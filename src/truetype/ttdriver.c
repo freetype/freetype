@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -293,7 +293,7 @@
   static FT_Error
   Load_Glyph( TT_GlyphSlot  slot,
               TT_Size       size,
-              FT_UShort     glyph_index,
+              FT_UInt       glyph_index,
               FT_Int32      load_flags )
   {
     FT_Error  error;

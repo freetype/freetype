@@ -1,3 +1,21 @@
+2004-04-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c, src/truetype/ttgload.h (TT_Load_Glyph),
+	src/ttdriver.c (Load_Glyph): Change type of `glyph_index' to
+	FT_UInt.  From Lex Warners.
+
+2004-04-17  Chisato Yamauchi  <cyamauch@a.phys.nagoya-u.ac.jp>
+
+	* src/sfnt/ttload.c (tt_face_load_sfnt_header): Really fix change
+	from 2004-03-19.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Use `ft_strlen'.
+
+	* src/pcf/pcfutil.c, src/pcf/pcfutil.h: Decorate functions with
+	`static.'.
+	Remove unused function `RepadBitmap'.
+	* src/pcf/pcfdrivr.c: Don't include pcfutil.h.
+
 2004-04-16  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype-config.in (usage): Fix and improve usage

@@ -276,7 +276,7 @@
                             SFNT_Header  sfnt )
   {
     FT_Error   error;
-    FT_ULong   format_tag, offset;
+    FT_ULong   font_format_tag, format_tag, offset;
     FT_Memory  memory = stream->memory;
 
     static const FT_Frame_Field  sfnt_header_fields[] =
@@ -318,10 +318,12 @@
     /*                                                                    */
     offset = FT_STREAM_POS();
 
-    if ( FT_READ_ULONG( format_tag ) )
+    if ( FT_READ_ULONG( font_format_tag ) )
       goto Exit;
 
-    if ( format_tag == TTAG_ttcf )
+    format_tag = font_format_tag;
+
+    if ( font_format_tag == TTAG_ttcf )
     {
       FT_Int  n;
 
@@ -353,8 +355,8 @@
       /* seek to the appropriate TrueType file, then read tag */
       offset = face->ttc_header.offsets[face_index];
 
-      if ( FT_STREAM_SEEK( offset ) ||
-           FT_READ_LONG( format_tag )                             )
+      if ( FT_STREAM_SEEK( offset )   ||
+           FT_READ_LONG( format_tag ) )
         goto Exit;
     }
 
@@ -375,7 +377,7 @@
     }
 
     /* disallow face index values > 0 for non-TTC files */
-    if ( format_tag != TTAG_ttcf && face_index > 0 )
+    if ( font_format_tag != TTAG_ttcf && face_index > 0 )
       error = SFNT_Err_Bad_Argument;
 
   Exit:
