@@ -696,7 +696,6 @@
   {
     AH_Outline*  outline = hinter->glyph;
     FT_Int       dimension;
-    AH_Edge*     edges;
     AH_Point*    points;
     AH_Point*    point_limit;
     AH_Point**   contour_limit;
@@ -708,7 +707,6 @@
 
     /* PASS 1: Move segment points to edge positions */
 
-    edges      = outline->horz_edges;
     touch_flag = ah_flah_touch_y;
 
     contour_limit = outline->contours + outline->num_contours;
@@ -1106,16 +1104,12 @@
       /* we now need to hint the metrics according to the change in */
       /* width/positioning that occured during the hinting process  */
       {
-        FT_Pos    old_width, new_width;
         FT_Pos    old_advance;
         FT_Pos    old_lsb, new_lsb;
         AH_Edge*  edge1 = outline->vert_edges;     /* leftmost edge  */
         AH_Edge*  edge2 = edge1 +
                           outline->num_vedges - 1; /* rightmost edge */
 
-
-        old_width = edge2->opos - edge1->opos;
-        new_width = edge2->pos  - edge1->pos;
 
         old_advance = hinter->pp2.x;
         old_lsb     = edge1->opos;
