@@ -225,7 +225,7 @@
 
           /* now, compute size */
           if ( asize )
-            *asize = sizeof( FTC_SBitRec ) + ABS(sbit->pitch) * sbit->height;
+            *asize = ABS(sbit->pitch) * sbit->height;
           
         }  /* glyph dimensions ok */
 
