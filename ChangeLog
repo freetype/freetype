@@ -1,3 +1,12 @@
+2001-10-20  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/type1/t1load.c (parse_font_name, parse_subrs): Added a test
+	for when loading synthetic fonts to make sure that the font name
+	and subrotuines are not loaded twice.  This is to remove a memory
+	leak that occured because the original memory blocks for these
+	objects were not deallocated when the objects were parsed the
+	second time.
+
 2001-10-19  David Turner <david@freetype.org>
 
 	* src/smooth/ftgrays.c, src/pshinter/pshglob.h, src/pshinter/pshrec.c,
@@ -5,7 +14,6 @@
 
 	* src/pshinter/module.mk, src/pshinter/rules.mk: adding control files
 	to build the postscript hinter with the "old" build system
-
 
 2001-10-19  Jacob Jansen <joukj@hrem.stm.tudelft.nl>
 
