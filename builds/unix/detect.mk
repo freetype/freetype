@@ -26,7 +26,10 @@ ifeq ($(PLATFORM),ansi)
     # configuration file.  Otherwise, the configure script is called and
     # `unix.mk' is created.
     #
-    # The use of the configure script can be forced by saying `make unix'.
+    # The use of the configure script can be forced by saying `make unix';
+    # arguments to `configure' should be in the CFG variable.  Example:
+    #
+    #   make unix CFG="--prefix=/usr --disable-static"
     #
     # Feel free to add support for other platform specific compilers in this
     # directory (e.g. solaris.mk + changes here to detect the platform).
@@ -62,7 +65,7 @@ ifeq ($(PLATFORM),ansi)
     setup: std_setup
 
     unix.mk: builds/unix/unix.in
-	    cd builds/unix; ./configure
+	    cd builds/unix; ./configure $(CFG)
 
   endif # test Unix
 endif   # test PLATFORM

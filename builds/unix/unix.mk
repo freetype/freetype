@@ -1,5 +1,5 @@
 #
-# FreeType 2 configuration rules for a standard Unix compiler
+# FreeType 2 configuration rules templates for Unix + configure
 #
 
 
@@ -17,11 +17,28 @@ ifndef TOP
   TOP := .
 endif
 
-DELETE   := rm -f
-SEP      := /
-HOSTSEP  := $(SEP)
-BUILD    := $(TOP)/builds/unix
-PLATFORM := unix
+DELETE    := rm -f
+DELDIR    := rmdir
+SEP       := /
+HOSTSEP   := $(SEP)
+BUILD     := $(TOP)/builds/unix
+PLATFORM  := unix
+
+FTSYS_SRC := $(BUILD)/ftsystem.c
+
+DISTCLEAN += $(BUILD)/config.cache  \
+             $(BUILD)/config.log    \
+             $(BUILD)/config.status \
+             $(BUILD)/unix.mk       \
+             $(BUILD)/ftconfig.h    \
+             $(BUILD)/libtool
+
+
+prefix       := /usr/local
+exec_prefix  := ${prefix}
+libdir       := ${exec_prefix}/lib
+version_info := 6:0:0
+
 
 # The directory where all object files are placed.
 #
@@ -47,12 +64,12 @@ LIB_DIR := $(OBJ_DIR)
 # The object file extension.  This can be .o, .tco, .obj, etc., depending on
 # the platform.
 #
-O := o
+O := lo
 
 # The library file extension.  This can be .a, .lib, etc., depending on the
 # platform.
 #
-A := a
+A := la
 
 
 # The name of the final library file.  Note that the DOS-specific Makefile
@@ -92,13 +109,17 @@ T := -o # Don't remove this comment line!  We need the space after `-o'.
 #   ANSI compliance.
 #
 ifndef CFLAGS
-  CFLAGS := -c
+  CFLAGS := -c -g -O2 -Wall
 endif
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS :=
+ANSIFLAGS := -pedantic -ansi
 
+# C compiler to use -- we use libtool!
+#
+#
+CC := $(BUILD)/libtool --mode=compile $(CC)
 
 ifdef BUILD_FREETYPE
 
@@ -109,12 +130,24 @@ ifdef BUILD_FREETYPE
 
   # The cleanup targets.
   #
-  clean_freetype: clean_freetype_std
-  distclean_freetype: distclean_freetype_std
+  clean_freetype: clean_freetype_unix
+  distclean_freetype: distclean_freetype_unix
+
+  # Unix cleaning and distclean rules.
+  #
+  clean_freetype_unix:
+	  -$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)
+	  -$(DELETE) $(OBJ_DIR)/*.o $(CLEAN)
+
+  distclean_freetype_unix: clean_freetype_unix
+	  -$(DELETE) $(FT_LIBRARY)
+	  -$(DELETE) $(OBJ_DIR)/.libs/*
+	  -$(DELDIR) $(OBJ_DIR)/.libs
+	  -$(DELETE) *.orig *~ core *.core $(DISTCLEAN)
 
   # Librarian to use to build the static library
   #
-  FT_LIBRARIAN := $(AR) -r
+  FT_LIBRARIAN := $(BUILD)/libtool --mode=link $(CC)
 
 
   # This final rule is used to link all object files into a single library.
@@ -124,8 +157,8 @@ ifdef BUILD_FREETYPE
   #   librarian library_file {list of object files}
   #
   $(FT_LIBRARY): $(OBJECTS_LIST)
-	  -$(DELETE) $@
-	  $(FT_LIBRARIAN) $@ $(OBJECTS_LIST)
+	  $(FT_LIBRARIAN) -o $@ $(OBJECTS_LIST) \
+                          -rpath $(libdir) -version-info $(version_info)
 
 endif
 

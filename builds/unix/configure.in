@@ -5,10 +5,10 @@ dnl
 
 AC_INIT(ftconfig.in)
 
-dnl Configuration file - stay in 8.3 limit
+dnl Configuration file -- stay in 8.3 limit
 AC_CONFIG_HEADER(ftconfig.h:ftconfig.in)
 
-version_info='0:0:0'
+version_info='6:0:0'
 AC_SUBST(version_info)
 
 dnl checks for system type
