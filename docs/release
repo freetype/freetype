@@ -17,14 +17,16 @@ How to prepare a new release
 
 . ChangeLog: Announce new release.
 
-. Tag the CVS.
-
-. Update `make-release' and `make-current' in ~/cvs/scripts/ on
-  www.freetype.org, then call them.
-
 . Call `make refdoc' to update HTML reference.  Copy it to
   freetype2/docs/reference in the `www' CVS module and update the CVS.
   Then call `update-www' in ~/cvs/scripts on www.freetype.org to
   update and distribute everything to sourceforge.
+
+. Tag the CVS (freetype, ft2demos, www/freetype2/docs).
+
+. Update `make-release' and `make-current' in ~/cvs/scripts/ on
+  www.freetype.org, then call them.
+
+. Create an md5 checksum file (with md5sum).
 
 . Announce new release on announce@freetype.org and to relevant newsgroups.
