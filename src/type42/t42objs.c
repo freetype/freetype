@@ -278,8 +278,8 @@
     root->max_advance_width  = face->ttf_face->max_advance_width;
     root->max_advance_height = face->ttf_face->max_advance_height;
 
-    root->underline_position  = info->underline_position >> 16;
-    root->underline_thickness = info->underline_thickness >> 16;
+    root->underline_position  = (FT_Short)( info->underline_position >> 16 );
+    root->underline_thickness = (FT_Short)( info->underline_thickness >> 16 );
 
     root->internal->max_points   = 0;
     root->internal->max_contours = 0;

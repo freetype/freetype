@@ -89,7 +89,7 @@
   *  GLYPH DICT SERVICE
   *
   */
-  
+
   static FT_Error
   sfnt_get_glyph_name( TT_Face     face,
                        FT_UInt     glyph_index,
@@ -130,7 +130,7 @@
   *  POSTSCRIPT NAME SERVICE
   *
   */
-  
+
   static const char*
   sfnt_get_ps_name( TT_Face  face )
   {
@@ -243,7 +243,7 @@
 
   static const FT_Service_PsNameRec   sfnt_service_ps_name =
   {
-    (FT_PsName_GetFunc) & sfnt_get_ps_name
+    (FT_PsName_GetFunc) sfnt_get_ps_name
   };
 
 
@@ -258,10 +258,10 @@
     { FT_SERVICE_ID_POSTSCRIPT_NAME, & sfnt_service_ps_name },
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
     { FT_SERVICE_ID_GLYPH_DICT,      & sfnt_service_glyph_dict },
-#endif    
+#endif
 
     { NULL, NULL }
-  };  
+  };
 
 
   FT_CALLBACK_DEF( FT_Module_Interface )

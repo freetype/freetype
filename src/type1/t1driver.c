@@ -116,7 +116,7 @@
 
   static const FT_Service_PsNameRec  t1_service_ps_name =
   {
-    (FT_PsName_GetFunc)  &t1_get_ps_name
+    (FT_PsName_GetFunc)  t1_get_ps_name
   };
 
 
@@ -145,10 +145,10 @@
     { FT_SERVICE_ID_POSTSCRIPT_NAME, &t1_service_ps_name },
     { FT_SERVICE_ID_GLYPH_DICT, &t1_service_glyph_dict },
     { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_TYPE_1 },
-    
-#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT    
+
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
     { FT_SERVICE_ID_MULTI_MASTERS, &t1_service_multi_masters },
-#endif      
+#endif
     { NULL, NULL }
   };
 

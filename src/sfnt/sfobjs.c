@@ -643,14 +643,14 @@
           FT_Bitmap_Size*  bsize  = root->available_sizes + n;
           TT_SBit_Strike   strike = face->sbit_strikes + n;
           FT_UShort        fupem  = face->header.Units_Per_EM;
-          FT_Short         height = face->horizontal.Ascender -
-                                      face->horizontal.Descender +
-                                      face->horizontal.Line_Gap;
+          FT_Short         height = (FT_Short)( face->horizontal.Ascender -
+                                                face->horizontal.Descender +
+                                                face->horizontal.Line_Gap );
           FT_Short         avg    = face->os2.xAvgCharWidth;
 
 
           /* assume 72dpi */
-          bsize->height = 
+          bsize->height =
             (FT_Short)( ( height * strike->y_ppem + fupem/2 ) / fupem );
           bsize->width  =
             (FT_Short)( ( avg * strike->y_ppem + fupem/2 ) / fupem );

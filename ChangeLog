@@ -1,3 +1,22 @@
+2003-09-21  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/ftserv.h,
+        include/freetype/internal/service/svpfr.h,
+        include/freetype/internal/pfr.h,
+        src/base/ftpfr.c:
+
+          migrating the functions of "ftpfr.h" to the new
+          service-base internal API
+
+        * src/cff/cffobjs.c, src/cid/cidobjs.c, src/pfr/pfrsbit.c,
+        src/psaux/psobjs.c, src/sfnt/sfdriver.c, src/sfnt/sfobjs.c,
+        src/truetype/ttobjs.c, src/type1/t1driver.c, src/type1/t1objs.c,
+        src/type42/t42objs.c, src/winfonts/winfnt.c:
+
+          removing various compiler warnings
+
+
+
 2003-09-19  David Bevan  <dbevan@emtex.com>
 
 	* src/type1/t1parse.c (pfb_tag_fields): Removed.
@@ -117,7 +136,7 @@
 	* src/base/ftbdf.c: Include FT_SERVICE_BDF_H.
 	(test_font_type): Removed.
 	(FT_Get_BDF_Charset_ID, FT_Get_BDF_Property): Use services
-	provided in `FT_SERVICE_ID_BDF' 
+	provided in `FT_SERVICE_ID_BDF'
 
 	* src/base/ftmm.c: Include FT_SERVICE_MULTIPLE_MASTERS_H.
 	(ft_face_get_mm_service): New auxiliary function to get services

@@ -589,14 +589,14 @@
       /* All white-space charcters are ignored. */
       skip_spaces( &cur, limit );
 
-      b = T1Radix( 16, &cur, cur + 1 );
+      b = (FT_Byte) T1Radix( 16, &cur, cur + 1 );
 
       if ( cur == cur2 )
         break;
 
       /* <f> == <f0> != <0f> */
-      bytes[n / 2] = ( n % 2 ) ? bytes[n / 2] + b
-                               : b * 16;
+      bytes[n / 2] = (FT_Byte)( ( n % 2 ) ? bytes[n / 2] + b
+                                          : b * 16 );
     }
 
     skip_spaces( &cur, limit );

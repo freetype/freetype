@@ -654,7 +654,7 @@
             error = pfr_load_bitmap_bits( p,
                                           stream->limit,
                                           format,
-                                          face->header.color_flags & 2,
+                                          FT_BOOL(face->header.color_flags & 2),
                                           &glyph->root.bitmap );
           }
         }
