@@ -167,9 +167,9 @@
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT_DEF( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
-                                             FTC_GlyphSet   gset,
-                                             FT_UInt        gindex );
+  FT_EXPORT( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
+                                         FTC_GlyphSet   gset,
+                                         FT_UInt        gindex );
 
 #define FTC_GlyphNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++

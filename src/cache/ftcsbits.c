@@ -364,10 +364,10 @@
   }
 
 
-  FT_EXPORT( FT_Error )  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
-                                                FTC_Image_Desc*  desc,
-                                                FT_UInt          gindex,
-                                                FTC_SBit        *ansbit )
+  FT_EXPORT_DEF( FT_Error )  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
+                                                    FTC_Image_Desc*  desc,
+                                                    FT_UInt          gindex,
+                                                    FTC_SBit        *ansbit )
   {
     FT_Error       error;
     FTC_ChunkNode  node;

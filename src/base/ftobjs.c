@@ -2034,10 +2034,10 @@
 
   /* documentation is in ftrender.h */
 
-  FT_EXPORT( FT_Error )  FT_Set_Renderer( FT_Library     library,
-                                          FT_Renderer    renderer,
-                                          FT_UInt        num_params,
-                                          FT_Parameter*  parameters )
+  FT_EXPORT_DEF( FT_Error )  FT_Set_Renderer( FT_Library     library,
+                                              FT_Renderer    renderer,
+                                              FT_UInt        num_params,
+                                              FT_Parameter*  parameters )
   {
     FT_ListNode  node;
     FT_Error     error = FT_Err_Ok;
