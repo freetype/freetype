@@ -1,3 +1,10 @@
+2002-09-17  Werner Lemberg  <wl@gnu.org>
+
+	More 16bit fixes.
+
+	* src/psaux/psobjs.c (reallocate_t1_table): Use FT_Long for
+	second parameter.
+
 2002-09-16  Werner Lemberg  <wl@gnu.org>
 
 	16bit fixes from Wolfgang Domröse.

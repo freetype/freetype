@@ -102,7 +102,7 @@
 
   static FT_Error
   reallocate_t1_table( PS_Table  table,
-                       FT_Int    new_size )
+                       FT_Long   new_size )
   {
     FT_Memory  memory   = table->memory;
     FT_Byte*   old_base = table->block;
@@ -739,7 +739,7 @@
                FT_Memory  memory )
   {
     FT_Byte*    cur = *cursor;
-    FT_Int      len = 0;
+    FT_PtrDist  len = 0;
     FT_Int      count;
     FT_String*  result;
     FT_Error    error;
