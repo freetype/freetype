@@ -5,7 +5,7 @@
 /*    Basic OpenType/CFF type definitions and interface (specification     */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -31,7 +31,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    CFF_IndexRec                                                          */
+  /*    CFF_IndexRec                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used to model a CFF Index table.                       */
@@ -184,16 +184,16 @@ FT_BEGIN_HEADER
   } CFF_FDSelectRec, *CFF_FDSelect;
 
 
-  /* A SubFont packs a font dict and a private dict together. They are */
-  /* needed to support CID-keyed CFF fonts.                            */
+  /* A SubFont packs a font dict and a private dict together.  They are */
+  /* needed to support CID-keyed CFF fonts.                             */
   typedef struct  CFF_SubFontRec_
   {
     CFF_FontRecDictRec  font_dict;
-    CFF_PrivateRec   private_dict;
+    CFF_PrivateRec      private_dict;
 
-    CFF_IndexRec     local_subrs_index;
-    FT_UInt          num_local_subrs;
-    FT_Byte**        local_subrs;
+    CFF_IndexRec        local_subrs_index;
+    FT_UInt             num_local_subrs;
+    FT_Byte**           local_subrs;
 
   } CFF_SubFontRec, *CFF_SubFont;
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType memory management macros (specification).               */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -183,80 +183,79 @@ FT_BEGIN_HEADER
 #define FT_MEM_MOVE( dest, source, count )  memmove( dest, source, count )
 
 
-/**************************************************************************
- *
- * we first define FT_MEM_ALLOC, FT_MEM_REALLOC and FT_MEM_FREE
- * all macros use an _implicit_ 'memory' parameter to access the
- * current memory allocator
- *
- */
+  /*************************************************************************/
+  /*                                                                       */
+  /* We first define FT_MEM_ALLOC, FT_MEM_REALLOC, and FT_MEM_FREE.  All   */
+  /* macros use an _implicit_ `memory' parameter to access the current     */
+  /* memory allocator.                                                     */
+  /*                                                                       */
 
 #ifdef FT_DEBUG_MEMORY
 
-#  define FT_MEM_ALLOC( _pointer_, _size_ )                                 \
-          FT_Alloc_Debug( memory, _size_,                                   \
+#define FT_MEM_ALLOC( _pointer_, _size_ )                            \
+          FT_Alloc_Debug( memory, _size_,                            \
                           (void**)&(_pointer_), __FILE__, __LINE__ )
 
-#  define FT_MEM_REALLOC( _pointer_, _current_, _size_ )                    \
-          FT_Realloc_Debug( memory, _current_, _size_,                      \
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )                 \
+          FT_Realloc_Debug( memory, _current_, _size_,                 \
                             (void**)&(_pointer_), __FILE__, __LINE__ )
 
-#  define FT_MEM_FREE( _pointer_ )                                          \
+#define FT_MEM_FREE( _pointer_ )                                            \
           FT_Free_Debug( memory, (void**)&(_pointer_), __FILE__, __LINE__ )
 
 
 #else  /* !FT_DEBUG_MEMORY */
 
-#  define FT_MEM_ALLOC( _pointer_, _size_ )                                 \
+
+#define FT_MEM_ALLOC( _pointer_, _size_ )                  \
           FT_Alloc( memory, _size_, (void**)&(_pointer_) )
 
-#  define FT_MEM_FREE( _pointer_ )                                          \
+#define FT_MEM_FREE( _pointer_ )                  \
           FT_Free( memory, (void**)&(_pointer_) )
 
-#  define FT_MEM_REALLOC( _pointer_, _current_, _size_ )                    \
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )                  \
           FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
+
 
 #endif /* !FT_DEBUG_MEMORY */
 
 
-/**************************************************************************
- *
- * the following functions macros that their pointer argument is _typed_
- * in order to automatically compute array element sizes..
- */
-#define FT_MEM_NEW( _pointer_ )   \
-          FT_MEM_ALLOC( _pointer_, sizeof(*(_pointer_)) )
+  /*************************************************************************/
+  /*                                                                       */
+  /* The following functions macros expect that their pointer argument is  */
+  /* _typed_ in order to automatically compute array element sizes.        */
+  /*                                                                       */
 
-#define FT_MEM_NEW_ARRAY( _pointer_, _count_ )   \
-          FT_MEM_ALLOC( _pointer_, (_count_)*sizeof(*(_pointer_)) )
+#define FT_MEM_NEW( _pointer_ )                               \
+          FT_MEM_ALLOC( _pointer_, sizeof ( *(_pointer_) ) )
 
-#define FT_MEM_RENEW_ARRAY( _pointer_, _old_, _new_ )                 \
-          FT_MEM_REALLOC( _pointer_, (_old_)*sizeof(*(_pointer_)),    \
-                                     (_new_)*sizeof(*(_pointer_)) )
+#define FT_MEM_NEW_ARRAY( _pointer_, _count_ )                           \
+          FT_MEM_ALLOC( _pointer_, (_count_) * sizeof ( *(_pointer_) ) )
+
+#define FT_MEM_RENEW_ARRAY( _pointer_, _old_, _new_ )                    \
+          FT_MEM_REALLOC( _pointer_, (_old_) * sizeof ( *(_pointer_) ),  \
+                                     (_new_) * sizeof ( *(_pointer_) ) )
 
 
-/**************************************************************************
- *
- * the following macros are obsolete but kept for compatibility reasons
- */
+  /*************************************************************************/
+  /*                                                                       */
+  /* the following macros are obsolete but kept for compatibility reasons  */
+  /*                                                                       */
 
-#define FT_MEM_ALLOC_ARRAY( _pointer_, _count_, _type_ )   \
-          FT_MEM_ALLOC( _pointer_, (_count_)*sizeof(_type_) )
+#define FT_MEM_ALLOC_ARRAY( _pointer_, _count_, _type_ )           \
+          FT_MEM_ALLOC( _pointer_, (_count_) * sizeof ( _type_ ) )
 
 #define FT_MEM_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )    \
-           FT_MEM_REALLOC( _pointer_, (_old_)*sizeof(_type),       \
-                                      (_new_)*sizeof(_type_) )
+          FT_MEM_REALLOC( _pointer_, (_old_) * sizeof ( _type ),   \
+                                     (_new_) * sizeof ( _type_ ) )
 
 
-
-/**************************************************************************
- *
- * the following macros are variants of their FT_MEM_XXXX equivalents
- * they're used to set an _implicit_ 'error' variable and return TRUE
- * if an error occured (i.e. if 'error != 0')
- */
-
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* The following macros are variants of their FT_MEM_XXXX equivalents;   */
+  /* they are used to set an _implicit_ `error' variable and return TRUE   */
+  /* if an error occured (i.e. if 'error != 0').                           */
+  /*                                                                       */
 
 #define FT_ALLOC( _pointer_, _size_ )                       \
           FT_SET_ERROR( FT_MEM_ALLOC( _pointer_, _size_ ) )
@@ -276,16 +275,17 @@ FT_BEGIN_HEADER
 #define FT_RENEW_ARRAY( _pointer_, _old_, _new_ )   \
           FT_SET_ERROR( FT_MEM_RENEW_ARRAY( _pointer_, _old_, _new_ ) )
 
+#define FT_ALLOC_ARRAY( _pointer_, _count_, _type_ )                    \
+          FT_SET_ERROR( FT_MEM_ALLOC( _pointer_,                        \
+                                      (_count_) * sizeof ( _type_ ) ) )
 
-#define FT_ALLOC_ARRAY( _pointer_, _count_, _type_ )                  \
-          FT_SET_ERROR( FT_MEM_ALLOC( _pointer_,                      \
-                                   (_count_)*sizeof ( _type_ ) ) )
-
-#define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )       \
+#define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )             \
           FT_SET_ERROR( FT_MEM_REALLOC( _pointer_,                      \
-                                     (_old_)*sizeof ( _type_ ),  \
-                                     (_new_)*sizeof ( _type_ ) ) )
+                                        (_old_) * sizeof ( _type_ ),    \
+                                        (_new_) * sizeof ( _type_ ) ) )
+
  /* */
+
 
 FT_END_HEADER
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Debugging and logging component (specification).                     */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -27,9 +27,9 @@
 FT_BEGIN_HEADER
 
 
-/* force the definition of FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE */
-/* is already defined; this simplifies the following #ifdefs            */
-/*                                                                      */
+  /* force the definition of FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE */
+  /* is already defined; this simplifies the following #ifdefs            */
+  /*                                                                      */
 #ifdef FT_DEBUG_LEVEL_TRACE
 #undef  FT_DEBUG_LEVEL_ERROR
 #define FT_DEBUG_LEVEL_ERROR
@@ -38,8 +38,8 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*  Define the trace enums as well as the trace levels array when        */
-  /*  they're needed                                                       */
+  /* Define the trace enums as well as the trace levels array when they    */
+  /* are needed.                                                           */
   /*                                                                       */
   /*************************************************************************/
 
@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
 
 #define FT_TRACE_DEF( x )  trace_ ## x ,
 
-  /* defining the enums */ 
+  /* defining the enumeration */ 
   typedef enum
   {
 #include FT_INTERNAL_TRACE_H  
@@ -57,7 +57,7 @@ FT_BEGIN_HEADER
 
 
   /* defining the array of trace levels, provided by `src/base/ftdebug.c' */
-  extern  int  ft_trace_levels[trace_count];
+  extern int  ft_trace_levels[trace_count];
 
 #undef FT_TRACE_DEF
 
@@ -66,7 +66,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*  Define the FT_TRACE macro                                            */
+  /* Define the FT_TRACE macro                                             */
   /*                                                                       */
   /* IMPORTANT!                                                            */
   /*                                                                       */
@@ -128,7 +128,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*  Define the FT_ASSERT macro                                           */
+  /* Define the FT_ASSERT macro                                            */
   /*                                                                       */
   /*************************************************************************/
 
@@ -170,7 +170,8 @@ FT_BEGIN_HEADER
 #endif /* FT_DEBUG_LEVEL_ERROR */
 
 
-  FT_BASE( void )   ft_debug_init( void );
+  FT_BASE( void )
+  ft_debug_init( void );
 
 
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
