@@ -1,3 +1,7 @@
+2002-03-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftutil.c (FT_Realloc): Use MEM_Set instead of memset.
+
 2002-03-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftdbgmem.c (ft_mem_table_resize, ft_mem_table_new,
