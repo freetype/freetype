@@ -1030,14 +1030,10 @@
     PS_Table   table  = &loader->subrs;
     FT_Memory  memory = parser->root.memory;
     FT_Error   error;
-    FT_Int     n;
+    FT_Int     n, num_subrs;
 
     PSAux_Service  psaux  = (PSAux_Service)face->psaux;
 
-
-    if ( loader->num_subrs )
-      /* with synthetic fonts it is possible we get here twice */
-      return;
 
     T1_Skip_Spaces( parser );
 
@@ -1053,14 +1049,14 @@
       return;
     }
 
-    loader->num_subrs = (FT_Int)T1_ToInt( parser );
+    num_subrs = (FT_Int)T1_ToInt( parser );
 
     /* position the parser right before the `dup' of the first subr */
     T1_Skip_PS_Token( parser );         /* `array' */
     T1_Skip_Spaces  ( parser );
 
     /* initialize subrs array */
-    error = psaux->ps_table_funcs->init( table, loader->num_subrs, memory );
+    error = psaux->ps_table_funcs->init( table, num_subrs, memory );
     if ( error )
       goto Fail;
 
@@ -1068,7 +1064,7 @@
     /*                                                       */
     /*   `index' + binary data                               */
     /*                                                       */
-    for ( n = 0; n < loader->num_subrs; n++ )
+    for ( n = 0; n < num_subrs; n++ )
     {
       FT_Long   idx, size;
       FT_Byte*  base;
@@ -1099,6 +1095,10 @@
         T1_Skip_Spaces  ( parser );
       }
 
+      /* with synthetic fonts it is possible we get here twice */
+      if ( loader->num_subrs )
+        continue;
+
       /* some fonts use a value of -1 for lenIV to indicate that */
       /* the charstrings are unencoded                           */
       /*                                                         */
@@ -1124,6 +1124,9 @@
       if ( error )
         goto Fail;
     }
+
+    loader->num_subrs = num_subrs;
+
     return;
 
   Fail:
@@ -1474,8 +1477,8 @@
         /* look up the `known' keyword */
         while ( cur < limit )
         {
-          if ( *cur == 'k' && cur + 5 < limit       &&
-               ft_strncmp( (char*)cur, "known", 5 ) )
+          if ( *cur == 'k' && cur + 5 < limit            &&
+               ft_strncmp( (char*)cur, "known", 5 ) == 0 )
             break;
 
           T1_Skip_PS_Token( parser );
@@ -1548,10 +1551,12 @@
 
               if ( n >= len )
               {
-                /* We found it -- run the parsing callback!      */
-                /* We only record the first instance of any      */
-                /* field to deal adequately with synthetic fonts */
-                if ( keyword_flag[0] == 0 )
+                /* We found it -- run the parsing callback! */
+                /* We only record the first instance of any */
+                /* field to deal adequately with synthetic  */
+                /* fonts; /Subrs is handled specially.      */
+                if ( keyword_flag[0] == 0            ||
+                     ft_strcmp( (const char*)name, "Subrs" ) == 0 )
                 {
                   parser->root.error = t1_load_keyword( face,
                                                         loader,
