@@ -34,7 +34,6 @@
 #include <t1gload.c>
 #include <t1tokens.c>
 #include <t1parse.c>
-#include <t1encode.c>
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
 #include <t1hinter.c>
