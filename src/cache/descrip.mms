@@ -18,6 +18,9 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cache])
 OBJS=ftcache.obj
 
 all : $(OBJS)
-	library [--.lib]freetype.olb $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+ftcache.obj : ftcache.c ftlru.c ftcmanag.c ftccache.c ftcglyph.c ftcimage.c \
+              ftcsbits.c ftccmap.c 
 
 # EOF

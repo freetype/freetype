@@ -121,8 +121,8 @@
     if ( face->root.internal->postscript_name )
       return face->root.internal->postscript_name;
 
-    /* scan the name table to see if we have a Postscript name here, either */
-    /* in Macintosh or Windows platform encodings..                         */
+    /* scan the name table to see whether we have a Postscript name here, */
+    /* either in Macintosh or Windows platform encodings                  */
     for ( n = 0; n < face->num_names; n++ )
     {
       TT_NameRec*  name = face->name_table.names + n;
