@@ -1234,10 +1234,10 @@
         coverage = -coverage;
 
       while ( coverage >= 512 )
-        coverage = 512 - coverage;
+        coverage -= 512;
 
       if ( coverage > 256 )
-        coverage = 0;
+        coverage = 512 - coverage;
       else if ( coverage == 256 )
         coverage = 255;
     }
