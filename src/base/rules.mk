@@ -52,8 +52,7 @@ BASE_H := $(BASE_)ftcalc.h    \
 # object.  It will then be linked to the final executable only if one of its
 # symbols is used by the application.
 #
-BASE_EXT_SRC := $(BASE_)ftbbox.c   \
-                $(BASE_)ftraster.c \
+BASE_EXT_SRC := $(BASE_)ftraster.c \
                 $(BASE_)ftoutln.c
 
 # Base layer extensions headers
