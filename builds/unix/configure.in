@@ -10,6 +10,8 @@ AC_CONFIG_HEADER(ftconfig.h:ftconfig.in)
 
 version_info='6:1:0'
 AC_SUBST(version_info)
+ft_version=`echo $version_info | tr : .`
+AC_SUBST(ft_version)
 
 dnl checks for system type
 AC_CANONICAL_SYSTEM

@@ -1,3 +1,9 @@
+2001-03-20  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.in: Add $ft_version.
+	* builds/unix/freetype-config.in: Use it.
+	* builds/unix/configure: Updated.
+
 2001-03-19  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/type1/t1load.c (parse_font_matrix): Assign the units per em
