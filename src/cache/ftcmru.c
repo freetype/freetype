@@ -330,7 +330,7 @@
 
 
     first = list->nodes;
-    while ( first && selection( first, key ) )
+    while ( first && ( selection == NULL || selection( first, key ) ) )
     {
       FTC_MruList_Remove( list, first );
       first = list->nodes;
