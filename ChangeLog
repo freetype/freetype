@@ -1,3 +1,15 @@
+2001-01-24  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/t1load.c (parse_font_matrix): Added heuristic to get
+	units_per_EM from the font matrix.
+
+        (parse_dict): Deleted test to see if the FontInfo keyword has been
+	seen.  Deletion of this test allows fonts without FontInfo
+	dictionaries to be parsed by the Type 1 driver.
+
+	(T1_Open_Face): deleted empty subroutines array test to make sure
+	fonts with no subroutines still are parsed.
+
 2001-01-17  Francesco Zappa Nardelli  <francesco.zappa.nardelli@ens.fr>
 
 	* src/pcfread.c (pcf_get_properties, pcf_get_metrics,
