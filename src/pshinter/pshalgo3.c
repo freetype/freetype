@@ -332,6 +332,56 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  static FT_Pos
+  psh3_dimension_quantize_len( PSH_Dimension  dim,
+                               FT_Pos         len,
+                               FT_Bool        do_snapping )
+  {
+    if ( len <= 64 )
+      len = 64;
+    else
+    {
+      FT_Pos  delta = len - dim->stdw.widths[0].cur;
+
+
+      if ( delta < 0 )
+        delta = -delta;
+
+      if ( delta < 40 )
+      {
+        len = dim->stdw.widths[0].cur;
+        if ( len < 48 )
+          len = 48;
+      }
+
+      if ( len < 3 * 64 )
+      {
+        delta = ( len & 63 );
+        len  &= -64;
+
+        if ( delta < 10 )
+          len += delta;
+
+        else if ( delta < 32 )
+          len += 10;
+
+        else if ( delta < 54 )
+          len += 54;
+
+        else
+          len += delta;
+      }
+      else
+        len = ( len + 32 ) & -64;
+    }
+
+    if ( do_snapping )
+      len = ( len + 32 ) & -64;
+
+    return  len;
+  }
+
+
 #ifdef DEBUG_HINTER
 
   static void
@@ -390,15 +440,15 @@
       FT_Pos  pos = FT_MulFix( hint->org_pos, scale ) + delta;
       FT_Pos  len = FT_MulFix( hint->org_len, scale );
 
-      FT_Int            no_snapping;
+      FT_Int            do_snapping;
       FT_Pos            fit_center;
       FT_Pos            fit_len;
       PSH_AlignmentRec  align;
 
 
       /* ignore stem alignments when requested through the hint flags */
-      if ( ( dimension == 0 && glyph->no_horz_hints ) ||
-           ( dimension == 1 && glyph->no_vert_hints ) )
+      if ( ( dimension == 0 && !glyph->do_horz_hints ) ||
+           ( dimension == 1 && !glyph->do_vert_hints ) )
       {
         hint->cur_pos = pos;
         hint->cur_len = len;
@@ -408,26 +458,10 @@
       }
 
       /* perform stem snapping when requested */
-      no_snapping = ( dimension == 0 && !glyph->no_horz_snapping ) ||
-                    ( dimension == 1 && !glyph->no_vert_snapping );
+      do_snapping = ( dimension == 0 && glyph->do_horz_snapping ) ||
+                    ( dimension == 1 && glyph->do_vert_snapping );
 
-      if ( !no_snapping )
-      {
-        /* compute fitted width/height */
-        fit_len = 0;
-        if ( hint->org_len )
-        {
-          fit_len = psh_dimension_snap_width( dim, hint->org_len );
-          if ( fit_len < 64 )
-            fit_len = 64;
-          else
-            fit_len = ( fit_len + 32 ) & -64;
-        }
-      }
-      else
-        fit_len = len;
-
-      hint->cur_len = fit_len;
+      hint->cur_len = fit_len = len;
 
       /* check blue zones for horizontal stems */
       align.align     = PSH_BLUE_ALIGN_NONE;
@@ -480,151 +514,64 @@
             pos       = par_cur_center + cur_delta - ( len >> 1 );
           }
 
-          if ( !no_snapping )
+          hint->cur_pos = pos;
+          hint->cur_len = fit_len;
+
+          if ( len <= 64 )
           {
-            /* normal processing */
-            if ( fit_len & 64 )
-            {
-              /* odd number of pixels */
-              fit_center = ( ( pos + ( len >> 1 ) ) & -64 ) + 32;
-            }
-            else
-            {
-              /* even number of pixels */
-              fit_center = ( pos + ( len >> 1 ) + 32 ) & -64;
-            }
-            hint->cur_pos = fit_center - ( fit_len >> 1 );
+            /* the stem is less than one pixel, we will center it */
+            /* around the nearest pixel center                    */
+            /*                                                    */
+            pos = ( pos + ( (len >> 1) & -64 ) );
+            len = 64;
           }
           else
           {
-#ifdef STRONGER
-            if ( len <= 64 )
-            {
-              /* the stem is less than one pixel, we will center it */
-              /* around the nearest pixel center                    */
-              /*                                                    */
-              pos = ( pos + ( (len >> 1) & -64 ) );
-              len = 64;
-            }
-            else
-            {
-              FT_Pos  Delta = len - dim->stdw.widths[0].cur;
-
-
-              if ( Delta < 0 )
-                Delta = -Delta;
-
-              if ( Delta < 40 )
-              {
-                len = dim->stdw.widths[0].cur;
-                if ( len < 32 )
-                  len = 32;
-              }
-
-              if ( len < 3 * 64 )
-              {
-                Delta = ( len & 63 );
-                len &= -64;
-
-                if ( Delta < 10 )
-                  len += Delta;
-
-                else if ( Delta < 32 )
-                  len += 10;
-
-                else if ( Delta < 54 )
-                  len += 54;
-
-                else
-                  len += Delta;
-              }
-              else
-                len = ( len + 32 ) & -64;
-            }
-
-            /* now that we have a good hinted stem width, try to position */
-            /* the stem along a pixel grid integer coordinate             */
-            hint->cur_pos = pos + psh3_hint_snap_stem_side_delta( pos, len );
-            hint->cur_len = len;
-
-#else /* !STRONGER */
-
-            /* Stems less than one pixel wide are easy - we want to
-             * make them as dark as possible, so they must fall within
-             * one pixel. If the stem is split between two pixels
-             * then snap the edge that is nearer to the pixel boundary
-             * to the pixel boundary
-             */
-            if (len <= 64)
-            {
-              if ( ( pos + len + 63 ) / 64  != pos / 64 + 1 )
-                pos += psh3_hint_snap_stem_side_delta ( pos, len );
-            }
-            /* Position stems other to minimize the amount of mid-grays.
-             * There are, in general, two positions that do this,
-             * illustrated as A) and B) below.
-             *
-             *   +                   +                   +                   +
-             *
-             * A)             |--------------------------------|
-             * B)   |--------------------------------|
-             * C)       |--------------------------------|
-             *
-             * Position A) (split the excess stem equally) should be better
-             * for stems of width N + f where f < 0.5.
-             *
-             * Position B) (split the deficiency equally) should be better
-             * for stems of width N + f where f > 0.5.
-             *
-             * It turns out though that minimizing the total number of touched
-             * pixels is also important, so position C), with one edge
-             * aligned with a pixel boundary is actually preferable
-             * to A).  There are also more possible positions for C) than
-             * for A) or B), so there will be less distortion of the overall
-             * character shape.
-             */
-            else
-            {
-              FT_Fixed frac_len = len & 63;
-              FT_Fixed center = pos + ( len >> 1 );
-
-              FT_Fixed delta_a, delta_b;
-
-
-              if ( len & 64 )
-              {
-                delta_a = ( center & -64 ) + 32 - center;
-                delta_b = ( ( center + 32 ) & - 64 ) - center;
-              }
-              else
-              {
-                delta_a = ( ( center + 32 ) & - 64 ) - center;
-                delta_b = ( center & -64 ) + 32 - center;
-              }
-
-              /* We choose between B) and C) above based on the amount
-               * of fractional stem width: for small amounts, choose
-               * C) always; for large amounts, B) always; inbetween,
-               * pick whichever one involves less stem movement.
-               */
-              if ( frac_len < 32 )
-                pos += psh3_hint_snap_stem_side_delta ( pos, len );
-              else if ( frac_len < 48 )
-              {
-                FT_Fixed  side_delta =
-                            psh3_hint_snap_stem_side_delta( pos, len );
-
-                if ( ABS( side_delta ) < ABS( delta_b ) )
-                  pos += side_delta;
-                else
-                  pos += delta_b;
-              }
-              else
-                pos += delta_b;
-            }
-            hint->cur_pos = pos;
-#endif /* !STRONGER */
+            len = psh3_dimension_quantize_len( dim, len, 0 );
           }
+
+          /* now that we have a good hinted stem width, try to position */
+          /* the stem along a pixel grid integer coordinate             */
+          hint->cur_pos = pos + psh3_hint_snap_stem_side_delta( pos, len );
+          hint->cur_len = len;
+        }
+      }
+
+      if ( do_snapping )
+      {
+        pos = hint->cur_pos;
+        len = hint->cur_len;
+
+        if ( len < 64 )
+          len = 64;
+        else
+          len = ( len + 32 ) & -64;
+
+        switch ( align.align )
+        {
+          case PSH_BLUE_ALIGN_TOP:
+            hint->cur_pos = align.align_top - len;
+            hint->cur_len = len;
+            break;
+
+          case PSH_BLUE_ALIGN_BOT:
+            hint->cur_len = len;
+            break;
+
+          case PSH_BLUE_ALIGN_BOT | PSH_BLUE_ALIGN_TOP:
+            /* don't touch */
+            break;
+
+
+          default:
+            hint->cur_len = len;
+            if ( len & 64 )
+              pos = ( ( pos + ( len >> 1 ) ) & -64 ) + 32;
+            else
+              pos = ( pos + ( len >> 1 ) + 32 ) & -64;
+
+            hint->cur_pos = pos - ( len >> 1 );
+            hint->cur_len = len;
         }
       }
 
@@ -1761,18 +1708,18 @@
 
 #endif /* DEBUG_HINTER */
 
-    glyph->no_horz_hints = 0;
-    glyph->no_vert_hints = 0;
-
-    glyph->no_horz_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
-                                       hint_mode == FT_RENDER_MODE_LCD_V  );
-
-    glyph->no_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
-                                       hint_mode == FT_RENDER_MODE_LCD    );
-
     error = psh3_glyph_init( glyph, outline, ps_hints, globals );
     if ( error )
       goto Exit;
+
+    glyph->do_horz_hints = 1;
+    glyph->do_vert_hints = 1;
+
+    glyph->do_horz_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_MONO ||
+                                       hint_mode == FT_RENDER_MODE_LCD  );
+
+    glyph->do_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_MONO  ||
+                                       hint_mode == FT_RENDER_MODE_LCD_V );
 
     for ( dimension = 0; dimension < 2; dimension++ )
     {

@@ -249,9 +249,15 @@
                         FT_UInt       mode,
                         FT_Vector*    origin )
   {
-    return ft_smooth_render_generic( render, slot, mode, origin,
-                                     FT_RENDER_MODE_LCD,
-                                     3, 0 );
+    FT_Error  error;
+
+    error = ft_smooth_render_generic( render, slot, mode, origin,
+                                      FT_RENDER_MODE_LCD,
+                                      3, 0 );
+    if ( !error )
+      slot->bitmap.pixel_mode = FT_PIXEL_MODE_LCD;
+
+    return error;
   }
 
 
@@ -262,9 +268,15 @@
                           FT_UInt       mode,
                           FT_Vector*    origin )
   {
-    return ft_smooth_render_generic( render, slot, mode, origin,
-                                     FT_RENDER_MODE_LCD_V,
-                                     0, 3 );
+    FT_Error  error;
+
+    error = ft_smooth_render_generic( render, slot, mode, origin,
+                                      FT_RENDER_MODE_LCD_V,
+                                      0, 3 );
+    if ( !error )
+      slot->bitmap.pixel_mode = FT_PIXEL_MODE_LCD_V;
+
+    return error;
   }
 
 
