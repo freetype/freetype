@@ -34,6 +34,10 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
 
     - Metrics for BDF and PCF bitmap font formats have been fixed.
 
+    - The   `freetype-config'   script   now  handles   --prefix   and
+      --exec-prefix correctly; it also  returns the proper --rpath (or
+      -R) value if FreeType has been built as a shared library.
+
 
   II. IMPORTANT CHANGES
 

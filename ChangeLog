@@ -1,3 +1,16 @@
+2003-02-08  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.in: Call AC_SUBST for `enable_shared',
+	`hardcode_libdir_flag_spec', and `wl'.
+	* builds/unix/configure: Regenerated.
+
+	* builds/unix/freetype-config.in: Make --prefix and --exec-prefix
+	actually work.
+	Report a proper --rpath (or -R) value for --libs argument if a
+	shared library has been built.
+
+	* docs/CHANGES: Updated.
+
 2003-02-07  Keith Packard  <keithp@keithp.com>
 
 	* src/bdf/bdfdrivr.c (BDF_Face_Init, BDF_Set_Pixel_Size): Fix
