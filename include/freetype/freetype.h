@@ -398,6 +398,14 @@ FT_BEGIN_HEADER
   /*    This macro converts four letter tags into an unsigned long.  It is */
   /*    used to define "encoding" identifiers (see @FT_Encoding).          */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    Since many 16bit compilers don't like 32bit enumerations, you      */
+  /*    should redefine this macro in case of problems to something like   */
+  /*    this:                                                              */
+  /*                                                                       */
+  /*      #define FT_ENC_TAG( value, _x1, _x2, _x3, _x4 )  (value)         */
+  /*                                                                       */
+  /*    to get a simple enumeration without assigning special numbers.     */
   /*                                                                       */
 #ifndef FT_ENC_TAG
 #define FT_ENC_TAG( value, _x1, _x2, _x3, _x4 ) \
