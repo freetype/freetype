@@ -889,16 +889,34 @@
       {
         T1_Snap_Zone*  zone       = hints->snap_heights;
         T1_Snap_Zone*  zone_limit = zone + hints->num_snap_heights;
+        T1_Pos         best_dist = 32000;
+        T1_Snap_Zone*  best_zone = 0;
 
         for ( ; zone < zone_limit; zone++ )
         {
-          if ( width_pix < zone->min )
-            break;
-
-          if ( width_pix <= zone->max )
+          T1_Pos  dist;
+          
+          dist = width_pix - zone->min; if (dist < 0) dist = -dist;
+          if (dist < best_dist)
           {
-            width_pix = zone->pix;
-            break;
+            best_zone = zone;
+            best_dist = dist;
+          }
+        }
+        
+        if (best_zone)
+        {
+          if (width_pix > best_zone->pix)
+          {
+            width_pix -= 0x20;
+            if (width_pix < best_zone->pix)
+              width_pix = best_zone->pix;
+          }
+          else
+          {
+            width_pix += 0x20;
+            if (width_pix > best_zone->pix)
+              width_pix = best_zone->pix;
           }
         }
       }
@@ -1053,18 +1071,36 @@
 
       /* Snap pixel width if in stem snap range */
       {
-        T1_Snap_Zone*  zone       = hints->snap_widths;
-        T1_Snap_Zone*  zone_limit = zone + hints->num_snap_widths;
+        T1_Snap_Zone*  zone       = hints->snap_heights;
+        T1_Snap_Zone*  zone_limit = zone + hints->num_snap_heights;
+        T1_Pos         best_dist = 32000;
+        T1_Snap_Zone*  best_zone = 0;
 
         for ( ; zone < zone_limit; zone++ )
         {
-          if ( width_pix < zone->min )
-            break;
-
-          if ( width_pix <= zone->max )
+          T1_Pos  dist;
+          
+          dist = width_pix - zone->min; if (dist < 0) dist = -dist;
+          if (dist < best_dist)
           {
-            width_pix = zone->pix;
-            break;
+            best_zone = zone;
+            best_dist = dist;
+          }
+        }
+        
+        if (best_zone)
+        {
+          if (width_pix > best_zone->pix)
+          {
+            width_pix -= 0x20;
+            if (width_pix < best_zone->pix)
+              width_pix = best_zone->pix;
+          }
+          else
+          {
+            width_pix += 0x20;
+            if (width_pix > best_zone->pix)
+              width_pix = best_zone->pix;
           }
         }
       }
