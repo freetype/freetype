@@ -1360,8 +1360,8 @@ FT_BEGIN_HEADER
   /*    FT_Open_Flags                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An enumeration used to list the bit flags used within              */
-  /*    FT_Open_Args().                                                    */
+  /*    An enumeration used to list the bit flags used within the          */
+  /*    'flags' field of the @FT_Open_Args structure                       */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    ft_open_memory   :: This is a memory-based stream.                 */
@@ -1373,6 +1373,10 @@ FT_BEGIN_HEADER
   /*    ft_open_driver   :: Use the `driver' field.                        */
   /*                                                                       */
   /*    ft_open_params   :: Use the `num_params' & `params' field.         */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    the 'ft_open_memory', 'ft_open_stream' and 'ft_open_pathname'      */
+  /*    flags are mutually exclusive..                                     */
   /*                                                                       */
   typedef enum
   {
@@ -1418,7 +1422,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    A structure used to indicate how to open a new font file/stream.   */
   /*    A pointer to such a structure can be used as a parameter for the   */
-  /*    functions FT_Open_Face() & FT_Attach_Stream().                     */
+  /*    functions @FT_Open_Face() & @FT_Attach_Stream().                   */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    flags       :: A set of bit flags indicating how to use the        */
@@ -1443,22 +1447,23 @@ FT_BEGIN_HEADER
   /*                   opening a new face.                                 */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    `stream_type' determines which fields are used to create a new     */
-  /*    input stream.                                                      */
+  /*    the stream type is determined by the content of 'flags', which     */
+  /*    are tested in the following order by @FT_Open_Face:                */
   /*                                                                       */
-  /*    If it is `ft_stream_memory', a new memory-based stream will be     */
-  /*    created using the memory block specified by `memory_base' and      */
-  /*    `memory_size'.                                                     */
+  /*    if the 'ft_open_memory' bit is set, assume that this is a          */
+  /*    memory file, located at 'memory_address', of 'memory_size' bytes   */
   /*                                                                       */
-  /*    If it is `ft_stream_pathname', a new stream will be created with   */
-  /*    the `pathname' field, calling the system-specific FT_New_Stream()  */
-  /*    function.                                                          */
+  /*    otherwise, if the 'ft_open_stream' bit is set, assume that         */
+  /*    a custom input stream is used, a grab it in 'stream'.              */
   /*                                                                       */
-  /*    If is is `ft_stream_copy', then the content of `stream' will be    */
-  /*    copied to a new input stream object.  The object will be closed    */
-  /*    and destroyed when the face is destroyed itself.  Note that this   */
-  /*    means that you should not close the stream before the library      */
-  /*    does!                                                              */
+  /*    otherwise, if the 'ft_open_pathname' bit is set, assume that       */
+  /*    this is a normal file and use the "pathname" to open it.           */
+  /*                                                                       */
+  /*    if the 'ft_open_driver' bit is set, @FT_Open_Face will only        */
+  /*    try to open the file with the driver whose handler is in "driver"  */
+  /*                                                                       */
+  /*    if the 'ft_open_params' bit is set, the parameters given by        */
+  /*    "num_params" and "params" will be used. They're ignored otherwise  */
   /*                                                                       */
   typedef struct  FT_Open_Args_
   {
