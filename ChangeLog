@@ -1,3 +1,14 @@
+2003-02-07  Werner Lemberg  <wl@gnu.org>
+
+	* builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.dsw, docs/CHANGES: Updated.
+
+2003-02-07  Vitaliy Pasternak  <v_a_pasternak@mail.ru>
+
+	* builds/win32/visualc/freetype.sln,
+	builds/win32/visualc/freetype.vcproj: New files for VS.NET 2003.
+
 2003-02-03  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP):

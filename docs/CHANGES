@@ -18,7 +18,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       formats.
 
     - Some subsetted Type 1  fonts weren't parsed correctly.  This bug
-      has been introduced in 2.1.7.
+      has been introduced in 2.1.7.  In summary, the Type 1 parser has
+      become more robust.
 
     - The WinFNT driver now correctly reports FT_ENCODING_NONE for all
       but one encoding.  Use  the new FT_WinFNT_ID_XXX values together
@@ -117,6 +118,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
     - Wolfgang Domröse contributed support files for building FreeType
       on the Atari using the PureC compiler.  Note that the Atari is a
       16bit platform.
+
+    - Vitaliy Pasternak contributed project files for VS.NET 2003.
 
 
 ======================================================================
