@@ -222,7 +222,7 @@
     size->strike_index    = 0xFFFF;
 #endif
 
-    return TT_Reset_Size( size );
+    return TT_Size_Reset( size );
   }
 
 
@@ -261,7 +261,7 @@
     size->strike_index    = 0xFFFF;
 #endif
 
-    return TT_Reset_Size( size );
+    return TT_Size_Reset( size );
   }
 
 
@@ -319,7 +319,7 @@
 
       if ( !size->ttmetrics.valid )
       {
-        if ( FT_SET_ERROR( TT_Reset_Size( size ) ) )
+        if ( FT_SET_ERROR( TT_Size_Reset( size ) ) )
           return error;
       }
     }
@@ -496,8 +496,8 @@
 
       (void*)0,        /* driver specific interface */
 
-      (FT_Module_Constructor)TT_Init_Driver,
-      (FT_Module_Destructor) TT_Done_Driver,
+      (FT_Module_Constructor)TT_Driver_Init,
+      (FT_Module_Destructor) TT_Driver_Done,
       (FT_Module_Requester)  tt_get_interface,
     },
 
@@ -506,10 +506,10 @@
     sizeof ( FT_GlyphSlotRec ),
 
 
-    (FT_Face_InitFunc)     TT_Init_Face,
-    (FT_Face_DoneFunc)     TT_Done_Face,
-    (FT_Size_InitFunc)     TT_Init_Size,
-    (FT_Size_DoneFunc)     TT_Done_Size,
+    (FT_Face_InitFunc)     TT_Face_Init,
+    (FT_Face_DoneFunc)     TT_Face_Done,
+    (FT_Size_InitFunc)     TT_Size_Init,
+    (FT_Size_DoneFunc)     TT_Size_Done,
     (FT_Slot_InitFunc)0,
     (FT_Slot_DoneFunc)0,
 

@@ -133,7 +133,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Init_Face                                                       */
+  /*    TT_Face_Init                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given TrueType face object.                          */
@@ -154,7 +154,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Init_Face( FT_Stream      stream,
+  TT_Face_Init( FT_Stream      stream,
                 TT_Face        face,
                 FT_Int         face_index,
                 FT_Int         num_params,
@@ -216,7 +216,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Done_Face                                                       */
+  /*    TT_Face_Done                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given face object.                                     */
@@ -225,7 +225,7 @@
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  TT_Done_Face( TT_Face  face )
+  TT_Face_Done( TT_Face  face )
   {
     FT_Memory  memory = face->root.memory;
     FT_Stream  stream = face->root.stream;
@@ -266,7 +266,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Init_Size                                                       */
+  /*    TT_Size_Init                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a new TrueType size object.                            */
@@ -278,7 +278,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Init_Size( TT_Size  size )
+  TT_Size_Init( TT_Size  size )
   {
     FT_Error  error = TT_Err_Ok;
 
@@ -447,7 +447,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Done_Size                                                       */
+  /*    TT_Size_Done                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The TrueType size object finalizer.                                */
@@ -456,7 +456,7 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  TT_Done_Size( TT_Size  size )
+  TT_Size_Done( TT_Size  size )
   {
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -738,7 +738,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Reset_Size                                                      */
+  /*    TT_Size_Reset                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Resets a TrueType size when resolutions and character dimensions   */
@@ -748,7 +748,7 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Reset_Size( TT_Size  size )
+  TT_Size_Reset( TT_Size  size )
   {
     FT_Face   face;
     FT_Error  error = TT_Err_Ok;
@@ -788,7 +788,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Init_Driver                                                     */
+  /*    TT_Driver_Init                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given TrueType driver object.                        */
@@ -800,20 +800,13 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Init_Driver( TT_Driver  driver )
+  TT_Driver_Init( TT_Driver  driver )
   {
     FT_Error  error;
 
 
     /* set `extra' in glyph loader */
     error = FT_GlyphLoader_CreateExtra( FT_DRIVER( driver )->glyph_loader );
-
-    /* init extension registry if needed */
-
-#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-    if ( !error )
-      return TT_Init_Extensions( driver );
-#endif
 
     return error;
   }
@@ -822,7 +815,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Done_Driver                                                     */
+  /*    TT_Driver_Done                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given TrueType driver.                                 */
@@ -831,16 +824,8 @@
   /*    driver :: A handle to the target TrueType driver.                  */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  TT_Done_Driver( TT_Driver  driver )
+  TT_Driver_Done( TT_Driver  driver )
   {
-    /* destroy extensions registry if needed */
-
-#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-
-    TT_Done_Extensions( driver );
-
-#endif
-
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     /* destroy the execution context */

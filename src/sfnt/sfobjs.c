@@ -478,11 +478,6 @@
          LOAD_( pclt )    )
       goto Exit;
 
-#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-    if ( ( error = TT_Extension_Create( face ) ) != SFNT_Err_Ok )
-      goto Exit;
-#endif
-
     face->root.family_name = tt_face_get_name( face, TT_NAME_ID_FONT_FAMILY );
     face->root.style_name  = tt_face_get_name( face, TT_NAME_ID_FONT_SUBFAMILY );
 

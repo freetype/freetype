@@ -379,14 +379,14 @@ FT_BEGIN_HEADER
   /* Face functions                                                        */
   /*                                                                       */
   FT_LOCAL( FT_Error )
-  TT_Init_Face( FT_Stream      stream,
+  TT_Face_Init( FT_Stream      stream,
                 TT_Face        face,
                 FT_Int         face_index,
                 FT_Int         num_params,
                 FT_Parameter*  params );
 
   FT_LOCAL( void )
-  TT_Done_Face( TT_Face  face );
+  TT_Face_Done( TT_Face  face );
 
 
   /*************************************************************************/
@@ -394,13 +394,13 @@ FT_BEGIN_HEADER
   /* Size functions                                                        */
   /*                                                                       */
   FT_LOCAL( FT_Error )
-  TT_Init_Size( TT_Size  size );
+  TT_Size_Init( TT_Size  size );
 
   FT_LOCAL( void )
-  TT_Done_Size( TT_Size  size );
+  TT_Size_Done( TT_Size  size );
 
   FT_LOCAL( FT_Error )
-  TT_Reset_Size( TT_Size  size );
+  TT_Size_Reset( TT_Size  size );
 
 
   /*************************************************************************/
@@ -408,10 +408,10 @@ FT_BEGIN_HEADER
   /* Driver functions                                                      */
   /*                                                                       */
   FT_LOCAL( FT_Error )
-  TT_Init_Driver( TT_Driver  driver );
+  TT_Driver_Init( TT_Driver  driver );
 
   FT_LOCAL( void )
-  TT_Done_Driver( TT_Driver  driver );
+  TT_Driver_Done( TT_Driver  driver );
 
 
 FT_END_HEADER

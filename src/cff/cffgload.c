@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -426,6 +426,7 @@
 
       builder->last = *point;
     }
+
     outline->n_points++;
   }
 
@@ -492,6 +493,7 @@
       if ( !error )
         error = add_point1( builder, x, y );
     }
+
     return error;
   }
 
@@ -501,6 +503,7 @@
   close_contour( CFF_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
+
 
     /* XXXX: We must not include the last point in the path if it */
     /*       is located on the first point.                       */
@@ -518,8 +521,8 @@
         p1    = outline->points + first;
       }
 
-      /* `delete' last point only if it coincides with the first */
-      /* point and it is not a control point (which can happen). */
+      /* `delete' last point only if it coincides with the first    */
+      /* point and if it is not a control point (which can happen). */
       if ( p1->x == p2->x && p1->y == p2->y )
         if ( *control == FT_Curve_Tag_On )
           outline->n_points--;
@@ -533,7 +536,7 @@
 
   static FT_Int
   cff_lookup_glyph_by_stdcharcode( CFF_Font  cff,
-                                   FT_Int     charcode )
+                                   FT_Int    charcode )
   {
     FT_UInt    n;
     FT_UShort  glyph_sid;
@@ -567,7 +570,7 @@
     FT_Int       bchar_index, achar_index, n_base_points;
     FT_Outline*  base = decoder->builder.base;
     TT_Face      face = decoder->builder.face;
-    CFF_Font    cff  = (CFF_Font)(face->extra.data);
+    CFF_Font     cff  = (CFF_Font)(face->extra.data);
     FT_Vector    left_bearing, advance;
     FT_Byte*     charstring;
     FT_ULong     charstring_len;
@@ -587,8 +590,8 @@
     /* accent character and return the array of subglyphs.         */
     if ( decoder->builder.no_recurse )
     {
-      FT_GlyphSlot     glyph  = (FT_GlyphSlot)decoder->builder.glyph;
-      FT_GlyphLoader   loader = glyph->internal->loader;
+      FT_GlyphSlot    glyph  = (FT_GlyphSlot)decoder->builder.glyph;
+      FT_GlyphLoader  loader = glyph->internal->loader;
       FT_SubGlyph     subg;
 
 
@@ -1124,15 +1127,13 @@
           {
             FT_UInt maskbyte;
 
+
             FT_TRACE4(( " " ));
 
             for ( maskbyte = 0;
                   maskbyte < (FT_UInt)(( decoder->num_hints + 7 ) >> 3);
                   maskbyte++, ip++ )
-            {
               FT_TRACE4(( "%02X", *ip ));
-            }
-
           }
 #else
           ip += ( decoder->num_hints + 7 ) >> 3;
@@ -2115,7 +2116,7 @@
     FT_Error     error = 0;
     CFF_Decoder  decoder;
     FT_Int       glyph_index;
-    CFF_Font    cff = (CFF_Font)face->other;
+    CFF_Font     cff = (CFF_Font)face->other;
 
 
     *max_advance = 0;
@@ -2185,7 +2186,7 @@
     CFF_Decoder  decoder;
     TT_Face      face = (TT_Face)glyph->root.face;
     FT_Bool      hinting;
-    CFF_Font    cff = (CFF_Font)face->extra.data;
+    CFF_Font     cff = (CFF_Font)face->extra.data;
 
     FT_Matrix    font_matrix;
     FT_Vector    font_offset;
@@ -2329,8 +2330,8 @@
 
           if ( hinting )
           {
-            metrics->horiAdvance = ( metrics->horiAdvance + 32 ) & -64;
-            metrics->vertAdvance = ( metrics->vertAdvance + 32 ) & -64;
+            metrics->horiAdvance  = ( metrics->horiAdvance + 32 ) & -64;
+            metrics->vertAdvance  = ( metrics->vertAdvance + 32 ) & -64;
 
             metrics->vertBearingX = ( metrics->vertBearingX + 32 ) & -64;
             metrics->vertBearingY = ( metrics->vertBearingY + 32 ) & -64;
