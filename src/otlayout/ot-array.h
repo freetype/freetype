@@ -27,7 +27,7 @@
 FT_BEGIN_HEADER
 
   typedef struct _OTArray OTArray;  
-  typedef FT_Int (*OT_Array_Comapre_Func) (const void * a, const void * b );
+  typedef FT_Int (*OT_Array_Compare_Func) (const void * a, const void * b );
 
   struct _OTArray
   {
@@ -41,7 +41,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( OTArray * ) OT_Array_New        ( FT_UInt element_size, FT_Memory memory );
   FT_LOCAL( void )      OT_Array_Free       ( OTArray * array );
   FT_LOCAL( OTArray * ) OT_Array_Set_Size   ( OTArray * array, FT_UInt length );
-  FT_LOCAL( void )      OT_Array_Sort       ( OTArray * array, OT_Array_Comapre_Func func );
+  FT_LOCAL( void )      OT_Array_Sort       ( OTArray * array, OT_Array_Compare_Func func );
   FT_LOCAL( OTArray * ) OT_Array_Append_Val ( OTArray * array, FT_Pointer newval );
 #define OT_Array_Index(array, type, index) (((type*)((array)->data))[(index)])
 

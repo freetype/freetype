@@ -72,7 +72,7 @@
   }
 
   FT_LOCAL_DEF( void )
-  OT_Array_Sort ( OTArray * array, OT_Array_Comapre_Func func )
+  OT_Array_Sort ( OTArray * array, OT_Array_Compare_Func func )
   {
     ft_qsort ( array->data, array->length, array->element_size, func );
   }
