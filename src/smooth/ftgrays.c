@@ -84,6 +84,10 @@
 #include <string.h>             /* for memcpy() */
 #include <setjmp.h>
 
+
+/* experimental support for gamma correction within the rasterizer */
+#define  GRAYS_USE_GAMMA
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -304,6 +308,10 @@
 
     void*    memory;
     jmp_buf  jump_buffer;
+
+#ifdef  GRAYS_USE_GAMMA
+    FT_Byte   gamma[257];
+#endif
 
   } TRaster, *PRaster;
 
@@ -1230,15 +1238,21 @@
 
     for ( ; count > 0; count--, spans++ )
     {
-      if ( spans->coverage )
+      FT_UInt  coverage = spans->coverage;
+
+#ifdef GRAYS_USE_GAMMA
+      coverage = raster->gamma[(FT_Byte)coverage];
+#endif
+      
+      if ( coverage )
 #if 1
-        MEM_Set( p + spans->x, (unsigned char)spans->coverage, spans->len );
+        MEM_Set( p + spans->x, (unsigned char)coverage, spans->len );
 #else /* 1 */
       {
         q     = p + spans->x;
         limit = q + spans->len;
         for ( ; q < limit; q++ )
-          q[0] = (unsigned char)spans->coverage;
+          q[0] = (unsigned char)coverage;
       }
 #endif /* 1 */
     }
@@ -1960,6 +1974,33 @@
   /**** RASTER OBJECT CREATION: In standalone mode, we simply use *****/
   /****                         a static object.                  *****/
 
+#ifdef  GRAYS_USE_GAMMA
+
+  /* initialize the "gamma" table. Yes, this is really a crummy function */
+  /* but the results look pretty good for something that simple..        */
+  /*                                                                     */
+#define  M_MAX  255
+#define  M_X    128
+#define  M_Y    96
+
+  static void
+  grays_init_gamma( PRaster  raster )
+  {
+    FT_UInt  x, a;
+    
+    for ( x = 0; x < 256; x++ )
+    {
+      if ( x <= M_X )
+        a = (x * M_Y + (M_X/2)) / M_X;
+      else
+        a = M_Y + ((x-M_X)*(M_MAX-M_Y) + (M_MAX-M_X)/2)/(M_MAX-M_X);
+      
+      raster->gamma[x] = (FT_Byte)a;
+    }
+  }
+  
+#endif /* GRAYS_USE_GAMMA */
+
 #ifdef _STANDALONE_
 
   static int
@@ -1974,6 +2015,10 @@
     *araster = (FT_Raster)&the_raster;
     MEM_Set( &the_raster, 0, sizeof ( the_raster ) );
 
+#ifdef GRAYS_USE_GAMMA
+    grays_init_gamma( (PRaster)*araster );
+#endif
+    
     return 0;
   }
 
@@ -2000,6 +2045,10 @@
     {
       raster->memory = memory;
       *araster = (FT_Raster)raster;
+
+#ifdef GRAYS_USE_GAMMA
+      grays_init_gamma( raster );
+#endif
     }
 
     return error;

@@ -169,10 +169,12 @@
     if ( base->flags & ah_edge_done )
     {
       if ( dist >= 64 )
-        dist = ( dist + 8 ) & -64;
+        dist = (dist+8) & -64;
 
       else if ( dist <= 32 && !vertical )
         dist = ( dist + 33 ) >> 1;
+      else
+        dist = 0;
     }
 
     serif->pos = base->pos + sign * dist;

@@ -994,7 +994,7 @@
                 dist = -dist;
 
               if ( len < 8 )
-                score = 300 + dist;
+                score = 300*8 + dist - len*3;
               else
                 score = dist + 300/len;
 
