@@ -4,9 +4,6 @@
 /*                                                                         */
 /*    FreeType Image cache (body).                                         */
 /*                                                                         */
-/*  Each image cache really manages FT_Glyph objects :-)                   */
-/*                                                                         */
-/*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
@@ -17,6 +14,13 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Each image cache really manages FT_Glyph objects.                     */
+  /*                                                                       */
+  /*************************************************************************/
 
 
 #ifndef FTCIMAGE_H
@@ -44,44 +48,23 @@
 
 #define  FTC_IMAGE_FORMAT( x )  ( (x) & 7 )
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Enum>                                                                */
-  /*    FTC_Image_Type                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    An enumeration used to list the types of glyph images found in a   */
-  /*    glyph image cache.                                                 */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    ftc_image_mono     :: Monochrome bitmap glyphs.                    */
-  /*                                                                       */
-  /*    ftc_image_grays    :: Anti-aliased bitmap glyphs.                  */
-  /*                                                                       */
-  /*    ftc_image_outline  :: Scaled (and hinted) outline glyphs.          */
-  /*                                                                       */
-  /*    ftc_master_outline :: Unscaled original outline glyphs.            */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Other types may be defined in the future.                          */
-  /*                                                                       */
-  typedef enum  FTC_Image_Type_
-  {
-    ftc_image_format_bitmap   = 0,
-    ftc_image_format_outline  = 1,
 
-    ftc_image_flag_monochrome = 16,
-    ftc_image_flag_unhinted   = 32,
-    ftc_image_flag_autohinted = 64,
-    ftc_image_flag_unscaled   = 128,
-    ftc_image_flag_no_sbits   = 256,
+#define  ftc_image_format_bitmap      0
+#define  ftc_image_format_outline     1
 
-    ftc_image_mono    = ftc_image_format_bitmap |
-                        ftc_image_flag_monochrome, /* monochrome bitmap   */
-    ftc_image_grays   = ftc_image_format_bitmap,   /* anti-aliased bitmap */
-    ftc_image_outline = ftc_image_format_outline   /* scaled outline */
+#define  ftc_image_flag_monochrome   16
+#define  ftc_image_flag_unhinted     32
+#define  ftc_image_flag_autohinted   64
+#define  ftc_image_flag_unscaled    128
+#define  ftc_image_flag_no_sbits    256
 
-  } FTC_Image_Type;
+  /* monochrome bitmap */
+#define  ftc_image_mono             ftc_image_format_bitmap | \
+                                    ftc_image_flag_monochrome
+  /* anti-aliased bitmap */
+#define  ftc_image_grays            ftc_image_format_bitmap
+  /* scaled outline */
+#define  ftc_image_outline          ftc_image_format_outline
 
 
   /*************************************************************************/
@@ -128,10 +111,10 @@
   /*    Creates a new glyph image cache.                                   */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    manager   :: The parent manager for the image cache.               */
+  /*    manager :: The parent manager for the image cache.                 */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    acache    :: A handle to the new glyph image cache object.         */
+  /*    acache  :: A handle to the new glyph image cache object.           */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -160,10 +143,10 @@
   /*              failure.                                                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    error code, 0 means success                                        */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    the returned glyph is owned and manager by the glyph image cache.  */
+  /*    The returned glyph is owned and managed by the glyph image cache.  */
   /*    Never try to transform or discard it manually!  You can however    */
   /*    create a copy with FT_Glyph_Copy() and modify the new one.         */
   /*                                                                       */
@@ -171,12 +154,10 @@
   /*    taken by the glyphs it holds, the returned glyph might disappear   */
   /*    on a later invocation of this function!  It's a cache after all... */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
-                          FTC_Image_Desc*  desc,
-                          FT_UInt          gindex,
-                          FT_Glyph*        aglyph );
-
+  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
+                                                     FTC_Image_Desc*  desc,
+                                                     FT_UInt          gindex,
+                                                     FT_Glyph*        aglyph );
 
 
 #ifdef __cplusplus

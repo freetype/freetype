@@ -91,9 +91,9 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    the face requester should not perform funny things on the returned */
+  /*    The face requester should not perform funny things on the returned */
   /*    face object, like creating a new FT_Size for it, or setting a      */
-  /*    transform through FT_Set_Transform !!                              */
+  /*    transformation through FT_Set_Transform()!                         */
   /*                                                                       */
   typedef FT_Error  (*FTC_Face_Requester)( FTC_FaceID  face_id,
                                            FT_Library  library,

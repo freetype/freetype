@@ -24,13 +24,13 @@
   /*            For example, see `ftcimage.h' and `ftcimage.c' which       */
   /*            implement a FT_Glyph cache based on this code.             */
   /*                                                                       */
-  /*  NOTE: for now, each glyph set is implemented as a static hash table  */
-  /*        it's be interesting to experiment with dynamic hashes to see   */
-  /*        if this improves performance or not (I don't know why but      */
-  /*        something tells me it won't ?!)                                */
+  /*  NOTE: For now, each glyph set is implemented as a static hash table. */
+  /*        It would be interesting to experiment with dynamic hashes to   */
+  /*        see whether this improves performance or not (I don't know why */
+  /*        but something tells me it won't).                              */
   /*                                                                       */
-  /*        in all cases, this change should not affect any derived        */
-  /*        glyph cache class..                                            */
+  /*        In all cases, this change should not affect any derived glyph  */
+  /*        cache class.                                                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -69,11 +69,12 @@
 #define FTC_MAX_GLYPH_SETS          16
 #define FTC_GSET_HASH_SIZE_DEFAULT  64
 
+
   typedef struct FTC_GlyphSetRec_*     FTC_GlyphSet;
   typedef struct FTC_GlyphNodeRec_*    FTC_GlyphNode;
   typedef struct FTC_Glyph_CacheRec_*  FTC_Glyph_Cache;
 
-  typedef struct FTC_GlyphNodeRec_
+  typedef struct  FTC_GlyphNodeRec_
   {
     FTC_CacheNodeRec  root;
     FTC_GlyphNode     gset_next;   /* next in glyph set's bucket list */
@@ -83,9 +84,9 @@
   } FTC_GlyphNodeRec;
 
 
-#define FTC_GLYPHNODE(x)               ( (FTC_GlyphNode)(x) )
-#define FTC_GLYPHNODE_TO_LRUNODE( n )  ( (FT_ListNode)(n) )
-#define FTC_LRUNODE_TO_GLYPHNODE( n )  ( (FTC_GlyphNode)(n) )
+#define FTC_GLYPHNODE( x )             ( (FTC_GlyphNode)( x ) )
+#define FTC_GLYPHNODE_TO_LRUNODE( n )  ( (FT_ListNode)( n ) )
+#define FTC_LRUNODE_TO_GLYPHNODE( n )  ( (FTC_GlyphNode)( n ) )
 
 
   /*************************************************************************/
@@ -93,24 +94,24 @@
   /* Glyph set methods.                                                    */
   /*                                                                       */
 
-  typedef FT_Error  (*FTC_GlyphSet_InitFunc)   ( FTC_GlyphSet  gset,
-                                                 FT_Pointer    type );
+  typedef FT_Error  (*FTC_GlyphSet_InitFunc)       ( FTC_GlyphSet    gset,
+                                                     FT_Pointer      type );
 
-  typedef void      (*FTC_GlyphSet_DoneFunc)   ( FTC_GlyphSet  gset );
+  typedef void      (*FTC_GlyphSet_DoneFunc)       ( FTC_GlyphSet    gset );
 
-  typedef FT_Bool   (*FTC_GlyphSet_CompareFunc)( FTC_GlyphSet  gset,
-                                                 FT_Pointer    type );
+  typedef FT_Bool   (*FTC_GlyphSet_CompareFunc)    ( FTC_GlyphSet    gset,
+                                                     FT_Pointer      type );
 
 
-  typedef FT_Error  (*FTC_GlyphSet_NewNodeFunc)( FTC_GlyphSet    gset,
-                                                 FT_UInt         gindex,
-                                                 FTC_GlyphNode  *anode );
+  typedef FT_Error  (*FTC_GlyphSet_NewNodeFunc)    ( FTC_GlyphSet    gset,
+                                                     FT_UInt         gindex,
+                                                     FTC_GlyphNode*  anode );
 
-  typedef void  (*FTC_GlyphSet_DestroyNodeFunc)( FTC_GlyphNode   node,
-                                                 FTC_GlyphSet    gset );
+  typedef void      (*FTC_GlyphSet_DestroyNodeFunc)( FTC_GlyphNode   node,
+                                                     FTC_GlyphSet    gset );
 
-  typedef FT_ULong (*FTC_GlyphSet_SizeNodeFunc)( FTC_GlyphNode   node,
-                                                 FTC_GlyphSet    gset );
+  typedef FT_ULong  (*FTC_GlyphSet_SizeNodeFunc)   ( FTC_GlyphNode   node,
+                                                     FTC_GlyphSet    gset );
 
 
   typedef struct  FTC_GlyphSet_Class_
@@ -154,8 +155,8 @@
   typedef struct  FTC_Glyph_CacheRec_
   {
     FTC_CacheRec  root;
-    FT_Lru        gsets_lru;  /* static sets lru list */
-    FTC_GlyphSet  last_gset;  /* small cache :o)      */
+    FT_Lru        gsets_lru;        /* static sets lru list */
+    FTC_GlyphSet  last_gset;        /* small cache :-)      */
 
   } FTC_Glyph_CacheRec;
 
@@ -163,14 +164,13 @@
   /*************************************************************************/
   /*                                                                       */
   /* These functions are exported so that they can be called from          */
-  /* user-provided cache classes; otherwise, they are really parts of the  */
+  /* user-provided cache classes; otherwise, they are really part of the   */
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT_FUNC( void )
-  FTC_GlyphNode_Init( FTC_GlyphNode  node,
-                      FTC_GlyphSet   gset,
-                      FT_UInt        gindex );
+  FT_EXPORT_FUNC( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
+                                              FTC_GlyphSet   gset,
+                                              FT_UInt        gindex );
 
 #define FTC_GlyphNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
@@ -179,32 +179,22 @@
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count--
 
 
-  FT_EXPORT_DEF( void )
-  FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
-                         FTC_Glyph_Cache  cache );
+  FT_EXPORT_DEF( void )      FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
+                                                    FTC_Glyph_Cache  cache );
+
+  FT_EXPORT_DEF( FT_Error )  FTC_Glyph_Cache_Init(  FTC_Glyph_Cache  cache );
+
+  FT_EXPORT_DEF( void )      FTC_Glyph_Cache_Done(  FTC_Glyph_Cache  cache );
 
 
+  FT_EXPORT_DEF( FT_Error )  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
+                                               FT_Pointer       type,
+                                               FTC_GlyphSet*    aset );
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache );
-
-
-  FT_EXPORT_DEF( void )
-  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache );
-
-
-
-
-  FT_EXPORT_DEF( FT_Error )
-  FTC_GlyphSet_New( FTC_Glyph_Cache   cache,
-                    FT_Pointer        type,
-                    FTC_GlyphSet     *aset );
-
-
-  FT_EXPORT_DEF( FT_Error )
-  FTC_GlyphSet_Lookup_Node( FTC_GlyphSet     gset,
-                            FT_UInt          glyph_index,
-                            FTC_GlyphNode   *anode );
+  FT_EXPORT_DEF( FT_Error )  FTC_GlyphSet_Lookup_Node(
+                               FTC_GlyphSet    gset,
+                               FT_UInt         glyph_index,
+                               FTC_GlyphNode*  anode );
 
 
 #ifdef __cplusplus
@@ -213,5 +203,6 @@
 
 
 #endif /* FTCGLYPH_H */
+
 
 /* END */

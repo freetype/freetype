@@ -40,7 +40,7 @@ Cache_DRV_SRC := $(CACHE_DIR_)ftlru.c    \
 Cache_DRV_H := $(CACHE_H_DIR_)ftlru.h    \
                $(CACHE_H_DIR_)ftcmanag.h \
                $(CACHE_H_DIR_)ftcglyph.h \
-               $(CACHE_DIR_)ftcimage.h
+               $(CACHE_H_DIR_)ftcimage.h
 
 
 # Cache driver object(s)
