@@ -15,9 +15,10 @@ any of your projects or products.
     is  suited  to products  which  don't  use  the GNU  General  Public
     License.
 
-  - The  GNU General Public  License, found  in `GPL.TXT',  for programs
-    which already use  the GPL.  Note that the  FTL is incompatible with
-    the GPL due to its advertisement clause.
+  - The GNU  General Public License  version 2, found in  `GPL.TXT' (any
+    later version can be used  also), for programs which already use the
+    GPL.  Note  that the  FTL is  incompatible with the  GPL due  to its
+    advertisement clause.
 
 The contributed PCF driver comes with a license similar to that of the X
 Window System.   It is  compatible to the  above two licenses  (see file
