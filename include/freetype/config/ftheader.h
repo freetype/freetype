@@ -496,6 +496,8 @@
 #define FT_CACHE_INTERNAL_GLYPH_H  <freetype/cache/ftcglyph.h>
 #define FT_CACHE_INTERNAL_CACHE_H  <freetype/cache/ftccache.h>
 
+#define FT_XFREE86_H               <freetype/ftxf86.h>
+
   /* now include internal headers definitions from <freetype/internal/...> */
 
 #define  FT_INTERNAL_INTERNAL_H    <freetype/internal/internal.h>
