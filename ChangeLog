@@ -1,3 +1,12 @@
+2005-03-15  David Turner  <david@freetype.org>
+
+    * src/lzw/ftlzw.c (FT_Stream_OpenLZW): modified the function to check
+    the LZW header before doing anything else. This helps avoid un-necessary
+    heap allocations (400 Kb of heap memory for the LZW decoder ! Oh my !)
+
+    * src/gzip/ftgzip.c (FT_Stream_OpenGZip): ditto for the .gz decoder,
+    though the code savings is smaller.
+
 2005-03-10  David Turner  <david@freetype.org>
 
 	* src/tools/glnames.py: Add comment to explain the compression
