@@ -37,7 +37,7 @@
       if ( name[0] == 'p' &&
            name[1] == 'f' &&
            name[2] == 'r' &&
-           name[4] == 0   )
+           name[3] == 0 )
       {
         *aservice = (FT_PFR_Service) module->clazz->module_interface;
         error = 0;

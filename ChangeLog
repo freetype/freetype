@@ -1,3 +1,13 @@
+2003-09-09  David Turner  <david@freetype.org>
+
+        * src/base/ftpfr.c, src/pfr/pfrtypes.h, src/pfr/pfrload.c,
+        src/pfr/pfrobjs.c: fixing PFR kerning support. The tables within
+        the font file contain (charcode,charcode) kerning pairs, we need
+        to convert them to (gindex,gindex) !
+
+        * include/freetype/ftoption.h: commenting out the macro
+        TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
 2003-08-31  Manish Singh  <yosh@gimp.org>
 
 	* src/bdf/bdflib.c (_bdf_readstream): Don't use FT_MEM_COPY but
