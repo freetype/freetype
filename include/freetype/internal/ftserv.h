@@ -78,16 +78,16 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
- 
+
   /*
    *  The following structure is used to _describe_ a given service
    *  to the library.  This is useful to build simple static service lists.
-   */  
+   */
   typedef struct  FT_ServiceDescRec_
   {
     const char*  serv_id;     /* service name         */
     const void*  serv_data;   /* service pointer/data */
-  
+
   } FT_ServiceDescRec;
 
   typedef const FT_ServiceDescRec*  FT_ServiceDesc;
@@ -114,7 +114,7 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
- 
+
   /*
    *  This structure is used to store a cache for several frequently used
    *  services.  It is the type of `face->internal->services'.  You
@@ -128,7 +128,8 @@ FT_BEGIN_HEADER
     FT_Pointer  postscript_name;
     FT_Pointer  multi_masters;
     FT_Pointer  glyph_dict;
-    
+    FT_Pointer  pfr_metrics;
+
   } FT_ServiceCacheRec, *FT_ServiceCache;
 
 
@@ -196,13 +197,14 @@ FT_BEGIN_HEADER
   /*
    *  The header files containing the services.
    */
- 
+
 #define FT_SERVICE_MULTIPLE_MASTERS_H  <freetype/internal/services/svmm.h>
-#define FT_SERVICE_POSTSCRIPT_NAME_H   <freetype/internal/services/svpostnm.h> 
+#define FT_SERVICE_POSTSCRIPT_NAME_H   <freetype/internal/services/svpostnm.h>
 #define FT_SERVICE_GLYPH_DICT_H        <freetype/internal/services/svgldict.h>
 #define FT_SERVICE_BDF_H               <freetype/internal/services/svbdf.h>
 #define FT_SERVICE_XFREE86_NAME_H      <freetype/internal/services/svxf86nm.h>
 #define FT_SERVICE_SFNT_H              <freetype/internal/services/svsfnt.h>
+#define FT_SERVICE_PFR_H               <freetype/internal/services/svpfr.h>
 
 
 FT_END_HEADER

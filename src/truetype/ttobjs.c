@@ -228,7 +228,7 @@
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 
     /* Determine whether unpatented hinting is to be used for this face. */
-    face->unpatented_hinting =
+    face->unpatented_hinting = FT_BOOL
        ( library->debug_hooks[ FT_DEBUG_HOOK_UNPATENTED_HINTING ] != NULL );
 
     {

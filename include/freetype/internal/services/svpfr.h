@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  pfr.h                                                                  */
+/*  svpfr.h                                                                */
 /*                                                                         */
 /*    Internal PFR service functions (specification only).                 */
 /*                                                                         */
@@ -16,14 +16,14 @@
 /***************************************************************************/
 
 
-#ifndef __PFR_H__
-#define __PFR_H__
+#ifndef __SVPFR_H__
+#define __SVPFR_H__
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
+#include FT_INTERNAL_SERVICE_H
 
 FT_BEGIN_HEADER
+
+#define  FT_SERVICE_ID_PFR_METRICS   "pfr-metrics"
 
   typedef FT_Error  (*FT_PFR_GetMetricsFunc)( FT_Face    face,
                                               FT_UInt   *aoutline,
@@ -41,20 +41,19 @@ FT_BEGIN_HEADER
                                               FT_Pos   *aadvance );
 
 
-  typedef struct  FT_PFR_ServiceRec_
+  FT_DEFINE_SERVICE( PfrMetrics )
   {
     FT_PFR_GetMetricsFunc  get_metrics;
     FT_PFR_GetKerningFunc  get_kerning;
     FT_PFR_GetAdvanceFunc  get_advance;
 
-  } FT_PFR_ServiceRec, *FT_PFR_Service;
+  };
 
-#define FT_PFR_SERVICE_NAME  "pfr"
-
+ /* */
 
 FT_END_HEADER
 
-#endif /* __PFR_H__ */
+#endif /* __SVPFR_H__ */
 
 
 /* END */

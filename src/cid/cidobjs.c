@@ -199,12 +199,12 @@
       if ( face->subrs )
       {
         FT_Int  n;
-        
+
 
         for ( n = 0; n < cid->num_dicts; n++ )
         {
           CID_Subrs  subr = face->subrs + n;
-          
+
 
           if ( subr->code )
           {
@@ -423,8 +423,8 @@
       root->height    = (FT_Short)(
         ( ( root->ascender - root->descender ) * 12 ) / 10 );
 
-      root->underline_position  = info->underline_position >> 16;
-      root->underline_thickness = info->underline_thickness >> 16;
+      root->underline_position  = (FT_Short) (info->underline_position >> 16);
+      root->underline_thickness = (FT_Short) (info->underline_thickness >> 16);
 
       root->internal->max_points   = 0;
       root->internal->max_contours = 0;

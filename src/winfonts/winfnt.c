@@ -453,10 +453,10 @@
 
 
         bsize->width  = font->header.avg_width;
-        bsize->height =
-          font->header.pixel_height + font->header.external_leading;
+        bsize->height = (FT_Short)(
+          font->header.pixel_height + font->header.external_leading );
         bsize->size   = font->header.nominal_point_size << 6;
-        bsize->x_ppem = 
+        bsize->x_ppem =
           (FT_Pos)( ( font->header.horizontal_resolution * bsize->size + 36 )
                     / 72 );
         bsize->y_ppem =
