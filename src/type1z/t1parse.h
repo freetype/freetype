@@ -280,25 +280,14 @@
                            T1_Fixed*  values,
                            T1_Int     power_ten );
 
+#if 0
   LOCAL_DEF
   T1_String*  T1_ToString( T1_Parser* parser );
 
-
   LOCAL_DEF
   T1_Bool   T1_ToBool( T1_Parser* parser );
-
-#if 0
-  LOCAL_DEF
-  T1_Int  T1_ToImmediate( T1_Parser*  parser );
 #endif
 
-#if 0
-  /* load a single field in an object */
-  LOCAL_DEF
-  T1_Error  T1_Load_Field( T1_Parser*     parser,
-                           void*          object,
-                           T1_Field_Rec*  field );
-#endif
 
 
 

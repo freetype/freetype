@@ -139,6 +139,8 @@
     T1_Int             num_flex_vectors;
     T1_Vector          flex_vectors[7];
 
+    T1_Blend*          blend;  /* for multiple masters */
+
   } T1_Decoder;
 
 

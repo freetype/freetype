@@ -102,9 +102,12 @@
      {
        /* allocate the blend "private" and "font_info" dictionaries */
        if ( ALLOC_ARRAY( blend->font_infos[1], num_designs, T1_FontInfo ) ||
-            ALLOC_ARRAY( blend->privates[1], num_designs, T1_Private )     )
+            ALLOC_ARRAY( blend->privates[1], num_designs, T1_Private )    ||
+            ALLOC_ARRAY( blend->weight_vector, num_designs*2, FT_Fixed )  )
          goto Exit;
   
+       blend->default_weight_vector = blend->weight_vector + num_designs;
+
        blend->font_infos[0] = &face->type1.font_info;
        blend->privates  [0] = &face->type1.private_dict;
        blend->num_designs   = num_designs;
@@ -144,7 +147,7 @@
  }                                  
 
 
- static  void t1_done_blend( T1_Face  face )
+ LOCAL_FUNC  void T1_Done_Blend( T1_Face  face )
  {
    FT_Memory  memory = face->root.memory;
    T1_Blend*  blend  = face->blend;
@@ -169,6 +172,10 @@
        blend->font_infos[n] = 0;
      }
 
+     /* release weight vectors */
+     FREE( blend->weight_vector );
+     blend->default_weight_vector = 0;
+
      /* release axis names */
      for ( n = 0; n < num_axis; n++ )
        FREE( blend->axis_names[n] );
@@ -178,7 +185,6 @@
      {
        T1_DesignMap*  dmap = blend->design_map + n;
        FREE( dmap->design_points );
-       FREE( dmap->blend_points );
        dmap->num_points = 0;
      }
      
@@ -186,6 +192,261 @@
    }
  }
 
+
+ static  void  parse_blend_axis_types( T1_Face  face, T1_Loader*  loader )
+ {
+   T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
+   T1_Int        n, num_axis;
+   FT_Error      error = 0;
+   T1_Blend*     blend;
+   FT_Memory     memory;
+
+   /* take an array of objects */
+   T1_ToTokenArray( &loader->parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
+   if (num_axis <= 0 || num_axis > T1_MAX_MM_AXIS)
+   {
+     FT_ERROR(( "T1.parse_blend_axis_types: incorrect number of axis: %d\n",
+                num_axis ));
+     error = FT_Err_Invalid_File_Format;
+     goto Exit;
+   }
+   
+   /* allocate blend if necessary */
+   error = t1_allocate_blend( face, 0, (T1_UInt)num_axis );
+   if (error) goto Exit;
+   
+   blend  = face->blend;
+   memory = face->root.memory;
+   
+   /* each token is an immediate containing the name of the axis */
+   for ( n = 0; n < num_axis; n++ )
+   {
+     T1_Token_Rec*  token = axis_tokens + n;
+     T1_Byte*       name;
+     T1_Int         len;
+     
+     /* skip first slash, if any */
+     if (token->start[0] == '/')
+       token->start++;
+       
+     len = token->limit - token->start;
+     if (len <= 0)
+     {
+       error = FT_Err_Invalid_File_Format;
+       goto Exit;
+     }
+       
+     if ( ALLOC( blend->axis_names[n], len+1 ) )
+       goto Exit;
+     
+     name = (T1_Byte*)blend->axis_names[n];
+     MEM_Copy( name, token->start, len );
+     name[len] = 0;
+   }
+
+ Exit:   
+   loader->parser.error = error;
+ }
+ 
+ 
+ static void  parse_blend_design_positions( T1_Face  face, T1_Loader*  loader )
+ {
+   T1_Token_Rec  design_tokens[ T1_MAX_MM_DESIGNS ];
+   T1_Int        num_designs;
+   T1_Int        num_axis;
+   T1_Parser*    parser = &loader->parser;
+   
+   FT_Error      error = 0;
+   T1_Blend*     blend;
+
+   /* get the array of design tokens - compute number of designs */   
+   T1_ToTokenArray( parser, design_tokens, T1_MAX_MM_DESIGNS, &num_designs );
+   if (num_designs <= 0 || num_designs > T1_MAX_MM_DESIGNS)
+   {
+     FT_ERROR(( "T1.design positions: incorrect number of designs: %d\n",
+                num_designs ));
+     error = FT_Err_Invalid_File_Format;
+     goto Exit;
+   }
+   
+   {
+     T1_Byte*  old_cursor = parser->cursor;
+     T1_Byte*  old_limit  = parser->limit;
+     T1_UInt   n;
+
+     blend = face->blend;
+     for ( n = 0; n < (T1_UInt)num_designs; n++ )
+     {
+       T1_Token_Rec  axis_tokens[ T1_MAX_MM_DESIGNS ];
+       T1_Token_Rec* token;
+       T1_Int        axis, n_axis;
+
+       /* read axis/coordinates tokens */
+       token = design_tokens + n;
+       parser->cursor = token->start - 1;
+       parser->limit  = token->limit + 1;
+       T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &n_axis );
+       
+       if (n == 0)
+       {
+         num_axis = n_axis;
+         error = t1_allocate_blend( face, num_designs, num_axis );
+         if (error) goto Exit;
+         blend = face->blend;
+       }
+       else if (n_axis != num_axis)
+       {
+         FT_ERROR(( "T1.design_positions: incorrect table\n" ));
+         error = FT_Err_Invalid_File_Format;
+         goto Exit;
+       }
+       
+       /* now, read each axis token into the design position */
+       for (axis = 0; axis < n_axis; axis++ )
+       {
+         T1_Token_Rec*  token2 = axis_tokens + axis;
+         parser->cursor = token2->start;
+         parser->limit  = token2->limit;
+         blend->design_pos[n][axis] = T1_ToFixed( parser, 0 );
+       }
+     }
+     
+     loader->parser.cursor = old_cursor;
+     loader->parser.limit  = old_limit;
+   }
+   
+ Exit:
+   loader->parser.error = error;
+ }
+
+ static void  parse_blend_design_map( T1_Face  face, T1_Loader*  loader )
+ {
+   FT_Error      error  = 0;
+   T1_Parser*    parser = &loader->parser;
+   T1_Blend*     blend;
+   T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
+   T1_Int        n, num_axis;
+   T1_Byte*      old_cursor;
+   T1_Byte*      old_limit;
+   FT_Memory     memory = face->root.memory;
+   
+   T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
+   if (num_axis <= 0 || num_axis > T1_MAX_MM_AXIS)
+   {
+     FT_ERROR(( "T1.design map: incorrect number of axis: %d\n",
+                num_axis ));
+     error = FT_Err_Invalid_File_Format;
+     goto Exit;
+   }
+   old_cursor = parser->cursor;
+   old_limit  = parser->limit;
+
+   error = t1_allocate_blend( face, 0, num_axis );
+   if (error) goto Exit;
+   blend = face->blend;
+
+   /* now, read each axis design map */
+   for ( n = 0; n < num_axis; n++ )
+   {
+     T1_DesignMap*   map = blend->design_map + n;
+     T1_Token_Rec*   token;
+     T1_Int          p, num_points;
+     
+     token = axis_tokens + n;
+     parser->cursor = token->start;
+     parser->limit  = token->limit;
+     
+     /* count the number of map points */
+     {
+       T1_Byte*  p     = token->start;
+       T1_Byte*  limit = token->limit;
+       
+       num_points = 0;
+       for ( ; p < limit; p++ )
+         if (p[0] == '[')
+           num_points++;
+     }
+     if (num_points <= 0 || num_points > T1_MAX_MM_MAP_POINTS)
+     {
+       FT_ERROR(( "T1.design map: incorrect table\n" ));
+       error = FT_Err_Invalid_File_Format;
+       goto Exit;
+     }
+     
+     /* allocate design map data */
+     if ( ALLOC_ARRAY( map->design_points, num_points*2, FT_Fixed ) )
+       goto Exit;
+     map->blend_points = map->design_points + num_points;
+     map->num_points   = (FT_Byte)num_points;
+     
+     for ( p = 0; p < num_points; p++ )
+     {
+       map->design_points[p] = T1_ToInt( parser );
+       map->blend_points [p] = T1_ToFixed( parser, 0 );
+     }
+   }   
+   
+   parser->cursor = old_cursor;
+   parser->limit  = old_limit;
+ Exit:
+   parser->error = error;
+ }
+
+ static void parse_weight_vector( T1_Face   face, T1_Loader*  loader )
+ {
+   FT_Error      error  = 0;
+   T1_Parser*    parser = &loader->parser;
+   T1_Blend*     blend  = face->blend;
+   T1_Token_Rec  master;
+   T1_UInt       n;
+   T1_Byte*      old_cursor;
+   T1_Byte*      old_limit;
+   
+   if (!blend || blend->num_designs == 0)
+   {
+     FT_ERROR(( "t1.weight_vector: too early !!\n" ));
+     error = FT_Err_Invalid_File_Format;
+     goto Exit;
+   }
+   
+   T1_ToToken( parser, &master );
+   if (master.type != t1_token_array)
+   {
+     FT_ERROR(( "t1.weight_vector: incorrect format !!\n" ));
+     error = FT_Err_Invalid_File_Format;
+     goto Exit;
+   }
+   
+   old_cursor = parser->cursor;
+   old_limit  = parser->limit;
+
+   parser->cursor = master.start;
+   parser->limit  = master.limit;
+   for ( n = 0; n < blend->num_designs; n++ )
+   {
+     blend->default_weight_vector[n] =
+     blend->weight_vector[n]         = T1_ToFixed( parser, 0 );
+   }
+   
+   parser->cursor = old_cursor;
+   parser->limit  = old_limit;
+ Exit:
+   parser->error = error;
+ }
+
+ /* the keyword /shareddict appears in some multiple master fonts with a lot */
+ /* of Postscript garbage behind it (that's completely out of spec !!), we   */
+ /* detect it and terminate the parsing                                      */
+ static  void parse_shared_dict( T1_Face  face, T1_Loader*  loader )
+ {
+   T1_Parser*  parser = &loader->parser;
+   
+   UNUSED(face);
+   
+   parser->cursor = parser->limit;
+   parser->error  = 0;
+ }
+ 
  /***************************************************************************/
  /***************************************************************************/
  /*****                                                                 *****/
@@ -802,6 +1063,13 @@
     T1_KEYWORD_CALLBACK( "Encoding", parse_encoding  ),
     T1_KEYWORD_CALLBACK( "Subrs",    parse_subrs     ),
     T1_KEYWORD_CALLBACK( "CharStrings", parse_charstrings ),
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+    T1_KEYWORD_CALLBACK( "BlendDesignPositions", parse_blend_design_positions ),
+    T1_KEYWORD_CALLBACK( "BlendDesignMap", parse_blend_design_map ),
+    T1_KEYWORD_CALLBACK( "BlendAxisTypes", parse_blend_axis_types ),
+    T1_KEYWORD_CALLBACK( "WeightVector", parse_weight_vector ),
+    T1_KEYWORD_CALLBACK( "shareddict",   parse_shared_dict ),
+#endif    
     T1_KEYWORD_CALLBACK( 0, 0 )
   };
 
@@ -864,7 +1132,7 @@
           while (cur2 < limit && is_alpha(*cur2)) cur2++;
           len  = cur2-cur;
 
-          if (len > 0 && len < 20)
+          if (len > 0 && len < 22)
           {
             if (!loader->fontdata)
             {

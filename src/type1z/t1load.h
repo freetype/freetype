@@ -46,6 +46,10 @@
   LOCAL_DEF
   T1_Error  T1_Open_Face( T1_Face  face );
 
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+  LOCAL_DEF
+  void T1_Done_Blend( T1_Face  face );
+#endif
 
 #ifdef __cplusplus
   }

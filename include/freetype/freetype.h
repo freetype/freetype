@@ -645,7 +645,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A bit-field constant, used to indicate that a given face contains  */
-  /*    fixed-width characters (like Courier, MonoType, etc).              */
+  /*    fixed-width characters (like Courier, Lucida, MonoType, etc..)     */
   /*                                                                       */
 #define FT_FACE_FLAG_FIXED_WIDTH  4
 

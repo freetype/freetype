@@ -140,8 +140,13 @@
   } T1_Blend_Flags;
 
   /* maximum number of multiple-masters designs, per-se the spec */
-  #define T1_MAX_MM_DESIGNS  16
-  #define T1_MAX_MM_AXIS     4
+  #define T1_MAX_MM_DESIGNS      16
+  
+  /* maximum number of multiple-masters axis, per-se the spec */
+  #define T1_MAX_MM_AXIS         4
+
+  /* maximum number of elements in a design map */
+  #define T1_MAX_MM_MAP_POINTS   20
 
   /* this structure is used to store the BlendDesignMap entry for an axis */
   typedef struct T1_DesignMap_
@@ -152,6 +157,7 @@
     
   } T1_DesignMap;
 
+
   typedef struct T1_Blend_
   {
     FT_UInt       num_designs;
@@ -160,6 +166,9 @@
     FT_String*    axis_names[ T1_MAX_MM_AXIS ];
     FT_Fixed*     design_pos[ T1_MAX_MM_DESIGNS ];
     T1_DesignMap  design_map[ T1_MAX_MM_AXIS ];
+    
+    FT_Fixed*     weight_vector;
+    FT_Fixed*     default_weight_vector;
     
     T1_FontInfo*  font_infos[ T1_MAX_MM_DESIGNS+1 ];
     T1_Private*   privates  [ T1_MAX_MM_DESIGNS+1 ];
@@ -173,7 +182,7 @@
   typedef struct CID_FontDict_
   {
     T1_FontInfo   font_info;
-    T1_Private    private;
+    T1_Private    private_dict;
 
     FT_UInt       num_subrs;
     FT_ULong      subrmap_offset;

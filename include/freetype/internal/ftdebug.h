@@ -170,7 +170,7 @@
   /* print a message and exit */
   FT_EXPORT_DEF(void)  FT_Panic  ( const char*  fmt, ... );
 
-#define FT_ERROR(varformat)  do { FT_XCAT( FT_Message, varformat ) } while(0)
+#define FT_ERROR(varformat)  do { FT_XCAT( FT_Message, varformat ); } while(0)
 
 
 #endif /* FT_DEBUG_LEVEL_TRACE || FT_DEBUG_LEVEL_ERROR */

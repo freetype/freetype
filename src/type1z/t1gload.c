@@ -205,6 +205,7 @@
     decoder->zone             = 0;
     decoder->flex_state       = 0;
     decoder->num_flex_vectors = 0;
+    decoder->blend            = 0;
 
     /* Clear loader */
     MEM_Set( &decoder->builder, 0, sizeof(decoder->builder) );
@@ -830,6 +831,72 @@
               break;;
             }
 
+          case 12:
+          case 13:
+            {
+              /* counter control hints, clear stack */
+              top = decoder->stack;
+              break;
+            }
+          
+          case 14:
+          case 15:
+          case 16:
+          case 17:
+          case 18: /* multiple masters */
+            {
+              T1_Blend*  blend = decoder->blend;
+              T1_UInt    num_points, nn, mm;
+              T1_Int*    delta;
+              T1_Int*    values;
+              
+              if (!blend)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: unexpected multiple masters operator !!\n" ));
+                goto Syntax_Error;
+              }
+              
+              num_points = top[1] - 13 + (top[1] == 18);
+              if (top[0] != num_points*blend->num_designs)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: incorrect number of mm arguments\n" ));
+                goto Syntax_Error;
+              }
+              
+              top       -= blend->num_designs*num_points;
+              if (top < decoder->stack)
+                goto Stack_Underflow;
+
+              /* we want to compute:                                   */
+              /*                                                       */
+              /*  a0*w0 + a1*w1 + ... + ak*wk                          */
+              /*                                                       */
+              /* but we only have the a0, a1-a0, a2-a0, .. ak-a0       */
+              /* however, given that w0 + w1 + ... + wk == 1, we can   */
+              /* rewrite it easily as:                                 */
+              /*                                                       */
+              /*  a0 + (a1-a0)*w1 + (a2-a0)*w2 + .. + (ak-a0)*wk       */
+              /*                                                       */
+              /* where k == num_designs-1                              */
+              /*                                                       */
+              /* I guess that's why it's written in this "compact"     */
+              /* form..                                                */
+              /*                                                       */
+              /*                                                       */
+              delta  = top + num_points;
+              values = top;
+              for ( nn = 0; nn < num_points; nn++ )
+              {
+                T1_Int  x = values[0];
+                for ( mm = 1; mm < blend->num_designs; mm++ )
+                  x += FT_MulFix( *delta++, blend->weight_vector[mm] );
+
+                *values++ = x;
+              }
+              /* note that "top" will be incremented later by calls to "pop" */
+              break;
+            }
+          
           default:
           Unexpected_OtherSubr:
             FT_ERROR(( "T1.Parse_CharStrings: invalid othersubr [%d %d]!!\n",
@@ -1086,8 +1153,9 @@
           case op_pop:  /****************************************************/
           {
             FT_TRACE4(( " pop" ));
-            FT_ERROR(( "T1.Parse_CharStrings : unexpected POP\n" ));
-            goto Syntax_Error;
+            /* theorically, the arguments are already on the stack */
+            top++;
+            break;
           }
 
 
@@ -1202,6 +1270,7 @@
     T1_Init_Decoder( &decoder );
     T1_Init_Builder( &decoder.builder, face, 0, 0 );
 
+    decoder.blend                = face->blend;
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
 
@@ -1270,6 +1339,7 @@
       T1_Init_Decoder( &decoder );
       T1_Init_Builder( &decoder.builder, face, size, glyph );
 
+      decoder.blend              = ((T1_Face)glyph->root.face)->blend;
       decoder.builder.no_recurse = (FT_Bool)!!(load_flags & FT_LOAD_NO_RECURSE);
 
       /* now load the unscaled outline */

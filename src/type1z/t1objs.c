@@ -138,6 +138,12 @@
     {
       memory = face->root.memory;
 
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+      /* release multiple masters information */
+      T1_Done_Blend( face );
+      face->blend = 0;
+#endif
+
       /* release font info strings */
       {
         T1_FontInfo*  info = &type1->font_info;

@@ -621,6 +621,7 @@
   }
 
 
+#if 0
   static
   T1_String*  t1_tostring( T1_Byte* *cursor, T1_Byte* limit, FT_Memory memory )
   {
@@ -670,6 +671,7 @@
     *cursor = cur;
     return result;
   }
+#endif
 
   static
   int  t1_tobool( T1_Byte* *cursor, T1_Byte* limit )
@@ -732,7 +734,7 @@
       /* if this is an array, and we have no blend, an error occurs */
       if (max_objects == 0)
         goto Fail;
-        
+
       count = max_objects;
       index = 1;
     }
@@ -894,6 +896,7 @@
   }
 
 
+#if 0
   LOCAL_FUNC
   T1_String*  T1_ToString( T1_Parser* parser )
   {
@@ -906,7 +909,7 @@
   {
     return t1_tobool( &parser->cursor, parser->limit );
   }
-
+#endif
 
 
   static
