@@ -459,13 +459,10 @@
 
     /* this table is optional */
     error = face->goto_table( face, TTAG_EBLC, stream, 0 );
-    if (error)
+    if ( error )
       error = face->goto_table( face, TTAG_bloc, stream, 0 );
     if ( error )
-    {
-      error = 0;
       goto Exit;
-    }
 
     table_base = FILE_Pos();
     if ( ACCESS_Frame( 8L ) )
