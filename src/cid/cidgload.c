@@ -1445,7 +1445,7 @@
     hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
               ( load_flags & FT_LOAD_NO_HINTING ) == 0;
 
-    glyph->root.format = ft_glyph_format_none;
+    glyph->root.format = ft_glyph_format_outline;
 
     {
       CID_Init_Decoder( &decoder );

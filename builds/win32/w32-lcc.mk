@@ -12,6 +12,7 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
+
 ifndef TOP
   TOP := .
 endif
@@ -44,15 +45,17 @@ OBJ_DIR := obj
 LIB_DIR := $(OBJ_DIR)
 
 
-# The object file extension.  This can be .o, .tco, .obj, etc., depending on
-# the platform.
+# The object file extension (for standard and static libraries).  This can be
+# .o, .tco, .obj, etc., depending on the platform.
 #
-O := obj
+O  := obj
+SO := obj
 
-# The library file extension.  This can be .a, .lib, etc., depending on the
-# platform.
+# The library file extension (for standard and static libraries).  This can
+# be .a, .lib, etc., depending on the platform.
 #
-A := lib
+A  := lib
+SA := lib
 
 
 # The name of the final library file.  Note that the DOS-specific Makefile

@@ -3,7 +3,7 @@
 /*  ahangles.h                                                             */
 /*                                                                         */
 /*    A routine used to compute vector angles with limited accuracy        */
-/*    and very high speed.                                                 */
+/*    and very high speed (body).                                          */
 /*                                                                         */
 /*  Copyright 2000 Catharon Productions Inc.                               */
 /*  Author: David Turner                                                   */

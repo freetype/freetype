@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ahglobal.c                                                             */
 /*                                                                         */
-/*    Routines used to compute global metrics automatically.               */
+/*    Routines used to compute global metrics automatically (body).        */
 /*                                                                         */
 /*  Copyright 2000 Catharon Productions Inc.                               */
 /*  Author: David Turner                                                   */

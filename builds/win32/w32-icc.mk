@@ -1,20 +1,17 @@
-#*******************************************************************
-#*
-#*  FreeType 2 Configuration rules for Win32 + IBM Visual Age C++
-#*
-#*  Copyright 1996-2000 by
-#*  David Turner, Robert Wilhelm, and Werner Lemberg.
-#*
-#*  This file is part of the FreeType project, and may only be used
-#*  modified and distributed under the terms of the FreeType project
-#*  license, LICENSE.TXT.  By continuing to use, modify, or distribute
-#*  this file you indicate that you have read the license and
-#*  understand and accept it fully.
-#*
-#*  Please read the file "freetype/docs/config.txt" to understand
-#*  what this file does..
-#*
-#*******************************************************************
+#
+# FreeType 2 Configuration rules for Win32 + IBM Visual Age C++
+#
+
+
+# Copyright 1996-2000 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+#
 
 DELETE   := del
 SEP      := $(strip \ )
@@ -23,105 +20,103 @@ BUILD    := $(TOP)$(SEP)config$(SEP)win32
 PLATFORM := win32
 CC       := icc
 
-# the directory where all object files are placed
+# The directory where all object files are placed.
 #
-# Note that this is not $(TOP)/obj !!
-# This lets you build the library in your own directory
-# with something like :
+# Note that this is not $(TOP)/obj!
+# This lets you build the library in your own directory with something like
 #
-#  set TOP=....../path/to/freetype2/top/dir...
-#  mkdir obj
-#  make -f %TOP%/Makefile setup  [options]
-#  make -f %TOP%/Makefile
-#
+#   set TOP=.../path/to/freetype2/top/dir...
+#   mkdir obj
+#   make -f %TOP%/Makefile setup [options]
+#   make -f %TOP%/Makefile
 #
 OBJ_DIR := obj
 
 
-# the directory where all library files are placed
+# The directory where all library files are placed.
 #
-#  by default, this is the same as OBJ_DIR, however, this can be
-#  changed to suit particular needs..
+# By default, this is the same as $(OBJ_DIR), however, this can be changed
+# to suit particular needs.
 #
 LIB_DIR := $(OBJ_DIR)
 
 
-# the object file extension, this can be .o, .tco, .obj, etc..
-# depending on the platform
+# The object file extension (for standard and static libraries).  This can be
+# .o, .tco, .obj, etc., depending on the platform.
 #
-O := obj
+O  := obj
+SO := obj
 
-# the library file extension, this can be .a, .lib, etc..
-# depending on the platform
+# The library file extension (for standard and static libraries).  This can
+# be .a, .lib, etc., depending on the platform.
 #
-A := lib
+A  := lib
+SA := lib
 
 
-# The name of the final library file.
-# Note that the DOS-specific Makefile uses a shorter (8.3) name
+# The name of the final library file.  Note that the DOS-specific Makefile
+# uses a shorter (8.3) name.
 #
 LIBRARY := freetype
 
 
-# path inclusion flag.
-#
-#  Some compilers use a different flag than '-I' to specify an
-#  additional include path. Examples are "/i=" or "-J", etc...
+# Path inclusion flag.  Some compilers use a different flag than `-I' to
+# specify an additional include path.  Examples are `/i=' or `-J'.
 #
 I := /I
 
 
-# The link flag used to specify a given library file on link.
-# Note that this is only used to compile the demo programs, not
-# the library itself.
+# C flag used to define a macro before the compilation of a given source
+# object.  Usually is `-D' like in `-DDEBUG'.
+#
+D := /D
+
+
+# The link flag used to specify a given library file on link.  Note that
+# this is only used to compile the demo programs, not the library itself.
 #
 L := /Fl
 
 
-# C flag used to define a macro before the compilation of a given
-# source object. Usually is '-D' like in "-DDEBUG"
-#
-D := /D
-
-# Target flag - LCC uses "-Fo" instead of "-o ", what a broken compiler
-#
+# Target flag.
 #
 T := /Fo
 
+
 # C flags
 #
-#   These should concern :
-#
-#     - debug output
-#     - optimization
-#     - warnings
-#     - ansi compliance..
+#   These should concern: debug output, optimization & warnings.
 #
 ifndef CFLAGS
-CFLAGS := /Q- /Gd+ /O2 /G5 /W3 /C
+  CFLAGS := /Q- /Gd+ /O2 /G5 /W3 /C
 endif
 
-# ANSI_FLAGS : put there the flags used to make your compiler ANSI-compliant
-#              nothing (if it already is by default like LCC).
+# ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
 ANSI_FLAGS := /Sa
 
+
 ifdef BUILD_FREETYPE
 
-include $(TOP)/builds/freetype.mk
+  # Now include the main sub-makefile.  It contains all the rules used to
+  # build the library with the previous variables defined.
+  #
+  include $(TOP)/builds/freetype.mk
 
-clean_freetype: clean_freetype_dos
-distclean_freetype: distclean_freetype_dos
+  # The cleanup targets.
+  #
+  clean_freetype: clean_freetype_dos
+  distclean_freetype: distclean_freetype_dos
 
-# This final rule is used to link all object files into a single
-# library. It is part of the system-specific sub-Makefile because not
-# all librarians accept a simple syntax like :
-#
-#    librarian library_file {list of object files} 
-#
-$(FT_LIBRARY): $(OBJECTS_LIST)
-	lib /nologo /out:$@ $(OBJECTS_LIST)
+  # This final rule is used to link all object files into a single library. 
+  # It is part of the system-specific sub-Makefile because not all
+  # librarians accept a simple syntax like
+  #
+  #   librarian library_file {list of object files} 
+  #
+  $(FT_LIBRARY): $(OBJECTS_LIST)
+	  lib /nologo /out:$@ $(OBJECTS_LIST)
 
 endif
 
-
+# EOF

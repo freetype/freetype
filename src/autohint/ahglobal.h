@@ -2,7 +2,8 @@
 /*                                                                         */
 /*  ahglobal.h                                                             */
 /*                                                                         */
-/*    Routines used to compute global metrics automatically.               */
+/*    Routines used to compute global metrics automatically                */
+/*    (specification).                                                     */
 /*                                                                         */
 /*  Copyright 2000 Catharon Productions Inc.                               */
 /*  Author: David Turner                                                   */

@@ -61,15 +61,17 @@ OBJ_DIR := obj
 LIB_DIR := $(OBJ_DIR)
 
 
-# The object file extension.  This can be .o, .tco, .obj, etc., depending on
-# the platform.
+# The object file extension (for standard and static libraries).  This can be
+# .o, .tco, .obj, etc., depending on the platform.
 #
-O := lo
+O  := lo
+SO := o
 
-# The library file extension.  This can be .a, .lib, etc., depending on the
-# platform.
+# The library file extension (for standard and static libraries).  This can
+# be .a, .lib, etc., depending on the platform.
 #
-A := la
+A  := la
+SA := a
 
 
 # The name of the final library file.  Note that the DOS-specific Makefile
@@ -108,9 +110,7 @@ T := -o # Don't remove this comment line!  We need the space after `-o'.
 #   Use the ANSIFLAGS variable to define the compiler flags used to enfore
 #   ANSI compliance.
 #
-ifndef CFLAGS
-  CFLAGS := -c -g -O2 -Wall
-endif
+CFLAGS := -c -Wall -g -O2
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
@@ -119,7 +119,13 @@ ANSIFLAGS := -pedantic -ansi
 # C compiler to use -- we use libtool!
 #
 #
-CC := $(BUILD)/libtool --mode=compile $(CC)
+CCraw := $(CC)
+CC    := $(BUILD)/libtool --mode=compile $(CCraw)
+
+# linker flags
+#
+LDFLAGS := 
+
 
 ifdef BUILD_FREETYPE
 
@@ -137,7 +143,8 @@ ifdef BUILD_FREETYPE
   #
   clean_freetype_unix:
 	  -$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)
-	  -$(DELETE) $(OBJ_DIR)/*.o $(CLEAN)
+	  -$(DELETE) $(subst $O,$(SO),$(BASE_OBJECTS) $(OBJ_M) $(OBJ_S))
+	  -$(DELETE) $(CLEAN)
 
   distclean_freetype_unix: clean_freetype_unix
 	  -$(DELETE) $(FT_LIBRARY)
@@ -145,14 +152,14 @@ ifdef BUILD_FREETYPE
 	  -$(DELDIR) $(OBJ_DIR)/.libs
 	  -$(DELETE) *.orig *~ core *.core $(DISTCLEAN)
 
-  # Librarian to use to build the static library
+  # Librarian to use to build the library
   #
-  FT_LIBRARIAN := $(BUILD)/libtool --mode=link $(CC)
+  FT_LIBRARIAN := $(BUILD)/libtool --mode=link $(CCraw)
 
 
   # This final rule is used to link all object files into a single library.
   # It is part of the system-specific sub-Makefile because not all
-  # librarians accept a simple syntax like:
+  # librarians accept a simple syntax like
   #
   #   librarian library_file {list of object files}
   #
