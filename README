@@ -1,17 +1,17 @@
 
-  FreeType 2.0.4
+  FreeType 2.0.5
   ==============
 
-  Please read the CHANGES file, it contains IMPORTANT INFORMATION.
+  Please read the docs/CHANGES file, it contains IMPORTANT INFORMATION.
 
   Read the files "INSTALL" or "docs/BUILD" for installation instructions.
 
   Note that the FreeType 2 documentation is now available as a separate
   package from our sites.  See:
 
-    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.4.tar.bz2
-    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.4.tar.gz
-    ftp://ftp.freetype.org/pub/freetype2/ftdoc204.zip
+    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.5.tar.bz2
+    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.5.tar.gz
+    ftp://ftp.freetype.org/pub/freetype2/ftdoc205.zip
 
   Enjoy!
 

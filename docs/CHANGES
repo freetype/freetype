@@ -30,6 +30,13 @@ LATEST CHANGES BETWEEN 2.0.5 and 2.0.4
   - Added a new function named "FT_Get_Name_Index" to retrieve the glyph
     index of a given glyph name, when found in a face.
 
+  - Added a new function named "FT_Get_Postscript_Name" to retrieve the
+    "unique" Postscript font name of a given face
+
+  - Added a new public header size named FT_SIZES_H (or <freetype/ftsizes.h>)
+    providing new FT_Size-management functions: FT_New_Size, FT_Activate_Size,
+    FT_Done_Size.
+
   - Fixed a reallocation bug that generated a dangling pointer (and possibly
     memory leaks) with Postscript fonts (in src/psaux/psobjs.c).
 

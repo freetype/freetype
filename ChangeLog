@@ -6,6 +6,7 @@
 	retrieve the Postscript name of a given font. Should work with all
 	formats except pure CFF/CEF fonts (this will be added soon).
 
+	* README, docs/CHANGES: updated for 2.0.5 release
 
 2001-10-08  David Turner  <david@freetype.org>
 
