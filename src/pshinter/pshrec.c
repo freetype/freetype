@@ -1009,9 +1009,9 @@
       }
     }
 
-#ifdef DEBUG_VIEW
+#ifdef DEBUG_HINTER
     if (!error)
-      the_ps_hints = hints;
+      ps_debug_hints = hints;
 #endif
     return error;
   }

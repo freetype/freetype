@@ -86,7 +86,7 @@
 
 
 /* experimental support for gamma correction within the rasterizer */
-#define  GRAYS_USE_GAMMA
+#define  xxxGRAYS_USE_GAMMA
 
   /*************************************************************************/
   /*                                                                       */
@@ -209,7 +209,7 @@
   /*                                                                       */
   /*   TYPE DEFINITIONS                                                    */
   /*                                                                       */
-  
+
   /* don't change the following types to FT_Int or FT_Pos, since we might */
   /* need to define them to "float" or "double" when experimenting with   */
   /* new algorithms                                                       */
@@ -220,7 +220,7 @@
   /* determine the type used to store cell areas.  This normally takes at */
   /* least PIXEL_BYTES*2 + 1.  On 16-bit systems, we need to use `long'   */
   /* instead of `int', otherwise bad things happen                        */
- 
+
 #if PIXEL_BITS <= 7
 
   typedef int   TArea;
@@ -1181,9 +1181,9 @@
     /* start to a new position */
     x = UPSCALE( to->x );
     y = UPSCALE( to->y );
-    
+
     gray_start_cell( (PRaster)raster, TRUNC( x ), TRUNC( y ) );
-      
+
     ((PRaster)raster)->x = x;
     ((PRaster)raster)->y = y;
     return 0;
@@ -1243,7 +1243,7 @@
 #ifdef GRAYS_USE_GAMMA
       coverage = raster->gamma[(FT_Byte)coverage];
 #endif
-      
+
       if ( coverage )
 #if 1
         MEM_Set( p + spans->x, (unsigned char)coverage, spans->len );
@@ -1400,7 +1400,7 @@
 
     if ( ras.num_cells == 0 )
       return;
-      
+
     cur   = ras.cells;
     limit = cur + ras.num_cells;
 
@@ -1748,7 +1748,7 @@
     };
 
     volatile int  error = 0;
-    
+
     if ( setjmp( ras.jump_buffer ) == 0 )
     {
       error = FT_Outline_Decompose( &ras.outline, &interface, &ras );
@@ -1778,7 +1778,7 @@
 
     /* clip to target bitmap, exit if nothing to do */
     clip = &ras.clip_box;
-    
+
     if ( ras.max_ex <= clip->xMin || ras.min_ex >= clip->xMax ||
          ras.max_ey <= clip->yMin || ras.min_ey >= clip->yMax )
       return 0;
@@ -1841,7 +1841,7 @@
 
 #if 1
         error = gray_convert_glyph_inner( RAS_VAR );
-#else       
+#else
         error = FT_Outline_Decompose( outline, &interface, &ras ) ||
                 gray_record_cell( RAS_VAR );
 #endif
@@ -1987,18 +1987,18 @@
   grays_init_gamma( PRaster  raster )
   {
     FT_UInt  x, a;
-    
+
     for ( x = 0; x < 256; x++ )
     {
       if ( x <= M_X )
         a = (x * M_Y + (M_X/2)) / M_X;
       else
         a = M_Y + ((x-M_X)*(M_MAX-M_Y) + (M_MAX-M_X)/2)/(M_MAX-M_X);
-      
+
       raster->gamma[x] = (FT_Byte)a;
     }
   }
-  
+
 #endif /* GRAYS_USE_GAMMA */
 
 #ifdef _STANDALONE_
@@ -2018,7 +2018,7 @@
 #ifdef GRAYS_USE_GAMMA
     grays_init_gamma( (PRaster)*araster );
 #endif
-    
+
     return 0;
   }
 
