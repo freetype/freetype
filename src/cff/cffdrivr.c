@@ -222,7 +222,7 @@
   /*************************************************************************/
 
   static FT_Error
-  get_cff_glyph_name( CFF_Face    face,
+  cff_get_glyph_name( CFF_Face    face,
                       FT_UInt     glyph_index,
                       FT_Pointer  buffer,
                       FT_UInt     buffer_max )
@@ -327,7 +327,7 @@
   /*    a given glyph name's glyph index.                                  */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    charmap    :: A handle to the source face object.                  */
+  /*    face       :: A handle to the source face object.                  */
   /*    glyph_name :: The glyph name.                                      */
   /*                                                                       */
   /* <Return>                                                              */
@@ -387,7 +387,7 @@
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
 
     if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
-      return (FT_Module_Interface)get_cff_glyph_name;
+      return (FT_Module_Interface)cff_get_glyph_name;
 
     if ( strcmp( (const char*)interface, "name_index" ) == 0 )
       return (FT_Module_Interface)cff_get_name_index;
