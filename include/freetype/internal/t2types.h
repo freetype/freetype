@@ -24,7 +24,7 @@
 #define T2TYPES_H
 
 
-#include <freetype/internal/tttypes.h>
+#include <freetype/freetype.h>
 
 
 #ifdef __cplusplus

@@ -1,299 +1,405 @@
 #!/usr/bin/env python
 #
-# This very simple python script is used to generate the glyph names
-# tables defined in the "psnames" module.
+
 #
+# FreeType 2 glyph name builder
 #
+
+
+# Copyright 1996-2000 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+"""\
+
+usage: %s <output-file>
+
+  This very simple python script is used to generate the glyph names
+  tables defined in the PSNames module.
+
+  Its single argument is the name of the header file to be created.
+"""
+
 
 import sys, string
 
-# this table is used to name the glyph according to the Macintosh
-# specification. It is used by the TrueType Postscript names table
-mac_standard_names = [
-    ".notdef", ".null", "CR", "space", "exclam",
-    "quotedbl", "numbersign", "dollar", "percent", "ampersand",
 
-    "quotesingle", "parenleft", "parenright", "asterisk", "plus",
-    "comma", "hyphen", "period", "slash", "zero",
+# This table is used to name the glyph according to the Macintosh
+# specification.  It is used by the TrueType Postscript names table
+#
+mac_standard_names = \
+[
+  # 0
+  ".notdef", ".null", "CR", "space", "exclam",
+  "quotedbl", "numbersign", "dollar", "percent", "ampersand",
 
-    "one", "two", "three", "four", "five",
-    "six", "seven", "eight", "nine", "colon",
+  # 10
+  "quotesingle", "parenleft", "parenright", "asterisk", "plus",
+  "comma", "hyphen", "period", "slash", "zero",
 
-    "semicolon", "less", "equal", "greater", "question",
-    "at", "A", "B", "C", "D",
+  # 20
+  "one", "two", "three", "four", "five",
+  "six", "seven", "eight", "nine", "colon",
 
-    "E", "F", "G", "H", "I",
-    "J", "K", "L", "M", "N",
+  # 30
+  "semicolon", "less", "equal", "greater", "question",
+  "at", "A", "B", "C", "D",
 
-    "O", "P", "Q", "R", "S",
-    "T", "U", "V", "W", "X",
+  # 40
+  "E", "F", "G", "H", "I",
+  "J", "K", "L", "M", "N",
 
-    "Y", "Z", "bracketleft", "backslash", "bracketright",
-    "asciicircum", "underscore", "grave", "a", "b",
+  # 50
+  "O", "P", "Q", "R", "S",
+  "T", "U", "V", "W", "X",
 
-    "c", "d", "e", "f", "g",
-    "h", "i", "j", "k", "l",
+  # 60
+  "Y", "Z", "bracketleft", "backslash", "bracketright",
+  "asciicircum", "underscore", "grave", "a", "b",
 
-    "m", "n", "o", "p", "q",
-    "r", "s", "t", "u", "v",
+  # 70
+  "c", "d", "e", "f", "g",
+  "h", "i", "j", "k", "l",
 
-    "w", "x", "y", "z", "braceleft",
-    "bar", "braceright", "asciitilde", "Adieresis", "Aring",
+  # 80
+  "m", "n", "o", "p", "q",
+  "r", "s", "t", "u", "v",
 
-    "Ccedilla", "Eacute", "Ntilde", "Odieresis", "Udieresis",
-    "aacute", "agrave", "acircumflex", "adieresis", "atilde",
+  # 90
+  "w", "x", "y", "z", "braceleft",
+  "bar", "braceright", "asciitilde", "Adieresis", "Aring",
 
-    "aring", "ccedilla", "eacute", "egrave", "ecircumflex",
-    "edieresis", "iacute", "igrave", "icircumflex", "idieresis",
+  # 100
+  "Ccedilla", "Eacute", "Ntilde", "Odieresis", "Udieresis",
+  "aacute", "agrave", "acircumflex", "adieresis", "atilde",
 
-    "ntilde", "oacute", "ograve", "ocircumflex", "odieresis",
-    "otilde", "uacute", "ugrave", "ucircumflex", "udieresis",
+  # 110
+  "aring", "ccedilla", "eacute", "egrave", "ecircumflex",
+  "edieresis", "iacute", "igrave", "icircumflex", "idieresis",
+
+  # 120
+  "ntilde", "oacute", "ograve", "ocircumflex", "odieresis",
+  "otilde", "uacute", "ugrave", "ucircumflex", "udieresis",
  
-    "dagger", "degree", "cent", "sterling", "section",
-    "bullet", "paragraph", "germandbls", "registered", "copyright",
+  # 130
+  "dagger", "degree", "cent", "sterling", "section",
+  "bullet", "paragraph", "germandbls", "registered", "copyright",
  
-    "trademark", "acute", "dieresis", "notequal", "AE",
-    "Oslash", "infinity", "plusminus", "lessequal", "greaterequal",
-
-    "yen", "mu", "partialdiff", "summation", "product",
-    "pi", "integral", "ordfeminine", "ordmasculine", "Omega",
-
-    "ae", "oslash", "questiondown", "exclamdown", "logicalnot",
-    "radical", "florin", "approxequal", "Delta", "guillemotleft",
-
-    "guillemotright", "ellipsis", "nbspace", "Agrave", "Atilde",
-    "Otilde", "OE", "oe", "endash", "emdash",
-
-    "quotedblleft", "quotedblright", "quoteleft", "quoteright", "divide",
-    "lozenge", "ydieresis", "Ydieresis", "fraction", "currency",
-
-    "guilsinglleft", "guilsinglright", "fi", "fl", "daggerdbl",
-    "periodcentered", "quotesinglbase", "quotedblbase", "perthousand", "Acircumflex",
-
-    "Ecircumflex", "Aacute", "Edieresis", "Egrave", "Iacute",
-    "Icircumflex", "Idieresis", "Igrave", "Oacute", "Ocircumflex",
-
-    "apple", "Ograve", "Uacute", "Ucircumflex", "Ugrave",
-    "dotlessi", "circumflex", "tilde", "macron", "breve",
-
-    "dotaccent", "ring", "cedilla", "hungarumlaut", "ogonek",
-    "caron", "Lslash", "lslash", "Scaron", "scaron",
-
-    "Zcaron", "zcaron", "brokenbar", "Eth", "eth",
-    "Yacute", "yacute", "Thorn", "thorn", "minus",
-
-    "multiply", "onesuperior", "twosuperior", "threesuperior", "onehalf",
-    "onequarter", "threequarters", "franc", "Gbreve", "gbreve",
-
-    "Idot", "Scedilla", "scedilla", "Cacute", "cacute",
-    "Ccaron", "ccaron", "dmacron" ]
-
-
-
-t1_standard_strings = [
-    ".notdef", "space", "exclam", "quotedbl", "numbersign",
-    "dollar", "percent", "ampersand", "quoteright", "parenleft",
-
-    "parenright", "asterisk", "plus", "comma", "hyphen",
-    "period", "slash", "zero", "one", "two",
-
-    "three", "four", "five", "six", "seven",
-    "eight", "nine", "colon", "semicolon", "less",
-
-    "equal", "greater", "question", "at", "A",
-    "B", "C", "D", "E", "F",
-
-    "G", "H", "I", "J", "K",
-    "L", "M", "N", "O", "P",
-
-    "Q", "R", "S", "T", "U",
-    "V", "W", "X", "Y", "Z",
-
-    "bracketleft", "backslash", "bracketright", "asciicircum", "underscore",
-    "quoteleft", "a", "b", "c", "d",
-
-    "e", "f", "g", "h", "i",
-    "j", "k", "l", "m", "n",
-
-    "o", "p", "q", "r", "s",
-    "t", "u", "v", "w", "x",
-
-    "y", "z", "braceleft", "bar", "braceright",
-    "asciitilde", "exclamdown", "cent", "sterling", "fraction",
-
-    "yen", "florin", "section", "currency", "quotesingle",
-    "quotedblleft", "quillemotleft", "guilsinglleft", "guilsinglright", "fi",
-
-    "fl", "endash", "dagger", "daggerdbl", "periodcenter",
-    "paragraph", "bullet", "quotesinglbase", "quotedblbase", "quotedblright",
-
-    "quillemotright", "ellipsis", "perthousand", "questiondown", "grave",
-    "acute", "circumflex", "tilde", "macron", "breve",
-
-    "dotaccent", "dieresis", "ring", "cedilla", "hungarumlaut",
-    "ogonek", "caron", "emdash", "AE", "ordfeminine",
-
-    "Lslash", "Oslash", "OE", "ordmasculine", "ae",
-   "dotlessi", "Islash", "oslash", "oe", "germandbls",
-
-    "onesuperior", "logicalnot", "mu", "trademark", "Eth",
-    "onehalf", "plusminus", "Thorn", "onequarter", "divide",
-
-    "brokenbar", "degree", "thorn", "threequarters", "twosuperior",
-    "regitered", "minus", "eth", "multiply", "threesuperior",
-
-    "copyright", "Aacute", "Acircumflex", "Adieresis", "Agrave",
-    "Aring", "Atilde", "Ccedilla", "Eacute", "Ecircumflex",
-
-    "Edieresis", "Egrave", "Iacute", "Icircumflex", "Idieresis",
-    "Igrave", "Ntilde", "Oacute", "Ocircumflex", "Odieresis",
-
-    "Ograve", "Otilde", "Scaron", "Uacute", "Ucircumflex",
-    "Udieresis", "Ugrave", "Yacute", "Ydieresis", "Zcaron",
-
-    "aacute", "acircumflex", "adieresis", "agrave", "aring",
-    "atilde", "ccedilla", "eacute", "ecircumflex", "edieresis",
-
-    "egrave", "iacute", "icircumflex", "idieresis", "igrave",
-    "ntilde", "oacute", "ocircumflex", "odieresis", "ograve",
-
-    "otilde", "scaron", "uacute", "ucircumflex", "udieresis",
-    "ugrave", "yacute", "ydieresis", "zcaron", "exclamsmall",
-
-    "Hungarumlautsmall", "dollaroldstyle", "dollarsuperior", "ampersandsmall",
-      "Acutesmall",
-    "parenleftsuperior", "parenrightsuperior", "twodotenleader",
-      "onedotenleader", "zerooldstyle",
-
-    "oneoldstyle", "twooldstyle", "threeoldstyle", "fouroldstyle",
-      "fiveoldstyle",
-    "sixoldstyle", "sevenoldstyle", "eightoldstyle", "nineoldstyle",
-      "commasuperior",
-
-    "threequartersemdash", "periodsuperior", "questionsmall", "asuperior",
-      "bsuperior",
-    "centsuperior", "dsuperior", "esuperior", "isuperior", "lsuperior",
-
-    "msuperior", "nsuperior", "osuperior", "rsuperior", "ssuperior",
-    "tsuperior", "ff", "ffi", "ffl", "parenleftinferior",
-
-    "parenrightinferior", "Circumflexsmall", "hyphensuperior", "Gravesmall",
-      "Asmall",
-    "Bsmall", "Csmall", "Dsmall", "Esmall", "Fsmall",
-
-    "Gsmall", "Hsmall", "Ismall", "Jsmall", "Ksmall",
-    "Lsmall", "Msmall", "Nsmall", "Osmall", "Psmall",
-
-    "Qsmall", "Rsmall", "Ssmall", "Tsmall", "Usmall",
-    "Vsmall", "Wsmall", "Xsmall", "Ysmall", "Zsmall",
-
-    "colonmonetary", "onefitted", "rupiah", "Tildesmall", "exclamdownsmall",
-    "centoldstyle", "Lslashsmall", "Scaronsmall", "Zcaronsmall",
-      "Dieresissmall",
-
-    "Brevesmall", "Caronsmall", "Dotaccentsmall", "Macronsmall", "figuredash",
-    "hypheninferior", "Ogoneksmall", "Ringsmall", "Cedillasmall",
-      "questiondownsmall",
-
-    "oneeighth", "threeeighths", "fiveeighths", "seveneighths", "onethird",
-    "twothirds", "zerosuperior", "foursuperior", "fivesuperior",
-      "sixsuperior",
-
-    "sevensuperior", "eightsuperior", "ninesuperior", "zeroinferior",
-      "oneinferior",
-    "twoinferior", "threeinferior", "fourinferior", "fiveinferior",
-      "sixinferior",
-
-    "seveninferior", "eightinferior", "nineinferior", "centinferior",
-      "dollarinferior",
-    "periodinferior", "commainferior", "Agravesmall", "Aacutesmall",
-      "Acircumflexsmall",
-
-    "Atildesmall", "Adieresissmall", "Aringsmall", "AEsmall", "Ccedillasmall",
-    "Egravesmall", "Eacutesmall", "Ecircumflexsmall", "Edieresissmall",
-      "Igravesmall",
-
-    "Iacutesmall", "Icircumflexsmall", "Idieresissmall", "Ethsmall",
-      "Ntildesmall",
-    "Ogravesmall", "Oacutesmall", "Ocircumflexsmall", "Otildesmall",
-      "Odieresissmall",
-
-    "OEsmall", "Oslashsmall", "Ugravesmall", "Uacautesmall",
-      "Ucircumflexsmall",
-    "Udieresissmall", "Yacutesmall", "Thornsmall", "Ydieresissmall",
-      "001.000",
-
-    "001.001", "001.002", "001.003", "Black", "Bold",
-    "Book", "Light", "Medium", "Regular", "Roman",
-
-    "Semibold" ]
-
-t1_standard_encoding = [
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   1,   2,   3,   4,   5,   6,   7,   8,
-      9,  10,  11,  12,  13,  14,  15,  16,  17,  18,
-
-     19,  20,  21,  22,  23,  24,  25,  26,  27,  28,
-     29,  30,  31,  32,  33,  34,  35,  36,  37,  38,
-     39,  40,  41,  42,  43,  44,  45,  46,  47,  48,
-     49,  50,  51,  52,  53,  54,  55,  56,  57,  58,
-     59,  60,  61,  62,  63,  64,  65,  66,  67,  68,
-
-     69,  70,  71,  72,  73,  74,  75,  76,  77,  78,
-     79,  80,  81,  82,  83,  84,  85,  86,  87,  88,
-     89,  90,  91,  92,  93,  94,  95,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,  96,  97,  98,  99, 100, 101, 102, 103, 104,
-    105, 106, 107, 108, 109, 110,   0, 111, 112, 113,
-    114,   0, 115, 116, 117, 118, 119, 120, 121, 122,
-      0, 123,   0, 124, 125, 126, 127, 128, 129, 130,
-
-    131,   0, 132, 133,   0, 134, 135, 136, 137,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0, 138,   0, 139,   0,   0,
-      0,   0, 140, 141, 142, 143,   0,   0,   0,   0,
-      0, 144,   0,   0,   0, 145,   0,   0, 146, 147,
-
-    148, 149,   0,   0,   0,   0 ]
-
-t1_expert_encoding = [
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   1, 229, 230,   0, 231, 232, 233, 234,
-    235, 236, 237, 238,  13,  14,  15,  99, 239, 240,
-
-    241, 242, 243, 244, 245, 246, 247, 248,  27,  28,
-    249, 250, 251, 252,   0, 253, 254, 255, 256, 257,
-      0,   0,   0, 258,   0,   0, 259, 260, 261, 262,
-      0,   0, 263, 264, 265,   0, 266, 109, 110, 267,
-    268, 269,   0, 270, 271, 272, 273, 274, 275, 276,
-
-    277, 278, 279, 280, 281, 282, 283, 284, 285, 286,
-    287, 288, 289, 290, 291, 292, 293, 294, 295, 296,
-    297, 298, 299, 300, 301, 302, 303,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0, 304, 305, 306,   0,   0, 307, 308, 309, 310,
-    311,   0, 312,   0,   0, 312,   0,   0, 314, 315,
-      0,   0, 316, 317, 318,   0,   0,   0, 158, 155,
-    163, 319, 320, 321, 322, 323, 324, 325,   0,   0,
-
-    326, 150, 164, 169, 327, 328, 329, 330, 331, 332,
-    333, 334, 335, 336, 337, 338, 339, 340, 341, 342,
-    343, 344, 345, 346, 347, 348, 349, 350, 351, 352,
-    353, 354, 355, 356, 357, 358, 359, 360, 361, 362,
-    363, 364, 365, 366, 367, 368, 369, 370, 371, 372,
-
-    373, 374, 375, 376, 377, 378 ]
-
+  # 140
+  "trademark", "acute", "dieresis", "notequal", "AE",
+  "Oslash", "infinity", "plusminus", "lessequal", "greaterequal",
+
+  # 150
+  "yen", "mu", "partialdiff", "summation", "product",
+  "pi", "integral", "ordfeminine", "ordmasculine", "Omega",
+
+  # 160
+  "ae", "oslash", "questiondown", "exclamdown", "logicalnot",
+  "radical", "florin", "approxequal", "Delta", "guillemotleft",
+
+  # 170
+  "guillemotright", "ellipsis", "nbspace", "Agrave", "Atilde",
+  "Otilde", "OE", "oe", "endash", "emdash",
+
+  # 180
+  "quotedblleft", "quotedblright", "quoteleft", "quoteright", "divide",
+  "lozenge", "ydieresis", "Ydieresis", "fraction", "currency",
+
+  # 190
+  "guilsinglleft", "guilsinglright", "fi", "fl", "daggerdbl",
+  "periodcentered", "quotesinglbase", "quotedblbase", "perthousand",
+    "Acircumflex",
+
+  # 200
+  "Ecircumflex", "Aacute", "Edieresis", "Egrave", "Iacute",
+  "Icircumflex", "Idieresis", "Igrave", "Oacute", "Ocircumflex",
+
+  # 210
+  "apple", "Ograve", "Uacute", "Ucircumflex", "Ugrave",
+  "dotlessi", "circumflex", "tilde", "macron", "breve",
+
+  # 220
+  "dotaccent", "ring", "cedilla", "hungarumlaut", "ogonek",
+  "caron", "Lslash", "lslash", "Scaron", "scaron",
+
+  # 230
+  "Zcaron", "zcaron", "brokenbar", "Eth", "eth",
+  "Yacute", "yacute", "Thorn", "thorn", "minus",
+
+  # 240
+  "multiply", "onesuperior", "twosuperior", "threesuperior", "onehalf",
+  "onequarter", "threequarters", "franc", "Gbreve", "gbreve",
+
+  # 250
+  "Idot", "Scedilla", "scedilla", "Cacute", "cacute",
+  "Ccaron", "ccaron", "dmacron"
+]
+
+
+t1_standard_strings = \
+[
+  # 0
+  ".notdef", "space", "exclam", "quotedbl", "numbersign",
+  "dollar", "percent", "ampersand", "quoteright", "parenleft",
+
+  # 10
+  "parenright", "asterisk", "plus", "comma", "hyphen",
+  "period", "slash", "zero", "one", "two",
+
+  # 20
+  "three", "four", "five", "six", "seven",
+  "eight", "nine", "colon", "semicolon", "less",
+
+  # 30
+  "equal", "greater", "question", "at", "A",
+  "B", "C", "D", "E", "F",
+
+  # 40
+  "G", "H", "I", "J", "K",
+  "L", "M", "N", "O", "P",
+
+  # 50
+  "Q", "R", "S", "T", "U",
+  "V", "W", "X", "Y", "Z",
+
+  # 60
+  "bracketleft", "backslash", "bracketright", "asciicircum", "underscore",
+  "quoteleft", "a", "b", "c", "d",
+
+  # 70
+  "e", "f", "g", "h", "i",
+  "j", "k", "l", "m", "n",
+
+  # 80
+  "o", "p", "q", "r", "s",
+  "t", "u", "v", "w", "x",
+
+  # 90
+  "y", "z", "braceleft", "bar", "braceright",
+  "asciitilde", "exclamdown", "cent", "sterling", "fraction",
+
+  # 100
+  "yen", "florin", "section", "currency", "quotesingle",
+  "quotedblleft", "guillemotleft", "guilsinglleft", "guilsinglright", "fi",
+
+  # 110
+  "fl", "endash", "dagger", "daggerdbl", "periodcenter",
+  "paragraph", "bullet", "quotesinglbase", "quotedblbase", "quotedblright",
+
+  # 120
+  "guillemotright", "ellipsis", "perthousand", "questiondown", "grave",
+  "acute", "circumflex", "tilde", "macron", "breve",
+
+  # 130
+  "dotaccent", "dieresis", "ring", "cedilla", "hungarumlaut",
+  "ogonek", "caron", "emdash", "AE", "ordfeminine",
+
+  # 140
+  "Lslash", "Oslash", "OE", "ordmasculine", "ae",
+  "dotlessi", "Islash", "oslash", "oe", "germandbls",
+
+  # 150
+  "onesuperior", "logicalnot", "mu", "trademark", "Eth",
+  "onehalf", "plusminus", "Thorn", "onequarter", "divide",
+
+  # 160
+  "brokenbar", "degree", "thorn", "threequarters", "twosuperior",
+  "registered", "minus", "eth", "multiply", "threesuperior",
+
+  # 170
+  "copyright", "Aacute", "Acircumflex", "Adieresis", "Agrave",
+  "Aring", "Atilde", "Ccedilla", "Eacute", "Ecircumflex",
+
+  # 180
+  "Edieresis", "Egrave", "Iacute", "Icircumflex", "Idieresis",
+  "Igrave", "Ntilde", "Oacute", "Ocircumflex", "Odieresis",
+
+  # 190
+  "Ograve", "Otilde", "Scaron", "Uacute", "Ucircumflex",
+  "Udieresis", "Ugrave", "Yacute", "Ydieresis", "Zcaron",
+
+  # 200
+  "aacute", "acircumflex", "adieresis", "agrave", "aring",
+  "atilde", "ccedilla", "eacute", "ecircumflex", "edieresis",
+
+  # 210
+  "egrave", "iacute", "icircumflex", "idieresis", "igrave",
+  "ntilde", "oacute", "ocircumflex", "odieresis", "ograve",
+
+  # 220
+  "otilde", "scaron", "uacute", "ucircumflex", "udieresis",
+  "ugrave", "yacute", "ydieresis", "zcaron", "exclamsmall",
+
+  # 230
+  "Hungarumlautsmall", "dollaroldstyle", "dollarsuperior", "ampersandsmall",
+    "Acutesmall",
+  "parenleftsuperior", "parenrightsuperior", "twodotenleader",
+    "onedotenleader", "zerooldstyle",
+
+  # 240
+  "oneoldstyle", "twooldstyle", "threeoldstyle", "fouroldstyle",
+    "fiveoldstyle",
+  "sixoldstyle", "sevenoldstyle", "eightoldstyle", "nineoldstyle",
+    "commasuperior",
+
+  # 250
+  "threequartersemdash", "periodsuperior", "questionsmall", "asuperior",
+    "bsuperior",
+  "centsuperior", "dsuperior", "esuperior", "isuperior", "lsuperior",
+
+  # 260
+  "msuperior", "nsuperior", "osuperior", "rsuperior", "ssuperior",
+  "tsuperior", "ff", "ffi", "ffl", "parenleftinferior",
+
+  # 270
+  "parenrightinferior", "Circumflexsmall", "hyphensuperior", "Gravesmall",
+    "Asmall",
+  "Bsmall", "Csmall", "Dsmall", "Esmall", "Fsmall",
+
+  # 280
+  "Gsmall", "Hsmall", "Ismall", "Jsmall", "Ksmall",
+  "Lsmall", "Msmall", "Nsmall", "Osmall", "Psmall",
+
+  # 290
+  "Qsmall", "Rsmall", "Ssmall", "Tsmall", "Usmall",
+  "Vsmall", "Wsmall", "Xsmall", "Ysmall", "Zsmall",
+
+  # 300
+  "colonmonetary", "onefitted", "rupiah", "Tildesmall", "exclamdownsmall",
+  "centoldstyle", "Lslashsmall", "Scaronsmall", "Zcaronsmall",
+    "Dieresissmall",
+
+  # 310
+  "Brevesmall", "Caronsmall", "Dotaccentsmall", "Macronsmall", "figuredash",
+  "hypheninferior", "Ogoneksmall", "Ringsmall", "Cedillasmall",
+    "questiondownsmall",
+
+  # 320
+  "oneeighth", "threeeighths", "fiveeighths", "seveneighths", "onethird",
+  "twothirds", "zerosuperior", "foursuperior", "fivesuperior",
+    "sixsuperior",
+
+  # 330
+  "sevensuperior", "eightsuperior", "ninesuperior", "zeroinferior",
+    "oneinferior",
+  "twoinferior", "threeinferior", "fourinferior", "fiveinferior",
+    "sixinferior",
+
+  # 340
+  "seveninferior", "eightinferior", "nineinferior", "centinferior",
+    "dollarinferior",
+  "periodinferior", "commainferior", "Agravesmall", "Aacutesmall",
+    "Acircumflexsmall",
+
+  # 350
+  "Atildesmall", "Adieresissmall", "Aringsmall", "AEsmall", "Ccedillasmall",
+  "Egravesmall", "Eacutesmall", "Ecircumflexsmall", "Edieresissmall",
+    "Igravesmall",
+
+  # 360
+  "Iacutesmall", "Icircumflexsmall", "Idieresissmall", "Ethsmall",
+    "Ntildesmall",
+  "Ogravesmall", "Oacutesmall", "Ocircumflexsmall", "Otildesmall",
+    "Odieresissmall",
+
+  # 370
+  "OEsmall", "Oslashsmall", "Ugravesmall", "Uacautesmall",
+    "Ucircumflexsmall",
+  "Udieresissmall", "Yacutesmall", "Thornsmall", "Ydieresissmall",
+    "001.000",
+
+  # 380
+  "001.001", "001.002", "001.003", "Black", "Bold",
+  "Book", "Light", "Medium", "Regular", "Roman",
+
+  # 390
+  "Semibold"
+]
+
+
+t1_standard_encoding = \
+[
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   1,   2,   3,   4,   5,   6,   7,   8,
+    9,  10,  11,  12,  13,  14,  15,  16,  17,  18,
+
+   19,  20,  21,  22,  23,  24,  25,  26,  27,  28,
+   29,  30,  31,  32,  33,  34,  35,  36,  37,  38,
+   39,  40,  41,  42,  43,  44,  45,  46,  47,  48,
+   49,  50,  51,  52,  53,  54,  55,  56,  57,  58,
+   59,  60,  61,  62,  63,  64,  65,  66,  67,  68,
+
+   69,  70,  71,  72,  73,  74,  75,  76,  77,  78,
+   79,  80,  81,  82,  83,  84,  85,  86,  87,  88,
+   89,  90,  91,  92,  93,  94,  95,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,  96,  97,  98,  99, 100, 101, 102, 103, 104,
+  105, 106, 107, 108, 109, 110,   0, 111, 112, 113,
+  114,   0, 115, 116, 117, 118, 119, 120, 121, 122,
+    0, 123,   0, 124, 125, 126, 127, 128, 129, 130,
+
+  131,   0, 132, 133,   0, 134, 135, 136, 137,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0, 138,   0, 139,   0,   0,
+    0,   0, 140, 141, 142, 143,   0,   0,   0,   0,
+    0, 144,   0,   0,   0, 145,   0,   0, 146, 147,
+
+  148, 149,   0,   0,   0,   0
+]
+
+
+t1_expert_encoding = \
+[
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   1, 229, 230,   0, 231, 232, 233, 234,
+  235, 236, 237, 238,  13,  14,  15,  99, 239, 240,
+
+  241, 242, 243, 244, 245, 246, 247, 248,  27,  28,
+  249, 250, 251, 252,   0, 253, 254, 255, 256, 257,
+    0,   0,   0, 258,   0,   0, 259, 260, 261, 262,
+    0,   0, 263, 264, 265,   0, 266, 109, 110, 267,
+  268, 269,   0, 270, 271, 272, 273, 274, 275, 276,
+
+  277, 278, 279, 280, 281, 282, 283, 284, 285, 286,
+  287, 288, 289, 290, 291, 292, 293, 294, 295, 296,
+  297, 298, 299, 300, 301, 302, 303,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+
+    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0, 304, 305, 306,   0,   0, 307, 308, 309, 310,
+  311,   0, 312,   0,   0, 312,   0,   0, 314, 315,
+    0,   0, 316, 317, 318,   0,   0,   0, 158, 155,
+  163, 319, 320, 321, 322, 323, 324, 325,   0,   0,
+
+  326, 150, 164, 169, 327, 328, 329, 330, 331, 332,
+  333, 334, 335, 336, 337, 338, 339, 340, 341, 342,
+  343, 344, 345, 346, 347, 348, 349, 350, 351, 352,
+  353, 354, 355, 356, 357, 358, 359, 360, 361, 362,
+  363, 364, 365, 366, 367, 368, 369, 370, 371, 372,
+
+  373, 374, 375, 376, 377, 378
+]
+
+
+# This data has been taken literally from the file `glyphlist.txt',
+# version 1.2, 22 Oct 1998.  It is available from
+#
+#   http://partners.adobe.com/asn/developer/typeforum/unicodegn.html
+#
 adobe_glyph_list = """\
 0041;A;LATIN CAPITAL LETTER A
 00C6;AE;LATIN CAPITAL LETTER AE
@@ -1345,153 +1451,239 @@ F732;twooldstyle;OLDSTYLE DIGIT TWO
 2080;zeroinferior;SUBSCRIPT ZERO
 F730;zerooldstyle;OLDSTYLE DIGIT ZERO
 2070;zerosuperior;SUPERSCRIPT ZERO
-03B6;zeta;GREEK SMALL LETTER ZETA"""
+03B6;zeta;GREEK SMALL LETTER ZETA
+"""
+
 
 t1_bias    = 0
 glyph_list = []
 
 
 def the_adobe_glyph_list():
-    """return the list of glyph names in the adobe list"""
-    lines  = string.split(adobe_glyph_list,'\n')
-    glyphs = []
-    for line in lines:
-        fields = string.split(line,';')
-#        print fields[0] + ' - ' + fields[1]
-        glyphs.append( fields[1] )
-    return glyphs
+  """return the list of glyph names in the adobe list"""
+
+  lines  = string.split( adobe_glyph_list, '\n' )
+  glyphs = []
+
+  for line in lines:
+    if line:
+      fields = string.split( line, ';' )
+#     print fields[0] + ' - ' + fields[1]
+      glyphs.append( fields[1] )
+
+  return glyphs
+
 
 def the_adobe_glyphs():
-    """ return the list of glyph names + unicode values"""
-    lines  = string.split(adobe_glyph_list,'\n')
-    glyphs = []
-    values = []
-    for line in lines:
-        fields = string.split(line,';')
-#        print fields[0] + ' - ' + fields[1]
-        glyphs.append( fields[1] )
-        values.append( fields[0] )
-    return glyphs, values
+  """return the list of glyph names + unicode values"""
+
+  lines  = string.split( adobe_glyph_list, '\n' )
+  glyphs = []
+  values = []
+
+  for line in lines:
+    if line:
+      fields = string.split( line, ';' )
+#     print fields[0] + ' - ' + fields[1]
+      glyphs.append( fields[1] )
+      values.append( fields[0] )
+
+  return glyphs, values
 
 
 def count_extra_glyphs( alist, filter ):
-    """count the number of extra glyphs"""
-    count  = 0
-    extras = []
-    for name in alist:
-        try:
-            filtered_index = filter.index(name)
-        except:
-            extras.append(name)
+  """count the number of extra glyphs"""
+
+  count  = 0
+  extras = []
+
+  for name in alist:
+    try:
+      filtered_index = filter.index( name )
+    except:
+      extras.append( name )
             
-    return extras
+  return extras
 
 
-def dump_mac_indices():
-    print "static const unsigned short mac_standard_names[" + \
-             repr(len(mac_standard_names)+1) + "] = {"
-    count = 0
-    for name in mac_standard_names:
-        try:
-            t1_index = t1_standard_strings.index(name)
-            print "    " + repr(t1_bias+t1_index)+","
-        except:
-            print "    " + repr(count)+","
-            count = count+1
+def dump_mac_indices( file ):
+  write = file.write
+
+  write( "  static const unsigned short  mac_standard_names[" + \
+        repr( len( mac_standard_names ) + 1 ) + "] =\n" )
+  write( "  {\n" )
+
+  count = 0
+  for name in mac_standard_names:
+    try:
+      t1_index = t1_standard_strings.index( name )
+      write( "    " + repr( t1_bias + t1_index ) + ",\n" )
+    except:
+      write( "    " + repr( count ) + ",\n" )
+      count = count + 1
       
-    print " 0 };"
-    print ""
+  write( "    0\n" )
+  write( "  };\n" )
+  write( "\n" )
+  write( "\n" )
 
 
-def dump_glyph_list(glyph_list, adobe_extra):
-    print "static const char*  standard_glyph_names[] = {"
-    for name in glyph_list:
-        print '  "'+name+'",'
+def dump_glyph_list( file, glyph_list, adobe_extra ):
+  write = file.write
 
-    print "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST"
-    for name in adobe_extra:
-        print '  "'+name+'",'
-        
-    print "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */"
-    print "  0 };"
-    print ""
+  write( "  static const char*  standard_glyph_names[] =\n" )
+  write( "  {\n" )
+
+  for name in glyph_list:
+    write( '    "' + name + '",\n' )
+
+  write( "\n" )
+  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
+  write( "\n" )
+
+  for name in adobe_extra:
+    write( '    "' + name + '",\n' )
+
+  write( "\n" )
+  write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
+  write( "\n" )
+  write( "    0\n" )
+  write( "  };\n" )
+  write( "\n" )
+  write( "\n" )
 
 
-def dump_unicode_values(glyph_list):
-    """build the glyph names to unicode values table"""
-    adobe_list, uni_values = the_adobe_glyphs()
-    index_list = []
+def dump_unicode_values( file, glyph_list ):
+  """build the glyph names to unicode values table"""
 
-    print "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST"
-    print "static const unsigned short  names_to_unicode[" + \
-             repr(len(glyph_list)+1) + "] = {"
+  write = file.write
+
+  adobe_list, uni_values = the_adobe_glyphs()
+  index_list = []
+
+  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
+  write( "\n" )
+  write( "  static const unsigned short  names_to_unicode[" + \
+          repr( len( glyph_list ) + 1 ) + "] =\n" )
+  write( "  {\n" )
              
-    for name in glyph_list:
-        try:
-            index = adobe_list.index(name)
-            index_list.append( uni_values[index] )
-            print "  0x" + uni_values[index] + ","
-        except:
-            index_list.append(0)
-            print "  0,"
+  for name in glyph_list:
+    try:
+      index = adobe_list.index( name )
+      index_list.append( uni_values[index] )
+      write( "    0x" + uni_values[index] + ",\n" )
+    except:
+      index_list.append( 0 )
+      write( "    0,\n" )
             
-    print "  0 };"
-    print "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */"
-    print ""
-
-def dump_encoding( encoding_name, encoding_list ):
-    """dumps a given encoding"""
-    print "static const unsigned short  "+encoding_name+"["+ \
-              repr(len(encoding_list)+1) + "] = {"
-    for value in encoding_list:
-        print "  "+repr(value)+","
-    print "  0 };"
-    print ""
+  write( "    0\n" )
+  write( "  };\n" )
+  write( "\n" )
+  write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
+  write( "\n" )
+  write( "\n" )
 
 
-def main(argv):
-    """main program body"""
+def dump_encoding( file, encoding_name, encoding_list ):
+  """dumps a given encoding"""
 
-    count_sid = len(t1_standard_strings)
+  write = file.write
+
+  write( "  static const unsigned short  " + encoding_name + "[" + \
+          repr( len( encoding_list ) + 1 ) + "] =\n" )
+  write( "  {\n" )
+
+  for value in encoding_list:
+    write( "    " + repr( value ) + ",\n" )
+  write( "    0\n" )
+  write( "  };\n" )
+  write( "\n" )
+  write( "\n" )
+
+
+def main():
+  """main program body"""
+
+  if len( sys.argv ) != 2:
+    print __doc__ % sys.argv[0]
+    sys.exit( 1 )
+
+  file  = open( sys.argv[1], "w\n" )
+  write = file.write
+
+  count_sid = len( t1_standard_strings )
     
-    # build mac index table & supplemental glyph names
-    mac_list   = count_extra_glyphs( mac_standard_names, t1_standard_strings )
-    count_mac  = len(mac_list)  
-    t1_bias    = count_mac
-    glyph_list = mac_list + t1_standard_strings
+  # build mac index table & supplemental glyph names
+  mac_list   = count_extra_glyphs( mac_standard_names, t1_standard_strings )
+  count_mac  = len( mac_list )  
+  t1_bias    = count_mac
+  glyph_list = mac_list + t1_standard_strings
     
-    # build adobe unicode index table & supplemental glyph names
-    adobe_list  = the_adobe_glyph_list()
-    adobe_list  = count_extra_glyphs( adobe_list, glyph_list )
-    count_adobe = len(adobe_list)
-    
-    print "/* the following tables are generated automatically - do not edit */"
-    print ""
+  # build adobe unicode index table & supplemental glyph names
+  adobe_list  = the_adobe_glyph_list()
+  adobe_list  = count_extra_glyphs( adobe_list, glyph_list )
+  count_adobe = len( adobe_list )
 
-    # dump glyph list
-    dump_glyph_list( glyph_list, adobe_list )
-    
-    # dump t1_standard_list
-    print "static const char**  t1_standard_glyphs = standard_glyph_names + " + repr(t1_bias) + ";"
-    print ""
-    print "#define NUM_STD_GLYPHS "+repr(len(t1_standard_strings))
-    print ""
-    print "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST"
-    print "#define NUM_ADOBE_GLYPHS "+repr(len(glyph_list)+len(adobe_list)-t1_bias)
-    print "#else"
-    print "#define NUM_ADOBE_GLYPHS "+repr(len(glyph_list)-t1_bias)
-    print "#endif"
-    print ""
+  write( "/***************************************************************************/\n" )
+  write( "/*                                                                         */\n" )
 
-    # dump mac indices table
-    dump_mac_indices()    
-    
-    # dump unicode values table
-    dump_unicode_values( glyph_list[t1_bias:] )
+  write( "/*  %-71s*/\n" % sys.argv[1] )
 
-    dump_encoding( "t1_standard_encoding", t1_standard_encoding )
-    dump_encoding( "t1_expert_encoding", t1_expert_encoding )
-    
-    print "/* end of automatically-generated tables */"
+  write( "/*                                                                         */\n" )
+  write( "/*    PostScript glyph names (specification only).                         */\n" )
+  write( "/*                                                                         */\n" )
+  write( "/*  Copyright 2000 by                                                      */\n" )
+  write( "/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */\n" )
+  write( "/*                                                                         */\n" )
+  write( "/*  This file is part of the FreeType project, and may only be used,       */\n" )
+  write( "/*  modified, and distributed under the terms of the FreeType project      */\n" )
+  write( "/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */\n" )
+  write( "/*  this file you indicate that you have read the license and              */\n" )
+  write( "/*  understand and accept it fully.                                        */\n" )
+  write( "/*                                                                         */\n" )
+  write( "/***************************************************************************/\n" )
+  write( "\n" )
+  write( "\n" )
+  write( "  /* this file has been generated automatically -- do not edit! */\n" )
+  write( "\n" )
+  write( "\n" )
 
-main(sys.argv)
+  # dump glyph list
+  dump_glyph_list( file, glyph_list, adobe_list )
+    
+  # dump t1_standard_list
+  write( "  static const char**  t1_standard_glyphs = " \
+          + "standard_glyph_names + " + repr( t1_bias ) + ";\n" )
+  write( "\n" )
+  write( "\n" )
+
+  write( "#define NUM_STD_GLYPHS " + repr( len( t1_standard_strings ) ) + "\n" )
+  write( "\n" )
+  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
+  write( "#define NUM_ADOBE_GLYPHS " + \
+          repr( len( glyph_list ) + len( adobe_list ) - t1_bias ) + "\n" )
+  write( "#else\n" )
+  write( "#define NUM_ADOBE_GLYPHS " + \
+          repr( len( glyph_list ) - t1_bias )  + "\n" )
+  write( "#endif\n" )
+  write( "\n" )
+  write( "\n" )
+
+  # dump mac indices table
+  dump_mac_indices( file )    
+    
+  # dump unicode values table
+  dump_unicode_values( file, glyph_list[t1_bias:] )
+
+  dump_encoding( file, "t1_standard_encoding", t1_standard_encoding )
+  dump_encoding( file, "t1_expert_encoding", t1_expert_encoding )
+    
+  write( "/* END */\n" )
+
+
+# Now run the main routine
+#
+main()
+
+
+# END
