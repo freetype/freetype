@@ -17,7 +17,7 @@ directory. Quick starter: go to "freetype2-beta8", then:
 
     alternatively, you can pass parameters to the configure script
     with the CFG variable, as in:
-  
+
      - make CFG="--prefix=/usr"
      - make
 

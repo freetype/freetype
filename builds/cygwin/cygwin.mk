@@ -1,6 +1,5 @@
-#
-#  Link instructions for standard systems
-#
+include $(TOP)/builds/cygwin/cygwin-def.mk
+include $(TOP)/builds/cygwin/cygwin-cc.mk
 
 ifdef BUILD_PROJECT
 
@@ -9,10 +8,12 @@ ifdef BUILD_PROJECT
   #
   include $(TOP)/builds/$(PROJECT).mk
 
+
   # The cleanup targets.
   #
-  clean_project: clean_project_std
-  distclean_project: distclean_project_std
+  clean_project: clean_project_cygwin
+  distclean_project: distclean_project_cygwin
+
 
   # This final rule is used to link all object files into a single library. 
   # this is compiler-specific
@@ -25,4 +26,5 @@ endif
 
 endif
 
-# EOF
+include $(TOP)/builds/cygwin/install.mk
+

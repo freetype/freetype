@@ -21,67 +21,72 @@
 ifeq ($(PLATFORM),ansi)
 
   ifdef COMSPEC
-
-    is_dos := $(findstring Dos,$(shell ver))
-
-    # We try to recognize a Dos session under OS/2.  The `ver' command
-    # returns `Operating System/2 ...' there, so `is_dos' should be empty.
     #
-    # To recognize a Dos session under OS/2, we check COMSPEC for the
-    # substring `MDOS\COMMAND'
+    # we try to recognize a Cygwin session, in which case we're
+    # certainly not running on DOS !!
     #
-    ifeq ($(is_dos),)
-      is_dos := $(findstring MDOS\COMMAND,$(COMSPEC))
+    ifneq ($(OSTYPE),cygwin)
+      is_dos := $(findstring Dos,$(shell ver))
+  
+      # We try to recognize a Dos session under OS/2.  The `ver' command
+      # returns `Operating System/2 ...' there, so `is_dos' should be empty.
+      #
+      # To recognize a Dos session under OS/2, we check COMSPEC for the
+      # substring `MDOS\COMMAND'
+      #
+      ifeq ($(is_dos),)
+        is_dos := $(findstring MDOS\COMMAND,$(COMSPEC))
+      endif
+    endif # test Cygwin
+  endif # test COMSPEC
+
+  ifneq ($(is_dos),)
+
+    PLATFORM := dos
+    DELETE   := del
+    COPY     := copy
+
+    # Use DJGPP (i.e. gcc) by default.
+    #
+    CONFIG_FILE := dos-gcc.mk
+    SEP         := /
+    ifndef CC
+      CC        := gcc
     endif
 
-    ifneq ($(is_dos),)
+    # additionally, we provide hooks for various other compilers
+    #
+    ifneq ($(findstring turboc,$(MAKECMDGOALS)),)     # Turbo C
+      CONFIG_FILE := dos-tcc.mk
+      SEP         := $(BACKSLASH)
+      CC          := tcc
+      .PHONY: turboc
+    endif
 
-      PLATFORM := dos
-      DELETE   := del
-      COPY     := copy
+    ifneq ($(findstring watcom,$(MAKECMDGOALS)),)     # Watcom C/C++
+      CONFIG_FILE := dos-wat.mk
+      SEP         := $(BACKSLASH)
+      CC          := wcc386
+      .PHONY: watcom
+    endif
 
-      # Use DJGPP (i.e. gcc) by default.
-      #
-      CONFIG_FILE := dos-gcc.mk
-      SEP         := /
-      ifndef CC
-        CC        := gcc
-      endif
+    ifneq ($(findstring borlandc16,$(MAKECMDGOALS)),) # Borland C/C++ 16-bit
+      CONFIG_FILE := dos-bcc.mk
+      SEP         := $(BACKSLASH)
+      CC          := bcc
+      .PHONY: borlandc16
+    endif
 
-      # additionally, we provide hooks for various other compilers
-      #
-      ifneq ($(findstring turboc,$(MAKECMDGOALS)),)     # Turbo C
-        CONFIG_FILE := dos-tcc.mk
-        SEP         := $(BACKSLASH)
-        CC          := tcc
-        .PHONY: turboc
-      endif
+    ifneq ($(findstring borlandc,$(MAKECMDGOALS)),)   # Borland C/C++ 32-bit
+      CONFIG_FILE := dos-bcc.mk
+      SEP         := $(BACKSLASH)
+      CC          := bcc32
+      .PHONY: borlandc
+    endif
 
-      ifneq ($(findstring watcom,$(MAKECMDGOALS)),)     # Watcom C/C++
-        CONFIG_FILE := dos-wat.mk
-        SEP         := $(BACKSLASH)
-        CC          := wcc386
-        .PHONY: watcom
-      endif
+    setup: dos_setup
 
-      ifneq ($(findstring borlandc16,$(MAKECMDGOALS)),) # Borland C/C++ 16-bit
-        CONFIG_FILE := dos-bcc.mk
-        SEP         := $(BACKSLASH)
-        CC          := bcc
-        .PHONY: borlandc16
-      endif
-
-      ifneq ($(findstring borlandc,$(MAKECMDGOALS)),)   # Borland C/C++ 32-bit
-        CONFIG_FILE := dos-bcc.mk
-        SEP         := $(BACKSLASH)
-        CC          := bcc32
-        .PHONY: borlandc
-      endif
-
-      setup: dos_setup
-
-    endif # test Dos
-  endif   # test COMSPEC
+  endif # test Dos
 endif     # test PLATFORM
 
 # EOF

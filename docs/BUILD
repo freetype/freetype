@@ -3,14 +3,9 @@ FreeType 2 compilation how-to
 
 Introduction:
 
-Welcome to this new beta of the FreeType 2 library. You'll find in this
+Welcome to this version of the FreeType 2 library. You'll find in this
 document instructions on how to compile the library on your favorite
 platform.
-
-  *** UNIX USERS : Even though the FT2 build system doesn't
-  ************** : use the Autoconf/Automake tools, these will
-  ************** : be introduced in the Unix-specific parts of
-  ************** : the build in our final release..
 
 
 I. QUICK COMMAND-LINE GUIDE:
@@ -61,6 +56,14 @@ II. COMMAND-LINE COMPILATION:
      Because the FT2 build system relies on many important features of GNU
      Make, trying to build the library with any other Make tool will *fail*.
 
+     Make sure that you're invoking GNU Make from the command line, by
+     typing something like:
+     
+        make -V
+        
+     to display its version number..
+     
+
 
   b/ Invoke "make":
 
@@ -109,7 +112,7 @@ II. COMMAND-LINE COMPILATION:
      "builds/<system>/detect.mk" (note that we hope to make the list
      displayed at user demand in the final release)..
 
-     If you're satisfying by the new configuration summary, skip to step e/
+     If you're satisfed by the new configuration summary, skip to step e/
 
 
   d/ Configure the build system for an unknown platform/compiler:
@@ -168,7 +171,7 @@ II. DETAILED COMPILATION PROCEDURE:
   from a graphical IDE on a Mac or Windows), you'll need to understand how the
   FreeType files are organized.
 
-  FreeType 2 has a very module design, and it is made of several components.
+  FreeType 2 has a very modular design, and it is made of several components.
   Each component must be compiled as a stand-alone object file, even when it
   is really made of several C source files. For example, the "base layer"
   component is made of the following C files:
@@ -241,7 +244,9 @@ II. DETAILED COMPILATION PROCEDURE:
      src/winfonts/winfnt.c       - the Windows FNT/FON font driver
 
   All font drivers are optional. the "sfnt" and "psnames" modules are
-  mandatory for certain drivers.
+  mandatory for certain drivers. However, you may need to update the list
+  of drivers that are statically linked to the library, which is located
+  in the file "include/freetype/config/ftmodule.h"
 
 
 III. Support for flat-directory compilation:
@@ -263,9 +268,9 @@ III. Support for flat-directory compilation:
 
    2/ Compile sources:
         
-     cc -c -DFT_FLAT_COMPILE -Ifreetype/include ftsystem.c
-     cc -c -DFT_FLAT_COMPILE -Ifreetype/include ftinit.c
-     cc -c -DFT_FLAT_COMPILE -Ifreetype/include ftdebug.c
-     cc -c -DFT_FLAT_COMPILE -Ifreetype/include ftbase.c
+     cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftsystem.c
+     cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftinit.c
+     cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftdebug.c
+     cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftbase.c
      etc...
 

@@ -93,7 +93,7 @@ endif
 
 std_setup:
 	@echo ""
-	@echo "FreeType build system -- automatic system detection"
+	@echo "$(PROJECT_TITLE) build system -- automatic system detection"
 	@echo ""
 	@echo "The following settings are used:"
 	@echo ""
@@ -111,7 +111,7 @@ std_setup:
 
 dos_setup:
 	@echo ÿ
-	@echo FreeType build system -- automatic system detection
+	@echo $(PROJECT_TITLE) build system -- automatic system detection
 	@echo ÿ
 	@echo The following settings are used:
 	@echo ÿ

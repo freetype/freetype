@@ -1,0 +1,94 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "freetype"=.\freetype.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/DEV/freetype", KAOAAAAA
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ftdump"=.\ftdump.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/DEV/freetype", KAOAAAAA
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name freetype
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ftstring"=.\ftstring.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/DEV/freetype", KAOAAAAA
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name freetype
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ftview"=.\ftview.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/DEV/freetype", KAOAAAAA
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name freetype
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+    begin source code control
+    "$/DEV/freetype", KAOAAAAA
+    .
+    end source code control
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+
