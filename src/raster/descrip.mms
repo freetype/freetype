@@ -18,6 +18,6 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.raster])
 OBJS=raster.obj
 
 all : $(OBJS)
-	library [--.lib]freetype.olb $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
 
 # EOF

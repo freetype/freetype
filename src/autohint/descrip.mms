@@ -20,6 +20,6 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/incl=([--.include],[--.src.autohint])
 OBJS=autohint.obj
 
 all : $(OBJS)
-	library [--.lib]freetype.olb $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
 
 # EOF

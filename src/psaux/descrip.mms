@@ -18,6 +18,6 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.psaux])
 OBJS=psaux.obj
 
 all : $(OBJS)
-	library [--.lib]freetype.olb $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
 
 # EOF

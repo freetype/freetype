@@ -44,7 +44,7 @@
     family = entry->family;
 
     /* remove from parent set table - eventually destroy the set */
-    if ( --family->num_nodes <= 0 )
+    if ( --family->num_nodes == 0 )
       FT_LruList_Remove( cache->families, (FT_LruNode) family );
   }
 
@@ -213,7 +213,7 @@
     FREE( node );
 
     /* check, just in case of general corruption :-) */
-    if ( manager->num_nodes <= 0 )
+    if ( manager->num_nodes == 0 )
       FT_ERROR(( "ftc_node_destroy: invalid cache node count! = %d\n",
                   manager->num_nodes ));
   }

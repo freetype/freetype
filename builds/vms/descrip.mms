@@ -18,7 +18,7 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([],[--.include],[--.src.base])
 OBJS=ftsystem.obj
 
 all : $(OBJS)
-	library/create [--.lib]freetype.olb $(OBJS)
+        library/create [--.lib]freetype.olb $(OBJS)
 
 ftsystem.obj : ftsystem.c ftconfig.h
 

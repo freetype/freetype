@@ -1,7 +1,18 @@
-2002-01-21  Antoine Leca <Antoine-Freetype@Leca-Marti.org>
+2002-01-25  Martin Zinser  <zinser@decus.de>
 
-        * docs/PATENTS: Typo fixed (Thanks to Detlef "Hawkeye"
-        Wuerkner) in the URL for the on-line resource.
+	* src/cache/ftccache.c (ftc_node_done, ftc_node_destroy): Fix
+	compilation warnings.
+	* src/base/descrip.mms (OBJS): Add `ftmm.obj'.
+	* src/cache/descrip.mms (ftcache.obj): Dependencies added.
+
+2002-01-25  WANG Yi  <wangyi@founder.com.cn>
+
+	* src/cff/cffdrivr.c (cff_get_name_index): Fix deallocation bug.
+
+2002-01-21  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
+
+	* docs/PATENTS: Typo fixed (thanks to Detlef "Hawkeye" Würkner) in
+	the URL for the online resource.
 
 2002-01-18  Ian Brown  <ian.brown@printsoft.de>
 

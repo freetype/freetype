@@ -30,6 +30,6 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.pcf])
 OBJS=pcf.obj
 
 all : $(OBJS)
-	library [--.lib]freetype.olb $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
 
 # EOF

@@ -344,6 +344,7 @@
     FT_String*          name;
     FT_UShort           sid;
     FT_UInt             i;
+    FT_Int              result;
 
 
     cff     = face->extra.data;
@@ -361,7 +362,12 @@
       else
         name = (FT_String *)psnames->adobe_std_strings( sid );
 
-      if ( !strcmp( glyph_name, name ) )
+      result = strcmp( glyph_name, name );
+
+      if ( sid > 390 )
+        FREE( name );
+
+      if ( !ret )
         return i;
     }
 
