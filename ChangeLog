@@ -59,9 +59,6 @@
 
 	* docs/*: Updated.
 
-	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c,
-	src/bdf/bdfdrivr.c, src/pcf/pcfdriver.c, src/pfr/pfrsbit.c,
-	src/sfnt/ttsbit.c, src/type42/t42objs.c, src/winfonts/winfnt.c:
 	Introduced three new functions to deal with glyph bitmaps within
 	FT_GlyphSlot objects:
 
@@ -70,8 +67,13 @@
 	  ft_glyphslot_set_bitmap
 
 	These functions are much more convenient to use than managing the
-	FT_GLYPH_OWN_BITMAP flag manually.  The font drivers have been
-	modified to use them as well.
+	FT_GLYPH_OWN_BITMAP flag manually.
+
+	* include/freetype/internal/ftobjs.h (ft_glyphslot_free_bitmap,
+	ft_glyphslot_alloc_bitmap, ft_glyphslot_set_bitmap): New functions.
+	* src/base/ftobjs.c, src/bdf/bdfdrivr.c, src/pcf/pcfdriver.c,
+	src/pfr/pfrsbit.c, src/sfnt/ttsbit.c, src/type42/t42objs.c,
+	src/winfonts/winfnt.c:
 
 	* src/cache/ftlru.c: Fixed an invalid assertion check.
 
@@ -219,10 +221,16 @@
 
 2003-01-22  David Turner  <david@freetype.org>
 
-	* include/freetype/ftbdf.h, include/freetype/internal/bdftypes.h,
+	Adding a new API `FT_Get_BDF_Property' to retrieve the BDF
+	properties of a given PCF or BDF font.
+
+	* include/freetype/ftbdf.h (FT_PropertyType): New enumeration.
+	(BDF_Property, BDF_PropertyRec): New structure.
+	FT_Get_BDF_Property): New function.
+	* include/freetype/internal/bdftypes.h: Include FT_BDF_H.
+	(BDF_GetPropertyFunc): New function pointer.
 	src/base/ftbdf.c, src/bdf/bdfdrivr.c, src/pcf/pcfdrivr.c,
-	src/pcf/pcfread.h: Adding a new API `FT_Get_BDF_Property' to
-	retrieve the BDF properties of a given PCF or BDF font.
+	src/pcf/pcfread.h:
 
 	* src/sfnt/ttload.c (sfnt_dir_check): Relaxed the "head" table size
 	verification to accept a few broken fonts who pad the size
@@ -253,12 +261,18 @@
 
 2003-01-15  Huw D M Davies  <h.davies1@physics.ox.ac.uk>
 
-	* include/freetype/config/ftheader.h (FT_WINFONTS_H),
-	include/freetype/internal/fnttypes.h, include/freetype/ftwinfnt.h,
-	src/base/winfnt.c, src/winfonts/winfnt.c, src/base/Jamfile,
-	src/base/rules.mk, src/base/descrip.mms: Added a Windows .FNT
-	specific API (mostly for Wine).  Also fixed a nasty bug in the
-	header loader which would cause invalid memory overwrites.
+	Added a Windows .FNT specific API (mostly for Wine).  Also fixed a
+	nasty bug in the header loader which would cause invalid memory
+	overwrites.
+
+	* include/freetype/config/ftheader.h (FT_WINFONTS_H): New macro
+	for ftwinfnt.h.
+	* include/freetype/internal/fnttypes.h: Move Windows FNT definition
+	to...
+	* include/freetype/ftwinfnt.h: This new file.
+	* include/freetype/internal/fnttypes.h, src/base/winfnt.c,
+	src/winfonts/winfnt.c, src/base/Jamfile, src/base/rules.mk,
+	src/base/descrip.mms:
 
 2003-01-14  Graham Asher  <graham.asher@btinternet.com>
 
@@ -364,6 +378,13 @@
 	sub-system on Unix to allow other programs to correctly link with
 	zlib when needed.
 
+2002-12-19  David Turner  <david@freetype.org>
+
+	* include/freetype/internal/sfnt.h (SFNT_Load_Table_Func): New
+	function pointer.
+
+	* include/freetype/tttables.h (FT_Load_Sfnt_Table): New function.
+
 2002-12-17  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c (find_unicode_charmap): Added some comments to
@@ -411,6 +432,11 @@
 	accept pre-defined charsets, even when the font contains fewer
 	glyphs.  Also enforced more checks to ensure that we never overflow
 	the character codes array in the encoding.
+
+2002-11-22  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
+
+	* include/freetype/ttnameid.h: Updated to latest OpenType
+	specification.
 
 2002-11-18  David Turner  <david@freetype.org>
 
@@ -477,13 +503,18 @@
 
 2002-10-31  David Turner  <david@freetype.org>
 
-	* include/freetype/ftgzip.h, src/gzip/ftgzip.c: Adding support for
-	gzip compressed streams.
+	* include/freetype/ftgzip.h, src/gzip/ftgzip.c: New files, adding
+	support for gzip compressed streams.
 	* include/freetype/config/ftheader.h (FT_GZIP_H): New macro for
 	`ftgzip.h'.
 
 	* src/pcf/pcfdriver.c: Adding automatic support for gzip-compressed
 	PCF files.
+	* include/freetype/internal/pcftypes.h (PCF_Public_FaceRec): Add
+	`gzip_stream' and `gzip_source'.
+
+	* include/freetype/ftpfr.h, include/freetype/internal/pfr.h: New
+	files.
 
 	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_USE_ZLIB):
 	New macro.
@@ -494,6 +525,10 @@
 	(FT_EXPORT, FT_EXPORT_DEF, FT_DEBUG_LEVEL_ERROR,
 	FT_DEBUG_LEVEL_TRACE, FT_DEBUG_MEMORY): Comment out definitions so
 	that platform specific configuration file can override.
+
+	* include/freetype/internal/ftstream.h: Include FT_SYSTEM_H.
+	* include/freetype/internal/internal.h (FT_INTERNAL_PFR_H): New
+	macro for pfr.h.
 
 2002-10-30  David Turner  <david@freetype.org>
 
