@@ -26,7 +26,8 @@
   /*                                                                       */
   /* Implementing basic computation routines.                              */
   /*                                                                       */
-  /* FT_MulDiv(), FT_MulFix(), and FT_DivFix() are declared in freetype.h. */
+  /* FT_MulDiv(), FT_MulFix(), FT_DivFix(), FT_RoundFix(), FT_CeilFix(),   */
+  /* and FT_FloorFix() are declared in freetype.h.                         */
   /*                                                                       */
   /*************************************************************************/
 
@@ -45,6 +46,32 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_calc
+
+  /* The following three functions are available regardless of whether */
+  /* FT_LONG64 or FT_CONFIG_OPTION_OLD_CALCS is defined.               */
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Fixed )  FT_RoundFix( FT_Fixed a )
+  {
+    return( ( a + 0x8000L ) & -0x10000L );
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Fixed )  FT_CeilFix( FT_Fixed a )
+  {
+    return( ( a + 0x10000L - 1 ) & -0x10000L );
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Fixed )  FT_FloorFix( FT_Fixed a )
+  {
+    return( a & -0x10000L );
+  }
 
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
