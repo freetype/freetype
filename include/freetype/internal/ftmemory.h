@@ -98,8 +98,15 @@
 #define MEM_Alloc( _pointer_, _size_ ) \
           FT_Alloc( memory, _size_, (void**)&(_pointer_) )
 
+#define MEM_Alloc_Array( _pointer_, _count_, _type_ ) \
+          FT_Alloc( memory, (_count_)*sizeof(_type_), (void**)&(_pointer_) )
+
 #define MEM_Realloc( _pointer_, _current_, _size_ ) \
           FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
+
+#define MEM_Realloc_Array( _pointer_, _current_, _new_, _type_ ) \
+          FT_Realloc( memory, (_current_)*sizeof(_type_),        \
+                      (_new_)*sizeof(_type_), (void**)&(_pointer_) )
 
 #define ALLOC( _pointer_, _size_ ) \
           FT_SET_ERROR( MEM_Alloc( _pointer_, _size_ ) )
