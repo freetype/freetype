@@ -513,6 +513,153 @@
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
   }
 
+  static
+  FT_Int  t2_lookup_glyph_by_stdcharcode( CFF_Font*  cff,
+                                          FT_Int     charcode )
+  {
+    FT_UInt    n;
+    FT_UShort  glyph_sid;
+
+    /* check range of standard char code */
+    if ( charcode < 0 || charcode > 255 )
+      return -1;
+
+
+    /* Get code to SID mapping from `cff_standard_encoding'. */
+    glyph_sid = cff_standard_encoding[charcode];
+
+    for ( n = 0; n < cff->num_glyphs; n++ )
+    {
+
+      if ( cff->charset.sids[n] == glyph_sid )
+        return n;
+    }
+
+    return -1;
+  }
+
+  static
+  FT_Error  t2_operator_seac( T2_Decoder*  decoder,
+                              FT_Pos       adx,
+                              FT_Pos       ady,
+                              FT_Int       bchar,
+                              FT_Int       achar )
+  {
+    FT_Error     error;
+    FT_Int       bchar_index, achar_index, n_base_points;
+    FT_Outline*  base = decoder->builder.base;
+    TT_Face      face = decoder->builder.face;
+    CFF_Font*    cff  = (CFF_Font*)(face->extra.data);
+    FT_Vector    left_bearing, advance;
+    FT_Byte*     charstring;
+    FT_ULong     charstring_len;
+
+    bchar_index = t2_lookup_glyph_by_stdcharcode( cff, bchar );
+    achar_index = t2_lookup_glyph_by_stdcharcode( cff, achar );
+
+    if ( bchar_index < 0 || achar_index < 0 )
+    {
+      FT_ERROR(( "t2_operator_seac:" ));
+      FT_ERROR(( " invalid seac character code arguments\n" ));
+      return T2_Err_Syntax_Error;
+    }
+
+    /* if we are trying to load a composite glyph, do not load the */
+    /* accent character and return the array of subglyphs.         */
+    if ( decoder->builder.no_recurse )
+    {
+      FT_GlyphSlot     glyph  = (FT_GlyphSlot)decoder->builder.glyph;
+      FT_GlyphLoader*  loader = glyph->internal->loader;
+      FT_SubGlyph*     subg;
+
+
+      /* reallocate subglyph array if necessary */
+      error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
+      if ( error )
+        goto Exit;
+
+      subg = loader->current.subglyphs;
+
+      /* subglyph 0 = base character */
+      subg->index = bchar_index;
+      subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES |
+                    FT_SUBGLYPH_FLAG_USE_MY_METRICS;
+      subg->arg1  = 0;
+      subg->arg2  = 0;
+      subg++;
+
+      /* subglyph 1 = accent character */
+      subg->index = achar_index;
+      subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES;
+      subg->arg1  = adx;
+      subg->arg2  = ady;
+
+      /* set up remaining glyph fields */
+      glyph->num_subglyphs = 2;
+      glyph->subglyphs     = loader->base.subglyphs;
+      glyph->format        = ft_glyph_format_composite;
+
+      loader->current.num_subglyphs = 2;
+    }
+
+    /* First load `bchar' in builder */
+    error = CFF_Access_Element( &cff->charstrings_index, bchar_index,
+                                &charstring, &charstring_len );
+    if ( !error )
+    {
+
+      error = T2_Parse_CharStrings( decoder, charstring, charstring_len );
+
+      if ( error )
+        goto Exit;
+
+      CFF_Forget_Element( &cff->charstrings_index, &charstring );
+    }
+
+    n_base_points = base->n_points;
+
+    /* save the left bearing and width of the base character */
+    /* as they will be erased by the next load.              */
+
+    left_bearing = decoder->builder.left_bearing;
+    advance      = decoder->builder.advance;
+
+    decoder->builder.left_bearing.x = 0;
+    decoder->builder.left_bearing.y = 0;
+
+    /* Now load `achar' on top of the base outline           */
+    error = CFF_Access_Element( &cff->charstrings_index, achar_index,
+                                &charstring, &charstring_len );
+    if ( !error )
+    {
+
+      error = T2_Parse_CharStrings( decoder, charstring, charstring_len );
+
+      if ( error )
+        goto Exit;
+
+      CFF_Forget_Element( &cff->charstrings_index, &charstring );
+    }
+
+    /* restore the left side bearing and advance width of the base character */
+    decoder->builder.left_bearing = left_bearing;
+    decoder->builder.advance      = advance;
+
+    /* Finally, move the accent */
+    if ( decoder->builder.load_points )
+    {
+      FT_Outline  dummy;
+
+      dummy.n_points = base->n_points - n_base_points;
+      dummy.points   = base->points   + n_base_points;
+
+      FT_Outline_Translate( &dummy, adx, ady );
+    }
+
+  Exit:
+    return error;
+  }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -856,9 +1003,14 @@
             case t2_op_vstem:
             case t2_op_hstemhm:
             case t2_op_vstemhm:
-            case t2_op_endchar:
             case t2_op_rmoveto:
               set_width_ok = num_args & 1;
+              break;
+
+            case t2_op_endchar:
+              /* If there is a width specified for endchar, we either have 1 */
+              /* argument or 5 arguments.  We like to argue.                 */
+              set_width_ok = ( ( num_args == 5 ) || ( num_args == 1 ) );
               break;
 
             default:
@@ -870,6 +1022,8 @@
             {
               decoder->glyph_width = decoder->nominal_width +
                                        ( stack[0] >> 16 );
+
+              /* Consumed an argument. */
               num_args--;
               args++;
             }
@@ -1424,6 +1578,18 @@
         case t2_op_endchar:
           FT_TRACE4(( " endchar" ));
 
+          /* We are going to emulate the seac operator. */
+          if ( num_args == 4)
+          {
+
+            error = t2_operator_seac( decoder, args[0] >> 16, args[1] >> 16,
+                                               args[2] >> 16, args[3] >> 16 );
+             args += 4;
+          }
+
+          if ( !error )
+            error = T2_Err_Ok;
+
           close_contour( builder );
 
           /* add current outline to the glyph slot */
@@ -1431,7 +1597,7 @@
 
           /* return now! */
           FT_TRACE4(( "\n\n" ));
-          return T2_Err_Ok;
+          return error;
 
         case t2_op_abs:
           FT_TRACE4(( " abs" ));
