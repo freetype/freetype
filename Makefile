@@ -18,7 +18,7 @@
 # It works as follows:
 #
 # - When invoked for the first time, this Makefile will include the rules
-#   found in `freetype/config/detect.mk'.  They are in charge of detecting
+#   found in `freetype/builds/detect.mk'.  They are in charge of detecting
 #   the current platform.
 #
 #   A summary of the detection will be displayed, and the file `config.mk'
@@ -27,7 +27,7 @@
 # - When invoked later, this Makefile will include the rules found in
 #   `config.mk'.  This sub-Makefile will define some system-specific
 #   variables (like compiler, compilation flags, object suffix, etc.), then
-#   include the rules found in `freetype/config/freetype.mk', used to build
+#   include the rules found in `freetype/builds/freetype.mk', used to build
 #   the library.
 #
 # See the comments in `config/detect.mk' and `config/freetype.mk' for more
