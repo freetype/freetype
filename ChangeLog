@@ -1,5 +1,10 @@
 2001-10-22  David Turner  <david@freetype.org>
 
+	* builds/unix/ftsystem.c, builds/vms/ftsystem.c,
+	builds/amiga/ftsystem.c, src/base/ftdbgmem.c: updated the memory
+	debugger and platform-specific implementations of 'ftsystem' in order
+	to be able to debug memory allocations on Unix, VMS and Amiga too !!
+
         * src/pshinter/pshalgo2.c (psh2_hint_table_record_mask): removed some
         bogus warnings..
 
