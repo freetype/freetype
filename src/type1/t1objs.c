@@ -118,9 +118,9 @@
 
     if ( funcs )
       error = funcs->set_scale( (PSH_Globals)size->root.internal,
-                                 size->root.metrics.x_scale,
-                                 size->root.metrics.y_scale,
-                                 0, 0 );
+                                size->root.metrics.x_scale,
+                                size->root.metrics.y_scale,
+                                0, 0 );
     return error;
   }
 
