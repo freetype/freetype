@@ -246,8 +246,7 @@ FT_BEGIN_HEADER
   *       parameter.data = &inc_int;
   *
   *       // set up FT_Open_Args structure
-  *       open_args.flags      = (FT_Open_Flags)( FT_OPEN_PATHNAME |
-  *                                               FT_OPEN_PARAMS   );
+  *       open_args.flags      = FT_OPEN_PATHNAME | FT_OPEN_PARAMS;
   *       open_args.pathname   = my_font_pathname;
   *       open_args.num_params = 1;
   *       open_args.params     = &parameter; // we use one optional argument

@@ -338,6 +338,11 @@ FT_BEGIN_HEADER
   /*    loader            :: The glyph loader object used to load outlines */
   /*                         into the glyph slot.                          */
   /*                                                                       */
+  /*    flags             :: Possible values are zero or                   */
+  /*                         FT_GLYPH_OWN_BITMAP.  The latter indicates    */
+  /*                         that the FT_GlyphSlot structure owns the      */
+  /*                         bitmap buffer.                                */
+  /*                                                                       */
   /*    glyph_transformed :: Boolean.  Set to TRUE when the loaded glyph   */
   /*                         must be transformed through a specific        */
   /*                         font transformation.  This is _not_ the same  */
@@ -352,9 +357,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    glyph_hints       :: Format-specific glyph hints management.       */
   /*                                                                       */
+
+#define FT_GLYPH_OWN_BITMAP  0x1
+
   typedef struct  FT_Slot_InternalRec_
   {
     FT_GlyphLoader  loader;
+    FT_UInt         flags;
     FT_Bool         glyph_transformed;
     FT_Matrix       glyph_matrix;
     FT_Vector       glyph_delta;

@@ -113,7 +113,6 @@ FT_BEGIN_HEADER
   /*    FT_New_Memory_Face                                                 */
   /*    FT_Open_Face                                                       */
   /*    FT_Open_Args                                                       */
-  /*    FT_Open_Flags                                                      */
   /*    FT_Parameter                                                       */
   /*    FT_Attach_File                                                     */
   /*    FT_Attach_Stream                                                   */
@@ -125,6 +124,12 @@ FT_BEGIN_HEADER
   /*    FT_Get_Char_Index                                                  */
   /*    FT_Get_Name_Index                                                  */
   /*    FT_Load_Char                                                       */
+  /*                                                                       */
+  /*    FT_OPEN_MEMORY                                                     */
+  /*    FT_OPEN_STREAM                                                     */
+  /*    FT_OPEN_PATHNAME                                                   */
+  /*    FT_OPEN_DRIVER                                                     */
+  /*    FT_OPEN_PARAMS                                                     */
   /*                                                                       */
   /*    FT_LOAD_DEFAULT                                                    */
   /*    FT_LOAD_RENDER                                                     */
@@ -1360,7 +1365,6 @@ FT_BEGIN_HEADER
     FT_Library        library;
     FT_Face           face;
     FT_GlyphSlot      next;
-    FT_UInt           flags;
     FT_Generic        generic;
 
     FT_Glyph_Metrics  metrics;
@@ -1475,13 +1479,13 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
-  /*    FT_Open_Flags                                                      */
+  /*    FT_OPEN_XXX                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An enumeration used to list the bit flags used within the          */
-  /*    `flags' field of the @FT_Open_Args structure.                      */
+  /*    A list of bit-field constants used within the `flags' field of the */
+  /*    @FT_Open_Args structure.                                           */
   /*                                                                       */
-  /* <Fields>                                                              */
+  /* <Values>                                                              */
   /*    FT_OPEN_MEMORY      :: This is a memory-based stream.              */
   /*                                                                       */
   /*    FT_OPEN_STREAM      :: Copy the stream from the `stream' field.    */
@@ -1507,15 +1511,11 @@ FT_BEGIN_HEADER
   /*    The `FT_OPEN_MEMORY', `FT_OPEN_STREAM', and `FT_OPEN_PATHNAME'     */
   /*    flags are mutually exclusive.                                      */
   /*                                                                       */
-  typedef enum
-  {
-    FT_OPEN_MEMORY   = 1,
-    FT_OPEN_STREAM   = 2,
-    FT_OPEN_PATHNAME = 4,
-    FT_OPEN_DRIVER   = 8,
-    FT_OPEN_PARAMS   = 16
-
-  } FT_Open_Flags;
+#define FT_OPEN_MEMORY    0x1
+#define FT_OPEN_STREAM    0x2
+#define FT_OPEN_PATHNAME  0x4
+#define FT_OPEN_DRIVER    0x8
+#define FT_OPEN_PARAMS    0x10
 
 #define ft_open_memory    FT_OPEN_MEMORY     /* deprecated */
 #define ft_open_stream    FT_OPEN_STREAM     /* deprecated */
@@ -1603,14 +1603,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Open_Args_
   {
-    FT_Open_Flags              flags;
-    const FT_Byte*             memory_base;
-    FT_Long                    memory_size;
-    FT_String*                 pathname;
-    FT_Stream                  stream;
-    FT_Module                  driver;
-    FT_Int                     num_params;
-    FT_Parameter*              params;
+    FT_UInt         flags;
+    const FT_Byte*  memory_base;
+    FT_Long         memory_size;
+    FT_String*      pathname;
+    FT_Stream       stream;
+    FT_Module       driver;
+    FT_Int          num_params;
+    FT_Parameter*   params;
 
   } FT_Open_Args;
 

@@ -192,10 +192,10 @@
 #if 0 /* this doesn't work well with embedded bitmaps */
 
           /* grab the bitmap when possible - this is a hack! */
-          if ( slot->flags & FT_GLYPH_OWN_BITMAP )
+          if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
           {
-            slot->flags &= ~FT_GLYPH_OWN_BITMAP;
-            sbit->buffer = bitmap->buffer;
+            slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
+            sbit->buffer           = bitmap->buffer;
           }
           else
 #endif

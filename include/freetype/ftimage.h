@@ -5,7 +5,7 @@
 /*    FreeType glyph image formats and default raster interface            */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -357,10 +357,10 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
-  /*   FT_Outline_Flags                                                    */
+  /*   FT_OUTLINE_XXX                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A simple type used to enumerates the flags in an outline's         */
+  /*    A list of bit-field constants use for the flags in an outline's    */
   /*    `outline_flags' field.                                             */
   /*                                                                       */
   /* <Values>                                                              */
@@ -414,17 +414,14 @@ FT_BEGIN_HEADER
   /*                                 completely ignored by a given         */
   /*                                 scan-converter.                       */
   /*                                                                       */
-  typedef enum  FT_Outline_Flags_
-  {
-    FT_OUTLINE_NONE            = 0,
-    FT_OUTLINE_OWNER           = 1,
-    FT_OUTLINE_EVEN_ODD_FILL   = 2,
-    FT_OUTLINE_REVERSE_FILL    = 4,
-    FT_OUTLINE_IGNORE_DROPOUTS = 8,
-    FT_OUTLINE_HIGH_PRECISION  = 256,
-    FT_OUTLINE_SINGLE_PASS     = 512
+#define FT_OUTLINE_NONE             0x0
+#define FT_OUTLINE_OWNER            0x1
+#define FT_OUTLINE_EVEN_ODD_FILL    0x2
+#define FT_OUTLINE_REVERSE_FILL     0x4
+#define FT_OUTLINE_IGNORE_DROPOUTS  0x8
 
-  } FT_Outline_Flags;
+#define FT_OUTLINE_HIGH_PRECISION   0x100
+#define FT_OUTLINE_SINGLE_PASS      0x200
 
 
  /*************************************************************************
@@ -937,11 +934,11 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
-  /*    FT_Raster_Flag                                                     */
+  /*    FT_RASTER_FLAG_XXX                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An enumeration to list the bit flags as used in the `flags' field  */
-  /*    of a FT_Raster_Params structure.                                   */
+  /*    A list of bit flag constants as used in the `flags' field of a     */
+  /*    @FT_Raster_Params structure.                                       */
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_RASTER_FLAG_DEFAULT :: This value is 0.                         */
@@ -949,7 +946,7 @@ FT_BEGIN_HEADER
   /*    FT_RASTER_FLAG_AA      :: This flag is set to indicate that an     */
   /*                              anti-aliased glyph image should be       */
   /*                              generated.  Otherwise, it will be        */
-  /*                              monochrome (1-bit)                       */
+  /*                              monochrome (1-bit).                      */
   /*                                                                       */
   /*    FT_RASTER_FLAG_DIRECT  :: This flag is set to indicate direct      */
   /*                              rendering.  In this mode, client         */
@@ -974,15 +971,12 @@ FT_BEGIN_HEADER
   /*                              in direct rendering mode where all spans */
   /*                              are generated if no clipping box is set. */
   /*                                                                       */
-  typedef  enum
-  {
-    FT_RASTER_FLAG_DEFAULT = 0,
-    FT_RASTER_FLAG_AA      = 1,
-    FT_RASTER_FLAG_DIRECT  = 2,
-    FT_RASTER_FLAG_CLIP    = 4
+#define FT_RASTER_FLAG_DEFAULT  0x0
+#define FT_RASTER_FLAG_AA       0x1
+#define FT_RASTER_FLAG_DIRECT   0x2
+#define FT_RASTER_FLAG_CLIP     0x4
 
-  } FT_Raster_Flag;
-
+  /* deprecated */
 #define ft_raster_flag_default  FT_RASTER_FLAG_DEFAULT
 #define ft_raster_flag_aa       FT_RASTER_FLAG_AA
 #define ft_raster_flag_direct   FT_RASTER_FLAG_DIRECT
