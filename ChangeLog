@@ -9,7 +9,7 @@
 	* include/freetype/internal/ftobject.h,
 	include/freetype/internal/ftexcept.h, include/freetype/ftsysmem.h,
 	include/freetype/ftsysio.h, src/base/ftsysmem.c, src/base/ftsysio.c:
-	New experimental files for.
+	New experimental files.
 
 2002-04-17  David Turner  <david@freetype.org>
 
