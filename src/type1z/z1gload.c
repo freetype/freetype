@@ -71,7 +71,7 @@
     T1_Face  face  = (T1_Face)decoder->builder.face;
     T1_Font* type1 = &face->type1;
     
-    return decoder->funcs->parse_charstrings( decoder,
+    return decoder->funcs.parse_charstrings( decoder,
                                         type1->charstrings    [glyph_index],
                                         type1->charstrings_len[glyph_index] );
   }

@@ -37,54 +37,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    PS_Table                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A PS_Table is a simple object used to store an array of objects in */
-  /*    a single memory block.                                             */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    block     :: The address in memory of the growheap's block.  This  */
-  /*                 can change between two object adds, due to            */
-  /*                 reallocation.                                         */
-  /*                                                                       */
-  /*    cursor    :: The current top of the grow heap within its block.    */
-  /*                                                                       */
-  /*    capacity  :: The current size of the heap block.  Increments by    */
-  /*                 1kByte chunks.                                        */
-  /*                                                                       */
-  /*    max_elems :: The maximum number of elements in table.              */
-  /*                                                                       */
-  /*    num_elems :: The current number of elements in table.              */
-  /*                                                                       */
-  /*    elements  :: A table of element addresses within the block.        */
-  /*                                                                       */
-  /*    lengths   :: A table of element sizes within the block.            */
-  /*                                                                       */
-  /*    memory    :: The object used for memory operations                 */
-  /*                 (alloc/realloc).                                      */
-  /*                                                                       */
-  typedef struct  PS_Table_
-  {
-    FT_Byte*   block;          /* current memory block           */
-    FT_Int     cursor;         /* current cursor in memory block */
-    FT_Int     capacity;       /* current size of memory block   */
-    FT_Long    init;
-
-    FT_Int     max_elems;
-    FT_Int     num_elems;
-    FT_Byte**  elements;       /* addresses of table elements */
-    FT_Int*    lengths;        /* lengths of table elements   */
-
-    FT_Memory  memory;
-
-  } PS_Table;
-
-
+  typedef struct PS_Table_  PS_Table;
 
   /*************************************************************************/
   /*                                                                       */
@@ -116,6 +69,58 @@
     void       (*release)( PS_Table*  table );                              
   
   } PS_Table_Funcs;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    PS_Table                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A PS_Table is a simple object used to store an array of objects in */
+  /*    a single memory block.                                             */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    block     :: The address in memory of the growheap's block.  This  */
+  /*                 can change between two object adds, due to            */
+  /*                 reallocation.                                         */
+  /*                                                                       */
+  /*    cursor    :: The current top of the grow heap within its block.    */
+  /*                                                                       */
+  /*    capacity  :: The current size of the heap block.  Increments by    */
+  /*                 1kByte chunks.                                        */
+  /*                                                                       */
+  /*    max_elems :: The maximum number of elements in table.              */
+  /*                                                                       */
+  /*    num_elems :: The current number of elements in table.              */
+  /*                                                                       */
+  /*    elements  :: A table of element addresses within the block.        */
+  /*                                                                       */
+  /*    lengths   :: A table of element sizes within the block.            */
+  /*                                                                       */
+  /*    memory    :: The object used for memory operations                 */
+  /*                 (alloc/realloc).                                      */
+  /*                                                                       */
+  /*    funcs     :: table of method pointers for this object              */
+  /*                                                                       */
+  struct  PS_Table_
+  {
+    FT_Byte*   block;          /* current memory block           */
+    FT_Int     cursor;         /* current cursor in memory block */
+    FT_Int     capacity;       /* current size of memory block   */
+    FT_Long    init;
+
+    FT_Int     max_elems;
+    FT_Int     num_elems;
+    FT_Byte**  elements;       /* addresses of table elements */
+    FT_Int*    lengths;        /* lengths of table elements   */
+
+    FT_Memory       memory;
+    PS_Table_Funcs  funcs;
+
+  };
+
+
 
 
   /*************************************************************************/
@@ -276,16 +281,10 @@
   /*                                                                       */
   /*    error  :: The last error returned.                                 */
   /*                                                                       */
-  typedef struct  T1_Parser_
-  {
-    FT_Byte*   cursor;
-    FT_Byte*   base;
-    FT_Byte*   limit;
-    FT_Error   error;
-    FT_Memory  memory;
-  
-  } T1_Parser;
-
+  /*    funcs  :: table of functions for the parser                        */
+  /*                                                                       */
+  /*                                                                       */
+  typedef struct  T1_Parser_  T1_Parser;
 
   typedef struct  T1_Parser_Funcs_
   {
@@ -293,9 +292,9 @@
                                  FT_Byte*    base,
                                  FT_Byte*    limit,
                                  FT_Memory   memory );
-                       
-    void      (*done)          ( T1_Parser*  parser );
 
+    void      (*done)          ( T1_Parser*  parser );
+    
     void      (*skip_spaces)   ( T1_Parser*  parser );
     void      (*skip_alpha)    ( T1_Parser*  parser );
   
@@ -331,6 +330,19 @@
 
   } T1_Parser_Funcs;
 
+  
+  struct T1_Parser_
+  {
+    FT_Byte*   cursor;
+    FT_Byte*   base;
+    FT_Byte*   limit;
+    FT_Error   error;
+    FT_Memory  memory;
+    
+    T1_Parser_Funcs  funcs;
+  };
+
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -339,6 +351,48 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
+
+  typedef struct T1_Builder_  T1_Builder;
+
+  typedef FT_Error  (*T1_Builder_Check_Points_Func) ( T1_Builder*  builder,
+                                                     FT_Int       count );
+                                                      
+  typedef void      (*T1_Builder_Add_Point_Func)    ( T1_Builder*  builder,
+                                                      FT_Pos       x,
+                                                      FT_Pos       y,
+                                                      FT_Byte      flag );    
+  
+  typedef FT_Error  (*T1_Builder_Add_Point1_Func)   ( T1_Builder*  builder,
+                                                      FT_Pos       x,
+                                                      FT_Pos       y );
+                                                    
+  typedef FT_Error  (*T1_Builder_Add_Contour_Func)  ( T1_Builder*  builder );
+
+  typedef FT_Error  (*T1_Builder_Start_Point_Func)  ( T1_Builder*  builder,
+                                                      FT_Pos       x,
+                                                      FT_Pos       y );
+
+  typedef void      (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
+
+
+  typedef struct  T1_Builder_Funcs_
+  {
+    void      (*init)( T1_Builder*   builder,
+                       FT_Face       face,
+                       FT_Size       size,
+                       FT_GlyphSlot  slot );
+  
+    void      (*done)( T1_Builder*   builder );
+    
+    T1_Builder_Check_Points_Func   check_points;
+    T1_Builder_Add_Point_Func      add_point;
+    T1_Builder_Add_Point1_Func     add_point1;
+    T1_Builder_Add_Contour_Func    add_contour;
+    T1_Builder_Start_Point_Func    start_point;
+    T1_Builder_Close_Contour_Func  close_contour;
+  
+  } T1_Builder_Funcs;
+
 
 
   /*************************************************************************/
@@ -395,7 +449,9 @@
   /*                    the metrics of a given glyph, not load all of its  */
   /*                    points.                                            */
   /*                                                                       */
-  typedef struct  T1_Builder_
+  /*    funcs        :: array of function pointers for the builder         */
+  /*                                                                       */
+  struct  T1_Builder_
   {
     FT_Memory        memory;
     FT_Face          face;
@@ -424,47 +480,8 @@
     FT_Error         error;         /* only used for memory errors */
     FT_Bool          metrics_only;
 
-  } T1_Builder;
-
-
-  typedef FT_Error  (*T1_Builder_Check_Points_Func) ( T1_Builder*  builder,
-                                                     FT_Int       count );
-                                                      
-  typedef void      (*T1_Builder_Add_Point_Func)    ( T1_Builder*  builder,
-                                                      FT_Pos       x,
-                                                      FT_Pos       y,
-                                                      FT_Byte      flag );    
-  
-  typedef FT_Error  (*T1_Builder_Add_Point1_Func)   ( T1_Builder*  builder,
-                                                      FT_Pos       x,
-                                                      FT_Pos       y );
-                                                    
-  typedef FT_Error  (*T1_Builder_Add_Contour_Func)  ( T1_Builder*  builder );
-
-  typedef FT_Error  (*T1_Builder_Start_Point_Func)  ( T1_Builder*  builder,
-                                                      FT_Pos       x,
-                                                      FT_Pos       y );
-
-  typedef void      (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
-
-
-  typedef struct  T1_Builder_Funcs_
-  {
-    void      (*init)( T1_Builder*   builder,
-                       FT_Face       face,
-                       FT_Size       size,
-                       FT_GlyphSlot  slot );
-  
-    void      (*done)( T1_Builder*   builder );
-    
-    T1_Builder_Check_Points_Func   check_points;
-    T1_Builder_Add_Point_Func      add_point;
-    T1_Builder_Add_Point1_Func     add_point1;
-    T1_Builder_Add_Contour_Func    add_contour;
-    T1_Builder_Start_Point_Func    start_point;
-    T1_Builder_Close_Contour_Func  close_contour;
-  
-  } T1_Builder_Funcs;
+    T1_Builder_Funcs funcs;
+  };
 
 
   /*************************************************************************/
@@ -509,8 +526,27 @@
   typedef struct T1_Decoder_        T1_Decoder;
   typedef struct T1_Decoder_Funcs_  T1_Decoder_Funcs;
 
-  typedef  FT_Error  (*T1_Decoder_Parse_Func)( T1_Decoder*  decoder,
-                                               FT_UInt      glyph_index );
+  typedef  FT_Error  (*T1_Decoder_Callback)( T1_Decoder*  decoder,
+                                             FT_UInt      glyph_index );
+
+  struct T1_Decoder_Funcs_
+  {
+    FT_Error     (*init) ( T1_Decoder*          decoder,
+                           FT_Face              face,
+                           FT_Size              size,
+                           FT_GlyphSlot         slot,
+                           FT_Byte**            glyph_names,
+                           T1_Blend*            blend,
+                           T1_Decoder_Callback  callback );
+    
+    void         (*done) ( T1_Decoder*  decoder );
+    
+    FT_Error     (*parse_charstrings)( T1_Decoder*  decoder,
+                                       FT_Byte*     base,
+                                       FT_UInt      len );
+  };
+
+
 
   struct T1_Decoder_
   {
@@ -539,29 +575,10 @@
 
     T1_Blend*                blend;       /* for multiple master support */
     
-    const T1_Decoder_Funcs*  funcs;
-    T1_Decoder_Parse_Func    parse_glyph;  
+    T1_Decoder_Callback      parse_callback;
+    T1_Decoder_Funcs         funcs;
   };
 
-
-  struct T1_Decoder_Funcs_
-  {
-    FT_Error     (*init)             ( T1_Decoder*            decoder,
-                                       FT_Face                face,
-                                       FT_Size                size,
-                                       FT_GlyphSlot           slot,
-                                       FT_Byte**              glyph_names,
-                                       T1_Blend*              blend,
-                                       T1_Decoder_Parse_Func  parse );
-    
-    void         (*done)             ( T1_Decoder*  decoder );
-    
-    FT_Error     (*parse_charstrings)( T1_Decoder*  decoder,
-                                       FT_Byte*     base,
-                                       FT_UInt      len );
-    
-  
-  };
 
   /*************************************************************************/
   /*************************************************************************/
@@ -573,7 +590,7 @@
 
   typedef struct  PSAux_Interface_
   {
-    const PS_Table_Funcs*   t1_table_funcs;
+    const PS_Table_Funcs*   ps_table_funcs;
     const T1_Parser_Funcs*  t1_parser_funcs;
     const T1_Builder_Funcs* t1_builder_funcs;
     const T1_Decoder_Funcs* t1_decoder_funcs;

@@ -22,7 +22,11 @@
   /*************************************************************************/
 
 
-#include "ftraster.h"
+#ifdef FT_FLAT_COMPILE
+#  include "ftraster.h"
+#else
+#  include <raster1/ftraster.h>
+#endif
 #include <freetype/internal/ftcalc.h>      /* for FT_MulDiv() only */
 
 

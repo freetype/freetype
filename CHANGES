@@ -1,5 +1,15 @@
 LATEST CHANGES
 
+  - updated "docs/docmaker.py", a draft API reference is available at
+    http://www.freetype.org/ft2api.html
+
+  - changed "type1z" to use "psaux"
+
+  - created a new module named "psaux" to hold the Type 1 & Type 2 parsing
+    routines. It should be used by "type1z", "cid" and "cff" in the future
+
+  - fixed an important bug in "FT_Glyph_Get_CBox"
+
   - fixed some compiler warnings that happened since the TrueType
     bytecode decoder was deactivated by default..
 

@@ -44,15 +44,15 @@
     Z1_Parser  parser;          /* parser used to read the stream */
 
     FT_Int     num_chars;       /* number of characters in encoding */
-    Z1_Table   encoding_table;  /* Z1_Table used to store the       */
+    PS_Table   encoding_table;  /* PS_Table used to store the       */
                                 /* encoding character names         */
 
     FT_Int     num_glyphs;
-    Z1_Table   glyph_names;
-    Z1_Table   charstrings;
+    PS_Table   glyph_names;
+    PS_Table   charstrings;
 
     FT_Int     num_subrs;
-    Z1_Table   subrs;
+    PS_Table   subrs;
     FT_Bool    fontdata;
 
   } Z1_Loader;
