@@ -2080,7 +2080,6 @@
     metrics = &face->size->metrics;
     clazz   = driver->clazz;
 
-    /* default processing -- this can be overridden by the driver */
     if ( pixel_width == 0 )
       pixel_width = pixel_height;
 
@@ -2091,6 +2090,12 @@
       pixel_width  = 1;
     if ( pixel_height < 1 )
       pixel_height = 1;
+
+    /* use `>=' to avoid potention compiler warning on 16bit platforms */
+    if ( pixel_width  >= 0xFFFFU )
+      pixel_width  = 0xFFFFU;
+    if ( pixel_height >= 0xFFFFU )
+      pixel_height = 0xFFFFU;
 
     metrics->x_ppem = (FT_UShort)pixel_width;
     metrics->y_ppem = (FT_UShort)pixel_height;
