@@ -1076,7 +1076,7 @@
 
     if ( glyph )
     {
-      FT_GlyphLoader*  loader = glyph->loader;
+      FT_GlyphLoader*  loader = glyph->internal->loader;
 
 
       builder->loader  = loader;

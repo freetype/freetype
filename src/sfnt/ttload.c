@@ -583,11 +583,11 @@
 
     face->root.num_glyphs = maxProfile->numGlyphs;
 
-    face->root.max_points = MAX( maxProfile->maxCompositePoints,
-                                 maxProfile->maxPoints );
+    face->root.internal->max_points = MAX( maxProfile->maxCompositePoints,
+                                           maxProfile->maxPoints );
 
-    face->root.max_contours = MAX( maxProfile->maxCompositeContours,
-                                   maxProfile->maxContours );
+    face->root.internal->max_contours = MAX( maxProfile->maxCompositeContours,
+                                             maxProfile->maxContours );
 
     face->max_components = (FT_ULong)maxProfile->maxComponentElements +
                            maxProfile->maxComponentDepth;
@@ -599,8 +599,8 @@
 
     /* We also increase maxPoints and maxContours in order to support */
     /* some broken fonts.                                             */
-    face->root.max_points   += 8;
-    face->root.max_contours += 4;
+    face->root.internal->max_points   += 8;
+    face->root.internal->max_contours += 4;
 
     FT_TRACE2(( "MAXP loaded.\n" ));
 

@@ -75,6 +75,95 @@
 #define ABS( a )     ( (a) < 0 ? -(a) : (a) )
 #endif
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_GlyphLoader                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The glyph loader is an internal object used to load several glyphs */
+  /*    together (for example, in the case of composites).                 */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The glyph loader implementation is not part of the high-level API, */
+  /*    hence the forward structure declaration.                           */
+  /*                                                                       */
+  typedef struct FT_GlyphLoader_  FT_GlyphLoader;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Face_InternalRec                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    this structure contains the internal fields of each FT_Face        */
+  /*    object. These fields may change between different releases         */
+  /*    of FreeType.                                                       */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    transform_matrix    :: A 2x2 matrix of 16.16 coefficients used     */
+  /*                           to transform glyph outlines after they are  */
+  /*                           loaded from the font.  Only used by the     */
+  /*                           convenience functions.                      */
+  /*                                                                       */
+  /*    transform_delta     :: A translation vector used to transform      */
+  /*                           glyph outlines after they are loaded from   */
+  /*                           the font.  Only used by the convenience     */
+  /*                           functions.                                  */
+  /*                                                                       */
+  /*    transform_flags     :: Some flags used to classify the transform.  */
+  /*                           Only used by the convenience functions.     */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  typedef struct FT_Face_InternalRec_
+  {
+    FT_UShort        max_points;
+    FT_Short         max_contours;
+
+    FT_Matrix        transform_matrix;
+    FT_Vector        transform_delta;
+    FT_Int           transform_flags;
+  
+  } FT_Face_InternalRec;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Slot_InternalRec                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    this structure contains the internal fields of each FT_GlyphSlot   */
+  /*    object. These fields may change between different releases         */
+  /*    of FreeType.                                                       */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    loader            :: the glyph loader object used to load          */
+  /*                         outlines in the glyph slot                    */
+  /*                                                                       */
+  /*    glyph_transformed :: boolean. set to TRUE when the loaded glyph    */
+  /*                         must be transformed through a specific        */
+  /*                         font transform. this is _not_ the same as     */
+  /*                         the face transform set through                */
+  /*                         FT_Set_Transform                              */
+  /*                                                                       */
+  /*    glyph_matrix      :: the 2x2 matrix corresponding to the glyph     */
+  /*                         transform, when required                      */
+  /*                                                                       */
+  /*    glyph_delta       :: the 2d translation vector corresponding to    */
+  /*                         the glyph transform, when required            */
+  /*                                                                       */
+  typedef struct FT_Slot_InternalRec_
+  {
+    FT_GlyphLoader*   loader;
+    FT_Bool           glyph_transformed;
+    FT_Matrix         glyph_matrix;
+    FT_Vector         glyph_delta;
+  
+  } FT_GlyphSlot_InternalRec;
 
   /*************************************************************************/
   /*************************************************************************/

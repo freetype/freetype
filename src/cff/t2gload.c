@@ -243,7 +243,7 @@
 
     if ( glyph )
     {
-      FT_GlyphLoader*  loader = glyph->root.loader;
+      FT_GlyphLoader*  loader = glyph->root.internal->loader;
 
 
       builder->loader  = loader;

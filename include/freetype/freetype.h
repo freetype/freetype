@@ -393,6 +393,21 @@
   /*************************************************************************/
   /*************************************************************************/
 
+ /*********************************************************************
+  *
+  * <Type>
+  *    FT_Face_Internal
+  *
+  * <Description>
+  *    an opaque handle to a FT_Face_InternalRec structure, used to
+  *    model private data of a given FT_Face object.
+  *
+  *    this fields might change between releases of FreeType 2 and
+  *    are not generally available to client applications
+  *
+  */
+  typedef struct FT_Face_InternalRec_*   FT_Face_Internal;
+
   /*************************************************************************/
   /*                                                                       */
   /*                       FreeType base face class                        */
@@ -570,18 +585,10 @@
   /*                           this should be set to 0.  Only relevant for */
   /*                           scalable formats.                           */
   /*                                                                       */
-  /*    transform_matrix    :: A 2x2 matrix of 16.16 coefficients used     */
-  /*                           to transform glyph outlines after they are  */
-  /*                           loaded from the font.  Only used by the     */
-  /*                           convenience functions.                      */
-  /*                                                                       */
-  /*    transform_delta     :: A translation vector used to transform      */
-  /*                           glyph outlines after they are loaded from   */
-  /*                           the font.  Only used by the convenience     */
-  /*                           functions.                                  */
-  /*                                                                       */
-  /*    transform_flags     :: Some flags used to classify the transform.  */
-  /*                           Only used by the convenience functions.     */
+  /*    internal            :: a pointer to internal fields of the face    */
+  /*                           object. These fields can change freely      */
+  /*                           between releases of FreeType and are not    */
+  /*                           publicly available..                        */
   /*                                                                       */
   typedef struct  FT_FaceRec_
   {
@@ -620,6 +627,7 @@
 
     FT_GlyphSlot     glyph;
     FT_Size          size;
+    FT_CharMap       charmap;
 
     /*@private begin */
 
@@ -627,18 +635,12 @@
     FT_Memory        memory;
     FT_Stream        stream;
 
-    FT_CharMap       charmap;
     FT_ListRec       sizes_list;
 
     FT_Generic       autohint;
     void*            extensions;
 
-    FT_UShort        max_points;
-    FT_Short         max_contours;
-
-    FT_Matrix        transform_matrix;
-    FT_Vector        transform_delta;
-    FT_Int           transform_flags;
+    FT_Face_Internal internal;
 
     /*@private end */
 
@@ -848,6 +850,17 @@
 #define FT_STYLE_FLAG_BOLD  2
 
 
+ /*********************************************************************
+  *
+  * <Type>
+  *    FT_Size_Internal
+  *
+  * <Description>
+  *    an opaque handle to a FT_Size_InternalRec structure, used to
+  *    model private data of a given FT_Size object.
+  */
+  typedef struct FT_Size_InternalRec_*   FT_Size_Internal;
+  
   /*************************************************************************/
   /*                                                                       */
   /*                    FreeType base size metrics                         */
@@ -914,16 +927,16 @@
   /*                                                                       */
   typedef struct  FT_Size_Metrics_
   {
-    FT_UShort   x_ppem;        /* horizontal pixels per EM               */
-    FT_UShort   y_ppem;        /* vertical pixels per EM                 */
+    FT_UShort  x_ppem;      /* horizontal pixels per EM               */
+    FT_UShort  y_ppem;      /* vertical pixels per EM                 */
 
-    FT_Fixed    x_scale;       /* two scales used to convert font units  */
-    FT_Fixed    y_scale;       /* to 26.6 frac. pixel coordinates..      */
+    FT_Fixed   x_scale;     /* two scales used to convert font units  */
+    FT_Fixed   y_scale;     /* to 26.6 frac. pixel coordinates..      */
 
-    FT_Pos      ascender;      /* ascender in 26.6 frac. pixels          */
-    FT_Pos      descender;     /* descender in 26.6 frac. pixels         */
-    FT_Pos      height;        /* text height in 26.6 frac. pixels       */
-    FT_Pos      max_advance;   /* max horizontal advance, in 26.6 pixels */
+    FT_Pos     ascender;    /* ascender in 26.6 frac. pixels          */
+    FT_Pos     descender;   /* descender in 26.6 frac. pixels         */
+    FT_Pos     height;      /* text height in 26.6 frac. pixels       */
+    FT_Pos     max_advance; /* max horizontal advance, in 26.6 pixels */
 
   } FT_Size_Metrics;
 
@@ -951,9 +964,11 @@
   /*                                                                       */
   typedef struct  FT_SizeRec_
   {
-    FT_Face          face;      /* parent face object              */
-    FT_Generic       generic;   /* generic pointer for client uses */
-    FT_Size_Metrics  metrics;   /* size metrics                    */
+    FT_Face           face;      /* parent face object              */
+    FT_Generic        generic;   /* generic pointer for client uses */
+    FT_Size_Metrics   metrics;   /* size metrics                    */
+    FT_Size_Internal  internal;
+    
 
   } FT_SizeRec;
 
@@ -974,20 +989,16 @@
   typedef struct FT_SubGlyph_  FT_SubGlyph;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_GlyphLoader                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The glyph loader is an internal object used to load several glyphs */
-  /*    together (for example, in the case of composites).                 */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The glyph loader implementation is not part of the high-level API, */
-  /*    hence the forward structure declaration.                           */
-  /*                                                                       */
-  typedef struct FT_GlyphLoader_  FT_GlyphLoader;
+ /*********************************************************************
+  *
+  * <Type>
+  *    FT_Slot_Internal
+  *
+  * <Description>
+  *    an opaque handle to a FT_Slot_InternalRec structure, used to
+  *    model private data of a given FT_GlyphSlot object.
+  */
+  typedef struct FT_Slot_InternalRec_*   FT_Slot_Internal;
 
 
   /*************************************************************************/
@@ -1146,14 +1157,7 @@
 
     void*             other;
 
-    /*@private begin */
-
-    FT_GlyphLoader*   loader;
-    FT_Bool           glyph_transformed;
-    FT_Matrix         glyph_matrix;
-    FT_Vector         glyph_delta;
-
-    /*@private end */
+    FT_Slot_Internal  internal;
 
   } FT_GlyphSlotRec;
 

@@ -222,7 +222,7 @@
     if ( decoder->builder.no_recurse )
     {
       FT_GlyphSlot     glyph  = (FT_GlyphSlot)decoder->builder.glyph;
-      FT_GlyphLoader*  loader = glyph->loader;
+      FT_GlyphLoader*  loader = glyph->internal->loader;
       FT_SubGlyph*     subg;
 
 
