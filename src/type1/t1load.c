@@ -765,7 +765,7 @@
   static
   int  is_alpha( FT_Byte  c )
   {
-    return ( isalnum( c ) || c == '.' || c == '_' );
+    return ( isalnum( c ) || c == '.' || c == '_' || c == '-' );
   }
 
 
