@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  cffload.c                                                              */
 /*                                                                         */
-/*    OpenType and CFF data/program tables loader (body)                   */
+/*    OpenType and CFF data/program tables loader (body).                  */
 /*                                                                         */
 /*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -2242,7 +2242,8 @@
     cff_done_index( &font->name_index );
     cff_done_index( &font->charstrings_index );
 
-    /* release font dictionaries, but only if working with a CID keyed CFF font */
+    /* release font dictionaries, but only if working with */
+    /* a CID keyed CFF font                                */
     if ( font->num_subfonts > 0 )
     {
       for ( index = 0; index < font->num_subfonts; index++ )

@@ -142,19 +142,21 @@ FT_BEGIN_HEADER
 
   } FTC_FontRec;
 
+
  /* */
 
-#define  FTC_FONT_COMPARE(f1,f2)                           \
-             ( (f1)->face_id    == (f2)->face_id    &&     \
-               (f1)->pix_width  == (f2)->pix_width  &&     \
-               (f1)->pix_height == (f2)->pix_height )
+#define FTC_FONT_COMPARE( f1, f2 )                  \
+          ( (f1)->face_id    == (f2)->face_id    && \
+            (f1)->pix_width  == (f2)->pix_width  && \
+            (f1)->pix_height == (f2)->pix_height )
 
-#define  FTC_FACE_ID_HASH(i)   ((FT_UInt32)(FT_Pointer)(i))
+#define FTC_FACE_ID_HASH( i )  ((FT_UInt32)(FT_Pointer)( i ))
 
-#define  FTC_FONT_HASH(f)                                   \
-             (FT_UInt32)( FTC_FACE_ID_HASH((f)->face_id) ^  \
-                          ((f)->pix_width << 8)          ^  \
-                          ((f)->pix_height)              )
+#define FTC_FONT_HASH( f )                              \
+          (FT_UInt32)( FTC_FACE_ID_HASH((f)->face_id) ^ \
+                       ((f)->pix_width << 8)          ^ \
+                       ((f)->pix_height)              )
+
 
   /*************************************************************************/
   /*                                                                       */

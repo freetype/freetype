@@ -20,4 +20,4 @@ SubDirHdrs  [ FT2_SubDir  src pshinter ] ;
   Library  $(FT2_LIB) : $(_sources).c ;
 }
 
-# end of src/psaux Jamfile
+# end of src/pshinter Jamfile

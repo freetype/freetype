@@ -34,15 +34,17 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define  FTC_CSET_CHUNK_INDEX(cset,gindex)   \
-                  ( (gindex) / (cset)->item_count )
-                  
-#define  FTC_CSET_START(cset,gindex)    \
-                  ( FTC_CSET_CHUNK_INDEX(cset,gindex) * (cset)->item_count )
 
-#define  FTC_CSET_HASH(cset,gindex)  \
-             ((FT_UFast)( ((cset)->hash << 16) | \
-                          (FTC_CSET_CHUNK_INDEX(cset,gindex) & 0xFFFF) ))
+#define FTC_CSET_CHUNK_INDEX( cset, gindex ) \
+          ( (gindex) / (cset)->item_count )
+                  
+#define FTC_CSET_START( cset, gindex )                                  \
+          ( FTC_CSET_CHUNK_INDEX( cset, gindex ) * (cset)->item_count )
+
+#define FTC_CSET_HASH( cset, gindex )                                         \
+          ( (FT_UFast)( ( (cset)->hash << 16 ) |                              \
+                        ( FTC_CSET_CHUNK_INDEX( cset, gindex ) & 0xFFFF ) ) )
+
 
   /* create a new chunk node, setting its cache index and ref count */
   FT_EXPORT_DEF( FT_Error )
@@ -54,10 +56,11 @@
     FTC_ChunkCache  ccache = cset->ccache;
     FT_Error        error  = 0;
     FT_UInt         len;
-    FT_UInt         start  = FTC_CSET_START(cset,gindex);
+    FT_UInt         start  = FTC_CSET_START( cset, gindex );
+
 
     cnode->cset       = cset;
-    cnode->node.hash  = FTC_CSET_HASH(cset,gindex);
+    cnode->node.hash  = FTC_CSET_HASH( cset, gindex );
     cnode->item_start = start;
 
     len = cset->item_total - start;
@@ -70,10 +73,11 @@
     {
       FT_Memory  memory = ccache->cache.memory;
      
+
       error = MEM_Alloc( cnode->items, cset->item_size * cnode->item_count ); 
     }
 
-    if   (!error )
+    if ( !error )
       cset->num_chunks++;
       
     return error;
@@ -83,19 +87,19 @@
   FT_EXPORT_DEF( void )
   ftc_chunk_node_done( FTC_ChunkNode  cnode )
   {
-    FTC_ChunkSet  cset  = cnode->cset;
+    FTC_ChunkSet  cset   = cnode->cset;
     FT_Memory     memory = cset->ccache->cache.memory;
+
 
     /* destroy the node */
     FREE( cnode->items );
     cnode->item_count = 0;
     cnode->item_start = 0;
 
-    /* remove from parent set table - eventually destroy the set */
+    /* remove from parent set table -- eventually destroy the set */
     if ( --cset->num_chunks <= 0 )
-      FT_LruList_Remove( cset->ccache->cset_lru, (FT_LruNode) cset );
+      FT_LruList_Remove( cset->ccache->cset_lru, (FT_LruNode)cset );
   }
-
 
 
   /*************************************************************************/
@@ -143,9 +147,9 @@
 
 
   FT_EXPORT_DEF( void )
-  ftc_chunk_cache_done(  FTC_ChunkCache  ccache )
+  ftc_chunk_cache_done( FTC_ChunkCache  ccache )
   {
-    ftc_cache_done( FTC_CACHE(ccache) );
+    ftc_cache_done( FTC_CACHE( ccache ) );
 
     /* simply delete all remaining glyph sets */
     if ( ccache->cset_lru )
@@ -156,15 +160,16 @@
   }
 
 
-
   FT_EXPORT_DEF( FT_Error )
   ftc_chunk_cache_init( FTC_ChunkCache    ccache,
                         FT_LruList_Class  cset_class )
   {
     FT_Error  error;
 
-    error = ftc_cache_init( FTC_CACHE(ccache) );
-    if (error) goto Exit;
+
+    error = ftc_cache_init( FTC_CACHE( ccache ) );
+    if ( error )
+      goto Exit;
 
     error = FT_LruList_New( cset_class, 0, ccache,
                             ccache->cache.memory,
@@ -172,7 +177,6 @@
   Exit:
     return error;
   }
-
 
 
   FT_EXPORT_DEF( FT_Error )
@@ -183,14 +187,15 @@
     FT_LruNode    node;
     FT_Error      error;
     
+
     error = FT_LruList_Lookup( ccache->cset_lru, query, &node );
     if ( !error )
     {
-      FTC_ChunkSet  cset  = FTC_CHUNK_SET(node);
-      FT_UFast      hash  = FTC_CSET_HASH( cset, query->gindex );
+      FTC_ChunkSet  cset = FTC_CHUNK_SET( node );
+      FT_UFast      hash = FTC_CSET_HASH( cset, query->gindex );
 
-      error = ftc_cache_lookup_node( FTC_CACHE(ccache), hash, query,
-                                     FTC_NODE_P(anode) );
+      error = ftc_cache_lookup_node( FTC_CACHE( ccache ), hash, query,
+                                     FTC_NODE_P( anode ) );
     }
     return error;
   }

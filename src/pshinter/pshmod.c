@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  pshmod.c                                                               */
 /*                                                                         */
-/*    FreeType Postscript hinter module implementation (body).             */
+/*    FreeType PostScript hinter module implementation (body).             */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2001 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -15,26 +15,28 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include "pshrec.h"
 #include "pshalgo.h"
 
- /* the Postscript Hinter module structure */
-  typedef struct
-  {
-    FT_ModuleRec             root;
-    PS_HintsRec              ps_hints;
 
-    PSH_Globals_FuncsRec     globals_funcs;
-    T1_Hints_FuncsRec        t1_funcs;
-    T2_Hints_FuncsRec        t2_funcs;
+  /* the Postscript Hinter module structure */
+  typedef struct  PS_Hinter_Module_Rec_
+  {
+    FT_ModuleRec          root;
+    PS_HintsRec           ps_hints;
+
+    PSH_Globals_FuncsRec  globals_funcs;
+    T1_Hints_FuncsRec     t1_funcs;
+    T2_Hints_FuncsRec     t2_funcs;
 
   } PS_Hinter_ModuleRec, *PS_Hinter_Module;
 
 
- /* finalize module */
-  FT_CALLBACK_DEF(void)
+  /* finalize module */
+  FT_CALLBACK_DEF( void )
   ps_hinter_done( PS_Hinter_Module  module )
   {
     module->t1_funcs.hints = NULL;
@@ -44,51 +46,52 @@
   }
 
 
- /* initialise module, create hints recorder and the interface */
-  FT_CALLBACK_DEF(FT_Error)
+  /* initialize module, create hints recorder and the interface */
+  FT_CALLBACK_DEF( FT_Error )
   ps_hinter_init( PS_Hinter_Module  module )
   {
     FT_Memory  memory = module->root.memory;
+
 
     ps_hints_init( &module->ps_hints, memory );
 
     psh_globals_funcs_init( &module->globals_funcs );
 
     t1_hints_funcs_init( &module->t1_funcs );
-    module->t1_funcs.hints = (T1_Hints) & module->ps_hints;
+    module->t1_funcs.hints = (T1_Hints)&module->ps_hints;
 
     t2_hints_funcs_init( &module->t2_funcs );
-    module->t2_funcs.hints = (T2_Hints) & module->ps_hints;
+    module->t2_funcs.hints = (T2_Hints)&module->ps_hints;
 
     return 0;
   }
 
 
- /* returns global hints interface */
-  FT_CALLBACK_DEF(PSH_Globals_Funcs)
+  /* returns global hints interface */
+  FT_CALLBACK_DEF( PSH_Globals_Funcs )
   pshinter_get_globals_funcs( FT_Module  module )
   {
     return &((PS_Hinter_Module)module)->globals_funcs;
   }
 
 
- /* return Type 1 hints interface */
-  FT_CALLBACK_DEF(T1_Hints_Funcs)
+  /* return Type 1 hints interface */
+  FT_CALLBACK_DEF( T1_Hints_Funcs )
   pshinter_get_t1_funcs( FT_Module  module )
   {
     return &((PS_Hinter_Module)module)->t1_funcs;
   }
 
 
- /* return Type 2 hints interface */
-  FT_CALLBACK_DEF(T2_Hints_Funcs)
+  /* return Type 2 hints interface */
+  FT_CALLBACK_DEF( T2_Hints_Funcs )
   pshinter_get_t2_funcs( FT_Module  module )
   {
     return &((PS_Hinter_Module)module)->t2_funcs;
   }
 
 
-  FT_CALLBACK_DEF(PSHinter_Interface)
+  FT_CALLBACK_DEF( PSHinter_Interface )
   pshinter_interface =
   {
     pshinter_get_globals_funcs,
@@ -101,14 +104,17 @@
   const FT_Module_Class  pshinter_module_class =
   {
     0,
-    sizeof( PS_Hinter_ModuleRec ),
+    sizeof ( PS_Hinter_ModuleRec ),
     "pshinter",
     0x10000L,
     0x20000L,
 
-    &pshinter_interface, /* module-specific interface */
+    &pshinter_interface,            /* module-specific interface */
 
-    (FT_Module_Constructor) ps_hinter_init,
-    (FT_Module_Destructor)  ps_hinter_done,
-    (FT_Module_Requester)   0  /* no additional interface for now */
+    (FT_Module_Constructor)ps_hinter_init,
+    (FT_Module_Destructor) ps_hinter_done,
+    (FT_Module_Requester)  0        /* no additional interface for now */
   };
+
+
+/* END */

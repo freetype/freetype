@@ -9,41 +9,41 @@
  * (These amiga.lib functions work under AmigaOS V33 and up)
  */
 extern APTR __asm AsmCreatePool(register __d0 ULONG memFlags,
-				register __d1 ULONG puddleSize,
-				register __d2 ULONG threshSize,
-				register __a6 struct ExecBase *SysBase);
+                                register __d1 ULONG puddleSize,
+                                register __d2 ULONG threshSize,
+                                register __a6 struct ExecBase *SysBase);
 
 extern VOID __asm AsmDeletePool(register __a0 APTR poolHeader,
-				register __a6 struct ExecBase *SysBase);
+                                register __a6 struct ExecBase *SysBase);
 
 extern APTR __asm AsmAllocPooled(register __a0 APTR poolHeader,
-				 register __d0 ULONG memSize,
-				 register __a6 struct ExecBase *SysBase);
+                                 register __d0 ULONG memSize,
+                                 register __a6 struct ExecBase *SysBase);
 
 extern VOID __asm AsmFreePooled(register __a0 APTR poolHeader,
-				register __a1 APTR memory,
-				register __d0 ULONG memSize,
-				register __a6 struct ExecBase *SysBase);
+                                register __a1 APTR memory,
+                                register __d0 ULONG memSize,
+                                register __a6 struct ExecBase *SysBase);
 
 
 // TetiSoft: C implementation of AllocVecPooled (see autodoc exec/AllocPooled)
 APTR AllocVecPooled(APTR poolHeader, ULONG memSize)
 {
-	ULONG newSize = memSize + 4;
-	ULONG *mem = AsmAllocPooled(poolHeader, newSize, SysBase);
+        ULONG newSize = memSize + 4;
+        ULONG *mem = AsmAllocPooled(poolHeader, newSize, SysBase);
 
-	if (!mem)
-		return NULL;
-	*mem = newSize;
-	return mem + 1;
+        if (!mem)
+                return NULL;
+        *mem = newSize;
+        return mem + 1;
 }
 
 // TetiSoft: C implementation of FreeVecPooled (see autodoc exec/AllocPooled)
 void FreeVecPooled(APTR poolHeader, APTR memory)
 {
-	ULONG *realmem = (ULONG *)memory - 1;
+        ULONG *realmem = (ULONG *)memory - 1;
 
-	AsmFreePooled(poolHeader, realmem, *realmem, SysBase);
+        AsmFreePooled(poolHeader, realmem, *realmem, SysBase);
 }
 
 /***************************************************************************/
@@ -215,7 +215,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   /* We use the macro STREAM_FILE for convenience to extract the       */
   /* system-specific stream handle from a given FreeType stream object */
 //#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
-#define STREAM_FILE( stream )  ( (BPTR)stream->descriptor.pointer )	// TetiSoft
+#define STREAM_FILE( stream )  ( (BPTR)stream->descriptor.pointer )        // TetiSoft
 
 
   /*************************************************************************/
@@ -233,7 +233,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   ft_close_stream( FT_Stream  stream )
   {
 //  fclose( STREAM_FILE( stream ) );
-    Close( STREAM_FILE( stream ) );	// TetiSoft
+    Close( STREAM_FILE( stream ) );        // TetiSoft
 
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
@@ -268,13 +268,13 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
                 unsigned long   count )
   {
 //  FILE*  file;
-    BPTR   file;	// TetiSoft
+    BPTR   file;        // TetiSoft
 
 
     file = STREAM_FILE( stream );
 
 //  fseek( file, offset, SEEK_SET );
-    Seek( file, offset, OFFSET_BEGINNING );	// TetiSoft
+    Seek( file, offset, OFFSET_BEGINNING );        // TetiSoft
 
 //  return (unsigned long)fread( buffer, 1, count, file );
     return (unsigned long)FRead( file, buffer, 1, count);
@@ -288,15 +288,15 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
                  FT_Stream    astream )
   {
 //  FILE*  file;
-    BPTR   file;		// TetiSoft
-    struct FileInfoBlock *fib;	// TetiSoft
+    BPTR   file;                // TetiSoft
+    struct FileInfoBlock *fib;        // TetiSoft
 
 
     if ( !astream )
       return FT_Err_Invalid_Stream_Handle;
 
 //  file = fopen( filepathname, "rb" );
-    file = Open( filepathname, MODE_OLDFILE );	// TetiSoft
+    file = Open( filepathname, MODE_OLDFILE );        // TetiSoft
     if ( !file )
     {
       FT_ERROR(( "FT_New_Stream:" ));
@@ -344,7 +344,6 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
 
     return FT_Err_Ok;
   }
-
 
 
 #ifdef FT_DEBUG_MEMORY

@@ -145,6 +145,7 @@ FT_BEGIN_HEADER
   /*    FT_Get_Kerning                                                     */
   /*    FT_Kerning_Mode                                                    */
   /*    FT_Get_Glyph_Name                                                  */
+  /*    FT_Get_Postscript_Name                                             */
   /*                                                                       */
   /*    FT_CharMapRec                                                      */
   /*    FT_Select_Charmap                                                  */
@@ -2292,15 +2293,14 @@ FT_BEGIN_HEADER
   /*    FT_Get_Postscript_Name                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the ASCII Postscript name of a given face, when          */
-  /*    available. This should only work with Postscript and TrueType      */
-  /*    fonts..                                                            */
+  /*    Retrieves the ASCII Postscript name of a given face, if available. */
+  /*    This should only work with Postscript and TrueType fonts.          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face :: handle to source face object.                              */
+  /*    face :: A handle to the source face object.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    pointer to face's Postscript name. NULL when un-available          */
+  /*    A pointer to the face's Postscript name.  NULL if un-available.    */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The returned pointer is owned by the face and will be destroyed    */

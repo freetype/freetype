@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  pshmod.h                                                               */
 /*                                                                         */
-/*    Postscript hinter module interface                                   */
+/*    PostScript hinter module interface (specification).                  */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 2001 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -15,8 +15,9 @@
 /*                                                                         */
 /***************************************************************************/
 
-#ifndef __PS_HINTER_MODULE_H__
-#define __PS_HINTER_MODULE_H__
+
+#ifndef __PSHMOD_H__
+#define __PSHMOD_H__
 
 
 #include <ft2build.h>
@@ -31,7 +32,8 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __PS_HINTER_MODULE_H__ */
+
+#endif /* __PSHMOD_H__ */
 
 
 /* END */

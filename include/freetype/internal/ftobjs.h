@@ -171,15 +171,15 @@ FT_BEGIN_HEADER
   /*    glyph_delta       :: The 2d translation vector corresponding to    */
   /*                         the glyph transformation, if necessary.       */
   /*                                                                       */
-  /*    glyph_hints       :: format-specific glyph hints management        */
+  /*    glyph_hints       :: Format-specific glyph hints management.       */
   /*                                                                       */
-  typedef struct FT_Slot_InternalRec_
+  typedef struct  FT_Slot_InternalRec_
   {
-    FT_GlyphLoader*   loader;
-    FT_Bool           glyph_transformed;
-    FT_Matrix         glyph_matrix;
-    FT_Vector         glyph_delta;
-    void*             glyph_hints;
+    FT_GlyphLoader*  loader;
+    FT_Bool          glyph_transformed;
+    FT_Matrix        glyph_matrix;
+    FT_Vector        glyph_delta;
+    void*            glyph_hints;
   
   } FT_GlyphSlot_InternalRec;
 
@@ -636,7 +636,7 @@ FT_BEGIN_HEADER
                             FT_UInt       render_mode );
 
   typedef const char*
-  (*FT_PSName_Requester)( FT_Face   face );
+  (*FT_PSName_Requester)( FT_Face  face );
 
   typedef FT_Error
   (*FT_Glyph_Name_Requester)( FT_Face     face,

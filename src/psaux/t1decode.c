@@ -141,7 +141,8 @@
       FT_String*  name = (FT_String*)decoder->glyph_names[n];
 
 
-      if ( name && name[0] == glyph_name[0] && strcmp( name,glyph_name ) == 0 )
+      if ( name && name[0] == glyph_name[0] &&
+           strcmp( name,glyph_name ) == 0 )
         return n;
     }
 
@@ -290,6 +291,7 @@
     {
       FT_Outline  dummy;
 
+
       dummy.n_points = (short)( base->n_points - n_base_points );
       dummy.points   = base->points + n_base_points;
 
@@ -336,6 +338,7 @@
     FT_Pos            x, y, orig_x, orig_y;
 
     T1_Hints_Funcs    hinter;
+
 
     /* we don't want to touch the source code -- use macro trick */
 #define start_point    T1_Builder_Start_Point
@@ -738,7 +741,7 @@
             /* apply hints to the loaded glyph outline now */
             hinter->apply( hinter->hints,
                            builder->current,
-                           (PSH_Globals) builder->hints_globals );
+                           (PSH_Globals)builder->hints_globals );
           }
           
           /* add current outline to the glyph slot */
@@ -1086,7 +1089,7 @@
   }
 
 
- /* parse a single Type 1 glyph */
+  /* parse a single Type 1 glyph */
   FT_LOCAL_DEF FT_Error
   T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
                           FT_UInt      glyph )
@@ -1095,7 +1098,7 @@
   }
 
 
- /* initialise T1 decoder */
+  /* initialise T1 decoder */
   FT_LOCAL_DEF FT_Error
   T1_Decoder_Init( T1_Decoder*          decoder,
                    FT_Face              face,
@@ -1137,7 +1140,7 @@
   }
 
 
- /* finalize T1 decoder */
+  /* finalize T1 decoder */
   FT_LOCAL_DEF void
   T1_Decoder_Done( T1_Decoder*  decoder )
   {

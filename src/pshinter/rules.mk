@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2001 by
+# Copyright 2001 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -31,12 +31,11 @@ PSHINTER_DRV_SRC := $(PSHINTER_DIR_)pshrec.c   \
                     $(PSHINTER_DIR_)pshmod.c   \
                     $(PSHINTER_DIR_)pshalgo1.c \
                     $(PSHINTER_DIR_)pshalgo2.c
-                    
+
 
 # PSHINTER driver headers
 #
 PSHINTER_DRV_H := $(PSHINTER_DRV_SRC:%c=%h)
-
 
 
 # PSHINTER driver object(s)
@@ -55,7 +54,7 @@ PSHINTER_DRV_SRC_S := $(PSHINTER_DIR_)pshinter.c
 # PSHINTER driver - single object
 #
 $(PSHINTER_DRV_OBJ_S): $(PSHINTER_DRV_SRC_S) $(PSHINTER_DRV_SRC) \
-                   $(FREETYPE_H) $(PSHINTER_DRV_H)
+                       $(FREETYPE_H) $(PSHINTER_DRV_H)
 	$(PSHINTER_COMPILE) $T$@ $(PSHINTER_DRV_SRC_S)
 
 

@@ -47,12 +47,13 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*                            SIZE  FUNCTIONS                            */
+  /*                            SIZE FUNCTIONS                             */
   /*                                                                       */
   /*  note that we store the global hints in the size's "internal" root    */
-  /*  field..                                                              */
+  /*  field                                                                */
   /*                                                                       */
   /*************************************************************************/
+
 
   static PSH_Globals_Funcs
   T1_Size_Get_Globals_Funcs( T1_Size  size )
@@ -61,60 +62,64 @@
     PSHinter_Interface*  pshinter = face->pshinter;
     FT_Module            module;
     
-    module = FT_Get_Module( size->root.face->driver->root.library, "pshinter" );
+
+    module = FT_Get_Module( size->root.face->driver->root.library,
+                            "pshinter" );
     return ( module && pshinter && pshinter->get_globals_funcs )
            ? pshinter->get_globals_funcs( module )
            : 0 ;
   }
 
 
-  FT_LOCAL_DEF
-  void T1_Size_Done( T1_Size   size )
+  FT_LOCAL_DEF void
+  T1_Size_Done( T1_Size  size )
   {
     if ( size->root.internal )
     {
-      PSH_Globals_Funcs    funcs;
+      PSH_Globals_Funcs  funcs;
     
-      funcs = T1_Size_Get_Globals_Funcs(size);
-      if (funcs)
-        funcs->destroy( (PSH_Globals) size->root.internal );
+
+      funcs = T1_Size_Get_Globals_Funcs( size );
+      if ( funcs )
+        funcs->destroy( (PSH_Globals)size->root.internal );
 
       size->root.internal = 0;
     }
   }
 
 
-
-  FT_LOCAL_DEF
-  FT_Error  T1_Size_Init( T1_Size  size )
+  FT_LOCAL_DEF FT_Error
+  T1_Size_Init( T1_Size  size )
   {
     FT_Error           error = 0;
     PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
     
+
     if ( funcs )
     {
-      PSH_Globals    globals;
-      T1_Face        face = (T1_Face) size->root.face;
+      PSH_Globals  globals;
+      T1_Face      face = (T1_Face)size->root.face;
       
+
       error = funcs->create( size->root.face->memory, 
                              &face->type1.private_dict, &globals );
-      if (!error)
-        size->root.internal = (FT_Size_Internal)(void*) globals;
+      if ( !error )
+        size->root.internal = (FT_Size_Internal)(void*)globals;
     }
     
     return error;
   }
 
 
-
-  FT_LOCAL_DEF
-  FT_Error  T1_Size_Reset( T1_Size  size )
+  FT_LOCAL_DEF FT_Error
+  T1_Size_Reset( T1_Size  size )
   {
-    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs(size);
+    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
     FT_Error           error = 0;
+
     
-    if (funcs)
-      error = funcs->set_scale( (PSH_Globals) size->root.internal,
+    if ( funcs )
+      error = funcs->set_scale( (PSH_Globals)size->root.internal,
                                  size->root.metrics.x_scale,
                                  size->root.metrics.y_scale,
                                  0, 0 );
@@ -178,8 +183,8 @@
   /* <Input>                                                               */
   /*    face :: A typeless pointer to the face object to destroy.          */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  T1_Face_Done( T1_Face  face )
+  FT_LOCAL_DEF void
+  T1_Face_Done( T1_Face  face )
   {
     FT_Memory  memory;
     T1_Font*   type1 = &face->type1;
@@ -237,7 +242,6 @@
       face->root.style_name  = 0;
     }
   }
-
 
 
   /*************************************************************************/

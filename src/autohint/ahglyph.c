@@ -596,11 +596,11 @@
 
             if ( point->out_dir != ah_dir_none )
               goto Is_Weak_Point;
-            
+
             angle_in  = ah_angle( &ivec );
             angle_out = ah_angle( &ovec );
             delta     = angle_in - angle_out;
-            
+
             if ( delta > AH_PI )
               delta = AH_2PI - delta;
 
@@ -952,7 +952,7 @@
           best_score = seg1->score;
         else
           best_score = 32000;
-          
+
         for ( seg2 = segments; seg2 < segment_limit; seg2++ )
           if ( seg1 != seg2 && seg1->dir + seg2->dir == 0 )
           {

@@ -26,6 +26,7 @@
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
+
 FT_BEGIN_HEADER
 
 
@@ -173,7 +174,7 @@ FT_BEGIN_HEADER
     /* support for Multiple Masters fonts */
     T1_Blend*      blend;
     
-    /* since FT 2.1 - interface to Postscript hinter */
+    /* since FT 2.1 - interface to PostScript hinter */
     void*          pshinter;
 
   } T1_FaceRec;

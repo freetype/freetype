@@ -105,10 +105,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#ifdef     MEM_Set
-#  define  MEM_Set(d,s,c)  memset(d,s,c)
-#endif
-
   /* define DEBUG_RASTER if you want to compile a debugging version */
 #define xxxDEBUG_RASTER
 
@@ -188,6 +184,11 @@
 
 
 #endif /* _STANDALONE_ */
+
+
+#ifndef MEM_Set
+#define MEM_Set( d, s, c )  memset( d, s, c )
+#endif
 
 
   /* FMulDiv means `Fast MulDiv'; it is used in case where `b' is       */

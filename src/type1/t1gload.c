@@ -173,7 +173,7 @@
                                  (FT_GlyphSlot)glyph,
                                  (FT_Byte**)type1->glyph_names,
                                  face->blend,
-                                 FT_BOOL(hinting),
+                                 FT_BOOL( hinting ),
                                  T1_Parse_Glyph );
     if ( error )
       goto Exit;
@@ -241,9 +241,9 @@
         if ( size && size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
-/* XXXX: the following needs serious work to work properly with hinting !! */
+  /* XXX: the following needs serious work to work properly with hinting! */
 #if 0
-        /* apply the font matrix, if any.. */
+        /* apply the font matrix, if any */
         FT_Outline_Transform( &glyph->root.outline, &font_matrix );
 
         FT_Outline_Translate( &glyph->root.outline,
@@ -261,7 +261,7 @@
           FT_Fixed     y_scale = glyph->y_scale;
 
 
-          /* First of all, scale the points, fi we're not hinting */
+          /* First of all, scale the points, if we are not hinting */
           if ( !hinting )
             for ( n = cur->n_points; n > 0; n--, vec++ )
             {

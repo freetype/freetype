@@ -1920,6 +1920,7 @@
   {
     const char*  result = NULL;
     
+
     if ( !face )
       goto Exit;
 
@@ -1927,12 +1928,14 @@
     if ( !result )
     {
       /* now, lookup for glyph name */
-      FT_Driver        driver = face->driver;
-      FT_Module_Class* clazz  = FT_MODULE_CLASS( driver );
+      FT_Driver         driver = face->driver;
+      FT_Module_Class*  clazz  = FT_MODULE_CLASS( driver );
+
 
       if ( clazz->get_interface )
       {
         FT_PSName_Requester  requester;
+
 
         requester = (FT_PSName_Requester)clazz->get_interface(
                       FT_MODULE( driver ), "postscript_name" );

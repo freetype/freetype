@@ -185,7 +185,6 @@
   }
 
 
-
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_Class  t1cid_driver_class =
   {
