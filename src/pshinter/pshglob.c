@@ -629,7 +629,7 @@
         PSH_Width      write = dim->stdw.widths;
 
 
-        write->org = priv->standard_width[1];
+        write->org = priv->standard_width[0];
         write++;
 
         read = priv->snap_widths;
@@ -649,9 +649,8 @@
         PSH_Width      write = dim->stdw.widths;
 
 
-        write->org = priv->standard_height[1];
-        write++;
-
+        write->org = priv->standard_height[0];
+        write++;                           
         read = priv->snap_heights;
         for ( count = priv->num_snap_heights; count > 0; count-- )
         {
