@@ -137,8 +137,8 @@
                         FT_Pos  dy )
   {
     AF_Direction  dir;
-    FT_Pos        ax = ABS( dx );
-    FT_Pos        ay = ABS( dy );
+    FT_Pos        ax = FT_ABS( dx );
+    FT_Pos        ay = FT_ABS( dy );
 
 
     dir = AF_DIR_NONE;

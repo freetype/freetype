@@ -1,3 +1,39 @@
+2004-03-04  Werner Lemberg  <wl@gnu.org>
+
+	* Jamfile, vms_make.com, builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype/vcproj, include/freetype/ftmoderr.h:
+	Add LZW module.
+
+	* Jamfile.in: Removed.
+
+	* docs/CHANGES: Updated.
+
+	* include/freetype/internal/ftobjs.h: s/MIN/FT_MIN/, s/MAX/FT_MAX/,
+	s/ABS/FT_ABS/.  Updated all callers.
+
+	* src/type1/t1load.c (parse_dict), src/pcf/pcfdrivr.c
+	(PCF_Face_Init): Use FT_ERROR_BASE.
+
+2004-03-04  Albert Chin  <china@thewrittenword.com>
+
+	Add support for PCF fonts compressed with LZW (extension .pcf.Z,
+	created with `compress').
+
+	* include/freetype/config/ftoption.h, devel/ftoption.h
+	(FT_CONFIG_OPTION_USE_LZW): New macro.
+
+	* include/freetype/ftlzw.h: New file.
+	* include/freetype/config/ftheader.h (FT_LZW_H): New macro for
+	ftlzw.h.
+
+	* src/lzw/*: New files.
+
+	* src/pcf/pcfdrivr.c: Include FT_LZW_H.
+	(PCF_Face_Init): Try LZW also.
+
+	* src/gzip/ftgzip.c: s/0/Gzip_Err_Ok/ where appropriate.
+	Beautify.
+
 2004-03-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshalgo.c (psh_hint_table_init): Simplify code.

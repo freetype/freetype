@@ -854,7 +854,7 @@
 
     (void)T1_ToFixedArray( parser, 6, temp, 3 );
 
-    temp_scale = ABS( temp[3] );
+    temp_scale = FT_ABS( temp[3] );
 
     /* Set Units per EM based on FontMatrix values.  We set the value to */
     /* 1000 / temp_scale, because temp_scale was already multiplied by   */
@@ -1660,7 +1660,7 @@
                   keyword_flag[0] = 1;
                 else
                 {
-                  if ( parser->root.error == T1_Err_Ignore )
+                  if ( FT_ERROR_BASE( parser->root.error ) == FT_Err_Ignore )
                     parser->root.error = T1_Err_Ok;
                   else
                     return parser->root.error;

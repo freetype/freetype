@@ -469,7 +469,7 @@
     FT_Pos      max_coord     = -32000;
 #endif
 
-    major_dir   = ABS( axis->major_dir );
+    major_dir   = FT_ABS( axis->major_dir );
     segment_dir = major_dir;
 
     /* set up (u,v) in each point */
@@ -524,8 +524,8 @@
       if ( point == last )  /* skip singletons -- just in case */
         continue;
 
-      if ( ABS( last->out_dir )  == major_dir &&
-           ABS( point->out_dir ) == major_dir )
+      if ( FT_ABS( last->out_dir )  == major_dir &&
+           FT_ABS( point->out_dir ) == major_dir )
       {
         /* we are already on an edge, try to locate its start */
         last = point;
@@ -533,7 +533,7 @@
         for (;;)
         {
           point = point->prev;
-          if ( ABS( point->out_dir ) != major_dir )
+          if ( FT_ABS( point->out_dir ) != major_dir )
           {
             point = point->next;
             break;
@@ -598,7 +598,7 @@
           passed = 1;
         }
 
-        if ( !on_edge && ABS( point->out_dir ) == major_dir )
+        if ( !on_edge && FT_ABS( point->out_dir ) == major_dir )
         {
           /* this is the start of a new segment! */
           segment_dir = point->out_dir;

@@ -16,8 +16,6 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       correctly  treated as a  CID, similar  to FreeType's  CID driver
       module.  Note that CID CMap support is still missing.
 
-    - Embedded bitmaps in SFNT-based CFF fonts are now supported.
-
     - The FT_FACE_FLAGS_GLYPH_NAMES is now  set correctly for all font
       formats.
 
@@ -52,6 +50,9 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       ADD_STYLE_NAME    properties.     Values    are   appended    to
       face->style_name; example: `Bold SemiCondensed'.
 
+    - The PCF driver now handles bitmap  fonts compressed with the LZW
+      algorithm (extension .pcf.Z, compressed with `compress').
+
     - A  new  API   function  `FT_Get_CMap_Language_ID'  (declared  in
       `tttables.h')  is  available  to   get  the  language  ID  of  a
       TrueType/SFNT cmap.
@@ -60,6 +61,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       CID-keyed Type 1 fonts is now supported.  While this can't occur
       in  file-based   fonts,  it  can   happen  in  document-embedded
       resources of PostScript documents.
+
+    - Embedded bitmaps in SFNT-based CFF fonts are now supported.
 
     - A simple  API is  now available  to control  FreeType's  tracing
       mechanism if compiled  with FT_DEBUG_LEVEL_TRACE.   See the file

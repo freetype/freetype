@@ -2403,7 +2403,7 @@
     /* at small sizes, F_dot_P can become too small, resulting   */
     /* in overflows and `spikes' in a number of glyphs like `w'. */
 
-    if ( ABS( CUR.F_dot_P ) < 0x4000000L )
+    if ( FT_ABS( CUR.F_dot_P ) < 0x4000000L )
       CUR.F_dot_P = 0x40000000L;
 
     /* Disable cached aspect ratio */
@@ -2446,7 +2446,7 @@
     FT_UNUSED_EXEC;
 
 
-    if ( ABS( Vx ) < 0x10000L && ABS( Vy ) < 0x10000L )
+    if ( FT_ABS( Vx ) < 0x10000L && FT_ABS( Vy ) < 0x10000L )
     {
       Vx *= 0x100;
       Vy *= 0x100;
@@ -2985,8 +2985,8 @@
     args[0] = TT_MULDIV( args[0], args[1], 64L );
 
 
-#define DO_ABS                \
-    args[0] = ABS( args[0] );
+#define DO_ABS                   \
+    args[0] = FT_ABS( args[0] );
 
 
 #define DO_NEG          \
@@ -5708,7 +5708,7 @@
 
     if ( ( CUR.opcode & 1 ) != 0 )   /* rounding and control cutin flag */
     {
-      if ( ABS( distance - org_dist ) > CUR.GS.control_value_cutin )
+      if ( FT_ABS( distance - org_dist ) > CUR.GS.control_value_cutin )
         distance = org_dist;
 
       distance = CUR_Func_round( distance, CUR.tt_metrics.compensations[0] );
@@ -5752,7 +5752,7 @@
 
     /* single width cutin test */
 
-    if ( ABS( org_dist - CUR.GS.single_width_value ) <
+    if ( FT_ABS( org_dist - CUR.GS.single_width_value ) <
          CUR.GS.single_width_cutin )
     {
       if ( org_dist >= 0 )
@@ -5842,7 +5842,7 @@
 
     /* single width test */
 
-    if ( ABS( cvt_dist - CUR.GS.single_width_value ) <
+    if ( FT_ABS( cvt_dist - CUR.GS.single_width_value ) <
          CUR.GS.single_width_cutin )
     {
       if ( cvt_dist >= 0 )
@@ -5886,7 +5886,7 @@
       /*      refer to the same zone.                                  */
 
       if ( CUR.GS.gep0 == CUR.GS.gep1 )
-        if ( ABS( cvt_dist - org_dist ) >= CUR.GS.control_value_cutin )
+        if ( FT_ABS( cvt_dist - org_dist ) >= CUR.GS.control_value_cutin )
           cvt_dist = org_dist;
 
       distance = CUR_Func_round(
@@ -6036,7 +6036,7 @@
     discriminant = TT_MULDIV( dax, -dby, 0x40 ) +
                    TT_MULDIV( day, dbx, 0x40 );
 
-    if ( ABS( discriminant ) >= 0x40 )
+    if ( FT_ABS( discriminant ) >= 0x40 )
     {
       val = TT_MULDIV( dx, -dby, 0x40 ) + TT_MULDIV( dy, dbx, 0x40 );
 

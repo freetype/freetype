@@ -427,7 +427,7 @@
     FT_Fixed  delta2 = FT_PIX_ROUND( pos + len ) - pos - len;
 
 
-    if ( ABS( delta1 ) <= ABS( delta2 ) )
+    if ( FT_ABS( delta1 ) <= FT_ABS( delta2 ) )
       return delta1;
     else
       return delta2;
@@ -771,7 +771,7 @@
               FT_Fixed  side_delta = psh_hint_snap_stem_side_delta ( pos,
                                                                      len );
 
-              if ( ABS( side_delta ) < ABS( delta_b ) )
+              if ( FT_ABS( side_delta ) < FT_ABS( delta_b ) )
                 pos += side_delta;
               else
                 pos += delta_b;
@@ -1414,7 +1414,7 @@
           flag = PSH_POINT_EDGE_MIN;
           d    = point->org_u - hint->org_pos;
 
-          if ( ABS( d ) < threshold )
+          if ( FT_ABS( d ) < threshold )
           {
           Is_Strong:
             psh_point_set_strong( point );
@@ -1428,7 +1428,7 @@
           flag = PSH_POINT_EDGE_MAX;
           d    = point->org_u - hint->org_pos - hint->org_len;
 
-          if ( ABS( d ) < threshold )
+          if ( FT_ABS( d ) < threshold )
             goto Is_Strong;
         }
       }
@@ -1464,7 +1464,7 @@
           flag = PSH_POINT_EDGE_MIN;
           d    = point->org_u - hint->org_pos;
 
-          if ( ABS( d ) < threshold )
+          if ( FT_ABS( d ) < threshold )
           {
           Is_Strong2:
             point->flags2 |= flag;
@@ -1478,7 +1478,7 @@
           flag = PSH_POINT_EDGE_MAX;
           d    = point->org_u - hint->org_pos - hint->org_len;
 
-          if ( ABS( d ) < threshold )
+          if ( FT_ABS( d ) < threshold )
             goto Is_Strong2;
         }
 

@@ -151,6 +151,8 @@ all :
         $(MMS)$(MMSQUALIFIERS)
         set default [-.gzip]
         $(MMS)$(MMSQUALIFIERS)
+        set default [-.lzw]
+        $(MMS)$(MMSQUALIFIERS)
         set default [-.pcf]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.pfr]
@@ -270,6 +272,39 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=($(LIBINCS)[--.include],[--.src.gzip])
 
 OBJS=ftgzip.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.lzw] directory"
+$ create [.src.lzw]descrip.mms
+$ open/append out [.src.lzw]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 LZW support compilation rules for VMS
+#
+
+
+# Copyright 2004 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+$EOD
+$ if libincs .nes. "" then write out "LIBINCS = ", libincs, ","
+$ copy sys$input: out
+$ deck
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=($(LIBINCS)[--.include],[--.src.lzw])
+
+OBJS=ftlzw.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
