@@ -487,6 +487,7 @@
   /* */
 
 #define FT_TRIGONOMETRY_H          <freetype/fttrigon.h>
+#define FT_STROKER_H               <freetype/ftstroker.h>
 #define FT_SYNTHESIS_H             <freetype/ftsynth.h>
 #define FT_ERROR_DEFINITIONS_H     <freetype/fterrdef.h>
 
