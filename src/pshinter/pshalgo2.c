@@ -317,7 +317,7 @@
   ps_simple_scale( PSH2_Hint_Table  table,
                    FT_Fixed         scale,
                    FT_Fixed         delta,
-                   FT_Bool          vertical )
+                   FT_Int           vertical )
   {
     PSH2_Hint  hint;
     FT_UInt    count;
@@ -339,7 +339,7 @@
   static void
   psh2_hint_align( PSH2_Hint    hint,
                    PSH_Globals  globals,
-                   FT_Bool      vertical )
+                   FT_Int       vertical )
   {
     PSH_Dimension  dim   = &globals->dimension[vertical];
     FT_Fixed       scale = dim->scale_mult;
@@ -370,6 +370,8 @@
         
       /* check blue zones for horizontal stems */
       align.align = 0;
+      align.align_bot = align.align_top = 0;
+      
       if (!vertical)
       {
         psh_blues_snap_stem( &globals->blues,
@@ -458,7 +460,7 @@
   static void
   psh2_hint_table_align_hints( PSH2_Hint_Table  table,
                                PSH_Globals      globals,
-                               FT_Bool          vertical )
+                               FT_Int           vertical )
   {
     PSH2_Hint      hint;
     FT_UInt        count;
@@ -616,6 +618,7 @@
   }
 #endif
 
+#if 0
  /* tune a single coordinate with the current interpolation zones */  
   static FT_Pos
   psh2_hint_table_tune_coord( PSH2_Hint_Table  table,
@@ -652,7 +655,7 @@
         
     return FT_MulFix( coord, zone->scale ) + zone->delta;
   }
-
+#endif
 
 #if 0
  /* tune a given outline with current interpolation zones */
@@ -661,7 +664,7 @@
   psh2_hint_table_tune_outline( PSH2_Hint_Table  table,
                                 FT_Outline*      outline,
                                 PSH_Globals      globals,
-                                FT_Bool          vertical )
+                                FT_Int           vertical )
 
   {
     FT_UInt        count, first, last;
@@ -887,12 +890,12 @@
         dxi = vec[n].x - vec[n_prev].x;
         dyi = vec[n].y - vec[n_prev].y;
         
-        point->dir_in    = psh2_compute_dir( dxi, dyi );
+        point->dir_in = (FT_Char) psh2_compute_dir( dxi, dyi );
 
         dxo = vec[n_next].x - vec[n].x;
         dyo = vec[n_next].y - vec[n].y;
 
-        point->dir_out   = psh2_compute_dir( dxo, dyo );
+        point->dir_out   = (FT_Char) psh2_compute_dir( dxo, dyo );
         
         /* detect smooth points */
         if ( point->flags & PSH2_POINT_OFF )
@@ -952,7 +955,7 @@
  /* load outline point coordinates into hinter glyph */
   static void
   psh2_glyph_load_points( PSH2_Glyph  glyph,
-                          FT_Bool     vertical )
+                          FT_Int      vertical )
   {
     FT_Vector*  vec   = glyph->outline->points;
     PSH2_Point  point = glyph->points;
@@ -978,7 +981,7 @@
  /* save hinted point coordinates back to outline */
   static void
   psh2_glyph_save_points( PSH2_Glyph  glyph,
-                          FT_Bool     vertical )
+                          FT_Int      vertical )
   {
     FT_UInt     n;
     PSH2_Point  point = glyph->points;
@@ -1061,7 +1064,7 @@
  /* find strong points in a glyph */
   static void
   psh2_glyph_find_strong_points( PSH2_Glyph  glyph,
-                                 FT_Bool     vertical )
+                                 FT_Int      vertical )
   {
     /* a point is strong if it is located on a stem                   */
     /* edge and has an "in" or "out" tangent to the hint's direction  */
@@ -1128,7 +1131,7 @@
  /* interpolate strong points with the help of hinted coordinates */
   static void
   psh2_glyph_interpolate_strong_points( PSH2_Glyph  glyph,
-                                        FT_Bool     vertical )
+                                        FT_Int      vertical )
   {
     PSH_Dimension    dim   = &glyph->globals->dimension[vertical];
     FT_Fixed         scale = dim->scale_mult;
@@ -1169,7 +1172,7 @@
 
   static void
   psh2_glyph_interpolate_normal_points( PSH2_Glyph  glyph,
-                                        FT_Bool     vertical )
+                                        FT_Int      vertical )
   {
 #if 1
     PSH_Dimension    dim   = &glyph->globals->dimension[vertical];
@@ -1279,7 +1282,7 @@
  /* interpolate other points */
   static void
   psh2_glyph_interpolate_other_points( PSH2_Glyph  glyph,
-                                       FT_Bool     vertical )
+                                       FT_Int      vertical )
   {
     PSH_Dimension dim          = &glyph->globals->dimension[vertical];
     FT_Fixed      scale        = dim->scale_mult;

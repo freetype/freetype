@@ -311,7 +311,7 @@
   ps_simple_scale( PSH1_Hint_Table  table,
                    FT_Fixed         scale,
                    FT_Fixed         delta,
-                   FT_Bool          vertical )
+                   FT_Int           vertical )
   {
     PSH1_Hint  hint;
     FT_UInt    count;
@@ -335,11 +335,13 @@
   psh1_hint_table_optimize( PSH1_Hint_Table  table,
                             PSH_Globals      globals,
                             FT_Outline*      outline,
-                            FT_Bool          vertical )
+                            FT_Int           vertical )
   {
     PSH_Dimension  dim   = &globals->dimension[vertical];
     FT_Fixed       scale = dim->scale_mult;
     FT_Fixed       delta = dim->scale_delta;
+
+    FT_UNUSED(outline);
 
 #ifdef DEBUG_HINTER
     if ( ps_debug_no_vert_hints && vertical )
@@ -385,7 +387,8 @@
           hint->cur_len = fit_len;
             
           /* check blue zones for horizontal stems */
-          align.align = 0;
+          align.align     = 0;
+          align.align_bot = align.align_top = 0;
           if (!vertical)
           {
             psh_blues_snap_stem( &globals->blues,
@@ -627,7 +630,7 @@
   psh1_hint_table_tune_outline( PSH1_Hint_Table  table,
                                 FT_Outline*      outline,
                                 PSH_Globals      globals,
-                                FT_Bool          vertical )
+                                FT_Int           vertical )
 
   {
     FT_UInt         count, first, last;
@@ -707,8 +710,8 @@
                    PSH_Globals  globals )
   {
     PSH1_Hint_TableRec  hints;
-    FT_Error           error;
-    FT_Int             dimension;
+    FT_Error            error = 0;
+    FT_Int              dimension;
     
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
