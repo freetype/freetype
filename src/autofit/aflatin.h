@@ -92,7 +92,6 @@ FT_BEGIN_HEADER
     AF_ScriptMetricsRec   root;
     FT_UInt               units_per_em;
     AF_LatinAxisRec       axis[ AF_DIMENSION_MAX ];
-    AF_ScalerRec          scaler;
 
   } AF_LatinMetricsRec, *AF_LatinMetrics;
 

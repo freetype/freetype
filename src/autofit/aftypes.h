@@ -195,7 +195,8 @@ FT_BEGIN_HEADER
   */
   typedef enum
   {
-    AF_SCRIPT_LATIN = 0,
+    AF_SCRIPT_NONE  = 0,
+    AF_SCRIPT_LATIN = 1,
     /* add new scripts here. don't forget to update the list in "afglobal.c" */
 
     AF_SCRIPT_MAX   /* do not remove */
@@ -209,6 +210,7 @@ FT_BEGIN_HEADER
   typedef struct AF_ScriptMetricsRec_
   {
     AF_ScriptClass    clazz;
+    AF_ScalerRec      scaler;
 
   } AF_ScriptMetricsRec, *AF_ScriptMetrics;
 

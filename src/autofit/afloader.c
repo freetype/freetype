@@ -426,7 +426,10 @@
       {
         loader->metrics = metrics;
 
-        metrics->clazz->script_metrics_scale( metrics, &scaler );
+        metrics->scaler = scaler;
+
+        if ( metrics->clazz->script_metrics_scale )
+          metrics->clazz->script_metrics_scale( metrics, &scaler );
 
         load_flags |=  FT_LOAD_NO_SCALE | FT_LOAD_IGNORE_TRANSFORM;
         load_flags &= ~FT_LOAD_RENDER;
