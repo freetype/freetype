@@ -62,20 +62,20 @@ FT_BEGIN_HEADER
 #include <limits.h>
 
   /* The number of bytes in an `int' type.  */
-#if   UINT_MAX == 0xFFFFFFFF
+#if   UINT_MAX == 0xFFFFFFFFU
 #define FT_SIZEOF_INT  4
-#elif UINT_MAX == 0xFFFF
+#elif UINT_MAX == 0xFFFFU
 #define FT_SIZEOF_INT  2
-#elif UINT_MAX > 0xFFFFFFFF && UINT_MAX == 0xFFFFFFFFFFFFFFFF
+#elif UINT_MAX > 0xFFFFFFFFU && UINT_MAX == 0xFFFFFFFFFFFFFFFFU
 #define FT_SIZEOF_INT  8
 #else
 #error "Unsupported number of bytes in `int' type!"
 #endif
 
   /* The number of bytes in a `long' type.  */
-#if   ULONG_MAX == 0xFFFFFFFF
+#if   ULONG_MAX == 0xFFFFFFFFU
 #define FT_SIZEOF_LONG  4
-#elif ULONG_MAX > 0xFFFFFFFF && ULONG_MAX == 0xFFFFFFFFFFFFFFFF
+#elif ULONG_MAX > 0xFFFFFFFFU && ULONG_MAX == 0xFFFFFFFFFFFFFFFFU
 #define FT_SIZEOF_LONG  8
 #else
 #error "Unsupported number of bytes in `long' type!"
