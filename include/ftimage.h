@@ -224,36 +224,36 @@
   /*    in FreeType 1.x.                                                   */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    n_contours     :: The number of contours in the outline.           */
+  /*    n_contours :: The number of contours in the outline.               */
   /*                                                                       */
-  /*    n_points       :: The number of points in the outline.             */
+  /*    n_points   :: The number of points in the outline.                 */
   /*                                                                       */
-  /*    points         :: A pointer to an array of `n_points' FT_Vector    */
-  /*                      elements, giving the outline's point             */
-  /*                      coordinates.                                     */
+  /*    points     :: A pointer to an array of `n_points' FT_Vector        */
+  /*                  elements, giving the outline's point                 */
+  /*                  coordinates.                                         */
   /*                                                                       */
-  /*    flags          :: A pointer to an array of `n_points' chars,       */
-  /*                      giving each outline point's type.  If bit 0 is   */
-  /*                      set, the point is `off' the curve, i.e., a       */
-  /*                      Bezier control point, while it is `on' when      */
-  /*                      unset.                                           */
+  /*    tags       :: A pointer to an array of `n_points' chars,           */
+  /*                  giving each outline point's type.  If bit 0 is       */
+  /*                  unset, the point is 'off' the curve, i.e. a          */
+  /*                  Bezier control point, while it is `on' when          */
+  /*                  unset.                                               */
   /*                                                                       */
-  /*                      Bit 1 is meaningful for `off' points only.  If   */
-  /*                      set, it indicates a third-order Bezier arc       */
-  /*                      control point; and a second-order control point  */
-  /*                      if unset.                                        */
+  /*                  Bit 1 is meaningful for `off' points only.  If       */
+  /*                  set, it indicates a third-order Bezier arc           */
+  /*                  control point; and a second-order control point      */
+  /*                  if unset.                                            */
   /*                                                                       */
-  /*    contours       :: An array of `n_contours' shorts, giving the end  */
-  /*                      point of each contour within the outline.  For   */
-  /*                      example, the first contour is defined by the     */
-  /*                      points `0' to `contours[0]', the second one is   */
-  /*                      defined by the points `contours[0]+1' to         */
-  /*                      `contours[1]', etc.                              */
+  /*    contours   :: An array of `n_contours' shorts, giving the end      */
+  /*                  point of each contour within the outline.  For       */
+  /*                  example, the first contour is defined by the         */
+  /*                  points `0' to `contours[0]', the second one is       */
+  /*                  defined by the points `contours[0]+1' to             */
+  /*                  `contours[1]', etc.                                  */
   /*                                                                       */
-  /*    outline_flags  :: a set of bit flags used to characterize the      */
-  /*                      outline and give hints to the scan-converter     */
-  /*                      and hinter on how to convert/grid-fit it..       */
-  /*                      see FT_Outline_Flags..                           */
+  /*    flags      :: a set of bit flags used to characterize the          */
+  /*                  outline and give hints to the scan-converter         */
+  /*                  and hinter on how to convert/grid-fit it..           */
+  /*                  see FT_Outline_Flags..                               */
   /*                                                                       */
   typedef struct  FT_Outline_
   {
@@ -261,10 +261,10 @@
     short       n_points;        /* number of points in the glyph      */
 
     FT_Vector*  points;          /* the outline's points               */
-    char*       flags;           /* the points flags                   */
+    char*       tags;            /* the points flags                   */
     short*      contours;        /* the contour end points             */
 
-    int         outline_flags;   /* outline masks                      */
+    int         flags;           /* outline masks                      */
     
   } FT_Outline;
 

@@ -164,7 +164,7 @@
 
     target->org   = source->org + np;
     target->cur   = source->cur + np;
-    target->flags = source->flags + np;
+    target->tags = source->tags + np;
 
     target->contours = source->contours + nc;
 
@@ -271,10 +271,10 @@
     stream->cursor += n_ins;
     
     /*********************************************************************/
-    /* reading the point flags                                           */
+    /* reading the point tags                                           */
 
     {    
-      TT_Byte*  flag  = load->zone.flags;
+      TT_Byte*  flag  = load->zone.tags;
       TT_Byte*  limit = flag + n_points;
       TT_Byte   c, count;
       
@@ -295,7 +295,7 @@
     {
       TT_Vector*  vec   = zone->org;
       TT_Vector*  limit = vec + n_points;
-      TT_Byte*    flag  = zone->flags;
+      TT_Byte*    flag  = zone->tags;
       TT_Pos      x     = 0;
       
       for ( ; vec < limit; vec++, flag++ )
@@ -321,7 +321,7 @@
     {
       TT_Vector*  vec   = zone->org;
       TT_Vector*  limit = vec + n_points;
-      TT_Byte*    flag  = zone->flags;
+      TT_Byte*    flag  = zone->tags;
       TT_Pos      x     = 0;
       
       for ( ; vec < limit; vec++, flag++ )
@@ -363,12 +363,12 @@
       pp2->x = pp1->x + load->advance;
       pp2->y = 0;
         
-      /* clear the touch flags */
+      /* clear the touch tags */
       for ( n = 0; n < n_points; n++ )
-        zone->flags[n] &= FT_Curve_Tag_On;
+        zone->tags[n] &= FT_Curve_Tag_On;
 
-      zone->flags[n_points    ] = 0;
-      zone->flags[n_points + 1] = 0;
+      zone->tags[n_points    ] = 0;
+      zone->tags[n_points + 1] = 0;
     }
     /* Note that we return two more points that are not */
     /* part of the glyph outline.                       */
@@ -870,8 +870,8 @@
           pp1[0] = loader->pp1;
           pp1[1] = loader->pp2;
       
-          pts->flags[num_points + 1] = 0;
-          pts->flags[num_points + 2] = 0;
+          pts->tags[num_points + 1] = 0;
+          pts->tags[num_points + 2] = 0;
       
           /* if hinting, round the phantom points */
           if ( IS_HINTED(loader->load_flags) )
@@ -883,7 +883,7 @@
           {
             TT_UInt  k;
             for ( k = 0; k < n_points; k++ )
-              pts->flags[k] &= FT_Curve_Tag_On;
+              pts->tags[k] &= FT_Curve_Tag_On;
           }
       
           cur_to_org( n_points, pts );
@@ -959,7 +959,7 @@
       for ( u = 0; u < num_points + 2; u++ )
       {
         glyph->outline.points[u] = loader->base.cur[u];
-        glyph->outline.flags [u] = loader->base.flags[u];
+        glyph->outline.tags [u] = loader->base.tags[u];
       }
 
       for ( u = 0; u < num_contours; u++ )
@@ -970,7 +970,7 @@
     glyph->outline.n_contours  = num_contours;
     
     /* glyph->outline.second_pass = TRUE; */
-    glyph->outline.outline_flags &= ~ft_outline_single_pass;
+    glyph->outline.flags &= ~ft_outline_single_pass;
 
     /* translate array so that (0,0) is the glyph's origin */
     translate_array( (TT_UShort)(num_points + 2),
@@ -1263,10 +1263,10 @@
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     /* clear all outline flags, except the "owner" one */
-    glyph->outline.outline_flags &= ft_outline_owner;
+    glyph->outline.flags &= ft_outline_owner;
     
     if (size && size->root.metrics.y_ppem < 24 )
-      glyph->outline.outline_flags |= ft_outline_high_precision;
+      glyph->outline.flags |= ft_outline_high_precision;
 
     /************************************************************************/
     /* let's initialise the rest of our loader now                          */

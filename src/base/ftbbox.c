@@ -398,7 +398,7 @@
       if ( y < cbox.yMin ) cbox.yMin = y;
       if ( y > cbox.yMax ) cbox.yMax = y;
 
-      if ( FT_CURVE_TAG( outline->flags[n] ) == FT_Curve_Tag_On )
+      if ( FT_CURVE_TAG( outline->tags[n] ) == FT_Curve_Tag_On )
       {
         /* update bbox for `on' points only */
         if ( x < bbox.xMin ) bbox.xMin = x;

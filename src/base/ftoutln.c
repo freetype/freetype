@@ -60,18 +60,18 @@
     MEM_Copy( target->points, source->points,
               source->n_points * 2 * sizeof ( FT_Pos ) );
 
-    MEM_Copy( target->flags, source->flags,
+    MEM_Copy( target->tags, source->tags,
               source->n_points * sizeof ( FT_Byte ) );
 
     MEM_Copy( target->contours, source->contours,
               source->n_contours * sizeof ( FT_Short ) );
 
     /* copy all flags, except the "ft_outline_owner" one */
-    is_owner = target->outline_flags & ft_outline_owner;
-    target->outline_flags = source->outline_flags;
+    is_owner = target->flags & ft_outline_owner;
+    target->flags = source->flags;
     
-    target->outline_flags &= ~ft_outline_owner;
-    target->outline_flags |= is_owner;
+    target->flags &= ~ft_outline_owner;
+    target->flags |= is_owner;
     return FT_Err_Ok;
   }
 

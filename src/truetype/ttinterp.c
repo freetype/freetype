@@ -1383,7 +1383,7 @@
                                        v * 0x10000L,
                                        CUR.F_dot_P );
 #endif
-      zone->flags[point] |= FT_Curve_Tag_Touch_X;
+      zone->tags[point] |= FT_Curve_Tag_Touch_X;
     }
 
     v = CUR.GS.freeVector.y;
@@ -1398,7 +1398,7 @@
                                        v * 0x10000L,
                                        CUR.F_dot_P );
 #endif
-      zone->flags[point] |= FT_Curve_Tag_Touch_Y;
+      zone->tags[point] |= FT_Curve_Tag_Touch_Y;
     }
   }
 
@@ -1420,7 +1420,7 @@
     UNUSED_EXEC;
 
     zone->cur[point].x += distance;
-    zone->flags[point] |= FT_Curve_Tag_Touch_X;
+    zone->tags[point] |= FT_Curve_Tag_Touch_X;
   }
 
 
@@ -1432,7 +1432,7 @@
     UNUSED_EXEC;
 
     zone->cur[point].y += distance;
-    zone->flags[point] |= FT_Curve_Tag_Touch_Y;
+    zone->tags[point] |= FT_Curve_Tag_Touch_Y;
   }
 
 
@@ -4791,7 +4791,7 @@
         }
       }
       else
-        CUR.pts.flags[point] ^= FT_Curve_Tag_On;
+        CUR.pts.tags[point] ^= FT_Curve_Tag_On;
 
       CUR.GS.loop--;
     }
@@ -4825,7 +4825,7 @@
     }
 
     for ( I = L; I <= K; I++ )
-      CUR.pts.flags[I] |= FT_Curve_Tag_On;
+      CUR.pts.tags[I] |= FT_Curve_Tag_On;
   }
 
 
@@ -4853,7 +4853,7 @@
     }
 
     for ( I = L; I <= K; I++ )
-      CUR.pts.flags[I] &= ~FT_Curve_Tag_On;
+      CUR.pts.tags[I] &= ~FT_Curve_Tag_On;
   }
 
 
@@ -4916,14 +4916,14 @@
     {
       CUR.zp2.cur[point].x += dx;
       if ( touch )
-        CUR.zp2.flags[point] |= FT_Curve_Tag_Touch_X;
+        CUR.zp2.tags[point] |= FT_Curve_Tag_Touch_X;
     }
 
     if ( CUR.GS.freeVector.y != 0 )
     {
       CUR.zp2.cur[point].y += dy;
       if ( touch )
-        CUR.zp2.flags[point] |= FT_Curve_Tag_Touch_Y;
+        CUR.zp2.tags[point] |= FT_Curve_Tag_Touch_Y;
     }
   }
 
@@ -5597,7 +5597,7 @@
     dx = CUR.zp0.cur[b0].x - CUR.zp1.cur[a0].x;
     dy = CUR.zp0.cur[b0].y - CUR.zp1.cur[a0].y;
 
-    CUR.zp2.flags[point] |= FT_Curve_Tag_Touch_Both;
+    CUR.zp2.tags[point] |= FT_Curve_Tag_Touch_Both;
 
     discriminant = TT_MULDIV( dax, -dby, 0x40 ) +
                    TT_MULDIV( day, dbx, 0x40 );
@@ -5780,7 +5780,7 @@
     if ( CUR.GS.freeVector.y != 0 )
       mask &= ~FT_Curve_Tag_Touch_Y;
 
-    CUR.zp0.flags[point] &= mask;
+    CUR.zp0.tags[point] &= mask;
   }
 
 
@@ -5933,7 +5933,7 @@
       end_point   = CUR.pts.contours[contour];
       first_point = point;
 
-      while ( point <= end_point && (CUR.pts.flags[point] & mask) == 0 )
+      while ( point <= end_point && (CUR.pts.tags[point] & mask) == 0 )
         point++;
 
       if ( point <= end_point )
@@ -5945,7 +5945,7 @@
 
         while ( point <= end_point )
         {
-          if ( (CUR.pts.flags[point] & mask) != 0 )
+          if ( (CUR.pts.tags[point] & mask) != 0 )
           {
             if ( point > 0 )
               Interp( cur_touched + 1,
@@ -7632,7 +7632,7 @@
 
     MEM_Alloc( save.org, sizeof ( TT_Vector ) * save.n_points );
     MEM_Alloc( save.cur, sizeof ( TT_Vector ) * save.n_points );
-    MEM_Alloc( save.flags, sizeof ( TT_Byte ) * save.n_points );
+    MEM_Alloc( save.tags, sizeof ( TT_Byte ) * save.n_points );
 
     exc->instruction_trap = 1;
 
@@ -7795,7 +7795,7 @@
 
       MEM_Copy( save.org,   pts.org, pts.n_points * sizeof ( TT_Vector ) );
       MEM_Copy( save.cur,   pts.cur, pts.n_points * sizeof ( TT_Vector ) );
-      MEM_Copy( save.flags, pts.flags, pts.n_points );
+      MEM_Copy( save.tags, pts.tags, pts.n_points );
 
       /* a return indicate the last command */
       if (ch == '\r')
@@ -7849,14 +7849,14 @@
         if ( save.org[A].y != pts.org[A].y ) diff |= 2;
         if ( save.cur[A].x != pts.cur[A].x ) diff |= 4;
         if ( save.cur[A].y != pts.cur[A].y ) diff |= 8;
-        if ( save.flags[A] != pts.flags[A] ) diff |= 16;
+        if ( save.tags[A] != pts.tags[A] ) diff |= 16;
 
         if ( diff )
         {
           FT_TRACE0(( "%02hx  ", A ));
 
           if ( diff & 16 ) temp = "(%01hx)"; else temp = " %01hx ";
-          FT_TRACE0(( temp, save.flags[A] & 7 ));
+          FT_TRACE0(( temp, save.tags[A] & 7 ));
 
           if ( diff & 1 ) temp = "(%08lx)"; else temp = " %08lx ";
           FT_TRACE0(( temp, save.org[A].x ));
@@ -7875,7 +7875,7 @@
           FT_TRACE0(( "%02hx  ", A ));
 
           if ( diff & 16 ) temp = "[%01hx]"; else temp = " %01hx ";
-          FT_TRACE0(( temp, pts.flags[A] & 7 ));
+          FT_TRACE0(( temp, pts.tags[A] & 7 ));
 
           if ( diff & 1 ) temp = "[%08lx]"; else temp = " %08lx ";
           FT_TRACE0(( temp, pts.org[A].x ));

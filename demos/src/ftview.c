@@ -189,7 +189,7 @@
       memset( bit_buffer, 0, size );
 
       if (low_prec)
-        glyph->outline.outline_flags &= ~ft_outline_high_precision;
+        glyph->outline.flags &= ~ft_outline_high_precision;
       
       if (use_grays & gray_render)
         error = grays_raster_render( &raster, &glyph->outline, &bit2 );

@@ -336,7 +336,7 @@
   *     n_contours   :: current number of contours in zone
   *     org          :: original glyph coordinates (font units/scaled)
   *     cur          :: current glyph coordinates  (scaled/hinted)
-  *     flags        :: point control flags
+  *     tags         :: point control tags 
   *     contours     :: contour end points
   *
   ***********************************************************************/
@@ -352,7 +352,7 @@
     FT_Vector*  org;        /* original point coordinates  */
     FT_Vector*  cur;        /* current point coordinates   */
 
-    FT_Byte*    flags;      /* current touch flags         */
+    FT_Byte*    tags;       /* current touch flags         */
     FT_UShort*  contours;   /* contour end points          */
 
   } FT_GlyphZone;

@@ -255,7 +255,7 @@
     cur->n_points   = 0;
     cur->n_contours = 0;
     cur->points     = base->points   + base->n_points;
-    cur->flags      = base->flags    + base->n_points;
+    cur->tags      = base->tags    + base->n_points;
     cur->contours   = base->contours + base->n_contours;
 
     error = T1_Parse_CharStrings( decoder,
@@ -282,7 +282,7 @@
     cur->n_points   = 0;
     cur->n_contours = 0;
     cur->points     = base->points   + base->n_points;
-    cur->flags      = base->flags    + base->n_points;
+    cur->tags      = base->tags    + base->n_points;
     cur->contours   = base->contours + base->n_contours;
 
     error = T1_Parse_CharStrings( decoder,
@@ -920,12 +920,12 @@
       if ( REALLOC_ARRAY( builder->base.points,
                           current, builder->max_points, T1_Vector )  ||
   
-           REALLOC_ARRAY( builder->base.flags,
+           REALLOC_ARRAY( builder->base.tags,
                           current, builder->max_points, T1_Byte )    )
         return error;
     
       builder->current.points = builder->base.points + increment;
-      builder->current.flags  = builder->base.flags  + increment;
+      builder->current.tags  = builder->base.tags  + increment;
     }
 
     return T1_Err_Ok;
@@ -1137,18 +1137,18 @@
     if ( num_points > 0 )
     {
       T1_Vector*  source_point;
-      char*       source_flags;
+      char*       source_tags;
       T1_Vector*  point;
-      char*       flags;
+      char*       tags;
               
       error = T1_Add_Points( builder, num_points );
       if (error) return error;
 
       point = cur->points + cur->n_points;
-      flags = cur->flags  + cur->n_points;
+      tags = cur->tags  + cur->n_points;
         
       source_point   = point - 2;
-      source_flags   = flags - 2;
+      source_tags   = tags - 2;
 
       cur->n_points += num_points;
 
@@ -1156,7 +1156,7 @@
         do
         {
           *point++ = *source_point--;
-          *flags++ = *source_flags--;
+          *tags++ = *source_tags--;
           num_points--;
         }
         while (num_points > 0);
@@ -1252,7 +1252,7 @@
       vec.y = builder->last.y + dy;
 
       cur->points[cur->n_points] = vec;
-      cur->flags [cur->n_points] = FT_Curve_Tag_On;
+      cur->tags [cur->n_points] = FT_Curve_Tag_On;
 
       builder->last = vec;
     }
@@ -1301,7 +1301,7 @@
       vec.x = builder->last.x + dx;
       vec.y = builder->last.y + dy;
       cur->points[cur->n_points] = vec;
-      cur->flags [cur->n_points] = FT_Curve_Tag_On;
+      cur->tags [cur->n_points] = FT_Curve_Tag_On;
 
       builder->last = vec;
     }
@@ -1326,7 +1326,7 @@
     FT_Outline*  cur = &builder->current;
     T1_Vector    vec;
     T1_Vector*   points;
-    char*        flags;
+    char*        tags;
 
     /* grow buffer if necessary */
     error = T1_Add_Points  ( builder, 3 );
@@ -1336,19 +1336,19 @@
     {
       /* save point */
       points = cur->points + cur->n_points;
-      flags  = cur->flags  + cur->n_points;
+      tags  = cur->tags  + cur->n_points;
 
       vec.x = builder->last.x + dx1;
       vec.y = builder->last.y + dy1;
-      points[0] = vec;  flags[0] = FT_Curve_Tag_Cubic;
+      points[0] = vec;  tags[0] = FT_Curve_Tag_Cubic;
 
       vec.x += dx2;
       vec.y += dy2;
-      points[1] = vec;  flags[1] = FT_Curve_Tag_Cubic;
+      points[1] = vec;  tags[1] = FT_Curve_Tag_Cubic;
 
       vec.x += dx3;
       vec.y += dy3;
-      points[2] = vec;  flags[2] = FT_Curve_Tag_On;
+      points[2] = vec;  tags[2] = FT_Curve_Tag_On;
 
       builder->last = vec;
     }
@@ -1537,10 +1537,10 @@
 
       glyph->root.format = ft_glyph_format_outline;
 
-      glyph->root.outline.outline_flags &= ft_outline_owner;
+      glyph->root.outline.flags &= ft_outline_owner;
       
       if ( size->root.metrics.y_ppem < 24 )
-        glyph->root.outline.outline_flags |= ft_outline_high_precision;
+        glyph->root.outline.flags |= ft_outline_high_precision;
       
       /*
       glyph->root.outline.second_pass    = TRUE;

@@ -79,7 +79,7 @@
 
 #endif
 
-#define  PIXEL_BITS  6
+#define  PIXEL_BITS  7
 #define  ONE_PIXEL   (1L << PIXEL_BITS)
 #define  PIXEL_MASK  (-1L << PIXEL_BITS)
 #define  TRUNC(x)    ((x) >> PIXEL_BITS)
@@ -87,6 +87,8 @@
 #define  FLOOR(x)    ((x) & -ONE_PIXEL)
 #define  CEILING(x)  (((x)+ONE_PIXEL-1) & -ONE_PIXEL)
 #define  ROUND(x)    (((x)+ONE_PIXEL/2) & -ONE_PIXEL)
+
+#define  UPSCALE(x)  (PIXEL_BITS >= 6 ? (x) << (PIXEL_BITS-6) : (x) >> (6-PIXEL_BITS))
 
 /****************************************************************************/
 /*                                                                          */
@@ -137,10 +139,10 @@ void  compute_cbox( RAS_ARG_ FT_Outline*  outline )
   }
 
   /* truncate the bounding box to integer pixels */  
-  ras.min_ex = TRUNC( ras.min_ex );
-  ras.min_ey = TRUNC( ras.min_ey );
-  ras.max_ex = TRUNC( CEILING( ras.max_ex ) );
-  ras.max_ey = TRUNC( CEILING( ras.max_ey ) );
+  ras.min_ex = ras.min_ex >> 6;
+  ras.min_ey = ras.min_ey >> 6;
+  ras.max_ex = ( ras.max_ex+63 ) >> 6;
+  ras.max_ey = ( ras.max_ey+63 ) >> 6;
 }
 
 
@@ -484,13 +486,18 @@ int  render_conic( RAS_ARG_ FT_Vector* control, FT_Vector* to )
   }
 
   if (level <= 1)
-    return render_line( RAS_VAR_ to->x, to->y );
+    return render_line( RAS_VAR_ UPSCALE(to->x), UPSCALE(to->y) );
 
   arc      = ras.bez_stack;
   arc[0]   = *to;
   arc[1]   = *control;
   arc[2].x = ras.x;
   arc[2].y = ras.y;
+
+  arc[0].x = UPSCALE(arc[0].x);
+  arc[0].y = UPSCALE(arc[0].y);
+  arc[1].x = UPSCALE(arc[1].x);
+  arc[1].y = UPSCALE(arc[1].y);
 
   levels    = ras.lev_stack;
   top       = 0;
@@ -573,7 +580,7 @@ int  render_cubic( RAS_ARG_ FT_Vector* control1,
   }
 
   if (level <= 1)
-    return render_line( RAS_VAR_ to->x, to->y );
+    return render_line( RAS_VAR_ UPSCALE(to->x), UPSCALE(to->y) );
 
   arc      = ras.bez_stack;
   arc[0]   = *to;
@@ -581,6 +588,13 @@ int  render_cubic( RAS_ARG_ FT_Vector* control1,
   arc[2]   = *control1;
   arc[3].x = ras.x;
   arc[3].y = ras.y;
+
+  arc[0].x = UPSCALE(arc[0].x);
+  arc[0].y = UPSCALE(arc[0].y);
+  arc[1].x = UPSCALE(arc[1].x);
+  arc[1].y = UPSCALE(arc[1].y);
+  arc[2].x = UPSCALE(arc[2].x);
+  arc[2].y = UPSCALE(arc[2].y);
 
   levels    = ras.lev_stack;
   top       = 0;
@@ -801,7 +815,7 @@ int  check_sort( PCell  cells, int count )
       v_start = v_control = v_first;
 
       point = outline->points + first;
-      tags  = outline->flags  + first;
+      tags  = outline->tags  + first;
       tag   = FT_CURVE_TAG( tags[0] );
 
       /* A contour cannot start with a cubic control point! */
@@ -812,7 +826,7 @@ int  check_sort( PCell  cells, int count )
       if ( tag == FT_Curve_Tag_Conic )
       {
         /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->flags[last] ) == FT_Curve_Tag_On )
+        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
         {
           /* start at last point if it is on the curve */
           v_start = v_last;
@@ -947,7 +961,7 @@ int  check_sort( PCell  cells, int count )
     FT_Vector  v_start;
 
     FT_Vector* point;
-    char*      flags;
+    char*      tags;
 
     int    n;         /* index of contour in outline     */
     int    first;     /* index of first point in contour */
@@ -973,7 +987,7 @@ int  check_sort( PCell  cells, int count )
 
       v_start = v_control = v_first;
 
-      tag   = FT_CURVE_TAG( outline->flags[first] );
+      tag   = FT_CURVE_TAG( outline->tags[first] );
       index = first;
 
       /* A contour cannot start with a cubic control point! */
@@ -987,7 +1001,7 @@ int  check_sort( PCell  cells, int count )
       if ( tag == FT_Curve_Tag_Conic )
       {
         /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->flags[last] ) == FT_Curve_Tag_On )
+        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
         {
           /* start at last point if it is on the curve */
           v_start = v_last;
@@ -1015,7 +1029,7 @@ int  check_sort( PCell  cells, int count )
         return error;
 
       point = outline->points + first;
-      flags = outline->flags  + first;
+      tags = outline->tags  + first;
 
       /* now process each contour point individually */
 
@@ -1023,9 +1037,9 @@ int  check_sort( PCell  cells, int count )
       {
         index++;
         point++;
-        flags++;
+        tags++;
 
-        tag = FT_CURVE_TAG( flags[0] );
+        tag = FT_CURVE_TAG( tags[0] );
 
         switch ( phase )
         {
@@ -1113,7 +1127,7 @@ int  check_sort( PCell  cells, int count )
       /* end of contour, close curve cleanly */
       error = 0;
 
-      tag = FT_CURVE_TAG( outline->flags[first] );
+      tag = FT_CURVE_TAG( outline->tags[first] );
 
       switch ( phase )
       {
@@ -1154,13 +1168,17 @@ int  check_sort( PCell  cells, int count )
   int  Move_To( FT_Vector*  to,
                 FT_Raster   raster )
   {
+    TPos  x, y;
+    
     /* record current cell, if any */
     record_cell( (PRaster)raster );
     
     /* start to a new position */
-    start_cell( (PRaster)raster, TRUNC(to->x), TRUNC(to->y) );
-    ((PRaster)raster)->x = to->x;
-    ((PRaster)raster)->y = to->y;
+    x = UPSCALE(to->x);
+    y = UPSCALE(to->y);
+    start_cell( (PRaster)raster, TRUNC(x), TRUNC(y) );
+    ((PRaster)raster)->x = x;
+    ((PRaster)raster)->y = y;
     return 0;
   }
   
@@ -1169,7 +1187,7 @@ int  check_sort( PCell  cells, int count )
   int  Line_To( FT_Vector*  to,
                 FT_Raster   raster )
   {
-    return render_line( (PRaster)raster, to->x, to->y );
+    return render_line( (PRaster)raster, UPSCALE(to->x), UPSCALE(to->y) );
   }
 
 
@@ -1262,7 +1280,7 @@ int  check_sort( PCell  cells, int count )
     /*                                                           */
     
     coverage = area >> (PIXEL_BITS*2+1-8);  /* use range 0..256 */
-    if ( ras.outline.outline_flags & ft_outline_even_odd_fill )
+    if ( ras.outline.flags & ft_outline_even_odd_fill )
     {
       if (coverage < 0)
         coverage = -coverage;
@@ -1285,7 +1303,7 @@ int  check_sort( PCell  cells, int count )
         coverage = 255;
     }
     
-    if (area)
+    if (coverage)
     {
       /* see if we can add this span to the current list */
       count = ras.num_gray_spans;

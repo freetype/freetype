@@ -2053,7 +2053,7 @@
     FT_Vector  v_start;
 
     FT_Vector* point;
-    char*      flags;
+    char*      tags;
 
     int    n;         /* index of contour in outline     */
     int    first;     /* index of first point in contour */
@@ -2079,7 +2079,7 @@
 
       v_start = v_control = v_first;
 
-      tag   = FT_CURVE_TAG( outline->flags[first] );
+      tag   = FT_CURVE_TAG( outline->tags[first] );
       index = first;
 
       /* A contour cannot start with a cubic control point! */
@@ -2093,7 +2093,7 @@
       if ( tag == FT_Curve_Tag_Conic )
       {
         /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->flags[last] ) == FT_Curve_Tag_On )
+        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
         {
           /* start at last point if it is on the curve */
           v_start = v_last;
@@ -2121,7 +2121,7 @@
         return error;
 
       point = outline->points + first;
-      flags = outline->flags  + first;
+      tags  = outline->tags  + first;
 
       /* now process each contour point individually */
 
@@ -2129,9 +2129,9 @@
       {
         index++;
         point++;
-        flags++;
+        tags++;
 
-        tag = FT_CURVE_TAG( flags[0] );
+        tag = FT_CURVE_TAG( tags[0] );
 
         switch ( phase )
         {
@@ -2219,7 +2219,7 @@
       /* end of contour, close curve cleanly */
       error = 0;
 
-      tag = FT_CURVE_TAG( outline->flags[first] );
+      tag = FT_CURVE_TAG( outline->tags[first] );
 
       switch ( phase )
       {
@@ -2310,18 +2310,18 @@
     memory   = library->memory;
 
     if ( ALLOC_ARRAY( outline->points,   numPoints * 2L, FT_Pos    ) ||
-         ALLOC_ARRAY( outline->flags,    numPoints,      FT_Byte   ) ||
+         ALLOC_ARRAY( outline->tags,    numPoints,      FT_Byte   ) ||
          ALLOC_ARRAY( outline->contours, numContours,    FT_UShort ) )
       goto Fail;
 
     outline->n_points       = (FT_UShort)numPoints;
     outline->n_contours     = (FT_Short)numContours;
-    outline->outline_flags |= ft_outline_owner;
+    outline->flags |= ft_outline_owner;
 
     return FT_Err_Ok;
 
   Fail:
-    outline->outline_flags |= ft_outline_owner;
+    outline->flags |= ft_outline_owner;
     FT_Done_Outline( library, outline );
 
     return error;
@@ -2366,10 +2366,10 @@
 
     if ( outline )
     {
-      if ( outline->outline_flags & ft_outline_owner )
+      if ( outline->flags & ft_outline_owner )
       {
         FREE( outline->points   );
-        FREE( outline->flags    );
+        FREE( outline->tags    );
         FREE( outline->contours );
       }
       *outline = null_outline;
@@ -2509,7 +2509,7 @@
     FT_Memory  memory = zone->memory;
     
     FREE( zone->contours );
-    FREE( zone->flags );
+    FREE( zone->tags );
     FREE( zone->cur );
     FREE( zone->org );
 
@@ -2554,7 +2554,7 @@
     
     if ( ALLOC_ARRAY( zone->org,      maxPoints*2, FT_F26Dot6 ) ||
          ALLOC_ARRAY( zone->cur,      maxPoints*2, FT_F26Dot6 ) ||
-         ALLOC_ARRAY( zone->flags,    maxPoints,   FT_Byte    ) ||
+         ALLOC_ARRAY( zone->tags,    maxPoints,   FT_Byte    ) ||
          ALLOC_ARRAY( zone->contours, maxContours, FT_UShort  ) )
     {
       FT_Done_GlyphZone(zone);
@@ -2599,7 +2599,7 @@
       /* reallocate the points arrays */
       if ( REALLOC_ARRAY( zone->org,   zone->max_points*2, newPoints*2, FT_F26Dot6 ) ||
            REALLOC_ARRAY( zone->cur,   zone->max_points*2, newPoints*2, FT_F26Dot6 ) ||
-           REALLOC_ARRAY( zone->flags, zone->max_points*2, newPoints,   FT_Byte    ) )
+           REALLOC_ARRAY( zone->tags, zone->max_points*2, newPoints,   FT_Byte    ) )
         goto Exit;
         
       zone->max_points = newPoints;

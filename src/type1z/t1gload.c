@@ -238,7 +238,7 @@
       if ( REALLOC_ARRAY( base->points, current,
                           builder->max_points, T1_Vector )  ||
   
-           REALLOC_ARRAY( base->flags, current,
+           REALLOC_ARRAY( base->tags, current,
                           builder->max_points, T1_Byte )    )
       {
         builder->error = error;
@@ -246,7 +246,7 @@
       }
     
       outline->points = base->points + increment;
-      outline->flags  = base->flags  + increment;
+      outline->tags  = base->tags  + increment;
     }
     return T1_Err_Ok;
   }
@@ -264,7 +264,7 @@
     if (builder->load_points)
     {
       FT_Vector*  point   = outline->points + outline->n_points;
-      FT_Byte*    control = (FT_Byte*)outline->flags + outline->n_points;
+      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
       
       point->x = x;
       point->y = y;
@@ -462,7 +462,7 @@
     cur->n_points   = 0;
     cur->n_contours = 0;
     cur->points     = base->points   + base->n_points;
-    cur->flags      = base->flags    + base->n_points;
+    cur->tags      = base->tags    + base->n_points;
     cur->contours   = base->contours + base->n_contours;
 
     error = T1_Parse_CharStrings( decoder,
@@ -489,7 +489,7 @@
     cur->n_points   = 0;
     cur->n_contours = 0;
     cur->points     = base->points   + base->n_points;
-    cur->flags      = base->flags    + base->n_points;
+    cur->tags      = base->tags    + base->n_points;
     cur->contours   = base->contours + base->n_contours;
 
     error = T1_Parse_CharStrings( decoder,
@@ -1275,9 +1275,9 @@
 
       glyph->root.format = ft_glyph_format_outline;
 
-      glyph->root.outline.outline_flags &= ft_outline_owner;
+      glyph->root.outline.flags &= ft_outline_owner;
       if ( size->root.metrics.y_ppem < 24 )
-        glyph->root.outline.outline_flags |= ft_outline_high_precision;
+        glyph->root.outline.flags |= ft_outline_high_precision;
       /*
       glyph->root.outline.second_pass    = TRUE;
       glyph->root.outline.high_precision = ( size->root.metrics.y_ppem < 24 );
