@@ -27,18 +27,19 @@
 FT_BEGIN_HEADER
 
 
-#ifdef FT_LONG64
-
-
-  typedef FT_INT64  FT_Int64;
-
-#define ADD_64( x, y, z )  z = (x) + (y)
-#define MUL_64( x, y, z )  z = (FT_Int64)(x) * (y)
-#define DIV_64( x, y )     ( (x) / (y) )
+/* OLD 64-bits internal API */
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
-#define SQRT_64( z )  FT_Sqrt64( z )
+#  ifdef FT_LONG64
+
+  typedef FT_INT64  FT_Int64;
+
+#    define ADD_64( x, y, z )  z = (x) + (y)
+#    define MUL_64( x, y, z )  z = (FT_Int64)(x) * (y)
+#    define DIV_64( x, y )     ( (x) / (y) )
+
+#    define SQRT_64( z )  FT_Sqrt64( z )
 
   /*************************************************************************/
   /*                                                                       */
@@ -58,10 +59,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Int32 )  FT_Sqrt64( FT_Int64  l );
 
-#endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
-
-#else /* FT_LONG64 */
+#  else /* !FT_LONG64 */
 
 
   typedef struct  FT_Int64_
@@ -72,9 +71,9 @@ FT_BEGIN_HEADER
   } FT_Int64;
 
 
-#define ADD_64( x, y, z )  FT_Add64( &x, &y, &z )
-#define MUL_64( x, y, z )  FT_MulTo64( x, y, &z )
-#define DIV_64( x, y )     FT_Div64by32( &x, y )
+#    define ADD_64( x, y, z )  FT_Add64( &x, &y, &z )
+#    define MUL_64( x, y, z )  FT_MulTo64( x, y, &z )
+#    define DIV_64( x, y )     FT_Div64by32( &x, y )
 
 
   /*************************************************************************/
@@ -146,9 +145,7 @@ FT_BEGIN_HEADER
                                        FT_Int32   y );
 
 
-#ifdef FT_CONFIG_OPTION_OLD_CALCS
-
-#define SQRT_64( z )  FT_Sqrt64( &z )
+#    define SQRT_64( z )  FT_Sqrt64( &z )
 
   /*************************************************************************/
   /*                                                                       */
@@ -168,10 +165,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Int32 )  FT_Sqrt64( FT_Int64*  x );
 
+#  endif /* !FT_LONG64 */
+
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
-
-#endif /* FT_LONG64 */
 
 
   FT_EXPORT( FT_Int32 )  FT_SqrtFixed( FT_Int32  x );

@@ -237,7 +237,7 @@ FT_BEGIN_HEADER
   /*   Used for debugging, this configuration macro should disappear       */
   /*   soon.                                                               */
   /*                                                                       */
-#define FT_CONFIG_OPTION_OLD_CALCS
+#undef  FT_CONFIG_OPTION_OLD_CALCS
 
 
   /*************************************************************************/

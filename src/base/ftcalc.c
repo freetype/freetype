@@ -38,6 +38,27 @@
 #include FT_INTERNAL_OBJECTS_H
 
 
+/* we need to define a 64-bits data type here */
+#ifndef FT_CONFIG_OPTION_OLD_CALCS
+
+#  ifdef FT_LONG64
+
+  typedef FT_INT64  FT_Int64;
+
+#  else
+
+  typedef struct  FT_Int64_
+  {
+    FT_UInt32  lo;
+    FT_UInt32  hi;
+
+  } FT_Int64;
+
+#  endif
+
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
