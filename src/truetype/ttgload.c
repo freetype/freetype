@@ -467,7 +467,6 @@
     TT_Error     error;
     TT_Face      face   = loader->face;
     TT_ULong     offset;
-    FT_SubGlyph  subglyphs[ TT_MAX_SUBGLYPHS ];
     TT_Int       num_subglyphs = 0, contours_count;
     TT_UInt      index, num_points, num_contours, count;
     TT_Fixed     x_scale, y_scale;
@@ -632,7 +631,8 @@
     else /* otherwise, load a composite !!                                  */
     {
       /* for each subglyph, read composite header */
-      FT_SubGlyph*  subglyph = subglyphs;
+	  TT_GlyphSlot  glyph    = loader->glyph;
+      FT_SubGlyph*  subglyph = glyph->subglyphs + glyph->num_subglyphs;
 
       if (ACCESS_Frame(count)) goto Fail;
 
@@ -640,6 +640,25 @@
       do
       {
         TT_Fixed  xx, xy, yy, yx;
+		FT_UInt   total_subglyphs;
+
+        /* grow the 'glyph->subglyphs' table if necessary */
+		total_subglyphs = glyph->num_subglyphs + num_subglyphs;
+		if ( total_subglyphs >= glyph->max_subglyphs )
+		{
+		  FT_UInt    new_max = glyph->max_subglyphs;
+		  FT_Memory  memory = loader->face->root.memory;
+
+          while (new_max <= total_subglyphs)
+		    new_max += 4;
+			
+		  if ( REALLOC_ARRAY( glyph->subglyphs, glyph->max_subglyphs,
+		                      new_max, FT_SubGlyph ) )
+            goto Fail;							  
+			
+		  glyph->max_subglyphs = new_max;
+		  subglyph = glyph->subglyphs + glyph->num_subglyphs + num_subglyphs;
+		}
 
         subglyph->arg1 = subglyph->arg2 = 0;
 
@@ -687,8 +706,6 @@
 
         subglyph++;
         num_subglyphs++;
-        if (num_subglyphs >= TT_MAX_SUBGLYPHS)
-          break;
       }
       while (subglyph[-1].flags & MORE_COMPONENTS);
 
@@ -707,27 +724,9 @@
       /* responsible for interpreting this data..)                     */
       if ( loader->load_flags & FT_LOAD_NO_RECURSE )
       {
-        FT_GlyphSlot  glyph = loader->glyph;
-
-        /* reallocate subglyph array if necessary */
-        if (glyph->max_subglyphs < num_subglyphs)
-        {
-          FT_Memory  memory = loader->face->root.memory;
-
-          if ( REALLOC_ARRAY( glyph->subglyphs, glyph->max_subglyphs,
-                              num_subglyphs, FT_SubGlyph ) )
-            goto Fail;
-
-          glyph->max_subglyphs = num_subglyphs;
-        }
-
-        /* copy subglyph array */
-        MEM_Copy( glyph->subglyphs, subglyphs,
-                  num_subglyphs*sizeof(FT_SubGlyph));
-
         /* set up remaining glyph fields */
-        glyph->num_subglyphs = num_subglyphs;
-        glyph->format        = ft_glyph_format_composite;
+        glyph->num_subglyphs += num_subglyphs;
+        glyph->format         = ft_glyph_format_composite;
         goto Load_End;
       }
 
@@ -741,7 +740,9 @@
       {
         TT_Int  n, num_base_points, num_new_points;
 
-        subglyph = subglyphs;
+        subglyph = glyph->subglyphs + glyph->num_subglyphs;
+		glyph->num_subglyphs += num_subglyphs;
+		
         for ( n = 0; n < num_subglyphs; n++, subglyph++ )
         {
           TT_Vector  pp1, pp2;
@@ -753,6 +754,8 @@
           num_base_points = loader->base.n_points;
 
           error = load_truetype_glyph( loader, subglyph->index );
+		  if (error) goto Fail;
+
           if ( subglyph->flags & USE_MY_METRICS )
           {
             pp1 = loader->pp1;
@@ -935,8 +938,8 @@
           loader->pp2 = pp1[1];
         }
 #endif
-
       }
+	  /* end of composite loading */
     }
 
     /*************************************************************************/
@@ -1326,7 +1329,8 @@
 #endif
 
     /* Main loading loop */
-    glyph->format = ft_glyph_format_outline;
+    glyph->format        = ft_glyph_format_outline;
+	glyph->num_subglyphs = 0;
     error = load_truetype_glyph( &loader, glyph_index );
     if (!error)
       compute_glyph_metrics( &loader, glyph_index );

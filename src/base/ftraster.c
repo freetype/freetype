@@ -2866,7 +2866,7 @@ Scan_DropOuts :
 
     /* set default 5-levels gray palette */
     for ( n = 0; n < 5; n++ )
-      raster->grays[n] = (n*127/4);
+      raster->grays[n] = (n*255/4);
 
     raster->gray_width = RASTER_GRAY_LINES/2;
   }

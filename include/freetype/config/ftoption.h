@@ -349,8 +349,6 @@
   /*                                                                       */
 #define TT_CONFIG_OPTION_INTERPRETER_SWITCH
 
-  /* The maximum number of sub-glyphs in a TrueType composite glyph */
-#define TT_MAX_SUBGLYPHS  96
 
   /*************************************************************************/
   /*************************************************************************/

@@ -1,4 +1,14 @@
-LATEST CHANGES -
+LATEST_CHANGES
+
+  - changed the default number of gray levels of the smooth renderer to
+    256 (instead of the previous 128). Of course, the human eye can't
+	see any difference ;-)
+
+  - removed TT_MAX_SUBGLYPHS, there is no static limit on the number of
+    subglyphs in a TrueType font now..
+
+=============================================================================
+OLD CHANGES 16 May 2000
 
   - tagged "BETA-6" in the CVS tree. This one is a serious release candidate
     even though it doesn't incorporate the auto-hinter yet..

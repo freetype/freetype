@@ -66,7 +66,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
   int    res = 72;
 
-  static grColor  fore_color = { 127 };
+  static grColor  fore_color = { 255 };
 
   int            Fail;
   unsigned char  autorun;
@@ -127,7 +127,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     bit.mode   = gr_pixel_mode_gray;
     bit.width  = DIM_X;
     bit.rows   = DIM_Y;
-    bit.grays  = 128;
+    bit.grays  = 256;
 
     surface = grNewSurface( 0, &bit );
     if (!surface)
@@ -185,7 +185,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       bit3.pitch  = bit2.pitch;
       bit3.mode   = antialias ? bit.mode : gr_pixel_mode_mono;
       bit3.buffer = bit_buffer;
-      bit3.grays  = 128;
+      bit3.grays  = 256;
 
       FT_Outline_Translate( &glyph->outline, -left, -bottom );
       memset( bit_buffer, 0, size );

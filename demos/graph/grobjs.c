@@ -98,8 +98,8 @@
          pixel_mode >= gr_pixel_mode_max  )
       goto Fail;
 
-    if ( pixel_mode != gr_pixel_mode_gray      ||
-         ( num_grays >= 2 && num_grays < 256 ) )
+    if ( pixel_mode != gr_pixel_mode_gray       ||
+         ( num_grays >= 2 && num_grays <= 256 ) )
       return 0;
 
   Fail:

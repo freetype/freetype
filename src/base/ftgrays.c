@@ -1016,13 +1016,13 @@ int  check_sort( PCell  cells, int count )
     {
       if (spans->coverage)
 #if 1
-        memset( p + spans->x, (spans->coverage+1) >> 1, spans->len );
+        memset( p + spans->x, (unsigned char)spans->coverage, spans->len );
 #else
       {
         q     = p + spans->x;
         limit = q + spans->len;
         for ( ; q < limit; q++ )
-          q[0] = (spans->coverage+1) >> 1;
+          q[0] = (unsigned char)spans->coverage;
       }
 #endif
     }

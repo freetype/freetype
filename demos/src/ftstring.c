@@ -57,7 +57,7 @@
 
   static int  res = 72;  /* default resolution in dpi */
 
-  static grColor  fore_color = { 127 };
+  static grColor  fore_color = { 255 };
 
   static int  graph_init = 0;
   static int  render_mode = 1;
@@ -158,7 +158,7 @@
     bit.mode   = gr_pixel_mode_gray;
     bit.width  = DIM_X;
     bit.rows   = DIM_Y;
-    bit.grays  = 128;
+    bit.grays  = 256;
 
     surface = grNewSurface( 0, &bit );
     if (!surface)
@@ -254,7 +254,7 @@
     if( !hinted )
       load_flags |= FT_LOAD_NO_HINTING;
 
-    num_grays = 128;
+    num_grays = 256;
     if (!antialias)
       num_grays = 0;
 
