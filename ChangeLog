@@ -1,3 +1,29 @@
+2005-03-25  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	Update of the Amiga port.
+
+	* builds/amiga/makefile, builds/amiga/smakefile: Handle new modules.
+
+	* builds/amiga/makefile.os4: Makefile for AmigaOS4 SDK.
+
+	* builds/amiga/README: Updated.
+
+	* builds/amiga/include/freetype/config/ftconfig.h: Handle gcc for
+	AmigaOS4.
+
+	* builds/amiga/include/freetype/config/ftmodule.h: Handle new
+	modules.
+
+	* builds/amiga/src/base/ftdebug.c: Updated to current version of
+	default ftdebug.c.
+	Add various include files and macros to have proper support for
+	both AmigaOS4 and older AmigaOS versions.
+	Don't declare KVPrintF explicitly.
+	Replace getenv with GetVar.
+	Actually enable debugging code.
+
+	* builds/amiga/src/base/ftsystem.c: Major rewrite.
+
 2005-03-23  Werner Lemberg  <wl@gnu.org>
 
 	* tests/*: Removed.
