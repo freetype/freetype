@@ -676,8 +676,6 @@
     FT_GlyphLoader*  gloader = loader->gloader;
     FT_Bool          opened_frame = 0;
 
-    FT_UNUSED( stream );  /* used with bytecode interpreter only */
-    
 
     /* check glyph index */
     index = glyph_index;
