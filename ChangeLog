@@ -19,7 +19,7 @@
 
 2003-11-22  Werner Lemberg  <wl@gnu.org>
 
-	* docs/VERSION.DLL: Updated.
+	* docs/VERSION.DLL, docs/CHANGES: Updated.
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): Make metrics->x_scale and
 	metrics->y_scale really precise.
