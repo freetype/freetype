@@ -1,3 +1,8 @@
+2002-10-02  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/bdf/bdflib.c (bdf_load_font): Allocate the _bdf_parse_t
+	structure with FT_ALLOC instead of using the stack.
+
 2002-09-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/include/freetype/internal/tttypes.h (num_sbit_strikes,
