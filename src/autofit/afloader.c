@@ -20,6 +20,7 @@
 #include "afhints.h"
 #include "afglobal.h"
 #include "aflatin.h"
+#include "aferrors.h"
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -51,7 +52,7 @@
   af_loader_reset( AF_Loader  loader,
                    FT_Face    face )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = AF_Err_Ok;
 
 
     loader->face    = face;
@@ -331,7 +332,7 @@
             if ( start_point + k >= num_base_points         ||
                                l >= (FT_UInt)num_new_points )
             {
-              error = FT_Err_Invalid_Composite;
+              error = AF_Err_Invalid_Composite;
               goto Exit;
             }
 
@@ -369,7 +370,7 @@
 
     default:
       /* we don't support other formats (yet?) */
-      error = FT_Err_Unimplemented_Feature;
+      error = AF_Err_Unimplemented_Feature;
     }
 
   Hint_Metrics:
@@ -448,7 +449,7 @@
 
 
     if ( !size )
-      return FT_Err_Invalid_Argument;
+      return AF_Err_Invalid_Argument;
 
     FT_ZERO( &scaler );
 

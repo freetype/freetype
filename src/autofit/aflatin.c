@@ -17,6 +17,7 @@
 
 
 #include "aflatin.h"
+#include "aferrors.h"
 
 
   /*************************************************************************/
@@ -377,7 +378,7 @@
   af_latin_metrics_init( AF_LatinMetrics  metrics,
                          FT_Face          face )
   {
-    FT_Error    error = FT_Err_Ok;
+    FT_Error    error = AF_Err_Ok;
     FT_CharMap  oldmap = face->charmap;
     FT_UInt     ee;
 
@@ -408,7 +409,7 @@
     }
 
     FT_Set_Charmap( face, oldmap );
-    return FT_Err_Ok;
+    return AF_Err_Ok;
   }
 
 
@@ -577,7 +578,7 @@
   {
     AF_AxisHints  axis          = &hints->axis[dim];
     FT_Memory     memory        = hints->memory;
-    FT_Error      error         = FT_Err_Ok;
+    FT_Error      error         = AF_Err_Ok;
     AF_Segment    segment       = NULL;
     AF_Point*     contour       = hints->contours;
     AF_Point*     contour_limit = contour + hints->num_contours;
@@ -921,7 +922,7 @@
                                 AF_Dimension   dim )
   {
     AF_AxisHints  axis   = &hints->axis[dim];
-    FT_Error      error  = 0;
+    FT_Error      error  = AF_Err_Ok;
     FT_Memory     memory = hints->memory;
     AF_LatinAxis  laxis  = &((AF_LatinMetrics)hints->metrics)->axis[dim];
 

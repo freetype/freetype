@@ -17,6 +17,7 @@
 
 
 #include "afhints.h"
+#include "aferrors.h"
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -24,7 +25,7 @@
                              FT_Memory     memory,
                              AF_Segment   *asegment )
   {
-    FT_Error    error   = FT_Err_Ok;
+    FT_Error    error   = AF_Err_Ok;
     AF_Segment  segment = NULL;
 
 
@@ -37,7 +38,7 @@
 
       if ( old_max >= big_max )
       {
-        error = FT_Err_Out_Of_Memory;
+        error = AF_Err_Out_Of_Memory;
         goto Exit;
       }
 
@@ -66,7 +67,7 @@
                           FT_Memory     memory,
                           AF_Edge      *aedge )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = AF_Err_Ok;
     AF_Edge   edge  = NULL;
     AF_Edge   edges;
 
@@ -80,7 +81,7 @@
 
       if ( old_max >= big_max )
       {
-        error = FT_Err_Out_Of_Memory;
+        error = AF_Err_Out_Of_Memory;
         goto Exit;
       }
 
@@ -462,7 +463,7 @@
   af_glyph_hints_reload( AF_GlyphHints  hints,
                          FT_Outline*    outline )
   {
-    FT_Error   error   = FT_Err_Ok;
+    FT_Error   error   = AF_Err_Ok;
     AF_Point   points;
     FT_UInt    old_max, new_max;
     AF_Scaler  scaler  = &hints->metrics->scaler;

@@ -42,7 +42,7 @@ I. Standard procedure
 
     -- other components (optional)
 
-      src/autohint/autohint.c -- auto hinting module
+      src/autofit/autofit.c   -- auto hinting module
       src/cache/ftcache.c     -- cache sub-system (in beta)
       src/sfnt/sfnt.c         -- SFNT files support
                                  (TrueType & OpenType)
