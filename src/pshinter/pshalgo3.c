@@ -332,6 +332,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
+#if 0
   static FT_Pos
   psh3_dimension_quantize_len( PSH_Dimension  dim,
                                FT_Pos         len,
@@ -380,6 +381,7 @@
 
     return  len;
   }
+#endif /* 0 */
 
 
 #ifdef DEBUG_HINTER
@@ -518,7 +520,7 @@
           hint->cur_pos = pos;
           hint->cur_len = fit_len;
 
-#if 0          
+#if 0
          /* stem adjustment tries to snap stem widths to standard
           * ones. this is important to prevent unpleasant rounding
           * artefacts...
@@ -535,7 +537,7 @@
 #else
              /* this seems to be a bug !! */
               pos = ( pos + ( (len >> 1) & -64 ) );
-#endif        
+#endif
               len = 64;
             }
             else
@@ -554,7 +556,7 @@
 
       if ( do_snapping )
       {
-        pos = hint->cur_pos;                   
+        pos = hint->cur_pos;
         len = hint->cur_len;
 
         if ( len < 64 )
@@ -620,7 +622,6 @@
       FT_Pos  pos = FT_MulFix( hint->org_pos, scale ) + delta;
       FT_Pos  len = FT_MulFix( hint->org_len, scale );
 
-      FT_Pos  fit_center;
       FT_Pos  fit_len;
 
       PSH_AlignmentRec  align;

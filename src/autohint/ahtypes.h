@@ -476,12 +476,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  AH_Face_GlobalsRec_
   {
-    FT_Face     face;
+    FT_Face        face;
     AH_GlobalsRec  design;
     AH_GlobalsRec  scaled;
-    FT_Fixed    x_scale;
-    FT_Fixed    y_scale;
-    FT_Bool     control_overshoot;
+    FT_Fixed       x_scale;
+    FT_Fixed       y_scale;
+    FT_Bool        control_overshoot;
 
   } AH_Face_GlobalsRec, *AH_Face_Globals;
 

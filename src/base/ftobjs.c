@@ -1387,11 +1387,19 @@
       char_height = 1 * 64;
 
     /* Compute pixel sizes in 26.6 units */
+#ifdef FT_CONFIG_CHESTER_BLUE_SCALE
+    dim_x = ( char_width  * horz_resolution ) / 72;
+    dim_y = ( char_height * vert_resolution ) / 72;
+
+    metrics->x_ppem = (FT_UShort)( (dim_x+32) >> 6 );
+    metrics->y_ppem = (FT_UShort)( (dim_y+32) >> 6 );
+#else
     dim_x = ( ( ( char_width  * horz_resolution ) / 72 ) + 32 ) & -64;
     dim_y = ( ( ( char_height * vert_resolution ) / 72 ) + 32 ) & -64;
 
     metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
     metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
+#endif
 
     metrics->x_scale = 0x10000L;
     metrics->y_scale = 0x10000L;

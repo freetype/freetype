@@ -96,10 +96,10 @@
 #ifndef FT_CONFIG_OPTION_SYSTEM_ZLIB
 
  local voidpf
- zcalloc (opaque, items, size)
-    voidpf opaque;
-    unsigned items;
-    unsigned size;
+ zcalloc ( /* opaque, items, size) */
+    voidpf opaque,
+    unsigned items,
+    unsigned size )
  {
    return ft_gzip_alloc( opaque, items, size );
  }

@@ -65,7 +65,6 @@ FT2_COMPONENTS ?= gzip       # support for gzip-compressed files.
                   base       # base component (public APIs)
                   bdf        # BDF font driver
                   cache      # cache sub-system
-                  ccg        # Chinese Character Generator font driver
                   cff        # CFF/CEF font driver
                   cid        # Postscript CID-keyed font driver
                   pcf        # PCF font driver
@@ -101,7 +100,10 @@ if $(DEBUG_HINTER)
 # We need "freetype2/include" in the current include path in order to
 # compile any part of FreeType 2.
 #
-SubDirHdr += $(FT2_INCLUDE) ;
+HDRS += $(FT2_INCLUDE) ;
+
+
+#SubDirHdr += $(FT2_INCLUDE) ;
 
 # Uncomment the following line if you want to build individual source files
 # for each FreeType 2 module.

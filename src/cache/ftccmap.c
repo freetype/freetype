@@ -131,7 +131,7 @@
   ftc_cmap_node_weight( FTC_CMapNode  cnode )
   {
     FT_UNUSED( cnode );
-    
+
     return sizeof ( *cnode );
   }
 
@@ -227,7 +227,7 @@
     return error;
 
   Bad_Descriptor:
-    FT_ERROR(( "ftp_cmap_family_init: invalid charmap descriptor\n" ));
+    FT_TRACE1(( "ftp_cmap_family_init: invalid charmap descriptor\n" ));
     return FTC_Err_Invalid_Argument;
   }
 
