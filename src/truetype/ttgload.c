@@ -539,6 +539,8 @@
     FT_Error         error    = FT_Err_Ok;
 
 
+    FT_UNUSED(debug);  /* used by truetype interpreter only */
+    
     n_ins = load->glyph->control_len;
 
     /* add shadow points */
@@ -674,7 +676,8 @@
     FT_GlyphLoader*  gloader = loader->gloader;
     FT_Bool          opened_frame = 0;
 
-
+    FT_UNUSED(stream);  /* used with bytecode interpreter only */
+    
     /* check glyph index */
     index = glyph_index;
     if ( index >= (FT_UInt)face->root.num_glyphs )

@@ -152,4 +152,38 @@ const FT_Module_Class*  ft_default_modules[] =
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_FreeType                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Destroys a given FreeType library object and all of its childs,    */
+  /*    including resources, drivers, faces, sizes, etc.                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle to the target library object.                  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Done_FreeType( FT_Library  library )
+  {
+    if (library)
+    {
+      FT_Memory  memory = library->memory;
+
+
+      /* Discard the library object */
+      FT_Done_Library( library );
+      
+      /* discard memory manager */
+      FT_Done_Memory( memory );
+    }
+
+    return FT_Err_Ok;
+  }
+
+
+
 /* END */

@@ -265,8 +265,10 @@
     }
     else if ( args->flags & ft_open_stream && args->stream )
     {
-      *stream        = *(args->stream);
-      stream->memory = memory;
+      /* in this case, we do not need to allocate a new stream      */
+      /* object. The caller is responsible for closing it himself!! */
+      FREE(stream);
+      stream = args->stream;
     }
     else
       error = FT_Err_Invalid_Argument;
@@ -300,16 +302,19 @@
 
 
   static
-  void  ft_done_stream( FT_Stream*  astream )
+  void  ft_done_stream( FT_Stream*  astream, FT_Int  external )
   {
     FT_Stream  stream = *astream;
-    FT_Memory  memory = stream->memory;
 
 
     if ( stream->close )
       stream->close( stream );
 
-    FREE( stream );
+    if (!external)
+    {
+      FT_Memory  memory = stream->memory;
+      FREE( stream );
+    }
     *astream = 0;
   }
 
@@ -1146,8 +1151,8 @@
       clazz->done_face( face );
 
     /* close the stream for this face if needed */
-    if ( ( face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) == 0 )
-      ft_done_stream( &face->stream );
+    ft_done_stream( &face->stream,
+                    (face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM) != 0 );
 
     /* get rid of it */
     FREE( face );
@@ -1392,7 +1397,7 @@
     FT_Stream    stream;
     FT_Face      face = 0;
     FT_ListNode  node = 0;
-
+    FT_Bool      external_stream;
 
     /* test for valid `library' and `args' delayed to */
     /* ft_new_input_stream()                          */
@@ -1401,6 +1406,8 @@
       return FT_Err_Invalid_Argument;
 
     *aface = 0;
+
+    external_stream = ( args->flags & ft_open_stream && args->stream );
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
@@ -1436,7 +1443,7 @@
       else
         error = FT_Err_Invalid_Handle;
 
-      ft_done_stream( &stream );
+      ft_done_stream( &stream, external_stream );
       goto Fail;
     }
     else
@@ -1473,7 +1480,7 @@
         }
       }
 
-      ft_done_stream( &stream );
+      ft_done_stream( &stream, external_stream );
 
       /* no driver is able to handle this format */
       error = FT_Err_Unknown_File_Format;
@@ -1484,7 +1491,7 @@
     FT_TRACE4(( "FT_New_Face: New face object, adding to list\n" ));
 
     /* set the FT_FACE_FLAG_EXTERNAL_STREAM bit for FT_Done_Face */
-    if ( args->flags & ft_open_stream && args->stream )
+    if ( external_stream )
       face->face_flags |= FT_FACE_FLAG_EXTERNAL_STREAM;
 
     /* add the face object to its driver's list */
@@ -1654,8 +1661,9 @@
       error = clazz->attach_file( face, stream );
 
     /* close the attached stream */
-    if ( !parameters->stream || ( parameters->flags & ft_open_stream ) )
-      ft_done_stream( &stream );
+    ft_done_stream( &stream,
+                    (FT_Bool)(parameters->stream &&
+                             (parameters->flags & ft_open_stream)) );
 
   Exit:
     return error;
@@ -3214,32 +3222,6 @@
          hook_index <
            ( sizeof ( library->debug_hooks ) / sizeof ( void* ) ) )
       library->debug_hooks[hook_index] = debug_hook;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_FreeType                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys a given FreeType library object and all of its childs,    */
-  /*    including resources, drivers, faces, sizes, etc.                   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to the target library object.                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Done_FreeType( FT_Library  library )
-  {
-    /* test for valid `library' delayed to FT_Done_Library() */
-
-    /* Discard the library object */
-    FT_Done_Library( library );
-
-    return FT_Err_Ok;
   }
 
 
