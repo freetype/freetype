@@ -427,6 +427,10 @@
           flags |= FT_FACE_FLAG_KERNING;
 #endif
 
+#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+        flags |= FT_FACE_FLAG_GLYPH_NAMES;
+#endif
+
         root->face_flags = flags;
 
         /*******************************************************************/
