@@ -359,9 +359,8 @@
   /* <Fields>                                                              */
   /*    face        :: A handle to the parent face object.                 */
   /*                                                                       */
-  /*    flags       :: A set of bit flags used to describe the charmap.    */
-  /*                   Each bit indicates that a given encoding is         */
-  /*                   supported.                                          */
+  /*    encoding    :: A tag which identifies the charmap.  Use this with  */
+  /*                   FT_Select_Charmap().                                */
   /*                                                                       */
   /*    platform_id :: An ID number describing the platform for the        */
   /*                   following encoding ID.  This comes directly from    */
