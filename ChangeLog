@@ -1,5 +1,12 @@
 2001-12-20  David Turner  <david@freetype.org>
 
+        * docs/CHANGES: updated for 2.0.6 release
+
+        * src/cff/cffload.h, src/cff/cffload.c, src/cff/cffgload.c: updated
+        to mode the definition of encoding tables within "cffload.c" instead
+        of making them part of a shared header (causing problems in "multi"
+        builds)
+
         * docs/TODO: added "stem3 and counter hints support" to the TODO list
         for the Postscript hinter
 
