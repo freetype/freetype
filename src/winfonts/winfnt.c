@@ -17,6 +17,7 @@
 
 
 #include <ft2build.h>
+#include FT_WINFONTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
@@ -68,7 +69,7 @@
   const FT_Frame_Field  winfnt_header_fields[] =
   {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  WinFNT_HeaderRec
+#define FT_STRUCTURE  FT_WinFNT_HeaderRec
 
     FT_FRAME_START( 146 ),
       FT_FRAME_USHORT_LE( version ),
@@ -106,7 +107,7 @@
       FT_FRAME_USHORT_LE( B_space ),
       FT_FRAME_USHORT_LE( C_space ),
       FT_FRAME_USHORT_LE( color_table_offset ),
-      FT_FRAME_BYTES    ( reserved2, 16 ),
+      FT_FRAME_BYTES    ( reserved1, 16 ),
     FT_FRAME_END
   };
 
@@ -127,8 +128,8 @@
   fnt_font_load( FNT_Font   font,
                  FT_Stream  stream )
   {
-    FT_Error       error;
-    WinFNT_Header  header = &font->header;
+    FT_Error          error;
+    FT_WinFNT_Header  header = &font->header;
 
 
     /* first of all, read the FNT header */
