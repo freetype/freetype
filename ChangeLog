@@ -1,11 +1,11 @@
-2001-01-11  Matthew Crosby  <mcrosby@marthon.org>
+2001-01-11  David Turner  <david.turner@freetype.org>
 
-	* src/pcd/pcfread.c: removed some compilation warnings related
-	to comparison of signed vs. unsigned integers
+	* src/pcd/pcfread.c: Removed some compilation warnings related
+	to comparison of signed vs. unsigned integers.
 
-	* include/freetype/internal/ftdebug.h: changed the debug trace
+	* include/freetype/internal/ftdebug.h: Changed the debug trace
 	constants from trace_t2xxxx to trace_cffxxxx to be able to compile
-	the CFF driver in debug mode
+	the CFF driver in debug mode.
 
 2001-01-11  Matthew Crosby  <mcrosby@marthon.org>
 
