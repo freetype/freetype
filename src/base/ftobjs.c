@@ -2305,7 +2305,6 @@
   }
 
 
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_ULong )
@@ -2329,8 +2328,8 @@
     return result;
   }
 
-  /* documentation is in freetype.h */
 
+  /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_ULong )
   FT_Get_Next_Char( FT_Face   face,
@@ -2356,7 +2355,6 @@
 
     return result;
   }
-
 
 
   /* documentation is in freetype.h */
