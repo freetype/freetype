@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 Glyph Loader (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -44,7 +44,7 @@
     CID_FaceInfo   cid  = &face->cid;
     FT_Byte*       p;
     FT_UInt        fd_select;
-    FT_Stream      stream = face->root.stream;
+    FT_Stream      stream = face->cid_stream;
     FT_Error       error  = 0;
     FT_Byte*       charstring = 0;
     FT_Memory      memory = face->root.memory;

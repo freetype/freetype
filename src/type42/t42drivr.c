@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level Type 42 driver interface (body).                          */
 /*                                                                         */
-/*  Copyright 2002, 2003 by Roberto Alameda.                               */
+/*  Copyright 2002, 2003, 2004 by Roberto Alameda.                         */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -95,7 +95,7 @@
       gname = face->type1.glyph_names[i];
 
       if ( !ft_strcmp( glyph_name, gname ) )
-        return ft_atoi( (const char *)face->type1.charstrings[i] );
+        return (FT_UInt)ft_atol( (const char *)face->type1.charstrings[i] );
     }
 
     return 0;

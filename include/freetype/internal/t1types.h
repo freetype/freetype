@@ -5,7 +5,7 @@
 /*    Basic Type1/Type2 type definitions and interface (specification      */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -173,6 +173,8 @@ FT_BEGIN_HEADER
     void*            psaux;
     CID_FaceInfoRec  cid;
     void*            afm_data;
+    FT_Byte*         binary_data; /* used if hex data has been converted */
+    FT_Stream        cid_stream;
     CID_Subrs        subrs;
 
     /* since FT 2.1 - interface to PostScript hinter */

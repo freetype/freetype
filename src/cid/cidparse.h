@@ -50,8 +50,8 @@ FT_BEGIN_HEADER
   /*    data_offset    :: The start position of the binary data (i.e., the */
   /*                      end of the data to be parsed.                    */
   /*                                                                       */
-  /*    data_type      :: If true, the binary data is represented in       */
-  /*                      hexadecimal format.                              */
+  /*    binary_length  :: The length of the data after the `StartData'     */
+  /*                      command if the data format is hexadecimal.       */
   /*                                                                       */
   /*    cid            :: A structure which holds the information about    */
   /*                      the current font.                                */
@@ -67,7 +67,8 @@ FT_BEGIN_HEADER
     FT_Long       postscript_len;
 
     FT_ULong      data_offset;
-    FT_Bool       data_type;
+
+    FT_Long       binary_length;
 
     CID_FaceInfo  cid;
     FT_Int        num_dict;

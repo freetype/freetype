@@ -140,22 +140,23 @@
     /* in a comment or string.  We also get its arguments to find out */
     /* whether the data is represented in binary or hex format.       */
 
+    arg1 = parser->root.cursor;
+    cid_parser_skip_PS_token( parser );
+    cid_parser_skip_spaces  ( parser );
+    arg2 = parser->root.cursor;
+    cid_parser_skip_PS_token( parser );
+    cid_parser_skip_spaces  ( parser );
+
     limit = parser->root.limit;
     cur   = parser->root.cursor;
-
-    arg1 = cur;
-    cid_parser_skip_PS_token( parser );
-    cid_parser_skip_spaces  ( parser );
-    arg2 = cur;
-    cid_parser_skip_PS_token( parser );
-    cid_parser_skip_spaces  ( parser );
 
     while ( cur < limit )
     {
       if ( *cur == 'S' && ft_strncmp( (char*)cur, "StartData", 9 ) == 0 )
       {
         if ( ft_strncmp( (char*)arg1, "(Hex)", 5 ) == 0 )
-          parser->data_type = 1;
+          parser->binary_length = ft_atol( (const char *)arg2 );
+
         limit = parser->root.limit;
         cur   = parser->root.cursor;
         goto Exit;

@@ -1,3 +1,37 @@
+2004-01-22  Werner Lemberg  <wl@gnu.org>
+
+	Add support for the hexadicimal representation of binary data
+	started with `StartData' in CID-keyed Type 1 fonts.
+
+	* include/freetype/internal/t1types.h (CID_FaceRec): Add new
+	members `binary_data' and `cid_stream'.
+
+	* src/cid/cidload.c (cid_read_subrs): Use `face->cid_stream'.
+	(cid_hex_to_binary): New auxiliary function.
+	(cid_face_open): Add new argument `face_index' to return quickly
+	if less than zero.  Updated all callers.
+	Call `cid_hex_to_binary', then open and assign memory stream to
+	`face->cid_stream' if `parser->binary_length' is non-zero.
+	* src/cid/cidload.h: Updated.
+
+	* src/cid/cidobjs.c (cid_face_done): Free `binary_data' and
+	`cid_stream'.
+
+	* src/cid/cidparse.c (cid_parser_new): Check arguments to
+	`StartData' and set parser->binary_length accordingly.
+	* src/cid/cidparse.h (CID_Parser): New member `binary_length'.
+
+	* src/cid/cidgload.c (cid_load_glyph): Use `face->cid_stream'.
+
+	* docs/CHANGES: Updated.
+
+2004-01-21  Werner Lemberg  <wl@gnu.org>
+
+	include/freetype/config/ftstdlib.h (ft_atoi): Replaced with...
+	(ft_atol): This.
+	* src/base/ftdbgmem.c: s/atol/ft_atol/.
+	* src/type42/t42drivr.c: s/ft_atoi/ft_atol/.
+
 2004-01-20  Masatake YAMATO  <jet@gyve.org>
 
 	* include/freetype/ftcache.h: Delete duplicated definition of

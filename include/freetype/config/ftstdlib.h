@@ -5,7 +5,7 @@
 /*    ANSI-specific library and header configuration file (specification   */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2004 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -110,7 +110,7 @@
 #define ft_qsort  qsort
 #define ft_exit   exit    /* only used to exit from unhandled exceptions */
 
-#define ft_atoi   atoi
+#define ft_atol   atol
 
 
   /**********************************************************************/
