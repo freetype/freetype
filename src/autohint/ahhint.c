@@ -1743,25 +1743,27 @@
     */
     {
       AH_Globals  design = &face_globals->design;
-      FT_Pos      shoot  = design->blue_shoots[ AH_BLUE_SMALL_TOP ];
+      FT_Pos      shoot  = design->blue_shoots[AH_BLUE_SMALL_TOP];
 
-     /* the value of 'shoot' will be -1000 if the font doesn't have */
-     /* small latin letters; we simply check the sign here...       */
+
+      /* the value of 'shoot' will be -1000 if the font doesn't have */
+      /* small latin letters; we simply check the sign here...       */
       if ( shoot > 0 )
       {
         FT_Pos  scaled = FT_MulFix( shoot, y_scale );
         FT_Pos  fitted = ( scaled + 32 ) & -64;
 
+
         if ( scaled != fitted )
         {
          /* adjust y_scale
           */
-          y_scale = FT_MulDiv( y_scale, fitted, scaled );
+          face->size->metrics.y_scale = FT_MulDiv( y_scale, fitted, scaled );
 
          /* adust x_scale
           */
           if ( fitted < scaled )
-            x_scale -= x_scale/50;  /* x_scale*0.98 with integers */
+            face->size->metrics.x_scale -= x_scale/50;  /* x_scale*0.98 */
         }
       }
     }
@@ -1772,7 +1774,9 @@
     /* need to rescale the global metrics                               */
     if ( face_globals->x_scale != x_scale ||
          face_globals->y_scale != y_scale )
-      ah_hinter_scale_globals( hinter, x_scale, y_scale );
+      ah_hinter_scale_globals( hinter,
+                               face->size->metrics.x_scale,
+                               face->size->metrics.y_scale );
 
     ah_loader_rewind( hinter->loader );
 
