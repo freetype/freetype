@@ -70,6 +70,11 @@ I. From the command line
       - make
       - make install
 
+    If the  configure script isn't run,  try to add `unix' as a target
+    on the command line, e.g.:
+
+      - make setup unix CFG="--prefix=/opt/experimental"
+
 
   - Windows:
 
