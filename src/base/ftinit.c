@@ -123,7 +123,7 @@ const FT_Module_Class*  const ft_default_modules[] =
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Init_FreeType( FT_Library*  library )
+  FT_EXPORT_DEF( FT_Error )  FT_Init_FreeType( FT_Library  *alibrary )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -142,9 +142,9 @@ const FT_Module_Class*  const ft_default_modules[] =
     /* build a library out of it, then fill it with the set of */
     /* default drivers.                                        */
 
-    error = FT_New_Library( memory, library );
+    error = FT_New_Library( memory, alibrary );
     if ( !error )
-      FT_Add_Default_Modules( *library );
+      FT_Add_Default_Modules( *alibrary );
 
     return error;
   }

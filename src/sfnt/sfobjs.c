@@ -267,38 +267,37 @@
 
     /* Load tables */
 
-    /* we now support two SFNT-based bitmapped font formats.       */
-    /* they are recognized easily as they do not include a "glyf"  */
-    /* table..                                                     */
+    /* We now support two SFNT-based bitmapped font formats.  They */
+    /* are recognized easily as they do not include a `glyf'       */
+    /* table.                                                      */
     /*                                                             */
-    /* the first format comes from Apple, and uses a table named   */
-    /* "bhed" instead of "head" to store the font header (using    */
-    /* the same format). it also doesn't include horizontal and    */
-    /* vertical metrics tables (i.e. "hhea" and "vhea" tables)     */
+    /* The first format comes from Apple, and uses a table named   */
+    /* `bhed' instead of `head' to store the font header (using    */
+    /* the same format).  It also doesn't include horizontal and   */
+    /* vertical metrics tables (i.e. `hhea' and `vhea' tables are  */
+    /* missing).                                                   */
     /*                                                             */
-    /* the other format comes from Microsoft, and is used with     */
-    /* WinCE / PocketPC. It's standard, except that it doesn't     */
-    /* contain outlines..                                          */
+    /* The other format comes from Microsoft, and is used with     */
+    /* WinCE/PocketPC.  It looks like a standard TTF, except that  */
+    /* it doesn't contain outlines.                                */
     /*                                                             */
 
-    /* do we have outlines in there ?? */
-    has_outline   = (TT_LookUp_Table( face, TTAG_glyf ) != 0);
+    /* do we have outlines in there? */
+    has_outline   = ( TT_LookUp_Table( face, TTAG_glyf ) != 0 );
     is_apple_sbit = 0;
     
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-    /*
-     * if this font doesn't contain outlines, we'll try to load
-     * a "bhed" table in it..
-     */
+    /* if this font doesn't contain outlines, we try to load */
+    /* a `bhed' table                                        */
     if ( !has_outline )
-      is_apple_sbit = !LOAD_(bitmap_header);
+      is_apple_sbit = !LOAD_( bitmap_header );
 
-#endif
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    /* load the font header ("head" table) if this isn't an Apple */
-    /* sbit font file..                                           */
-    if ( !is_apple_sbit && LOAD_(header) )
+    /* load the font header (`head' table) if this isn't an Apple */
+    /* sbit font file                                             */
+    if ( !is_apple_sbit && LOAD_( header ) )
       goto Exit;
 
     /* load other tables */
@@ -309,20 +308,20 @@
       goto Exit;
 
     /* do not load the metrics headers and tables if this is an Apple */
-    /* sbit font file..                                               */
+    /* sbit font file                                                 */
     if ( !is_apple_sbit )
     {
-      /* load the "hhea" and "hmtx" tables at once */
+      /* load the `hhea' and `hmtx' tables at once */
       error = sfnt->load_metrics( face, stream, 0 );
-      if (error)
+      if ( error )
         goto Exit;
         
-      /* try to load the "vhea" and "vmtx" tables at once */
+      /* try to load the `vhea' and `vmtx' tables at once */
       error = sfnt->load_metrics( face, stream, 1 );
-      if (error)
+      if ( error )
         goto Exit;
         
-      if ( LOAD_(os2) )
+      if ( LOAD_( os2 ) )
         goto Exit;
     }
 

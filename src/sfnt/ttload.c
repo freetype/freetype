@@ -517,21 +517,26 @@
     return error;
   }
 
+
   FT_LOCAL_DEF
   FT_Error  TT_Load_Header( TT_Face    face,
-			    FT_Stream  stream )
+                            FT_Stream  stream )
   {
     return TT_Load_Generic_Header( face, stream, TTAG_head );
   }
 
+
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
   FT_LOCAL_DEF
   FT_Error  TT_Load_Bitmap_Header( TT_Face    face,
-				   FT_Stream  stream )
+                                   FT_Stream  stream )
   {
     return TT_Load_Generic_Header( face, stream, TTAG_bhed );
   }
-#endif
+
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
 
   /*************************************************************************/
   /*                                                                       */

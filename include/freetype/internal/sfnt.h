@@ -243,7 +243,7 @@
   FT_Error  (*TT_Load_Any_Func)( TT_Face    face,
                                  FT_ULong   tag,
                                  FT_Long    offset,
-                                 FT_Byte*   buffer,
+                                 FT_Byte   *buffer,
                                  FT_ULong*  length );
 
 
@@ -268,9 +268,9 @@
   /*    stream      :: The input stream.                                   */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    map         :: The target pixmap.                                  */
+  /*    amap        :: The target pixmap.                                  */
   /*                                                                       */
-  /*    metrics     :: A big sbit metrics structure for the glyph image.   */
+  /*    ametrics    :: A big sbit metrics structure for the glyph image.   */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.  Returns an error if no     */
@@ -281,18 +281,43 @@
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_SBit_Image_Func)( TT_Face           face,
-					FT_ULong          strike_index,
+                                        FT_ULong          strike_index,
                                         FT_UInt           glyph_index,
                                         FT_UInt           load_flags,
                                         FT_Stream         stream,
-                                        FT_Bitmap*        map,
-                                        TT_SBit_Metrics*  metrics );
+                                        FT_Bitmap        *amap,
+                                        TT_SBit_Metrics  *ametrics );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Set_SBit_Strike_Func                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Selects an sbit strike for given horizontal and vertical ppem      */
+  /*    values.                                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face          :: The target face object.                           */
+  /*                                                                       */
+  /*    x_ppem        :: The horizontal resolution in points per EM.       */
+  /*                                                                       */
+  /*    y_ppem        :: The vertical resolution in points per EM.         */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    astrike_index :: The index of the sbit strike.                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.  Returns an error if no     */
+  /*    sbit strike exists for the selected ppem values.                   */
+  /*                                                                       */
   typedef
-  FT_Error  (*TT_Set_SBit_Strike_Func)( TT_Face           face,
-					FT_Int            x_ppem,
-					FT_Int            y_ppem,
-					FT_ULong*         astrike_index );
+  FT_Error  (*TT_Set_SBit_Strike_Func)( TT_Face    face,
+                                        FT_Int     x_ppem,
+                                        FT_Int     y_ppem,
+                                        FT_ULong  *astrike_index );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -479,9 +504,11 @@
     TT_Load_Table_Func        load_gasp;
     TT_Load_Table_Func        load_pclt;
 
+    /* see `ttload.h' */
     TT_Load_Table_Func        load_bitmap_header;
-    TT_Set_SBit_Strike_Func   set_sbit_strike;
+
     /* see `ttsbit.h' */
+    TT_Set_SBit_Strike_Func   set_sbit_strike;
     TT_Load_Table_Func        load_sbits;
     TT_Load_SBit_Image_Func   load_sbit_image;
     TT_Free_Table_Func        free_sbits;

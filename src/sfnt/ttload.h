@@ -121,10 +121,13 @@
                           FT_Stream  stream );
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
   FT_LOCAL
   FT_Error  TT_Load_Bitmap_Header( TT_Face    face,
-				   FT_Stream  stream );
-#endif
+                                   FT_Stream  stream );
+
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
 
 #ifdef __cplusplus
   }

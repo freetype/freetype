@@ -45,10 +45,10 @@
 
 
   FT_LOCAL
-  FT_Error  TT_Set_SBit_Strike( TT_Face   face,
-   			        FT_Int    x_ppem,
- 				FT_Int    y_ppem,
- 				FT_ULong *astrike_index );
+  FT_Error  TT_Set_SBit_Strike( TT_Face    face,
+                                FT_Int     x_ppem,
+                                FT_Int     y_ppem,
+                                FT_ULong  *astrike_index );
 
   FT_LOCAL
   FT_Error  TT_Load_SBit_Image( TT_Face           face,
@@ -58,7 +58,6 @@
                                 FT_Stream         stream,
                                 FT_Bitmap        *map,
                                 TT_SBit_Metrics  *metrics );
-
 
 
 #ifdef __cplusplus

@@ -1337,7 +1337,7 @@
   FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
                                           const char*  pathname,
                                           FT_Long      face_index,
-                                          FT_Face*     aface )
+                                          FT_Face     *aface )
   {
     FT_Open_Args  args;
 
@@ -1399,7 +1399,7 @@
                                                  FT_Byte*    file_base,
                                                  FT_Long     file_size,
                                                  FT_Long     face_index,
-                                                 FT_Face*    face )
+                                                 FT_Face    *aface )
   {
     FT_Open_Args  args;
 
@@ -1412,7 +1412,7 @@
     args.memory_base = file_base;
     args.memory_size = file_size;
 
-    return FT_Open_Face( library, &args, face_index, face );
+    return FT_Open_Face( library, &args, face_index, aface );
   }
 
 
@@ -1459,7 +1459,7 @@
   FT_EXPORT_DEF( FT_Error )  FT_Open_Face( FT_Library     library,
                                            FT_Open_Args*  args,
                                            FT_Long        face_index,
-                                           FT_Face*       aface )
+                                           FT_Face       *aface )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1810,7 +1810,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_New_Size( FT_Face   face,
-                                          FT_Size*  asize )
+                                          FT_Size  *asize )
   {
     FT_Error          error;
     FT_Memory         memory;
@@ -2178,7 +2178,7 @@
                                              FT_UInt     left_glyph,
                                              FT_UInt     right_glyph,
                                              FT_UInt     kern_mode,
-                                             FT_Vector*  kerning )
+                                             FT_Vector  *akerning )
   {
     FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;
@@ -2188,32 +2188,32 @@
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
-    if ( !kerning )
+    if ( !akerning )
       return FT_Err_Invalid_Argument;
 
     driver = face->driver;
     memory = driver->root.memory;
 
-    kerning->x = 0;
-    kerning->y = 0;
+    akerning->x = 0;
+    akerning->y = 0;
 
     if ( driver->clazz->get_kerning )
     {
       error = driver->clazz->get_kerning( face,
                                           left_glyph,
                                           right_glyph,
-                                          kerning );
+                                          akerning );
       if ( !error )
       {
         if ( kern_mode != ft_kerning_unscaled )
         {
-          kerning->x = FT_MulFix( kerning->x, face->size->metrics.x_scale );
-          kerning->y = FT_MulFix( kerning->y, face->size->metrics.y_scale );
+          akerning->x = FT_MulFix( akerning->x, face->size->metrics.x_scale );
+          akerning->y = FT_MulFix( akerning->y, face->size->metrics.y_scale );
 
           if ( kern_mode != ft_kerning_unfitted )
           {
-            kerning->x = ( kerning->x + 32 ) & -64;
-            kerning->y = ( kerning->y + 32 ) & -64;
+            akerning->x = ( akerning->x + 32 ) & -64;
+            akerning->y = ( akerning->y + 32 ) & -64;
           }
         }
       }
@@ -3203,7 +3203,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_New_Library( FT_Memory    memory,
-                                             FT_Library*  alibrary )
+                                             FT_Library  *alibrary )
   {
     FT_Library  library = 0;
     FT_Error    error;

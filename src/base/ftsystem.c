@@ -231,12 +231,12 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_New_Stream( const char*  filepathname,
-                                            FT_Stream    stream )
+                                            FT_Stream    astream )
   {
     FILE*  file;
 
 
-    if ( !stream )
+    if ( !astream )
       return FT_Err_Invalid_Stream_Handle;
 
     file = fopen( filepathname, "rb" );
@@ -249,19 +249,19 @@
     }
 
     fseek( file, 0, SEEK_END );
-    stream->size = ftell( file );
+    astream->size = ftell( file );
     fseek( file, 0, SEEK_SET );
 
-    stream->descriptor.pointer = file;
-    stream->pathname.pointer   = (char*)filepathname;
-    stream->pos                = 0;
+    astream->descriptor.pointer = file;
+    astream->pathname.pointer   = (char*)filepathname;
+    astream->pos                = 0;
 
-    stream->read  = ft_io_stream;
-    stream->close = ft_close_stream;
+    astream->read  = ft_io_stream;
+    astream->close = ft_close_stream;
 
     FT_TRACE1(( "FT_New_Stream:" ));
     FT_TRACE1(( " opened `%s' (%d bytes) successfully\n",
-                filepathname, stream->size ));
+                filepathname, astream->size ));
 
     return FT_Err_Ok;
   }

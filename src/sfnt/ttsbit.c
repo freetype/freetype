@@ -629,27 +629,29 @@
 
   
   FT_LOCAL_DEF
-  FT_Error  TT_Set_SBit_Strike( TT_Face   face,
-			        FT_Int    x_ppem,
-				FT_Int    y_ppem,
-				FT_ULong* astrike_index )
+  FT_Error  TT_Set_SBit_Strike( TT_Face    face,
+                                FT_Int     x_ppem,
+                                FT_Int     y_ppem,
+                                FT_ULong  *astrike_index )
   {
-    FT_Int i;
+    FT_Int  i;
+
 
     if ( x_ppem < 0 || x_ppem > 255 ||
-	 y_ppem < 1 || y_ppem > 255 )
+         y_ppem < 1 || y_ppem > 255 )
       return TT_Err_Invalid_PPem;
 
     for ( i = 0; i < face->num_sbit_strikes; i++ )
     {
-      if ( ( face->sbit_strikes[i].y_ppem  == y_ppem ) &&
-	   ( ( x_ppem == 0 ) ||
-	     ( face->sbit_strikes[i].x_ppem == x_ppem )))
+      if ( ( face->sbit_strikes[i].y_ppem  == y_ppem )  &&
+           ( ( x_ppem == 0 ) ||
+             ( face->sbit_strikes[i].x_ppem == x_ppem ) ) )
       {
-	*astrike_index = i;
-	return TT_Err_Ok;
+        *astrike_index = i;
+        return TT_Err_Ok;
       }
     }
+
     return TT_Err_Invalid_PPem;
   }
 
@@ -665,10 +667,12 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    glyph_index   :: The glyph index.                                  */
+  /*                                                                       */
   /*    strike        :: The source/current sbit strike.                   */
   /*                                                                       */
   /* <Output>                                                              */
   /*    arange        :: The sbit range containing the glyph index.        */
+  /*                                                                       */
   /*    aglyph_offset :: The offset of the glyph data in `EBDT' table.     */
   /*                                                                       */
   /* <Return>                                                              */
@@ -766,12 +770,16 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face          :: The target face object.                           */
+  /*                                                                       */
   /*    glyph_index   :: The glyph index.                                  */
-  /*    strike_index  :: The current strike index.                          */
+  /*                                                                       */
+  /*    strike_index  :: The current strike index.                         */
   /*                                                                       */
   /* <Output>                                                              */
   /*    arange        :: The SBit range containing the glyph index.        */
+  /*                                                                       */
   /*    astrike       :: The SBit strike containing the glyph index.       */
+  /*                                                                       */
   /*    aglyph_offset :: The offset of the glyph data in `EBDT' table.     */
   /*                                                                       */
   /* <Return>                                                              */
@@ -781,21 +789,23 @@
   static
   FT_Error  Find_SBit_Image( TT_Face           face,
                              FT_UInt           glyph_index,
-			     FT_ULong          strike_index,
-                             TT_SBit_Range**   arange,
-                             TT_SBit_Strike**  astrike,
-                             FT_ULong*         aglyph_offset )
+                             FT_ULong          strike_index,
+                             TT_SBit_Range*   *arange,
+                             TT_SBit_Strike*  *astrike,
+                             FT_ULong         *aglyph_offset )
   {
-    FT_Error  error;
+    FT_Error         error;
     TT_SBit_Strike*  strike;
 
-    if ( !face->sbit_strikes || ( face->num_sbit_strikes <= (FT_Int)strike_index ) )
+
+    if ( !face->sbit_strikes                              || 
+         ( face->num_sbit_strikes <= (FT_Int)strike_index ) )
       goto Fail;
 
     strike = &face->sbit_strikes[strike_index];
 
     error = Find_SBit_Range( glyph_index, strike,
-			     arange, aglyph_offset );
+                             arange, aglyph_offset );
     if ( error )
       goto Fail;
 
@@ -921,8 +931,8 @@
   /*    Crops a bitmap to its tightest bounding box, and adjusts its       */
   /*    metrics.                                                           */
   /*                                                                       */
-  /* <Input>                                                               */
-  /*    image   :: The input glyph slot.                                   */
+  /* <InOut>                                                               */
+  /*    map     :: The bitmap.                                             */
   /*                                                                       */
   /*    metrics :: The corresponding metrics structure.                    */
   /*                                                                       */
@@ -1366,21 +1376,21 @@
   /*    returns its metrics.                                               */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face        :: The target face object.                             */
+  /*    face         :: The target face object.                            */
   /*                                                                       */
   /*    strike_index :: The current strike index.                          */
   /*                                                                       */
-  /*    glyph_index :: The current glyph index.                            */
+  /*    glyph_index  :: The current glyph index.                           */
   /*                                                                       */
-  /*    load_flags  :: The glyph load flags (the code checks for the flag  */
-  /*                   FT_LOAD_CROP_BITMAP                                 */
+  /*    load_flags   :: The glyph load flags (the code checks for the flag */
+  /*                    FT_LOAD_CROP_BITMAP).                              */
   /*                                                                       */
-  /*    stream      :: The input stream.                                   */
+  /*    stream       :: The input stream.                                  */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    map         :: The target pixmap.                                  */
+  /*    map          :: The target pixmap.                                 */
   /*                                                                       */
-  /*    metrics     :: A big sbit metrics structure for the glyph image.   */
+  /*    metrics      :: A big sbit metrics structure for the glyph image.  */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.  Returns an error if no     */
@@ -1391,12 +1401,12 @@
   /*                                                                       */
   FT_LOCAL_DEF
   FT_Error  TT_Load_SBit_Image( TT_Face           face,
-				FT_ULong          strike_index,
+                                FT_ULong          strike_index,
                                 FT_UInt           glyph_index,
                                 FT_UInt           load_flags,
                                 FT_Stream         stream,
-                                FT_Bitmap*        map,
-                                TT_SBit_Metrics*  metrics )
+                                FT_Bitmap        *map,
+                                TT_SBit_Metrics  *metrics )
   {
     FT_Error         error;
     FT_Memory        memory = stream->memory;

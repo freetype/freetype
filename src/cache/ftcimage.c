@@ -262,7 +262,7 @@
 
 
   FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
-                                                  FTC_Image_Cache*  acache )
+                                                  FTC_Image_Cache  *acache )
   {
     return FTC_Manager_Register_Cache(
              manager,
