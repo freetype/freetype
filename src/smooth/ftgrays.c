@@ -1320,7 +1320,7 @@
 
       if ( ras.span_y != y || count >= FT_MAX_GRAY_SPANS )
       {
-        if ( ras.render_span )
+        if ( ras.render_span && count > 0 )
           ras.render_span( ras.span_y, count, ras.gray_spans,
                            ras.render_span_data );
         /* ras.render_span( span->y, ras.gray_spans, count ); */
