@@ -23,7 +23,8 @@
 #include "pshrec.h"
 #include "pshalgo.h"
 
-#define FT_COMPONENT   trace_ttgload
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_pshrec
 
 #ifdef DEBUG_HINTER
   extern PS_Hints  ps_debug_hints         = 0;
@@ -479,7 +480,7 @@
       table->num_masks--;
     }
     else
-      FT_ERROR(( "%s: ignoring invalid indices (%d,%d)\n",
+      FT_ERROR(( "ps_mask_table_merge: ignoring invalid indices (%d,%d)\n",
                  index1, index2 ));
 
   Exit:
@@ -822,7 +823,7 @@
       hints->error     = FT_Err_Invalid_Argument;
       hints->hint_type = hint_type;
 
-      FT_ERROR(( "%s.init: invalid charstring type!\n", "pshrec.hints" ));
+      FT_ERROR(( "ps_hints_open: invalid charstring type!\n" ));
       break;
     }
   }
@@ -840,7 +841,7 @@
       /* limit "dimension" to 0..1 */
       if ( dimension < 0 || dimension > 1 )
       {
-        FT_ERROR(( "ps.hints.stem: invalid dimension (%d) used\n",
+        FT_ERROR(( "ps_hints_stem: invalid dimension (%d) used\n",
                    dimension ));
         dimension = ( dimension != 0 );
       }
@@ -864,7 +865,7 @@
                                              memory, NULL );
             if ( error )
             {
-              FT_ERROR(( "ps.hints.stem: could not add stem"
+              FT_ERROR(( "ps_hints_stem: could not add stem"
                          " (%d,%d) to hints table\n", stems[0], stems[1] ));
 
               hints->error = error;
@@ -875,7 +876,7 @@
         }
 
       default:
-        FT_ERROR(( "ps.hints.stem: called with invalid hint type (%d)\n",
+        FT_ERROR(( "ps_hints_stem: called with invalid hint type (%d)\n",
                    hints->hint_type ));
         break;
       }
@@ -903,7 +904,7 @@
       /* limit "dimension" to 0..1 */
       if ( dimension < 0 || dimension > 1 )
       {
-        FT_ERROR(( "ps.hints.stem: invalid dimension (%d) used\n",
+        FT_ERROR(( "ps_hints_t1stem3: invalid dimension (%d) used\n",
                    dimension ));
         dimension = ( dimension != 0 );
       }
@@ -930,7 +931,7 @@
       }
       else
       {
-        FT_ERROR(( "ps.hints.stem3: called with invalid hint type!\n" ));
+        FT_ERROR(( "ps_hints_t1stem3: called with invalid hint type!\n" ));
         error = FT_Err_Invalid_Argument;
         goto Fail;
       }
@@ -939,7 +940,7 @@
     return;
 
   Fail:
-    FT_ERROR(( "ps.hints.stem3: could not add counter stems to table\n" ));
+    FT_ERROR(( "ps_hints_t1stem3: could not add counter stems to table\n" ));
     hints->error = error;
   }
 
@@ -1004,8 +1005,8 @@
       /* check bit count; must be equal to current total hint count */
       if ( bit_count !=  count1 + count2 )
       {
-        FT_ERROR(( "%s: called with invalid bitcount %d (instead of %d)\n",
-                   "ps.hinter.type2.hintmask",
+        FT_ERROR(( "ps_hints_t2mask: "
+                   "called with invalid bitcount %d (instead of %d)\n",
                    bit_count, count1 + count2 ));
         
         /* simply ignore the operator */
@@ -1049,8 +1050,8 @@
       /* check bit count, must be equal to current total hint count */
       if ( bit_count !=  count1 + count2 )
       {
-        FT_ERROR(( "%s: called with invalid bitcount %d (instead of %d)\n",
-                   "ps.hinter.type2.counter",
+        FT_ERROR(( "ps_hints_t2counter: "
+                   "called with invalid bitcount %d (instead of %d)\n",
                    bit_count, count1 + count2 ));
                    
         /* simply ignore the operator */

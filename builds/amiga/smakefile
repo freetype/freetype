@@ -33,6 +33,8 @@ OBJDEBUG = ftdebug.o ftdebugpure.o
 
 OBJAHINT = autohint.o ahoptim.o
 
+OBJPSHINT = pshinter.o
+
 OBJPSAUX = psaux.o
 
 OBJPSNAM = psnames.o
@@ -57,7 +59,7 @@ OBJWINFNT = winfnt.o
 
 OBJPCF = pcf.o
 
-OBJPS = $(OBJPSAUX) $(OBJPSNAM)
+OBJPS = $(OBJPSAUX) $(OBJPSNAM) $(OBJPSHINT)
 
 OBJRASTER = $(OBJRAST) $(OBJSMOOTH)
 
@@ -141,6 +143,11 @@ autohint.o: $(CORE)autohint/autohint.c
 ahoptim.o: $(CORE)autohint/ahoptim.c
 	sc $(SCFLAGS) objname=$@ $<
 
+#
+# freetype library PS hinting module
+#
+pshinter.o: $(CORE)pshinter/pshinter.c
+	sc $(SCFLAGS) objname=$@ $<
 #
 # freetype library PS support module
 #

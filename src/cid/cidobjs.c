@@ -201,10 +201,12 @@
       {
         FT_Int      n;
         
+
         for ( n = 0; n < cid->num_dicts; n++ )
         {
           CID_Subrs*  subr = face->subrs + n;
           
+
           if ( subr->code )
           {
             FREE( subr->code[0] );

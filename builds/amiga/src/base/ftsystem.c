@@ -2,9 +2,19 @@
 // malloc() realloc() and free() which can't be used in an amiga
 // shared run-time library linked with libinit.o
 
+#ifdef __GNUC__
+// Avoid warnings "struct X declared inside parameter list"
+#include <exec/memory.h>
+#include <exec/devices.h>
+#include <exec/io.h>
+#include <exec/semaphores.h>
+#include <dos/exall.h>
+#endif
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 
+#ifndef __GNUC__
 /* TetiSoft: Missing in alib_protos.h, see amiga.lib autodoc
  * (These amiga.lib functions work under AmigaOS V33 and up)
  */
@@ -24,13 +34,18 @@ extern VOID __asm AsmFreePooled(register __a0 APTR poolHeader,
                                 register __a1 APTR memory,
                                 register __d0 ULONG memSize,
                                 register __a6 struct ExecBase *SysBase);
+#endif
 
 
 // TetiSoft: C implementation of AllocVecPooled (see autodoc exec/AllocPooled)
 APTR AllocVecPooled(APTR poolHeader, ULONG memSize)
 {
-        ULONG newSize = memSize + 4;
+        ULONG newSize = memSize + sizeof(ULONG);
+#ifdef __GNUC__
+        ULONG *mem = AllocPooled(poolHeader, newSize);
+#else
         ULONG *mem = AsmAllocPooled(poolHeader, newSize, SysBase);
+#endif
 
         if (!mem)
                 return NULL;
@@ -43,7 +58,11 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
 {
         ULONG *realmem = (ULONG *)memory - 1;
 
+#ifdef __GNUC__
+        FreePooled(poolHeader, realmem, *realmem);
+#else
         AsmFreePooled(poolHeader, realmem, *realmem, SysBase);
+#endif
 }
 
 /***************************************************************************/
@@ -215,7 +234,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   /* We use the macro STREAM_FILE for convenience to extract the       */
   /* system-specific stream handle from a given FreeType stream object */
 //#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
-#define STREAM_FILE( stream )  ( (BPTR)stream->descriptor.pointer )        // TetiSoft
+#define STREAM_FILE( stream )  ( (BPTR)stream->descriptor.pointer )     // TetiSoft
 
 
   /*************************************************************************/
@@ -233,7 +252,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   ft_close_stream( FT_Stream  stream )
   {
 //  fclose( STREAM_FILE( stream ) );
-    Close( STREAM_FILE( stream ) );        // TetiSoft
+    Close( STREAM_FILE( stream ) );     // TetiSoft
 
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
@@ -274,7 +293,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
     file = STREAM_FILE( stream );
 
 //  fseek( file, offset, SEEK_SET );
-    Seek( file, offset, OFFSET_BEGINNING );        // TetiSoft
+    Seek( file, offset, OFFSET_BEGINNING );     // TetiSoft
 
 //  return (unsigned long)fread( buffer, 1, count, file );
     return (unsigned long)FRead( file, buffer, 1, count);
@@ -289,14 +308,14 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   {
 //  FILE*  file;
     BPTR   file;                // TetiSoft
-    struct FileInfoBlock *fib;        // TetiSoft
+    struct FileInfoBlock *fib;  // TetiSoft
 
 
     if ( !astream )
       return FT_Err_Invalid_Stream_Handle;
 
 //  file = fopen( filepathname, "rb" );
-    file = Open( filepathname, MODE_OLDFILE );        // TetiSoft
+    file = Open( filepathname, MODE_OLDFILE );  // TetiSoft
     if ( !file )
     {
       FT_ERROR(( "FT_New_Stream:" ));
@@ -346,6 +365,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   }
 
 
+
 #ifdef FT_DEBUG_MEMORY
 
   extern FT_Int
@@ -370,7 +390,11 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
     if ( memory )
     {
 //    memory->user    = 0;
+#ifdef __GNUC__
+      memory->user    = CreatePool ( MEMF_PUBLIC, 2048, 2048 );
+#else
       memory->user    = AsmCreatePool ( MEMF_PUBLIC, 2048, 2048, SysBase );
+#endif
       if ( memory->user == NULL )
       {
         FreeVec ( memory );
@@ -400,7 +424,11 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
     ft_mem_debug_done( memory );
 #endif  
 
+#ifdef __GNUC__
+    DeletePool( memory->user );
+#else
     AsmDeletePool( memory->user, SysBase );
+#endif
     FreeVec( memory );
   }
 

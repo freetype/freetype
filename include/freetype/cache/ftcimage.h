@@ -168,9 +168,9 @@ FT_BEGIN_HEADER
   /*    aglyph :: The corresponding @FT_Glyph object.  0 in case of        */
   /*              failure.                                                 */
   /*                                                                       */
-  /*    anode  :: used to return the address of of the corresponding       */
-  /*              cache node after incrementing its reference count        */
-  /*              (see note below)                                         */
+  /*    anode  :: Used to return the address of of the corresponding cache */
+  /*              node after incrementing its reference count (see note    */
+  /*              below).                                                  */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -182,14 +182,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    If "anode" is _not_ NULL, it receives the address of the cache     */
   /*    node containing the glyph image, after increasing its reference    */
-  /*    count. This ensures that the node (as well as the FT_Glyph) will   */
+  /*    count.  This ensures that the node (as well as the FT_Glyph) will  */
   /*    always be kept in the cache until you call @FTC_Node_Unref to      */
   /*    "release" it.                                                      */
   /*                                                                       */
   /*    If "anode" is NULL, the cache node is left unchanged, which means  */
   /*    that the FT_Glyph could be flushed out of the cache on the next    */
-  /*    call to one of the caching sub-system APIs. Just don't assume      */
-  /*    that it's persistent..                                             */
+  /*    call to one of the caching sub-system APIs.  Don't assume that it  */
+  /*    is persistent!                                                     */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_ImageCache_Lookup( FTC_ImageCache  cache,

@@ -21,6 +21,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include "pshalgo2.h"
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_pshalgo2
 
 #ifdef DEBUG_HINTER
   extern PSH2_Hint_Table  ps2_debug_hint_table = 0;
