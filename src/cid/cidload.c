@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 font loader (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -279,15 +279,6 @@
   };
 
 
-  static int
-  is_alpha( char  c )
-  {
-    return ( ft_isalnum( (int)c ) ||
-             c == '.'             ||
-             c == '_'             );
-  }
-
-
   static FT_Error
   cid_parse_dict( CID_Face     face,
                   CID_Loader*  loader,
@@ -322,17 +313,15 @@
         /* look for immediates */
         else if ( *cur == '/' && cur + 2 < limit )
         {
-          FT_Byte*  cur2;
-          FT_Int    len;
+          FT_Int  len;
 
 
           cur++;
 
-          cur2 = cur;
-          while ( cur2 < limit && is_alpha( *cur2 ) )
-            cur2++;
+          parser->root.cursor = cur;
+          cid_parser_skip_alpha( parser );
 
-          len = (FT_Int)( cur2 - cur );
+          len = (FT_Int)( parser->root.cursor - cur );
           if ( len > 0 && len < 22 )
           {
             /* now compare the immediate name to the keyword table */
@@ -361,7 +350,6 @@
                 if ( n >= len )
                 {
                   /* we found it - run the parsing callback */
-                  parser->root.cursor = cur2;
                   cid_parser_skip_spaces( parser );
                   parser->root.error = cid_load_keyword( face,
                                                          loader,

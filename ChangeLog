@@ -1,3 +1,12 @@
+2003-15-07  YAMANO-UCHI Hidetoshi  <mer@din.or.jp>
+
+	* src/cid/cidload.c (is_alpha): Removed.
+	(cid_parse_dict): Use `cid_parser_skip_alpha' instead of `is_alpha'.
+
+2003-05-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahoptim.c, src/autohint/ahoptim.h: Obsolete, removed.
+
 2003-05-07  David Turner  <david@freetype.org>
 
 	* src/autohint/ahglyph.c (ah_setup_uv): Exchange `for' loop and
