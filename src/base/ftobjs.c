@@ -1091,7 +1091,7 @@
     args.stream = stream;
     if ( driver_name )
     {
-      args.flags = args.flags | FT_OPEN_DRIVER;
+      args.flags = (FT_Open_Flags)( args.flags | FT_OPEN_DRIVER );
       args.driver = FT_Get_Module( library, driver_name );
     }
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 42 font parser (body).                                          */
 /*                                                                         */
-/*  Copyright 2002 by Roberto Alameda.                                     */
+/*  Copyright 2002, 2003 by Roberto Alameda.                               */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -65,24 +65,24 @@
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_FONT_INFO
 
-    T1_FIELD_STRING   ( "version",            version )
-    T1_FIELD_STRING   ( "Notice",             notice )
-    T1_FIELD_STRING   ( "FullName",           full_name )
-    T1_FIELD_STRING   ( "FamilyName",         family_name )
-    T1_FIELD_STRING   ( "Weight",             weight )
-    T1_FIELD_NUM      ( "ItalicAngle",        italic_angle )
-    T1_FIELD_TYPE_BOOL( "isFixedPitch",       is_fixed_pitch )
-    T1_FIELD_NUM      ( "UnderlinePosition",  underline_position )
-    T1_FIELD_NUM      ( "UnderlineThickness", underline_thickness )
+    T1_FIELD_STRING     ( "version",            version )
+    T1_FIELD_STRING     ( "Notice",             notice )
+    T1_FIELD_STRING     ( "FullName",           full_name )
+    T1_FIELD_STRING     ( "FamilyName",         family_name )
+    T1_FIELD_STRING     ( "Weight",             weight )
+    T1_FIELD_FIXED_P    ( "ItalicAngle",        italic_angle )
+    T1_FIELD_TYPE_BOOL_P( "isFixedPitch",       is_fixed_pitch )
+    T1_FIELD_FIXED_P    ( "UnderlinePosition",  underline_position )
+    T1_FIELD_FIXED_P    ( "UnderlineThickness", underline_thickness )
 
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  T1_FontRec
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_FONT_DICT
 
-    T1_FIELD_NUM( "PaintType",   paint_type )
-    T1_FIELD_NUM( "FontType",    font_type )
-    T1_FIELD_NUM( "StrokeWidth", stroke_width )
+    T1_FIELD_NUM_P  ( "PaintType",   paint_type )
+    T1_FIELD_NUM    ( "FontType",    font_type )
+    T1_FIELD_FIXED_P( "StrokeWidth", stroke_width )
 
     T1_FIELD_CALLBACK( "FontName",    t42_parse_font_name )
     T1_FIELD_CALLBACK( "FontBBox",    t42_parse_font_bbox )

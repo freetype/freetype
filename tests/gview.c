@@ -22,9 +22,9 @@
 
 #include <time.h>    /* for clock() */
 
-/* SunOS 4.1.* does not define CLOCKS_PER_SEC, so include <sys/param.h> */
-/* to get the HZ macro which is the equivalent.                         */
-#if defined(__sun__) && !defined(SVR4) && !defined(__SVR4)
+  /* SunOS 4.1.* does not define CLOCKS_PER_SEC, so include <sys/param.h> */
+  /* to get the HZ macro which is the equivalent.                         */
+#if defined( __sun__ ) && !defined( SVR4 ) && !defined( __SVR4 )
 #include <sys/param.h>
 #define CLOCKS_PER_SEC HZ
 #endif
@@ -53,6 +53,7 @@ static  NV_Scale      grid_scale = 1.0;
 
 static  int   glyph_index;
 static  int   pixel_size = 12;
+
 
  /************************************************************************/
  /************************************************************************/
@@ -114,6 +115,7 @@ static  NV_Path   symbol_rect_v  = NULL;
 #define  LINK_COLOR        0xF0FFFF00
 #define  SERIF_LINK_COLOR  0xF0FF808F
 
+
 /* print message and abort program */
 static void
 Panic( const char*  message )
@@ -142,6 +144,7 @@ init_symbols( void )
   nv_path_new_circle( renderer, 0, 0, 2., &symbol_dot );
  }
 
+
 static void
 done_symbols( void )
 {
@@ -152,36 +155,39 @@ done_symbols( void )
   nv_path_destroy( symbol_square );
 }
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                     COMMON GRID DRAWING ROUTINES             *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+
+  /************************************************************************/
+  /************************************************************************/
+  /*****                                                              *****/
+  /*****               COMMON GRID DRAWING ROUTINES                   *****/
+  /*****                                                              *****/
+  /************************************************************************/
+  /************************************************************************/
 
 static void
 reset_scale( NV_Scale  scale )
 {
- /* compute font units -> grid pixels scale factor */
+  /* compute font units -> grid pixels scale factor */
   glyph_scale = target->width*0.75 / face->units_per_EM * scale;
 
- /* setup font units -> grid pixels transform */
+  /* setup font units -> grid pixels transform */
   nv_transform_set_scale( &glyph_transform, glyph_scale, -glyph_scale );
   glyph_org_x = glyph_transform.delta.x = target->width*0.125;
   glyph_org_y = glyph_transform.delta.y = target->height*0.875;
 
- /* setup subpixels -> grid pixels transform */
-  nv_transform_set_scale( &size_transform,
-                            glyph_scale/nv_fromfixed(face->size->metrics.x_scale),
-                          - glyph_scale/nv_fromfixed(face->size->metrics.y_scale) );
+  /* setup subpixels -> grid pixels transform */
+  nv_transform_set_scale(
+    &size_transform,
+    glyph_scale / nv_fromfixed( face->size->metrics.x_scale ),
+    -glyph_scale / nv_fromfixed( face->size->metrics.y_scale ) );
 
   size_transform.delta = glyph_transform.delta;
 }
 
 
 static void
-reset_size( int  pixel_size, NV_Scale  scale )
+reset_size( int       pixel_size,
+            NV_Scale  scale )
 {
   FT_Set_Pixel_Sizes( face, pixel_size, pixel_size );
   reset_scale( scale );
@@ -202,34 +208,36 @@ draw_grid( void )
   int  x = (int)glyph_org_x;
   int  y = (int)glyph_org_y;
 
+
   /* draw grid */
   if ( option_show_grid )
   {
     NV_Scale  min, max, x, step;
 
+
     /* draw vertical grid bars */
     step = 64. * size_transform.matrix.xx;
-    if (step > 1.)
+    if ( step > 1. )
     {
-      min  = max = glyph_org_x;
+      min = max = glyph_org_x;
       while ( min - step >= 0 )             min -= step;
       while ( max + step < target->width )  max += step;
 
       for ( x = min; x <= max; x += step )
-        nv_pixmap_fill_rect( target, (NV_Int)(x+.5), 0,
+        nv_pixmap_fill_rect( target, (NV_Int)(x + .5), 0,
                              1, target->height, GRID_COLOR );
     }
 
     /* draw horizontal grid bars */
     step = -64. * size_transform.matrix.yy;
-    if (step > 1.)
+    if ( step > 1. )
     {
-      min  = max = glyph_org_y;
+      min = max = glyph_org_y;
       while ( min - step >= 0 )              min -= step;
       while ( max + step < target->height )  max += step;
 
       for ( x = min; x <= max; x += step )
-        nv_pixmap_fill_rect( target, 0, (NV_Int)(x+.5),
+        nv_pixmap_fill_rect( target, 0, (NV_Int)(x + .5),
                              target->width, 1, GRID_COLOR );
     }
   }
@@ -247,6 +255,7 @@ draw_grid( void )
     NV_Path  stroke;
     NV_UInt  units = (NV_UInt)face->units_per_EM;
 
+
     nv_path_new_rectangle( renderer, 0, 0, units, units, 0, 0, &path );
     nv_path_transform( path, &glyph_transform );
 
@@ -263,13 +272,13 @@ draw_grid( void )
 }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****            POSTSCRIPT GLOBALS ROUTINES                       *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /************************************************************************/
+  /************************************************************************/
+  /*****                                                              *****/
+  /*****                 POSTSCRIPT GLOBALS ROUTINES                  *****/
+  /*****                                                              *****/
+  /************************************************************************/
+  /************************************************************************/
 
 #include <../src/pshinter/pshglob.h>
 
@@ -284,6 +293,7 @@ draw_ps_blue_zones( void )
     FT_Int          y1, y2;
     FT_UInt         count;
     PSH_Blue_Zone   zone;
+
 
     /* draw top zones */
     table = &blues->normal_top;
@@ -346,7 +356,7 @@ draw_ps_blue_zones( void )
       y2 = (int)(v.y + 0.5);
 
       nv_pixmap_fill_rect( target, 0, y1,
-                           target->width, y2-y1+1,
+                           target->width, y2 - y1 + 1,
                            BLUES_BOT_COLOR );
 
 #if 0
@@ -374,9 +384,10 @@ draw_ps_hint( PSH_Hint  hint,
   int        x1, x2;
   NV_Vector  v;
 
+
   if ( pshint_vertical != vertical )
   {
-    if (vertical)
+    if ( vertical )
       pshint_cpos = 40;
     else
       pshint_cpos = 10;
@@ -384,7 +395,7 @@ draw_ps_hint( PSH_Hint  hint,
     pshint_vertical = vertical;
   }
 
-  if (!vertical)
+  if ( !vertical )
   {
     if ( !option_show_vert_hints )
       return;
@@ -413,12 +424,12 @@ draw_ps_hint( PSH_Hint  hint,
                            psh_hint_is_ghost( hint )
                            ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
 
-    nv_pixmap_fill_rect( target, x1, pshint_cpos, x2+1-x1, 1,
+    nv_pixmap_fill_rect( target, x1, pshint_cpos, x2 + 1 - x1, 1,
                          STEM_JOIN_COLOR );
   }
   else
   {
-    if (!option_show_horz_hints)
+    if ( !option_show_horz_hints )
       return;
 
     v.y = hint->cur_pos;
@@ -435,7 +446,7 @@ draw_ps_hint( PSH_Hint  hint,
                          psh_hint_is_ghost( hint )
                          ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
 
-    if ( psh_hint_is_ghost(hint) )
+    if ( psh_hint_is_ghost( hint ) )
     {
       x1 --;
       x2 = x1 + 2;
@@ -445,7 +456,7 @@ draw_ps_hint( PSH_Hint  hint,
                            psh_hint_is_ghost(hint)
                            ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
 
-    nv_pixmap_fill_rect( target, pshint_cpos, x2, 1, x1+1-x2,
+    nv_pixmap_fill_rect( target, pshint_cpos, x2, 1, x1 + 1 - x2,
                          STEM_JOIN_COLOR );
   }
 
@@ -470,9 +481,11 @@ ps_draw_control_points( void )
     NV_Path       horz_rect;
     NV_Path       dot, circle;
 
+
     for ( ; count > 0; count--, point++ )
     {
       NV_Vector  vec;
+
 
       vec.x = point->cur_x;
       vec.y = point->cur_y;
@@ -486,7 +499,7 @@ ps_draw_control_points( void )
         nv_painter_fill_path( painter, trans, 0, symbol_circle );
       }
 
-      if (option_show_horz_hints)
+      if ( option_show_horz_hints )
       {
         if ( point->flags_y & PSH_POINT_STRONG )
         {
@@ -495,7 +508,7 @@ ps_draw_control_points( void )
         }
       }
 
-      if (option_show_vert_hints)
+      if ( option_show_vert_hints )
       {
         if ( point->flags_x & PSH_POINT_STRONG )
         {
@@ -514,13 +527,14 @@ ps_print_hints( void )
   if ( ps_debug_hints )
   {
     FT_Int         dimension;
-    PSH_Dimension  dim;
+
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
       PS_Dimension  dim   = &ps_debug_hints->dimension[ dimension ];
       PS_Mask       mask  = dim->masks.masks;
       FT_UInt       count = dim->masks.num_masks;
+
 
       printf( "%s hints -------------------------\n",
               dimension ? "vertical" : "horizontal" );
@@ -529,12 +543,14 @@ ps_print_hints( void )
       {
         FT_UInt  index;
 
+
         printf( "mask -> %d\n", mask->end_point );
         for ( index = 0; index < mask->num_bits; index++ )
         {
           if ( mask->bytes[ index >> 3 ] & (0x80 >> (index & 7)) )
           {
             PS_Hint  hint = dim->hints.hints + index;
+
 
             printf( "%c [%3d %3d (%4d)]\n", dimension ? "v" : "h",
                     hint->pos, hint->pos + hint->len, hint->len );
@@ -545,22 +561,24 @@ ps_print_hints( void )
   }
 }
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****            AUTOHINTER DRAWING ROUTINES                       *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+
+  /************************************************************************/
+  /************************************************************************/
+  /*****                                                              *****/
+  /*****            AUTOHINTER DRAWING ROUTINES                       *****/
+  /*****                                                              *****/
+  /************************************************************************/
+  /************************************************************************/
 
 static NV_Path
-ah_link_path( NV_Vector*   p1,
-              NV_Vector*   p4,
-              NV_Bool      vertical )
+ah_link_path( NV_Vector*  p1,
+              NV_Vector*  p4,
+              NV_Bool     vertical )
 {
   NV_PathWriter  writer;
   NV_Vector      p2, p3;
   NV_Path        path, stroke;
+
 
   if ( vertical )
   {
@@ -587,7 +605,9 @@ ah_link_path( NV_Vector*   p1,
   path = nv_path_writer_get_path( writer );
   nv_path_writer_destroy( writer );
 
-  nv_path_stroke( path, 1., nv_path_linecap_butt, nv_path_linejoin_round, 1.,  &stroke );
+  nv_path_stroke( path, 1.,
+                  nv_path_linecap_butt, nv_path_linejoin_round,
+                  1., &stroke );
 
   nv_path_destroy( path );
 
@@ -604,6 +624,7 @@ ah_draw_smooth_points( void )
     FT_UInt      count = glyph->num_points;
     AH_Point     point = glyph->points;
 
+
     nv_painter_set_color( painter, SMOOTH_COLOR, 256 );
 
     for ( ; count > 0; count--, point++ )
@@ -612,6 +633,7 @@ ah_draw_smooth_points( void )
       {
         NV_Transform  transform, *trans = &transform;
         NV_Vector     vec;
+
 
         vec.x = point->x - ah_debug_hinter->pp1.x;
         vec.y = point->y;
@@ -630,10 +652,11 @@ ah_draw_edges( void )
 {
   if ( ah_debug_hinter )
   {
-    AH_Outline   glyph = ah_debug_hinter->glyph;
-    FT_UInt      count;
-    AH_Edge      edge;
-    FT_Pos       pp1 = ah_debug_hinter->pp1.x;
+    AH_Outline  glyph = ah_debug_hinter->glyph;
+    FT_UInt     count;
+    AH_Edge     edge;
+    FT_Pos      pp1 = ah_debug_hinter->pp1.x;
+
 
     nv_painter_set_color( painter, EDGE_COLOR, 256 );
 
@@ -646,8 +669,9 @@ ah_draw_edges( void )
         edge  = glyph->vert_edges;
         for ( ; count > 0; count--, edge++ )
         {
-          NV_Vector     vec;
-          NV_Pos        x;
+          NV_Vector  vec;
+          NV_Pos     x;
+
 
           vec.x = edge->pos - pp1;
           vec.y = 0;
@@ -666,8 +690,9 @@ ah_draw_edges( void )
         edge  = glyph->horz_edges;
         for ( ; count > 0; count--, edge++ )
         {
-          NV_Vector     vec;
-          NV_Pos        x;
+          NV_Vector  vec;
+          NV_Pos     x;
+
 
           vec.x = 0;
           vec.y = edge->pos;
@@ -685,14 +710,16 @@ ah_draw_edges( void )
       /* draw vertical segments */
       if ( option_show_vert_hints )
       {
-        AH_Segment   seg   = glyph->vert_segments;
-        FT_UInt      count = glyph->num_vsegments;
+        AH_Segment  seg   = glyph->vert_segments;
+        FT_UInt     count = glyph->num_vsegments;
+
 
         for ( ; count > 0; count--, seg++ )
         {
           AH_PointRec  *first, *last;
           NV_Vector  v1, v2;
           NV_Pos     y1, y2, x;
+
 
           first = seg->first;
           last  = seg->last;
@@ -717,21 +744,24 @@ ah_draw_edges( void )
           y2 = (NV_Pos)( v2.y + 0.5 );
           x  = (NV_Pos)( v1.x + 0.5 );
 
-          nv_pixmap_fill_rect( target, x-1, y2, 3, ABS(y1-y2)+1, SEGMENT_COLOR );
+          nv_pixmap_fill_rect( target, x - 1, y2, 3,
+                               ABS( y1 - y2 ) + 1, SEGMENT_COLOR );
         }
       }
 
       /* draw horizontal segments */
       if ( option_show_horz_hints )
       {
-        AH_Segment   seg   = glyph->horz_segments;
-        FT_UInt      count = glyph->num_hsegments;
+        AH_Segment  seg   = glyph->horz_segments;
+        FT_UInt     count = glyph->num_hsegments;
+
 
         for ( ; count > 0; count--, seg++ )
         {
           AH_PointRec  *first, *last;
-          NV_Vector  v1, v2;
-          NV_Pos     y1, y2, x;
+          NV_Vector    v1, v2;
+          NV_Pos       y1, y2, x;
+
 
           first = seg->first;
           last  = seg->last;
@@ -756,21 +786,23 @@ ah_draw_edges( void )
           y2 = (NV_Pos)( v2.x + 0.5 );
           x  = (NV_Pos)( v1.y + 0.5 );
 
-          nv_pixmap_fill_rect( target, y1, x-1, ABS(y1-y2)+1, 3, SEGMENT_COLOR );
+          nv_pixmap_fill_rect( target, y1, x - 1,
+                               ABS( y1 - y2 ) + 1, 3, SEGMENT_COLOR );
         }
       }
 
-
       if ( option_show_vert_hints && option_show_links )
       {
-        AH_Segment   seg   = glyph->vert_segments;
-        FT_UInt      count = glyph->num_vsegments;
+        AH_Segment  seg   = glyph->vert_segments;
+        FT_UInt     count = glyph->num_vsegments;
+
 
         for ( ; count > 0; count--, seg++ )
         {
-          AH_Segment   seg2 = NULL;
-          NV_Path      link;
-          NV_Vector    v1, v2;
+          AH_Segment  seg2 = NULL;
+          NV_Path     link;
+          NV_Vector   v1, v2;
+
 
           if ( seg->link )
           {
@@ -784,12 +816,14 @@ ah_draw_edges( void )
           {
             v1.x = seg->first->x  - pp1;
             v2.x = seg2->first->x - pp1;
-            v1.y = (seg->first->y + seg->last->y)/2;
-            v2.y = (seg2->first->y + seg2->last->y)/2;
+            v1.y = ( seg->first->y + seg->last->y ) / 2;
+            v2.y = ( seg2->first->y + seg2->last->y ) / 2;
 
             link = ah_link_path( &v1, &v2, 1 );
 
-            nv_painter_set_color( painter, seg->serif ? SERIF_LINK_COLOR : LINK_COLOR, 256 );
+            nv_painter_set_color( painter,
+                                  seg->serif ? SERIF_LINK_COLOR : LINK_COLOR,
+                                  256 );
             nv_painter_fill_path( painter, &size_transform, 0, link );
 
             nv_path_destroy( link );
@@ -799,14 +833,16 @@ ah_draw_edges( void )
 
       if ( option_show_horz_hints && option_show_links )
       {
-        AH_Segment   seg   = glyph->horz_segments;
-        FT_UInt      count = glyph->num_hsegments;
+        AH_Segment  seg   = glyph->horz_segments;
+        FT_UInt     count = glyph->num_hsegments;
+
 
         for ( ; count > 0; count--, seg++ )
         {
-          AH_Segment   seg2 = NULL;
-          NV_Path      link;
-          NV_Vector    v1, v2;
+          AH_Segment  seg2 = NULL;
+          NV_Path     link;
+          NV_Vector   v1, v2;
+
 
           if ( seg->link )
           {
@@ -820,12 +856,14 @@ ah_draw_edges( void )
           {
             v1.y = seg->first->y;
             v2.y = seg2->first->y;
-            v1.x = (seg->first->x + seg->last->x)/2 - pp1;
-            v2.x = (seg2->first->x + seg2->last->x)/2 - pp1;
+            v1.x = ( seg->first->x + seg->last->x ) / 2 - pp1;
+            v2.x = ( seg2->first->x + seg2->last->x ) / 2 - pp1;
 
             link = ah_link_path( &v1, &v2, 0 );
 
-            nv_painter_set_color( painter, seg->serif ? SERIF_LINK_COLOR : LINK_COLOR, 256 );
+            nv_painter_set_color( painter,
+                                  seg->serif ? SERIF_LINK_COLOR : LINK_COLOR,
+                                  256 );
             nv_painter_fill_path( painter, &size_transform, 0, link );
 
             nv_path_destroy( link );
@@ -836,27 +874,30 @@ ah_draw_edges( void )
   }
 }
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                        MAIN LOOP(S)                          *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+
+  /************************************************************************/
+  /************************************************************************/
+  /*****                                                              *****/
+  /*****                        MAIN LOOP(S)                          *****/
+  /*****                                                              *****/
+  /************************************************************************/
+  /************************************************************************/
 
 static void
 draw_glyph( int  glyph_index )
 {
   NV_Path   path;
 
-  pshint_vertical    = -1;
+
+  pshint_vertical = -1;
 
   ps_debug_hint_func = option_show_ps_hints ? draw_ps_hint : 0;
 
   ah_debug_hinter = NULL;
 
   error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_BITMAP );
-  if (error) Panic( "could not load glyph" );
+  if ( error )
+    Panic( "could not load glyph" );
 
   if ( face->glyph->format != FT_GLYPH_FORMAT_OUTLINE )
     Panic( "could not load glyph outline" );
@@ -865,27 +906,30 @@ draw_glyph( int  glyph_index )
                                     (NV_Outline*)&face->glyph->outline,
                                     &size_transform,
                                     &path );
-  if (error) Panic( "could not create glyph path" );
+  if ( error )
+    Panic( "could not create glyph path" );
 
   /* tracé du glyphe plein */
   if ( option_show_glyph )
   {
-    nv_painter_set_color ( painter, 0xFF404080, 128 );
-    nv_painter_fill_path ( painter, 0, 0, path );
+    nv_painter_set_color( painter, 0xFF404080, 128 );
+    nv_painter_fill_path( painter, 0, 0, path );
   }
 
   if ( option_show_stroke )
   {
-    NV_Path   stroke;
+    NV_Path  stroke;
+
 
     error = nv_path_stroke( path, 0.6,
                             nv_path_linecap_butt,
                             nv_path_linejoin_miter,
                             1.0, &stroke );
-    if (error) Panic( "could not stroke glyph path" );
+    if ( error )
+      Panic( "could not stroke glyph path" );
 
-    nv_painter_set_color ( painter, 0xFF000040, 256 );
-    nv_painter_fill_path ( painter, 0, 0, stroke );
+    nv_painter_set_color( painter, 0xFF000040, 256 );
+    nv_painter_fill_path( painter, 0, 0, stroke );
 
     nv_path_destroy( stroke );
   }
@@ -898,6 +942,7 @@ draw_glyph( int  glyph_index )
     NV_Scale    r = 2;
     NV_Int      n, first, last;
 
+
     nv_path_get_outline( path, NULL, memory, &out );
 
     first = 0;
@@ -907,6 +952,7 @@ draw_glyph( int  glyph_index )
       NV_Transform   trans;
       NV_Color       color;
       NV_SubVector*  vec;
+
 
       last  = out.contours[n];
 
@@ -918,7 +964,7 @@ draw_glyph( int  glyph_index )
 
         vec = out.points + m;
 
-        nv_transform_set_translate( &trans, vec->x/64.0, vec->y/64.0 );
+        nv_transform_set_translate( &trans, vec->x / 64.0, vec->y / 64.0 );
 
         nv_painter_set_color( painter, color, 256 );
         nv_painter_fill_path( painter, &trans, 0, symbol_dot );
@@ -927,8 +973,9 @@ draw_glyph( int  glyph_index )
         {
           char  temp[5];
 
+
           sprintf( temp, "%d", m );
-          nv_pixmap_cell_text( target, vec->x/64 + 4, vec->y/64 - 4,
+          nv_pixmap_cell_text( target, vec->x / 64 + 4, vec->y / 64 - 4,
                                temp, TEXT_COLOR );
         }
       }
@@ -947,7 +994,9 @@ draw_glyph( int  glyph_index )
     char  temp[1024];
     char  temp2[64];
 
-    sprintf( temp, "font name : %s (%s)", face->family_name, face->style_name );
+
+    sprintf( temp, "font name : %s (%s)", face->family_name,
+                                          face->style_name );
     nv_pixmap_cell_text( target, 0, 0, temp, TEXT_COLOR );
 
     FT_Get_Glyph_Name( face, glyph_index, temp2, 63 );
@@ -965,131 +1014,132 @@ draw_glyph( int  glyph_index )
 }
 
 
-
 #define  TOGGLE_OPTION(var,prefix)                           \
+            do                                               \
             {                                                \
               var = !var;                                    \
               sprintf( temp_message, prefix " is now %s",    \
                        var ? "on" : "off" );                 \
-              break;                                         \
-            }
+            }                                                \
+            while()
 
 
 #define  TOGGLE_OPTION_NEG(var,prefix)                       \
+            do                                               \
             {                                                \
               var = !var;                                    \
               sprintf( temp_message, prefix " is now %s",    \
                        !var ? "on" : "off" );                \
-              break;                                         \
-            }
+            }                                                \
+            while
 
 
 static void
-handle_event( NVV_EventRec*   ev )
+handle_event( NVV_EventRec*  ev )
 {
-  switch (ev->key)
+  switch ( ev->key )
   {
-    case NVV_Key_Left:
-      {
-        if ( glyph_index > 0 )
-          glyph_index--;
-        break;
-      }
+  case NVV_Key_Left:
+    if ( glyph_index > 0 )
+      glyph_index--;
+    break;
 
-    case NVV_Key_Right:
-      {
-        if ( glyph_index+1 < face->num_glyphs )
-          glyph_index++;
-        break;
-      }
+  case NVV_Key_Right:
+    if ( glyph_index + 1 < face->num_glyphs )
+      glyph_index++;
+    break;
 
-    case NVV_KEY('x'):
-      TOGGLE_OPTION( option_show_axis, "grid axis display" )
+  case NVV_KEY( 'x' ):
+    TOGGLE_OPTION( option_show_axis, "grid axis display" );
+    break;
 
-    case NVV_KEY('s'):
-      TOGGLE_OPTION( option_show_stroke, "glyph stroke display" )
+  case NVV_KEY( 's' ):
+    TOGGLE_OPTION( option_show_stroke, "glyph stroke display" );
+    break;
 
-    case NVV_KEY('g'):
-      TOGGLE_OPTION( option_show_glyph, "glyph fill display" )
+  case NVV_KEY( 'g' ):
+    TOGGLE_OPTION( option_show_glyph, "glyph fill display" );
+    break;
 
-    case NVV_KEY('d'):
-      TOGGLE_OPTION( option_show_dots, "control points display" )
+  case NVV_KEY( 'd' ):
+    TOGGLE_OPTION( option_show_dots, "control points display" );
+    break
 
-    case NVV_KEY('e'):
-      TOGGLE_OPTION( option_show_em, "EM square display" )
+  case NVV_KEY( 'e' ):
+    TOGGLE_OPTION( option_show_em, "EM square display" );
+    break;
 
-    case NVV_KEY('+'):
-      {
-        grid_scale *= 1.2;
-        reset_scale( grid_scale );
-        break;
-      }
+  case NVV_KEY( '+' ):
+    grid_scale *= 1.2;
+    reset_scale( grid_scale );
+    break;
 
-    case NVV_KEY('-'):
-      {
-        if (grid_scale > 0.3)
-        {
-          grid_scale /= 1.2;
-          reset_scale( grid_scale );
-        }
-        break;
-      }
+  case NVV_KEY( '-' ):
+    if ( grid_scale > 0.3 )
+    {
+      grid_scale /= 1.2;
+      reset_scale( grid_scale );
+    }
+    break;
 
-    case NVV_Key_Up:
-      {
-        pixel_size++;
-        reset_size( pixel_size, grid_scale );
-        sprintf( temp_message, "pixel size = %d", pixel_size );
-        break;
-      }
+  case NVV_Key_Up:
+    pixel_size++;
+    reset_size( pixel_size, grid_scale );
+    sprintf( temp_message, "pixel size = %d", pixel_size );
+    break;
 
-    case NVV_Key_Down:
-      {
-        if (pixel_size > 1)
-        {
-          pixel_size--;
-          reset_size( pixel_size, grid_scale );
-          sprintf( temp_message, "pixel size = %d", pixel_size );
-        }
-        break;
-      }
+  case NVV_Key_Down:
+    if ( pixel_size > 1 )
+    {
+      pixel_size--;
+      reset_size( pixel_size, grid_scale );
+      sprintf( temp_message, "pixel size = %d", pixel_size );
+    }
+    break;
 
-    case NVV_KEY('z'):
-      TOGGLE_OPTION_NEG( ps_debug_no_vert_hints, "vertical hints processing" )
+  case NVV_KEY( 'z' ):
+    TOGGLE_OPTION_NEG( ps_debug_no_vert_hints, "vertical hints processing" );
+    break;
 
-    case NVV_KEY('a'):
-      TOGGLE_OPTION_NEG( ps_debug_no_horz_hints, "horizontal hints processing" )
+  case NVV_KEY( 'a' ):
+    TOGGLE_OPTION_NEG( ps_debug_no_horz_hints, "horizontal hints processing" );
+    break;
 
-    case NVV_KEY('Z'):
-      TOGGLE_OPTION( option_show_vert_hints, "vertical hints display" )
+  case NVV_KEY( 'Z' ):
+    TOGGLE_OPTION( option_show_vert_hints, "vertical hints display" );
+    break;
 
-    case NVV_KEY('A'):
-      TOGGLE_OPTION( option_show_horz_hints, "horizontal hints display" )
+  case NVV_KEY( 'A' ):
+    TOGGLE_OPTION( option_show_horz_hints, "horizontal hints display" );
+    break;
 
-    case NVV_KEY('S'):
-      TOGGLE_OPTION( option_show_smooth, "smooth points display" );
+  case NVV_KEY( 'S' ):
+    TOGGLE_OPTION( option_show_smooth, "smooth points display" );
+    break;
 
-    case NVV_KEY('i'):
-      TOGGLE_OPTION( option_show_indices, "point index display" );
+  case NVV_KEY( 'i' ):
+    TOGGLE_OPTION( option_show_indices, "point index display" );
+    break;
 
-    case NVV_KEY('b'):
-      TOGGLE_OPTION( option_show_blues, "blue zones display" );
+  case NVV_KEY( 'b' ):
+    TOGGLE_OPTION( option_show_blues, "blue zones display" );
+    break;
 
-    case NVV_KEY('h'):
-      ps_debug_no_horz_hints = option_hinting;
-      ps_debug_no_vert_hints = option_hinting;
+  case NVV_KEY( 'h' ):
+    ps_debug_no_horz_hints = option_hinting;
+    ps_debug_no_vert_hints = option_hinting;
 
-      TOGGLE_OPTION( option_hinting, "hinting" )
+    TOGGLE_OPTION( option_hinting, "hinting" );
+    break;
 
-    case NVV_KEY('H'):
-      ps_print_hints();
-      break;
+  case NVV_KEY( 'H' ):
+    ps_print_hints();
+    break;
 
-    default:
-      ;
+  default:
+    ;
   }
 }
-
 
 
 static void
@@ -1115,14 +1165,16 @@ usage()
 
 
 static void
-parse_options( int*  argc_p, char*** argv_p )
+parse_options( int*     argc_p,
+               char***  argv_p )
 {
-  int    argc = *argc_p;
-  char** argv = *argv_p;
+  int     argc = *argc_p;
+  char**  argv = *argv_p;
 
-  while (argc > 2 && argv[1][0] == '-')
+
+  while ( argc > 2 && argv[1][0] == '-' )
   {
-    switch (argv[1][1])
+    switch ( argv[1][1] )
     {
       OPTION2( 'f', first_glyph = atoi( argv[2] ); )
 
@@ -1138,10 +1190,12 @@ parse_options( int*  argc_p, char*** argv_p )
 }
 
 
-
-int  main( int  argc, char**  argv )
+int
+main( int     argc,
+      char**  argv )
 {
   char*  filename = "/winnt/fonts/arial.ttf";
+
 
   parse_options( &argc, &argv );
 
@@ -1151,39 +1205,45 @@ int  main( int  argc, char**  argv )
 
   /* create library */
   error = nv_renderer_new( 0, &renderer );
-  if (error) Panic( "could not create Nirvana renderer" );
+  if ( error )
+    Panic( "could not create Nirvana renderer" );
 
   memory = nv_renderer_get_memory( renderer );
   init_symbols();
 
   error = nvv_display_new( renderer, &display );
-  if (error) Panic( "could not create display" );
+  if ( error )
+    Panic( "could not create display" );
 
   error = nvv_surface_new( display, 460, 460, nv_pixmap_type_argb, &surface );
-  if (error) Panic( "could not create surface" );
+  if ( error )
+    Panic( "could not create surface" );
 
   target = nvv_surface_get_pixmap( surface );
 
   error = nv_painter_new( renderer, &painter );
-  if (error) Panic( "could not create painter" );
+  if ( error )
+    Panic( "could not create painter" );
 
   nv_painter_set_target( painter, target );
 
   clear_background();
 
   error = FT_Init_FreeType( &freetype );
-  if (error) Panic( "could not initialise FreeType" );
+  if ( error )
+    Panic( "could not initialize FreeType" );
 
   error = FT_New_Face( freetype, filename, 0, &face );
-  if (error) Panic( "could not open font face" );
+  if ( error )
+    Panic( "could not open font face" );
 
   reset_size( pixel_size, grid_scale );
-
 
   nvv_surface_set_title( surface, "FreeType Glyph Viewer" );
 
   {
     NVV_EventRec  event;
+
 
     glyph_index = first_glyph;
     for ( ;; )
@@ -1199,7 +1259,7 @@ int  main( int  argc, char**  argv )
 
       draw_ps_blue_zones();
       draw_glyph( glyph_index );
-      ps3_draw_control_points();
+      ps_draw_control_points();
 
       nvv_surface_refresh( surface, NULL );
 
@@ -1208,20 +1268,19 @@ int  main( int  argc, char**  argv )
         break;
 
       handle_event( &event );
-      switch (event.key)
+      switch ( event.key )
       {
-        case NVV_Key_Esc:
-          goto Exit;
+      case NVV_Key_Esc:
+        goto Exit;
 
-        default:
-          ;
+      default:
+        ;
       }
     }
   }
 
- Exit:
+Exit:
   /* wait for escape */
-
 
   /* destroy display (and surface) */
   nvv_display_unref( display );

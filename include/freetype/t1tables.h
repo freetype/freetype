@@ -5,7 +5,7 @@
 /*    Basic Type 1/Type 2 tables definitions and interface (specification  */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -67,10 +67,10 @@ FT_BEGIN_HEADER
     FT_String*  full_name;
     FT_String*  family_name;
     FT_String*  weight;
-    FT_Long     italic_angle;
-    FT_Bool     is_fixed_pitch;
-    FT_Short    underline_position;
-    FT_UShort   underline_thickness;
+    FT_Fixed*   italic_angle;
+    FT_Bool*    is_fixed_pitch;
+    FT_Fixed*   underline_position;
+    FT_Fixed*   underline_thickness;
 
   } PS_FontInfoRec, *PS_FontInfo;
 

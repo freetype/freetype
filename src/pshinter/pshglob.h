@@ -167,6 +167,13 @@ FT_BEGIN_HEADER
                             FT_Int         org_width );
 #endif
 
+  FT_LOCAL( FT_Error )
+  psh_globals_set_scale( PSH_Globals  globals,
+                         FT_Fixed     x_scale,
+                         FT_Fixed     y_scale,
+                         FT_Fixed     x_delta,
+                         FT_Fixed     y_delta );
+
   /* snap a stem to one or two blue zones */
   FT_LOCAL( void )
   psh_blues_snap_stem( PSH_Blues      blues,

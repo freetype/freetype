@@ -1,3 +1,61 @@
+2003-05-30  Werner Lemberg  <wl@gnu.org>
+
+	Avoid overwriting of numeric font dictionary entries for synthetic
+	fonts. Additionally, some entries were handled as `integer' instead
+	of `number'.
+
+	* include/freetype/internal/psaux.h (T1_FieldType): Add
+	T1_FIELD_TYPE_BOOL_P, T1_FIELD_TYPE_INTEGER_P, and
+	T1_FIELD_TYPE_FIXED_P.
+	(T1_FIELD_BOOL_P, T1_FIELD_NUM_P, T1_FIELD_FIXED_P): New macros.
+	* src/psaux/psobjs.c (ps_parser_load_field): Handle new field types.
+
+	* include/freetype/internal/cfftypes.h (CFF_FontRecDict),
+	src/cff/cfftoken.h: Change type of underline_position and
+	underline_thickness to FT_Fixed.
+	* src/cff/cffload.c (cff_subfont_load): Fix default values of
+	underline_position and underline_thickness.
+	* src/cff/cffobjs.c (cff_face_init): Set underline_position
+	and underline_thickness in `root'.
+
+	* include/freetype/internal/t1types.h (T1_Font): Change point_type
+	and stroke_width to pointers.
+	* include/freetype/t1tables.h (PS_FontInfo): Change italic_angle,
+	is_fixed_pitch, underline_position, and underline_thickness to
+	pointers.
+	* src/type1/t1tokens.h: Change italic_angle, is_fixed_pitch,
+	underline_position, and underline_thickness to pointers.  Change
+	the type of the latter two to `fixed'.
+	Change type of stroke_width to `fixed' and make it a pointer.
+	Change paint_type to pointer.
+	* src/type1/t1objs.c (T1_Face_Done): Updated.
+	(T1_Face_Init): Updated.
+	Fix assignment of underline_position and underline_thickness.
+
+	* src/cid/cidtoken.h: Change italic_angle, is_fixed_pitch,
+	underline_position, and underline_thickness to pointers.  Change
+	the type of the latter two to `fixed'.
+	Change type of stroke_width to `fixed'.
+	* src/cid/cidobjs.c (cid_face_done): Updated.
+	(cid_face_init): Updated.
+	Fix assignment of underline_position and underline_thickness.
+
+	* src/type42/t42parse.c: Change italic_angle, is_fixed_pitch,
+	underline_position, and underline_thickness to pointers.  Change the
+	type of the latter two to `fixed'.
+	Change type of stroke_width to `fixed' and make it a pointer.
+	Change paint_type to pointer.
+	* src/type42/t42objs.c (T42_Face_Init): Updated.
+	Fix assignment of underline_position and underline_thickness.
+	(T42_Face_Done): Updated.
+
+	* src/base/ftobjs.c (open_face_from_buffer): Fix compiler warning.
+	* src/pshinter/pshglob.c, src/pshinter/pshglob.h
+	(psh_globals_set_scale): Make it a local function.
+
+	* test/gview.c: Fix remaming ps3->ps typo.
+	Formatting.
+
 2003-05-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshalgo1.[ch], src/pshinter/pshalgo2.[ch]: Removed.
