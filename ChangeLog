@@ -1,35 +1,49 @@
+2001-04-26  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/config.guess, builds/unix/config.sub: Updated to
+	latest versions from gnu.org.
+
+	* builds/compiler/gcc-dev.mk: Add `-Wno-long-long' flag.
+
+	* include/freetype/internal/ftcalc.h: Define FT_SqrtFixed()
+	uncoditionally.
+	* src/base/ftbbox.c: Include FT_INTERNAL_CALC_H.
+	Fix compiler warnings.
+	* src/base/ftcalc.c: Fix (potential) compiler warnings.
+
 2001-04-26  David Turner  <david@freetype.org>
 
-	* src/base/ftcalc.c (FT_SqrtFixed): corrected/optimised the 32-bit
-	fixed-point square root. it is now used even with 64-bits
-	ints, as it's simply _much_ faster than calling FT_Sqrt64 :-)
+	* src/base/ftcalc.c (FT_SqrtFixed): Corrected/optimized the 32-bit
+	fixed-point square root computation.  It is now used even with
+	64-bits integers, as it is _much_ faster than calling FT_Sqrt64 :-)
 
-    * src/base/ftbbox.c : removed invalid "#include FT_BEZIER_H" line
+	* src/base/ftbbox.c: Removed invalid "#include FT_BEZIER_H" line.
 
 2001-04-25  David Turner  <david@freetype.org>
 
-        * src/base/ftbbox.c (BBox_Cubic_Check): rewrote function to use
-        direct computations with 16.16 values instead of sub-divisions.
-        It is now slower, but proves a point :-)
+	* src/base/ftbbox.c (BBox_Cubic_Check): Rewrote function to use
+	direct computations with 16.16 values instead of sub-divisions.  It
+	is now slower, but proves a point :-)
 
-        * src/raster/ftraster.c, src/smooth/ftgrays.c, src/base/ftbbox.c :
-        fixed the bezier stack depths..
+	* src/raster/ftraster.c, src/smooth/ftgrays.c, src/base/ftbbox.c:
+	Fixed the bezier stack depths.
 
-        * src/base/ftcalc.c (FT_MulFix): minor rounding fix
+	* src/base/ftcalc.c (FT_MulFix): Minor rounding fix.
 
-        * builds/beos : added BeOS-specific files to the old build system
-        (no changes were necessary to support BeOS in the Jamfile though)
+	* builds/beos: Added BeOS-specific files to the old build system
+	(no changes were necessary to support BeOS in the Jamfile though).
 
 2001-04-20  David Turner  <david@freetype.org>
 
-	* ftconfig.h, ftoption.h: updated "ftconfig.h" to detect 64-bit int
-	types on platforms where Autoconf is not available). Also removed
-	FTCALC_USE_LONG_LONG and replaced it with FT_CONFIG_OPTION_FORCE_INT64
+	* ftconfig.h, ftoption.h: Updated "ftconfig.h" to detect 64-bit int
+	types on platforms where Autoconf is not available).  Also removed
+	FTCALC_USE_LONG_LONG and replaced it with
+	FT_CONFIG_OPTION_FORCE_INT64.
 	
-	* builds/win32/freetype.dsp: updated the Visual C++ project file. Doesn't
-	create a DLL yet..
+	* builds/win32/freetype.dsp: Updated the Visual C++ project file.
+	Doesn't create a DLL yet.
 
-	* cffgload.c: removed a compilation warning
+	* cffgload.c: Removed a compilation warning.
 
 2001-04-10  Tom Kacvinsky  <tjk@ams.org>
 
