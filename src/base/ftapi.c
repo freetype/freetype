@@ -291,7 +291,7 @@
                 FT_Face    face,
                 FT_Driver  driver )
   {
-    FT_Driver_Class*  clazz = driver->clazz;
+    FT_Driver_Class  clazz = driver->clazz;
 
 
     /* discard auto-hinting data */
@@ -364,7 +364,7 @@
              FT_Face*       aface )
   {
     FT_Memory         memory;
-    FT_Driver_Class*  clazz;
+    FT_Driver_Class  clazz;
     FT_Face           face = 0;
     FT_Error          error;
     FT_Face_Internal  internal;
@@ -671,7 +671,7 @@
     FT_Error   error;
     FT_Driver  driver;
 
-    FT_Driver_Class*  clazz;
+    FT_Driver_Class  clazz;
 
 
     /* test for valid `parameters' delayed to ft_new_input_stream() */
@@ -748,7 +748,7 @@
     FT_Error          error;
     FT_Memory         memory;
     FT_Driver         driver;
-    FT_Driver_Class*  clazz;
+    FT_Driver_Class  clazz;
 
     FT_Size           size = 0;
     FT_ListNode       node = 0;
@@ -880,7 +880,7 @@
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
-    FT_Driver_Class*  clazz;
+    FT_Driver_Class  clazz;
     FT_Size_Metrics*  metrics;
     FT_Long           dim_x, dim_y;
 
@@ -949,7 +949,7 @@
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
-    FT_Driver_Class*  clazz;
+    FT_Driver_Class  clazz;
     FT_Size_Metrics*  metrics = &face->size->metrics;
 
 
@@ -1757,7 +1757,7 @@
       FT_Driver   driver = FT_DRIVER( module );
 
 
-      driver->clazz = (FT_Driver_Class*)module->clazz;
+      driver->clazz = (FT_Driver_Class)module->clazz;
       if ( FT_DRIVER_USES_OUTLINES( driver ) )
       {
         error = FT_GlyphLoader_New( memory, &driver->glyph_loader );

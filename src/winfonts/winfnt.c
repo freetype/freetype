@@ -711,7 +711,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Driver_Class  winfnt_driver_class =
+  const FT_Driver_ClassRec  winfnt_driver_class =
   {
     {
       ft_module_font_driver,
@@ -732,24 +732,24 @@
     sizeof( FNT_SizeRec ),
     sizeof( FT_GlyphSlotRec ),
 
-    (FTDriver_initFace)     FNT_Face_Init,
-    (FTDriver_doneFace)     FNT_Face_Done,
-    (FTDriver_initSize)     0,
-    (FTDriver_doneSize)     0,
-    (FTDriver_initGlyphSlot)0,
-    (FTDriver_doneGlyphSlot)0,
+    (FT_Face_InitFunc)     FNT_Face_Init,
+    (FT_Face_DoneFunc)     FNT_Face_Done,
+    (FT_Size_InitFunc)     0,
+    (FT_Size_DoneFunc)     0,
+    (FT_Slot_InitFunc)0,
+    (FT_Slot_DoneFunc)0,
 
-    (FTDriver_setCharSizes) FNT_Size_Set_Pixels,
-    (FTDriver_setPixelSizes)FNT_Size_Set_Pixels,
+    (FT_Size_ResetPointsFunc) FNT_Size_Set_Pixels,
+    (FT_Size_ResetPixelsFunc)FNT_Size_Set_Pixels,
 
-    (FTDriver_loadGlyph)    FNT_Load_Glyph,
-    (FTDriver_getCharIndex) FNT_Get_Char_Index,
+    (FT_Slot_LoadFunc)    FNT_Load_Glyph,
+    (FT_CharMap_CharIndexFunc) FNT_Get_Char_Index,
 
-    (FTDriver_getKerning)   0,
-    (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0,
+    (FT_Face_GetKerningFunc)   0,
+    (FT_Face_AttachFunc)   0,
+    (FT_Face_GetAdvancesFunc)  0,
 
-    (FTDriver_getNextChar)  FNT_Get_Next_Char
+    (FT_CharMap_CharNextFunc)  FNT_Get_Next_Char
   };
 
 
@@ -775,7 +775,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )
+  FT_EXPORT_DEF( const FT_Driver_Class )
   getDriverClass( void )
   {
     return &winfnt_driver_class;

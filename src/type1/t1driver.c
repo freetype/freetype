@@ -457,7 +457,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Driver_Class  t1_driver_class =
+  const FT_Driver_ClassRec  t1_driver_class =
   {
     {
       ft_module_font_driver      |
@@ -481,28 +481,28 @@
     sizeof( T1_SizeRec ),
     sizeof( T1_GlyphSlotRec ),
 
-    (FTDriver_initFace)     T1_Face_Init,
-    (FTDriver_doneFace)     T1_Face_Done,
-    (FTDriver_initSize)     T1_Size_Init,
-    (FTDriver_doneSize)     T1_Size_Done,
-    (FTDriver_initGlyphSlot)T1_GlyphSlot_Init,
-    (FTDriver_doneGlyphSlot)T1_GlyphSlot_Done,
+    (FT_Face_InitFunc)     T1_Face_Init,
+    (FT_Face_DoneFunc)     T1_Face_Done,
+    (FT_Size_InitFunc)     T1_Size_Init,
+    (FT_Size_DoneFunc)     T1_Size_Done,
+    (FT_Slot_InitFunc)T1_GlyphSlot_Init,
+    (FT_Slot_DoneFunc)T1_GlyphSlot_Done,
 
-    (FTDriver_setCharSizes) T1_Size_Reset,
-    (FTDriver_setPixelSizes)T1_Size_Reset,
-    (FTDriver_loadGlyph)    T1_Load_Glyph,
-    (FTDriver_getCharIndex) Get_Char_Index,
+    (FT_Size_ResetPointsFunc) T1_Size_Reset,
+    (FT_Size_ResetPixelsFunc)T1_Size_Reset,
+    (FT_Slot_LoadFunc)    T1_Load_Glyph,
+    (FT_CharMap_CharIndexFunc) Get_Char_Index,
 
 #ifdef T1_CONFIG_OPTION_NO_AFM
-    (FTDriver_getKerning)   0,
-    (FTDriver_attachFile)   0,
+    (FT_Face_GetKerningFunc)   0,
+    (FT_Face_AttachFunc)   0,
 #else
-    (FTDriver_getKerning)   Get_Kerning,
-    (FTDriver_attachFile)   T1_Read_AFM,
+    (FT_Face_GetKerningFunc)   Get_Kerning,
+    (FT_Face_AttachFunc)   T1_Read_AFM,
 #endif
-    (FTDriver_getAdvances)  0,
+    (FT_Face_GetAdvancesFunc)  0,
 
-    (FTDriver_getNextChar)  Get_Next_Char
+    (FT_CharMap_CharNextFunc)  Get_Next_Char
   };
 
 
@@ -528,7 +528,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )
+  FT_EXPORT_DEF( const FT_Driver_Class )
   getDriverClass( void )
   {
     return &t1_driver_class;
