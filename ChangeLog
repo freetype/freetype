@@ -1,3 +1,8 @@
+2004-07-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttobjs.c (tt_face_init): Accept 0x00020000 format tag
+	found in some Arphic fonts made for Chinese version of Windows 3.1.
+
 2004-07-17  David Turner  <david@freetype.org>
 
 	Fixed a dangling pointer bug in the cache code that happened in very
