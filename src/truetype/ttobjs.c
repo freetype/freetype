@@ -165,7 +165,7 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   tt_face_init( FT_Stream      stream,
-                TT_Face        face,
+                FT_Face        ttface,      /* TT_Face */
                 FT_Int         face_index,
                 FT_Int         num_params,
                 FT_Parameter*  params )
@@ -173,6 +173,7 @@
     FT_Error      error;
     FT_Library    library;
     SFNT_Service  sfnt;
+    TT_Face       face = (TT_Face)ttface;
 
 
     library = face->root.driver->root.library;
@@ -269,8 +270,9 @@
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  tt_face_done( TT_Face  face )
+  tt_face_done( FT_Face  ttface )           /* TT_Face */
   {
+    TT_Face       face   = (TT_Face)ttface;
     FT_Memory     memory = face->root.memory;
     FT_Stream     stream = face->root.stream;
 
@@ -327,8 +329,9 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_init( TT_Size  size )
+  tt_size_init( FT_Size  ttsize )           /* TT_Size */
   {
+    TT_Size   size  = (TT_Size)ttsize;
     FT_Error  error = TT_Err_Ok;
 
 
@@ -485,7 +488,7 @@
 
   Fail_Memory:
 
-    tt_size_done( size );
+    tt_size_done( ttsize );
     return error;
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
@@ -505,8 +508,9 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  tt_size_done( TT_Size  size )
+  tt_size_done( FT_Size  ttsize )           /* TT_Size */
   {
+    TT_Size    size = (TT_Size)ttsize;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
@@ -851,7 +855,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_driver_init( TT_Driver  driver )
+  tt_driver_init( FT_Module  driver )       /* TT_Driver */
   {
     FT_Error  error;
 
@@ -875,9 +879,11 @@
   /*    driver :: A handle to the target TrueType driver.                  */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  tt_driver_done( TT_Driver  driver )
+  tt_driver_done( FT_Module  ttdriver )     /* TT_Driver */
   {
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+    TT_Driver  driver = (TT_Driver)ttdriver;
+
 
     /* destroy the execution context */
     if ( driver->context )
