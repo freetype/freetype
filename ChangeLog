@@ -1,16 +1,16 @@
-2001-05-08  Francesco Zappa Nardelli <Francesco.Zappa.Nardelli@ens.fr>
+2001-05-08  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
-    * src/pcfdriver.c: fixed incorrect bitmap width computation
+	* src/pcfdriver.c: Fixed incorrect bitmap width computation.
 
 2001-05-08  David Turner  <david@freetype.org>
 
-    * docs/docmaker.py: updated the DocMaker script in order to add
-    command line options (--output,--prefix,--title), fix the erroneous
-    line numbers reported during errors and warnings, and other formatting
-    issues..
+	* docs/docmaker.py: Updated the DocMaker script in order to add
+	command line options (--output,--prefix,--title), fix the erroneous
+	line numbers reported during errors and warnings, and other
+	formatting issues.
 
-    * src/base/ftcalc.c: various tiny fixes related to rounding in 64-bits
-    routines and pseudo"optimisations" :-)
+	* src/base/ftcalc.c: Carious tiny fixes related to rounding in
+	64-bits routines and pseudo"optimizations" :-)
 
 2001-04-27  David Turner  <david@freetype.org>
 

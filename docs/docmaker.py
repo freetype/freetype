@@ -9,16 +9,16 @@
 #  DocMaker is very similar to other tools like Doxygen, with the
 #  following differences:
 #
-#    - it is written in Python (so it's slow, but easy to maintain and
-#      improve)
+#    - It is written in Python (so it is slow, but easy to maintain and
+#      improve).
 #
-#    - the comment syntax used by DocMaker is simpler and makes for
-#      clearer comments
+#    - The comment syntax used by DocMaker is simpler and makes for
+#      clearer comments.
 #
 #  Of course, it doesn't have all the goodies of most similar tools,
-#  (e.g. C++ class hierarchies), but hey, it's only 2000 lines of
-#  python
-#  
+#  (e.g. C++ class hierarchies), but hey, it is only 2000 lines of
+#  Python.
+#
 #  DocMaker is mainly used to generate the API references of several
 #  FreeType packages.
 #
@@ -28,18 +28,19 @@
 import fileinput, sys, os, string, glob, getopt
 
 # The Project's title.  This can be overridden from the command line with
-# the options "-t" or "--title"
-project_title  = "Project"
+# the options "-t" or "--title".
+#
+project_title = "Project"
 
-# The project's filename prefix. This can be set from the command line with
+# The project's filename prefix.  This can be set from the command line with
 # the options "-p" or "--prefix"
 #
 project_prefix = ""
 
-# The project's documentation output directory. This can be set from the
-# command line with the options "-o" or "--output"
+# The project's documentation output directory.  This can be set from the
+# command line with the options "-o" or "--output".
 #
-output_dir     = None
+output_dir = None
 
 
 # The following defines the HTML header used by all generated pages.
@@ -177,13 +178,13 @@ def html_format( line ):
     return result
 
 
-# open the standard output to a given project documentation file
-# use "output_dir" to determine the filename location, when necessary
-# and save the old stdout in a tuple that is returned by this function
+# Open the standard output to a given project documentation file.  Use
+# "output_dir" to determine the filename location if necessary and save the
+# old stdout in a tuple that is returned by this function.
 #
 def open_output( filename ):
     global output_dir
-    
+
     if output_dir and output_dir != "":
         filename = output_dir + os.sep + filename
 
@@ -194,22 +195,23 @@ def open_output( filename ):
     return ( new_file, old_stdout )
 
 
-# close the output that was returned by "close_output"
-#
+# Close the output that was returned by "close_output".
 #
 def close_output( output ):
     output[0].close()
     sys.stdout = output[1]
 
-# check output directoy
+
+# Check output directory.
 #
 def check_output( ):
     global output_dir
     if output_dir:
         if output_dir != "":
             if not os.path.isdir( output_dir ):
-                sys.stderr.write( "argument '"+output_dir+"' is not a valid directory" )
-                sys.exit(2)
+                sys.stderr.write( "argument" + " '" + output_dir + "' " +
+                                  "is not a valid directory" )
+                sys.exit( 2 )
         else:
             output_dir = None
 
@@ -416,7 +418,7 @@ class DocParagraph:
                 i = 0
                 while i < l and word[i] in alphanum:
                     i = i + 1
-                
+
                 if i < l:
                     extra = word[i :]
                     word  = word[0 : i]
@@ -939,11 +941,11 @@ class DocSection:
         #
         if self.elements.has_key( block.name ):
             block.print_error( "duplicate element definition for " +
-                              "'" + block.name + "' " +
-                              "in section " +
-                              "'" + self.name + "'\n" +
-                              "previous definition in " +
-                              "'" + self.elements[block.name].location() + "'" )
+                               "'" + block.name + "' " +
+                               "in section " +
+                               "'" + self.name + "'\n" +
+                               "previous definition in " +
+                               "'" + self.elements[block.name].location() + "'" )
 
         self.elements[block.name] = block
         self.list.append( block )
@@ -1119,20 +1121,17 @@ class DocSectionList:
 
 
     def dump_html_sections( self ):
-        
         for section in self.sections.values():
             if section.filename:
                 output = open_output( section.filename )
-                
+
                 section.dump_html( self.identifiers )
-                
+
                 close_output( output )
 
 
-
     def dump_html_index( self ):
-
-        output = open_output( self.index_filename )        
+        output = open_output( self.index_filename )
 
         num_columns = 3
         total       = len( self.index )
@@ -1387,8 +1386,8 @@ def make_block_list( args = None ):
     # sys.stderr.write( repr( sys.argv[1 :] ) + '\n' )
 
     if not args:
-        args = sys.argv[1:]
-        
+        args = sys.argv[1 :]
+
     for pathname in args:
         if string.find( pathname, '*' ) >= 0:
             newpath = glob.glob( pathname )
@@ -1595,25 +1594,28 @@ def main( argv ):
     global html_header, html_header1, html_header2, html_header3
 
     try:
-        opts, args = getopt.getopt( sys.argv[1:], "ht:o:p:", [ "help", "title=", "output=", "prefix=" ] )
-        
+        opts, args = getopt.getopt( sys.argv[1:],
+                                    "ht:o:p:",
+                                    [ "help", "title=", "output=", "prefix=" ] )
+
     except getopt.GetoptError:
         usage()
-        sys.exit(2)
+        sys.exit( 2 )
 
     if args == []:
         usage()
-        sys.exit(1)
+        sys.exit( 1 )
 
     # process options
+    #
     project_title  = "Project"
-    project_prefix = None 
+    project_prefix = None
     output_dir     = None
-    
+
     for opt in opts:
         if opt[0] in ( "-h", "--help" ):
             usage()
-            sys.exit(0)
+            sys.exit( 0 )
 
         if opt[0] in ( "-t", "--title" ):
             project_title = opt[1]
@@ -1628,9 +1630,11 @@ def main( argv ):
     check_output( )
 
     # we begin by simply building a list of DocBlock elements
+    #
     list = make_block_list( args )
 
     # now, sort the blocks into sections
+    #
     document = DocDocument()
     for block in list:
         document.append_block( block )
