@@ -7,6 +7,8 @@
 	* src/cache/ftccache.c (ftc_node_hash_unlink, ftc_node_hash_link)
 	[FTC_CACHE_USE_LINEAR_HASHING]: Fix returned error code.
 	Fix debugging messages.
+	* src/cache/ftccache.i (GEN_CACHE_LOOKUP): Move declaration of
+	`family' and `hash' up to make it compilable with g++.
 
 	* src/type42/t42error.h: New file.
 	* src/type42/t42drivr.c, src/type42/t42objs.c,

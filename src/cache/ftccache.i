@@ -31,6 +31,8 @@
                     FTC_Node   *anode )
   {
     FT_LruNode  lru;
+    FTC_Family  family;
+    FT_UFast    hash;
 
 
     query->hash   = 0;
@@ -70,10 +72,11 @@
     }
 
     {
-      FTC_Family  family = (FTC_Family) lru;
-      FT_UFast    hash   = query->hash;
-      FTC_Node    node, *pnode, *bucket;
+      FTC_Node  node, *pnode, *bucket;
 
+
+      family = (FTC_Family)lru;
+      hash   = query->hash;
 
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
       FT_UInt  index;
