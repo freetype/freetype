@@ -43,14 +43,14 @@
 #define FT_COMPONENT  trace_ttcmap
 
 
-  static FT_UInt  code_to_index0( TT_CMapTable*  charmap,
-                                  FT_ULong       char_code );
-  static FT_UInt  code_to_index2( TT_CMapTable*  charmap,
-                                  FT_ULong       char_code );
-  static FT_UInt  code_to_index4( TT_CMapTable*  charmap,
-                                  FT_ULong       char_code );
-  static FT_UInt  code_to_index6( TT_CMapTable*  charmap,
-                                  FT_ULong       char_code );
+  LOCAL_FUNC_X FT_UInt  code_to_index0( TT_CMapTable*  charmap,
+                                        FT_ULong       char_code );
+  LOCAL_FUNC_X FT_UInt  code_to_index2( TT_CMapTable*  charmap,
+                                        FT_ULong       char_code );
+  LOCAL_FUNC_X FT_UInt  code_to_index4( TT_CMapTable*  charmap,
+                                        FT_ULong       char_code );
+  LOCAL_FUNC_X FT_UInt  code_to_index6( TT_CMapTable*  charmap,
+                                        FT_ULong       char_code );
 
 
   /*************************************************************************/
@@ -355,7 +355,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   FT_UInt  code_to_index0( TT_CMapTable*  cmap,
                            FT_ULong       charCode )
   {
@@ -381,7 +381,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   FT_UInt  code_to_index2( TT_CMapTable*  cmap,
                            FT_ULong       charCode )
   {
@@ -445,7 +445,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   FT_UInt  code_to_index4( TT_CMapTable*  cmap,
                            FT_ULong       charCode )
   {
@@ -528,7 +528,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   FT_UInt  code_to_index6( TT_CMapTable*  cmap,
                            FT_ULong       charCode )
   {

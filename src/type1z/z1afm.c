@@ -149,7 +149,7 @@
 
 
   /* compare two kerning pairs */
-  static
+  LOCAL_FUNC_X
   int  compare_kern_pairs( const void*  a,
                            const void*  b )
   {

@@ -55,7 +55,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  ft_autohinter_load( FT_AutoHinter  module,
                                 FT_GlyphSlot   slot,
                                 FT_Size        size,
@@ -67,7 +67,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void   ft_autohinter_reset( FT_AutoHinter  module,
                               FT_Face        face )
   {
@@ -78,7 +78,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  ft_autohinter_get_globals( FT_AutoHinter  module,
                                    FT_Face        face,
                                    void**         global_hints,
@@ -89,7 +89,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  ft_autohinter_done_globals( FT_AutoHinter  module,
                                     void*          global_hints )
   {
@@ -107,7 +107,7 @@
   };
 
 
-  FT_EXPORT_VAR( const FT_Module_Class )  autohint_module_class =
+  FT_CPLUSPLUS( const FT_Module_Class ) autohint_module_class =
   {
     ft_module_hinter,
     sizeof ( FT_AutoHinterRec ),

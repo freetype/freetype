@@ -231,6 +231,27 @@
 #endif /* !FT_EXPORT_VAR */
 
 
+  /* This is special.  Within C++, you must specify `extern "C"' for */
+  /* functions which are used via function pointers, and you also    */
+  /* must do that for structures which contain function pointers to  */
+  /* assure C linkage -- it's not possible to have (local) anonymous */
+  /* functions which are accessed by (global) function pointers.     */
+  /*                                                                 */
+#ifdef __cplusplus
+
+#define LOCAL_FUNC_X  extern "C"
+
+#define FT_CPLUSPLUS( x )  extern "C"  x
+
+#else
+
+#define LOCAL_FUNC_X  static
+
+#define FT_CPLUSPLUS( x )  x
+
+#endif /* __cplusplus */
+
+
 #ifdef __cplusplus
   }
 #endif

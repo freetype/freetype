@@ -122,7 +122,7 @@
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
-  static
+  LOCAL_FUNC_X
   FT_Module_Interface  SFNT_Get_Interface( FT_Module    module,
                                            const char*  interface )
   {
@@ -204,7 +204,7 @@
   };
 
 
-  FT_EXPORT_VAR( const FT_Module_Class )  sfnt_module_class =
+  FT_CPLUSPLUS( const FT_Module_Class )  sfnt_module_class =
   {
     0,  /* not a font driver or renderer */
     sizeof( FT_ModuleRec ),
