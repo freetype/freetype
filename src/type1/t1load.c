@@ -397,7 +397,12 @@
     /* take an array of objects */
     T1_ToTokenArray( &loader->parser, axis_tokens,
                      T1_MAX_MM_AXIS, &num_axis );
-    if ( num_axis <= 0 || num_axis > T1_MAX_MM_AXIS )
+    if ( num_axis < 0 )
+    {
+      error = T1_Err_Ignore;
+      goto Exit;
+    }
+    if ( num_axis == 0 || num_axis > T1_MAX_MM_AXIS )
     {
       FT_ERROR(( "parse_blend_axis_types: incorrect number of axes: %d\n",
                  num_axis ));
@@ -459,8 +464,14 @@
 
 
     /* get the array of design tokens -- compute number of designs */
-    T1_ToTokenArray( parser, design_tokens, T1_MAX_MM_DESIGNS, &num_designs );
-    if ( num_designs <= 0 || num_designs > T1_MAX_MM_DESIGNS )
+    T1_ToTokenArray( parser, design_tokens,
+                     T1_MAX_MM_DESIGNS, &num_designs );
+    if ( num_designs < 0 )
+    {
+      error = T1_Err_Ignore;
+      goto Exit;
+    }
+    if ( num_designs == 0 || num_designs > T1_MAX_MM_DESIGNS )
     {
       FT_ERROR(( "parse_blend_design_positions:" ));
       FT_ERROR(( " incorrect number of designs: %d\n",
@@ -472,13 +483,13 @@
     {
       FT_Byte*  old_cursor = parser->root.cursor;
       FT_Byte*  old_limit  = parser->root.limit;
-      FT_UInt   n;
+      FT_Int    n;
 
 
       blend    = face->blend;
       num_axis = 0;  /* make compiler happy */
 
-      for ( n = 0; n < (FT_UInt)num_designs; n++ )
+      for ( n = 0; n < num_designs; n++ )
       {
         T1_TokenRec  axis_tokens[T1_MAX_MM_DESIGNS];
         T1_Token     token;
@@ -541,8 +552,14 @@
     FT_Memory    memory = face->root.memory;
 
 
-    T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
-    if ( num_axis <= 0 || num_axis > T1_MAX_MM_AXIS )
+    T1_ToTokenArray( parser, axis_tokens, 
+                     T1_MAX_MM_AXIS, &num_axis );
+    if ( num_axis < 0 )
+    {
+      error = T1_Err_Ignore;
+      goto Exit;
+    }
+    if ( num_axis == 0 || num_axis > T1_MAX_MM_AXIS )
     {
       FT_ERROR(( "parse_blend_design_map: incorrect number of axes: %d\n",
                  num_axis ));
@@ -615,26 +632,46 @@
   parse_weight_vector( T1_Face    face,
                        T1_Loader  loader )
   {
+    T1_TokenRec  design_tokens[T1_MAX_MM_DESIGNS];
+    FT_Int       num_designs;
     FT_Error     error  = T1_Err_Ok;
     T1_Parser    parser = &loader->parser;
     PS_Blend     blend  = face->blend;
-    T1_TokenRec  master;
-    FT_UInt      n;
+    T1_Token     token;
+    FT_Int       n;
     FT_Byte*     old_cursor;
     FT_Byte*     old_limit;
 
 
-    if ( !blend || blend->num_designs == 0 )
+    T1_ToTokenArray( parser, design_tokens,
+                     T1_MAX_MM_DESIGNS, &num_designs );
+    if ( num_designs < 0 )
     {
-      FT_ERROR(( "parse_weight_vector: too early!\n" ));
+      error = T1_Err_Ignore;
+      goto Exit;
+    }
+    if ( num_designs == 0 || num_designs > T1_MAX_MM_DESIGNS )
+    {
+      FT_ERROR(( "parse_weight_vector:" ));
+      FT_ERROR(( " incorrect number of designs: %d\n",
+                 num_designs ));
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
 
-    T1_ToToken( parser, &master );
-    if ( master.type != T1_TOKEN_TYPE_ARRAY )
+    if ( !blend || !blend->num_designs )
     {
-      FT_ERROR(( "parse_weight_vector: incorrect format!\n" ));
+      error = t1_allocate_blend( face, num_designs, 0 );
+      if ( error )
+        goto Exit;
+      blend = face->blend;
+    }
+    else if ( blend->num_designs != (FT_UInt)num_designs )
+    {
+      FT_ERROR(( "parse_weight_vector:"
+                 " /BlendDesignPosition and /WeightVector have\n" ));
+      FT_ERROR(( "                    "
+                 " different number of elements!\n" ));
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
@@ -642,12 +679,12 @@
     old_cursor = parser->root.cursor;
     old_limit  = parser->root.limit;
 
-    /* don't include the delimiting brackets */
-    parser->root.cursor = master.start + 1;
-    parser->root.limit  = master.limit - 1;
-
-    for ( n = 0; n < blend->num_designs; n++ )
+    for ( n = 0; n < num_designs; n++ )
     {
+      token = design_tokens + n;
+      parser->root.cursor = token->start;
+      parser->root.limit  = token->limit;
+
       blend->default_weight_vector[n] =
       blend->weight_vector[n]         = T1_ToFixed( parser, 0 );
     }
@@ -659,23 +696,6 @@
     parser->root.error = error;
   }
 
-
-  /* the keyword `/shareddict' appears in some multiple master fonts   */
-  /* with a lot of Postscript garbage behind it (that's completely out */
-  /* of spec!); we detect it and terminate the parsing                 */
-  /*                                                                   */
-  static void
-  parse_shared_dict( T1_Face    face,
-                     T1_Loader  loader )
-  {
-    T1_Parser  parser = &loader->parser;
-
-    FT_UNUSED( face );
-
-
-    parser->root.cursor = parser->root.limit;
-    parser->root.error  = 0;
-  }
 
 #endif /* T1_CONFIG_OPTION_NO_MM_SUPPORT */
 
@@ -1007,9 +1027,9 @@
 
             parser->root.error = T1_Add_Table( char_table, charcode,
                                                cur, len + 1 );
-            char_table->elements[charcode][len] = '\0';
             if ( parser->root.error )
               return;
+            char_table->elements[charcode][len] = '\0';
 
             n++;
           }
@@ -1041,10 +1061,7 @@
         face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
 
       else
-      {
-        FT_ERROR(( "parse_encoding: invalid token!\n" ));
-        parser->root.error = T1_Err_Invalid_File_Format;
-      }
+        parser->root.error = T1_Err_Ignore;
     }
   }
 
@@ -1230,8 +1247,8 @@
       FT_Byte*  base;
 
 
-      /* the format is simple:                    */
-      /*   `/glyphname' + binary data             */
+      /* the format is simple:        */
+      /*   `/glyphname' + binary data */
 
       T1_Skip_Spaces( parser );
 
@@ -1395,7 +1412,7 @@
       /* We take index 0 and add it to the end of the table(s)    */
       /* and add our own /.notdef glyph to index 0.               */
 
-      /* 0 333 hsbw endchar                                      */
+      /* 0 333 hsbw endchar */
       FT_Byte  notdef_glyph[] = {0x8B, 0xF7, 0xE1, 0x0D, 0x0E};
       char*    notdef_name    = (char *)".notdef";
 
@@ -1469,7 +1486,6 @@
     T1_FIELD_CALLBACK( "BlendDesignMap", parse_blend_design_map )
     T1_FIELD_CALLBACK( "BlendAxisTypes", parse_blend_axis_types )
     T1_FIELD_CALLBACK( "WeightVector", parse_weight_vector )
-    T1_FIELD_CALLBACK( "shareddict", parse_shared_dict )
 #endif
 
     { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
@@ -1640,10 +1656,16 @@
                 parser->root.error = t1_load_keyword( face,
                                                       loader,
                                                       keyword );
-                if ( parser->root.error )
-                  return parser->root.error;
+                if ( parser->root.error == T1_Err_Ok )
+                  keyword_flag[0] = 1;
+                else
+                {
+                  if ( parser->root.error == T1_Err_Ignore )
+                    parser->root.error = T1_Err_Ok;
+                  else
+                    return parser->root.error;
+                }
               }
-              keyword_flag[0] = 1;
               break;
             }
 
@@ -1657,12 +1679,15 @@
       else
       {
         T1_Skip_PS_Token( parser );
+        if ( parser->root.error )
+          goto Exit;
         have_integer = 0;
       }
 
       T1_Skip_Spaces( parser );
     }
 
+  Exit:
     return parser->root.error;
   }
 
@@ -1755,6 +1780,30 @@
                         keyword_flags );
     if ( error )
       goto Exit;
+
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+
+    /* the following can happen for MM instances; we then treat the */
+    /* font as a normal PS font                                     */
+    if ( face->blend                                             &&
+         ( !face->blend->num_designs || !face->blend->num_axis ) )
+      T1_Done_Blend( face );
+
+    /* another safety check */
+    if ( face->blend )
+    {
+      FT_UInt  i;
+
+
+      for ( i = 0; i < face->blend->num_axis; i++ )
+        if ( !face->blend->design_map[i].num_points )
+        {
+          T1_Done_Blend( face );
+          break;
+        }
+    }
+
+#endif /* T1_CONFIG_OPTION_NO_MM_SUPPORT */
 
     /* now, propagate the subrs, charstrings, and glyphnames tables */
     /* to the Type1 data                                            */

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auxiliary functions for PostScript fonts (body).                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1280,10 +1280,6 @@
           if ( cur >= limit )
             break;
 
-          /* with synthetic fonts, it is possible to find a field twice */
-          if ( *(FT_String**)q )
-            break;
-
           if ( field->type == T1_FIELD_TYPE_KEY )
           {
             /* don't include leading `/' */
@@ -1359,7 +1355,7 @@
     T1_TokenRec  elements[T1_MAX_TABLE_ELEMENTS];
     T1_Token     token;
     FT_Int       num_elements;
-    FT_Error     error = 0;
+    FT_Error     error = PSaux_Err_Ok;
     FT_Byte*     old_cursor;
     FT_Byte*     old_limit;
     T1_FieldRec  fieldrec = *(T1_Field)field;
@@ -1374,8 +1370,10 @@
     ps_parser_to_token_array( parser, elements,
                               T1_MAX_TABLE_ELEMENTS, &num_elements );
     if ( num_elements < 0 )
-      goto Fail;
-
+    {
+      error = PSaux_Err_Ignore;
+      goto Exit;
+    }
     if ( num_elements > T1_MAX_TABLE_ELEMENTS )
       num_elements = T1_MAX_TABLE_ELEMENTS;
 
@@ -1408,10 +1406,6 @@
 
   Exit:
     return error;
-
-  Fail:
-    error = PSaux_Err_Invalid_File_Format;
-    goto Exit;
   }
 
 

@@ -1,15 +1,58 @@
-2003-02-09  Werner Lemberg  <wl@gnu.org>
+2004-02-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidload.c (cid_face_open): Always allocate
+	face->cid_stream so that we can deallocate it safely.
+
+2004-02-10  Werner Lemberg  <wl@gnu.org>
+
+	Make the PS parser more tolerant w.r.t. non-standard font data.  In
+	general, an error is only reported in case of a syntax error; a
+	wrong type is now simply ignored (if possible).  To be independent
+	of the order of various MM-specific keywords, the parse_shared_dict
+	routine has been removed -- the PS parser is now capable to skip
+	this data.  It no longer fails on parsing e.g.
+
+	  dup /WeightVector exch def
+
+	Since the token following /WeightVector isn't `[' (starting an
+	array) it is simply ignored.
+
+	* include/freetype/fterrdef.h: Define `FT_Err_Ignore' (0xA2) as a
+	new internal error value.
+
+	* src/type1/t1load.c (parse_blend_axis_types,
+	parse_blend_design_positions, parse_blend_design_map): Return
+	T1_Err_Ignore if no proper array is following the keyword.
+	(parse_weight_vector): Use T1_ToTokenArray, initializing `blend'
+	structure, if necessary.
+	Return T1_Err_Ignore if no proper array is following the keyword.
+	(parse_shared_dict): Removed.
+	(parse_encoding): Set parser->root.error to return T1_Err_Ignore
+	if no result can be obtained.
+	Check for errors before accessing `elements' array.
+	(t1_keywords): Remove /shareddict.
+	(parse_dict): Reset error if t1_load_keyword returns T1_Err_Ignore.
+	Set keyword_flag only in case of success.
+	Check error code if skipping an unrecognized token.
+	(T1_Open_Face) [!T1_CONFIG_OPTION_NO_MM_SUPPORT]: Call T1_Done_Blend
+	if blend commands haven't set up a proper MM font.
+
+	* src/psaux/psobjs.c (ps_parser_load_field_table): Remove special
+	code for synthetic fonts.
+	Return PSaux_Err_Ignore if no proper value has been found.
+
+2004-02-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
 	<cff_op_endchar>: Preserve glyph width before calling
 	cff_operator_seac.
 
-2003-02-09  Martin Muskens  <mmuskens@aurelon.com>
+2004-02-09  Martin Muskens  <mmuskens@aurelon.com>
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Handle special
 	first argument for `hintmask' and `cntrmask' operators also.
 
-2003-02-08  Werner Lemberg  <wl@gnu.org>
+2004-02-08  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.in: Call AC_SUBST for `enable_shared',
 	`hardcode_libdir_flag_spec', and `wl'.
@@ -22,7 +65,7 @@
 
 	* docs/CHANGES: Updated.
 
-2003-02-07  Keith Packard  <keithp@keithp.com>
+2004-02-07  Keith Packard  <keithp@keithp.com>
 
 	* src/bdf/bdfdrivr.c (BDF_Face_Init, BDF_Set_Pixel_Size): Fix
 	computation of various vertical and horizontal metric values.
@@ -30,24 +73,24 @@
 	* src/pcfdrivr.c (PCF_Set_Pixel_Size), src/pcfread (pcf_load_font):
 	Ditto.
 
-2003-02-07  Werner Lemberg  <wl@gnu.org>
+2004-02-07  Werner Lemberg  <wl@gnu.org>
 
 	* builds/win32/visualc/index.html,
 	builds/win32/visualc/freetype.dsp,
 	builds/win32/visualc/freetype.dsw, docs/CHANGES: Updated.
 
-2003-02-07  Vitaliy Pasternak  <v_a_pasternak@mail.ru>
+2004-02-07  Vitaliy Pasternak  <v_a_pasternak@mail.ru>
 
 	* builds/win32/visualc/freetype.sln,
 	builds/win32/visualc/freetype.vcproj: New files for VS.NET 2003.
 
-2003-02-03  Werner Lemberg  <wl@gnu.org>
+2004-02-03  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP):
 	Initialize `node'.
 	* src/type1/t1load.c (parse_dict): Initialize `have_integer'.
 
-2003-02-02  Werner Lemberg  <wl@gnu.org>
+2004-02-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_dict): Handle `RD' and `-|' commands
 	outside of /Subrs or /CharStrings.  This can happen if there is
