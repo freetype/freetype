@@ -1,3 +1,17 @@
+2004-12-28  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
+	--copy' from libtool 1.5.10.
+	* builds/unix/aclocal.m4: Regenerated with `aclocal -I .' from
+	automake 1.9.4.
+	* builds/unix/configure: Regenerated with autoconf 2.59b.
+
+	* builds/unix/config.guess, builds/unix/config.sub: Updated from
+	`config' CVS module at subversions.gnu.org.
+
+	* builds/unix/install-sh: Updated from
+	`texinfo' CVS module at subversions.gnu.org.
+
 2004-12-27  Dirck Blaskey  <listtarget@danbala.com>
 
 	* src/cff/cffobjs.c (cff_face_init): Improve computation of
