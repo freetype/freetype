@@ -217,7 +217,7 @@
 
 
       FT_ERROR(( "%s.init: missing/incorrect hint masks!\n" ));
-      count = table->max_hints;
+      Count = table->max_hints;
       for ( Index = 0; Index < Count; Index++ )
         psh2_hint_table_record( table, Index );
     }
@@ -1495,14 +1495,11 @@
                    FT_Outline*  outline,
                    PSH_Globals  globals )
   {
-    PSH2_Glyph     glyph;
     PSH2_GlyphRec  glyphrec;
+    PSH2_Glyph     glyph = &glyphrec;
     FT_Error       error;
     FT_Memory      memory;
     FT_Int         dimension;
-
-    FT_UNUSED(glyphrec);
-
 
     memory = globals->memory;
 
@@ -1517,8 +1514,6 @@
       return error;
 
     ps2_debug_glyph = glyph;
-#else
-    glyph = &glyphrec;
 #endif
 
     error = psh2_glyph_init( glyph, outline, ps_hints, globals );

@@ -662,8 +662,8 @@
 
 
 #else  /* !FT_DEBUG_MEMORY */
-
- /* ANSI C doesn't like empty source files */
+ 
+ /* ansi C doesn't like empty source files */
   extern const FT_Byte  _debug_mem_dummy = 0;
 
 #endif /* !FT_DEBUG_MEMORY */

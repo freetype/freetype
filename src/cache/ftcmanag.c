@@ -22,7 +22,6 @@
 #include FT_CACHE_INTERNAL_LRU_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
-#include FT_LIST_H
 #include FT_SIZES_H
 
 #include "ftcerror.h"
@@ -63,12 +62,11 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  ftc_face_node_init( FTC_FaceNode  node,
-                      FTC_FaceID    face_id,
-                      FT_LruList    list )
+  ftc_face_node_init( FTC_FaceNode node,
+                      FTC_FaceID   face_id,
+                      FTC_Manager  manager )
   {
-    FTC_Manager  manager = FTC_LRU_GET_MANAGER( list );
-    FT_Error     error;
+    FT_Error  error;
 
 
     error = manager->request_face( face_id,
@@ -97,10 +95,9 @@
 
   FT_CALLBACK_DEF( void )
   ftc_face_node_done( FTC_FaceNode  node,
-                      FT_LruList    list )
+                      FTC_Manager   manager )
   {
-    FTC_Manager  manager = FTC_LRU_GET_MANAGER( list );
-    FT_Face      face    = node->face;
+    FT_Face  face    = node->face;
 
 
     /* we must begin by removing all sizes for the target face */
@@ -128,6 +125,36 @@
     (FT_LruNode_FlushFunc)  0,  /* no flushing needed                      */
     (FT_LruNode_CompareFunc)0,  /* direct comparison of FTC_FaceID handles */
   };
+
+
+  /* documentation is in ftcache.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Manager_Lookup_Face( FTC_Manager  manager,
+                           FTC_FaceID   face_id,
+                           FT_Face     *aface )
+  {
+    FT_Error      error;
+    FTC_FaceNode  node;
+
+
+    if ( aface == NULL )
+      return FTC_Err_Bad_Argument;
+
+    *aface = NULL;
+
+    if ( !manager )
+      return FTC_Err_Invalid_Cache_Handle;
+
+    error = FT_LruList_Lookup( manager->faces_list,
+                               (FT_LruKey)face_id,
+                               (FT_LruNode*)&node );
+    if ( !error )
+      *aface = node->face;
+
+    return error;
+  }
+
 
 
   /*************************************************************************/
@@ -242,6 +269,169 @@
   };
 
 
+
+  /* documentation is in ftcache.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Manager_Lookup_Size( FTC_Manager  manager,
+                           FTC_Font     font,
+                           FT_Face     *aface,
+                           FT_Size     *asize )
+  {
+    FT_Error  error;
+
+
+    /* check for valid `manager' delayed to FTC_Manager_Lookup_Face() */
+    if ( aface )
+      *aface = 0;
+
+    if ( asize )
+      *asize = 0;
+
+    error = FTC_Manager_Lookup_Face( manager, font->face_id, aface );
+    if ( !error )
+    {
+      FTC_SizeQueryRec  query;
+      FTC_SizeNode      node;
+
+
+      query.face   = *aface;
+      query.width  = font->pix_width;
+      query.height = font->pix_height;
+
+      error = FT_LruList_Lookup( manager->sizes_list,
+                                 (FT_LruKey)&query,
+                                 (FT_LruNode*)&node );
+      if ( !error )
+      {
+        /* select the size as the current one for this face */
+        FT_Activate_Size( node->size );
+
+        if ( asize )
+          *asize = node->size;
+      }
+    }
+
+    return error;
+  }
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    SET TABLE MANAGEMENT                       *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  static void
+  ftc_family_table_init( FTC_FamilyTable  table )
+  {
+    table->count   = 0;
+    table->size    = 0;
+    table->entries = NULL;
+    table->free    = FTC_FAMILY_ENTRY_NONE;
+  }
+
+
+  static void
+  ftc_family_table_done( FTC_FamilyTable  table,
+                         FT_Memory        memory )
+  {
+    FREE( table->entries );
+    table->free  = 0;
+    table->count = 0;
+    table->size  = 0;
+  }
+
+
+  FT_LOCAL_DEF FT_Error
+  ftc_family_table_alloc( FTC_FamilyTable   table,
+                          FT_Memory         memory,
+                          FTC_FamilyEntry  *aentry )
+  {
+    FTC_FamilyEntry  entry;
+    FT_Error         error = 0;
+
+   /* re-allocate table size when needed */
+    if ( table->free == FTC_FAMILY_ENTRY_NONE && table->count >= table->size )
+    {
+      FT_UInt  old_size = table->size;
+      FT_UInt  new_size, index;
+
+      if ( old_size == 0 )
+        new_size = 8;
+      else
+      {
+        new_size = old_size*2;
+
+        /* check for (unlikely) overflow */
+        if ( new_size < old_size )
+          new_size = 65534;
+      }
+
+      if ( REALLOC_ARRAY( table->entries, old_size, new_size, FTC_FamilyEntryRec ) )
+        return error;
+
+      table->size = new_size;
+
+      entry       = table->entries + old_size;
+      table->free = old_size;
+
+      for ( index = old_size; index+1 < new_size; index++, entry++ )
+      {
+        entry->link  = index+1;
+        entry->index = index;
+      }
+
+      entry->link  = FTC_FAMILY_ENTRY_NONE;
+      entry->index = index;
+    }
+
+    if ( table->free != FTC_FAMILY_ENTRY_NONE )
+    {
+      entry       = table->entries + table->free;
+      table->free = entry->link;
+    }
+    else if ( table->count < table->size )
+    {
+      entry = table->entries + table->count++;
+    }
+    else
+    {
+      FT_ERROR(( "FreeType.cache.alloc_set: internal bug !!" ));
+      return FT_Err_Invalid_Argument;
+    }
+
+    entry->link = FTC_FAMILY_ENTRY_NONE;
+    table->count++;
+
+    *aentry = entry;
+    return error;
+  }
+
+
+  FT_LOCAL_DEF void
+  ftc_family_table_free( FTC_FamilyTable  table,
+                         FT_UInt          index )
+  {
+    /* simply add it to the linked list of free entries */
+    if ( index < table->count )
+    {
+      FTC_FamilyEntry  entry = table->entries + index;
+
+      if ( entry->link != FTC_FAMILY_ENTRY_NONE )
+        FT_ERROR(( "FreeType.cache.set_free: internal bug !!\n" ));
+      else
+      {
+        entry->link = table->free;
+        table->free = entry->index;
+        table->count--;
+      }
+    }
+  }
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -307,6 +497,8 @@
     manager->request_face = requester;
     manager->request_data = req_data;
 
+    ftc_family_table_init( &manager->families );
+
     *amanager = manager;
 
   Exit:
@@ -348,7 +540,10 @@
         manager->caches[index] = 0;
       }
     }
-    
+
+    /* discard families table */
+    ftc_family_table_done( &manager->families, memory );
+
     /* discard faces and sizes */
     FT_LruList_Destroy( manager->faces_list );
     manager->faces_list = 0;
@@ -374,251 +569,10 @@
   }
 
 
-  /* documentation is in ftcache.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Manager_Lookup_Face( FTC_Manager  manager,
-                           FTC_FaceID   face_id,
-                           FT_Face     *aface )
-  {
-    FT_Error      error;
-    FTC_FaceNode  node;
-
-
-    if ( aface == NULL )
-      return FTC_Err_Bad_Argument;
-
-    *aface = NULL;
-
-    if ( !manager )
-      return FTC_Err_Invalid_Cache_Handle;
-
-    error = FT_LruList_Lookup( manager->faces_list,
-                               (FT_LruKey)face_id,
-                               (FT_LruNode*)&node );
-    if ( !error )
-      *aface = node->face;
-    
-    return error;
-  }
-
-
-  /* documentation is in ftcache.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Manager_Lookup_Size( FTC_Manager  manager,
-                           FTC_Font     font,
-                           FT_Face     *aface,
-                           FT_Size     *asize )
-  {
-    FT_Error  error;
-
-
-    /* check for valid `manager' delayed to FTC_Manager_Lookup_Face() */
-    if ( aface )
-      *aface = 0;
-
-    if ( asize )
-      *asize = 0;
-
-    error = FTC_Manager_Lookup_Face( manager, font->face_id, aface );
-    if ( !error )
-    {
-      FTC_SizeQueryRec  query;
-      FTC_SizeNode      node;
-
-
-      query.face   = *aface;
-      query.width  = font->pix_width;
-      query.height = font->pix_height;
-
-      error = FT_LruList_Lookup( manager->sizes_list,
-                                 (FT_LruKey)&query,
-                                 (FT_LruNode*)&node );
-      if ( !error )
-      {
-        /* select the size as the current one for this face */
-        FT_Activate_Size( node->size );
-
-        if ( asize )
-          *asize = node->size;
-      }
-    }
-
-    return error;
-  }
-
-
-  /* add a new node to the head of the manager's circular MRU list */
-  static void
-  ftc_node_mru_link( FTC_Node     node,
-                     FTC_Manager  manager )
-  {
-    FTC_Node  first = manager->nodes_list;
-
-
-    if ( first )
-    {
-      node->mru_prev = first->mru_prev;
-      node->mru_next = first;
-
-      first->mru_prev->mru_next = node;
-      first->mru_prev           = node;
-    }
-    else
-    {
-      node->mru_next = node;
-      node->mru_prev = node;
-    }
-
-    manager->nodes_list = node;
-    manager->num_nodes++;
-  }
-
-
-  /* remove a node from the manager's MRU list */
-  static void
-  ftc_node_mru_unlink( FTC_Node     node,
-                       FTC_Manager  manager )
-  {
-    FTC_Node  prev  = node->mru_prev;
-    FTC_Node  next  = node->mru_next;
-    FTC_Node  first = manager->nodes_list;
-
-
-    prev->mru_next = next;
-    next->mru_prev = prev;
-
-    if ( node->mru_next == first )
-    {
-      /* this is the last node in the list; update its head pointer */
-      if ( node == first )
-        manager->nodes_list = NULL;
-      else
-        first->mru_prev = prev;
-    }
-
-    node->mru_next = NULL;
-    node->mru_prev = NULL;
-    manager->num_nodes--;
-  }
-
-
-  /* move a node to the head of the manager's MRU list */
-  static void
-  ftc_node_mru_up( FTC_Node     node,
-                   FTC_Manager  manager )
-  {
-    FTC_Node  first = manager->nodes_list;
-
-
-    if ( node != first )
-    {
-      ftc_node_mru_unlink( node, manager );
-      ftc_node_mru_link( node, manager );
-    }
-  }
-
-
-  /* remove a node from its cache's hash table */
-  static void
-  ftc_node_hash_unlink( FTC_Node   node,
-                        FTC_Cache  cache )
-  {
-    FTC_Node  *pnode = cache->buckets + ( node->hash % cache->size );
-
-
-    for (;;)
-    {
-      if ( *pnode == NULL )
-      {
-        FT_ERROR(( "FreeType.cache.hash_unlink: unknown node!\n" ));
-        return;
-      }
-
-      if ( *pnode == node )
-      {
-        *pnode     = node->link;
-        node->link = NULL;
-
-        cache->nodes--;
-        return;
-      }
-
-      pnode = &(*pnode)->link;
-    }
-  }
-
-
-  /* add a node to the "top" of its cache's hash table */
-  static void
-  ftc_node_hash_link( FTC_Node   node,
-                      FTC_Cache  cache )
-  {
-    FTC_Node  *pnode = cache->buckets + ( node->hash % cache->size );
-
-
-    node->link = *pnode;
-    *pnode     = node;
-
-    cache->nodes++;
-  }
-
-
-  /* remove a node from the cache manager */
-  static void
-  ftc_node_destroy( FTC_Node     node,
-                    FTC_Manager  manager )
-  {
-    FT_Memory        memory  = manager->library->memory;
-    FTC_Cache        cache;
-    FTC_Cache_Class  clazz;
 
 
 #ifdef FT_DEBUG_ERROR
-    /* find node's cache */
-    if ( node->cache_index >= FTC_MAX_CACHES )
-    {
-      FT_ERROR(( "FreeType.cache.node_destroy: invalid node handle\n" ));
-      return;
-    }
-#endif
-
-    cache = manager->caches[node->cache_index];
-
-#ifdef FT_DEBUG_ERROR
-    if ( cache == NULL )
-    {
-      FT_ERROR(( "FreeType.cache.node_destroy: invalid node handle\n" ));
-      return;
-    }
-#endif
-
-    clazz = cache->clazz;
-
-    manager->cur_weight -= clazz->node_weight( node, cache );
-
-    /* remove node from mru list */
-    ftc_node_mru_unlink( node, manager );
-
-    /* remove node from cache's hash table */
-    ftc_node_hash_unlink( node, cache );
-
-    /* now finalize it */
-
-    if ( clazz->node_done )
-      clazz->node_done( node, cache );
-
-    FREE( node );
-
-    /* check, just in case of general corruption :-) */
-    if ( manager->num_nodes <= 0 )
-      FT_ERROR(( "FTC_Manager_Compress: Invalid cache node count! = %d\n",
-                  manager->num_nodes ));
-  }
-
-
-  FT_EXPORT_DEF( void )
+  FT_EXPORT_DEF(void)
   FTC_Manager_Check( FTC_Manager  manager )
   {
     FTC_Node  node, first;
@@ -636,14 +590,23 @@
 
       do
       {
-        FTC_Cache  cache = manager->caches[node->cache_index];
-        
+        FTC_FamilyEntry  entry = manager->families.entries + node->fam_index;
+        FTC_Cache     cache;
 
-        weight += cache->clazz->node_weight( node, cache );
-        node    = node->mru_next;
+        if ( (FT_UInt)node->fam_index >= manager->families.count ||
+             entry->link              != FTC_FAMILY_ENTRY_NONE  )
+          FT_ERROR(( "FTC_Manager_Compress: invalid node (family index = %ld\n",
+                     node->fam_index ));
+        else
+        {
+          cache   = entry->cache;
+          weight += cache->clazz->node_weight( node, cache );
+        }
 
-      } while ( node != first );
-      
+        node = node->mru_next;
+      }
+      while (node != first);
+
       if ( weight != manager->cur_weight )
         FT_ERROR((
           "FTC_Manager_Compress: invalid weight %ld instead of %ld\n",
@@ -654,22 +617,23 @@
     if ( first )
     {
       FT_UFast  count = 0;
-      
+
 
       node = first;
       do
       {
         count++;
         node = node->mru_next;
+      }
+      while (node != first);
 
-      } while ( node != first );
-      
       if ( count != manager->num_nodes )
         FT_ERROR((
           "FTC_Manager_Compress: invalid cache node count %d instead of %d\n",
           manager->num_nodes, count ));
     }
   }
+#endif /* FT_DEBUG_ERROR */
 
 
   /* `Compress' the manager's data, i.e., get rid of old cache nodes */
@@ -689,7 +653,7 @@
 
     first = manager->nodes_list;
 
-#if 0
+#ifdef FT_DEBUG_ERROR
     FTC_Manager_Check( manager );
 
     FT_ERROR(( "compressing, weight = %ld, max = %ld, nodes = %d\n",
@@ -782,296 +746,20 @@
   }
 
 
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                    ABSTRACT CACHE CLASS                       *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
 
-#define FTC_PRIMES_MIN  7
-#define FTC_PRIMES_MAX  13845163
 
-  static const FT_UInt  ftc_primes[] =
+
+
+
+  FT_EXPORT_DEF(void)
+  FTC_Node_Unref( FTC_Node     node,
+                  FTC_Manager  manager )
   {
-    7,
-    11,
-    19,
-    37,
-    73,
-    109,
-    163,
-    251,
-    367,
-    557,
-    823,
-    1237,
-    1861,
-    2777,
-    4177,
-    6247,
-    9371,
-    14057,
-    21089,
-    31627,
-    47431,
-    71143,
-    106721,
-    160073,
-    240101,
-    360163,
-    540217,
-    810343,
-    1215497,
-    1823231,
-    2734867,
-    4102283,
-    6153409,
-    9230113,
-    13845163,
-  };
-
-
-  static FT_UFast
-  ftc_prime_closest( FT_UFast  num )
-  {
-    FT_UInt  i;
-
-
-    for ( i = 0; i < sizeof ( ftc_primes ) / sizeof ( ftc_primes[0] ); i++ )
-      if ( ftc_primes[i] > num )
-        return ftc_primes[i];
-
-    return FTC_PRIMES_MAX;
-  }
-
-
-  FT_EXPORT_DEF( void )
-  ftc_cache_resize( FTC_Cache  cache )
-  {
-    FT_UFast  new_size;
-
-
-    new_size = ftc_prime_closest( cache->nodes );
-    if ( new_size != cache->size )
+    if ( node && (FT_UInt)node->fam_index < manager->families.count &&
+         manager->families.entries[node->fam_index].cache )
     {
-      FT_Memory  memory = cache->memory;
-      FT_Error   error;
-      FTC_Node*  new_buckets ;
-      FT_ULong   i;
-
-
-      if ( ALLOC_ARRAY( new_buckets, new_size, FTC_Node ) )
-        return;
-
-      for ( i = 0; i < cache->size; i++ )
-      {
-        FTC_Node   node, next, *pnode;
-        FT_UFast   hash;
-
-
-        node = cache->buckets[i];
-        while ( node )
-        {
-          next  = node->link;
-          hash  = node->hash % new_size;
-          pnode = new_buckets + hash;
-
-          node->link = pnode[0];
-          pnode[0]   = node;
-
-          node = next;
-        }
-      }
-
-      if ( cache->buckets )
-        FREE( cache->buckets );
-
-      cache->buckets = new_buckets;
-      cache->size    = new_size;
-    }
-  }
-
-
-  FT_EXPORT_DEF( FT_Error )
-  ftc_cache_init( FTC_Cache  cache )
-  {
-    FT_Memory  memory = cache->memory;
-    FT_Error   error;
-    
-
-    cache->nodes = 0;
-    cache->size  = FTC_PRIMES_MIN;
-    
-    if ( ALLOC_ARRAY( cache->buckets, cache->size, FTC_Node ) )
-      goto Exit;
-      
-  Exit:
-    return error;
-  }
-
-
-  FT_EXPORT_DEF( void )
-  ftc_cache_done( FTC_Cache  cache )
-  {
-    if ( cache )
-    {
-      FT_Memory        memory  = cache->memory;
-      FTC_Cache_Class  clazz   = cache->clazz;
-      FTC_Manager      manager = cache->manager;
-      FT_UFast         i;
-
-
-      for ( i = 0; i < cache->size; i++ )
-      {
-        FTC_Node  *pnode = cache->buckets + i, next, node = *pnode;
-
-        while ( node )
-        {
-          next        = node->link;
-          node->link  = NULL;
-
-          /* remove node from mru list */
-          ftc_node_mru_unlink( node, manager );
-
-          /* now finalize it */
-          manager->cur_weight -= clazz->node_weight( node, cache );
-
-          if ( clazz->node_done )
-            clazz->node_done( node, cache );
-
-          FREE( node );
-          node = next;
-        }
-        cache->buckets[i] = NULL;
-      }
-
-      FREE( cache->buckets );
-
-      cache->nodes = 0;
-      cache->size  = 0;
-    }
-  }
-
-
-  /* Look up a node in "top" of its cache's hash table. */
-  /* If not found, create a new node.                   */
-  /*                                                    */
-  FT_EXPORT_DEF( FT_Error )
-  ftc_cache_lookup_node( FTC_Cache   cache,
-                         FT_UFast    key_hash,
-                         FT_Pointer  key,
-                         FTC_Node   *anode )
-  {
-    FT_Error   error  = 0;
-    FTC_Node   result = NULL;
-    FTC_Node*  bucket = cache->buckets + ( key_hash % cache->size );
-
-
-    if ( *bucket )
-    {
-      FTC_Node*             pnode   = bucket;
-      FTC_Node_CompareFunc  compare = cache->clazz->node_compare;
-
-
-      for (;;)
-      {
-        FTC_Node  node;
-
-
-        node = *pnode;
-        if ( node == NULL )
-          break;
-
-        if ( compare( node, key, cache ) )
-        {
-          /* move to head of bucket list */
-          if ( pnode != bucket )
-          {
-            *pnode     = node->link;
-            node->link = *bucket;
-            *bucket    = node;
-          }
-          
-          /* move to head of MRU list */
-          if ( node != cache->manager->nodes_list )
-            ftc_node_mru_up( node, cache->manager );
-
-          result = node;
-          goto Exit;
-        }
-
-        pnode = &(*pnode)->link;
-      }
-    }
-
-    /* didn't find a node, create a new one */
-    {
-      FTC_Cache_Class  clazz   = cache->clazz;
-      FTC_Manager      manager = cache->manager;
-      FT_Memory        memory  = cache->memory;
-      FTC_Node         node;
-
-
-      if ( ALLOC( node, clazz->node_size ) )
-        goto Exit;
-
-      /* node initializer must set 'hash' field */
-
-      node->cache_index = cache->cache_index;
-      node->ref_count   = 0;
-
-      error = clazz->node_init( node, key, cache );
-      if ( error )
-      {
-        FREE( node );
-        goto Exit;
-      }
-
-      ftc_node_hash_link( node, cache );
-      ftc_node_mru_link( node, cache->manager );
-
-      cache->manager->cur_weight += clazz->node_weight( node, cache );
-
-      /* now try to compress the node pool when necessary */
-      if ( manager->cur_weight >= manager->max_weight )
-      {
-        node->ref_count++;
-        FTC_Manager_Compress( manager );
-        node->ref_count--;
-      }
-
-      /* try to resize the hash table when appropriate */
-      if ( FTC_CACHE_RESIZE_TEST( cache ) )
-        ftc_cache_resize( cache );
-
-      result = node;
-    }
-
-  Exit:
-   *anode = result;
-    return error;
-  }
-
-
-  /* maybe the next two functions will disappear eventually */
-
-  FT_EXPORT_DEF( void )
-  ftc_node_ref( FTC_Node   node,
-                FTC_Cache  cache )
-  {
-    if ( node && cache && (FT_UInt)node->cache_index == cache->cache_index )
-      node->ref_count++;
-  }
-
-
-  FT_EXPORT_DEF( void )
-  ftc_node_unref( FTC_Node   node,
-                  FTC_Cache  cache )
-  {
-    if ( node && cache && (FT_UInt)node->cache_index == cache->cache_index )
       node->ref_count--;
+    }
   }
 
 

@@ -16,7 +16,7 @@ HDRMACRO  [ FT2_SubDir  include ftcache.h ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = ftlru ftcmanag ftcglyph ftcchunk ftcsbits ftcimage ;
+    _sources = ftlru ftcmanag ftccache ftcglyph ftcsbits ftcimage ;
   }
   else
   {

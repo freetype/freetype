@@ -57,6 +57,37 @@ FT_BEGIN_HEADER
   /*   This section describes the FreeType 2 cache sub-system which is     */
   /*   stile in beta.                                                      */
   /*                                                                       */
+  /* <Order>                                                               */
+  /*   FTC_Manager                                                         */
+  /*   FTC_FaceID                                                          */
+  /*   FTC_Face_Requester                                                  */
+  /*                                                                       */
+  /*   FTC_Manager_New                                                     */
+  /*   FTC_Manager_Lookup_Face                                             */
+  /*   FTC_Manager_Lookup_Size                                             */
+  /*                                                                       */
+  /*   FTC_Node                                                            */
+  /*   FTC_Node_Unref                                                      */
+  /*                                                                       */
+  /*   FTC_Font                                                            */
+  /*   FTC_ImageDesc                                                       */
+  /*   FTC_ImageCache                                                      */
+  /*   FTC_ImageCache_New                                                  */
+  /*   FTC_ImageCache_Lookup                                               */
+  /*                                                                       */
+  /*   FTC_SBit                                                            */
+  /*   FTC_SBitCache                                                       */
+  /*   FTC_SBitCache_New                                                   */
+  /*   FTC_SBitCache_Lookup                                                */
+  /*                                                                       */
+  /*                                                                       */
+  /*   FTC_Image_Desc                                                      */
+  /*   FTC_Image_Cache                                                     */
+  /*   FTC_Image_Cache_Lookup                                              */
+  /*                                                                       */
+  /*   FTC_SBit_Cache                                                      */
+  /*   FTC_Sbit_Cache_Lookup                                               */
+  /*                                                                       */
   /*************************************************************************/
 
 
@@ -157,7 +188,6 @@ FT_BEGIN_HEADER
                        ((f)->pix_width << 8)          ^ \
                        ((f)->pix_height)              )
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -190,6 +220,26 @@ FT_BEGIN_HEADER
   /*    with corresponding FT_Size objects.                                */
   /*                                                                       */
   typedef struct FTC_ManagerRec_*  FTC_Manager;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FTC_Node                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    an opaque handle to a cache node object. Each cache node is        */
+  /*    reference-counted. A node with a count of 0 might be flushed       */
+  /*    out of a full cache whenever a lookup request is performed         */
+  /*                                                                       */
+  /*    when you lookup nodes, you have the ability to "acquire" them,     */
+  /*    i.e. increment their reference count. This will prevent the node   */
+  /*    from being flushed out of the cache until you explicitely          */
+  /*    "release" it (see @FTC_Node_Release)                               */
+  /*                                                                       */
+  /*    see @FTC_BitsetCache_Lookup and @FTC_ImageCache_Lookup             */
+  /*                                                                       */
+  typedef struct FTC_NodeRec_*     FTC_Node;
 
 
   /*************************************************************************/
@@ -348,6 +398,24 @@ FT_BEGIN_HEADER
                            FTC_Font     font,
                            FT_Face     *aface,
                            FT_Size     *asize );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FTC_Node_Unref                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    decrement a cache node's internal reference count. when the count  */
+  /*    reaches 0, it is not destroyed but becomes eligible for subsequent */
+  /*    cache flushes..                                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    node    :: cache node handle                                       */
+  /*    manager :: cache manager handle                                    */
+  /*                                                                       */
+  FT_EXPORT( void )
+  FTC_Node_Unref( FTC_Node     node,
+                  FTC_Manager  manager );
 
   /* */
 

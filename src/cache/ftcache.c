@@ -21,8 +21,8 @@
 #include <ft2build.h>
 #include "ftlru.c"
 #include "ftcmanag.c"
+#include "ftccache.c"
 #include "ftcglyph.c"
-#include "ftcchunk.c"
 #include "ftcimage.c"
 #include "ftcsbits.c"
 
