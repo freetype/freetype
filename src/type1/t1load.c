@@ -787,10 +787,11 @@
     FT_Byte*  limit = parser->root.limit;
 
 
-    /* the binary data has the following format */
-    /*                                          */
-    /* `size' [white*] RD white ....... ND      */
-    /*                                          */
+    /* the binary data has one of the following formats */
+    /*                                                  */
+    /*   `size' [white*] RD white ....... ND            */
+    /*   `size' [white*] -| white ....... |-            */
+    /*                                                  */
 
     T1_Skip_Spaces( parser );
 
@@ -1116,7 +1117,7 @@
       /* (bound to `noaccess put') or by two separate tokens:  */
       /* `noaccess' & `put'.  We position the parser right     */
       /* before the next `dup', if any.                        */
-      T1_Skip_PS_Token( parser );   /* `NP' or `I' or `noaccess' */
+      T1_Skip_PS_Token( parser );   /* `NP' or `|' or `noaccess' */
       T1_Skip_Spaces  ( parser );
 
       if ( ft_strncmp( (char*)parser->root.cursor, "put", 3 ) == 0 )
@@ -1487,7 +1488,8 @@
               FT_Byte*   keyword_flags )
   {
     T1_Parser  parser = &loader->parser;
-    FT_Byte*   limit;
+    FT_Byte   *limit, *start_binary;
+    FT_Bool    have_integer;
 
 
     parser->root.cursor = base;
@@ -1543,6 +1545,7 @@
             cur2 = parser->root.cursor;
         }
         parser->root.cursor = cur2;
+        have_integer = 0;
       }
 
       /* look for `eexec' */
@@ -1554,6 +1557,43 @@
       else if ( *cur == 'c' && cur + 9 < limit &&
                 ft_strncmp( (char*)cur, "closefile", 9 ) == 0 )
         break;
+
+      /* check whether we have an integer */
+      else if ( ft_isdigit( *cur ) )
+      {
+        start_binary = cur;
+        T1_Skip_PS_Token( parser );
+        have_integer = 1;
+      }
+
+      /* in valid Type 1 fonts we don't see `RD' or `-|' directly */
+      /* since those tokens are handled by parse_subrs and        */
+      /* parse_charstrings                                        */
+      else if ( *cur == 'R' && cur + 6 < limit && *(cur + 1) == 'D' &&
+                have_integer )
+      {
+        FT_Long   s;
+        FT_Byte*  b;
+
+
+        parser->root.cursor = start_binary;
+        if ( !read_binary_data( parser, &s, &b ) )
+          return T1_Err_Invalid_File_Format;
+        have_integer = 0;
+      }
+
+      else if ( *cur == '-' && cur + 6 < limit && *(cur + 1) == '|' &&
+                have_integer )
+      {
+        FT_Long   s;
+        FT_Byte*  b;
+
+
+        parser->root.cursor = start_binary;
+        if ( !read_binary_data( parser, &s, &b ) )
+          return T1_Err_Invalid_File_Format;
+        have_integer = 0;
+      }
 
       /* look for immediates */
       else if ( *cur == '/' && cur + 2 < limit )
@@ -1582,10 +1622,7 @@
 
             name = (FT_Byte*)keyword->ident;
             if ( !name )
-            {
-              T1_Skip_PS_Token( parser );
               break;
-            }
 
             if ( cur[0] == name[0]                      &&
                  len == ft_strlen( (const char *)name ) &&
@@ -1614,9 +1651,14 @@
             keyword_flag++;
           }
         }
+
+        have_integer = 0;
       }
       else
+      {
         T1_Skip_PS_Token( parser );
+        have_integer = 0;
+      }
 
       T1_Skip_Spaces( parser );
     }
@@ -1732,7 +1774,7 @@
 #endif
       if ( !loader.charstrings.init )
       {
-        FT_ERROR(( "T1_Open_Face: no charstrings array in face!\n" ));
+        FT_ERROR(( "T1_Open_Face: no `/CharStrings' array in face!\n" ));
         error = T1_Err_Invalid_File_Format;
       }
 

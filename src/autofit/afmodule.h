@@ -14,4 +14,3 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __AFMODULE_H__ */
-

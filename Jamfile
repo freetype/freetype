@@ -1,4 +1,4 @@
-# FreeType 2 top Jamfile (c) 2001, 2002, 2003 David Turner
+# FreeType 2 top Jamfile (c) 2001, 2002, 2003, 2004 David Turner
 #
 
 # The HDRMACRO is already defined in FTJam and is used to add

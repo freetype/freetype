@@ -1,3 +1,11 @@
+2003-02-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_dict): Handle `RD' and `-|' commands
+	outside of /Subrs or /CharStrings.  This can happen if there is
+	additional code manipulating those two arrays so that FreeType
+	doesn't recognize them properly.
+	(T1_Open_Face): Improve an error message.
+
 2004-02-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_charstrings): Exit immediately if
@@ -9,16 +17,28 @@
 
 	* src/sfnt/Jamfile: Removing `ttcmap' from the list of sources.
 
-	* src/cache/*, include/freetype/cache/*: Fixing a bug after heavy
-	testing.  The current sources are now `release candidates' for the
-	final version of the cache sub-system.
+	* include/freetype/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP)
+	<FTC_INLINE>: Provide macro version which doesn't use inline code.
+	* include/freetype/cache/ftcglyph.h (FTC_GCACHE_LOOKUP_CMP)
+	<FTC_INLINE>: Ditto.
+	Use FTC_MRULIST_LOOKUP_CMP.
+	* include/freetype/cache/ftcmru.h (FTC_MRULIST_LOOKUP_CMP): New
+	macro.
+	(FTC_MRULIST_LOOKUP): Use it.
+
+	* src/cache/Jamfile (_sources), src/cache/descrip.mms: Updated.
+	* src/cache/ftcbasic.c: Fix compiler warnings.
+	* src/cache/ftcmanag.c (FTC_Manager_LookupSize,
+	FTC_Manager_LookupFace) <FTC_INLINE>: Use FTC_MRULIST_LOOKUP_CMP.
+	* src/cache/ftcmru.c (FTC_MruList_Find): Fix a bug (found after
+	heavy testing).
 
 	* Jamfile: Updating `refdoc' target, and adding `autohint' to the
 	list of modules to build.  Both the autohinter and autofitter will
 	be built by default.  But which one will be used is determined by
 	the content of `ftmodule.h'.
 
-	* src/autofit/*: Much updates, but the code is still buggy...
+	* src/autofit/*: Many updates, but the code is still buggy...
 
 2004-01-31  Werner Lemberg  <wl@gnu.org>
 
