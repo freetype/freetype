@@ -197,9 +197,15 @@
       goto Exit;
 
     if ( face->root.face_flags & FT_FACE_FLAG_SCALABLE )
-      error = TT_Load_Locations( face, stream ) ||
-              TT_Load_CVT      ( face, stream ) ||
-              TT_Load_Programs ( face, stream );
+      {
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+        if ( !face->root.incremental_interface )
+          error = TT_Load_Locations( face, stream );
+		if ( !error )
+#endif
+          error = TT_Load_CVT      ( face, stream ) ||
+                  TT_Load_Programs ( face, stream );
+      }
 
     /* initialize standard glyph loading routines */
     TT_Init_Glyph_Loading( face );
