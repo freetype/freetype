@@ -108,10 +108,10 @@ FT_BEGIN_HEADER
   /*    FTC_FaceID                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A generic pointer type that is used to identity face objects.  The */
+  /*    An opaque pointer type that is used to identity face objects.  The */
   /*    contents of such objects is application-dependent.                 */
   /*                                                                       */
-  typedef FT_Pointer  FTC_FaceID;
+  typedef struct FTC_FaceIDRec_*    FTC_FaceID;
 
 
   /*************************************************************************/
@@ -401,21 +401,6 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* @type:                                                                */
-  /*    FTC_CMapDesc                                                       */
-  /*                                                                       */
-  /* @description:                                                         */
-  /*    A handle to an @FTC_CMapDescRec structure used to describe a given */
-  /*    charmap in a charmap cache.                                        */
-  /*                                                                       */
-  /*    Each @FTC_CMapDesc describes which charmap (of which @FTC_FaceID)  */
-  /*    we want to use in @FTC_CMapCache_Lookup.                           */
-  /*                                                                       */
-  typedef struct FTC_CMapDescRec_*  FTC_CMapDesc;
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* @function:                                                            */
   /*    FTC_CMapCache_New                                                  */
   /*                                                                       */
@@ -442,7 +427,7 @@ FT_BEGIN_HEADER
 
  /* retrieve the index of a given charmap
   */
-  FT_EXPORT( FT_UInt )
+  FT_EXPORT( FT_Int )
   FT_Get_CharMap_Index( FT_CharMap  charmap );
 
   /*************************************************************************/
@@ -457,21 +442,19 @@ FT_BEGIN_HEADER
   /* @input:                                                               */
   /*    cache     :: A charmap cache handle.                               */
   /*                                                                       */
-  /*    cmap_desc :: A charmap descriptor handle.                          */
+  /*    face_id    :: source face id                                       */
+  /*                                                                       */
+  /*    cmap_index :: index of charmap in source face                      */
   /*                                                                       */
   /*    char_code :: The character code (in the corresponding charmap).    */
   /*                                                                       */
   /* @return:                                                              */
   /*    Glyph index.  0 means "no glyph".                                  */
   /*                                                                       */
-  /* @note:                                                                */
-  /*    This function doesn't return @FTC_Node handles, since there is no  */
-  /*    real use for them with typical uses of charmaps.                   */
-  /*                                                                       */
   FT_EXPORT( FT_UInt )
   FTC_CMapCache_Lookup( FTC_CMapCache  cache,
                         FTC_FaceID     face_id,
-                        FT_UInt        cmap_index,
+                        FT_Int         cmap_index,
                         FT_UInt32      char_code );
 
 
@@ -480,7 +463,7 @@ FT_BEGIN_HEADER
   /* <Section>                                                             */
   /*    cache_subsystem                                                    */
   /*                                                                       */
-  /*************************************************************************/
+  /**********************************************************************/
 
 
   /*************************************************************************/

@@ -53,6 +53,7 @@
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
 
+#define xxFT_DEBUG_ERROR
 
 FT_BEGIN_HEADER
 
@@ -65,7 +66,6 @@ FT_BEGIN_HEADER
 
   } FTC_MruNodeRec;
 
-
   FT_EXPORT( void )
   FTC_MruNode_Prepend( FTC_MruNode  *plist,
                        FTC_MruNode   node );
@@ -77,7 +77,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FTC_MruNode_Remove( FTC_MruNode  *plist,
                       FTC_MruNode   node );
-
 
   typedef struct FTC_MruListRec_*              FTC_MruList;
 
@@ -107,7 +106,6 @@ FT_BEGIN_HEADER
 
   } FTC_MruListClassRec;
 
-
   typedef struct FTC_MruListRec_
   {
     FT_UInt                  num_nodes;
@@ -134,19 +132,19 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FTC_MruList_Done( FTC_MruList  list );
 
-
   FT_EXPORT( FTC_MruNode )
-  FTC_MruList_Lookup( FTC_MruList   list,
-                      FT_Pointer    key );
-
-  FT_EXPORT( void )
-  FTC_MruList_Up( FTC_MruList    list,
-                  FTC_MruNode    node );
+  FTC_MruList_Find( FTC_MruList  list,
+                    FT_Pointer    key );
 
   FT_EXPORT( FT_Error )
   FTC_MruList_New( FTC_MruList    list,
                    FT_Pointer     key,
                    FTC_MruNode   *anode );
+
+  FT_EXPORT( FT_Error )
+  FTC_MruList_Lookup( FTC_MruList   list,
+                      FT_Pointer    key,
+                      FTC_MruNode  *pnode );
 
   FT_EXPORT( void )
   FTC_MruList_Remove( FTC_MruList  list,

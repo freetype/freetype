@@ -235,11 +235,10 @@
     FT_ULong   size;
 
 
+    FT_ASSERT( snode->count <= FTC_SBITS_ITEM_PER_NODE );
+
     /* the node itself */
     size = sizeof ( *snode );
-
-    /* the sbit records */
-    size += count * sizeof( FTC_SBitRec );
 
     for ( ; count > 0; count--, sbit++ )
     {

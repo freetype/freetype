@@ -19,6 +19,7 @@
 #ifndef __FTCCACHE_H__
 #define __FTCCACHE_H__
 
+
 #include FT_CACHE_INTERNAL_MRU_H
 
 FT_BEGIN_HEADER
@@ -64,8 +65,8 @@ FT_BEGIN_HEADER
 #define FTC_NODE( x )    ( (FTC_Node)(x) )
 #define FTC_NODE_P( x )  ( (FTC_Node*)(x) )
 
-#define FTC_NODE__MRU_NEXT(x)  FTC_NODE( (x)->mru.next )
-#define FTC_NODE__MRU_PREV(x)  FTC_NODE( (x)->mru.prev )
+#define FTC_NODE__NEXT(x)  FTC_NODE( (x)->mru.next )
+#define FTC_NODE__PREV(x)  FTC_NODE( (x)->mru.prev )
 
   /*************************************************************************/
   /*                                                                       */

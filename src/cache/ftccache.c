@@ -29,7 +29,7 @@
 #define FTC_HASH_SUB_LOAD  ( FTC_HASH_MAX_LOAD - FTC_HASH_MIN_LOAD )
 
 /* this one _must_ be a power of 2! */
-#define FTC_HASH_INITIAL_SIZE  512
+#define FTC_HASH_INITIAL_SIZE  8
 
 
   /*************************************************************************/
@@ -76,9 +76,6 @@
   static void
   ftc_cache_resize( FTC_Cache  cache )
   {
-#if 1
-    FT_UNUSED(cache);
-#else
     for (;;)
     {
       FTC_Node   node, *pnode;
@@ -173,7 +170,6 @@
       else /* the hash table is balanced */
         break;
     }
-#endif
   }
 
 
@@ -376,6 +372,8 @@
                  FTC_Node     node )
   {
     node->hash = hash;
+    node->cache_index = (FT_UInt16) cache->index;
+    node->ref_count   = 0;
 
     ftc_node_hash_link( node, cache );
     ftc_node_mru_link( node, cache->manager );
@@ -461,9 +459,20 @@
     *
     */
     error = cache->clazz.node_new( &node, query, cache );
-    if ( !error )
-      goto AddNode;
+    if ( error )
+      goto FlushCache;
 
+  AddNode:
+   /* don't assume that the cache has the same number of buckets, since
+    * our allocation request might have triggered global cache flushing
+    */
+    ftc_cache_add( cache, hash, node );
+
+  Exit:
+    *anode = node;
+    return error;
+
+  FlushCache:
     node = NULL;
     if ( error != FT_Err_Out_Of_Memory )
       goto Exit;
@@ -495,20 +504,7 @@
         tries = count;
       }
     }
-
-  AddNode:
-    node->ref_count   = 0;
-    node->cache_index = (FT_UInt16) cache->index;
-    node->hash        = hash;
-
-   /* don't assume that the cache has the same number of buckets, since
-    * our allocation request might have triggered global cache flushing
-    */
-    ftc_cache_add( cache, hash, node );
-
-  Exit:
-    *anode = node;
-    return error;
+    goto AddNode;
   }
 
 
@@ -565,6 +561,5 @@
 
     ftc_cache_resize( cache );
   }
-
 
 /* END */

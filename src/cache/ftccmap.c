@@ -200,7 +200,7 @@
   FT_EXPORT_DEF( FT_UInt )
   FTC_CMapCache_Lookup( FTC_CMapCache  cmap_cache,
                         FTC_FaceID     face_id,
-                        FT_UInt        cmap_index,
+                        FT_Int         cmap_index,
                         FT_UInt32      char_code )
   {
     FTC_Cache         cache = FTC_CACHE( cmap_cache );
@@ -218,7 +218,7 @@
     }
 
     query.face_id    = face_id;
-    query.cmap_index = cmap_index;
+    query.cmap_index = (FT_UInt)cmap_index;
     query.char_code  = char_code;
 
     hash = FTC_CMAP_HASH( face_id, cmap_index, char_code );
