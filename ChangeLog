@@ -1,3 +1,7 @@
+2004-04-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/lzw/zopen.c: Don't include sys/param.h and sys/stat.h.
+
 2004-04-10  Werner Lemberg  <wl@gnu.org>
 
 	* src/lzw/ftlzw.c: Include zopen.h dependent on
