@@ -149,13 +149,19 @@
  /*                                                                        */
  /* Voila, here comes robust though tolerant font format checking :-)      */
  /*                                                                        */
-  static FT_Error
+ /* When checking directory entries ignore the tables 'glyx' and 'locx'    */
+ /* which are hacked-out versions of 'glyf' and 'loca' in some PostScript  */
+ /* Type 42 fonts, and will generally be invalid.                          */
+ /*                                                                        */
+ static FT_Error
   sfnt_dir_check( FT_Stream    stream,
                   FT_ULong     offset,
                   FT_UInt      num_tables )
-  {
+   {
     FT_Error  error;
     FT_UInt   nn, has_head = 0;
+	const FT_ULong glyx_tag = FT_MAKE_TAG('g','l','y','x');
+	const FT_ULong locx_tag = FT_MAKE_TAG('l','o','c','x');
 
     static const FT_Frame_Field  sfnt_dir_entry_fields[] =
     {
@@ -194,7 +200,8 @@
       if ( FT_STREAM_READ_FIELDS( sfnt_dir_entry_fields, &table ) )
         goto Bad_Format;
 
-      if ( offset + table.Offset + table.Length > stream->size )
+      if ( offset + table.Offset + table.Length > stream->size &&
+		   table.Tag != glyx_tag && table.Tag != locx_tag )
         goto Bad_Format;
 
       if ( table.Tag == TTAG_head )
