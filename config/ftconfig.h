@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    ANSI-specific configuration file (specification only).               */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -19,17 +19,20 @@
   /*************************************************************************/
   /*                                                                       */
   /* This header file contains a number of macro definitions that are used */
-  /* by the rest of the engine.  Porters are free to copy this file and    */
-  /* adapt it to suit their own system.                                    */
+  /* by the rest of the engine. Most of the macros here are automatically  */
+  /* determined at compile time, and you should not need to change it to   */
+  /* port FreeType, except to compile the library with a non ANSI compiler */
   /*                                                                       */
-  /* IMPORTANT NOTE:                                                       */
+  /* Note however that if some specific modifications are needed, we       */
+  /* advise you to place a modified copy in your build directory.          */
   /*                                                                       */
-  /*    Porters, read carefully the comments in `ftsys.h' before trying to */
-  /*    port this file to your system.  It contains many essential         */
-  /*    remarks, and will ease your work greatly.                          */
+  /* The build directory is usually "freetype/config/<system>", and        */
+  /* contains system-specific files that are always included first when    */
+  /* building the library..                                                */
+  /*                                                                       */
+  /* This ANSI version should stay in "freetype/config"                    */
   /*                                                                       */
   /*************************************************************************/
-
 
 #ifndef FTCONFIG_H
 #define FTCONFIG_H
@@ -138,10 +141,11 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* GCC provides the non-ANSI 'long long' 64-bit type.  You can activate  */
-  /* it by defining the FTCALC_USE_LONG_LONG macro in `ftconfig.h'.  Note  */
-  /* that this will produce many -ansi warnings during library             */
-  /* compilation.                                                          */
+  /* many compilers provide the non-ANSI 'long long' 64-bit type.  You can */
+  /* activate it by defining the FTCALC_USE_LONG_LONG macro in `ftoption.h'*/
+  /* Note that this will produce many -ansi warnings during library        */
+  /* compilation, and that in many cases, the generated code will not be   */
+  /* smaller or faster !!                                                  */
   /*                                                                       */
 #ifdef FTCALC_USE_LONG_LONG
 

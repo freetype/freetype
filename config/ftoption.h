@@ -1,3 +1,20 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftoption.h                                                             */
+/*                                                                         */
+/*    User-selectable configuration macros.                                */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used        */
+/*  modified and distributed under the terms of the FreeType project       */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 #ifndef FTOPTION_H
 #define FTOPTION_H
 
@@ -6,9 +23,16 @@
   /*                 USER-SELECTABLE CONFIGURATION MACROS                  */
   /*                                                                       */
   /* These macros can be toggled by developers to enable or disable        */
-  /* certain aspects of FreeType.  This file contains macros that apply to */
-  /* all of FreeType.  Driver-specific configurations are placed in each   */
-  /* driver directory (e.g. `freetype/drivers/ttlib/ttconfig.h').          */
+  /* certain aspects of FreeType. This is a default file, where all major  */
+  /* options are enabled.                                                  */
+  /*                                                                       */
+  /* Note that if some modifications are required for your build, we       */
+  /* advise you to put a modified copy of this file in your build          */
+  /* directory, rather than modifying it in-place.                         */
+  /*                                                                       */
+  /* The build directory is normally "freetype/config/<system>" and        */
+  /* contains build or system-specific files that are included in          */
+  /* priority when building the library.                                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -27,7 +51,12 @@
   /*   with an alternate glyph format, this will reduce the size of the    */
   /*   base layer code.                                                    */
   /*                                                                       */
+  /*   Note that a few Type 1 fonts, as well as Windows "Vector" fonts     */
+  /*   use a vector "plotter" format that isn't supported when this        */
+  /*   macro is undefined..                                                */
+  /*                                                                       */
 #define FT_CONFIG_OPTION_ALTERNATE_GLYPH_FORMATS
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -54,6 +83,7 @@
   /*                                                                       */
 #define FT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
+
   /*************************************************************************/
   /*                                                                       */
   /* Postscript Names to Unicode Values support                            */
@@ -71,12 +101,14 @@
   /*                                                                       */
 #define FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
 
+
   /*************************************************************************/
   /*                                                                       */
-  /* GCC provides the non-ANSI `long long' 64-bit type.  You can activate  */
-  /* it by defining the FTCALC_USE_LONG_LONG macro here.  Note however     */
-  /* that we did not experience any improvement in speed with gcc, and     */
-  /* that the final code seems bigger when linked.                         */
+  /* many compilers provide the non-ANSI 'long long' 64-bit type.  You can */
+  /* activate it by defining the FTCALC_USE_LONG_LONG macro in `ftoption.h'*/
+  /* Note that this will produce many -ansi warnings during library        */
+  /* compilation, and that in many cases, the generated code will not be   */
+  /* smaller or faster !!                                                  */
   /*                                                                       */
 #undef FTCALC_USE_LONG_LONG
 
@@ -148,23 +180,12 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* Define this configuration macro whenever you want to build a version  */
-  /* of FreeType that does not include a default `system' component.       */
-  /*                                                                       */
-  /* Note that this will prevent the compilation of `ftinit', hence the    */
-  /* function FT_Init_FreeType                                             */
-  /*                                                                       */
-#undef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /*    The size in bytes of the render pool used by the scan-line         */
   /*    converter to do all of its work.                                   */
   /*                                                                       */
   /*    This must be greater than 4 Kb                                     */
   /*                                                                       */
-#define FT_RENDER_POOL_SIZE   32768
+#define FT_RENDER_POOL_SIZE   8192
 
 
   /*************************************************************************/
@@ -175,6 +196,9 @@
   /*    single FreeType library object.  8 seems to be a good choice due   */
   /*    to the relative low actual number of drivers ;-)                   */
   /*                                                                       */
+  /*    If you don't intend to register new drivers at runtime, you        */
+  /*    certainly do not need to change this value..                       */
+  /*                                                                       */
 #define FT_MAX_DRIVERS  8
 
 
@@ -184,6 +208,9 @@
   /*                                                                       */
   /*    The maximum number of extensions that can be registered in a       */
   /*    single font driver. 8 seems to be a good choice for now..          */
+  /*                                                                       */
+  /*    If you don't know what this means, you certainly do not need to    */
+  /*    change this value..                                                */
   /*                                                                       */
 #define FT_MAX_EXTENSIONS  8
 
@@ -196,9 +223,7 @@
   /*    in a given library instance. 8 seems to be a good choice due to    */
   /*    the relatively low number of current formats ;-)                   */
   /*                                                                       */
-
 #define FT_MAX_GLYPH_FORMATS  8
-
 
 
 #endif /* FTOPTION_H */

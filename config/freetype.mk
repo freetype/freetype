@@ -23,8 +23,8 @@
 #
 include $(TOP)/config/modules.mk
 
-# The targets `objects', `library' and `multiple' are defined
-# at the end of this Makefile when all rules have been included..
+# The targets `objects', `library' are defined at the end of
+# this Makefile when all rules have been included..
 #
 .PHONY: build_freetype objects library
 
@@ -59,10 +59,11 @@ BASE_   := $(BASE_DIR)$(SEP)
 OBJ_    := $(OBJ_DIR)$(SEP)
 LIB_    := $(LIB_DIR)$(SEP)
 PUBLIC_ := $(TOP)$(SEP)include$(SEP)
+CONFIG_ := $(TOP)$(SEP)config$(SEP)
 
 # The name of the final library file.
 #
-FT_LIBRARY := $(LIB_DIR)$(SEP)$(LIBRARY).$A
+FT_LIBRARY := $(LIB_)$(LIBRARY).$A
 
 
 # include paths
@@ -70,10 +71,10 @@ FT_LIBRARY := $(LIB_DIR)$(SEP)$(LIBRARY).$A
 # IMPORTANT NOTE: The architecture-dependent directory must ALWAYS be placed
 #                 in front of the include list.  Porters are then able to put
 #                 their own version of some of the FreeType components in
-#                 the 'freetype/arch/<system>' directory, as these files
+#                 the 'freetype/config/<system>' directory, as these files
 #                 will override the default sources.
 #
-INCLUDES := $(BUILD) $(TOP)$(SEP)include $(INCLUDES)
+INCLUDES := $(BUILD) $(TOP)$(SEP)config $(TOP)$(SEP)include $(INCLUDES)
 
 INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 
@@ -95,13 +96,19 @@ DRIVERS_LIST    :=
 OBJECTS_LIST    :=
 
 # System-specific component - this must be defined in this Makefile
-# for easy updates
+# for easy updates. The default Ansi ftsystem.c is located in
+# 'freetype/config/ftsystem.c'. However, some system-specific
+# configuration might define FTSYS_SRC to fetch it in other places,
+# like 'freetype/config/<system>/ftsystem.c'
 #
 # BASE_H is defined in src/base/rules.mk and contains the list of all
 # base layer header files.
 #
-FTSYS_SRC = $(BUILD)$(SEP)ftsystem.c
-FTSYS_OBJ = $(OBJ_DIR)$(SEP)ftsystem.$O
+ifndef FTSYS_SRC
+FTSYS_SRC = $(BASE_)ftsystem.c
+endif
+
+FTSYS_OBJ = $(OBJ_)ftsystem.$O
 
 OBJECTS_LIST += $(FTSYS_OBJ)
 
@@ -111,7 +118,8 @@ $(FTSYS_OBJ): $(FTSYS_SRC) $(BASE_H)
 
 # ftdebug component
 #
-#
+# FTDebug contains code used to print traces and errors. It is
+# normally empty for a release build (see ftoption.h)
 #
 
 FTDEBUG_SRC = $(BASE_)ftdebug.c
@@ -144,14 +152,15 @@ include $(wildcard $(SRC)/*/rules.mk)
 #   The set of initial drivers is determined by the driver Makefiles
 #   includes above.  Each driver Makefile updates the FTINIT_xxxx lists
 #   which contain additional include paths and macros used to compile the
-#   single 'ftapi.c' source.
+#   single 'ftinit.c' source.
 #
-FTINIT_SRC := $(BASE_DIR)$(SEP)ftinit.c
+FTINIT_SRC := $(BASE_)ftinit.c
 FTINIT_OBJ := $(OBJ_)ftinit.$O
 
-$(FTINIT_OBJ): $(FTINIT_SRC) $(BASE_H) $(FTINIT_DRIVER_H) $(FT_MODULE_LIST)
-	$(FT_COMPILE) $(FTINIT_DRIVER_PATHS:%=$I%) \
-                      $(FTINIT_DRIVER_MACROS:%=$D%) $T$@ $<
+OBJECTS_LIST += $(FTINIT_OBJ)
+
+$(FTINIT_OBJ): $(FTINIT_SRC) $(BASE_H) $(FT_MODULE_LIST)
+	$(FT_COMPILE) $T$@ $<
 
 
 # All FreeType library objects
@@ -159,11 +168,19 @@ $(FTINIT_OBJ): $(FTINIT_SRC) $(BASE_H) $(FTINIT_DRIVER_H) $(FT_MODULE_LIST)
 #   By default, we include the base layer extensions.  These could be
 #   ommitted on builds which do not want them.
 #
-OBJ_M = $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M) \
-        $(FTINIT_OBJ)
+OBJ_M = $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M)
 
-OBJ_S = $(BASE_OBJ_S) $(BASE_EXT_OBJ) $(DRV_OBJS_S) \
-        $(FTINIT_OBJ)
+OBJ_S = $(BASE_OBJ_S) $(BASE_EXT_OBJ) $(DRV_OBJS_S)
+
+# the target 'multi' on the Make command line indicates that we want
+# to compile each source file independently..
+#
+# Otherwise, each module/driver is compiled in a single object file
+# through source file inclusion (see 'src/base/ftbase.c' or
+# 'src/truetype/truetype.c' for examples)
+#
+
+BASE_OBJECTS := $(OBJECTS_LIST)
 
 ifneq ($(findstring multi,$(MAKECMDGOALS)),)
 OBJECTS_LIST += $(OBJ_M)
@@ -183,7 +200,7 @@ library: $(FT_LIBRARY)
 # on all systems though..
 #
 clean_freetype_std:
-	-$(DELETE) $(OBJ_S) $(OBJ_M)
+	-$(DELETE) $(BASE_OBJECTS) $(OBJS_M) $(OBJS_S)
 
 distclean_freetype_std: clean_freetype_std
 	-$(DELETE) $(FT_LIBRARY)
@@ -199,6 +216,8 @@ clean_freetype_dos:
 distclean_freetype_dos: clean_freetype_dos
 	-del $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY)) 2> nul
 
+# remove configuration file (used for distclean)
+#
 remove_config_mk:
 	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(CONFIG_MK))
 

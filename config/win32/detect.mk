@@ -43,38 +43,45 @@ PLATFORM := win32
 DELETE   := del
 COPY     := copy
 
-CONFIG_FILE := Makefile.gcc  # gcc Makefile by default - aren't we biased ;-)
+CONFIG_FILE := w32-gcc.mk  # gcc Makefile by default - aren't we biased ;-)
 SEP         := /
 ifeq ($(CC),cc)
 CC          := gcc
 endif
 
 ifneq ($(findstring visualc,$(MAKECMDGOALS)),)     # Visual C/C++
-CONFIG_FILE := Makefile.vcc
+CONFIG_FILE := w32-vcc.mk
 SEP         := $(BACKSLASH)
 CC          := cl
 visualc: setup
 endif
 
 ifneq ($(findstring watcom,$(MAKECMDGOALS)),)      # Watcom C/C++
-CONFIG_FILE := Makefile.wat
+CONFIG_FILE := w32-wat.mk
 SEP         := $(BACKSLASH)
 CC          := wcc386
 watcom: setup
 endif
 
 ifneq ($(findstring visualage,$(MAKECMDGOALS)),)   # Visual Age C++
-CONFIG_FILE := Makefile.icc
+CONFIG_FILE := w32-icc.mk
 SEP         := $(BACKSLASH)
 CC          := icc
 visualage: setup
 endif
 
 ifneq ($(findstring lcc,$(MAKECMDGOALS)),)         # LCC-Win32
-CONFIG_FILE := Makefile.lcc
+CONFIG_FILE := w32-lcc.mk
 SEP         := $(BACKSLASH)
 CC          := lcc
 lcc: setup
+endif
+
+ifneq ($(findstring devel,$(MAKECMDGOALS)),)
+CONFIG_FILE := w32-dev.mk
+CC          := gcc
+SEP         := /
+devel: setup
 endif
 
 CONFIG_RULES := $(TOP)\config\win32\$(CONFIG_FILE)

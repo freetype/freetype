@@ -17,7 +17,7 @@
 #*  OTHER MAKEFILES.                                                        *
 #*                                                                          *
 #*  This file is in charge of handling the generation of the modules list   *
-#*  file, normally located in `config/<platform>/modules'.                  *
+#*  file, normally located in `config/ftmodule.h'                           *
 #*                                                                          *
 #****************************************************************************
 
@@ -26,7 +26,9 @@
 # MODULE_LIST, as it name suggests, indicate where the modules list
 # reside. For now, it is in $(BUILD)/ftmodule.h
 #
-FT_MODULE_LIST := $(BUILD)$(SEP)ftmodule.h
+ifndef FT_MODULE_LIST
+FT_MODULE_LIST := $(TOP)$(SEP)config$(SEP)ftmodule.h
+endif
 
 # To build the modules list, we invoke the `make_module_list' target
 #
@@ -56,7 +58,7 @@ endif
 OPEN_DRIVER  := $(OPEN_MODULE)FT_DRIVER(
 CLOSE_DRIVER := )$(CLOSE_MODULE)
 
-ECHO_DRIVER      := @echo "* driver:  
+ECHO_DRIVER      := @echo "* driver: 
 ECHO_DRIVER_DESC := (
 ECHO_DRIVER_DONE := )"
 
