@@ -1198,14 +1198,17 @@
     FT_UInt       count  = table->numNameRecords;
 
 
-    for ( ; count > 0; count--, entry++ )
+    if ( table->names )
     {
-      FT_FREE( entry->string );
-      entry->stringLength = 0;
-    }
+      for ( ; count > 0; count--, entry++ )
+      {
+        FT_FREE( entry->string );
+        entry->stringLength = 0;
+      }
 
-    /* free strings table */
-    FT_FREE( table->names );
+      /* free strings table */
+      FT_FREE( table->names );
+    }
 
     table->numNameRecords = 0;
     table->format         = 0;
