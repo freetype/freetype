@@ -2,6 +2,13 @@
 
 	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
 
+2002-06-21  David Turner  <david@freetype.org>
+
+
+	* Version 2.1.2 released.
+	=========================
+
+
 2002-06-21  Roberto Alameda  <ojancano@geekmail.de>.
 
 	* include/freetype/internal/t42types.h (T42_Font): Removed since
@@ -158,6 +165,13 @@
 	Initialize more fields of `glyph'.
 
 	* builds/win32/visualc/freetype.dsp: Updated.
+
+2002-06-09  David Turner  <david@freetype.org>
+
+
+	* Version 2.1.1 released.
+	=========================
+
 
 2002-06-08  Juliusz Chroboczek  <jch@pps.jussieu.fr>
 
