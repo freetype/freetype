@@ -327,7 +327,7 @@
   static FT_Int
   cff_ps_has_glyph_names( FT_Face  face )
   {
-    return face->face_flags & FT_FACE_FLAG_GLYPH_NAMES;
+    return ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES ) > 0;
   }
 
 
