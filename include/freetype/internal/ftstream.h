@@ -165,6 +165,7 @@ FT_BEGIN_HEADER
 
 #define FT_GET_OFF3_LE( p )                            \
           ( (long) ( ( (signed char)(p)[2] << 16 ) |   \
+                                  ( (p)[1] <<  8 ) |   \
                                     (p)[0]         ) )
 
 #define FT_GET_LONG_LE( p )                            \
