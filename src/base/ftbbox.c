@@ -425,7 +425,8 @@
         (FT_Outline_MoveTo_Func) BBox_Move_To,
         (FT_Outline_LineTo_Func) BBox_Move_To,
         (FT_Outline_ConicTo_Func)BBox_Conic_To,
-        (FT_Outline_CubicTo_Func)BBox_Cubic_To
+        (FT_Outline_CubicTo_Func)BBox_Cubic_To,
+        0, 0
       };
 
       FT_Error   error;

@@ -76,10 +76,10 @@
   /*    itself is finalized.                                               */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*   ext  :: A typeless pointer to the extension data.                   */
+  /*    ext  :: A typeless pointer to the extension data.                  */
   /*                                                                       */
-  /*   face :: A handle to the source face object the extension is         */
-  /*           associated with.                                            */
+  /*    face :: A handle to the source face object the extension is        */
+  /*            associated with.                                           */
   /*                                                                       */
   typedef void  (*FT_Extension_Finalizer)( void*    ext,
                                            FT_Face  face );
