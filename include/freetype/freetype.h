@@ -2187,7 +2187,7 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Vector_Transform( FT_Vector*  vector,
+  FT_EXPORT_DEF(void)  FT_Vector_Transform( FT_Vector*  vec,
                                             FT_Matrix*  matrix );
 
 
