@@ -460,6 +460,10 @@
     FT_UInt        count;
 
 #ifdef DEBUG_HINTER
+    PSH_Dimension  dim   = &globals->dimension[vertical];
+    FT_Fixed       scale = dim->scale_mult;
+    FT_Fixed       delta = dim->scale_delta;
+
     if ( ps_debug_no_vert_hints && vertical )
     {
       ps_simple_scale( table, scale, delta, vertical );

@@ -752,7 +752,6 @@
             if ( point == last )
               break;
           }
-
         }
 
         last   = point;

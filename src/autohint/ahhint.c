@@ -1296,6 +1296,10 @@
       slot->format  = ft_glyph_format_outline;
     }
 
+#ifdef DEBUG_HINTER
+    ah_debug_hinter = hinter;
+#endif
+
   Exit:
     return error;
   }
