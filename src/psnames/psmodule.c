@@ -39,11 +39,6 @@
   static FT_UInt32
   ps_unicode_value( const char*  glyph_name )
   {
-    FT_Int  n;
-    char    first = glyph_name[0];
-    char    temp[64];
-
-
     /* If the name begins with `uni', then the glyph name may be a */
     /* hard-coded unicode character code.                          */
     if ( glyph_name[0] == 'u' &&
@@ -127,37 +122,22 @@
     /* look for a non-initial dot in the glyph name in order to */
     /* sort-out variants like `A.swash', `e.final', etc.        */
     {
-      const char*  p;
-      int          len;
+      const char*  p   = glyph_name;
+      const char*  dot = NULL;
 
 
-      p = glyph_name;
-
-      while ( *p && *p != '.' )
-        p++;
-
-      len = (int)( p - glyph_name );
-
-      if ( *p && len < 64 )
+      for ( ; *p; p++ )
       {
-        ft_strncpy( temp, glyph_name, len );
-        temp[len]  = 0;
-        glyph_name = temp;
+        if ( *p == '.' && p > glyph_name && !dot )
+          dot = p;
       }
+
+      if ( !dot )
+        dot = p;
+
+      /* now, look up the glyph in the Adobe Glyph List */
+      return ft_get_adobe_glyph_index( glyph_name, dot );
     }
-
-    /* now, look up the glyph in the Adobe Glyph List */
-    for ( n = 0; n < NUM_ADOBE_GLYPHS; n++ )
-    {
-      const char*  name = sid_standard_names[n];
-
-
-      if ( first == name[0] && ft_strcmp( glyph_name, name ) == 0 )
-        return ps_names_to_unicode[n];
-    }
-
-    /* not found, there is probably no Unicode value for this glyph name */
-    return 0;
   }
 
 
@@ -320,17 +300,20 @@
   static const char*
   ps_get_macintosh_name( FT_UInt  name_index )
   {
-    if ( name_index >= 258 )
+    if ( name_index >= FT_NUM_MAC_NAMES )
       name_index = 0;
 
-    return ps_glyph_names[mac_standard_names[name_index]];
+    return ft_standard_glyph_names + ft_mac_names[name_index];
   }
 
 
   static const char*
   ps_get_standard_strings( FT_UInt  sid )
   {
-    return ( sid < NUM_SID_GLYPHS ? sid_standard_names[sid] : 0 );
+    if ( sid >= FT_NUM_SID_NAMES )
+      return 0;
+
+    return ft_standard_glyph_names + ft_sid_names[sid];
   }
 
 

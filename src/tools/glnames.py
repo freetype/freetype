@@ -27,7 +27,7 @@ usage: %s <output-file>
 """
 
 
-import sys, string
+import sys, string, struct
 
 
 # This table is used to name the glyphs according to the Macintosh
@@ -412,6 +412,7 @@ t1_expert_encoding = \
 # version 2.0, 22 Sept 2002.  It is available from
 #
 #   http://partners.adobe.com/asn/developer/typeforum/unicodegn.html
+#   http://partners.adobe.com/public/developer/en/opentype/glyphlist.txt
 #
 adobe_glyph_list = """\
 A;0041
@@ -4698,6 +4699,174 @@ zukatakana;30BA
 """
 
 
+# string table management
+#
+class StringTable:
+  def __init__(self,name_list):
+    self.names   = name_list
+    self.indices = {}
+    index        = 0
+    
+    for name in name_list:
+      self.indices[name] = index
+      index += len(name) + 1
+      
+    self.total = index      
+
+  def dump(self,file,table_name):
+    write = file.write
+    write( "static const char " + table_name + "["+repr(self.total)+"] =\n" )
+    write( "{\n" )
+    column = 0
+    line   = "  "
+    comma  = ""
+    for name in self.names:
+      for n in range(len(name)):
+         line += comma
+         line += "'%c'" % name[n]
+         comma  = ","
+         column += 1
+         if column == 16:
+           column = 0
+           comma  = ",\n  "
+      line += comma
+      line += " 0 "
+      comma = ","
+      column += 1
+      if column == 16:
+        column = 0
+        comma  = ",\n  "
+        
+    if column != 0:
+      line += "\n"
+
+    write( line + "};\n\n" )
+
+  def dump_sublist(self,file,table_name,macro_name,sublist):
+    write = file.write
+    write( "#define "+macro_name+"  "+repr(len(sublist))+"\n\n" )
+    write( "static const short " + table_name + "["+repr(len(sublist))+"] =\n" )
+    write( "{\n" )
+    line  = "  "
+    comma = ""
+    col   = 0
+    for name in sublist:
+      line += comma
+      line += "%4d" % self.indices[name]
+      col  += 1
+      comma = ","
+      if col == 14:
+        col = 0
+        comma = ",\n  "
+      
+    write( line + "\n};\n\n" )
+    
+
+class StringNode:
+  def __init__(self,letter,value):
+    self.letter   = letter
+    self.value    = value
+    self.children = {}
+
+  def __cmp__(self,other):
+    return ord(self.letter[0]) - ord(other.letter[0])
+
+  def add(self,word,value):
+    if len(word) == 0:
+      self.value = value
+      return
+    letter = word[0]
+    word   = word[1:]
+    if self.children.has_key(letter):
+      child = self.children[letter]
+    else:
+      child = StringNode(letter,0)
+      self.children[letter] = child
+    child.add(word,value)
+
+  def optimize(self):
+    # optimize all children first
+    children = self.children.values()
+    self.children = {}
+    for child in children:
+      self.children[child.letter[0]] = child.optimize()
+
+    # don't optimize if there's a value,
+    # if we don't have any child or if we
+    # have more than one child
+    if (self.value != 0) or (not children) or len(children) > 1:
+      return self
+
+    child = children[0]
+    self.letter += child.letter
+    self.value = child.value
+    self.children = child.children
+    return self
+
+  def dump_debug(self,write,margin):
+    # this is used during debugging
+    line = margin + "+-"
+    if len(self.letter) == 0:
+      line += "<NOLETTER>"
+    else:
+      line += self.letter
+
+    if self.value:
+      line += " => " + repr(self.value)
+
+    write( line+"\n" )
+    if self.children:
+      margin += "| "
+      for child in self.children.values():
+        child.dump_debug(write,margin)
+  
+  def locate(self,index):
+    self.index = index
+    if len(self.letter) > 0:    
+      index += len(self.letter)+1
+    else:
+      index += 2
+      
+    if self.value != 0:
+      index += 2
+      
+    children = self.children.values()
+    children.sort()
+    index += 2*len(children)
+    for child in children:
+      index = child.locate(index)
+
+    return index
+
+  def store(self,storage):
+    # write the letters
+    l = len(self.letter)
+    if l == 0:
+      storage += struct.pack("B",0)
+    else:
+      for n in range(l):
+        val = ord(self.letter[n])
+        if n < l-1:
+          val += 128
+        storage += struct.pack("B",val)
+
+    # write the count
+    children = self.children.values()
+    children.sort()
+    count    = len(children)
+    if self.value != 0:
+      storage += struct.pack( "!BH", count+128, self.value )
+    else:
+      storage += struct.pack( "B", count )
+
+    for child in children:
+      storage += struct.pack( "!H", child.index )
+
+    for child in children:
+      storage = child.store(storage)
+
+    return storage
+
 t1_bias    = 0
 glyph_list = []
 
@@ -4751,107 +4920,55 @@ def filter_glyph_names( alist, filter ):
   return extras
 
 
-def dump_mac_indices( file, all_glyphs ):
-  write = file.write
-
-  write( "  static const unsigned short  mac_standard_names[" + \
-         repr( len( mac_standard_names ) + 1 ) + "] =\n" )
-  write( "  {\n" )
-
-  for name in mac_standard_names:
-    write( "    " + repr( all_glyphs.index( name ) ) + ",\n" )
-
-  write( "    0\n" )
-  write( "  };\n" )
-  write( "\n" )
-  write( "\n" )
-
-
-def dump_glyph_list( file, base_list, adobe_list ):
-  write = file.write
-
-  name_list = []
-
-  write( "  static const char* const  ps_glyph_names[] =\n" )
-  write( "  {\n" )
-
-  for name in base_list:
-    write( '    "' + name + '",\n' )
-    name_list.append( name )
-
-  write( "\n" )
-  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
-  write( "\n" )
-
-  for name in adobe_list:
-    write( '    "' + name + '",\n' )
-    name_list.append( name )
-
-  write( "\n" )
-  write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
-  write( "\n" )
-  write( "    NULL\n" )
-  write( "  };\n" )
-  write( "\n" )
-  write( "\n" )
-
-  return name_list
-
-
-def dump_unicode_values( file, sid_list, adobe_list ):
-  """build the glyph names to unicode values table"""
-
-  write = file.write
-
-  agl_names, agl_unicodes = adobe_glyph_values()
-
-  write( "\n" )
-  write( "  static const unsigned short  ps_names_to_unicode[" + \
-          repr( len( sid_list ) + len( adobe_list ) + 1 ) + "] =\n" )
-  write( "  {\n" )
-
-  for name in sid_list:
-    try:
-      index = agl_names.index( name )
-      write( "    0x" + agl_unicodes[index] + "U,\n" )
-    except:
-      write( "    0,\n" )
-
-  write( "\n" )
-  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
-  write( "\n" )
-
-  for name in adobe_list:
-    try:
-      index = agl_names.index( name )
-      write( "    0x" + agl_unicodes[index] + "U,\n" )
-    except:
-      write( "    0,\n" )
-
-  write( "\n" )
-  write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
-  write( "    0\n" )
-  write( "  };\n" )
-  write( "\n" )
-  write( "\n" )
-  write( "\n" )
-
 
 def dump_encoding( file, encoding_name, encoding_list ):
   """dumps a given encoding"""
 
   write = file.write
+  write( "/* the following are indices into the SID name table */\n" )
+  write( "static const unsigned short  " + encoding_name + "[" + \
+          repr( len( encoding_list ) ) + "] =\n" )
+  write( "{\n" )
 
-  write( "  static const unsigned short  " + encoding_name + "[" + \
-          repr( len( encoding_list ) + 1 ) + "] =\n" )
-  write( "  {\n" )
-
+  line  = "  "
+  comma = ""
+  col   = 0
   for value in encoding_list:
-    write( "    " + repr( value ) + ",\n" )
-  write( "    0\n" )
-  write( "  };\n" )
-  write( "\n" )
-  write( "\n" )
+    line += comma
+    line += "%3d" % value
+    comma = ","
+    col  += 1
+    if col == 16:
+      col = 0
+      comma = ",\n  "
+      
+  write( line + "\n};\n\n" )  
+
+  
+def dump_array( the_array, write, array_name ):
+  """dumps a given encoding"""
+
+  write( "static const unsigned char  " + array_name + "[" + \
+          repr(len(the_array)) + "] =\n" )
+  write( "{\n" )
+  line  = ""
+  comma = "  "
+  col   = 0
+  for value in the_array:
+    line += comma
+    line += "%3d" % ord(value)
+    comma = ","
+    col  += 1
+    if col == 16:
+      col = 0
+      comma = ",\n  "
+      
+    if len(line) > 1024:
+      write( line )
+      line = ""
+
+  write( line + "\n};\n\n" )  
+
 
 
 def main():
@@ -4867,13 +4984,11 @@ def main():
   count_sid = len( sid_standard_names )
 
   # 'mac_extras' contains the list of glyph names in the Macintosh standard
-  # encoding which are not in either the Adobe Glyph List or the SID
-  # Standard Names.
+  # encoding which are not in the SID Standard Names.
   #
-  mac_extras = filter_glyph_names( mac_standard_names, adobe_glyph_names() )
-  mac_extras = filter_glyph_names( mac_extras, sid_standard_names )
+  mac_extras = filter_glyph_names( mac_standard_names, sid_standard_names )
 
-  # 'base_list' contains the first names of our final glyph names table.
+  # 'base_list' contains the names of our final glyph names table.
   # It consists of the 'mac_extras' glyph names, followed by the SID
   # Standard names.
   #
@@ -4881,22 +4996,15 @@ def main():
   t1_bias          = mac_extras_count
   base_list        = mac_extras + sid_standard_names
 
-  # 'adobe_list' contains the glyph names that are in the AGL, but not in
-  # the base_list; they will be placed after base_list glyph names in
-  # our final table.
-  #
-  adobe_list  = filter_glyph_names( adobe_glyph_names(), base_list )
-  adobe_count = len( adobe_list )
-
   write( "/***************************************************************************/\n" )
   write( "/*                                                                         */\n" )
 
   write( "/*  %-71s*/\n" % sys.argv[1] )
 
   write( "/*                                                                         */\n" )
-  write( "/*    PostScript glyph names (specification only).                         */\n" )
+  write( "/*    PostScript glyph names.                                              */\n" )
   write( "/*                                                                         */\n" )
-  write( "/*  Copyright 2000-2001, 2003 by                                           */\n" )
+  write( "/*  Copyright 2005 by                                                      */\n" )
   write( "/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */\n" )
   write( "/*                                                                         */\n" )
   write( "/*  This file is part of the FreeType project, and may only be used,       */\n" )
@@ -4908,42 +5016,190 @@ def main():
   write( "/***************************************************************************/\n" )
   write( "\n" )
   write( "\n" )
-  write( "  /* this file has been generated automatically -- do not edit! */\n" )
+  write( "  /* ALL of this file has been generated automatically -- do not edit! */\n"  )
   write( "\n" )
   write( "\n" )
 
-  # dump final glyph list (mac extras + sid standard names + AGL glyph names)
+  # dump final glyph list (mac extras + sid standard names)
   #
-  name_list = dump_glyph_list( file, base_list, adobe_list )
-
-  # dump t1_standard_list
-  write( "  static const char* const * const  sid_standard_names = " \
-          + "ps_glyph_names + " + repr( t1_bias ) + ";\n" )
-  write( "\n" )
-  write( "\n" )
-
-  write( "#define NUM_SID_GLYPHS " + repr( len( sid_standard_names ) ) + "\n" )
-  write( "\n" )
-  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
-  write( "#define NUM_ADOBE_GLYPHS " + \
-          repr( len( base_list ) + len( adobe_list ) - t1_bias ) + "\n" )
-  write( "#else\n" )
-  write( "#define NUM_ADOBE_GLYPHS " + \
-          repr( len( base_list ) - t1_bias )  + "\n" )
-  write( "#endif\n" )
-  write( "\n" )
-  write( "\n" )
-
-  # dump mac indices table
-  dump_mac_indices( file, name_list )
-
-  # dump unicode values table
-  dump_unicode_values( file, sid_standard_names, adobe_list )
+  st = StringTable(base_list)
+  
+  st.dump(file,"ft_standard_glyph_names")
+  st.dump_sublist(file,"ft_mac_names","FT_NUM_MAC_NAMES",mac_standard_names)
+  st.dump_sublist(file,"ft_sid_names","FT_NUM_SID_NAMES",sid_standard_names)
 
   dump_encoding( file, "t1_standard_encoding", t1_standard_encoding )
   dump_encoding( file, "t1_expert_encoding", t1_expert_encoding )
 
-  write( "/* END */\n" )
+  # dump the AGL in its compressed form
+  #
+  agl_glyphs, agl_values = adobe_glyph_values()
+  dict = StringNode( "", 0 )
+  for g in range(len(agl_glyphs)):
+    dict.add(agl_glyphs[g],eval("0x"+agl_values[g]))
+
+  dict = dict.optimize()
+  dict_len   = dict.locate(0)
+  dict_array = dict.store("")
+
+  write( """
+ /* this table is a compressed version of the Adobe Glyph List
+  * which has been optimized for efficient searching. It has
+  * been generated by the 'glnames.py' python script located
+  * in the 'src/tools' directory.
+  *
+  * the corresponding lookup function is defined just below
+  * the table (several pages down this text :-)
+  */
+""" )
+  
+  dump_array(dict_array,write,"ft_adobe_glyph_list")
+
+  # write the lookup routine now
+  #
+  write( """
+ /* this is the wicked routine used to search our compressed
+  * table efficiently
+  */
+  static unsigned long
+  ft_get_adobe_glyph_index( const char*  name,
+                            const char*  limit )
+  {
+    int                   c = 0;
+    int                   count, min, max;
+    const unsigned char*  p = ft_adobe_glyph_list;
+
+    if ( name == 0 || name >= limit )
+      goto NotFound;
+
+    c     = *name++;
+    count = p[1];
+    p    += 2;
+
+    min = 0;
+    max = count;
+
+    while ( min < max )
+    {
+      int                   mid    = (min+max) >> 1;
+      const unsigned char*  q      = p + mid*2;
+      int                   c2;
+
+      q = ft_adobe_glyph_list + (((int)q[0] << 8) | q[1]);
+
+      c2 = q[0] & 127;
+      if ( c2 == c )
+      {
+        p = q;
+        goto Found;
+      }
+      if ( c2 < c )
+        min = mid+1;
+      else
+        max = mid;
+    }
+    goto NotFound;
+
+  Found:
+    for (;;)
+    {
+      /* assert (*p & 127) == c */
+
+      if ( name >= limit )
+      {
+        if ( (p[0] & 128) == 0 &&
+             (p[1] & 128) != 0 )
+          return (unsigned long)(((int)p[2] << 8) | p[3]);
+
+        goto NotFound;
+      }
+      c = *name++;
+      if ( p[0] & 128 )
+      {
+        p++;
+        if ( c != (p[0] & 127) )
+          goto NotFound;
+
+        continue;
+      }
+
+      p++;
+      count = p[0] & 127;
+      if ( p[0] & 128 )
+        p += 2;
+
+      p++;
+
+      for ( ; count > 0; count--, p += 2 )
+      {
+        int                   offset = ((int)p[0] << 8) | p[1];
+        const unsigned char*  q      = ft_adobe_glyph_list + offset;
+
+        if ( c == (q[0] & 127) )
+        {
+          p = q;
+          goto NextIter;
+        }
+      }
+      goto NotFound;
+
+    NextIter:
+      ;
+    }
+
+  NotFound:
+    return 0;
+  }
+  
+""" )
+
+  if 0:  # generate unit test, or don't
+    #
+    # now write the unit test to check that everything works OK
+    #
+    write( "#ifdef TEST\n\n" )
+
+    write( "static const char* const the_names[] = {\n" )
+    for name in agl_glyphs:
+      write( '  "'+name+'",\n' )
+    write( "  0\n};\n" )
+
+    write( "static const unsigned long the_values[] = {\n" )
+    for val in agl_values:
+      write( '  0x'+val+',\n' )
+    write( "  0\n};\n" )
+
+    write( """
+#include <stdlib.h>
+#include <stdio.h>
+
+  int  main( void )
+  {
+    int                   result = 0;
+    const char* const*    names  = the_names;
+    const unsigned long*  values = the_values;
+    
+    for ( ; *names; names++, values++ )
+    {
+      const char*    name      = *names;
+      unsigned long  reference = *values;
+      unsigned long  value;
+
+      value     = ft_get_adobe_glyph_index( name, name + strlen(name) );
+      if ( value != reference )
+      {
+        result = 1;
+        fprintf( stderr, "name '%s' => %04x instead of %04x\\n",
+                         name, value, reference );
+      }
+    }
+    
+    return result;
+  }
+""" )
+    write( "#endif /* TEST */\n" )
+  
+  write("/* END */\n")
 
 
 # Now run the main routine
