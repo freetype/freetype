@@ -1853,17 +1853,23 @@
            outline->contours[outline->n_contours - 1] + 1 )
       return ErrRaster_Invalid_Outline;
 
-    if ( !target_map || !target_map->buffer )
+    /* if direct mode is not set, we must have a target bitmap */
+    if ( (params->flags & ft_raster_flag_direct == 0) &&
+         ( !target_map || !target_map->buffer )       )
       return -1;
 
-    /* XXX: this version does not support monochrome rendering yet! */
+    /* this version does not support monochrome rendering */
     if ( !(params->flags & ft_raster_flag_aa) )
       return ErrRaster_Invalid_Mode;
 
     ras.outline   = *outline;
-    ras.target    = *target_map;
     ras.num_cells = 0;
     ras.invalid   = 1;
+
+    if (target_map)
+      ras.target = *target_map;
+    else
+      ras.target = 0;
 
     ras.render_span      = (FT_Raster_Span_Func)grays_render_span;
     ras.render_span_data = &ras;
