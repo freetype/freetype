@@ -1227,7 +1227,7 @@
 
 
   typedef struct FT_SubGlyph_  FT_SubGlyph;
-  
+
   struct FT_SubGlyph_
   {
     FT_Int        index;
@@ -1305,7 +1305,7 @@
     FT_Glyph_Format   format;
     FT_Bitmap         bitmap;
     FT_Outline        outline;
-    
+
     FT_Int            num_subglyphs;
     FT_Int            max_subglyphs;
     FT_SubGlyph*      subglyphs;
@@ -1380,11 +1380,11 @@
   /*    ft_stream_pathname :: create a new input stream from a C pathname  */
   /*                                                                       */
   typedef enum {
-  
+
     ft_stream_memory   = 1,
     ft_stream_copy     = 2,
     ft_stream_pathname = 3
-  
+
   } FT_Stream_Type;
 
  /*************************************************************************
@@ -1428,7 +1428,7 @@
   *    should not close the stream before the library does !!
   *
   *************************************************************************/
-  
+
   typedef struct FT_Open_Args_
   {
     FT_Stream_Type  stream_type;
@@ -1559,7 +1559,7 @@
   EXPORT_DEF
   FT_Error  FT_Attach_File( FT_Face      face,
                             const char*  filepathname );
-                            
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2103,7 +2103,7 @@
   /* <Input>                                                               */
   /*    outline   :: A pointer to the source target.                       */
   /*                                                                       */
-  /*    interface :: A table of `emitters', i.e,. function pointers called */
+  /*    funcs     :: A table of `emitters', i.e,. function pointers called */
   /*                 during decomposition to indicate path operations.     */
   /*                                                                       */
   /*    user      :: A typeless pointer which is passed to each emitter    */
@@ -2115,9 +2115,9 @@
   /*                                                                       */
   EXPORT_DEF
   int  FT_Outline_Decompose( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
+                             FT_Outline_Funcs*  funcs,
                              void*              user );
- 
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2308,22 +2308,22 @@
   *   FT_Get_Raster
   *
   * <Description>
-  *   Return a pointer to the raster corresponding to a given glyph   
-  *   format tag.      
+  *   Return a pointer to the raster corresponding to a given glyph
+  *   format tag.
   *
   * <Input>
   *   library      :: handle to source library object
   *   glyph_format :: glyph format tag
   *
   * <Output>
-  *   raster_funcs :: if this field is not 0, returns a pointer to the      
+  *   raster_funcs :: if this field is not 0, returns a pointer to the
   *                   raster's interface/descriptor..
   *
   * <Return>
   *   a pointer to the corresponding raster object.
   *
   *************************************************************************/
- 
+
   EXPORT_DEF
   FT_Raster  FT_Get_Raster( FT_Library        library,
                             FT_Glyph_Format   glyph_format,

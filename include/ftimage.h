@@ -99,7 +99,7 @@
   *    have been found to date..
   *
   *************************************************************************/
-  
+
   typedef enum FT_Pixel_Mode_
   {
     ft_pixel_mode_none = 0,
@@ -112,9 +112,9 @@
     ft_pixel_mode_rgb16,
     ft_pixel_mode_rgb24,
     ft_pixel_mode_rgb32,
-  
+
     ft_pixel_mode_max      /* do not remove */
-    
+
   } FT_Pixel_Mode;
 
 
@@ -138,51 +138,51 @@
   *    FreeType, these types are not handled by the library itself.
   *
   *************************************************************************/
-  
+
   typedef enum FT_Palette_Mode_
   {
     ft_palette_mode_rgb = 0,
     ft_palette_mode_rgba,
-    
+
     ft_palettte_mode_max   /* do not remove */
-  
+
   } FT_Palette_Mode;
 
 
   /*************************************************************************
-   *                                                                         
-   * <Struct>                                                                
-   *    FT_Bitmap                                                            
-   *                                                                         
-   * <Description>                                                           
-   *    A structure used to describe a bitmap or pixmap to the raster.       
-   *    Note that we now manage pixmaps of various depths through the        
+   *
+   * <Struct>
+   *    FT_Bitmap
+   *
+   * <Description>
+   *    A structure used to describe a bitmap or pixmap to the raster.
+   *    Note that we now manage pixmaps of various depths through the
    *    `pixel_mode' field.
-   *                                                                         
-   * <Fields>                                                                
-   *    rows         :: The number of bitmap rows.                               
-   *                                                                         
-   *    width        :: The number of pixels in bitmap row.                      
-   *                                                                         
-   *    pitch        :: The pitch's absolute value is the number of bytes        
-   *                    taken by one bitmap row, including padding. However,     
-   *                    the pitch is positive when the bitmap has a `down'       
-   *                    flow, and negative when it has an `up' flow. In all      
-   *                    cases, the pitch is an offset to add to a bitmap         
-   *                    pointer in order to go down one row.                     
-   *                                                                         
-   *    buffer       :: A typeless pointer to the bitmap buffer. This value      
-   *                    should be aligned on 32-bit boundaries in most cases.    
-   *                                                                         
-   *    num_grays    :: this field is only used with ft_pixel_mode_grays,      
-   *                    it gives the number of gray levels used in the         
-   *                    bitmap.                                                
-   *                                                                         
-   *    pixel_mode   :: the pixel_mode, i.e. how pixel bits are stored         
-   *                                                                         
-   *    palette_mode :: this field is only used with paletted pixel modes,   
-   *                    it indicates how the palette is stored               
-   *                                                                         
+   *
+   * <Fields>
+   *    rows         :: The number of bitmap rows.
+   *
+   *    width        :: The number of pixels in bitmap row.
+   *
+   *    pitch        :: The pitch's absolute value is the number of bytes
+   *                    taken by one bitmap row, including padding. However,
+   *                    the pitch is positive when the bitmap has a `down'
+   *                    flow, and negative when it has an `up' flow. In all
+   *                    cases, the pitch is an offset to add to a bitmap
+   *                    pointer in order to go down one row.
+   *
+   *    buffer       :: A typeless pointer to the bitmap buffer. This value
+   *                    should be aligned on 32-bit boundaries in most cases.
+   *
+   *    num_grays    :: this field is only used with ft_pixel_mode_grays,
+   *                    it gives the number of gray levels used in the
+   *                    bitmap.
+   *
+   *    pixel_mode   :: the pixel_mode, i.e. how pixel bits are stored
+   *
+   *    palette_mode :: this field is only used with paletted pixel modes,
+   *                    it indicates how the palette is stored
+   *
    *    palette      :: a typeless pointer to the bitmap palette. only used
    *                    for paletted pixel modes.
    *
@@ -197,7 +197,7 @@
    *
    *
    *************************************************************************/
-   
+
   typedef struct FT_Bitmap_
   {
     int    rows;
@@ -265,7 +265,7 @@
     short*      contours;        /* the contour end points             */
 
     int         flags;           /* outline masks                      */
-    
+
   } FT_Outline;
 
   /*************************************************************************/
@@ -325,7 +325,7 @@
     ft_outline_ignore_dropouts = 8,
     ft_outline_high_precision  = 256,
     ft_outline_single_pass     = 512
-  
+
   } FT_Outline_Flags;
 
 
@@ -515,7 +515,7 @@
   *                               Hershey contain glyph in this format).
   *
   ***********************************************************************/
-  
+
   typedef enum FT_Glyph_Format_
   {
     ft_glyph_format_none      = 0,
@@ -523,7 +523,7 @@
     ft_glyph_format_bitmap    = FT_IMAGE_TAG('b','i','t','s'),
     ft_glyph_format_outline   = FT_IMAGE_TAG('o','u','t','l'),
     ft_glyph_format_plotter   = FT_IMAGE_TAG('p','l','o','t')
-  
+
   } FT_Glyph_Format;
 
   /*************************************************************************/
@@ -586,9 +586,9 @@
   typedef struct FT_Span_
   {
     short          x;
-    short          len;
+    unsigned short len;
     unsigned char  coverage;
-  
+
   } FT_Span;
 
 
@@ -630,7 +630,7 @@
                                        int       count,
                                        FT_Span*  spans,
                                        void*     user );
-                                      
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -683,7 +683,7 @@
   *    FT_Raster_Flag
   *
   * <Description>
-  *    An enumeration used to list the bit flags used in the "flags"   
+  *    An enumeration used to list the bit flags used in the "flags"
   *    field of a FT_Raster_Params function.
   *
   * <Fields>
@@ -702,11 +702,11 @@
   *
   **************************************************************************/
   typedef enum {
-  
+
     ft_raster_flag_default = 0,
     ft_raster_flag_aa      = 1,
     ft_raster_flag_direct  = 2
-  
+
   } FT_Raster_Flag;
 
  /**************************************************************************
@@ -747,7 +747,7 @@
   *    drop-out control per-se the TrueType specification..
   *
   **************************************************************************/
-  
+
   typedef struct FT_Raster_Params_
   {
     FT_Bitmap*              target;
@@ -758,7 +758,7 @@
     FT_Raster_BitTest_Func  bit_test;
     FT_Raster_BitSet_Func   bit_set;
     void*                   user;
-  
+
   } FT_Raster_Params;
 
 
@@ -791,7 +791,7 @@
 
   typedef int (*FT_Raster_New_Func)( void*      memory,
                                      FT_Raster *raster );
-  
+
 
  /**************************************************************************
   * <FuncType>
@@ -806,8 +806,8 @@
   **************************************************************************/
 
   typedef void (*FT_Raster_Done_Func)( FT_Raster  raster );
-  
-  
+
+
 
  /**************************************************************************
   *
@@ -927,9 +927,9 @@
     FT_Raster_Set_Mode_Func  raster_set_mode;
     FT_Raster_Render_Func    raster_render;
     FT_Raster_Done_Func      raster_done;
-  
+
   } FT_Raster_Funcs;
- 
+
 #endif /* FTIMAGE_H */
 
 

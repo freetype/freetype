@@ -651,11 +651,11 @@
  *  Borland compilers (read: from BC++ 3.1 on) can increase this limit.
  *  If you get a warning with such a compiler, use the -i40 switch.
  */
- 
+
 #define TT_UCR_ARABIC_PRESENTATION_FORMS_A      \
          TT_UCR_ARABIC_PRESENTATIONS_A
 #define TT_UCR_ARABIC_PRESENTATION_FORMS_B      \
-         TT_UCR_ARABIC_PRESENTATIONS_B           
+         TT_UCR_ARABIC_PRESENTATIONS_B
 
 #define TT_UCR_COMBINING_DIACRITICAL_MARKS      \
          TT_UCR_COMBINING_DIACRITICS

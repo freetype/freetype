@@ -5,7 +5,7 @@
  *    FreeType low-level system interface definition
  *
  *    This file contains the definitions of the stream and memory interfaces
- *    used by FreeType.                                                  
+ *    used by FreeType.
  *
  *
  *  Copyright 1996-1999 by
@@ -29,7 +29,7 @@
  *************************************************************************/
 
   typedef struct FT_MemoryRec_*  FT_Memory;
-  
+
   typedef void* (*FT_Alloc_Func)( FT_Memory  memory,
                                   long       size );
 
@@ -56,12 +56,12 @@
  *                       I / O   M A N A G E M E N T
  *
  *************************************************************************/
-  
+
   typedef union FT_StreamDesc_
   {
     long  value;
     void* pointer;
-    
+
   } FT_StreamDesc;
 
 
@@ -79,7 +79,7 @@
     char*           base;
     unsigned long   size;
     unsigned long   pos;
-    
+
     FT_StreamDesc   descriptor;
     FT_StreamDesc   pathname;    /* ignored by FreeType - useful for debugging */
 
