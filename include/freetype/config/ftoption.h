@@ -249,8 +249,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
-#undef  FT_DEBUG_LEVEL_ERROR
-#undef  FT_DEBUG_LEVEL_TRACE
+#define FT_DEBUG_LEVEL_ERROR
+#define FT_DEBUG_LEVEL_TRACE
 
 
   /*************************************************************************/
@@ -265,7 +265,7 @@ FT_BEGIN_HEADER
   /*   Note that the memory debugger is only activated at runtime when     */
   /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
   /*                                                                       */
-#undef  FT_DEBUG_MEMORY
+#define  FT_DEBUG_MEMORY
 
 
   /*************************************************************************/
