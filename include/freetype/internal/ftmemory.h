@@ -230,7 +230,7 @@ FT_BEGIN_HEADER
 #define FT_MEM_NEW_ARRAY( _pointer_, _count_ )   \
           FT_MEM_ALLOC( _pointer_, (_count_)*sizeof(*(_pointer_)) )
 
-#define FT_MEM_RENEW_ARRAY( _pointer_, _old_, _new_ )               \
+#define FT_MEM_RENEW_ARRAY( _pointer_, _old_, _new_ )                 \
           FT_MEM_REALLOC( _pointer_, (_old_)*sizeof(*(_pointer_)),    \
                                      (_new_)*sizeof(*(_pointer_)) )
 
@@ -243,8 +243,8 @@ FT_BEGIN_HEADER
 #define FT_MEM_ALLOC_ARRAY( _pointer_, _count_, _type_ )   \
           FT_MEM_ALLOC( _pointer_, (_count_)*sizeof(_type_) )
 
-#define FT_MEM_REALLOC_ARRAY( _pointer_, _current_, _new_, _type_ )    \
-           FT_MEM_REALLOC( _pointer_, (_current_)*sizeof(_type),       \
+#define FT_MEM_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )    \
+           FT_MEM_REALLOC( _pointer_, (_old_)*sizeof(_type),       \
                                       (_new_)*sizeof(_type_) )
 
 
@@ -270,21 +270,21 @@ FT_BEGIN_HEADER
 #define FT_NEW( _pointer_ )  \
           FT_SET_ERROR( FT_MEM_NEW( _pointer_ ) )
 
-#define FT_RENEW_ARRAY( _pointer_, _current_, _new_ )   \
-          FT_SET_ERROR( FT_MEM_RENEW_ARRAY( _pointer_, _current_, _new_ ) )
+#define FT_NEW_ARRAY( _pointer_, _count_ )  \
+          FT_SET_ERROR( FT_MEM_NEW_ARRAY( _pointer_, _count_ ) )
+
+#define FT_RENEW_ARRAY( _pointer_, _old_, _new_ )   \
+          FT_SET_ERROR( FT_MEM_RENEW_ARRAY( _pointer_, _old_, _new_ ) )
 
 
 #define FT_ALLOC_ARRAY( _pointer_, _count_, _type_ )                  \
           FT_SET_ERROR( FT_MEM_ALLOC( _pointer_,                      \
                                    (_count_)*sizeof ( _type_ ) ) )
 
-#define FT_NEW_ARRAY( _pointer_, _count_ )  \
-          FT_SET_ERROR( FT_MEM_NEW_ARRAY( _pointer_, _count_ ) )
-
-#define FT_REALLOC_ARRAY( _pointer_, _current_, _count_, _type_ )       \
+#define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )       \
           FT_SET_ERROR( FT_MEM_REALLOC( _pointer_,                      \
-                                     (_current_)*sizeof ( _type_ ),  \
-                                     (_count_)*sizeof ( _type_ ) ) )
+                                     (_old_)*sizeof ( _type_ ),  \
+                                     (_new_)*sizeof ( _type_ ) ) )
  /* */
 
 FT_END_HEADER
