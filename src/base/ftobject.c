@@ -1,4 +1,5 @@
-#include "ftobject.c"
+#include "ftobject.h"
+#include "fthash.h"
 
 #define  FT_MAGIC_DEATH   0xDEADdead
 #define  FT_MAGIC_CLASS   0x12345678
@@ -290,13 +291,3 @@
                               FT_Type     type,
                               FT_Pointer  init_data,
                               FT_Memory   memory );
-
-  FT_BASE_DEF( void )
-  ft_object_push( FT_Object  object );
-
-  FT_BASE_DEF( void )
-  ft_object_pop( FT_Object  object );
-
-  FT_BASE_DEF( void )
-  ft_object_pop_destroy( FT_Object  object );
-
