@@ -1501,6 +1501,7 @@
 
 
     FT_FREE( charset->sids );
+    FT_FREE( charset->cids );
     charset->format = 0;
     charset->offset = 0;
   }
@@ -1672,7 +1673,7 @@
       }
     }
 
-    /* we have to invert the `sids' array for CID-keyed fonts */
+    /* we have to invert the `sids' array for subsetted CID-keyed fonts */
     if ( invert )
     {
       FT_UInt    i;
@@ -2244,9 +2245,13 @@
     /* read the Charset and Encoding tables if available */
     if ( font->num_glyphs > 0 )
     {
+      FT_Bool  invert;
+
+
+      invert = dict->cid_registry != 0xFFFFU &&
+               font->charstrings_index.count != dict->cid_count;
       error = cff_charset_load( &font->charset, font->num_glyphs, stream,
-                                base_offset, dict->charset_offset,
-                                dict->cid_registry != 0xFFFFU );
+                                base_offset, dict->charset_offset, invert );
       if ( error )
         goto Exit;
 

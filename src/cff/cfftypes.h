@@ -123,7 +123,7 @@ FT_BEGIN_HEADER
     FT_Long    cid_font_version;
     FT_Long    cid_font_revision;
     FT_Long    cid_font_type;
-    FT_Long    cid_count;
+    FT_ULong   cid_count;
     FT_ULong   cid_uid_base;
     FT_ULong   cid_fd_array_offset;
     FT_ULong   cid_fd_select_offset;

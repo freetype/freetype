@@ -2316,8 +2316,10 @@
 
 
       /* in a CID-keyed font, consider `glyph_index' as a CID and map */
-      /* it immediately to the real glyph_index                       */
-      if ( cff->top_font.font_dict.cid_registry != 0xFFFFU )
+      /* it immediately to the real glyph_index -- if it isn't a      */
+      /* subsetted font, glyph_indices and CIDs are identical, though */
+      if ( cff->top_font.font_dict.cid_registry != 0xFFFFU &&
+           cff->charset.cids )
         glyph_index = cff->charset.cids[glyph_index];
 
       cff_decoder_init( &decoder, face, size, glyph, hinting,
