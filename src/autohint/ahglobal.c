@@ -235,8 +235,8 @@
       AH_LOG(( "\n" ));
 
       /* we have computed the contents of the `rounds' and `flats' tables, */
-      /* now determine the reference and overshoot position of the blue;   */
-      /* we simply take the median value after a simple short              */
+      /* now determine the reference and overshoot position of the blue -- */
+      /* we simply take the median value after a simple sort               */
       sort_values( num_rounds, rounds );
       sort_values( num_flats,  flats  );
 
@@ -312,7 +312,7 @@
     /* stem height of the "-", but it wasn't too good.  Moreover, we now */
     /* have a single character that gives us standard width and height.  */
     {
-      FT_UInt   glyph_index;
+      FT_UInt  glyph_index;
 
 
       glyph_index = FT_Get_Char_Index( hinter->face, 'o' );
@@ -376,7 +376,7 @@
     }
 
     /* Now, compute the edge distance threshold as a fraction of the */
-    /* smallest width in the font. Set it in `hinter.glyph' too!     */
+    /* smallest width in the font. Set it in `hinter->glyph' too!    */
     if ( edge_distance_threshold == 32000 )
       edge_distance_threshold = 50;
 
