@@ -359,12 +359,13 @@
     FT_Module            sfntd;
     SFNT_Service         sfnt;
 
+
     result = ft_service_list_lookup( tt_services, tt_interface );
     if ( result != NULL )
       return result;
 
     /* only return the default interface from the SFNT module */
-    sfntd = FT_Get_Module( driver->root.root.library,  "sfnt" );
+    sfntd = FT_Get_Module( driver->root.root.library, "sfnt" );
     if ( sfntd )
     {
       sfnt = (SFNT_Service)( sfntd->clazz->module_interface );

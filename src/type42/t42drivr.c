@@ -104,8 +104,8 @@
 
   static FT_Service_GlyphDictRec  t42_service_glyph_dict =
   {
-    (FT_GlyphDict_GetNameFunc)    t42_get_glyph_name,
-    (FT_GlyphDict_NameIndexFunc)  t42_get_name_index
+    (FT_GlyphDict_GetNameFunc)  t42_get_glyph_name,
+    (FT_GlyphDict_NameIndexFunc)t42_get_name_index
   };
 
 
@@ -124,7 +124,7 @@
 
   static FT_Service_PsNameRec  t42_service_ps_name =
   {
-    (FT_PsName_GetFunc)  t42_get_ps_name
+    (FT_PsName_GetFunc)t42_get_ps_name
   };
 
 
@@ -136,11 +136,12 @@
 
   static const FT_ServiceDescRec  t42_services[] =
   {
-    { FT_SERVICE_ID_GLYPH_DICT,      & t42_service_glyph_dict },
-    { FT_SERVICE_ID_POSTSCRIPT_NAME, & t42_service_ps_name    },
+    { FT_SERVICE_ID_GLYPH_DICT,      &t42_service_glyph_dict },
+    { FT_SERVICE_ID_POSTSCRIPT_NAME, &t42_service_ps_name    },
     { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TYPE_42   },
     { NULL, NULL }
   };
+
 
   static FT_Module_Interface
   T42_Get_Interface( FT_Driver         driver,

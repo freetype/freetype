@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Multiple Master font support (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2003 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -31,12 +31,14 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_mm
 
+
   static FT_Error
   ft_face_get_mm_service( FT_Face                   face,
                           FT_Service_MultiMasters  *aservice )
   {
     FT_Error  error;
     
+
     *aservice = NULL;
     
     if ( !face )
@@ -50,6 +52,7 @@
                               multi_masters,
                               FT_SERVICE_ID_MULTI_MASTERS );
     }
+
     return error;
   }
 
@@ -62,6 +65,7 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
+
 
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
@@ -85,6 +89,7 @@
     FT_Error                 error;
     FT_Service_MultiMasters  service;
 
+
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -92,6 +97,7 @@
       if ( service->set_mm_design )
         error = service->set_mm_design( face, num_coords, coords );
     }
+
     return error;
   }
 
@@ -106,6 +112,7 @@
     FT_Error                 error;
     FT_Service_MultiMasters  service;
 
+
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -113,7 +120,9 @@
       if ( service->set_mm_blend )
          error = service->set_mm_blend( face, num_coords, coords );
     }
+
     return error;
   }
+
 
 /* END */

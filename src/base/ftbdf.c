@@ -38,11 +38,13 @@
     {
       FT_Service_BDF  service;
       
+
       FT_FACE_FIND_SERVICE( service, face, FT_SERVICE_ID_BDF );
       
       if ( service && service->get_charset_id )
         error = service->get_charset_id( face, &encoding, &registry );
     }
+
     if ( acharset_encoding )
       *acharset_encoding = encoding;
     
@@ -69,11 +71,13 @@
     {
       FT_Service_BDF  service;
       
+
       FT_FACE_FIND_SERVICE( service, face, FT_SERVICE_ID_BDF );
       
       if ( service && service->get_property )
         error = service->get_property( face, prop_name, aproperty );
     }
+
     return  error;
   }
 

@@ -98,8 +98,8 @@
 
   static const FT_Service_GlyphDictRec  t1_service_glyph_dict =
   {
-    (FT_GlyphDict_GetNameFunc)    t1_get_glyph_name,
-    (FT_GlyphDict_NameIndexFunc)  t1_get_name_index
+    (FT_GlyphDict_GetNameFunc)  t1_get_glyph_name,
+    (FT_GlyphDict_NameIndexFunc)t1_get_name_index
   };
 
 
@@ -116,7 +116,7 @@
 
   static const FT_Service_PsNameRec  t1_service_ps_name =
   {
-    (FT_PsName_GetFunc) & t1_get_ps_name
+    (FT_PsName_GetFunc)  &t1_get_ps_name
   };
 
 
@@ -128,9 +128,9 @@
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
   static const FT_Service_MultiMastersRec  t1_service_multi_masters =
   {
-    (FT_Get_MM_Func)         T1_Get_Multi_Master,
-    (FT_Set_MM_Design_Func)  T1_Set_MM_Design,
-    (FT_Set_MM_Blend_Func)   T1_Set_MM_Blend
+    (FT_Get_MM_Func)       T1_Get_Multi_Master,
+    (FT_Set_MM_Design_Func)T1_Set_MM_Design,
+    (FT_Set_MM_Blend_Func) T1_Set_MM_Blend
   };
 #endif
 
@@ -143,8 +143,8 @@
   static const FT_ServiceDescRec  t1_services[] =
   {
     { FT_SERVICE_ID_POSTSCRIPT_NAME, &t1_service_ps_name },
-    { FT_SERVICE_ID_GLYPH_DICT,      &t1_service_glyph_dict },
-    { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TYPE_1 },
+    { FT_SERVICE_ID_GLYPH_DICT, &t1_service_glyph_dict },
+    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_TYPE_1 },
     
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT    
     { FT_SERVICE_ID_MULTI_MASTERS, &t1_service_multi_masters },

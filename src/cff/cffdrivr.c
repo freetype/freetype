@@ -312,10 +312,10 @@
   }
 
 
-  static const FT_Service_GlyphDictRec   cff_service_glyph_dict =
+  static const FT_Service_GlyphDictRec  cff_service_glyph_dict =
   {
-    (FT_GlyphDict_GetNameFunc)    cff_get_glyph_name,
-    (FT_GlyphDict_NameIndexFunc)  cff_get_name_index,
+    (FT_GlyphDict_GetNameFunc)  cff_get_glyph_name,
+    (FT_GlyphDict_NameIndexFunc)cff_get_name_index,
   };
 
 
@@ -333,12 +333,13 @@
 
   static const FT_ServiceDescRec  cff_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME,  FT_XF86_FORMAT_CFF },
+    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_CFF },
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
-    { FT_SERVICE_ID_GLYPH_DICT, & cff_service_glyph_dict },
+    { FT_SERVICE_ID_GLYPH_DICT, &cff_service_glyph_dict },
 #endif
     { NULL, NULL }
   };
+
 
   static FT_Module_Interface
   cff_get_interface( CFF_Driver   driver,
