@@ -1,3 +1,8 @@
+2002-01-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffdrivr.c (cff_get_name_index): Make last patch work
+	actually.
+
 2002-01-25  Martin Zinser  <zinser@decus.de>
 
 	* src/cache/ftccache.c (ftc_node_done, ftc_node_destroy): Fix
