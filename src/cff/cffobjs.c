@@ -446,81 +446,80 @@
           flags |= FT_STYLE_FLAG_BOLD;
 
         root->style_flags = flags;
+      }
         
-        /*******************************************************************/
-        /*                                                                 */
-        /* Compute char maps.                                              */
-        /*                                                                 */
+      /*******************************************************************/
+      /*                                                                 */
+      /* Compute char maps.                                              */
+      /*                                                                 */
+      
+      /* try to synthetize a Unicode charmap if there is none available */
+      /* already. If an OpenType font contains a Unicode "cmap", we     */
+      /* will use it, wathever be in the CFF part of the file..         */
+      {
+        FT_CharMapRec  cmaprec;
+        FT_CharMap     cmap;
+        FT_UInt        nn;
+        CFF_Encoding   encoding = &cff->encoding;
         
-        /* try to synthetize a Unicode charmap if there is none available */
-        /* already. If an OpenType font contains a Unicode "cmap", we     */
-        /* will use it, wathever be in the CFF part of the file..         */
+        for ( nn = 0; nn < (FT_UInt) root->num_charmaps; nn++ )
         {
-          FT_CharMapRec  cmaprec;
-          FT_CharMap     cmap;
-          FT_UInt        nn;
-          CFF_Encoding   encoding = &cff->encoding;
+          cmap = root->charmaps[nn];
           
-          for ( nn = 0; nn < (FT_UInt) root->num_charmaps; nn++ )
-          {
-            cmap = root->charmaps[nn];
+          /* Windows Unicode (3,1) ? */
+          if ( cmap->platform_id == 3 && cmap->encoding_id == 1 )
+            goto Skip_Unicode;
             
-            /* Windows Unicode (3,1) ? */
-            if ( cmap->platform_id == 3 && cmap->platform_id == 1 )
-              goto Skip_Unicode;
-              
-            /* Deprecated Unicode platform id  ?? */
-            if ( cmap->platform_id == 0 )
-              break; /* Standard Unicode (deprecated) */
-          }
-          
-          /* we didn't find a Unicode charmap, synthetize one */
+          /* Deprecated Unicode platform id  ?? */
+          if ( cmap->platform_id == 0 )
+            goto Skip_Unicode; /* Standard Unicode (deprecated) */
+        }
+        
+        /* we didn't find a Unicode charmap, synthetize one */
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
 
+        cmaprec.face        = root;
+        cmaprec.platform_id = 3;
+        cmaprec.encoding_id = 1;
+        cmaprec.encoding    = ft_encoding_unicode;
+
+        FT_CMap_New( &cff_cmap_unicode_class_rec, NULL, &cmaprec, NULL );
+
+      Skip_Unicode:
+        if ( encoding->count > 0 )
+        {
+          FT_CMap_Class  clazz;
+          
           cmaprec.face        = root;
-          cmaprec.platform_id = 3;
-          cmaprec.encoding_id = 1;
-          cmaprec.encoding    = ft_encoding_unicode;
+          cmaprec.platform_id = 7;  /* Adobe platform id */
 
-          FT_CMap_New( &cff_cmap_unicode_class_rec, NULL, &cmaprec, NULL );
-
-        Skip_Unicode:
-          if ( encoding->count > 0 )
+          switch( encoding->offset )
           {
-            FT_CMap_Class  clazz;
+            case 0:
+              cmaprec.encoding_id = 0;
+              cmaprec.encoding    = ft_encoding_adobe_standard;
+              clazz               = &cff_cmap_encoding_class_rec;
+              break;
             
-            cmaprec.face        = root;
-            cmaprec.platform_id = 7;  /* Adobe platform id */
-
-            switch( encoding->offset )
-            {
-              case 0:
-                cmaprec.encoding_id = 0;
-                cmaprec.encoding    = ft_encoding_adobe_standard;
-                clazz               = &cff_cmap_encoding_class_rec;
-                break;
-              
-              case 1:
-                cmaprec.encoding_id = 1;
-                cmaprec.encoding    = ft_encoding_adobe_expert;
-                clazz               = &cff_cmap_encoding_class_rec;
-                break;
-              
-              default:
-                cmaprec.encoding_id = 3;
-                cmaprec.encoding    = ft_encoding_adobe_custom;
-                clazz               = &cff_cmap_encoding_class_rec;
-            }
+            case 1:
+              cmaprec.encoding_id = 1;
+              cmaprec.encoding    = ft_encoding_adobe_expert;
+              clazz               = &cff_cmap_encoding_class_rec;
+              break;
             
-            FT_CMap_New( clazz, NULL, &cmaprec, NULL );
+            default:
+              cmaprec.encoding_id = 3;
+              cmaprec.encoding    = ft_encoding_adobe_custom;
+              clazz               = &cff_cmap_encoding_class_rec;
+          }
+          
+          FT_CMap_New( clazz, NULL, &cmaprec, NULL );
 
 #else  /* !FT_CONFIG_OPTION_USE_CMAPS */
 
           /* unimplemented !! */
           
 #endif /* !FT_CONFIG_OPTION_USE_CMAPS */
-          
-          }
         }
         
       }
