@@ -844,22 +844,17 @@
   /*************************************************************************/
   /*                                                                       */
   /* Before an opcode is executed, the interpreter verifies that there are */
-  /* enough arguments on the stack, with the help of the Pop_Push_Count    */
+  /* enough arguments on the stack, with the help of the `Pop_Push_Count'  */
   /* table.                                                                */
   /*                                                                       */
   /* For each opcode, the first column gives the number of arguments that  */
   /* are popped from the stack; the second one gives the number of those   */
   /* that are pushed in result.                                            */
   /*                                                                       */
-  /* Note that for opcodes with a varying number of parameters, either 0   */
-  /* or 1 arg is verified before execution, depending on the nature of the */
-  /* instruction:                                                          */
-  /*                                                                       */
-  /* - if the number of arguments is given by the bytecode stream or the   */
-  /*   loop variable, 0 is chosen.                                         */
-  /*                                                                       */
-  /* - if the first argument is a count n that is followed by arguments    */
-  /*   a1 .. an, then 1 is chosen.                                         */
+  /* Opcodes which have a varying number of parameters in the data stream  */
+  /* (NPUSHB, NPUSHW) are handled specially; they have a negative value in */
+  /* the `opcode_length' table, and the value in `Pop_Push_Count' is set   */
+  /* to zero.                                                              */
   /*                                                                       */
   /*************************************************************************/
 
@@ -1156,7 +1151,7 @@
     1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
     1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
 
-   -1,-1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
+   -1,-2, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
     1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
     1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
     1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,
@@ -4161,7 +4156,7 @@
       {
         if ( CUR.IP + 1 > CUR.codeSize )
           goto Fail_Overflow;
-        CUR.length = CUR.code[CUR.IP + 1] + 2;
+        CUR.length = 2 - CUR.length * CUR.code[CUR.IP + 1];
       }
 
       if ( CUR.IP + CUR.length <= CUR.codeSize )
@@ -7044,7 +7039,7 @@
         if ( CUR.IP + 1 > CUR.codeSize )
           goto LErrorCodeOverflow_;
 
-        CUR.length = CUR.code[CUR.IP + 1] + 2;
+        CUR.length = 2 - CUR.length * CUR.code[CUR.IP + 1];
       }
 
       if ( CUR.IP + CUR.length > CUR.codeSize )
