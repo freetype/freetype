@@ -196,6 +196,25 @@
 
       memory = face->root.memory;
 
+      /* release subrs */
+      if ( face->subrs )
+      {
+        FT_Int      n;
+        
+        for ( n = 0; n < cid->num_dicts; n++ )
+        {
+          CID_Subrs*  subr = face->subrs + n;
+          
+          if ( subr->code )
+          {
+            FREE( subr->code[0] );
+            FREE( subr->code );
+          }
+        }
+
+        FREE( face->subrs );
+      }
+
       /* release FontInfo strings */
       FREE( info->version );
       FREE( info->notice );

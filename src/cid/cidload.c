@@ -446,7 +446,7 @@
 
       if ( FILE_Seek( cid->data_offset + offsets[0] ) ||
            FILE_Read( subr->code[0], data_len )  )
-        goto Exit;
+        goto Fail;
 
       /* set up pointers */
       for ( count = 1; count <= num_subrs; count++ )

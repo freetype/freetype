@@ -1,5 +1,9 @@
 2001-12-21  David Turner  <david@freetype.org>
 
+        * include/freetype/cache/ftcmanag.h, include/freetype/cache/ftcimage.h,
+        include/freetype/cache/ftcsbits.h: updating documentation to better
+        explain the use of the "anode" output parameter in lookup functions
+
 	* src/pshinter/pshglob.c (psh_globals_new): Replaced a floating
 	point constant with a fixed-float equivalent.  For some reasons not
 	all compilers are capable of directly computing a floating pointer

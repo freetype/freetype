@@ -123,7 +123,7 @@
                                  size->root.metrics.x_scale,
                                  size->root.metrics.y_scale,
                                  0, 0 );
-    return error;                                
+    return error;
   }
 
 

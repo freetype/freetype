@@ -170,6 +170,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    anode  :: used to return the address of of the corresponding       */
   /*              cache node after incrementing its reference count        */
+  /*              (see note below)                                         */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
