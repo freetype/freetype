@@ -221,6 +221,11 @@
       FT_FREE( info->family_name );
       FT_FREE( info->weight );
 
+      FT_FREE( info->italic_angle );
+      FT_FREE( info->underline_position );
+      FT_FREE( info->underline_thickness );
+      FT_FREE( info->is_fixed_pitch );
+
       /* release font dictionaries */
       FT_FREE( cid->font_dicts );
       cid->num_dicts = 0;
@@ -331,10 +336,12 @@
       /* Init the face object fields */
       /* Now set up root face fields */
       {
-        FT_Face  root = (FT_Face)&face->root;
+        FT_Face       root = (FT_Face)&face->root;
+        CID_FaceInfo  cid  = &face->cid;
+        PS_FontInfo   info = &cid->font_info;
 
 
-        root->num_glyphs   = face->cid.cid_count;
+        root->num_glyphs   = cid->cid_count;
         root->num_charmaps = 0;
 
         root->face_index = face_index;
@@ -342,17 +349,17 @@
 
         root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
 
-        if ( face->cid.font_info.is_fixed_pitch )
+        if ( info->is_fixed_pitch && *info->is_fixed_pitch )
           root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
         /* XXX: TODO: add kerning with .afm support */
 
         /* get style name -- be careful, some broken fonts only */
         /* have a /FontName dictionary entry!                   */
-        root->family_name = face->cid.font_info.family_name;
+        root->family_name = info->family_name;
         if ( root->family_name )
         {
-          char*  full   = face->cid.font_info.full_name;
+          char*  full   = info->full_name;
           char*  family = root->family_name;
 
           while ( *family && *full == *family )
@@ -369,9 +376,9 @@
         else
         {
           /* do we have a `/FontName'? */
-          if ( face->cid.cid_font_name )
+          if ( cid->cid_font_name )
           {
-            root->family_name = face->cid.cid_font_name;
+            root->family_name = cid->cid_font_name;
             root->style_name  = (char *)"Regular";
           }
         }
@@ -380,10 +387,10 @@
         root->num_fixed_sizes = 0;
         root->available_sizes = 0;
 
-        root->bbox.xMin =   face->cid.font_bbox.xMin             >> 16;
-        root->bbox.yMin =   face->cid.font_bbox.yMin             >> 16;
-        root->bbox.xMax = ( face->cid.font_bbox.xMax + 0xFFFFU ) >> 16;
-        root->bbox.yMax = ( face->cid.font_bbox.yMax + 0xFFFFU ) >> 16;
+        root->bbox.xMin =   cid->font_bbox.xMin             >> 16;
+        root->bbox.yMin =   cid->font_bbox.yMin             >> 16;
+        root->bbox.xMax = ( cid->font_bbox.xMax + 0xFFFFU ) >> 16;
+        root->bbox.yMax = ( cid->font_bbox.yMax + 0xFFFFU ) >> 16;
 
         if ( !root->units_per_EM )
           root->units_per_EM  = 1000;
@@ -393,8 +400,10 @@
         root->height    = (FT_Short)(
           ( ( root->ascender + root->descender ) * 12 ) / 10 );
 
-        root->underline_position  = face->cid.font_info.underline_position;
-        root->underline_thickness = face->cid.font_info.underline_thickness;
+        if ( info->underline_position )
+          root->underline_position = *info->underline_position >> 16;
+        if ( info->underline_thickness )
+          root->underline_thickness = *info->underline_thickness >> 16;
 
         root->internal->max_points   = 0;
         root->internal->max_contours = 0;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType and CFF data/program tables loader (body).                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1965,8 +1965,8 @@
     /* set defaults */
     FT_MEM_ZERO( top, sizeof ( *top ) );
 
-    top->underline_position  = -100;
-    top->underline_thickness = 50;
+    top->underline_position  = -100L << 16;
+    top->underline_thickness = 50L << 16;
     top->charstring_type     = 2;
     top->font_matrix.xx      = 0x10000L;
     top->font_matrix.yy      = 0x10000L;

@@ -902,12 +902,25 @@
         val = t1_tobool( &cur, limit );
         goto Store_Integer;
 
+      case T1_FIELD_TYPE_BOOL_P:
+        val = t1_tobool( &cur, limit );
+        goto Store_Integer_P;
+
       case T1_FIELD_TYPE_FIXED:
         val = t1_tofixed( &cur, limit, 3 );
         goto Store_Integer;
 
+      case T1_FIELD_TYPE_FIXED_P:
+        val = t1_tofixed( &cur, limit, 3 );
+        goto Store_Integer_P;
+
       case T1_FIELD_TYPE_INTEGER:
         val = t1_toint( &cur, limit );
+        goto Store_Integer;
+
+      case T1_FIELD_TYPE_INTEGER_P:
+        val = t1_toint( &cur, limit );
+        goto Store_Integer_P;
 
       Store_Integer:
         switch ( field->size )
@@ -929,14 +942,91 @@
         }
         break;
 
+      Store_Integer_P:
+        switch ( field->size )
+        {
+        case 1:
+          {
+            FT_Memory  memory = parser->memory;
+            FT_Byte    *p;
+
+
+            /* with synthetic fonts, it's possible to find a field twice */
+            if ( *(FT_Byte**)q )
+              break;
+
+            if ( FT_ALLOC( p, 1 ) )
+              goto Exit;
+
+            *p = val;
+            *(FT_Byte**)q = p;
+            break;
+          }
+
+        case 2:
+          {
+            FT_Memory  memory = parser->memory;
+            FT_UShort  *p;
+
+
+            /* with synthetic fonts, it's possible to find a field twice */
+            if ( *(FT_UShort**)q )
+              break;
+
+            if ( FT_ALLOC( p, 2 ) )
+              goto Exit;
+
+            *p = val;
+            *(FT_UShort**)q = p;
+            break;
+          }
+
+        case 4:
+          {
+            FT_Memory  memory = parser->memory;
+            FT_UInt32  *p;
+
+
+            /* with synthetic fonts, it's possible to find a field twice */
+            if ( *(FT_UInt32**)q )
+              break;
+
+            if ( FT_ALLOC( p, 4 ) )
+              goto Exit;
+
+            *p = val;
+            *(FT_UInt32**)q = p;
+            break;
+          }
+
+        default:
+          {
+            FT_Memory  memory = parser->memory;
+            FT_Long  *p;
+
+
+            /* with synthetic fonts, it's possible to find a field twice */
+            if ( *(FT_Long**)q )
+              break;
+
+            if ( FT_ALLOC( p, 8 ) )
+              goto Exit;
+
+            *p = val;
+            *(FT_Long**)q = p;
+            break;
+          }
+        }
+        break;
+
       case T1_FIELD_TYPE_STRING:
         {
           FT_Memory  memory = parser->memory;
           FT_UInt    len    = (FT_UInt)( limit - cur );
 
 
+          /* with synthetic fonts, it's possible to find a field twice */
           if ( *(FT_String**)q )
-            /* with synthetic fonts, it's possible to find a field twice */
             break;
 
           if ( FT_ALLOC( string, len + 1 ) )

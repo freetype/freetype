@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -293,7 +293,7 @@
       sfnt_format = 1;
 
       /* now, the font can be either an OpenType/CFF font, or an SVG CEF */
-      /* font in the later case; it doesn't have a `head' table          */
+      /* font; in the later case it doesn't have a `head' table          */
       error = face->goto_table( face, TTAG_head, stream, 0 );
       if ( !error )
       {
@@ -395,6 +395,9 @@
           root->units_per_EM = dict->units_per_em;
         else
           root->units_per_EM = 1000;
+
+        root->underline_position  = dict->underline_position >> 16;
+        root->underline_thickness = dict->underline_thickness >> 16;
 
         /* retrieve font family & style name */
         root->family_name  = cff_index_get_name( &cff->name_index, face_index );
