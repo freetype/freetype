@@ -144,6 +144,19 @@
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap0_get_info( TT_CMap       cmap,
+                     TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 4;
+
+
+    cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
+
+    return FT_Err_Ok;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const TT_CMap_ClassRec  tt_cmap0_class_rec =
   {
@@ -156,7 +169,8 @@
       (FT_CMap_CharNextFunc) tt_cmap0_char_next
     },
     0,
-    (TT_CMap_ValidateFunc)   tt_cmap0_validate
+    (TT_CMap_ValidateFunc)   tt_cmap0_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap0_get_info
   };
 
 #endif /* TT_CONFIG_CMAP_FORMAT_0 */
@@ -497,6 +511,19 @@
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap2_get_info( TT_CMap       cmap,
+                     TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 4;
+
+
+    cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
+
+    return FT_Err_Ok;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const TT_CMap_ClassRec  tt_cmap2_class_rec =
   {
@@ -509,7 +536,8 @@
       (FT_CMap_CharNextFunc) tt_cmap2_char_next
     },
     2,
-    (TT_CMap_ValidateFunc)   tt_cmap2_validate
+    (TT_CMap_ValidateFunc)   tt_cmap2_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap2_get_info
   };
 
 #endif /* TT_CONFIG_CMAP_FORMAT_2 */
@@ -1058,6 +1086,19 @@
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap4_get_info( TT_CMap       cmap,
+                     TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 4;
+
+
+    cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
+
+    return FT_Err_Ok;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const TT_CMap_ClassRec  tt_cmap4_class_rec =
   {
@@ -1070,7 +1111,8 @@
       (FT_CMap_CharNextFunc) tt_cmap4_char_next
     },
     4,
-    (TT_CMap_ValidateFunc)   tt_cmap4_validate
+    (TT_CMap_ValidateFunc)   tt_cmap4_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap4_get_info
   };
 
 #endif /* TT_CONFIG_CMAP_FORMAT_4 */
@@ -1202,6 +1244,19 @@
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap6_get_info( TT_CMap       cmap,
+                     TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 4;
+
+
+    cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
+
+    return FT_Err_Ok;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const TT_CMap_ClassRec  tt_cmap6_class_rec =
   {
@@ -1214,7 +1269,8 @@
       (FT_CMap_CharNextFunc) tt_cmap6_char_next
     },
     6,
-    (TT_CMap_ValidateFunc)   tt_cmap6_validate
+    (TT_CMap_ValidateFunc)   tt_cmap6_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap6_get_info
   };
 
 #endif /* TT_CONFIG_CMAP_FORMAT_6 */
@@ -1439,6 +1495,18 @@
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap8_get_info( TT_CMap       cmap,
+                     TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 8;
+
+
+    cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
+    return FT_Err_Ok;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const TT_CMap_ClassRec  tt_cmap8_class_rec =
   {
@@ -1451,7 +1519,8 @@
       (FT_CMap_CharNextFunc) tt_cmap8_char_next
     },
     8,
-    (TT_CMap_ValidateFunc)   tt_cmap8_validate
+    (TT_CMap_ValidateFunc)   tt_cmap8_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap8_get_info
   };
 
 #endif /* TT_CONFIG_CMAP_FORMAT_8 */
@@ -1571,6 +1640,19 @@
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap10_get_info( TT_CMap       cmap,
+                      TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 8;
+
+
+    cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
+
+    return FT_Err_Ok;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const TT_CMap_ClassRec  tt_cmap10_class_rec =
   {
@@ -1583,7 +1665,8 @@
       (FT_CMap_CharNextFunc) tt_cmap10_char_next
     },
     10,
-    (TT_CMap_ValidateFunc)   tt_cmap10_validate
+    (TT_CMap_ValidateFunc)   tt_cmap10_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap10_get_info
   };
 
 #endif /* TT_CONFIG_CMAP_FORMAT_10 */
@@ -1741,6 +1824,19 @@
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap12_get_info( TT_CMap       cmap,
+                      TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 8;
+
+
+    cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
+
+    return FT_Err_Ok;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const TT_CMap_ClassRec  tt_cmap12_class_rec =
   {
@@ -1753,7 +1849,8 @@
       (FT_CMap_CharNextFunc) tt_cmap12_char_next
     },
     12,
-    (TT_CMap_ValidateFunc)   tt_cmap12_validate
+    (TT_CMap_ValidateFunc)   tt_cmap12_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap12_get_info
   };
 
 
@@ -1872,6 +1969,18 @@
     }
 
     return 0;
+  }
+
+
+  FT_LOCAL( FT_Error )
+  tt_get_cmap_info( FT_CharMap    charmap,
+                    TT_CMapInfo  *cmap_info )
+  {
+    FT_CMap        cmap  = (FT_CMap)charmap;
+    TT_CMap_Class  clazz = (TT_CMap_Class)cmap->clazz;
+
+
+    return clazz->get_cmap_info( charmap, cmap_info );
   }
 
 

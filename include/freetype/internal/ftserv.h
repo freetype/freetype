@@ -248,6 +248,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_SFNT_H              <freetype/internal/services/svsfnt.h>
 #define FT_SERVICE_PFR_H               <freetype/internal/services/svpfr.h>
 #define FT_SERVICE_WINFNT_H            <freetype/internal/services/svwinfnt.h>
+#define FT_SERVICE_TT_CMAP_H           <freetype/internal/services/svttcmap.h>
 
  /* */
 
