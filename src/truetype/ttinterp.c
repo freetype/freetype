@@ -718,6 +718,7 @@
     exec->callTop = 0;
 
 #if 1
+    (void)debug;
     return exec->face->interpreter( exec );
 #else
     if ( !debug )
@@ -2151,6 +2152,8 @@
     TT_F26Dot6  W;
     TT_Bool     S1, S2;
 
+    UNUSED_EXEC;
+    
     if ( ABS( Vx ) < 0x10000L && ABS( Vy ) < 0x10000L )
     {
       Vx *= 0x100;

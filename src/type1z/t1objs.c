@@ -167,8 +167,9 @@
     T1_Error      error;
     PSNames_Interface*  psnames;
 
-    (void)face_index;
-    (void)face;
+    UNUSED(face_index);
+    UNUSED(face);
+    UNUSED(stream);
 
     face->root.num_faces = 1;
 

@@ -212,7 +212,7 @@
   {
     FT_Memory  memory = table->memory;
     
-    if (table->init == 0xdeadbeef)
+    if (table->init == (FT_Long)0xdeadbeef)
     {
       FREE( table->block );
       FREE( table->elements );

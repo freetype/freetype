@@ -52,10 +52,19 @@
   /*                                                                       */
   /*************************************************************************/
 
+#define OLD
+
+
+#define xxxDEBUG_RAS
+#ifdef DEBUG_RAS
+#include <stdio.h>
+#endif
+
 
 #include <ftraster.h>
 #ifndef _STANDALONE_
 #include <ftconfig.h>
+#include <ftdebug.h>
 #endif
 
 #ifndef EXPORT_FUNC
@@ -117,41 +126,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* FT_RASTER_ANTI_ALIAS_5                                                */
-  /*                                                                       */
-  /*   Define this configuration macro if you want to enable the 5-grays   */
-  /*   anti-aliasing mode.  Ignored if FT_RASTER_OPTION_ANTI_ALIAS isn't   */
-  /*   defined.                                                            */
-  /*                                                                       */
-#define FT_RASTER_ANTI_ALIAS_5
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* FT_RASTER_ANTI_ALIAS_17                                               */
-  /*                                                                       */
-  /*   Define this configuration macro if you want to enable the 17-grays  */
-  /*   anti-aliasing mode.  Ignored if FT_RASTER_OPTION_ANTI_ALIAS isn't   */
-  /*   defined.                                                            */
-  /*                                                                       */
-/* #define FT_RASTER_ANTI_ALIAS_17 */
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* FT_RASTER_LITTLE_ENDIAN                                               */
-  /* FT_RASTER_BIG_ENDIAN                                                  */
-  /*                                                                       */
-  /*   The default anti-alias routines are processor-independent, but      */
-  /*   slow.  Define one of these macros to suit your own system, and      */
-  /*   enjoy greatly improved rendering speed.                             */
-  /*                                                                       */
-
-/* #define FT_RASTER_LITTLE_ENDIAN */
-/* #define FT_RASTER_BIG_ENDIAN    */
-
-  /*************************************************************************/
-  /*                                                                       */
   /* FT_RASTER_CONSTANT_PRECISION                                          */
   /*                                                                       */
   /*   Define this configuration macro if you want to use a constant       */
@@ -162,7 +136,7 @@
   /*   This results in a speed boost, but the macro can be undefined if    */
   /*   it results in rendering errors (mainly changed drop-outs)..         */
   /*                                                                       */
-#define FT_RASTER_CONSTANT_PRECISION
+#undef  FT_RASTER_CONSTANT_PRECISION
 
 
   /*************************************************************************/
@@ -188,7 +162,7 @@
   /*   constant, as it speeds things a bit while keeping a very good       */
   /*   accuracy on the bezier intersections..                              */
   /*                                                                       */
-#define FT_DYNAMIC_BEZIER_STEPS
+#undef  FT_DYNAMIC_BEZIER_STEPS
 
 
 #else /* _STANDALONE_ */
@@ -223,16 +197,20 @@
 #define FT_RASTER_BIG_ENDIAN
 #endif
 
-#define FT_RASTER_CONSTANT_PRECISION
-#define FT_DYNAMIC_BEZIER_STEPS
+#undef  FT_RASTER_CONSTANT_PRECISION
+#undef  FT_DYNAMIC_BEZIER_STEPS
 #define FT_PRECISION_BITS    8
 
 #endif /* _STANDALONE_ */
 
 
 /* to keep the compiler happy */
-#ifndef PTRACE2
-#define PTRACE2(x)  /*void*/
+#ifndef FT_TRACE2
+#define FT_TRACE2(x)  /*void*/
+#endif
+
+#ifndef FT_TRACE4
+#define FT_TRACE4(x)  /* void */
 #endif
 
   /*************************************************************************/
@@ -302,6 +280,7 @@
   /* `->'                                                              */
 #define ras       (*raster)
 
+#define           UNUSED_RASTER   (void)raster;
 
   /*************************************************************************/
   /*                                                                       */
@@ -706,7 +685,6 @@
     long  o;
     long  x;
 
-
     x = ras.cursor[-1];
 
     switch ( ras.cur_prof->flow )
@@ -1001,7 +979,7 @@
     int    n;
 
 
-    PTRACE2(( "EXTREMA += %d", y ));
+    FT_TRACE2(( "EXTREMA += %d", y ));
     n       = ras.n_extrema - 1;
     extrema = ras.pool_size - ras.n_extrema;
 
@@ -1069,7 +1047,7 @@
         switch ( p->flow )
         {
           case Flow_Down:
-            PTRACE2(( "FLOW DOWN (start = %d, height = %d)",
+            FT_TRACE2(( "FLOW DOWN (start = %d, height = %d)",
                       p->start, p->height ));
             bottom     = p->start - p->height+1;
             top        = p->start;
@@ -1079,7 +1057,7 @@
 
           case Flow_Up:
           default:
-            PTRACE2(( "FLOW UP (start = %d, height = %d)",
+            FT_TRACE2(( "FLOW UP (start = %d, height = %d)",
                       p->start, p->height ));
             bottom = p->start;
             top    = p->start + p->height-1;
@@ -1098,6 +1076,19 @@
 
     return SUCCESS;
   }
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****         COMPUTE SCAN-LINE INTERSECTIONS FROM SEGMENTS           ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
 
 
   /*************************************************************************/
@@ -1154,6 +1145,11 @@
     /* clip to lower scanline when necessary */
     if ( y1 < miny )
     {
+#ifdef OLD
+      x1 += FT_MulDiv( Dx, miny-y1, Dy );
+      e1  = TRUNC( miny );
+      f1  = 0;
+#else    
       TPos  x, y;
 
       /* we use a binary search to compute the lower
@@ -1182,6 +1178,7 @@
 
       e1  = TRUNC( miny );
       f1  = 0;
+#endif      
     }
     else
     {
@@ -1223,6 +1220,22 @@
       return FAILURE;
     }
 
+#ifdef OLD
+    if ( Dx > 0 )
+    {
+      Ix = ( PRECISION*Dx ) / Dy;
+      Rx = ( PRECISION*Dx ) % Dy;
+      Dx = 1;
+    }
+    else
+    {
+      Ix = -( (PRECISION*-Dx) / Dy );
+      Rx =    (PRECISION*-Dx) % Dy;
+      Dx = -1;
+    }
+    
+    Ax = -Dy;
+#else
     /* compute decision variables and push the intersections on top */
     /* of the render pool                                           */
     Dx <<= PRECISION_BITS;
@@ -1237,6 +1250,7 @@
     Ax   = -Dy;
     Rx <<= 1;
     Dy <<= 1;
+#endif
 
     top = ras.cursor;
 
@@ -1251,7 +1265,11 @@
       if ( Ax >= 0 )
       {
         Ax -= Dy;
+#ifdef OLD
+        x1 += Dx;
+#else        
         x1 ++;
+#endif        
       }
       size--;
     }
@@ -1416,10 +1434,18 @@
 
     e2 = FLOOR( y2 );  /* integer end y */
 
+#ifdef OLD
+    if ( e2 > maxy )
+      e2 = maxy;
+      
+    e0 = miny;
+#else    
     if ( e2 > maxy )
       e2 = FLOOR(maxy);
 
     e0 = CEILING(miny);
+#endif
+
 
     if ( y1 < miny )
     {
@@ -1466,6 +1492,7 @@
       return FAILURE;
     }
 
+    
 #ifdef FT_DYNAMIC_BEZIER_STEPS
     /* compute dynamic bezier step threshold */
     threshold = Dynamic_Bezier_Threshold( RAS_VAR_ degree, arc );
@@ -1487,7 +1514,11 @@
       {
         y1 = arc[degree].y;  /* start y of top-most arc */
 
+#ifdef OLD
+        if ( y2-y1 >= PRECISION_STEP )
+#else        
         if ( y2 >= e + PRECISION || y2 - y1 >= threshold )
+#endif        
         {
           /* if the arc's height is too great, split it */
           splitter( arc );
@@ -1573,6 +1604,19 @@
   }
 
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****         SPLITTING CONIC AND CUBIC BEZIERS IN HALF               ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
 #ifdef FT_RASTER_CONIC_BEZIERS
 
   /*************************************************************************/
@@ -1608,60 +1652,7 @@
     base[2].y = ( a + b ) / 2;
   }
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Push_Conic                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Clears the Bezier stack and pushes a new arc on top of it.         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    p2 :: A pointer to the second (control) point.                     */
-  /*    p3 :: A pointer to the third (end) point.                          */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The first point is taken as `raster->last', so it doesn't appear   */
-  /*    in the signature.                                                  */
-  /*                                                                       */
-  static
-  void  Push_Conic( RAS_ARG_ FT_Vector*  p2,
-                             FT_Vector*  p3 )
-  {
-#undef  STORE
-#define STORE( _arc, point )                    \
-          {                                     \
-            TPos  x = SCALED( point->x );       \
-            TPos  y = SCALED( point->y );       \
-                                                \
-                                                \
-            if ( ras.flipped )                  \
-            {                                   \
-              _arc.x = y;                       \
-              _arc.y = x;                       \
-            }                                   \
-            else                                \
-            {                                   \
-              _arc.x = x;                       \
-              _arc.y = y;                       \
-            }                                   \
-          }
-
-    TPoint*  arc;
-
-
-    ras.arc = arc = ras.arcs;
-
-    arc[2] = ras.last;
-    STORE( arc[1], p2 );
-    STORE( arc[0], p3 );
-#undef  STORE
-  }
-
-#endif /* FT_RASTER_CONIC_BEZIERS */
-
-
+#endif
 
 #ifdef FT_RASTER_CUBIC_BEZIERS
 
@@ -1705,63 +1696,21 @@
     base[3].y = ( a + b + 1 ) >> 1;
   }
 
+#endif /* FT_RASTER_CUBIC_BEZIERS */
+
 
   /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Push_Cubic                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Clears the Bezier stack and pushes a new third-order Bezier arc on */
-  /*    top of it.                                                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    p2 :: A pointer to the second (control) point.                     */
-  /*    p3 :: A pointer to the third (control) point.                      */
-  /*    p4 :: A pointer to the fourth (end) point.                         */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The first point is taken as `raster->last', so it doesn't appear   */
-  /*    in the signature.                                                  */
-  /*                                                                       */
-  /*    This is the same as Push_Conic(), except that it deals with        */
-  /*    third-order Beziers.                                               */
-  /*                                                                       */
-  static
-  void  Push_Cubic( RAS_ARG_ FT_Vector*  p2,
-                             FT_Vector*  p3,
-                             FT_Vector*  p4 )
-  {
-#undef  STORE
-#define STORE( _arc, point )                    \
-          {                                     \
-            TPos  x = SCALED( point->x );       \
-            TPos  y = SCALED( point->y );       \
-                                                \
-            if ( ras.flipped )                  \
-            {                                   \
-              _arc.x = y;                       \
-              _arc.y = x;                       \
-            }                                   \
-            else                                \
-            {                                   \
-              _arc.x = x;                       \
-              _arc.y = y;                       \
-            }                                   \
-          }
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                   PROCESSING OUTLINE SEGMENTS                   ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
 
-    TPoint*  arc;
-    ras.arc = arc = ras.arcs;
-
-    arc[3] = ras.last;
-    STORE( arc[2], p2 );
-    STORE( arc[1], p3 );
-    STORE( arc[0], p4 );
-
-#undef STORE
-  }
-
-#endif /* FT_RASTER_CUBIC_BEZIERS */
 
 
   /*************************************************************************/
@@ -1945,6 +1894,56 @@
 
 #ifdef FT_RASTER_CONIC_BEZIERS
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Push_Conic                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Clears the Bezier stack and pushes a new arc on top of it.         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    p2 :: A pointer to the second (control) point.                     */
+  /*    p3 :: A pointer to the third (end) point.                          */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The first point is taken as `raster->last', so it doesn't appear   */
+  /*    in the signature.                                                  */
+  /*                                                                       */
+  static
+  void  Push_Conic( RAS_ARG_ FT_Vector*  p2,
+                             FT_Vector*  p3 )
+  {
+#undef  STORE
+#define STORE( _arc, point )                    \
+          {                                     \
+            TPos  x = SCALED( point->x );       \
+            TPos  y = SCALED( point->y );       \
+                                                \
+                                                \
+            if ( ras.flipped )                  \
+            {                                   \
+              _arc.x = y;                       \
+              _arc.y = x;                       \
+            }                                   \
+            else                                \
+            {                                   \
+              _arc.x = x;                       \
+              _arc.y = y;                       \
+            }                                   \
+          }
+
+    TPoint*  arc;
+
+
+    ras.arc = arc = ras.arcs;
+
+    arc[2] = ras.last;
+    STORE( arc[1], p2 );
+    STORE( arc[0], p3 );
+#undef  STORE
+  }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2063,11 +2062,65 @@
     return ErrRaster_Invalid_Outline;
   }
 
-
 #endif /* FT_RASTER_CONIC_BEZIERS */
 
 
 #ifdef FT_RASTER_CUBIC_BEZIERS
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Push_Cubic                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Clears the Bezier stack and pushes a new third-order Bezier arc on */
+  /*    top of it.                                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    p2 :: A pointer to the second (control) point.                     */
+  /*    p3 :: A pointer to the third (control) point.                      */
+  /*    p4 :: A pointer to the fourth (end) point.                         */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The first point is taken as `raster->last', so it doesn't appear   */
+  /*    in the signature.                                                  */
+  /*                                                                       */
+  /*    This is the same as Push_Conic(), except that it deals with        */
+  /*    third-order Beziers.                                               */
+  /*                                                                       */
+  static
+  void  Push_Cubic( RAS_ARG_ FT_Vector*  p2,
+                             FT_Vector*  p3,
+                             FT_Vector*  p4 )
+  {
+#undef  STORE
+#define STORE( _arc, point )                    \
+          {                                     \
+            TPos  x = SCALED( point->x );       \
+            TPos  y = SCALED( point->y );       \
+                                                \
+            if ( ras.flipped )                  \
+            {                                   \
+              _arc.x = y;                       \
+              _arc.y = x;                       \
+            }                                   \
+            else                                \
+            {                                   \
+              _arc.x = x;                       \
+              _arc.y = y;                       \
+            }                                   \
+          }
+
+    TPoint*  arc;
+    ras.arc = arc = ras.arcs;
+
+    arc[3] = ras.last;
+    STORE( arc[2], p2 );
+    STORE( arc[1], p3 );
+    STORE( arc[0], p4 );
+
+#undef STORE
+  }
 
 
   /*************************************************************************/
@@ -2480,12 +2533,17 @@
 
     /* Drop-out control */
     e1 = TRUNC( CEILING( x1 ) );
+    
     if ( x2 - x1 - PRECISION <= PRECISION_JITTER )
       e2 = e1;
     else
       e2 = TRUNC( FLOOR( x2 ) );
 
+#ifdef OLD
+    if ( e2 >= 0 && e1 < ras.bit_width )
+#else
     if ( e1 <= e2 && e2 >= 0 && e1 < ras.bit_width )
+#endif    
     {
       if ( e1 < 0 )              e1 = 0;
       if ( e2 >= ras.bit_width ) e2 = ras.bit_width - 1;
@@ -2916,6 +2974,7 @@
   int  Vertical_Gray_Test_Pixel( RAS_ARG_ TScan  y,
                                           int    x )
   {
+    UNUSED_RASTER
     UNUSED( y );
 
 #if 0
@@ -3163,6 +3222,7 @@
     return ( x >= 0 && x < ras.target.rows &&
             *pixel >= 64 );
 #else
+    UNUSED_RASTER
     UNUSED(y);
     UNUSED(x);
     return 0;
@@ -3321,6 +3381,9 @@
     TProfileList  wait;
     TProfileList  draw;
 
+    #ifdef DEBUG_RAS
+    int   y_set = 0;
+    #endif
 
     /* Init empty linked lists */
     Init_Linked( &wait );
@@ -3355,9 +3418,9 @@
     }
 
     /* Now inits the sweep */
-    PTRACE2(( "draw_sweep: initialize sweep\n" ));
+    FT_TRACE2(( "draw_sweep: initialize sweep\n" ));
     ras.render.init( RAS_VAR_  &min_Y, &max_Y );
-    PTRACE2(( "  init min_y = %d, max_y = %d\n", min_Y, max_Y ));
+    FT_TRACE2(( "  init min_y = %d, max_y = %d\n", min_Y, max_Y ));
 
     /* Then compute the distance of each profile from min_Y */
     P = wait;
@@ -3375,7 +3438,7 @@
          ras.pool_size[-ras.n_extrema] == min_Y )
       ras.n_extrema--;
 
-    PTRACE2(( "starting loop with n_extrema = %d", ras.n_extrema ));
+    FT_TRACE2(( "starting loop with n_extrema = %d", ras.n_extrema ));
     while ( ras.n_extrema > 0 )
     {
       PProfile  prof = wait;
@@ -3404,7 +3467,7 @@
       y_change = ras.pool_size[-ras.n_extrema--];
       y_height = y_change - y;
 
-      PTRACE2(( ">>> y = %d, y_change = %d, y_height = %d",
+      FT_TRACE2(( ">>> y = %d, y_change = %d, y_height = %d",
                 y, y_change, y_height ));
 
       while ( y < y_change )
@@ -3423,7 +3486,7 @@
         window = left->flow;
         prof   = left->link;
 
-        PTRACE2(( ">>>  line y = %d", y ));
+        FT_TRACE2(( ">>>  line y = %d", y ));
 
         while ( prof )
         {
@@ -3463,7 +3526,15 @@
               }
             }
 
-            PTRACE2(( "drawing span ( y=%d, x1=%d, x2=%d )", y, x1, x2 ));
+            FT_TRACE2(( "drawing span ( y=%d, x1=%d, x2=%d )", y, x1, x2 ));
+            #ifdef DEBUG_RAS
+            if (!y_set)
+            {
+              y_set = 1;
+              fprintf( stderr, "%3d", y );
+            }
+            fprintf( stderr, " [%.2f-%.2f]", x1*1.0/PRECISION, x2*1.0/PRECISION );
+            #endif
             ras.render.span( RAS_VAR_  y, x1, x2 );
 
    Skip_To_Next:
@@ -3482,16 +3553,23 @@
         ras.render.step( RAS_VAR );
 
         y++;
+        #ifdef DEBUG_RAS
+        if (y_set)
+        {
+          fprintf( stderr, "\n" );
+          y_set = 0;
+        }
+        #endif
 
         if ( y < y_change )
           Sort( &draw );
 
-        PTRACE2(( "line sorted for next operation" ));
+        FT_TRACE4(( "line sorted for next operation" ));
       }
 
       /* Now finalize the profiles that needs it */
 
-      PTRACE2(( "finalizing profiles..." ));
+      FT_TRACE2(( "finalizing profiles..." ));
       {
         PProfile  prof, next;
 
@@ -3505,7 +3583,7 @@
         }
       }
 
-      PTRACE2(( "profiles finalized for this run" ));
+      FT_TRACE2(( "profiles finalized for this run" ));
     }
 
     /* for gray-scaling, flushes the bitmap scanline cache */
@@ -3543,9 +3621,18 @@ Scan_DropOuts :
       left  = ( ras.flipped ? P_Right : P_Left  );
       right = ( ras.flipped ? P_Left  : P_Right );
 
-      PTRACE2(( "performing drop-out control ( x1= %d, x2 = %d )",
+      FT_TRACE2(( "performing drop-out control ( x1= %d, x2 = %d )",
                 x1, x2 ));
 
+      #ifdef DEBUG_RAS
+      if (!y_set)
+      {
+        y_set = 1;
+        fprintf( stderr, "%3d", y );
+      }
+      fprintf( stderr, " <%.2f-%.2f>", P_Left->X*1.0/PRECISION, P_Right->X*1.0/PRECISION );
+      #endif
+      
       e1 = CEILING( x1 );
       e2 = FLOOR  ( x2 );
 
@@ -3611,7 +3698,7 @@ Scan_DropOuts :
           goto Next_Dropout;
       }
 
-      PTRACE2(( "  -> setting pixel" ));
+      FT_TRACE2(( "  -> setting pixel" ));
       ras.render.set_pixel( RAS_VAR_ y,
                             TRUNC( e1 ),
                             (x2 - x1) >> ras.scale_shift );
@@ -3647,7 +3734,7 @@ Scan_DropOuts :
 
     band = ras.band_stack;
 
-    PTRACE2(( "raster: entering render_single_pass (flipped = %d)\n",
+    FT_TRACE2(( "raster: entering render_single_pass (flipped = %d)\n",
               flipped ));
 
     while ( band >= ras.band_stack )
@@ -3658,7 +3745,7 @@ Scan_DropOuts :
       ras.cursor = ras.pool;
       ras.error  = 0;
 
-      PTRACE2(( "raster: band = [ %d, %d ]\n",
+      FT_TRACE2(( "raster: band = [ %d, %d ]\n",
                 band[0].y_min,
                 band[0].y_max ));
 
@@ -3671,7 +3758,7 @@ Scan_DropOuts :
           return FAILURE;
         ras.error = ErrRaster_Ok;
 
-        PTRACE2(( "conversion failure, performing sub-banding\n" ));
+        FT_TRACE2(( "conversion failure, performing sub-banding\n" ));
 
         /* sub-banding */
 
@@ -3698,7 +3785,7 @@ Scan_DropOuts :
       }
       else
       {
-        PTRACE2(( "conversion succeeded, span drawing sweep\n" ));
+        FT_TRACE2(( "conversion succeeded, span drawing sweep\n" ));
 #if 1  /* for debugging */
         if ( ras.start_prof )
           if ( Draw_Sweep( RAS_VAR ) )
@@ -3708,7 +3795,7 @@ Scan_DropOuts :
       }
     }
 
-    PTRACE2(( "raster: exiting render_single_pass\n" ));
+    FT_TRACE2(( "raster: exiting render_single_pass\n" ));
 
     return SUCCESS;  /* success */
   }

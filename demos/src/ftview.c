@@ -267,7 +267,11 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
     i = first_glyph;
 
+#if 0
+     while ( i < first_glyph+1 )
+#else
      while ( i < num_glyphs )
+#endif
     {
       if ( !(error = LoadChar( i, hinted )) )
       {

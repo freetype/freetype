@@ -151,10 +151,10 @@
     
 #ifdef READ_FIELDS
     const FT_Frame_Field  ttc_header_fields[] = {
-           { ft_frame_start, 0, 8 },   /* frame of 8 bytes */
+           FT_FRAME_START(8),  /* frame of 8 bytes */
              FT_FRAME_LONG( TTC_Header, version  ),
              FT_FRAME_LONG( TTC_Header, DirCount ),
-           { ft_frame_end, 0, 0 } };
+           FT_FRAME_END };
 #endif
 
     FT_TRACE2(( "TT_Load_Format_Tag(%08lx, %ld )\n",
@@ -256,12 +256,12 @@
     FT_Memory  memory = stream->memory;
 #ifdef READ_FIELDS
     const FT_Frame_Field table_dir_fields[] = {
-           { ft_frame_start, 0, 8 },
+           FT_FRAME_START(8),
              FT_FRAME_USHORT( TT_TableDir, numTables ),
              FT_FRAME_USHORT( TT_TableDir, searchRange ),
              FT_FRAME_USHORT( TT_TableDir, entrySelector ),
              FT_FRAME_USHORT( TT_TableDir, rangeShift ),
-           { ft_frame_end, 0 , 0 } };
+           FT_FRAME_END };
 #endif
 
     TT_TableDir  tableDir;
@@ -438,8 +438,8 @@
     TT_Error    error;
     TT_Header*  header;
 #ifdef READ_FIELDS
-    const FT_Frame_Field  header_fields[] = {
-            { ft_frame_start, 0, 54 },
+    static const FT_Frame_Field  header_fields[] = {
+            FT_FRAME_START(54),
               FT_FRAME_ULONG(  TT_Header, Table_Version ),
               FT_FRAME_ULONG(  TT_Header, Font_Revision ),
               FT_FRAME_LONG(   TT_Header, CheckSum_Adjust ),
@@ -459,7 +459,7 @@
               FT_FRAME_SHORT(  TT_Header, Font_Direction ),
               FT_FRAME_SHORT(  TT_Header, Index_To_Loc_Format ),
               FT_FRAME_SHORT(  TT_Header, Glyph_Data_Format ),
-            { ft_frame_end } };
+            FT_FRAME_END };
 #endif
 
     FT_TRACE2(( "Load_TT_Header( %08lx )\n", (TT_Long)face ));
@@ -539,7 +539,7 @@
     TT_MaxProfile*  maxProfile = &face->max_profile;
 #ifdef READ_FIELDS
     const FT_Frame_Field  maxp_fields[] = {
-              { ft_frame_start, 0, 32 },
+              FT_FRAME_START(32),
                 FT_FRAME_ULONG(  TT_MaxProfile, version ),
                 FT_FRAME_USHORT( TT_MaxProfile, numGlyphs ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxPoints ),
@@ -555,7 +555,7 @@
                 FT_FRAME_USHORT( TT_MaxProfile, maxSizeOfInstructions ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxComponentElements ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxComponentDepth ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 #endif
 
     FT_TRACE2(( "Load_TT_MaxProfile( %08lx )\n", (TT_Long)face ));
@@ -785,7 +785,7 @@
     TT_HoriHeader*  header;
 #ifdef READ_FIELDS
     const FT_Frame_Field  metrics_header_fields[] = {
-              { ft_frame_start, 0, 36 },
+              FT_FRAME_START(36),
                 FT_FRAME_ULONG(  TT_HoriHeader, Version ),
                 FT_FRAME_SHORT(  TT_HoriHeader, Ascender ),
                 FT_FRAME_SHORT(  TT_HoriHeader, Descender ),
@@ -803,7 +803,7 @@
                 FT_FRAME_SHORT(  TT_HoriHeader, Reserved[4] ),
                 FT_FRAME_SHORT(  TT_HoriHeader, metric_Data_Format ),
                 FT_FRAME_USHORT( TT_HoriHeader, number_Of_HMetrics ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 #endif
     FT_TRACE2(( vertical ? "Vertical header " : "Horizontal header " ));
 
@@ -909,11 +909,11 @@
     TT_NameTable*  names;
 #ifdef READ_FIELDS
     const FT_Frame_Field  name_table_fields[] = {
-              { ft_frame_start, 0, 6 },
+              FT_FRAME_START(6),
                 FT_FRAME_USHORT( TT_NameTable, format ),
                 FT_FRAME_USHORT( TT_NameTable, numNameRecords ),
                 FT_FRAME_USHORT( TT_NameTable, storageOffset ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 
     const FT_Frame_Field  name_record_fields[] = {
                 FT_FRAME_USHORT( TT_NameRec, platformID ),
@@ -922,7 +922,7 @@
                 FT_FRAME_USHORT( TT_NameRec, nameID ),
                 FT_FRAME_USHORT( TT_NameRec, stringLength ),
                 FT_FRAME_USHORT( TT_NameRec, stringOffset ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 #endif
 
 
@@ -1103,17 +1103,17 @@
 
 #ifdef READ_FIELDS
     const FT_Frame_Field  cmap_fields[] = {
-              { ft_frame_start, 0, 4 },
+              FT_FRAME_START(4),
                 FT_FRAME_USHORT( TT_CMapDir, tableVersionNumber ),
                 FT_FRAME_USHORT( TT_CMapDir, numCMaps ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 
     const FT_Frame_Field  cmap_rec_fields[] = {
-              { ft_frame_start, 0, 6 },
+              FT_FRAME_START(6),
                 FT_FRAME_USHORT( TT_CMapTable, format ),
                 FT_FRAME_USHORT( TT_CMapTable, length ),
                 FT_FRAME_USHORT( TT_CMapTable, version ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 #endif
 
     FT_TRACE2(( "CMaps " ));
@@ -1219,7 +1219,7 @@
     TT_OS2*   os2;
 #ifdef READ_FIELDS
     const FT_Frame_Field  os2_fields[] = {
-              { ft_frame_start, 0, 78 },
+              FT_FRAME_START(78),
                 FT_FRAME_USHORT( TT_OS2, version ),
                 FT_FRAME_SHORT(  TT_OS2, xAvgCharWidth ),
                 FT_FRAME_USHORT( TT_OS2, usWeightClass ),
@@ -1263,22 +1263,22 @@
                 FT_FRAME_SHORT(  TT_OS2, sTypoLineGap ),
                 FT_FRAME_USHORT( TT_OS2, usWinAscent ),
                 FT_FRAME_USHORT( TT_OS2, usWinDescent ),
-              { ft_frame_end } };
+              FT_FRAME_END };
               
     const FT_Frame_Field  os2_fields_extra[] = {
-              { ft_frame_start, 0, 8 },
+              FT_FRAME_START(8),
                 FT_FRAME_ULONG( TT_OS2, ulCodePageRange1 ),
                 FT_FRAME_ULONG( TT_OS2, ulCodePageRange2 ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 
     const FT_Frame_Field  os2_fields_extra2[] = {
-              { ft_frame_start, 0, 10 },
+              FT_FRAME_START(10),
                 FT_FRAME_SHORT( TT_OS2,  sxHeight ),
                 FT_FRAME_SHORT( TT_OS2,  sCapHeight ),
                 FT_FRAME_USHORT( TT_OS2, usDefaultChar ),
                 FT_FRAME_USHORT( TT_OS2, usBreakChar ),
                 FT_FRAME_USHORT( TT_OS2, usMaxContext ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 #else
     TT_Int    j;
 #endif
@@ -1414,7 +1414,7 @@
     TT_Postscript*  post = &face->postscript;
 #ifdef READ_FIELDS
     const FT_Frame_Field  post_fields[] = {
-              { ft_frame_start, 0, 32 },
+              FT_FRAME_START(32),
                 FT_FRAME_ULONG( TT_Postscript, FormatType ),
                 FT_FRAME_ULONG( TT_Postscript, italicAngle ),
                 FT_FRAME_SHORT( TT_Postscript, underlinePosition ),
@@ -1424,7 +1424,7 @@
                 FT_FRAME_ULONG( TT_Postscript, maxMemType42 ),
                 FT_FRAME_ULONG( TT_Postscript, minMemType1 ),
                 FT_FRAME_ULONG( TT_Postscript, maxMemType1 ),
-              { ft_frame_end } };
+              FT_FRAME_END };
 #endif
 
     FT_TRACE2(( "PostScript " ));

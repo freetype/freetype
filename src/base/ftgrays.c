@@ -1151,6 +1151,8 @@ int  check_sort( PCell  cells, int count )
     TScan  x, y, cover, area;
     PCell  start, cur, limit;
 
+    (void)target;
+
     cur   = ras.cells;
     limit = cur + ras.num_cells;
 

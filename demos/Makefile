@@ -187,6 +187,9 @@ else
   $(OBJ_)ftgrays2.$O: $(SRC_DIR_)ftgrays2.c
 	  $(COMPILE) $T$@ $<
 
+  $(OBJ_)ftrast.$O: $(SRC_DIR_)ftrast.c
+	  $(COMPILE) $T$@ $<
+
   $(OBJ_)fttry.$O: $(SRC_DIR_)fttry.c
 	  $(COMPILE) $T$@ $<
 
@@ -261,7 +264,7 @@ else
 	  $(LINK)
 
 
-  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
+  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftrast.$O
 	  $(GRAPH_LINK)
 
   $(BIN_)ftstring$E: $(OBJ_)ftstring.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)

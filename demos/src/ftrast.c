@@ -20,7 +20,7 @@
  *
  ******************************************************************/
 
-#include "frast.h"
+#include "ftrast.h"
 #include <ftcalc.h>      /* for FT_MulDiv only */
 
   /****************************************************************/
@@ -44,17 +44,20 @@
 /* The default render pool size */
 #define  RASTER_RENDER_POOL   8192
 
+/* XXXXX */
+#define FT_CONFIG_OPTION_GRAY_SCALING
+
 /* The size of the two-lines intermediate bitmap used */
 /* for anti-aliasing                                  */
 #define  RASTER_GRAY_LINES    1024
 
-#define Raster_Err_None              TT_Err_Ok
-#define Raster_Err_Not_Ini           TT_Err_Raster_Not_Initialized
-#define Raster_Err_Overflow          TT_Err_Raster_Pool_Overflow
-#define Raster_Err_Neg_Height        TT_Err_Raster_Negative_Height
-#define Raster_Err_Invalid           TT_Err_Raster_Invalid_Value
-#define Raster_Err_Gray_Unsupported  TT_Err_Raster_Gray_Unsupported
-
+#define Raster_Err_None              0
+#define Raster_Err_Not_Ini           -1
+#define Raster_Err_Overflow          -2
+#define Raster_Err_Neg_Height        -3
+#define Raster_Err_Invalid           -4
+#define Raster_Err_Gray_Unsupported  -5
+#define Raster_Err_Unsupported       -6
 
 /* FMulDiv means "Fast MulDiv", it is uses in case where 'b' is typically */
 /* a small value and the result of (a*b) is known to fit in 32 bits.      */
@@ -86,7 +89,13 @@
 #define NULL  (void*)0
 #endif
 
+#ifndef SUCCESS
+#define SUCCESS 0
+#endif
 
+#ifndef FAILURE
+#define FAILURE 1
+#endif
 
 
 #define MaxBezier  32   /* The maximum number of stacked Bezier curves. */
@@ -148,7 +157,7 @@
   {
     FT_F26Dot6  X;           /* current coordinate during sweep          */
     PProfile    link;        /* link to next profile - various purpose   */
-    PStorage    offset;      /* start of profile's data in render pool   */
+    PLong       offset;      /* start of profile's data in render pool   */
     Int         flow;        /* Profile orientation: Asc/Descending      */
     Long        height;      /* profile's height in scanlines            */
     Long        start;       /* profile's starting scanline              */
@@ -274,11 +283,6 @@
 
     FT_Error  error;
 
-    PByte     flags;                /* current flags table    */
-    PUShort   outs;                 /* current outlines table */
-
-    UShort    nPoints;              /* number of points in current glyph   */
-    Short     nContours;            /* number of contours in current glyph */
     Int       numTurns;             /* number of Y-turns in outline        */
 
     TPoint*   arc;                  /* current Bezier arc pointer */
@@ -302,7 +306,8 @@
                                     /* of impact                         */
     TStates   state;                /* rendering state */
 
-    FT_Bitmap target;          /* description of target bit/pixmap */
+    FT_Bitmap  target;          /* description of target bit/pixmap */
+    FT_Outline outline;
 
     Long      traceOfs;             /* current offset in target bitmap */
     Long      traceG;               /* current offset in target pixmap */
@@ -318,8 +323,6 @@
     Function_Sweep_Span*  Proc_Sweep_Span;
     Function_Sweep_Span*  Proc_Sweep_Drop;
     Function_Sweep_Step*  Proc_Sweep_Step;
-
-    FT_Vector*  coords;
 
     Byte      dropOutControl;       /* current drop_out control method */
 
@@ -348,6 +351,19 @@
 
     Int       count_table[256];     /* Look-up table used to quickly count */
                                     /* set bits in a gray 2x2 cell         */
+
+    void*     memory;
+    
+#if 0
+    PByte     flags;                /* current flags table    */
+    PUShort   outs;                 /* current outlines table */
+    FT_Vector*  coords;
+
+    UShort    nPoints;              /* number of points in current glyph   */
+    Short     nContours;            /* number of contours in current glyph */
+#endif
+
+
   };
 
 
@@ -437,12 +453,12 @@
     switch ( aState )
     {
     case Ascending:
-      ras.cProfile->flow = FT_Flow_Up;
+      ras.cProfile->flow = Flow_Up;
       FT_TRACE7(( "New ascending profile = %lx\n", (long)ras.cProfile ));
       break;
 
     case Descending:
-      ras.cProfile->flow = FT_Flow_Down;
+      ras.cProfile->flow = Flow_Down;
       FT_TRACE7(( "New descending profile = %lx\n", (long)ras.cProfile ));
       break;
 
@@ -541,7 +557,7 @@
   static
   Bool Insert_Y_Turn( RAS_ARGS  Int  y )
   {
-    PStorage  y_turns;
+    PLong     y_turns;
     Int       y2, n;
 
     n       = ras.numTurns-1;
@@ -611,14 +627,14 @@
 
         switch ( p->flow )
         {
-        case FT_Flow_Down:
+        case Flow_Down:
           bottom     = p->start - p->height+1;
           top        = p->start;
           p->start   = bottom;
           p->offset += p->height-1;
           break;
 
-        case FT_Flow_Up:
+        case Flow_Up:
         default:
           bottom = p->start;
           top    = p->start + p->height-1;
@@ -720,35 +736,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Push_Cubic                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Clears the Bezier stack and pushes a new third-order Bezier arc on */
-  /*    top of it.                                                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    p2 :: A pointer to the second (control) point.                     */
-  /*    p3 :: A pointer to the third (control) point.                      */
-  /*    p4 :: A pointer to the fourth (end) point.                         */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The first point is taken as `raster->last', so it doesn't appear   */
-  /*    in the signature.                                                  */
-  /*                                                                       */
-  /*    This is the same as Push_Conic(), except that it deals with        */
-  /*    third-order Beziers.                                               */
-  /*                                                                       */
-  static
-  static void  Push_Cubic( RAS_ARGS Long  x1, Long  y1,
-                                    Long  x2, Long  y2,
-                                    Long  x3, Long  y3,
-                                    Long  x4, Long  y4 )
-  {
-  }
-
 
 /****************************************************************************/
 /*                                                                          */
@@ -772,7 +759,7 @@
     Int   e1, e2, f1, f2, size;     /* XXX: is `Short' sufficient? */
     Long  Ix, Rx, Ax;
 
-    PStorage  top;
+    PLong  top;
 
 
     Dx = x2 - x1;
@@ -913,7 +900,7 @@
     TPoint*  arc;
     TPoint*  start_arc;
 
-    PStorage top;
+    PLong top;
 
 
     arc = ras.arc;
@@ -1138,7 +1125,7 @@
                                   Long  cx,
                                   Long  cy )
   {
-    Long     y1, y2, y3, x3;
+    Long     y1, y2, y3, x3, ymin, ymax;
     TStates  state_bez;
 
 
@@ -1192,18 +1179,18 @@
             goto Fail;
 
           /* create a new profile */
-          if ( New_Profile( RAS_VAR_ state_bez ) )
+          if ( New_Profile( RAS_VARS state_bez ) )
             goto Fail;
         }
 
         /* now call the appropriate routine */
         if ( state_bez == Ascending )
         {
-          if ( Bezier_Up( RAS_VAR_  2, Split_Conic, ras.minY, ras.maxY ) )
+          if ( Bezier_Up( RAS_VARS  2, Split_Conic, ras.minY, ras.maxY ) )
             goto Fail;
         }
         else
-          if ( Bezier_Down( RAS_VAR_  2, Split_Conic, ras.minY, ras.maxY ) )
+          if ( Bezier_Down( RAS_VARS  2, Split_Conic, ras.minY, ras.maxY ) )
             goto Fail;
       }
 
@@ -1213,6 +1200,8 @@
     ras.lastY = y3;
 
     return SUCCESS;
+  Fail:
+    return FAILURE;
   }
 
 /****************************************************************************/
@@ -1226,11 +1215,10 @@
                                   Long  y,
                                   Long  cx1,
                                   Long  cy1,
-                                  Lonc  cx2,
+                                  Long  cx2,
                                   Long  cy2 )
   {
-    TPos     y1, y2, y3, y4, x4, ymin1, ymax1, ymin2, ymax2;
-    Long     y0, y1, y2, y3, x3;
+    Long     y1, y2, y3, y4, x4, ymin1, ymax1, ymin2, ymax2;
     TStates  state_bez;
 
 
@@ -1295,25 +1283,25 @@
                End_Profile( RAS_VAR ) )
             goto Fail;
 
-          if ( New_Profile( RAS_VAR_ state_bez ) )
+          if ( New_Profile( RAS_VARS state_bez ) )
             goto Fail;
         }
 
         /* compute intersections */
         if ( state_bez == Ascending )
         {
-          if ( Bezier_Up ( RAS_VAR_ 3, Split_Cubic, ras.minY, ras.maxY ) )
+          if ( Bezier_Up ( RAS_VARS 3, Split_Cubic, ras.minY, ras.maxY ) )
             goto Fail;
         }
         else
-          if ( Bezier_Down ( RAS_VAR_ 3, Split_Cubic, ras.minY, ras.maxY ) )
+          if ( Bezier_Down ( RAS_VARS 3, Split_Cubic, ras.minY, ras.maxY ) )
             goto Fail;
       }
 
     } while ( ras.arc >= ras.arcs );
 
-    ras.lastX = x4
-    ras.lastY = y4
+    ras.lastX = x4;
+    ras.lastY = y4;
 
     return SUCCESS;
   Fail:
@@ -1356,9 +1344,6 @@
     FT_Vector* limit;
     char*      tags;
 
-    int    n;         /* index of contour in outline     */
-    int    first;     /* index of first point in contour */
-    int    error;
     char   tag;       /* current point's state           */
 
     points = ras.outline.points;
@@ -1377,7 +1362,7 @@
     v_control = v_start;
 
     point = points + first;
-    tags  = ras.outline->tags  + first;
+    tags  = ras.outline.tags  + first;
     tag   = FT_CURVE_TAG( tags[0] );
 
     /* A contour cannot start with a cubic control point! */
@@ -1388,7 +1373,7 @@
     if ( tag == FT_Curve_Tag_Conic )
     {
       /* first point is conic control.  Yes, this happens. */
-      if ( FT_CURVE_TAG( ras.outline->tags[last] ) == FT_Curve_Tag_On )
+      if ( FT_CURVE_TAG( ras.outline.tags[last] ) == FT_Curve_Tag_On )
       {
         /* start at last point if it is on the curve */
         v_start = v_last;
@@ -1515,17 +1500,16 @@
     /* close the contour with a line segment */
     if (Line_To( RAS_VARS v_start.x, v_start.y ))
       goto Fail;
-  }
 
-Close:
-  return SUCCESS;
+  Close:
+    return SUCCESS;
+    
+  Invalid_Outline:
+    ras.error = Raster_Err_Invalid;
   
-Invalid_Outline:
-  ras.error = Raster_Err_Invalid;
-
-Fail:
-  return FAILURE;
-}
+  Fail:
+    return FAILURE;
+  }
   
 /****************************************************************************/
 /*                                                                          */
@@ -1565,15 +1549,15 @@ Fail:
 
     start = 0;
 
-    for ( i = 0; i < ras.nContours; i++ )
+    for ( i = 0; i < ras.outline.n_contours; i++ )
     {
       ras.state    = Unknown;
       ras.gProfile = NULL;
 
-      if ( Decompose_Curve( RAS_VARS  start, ras.outs[i], flipped ) )
+      if ( Decompose_Curve( RAS_VARS  start, ras.outline.contours[i], flipped ) )
         return FAILURE;
 
-      start = ras.outs[i] + 1;
+      start = ras.outline.contours[i] + 1;
 
       /* We must now see if the extreme arcs join or not */
       if ( ( FRAC( ras.lastY ) == 0 &&
@@ -1775,18 +1759,15 @@ Fail:
 
   static void  Vertical_Sweep_Init( RAS_ARGS Short*  min, Short*  max )
   {
-    switch ( ras.target.flow )
-    {
-    case FT_Flow_Up:
-      ras.traceOfs  = *min * ras.target.cols;
-      ras.traceIncr = ras.target.cols;
-      break;
-
-    default:
-      ras.traceOfs  = ( ras.target.rows - 1 - *min ) * ras.target.cols;
-      ras.traceIncr = -ras.target.cols;
-    }
-
+    Long  pitch = ras.target.pitch;
+    
+    (void)max;
+    
+    ras.traceIncr = - pitch;
+    ras.traceOfs  = - *min * pitch;
+    if (ras.traceIncr > 0)
+      ras.traceOfs += (ras.target.rows-1)*pitch;
+  
     ras.gray_min_x = 0;
     ras.gray_max_x = 0;
   }
@@ -1800,9 +1781,12 @@ Fail:
   {
     Long   e1, e2;
     Short  c1, c2;
-    Short  f1, f2;
+    Byte   f1, f2;
     Byte*  target;
 
+    (void)y;
+    (void)left;
+    (void)right;
 
     /* Drop-out control */
 
@@ -1821,25 +1805,32 @@ Fail:
       c1 = (Short)(e1 >> 3);
       c2 = (Short)(e2 >> 3);
 
-      f1 = e1 & 7;
-      f2 = e2 & 7;
+      f1 =  ((unsigned char)0xFF >> (e1 & 7));
+      f2 = ~((unsigned char)0x7F >> (e2 & 7));
 
       if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
       if ( ras.gray_max_x < c2 ) ras.gray_max_x = c2;
 
       target = ras.bTarget + ras.traceOfs + c1;
+      c2 -= c1;
 
-      if ( c1 != c2 )
+      if ( c2 > 0 )
       {
-        *target |= LMask[f1];
+        target[0] |= f1;
 
-        if ( c2 > c1 + 1 )
-          MEM_Set( target + 1, 0xFF, c2 - c1 - 1 );
-
-        target[c2 - c1] |= RMask[f2];
+        /* memset() is slower than the following code on many platforms. */
+        /* This is due to the fact that, in the vast majority of cases,  */
+        /* the span length in bytes is relatively small.                 */
+        c2--;
+        while ( c2 > 0 )
+        {
+          *(++target) = 0xFF;
+          c2--;
+        }
+        target[1] |= f2;
       }
       else
-        *target |= ( LMask[f1] & RMask[f2] );
+        *target |= ( f1 & f2 );
     }
   }
 
@@ -1947,7 +1938,7 @@ Fail:
       if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
       if ( ras.gray_max_x < c1 ) ras.gray_max_x = c1;
 
-      ras.bTarget[ras.traceOfs + c1] |= (Char)(0x80 >> f1);
+      ras.bTarget[ras.traceOfs + c1] |= (char)(0x80 >> f1);
     }
   }
 
@@ -1970,6 +1961,9 @@ Fail:
   static void  Horizontal_Sweep_Init( RAS_ARGS Short*  min, Short*  max )
   {
     /* nothing, really */
+    (void)raster;
+    (void)min;
+    (void)max;
   }
 
 
@@ -1983,7 +1977,9 @@ Fail:
     PByte bits;
     Byte  f1;
 
-
+    (void)left;
+    (void)right;
+    
     if ( x2-x1 < ras.precision )
     {
       e1 = CEILING( x1 );
@@ -1998,10 +1994,13 @@ Fail:
 
         if ( e1 >= 0 && e1 < ras.target.rows )
         {
-          if ( ras.target.flow == FT_Flow_Down )
-            bits[(ras.target.rows-1 - e1) * ras.target.cols] |= f1;
-          else
-            bits[e1 * ras.target.cols] |= f1;
+          PByte  p;
+
+          p = bits - e1*ras.target.pitch;
+          if (ras.target.pitch > 0)
+            p += (ras.target.rows-1)*ras.target.pitch;
+         
+          p[0] |= f1;
         }
       }
     }
@@ -2009,10 +2008,15 @@ Fail:
       e2 = TRUNC( e2 );
 
       if ( e2 >= 0 && e2 < ras.target.rows )
-        if ( ras.target.flow == FT_Flow_Down )
-          bits[(ras.target.rows-1-e2) * ras.target.cols] |= f1;
-        else
-          bits[e2 * ras.target.cols] |= f1;
+      {
+        PByte  p;
+
+        p = bits - e2*ras.target.pitch;
+        if (ras.target.pitch > 0)
+          p += (ras.target.rows-1)*ras.target.pitch;
+        
+        p[0] |= f1;
+      }
 #endif
   }
 
@@ -2072,10 +2076,9 @@ Fail:
           bits = ras.bTarget + (y >> 3);
           f1   = (Byte)(0x80 >> (y &  7));
 
-          if ( ras.target.flow == FT_Flow_Down )
-            bits += (ras.target.rows-1-e1) * ras.target.cols;
-          else
-            bits += e1 * ras.target.cols;
+          bits -= e1*ras.target.pitch;
+          if (ras.target.pitch > 0)
+            bits += (ras.target.rows-1)*ras.target.pitch;
 
           if ( e1 >= 0              &&
                e1 < ras.target.rows &&
@@ -2104,10 +2107,11 @@ Fail:
 
     if ( e1 >= 0 && e1 < ras.target.rows )
     {
-      if (ras.target.flow==FT_Flow_Down)
-        bits[(ras.target.rows-1-e1) * ras.target.cols] |= f1;
-      else
-        bits[e1 * ras.target.cols] |= f1;
+      bits -= e1*ras.target.pitch;
+      if (ras.target.pitch > 0)
+        bits += (ras.target.rows-1)*ras.target.pitch;
+
+      bits[0] |= f1;
     }
   }
 
@@ -2115,6 +2119,7 @@ Fail:
   static void Horizontal_Sweep_Step( RAS_ARG )
   {
     /* Nothing, really */
+    (void)raster;
   }
 
 
@@ -2139,25 +2144,24 @@ Fail:
 
   static void  Vertical_Gray_Sweep_Init( RAS_ARGS Short*  min, Short*  max )
   {
+    Long  pitch, byte_len;
+    
     *min = *min & -2;
     *max = ( *max + 3 ) & -2;
 
-    ras.traceOfs = 0;
-
-    switch ( ras.target.flow )
+    ras.traceOfs  = 0;
+    pitch         = ras.target.pitch;
+    byte_len      = -pitch;
+    ras.traceIncr = byte_len;
+    ras.traceG    = (*min/2)*byte_len;
+    if (pitch > 0)
     {
-    case FT_Flow_Up:
-      ras.traceG  = (*min / 2) * ras.target.cols;
-      ras.traceIncr = ras.target.cols;
-      break;
-
-    default:
-      ras.traceG    = (ras.target.rows-1 - *min/2) * ras.target.cols;
-      ras.traceIncr = -ras.target.cols;
+      ras.traceG += (ras.target.rows-1)*pitch;
+      byte_len    = -byte_len;
     }
 
-    ras.gray_min_x =  ras.target.cols;
-    ras.gray_max_x = -ras.target.cols;
+    ras.gray_min_x =  byte_len;
+    ras.gray_max_x = -byte_len;
   }
 
 
@@ -2195,10 +2199,10 @@ Fail:
 
           if ( c2 )
           {
-            pix[0] = grays[(c2 & 0xF000) >> 12];
-            pix[1] = grays[(c2 & 0x0F00) >>  8];
-            pix[2] = grays[(c2 & 0x00F0) >>  4];
-            pix[3] = grays[(c2 & 0x000F)      ];
+            pix[0] = grays[(c2 >> 12) & 0x000F];
+            pix[1] = grays[(c2 >> 8 ) & 0x000F];
+            pix[2] = grays[(c2 >> 4 ) & 0x000F];
+            pix[3] = grays[ c2        & 0x000F];
 
             *bit  = 0;
             *bit2 = 0;
@@ -2214,8 +2218,8 @@ Fail:
       ras.traceOfs = 0;
       ras.traceG  += ras.traceIncr;
 
-      ras.gray_min_x =  ras.target.cols;
-      ras.gray_max_x = -ras.target.cols;
+      ras.gray_min_x =  32000;
+      ras.gray_max_x = -32000;
     }
   }
 
@@ -2227,6 +2231,12 @@ Fail:
                                                     PProfile    right )
   {
     /* nothing, really */
+    (void)raster;
+    (void)y;
+    (void)x1;
+    (void)x2;
+    (void)left;
+    (void)right;
   }
 
   static void  Horizontal_Gray_Sweep_Drop( RAS_ARGS Short       y,
@@ -2299,12 +2309,9 @@ Fail:
       e1 = TRUNC( e1 ) / 2;
       if ( e1 < ras.target.rows )
       {
-        if ( ras.target.flow == FT_Flow_Down )
-          pixel = ras.gTarget +
-                  (ras.target.rows - 1 - e1) * ras.target.cols + y / 2;
-        else
-          pixel = ras.gTarget +
-                  e1 * ras.target.cols + y / 2;
+        pixel = ras.gTarget - e1*ras.target.pitch + y/2;
+        if (ras.target.pitch > 0)
+          pixel += (ras.target.rows-1)*ras.target.pitch;
 
         if (pixel[0] == ras.grays[0])
           pixel[0] = color;
@@ -2410,8 +2417,8 @@ Fail:
 
           switch ( P->flow )
           {
-            case FT_Flow_Up:    InsNew( &draw_left,  P ); break;
-            case FT_Flow_Down:  InsNew( &draw_right, P ); break;
+            case Flow_Up:    InsNew( &draw_left,  P ); break;
+            case Flow_Down:  InsNew( &draw_right, P ); break;
           }
         }
 
@@ -2642,40 +2649,14 @@ Scan_DropOuts :
 /****************************************************************************/
 
   LOCAL_FUNC
-  FT_Error  Render_Glyph( RAS_ARGS FT_Outline*     glyph,
-                                   FT_Raster_Map*  target_map )
+  FT_Error  Render_Glyph( RAS_ARG )
   {
     FT_Error  error;
 
-
-    if ( glyph->n_points == 0 || glyph->n_contours <= 0 )
-      return FT_Err_Ok;
-
-    if ( !ras.buff )
-    {
-      ras.error = Raster_Err_Not_Ini;
-      return ras.error;
-    }
-
-    if ( glyph->n_points < glyph->contours[glyph->n_contours - 1] )
-    {
-      ras.error = FT_Err_Too_Many_Points;
-      return ras.error;
-    }
-
-    if ( target_map )
-      ras.target = *target_map;
-
-    ras.outs      = glyph->contours;
-    ras.flags     = glyph->flags;
-    ras.nPoints   = glyph->n_points;
-    ras.nContours = glyph->n_contours;
-    ras.coords    = glyph->points;
-
-    Set_High_Precision( RAS_VARS glyph->high_precision );
+    Set_High_Precision( RAS_VARS ras.outline.flags & ft_outline_high_precision );
     ras.scale_shift    = ras.precision_shift;
-    ras.dropOutControl = glyph->dropout_mode;
-    ras.second_pass    = glyph->second_pass;
+    ras.dropOutControl = 2;
+    ras.second_pass    = !(ras.outline.flags & ft_outline_single_pass);
 
 
     /* Vertical Sweep */
@@ -2689,7 +2670,7 @@ Scan_DropOuts :
     ras.band_stack[0].y_max = ras.target.rows - 1;
 
     ras.bWidth  = ras.target.width;
-    ras.bTarget = (Byte*)ras.target.bitmap;
+    ras.bTarget = (Byte*)ras.target.buffer;
 
     if ( (error = Render_Single_Pass( RAS_VARS 0 )) != 0 )
       return error;
@@ -2715,8 +2696,6 @@ Scan_DropOuts :
   }
 
 
-#ifdef FT_CONFIG_OPTION_GRAY_SCALING
-
 /****************************************************************************/
 /*                                                                          */
 /* Function:    Render_Gray_Glyph                                           */
@@ -2731,28 +2710,12 @@ Scan_DropOuts :
 /****************************************************************************/
 
   LOCAL_FUNC
-  FT_Error  Render_Gray_Glyph( RAS_ARGS  FT_Outline*     glyph,
-                                         FT_Raster_Map*  target_map,
-                                         Byte*           palette )
+  FT_Error  Render_Gray_Glyph( RAS_ARG )
   {
-    Int       i;
+    Long      byte_len;
     FT_Error  error;
 
-    if ( !ras.buff )
-    {
-      ras.error = Raster_Err_Not_Ini;
-      return ras.error;
-    }
-
-    if ( glyph->n_points == 0 || glyph->n_contours <= 0 )
-      return FT_Err_Ok;
-
-    if ( glyph->n_points < glyph->contours[glyph->n_contours - 1] )
-    {
-      ras.error = FT_Err_Too_Many_Points;
-      return ras.error;
-    }
-
+#if 0
     if ( palette )
     {
       for ( i = 0; i < 5; i++ )
@@ -2761,17 +2724,12 @@ Scan_DropOuts :
 
     if ( target_map )
       ras.target = *target_map;
+#endif
 
-    ras.outs      = glyph->contours;
-    ras.flags     = glyph->flags;
-    ras.nPoints   = glyph->n_points;
-    ras.nContours = glyph->n_contours;
-    ras.coords    = glyph->points;
-
-    Set_High_Precision( RAS_VARS glyph->high_precision );
+    Set_High_Precision( RAS_VARS ras.outline.flags & ft_outline_high_precision );
     ras.scale_shift    = ras.precision_shift+1;
-    ras.dropOutControl = glyph->dropout_mode;
-    ras.second_pass    = glyph->second_pass;
+    ras.dropOutControl = 2;
+    ras.second_pass    = !(ras.outline.flags & ft_outline_single_pass);
 
 
     /* Vertical Sweep */
@@ -2781,12 +2739,17 @@ Scan_DropOuts :
     ras.band_stack[0].y_max = 2 * ras.target.rows - 1;
 
     ras.bWidth  = ras.gray_width;
-    if ( ras.bWidth > ras.target.cols/4 )
-      ras.bWidth = ras.target.cols/4;
+    
+    byte_len = ras.target.pitch;
+    if (byte_len < 0)
+      byte_len = -byte_len;
+      
+    if ( ras.bWidth > byte_len/4 )
+      ras.bWidth = byte_len/4;
 
     ras.bWidth  = ras.bWidth * 8;
     ras.bTarget = (Byte*)ras.gray_lines;
-    ras.gTarget = (Byte*)ras.target.bitmap;
+    ras.gTarget = (Byte*)ras.target.buffer;
 
     ras.Proc_Sweep_Init = Vertical_Gray_Sweep_Init;
     ras.Proc_Sweep_Span = Vertical_Sweep_Span;
@@ -2818,9 +2781,9 @@ Scan_DropOuts :
     return FT_Err_Ok;
   }
 
-#endif /* FT_CONFIG_OPTION_GRAY_SCALING */
 
 
+#if 0
 /************************************************/
 /*                                              */
 /* InitRasterizer                               */
@@ -2900,6 +2863,131 @@ Scan_DropOuts :
 
     return FT_Err_Ok;
   }
+#endif
+
+  /**** RASTER OBJECT CREATION : in standalone mode, we simply use *****/
+  /****                          a static object ..                *****/
+#ifdef _STANDALONE_
+
+  static
+  int  ft_black_new( void*  memory, FT_Raster *araster )
+  {
+     static FT_RasterRec_  the_raster;
+     *araster = &the_raster;  
+     memset( &the_raster, sizeof(the_raster), 0 );
+     return 0;
+  }
+
+  static
+  void  ft_black_done( FT_Raster  raster )
+  {
+    /* nothing */
+    raster->init = 0;
+  }
+
+#else
+
+#include <ftobjs.h>
+
+  static
+  int  ft_black_new( FT_Memory  memory, TRaster_Instance*  *araster )
+  {
+    FT_Error           error;
+    TRaster_Instance*  raster;
+    
+    *araster = 0;
+    if ( !ALLOC( raster, sizeof(*raster) ))
+    {
+      raster->memory = memory;
+      *araster = raster;
+    }
+      
+    return error;
+  }
+  
+  static
+  void ft_black_done( TRaster_Instance*  raster )
+  {
+    FT_Memory  memory = (FT_Memory)raster->memory;
+    FREE( raster );
+  }
+  
+#endif
+
+
+  static void ft_black_reset( TRaster_Instance* raster,
+                              const char*       pool_base,
+                              long              pool_size )
+  {
+    if ( raster && pool_base && pool_size >= 4096 )
+    {
+      /* save the pool */
+      raster->buff     = (PLong)pool_base;
+      raster->sizeBuff = raster->buff + pool_size / sizeof (Long);
+    }
+  }
+
+
+  static
+  int  ft_black_render( TRaster_Instance*  raster,
+                        FT_Raster_Params*  params )
+  {
+    FT_Outline*  outline    = (FT_Outline*)params->source;
+    FT_Bitmap*   target_map = params->target;
+    
+    if ( !raster || !raster->buff || !raster->sizeBuff )
+      return Raster_Err_Not_Ini;
+
+    if ( !outline || !outline->contours || !outline->points )
+      return Raster_Err_Invalid;
+
+    /* return immediately if the outline is empty */
+    if ( outline->n_points == 0 || outline->n_contours <= 0 )
+      return Raster_Err_None;
+
+    if ( outline->n_points != outline->contours[outline->n_contours - 1] + 1 )
+      return Raster_Err_Invalid;
+
+    if ( !target_map || !target_map->buffer )
+      return Raster_Err_Invalid;
+
+    /* this version of the raster does not support direct rendering, sorry */
+    if ( params->flags & ft_raster_flag_direct )
+      return Raster_Err_Unsupported;
+
+    ras.outline  = *outline;
+    ras.target   = *target_map;
+    
+    return ( params->flags & ft_raster_flag_aa 
+           ? Render_Glyph( raster )
+           : Render_Gray_Glyph( raster ) );
+
+#if 0
+    /* Note that we always use drop-out mode 2, because it seems that */
+    /* it's the only way to do to get results consistent with Windows */
+    /* rendering..                                                    */
+    ras.dropout_mode = 2;
+
+    ras.second_pass  = (outline->flags & ft_outline_single_pass) == 0;
+    SET_High_Precision( (char)((outline->flags & ft_outline_high_precision)!= 0) );
+
+    return ( params->flags & ft_raster_flag_aa
+           ? Raster_Render8( raster )
+           : Raster_Render1( raster ) );
+#endif           
+  }
+
+
+  FT_Raster_Funcs      ft_black_raster =
+  {
+    ft_glyph_format_outline,
+    (FT_Raster_New_Func)       ft_black_new,
+    (FT_Raster_Reset_Func)     ft_black_reset,
+    (FT_Raster_Set_Mode_Func)  0,
+    (FT_Raster_Render_Func)    ft_black_render,
+    (FT_Raster_Done_Func)      ft_black_done
+  };
+
 
 
 /* END */

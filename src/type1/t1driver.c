@@ -58,6 +58,8 @@
   FTDriver_Interface  Get_Interface( FT_Driver         driver,
                                      const FT_String*  interface )
   {
+    UNUSED(driver);
+    
     if ( strcmp( (const char*)interface, "attach_file" ) == 0 )
       return (FTDriver_Interface)T1_Read_AFM;
       
@@ -141,6 +143,7 @@
                             T1_UInt      vert_resolution )
   {
     UNUSED(char_width);
+    UNUSED(char_height);
     UNUSED(horz_resolution);
     UNUSED(vert_resolution);
 

@@ -651,6 +651,8 @@
   static
   void t1_init_loader( T1_Loader* loader, T1_Face  face )
   {
+    UNUSED(face);
+    
     MEM_Set( loader, 0, sizeof(*loader) );
     loader->num_glyphs = 0;
     loader->num_chars  = 0;

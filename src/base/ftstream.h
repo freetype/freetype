@@ -68,6 +68,9 @@ typedef struct FT_Frame_Field_
 
 #define FT_MAKE_EMPTY_FIELD( frame_op )  { frame_op, 0, 0 }
 
+#define FT_FRAME_START(s)    { ft_frame_start, 0, s }
+#define FT_FRAME_END         { ft_frame_end, 0, 0 }
+
 #define FT_FRAME_LONG(s,f)   FT_FRAME_FIELD( ft_frame_long_be, s, f )
 #define FT_FRAME_ULONG(s,f)  FT_FRAME_FIELD( ft_frame_ulong_be, s, f )
 #define FT_FRAME_SHORT(s,f)  FT_FRAME_FIELD( ft_frame_short_be, s, f )
