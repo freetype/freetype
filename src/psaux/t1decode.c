@@ -492,10 +492,10 @@
               goto Syntax_Error;
             }
 
-          if ( ip[-2] < 251 )
-            value =  ( ( (FT_Long)ip[-2] - 247 ) << 8 ) + ip[-1] + 108;
-          else
-            value = -( ( ( (FT_Long)ip[-2] - 251 ) << 8 ) + ip[-1] + 108 );
+            if ( ip[-2] < 251 )
+              value =  ( ( (FT_Long)ip[-2] - 247 ) << 8 ) + ip[-1] + 108;
+            else
+              value = -( ( ( (FT_Long)ip[-2] - 251 ) << 8 ) + ip[-1] + 108 );
           }
         }
         else
@@ -907,12 +907,21 @@
             zone->cursor = ip;  /* save current instruction pointer */
 
             zone++;
-            zone->base   = decoder->subrs[index] + decoder->lenIV;
+
+            /* The Type 1 driver stores subroutines without the seed bytes.  */
+            /* The CID driver stores subroutines with seed bytes.  This case */
+            /* is taken care of when decoder->subrs_len == 0.                */
+            zone->base   = decoder->subrs[index];
 
             if (decoder->subrs_len)
               zone->limit  = zone->base + decoder->subrs_len[index];
             else
-              zone->limit  = decoder->subrs[index+1];
+            {
+              /* We are using subroutines from a CID font.  We must adjust */
+              /* for the seed bytes.                                       */
+              zone->base  += ( decoder->lenIV >= 0 ? decoder->lenIV : 0 ); 
+              zone->limit  = decoder->subrs[index + 1];
+            }
 
             zone->cursor = zone->base;
 
