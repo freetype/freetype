@@ -974,7 +974,15 @@
 
     /* when the flag NO_RECURSE is set, we disable hinting and scaling */
     if ( load_flags & FT_LOAD_NO_RECURSE )
-      load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
+    {
+      /* disable scaling, hinting and transform */
+      load_flags |= FT_LOAD_NO_SCALE       |
+                    FT_LOAD_NO_HINTING     |
+                    FT_LOAD_IGNORE_TRANSFORM;
+                    
+      /* disable bitmap rendering */
+      load_flags &= ~FT_LOAD_RENDER;                    
+    }
 
     /* do we need to load the glyph through the auto-hinter? */
     library  = driver->root.library;
@@ -1019,7 +1027,20 @@
       slot->advance.y = 0;
     }
 
-    if ( ( load_flags & FT_LOAD_NO_RECURSE ) == 0 )
+    /* compute the linear advance in 16.16 pixels */
+    if ( ( load_flags & FT_LOAD_LINEAR_DESIGN ) == 0 )
+    {
+      FT_UInt           EM      = face->units_per_EM;
+      FT_Size_Metrics*  metrics = &face->size->metrics;
+      
+      slot->linearHoriAdvance = FT_MulDiv( slot->linearHoriAdvance,
+                                           (FT_Long)metrics->x_ppem << 16, EM );
+
+      slot->linearVertAdvance = FT_MulDiv( slot->linearVertAdvance,
+                                           (FT_Long)metrics->y_ppem << 16, EM );
+    }
+
+    if ( ( load_flags & FT_LOAD_IGNORE_TRANSFORM ) == 0 )
     {
       /* now, transform the glyph image if needed */
       if ( face->transform_flags )
@@ -1035,18 +1056,18 @@
         /* transform advance */
         FT_Vector_Transform( &slot->advance, &face->transform_matrix );
       }
+    }
 
-      /* do we need to render the image now? */
-      if ( !error                                    &&
-           slot->format != ft_glyph_format_bitmap    &&
-           slot->format != ft_glyph_format_composite &&
-           load_flags & FT_LOAD_RENDER )
-      {
-        error = FT_Render_Glyph( slot,
-                                 ( load_flags & FT_LOAD_MONOCHROME )
-                                    ? ft_render_mode_mono
-                                    : ft_render_mode_normal );
-      }
+    /* do we need to render the image now? */
+    if ( !error                                    &&
+         slot->format != ft_glyph_format_bitmap    &&
+         slot->format != ft_glyph_format_composite &&
+         load_flags & FT_LOAD_RENDER )
+    {
+      error = FT_Render_Glyph( slot,
+                               ( load_flags & FT_LOAD_MONOCHROME )
+                                  ? ft_render_mode_mono
+                                  : ft_render_mode_normal );
     }
 
   Exit:
