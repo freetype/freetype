@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -24,6 +24,7 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H
+#include FT_SERVICE_TT_CMAP_H
 
 #include "cffdrivr.h"
 #include "cffgload.h"
@@ -338,6 +339,32 @@
   };
 
 
+  /*
+   *  (empty) TT CMAP INFO
+   *
+   *  Hide TT CMAP INFO service defined in SFNT module;
+   *  just return 0.
+   *
+   */
+
+  static FT_Error
+  cff_get_cmap_info( FT_CharMap    charmap,
+                     TT_CMapInfo  *cmap_info )
+  {
+    FT_UNUSED( charmap );
+
+    cmap_info->language = 0;
+
+    return CFF_Err_Ok;
+  }
+
+
+  static const FT_Service_TTCMapsRec  cff_service_get_cmap_info =
+  {
+    (TT_CMap_Info_GetFunc)cff_get_cmap_info
+  };
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -357,6 +384,7 @@
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
     { FT_SERVICE_ID_GLYPH_DICT,      &cff_service_glyph_dict },
 #endif
+    { FT_SERVICE_ID_TT_CMAP,         &cff_service_get_cmap_info },
     { NULL, NULL }
   };
 

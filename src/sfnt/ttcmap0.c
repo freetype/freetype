@@ -1966,6 +1966,7 @@
               FT_ERROR(( "tt_face_build_cmaps:" ));
               FT_ERROR(( " broken cmap sub-table ignored!\n" ));
             }
+            break;
           }
         }
       }

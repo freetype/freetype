@@ -1,3 +1,16 @@
+2004-01-10  Masatake YAMATO  <jet@gyve.org>
+
+	Make `FT_Get_CMap_Language_ID' work with CFF.  Bug reported by
+	Steve Hartwell <shspamsink@comcast.net>.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_TT_CMAP_H.
+	(cff_services): Added an entry for FT_SERVICE_ID_TT_CMAP.
+	(cff_get_cmap_info): New function.
+	(cff_service_get_cmap_info) New entry for cff_services.
+
+	* src/sfnt/ttcmap0.c: Exit loop after a format match has been found. 
+	Suggested by Steve Hartwell <shspamsink@comcast.net>.
+
 2004-01-03  Masatake YAMATO  <jet@gyve.org>
 
 	* src/base/ftobjs.c (destroy_charmaps): New function.
