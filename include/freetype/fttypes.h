@@ -7,19 +7,22 @@
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
 
+
 #ifndef FTTYPES_H
 #define FTTYPES_H
 
+
 #include <freetype/ftsystem.h>
 #include <freetype/ftimage.h>
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -41,7 +44,7 @@
   /*    A signed 16-bit integer used to store a distance in original font  */
   /*    units.                                                             */
   /*                                                                       */
-  typedef signed short    FT_FWord;   /* Distance in FUnits */
+  typedef signed short  FT_FWord;   /* distance in FUnits */
 
 
   /*************************************************************************/
@@ -53,7 +56,7 @@
   /*    An unsigned 16-bit integer used to store a distance in original    */
   /*    font units.                                                        */
   /*                                                                       */
-  typedef unsigned short  FT_UFWord;  /* Unsigned distance */
+  typedef unsigned short  FT_UFWord;  /* unsigned distance */
 
 
   /*************************************************************************/
@@ -212,17 +215,19 @@
   /*                                                                       */
   typedef void*  FT_Pointer;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_UnitVector                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A simple structure used to store a 2d vector unit vector.  Uses    */
+  /*    A simple structure used to store a 2D vector unit vector.  Uses    */
   /*    FT_F2Dot14 types.                                                  */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    x :: Horizontal coordinate.                                        */
+  /*                                                                       */
   /*    y :: Vertical coordinate.                                          */
   /*                                                                       */
   typedef struct  FT_UnitVector_
@@ -249,8 +254,11 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    xx :: Matrix coefficient.                                          */
+  /*                                                                       */
   /*    xy :: Matrix coefficient.                                          */
+  /*                                                                       */
   /*    yx :: Matrix coefficient.                                          */
+  /*                                                                       */
   /*    yy :: Matrix coefficient.                                          */
   /*                                                                       */
   typedef struct  FT_Matrix_
@@ -273,8 +281,11 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    xMin :: The horizontal minimum (left-most).                        */
+  /*                                                                       */
   /*    yMin :: The vertical minimum (bottom-most).                        */
+  /*                                                                       */
   /*    xMax :: The horizontal maximum (right-most).                       */
+  /*                                                                       */
   /*    yMax :: The vertical maximum (top-most).                           */
   /*                                                                       */
   typedef struct  FT_BBox_
@@ -295,10 +306,10 @@
   /*    TrueType tables into an unsigned long to be used within FreeType.  */
   /*                                                                       */
 #define FT_MAKE_TAG( _x1, _x2, _x3, _x4 ) \
-          (((FT_ULong)_x1 << 24) |        \
-           ((FT_ULong)_x2 << 16) |        \
-           ((FT_ULong)_x3 << 8)  |        \
-            (FT_ULong)_x4)
+          ( ( (FT_ULong)_x1 << 24 ) |     \
+            ( (FT_ULong)_x2 << 16 ) |     \
+            ( (FT_ULong)_x3 <<  8 ) |     \
+              (FT_ULong)_x4         )
 
 
   /*************************************************************************/
@@ -343,9 +354,11 @@
   /*    A structure used to hold a single list element.                    */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    prev :: Previous element in the list.  NULL if first.              */
-  /*    next :: Next element in the list.  NULL if last.                   */
-  /*    data :: Typeless pointer to the listed object.                     */
+  /*    prev :: The previous element in the list.  NULL if first.          */
+  /*                                                                       */
+  /*    next :: The next element in the list.  NULL if last.               */
+  /*                                                                       */
+  /*    data :: A typeless pointer to the listed object.                   */
   /*                                                                       */
   typedef struct  FT_ListNodeRec_
   {
@@ -366,8 +379,9 @@
   /*    used in many parts of FreeType.                                    */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    head :: Head (first element) of doubly-linked list.                */
-  /*    tail :: Tail (last element) of doubly-linked list.                 */
+  /*    head :: The head (first element) of doubly-linked list.            */
+  /*                                                                       */
+  /*    tail :: The tail (last element) of doubly-linked list.             */
   /*                                                                       */
   typedef struct  FT_ListRec_
   {
@@ -377,8 +391,10 @@
   } FT_ListRec;
 
 
-#define FT_IS_EMPTY(list)  ( (list).head == 0 )
+#define FT_IS_EMPTY( list )  ( (list).head == 0 )
+
 
 #endif /* FTTYPES_H */
-/* END */
 
+
+/* END */

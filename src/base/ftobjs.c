@@ -2502,7 +2502,7 @@
   /*                                                                       */
   /*    num_params :: The number of additional parameters.                 */
   /*                                                                       */
-  /*    params     :: Additional parameters.                               */
+  /*    parameters :: Additional parameters.                               */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */

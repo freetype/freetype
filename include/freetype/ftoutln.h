@@ -8,8 +8,8 @@
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -42,7 +42,7 @@
   /* <Input>                                                               */
   /*    outline   :: A pointer to the source target.                       */
   /*                                                                       */
-  /*    funcs     :: A table of `emitters', i.e,. function pointers called */
+  /*    interface :: A table of `emitters', i.e,. function pointers called */
   /*                 during decomposition to indicate path operations.     */
   /*                                                                       */
   /*    user      :: A typeless pointer which is passed to each emitter    */
@@ -52,9 +52,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means sucess.                              */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Decompose( FT_Outline*        outline,
-                                                 FT_Outline_Funcs*  funcs,
-                                                 void*              user );
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Decompose(
+                               FT_Outline*        outline,
+                               FT_Outline_Funcs*  interface,
+                               void*              user );
 
 
   /*************************************************************************/
@@ -68,7 +69,7 @@
   /* <Input>                                                               */
   /*    library     :: A handle to the library object from where the       */
   /*                   outline is allocated.  Note however that the new    */
-  /*                   outline will NOT necessarily be FREED when          */
+  /*                   outline will NOT necessarily be FREED, when         */
   /*                   destroying the library, by FT_Done_FreeType().      */
   /*                                                                       */
   /*    numPoints   :: The maximal number of points within the outline.    */
@@ -87,19 +88,19 @@
   /*                                                                       */
   /* <Note>                                                                */
   /*    The reason why this function takes a `library' parameter is simply */
-  /*    to use the library's memory allocator.  You can copy the source    */
-  /*    code of this function, replacing allocations with `malloc()' if    */
-  /*    you want to control where the objects go.                          */
+  /*    to use the library's memory allocator.                             */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_New( FT_Library   library,
-                                           FT_UInt      numPoints,
-                                           FT_Int       numContours,
-                                           FT_Outline*  outline );
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_New( FT_Library   library,
+                                             FT_UInt      numPoints,
+                                             FT_Int       numContours,
+                                             FT_Outline*  outline );
 
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_New_Internal( FT_Memory    memory,
-                                                    FT_UInt      numPoints,
-                                                    FT_Int       numContours,
-                                                    FT_Outline*  outline );
+
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_New_Internal(
+                               FT_Memory    memory,
+                               FT_UInt      numPoints,
+                               FT_Int       numContours,
+                               FT_Outline*  outline );
 
 
   /*************************************************************************/
@@ -127,15 +128,15 @@
   /*    descriptor will be released.                                       */
   /*                                                                       */
   /*    The reason why this function takes an `outline' parameter is       */
-  /*    simply to use FT_Alloc()/FT_Free().  You can copy the source code  */
-  /*    of this function, replacing allocations with `malloc()' in your    */
-  /*    application if you want something simpler.                         */
+  /*    simply to use FT_Free().                                           */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Done( FT_Library   library,
-                                            FT_Outline*  outline );
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Done( FT_Library   library,
+                                              FT_Outline*  outline );
+
 
   FT_EXPORT_DEF( FT_Error )  FT_Outline_Done_Internal( FT_Memory    memory,
                                                        FT_Outline*  outline );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -163,8 +164,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                            FT_BBox*     cbox );
+  FT_EXPORT_DEF( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
+                                              FT_BBox*     cbox );
 
 
   /*************************************************************************/
@@ -177,16 +178,17 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    outline :: A pointer to the target outline descriptor.             */
+  /*                                                                       */
   /*    xOffset :: The horizontal offset.                                  */
+  /*                                                                       */
   /*    yOffset :: The vertical offset.                                    */
   /*                                                                       */
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Translate( FT_Outline*  outline,
-                                             FT_Pos       xOffset,
-                                             FT_Pos       yOffset );
-
+  FT_EXPORT_DEF( void )  FT_Outline_Translate( FT_Outline*  outline,
+                                               FT_Pos       xOffset,
+                                               FT_Pos       yOffset );
 
 
   /*************************************************************************/
@@ -201,38 +203,40 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    source :: A handle to the source outline.                          */
+  /*                                                                       */
+  /* <Output>                                                              */
   /*    target :: A handle to the target outline.                          */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Copy( FT_Outline*  source,
-                                            FT_Outline*  target );
-
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
+                                              FT_Outline*  target );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Outline_Transform                                               */
+  /*    FT_Vector_Transform                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Applies a simple 2x2 matrix to all of an outline's points.  Useful */
-  /*    for applying rotations, slanting, flipping, etc.                   */
+  /*    Transforms a single vector through a 2x2 matrix.                   */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    vector :: The target vector to transform.                          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    outline :: A pointer to the target outline descriptor.             */
-  /*    matrix  :: A pointer to the transformation matrix.                 */
+  /*    matrix :: A pointer to the source 2x2 matrix.                      */
   /*                                                                       */
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You can use FT_Outline_Translate() if you need to translate the    */
-  /*    outline's points.                                                  */
+  /*    The result is undefined if either `vector' or `matrix' is invalid. */
   /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Transform( FT_Outline*  outline,
-                                             FT_Matrix*   matrix );
+  FT_EXPORT_DEF( void )  FT_Outline_Transform( FT_Outline*  outline,
+                                               FT_Matrix*   matrix );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -240,20 +244,20 @@
   /*    FT_Outline_Reverse                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Reverse the drawing direction of an outline. This is used to       */
-  /*    ensure consistent fill conventions for mirrored glyphs..           */
+  /*    Reverses the drawing direction of an outline.  This is used to     */
+  /*    ensure consistent fill conventions for mirrored glyphs.            */
   /*                                                                       */
   /* <Input>                                                               */
   /*    outline :: A pointer to the target outline descriptor.             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This functions toggles the bit flag ft_outline_reverse_fill in     */
-  /*    the outline's "flags" field..                                      */
+  /*    This functions toggles the bit flag `ft_outline_reverse_fill' in   */
+  /*    the outline's `flags' field.                                       */
   /*                                                                       */
   /*    It shouldn't be used by a normal client application, unless it     */
-  /*    knows what it's doing..                                            */
+  /*    knows what it is doing.                                            */
   /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Reverse( FT_Outline*  outline );
+  FT_EXPORT_DEF( void )  FT_Outline_Reverse( FT_Outline*  outline );
 
 
   /*************************************************************************/
@@ -263,12 +267,13 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Renders an outline within a bitmap.  The outline's image is simply */
-  /*    or-ed to the target bitmap.                                        */
-  /*                                                                       */
+  /*    OR-ed to the target bitmap.                                        */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library :: A handle to a FreeType library object.                  */
+  /*                                                                       */
   /*    outline :: A pointer to the source outline descriptor.             */
+  /*                                                                       */
   /*    map     :: A pointer to the target bitmap descriptor.              */
   /*                                                                       */
   /* <Return>                                                              */
@@ -284,9 +289,10 @@
   /*                                                                       */
   /*    It will use the raster correponding to the default glyph format.   */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Get_Bitmap( FT_Library   library,
-                                                  FT_Outline*  outline,
-                                                  FT_Bitmap*   bitmap );
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Get_Bitmap( FT_Library   library,
+                                                    FT_Outline*  outline,
+                                                    FT_Bitmap*   bitmap );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -294,15 +300,18 @@
   /*    FT_Outline_Render                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Renders an outline within a bitmap using the current scan-convert  */
-  /*    This functions uses a FT_Raster_Params as argument, allowing       */
-  /*    advanced features like direct composition/translucency, etc..      */
+  /*    Renders an outline within a bitmap using the current scan-convert. */
+  /*    This functions uses an FT_Raster_Params structure as an argument,  */
+  /*    allowing advanced features like direct composition, translucency,  */
+  /*    etc.                                                               */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library :: A handle to a FreeType library object.                  */
+  /*                                                                       */
   /*    outline :: A pointer to the source outline descriptor.             */
-  /*    params  :: A pointer to a FT_Raster_Params used to describe        */
-  /*               the rendering operation                                 */
+  /*                                                                       */
+  /*    params  :: A pointer to a FT_Raster_Params structure used to       */
+  /*               describe the rendering operation.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -312,16 +321,16 @@
   /*    scan-line converter will be serialized.                            */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You should know what you're doing and the role of FT_Raster_Params */
+  /*    You should know what you are doing and how FT_Raster_Params works  */
   /*    to use this function.                                              */
   /*                                                                       */
-  /*    the field "params.source" will be set to "outline" before the      */
-  /*    scan converter is called, which means that the value you give it   */
-  /*    is actually ignored..                                              */
+  /*    The field `params.source' will be set to `outline' before the scan */
+  /*    converter is called, which means that the value you give to it is  */
+  /*    actually ignored.                                                  */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Render( FT_Library        library,
-                                              FT_Outline*       outline,
-                                              FT_Raster_Params* params );
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Render( FT_Library         library,
+                                                FT_Outline*        outline,
+                                                FT_Raster_Params*  params );
 
 
 #ifdef __cplusplus
