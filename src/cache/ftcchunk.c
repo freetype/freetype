@@ -347,15 +347,21 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache )
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache )
   {
     FT_Memory  memory = cache->root.memory;
     FT_Error   error;
 
+    FTC_Chunk_Cache_Class*  ccache_clazz;
 
     /* set up root node_class to be used by manager */
     cache->root.node_clazz =
       (FTC_CacheNode_Class*)&ftc_chunk_cache_node_class;
+
+    /* setup "compare" shortcut */
+    ccache_clazz   = (FTC_Chunk_Cache_Class*)cache->root.clazz;
+    cache->compare = ccache_clazz->cset_class->compare;
 
     error = FT_Lru_New( &ftc_chunk_set_lru_class,
                         FTC_MAX_CHUNK_SETS,
@@ -367,11 +373,64 @@
   }
 
 
-  FT_EXPORT_DEF( void )  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache )
+  FT_EXPORT_DEF( void )
+  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache )
   {
     /* discard glyph sets */
     FT_Lru_Done( cache->csets_lru );
   }
 
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Chunk_Cache_Lookup( FTC_Chunk_Cache  cache,
+                          FT_Pointer       type,
+                          FT_UInt          gindex,
+                          FTC_ChunkNode   *anode,
+                          FT_UInt         *aindex )
+  {
+    FT_Error       error;
+    FTC_ChunkSet   cset;
+    FTC_ChunkNode  node;
+    FT_UInt        cindex;
+    FTC_Manager    manager;
+
+
+    /* check for valid `desc' delayed to FT_Lru_Lookup() */
+
+    if ( !cache || !anode || !aindex )
+      return FT_Err_Invalid_Argument;
+
+    *anode  = 0;
+    *aindex = 0;
+    cset    = cache->last_cset;
+
+    if ( !cset || !cache->compare( cset, type ) )
+    {
+      error = FT_Lru_Lookup( cache->csets_lru,
+                             (FT_LruKey)type,
+                             (FT_Pointer*)&cset );
+      cache->last_cset = cset;
+      if ( error )
+        goto Exit;
+    }
+
+    error = FTC_ChunkSet_Lookup_Node( cset, gindex, &node, &cindex );
+    if ( error )
+      goto Exit;
+
+    /* now compress the manager's cache pool if needed */
+    manager = cache->root.manager;
+    if ( manager->num_bytes > manager->max_bytes )
+    {
+      FTC_ChunkNode_Ref   ( node );
+      FTC_Manager_Compress( manager );
+      FTC_ChunkNode_Unref ( node );
+    }
+
+    *anode  = node;
+    *aindex = cindex;
+
+  Exit:
+    return error;
+  }
 
 /* END */
