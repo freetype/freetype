@@ -6,17 +6,38 @@
 #
 #
 
+
+ifeq ($(PLATFORM),ansi)
+
+###################################################################
+#
+# Detecting Windows NT or Windows 9x
+#
+
+# Detecting Windows NT is easy, as the OS variable must be defined
+# and contains "Windows_NT". Untested with Windows 2K, but I guess
+# it should work ...
+#
+ifeq ($(OS),Windows_NT)
+is_windows := 1
+
 # We test for the COMSPEC environment variable, then run the 'ver'
 # command-line program to see if its output contains the word "Windows"
 #
 # If this is true, we're running a win32 platform (or an emulation)
 #
-
-ifeq ($(PLATFORM),ansi)
+else
 ifdef COMSPEC
-
 is_windows := $(findstring Windows,$(strip $(shell ver)))
-ifneq ($(is_windows),)
+endif
+endif  #test NT
+
+####################################################################
+#
+# Rules for Win32
+#
+
+ifdef is_windows
 
 PLATFORM := win32
 DELETE   := del
@@ -60,7 +81,6 @@ CONFIG_RULES := $(TOP)\config\win32\$(CONFIG_FILE)
 
 setup: dos_setup
 
-endif #test Windows
-endif #test COMSPEC
+endif #test is_windows
 endif #test PLATFORM
 
