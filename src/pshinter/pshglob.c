@@ -493,7 +493,7 @@
     FT_Int          no_shoots;
 
 
-    alignment->align = 0;
+    alignment->align = PSH_BLUE_ALIGN_NONE;
 
     no_shoots = blues->no_overshoots;
 

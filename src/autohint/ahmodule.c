@@ -79,7 +79,7 @@
   ft_autohinter_reset( FT_AutoHinter  module,
                        FT_Face        face )
   {
-    UNUSED( module );
+    FT_UNUSED( module );
 
     if ( face->autohint.data )
       ah_hinter_done_face_globals( (AH_Face_Globals*)(face->autohint.data) );
