@@ -857,13 +857,40 @@
           {
             /* If `nominal_width' is non-zero, the number is really a difference */
             /* against `nominal_width'.  Else, the number here is truly a width, */
-            /* not a difference.  If the font does not set `nominal_width', then */
-            /* `nominal_width' defaults to zero, and so we can set 'glyph_width' */
-            /* to `nominal_width' plus number on the stack -- for either case.   */
+            /* not a difference against `nominal_width'.  If the font does not   */
+            /* set `nominal_width', then `nominal_width' defaults to zero, and   */
+            /* so we can set 'glyph_width' to `nominal_width' plus number on the */
+            /* stack -- for either case.                                         */
 
-            decoder->glyph_width = decoder->nominal_width + ( stack[0] >> 16 );
-            num_args--;
-            args++;
+            FT_Int set_width_ok;
+
+            switch ( op )
+            {
+            case t2_op_hmoveto:
+            case t2_op_vmoveto:
+              set_width_ok = num_args & 2;
+              break;
+
+            case t2_op_hstem:
+            case t2_op_vstem:
+            case t2_op_hstemhm:
+            case t2_op_vstemhm:
+            case t2_op_endchar:
+            case t2_op_rmoveto:
+              set_width_ok = num_args & 1;
+              break;
+
+            default:
+              set_width_ok = 0;
+              break;
+            }
+
+            if ( set_width_ok )
+            {
+              decoder->glyph_width = decoder->nominal_width + ( stack[0] >> 16 );
+              num_args--;
+              args++;
+            }
           }
 
           decoder->read_width  = 0;
