@@ -59,6 +59,8 @@
 
   int    res = 96;
 
+  static grColor  fore_color = { 127 };
+
   int            Fail;
   unsigned char  autorun;
 
@@ -195,11 +197,7 @@
     if (bit.pitch < 0)
       y_top = bit.rows - y_top;
 */
-    grBlitGlyphToBitmap( &bit,
-                         &bit3,
-                         x_top,
-                         y_top,
-                         (grColor)127L ); 
+    grBlitGlyphToBitmap( &bit, &bit3, x_top, y_top, fore_color );
     return 0;
   }
 
@@ -587,7 +585,7 @@
         if (!new_header)
           new_header = Header;
               
-        grWriteCellString( &bit, 0, 0, new_header, (grColor)127L );
+        grWriteCellString( &bit, 0, 0, new_header, fore_color );
         new_header = 0;
 
         sprintf( Header, "at %d points, first glyph = %d",
@@ -600,7 +598,7 @@
                          ft_basename(filename) );
       }
 
-      grWriteCellString( &bit, 0, 8, Header, (grColor)127L );
+      grWriteCellString( &bit, 0, 8, Header, fore_color );
       grRefreshSurface( surface );
       
       grListenSurface( surface, 0, &event );
