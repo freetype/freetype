@@ -103,6 +103,7 @@ T1_DRV_SRC := $(T1_DIR_)t1objs.c    \
               $(T1_DIR_)t1driver.c  \
 	          $(T1_DIR_)t1encode.c  \
               $(T1_DIR_)t1hinter.c  \
+              $(T1_DIR_)t1afm.c     \
               $(T1_DIR_)t1gload.c
 
 

@@ -17,6 +17,7 @@
 
 #include <t1driver.h>
 #include <t1gload.h>
+#include <t1afm.h>
 
 #include <ftdebug.h>
 #include <ftstream.h>
@@ -24,6 +25,97 @@
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1driver
+
+#ifndef T1_CONFIG_OPTION_NO_AFM
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Get_Interface                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Each driver can provide one or more extensions to the base         */
+  /*    FreeType API.  These can be used to access format specific         */
+  /*    features (e.g., all TrueType/OpenType resources share a common     */
+  /*    file structure and common tables which can be accessed through the */
+  /*    `sfnt' interface), or more simply generic ones (e.g., the          */
+  /*    `postscript names' interface which can be used to retrieve the     */
+  /*     PostScript name of a given glyph index).                          */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    driver    :: A handle to a driver object.                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    interface :: A string designing the interface.  Examples are       */
+  /*                 `sfnt', `post_names', `charmaps', etc.                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A typeless pointer to the extension's interface (normally a table  */
+  /*    of function pointers).  Returns NULL if the requested extension    */
+  /*    isn't available (i.e., wasn't compiled in the driver at build      */
+  /*    time).                                                             */
+  /*                                                                       */
+  static
+  void*  Get_Interface)( FT_Driver         driver,
+                         const FT_String*  interface )
+  {
+    if ( strcmp( (const char*)interface, "attach_file" ) == 0 )
+      return T1_Read_AFM;
+      
+    return 0;
+  }
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Get_Kerning                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A driver method used to return the kerning vector between two      */
+  /*    glyphs of the same face.                                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face        :: A handle to the source face object.                 */
+  /*                                                                       */
+  /*    left_glyph  :: The index of the left glyph in the kern pair.       */
+  /*                                                                       */
+  /*    right_glyph :: The index of the right glyph in the kern pair.      */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    kerning     :: The kerning vector.  This is in font units for      */
+  /*                   scalable formats, and in pixels for fixed-sizes     */
+  /*                   formats.                                            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Only horizontal layouts (left-to-right & right-to-left) are        */
+  /*    supported by this function.  Other layouts, or more sophisticated  */
+  /*    kernings are out of scope of this method (the basic driver         */
+  /*    interface is meant to be simple).                                  */
+  /*                                                                       */
+  /*    They can be implemented by format-specific interfaces.             */
+  /*                                                                       */
+  static
+  T1_Error  Get_Kerning( T1_Face     face,
+                         T1_UInt     left_glyph,
+                         T1_UInt     right_glyph,
+                         T1_Vector*  kerning )
+  {
+    T1_AFM*  afm;
+    
+    kerning->x = 0;
+    kerning->y = 0;
+
+    afm = (T1_AFM*)face->afm_data;
+    if (afm)
+      T1_Get_Kerning( afm, left_glyph, right_glyph, kerning );
+
+    return T1_Err_Ok;
+  }
+#endif
 
   /******************************************************************/
   /*                                                                */
@@ -394,11 +486,21 @@
 
     (FTDriver_initDriver)           T1_Init_Driver,
     (FTDriver_doneDriver)           T1_Done_Driver,
+
+#ifdef T1_CONFIG_OPTION_NO_AFM
     (FTDriver_getInterface)         0,
+#else
+    (FTDriver_getInterface)         Get_Interface,
+#endif
 
     (FTDriver_initFace)             Init_Face,
     (FTDriver_doneFace)             T1_Done_Face,
+
+#ifdef T1_CONFIG_OPTION_NO_AFM    
     (FTDriver_getKerning)           0,
+#else
+    (FTDriver_getKerning)           Get_Kerning,
+#endif
 
     (FTDriver_initSize)             T1_Init_Size,
     (FTDriver_doneSize)             T1_Done_Size,

@@ -42,9 +42,14 @@
 #include <t1objs.c>
 #include <t1load.c>     /* table loader      */
 #include <t1gload.c>
-
 #include <t1tokens.c>
 #include <t1parse.c>
 #include <t1encode.c>
-#include <t1hinter.c>
 
+#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
+#include <t1hinter.c>
+#endif
+
+#ifndef T1_CONFIG_OPTION_NO_AFM
+#include <t1afm.c>
+#endif
