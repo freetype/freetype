@@ -1,5 +1,8 @@
 2000-12-01  David Turner  <david.turner@freetype.org>
 
+	* Version 2.0.1 released.
+	=========================
+
 	* builds/unix/configure.in, builds/unix/configure,
 	builds/cygwin/configure.in, builds/cygwin/configure: Setting
 	"version_info" to 6:1:0 for the 2.0.1 release.
