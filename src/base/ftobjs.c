@@ -575,15 +575,14 @@
     if ( ( load_flags & FT_LOAD_LINEAR_DESIGN ) == 0  &&
          ( face->face_flags & FT_FACE_FLAG_SCALABLE ) )
     {
-      FT_UInt           EM      = face->units_per_EM;
       FT_Size_Metrics*  metrics = &face->size->metrics;
 
 
       slot->linearHoriAdvance = FT_MulDiv( slot->linearHoriAdvance,
-                                           (FT_Long)metrics->x_ppem << 16, EM );
+                                           metrics->x_scale, 64 );
 
       slot->linearVertAdvance = FT_MulDiv( slot->linearVertAdvance,
-                                           (FT_Long)metrics->y_ppem << 16, EM );
+                                           metrics->y_scale, 64 );
     }
 
     if ( ( load_flags & FT_LOAD_IGNORE_TRANSFORM ) == 0 )
@@ -2042,11 +2041,11 @@
       char_height = 1 * 64;
 
     /* Compute pixel sizes in 26.6 units with rounding */
-    dim_x = ( ( char_width  * horz_resolution + (36+32*72) ) / 72 ) & -64;
-    dim_y = ( ( char_height * vert_resolution + (36+32*72) ) / 72 ) & -64;
+    dim_x = ( char_width  * horz_resolution + 36 ) / 72;
+    dim_y = ( char_height * vert_resolution + 36 ) / 72;
 
-    metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
-    metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
+    metrics->x_ppem  = (FT_UShort)( ( dim_x + 32 ) >> 6 );
+    metrics->y_ppem  = (FT_UShort)( ( dim_y + 32 ) >> 6 );
 
     metrics->x_scale = 0x10000L;
     metrics->y_scale = 0x10000L;

@@ -1,6 +1,41 @@
-2003-11-22  David Turner    <david@freetype.org>
+2003-11-22  Rogier van Dalen  <R.C.van.Dalen@umail.leidenuniv.nl>
 
-        * src/autofit/*: more updates
+	* src/truetype/ttinterp.c (CUR_Func_move_orig): New macro.
+	(Direct_Move_Orig, Direct_Move_Orig_X, Direct_Move_Orig_Y): New
+	functions.  Similar to Direct_Move, Direct_Move_X, and
+	Direct_Move_Y but without touching.
+	(Compute_Funcs): Use new functions.
+
+	(Round_None, Round_To_Grid, Round_To_Half_Grid, Round_Down_To_Grid,
+	Round_Up_To_Grid, Round_To_Double_Grid, Round_Super,
+	Round_Super_45): Fix rounding of value zero.
+
+	(DO_DIV): Don't use TT_MULDIV.
+
+	(Ins_SHC): This instruction actually touches the points.
+	(Ins_MSIRP): Fix undocumented behaviour.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Updated.
+
+2003-11-22  Werner Lemberg  <wl@gnu.org>
+
+	* docs/VERSION.DLL: Updated.
+
+	* src/base/ftobjs.c (FT_Set_Char_Size): Make metrics->x_scale and
+	metrics->y_scale really precise.
+
+	(FT_Load_Glyph): Update computation of linearHoriAdvance and
+	linearVertAdvance.
+
+	* src/true/type/ttinterp.c (Update_Max): Use FT_REALLOC.
+
+2003-11-22  David Turner  <david@freetype.org>
+
+	* src/autofit/*: More updates.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 8.
+	* builds/unix/configure.ac (version_info): Set to 9:6:3.
+	* README: Updated.
 
 2003-11-13  John A. Boyd Jr.  <jaboydjr@netwalk.com>
 

@@ -91,20 +91,19 @@ other release numbers.
   old_CPPFLAGS="$CPPFLAGS"
   CPPFLAGS=`freetype-config --cflags`
   AC_TRY_CPP([
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #if (FREETYPE_MAJOR*1000 + FREETYPE_MINOR)*1000 + FREETYPE_PATCH < 2000009
 #error Freetype version too low.
 #endif
-  ],[
-    AC_MSG_RESULT(yes)
-    FREETYPE_LIBS=`freetype-config --libs`
-    AC_SUBST(FREETYPE_LIBS)
-    AC_DEFINE(HAVE_FREETYPE,1,[Define if you have the FreeType2 library])
-    CPPFLAGS="$old_CPPFLAGS"
-  ],[
-    AC_MSG_ERROR([Need FreeType library version 2.0.9 or higher])
-  ])
+  ],
+  [AC_MSG_RESULT(yes)
+   FREETYPE_LIBS=`freetype-config --libs`
+   AC_SUBST(FREETYPE_LIBS)
+   AC_DEFINE(HAVE_FREETYPE,1,[Define if you have the FreeType2 library])
+   CPPFLAGS="$old_CPPFLAGS"],
+  [AC_MSG_ERROR([Need FreeType library version 2.0.9 or higher])])
 
 
 --- end of VERSION.DLL ---

@@ -26,6 +26,7 @@
 
 #include "pfrerror.h"
 
+
   static FT_Error
   pfr_get_kerning( PFR_Face    face,
                    FT_UInt     left,
@@ -52,15 +53,16 @@
     return PFR_Err_Ok;
   }
 
+
  /*
   *  PFR METRICS SERVICE
   *
   */
 
   static FT_Error
-  pfr_get_advance( PFR_Face   face,
-                   FT_UInt    gindex,
-                   FT_Pos    *aadvance )
+  pfr_get_advance( PFR_Face  face,
+                   FT_UInt   gindex,
+                   FT_Pos   *aadvance )
   {
     FT_Error  error = PFR_Err_Bad_Argument;
 
@@ -68,12 +70,12 @@
     *aadvance = 0;
     if ( face )
     {
-      PFR_PhyFont  phys  = &face->phy_font;
+      PFR_PhyFont  phys = &face->phy_font;
 
 
       if ( gindex < phys->num_chars )
       {
-        *aadvance = phys->chars[ gindex ].advance;
+        *aadvance = phys->chars[gindex].advance;
         error = 0;
       }
     }
@@ -89,7 +91,7 @@
                    FT_Fixed  *ametrics_x_scale,
                    FT_Fixed  *ametrics_y_scale )
   {
-    PFR_PhyFont  phys  = &face->phy_font;
+    PFR_PhyFont  phys = &face->phy_font;
     FT_Fixed     x_scale, y_scale;
     FT_Size      size = face->root.size;
 
@@ -118,7 +120,7 @@
     if ( ametrics_y_scale )
       *ametrics_y_scale = y_scale;
 
-    return 0;
+    return PFR_Err_Ok;
   }
 
 
@@ -130,6 +132,7 @@
     (FT_PFR_GetAdvanceFunc)pfr_get_advance
   };
 
+
  /*
   *  SERVICE LIST
   *
@@ -137,7 +140,7 @@
 
   static const FT_ServiceDescRec  pfr_services[] =
   {
-    { FT_SERVICE_ID_PFR_METRICS, & pfr_metrics_service_rec },
+    { FT_SERVICE_ID_PFR_METRICS, &pfr_metrics_service_rec },
     { FT_SERVICE_ID_XF86_NAME,   FT_XF86_FORMAT_PFR },
     { NULL, NULL }
   };
@@ -177,20 +180,20 @@
     sizeof( PFR_SizeRec ),
     sizeof( PFR_SlotRec ),
 
-    (FT_Face_InitFunc)        pfr_face_init,
-    (FT_Face_DoneFunc)        pfr_face_done,
-    (FT_Size_InitFunc)        NULL,
-    (FT_Size_DoneFunc)        NULL,
-    (FT_Slot_InitFunc)        pfr_slot_init,
-    (FT_Slot_DoneFunc)        pfr_slot_done,
+    (FT_Face_InitFunc)       pfr_face_init,
+    (FT_Face_DoneFunc)       pfr_face_done,
+    (FT_Size_InitFunc)       NULL,
+    (FT_Size_DoneFunc)       NULL,
+    (FT_Slot_InitFunc)       pfr_slot_init,
+    (FT_Slot_DoneFunc)       pfr_slot_done,
 
-    (FT_Size_ResetPointsFunc) NULL,
-    (FT_Size_ResetPixelsFunc) NULL,
-    (FT_Slot_LoadFunc)        pfr_slot_load,
+    (FT_Size_ResetPointsFunc)NULL,
+    (FT_Size_ResetPixelsFunc)NULL,
+    (FT_Slot_LoadFunc)       pfr_slot_load,
 
-    (FT_Face_GetKerningFunc)  pfr_get_kerning,
-    (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0
+    (FT_Face_GetKerningFunc) pfr_get_kerning,
+    (FT_Face_AttachFunc)     0,
+    (FT_Face_GetAdvancesFunc)0
   };
 
 
