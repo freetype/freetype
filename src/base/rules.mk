@@ -50,7 +50,8 @@ BASE_SRC := $(BASE_DIR)/ftapi.c    \
 # object.  It will then be linked to the final executable only if one of its
 # symbols is used by the application.
 #
-BASE_EXT_SRC := $(BASE_DIR)/ftbbox.c   \
+BASE_EXT_SRC := $(BASE_DIR)/ftbitmap.c \
+                $(BASE_DIR)/ftbbox.c   \
                 $(BASE_DIR)/ftbdf.c    \
                 $(BASE_DIR)/ftglyph.c  \
                 $(BASE_DIR)/ftmm.c     \
