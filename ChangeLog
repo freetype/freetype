@@ -1,8 +1,13 @@
+2002-09-19  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/config.guess, builds/unix/config.sub: Updated to
+	recent versions.
+
 2002-09-18  David Turner  <david@freetype.org>
 
-        * src/base/ftobjs.c (FT_Library_Version): bugfix
+	* src/base/ftobjs.c (FT_Library_Version): Bugfix.
 
-        * FreeType 2.1.3rc2 (release candidate 2) is released !!
+	* FreeType 2.1.3rc2 (release candidate 2) is released!
 
 2002-09-17  David Turner  <david@freetype.org>
 
