@@ -268,7 +268,7 @@
     n_base_points   = cur->n_points;
 
     /* save the left bearing and width of the base character */
-    /* as they will be erase by the next load..              */
+    /* as they will be erased by the next load..             */
     left_bearing = decoder->builder.left_bearing;
     advance      = decoder->builder.advance;
 

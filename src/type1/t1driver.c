@@ -20,6 +20,7 @@
 
 #include <ftdebug.h>
 #include <ftstream.h>
+#include <psnames.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1driver
@@ -137,6 +138,172 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Get_Char_Index                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Uses a charmap to return a given character code's glyph index.     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charmap  :: A handle to the source charmap object.                 */
+  /*    charcode :: The character code.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Glyph index.  0 means `undefined character code'.                  */
+  /*                                                                       */
+  static
+  T1_UInt  Get_Char_Index( FT_CharMap  charmap,
+                           T1_Long     charcode )
+  {
+    T1_Face             face;
+    T1_UInt             result = 0;
+    PSNames_Interface*  psnames;
+
+    face = (T1_Face)charmap->face;
+    psnames = (PSNames_Interface*)face->psnames;
+    if (psnames)    
+      switch (charmap->encoding)
+      {
+       /********************************************************************/
+       /*                                                                  */
+       /* Unicode encoding support                                         */
+       /*                                                                  */
+        case ft_encoding_unicode:
+          {
+            /* use the "psnames" module to synthetize the Unicode charmap */
+            result = psnames->lookup_unicode( &face->unicode_map,
+                                              (T1_ULong)charcode );
+
+            /* the function returns 0xFFFF when the Unicode charcode has */
+            /* no corresponding glyph..                                  */
+            if (result == 0xFFFF)
+              result = 0;
+            goto Exit;
+          }
+  
+       /********************************************************************/
+       /*                                                                  */
+       /* Custom Type 1 encoding                                           */
+       /*                                                                  */
+        case ft_encoding_adobe_custom:
+          {
+            T1_Encoding*  encoding = &face->type1.encoding;
+            if (charcode >= encoding->code_first &&
+                charcode <= encoding->code_last)
+            {
+              result = encoding->char_index[charcode];
+            }
+            goto Exit;
+          }
+          
+       /********************************************************************/
+       /*                                                                  */
+       /* Adobe Standard & Expert encoding support                         */
+       /*                                                                  */
+       default:
+         if (charcode < 256)
+         {
+           FT_UInt      code;
+           FT_Int       n;
+           const char*  glyph_name;
+           
+           code = psnames->adobe_std_encoding[charcode];
+           if (charmap->encoding == ft_encoding_adobe_expert)
+             code = psnames->adobe_expert_encoding[charcode];
+           
+           glyph_name = psnames->adobe_std_strings(code);
+           if (!glyph_name) break;
+           
+           for ( n = 0; n < face->type1.num_glyphs; n++ )
+           {
+             const char*  gname = face->type1.glyph_names[n];
+             
+             if ( gname && gname[0] == glyph_name[0] &&
+                  strcmp( gname, glyph_name ) == 0 )
+             {
+               result = n;
+               break;
+             }
+           }
+         }
+      }
+  Exit:      
+    return result;
+  }
+
+
+  static
+  T1_Error   Init_Face( FT_Stream  stream,
+                        FT_Int     face_index,
+                        T1_Face    face )
+  {
+    T1_Error  error;
+    
+    error = T1_Init_Face(stream, face_index, face);
+    if (!error)
+    {
+      FT_Face      root    = &face->root;
+      FT_CharMap   charmap = face->charmaprecs;
+
+      /* synthetize a Unicode charmap if there is support in the "psnames" */
+      /* module..                                                          */
+      if (face->psnames)
+      {
+        PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
+        if (psnames->unicode_value)
+        {
+          error = psnames->build_unicodes( root->memory,
+                                           face->type1.num_glyphs,
+                                           (const char**)face->type1.glyph_names,
+                                           &face->unicode_map );
+          if (!error)
+          {
+            root->charmap        = charmap;
+            charmap->face        = (FT_Face)face;
+            charmap->encoding    = ft_encoding_unicode;
+            charmap->platform_id = 3;
+            charmap->encoding_id = 1;
+            charmap++;
+          }
+          
+          /* simply clear the error in case of failure (which really) */
+          /* means that out of memory or no unicode glyph names       */
+          error = 0;
+        }
+      }
+
+      /* now, support either the standard, expert, or custom encodings */
+      charmap->face        = (FT_Face)face;
+      charmap->platform_id = 7;  /* a new platform id for Adobe fonts ?? */
+      
+      switch (face->type1.encoding_type)
+      {
+        case t1_encoding_standard:
+          charmap->encoding    = ft_encoding_adobe_standard;
+          charmap->encoding_id = 0;
+          break;
+        
+        case t1_encoding_expert:
+          charmap->encoding    = ft_encoding_adobe_expert;
+          charmap->encoding_id = 1;
+          break;
+        
+        default:
+          charmap->encoding    = ft_encoding_adobe_custom;
+          charmap->encoding_id = 2;
+          break;
+      }
+      
+      root->charmaps = face->charmaps;
+      root->num_charmaps = charmap - face->charmaprecs + 1;
+      face->charmaps[0] = &face->charmaprecs[0];
+      face->charmaps[1] = &face->charmaprecs[1];
+    }
+    return error;
+  }
+
   /******************************************************************/
   /*                                                                */
   /* <Struct> FT_DriverInterface                                    */
@@ -229,7 +396,7 @@
     (FTDriver_doneDriver)           T1_Done_Driver,
     (FTDriver_getInterface)         0,
 
-    (FTDriver_initFace)             T1_Init_Face,
+    (FTDriver_initFace)             Init_Face,
     (FTDriver_doneFace)             T1_Done_Face,
     (FTDriver_getKerning)           0,
 
@@ -242,7 +409,7 @@
     (FTDriver_doneGlyphSlot)        T1_Done_GlyphSlot,
     (FTDriver_loadGlyph)            T1_Load_Glyph,
 
-    (FTDriver_getCharIndex)         0,
+    (FTDriver_getCharIndex)         Get_Char_Index,
   };
 
 
