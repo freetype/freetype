@@ -353,9 +353,14 @@
 
     FT_ULong   ulCodePageRange1;       /* Bits 0-31   */
     FT_ULong   ulCodePageRange2;       /* Bits 32-63  */
-    FT_ULong   ulCodePageRange3;       /* Bits 64-95  */
-    FT_ULong   ulCodePageRange4;       /* Bits 96-127 */
 
+    /* only version 2 tables */
+    FT_Short   sxHeight;
+    FT_Short   sCapHeight;
+    FT_UShort  usDefaultChar;
+    FT_UShort  usBreakChar;
+    FT_UShort  usMaxContext;
+    
   } TT_OS2;
 
 
@@ -388,14 +393,105 @@
   } TT_Postscript;
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    TT_MaxProfile                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The maximum profile is a table containing many max values which    */
+  /*    can be used to pre-allocate arrays.  This ensures that no memory   */
+  /*    allocation occurs during a glyph load.                             */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    version               :: The version number.                       */
+  /*                                                                       */
+  /*    numGlyphs             :: The number of glyphs in this TrueType     */
+  /*                             font.                                     */
+  /*                                                                       */
+  /*    maxPoints             :: The maximum number of points in a         */
+  /*                             non-composite TrueType glyph.  See also   */
+  /*                             the structure element                     */
+  /*                             `maxCompositePoints'.                     */
+  /*                                                                       */
+  /*    maxContours           :: The maximum number of contours in a       */
+  /*                             non-composite TrueType glyph.  See also   */
+  /*                             the structure element                     */
+  /*                             `maxCompositeContours'.                   */
+  /*                                                                       */
+  /*    maxCompositePoints    :: The maximum number of points in a         */
+  /*                             composite TrueType glyph.  See also the   */
+  /*                             structure element `maxPoints'.            */
+  /*                                                                       */
+  /*    maxCompositeContours  :: The maximum number of contours in a       */
+  /*                             composite TrueType glyph.  See also the   */
+  /*                             structure element `maxContours'.          */
+  /*                                                                       */
+  /*    maxZones              :: The maximum number of zones used for      */
+  /*                             glyph hinting.                            */
+  /*                                                                       */
+  /*    maxTwilightPoints     :: The maximum number of points in the       */
+  /*                             twilight zone used for glyph hinting.     */
+  /*                                                                       */
+  /*    maxStorage            :: The maximum number of elements in the     */
+  /*                             storage area used for glyph hinting.      */
+  /*                                                                       */
+  /*    maxFunctionDefs       :: The maximum number of function            */
+  /*                             definitions in the TrueType bytecode for  */
+  /*                             this font.                                */
+  /*                                                                       */
+  /*    maxInstructionDefs    :: The maximum number of instruction         */
+  /*                             definitions in the TrueType bytecode for  */
+  /*                             this font.                                */
+  /*                                                                       */
+  /*    maxStackElements      :: The maximum number of stack elements used */
+  /*                             during bytecode interpretation.           */
+  /*                                                                       */
+  /*    maxSizeOfInstructions :: The maximum number of TrueType opcodes    */
+  /*                             used for glyph hinting.                   */
+  /*                                                                       */
+  /*    maxComponentElements  :: An obscure value related to composite     */
+  /*                             glyphs definitions.                       */
+  /*                                                                       */
+  /*    maxComponentDepth     :: An obscure value related to composite     */
+  /*                             glyphs definitions.  Probably the maximum */
+  /*                             number of simple glyphs in a composite.   */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This structure is only used during font loading.                   */
+  /*                                                                       */
+  typedef struct  TT_MaxProfile_
+  {
+    FT_Fixed   version;
+    FT_UShort  numGlyphs;
+    FT_UShort  maxPoints;
+    FT_UShort  maxContours;
+    FT_UShort  maxCompositePoints;
+    FT_UShort  maxCompositeContours;
+    FT_UShort  maxZones;
+    FT_UShort  maxTwilightPoints;
+    FT_UShort  maxStorage;
+    FT_UShort  maxFunctionDefs;
+    FT_UShort  maxInstructionDefs;
+    FT_UShort  maxStackElements;
+    FT_UShort  maxSizeOfInstructions;
+    FT_UShort  maxComponentElements;
+    FT_UShort  maxComponentDepth;
+
+  } TT_MaxProfile;
+
+
+
+
   typedef enum
   {
     ft_sfnt_head = 0,
-    ft_sfnt_hhea = 1,
-    ft_sfnt_vhea = 2,
-    ft_sfnt_os2  = 3,
-    ft_sfnt_post = 4,
-    
+    ft_sfnt_maxp = 1,
+    ft_sfnt_os2  = 2,
+    ft_sfnt_hhea = 3,
+    ft_sfnt_vhea = 4,
+    ft_sfnt_post = 5,
+
     sfnt_max   /* don't remove */
   
   } FT_Sfnt_Tag;
