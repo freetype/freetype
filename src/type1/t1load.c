@@ -1373,8 +1373,14 @@
                   if (dict_state != dict_private)
                     parser->state_index--;
                
+                  /* many fonts use a NP instead of def or put, so */
+                  /* we simply ignore the nest token..             */
+#if 0
                   error = Expect_Keyword2( parser, key_def, key_put );
                   if (error) goto Exit;
+#else
+                  (void)Expect_Keyword2( parser, key_def, key_put );
+#endif
               }
               break;
 
