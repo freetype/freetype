@@ -46,9 +46,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*********                                                       *********/
-  /*********        WARNING, THIS IS ALPHA CODE, THIS API          *********/
-  /*********    IS DUE TO CHANGE UNTIL STRICTLY NOTIFIED BY THE    *********/
-  /*********            FREETYPE DEVELOPMENT TEAM                  *********/
+  /*********             WARNING, THIS IS BETA CODE.               *********/
   /*********                                                       *********/
   /*************************************************************************/
   /*************************************************************************/
@@ -162,13 +160,12 @@
                                         FT_Pointer  *anobject );
 
 
-  FT_EXPORT( void )  FT_Lru_Remove_Node( FT_Lru      lru,
-                                         FT_LruNode  node );
+  FT_EXPORT( void )      FT_Lru_Remove_Node( FT_Lru      lru,
+                                             FT_LruNode  node );
 
-  FT_EXPORT( void )  FT_Lru_Remove_Selection( FT_Lru           lru,
-                                              FT_Lru_Selector  selector,
-                                              FT_Pointer       data );
-
+  FT_EXPORT( void )      FT_Lru_Remove_Selection( FT_Lru           lru,
+                                                  FT_Lru_Selector  selector,
+                                                  FT_Pointer       data );
 
 #ifdef __cplusplus
   }
