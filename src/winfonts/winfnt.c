@@ -476,10 +476,17 @@
         FT_CharMapRec  charmap;
 
 
-        charmap.encoding    = FT_ENCODING_UNICODE;
-        charmap.platform_id = 3;
-        charmap.encoding_id = 1;
+        charmap.encoding    = FT_ENCODING_NONE;
+        charmap.platform_id = 0;
+        charmap.encoding_id = 0;
         charmap.face        = root;
+
+        if ( font->header.charset == FT_WinFNT_ID_MAC )
+        {
+          charmap.encoding    = FT_ENCODING_APPLE_ROMAN;
+          charmap.platform_id = 1;
+/*        charmap.encoding_id = 0; */
+        }
 
         error = FT_CMap_New( fnt_cmap_class,
                              NULL,

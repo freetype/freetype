@@ -1,47 +1,58 @@
+2003-12-22  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftwinfnt.h (FT_WinFNT_ID_*): New definitions
+	to describe the `charset' field in FT_WinFNT_HeaderRec.
+	* src/winfonts/winfnt.c (FNT_Face_Init): Set encoding to
+	FT_ENCODING_NONE except for FT_WinFNT_ID_MAC.
+
+	* include/freetype/freetype.h (FT_Encoding): Improve comment,
+	based on work by Detlef Würkner <TetiSoft@apg.lahn.de>.
+
+	* docs/CHANGES: Updated.
+
 2003-12-22  David Turner  <david@freetype.org>
 
-        * include/freetype/ftcache.h,
-        include/freetype/cache/ftcmanag.h,
-        include/freetype/cache/ftccache.h,
-        include/freetype/cache/ftcmanag.h,
-        include/freetype/cache/ftcmru.h (added),
-        include/freetype/cache/ftlru.h (removed),
-        include/freetype/cache/ftcsbits.h,
-        include/freetype/cache/ftcimage.h,
-        include/freetype/cache/ftcglyph.h,
-        src/cache/ftcmru.c,
-        src/cache/ftcmanag.c,
-        src/cache/ftccache.c,
-        src/cache/ftcglyph.c,
-        src/cache/ftcimage.c,
-        src/cache/ftcsbits.c,
-        src/cache/ftccmap.c,
-        src/cache/ftcbasic.c (added),
-        src/cache/ftclru.c (removed):
+	* include/freetype/ftcache.h,
+	include/freetype/cache/ftcmanag.h,
+	include/freetype/cache/ftccache.h,
+	include/freetype/cache/ftcmanag.h,
+	include/freetype/cache/ftcmru.h (added),
+	include/freetype/cache/ftlru.h (removed),
+	include/freetype/cache/ftcsbits.h,
+	include/freetype/cache/ftcimage.h,
+	include/freetype/cache/ftcglyph.h,
+	src/cache/ftcmru.c,
+	src/cache/ftcmanag.c,
+	src/cache/ftccache.c,
+	src/cache/ftcglyph.c,
+	src/cache/ftcimage.c,
+	src/cache/ftcsbits.c,
+	src/cache/ftccmap.c,
+	src/cache/ftcbasic.c (added),
+	src/cache/ftclru.c (removed):
 
-          *Complete* rewrite of the cache sub-system to "solve" the
-          following points:
+	  *Complete* rewrite of the cache sub-system to "solve" the
+	  following points:
 
-            - all public APIs have been moved to FT_CACHE_H, everything
-              under "include/freetype/cache" is only needed by client
-              applications that want to implement their own caches
+	    - all public APIs have been moved to FT_CACHE_H, everything
+	      under "include/freetype/cache" is only needed by client
+	      applications that want to implement their own caches
 
-            - a new function named FTC_Manager_RemoveFaceID to deal
-              with the uninstallation of FaceIDs
+	    - a new function named FTC_Manager_RemoveFaceID to deal
+	      with the uninstallation of FaceIDs
 
-            - the image and sbit cache are now abstract classes, that
-              can be extended much more easily by client applications
+	    - the image and sbit cache are now abstract classes, that
+	      can be extended much more easily by client applications
 
-            - better performance in certain areas. Further optimizations
-              to come shortly anyway...
+	    - better performance in certain areas. Further optimizations
+	      to come shortly anyway...
 
-            - the FTC_CMapCache_Lookup function has changed its signature,
-              charmaps can now only be retrieved by index
+	    - the FTC_CMapCache_Lookup function has changed its signature,
+	      charmaps can now only be retrieved by index
 
-            - FTC_Manager_Lookup_Face => FTC_Manager_LookupFace
-              FTC_Manager_Lookup_Size => FTC_Manager_LookupSize (still in
-              private header for the moment)
-
+	    - FTC_Manager_Lookup_Face => FTC_Manager_LookupFace
+	      FTC_Manager_Lookup_Size => FTC_Manager_LookupSize (still in
+	      private header for the moment)
 
 2003-12-21  Werner Lemberg  <wl@gnu.org>
 
