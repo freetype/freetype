@@ -428,7 +428,7 @@
 
 
       case imm_BlueValues:
-        CopyArray( parser, &priv->num_blues,
+        CopyArray( parser, &priv->num_blue_values,
                    priv->blue_values, 14 );
         break;
 
@@ -478,13 +478,13 @@
 
       case imm_StemSnapH:
         CopyArray( parser, &priv->num_snap_widths,
-                   priv->stem_snap_widths, 12 );
+                   priv->snap_widths, 12 );
         break;
 
 
       case imm_StemSnapV:
         CopyArray( parser, &priv->num_snap_heights,
-                   priv->stem_snap_heights, 12 );
+                   priv->snap_heights, 12 );
         break;
 
 

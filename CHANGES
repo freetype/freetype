@@ -1,5 +1,12 @@
 LATEST_CHANGES
 
+  - added the CID-keyed Type 1 driver in "src/cid". Works pretty well for
+    only 13 Kb of code ;-) Doesn't read AFM files though, nor the really
+    useful CMAP files..
+
+  - fixed two bugs in the smooth renderer (src/base/ftgrays.c). Thanks to
+    Boris Letocha for spotting them and providing a fix..
+
   - fixed potential "divide by zero" bugs in ftcalc.c.. my god..
 
   - added source code for the OpenType/CFF driver (still incomplete though..)

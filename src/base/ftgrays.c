@@ -300,7 +300,7 @@
     /* in during the render phase.  This means that:                       */
     /*                                                                     */
     /* . the new vertical position must be within min_ey..max_ey - 1.      */
-    /* . the new horizontal position must be strictly less than max_ey     */
+    /* . the new horizontal position must be strictly less than max_ex     */
     /*                                                                     */
     /* Note that if a cell is to the left of the clipping region, it is    */
     /* actually set to the (min_ex-1) horizontal position.                 */
@@ -1198,7 +1198,7 @@
         coverage = -coverage;
 
       while ( coverage >= 512 )
-        coverage -= 512;
+        coverage = 512-coverage;
 
       if ( coverage > 256 )
         coverage = 0;
@@ -1216,6 +1216,7 @@
     }
 
     y += ras.min_ey;
+    x += ras.min_ex;
 
     if ( coverage )
     {
@@ -1330,9 +1331,9 @@
       else
       {
         /* draw a gray span until the end of the clipping region */
-        if ( cover && x < ras.max_ex )
+        if ( cover && x < ras.max_ex - ras.min_ex )
           grays_hline( RAS_VAR_ x, y,
-                       cover * ( ONE_PIXEL * 2 ), ras.max_ex - x );
+                       cover * ( ONE_PIXEL * 2 ), ras.max_ex - x - ras.min_ex );
         cover = 0;
       }
 

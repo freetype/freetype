@@ -993,13 +993,12 @@
       for ( u = 0; u < num_points + 2; u++ )
       {
         glyph->outline.points[u] = loader->base.cur[u];
-        glyph->outline.tags [u] = loader->base.tags[u];
+        glyph->outline.tags  [u] = loader->base.tags[u];
       }
 
       for ( u = 0; u < num_contours; u++ )
         glyph->outline.contours[u] = loader->base.contours[u];
 
-      /* glyph->outline.second_pass = TRUE; */
       glyph->outline.flags      &= ~ft_outline_single_pass;
       glyph->outline.n_points    = num_points;
       glyph->outline.n_contours  = num_contours;
@@ -1029,6 +1028,8 @@
     {
       TT_Pos  left_bearing;
       TT_Pos  advance;
+      
+      TT_Pos  lsb2, adv2;
 
       left_bearing = loader->left_bearing;
       advance      = loader->advance;
@@ -1042,14 +1043,22 @@
            (loader->load_flags & FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH) == 0 )
         advance = face->horizontal.advance_Width_Max;
 
-      if ( !(loader->load_flags & FT_LOAD_NO_SCALE) )
+      lsb2 = left_bearing;
+      adv2 = advance;
+      
+      /* if necessary, scale the horizontal left bearing and advance */
+      /* to get their values in 16.16 format..                       */
+      if ( !(loader->load_flags & FT_LOAD_NO_SCALE) &&
+             loader->load_flags & FT_LOAD_LINEAR    )
       {
-        left_bearing = FT_MulFix( left_bearing, x_scale );
-        advance      = FT_MulFix( advance, x_scale );
+        FT_Pos  em_size    = face->root.units_per_EM;
+        FT_Pos  pixel_size = (FT_Pos)face->root.size->metrics.x_ppem << 16;
+        
+        lsb2 = FT_MulDiv( lsb2, pixel_size, em_size );
+        adv2 = FT_MulDiv( adv2, pixel_size, em_size );
       }
-
-      glyph->metrics2.horiBearingX = left_bearing;
-      glyph->metrics2.horiAdvance  = advance;
+      glyph->metrics2.horiBearingX = lsb2;
+      glyph->metrics2.horiAdvance  = adv2;
     }
 
     glyph->metrics.horiBearingX = bbox.xMin;
@@ -1131,8 +1140,25 @@
         advance = advance_height;
       }
 
-      glyph->metrics2.vertBearingY = Top;
-      glyph->metrics2.vertAdvance  = advance;
+      /* compute metrics2 fields */
+      {
+       FT_Pos  vtb2 = top_bearing;
+       FT_Pos  adv2 = advance_height;
+        
+        /* scale to 16.16 format if required */
+        if ( !(loader->load_flags & FT_LOAD_NO_SCALE) &&
+               loader->load_flags & FT_LOAD_LINEAR    )
+        {               
+          FT_Pos  em_size = face->root.units_per_EM;
+          FT_Pos  pixel_size = face->root.size->metrics.y_ppem;
+          
+          vtb2 = FT_MulDiv( vtb2, pixel_size, em_size );
+          adv2 = FT_MulDiv( adv2, pixel_size, em_size );
+        }
+        
+        glyph->metrics2.vertBearingY = vtb2;
+        glyph->metrics2.vertAdvance  = adv2;
+      }
 
       /* XXX: for now, we have no better algorithm for the lsb, but it    */
       /*      should work fine.                                           */
@@ -1306,7 +1332,7 @@
     /* clear all outline flags, except the "owner" one */
     glyph->outline.flags &= ft_outline_owner;
 
-    if (size && size->root.metrics.y_ppem < 24 )
+    if ( size && size->root.metrics.y_ppem < 24 )
       glyph->outline.flags |= ft_outline_high_precision;
 
     /************************************************************************/

@@ -612,6 +612,7 @@
     FT_CharMap       charmap;
     FT_ListRec       sizes_list;
 
+    void*            autohint_globals;
     void*            extensions;
 
     FT_UShort        max_points;
@@ -934,11 +935,15 @@
   /*                FT_Load_Glyph() API function) and can be expressed     */
   /*                either in 26.6 fractional pixels or font units.        */
   /*                                                                       */
-  /*    metrics2 :: This field can be used to return alternate glyph       */
-  /*                metrics after a single load.  It can contain either    */
-  /*                the glyph's metrics in font units, or the scaled but   */
-  /*                unhinted ones.  See the load flags that apply when     */
-  /*                calling the API function FT_Load_Glyph().              */
+  /*    metrics2 :: This field is used to return alternate glyph metrics   */
+  /*                for scalable formats. Only four fields in it are       */
+  /*                valid: horiBearingX, horiAdvance, vertBearingY and     */
+  /*                vertAdvance. All other fields should be ignored.       */
+  /*                By default, it contains the glyph metrics expressed    */
+  /*                in font units. However, when FT_Load_Glyph() is called */
+  /*                with FT_LOAD_LINEAR set, the metrics are expressed     */
+  /*                in 16.16 unhinted pixel values.. This can be useful    */
+  /*                to perform WYSIWYG glyph layout..                      */
   /*                                                                       */
   /*    generic  :: A typeless pointer which is unused by the FreeType     */
   /*                library or any of its drivers.  It can be used by      */
@@ -954,7 +959,6 @@
   /*                if it is a fixed-width one.  The nature of the last    */
   /*                loaded glyph can be retrieved through the result value */
   /*                returned by FT_Load_Glyph().                           */
-  /*                                                                       */
   /*                                                                       */
 
   enum

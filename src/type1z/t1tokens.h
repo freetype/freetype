@@ -43,7 +43,7 @@
   T1_PRIVATE_NUM  ( "BlueShift", blue_shift )
   T1_PRIVATE_NUM  ( "BlueFuzz",  blue_fuzz )
   
-  T1_PRIVATE_NUM_TABLE( "BlueValues", blue_values, 14, num_blues )
+  T1_PRIVATE_NUM_TABLE( "BlueValues", blue_values, 14, num_blue_values )
   T1_PRIVATE_NUM_TABLE( "OtherBlues", other_blues, 10, num_other_blues )
   T1_PRIVATE_NUM_TABLE( "FamilyBlues", family_blues, 14, num_family_blues )
   T1_PRIVATE_NUM_TABLE( "FamilyOtherBlues", family_other_blues, 10, num_family_other_blues )
@@ -52,8 +52,8 @@
   T1_PRIVATE_NUM_TABLE2( "StdVW", standard_height, 1 )
   T1_PRIVATE_NUM_TABLE2( "MinFeature", min_feature, 2 )
   
-  T1_PRIVATE_NUM_TABLE ( "StemSnapH", stem_snap_widths, 12, num_snap_widths )
-  T1_PRIVATE_NUM_TABLE ( "StemSnapV", stem_snap_heights, 12, num_snap_heights )
+  T1_PRIVATE_NUM_TABLE ( "StemSnapH", snap_widths, 12, num_snap_widths )
+  T1_PRIVATE_NUM_TABLE ( "StemSnapV", snap_heights, 12, num_snap_heights )
 
 #undef  T1TYPE
 #define T1TYPE  T1_Font

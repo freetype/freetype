@@ -69,7 +69,7 @@
     FT_Int       unique_id;
     FT_Int       lenIV;
 
-    FT_Byte      num_blues;
+    FT_Byte      num_blue_values;
     FT_Byte      num_other_blues;
     FT_Byte      num_family_blues;
     FT_Byte      num_family_other_blues;
@@ -92,8 +92,8 @@
     FT_Bool      force_bold;
     FT_Bool      round_stem_up;
 
-    FT_Short     stem_snap_widths [13];  /* reserve one place for the std */
-    FT_Short     stem_snap_heights[13];  /* reserve one place for the std */
+    FT_Short     snap_widths [13];  /* reserve one place for the std */
+    FT_Short     snap_heights[13];  /* reserve one place for the std */
 
     FT_Long      language_group;
     FT_Long      password;
@@ -181,8 +181,16 @@
 
   typedef struct CID_FontDict_
   {
-    T1_FontInfo   font_info;
     T1_Private    private_dict;
+
+    FT_UInt       len_buildchar;
+    FT_Fixed      forcebold_threshold;
+    FT_Pos        stroke_width;
+    FT_Fixed      expansion_factor;
+    
+    FT_Byte       paint_type;
+    FT_Byte       font_type;
+    FT_Matrix     font_matrix;
 
     FT_UInt       num_subrs;
     FT_ULong      subrmap_offset;
@@ -201,6 +209,8 @@
     FT_String*  ordering;
     FT_Int      supplement;
 
+    T1_FontInfo font_info;
+    FT_BBox     font_bbox;
     FT_ULong    uid_base;
 
     FT_Int      num_xuid;
@@ -212,8 +222,10 @@
     FT_Int      gd_bytes;
     FT_ULong    cid_count;
 
-    FT_Int         num_font_dicts;
+    FT_Int         num_dicts;
     CID_FontDict*  font_dicts;
+
+    FT_ULong    data_offset;
 
   } CID_Info;
 

@@ -59,9 +59,9 @@
 
   static grColor  fore_color = { 255 };
 
-  static int  graph_init = 0;
+  static int  graph_init  = 0;
   static int  render_mode = 1;
-  static int  use_grays   = 0;
+  static int  use_grays   = 1;
 
   /* the standard raster's interface */
   static FT_Raster_Funcs  std_raster;

@@ -127,7 +127,7 @@
     /* First of all, check the sizes of the /BlueValues and /OtherBlues */
     /* tables. They all must contain an even number of arguments        */
     if ( priv->num_other_blues & 1 ||
-         priv->num_blues       & 1 )
+         priv->num_blue_values & 1 )
     {
       FT_ERROR(( "T1.Copy_Blues : odd number of blue values\n" ));
       return T1_Err_Syntax_Error;
@@ -141,7 +141,7 @@
       blues[n] = priv->other_blues[n];
 
     /* Add the first blue zone in /BlueValues to the table */
-    num_top = priv->num_blues - 2;
+    num_top = priv->num_blue_values - 2;
     if ( num_top >= 0 )
     {
       blues[ num_bottom ] = priv->blue_values[0];
@@ -294,7 +294,7 @@
     standard_width = priv->standard_width[0];
     n_zones        = priv->num_snap_widths;
     base_zone      = hints->snap_widths;
-    orgs           = priv->stem_snap_widths;
+    orgs           = priv->snap_widths;
     scale          = size->root.metrics.x_scale;
 
     while (direction < 2)
@@ -461,7 +461,7 @@
       standard_width = priv->standard_height[0];
       n_zones        = priv->num_snap_heights;
       base_zone      = hints->snap_heights;
-      orgs           = priv->stem_snap_heights;
+      orgs           = priv->snap_heights;
       scale          = size->root.metrics.y_scale;
     }
 

@@ -394,6 +394,12 @@
 /*                                                                 */
 #undef  T1_CONFIG_OPTION_NO_AFM
 
-
+/*******************************************************************/
+/* Define this configuration macro if you want to prevent the      */
+/* compilation of the multiple-masters support in the Type 1 driver*/
+/* AFM files into an existing face. Note that when set, the T1     */
+/* driver will be unable to produce kerning distances..            */
+/*                                                                 */
+#undef  T1_CONFIG_OPTION_NO_MM_SUPPORT
 
 #endif /* FTOPTION_H */

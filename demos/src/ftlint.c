@@ -81,6 +81,20 @@
     for ( file_index = 2; file_index < argc; file_index++ )
     {
       fname = argv[file_index];
+      
+      /* try to open the file with no extra extension first */
+      error = FT_New_Face( library, fname, 0, &face );
+      if (!error) goto Success;
+
+      if ( error == FT_Err_Unknown_File_Format )
+      {
+        printf( "unknown format\n" );
+        continue;
+      }
+
+      /* ok, we could not load the file, try to add an extension to */
+      /* its name if possible..                                     */
+      
       i     = strlen( fname );
       while ( i > 0 && fname[i] != '\\' && fname[i] != '/' )
       {
@@ -124,7 +138,7 @@
       error = FT_New_Face( library, filename, 0, &face );
       if (error)
       {
-        if (error == FT_Err_Invalid_File_Format)
+        if (error == FT_Err_Unknown_File_Format)
           printf( "unknown format\n" );
         else
           printf( "could not find/open file (error: %d)\n", error );
@@ -132,6 +146,7 @@
       }
       if (error) Panic( "Could not open file" );
 
+  Success:
       num_glyphs = face->num_glyphs;
 
       error = FT_Set_Char_Size( face, ptsize << 6, ptsize << 6, 72, 72 );

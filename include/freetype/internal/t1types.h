@@ -344,6 +344,13 @@
   } T1_Font;
 
 
+  typedef struct CID_Subrs_
+  {
+    FT_UInt    num_subrs;
+    FT_Byte**  code;
+    
+  } CID_Subrs;
+
 
 /*************************************************************************/
 /*************************************************************************/
@@ -372,7 +379,7 @@
 
 
   typedef struct T1_FaceRec_*   T1_Face;
-
+  typedef struct CID_FaceRec_*  CID_Face;
 
   /***************************************************/
   /*                                                 */
@@ -396,5 +403,14 @@
 
   } T1_FaceRec;
 
+
+  typedef struct CID_FaceRec_
+  {
+    FT_FaceRec    root;
+    void*         psnames;
+    CID_Info      cid;
+    CID_Subrs*    subrs;
+  
+  } CID_FaceRec;
 
 #endif /* T1TYPES_H */

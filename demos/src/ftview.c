@@ -74,7 +74,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   int  graph_init = 0;
 
   int  render_mode = 1;
-  int  use_grays   = 0;
+  int  use_grays   = 1;
 
   /* the standard raster's interface */
   FT_Raster_Funcs  std_raster;
@@ -618,6 +618,16 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     hinted      = 1;
     file_loaded = 0;
 
+    filename[128] = '\0';
+    alt_filename[128] = '\0';
+
+    strncpy( filename, argv[file], 128 );
+    strncpy( alt_filename, argv[file], 128 );
+
+    /* try to load the file name as is, first */
+    error = FT_New_Face( library, argv[file], 0, &face );
+    if (!error) goto Success;
+
 #ifndef macintosh
     i = strlen( argv[file] );
     while ( i > 0 && argv[file][i] != '\\' && argv[file][i] != '/' )
@@ -627,12 +637,6 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       i--;
     }
 #endif
-
-    filename[128] = '\0';
-    alt_filename[128] = '\0';
-
-    strncpy( filename, argv[file], 128 );
-    strncpy( alt_filename, argv[file], 128 );
 
 #ifndef macintosh
     if ( i >= 0 )
@@ -647,6 +651,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     error = FT_New_Face( library, filename, 0, &face );
     if (error) goto Display_Font;
 
+ Success:
     file_loaded++;
 
     error = Reset_Scale( ptsize );
