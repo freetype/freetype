@@ -102,7 +102,8 @@
 
       val = ( (FT_Long)p[0] << 24 ) |
             ( (FT_Long)p[1] << 16 ) |
-            ( (FT_Long)p[2] <<  8 ) | p[3];
+            ( (FT_Long)p[2] <<  8 ) |
+                       p[3];
       p += 4;
     }
     else if ( v < 247 )
@@ -135,7 +136,7 @@
   }
 
 
-  /* reads a real */
+  /* read a real */
   static
   FT_Fixed  parse_t2_real( FT_Byte*  start,
                            FT_Byte*  limit,
@@ -258,7 +259,7 @@
   }
 
 
-  /* reads a number, either integer or real */
+  /* read a number, either integer or real */
   static
   FT_Long  t2_parse_num( FT_Byte**  d )
   {
@@ -293,7 +294,7 @@
       matrix->yx = t2_parse_fixed( data++ );
       matrix->xy = t2_parse_fixed( data++ );
       matrix->yy = t2_parse_fixed( data   );
-      error = 0;
+      error = T2_Err_Ok;
     }
 
     return error;
@@ -303,9 +304,9 @@
   static
   FT_Error  parse_font_bbox( T2_Parser*  parser )
   {
-    CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
-    FT_BBox*        bbox   = &dict->font_bbox;
-    FT_Byte**       data   = parser->stack;
+    CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
+    FT_BBox*        bbox = &dict->font_bbox;
+    FT_Byte**       data = parser->stack;
     FT_Error        error;
 
 
@@ -317,7 +318,7 @@
       bbox->yMin = t2_parse_num( data++ );
       bbox->xMax = t2_parse_num( data++ );
       bbox->yMax = t2_parse_num( data   );
-      error = 0;
+      error = T2_Err_Ok;
     }
 
     return error;
@@ -338,7 +339,7 @@
     {
       dict->private_size   = t2_parse_num( data++ );
       dict->private_offset = t2_parse_num( data   );
-      error = 0;
+      error = T2_Err_Ok;
     }
 
     return error;
@@ -360,7 +361,7 @@
       dict->cid_registry   = (FT_UInt)t2_parse_num( data++ );
       dict->cid_ordering   = (FT_UInt)t2_parse_num( data++ );
       dict->cid_supplement = (FT_ULong)t2_parse_num( data );
-      error = 0;
+      error = T2_Err_Ok;
     }
 
     return error;
@@ -386,7 +387,8 @@
             code | T2CODE,              \
             0, 0,                       \
             parse_ ## name,             \
-            0, 0 },
+            0, 0                        \
+          },
 
 #undef  T2_FIELD
 #define T2_FIELD( code, name, kind )                 \
@@ -426,7 +428,7 @@
                            FT_Byte*    limit )
   {
     FT_Byte*  p     = start;
-    FT_Error  error = 0;
+    FT_Error  error = T2_Err_Ok;
 
 
     parser->top    = parser->stack;
@@ -474,7 +476,7 @@
       }
       else
       {
-        /* this is not a number, hence it's an operator.  Compute its code */
+        /* This is not a number, hence it's an operator.  Compute its code */
         /* and look for it in our current list.                            */
 
         FT_UInt                  code;
@@ -551,11 +553,11 @@
 
             case t2_kind_delta:
               {
-                FT_Byte*  qcount = (FT_Byte*)parser->object +
-                                     field->count_offset;
+                FT_Byte*   qcount = (FT_Byte*)parser->object +
+                                      field->count_offset;
 
-                FT_Long   val;
-                FT_Byte** data = parser->stack;
+                FT_Long    val;
+                FT_Byte**  data = parser->stack;
 
 
                 if ( num_args > field->array_max )
@@ -576,6 +578,12 @@
                   case 2:
                     *(FT_Short*)q = (FT_Short)val;
                     break;
+#if SIZEOF_INT == 4
+                  case 4:
+                    *(FT_Int*)q = (FT_Int)val;
+                    break;
+#endif
+
                   default:
                     *(FT_Long*)q = val;
                   }

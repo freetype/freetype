@@ -276,7 +276,7 @@
     if ( LOAD_( hdmx )          ||
          LOAD_( gasp )          ||
          LOAD_( kerning )       ||
-	 LOAD_( pclt )          )
+         LOAD_( pclt )          )
       goto Exit;
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE

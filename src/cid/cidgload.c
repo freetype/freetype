@@ -335,17 +335,18 @@
   {
     FT_Outline*  outline = builder->current;
 
-    /* XXXX : we must not include the last point in the path if it */
-    /*        is located on the first point..                      */
-    if (outline->n_points > 1)
+    /* XXXX: We must not include the last point in the path if it */
+    /*       is located on the first point.                       */
+    if ( outline->n_points > 1 )
     {
       FT_Int      first = 0;
       FT_Vector*  p1    = outline->points + first;
-      FT_Vector*  p2    = outline->points + outline->n_points-1;
+      FT_Vector*  p2    = outline->points + outline->n_points - 1;
       
-      if (outline->n_contours > 1)
+
+      if ( outline->n_contours > 1 )
       {
-        first = outline->contours[outline->n_contours-2]+1;
+        first = outline->contours[outline->n_contours - 2] + 1;
         p1    = outline->points + first;
       }
         
@@ -1121,7 +1122,10 @@
           FT_TRACE4(( " div" ));
 
           if ( top[1] )
-            *top++ = top[0] / top[1];
+          {
+            *top = top[0] / top[1];
+            top++;
+          }
           else
           {
             FT_ERROR(( "CID_Parse_CharStrings: division by 0\n" ));

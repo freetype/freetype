@@ -1236,17 +1236,18 @@
   {
     FT_Outline*  cur = builder->current;
 
-    /* XXXX : we must not include the last point in the path if it */
-    /*        is located on the first point..                      */
-    if (cur->n_points > 1)
+    /* XXXX: We must not include the last point in the path if it */
+    /*       is located on the first point.                       */
+    if ( cur->n_points > 1 )
     {
       FT_Int      first = 0;
       FT_Vector*  p1    = cur->points + first;
-      FT_Vector*  p2    = cur->points + cur->n_points-1;
+      FT_Vector*  p2    = cur->points + cur->n_points - 1;
       
-      if (cur->n_contours > 1)
+
+      if ( cur->n_contours > 1 )
       {
-        first = cur->contours[cur->n_contours-2]+1;
+        first = cur->contours[cur->n_contours - 2] + 1;
         p1    = cur->points + first;
       }
         
@@ -1259,7 +1260,7 @@
       cur->contours[cur->n_contours - 1] = cur->n_points - 1;
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-    /* hint latest points if needed - this is not strictly required      */
+    /* hint latest points if needed -- this is not strictly required     */
     /* there, but it helps for debugging, and doesn't affect performance */
     if ( builder->pass == 1 )
       T1_Hint_Points( builder );

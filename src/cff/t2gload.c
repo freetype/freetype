@@ -413,7 +413,7 @@
   }
 
 
-  /* check room for a new on-curve point, then add it */
+  /* check space for a new on-curve point, then add it */
   static
   FT_Error  add_point1( T2_Builder*  builder,
                         FT_Pos       x,
@@ -485,17 +485,17 @@
   {
     FT_Outline*  outline = builder->current;
 
-    /* XXXX : we must not include the last point in the path if it */
-    /*        is located on the first point..                      */
-    if (outline->n_points > 1)
+    /* XXXX: We must not include the last point in the path if it */
+    /*       is located on the first point.                       */
+    if ( outline->n_points > 1 )
     {
       FT_Int      first = 0;
       FT_Vector*  p1    = outline->points + first;
-      FT_Vector*  p2    = outline->points + outline->n_points-1;
+      FT_Vector*  p2    = outline->points + outline->n_points - 1;
       
-      if (outline->n_contours > 1)
+      if ( outline->n_contours > 1 )
       {
-        first = outline->contours[outline->n_contours-2]+1;
+        first = outline->contours[outline->n_contours - 2] + 1;
         p1    = outline->points + first;
       }
         
@@ -508,9 +508,12 @@
   }
 
 
-#define USE_ARGS( n )  top -= n;                   \
-                       if ( top < decoder->stack ) \
-                         goto Stack_Underflow
+#define USE_ARGS( n )  do                            \
+                       {                             \
+                         top -= n;                   \
+                         if ( top < decoder->stack ) \
+                           goto Stack_Underflow;     \
+                       } while ( 0 )
 
 
   /*************************************************************************/
@@ -522,12 +525,12 @@
   /*    Parses a given Type 2 charstrings program.                         */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    decoder          :: The current Type 1 decoder.                    */
+  /*    decoder         :: The current Type 1 decoder.                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    charstring_base  :: The base of the charstring stream.             */
+  /*    charstring_base :: The base of the charstring stream.              */
   /*                                                                       */
-  /*    charstring_len   :: The length in bytes of the charstring stream.  */
+  /*    charstring_len  :: The length in bytes of the charstring stream.   */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -537,15 +540,15 @@
                                   FT_Byte*     charstring_base,
                                   FT_Int       charstring_len )
   {
-    FT_Error            error;
-    T2_Decoder_Zone*    zone;
-    FT_Byte*            ip;
-    FT_Byte*            limit;
-    T2_Builder*         builder = &decoder->builder;
-    FT_Outline*         outline;
-    FT_Pos              x, y;
-    FT_Fixed            seed;
-    FT_Fixed*           stack;
+    FT_Error          error;
+    T2_Decoder_Zone*  zone;
+    FT_Byte*          ip;
+    FT_Byte*          limit;
+    T2_Builder*       builder = &decoder->builder;
+    FT_Outline*       outline;
+    FT_Pos            x, y;
+    FT_Fixed          seed;
+    FT_Fixed*         stack;
 
 
     /* set default width */
@@ -611,7 +614,7 @@
         {
           if ( ip >= limit )
             goto Syntax_Error;
-          val = (v - 247) * 256 + *ip++ + 108;
+          val = ( v - 247 ) * 256 + *ip++ + 108;
         }
         else if ( v < 255 )
         {
@@ -625,7 +628,8 @@
             goto Syntax_Error;
           val = ( (FT_Long)ip[0] << 24 ) |
                 ( (FT_Long)ip[1] << 16 ) |
-                ( (FT_Long)ip[2] <<  8 ) | ip[3];
+                ( (FT_Long)ip[2] <<  8 ) |
+                           ip[3];
           ip    += 4;
           shift  = 0;
         }
@@ -652,6 +656,7 @@
 
         /* find operator */
         op = t2_op_unknown;
+
         switch ( v )
         {
         case 1:
@@ -852,8 +857,8 @@
         case t2_op_vstem:
         case t2_op_hstemhm:
         case t2_op_vstemhm:
-          /* if the number of arguments is no even, the first one  */
-          /* is simply the glyph width.. encoded as the difference */
+          /* if the number of arguments is not even, the first one */
+          /* is simply the glyph width, encoded as the difference  */
           /* to nominalWidthX                                      */
           FT_TRACE4(( op == t2_op_hstem   ? " hstem"   :
                       op == t2_op_vstem   ? " vstem"   :
@@ -865,8 +870,8 @@
 
         case t2_op_hintmask:
         case t2_op_cntrmask:
-          FT_TRACE4(( op == t2_op_hintmask ? " hintmask" :
-                                             " cntrmask" ));
+          FT_TRACE4(( op == t2_op_hintmask ? " hintmask"
+                                           : " cntrmask" ));
 
           decoder->num_hints += num_args / 2;
           ip += ( decoder->num_hints + 7 ) >> 3;
@@ -930,8 +935,8 @@
             FT_Int  phase = ( op == t2_op_hlineto );
 
 
-            FT_TRACE4(( op == t2_op_hlineto ? " hlineto" :
-                                              " vlineto" ));
+            FT_TRACE4(( op == t2_op_hlineto ? " hlineto"
+                                            : " vlineto" ));
 
             if ( start_point ( builder, x, y )     ||
                  check_points( builder, num_args ) )
@@ -958,7 +963,7 @@
         case t2_op_rrcurveto:
           FT_TRACE4(( " rrcurveto" ));
 
-          /* check number of arguments, must be a multiple of 6 */
+          /* check number of arguments; must be a multiple of 6 */
           if ( num_args % 6 != 0 )
             goto Stack_Underflow;
 
@@ -1057,8 +1062,8 @@
             FT_Int  phase;
 
 
-            FT_TRACE4(( op == t2_op_vhcurveto ? " vhcurveto" :
-                                                " hvcurveto" ));
+            FT_TRACE4(( op == t2_op_vhcurveto ? " vhcurveto"
+                                              : " hvcurveto" ));
 
             if ( start_point ( builder, x, y ) )
               goto Memory_Error;
@@ -1071,6 +1076,7 @@
               goto Stack_Underflow;
 
             phase = ( op == t2_op_hvcurveto );
+
             while ( num_args >= 4 )
             {
               num_args -= 4;
@@ -1286,6 +1292,7 @@
         case t2_op_drop:
           /* nothing */
           FT_TRACE4(( " drop" ));
+
           break;
 
         case t2_op_exch:
@@ -1349,7 +1356,7 @@
             }
             else
             {
-              while (index < 0)
+              while ( index < 0 )
               {
                 FT_Fixed  tmp = args[0];
                 FT_Int    i;
@@ -1379,6 +1386,7 @@
 
 
             FT_TRACE4(( " put" ));
+
             if ( index >= 0 && index < decoder->len_buildchar )
               decoder->buildchar[index] = val;
           }
@@ -1406,7 +1414,7 @@
           goto Unimplemented;
 
         case t2_op_load:
-           FT_TRACE4(( " load" ));
+          FT_TRACE4(( " load" ));
 
           goto Unimplemented;
 
@@ -1469,7 +1477,8 @@
 
             if ( index >= decoder->num_locals )
             {
-              FT_ERROR(( "T2_Parse_Charstrings: invalid local subr index\n" ));
+              FT_ERROR(( "T2_Parse_CharStrings:" ));
+              FT_ERROR(( "  invalid local subr index\n" ));
               goto Syntax_Error;
             }
 
@@ -1482,9 +1491,9 @@
             zone->cursor = ip;  /* save current instruction pointer */
 
             zone++;
-            zone->base    = decoder->locals[index];
-            zone->limit   = decoder->locals[index+1];
-            zone->cursor  = zone->base;
+            zone->base   = decoder->locals[index];
+            zone->limit  = decoder->locals[index+1];
+            zone->cursor = zone->base;
 
             if ( !zone->base )
             {
@@ -1508,7 +1517,8 @@
 
             if ( index >= decoder->num_globals )
             {
-              FT_ERROR(( "T2_Parse_Charstrings: invalid global subr index\n" ));
+              FT_ERROR(( "T2_Parse_CharStrings:" ));
+              FT_ERROR(( " invalid global subr index\n" ));
               goto Syntax_Error;
             }
 
@@ -1559,6 +1569,7 @@
           if ( ip[-1] == 12 )
             FT_ERROR(( " %d", ip[0] ));
           FT_ERROR(( "\n" ));
+
           return T2_Err_Unimplemented_Feature;
         }
 
@@ -1693,9 +1704,9 @@
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
-    glyph->x_scale = 0x10000;
-    glyph->y_scale = 0x10000;
-    if (size)
+    glyph->x_scale = 0x10000L;
+    glyph->y_scale = 0x10000L;
+    if ( size )
     {
       glyph->x_scale = size->metrics.x_scale;
       glyph->y_scale = size->metrics.y_scale;
@@ -1717,7 +1728,7 @@
       T2_Init_Decoder( &decoder, face, size, glyph );
 
       decoder.builder.no_recurse =
-        (FT_Bool)( (load_flags & FT_LOAD_NO_RECURSE) != 0 );
+        (FT_Bool)( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
 
       /* now load the unscaled outline */
       error = T2_Access_Element( &cff->charstrings_index, glyph_index,
@@ -1734,13 +1745,13 @@
       T2_Done_Builder( &decoder.builder );
     }
 
-    /* Now, set the metrics - this is rather simple, as    */
+    /* Now, set the metrics -- this is rather simple, as   */
     /* the left side bearing is the xMin, and the top side */
     /* bearing the yMax.                                   */
     if ( !error )
     {
-      /* for composite glyphs, return only the left side bearing and the */
-      /* advance width..                                                 */
+      /* for composite glyphs, return only left side bearing and */
+      /* advance width                                           */
       if ( glyph->root.format == ft_glyph_format_composite )
       {
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
@@ -1748,12 +1759,12 @@
       }
       else
       {
-        FT_BBox           cbox;
-        FT_Glyph_Metrics* metrics = &glyph->root.metrics;
+        FT_BBox            cbox;
+        FT_Glyph_Metrics*  metrics = &glyph->root.metrics;
 
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance  = decoder.glyph_width;
+        metrics->horiAdvance = decoder.glyph_width;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
@@ -1795,8 +1806,8 @@
           metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
         }
 
-        /* apply the font matrix */
 #if 0
+        /* apply the font matrix */
         FT_Outline_Transform( &glyph->root.outline, cff->font_matrix );
 #endif
 
@@ -1808,8 +1819,8 @@
         {
           cbox.xMin &= -64;
           cbox.yMin &= -64;
-          cbox.xMax = ( cbox.xMax + 63 ) & -64;
-          cbox.yMax = ( cbox.yMax + 63 ) & -64;
+          cbox.xMax  = ( cbox.xMax + 63 ) & -64;
+          cbox.yMax  = ( cbox.yMax + 63 ) & -64;
         }
 
         metrics->width  = cbox.xMax - cbox.xMin;

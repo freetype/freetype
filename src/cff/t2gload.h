@@ -177,9 +177,8 @@
   FT_Error  T2_Compute_Max_Advance( TT_Face  face,
                                     FT_Int*  max_advance );
 
-#endif
+#endif /* 0 */
 
-  /* This function is exported, because it is used by the T1Dump utility */
   LOCAL_DEF
   FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
                                   FT_Byte*     charstring_base,

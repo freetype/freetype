@@ -95,9 +95,9 @@
   /*                                                                     */
   typedef struct  T2_DriverRec_
   {
-    FT_DriverRec    root;
+    FT_DriverRec  root;
 
-    void*           extension_component;
+    void*         extension_component;
 
   } T2_DriverRec;
 

@@ -144,7 +144,6 @@
 #undef PAIR_TAG
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -203,6 +202,7 @@
 
     /* force drop-out mode to 2 - irrelevant now */
     /* slot->outline.dropout_mode = 2; */
+
     return error;
   }
 

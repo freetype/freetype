@@ -682,6 +682,8 @@
     if ( slot->flags & ft_glyph_own_bitmap )
     {
       FT_Memory  memory = FT_FACE_MEMORY( slot->face );
+
+
       FREE( slot->bitmap.buffer );
       slot->flags &= ~ft_glyph_own_bitmap;
     }
@@ -958,31 +960,32 @@
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
-    /* do we need to load the glyph through the auto-hinter ?? */
+    /* do we need to load the glyph through the auto-hinter? */
     library  = driver->root.library;
     hinter   = library->auto_hinter;
     autohint = hinter &&
-               !(load_flags & (FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING));
-    if (autohint)
+               !( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) );
+    if ( autohint )
     {
       if ( FT_DRIVER_HAS_HINTER( driver ) &&
-           !(load_flags & FT_LOAD_FORCE_AUTOHINT) )
-	autohint = 0;
-    }	       
+           !( load_flags & FT_LOAD_FORCE_AUTOHINT ) )
+        autohint = 0;
+    }
     
-    if (autohint)
+    if ( autohint )
     {
       FT_AutoHinter_Interface*  hinting;
       
+
       hinting = (FT_AutoHinter_Interface*)hinter->clazz->module_interface;
-      error = hinting->load_glyph( (FT_AutoHinter)hinter, slot,  face->size,
+      error = hinting->load_glyph( (FT_AutoHinter)hinter, slot, face->size,
                                    glyph_index, load_flags );
     }
     else
       error = driver->clazz->load_glyph( slot,
                                          face->size,
-					 glyph_index,
-					 load_flags );
+                                         glyph_index,
+                                         load_flags );
     if ( error )
       goto Exit;
 
@@ -1013,15 +1016,17 @@
       FT_Vector_Transform( &slot->advance, &face->transform_matrix );
     }
 
-    /* do we need to render the image now ? */
+    /* do we need to render the image now? */
     if ( !error                                    &&
          slot->format != ft_glyph_format_bitmap    &&
          slot->format != ft_glyph_format_composite &&
-	 load_flags & FT_LOAD_RENDER )
+         load_flags & FT_LOAD_RENDER )
     {
-      error = FT_Render_Glyph( slot, (load_flags & FT_LOAD_ANTI_ALIAS) ?
-                                ft_render_mode_antialias : 0 );
-    }	 
+      error = FT_Render_Glyph( slot,
+                               ( load_flags & FT_LOAD_ANTI_ALIAS )
+                                  ? ft_render_mode_antialias
+                                  : 0 );
+    } 
 
   Exit:
     return error;
@@ -2773,8 +2778,8 @@
         goto Fail;
     }
 
-    /* is the module a auto-hinter ? */
-    if ( FT_MODULE_IS_HINTER(module) )
+    /* is the module a auto-hinter? */
+    if ( FT_MODULE_IS_HINTER( module ) )
       library->auto_hinter = module;
       
     /* if the module is a font driver */

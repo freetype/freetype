@@ -46,7 +46,10 @@
 
 
     for ( result = 0; off_size > 0; off_size-- )
-      result = ( result <<= 8 ) | *p++;
+    {
+      result <<= 8;
+      result  |= *p++;
+    }
 
     return result;
   }
@@ -66,7 +69,7 @@
 
     index->stream = stream;
     if ( !READ_UShort( count ) &&
-          count > 0            )
+         count > 0             )
     {
       FT_Byte*   p;
       FT_Byte    offsize;
@@ -74,7 +77,7 @@
       FT_ULong*  poff;
 
 
-      /* there is at least one element; read the offset size            */
+      /* there is at least one element; read the offset size,           */
       /* then access the offset table to compute the index's total size */
       if ( READ_Byte( offsize ) )
         goto Exit;
@@ -196,8 +199,8 @@
         {
           element++;
           off2 = index->offsets[element];
-        }
-        while ( off2 == 0 && element < index->count );
+
+        } while ( off2 == 0 && element < index->count );
 
         if ( !off2 )
           off1 = 0;
@@ -362,26 +365,22 @@
     switch ( format )
     {
     case 0:     /* format 0, that's simple */
-      {
-        select->data_size = num_glyphs;
-        goto Load_Data;
-      }
+      select->data_size = num_glyphs;
+      goto Load_Data;
 
     case 3:     /* format 3, a tad more complex */
-      {
-        if ( READ_UShort( num_ranges ) )
-          goto Exit;
+      if ( READ_UShort( num_ranges ) )
+        goto Exit;
 
-        select->data_size = num_ranges * 3 + 2;
+      select->data_size = num_ranges * 3 + 2;
 
-      Load_Data:
-        if ( EXTRACT_Frame( select->data_size, select->data ) )
-          goto Exit;
-      }
+    Load_Data:
+      if ( EXTRACT_Frame( select->data_size, select->data ) )
+        goto Exit;
       break;
 
 
-    default:    /* humm... that's wrong */
+    default:    /* hmm... that's wrong */
       error = FT_Err_Invalid_File_Format;
     }
 
@@ -439,6 +438,7 @@
             break;
           }
           first = limit;
+
         } while ( p < p_limit );
       }
       break;
@@ -495,7 +495,7 @@
     if ( error )
       goto Exit;
 
-    /* if it's a CID font, we stop there */
+    /* if it is a CID font, we stop there */
     if ( top->cid_registry )
       goto Exit;
 

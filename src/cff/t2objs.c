@@ -80,6 +80,7 @@
     FT_Error         error;
     SFNT_Interface*  sfnt;
 
+
     sfnt = (SFNT_Interface*)FT_Get_Module_Interface(
              face->root.driver->root.library, "sfnt" );
     if ( !sfnt )
@@ -94,7 +95,7 @@
     if ( error )
       goto Exit;
 
-    if ( face->format_tag != 0x4f54544fL )     /* OpenType/CFF font */
+    if ( face->format_tag != 0x4F54544FL )  /* `OTTO'; OpenType/CFF font */
     {
       FT_TRACE2(( "[not a valid OpenType/CFF font]\n" ));
       goto Bad_Format;
@@ -109,7 +110,7 @@
     if ( error )
       goto Exit;
 
-    /* now, load the CFF part of the file.. */
+    /* now, load the CFF part of the file */
     error = face->goto_table( face, TTAG_CFF, stream, 0 );
     if ( error )
       goto Exit;
@@ -129,7 +130,7 @@
         goto Exit;
 
       /* Complement the root flags with some interesting information. */
-      /* note that for OpenType/CFF, there is no need to do this, but */
+      /* Note that for OpenType/CFF, there is no need to do this, but */
       /* this will be necessary for pure CFF fonts through.           */
       root = &face->root;
     }
@@ -157,9 +158,9 @@
   LOCAL_DEF
   void  T2_Done_Face( T2_Face  face )
   {
-    FT_Memory  memory = face->root.memory;
+    FT_Memory        memory = face->root.memory;
+    SFNT_Interface*  sfnt   = face->sfnt;
 
-    SFNT_Interface*  sfnt = face->sfnt;
 
     if ( sfnt )
       sfnt->done_face( face );
@@ -195,11 +196,17 @@
   FT_Error  T2_Init_Driver( T2_Driver  driver )
   {
     /* init extension registry if needed */
+
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
+
     return TT_Init_Extensions( driver );
+
 #else
+
     UNUSED( driver );
+
     return T2_Err_Ok;
+
 #endif
   }
 
@@ -219,10 +226,15 @@
   void  T2_Done_Driver( T2_Driver  driver )
   {
     /* destroy extensions registry if needed */
+
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
+
     TT_Done_Extensions( driver );
+
 #else
+
     UNUSED( driver );
+
 #endif
   }
 
