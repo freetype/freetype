@@ -130,9 +130,8 @@
   } FT_Extension_Class;
 
 
-  FT_EXPORT( FT_Error )  FT_Register_Extension(
-                               FT_Driver            driver,
-                               FT_Extension_Class*  clazz );
+  FT_EXPORT( FT_Error )  FT_Register_Extension( FT_Driver            driver,
+                                                FT_Extension_Class*  clazz );
 
 
 #ifdef FT_CONFIG_OPTION_EXTEND_ENGINE
@@ -161,10 +160,9 @@
 
 
   /* return an extension's data & interface according to its ID */
-  FT_EXPORT( void* )  FT_Get_Extension(
-                            FT_Face      face,
-                            const char*  extension_id,
-                            void**       extension_interface );
+  FT_EXPORT( void* )  FT_Get_Extension( FT_Face      face,
+                                        const char*  extension_id,
+                                        void**       extension_interface );
 
 
 #ifdef __cplusplus

@@ -229,9 +229,9 @@
 
 #endif /* !FT_EXPORT_VAR */
 
-  /* the following macros are needed to compile the library with a   */
-  /* C++ compiler. Werner insisted on being able to do that even     */
-  /* though we explicitely do not support C++ compilation            */
+  /* The following macros are needed to compile the library with a   */
+  /* C++ compiler.  Note that we do this for convenience -- please   */
+  /* don't ask for more C++ features.                                */
   /*                                                                 */
 
   /* This is special.  Within C++, you must specify `extern "C"' for */
@@ -241,13 +241,13 @@
   /* functions which are accessed by (global) function pointers.     */
   /*                                                                 */
   /*                                                                 */
-  /* FT_CALLBACK_DEF is used to _define_ a callback function         */
+  /* FT_CALLBACK_DEF is used to _define_ a callback function.        */
   /*                                                                 */
-  /* FT_CALLBACK_TABLE is used to _declare_ a constant variable      */
-  /* that contains pointers to callback functions                    */
+  /* FT_CALLBACK_TABLE is used to _declare_ a constant variable that */
+  /* contains pointers to callback functions.                        */
   /*                                                                 */
   /* FT_CALLBACK_TABLE_DEF is used to _define_ a constant variable   */
-  /* that contains pointers to callback functions                    */
+  /* that contains pointers to callback functions.                   */
   /*                                                                 */
 #ifdef __cplusplus
 

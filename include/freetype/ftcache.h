@@ -321,9 +321,9 @@
 
   /* this must be used internally for the moment */
   FT_EXPORT( FT_Error )  FTC_Manager_Register_Cache(
-                               FTC_Manager       manager,
-                               FTC_Cache_Class*  clazz,
-                               FTC_Cache*        acache );
+                           FTC_Manager       manager,
+                           FTC_Cache_Class*  clazz,
+                           FTC_Cache*        acache );
 
 
 #ifdef __cplusplus

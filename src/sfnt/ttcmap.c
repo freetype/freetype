@@ -43,14 +43,18 @@
 #define FT_COMPONENT  trace_ttcmap
 
 
-  FT_CALLBACK_DEF FT_UInt  code_to_index0( TT_CMapTable*  charmap,
-                                        FT_ULong       char_code );
-  FT_CALLBACK_DEF FT_UInt  code_to_index2( TT_CMapTable*  charmap,
-                                        FT_ULong       char_code );
-  FT_CALLBACK_DEF FT_UInt  code_to_index4( TT_CMapTable*  charmap,
-                                        FT_ULong       char_code );
-  FT_CALLBACK_DEF FT_UInt  code_to_index6( TT_CMapTable*  charmap,
-                                        FT_ULong       char_code );
+  FT_CALLBACK_DEF
+  FT_UInt  code_to_index0( TT_CMapTable*  charmap,
+                           FT_ULong       char_code );
+  FT_CALLBACK_DEF
+  FT_UInt  code_to_index2( TT_CMapTable*  charmap,
+                           FT_ULong       char_code );
+  FT_CALLBACK_DEF
+  FT_UInt  code_to_index4( TT_CMapTable*  charmap,
+                           FT_ULong       char_code );
+  FT_CALLBACK_DEF
+  FT_UInt  code_to_index6( TT_CMapTable*  charmap,
+                           FT_ULong       char_code );
 
 
   /*************************************************************************/

@@ -292,7 +292,7 @@
 
 
   FT_BASE( FT_Char )   FT_Read_Char( FT_Stream  stream,
-                                    FT_Error*  error );
+                                     FT_Error*  error );
 
   FT_BASE( FT_Short )  FT_Read_Short( FT_Stream  stream,
                                       FT_Error*  error );
@@ -304,7 +304,7 @@
                                      FT_Error*  error );
 
   FT_BASE( FT_Short )  FT_Read_ShortLE( FT_Stream  stream,
-                                         FT_Error*  error );
+                                        FT_Error*  error );
 
   FT_BASE( FT_Long )   FT_Read_LongLE( FT_Stream  stream,
                                        FT_Error*  error );

@@ -66,9 +66,9 @@
   /*    FreeType error code.  0 means sucess.                              */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Outline_Decompose(
-                                FT_Outline*              outline,
-                                const FT_Outline_Funcs*  interface,
-                                void*                    user )
+                               FT_Outline*              outline,
+                               const FT_Outline_Funcs*  interface,
+                               void*                    user )
   {
 #undef SCALED
 #define SCALED( x )  ( ( (x) << shift ) - delta )
@@ -271,10 +271,10 @@
 
 
   FT_EXPORT_DEF( FT_Error )  FT_Outline_New_Internal(
-                                FT_Memory    memory,
-                                FT_UInt      numPoints,
-                                FT_Int       numContours,
-                                FT_Outline*  outline )
+                               FT_Memory    memory,
+                               FT_UInt      numPoints,
+                               FT_Int       numContours,
+                               FT_Outline*  outline )
   {
     FT_Error  error;
 
@@ -336,9 +336,9 @@
   /*    to use the library's memory allocator.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Outline_New( FT_Library   library,
-                                              FT_UInt      numPoints,
-                                              FT_Int       numContours,
-                                              FT_Outline*  outline )
+                                             FT_UInt      numPoints,
+                                             FT_Int       numContours,
+                                             FT_Outline*  outline )
   {
     if ( !library )
       return FT_Err_Invalid_Library_Handle;

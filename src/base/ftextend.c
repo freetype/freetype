@@ -119,14 +119,15 @@
   /*                                                                       */
   /* <InOut>                                                               */
   /*    driver :: A handle to the driver object.                           */
+  /*                                                                       */
   /*    class  :: A pointer to a class describing the extension.           */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Register_Extension(
-                                FT_Driver            driver,
-                                FT_Extension_Class*  clazz )
+                               FT_Driver            driver,
+                               FT_Extension_Class*  clazz )
   {
     FT_Extension_Registry*  registry;
 
@@ -184,9 +185,9 @@
   /*    A generic pointer to the extension block.                          */
   /*                                                                       */
   FT_EXPORT_DEF( void* )  FT_Get_Extension(
-                             FT_Face      face,
-                             const char*  extension_id,
-                             void**       extension_interface )
+                            FT_Face      face,
+                            const char*  extension_id,
+                            void**       extension_interface )
   {
     FT_Extension_Registry*  registry;
 

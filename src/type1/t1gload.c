@@ -219,9 +219,9 @@
         
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
-        internal->glyph_matrix         = font_matrix;
-        internal->glyph_delta          = font_offset;
-        internal->glyph_transformed    = 1;
+        internal->glyph_matrix           = font_matrix;
+        internal->glyph_delta            = font_offset;
+        internal->glyph_transformed      = 1;
       }
       else
       {
@@ -230,8 +230,8 @@
 
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance          = decoder.builder.advance.x;
-        glyph->root.linearHoriAdvance = decoder.builder.advance.x;
+        metrics->horiAdvance                    = decoder.builder.advance.x;
+        glyph->root.linearHoriAdvance           = decoder.builder.advance.x;
         glyph->root.internal->glyph_transformed = 0;
 
         /* make up vertical metrics */

@@ -16,9 +16,13 @@
 /***************************************************************************/
 
 
-/* NOTE: include this file after <freetype/freetype.h> and after the
-   Mac-specific <Types.h> header (or any other Mac header that includes
-   <Types.h>); we use Handle type. */
+/***************************************************************************/
+/*                                                                         */
+/* NOTE: Include this file after <freetype/freetype.h> and after the       */
+/*       Mac-specific <Types.h> header (or any other Mac header that       */
+/*       includes <Types.h>); we use Handle type.                          */
+/*                                                                         */
+/***************************************************************************/
 
 
 #ifndef FT_MAC_H
@@ -60,10 +64,10 @@
   /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_New_Face_From_FOND(
-                                FT_Library  library,
-                                Handle      fond,
-                                FT_Long     face_index,
-                                FT_Face*    aface );
+                               FT_Library  library,
+                               Handle      fond,
+                               FT_Long     face_index,
+                               FT_Face*    aface );
 
 
 #ifdef __cplusplus

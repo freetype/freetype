@@ -169,8 +169,8 @@
   /*                                                                       */
 
   FT_EXPORT_DEF( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
-                                              FTC_GlyphSet   gset,
-                                              FT_UInt        gindex );
+                                             FTC_GlyphSet   gset,
+                                             FT_UInt        gindex );
 
 #define FTC_GlyphNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
@@ -192,9 +192,9 @@
                                            FTC_GlyphSet*    aset );
 
   FT_EXPORT( FT_Error )  FTC_GlyphSet_Lookup_Node(
-                               FTC_GlyphSet    gset,
-                               FT_UInt         glyph_index,
-                               FTC_GlyphNode*  anode );
+                           FTC_GlyphSet    gset,
+                           FT_UInt         glyph_index,
+                           FTC_GlyphNode*  anode );
 
 
 #ifdef __cplusplus

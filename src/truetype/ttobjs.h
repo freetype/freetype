@@ -109,12 +109,14 @@
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
-  FT_LOCAL void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
+  FT_LOCAL
+  void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
 
-  FT_LOCAL FT_Error TT_New_GlyphZone( FT_Memory      memory,
-                                       FT_UShort      maxPoints,
-                                       FT_Short       maxContours,
-                                       TT_GlyphZone*  zone );
+  FT_LOCAL
+  FT_Error  TT_New_GlyphZone( FT_Memory      memory,
+                              FT_UShort      maxPoints,
+                              FT_Short       maxContours,
+                              TT_GlyphZone*  zone );
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 

@@ -226,9 +226,9 @@
 
 
   FT_EXPORT_DEF( FT_Error )  FTC_GlyphSet_Lookup_Node(
-                                FTC_GlyphSet    gset,
-                                FT_UInt         glyph_index,
-                                FTC_GlyphNode*  anode )
+                               FTC_GlyphSet    gset,
+                               FT_UInt         glyph_index,
+                               FTC_GlyphNode*  anode )
   {
     FTC_Glyph_Cache      cache      = gset->cache;
     FTC_Manager          manager    = cache->root.manager;

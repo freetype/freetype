@@ -393,20 +393,21 @@
   /*************************************************************************/
   /*************************************************************************/
 
- /*********************************************************************
-  *
-  * <Type>
-  *    FT_Face_Internal
-  *
-  * <Description>
-  *    an opaque handle to a FT_Face_InternalRec structure, used to
-  *    model private data of a given FT_Face object.
-  *
-  *    this fields might change between releases of FreeType 2 and
-  *    are not generally available to client applications
-  *
-  */
-  typedef struct FT_Face_InternalRec_*   FT_Face_Internal;
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Face_Internal                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    An opaque handle to an FT_Face_InternalRec structure, used to      */
+  /*    model private data of a given FT_Face object.                      */
+  /*                                                                       */
+  /*    This field might change between releases of FreeType 2 and are     */
+  /*    not generally available to client applications.                    */
+  /*                                                                       */
+  typedef struct FT_Face_InternalRec_*  FT_Face_Internal;
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -571,76 +572,62 @@
   /*                                                                       */
   /*    sizes_list          :: The list of child sizes for this face.      */
   /*                                                                       */
-  /*    max_points          :: The maximal number of points used to store  */
-  /*                           the vectorial outline of any glyph in this  */
-  /*                           face.  If this value cannot be known in     */
-  /*                           advance, or if the face isn't scalable,     */
-  /*                           this should be set to 0.  Only relevant for */
-  /*                           scalable formats.                           */
-  /*                                                                       */
-  /*    max_contours        :: The maximal number of contours used to      */
-  /*                           store the vectorial outline of any glyph in */
-  /*                           this face.  If this value cannot be known   */
-  /*                           in advance, or if the face isn't scalable,  */
-  /*                           this should be set to 0.  Only relevant for */
-  /*                           scalable formats.                           */
-  /*                                                                       */
-  /*    internal            :: a pointer to internal fields of the face    */
-  /*                           object. These fields can change freely      */
+  /*    internal            :: A pointer to internal fields of the face    */
+  /*                           object.  These fields can change freely     */
   /*                           between releases of FreeType and are not    */
-  /*                           publicly available..                        */
+  /*                           publicly available.                         */
   /*                                                                       */
   typedef struct  FT_FaceRec_
   {
-    FT_Long          num_faces;
-    FT_Long          face_index;
+    FT_Long           num_faces;
+    FT_Long           face_index;
 
-    FT_Long          face_flags;
-    FT_Long          style_flags;
+    FT_Long           face_flags;
+    FT_Long           style_flags;
 
-    FT_Long          num_glyphs;
+    FT_Long           num_glyphs;
 
-    FT_String*       family_name;
-    FT_String*       style_name;
+    FT_String*        family_name;
+    FT_String*        style_name;
 
-    FT_Int           num_fixed_sizes;
-    FT_Bitmap_Size*  available_sizes;
+    FT_Int            num_fixed_sizes;
+    FT_Bitmap_Size*   available_sizes;
 
-    FT_Int           num_charmaps;
-    FT_CharMap*      charmaps;
+    FT_Int            num_charmaps;
+    FT_CharMap*       charmaps;
 
-    FT_Generic       generic;
+    FT_Generic        generic;
 
-    /*# the following are only relevant for scalable outlines */
-    FT_BBox          bbox;
+    /*# the following are only relevant to scalable outlines */
+    FT_BBox           bbox;
 
-    FT_UShort        units_per_EM;
-    FT_Short         ascender;
-    FT_Short         descender;
-    FT_Short         height;
+    FT_UShort         units_per_EM;
+    FT_Short          ascender;
+    FT_Short          descender;
+    FT_Short          height;
 
-    FT_Short         max_advance_width;
-    FT_Short         max_advance_height;
+    FT_Short          max_advance_width;
+    FT_Short          max_advance_height;
 
-    FT_Short         underline_position;
-    FT_Short         underline_thickness;
+    FT_Short          underline_position;
+    FT_Short          underline_thickness;
 
-    FT_GlyphSlot     glyph;
-    FT_Size          size;
-    FT_CharMap       charmap;
+    FT_GlyphSlot      glyph;
+    FT_Size           size;
+    FT_CharMap        charmap;
 
     /*@private begin */
 
-    FT_Driver        driver;
-    FT_Memory        memory;
-    FT_Stream        stream;
+    FT_Driver         driver;
+    FT_Memory         memory;
+    FT_Stream         stream;
 
-    FT_ListRec       sizes_list;
+    FT_ListRec        sizes_list;
 
-    FT_Generic       autohint;
-    void*            extensions;
+    FT_Generic        autohint;
+    void*             extensions;
 
-    FT_Face_Internal internal;
+    FT_Face_Internal  internal;
 
     /*@private end */
 
@@ -850,16 +837,17 @@
 #define FT_STYLE_FLAG_BOLD  2
 
 
- /*********************************************************************
-  *
-  * <Type>
-  *    FT_Size_Internal
-  *
-  * <Description>
-  *    an opaque handle to a FT_Size_InternalRec structure, used to
-  *    model private data of a given FT_Size object.
-  */
-  typedef struct FT_Size_InternalRec_*   FT_Size_Internal;
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Size_Internal                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    An opaque handle to an FT_Size_InternalRec structure, used to      */
+  /*    model private data of a given FT_Size object.                      */
+  /*                                                                       */
+  typedef struct FT_Size_InternalRec_*  FT_Size_Internal;
+
   
   /*************************************************************************/
   /*                                                                       */
@@ -969,7 +957,6 @@
     FT_Size_Metrics   metrics;   /* size metrics                    */
     FT_Size_Internal  internal;
     
-
   } FT_SizeRec;
 
 
@@ -989,16 +976,16 @@
   typedef struct FT_SubGlyph_  FT_SubGlyph;
 
 
- /*********************************************************************
-  *
-  * <Type>
-  *    FT_Slot_Internal
-  *
-  * <Description>
-  *    an opaque handle to a FT_Slot_InternalRec structure, used to
-  *    model private data of a given FT_GlyphSlot object.
-  */
-  typedef struct FT_Slot_InternalRec_*   FT_Slot_Internal;
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Slot_Internal                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    An opaque handle to an FT_Slot_InternalRec structure, used to      */
+  /*    model private data of a given FT_GlyphSlot object.                 */
+  /*                                                                       */
+  typedef struct FT_Slot_InternalRec_*  FT_Slot_Internal;
 
 
   /*************************************************************************/
