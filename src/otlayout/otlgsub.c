@@ -57,10 +57,14 @@
 
   static void
   otl_gsub_lookup1_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
 
 
     OTL_CHECK( 2 );
@@ -69,12 +73,26 @@
     switch ( format )
     {
     case 1:
-      OTL_CHECK( 4 );
+      {
+        OTL_Bytes  coverage;
+        OTL_Int    delta;
+        OTL_Long   idx;
 
-      otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
-      /* skip delta glyph ID */
+        OTL_CHECK( 4 );
+        coverage = table + OTL_NEXT_USHORT( p );
+        delta    = OTL_NEXT_SHORT( p );
 
+        otl_coverage_validate( coverage, valid );
+
+        idx = otl_coverage_get_first( coverage ) + delta;
+        if ( idx < 0 )
+          OTL_INVALID_DATA;
+
+        idx = otl_coverage_get_last( coverage ) + delta;
+        if ( (OTL_UInt)idx >= glyph_count )
+          OTL_INVALID_DATA;
+      }
       break;
 
     case 2:
@@ -88,11 +106,11 @@
 
         otl_coverage_validate( table + coverage, valid );
 
-        OTL_CHECK( 2 * num_glyphs );
+        OTL_CHECK( num_glyphs * 2 );
 
-        /* We don't check that there are at most `num_glyphs' */
-        /* elements in the coverage table.  This is delayed   */
-        /* to the lookup function.                            */
+        for ( ; num_glyphs > 0; num_glyphs-- )
+          if ( OTL_NEXT_USHORT( p ) >= glyph_count )
+            OTL_INVALID_DATA;
       }
       break;
 
@@ -198,6 +216,7 @@
 
   static void
   otl_sequence_validate( OTL_Bytes      table,
+                         OTL_UInt       glyph_count,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -207,21 +226,27 @@
     OTL_CHECK( 2 );
     num_glyphs = OTL_NEXT_USHORT( p );
 
-    /* XXX: according to the spec, `num_glyphs' should be > 0; */
-    /*      we can deal with these cases pretty well, however  */
+    /* according to the specification, `num_glyphs' should be > 0; */
+    /* we can deal with these cases pretty well, however           */
 
-    OTL_CHECK( 2 * num_glyphs );
+    OTL_CHECK( num_glyphs * 2 );
 
-    /* XXX: check glyph indices */
+    for ( ; num_glyphs > 0; num_glyphs-- )
+      if ( OTL_NEXT_USHORT( p ) >= glyph_count )
+        OTL_INVALID_DATA;
   }
 
 
   static void
   otl_gsub_lookup2_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
 
 
     OTL_CHECK( 2 );
@@ -243,7 +268,8 @@
 
         /* scan sequence records */
         for ( ; num_sequences > 0; num_sequences-- )
-          otl_sequence_validate( table + OTL_NEXT_USHORT( p ), valid );
+          otl_sequence_validate( table + OTL_NEXT_USHORT( p ), glyph_count,
+                                 valid );
       }
       break;
 
@@ -329,27 +355,34 @@
 
   static void
   otl_alternate_set_validate( OTL_Bytes      table,
+                              OTL_UInt       glyph_count,
                               OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_glyphs;
 
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_glyphs = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2 * count );
+    OTL_CHECK( num_glyphs * 2 );
 
-    /* XXX: check glyph indices */
+    for ( ; num_glyphs > 0; num_glyphs-- )
+      if ( OTL_NEXT_USHORT( p ) >= glyph_count )
+        OTL_INVALID_DATA;
   }
 
 
   static void
   otl_gsub_lookup3_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
 
 
     OTL_CHECK( 2 );
@@ -367,11 +400,12 @@
 
         otl_coverage_validate( table + coverage, valid );
 
-        OTL_CHECK( 2 * num_alternate_sets );
+        OTL_CHECK( num_alternate_sets * 2 );
 
         /* scan alternate set records */
         for ( ; num_alternate_sets > 0; num_alternate_sets-- )
-          otl_alternate_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+          otl_alternate_set_validate( table + OTL_NEXT_USHORT( p ),
+                                      glyph_count, valid );
       }
       break;
 
@@ -442,6 +476,7 @@
 
   static void
   otl_ligature_validate( OTL_Bytes      table,
+                         OTL_UInt       glyph_count,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -455,14 +490,19 @@
     if ( num_components == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( 2 * ( num_components - 1 ) );
+    num_components--;
 
-    /* XXX: check glyph indices */
+    OTL_CHECK( num_components * 2 );
+
+    for ( ; num_components > 0; num_components-- )
+      if ( OTL_NEXT_USHORT( p ) >= glyph_count )
+        OTL_INVALID_DATA;
   }
 
 
   static void
   otl_ligature_set_validate( OTL_Bytes      table,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -472,20 +512,25 @@
     OTL_CHECK( 2 );
     num_ligatures = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2 * num_ligatures );
+    OTL_CHECK( num_ligatures * 2 );
 
     /* scan ligature records */
     for ( ; num_ligatures > 0; num_ligatures-- )
-      otl_ligature_validate( table + OTL_NEXT_USHORT( p ), valid );
+      otl_ligature_validate( table + OTL_NEXT_USHORT( p ), glyph_count,
+                             valid );
   }
 
 
   static void
   otl_gsub_lookup4_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count);
 
 
     OTL_CHECK( 2 );
@@ -503,11 +548,12 @@
 
         otl_coverage_validate( table + coverage, valid );
 
-        OTL_CHECK( 2 * num_ligsets );
+        OTL_CHECK( num_ligsets * 2 );
 
         /* scan ligature set records */
         for ( ; num_ligsets > 0; num_ligsets-- )
-          otl_ligature_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+          otl_ligature_set_validate( table + OTL_NEXT_USHORT( p ),
+                                     glyph_count, valid );
       }
       break;
 
@@ -525,8 +571,10 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  /* used for both format 1 and 2 */
   static void
   otl_sub_rule_validate( OTL_Bytes      table,
+                         OTL_UInt       lookup_count,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -542,12 +590,25 @@
 
     OTL_CHECK( ( num_glyphs - 1 ) * 2 + num_subst * 4 );
 
-    /* XXX: check glyph indices and subst lookups */
+    for ( ; num_subst > 0; num_subst-- )
+    {
+      if ( OTL_NEXT_USHORT( p ) >= num_glyphs )
+        OTL_INVALID_DATA;
+
+      if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+        OTL_INVALID_DATA;
+    }
+
+    /* no need to check glyph indices/classes used as input for this  */
+    /* context rule since even invalid glyph indices/classes return a */
+    /* meaningful result                                              */
   }
 
 
+  /* used for both format 1 and 2 */
   static void
   otl_sub_rule_set_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -557,63 +618,25 @@
     OTL_CHECK( 2 );
     num_subrules = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2 * num_subrules );
-
-    /* scan sub rule records */
-    for ( ; num_subrules > 0; num_subrules-- )
-      otl_sub_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
-  }
-
-
-  static void
-  otl_sub_class_rule_validate( OTL_Bytes      table,
-                               OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   num_glyphs, num_subst;
-
-
-    OTL_CHECK( 4 );
-    num_glyphs = OTL_NEXT_USHORT( p );
-    num_subst  = OTL_NEXT_USHORT( p );
-
-    if ( num_glyphs == 0 )
-      OTL_INVALID_DATA;
-
-    OTL_CHECK( ( num_glyphs - 1 ) * 2 + num_subst * 4 );
-
-    /* XXX: check subst lookups */
-
-    /* no need to check glyph indices used as input for this context    */
-    /* rule since even invalid glyph indices return a meaningful result */
-  }
-
-
-  static void
-  otl_sub_class_rule_set_validate( OTL_Bytes      table,
-                                   OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   num_subrules;
-
-
-    OTL_CHECK( 2 );
-    num_subrules = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( 2 * num_subrules );
+    OTL_CHECK( num_subrules * 2 );
 
     /* scan subrule records */
     for ( ; num_subrules > 0; num_subrules-- )
-      otl_sub_class_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
+      otl_sub_rule_validate( table + OTL_NEXT_USHORT( p ), lookup_count,
+                             valid );
   }
 
 
   static void
   otl_gsub_lookup5_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -631,11 +654,12 @@
 
         otl_coverage_validate( table + coverage, valid );
 
-        OTL_CHECK( 2 * num_subrulesets );
+        OTL_CHECK( num_subrulesets * 2 );
 
         /* scan subrule set records */
         for ( ; num_subrulesets > 0; num_subrulesets-- )
-          otl_sub_rule_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+          otl_sub_rule_set_validate( table + OTL_NEXT_USHORT( p ),
+                                     lookup_count, valid );
       }
       break;
 
@@ -652,30 +676,42 @@
         otl_coverage_validate( table + coverage, valid );
         otl_class_definition_validate( table + class_def, valid );
 
-        OTL_CHECK( 2 * num_subclass_sets );
+        OTL_CHECK( num_subclass_sets * 2 );
 
         /* scan subclass set records */
         for ( ; num_subclass_sets > 0; num_subclass_sets-- )
-          otl_sub_class_rule_set_validate( table + OTL_NEXT_USHORT( p ),
-                                           valid );
+        {
+          OTL_UInt  offset = OTL_NEXT_USHORT( p );
+
+
+          if ( offset )
+            otl_sub_rule_set_validate( table + offset, lookup_count, valid );
+        }
       }
       break;
 
     case 3:
       {
-        OTL_UInt  num_glyphs, num_subst;
+        OTL_UInt  num_glyphs, num_subst, count;
 
 
         OTL_CHECK( 4 );
         num_glyphs = OTL_NEXT_USHORT( p );
         num_subst  = OTL_NEXT_USHORT( p );
 
-        OTL_CHECK( 2 * num_glyphs + 4 * num_subst );
+        OTL_CHECK( num_glyphs * 2 + num_subst * 4 );
 
-        for ( ; num_glyphs > 0; num_glyphs-- )
+        for ( count = num_glyphs; count > 0; count-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
-        /* XXX: check subst lookups */
+        for ( ; num_subst > 0; num_subst-- )
+        {
+          if ( OTL_NEXT_USHORT( p ) >= num_glyphs )
+            OTL_INVALID_DATA;
+
+          if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+            OTL_INVALID_DATA;
+        }
       }
       break;
 
@@ -696,6 +732,7 @@
   /* used for both format 1 and 2 */
   static void
   otl_chain_sub_rule_validate( OTL_Bytes      table,
+                               OTL_UInt       lookup_count,
                                OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -706,33 +743,42 @@
     OTL_CHECK( 2 );
     num_backtrack_glyphs = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
-    p += 2 * num_backtrack_glyphs;
+    OTL_CHECK( num_backtrack_glyphs * 2 + 2 );
+    p += num_backtrack_glyphs * 2;
 
     num_input_glyphs = OTL_NEXT_USHORT( p );
     if ( num_input_glyphs == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( 2 * num_input_glyphs );
-    p += 2 * ( num_input_glyphs - 1 );
+    OTL_CHECK( num_input_glyphs * 2 );
+    p += ( num_input_glyphs - 1 ) * 2;
 
     num_lookahead_glyphs = OTL_NEXT_USHORT( p );
-    OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
-    p += 2 * num_lookahead_glyphs;
+    OTL_CHECK( num_lookahead_glyphs * 2 + 2 );
+    p += num_lookahead_glyphs * 2;
 
     num_subst = OTL_NEXT_USHORT( p );
-    OTL_CHECK( 4 * num_subst );
+    OTL_CHECK( num_subst * 4 );
 
-    /* XXX: check subst lookups */
+    for ( ; num_subst > 0; num_subst-- )
+    {
+      if ( OTL_NEXT_USHORT( p ) >= num_input_glyphs )
+        OTL_INVALID_DATA;
 
-    /* no need to check glyph indices used as input for this context    */
-    /* rule since even invalid glyph indices return a meaningful result */
+      if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+        OTL_INVALID_DATA;
+    }
+
+    /* no need to check glyph indices/classes used as input for this  */
+    /* context rule since even invalid glyph indices/classes return a */
+    /* meaningful result                                              */
   }
 
 
   /* used for both format 1 and 2 */
   static void
   otl_chain_sub_rule_set_validate( OTL_Bytes      table,
+                                   OTL_UInt       lookup_count,
                                    OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -742,20 +788,25 @@
     OTL_CHECK( 2 );
     num_chain_subrules = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2 * num_chain_subrules );
+    OTL_CHECK( num_chain_subrules * 2 );
 
-    /* scan chain subrule records */
+    /* scan chain subst rule records */
     for ( ; num_chain_subrules > 0; num_chain_subrules-- )
-      otl_chain_sub_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
+      otl_chain_sub_rule_validate( table + OTL_NEXT_USHORT( p ),
+                                   lookup_count, valid );
   }
 
 
   static void
   otl_gsub_lookup6_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -773,12 +824,12 @@
 
         otl_coverage_validate( table + coverage, valid );
 
-        OTL_CHECK( 2 * num_chain_subrulesets );
+        OTL_CHECK( num_chain_subrulesets * 2 );
 
         /* scan chain subrule set records */
         for ( ; num_chain_subrulesets > 0; num_chain_subrulesets-- )
           otl_chain_sub_rule_set_validate( table + OTL_NEXT_USHORT( p ),
-                                           valid );
+                                           lookup_count, valid );
       }
       break;
 
@@ -801,37 +852,43 @@
         otl_class_definition_validate( table + input_class, valid );
         otl_class_definition_validate( table + ahead_class, valid );
 
-        OTL_CHECK( 2 * num_chain_subclass_sets );
+        OTL_CHECK( num_chain_subclass_sets * 2 );
 
         /* scan chain subclass set records */
         for ( ; num_chain_subclass_sets > 0; num_chain_subclass_sets-- )
-          otl_chain_sub_rule_set_validate( table + OTL_NEXT_USHORT( p ),
-                                           valid );
+        {
+          OTL_UInt  offset = OTL_NEXT_USHORT( p );
+
+
+          if ( offset )
+            otl_chain_sub_rule_set_validate( table + offset, lookup_count,
+                                             valid );
+        }
       }
       break;
 
     case 3:
       {
         OTL_UInt  num_backtrack_glyphs, num_input_glyphs;
-        OTL_UInt  num_lookahead_glyphs, num_subst;
+        OTL_UInt  num_lookahead_glyphs, num_subst, count;
 
 
         OTL_CHECK( 2 );
 
         num_backtrack_glyphs = OTL_NEXT_USHORT( p );
-        OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
+        OTL_CHECK( num_backtrack_glyphs * 2 + 2 );
 
         for ( ; num_backtrack_glyphs > 0; num_backtrack_glyphs-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
         num_input_glyphs = OTL_NEXT_USHORT( p );
-        OTL_CHECK( 2 * num_input_glyphs + 2 );
+        OTL_CHECK( num_input_glyphs * 2 + 2 );
 
-        for ( ; num_input_glyphs > 0; num_input_glyphs-- )
+        for ( count = num_input_glyphs; count > 0; count-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
         num_lookahead_glyphs = OTL_NEXT_USHORT( p );
-        OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
+        OTL_CHECK( num_lookahead_glyphs * 2 + 2 );
 
         for ( ; num_lookahead_glyphs > 0; num_lookahead_glyphs-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
@@ -839,7 +896,14 @@
         num_subst = OTL_NEXT_USHORT( p );
         OTL_CHECK( num_subst * 4 );
 
-        /* XXX: check subst lookups */
+        for ( ; num_subst > 0; num_subst-- )
+        {
+          if ( OTL_NEXT_USHORT( p ) >= num_input_glyphs )
+            OTL_INVALID_DATA;
+
+          if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+            OTL_INVALID_DATA;
+        }
       }
       break;
 
@@ -859,6 +923,8 @@
 
   static void
   otl_gsub_lookup7_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -883,7 +949,7 @@
           OTL_INVALID_DATA;
 
         validate = otl_gsub_validate_funcs[lookup_type - 1];
-        validate( table + lookup_offset, valid );
+        validate( table + lookup_offset, lookup_count, glyph_count, valid );
       }
       break;
 
@@ -903,11 +969,15 @@
 
   static void
   otl_gsub_lookup8_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table, coverage;
     OTL_UInt   format;
     OTL_UInt   num_backtrack_glyphs, num_lookahead_glyphs, num_glyphs;
+
+    OTL_UNUSED( lookup_count );
 
 
     OTL_CHECK( 2 );
@@ -922,13 +992,13 @@
 
       otl_coverage_validate( coverage, valid );
 
-      OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
+      OTL_CHECK( num_backtrack_glyphs * 2 + 2 );
 
       for ( ; num_backtrack_glyphs > 0; num_backtrack_glyphs-- )
         otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
       num_lookahead_glyphs = OTL_NEXT_USHORT( p );
-      OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
+      OTL_CHECK( num_lookahead_glyphs * 2 + 2 );
 
       for ( ; num_lookahead_glyphs > 0; num_lookahead_glyphs-- )
         otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
@@ -937,9 +1007,12 @@
       if ( num_glyphs != otl_coverage_get_count( coverage ) )
         OTL_INVALID_DATA;
 
-      OTL_CHECK( 2 * num_glyphs );
+      OTL_CHECK( num_glyphs * 2 );
 
-      /* XXX: check glyph indices */
+      for ( ; num_glyphs > 0; num_glyphs-- )
+        if ( OTL_NEXT_USHORT( p ) >= glyph_count )
+          OTL_INVALID_DATA;
+
       break;
 
     default:
@@ -971,6 +1044,7 @@
 
   OTL_LOCALDEF( void )
   otl_gsub_validate( OTL_Bytes      table,
+                     OTL_UInt       glyph_count,
                      OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -987,7 +1061,7 @@
     lookups  = OTL_NEXT_USHORT( p );
 
     otl_lookup_list_validate( table + lookups, 8, otl_gsub_validate_funcs,
-                              valid );
+                              glyph_count, valid );
     otl_feature_list_validate( table + features, table + lookups, valid );
     otl_script_list_validate( table + scripts, table + features, valid );
   }

@@ -23,6 +23,7 @@
 
   static void
   otl_jstf_extender_validate( OTL_Bytes      table,
+                              OTL_UInt       glyph_count,
                               OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -35,7 +36,9 @@
 
     OTL_CHECK( num_glyphs * 2 );
 
-    /* XXX: check glyph indices */
+    for ( ; num_glyphs > 0; num_glyphs-- )
+      if ( OTL_NEXT_USHORT( p ) >= glyph_count )
+        OTL_INVALID_DATA;
   }
 
 
@@ -63,6 +66,7 @@
 
   static void
   otl_jstf_max_validate( OTL_Bytes      table,
+                         OTL_UInt       glyph_count,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -76,7 +80,8 @@
     /* scan subtable records */
     for ( ; num_lookups > 0; num_lookups-- )
       /* XXX: check lookup types? */
-      otl_gpos_subtable_validate( table + OTL_NEXT_USHORT( p ), valid );
+      otl_gpos_subtable_validate( table + OTL_NEXT_USHORT( p ), glyph_count,
+                                  valid );
   }
 
 
@@ -84,6 +89,7 @@
   otl_jstf_priority_validate( OTL_Bytes      table,
                               OTL_UInt       gsub_lookup_count,
                               OTL_UInt       gpos_lookup_count,
+                              OTL_UInt       glyph_count,
                               OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -117,7 +123,7 @@
     /* shrinkage JSTF max */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_max_validate( table + val, valid );
+      otl_jstf_max_validate( table + val, glyph_count, valid );
 
     /* extension GSUB enable/disable */
     val = OTL_NEXT_USHORT( p );
@@ -144,7 +150,7 @@
     /* extension JSTF max */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_max_validate( table + val, valid );
+      otl_jstf_max_validate( table + val, glyph_count, valid );
   }
 
 
@@ -152,6 +158,7 @@
   otl_jstf_lang_validate( OTL_Bytes      table,
                           OTL_UInt       gsub_lookup_count,
                           OTL_UInt       gpos_lookup_count,
+                          OTL_UInt       glyph_count,
                           OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -166,7 +173,7 @@
     for ( ; num_priorities > 0; num_priorities-- )
       otl_jstf_priority_validate( table + OTL_NEXT_USHORT( p ),
                                   gsub_lookup_count, gpos_lookup_count,
-                                  valid );
+                                  glyph_count, valid );
   }
 
 
@@ -174,6 +181,7 @@
   otl_jstf_script_validate( OTL_Bytes      table,
                             OTL_UInt       gsub_lookup_count,
                             OTL_UInt       gpos_lookup_count,
+                            OTL_UInt       glyph_count,
                             OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -186,11 +194,12 @@
     num_langsys  = OTL_NEXT_USHORT( p );
 
     if ( extender )
-      otl_jstf_extender_validate( table + extender, valid );
+      otl_jstf_extender_validate( table + extender, glyph_count, valid );
 
     if ( default_lang )
       otl_jstf_lang_validate( table + default_lang,
-                              gsub_lookup_count, gpos_lookup_count, valid );
+                              gsub_lookup_count, gpos_lookup_count,
+                              glyph_count, valid );
 
     OTL_CHECK( 6 * num_langsys );
 
@@ -200,7 +209,8 @@
       p += 4;       /* skip tag */
 
       otl_jstf_lang_validate( table + OTL_NEXT_USHORT( p ),
-                              gsub_lookup_count, gpos_lookup_count, valid );
+                              gsub_lookup_count, gpos_lookup_count,
+                              glyph_count, valid );
     }
   }
 
@@ -209,6 +219,7 @@
   otl_jstf_validate( OTL_Bytes      table,
                      OTL_Bytes      gsub,
                      OTL_Bytes      gpos,
+                     OTL_UInt       glyph_count,
                      OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -239,7 +250,8 @@
       p += 4;       /* skip tag */
 
       otl_jstf_script_validate( table + OTL_NEXT_USHORT( p ),
-                                gsub_lookup_count, gpos_lookup_count, valid );
+                                gsub_lookup_count, gpos_lookup_count,
+                                glyph_count, valid );
     }
   }
 

@@ -87,6 +87,47 @@
 
 
   OTL_LOCALDEF( OTL_UInt )
+  otl_coverage_get_first( OTL_Bytes  table )
+  {
+    OTL_Bytes  p = table;
+
+
+    p += 4;     /* skip format and count */
+
+    return OTL_NEXT_USHORT( p );
+  }
+
+
+  OTL_LOCALDEF( OTL_UInt )
+  otl_coverage_get_last( OTL_Bytes  table )
+  {
+    OTL_Bytes  p = table;
+    OTL_UInt   format = OTL_NEXT_USHORT( p );
+    OTL_UInt   count  = OTL_NEXT_USHORT( p );
+    OTL_UInt   result;
+
+
+    switch ( format )
+    {
+    case 1:
+      p += ( count - 1 ) * 2;
+      result = OTL_NEXT_USHORT( p );
+      break;
+
+    case 2:
+      p += ( count - 1 ) * 6 + 2;
+      result = OTL_NEXT_USHORT( p );
+      break;
+
+    default:
+      ;
+    }
+
+    return result;
+  }
+
+
+  OTL_LOCALDEF( OTL_UInt )
   otl_coverage_get_count( OTL_Bytes  table )
   {
     OTL_Bytes  p      = table;
@@ -215,14 +256,15 @@
     {
     case 1:
       {
-        OTL_UInt  num_glyphs, start = OTL_NEXT_USHORT( p );
+        OTL_UInt  num_glyphs;
 
+
+        p += 2;         /* skip start_glyph */
 
         OTL_CHECK( 2 );
         num_glyphs = OTL_NEXT_USHORT( p );
 
         OTL_CHECK( num_glyphs * 2 );
-
       }
       break;
 
@@ -442,6 +484,8 @@
   otl_lookup_validate( OTL_Bytes          table,
                        OTL_UInt           type_count,
                        OTL_ValidateFunc*  type_funcs,
+                       OTL_UInt           lookup_count,
+                       OTL_UInt           glyph_count,
                        OTL_Validator      valid )
   {
     OTL_Bytes         p = table;
@@ -463,7 +507,8 @@
 
     /* scan subtables */
     for ( ; num_subtables > 0; num_subtables-- )
-      validate( table + OTL_NEXT_USHORT( p ), valid );
+      validate( table + OTL_NEXT_USHORT( p ), lookup_count, glyph_count,
+                valid );
   }
 
 
@@ -511,10 +556,11 @@
   otl_lookup_list_validate( OTL_Bytes          table,
                             OTL_UInt           type_count,
                             OTL_ValidateFunc*  type_funcs,
+                            OTL_UInt           glyph_count,
                             OTL_Validator      valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   num_lookups;
+    OTL_UInt   num_lookups, count;
 
 
     OTL_CHECK( 2 );
@@ -522,9 +568,10 @@
     OTL_CHECK( 2 * num_lookups );
 
     /* scan lookup records */
-    for ( ; num_lookups > 0; num_lookups-- )
+    for ( count = num_lookups; count > 0; count-- )
       otl_lookup_validate( table + OTL_NEXT_USHORT( p ),
-                           type_count, type_funcs, valid );
+                           type_count, type_funcs,
+                           num_lookups, glyph_count, valid );
   }
 
 

@@ -208,6 +208,7 @@
                      OTL_Validator  valid )
   {
     OTL_Bytes p = table;
+    OTL_UInt  val;
 
 
     OTL_CHECK( 6 );
@@ -215,8 +216,15 @@
     if ( OTL_NEXT_ULONG( p ) != 0x10000UL )
       OTL_INVALID_DATA;
 
-    otl_axis_table_validate( table + OTL_NEXT_USHORT( p ), valid );
-    otl_axis_table_validate( table + OTL_NEXT_USHORT( p ), valid );
+    /* validate horizontal axis table */
+    val = OTL_NEXT_USHORT( p );
+    if ( val )
+      otl_axis_table_validate( table + val, valid );
+
+    /* validate vertical axis table */
+    val = OTL_NEXT_USHORT( p );
+    if ( val )
+      otl_axis_table_validate( table + val, valid );
   }
 
 

@@ -189,6 +189,8 @@ OTL_BEGIN_HEADER
   } OTL_ValidatorRec;
 
   typedef void  (*OTL_ValidateFunc)( OTL_Bytes      table,
+                                     OTL_UInt       lookup_count,
+                                     OTL_UInt       glyph_count,
                                      OTL_Validator  valid );
 
   OTL_API( void )

@@ -173,10 +173,15 @@
 
   static void
   otl_gpos_lookup1_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -270,10 +275,15 @@
 
   static void
   otl_gpos_lookup2_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -354,10 +364,15 @@
 
   static void
   otl_gpos_lookup3_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -430,10 +445,15 @@
 
   static void
   otl_gpos_lookup4_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -465,6 +485,7 @@
       OTL_INVALID_DATA;
     }
   }
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -529,10 +550,15 @@
 
   static void
   otl_gpos_lookup5_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -576,10 +602,15 @@
 
   static void
   otl_gpos_lookup6_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( lookup_count );
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -623,6 +654,7 @@
   /* used for both format 1 and 2 */
   static void
   otl_pos_rule_validate( OTL_Bytes      table,
+                         OTL_UInt       lookup_count,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -638,7 +670,14 @@
 
     OTL_CHECK( ( num_glyphs - 1 ) * 2 + num_pos * 4 );
 
-    /* XXX: check pos lookups */
+    for ( ; num_pos > 0; num_pos-- )
+    {
+      if ( OTL_NEXT_USHORT( p ) >= num_glyphs )
+        OTL_INVALID_DATA;
+
+      if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+        OTL_INVALID_DATA;
+    }
 
     /* no need to check glyph indices/classes used as input for this  */
     /* context rule since even invalid glyph indices/classes return a */
@@ -649,6 +688,7 @@
   /* used for both format 1 and 2 */
   static void
   otl_pos_rule_set_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -662,16 +702,21 @@
 
     /* scan posrule records */
     for ( ; num_posrules > 0; num_posrules-- )
-      otl_pos_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
+      otl_pos_rule_validate( table + OTL_NEXT_USHORT( p ), lookup_count,
+                             valid );
   }
 
 
   static void
   otl_gpos_lookup7_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -693,7 +738,8 @@
 
         /* scan posrule set records */
         for ( ; num_posrule_sets > 0; num_posrule_sets-- )
-          otl_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+          otl_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ),
+                                     lookup_count, valid );
       }
       break;
 
@@ -714,13 +760,19 @@
 
         /* scan pos class set rules */
         for ( ; num_posclass_sets > 0; num_posclass_sets-- )
-          otl_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+        {
+          OTL_UInt  offset = OTL_NEXT_USHORT( p );
+
+
+          if ( offset )
+            otl_pos_rule_set_validate( table + offset, lookup_count, valid );
+        }
       }
       break;
 
     case 3:
       {
-        OTL_UInt  num_glyphs, num_pos;
+        OTL_UInt  num_glyphs, num_pos, count;
 
 
         OTL_CHECK( 4 );
@@ -729,10 +781,17 @@
 
         OTL_CHECK( num_glyphs * 2 + num_pos * 4 );
 
-        for ( ; num_glyphs > 0; num_glyphs-- )
+        for ( count = num_glyphs; count > 0; count-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
-        /* XXX: check pos lookups */
+        for ( ; num_pos > 0; num_pos-- )
+        {
+          if ( OTL_NEXT_USHORT( p ) >= num_glyphs )
+            OTL_INVALID_DATA;
+
+          if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+            OTL_INVALID_DATA;
+        }
       }
       break;
 
@@ -753,6 +812,7 @@
   /* used for both format 1 and 2 */
   static void
   otl_chain_pos_rule_validate( OTL_Bytes      table,
+                               OTL_UInt       lookup_count,
                                OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -780,36 +840,53 @@
     num_pos = OTL_NEXT_USHORT( p );
     OTL_CHECK( num_pos * 4 );
 
-    /* XXX: check pos lookups */
+    for ( ; num_pos > 0; num_pos-- )
+    {
+      if ( OTL_NEXT_USHORT( p ) >= num_input_glyphs )
+        OTL_INVALID_DATA;
+
+      if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+        OTL_INVALID_DATA;
+    }
+
+    /* no need to check glyph indices/classes used as input for this  */
+    /* context rule since even invalid glyph indices/classes return a */
+    /* meaningful result                                              */
   }
 
 
   /* used for both format 1 and 2 */
   static void
   otl_chain_pos_rule_set_validate( OTL_Bytes      table,
+                                   OTL_UInt       lookup_count,
                                    OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_chain_subrules;
 
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_chain_subrules = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2 * count );
+    OTL_CHECK( num_chain_subrules * 2 );
 
     /* scan chain pos rule records */
-    for ( ; count > 0; count-- )
-      otl_chain_pos_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
+    for ( ; num_chain_subrules > 0; num_chain_subrules-- )
+      otl_chain_pos_rule_validate( table + OTL_NEXT_USHORT( p ),
+                                   lookup_count, valid );
   }
 
 
   static void
   otl_gpos_lookup8_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   format;
+
+    OTL_UNUSED( glyph_count );
 
 
     OTL_CHECK( 2 );
@@ -832,7 +909,7 @@
         /* scan chain pos ruleset records */
         for ( ; num_chain_pos_rulesets > 0; num_chain_pos_rulesets-- )
           otl_chain_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ),
-                                           valid );
+                                           lookup_count, valid );
       }
       break;
 
@@ -859,33 +936,39 @@
 
         /* scan chainpos class set records */
         for ( ; num_chainpos_class_sets > 0; num_chainpos_class_sets-- )
-          otl_chain_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ),
-                                           valid );
+        {
+          OTL_UInt  offset = OTL_NEXT_USHORT( p );
+
+
+          if ( offset )
+            otl_chain_pos_rule_set_validate( table + offset, lookup_count,
+                                             valid );
+        }
       }
       break;
 
     case 3:
       {
         OTL_UInt  num_backtrack_glyphs, num_input_glyphs;
-        OTL_UInt  num_lookahead_glyphs, num_pos;
+        OTL_UInt  num_lookahead_glyphs, num_pos, count;
 
 
         OTL_CHECK( 2 );
-        num_backtrack_glyphs = OTL_NEXT_USHORT( p );
 
-        OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
+        num_backtrack_glyphs = OTL_NEXT_USHORT( p );
+        OTL_CHECK( num_backtrack_glyphs * 2 + 2 );
 
         for ( ; num_backtrack_glyphs > 0; num_backtrack_glyphs-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
         num_input_glyphs = OTL_NEXT_USHORT( p );
-        OTL_CHECK( 2 * num_input_glyphs + 2 );
+        OTL_CHECK( num_input_glyphs * 2 + 2 );
 
-        for ( ; num_input_glyphs > 0; num_input_glyphs-- )
+        for ( count = num_input_glyphs; count > 0; count-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
         num_lookahead_glyphs = OTL_NEXT_USHORT( p );
-        OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
+        OTL_CHECK( num_lookahead_glyphs * 2 + 2 );
 
         for ( ; num_lookahead_glyphs > 0; num_lookahead_glyphs-- )
           otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
@@ -893,7 +976,14 @@
         num_pos = OTL_NEXT_USHORT( p );
         OTL_CHECK( num_pos * 4 );
 
-        /* XXX: check pos lookups */
+        for ( ; num_pos > 0; num_pos-- )
+        {
+          if ( OTL_NEXT_USHORT( p ) >= num_input_glyphs )
+            OTL_INVALID_DATA;
+
+          if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+            OTL_INVALID_DATA;
+        }
       }
       break;
 
@@ -913,6 +1003,8 @@
 
   static void
   otl_gpos_lookup9_validate( OTL_Bytes      table,
+                             OTL_UInt       lookup_count,
+                             OTL_UInt       glyph_count,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -937,7 +1029,7 @@
           OTL_INVALID_DATA;
 
         validate = otl_gpos_validate_funcs[lookup_type - 1];
-        validate( table + lookup_offset, valid );
+        validate( table + lookup_offset, lookup_count, glyph_count, valid );
       }
       break;
 
@@ -963,9 +1055,11 @@
 
   OTL_LOCALDEF( void )
   otl_gpos_subtable_validate( OTL_Bytes      table,
+                              OTL_UInt       glyph_count,
                               OTL_Validator  valid )
   {
-    otl_lookup_list_validate( table, 9, otl_gpos_validate_funcs, valid );
+    otl_lookup_list_validate( table, 9, otl_gpos_validate_funcs,
+                              glyph_count, valid );
   }
 
 
@@ -979,6 +1073,7 @@
 
   OTL_LOCALDEF( void )
   otl_gpos_validate( OTL_Bytes      table,
+                     OTL_UInt       glyph_count,
                      OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -994,7 +1089,7 @@
     features = OTL_NEXT_USHORT( p );
     lookups  = OTL_NEXT_USHORT( p );
 
-    otl_gpos_subtable_validate( table + lookups, valid );
+    otl_gpos_subtable_validate( table + lookups, glyph_count, valid );
     otl_feature_list_validate( table + features, table + lookups, valid );
     otl_script_list_validate( table + scripts, table + features, valid );
   }
