@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src autohint ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = ahangles.c ahglobal.c ahglyph.c ahhint.c ahmodule.c ;
+    _sources = ahangles ahglobal ahglyph ahhint ahmodule ;
   }
   else
   {
-    _sources = autohint.c ;
+    _sources = autohint ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/autohint Jamfile

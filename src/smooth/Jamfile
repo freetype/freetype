@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src smooth ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = ftgrays.c ftsmooth.c ;
+    _sources = ftgrays ftsmooth ;
   }
   else
   {
-    _sources = smooth.c ;
+    _sources = smooth ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/smooth Jamfile

@@ -10,15 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src base ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = ftcalc.c ftextend.c ftlist.c ftobjs.c ftstream.c
-               ftoutln.c ftnames.c ;
+    _sources = ftcalc ftextend ftlist ftobjs ftstream ftoutln ftnames ;
   }
   else
   {
-    _sources = ftbase.c ;
+    _sources = ftbase ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # Add the optional/replaceable files.

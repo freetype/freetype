@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src type1 ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = t1afm.c t1driver.c t1objs.c t1load.c t1gload.c t1parse.c ;
+    _sources = t1afm t1driver t1objs t1load t1gload t1parse ;
   }
   else
   {
-    _sources = type1.c ;
+    _sources = type1 ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/type1 Jamfile

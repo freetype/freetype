@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src cff ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = cffdrivr.c cffgload.c cffload.c cffobjs.c cffparse.c ;
+    _sources = cffdrivr cffgload cffload cffobjs cffparse ;
   }
   else
   {
-    _sources = cff.c ;
+    _sources = cff ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/cff Jamfile

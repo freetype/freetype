@@ -1,3 +1,19 @@
+2001-04-05  Werner Lemberg  <wl@gnu.org>
+
+	* builds/os2/*.mk: These files have been forgotten to update to
+	the structure of similar makefiles.
+	* builds/dos/*.mk: Ditto.
+	* builds/ansi/*.mk: Ditto.
+
+	* builds/win32/win32-def.mk (BUILD): Fix typo.
+
+	* builds/compiler/*.mk (CLEAN_LIBRARY): Don't use NO_OUTPUT.
+	This is already used in the link_*.mk files.
+
+2001-04-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/*/Jamfile: Slight changes	to make files more cryptic.
+
 2001-04-03  Werner Lemberg  <wl@gnu.org>
 
 	* Jamfile, src/Jamfile, src/*/Jamfile: Formatted.  Slight changes

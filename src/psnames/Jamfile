@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src psnames ] ;
   
   if $(FT2_MULTI)
   {
-    _sources = psmodule.c ;
+    _sources = psmodule ;
   }
   else
   {
-    _sources = psnames.c ;
+    _sources = psnames ;
   }
   
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/psnames Jamfile

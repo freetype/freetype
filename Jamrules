@@ -18,7 +18,7 @@ else
   LIBPREFIX ?= "" ;
 }
 
-# FT_TOP contains the location of the FreeType source directory.  You can
+# FT2_TOP contains the location of the FreeType source directory.  You can
 # set it to a specific value if you want to compile the library as part of a
 # larger project.
 #
