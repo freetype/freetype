@@ -476,7 +476,7 @@
     {
       builder->path_begun = 1;
       error = add_contour( builder );
-      if ( !error )
+      if ( error )
         return error;
     }
     return add_point1( builder, x, y );
@@ -609,7 +609,7 @@
         {
           if ( ip + 1 >= limit )
             goto Syntax_Error;
-          val = (FT_Int32)( ( (FT_Short)ip[0] << 8 ) | ip[1] );
+          val = (FT_Short)( ( (FT_Short)ip[0] << 8 ) | ip[1] );
           ip += 2;
         }
         else if ( v < 247 )
