@@ -23,8 +23,11 @@
     FT_Byte*     address;
     FT_Long      size;     /* < 0 if the block was freed */
     
-    const char*  file_name;
-    FT_Long      line_no;
+    const char*  alloc_file_name;
+    FT_Long      alloc_line_no;
+    
+    const char*  free_file_name;
+    FT_Long      free_line_no;
 
     FT_MemNode   link;
   
@@ -53,6 +56,8 @@
 
 #define  FT_MEM_SIZE_MIN   7
 #define  FT_MEM_SIZE_MAX   13845163
+
+#define  FT_FILENAME(x)  ((x) ? (x) : "unknown file")
 
   static const FT_UInt  ft_mem_primes[] =
   {
@@ -103,7 +108,7 @@
     va_list  ap;
 
 
-    printf( "FreeType.DebugMemory: " );
+    printf( "FreeType.Debug: " );
 
     va_start( ap, fmt );
     vprintf( fmt, ap );
@@ -256,10 +261,10 @@
           
           if ( node->size > 0 )
           {
-            printf( "leaked memory block at address %p, size %8ld (%s:%d)\n",
+            printf( "leaked memory block at address %p, size %8ld in (%s:%d)\n",
                      node->address, node->size,
-                     node->file_name ? node->file_name : "unknown_file",
-                     node->line_no );
+                     FT_FILENAME( node->alloc_file_name ),
+                     node->alloc_line_no );
                      
             leak_count++;
             leaks += node->size;
@@ -337,15 +342,13 @@
         {
           /* this block was already freed. this means that our memory is */
           /* now completely corrupted !!                                 */
-          ft_mem_debug_panic( "memory heap corrupted" );
+          ft_mem_debug_panic( "memory heap corrupted (allocating freed block)" );
         }
         else
         {
           /* this block was already allocated. this means that our memory */
           /* is also corrupted !!                                         */
-          ft_mem_debug_panic( "duplicate block allocation at address "
-                           "%p, size %ld\n",
-                           address, size );
+          ft_mem_debug_panic( "memory heap corrupted (re-allocating allocated block)" );
         }
       }
       
@@ -357,8 +360,11 @@
       node->address   = address;
       node->size      = size;
 
-      node->file_name = table->file_name;
-      node->line_no   = table->line_no;
+      node->alloc_file_name = table->file_name;
+      node->alloc_line_no   = table->line_no;
+
+      node->free_file_name  = NULL;
+      node->free_line_no    = 0;
 
       node->link      = pnode[0];
 
@@ -390,19 +396,30 @@
       if (node)
       {
         if ( node->size < 0 )
-          ft_mem_debug_panic( "freeing memory block at %p more than once !!",
-                              address );
+          ft_mem_debug_panic( "freeing memory block at %p more than once at (%s:%ld)\n"
+                              "block allocated at (%s:%ld) and released at (%s:%ld)",
+                              address,
+                              FT_FILENAME(table->file_name),
+                              table->line_no,
+                              FT_FILENAME(node->alloc_file_name),
+                              node->alloc_line_no,
+                              FT_FILENAME(node->free_file_name),
+                              node->free_line_no );
         
         /* we simply invert the node's size to indicate that the node */
         /* was freed. We also change its content..                    */
         memset( address, 0xF3, node->size );
-        
+
         table->alloc_current -= node->size;
         node->size            = -node->size;
+        node->free_file_name  = table->file_name;
+        node->free_line_no    = table->line_no;
       }
       else
-        ft_mem_debug_panic( "trying to free unknown block at %p\n",
-                            address );
+        ft_mem_debug_panic( "trying to free unknown block at %p in (%s:%ld)\n",
+                            address,
+                            FT_FILENAME( table->file_name ),
+                            table->line_no );
     }
   }
 
@@ -420,6 +437,9 @@
     block = ft_mem_table_alloc( table, size );
     if ( block )
       ft_mem_table_set( table, block, (FT_ULong)size );
+
+    table->file_name = NULL;
+    table->line_no   = 0;
       
     return (FT_Pointer) block;
   }
@@ -432,11 +452,15 @@
     FT_MemTable  table = memory->user;
     
     if ( block == NULL )
-      ft_mem_debug_panic( "trying to free NULL !!" );
+      ft_mem_debug_panic( "trying to free NULL in (%s:%ld)",
+                          FT_FILENAME( table->file_name ),
+                          table->line_no );
     
     ft_mem_table_remove( table, (FT_Byte*)block );
     
     /* we never really free the block */
+    table->file_name = NULL;
+    table->line_no   = 0;
   }
   
 
@@ -451,33 +475,42 @@
     FT_MemNode   node, *pnode;
     FT_Pointer   new_block;
 
+    const char*  file_name = FT_FILENAME(table->file_name);
+    FT_Long      line_no   = table->line_no;
+
     if ( block == NULL || cur_size == 0 )
-      ft_mem_debug_panic( "trying to reallocate NULL" );
+      ft_mem_debug_panic( "trying to reallocate NULL in (%s:%ld)",
+                           file_name, line_no );
     
     if ( new_size <= 0 )
-      ft_mem_debug_panic( "trying to reallocate %p to size 0 (current is %ld)",
-                          block, cur_size );
+      ft_mem_debug_panic( "trying to reallocate %p to size 0 (current is %ld)"
+                          " in (%s:%ld)",
+                          block, cur_size, file_name, line_no );
     
    /* check 'cur_size' value */
     pnode = ft_mem_table_get_nodep( table, (FT_Byte*)block );
     node  = *pnode;
     if (!node)
-      ft_mem_debug_panic( "trying to reallocate unknown block at %p",
-                          block );
+      ft_mem_debug_panic( "trying to reallocate unknown block at %p in (%s:%ld)",
+                          block, file_name, line_no );
     
     if ( node->size <= 0 )
-      ft_mem_debug_panic( "trying to reallocate freed block at %p",
-                          block );
+      ft_mem_debug_panic( "trying to reallocate freed block at %p in (%s:%ld)",
+                          block, file_name, line_no );
     
     if ( node->size != cur_size )
       ft_mem_debug_panic( "invalid realloc request for %p. cur_size is "
-                          "%ld instead of %ld", block, cur_size, node->size );
+                          "%ld instead of %ld in (%s:%ld)",
+                          block, cur_size, node->size, file_name, line_no );
     
     new_block = ft_mem_debug_alloc( memory, new_size );
     if ( new_block == NULL )
       return NULL;
 
     memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
+
+    table->file_name = file_name;
+    table->line_no   = line_no;
 
     ft_mem_debug_free( memory, (FT_Byte*)block );
     
@@ -541,6 +574,41 @@
     return FT_Alloc( memory, size, P );
   }            
 
+
+  FT_BASE_DEF( FT_Error )
+  FT_Realloc_Debug( FT_Memory    memory,
+                    FT_Long      current,
+                    FT_Long      size,
+                    void*       *P,
+                    const char*  file_name,
+                    FT_Long      line_no )
+  {
+    FT_MemTable  table = memory->user;
+    
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+    return FT_Realloc( memory, current, size, P );
+  }                    
+
+
+  FT_BASE_DEF( void )
+  FT_Free_Debug( FT_Memory    memory,
+                 FT_Pointer   block,
+                 const char*  file_name,
+                 FT_Long      line_no )
+  {
+    FT_MemTable  table = memory->user;
+    
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+    FT_Free( memory, block );
+  }
 
 
 #else  /* !FT_DEBUG_MEMORY */
