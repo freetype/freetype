@@ -1,3 +1,14 @@
+2002-07-04  David Turner  <david@freetype.org>
+
+    * src/pfr/pfrobjs.c (pfr_slot_load): fixed a small bug that returned
+    incorrect advances when the outline resolution was different from the
+    metrics resolution
+
+    * src/autohint/ahhint.c: removing compiler warnings
+    
+    * src/autohint/ahglyph.c: slight improvements to the serif detection
+    code. More work is needed though..
+
 2002-07-03  David Turner  <david@freetype.org>
 
     * src/autohint/ahglobal.c, src/autohint/ahtypes.h, src/autohint/ahhint.c:

@@ -40,7 +40,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
+#if 0
   /* snap a given width in scaled coordinates to one of the */
   /* current standard widths                                */
   static FT_Pos
@@ -86,7 +86,7 @@
 
     return width;
   }
-
+#endif
 
   /* compute the snapped width of a given stem */
   static FT_Pos
@@ -364,7 +364,6 @@
 
         {
           FT_Bool  min = 0;
-          FT_Pos   delta;
 
           if ( !anchor )
           {
