@@ -1,5 +1,8 @@
 2002-01-06  David Turner  <david@freetype.org>
 
+        * include/freetype/config/ftoption.h: setting default options for
+        a release build (debugging off, bytecode interpreter off)
+
         * src/base/ftobjs.c, src/base/ftoutln.c, src/cache/ftccmap.c,
         src/cff/cffload.c, src/cff/cffobjs.c, src/pshinter/pshalgo2.c,
         src/sfnt/ttload.c, src/sfnt/ttsbit.c: removing small compiler
