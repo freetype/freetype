@@ -1,40 +1,16 @@
+2003-12-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_lookup_glyph_by_stdcharcode): Handle
+	CID-keyed fonts.
+
 2003-12-23  David Turner  <david@freetype.org>
 
-        * include/freetype/fttypes.h
-        src/autofit/afangles.c
-        src/autofit/aflatin.c
-        src/autohint/ahglyph.c
-        src/autohint/ahhint.c
-        src/base/ftcalc.c
-        src/base/ftgloadr.c
-        src/base/ftglyph.c
-        src/base/ftobjs.c
-        src/base/ftsynth.c
-        src/base/fttrigon.c
-        src/cff/cffgload.c
-        src/cid/cidgload.c
-        src/cid/cidload.c
-        src/pfr/pfrgload.c
-        src/pfr/pfrload.c
-        src/pfr/pfrsbit.c
-        src/psaux/psobjs.c
-        src/pshinter/pshalgo.c
-        src/pshinter/pshglob.c
-        src/pshinter/pshrec.c
-        src/raster/ftrend1.c
-        src/sfnt/ttcmap0.c
-        src/smooth/ftsmooth.c
-        src/truetype/ttdriver.c
-        src/truetype/ttgload.c
-        src/truetype/ttinterp.c
-        src/truetype/ttobjs.c
-        src/type1/t1gload.c
-        src/winfonts/winfnt.c:
-
-          use of the FT_PAD_XXX and FT_PIX_XXX macros to avoid compiler
-          warnings with very pedantic compilers. Hints:  (x) & -64 will
-          warn if (x) is not signed.. use (x) & ~63 instead !
-
+	* include/freetype/internal/ftobjs.h (FT_PAD_FLOOR, FT_PAD_ROUND,
+	FT_PAD_CEIL, FT_PIX_FLOOR, FT_PIX_ROUND, FT_CEIL): New macros.  They
+	are used to avoid compiler warnings with very pedantic compilers. 
+	Note that `(x) & -64' causes a warning if (x) is not signed.  Use
+	`(x) & ~63' instead!
+	Updated all related code.
 
 2003-12-22  Werner Lemberg  <wl@gnu.org>
 

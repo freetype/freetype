@@ -591,7 +591,7 @@ FT_BEGIN_HEADER
   /*   values as well.                                                     */
   /*                                                                       */
   /*   FT_ENCODING_NONE is set by the BDF and PCF drivers if the charmap   */
-  /*   is not Unicode or ISO-8859-1 (otherwise it is set to                */
+  /*   is neither Unicode nor ISO-8859-1 (otherwise it is set to           */
   /*   FT_ENCODING_UNICODE).  Use `FT_Get_BDF_Charset_ID' to find out      */
   /*   which encoding is really present.  If, for example, the             */
   /*   `cs_registry' field is `KOI8' and the `cs_encoding' field is `R',   */
