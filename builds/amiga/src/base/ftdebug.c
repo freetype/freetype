@@ -88,35 +88,94 @@ extern void __stdargs KVPrintF( const char *formatString, const void *values );
   }
 
 
-#ifdef FT_DEBUG_LEVEL_TRACE
 
-  FT_EXPORT_DEF( void )
-  FT_SetTraceLevel( FT_Trace  component,
-                    char      level )
+  /* since I don't know wether "getenv" is available on the Amiga */
+  /* I prefer to simply disable this code for now in all builds   */
+  /*                                                              */
+
+/* #ifdef FT_DEBUG_LEVEL_TRACE */
+#if 0
+
+  FT_BASE_DEF( void )
+  ft_debug_init( void )
   {
-    if ( component >= trace_max )
-      return;
-
-    /* if component is `trace_any', change _all_ levels at once */
-    if ( component == trace_any )
+    const char*  ft2_debug = getenv( "FT2_DEBUG" );
+    
+    if ( ft2_debug )
     {
-      int  n;
+      const char*  p = ft2_debug;
+      const char*  q;
+      
 
+      for ( ; *p; p++ )
+      {
+        /* skip leading whitespace and separators */
+        if ( *p == ' ' || *p == '\t' || *p == ':' || *p == ';' || *p == '=' )
+          continue;
+          
+        /* read toggle name, followed by '=' */
+        q = p;
+        while ( *p && *p != '=' )
+          p++;
+          
+        if ( *p == '=' && p > q )
+        {
+          int  n, i, len = p - q;
+          int  level = -1, found = -1;
+          
 
-      for ( n = trace_any; n < trace_max; n++ )
-        ft_trace_levels[n] = level;
+          for ( n = 0; n < trace_count; n++ )
+          {
+            const char*  toggle = ft_trace_toggles[n];
+            
+
+            for ( i = 0; i < len; i++ )
+            {
+              if ( toggle[i] != q[i] )
+                break;
+            }
+            
+            if ( i == len && toggle[i] == 0 )
+            {
+              found = n;
+              break;
+            }
+          }
+          
+          /* read level */
+          p++;
+          if ( *p )
+          {
+            level = *p++ - '0';
+            if ( level < 0 || level > 6 )
+              level = -1;
+          }
+          
+          if ( found >= 0 && level >= 0 )
+          {
+            if ( found == trace_any )
+            {
+              /* special case for "any" */
+              for ( n = 0; n < trace_count; n++ )
+                ft_trace_levels[n] = level;
+            }
+            else
+              ft_trace_levels[found] = level;
+          }
+        }
+      }
     }
-    else        /* otherwise, only change individual component */
-      ft_trace_levels[component] = level;
   }
 
-#endif /* FT_DEBUG_LEVEL_TRACE */
+#else  /* !FT_DEBUG_LEVEL_TRACE */
 
-#endif /* FT_DEBUG_LEVEL_TRACE || FT_DEBUG_LEVEL_ERROR */
+  FT_BASE_DEF( void )
+  ft_debug_init( void )
+  {
+    /* nothing */
+  }
 
-
-  /* ANSI C doesn't allow empty files, so we insert a dummy symbol */
-  extern const int  ft_debug_dummy;
+#endif /* !FT_DEBUG_LEVEL_TRACE */
 
 
 /* END */
