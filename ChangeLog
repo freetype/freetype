@@ -1,5 +1,8 @@
 2005-03-01  David Turner  <david@freetype.org>
 
+    * src/sfnt/{ttkern.c,ttsbit.h,ttsbit0.c,ttload.c},: removing compiler
+    warnings
+
     * src/autofit/{rules.mk,module.mk,afangles.h}: adding missing files
 
     * src/autofit/afloader.c: fixing small bug that could crash the engine

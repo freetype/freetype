@@ -808,7 +808,6 @@
                         FT_Bool    vertical )
   {
     FT_Error   error;
-    FT_Memory  memory = stream->memory;
     FT_ULong   table_size;
     FT_Byte**  ptable;
     FT_ULong*  ptable_size;

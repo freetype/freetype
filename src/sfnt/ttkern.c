@@ -48,7 +48,6 @@
                      FT_Stream  stream )
   {
     FT_Error   error;
-    FT_Memory  memory = stream->memory;
     FT_ULong   table_size;
     FT_Byte*   p;
     FT_Byte*   p_limit;
@@ -184,7 +183,6 @@
     FT_Int    result = 0;
     FT_UInt   count, mask = 1;
     FT_Byte*  p       = face->kern_table;
-    FT_Byte*  p_limit = p + face->kern_table_size;
 
 
     p   += 4;
@@ -199,6 +197,7 @@
       FT_UInt  coverage = FT_NEXT_USHORT( p );
       FT_Int   value    = 0;
 
+      FT_UNUSED(version);
 
       next = base + length;
 
@@ -222,7 +221,6 @@
           {
             FT_UInt   min = 0;
             FT_UInt   max = num_pairs;
-            FT_Byte*  q;
 
 
             while ( min < max )
@@ -287,7 +285,6 @@
       p = next;
     }
 
-  Exit:
     return result;
   }
 

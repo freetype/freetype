@@ -90,10 +90,8 @@
                              FT_Stream  stream )
   {
     FT_Error   error  = SFNT_Err_Ok;
-    FT_Memory  memory = stream->memory;
     FT_Fixed   version;
     FT_ULong   num_strikes, table_size;
-    FT_ULong   table_base;
     FT_Byte*   p;
     FT_Byte*   p_limit;
     FT_UInt    nn, count;
@@ -453,7 +451,6 @@
     FT_Byte*    line;
     FT_Int      bit_height, bit_width, pitch, width, height, h;
     FT_Bitmap*  bitmap;
-    FT_UInt     rval;
 
 
     if ( !decoder->bitmap_allocated )
@@ -468,6 +465,7 @@
     bit_width  = bitmap->width;
     bit_height = bitmap->rows;
     pitch      = bitmap->pitch;
+    line       = bitmap->buffer;
 
     width  = decoder->metrics->width;
     height = decoder->metrics->height;
@@ -562,6 +560,7 @@
     bit_width  = bitmap->width;
     bit_height = bitmap->rows;
     pitch      = bitmap->pitch;
+    line       = bitmap->buffer;
 
     width  = decoder->metrics->width;
     height = decoder->metrics->height;
@@ -630,7 +629,7 @@
                                  FT_Int          x_pos,
                                  FT_Int          y_pos )
   {
-    FT_Error  error;
+    FT_Error  error = 0;
     FT_UInt   num_components, nn;
 
 
@@ -772,7 +771,7 @@
     FT_Byte*  p          = decoder->eblc_base + decoder->strike_index_array;
     FT_Byte*  p_limit    = decoder->eblc_limit;
     FT_ULong  num_ranges = decoder->strike_index_count;
-    FT_UInt   start, end, offset, index_format, image_format;
+    FT_UInt   start, end, index_format, image_format;
     FT_ULong  image_start, image_end, image_offset;
 
 
