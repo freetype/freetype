@@ -1,74 +1,78 @@
+2002-04-13  Werner LEMBERG  <wl@gnu.org>
+
+	* src/cff/cffgload.c (CFF_Parse_CharStrings): s/rand/Rand/ to avoid
+	compiler warning.
+
 2002-04-12  David Turner  <david@freetype.org>
 
-        * builds/unix/ftconfig.in, builds/vms/ftconfig.h: Oops, forgot to
-          update these files too
+	* README.UNX: Updated the Unix-specific quick-compilation guide to
+	warn about the GNU Make requirement at compile time.
 
-        * README.UNX: updated the Unix-specific quick-compilation guide to
-          warn about the GNU Make requirement at compile time..
+	* include/freetype/config/ftstdlib.h,
+	include/freetype/config/ftconfig.h,
+	include/freetype/config/ftheader.h,
+	include/freetype/internal/ftmemory.h,
+	include/freetype/internal/ftobjs.h,
 
-        * include/freetype/config/ftstdlib.h,
-          include/freetype/config/ftconfig.h,
-          include/freetype/config/ftheader.h,
-          include/freetype/internal/ftmemory.h,
-          include/freetype/internal/ftobjs.h,
-          
-          src/autohint/ahoptim.c,
-          
-          src/base/ftdbgmem.c, src/base/ftdebug.c,
-          src/base/ftmac.c,    src/base/ftobjs.c,
-          src/base/ftsystem.c,
+	src/autohint/ahoptim.c,
 
-          src/cache/ftcimage.c, src/cache/ftcsbits.c,
-          
-          src/cff/cffdriver.c, src/cff/cffload.c, src/cff/cffobjs.c,
-          
-          src/cid/cidload.c, src/cid/cidparse.c, src/cid/cidriver.c,
-          
-          src/pcf/pcfdriver.c, src/pcf/pcfread.c,
-          
-          src/psaux/t1cmap.c, src/psaux/t1decode.c,
-          
-          src/pshinter/pshalgo1.c, src/pshinter/pshalgo2.c,
-          src/pshinter/pshrec.c,
-          
-          src/psnames/psmodule.c,
-          
-          src/raster/ftraster.c,
-          
-          src/sfnt/sfdriver.c, src/sfnt/ttload.c, src/sfnt/ttpost.c,
-          
-          src/smooth/ftgrays.c,
-          
-          src/type1/t1afm.c,  src/type1/t1driver.c, src/type1/t1gload.c,
-          src/type1/t1load.c, src/type1/t1objs.c,   src/type1/t1parse.c:
-          
-            added the new configuration file "ftstdlib.h" used to define
-            aliases for all ISO C library functions used by the engine
-            (e.g. strlen, qsort, setjmp, etc...)
-            
-            this eases the porting of FreeType 2 to exotic environments like
-            XFree86 modules/extensions..
+	src/base/ftdbgmem.c, src/base/ftdebug.c, src/base/ftmac.c,
+	src/base/ftobjs.c, src/base/ftsystem.c,
 
-            also removed many #include <string.h>, #include <stdlib.h>, etc...
-            from the engine's sources where they're not needed..
+	src/cache/ftcimage.c, src/cache/ftcsbits.c,
 
+	src/cff/cffdriver.c, src/cff/cffload.c, src/cff/cffobjs.c,
+
+	src/cid/cidload.c, src/cid/cidparse.c, src/cid/cidriver.c,
+
+	src/pcf/pcfdriver.c, src/pcf/pcfread.c,
+
+	src/psaux/t1cmap.c, src/psaux/t1decode.c,
+
+	src/pshinter/pshalgo1.c, src/pshinter/pshalgo2.c,
+	src/pshinter/pshrec.c,
+
+	src/psnames/psmodule.c,
+
+	src/raster/ftraster.c,
+
+	src/sfnt/sfdriver.c, src/sfnt/ttload.c,
+
+	src/smooth/ftgrays.c,
+
+	src/type1/t1afm.c, src/type1/t1driver.c, src/type1/t1gload.c,
+	src/type1/t1load.c, src/type1/t1objs.c, src/type1/t1parse.c,
+
+	builds/unix/ftconfig.in, builds/vms/ftconfig.h,
+
+	builds/amiga/src/base/ftdebug.c:
+
+	Added the new configuration file "ftstdlib.h" used to define
+	aliases for all ISO C library functions used by the engine
+	(e.g. strlen, qsort, setjmp, etc.).
+
+	This eases the porting of FreeType 2 to environments like
+	XFree86 modules/extensions.
+
+	Also removed many #include <string.h>, #include <stdlib.h>, etc.
+	from the engine's sources where they are not needed.
+
+	* src/sfnt/ttpost.c: Use macro name for psnames.h.
 
 2002-04-12  Vincent Caron  <v.caron@zerodeux.net>
 
-        * configure, builds/detect.mk: updated the build system to print
-          a warning message in case GNU Make isn't used to build the library.
-          Very nice !
-
+	* configure, builds/detect.mk: Updated the build system to print
+	a warning message in case GNU Make isn't used to build the library.
 
 2002-04-11  David Turner  <david@freetype.org>
 
-        * README, docs/CHANGES, Jamfile.in: updating for the 2.1.0 release
+	* README, docs/CHANGES, Jamfile.in: Updates for the 2.1.0 release.
 
-        * docs/FTL.txt: updated license text to provide a preffered disclaimer
-          and adjust copyright dates/extents
+	* docs/FTL.txt: Updated license text to provide a preferred
+	disclaimer and adjust copyright dates/extents.
 
-        * include/freetype/cache/ftcglyph.h: removing obsolete (and confusing
-          comment)
+	* include/freetype/cache/ftcglyph.h: Removing obsolete (and
+	confusing) comment.
 
 	* Jamfile.in: New file.
 

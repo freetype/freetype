@@ -283,8 +283,8 @@
   is_alpha( char  c )
   {
     return ( ft_isalnum( (int)c ) ||
-             c == '.'          ||
-             c == '_'          );
+             c == '.'             ||
+             c == '_'             );
   }
 
 

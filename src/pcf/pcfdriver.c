@@ -315,9 +315,9 @@ THE SOFTWARE.
       if ( ( charset_registry != NULL ) &&
            ( charset_encoding != NULL ) )
       {
-        if ( !ft_strcmp( face->charset_registry, "ISO10646" ) ||
-           ( !ft_strcmp( face->charset_registry, "ISO8859" ) &&
-             !ft_strcmp( face->charset_encoding, "1" ) ) )
+        if ( !ft_strcmp( face->charset_registry, "ISO10646" )     ||
+             ( !ft_strcmp( face->charset_registry, "ISO8859" ) &&
+               !ft_strcmp( face->charset_encoding, "1" )       )  )
           unicode_charmap = 1;
       }
 

@@ -200,11 +200,11 @@
     /* Now check font format; we must see `%!PS-AdobeFont-1' */
     /* or `%!FontType'                                       */
     {
-      if ( size <= 16                                    ||
+      if ( size <= 16                                       ||
            ( ft_strncmp( (const char*)parser->base_dict,
-                      "%!PS-AdobeFont-1", 16 )        &&
+                         "%!PS-AdobeFont-1", 16 )        &&
              ft_strncmp( (const char*)parser->base_dict,
-                      "%!FontType", 10 )              )  )
+                         "%!FontType", 10 )              )  )
       {
         FT_TRACE2(( "[not a Type1 font]\n" ));
         error = T1_Err_Unknown_File_Format;

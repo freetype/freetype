@@ -1719,7 +1719,7 @@
             if ( tt_kern_pair_compare( pair0, pair0 + 1 ) != -1 )
             {
               ft_qsort( (void*)face->kern_pairs, (int)num_pairs,
-                     sizeof ( TT_Kern0_PairRec ), tt_kern_pair_compare );
+                        sizeof ( TT_Kern0_PairRec ), tt_kern_pair_compare );
               break;
             }
           }

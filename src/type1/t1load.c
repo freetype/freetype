@@ -1294,7 +1294,7 @@
 
         /* record index of /.notdef              */
         if ( ft_strcmp( (const char*)".notdef",
-                     (const char*)(name_table->elements[n]) ) == 0 )
+                        (const char*)(name_table->elements[n]) ) == 0 )
         {
           notdef_index = n;
           notdef_found = 1;
@@ -1334,7 +1334,7 @@
 
     /* if /.notdef is found but does not occupy index 0, do our magic.      */
     if ( ft_strcmp( (const char*)".notdef",
-                 (const char*)name_table->elements[0] ) &&
+                    (const char*)name_table->elements[0] ) &&
          notdef_found                                      )
     {
       /* Swap glyph in index 0 with /.notdef glyph.  First, add index 0    */
@@ -1510,7 +1510,7 @@
           cur2 = cur;
 
           /* lookup the `known' keyword */
-          while ( cur < limit && *cur != 'k'        &&
+          while ( cur < limit && *cur != 'k'           &&
                   ft_strncmp( (char*)cur, "known", 5 ) )
             cur++;
 
@@ -1559,7 +1559,7 @@
                 if ( !name )
                   break;
 
-                if ( cur[0] == name[0]                          &&
+                if ( cur[0] == name[0]                             &&
                      len == (FT_Int)ft_strlen( (const char*)name ) )
                 {
                   FT_Int  n;
@@ -1730,7 +1730,7 @@
           {
             glyph_name = (FT_Byte*)type1->glyph_names[idx];
             if ( ft_strcmp( (const char*)char_name,
-                         (const char*)glyph_name ) == 0 )
+                            (const char*)glyph_name ) == 0 )
             {
               type1->encoding.char_index[charcode] = (FT_UShort)idx;
               type1->encoding.char_name [charcode] = (char*)glyph_name;
@@ -1738,7 +1738,7 @@
               /* Change min/max encoded char only if glyph name is */
               /* not /.notdef                                      */
               if ( ft_strcmp( (const char*)".notdef",
-                           (const char*)glyph_name ) != 0 )
+                              (const char*)glyph_name ) != 0 )
               {
                 if (charcode < min_char) min_char = charcode;
                 if (charcode > max_char) max_char = charcode;

@@ -142,7 +142,7 @@
       FT_String*  name = (FT_String*)decoder->glyph_names[n];
 
 
-      if ( name && name[0] == glyph_name[0] &&
+      if ( name && name[0] == glyph_name[0]  &&
            ft_strcmp( name,glyph_name ) == 0 )
         return n;
     }
