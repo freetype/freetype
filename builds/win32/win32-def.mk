@@ -1,0 +1,51 @@
+# Copyright 2000 David Turner <david.turner@freetype.org>
+#
+# Win32 specific definitions
+#
+
+DELETE   := del
+HOSTSEP  := $(strip \ )
+BUILD    := $(TOP)$(SEP)config$(SEP)win32
+PLATFORM := win32
+
+# by default, we use "\" as a separator on Win32
+# but certain compilers accept "/" as well
+#
+ifndef SEP
+SEP      := $(HOSTSEP)
+endif
+
+
+# The directory where all object files are placed.
+#
+# This lets you build the library in your own directory with something like
+#
+#   set TOP=.../path/to/freetype2/top/dir...
+#   set OBJ_DIR=.../path/to/obj/dir
+#   make -f %TOP%/Makefile setup [options]
+#   make -f %TOP%/Makefile
+#
+ifndef OBJ_DIR
+  OBJ_DIR := $(TOP)$(SEP)obj
+endif
+
+
+# The directory where all library files are placed.
+#
+# By default, this is the same as $(OBJ_DIR), however, this can be changed
+# to suit particular needs.
+#
+LIB_DIR := $(OBJ_DIR)
+
+# The name of the final library file.  Note that the DOS-specific Makefile
+# uses a shorter (8.3) name.
+#
+LIBRARY := $(PROJECT)
+
+
+# the NO_OUTPUT macro is used to ignore the output of commands
+# 
+NO_OUTPUT = 2> nul
+
+
+
