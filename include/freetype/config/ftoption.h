@@ -220,7 +220,7 @@
   /*                                                                       */
   /* This must be greater than 4kByte.                                     */
   /*                                                                       */
-#define FT_RENDER_POOL_SIZE  16384
+#define FT_RENDER_POOL_SIZE  32768
 
 
   /*************************************************************************/
@@ -310,7 +310,7 @@
   /* By undefining this, you will only compile the code necessary to load  */
   /* TrueType glyphs without hinting.                                      */
   /*                                                                       */
-#undef  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#define  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
   /*************************************************************************/

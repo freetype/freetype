@@ -163,6 +163,11 @@
   FT_ERRORDEF( FT_Err_Raster_Negative_Height,       0x0063, \
                "negative height while rastering" )
 
+  /* cache errors */
+  
+  FT_ERRORDEF( FT_Err_Too_Many_Caches,              0x0070, \
+               "too many registered caches" )
+
   /* range 0x400 - 0x4FF is reserved for TrueType specific stuff */
 
   /* range 0x500 - 0x5FF is reserved for CFF specific stuff */

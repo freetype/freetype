@@ -98,11 +98,12 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    FTC_SizeRec                                                        */
+  /*    FTC_FontRec                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A simple structure used to describe a given `font size' to the     */
-  /*    cache manager.                                                     */
+  /*    A simple structure used to describe a given `font' to the cache    */
+  /*    manager. Note that a "font" is the combination of a given face     */
+  /*    with a given character size..                                      */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    face_id    :: The ID of the face to use.                           */
@@ -111,24 +112,24 @@
   /*                                                                       */
   /*    pix_height :: The character height in integer pixels.              */
   /*                                                                       */
-  typedef struct  FTC_SizeRec_
+  typedef struct  FTC_FontRec_
   {
     FTC_FaceID  face_id;
     FT_UShort   pix_width;
     FT_UShort   pix_height;
     
-  } FTC_SizeRec;
+  } FTC_FontRec;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    FTC_SizeID                                                         */
+  /*    FTC_Font                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A simple handle to a FTC_SizeRec structure.                        */
+  /*    A simple handle to a FTC_FontRec structure.                        */
   /*                                                                       */
-  typedef FTC_SizeRec*  FTC_SizeID;
+  typedef FTC_FontRec*  FTC_Font;
  
 
   /*************************************************************************/
@@ -171,6 +172,9 @@
   /*    max_sizes :: Maximum number of sizes to keep alive in manager.     */
   /*                 Use 0 for defaults.                                   */
   /*                                                                       */
+  /*    max_bytes :: Maximum number of bytes to use for cached data.       */
+  /*                 Use 0 for defaults.                                   */
+  /*                                                                       */
   /*    requester :: An application-provided callback used to translate    */
   /*                 face IDs into real FT_Face objects.                   */
   /*                                                                       */
@@ -187,6 +191,7 @@
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_New( FT_Library          library,
                                               FT_UInt             max_faces,
                                               FT_UInt             max_sizes,
+                                              FT_ULong            max_bytes,
                                               FTC_Face_Requester  requester,
                                               FT_Pointer          req_data,
                                               FTC_Manager*        amanager );
@@ -298,9 +303,22 @@
   /*    that you can call FT_Load_Glyph() with the face if you need to.    */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
-                                                      FTC_SizeID   size_id,
+                                                      FTC_Font     font,
                                                       FT_Face*     aface,
                                                       FT_Size*     asize );
+
+
+  /* a cache class is used to describe a unique cache type to the */
+  /* manager..                                                    */
+  typedef struct FTC_Cache_Class_  FTC_Cache_Class;
+  typedef struct FTC_CacheRec_*    FTC_Cache;
+
+
+  /* this must be used internally for the moment */
+  FT_EXPORT_DEF( FT_Error )  FTC_Manager_Register_Cache(
+                                   FTC_Manager       manager,
+                                   FTC_Cache_Class*  clazz,
+                                   FTC_Cache        *acache );
 
   
   /*************************************************************************/
@@ -349,12 +367,12 @@
     ftc_image_flag_unscaled   = 128,
     ftc_image_flag_no_sbits   = 256,
     
-    ftc_image_mono             = ftc_image_format_bitmap |
-                                 ftc_image_flag_monochrome, /* monochrome bitmap   */
+    ftc_image_mono            = ftc_image_format_bitmap |
+                                ftc_image_flag_monochrome, /* monochrome bitmap   */
                                 
-    ftc_image_grays            = ftc_image_format_bitmap,   /* anti-aliased bitmap */
+    ftc_image_grays           = ftc_image_format_bitmap,   /* anti-aliased bitmap */
                                 
-    ftc_image_outline          = ftc_image_format_outline   /* scaled outline */
+    ftc_image_outline         = ftc_image_format_outline   /* scaled outline */
   
   } FTC_Image_Type;
 
@@ -375,7 +393,7 @@
   /*                                                                       */
   typedef struct  FTC_Image_Desc_
   {
-    FTC_SizeRec  size;
+    FTC_FontRec  font;
     FT_UInt      image_type;
   
   } FTC_Image_Desc;
@@ -405,9 +423,6 @@
   /* <Input>                                                               */
   /*    manager   :: The parent manager for the image cache.               */
   /*                                                                       */
-  /*    max_bytes :: The maximum amount of memory that will be used to     */
-  /*                 store glyph images.                                   */
-  /*                                                                       */
   /* <Output>                                                              */
   /*    acache    :: A handle to the new glyph image cache object.         */
   /*                                                                       */
@@ -415,23 +430,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
-                                                  FT_ULong          max_bytes,
                                                   FTC_Image_Cache*  acache );
                                                 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FTC_Image_Cache_Done                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys a given glyph image cache (and all glyphs within it).     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    manager :: The parent manager for the image cache.                 */
-  /*                                                                       */
-  FT_EXPORT_DEF( void )  FTC_Image_Cache_Done( FTC_Image_Cache  cache );
-
 
   /*************************************************************************/
   /*                                                                       */
