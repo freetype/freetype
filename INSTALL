@@ -5,43 +5,46 @@ directory.  This is only a quick starter.
 I. From the command line
 ------------------------
 
-  There are two ways to quickly build FreeType 2 from the command line.
+  There  are two ways  to quickly  build FreeType  2 from  the command
+  line.
   
-  The first, and favorite one, is to use the "Jam" build tool. Jam is
-  a highly portable replacement for Make whose control files do not
+  The first, and favorite one, is to use the "Jam" build tool.  Jam is
+  a highly  portable replacement for  Make whose control files  do not
   depend on the current platform or compiler toolset.
   
-  For more information, please see: http://www.freetype.org/jam/index.html
+  For more information, please see:
+
+    http://www.freetype.org/jam/index.html
   
   The second one is to use "GNU Make" (and NO OTHER MAKE TOOL).
      
      
-  1. Building FT2 with "Jam":
-  ===========================
+  1. Building FT2 with "Jam"
+  --------------------------
   
-    once you've got *our version* of the Jam tool installed on your
-    system, simply go to the top-level FT2 directory, then type:
+    Once you've  got *our version* of  the Jam tool  installed on your
+    system, simply go to the top-level FT2 directory, then type
     
       "jam"
       
-    on the command line. This will build the library and place it
-    in the "objs" directory.
+    on the command line.  This will  build the library and place it in
+    the "objs" directory.
     
-    By default, a static library is built. On Unix systems, it's possible
-    to build a shared library through the "libtool" script. You'll need
-    to have libtool installed on your system, then re-define a few
-    environment variables before invoking Jam, as in:
+    By default,  a static  library is built.   On Unix systems,  it is
+    possible to  build a shared library through  the "libtool" script.
+    You need to have libtool  installed on your system, then re-define
+    a few environment variables before invoking Jam, as in
 
        export CC="libtool --mode=compile"
        export LINK="libtool --mode=link"
        jam
                
-    In later releases of FT2, building shared libraries with Jam should
-    become automatic..
+    In  later releases  of  FT2, building  shared  libraries with  Jam
+    should become automatic.
     
     
-  2. Building FT2 with "GNU Make":
-  ================================
+  2. Building FT2 with "GNU Make"
+  -------------------------------
   
   You need  to have  GNU Make (version  3.78.1 or newer)  installed on
   your system to compile the library from the command line.  This will
@@ -121,7 +124,8 @@ II. In your own environment (IDE)
 
       src/autohint/autohint.c -- auto hinting module
       src/cache/ftcache.c     -- cache sub-system (in beta)
-      src/sfnt/sfnt.c         -- SFNT files support (TrueType & OpenType)
+      src/sfnt/sfnt.c         -- SFNT files support
+                                 (TrueType & OpenType)
       src/cff/cff.c           -- CFF/OpenType font driver
       src/psnames/psnames.c   -- Postscript glyph names support
       src/psaux/psaux.c       -- Postscript Type 1 parsing
@@ -139,6 +143,6 @@ II. In your own environment (IDE)
 
        etc.
 
-For more information, please consult "docs/BUILD" !!
+For more information, please consult "docs/BUILD".
 
 --- end of INSTALL --
