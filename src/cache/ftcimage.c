@@ -16,10 +16,10 @@
 /***************************************************************************/
 
 
-#include  <ft2build.h>
-#include  FT_CACHE_H
-#include  FT_CACHE_IMAGE_H
-#include  FT_INTERNAL_MEMORY_H
+#include <ft2build.h>
+#include FT_CACHE_H
+#include FT_CACHE_IMAGE_H
+#include FT_INTERNAL_MEMORY_H
 
 #include <string.h>     /* memcmp() */
 #include <stdlib.h>     /* labs()   */

@@ -19,12 +19,15 @@
 #ifndef CIDPARSE_H
 #define CIDPARSE_H
 
-#include  <ft2build.h>
-#include  FT_INTERNAL_TYPE1_TYPES_H
-#include  FT_INTERNAL_STREAM_H
-#include  FT_INTERNAL_POSTSCRIPT_AUX_H
+
+#include <ft2build.h>
+#include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
+
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -68,14 +71,14 @@ FT_BEGIN_HEADER
   } CID_Parser;
 
 
-  FT_LOCAL FT_Error
-  CID_New_Parser( CID_Parser*       parser,
-                  FT_Stream         stream,
-                  FT_Memory         memory,
-                  PSAux_Interface*  psaux );
+  FT_LOCAL
+  FT_Error  CID_New_Parser( CID_Parser*       parser,
+                            FT_Stream         stream,
+                            FT_Memory         memory,
+                            PSAux_Interface*  psaux );
 
-  FT_LOCAL void
-  CID_Done_Parser( CID_Parser*  parser );
+  FT_LOCAL
+  void  CID_Done_Parser( CID_Parser*  parser );
 
 
   /*************************************************************************/

@@ -22,6 +22,7 @@
 #include FT_SOURCE_FILE(raster,ftrend1.h)
 #include FT_SOURCE_FILE(raster,ftraster.h)
 
+
   /* initialize renderer -- init its raster */
   static
   FT_Error  ft_raster1_init( FT_Renderer  render )

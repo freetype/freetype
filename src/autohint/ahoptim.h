@@ -22,8 +22,10 @@
 #ifndef AHOPTIM_H
 #define AHOPTIM_H
 
-#include  <ft2build.h>
-#include  FT_SOURCE_FILE(autohint,ahtypes.h)
+
+#include <ft2build.h>
+#include FT_SOURCE_FILE(autohint,ahtypes.h)
+
 
 FT_BEGIN_HEADER
 

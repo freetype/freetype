@@ -24,12 +24,13 @@
   /*                                                                       */
   /*************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_CONFIG_CONFIG_H
-#include  FT_INTERNAL_DEBUG_H
-#include  FT_SYSTEM_H
-#include  FT_ERRORS_H
-#include  FT_TYPES_H
+
+#include <ft2build.h>
+#include FT_CONFIG_CONFIG_H
+#include FT_INTERNAL_DEBUG_H
+#include FT_SYSTEM_H
+#include FT_ERRORS_H
+#include FT_TYPES_H
 
 #include <stdio.h>
 #include <stdlib.h>

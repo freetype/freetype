@@ -60,6 +60,7 @@
   /*                                                                       */
   /*************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_CONFIG_CONFIG_H
@@ -68,6 +69,7 @@
 #include FT_INTERNAL_TYPE1_ERRORS_H
 
 #include FT_SOURCE_FILE(type1,t1load.h)
+
 #include <string.h>     /* for strncmp(), strcmp() */
 #include <ctype.h>      /* for isalnum()           */
 

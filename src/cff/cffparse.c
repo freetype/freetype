@@ -15,10 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_SOURCE_FILE(cff,cffparse.h)
 #include FT_INTERNAL_CFF_ERRORS_H
 #include FT_INTERNAL_STREAM_H
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -30,8 +32,8 @@
 #define FT_COMPONENT  trace_t2parse
 
 
-#define T2_Err_Stack_Underflow   FT_Err_Invalid_Argument
-#define T2_Err_Syntax_Error      FT_Err_Invalid_Argument
+#define T2_Err_Stack_Underflow  FT_Err_Invalid_Argument
+#define T2_Err_Syntax_Error     FT_Err_Invalid_Argument
 
 
   enum
@@ -64,10 +66,10 @@
   } CFF_Field_Handler;
 
 
-  FT_LOCAL_DEF void
-  CFF_Parser_Init( CFF_Parser*  parser,
-                   FT_UInt     code,
-                   void*       object )
+  FT_LOCAL_DEF
+  void  CFF_Parser_Init( CFF_Parser*  parser,
+                         FT_UInt      code,
+                         void*        object )
   {
     MEM_Set( parser, 0, sizeof ( *parser ) );
 
@@ -77,10 +79,10 @@
   }
 
 
-  /* reads an integer */
-  static FT_Long
-  cff_parse_integer( FT_Byte*  start,
-                     FT_Byte*  limit )
+  /* read an integer */
+  static
+  FT_Long  cff_parse_integer( FT_Byte*  start,
+                              FT_Byte*  limit )
   {
     FT_Byte*  p   = start;
     FT_Int    v   = *p++;
@@ -137,10 +139,10 @@
 
 
   /* read a real */
-  static FT_Fixed
-  cff_parse_real( FT_Byte*  start,
-                  FT_Byte*  limit,
-                  FT_Int    power_ten )
+  static
+  FT_Fixed  cff_parse_real( FT_Byte*  start,
+                            FT_Byte*  limit,
+                            FT_Int    power_ten )
   {
     FT_Byte*  p    = start;
     FT_Long   num, divider, result, exp;
@@ -158,7 +160,6 @@
 
     for (;;)
     {
-
       /* If we entered this iteration with phase == 4, we need to */
       /* read a new byte.  This also skips past the intial 0x1E.  */
       if ( phase )
@@ -186,17 +187,16 @@
     if ( nib == 0xa )
       for (;;)
       {
-
         /* If we entered this iteration with phase == 4, we need */
         /* to read a new byte.                                   */
         if ( phase )
-	{
+        {
           p++;
 
           /* Make sure we don't read past the end. */
           if ( p >= limit )
             goto Bad;
-	}
+        }
 
         /* Get the nibble. */
         nib   = ( p[0] >> phase ) & 0xF;
@@ -204,7 +204,7 @@
         if ( nib >= 10 )
           break;
 
-        if (divider < 10000000L)
+        if ( divider < 10000000L )
         {
           num      = num * 10 + nib;
           divider *= 10;
@@ -227,13 +227,13 @@
         /* If we entered this iteration with phase == 4, we need */
         /* to read a new byte.                                   */
         if ( phase )
-	{
+        {
           p++;
 
           /* Make sure we don't read past the end. */
           if ( p >= limit )
             goto Bad;
-	}
+        }
 
         /* Get the nibble. */
         nib   = ( p[0] >> phase ) & 0xF;
@@ -283,25 +283,25 @@
 
 
   /* read a number, either integer or real */
-  static FT_Long
-  cff_parse_num( FT_Byte**  d )
+  static
+  FT_Long  cff_parse_num( FT_Byte**  d )
   {
     return ( **d == 30 ? ( cff_parse_real   ( d[0], d[1], 0 ) >> 16 )
                        :   cff_parse_integer( d[0], d[1] ) );
   }
 
 
-  /* reads a floating point number, either integer or real */
-  static FT_Fixed
-  cff_parse_fixed( FT_Byte**  d )
+  /* read a floating point number, either integer or real */
+  static
+  FT_Fixed  cff_parse_fixed( FT_Byte**  d )
   {
     return ( **d == 30 ? cff_parse_real   ( d[0], d[1], 0 )
                        : cff_parse_integer( d[0], d[1] ) << 16 );
   }
 
 
-  static FT_Error
-  cff_parse_font_matrix( CFF_Parser*  parser )
+  static
+  FT_Error  cff_parse_font_matrix( CFF_Parser*  parser )
   {
     CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
     FT_Matrix*      matrix = &dict->font_matrix;
@@ -327,8 +327,8 @@
   }
 
 
-  static FT_Error
-  cff_parse_font_bbox( CFF_Parser*  parser )
+  static
+  FT_Error  cff_parse_font_bbox( CFF_Parser*  parser )
   {
     CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
     FT_BBox*        bbox = &dict->font_bbox;
@@ -351,8 +351,8 @@
   }
 
 
-  static FT_Error
-  cff_parse_private_dict( CFF_Parser*  parser )
+  static
+  FT_Error  cff_parse_private_dict( CFF_Parser*  parser )
   {
     CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
     FT_Byte**       data = parser->stack;
@@ -372,8 +372,8 @@
   }
 
 
-  static FT_Error
-  cff_parse_cid_ros( CFF_Parser*  parser )
+  static
+  FT_Error  cff_parse_cid_ros( CFF_Parser*  parser )
   {
     CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
     FT_Byte**       data = parser->stack;
@@ -448,10 +448,10 @@
   };
 
 
-  FT_LOCAL_DEF FT_Error
-  CFF_Parser_Run( CFF_Parser*  parser,
-                  FT_Byte*    start,
-                  FT_Byte*    limit )
+  FT_LOCAL_DEF
+  FT_Error  CFF_Parser_Run( CFF_Parser*  parser,
+                            FT_Byte*     start,
+                            FT_Byte*     limit )
   {
     FT_Byte*  p     = start;
     FT_Error  error = T2_Err_Ok;
@@ -505,9 +505,9 @@
         /* This is not a number, hence it's an operator.  Compute its code */
         /* and look for it in our current list.                            */
 
-        FT_UInt                  code;
-        FT_UInt                  num_args = (FT_UInt)
-                                              ( parser->top - parser->stack );
+        FT_UInt                   code;
+        FT_UInt                   num_args = (FT_UInt)
+                                             ( parser->top - parser->stack );
         const CFF_Field_Handler*  field;
 
 
@@ -532,6 +532,7 @@
             /* we found our field's handler; read it */
             FT_Long   val;
             FT_Byte*  q = (FT_Byte*)parser->object + field->offset;
+
 
             switch ( field->kind )
             {

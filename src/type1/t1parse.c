@@ -32,6 +32,7 @@
   /*                                                                       */
   /*************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
@@ -39,6 +40,7 @@
 #include FT_INTERNAL_TYPE1_ERRORS_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_SOURCE_FILE(type1,t1parse.h)
+
 #include <string.h>     /* for strncmp() */
 
 

@@ -19,10 +19,13 @@
 #ifndef TTPLOAD_H
 #define TTPLOAD_H
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_TRUETYPE_TYPES_H
 
+
 FT_BEGIN_HEADER
+
 
   FT_LOCAL
   FT_Error  TT_Load_Locations( TT_Face    face,
@@ -35,6 +38,7 @@ FT_BEGIN_HEADER
   FT_LOCAL
   FT_Error  TT_Load_Programs( TT_Face    face,
                               FT_Stream  stream );
+
 
 FT_END_HEADER
 

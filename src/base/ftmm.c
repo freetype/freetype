@@ -15,9 +15,10 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_MULTIPLE_MASTERS_H
-#include  FT_INTERNAL_OBJECTS_H
+
+#include <ft2build.h>
+#include FT_MULTIPLE_MASTERS_H
+#include FT_INTERNAL_OBJECTS_H
 
 
   /*************************************************************************/

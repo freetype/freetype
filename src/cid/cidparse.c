@@ -15,14 +15,16 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_INTERNAL_DEBUG_H
-#include  FT_INTERNAL_CALC_H
-#include  FT_INTERNAL_OBJECTS_H
-#include  FT_INTERNAL_STREAM_H
-#include  FT_INTERNAL_TYPE1_ERRORS_H
-#include  FT_SOURCE_FILE(cid,cidparse.h)
-#include  <string.h>     /* for strncmp() */
+
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
+#include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_TYPE1_ERRORS_H
+#include FT_SOURCE_FILE(cid,cidparse.h)
+
+#include <string.h>     /* for strncmp() */
 
 
   /*************************************************************************/

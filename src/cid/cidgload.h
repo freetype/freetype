@@ -19,8 +19,10 @@
 #ifndef CIDGLOAD_H
 #define CIDGLOAD_H
 
-#include  <ft2build.h>
-#include  FT_SOURCE_FILE(cid,cidobjs.h)
+
+#include <ft2build.h>
+#include FT_SOURCE_FILE(cid,cidobjs.h)
+
 
 FT_BEGIN_HEADER
 
@@ -38,6 +40,7 @@ FT_BEGIN_HEADER
                             CID_Size       size,
                             FT_Int         glyph_index,
                             FT_Int         load_flags );
+
 
 FT_END_HEADER
 

@@ -113,10 +113,10 @@
   /* directory and compile them normally by defining the macro             */
   /* FT_FLAT_COMPILATION.                                                  */
   /*                                                                       */
-#ifdef  FT_FLAT_COMPILATION
-#  define FT_SOURCE_FILE( d, x )  #x
+#ifdef FT_FLAT_COMPILATION
+#define FT_SOURCE_FILE( d, x )  #x
 #else
-#  define FT_SOURCE_FILE( d, x )  <d/x>
+#define FT_SOURCE_FILE( d, x )  <d/x>
 #endif
 
 

@@ -19,11 +19,13 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_SOURCE_FILE(autohint,ahglyph.h)
-#include  FT_SOURCE_FILE(autohint,ahangles.h)
-#include  FT_SOURCE_FILE(autohint,ahglobal.h)
-#include  <stdio.h>
+
+#include <ft2build.h>
+#include FT_SOURCE_FILE(autohint,ahglyph.h)
+#include FT_SOURCE_FILE(autohint,ahangles.h)
+#include FT_SOURCE_FILE(autohint,ahglobal.h)
+
+#include <stdio.h>
 
 
 #define xxxAH_DEBUG_GLYPH

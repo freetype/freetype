@@ -15,11 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_INTERNAL_POSTSCRIPT_AUX_H
-#include  FT_INTERNAL_DEBUG_H
-#include  FT_ERRORS_H
-#include  FT_SOURCE_FILE(psaux,psobjs.h)
+
+#include <ft2build.h>
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_INTERNAL_DEBUG_H
+#include FT_ERRORS_H
+#include FT_SOURCE_FILE(psaux,psobjs.h)
 
 
   /*************************************************************************/

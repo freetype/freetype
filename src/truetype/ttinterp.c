@@ -15,6 +15,7 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
@@ -26,10 +27,10 @@
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
-#define TT_MULFIX   FT_MulFix
-#define TT_MULDIV   FT_MulDiv
+#define TT_MULFIX  FT_MulFix
+#define TT_MULDIV  FT_MulDiv
 
-#define TT_INT64    FT_Int64
+#define TT_INT64   FT_Int64
 
 
   /*************************************************************************/

@@ -20,11 +20,14 @@
 #ifndef TTPOST_H
 #define TTPOST_H
 
+
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
 
+
 FT_BEGIN_HEADER
+
 
 #define TT_Err_Invalid_Post_Table_Format  0x0B00
 #define TT_Err_Invalid_Post_Table         0x0B01

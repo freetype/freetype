@@ -15,15 +15,17 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_INTERNAL_DEBUG_H
-#include  FT_CONFIG_CONFIG_H
-#include  FT_MULTIPLE_MASTERS_H
-#include  FT_INTERNAL_TYPE1_TYPES_H
-#include  FT_INTERNAL_TYPE1_ERRORS_H
-#include  FT_SOURCE_FILE(cid,cidload.h)
-#include  <stdio.h>
-#include  <ctype.h>  /* for isspace(), isalnum() */
+
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_CONFIG_CONFIG_H
+#include FT_MULTIPLE_MASTERS_H
+#include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_TYPE1_ERRORS_H
+#include FT_SOURCE_FILE(cid,cidload.h)
+
+#include <stdio.h>
+#include <ctype.h>  /* for isspace(), isalnum() */
 
 
   /*************************************************************************/

@@ -19,13 +19,16 @@
 #ifndef T2OBJS_H
 #define T2OBJS_H
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_CFF_TYPES_H
 #include FT_INTERNAL_CFF_ERRORS_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
+
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -111,26 +114,26 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* Face functions                                                        */
   /*                                                                       */
-  FT_LOCAL FT_Error
-  T2_Init_Face( FT_Stream      stream,
-                T2_Face        face,
-                FT_Int         face_index,
-                FT_Int         num_params,
-                FT_Parameter*  params );
+  FT_LOCAL
+  FT_Error  T2_Init_Face( FT_Stream      stream,
+                          T2_Face        face,
+                          FT_Int         face_index,
+                          FT_Int         num_params,
+                          FT_Parameter*  params );
 
-  FT_LOCAL void
-  T2_Done_Face( T2_Face  face );
+  FT_LOCAL
+  void  T2_Done_Face( T2_Face  face );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* Driver functions                                                      */
   /*                                                                       */
-  FT_LOCAL FT_Error
-  T2_Init_Driver( T2_Driver  driver );
+  FT_LOCAL
+  FT_Error  T2_Init_Driver( T2_Driver  driver );
 
-  FT_LOCAL void
-  T2_Done_Driver( T2_Driver  driver );
+  FT_LOCAL
+  void  T2_Done_Driver( T2_Driver  driver );
 
 
 FT_END_HEADER

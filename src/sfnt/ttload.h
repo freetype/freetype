@@ -20,12 +20,14 @@
 #ifndef TTLOAD_H
 #define TTLOAD_H
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
 
 
 FT_BEGIN_HEADER
+
 
   FT_LOCAL
   TT_Table*  TT_LookUp_Table( TT_Face   face,

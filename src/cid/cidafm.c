@@ -15,14 +15,16 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_SOURCE_FILE(cid,cidafm.h)
-#include  FT_INTERNAL_STREAM_H
-#include  FT_INTERNAL_TYPE1_TYPES_H
-#include  FT_INTERNAL_TYPE1_ERRORS_H
-#include  <stdlib.h>  /* for qsort()   */
-#include  <string.h>  /* for strcmp()  */
-#include  <ctype.h>   /* for isalnum() */
+
+#include <ft2build.h>
+#include FT_SOURCE_FILE(cid,cidafm.h)
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_TYPE1_ERRORS_H
+
+#include <stdlib.h>  /* for qsort()   */
+#include <string.h>  /* for strcmp()  */
+#include <ctype.h>   /* for isalnum() */
 
 
   /*************************************************************************/

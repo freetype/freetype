@@ -19,13 +19,17 @@
 #ifndef CIDRIVER_H
 #define CIDRIVER_H
 
-#include  <ft2build.h>
-#include  FT_INTERNAL_DRIVER_H
+
+#include <ft2build.h>
+#include FT_INTERNAL_DRIVER_H
+
 
 FT_BEGIN_HEADER
 
+
   FT_CALLBACK_TABLE
   const  FT_Driver_Class  t1cid_driver_class;
+
 
 FT_END_HEADER
 

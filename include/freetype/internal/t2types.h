@@ -61,28 +61,28 @@ FT_BEGIN_HEADER
   } CFF_Index;
 
 
-  typedef struct CFF_Encoding_
+  typedef struct  CFF_Encoding_
   {
-    FT_Stream   stream;
+    FT_Stream  stream;
     
-    FT_UInt     format;
-    FT_ULong    offset;
-    FT_UInt     size;
+    FT_UInt    format;
+    FT_ULong   offset;
+    FT_UInt    size;
     
-    FT_Byte*    bytes;
+    FT_Byte*   bytes;
   
   } CFF_Encoding;
 
 
-  typedef struct CFF_Charset_
+  typedef struct  CFF_Charset_
   {
-    FT_Stream   stream;
+    FT_Stream  stream;
     
-    FT_UInt     format;
-    FT_ULong    offset;
-    FT_UInt     size;
+    FT_UInt    format;
+    FT_ULong   offset;
+    FT_UInt    size;
     
-    FT_Byte*    bytes;
+    FT_Byte*   bytes;
   
   } CFF_Charset;
 
