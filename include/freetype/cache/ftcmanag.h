@@ -151,18 +151,6 @@ FT_BEGIN_HEADER
 
  /* */
 
-  typedef struct  FTC_ScalerRec_
-  {
-    FTC_FaceID  face_id;
-    FT_UInt     width;
-    FT_UInt     height;
-    FT_Int      pixel;
-    FT_UInt     x_res;
-    FT_UInt     y_res;
-
-  } FTC_ScalerRec, *FTC_Scaler;
-
-
 #define FTC_SCALER_COMPARE( a, b )                \
     ( (a)->face_id      == (b)->face_id      &&   \
       (a)->width        == (b)->width        &&   \
@@ -176,12 +164,6 @@ FT_BEGIN_HEADER
     ( FTC_FACE_ID_HASH( (q)->face_id ) +                     \
       (q)->width + (q)->height*7 +                           \
       ( (q)->pixel ? 0 : ( (q)->x_res*33 ^ (q)->y_res*61 ) ) )
-
-
-  FT_EXPORT( FT_Error )
-  FTC_Manager_LookupSize( FTC_Manager  manager,
-                          FTC_Scaler   scaler,
-                          FT_Size     *asize );
 
  /* */
 
