@@ -1,3 +1,12 @@
+2003-05-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahoptim.c (LOG): Renamed to...
+	(AH_OPTIM_LOG): This.
+	(AH_Dump_Springs): Fix log message format.
+
+	* src/autohint/ahhint.c (ah_hint_edges_3): Renamed to...
+	(ah_hint_edges): This.
+
 2002-05-02  Keith Packard  <keithp@keithp.com>
 
 	* src/bdf/bdfdrivr.c (BDF_Set_Pixel_Size): Initialize `max_advance'.
