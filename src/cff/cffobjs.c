@@ -537,10 +537,21 @@
                                                     psnames );
           char*  fullp  = full;
           char*  family = cffface->family_name;
+          char*  family_name = 0;
+
+
+          if ( dict->family_name )
+          {
+            family_name = cff_index_get_sid_string( &cff->string_index,
+                                                    dict->family_name,
+                                                    psnames);
+            if ( family_name )
+              family = family_name;
+          }
 
           /* We try to extract the style name from the full name.   */
           /* We need to ignore spaces and dashes during the search. */
-          if ( full )
+          if ( full && family )
           {
             while ( *fullp )
             {
@@ -576,6 +587,9 @@
               }
               break;
             }
+
+            if ( family_name )
+              FT_FREE( family_name );
             FT_FREE( full );
           }
         }
@@ -642,6 +656,12 @@
               flags |= FT_STYLE_FLAG_BOLD;
           FT_FREE( weight );
         }
+
+        /* double check */
+        if ( !(flags & FT_STYLE_FLAG_BOLD) && cffface->style_name )
+          if ( !strncmp( cffface->style_name, "Bold", 4 )  ||
+               !strncmp( cffface->style_name, "Black", 5 ) )
+            flags |= FT_STYLE_FLAG_BOLD;
 
         cffface->style_flags = flags;
       }
