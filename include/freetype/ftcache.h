@@ -260,13 +260,19 @@ FT_BEGIN_HEADER
   /*    library   :: The parent FreeType library handle to use.            */
   /*                                                                       */
   /*    max_faces :: Maximum number of faces to keep alive in manager.     */
-  /*                 Use 0 for defaults.                                   */
+  /*                 Use 0 for defaults (currently 2; see the value of     */
+  /*                 FTC_MAX_FACES_DEFAULT in                              */
+  /*                 `include/freetype/cache/ftcmanag.h').                 */
   /*                                                                       */
   /*    max_sizes :: Maximum number of sizes to keep alive in manager.     */
-  /*                 Use 0 for defaults.                                   */
+  /*                 Use 0 for defaults (currently 4; see the value of     */
+  /*                 FTC_MAX_SIZES_DEFAULT in                              */
+  /*                 `include/freetype/cache/ftcmanag.h').                 */
   /*                                                                       */
   /*    max_bytes :: Maximum number of bytes to use for cached data.       */
-  /*                 Use 0 for defaults.                                   */
+  /*                 Use 0 for defaults (currently 200000; see the value   */
+  /*                 of FTC_MAX_BYTES_DEFAULT in                           */
+  /*                 `include/freetype/cache/ftcmanag.h').                 */
   /*                                                                       */
   /*    requester :: An application-provided callback used to translate    */
   /*                 face IDs into real @FT_Face objects.                  */
