@@ -4,26 +4,29 @@
 /*                                                                         */
 /*    Basic SFNT/TrueType tables definitions and interface                 */
 /*                                                                         */
-/*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
 
+
 #ifndef TTTABLES_H
 #define TTTABLES_H
 
+
 #include <freetype/freetype.h>
+
 
 #ifdef __cplusplus
   extern "C" {
 #endif
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -303,6 +306,7 @@
 
   } TT_VertHeader;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -358,7 +362,8 @@
     FT_ULong   ulCodePageRange1;       /* Bits 0-31   */
     FT_ULong   ulCodePageRange2;       /* Bits 32-63  */
 
-    /* only version 2 tables */
+    /* only version 2 tables: */
+
     FT_Short   sxHeight;
     FT_Short   sCapHeight;
     FT_UShort  usDefaultChar;
@@ -396,34 +401,36 @@
 
   } TT_Postscript;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
   /*    TT_PCLT                                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model a TrueType PCLT table. All fields        */
+  /*    A structure used to model a TrueType PCLT table.  All fields       */
   /*    comply to the TrueType table.                                      */
   /*                                                                       */
   typedef struct TT_PCLT_
   {
     FT_Fixed   Version;
-	FT_ULong   FontNumber;
-	FT_UShort  Pitch;
-	FT_UShort  xHeight;
-	FT_UShort  Style;
-	FT_UShort  TypeFamily;
-	FT_UShort  CapHeight;
-	FT_UShort  SymbolSet;
-        FT_Char    TypeFace[16];
-	FT_Char    CharacterComplement[8];
-	FT_Char    FileName[6];
-	FT_Char    StrokeWeight;
-	FT_Char    WidthType;
-	FT_Byte    SerifStyle;
-	FT_Byte    Reserved;
-	
+    FT_ULong   FontNumber;
+    FT_UShort  Pitch;
+    FT_UShort  xHeight;
+    FT_UShort  Style;
+    FT_UShort  TypeFamily;
+    FT_UShort  CapHeight;
+    FT_UShort  SymbolSet;
+    FT_Char    TypeFace[16];
+    FT_Char    CharacterComplement[8];
+    FT_Char    FileName[6];
+    FT_Char    StrokeWeight;
+    FT_Char    WidthType;
+    FT_Byte    SerifStyle;
+    FT_Byte    Reserved;
+    
   } TT_PCLT;
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -513,8 +520,6 @@
   } TT_MaxProfile;
 
 
-
-
   typedef enum
   {
     ft_sfnt_head = 0,
@@ -523,43 +528,48 @@
     ft_sfnt_hhea = 3,
     ft_sfnt_vhea = 4,
     ft_sfnt_post = 5,
-	ft_sfnt_pclt = 6,
+    ft_sfnt_pclt = 6,
 
     sfnt_max   /* don't remove */
 
   } FT_Sfnt_Tag;
 
+
   /* internal use only */
-  typedef  void*  (*FT_Get_Sfnt_Table_Func)( FT_Face  face, FT_Sfnt_Tag tag );
+  typedef void*  (*FT_Get_Sfnt_Table_Func)( FT_Face      face,
+                                            FT_Sfnt_Tag  tag );
 
- /***************************************************************************
-  *
-  * <Function>
-  *    FT_Get_Sfnt_Table
-  *
-  * <Description>
-  *    Returns a pointer to a given SFNT table within a face.
-  *
-  * <Input>
-  *    face  :: handle to source
-  *    tag   :: index if SFNT table
-  *
-  * <Return>
-  *    type-less pointer to the table. This will be 0 in case of error, or
-  *    when the corresponding table was not found *OR* loaded from the file.
-  *
-  * <Note>
-  *    The table is owned by the face object, and disappears with it.
-  *
-  *    This function is only useful to access Sfnt tables that are loaded
-  *    by the sfnt/truetype/opentype drivers. See FT_Sfnt_tag for a list.
-  *
-  *    You can load any table with a different function.. XXX
-  *
-  ***************************************************************************/
 
-  FT_EXPORT_DEF(void*)  FT_Get_Sfnt_Table( FT_Face      face,
-                                           FT_Sfnt_Tag  tag );
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Sfnt_Table                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Returns a pointer to a given SFNT table within a face.             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: A handle to the source.                                    */
+  /*                                                                       */
+  /*    tag  :: The index of the SFNT table.                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A type-less pointer to the table.  This will be 0 in case of       */
+  /*    error, or if the corresponding table was not found *OR* loaded     */
+  /*    from the file.                                                     */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The table is owned by the face object and disappears with it.      */
+  /*                                                                       */
+  /*    This function is only useful to access SFNT tables that are loaded */
+  /*    by the sfnt/truetype/opentype drivers.  See FT_Sfnt_tag for a      */
+  /*    list.                                                              */
+  /*                                                                       */
+  /*    You can load any table using the (internal) SFNT_Interface         */
+  /*    structure -- this is available via FT_Get_Module_Interface().      */
+  /*                                                                       */
+  FT_EXPORT_DEF( void* )  FT_Get_Sfnt_Table( FT_Face      face,
+                                             FT_Sfnt_Tag  tag );
 
 #ifdef __cplusplus
   }
@@ -568,3 +578,5 @@
 
 #endif /* TTTABLES_H */
 
+
+/* END */
