@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ttmakeid.h                                                             */
+/*  ttnameid.h                                                             */
 /*                                                                         */
 /*    TrueType name ID definitions (specification only).                   */
 /*                                                                         */

@@ -1,7 +1,8 @@
 #
 # FreeType 2 configuration rules templates for
-# development under Unix with no configure (gcc only)
+# development under Unix-like platforms with no configure script (gcc only)
 #
+
 
 # Copyright 1996-2000 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -11,6 +12,7 @@
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
 # fully.
+
 
 ifndef TOP
   TOP := .

@@ -1,5 +1,5 @@
 #
-# FreeType 2 PSAUX driver configuration rules
+# FreeType 2 PSaux driver configuration rules
 #
 
 
