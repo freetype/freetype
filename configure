@@ -1,0 +1,9 @@
+#!/bin/sh
+# call the 'configure' script located in 'builds/unix'
+# this should re-generate the following files:
+#
+#     config.mk
+#     Jamfile
+#     install
+#
+make setup unix CFG="$@"
