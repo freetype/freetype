@@ -23,8 +23,14 @@
 
 #include <freetype/internal/t2errors.h>
 #include <freetype/tttags.h>
-#include <t2load.h>
-#include <t2parse.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "t2load.h"
+#include "t2parse.h"
+#else
+#include <cff/t2load.h>
+#include <cff/t2parse.h>
+#endif
 
 
   /*************************************************************************/
@@ -283,8 +289,6 @@
   }
 
 
-#if 0 /* unused until we fully support pure-CFF fonts */
-
   LOCAL_FUNC
   FT_String*  T2_Get_String( CFF_Index*          index,
                              FT_UInt             sid,
@@ -319,7 +323,6 @@
     }
   }
 
-#endif /* 0 */
 
 
   /*************************************************************************/

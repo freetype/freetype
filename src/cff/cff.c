@@ -18,11 +18,20 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <t2driver.c>    /* driver interface     */
-#include <t2parse.c>     /* token parser         */
-#include <t2load.c>      /* tables loader        */
-#include <t2objs.c>      /* object management    */
-#include <t2gload.c>     /* glyph loader         */
+#ifdef FT_FLAT_COMPILE
+#include "t2driver.c"    /* driver interface     */
+#include "t2parse.c"     /* token parser         */
+#include "t2load.c"      /* tables loader        */
+#include "t2objs.c"      /* object management    */
+#include "t2gload.c"     /* glyph loader         */
+#else
+#include <cff/t2driver.c>    /* driver interface     */
+#include <cff/t2parse.c>     /* token parser         */
+#include <cff/t2load.c>      /* tables loader        */
+#include <cff/t2objs.c>      /* object management    */
+#include <cff/t2gload.c>     /* glyph loader         */
+#endif
+
 
 
 /* END */

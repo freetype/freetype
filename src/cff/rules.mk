@@ -19,14 +19,7 @@ T2_DIR  := $(SRC_)cff
 T2_DIR_ := $(T2_DIR)$(SEP)
 
 
-# additional include flags used when compiling the driver
-#
-T2_INCLUDE := $(T2_DIR)
-
-# compilation flags for the driver
-#
-T2_CFLAGS  := $(T2_INCLUDE:%=$I%)
-T2_COMPILE := $(FT_COMPILE) $(T2_CFLAGS)
+T2_COMPILE := $(FT_COMPILE)
 
 
 # T2 driver sources (i.e., C files)

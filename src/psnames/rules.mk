@@ -18,15 +18,10 @@
 PSNAMES_DIR  := $(SRC_)psnames
 PSNAMES_DIR_ := $(PSNAMES_DIR)$(SEP)
 
-# additional include flags used when compiling the driver
-#
-PSNAMES_INCLUDE := $(PSNAMES_DIR)
-
 
 # compilation flags for the driver
 #
-PSNAMES_CFLAGS  := $(PSNAMES_INCLUDE:%=$I%)
-PSNAMES_COMPILE := $(FT_COMPILE) $(PSNAMES_CFLAGS)
+PSNAMES_COMPILE := $(FT_COMPILE)
 
 
 # PSNames driver sources (i.e., C files)

@@ -20,7 +20,7 @@ endif
 DELETE   := @RMF@
 SEP      := /
 HOSTSEP  := $(SEP)
-BUILD    := $(TOP)/config/unix
+BUILD    := $(TOP)/builds/unix
 PLATFORM := unix
 
 # The directory where all object files are placed.

@@ -18,7 +18,14 @@
 
 #include <freetype/internal/psnames.h>
 #include <freetype/internal/ftobjs.h>
-#include <psmodule.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "psmodule.h"
+#include "pstables.h"
+#else
+#include <psnames/psmodule.h>
+#include <psnames/pstables.h>
+#endif
 
 #include <stdlib.h>     /* for qsort()             */
 #include <string.h>     /* for strcmp(), strncpy() */
@@ -27,9 +34,6 @@
 #ifndef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES
 
 
-  /* see the Python script `freetype2/docs/glnames.py' which is used */
-  /* to generate the following file                                  */
-#include <pstables.h>
 
 
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST

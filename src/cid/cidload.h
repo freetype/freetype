@@ -20,7 +20,12 @@
 #define CIDLOAD_H
 
 #include <freetype/internal/ftstream.h>
-#include <cidparse.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "cidparse.h"
+#else
+#include <cid/cidparse.h>
+#endif
 
 #ifdef __cplusplus
   extern "C" {

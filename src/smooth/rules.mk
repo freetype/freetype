@@ -18,15 +18,9 @@
 SMOOTH_DIR  := $(SRC_)smooth
 SMOOTH_DIR_ := $(SMOOTH_DIR)$(SEP)
 
-# additional include flags used when compiling the driver
-#
-SMOOTH_INCLUDE := $(SMOOTH_DIR)
-
-
 # compilation flags for the driver
 #
-SMOOTH_CFLAGS  := $(SMOOTH_INCLUDE:%=$I%)
-SMOOTH_COMPILE := $(FT_COMPILE) $(SMOOTH_CFLAGS)
+SMOOTH_COMPILE := $(FT_COMPILE)
 
 
 # smooth driver sources (i.e., C files)

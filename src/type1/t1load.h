@@ -20,7 +20,13 @@
 #define T1LOAD_H
 
 #include <freetype/internal/ftstream.h>
-#include <t1parse.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "t1parse.h"
+#else
+#include <type1/t1parse.h>
+#endif
+
 
 #ifdef __cplusplus
   extern "C" {

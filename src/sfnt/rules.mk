@@ -19,14 +19,9 @@ SFNT_DIR  := $(SRC_)sfnt
 SFNT_DIR_ := $(SFNT_DIR)$(SEP)
 
 
-# additional include flags used when compiling the driver
-#
-SFNT_INCLUDE := $(SFNT_DIR)
-
 # compilation flags for the driver
 #
-SFNT_CFLAGS  := $(SFNT_INCLUDE:%=$I%)
-SFNT_COMPILE := $(FT_COMPILE) $(SFNT_CFLAGS)
+SFNT_COMPILE := $(FT_COMPILE)
 
 
 # SFNT driver sources (i.e., C files)

@@ -33,7 +33,13 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1errors.h>
-#include <z1parse.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "z1parse.h"
+#else
+#include <type1z/z1parse.h>
+#endif
+
 
 #undef FT_COMPONENT
 #define FT_COMPONENT  trace_t1load

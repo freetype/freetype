@@ -21,7 +21,14 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1types.h>
 #include <freetype/ftmm.h>
-#include <z1parse.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "z1parse.h"
+#else
+#include <type1z/z1parse.h>
+#endif
+
+
 
 #ifdef __cplusplus
   extern "C" {

@@ -15,7 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include <winfnt.h>
+#ifdef FT_FLAT_COMPILE
+#include "winfnt.h"
+#else
+#include <winfonts/winfnt.h>
+#endif
+
 #include <freetype/fterrors.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/ftdebug.h>
@@ -170,6 +175,7 @@
          READ_Fields( winmz_header_fields, &mz_header ) )
       goto Exit;
 
+    error = FT_Err_Unknown_File_Format;
     if ( mz_header.magic == WINFNT_MZ_MAGIC )
     {
       /* yes, now look for a NE header in the file */
@@ -179,6 +185,7 @@
            READ_Fields( winne_header_fields, &ne_header ) )
         goto Exit;
       
+      error = FT_Err_Unknown_File_Format;
       if ( ne_header.magic == WINFNT_NE_MAGIC )
       {
         /* good, now look in the resource table for each FNT resource */

@@ -19,14 +19,9 @@ T1Z_DIR  := $(SRC_)type1z
 T1Z_DIR_ := $(T1Z_DIR)$(SEP)
 
 
-# additional include flags used when compiling the driver
-#
-T1Z_INCLUDE := $(SHARED) $(T1Z_DIR)
-
 # compilation flags for the driver
 #
-T1Z_CFLAGS  := $(T1Z_INCLUDE:%=$I%)
-T1Z_COMPILE := $(FT_COMPILE) $(T1Z_CFLAGS)
+T1Z_COMPILE := $(FT_COMPILE)
 
 
 # Type1 driver sources (i.e., C files)

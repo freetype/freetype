@@ -35,7 +35,12 @@
 #ifndef Z1GLOAD_H
 #define Z1GLOAD_H
 
-#include <z1objs.h>
+#ifdef FT_FLAT_COMPILE
+#include "z1objs.h"
+#else
+#include <type1z/z1objs.h>
+#endif
+
 
 #ifdef __cplusplus
   extern "C" {

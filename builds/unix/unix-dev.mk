@@ -22,7 +22,7 @@ endif
 DELETE   := rm -f
 SEP      := /
 HOSTSEP  := $(SEP)
-BUILD    := $(TOP)/config/unix
+BUILD    := $(TOP)/builds/unix
 PLATFORM := unix
 
 # The directory where all object files are placed.
@@ -107,7 +107,7 @@ ifdef BUILD_FREETYPE
   # Now include the main sub-makefile.  It contains all the rules used to
   # build the library with the previous variables defined.
   #
-  include $(TOP)/config/freetype.mk
+  include $(TOP)/builds/freetype.mk
 
   # The cleanup targets.
   #

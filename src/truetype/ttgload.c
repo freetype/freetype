@@ -23,11 +23,12 @@
 #include <freetype/tttags.h>
 #include <freetype/ftoutln.h>
 
-#include <ttgload.h>
-
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#include <ttinterp.h>
+#ifdef FT_FLAT_COMPILE
+#include "ttgload.h"
+#else
+#include <truetype/ttgload.h>
 #endif
+
 
 
   /*************************************************************************/

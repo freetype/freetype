@@ -20,9 +20,14 @@
 #include <freetype/internal/ftcalc.h>
 #include <freetype/ftsystem.h>
 
-#include <ttobjs.h>
+#ifdef FT_FLAT_COMPILE
+#include "ttinterp.h"
+#else
+#include <truetype/ttinterp.h>
+#endif
+
+
 #include <freetype/internal/tterrors.h>
-#include <ttinterp.h>
 
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER

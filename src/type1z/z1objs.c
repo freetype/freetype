@@ -18,10 +18,18 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
-#include <z1gload.h>
-#include <z1load.h>
+#ifdef FT_FLAT_COMPILE
+#include "z1gload.h"
+#include "z1load.h"
+#include "z1afm.h"
+#else
+#include <type1z/z1gload.h>
+#include <type1z/z1load.h>
+#include <type1z/z1afm.h>
+#endif
+
+
 #include <freetype/internal/psnames.h>
-#include <z1afm.h>
 
 /* Required by tracing mode */
 #undef   FT_COMPONENT

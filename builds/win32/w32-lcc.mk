@@ -19,7 +19,7 @@ endif
 DELETE   := del
 SEP      := /
 HOSTSEP  := $(strip \ )
-BUILD    := $(TOP)/config/win32
+BUILD    := $(TOP)/builds/win32
 PLATFORM := win32
 CC       := lcc
 
@@ -105,7 +105,7 @@ ifdef BUILD_FREETYPE
   # Now include the main sub-makefile.  It contains all the rules used to
   # build the library with the previous variables defined.
   #
-  include $(TOP)/config/freetype.mk
+  include $(TOP)/builds/freetype.mk
 
   # The cleanup targets.
   #

@@ -16,14 +16,26 @@
 /***************************************************************************/
 
 
-#include <t1gload.h>
+#ifdef FT_FLAT_COMPILE
+
+#include <type1/t1gload.h>
+#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
+#include <type1/t1hinter.h>
+#endif
+
+#else
+
+#include <type1/t1gload.h>
+#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
+#include <type1/t1hinter.h>
+#endif
+
+#endif
+
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/ftoutln.h>
 
-#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-#include <t1hinter.h>
-#endif
 
 #include <string.h>     /* for strcmp() */
 

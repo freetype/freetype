@@ -16,7 +16,12 @@
 /***************************************************************************/
 
 
-#include <sfobjs.h>
+#ifdef FT_FLAT_COMPILE
+#include "sfobjs.h"
+#else
+#include <sfnt/sfobjs.h>
+#endif
+
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/psnames.h>
 #include <freetype/ttnameid.h>

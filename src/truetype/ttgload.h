@@ -19,11 +19,22 @@
 #ifndef TTGLOAD_H
 #define TTGLOAD_H
 
-#include <ttobjs.h>
+#ifdef FT_FLAT_COMPILE
 
+#include "ttobjs.h"
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#include <ttinterp.h>
+#include "ttinterp.h"
 #endif
+
+#else
+
+#include <truetype/ttobjs.h>
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#include <truetype/ttinterp.h>
+#endif
+
+#endif
+
 
 #ifdef __cplusplus
   extern "C" {

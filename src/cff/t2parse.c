@@ -16,7 +16,12 @@
 /***************************************************************************/
 
 
-#include <t2parse.h>
+#ifdef FT_FLAT_COMPILE
+#include "t2parse.h"
+#else
+#include <cff/t2parse.h>
+#endif
+
 #include <freetype/internal/t2errors.h>
 
 
@@ -417,7 +422,11 @@
 
   static const T2_Field_Handler  t2_field_handlers[] =
   {
-#include <t2tokens.h>
+#ifdef FT_FLAT_COMPILE
+#include "t2tokens.h"
+#else
+#include <cff/t2tokens.h>
+#endif
     { 0, 0, 0, 0, 0, 0, 0 }
   };
 

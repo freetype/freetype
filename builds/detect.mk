@@ -17,7 +17,7 @@
 # the following variables:
 #
 #   BUILD        The configuration and system-specific directory.  Usually
-#                `freetype/config/$(PLATFORM)' but can be different for
+#                `freetype/builds/$(PLATFORM)' but can be different for
 #                custom builds of the library.
 #
 # The following variables must be defined in system specific `detect.mk'
@@ -52,7 +52,7 @@ DELETE   := $(RM)
 COPY     := cp
 SEP      := /
 
-BUILD_CONFIG_ = $(TOP)$(SEP)config$(SEP)
+BUILD_CONFIG_ = $(TOP)$(SEP)builds$(SEP)
 BUILD         = $(BUILD_CONFIG_)$(PLATFORM)
 CONFIG_RULES  = $(BUILD)$(SEP)$(CONFIG_FILE)
 
@@ -70,7 +70,7 @@ CONFIG_RULES  = $(BUILD)$(SEP)$(CONFIG_FILE)
 #
 BACKSLASH := $(strip \ )
 
-# Now, include all detection rule files found in the `config/<system>'
+# Now, include all detection rule files found in the `builds/<system>'
 # directories.  Note that the calling order of the various `detect.mk' files
 # isn't predictable.
 #

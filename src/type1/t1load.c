@@ -20,8 +20,14 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/t1types.h>
 
-#include <t1tokens.h>
-#include <t1parse.h>
+#ifdef FT_FLAT_COMPILE
+#include "t1tokens.h"
+#include "t1parse.h"
+#else
+#include <type1/t1tokens.h>
+#include <type1/t1parse.h>
+#endif
+
 
 #include <stdio.h>
 

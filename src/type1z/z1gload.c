@@ -15,7 +15,12 @@
  *
  ******************************************************************/
 
-#include <z1gload.h>
+#ifdef FT_FLAT_COMPILE
+#include "z1gload.h"
+#else
+#include <type1z/z1gload.h>
+#endif
+
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/ftoutln.h>

@@ -15,10 +15,18 @@
  *
  ******************************************************************/
 
-#include <z1driver.h>
-#include <z1gload.h>
-#include <z1load.h>
-#include <z1afm.h>
+#ifdef FT_FLAT_COMPILE
+#include "z1driver.h"
+#include "z1gload.h"
+#include "z1load.h"
+#include "z1afm.h"
+#else
+#include <type1z/z1driver.h>
+#include <type1z/z1gload.h>
+#include <type1z/z1load.h>
+#include <type1z/z1afm.h>
+#endif
+
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>

@@ -18,15 +18,9 @@
 RAS1_DIR  := $(SRC_)raster1
 RAS1_DIR_ := $(RAS1_DIR)$(SEP)
 
-# additional include flags used when compiling the driver
-#
-RAS1_INCLUDE := $(RAS1_DIR)
-
-
 # compilation flags for the driver
 #
-RAS1_CFLAGS  := $(RAS1_INCLUDE:%=$I%)
-RAS1_COMPILE := $(FT_COMPILE) $(RAS1_CFLAGS)
+RAS1_COMPILE := $(FT_COMPILE)
 
 
 # raster1 driver sources (i.e., C files)

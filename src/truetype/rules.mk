@@ -19,14 +19,9 @@ TT_DIR  := $(SRC_)truetype
 TT_DIR_ := $(TT_DIR)$(SEP)
 
 
-# additional include flags used when compiling the driver
-#
-TT_INCLUDE := $(TT_DIR)
-
 # compilation flags for the driver
 #
-TT_CFLAGS  := $(TT_INCLUDE:%=$I%)
-TT_COMPILE := $(FT_COMPILE) $(TT_CFLAGS)
+TT_COMPILE := $(FT_COMPILE)
 
 
 # TrueType driver sources (i.e., C files)

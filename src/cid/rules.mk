@@ -19,14 +19,7 @@ CID_DIR  := $(SRC_)cid
 CID_DIR_ := $(CID_DIR)$(SEP)
 
 
-# additional include flags used when compiling the driver
-#
-CID_INCLUDE := $(CID_DIR)
-
-# compilation flags for the driver
-#
-CID_CFLAGS  := $(CID_INCLUDE:%=$I%)
-CID_COMPILE := $(FT_COMPILE) $(CID_CFLAGS)
+CID_COMPILE := $(FT_COMPILE)
 
 
 # CID driver sources (i.e., C files)

@@ -18,7 +18,13 @@
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/t1types.h>
-#include <t1parse.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "t1parse.h"
+#else
+#include <type1/t1parse.h>
+#endif
+
 
 #include <stdio.h>  /* for sscanf()  */
 #include <string.h> /* for strncpy() */

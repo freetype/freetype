@@ -19,14 +19,7 @@ FNT_DIR  := $(SRC_)winfonts
 FNT_DIR_ := $(FNT_DIR)$(SEP)
 
 
-# additional include flags used when compiling the driver
-#
-FNT_INCLUDE := $(FNT_DIR)
-
-# compilation flags for the driver
-#
-FNT_CFLAGS  := $(FNT_INCLUDE:%=$I%)
-FNT_COMPILE := $(FT_COMPILE) $(FNT_CFLAGS)
+FNT_COMPILE := $(FT_COMPILE)
 
 
 # Windows driver sources (i.e., C files)

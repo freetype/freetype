@@ -65,7 +65,13 @@
 
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/t1errors.h>
-#include <z1load.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "z1load.h"
+#else
+#include <type1z/z1load.h>
+#endif
+
 #include <stdio.h>
 
 #undef  FT_COMPONENT
@@ -631,7 +637,11 @@
 #define Z1_TOPDICT_NUM_FIXED2(n,f,m)   Z1_NEW_FIXED_TABLE2(n,f,m)
 
 /* including this file defines all field variables */
-#include <z1tokens.h>
+#ifdef FT_FLAT_COMPILE
+#include "z1tokens.h"
+#else
+#include <type1z/z1tokens.h>
+#endif
 
  /*********************************************************************
   *
@@ -1203,7 +1213,11 @@
   static
   const Z1_KeyWord  t1_keywords[] =
   {
-#include <z1tokens.h>  
+#ifdef FT_FLAT_COMPILE
+#include "z1tokens.h"
+#else
+#include <type1z/z1tokens.h>
+#endif
     
     /* now add the special functions... */
     Z1_KEYWORD_CALLBACK( "FontName", parse_font_name ),

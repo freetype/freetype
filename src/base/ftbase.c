@@ -16,12 +16,20 @@
 /***************************************************************************/
 
 
+#ifdef FT_FLAT_COMPILE
+#include "ftcalc.c"
+#include "ftobjs.c"
+#include "ftstream.c"
+#include "ftlist.c"
+#include "ftoutln.c"
+#include "ftextend.c"
+#else
 #include <ftcalc.c>
 #include <ftobjs.c>
 #include <ftstream.c>
 #include <ftlist.c>
 #include <ftoutln.c>
 #include <ftextend.c>
-
+#endif
 
 /* END */

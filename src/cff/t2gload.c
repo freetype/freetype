@@ -23,8 +23,13 @@
 #include <freetype/ftoutln.h>
 #include <freetype/tttags.h>
 
-#include <t2load.h>
-#include <t2gload.h>
+#ifdef FT_FLAT_COMPILE
+#include "t2load.h"
+#include "t2gload.h"
+#else
+#include <cff/t2load.h>
+#include <cff/t2gload.h>
+#endif
 
 #include <freetype/internal/t2errors.h>
 
@@ -472,9 +477,9 @@
       builder->path_begun = 1;
       error = add_contour( builder );
       if ( !error )
-        error = add_point1( builder, x, y );
+        return error;
     }
-    return error;
+    return add_point1( builder, x, y );
   }
 
 
@@ -595,8 +600,8 @@
       v = *ip++;
       if ( v >= 32 || v == 28 )
       {
-        FT_Int  shift = 16;
-        FT_Long val;
+        FT_Int    shift = 16;
+        FT_Int32  val;
 
 
         /* this is an operand, push it on the stack */
@@ -604,7 +609,7 @@
         {
           if ( ip + 1 >= limit )
             goto Syntax_Error;
-          val = (FT_Short)( ( (FT_Int)ip[0] << 8 ) + ip[1] );
+          val = (FT_Int32)( ( (FT_Short)ip[0] << 8 ) | ip[1] );
           ip += 2;
         }
         else if ( v < 247 )
@@ -640,7 +645,7 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
         if ( !( val & 0xFFFF ) )
-          FT_TRACE4(( " %d", (FT_Int)( val >> 16 ) ));
+          FT_TRACE4(( " %d", (FT_Int32)( val >> 16 ) ));
         else
           FT_TRACE4(( " %.2f", val/65536.0 ));
 #endif
@@ -1296,7 +1301,7 @@
           {
             FT_Pos start_x, start_y; /* record start x,y values for alter use */
             FT_Int dx = 0, dy = 0;   /* used in hort./vert. algorithm below   */
-            FT_Int hort_flag, count;
+            FT_Int horizontal, count;
  
             FT_TRACE4(( " flex1" ));
    
@@ -1314,7 +1319,7 @@
             args = stack;
             
             /* grab up to the last argument */
-            while ( args < decoder->top - 1)
+            for ( count = 5; count > 0; count-- )
             {
               dx += args[0];
               dy += args[1];
@@ -1328,7 +1333,7 @@
             if ( dy < 0 ) dy = -dy;
    
             /* strange test, but here it is... */
-            hort_flag = (dx > dy);
+            horizontal = (dx > dy);
    
             for ( count = 5; count > 0; count-- )
             {
@@ -1338,7 +1343,7 @@
               args += 2;
             }
    
-            if (hort_flag)
+            if (horizontal)
             {
               x += args[0];
               y  = start_y;

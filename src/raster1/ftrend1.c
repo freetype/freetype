@@ -18,8 +18,14 @@
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/ftoutln.h>
-#include <ftrend1.h>
-#include <ftraster.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "ftrend1.h"
+#include "ftraster.h"
+#else
+#include <raster1/ftrend1.h>
+#include <raster1/ftraster.h>
+#endif
 
 
   /* initialize renderer -- init its raster */

@@ -108,7 +108,7 @@ ANSI_FLAGS := /Sa
 
 ifdef BUILD_FREETYPE
 
-include $(TOP)/config/freetype.mk
+include $(TOP)/builds/freetype.mk
 
 clean_freetype: clean_freetype_dos
 distclean_freetype: distclean_freetype_dos

@@ -29,14 +29,11 @@
   FT_String*  T2_Get_Name( CFF_Index*  index,
                            FT_UInt     element );
 
-#if 0  /* will be used later for pure-CFF font support */
-
   LOCAL_DEF
   FT_String*  T2_Get_String( CFF_Index*          index,
                              FT_UInt             sid,
                              PSNames_Interface*  interface );
 
-#endif
 
   LOCAL_DEF
   FT_Error  T2_Access_Element( CFF_Index*  index,

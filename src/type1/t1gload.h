@@ -19,7 +19,12 @@
 #ifndef T1GLOAD_H
 #define T1GLOAD_H
 
-#include <t1objs.h>
+#ifdef FT_FLAT_COMPILE
+#include "t1objs.h"
+#else
+#include <type1/t1objs.h>
+#endif
+
 
 #ifdef __cplusplus
   extern "C" {

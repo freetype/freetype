@@ -16,9 +16,15 @@
 /***************************************************************************/
 
 
-#include <t1driver.h>
-#include <t1gload.h>
-#include <t1afm.h>
+#ifdef FT_FLAT_COMPILE
+#include "t1driver.h"
+#include "t1gload.h"
+#include "t1afm.h"
+#else
+#include <type1/t1driver.h>
+#include <type1/t1gload.h>
+#include <type1/t1afm.h>
+#endif
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>

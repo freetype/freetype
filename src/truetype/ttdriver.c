@@ -21,8 +21,14 @@
 #include <freetype/internal/sfnt.h>
 #include <freetype/ttnameid.h>
 
-#include <ttdriver.h>
-#include <ttgload.h>
+#ifdef FT_FLAT_COMPILE
+#include "ttdriver.h"
+#include "ttgload.h"
+#else
+#include <truetype/ttdriver.h>
+#include <truetype/ttgload.h>
+#endif
+
 
 
   /*************************************************************************/

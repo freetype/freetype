@@ -18,14 +18,28 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <z1parse.c>
-#include <z1load.c>
-#include <z1objs.c>
-#include <z1driver.c>
-#include <z1gload.c>
+#ifdef FT_FLAT_COMPILE
 
+#include "z1parse.c"
+#include "z1load.c"
+#include "z1objs.c"
+#include "z1driver.c"
+#include "z1gload.c"
 #ifndef Z1_CONFIG_OPTION_NO_AFM
-#include <z1afm.c>
+#include "z1afm.c"
+#endif
+
+#else
+
+#include <type1z/z1parse.c>
+#include <type1z/z1load.c>
+#include <type1z/z1objs.c>
+#include <type1z/z1driver.c>
+#include <type1z/z1gload.c>
+#ifndef Z1_CONFIG_OPTION_NO_AFM
+#include <type1z/z1afm.c>
+#endif
+
 #endif
 
 

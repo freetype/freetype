@@ -20,7 +20,7 @@ endif
 DELETE   := rm -f
 SEP      := /
 HOSTSEP  := $(strip \ )
-BUILD    := $(TOP)/config/dos
+BUILD    := $(TOP)/builds/dos
 PLATFORM := dos
 
 # The directory where all object files are placed.
@@ -105,7 +105,7 @@ ifdef BUILD_FREETYPE
   # Now include the main sub-makefile.  It contains all the rules used to
   # build the library with the previous variables defined.
   #
-  include $(TOP)/config/freetype.mk
+  include $(TOP)/builds/freetype.mk
 
   # The cleanup targets.
   #

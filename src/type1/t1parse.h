@@ -31,7 +31,13 @@
 #define T1PARSE_H
 
 #include <freetype/internal/ftstream.h>
-#include <t1tokens.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "t1tokens.h"
+#else
+#include <type1/t1tokens.h>
+#endif
+
 
 #ifdef __cplusplus
   extern "C" {

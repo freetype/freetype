@@ -115,7 +115,7 @@ FT_LIBRARY := $(LIB_)$(LIBRARY).$A
 #                 in the `freetype/config/<system>' directory, as these
 #                 files will override the default sources.
 #
-INCLUDES := $(BUILD) $(TOP)$(SEP)include $(INCLUDES)
+INCLUDES := $(BUILD) $(TOP)$(SEP)include $(SRC)
 
 INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 

@@ -18,8 +18,15 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <ftgrays.c>
-#include <ftsmooth.c>
+#ifdef FT_FLAT_COMPILE
+#include "ftgrays.c"
+#include "ftsmooth.c"
+#else
+#include <smooth/ftgrays.c>
+#include <smooth/ftsmooth.c>
+#endif
+
+
 
 
 /* END */

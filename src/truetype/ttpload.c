@@ -21,7 +21,12 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 
-#include <ttpload.h>
+#ifdef FT_FLAT_COMPILE
+#include "ttpload.h"
+#else
+#include <truetype/ttpload.h>
+#endif
+
 #include <freetype/internal/tterrors.h>
 
 

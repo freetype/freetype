@@ -75,8 +75,8 @@ ifdef check_platform
   #
   modules: make_module_list setup
 
-  include $(TOP)/config/detect.mk
-  include $(TOP)/config/modules.mk
+  include $(TOP)/builds/detect.mk
+  include $(TOP)/builds/modules.mk
 
   ifeq ($(wildcard $(FT_MODULE_LIST)),)
     setup: make_module_list

@@ -20,7 +20,12 @@
 #define T2GLOAD_H
 
 #include <freetype/freetype.h>
-#include <t2objs.h>
+
+#ifdef FT_FLAT_COMPILE
+#include "t2objs.h"
+#else
+#include <cff/t2objs.h>
+#endif
 
 #ifdef __cplusplus
   extern "C" {

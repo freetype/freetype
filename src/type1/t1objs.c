@@ -19,13 +19,27 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
-#include <t1gload.h>
-#include <t1load.h>
-#include <t1afm.h>
+#ifdef FT_FLAT_COMPILE
 
+#include "t1gload.h"
+#include "t1load.h"
+#include "t1afm.h"
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-#include <t1hinter.h>
+#include "t1hinter.h"
 #endif
+
+#else
+
+#include <type1/t1gload.h>
+#include <type1/t1load.h>
+#include <type1/t1afm.h>
+#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
+#include <type1/t1hinter.h>
+#endif
+
+#endif
+
+
 
 #include <freetype/internal/psnames.h>
 

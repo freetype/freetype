@@ -21,7 +21,7 @@
 # environment, or on the command line) are used:
 #
 #   BUILD          The architecture dependent directory,
-#                  e.g. `$(TOP)/config/unix'.
+#                  e.g. `$(TOP)/builds/unix'.
 #
 #   OBJ_DIR        The directory in which object files are created.
 #
@@ -112,7 +112,7 @@ FT_LIBRARY := $(LIB_)$(LIBRARY).$A
 # IMPORTANT NOTE: The architecture-dependent directory must ALWAYS be placed
 #                 in front of the include list.  Porters are then able to
 #                 put their own version of some of the FreeType components
-#                 in the `freetype/config/<system>' directory, as these
+#                 in the `freetype/builds/<system>' directory, as these
 #                 files will override the default sources.
 #
 INCLUDES := $(BUILD) $(TOP)$(SEP)include $(SRC)
@@ -121,7 +121,7 @@ INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 
 
 # C flags used for the compilation of an object file.  This must include at
-# least the paths for the `base' and `config/<system>' directories;
+# least the paths for the `base' and `builds/<system>' directories;
 # debug/optimization/warning flags + ansi compliance if needed.
 #
 FT_CFLAGS  = $(CFLAGS) $(INCLUDE_FLAGS)
@@ -131,7 +131,7 @@ FT_COMPILE = $(CC) $(ANSIFLAGS) $(FT_CFLAGS)
 
 # Include the `modules' rules file.
 #
-include $(TOP)/config/modules.mk
+include $(TOP)/builds/modules.mk
 
 
 # Initialize the list of objects.

@@ -19,14 +19,9 @@ T1_DIR  := $(SRC_)type1
 T1_DIR_ := $(T1_DIR)$(SEP)
 
 
-# additional include flags used when compiling the driver
-#
-T1_INCLUDE := $(T1_DIR)
-
 # compilation flags for the driver
 #
-T1_CFLAGS  := $(T1_INCLUDE:%=$I%)
-T1_COMPILE := $(FT_COMPILE) $(T1_CFLAGS)
+T1_COMPILE := $(FT_COMPILE)
 
 
 # Type1 driver sources (i.e., C files)

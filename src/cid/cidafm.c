@@ -15,8 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
+#ifdef FT_FLAT_COMPILE
+#include "cidafm.h"
+#else
+#include <cid/cidafm.h>
+#endif
 
-#include <cidafm.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/t1errors.h>
