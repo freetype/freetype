@@ -61,7 +61,7 @@
           load_flags |= FT_LOAD_MONOCHROME;
           
         /* disable embedded bitmaps loading if necessary */
-        if ( load_flags & ftc_image_flag_no_sbits )
+        if ( image_type & ftc_image_flag_no_sbits )
           load_flags |= FT_LOAD_NO_BITMAP;
       }
       else if ( FTC_IMAGE_FORMAT( image_type ) == ftc_image_format_outline )
