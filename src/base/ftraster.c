@@ -150,6 +150,46 @@
 /* #define FT_RASTER_LITTLE_ENDIAN */
 /* #define FT_RASTER_BIG_ENDIAN    */
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* FT_RASTER_CONSTANT_PRECISION                                          */
+  /*                                                                       */
+  /*   Define this configuration macro if you want to use a constant       */
+  /*   precision for the internal sub-pixel coordinates. Otherwise, the    */
+  /*   precision is either 64 or 1024 units per pixel, depending on the    */
+  /*   outline's "high_precision" flag..                                   */
+  /*                                                                       */
+  /*   This results in a speed boost, but the macro can be undefined if    */
+  /*   it results in rendering errors (mainly changed drop-outs)..         */
+  /*                                                                       */
+#define FT_RASTER_CONSTANT_PRECISION
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* FT_PRECISION_BITS                                                     */
+  /*                                                                       */
+  /*   When the macro FT_RASTER_CONSTANT_PRECISION is defined, this        */
+  /*   constant holds the number of bits used for the internal sub-pixels  */
+  /*                                                                       */
+  /*   This number should be at least 6, but use at least 8 if you         */
+  /*   intend to generate small glyph images (use 6 for a printer, for     */
+  /*   example..)                                                          */
+  /*                                                                       */
+#define FT_PRECISION_BITS 8
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* FT_DYNAMIC_BEZIER_STEPS                                               */
+  /*                                                                       */
+  /*   Set this macro to enable the bezier decomposition to be             */
+  /*   dynamically computed. This is interesting when the precision is     */
+  /*   constant, as it speeds things a bit while keeping a very good       */
+  /*   accuracy on the bezier intersections..                              */
+  /*                                                                       */
+#define FT_DYNAMIC_BEZIER_STEPS
+
 
 #else /* _STANDALONE_ */
 
@@ -183,6 +223,9 @@
 #define FT_RASTER_BIG_ENDIAN
 #endif
 
+#define FT_RASTER_CONSTANT_PRECISION
+#define FT_DYNAMIC_BEZIER_STEPS
+#define FT_PRECISION_BITS    8
 
 #endif /* _STANDALONE_ */
 
@@ -262,16 +305,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* For anti-aliasing modes, we use a 2 or 4 lines intermediate bitmap    */
-  /* which is filtered repeatedly to render each pixmap row.  The          */
-  /* following macro defines this buffer's size in bytes (which is part of */
-  /* raster objects).                                                      */
-  /*                                                                       */
-#define ANTI_ALIAS_BUFFER_SIZE  2048
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* Error codes returned by the scan-line converter/raster.               */
   /*                                                                       */
 #define ErrRaster_Ok                     0
@@ -332,7 +365,7 @@
   /* 26.6 format (i.e, 6 bits for the fractional part), but hackers are    */
   /* free to experiment with different values.                             */
   /*                                                                       */
-#define Pixel_Bits  6
+#define INPUT_BITS  6
 
 
   /*************************************************************************/
@@ -356,11 +389,9 @@
   /*                                                                       */
   /* A pointer to an unsigned char.                                        */
   /*                                                                       */
-  typedef unsigned char*  PByte;
+  typedef unsigned char Byte, *PByte;
+  typedef int           TResult;
 
-  typedef char  TResult;
-
-  typedef unsigned char   Byte;
 
   /*************************************************************************/
   /*                                                                       */
@@ -477,18 +508,38 @@
   } Raster_Render;
 
 
+#ifdef FT_RASTER_CONSTANT_PRECISION
+
+  #define PRECISION_BITS    FT_PRECISION_BITS
+  #define PRECISION         (1 << PRECISION_BITS)
+  #define PRECISION_MASK    (-1L << PRECISION_BITS)
+  #define PRECISION_HALF    (PRECISION >> 1)
+  #define PRECISION_JITTER  (PRECISION >> 5)
+  #define PRECISION_STEP    PRECISION_HALF
+
+#else
+
+  #define PRECISION_BITS    ras.precision_bits
+  #define PRECISION         ras.precision
+  #define PRECISION_MASK    ras.precision_mask
+  #define PRECISION_HALF    ras.precision_half
+  #define PRECISION_JITTER  ras.precision_jitter
+  #define PRECISION_STEP    ras.precision_step
+
+#endif
+
   /*************************************************************************/
   /*                                                                       */
   /* Compute lowest integer coordinate below a given value.                */
   /*                                                                       */
-#define FLOOR( x )  ( (x) & ras.precision_mask )
+#define FLOOR( x )  ( (x) & PRECISION_MASK )
 
 
   /*************************************************************************/
   /*                                                                       */
   /* Compute highest integer coordinate above a given value.               */
   /*                                                                       */
-#define CEILING( x )  ( ((x) + ras.precision - 1) & ras.precision_mask )
+#define CEILING( x )  ( ((x) + PRECISION - 1) & PRECISION_MASK )
 
 
   /*************************************************************************/
@@ -496,14 +547,14 @@
   /* Get integer coordinate of a given 26.6 or 22.10 `x' coordinate -- no  */
   /* rounding.                                                             */
   /*                                                                       */
-#define TRUNC( x )  ( (signed long)(x) >> ras.precision_bits )
+#define TRUNC( x )  ( (signed long)(x) >> PRECISION_BITS )
 
 
   /*************************************************************************/
   /*                                                                       */
   /* Get the fractional part of a given coordinate.                        */
   /*                                                                       */
-#define FRAC( x )  ( (x) & (ras.precision - 1) )
+#define FRAC( x )  ( (x) & (PRECISION-1) )
 
 
   /*************************************************************************/
@@ -560,6 +611,7 @@
 
     int       error;
 
+#ifndef FT_RASTER_CONSTANT_PRECISION
     int       precision_bits;       /* precision related variables */
     int       precision;
     int       precision_half;
@@ -567,6 +619,7 @@
     int       precision_shift;
     int       precision_step;
     int       precision_jitter;
+#endif
 
     FT_Outline*  outline;
 
@@ -595,9 +648,6 @@
     int       trace_pix;            /* current offset in target pixmap    */
     int       trace_incr;           /* sweep's increment in target bitmap */
 
-    int       gray_min_x;           /* current min x during gray rendering */
-    int       gray_max_x;           /* current max x during gray rendering */
-
     /* dispatch variables */
 
     Raster_Render     render;
@@ -624,31 +674,6 @@
     int       band_top;         /* band stack top                  */
 
     TPoint    arcs[2 * MaxBezier + 1];  /* The Bezier stack */
-
-#if defined( FT_RASTER_OPTION_ANTI_ALIAS )
-
-    long      grays[20];        /* Palette of gray levels used for render */
-
-    int       gray_width;       /* length in bytes of the monochrome       */
-                                /* intermediate scanline of gray_lines.    */
-                                /* Each gray pixel takes 2 or 4 bits long  */
-
-                        /* The gray_lines must hold 2 lines, thus with size */
-                        /* in bytes of at least `gray_width*2'              */
-
-    int       grays_count;      /* number of entries in the palette */
-
-    char      gray_lines[ANTI_ALIAS_BUFFER_SIZE];
-                                /* Intermediate table used to render the   */
-                                /* graylevels pixmaps.                     */
-                                /* gray_lines is a buffer holding 2 or 4   */
-                                /* monochrome scanlines                    */
-
-    int       count_table[256];    /* Look-up table used to quickly count  */
-                                   /* set bits in several gray 2x2 cells   */
-                                   /* at once.                             */
-
-#endif /* FT_RASTER_OPTION_ANTI_ALIAS */
   };
 
 
@@ -688,18 +713,18 @@
     case FT_Flow_Up:
       o = Vio_ScanLineWidth *
          ( ras.cursor - ras.cur_prof->offset + ras.cur_prof->start ) +
-         ( x / (ras.precision * 8) );
+         ( x / (PRECISION * 8) );
       break;
 
     case FT_Flow_Down:
       o = Vio_ScanLineWidth *
          ( ras.cur_prof->start - ras.cursor + ras.cur_prof->offset ) +
-         ( x / (ras.precision * 8) );
+         ( x / (PRECISION * 8) );
       break;
     }
 
     if ( o > 0 )
-      Vio[o] |= (unsigned)0x80 >> ( (x/ras.precision) & 7 );
+      Vio[o] |= (unsigned)0x80 >> ( (x/PRECISION) & 7 );
   }
 
 
@@ -728,6 +753,10 @@
   static
   void  Set_High_Precision( RAS_ARG_  char  High )
   {
+#ifdef FT_RASTER_CONSTANT_PRECISION
+    (void)High;
+    (void)&ras;
+#else
     if ( High )
     {
       ras.precision_bits   = 10;
@@ -741,10 +770,11 @@
       ras.precision_jitter = 2;
     }
 
-    ras.precision       = 1 << ras.precision_bits;
+    ras.precision       = 1L << ras.precision_bits;
     ras.precision_half  = ras.precision / 2;
-    ras.precision_shift = ras.precision_bits - Pixel_Bits;
+    ras.precision_shift = ras.precision_bits - INPUT_BITS;
     ras.precision_mask  = -ras.precision;
+#endif
   }
 
   /*************************************************************************/
@@ -1164,7 +1194,7 @@
       if ( e1 == e2 ) goto Exit;
       else
       {
-        x1 += FMulDiv( Dx, ras.precision - f1, Dy );
+        x1 += FMulDiv( Dx, PRECISION - f1, Dy );
         e1 += 1;
       }
     }
@@ -1194,7 +1224,7 @@
 
     /* compute decision variables and push the intersections on top */
     /* of the render pool                                           */
-    Dx <<= ras.precision_bits;
+    Dx <<= PRECISION_BITS;
     Ix   = Dx / Dy;
     Rx   = Dx % Dy;
     if (Rx < 0)
@@ -1276,6 +1306,73 @@
  /* A function type describing the functions used to split bezier arcs */
   typedef  void  (*TSplitter)( TPoint*  base );
 
+#ifdef FT_DYNAMIC_BEZIER_STEPS
+  static
+  TPos  Dynamic_Bezier_Threshold( RAS_ARG_ int degree, TPoint*  arc )
+  {
+    TPos    min_x,  max_x,  min_y, max_y, A, B;
+    TPos    wide_x, wide_y, threshold;
+    TPoint* cur   = arc;
+    TPoint* limit = cur + degree;
+
+    /* first of all, set the threshold to the maximum x or y extent */
+    min_x = max_x = arc[0].x;
+    min_y = max_y = arc[0].y;
+    cur++;
+    for ( ; cur < limit; cur++ )
+    {
+      TPos  x = cur->x;
+      TPos  y = cur->y;
+
+      if ( x < min_x ) min_x = x;
+      if ( x > max_x ) max_x = x;
+
+      if ( y < min_y ) min_y = y;
+      if ( y > max_y ) max_y = y;
+    }
+    wide_x = (max_x - min_x) << 4;
+    wide_y = (max_y - min_y) << 4;
+
+    threshold = wide_x;
+    if (threshold < wide_y) threshold = wide_y;
+
+    /* now compute the second and third order error values */
+    
+    wide_x = arc[0].x + arc[1].x - arc[2].x*2;
+    wide_y = arc[0].y + arc[1].y - arc[2].y*2;
+
+    if (wide_x < 0) wide_x = -wide_x;
+    if (wide_y < 0) wide_y = -wide_y;
+
+    A = wide_x; if ( A < wide_y ) A = wide_y;
+
+    if (degree >= 3)
+    {
+      wide_x = arc[3].x - arc[0].x + 3*(arc[2].x - arc[3].x);
+      wide_y = arc[3].y - arc[0].y + 3*(arc[2].y - arc[3].y);
+
+      if (wide_x < 0) wide_x = -wide_x;
+      if (wide_y < 0) wide_y = -wide_y;
+
+      B = wide_x; if ( B < wide_y ) B = wide_y;
+    }
+    else
+      B = 0;
+
+    while ( A > 0 || B > 0 )
+    {
+      threshold >>= 1;
+      A         >>= 2;
+      B         >>= 3;
+    }
+
+    if (threshold < PRECISION_STEP)
+      threshold = PRECISION_STEP;
+
+    return threshold;
+  }
+#endif
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1299,7 +1396,7 @@
                                TPos       miny,
                                TPos       maxy )
   {
-    TPos  y1, y2, e, e2, e0;
+    TPos  y1, y2, e, e2, e0, threshold;
     int   f1;
 
     TPoint*  arc;
@@ -1345,7 +1442,7 @@
 
         DEBUG_PSET;
 
-        e += ras.precision; /* go to next scanline */
+        e += PRECISION; /* go to next scanline */
       }
     }
 
@@ -1368,6 +1465,13 @@
       return FAILURE;
     }
 
+#ifdef FT_DYNAMIC_BEZIER_STEPS
+    /* compute dynamic bezier step threshold */
+    threshold = Dynamic_Bezier_Threshold( RAS_VAR_ degree, arc );
+#else
+    threshold = PRECISION_STEP;
+#endif
+
     start_arc = arc;
 
     /* loop while there is still an arc on the bezier stack */
@@ -1382,7 +1486,7 @@
       {
         y1 = arc[degree].y;  /* start y of top-most arc */
 
-        if ( y2 - y1 >= ras.precision_step )
+        if ( y2 >= e + PRECISION || y2 - y1 >= threshold )
         {
           /* if the arc's height is too great, split it */
           splitter( arc );
@@ -1400,7 +1504,7 @@
           DEBUG_PSET;
 
           arc -= degree;         /* pop the arc         */
-          e   += ras.precision;  /* go to next scanline */
+          e   += PRECISION;  /* go to next scanline */
         }
       }
       else
@@ -1412,7 +1516,7 @@
 
           DEBUG_PSET;
 
-          e += ras.precision; /* go to next scanline */
+          e += PRECISION; /* go to next scanline */
         }
         arc -= degree;        /* pop the arc */
       }
@@ -1423,7 +1527,6 @@
     ras.arc   -= degree;
     return SUCCESS;
   }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -1493,14 +1596,14 @@
 
     base[4].x = base[2].x;
     b = base[1].x;
-    a = base[3].x = ( base[2].x + b )/2;
-    b = base[1].x = ( base[0].x + b )/2;
-    base[2].x = ( a + b ) / 2;
+    a = base[3].x = ( base[2].x + b + 1 ) >> 1;
+    b = base[1].x = ( base[0].x + b + 1 ) >> 1;
+    base[2].x = ( a + b + 1 ) >> 1;
 
     base[4].y = base[2].y;
     b = base[1].y;
-    a = base[3].y = ( base[2].y + b )/2;
-    b = base[1].y = ( base[0].y + b )/2;
+    a = base[3].y = ( base[2].y + b + 1 ) >> 1;
+    b = base[1].y = ( base[0].y + b + 1 ) >> 1;
     base[2].y = ( a + b ) / 2;
   }
 
@@ -1583,22 +1686,22 @@
     base[6].x = base[3].x;
     c = base[1].x;
     d = base[2].x;
-    base[1].x = a = ( base[0].x + c ) / 2;
-    base[5].x = b = ( base[3].x + d ) / 2;
-    c = ( c + d ) / 2;
-    base[2].x = a = ( a + c ) / 2;
-    base[4].x = b = ( b + c ) / 2;
-    base[3].x = ( a + b ) / 2;
+    base[1].x = a = ( base[0].x + c + 1 ) >> 1;
+    base[5].x = b = ( base[3].x + d + 1 ) >> 1;
+    c = ( c + d + 1 ) >> 1;
+    base[2].x = a = ( a + c + 1 ) >> 1;
+    base[4].x = b = ( b + c + 1 ) >> 1;
+    base[3].x = ( a + b + 1 ) >> 1;
 
     base[6].y = base[3].y;
     c = base[1].y;
     d = base[2].y;
-    base[1].y = a = ( base[0].y + c ) / 2;
-    base[5].y = b = ( base[3].y + d ) / 2;
-    c = ( c + d ) / 2;
-    base[2].y = a = ( a + c ) / 2;
-    base[4].y = b = ( b + c ) / 2;
-    base[3].y = ( a + b ) / 2;
+    base[1].y = a = ( base[0].y + c + 1 ) >> 1;
+    base[5].y = b = ( base[3].y + d + 1 ) >> 1;
+    c = ( c + d + 1 ) >> 1;
+    base[2].y = a = ( a + c + 1 ) >> 1;
+    base[4].y = b = ( b + c + 1 ) >> 1;
+    base[3].y = ( a + b + 1 ) >> 1;
   }
 
 
@@ -1634,7 +1737,6 @@
             TPos  x = SCALED( point->x );       \
             TPos  y = SCALED( point->y );       \
                                                 \
-                                                \
             if ( ras.flipped )                  \
             {                                   \
               _arc.x = y;                       \
@@ -1649,7 +1751,6 @@
 
     TPoint*  arc;
     ras.arc = arc = ras.arcs;
-
 
     arc[3] = ras.last;
     STORE( arc[2], p2 );
@@ -1677,7 +1778,6 @@
   TResult  Check_Contour( RAS_ARG )
   {
     PProfile  lastProfile;
-
 
     /* Sometimes, the first and last profile in a contour join on      */
     /* an integer scan-line; we must then remove the last intersection */
@@ -2137,35 +2237,10 @@
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
 
-#if 0
-  typedef int  (*FTRasterMoveTo_Func)( FT_Vector*  to,
-                                       void*       user );
 
-  typedef int  (*FTRasterLineTo_Func)( FT_Vector*  to,
-                                       void*       user );
-
-  typedef int  (*FTRasterConicTo_Func)( FT_Vector*  control,
-                                        FT_Vector*  to,
-                                        void*       user );
-
-  typedef int  (*FTRasterCubicTo_Func)( FT_Vector*  control1,
-                                        FT_Vector*  control2,
-                                        FT_Vector*  to,
-                                        void*       user );
-
-  typedef struct  FT_Raster_Funcs_
-  {
-    FTRasterMoveTo_Func   move_to;
-    FTRasterLineTo_Func   line_to;
-    FTRasterConicTo_Func  conic_to;
-    FTRasterCubicTo_Func  cubic_to;
-
-  } FT_Raster_Funcs;
-#endif
-
-  int  FT_Decompose_Outline( FT_Outline*       outline,
-                             FT_Raster_Funcs*  interface,
-                             void*             user )
+  int  FT_Decompose_Outline( FT_Outline*        outline,
+                             FT_Outline_Funcs*  interface,
+                             void*              user )
   {
     typedef enum _phases
     {
@@ -2627,9 +2702,6 @@
 
     if (pitch > 0)
       ras.trace_bit += pitch*(ras.target.rows-1);
-
-    ras.gray_min_x = 0;
-    ras.gray_max_x = 0;
   }
 
 
@@ -2657,13 +2729,11 @@
     Byte   f1, f2;
     PByte  target;
 
-
     UNUSED( y );
 
     /* Drop-out control */
-
     e1 = TRUNC( CEILING( x1 ) );
-    if ( x2 - x1 - ras.precision <= ras.precision_jitter )
+    if ( x2 - x1 - PRECISION <= PRECISION_JITTER )
       e2 = e1;
     else
       e2 = TRUNC( FLOOR( x2 ) );
@@ -2678,11 +2748,6 @@
 
       f1 =  ((unsigned char)0xFF >> (e1 & 7));
       f2 = ~((unsigned char)0x7F >> (e2 & 7));
-
-#ifdef FT_RASTER_ANY_ENDIAN
-      if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
-      if ( ras.gray_max_x < c2 ) ras.gray_max_x = c2;
-#endif
 
       target = ras.bit_buffer + ras.trace_bit + c1;
       c2 -= c1;
@@ -2758,14 +2823,7 @@
     UNUSED( y );
 
     if ( x >= 0 && x < ras.bit_width )
-    {
-      int c1 = x >> 3;
-
-      if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
-      if ( ras.gray_max_x < c1 ) ras.gray_max_x = c1;
-
-      ras.bit_buffer[ras.trace_bit+c1] |= (char)(0x80 >> (x & 7));
-    }
+      ras.bit_buffer[ras.trace_bit+(x >> 3)] |= (char)(0x80 >> (x & 7));
   }
 
 
@@ -2858,7 +2916,7 @@
     UNUSED( y );
 
     /* During the horizontal sweep, we only take care of drop-outs */
-    if ( x2 - x1 < ras.precision )
+    if ( x2 - x1 < PRECISION )
     {
       e1 = CEILING( x1 );
       e2 = FLOOR( x2 );
@@ -3012,7 +3070,7 @@
 
     UNUSED( max );
 
-    pitch          = ras.target.pitch;
+    pitch = ras.target.pitch;
 
     /* start from the bottom line, going up */
     ras.trace_incr = -pitch;
@@ -3043,19 +3101,19 @@
                                            TPos   x2 )
   {
     TPos   e1, e2;
-    int    shift = ras.precision_bits - 6;
+    int    shift = PRECISION_BITS - 6;
     PByte  target;
 
     UNUSED( y );
 
-    x1 += ras.precision_half;
-    x2 += ras.precision_half;
+    x1 += PRECISION_HALF;
+    x2 += PRECISION_HALF;
 
 #ifdef FT_RASTER_OPTION_CONTRAST
-    if ( x2-x1 < ras.precision )
+    if ( x2-x1 < PRECISION )
     {
-	  x1 = ((x1+x2) >> 1) - ras.precision_half;
-	  x2 = x1 + ras.precision;
+	  x1 = ((x1+x2) >> 1) - PRECISION_HALF;
+	  x2 = x1 + PRECISION;
 	}
 #endif
 
@@ -3256,22 +3314,21 @@
                                              TPos   x2 )
   {
     TPos   e1, e2;
-    int    shift = ras.precision_bits - 6;
+    int    shift = PRECISION_BITS - 6;
     int    incr;
     PByte  bits;
     Byte   b;
 
-
     UNUSED( y );
 
-    x1 += ras.precision_half;
-    x2 += ras.precision_half;
+    x1 += PRECISION_HALF;
+    x2 += PRECISION_HALF;
 
 #ifdef FT_RASTER_OPTION_CONTRAST
-    if (x2-x1 < ras.precision)
+    if (x2-x1 < PRECISION)
 	{
-	  x1 = ((x1+x2) >> 1) - ras.precision_half;
-	  x2 = x1 + ras.precision;
+	  x1 = ((x1+x2) >> 1) - PRECISION_HALF;
+	  x2 = x1 + PRECISION;
 	}
 #endif
 
@@ -3308,10 +3365,9 @@
         b = bits[0];
         if (b < 127) b++;
         b = (Byte)((64-x1) + (b >> 1));
-        /* if (b < 32) b = 32; */
         bits[0] = b;
 
-        if ( ras.precision > 64 )
+        if ( e2 < 24 )
         {
           e2--;
           while (e2 > 0)
@@ -3334,7 +3390,6 @@
           b     = bits[0];
           if (b < 127) b++;
           b     = (Byte)(x2 + (b >> 1));
-          /* if (b < 32) b = 32; */
           bits[0] = b;
         }
       }
@@ -3343,7 +3398,6 @@
         b = bits[0];
         if (b < 127) b++;
         b = (Byte)((b >> 1)+(x2-x1));
-        /* if (b < 32) b = 32; */
         bits[0] = b;
       }
     }
@@ -3601,7 +3655,6 @@
       {
         PProfile  next = prof->link;
 
-
         prof->countL -= y_height;
         if ( prof->countL == 0 )
         {
@@ -3645,7 +3698,6 @@
         {
           PProfile  next = prof->link;
 
-
           window += prof->flow;
 
           if ( window == 0 )
@@ -3657,20 +3709,18 @@
             {
               TPos  xs = x1;
 
-
               x1 = x2;
               x2 = xs;
             }
 
-            if ( x2 - x1 <= ras.precision && ras.dropout_mode )
+            if ( x2 - x1 <= PRECISION && ras.dropout_mode )
             {
               e1 = CEILING( x1 );
               e2 = FLOOR( x2 );
 
-              if ( e1 > e2 || e2 == e1 + ras.precision )
+              if ( e1 > e2 || e2 == e1 + PRECISION )
               {
                 /* a drop out was detected */
-
                 left->X = x1;
                 prof->X = x2;
 
@@ -3682,8 +3732,7 @@
               }
             }
 
-            PTRACE2(( "drawing span ( y=%d, x1=%d, x2=%d )",
-                      y, x1, x2 ));
+            PTRACE2(( "drawing span ( y=%d, x1=%d, x2=%d )", y, x1, x2 ));
             ras.render.span( RAS_VAR_  y, x1, x2 );
 
    Skip_To_Next:
@@ -3715,7 +3764,6 @@
       {
         PProfile  prof, next;
 
-
         prof = draw;
         while ( prof )
         {
@@ -3732,8 +3780,8 @@
     /* for gray-scaling, flushes the bitmap scanline cache */
     while ( y <= max_Y )
     {
-        ras.render.step( RAS_VAR );
-        y++;
+      ras.render.step( RAS_VAR );
+      y++;
     }
 
     return SUCCESS;
@@ -3747,7 +3795,6 @@ Scan_DropOuts :
     {
       TPos      e1,   e2;
       PProfile  left, right;
-
 
       while ( P_Left->countL != 1 )
         P_Left = P_Left->link;
@@ -3773,7 +3820,7 @@ Scan_DropOuts :
 
       if ( e1 > e2 )
       {
-        if ( e1 == e2 + ras.precision )
+        if ( e1 == e2 + PRECISION )
         {
           switch ( ras.dropout_mode )
           {
@@ -3874,9 +3921,8 @@ Scan_DropOuts :
 
     while ( band >= ras.band_stack )
     {
-      ras.maxY = ((long)band[0].y_max << (ras.scale_shift+6)) - 1;
-
-      ras.minY = (long)band[0].y_min << (ras.scale_shift+6);
+      ras.maxY = ((long)band[0].y_max << PRECISION_BITS) - 1;
+      ras.minY =  (long)band[0].y_min << PRECISION_BITS;
 
       ras.cursor = ras.pool;
       ras.error  = 0;
@@ -3922,9 +3968,11 @@ Scan_DropOuts :
       else
       {
         PTRACE2(( "conversion succeeded, span drawing sweep\n" ));
+#if 1  /* for debugging */
         if ( ras.start_prof )
           if ( Draw_Sweep( RAS_VAR ) )
             return ras.error;
+#endif
         band --;
       }
     }
@@ -3944,8 +3992,8 @@ Scan_DropOuts :
     if ( ras.target.width > ABS(ras.target.pitch)*8 )
       return ErrRaster_Invalid_Map;
 
-    ras.scale_shift  = ras.precision_bits - 6;
-    ras.scale_delta  = ras.precision_half;
+    ras.scale_shift  = PRECISION_BITS - INPUT_BITS;
+    ras.scale_delta  = PRECISION_HALF;
 
     /* Vertical Sweep */
     ras.band_top            = 0;
@@ -3992,8 +4040,8 @@ Scan_DropOuts :
     ras.band_stack[0].y_min = 0;
     ras.band_stack[0].y_max = ras.target.rows;
 
-    ras.scale_shift  = (ras.precision_bits-6);
-    ras.scale_delta  = ras.precision_half;
+    ras.scale_shift  = PRECISION_BITS - INPUT_BITS;
+    ras.scale_delta  = PRECISION_HALF;
     ras.dropout_mode = 2;
 
     ras.render     = vertical_render_gray;
@@ -4080,128 +4128,13 @@ Scan_DropOuts :
 
     switch ( target_map->pixel_mode )
     {
-    case ft_pixel_mode_mono:
-      return Raster_Render1( raster );
-    case ft_pixel_mode_grays:
-      return Raster_Render8( raster );
-
-    default:
-      return ErrRaster_Unimplemented;
+    case ft_pixel_mode_mono:   return Raster_Render1( raster );
+    case ft_pixel_mode_grays:  return Raster_Render8( raster );
+    default:                   return ErrRaster_Unimplemented;
     }
   }
 
 
-#ifdef FT_RASTER_OPTION_ANTI_ALIAS
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Reset_Palette_5                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Resets lookup table when the 5-gray-levels palette changes.        */
-  /*                                                                       */
-  static
-  void  Reset_Palette_5( RAS_ARG )
-  {
-
-
-#ifdef FT_RASTER_ANY_ENDIAN
-
-
-    int  i, j, l, c;
-
-
-    for ( i = 0; i < 256; i++ )
-    {
-      l = 0;
-      j = i;
-
-      for ( c = 0; c < 4; c++ )
-      {
-        l <<= 4;
-
-        if ( j & 0x80 ) l++;
-        if ( j & 0x40 ) l++;
-
-        j = ( j << 2 ) & 0xFF;
-      }
-
-      ras.count_table[i] = l;
-    }
-
-
-#else /* FT_RASTER_ANY_ENDIAN */
-
-
-    int  i;
-
-
-    for ( i = 0; i < 256; i++ )
-    {
-      int  cnt1, cnt2;
-
-      cnt1 = ((i & 128) >> 7) +
-             ((i & 64)  >> 6) +
-             ((i & 8)   >> 3) +
-             ((i & 4)   >> 2);
-
-      cnt2 = ((i & 32) >> 5) +
-             ((i & 16) >> 4) +
-             ((i & 2)  >> 1) +
-              (i & 1);
-
-    /*                                                                 */
-    /* Note that when the endianess isn't specified through one of the */
-    /* configuration, we use the big-endian storage in `count_table'   */
-    /*                                                                 */
-
-#if defined( FT_RASTER_LITTLE_ENDIAN )
-      ras.count_table[i] = (ras.grays[cnt2] << 8) | ras.grays[cnt1];
-#else
-      ras.count_table[i] = (ras.grays[cnt1] << 8) | ras.grays[cnt2];
-#endif
-    }
-
-
-#endif /* FT_RASTER_ANY_ENDIAN */
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Reset_Palette_17                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Resets lookup table when 17-gray-levels palette changes.           */
-  /*                                                                       */
-#ifdef FT_RASTER_ANTI_ALIAS_17
-
-
-  static
-  void  Reset_Palette_17( RAS_ARG )
-  {
-    int  i;
-
-
-    for ( i = 0; i < 256; i++ )
-      ras.count_table[i] = ((i & 128) >> 7) +
-                           ((i &  64) >> 6) +
-                           ((i &   8) >> 3) +
-                           ((i &   4) >> 2) +
-                           ((i &  32) >> 5) +
-                           ((i &  16) >> 4) +
-                           ((i &   2) >> 1) +
-                            (i &   1);
-}
-
-
-#endif /* FT_RASTER_ANTI_ALIAS_17 */
-
-
-#endif /* TT_RASTER_OPTION_ANTI_ALIAS */
 
 
   /*************************************************************************/
@@ -4273,116 +4206,10 @@ Scan_DropOuts :
     raster->pool      = (PPos)pool_base;
     raster->pool_size = raster->pool + pool_size / sizeof ( TPos );
 
-#ifdef FT_RASTER_OPTION_ANTI_ALIAS
-    raster->gray_width = ANTI_ALIAS_BUFFER_SIZE/2;
-    /* clear anti-alias intermediate lines */
-    {
-      char*  p     = raster->gray_lines;
-      char*  limit = p + ANTI_ALIAS_BUFFER_SIZE;
-
-      do *p++ = 0; while ( p < limit );
-    }
-#endif
-
-#if 0
-    /* set the default palette: 5 levels = 0, 1, 2, 3, and 4 */
-    FT_Raster_SetPalette( raster, 5, default_palette );
-#endif
-
     return ErrRaster_Ok;
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Raster_SetPalette                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Sets the pixmap rendering palette.  Anti-aliasing modes are        */
-  /*    implemented/possible, they differ from the number of entries in    */
-  /*    the palette.                                                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    count   :: The number of palette entries.  Valid values are 2, 5,  */
-  /*               and 17, which are the number of intermediate gray       */
-  /*               levels supported.                                       */
-  /*                                                                       */
-  /*    palette :: An array of `count' chars giving the 8-bit palette of   */
-  /*               intermediate `gray' levels for anti-aliased rendering.  */
-  /*                                                                       */
-  /*               In all modes, palette[0] corresponds to the background, */
-  /*               while palette[count-1] to the foreground.  Hence, a     */
-  /*               count of 2 corresponds to no anti-aliasing; a count of  */
-  /*               5 uses 3 intermediate levels between the background and */
-  /*               foreground, while a count of 17 uses 15 of them.        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    An error code, used as a FT_Error by the FreeType library.         */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    By default, a new object uses mode 5, with a palette of 0, 1, 2,   */
-  /*    3, and 4.  You don't need to set the palette if you don't need to  */
-  /*    render pixmaps.                                                    */
-  /*                                                                       */
-  EXPORT_FUNC
-  int   FT_Raster_SetPalette( FT_Raster    raster,
-                              int          count,
-                              const char*  palette )
-  {
-    switch ( count )
-    {
-#ifdef FT_RASTER_OPTION_ANTI_ALIAS
-
-
-      /******************************/
-      /* The case of 17 gray levels */
-      /******************************/
-
-      case 17:
-#ifdef FT_RASTER_ANTI_ALIAS_17
-      {
-        int  n;
-
-
-        raster->grays_count = count;
-        for ( n = 0; n < count; n++ )
-          raster->grays[n] = (unsigned char)palette[n];
-        Reset_Palette_17( RAS_VAR );
-        break;
-      }
-#else
-      return ErrRaster_Unimplemented;
-#endif
-
-      /*****************************/
-      /* The case of 5 gray levels */
-      /*****************************/
-
-      case 5:
-#ifdef FT_RASTER_ANTI_ALIAS_5
-      {
-        int  n;
-
-
-        raster->grays_count = count;
-        for ( n = 0; n < count; n++ )
-          raster->grays[n] = (unsigned char)palette[n];
-        Reset_Palette_5( RAS_VAR );
-        break;
-      }
-#else
-      return ErrRaster_Unimplemented;
-#endif
-
-
-#endif /* FT_RASTER_OPTION_ANTI_ALIAS */
-      default:
-        return ErrRaster_Bad_Palette_Count;
-    }
-
-    return ErrRaster_Ok;
-  }
 
   FT_Raster_Interface  ft_default_raster =
   {
