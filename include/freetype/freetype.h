@@ -167,9 +167,10 @@ FT_BEGIN_HEADER
   /*    FT_Glyph_Metrics                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model the metrics of a single glyph.  Note     */
-  /*    that values are expressed in 26.6 fractional pixel format or in    */
-  /*    font units, depending on context.                                  */
+  /*    A structure used to model the metrics of a single glyph.  The      */
+  /*    values are expressed in 26.6 fractional pixel format; if the flag  */
+  /*    FT_LOAD_NO_SCALE is used, values are returned in font units        */
+  /*    instead.                                                           */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    width        :: The glyph's width.                                 */
@@ -1363,13 +1364,15 @@ FT_BEGIN_HEADER
   /*                         FT_GLYPH_FORMAT_OUTLINE.                      */
   /*                                                                       */
   /*    num_subglyphs     :: The number of subglyphs in a composite glyph. */
-  /*                         This format is only valid for the composite   */
-  /*                         glyph format, that should normally only be    */
-  /*                         loaded with the FT_LOAD_NO_RECURSE flag.      */
+  /*                         This field is only valid for the composite    */
+  /*                         glyph format that should normally only be     */
+  /*                         loaded with the FT_LOAD_NO_RECURSE flag.  For */
+  /*                         now this is internal to FreeType.             */
   /*                                                                       */
   /*    subglyphs         :: An array of subglyph descriptors for          */
   /*                         composite glyphs.  There are `num_subglyphs'  */
-  /*                         elements in there.                            */
+  /*                         elements in there.  Currently internal to     */
+  /*                         FreeType.                                     */
   /*                                                                       */
   /*    control_data      :: Certain font drivers can also return the      */
   /*                         control data for a given glyph image (e.g.    */
