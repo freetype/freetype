@@ -37,6 +37,14 @@ OTL_BEGIN_HEADER
   otl_coverage_validate( OTL_Bytes      table,
                          OTL_Validator  valid );
 
+  /* return first covered glyph */
+  OTL_LOCAL( OTL_UInt )
+  otl_coverage_get_first( OTL_Bytes  table );
+
+  /* return last covered glyph */
+  OTL_LOCAL( OTL_UInt )
+  otl_coverage_get_last( OTL_Bytes  table );
+
   /* return number of covered glyphs */
   OTL_LOCAL( OTL_UInt )
   otl_coverage_get_count( OTL_Bytes  table );
@@ -116,6 +124,8 @@ OTL_BEGIN_HEADER
   otl_lookup_validate( OTL_Bytes          table,
                        OTL_UInt           type_count,
                        OTL_ValidateFunc*  type_funcs,
+                       OTL_UInt           lookup_count,
+                       OTL_UInt           glyph_count,
                        OTL_Validator      valid );
 
   /* return number of sub-tables in a lookup */
@@ -143,6 +153,7 @@ OTL_BEGIN_HEADER
   otl_lookup_list_validate( OTL_Bytes          table,
                             OTL_UInt           type_count,
                             OTL_ValidateFunc*  type_funcs,
+                            OTL_UInt           glyph_count,
                             OTL_Validator      valid );
 
 #if 0

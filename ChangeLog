@@ -1,3 +1,81 @@
+2004-08-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/otlgpos.c (otl_gpos_lookup1_validate,
+	otl_gpos_lookup2_validate, otl_gpos_lookup3_validate,
+	otl_gpos_lookup4_validate, otl_gpos_lookup5_validate,
+	otl_gpos_lookup6_validate, otl_gpos_lookup9_validate,
+	otl_gpos_validate): Update
+	function arguments.
+	(otl_gpos_lookup7_validate, otl_gpos_lookup8_validate): Update
+	function arguments.
+	Handle NULL offsets correctly.
+	Check sequence and lookup indices for format 3.
+	(otl_pos_rule_validate, otl_chain_pos_rule_validate): Add argument
+	to pass lookup count.
+	Check sequence and glyph indices.
+	(otl_gpos_subtable_validate): Update function arguments.
+	Update callers. 
+
+	* src/otlayout/otlgpos.h: Updated.
+
+	* src/otlayout/otlgsub.c (otl_gsub_lookup1_validate,
+	otl_gsub_lookup3_validate, otl_gsub_lookup8_validate): Update
+	function arguments.
+	Add glyph index checks.
+	(otl_sequence_validate, otl_alternate_set_validate,
+	otl_ligature_validate): Add argument to pass glyph count.
+	Update callers.
+	Add glyph index check.
+	(otl_gsub_lookup2_validate, otl_gsub_lookup4_validate): Update
+	function arguments.
+	(otl_ligature_set_validate): Add argument to pass glyph count.
+	Update caller.
+	(otl_sub_class_rule_validate,
+	otl_sub_class_rule_set_validate): Removed.
+	(otl_sub_rule_validate, otl_chain_sub_rule_validate): Add argument
+	to pass lookup count.
+	Update callers.
+	Add lookup index check.
+	(otl_sub_rule_set_validate, otl_chain_sub_rule_set_validate): Add
+	argument to pass lookup count.
+	Update callers.
+	(otl_gsub_lookup5_validate): Update function arguments.
+	Handle NULL offsets correctly.
+	Don't call otl_sub_class_rule_set_validate but
+	otl_sub_rule_set_validate.
+	Check sequence and lookup indices for format 3.
+	(otl_gsub_lookup6_validate): Update function arguments.
+	Handle NULL offsets correctly.
+	Check sequence and lookup indices for format 3.
+	(otl_gsub_lookup7_validate, otl_gsub_validate): Update function
+	arguments.
+
+	* src/otlayout/otlgsub.h: Updated.
+
+	* src/otlayout/otlbase.c (otl_base_validate): Handle NULL offsets
+	correctly.
+
+	* src/otlayout/otlcommn.c (otl_class_definition_validate): Fix
+	compiler warning.
+	(otl_coverage_get_first, otl_coverage_get_last): New functions.
+	(otl_lookup_validate): Add arguments to pass lookup and glyph
+	counts.
+	Update callers.
+	(otl_lookup_list_validate): Add argument to pass glyph count.
+	Update callers.
+
+	* src/otlayout/otlcommn.h: Updated.
+
+	* src/otlayout/otljstf.c (otl_jstf_extender_validate,
+	otl_jstf_max_validate, otl_jstf_script_validate,
+	otl_jstf_priority_validate, otl_jstf_lang_validate): Add parameter
+	to validate glyph indices.
+	Update callers.
+	(otl_jstf_validate): Add parameter which specifies number of glyphs
+	in font.
+
+	* src/otlayout/otljstf.h: Updated.
+
 2004-08-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/otlayout/otlgpos.c (otl_liga_mark2_validate): Add parameter
