@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    CFF_Driver                                                          */
+  /*    CFF_Driver                                                         */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to an OpenType driver object.                             */
@@ -46,7 +46,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    CFF_Size                                                            */
+  /*    CFF_Size                                                           */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to an OpenType size object.                               */
@@ -57,12 +57,12 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    CFF_GlyphSlot                                                       */
+  /*    CFF_GlyphSlot                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to an OpenType glyph slot object.                         */
   /*                                                                       */
-  typedef struct CFF_GlyphSlotRec_
+  typedef struct  CFF_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 
@@ -116,10 +116,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_LOCAL
   FT_Error  CFF_Init_Face( FT_Stream      stream,
-                          CFF_Face        face,
-                          FT_Int         face_index,
-                          FT_Int         num_params,
-                          FT_Parameter*  params );
+                           CFF_Face       face,
+                           FT_Int         face_index,
+                           FT_Int         num_params,
+                           FT_Parameter*  params );
 
   FT_LOCAL
   void  CFF_Done_Face( CFF_Face  face );
