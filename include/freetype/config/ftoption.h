@@ -230,6 +230,20 @@ FT_BEGIN_HEADER
 /* #define  FT_DEBUG_LEVEL_ERROR */
 /* #define  FT_DEBUG_LEVEL_TRACE */
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* Memory Debugging                                                      */
+  /*                                                                       */
+  /*   FreeType now comes with an integrated memory debugger that is       */
+  /*   capable of detecting simple errors like memory leaks or double      */
+  /*   deletes. You should define the FT_DEBUG_MEMORY macro to enable      */
+  /*   it..                                                                */
+  /*                                                                       */
+  /*   beware that when the debugging memory allocator is used, FreeType   */
+  /*   will use a _lot_ more memory. You should always ensure that this    */
+  /*   macro is undefined in release or testing builds..                   */
+  /*                                                                       */
+#define  FT_DEBUG_MEMORY
 
   /*************************************************************************/
   /*                                                                       */
