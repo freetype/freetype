@@ -1,3 +1,8 @@
+2003-11-03  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/*: Add a guard to all public header files which
+	load FT_FREETYPE_H to reject freetype.h from FreeType 1.
+
 2003-11-02  Patrick Welche  <prlw1@newn.cam.ac.uk>
 
 	* builds/unix/freetype2.m4, builds/unix/ft-munmap.m4: Protect
