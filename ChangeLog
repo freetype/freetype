@@ -1,3 +1,8 @@
+2000-03-24  David Turner  <david.turner@freetype.org>
+
+	* Version 2.0.2 released.
+	=========================
+
 2001-03-20  Werner Lemberg  <wl@gnu.org>
 
 	* builds/win32/detekt.mk: Fix .PHONY target for Intel compiler.
