@@ -1,10 +1,15 @@
+2003-12-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftcsbits.c (FTC_SNode_Weight):
+	s/FTC_SBIT_ITEM_PER_NODE/FTC_SBIT_ITEMS_PER_NODE/.
+
 2003-12-24  David Turner  <david@freetype.org>
 
-        * fixed compilation problems in the cache sub-system
+	* Fixed compilation problems in the cache sub-system.
 
-        * partial updates to src/autofit
+	* Partial updates to src/autofit.
 
-        * MERRY X-MAS !
+	* Jamfile (FT2_COMPONENTS): Add autofit module.
 
 2003-12-23  Werner Lemberg  <wl@gnu.org>
 
@@ -20,8 +25,8 @@
 	`(x) & ~63' instead!
 	Updated all related code.
 
-        * include/freetype/ftstroke.h, src/base/ftstroke.c: added support
-        for extraction of "inside" and "outside" borders
+	* include/freetype/ftstroke.h, src/base/ftstroke.c: Added support
+	for extraction of "inside" and "outside" borders.
 
 2003-12-22  Werner Lemberg  <wl@gnu.org>
 
