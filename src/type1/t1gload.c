@@ -103,16 +103,20 @@
     decoder.subrs     = type1->subrs;
     decoder.subrs_len = type1->subrs_len;
 
+    *max_advance = 0;
+
     /* for each glyph, parse the glyph charstring and extract */
     /* the advance width                                      */
     for ( glyph_index = 0; glyph_index < type1->num_glyphs; glyph_index++ )
     {
       /* now get load the unscaled outline */
       error = T1_Parse_Glyph( &decoder, glyph_index );
+      if ( glyph_index == 0 || decoder.builder.advance.x > *max_advance )
+        *max_advance = decoder.builder.advance.x;
+        
       /* ignore the error if one occured - skip to next glyph */
     }
 
-    *max_advance = decoder.builder.advance.x;
     return T1_Err_Ok;
   }
 
