@@ -29,13 +29,9 @@
 
 #undef __FTERRORS_H__
 
-#define FT_ERRORDEF_( e, v, s )   \
-          FT_ERRORDEF( CFF_Err_ ## e, v + FT_Mod_Err_CFF, s )
-#define FT_NOERRORDEF_( e, v, s ) \
-          FT_ERRORDEF( CFF_Err_ ## e, v, s )
+#define FT_ERR_PREFIX     CFF_Err_
+#define FT_ERR_BASE       FT_Mod_Err_CFF
 
-#define FT_ERROR_START_LIST       enum {
-#define FT_ERROR_END_LIST         CFF_Err_Max };
 
 #include FT_ERRORS_H
 

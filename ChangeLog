@@ -1,3 +1,15 @@
+2001-06-19  David Turner  <david@freetype.org>
+
+        * include/freetype/fterrors.h: updated some of the error macros to
+        simplify Werner's latest tricks :o)
+        
+        * include/freetype/freetype.h (FT_New_Memory_Face): updated docs
+        
+        Removing _lots_ of compiler warnings when the most pedantic warning
+        levels of Visual C++ and Borland C++ are used. Too many files to be
+        listed here.., but FT2 now compiles without warnings with VC++ and
+        the "/W4" warning level (lint-style)
+
 2001-06-18  Werner Lemberg  <wl@gnu.org>
 
 	Minor cleanups to remove compiler warnings.

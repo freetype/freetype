@@ -105,7 +105,7 @@
     for ( height = target->rows; height > 0; height-- )
     {
       FT_Byte*  cur   = line_buff;      /* current write cursor          */
-      FT_UInt   count = line_bits;      /* # of bits to extract per line */
+      FT_Int    count = line_bits;      /* # of bits to extract per line */
       FT_Byte   shift = (FT_Byte)(x_offset & 7); /* current write shift  */
       FT_Byte   space = (FT_Byte)(8 - shift);
 
@@ -156,7 +156,7 @@
 
 
         /* ensure that there are at least `count' bits in the accumulator */
-        if ( loaded < count )
+        if ( (FT_Int)loaded < count )
         {
           acc    |= (FT_UShort)*source++ << ( 8 - loaded );
           loaded += 8;

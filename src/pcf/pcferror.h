@@ -29,13 +29,8 @@
 
 #undef __FTERRORS_H__
 
-#define FT_ERRORDEF_( e, v, s )   \
-          FT_ERRORDEF( PCF_Err_ ## e, v + FT_Mod_Err_PCF, s )
-#define FT_NOERRORDEF_( e, v, s ) \
-          FT_ERRORDEF( PCF_Err_ ## e, v, s )
-
-#define FT_ERROR_START_LIST       enum {
-#define FT_ERROR_END_LIST         PCF_Err_Max };
+#define FT_ERR_PREFIX     PCF_Err_
+#define FT_ERR_BASE       FT_Mod_Err_PCF
 
 #include FT_ERRORS_H
 
