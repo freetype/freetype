@@ -151,7 +151,7 @@
     parser->single_block = 0;
 
     /* check the header format */
-    error = check_type1_format( stream, "%!PS-AdobeFont-1", 16 );
+    error = check_type1_format( stream, "%!PS-AdobeFont", 14 );
     if ( error )
     {
       if ( error != T1_Err_Unknown_File_Format )
