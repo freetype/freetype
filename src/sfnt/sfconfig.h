@@ -33,7 +33,7 @@
   /* Define TT_CONFIG_OPTION_EMBEDDED_BITMAPS if you want to support       */
   /* embedded bitmaps in the TrueType/OpenType driver.                     */
   /*                                                                       */
-#define TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#define  TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
 
   /*************************************************************************/
@@ -49,7 +49,7 @@
   /* Otherwise, the driver will provide its own set of glyph names to      */
   /* be built without the "psnames" module.                                */
   /*                                                                       */
-#define TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+#define  TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
 
 
