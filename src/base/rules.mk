@@ -55,7 +55,8 @@ BASE_H := $(BASE_)ftcalc.h    \
 # symbols is used by the application.
 #
 BASE_EXT_SRC := $(BASE_)ftraster.c \
-                $(BASE_)ftglyph.c
+                $(BASE_)ftglyph.c  \
+                $(BASE_)ftgrays.c
 
 # Base layer extensions headers
 #
