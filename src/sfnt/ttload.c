@@ -184,17 +184,17 @@
     const FT_Frame_Field  ttc_header_fields[] =
     {
       FT_FRAME_START( 8 ),
-        FT_FRAME_LONG( TTC_Header, version  ),
-        FT_FRAME_LONG( TTC_Header, DirCount ),
+        FT_FRAME_LONG( TTC_Header, version ),
+        FT_FRAME_LONG( TTC_Header, count   ),
       FT_FRAME_END };
 
 
     FT_TRACE2(( "TT_Load_SFNT_Header: %08p, %ld\n",
                 face, face_index ));
 
-    face->ttc_header.Tag      = 0;
+    face->ttc_header.tag      = 0;
     face->ttc_header.version  = 0;
-    face->ttc_header.DirCount = 0;
+    face->ttc_header.count    = 0;
 
     face->num_tables = 0;
 
@@ -217,27 +217,27 @@
         goto Exit;
 
       /* now read the offsets of each font in the file */
-      if ( ALLOC_ARRAY( face->ttc_header.TableDirectory,
-                        face->ttc_header.DirCount,
-                        FT_ULong )                        ||
-           ACCESS_Frame( face->ttc_header.DirCount * 4L ) )
+      if ( ALLOC_ARRAY( face->ttc_header.offsets,
+                        face->ttc_header.count,
+                        FT_ULong )                     ||
+           ACCESS_Frame( face->ttc_header.count * 4L ) )
         goto Exit;
 
-      for ( n = 0; n < face->ttc_header.DirCount; n++ )
-        face->ttc_header.TableDirectory[n] = GET_ULong();
+      for ( n = 0; n < face->ttc_header.count; n++ )
+        face->ttc_header.offsets[n] = GET_ULong();
 
       FORGET_Frame();
 
       /* check face index */
-      if ( face_index >= face->ttc_header.DirCount )
+      if ( face_index >= face->ttc_header.count )
       {
         error = TT_Err_Bad_Argument;
         goto Exit;
       }
 
       /* seek to the appropriate TrueType file, then read tag */
-      if ( FILE_Seek( face->ttc_header.TableDirectory[face_index] ) ||
-           READ_Long( format_tag )                                  )
+      if ( FILE_Seek( face->ttc_header.offsets[face_index] ) ||
+           READ_Long( format_tag )                           )
         goto Exit;
     }
 

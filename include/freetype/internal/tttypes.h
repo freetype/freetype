@@ -5,14 +5,11 @@
 /*    Basic SFNT/TrueType type definitions and interface (specification    */
 /*    only).                                                               */
 /*                                                                         */
-/*  This code is shared by all TrueType and OpenType drivers.              */
-/*                                                                         */
-/*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -51,19 +48,22 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    tag     :: Must be `ttc ' to indicate a TrueType collection.       */
+  /*                                                                       */
   /*    version :: The version number.                                     */
+  /*                                                                       */
   /*    count   :: The number of faces in the collection.  The             */
   /*               specification says this should be an unsigned long, but */
   /*               we use a signed long since we need the value -1 for     */
   /*               specific purposes.                                      */
+  /*                                                                       */
   /*    offsets :: The offsets of the font headers, one per face.          */
   /*                                                                       */
   typedef struct  TTC_Header_
   {
-    FT_ULong   Tag;
+    FT_ULong   tag;
     FT_Fixed   version;
-    FT_Long    DirCount;
-    FT_ULong*  TableDirectory;
+    FT_Long    count;
+    FT_ULong*  offsets;
 
   } TTC_Header;
 
@@ -77,11 +77,15 @@
   /*    SFNT file format header.                                           */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    format_tag     :: font format tag..                                */
-  /*    num_tables     :: number of tables in file                         */
-  /*    search_range   :: must be 16*(max power of 2 <= num_tables)        */
-  /*    entry_selector :: log2 of search_range/16                          */
-  /*    range_shift    :: must be num_tables*16 - search_range             */
+  /*    format_tag     :: The font format tag.                             */
+  /*                                                                       */
+  /*    num_tables     :: The number of tables in file.                    */
+  /*                                                                       */
+  /*    search_range   :: Must be 16*(max power of 2 <= num_tables).       */
+  /*                                                                       */
+  /*    entry_selector :: Must be log2 of search_range/16.                 */
+  /*                                                                       */
+  /*    range_shift    :: Must be num_tables*16 - search_range.            */
   /*                                                                       */
   typedef struct SFNT_Header_
   {
@@ -92,6 +96,7 @@
     FT_UShort  range_shift;
   
   } SFNT_Header;
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -104,10 +109,13 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    version       :: The version number; starts with 0x00010000.       */
+  /*                                                                       */
   /*    numTables     :: The number of tables.                             */
   /*                                                                       */
   /*    searchRange   :: Unused.                                           */
+  /*                                                                       */
   /*    entrySelector :: Unused.                                           */
+  /*                                                                       */
   /*    rangeShift    :: Unused.                                           */
   /*                                                                       */
   /* <Note>                                                                */
@@ -115,8 +123,8 @@
   /*                                                                       */
   typedef struct  TT_TableDir_
   {
-    FT_Fixed   version;      /* should be 0x10000 */
-    FT_UShort  numTables;    /* number of tables  */
+    FT_Fixed   version;        /* should be 0x10000 */
+    FT_UShort  numTables;      /* number of tables  */
 
     FT_UShort  searchRange;    /* These parameters are only used  */
     FT_UShort  entrySelector;  /* for a dichotomy search in the   */
@@ -135,9 +143,12 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    Tag      :: A four-bytes tag describing the table.                 */
+  /*                                                                       */
   /*    CheckSum :: The table checksum.  This value can be ignored.        */
+  /*                                                                       */
   /*    Offset   :: The offset of the table from the start of the TrueType */
   /*                font in its resource.                                  */
+  /*                                                                       */
   /*    Length   :: The table length (in bytes).                           */
   /*                                                                       */
   typedef struct  TT_Table_
@@ -161,6 +172,7 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    tableVersionNumber :: The version number.                          */
+  /*                                                                       */
   /*    numCMaps           :: The number of charmaps in the font.          */
   /*                                                                       */
   /* <Note>                                                                */
@@ -189,7 +201,7 @@
   /*    encodingID :: A platform-specific ID used to indicate which source */
   /*                  encoding is used in this charmap.                    */
   /*                                                                       */
-  /*    offset ::     The offset of the charmap relative to the start of   */
+  /*    offset     :: The offset of the charmap relative to the start of   */
   /*                  the `cmap' table.                                    */
   /*                                                                       */
   /* <Note>                                                                */
@@ -215,6 +227,7 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    advance :: The advance width or height for the glyph.              */
+  /*                                                                       */
   /*    bearing :: The left-side or top-side bearing for the glyph.        */
   /*                                                                       */
   typedef struct  TT_LongMetrics_
@@ -362,7 +375,9 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    version    :: The version number.                                  */
+  /*                                                                       */
   /*    numRanges  :: The number of gasp ranges in table.                  */
+  /*                                                                       */
   /*    gaspRanges :: An array of gasp ranges.                             */
   /*                                                                       */
   typedef struct  TT_Gasp_
@@ -381,7 +396,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A small structure used to model the pre-computed widths of a given */
-  /*    size.  They're found in the `hdmx' table.                          */
+  /*    size.  They are found in the `hdmx' table.                         */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    ppem      :: The pixels per EM value at which these metrics apply. */
@@ -402,7 +417,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    TT_HdmxRec                                                         */
+  /*    TT_Hdmx                                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used to model the `hdmx' table, which contains         */
@@ -410,7 +425,9 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    version     :: The version number.                                 */
+  /*                                                                       */
   /*    num_records :: The number of hdmx records.                         */
+  /*                                                                       */
   /*    records     :: An array of hdmx records.                           */
   /*                                                                       */
   typedef struct  TT_Hdmx_
@@ -434,7 +451,9 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    left  :: The index of the left glyph in pair.                      */
+  /*                                                                       */
   /*    right :: The index of the right glyph in pair.                     */
+  /*                                                                       */
   /*    value :: The kerning distance.  A positive value spaces the        */
   /*             glyphs, a negative one makes them closer.                 */
   /*                                                                       */
@@ -446,17 +465,19 @@
 
   } TT_Kern_0_Pair;
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
   /***                                                                   ***/
   /***                                                                   ***/
-  /***                  EMBEDDED BITMAPS SUPPORT                         ***/
+  /***                    EMBEDDED BITMAPS SUPPORT                       ***/
   /***                                                                   ***/
   /***                                                                   ***/
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -512,15 +533,15 @@
   /*    `EBDT' (Microsoft) or the `bdat' (Apple) table.                    */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    height    :: The glyph height in pixels.                           */
+  /*    height   :: The glyph height in pixels.                            */
   /*                                                                       */
-  /*    width     :: The glyph width in pixels.                            */
+  /*    width    :: The glyph width in pixels.                             */
   /*                                                                       */
-  /*    bearingX  :: The left-side bearing.                                */
+  /*    bearingX :: The left-side bearing.                                 */
   /*                                                                       */
-  /*    bearingY  :: The top-side bearing.                                 */
+  /*    bearingY :: The top-side bearing.                                  */
   /*                                                                       */
-  /*    advance   :: The advance width or height.                          */
+  /*    advance  :: The advance width or height.                           */
   /*                                                                       */
   typedef struct  TT_SBit_Small_Metrics_
   {
@@ -581,6 +602,9 @@
   /*                               resp.                                   */
   /*                                                                       */
   /*                                 vertBearingX - width                  */
+  /*                                                                       */
+  /*    pads                    :: Unused (to make the size of the record  */
+  /*                               a multiple of 32 bits.                  */
   /*                                                                       */
   typedef struct  TT_SBit_Line_Metrics_
   {
@@ -692,23 +716,23 @@
   /*                                                                       */
   typedef struct  TT_SBit_Strike_
   {
-    FT_Int                 num_ranges;
-    TT_SBit_Range*         sbit_ranges;
-    FT_ULong               ranges_offset;
+    FT_Int                num_ranges;
+    TT_SBit_Range*        sbit_ranges;
+    FT_ULong              ranges_offset;
 
-    FT_ULong               color_ref;
+    FT_ULong              color_ref;
 
-    TT_SBit_Line_Metrics   hori;
-    TT_SBit_Line_Metrics   vert;
+    TT_SBit_Line_Metrics  hori;
+    TT_SBit_Line_Metrics  vert;
 
-    FT_UShort              start_glyph;
-    FT_UShort              end_glyph;
+    FT_UShort             start_glyph;
+    FT_UShort             end_glyph;
 
-    FT_Byte                x_ppem;
-    FT_Byte                y_ppem;
+    FT_Byte               x_ppem;
+    FT_Byte               y_ppem;
 
-    FT_Byte                bit_depth;
-    FT_Char                flags;
+    FT_Byte               bit_depth;
+    FT_Char               flags;
 
   } TT_SBit_Strike;
 
@@ -723,7 +747,9 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    glyph_code :: The element's glyph index.                           */
+  /*                                                                       */
   /*    x_offset   :: The element's left bearing.                          */
+  /*                                                                       */
   /*    y_offset   :: The element's top bearing.                           */
   /*                                                                       */
   typedef struct  TT_SBit_Component_
@@ -771,6 +797,7 @@
 
   } TT_SBit_Scale;
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -782,6 +809,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -862,6 +890,7 @@
 
   } TT_Post_Names;
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -874,7 +903,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
   /* format 0 */
+
   typedef struct  TT_CMap0_
   {
     FT_Byte*  glyphIdArray;
@@ -883,6 +914,7 @@
 
 
   /* format 2 */
+
   typedef struct  TT_CMap2SubHeader_
   {
     FT_UShort  firstCode;      /* first valid low byte         */
@@ -895,7 +927,7 @@
 
   typedef struct  TT_CMap2_
   {
-    FT_UShort*  subHeaderKeys;
+    FT_UShort*          subHeaderKeys;
     /* high byte mapping table            */
     /* value = subHeader index * 8        */
 
@@ -907,6 +939,7 @@
 
 
   /* format 4 */
+
   typedef struct  TT_CMap4Segment_
   {
     FT_UShort  endCount;
@@ -919,21 +952,22 @@
 
   typedef struct  TT_CMap4_
   {
-    FT_UShort  segCountX2;     /* number of segments * 2       */
-    FT_UShort  searchRange;    /* these parameters can be used */
-    FT_UShort  entrySelector;  /* for a binary search          */
-    FT_UShort  rangeShift;
+    FT_UShort         segCountX2;     /* number of segments * 2       */
+    FT_UShort         searchRange;    /* these parameters can be used */
+    FT_UShort         entrySelector;  /* for a binary search          */
+    FT_UShort         rangeShift;
 
     TT_CMap4Segment*  segments;
     FT_UShort*        glyphIdArray;
     FT_UShort         numGlyphId;   /* control value */
     
-    TT_CMap4Segment*  last_segment;  /* last used segment, this is a small  */
+    TT_CMap4Segment*  last_segment;  /* last used segment; this is a small  */
                                      /* cache to potentially increase speed */
   } TT_CMap4;
 
 
   /* format 6 */
+
   typedef struct  TT_CMap6_
   {
     FT_UShort   firstCode;      /* first character code of subrange      */
@@ -943,11 +977,14 @@
 
   } TT_CMap6;
 
+
   typedef struct TT_CMapTable_  TT_CMapTable;
+
 
   typedef
   FT_UInt  (*TT_CharMap_Func)( TT_CMapTable*  charmap,
                                FT_ULong       char_code );
+
 
   /* charmap table */
   struct  TT_CMapTable_
@@ -979,16 +1016,17 @@
   /*    TT_CharMapRec                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   The TrueType character map object type.                             */
+  /*    The TrueType character map object type.                            */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    root :: The parent character map structure.                        */
+  /*                                                                       */
   /*    cmap :: The used character map.                                    */
   /*                                                                       */
   typedef struct  TT_CharMapRec_
   {
-    FT_CharMapRec   root;
-    TT_CMapTable    cmap;
+    FT_CharMapRec  root;
+    TT_CMapTable   cmap;
 
   } TT_CharMapRec;
 
@@ -1011,11 +1049,12 @@
   /* This structure/class is defined here because it is common to the      */
   /* following formats: TTF, OpenType-TT, and OpenType-CFF.                */
   /*                                                                       */
-  /* Note however that the classes TT_Size, TT_GlyphSlot, and TT_CharMap   */
+  /* Note, however, that the classes TT_Size, TT_GlyphSlot, and TT_CharMap */
   /* are not shared between font drivers, and are thus defined normally in */
-  /* `drivers/truetype/ttobjs.h'.                                          */
+  /* `ttobjs.h'.                                                           */
   /*                                                                       */
   /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1031,7 +1070,7 @@
   /*    The TT_Face structure is also used as a `parent class' for the     */
   /*    OpenType-CFF class (T2_Face).                                      */
   /*                                                                       */
-  typedef struct TT_FaceRec_*   TT_Face;
+  typedef struct TT_FaceRec_*  TT_Face;
 
 
   /*************************************************************************/
@@ -1051,6 +1090,7 @@
   /* forward declaration */
   typedef struct TT_Loader_  TT_Loader;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1060,86 +1100,96 @@
   /*    Seeks a stream to the start of a given TrueType table.             */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face      :: A handle to the target face object.                   */
-  /*    tag       :: a 4-byte tag used to name the table                   */
-  /*    stream    :: The input stream.                                     */
+  /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
+  /*    tag    :: A 4-byte tag used to name the table.                     */
+  /*                                                                       */
+  /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    length    :: length of table in bytes. Set to 0 when not needed    */
+  /*    length :: The length of the table in bytes.  Set to 0 if not       */
+  /*              needed.                                                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The stream cursor must be at the font file's origin                */
+  /*    The stream cursor must be at the font file's origin.               */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Goto_Table_Func)( TT_Face    face,
                                    FT_ULong   tag,
                                    FT_Stream  stream,
-                                   FT_ULong  *length );
+                                   FT_ULong*  length );
+
 
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Access_Glyph_Frame                                              */
+  /*    TT_Access_Glyph_Frame_Func                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Seeks a stream to the start of a given glyph element, and          */
-  /*    opens a frame for it..                                             */
+  /*    Seeks a stream to the start of a given glyph element, and opens a  */
+  /*    frame for it.                                                      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    loader      :: the current TrueType glyph loader object            */
-  /*    glyph index :: index of glyph to access                            */
-  /*    offset      :: offset of glyph according to locations table        */
-  /*    byte_count  :: size of frame in bytes                              */
+  /*    loader      :: The current TrueType glyph loader object.           */
+  /*                                                                       */
+  /*    glyph index :: The index of the glyph to access.                   */
+  /*                                                                       */
+  /*    offset      :: The offset of the glyph according to the            */
+  /*                   `locations' table.                                  */
+  /*                                                                       */
+  /*    byte_count  :: The size of the frame in bytes.                     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function is normally equivalent to FILE_Seek(offset)          */
-  /*    followed by ACCESS_Frame(byte_count) with the loader's stream      */
-  /*    but alternative formats (compressed ones) might use something      */
-  /*    different..                                                        */
+  /*    followed by ACCESS_Frame(byte_count) with the loader's stream, but */
+  /*    alternative formats (e.g. compressed ones) might use something     */
+  /*    different.                                                         */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Access_Glyph_Frame_Func)( TT_Loader*  loader,
                                            FT_UInt     glyph_index,
                                            FT_ULong    offset,
                                            FT_UInt     byte_count );
+
   
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_Glyph_Element                                              */
+  /*    TT_Load_Glyph_Element_Func                                         */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Reads one glyph element (its header, a simple glyph, or a          */
-  /*    composite) from the loader's current stream frame..                */
+  /*    composite) from the loader's current stream frame.                 */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    loader      :: the current TrueType glyph loader object            */
+  /*    loader :: The current TrueType glyph loader object.                */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_Glyph_Element_Func)( TT_Loader*  loader );
   
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Forget_Frame_Element                                            */
+  /*    TT_Forget_Glyph_Frame_Func                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Closes the current loader stream frame for the glyph..             */
+  /*    Closes the current loader stream frame for the glyph.              */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    loader      :: the current TrueType glyph loader object            */
+  /*    loader :: The current TrueType glyph loader object.                */
   /*                                                                       */
   typedef
-  void      (*TT_Forget_Glyph_Frame_Func)( TT_Loader*  loader );
+  void  (*TT_Forget_Glyph_Frame_Func)( TT_Loader*  loader );
 
 
 
@@ -1155,153 +1205,175 @@
   /*    point-size independent data found in a TrueType font file.         */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    root              :: The base FT_Face structure, managed by the    */
-  /*                         base layer.                                   */
+  /*    root                 :: The base FT_Face structure, managed by the */
+  /*                            base layer.                                */
   /*                                                                       */
-  /*    ttcHeader         :: The TrueType collection header, used when the */
-  /*                         file is a `ttc' rather than a `ttf'.  For     */
-  /*                         ordinary font files, the field                */
-  /*                         `ttcHeader.DirCount' is set to 0.             */
+  /*    ttc_header           :: The TrueType collection header, used when  */
+  /*                            the file is a `ttc' rather than a `ttf'.   */
+  /*                            For ordinary font files, the field         */
+  /*                            `ttc_header.count' is set to 0.            */
   /*                                                                       */
-  /*    num_tables        :: The number of TrueType tables in this font    */
-  /*                         file.                                         */
+  /*    format_tag           :: The font format tag.                       */
   /*                                                                       */
-  /*    dir_tables        :: The directory of TrueType tables for this     */
-  /*                         font file.                                    */
+  /*    num_tables           :: The number of TrueType tables in this font */
+  /*                            file.                                      */
   /*                                                                       */
-  /*    header            :: The font's font header (`head' table).  Read  */
-  /*                         on font opening.                              */
+  /*    dir_tables           :: The directory of TrueType tables for this  */
+  /*                            font file.                                 */
   /*                                                                       */
-  /*    horizontal        :: The font's horizontal header (`hhea' table).  */
-  /*                         This field also contains the associated       */
-  /*                         horizontal metrics table (`hmtx').            */
+  /*    header               :: The font's font header (`head' table).     */
+  /*                            Read on font opening.                      */
   /*                                                                       */
-  /*    max_profile       :: The font's maximum profile table.  Read on    */
-  /*                         font opening.  Note that some maximum values  */
-  /*                         cannot be taken directly from this table.  We */
-  /*                         thus define additional fields below to hold   */
-  /*                         the computed maxima.                          */
+  /*    horizontal           :: The font's horizontal header (`hhea'       */
+  /*                            table).  This field also contains the      */
+  /*                            associated horizontal metrics table        */
+  /*                            (`hmtx').                                  */
   /*                                                                       */
-  /*    max_components    :: The maximum number of glyph components        */
-  /*                         required to load any composite glyph from     */
-  /*                         this font.  Used to size the load stack.      */
+  /*    max_profile          :: The font's maximum profile table.  Read on */
+  /*                            font opening.  Note that some maximum      */
+  /*                            values cannot be taken directly from this  */
+  /*                            table.  We thus define additional fields   */
+  /*                            below to hold the computed maxima.         */
   /*                                                                       */
-  /*    vertical_info     :: A boolean which is set when the font file     */
-  /*                         contains vertical metrics.  If not, the value */
-  /*                         of the `vertical' field is undefined.         */
+  /*    max_components       :: The maximum number of glyph components     */
+  /*                            required to load any composite glyph from  */
+  /*                            this font.  Used to size the load stack.   */
   /*                                                                       */
-  /*    vertical          :: The font's vertical header (`vhea' table).    */
-  /*                         This field also contains the associated       */
-  /*                         vertical metrics table (`vmtx'), if found.    */
-  /*                         IMPORTANT: The contents of this field is      */
-  /*                         undefined if the `verticalInfo' field is      */
-  /*                         unset.                                        */
+  /*    vertical_info        :: A boolean which is set when the font file  */
+  /*                            contains vertical metrics.  If not, the    */
+  /*                            value of the `vertical' field is           */
+  /*                            undefined.                                 */
   /*                                                                       */
-  /*    num_names         :: The number of name records within this        */
-  /*                         TrueType font.                                */
+  /*    vertical             :: The font's vertical header (`vhea' table). */
+  /*                            This field also contains the associated    */
+  /*                            vertical metrics table (`vmtx'), if found. */
+  /*                            IMPORTANT: The contents of this field is   */
+  /*                            undefined if the `verticalInfo' field is   */
+  /*                            unset.                                     */
   /*                                                                       */
-  /*    name_table        :: The table of name records (`name').           */
+  /*    num_names            :: The number of name records within this     */
+  /*                            TrueType font.                             */
   /*                                                                       */
-  /*    os2               :: The font's OS/2 table (`OS/2').               */
+  /*    name_table           :: The table of name records (`name').        */
   /*                                                                       */
-  /*    postscript        :: The font's PostScript table (`post' table).   */
-  /*                         The PostScript glyph names are not loaded by  */
-  /*                         the driver on face opening.  See the `ttpost' */
-  /*                         module for more details.                      */
+  /*    os2                  :: The font's OS/2 table (`OS/2').            */
   /*                                                                       */
-  /*    num_charmaps      :: The number of character mappings in the font. */
+  /*    postscript           :: The font's PostScript table (`post'        */
+  /*                            table).  The PostScript glyph names are    */
+  /*                            not loaded by the driver on face opening.  */
+  /*                            See the `ttpost' module for more details.  */
   /*                                                                       */
-  /*    charmaps          :: The array of charmap objects for this font    */
-  /*                         file.  Note that this field is a typeless     */
-  /*                         pointer.  The Reason is that the format of    */
-  /*                         charmaps varies with the underlying font      */
-  /*                         format and cannot be determined here.         */
+  /*    num_charmaps         :: The number of character mappings in the    */
+  /*                            font.                                      */
   /*                                                                       */
-  /*    goto_face         :: a function called by each TrueType table      */
-  /*                         loader to position a stream's cursor to the   */
-  /*                         start of a given table according to its tag.  */
-  /*                         it defaults to TT_Goto_Face but can be        */
-  /*                         different for strange formats (e.g. Type 42)  */
+  /*    charmaps             :: The array of charmap objects for this font */
+  /*                            file.  Note that this field is a typeless  */
+  /*                            pointer.  The Reason is that the format of */
+  /*                            charmaps varies with the underlying font   */
+  /*                            format and cannot be determined here.      */
   /*                                                                       */
-  /*    sfnt              :: a pointer to the SFNT `driver' interface.     */
+  /*    goto_table           :: A function called by each TrueType table   */
+  /*                            loader to position a stream's cursor to    */
+  /*                            the start of a given table according to    */
+  /*                            its tag.  It defaults to TT_Goto_Face but  */
+  /*                            can be different for strange formats (e.g. */
+  /*                            Type 42).                                  */
   /*                                                                       */
-  /*    hdmx              :: The face's horizontal device metrics (`hdmx'  */
-  /*                         table).  This table is optional in            */
-  /*                         TrueType/OpenType fonts.                      */
+  /*    access_glyph_frame   :: XXX                                        */
   /*                                                                       */
-  /*    gasp              :: The grid-fitting and scaling properties table */
-  /*                         (`gasp').  This table is optional in          */
-  /*                         TrueType/OpenType fonts.                      */
+  /*    read_glyph_header    :: XXX                                        */
   /*                                                                       */
-  /*    num_sbit_strikes  :: The number of sbit strikes, i.e., bitmap      */
-  /*                         sizes, embedded in this font.                 */
+  /*    read_simple_glyph    :: XXX                                        */
   /*                                                                       */
-  /*    sbit_strikes      :: An array of sbit strikes embedded in this     */
-  /*                         font.  This table is optional in a            */
-  /*                         TrueType/OpenType font.                       */
+  /*    read_composite_glyph :: XXX                                        */
   /*                                                                       */
-  /*    num_sbit_scales   :: The number of sbit scales for this font.      */
+  /*    forget_glyph_frame   :: XXX                                        */
   /*                                                                       */
-  /*    sbit_scales       :: Array of sbit scales embedded in this font.   */
-  /*                         This table is optional in a TrueType/OpenType */
-  /*                         font.                                         */
+  /*    sfnt                 :: A pointer to the SFNT `driver' interface.  */
   /*                                                                       */
-  /*    postscript_names  :: A table used to store the Postscript names of */
-  /*                         the glyphs for this font.  See the file       */
-  /*                         `ttconfig.h' for comments on the              */
-  /*                         TT_CONFIG_OPTION_POSTSCRIPT_NAMES option.     */
+  /*    psnames              :: A pointer to the `PSNames' module          */
+  /*                            interface.                                 */
   /*                                                                       */
-  /*    num_locations     :: The number of glyph locations in this         */
-  /*                         TrueType file.  This should be identical to   */
-  /*                         the number of glyphs.  Ignored for Type 2     */
-  /*                         fonts.                                        */
+  /*    hdmx                 :: The face's horizontal device metrics       */
+  /*                            (`hdmx' table).  This table is optional in */
+  /*                            TrueType/OpenType fonts.                   */
   /*                                                                       */
-  /*    glyph_locations   :: An array of longs.  These are offsets to      */
-  /*                         glyph data within the `glyf' table.  Ignored  */
-  /*                         for Type 2 font faces.                        */
+  /*    gasp                 :: The grid-fitting and scaling properties    */
+  /*                            table (`gasp').  This table is optional in */
+  /*                            TrueType/OpenType fonts.                   */
   /*                                                                       */
-  /*    font_program_size :: Size in bytecodes of the face's font program. */
-  /*                         0 if none defined.  Ignored for Type 2 fonts. */
+  /*    pclt                 :: XXX                                        */
   /*                                                                       */
-  /*    font_program      :: The face's font program (bytecode stream)     */
-  /*                         executed at load time, also used during glyph */
-  /*                         rendering.  Comes from the `fpgm' table.      */
-  /*                         Ignored for Type 2 font fonts.                */
+  /*    num_sbit_strikes     :: The number of sbit strikes, i.e., bitmap   */
+  /*                            sizes, embedded in this font.              */
   /*                                                                       */
-  /*    cvt_program_size  :: Size in bytecodes of the face's cvt program.  */
-  /*                         Ignored for Type 2 fonts.                     */
+  /*    sbit_strikes         :: An array of sbit strikes embedded in this  */
+  /*                            font.  This table is optional in a         */
+  /*                            TrueType/OpenType font.                    */
   /*                                                                       */
-  /*    cvt_program       :: The face's cvt program (bytecode stream)      */
-  /*                         executed each time an instance/size is        */
-  /*                         changed/reset.  Comes from the `prep' table.  */
-  /*                         Ignored for Type 2 fonts.                     */
+  /*    num_sbit_scales      :: The number of sbit scales for this font.   */
   /*                                                                       */
-  /*    cvt_size          :: Size of the control value table (in entries). */
-  /*                         Ignored for Type 2 fonts.                     */
+  /*    sbit_scales          :: Array of sbit scales embedded in this      */
+  /*                            font.  This table is optional in a         */
+  /*                            TrueType/OpenType font.                    */
   /*                                                                       */
-  /*    cvt               :: The face's original control value table.      */
-  /*                         Coordinates are expressed in unscaled font    */
-  /*                         units.  Comes from the `cvt ` table.  Ignored */
-  /*                         for Type 2 fonts.                             */
+  /*    postscript_names     :: A table used to store the Postscript names */
+  /*                            of  the glyphs for this font.  See the     */
+  /*                            file  `ttconfig.h' for comments on the     */
+  /*                            TT_CONFIG_OPTION_POSTSCRIPT_NAMES option.  */
   /*                                                                       */
-  /*    num_kern_pairs    :: The number of kerning pairs present in the    */
-  /*                         font file.  The engine only loads the first   */
-  /*                         horizontal format 0 kern table it finds in    */
-  /*                         the font file.  You should use the `ttxkern'  */
-  /*                         structures if you want to access other        */
-  /*                         kerning tables.  Ignored for Type 2 fonts.    */
+  /*    num_locations        :: The number of glyph locations in this      */
+  /*                            TrueType file.  This should be             */
+  /*                            identical to the number of glyphs.         */
+  /*                            Ignored for Type 2 fonts.                  */
   /*                                                                       */
-  /*    kern_table_index  :: The index of the kerning table in the font    */
-  /*                         kerning directory.  Only used by the ttxkern  */
-  /*                         extension to avoid data duplication.  Ignored */
-  /*                         for Type 2 fonts.                             */
+  /*    glyph_locations      :: An array of longs.  These are offsets to   */
+  /*                            glyph data within the `glyf' table.        */
+  /*                            Ignored for Type 2 font faces.             */
   /*                                                                       */
-  /*    kern_pairs        :: Array of kerning pairs, if any.  Ignored for  */
-  /*                         Type 2 fonts.                                 */
+  /*    font_program_size    :: Size in bytecodes of the face's font       */
+  /*                            program.  0 if none defined.  Ignored for  */
+  /*                            Type 2 fonts.                              */
   /*                                                                       */
-  /*    interpreter       :: Pointer to the TrueType bytecode interpreter  */
-  /*                         this field is also used to hook the debugger  */
-  /*                         in `ttdebug'                                  */
+  /*    font_program         :: The face's font program (bytecode stream)  */
+  /*                            executed at load time, also used during    */
+  /*                            glyph rendering.  Comes from the `fpgm'    */
+  /*                            table.  Ignored for Type 2 font fonts.     */
+  /*                                                                       */
+  /*    cvt_program_size     :: The size in bytecodes of the face's cvt    */
+  /*                            program.  Ignored for Type 2 fonts.        */
+  /*                                                                       */
+  /*    cvt_program          :: The face's cvt program (bytecode stream)   */
+  /*                            executed each time an instance/size is     */
+  /*                            changed/reset.  Comes from the `prep'      */
+  /*                            table.  Ignored for Type 2 fonts.          */
+  /*                                                                       */
+  /*    cvt_size             :: Size of the control value table (in        */
+  /*                            entries).   Ignored for Type 2 fonts.      */
+  /*                                                                       */
+  /*    cvt                  :: The face's original control value table.   */
+  /*                            Coordinates are expressed in unscaled font */
+  /*                            units.  Comes from the `cvt ' table.       */
+  /*                            Ignored for Type 2 fonts.                  */
+  /*                                                                       */
+  /*    num_kern_pairs       :: The number of kerning pairs present in the */
+  /*                            font file.  The engine only loads the      */
+  /*                            first horizontal format 0 kern table it    */
+  /*                            finds in the font file.  You should use    */
+  /*                            the `ttxkern' structures if you want to    */
+  /*                            access other kerning tables.  Ignored      */
+  /*                            for Type 2 fonts.                          */
+  /*                                                                       */
+  /*    kern_table_index     :: The index of the kerning table in the font */
+  /*                            kerning directory.  Only used by the       */
+  /*                            ttxkern extension to avoid data            */
+  /*                            duplication.  Ignored for Type 2 fonts.    */
+  /*                                                                       */
+  /*    interpreter          :: A pointer to the TrueType bytecode         */
+  /*                            interpreters field is also used to hook    */
+  /*                            the debugger in `ttdebug'.                 */
+  /*                                                                       */
+  /*    extra                :: XXX                                        */
   /*                                                                       */
   typedef struct  TT_FaceRec_
   {
@@ -1331,11 +1403,7 @@
     FT_Int             num_charmaps;
     TT_CharMap         charmaps;     /* array of TT_CharMapRec */
 
-    /* a pointer to the function used to seek a stream to the start of */
-    /* a given TrueType table. This should default to the function     */
-    /* TT_Goto_Table defined in `ttload.h', but some font drivers      */
-    /* might need something different, e.g. Type 42 fonts              */
-    TT_Goto_Table_Func       goto_table;
+    TT_Goto_Table_Func          goto_table;
 
     TT_Access_Glyph_Frame_Func  access_glyph_frame;
     TT_Load_Glyph_Element_Func  read_glyph_header;
@@ -1376,6 +1444,7 @@
     /* postscript names table */
     TT_Post_Names      postscript_names;
 
+
     /***********************************************************************/
     /*                                                                     */
     /* TrueType-specific fields (ignored by the OTF-Type2 driver)          */
@@ -1403,9 +1472,10 @@
     FT_Int             kern_table_index;
     TT_Kern_0_Pair*    kern_pairs;
 
-    /* a pointer to the bytecode interpreter to use. This is also */
-    /* used to hook the debugger for the `ttdebug' utility..      */
+    /* A pointer to the bytecode interpreter to use.  This is also */
+    /* used to hook the debugger for the `ttdebug' utility.        */
     TT_Interpreter     interpreter;
+
 
     /***********************************************************************/
     /*                                                                     */
@@ -1419,30 +1489,35 @@
   } TT_FaceRec;
 
 
-
-
- /************************************************************************
-  *
-  *  <Struct>
-  *     TT_GlyphZone
-  *
-  *  <Description>
-  *     A glyph zone is used to load, scale and hint glyph outline
-  *     coordinates.
-  *
-  *  <Fields>
-  *     memory       :: handle to memory manager
-  *     max_points   :: max size in points of zone
-  *     max_contours :: max size in contours of zone
-  *     n_points     :: current number of points in zone
-  *     n_contours   :: current number of contours in zone
-  *     org          :: original glyph coordinates (font units/scaled)
-  *     cur          :: current glyph coordinates  (scaled/hinted)
-  *     tags         :: point control tags
-  *     contours     :: contour end points
-  *
-  ***********************************************************************/
-
+  /*************************************************************************/
+  /*                                                                       */
+  /*  <Struct>                                                             */
+  /*     TT_GlyphZone                                                      */
+  /*                                                                       */
+  /*  <Description>                                                        */
+  /*     A glyph zone is used to load, scale and hint glyph outline        */
+  /*     coordinates.                                                      */
+  /*                                                                       */
+  /*  <Fields>                                                             */
+  /*     memory       :: A handle to the memory manager.                   */
+  /*                                                                       */
+  /*     max_points   :: The maximal size in points of the zone.           */
+  /*                                                                       */
+  /*     max_contours :: Max size in links contours of thez one.           */
+  /*                                                                       */
+  /*     n_points     :: The current number of points in the zone.         */
+  /*                                                                       */
+  /*     n_contours   :: The current number of contours in the zone.       */
+  /*                                                                       */
+  /*     org          :: The original glyph coordinates (font              */
+  /*                     units/scaled).                                    */
+  /*                                                                       */
+  /*     cur          :: The current glyph coordinates (scaled/hinted).    */
+  /*                                                                       */
+  /*     tags         :: The point control tags.                           */
+  /*                                                                       */
+  /*     contours     :: The contours end points.                          */
+  /*                                                                       */
   typedef struct  TT_GlyphZone_
   {
     FT_Memory   memory;
@@ -1460,43 +1535,43 @@
   } TT_GlyphZone;
 
 
- /* handle to execution context */
+  /* handle to execution context */
   typedef struct TT_ExecContextRec_*  TT_ExecContext;
 
- /* glyph loader structure */
+  /* glyph loader structure */
   struct  TT_Loader_
   {
-    FT_Face         face;
-    FT_Size         size;
-    FT_GlyphSlot    glyph;
-    FT_GlyphLoader* gloader;
+    FT_Face          face;
+    FT_Size          size;
+    FT_GlyphSlot     glyph;
+    FT_GlyphLoader*  gloader;
 
-    FT_ULong        load_flags;
-    FT_UInt         glyph_index;
+    FT_ULong         load_flags;
+    FT_UInt          glyph_index;
 
-    FT_Stream       stream;
-    FT_Int          byte_len;
+    FT_Stream        stream;
+    FT_Int           byte_len;
 
-    FT_Short        n_contours;
-    FT_BBox         bbox;
-    FT_Int          left_bearing;
-    FT_Int          advance;
-    FT_Bool         preserve_pps;
-    FT_Vector       pp1;
-    FT_Vector       pp2;
+    FT_Short         n_contours;
+    FT_BBox          bbox;
+    FT_Int           left_bearing;
+    FT_Int           advance;
+    FT_Bool          preserve_pps;
+    FT_Vector        pp1;
+    FT_Vector        pp2;
 
-    FT_ULong        glyf_offset;
+    FT_ULong         glyf_offset;
 
     /* the zone where we load our glyphs */
-    TT_GlyphZone    base;
-    TT_GlyphZone    zone;
+    TT_GlyphZone     base;
+    TT_GlyphZone     zone;
 
-    TT_ExecContext  exec;
-    FT_Byte*        instructions;
-    FT_ULong        ins_pos;
+    TT_ExecContext   exec;
+    FT_Byte*         instructions;
+    FT_ULong         ins_pos;
     
     /* for possible extensibility in other formats */
-    void*           other;
+    void*            other;
 
   };
 

@@ -232,7 +232,7 @@
     if ( error )
       goto Exit;
 
-    face->root.num_faces = face->ttc_header.DirCount;
+    face->root.num_faces = face->ttc_header.count;
     if ( face->root.num_faces < 1 )
       face->root.num_faces = 1;
 
@@ -493,8 +493,8 @@
     face->num_kern_pairs = 0;
 
     /* freeing the collection table */
-    FREE( face->ttc_header.TableDirectory );
-    face->ttc_header.DirCount = 0;
+    FREE( face->ttc_header.offsets );
+    face->ttc_header.count = 0;
 
     /* freeing table directory */
     FREE( face->dir_tables );
