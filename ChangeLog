@@ -4,6 +4,9 @@
 	`root->num_faces' to `cff->num_faces' and set `units_per_EM'
 	to 1000.
 
+	* src/cff/t2parse.c (parse_t2_real): Fixed real number parsing
+	loop.
+
 2000-11-16  David Turner <david@freetype.org>
 
 	* src/autohint/ahtypes.h (AH_Hinter): Added new fields to control
