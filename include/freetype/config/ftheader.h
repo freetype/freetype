@@ -416,6 +416,18 @@
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
+  /*    FT_BITMAP_H                                                        */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the API of the optional bitmap conversion component.               */
+  /*                                                                       */
+#define FT_BITMAP_H  <freetype/ftbitmap.h>
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
   /*    FT_BBOX_H                                                          */
   /*                                                                       */
   /* @description:                                                         */

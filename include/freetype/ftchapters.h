@@ -71,6 +71,7 @@
 /*    computations                                                         */
 /*    list_processing                                                      */
 /*    outline_processing                                                   */
+/*    bitmap_handling                                                      */
 /*    raster                                                               */
 /*    glyph_stroker                                                        */
 /*    system_interface                                                     */
@@ -79,4 +80,3 @@
 /*    lzw                                                                  */
 /*                                                                         */
 /***************************************************************************/
-

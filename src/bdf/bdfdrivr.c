@@ -643,13 +643,11 @@ THE SOFTWARE.
                   FT_UInt       glyph_index,
                   FT_Int32      load_flags )
   {
-    BDF_Face       face   = (BDF_Face)FT_SIZE_FACE( size );
-    FT_Error       error  = BDF_Err_Ok;
-    FT_Bitmap*     bitmap = &slot->bitmap;
-    bdf_glyph_t    glyph;
-    int            bpp    = face->bdffont->bpp;
-    int            i, j, count;
-    unsigned char  *p, *pp;
+    BDF_Face     face   = (BDF_Face)FT_SIZE_FACE( size );
+    FT_Error     error  = BDF_Err_Ok;
+    FT_Bitmap*   bitmap = &slot->bitmap;
+    bdf_glyph_t  glyph;
+    int          bpp    = face->bdffont->bpp;
 
     FT_UNUSED( load_flags );
 
@@ -671,109 +669,27 @@ THE SOFTWARE.
 
     bitmap->rows  = glyph.bbx.height;
     bitmap->width = glyph.bbx.width;
+    bitmap->pitch = glyph.bpr;
 
-    if ( bpp == 1 )
+    /* note: we don't allocate a new array to hold the bitmap; */
+    /*       we can simply point to it                         */
+    ft_glyphslot_set_bitmap( slot, glyph.bitmap );
+
+    switch ( bpp )
     {
+    case 1:
       bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
-      bitmap->pitch      = glyph.bpr;
-
-      /* note: we don't allocate a new array to hold the bitmap; */
-      /*       we can simply point to it                         */
-      ft_glyphslot_set_bitmap( slot, glyph.bitmap );
-    }
-    else
-    {
-      /* blow up pixmap to have 8 bits per pixel */
+      break;
+    case 2:
+      bitmap->pixel_mode = FT_PIXEL_MODE_GRAY2;
+      break;
+    case 4:
+      bitmap->pixel_mode = FT_PIXEL_MODE_GRAY4;
+      break;
+    case 8:
       bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
-      bitmap->pitch      = bitmap->width;
-
-      error = ft_glyphslot_alloc_bitmap( slot, bitmap->rows * bitmap->pitch );
-      if ( error )
-        goto Exit;
-
-      switch ( bpp )
-      {
-      case 2:
-        bitmap->num_grays = 4;
-
-        count = 0;
-        p     = glyph.bitmap;
-
-        for ( i = 0; i < bitmap->rows; i++ )
-        {
-          pp = p;
-
-          /* get the full bytes */
-          for ( j = 0; j < ( bitmap->width >> 2 ); j++ )
-          {
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xC0 ) >> 6 );
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x30 ) >> 4 );
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x0C ) >> 2 );
-            bitmap->buffer[count++] = (FT_Byte)(   *pp & 0x03 );
-
-            pp++;
-          }
-
-          /* get remaining pixels (if any) */
-          switch ( bitmap->width & 3 )
-          {
-          case 3:
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xC0 ) >> 6 );
-            /* fall through */
-          case 2:
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x30 ) >> 4 );
-            /* fall through */
-          case 1:
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x0C ) >> 2 );
-            /* fall through */
-          case 0:
-            break;
-          }
-
-          p += glyph.bpr;
-        }
-        break;
-
-      case 4:
-        bitmap->num_grays = 16;
-
-        count = 0;
-        p     = glyph.bitmap;
-
-        for ( i = 0; i < bitmap->rows; i++ )
-        {
-          pp = p;
-
-          /* get the full bytes */
-          for ( j = 0; j < ( bitmap->width >> 1 ); j++ )
-          {
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xF0 ) >> 4 );
-            bitmap->buffer[count++] = (FT_Byte)(   *pp & 0x0F );
-
-            pp++;
-          }
-
-          /* get remaining pixel (if any) */
-          switch ( bitmap->width & 1 )
-          {
-          case 1:
-            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xF0 ) >> 4 );
-            /* fall through */
-          case 0:
-            break;
-          }
-
-          p += glyph.bpr;
-        }
-        break;
-
-      case 8:
-        bitmap->num_grays = 256;
-
-        FT_MEM_COPY( bitmap->buffer, glyph.bitmap,
-                     bitmap->rows * bitmap->pitch );
-        break;
-      }
+      bitmap->num_grays  = 256;
+      break;
     }
 
     slot->bitmap_left = glyph.bbx.x_offset;

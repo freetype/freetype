@@ -1,0 +1,133 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftbitmap.h                                                             */
+/*                                                                         */
+/*    FreeType utility functions for converting 1bpp, 2bpp, 4bpp, and 8bpp */
+/*    bitmaps into 8bpp format (specification).                            */  
+/*                                                                         */
+/*  Copyright 2004 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#ifndef __FTBITMAP_H__
+#define __FTBITMAP_H__
+
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#ifdef FREETYPE_H
+#error "freetype.h of FreeType 1 has been loaded!"
+#error "Please fix the directory search order for header files"
+#error "so that freetype.h of FreeType 2 is found first."
+#endif
+
+
+FT_BEGIN_HEADER
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    bitmap_handling                                                    */
+  /*                                                                       */
+  /*************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Bitmap_New                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Initialize a pointer to an FT_Bitmap structure.                    */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    abitmap :: A pointer to the bitmap structure.                      */
+  /*                                                                       */
+  FT_EXPORT( void )
+  FT_Bitmap_New( FT_Bitmap  *abitmap );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Bitmap_Convert                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Convert a bitmap object with depth 1bpp, 2bpp, 4bpp, or 8bpp to a  */
+  /*    bitmap object with depth 8bpp, making the number of used bytes per */
+  /*    line (a.k.a. the `pitch') a multiple of `alignment'.               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library   :: A handle to a library object.                         */
+  /*                                                                       */
+  /*    source    :: The source bitmap.                                    */
+  /*                                                                       */
+  /*    alignment :: The pitch of the bitmap is a multiple of this         */
+  /*                 parameter.  Common values are 1, 2, or 4.             */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    target    :: The target bitmap.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    It is possible to call @FT_Bitmap_Convert multiple times without   */
+  /*    calling @FT_Bitmap_Done (the memory is simply reallocated).        */
+  /*                                                                       */
+  /*    Use @FT_Bitmap_Done to finally remove the bitmap object.           */
+  /*                                                                       */
+  /*    The `library' argument is taken to have access to FreeType's       */
+  /*    memory handling functions.                                         */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Bitmap_Convert( FT_Library        library,
+                     const FT_Bitmap  *source,
+                     FT_Bitmap        *target,
+                     FT_Int            alignment );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Bitmap_Done                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Destroy a bitmap object created with @FT_Bitmap_New.               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle to a library object.                           */
+  /*                                                                       */
+  /*    bitmap  :: The bitmap object to be freed.                          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The `library' argument is taken to have access to FreeType's       */
+  /*    memory handling functions.                                         */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Bitmap_Done( FT_Library  library,
+                  FT_Bitmap  *bitmap );
+
+
+  /* */
+
+
+FT_END_HEADER
+
+#endif /* __FTBITMAP_H__ */
+
+
+/* END */

@@ -1,3 +1,18 @@
+2004-12-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftbitmap.c, include/freetype/ftbitmap.h: New files for
+	handling various bitmap formats.
+
+	* include/freetype/config/ftheader.h (FT_BITMAP_H): New macro.
+
+	* src/base/rules.mk (BASE_EXT_SRC): Add ftbitmap.c.
+
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Don't convert bitmaps to 8bpp
+	but return them as-is.
+
+	* docs/CHANGES: Mention new bitmap API.
+	* include/freetype/ftchapter.s: Updated.
+
 2004-12-11  Robert Clark  <freetype@ratty.org.uk>
 
 	* src/base/ftobjs.c (FT_Get_Kerning): Make kerning amount

@@ -36,6 +36,18 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       JSTF).   After validation  it is  no longer  necessary to  check
       for errors in those tables while accessing them.
 
+    - A new API in FT_BITMAP_H  (`FT_Bitmap_New', `FT_Bitmap_Convert',
+      `FT_Bitmap_Done')  has  been  added.   Its  use  is  to  convert
+      an FT_Bitmap structure in 1bpp, 2bpp, 4bpp, or 8bpp format  into
+      another 8bpp FT_Bitmap, probably using a different pitch.
+
+  III. MISCELLANEOUS
+
+    - The BDF driver  no longer converts  all returned bitmaps  with a
+      depth of 2bpp or 4bpp to a depth of 8bpp.  The documentation has
+      not  mentioned  this  explicitly,  but  implementors  might have
+      relied on this after looking into the source files.
+
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 
