@@ -1,3 +1,11 @@
+2003-10-21  Josselin Mouette  <joss@debian.org>
+
+	* include/freetype/internal/t1types.h (T1_FontRec): `paint_type'
+	and `stroke_width' aren't pointers.
+
+	* src/type42/t42objs.c (T42_Face_Done), src/type1/t1objs.c
+	(T1_Face_Done): Don't free `paint_type' and `stroke_width'.
+
 2003-10-20  Graham Asher  <graham.asher@btinternet.com>
 
 	* src/winfonts/winfnt.c (fnt_cmap_class): Fix position of `const'.
