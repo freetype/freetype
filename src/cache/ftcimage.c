@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftcimage.c                                                             */
 /*                                                                         */
-/*    XXX                                                                  */
+/*    FreeType Image Cache                                                 */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -448,6 +448,9 @@
     error = FTC_ImageNode_New( queue->cache, &inode );
     if (error)
       goto Exit;
+
+    /* set the glyph and queue indices in the image node */
+    FTC_IMAGENODE_SET_INDICES( inode, glyph_index, queue->index );
     
     error = queue->clazz->init_image( queue, inode );
     if (error)
@@ -455,9 +458,6 @@
       FTC_ImageNode_Done( queue->cache, inode );
       goto Exit;
     }
-    
-    /* set the glyph and queue indices in the image node */
-    FTC_IMAGENODE_SET_INDICES( inode, glyph_index, queue->index );
     
     /* insert the node at the start of our bucket list */
     FT_List_Insert( bucket, (FT_ListNode)inode );
@@ -606,6 +606,7 @@
       goto Exit;
     
     cache->manager   = manager;
+    cache->memory    = manager->library->memory;
     cache->max_bytes = max_bytes;
 
     error = FT_Lru_New( &ftc_image_queue_lru_class,
@@ -653,11 +654,20 @@
     FTC_ImageNode    inode;
 
     *aglyph = 0;    
-    error   = FT_Lru_Lookup( cache->queues_lru,
-                             (FT_LruKey)desc,
-                             (FT_Pointer*)&queue );
-    if (error)
-      goto Exit;
+    queue   = cache->last_queue;
+    if ( !queue ||
+          queue->descriptor.size.face_id != desc->size.face_id ||
+          queue->descriptor.size.pix_width != desc->size.pix_width ||
+          queue->descriptor.size.pix_height != desc->size.pix_height ||
+          queue->descriptor.image_type != desc->image_type )
+    {
+      error   = FT_Lru_Lookup( cache->queues_lru,
+                               (FT_LruKey)desc,
+                               (FT_Pointer*)&queue );
+      cache->last_queue = queue;
+      if (error)
+        goto Exit;
+    }
 
     error = FTC_Image_Queue_Lookup_Node( queue, gindex, &inode );
     if (error)

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftcimage.h                                                             */
 /*                                                                         */
-/*    XXX                                                                  */
+/*    FreeType Image Cache                                                 */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -82,8 +82,10 @@
     FT_ULong     max_bytes;   /* maximum size of cache in bytes */
     FT_ULong     num_bytes;   /* current size of cache in bytes */
     
-    FT_Lru       queues_lru;  /* static queues lru list          */
+    FT_Lru       queues_lru;   /* static queues lru list          */
     FT_ListRec   glyphs_lru;   /* global lru list of glyph images */
+    
+    FTC_Image_Queue  last_queue;  /* small cache */
 
   } FTC_Image_CacheRec;
 

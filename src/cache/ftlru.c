@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftlru.c                                                                */
 /*                                                                         */
-/*    XXX                                                                  */
+/*    simple LRU list-cache                                                */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

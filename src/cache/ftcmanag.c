@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftcmanag.h                                                             */
 /*                                                                         */
-/*    XXX                                                                  */
+/*    FreeType Cache Manager                                               */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -317,7 +317,7 @@
       if ( !error )
       {
         /* select the size as the current one for this face */
-        face->size = *asize;
+        face->size = size;
         
         if (asize)
           *asize = size;

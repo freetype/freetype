@@ -1019,31 +1019,34 @@
       slot->advance.y = 0;
     }
 
-    /* now, transform the glyph image when needed */
-    if ( face->transform_flags && !( load_flags & FT_LOAD_NO_RECURSE ) )
+    if ((load_flags & FT_LOAD_NO_RECURSE)==0)
     {
-      /* get renderer */
-      FT_Renderer  renderer = ft_lookup_glyph_renderer( slot );
+      /* now, transform the glyph image when needed */
+      if ( face->transform_flags )
+      {
+        /* get renderer */
+        FT_Renderer  renderer = ft_lookup_glyph_renderer( slot );
 
 
-      if ( renderer )
-        error = renderer->clazz->transform_glyph( renderer, slot,
-                                                  &face->transform_matrix,
-                                                  &face->transform_delta );
-      /* transform advance */
-      FT_Vector_Transform( &slot->advance, &face->transform_matrix );
-    }
+        if ( renderer )
+          error = renderer->clazz->transform_glyph( renderer, slot,
+                                                    &face->transform_matrix,
+                                                    &face->transform_delta );
+        /* transform advance */
+        FT_Vector_Transform( &slot->advance, &face->transform_matrix );
+      }
 
-    /* do we need to render the image now? */
-    if ( !error                                    &&
-         slot->format != ft_glyph_format_bitmap    &&
-         slot->format != ft_glyph_format_composite &&
-         load_flags & FT_LOAD_RENDER )
-    {
-      error = FT_Render_Glyph( slot,
-                               ( load_flags & FT_LOAD_MONOCHROME )
-                                  ? ft_render_mode_mono
-                                  : ft_render_mode_normal );
+      /* do we need to render the image now? */
+      if ( !error                                    &&
+           slot->format != ft_glyph_format_bitmap    &&
+           slot->format != ft_glyph_format_composite &&
+           load_flags & FT_LOAD_RENDER )
+      {
+        error = FT_Render_Glyph( slot,
+                                 ( load_flags & FT_LOAD_MONOCHROME )
+                                    ? ft_render_mode_mono
+                                    : ft_render_mode_normal );
+      }
     }
 
   Exit:
