@@ -1,3 +1,24 @@
+LATEST CHANGES - 27-jan-2000
+
+  - updated the "sfnt" module interface to allow several SFNT-based
+    drivers to co-exist peacefully
+    
+  - updated the "T1_Face" type to better separate Postscript font content
+    from the rest of the FT_Face structure. Might be used later by the
+    CFF/Type2 driver..
+    
+  - added an experimental replacement Type 1 driver featuring advanced
+    (and speedy) pattern matching to retrieve the data from postscript
+    fonts.
+
+  - very minor changes in the implementation of FT_Set_Char_Size and
+    FT_Set_Pixel_Sizes (they now implement default to ligthen the
+    font driver's code).
+
+
+=============================================================================
+OLD MESSAGE
+
 This file summarizes the changes that occured since the last "beta" of FreeType 2.
 Because the list is important, it has been divided into separate sections:
 
