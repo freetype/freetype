@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ciderrs.h                                                              */
+/*  pshnterr.h                                                             */
 /*                                                                         */
 /*    PS Hinter error codes (specification only).                          */
 /*                                                                         */
@@ -30,7 +30,7 @@
 #undef __FTERRORS_H__
 
 #define FT_ERR_PREFIX  PSH_Err_
-#define FT_ERR_BASE    FT_Mod_Err_PSH
+#define FT_ERR_BASE    FT_Mod_Err_PShinter
 
 #include FT_ERRORS_H
 

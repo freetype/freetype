@@ -180,8 +180,8 @@ FT_BEGIN_HEADER
 
 #elif defined( __MWERKS__ )    /* Metrowerks CodeWarrior */
 
-  /* I don't know if it provides 64-bit data types, any suggestion */
-  /* is welcome.                                                   */
+#define FT_LONG64
+#define FT_INT64  long long int
 
 #elif defined( __GNUC__ )
 

@@ -635,7 +635,7 @@
 
     for ( i = 0; i < face->num_sbit_strikes; i++ )
     {
-      if ( ( face->sbit_strikes[i].y_ppem  == y_ppem )    &&
+      if ( ( face->sbit_strikes[i].y_ppem == y_ppem )     &&
            ( ( x_ppem == 0 )                            ||
              ( face->sbit_strikes[i].x_ppem == x_ppem ) ) )
       {

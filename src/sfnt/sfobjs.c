@@ -558,7 +558,7 @@
       /* Compute style flags.                                              */
       /*                                                                   */
       flags = 0;
-      if ( has_outline == TRUE && face->os2.version != 0xFFFF )
+      if ( has_outline == TRUE && face->os2.version != 0xFFFFU )
       {
         /* we have an OS/2 table; use the `fsSelection' field */
         if ( face->os2.fsSelection & 1 )
@@ -719,7 +719,7 @@
 
         /* some fonts have the OS/2 "sTypoAscender", "sTypoDescender" & */
         /* "sTypoLineGap" fields set to 0, like ARIALNB.TTF             */
-        if ( face->os2.version != 0xFFFF && root->ascender )
+        if ( face->os2.version != 0xFFFFU && root->ascender )
         {
           FT_Int  height;
 

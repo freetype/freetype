@@ -728,32 +728,31 @@
 
     sbit_metrics = &size->strike_metrics;
 
-    error = sfnt->set_sbit_strike(face,
-                                  metrics->x_ppem, metrics->y_ppem,
-                                  &strike_index);
+    error = sfnt->set_sbit_strike( face,
+                                   metrics->x_ppem, metrics->y_ppem,
+                                   &strike_index );
 
     if ( !error )
     {
       TT_SBit_Strike  strike = face->sbit_strikes + strike_index;
 
 
-      sbit_metrics->x_ppem      = metrics->x_ppem;
-      sbit_metrics->y_ppem      = metrics->y_ppem;
+      sbit_metrics->x_ppem = metrics->x_ppem;
+      sbit_metrics->y_ppem = metrics->y_ppem;
 #if 0
       /*
        * sbit_metrics->?_scale
        * are not used now.
        */
-      sbit_metrics->x_scale     = 1 << 16;
-      sbit_metrics->y_scale     = 1 << 16;
+      sbit_metrics->x_scale = 1 << 16;
+      sbit_metrics->y_scale = 1 << 16;
 #endif
 
-      sbit_metrics->ascender    = strike->hori.ascender  << 6;
-      sbit_metrics->descender   = strike->hori.descender << 6;
+      sbit_metrics->ascender  = strike->hori.ascender << 6;
+      sbit_metrics->descender = strike->hori.descender << 6;
 
       /* XXX: Is this correct? */
-      sbit_metrics->height      = sbit_metrics->ascender -
-                                  sbit_metrics->descender;
+      sbit_metrics->height = sbit_metrics->ascender - sbit_metrics->descender;
 
       /* XXX: Is this correct? */
       sbit_metrics->max_advance = ( strike->hori.min_origin_SB  +

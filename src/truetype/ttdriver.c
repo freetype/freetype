@@ -226,7 +226,7 @@
 
     size->ttmetrics.valid = FALSE;
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    size->strike_index    = 0xFFFF;
+    size->strike_index    = 0xFFFFU;
 #endif
 
     return tt_size_reset( size );
@@ -256,7 +256,7 @@
     size->metrics         = size->root.metrics;
     size->ttmetrics.valid = FALSE;
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    size->strike_index    = 0xFFFF;
+    size->strike_index    = 0xFFFFU;
 #endif
 
     return tt_size_reset( size );
