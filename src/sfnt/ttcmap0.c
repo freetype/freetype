@@ -909,7 +909,7 @@
 
       /* we begin by finding the segment which end is
          closer to our code point */
-      hi = 0;
+      hi = max + 1;
       while ( min < max )
       {
         mid = ( min + max ) >> 1;
