@@ -258,6 +258,7 @@ FT_BEGIN_HEADER
   /*    x_ppem :: The horizontal ppem value (in 26.6 fractional format).   */
   /*                                                                       */
   /*    y_ppem :: The vertical ppem value (in 26.6 fractional format).     */
+  /*              Usually, this is the `nominal' pixel height of the font. */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The values in this structure are taken from the bitmap font.  If   */
