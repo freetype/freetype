@@ -215,7 +215,7 @@ FT_BEGIN_HEADER
 #define FT_LOCAL_DEF(x)  extern "C" x
 #else
 #define FT_LOCAL(x)      extern x
-#define FT_LOCAL_DEF(x)  extern x
+#define FT_LOCAL_DEF(x)  x
 #endif
 
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */

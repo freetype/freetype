@@ -1014,7 +1014,6 @@ THE SOFTWARE.
       /* set-up charset */
       {
         PCF_Property  charset_registry = 0, charset_encoding = 0;
-        FT_Bool       unicode_charmap  = 0;
   
   
         charset_registry = pcf_find_property( face, "CHARSET_REGISTRY" );
