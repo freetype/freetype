@@ -1,3 +1,10 @@
+2003-06-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/psnames/psmodule.c (ps_unicode_value): Add support to
+	recognize `uXXXX[X[X]]' glyph names.
+	Don't handle glyph names starting with `uni' which have more than
+	four digits.
+
 2003-06-16  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FT_Open_Flags): Replaced with

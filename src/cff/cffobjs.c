@@ -523,7 +523,6 @@
 
           FT_CMap_New( clazz, NULL, &cmaprec, NULL );
         }
-
       }
     }
 

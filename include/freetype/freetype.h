@@ -213,7 +213,7 @@ FT_BEGIN_HEADER
   /*    An extremely simple structure used to model the size of a bitmap   */
   /*    strike (i.e., a bitmap instance of the font for a given            */
   /*    resolution) in a fixed-size font face.  This is used for the       */
-  /*    `available_sizes' field of the FT_Face_Properties structure.       */
+  /*    `available_sizes' field of the @FT_FaceRec structure.              */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    height :: The character height in pixels.                          */
@@ -1026,8 +1026,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* @description:                                                         */
   /*    A macro that returns true whenever a face object contains some     */
-  /*    embedded bitmaps.  See the `fixed_sizes' field of the @FT_FaceRec  */
-  /*    structure.                                                         */
+  /*    embedded bitmaps.  See the `available_sizes' field of the          */
+  /*    @FT_FaceRec structure.                                             */
   /*                                                                       */
 #define FT_HAS_FIXED_SIZES( face ) \
           ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
