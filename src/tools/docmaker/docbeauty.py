@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  DocBeuaty 0.2 (c) 2003 David Turner <david@freetype.org>
+#  DocBeauty 0.1 (c) 2003 David Turner <david@freetype.org>
 #
 # This program is used to beautify the documentation comments used
 # in the FreeType 2 public headers.
@@ -20,7 +20,10 @@ import sys, os, time, string, getopt
 
 def beautify_block( block ):
     if block.content:
-        # only beautify documentation blocks
+        # convert all <XXXXX> tags to @XXXXX:
+        
+        
+        # now beautify the documentation "borders" themselves
         lines = [ " /*************************************************************************" ]
         for l in block.content:
             lines.append( "  *" + l )
