@@ -1,3 +1,146 @@
+LATEST CHANGES BETWEEN 2.1.0 and 2.0.9
+
+  I. IMPORTANT BUG FIXES
+
+    - The TrueType bytecode interpreter has been fixed to produce
+      _exactly_ the same output as FreeType 1.x. Previous differences
+      were due to slightly distinct fixed-point computation routines
+      used to perform dot products and vector length measurements.
+      
+      It seems that native TrueType hinting is _extremely_ sensitive
+      to rounding errors. The required vector computation routines have
+      been optimized and placed within the "ttinterp.c" file.
+
+
+  II. NEW FEATURES
+
+    - The 'configure' script used on Unix systems has been modified to
+      check that GNU Make is being used to build the library. If not,
+      it will display a message proposing to use the GNUMAKE environment
+      variable to name it..
+      
+      The Unix-specific file README.UNX has been modified accordingly
+
+  
+  III. MISCELLANEOUS
+
+    - The FreeType License in 'docs/FTL.txt' has been updated to include
+      a proposed preffered disclaimer. If you're using FreeType in your
+      products, you're encouraged (but not mandated) to use the following
+      text in your documentation:
+      
+      """  
+       Portions of this software are copyright © 1996-2002 The FreeType
+       Project (www.freetype.org).  All rights reserved.
+      """
+
+
+    - The default size of the render pool has been reduced to 16 Kb. This
+      shouldn't result in any noticeable performance penalty, unless you're
+      using the engine as-is to render very large and complex glyphs..
+
+
+    - The FreeType 2 Re-Design has begun. More information can be found
+      at the following web address:
+      
+        http://www.freetype.org/freetype2/redesign.html
+        
+      The following internal changes have been performed within the sources
+      of this release:
+      
+        - many internal types have been renamed to increase consistency.
+          the following should be true, except for public types:
+          
+            * all structure types have a name ending in "Rec" (short for
+              'record').
+           
+            * a pointer-to-structure type has the same name than the
+              structure, _without_ the "Rec" suffix.
+              
+                for example:
+                
+                   typedef struct FooRec_
+                   {
+                     ....
+                     
+                   } FooRec, *Foo;
+      
+        - many internal macros have been renamed to increase consistency.
+          the following should be true:
+          
+            * all macros have a name beginning in "FT_". This required
+              a few changes like:
+              
+                 ALLOC   => FT_ALLOC
+                 FREE    => FT_FREE
+                 REALLOC => FT_REALLOC
+              
+              
+            * all macro are completely UPPERCASE. This required a few
+              changes like:
+              
+                 READ_Short  => FT_READ_SHORT
+                 NEXT_Short  => FT_NEXT_SHORT
+                 GET_ULongLE => FT_GET_ULONG_LE
+                 MEM_Set     => FT_MEM_SET
+                 MEM_Copy    => FT_MEM_COPY
+                 etc..
+      
+            * whenever possible, all macro names follow the FT_<OBJECT>_<METHOD>
+              pattern. For example:
+              
+                 ACCESS_Frame   => FT_FRAME_ENTER
+                 FORGET_Frame   => FT_FRAME_EXIT
+                 EXTRACT_Frame  => FT_FRAME_EXTRACT
+                 RELEASE_Frame  => FT_FRAME_RELEASE
+                 
+                 FILE_Pos       => FT_STREAM_POS
+                 FILE_Seek      => FT_STREAM_SEEK
+                 FILE_Read      => FT_STREAM_READ
+                 FILE_ReadAt    => FT_STREAM_READ_AT
+                 READ_Fields    => FT_STREAM_READ_FIELDS
+
+
+        - many internal functions have been renamed to follow the
+          FT_<Object>_<Method> pattern. For example:
+          
+                 FT_Seek_Stream       => FT_Stream_Seek
+                 FT_Read_Stream_At    => FT_Stream_ReadAt
+                 FT_Done_Stream       => FT_Stream_Close
+                 FT_New_Stream        => FT_Stream_Open
+                 FT_New_Memory_Stream => FT_Stream_OpenMemory
+                 FT_Extract_Frame     => FT_Stream_ExtractFrame
+
+          note that method names do not contain "_".
+                 
+
+        - the FT_ALLOC_ARRAY and FT_REALLOC_ARRAY have been removed and
+          are now replaced by FT_NEW_ARRAY and FT_RENEW_ARRAY which do
+          not take a type as the fourth argument. Instead, the array
+          element type size is computed automatically from the type
+          of the target pointer used.
+      
+
+        - a new object class, named FT_CMap has been introduced. These
+          internal objects are used to model character maps. This eases
+          the support of additional charmap types within the engine
+
+
+        - a new configuration file named "ftstdlib.h" has been added
+          to 'include/freetype/config'. It is used to define aliases
+          for _every_ routine of the ISO C library that the font engine
+          uses. Each aliases has a "ft_" prefix (e.g. "ft_strlen" is an
+          alias for "strlen").
+          
+          this is used to ease the porting of FT2 to exotic runtime
+          environments where the ISO C Library isn't available (e.g.
+          XFree86 extension modules).
+
+
+
+      More details are available in the "ChangeLog" file.
+
+
 LATEST CHANGES BETWEEN 2.0.9 and 2.0.8
 
   I. IMPORTANT BUG FIXES

@@ -1,3 +1,13 @@
+2002-04-15  David Turner  <david@freetype.org>
+
+        * docs/FTL.txt: formatting
+
+        * include/freetype/config/ftoption.h: changing the size of the
+          render pool to 16Kb (instead of 32Kb).
+        
+        * docs/CHANGES: preparing the 2.1.0 release
+
+
 2002-04-13  Werner LEMBERG  <wl@gnu.org>
 
 	* src/cff/cffgload.c (CFF_Parse_CharStrings): s/rand/Rand/ to avoid
@@ -648,6 +658,7 @@
 	* include/freetype/internal/fttrace.h: New file, to define the trace
 	levels used for debugging.  It is used both to define enums and
 	toggle names for FT2_DEBUG.
+
 	* include/freetype/internal/internal.h: Updated.
 
 	* src/base/ftobjs.c, src/base/ftstream.c: Updated.
