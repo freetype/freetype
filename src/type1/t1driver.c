@@ -227,8 +227,6 @@
 #endif /* T1_CONFIG_OPTION_NO_AFM */
 
 
-
-
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  t1_driver_class =
   {

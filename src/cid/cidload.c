@@ -115,6 +115,10 @@
       object = (FT_Byte*)&cid->font_info;
       break;
 
+    case T1_FIELD_LOCATION_BBOX:
+      object = (FT_Byte*)&cid->font_bbox;
+      break;
+
     default:
       {
         CID_FaceDict  dict;
@@ -156,6 +160,7 @@
   }
 
 
+#if 0
   FT_CALLBACK_DEF( FT_Error )
   parse_font_bbox( CID_Face     face,
                    CID_Parser*  parser )
@@ -171,8 +176,9 @@
     bbox->yMax = FT_RoundFix( temp[3] );
 
     return CID_Err_Ok;       /* this is a callback function; */
-                            /* we must return an error code */
+                             /* we must return an error code */
   }
+#endif
 
 
   FT_CALLBACK_DEF( FT_Error )
@@ -273,9 +279,12 @@
 
 #include "cidtoken.h"
 
+#if 0
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
+#endif
     T1_FIELD_CALLBACK( "FDArray", parse_fd_array )
     T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
+
     { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
   };
 

@@ -211,6 +211,8 @@
     /* get style name -- be careful, some broken fonts only */
     /* have a `/FontName' dictionary entry!                 */
     root->family_name = info->family_name;
+    /* assume "Regular" style if we don't know better */
+    root->style_name = (char *)"Regular";
     if ( root->family_name )
     {
       char*  full   = info->full_name;
@@ -219,28 +221,34 @@
 
       if ( full )
       {
-        while ( *family && *full == *family )
+        while ( *full )
         {
-          family++;
-          full++;
+          if ( *full == *family )
+          {
+            family++;
+            full++;
+          }
+          else
+          {
+            if ( *full == ' ' || *full == '-' )
+              full++;
+            else if ( *family == ' ' || *family == '-' )
+              family++;
+            else
+            {
+              if ( !*family )
+                root->style_name = full;
+              break;
+            }
+          }
         }
-
-        if ( *full == ' ' || *full == '-' )
-          root->style_name = full + 1;
-        else
-          root->style_name = (char *)"Regular";
       }
-      else
-        root->style_name = (char *)"Regular";
     }
     else
     {
       /* do we have a `/FontName'? */
       if ( type1->font_name )
-      {
         root->family_name = type1->font_name;
-        root->style_name  = (char *)"Regular";
-      }
     }
 
     /* no embedded bitmap support */

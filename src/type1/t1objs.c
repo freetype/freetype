@@ -308,7 +308,7 @@
     face->pshinter = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
                                               "pshinter" );
 
-    /* open the tokenizer, this will also check the font format */
+    /* open the tokenizer; this will also check the font format */
     error = T1_Open_Face( face );
     if ( error )
       goto Exit;
@@ -325,10 +325,11 @@
       goto Exit;
     }
 
-    /* Now, load the font program into the face object */
+    /* now load the font program into the face object */
 
-    /* Init the face object fields */
-    /* Now set up root face fields */
+    /* initialize the face object fields */
+
+    /* set up root face fields */
     {
       FT_Face  root = (FT_Face)&face->root;
 
@@ -336,7 +337,7 @@
       root->num_glyphs = type1->num_glyphs;
       root->face_index = face_index;
 
-      root->face_flags = FT_FACE_FLAG_SCALABLE;
+      root->face_flags  = FT_FACE_FLAG_SCALABLE;
       root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
       root->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
 
@@ -418,7 +419,7 @@
       root->ascender  = (FT_Short)( root->bbox.yMax );
       root->descender = (FT_Short)( root->bbox.yMin );
       root->height    = (FT_Short)(
-                          ( ( root->ascender - root->descender ) * 12 ) / 10 );
+        ( ( root->ascender - root->descender ) * 12 ) / 10 );
 
       /* now compute the maximum advance width */
       root->max_advance_width =

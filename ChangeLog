@@ -1,3 +1,22 @@
+2003-06-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidobjs.c: Apply change 2003-05-31 from <Ron.Dev@gmx.de>.
+	Compute style flags.
+	Fix computation of root->height.
+	* src/cid/cidtoken.h: Handle FontBBox.
+	* src/cid/cidload.c (cid_load_keyword): Handle
+	T1_FIELD_LOCATION_BBOX.
+	(parse_font_bbox): Commented out.
+	(cid_field_record): Comment out element for parsing FontBBox.
+
+	* src/type42/t42parse.c (t42_parse_font_bbox): Commented out.
+	(t42_keywords): Handle FontBBox with T1_FIELD_BBOX, not with
+	T1_FIELD_CALLBACK.
+	(t42_parse_font_bbox): Commented out.
+	(t42_load_keyword): Handle T1_FIELD_LOCATION_BBOX.
+	* src/type42/t42objs.c (T42_Face_Init): Apply change 2003-05-31
+	from <Ron.Dev@gmx.de>.
+
 2003-06-09  George Williams  <gww@silcom.com>
 
 	* src/truetype/ttinterp.c (SetSuperRound) <0x30>: Follow Apple's
