@@ -158,9 +158,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  parse_font_bbox( CID_Face     face,
-                             CID_Parser*  parser )
+  FT_CALLBACK_DEF(FT_Error)
+  parse_font_bbox( CID_Face     face,
+                   CID_Parser*  parser )
   {
     FT_Fixed  temp[4];
     FT_BBox*  bbox = &face->cid.font_bbox;
@@ -177,9 +177,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  parse_font_matrix( CID_Face     face,
-                               CID_Parser*  parser )
+  FT_CALLBACK_DEF(FT_Error)
+  parse_font_matrix( CID_Face     face,
+                     CID_Parser*  parser )
   {
     FT_Matrix*     matrix;
     FT_Vector*     offset;
@@ -231,9 +231,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  parse_fd_array( CID_Face     face,
-                            CID_Parser*  parser )
+  FT_CALLBACK_DEF(FT_Error)
+  parse_fd_array( CID_Face     face,
+                  CID_Parser*  parser )
   {
     CID_Info*  cid    = &face->cid;
     FT_Memory  memory = face->root.memory;

@@ -41,9 +41,9 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_manager_init_face( FT_Lru      lru,
-                                   FT_LruNode  node )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_manager_init_face( FT_Lru      lru,
+                         FT_LruNode  node )
   {
     FTC_Manager  manager = FTC_LRU_GET_MANAGER( lru );
     FT_Error     error;
@@ -67,10 +67,10 @@
 
 
   /* helper function for ftc_manager_done_face() */
-  FT_CALLBACK_DEF
-  FT_Bool  ftc_manager_size_selector( FT_Lru      lru,
-                                      FT_LruNode  node,
-                                      FT_Pointer  data )
+  FT_CALLBACK_DEF(FT_Bool)
+  ftc_manager_size_selector( FT_Lru      lru,
+                             FT_LruNode  node,
+                             FT_Pointer  data )
   {
     FT_UNUSED( lru );
 
@@ -78,9 +78,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  void  ftc_manager_done_face( FT_Lru      lru,
-                               FT_LruNode  node )
+  FT_CALLBACK_DEF(void)
+  ftc_manager_done_face( FT_Lru      lru,
+                         FT_LruNode  node )
   {
     FTC_Manager  manager = FTC_LRU_GET_MANAGER( lru );
     FT_Face      face    = (FT_Face)node->root.data;
@@ -107,9 +107,9 @@
   } FTC_FontRequest;
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_manager_init_size( FT_Lru      lru,
-                                   FT_LruNode  node )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_manager_init_size( FT_Lru      lru,
+                         FT_LruNode  node )
   {
     FTC_FontRequest*  font_req = (FTC_FontRequest*)node->key;
     FT_Size           size;
@@ -136,9 +136,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  void  ftc_manager_done_size( FT_Lru      lru,
-                               FT_LruNode  node )
+  FT_CALLBACK_DEF(void)
+  ftc_manager_done_size( FT_Lru      lru,
+                         FT_LruNode  node )
   {
     FT_UNUSED( lru );
 
@@ -147,10 +147,10 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_manager_flush_size( FT_Lru      lru,
-                                    FT_LruNode  node,
-                                    FT_LruKey   key )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_manager_flush_size( FT_Lru      lru,
+                          FT_LruNode  node,
+                          FT_LruKey   key )
   {
     FTC_FontRequest*  req  = (FTC_FontRequest*)key;
     FT_Size           size = (FT_Size)node->root.data;
@@ -174,9 +174,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Bool  ftc_manager_compare_size( FT_LruNode  node,
-                                     FT_LruKey   key )
+  FT_CALLBACK_DEF(FT_Bool)
+  ftc_manager_compare_size( FT_LruNode  node,
+                            FT_LruKey   key )
   {
     FTC_FontRequest*  req  = (FTC_FontRequest*)key;
     FT_Size           size = (FT_Size)node->root.data;

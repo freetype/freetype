@@ -36,9 +36,9 @@
 #define FT_COMPONENT  trace_cidgload
 
 
-  FT_CALLBACK_DEF
-  FT_Error  cid_load_glyph( T1_Decoder*  decoder,
-                            FT_UInt      glyph_index )
+  FT_CALLBACK_DEF(FT_Error)
+  cid_load_glyph( T1_Decoder*  decoder,
+                  FT_UInt      glyph_index )
   {
     CID_Face   face = (CID_Face)decoder->builder.face;
     CID_Info*  cid  = &face->cid;

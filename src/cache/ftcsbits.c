@@ -56,8 +56,8 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF
-  void  ftc_sbit_chunk_node_destroy( FTC_ChunkNode  node )
+  FT_CALLBACK_DEF(void)
+  ftc_sbit_chunk_node_destroy( FTC_ChunkNode  node )
   {
     FTC_ChunkSet  cset   = node->cset;
     FT_Memory     memory = cset->memory;
@@ -73,10 +73,10 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_bitmap_copy( FT_Memory   memory,
-                             FT_Bitmap*  source,
-                             FTC_SBit    target )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_bitmap_copy( FT_Memory   memory,
+                   FT_Bitmap*  source,
+                   FTC_SBit    target )
   {
     FT_Error  error;
     FT_Int    pitch = source->pitch;
@@ -95,10 +95,10 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_sbit_chunk_node_new( FTC_ChunkSet    cset,
-                                     FT_UInt         index,
-                                     FTC_ChunkNode  *anode )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_sbit_chunk_node_new( FTC_ChunkSet    cset,
+                           FT_UInt         index,
+                           FTC_ChunkNode  *anode )
   {
     FT_Error       error;
     FT_Memory      memory  = cset->memory;
@@ -240,8 +240,8 @@
   /* this function is important because it is both part of */
   /* an FTC_ChunkSet_Class and an FTC_CacheNode_Class      */
   /*                                                       */
-  FT_CALLBACK_DEF
-  FT_ULong  ftc_sbit_chunk_node_size( FTC_ChunkNode  node )
+  FT_CALLBACK_DEF(FT_ULong)
+  ftc_sbit_chunk_node_size( FTC_ChunkNode  node )
   {
     FT_ULong      size;
     FTC_ChunkSet  cset  = node->cset;
@@ -282,9 +282,9 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_sbit_chunk_set_sizes( FTC_ChunkSet     cset,
-                                      FTC_Image_Desc*  desc )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_sbit_chunk_set_sizes( FTC_ChunkSet     cset,
+                            FTC_Image_Desc*  desc )
   {
     FT_Error  error;
     FT_Face   face;
@@ -303,9 +303,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_sbit_chunk_set_init( FTC_SBitSet      sset,
-                                     FTC_Image_Desc*  type )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_sbit_chunk_set_init( FTC_SBitSet      sset,
+                           FTC_Image_Desc*  type )
   {
     sset->desc = *type;
 
@@ -313,9 +313,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Bool  ftc_sbit_chunk_set_compare( FTC_SBitSet      sset,
-                                       FTC_Image_Desc*  type )
+  FT_CALLBACK_DEF(FT_Bool)
+  ftc_sbit_chunk_set_compare( FTC_SBitSet      sset,
+                              FTC_Image_Desc*  type )
   {
     return FT_BOOL( !memcmp( &sset->desc, type, sizeof ( *type ) ) );
   }

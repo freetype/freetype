@@ -32,35 +32,35 @@
   } FT_AutoHinterRec;
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ft_autohinter_init( FT_AutoHinter  module )
+  FT_CALLBACK_DEF(FT_Error)
+  ft_autohinter_init( FT_AutoHinter  module )
   {
     return ah_hinter_new( module->root.library, &module->hinter );
   }
 
 
-  FT_CALLBACK_DEF
-  void  ft_autohinter_done( FT_AutoHinter  module )
+  FT_CALLBACK_DEF(void)
+  ft_autohinter_done( FT_AutoHinter  module )
   {
     ah_hinter_done( module->hinter );
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ft_autohinter_load( FT_AutoHinter  module,
-                                FT_GlyphSlot   slot,
-                                FT_Size        size,
-                                FT_UInt        glyph_index,
-                                FT_ULong       load_flags )
+  FT_CALLBACK_DEF(FT_Error)
+  ft_autohinter_load( FT_AutoHinter  module,
+                      FT_GlyphSlot   slot,
+                      FT_Size        size,
+                      FT_UInt        glyph_index,
+                      FT_ULong       load_flags )
   {
     return ah_hinter_load_glyph( module->hinter,
                                  slot, size, glyph_index, load_flags );
   }
 
 
-  FT_CALLBACK_DEF
-  void   ft_autohinter_reset( FT_AutoHinter  module,
-                              FT_Face        face )
+  FT_CALLBACK_DEF(void)
+  ft_autohinter_reset( FT_AutoHinter  module,
+                       FT_Face        face )
   {
     UNUSED( module );
 
@@ -69,20 +69,20 @@
   }
 
 
-  FT_CALLBACK_DEF
-  void  ft_autohinter_get_globals( FT_AutoHinter  module,
-                                   FT_Face        face,
-                                   void**         global_hints,
-                                   long*          global_len )
+  FT_CALLBACK_DEF(void)
+  ft_autohinter_get_globals( FT_AutoHinter  module,
+                             FT_Face        face,
+                             void**         global_hints,
+                             long*          global_len )
   {
     ah_hinter_get_global_hints( module->hinter, face,
                                 global_hints, global_len );
   }
 
 
-  FT_CALLBACK_DEF
-  void  ft_autohinter_done_globals( FT_AutoHinter  module,
-                                    void*          global_hints )
+  FT_CALLBACK_DEF(void)
+  ft_autohinter_done_globals( FT_AutoHinter  module,
+                              void*          global_hints )
   {
     ah_hinter_done_global_hints( module->hinter, global_hints );
   }

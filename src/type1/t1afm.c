@@ -139,9 +139,9 @@
 
 
   /* compare two kerning pairs */
-  FT_CALLBACK_DEF
-  int  compare_kern_pairs( const void*  a,
-                           const void*  b )
+  FT_CALLBACK_DEF(int)
+  compare_kern_pairs( const void*  a,
+                      const void*  b )
   {
     T1_Kern_Pair*  pair1 = (T1_Kern_Pair*)a;
     T1_Kern_Pair*  pair2 = (T1_Kern_Pair*)b;

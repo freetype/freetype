@@ -1,3 +1,8 @@
+2001-06-27  David Turner <david@freetype.org>
+
+	* include/freetype/ftconfig.h, src/*/*.c: changed the definition and
+	uses of the FT_CALLBACK_DEF macro in order to support 16-bit compilers
+
 2001-06-26  Wolfgang Domröse  <porthos.domroese@harz.de>
 
 	* include/freetype/internal/ftstream.h (FT_GET_OFF3_LE): Fix typo.
