@@ -1,3 +1,8 @@
+2002-03-26  David Turner    <david@freetype.org>
+
+	* src/sfnt/sfdriver.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap0.c:
+	  fixed a small bug in the FT_CMaps support code
+
 2002-03-22  David Turner    <david@freetype.org>
 
         * src/base/ftobjs.c, src/sfnt/ttcmap0.c, src/type1/t1objs.c:

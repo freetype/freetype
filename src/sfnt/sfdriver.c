@@ -174,12 +174,11 @@
       TT_NameEntryRec*  name   = face->name_table.names + found_win;
       FT_UInt           len    = name->stringLength;
       FT_Error          error;
-      FT_String*        result;
-      
+
       if ( !FT_ALLOC( result, len+1 ) )
       {
-        FT_MEM_COPY( result, name->string, len );
-        result[len] = '\0';
+        FT_MEM_COPY( (char*)result, name->string, len );
+        ((char*)result)[len] = '\0';
       }
       goto Exit;
     }
