@@ -2246,6 +2246,8 @@
     for ( index = 0; index < font->num_subfonts; index++ )
       CFF_Done_SubFont( memory, font->subfonts[index] );
 
+    FREE( font->subfonts );
+
     CFF_Done_Encoding( &font->encoding, font->stream );
     CFF_Done_Charset( &font->charset, font->stream );
 
