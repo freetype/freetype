@@ -21,6 +21,7 @@
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
 #include <freetype/fttypes.h>
+#include <freetype/internal/ftobjs.h>
 
 #include <stdio.h>
 #include <stdlib.h>
