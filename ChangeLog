@@ -1,5 +1,9 @@
 2005-03-23  Werner Lemberg  <wl@gnu.org>
 
+	* tests/*: Removed.
+
+2005-03-23  Werner Lemberg  <wl@gnu.org>
+
 	* docs/CHANGES, docs/INSTALL.ANY: Updated.
 
 	* include/freetype/ftmoderr.h: Replace `Autohint' with `Autofit'.
