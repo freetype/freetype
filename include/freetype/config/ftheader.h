@@ -523,6 +523,8 @@
 
 #define FT_INCREMENTAL_H           <freetype/ftincrem.h>
 
+#define FT_TRUETYPE_UNPATENTED_H   <freetype/ttunpat.h>
+
   /* now include internal headers definitions from <freetype/internal/...> */
 
 #define  FT_INTERNAL_INTERNAL_H    <freetype/internal/internal.h>
