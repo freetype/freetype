@@ -1,5 +1,24 @@
 2002-06-14  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
+	Fix glyph indices to make index zero always the undefined glyph.
+
+	* src/bdf/bdfdrivr.c (bdf_cmap_init): Don't decrease
+	cmap->num_encodings.
+	(bdf_cmap_char_index, bdf_cmap_char_next, BDF_Get_Char_Index):
+	Increase result by 1 for normal cases.
+	(BDF_Glyph_Load): Decrease index by 1.
+
+	* src/pcf/pcfdriver.c (pcf_cmap_char_index, pcf_cmap_char_next,
+	PCF_Char_Get_Index): Increase result by 1 for normal cases.
+	(PCF_Glyph_Load): Decrease index by 1.
+	* src/pcf/pcfread.c (pcf_get_encodings): Don't decrease j for
+	allocating `encoding'.
+
+	* src/base/ftobjs.c (FT_Load_Glyph, FT_Get_Glyph_Name): Fix
+	bounding tests.
+
+2002-06-14  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
 	Add new cmap support to BDF driver
 
 	* src/bdf/bdfdrivr.c (BDF_CMapRec) [FT_CONFIG_OPTION_USE_CMAPS]:
