@@ -168,7 +168,7 @@
     file = STREAM_FILE(stream);
 
     fseek( file, offset, SEEK_SET );    
-    return (unsigned long)fread( buffer, count, 1, file );
+    return (unsigned long)fread( buffer, 1, count, file );
   }
 
 
