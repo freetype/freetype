@@ -232,9 +232,9 @@
 	  t1_field_cid_info => T1_FIELD_LOCATION_CID_INFO
 	  etc.
 
-	* include/freetype/internal/psglobals.h,
-	include/freetype/internal/pshints.h, src/pshinter/pshglob.h:
-	Removing obsolete files.
+	* include/freetype/internal/psglobals.h: Removed.
+	* include/freetype/internal/pshints.h, src/pshinter/pshglob.h:
+	Updated.
 
 	* include/freetype/internal/tttypes.h,
 	include/freetype/internal/sfnt.h, src/base/ftnames.c,
