@@ -1,3 +1,9 @@
+2003-01-08  David Turner  <david@freetype.org>
+
+        * Jamrules, Jamfile, Jamfile.in, src/*/Jamfile: small changes to
+        support the compilation of FreeType 2 as part of larger projects with
+        their own configuration options (only with Jam)
+
 2003-01-07  David Turner  <david@freetype.org>
 
         * src/base/ftstroker.c: probably the last bug-fixes to the stroker,
