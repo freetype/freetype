@@ -64,7 +64,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Computes the square root of an Int32 integer (which will be        */
-  /*    as an unsigned long value).                                        */
+  /*    handled as an unsigned long value).                                */
   /*                                                                       */
   /* <Input>                                                               */
   /*    x :: The value to compute the root for.                            */
@@ -132,13 +132,14 @@
   {
     FT_Int s;
 
+
     s = 1;
     if ( a < 0 ) { a = -a; s = -s; }
     if ( b < 0 ) { b = -b; s = -s; }
     if ( c < 0 ) { c = -c; s = -s; }
 
-    return s * ( c > 0 ? ( ( (FT_Int64)a * b + ( c >> 1 ) ) / c )
-                       : 0x7FFFFFFF );
+    return s * ( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
+                       : 0x7FFFFFFFL );
   }
 
 
@@ -174,7 +175,7 @@
   FT_EXPORT_FUNC( FT_Long )  FT_MulFix( FT_Long  a,
                                         FT_Long  b )
   {
-    FT_Int s;
+    FT_Int  s;
 
 
     s = 1;
@@ -219,11 +220,11 @@
     s ^= b; b = ABS(b);
 
     if ( b == 0 )
-      /* check for divide by 0 */
+      /* check for division by 0 */
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = ((FT_Int64)a << 16) / b;
+      q = ( (FT_Int64)a << 16 ) / b;
 
     return (FT_Int32)( s < 0 ? -q : q );
   }
@@ -277,9 +278,9 @@
     do
     {
       s = r;
-      r = ( r + l/r ) >> 1;
+      r = ( r + l / r ) >> 1;
     }
-    while ( r > s || r*r > l );
+    while ( r > s || r * r > l );
 
     return r;
   }
@@ -344,22 +345,23 @@
     s ^= b; b = ABS( b );
     s ^= c; c = ABS( c );
 
-    if ( a <= 46340 && b <= 46340 && c <= 176095L && c > 0)
+    if ( a <= 46340 && b <= 46340 && c <= 176095L && c > 0 )
     {
-      a = a*b + (c >> 1) ) / c;
+      a = ( a * b + ( c >> 1 ) ) / c;
     }
-    else if (c > 0)
+    else if ( c > 0 )
     {
       FT_Int64  temp, temp2;
 
+
       FT_MulTo64( a, b, &temp );
-      temp2.hi = (FT_Int32)(c >> 31);
-      temp2.lo = (FT_Word32)(c / 2);
+      temp2.hi = (FT_Int32)( c >> 31 );
+      temp2.lo = (FT_Word32)( c / 2 );
       FT_Add64( &temp, &temp2, &temp );
       a = FT_Div64by32( &temp, c );
     }
     else
-      a = 0x7FFFFFFF;
+      a = 0x7FFFFFFFL;
 
     return ( s < 0 ) ? -a : a;
   }
@@ -414,14 +416,16 @@
 
     if ( ua <= 2048 && ub <= 1048576L )
     {
-      ua = ( ua*ub + 0x8000 ) >> 16;
+      ua = ( ua * ub + 0x8000 ) >> 16;
     }
     else
     {
       FT_ULong  al = ua & 0xFFFF;
 
 
-      ua = (ua >> 16)*ub + al*(ub >> 16) + ( al*(ub & 0xFFFF) >> 16 );
+      ua = ( ua >> 16 ) * ub +
+           al * ( ub >> 16 ) +
+           ( al * ( ub & 0xFFFF ) >> 16 );
     }
 
     return ( s < 0 ? -(FT_Long)ua : ua );
@@ -447,7 +451,7 @@
   /*    The result of `(a*0x10000)/b'.                                     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The optimization for FT_DivFix() is simple: If (a << 16) fits in   */
+  /*    The optimization for FT_DivFix() is simple: If (a << 16) fits into */
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
   /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
@@ -462,12 +466,14 @@
     s ^= b; b = ABS(b);
 
     if ( b == 0 )
-      /* check for divide by 0 */
+    {
+      /* check for division by 0 */
       q = 0x7FFFFFFFL;
-    else if ( (a >> 16) == 0 )
+    }
+    else if ( ( a >> 16 ) == 0 )
     {
       /* compute result directly */
-      q = (FT_Word32)(a << 16) / (FT_Word32)b;
+      q = (FT_Word32)( a << 16 ) / (FT_Word32)b;
     }
     else
     {
@@ -576,7 +582,7 @@
 
       /* Check carry overflow of i1 + lo */
       lo += i1;
-      hi += (lo < i1);
+      hi += ( lo < i1 );
 
       z->lo = lo;
       z->hi = hi;
@@ -615,6 +621,7 @@
     FT_Int32   s;
     FT_Word32  q, r, i, lo;
 
+
     s  = x->hi;
     if ( s < 0 )
     {
@@ -626,8 +633,10 @@
     /* Shortcut */
     if ( x->hi == 0 )
     {
-      if (y > 0) q = x->lo / y;
-            else q = 0x7FFFFFFF;
+      if ( y > 0 )
+        q = x->lo / y;
+      else
+        q = 0x7FFFFFFFL;
 
       return ( s < 0 ) ? -(FT_Int32)q : (FT_Int32)q;
     }
@@ -637,8 +646,8 @@
 
     if ( r >= (FT_Word32)y ) /* we know y is to be treated as unsigned here */
       return ( s < 0 ) ? 0x80000001L : 0x7FFFFFFFL;
-                            /* Return Max/Min Int32 if divide overflow. */
-                            /* This includes division by zero!          */
+                             /* Return Max/Min Int32 if division overflow.  */
+                             /* This includes division by zero!             */
     q = 0;
     for ( i = 0; i < 32; i++ )
     {
@@ -678,6 +687,7 @@
     z->hi = hi;
   }
 
+
   static
   int  ft_order64( FT_Int64*  z )
   {
@@ -701,6 +711,7 @@
     return j - 1;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -723,18 +734,19 @@
     FT_Int32  r, s;
 
 
-    if ( (FT_Int32)l->hi < 0        ||
-         (l->hi == 0 && l->lo == 0) )
+    if ( (FT_Int32)l->hi < 0          ||
+         ( l->hi == 0 && l->lo == 0 ) )
       return 0;
 
     s = ft_order64( l );
-    if ( s == 0 ) return 1;
+    if ( s == 0 )
+      return 1;
 
     r = ft_square_roots[s];
     do
     {
       s = r;
-      r = ( r + FT_Div64by32(l,r) ) >> 1;
+      r = ( r + FT_Div64by32( l, r ) ) >> 1;
       FT_MulTo64( r, r,   &l2 );
       FT_Sub64  ( l, &l2, &l2 );
     }
