@@ -586,8 +586,8 @@
         switch (n)
         {
           case 0 : result = &matrix->xx; break;
-          case 1 : result = &matrix->xy; break;
-          case 2 : result = &matrix->yx; break;
+          case 1 : result = &matrix->yx; break;
+          case 2 : result = &matrix->xy; break;
           default: result = &matrix->yy;
         }
 

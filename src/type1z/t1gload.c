@@ -1349,6 +1349,9 @@
           metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
         }
 
+        /* apply the font matrix */
+        FT_Outline_Transform( &glyph->root.outline, &face->type1.font_matrix );
+
         /* compute the other metrics */
         FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
 

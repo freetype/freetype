@@ -1,5 +1,8 @@
 LATEST_CHANGES
 
+  - a minor fix to the Type 1 driver to let them apply the font matrix
+    correctly (used for many oblique fonts..)
+
   - some fixes for 64-bit systems (mainly changing some FT_TRACE calls
     to use %p instead of %lx).. Thanks to Karl Robillard
 

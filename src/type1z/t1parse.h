@@ -37,6 +37,30 @@
   extern "C" {
 #endif
 
+
+  typedef enum T1_Field_Type_
+  {
+    t1_field_none = 0,
+    t1_field_bool,
+    t1_field_integer,
+    t1_field_fixed,
+    t1_field_string,
+    t1_field_fixed_array,
+    t1_field_coord_array
+    
+  } T1_Field_Type;
+  
+  
+  typedef struct T1_Field_Rec_
+  {
+    T1_Field_Type  type;      /* type of field                        */
+    FT_UInt        offset;    /* offset of field in object            */
+    FT_UInt        size;      /* size of field in bytes               */
+    T1_Int         array_max; /* maximum number of elements for array */
+    T1_Int         power_ten; /* power of ten for "fixed" fields      */
+    
+  } T1_Field_Rec;
+  
 /*************************************************************************
  *
  * <Struct> T1_Table
@@ -181,6 +205,14 @@
 #if 0
   LOCAL_DEF
   T1_Int  T1_ToImmediate( T1_Parser*  parser );
+#endif
+
+#if 0
+  /* load a single field in an object */
+  LOCAL_DEF
+  T1_Error  T1_Load_Field( T1_Parser*     parser,
+                           void*          object,
+                           T1_Field_Rec*  field );
 #endif
 
   LOCAL_DEF

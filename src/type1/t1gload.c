@@ -1565,6 +1565,9 @@
         FT_BBox           cbox;
         FT_Glyph_Metrics* metrics = &glyph->root.metrics;
 
+        /* apply the font matrix */
+        FT_Outline_Transform( &glyph->root.outline, &face->type1.font_matrix );
+
         FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
 
         /* grid fit the bounding box if necessary */

@@ -579,6 +579,43 @@
     return t1_tobool( &parser->cursor, parser->limit );
   }
 
+
+#if 0
+  /* load a single field in an object */
+  LOCAL_FUNC
+  T1_Error  T1_Load_Field( T1_Parser*     parser,
+                           void*          object,
+                           T1_Field_Rec*  field )
+  {
+    FT_Byte*  p       = (FT_Byte*)object + field->offset;
+    FT_Byte** pcursor = &parser->cursor;
+    FT_Byte*  limit   = parser->limit;
+    
+    switch (field->type)
+    {
+      case t1_field_boolean:
+        *(T1_Bool*)p = t1_tobool( pcursor, limit );
+        break;
+        
+      case t1_field_string:
+        *(T1_String**)p = t1_tostring( pcursor, limit, parser->memory );
+        break;
+        
+      case t1_field_int:
+        *(T1_Long*)p = t1_toint( pcursor, limit );
+        break;
+        
+      case t1_field_fixed:
+        *(T1_Fixed*)p = t1_tofixed( pcursor, limit, field->power_ten );
+        break;
+        
+      default:
+        return T1_Err_Invalid_Argument;
+    }
+    return 0;
+  }                           
+#endif
+
   static
   FT_Error  read_pfb_tag( FT_Stream  stream, T1_UShort *tag, T1_Long*  size )
   {
