@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftcglyph.h                                                             */
 /*                                                                         */
-/*    FreeType glyph image (FT_Glyph) cache (specification).               */
+/*    FreeType abstract glyph cache (specification).                       */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -23,6 +23,14 @@
   /*            provide additional logic to implement a complete cache.    */
   /*            For example, see `ftcimage.h' and `ftcimage.c' which       */
   /*            implement a FT_Glyph cache based on this code.             */
+  /*                                                                       */
+  /*  NOTE: for now, each glyph set is implemented as a static hash table  */
+  /*        it's be interesting to experiment with dynamic hashes to see   */
+  /*        if this improves performance or not (I don't know why but      */
+  /*        something tells me it won't ?!)                                */
+  /*                                                                       */
+  /*        in all cases, this change should not affect any derived        */
+  /*        glyph cache class..                                            */
   /*                                                                       */
   /*************************************************************************/
 
@@ -147,7 +155,7 @@
   {
     FTC_CacheRec  root;
     FT_Lru        gsets_lru;  /* static sets lru list */
-    FTC_GlyphSet  last_gset;  /* small cache :-)        */
+    FTC_GlyphSet  last_gset;  /* small cache :o)      */
 
   } FTC_Glyph_CacheRec;
 

@@ -58,11 +58,11 @@
 #define  FTC_MAX_CHUNK_SETS  16
 
 
-  typedef struct FTC_ChunkRec_*        FTC_Chunk;
+  typedef struct FTC_ChunkNodeRec_*    FTC_ChunkNode;
   typedef struct FTC_ChunkSetRec_*     FTC_ChunkSet;
   typedef struct FTC_Chunk_CacheRec_*  FTC_Chunk_Cache;
 
-  typedef struct FTC_ChunkRec_
+  typedef struct FTC_ChunkNodeRec_
   {
     FTC_CacheNodeRec    root;
     FTC_ChunkSet        cset;
@@ -70,13 +70,20 @@
     FT_UShort           num_elements;
     FT_Byte*            elements;
   
-  } FTC_ChunkRec;
+  } FTC_ChunkNodeRec;
 
+#define FTC_CHUNKNODE_TO_LRUNODE(x)  ((FT_ListNode)(x))
+#define FTC_LRUNODE_TO_CHUNKNODE(x)  ((FTC_ChunkNode)(x))
 
   /*************************************************************************/
   /*                                                                       */
   /*  chunk set methods                                                    */
   /*                                                                       */
+
+ /* used to set "element_max", "element_count" and "element_size" */
+  typedef FT_Error  (*FTC_ChunkSet_SizesFunc)  ( FTC_ChunkSet   cset,
+                                                 FT_Pointer     type );
+
 
   typedef FT_Error  (*FTC_ChunkSet_InitFunc)  ( FTC_ChunkSet   cset,
                                                 FT_Pointer     type );
@@ -100,11 +107,12 @@
 
   typedef struct  FTC_ChunkSet_Class_
   {
-    FT_UInt                       cset_size;
+    FT_UInt                       cset_byte_size;
 
     FTC_ChunkSet_InitFunc         init;
     FTC_ChunkSet_DoneFunc         done;
     FTC_ChunkSet_CompareFunc      compare;
+    FTC_ChunkSet_SizesFunc        sizes;
 
     FTC_ChunkSet_NewNodeFunc      new_node;
     FTC_ChunkSet_SizeNodeFunc     size_node;
@@ -119,11 +127,12 @@
     FTC_Manager          manager;
     FT_Memory            memory;
     FTC_ChunkSet_Class*  clazz;
-    FT_UInt              cset_index;  /* index in parent cache    */
+    FT_UInt              cset_index;     /* index in parent cache    */
 
     FT_UInt              element_max;    /* maximum number of elements   */
     FT_UInt              element_size;   /* element size in bytes        */
     FT_UInt              element_count;  /* number of elements per chunk */
+
     FT_UInt              num_chunks;
     FTC_ChunkNode*       chunks;
 
@@ -145,7 +154,7 @@
     FTC_CacheRec     root;
     FT_Lru           csets_lru;  /* static chunk set lru list */
     FTC_ChunkSet     last_cset;  /* small cache :-)           */
-
+    
   } FTC_Chunk_CacheRec;
 
   /*************************************************************************/
@@ -155,7 +164,7 @@
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT_FUNC( NV_Error )
+  FT_EXPORT_FUNC( FT_Error )
   FTC_ChunkNode_Init( FTC_ChunkNode  node,
                       FTC_ChunkSet   cset,
                       FT_UInt        index,
@@ -186,10 +195,7 @@
   FT_EXPORT_DEF( FT_Error )
   FTC_ChunkSet_New( FTC_Chunk_Cache   cache,
                     FT_Pointer        type,
-                    FT_UInt           num_elements,
-                    FT_UInt           element_size,
-                    FT_UInt           chunk_size,
-                    FTC_ChunkSet     *aset )
+                    FTC_ChunkSet     *aset );
 
 
   FT_EXPORT_DEF( FT_Error )

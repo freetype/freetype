@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/cache/ftcglyph.h>
+#include <freetype/cache/ftcchunk.h>
 #include <freetype/fterrors.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftlist.h>
@@ -33,7 +33,7 @@
 
 
   /* create a new chunk node, setting its cache index and ref count */
-  FT_EXPORT_FUNC( NV_Error )
+  FT_EXPORT_FUNC( FT_Error )
   FTC_ChunkNode_Init( FTC_ChunkNode  node,
                       FTC_ChunkSet   cset,
                       FT_UInt        index,
@@ -41,22 +41,25 @@
   {
     FTC_Chunk_Cache      cache = cset->cache;
     FTC_CacheNode_Data*  data  = FTC_CACHENODE_TO_DATA_P( &node->root );
-    NV_Error             error = 0;
+    FT_Error             error = 0;
 
 
     data->cache_index = (FT_UShort) cache->root.cache_index;
     data->ref_count   = (FT_Short)  0;
     node->cset_index  = (FT_UShort) index;
 
-    node->num_elements = (index+1 < cset->chunk_count)
-                       ? cset->chunk_size
-                       : cset->element_max - cset->chunk_count*index;
+    node->num_elements = (index+1 < cset->element_count)
+                       ? cset->element_count * cset->element_size
+                       : cset->element_max   - cset->element_count*index;
     if (alloc)
     {
       /* allocate elements array */
+      FT_Memory   memory;
+
+      
       memory = cache->root.memory;
-      error  = MEM_ALLOC( cache->elements, cset->element_size *
-                                           cset->element_count );
+      error  = MEM_Alloc( node->elements, cset->element_size *
+                                          cset->element_count );
     }
     return error;
   }
@@ -79,7 +82,7 @@
     FTC_ChunkSet  cset     = node->cset;
 
 
-    return cset->clazz->size_node( node, cset );
+    return cset->clazz->size_node( node );
   }
 
 
@@ -102,9 +105,6 @@
   FT_EXPORT_FUNC( FT_Error )
   FTC_ChunkSet_New( FTC_Chunk_Cache   cache,
                     FT_Pointer        type,
-                    FT_UInt           num_elements,
-                    FT_UInt           element_size,
-                    FT_UInt           chunk_size,
                     FTC_ChunkSet     *aset )
   {
     FT_Error      error;
@@ -121,19 +121,22 @@
 
     *aset = 0;
 
-    if ( ALLOC( set, clazz->cset_byte_size ) )
+    if ( ALLOC( cset, clazz->cset_byte_size ) )
       goto Exit;
 
     cset->cache         = cache;
     cset->manager       = manager;
     cset->memory        = memory;
-    cset->element_max   = num_elements;
-    cset->element_size  = element_size;
-    cset->element_count = chunk_size;
     cset->clazz         = clazz;
 
+    /* now compute element_max, element_count and element_size */
+    error = clazz->sizes( cset, type);
+    if (error)
+      goto Exit;
+
     /* compute maximum number of nodes */
-    cset->num_chunks = (num_elements + (chunk_size-1))/chunk_size;
+    cset->num_chunks = (cset->element_max   + 
+                        cset->element_count - 1) / cset->element_count;
 
     /* allocate chunk pointers table */
     if ( ALLOC_ARRAY( cset->chunks, cset->num_chunks, FTC_ChunkNode ) )
@@ -165,7 +168,7 @@
     FTC_Chunk_Cache         cache        = cset->cache;
     FTC_Manager             manager      = cache->root.manager;
     FT_List                 glyphs_lru   = &manager->global_lru;
-    FTC_ChunkNode*          bucket       = cset->chunk;
+    FTC_ChunkNode*          bucket       = cset->chunks;
     FTC_ChunkNode*          bucket_limit = bucket + cset->num_chunks;
     FT_Memory               memory       = cache->root.memory;
 
@@ -181,6 +184,7 @@
       lrunode = FTC_CHUNKNODE_TO_LRUNODE( node );
 
       manager->num_bytes -= clazz->size_node( node );
+      manaher->num_nodes --;
 
       FT_List_Remove( glyphs_lru, lrunode );
 
@@ -201,21 +205,21 @@
   FTC_ChunkSet_Lookup_Node( FTC_ChunkSet    cset,
                             FT_UInt         glyph_index,
                             FTC_ChunkNode  *anode,
-                            FTC_UInt       *index )
+                            FT_UInt        *aindex )
   {
-    FTC_Glyph_Cache  cache   = cset->cache;
+    FTC_Chunk_Cache  cache   = cset->cache;
     FTC_Manager      manager = cache->root.manager;
     FT_Error         error   = 0;
 
-    FTC_GlyphSet_Class*  clazz = cset->clazz;
+    FTC_ChunkSet_Class*  clazz = cset->clazz;
 
 
     *anode = 0;
-    if (glyph_index >= cset->elements_max)
+    if (glyph_index >= cset->element_max)
       error = FT_Err_Invalid_Argument;
     else
     {
-      FT_UInt         chunk_size  = cset->chunk_size;
+      FT_UInt         chunk_size  = cset->element_count;
       FT_UInt         chunk_index = glyph_index/chunk_size;
       FTC_ChunkNode*  pnode       = cset->chunks + chunk_index;
       FTC_ChunkNode   node        = *pnode;
@@ -233,7 +237,8 @@
         /* insert the node at the start the global LRU glyph list */
         FT_List_Insert( &manager->global_lru, FTC_CHUNKNODE_TO_LRUNODE( node ) );
 
-        manager->num_bytes += clazz->size_node( node, gset );
+        manager->num_bytes += clazz->size_node( node );
+        manager->num_nodes ++;
 
         if (manager->num_bytes > manager->max_bytes)
         {
@@ -287,7 +292,7 @@
     {
       /* good, now set the set index within the set object */
       cset->cset_index = node - lru->nodes;
-      node->root.data  = set;
+      node->root.data  = cset;
     }
 
     return error;
@@ -347,15 +352,8 @@
     cache->root.node_clazz =
       (FTC_CacheNode_Class*)&ftc_chunk_cache_node_class;
 
-    /* The following is extremely important for ftc_destroy_glyph_image() */
-    /* to work properly, as the second parameter that is sent to it       */
-    /* through the cache manager is `user_data' and must be set to        */
-    /* `cache' here.                                                      */
-    /*                                                                    */
-    cache->root.cache_user = cache;
-
     error = FT_Lru_New( &ftc_chunk_set_lru_class,
-                        FTC_MAX_GLYPH_CSETS,
+                        FTC_MAX_CHUNK_SETS,
                         cache,
                         memory,
                         1, /* pre_alloc == TRUE */
