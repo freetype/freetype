@@ -22,7 +22,8 @@
   }
 
 
-  FT_LOCAL_DEF( const AF_ScriptClassRec )  af_dummy_script_class =
+  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec
+  af_dummy_script_class =
   {
     AF_SCRIPT_NONE,
     NULL,
@@ -35,3 +36,6 @@
     (AF_Script_InitHintsFunc)    af_dummy_hints_init,
     (AF_Script_ApplyHintsFunc)   af_dummy_hints_apply
   };
+
+
+/* END */

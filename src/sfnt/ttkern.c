@@ -197,7 +197,8 @@
       FT_UInt  coverage = FT_NEXT_USHORT( p );
       FT_Int   value    = 0;
 
-      FT_UNUSED(version);
+      FT_UNUSED( version );
+
 
       next = base + length;
 

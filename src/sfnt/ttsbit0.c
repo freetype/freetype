@@ -535,11 +535,11 @@
 
 
   static FT_Error
-  tt_sbit_decoder_load_bit_aligned ( TT_SBitDecoder  decoder,
-                                     FT_Byte*        p,
-                                     FT_Byte*        limit,
-                                     FT_Int          x_pos,
-                                     FT_Int          y_pos )
+  tt_sbit_decoder_load_bit_aligned( TT_SBitDecoder  decoder,
+                                    FT_Byte*        p,
+                                    FT_Byte*        limit,
+                                    FT_Int          x_pos,
+                                    FT_Int          y_pos )
   {
     FT_Error    error = SFNT_Err_Ok;
     FT_Byte*    line;
@@ -629,7 +629,7 @@
                                  FT_Int          x_pos,
                                  FT_Int          y_pos )
   {
-    FT_Error  error = 0;
+    FT_Error  error = SFNT_Err_Ok;
     FT_UInt   num_components, nn;
 
 
