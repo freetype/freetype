@@ -199,11 +199,11 @@
  *********************************************************************/
 
   static
-  T1_Int    lookup_glyph_by_stdcharcode( T1_Face  face,
-                                         T1_Int   charcode )
+  FT_Int    lookup_glyph_by_stdcharcode( T1_Face  face,
+                                         FT_Int   charcode )
   {
-    T1_Int              n;
-    const T1_String*    glyph_name;
+    FT_Int              n;
+    const FT_String*    glyph_name;
     PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
 
     /* check range of standard char code */
@@ -215,7 +215,7 @@
 
     for ( n = 0; n < face->type1.num_glyphs; n++ )
     {
-      T1_String*  name = (T1_String*)face->type1.glyph_names[n];
+      FT_String*  name = (FT_String*)face->type1.glyph_names[n];
 
       if ( name && strcmp(name,glyph_name) == 0 )
         return n;
@@ -247,19 +247,19 @@
  *********************************************************************/
 
   static
-  T1_Error  t1operator_seac( T1_Decoder*  decoder,
-                             T1_Pos       asb,
-                             T1_Pos       adx,
-                             T1_Pos       ady,
-                             T1_Int       bchar,
-                             T1_Int       achar )
+  FT_Error  t1operator_seac( T1_Decoder*  decoder,
+                             FT_Pos       asb,
+                             FT_Pos       adx,
+                             FT_Pos       ady,
+                             FT_Int       bchar,
+                             FT_Int       achar )
   {
-    T1_Error     error;
+    FT_Error     error;
     T1_Face      face = decoder->builder.face;
-    T1_Int       bchar_index, achar_index, n_base_points;
+    FT_Int       bchar_index, achar_index, n_base_points;
     FT_Outline*  cur  = &decoder->builder.current;
     FT_Outline*  base = &decoder->builder.base;
-    T1_Vector    left_bearing, advance;
+    FT_Vector    left_bearing, advance;
     T1_Font*     type1 = &face->type1;
 
     bchar_index = lookup_glyph_by_stdcharcode( face, bchar );
@@ -357,7 +357,7 @@
 
       /* adjust contours in accented character outline */
       {
-        T1_Int  n;
+        FT_Int  n;
 
         for ( n = 0; n < cur->n_contours; n++ )
           cur->contours[n] += n_base_points;
@@ -394,14 +394,14 @@
  *********************************************************************/
 
   static
-  T1_Error  t1operator_flex( T1_Decoder*  decoder,
-                             T1_Pos       threshold,
-                             T1_Pos       end_x,
-                             T1_Pos       end_y )
+  FT_Error  t1operator_flex( T1_Decoder*  decoder,
+                             FT_Pos       threshold,
+                             FT_Pos       end_x,
+                             FT_Pos       end_y )
   {
-    T1_Vector    vec;
-    T1_Vector*   flex  = decoder->flex_vectors;
-    T1_Int       n;
+    FT_Vector    vec;
+    FT_Vector*   flex  = decoder->flex_vectors;
+    FT_Int       n;
 
     /* we don't even try to test the threshold in the non-hinting  */
     /* builder, even if the flex operator is said to be a path      */
@@ -460,22 +460,22 @@
  *********************************************************************/
 
   LOCAL_FUNC
-  T1_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
-                                   T1_Byte*     charstring_base,
-                                   T1_Int       charstring_len,
-                                   T1_Int       num_subrs,
-                                   T1_Byte**    subrs_base,
-                                   T1_Int*      subrs_len )
+  FT_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
+                                   FT_Byte*     charstring_base,
+                                   FT_Int       charstring_len,
+                                   FT_Int       num_subrs,
+                                   FT_Byte**    subrs_base,
+                                   FT_Int*      subrs_len )
   {
-    T1_Error            error;
+    FT_Error            error;
     T1_Decoder_Zone*    zone;
-    T1_Byte*            ip;
-    T1_Byte*            limit;
+    FT_Byte*            ip;
+    FT_Byte*            limit;
     T1_Builder*         builder = &decoder->builder;
     T1_Builder_Funcs*   builds  = &builder->funcs;
     T1_Hinter_Funcs*    hints   = &decoder->hinter;
 
-    static const T1_Int  args_count[ op_max ] =
+    static const FT_Int  args_count[ op_max ] =
     {
       0, /* none */
       0, /* endchar */
@@ -521,9 +521,9 @@
     /* now, execute loop */
     while ( ip < limit )
     {
-      T1_Int*      top      = decoder->top;
+      FT_Int*      top      = decoder->top;
       T1_Operator  op       = op_none;
-      T1_Long      value    = 0;
+      FT_Long      value    = 0;
 
       /* First of all, decompress operator or value */
       switch (*ip++)
@@ -656,8 +656,8 @@
 
           case 2:   /* add flex vector ------------------------------- */
             {
-              T1_Int      index;
-              T1_Vector*  flex;
+              FT_Int      index;
+              FT_Vector*  flex;
 
               if (top[0] != 0) goto Unexpected_OtherSubr;
 
@@ -747,7 +747,7 @@
       }
       else
       {
-        T1_Int  num_args = args_count[op];
+        FT_Int  num_args = args_count[op];
 
         if ( top - decoder->stack < num_args )
           goto Stack_Underflow;
@@ -861,7 +861,7 @@
 
           case op_callsubr:
             {
-              T1_Int  index = top[0];
+              FT_Int  index = top[0];
 
               if ( index < 0 || index >= num_subrs )
               {
@@ -959,10 +959,10 @@
 /*    invoked..                                                          */
 /*                                                                       */
   LOCAL_FUNC
-  T1_Error  T1_Add_Points( T1_Builder*  builder,
-                           T1_Int       num_points )
+  FT_Error  T1_Add_Points( T1_Builder*  builder,
+                           FT_Int       num_points )
   {
-    T1_Int    new_points;
+    FT_Int    new_points;
 
     new_points = builder->base.n_points +
                  builder->current.n_points +
@@ -971,18 +971,18 @@
     if ( new_points > builder->max_points )
     {
       FT_Memory  memory    = builder->memory;
-      T1_Error   error;
-      T1_Int     increment = builder->current.points - builder->base.points;
-      T1_Int     current   = builder->max_points;
+      FT_Error   error;
+      FT_Int     increment = builder->current.points - builder->base.points;
+      FT_Int     current   = builder->max_points;
 
       while ( builder->max_points < new_points )
         builder->max_points += 16;
 
       if ( REALLOC_ARRAY( builder->base.points,
-                          current, builder->max_points, T1_Vector )  ||
+                          current, builder->max_points, FT_Vector )  ||
 
            REALLOC_ARRAY( builder->base.tags,
-                          current, builder->max_points, T1_Byte )    )
+                          current, builder->max_points, FT_Byte )    )
         return error;
 
       builder->current.points = builder->base.points + increment;
@@ -1014,10 +1014,10 @@
 /*    invoked..                                                          */
 /*                                                                       */
   LOCAL_FUNC
-  T1_Error  T1_Add_Contours( T1_Builder*  builder,
-                             T1_Int       num_contours )
+  FT_Error  T1_Add_Contours( T1_Builder*  builder,
+                             FT_Int       num_contours )
   {
-    T1_Int    new_contours;
+    FT_Int    new_contours;
 
     new_contours = builder->base.n_contours +
                    builder->current.n_contours +
@@ -1025,16 +1025,16 @@
 
     if ( new_contours > builder->max_contours && builder->load_points )
     {
-      T1_Error  error;
+      FT_Error  error;
       FT_Memory memory = builder->memory;
-      T1_Int    increment = builder->current.contours - builder->base.contours;
-      T1_Int    current   = builder->max_contours;
+      FT_Int    increment = builder->current.contours - builder->base.contours;
+      FT_Int    current   = builder->max_contours;
 
       while ( builder->max_contours < new_contours )
         builder->max_contours += 4;
 
       if ( REALLOC_ARRAY( builder->base.contours,
-                          current, builder->max_contours, T1_Short ) )
+                          current, builder->max_contours, FT_Short ) )
         return error;
 
       builder->current.contours = builder->base.contours + increment;
@@ -1064,11 +1064,11 @@
 
 
   static
-  T1_Error  maxadv_sbw( T1_Decoder*  decoder,
-                        T1_Pos       sbx,
-                        T1_Pos       sby,
-                        T1_Pos       wx,
-                        T1_Pos       wy )
+  FT_Error  maxadv_sbw( T1_Decoder*  decoder,
+                        FT_Pos       sbx,
+                        FT_Pos       sby,
+                        FT_Pos       wx,
+                        FT_Pos       wy )
   {
     if (wx > decoder->builder.advance.x)
       decoder->builder.advance.x = wx;
@@ -1082,7 +1082,7 @@
 
 
   static
-  T1_Int  maxadv_error( void )
+  FT_Int  maxadv_error( void )
   {
     /* we should never reach this code, unless with a buggy font */
     return -2;
@@ -1120,12 +1120,12 @@
 
 
   LOCAL_FUNC
-  T1_Error  T1_Compute_Max_Advance( T1_Face  face,
-                                    T1_Int  *max_advance )
+  FT_Error  T1_Compute_Max_Advance( T1_Face  face,
+                                    FT_Int  *max_advance )
   {
-    T1_Error    error;
+    FT_Error    error;
     T1_Decoder  decoder;
-    T1_Int      glyph_index;
+    FT_Int      glyph_index;
     T1_Font*    type1 = &face->type1;
 
     *max_advance = 0;
@@ -1175,12 +1175,12 @@
 
 
   static
-  T1_Error  close_open_path( T1_Builder*  builder )
+  FT_Error  close_open_path( T1_Builder*  builder )
   {
-    T1_Error     error;
+    FT_Error     error;
     FT_Outline*  cur = &builder->current;
-    T1_Int       num_points;
-    T1_Int       first_point;
+    FT_Int       num_points;
+    FT_Int       first_point;
 
     /* Some fonts, like Hershey, are made of "open paths" which are    */
     /* now managed directly by FreeType. In this case, it is necessary */
@@ -1196,9 +1196,9 @@
     num_points = cur->n_points - first_point - 2;
     if ( num_points > 0 )
     {
-      T1_Vector*  source_point;
+      FT_Vector*  source_point;
       char*       source_tags;
-      T1_Vector*  point;
+      FT_Vector*  point;
       char*       tags;
 
       error = T1_Add_Points( builder, num_points );
@@ -1228,7 +1228,7 @@
 
 
   static
-  T1_Error  gload_closepath( T1_Builder*  builder )
+  FT_Error  gload_closepath( T1_Builder*  builder )
   {
     FT_Outline*  cur = &builder->current;
 
@@ -1250,10 +1250,10 @@
 
 
   static
-  T1_Error  gload_endchar( T1_Builder*  builder )
+  FT_Error  gload_endchar( T1_Builder*  builder )
   {
     FT_Outline*  cur = &builder->current;
-    T1_Error     error;
+    FT_Error     error;
 
     /* close path if needed */
     if (builder->path_begun)
@@ -1273,11 +1273,11 @@
 
 
   static
-  T1_Error  gload_sbw( T1_Builder*  builder,
-                       T1_Pos       sbx,
-                       T1_Pos       sby,
-                       T1_Pos       wx,
-                       T1_Pos       wy )
+  FT_Error  gload_sbw( T1_Builder*  builder,
+                       FT_Pos       sbx,
+                       FT_Pos       sby,
+                       FT_Pos       wx,
+                       FT_Pos       wy )
   {
     builder->left_bearing.x += sbx;
     builder->left_bearing.y += sby;
@@ -1293,13 +1293,13 @@
 
 
   static
-  T1_Error  gload_rlineto( T1_Builder*  builder,
-                           T1_Pos       dx,
-                           T1_Pos       dy )
+  FT_Error  gload_rlineto( T1_Builder*  builder,
+                           FT_Pos       dx,
+                           FT_Pos       dy )
   {
-    T1_Error     error;
+    FT_Error     error;
     FT_Outline*  cur = &builder->current;
-    T1_Vector    vec;
+    FT_Vector    vec;
 
     /* grow buffer if necessary */
     error = T1_Add_Points  ( builder, 1 );
@@ -1324,13 +1324,13 @@
 
 
   static
-  T1_Error  gload_rmoveto( T1_Builder*  builder,
-                           T1_Pos       dx,
-                           T1_Pos       dy )
+  FT_Error  gload_rmoveto( T1_Builder*  builder,
+                           FT_Pos       dx,
+                           FT_Pos       dy )
   {
-    T1_Error     error;
+    FT_Error     error;
     FT_Outline*  cur = &builder->current;
-    T1_Vector    vec;
+    FT_Vector    vec;
 
     /* in the case where "path_begun" is set, we have a rmoveto    */
     /* after some normal path definition. When the face's paint    */
@@ -1374,18 +1374,18 @@
 
 
   static
-  T1_Error  gload_rrcurveto( T1_Builder*  builder,
-                             T1_Pos       dx1,
-                             T1_Pos       dy1,
-                             T1_Pos       dx2,
-                             T1_Pos       dy2,
-                             T1_Pos       dx3,
-                             T1_Pos       dy3 )
+  FT_Error  gload_rrcurveto( T1_Builder*  builder,
+                             FT_Pos       dx1,
+                             FT_Pos       dy1,
+                             FT_Pos       dx2,
+                             FT_Pos       dy2,
+                             FT_Pos       dx3,
+                             FT_Pos       dy3 )
   {
-    T1_Error     error;
+    FT_Error     error;
     FT_Outline*  cur = &builder->current;
-    T1_Vector    vec;
-    T1_Vector*   points;
+    FT_Vector    vec;
+    FT_Vector*   points;
     char*        tags;
 
     /* grow buffer if necessary */
@@ -1422,7 +1422,7 @@
 
 
   static
-  T1_Error  gload_ignore( void )
+  FT_Error  gload_ignore( void )
   {
     return 0;
   }
@@ -1542,7 +1542,7 @@
       
       /* adjust contours in accented character outline */
       {
-        T1_Int  n;
+        FT_Int  n;
 
         for ( n = 0; n < cur->n_contours; n++ )
           cur->contours[n] += n_base_points;
@@ -1595,15 +1595,15 @@
 
 
   LOCAL_FUNC
-  T1_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
+  FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
                            T1_Size       size,
-                           T1_Int        glyph_index,
-                           T1_Int        load_flags )
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags )
   {
-    T1_Error        error;
+    FT_Error        error;
     T1_Decoder      decoder;
     T1_Face         face = (T1_Face)glyph->root.face;
-    T1_Bool         hinting;
+    FT_Bool         hinting;
     T1_Font*        type1 = &face->type1;
 
     if (load_flags & FT_LOAD_NO_RECURSE)
@@ -1725,11 +1725,11 @@
         else if ( (load_flags & FT_LOAD_NO_SCALE) == 0 )
         {
           /* scale the outline and the metrics */
-          T1_Int       n;
+          FT_Int       n;
           FT_Outline*  cur = &decoder.builder.base;
-          T1_Vector*   vec = cur->points;
-          T1_Fixed     x_scale = glyph->x_scale;
-          T1_Fixed     y_scale = glyph->y_scale;
+          FT_Vector*   vec = cur->points;
+          FT_Fixed     x_scale = glyph->x_scale;
+          FT_Fixed     y_scale = glyph->y_scale;
 
           /* First of all, scale the points */
           for ( n = cur->n_points; n > 0; n--, vec++ )

@@ -23,15 +23,15 @@
 
   typedef struct  T1_Kern_Pair_
   {
-    T1_UInt    glyph1;
-    T1_UInt    glyph2;
-    T1_Vector  kerning;
+    FT_UInt    glyph1;
+    FT_UInt    glyph2;
+    FT_Vector  kerning;
 
   } T1_Kern_Pair;
 
   typedef struct  T1_AFM_
   {
-    T1_Int         num_pairs;
+    FT_Int         num_pairs;
     T1_Kern_Pair*  kern_pairs;
 
   } T1_AFM;
@@ -40,7 +40,7 @@
 #if 0
 
 LOCAL_DEF
-T1_Error  CID_Read_AFM( FT_Face   face,
+FT_Error  CID_Read_AFM( FT_Face   face,
                         FT_Stream stream );
 
 LOCAL_DEF
@@ -49,9 +49,9 @@ void  CID_Done_AFM( FT_Memory  memory,
 
 LOCAL_DEF
 void  CID_Get_Kerning( T1_AFM*     afm,
-                       T1_UInt     glyph1,
-                       T1_UInt     glyph2,
-                       T1_Vector*  kerning );
+                       FT_UInt     glyph1,
+                       FT_UInt     glyph2,
+                       FT_Vector*  kerning );
 
 #endif
 

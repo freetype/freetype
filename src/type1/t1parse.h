@@ -89,14 +89,14 @@
 
   typedef struct T1_Table_
   {
-    T1_Byte*   block;          /* current memory block           */
-    T1_Int     cursor;         /* current cursor in memory block */
-    T1_Int     capacity;       /* current size of memory block   */
+    FT_Byte*   block;          /* current memory block           */
+    FT_Int     cursor;         /* current cursor in memory block */
+    FT_Int     capacity;       /* current size of memory block   */
 
-    T1_Int     max_elems;
-    T1_Int     num_elems;
-    T1_Byte**  elements;       /* addresses of table elements */
-    T1_Int*    lengths;        /* lengths of table elements   */
+    FT_Int     max_elems;
+    FT_Int     num_elems;
+    FT_Byte**  elements;       /* addresses of table elements */
+    FT_Int*    lengths;        /* lengths of table elements   */
 
     FT_Memory  memory;
 
@@ -152,31 +152,31 @@
 /*                                                                       */
   typedef  struct  T1_Parser_
   {
-    T1_Error      error;
+    FT_Error      error;
     T1_Face       face;
 
     T1_Tokenizer  tokenizer;
-    T1_Bool       dump_tokens;
+    FT_Bool       dump_tokens;
 
     T1_Token      stack[ T1_MAX_STACK_DEPTH ];
     T1_Token*     top;
     T1_Token*     limit;
     T1_Token*     args;
 
-    T1_Int        state_index;
+    FT_Int        state_index;
     T1_DictState  state_stack[ T1_MAX_DICT_DEPTH ];
 
 	T1_Table      table;
 
-	T1_Int        cur_name;
+	FT_Int        cur_name;
 
 	T1_EncodingType  encoding_type;
-    T1_Byte*         encoding_names;
-    T1_Int*          encoding_lengths;
-    T1_Byte**        encoding_offsets;
+    FT_Byte*         encoding_names;
+    FT_Int*          encoding_lengths;
+    FT_Byte**        encoding_offsets;
 
-    T1_Byte*      subrs;
-    T1_Byte*      charstrings;
+    FT_Byte*      subrs;
+    FT_Byte*      charstrings;
 
   } T1_Parser;
 
@@ -198,8 +198,8 @@
 /*    Error code. 0 means success                                        */
 /*                                                                       */
   LOCAL_DEF
-  T1_Error  T1_New_Table( T1_Table*  table,
-                          T1_Int     count,
+  FT_Error  T1_New_Table( T1_Table*  table,
+                          FT_Int     count,
                           FT_Memory  memory );
 
 
@@ -221,10 +221,10 @@
 /*    realloc failed..                                                   */
 /*                                                                       */
   LOCAL_DEF
-  T1_Error  T1_Add_Table( T1_Table*  table,
-                          T1_Int     index,
+  FT_Error  T1_Add_Table( T1_Table*  table,
+                          FT_Int     index,
                           void*      object,
-                          T1_Int     length );
+                          FT_Int     length );
 
 
 /*************************************************************************/
@@ -248,34 +248,34 @@
 
 
   LOCAL_DEF
-  T1_String*   CopyString( T1_Parser*  parser );
+  FT_String*   CopyString( T1_Parser*  parser );
 
 
   LOCAL_DEF
-  T1_Long      CopyInteger( T1_Parser*  parser );
+  FT_Long      CopyInteger( T1_Parser*  parser );
 
 
   LOCAL_DEF
-  T1_Bool      CopyBoolean( T1_Parser*  parser );
+  FT_Bool      CopyBoolean( T1_Parser*  parser );
 
 
   LOCAL_DEF
-  T1_Long      CopyFloat( T1_Parser*  parser,
-                          T1_Int      scale );
+  FT_Long      CopyFloat( T1_Parser*  parser,
+                          FT_Int      scale );
 
   LOCAL_DEF
   void         CopyBBox( T1_Parser*  parser,
-                         T1_BBox*    bbox );
+                         FT_BBox*    bbox );
 
   LOCAL_DEF
   void         CopyMatrix( T1_Parser*  parser,
-                           T1_Matrix*  matrix );
+                           FT_Matrix*  matrix );
 
   LOCAL_DEF
   void  CopyArray( T1_Parser*  parser,
-                   T1_Byte*    num_elements,
-                   T1_Short*   elements,
-                   T1_Int      max_elements );
+                   FT_Byte*    num_elements,
+                   FT_Short*   elements,
+                   FT_Int      max_elements );
 
 #ifdef __cplusplus
   }

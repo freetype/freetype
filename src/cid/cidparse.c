@@ -70,16 +70,16 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
-  T1_Error  T1_New_Table( T1_Table*  table,
-                          T1_Int     count,
+  FT_Error  T1_New_Table( T1_Table*  table,
+                          FT_Int     count,
                           FT_Memory  memory )
   {
-    T1_Error  error;
+    FT_Error  error;
 
 
     table->memory = memory;
-    if ( ALLOC_ARRAY( table->elements, count, T1_Byte*  ) ||
-         ALLOC_ARRAY( table->lengths, count, T1_Byte* )   )
+    if ( ALLOC_ARRAY( table->elements, count, FT_Byte*  ) ||
+         ALLOC_ARRAY( table->lengths, count, FT_Byte* )   )
       goto Exit;
 
     table->max_elems = count;
@@ -99,11 +99,11 @@
 
   static
   void  shift_elements( T1_Table*  table,
-                        T1_Byte*   old_base )
+                        FT_Byte*   old_base )
   {
-    T1_Long    delta  = table->block - old_base;
-    T1_Byte**  offset = table->elements;
-    T1_Byte**  limit  = offset + table->max_elems;
+    FT_Long    delta  = table->block - old_base;
+    FT_Byte**  offset = table->elements;
+    FT_Byte**  limit  = offset + table->max_elems;
 
 
     if ( delta )
@@ -116,12 +116,12 @@
 
 
   static
-  T1_Error  reallocate_t1_table( T1_Table*  table,
-                                 T1_Int     new_size )
+  FT_Error  reallocate_t1_table( T1_Table*  table,
+                                 FT_Int     new_size )
   {
     FT_Memory  memory   = table->memory;
-    T1_Byte*   old_base = table->block;
-    T1_Error   error;
+    FT_Byte*   old_base = table->block;
+    FT_Error   error;
 
 
     /* realloc the base block */
@@ -161,10 +161,10 @@
   /*    reallocation fails.                                                */
   /*                                                                       */
   LOCAL_FUNC
-  T1_Error  T1_Add_Table( T1_Table*  table,
-                          T1_Int     index,
+  FT_Error  T1_Add_Table( T1_Table*  table,
+                          FT_Int     index,
                           void*      object,
-                          T1_Int     length )
+                          FT_Int     length )
   {
     if ( index < 0 || index > table->max_elems )
     {
@@ -175,8 +175,8 @@
     /* grow the base block if needed */
     if ( table->cursor + length > table->capacity )
     {
-      T1_Error  error;
-      T1_Int    new_size = table->capacity;
+      FT_Error  error;
+      FT_Int    new_size = table->capacity;
 
 
       while ( new_size < table->cursor + length )
@@ -218,8 +218,8 @@
   void  T1_Done_Table( T1_Table*  table )
   {
     FT_Memory  memory = table->memory;
-    T1_Error   error;
-    T1_Byte*   old_base;
+    FT_Error   error;
+    FT_Byte*   old_base;
 
 
     /* should never fail, as rec.cursor <= rec.size */
@@ -273,13 +273,13 @@
   LOCAL_FUNC
   void  CID_Skip_Spaces( CID_Parser*  parser )
   {
-    T1_Byte* cur   = parser->cursor;
-    T1_Byte* limit = parser->limit;
+    FT_Byte* cur   = parser->cursor;
+    FT_Byte* limit = parser->limit;
 
 
     while ( cur < limit )
     {
-      T1_Byte  c = *cur;
+      FT_Byte  c = *cur;
 
 
       if ( !IS_T1_SPACE( c ) )
@@ -295,10 +295,10 @@
   void  CID_ToToken( CID_Parser*    parser,
                      T1_Token_Rec*  token )
   {
-    T1_Byte*  cur;
-    T1_Byte*  limit;
-    T1_Byte   starter, ender;
-    T1_Int    embed;
+    FT_Byte*  cur;
+    FT_Byte*  limit;
+    FT_Byte   starter, ender;
+    FT_Int    embed;
 
 
     token->type  = t1_token_none;
@@ -378,8 +378,8 @@
   LOCAL_FUNC
   void  CID_ToTokenArray( CID_Parser*    parser,
                           T1_Token_Rec*  tokens,
-                          T1_UInt        max_tokens,
-                          T1_Int*        pnum_tokens )
+                          FT_UInt        max_tokens,
+                          FT_Int*        pnum_tokens )
   {
     T1_Token_Rec  master;
 
@@ -390,8 +390,8 @@
 
     if ( master.type == t1_token_array )
     {
-      T1_Byte*       old_cursor = parser->cursor;
-      T1_Byte*       old_limit  = parser->limit;
+      FT_Byte*       old_cursor = parser->cursor;
+      FT_Byte*       old_limit  = parser->limit;
       T1_Token_Rec*  cur        = tokens;
       T1_Token_Rec*  limit      = cur + max_tokens;
 
@@ -423,18 +423,18 @@
 
 
   static
-  T1_Long  t1_toint( T1_Byte**  cursor,
-                     T1_Byte*   limit )
+  FT_Long  t1_toint( FT_Byte**  cursor,
+                     FT_Byte*   limit )
   {
-    T1_Long   result = 0;
-    T1_Byte*  cur    = *cursor;
-    T1_Byte   c, d;
+    FT_Long   result = 0;
+    FT_Byte*  cur    = *cursor;
+    FT_Byte   c, d;
 
 
     for ( ; cur < limit; cur++ )
     {
       c = *cur;
-      d = (T1_Byte)( c - '0' );
+      d = (FT_Byte)( c - '0' );
       if ( d < 10 )
         break;
 
@@ -449,7 +449,7 @@
     {
       do
       {
-        d = (T1_Byte)( cur[0] - '0' );
+        d = (FT_Byte)( cur[0] - '0' );
         if ( d >= 10 )
           break;
 
@@ -469,14 +469,14 @@
 
 
   static
-  T1_Long  t1_tofixed( T1_Byte**  cursor,
-                       T1_Byte*   limit,
-                       T1_Long    power_ten )
+  FT_Long  t1_tofixed( FT_Byte**  cursor,
+                       FT_Byte*   limit,
+                       FT_Long    power_ten )
   {
-    T1_Byte*  cur = *cursor;
-    T1_Long   num, divider, result;
-    T1_Int    sign = 0;
-    T1_Byte   d;
+    FT_Byte*  cur = *cursor;
+    FT_Long   num, divider, result;
+    FT_Int    sign = 0;
+    FT_Byte   d;
 
 
     if ( cur >= limit )
@@ -503,7 +503,7 @@
 
       for (;;)
       {
-        d = (T1_Byte)( *cur - '0' );
+        d = (FT_Byte)( *cur - '0' );
         if ( d >= 10 ) break;
 
         if ( divider < 10000000L )
@@ -554,11 +554,11 @@
 
 
   static
-  int  t1_tobool( T1_Byte**  cursor,
-                  T1_Byte*   limit )
+  int  t1_tobool( FT_Byte**  cursor,
+                  FT_Byte*   limit )
   {
-    T1_Byte*  cur    = *cursor;
-    T1_Bool   result = 0;
+    FT_Byte*  cur    = *cursor;
+    FT_Bool   result = 0;
 
 
     /* return 1 if we find a "true", 0 otherwise */
@@ -587,14 +587,14 @@
 
 
   static
-  T1_Int  t1_tocoordarray( T1_Byte**  cursor,
-                           T1_Byte*   limit,
-                           T1_Int     max_coords,
-                           T1_Short*  coords )
+  FT_Int  t1_tocoordarray( FT_Byte**  cursor,
+                           FT_Byte*   limit,
+                           FT_Int     max_coords,
+                           FT_Short*  coords )
   {
-    T1_Byte*  cur   = *cursor;
-    T1_Int    count = 0;
-    T1_Byte   c, ender;
+    FT_Byte*  cur   = *cursor;
+    FT_Int    count = 0;
+    FT_Byte   c, ender;
 
 
     if ( cur >= limit )
@@ -632,7 +632,7 @@
       if ( count >= max_coords || c == ender )
         break;
 
-      coords[count] = (T1_Short)( t1_tofixed( &cur, limit, 0 ) >> 16 );
+      coords[count] = (FT_Short)( t1_tofixed( &cur, limit, 0 ) >> 16 );
       count++;
 
       if ( !ender )
@@ -646,15 +646,15 @@
 
 
   static
-  T1_Int  t1_tofixedarray( T1_Byte**  cursor,
-                           T1_Byte*   limit,
-                           T1_Int     max_values,
-                           T1_Fixed*  values,
-                           T1_Int     power_ten )
+  FT_Int  t1_tofixedarray( FT_Byte**  cursor,
+                           FT_Byte*   limit,
+                           FT_Int     max_values,
+                           FT_Fixed*  values,
+                           FT_Int     power_ten )
   {
-    T1_Byte*  cur   = *cursor;
-    T1_Int    count = 0;
-    T1_Byte   c, ender;
+    FT_Byte*  cur   = *cursor;
+    FT_Int    count = 0;
+    FT_Byte   c, ender;
 
 
     if ( cur >= limit )
@@ -710,16 +710,16 @@
   /* Loads a simple field (i.e. non-table) into the current */
   /* list of objects                                        */
   LOCAL_FUNC
-  T1_Error  CID_Load_Field( CID_Parser*          parser,
+  FT_Error  CID_Load_Field( CID_Parser*          parser,
                             const T1_Field_Rec*  field,
                             void*                object )
   {
     T1_Token_Rec  token;
-    T1_Byte*      cur;
-    T1_Byte*      limit;
-    T1_UInt       count;
-    T1_UInt       index;
-    T1_Error      error;
+    FT_Byte*      cur;
+    FT_Byte*      limit;
+    FT_UInt       count;
+    FT_UInt       index;
+    FT_Error      error;
 
 
     CID_ToToken( parser, &token );
@@ -732,9 +732,9 @@
     limit = token.limit;
 
     {
-      T1_Byte*   q = (T1_Byte*)object + field->offset;
-      T1_Long    val;
-      T1_String* string;
+      FT_Byte*   q = (FT_Byte*)object + field->offset;
+      FT_Long    val;
+      FT_String* string;
 
 
       switch ( field->type )
@@ -754,22 +754,22 @@
         switch ( field->size )
         {
           case 1:
-            *(T1_Byte*)q = (T1_Byte)val;
+            *(FT_Byte*)q = (FT_Byte)val;
             break;
 
           case 2:
-            *(T1_UShort*)q = (T1_UShort)val;
+            *(FT_UShort*)q = (FT_UShort)val;
             break;
 
           default:
-            *(T1_Long*)q = val;
+            *(FT_Long*)q = val;
         }
         break;
 
       case t1_field_string:
         {
           FT_Memory  memory = parser->memory;
-          T1_UInt    len    = limit-cur;
+          FT_UInt    len    = limit-cur;
 
 
           if ( ALLOC( string, len + 1 ) )
@@ -778,7 +778,7 @@
           MEM_Copy( string, cur, len );
           string[len] = 0;
 
-          *(T1_String**)q = string;
+          *(FT_String**)q = string;
         }
         break;
 
@@ -803,16 +803,16 @@
 
 
   LOCAL_FUNC
-  T1_Error  CID_Load_Field_Table( CID_Parser*          parser,
+  FT_Error  CID_Load_Field_Table( CID_Parser*          parser,
                                   const T1_Field_Rec*  field,
                                   void*                object )
   {
     T1_Token_Rec   elements[CID_MAX_TABLE_ELEMENTS];
     T1_Token_Rec*  token;
-    T1_Int         num_elements;
-    T1_Error       error = 0;
-    T1_Byte*       old_cursor;
-    T1_Byte*       old_limit;
+    FT_Int         num_elements;
+    FT_Error       error = 0;
+    FT_Byte*       old_cursor;
+    FT_Byte*       old_limit;
     T1_Field_Rec   fieldrec = *(T1_Field_Rec*)field;
 
 
@@ -832,7 +832,7 @@
 
     /* we store the elements count */
     if ( field->count_offset )
-      *(T1_Byte*)( (T1_Byte*)object + field->count_offset ) = num_elements;
+      *(FT_Byte*)( (FT_Byte*)object + field->count_offset ) = num_elements;
 
     /* we now load each element, adjusting the field.offset on each one */
     token = elements;
@@ -857,16 +857,16 @@
 
 
   LOCAL_FUNC
-  T1_Long  CID_ToInt( CID_Parser*  parser )
+  FT_Long  CID_ToInt( CID_Parser*  parser )
   {
     return t1_toint( &parser->cursor, parser->limit );
   }
 
 
   LOCAL_FUNC
-  T1_Int  CID_ToCoordArray( CID_Parser*  parser,
-                            T1_Int       max_coords,
-                            T1_Short*    coords )
+  FT_Int  CID_ToCoordArray( CID_Parser*  parser,
+                            FT_Int       max_coords,
+                            FT_Short*    coords )
   {
     return t1_tocoordarray( &parser->cursor, parser->limit,
                             max_coords, coords );
@@ -874,10 +874,10 @@
 
 
   LOCAL_FUNC
-  T1_Int  CID_ToFixedArray( CID_Parser*  parser,
-                            T1_Int       max_values,
-                            T1_Fixed*    values,
-                            T1_Int       power_ten )
+  FT_Int  CID_ToFixedArray( CID_Parser*  parser,
+                            FT_Int       max_values,
+                            FT_Fixed*    values,
+                            FT_Int       power_ten )
   {
     return t1_tofixedarray( &parser->cursor, parser->limit,
                             max_values, values, power_ten );
@@ -916,10 +916,10 @@
                             FT_Stream    stream,
                             FT_Memory    memory )
   {
-    T1_Error  error;
-    T1_ULong  base_offset, offset, ps_len;
-    T1_Byte   buffer[256 + 10];
-    T1_Int    buff_len;
+    FT_Error  error;
+    FT_ULong  base_offset, offset, ps_len;
+    FT_Byte   buffer[256 + 10];
+    FT_Int    buff_len;
 
 
     MEM_Set( parser, 0, sizeof ( *parser ) );
@@ -946,7 +946,7 @@
     buff_len = 256;
     for (;;)
     {
-      T1_Byte *p, *limit = buffer + 256;
+      FT_Byte *p, *limit = buffer + 256;
 
       /* fill input buffer */
       buff_len -= 256;

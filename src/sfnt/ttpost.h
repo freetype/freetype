@@ -33,9 +33,9 @@ extern "C" {
 
 
   LOCAL_DEF
-  TT_Error TT_Get_PS_Name( TT_Face      face,
-                           TT_UInt      index,
-                           TT_String**  PSname );
+  FT_Error TT_Get_PS_Name( TT_Face      face,
+                           FT_UInt      index,
+                           FT_String**  PSname );
 
   LOCAL_DEF
   void  TT_Free_Post_Names( TT_Face  face );

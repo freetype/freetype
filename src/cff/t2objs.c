@@ -77,7 +77,7 @@
                           FT_Int         num_params,
                           FT_Parameter*  params )
   {
-    TT_Error         error;
+    FT_Error         error;
     FT_Driver        sfnt_driver;
     SFNT_Interface*  sfnt;
 
@@ -250,7 +250,7 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  T2_Reset_Size( T2_Size  size )
+  FT_Error  T2_Reset_Size( T2_Size  size )
   {
     T2_Face           face    = (T2_Face)size->face;
     FT_Size_Metrics*  metrics = &size->metrics;
@@ -291,7 +291,7 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot )
+  FT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot )
   {
     FT_Library  library = slot->root.face->driver->library;
 
@@ -345,18 +345,9 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  T2_Init_Driver( T2_Driver  driver )
+  FT_Error  T2_Init_Driver( T2_Driver  driver )
   {
-    FT_Memory  memory = driver->root.memory;
-    FT_Error   error;
-
-
-    error = FT_New_GlyphZone( memory, 0, 0, &driver->zone );
-    if ( error )
-      return error;
-
     /* init extension registry if needed */
-
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     return TT_Init_Extensions( driver );
 #else
@@ -380,13 +371,9 @@
   void  T2_Done_Driver( T2_Driver  driver )
   {
     /* destroy extensions registry if needed */
-
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     TT_Done_Extensions( driver );
 #endif
-
-    /* remove the loading glyph zone */
-    FT_Done_GlyphZone( &driver->zone );
   }
 
 

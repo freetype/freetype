@@ -10,7 +10,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1load
 
-  typedef  T1_Error  (*T1_Parse_Func)( T1_Parser*  parser );
+  typedef  FT_Error  (*T1_Parse_Func)( T1_Parser*  parser );
 
 
 /*************************************************************************/
@@ -68,10 +68,10 @@
 /*    Error code. 0 means success                                        */
 /*                                                                       */
   LOCAL_FUNC
-  T1_Error  Next_T1_Token( T1_Parser*  parser,
+  FT_Error  Next_T1_Token( T1_Parser*  parser,
                            T1_Token*   token )
   {
-    T1_Error      error;
+    FT_Error      error;
     T1_Tokenizer  tokzer = parser->tokenizer;
 
   L1:
@@ -116,13 +116,13 @@
 #if defined( FT_DEBUG_LEVEL_ERROR ) || defined( FT_DEBUG_LEVEL_TRACE )
     if ( parser->dump_tokens )
     {
-      T1_String  temp_string[128];
-      T1_Int     len;
+      FT_String  temp_string[128];
+      FT_Int     len;
 
       len = token->len;
       if ( len > 127 ) len = 127;
       strncpy( temp_string,
-               (T1_String*)tokzer->base + token->start,
+               (FT_String*)tokzer->base + token->start,
                len );
       temp_string[len] = '\0';
       FT_ERROR(( "%s\n", temp_string ));
@@ -135,11 +135,11 @@
 
 
   static
-  T1_Error  Expect_Keyword( T1_Parser*    parser,
+  FT_Error  Expect_Keyword( T1_Parser*    parser,
                             T1_TokenType  keyword )
   {
     T1_Token  token;
-    T1_Error  error;
+    FT_Error  error;
 
     error = Next_T1_Token( parser, &token );
     if (error) goto Exit;
@@ -159,12 +159,12 @@
 
 
   static
-  T1_Error  Expect_Keyword2( T1_Parser*    parser,
+  FT_Error  Expect_Keyword2( T1_Parser*    parser,
                              T1_TokenType  keyword1,
                              T1_TokenType  keyword2 )
   {
     T1_Token  token;
-    T1_Error  error;
+    FT_Error  error;
 
     error = Next_T1_Token( parser, &token );
     if (error) goto Exit;
@@ -191,7 +191,7 @@
 	T1_Token*     token  = parser->top+1;
 	FT_Memory     memory = parser->face->root.memory;
 	T1_Encoding*  encode = &parser->face->type1.encoding;
-	T1_Error      error  = 0;
+	FT_Error      error  = 0;
 
 	if (token->kind  == tok_keyword &&
         (token->kind2 == key_StandardEncoding ||
@@ -201,7 +201,7 @@
 	  encode->code_first = 32;
 	  encode->code_last  = 255;
 
-	  if ( ALLOC_ARRAY( encode->char_index, 256, T1_Short ) )
+	  if ( ALLOC_ARRAY( encode->char_index, 256, FT_Short ) )
 		goto Exit;
 
 	  encode->char_name = 0;  /* no need to store glyph names */
@@ -255,7 +255,7 @@
 /*    Error code. 0 means success                                         */
 /*                                                                        */
   static
-  T1_Error  Do_Def_Font( T1_Parser*  parser )
+  FT_Error  Do_Def_Font( T1_Parser*  parser )
   {
     T1_Token*  top   = parser->top;
     T1_Face    face  = parser->face;
@@ -270,8 +270,8 @@
         if (top[1].kind == tok_immediate)
         {
           FT_Memory  memory = parser->tokenizer->memory;
-          T1_Error   error;
-          T1_Int     len = top[1].len;
+          FT_Error   error;
+          FT_Int     len = top[1].len;
 
           if ( ALLOC( type1->font_name, len+1 ) )
           {
@@ -293,11 +293,11 @@
         break;
 
       case imm_PaintType:
-        type1->paint_type = (T1_Byte)CopyInteger( parser );
+        type1->paint_type = (FT_Byte)CopyInteger( parser );
         break;
 
       case imm_FontType:
-        type1->font_type = (T1_Byte)CopyInteger( parser );
+        type1->font_type = (FT_Byte)CopyInteger( parser );
         break;
 
       case imm_FontMatrix:
@@ -345,7 +345,7 @@
 /*    Error code. 0 means success                                         */
 /*                                                                        */
   static
-  T1_Error  Do_Def_FontInfo( T1_Parser*  parser )
+  FT_Error  Do_Def_FontInfo( T1_Parser*  parser )
   {
     T1_Token*    top   = parser->top;
     T1_FontInfo* info  = &parser->face->type1.font_info;
@@ -381,11 +381,11 @@
         break;
 
       case imm_UnderlinePosition:
-        info->underline_position = (T1_Short)CopyInteger( parser );
+        info->underline_position = (FT_Short)CopyInteger( parser );
         break;
 
       case imm_UnderlineThickness:
-        info->underline_thickness = (T1_Short)CopyInteger( parser );
+        info->underline_thickness = (FT_Short)CopyInteger( parser );
         break;
 
       default:
@@ -413,7 +413,7 @@
 /*    Error code. 0 means success                                         */
 /*                                                                        */
   static
-  T1_Error  Do_Def_Private( T1_Parser*  parser )
+  FT_Error  Do_Def_Private( T1_Parser*  parser )
   {
     T1_Token*   top   = parser->top;
     T1_Private* priv  = &parser->face->type1.private_dict;
@@ -467,12 +467,12 @@
 
 
       case imm_StdHW:
-        CopyArray( parser, 0, (T1_Short*)&priv->standard_width, 1 );
+        CopyArray( parser, 0, (FT_Short*)&priv->standard_width, 1 );
         break;
 
 
       case imm_StdVW:
-        CopyArray( parser, 0, (T1_Short*)&priv->standard_height, 1 );
+        CopyArray( parser, 0, (FT_Short*)&priv->standard_height, 1 );
         break;
 
 
@@ -543,7 +543,7 @@
 /*    Error code. 0 means success                                         */
 /*                                                                        */
   static
-  T1_Error  Do_Def_Error( T1_Parser*  parser )
+  FT_Error  Do_Def_Error( T1_Parser*  parser )
   {
     FT_ERROR(( "T1.Load : 'def' keyword encountered in bad dictionary/array\n" ));
     parser->error = T1_Err_Syntax_Error;
@@ -552,7 +552,7 @@
 
 
   static
-  T1_Error  Do_Def_Ignore( T1_Parser*  parser )
+  FT_Error  Do_Def_Ignore( T1_Parser*  parser )
   {
     UNUSED(parser);
     return T1_Err_Ok;
@@ -600,13 +600,13 @@
 /*    Error code. 0 means success                                         */
 /*                                                                        */
   static
-  T1_Error  Do_Put_Encoding( T1_Parser*  parser )
+  FT_Error  Do_Put_Encoding( T1_Parser*  parser )
   {
-    T1_Error      error  = T1_Err_Ok;
+    FT_Error      error  = T1_Err_Ok;
     T1_Face       face   = parser->face;
     T1_Token*     top    = parser->top;
     T1_Encoding*  encode = &face->type1.encoding;
-    T1_Int        index;
+    FT_Int        index;
 
     /* record and check the character code */
     if ( top[0].kind != tok_number )
@@ -614,7 +614,7 @@
       FT_TRACE4(( "T1.Parse.put: number expected\n" ));
       goto Syntax_Error;
     }
-    index = (T1_Int)CopyInteger( parser );
+    index = (FT_Int)CopyInteger( parser );
     if (parser->error) return parser->error;
 
     if ( index < 0 || index >= encode->num_chars )
@@ -639,16 +639,16 @@
     }
     else
     {
-      T1_String  temp_name[128];
+      FT_String  temp_name[128];
       T1_Token*  token = top+1;
-      T1_Int     len   = token->len-1;
+      FT_Int     len   = token->len-1;
 
       /* copy immediate name */
       if (len > 127) len = 127;
       MEM_Copy( temp_name, parser->tokenizer->base + token->start+1, len );
       temp_name[len] = '\0';
 
-      error = T1_Add_Table( &parser->table, index, (T1_Byte*)temp_name, len+1 );
+      error = T1_Add_Table( &parser->table, index, (FT_Byte*)temp_name, len+1 );
 
 	  /* adjust code_first and code_last */
 	  if ( index < encode->code_first )  encode->code_first = index;
@@ -688,13 +688,13 @@
 /*    Error code. 0 means success                                         */
 /*                                                                        */
   static
-  T1_Error  Do_RD_Subrs( T1_Parser*  parser )
+  FT_Error  Do_RD_Subrs( T1_Parser*  parser )
   {
-    T1_Error      error  = T1_Err_Ok;
+    FT_Error      error  = T1_Err_Ok;
     T1_Face       face   = parser->face;
     T1_Token*     top    = parser->top;
     T1_Tokenizer  tokzer = parser->tokenizer;
-    T1_Int        index, count;
+    FT_Int        index, count;
 
     /* record and check the character code */
     if ( top[0].kind != tok_number ||
@@ -703,10 +703,10 @@
       FT_ERROR(( "T1.Parse.put: number expected\n" ));
       goto Syntax_Error;
     }
-    index = (T1_Int)CopyInteger( parser );
+    index = (FT_Int)CopyInteger( parser );
     error = parser->error; if (error) goto Exit;
 
-    count = (T1_Int)CopyInteger( parser );
+    count = (FT_Int)CopyInteger( parser );
     error = parser->error; if (error) goto Exit;
 
     if ( index < 0 || index >= face->type1.num_subrs )
@@ -717,7 +717,7 @@
 
     /* decrypt charstring and skip them */
     {
-      T1_Byte*  base = tokzer->base + tokzer->cursor;
+      FT_Byte*  base = tokzer->base + tokzer->cursor;
 
       t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;
@@ -755,13 +755,13 @@
 /*    Error code. 0 means success                                         */
 /*                                                                        */
   static
-  T1_Error  Do_RD_Charstrings( T1_Parser*  parser )
+  FT_Error  Do_RD_Charstrings( T1_Parser*  parser )
   {
-    T1_Error      error = T1_Err_Ok;
+    FT_Error      error = T1_Err_Ok;
     T1_Face       face  = parser->face;
     T1_Token*     top   = parser->top;
     T1_Tokenizer  tokzer = parser->tokenizer;
-    T1_Int        index, count;
+    FT_Int        index, count;
 
     /* check the character name argument */
     if ( top[0].kind != tok_immediate )
@@ -777,7 +777,7 @@
       goto Syntax_Error;
     }
 	parser->args++;
-    count = (T1_Int)CopyInteger( parser );
+    count = (FT_Int)CopyInteger( parser );
     error = parser->error; if (error) goto Exit;
 
     /* record the glyph name and get the corresponding glyph index */
@@ -785,9 +785,9 @@
       index = 0;
     else
     {
-      T1_String  temp_name[128];
+      FT_String  temp_name[128];
       T1_Token*  token = top;
-      T1_Int     len   = token->len-1;
+      FT_Int     len   = token->len-1;
 
       /* copy immediate name */
       if (len > 127) len = 127;
@@ -795,13 +795,13 @@
       temp_name[len] = '\0';
 
       index = parser->cur_name++;
-      error = T1_Add_Table( &parser->table, index*2, (T1_Byte*)temp_name, len+1 );
+      error = T1_Add_Table( &parser->table, index*2, (FT_Byte*)temp_name, len+1 );
       if (error) goto Exit;
     }
 
     /* decrypt and record charstring, then skip them */
     {
-      T1_Byte*  base = tokzer->base + tokzer->cursor;
+      FT_Byte*  base = tokzer->base + tokzer->cursor;
 
       t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;  /* skip */
@@ -829,11 +829,11 @@
 
 
   static
-  T1_Error  Expect_Dict_Arguments( T1_Parser*    parser,
-                                   T1_Int        num_args,
+  FT_Error  Expect_Dict_Arguments( T1_Parser*    parser,
+                                   FT_Int        num_args,
                                    T1_TokenType  immediate,
                                    T1_DictState  new_state,
-                                   T1_Int       *count )
+                                   FT_Int       *count )
   {
     /* check that we have enough arguments in the stack, including */
     /* the 'dict' keyword..                                        */
@@ -886,12 +886,12 @@
 
 
   static
-  T1_Error  Expect_Array_Arguments( T1_Parser*  parser )
+  FT_Error  Expect_Array_Arguments( T1_Parser*  parser )
   {
     T1_Token*     top   = parser->top;
-    T1_Error      error = T1_Err_Ok;
+    FT_Error      error = T1_Err_Ok;
     T1_DictState  new_state;
-    T1_Int        count;
+    FT_Int        count;
     T1_Face       face   = parser->face;
     FT_Memory     memory = face->root.memory;
 
@@ -918,7 +918,7 @@
       FT_ERROR(( "T1.Parse.array: second argument must be a number\n" ));
       goto Syntax_Error;
     }
-    count = (T1_Int)CopyInteger( parser );
+    count = (FT_Int)CopyInteger( parser );
 
     /* Is this an array we know about ?? */
     switch ( top[0].kind2 )
@@ -935,7 +935,7 @@
 
           /* allocate the table of character indexes. The table of */
           /* character names is allocated through init_t1_recorder */
-          if ( ALLOC_ARRAY( encode->char_index, count, T1_Short   ) )
+          if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   ) )
             return error;
 
           error = T1_New_Table( &parser->table, count, memory );
@@ -978,30 +978,30 @@
 
 
   static
-  T1_Error  Finalise_Parsing( T1_Parser*  parser )
+  FT_Error  Finalise_Parsing( T1_Parser*  parser )
   {
     T1_Face    face       = parser->face;
     T1_Font*   type1      = &face->type1;
     FT_Memory  memory     = face->root.memory;
     T1_Table*  strings    = &parser->table;
     PSNames_Interface*  psnames    = (PSNames_Interface*)face->psnames;
-	T1_Int     num_glyphs;
-	T1_Int     n;
-	T1_Error   error;
+	FT_Int     num_glyphs;
+	FT_Int     n;
+	FT_Error   error;
 
     num_glyphs = type1->num_glyphs = parser->cur_name;
 
 	/* allocate glyph names and charstrings arrays */
-	if ( ALLOC_ARRAY( type1->glyph_names    , num_glyphs, T1_String* ) ||
-		 ALLOC_ARRAY( type1->charstrings    , num_glyphs, T1_Byte* )   ||
-	     ALLOC_ARRAY( type1->charstrings_len, num_glyphs, T1_Int*  )   )
+	if ( ALLOC_ARRAY( type1->glyph_names    , num_glyphs, FT_String* ) ||
+		 ALLOC_ARRAY( type1->charstrings    , num_glyphs, FT_Byte* )   ||
+	     ALLOC_ARRAY( type1->charstrings_len, num_glyphs, FT_Int*  )   )
 	  return error;
 
 	/* copy glyph names and charstrings offsets and lengths */
     type1->charstrings_block = strings->block;
 	for ( n = 0; n < num_glyphs; n++ )
 	{
-      type1->glyph_names[n]     = (T1_String*)strings->elements[2*n];
+      type1->glyph_names[n]     = (FT_String*)strings->elements[2*n];
       type1->charstrings[n]     = strings->elements[2*n+1];
       type1->charstrings_len[n] = strings->lengths [2*n+1];
     }
@@ -1024,7 +1024,7 @@
     }
 
 	{
-	  T1_Int        n;
+	  FT_Int        n;
 	  T1_Encoding*  encode = &type1->encoding;
 
 	  encode->code_first = encode->num_chars-1;
@@ -1032,9 +1032,9 @@
 
 	  for ( n = 0; n < encode->num_chars; n++ )
 	  {
-		T1_String** names;
-		T1_Int      index;
-		T1_Int      m;
+		FT_String** names;
+		FT_Int      index;
+		FT_Int      m;
 
 		switch (parser->encoding_type)
 		{
@@ -1050,21 +1050,21 @@
 
 		  default:
 		      index = n;
-			  names = (T1_String**)parser->encoding_offsets;
+			  names = (FT_String**)parser->encoding_offsets;
 		}
 		encode->char_index[n] = 0;
 		if (index)
 		{
-		  T1_String*  name;
+		  FT_String*  name;
 
           if (names)
             name = names[index];
           else
-            name = (T1_String*)psnames->adobe_std_strings(index);
+            name = (FT_String*)psnames->adobe_std_strings(index);
 
 		  if ( name )
 		  {
-            T1_Int  len = strlen(name);
+            FT_Int  len = strlen(name);
 
             /* lookup glyph index from name */
             for ( m = 0; m < num_glyphs; m++ )
@@ -1096,9 +1096,9 @@
 
 
   LOCAL_FUNC
-  T1_Error  Parse_T1_FontProgram( T1_Parser*  parser )
+  FT_Error  Parse_T1_FontProgram( T1_Parser*  parser )
   {
-    T1_Error  error;
+    FT_Error  error;
     T1_Font*  type1 = &parser->face->type1;
 
     for (;;)
@@ -1106,7 +1106,7 @@
       T1_Token      token;
       T1_Token*     top;
       T1_DictState  dict_state;
-      T1_Int        dict_index;
+      FT_Int        dict_index;
 
       error      = Next_T1_Token( parser, &token );
       top        = parser->top;
@@ -1159,7 +1159,7 @@
                 case dict_private:
                   {
                     T1_Face  face = parser->face;
-                    T1_Int   count;
+                    FT_Int   count;
 
                     error = Expect_Dict_Arguments( parser, 2, imm_CharStrings,
                                                    dict_charstrings, &count );
@@ -1170,7 +1170,7 @@
                     if (error) goto Exit;
 
                     /* record '.notdef' as the first glyph in the font */
-                    error = T1_Add_Table( &parser->table, 0, (T1_Byte*)".notdef", 8 );
+                    error = T1_Add_Table( &parser->table, 0, (FT_Byte*)".notdef", 8 );
                     parser->cur_name = 1;
                     /* XXXXX : DO SOMETHING HERE */
                   }

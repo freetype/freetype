@@ -59,7 +59,7 @@
   /*    The parser contains a handle to the target face object.            */
   /*                                                                       */
    LOCAL_DEF
-   T1_Error  Parse_T1_FontProgram( T1_Parser*  parser );
+   FT_Error  Parse_T1_FontProgram( T1_Parser*  parser );
 
 
 #ifdef __cplusplus

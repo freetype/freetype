@@ -96,7 +96,7 @@
 
 
 #undef  KERN_INDEX
-#define KERN_INDEX(g1,g2)   (((T1_ULong)g1 << 16) | g2)
+#define KERN_INDEX(g1,g2)   (((FT_ULong)g1 << 16) | g2)
 
  /* compare two kerning pairs */
   static
@@ -105,8 +105,8 @@
     T1_Kern_Pair*  pair1 = (T1_Kern_Pair*)a;
     T1_Kern_Pair*  pair2 = (T1_Kern_Pair*)b;
 
-    T1_ULong  index1 = KERN_INDEX(pair1->glyph1,pair1->glyph2);
-    T1_ULong  index2 = KERN_INDEX(pair2->glyph1,pair2->glyph2);
+    FT_ULong  index1 = KERN_INDEX(pair1->glyph1,pair1->glyph2);
+    FT_ULong  index2 = KERN_INDEX(pair2->glyph1,pair2->glyph2);
 
     return ( index1 < index2 ? -1 :
            ( index1 > index2 ?  1 : 0 ));
@@ -202,7 +202,7 @@
                         FT_Vector*  kerning )
   {
     T1_Kern_Pair  *min, *mid, *max;
-    T1_ULong       index = KERN_INDEX(glyph1,glyph2);
+    FT_ULong       index = KERN_INDEX(glyph1,glyph2);
 
     /* simple binary search */
     min = afm->kern_pairs;
@@ -210,7 +210,7 @@
 
     while (min <= max)
     {
-      T1_ULong  midi;
+      FT_ULong  midi;
 
       mid = min + (max-min)/2;
       midi = KERN_INDEX(mid->glyph1,mid->glyph2);

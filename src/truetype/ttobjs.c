@@ -50,6 +50,135 @@
   /*                                                                       */
   /*************************************************************************/
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_Done_GlyphZone                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Deallocates a glyph zone.                                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    zone :: A pointer to the target glyph zone.                        */
+  /*                                                                       */
+  LOCAL_FUNC void  TT_Done_GlyphZone( TT_GlyphZone*  zone )
+  {
+    FT_Memory  memory = zone->memory;
+
+    FREE( zone->contours );
+    FREE( zone->tags );
+    FREE( zone->cur );
+    FREE( zone->org );
+
+    zone->max_points   = zone->n_points   = 0;
+    zone->max_contours = zone->n_contours = 0;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_New_GlyphZone                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Allocates a new glyph zone.                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory      :: A handle to the current memory object.              */
+  /*                                                                       */
+  /*    maxPoints   :: The capacity of glyph zone in points.               */
+  /*                                                                       */
+  /*    maxContours :: The capacity of glyph zone in contours.             */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    zone        :: A pointer to the target glyph zone record.          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  LOCAL_FUNC FT_Error TT_New_GlyphZone( FT_Memory      memory,
+                                        FT_UShort      maxPoints,
+                                        FT_Short       maxContours,
+                                        TT_GlyphZone*  zone )
+  {
+    FT_Error      error;
+
+    if ( maxPoints > 0 )
+      maxPoints += 2;
+
+    MEM_Set( zone, 0, sizeof ( *zone ) );
+    zone->memory = memory;
+
+    if ( ALLOC_ARRAY( zone->org,      maxPoints * 2, FT_F26Dot6 ) ||
+         ALLOC_ARRAY( zone->cur,      maxPoints * 2, FT_F26Dot6 ) ||
+         ALLOC_ARRAY( zone->tags,     maxPoints,     FT_Byte    ) ||
+         ALLOC_ARRAY( zone->contours, maxContours,   FT_UShort  ) )
+    {
+      TT_Done_GlyphZone( zone );
+    }
+
+    return error;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_Update_GlyphZone                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Checks the size of a zone and reallocates it if necessary.         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    newPoints   :: The new capacity for points.  We add two slots for  */
+  /*                   phantom points.                                     */
+  /*                                                                       */
+  /*    newContours :: The new capacity for contours.                      */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    zone        :: The address of the target zone.                     */
+  /*                                                                       */
+  LOCAL_FUNC FT_Error   TT_Update_GlyphZone( TT_GlyphZone*  zone,
+                                             FT_UShort      newPoints,
+                                             FT_Short       newContours )
+  {
+    FT_Error      error  = FT_Err_Ok;
+    FT_Memory     memory = zone->memory;
+
+
+    newPoints += 2;
+
+    if ( zone->max_points < newPoints )
+    {
+      /* reallocate the points arrays */
+      if ( REALLOC_ARRAY( zone->org,  zone->max_points * 2,
+                                      newPoints * 2, FT_F26Dot6 ) ||
+           REALLOC_ARRAY( zone->cur,  zone->max_points * 2,
+                                      newPoints * 2, FT_F26Dot6 ) ||
+           REALLOC_ARRAY( zone->tags, zone->max_points * 2,
+                                      newPoints,     FT_Byte    ) )
+        goto Exit;
+
+      zone->max_points = newPoints;
+    }
+
+    if ( zone->max_contours < newContours )
+    {
+      /* reallocate the contours array */
+      if ( REALLOC_ARRAY( zone->contours, zone->max_contours,
+                                          newContours, FT_UShort ) )
+        goto Exit;
+
+      zone->max_contours = newContours;
+    }
+
+  Exit:
+    return error;
+  }
+
+
+
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -75,13 +204,13 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Init_Face( FT_Stream      stream,
+  FT_Error  TT_Init_Face( FT_Stream      stream,
                           TT_Face        face,
-                          TT_Int         face_index,
-                          TT_Int         num_params,
+                          FT_Int         face_index,
+                          FT_Int         num_params,
                           FT_Parameter*  params )
   {
-    TT_Error         error;
+    FT_Error         error;
     FT_Driver        sfnt_driver;
     SFNT_Interface*  sfnt;
 
@@ -194,18 +323,18 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Init_Size( TT_Size  size )
+  FT_Error  TT_Init_Size( TT_Size  size )
   {
-    TT_Error   error = 0;
+    FT_Error   error = 0;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     TT_Face    face   = (TT_Face)size->root.face;
     FT_Memory  memory = face->root.memory;
-    TT_Int     i;
+    FT_Int     i;
 
     TT_ExecContext  exec;
-    TT_UShort       n_twilight;
+    FT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
 
 
@@ -250,16 +379,16 @@
                       TT_DefRecord )                ||
 
          ALLOC_ARRAY( size->cvt,
-                      size->cvt_size, TT_Long )     ||
+                      size->cvt_size, FT_Long )     ||
 
          ALLOC_ARRAY( size->storage,
-                      size->storage_size, TT_Long ) )
+                      size->storage_size, FT_Long ) )
 
       goto Fail_Memory;
 
     /* reserve twilight zone */
     n_twilight = maxp->maxTwilightPoints;
-    error = FT_New_GlyphZone( memory, n_twilight, 0, &size->twilight );
+    error = TT_New_GlyphZone( memory, n_twilight, 0, &size->twilight );
     if ( error )
       goto Fail_Memory;
 
@@ -402,7 +531,7 @@
     size->storage_size = 0;
 
     /* twilight zone */
-    FT_Done_GlyphZone( &size->twilight );
+    TT_Done_GlyphZone( &size->twilight );
 
     FREE( size->function_defs );
     FREE( size->instruction_defs );
@@ -434,10 +563,10 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Reset_Size( TT_Size  size )
+  FT_Error  TT_Reset_Size( TT_Size  size )
   {
     TT_Face   face;
-    TT_Error  error = TT_Err_Ok;
+    FT_Error  error = TT_Err_Ok;
 
     FT_Size_Metrics*  metrics;
 
@@ -489,7 +618,7 @@
 
     {
       TT_ExecContext    exec;
-      TT_UInt  i, j;
+      FT_UInt  i, j;
 
 
       /* Scale the cvt values to the new ppem.          */
@@ -583,7 +712,7 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot )
+  FT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot )
   {
     /* allocate the outline space */
     FT_Face     face    = slot->face;
@@ -641,13 +770,12 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Init_Driver( TT_Driver  driver )
+  FT_Error  TT_Init_Driver( TT_Driver  driver )
   {
     FT_Memory  memory = driver->root.memory;
-    TT_Error   error;
+    FT_Error   error;
 
-
-    error = FT_New_GlyphZone( memory, 0, 0, &driver->zone );
+    error = TT_New_GlyphZone( memory, 0, 0, &driver->zone );
     if ( error )
       return error;
 
@@ -682,7 +810,7 @@
 #endif
 
     /* remove the loading glyph zone */
-    FT_Done_GlyphZone( &driver->zone );
+    TT_Done_GlyphZone( &driver->zone );
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 

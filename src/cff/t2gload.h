@@ -92,27 +92,27 @@
     FT_Outline    current;       /* the current glyph outline   */
     FT_Outline    base;          /* the composite glyph outline */
 
-    TT_Int        max_points;    /* capacity of base outline in points   */
-    TT_Int        max_contours;  /* capacity of base outline in contours */
+    FT_Int        max_points;    /* capacity of base outline in points   */
+    FT_Int        max_contours;  /* capacity of base outline in contours */
 
-    TT_Vector     last;
+    FT_Vector     last;
 
-    TT_Fixed      scale_x;
-    TT_Fixed      scale_y;
+    FT_Fixed      scale_x;
+    FT_Fixed      scale_y;
 
-    TT_Pos        pos_x;
-    TT_Pos        pos_y;
+    FT_Pos        pos_x;
+    FT_Pos        pos_y;
 
-    TT_Vector     left_bearing;
-    TT_Vector     advance;
+    FT_Vector     left_bearing;
+    FT_Vector     advance;
 
-    TT_BBox       bbox;          /* bounding box */
-    TT_Bool       path_begun;
-    TT_Bool       load_points;
-    TT_Bool       no_recurse;
+    FT_BBox       bbox;          /* bounding box */
+    FT_Bool       path_begun;
+    FT_Bool       load_points;
+    FT_Bool       no_recurse;
 
-    TT_Error      error;         /* only used for memory errors */
-    TT_Bool       metrics_only;
+    FT_Error      error;         /* only used for memory errors */
+    FT_Bool       metrics_only;
 
   } T2_Builder;
 
@@ -121,9 +121,9 @@
 
   typedef struct  T2_Decoder_Zone_
   {
-    TT_Byte*  base;
-    TT_Byte*  limit;
-    TT_Byte*  cursor;
+    FT_Byte*  base;
+    FT_Byte*  limit;
+    FT_Byte*  cursor;
 
   } T2_Decoder_Zone;
 
@@ -133,32 +133,32 @@
     T2_Builder        builder;
     CFF_Font*         cff;
 
-    TT_Fixed          stack[T2_MAX_OPERANDS + 1];
-    TT_Fixed*         top;
+    FT_Fixed          stack[T2_MAX_OPERANDS + 1];
+    FT_Fixed*         top;
 
     T2_Decoder_Zone   zones[T2_MAX_SUBRS_CALLS + 1];
     T2_Decoder_Zone*  zone;
 
-    TT_Int            flex_state;
-    TT_Int            num_flex_vectors;
-    TT_Vector         flex_vectors[7];
+    FT_Int            flex_state;
+    FT_Int            num_flex_vectors;
+    FT_Vector         flex_vectors[7];
 
-    TT_Pos            glyph_width;
-    TT_Pos            nominal_width;
+    FT_Pos            glyph_width;
+    FT_Pos            nominal_width;
 
-    TT_Bool           read_width;
-    TT_Int            num_hints;
-    TT_Fixed*         buildchar;
-    TT_Int            len_buildchar;
+    FT_Bool           read_width;
+    FT_Int            num_hints;
+    FT_Fixed*         buildchar;
+    FT_Int            len_buildchar;
 
-    TT_UInt           num_locals;
-    TT_UInt           num_globals;
+    FT_UInt           num_locals;
+    FT_UInt           num_globals;
 
-    TT_Int            locals_bias;
-    TT_Int            globals_bias;
+    FT_Int            locals_bias;
+    FT_Int            globals_bias;
 
-    TT_Byte**         locals;
-    TT_Byte**         globals;
+    FT_Byte**         locals;
+    FT_Byte**         globals;
 
   } T2_Decoder;
 
@@ -174,22 +174,22 @@
 
   /* Compute the maximum advance width of a font through quick parsing */
   LOCAL_DEF
-  TT_Error  T2_Compute_Max_Advance( TT_Face  face,
-                                    TT_Int*  max_advance );
+  FT_Error  T2_Compute_Max_Advance( TT_Face  face,
+                                    FT_Int*  max_advance );
 
 #endif
 
   /* This function is exported, because it is used by the T1Dump utility */
   LOCAL_DEF
-  TT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
-                                  TT_Byte*     charstring_base,
-                                  TT_Int       charstring_len );
+  FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
+                                  FT_Byte*     charstring_base,
+                                  FT_Int       charstring_len );
 
   LOCAL_DEF
-  TT_Error  T2_Load_Glyph( T2_GlyphSlot  glyph,
+  FT_Error  T2_Load_Glyph( T2_GlyphSlot  glyph,
                            T2_Size       size,
-                           TT_Int        glyph_index,
-                           TT_Int        load_flags );
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags );
 
 
 #ifdef __cplusplus

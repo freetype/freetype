@@ -54,8 +54,8 @@
   /* a simple structure used to identify tokens */
   typedef struct T1_Token_Rec_
   {
-    T1_Byte*       start;   /* first character of token in input stream */
-    T1_Byte*       limit;   /* first character after the token          */
+    FT_Byte*       start;   /* first character of token in input stream */
+    FT_Byte*       limit;   /* first character after the token          */
     T1_Token_Type  type;    /* type of token..                          */
   
   } T1_Token_Rec;  
@@ -80,11 +80,11 @@
   typedef struct T1_Field_Rec_
   {
     T1_Field_Type  type;          /* type of field                        */
-    T1_UInt        offset;        /* offset of field in object            */
-    T1_UInt        size;          /* size of field in bytes               */
-    T1_UInt        array_max;     /* maximum number of elements for array */
-    T1_UInt        count_offset;  /* offset of element count for arrays   */
-    T1_Int         flag_bit;      /* bit number for field flag            */
+    FT_UInt        offset;        /* offset of field in object            */
+    FT_UInt        size;          /* size of field in bytes               */
+    FT_UInt        array_max;     /* maximum number of elements for array */
+    FT_UInt        count_offset;  /* offset of element count for arrays   */
+    FT_Int         flag_bit;      /* bit number for field flag            */
    
   } T1_Field_Rec;
 
@@ -92,54 +92,54 @@
 
 #define T1_FIELD_BOOL( _ftype, _fname )               \
     { t1_field_bool,                                  \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
       sizeof(T1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
 #define T1_FIELD_NUM( _ftype, _fname )                \
     { t1_field_integer,                               \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
       sizeof(T1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
 #define T1_FIELD_FIXED( _ftype, _fname, _power )      \
     { t1_field_fixed,                                 \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
       sizeof(T1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
 #define T1_FIELD_STRING( _ftype, _fname )             \
     { t1_field_string,                                \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
       sizeof(T1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
 #define T1_FIELD_NUM_ARRAY( _ftype, _fname, _fcount, _fmax ) \
     { t1_field_integer,                                      \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
       sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                \
       _fmax,                                                 \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),         \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),         \
       0 }
 
 #define T1_FIELD_FIXED_ARRAY( _ftype, _fname, _fcount, _fmax ) \
     { t1_field_fixed,                                          \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
       sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                  \
       _fmax,                                                   \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),           \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),           \
       0 }
 
 #define T1_FIELD_NUM_ARRAY2( _ftype, _fname, _fmax )         \
     { t1_field_integer,                                      \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
       sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                \
       _fmax,                                                 \
       0, 0 }
 
 #define T1_FIELD_FIXED_ARRAY2( _ftype, _fname, _fmax )         \
     { t1_field_fixed,                                          \
-      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
+      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
       sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                  \
       _fmax,                                                   \
       0, 0 }
@@ -177,15 +177,15 @@
 
   typedef struct T1_Table_
   {
-    T1_Byte*   block;          /* current memory block           */
-    T1_Int     cursor;         /* current cursor in memory block */
-    T1_Int     capacity;       /* current size of memory block   */
-    T1_Long    init;
+    FT_Byte*   block;          /* current memory block           */
+    FT_Int     cursor;         /* current cursor in memory block */
+    FT_Int     capacity;       /* current size of memory block   */
+    FT_Long    init;
 
-    T1_Int     max_elems;
-    T1_Int     num_elems;
-    T1_Byte**  elements;       /* addresses of table elements */
-    T1_Int*    lengths;        /* lengths of table elements   */
+    FT_Int     max_elems;
+    FT_Int     num_elems;
+    FT_Byte**  elements;       /* addresses of table elements */
+    FT_Int*    lengths;        /* lengths of table elements   */
 
     FT_Memory  memory;
 
@@ -226,34 +226,34 @@
     FT_Stream  stream;
     FT_Memory  memory;
 
-    T1_Byte*   base_dict;
-    T1_Int     base_len;
+    FT_Byte*   base_dict;
+    FT_Int     base_len;
 
-    T1_Byte*   private_dict;
-    T1_Int     private_len;
+    FT_Byte*   private_dict;
+    FT_Int     private_len;
 
-    T1_Byte    in_pfb;
-    T1_Byte    in_memory;
-    T1_Byte    single_block;
+    FT_Byte    in_pfb;
+    FT_Byte    in_memory;
+    FT_Byte    single_block;
 
-    T1_Byte*   cursor;
-    T1_Byte*   limit;
-    T1_Error   error;
+    FT_Byte*   cursor;
+    FT_Byte*   limit;
+    FT_Error   error;
 
   } T1_Parser;
 
 
   LOCAL_DEF
-  T1_Error  T1_New_Table( T1_Table*  table,
-                          T1_Int     count,
+  FT_Error  T1_New_Table( T1_Table*  table,
+                          FT_Int     count,
                           FT_Memory  memory );
 
 
   LOCAL_DEF
-  T1_Error  T1_Add_Table( T1_Table*  table,
-                          T1_Int     index,
+  FT_Error  T1_Add_Table( T1_Table*  table,
+                          FT_Int     index,
                           void*      object,
-                          T1_Int     length );
+                          FT_Int     length );
 
 #if 0
   LOCAL_DEF
@@ -264,28 +264,28 @@
   void  T1_Release_Table( T1_Table*  table );
 
   LOCAL_DEF
-  T1_Long  T1_ToInt  ( T1_Parser*  parser );
+  FT_Long  T1_ToInt  ( T1_Parser*  parser );
 
   LOCAL_DEF
-  T1_Long  T1_ToFixed( T1_Parser*  parser, T1_Int  power_ten );
+  FT_Long  T1_ToFixed( T1_Parser*  parser, FT_Int  power_ten );
 
   LOCAL_DEF
-  T1_Int  T1_ToCoordArray( T1_Parser* parser,
-                           T1_Int     max_coords,
-                           T1_Short*  coords );
+  FT_Int  T1_ToCoordArray( T1_Parser* parser,
+                           FT_Int     max_coords,
+                           FT_Short*  coords );
 
   LOCAL_DEF
-  T1_Int  T1_ToFixedArray( T1_Parser* parser,
-                           T1_Int     max_values,
-                           T1_Fixed*  values,
-                           T1_Int     power_ten );
+  FT_Int  T1_ToFixedArray( T1_Parser* parser,
+                           FT_Int     max_values,
+                           FT_Fixed*  values,
+                           FT_Int     power_ten );
 
 #if 0
   LOCAL_DEF
-  T1_String*  T1_ToString( T1_Parser* parser );
+  FT_String*  T1_ToString( T1_Parser* parser );
 
   LOCAL_DEF
-  T1_Bool   T1_ToBool( T1_Parser* parser );
+  FT_Bool   T1_ToBool( T1_Parser* parser );
 #endif
 
 
@@ -303,36 +303,36 @@
   LOCAL_FUNC
   void  T1_ToTokenArray( T1_Parser*     parser,
                          T1_Token_Rec*  tokens,
-                         T1_UInt        max_tokens,
-                         T1_Int*        pnum_tokens );
+                         FT_UInt        max_tokens,
+                         FT_Int*        pnum_tokens );
 
   LOCAL_DEF
-  T1_Error  T1_Load_Field( T1_Parser*           parser,
+  FT_Error  T1_Load_Field( T1_Parser*           parser,
                            const T1_Field_Rec*  field,
                            void**               objects,
-                           T1_UInt              max_objects,
-                           T1_ULong*            pflags );
+                           FT_UInt              max_objects,
+                           FT_ULong*            pflags );
 
   LOCAL_DEF
-  T1_Error  T1_Load_Field_Table( T1_Parser*           parser,
+  FT_Error  T1_Load_Field_Table( T1_Parser*           parser,
                                  const T1_Field_Rec*  field,
                                  void**               objects,
-                                 T1_UInt              max_objects,
-                                 T1_ULong*            pflags );
+                                 FT_UInt              max_objects,
+                                 FT_ULong*            pflags );
 
 
   LOCAL_DEF
-  T1_Error  T1_New_Parser( T1_Parser*  parser,
+  FT_Error  T1_New_Parser( T1_Parser*  parser,
                            FT_Stream   stream,
                            FT_Memory   memory );
 
   LOCAL_DEF
-  T1_Error  T1_Get_Private_Dict( T1_Parser*  parser );
+  FT_Error  T1_Get_Private_Dict( T1_Parser*  parser );
 
   LOCAL_DEF
-  void  T1_Decrypt( T1_Byte*   buffer,
-                    T1_Int     length,
-                    T1_UShort  seed );
+  void  T1_Decrypt( FT_Byte*   buffer,
+                    FT_Int     length,
+                    FT_UShort  seed );
 
   LOCAL_DEF
   void  T1_Done_Parser( T1_Parser*  parser );

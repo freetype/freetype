@@ -66,14 +66,14 @@
   {
     FT_GlyphSlotRec  root;
 
-    TT_Bool          hint;
-    TT_Bool          scaled;
+    FT_Bool          hint;
+    FT_Bool          scaled;
 
-    TT_Int           max_points;
-    TT_Int           max_contours;
+    FT_Int           max_points;
+    FT_Int           max_contours;
 
-    TT_Fixed         x_scale;
-    TT_Fixed         y_scale;
+    FT_Fixed         x_scale;
+    FT_Fixed         y_scale;
 
   } T2_GlyphSlotRec, *T2_GlyphSlot;
 
@@ -85,9 +85,9 @@
   /*                                                                       */
   typedef struct  T2_Transform_
   {
-    TT_Fixed    xx, xy;     /* transformation matrix coefficients */
-    TT_Fixed    yx, yy;
-    TT_F26Dot6  ox, oy;     /* offsets        */
+    FT_Fixed    xx, xy;     /* transformation matrix coefficients */
+    FT_Fixed    yx, yy;
+    FT_F26Dot6  ox, oy;     /* offsets        */
 
   } T2_Transform;
 
@@ -99,7 +99,6 @@
   typedef struct  T2_DriverRec_
   {
     FT_DriverRec    root;
-    FT_GlyphZone    zone;     /* glyph loader points zone */
 
     void*           extension_component;
 
@@ -113,8 +112,8 @@
   LOCAL_DEF
   FT_Error  T2_Init_Face( FT_Stream      stream,
                           T2_Face        face,
-                          TT_Int         face_index,
-                          TT_Int         num_params,
+                          FT_Int         face_index,
+                          FT_Int         num_params,
                           FT_Parameter*  params );
 
   LOCAL_DEF
@@ -132,7 +131,7 @@
   void  T2_Done_Size( T2_Size  size );
 
   LOCAL_DEF
-  TT_Error  T2_Reset_Size( T2_Size  size );
+  FT_Error  T2_Reset_Size( T2_Size  size );
 
 
   /*************************************************************************/
@@ -140,7 +139,7 @@
   /* GlyphSlot functions                                                   */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot );
+  FT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot );
 
   LOCAL_DEF
   void  T2_Done_GlyphSlot( T2_GlyphSlot  slot );
@@ -151,7 +150,7 @@
   /* Driver functions                                                      */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  T2_Init_Driver( T2_Driver  driver );
+  FT_Error  T2_Init_Driver( T2_Driver  driver );
 
   LOCAL_DEF
   void  T2_Done_Driver( T2_Driver  driver );

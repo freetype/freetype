@@ -33,14 +33,14 @@
 #define FT_COMPONENT  trace_ttcmap
 
 
-  static TT_UInt  code_to_index0( TT_CMapTable*  charmap,
-                                  TT_ULong       char_code );
-  static TT_UInt  code_to_index2( TT_CMapTable*  charmap,
-                                  TT_ULong       char_code );
-  static TT_UInt  code_to_index4( TT_CMapTable*  charmap,
-                                  TT_ULong       char_code );
-  static TT_UInt  code_to_index6( TT_CMapTable*  charmap,
-                                  TT_ULong       char_code );
+  static FT_UInt  code_to_index0( TT_CMapTable*  charmap,
+                                  FT_ULong       char_code );
+  static FT_UInt  code_to_index2( TT_CMapTable*  charmap,
+                                  FT_ULong       char_code );
+  static FT_UInt  code_to_index4( TT_CMapTable*  charmap,
+                                  FT_ULong       char_code );
+  static FT_UInt  code_to_index6( TT_CMapTable*  charmap,
+                                  FT_ULong       char_code );
 
 
   /*************************************************************************/
@@ -67,15 +67,15 @@
   /*    released.                                                          */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_CharMap_Load( TT_Face        face,
+  FT_Error  TT_CharMap_Load( TT_Face        face,
                              TT_CMapTable*  cmap,
                              FT_Stream      stream )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory;
-    TT_UShort  num_SH, num_Seg, i;
+    FT_UShort  num_SH, num_Seg, i;
 
-    TT_UShort  u, l;
+    FT_UShort  u, l;
 
     TT_CMap0*  cmap0;
     TT_CMap2*  cmap2;
@@ -112,7 +112,7 @@
 
       /* allocate subheader keys */
 
-      if ( ALLOC_ARRAY( cmap2->subHeaderKeys, 256, TT_UShort ) ||
+      if ( ALLOC_ARRAY( cmap2->subHeaderKeys, 256, FT_UShort ) ||
            ACCESS_Frame( 512L )                                )
         goto Fail;
 
@@ -155,7 +155,7 @@
 
       /* load glyph IDs */
 
-      if ( ALLOC_ARRAY( cmap2->glyphIdArray, l, TT_UShort ) ||
+      if ( ALLOC_ARRAY( cmap2->glyphIdArray, l, FT_UShort ) ||
            ACCESS_Frame( l * 2L )                           )
         goto Fail;
 
@@ -215,7 +215,7 @@
 
       /* load IDs */
 
-      if ( ALLOC_ARRAY( cmap4->glyphIdArray, l, TT_UShort ) ||
+      if ( ALLOC_ARRAY( cmap4->glyphIdArray, l, FT_UShort ) ||
            ACCESS_Frame( l * 2L )                           )
         goto Fail;
 
@@ -244,7 +244,7 @@
 
       if ( ALLOC_ARRAY( cmap6->glyphIdArray,
                         cmap6->entryCount,
-                        TT_Short )           ||
+                        FT_Short )           ||
            ACCESS_Frame( l * 2L )            )
         goto Fail;
 
@@ -284,7 +284,7 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_CharMap_Free( TT_Face        face,
+  FT_Error  TT_CharMap_Free( TT_Face        face,
                              TT_CMapTable*  cmap )
   {
     FT_Memory  memory;
@@ -346,8 +346,8 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
-  TT_UInt code_to_index0( TT_CMapTable*  cmap,
-                          TT_ULong       charCode )
+  FT_UInt code_to_index0( TT_CMapTable*  cmap,
+                          FT_ULong       charCode )
   {
     TT_CMap0*  cmap0 = &cmap->c.cmap0;
 
@@ -372,19 +372,19 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
-  TT_UInt  code_to_index2( TT_CMapTable*  cmap,
-                           TT_ULong       charCode )
+  FT_UInt  code_to_index2( TT_CMapTable*  cmap,
+                           FT_ULong       charCode )
   {
-    TT_UInt             result, index1, offset;
-    TT_UInt             char_lo;
-    TT_ULong            char_hi;
+    FT_UInt             result, index1, offset;
+    FT_UInt             char_lo;
+    FT_ULong            char_hi;
     TT_CMap2SubHeader*  sh2;
     TT_CMap2*           cmap2;
 
 
     cmap2   = &cmap->c.cmap2;
     result  = 0;
-    char_lo = (TT_UInt)( charCode & 0xFF );
+    char_lo = (FT_UInt)( charCode & 0xFF );
     char_hi = charCode >> 8;
 
     if ( char_hi == 0 )
@@ -436,10 +436,10 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
-  TT_UInt  code_to_index4( TT_CMapTable*  cmap,
-                           TT_ULong       charCode )
+  FT_UInt  code_to_index4( TT_CMapTable*  cmap,
+                           FT_ULong       charCode )
   {
-    TT_UInt          result, index1, segCount;
+    FT_UInt          result, index1, segCount;
     TT_CMap4*        cmap4;
     TT_CMap4Segment  *seg4, *limit;
 
@@ -461,8 +461,8 @@
     /* the cache is to significantly speed up charcode to glyph index     */
     /* conversion.                                                        */
 
-    if ( (TT_ULong)(charCode       - seg4->startCount) <
-         (TT_ULong)(seg4->endCount - seg4->startCount) )
+    if ( (FT_ULong)(charCode       - seg4->startCount) <
+         (FT_ULong)(seg4->endCount - seg4->startCount) )
       goto Found;
 
     for ( seg4 = cmap4->segments; seg4 < limit; seg4++ )
@@ -519,11 +519,11 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
-  TT_UInt  code_to_index6( TT_CMapTable*  cmap,
-                           TT_ULong       charCode )
+  FT_UInt  code_to_index6( TT_CMapTable*  cmap,
+                           FT_ULong       charCode )
   {
     TT_CMap6*  cmap6;
-    TT_UInt    result = 0;
+    FT_UInt    result = 0;
 
 
     cmap6     = &cmap->c.cmap6;

@@ -37,299 +37,6 @@
   /*************************************************************************/
   /***                                                                   ***/
   /***                                                                   ***/
-  /***                DEFINITIONS OF BASIC DATA TYPES                    ***/
-  /***                                                                   ***/
-  /***                                                                   ***/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* The REDEFINE() macro is used to convert a FreeType generic type into  */
-  /* a TrueType-specific one.  It simply replaces the `FT_' prefix by      */
-  /* `TT_' in order to define compatible types like TT_Long, TT_Error,     */
-  /* TT_Outline, etc.                                                      */
-  /*                                                                       */
-#undef  REDEFINE
-#define REDEFINE( type )  typedef FT_##type  TT_##type
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Bool                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A typedef of unsigned char, used for simple booleans.              */
-  /*                                                                       */
-  REDEFINE( Bool );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_FWord                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A signed 16-bit integer used to store a distance in original font  */
-  /*    units.                                                             */
-  /*                                                                       */
-  REDEFINE( FWord );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_UFWord                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    An unsigned 16-bit integer used to store a distance in original    */
-  /*    font units.                                                        */
-  /*                                                                       */
-  REDEFINE( UFWord );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Char                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A simple typedef for the _signed_ char type.                       */
-  /*                                                                       */
-  REDEFINE( Char );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Byte                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A simple typedef for the _unsigned_ char type.                     */
-  /*                                                                       */
-  REDEFINE( Byte );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_String                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A simple typedef for the char type, usually used for strings.      */
-  /*                                                                       */
-  REDEFINE( String );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Short                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A typedef for signed short.                                        */
-  /*                                                                       */
-  REDEFINE( Short );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_UShort                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A typedef for unsigned short.                                      */
-  /*                                                                       */
-  REDEFINE( UShort );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Int                                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A typedef for the int type.                                        */
-  /*                                                                       */
-  REDEFINE( Int );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_UInt                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A typedef for the unsigned int type.                               */
-  /*                                                                       */
-  REDEFINE( UInt );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Long                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A typedef for signed long.                                         */
-  /*                                                                       */
-  REDEFINE( Long );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_ULong                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A typedef for unsigned long.                                       */
-  /*                                                                       */
-  REDEFINE( ULong );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_F2Dot14                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A signed 2.14 fixed float type used for unit vectors.              */
-  /*                                                                       */
-  REDEFINE( F2Dot14 );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_F26Dot6                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A signed 26.6 fixed float type used for vectorial pixel            */
-  /*    coordinates.                                                       */
-  /*                                                                       */
-  REDEFINE( F26Dot6 );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Fixed                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This type is used to store 16.16 fixed float values, like scales   */
-  /*    or matrix coefficients.                                            */
-  /*                                                                       */
-  REDEFINE( Fixed );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Pos                                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The type FT_Pos is a 32-bit integer used to store vectorial        */
-  /*    coordinates.  Depending on the context, these can represent        */
-  /*    distances in integer font units, or 26.6 fixed float pixel         */
-  /*    coordinates.                                                       */
-  /*                                                                       */
-  REDEFINE( Pos );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    TT_Vector                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A simple structure used to store a 2d vector; coordinates are of   */
-  /*    the TT_Pos type.                                                   */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    x :: The horizontal coordinate.                                    */
-  /*    y :: The vertical coordinate.                                      */
-  /*                                                                       */
-  REDEFINE( Vector );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    TT_UnitVector                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A simple structure used to store a 2d vector unit vector.  Uses    */
-  /*    TT_F2Dot14 types.                                                  */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    x :: Horizontal coordinate.                                        */
-  /*    y :: Vertical coordinate.                                          */
-  /*                                                                       */
-  REDEFINE( UnitVector );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    TT_Matrix                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A simple structure used to store a 2x2 matrix.  Coefficients are   */
-  /*    in 16.16 fixed float format.  The computation performed is:        */
-  /*                                                                       */
-  /*       {                                                               */
-  /*          x' = x*xx + y*xy                                             */
-  /*          y' = x*yx + y*yy                                             */
-  /*       }                                                               */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    xx :: Matrix coefficient.                                          */
-  /*    xy :: Matrix coefficient.                                          */
-  /*    yx :: Matrix coefficient.                                          */
-  /*    yy :: Matrix coefficient.                                          */
-  /*                                                                       */
-  REDEFINE( Matrix );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    TT_BBox                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A structure used to hold an outline's bounding box, i.e., the      */
-  /*    coordinates of its extrema in the horizontal and vertical          */
-  /*    directions.                                                        */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    xMin :: The horizontal minimum (left-most).                        */
-  /*    yMin :: The vertical minimum (bottom-most).                        */
-  /*    xMax :: The horizontal maximum (right-most).                       */
-  /*    yMax :: The vertical maximum (top-most).                           */
-  /*                                                                       */
-  REDEFINE( BBox );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    TT_Error                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The TrueType error code type.  A value of 0 is always interpreted  */
-  /*    as a successful operation.                                         */
-  /*                                                                       */
-  REDEFINE( Error );
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /***                                                                   ***/
-  /***                                                                   ***/
   /***             REQUIRED TRUETYPE/OPENTYPE TABLES DEFINITIONS         ***/
   /***                                                                   ***/
   /***                                                                   ***/
@@ -358,10 +65,10 @@
   /*                                                                       */
   typedef struct  TTC_Header_
   {
-    TT_ULong   Tag;
-    TT_Fixed   version;
-    TT_Long    DirCount;
-    TT_ULong*  TableDirectory;
+    FT_ULong   Tag;
+    FT_Fixed   version;
+    FT_Long    DirCount;
+    FT_ULong*  TableDirectory;
 
   } TTC_Header;
 
@@ -383,11 +90,11 @@
   /*                                                                       */
   typedef struct SFNT_Header_
   {
-    TT_ULong   format_tag;
-    TT_UShort  num_tables;
-    TT_UShort  search_range;
-    TT_UShort  entry_selector;
-    TT_UShort  range_shift;
+    FT_ULong   format_tag;
+    FT_UShort  num_tables;
+    FT_UShort  search_range;
+    FT_UShort  entry_selector;
+    FT_UShort  range_shift;
   
   } SFNT_Header;
 
@@ -413,12 +120,12 @@
   /*                                                                       */
   typedef struct  TT_TableDir_
   {
-    TT_Fixed   version;      /* should be 0x10000 */
-    TT_UShort  numTables;    /* number of tables  */
+    FT_Fixed   version;      /* should be 0x10000 */
+    FT_UShort  numTables;    /* number of tables  */
 
-    TT_UShort  searchRange;    /* These parameters are only used  */
-    TT_UShort  entrySelector;  /* for a dichotomy search in the   */
-    TT_UShort  rangeShift;     /* directory.  We ignore them.     */
+    FT_UShort  searchRange;    /* These parameters are only used  */
+    FT_UShort  entrySelector;  /* for a dichotomy search in the   */
+    FT_UShort  rangeShift;     /* directory.  We ignore them.     */
 
   } TT_TableDir;
 
@@ -440,10 +147,10 @@
   /*                                                                       */
   typedef struct  TT_Table_
   {
-    TT_ULong  Tag;        /*        table type */
-    TT_ULong  CheckSum;   /*    table checksum */
-    TT_ULong  Offset;     /* table file offset */
-    TT_ULong  Length;     /*      table length */
+    FT_ULong  Tag;        /*        table type */
+    FT_ULong  CheckSum;   /*    table checksum */
+    FT_ULong  Offset;     /* table file offset */
+    FT_ULong  Length;     /*      table length */
 
   } TT_Table;
 
@@ -466,8 +173,8 @@
   /*                                                                       */
   typedef struct  TT_CMapDir_
   {
-    TT_UShort  tableVersionNumber;
-    TT_UShort  numCMaps;
+    FT_UShort  tableVersionNumber;
+    FT_UShort  numCMaps;
 
   } TT_CMapDir;
 
@@ -495,9 +202,9 @@
   /*                                                                       */
   typedef struct  TT_CMapDirEntry_
   {
-    TT_UShort  platformID;
-    TT_UShort  platformEncodingID;
-    TT_Long    offset;
+    FT_UShort  platformID;
+    FT_UShort  platformEncodingID;
+    FT_Long    offset;
 
   } TT_CMapDirEntry;
 
@@ -517,8 +224,8 @@
   /*                                                                       */
   typedef struct  TT_LongMetrics_
   {
-    TT_UShort  advance;
-    TT_Short   bearing;
+    FT_UShort  advance;
+    FT_Short   bearing;
 
   } TT_LongMetrics;
 
@@ -531,7 +238,7 @@
   /*    A simple type to model the short metrics of the `hmtx' and `vmtx'  */
   /*    tables.                                                            */
   /*                                                                       */
-  typedef TT_Short  TT_ShortMetrics;
+  typedef FT_Short  TT_ShortMetrics;
 
 
   /*************************************************************************/
@@ -563,17 +270,17 @@
   /*                                                                       */
   typedef struct  TT_NameRec_
   {
-    TT_UShort  platformID;
-    TT_UShort  encodingID;
-    TT_UShort  languageID;
-    TT_UShort  nameID;
-    TT_UShort  stringLength;
-    TT_UShort  stringOffset;
+    FT_UShort  platformID;
+    FT_UShort  encodingID;
+    FT_UShort  languageID;
+    FT_UShort  nameID;
+    FT_UShort  stringLength;
+    FT_UShort  stringOffset;
 
     /* this last field is not defined in the spec */
     /* but used by the FreeType engine            */
 
-    TT_Byte*   string;
+    FT_Byte*   string;
 
   } TT_NameRec;
 
@@ -600,11 +307,11 @@
   /*                                                                       */
   typedef struct  TT_NameTable_
   {
-    TT_UShort    format;
-    TT_UShort    numNameRecords;
-    TT_UShort    storageOffset;
+    FT_UShort    format;
+    FT_UShort    numNameRecords;
+    FT_UShort    storageOffset;
     TT_NameRec*  names;
-    TT_Byte*     storage;
+    FT_Byte*     storage;
 
   } TT_NameTable;
 
@@ -639,8 +346,8 @@
   /*                                                                       */
   typedef struct  TT_GaspRange_
   {
-    TT_UShort  maxPPEM;
-    TT_UShort  gaspFlag;
+    FT_UShort  maxPPEM;
+    FT_UShort  gaspFlag;
 
   } TT_GaspRange;
 
@@ -665,8 +372,8 @@
   /*                                                                       */
   typedef struct  TT_Gasp_
   {
-    TT_UShort      version;
-    TT_UShort      numRanges;
+    FT_UShort      version;
+    FT_UShort      numRanges;
     TT_GaspRange*  gaspRanges;
 
   } TT_Gasp;
@@ -690,9 +397,9 @@
   /*                                                                       */
   typedef struct  TT_HdmxRec_
   {
-    TT_Byte   ppem;
-    TT_Byte   max_width;
-    TT_Byte*  widths;
+    FT_Byte   ppem;
+    FT_Byte   max_width;
+    FT_Byte*  widths;
 
   } TT_HdmxRec;
 
@@ -713,8 +420,8 @@
   /*                                                                       */
   typedef struct  TT_Hdmx_
   {
-    TT_UShort    version;
-    TT_Short     num_records;
+    FT_UShort    version;
+    FT_Short     num_records;
     TT_HdmxRec*  records;
 
   } TT_Hdmx;
@@ -738,9 +445,9 @@
   /*                                                                       */
   typedef struct  TT_Kern_0_Pair_
   {
-    TT_UShort  left;   /* index of left  glyph in pair */
-    TT_UShort  right;  /* index of right glyph in pair */
-    TT_FWord   value;  /* kerning value                */
+    FT_UShort  left;   /* index of left  glyph in pair */
+    FT_UShort  right;  /* index of right glyph in pair */
+    FT_FWord   value;  /* kerning value                */
 
   } TT_Kern_0_Pair;
 
@@ -785,16 +492,16 @@
   /*                                                                       */
   typedef struct  TT_SBit_Metrics_
   {
-    TT_Byte  height;
-    TT_Byte  width;
+    FT_Byte  height;
+    FT_Byte  width;
 
-    TT_Char  horiBearingX;
-    TT_Char  horiBearingY;
-    TT_Byte  horiAdvance;
+    FT_Char  horiBearingX;
+    FT_Char  horiBearingY;
+    FT_Byte  horiAdvance;
 
-    TT_Char  vertBearingX;
-    TT_Char  vertBearingY;
-    TT_Byte  vertAdvance;
+    FT_Char  vertBearingX;
+    FT_Char  vertBearingY;
+    FT_Byte  vertAdvance;
 
   } TT_SBit_Metrics;
 
@@ -822,12 +529,12 @@
   /*                                                                       */
   typedef struct  TT_SBit_Small_Metrics_
   {
-    TT_Byte  height;
-    TT_Byte  width;
+    FT_Byte  height;
+    FT_Byte  width;
 
-    TT_Char  bearingX;
-    TT_Char  bearingY;
-    TT_Byte  advance;
+    FT_Char  bearingX;
+    FT_Char  bearingY;
+    FT_Byte  advance;
 
   } TT_SBit_Small_Metrics;
 
@@ -882,17 +589,17 @@
   /*                                                                       */
   typedef struct  TT_SBit_Line_Metrics_
   {
-    TT_Char  ascender;
-    TT_Char  descender;
-    TT_Byte  max_width;
-    TT_Char  caret_slope_numerator;
-    TT_Char  caret_slope_denominator;
-    TT_Char  caret_offset;
-    TT_Char  min_origin_SB;
-    TT_Char  min_advance_SB;
-    TT_Char  max_before_BL;
-    TT_Char  min_after_BL;
-    TT_Char  pads[2];
+    FT_Char  ascender;
+    FT_Char  descender;
+    FT_Byte  max_width;
+    FT_Char  caret_slope_numerator;
+    FT_Char  caret_slope_denominator;
+    FT_Char  caret_offset;
+    FT_Char  min_origin_SB;
+    FT_Char  min_advance_SB;
+    FT_Char  max_before_BL;
+    FT_Char  min_after_BL;
+    FT_Char  pads[2];
 
   } TT_SBit_Line_Metrics;
 
@@ -936,21 +643,21 @@
   /*                                                                       */
   typedef struct  TT_SBit_Range
   {
-    TT_UShort        first_glyph;
-    TT_UShort        last_glyph;
+    FT_UShort        first_glyph;
+    FT_UShort        last_glyph;
 
-    TT_UShort        index_format;
-    TT_UShort        image_format;
-    TT_ULong         image_offset;
+    FT_UShort        index_format;
+    FT_UShort        image_format;
+    FT_ULong         image_offset;
 
-    TT_ULong         image_size;
+    FT_ULong         image_size;
     TT_SBit_Metrics  metrics;
-    TT_ULong         num_glyphs;
+    FT_ULong         num_glyphs;
 
-    TT_ULong*        glyph_offsets;
-    TT_UShort*       glyph_codes;
+    FT_ULong*        glyph_offsets;
+    FT_UShort*       glyph_codes;
 
-    TT_ULong         table_offset;
+    FT_ULong         table_offset;
 
   } TT_SBit_Range;
 
@@ -990,23 +697,23 @@
   /*                                                                       */
   typedef struct  TT_SBit_Strike_
   {
-    TT_Int                 num_ranges;
+    FT_Int                 num_ranges;
     TT_SBit_Range*         sbit_ranges;
-    TT_ULong               ranges_offset;
+    FT_ULong               ranges_offset;
 
-    TT_ULong               color_ref;
+    FT_ULong               color_ref;
 
     TT_SBit_Line_Metrics   hori;
     TT_SBit_Line_Metrics   vert;
 
-    TT_UShort              start_glyph;
-    TT_UShort              end_glyph;
+    FT_UShort              start_glyph;
+    FT_UShort              end_glyph;
 
-    TT_Byte                x_ppem;
-    TT_Byte                y_ppem;
+    FT_Byte                x_ppem;
+    FT_Byte                y_ppem;
 
-    TT_Byte                bit_depth;
-    TT_Char                flags;
+    FT_Byte                bit_depth;
+    FT_Char                flags;
 
   } TT_SBit_Strike;
 
@@ -1026,10 +733,10 @@
   /*                                                                       */
   typedef struct  TT_SBit_Component_
   {
-    TT_UShort  glyph_code;
+    FT_UShort  glyph_code;
 
-    TT_Char    x_offset;
-    TT_Char    y_offset;
+    FT_Char    x_offset;
+    FT_Char    y_offset;
 
   } TT_SBit_Component;
 
@@ -1061,11 +768,11 @@
     TT_SBit_Line_Metrics  hori;
     TT_SBit_Line_Metrics  vert;
 
-    TT_Byte               x_ppem;
-    TT_Byte               y_ppem;
+    FT_Byte               x_ppem;
+    FT_Byte               y_ppem;
 
-    TT_Byte               x_ppem_substitute;
-    TT_Byte               y_ppem_substitute;
+    FT_Byte               x_ppem_substitute;
+    FT_Byte               y_ppem_substitute;
 
   } TT_SBit_Scale;
 
@@ -1101,10 +808,10 @@
   /*                                                                       */
   typedef struct  TT_Post_20_
   {
-    TT_UShort   num_glyphs;
-    TT_UShort   num_names;
-    TT_UShort*  glyph_indices;
-    TT_Char**   glyph_names;
+    FT_UShort   num_glyphs;
+    FT_UShort   num_names;
+    FT_UShort*  glyph_indices;
+    FT_Char**   glyph_names;
 
   } TT_Post_20;
 
@@ -1126,8 +833,8 @@
   /*                                                                       */
   typedef struct  TT_Post_25_
   {
-    TT_UShort  num_glyphs;
-    TT_Char*   offsets;
+    FT_UShort  num_glyphs;
+    FT_Char*   offsets;
 
   } TT_Post_25;
 
@@ -1149,7 +856,7 @@
   /*                                                                       */
   typedef struct  TT_Post_Names_
   {
-    TT_Bool       loaded;
+    FT_Bool       loaded;
 
     union
     {
@@ -1175,7 +882,7 @@
   /* format 0 */
   typedef struct  TT_CMap0_
   {
-    TT_Byte*  glyphIdArray;
+    FT_Byte*  glyphIdArray;
 
   } TT_CMap0;
 
@@ -1183,23 +890,23 @@
   /* format 2 */
   typedef struct  TT_CMap2SubHeader_
   {
-    TT_UShort  firstCode;      /* first valid low byte         */
-    TT_UShort  entryCount;     /* number of valid low bytes    */
-    TT_Short   idDelta;        /* delta value to glyphIndex    */
-    TT_UShort  idRangeOffset;  /* offset from here to 1st code */
+    FT_UShort  firstCode;      /* first valid low byte         */
+    FT_UShort  entryCount;     /* number of valid low bytes    */
+    FT_Short   idDelta;        /* delta value to glyphIndex    */
+    FT_UShort  idRangeOffset;  /* offset from here to 1st code */
 
   } TT_CMap2SubHeader;
 
 
   typedef struct  TT_CMap2_
   {
-    TT_UShort*  subHeaderKeys;
+    FT_UShort*  subHeaderKeys;
     /* high byte mapping table            */
     /* value = subHeader index * 8        */
 
     TT_CMap2SubHeader*  subHeaders;
-    TT_UShort*          glyphIdArray;
-    TT_UShort           numGlyphId;   /* control value */
+    FT_UShort*          glyphIdArray;
+    FT_UShort           numGlyphId;   /* control value */
 
   } TT_CMap2;
 
@@ -1207,24 +914,24 @@
   /* format 4 */
   typedef struct  TT_CMap4Segment_
   {
-    TT_UShort  endCount;
-    TT_UShort  startCount;
-    TT_Short   idDelta;
-    TT_UShort  idRangeOffset;
+    FT_UShort  endCount;
+    FT_UShort  startCount;
+    FT_Short   idDelta;
+    FT_UShort  idRangeOffset;
 
   } TT_CMap4Segment;
 
 
   typedef struct  TT_CMap4_
   {
-    TT_UShort  segCountX2;     /* number of segments * 2       */
-    TT_UShort  searchRange;    /* these parameters can be used */
-    TT_UShort  entrySelector;  /* for a binary search          */
-    TT_UShort  rangeShift;
+    FT_UShort  segCountX2;     /* number of segments * 2       */
+    FT_UShort  searchRange;    /* these parameters can be used */
+    FT_UShort  entrySelector;  /* for a binary search          */
+    FT_UShort  rangeShift;
 
     TT_CMap4Segment*  segments;
-    TT_UShort*        glyphIdArray;
-    TT_UShort         numGlyphId;   /* control value */
+    FT_UShort*        glyphIdArray;
+    FT_UShort         numGlyphId;   /* control value */
     
     TT_CMap4Segment*  last_segment;  /* last used segment, this is a small  */
                                      /* cache to potentially increase speed */
@@ -1234,30 +941,30 @@
   /* format 6 */
   typedef struct  TT_CMap6_
   {
-    TT_UShort   firstCode;      /* first character code of subrange      */
-    TT_UShort   entryCount;     /* number of character codes in subrange */
+    FT_UShort   firstCode;      /* first character code of subrange      */
+    FT_UShort   entryCount;     /* number of character codes in subrange */
 
-    TT_UShort*  glyphIdArray;
+    FT_UShort*  glyphIdArray;
 
   } TT_CMap6;
 
   typedef struct TT_CMapTable_  TT_CMapTable;
 
   typedef
-  TT_UInt  (*TT_CharMap_Func)( TT_CMapTable*  charmap,
-                               TT_ULong       char_code );
+  FT_UInt  (*TT_CharMap_Func)( TT_CMapTable*  charmap,
+                               FT_ULong       char_code );
 
   /* charmap table */
   struct  TT_CMapTable_
   {
-    TT_UShort  platformID;
-    TT_UShort  platformEncodingID;
-    TT_UShort  format;
-    TT_UShort  length;
-    TT_UShort  version;
+    FT_UShort  platformID;
+    FT_UShort  platformEncodingID;
+    FT_UShort  format;
+    FT_UShort  length;
+    FT_UShort  version;
 
-    TT_Bool    loaded;
-    TT_ULong   offset;
+    FT_Bool    loaded;
+    FT_ULong   offset;
 
     union
     {
@@ -1344,7 +1051,7 @@
 
 
   /* a function type used for the truetype bytecode interpreter hooks */
-  typedef TT_Error  (*TT_Interpreter)( void*  exec_context );
+  typedef FT_Error  (*TT_Interpreter)( void*  exec_context );
 
 
   /*************************************************************************/
@@ -1370,10 +1077,10 @@
   /*    The stream cursor must be at the font file's origin                */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Goto_Table_Func)( TT_Face    face,
-                                   TT_ULong   tag,
+  FT_Error  (*TT_Goto_Table_Func)( TT_Face    face,
+                                   FT_ULong   tag,
                                    FT_Stream  stream,
-                                   TT_ULong  *length );
+                                   FT_ULong  *length );
 
   /*************************************************************************/
   /*                                                                       */
@@ -1542,25 +1249,25 @@
     TTC_Header         ttc_header;
 
     FT_ULong           format_tag;
-    TT_UShort          num_tables;
+    FT_UShort          num_tables;
     TT_Table*          dir_tables;
 
     TT_Header          header;       /* TrueType header table          */
     TT_HoriHeader      horizontal;   /* TrueType horizontal header     */
 
     TT_MaxProfile      max_profile;
-    TT_ULong           max_components;
+    FT_ULong           max_components;
 
-    TT_Bool            vertical_info;
+    FT_Bool            vertical_info;
     TT_VertHeader      vertical;     /* TT Vertical header, if present */
 
-    TT_Int             num_names;    /* number of name records  */
+    FT_Int             num_names;    /* number of name records  */
     TT_NameTable       name_table;   /* name table              */
 
     TT_OS2             os2;          /* TrueType OS/2 table            */
     TT_Postscript      postscript;   /* TrueType Postscript table      */
 
-    TT_Int             num_charmaps;
+    FT_Int             num_charmaps;
     TT_CharMap         charmaps;     /* array of TT_CharMapRec */
 
     /* a pointer to the function used to seek a stream to the start of */
@@ -1593,10 +1300,10 @@
 	TT_PCLT            pclt;
 
     /* embedded bitmaps support */
-    TT_Int             num_sbit_strikes;
+    FT_Int             num_sbit_strikes;
     TT_SBit_Strike*    sbit_strikes;
 
-    TT_Int             num_sbit_scales;
+    FT_Int             num_sbit_scales;
     TT_SBit_Scale*     sbit_scales;
 
     /* postscript names table */
@@ -1609,24 +1316,24 @@
     /***********************************************************************/
 
     /* the glyph locations */
-    TT_UShort          num_locations;
-    TT_Long*           glyph_locations;
+    FT_UShort          num_locations;
+    FT_Long*           glyph_locations;
 
     /* the font program, if any */
-    TT_ULong           font_program_size;
-    TT_Byte*           font_program;
+    FT_ULong           font_program_size;
+    FT_Byte*           font_program;
 
     /* the cvt program, if any */
-    TT_ULong           cvt_program_size;
-    TT_Byte*           cvt_program;
+    FT_ULong           cvt_program_size;
+    FT_Byte*           cvt_program;
 
     /* the original, unscaled, control value table */
-    TT_ULong           cvt_size;
-    TT_Short*          cvt;
+    FT_ULong           cvt_size;
+    FT_Short*          cvt;
 
     /* the format 0 kerning table, if any */
-    TT_Int             num_kern_pairs;
-    TT_Int             kern_table_index;
+    FT_Int             num_kern_pairs;
+    FT_Int             kern_table_index;
     TT_Kern_0_Pair*    kern_pairs;
 
     /* a pointer to the bytecode interpreter to use. This is also */

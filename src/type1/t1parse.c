@@ -21,17 +21,17 @@
 /*                                                                       */
 
   LOCAL_FUNC
-  T1_Error  T1_New_Table( T1_Table*  table,
-                          T1_Int     count,
+  FT_Error  T1_New_Table( T1_Table*  table,
+                          FT_Int     count,
                           FT_Memory  memory )
   {
-	 T1_Error  error;
+	 FT_Error  error;
 
 	 table->memory = memory;
-	 if ( ALLOC_ARRAY( table->elements, count, T1_Byte* ) )
+	 if ( ALLOC_ARRAY( table->elements, count, FT_Byte* ) )
 		 return error;
 
-	 if ( ALLOC_ARRAY( table->lengths, count, T1_Byte* ) )
+	 if ( ALLOC_ARRAY( table->lengths, count, FT_Byte* ) )
 	 {
 	   FREE( table->elements );
 	   return error;
@@ -68,12 +68,12 @@
 /*                                                                       */
 
       static
-      T1_Error  reallocate_t1_table( T1_Table*  table,
-                                     T1_Int     new_size )
+      FT_Error  reallocate_t1_table( T1_Table*  table,
+                                     FT_Int     new_size )
       {
         FT_Memory  memory   = table->memory;
-        T1_Byte*   old_base = table->block;
-        T1_Error   error;
+        FT_Byte*   old_base = table->block;
+        FT_Error   error;
 
         /* realloc the base block */
         if ( REALLOC( table->block, table->capacity, new_size ) )
@@ -83,9 +83,9 @@
         /* shift all offsets when needed */
         if (old_base)
         {
-          T1_Long   delta  = table->block - old_base;
-          T1_Byte** offset = table->elements;
-          T1_Byte** limit  = offset + table->max_elems;
+          FT_Long   delta  = table->block - old_base;
+          FT_Byte** offset = table->elements;
+          FT_Byte** limit  = offset + table->max_elems;
 
           if (delta)
             for ( ; offset < limit; offset ++ )
@@ -98,10 +98,10 @@
 
 
   LOCAL_FUNC
-  T1_Error  T1_Add_Table( T1_Table*  table,
-                          T1_Int     index,
+  FT_Error  T1_Add_Table( T1_Table*  table,
+                          FT_Int     index,
                           void*      object,
-                          T1_Int     length )
+                          FT_Int     length )
   {
 	if (index < 0 || index > table->max_elems)
     {
@@ -112,8 +112,8 @@
     /* grow the base block if needed */
     if ( table->cursor + length > table->capacity )
     {
-      T1_Error  error;
-      T1_Int    new_size = table->capacity;
+      FT_Error  error;
+      FT_Int    new_size = table->capacity;
 
       while ( new_size < table->cursor+length )
         new_size += 1024;
@@ -150,8 +150,8 @@
   void  T1_Done_Table( T1_Table*  table )
   {
     FT_Memory  memory = table->memory;
-    T1_Error   error;
-    T1_Byte*   old_base;
+    FT_Error   error;
+    FT_Byte*   old_base;
 
     /* should never fail, as rec.cursor <= rec.size */
     old_base = table->block;
@@ -163,9 +163,9 @@
 
     if (old_base != table->block)
     {
-      T1_Long   delta   = table->block - old_base;
-      T1_Byte** element = table->elements;
-      T1_Byte** limit   = element + table->max_elems;
+      FT_Long   delta   = table->block - old_base;
+      FT_Byte** element = table->elements;
+      FT_Byte** limit   = element + table->max_elems;
 
       for ( ; element < limit; element++ )
         if (element[0])
@@ -175,12 +175,12 @@
 
 
   LOCAL_FUNC
-  T1_String*   CopyString( T1_Parser*  parser )
+  FT_String*   CopyString( T1_Parser*  parser )
   {
-    T1_String*  string = NULL;
+    FT_String*  string = NULL;
     T1_Token*   token  = parser->args++;
     FT_Memory   memory = parser->tokenizer->memory;
-    T1_Error    error;
+    FT_Error    error;
 
     if ( token->kind == tok_string )
     {
@@ -208,12 +208,12 @@
 
 
   static
-  T1_Error  parse_int( T1_Byte*  base,
-                       T1_Byte*  limit,
-                       T1_Long*  result )
+  FT_Error  parse_int( FT_Byte*  base,
+                       FT_Byte*  limit,
+                       FT_Long*  result )
   {
-    T1_Bool  sign = 0;
-    T1_Long  sum  = 0;
+    FT_Bool  sign = 0;
+    FT_Long  sum  = 0;
 
     if (base >= limit)
       goto Fail;
@@ -254,10 +254,10 @@
 
 
   static
-  T1_Error  parse_float( T1_Byte*  base,
-                         T1_Byte*  limit,
-                         T1_Int    scale,
-                         T1_Long*  result )
+  FT_Error  parse_float( FT_Byte*  base,
+                         FT_Byte*  limit,
+                         FT_Int    scale,
+                         FT_Long*  result )
   {
 #if 1
     /* XXX : We're simply much too lazy to code this function  */
@@ -274,16 +274,16 @@
     if ( sscanf( temp, "%lf", &value ) != 1 )
       goto Fail;
 
-    *result = (T1_Long)(scale*value);
+    *result = (FT_Long)(scale*value);
     return 0;
 
 #else
-  T1_Byte*  cur;
-  T1_Bool   sign        = 0;  /* sign                        */
-  T1_Long   number_int  = 0;  /* integer part                */
-  T1_Long   number_frac = 0;  /* fractional part             */
-  T1_Long   exponent    = 0;  /* exponent value              */
-  T1_Int    num_frac    = 0;  /* number of fractional digits */
+  FT_Byte*  cur;
+  FT_Bool   sign        = 0;  /* sign                        */
+  FT_Long   number_int  = 0;  /* integer part                */
+  FT_Long   number_frac = 0;  /* fractional part             */
+  FT_Long   exponent    = 0;  /* exponent value              */
+  FT_Int    num_frac    = 0;  /* number of fractional digits */
 
   /* check sign */
   if (*base == '+')
@@ -299,7 +299,7 @@
   cur = base;
   while ( cur < limit )
   {
-    T1_Byte  c = *cur;
+    FT_Byte  c = *cur;
     if ( c == '.' || c == 'e' || c == 'E' )
       break;
 
@@ -319,7 +319,7 @@
     base = cur;
     while ( cur < limit )
     {
-      T1_Byte  c = *cur;
+      FT_Byte  c = *cur;
       if ( c == 'e' || c == 'E' )
         break;
       cur++;
@@ -377,18 +377,18 @@
 
 
   static
-  T1_Error  parse_integer( T1_Byte*  base,
-                           T1_Byte*  limit,
-                           T1_Long*  result )
+  FT_Error  parse_integer( FT_Byte*  base,
+                           FT_Byte*  limit,
+                           FT_Long*  result )
   {
-    T1_Byte*  cur;
+    FT_Byte*  cur;
 
     /* the lexical analyser accepts floats as well as integers */
     /* now, check that we really have an int in this token     */
     cur = base;
     while ( cur < limit )
     {
-      T1_Byte  c = *cur++;
+      FT_Byte  c = *cur++;
 
       if ( c == '.' || c == 'e' || c == 'E' )
         goto Float_Number;
@@ -401,7 +401,7 @@
     /* We really have a float there, simply call parse_float in this */
     /* case with a scale of '10' to perform round..                */
     {
-      T1_Error error;
+      FT_Error error;
 
       error = parse_float( base, limit, 10, result );
       if (!error)
@@ -415,15 +415,15 @@
 
 
   LOCAL_FUNC
-  T1_Long  CopyInteger( T1_Parser*  parser )
+  FT_Long  CopyInteger( T1_Parser*  parser )
   {
-    T1_Long   sum   = 0;
+    FT_Long   sum   = 0;
     T1_Token* token = parser->args++;
 
     if ( token->kind == tok_number )
     {
-      T1_Byte*  base  = parser->tokenizer->base + token->start;
-      T1_Byte*  limit = base + token->len;
+      FT_Byte*  base  = parser->tokenizer->base + token->start;
+      FT_Byte*  limit = base + token->len;
 
       /* now read the number's value */
       parser->error = parse_integer( base, limit, &sum );
@@ -439,10 +439,10 @@
 
 
   LOCAL_FUNC
-  T1_Bool   CopyBoolean( T1_Parser*  parser )
+  FT_Bool   CopyBoolean( T1_Parser*  parser )
   {
-    T1_Error  error  = T1_Err_Ok;
-    T1_Bool   result = 0;
+    FT_Error  error  = T1_Err_Ok;
+    FT_Bool   result = 0;
     T1_Token* token  = parser->args++;
 
     if ( token->kind == tok_keyword )
@@ -470,17 +470,17 @@
 
 
   LOCAL_FUNC
-  T1_Long   CopyFloat( T1_Parser*  parser,
-                       T1_Int      scale )
+  FT_Long   CopyFloat( T1_Parser*  parser,
+                       FT_Int      scale )
   {
-    T1_Error  error;
-    T1_Long   sum = 0;
+    FT_Error  error;
+    FT_Long   sum = 0;
     T1_Token* token = parser->args++;
 
     if ( token->kind == tok_number )
     {
-      T1_Byte*  base  = parser->tokenizer->base + token->start;
-      T1_Byte*  limit = base + token->len;
+      FT_Byte*  base  = parser->tokenizer->base + token->start;
+      FT_Byte*  limit = base + token->len;
 
       error = parser->error = parse_float( base, limit, scale, &sum );
       if (error) goto Fail;
@@ -501,26 +501,26 @@
 
   LOCAL_FUNC
   void  CopyBBox( T1_Parser*  parser,
-                  T1_BBox*    bbox )
+                  FT_BBox*    bbox )
   {
     T1_Token* token = parser->args++;
-    T1_Int    n;
-    T1_Error  error;
+    FT_Int    n;
+    FT_Error  error;
 
     if ( token->kind == tok_program ||
          token->kind == tok_array   )
     {
       /* get rid of '['/']', or '{'/'}' */
-      T1_Byte*  base  = parser->tokenizer->base + token->start + 1;
-      T1_Byte*  limit = base + token->len - 2;
-      T1_Byte*  cur;
-      T1_Byte*  start;
+      FT_Byte*  base  = parser->tokenizer->base + token->start + 1;
+      FT_Byte*  limit = base + token->len - 2;
+      FT_Byte*  cur;
+      FT_Byte*  start;
 
       /* read each parameter independently */
       cur = base;
       for ( n = 0; n < 4; n++ )
       {
-        T1_Long*  result;
+        FT_Long*  result;
 
         /* skip whitespace */
         while (cur < limit && *cur == ' ') cur++;
@@ -555,25 +555,25 @@
 
   LOCAL_FUNC
   void  CopyMatrix( T1_Parser*  parser,
-                    T1_Matrix*  matrix )
+                    FT_Matrix*  matrix )
   {
     T1_Token* token = parser->args++;
-    T1_Error  error;
+    FT_Error  error;
 
     if ( token->kind == tok_array )
     {
       /* get rid of '[' and ']' */
-      T1_Byte*  base  = parser->tokenizer->base + token->start + 1;
-      T1_Byte*  limit = base + token->len - 2;
-      T1_Byte*  cur;
-      T1_Byte*  start;
-      T1_Int    n;
+      FT_Byte*  base  = parser->tokenizer->base + token->start + 1;
+      FT_Byte*  limit = base + token->len - 2;
+      FT_Byte*  cur;
+      FT_Byte*  start;
+      FT_Int    n;
 
       /* read each parameter independently */
       cur = base;
       for ( n = 0; n < 4; n++ )
       {
-        T1_Long*  result;
+        FT_Long*  result;
 
         /* skip whitespace */
         while (cur < limit && *cur == ' ') cur++;
@@ -607,28 +607,28 @@
 
   LOCAL_FUNC
   void  CopyArray( T1_Parser*  parser,
-                   T1_Byte*    num_elements,
-                   T1_Short*   elements,
-                   T1_Int      max_elements )
+                   FT_Byte*    num_elements,
+                   FT_Short*   elements,
+                   FT_Int      max_elements )
   {
     T1_Token* token = parser->args++;
-    T1_Error  error;
+    FT_Error  error;
 
     if ( token->kind == tok_array   ||
          token->kind == tok_program )   /* in the case of MinFeature */
     {
       /* get rid of '['/']', or '{'/'}' */
-      T1_Byte*  base  = parser->tokenizer->base + token->start + 1;
-      T1_Byte*  limit = base + token->len - 2;
-      T1_Byte*  cur;
-      T1_Byte*  start;
-      T1_Int    n;
+      FT_Byte*  base  = parser->tokenizer->base + token->start + 1;
+      FT_Byte*  limit = base + token->len - 2;
+      FT_Byte*  cur;
+      FT_Byte*  start;
+      FT_Int    n;
 
       /* read each parameter independently */
       cur = base;
       for ( n = 0; n < max_elements; n++ )
       {
-        T1_Long  result;
+        FT_Long  result;
 
         /* test end of string */
         if (cur >= limit)
@@ -648,11 +648,11 @@
         error = parse_integer( start, cur, &result );
         if (error) goto Fail;
 
-        *elements ++ = (T1_Short)result;
+        *elements ++ = (FT_Short)result;
       }
 
       if (num_elements)
-        *num_elements = (T1_Byte)n;
+        *num_elements = (FT_Byte)n;
 
       parser->error = 0;
       return;

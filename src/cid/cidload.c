@@ -40,11 +40,11 @@
 
  /* read a single offset */
   LOCAL_FUNC
-  T1_Long  cid_get_offset( T1_Byte**  start,
-                           T1_Byte    offsize )
+  FT_Long  cid_get_offset( FT_Byte**  start,
+                           FT_Byte    offsize )
   {
-    T1_Long   result;
-    T1_Byte*  p = *start;
+    FT_Long   result;
+    FT_Byte*  p = *start;
 
 
     for ( result = 0; offsize > 0; offsize-- )
@@ -56,13 +56,13 @@
 
 
   LOCAL_FUNC
-  void  cid_decrypt( T1_Byte*   buffer,
-                     T1_Int     length,
-                     T1_UShort  seed )
+  void  cid_decrypt( FT_Byte*   buffer,
+                     FT_Int     length,
+                     FT_UShort  seed )
   {
     while ( length > 0 )
     {
-      T1_Byte  plain;
+      FT_Byte  plain;
 
 
       plain     = ( *buffer ^ ( seed >> 8 ) );
@@ -83,13 +83,13 @@
 
 
   static
-  T1_Error  cid_load_keyword( CID_Face             face,
+  FT_Error  cid_load_keyword( CID_Face             face,
                               CID_Loader*          loader,
                               const T1_Field_Rec*  keyword )
   {
-    T1_Error    error;
+    FT_Error    error;
     CID_Parser* parser = &loader->parser;
-    T1_Byte*    object;
+    FT_Byte*    object;
     CID_Info*   cid = &face->cid;
 
 
@@ -104,11 +104,11 @@
     switch ( keyword->location )
     {
     case t1_field_cid_info:
-      object = (T1_Byte*)cid;
+      object = (FT_Byte*)cid;
       break;
 
     case t1_field_font_info:
-      object = (T1_Byte*)&cid->font_info;
+      object = (FT_Byte*)&cid->font_info;
       break;
 
     default:
@@ -128,11 +128,11 @@
         switch ( keyword->location )
         {
         case t1_field_private:
-          object = (T1_Byte*)&dict->private_dict;
+          object = (FT_Byte*)&dict->private_dict;
           break;
 
         default:
-          object = (T1_Byte*)dict;
+          object = (FT_Byte*)dict;
         }
       }
     }
@@ -150,11 +150,11 @@
 
 
   static
-  T1_Error  parse_font_bbox( CID_Face     face,
+  FT_Error  parse_font_bbox( CID_Face     face,
                              CID_Parser*  parser )
   {
-    T1_Short  temp[4];
-    T1_BBox*  bbox = &face->cid.font_bbox;
+    FT_Short  temp[4];
+    FT_BBox*  bbox = &face->cid.font_bbox;
 
 
     (void)CID_ToCoordArray( parser, 4, temp );
@@ -169,12 +169,12 @@
 
 
   static
-  T1_Error  parse_font_matrix( CID_Face     face,
+  FT_Error  parse_font_matrix( CID_Face     face,
                                CID_Parser*  parser )
   {
-    T1_Matrix*     matrix;
+    FT_Matrix*     matrix;
     CID_FontDict*  dict;
-    T1_Fixed       temp[4];
+    FT_Fixed       temp[4];
 
 
     if ( parser->num_dict >= 0 )
@@ -195,26 +195,26 @@
 
 
   static
-  T1_Error  parse_fd_array( CID_Face     face,
+  FT_Error  parse_fd_array( CID_Face     face,
                             CID_Parser*  parser )
   {
     CID_Info*  cid    = &face->cid;
     FT_Memory  memory = face->root.memory;
-    T1_Error   error  = T1_Err_Ok;
-    T1_Long    num_dicts;
+    FT_Error   error  = T1_Err_Ok;
+    FT_Long    num_dicts;
 
 
     num_dicts = CID_ToInt( parser );
 
     if ( !cid->font_dicts )
     {
-      T1_Int  n;
+      FT_Int  n;
 
 
       if ( ALLOC_ARRAY( cid->font_dicts, num_dicts, CID_FontDict ) )
         goto Exit;
 
-      cid->num_dicts = (T1_UInt)num_dicts;
+      cid->num_dicts = (FT_UInt)num_dicts;
 
       /* don't forget to set a few defaults */
       for ( n = 0; n < cid->num_dicts; n++ )
@@ -252,7 +252,7 @@
   static
   void  skip_whitespace( CID_Parser*  parser )
   {
-    T1_Byte*  cur = parser->cursor;
+    FT_Byte*  cur = parser->cursor;
 
 
     while ( cur < parser->limit && isspace( *cur ) )
@@ -263,10 +263,10 @@
 
 
   static
-  T1_Error  parse_dict( CID_Face     face,
+  FT_Error  parse_dict( CID_Face     face,
                         CID_Loader*  loader,
-                        T1_Byte*     base,
-                        T1_Long      size )
+                        FT_Byte*     base,
+                        FT_Long      size )
   {
     CID_Parser*  parser = &loader->parser;
 
@@ -276,8 +276,8 @@
     parser->error  = 0;
 
     {
-      T1_Byte*  cur   = base;
-      T1_Byte*  limit = cur + size;
+      FT_Byte*  cur   = base;
+      FT_Byte*  limit = cur + size;
 
 
       for ( ;cur < limit; cur++ )
@@ -296,8 +296,8 @@
         /* look for immediates */
         else if ( *cur == '/' && cur + 2 < limit )
         {
-          T1_Byte*  cur2;
-          T1_Int    len;
+          FT_Byte*  cur2;
+          FT_Int    len;
 
 
           cur++;
@@ -315,17 +315,17 @@
 
             for (;;)
             {
-              T1_Byte*  name;
+              FT_Byte*  name;
 
 
-              name = (T1_Byte*)keyword->ident;
+              name = (FT_Byte*)keyword->ident;
               if ( !name )
                 break;
 
               if ( cur[0] == name[0]                          &&
-                   len == (T1_Int)strlen( (const char*)name ) )
+                   len == (FT_Int)strlen( (const char*)name ) )
               {
-                T1_Int  n;
+                FT_Int  n;
 
 
                 for ( n = 1; n < len; n++ )
@@ -357,16 +357,16 @@
 
   /* read the subrmap and the subrs of each font dict */
   static
-  T1_Error  cid_read_subrs( CID_Face  face )
+  FT_Error  cid_read_subrs( CID_Face  face )
   {
     CID_Info*   cid    = &face->cid;
     FT_Memory   memory = face->root.memory;
     FT_Stream   stream = face->root.stream;
-    T1_Error    error;
-    T1_UInt     n;
+    FT_Error    error;
+    FT_UInt     n;
     CID_Subrs*  subr;
-    T1_UInt     max_offsets = 0;
-    T1_ULong*   offsets = 0;
+    FT_UInt     max_offsets = 0;
+    FT_ULong*   offsets = 0;
 
 
     if ( ALLOC_ARRAY( face->subrs, cid->num_dicts, CID_Subrs ) )
@@ -376,18 +376,18 @@
     for ( n = 0; n < cid->num_dicts; n++, subr++ )
     {
       CID_FontDict*  dict = cid->font_dicts + n;
-      T1_UInt        count, num_subrs = dict->num_subrs;
-      T1_ULong       data_len;
-      T1_Byte*       p;
+      FT_UInt        count, num_subrs = dict->num_subrs;
+      FT_ULong       data_len;
+      FT_Byte*       p;
 
 
       /* reallocate offsets array if needed */
       if ( num_subrs + 1 > max_offsets )
       {
-        T1_UInt  new_max = ( num_subrs + 1 + 3 ) & -4;
+        FT_UInt  new_max = ( num_subrs + 1 + 3 ) & -4;
 
 
-        if ( REALLOC_ARRAY( offsets, max_offsets, new_max, T1_ULong ) )
+        if ( REALLOC_ARRAY( offsets, max_offsets, new_max, FT_ULong ) )
           goto Fail;
 
         max_offsets = new_max;
@@ -408,7 +408,7 @@
       /* allocate, and read them                     */
       data_len = offsets[num_subrs] - offsets[0];
 
-      if ( ALLOC_ARRAY( subr->code, num_subrs+1, T1_Byte* ) ||
+      if ( ALLOC_ARRAY( subr->code, num_subrs+1, FT_Byte* ) ||
            ALLOC( subr->code[0], data_len )                 )
         goto Fail;
 
@@ -419,7 +419,7 @@
       /* set up pointers */
       for ( count = 1; count <= num_subrs; count++ )
       {
-        T1_UInt  len;
+        FT_UInt  len;
 
 
         len               = offsets[count] - offsets[count - 1];
@@ -429,7 +429,7 @@
       /* decrypt subroutines */
       for ( count = 0; count < num_subrs; count++ )
       {
-        T1_UInt  len;
+        FT_UInt  len;
 
 
         len = offsets[count + 1] - offsets[count];
@@ -481,11 +481,11 @@
 
 
   LOCAL_FUNC
-  T1_Error  CID_Open_Face( CID_Face  face )
+  FT_Error  CID_Open_Face( CID_Face  face )
   {
     CID_Loader  loader;
     CID_Parser* parser;
-    T1_Error   error;
+    FT_Error   error;
 
 
     t1_init_loader( &loader, face );

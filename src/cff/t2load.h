@@ -32,25 +32,25 @@
 #if 0  /* will be used later for pure-CFF font support */
 
   LOCAL_DEF
-  TT_String*  T2_Get_String( CFF_Index*          index,
-                             TT_UInt             sid,
+  FT_String*  T2_Get_String( CFF_Index*          index,
+                             FT_UInt             sid,
                              PSNames_Interface*  interface );
 
 #endif
 
   LOCAL_DEF
-  TT_Error  T2_Access_Element( CFF_Index*  index,
-                               TT_UInt     element,
-                               TT_Byte**   pbytes,
-                               TT_ULong*   pbyte_len );
+  FT_Error  T2_Access_Element( CFF_Index*  index,
+                               FT_UInt     element,
+                               FT_Byte**   pbytes,
+                               FT_ULong*   pbyte_len );
 
   LOCAL_DEF
   void  T2_Forget_Element( CFF_Index*  index,
-                           TT_Byte**   pbytes );
+                           FT_Byte**   pbytes );
 
   LOCAL_DEF
-  TT_Error  T2_Load_CFF_Font( FT_Stream  stream,
-                              TT_Int     face_index,
+  FT_Error  T2_Load_CFF_Font( FT_Stream  stream,
+                              FT_Int     face_index,
                               CFF_Font*  font );
 
   LOCAL_DEF

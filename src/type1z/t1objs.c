@@ -74,7 +74,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Init_Size( T1_Size  size )
+  FT_Error  T1_Init_Size( T1_Size  size )
   {
     size->valid = 0;
     return T1_Err_Ok;
@@ -99,7 +99,7 @@
  ******************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_Reset_Size( T1_Size  size )
+  FT_Error  T1_Reset_Size( T1_Size  size )
   {
     /* recompute ascender, descender, etc.. */
     T1_Face           face    = (T1_Face)size->root.face;
@@ -220,13 +220,13 @@
  ******************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_Init_Face( FT_Stream      stream,
+  FT_Error  T1_Init_Face( FT_Stream      stream,
                           T1_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
                           FT_Parameter*  params )
   {
-    T1_Error      error;
+    FT_Error      error;
     PSNames_Interface*  psnames;
 
     UNUSED(num_params);
@@ -319,8 +319,8 @@
 
         root->bbox         = face->type1.font_bbox;
         root->units_per_EM = 1000;
-        root->ascender     =  (T1_Short)face->type1.font_bbox.yMax;
-        root->descender    = -(T1_Short)face->type1.font_bbox.yMin;
+        root->ascender     =  (FT_Short)face->type1.font_bbox.yMax;
+        root->descender    = -(FT_Short)face->type1.font_bbox.yMin;
         root->height       = ((root->ascender + root->descender)*12)/10;
 
         /* now compute the maximum advance width */
@@ -330,7 +330,7 @@
         /* compute max advance width for proportional fonts */
         if (!face->type1.font_info.is_fixed_pitch)
         {
-          T1_Int  max_advance;
+          FT_Int  max_advance;
 
           error = T1_Compute_Max_Advance( face, &max_advance );
 
@@ -454,7 +454,7 @@
  ******************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_Init_GlyphSlot( T1_GlyphSlot  glyph )
+  FT_Error  T1_Init_GlyphSlot( T1_GlyphSlot  glyph )
   {
     FT_Library  library = glyph->root.face->driver->library;
 
@@ -482,7 +482,7 @@
  ******************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_Init_Driver( T1_Driver  driver )
+  FT_Error  T1_Init_Driver( T1_Driver  driver )
   {
     UNUSED(driver);
     return T1_Err_Ok;

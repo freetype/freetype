@@ -55,10 +55,10 @@
 
   typedef struct T1_Snap_Zone_
   {
-    T1_Pos  orus;
-    T1_Pos  pix;
-    T1_Pos  min;
-    T1_Pos  max;
+    FT_Pos  orus;
+    FT_Pos  pix;
+    FT_Pos  min;
+    FT_Pos  max;
 
   } T1_Snap_Zone;
 
@@ -79,8 +79,8 @@
 
   typedef struct T1_Edge_
   {
-    T1_Pos  orus;
-    T1_Pos  pix;
+    FT_Pos  orus;
+    FT_Pos  pix;
 
   } T1_Edge;
 
@@ -108,7 +108,7 @@
   {
     T1_Edge  min_edge;
     T1_Edge  max_edge;
-    T1_Int   hint_flags;
+    FT_Int   hint_flags;
 
   } T1_Stem_Hint;
 
@@ -154,16 +154,16 @@
 
   struct T1_Size_Hints_
   {
-    T1_Bool       supress_overshoots;
+    FT_Bool       supress_overshoots;
 
-    T1_Int        num_blue_zones;
-    T1_Int        num_bottom_zones;
+    FT_Int        num_blue_zones;
+    FT_Int        num_bottom_zones;
     T1_Snap_Zone  blue_zones[ T1_HINTER_MAX_BLUES ];
 
-    T1_Int        num_snap_widths;
+    FT_Int        num_snap_widths;
     T1_Snap_Zone  snap_widths[ T1_HINTER_MAX_SNAPS ];
 
-    T1_Int        num_snap_heights;
+    FT_Int        num_snap_heights;
     T1_Snap_Zone  snap_heights[ T1_HINTER_MAX_SNAPS ];
   };
 
@@ -192,11 +192,11 @@
 
   typedef struct T1_Stem_Table_
   {
-    T1_Int        num_stems;
-    T1_Int        num_active;
+    FT_Int        num_stems;
+    FT_Int        num_active;
 
     T1_Stem_Hint  stems[ T1_HINTER_MAX_EDGES ];
-    T1_Int        sort [ T1_HINTER_MAX_EDGES ];
+    FT_Int        sort [ T1_HINTER_MAX_EDGES ];
 
   } T1_Stem_Table;
 
@@ -257,7 +257,7 @@
  ************************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_New_Size_Hinter( T1_Size  size );
+  FT_Error  T1_New_Size_Hinter( T1_Size  size );
 
 
 /************************************************************************
@@ -295,7 +295,7 @@
  ************************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Reset_Size_Hinter( T1_Size  size );
+  FT_Error  T1_Reset_Size_Hinter( T1_Size  size );
 
 
 /************************************************************************
@@ -315,7 +315,7 @@
  ************************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_New_Glyph_Hinter( T1_GlyphSlot  glyph );
+  FT_Error  T1_New_Glyph_Hinter( T1_GlyphSlot  glyph );
 
 
 /************************************************************************

@@ -67,15 +67,15 @@
 /*                                                                       */
 
   LOCAL_FUNC
-  T1_Error  T1_New_Table( T1_Table*  table,
-                          T1_Int     count,
+  FT_Error  T1_New_Table( T1_Table*  table,
+                          FT_Int     count,
                           FT_Memory  memory )
   {
-	 T1_Error  error;
+	 FT_Error  error;
 
 	 table->memory = memory;
-	 if ( ALLOC_ARRAY( table->elements, count, T1_Byte*  ) ||
-          ALLOC_ARRAY( table->lengths, count, T1_Byte* ) )
+	 if ( ALLOC_ARRAY( table->elements, count, FT_Byte*  ) ||
+          ALLOC_ARRAY( table->lengths, count, FT_Byte* ) )
        goto Exit;
 
 	table->max_elems = count;
@@ -112,11 +112,11 @@
 /*                                                                       */
 
 
-      static void  shift_elements( T1_Table*  table, T1_Byte*  old_base )
+      static void  shift_elements( T1_Table*  table, FT_Byte*  old_base )
       {
-        T1_Long    delta  = table->block - old_base;
-        T1_Byte**  offset = table->elements;
-        T1_Byte**  limit  = offset + table->max_elems;
+        FT_Long    delta  = table->block - old_base;
+        FT_Byte**  offset = table->elements;
+        FT_Byte**  limit  = offset + table->max_elems;
 
         if (delta)
           for ( ; offset < limit; offset++ )
@@ -127,12 +127,12 @@
       }
 
       static
-      T1_Error  reallocate_t1_table( T1_Table*  table,
-                                     T1_Int     new_size )
+      FT_Error  reallocate_t1_table( T1_Table*  table,
+                                     FT_Int     new_size )
       {
         FT_Memory  memory   = table->memory;
-        T1_Byte*   old_base = table->block;
-        T1_Error   error;
+        FT_Byte*   old_base = table->block;
+        FT_Error   error;
 
         /* realloc the base block */
         if ( REALLOC( table->block, table->capacity, new_size ) )
@@ -150,10 +150,10 @@
 
 
   LOCAL_FUNC
-  T1_Error  T1_Add_Table( T1_Table*  table,
-                          T1_Int     index,
+  FT_Error  T1_Add_Table( T1_Table*  table,
+                          FT_Int     index,
                           void*      object,
-                          T1_Int     length )
+                          FT_Int     length )
   {
 	if (index < 0 || index > table->max_elems)
     {
@@ -164,8 +164,8 @@
     /* grow the base block if needed */
     if ( table->cursor + length > table->capacity )
     {
-      T1_Error  error;
-      T1_Int    new_size = table->capacity;
+      FT_Error  error;
+      FT_Int    new_size = table->capacity;
 
       while ( new_size < table->cursor+length )
         new_size += 1024;
@@ -203,8 +203,8 @@
   void  T1_Done_Table( T1_Table*  table )
   {
     FT_Memory  memory = table->memory;
-    T1_Error   error;
-    T1_Byte*   old_base;
+    FT_Error   error;
+    FT_Byte*   old_base;
 
     /* should never fail, as rec.cursor <= rec.size */
     old_base = table->block;
@@ -252,12 +252,12 @@
   LOCAL_FUNC
   void     T1_Skip_Spaces( T1_Parser*  parser )
   {
-    T1_Byte* cur   = parser->cursor;
-    T1_Byte* limit = parser->limit;
+    FT_Byte* cur   = parser->cursor;
+    FT_Byte* limit = parser->limit;
 
     while (cur < limit)
     {
-      T1_Byte  c = *cur;
+      FT_Byte  c = *cur;
       if (!IS_T1_SPACE(c))
         break;
       cur++;
@@ -269,10 +269,10 @@
   void  T1_ToToken( T1_Parser*     parser,
                     T1_Token_Rec*  token )
   {
-    T1_Byte*  cur;
-    T1_Byte*  limit;
-    T1_Byte   starter, ender;
-    T1_Int    embed;
+    FT_Byte*  cur;
+    FT_Byte*  limit;
+    FT_Byte   starter, ender;
+    FT_Int    embed;
 
     token->type  = t1_token_none;
     token->start = 0;
@@ -350,8 +350,8 @@
   LOCAL_FUNC
   void  T1_ToTokenArray( T1_Parser*     parser,
                          T1_Token_Rec*  tokens,
-                         T1_UInt        max_tokens,
-                         T1_Int        *pnum_tokens )
+                         FT_UInt        max_tokens,
+                         FT_Int        *pnum_tokens )
   {
     T1_Token_Rec  master;
 
@@ -360,8 +360,8 @@
     T1_ToToken( parser, &master );
     if (master.type == t1_token_array)
     {
-      T1_Byte*       old_cursor = parser->cursor;
-      T1_Byte*       old_limit  = parser->limit;
+      FT_Byte*       old_cursor = parser->cursor;
+      FT_Byte*       old_limit  = parser->limit;
       T1_Token_Rec*  cur        = tokens;
       T1_Token_Rec*  limit      = cur + max_tokens;
 
@@ -391,17 +391,17 @@
 
 
   static
-  T1_Long  t1_toint( T1_Byte* *cursor,
-                     T1_Byte*  limit )
+  FT_Long  t1_toint( FT_Byte* *cursor,
+                     FT_Byte*  limit )
   {
-    T1_Long  result = 0;
-    T1_Byte* cur    = *cursor;
-    T1_Byte  c, d;
+    FT_Long  result = 0;
+    FT_Byte* cur    = *cursor;
+    FT_Byte  c, d;
 
     for (; cur < limit; cur++)
     {
       c = *cur;
-      d = (T1_Byte)(c - '0');
+      d = (FT_Byte)(c - '0');
       if (d < 10) break;
 
       if ( c=='-' )
@@ -415,7 +415,7 @@
     {
       do
       {
-        d = (T1_Byte)(cur[0] - '0');
+        d = (FT_Byte)(cur[0] - '0');
         if (d >= 10)
           break;
 
@@ -434,14 +434,14 @@
 
 
   static
-  T1_Long  t1_tofixed( T1_Byte* *cursor,
-                       T1_Byte*  limit,
-                       T1_Long   power_ten )
+  FT_Long  t1_tofixed( FT_Byte* *cursor,
+                       FT_Byte*  limit,
+                       FT_Long   power_ten )
   {
-    T1_Byte* cur    = *cursor;
-    T1_Long  num, divider, result;
-    T1_Int   sign   = 0;
-    T1_Byte  d;
+    FT_Byte* cur    = *cursor;
+    FT_Long  num, divider, result;
+    FT_Int   sign   = 0;
+    FT_Byte  d;
 
     if (cur >= limit) return 0;
 
@@ -464,7 +464,7 @@
 
       for (;;)
       {
-        d = (T1_Byte)(*cur - '0');
+        d = (FT_Byte)(*cur - '0');
         if (d >= 10) break;
 
         if (divider < 10000000L)
@@ -512,14 +512,14 @@
 
 
   static
-  T1_Int  t1_tocoordarray( T1_Byte*  *cursor,
-                           T1_Byte*   limit,
-                           T1_Int     max_coords,
-                           T1_Short*  coords )
+  FT_Int  t1_tocoordarray( FT_Byte*  *cursor,
+                           FT_Byte*   limit,
+                           FT_Int     max_coords,
+                           FT_Short*  coords )
   {
-    T1_Byte*  cur   = *cursor;
-    T1_Int    count = 0;
-    T1_Byte   c, ender;
+    FT_Byte*  cur   = *cursor;
+    FT_Int    count = 0;
+    FT_Byte   c, ender;
 
     if (cur >= limit) goto Exit;
 
@@ -552,7 +552,7 @@
       if (count >= max_coords || c == ender)
         break;
 
-      coords[count] = (T1_Short)(t1_tofixed(&cur,limit,0) >> 16);
+      coords[count] = (FT_Short)(t1_tofixed(&cur,limit,0) >> 16);
       count++;
 
       if (!ender)
@@ -567,15 +567,15 @@
 
 
   static
-  T1_Int  t1_tofixedarray( T1_Byte*  *cursor,
-                           T1_Byte*   limit,
-                           T1_Int     max_values,
-                           T1_Fixed*  values,
-                           T1_Int     power_ten )
+  FT_Int  t1_tofixedarray( FT_Byte*  *cursor,
+                           FT_Byte*   limit,
+                           FT_Int     max_values,
+                           FT_Fixed*  values,
+                           FT_Int     power_ten )
   {
-    T1_Byte*  cur   = *cursor;
-    T1_Int    count = 0;
-    T1_Byte   c, ender;
+    FT_Byte*  cur   = *cursor;
+    FT_Int    count = 0;
+    FT_Byte   c, ender;
 
     if (cur >= limit) goto Exit;
 
@@ -623,13 +623,13 @@
 
 #if 0
   static
-  T1_String*  t1_tostring( T1_Byte* *cursor, T1_Byte* limit, FT_Memory memory )
+  FT_String*  t1_tostring( FT_Byte* *cursor, FT_Byte* limit, FT_Memory memory )
   {
-    T1_Byte*    cur = *cursor;
-    T1_Int      len = 0;
-    T1_Int      count;
-    T1_String*  result;
-    T1_Error    error;
+    FT_Byte*    cur = *cursor;
+    FT_Int      len = 0;
+    FT_Int      count;
+    FT_String*  result;
+    FT_Error    error;
 
     /* XXX : some stupid fonts have a "Notice" or "Copyright" string     */
     /*       that simply doesn't begin with an opening parenthesis, even */
@@ -674,10 +674,10 @@
 #endif
 
   static
-  int  t1_tobool( T1_Byte* *cursor, T1_Byte* limit )
+  int  t1_tobool( FT_Byte* *cursor, FT_Byte* limit )
   {
-    T1_Byte*  cur    = *cursor;
-    T1_Bool   result = 0;
+    FT_Byte*  cur    = *cursor;
+    FT_Bool   result = 0;
 
     /* return 1 if we find a "true", 0 otherwise */
     if ( cur+3 < limit &&
@@ -707,18 +707,18 @@
 
  /* Loads a simple field (i.e. non-table) into the current list of objects */
   LOCAL_FUNC
-  T1_Error  T1_Load_Field( T1_Parser*           parser,
+  FT_Error  T1_Load_Field( T1_Parser*           parser,
                            const T1_Field_Rec*  field,
                            void**               objects,
-                           T1_UInt              max_objects,
-                           T1_ULong*            pflags )
+                           FT_UInt              max_objects,
+                           FT_ULong*            pflags )
   {
     T1_Token_Rec  token;
-    T1_Byte*      cur;
-    T1_Byte*      limit;
-    T1_UInt       count;
-    T1_UInt       index;
-    T1_Error      error;
+    FT_Byte*      cur;
+    FT_Byte*      limit;
+    FT_UInt       count;
+    FT_UInt       index;
+    FT_Error      error;
 
     T1_ToToken( parser, &token );
     if (!token.type)
@@ -741,9 +741,9 @@
 
     for ( ; count > 0; count--, index++ )
     {
-      T1_Byte*   q = (T1_Byte*)objects[index] + field->offset;
-      T1_Long    val;
-      T1_String* string;
+      FT_Byte*   q = (FT_Byte*)objects[index] + field->offset;
+      FT_Long    val;
+      FT_String* string;
 
       switch (field->type)
       {
@@ -765,9 +765,9 @@
           Store_Integer:
             switch (field->size)
             {
-              case 1:  *(T1_Byte*)q   = (T1_Byte)val;   break;
-              case 2:  *(T1_UShort*)q = (T1_UShort)val; break;
-              default: *(T1_Long*)q   = val;
+              case 1:  *(FT_Byte*)q   = (FT_Byte)val;   break;
+              case 2:  *(FT_UShort*)q = (FT_UShort)val; break;
+              default: *(FT_Long*)q   = val;
             }
           }
           break;
@@ -783,7 +783,7 @@
             MEM_Copy( string, cur, len );
             string[len] = 0;              
 
-            *(T1_String**)q = string;
+            *(FT_String**)q = string;
           }
           break;
           
@@ -807,18 +807,18 @@
 #define T1_MAX_TABLE_ELEMENTS  32
 
   LOCAL_FUNC
-  T1_Error  T1_Load_Field_Table( T1_Parser*           parser,
+  FT_Error  T1_Load_Field_Table( T1_Parser*           parser,
                                  const T1_Field_Rec*  field,
                                  void**               objects,
-                                 T1_UInt              max_objects,
-                                 T1_ULong*            pflags )
+                                 FT_UInt              max_objects,
+                                 FT_ULong*            pflags )
   {
     T1_Token_Rec  elements[T1_MAX_TABLE_ELEMENTS];
     T1_Token_Rec* token;
-    T1_Int        num_elements;
-    T1_Error      error = 0;
-    T1_Byte*      old_cursor;
-    T1_Byte*      old_limit;
+    FT_Int        num_elements;
+    FT_Error      error = 0;
+    FT_Byte*      old_cursor;
+    FT_Byte*      old_limit;
     T1_Field_Rec  fieldrec = *(T1_Field_Rec*)field;
     
     T1_ToTokenArray( parser, elements, 32, &num_elements );
@@ -832,7 +832,7 @@
     old_limit  = parser->limit;
 
     /* we store the elements count */
-    *(T1_Byte*)((T1_Byte*)objects[0] + field->count_offset) = num_elements;
+    *(FT_Byte*)((FT_Byte*)objects[0] + field->count_offset) = num_elements;
 
     /* we now load each element, adjusting the field.offset on each one */
     token = elements;
@@ -864,33 +864,33 @@
 
 
   LOCAL_FUNC
-  T1_Long  T1_ToInt  ( T1_Parser*  parser )
+  FT_Long  T1_ToInt  ( T1_Parser*  parser )
   {
     return t1_toint( &parser->cursor, parser->limit );
   }
 
 
   LOCAL_FUNC
-  T1_Long  T1_ToFixed( T1_Parser*  parser, T1_Int power_ten )
+  FT_Long  T1_ToFixed( T1_Parser*  parser, FT_Int power_ten )
   {
     return t1_tofixed( &parser->cursor, parser->limit, power_ten );
   }
 
 
   LOCAL_FUNC
-  T1_Int  T1_ToCoordArray( T1_Parser* parser,
-                           T1_Int     max_coords,
-                           T1_Short*  coords )
+  FT_Int  T1_ToCoordArray( T1_Parser* parser,
+                           FT_Int     max_coords,
+                           FT_Short*  coords )
   {
     return t1_tocoordarray( &parser->cursor, parser->limit, max_coords, coords );
   }
 
 
   LOCAL_FUNC
-  T1_Int  T1_ToFixedArray( T1_Parser* parser,
-                           T1_Int     max_values,
-                           T1_Fixed*  values,
-                           T1_Int     power_ten )
+  FT_Int  T1_ToFixedArray( T1_Parser* parser,
+                           FT_Int     max_values,
+                           FT_Fixed*  values,
+                           FT_Int     power_ten )
   {
     return t1_tofixedarray( &parser->cursor, parser->limit, max_values, values, power_ten );
   }
@@ -898,14 +898,14 @@
 
 #if 0
   LOCAL_FUNC
-  T1_String*  T1_ToString( T1_Parser* parser )
+  FT_String*  T1_ToString( T1_Parser* parser )
   {
     return t1_tostring( &parser->cursor, parser->limit, parser->memory );
   }
 
 
   LOCAL_FUNC
-  T1_Bool   T1_ToBool( T1_Parser* parser )
+  FT_Bool   T1_ToBool( T1_Parser* parser )
   {
     return t1_tobool( &parser->cursor, parser->limit );
   }
@@ -913,9 +913,9 @@
 
 
   static
-  T1_Error  read_pfb_tag( FT_Stream  stream, T1_UShort *tag, T1_Long*  size )
+  FT_Error  read_pfb_tag( FT_Stream  stream, FT_UShort *tag, FT_Long*  size )
   {
-    T1_Error  error;
+    FT_Error  error;
 
     if (READ_UShort(*tag)) goto Exit;
     if (*tag == 0x8001 || *tag == 0x8002)
@@ -938,13 +938,13 @@
 
 
   LOCAL_FUNC
-  T1_Error  T1_New_Parser( T1_Parser*  parser,
+  FT_Error  T1_New_Parser( T1_Parser*  parser,
                            FT_Stream   stream,
                            FT_Memory   memory )
   {
-    T1_Error  error;
-    T1_UShort tag;
-    T1_Long   size;
+    FT_Error  error;
+    FT_UShort tag;
+    FT_Long   size;
 
     parser->stream       = stream;
     parser->memory       = memory;
@@ -999,7 +999,7 @@
     /* if it's a memory-based resource, set up pointers */
     if ( !stream->read )
     {
-      parser->base_dict = (T1_Byte*)stream->base + stream->pos;
+      parser->base_dict = (FT_Byte*)stream->base + stream->pos;
       parser->base_len  = size;
       parser->in_memory = 1;
 
@@ -1074,13 +1074,13 @@
 
 
   LOCAL_FUNC
-  void  T1_Decrypt( T1_Byte*   buffer,
-                    T1_Int     length,
-                    T1_UShort  seed )
+  void  T1_Decrypt( FT_Byte*   buffer,
+                    FT_Int     length,
+                    FT_UShort  seed )
   {
     while ( length > 0 )
     {
-      T1_Byte  plain;
+      FT_Byte  plain;
 
       plain     = (*buffer ^ (seed >> 8));
       seed      = (*buffer+seed)*52845+22719;
@@ -1091,12 +1091,12 @@
 
 
   LOCAL_FUNC
-  T1_Error  T1_Get_Private_Dict( T1_Parser*  parser )
+  FT_Error  T1_Get_Private_Dict( T1_Parser*  parser )
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->memory;
-    T1_Error   error  = 0;
-    T1_Long    size;
+    FT_Error   error  = 0;
+    FT_Long    size;
 
     if (parser->in_pfb)
     {
@@ -1104,9 +1104,9 @@
       /* made of several segments. We thus first read the number of    */
       /* segments to compute the total size of the private dictionary  */
       /* then re-read them into memory..                               */
-      T1_Long    start_pos    = FILE_Pos();
-      T1_UShort  tag;
-      T1_Long    size;
+      FT_Long    start_pos    = FILE_Pos();
+      FT_UShort  tag;
+      FT_Long    size;
 
       parser->private_len = 0;
       for (;;)
@@ -1226,8 +1226,8 @@
       {
         /* ASCII hexadecimal encoding.. This blows goats !!.. */
 
-        T1_Byte*  write;
-        T1_Int    count;
+        FT_Byte*  write;
+        FT_Int    count;
 
         write = parser->private_dict;
         count = 0;

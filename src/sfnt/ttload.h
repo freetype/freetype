@@ -35,75 +35,75 @@
 
   LOCAL_DEF
   TT_Table*  TT_LookUp_Table( TT_Face   face,
-                              TT_ULong  tag );
+                              FT_ULong  tag );
 
   LOCAL_DEF
-  TT_Error  TT_Goto_Table( TT_Face    face,
-                           TT_ULong   tag,
+  FT_Error  TT_Goto_Table( TT_Face    face,
+                           FT_ULong   tag,
                            FT_Stream  stream,
-                           TT_ULong*  length );
+                           FT_ULong*  length );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_SFNT_Header( TT_Face       face,
+  FT_Error  TT_Load_SFNT_Header( TT_Face       face,
                                  FT_Stream     stream,
-                                 TT_Long       face_index,
+                                 FT_Long       face_index,
                                  SFNT_Header*  sfnt );
   LOCAL_DEF
-  TT_Error  TT_Load_Directory( TT_Face       face,
+  FT_Error  TT_Load_Directory( TT_Face       face,
                                FT_Stream     stream,
                                SFNT_Header*  sfnt );
 
   LOCAL_DEF
-  TT_Error  TT_Load_Any( TT_Face   face,
-                         TT_ULong  tag,
-                         TT_Long   offset,
+  FT_Error  TT_Load_Any( TT_Face   face,
+                         FT_ULong  tag,
+                         FT_Long   offset,
                          void*     buffer,
-                         TT_Long*  length );
+                         FT_Long*  length );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_Header( TT_Face    face,
+  FT_Error  TT_Load_Header( TT_Face    face,
                             FT_Stream  stream );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_Metrics_Header( TT_Face    face,
+  FT_Error  TT_Load_Metrics_Header( TT_Face    face,
                                     FT_Stream  stream,
-                                    TT_Bool    vertical );
+                                    FT_Bool    vertical );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_CMap( TT_Face    face,
+  FT_Error  TT_Load_CMap( TT_Face    face,
                           FT_Stream  stream );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_MaxProfile( TT_Face    face,
+  FT_Error  TT_Load_MaxProfile( TT_Face    face,
                                 FT_Stream  stream );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_Names( TT_Face    face,
+  FT_Error  TT_Load_Names( TT_Face    face,
                            FT_Stream  stream );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_OS2( TT_Face    face,
+  FT_Error  TT_Load_OS2( TT_Face    face,
                          FT_Stream  stream );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_PostScript( TT_Face    face,
+  FT_Error  TT_Load_PostScript( TT_Face    face,
                                 FT_Stream  stream );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_Hdmx( TT_Face    face,
+  FT_Error  TT_Load_Hdmx( TT_Face    face,
                           FT_Stream  stream );
 
   LOCAL_DEF
-  TT_Error  TT_Load_PCLT( TT_Face    face,
+  FT_Error  TT_Load_PCLT( TT_Face    face,
                           FT_Stream  stream );
 
   LOCAL_DEF
@@ -115,12 +115,12 @@
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_Kern( TT_Face    face,
+  FT_Error  TT_Load_Kern( TT_Face    face,
                           FT_Stream  stream );
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_Gasp( TT_Face    face,
+  FT_Error  TT_Load_Gasp( TT_Face    face,
                           FT_Stream  stream );
 
 

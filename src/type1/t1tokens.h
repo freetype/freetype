@@ -169,8 +169,8 @@
   {
     T1_TokenType   kind;     /* simple type                    */
     T1_TokenType   kind2;    /* detailed type                  */
-    T1_Int         start;    /* index of first token character */
-    T1_Int         len;      /* length of token in chars       */
+    FT_Int         start;    /* index of first token character */
+    FT_Int         len;      /* length of token in chars       */
 
   } T1_Token;
 
@@ -182,15 +182,15 @@
     FT_Memory   memory;
     FT_Stream   stream;
 
-    T1_Bool     in_pfb;      /* true if PFB file, PFA otherwise */
-    T1_Bool     in_private;  /* true if in private dictionary   */
+    FT_Bool     in_pfb;      /* true if PFB file, PFA otherwise */
+    FT_Bool     in_private;  /* true if in private dictionary   */
 
-    T1_Byte*    base;        /* base address of current read buffer */
-    T1_Long     cursor;      /* current position in read buffer     */
-    T1_Long     limit;       /* limit of current read buffer        */
-    T1_Long     max;         /* maximum size of read buffer         */
+    FT_Byte*    base;        /* base address of current read buffer */
+    FT_Long     cursor;      /* current position in read buffer     */
+    FT_Long     limit;       /* limit of current read buffer        */
+    FT_Long     max;         /* maximum size of read buffer         */
 
-    T1_Error    error;       /* last error                          */
+    FT_Error    error;       /* last error                          */
     T1_Token    token;       /* last token read                     */
 
   } T1_TokenParser;
@@ -235,7 +235,7 @@
  /*     function..                                                        */
  /*                                                                       */
  LOCAL_DEF
- T1_Error  New_Tokenizer( FT_Stream      stream,
+ FT_Error  New_Tokenizer( FT_Stream      stream,
                           T1_Tokenizer*  tokenizer );
 
 
@@ -255,7 +255,7 @@
  /*     Type1 error code. 0 means success..                               */
  /*                                                                       */
  LOCAL_DEF
- T1_Error  Done_Tokenizer( T1_Tokenizer  tokenizer );
+ FT_Error  Done_Tokenizer( T1_Tokenizer  tokenizer );
 
 
 
@@ -276,7 +276,7 @@
  /*     Type1 error code. 0 means success..                               */
  /*                                                                       */
  LOCAL_DEF
- T1_Error  Open_PrivateDict( T1_Tokenizer  tokenizer );
+ FT_Error  Open_PrivateDict( T1_Tokenizer  tokenizer );
 
 
 
@@ -301,7 +301,7 @@
  /*     charstrings from the private dict..                               */
  /*                                                                       */
  LOCAL_DEF
- T1_Error  Read_Token( T1_Tokenizer  tokenizer );
+ FT_Error  Read_Token( T1_Tokenizer  tokenizer );
 
 
 #if 0
@@ -328,9 +328,9 @@
  /*     charstrings from the private dict..                               */
  /*                                                                       */
  LOCAL_DEF
- T1_Error  Read_CharStrings( T1_Tokenizer  tokenizer,
-                             T1_Int        num_chars,
-                             T1_Byte*      buffer );
+ FT_Error  Read_CharStrings( T1_Tokenizer  tokenizer,
+                             FT_Int        num_chars,
+                             FT_Byte*      buffer );
 #endif
 
  /*************************************************************************/
@@ -346,8 +346,8 @@
  /*     seed    :: ecnryption seed (4330 for charstrings).                */
  /*                                                                       */
   LOCAL_DEF
-  void  t1_decrypt( T1_Byte*   buffer,
-                    T1_Int     length,
-                    T1_UShort  seed );
+  void  t1_decrypt( FT_Byte*   buffer,
+                    FT_Int     length,
+                    FT_UShort  seed );
 
 #endif /* T1TOKENS_H */

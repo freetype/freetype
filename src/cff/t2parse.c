@@ -49,24 +49,24 @@
 
 
   /* now generate handlers for the most simple fields */
-  typedef TT_Error  (*T2_Field_Reader)( T2_Parser*  parser );
+  typedef FT_Error  (*T2_Field_Reader)( T2_Parser*  parser );
 
   typedef struct  T2_Field_Handler_
   {
     int              kind;
     int              code;
-    TT_UInt          offset;
-    TT_Byte          size;
+    FT_UInt          offset;
+    FT_Byte          size;
     T2_Field_Reader  reader;
-    TT_UInt          array_max;
-    TT_UInt          count_offset;
+    FT_UInt          array_max;
+    FT_UInt          count_offset;
 
   } T2_Field_Handler;
 
 
   LOCAL_FUNC
   void  T2_Parser_Init( T2_Parser*  parser,
-                        TT_UInt     code,
+                        FT_UInt     code,
                         void*       object )
   {
     MEM_Set( parser, 0, sizeof ( *parser ) );
@@ -79,12 +79,12 @@
 
   /* reads an integer */
   static
-  TT_Long  parse_t2_integer( TT_Byte*  start,
-                             TT_Byte*  limit )
+  FT_Long  parse_t2_integer( FT_Byte*  start,
+                             FT_Byte*  limit )
   {
-    TT_Byte*  p   = start;
-    TT_Int    v   = *p++;
-    TT_Long   val = 0;
+    FT_Byte*  p   = start;
+    FT_Int    v   = *p++;
+    FT_Long   val = 0;
 
 
     if ( v == 28 )
@@ -92,7 +92,7 @@
       if ( p + 2 > limit )
         goto Bad;
 
-      val = (TT_Short)( ( (TT_Int)p[0] << 8 ) | p[1] );
+      val = (FT_Short)( ( (FT_Int)p[0] << 8 ) | p[1] );
       p  += 2;
     }
     else if ( v == 29 )
@@ -100,9 +100,9 @@
       if ( p + 4 > limit )
         goto Bad;
 
-      val = ( (TT_Long)p[0] << 24 ) |
-            ( (TT_Long)p[1] << 16 ) |
-            ( (TT_Long)p[2] <<  8 ) | p[3];
+      val = ( (FT_Long)p[0] << 24 ) |
+            ( (FT_Long)p[1] << 16 ) |
+            ( (FT_Long)p[2] <<  8 ) | p[3];
       p += 4;
     }
     else if ( v < 247 )
@@ -137,15 +137,15 @@
 
   /* reads a real */
   static
-  TT_Fixed  parse_t2_real( TT_Byte*  start,
-                           TT_Byte*  limit,
-                           TT_Int    power_ten )
+  FT_Fixed  parse_t2_real( FT_Byte*  start,
+                           FT_Byte*  limit,
+                           FT_Int    power_ten )
   {
-    TT_Byte*  p    = start;
-    TT_Long   num, divider, result, exp;
-    TT_Int    sign = 0, exp_sign = 0;
-    TT_Byte   nib;
-    TT_Byte   phase;
+    FT_Byte*  p    = start;
+    FT_Long   num, divider, result, exp;
+    FT_Int    sign = 0, exp_sign = 0;
+    FT_Byte   nib;
+    FT_Byte   phase;
 
 
     result  = 0;
@@ -260,7 +260,7 @@
 
   /* reads a number, either integer or real */
   static
-  TT_Long  t2_parse_num( TT_Byte**  d )
+  FT_Long  t2_parse_num( FT_Byte**  d )
   {
     return ( **d == 30 ? ( parse_t2_real( d[0], d[1], 0 ) >> 16 )
                        : parse_t2_integer( d[0], d[1] ) );
@@ -269,7 +269,7 @@
 
   /* reads a floating point number, either integer or real */
   static
-  TT_Fixed  t2_parse_fixed( TT_Byte**  d )
+  FT_Fixed  t2_parse_fixed( FT_Byte**  d )
   {
     return ( **d == 30 ? parse_t2_real( d[0], d[1], 0 )
                        : parse_t2_integer( d[0], d[1] ) << 16 );
@@ -277,12 +277,12 @@
 
 
   static
-  TT_Error  parse_font_matrix( T2_Parser*  parser )
+  FT_Error  parse_font_matrix( T2_Parser*  parser )
   {
     CFF_Top_Dict*  dict   = (CFF_Top_Dict*)parser->object;
-    TT_Matrix*     matrix = &dict->font_matrix;
-    TT_Byte**      data   = parser->stack;
-    TT_Error       error;
+    FT_Matrix*     matrix = &dict->font_matrix;
+    FT_Byte**      data   = parser->stack;
+    FT_Error       error;
 
 
     error = T2_Err_Stack_Underflow;
@@ -301,12 +301,12 @@
 
 
   static
-  TT_Error  parse_font_bbox( T2_Parser*  parser )
+  FT_Error  parse_font_bbox( T2_Parser*  parser )
   {
     CFF_Top_Dict*  dict   = (CFF_Top_Dict*)parser->object;
     FT_BBox*       bbox   = &dict->font_bbox;
-    TT_Byte**      data   = parser->stack;
-    TT_Error       error;
+    FT_Byte**      data   = parser->stack;
+    FT_Error       error;
 
 
     error = T2_Err_Stack_Underflow;
@@ -325,11 +325,11 @@
 
 
   static
-  TT_Error  parse_private_dict( T2_Parser*  parser )
+  FT_Error  parse_private_dict( T2_Parser*  parser )
   {
     CFF_Top_Dict*  dict = (CFF_Top_Dict*)parser->object;
-    TT_Byte**      data = parser->stack;
-    TT_Error       error;
+    FT_Byte**      data = parser->stack;
+    FT_Error       error;
 
 
     error = T2_Err_Stack_Underflow;
@@ -346,20 +346,20 @@
 
 
   static
-  TT_Error  parse_cid_ros( T2_Parser*  parser )
+  FT_Error  parse_cid_ros( T2_Parser*  parser )
   {
     CFF_Top_Dict*  dict   = (CFF_Top_Dict*)parser->object;
-    TT_Byte**      data   = parser->stack;
-    TT_Error       error;
+    FT_Byte**      data   = parser->stack;
+    FT_Error       error;
 
 
     error = T2_Err_Stack_Underflow;
 
     if ( parser->top >= parser->stack + 3 )
     {
-      dict->cid_registry   = (TT_UInt)t2_parse_num( data++ );
-      dict->cid_ordering   = (TT_UInt)t2_parse_num( data++ );
-      dict->cid_supplement = (TT_ULong)t2_parse_num( data );
+      dict->cid_registry   = (FT_UInt)t2_parse_num( data++ );
+      dict->cid_ordering   = (FT_UInt)t2_parse_num( data++ );
+      dict->cid_supplement = (FT_ULong)t2_parse_num( data );
       error = 0;
     }
 
@@ -393,7 +393,7 @@
           {                                          \
             kind,                                    \
             code | T2CODE,                           \
-            (TT_UInt)(char*)&T2_REF( T2TYPE, name ), \
+            (FT_UInt)(char*)&T2_REF( T2TYPE, name ), \
             sizeof( T2_REF( T2TYPE, name ) ),        \
             0                                        \
           },
@@ -403,11 +403,11 @@
         {                                                    \
           t2_kind_delta,                                     \
           code | T2CODE,                                     \
-          (TT_UInt)(char*)&T2_REF( T2TYPE, name ),           \
+          (FT_UInt)(char*)&T2_REF( T2TYPE, name ),           \
           sizeof( T2_REF( T2TYPE, name ) ),                  \
           0,                                                 \
           max,                                               \
-          (TT_UInt)(char*)&T2_REF( T2TYPE, num_ ## name )    \
+          (FT_UInt)(char*)&T2_REF( T2TYPE, num_ ## name )    \
         },
 
 #define T2CODE_TOPDICT  0x1000
@@ -421,12 +421,12 @@
 
 
   LOCAL_FUNC
-  TT_Error  T2_Parser_Run( T2_Parser*  parser,
-                           TT_Byte*    start,
-                           TT_Byte*    limit )
+  FT_Error  T2_Parser_Run( T2_Parser*  parser,
+                           FT_Byte*    start,
+                           FT_Byte*    limit )
   {
-    TT_Byte*  p     = start;
-    TT_Error  error = 0;
+    FT_Byte*  p     = start;
+    FT_Error  error = 0;
 
 
     parser->top    = parser->stack;
@@ -436,7 +436,7 @@
 
     while ( p < limit )
     {
-      TT_Byte  v = *p;
+      FT_Byte  v = *p;
 
 
       if ( v >= 27 && v != 31 )
@@ -477,8 +477,8 @@
         /* this is not a number, hence it's an operator.  Compute its code */
         /* and look for it in our current list.                            */
 
-        TT_UInt                  code;
-        TT_Int                   num_args = parser->top - parser->stack;
+        FT_UInt                  code;
+        FT_Int                   num_args = parser->top - parser->stack;
         const T2_Field_Handler*  field;
 
 
@@ -501,8 +501,8 @@
           if ( field->code == code )
           {
             /* we found our field's handler; read it */
-            TT_Long   val;
-            TT_Byte*  q = (TT_Byte*)parser->object + field->offset;
+            FT_Long   val;
+            FT_Byte*  q = (FT_Byte*)parser->object + field->offset;
 
 
             switch ( field->kind )
@@ -520,30 +520,30 @@
               switch ( field->size )
               {
               case 1:
-                *(TT_Byte*)q = (TT_Byte)val;
+                *(FT_Byte*)q = (FT_Byte)val;
                 break;
               case 2:
-                *(TT_Short*)q = (TT_Short)val;
+                *(FT_Short*)q = (FT_Short)val;
                 break;
               default:
-                *(TT_Long*)q = val;
+                *(FT_Long*)q = val;
               }
               break;
 
             case t2_kind_delta:
               {
-                TT_Byte*  qcount = (TT_Byte*)parser->object +
+                FT_Byte*  qcount = (FT_Byte*)parser->object +
                                      field->count_offset;
 
-                TT_Long   val;
-                TT_Byte** data = parser->stack;
+                FT_Long   val;
+                FT_Byte** data = parser->stack;
 
 
                 if ( num_args > field->array_max )
                   num_args = field->array_max;
 
                 /* store count */
-                *qcount = (TT_Byte)num_args;
+                *qcount = (FT_Byte)num_args;
 
                 val = 0;
                 while ( num_args > 0 )
@@ -552,13 +552,13 @@
                   switch ( field->size )
                   {
                   case 1:
-                    *(TT_Byte*)q = (TT_Byte)val;
+                    *(FT_Byte*)q = (FT_Byte)val;
                     break;
                   case 2:
-                    *(TT_Short*)q = (TT_Short)val;
+                    *(FT_Short*)q = (FT_Short)val;
                     break;
                   default:
-                    *(TT_Long*)q = val;
+                    *(FT_Long*)q = val;
                   }
 
                   q += field->size;

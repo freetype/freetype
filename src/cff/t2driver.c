@@ -52,8 +52,8 @@
 
 
 #undef  PAIR_TAG
-#define PAIR_TAG( left, right )  ( ( (TT_ULong)left << 16 ) | \
-                                     (TT_ULong)right        )
+#define PAIR_TAG( left, right )  ( ( (FT_ULong)left << 16 ) | \
+                                     (FT_ULong)right        )
 
 
   /*************************************************************************/
@@ -89,10 +89,10 @@
   /*    They can be implemented by format-specific interfaces.             */
   /*                                                                       */
   static
-  TT_Error  Get_Kerning( TT_Face     face,
-                         TT_UInt     left_glyph,
-                         TT_UInt     right_glyph,
-                         TT_Vector*  kerning )
+  FT_Error  Get_Kerning( TT_Face     face,
+                         FT_UInt     left_glyph,
+                         FT_UInt     right_glyph,
+                         FT_Vector*  kerning )
   {
     TT_Kern_0_Pair*  pair;
 
@@ -106,8 +106,8 @@
     if ( face->kern_pairs )
     {
       /* there are some kerning pairs in this font file! */
-      TT_ULong  search_tag = PAIR_TAG( left_glyph, right_glyph );
-      TT_Long   left, right;
+      FT_ULong  search_tag = PAIR_TAG( left_glyph, right_glyph );
+      FT_Long   left, right;
 
 
       left  = 0;
@@ -115,8 +115,8 @@
 
       while ( left <= right )
       {
-        TT_Int    middle = left + ( ( right - left ) >> 1 );
-        TT_ULong  cur_pair;
+        FT_Int    middle = left + ( ( right - left ) >> 1 );
+        FT_ULong  cur_pair;
 
 
         pair     = face->kern_pairs + middle;
@@ -184,11 +184,11 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
-  TT_Error  Set_Char_Sizes( T2_Size     size,
-                            TT_F26Dot6  char_width,
-                            TT_F26Dot6  char_height,
-                            TT_UInt     horz_resolution,
-                            TT_UInt     vert_resolution )
+  FT_Error  Set_Char_Sizes( T2_Size     size,
+                            FT_F26Dot6  char_width,
+                            FT_F26Dot6  char_height,
+                            FT_UInt     horz_resolution,
+                            FT_UInt     vert_resolution )
   {
     FT_Size_Metrics*  metrics = &size->metrics;
     T2_Face           face    = (T2_Face)size->face;
@@ -213,8 +213,8 @@
       metrics->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
       metrics->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
 
-      metrics->x_ppem  = (TT_UShort)( dim_x >> 6 );
-      metrics->y_ppem  = (TT_UShort)( dim_y >> 6 );
+      metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
+      metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
     }
 
     return T2_Reset_Size( size );
@@ -242,9 +242,9 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
-  TT_Error  Set_Pixel_Sizes( T2_Size  size,
-                             TT_UInt  pixel_width,
-                             TT_UInt  pixel_height )
+  FT_Error  Set_Pixel_Sizes( T2_Size  size,
+                             FT_UInt  pixel_width,
+                             FT_UInt  pixel_height )
   {
     UNUSED( pixel_width );
     UNUSED( pixel_height );
@@ -280,12 +280,12 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
-  TT_Error  Load_Glyph( T2_GlyphSlot  slot,
+  FT_Error  Load_Glyph( T2_GlyphSlot  slot,
                         T2_Size       size,
-                        TT_UShort     glyph_index,
-                        TT_UInt       load_flags )
+                        FT_UShort     glyph_index,
+                        FT_UInt       load_flags )
   {
-    TT_Error  error;
+    FT_Error  error;
 
 
     if ( !slot )
@@ -343,10 +343,10 @@
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
   static
-  TT_UInt  Get_Char_Index( TT_CharMap  charmap,
-                           TT_Long     charcode )
+  FT_UInt  Get_Char_Index( TT_CharMap  charmap,
+                           FT_Long     charcode )
   {
-    TT_Error       error;
+    FT_Error       error;
     T2_Face        face;
     TT_CMapTable*  cmap;
 

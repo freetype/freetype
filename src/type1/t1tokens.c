@@ -92,15 +92,15 @@
   {
     /* performs a binary search */
 
-    T1_Int  left, right;
+    FT_Int  left, right;
 
     left  = 0;
     right = table_len-1;
 
     while ( right-left > 1 )
     {
-      T1_Int  middle = left + (( right-left ) >> 1);
-      T1_Int  cmp;
+      FT_Int  middle = left + (( right-left ) >> 1);
+      FT_Int  cmp;
 
       cmp = lexico_strcmp( base, length, table[middle] );
       if (!cmp) return middle;
@@ -120,13 +120,13 @@
 
   /* read the small PFB section header */
   static
-  T1_Error  Read_PFB_Tag( FT_Stream  stream,
-                          T1_UShort* atag,
-                          T1_ULong*  asize )
+  FT_Error  Read_PFB_Tag( FT_Stream  stream,
+                          FT_UShort* atag,
+                          FT_ULong*  asize )
   {
-    T1_UShort tag;
-    T1_ULong  size;
-    T1_Error  error;
+    FT_UShort tag;
+    FT_ULong  size;
+    FT_Error  error;
 
     FT_TRACE2(( "Read_PFB_Tag : reading\n" ));
 
@@ -153,10 +153,10 @@
 
 
   static
-  T1_Error  grow( T1_Tokenizer  tokzer )
+  FT_Error  grow( T1_Tokenizer  tokzer )
   {
-    T1_Error   error;
-    T1_Long    left_bytes;
+    FT_Error   error;
+    FT_Long    left_bytes;
     FT_Memory  memory = tokzer->memory;
 
     left_bytes = tokzer->max - tokzer->limit;
@@ -189,13 +189,13 @@
 
 
   LOCAL_FUNC
-  void  t1_decrypt( T1_Byte*   buffer,
-                    T1_Int     length,
-                    T1_UShort  seed )
+  void  t1_decrypt( FT_Byte*   buffer,
+                    FT_Int     length,
+                    FT_UShort  seed )
   {
     while ( length > 0 )
     {
-      T1_Byte  plain;
+      FT_Byte  plain;
 
       plain     = (*buffer ^ (seed >> 8));
       seed      = (*buffer+seed)*52845+22719;
@@ -231,18 +231,18 @@
  /*                                                                       */
 
  LOCAL_FUNC
- T1_Error  New_Tokenizer( FT_Stream      stream,
+ FT_Error  New_Tokenizer( FT_Stream      stream,
                           T1_Tokenizer*  tokenizer )
  {
    FT_Memory     memory = stream->memory;
    T1_Tokenizer  tokzer;
-   T1_Error      error;
-   T1_UShort     tag;
-   T1_ULong      size;
+   FT_Error      error;
+   FT_UShort     tag;
+   FT_ULong      size;
 
-   T1_Byte*      tok_base;
-   T1_ULong      tok_limit;
-   T1_ULong      tok_max;
+   FT_Byte*      tok_base;
+   FT_ULong      tok_limit;
+   FT_ULong      tok_max;
 
    *tokenizer = 0;
 
@@ -280,7 +280,7 @@
    /* if it's a memory-based resource, set up pointer */
    if ( !stream->read )
    {
-     tok_base  = (T1_Byte*)stream->base + stream->pos;
+     tok_base  = (FT_Byte*)stream->base + stream->pos;
      tok_limit = size;
      tok_max   = size;
 
@@ -369,7 +369,7 @@
  /*                                                                       */
 
  LOCAL_FUNC
- T1_Error  Done_Tokenizer( T1_Tokenizer  tokenizer )
+ FT_Error  Done_Tokenizer( T1_Tokenizer  tokenizer )
  {
    FT_Memory  memory = tokenizer->memory;
 
@@ -401,17 +401,17 @@
  /*                                                                       */
 
  LOCAL_FUNC
- T1_Error  Open_PrivateDict( T1_Tokenizer  tokenizer )
+ FT_Error  Open_PrivateDict( T1_Tokenizer  tokenizer )
  {
    T1_Tokenizer  tokzer = tokenizer;
    FT_Stream     stream = tokzer->stream;
    FT_Memory     memory = tokzer->memory;
-   T1_Error      error = 0;
+   FT_Error      error = 0;
 
-   T1_UShort     tag;
-   T1_ULong      size;
+   FT_UShort     tag;
+   FT_ULong      size;
 
-   T1_Byte*      private;
+   FT_Byte*      private;
 
    /* are we already in the private dictionary ? */
    if ( tokzer->in_private )
@@ -423,8 +423,8 @@
      /* made of several segments. We thus first read the number of    */
      /* segments to compute the total size of the private dictionary  */
      /* then re-read them into memory..                               */
-     T1_Long  start_pos    = FILE_Pos();
-     T1_ULong private_size = 0;
+     FT_Long  start_pos    = FILE_Pos();
+     FT_ULong private_size = 0;
 
      do
      {
@@ -541,10 +541,10 @@
      else
      {
        /* ASCII hexadecimal encoding.. This sucks.. */
-       T1_Byte*  write;
-       T1_Byte*  cur;
-       T1_Byte*  limit;
-       T1_Int    count;
+       FT_Byte*  write;
+       FT_Byte*  cur;
+       FT_Byte*  limit;
+       FT_Int    count;
 
        /* Allocate a buffer, read each one byte at a time .. */
        count = ( stream->size - tokzer->cursor );
@@ -638,13 +638,13 @@
  /*     charstrings from the private dict..                               */
  /*                                                                       */
  LOCAL_FUNC
- T1_Error  Read_Token( T1_Tokenizer  tokenizer )
+ FT_Error  Read_Token( T1_Tokenizer  tokenizer )
  {
    T1_Tokenizer tok = tokenizer;
-   T1_Long      cur, limit;
-   T1_Byte*     base;
+   FT_Long      cur, limit;
+   FT_Byte*     base;
    char         c, starter, ender;
-   T1_Bool      token_started;
+   FT_Bool      token_started;
 
    T1_TokenType  kind;
 
@@ -669,7 +669,7 @@
      c = (char)base[cur++];
 
      /* check that we have an ASCII character */
-     if ( (T1_Byte)c > 127 )
+     if ( (FT_Byte)c > 127 )
      {
        FT_ERROR(( "Unexpected binary data in Type1 fragment !!\n" ));
        tok->error = T1_Err_Invalid_File_Format;
@@ -696,7 +696,7 @@
        case '%' : /* this is a comment - skip everything */
          for (;;)
          {
-           T1_Int  left = limit - cur;
+           FT_Int  left = limit - cur;
 
            while (left > 0)
            {
@@ -723,12 +723,12 @@
          }
 
          {
-           T1_Int  nest_level = 1;
+           FT_Int  nest_level = 1;
 
            starter = c;
            for (;;)
            {
-             T1_Int  left = limit-cur;
+             FT_Int  left = limit-cur;
              while (left > 0)
              {
                c = (char)base[cur++];
@@ -805,7 +805,7 @@
      L2:
        for (;;)
        {
-         T1_Int  left = limit-cur;
+         FT_Int  left = limit-cur;
          while (left > 0)
          {
            c = (char)base[cur++];
@@ -847,7 +847,7 @@
        tok->token.start = cur-1;
        for (;;)
        {
-         T1_Int  left = limit-cur;
+         FT_Int  left = limit-cur;
          if ( left > 0 )
          {
            /* test for any following digit, interpreted as number */
@@ -868,7 +868,7 @@
 
          for (;;)
          {
-           T1_Int  left = limit-cur;
+           FT_Int  left = limit-cur;
            if ( left > 0 )
            {
              /* test for single '/', interpreted as garbage */
@@ -909,7 +909,7 @@
    if (!tok->error)
    {
      /* now, tries to match keywords and immediate names */
-     T1_Int  index;
+     FT_Int  index;
 
      switch ( tok->token.kind )
      {
@@ -971,13 +971,13 @@
  /*     charstrings from the private dict..                               */
  /*                                                                       */
  LOCAL_FUNC
- T1_Error  Read_CharStrings( T1_Tokenizer  tokenizer,
-                             T1_Int        num_chars,
-                             T1_Byte*      buffer )
+ FT_Error  Read_CharStrings( T1_Tokenizer  tokenizer,
+                             FT_Int        num_chars,
+                             FT_Byte*      buffer )
  {
    for (;;)
    {
-     T1_Int  left = tokenizer->limit - tokenizer->cursor;
+     FT_Int  left = tokenizer->limit - tokenizer->cursor;
 
      if ( left >= num_chars )
      {

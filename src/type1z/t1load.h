@@ -31,37 +31,37 @@
   {
     T1_Parser        parser;          /* parser used to read the stream */
 
-    T1_Int           num_chars;       /* number of characters in encoding */
+    FT_Int           num_chars;       /* number of characters in encoding */
     T1_Table         encoding_table;  /* T1_Table used to store the       */
                                 /* encoding character names         */
 
-    T1_Int           num_glyphs;
+    FT_Int           num_glyphs;
     T1_Table         glyph_names;
     T1_Table         charstrings;
 
-    T1_Int           num_subrs;
+    FT_Int           num_subrs;
     T1_Table         subrs;
-    T1_Bool          fontdata;
+    FT_Bool          fontdata;
 
   } T1_Loader;
 
   LOCAL_DEF
-  T1_Error  T1_Open_Face( T1_Face  face );
+  FT_Error  T1_Open_Face( T1_Face  face );
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
   LOCAL_DEF
-  T1_Error  T1_Get_Multi_Master( T1_Face           face,
+  FT_Error  T1_Get_Multi_Master( T1_Face           face,
                                  FT_Multi_Master*  master );
 
   LOCAL_DEF
-  T1_Error  T1_Set_MM_Blend( T1_Face    face,
-                             T1_UInt    num_coords,
-                             T1_Fixed*  coords );
+  FT_Error  T1_Set_MM_Blend( T1_Face    face,
+                             FT_UInt    num_coords,
+                             FT_Fixed*  coords );
 
   LOCAL_DEF
-  T1_Error  T1_Set_MM_Design( T1_Face   face,
-                              T1_UInt   num_coords,
-                              T1_Long*  coords );
+  FT_Error  T1_Set_MM_Design( T1_Face   face,
+                              FT_UInt   num_coords,
+                              FT_Long*  coords );
 
   LOCAL_DEF
   void  T1_Done_Blend( T1_Face  face );

@@ -27,12 +27,12 @@
 
 
   LOCAL_DEF
-  TT_Error  TT_CharMap_Load( TT_Face        face,
+  FT_Error  TT_CharMap_Load( TT_Face        face,
                              TT_CMapTable*  cmap,
                              FT_Stream      input );
 
   LOCAL_DEF
-  TT_Error  TT_CharMap_Free( TT_Face        face,
+  FT_Error  TT_CharMap_Free( TT_Face        face,
                              TT_CMapTable*  cmap );
 
 #ifdef __cplusplus

@@ -299,9 +299,9 @@
   /* <Return>                                                              */
   /*    The bias value.                                                    */
   static
-  TT_Int  t2_compute_bias( TT_UInt  num_subrs )
+  FT_Int  t2_compute_bias( FT_UInt  num_subrs )
   {
-    TT_Int  result;
+    FT_Int  result;
 
 
     if ( num_subrs < 1240 )
@@ -363,8 +363,8 @@
 
   /* check that there is enough room for `count' more points */
   static
-  TT_Error  check_points( T2_Builder*  builder,
-                          TT_Int       count )
+  FT_Error  check_points( T2_Builder*  builder,
+                          FT_Int       count )
   {
     FT_Outline*  base    = &builder->base;
     FT_Outline*  outline = &builder->current;
@@ -378,20 +378,20 @@
     /* realloc points table if necessary */
     if ( count >= builder->max_points )
     {
-      TT_Error   error;
+      FT_Error   error;
       FT_Memory  memory    = builder->memory;
-      TT_Int     increment = outline->points - base->points;
-      TT_Int     current   = builder->max_points;
+      FT_Int     increment = outline->points - base->points;
+      FT_Int     current   = builder->max_points;
 
 
       while ( builder->max_points < count )
         builder->max_points += 8;
 
       if ( REALLOC_ARRAY( base->points, current,
-                          builder->max_points, TT_Vector )  ||
+                          builder->max_points, FT_Vector )  ||
 
            REALLOC_ARRAY( base->tags, current,
-                          builder->max_points, TT_Byte )    )
+                          builder->max_points, FT_Byte )    )
       {
         builder->error = error;
         return error;
@@ -408,17 +408,17 @@
   /* add a new point, do not check space */
   static
   void  add_point( T2_Builder*  builder,
-                   TT_Pos       x,
-                   TT_Pos       y,
-                   TT_Byte      flag )
+                   FT_Pos       x,
+                   FT_Pos       y,
+                   FT_Byte      flag )
   {
     FT_Outline*  outline = &builder->current;
 
 
     if ( builder->load_points )
     {
-      TT_Vector*  point   = outline->points + outline->n_points;
-      TT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
+      FT_Vector*  point   = outline->points + outline->n_points;
+      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 
       point->x = x >> 16;
@@ -434,11 +434,11 @@
 
   /* check room for a new on-curve point, then add it */
   static
-  TT_Error  add_point1( T2_Builder*  builder,
-                        TT_Pos       x,
-                        TT_Pos       y )
+  FT_Error  add_point1( T2_Builder*  builder,
+                        FT_Pos       x,
+                        FT_Pos       y )
   {
-    TT_Error  error;
+    FT_Error  error;
 
 
     error = check_points( builder, 1 );
@@ -451,7 +451,7 @@
 
   /* check room for a new contour, then add it */
   static
-  TT_Error  add_contour( T2_Builder*  builder )
+  FT_Error  add_contour( T2_Builder*  builder )
   {
     FT_Outline*  base    = &builder->base;
     FT_Outline*  outline = &builder->current;
@@ -467,16 +467,16 @@
     if ( base->n_contours + outline->n_contours >= builder->max_contours &&
          builder->load_points )
     {
-      TT_Error  error;
+      FT_Error  error;
       FT_Memory memory    = builder->memory;
-      TT_Int    increment = outline->contours - base->contours;
-      TT_Int    current   = builder->max_contours;
+      FT_Int    increment = outline->contours - base->contours;
+      FT_Int    current   = builder->max_contours;
 
 
       builder->max_contours += 4;
 
       if ( REALLOC_ARRAY( base->contours,
-                          current, builder->max_contours, TT_Short ) )
+                          current, builder->max_contours, FT_Short ) )
       {
         builder->error = error;
         return error;
@@ -496,14 +496,14 @@
 
   /* if a path was begun, add its first on-curve point */
   static
-  TT_Error  start_point( T2_Builder*  builder,
-                         TT_Pos       x,
-                         TT_Pos       y )
+  FT_Error  start_point( T2_Builder*  builder,
+                         FT_Pos       x,
+                         FT_Pos       y )
   {
     /* test whether we are building a new contour */
     if ( !builder->path_begun )
     {
-      TT_Error  error;
+      FT_Error  error;
 
 
       builder->path_begun = 1;
@@ -553,19 +553,19 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
-                                  TT_Byte*     charstring_base,
-                                  TT_Int       charstring_len )
+  FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
+                                  FT_Byte*     charstring_base,
+                                  FT_Int       charstring_len )
   {
-    TT_Error            error;
+    FT_Error            error;
     T2_Decoder_Zone*    zone;
-    TT_Byte*            ip;
-    TT_Byte*            limit;
+    FT_Byte*            ip;
+    FT_Byte*            limit;
     T2_Builder*         builder = &decoder->builder;
     FT_Outline*         outline;
-    TT_Pos              x, y;
-    TT_Fixed            seed;
-    TT_Fixed*           stack;
+    FT_Pos              x, y;
+    FT_Fixed            seed;
+    FT_Fixed*           stack;
 
 
     /* set default width */
@@ -602,8 +602,8 @@
     while ( ip < limit )
     {
       T2_Operator  op;
-      TT_Byte      v;
-      TT_Byte      count;
+      FT_Byte      v;
+      FT_Byte      count;
 
 
       /********************************************************************/
@@ -613,8 +613,8 @@
       v = *ip++;
       if ( v >= 32 || v == 28 )
       {
-        TT_Int  shift = 16;
-        TT_Long val;
+        FT_Int  shift = 16;
+        FT_Long val;
 
 
         /* this is an operand, push it on the stack */
@@ -665,9 +665,9 @@
       }
       else
       {
-        TT_Fixed*  args     = decoder->top;
-        TT_Int     num_args = args - decoder->stack;
-        TT_Int     req_args;
+        FT_Fixed*  args     = decoder->top;
+        FT_Int     num_args = args - decoder->stack;
+        FT_Int     req_args;
 
 
         /* find operator */
@@ -947,7 +947,7 @@
         case t2_op_hlineto:
         case t2_op_vlineto:
           {
-            TT_Int  phase = ( op == t2_op_hlineto );
+            FT_Int  phase = ( op == t2_op_hlineto );
 
 
             FT_TRACE4(( op == t2_op_hlineto ? " hlineto" :
@@ -1074,7 +1074,7 @@
         case t2_op_vhcurveto:
         case t2_op_hvcurveto:
           {
-            TT_Int  phase;
+            FT_Int  phase;
 
 
             FT_TRACE4(( op == t2_op_vhcurveto ? " vhcurveto" :
@@ -1128,7 +1128,7 @@
         case t2_op_rlinecurve:
         case t2_op_rcurveline:
           {
-            TT_Int  mod6 = num_args % 6;
+            FT_Int  mod6 = num_args % 6;
 
 
             FT_TRACE4(( op == t2_op_rcurveline ? " rcurveline" :
@@ -1227,7 +1227,7 @@
 
         case t2_op_random:
           {
-            TT_Fixed  rand;
+            FT_Fixed  rand;
 
 
             FT_TRACE4(( " rand" ));
@@ -1256,9 +1256,9 @@
 
           if ( args[0] > 0 )
           {
-            TT_Int    count = 9;
-            TT_Fixed  root  = args[0];
-            TT_Fixed  new_root;
+            FT_Int    count = 9;
+            FT_Fixed  root  = args[0];
+            FT_Fixed  new_root;
 
 
             for (;;)
@@ -1282,7 +1282,7 @@
 
         case t2_op_exch:
           {
-            TT_Fixed  tmp;
+            FT_Fixed  tmp;
 
 
             FT_TRACE4(( " exch" ));
@@ -1296,7 +1296,7 @@
 
         case t2_op_index:
           {
-            TT_Int  index = args[0] >> 16;
+            FT_Int  index = args[0] >> 16;
 
 
             FT_TRACE4(( " index" ));
@@ -1312,8 +1312,8 @@
 
         case t2_op_roll:
           {
-            TT_Int count = (FT_Int)( args[0] >> 16 );
-            TT_Int index = (FT_Int)( args[1] >> 16 );
+            FT_Int count = (FT_Int)( args[0] >> 16 );
+            FT_Int index = (FT_Int)( args[1] >> 16 );
 
 
             FT_TRACE4(( " roll" ));
@@ -1329,8 +1329,8 @@
             {
               while ( index > 0 )
               {
-                TT_Fixed tmp = args[count - 1];
-                TT_Int   i;
+                FT_Fixed tmp = args[count - 1];
+                FT_Int   i;
 
 
                 for ( i = count - 2; i >= 0; i-- )
@@ -1343,8 +1343,8 @@
             {
               while (index < 0)
               {
-                TT_Fixed  tmp = args[0];
-                TT_Int    i;
+                FT_Fixed  tmp = args[0];
+                FT_Int    i;
 
 
                 for ( i = 0; i < count - 1; i++ )
@@ -1366,8 +1366,8 @@
 
         case t2_op_put:
           {
-            TT_Fixed  val   = args[0];
-            TT_Int    index = (FT_Int)( args[1] >> 16 );
+            FT_Fixed  val   = args[0];
+            FT_Int    index = (FT_Int)( args[1] >> 16 );
 
 
             FT_TRACE4(( " put" ));
@@ -1453,7 +1453,7 @@
 
         case t2_op_callsubr:
           {
-            TT_UInt  index = (FT_UInt)( ( args[0] >> 16 ) +
+            FT_UInt  index = (FT_UInt)( ( args[0] >> 16 ) +
                                         decoder->locals_bias );
 
 
@@ -1492,7 +1492,7 @@
 
         case t2_op_callgsubr:
           {
-            TT_UInt  index = (FT_UInt)( ( args[0] >> 16 ) +
+            FT_UInt  index = (FT_UInt)( ( args[0] >> 16 ) +
                                         decoder->globals_bias );
 
 
@@ -1600,12 +1600,12 @@
 
 
   LOCAL_FUNC
-  TT_Error  T2_Compute_Max_Advance( TT_Face  face,
-                                    TT_Int*  max_advance )
+  FT_Error  T2_Compute_Max_Advance( TT_Face  face,
+                                    FT_Int*  max_advance )
   {
-    TT_Error    error = 0;
+    FT_Error    error = 0;
     T2_Decoder  decoder;
-    TT_Int      glyph_index;
+    FT_Int      glyph_index;
     CFF_Font*   cff = (CFF_Font*)face->other;
 
 
@@ -1622,8 +1622,8 @@
     for ( glyph_index = 0; glyph_index < face->root.num_glyphs;
           glyph_index++ )
     {
-      TT_Byte*  charstring;
-      TT_ULong  charstring_len;
+      FT_Byte*  charstring;
+      FT_ULong  charstring_len;
 
 
       /* now get load the unscaled outline */
@@ -1666,15 +1666,15 @@
 
 
   LOCAL_FUNC
-  TT_Error  T2_Load_Glyph( T2_GlyphSlot  glyph,
+  FT_Error  T2_Load_Glyph( T2_GlyphSlot  glyph,
                            T2_Size       size,
-                           TT_Int        glyph_index,
-                           TT_Int        load_flags )
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags )
   {
-    TT_Error    error;
+    FT_Error    error;
     T2_Decoder  decoder;
     TT_Face     face = (TT_Face)glyph->root.face;
-    TT_Bool     hinting;
+    FT_Bool     hinting;
     CFF_Font*   cff = (CFF_Font*)face->other;
 
 
@@ -1693,14 +1693,14 @@
     glyph->root.format = ft_glyph_format_none;
 
     {
-      TT_Byte*  charstring;
-      TT_ULong  charstring_len;
+      FT_Byte*  charstring;
+      FT_ULong  charstring_len;
 
 
       T2_Init_Decoder( &decoder, face, size, glyph );
 
       decoder.builder.no_recurse =
-        (FT_Bool)( load_flags & FT_LOAD_NO_RECURSE );
+        (FT_Bool)( (load_flags & FT_LOAD_NO_RECURSE) != 0 );
 
       /* now load the unscaled outline */
       error = T2_Access_Element( &cff->charstrings_index, glyph_index,
@@ -1768,11 +1768,11 @@
         if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
           /* scale the outline and the metrics */
-          TT_Int       n;
+          FT_Int       n;
           FT_Outline*  cur     = &decoder.builder.base;
-          TT_Vector*   vec     = cur->points;
-          TT_Fixed     x_scale = glyph->x_scale;
-          TT_Fixed     y_scale = glyph->y_scale;
+          FT_Vector*   vec     = cur->points;
+          FT_Fixed     x_scale = glyph->x_scale;
+          FT_Fixed     y_scale = glyph->y_scale;
 
 
           /* First of all, scale the points */

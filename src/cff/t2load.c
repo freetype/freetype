@@ -39,10 +39,10 @@
 
  /* read a CFF offset from memory */
   static
-  TT_ULong  t2_get_offset( TT_Byte*  p,
-                           TT_Byte   off_size )
+  FT_ULong  t2_get_offset( FT_Byte*  p,
+                           FT_Byte   off_size )
   {
-    TT_ULong  result;
+    FT_ULong  result;
 
 
     for ( result = 0; off_size > 0; off_size-- )
@@ -53,13 +53,13 @@
 
 
   static
-  TT_Error  t2_new_cff_index( CFF_Index*  index,
+  FT_Error  t2_new_cff_index( CFF_Index*  index,
                               FT_Stream   stream,
-                              TT_Bool     load )
+                              FT_Bool     load )
   {
-    TT_Error  error;
+    FT_Error  error;
     FT_Memory memory = stream->memory;
-    TT_UShort count;
+    FT_UShort count;
 
 
     MEM_Set( index, 0, sizeof ( *index ) );
@@ -68,10 +68,10 @@
     if ( !READ_UShort( count ) &&
           count > 0            )
     {
-      TT_Byte*   p;
-      TT_Byte    offsize;
-      TT_ULong   data_size;
-      TT_ULong*  poff;
+      FT_Byte*   p;
+      FT_Byte    offsize;
+      FT_ULong   data_size;
+      FT_ULong*  poff;
 
 
       /* there is at least one element; read the offset size            */
@@ -82,16 +82,16 @@
       index->stream   = stream;
       index->count    = count;
       index->off_size = offsize;
-      data_size       = (TT_ULong)( count + 1 ) * offsize;
+      data_size       = (FT_ULong)( count + 1 ) * offsize;
 
       if ( ALLOC_ARRAY( index->offsets, count + 1, FT_ULong ) ||
            ACCESS_Frame( data_size )                          )
         goto Exit;
 
       poff = index->offsets;
-      p    = (TT_Byte*)stream->cursor;
+      p    = (FT_Byte*)stream->cursor;
 
-      for ( ; (TT_Short)count >= 0; count-- )
+      for ( ; (FT_Short)count >= 0; count-- )
       {
         poff[0] = t2_get_offset( p, offsize );
         poff++;
@@ -143,18 +143,18 @@
 
 
   static
-  TT_Error  t2_explicit_cff_index( CFF_Index*  index,
-                                   TT_Byte***  table )
+  FT_Error  t2_explicit_cff_index( CFF_Index*  index,
+                                   FT_Byte***  table )
   {
-    TT_Error   error  = 0;
+    FT_Error   error  = 0;
     FT_Memory  memory = index->stream->memory;
-    TT_UInt    n, offset, old_offset;
-    TT_Byte**  t;
+    FT_UInt    n, offset, old_offset;
+    FT_Byte**  t;
 
 
     *table = 0;
 
-    if ( index->count > 0 && !ALLOC_ARRAY( t, index->count + 1, TT_Byte* ) )
+    if ( index->count > 0 && !ALLOC_ARRAY( t, index->count + 1, FT_Byte* ) )
     {
       old_offset = 1;
       for ( n = 0; n <= index->count; n++ )
@@ -175,18 +175,18 @@
 
 
   LOCAL_FUNC
-  TT_Error  T2_Access_Element( CFF_Index*  index,
-                               TT_UInt     element,
-                               TT_Byte**   pbytes,
-                               TT_ULong*   pbyte_len )
+  FT_Error  T2_Access_Element( CFF_Index*  index,
+                               FT_UInt     element,
+                               FT_Byte**   pbytes,
+                               FT_ULong*   pbyte_len )
   {
-    TT_Error  error = 0;
+    FT_Error  error = 0;
 
 
     if ( index && index->count > element )
     {
       /* compute start and end offsets */
-      TT_ULong  off1, off2;
+      FT_ULong  off1, off2;
 
 
       off1 = index->offsets[element];
@@ -241,7 +241,7 @@
 
   LOCAL_FUNC
   void  T2_Forget_Element( CFF_Index*  index,
-                           TT_Byte**   pbytes )
+                           FT_Byte**   pbytes )
   {
     if ( index->bytes == 0 )
     {
@@ -254,14 +254,14 @@
 
 
   LOCAL_FUNC
-  TT_String*  T2_Get_Name( CFF_Index*  index,
-                           TT_UInt     element )
+  FT_String*  T2_Get_Name( CFF_Index*  index,
+                           FT_UInt     element )
   {
     FT_Memory   memory = index->stream->memory;
-    TT_Byte*    bytes;
-    TT_ULong    byte_len;
-    TT_Error    error;
-    TT_String*  name = 0;
+    FT_Byte*    bytes;
+    FT_ULong    byte_len;
+    FT_Error    error;
+    FT_String*  name = 0;
 
 
     error = T2_Access_Element( index, element, &bytes, &byte_len );
@@ -283,8 +283,8 @@
 #if 0 /* unused until we fully support pure-CFF fonts */
 
   LOCAL_FUNC
-  TT_String*  T2_Get_String( CFF_Index*          index,
-                             TT_UInt             sid,
+  FT_String*  T2_Get_String( CFF_Index*          index,
+                             FT_UInt             sid,
                              PSNames_Interface*  interface )
   {
     /* if it is not a standard string, return it */
@@ -293,18 +293,18 @@
 
     /* that's a standard string, fetch a copy from the PSName module */
     {
-      TT_String*   name       = 0;
+      FT_String*   name       = 0;
       const char*  adobe_name = interface->adobe_std_strings( sid );
-      TT_UInt      len;
+      FT_UInt      len;
 
 
       if ( adobe_name )
       {
         FT_Memory memory = index->stream->memory;
-        TT_Error  error;
+        FT_Error  error;
 
 
-        len = (TT_UInt)strlen( adobe_name );
+        len = (FT_UInt)strlen( adobe_name );
         if ( !ALLOC( name, len + 1 ) )
         {
           MEM_Copy( name, adobe_name, len );
@@ -321,7 +321,7 @@
 
   LOCAL_FUNC
   FT_Error  T2_Load_CFF_Font( FT_Stream  stream,
-                              TT_Int     face_index,
+                              FT_Int     face_index,
                               CFF_Font*  font )
   {
     static const FT_Frame_Field  cff_header_fields[] =
@@ -382,8 +382,8 @@
     if ( face_index >= 0 )
     {
       T2_Parser      parser;
-      TT_Byte*       dict;
-      TT_ULong       dict_len;
+      FT_Byte*       dict;
+      FT_ULong       dict_len;
       CFF_Index*     index = &font->top_dict_index;
       CFF_Top_Dict*  top   = &font->top_dict;
 
@@ -419,8 +419,8 @@
         priv->blue_shift       = 7;
         priv->blue_fuzz        = 1;
         priv->lenIV            = -1;
-        priv->expansion_factor = (TT_Fixed)0.06 * 0x10000L;
-        priv->blue_scale       = (TT_Fixed)0.039625 * 0x10000L;
+        priv->expansion_factor = (FT_Fixed)0.06 * 0x10000L;
+        priv->blue_scale       = (FT_Fixed)0.039625 * 0x10000L;
 
         T2_Parser_Init( &parser, T2CODE_PRIVATE, priv );
 
@@ -429,8 +429,8 @@
           goto Exit;
 
         error = T2_Parser_Run( &parser,
-                               (TT_Byte*)stream->cursor,
-                               (TT_Byte*)stream->limit );
+                               (FT_Byte*)stream->cursor,
+                               (FT_Byte*)stream->limit );
         FORGET_Frame();
         if ( error )
           goto Exit;

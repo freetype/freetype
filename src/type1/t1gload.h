@@ -54,31 +54,31 @@
 /*                                                                       */
   typedef struct T1_Builder_  T1_Builder;
 
-  typedef T1_Error  (*T1_Builder_EndChar)( T1_Builder*  loader );
+  typedef FT_Error  (*T1_Builder_EndChar)( T1_Builder*  loader );
 
-  typedef T1_Error  (*T1_Builder_Sbw)    ( T1_Builder*  loader,
-                                           T1_Pos       sbx,
-                                           T1_Pos       sby,
-                                           T1_Pos       wx,
-                                           T1_Pos       wy );
+  typedef FT_Error  (*T1_Builder_Sbw)    ( T1_Builder*  loader,
+                                           FT_Pos       sbx,
+                                           FT_Pos       sby,
+                                           FT_Pos       wx,
+                                           FT_Pos       wy );
 
-  typedef T1_Error  (*T1_Builder_ClosePath)( T1_Builder*  loader );
+  typedef FT_Error  (*T1_Builder_ClosePath)( T1_Builder*  loader );
 
-  typedef T1_Error  (*T1_Builder_RLineTo)( T1_Builder*  loader,
-                                           T1_Pos       dx,
-                                           T1_Pos       dy );
+  typedef FT_Error  (*T1_Builder_RLineTo)( T1_Builder*  loader,
+                                           FT_Pos       dx,
+                                           FT_Pos       dy );
 
-  typedef T1_Error  (*T1_Builder_RMoveTo)( T1_Builder*  loader,
-                                           T1_Pos       dx,
-                                           T1_Pos       dy );
+  typedef FT_Error  (*T1_Builder_RMoveTo)( T1_Builder*  loader,
+                                           FT_Pos       dx,
+                                           FT_Pos       dy );
 
-  typedef T1_Error  (*T1_Builder_RCurveTo)( T1_Builder*  loader,
-                                            T1_Pos       dx1,
-                                            T1_Pos       dy1,
-                                            T1_Pos       dx2,
-                                            T1_Pos       dy2,
-                                            T1_Pos       dx3,
-                                            T1_Pos       dy3 );
+  typedef FT_Error  (*T1_Builder_RCurveTo)( T1_Builder*  loader,
+                                            FT_Pos       dx1,
+                                            FT_Pos       dy1,
+                                            FT_Pos       dx2,
+                                            FT_Pos       dy2,
+                                            FT_Pos       dx3,
+                                            FT_Pos       dy3 );
 
   typedef struct T1_Builder_Funcs_
   {
@@ -146,27 +146,27 @@
     FT_Outline    current;       /* the current glyph outline   */
     FT_Outline    base;          /* the composite glyph outline */
 
-    T1_Int        max_points;    /* capacity of base outline in points   */
-    T1_Int        max_contours;  /* capacity of base outline in contours */
+    FT_Int        max_points;    /* capacity of base outline in points   */
+    FT_Int        max_contours;  /* capacity of base outline in contours */
 
-    T1_Vector     last;
+    FT_Vector     last;
 
-    T1_Fixed      scale_x;
-    T1_Fixed      scale_y;
+    FT_Fixed      scale_x;
+    FT_Fixed      scale_y;
 
-    T1_Pos        pos_x;
-    T1_Pos        pos_y;
+    FT_Pos        pos_x;
+    FT_Pos        pos_y;
 
-    T1_Vector     left_bearing;
-    T1_Vector     advance;
-    T1_Bool       no_recurse;
+    FT_Vector     left_bearing;
+    FT_Vector     advance;
+    FT_Bool       no_recurse;
 
-    T1_BBox       bbox;          /* bounding box */
-    T1_Bool       path_begun;
-    T1_Bool       load_points;
+    FT_BBox       bbox;          /* bounding box */
+    FT_Bool       path_begun;
+    FT_Bool       load_points;
 
-    T1_Int        pass;
-    T1_Int        hint_point;
+    FT_Int        pass;
+    FT_Int        hint_point;
 
     /* path construction function interface */
     T1_Builder_Funcs  funcs;
@@ -182,24 +182,24 @@
 /*     used by a Type 1 hinter to perform outline hinting.               */
 /*                                                                       */
 
-  typedef T1_Error  (*T1_Hinter_ChangeHints)( T1_Builder*  builder );
+  typedef FT_Error  (*T1_Hinter_ChangeHints)( T1_Builder*  builder );
 
-  typedef T1_Error  (*T1_Hinter_DotSection)( T1_Builder*  builder );
+  typedef FT_Error  (*T1_Hinter_DotSection)( T1_Builder*  builder );
 
-  typedef T1_Error  (*T1_Hinter_Stem)( T1_Builder*  builder,
-                                       T1_Pos       pos,
-                                       T1_Pos       width,
-                                       T1_Bool      vertical );
+  typedef FT_Error  (*T1_Hinter_Stem)( T1_Builder*  builder,
+                                       FT_Pos       pos,
+                                       FT_Pos       width,
+                                       FT_Bool      vertical );
 
 
-  typedef T1_Error  (*T1_Hinter_Stem3)( T1_Builder*  builder,
-                                        T1_Pos       pos0,
-                                        T1_Pos       width0,
-                                        T1_Pos       pos1,
-                                        T1_Pos       width1,
-                                        T1_Pos       pos2,
-                                        T1_Pos       width2,
-                                        T1_Bool      vertical );
+  typedef FT_Error  (*T1_Hinter_Stem3)( T1_Builder*  builder,
+                                        FT_Pos       pos0,
+                                        FT_Pos       width0,
+                                        FT_Pos       pos1,
+                                        FT_Pos       width1,
+                                        FT_Pos       pos2,
+                                        FT_Pos       width2,
+                                        FT_Bool      vertical );
 
   typedef struct T1_Hinter_Func_
   {
@@ -251,9 +251,9 @@
   /* execution context charstring zone */
   typedef struct T1_Decoder_Zone_
   {
-    T1_Byte*  base;
-    T1_Byte*  limit;
-    T1_Byte*  cursor;
+    FT_Byte*  base;
+    FT_Byte*  limit;
+    FT_Byte*  cursor;
 
   } T1_Decoder_Zone;
 
@@ -263,15 +263,15 @@
     T1_Builder         builder;
     T1_Hinter_Funcs    hinter;
 
-    T1_Int             stack[ T1_MAX_CHARSTRINGS_OPERANDS ];
-    T1_Int*            top;
+    FT_Int             stack[ T1_MAX_CHARSTRINGS_OPERANDS ];
+    FT_Int*            top;
 
     T1_Decoder_Zone    zones[ T1_MAX_SUBRS_CALLS+1 ];
     T1_Decoder_Zone*   zone;
 
-    T1_Int             flex_state;
-    T1_Int             num_flex_vectors;
-    T1_Vector          flex_vectors[7];
+    FT_Int             flex_state;
+    FT_Int             num_flex_vectors;
+    FT_Vector          flex_vectors[7];
 
   } T1_Decoder;
 
@@ -357,18 +357,18 @@
 
   /* Compute the maximum advance width of a font through quick parsing */
   LOCAL_DEF
-  T1_Error  T1_Compute_Max_Advance( T1_Face  face,
-                                    T1_Int  *max_advance );
+  FT_Error  T1_Compute_Max_Advance( T1_Face  face,
+                                    FT_Int  *max_advance );
 
 
   /* This function is exported, because it is used by the T1Dump utility */
   LOCAL_DEF
-  T1_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
-                                   T1_Byte*     charstring_base,
-                                   T1_Int       charstring_len,
-                                   T1_Int       num_subrs,
-                                   T1_Byte**    subrs_base,
-                                   T1_Int*      subrs_len );
+  FT_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
+                                   FT_Byte*     charstring_base,
+                                   FT_Int       charstring_len,
+                                   FT_Int       num_subrs,
+                                   FT_Byte**    subrs_base,
+                                   FT_Int*      subrs_len );
 
 
 
@@ -394,8 +394,8 @@
 /*    invoked..                                                          */
 /*                                                                       */
   LOCAL_DEF
-  T1_Error  T1_Add_Points( T1_Builder*  builder,
-                           T1_Int       num_points );
+  FT_Error  T1_Add_Points( T1_Builder*  builder,
+                           FT_Int       num_points );
 
 /*************************************************************************/
 /*                                                                       */
@@ -419,15 +419,15 @@
 /*    invoked..                                                          */
 /*                                                                       */
   LOCAL_DEF
-  T1_Error  T1_Add_Contours( T1_Builder*  builder,
-                             T1_Int       num_contours );
+  FT_Error  T1_Add_Contours( T1_Builder*  builder,
+                             FT_Int       num_contours );
 
 
   LOCAL_DEF
-  T1_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
+  FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
                            T1_Size       size,
-                           T1_Int        glyph_index,
-                           T1_Int        load_flags );
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags );
 
 
 #ifdef __cplusplus

@@ -55,7 +55,7 @@
 
   } T1_Operator;
 
-  static const T1_Int  t1_args_count[ op_max ] =
+  static const FT_Int  t1_args_count[ op_max ] =
   {
     0, /* none */
     0, /* endchar */
@@ -214,8 +214,8 @@
 
   /* check that there is enough room for "count" more points */
   static
-  T1_Error  check_points( T1_Builder*  builder,
-                          T1_Int       count )
+  FT_Error  check_points( T1_Builder*  builder,
+                          FT_Int       count )
   {
     FT_Outline*  base    = &builder->base;
     FT_Outline*  outline = &builder->current;
@@ -228,19 +228,19 @@
     /* realloc points table if necessary */
     if ( count >= builder->max_points )
     {
-      T1_Error   error;
+      FT_Error   error;
       FT_Memory  memory    = builder->memory;
-      T1_Int     increment = outline->points - base->points;
-      T1_Int     current   = builder->max_points;
+      FT_Int     increment = outline->points - base->points;
+      FT_Int     current   = builder->max_points;
 
       while ( builder->max_points < count )
         builder->max_points += 8;
 
       if ( REALLOC_ARRAY( base->points, current,
-                          builder->max_points, T1_Vector )  ||
+                          builder->max_points, FT_Vector )  ||
 
            REALLOC_ARRAY( base->tags, current,
-                          builder->max_points, T1_Byte )    )
+                          builder->max_points, FT_Byte )    )
       {
         builder->error = error;
         return error;
@@ -280,11 +280,11 @@
 
   /* check room for a new on-curve point, then add it */
   static
-  T1_Error  add_point1( T1_Builder*  builder,
+  FT_Error  add_point1( T1_Builder*  builder,
                         FT_Pos       x,
                         FT_Pos       y )
   {
-    T1_Error  error;
+    FT_Error  error;
 
     error = check_points(builder,1);
     if (!error)
@@ -296,7 +296,7 @@
 
   /* check room for a new contour, then add it */
   static
-  T1_Error  add_contour( T1_Builder*  builder )
+  FT_Error  add_contour( T1_Builder*  builder )
   {
     FT_Outline*  base    = &builder->base;
     FT_Outline*  outline = &builder->current;
@@ -311,15 +311,15 @@
     if ( base->n_contours + outline->n_contours >= builder->max_contours &&
          builder->load_points )
     {
-      T1_Error  error;
+      FT_Error  error;
       FT_Memory memory = builder->memory;
-      T1_Int    increment = outline->contours - base->contours;
-      T1_Int    current   = builder->max_contours;
+      FT_Int    increment = outline->contours - base->contours;
+      FT_Int    current   = builder->max_contours;
 
       builder->max_contours += 4;
 
       if ( REALLOC_ARRAY( base->contours,
-                          current, builder->max_contours, T1_Short ) )
+                          current, builder->max_contours, FT_Short ) )
       {
         builder->error = error;
         return error;
@@ -337,14 +337,14 @@
 
   /* if a path was begun, add its first on-curve point */
   static
-  T1_Error  start_point( T1_Builder*  builder,
-                         T1_Pos       x,
-                         T1_Pos       y )
+  FT_Error  start_point( T1_Builder*  builder,
+                         FT_Pos       x,
+                         FT_Pos       y )
   {
     /* test wether we're building a new contour */
     if (!builder->path_begun)
     {
-      T1_Error  error;
+      FT_Error  error;
 
       builder->path_begun = 1;
       error = add_contour( builder );
@@ -385,11 +385,11 @@
  *********************************************************************/
 
   static
-  T1_Int    lookup_glyph_by_stdcharcode( T1_Face  face,
-                                         T1_Int   charcode )
+  FT_Int    lookup_glyph_by_stdcharcode( T1_Face  face,
+                                         FT_Int   charcode )
   {
-    T1_Int              n;
-    const T1_String*    glyph_name;
+    FT_Int              n;
+    const FT_String*    glyph_name;
     PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
 
     /* check range of standard char code */
@@ -401,7 +401,7 @@
 
     for ( n = 0; n < face->type1.num_glyphs; n++ )
     {
-      T1_String*  name = (T1_String*)face->type1.glyph_names[n];
+      FT_String*  name = (FT_String*)face->type1.glyph_names[n];
 
       if ( name && strcmp(name,glyph_name) == 0 )
         return n;
@@ -434,19 +434,19 @@
  *********************************************************************/
 
   static
-  T1_Error  t1operator_seac( T1_Decoder*  decoder,
-                             T1_Pos       asb,
-                             T1_Pos       adx,
-                             T1_Pos       ady,
-                             T1_Int       bchar,
-                             T1_Int       achar )
+  FT_Error  t1operator_seac( T1_Decoder*  decoder,
+                             FT_Pos       asb,
+                             FT_Pos       adx,
+                             FT_Pos       ady,
+                             FT_Int       bchar,
+                             FT_Int       achar )
   {
-    T1_Error     error;
+    FT_Error     error;
     T1_Face      face = decoder->builder.face;
-    T1_Int       bchar_index, achar_index, n_base_points;
+    FT_Int       bchar_index, achar_index, n_base_points;
     FT_Outline*  cur  = &decoder->builder.current;
     FT_Outline*  base = &decoder->builder.base;
-    T1_Vector    left_bearing, advance;
+    FT_Vector    left_bearing, advance;
     T1_Font*     type1 = &face->type1;
 
     bchar_index = lookup_glyph_by_stdcharcode( face, bchar );
@@ -545,7 +545,7 @@
       /* adjust contours in accented character outline */
       if (decoder->builder.load_points)
       {
-        T1_Int  n;
+        FT_Int  n;
 
         for ( n = 0; n < cur->n_contours; n++ )
           cur->contours[n] += n_base_points;
@@ -588,20 +588,20 @@
 #define USE_ARGS(n)  top -= n; if (top < decoder->stack) goto Stack_Underflow
 
   LOCAL_FUNC
-  T1_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
-                                   T1_Byte*     charstring_base,
-                                   T1_Int       charstring_len,
-                                   T1_Int       num_subrs,
-                                   T1_Byte**    subrs_base,
-                                   T1_Int*      subrs_len )
+  FT_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
+                                   FT_Byte*     charstring_base,
+                                   FT_Int       charstring_len,
+                                   FT_Int       num_subrs,
+                                   FT_Byte**    subrs_base,
+                                   FT_Int*      subrs_len )
   {
-    T1_Error            error;
+    FT_Error            error;
     T1_Decoder_Zone*    zone;
-    T1_Byte*            ip;
-    T1_Byte*            limit;
+    FT_Byte*            ip;
+    FT_Byte*            limit;
     T1_Builder*         builder = &decoder->builder;
     FT_Outline*         outline;
-    T1_Pos              x, y;
+    FT_Pos              x, y;
 
     /* First of all, initialise the decoder */
     decoder->top  = decoder->stack;
@@ -623,9 +623,9 @@
     /* now, execute loop */
     while ( ip < limit )
     {
-      T1_Int*      top      = decoder->top;
+      FT_Int*      top      = decoder->top;
       T1_Operator  op       = op_none;
-      T1_Long      value    = 0;
+      FT_Long      value    = 0;
 
       /********************************************************************/
       /*                                                                  */
@@ -767,7 +767,7 @@
 
           case 2: /* add flex vectors ------------------------ */
             {
-              T1_Int      index;
+              FT_Int      index;
 
               if ( top[0] != 0 ) goto Unexpected_OtherSubr;
 
@@ -779,7 +779,7 @@
                 add_point( builder,
                            x,
                            y,
-                           (T1_Byte)( index==3 || index==6 ) );
+                           (FT_Byte)( index==3 || index==6 ) );
             }
             break;
 
@@ -846,9 +846,9 @@
           case 18: /* multiple masters */
             {
               T1_Blend*  blend = decoder->blend;
-              T1_UInt    num_points, nn, mm;
-              T1_Int*    delta;
-              T1_Int*    values;
+              FT_UInt    num_points, nn, mm;
+              FT_Int*    delta;
+              FT_Int*    values;
               
               if (!blend)
               {
@@ -887,7 +887,7 @@
               values = top;
               for ( nn = 0; nn < num_points; nn++ )
               {
-                T1_Int  x = values[0];
+                FT_Int  x = values[0];
                 for ( mm = 1; mm < blend->num_designs; mm++ )
                   x += FT_MulFix( *delta++, blend->weight_vector[mm] );
 
@@ -907,7 +907,7 @@
       }
       else  /* general operator */
       {
-        T1_Int  num_args = t1_args_count[op];
+        FT_Int  num_args = t1_args_count[op];
 
         if ( top - decoder->stack < num_args )
           goto Stack_Underflow;
@@ -1114,7 +1114,7 @@
 
           case op_callsubr:  /***********************************************/
           {
-            T1_Int  index;
+            FT_Int  index;
 
             FT_TRACE4(( " callsubr" ));
             index = top[0];
@@ -1256,12 +1256,12 @@
   /**********************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_Compute_Max_Advance( T1_Face  face,
-                                    T1_Int  *max_advance )
+  FT_Error  T1_Compute_Max_Advance( T1_Face  face,
+                                    FT_Int  *max_advance )
   {
-    T1_Error    error;
+    FT_Error    error;
     T1_Decoder  decoder;
-    T1_Int      glyph_index;
+    FT_Int      glyph_index;
     T1_Font*    type1 = &face->type1;
 
     *max_advance = 0;
@@ -1310,15 +1310,15 @@
 
 
   LOCAL_FUNC
-  T1_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
+  FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
                            T1_Size       size,
-                           T1_Int        glyph_index,
-                           T1_Int        load_flags )
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags )
   {
-    T1_Error        error;
+    FT_Error        error;
     T1_Decoder      decoder;
     T1_Face         face = (T1_Face)glyph->root.face;
-    T1_Bool         hinting;
+    FT_Bool         hinting;
     T1_Font*        type1 = &face->type1;
 
     if (load_flags & FT_LOAD_NO_RECURSE)
@@ -1396,11 +1396,11 @@
         if ( (load_flags & FT_LOAD_NO_SCALE) == 0 )
         {
           /* scale the outline and the metrics */
-          T1_Int       n;
+          FT_Int       n;
           FT_Outline*  cur = &decoder.builder.base;
-          T1_Vector*   vec = cur->points;
-          T1_Fixed     x_scale = glyph->x_scale;
-          T1_Fixed     y_scale = glyph->y_scale;
+          FT_Vector*   vec = cur->points;
+          FT_Fixed     x_scale = glyph->x_scale;
+          FT_Fixed     y_scale = glyph->y_scale;
 
           /* First of all, scale the points */
           for ( n = cur->n_points; n > 0; n--, vec++ )

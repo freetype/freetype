@@ -87,27 +87,27 @@
     FT_Outline    current;       /* the current glyph outline   */
     FT_Outline    base;          /* the composite glyph outline */
 
-    T1_Int        max_points;    /* capacity of base outline in points   */
-    T1_Int        max_contours;  /* capacity of base outline in contours */
+    FT_Int        max_points;    /* capacity of base outline in points   */
+    FT_Int        max_contours;  /* capacity of base outline in contours */
 
-    T1_Vector     last;
+    FT_Vector     last;
 
-    T1_Fixed      scale_x;
-    T1_Fixed      scale_y;
+    FT_Fixed      scale_x;
+    FT_Fixed      scale_y;
 
-    T1_Pos        pos_x;
-    T1_Pos        pos_y;
+    FT_Pos        pos_x;
+    FT_Pos        pos_y;
 
-    T1_Vector     left_bearing;
-    T1_Vector     advance;
+    FT_Vector     left_bearing;
+    FT_Vector     advance;
 
-    T1_BBox       bbox;          /* bounding box */
-    T1_Bool       path_begun;
-    T1_Bool       load_points;
-    T1_Bool       no_recurse;
+    FT_BBox       bbox;          /* bounding box */
+    FT_Bool       path_begun;
+    FT_Bool       load_points;
+    FT_Bool       no_recurse;
 
-    T1_Error      error;         /* only used for memory errors */
-    T1_Bool       metrics_only;
+    FT_Error      error;         /* only used for memory errors */
+    FT_Bool       metrics_only;
 
   } CID_Builder;
 
@@ -116,9 +116,9 @@
 
   typedef struct  CID_Decoder_Zone_
   {
-    T1_Byte*  base;
-    T1_Byte*  limit;
-    T1_Byte*  cursor;
+    FT_Byte*  base;
+    FT_Byte*  limit;
+    FT_Byte*  cursor;
 
   } CID_Decoder_Zone;
 
@@ -127,19 +127,19 @@
   {
     CID_Builder        builder;
 
-    T1_Int             stack[T1_MAX_CHARSTRINGS_OPERANDS];
-    T1_Int*            top;
+    FT_Int             stack[T1_MAX_CHARSTRINGS_OPERANDS];
+    FT_Int*            top;
 
     CID_Decoder_Zone   zones[T1_MAX_SUBRS_CALLS + 1];
     CID_Decoder_Zone*  zone;
 
-    T1_Matrix          font_matrix;
+    FT_Matrix          font_matrix;
     CID_Subrs*         subrs;
-    T1_UInt            lenIV;
+    FT_UInt            lenIV;
 
-    T1_Int             flex_state;
-    T1_Int             num_flex_vectors;
-    T1_Vector          flex_vectors[7];
+    FT_Int             flex_state;
+    FT_Int             num_flex_vectors;
+    FT_Vector          flex_vectors[7];
 
   } CID_Decoder;
 
@@ -162,22 +162,22 @@
 
   /* Compute the maximum advance width of a font through quick parsing */
   LOCAL_DEF
-  T1_Error  CID_Compute_Max_Advance( CID_Face  face,
-                                     T1_Int*   max_advance );
+  FT_Error  CID_Compute_Max_Advance( CID_Face  face,
+                                     FT_Int*   max_advance );
 
 #endif
 
   /* This function is exported, because it is used by the T1Dump utility */
   LOCAL_DEF
-  T1_Error  CID_Parse_CharStrings( CID_Decoder*  decoder,
-                                   T1_Byte*      charstring_base,
-                                   T1_Int        charstring_len );
+  FT_Error  CID_Parse_CharStrings( CID_Decoder*  decoder,
+                                   FT_Byte*      charstring_base,
+                                   FT_Int        charstring_len );
 
   LOCAL_DEF
-  T1_Error  CID_Load_Glyph( T1_GlyphSlot  glyph,
+  FT_Error  CID_Load_Glyph( T1_GlyphSlot  glyph,
                             T1_Size       size,
-                            T1_Int        glyph_index,
-                            T1_Int        load_flags );
+                            FT_Int        glyph_index,
+                            FT_Int        load_flags );
 
 
 #ifdef __cplusplus

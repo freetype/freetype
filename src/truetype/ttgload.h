@@ -35,30 +35,30 @@
     TT_Size         size;
     TT_GlyphSlot    glyph;
 
-    TT_ULong        load_flags;
-    TT_UInt         glyph_index;
+    FT_ULong        load_flags;
+    FT_UInt         glyph_index;
 
     FT_Stream       stream;
-    TT_Int          byte_len;
-    TT_Int          left_points;
-    TT_Int          left_contours;
+    FT_Int          byte_len;
+    FT_Int          left_points;
+    FT_Int          left_contours;
 
-    TT_BBox         bbox;
-    TT_Int          left_bearing;
-    TT_Int          advance;
-    TT_Bool         preserve_pps;
-    TT_Vector       pp1;
-    TT_Vector       pp2;
+    FT_BBox         bbox;
+    FT_Int          left_bearing;
+    FT_Int          advance;
+    FT_Bool         preserve_pps;
+    FT_Vector       pp1;
+    FT_Vector       pp2;
 
-    TT_ULong        glyf_offset;
+    FT_ULong        glyf_offset;
 
     /* the zone where we load our glyphs */
-    FT_GlyphZone    base;
-    FT_GlyphZone    zone;
+    TT_GlyphZone    base;
+    TT_GlyphZone    zone;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     TT_ExecContext  exec;
-    TT_Byte*        instructions;
+    FT_Byte*        instructions;
 #endif
 
   } TT_Loader;
@@ -66,15 +66,15 @@
 
   LOCAL_DEF
   void  TT_Get_Metrics( TT_HoriHeader*  header,
-                        TT_UInt         index,
-                        TT_Short*       bearing,
-                        TT_UShort*      advance );
+                        FT_UInt         index,
+                        FT_Short*       bearing,
+                        FT_UShort*      advance );
 
   LOCAL_DEF
-  TT_Error  TT_Load_Glyph( TT_Size       size,
+  FT_Error  TT_Load_Glyph( TT_Size       size,
                            TT_GlyphSlot  glyph,
-                           TT_UShort     glyph_index,
-                           TT_UInt       load_flags );
+                           FT_UShort     glyph_index,
+                           FT_UInt       load_flags );
 
 #ifdef __cplusplus
   }

@@ -75,8 +75,8 @@
 
   PARSE_INT("ItalicAngle",italic_angle)
   PARSE_BOOL("isFixedPitch",is_fixed_pitch)
-  PARSE_NUM("UnderlinePosition",underline_position,T1_Short)
-  PARSE_NUM("UnderlineThickness",underline_thickness,T1_UShort)
+  PARSE_NUM("UnderlinePosition",underline_position,FT_Short)
+  PARSE_NUM("UnderlineThickness",underline_thickness,FT_UShort)
 
  /* define the private dict parsing callbacks */
 
@@ -114,8 +114,8 @@
 
 
 /* PARSE_STRING( "FontName", font_name ) -- handled by special routine */
-   PARSE_NUM( "PaintType", paint_type, T1_Byte )
-   PARSE_NUM( "FontType", font_type, T1_Byte )
+   PARSE_NUM( "PaintType", paint_type, FT_Byte )
+   PARSE_NUM( "FontType", font_type, FT_Byte )
    PARSE_FIXEDS2( "FontMatrix", 4, font_matrix )
 /*  PARSE_COORDS2( "FontBBox", 4, font_bbox ) -- handled by special func */
    PARSE_INT( "StrokeWidth", stroke_width )

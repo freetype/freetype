@@ -66,7 +66,7 @@
   /*                                                                       */
   static
   FTDriver_Interface  Get_Interface( FT_Driver         driver,
-                                     const T1_String*  interface )
+                                     const FT_String*  interface )
   {
     UNUSED( driver );
     UNUSED( interface );
@@ -111,10 +111,10 @@
   /*    They can be implemented by format-specific interfaces.             */
   /*                                                                       */
   static
-  T1_Error  Get_Kerning( T1_Face     face,
-                         T1_UInt     left_glyph,
-                         T1_UInt     right_glyph,
-                         T1_Vector*  kerning )
+  FT_Error  Get_Kerning( T1_Face     face,
+                         FT_UInt     left_glyph,
+                         FT_UInt     right_glyph,
+                         FT_Vector*  kerning )
   {
     T1_AFM*  afm;
 
@@ -160,11 +160,11 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   static
-  T1_Error  Set_Char_Sizes( T1_Size     size,
-                            T1_F26Dot6  char_width,
-                            T1_F26Dot6  char_height,
-                            T1_UInt     horz_resolution,
-                            T1_UInt     vert_resolution )
+  FT_Error  Set_Char_Sizes( T1_Size     size,
+                            FT_F26Dot6  char_width,
+                            FT_F26Dot6  char_height,
+                            FT_UInt     horz_resolution,
+                            FT_UInt     vert_resolution )
   {
     UNUSED( char_width );
     UNUSED( char_height );
@@ -197,9 +197,9 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   static
-  T1_Error  Set_Pixel_Sizes( T1_Size  size,
-                             T1_Int   pixel_width,
-                             T1_Int   pixel_height )
+  FT_Error  Set_Pixel_Sizes( T1_Size  size,
+                             FT_Int   pixel_width,
+                             FT_Int   pixel_height )
   {
     UNUSED( pixel_width );
     UNUSED( pixel_height );
@@ -225,11 +225,11 @@
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
   static
-  T1_UInt  Get_Char_Index( FT_CharMap  charmap,
-                           T1_Long     charcode )
+  FT_UInt  Get_Char_Index( FT_CharMap  charmap,
+                           FT_Long     charcode )
   {
     T1_Face             face;
-    T1_UInt             result = 0;
+    FT_UInt             result = 0;
     PSNames_Interface*  psnames;
 
 
@@ -245,7 +245,7 @@
       case ft_encoding_unicode:
         /* use the `PSNames' module to synthetize the Unicode charmap */
         result = psnames->lookup_unicode( &face->unicode_map,
-                                          (T1_ULong)charcode );
+                                          (FT_ULong)charcode );
 
         /* the function returns 0xFFFF if the Unicode charcode has */
         /* no corresponding glyph.                                 */
@@ -275,8 +275,8 @@
       default:
         if ( charcode < 256 )
         {
-          T1_UInt      code;
-          T1_Int       n;
+          FT_UInt      code;
+          FT_Int       n;
           const char*  glyph_name;
 
 

@@ -77,35 +77,83 @@
   /*                                                                       */
   typedef struct  TT_GraphicsState_
   {
-    TT_UShort      rp0;
-    TT_UShort      rp1;
-    TT_UShort      rp2;
+    FT_UShort      rp0;
+    FT_UShort      rp1;
+    FT_UShort      rp2;
 
-    TT_UnitVector  dualVector;
-    TT_UnitVector  projVector;
-    TT_UnitVector  freeVector;
+    FT_UnitVector  dualVector;
+    FT_UnitVector  projVector;
+    FT_UnitVector  freeVector;
 
-    TT_Long        loop;
-    TT_F26Dot6     minimum_distance;
-    TT_Int         round_state;
+    FT_Long        loop;
+    FT_F26Dot6     minimum_distance;
+    FT_Int         round_state;
 
-    TT_Bool        auto_flip;
-    TT_F26Dot6     control_value_cutin;
-    TT_F26Dot6     single_width_cutin;
-    TT_F26Dot6     single_width_value;
-    TT_Short       delta_base;
-    TT_Short       delta_shift;
+    FT_Bool        auto_flip;
+    FT_F26Dot6     control_value_cutin;
+    FT_F26Dot6     single_width_cutin;
+    FT_F26Dot6     single_width_value;
+    FT_Short       delta_base;
+    FT_Short       delta_shift;
 
-    TT_Byte        instruct_control;
-    TT_Bool        scan_control;
-    TT_Int         scan_type;
+    FT_Byte        instruct_control;
+    FT_Bool        scan_control;
+    FT_Int         scan_type;
 
-    TT_UShort      gep0;
-    TT_UShort      gep1;
-    TT_UShort      gep2;
+    FT_UShort      gep0;
+    FT_UShort      gep1;
+    FT_UShort      gep2;
 
   } TT_GraphicsState;
 
+ /************************************************************************
+  *
+  *  <Struct>
+  *     TT_GlyphZone
+  *
+  *  <Description>
+  *     A glyph zone is used to load, scale and hint glyph outline
+  *     coordinates.
+  *
+  *  <Fields>
+  *     memory       :: handle to memory manager
+  *     max_points   :: max size in points of zone
+  *     max_contours :: max size in contours of zone
+  *     n_points     :: current number of points in zone
+  *     n_contours   :: current number of contours in zone
+  *     org          :: original glyph coordinates (font units/scaled)
+  *     cur          :: current glyph coordinates  (scaled/hinted)
+  *     tags         :: point control tags
+  *     contours     :: contour end points
+  *
+  ***********************************************************************/
+
+  typedef struct  TT_GlyphZone_
+  {
+    FT_Memory   memory;
+    FT_UShort   max_points;
+    FT_UShort   max_contours;
+    FT_UShort   n_points;   /* number of points in zone    */
+    FT_Short    n_contours; /* number of contours          */
+
+    FT_Vector*  org;        /* original point coordinates  */
+    FT_Vector*  cur;        /* current point coordinates   */
+
+    FT_Byte*    tags;       /* current touch flags         */
+    FT_UShort*  contours;   /* contour end points          */
+
+  } TT_GlyphZone;
+
+  LOCAL_DEF void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
+
+  LOCAL_DEF FT_Error TT_New_GlyphZone( FT_Memory      memory,
+                                       FT_UShort      maxPoints,
+                                       FT_Short       maxContours,
+                                       TT_GlyphZone*  zone );
+
+  LOCAL_DEF FT_Error TT_Update_GlyphZone( TT_GlyphZone*  zone,
+                                          FT_UShort      newPoints,
+                                          FT_Short       newContours );
 
   /*************************************************************************/
   /*                                                                       */
@@ -138,8 +186,8 @@
 
   typedef struct  TT_CodeRange_
   {
-    TT_Byte*  base;
-    TT_ULong  size;
+    FT_Byte*  base;
+    FT_ULong  size;
 
   } TT_CodeRange;
 
@@ -152,10 +200,10 @@
   /*                                                                       */
   typedef struct  TT_DefRecord_
   {
-    TT_Int   range;      /* in which code range is it located? */
-    TT_Long  start;      /* where does it start?               */
-    TT_UInt  opc;        /* function #, or instruction code    */
-    TT_Bool  active;     /* is it active?                      */
+    FT_Int   range;      /* in which code range is it located? */
+    FT_Long  start;      /* where does it start?               */
+    FT_UInt  opc;        /* function #, or instruction code    */
+    FT_Bool  active;     /* is it active?                      */
 
   } TT_DefRecord, *TT_DefArray;
 
@@ -167,9 +215,9 @@
   /*                                                                       */
   typedef struct  TT_Transform_
   {
-    TT_Fixed    xx, xy;     /* transformation matrix coefficients */
-    TT_Fixed    yx, yy;
-    TT_F26Dot6  ox, oy;     /* offsets        */
+    FT_Fixed    xx, xy;     /* transformation matrix coefficients */
+    FT_Fixed    yx, yy;
+    FT_F26Dot6  ox, oy;     /* offsets        */
 
   } TT_Transform;
 
@@ -180,27 +228,27 @@
   /*                                                                       */
   typedef struct  TT_SubglyphRec_
   {
-    TT_Long       index;        /* subglyph index; initialized with -1 */
-    TT_Bool       is_scaled;    /* is the subglyph scaled?             */
-    TT_Bool       is_hinted;    /* should it be hinted?                */
-    TT_Bool       preserve_pps; /* preserve phantom points?            */
+    FT_Long       index;        /* subglyph index; initialized with -1 */
+    FT_Bool       is_scaled;    /* is the subglyph scaled?             */
+    FT_Bool       is_hinted;    /* should it be hinted?                */
+    FT_Bool       preserve_pps; /* preserve phantom points?            */
 
-    TT_Long       file_offset;
+    FT_Long       file_offset;
 
-    TT_BBox       bbox;
-    TT_Pos        left_bearing;
-    TT_Pos        advance;
+    FT_BBox       bbox;
+    FT_Pos        left_bearing;
+    FT_Pos        advance;
 
-    FT_GlyphZone  zone;
+    TT_GlyphZone  zone;
 
-    TT_Long       arg1;         /* first argument                      */
-    TT_Long       arg2;         /* second argument                     */
+    FT_Long       arg1;         /* first argument                      */
+    FT_Long       arg2;         /* second argument                     */
 
-    TT_UShort     element_flag; /* current load element flag           */
+    FT_UShort     element_flag; /* current load element flag           */
 
     TT_Transform  transform;    /* transformation matrix               */
 
-    TT_Vector     pp1, pp2;     /* phantom points                      */
+    FT_Vector     pp1, pp2;     /* phantom points                      */
 
   } TT_SubGlyphRec, *TT_SubGlyph_Stack;
 
@@ -274,19 +322,19 @@
   typedef struct  TT_Size_Metrics_
   {
     /* for non-square pixels */
-    TT_Long     x_ratio;
-    TT_Long     y_ratio;
+    FT_Long     x_ratio;
+    FT_Long     y_ratio;
 
-    TT_UShort   ppem;               /* maximum ppem size              */
-    TT_Long     ratio;              /* current ratio                  */
-    TT_Fixed    scale;
+    FT_UShort   ppem;               /* maximum ppem size              */
+    FT_Long     ratio;              /* current ratio                  */
+    FT_Fixed    scale;
 
-    TT_F26Dot6  compensations[4];   /* device-specific compensations  */
+    FT_F26Dot6  compensations[4];   /* device-specific compensations  */
 
-    TT_Bool     valid;
+    FT_Bool     valid;
 
-    TT_Bool     rotated;            /* `is the glyph rotated?'-flag   */
-    TT_Bool     stretched;          /* `is the glyph stretched?'-flag */
+    FT_Bool     rotated;            /* `is the glyph rotated?'-flag   */
+    FT_Bool     stretched;          /* `is the glyph stretched?'-flag */
 
   } TT_Size_Metrics;
 
@@ -313,28 +361,28 @@
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
-    TT_UInt            num_function_defs; /* number of function definitions */
-    TT_UInt            max_function_defs;
+    FT_UInt            num_function_defs; /* number of function definitions */
+    FT_UInt            max_function_defs;
     TT_DefArray        function_defs;     /* table of function definitions  */
 
-    TT_UInt            num_instruction_defs;  /* number of ins. definitions */
-    TT_UInt            max_instruction_defs;
+    FT_UInt            num_instruction_defs;  /* number of ins. definitions */
+    FT_UInt            max_instruction_defs;
     TT_DefArray        instruction_defs;      /* table of ins. definitions  */
 
-    TT_UInt            max_func;
-    TT_UInt            max_ins;
+    FT_UInt            max_func;
+    FT_UInt            max_ins;
 
     TT_CodeRangeTable  codeRangeTable;
 
     TT_GraphicsState   GS;
 
-    TT_ULong           cvt_size;      /* the scaled control value table */
-    TT_Long*           cvt;
+    FT_ULong           cvt_size;      /* the scaled control value table */
+    FT_Long*           cvt;
 
-    TT_UShort          storage_size; /* The storage area is now part of */
-    TT_Long*           storage;      /* the instance                    */
+    FT_UShort          storage_size; /* The storage area is now part of */
+    FT_Long*           storage;      /* the instance                    */
 
-    FT_GlyphZone       twilight;     /* The instance's twilight zone    */
+    TT_GlyphZone       twilight;     /* The instance's twilight zone    */
 
     /* debugging variables */
 
@@ -342,7 +390,7 @@
     /* execution context tied to the instance    */
     /* object rather than asking it on demand.   */
 
-    TT_Bool            debug;
+    FT_Bool            debug;
     TT_ExecContext     context;
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
@@ -358,7 +406,7 @@
   {
     FT_DriverRec    root;
     TT_ExecContext  context;  /* execution context        */
-    FT_GlyphZone    zone;     /* glyph loader points zone */
+    TT_GlyphZone    zone;     /* glyph loader points zone */
 
     void*           extension_component;
 
@@ -370,10 +418,10 @@
   /* Face functions                                                        */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Init_Face( FT_Stream      stream,
+  FT_Error  TT_Init_Face( FT_Stream      stream,
                           TT_Face        face,
-                          TT_Int         face_index,
-                          TT_Int         num_params,
+                          FT_Int         face_index,
+                          FT_Int         num_params,
                           FT_Parameter*  params );
 
   LOCAL_DEF
@@ -385,13 +433,13 @@
   /* Size functions                                                        */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Init_Size( TT_Size  size );
+  FT_Error  TT_Init_Size( TT_Size  size );
 
   LOCAL_DEF
   void  TT_Done_Size( TT_Size  size );
 
   LOCAL_DEF
-  TT_Error  TT_Reset_Size( TT_Size  size );
+  FT_Error  TT_Reset_Size( TT_Size  size );
 
 
   /*************************************************************************/
@@ -399,7 +447,7 @@
   /* GlyphSlot functions                                                   */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
+  FT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
 
   LOCAL_DEF
   void  TT_Done_GlyphSlot( TT_GlyphSlot  slot );
@@ -410,7 +458,7 @@
   /* Driver functions                                                      */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Init_Driver( TT_Driver  driver );
+  FT_Error  TT_Init_Driver( TT_Driver  driver );
 
   LOCAL_DEF
   void  TT_Done_Driver( TT_Driver  driver );

@@ -63,18 +63,18 @@
   /*                                                                       */
   static
   void  blit_sbit( FT_Bitmap*  target,
-                   TT_Byte*    source,
-                   TT_Int      line_bits,
-                   TT_Bool     byte_padded,
-                   TT_Int      x_offset,
-                   TT_Int      y_offset )
+                   FT_Byte*    source,
+                   FT_Int      line_bits,
+                   FT_Bool     byte_padded,
+                   FT_Int      x_offset,
+                   FT_Int      y_offset )
   {
-    TT_Byte*   line_buff;
-    TT_Int     line_incr;
-    TT_Int     height;
+    FT_Byte*   line_buff;
+    FT_Int     line_incr;
+    FT_Int     height;
 
-    TT_UShort  acc;
-    TT_Byte    loaded;
+    FT_UShort  acc;
+    FT_Byte    loaded;
 
 
     /* first of all, compute starting write position */
@@ -102,10 +102,10 @@
 
     for ( height = target->rows; height > 0; height-- )
     {
-      TT_Byte*  cur   = line_buff;    /* current write cursor          */
-      TT_Int    count = line_bits;    /* # of bits to extract per line */
-      TT_Byte   shift = x_offset & 7; /* current write shift           */
-      TT_Byte   space = 8 - shift;
+      FT_Byte*  cur   = line_buff;    /* current write cursor          */
+      FT_Int    count = line_bits;    /* # of bits to extract per line */
+      FT_Byte   shift = x_offset & 7; /* current write shift           */
+      FT_Byte   space = 8 - shift;
 
 
       /* first of all, read individual source bytes */
@@ -115,18 +115,18 @@
         {
           do
           {
-            TT_Byte  val;
+            FT_Byte  val;
 
 
             /* ensure that there are at least 8 bits in the accumulator */
             if ( loaded < 8 )
             {
-              acc    |= (TT_UShort)*source++ << ( 8 - loaded );
+              acc    |= (FT_UShort)*source++ << ( 8 - loaded );
               loaded += 8;
             }
 
             /* now write one byte */
-            val = (TT_Byte)( acc >> 8 );
+            val = (FT_Byte)( acc >> 8 );
             if ( shift )
             {
               cur[0] |= val >> shift;
@@ -150,18 +150,18 @@
       /* now write remaining bits (count < 8) */
       if ( count > 0 )
       {
-        TT_Byte  val;
+        FT_Byte  val;
 
 
         /* ensure that there are at least `count' bits in the accumulator */
         if ( loaded < count )
         {
-          acc    |= (TT_UShort)*source++ << ( 8 - loaded );
+          acc    |= (FT_UShort)*source++ << ( 8 - loaded );
           loaded += 8;
         }
 
         /* now write remaining bits */
-        val     = ( (TT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count );
+        val     = ( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count );
         cur[0] |= val >> shift;
 
         if ( count > space )
@@ -214,10 +214,10 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
-  TT_Error  Load_SBit_Const_Metrics( TT_SBit_Range*  range,
+  FT_Error  Load_SBit_Const_Metrics( TT_SBit_Range*  range,
                                      FT_Stream       stream )
   {
-    TT_Error  error;
+    FT_Error  error;
 
 
     if ( READ_ULong( range->image_size ) )
@@ -246,12 +246,12 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
-  TT_Error  Load_SBit_Range_Codes( TT_SBit_Range*  range,
+  FT_Error  Load_SBit_Range_Codes( TT_SBit_Range*  range,
                                    FT_Stream       stream,
-                                   TT_Bool         load_offsets )
+                                   FT_Bool         load_offsets )
   {
-    TT_Error   error;
-    TT_ULong   count, n, size;
+    FT_Error   error;
+    FT_ULong   count, n, size;
     FT_Memory  memory = stream->memory;
 
 
@@ -263,7 +263,7 @@
     /* Allocate glyph offsets table if needed */
     if ( load_offsets )
     {
-      if ( ALLOC_ARRAY( range->glyph_offsets, count, TT_ULong ) )
+      if ( ALLOC_ARRAY( range->glyph_offsets, count, FT_ULong ) )
         goto Exit;
 
       size = count * 4L;
@@ -272,7 +272,7 @@
       size = count * 2L;
 
     /* Allocate glyph codes table and access frame */
-    if ( ALLOC_ARRAY ( range->glyph_codes, count, TT_UShort ) ||
+    if ( ALLOC_ARRAY ( range->glyph_codes, count, FT_UShort ) ||
          ACCESS_Frame( size )                                 )
       goto Exit;
 
@@ -281,7 +281,7 @@
       range->glyph_codes[n] = GET_UShort();
 
       if ( load_offsets )
-        range->glyph_offsets[n] = (TT_ULong)range->image_offset +
+        range->glyph_offsets[n] = (FT_ULong)range->image_offset +
                                   GET_UShort();
     }
 
@@ -309,10 +309,10 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
-  TT_Error  Load_SBit_Range( TT_SBit_Range*  range,
+  FT_Error  Load_SBit_Range( TT_SBit_Range*  range,
                              FT_Stream       stream )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
 
 
@@ -321,9 +321,9 @@
     case 1:   /* variable metrics with 4-byte offsets */
     case 3:   /* variable metrics with 2-byte offsets */
       {
-        TT_ULong  num_glyphs, n;
-        TT_Int    size_elem;
-        TT_Bool   large = ( range->index_format == 1 );
+        FT_ULong  num_glyphs, n;
+        FT_Int    size_elem;
+        FT_Bool   large = ( range->index_format == 1 );
 
 
         num_glyphs        = range->last_glyph - range->first_glyph + 1L;
@@ -333,12 +333,12 @@
         size_elem = large ? 4 : 2;
 
         if ( ALLOC_ARRAY( range->glyph_offsets,
-                          num_glyphs, TT_ULong )    ||
+                          num_glyphs, FT_ULong )    ||
              ACCESS_Frame( num_glyphs * size_elem ) )
           goto Exit;
 
         for ( n = 0; n < num_glyphs; n++ )
-          range->glyph_offsets[n] = (TT_ULong)( range->image_offset +
+          range->glyph_offsets[n] = (FT_ULong)( range->image_offset +
                                                   ( large ? GET_ULong()
                                                           : GET_UShort() ) );
         FORGET_Frame();
@@ -384,14 +384,14 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_SBit_Strikes( TT_Face    face,
+  FT_Error  TT_Load_SBit_Strikes( TT_Face    face,
                                   FT_Stream  stream )
   {
-    TT_Error   error  = 0;
+    FT_Error   error  = 0;
     FT_Memory  memory = stream->memory;
-    TT_Fixed   version;
-    TT_ULong   num_strikes;
-    TT_ULong   table_base;
+    FT_Fixed   version;
+    FT_ULong   num_strikes;
+    FT_ULong   table_base;
 
     const FT_Frame_Field  sbit_line_metrics_fields[] =
     {
@@ -440,6 +440,8 @@
 
     /* this table is optional */
     error = face->goto_table( face, TTAG_EBLC, stream, 0 );
+    if (error)
+      error = face->goto_table( face, TTAG_bloc, stream, 0 );
     if ( error )
     {
       error = 0;
@@ -474,7 +476,7 @@
     /* now read each strike table separately */
     {
       TT_SBit_Strike*  strike = face->sbit_strikes;
-      TT_ULong         count  = num_strikes;
+      FT_ULong         count  = num_strikes;
 
 
       if ( ACCESS_Frame( 48L * num_strikes ) )
@@ -499,13 +501,13 @@
     /* allocate the index ranges for each strike table */
     {
       TT_SBit_Strike*  strike = face->sbit_strikes;
-      TT_ULong         count  = num_strikes;
+      FT_ULong         count  = num_strikes;
 
 
       while ( count > 0 )
       {
         TT_SBit_Range*  range;
-        TT_ULong        count2 = strike->num_ranges;
+        FT_ULong        count2 = strike->num_ranges;
 
 
         if ( ALLOC_ARRAY( strike->sbit_ranges,
@@ -632,10 +634,10 @@
   /*    TrueType error code.  0 means the glyph index was found.           */
   /*                                                                       */
   static
-  TT_Error  Find_SBit_Range( TT_UInt          glyph_index,
+  FT_Error  Find_SBit_Range( FT_UInt          glyph_index,
                              TT_SBit_Strike*  strike,
                              TT_SBit_Range**  arange,
-                             TT_ULong*        aglyph_offset )
+                             FT_ULong*        aglyph_offset )
   {
     TT_SBit_Range  *range, *range_limit;
 
@@ -657,7 +659,7 @@
       if ( glyph_index >= range->first_glyph &&
            glyph_index <= range->last_glyph  )
       {
-        TT_UShort  delta = glyph_index - range->first_glyph;
+        FT_UShort  delta = glyph_index - range->first_glyph;
 
 
         switch ( range->index_format )
@@ -675,7 +677,7 @@
         case 4:
         case 5:
           {
-            TT_ULong  n;
+            FT_ULong  n;
 
 
             for ( n = 0; n < range->num_glyphs; n++ )
@@ -737,14 +739,14 @@
   /*    TT_Err_Invalid_Argument if no sbit exists for the requested glyph. */
   /*                                                                       */
   static
-  TT_Error  Find_SBit_Image( TT_Face           face,
-                             TT_UInt           glyph_index,
-                             TT_Int            x_ppem,
-                             TT_Int            y_ppem,
+  FT_Error  Find_SBit_Image( TT_Face           face,
+                             FT_UInt           glyph_index,
+                             FT_Int            x_ppem,
+                             FT_Int            y_ppem,
 
                              TT_SBit_Range**   arange,
                              TT_SBit_Strike**  astrike,
-                             TT_ULong*         aglyph_offset )
+                             FT_ULong*         aglyph_offset )
   {
     TT_SBit_Strike*  strike = face->sbit_strikes;
     TT_SBit_Strike*  strike_limit = strike + face->num_sbit_strikes;
@@ -757,7 +759,7 @@
     {
       if ( strike->x_ppem == x_ppem && strike->y_ppem == y_ppem )
       {
-        TT_Error  error;
+        FT_Error  error;
 
 
         error = Find_SBit_Range( glyph_index, strike,
@@ -809,11 +811,11 @@
   /*    function exit.                                                     */
   /*                                                                       */
   static
-  TT_Error  Load_SBit_Metrics( FT_Stream         stream,
+  FT_Error  Load_SBit_Metrics( FT_Stream         stream,
                                TT_SBit_Range*    range,
                                TT_SBit_Metrics*  metrics )
   {
-    TT_Error  error = TT_Err_Ok;
+    FT_Error  error = TT_Err_Ok;
 
 
     switch ( range->image_format )
@@ -912,9 +914,9 @@
     /*                                                                     */
     /***********************************************************************/
 
-    TT_Int    rows, count;
-    TT_Long   line_len;
-    TT_Byte*  line;
+    FT_Int    rows, count;
+    FT_Long   line_len;
+    FT_Byte*  line;
 
 
     /***********************************************************************/
@@ -923,15 +925,15 @@
     /* them if they're empty.                                              */
     /*                                                                     */
     {
-      line     = (TT_Byte*)map->buffer;
+      line     = (FT_Byte*)map->buffer;
       rows     = map->rows;
       line_len = map->pitch;
 
 
       for ( count = 0; count < rows; count++ )
       {
-        TT_Byte*  cur   = line;
-        TT_Byte*  limit = line + line_len;
+        FT_Byte*  cur   = line;
+        FT_Byte*  limit = line + line_len;
 
 
         for ( ; cur < limit; cur++ )
@@ -950,7 +952,7 @@
       /* now, crop the empty upper lines */
       if ( count > 0 )
       {
-        line = (TT_Byte*)map->buffer;
+        line = (FT_Byte*)map->buffer;
 
         MEM_Move( line, line + count * line_len, (rows - count) * line_len );
 
@@ -968,12 +970,12 @@
     /* second, crop the lower lines                                        */
     /*                                                                     */
     {
-      line = (TT_Byte*)map->buffer + (rows - 1) * line_len;
+      line = (FT_Byte*)map->buffer + (rows - 1) * line_len;
 
       for ( count = 0; count < rows; count++ )
       {
-        TT_Byte*  cur   = line;
-        TT_Byte*  limit = line + line_len;
+        FT_Byte*  cur   = line;
+        FT_Byte*  limit = line + line_len;
 
 
         for ( ; cur < limit; cur++ )
@@ -999,10 +1001,10 @@
     /*                                                                     */
     do
     {
-      TT_Byte*  limit;
+      FT_Byte*  limit;
 
 
-      line  = (TT_Byte*)map->buffer;
+      line  = (FT_Byte*)map->buffer;
       limit = line + rows * line_len;
 
       for ( ; line < limit; line += line_len )
@@ -1010,20 +1012,20 @@
           goto Found_Left;
 
       /* shift the whole glyph one pixel to the left */
-      line  = (TT_Byte*)map->buffer;
+      line  = (FT_Byte*)map->buffer;
       limit = line + rows * line_len;
 
       for ( ; line < limit; line += line_len )
       {
-        TT_Int    n, width = map->width;
-        TT_Byte   old;
-        TT_Byte*  cur = line;
+        FT_Int    n, width = map->width;
+        FT_Byte   old;
+        FT_Byte*  cur = line;
 
 
         old = cur[0] << 1;
         for ( n = 8; n < width; n += 8 )
         {
-          TT_Byte  val;
+          FT_Byte  val;
 
 
           val    = cur[1];
@@ -1049,12 +1051,12 @@
     /*                                                                     */
     do
     {
-      TT_Int    right = map->width - 1;
-      TT_Byte*  limit;
-      TT_Byte   mask;
+      FT_Int    right = map->width - 1;
+      FT_Byte*  limit;
+      FT_Byte   mask;
 
 
-      line  = (TT_Byte*)map->buffer + ( right >> 3 );
+      line  = (FT_Byte*)map->buffer + ( right >> 3 );
       limit = line + rows * line_len;
       mask  = 0x80 >> ( right & 7 );
 
@@ -1080,15 +1082,15 @@
 
 
   static
-  TT_Error Load_SBit_Single( FT_Bitmap*        map,
-                             TT_Int            x_offset,
-                             TT_Int            y_offset,
-                             TT_Int            pix_bits,
-                             TT_UShort         image_format,
+  FT_Error Load_SBit_Single( FT_Bitmap*        map,
+                             FT_Int            x_offset,
+                             FT_Int            y_offset,
+                             FT_Int            pix_bits,
+                             FT_UShort         image_format,
                              TT_SBit_Metrics*  metrics,
                              FT_Stream         stream )
   {
-    TT_Error  error;
+    FT_Error  error;
 
 
     /* check that the source bitmap fits into the target pixmap */
@@ -1101,11 +1103,11 @@
     }
 
     {
-      TT_Int  glyph_width  = metrics->width;
-      TT_Int  glyph_height = metrics->height;
-      TT_Int  glyph_size;
-      TT_Int  line_bits    = pix_bits * glyph_width;
-      TT_Bool pad_bytes    = 0;
+      FT_Int  glyph_width  = metrics->width;
+      FT_Int  glyph_height = metrics->height;
+      FT_Int  glyph_size;
+      FT_Int  line_bits    = pix_bits * glyph_width;
+      FT_Bool pad_bytes    = 0;
 
 
       /* compute size of glyph image */
@@ -1114,7 +1116,7 @@
       case 1:  /* byte-padded formats */
       case 6:
         {
-          TT_Int  line_length;
+          FT_Int  line_length;
 
 
           switch ( pix_bits )
@@ -1148,7 +1150,7 @@
       /* don't forget to multiply `x_offset' by `map->pix_bits' as */
       /* the sbit blitter doesn't make a difference between pixmap */
       /* depths.                                                   */
-      blit_sbit( map, (TT_Byte*)stream->cursor, line_bits, pad_bytes,
+      blit_sbit( map, (FT_Byte*)stream->cursor, line_bits, pad_bytes,
                  x_offset * pix_bits, y_offset );
 
       FORGET_Frame();
@@ -1160,18 +1162,18 @@
 
 
   static
-  TT_Error Load_SBit_Image( TT_SBit_Strike*   strike,
+  FT_Error Load_SBit_Image( TT_SBit_Strike*   strike,
                             TT_SBit_Range*    range,
-                            TT_ULong          ebdt_pos,
-                            TT_ULong          glyph_offset,
+                            FT_ULong          ebdt_pos,
+                            FT_ULong          glyph_offset,
                             FT_Bitmap*        map,
-                            TT_Int            x_offset,
-                            TT_Int            y_offset,
+                            FT_Int            x_offset,
+                            FT_Int            y_offset,
                             FT_Stream         stream,
                             TT_SBit_Metrics*  metrics )
   {
     FT_Memory  memory = stream->memory;
-    TT_Error   error;
+    FT_Error   error;
 
 
     /* place stream at beginning of glyph data and read metrics */
@@ -1188,7 +1190,7 @@
     /* final pixmap buffer                                     */
     if ( map->buffer == 0 )
     {
-      TT_Long  size;
+      FT_Long  size;
 
 
       map->width = metrics->width;
@@ -1256,7 +1258,7 @@
     {
       TT_SBit_Component*  components;
       TT_SBit_Component*  comp;
-      TT_UShort           num_components, count;
+      FT_UShort           num_components, count;
 
 
       if ( READ_UShort( num_components )                                ||
@@ -1284,7 +1286,7 @@
       {
         TT_SBit_Range*   elem_range;
         TT_SBit_Metrics  elem_metrics;
-        TT_ULong         elem_offset;
+        FT_ULong         elem_offset;
 
 
         /* find the range for this element */
@@ -1354,18 +1356,18 @@
   /*    The `map.buffer' field is always freed before the glyph is loaded. */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_SBit_Image( TT_Face           face,
-                                TT_Int            x_ppem,
-                                TT_Int            y_ppem,
-                                TT_UInt           glyph_index,
-                                TT_UInt           load_flags,
+  FT_Error  TT_Load_SBit_Image( TT_Face           face,
+                                FT_Int            x_ppem,
+                                FT_Int            y_ppem,
+                                FT_UInt           glyph_index,
+                                FT_UInt           load_flags,
                                 FT_Stream         stream,
                                 FT_Bitmap*        map,
                                 TT_SBit_Metrics*  metrics )
   {
-    TT_Error         error;
+    FT_Error         error;
     FT_Memory        memory = stream->memory;
-    TT_ULong         ebdt_pos, glyph_offset;
+    FT_ULong         ebdt_pos, glyph_offset;
 
     TT_SBit_Strike*  strike;
     TT_SBit_Range*   range;
@@ -1381,6 +1383,8 @@
     /* the font file                                 */
     error = face->goto_table( face, TTAG_EBDT, stream, 0 );
     if ( error )
+      error = face->goto_table( face, TTAG_bdat, stream, 0 );
+    if (error)
       goto Exit;
 
     ebdt_pos = FILE_Pos();
@@ -1403,8 +1407,8 @@
     if ( strike->flags & 1 )
     {
       /* in case of a horizontal strike only */
-      TT_Int  advance;
-      TT_Int  top;
+      FT_Int  advance;
+      FT_Int  top;
 
 
       advance = strike->hori.ascender - strike->hori.descender;

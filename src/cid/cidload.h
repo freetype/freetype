@@ -30,22 +30,22 @@
   typedef struct  CID_Loader_
   {
     CID_Parser  parser;          /* parser used to read the stream */
-    T1_Int      num_chars;       /* number of characters in encoding */
+    FT_Int      num_chars;       /* number of characters in encoding */
 
   } CID_Loader;
 
 
   LOCAL_DEF
-  T1_Long  cid_get_offset( T1_Byte**  start,
-                           T1_Byte    offsize );
+  FT_Long  cid_get_offset( FT_Byte**  start,
+                           FT_Byte    offsize );
 
   LOCAL_DEF
-  void  cid_decrypt( T1_Byte*   buffer,
-                     T1_Int     length,
-                     T1_UShort  seed );
+  void  cid_decrypt( FT_Byte*   buffer,
+                     FT_Int     length,
+                     FT_UShort  seed );
 
   LOCAL_DEF
-  T1_Error  CID_Open_Face( CID_Face  face );
+  FT_Error  CID_Open_Face( CID_Face  face );
 
 
 #ifdef __cplusplus

@@ -75,7 +75,7 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_DEF
-  T1_Error  CID_Init_Size( T1_Size  size )
+  FT_Error  CID_Init_Size( T1_Size  size )
   {
     size->valid = 0;
 
@@ -99,7 +99,7 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
-  T1_Error  CID_Reset_Size( T1_Size  size )
+  FT_Error  CID_Reset_Size( T1_Size  size )
   {
     /* recompute ascender, descender, etc. */
     CID_Face          face    = (CID_Face)size->root.face;
@@ -204,13 +204,13 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
-  T1_Error  CID_Init_Face( FT_Stream      stream,
+  FT_Error  CID_Init_Face( FT_Stream      stream,
                            CID_Face       face,
-                           T1_Int         face_index,
-                           T1_Int         num_params,
+                           FT_Int         face_index,
+                           FT_Int         num_params,
                            FT_Parameter*  params )
   {
-    T1_Error            error;
+    FT_Error            error;
     PSNames_Interface*  psnames;
 
     UNUSED( num_params );
@@ -323,7 +323,7 @@
         /* compute max advance width for proportional fonts */
         if ( !face->type1.font_info.is_fixed_pitch )
         {
-          T1_Int  max_advance;
+          FT_Int  max_advance;
 
 
           error = T1_Compute_Max_Advance( face, &max_advance );
@@ -461,7 +461,7 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
-  T1_Error  CID_Init_GlyphSlot( T1_GlyphSlot  glyph )
+  FT_Error  CID_Init_GlyphSlot( T1_GlyphSlot  glyph )
   {
     FT_Library  library = glyph->root.face->driver->library;
 
@@ -489,7 +489,7 @@
   /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
-  T1_Error  CID_Init_Driver( T1_Driver  driver )
+  FT_Error  CID_Init_Driver( T1_Driver  driver )
   {
     UNUSED( driver );
 

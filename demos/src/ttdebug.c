@@ -39,7 +39,7 @@ TT_Face         face;       /* truetype face */
 TT_Size         size;       /* truetype size */
 TT_GlyphSlot    glyph;      /* truetype glyph slot */
 TT_ExecContext  exec;       /* truetype execution context */
-TT_Error        error;
+FT_Error        error;
 
 TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
 
@@ -53,7 +53,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
 #undef  PACK
 #define PACK( x, y )  ((x << 4) | y)
 
-  static const TT_Byte  Pop_Push_Count[256] =
+  static const FT_Byte  Pop_Push_Count[256] =
   {
     /* opcodes are gathered in groups of 16 */
     /* please keep the spaces as they are   */
@@ -807,16 +807,16 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
 
 
   static
-  TT_Error  RunIns( TT_ExecContext  exc )
+  FT_Error  RunIns( TT_ExecContext  exc )
   {
     FT_Int    A, diff, key;
     FT_Long   next_IP;
     FT_Char   ch, oldch = '\0', *temp;
 
-    TT_Error  error = 0;
+    FT_Error  error = 0;
 
-    FT_GlyphZone  save;
-    FT_GlyphZone  pts;
+    TT_GlyphZone  save;
+    TT_GlyphZone  pts;
 
     const FT_String*  round_str[8] =
     {
@@ -831,7 +831,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
     };
 
     /* only debug the requested code range */
-    if (exc->curRange != (TT_Int)debug_coderange)
+    if (exc->curRange != (FT_Int)debug_coderange)
       return TT_RunIns(exc);
 
     exc->pts.n_points   = exc->zp0.n_points;
@@ -843,11 +843,11 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
     save.n_points   = pts.n_points;
     save.n_contours = pts.n_contours;
 
-    save.org   = (TT_Vector*)malloc( 2 * sizeof( TT_F26Dot6 ) *
+    save.org   = (FT_Vector*)malloc( 2 * sizeof( FT_F26Dot6 ) *
                                        save.n_points );
-    save.cur   = (TT_Vector*)malloc( 2 * sizeof( TT_F26Dot6 ) *
+    save.cur   = (FT_Vector*)malloc( 2 * sizeof( FT_F26Dot6 ) *
                                        save.n_points );
-    save.tags = (TT_Byte*)malloc( save.n_points );
+    save.tags = (FT_Byte*)malloc( save.n_points );
 
     exc->instruction_trap = 1;
 
@@ -996,8 +996,8 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
         }
       } while ( !key );
 
-      MEM_Copy( save.org,   pts.org, pts.n_points * sizeof ( TT_Vector ) );
-      MEM_Copy( save.cur,   pts.cur, pts.n_points * sizeof ( TT_Vector ) );
+      MEM_Copy( save.org,   pts.org, pts.n_points * sizeof ( FT_Vector ) );
+      MEM_Copy( save.cur,   pts.cur, pts.n_points * sizeof ( FT_Vector ) );
       MEM_Copy( save.tags, pts.tags, pts.n_points );
 
       /* a return indicate the last command */

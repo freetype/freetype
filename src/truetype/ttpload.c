@@ -53,13 +53,13 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Locations( TT_Face    face,
+  FT_Error  TT_Load_Locations( TT_Face    face,
                                FT_Stream  stream )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
-    TT_Short   LongOffsets;
-    TT_ULong   table_len;
+    FT_Short   LongOffsets;
+    FT_ULong   table_len;
 
 
     FT_TRACE2(( "Locations " ));
@@ -74,21 +74,21 @@
 
     if ( LongOffsets != 0 )
     {
-      face->num_locations = (TT_UShort)( table_len >> 2 );
+      face->num_locations = (FT_UShort)( table_len >> 2 );
 
       FT_TRACE2(( "(32bit offsets): %12d ", face->num_locations ));
 
       if ( ALLOC_ARRAY( face->glyph_locations,
                         face->num_locations,
-                        TT_Long ) )
+                        FT_Long ) )
         goto Exit;
 
       if ( ACCESS_Frame( face->num_locations * 4L ) )
         goto Exit;
 
       {
-        TT_Long*  loc   = face->glyph_locations;
-        TT_Long*  limit = loc + face->num_locations;
+        FT_Long*  loc   = face->glyph_locations;
+        FT_Long*  limit = loc + face->num_locations;
 
 
         for ( ; loc < limit; loc++ )
@@ -99,24 +99,24 @@
     }
     else
     {
-      face->num_locations = (TT_UShort)( table_len >> 1 );
+      face->num_locations = (FT_UShort)( table_len >> 1 );
 
       FT_TRACE2(( "(16bit offsets): %12d ", face->num_locations ));
 
       if ( ALLOC_ARRAY( face->glyph_locations,
                         face->num_locations,
-                        TT_Long ) )
+                        FT_Long ) )
         goto Exit;
 
       if ( ACCESS_Frame( face->num_locations * 2L ) )
         goto Exit;
       {
-        TT_Long*  loc   = face->glyph_locations;
-        TT_Long*  limit = loc + face->num_locations;
+        FT_Long*  loc   = face->glyph_locations;
+        FT_Long*  limit = loc + face->num_locations;
 
 
         for ( ; loc < limit; loc++ )
-          *loc = (TT_Long)( (TT_ULong)GET_UShort() * 2 );
+          *loc = (FT_Long)( (FT_ULong)GET_UShort() * 2 );
       }
       FORGET_Frame();
     }
@@ -146,12 +146,12 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_CVT( TT_Face    face,
+  FT_Error  TT_Load_CVT( TT_Face    face,
                          FT_Stream  stream )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
-    TT_ULong   table_len;
+    FT_ULong   table_len;
 
 
     FT_TRACE2(( "CVT " ));
@@ -172,15 +172,15 @@
 
     if ( ALLOC_ARRAY( face->cvt,
                       face->cvt_size,
-                      TT_Short ) )
+                      FT_Short ) )
       goto Exit;
 
     if ( ACCESS_Frame( face->cvt_size * 2L ) )
       goto Exit;
 
     {
-      TT_Short*  cur   = face->cvt;
-      TT_Short*  limit = cur + face->cvt_size;
+      FT_Short*  cur   = face->cvt;
+      FT_Short*  limit = cur + face->cvt_size;
 
 
       for ( ; cur <  limit; cur++ )
@@ -213,11 +213,11 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Programs( TT_Face    face,
+  FT_Error  TT_Load_Programs( TT_Face    face,
                               FT_Stream  stream )
   {
-    TT_Error   error;
-    TT_ULong   table_len;
+    FT_Error   error;
+    FT_ULong   table_len;
 
 
     FT_TRACE2(( "Font program " ));

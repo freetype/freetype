@@ -52,7 +52,7 @@
   /*                                                                       */
   LOCAL_FUNC
   TT_Table*  TT_LookUp_Table( TT_Face   face,
-                              TT_ULong  tag  )
+                              FT_ULong  tag  )
   {
     TT_Table*  entry;
     TT_Table*  limit;
@@ -60,10 +60,10 @@
 
     FT_TRACE3(( "TT_LookUp_Table: %08p, `%c%c%c%c'\n",
                   face,
-                  (TT_Char)( tag >> 24 ),
-                  (TT_Char)( tag >> 16 ),
-                  (TT_Char)( tag >> 8  ),
-                  (TT_Char)( tag )     ));
+                  (FT_Char)( tag >> 24 ),
+                  (FT_Char)( tag >> 16 ),
+                  (FT_Char)( tag >> 8  ),
+                  (FT_Char)( tag )     ));
 
     entry = face->dir_tables;
     limit = entry + face->num_tables;
@@ -99,13 +99,13 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Goto_Table( TT_Face    face,
-                           TT_ULong   tag,
+  FT_Error  TT_Goto_Table( TT_Face    face,
+                           FT_ULong   tag,
                            FT_Stream  stream,
-                           TT_ULong*  length )
+                           FT_ULong*  length )
   {
     TT_Table*  table;
-    TT_Error   error;
+    FT_Error   error;
 
 
     table = TT_LookUp_Table( face, tag );
@@ -152,13 +152,13 @@
   /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_SFNT_Header( TT_Face       face,
+  FT_Error  TT_Load_SFNT_Header( TT_Face       face,
                                  FT_Stream     stream,
-                                 TT_Long       face_index,
+                                 FT_Long       face_index,
                                  SFNT_Header*  sfnt )
   {
-    TT_Error   error;
-    TT_ULong   format_tag;
+    FT_Error   error;
+    FT_ULong   format_tag;
     FT_Memory  memory = stream->memory;
 
     const FT_Frame_Field  sfnt_header_fields[] =
@@ -196,7 +196,7 @@
 
     if ( format_tag == TTAG_ttcf )
     {
-      TT_Int  n;
+      FT_Int  n;
 
 
       FT_TRACE3(( "TT_Load_SFNT_Header: file is a collection\n" ));
@@ -209,7 +209,7 @@
       /* now read the offsets of each font in the file */
       if ( ALLOC_ARRAY( face->ttc_header.TableDirectory,
                         face->ttc_header.DirCount,
-                        TT_ULong )                        ||
+                        FT_ULong )                        ||
            ACCESS_Frame( face->ttc_header.DirCount * 4L ) )
         goto Exit;
 
@@ -238,8 +238,8 @@
 
     /* now, check the values of `num_tables', `seach_range', etc. */
     {
-      TT_UInt  num_tables     = sfnt->num_tables;
-      TT_ULong entry_selector = 1L << sfnt->entry_selector;
+      FT_UInt  num_tables     = sfnt->num_tables;
+      FT_ULong entry_selector = 1L << sfnt->entry_selector;
 
 
       /* IMPORTANT: Many fonts have an incorrect `search_range' value, so */
@@ -281,11 +281,11 @@
   /*    The stream cursor must be at the font file's origin.               */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Directory( TT_Face       face,
+  FT_Error  TT_Load_Directory( TT_Face       face,
                                FT_Stream     stream,
                                SFNT_Header*  sfnt )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
 
     TT_Table *entry, *limit;
@@ -317,10 +317,10 @@
       entry->Length   = GET_Long();
 
       FT_TRACE2(( "  %c%c%c%c  -  %08lx  -  %08lx\n",
-                  (TT_Char)( entry->Tag >> 24 ),
-                  (TT_Char)( entry->Tag >> 16 ),
-                  (TT_Char)( entry->Tag >> 8  ),
-                  (TT_Char)( entry->Tag       ),
+                  (FT_Char)( entry->Tag >> 24 ),
+                  (FT_Char)( entry->Tag >> 16 ),
+                  (FT_Char)( entry->Tag >> 8  ),
+                  (FT_Char)( entry->Tag       ),
                   entry->Offset,
                   entry->Length ));
     }
@@ -376,16 +376,16 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Any( TT_Face   face,
-                         TT_ULong  tag,
-                         TT_Long   offset,
+  FT_Error  TT_Load_Any( TT_Face   face,
+                         FT_ULong  tag,
+                         FT_Long   offset,
                          void*     buffer,
-                         TT_Long*  length )
+                         FT_Long*  length )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Stream  stream;
     TT_Table*  table;
-    TT_ULong   size;
+    FT_ULong   size;
 
 
     if ( tag != 0 )
@@ -439,10 +439,10 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Header( TT_Face    face,
+  FT_Error  TT_Load_Header( TT_Face    face,
                             FT_Stream  stream )
   {
-    TT_Error    error;
+    FT_Error    error;
     TT_Header*  header;
 
     static const FT_Frame_Field  header_fields[] =
@@ -510,10 +510,10 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_MaxProfile( TT_Face    face,
+  FT_Error  TT_Load_MaxProfile( TT_Face    face,
                                 FT_Stream  stream )
   {
-    TT_Error        error;
+    FT_Error        error;
     TT_MaxProfile*  maxProfile = &face->max_profile;
 
     const FT_Frame_Field  maxp_fields[] =
@@ -563,7 +563,7 @@
     face->root.max_contours = MAX( maxProfile->maxCompositeContours,
                                    maxProfile->maxContours );
 
-    face->max_components = (TT_ULong)maxProfile->maxComponentElements +
+    face->max_components = (FT_ULong)maxProfile->maxComponentElements +
                            maxProfile->maxComponentDepth;
 
     /* XXX: some fonts have maxComponents set to 0; we will */
@@ -600,15 +600,15 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
-  TT_Error  TT_Load_Metrics( TT_Face    face,
+  FT_Error  TT_Load_Metrics( TT_Face    face,
                              FT_Stream  stream,
-                             TT_Bool    vertical )
+                             FT_Bool    vertical )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    TT_ULong   table_len;
-    TT_Long    num_shorts, num_longs, num_shorts_checked;
+    FT_ULong   table_len;
+    FT_Long    num_shorts, num_longs, num_shorts_checked;
 
     TT_LongMetrics**   longs;
     TT_ShortMetrics**  shorts;
@@ -701,7 +701,7 @@
       /* fonts usually only, nothing serious will happen        */
       if ( num_shorts > num_shorts_checked && num_shorts_checked > 0 )
       {
-        TT_Short  val = *(shorts)[num_shorts_checked - 1];
+        FT_Short  val = *(shorts)[num_shorts_checked - 1];
 
 
         limit = *shorts + num_shorts;
@@ -736,11 +736,11 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Metrics_Header( TT_Face    face,
+  FT_Error  TT_Load_Metrics_Header( TT_Face    face,
                                     FT_Stream  stream,
-                                    TT_Bool    vertical )
+                                    FT_Bool    vertical )
   {
-    TT_Error        error;
+    FT_Error        error;
     TT_HoriHeader*  header;
 
     const FT_Frame_Field  metrics_header_fields[] =
@@ -832,14 +832,14 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Names( TT_Face    face,
+  FT_Error  TT_Load_Names( TT_Face    face,
                            FT_Stream  stream )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    TT_ULong   table_pos, table_len;
-    TT_ULong   storageSize;
+    FT_ULong   table_pos, table_len;
+    FT_ULong   storageSize;
 
     TT_NameTable*  names;
 
@@ -901,12 +901,12 @@
 
       for ( ; cur < limit; cur ++ )
       {
-        TT_ULong  upper;
+        FT_ULong  upper;
 
 
         (void)READ_Fields( name_record_fields, cur );
 
-        upper = (TT_ULong)( cur->stringOffset + cur->stringLength );
+        upper = (FT_ULong)( cur->stringOffset + cur->stringLength );
         if ( upper > storageSize )
           storageSize = upper;
       }
@@ -942,7 +942,7 @@
 
         for ( ; cur < limit; cur++ )
         {
-          TT_UInt  j;
+          FT_UInt  j;
 
 
           FT_TRACE3(( "%d %d %x %d\n  ",
@@ -956,10 +956,10 @@
           if ( cur->string )
             for ( j = 0; j < cur->stringLength; j++ )
             {
-              TT_Char  c = *(cur->string + j);
+              FT_Char  c = *(cur->string + j);
 
 
-              if ( (TT_Byte)c < 128 )
+              if ( (FT_Byte)c < 128 )
                 FT_TRACE3(( "%c", c ));
             }
         }
@@ -1023,12 +1023,12 @@
   /*     TrueType error code.  0 means success.                            */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_CMap( TT_Face    face,
+  FT_Error  TT_Load_CMap( TT_Face    face,
                           FT_Stream  stream )
   {
-    TT_Error    error;
+    FT_Error    error;
     FT_Memory   memory = stream->memory;
-    TT_Long     table_start;
+    FT_Long     table_start;
     TT_CMapDir  cmap_dir;
 
     const FT_Frame_Field  cmap_fields[] =
@@ -1090,7 +1090,7 @@
         cmap->loaded             = FALSE;
         cmap->platformID         = GET_UShort();
         cmap->platformEncodingID = GET_UShort();
-        cmap->offset             = (TT_ULong)GET_Long();
+        cmap->offset             = (FT_ULong)GET_Long();
       }
 
       FORGET_Frame();
@@ -1101,7 +1101,7 @@
         TT_CMapTable* cmap = &charmap->cmap;
 
 
-        if ( FILE_Seek( table_start + (TT_Long)cmap->offset ) ||
+        if ( FILE_Seek( table_start + (FT_Long)cmap->offset ) ||
              READ_Fields( cmap_rec_fields, cmap )             )
           goto Exit;
 
@@ -1132,10 +1132,10 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_OS2( TT_Face    face,
+  FT_Error  TT_Load_OS2( TT_Face    face,
                          FT_Stream  stream )
   {
-    TT_Error  error;
+    FT_Error  error;
     TT_OS2*   os2;
 
     const FT_Frame_Field  os2_fields[] =
@@ -1266,10 +1266,10 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_PostScript( TT_Face    face,
+  FT_Error  TT_Load_PostScript( TT_Face    face,
                                 FT_Stream  stream )
   {
-    TT_Error        error;
+    FT_Error        error;
     TT_Postscript*  post = &face->postscript;
 
     static const FT_Frame_Field  post_fields[] =
@@ -1321,7 +1321,7 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_PCLT( TT_Face    face,
+  FT_Error  TT_Load_PCLT( TT_Face    face,
                           FT_Stream  stream )
   {
     static const FT_Frame_Field  pclt_fields[] =
@@ -1347,7 +1347,7 @@
       FT_FRAME_END
     };
 
-    TT_Error  error;
+    FT_Error  error;
     TT_PCLT*  pclt = &face->pclt;
 
 
@@ -1392,13 +1392,13 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Gasp( TT_Face    face,
+  FT_Error  TT_Load_Gasp( TT_Face    face,
                           FT_Stream  stream )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    TT_UInt        j,num_ranges;
+    FT_UInt        j,num_ranges;
     TT_GaspRange*  gaspranges;
 
 
@@ -1464,13 +1464,13 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Kern( TT_Face    face,
+  FT_Error  TT_Load_Kern( TT_Face    face,
                           FT_Stream  stream )
   {
-    TT_Error   error;
+    FT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    TT_UInt    n, num_tables, version;
+    FT_UInt    n, num_tables, version;
 
 
     /* the kern table is optional. exit silently if it is missing */
@@ -1488,8 +1488,8 @@
 
     for ( n = 0; n < num_tables; n++ )
     {
-      TT_UInt  coverage;
-      TT_UInt  length;
+      FT_UInt  coverage;
+      FT_UInt  length;
 
 
       if ( ACCESS_Frame( 6L ) )
@@ -1503,7 +1503,7 @@
 
       if ( coverage == 0x0001 )
       {
-        TT_UInt          num_pairs;
+        FT_UInt          num_pairs;
         TT_Kern_0_Pair*  pair;
         TT_Kern_0_Pair*  limit;
 
@@ -1569,15 +1569,15 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Hdmx( TT_Face    face,
+  FT_Error  TT_Load_Hdmx( TT_Face    face,
                           FT_Stream  stream )
   {
-    TT_Error  error;
+    FT_Error  error;
     FT_Memory memory = stream->memory;
 
     TT_Hdmx*  hdmx = &face->hdmx;
-    TT_Long   num_glyphs;
-    TT_Long   record_size;
+    FT_Long   num_glyphs;
+    FT_Long   record_size;
 
 
     hdmx->version     = 0;
@@ -1651,7 +1651,7 @@
   {
     if ( face )
     {
-      TT_Int     n;
+      FT_Int     n;
       FT_Memory  memory = face->root.driver->memory;
 
 

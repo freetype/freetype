@@ -35,14 +35,14 @@
 
   typedef struct  T2_Parser_
   {
-    TT_Byte*   start;
-    TT_Byte*   limit;
-    TT_Byte*   cursor;
+    FT_Byte*   start;
+    FT_Byte*   limit;
+    FT_Byte*   cursor;
 
-    TT_Byte*   stack[T2_MAX_STACK_DEPTH + 1];
-    TT_Byte**  top;
+    FT_Byte*   stack[T2_MAX_STACK_DEPTH + 1];
+    FT_Byte**  top;
 
-    TT_UInt    object_code;
+    FT_UInt    object_code;
     void*      object;
 
   } T2_Parser;
@@ -50,13 +50,13 @@
 
   LOCAL_DEF
   void  T2_Parser_Init( T2_Parser*  parser,
-                        TT_UInt     code,
+                        FT_UInt     code,
                         void*       object );
 
   LOCAL_DEF
-  TT_Error  T2_Parser_Run( T2_Parser*  parser,
-                           TT_Byte*    start,
-                           TT_Byte*    limit );
+  FT_Error  T2_Parser_Run( T2_Parser*  parser,
+                           FT_Byte*    start,
+                           FT_Byte*    limit );
 
 
 #ifdef __cplusplus

@@ -140,9 +140,9 @@
   /*    values of "search_range", "entry_selector" and "range_shift"..     */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_SFNT_Header_Func)( TT_Face      face,
+  FT_Error  (*TT_Load_SFNT_Header_Func)( TT_Face      face,
                                          FT_Stream    stream,
-                                         TT_Long      faceIndex,
+                                         FT_Long      faceIndex,
                                          SFNT_Header* sfnt );
 
   /*************************************************************************/
@@ -167,7 +167,7 @@
   /*    TT_Load_Format_Tag                                                 */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_Directory_Func)( TT_Face       face,
+  FT_Error  (*TT_Load_Directory_Func)( TT_Face       face,
                                        FT_Stream     stream,
                                        SFNT_Header*  sfnt );
 
@@ -214,11 +214,11 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_Any_Func)( TT_Face   face,
-                                 TT_ULong  tag,
-                                 TT_Long   offset,
+  FT_Error  (*TT_Load_Any_Func)( TT_Face   face,
+                                 FT_ULong  tag,
+                                 FT_Long   offset,
                                  void*     buffer,
-                                 TT_Long*  length );
+                                 FT_Long*  length );
 
 
   /*************************************************************************/
@@ -253,11 +253,11 @@
   /*    The `map.buffer' field is always freed before the glyph is loaded. */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_SBit_Image_Func)( TT_Face           face,
-                                        TT_Int            x_ppem,
-                                        TT_Int            y_ppem,
-                                        TT_UInt           glyph_index,
-                                        TT_UInt           load_flags,
+  FT_Error  (*TT_Load_SBit_Image_Func)( TT_Face           face,
+                                        FT_Int            x_ppem,
+                                        FT_Int            y_ppem,
+                                        FT_UInt           glyph_index,
+                                        FT_UInt           load_flags,
                                         FT_Stream         stream,
                                         FT_Bitmap*        map,
                                         TT_SBit_Metrics*  metrics );
@@ -282,9 +282,9 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   typedef
-  TT_Error (*TT_Get_PS_Name_Func)( TT_Face      face,
-                                   TT_UInt      index,
-                                   TT_String**  PSname );
+  FT_Error (*TT_Get_PS_Name_Func)( TT_Face      face,
+                                   FT_UInt      index,
+                                   FT_String**  PSname );
 
 
   /*************************************************************************/
@@ -304,9 +304,9 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_Metrics_Func)( TT_Face    face,
+  FT_Error  (*TT_Load_Metrics_Func)( TT_Face    face,
                                      FT_Stream  stream,
-                                     TT_Bool    vertical );
+                                     FT_Bool    vertical );
 
 
 
@@ -334,7 +334,7 @@
   /*    released.                                                          */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_CharMap_Load_Func)( TT_Face        face,
+  FT_Error  (*TT_CharMap_Load_Func)( TT_Face        face,
                                      TT_CMapTable*  cmap,
                                      FT_Stream      input );
 
@@ -355,7 +355,7 @@
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_CharMap_Free_Func)( TT_Face        face,
+  FT_Error  (*TT_CharMap_Free_Func)( TT_Face        face,
                                      TT_CMapTable*  cmap );
 
 
@@ -379,7 +379,7 @@
   /*    the start of the table                                             */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_Table_Func)( TT_Face    face,
+  FT_Error  (*TT_Load_Table_Func)( TT_Face    face,
                                    FT_Stream  stream );
 
 

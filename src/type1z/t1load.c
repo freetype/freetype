@@ -80,13 +80,13 @@
  /***************************************************************************/
  /***************************************************************************/
 
- static  T1_Error  t1_allocate_blend( T1_Face   face,
-                                      T1_UInt   num_designs,
-                                      T1_UInt   num_axis )
+ static  FT_Error  t1_allocate_blend( T1_Face   face,
+                                      FT_UInt   num_designs,
+                                      FT_UInt   num_axis )
  {
    T1_Blend*  blend;
    FT_Memory  memory = face->root.memory;
-   T1_Error   error  = 0;
+   FT_Error   error  = 0;
    
    blend = face->blend;
    if (!blend)
@@ -148,12 +148,12 @@
    goto Exit;
  }                                  
 
- LOCAL_FUNC  T1_Error  T1_Get_Multi_Master( T1_Face          face,
+ LOCAL_FUNC  FT_Error  T1_Get_Multi_Master( T1_Face          face,
                                             FT_Multi_Master* master )
  {
    T1_Blend*  blend = face->blend;
-   T1_UInt    n;
-   T1_Error   error;
+   FT_UInt    n;
+   FT_Error   error;
    
    error = T1_Err_Invalid_Argument;
    if (blend)
@@ -175,13 +175,13 @@
  }                                            
 
 
- LOCAL_FUNC  T1_Error  T1_Set_MM_Blend( T1_Face    face,
-                                        T1_UInt    num_coords,
-                                        T1_Fixed*  coords )
+ LOCAL_FUNC  FT_Error  T1_Set_MM_Blend( T1_Face    face,
+                                        FT_UInt    num_coords,
+                                        FT_Fixed*  coords )
  {
    T1_Blend*  blend = face->blend;
-   T1_Error   error;
-   T1_UInt    n, m;
+   FT_Error   error;
+   FT_UInt    n, m;
    
    error = T1_Err_Invalid_Argument;
    if (blend && blend->num_axis == num_coords)
@@ -213,32 +213,32 @@
  }
  
 
- LOCAL_FUNC  T1_Error  T1_Set_MM_Design( T1_Face   face,
-                                         T1_UInt   num_coords,
-                                         T1_Long*  coords )
+ LOCAL_FUNC  FT_Error  T1_Set_MM_Design( T1_Face   face,
+                                         FT_UInt   num_coords,
+                                         FT_Long*  coords )
  {
    T1_Blend*  blend = face->blend;
-   T1_Error   error;
-   T1_UInt    n, p;
+   FT_Error   error;
+   FT_UInt    n, p;
    
    error = T1_Err_Invalid_Argument;
    if (blend && blend->num_axis == num_coords)
    {
      /* compute the blend coordinates through the blend design map */
-     T1_Fixed  final_blends[ T1_MAX_MM_DESIGNS ];
+     FT_Fixed  final_blends[ T1_MAX_MM_DESIGNS ];
      
      for ( n = 0; n < blend->num_axis; n++ )
      {
-       T1_Long        design = coords[n];
-       T1_Fixed       the_blend;
+       FT_Long        design = coords[n];
+       FT_Fixed       the_blend;
        T1_DesignMap*  map     = blend->design_map + n;
-       T1_Fixed*      designs = map->design_points;
-       T1_Fixed*      blends  = map->blend_points;
-       T1_Int         before = -1, after = -1;
+       FT_Fixed*      designs = map->design_points;
+       FT_Fixed*      blends  = map->blend_points;
+       FT_Int         before = -1, after = -1;
        
        for ( p = 0; p < map->num_points; p++ )
        {
-         T1_Fixed  p_design = designs[p];
+         FT_Fixed  p_design = designs[p];
          
          /* exact match ? */
          if (design == p_design)
@@ -284,9 +284,9 @@
    
    if (blend)
    {
-     T1_UInt  num_designs = blend->num_designs;
-     T1_UInt  num_axis    = blend->num_axis;
-     T1_UInt  n;
+     FT_UInt  num_designs = blend->num_designs;
+     FT_UInt  num_axis    = blend->num_axis;
+     FT_UInt  n;
           
      /* release design pos table */
      FREE( blend->design_pos[0] );
@@ -327,8 +327,8 @@
  static  void  parse_blend_axis_types( T1_Face  face, T1_Loader*  loader )
  {
    T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
-   T1_Int        n, num_axis;
-   T1_Error      error = 0;
+   FT_Int        n, num_axis;
+   FT_Error      error = 0;
    T1_Blend*     blend;
    FT_Memory     memory;
 
@@ -343,7 +343,7 @@
    }
    
    /* allocate blend if necessary */
-   error = t1_allocate_blend( face, 0, (T1_UInt)num_axis );
+   error = t1_allocate_blend( face, 0, (FT_UInt)num_axis );
    if (error) goto Exit;
    
    blend  = face->blend;
@@ -353,8 +353,8 @@
    for ( n = 0; n < num_axis; n++ )
    {
      T1_Token_Rec*  token = axis_tokens + n;
-     T1_Byte*       name;
-     T1_Int         len;
+     FT_Byte*       name;
+     FT_Int         len;
      
      /* skip first slash, if any */
      if (token->start[0] == '/')
@@ -370,7 +370,7 @@
      if ( ALLOC( blend->axis_names[n], len+1 ) )
        goto Exit;
      
-     name = (T1_Byte*)blend->axis_names[n];
+     name = (FT_Byte*)blend->axis_names[n];
      MEM_Copy( name, token->start, len );
      name[len] = 0;
    }
@@ -383,11 +383,11 @@
  static void  parse_blend_design_positions( T1_Face  face, T1_Loader*  loader )
  {
    T1_Token_Rec  design_tokens[ T1_MAX_MM_DESIGNS ];
-   T1_Int        num_designs;
-   T1_Int        num_axis;
+   FT_Int        num_designs;
+   FT_Int        num_axis;
    T1_Parser*    parser = &loader->parser;
    
-   T1_Error      error = 0;
+   FT_Error      error = 0;
    T1_Blend*     blend;
 
    /* get the array of design tokens - compute number of designs */   
@@ -401,16 +401,17 @@
    }
    
    {
-     T1_Byte*  old_cursor = parser->cursor;
-     T1_Byte*  old_limit  = parser->limit;
-     T1_UInt   n;
+     FT_Byte*  old_cursor = parser->cursor;
+     FT_Byte*  old_limit  = parser->limit;
+     FT_UInt   n;
 
-     blend = face->blend;
-     for ( n = 0; n < (T1_UInt)num_designs; n++ )
+     blend    = face->blend;
+     num_axis = 0;  /* make compiler happy */
+     for ( n = 0; n < (FT_UInt)num_designs; n++ )
      {
        T1_Token_Rec  axis_tokens[ T1_MAX_MM_DESIGNS ];
        T1_Token_Rec* token;
-       T1_Int        axis, n_axis;
+       FT_Int        axis, n_axis;
 
        /* read axis/coordinates tokens */
        token = design_tokens + n;
@@ -452,13 +453,13 @@
 
  static void  parse_blend_design_map( T1_Face  face, T1_Loader*  loader )
  {
-   T1_Error      error  = 0;
+   FT_Error      error  = 0;
    T1_Parser*    parser = &loader->parser;
    T1_Blend*     blend;
    T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
-   T1_Int        n, num_axis;
-   T1_Byte*      old_cursor;
-   T1_Byte*      old_limit;
+   FT_Int        n, num_axis;
+   FT_Byte*      old_cursor;
+   FT_Byte*      old_limit;
    FT_Memory     memory = face->root.memory;
    
    T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
@@ -481,7 +482,7 @@
    {
      T1_DesignMap*   map = blend->design_map + n;
      T1_Token_Rec*   token;
-     T1_Int          p, num_points;
+     FT_Int          p, num_points;
      
      token = axis_tokens + n;
      parser->cursor = token->start;
@@ -489,8 +490,8 @@
      
      /* count the number of map points */
      {
-       T1_Byte*  p     = token->start;
-       T1_Byte*  limit = token->limit;
+       FT_Byte*  p     = token->start;
+       FT_Byte*  limit = token->limit;
        
        num_points = 0;
        for ( ; p < limit; p++ )
@@ -525,13 +526,13 @@
 
  static void parse_weight_vector( T1_Face   face, T1_Loader*  loader )
  {
-   T1_Error      error  = 0;
+   FT_Error      error  = 0;
    T1_Parser*    parser = &loader->parser;
    T1_Blend*     blend  = face->blend;
    T1_Token_Rec  master;
-   T1_UInt       n;
-   T1_Byte*      old_cursor;
-   T1_Byte*      old_limit;
+   FT_UInt       n;
+   FT_Byte*      old_cursor;
+   FT_Byte*      old_limit;
    
    if (!blend || blend->num_designs == 0)
    {
@@ -707,14 +708,14 @@
 #define T1_TOPDICT_NUM_FIXED2(n,f,m)   T1_KEYWORD_TYPE1(n,f),
 
 
-  static  T1_Error   t1_load_keyword( T1_Face     face,
+  static  FT_Error   t1_load_keyword( T1_Face     face,
                                       T1_Loader*  loader,
                                       T1_KeyWord* keyword )
   {
-    T1_Error  error;
+    FT_Error  error;
     void*     dummy_object;
     void**    objects;
-    T1_UInt   max_objects;
+    FT_UInt   max_objects;
     T1_Blend* blend = face->blend;
     
     /* if the keyword has a dedicated callback, call it */
@@ -790,7 +791,7 @@
   static
   void  skip_whitespace( T1_Parser* parser )
   {
-    T1_Byte*  cur = parser->cursor;
+    FT_Byte*  cur = parser->cursor;
 
     while ( cur < parser->limit && is_space(*cur) )
       cur++;
@@ -801,7 +802,7 @@
   static
   void skip_blackspace( T1_Parser* parser )
   {
-    T1_Byte*  cur = parser->cursor;
+    FT_Byte*  cur = parser->cursor;
 
     while ( cur < parser->limit && !is_space(*cur) )
       cur++;
@@ -810,10 +811,10 @@
   }
 
   static
-  int   read_binary_data( T1_Parser*  parser, T1_Int *size, T1_Byte* *base )
+  int   read_binary_data( T1_Parser*  parser, FT_Int *size, FT_Byte* *base )
   {
-    T1_Byte*  cur;
-    T1_Byte*  limit = parser->limit;
+    FT_Byte*  cur;
+    FT_Byte*  limit = parser->limit;
 
     /* the binary data has the following format */
     /*                                          */
@@ -823,7 +824,7 @@
     skip_whitespace(parser);
     cur = parser->cursor;
 
-    if ( cur < limit && (T1_Byte)(*cur-'0') < 10 )
+    if ( cur < limit && (FT_Byte)(*cur-'0') < 10 )
     {
       *size = T1_ToInt(parser);
 
@@ -852,12 +853,12 @@
   void  parse_font_name( T1_Face  face, T1_Loader*  loader )
   {
     T1_Parser*  parser = &loader->parser;
-    T1_Error    error;
+    FT_Error    error;
     FT_Memory   memory = parser->memory;
-    T1_Int      len;
-    T1_Byte*    cur;
-    T1_Byte*    cur2;
-    T1_Byte*    limit;
+    FT_Int      len;
+    FT_Byte*    cur;
+    FT_Byte*    cur2;
+    FT_Byte*    limit;
 
     skip_whitespace(parser);
     cur   = parser->cursor;
@@ -886,8 +887,8 @@
   void  parse_font_bbox( T1_Face  face, T1_Loader*  loader )
   {
     T1_Parser*  parser = &loader->parser;
-    T1_Short    temp[4];
-    T1_BBox*    bbox = &face->type1.font_bbox;
+    FT_Short    temp[4];
+    FT_BBox*    bbox = &face->type1.font_bbox;
 
     (void)T1_ToCoordArray( parser, 4, temp );
     bbox->xMin = temp[0];
@@ -901,7 +902,7 @@
   {
     T1_Parser*  parser = &loader->parser;
     FT_Matrix*  matrix = &face->type1.font_matrix;
-    T1_Fixed    temp[4];
+    FT_Fixed    temp[4];
 
     (void)T1_ToFixedArray( parser, 4, temp, 3 );
     matrix->xx = temp[0];
@@ -916,8 +917,8 @@
   void  parse_encoding( T1_Face  face, T1_Loader*  loader )
   {
     T1_Parser*  parser = &loader->parser;
-    T1_Byte*    cur   = parser->cursor;
-    T1_Byte*    limit = parser->limit;
+    FT_Byte*    cur   = parser->cursor;
+    FT_Byte*    limit = parser->limit;
 
     /* skip whitespace */
     while (is_space(*cur))
@@ -933,13 +934,13 @@
 
     /* if we have a number, then the encoding is an array, */
     /* and we must load it now                             */
-    if ((T1_Byte)(*cur - '0') < 10)
+    if ((FT_Byte)(*cur - '0') < 10)
     {
       T1_Encoding*  encode     = &face->type1.encoding;
-      T1_Int        count, n;
+      FT_Int        count, n;
       T1_Table*     char_table = &loader->encoding_table;
       FT_Memory     memory     = parser->memory;
-      T1_Error      error;
+      FT_Error      error;
 
       /* read the number of entries in the encoding, should be 256 */
       count = T1_ToInt( parser );
@@ -947,8 +948,8 @@
 
       /* we use a T1_Table to store our charnames */
       encode->num_chars = count;
-      if ( ALLOC_ARRAY( encode->char_index, count, T1_Short   ) ||
-           ALLOC_ARRAY( encode->char_name,  count, T1_String* ) ||
+      if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   ) ||
+           ALLOC_ARRAY( encode->char_name,  count, FT_String* ) ||
            (error = T1_New_Table( char_table, count, memory )) != 0     )
       {
         parser->error = error;
@@ -975,7 +976,7 @@
 
       for ( ; cur < limit; )
       {
-        T1_Byte  c;
+        FT_Byte  c;
 
         c = *cur;
 
@@ -993,9 +994,9 @@
         }
 
         /* otherwise, we must find a number before anything else */
-        if ( (T1_Byte)(c-'0') < 10 )
+        if ( (FT_Byte)(c-'0') < 10 )
         {
-          T1_Int  charcode;
+          FT_Int  charcode;
 
           parser->cursor = cur;
           charcode = T1_ToInt(parser);
@@ -1009,7 +1010,7 @@
             /* bingo, we have an immediate name - it must be a */
             /* character name                                  */
             FT_Byte*  cur2 = cur+1;
-            T1_Int    len;
+            FT_Int    len;
 
             while (cur2 < limit && is_alpha(*cur2)) cur2++;
             len = cur2-cur-1;
@@ -1054,8 +1055,8 @@
     T1_Parser*  parser = &loader->parser;
     T1_Table*   table  = &loader->subrs;
     FT_Memory   memory = parser->memory;
-    T1_Error    error;
-    T1_Int      n;
+    FT_Error    error;
+    FT_Int      n;
 
     loader->num_subrs = T1_ToInt( parser );
     if (parser->error) return;
@@ -1071,8 +1072,8 @@
 
     for ( n = 0; n < loader->num_subrs; n++ )
     {
-      T1_Int    index, size;
-      T1_Byte*  base;
+      FT_Int    index, size;
+      FT_Byte*  base;
 
       index = T1_ToInt(parser);
       if (!read_binary_data(parser,&size,&base)) return;
@@ -1100,11 +1101,11 @@
     T1_Table*   code_table = &loader->charstrings;
     T1_Table*   name_table = &loader->glyph_names;
     FT_Memory   memory     = parser->memory;
-    T1_Error    error;
+    FT_Error    error;
 
-    T1_Byte*    cur;
-    T1_Byte*    limit = parser->limit;
-    T1_Int      n;
+    FT_Byte*    cur;
+    FT_Byte*    limit = parser->limit;
+    FT_Int      n;
 
     loader->num_glyphs = T1_ToInt( parser );
     if (parser->error) return;
@@ -1117,8 +1118,8 @@
     n = 0;
     for ( ;; )
     {
-      T1_Int    size;
-      T1_Byte*  base;
+      FT_Int    size;
+      FT_Byte*  base;
 
       /* the format is simple :                   */
       /*   "/glyphname" + binary data             */
@@ -1146,8 +1147,8 @@
         skip_blackspace(parser);
       else
       {
-        T1_Byte*  cur2 = cur+1;
-        T1_Int    len;
+        FT_Byte*  cur2 = cur+1;
+        FT_Int    len;
 
         while (cur2 < limit && is_alpha(*cur2)) cur2++;
         len = cur2-cur-1;
@@ -1207,10 +1208,10 @@
 
 
   static
-  T1_Error  parse_dict( T1_Face     face,
+  FT_Error  parse_dict( T1_Face     face,
                         T1_Loader*  loader,
-                        T1_Byte*    base,
-                        T1_Long     size )
+                        FT_Byte*    base,
+                        FT_Long     size )
   {
     T1_Parser*  parser   = &loader->parser;
 
@@ -1219,8 +1220,8 @@
     parser->error  = 0;
 
     {
-      T1_Byte*  cur     = base;
-      T1_Byte*  limit   = cur + size;
+      FT_Byte*  cur     = base;
+      FT_Byte*  limit   = cur + size;
 
       for ( ;cur < limit; cur++ )
       {
@@ -1228,7 +1229,7 @@
         if ( *cur == 'F' && cur+25 < limit &&
              strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
         {
-          T1_Byte*  cur2;
+          FT_Byte*  cur2;
           
           /* skip the "FontDirectory" keyword */
           cur += 13;
@@ -1256,8 +1257,8 @@
         /* look for immediates */
         else if (*cur == '/' && cur+2 < limit)
         {
-          T1_Byte* cur2;
-          T1_Int   len;
+          FT_Byte* cur2;
+          FT_Int   len;
 
           cur  ++;
           cur2 = cur;
@@ -1278,15 +1279,15 @@
   
               for (;;)
               {
-                T1_Byte*  name;
+                FT_Byte*  name;
   
-                name = (T1_Byte*)keyword->name;
+                name = (FT_Byte*)keyword->name;
                 if (!name) break;
   
                 if ( cur[0] == name[0] &&
-                     len == (T1_Int)strlen((const char*)name) )
+                     len == (FT_Int)strlen((const char*)name) )
                 {
-                  T1_Int  n;
+                  FT_Int  n;
                   for ( n = 1; n < len; n++ )
                     if (cur[n] != name[n])
                       break;
@@ -1347,12 +1348,12 @@
   }
 
   LOCAL_FUNC
-  T1_Error  T1_Open_Face( T1_Face  face )
+  FT_Error  T1_Open_Face( T1_Face  face )
   {
     T1_Loader  loader;
     T1_Parser* parser;
     T1_Font*   type1 = &face->type1;
-    T1_Error   error;
+    FT_Error   error;
 
     t1_init_loader( &loader, face );
 
@@ -1402,7 +1403,7 @@
     /* we copy the glyph names "block" and "elements" fields */
     /* but the "lengths" field must be released later..      */
     type1->glyph_names_block    = loader.glyph_names.block;
-    type1->glyph_names          = (T1_String**)loader.glyph_names.elements;
+    type1->glyph_names          = (FT_String**)loader.glyph_names.elements;
     loader.glyph_names.block    = 0;
     loader.glyph_names.elements = 0;
 
@@ -1410,9 +1411,9 @@
     /* array..                                                */
     if ( type1->encoding_type == t1_encoding_array )
     {
-      T1_Int    charcode, index, min_char, max_char;
-      T1_Byte*  char_name;
-      T1_Byte*  glyph_name;
+      FT_Int    charcode, index, min_char, max_char;
+      FT_Byte*  char_name;
+      FT_Byte*  glyph_name;
 
       /* OK, we do the following : for each element in the encoding */
       /* table, lookup the index of the glyph having the same name  */
@@ -1432,7 +1433,7 @@
         if (char_name)
           for ( index = 0; index < type1->num_glyphs; index++ )
           {
-            glyph_name = (T1_Byte*)type1->glyph_names[index];
+            glyph_name = (FT_Byte*)type1->glyph_names[index];
             if ( strcmp( (const char*)char_name,
                          (const char*)glyph_name ) == 0 )
             {

@@ -55,13 +55,13 @@
 
   /* read a glyph name and return the equivalent glyph index */
   static
-  T1_UInt  afm_atoindex( T1_Byte**  start,
-                         T1_Byte*   limit,
+  FT_UInt  afm_atoindex( FT_Byte**  start,
+                         FT_Byte*   limit,
                          T1_Font*   type1 )
   {
-    T1_Byte*  p = *start;
-    T1_Int    len;
-    T1_UInt   result = 0;
+    FT_Byte*  p = *start;
+    FT_Int    len;
+    FT_UInt   result = 0;
     char      temp[64];
 
 
@@ -79,7 +79,7 @@
 
     if ( len > 0 && len < 64 )
     {
-      T1_Int  n;
+      FT_Int  n;
 
 
       /* copy glyph name to intermediate array */
@@ -106,10 +106,10 @@
 
   /* read an integer */
   static
-  int  afm_atoi( T1_Byte**  start,
-                 T1_Byte*   limit )
+  int  afm_atoi( FT_Byte**  start,
+                 FT_Byte*   limit )
   {
-    T1_Byte*  p    = *start;
+    FT_Byte*  p    = *start;
     int       sum  = 0;
     int       sign = 1;
 
@@ -136,7 +136,7 @@
 
 
 #undef  KERN_INDEX
-#define KERN_INDEX( g1, g2 ) ( ( (T1_ULong)g1 << 16 ) | g2 )
+#define KERN_INDEX( g1, g2 ) ( ( (FT_ULong)g1 << 16 ) | g2 )
 
 
   /* compare two kerning pairs */
@@ -147,8 +147,8 @@
     T1_Kern_Pair*  pair1 = (T1_Kern_Pair*)a;
     T1_Kern_Pair*  pair2 = (T1_Kern_Pair*)b;
 
-    T1_ULong  index1 = KERN_INDEX( pair1->glyph1, pair1->glyph2 );
-    T1_ULong  index2 = KERN_INDEX( pair2->glyph1, pair2->glyph2 );
+    FT_ULong  index1 = KERN_INDEX( pair1->glyph1, pair1->glyph2 );
+    FT_ULong  index2 = KERN_INDEX( pair2->glyph1, pair2->glyph2 );
 
 
     return ( index1 - index2 );
@@ -157,15 +157,15 @@
 
   /* parse an AFM file - for now, only read the kerning pairs */
   LOCAL_FUNC
-  T1_Error  CID_Read_AFM( FT_Face    t1_face,
+  FT_Error  CID_Read_AFM( FT_Face    t1_face,
                           FT_Stream  stream )
   {
-    T1_Error       error;
+    FT_Error       error;
     FT_Memory      memory = stream->memory;
-    T1_Byte*       start;
-    T1_Byte*       limit;
-    T1_Byte*       p;
-    T1_Int         count = 0;
+    FT_Byte*       start;
+    FT_Byte*       limit;
+    FT_Byte*       p;
+    FT_Int         count = 0;
     T1_Kern_Pair*  pair;
     T1_Font*       type1 = &((T1_Face)t1_face)->type1;
     T1_AFM*        afm   = 0;
@@ -174,8 +174,8 @@
     if ( ACCESS_Frame( stream->size ) )
       return error;
 
-    start = (T1_Byte*)stream->cursor;
-    limit = (T1_Byte*)stream->limit;
+    start = (FT_Byte*)stream->cursor;
+    limit = (FT_Byte*)stream->limit;
     p     = start;
 
     /* we are now going to count the occurences of "KP" or "KPX" in */
@@ -207,7 +207,7 @@
     {
       if ( IS_KERN_PAIR( p ) )
       {
-        T1_Byte*  q;
+        FT_Byte*  q;
 
 
         /* skip keyword (KP or KPX) */
@@ -244,12 +244,12 @@
   /* find the kerning for a given glyph pair */
   LOCAL_FUNC
   void  CID_Get_Kerning( T1_AFM*     afm,
-                         T1_UInt     glyph1,
-                         T1_UInt     glyph2,
-                         T1_Vector*  kerning )
+                         FT_UInt     glyph1,
+                         FT_UInt     glyph2,
+                         FT_Vector*  kerning )
   {
     T1_Kern_Pair  *min, *mid, *max;
-    T1_ULong       index = KERN_INDEX( glyph1, glyph2 );
+    FT_ULong       index = KERN_INDEX( glyph1, glyph2 );
 
 
     /* simple binary search */
@@ -258,7 +258,7 @@
 
     while ( min <= max )
     {
-      T1_ULong  midi;
+      FT_ULong  midi;
 
 
       mid = min + ( max - min ) / 2;

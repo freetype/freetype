@@ -24,17 +24,17 @@
 
 
   LOCAL_DEF
-  TT_Error  SFNT_Init_Face( FT_Stream      stream,
+  FT_Error  SFNT_Init_Face( FT_Stream      stream,
                             TT_Face        face,
-                            TT_Int         face_index,
-                            TT_Int         num_params,
+                            FT_Int         face_index,
+                            FT_Int         num_params,
                             FT_Parameter*  params );
 
   LOCAL_DEF
-  TT_Error  SFNT_Load_Face( FT_Stream      stream,
+  FT_Error  SFNT_Load_Face( FT_Stream      stream,
                             TT_Face        face,
-                            TT_Int         face_index,
-                            TT_Int         num_params,
+                            FT_Int         face_index,
+                            FT_Int         num_params,
                             FT_Parameter*  params );
 
   LOCAL_DEF

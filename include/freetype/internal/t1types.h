@@ -29,231 +29,6 @@
 #endif
 
 
-/*************************************************************************/
-/*************************************************************************/
-/*************************************************************************/
-/***                                                                   ***/
-/***                                                                   ***/
-/***                DEFINITIONS OF BASIC DATA TYPES                    ***/
-/***                                                                   ***/
-/***                                                                   ***/
-/*************************************************************************/
-/*************************************************************************/
-/*************************************************************************/
-
-
-/* The REDEFINE macro is used to convert a FreeType generic type into    */
-/* a TrueType-specific one. It simply replaces the "FT_" prefix by "T1_" */
-/* in order to define compatible T1_Long, T1_Error, T1_Outline, etc..    */
-/*                                                                       */
-#undef  REDEFINE
-#define REDEFINE( type )   typedef FT_##type  T1_##type
-
-
-  /* <Type> T1_Bool                                                       */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    A simple typedef of unsigned char, used for simple booleans.      */
-  /*                                                                      */
-  REDEFINE( Bool );
-
-
-  /* <Type> T1_FWord                                                      */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a signed 16-bit integer used to store a distance in original      */
-  /*    font units.                                                       */
-  /*                                                                      */
-  REDEFINE( FWord );
-
-
-  /* <Type> T1_UFWord                                                     */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    an unsigned 16-bit integer used to store a distance in original   */
-  /*    font units.                                                       */
-  /*                                                                      */
-  REDEFINE( UFWord );
-
-
-  /* <Type> T1_Char                                                       */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a simple typedef for the _signed_ char type.                      */
-  /*                                                                      */
-  REDEFINE( Char );
-
-
-  /* <Type> T1_Byte                                                       */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a simple typedef for the _unsigned_ char type.                    */
-  /*                                                                      */
-  REDEFINE( Byte );
-
-
-  /* <Type> T1_String                                                     */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a simple typedef for the char type, used for strings usually.     */
-  /*                                                                      */
-  REDEFINE( String );
-
-
-  /* <Type> T1_Short                                                      */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a typedef for signed short                                        */
-  /*                                                                      */
-  REDEFINE( Short );
-
-
-  /* <Type> T1_UShort                                                     */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a typedef for unsigned short                                      */
-  /*                                                                      */
-  REDEFINE( UShort );
-
-
-  /* <Type> FT_Int                                                        */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a typedef for the int type                                        */
-  /*                                                                      */
-  REDEFINE( Int );
-
-
-  /* <Type> FT_UInt                                                       */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a typedef for the unsigned int type                               */
-  /*                                                                      */
-  REDEFINE( UInt );
-
-
-  /* <Type> T1_Long                                                       */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a typedef for signed long                                         */
-  /*                                                                      */
-  REDEFINE( Long );
-
-
-  /* <Type> T1_ULong                                                      */
-  /*                                                                      */
-  /* <Description>                                                        */
-  /*    a typedef for unsigned long                                       */
-  /*                                                                      */
-  REDEFINE( ULong );
-
-
-  /* <Type> T1_F2Dot14                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    a signed 2.14 fixed float used for unit vectors                    */
-  /*                                                                       */
-  REDEFINE( F2Dot14 );
-
-
-  /* <Type> T1_F26Dot6                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    a signed 26.6 fixed float used for vectorial pixel coordinates     */
-  /*                                                                       */
-  REDEFINE( F26Dot6 );
-
-
-  /* <Type> T1_Fixed                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*     This type is used to store 16.16 fixed float values, like         */
-  /*     scales or matrix coefficients..                                   */
-  /*                                                                       */
-  REDEFINE( Fixed );
-
-
-  /* <Type> T1_Pos                                                      */
-  /*                                                                    */
-  /* <Description>                                                      */
-  /*     The type T1_Pos is a 32-bits integer used to store vectorial   */
-  /*     coordinates. Depending on the context, these can represent     */
-  /*     distances in integer font units, or 26.6 fixed float pixel     */
-  /*     coordinates..                                                  */
-  /*                                                                    */
-  REDEFINE( Pos );
-
-
-  /* <Struct> T1_Vector                                                 */
-  /*                                                                    */
-  /* <Description>                                                      */
-  /*     A simple structure used to store a 2d vector, coordinates      */
-  /*     are of the T1_Pos type.                                        */
-  /*                                                                    */
-  /* <Fields>                                                           */
-  /*    x  ::  horizontal coordinate                                    */
-  /*    y  ::  vertical coordinate                                      */
-  /*                                                                    */
-  REDEFINE( Vector );
-
-  /* <Struct> T1_UnitVector                                             */
-  /*                                                                    */
-  /* <Description>                                                      */
-  /*     A simple structure used to store a 2d vector unit vector.      */
-  /*     uses T1_F2Dot14 types.                                         */
-  /*                                                                    */
-  /* <Fields>                                                           */
-  /*    x  ::  horizontal coordinate                                    */
-  /*    y  ::  vertical coordinate                                      */
-  /*                                                                    */
-  REDEFINE( UnitVector );
-
-
-  /* <Struct> T1_Matrix                                                 */
-  /*                                                                    */
-  /* <Description>                                                      */
-  /*     A simple structure used to store a 2x2 matrix. Coefficients    */
-  /*     are in 16.16 fixed float format. The computation performed     */
-  /*     is :                                                           */
-  /*             {                                                      */
-  /*               x' = x*xx + y*xy                                     */
-  /*               y' = x*yx + y*yy                                     */
-  /*             }                                                      */
-  /*                                                                    */
-  /* <Fields>                                                           */
-  /*     xx  :: matrix coefficient                                      */
-  /*     xy  :: matrix coefficient                                      */
-  /*     yx  :: matrix coefficient                                      */
-  /*     yy  :: matrix coefficient                                      */
-  /*                                                                    */
-  REDEFINE( Matrix );
-
-
-  /* <Struct> T1_BBox                                                   */
-  /*                                                                    */
-  /* <Description>                                                      */
-  /*     A structure used to hold an outline's bounding box, i.e.       */
-  /*     the coordinates of its extrema in the horizontal and vertical  */
-  /*     directions.                                                    */
-  /*                                                                    */
-  /* <Fields>                                                           */
-  /*     xMin   ::  the horizontal minimum  (left-most)                 */
-  /*     yMin   ::  the vertical minimum    (bottom-most)               */
-  /*     xMax   ::  the horizontal maximum  (right-most)                */
-  /*     yMax   ::  the vertical maximum    (top-most)                  */
-  /*                                                                    */
-  REDEFINE( BBox );
-
-
-  /* <Type> T1_Error                                                    */
-  /*                                                                    */
-  /* <Description>                                                      */
-  /*    The FreeType error code type. A value of 0 is always            */
-  /*    interpreted as a succesful operation.                           */
-  /*                                                                    */
-  REDEFINE( Error );
-
-
 
 /*************************************************************************/
 /*************************************************************************/
@@ -285,12 +60,12 @@
   /*                                                                     */
   typedef struct T1_Encoding_
   {
-    T1_Int      num_chars;
-    T1_Int      code_first;
-    T1_Int      code_last;
+    FT_Int      num_chars;
+    FT_Int      code_first;
+    FT_Int      code_last;
 
-    T1_UShort*  char_index;
-    T1_String** char_name;
+    FT_UShort*  char_index;
+    FT_String** char_name;
 
   } T1_Encoding;
 
@@ -320,26 +95,26 @@
     T1_EncodingType  encoding_type;
     T1_Encoding      encoding;
 
-    T1_Byte*     subrs_block;
-    T1_Byte*     charstrings_block;
-    T1_Byte*     glyph_names_block;
+    FT_Byte*     subrs_block;
+    FT_Byte*     charstrings_block;
+    FT_Byte*     glyph_names_block;
 
-    T1_Int       num_subrs;
-    T1_Byte**    subrs;
-    T1_Int*      subrs_len;
+    FT_Int       num_subrs;
+    FT_Byte**    subrs;
+    FT_Int*      subrs_len;
 
-    T1_Int       num_glyphs;
-    T1_String**  glyph_names;       /* array of glyph names       */
-    T1_Byte**    charstrings;       /* array of glyph charstrings */
-    T1_Int*      charstrings_len;
+    FT_Int       num_glyphs;
+    FT_String**  glyph_names;       /* array of glyph names       */
+    FT_Byte**    charstrings;       /* array of glyph charstrings */
+    FT_Int*      charstrings_len;
 
-    T1_Byte      paint_type;
-    T1_Byte      font_type;
-    T1_Matrix    font_matrix;
-    T1_BBox      font_bbox;
-    T1_Long      font_id;
+    FT_Byte      paint_type;
+    FT_Byte      font_type;
+    FT_Matrix    font_matrix;
+    FT_BBox      font_bbox;
+    FT_Long      font_id;
 
-    T1_Int       stroke_width;
+    FT_Int       stroke_width;
 
   } T1_Font;
 

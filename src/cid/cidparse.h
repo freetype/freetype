@@ -80,15 +80,15 @@
 
 
   LOCAL_DEF
-  T1_Error  T1_New_Table( T1_Table*  table,
-                          T1_Int     count,
+  FT_Error  T1_New_Table( T1_Table*  table,
+                          FT_Int     count,
                           T1_Memory  memory );
 
   LOCAL_DEF
-  T1_Error  T1_Add_Table( T1_Table*  table,
-                          T1_Int     index,
+  FT_Error  T1_Add_Table( T1_Table*  table,
+                          FT_Int     index,
                           void*      object,
-                          T1_Int     length );
+                          FT_Int     length );
 
   LOCAL_DEF
   void  T1_Release_Table( T1_Table*  table );
@@ -134,23 +134,23 @@
     FT_Stream  stream;
     FT_Memory  memory;
 
-    T1_Byte*   postscript;
-    T1_Int     postscript_len;
+    FT_Byte*   postscript;
+    FT_Int     postscript_len;
 
-    T1_ULong   data_offset;
+    FT_ULong   data_offset;
 
-    T1_Byte*   cursor;
-    T1_Byte*   limit;
-    T1_Error   error;
+    FT_Byte*   cursor;
+    FT_Byte*   limit;
+    FT_Error   error;
 
     CID_Info*  cid;
-    T1_Int     num_dict;
+    FT_Int     num_dict;
 
   } CID_Parser;
 
 
   LOCAL_DEF
-  T1_Error  CID_New_Parser( CID_Parser*  parser,
+  FT_Error  CID_New_Parser( CID_Parser*  parser,
                             FT_Stream    stream,
                             FT_Memory    memory );
 
@@ -165,18 +165,18 @@
   /*************************************************************************/
 
   LOCAL_DEF
-  T1_Long  CID_ToInt( CID_Parser*  parser );
+  FT_Long  CID_ToInt( CID_Parser*  parser );
 
   LOCAL_DEF
-  T1_Int  CID_ToCoordArray( CID_Parser* parser,
-                            T1_Int     max_coords,
-                            T1_Short*  coords );
+  FT_Int  CID_ToCoordArray( CID_Parser* parser,
+                            FT_Int     max_coords,
+                            FT_Short*  coords );
 
   LOCAL_DEF
-  T1_Int  CID_ToFixedArray( CID_Parser* parser,
-                            T1_Int      max_values,
-                            T1_Fixed*   values,
-                            T1_Int      power_ten );
+  FT_Int  CID_ToFixedArray( CID_Parser* parser,
+                            FT_Int      max_values,
+                            FT_Fixed*   values,
+                            FT_Int      power_ten );
 
   LOCAL_DEF
   void  CID_Skip_Spaces( CID_Parser*  parser );
@@ -199,8 +199,8 @@
   /* a simple structure used to identify tokens */
   typedef struct T1_Token_Rec_
   {
-    T1_Byte*       start;   /* first character of token in input stream */
-    T1_Byte*       limit;   /* first character after the token          */
+    FT_Byte*       start;   /* first character of token in input stream */
+    FT_Byte*       limit;   /* first character after the token          */
     T1_Token_Type  type;    /* type of token..                          */
 
   } T1_Token_Rec;
@@ -241,7 +241,7 @@
   } T1_Field_Location;
 
 
-  typedef T1_Error  (*CID_Field_Parser)( CID_Face     face,
+  typedef FT_Error  (*CID_Field_Parser)( CID_Face     face,
                                          CID_Parser*  parser );
 
   /* structure type used to model object fields */
@@ -251,11 +251,11 @@
     T1_Field_Location  location;
     T1_Field_Type      type;          /* type of field                     */
     CID_Field_Parser   reader;
-    T1_UInt            offset;        /* offset of field in object         */
-    T1_UInt            size;          /* size of field in bytes            */
-    T1_UInt            array_max;     /* maximal number of elements for    */
+    FT_UInt            offset;        /* offset of field in object         */
+    FT_UInt            size;          /* size of field in bytes            */
+    FT_UInt            array_max;     /* maximal number of elements for    */
                                       /* array                             */
-    T1_UInt            count_offset;  /* offset of element count for       */
+    FT_UInt            count_offset;  /* offset of element count for       */
                                       /* arrays                            */
   } T1_Field_Rec;
 
@@ -266,7 +266,7 @@
           {                                                  \
             _ident, T1CODE, _type,                           \
             0,                                               \
-            (T1_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ), \
+            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ), \
             sizeof ( T1_FIELD_REF( T1TYPE, _fname ) ),       \
             0, 0                                             \
           },
@@ -283,17 +283,17 @@
           {                                                         \
             _ident, T1CODE, _type,                                  \
             0,                                                      \
-            (T1_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ),        \
+            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ),        \
             sizeof ( T1_FIELD_REF( T1TYPE, _fname )[0] ),           \
             _max,                                                   \
-            (T1_UInt)(char*)&T1_FIELD_REF( T1TYPE, num_ ## _fname ) \
+            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, num_ ## _fname ) \
           },
 
 #define T1_NEW_TABLE_FIELD2( _ident, _type, _fname, _max )   \
           {                                                  \
             _ident, T1CODE, _type,                           \
             0,                                               \
-            (T1_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ), \
+            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ), \
             sizeof ( T1_FIELD_REF( T1TYPE, _fname )[0] ),    \
             _max, 0                                          \
           },
@@ -332,12 +332,12 @@
 
 
   LOCAL_DEF
-  T1_Error  CID_Load_Field( CID_Parser*          parser,
+  FT_Error  CID_Load_Field( CID_Parser*          parser,
                             const T1_Field_Rec*  field,
                             void*                object );
 
   LOCAL_DEF
-  T1_Error  CID_Load_Field_Table( CID_Parser*          parser,
+  FT_Error  CID_Load_Field_Table( CID_Parser*          parser,
                                   const T1_Field_Rec*  field,
                                   void*                object );
 

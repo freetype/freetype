@@ -94,7 +94,7 @@
   typedef struct T1_SizeRec_
   {
     FT_SizeRec      root;
-    T1_Bool         valid;
+    FT_Bool         valid;
     T1_Size_Hints*  hints;  /* defined in the hinter.  This allows */
                             /* us to experiment with different     */
                             /* hinting schemes without having to   */
@@ -107,14 +107,14 @@
   {
     FT_GlyphSlotRec  root;
 
-    T1_Bool          hint;
-    T1_Bool          scaled;
+    FT_Bool          hint;
+    FT_Bool          scaled;
 
-    T1_Int           max_points;
-    T1_Int           max_contours;
+    FT_Int           max_points;
+    FT_Int           max_contours;
 
-    T1_Fixed         x_scale;
-    T1_Fixed         y_scale;
+    FT_Fixed         x_scale;
+    FT_Fixed         y_scale;
 
     T1_Glyph_Hints*  hints;  /* defined in the hinter */
 
@@ -122,10 +122,10 @@
 
 
   LOCAL_DEF
-  T1_Error  CID_Init_Face( FT_Stream     stream,
+  FT_Error  CID_Init_Face( FT_Stream     stream,
                            CID_Face      face,
-                           T1_Int        face_index,
-                           T1_Int        num_params,
+                           FT_Int        face_index,
+                           FT_Int        num_params,
                            FT_Parameter* params );
 
   LOCAL_DEF
@@ -133,24 +133,24 @@
 
 
   LOCAL_DEF
-  T1_Error  CID_Init_Size( T1_Size  size );
+  FT_Error  CID_Init_Size( T1_Size  size );
 
   LOCAL_DEF
   void  CID_Done_Size( T1_Size  size );
 
   LOCAL_DEF
-  T1_Error  CID_Reset_Size( T1_Size  size );
+  FT_Error  CID_Reset_Size( T1_Size  size );
 
 
   LOCAL_DEF
-  T1_Error  CID_Init_GlyphSlot( T1_GlyphSlot  slot );
+  FT_Error  CID_Init_GlyphSlot( T1_GlyphSlot  slot );
 
   LOCAL_DEF
   void  CID_Done_GlyphSlot( T1_GlyphSlot  slot );
 
 
   LOCAL_DEF
-  T1_Error  CID_Init_Driver( T1_Driver  driver );
+  FT_Error  CID_Init_Driver( T1_Driver  driver );
 
   LOCAL_DEF
   void  CID_Done_Driver( T1_Driver  driver );

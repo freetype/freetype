@@ -78,11 +78,11 @@
       /* ultra simple bubble sort (not a lot of elements, mostly */
       /* pre-sorted, no need for quicksort)                      */
       static
-      void  t1_sort_blues( T1_Int*  blues,
-                           T1_Int   count )
+      void  t1_sort_blues( FT_Int*  blues,
+                           FT_Int   count )
       {
-        T1_Int  i, swap;
-        T1_Int* cur;
+        FT_Int  i, swap;
+        FT_Int* cur;
 
         for ( i = 2; i < count; i += 2 )
         {
@@ -102,21 +102,21 @@
 
 
   static
-  T1_Error  t1_set_blue_zones( T1_Size  size )
+  FT_Error  t1_set_blue_zones( T1_Size  size )
   {
     T1_Face          face = (T1_Face)size->root.face;
     T1_Private*      priv = &face->type1.private_dict;
-    T1_Int           n;
-    T1_Int           blues[24];
-    T1_Int           num_bottom;
-    T1_Int           num_top;
-    T1_Int           num_blues;
+    FT_Int           n;
+    FT_Int           blues[24];
+    FT_Int           num_bottom;
+    FT_Int           num_top;
+    FT_Int           num_blues;
     T1_Size_Hints*   hints = size->hints;
     T1_Snap_Zone*    zone;
-    T1_Pos           pix, orus;
-    T1_Pos           min, max, threshold;
-    T1_Fixed         scale;
-    T1_Bool          is_bottom;
+    FT_Pos           pix, orus;
+    FT_Pos           min, max, threshold;
+    FT_Fixed         scale;
+    FT_Bool          is_bottom;
 
     /**********************************************************************/
     /*                                                                    */
@@ -276,14 +276,14 @@
  ************************************************************************/
 
   static
-  T1_Error  t1_set_snap_zones( T1_Size  size )
+  FT_Error  t1_set_snap_zones( T1_Size  size )
   {
-    T1_Int         n, direction, n_zones, num_zones;
+    FT_Int         n, direction, n_zones, num_zones;
     T1_Snap_Zone*  zone;
     T1_Snap_Zone*  base_zone;
-    T1_Short*      orgs;
-    T1_Pos         standard_width;
-    T1_Fixed       scale;
+    FT_Short*      orgs;
+    FT_Pos         standard_width;
+    FT_Fixed       scale;
 
     T1_Face         face = (T1_Face)size->root.face;
     T1_Private*     priv = &face->type1.private_dict;
@@ -304,7 +304,7 @@
       /*  Read and scale stem snap widths table from the physical      */
       /*  font record.                                                 */
       /*                                                               */
-      T1_Pos  prev, orus, pix, min, max, threshold;
+      FT_Pos  prev, orus, pix, min, max, threshold;
 
       threshold = ONE_PIXEL/4;
       zone      = base_zone;
@@ -376,7 +376,7 @@
       if ( standard_width > 0 )
       {
         T1_Snap_Zone*  parent;
-        T1_Pos         std_pix, std_min, std_max;
+        FT_Pos         std_pix, std_min, std_max;
 
         std_pix = SCALE( standard_width );
 
@@ -486,7 +486,7 @@
  ************************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_New_Size_Hinter( T1_Size  size )
+  FT_Error  T1_New_Size_Hinter( T1_Size  size )
   {
     FT_Memory  memory = size->root.face->memory;
 
@@ -535,7 +535,7 @@
  ************************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_Reset_Size_Hinter( T1_Size  size )
+  FT_Error  T1_Reset_Size_Hinter( T1_Size  size )
   {
     return t1_set_blue_zones(size) || t1_set_snap_zones(size);
   }
@@ -559,7 +559,7 @@
  ************************************************************************/
 
   LOCAL_FUNC
-  T1_Error  T1_New_Glyph_Hinter( T1_GlyphSlot  glyph )
+  FT_Error  T1_New_Glyph_Hinter( T1_GlyphSlot  glyph )
   {
     FT_Memory  memory = glyph->root.face->memory;
 
@@ -605,23 +605,23 @@
   /**********************************************************************/
 
   static
-  T1_Error   t1_hinter_ignore( void )
+  FT_Error   t1_hinter_ignore( void )
   {
     /* do nothing, used for "dotsection" which is unsupported for now */
     return 0;
   }
 
   static
-  T1_Error   t1_hinter_stem( T1_Builder*  builder,
-                             T1_Pos       pos,
-                             T1_Int       width,
-                             T1_Bool      vertical )
+  FT_Error   t1_hinter_stem( T1_Builder*  builder,
+                             FT_Pos       pos,
+                             FT_Int       width,
+                             FT_Bool      vertical )
   {
     T1_Stem_Table*   stem_table;
     T1_Stem_Hint*    stems;
     T1_Stem_Hint*    cur_stem;
-    T1_Int           min, max, n, num_stems;
-    T1_Bool          new_stem;
+    FT_Int           min, max, n, num_stems;
+    FT_Bool          new_stem;
     T1_Glyph_Hints*  hinter = builder->glyph->hints;
 
     /* select the appropriate stem array */
@@ -698,14 +698,14 @@
 
 
   static
-  T1_Error   t1_hinter_stem3( T1_Builder*  builder,
-                              T1_Pos       pos0,
-                              T1_Int       width0,
-                              T1_Pos       pos1,
-                              T1_Int       width1,
-                              T1_Pos       pos2,
-                              T1_Int       width2,
-                              T1_Bool      vertical )
+  FT_Error   t1_hinter_stem3( T1_Builder*  builder,
+                              FT_Pos       pos0,
+                              FT_Int       width0,
+                              FT_Pos       pos1,
+                              FT_Int       width1,
+                              FT_Pos       pos2,
+                              FT_Int       width2,
+                              FT_Bool      vertical )
   {
     /* For now, don't be elitist and simply call "stem" 3 times */
     return t1_hinter_stem( builder, pos0, width0, vertical ) ||
@@ -715,9 +715,9 @@
 
 
   static
-  T1_Error  t1_hinter_changehints( T1_Builder*  builder )
+  FT_Error  t1_hinter_changehints( T1_Builder*  builder )
   {
-    T1_Int           dimension;
+    FT_Int           dimension;
     T1_Stem_Table*   stem_table;
     T1_Glyph_Hints*  hinter = builder->glyph->hints;
 
@@ -787,11 +787,11 @@
   static
   void  t1_sort_hints( T1_Stem_Table*  table )
   {
-    T1_Int         num_stems   = table->num_stems;
-    T1_Int         num_active  = 0;
-    T1_Int*        sort        = table->sort;
+    FT_Int         num_stems   = table->num_stems;
+    FT_Int         num_active  = 0;
+    FT_Int*        sort        = table->sort;
     T1_Stem_Hint*  stems       = table->stems;
-    T1_Int         n;
+    FT_Int         n;
 
     /* record active stems in sort table */
     for ( n = 0; n < num_stems; n++ )
@@ -805,12 +805,12 @@
     /* simple bubble sort (quicksort would be slower)..        */
     for ( n = 1; n < num_active; n++ )
     {
-      T1_Int        p   = n-1;
+      FT_Int        p   = n-1;
       T1_Stem_Hint* cur = stems + sort[n];
 
       do
       {
-        T1_Int         swap;
+        FT_Int         swap;
         T1_Stem_Hint*  prev = stems + sort[p];
 
         /* note that by definition, the active stems cannot overlap    */
@@ -861,8 +861,8 @@
   static
   void  t1_hint_horizontal_stems( T1_Stem_Table*  table,
                                   T1_Size_Hints*  hints,
-                                  T1_Pos          blueShift,
-                                  T1_Fixed        scale )
+                                  FT_Pos          blueShift,
+                                  FT_Fixed        scale )
   {
     T1_Stem_Hint*  stem      = table->stems;
     T1_Stem_Hint*  limit     = stem + table->num_stems;
@@ -873,28 +873,28 @@
     /* then scan the horizontal stem table */
     for ( ; stem < limit; stem++ )
     {
-      T1_Pos  bottom_orus = stem->min_edge.orus;
-      T1_Pos  top_orus    = stem->max_edge.orus;
+      FT_Pos  bottom_orus = stem->min_edge.orus;
+      FT_Pos  top_orus    = stem->max_edge.orus;
 
-      T1_Pos  top_pix     = SCALE( top_orus );
-      T1_Pos  bottom_pix  = SCALE( bottom_orus );
-      T1_Pos  width_pix   = top_pix - bottom_pix;
+      FT_Pos  top_pix     = SCALE( top_orus );
+      FT_Pos  bottom_pix  = SCALE( bottom_orus );
+      FT_Pos  width_pix   = top_pix - bottom_pix;
 
-      T1_Pos  bottom      = bottom_pix;
-      T1_Pos  top         = top_pix;
-      T1_Int  align       = T1_ALIGN_NONE;
+      FT_Pos  bottom      = bottom_pix;
+      FT_Pos  top         = top_pix;
+      FT_Int  align       = T1_ALIGN_NONE;
 
       /******************************************************************/
       /* Snap pixel width if in stem snap range                         */
       {
         T1_Snap_Zone*  zone       = hints->snap_heights;
         T1_Snap_Zone*  zone_limit = zone + hints->num_snap_heights;
-        T1_Pos         best_dist = 32000;
+        FT_Pos         best_dist = 32000;
         T1_Snap_Zone*  best_zone = 0;
 
         for ( ; zone < zone_limit; zone++ )
         {
-          T1_Pos  dist;
+          FT_Pos  dist;
 
           dist = width_pix - zone->min; if (dist < 0) dist = -dist;
           if (dist < best_dist)
@@ -930,7 +930,7 @@
       /******************************************************************/
       /* Now check for bottom blue zones alignement                     */
       {
-        T1_Int         num_blues  = hints->num_bottom_zones;
+        FT_Int         num_blues  = hints->num_bottom_zones;
         T1_Snap_Zone*  blue       = hints->blue_zones;
         T1_Snap_Zone*  blue_limit = blue + num_blues;
 
@@ -947,7 +947,7 @@
             /* implements blue shift */
             if (!hints->supress_overshoots)
             {
-              T1_Pos  delta = blue->pix - bottom_pix;
+              FT_Pos  delta = blue->pix - bottom_pix;
 
               delta   = ( delta < blueShift ? 0 : ROUND( delta ) );
               bottom -= delta;
@@ -960,7 +960,7 @@
       /******************************************************************/
       /* Check for top blue zones alignement */
       {
-        T1_Int         num_blues  = hints->num_blue_zones -
+        FT_Int         num_blues  = hints->num_blue_zones -
                                     hints->num_bottom_zones;
 
         T1_Snap_Zone*  blue       = hints->blue_zones +
@@ -981,7 +981,7 @@
             /* implements blue shift */
             if (!hints->supress_overshoots)
             {
-              T1_Pos  delta = top - blue->pix;
+              FT_Pos  delta = top - blue->pix;
 
               delta  = ( delta < blueShift ? 0 : ROUND( delta ) );
               top   += delta;
@@ -1056,16 +1056,16 @@
   static
   void  t1_hint_vertical_stems( T1_Stem_Table*  table,
                                 T1_Size_Hints*  hints,
-                                T1_Fixed        scale )
+                                FT_Fixed        scale )
   {
     T1_Stem_Hint*  stem  = table->stems;
     T1_Stem_Hint*  limit = stem + table->num_stems;
 
     for ( ; stem < limit; stem++ )
     {
-      T1_Pos  stem_left  = stem->min_edge.orus;
-      T1_Pos  stem_right = stem->max_edge.orus;
-      T1_Pos  width_pix, left;
+      FT_Pos  stem_left  = stem->min_edge.orus;
+      FT_Pos  stem_right = stem->max_edge.orus;
+      FT_Pos  width_pix, left;
 
       width_pix = SCALE( stem_right - stem_left );
 
@@ -1073,12 +1073,12 @@
       {
         T1_Snap_Zone*  zone       = hints->snap_heights;
         T1_Snap_Zone*  zone_limit = zone + hints->num_snap_heights;
-        T1_Pos         best_dist = 32000;
+        FT_Pos         best_dist = 32000;
         T1_Snap_Zone*  best_zone = 0;
 
         for ( ; zone < zone_limit; zone++ )
         {
-          T1_Pos  dist;
+          FT_Pos  dist;
 
           dist = width_pix - zone->min; if (dist < 0) dist = -dist;
           if (dist < best_dist)
@@ -1151,17 +1151,17 @@
  ************************************************************************/
 
   static
-  T1_Pos  t1_hint_point( T1_Stem_Table*  table,
-                         T1_Pos          coord,
-                         T1_Fixed        scale )
+  FT_Pos  t1_hint_point( T1_Stem_Table*  table,
+                         FT_Pos          coord,
+                         FT_Fixed        scale )
   {
-    T1_Int         num_active = table->num_active;
-    T1_Int         n;
+    FT_Int         num_active = table->num_active;
+    FT_Int         n;
     T1_Stem_Hint*  prev = 0;
     T1_Stem_Hint*  cur  = 0;
     T1_Edge*       min;
     T1_Edge*       max;
-    T1_Pos         delta;
+    FT_Pos         delta;
 
     /* only hint when there is at least one stem defined */
     if (num_active <= 0)
@@ -1239,19 +1239,19 @@
   LOCAL_FUNC
   void  T1_Hint_Points( T1_Builder*  builder )
   {
-    T1_Int    first   = builder->hint_point;
-    T1_Int    last    = builder->current.n_points-1;
+    FT_Int    first   = builder->hint_point;
+    FT_Int    last    = builder->current.n_points-1;
 
     T1_Size   size    = builder->size;
-    T1_Fixed  scale_x = size->root.metrics.x_scale;
-    T1_Fixed  scale_y = size->root.metrics.y_scale;
+    FT_Fixed  scale_x = size->root.metrics.x_scale;
+    FT_Fixed  scale_y = size->root.metrics.y_scale;
 
     T1_Glyph_Hints*  hints      = builder->glyph->hints;
     T1_Stem_Table*   hori_stems = &hints->hori_stems;
     T1_Stem_Table*   vert_stems = &hints->vert_stems;
 
-    T1_Vector*  cur   = builder->current.points + first;
-    T1_Vector*  limit = cur + last - first + 1;
+    FT_Vector*  cur   = builder->current.points + first;
+    FT_Vector*  limit = cur + last - first + 1;
 
     /* first of all, sort the active stem hints */
     t1_sort_hints( hori_stems );
@@ -1289,8 +1289,8 @@
     T1_Private*      priv  = &builder->face->type1.private_dict;
 
     T1_Size   size    = builder->size;
-    T1_Fixed  scale_x = size->root.metrics.x_scale;
-    T1_Fixed  scale_y = size->root.metrics.y_scale;
+    FT_Fixed  scale_x = size->root.metrics.x_scale;
+    FT_Fixed  scale_y = size->root.metrics.y_scale;
 
     t1_hint_horizontal_stems( &hints->hori_stems,
                               builder->size->hints,

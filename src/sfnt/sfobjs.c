@@ -50,13 +50,13 @@
   /*    Character string.  NULL if no name is present.                     */
   /*                                                                       */
   static
-  TT_String*  Get_Name( TT_Face    face,
-                        TT_UShort  nameid )
+  FT_String*  Get_Name( TT_Face    face,
+                        FT_UShort  nameid )
   {
     FT_Memory    memory = face->root.memory;
-    TT_UShort    n;
+    FT_UShort    n;
     TT_NameRec*  rec;
-    TT_Bool      wide_chars = 1;
+    FT_Bool      wide_chars = 1;
 
 
     rec = face->name_table.names;
@@ -65,7 +65,7 @@
       if ( rec->nameID == nameid )
       {
         /* found the name - now create an ASCII string from it */
-        TT_Bool  found = 0;
+        FT_Bool  found = 0;
 
 
         /* test for Microsoft English language */
@@ -89,16 +89,16 @@
         /* found a Unicode name */
         if ( found )
         {
-          TT_String*  string;
-          TT_UInt     len;
+          FT_String*  string;
+          FT_UInt     len;
 
 
           if ( wide_chars )
           {
-            TT_UInt   m;
+            FT_UInt   m;
 
 
-            len = (TT_UInt)rec->stringLength / 2;
+            len = (FT_UInt)rec->stringLength / 2;
             if ( MEM_Alloc( string, len + 1 ) )
               return NULL;
 
@@ -173,13 +173,13 @@
 
 
   LOCAL_FUNC
-  TT_Error  SFNT_Init_Face( FT_Stream      stream,
+  FT_Error  SFNT_Init_Face( FT_Stream      stream,
                             TT_Face        face,
-                            TT_Int         face_index,
-                            TT_Int         num_params,
+                            FT_Int         face_index,
+                            FT_Int         num_params,
                             FT_Parameter*  params )
   {
-    TT_Error            error;
+    FT_Error            error;
     SFNT_Interface*     sfnt;
     PSNames_Interface*  psnames;
     SFNT_Header         sfnt_header;
@@ -254,13 +254,13 @@
 
 
   LOCAL_FUNC
-  TT_Error  SFNT_Load_Face( FT_Stream      stream,
+  FT_Error  SFNT_Load_Face( FT_Stream      stream,
                             TT_Face        face,
-                            TT_Int         face_index,
-                            TT_Int         num_params,
+                            FT_Int         face_index,
+                            FT_Int         num_params,
                             FT_Parameter*  params )
   {
-    TT_Error         error;
+    FT_Error         error;
     SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
 
 
@@ -305,9 +305,9 @@
     /* now set up root fields */
     {
       FT_Face     root = &face->root;
-      TT_Int      flags;
+      FT_Int      flags;
       TT_CharMap  charmap;
-      TT_Int      n;
+      FT_Int      n;
       FT_Memory   memory;
 
 
@@ -378,8 +378,8 @@
 
       for ( n = 0; n < root->num_charmaps; n++, charmap++ )
       {
-        TT_Int  platform = charmap->cmap.platformID;
-        TT_Int  encoding = charmap->cmap.platformEncodingID;
+        FT_Int  platform = charmap->cmap.platformID;
+        FT_Int  encoding = charmap->cmap.platformEncodingID;
 
 
         charmap->root.face        = (FT_Face)face;
@@ -502,7 +502,7 @@
     /* freeing the character mapping tables */
     if (sfnt && sfnt->load_charmaps )
     {
-      TT_UShort  n;
+      FT_UShort  n;
 
 
       for ( n = 0; n < face->num_charmaps; n++ )

@@ -26,6 +26,8 @@
 #define TTAG_cvt   FT_MAKE_TAG( 'c', 'v', 't', ' ' )
 #define TTAG_CFF   FT_MAKE_TAG( 'C', 'F', 'F', ' ' )
 #define TTAG_DSIG  FT_MAKE_TAG( 'D', 'S', 'I', 'G' )
+#define TTAG_bdat  FT_MAKE_TAG( 'b', 'd', 'a', 't' )
+#define TTAG_bloc  FT_MAKE_TAG( 'b', 'l', 'o', 'c' )
 #define TTAG_EBDT  FT_MAKE_TAG( 'E', 'B', 'D', 'T' )
 #define TTAG_EBLC  FT_MAKE_TAG( 'E', 'B', 'L', 'C' )
 #define TTAG_EBSC  FT_MAKE_TAG( 'E', 'B', 'S', 'C' )

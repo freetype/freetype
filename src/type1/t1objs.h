@@ -95,7 +95,7 @@
   typedef struct T1_SizeRec_
   {
     FT_SizeRec      root;
-    T1_Bool         valid;
+    FT_Bool         valid;
     T1_Size_Hints*  hints;  /* defined in the hinter. This allows */
                             /* us to experiment with different    */
                             /* hinting schemes without having to  */
@@ -115,11 +115,11 @@
   {
     FT_GlyphSlotRec  root;
 
-    T1_Bool          hint;
-    T1_Bool          scaled;
+    FT_Bool          hint;
+    FT_Bool          scaled;
 
-    T1_Int           max_points;
-    T1_Int           max_contours;
+    FT_Int           max_points;
+    FT_Int           max_contours;
 
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
@@ -147,7 +147,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Init_Face( FT_Stream     stream,
+  FT_Error  T1_Init_Face( FT_Stream     stream,
                           T1_Face       face,
                           FT_Int        face_index,
                           FT_Int        num_params,
@@ -188,7 +188,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Init_Size( T1_Size  size );
+  FT_Error  T1_Init_Size( T1_Size  size );
 
 
 
@@ -222,7 +222,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Reset_Size( T1_Size  size );
+  FT_Error  T1_Reset_Size( T1_Size  size );
 
 
 
@@ -239,7 +239,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Init_GlyphSlot( T1_GlyphSlot  slot );
+  FT_Error  T1_Init_GlyphSlot( T1_GlyphSlot  slot );
 
 
 
@@ -276,7 +276,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Init_Driver( T1_Driver  driver );
+  FT_Error  T1_Init_Driver( T1_Driver  driver );
 
 
 
