@@ -9,5 +9,18 @@ not exactly bugs, but should be considered though:
   the quality of AA text, but Monochrome and LCD hinting still suck.  We
   need to do something about that.
 
+* Add CIDCMap support to the CID driver.
+
+* Add track kerning support to the Type1 and PFR driver and the API
+  (The degree of kerning, e.g. light, normal or tight, and
+  the glyph size has to be passed as parameter).
+
+* Add kerning (AFM file) support to the CID driver.
+
+* Possibly add support for reading PFM files.
+
+* Is the anti-aliased glyphs feature of BDF also available in PCF format?
+  If yes, add support to the PCF driver.
+
 
 --- end of TODO ---

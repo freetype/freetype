@@ -843,71 +843,6 @@
   /* dictionaries                                   */
 
   static void
-  parse_font_name( T1_Face    face,
-                   T1_Loader  loader )
-  {
-    T1_Parser   parser = &loader->parser;
-    FT_Error    error;
-    FT_Memory   memory = parser->root.memory;
-    FT_PtrDist  len;
-    FT_Byte*    cur;
-    FT_Byte*    cur2;
-    FT_Byte*    limit;
-
-
-    if ( face->type1.font_name )
-      /*  with synthetic fonts, it's possible we get here twice  */
-      return;
-
-    T1_Skip_Spaces( parser );
-
-    cur   = parser->root.cursor;
-    limit = parser->root.limit;
-
-    if ( cur >= limit - 1 || *cur != '/' )
-      return;
-
-    cur++;
-    cur2 = cur;
-    while ( cur2 < limit && is_name_char( *cur2 ) )
-      cur2++;
-
-    len = cur2 - cur;
-    if ( len > 0 )
-    {
-      if ( FT_ALLOC( face->type1.font_name, len + 1 ) )
-      {
-        parser->root.error = error;
-        return;
-      }
-
-      FT_MEM_COPY( face->type1.font_name, cur, len );
-      face->type1.font_name[len] = '\0';
-    }
-    parser->root.cursor = cur2;
-  }
-
-
-#if 0
-  static void
-  parse_font_bbox( T1_Face    face,
-                   T1_Loader  loader )
-  {
-    T1_Parser  parser = &loader->parser;
-    FT_Fixed   temp[4];
-    FT_BBox*   bbox   = &face->type1.font_bbox;
-
-
-    (void)T1_ToFixedArray( parser, 4, temp, 0 );
-    bbox->xMin = FT_RoundFix( temp[0] );
-    bbox->yMin = FT_RoundFix( temp[1] );
-    bbox->xMax = FT_RoundFix( temp[2] );
-    bbox->yMax = FT_RoundFix( temp[3] );
-  }
-#endif
-
-
-  static void
   parse_font_matrix( T1_Face    face,
                      T1_Loader  loader )
   {
@@ -1498,10 +1433,6 @@
 #include "t1tokens.h"
 
     /* now add the special functions... */
-    T1_FIELD_CALLBACK( "FontName", parse_font_name )
-#if 0
-    T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
-#endif
     T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
     T1_FIELD_CALLBACK( "Encoding", parse_encoding )
     T1_FIELD_CALLBACK( "Subrs", parse_subrs )
