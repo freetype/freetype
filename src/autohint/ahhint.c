@@ -30,7 +30,7 @@
 #define FACE_GLOBALS( face )  ((AH_Face_Globals*)(face)->autohint.data)
 
 #define AH_USE_IUP
-
+#define OPTIM_STEM_SNAP
 
   /*************************************************************************/
   /*************************************************************************/
@@ -51,6 +51,7 @@
     int     n;
     FT_Pos  best      = 64 + 32 + 2;
     FT_Pos  reference = width;
+    FT_Pos  scaled;
 
 
     for ( n = 0; n < count; n++ )
@@ -70,16 +71,16 @@
       }
     }
 
+    scaled = (reference+32) & -64;
+
     if ( width >= reference )
     {
-      width -= 0x21;
-      if ( width < reference )
+      if ( width < scaled + 48 )
         width = reference;
     }
     else
     {
-      width += 0x21;
-      if ( width > reference )
+      if ( width > scaled - 48 )
         width = reference;
     }
 
@@ -87,24 +88,62 @@
   }
 
 
-  /* align one stem edge relative to the previous stem edge */
-  static void
-  ah_align_linked_edge( AH_Hinter*  hinter,
-                        AH_Edge*    base_edge,
-                        AH_Edge*    stem_edge,
-                        int         vertical )
+  /* compute the snapped width of a given stem */
+  static FT_Pos
+  ah_compute_stem_width( AH_Hinter*  hinter,
+                         int         vertical,
+                         FT_Pos      width )
   {
-    FT_Pos       dist    = stem_edge->opos - base_edge->opos;
     AH_Globals*  globals = &hinter->globals->scaled;
-    FT_Pos       sign    = 1;
-
+    FT_Pos       dist    = width;
+    FT_Int       sign    = 0;
 
     if ( dist < 0 )
     {
-      dist = -dist;
-      sign = -1;
+      dist = -width;
+      sign = 1;
     }
 
+#if 1
+    if ( dist < 64 )
+      dist = 64;
+
+    {
+      FT_Pos  delta = dist - globals->stds[vertical];
+
+      if ( delta < 0 )
+        delta = -delta;
+
+      if ( delta < 40 )
+      {
+        dist = globals->stds[vertical];
+        if ( dist < 32 )
+          dist = 32;
+      }
+
+      {
+        if ( dist < 3*64 )
+        {
+          delta = (dist & 63);
+          dist &= -64;
+
+          if ( delta < 10 )
+            dist += delta;
+
+          else if ( delta < 32 )
+            dist += 10;
+
+          else if ( delta < 54 )
+            dist += 54;
+
+          else
+            dist += delta;
+        }
+        else
+          dist = (dist+32) & -64;
+      }
+    }
+#else
     if ( vertical )
     {
       dist = ah_snap_width( globals->heights, globals->num_heights, dist );
@@ -138,14 +177,32 @@
           dist = ( dist + 64 ) >> 1;
 
         else if ( dist < 128 )
-          dist = ( dist + 42 ) & -64;
+          dist = ( dist + 22 ) & -64;
         else
           /* XXX: round otherwise, prevent color fringes in LCD mode */
           dist = ( dist + 32 ) & -64;
       }
     }
+#endif
 
-    stem_edge->pos = base_edge->pos + sign * dist;
+    if ( sign )
+      dist = -dist;
+
+    return dist;
+  }
+
+
+  /* align one stem edge relative to the previous stem edge */
+  static void
+  ah_align_linked_edge( AH_Hinter*  hinter,
+                        AH_Edge*    base_edge,
+                        AH_Edge*    stem_edge,
+                        int         vertical )
+  {
+    FT_Pos       dist    = stem_edge->opos - base_edge->opos;
+
+    stem_edge->pos = base_edge->pos +
+                     ah_compute_stem_width( hinter, vertical, dist );
   }
 
 
@@ -168,6 +225,10 @@
       sign = -1;
     }
 
+#if 0
+    if ( dist < 32 )
+      dist = 32;
+#else
     /* do not strengthen serifs */
     if ( base->flags & ah_edge_done )
     {
@@ -179,6 +240,7 @@
       else
         dist = 0;
     }
+#endif
 
     serif->pos = base->pos + sign * dist;
   }
@@ -308,32 +370,57 @@
           {
             edge->pos = ( edge->opos + 32 ) & -64;
             anchor    = edge;
+
+            edge->flags |= ah_edge_done;
+
+            ah_align_linked_edge( hinter, edge, edge2, dimension );
           }
           else
-            edge->pos = anchor->pos +
-                        ( ( edge->opos - anchor->opos + 32 ) & -64 );
-
-          edge->flags |= ah_edge_done;
-
-          if ( edge > edges && edge->pos < edge[-1].pos )
           {
-            edge->pos = edge[-1].pos;
-            min       = 1;
-          }
+            FT_Pos   org_pos, org_len, org_center, cur_len;
+            FT_Pos   cur_pos1, cur_pos2, delta1, delta2;
 
-          ah_align_linked_edge( hinter, edge, edge2, dimension );
-          delta = 0;
-          if ( edge2 + 1 < edge_limit        &&
-               edge2[1].flags & ah_edge_done )
-            delta = edge2[1].pos - edge2->pos;
 
-          if ( delta < 0 )
-          {
-            edge2->pos += delta;
-            if ( !min )
-              edge->pos += delta;
+            org_pos    = anchor->pos + (edge->opos - anchor->opos);
+            org_len    = edge2->opos - edge->opos;
+            org_center = org_pos + (org_len >> 1);
+
+            cur_len    = ah_compute_stem_width( hinter, dimension, org_len );
+
+            cur_pos1   = ( org_pos + 32 ) & -64;
+            delta1     = ( cur_pos1 + (cur_len >> 1) - org_center );
+            if ( delta1 < 0 )
+              delta1 = -delta1;
+
+            cur_pos2   = (( org_pos + org_len + 32 ) & -64) - cur_len;
+            delta2     = ( cur_pos2 + (cur_len >> 1) - org_center );
+            if ( delta2 < 0 )
+              delta2 = -delta2;
+
+            edge->pos  = ( delta1 <= delta2 ) ? cur_pos1 : cur_pos2;
+            edge2->pos = edge->pos + cur_len;
+
+            edge->flags  |= ah_edge_done;
+            edge2->flags |= ah_edge_done;
+
+            if ( edge > edges && edge->pos < edge[-1].pos )
+              edge->pos = edge[-1].pos;
+
+#if 0
+            delta = 0;
+            if ( edge2 + 1 < edge_limit        &&
+                 edge2[1].flags & ah_edge_done )
+              delta = edge2[1].pos - edge2->pos;
+
+            if ( delta < 0 )
+            {
+              edge2->pos += delta;
+              if ( !min )
+                edge->pos += delta;
+            }
+            edge2->flags |= ah_edge_done;
+#endif
           }
-          edge2->flags |= ah_edge_done;
         }
       }
 
@@ -854,6 +941,9 @@
 
     for ( n = 0; n < design->num_heights; n++ )
       scaled->heights[n] = FT_MulFix( design->heights[n], y_scale );
+
+    scaled->stds[0] = ( design->num_widths  > 0 ) ? scaled->widths[0]  : 32000;
+    scaled->stds[1] = ( design->num_heights > 0 ) ? scaled->heights[0] : 32000;
 
     /* scale the blue zones */
     for ( n = 0; n < ah_blue_max; n++ )

@@ -423,6 +423,8 @@ FT_BEGIN_HEADER
     FT_Int  num_widths;
     FT_Int  num_heights;
 
+    FT_Pos  stds[2];
+
     FT_Pos  widths [AH_MAX_WIDTHS];
     FT_Pos  heights[AH_MAX_HEIGHTS];
 

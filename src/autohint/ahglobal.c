@@ -368,7 +368,6 @@
       limit        = segments + outline->num_vsegments;
       widths       = globals->widths;
       p_num_widths = &globals->num_widths;
-
     }
 
     /* Now, compute the edge distance threshold as a fraction of the */
