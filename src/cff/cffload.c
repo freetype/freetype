@@ -1743,14 +1743,17 @@
            FT_READ_BYTE( count )              )
         goto Exit;
 
-      encoding->count = count + 1;
-
       switch ( encoding->format & 0x7F )
       {
       case 0:
         {
           FT_Byte*  p;
           
+          /* by convention, GID 0 is always ".notdef" and is never */
+          /* coded in the font. Hence, the number of codes found   */
+          /* in the table is 'count+1'                             */
+          /*                                                       */
+          encoding->count = count + 1;
 
           if ( FT_FRAME_ENTER( count ) )
             goto Exit;
@@ -1762,7 +1765,7 @@
             glyph_code = *p++;
 
             /* Make sure j is not too big. */
-            if ( (FT_UInt) glyph_code < num_glyphs )
+            if ( j < num_glyphs )
             {
               /* Assign code to GID mapping. */
               encoding->codes[glyph_code] = (FT_UShort)j;
@@ -1783,6 +1786,8 @@
           FT_UInt  k;
 
 
+          encoding->count = 0;
+
           /* Parse the Format1 ranges. */
           for ( j = 0;  j < count; j++, i += nleft )
           {
@@ -1796,7 +1801,11 @@
 
             /* Increment nleft, so we read `nleft + 1' codes/sids. */
             nleft++;
-
+            
+            /* compute max number of character codes */
+            if ( nleft > encoding->count )
+              encoding->count = nleft;
+            
             /* Fill in the range of codes/sids. */
             for ( k = i; k < nleft + i; k++, glyph_code++ )
             {
@@ -1811,6 +1820,10 @@
               }
             }
           }
+          
+          /* simple check, one never knows what can be found in a font */
+          if ( encoding->count > 256 )
+            encoding->count = 256;
         }
         break;
 
@@ -1866,8 +1879,6 @@
       /* encoding (see the note at the end of section 12 in the CFF     */
       /* specification).                                                */
 
-      encoding->count = 256;
-
       switch ( (FT_UInt)offset )
       {
       case 0:
@@ -1885,6 +1896,10 @@
       Populate:
         /* Construct code to GID mapping from code to SID mapping */
         /* and charset.                                           */
+        
+        encoding->count = 0;
+
+
         for ( j = 0; j < 256; j++ )
         {
           /* If j is encoded, find the GID for it. */
@@ -1904,7 +1919,13 @@
               encoding->sids [j] = 0;
             }
             else
+            {
               encoding->codes[j] = (FT_UShort)i;
+              
+              /* update encoding count */
+              if ( encoding->count < j+1 )
+                encoding->count = j+1;
+            }
           }
         }
         break;
