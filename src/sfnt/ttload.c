@@ -501,7 +501,7 @@
     error = face->goto_table( face, tag, stream, 0 );
     if ( error )
     {
-      FT_TRACE2(( "TT_Load_Generic_Table: Font table is missing!\n" ));
+      FT_TRACE2(( "TT_Load_Generic_Header: Font table is missing!\n" ));
       goto Exit;
     }
 
@@ -512,7 +512,7 @@
 
     FT_TRACE2(( "    Units per EM: %8u\n", header->Units_Per_EM ));
     FT_TRACE2(( "    IndexToLoc:   %8d\n", header->Index_To_Loc_Format ));
-    FT_TRACE2(( "TT_Load_Generic_Table: Font table loaded.\n" ));
+    FT_TRACE2(( "TT_Load_Generic_Header: Font table loaded.\n" ));
 
   Exit:
     return error;
