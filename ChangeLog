@@ -18,6 +18,20 @@
 	* include/freetype/internal/ftmemory.h: adding FT_ARRAY_ZERO, as a
 	convenience macro.
 
+    * include/freetype/config/ftoption.h, include/freetype/internal/ttypes.h,
+    src/truetype/ttpload.c, src/truetype/ttpload.h, src/truetype/ttgload.c:
+    added the temporary configuration FT_OPTIMIZE_MEMORY to control various
+    optimizations used to reduce the heap footprint of memory-mapped TrueType
+    files.
+
+    * src/truetype/ttpload.c (tt_face_load_loca, tt_face_get_location,
+    tt_face_done_loca): when FT_OPTIMIZE_MEMORY is set, the locations table
+    is read directly from memory-mapped streams, instead of being decoded
+    into the heap.
+
+    * src/truetype/ttpload.c: only load the CVT and fpgm tables when the
+    bytecode interpreter is compiled in.
+
 
 2005-02-20  Werner Lemberg  <wl@gnu.org>
 

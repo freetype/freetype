@@ -304,12 +304,15 @@
 
 
       if ( FT_RENEW_ARRAY( outline->points,        max,     news     ) ||
-           FT_RENEW_ARRAY( outline->horz_edges,    max * 2, news * 2 ) ||
-           FT_RENEW_ARRAY( outline->horz_segments, max * 2, news * 2 ) )
+           FT_RENEW_ARRAY( outline->horz_edges,    max * 2, news * 2 ) )
+        goto Exit;
+
+      outline->vert_edges    = outline->horz_edges    + news;
+
+      if ( FT_RENEW_ARRAY( outline->horz_segments, max * 2, news * 2 ) )
         goto Exit;
 
       /* readjust some pointers */
-      outline->vert_edges    = outline->horz_edges    + news;
       outline->vert_segments = outline->horz_segments + news;
       outline->max_points    = news;
     }

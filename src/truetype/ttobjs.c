@@ -218,8 +218,11 @@
       if ( !face->root.internal->incremental_interface )
         error = tt_face_load_loca( face, stream );
       if ( !error )
-        error = tt_face_load_cvt( face, stream ) ||
-                tt_face_load_fpgm( face, stream );
+      {
+        error = tt_face_load_cvt( face, stream );
+        if ( !error )
+          error = tt_face_load_fpgm( face, stream );
+      }
 
 #else
 
@@ -290,8 +293,7 @@
       sfnt->done_face( face );
 
     /* freeing the locations table */
-    FT_FREE( face->glyph_locations );
-    face->num_locations = 0;
+    tt_face_done_loca( face );
 
     /* freeing the CVT */
     FT_FREE( face->cvt );

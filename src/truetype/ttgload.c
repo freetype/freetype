@@ -1019,13 +1019,7 @@
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
-    {
-      offset = face->glyph_locations[glyph_index];
-      count  = 0;
-
-      if ( glyph_index < (FT_UInt)face->num_locations - 1 )
-        count = (FT_UInt)( face->glyph_locations[glyph_index + 1] - offset );
-    }
+    offset = tt_face_get_location( face, glyph_index, &count );
 
     if ( count == 0 )
     {
