@@ -1422,7 +1422,8 @@
                point->dir_in != point->dir_out )
             continue;
 
-          if ( !psh3_point_is_extremum( point ) )
+          if ( !psh3_point_is_extremum( point )   &&
+               !psh3_point_is_inflection( point ) )
             continue;
 
           point->flags &= ~PSH3_POINT_SMOOTH;
