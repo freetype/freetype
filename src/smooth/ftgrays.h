@@ -40,7 +40,7 @@
 #define FT_EXPORT_VAR( x )  extern  x
 #endif
 
-  FT_EXPORT_VAR( FT_Raster_Funcs )  ft_grays_raster;
+  FT_EXPORT_VAR( const FT_Raster_Funcs )  ft_grays_raster;
 
 #ifdef __cplusplus
   }

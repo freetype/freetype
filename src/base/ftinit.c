@@ -65,8 +65,8 @@
 #define FT_USE_MODULE( x )  (const FT_Module_Class*)&x,
 
 static
-const FT_Module_Class*  ft_default_modules[] =
-  {
+const FT_Module_Class*  const ft_default_modules[] =
+const {
 #include <freetype/config/ftmodule.h>
     0
   };

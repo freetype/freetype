@@ -53,9 +53,9 @@
   /*    FreeType error code.  0 means sucess.                              */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Outline_Decompose(
-                               FT_Outline*        outline,
-                               FT_Outline_Funcs*  interface,
-                               void*              user );
+                               FT_Outline*              outline,
+                               const FT_Outline_Funcs*  interface,
+                               void*                    user );
 
 
   /*************************************************************************/
