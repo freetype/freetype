@@ -1,7 +1,11 @@
+2001-06-26  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* include/freetype/internal/ftstream.h (FT_GET_OFF3_LE): Fix typo.
+
 2001-06-24  David Turner  <david@freetype.org>
 
-    * src/base/ftcalc.c (ft_div64by32): fixed the source to work
-    correctly on 16-bit systems..
+	* src/base/ftcalc.c (ft_div64by32): Fixed the source to work
+	correctly on 16-bit systems.
 
 2001-06-23  Anthony Fok  <fok@debian.org>
 
@@ -9,9 +13,9 @@
 
 2001-06-22  David Turner <david@freetype.org>
 
-    * docs/PATENTS: added patents disclaimer. This one was missing !!
+	* docs/PATENTS: Added patents disclaimer.  This one was missing!
     
-    * docs/CHANGES, docs/todo: updated for the upcoming 2.0.4 release
+	* docs/CHANGES, docs/todo: Updated for the upcoming 2.0.4 release.
 
 2001-06-20  Werner Lemberg  <wl@gnu.org>
 
