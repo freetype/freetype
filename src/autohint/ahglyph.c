@@ -5,7 +5,7 @@
 /*    Routines used to load and analyze a given glyph before hinting       */
 /*    (body).                                                              */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
+/*  Copyright 2000-2001, 2002, 2003 Catharon Productions Inc.              */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -1358,12 +1358,12 @@
             }
             else
               edge->link  = edge2;
-#else /* !CHESTER_SERIF */
+#else /* !FT_CONFIG_CHESTER_SERIF */
             if ( is_serif )
               edge->serif = edge2;
             else
               edge->link  = edge2;
-#endif
+#endif /* !FT_CONFIG_CHESTER_SERIF */
           }
 
           seg = seg->edge_next;
@@ -1493,7 +1493,7 @@
         best_dist = 64 / 2;
 #else
       if ( best_dist > 64 / 4 )
-         best_dist = 64 / 4;
+        best_dist = 64 / 4;
 #endif
 
       for ( blue = AH_BLUE_CAPITAL_TOP; blue < AH_BLUE_MAX; blue++ )

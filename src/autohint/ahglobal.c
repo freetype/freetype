@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Routines used to compute global metrics automatically (body).        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
+/*  Copyright 2000-2001, 2002, 2003 Catharon Productions Inc.              */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -323,7 +323,8 @@
       if ( error )
         goto Exit;
 
-      error = ah_outline_load( hinter->glyph, 0x10000L, 0x10000L, hinter->face );
+      error = ah_outline_load( hinter->glyph, 0x10000L, 0x10000L,
+                               hinter->face );
       if ( error )
         goto Exit;
 

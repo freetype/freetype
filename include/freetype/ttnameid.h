@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType name ID definitions (specification only).                   */
 /*                                                                         */
-/*  Copyright 1996-2002 by                                                 */
+/*  Copyright 1996-2002, 2003 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -257,8 +257,8 @@ FT_BEGIN_HEADER
    *     Corresponds to Microsoft Johab encoding.  See @FT_ENCODING_MS_JOHAB.
    *
    *   TT_MS_ID_UCS_4 ::
-   *     Corresponds to UCS-4 or UTF-32 charmaps.  This has been added into
-   *     OpenType specification as of version 1.4 (mid-2001.)
+   *     Corresponds to UCS-4 or UTF-32 charmaps.  This has been added to
+   *     the OpenType specification version 1.4 (mid-2001.)
    */
 
 #define TT_MS_ID_SYMBOL_CS    0

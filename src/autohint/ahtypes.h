@@ -5,7 +5,7 @@
 /*    General types and definitions for the auto-hint module               */
 /*    (specification only).                                                */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
+/*  Copyright 2000-2001, 2002, 2003 Catharon Productions Inc.              */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -387,24 +387,24 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_CHESTER_SMALL_F
 
-#  define AH_BLUE_CAPITAL_TOP     0                              /* THEZOCQS */
-#  define AH_BLUE_CAPITAL_BOTTOM  ( AH_BLUE_CAPITAL_TOP + 1 )    /* HEZLOCUS */
-#  define AH_BLUE_SMALL_F_TOP     ( AH_BLUE_CAPITAL_BOTTOM + 1 ) /* fijkdbh  */
-#  define AH_BLUE_SMALL_TOP       ( AH_BLUE_SMALL_F_TOP + 1 )    /* xzroesc  */
-#  define AH_BLUE_SMALL_BOTTOM    ( AH_BLUE_SMALL_TOP + 1 )      /* xzroesc  */
-#  define AH_BLUE_SMALL_MINOR     ( AH_BLUE_SMALL_BOTTOM + 1 )   /* pqgjy    */
-#  define AH_BLUE_MAX             ( AH_BLUE_SMALL_MINOR + 1 )
+#define AH_BLUE_CAPITAL_TOP     0                              /* THEZOCQS */
+#define AH_BLUE_CAPITAL_BOTTOM  ( AH_BLUE_CAPITAL_TOP + 1 )    /* HEZLOCUS */
+#define AH_BLUE_SMALL_F_TOP     ( AH_BLUE_CAPITAL_BOTTOM + 1 ) /* fijkdbh  */
+#define AH_BLUE_SMALL_TOP       ( AH_BLUE_SMALL_F_TOP + 1 )    /* xzroesc  */
+#define AH_BLUE_SMALL_BOTTOM    ( AH_BLUE_SMALL_TOP + 1 )      /* xzroesc  */
+#define AH_BLUE_SMALL_MINOR     ( AH_BLUE_SMALL_BOTTOM + 1 )   /* pqgjy    */
+#define AH_BLUE_MAX             ( AH_BLUE_SMALL_MINOR + 1 )
 
-#else /* !CHESTER_SMALL_F */
+#else /* !FT_CONFIG_CHESTER_SMALL_F */
 
-#  define AH_BLUE_CAPITAL_TOP     0                              /* THEZOCQS */
-#  define AH_BLUE_CAPITAL_BOTTOM  ( AH_BLUE_CAPITAL_TOP + 1 )    /* HEZLOCUS */
-#  define AH_BLUE_SMALL_TOP       ( AH_BLUE_CAPITAL_BOTTOM + 1)  /* xzroesc  */
-#  define AH_BLUE_SMALL_BOTTOM    ( AH_BLUE_SMALL_TOP + 1 )      /* xzroesc  */
-#  define AH_BLUE_SMALL_MINOR     ( AH_BLUE_SMALL_BOTTOM + 1 )   /* pqgjy    */
-#  define AH_BLUE_MAX             ( AH_BLUE_SMALL_MINOR + 1 )
+#define AH_BLUE_CAPITAL_TOP     0                              /* THEZOCQS */
+#define AH_BLUE_CAPITAL_BOTTOM  ( AH_BLUE_CAPITAL_TOP + 1 )    /* HEZLOCUS */
+#define AH_BLUE_SMALL_TOP       ( AH_BLUE_CAPITAL_BOTTOM + 1)  /* xzroesc  */
+#define AH_BLUE_SMALL_BOTTOM    ( AH_BLUE_SMALL_TOP + 1 )      /* xzroesc  */
+#define AH_BLUE_SMALL_MINOR     ( AH_BLUE_SMALL_BOTTOM + 1 )   /* pqgjy    */
+#define AH_BLUE_MAX             ( AH_BLUE_SMALL_MINOR + 1 )
 
-#endif /* !CHESTER_SMALL_F */
+#endif /* !FT_CONFIG_CHESTER_SMALL_F */
 
   typedef FT_Int  AH_Blue;
 

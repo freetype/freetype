@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -539,26 +539,28 @@ FT_BEGIN_HEADER
  /* */
  
  /*
-  * free the bitmap of a given glyphslot when needed
-  * (i.e. only when it was allocated with ft_glyphslot_alloc_bitmap)
+  * Free the bitmap of a given glyphslot when needed
+  * (i.e., only when it was allocated with ft_glyphslot_alloc_bitmap).
   */
   FT_BASE( void )
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot );
  
+
  /*
-  * allocate a new bitmap buffer in a glyph slot
+  * Allocate a new bitmap buffer in a glyph slot.
   */
   FT_BASE( FT_Error )
   ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,
                              FT_ULong      size );
 
+
  /*
-  * set the bitmap buffer in a glyph slot to a given pointer.
-  * the buffer will not be freed by a later call to ft_glyphslot_free_bitmap
+  * Set the bitmap buffer in a glyph slot to a given pointer.
+  * The buffer will not be freed by a later call to ft_glyphslot_free_bitmap.
   */
   FT_BASE( void )
-  ft_glyphslot_set_bitmap( FT_GlyphSlot   slot,
-                           FT_Pointer     buffer );
+  ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
+                           FT_Pointer    buffer );
 
 
   /*************************************************************************/
