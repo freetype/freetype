@@ -1,3 +1,14 @@
+2002-09-25  David Turner  <david@freetype.org>
+
+        * src/autohint/ahtypes.h: disabling metrics hinting in the auto-hinter.
+        this produces much better anti-aliased text
+
+2002-09-25  Anthony Fok  <anthony@thizlinux.com>
+
+        * src/sfnt/ttcmap0.c: added support for opens___.ttf (it contains
+        a charmap that uses offset=0xFFFFU instead of 0x0000 to indicate a
+        missing glyph)
+
 2002-09-21  Wolfgang Domröse  <porthos.domroese@harz.de>
 
 	* src/truetype/ttdriver.c (Load_Glyph): Fourth parameter must be
