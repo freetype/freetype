@@ -1,16 +1,24 @@
 2004-07-17  David Turner  <david@freetype.org>
 
-        * include/freetype/cache/ftcglyph.h, src/cache/ftcglyph.c:
-        fixed a dangling pointer bug that happened in very rare cases:
-        i.e. when a new family object was destroyed by an out-of-memory
-        condition during a glyph node initialization. The function
-        FTC_Cache_Lookup would flush the cache and restart the lookup
-        with a bad pointer.
+	Fixed a dangling pointer bug in the cache code that happened in very
+	rare cases, i.e., when a new family object was destroyed by an
+	out-of-memory condition during a glyph node initialization.  The
+	function FTC_Cache_Lookup would flush the cache and restart the
+	lookup with a bad pointer.
 
-        * src/cache/ftcmanag.c: fixed a cache flushing bug
+	* include/freetype/cache/ftcglyph.h (FTC_FAMILY_TREE): New macro.
+	(FTC_GCACHE_LOOKUP_CMP): Use it.
+	Handle reference count in `num_nodes' correctly.
 
-        * src/truetype/ttinterp.c (TT_Normalize): fixed a bug that
-        caused long and unecessary delays when normalizing huge vectors
+	* src/cache/ftcglyph.c (FTC_GNode_UnselectFamily): Use
+	FTC_FAMILY_FREE.
+	(FTC_GCache_Lookup): Handle reference count in `num_nodes' correctly.
+
+	* src/cache/ftcmanag.c (FTC_Manager_FlushN): Fixed a cache flushing
+	bug.
+
+	* src/truetype/ttinterp.c (Normalize): Fixed a bug that caused
+	long and unnecessary delays while normalizing huge vectors.
 
 2004-07-15  Werner Lemberg  <wl@gnu.org>
 
@@ -67,6 +75,11 @@
 	by Dirck Blaskey.
 
 2004-06-24  David Turner  <david@freetype.org>
+
+
+	* Version 2.1.9 released.
+	=========================
+
 
 	* src/truetype/ttgload.c, src/truetype/ttxgvar.c: Removing
 	compiler warnings.
