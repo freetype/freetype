@@ -580,7 +580,7 @@ FT_BEGIN_HEADER
   typedef struct  FT_DriverRec_
   {
     FT_ModuleRec      root;
-    FT_Driver_Class  clazz;
+    FT_Driver_Class   clazz;
 
     FT_ListRec        faces_list;
     void*             extensions;
@@ -688,17 +688,17 @@ FT_BEGIN_HEADER
                             FT_UInt       render_mode );
 
   typedef const char*
-  (*FT_PSName_Requester)( FT_Face  face );
+  (*FT_Face_GetPostscriptNameFunc)( FT_Face  face );
 
   typedef FT_Error
-  (*FT_Glyph_Name_Requester)( FT_Face     face,
-                              FT_UInt     glyph_index,
-                              FT_Pointer  buffer,
-                              FT_UInt     buffer_max );
+  (*FT_Face_GetGlyphNameFunc)( FT_Face     face,
+                               FT_UInt     glyph_index,
+                               FT_Pointer  buffer,
+                               FT_UInt     buffer_max );
 
   typedef FT_UInt
-  (*FT_Name_Index_Requester)( FT_Face     face,
-                              FT_String*  glyph_name );
+  (*FT_Face_GetGlyphNameIndexFunc)( FT_Face     face,
+                                    FT_String*  glyph_name );
 
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM

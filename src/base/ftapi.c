@@ -1188,10 +1188,10 @@
 
       if ( clazz->get_interface )
       {
-        FT_Name_Index_Requester  requester;
+        FT_Face_GetGlyphNameIndexFunc  requester;
 
 
-        requester = (FT_Name_Index_Requester)clazz->get_interface(
+        requester = (FT_Face_GetGlyphNameIndexFunc)clazz->get_interface(
                       FT_MODULE( driver ), "name_index" );
         if ( requester )
           result = requester( face, glyph_name );
@@ -1228,10 +1228,10 @@
 
       if ( clazz->get_interface )
       {
-        FT_Glyph_Name_Requester  requester;
+        FT_Face_GetGlyphNameFunc  requester;
 
 
-        requester = (FT_Glyph_Name_Requester)clazz->get_interface(
+        requester = (FT_Face_GetGlyphNameFunc)clazz->get_interface(
                       FT_MODULE( driver ), "glyph_name" );
         if ( requester )
           error = requester( face, glyph_index, buffer, buffer_max );
@@ -1263,10 +1263,10 @@
 
       if ( clazz->get_interface )
       {
-        FT_PSName_Requester  requester;
+        FT_Face_GetPostscriptNameFunc  requester;
 
 
-        requester = (FT_PSName_Requester)clazz->get_interface(
+        requester = (FT_Face_GetPostscriptNameFunc)clazz->get_interface(
                       FT_MODULE( driver ), "postscript_name" );
         if ( requester )
           result = requester( face );
