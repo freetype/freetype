@@ -42,7 +42,7 @@
     count = ( ( count  & 0xCC ) >> 2 ) + ( count  & 0x33 );
     count = ( ( count  & 0xF0 ) >> 4 ) + ( count  & 0x0F );
 
-    return count;
+    return count * 2;
   }
 
 
@@ -314,7 +314,7 @@
     case 2:
       {
         OTL_UInt  coverage, value1, value2, class1, class2;
-        OTL_UInt  num_classes1, num_classes2, len_value1, len_value2;
+        OTL_UInt  num_classes1, num_classes2, len_value1, len_value2, count;
 
 
         OTL_CHECK( 14 );
@@ -330,13 +330,15 @@
         len_value2 = otl_value_length( value2 );
 
         otl_coverage_validate( table + coverage, valid );
+        otl_class_definition_validate( table + class1, valid );
+        otl_class_definition_validate( table + class2, valid );
 
         OTL_CHECK( num_classes1 * num_classes2 *
                      ( len_value1 + len_value2 ) );
 
         for ( ; num_classes1 > 0; num_classes1-- )
         {
-          for ( ; num_classes2 > 0; num_classes2-- )
+          for ( count = num_classes2; count > 0; count-- )
           {
             otl_value_validate( p, table, value1, valid );
             p += len_value1;
@@ -522,7 +524,7 @@
         if ( !offset && maybe_zero )
           continue;
   
-        otl_anchor_validate( table + OTL_NEXT_USHORT( p ), valid );
+        otl_anchor_validate( table + offset, valid );
       }
   }
 
