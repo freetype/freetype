@@ -421,7 +421,7 @@
   FT_Get_Glyph( FT_GlyphSlot  slot,
                 FT_Glyph     *aglyph )
   {
-    FT_Library  library = slot->library;
+    FT_Library  library;
     FT_Error    error;
     FT_Glyph    glyph;
 
@@ -430,6 +430,8 @@
 
     if ( !slot )
       return FT_Err_Invalid_Slot_Handle;
+
+    library = slot->library;
 
     if ( !aglyph )
       return FT_Err_Invalid_Argument;

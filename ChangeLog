@@ -1,5 +1,8 @@
 2003-09-29  David Turner  <david@freetype.org>
 
+        * src/base/ftglyph.c (FT_Get_Glyph): fixing small bug, thanks
+        to Henry Maddocks for spotting this
+
         * include/freetype/internal/services/svpsname.h (added),
         include/freetype/internal/psnames.h (removed),
         include/freetype/internal/internal.h (FT_SERVICE_POSTSCRIPT_NAMES):
