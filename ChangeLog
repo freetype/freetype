@@ -1,3 +1,13 @@
+2003-08-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Accept lowercase characters
+	for spacing.
+
+2003-08-27  Mike FABIAN  <mfabian@suse.de>
+
+	* src/pcf/pcfread.c (pcf_load_font), src/bdf/bdfdrivr.c
+	(BDF_Face_Init): Accept lowercase characters for slant and weight.
+
 2003-08-18  David Turner  <david@freetype.org>
 
 	* include/freetype/config/ftoption.h: Disabling TrueType bytecode

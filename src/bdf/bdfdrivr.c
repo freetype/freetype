@@ -253,7 +253,9 @@ THE SOFTWARE.
         if ( prop->format == BDF_ATOM )
           if ( prop->value.atom != NULL )
             if ( ( *(prop->value.atom) == 'M' ) ||
-                 ( *(prop->value.atom) == 'C' ) )
+                 ( *(prop->value.atom) == 'm' ) ||
+                 ( *(prop->value.atom) == 'C' ) ||
+                 ( *(prop->value.atom) == 'c' ) )
               root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
       /* FZ XXX: TO DO: FT_FACE_FLAGS_VERTICAL   */
@@ -265,14 +267,17 @@ THE SOFTWARE.
         if ( prop->format == BDF_ATOM )
           if ( prop->value.atom != NULL )
             if ( ( *(prop->value.atom) == 'O' ) ||
-                 ( *(prop->value.atom) == 'I' ) )
+                 ( *(prop->value.atom) == 'o' ) ||
+                 ( *(prop->value.atom) == 'I' ) ||
+                 ( *(prop->value.atom) == 'i' ) )
               root->style_flags |= FT_STYLE_FLAG_ITALIC;
 
       prop = bdf_get_font_property( font, "WEIGHT_NAME" );
       if ( prop != NULL )
         if ( prop->format == BDF_ATOM )
           if ( prop->value.atom != NULL )
-            if ( *(prop->value.atom) == 'B' )
+            if ( ( *(prop->value.atom) == 'B' ) ||
+                 ( *(prop->value.atom) == 'b' ) )
               root->style_flags |= FT_STYLE_FLAG_BOLD;
 
       prop = bdf_get_font_property( font, "FAMILY_NAME" );
