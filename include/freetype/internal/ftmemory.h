@@ -172,15 +172,11 @@ FT_BEGIN_HEADER
            void**     P );
 
 
-  /* This `#include' is needed by the MEM_xxx() macros; it should be */
-  /* available on all platforms we know of.                          */
-#include <string.h>
+#define FT_MEM_SET( dest, byte, count )     ft_memset( dest, byte, count )
 
-#define FT_MEM_SET( dest, byte, count )     memset( dest, byte, count )
+#define FT_MEM_COPY( dest, source, count )  ft_memcpy( dest, source, count )
 
-#define FT_MEM_COPY( dest, source, count )  memcpy( dest, source, count )
-
-#define FT_MEM_MOVE( dest, source, count )  memmove( dest, source, count )
+#define FT_MEM_MOVE( dest, source, count )  ft_memmove( dest, source, count )
 
 
   /*************************************************************************/

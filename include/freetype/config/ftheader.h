@@ -111,6 +111,21 @@
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
+  /*    FT_CONFIG_STANDARD_LIBRARY_H                                       */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    FreeType 2 configuration data.                                     */
+  /*                                                                       */
+#ifndef FT_CONFIG_STANDARD_LIBRARY_H
+#define FT_CONFIG_STANDARD_LIBRARY_H  <freetype/config/ftstdlib.h>
+#endif
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
   /*    FT_CONFIG_OPTIONS_H                                                */
   /*                                                                       */
   /* @description:                                                         */

@@ -30,7 +30,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 
   typedef struct FT_MemNodeRec_*   FT_MemNode;
@@ -121,8 +120,6 @@
     13845163,
   };
 
-
-#include <stdarg.h>
 
 
   extern void
@@ -547,7 +544,7 @@
         block, file_name, line_no );
 
     if ( node->size != cur_size )
-      ft_mem_debug_panic( "invalid realloc request for %p. cur_size is "
+      ft_mem_debug_panic( "invalid ft_realloc request for %p. cur_size is "
                           "%ld instead of %ld in (%s:%ld)",
                           block, cur_size, node->size, file_name, line_no );
 
@@ -555,7 +552,7 @@
     if ( new_block == NULL )
       return NULL;
 
-    memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
+    ft_memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
 
     table->file_name = file_name;
     table->line_no   = line_no;

@@ -26,8 +26,6 @@
 
 #include "ciderrs.h"
 
-#include <string.h>     /* for strncmp() */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -73,7 +71,7 @@
     if ( FT_FRAME_ENTER( 31 ) )
       goto Exit;
 
-    if ( strncmp( (char *)stream->cursor,
+    if ( ft_strncmp( (char *)stream->cursor,
                   "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
     {
       FT_TRACE2(( "[not a valid CID-keyed font]\n" ));
@@ -108,7 +106,7 @@
       /* look for `StartData' */
       for ( p = buffer; p < limit; p++ )
       {
-        if ( p[0] == 'S' && strncmp( (char*)p, "StartData", 9 ) == 0 )
+        if ( p[0] == 'S' && ft_strncmp( (char*)p, "StartData", 9 ) == 0 )
         {
           /* save offset of binary data after `StartData' */
           offset = (FT_ULong)( top_position - ( limit - p ) + 10 );

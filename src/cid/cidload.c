@@ -26,9 +26,6 @@
 
 #include "ciderrs.h"
 
-#include <stdio.h>
-#include <ctype.h>  /* for isspace(), isalnum() */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -285,7 +282,7 @@
   static int
   is_alpha( char  c )
   {
-    return ( isalnum( (int)c ) ||
+    return ( ft_isalnum( (int)c ) ||
              c == '.'          ||
              c == '_'          );
   }
@@ -313,7 +310,7 @@
       {
         /* look for `%ADOBeginFontDict' */
         if ( *cur == '%' && cur + 20 < limit &&
-             strncmp( (char*)cur, "%ADOBeginFontDict", 17 ) == 0 )
+             ft_strncmp( (char*)cur, "%ADOBeginFontDict", 17 ) == 0 )
         {
           cur += 17;
 
@@ -352,7 +349,7 @@
                 break;
 
               if ( cur[0] == name[0]                          &&
-                   len == (FT_Int)strlen( (const char*)name ) )
+                   len == (FT_Int)ft_strlen( (const char*)name ) )
               {
                 FT_Int  n;
 

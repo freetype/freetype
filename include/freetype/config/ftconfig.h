@@ -41,7 +41,7 @@
 
 #include <ft2build.h>
 #include FT_CONFIG_OPTIONS_H
-
+#include FT_CONFIG_STANDARD_LIBRARY_H
 
 FT_BEGIN_HEADER
 
@@ -58,24 +58,21 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /* We use <limits.h> values to know the sizes of the types.  */
-#include <limits.h>
-
   /* The number of bytes in an `int' type.  */
-#if   UINT_MAX == 0xFFFFFFFFUL
+#if   FT_UINT_MAX == 0xFFFFFFFFUL
 #define FT_SIZEOF_INT  4
-#elif UINT_MAX == 0xFFFFU
+#elif FT_UINT_MAX == 0xFFFFU
 #define FT_SIZEOF_INT  2
-#elif UINT_MAX > 0xFFFFFFFFU && UINT_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif FT_UINT_MAX > 0xFFFFFFFFU && FT_UINT_MAX == 0xFFFFFFFFFFFFFFFFU
 #define FT_SIZEOF_INT  8
 #else
 #error "Unsupported number of bytes in `int' type!"
 #endif
 
   /* The number of bytes in a `long' type.  */
-#if   ULONG_MAX == 0xFFFFFFFFUL
+#if   FT_ULONG_MAX == 0xFFFFFFFFUL
 #define FT_SIZEOF_LONG  4
-#elif ULONG_MAX > 0xFFFFFFFFU && ULONG_MAX == 0xFFFFFFFFFFFFFFFFU
+#elif FT_ULONG_MAX > 0xFFFFFFFFU && FT_ULONG_MAX == 0xFFFFFFFFFFFFFFFFU
 #define FT_SIZEOF_LONG  8
 #else
 #error "Unsupported number of bytes in `long' type!"

@@ -47,12 +47,6 @@
 
 #if defined( FT_DEBUG_LEVEL_ERROR )
 
-
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
-
-
   FT_EXPORT_DEF( void )
   FT_Message( const char*  fmt, ... )
   {

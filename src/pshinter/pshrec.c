@@ -472,7 +472,7 @@
         PS_MaskRec  dummy = *mask2;
 
 
-        memmove( mask2, mask2 + 1, delta * sizeof ( PS_MaskRec ) );
+        ft_memmove( mask2, mask2 + 1, delta * sizeof ( PS_MaskRec ) );
 
         mask2[delta] = dummy;
       }
@@ -797,7 +797,7 @@
   ps_hints_init( PS_Hints   hints,
                  FT_Memory  memory )
   {
-    memset( hints, 0, sizeof ( *hints ) );
+    ft_memset( hints, 0, sizeof ( *hints ) );
     hints->memory = memory;
     return 0;
   }
@@ -1132,7 +1132,7 @@
   FT_LOCAL_DEF( void )
   t1_hints_funcs_init( T1_Hints_FuncsRec*  funcs )
   {
-    memset( (char*)funcs, 0, sizeof ( *funcs ) );
+    ft_memset( (char*)funcs, 0, sizeof ( *funcs ) );
 
     funcs->open  = (T1_Hints_OpenFunc)    t1_hints_open;
     funcs->close = (T1_Hints_CloseFunc)   ps_hints_close;
@@ -1197,7 +1197,7 @@
   FT_LOCAL_DEF( void )
   t2_hints_funcs_init( T2_Hints_FuncsRec*  funcs )
   {
-    memset( funcs, 0, sizeof ( *funcs ) );
+    ft_memset( funcs, 0, sizeof ( *funcs ) );
 
     funcs->open    = (T2_Hints_OpenFunc)   t2_hints_open;
     funcs->close   = (T2_Hints_CloseFunc)  ps_hints_close;

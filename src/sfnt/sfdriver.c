@@ -33,8 +33,6 @@
 #include "ttpost.h"
 #endif
 
-#include <string.h>     /* for strcmp() */
-
 
   static void*
   get_sfnt_table( TT_Face      face,
@@ -97,7 +95,7 @@
     error = TT_Get_PS_Name( face, glyph_index, &gname );
     if ( !error && buffer_max > 0 )
     {
-      FT_UInt  len = (FT_UInt)( strlen( gname ) );
+      FT_UInt  len = (FT_UInt)( ft_strlen( gname ) );
 
 
       if ( len >= buffer_max )
@@ -201,15 +199,15 @@
   {
     FT_UNUSED( module );
 
-    if ( strcmp( interface, "get_sfnt" ) == 0 )
+    if ( ft_strcmp( interface, "get_sfnt" ) == 0 )
       return (FT_Module_Interface)get_sfnt_table;
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    if ( strcmp( interface, "glyph_name" ) == 0 )
+    if ( ft_strcmp( interface, "glyph_name" ) == 0 )
       return (FT_Module_Interface)get_sfnt_glyph_name;
 #endif
 
-    if ( strcmp( interface, "postscript_name" ) == 0 )
+    if ( ft_strcmp( interface, "postscript_name" ) == 0 )
       return (FT_Module_Interface)get_sfnt_postscript_name;
 
     return 0;

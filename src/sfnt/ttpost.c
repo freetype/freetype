@@ -50,7 +50,7 @@
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
 
-#include <freetype/internal/psnames.h>
+#include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
 #define MAC_NAME( x )  ( (FT_String*)psnames->macintosh_name( x ) )
 

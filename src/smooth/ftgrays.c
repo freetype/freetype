@@ -81,9 +81,6 @@
   /*************************************************************************/
 
 
-#include <string.h>             /* for memcpy() */
-#include <setjmp.h>
-
 
 /* experimental support for gamma correction within the rasterizer */
 #define xxxGRAYS_USE_GAMMA
@@ -101,8 +98,18 @@
 
 #define ErrRaster_MemoryOverflow   -4
 
+
+
+
+
+
+
 #ifdef _STANDALONE_
 
+#include <string.h>             /* for ft_memcpy() */
+#include <setjmp.h>
+#include <limits.h>
+#define  FT_UINT_MAX  UINT_MAX
 
 #define ErrRaster_Invalid_Mode     -2
 #define ErrRaster_Invalid_Outline  -1
@@ -146,7 +153,7 @@
 
 
 #ifndef FT_MEM_SET
-#define FT_MEM_SET( d, s, c )  memset( d, s, c )
+#define FT_MEM_SET( d, s, c )  ft_memset( d, s, c )
 #endif
 
   /* define this to dump debugging information */
@@ -203,7 +210,7 @@
   /* increases the number of cells available in the render pool but slows  */
   /* down the rendering a bit.  It is useful if you have a really tiny     */
   /* render pool.                                                          */
-#define xxxGRAYS_COMPACT
+#undef  GRAYS_COMPACT
 
 
   /*************************************************************************/
@@ -229,9 +236,7 @@
 #else /* PIXEL_BITS >= 8 */
 
   /* approximately determine the size of integers using an ANSI-C header */
-#include <limits.h>
-
-#if UINT_MAX == 0xFFFFU
+#if FT_UINT_MAX == 0xFFFFU
   typedef long  TArea;
 #else
   typedef int  TArea;
@@ -308,7 +313,7 @@
     int  cubic_level;
 
     void*    memory;
-    jmp_buf  jump_buffer;
+    ft_jmp_buf  jump_buffer;
 
 #ifdef GRAYS_USE_GAMMA
     FT_Byte  gamma[257];
@@ -1083,7 +1088,7 @@
 #ifdef QUICK_SORT
 
   /* This is a non-recursive quicksort that directly process our cells     */
-  /* array.  It should be faster than calling the stdlib qsort(), and we   */
+  /* array.  It should be faster than calling the stdlib ft_qsort(), and we   */
   /* can even tailor our insertion threshold...                            */
 
 #define QSORT_THRESHOLD  9  /* below this size, a sub-array will be sorted */

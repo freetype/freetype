@@ -25,9 +25,6 @@
 
 #include "psnamerr.h"
 
-#include <stdlib.h>     /* for qsort()             */
-#include <string.h>     /* for strcmp(), strncpy() */
-
 
 #ifndef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES
 
@@ -106,7 +103,7 @@
 
       if ( *p && len < 64 )
       {
-        strncpy( temp, glyph_name, len );
+        ft_strncpy( temp, glyph_name, len );
         temp[len]  = 0;
         glyph_name = temp;
       }
@@ -118,7 +115,7 @@
       const char*  name = sid_standard_names[n];
 
 
-      if ( first == name[0] && strcmp( glyph_name, name ) == 0 )
+      if ( first == name[0] && ft_strcmp( glyph_name, name ) == 0 )
         return ps_names_to_unicode[n];
     }
 
@@ -127,7 +124,7 @@
   }
 
 
-  /* qsort callback to sort the unicode map */
+  /* ft_qsort callback to sort the unicode map */
   FT_CALLBACK_DEF( int )
   compare_uni_maps( const void*  a,
                     const void*  b )
@@ -198,7 +195,7 @@
       }
       else
         /* sort the table in increasing order of unicode values */
-        qsort( table->maps, count, sizeof ( PS_UniMap ), compare_uni_maps );
+        ft_qsort( table->maps, count, sizeof ( PS_UniMap ), compare_uni_maps );
 
       table->num_maps = count;
     }

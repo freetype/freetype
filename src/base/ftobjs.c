@@ -25,9 +25,6 @@
 #include FT_TRUETYPE_TABLES_H
 #include FT_OUTLINE_H
 
-#include <string.h>     /* for strcmp() */
-#include <setjmp.h>     /* for setjmp() and longjmp() */
-
 
   FT_BASE_DEF( void )
   ft_validator_init( FT_Validator        valid,
@@ -2167,7 +2164,7 @@
     for ( nn = 0; nn < library->num_modules; nn++ )
     {
       module = library->modules[nn];
-      if ( strcmp( module->clazz->module_name, clazz->module_name ) == 0 )
+      if ( ft_strcmp( module->clazz->module_name, clazz->module_name ) == 0 )
       {
         /* this installed module has the same name, compare their versions */
         if ( clazz->module_version <= module->clazz->module_version )
@@ -2283,7 +2280,7 @@
     limit = cur + library->num_modules;
 
     for ( ; cur < limit; cur++ )
-      if ( strcmp( cur[0]->clazz->module_name, module_name ) == 0 )
+      if ( ft_strcmp( cur[0]->clazz->module_name, module_name ) == 0 )
       {
         result = cur[0];
         break;

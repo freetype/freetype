@@ -68,11 +68,8 @@
 #include FT_INTERNAL_TYPE1_TYPES_H
 
 #include "t1load.h"
-
 #include "t1errors.h"
 
-#include <string.h>     /* for strncmp(), strcmp() */
-#include <ctype.h>      /* for isalnum()           */
 
 
   /*************************************************************************/
@@ -770,7 +767,7 @@
     /* Note: we must accept "+" as a valid character, as it is used in */
     /*       embedded type1 fonts in PDF documents.                    */
     /*                                                                 */
-    return ( isalnum( c ) || c == '.' || c == '_' || c == '-' || c == '+' );
+    return ( ft_isalnum( c ) || c == '.' || c == '_' || c == '-' || c == '+' );
   }
 
 
@@ -1076,15 +1073,15 @@
     else
     {
       if ( cur + 17 < limit &&
-           strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
+           ft_strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
         face->type1.encoding_type = T1_ENCODING_TYPE_STANDARD;
 
       else if ( cur + 15 < limit &&
-                strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
+                ft_strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
         face->type1.encoding_type = T1_ENCODING_TYPE_EXPORT;
 
       else if ( cur + 18 < limit &&
-                strncmp( (const char*)cur, "ISOLatin1Encoding", 17 ) == 0 )
+                ft_strncmp( (const char*)cur, "ISOLatin1Encoding", 17 ) == 0 )
         face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
 
       else
@@ -1139,7 +1136,7 @@
 
       /* If the next token isn't `dup', we are also done.  This */
       /* happens when there are `holes' in the Subrs array.     */
-      if ( strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
+      if ( ft_strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
         break;
 
       idx = T1_ToInt( parser );
@@ -1155,7 +1152,7 @@
       T1_Skip_Alpha( parser );    /* `NP' or `I' or `noaccess' */
       T1_Skip_Spaces( parser );
 
-      if ( strncmp( (char*)parser->root.cursor, "put", 3 ) == 0 )
+      if ( ft_strncmp( (char*)parser->root.cursor, "put", 3 ) == 0 )
       {
         T1_Skip_Alpha( parser );  /* skip `put' */
         T1_Skip_Spaces( parser );
@@ -1296,7 +1293,7 @@
         name_table->elements[n][len] = '\0';
 
         /* record index of /.notdef              */
-        if ( strcmp( (const char*)".notdef",
+        if ( ft_strcmp( (const char*)".notdef",
                      (const char*)(name_table->elements[n]) ) == 0 )
         {
           notdef_index = n;
@@ -1336,7 +1333,7 @@
     loader->num_glyphs = n;
 
     /* if /.notdef is found but does not occupy index 0, do our magic.      */
-    if ( strcmp( (const char*)".notdef",
+    if ( ft_strcmp( (const char*)".notdef",
                  (const char*)name_table->elements[0] ) &&
          notdef_found                                      )
     {
@@ -1503,7 +1500,7 @@
       {
         /* look for `FontDirectory', which causes problems on some fonts */
         if ( *cur == 'F' && cur + 25 < limit                 &&
-             strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
+             ft_strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
         {
           FT_Byte*  cur2;
 
@@ -1514,7 +1511,7 @@
 
           /* lookup the `known' keyword */
           while ( cur < limit && *cur != 'k'        &&
-                  strncmp( (char*)cur, "known", 5 ) )
+                  ft_strncmp( (char*)cur, "known", 5 ) )
             cur++;
 
           if ( cur < limit )
@@ -1563,7 +1560,7 @@
                   break;
 
                 if ( cur[0] == name[0]                          &&
-                     len == (FT_Int)strlen( (const char*)name ) )
+                     len == (FT_Int)ft_strlen( (const char*)name ) )
                 {
                   FT_Int  n;
 
@@ -1732,7 +1729,7 @@
           for ( idx = 0; idx < type1->num_glyphs; idx++ )
           {
             glyph_name = (FT_Byte*)type1->glyph_names[idx];
-            if ( strcmp( (const char*)char_name,
+            if ( ft_strcmp( (const char*)char_name,
                          (const char*)glyph_name ) == 0 )
             {
               type1->encoding.char_index[charcode] = (FT_UShort)idx;
@@ -1740,7 +1737,7 @@
 
               /* Change min/max encoded char only if glyph name is */
               /* not /.notdef                                      */
-              if ( strcmp( (const char*)".notdef",
+              if ( ft_strcmp( (const char*)".notdef",
                            (const char*)glyph_name ) != 0 )
               {
                 if (charcode < min_char) min_char = charcode;

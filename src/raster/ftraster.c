@@ -187,7 +187,7 @@
 
 
 #ifndef FT_MEM_SET
-#define FT_MEM_SET( d, s, c )  memset( d, s, c )
+#define FT_MEM_SET( d, s, c )  ft_memset( d, s, c )
 #endif
 
 
@@ -2094,7 +2094,7 @@
       {
         target[0] |= f1;
 
-        /* memset() is slower than the following code on many platforms. */
+        /* ft_memset() is slower than the following code on many platforms. */
         /* This is due to the fact that, in the vast majority of cases,  */
         /* the span length in bytes is relatively small.                 */
         c2--;

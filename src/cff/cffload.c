@@ -1332,7 +1332,7 @@
         FT_Error   error;
 
 
-        len = (FT_UInt)strlen( adobe_name );
+        len = (FT_UInt)ft_strlen( adobe_name );
         if ( !FT_ALLOC( name, len + 1 ) )
         {
           FT_MEM_COPY( name, adobe_name, len );

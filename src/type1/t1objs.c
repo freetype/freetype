@@ -20,8 +20,6 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 
-#include <string.h>         /* strcmp() */
-
 #include "t1gload.h"
 #include "t1load.h"
 
@@ -382,8 +380,8 @@
         root->style_flags |= FT_STYLE_FLAG_ITALIC;
       if ( face->type1.font_info.weight )
       {
-        if ( !strcmp( face->type1.font_info.weight, "Bold"  ) ||
-             !strcmp( face->type1.font_info.weight, "Black" ) )
+        if ( !ft_strcmp( face->type1.font_info.weight, "Bold"  ) ||
+             !ft_strcmp( face->type1.font_info.weight, "Black" ) )
           root->style_flags |= FT_STYLE_FLAG_BOLD;
       }
 

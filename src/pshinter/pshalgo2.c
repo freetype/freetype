@@ -861,7 +861,7 @@
 
 
     /* clear all fields */
-    memset( glyph, 0, sizeof ( *glyph ) );
+    ft_memset( glyph, 0, sizeof ( *glyph ) );
 
     memory = globals->memory;
 

@@ -61,7 +61,6 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define FLOAT( x )  ( (float)( (x) / 64.0 ) )
 
