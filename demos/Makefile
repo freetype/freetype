@@ -71,9 +71,7 @@ else
 
   SRC_DIR_ := $(SRC_DIR)$(SEP)
 
-  FT_INCLUDES := $(BUILD) $(TOP_)config $(TOP_)include $(SRC_)base $(SRC_DIR)
-  TT_INCLUDES := $(SRC_)shared $(SRC_)truetype
-  T1_INCLUDES := $(SRC_)shared $(SRC_)type1
+  FT_INCLUDES := $(BUILD) $(TOP_)config $(TOP_)include $(SRC_) $(SRC_DIR)
 
   COMPILE    = $(CC) $(CFLAGS) $(INCLUDES:%=$I%)
   FTLIB     := $(TOP_)$(LIB_DIR)$(SEP)$(LIBRARY).$A
@@ -225,7 +223,7 @@ else
   # the Type1 source path
   #
   $(OBJ_)t1dump.$O: $(SRC_DIR)/t1dump.c
-	  $(COMPILE) $(T1_INCLUDES:%=$I%) $T$@ $<
+	  $(COMPILE) $T$@ $<
 
 
   ####################################################################
@@ -242,7 +240,7 @@ else
   endif
 
   $(OBJ_)ttdebug.$O: $(SRC_DIR)/ttdebug.c
-	    $(COMPILE) $(TT_INCLUDES:%=$I%) $T$@ $< $(EXTRAFLAGS)
+	    $(COMPILE) $T$@ $< $(EXTRAFLAGS)
 
 
   ####################################################################

@@ -27,9 +27,9 @@
 
 
 #include <freetype/freetype.h>
-#include "ttobjs.h"
-#include "ttdriver.h"
-#include "ttinterp.h"
+#include <truetype/ttobjs.h>
+#include <truetype/ttdriver.h>
+#include <truetype/ttinterp.h>
 
 
 FT_Library      library;    /* root library object */
