@@ -251,9 +251,9 @@
 	* src/gzip/ftgzip.c: Bugfix: couldn't read certain gzip-ed font
 	files.
 
-2003-01-15  Huw D M Davies <h.davies1@physics.ox.ac.uk>
+2003-01-15  Huw D M Davies  <h.davies1@physics.ox.ac.uk>
 
-	* include/freetype/config/ftheader.h,
+	* include/freetype/config/ftheader.h (FT_WINFONTS_H),
 	include/freetype/internal/fnttypes.h, include/freetype/ftwinfnt.h,
 	src/base/winfnt.c, src/winfonts/winfnt.c, src/base/Jamfile,
 	src/base/rules.mk, src/base/descrip.mms: Added a Windows .FNT
@@ -278,17 +278,24 @@
 
 2003-01-11  David Chester  <davidchester@qmx.net>
 
-	* include/freetype/config/ftoption.h, src/autohint/ahglobal.h,
-	src/autohint/ahglobal.c, src/autohint/ahglyph.c,
-	src/autohint/ahtypes.h: Patches to the auto-hinter in order to
-	slightly improve the output.  Note that everything is controlled
-	through the new FT_CONFIG_OPTION_CHESTER_HINTS defined at the end of
-	"ftoption.h".  There are also individual FT_CONFIG_CHESTER_XXX
-	macros to control individual "features".
+	Patches to the auto-hinter in order to slightly improve the output. 
+	Note that everything is controlled through the new
+	FT_CONFIG_OPTION_CHESTER_HINTS defined in "ftoption.h".  There are
+	also individual FT_CONFIG_CHESTER_XXX macros to control individual
+	"features".
 
 	Note that all improvements are enabled by default, but can be
 	tweaked for optimization and testing purposes.  The configuration
 	macros will most likely disappear in the short future.
+
+	* include/freetype/config/ftoption.h
+	(FT_CONFIG_OPTION_CHESTER_HINTS): New macro.
+	(FT_CONFIG_CHESTER_{SMALL_F,ASCENDER,SERIF,STEM,BLUE_SCALE})
+	[FT_CONFIG_OPTION_CHESTER_HINTS]: New macros to control individual
+	features.
+
+	* src/autohint/ahglobal.h, src/autohint/ahglobal.c,
+	src/autohint/ahglyph.c, src/autohint/ahtypes.h:
 
 2003-01-11  David Turner  <david@freetype.org>
 
@@ -432,7 +439,7 @@
 	the use of system-wide zlib.
 
 	Note that this macro, as well as
-	FT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore.
+	FT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore. 
 	This allows the build system to define them depending on the
 	configuration (typically by adding -D flags at compile time).
 
@@ -464,9 +471,21 @@
 
 	* include/freetype/ftgzip.h, src/gzip/ftgzip.c: Adding support for
 	gzip compressed streams.
+	* include/freetype/config/ftheader.h (FT_GZIP_H): New macro for
+	`ftgzip.h'.
 
 	* src/pcf/pcfdriver.c: Adding automatic support for gzip-compressed
 	PCF files.
+
+	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_USE_ZLIB):
+	New macro.
+	(T1_CONFIG_OPTION_DISABLE_HINTER, FT_CONFIG_OPTION_USE_CMAPS
+	FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS,
+	FT_CONFIG_OPTION_ALTERNATE_GLYPH_FORMATS): Removed.
+
+	(FT_EXPORT, FT_EXPORT_DEF, FT_DEBUG_LEVEL_ERROR,
+	FT_DEBUG_LEVEL_TRACE, FT_DEBUG_MEMORY): Comment out definitions so
+	that platform specific configuration file can override.
 
 2002-10-30  David Turner  <david@freetype.org>
 
