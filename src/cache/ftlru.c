@@ -46,7 +46,7 @@
       list->clazz      = clazz;
       list->memory     = memory;
       list->max_nodes  = max_nodes;
-      list->user_data  = user_data;
+      list->data  = user_data;
 
       if ( clazz->list_init )
       {
@@ -110,7 +110,7 @@
 
 
       if ( clazz->node_done )
-        clazz->node_done( node, list );
+        clazz->node_done( node, list->data );
 
       FREE( node );
       node = next;
@@ -151,7 +151,7 @@
         if ( node == NULL )
           break;
 
-        if ( clazz->node_compare( node, key, list ) )
+        if ( clazz->node_compare( node, key, list->data ) )
           break;
 
         plast = pnode;
@@ -203,15 +203,15 @@
       {
         if ( clazz->node_flush )
         {
-          error = clazz->node_flush( last, key, list );
+          error = clazz->node_flush( last, key, list->data );
         }
         else
         {
           if ( clazz->node_done )
-            clazz->node_done( last, list );
+            clazz->node_done( last, list->data );
 
           last->key  = key;
-          error = clazz->node_init( last, key, list );
+          error = clazz->node_init( last, key, list->data );
         }
 
         if ( !error )
@@ -228,7 +228,7 @@
         /* in case of error during the flush or done/init cycle, */
         /* we need to discard the node                           */
         if ( clazz->node_done )
-          clazz->node_done( last, list );
+          clazz->node_done( last, list->data );
 
         *plast = NULL;
         list->num_nodes--;
@@ -243,7 +243,7 @@
       goto Exit;
 
     node->key = key;
-    error = clazz->node_init( node, key, list );
+    error = clazz->node_init( node, key, list->data );
     if ( error )
     {
       FREE( node );
@@ -284,7 +284,7 @@
         node->next = NULL;
 
         if ( clazz->node_done )
-          clazz->node_done( node, list );
+          clazz->node_done( node, list->data );
 
         FREE( node );
         list->num_nodes--;
@@ -319,7 +319,7 @@
       if ( node == NULL )
         break;
 
-      if ( select_func( node, select_data, list ) )
+      if ( select_func( node, select_data, list->data ) )
       {
         *pnode     = node->next;
         node->next = NULL;

@@ -220,7 +220,7 @@
 
 
       FT_ERROR(( "%s.init: missing/incorrect hint masks!\n" ));
-      count = table->max_hints;
+      Count = table->max_hints;
       for ( Index = 0; Index < Count; Index++ )
         psh1_hint_table_record( table, Index );
     }

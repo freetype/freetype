@@ -467,7 +467,7 @@
 
 #define FT_CACHE_INTERNAL_LRU_H    <freetype/cache/ftlru.h>
 #define FT_CACHE_INTERNAL_GLYPH_H  <freetype/cache/ftcglyph.h>
-#define FT_CACHE_INTERNAL_CHUNK_H  <freetype/cache/ftcchunk.h>
+#define FT_CACHE_INTERNAL_CACHE_H  <freetype/cache/ftccache.h>
 
   /* now include internal headers definitions from <freetype/internal/...> */
 

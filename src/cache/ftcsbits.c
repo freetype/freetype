@@ -19,7 +19,7 @@
 #include <ft2build.h>
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
-#include FT_CACHE_INTERNAL_CHUNK_H
+#include FT_CACHE_INTERNAL_GLYPH_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_ERRORS_H
@@ -32,28 +32,43 @@
 #define FTC_SBIT_ITEMS_PER_NODE  16
 
 
- /* handle to sbit set */
-  typedef struct FTC_SBitSetRec_*  FTC_SBitSet;
+  typedef struct FTC_SBitNodeRec_*    FTC_SBitNode;
 
- /* sbit set structure */
-  typedef struct  FTC_SBitSetRec_
+  typedef struct FTC_SBitNodeRec_
   {
-    FTC_ChunkSetRec  cset;
-    FTC_Image_Desc   desc;
+    FTC_GlyphNodeRec   gnode;
+    FTC_SBitRec        sbits[ FTC_SBIT_ITEMS_PER_NODE ];
 
-  } FTC_SBitSetRec;
+  } FTC_SBitNodeRec;
 
+#define  FTC_SBIT_NODE(x)   ((FTC_SBitNode)(x))
 
-#define FTC_SBIT_SET( x )         ( (FTC_SBitSet)(x) )
-#define FTC_SBIT_SET_MEMORY( x )  FTC_CHUNK_SET_MEMORY( &(x)->cset )
 
 
   typedef struct  FTC_SBitQueryRec_
   {
-    FTC_ChunkQueryRec  chunk;
-    FTC_Image_Desc     desc;
+    FTC_GlyphQueryRec  gquery;
+    FTC_ImageDesc      desc;
 
   } FTC_SBitQueryRec, *FTC_SBitQuery;
+
+#define  FTC_SBIT_QUERY(x)  ((FTC_SBitQuery)(x))
+
+
+
+  typedef struct FTC_SBitFamilyRec_*  FTC_SBitFamily;
+
+ /* sbit family structure */
+  typedef struct  FTC_SBitFamilyRec_
+  {
+    FTC_GlyphFamilyRec  gfam;
+    FTC_ImageDesc       desc;
+
+  } FTC_SBitFamilyRec;
+  
+#define FTC_SBIT_FAMILY( x )         ( (FTC_SBitFamily)(x) )
+#define FTC_SBIT_FAMILY_MEMORY( x )  FTC_GLYPH_FAMILY_MEMORY( &(x)->cset )
+
 
 
   /*************************************************************************/
@@ -65,31 +80,10 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF( void )
-  ftc_sbit_node_done( FTC_ChunkNode  cnode )
-  {
-    FTC_ChunkSet  cset   = cnode->cset;
-    FT_Memory     memory = cset->ccache->cache.memory;
-    FT_UInt       count  = cnode->item_count;
-    FTC_SBit      sbit   = (FTC_SBit) cnode->items;
-
-
-    if ( sbit )
-    {
-      for ( ; count > 0; sbit++, count-- )
-        FREE( sbit->buffer );
-
-      FREE( cnode->items );
-    }
-
-    ftc_chunk_node_done( cnode );
-  }
-
-
   static FT_Error
-  ftc_sbit_set_bitmap( FTC_SBit    sbit,
-                       FT_Bitmap*  bitmap,
-                       FT_Memory   memory )
+  ftc_sbit_copy_bitmap( FTC_SBit    sbit,
+                        FT_Bitmap*  bitmap,
+                        FT_Memory   memory )
   {
     FT_Error  error;
     FT_Int    pitch = bitmap->pitch;
@@ -108,49 +102,69 @@
   }
 
 
+
+  FT_CALLBACK_DEF( void )
+  ftc_sbit_node_done( FTC_SBitNode  snode,
+                      FTC_Cache     cache )
+  {
+    FTC_SBit   sbit  = snode->sbits;
+    FT_UInt    count = FTC_GLYPH_NODE(snode)->item_count;
+    FT_Memory  memory = cache->memory;
+
+
+    for ( ; count > 0; sbit++, count-- )
+      FREE( sbit->buffer );
+
+    ftc_glyph_node_done( FTC_GLYPH_NODE(snode), cache );
+  }
+
+
   static FT_Error
-  ftc_sbit_node_load( FTC_ChunkNode  cnode,
-                      FT_UInt        gindex,
-                      FT_ULong      *asize )
+  ftc_sbit_node_load( FTC_SBitNode  snode,
+                      FTC_Manager   manager,
+                      FT_UInt       gindex,
+                      FT_ULong     *asize )
   {
     FT_Error       error;
-    FTC_ChunkSet   cset    = cnode->cset;
-    FTC_SBitSet    sbitset = FTC_SBIT_SET(cset);
-    FT_Memory      memory  = FTC_SBIT_SET_MEMORY(sbitset);
+    FTC_GlyphNode  gnode = FTC_GLYPH_NODE(snode);
+    FTC_GlyphFamily   gfam;
+    FTC_SBitFamily    sfam;
+    FT_Memory      memory;
     FT_Face        face;
     FT_Size        size;
-
     FTC_SBit       sbit;
 
-
-    if ( gindex <  (FT_UInt)cnode->item_start                     ||
-         gindex >= (FT_UInt)cnode->item_start + cnode->item_count )
+    if ( gindex <  (FT_UInt)gnode->item_start                     ||
+         gindex >= (FT_UInt)gnode->item_start + gnode->item_count )
     {
       FT_ERROR(( "FreeType.cache.sbit_load: invalid glyph index" ));
       return FTC_Err_Invalid_Argument;
     }
 
-    sbit = (FTC_SBit)cnode->items + ( gindex - cnode->item_start );
+    gfam   = FTC_GLYPH_FAMILY( manager->families.entries[ gnode->node.fam_index ].family );
+    sfam   = FTC_SBIT_FAMILY(gfam);
+    memory = manager->library->memory;
 
-    error = FTC_Manager_Lookup_Size( cset->ccache->cache.manager,
-                                     &sbitset->desc.font,
+    sbit = snode->sbits + (gindex - gnode->item_start);
+
+    error = FTC_Manager_Lookup_Size( manager, &sfam->desc.font,
                                      &face, &size );
     if ( !error )
     {
       FT_UInt   load_flags  = FT_LOAD_DEFAULT;
-      FT_UInt   image_type  = sbitset->desc.image_type;
+      FT_UInt   type  = sfam->desc.type;
 
 
       /* determine load flags, depending on the font description's */
       /* image type                                                */
 
-      if ( FTC_IMAGE_FORMAT( image_type ) == ftc_image_format_bitmap )
+      if ( FTC_IMAGE_FORMAT( type ) == ftc_image_format_bitmap )
       {
-        if ( image_type & ftc_image_flag_monochrome )
+        if ( type & ftc_image_flag_monochrome )
           load_flags |= FT_LOAD_MONOCHROME;
 
         /* disable embedded bitmaps loading if necessary */
-        if ( image_type & ftc_image_flag_no_sbits )
+        if ( type & ftc_image_flag_no_sbits )
           load_flags |= FT_LOAD_NO_BITMAP;
       }
       else
@@ -165,10 +179,10 @@
       /* always render glyphs to bitmaps */
       load_flags |= FT_LOAD_RENDER;
 
-      if ( image_type & ftc_image_flag_unhinted )
+      if ( type & ftc_image_flag_unhinted )
         load_flags |= FT_LOAD_NO_HINTING;
 
-      if ( image_type & ftc_image_flag_autohinted )
+      if ( type & ftc_image_flag_autohinted )
         load_flags |= FT_LOAD_FORCE_AUTOHINT;
 
       /* by default, indicates a `missing' glyph */
@@ -222,13 +236,13 @@
           else
           {
             /* copy the bitmap into a new buffer -- ignore error */
-            error = ftc_sbit_set_bitmap( sbit, bitmap, memory );
+            error = ftc_sbit_copy_bitmap( sbit, bitmap, memory );
           }
 
           /* now, compute size */
           if ( asize )
-            *asize = ABS( sbit->pitch ) * sbit->height;
-          
+            *asize = ABS(sbit->pitch) * sbit->height;
+
         }  /* glyph dimensions ok */
 
       } /* glyph loading successful */
@@ -251,45 +265,39 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  ftc_sbit_node_init( FTC_ChunkNode   cnode,
-                      FTC_ChunkQuery  query )
+  ftc_sbit_node_init( FTC_SBitNode    snode,
+                      FTC_GlyphQuery  gquery,
+                      FTC_Cache       cache )
   {
     FT_Error  error;
 
+    ftc_glyph_node_init( FTC_GLYPH_NODE(snode),
+                         gquery->gindex,
+                         FTC_GLYPH_FAMILY(gquery->query.family) );
 
-    error = ftc_chunk_node_init( cnode,
-                                 query->cset,
-                                 query->gindex,
-                                 TRUE );
-    if ( !error )
-    {
-      error = ftc_sbit_node_load( cnode, query->gindex, NULL );
-
-      if ( error )
-        ftc_chunk_node_done( cnode );
-    }
+    error = ftc_sbit_node_load( snode, cache->manager, gquery->gindex, NULL );
+    if ( error )
+      ftc_glyph_node_done( FTC_GLYPH_NODE(snode), cache );
 
     return error;
   }
 
 
-  /* this function is important because it is both part of */
-  /* an FTC_ChunkSet_Class and an FTC_CacheNode_Class      */
-  /*                                                       */
   FT_CALLBACK_DEF( FT_ULong )
-  ftc_sbit_node_weight( FTC_ChunkNode  cnode )
+  ftc_sbit_node_weight( FTC_SBitNode  snode )
   {
-    FT_ULong  size;
-    FT_UInt   count = cnode->item_count;
-    FT_Int    pitch;
-    FTC_SBit  sbit  = (FTC_SBit) cnode->items;
+    FTC_GlyphNode  gnode = FTC_GLYPH_NODE(snode);
+    FT_UInt        count = gnode->item_count;
+    FTC_SBit       sbit  = snode->sbits;
+    FT_Int         pitch;
+    FT_ULong       size;
 
 
     /* the node itself */
-    size = sizeof ( *cnode );
+    size  = sizeof ( *snode );
 
     /* the sbit records */
-    size += cnode->item_count * sizeof ( FTC_SBitRec );
+    size += FTC_GLYPH_NODE(snode)->item_count * sizeof ( FTC_SBitRec );
 
     for ( ; count > 0; count--, sbit++ )
     {
@@ -309,30 +317,26 @@
 
 
   FT_CALLBACK_DEF( FT_Bool )
-  ftc_sbit_node_compare( FTC_ChunkNode  cnode,
-                         FTC_SBitQuery  query,
+  ftc_sbit_node_compare( FTC_SBitNode   snode,
+                         FTC_SBitQuery  squery,
                          FTC_Cache      cache )
   {
-    FTC_ChunkQuery  creq  = &query->chunk;
-    FT_UInt         gindex = query->chunk.gindex;
-    FT_UInt         offset = (FT_UInt)(gindex - cnode->item_start);
+    FTC_GlyphQuery  gquery = FTC_GLYPH_QUERY(squery);
+    FTC_GlyphNode   gnode  = FTC_GLYPH_NODE(snode);
     FT_Bool         result;
 
-
-    result = FT_BOOL( offset < (FT_UInt)cnode->item_count &&
-                      creq->cset == cnode->cset );
+    result = ftc_glyph_node_compare( gnode, gquery );
     if ( result )
     {
       /* check if we need to load the glyph bitmap now */
-      FTC_SBit  sbit = (FTC_SBit)cnode->items + offset;
-      
+      FT_UInt   gindex = gquery->gindex;
+      FTC_SBit  sbit   = snode->sbits + (gindex - gnode->item_start);
 
       if ( sbit->buffer == NULL && sbit->width != 255 )
       {
         FT_ULong  size;
 
-
-        ftc_sbit_node_load( cnode, gindex, &size );
+        ftc_sbit_node_load( snode, cache->manager, gindex, &size );
         cache->manager->cur_weight += size;
       }
     }
@@ -344,41 +348,35 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                     SBIT CHUNK SETS                           *****/
+  /*****                     SBITS FAMILIES                            *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
 
 
   FT_CALLBACK_DEF( FT_Error )
-  ftc_sbit_set_init( FTC_SBitSet    sset,
-                     FTC_SBitQuery  query,
-                     FT_LruList     lru )
+  ftc_sbit_family_init( FTC_SBitFamily  sfam,
+                        FTC_SBitQuery   squery,
+                        FTC_Cache       cache )
   {
-    FTC_ChunkCache  ccache  = lru->user_data;
-    FTC_Manager     manager = ccache->cache.manager;
-    FT_Error        error;
-    FT_Face         face;
+    FTC_Manager  manager = cache->manager;
+    FT_Error     error;
+    FT_Face      face;
 
-
-    sset->desc = query->desc;
+    sfam->desc = squery->desc;
 
     /* we need to compute "cquery.item_total" now */
     error = FTC_Manager_Lookup_Face( manager,
-                                     query->desc.font.face_id,
+                                     squery->desc.font.face_id,
                                      &face );
     if ( !error )
     {
-      ftc_chunk_set_init( FTC_CHUNK_SET( sset ),
-                          sizeof ( FTC_SBitRec ),
-                          FTC_SBIT_ITEMS_PER_NODE,
-                          face->num_glyphs,
-                          FTC_CHUNK_CACHE( lru->user_data ) );
-
-      /* now compute hash from description -- this is _very_ important */
-      /* for good performance                                          */
-      sset->cset.hash   = FTC_IMAGE_DESC_HASH( &sset->desc );
-      query->chunk.cset = &sset->cset;
+      error = ftc_glyph_family_init( FTC_GLYPH_FAMILY(sfam),
+                                     FTC_IMAGE_DESC_HASH( &sfam->desc ),
+                                     FTC_SBIT_ITEMS_PER_NODE,
+                                     face->num_glyphs,
+                                     FTC_GLYPH_QUERY(squery),
+                                     cache );
     }
 
     return error;
@@ -386,36 +384,22 @@
 
 
   FT_CALLBACK_DEF( FT_Bool )
-  ftc_sbit_set_compare( FTC_SBitSet    sset,
-                        FTC_SBitQuery  query )
+  ftc_sbit_family_compare( FTC_SBitFamily    sfam,
+                        FTC_SBitQuery  squery )
   {
     FT_Bool  result;
 
 
     /* we need to set the "cquery.cset" field or our query for */
-    /* faster glyph comparisons in ftc_sbit_node_compare()     */
-    /*                                                         */
-    result = FT_BOOL( FTC_IMAGE_DESC_COMPARE( &sset->desc, &query->desc ) );
+    /* faster glyph comparisons in ftc_sbit_node_compare..         */
+    /*                                                             */
+    result = FT_BOOL( FTC_IMAGE_DESC_COMPARE( &sfam->desc, &squery->desc ) );
     if ( result )
-      query->chunk.cset = &sset->cset;
+      FTC_GLYPH_FAMILY_FOUND(sfam,squery);
 
     return result;
   }
 
-
-  FT_CALLBACK_TABLE_DEF
-  const FT_LruList_ClassRec  ftc_sbit_set_class =
-  {
-    sizeof ( FT_LruListRec ),
-    (FT_LruList_InitFunc)   NULL,
-    (FT_LruList_DoneFunc)   NULL,
-
-    sizeof ( FTC_SBitSetRec ),
-    (FT_LruNode_InitFunc)   ftc_sbit_set_init,
-    (FT_LruNode_DoneFunc)   ftc_chunk_set_done,
-    (FT_LruNode_FlushFunc)  NULL,
-    (FT_LruNode_CompareFunc)ftc_sbit_set_compare,
-  };
 
 
   /*************************************************************************/
@@ -427,34 +411,33 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF( FT_Error )
-  ftc_sbit_cache_init( FTC_SBit_Cache  scache )
-  {
-    return ftc_chunk_cache_init( FTC_CHUNK_CACHE( scache ),
-                                 &ftc_sbit_set_class );
-  }
-
 
   FT_CALLBACK_TABLE_DEF
   const FTC_Cache_ClassRec  ftc_sbit_cache_class =
   {
-    sizeof ( FTC_ChunkCacheRec ),
-    (FTC_Cache_InitFunc)  ftc_sbit_cache_init,
-    (FTC_Cache_DoneFunc)  ftc_chunk_cache_done,
+    sizeof( FTC_CacheRec ),
+    (FTC_Cache_InitFunc)  ftc_cache_init,
+    (FTC_Cache_ClearFunc) ftc_cache_clear,
+    (FTC_Cache_DoneFunc)  ftc_cache_done,
 
-    sizeof ( FTC_ChunkNodeRec ),
-    (FTC_Node_InitFunc)   ftc_sbit_node_init,
-    (FTC_Node_WeightFunc) ftc_sbit_node_weight,
-    (FTC_Node_CompareFunc)ftc_sbit_node_compare,
-    (FTC_Node_DoneFunc)   ftc_sbit_node_done
+    sizeof( FTC_SBitFamilyRec ),
+    (FTC_Family_InitFunc)    ftc_sbit_family_init,
+    (FTC_Family_CompareFunc) ftc_sbit_family_compare,
+    (FTC_Family_DoneFunc)    ftc_glyph_family_done,
+
+    sizeof( FTC_SBitNodeRec ),
+    (FTC_Node_InitFunc)     ftc_sbit_node_init,
+    (FTC_Node_WeightFunc)   ftc_sbit_node_weight,
+    (FTC_Node_CompareFunc)  ftc_sbit_node_compare,
+    (FTC_Node_DoneFunc)     ftc_sbit_node_done
   };
 
 
   /* documentation is in ftcsbits.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FTC_SBit_Cache_New( FTC_Manager      manager,
-                      FTC_SBit_Cache  *acache )
+  FTC_SBitCache_New( FTC_Manager     manager,
+                     FTC_SBitCache  *acache )
   {
     return FTC_Manager_Register_Cache( manager,
                                        &ftc_sbit_cache_class,
@@ -465,34 +448,77 @@
   /* documentation is in ftcsbits.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
-                         FTC_Image_Desc*  desc,
-                         FT_UInt          gindex,
-                         FTC_SBit        *ansbit )
+  FTC_SBitCache_Lookup( FTC_SBitCache   cache,
+                        FTC_ImageDesc*  desc,
+                        FT_UInt         gindex,
+                        FTC_SBit       *ansbit,
+                        FTC_Node       *anode )
   {
     FT_Error          error;
-    FTC_ChunkCache    ccache = (FTC_ChunkCache) cache;
-    FTC_ChunkNode     node;
-    FTC_SBitQueryRec  query;
+    FTC_SBitQueryRec  squery;
+    FTC_SBitNode      node;
 
-
-    /* argument checks delayed to FTC_Chunk_Cache_Lookup */
+    /* argument checks delayed to ftc_cache_lookup */
     if ( !ansbit )
       return FTC_Err_Invalid_Argument;
 
     *ansbit = NULL;
 
-    query.chunk.gindex = gindex;
-    query.chunk.cset   = NULL;
-    query.desc         = *desc;
-    
-    error = ftc_chunk_cache_lookup( ccache, &query.chunk, &node );
+    if ( anode )
+      *anode = NULL;
+
+    squery.gquery.gindex = gindex;
+    squery.desc          = *desc;
+
+    error = ftc_cache_lookup( FTC_CACHE(cache),
+                              FTC_QUERY(&squery),
+                              (FTC_Node*) &node );
     if ( !error )
     {
-      *ansbit = (FTC_SBit)node->items + ( gindex - node->item_start );
+      *ansbit = node->sbits + (gindex - FTC_GLYPH_NODE(node)->item_start);
+
+      if ( anode )
+      {
+        *anode = FTC_NODE(node);
+        FTC_NODE(node)->ref_count ++;
+      }
     }
     return error;
   }
+
+
+
+ /* backwards-compatibility functions */
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_SBit_Cache_New( FTC_Manager      manager,
+                      FTC_SBit_Cache  *acache )
+  {
+    return FTC_SBitCache_New( manager, (FTC_SBitCache*)acache );
+  }
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
+                         FTC_Image_Desc*  desc,
+                         FT_UInt          gindex,
+                         FTC_SBit        *ansbit )
+  {
+    FTC_ImageDesc  desc0;
+    
+    if ( !desc )
+      return FT_Err_Invalid_Argument;
+      
+    desc0.font = desc->font;
+    desc0.type = (FT_UInt32) desc->image_type;
+
+    return FTC_SBitCache_Lookup( (FTC_SBitCache)cache,
+                                  &desc0,
+                                  gindex,
+                                  ansbit,
+                                  NULL );
+  }
+
 
 
 /* END */

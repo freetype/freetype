@@ -1,3 +1,20 @@
+2001-12-05  David Turner  <david@freetype.org>
+
+    First of all, a big thanks to Werner and Antoine for their latest work !!
+    
+    * src/pshinter/pshalgo2.c (psh2_hint_table_init),
+      src/pshinter/pshalgo1.c (psh1_hint_table_init): removed compiler
+      warnings
+
+    * include/freetype/cache/*, src/cache/*: yet another massive rewrite of
+    the caching sub-system, in order to both increase performance and allow
+    simpler cache sub-classing. As an example, the code for the image and
+    sbit caches is now much simpler
+
+    I still need to update the documentation in www/freetype2/docs/cache.html
+    to reflect the new design though..
+
+
 2001-12-05  David Krause  <freetype@davidkrause.com>
 
 	* docs/license.txt: s/X Windows/X Window System/.
