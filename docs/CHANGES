@@ -20,11 +20,11 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
       and `gvar' tables;  the Multiple Masters  API has been  slightly
       extended to cope with the new functionality).
 
-    - The `FT_Glyph_Metrics' structure has been extended: The elements
+    - The `FT_GlyphSlotRec' structure has been extended:  The elements
       `lsb_delta' and  `rsb_delta' give the difference  between hinted
       and  unhinted  left and right  side bearings  if autohinting  is
       active.  Using those values can improve the inter-letter spacing
-      considerably.   See the documentation of  `FT_Glyph_Metrics' and
+      considerably.   See the documentation of  `FT_GlyphSlotRec'  and
       the `ftstring' demo program how to use it.
 
 

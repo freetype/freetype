@@ -1468,13 +1468,13 @@ FT_BEGIN_HEADER
   /*                         Note that the app will need to know about the */
   /*                         image format.                                 */
   /*                                                                       */
-  /*    lsb_delta ::                                                       */
-  /*      The difference between hinted and unhinted left side bearing     */
-  /*      while autohinting is active.  Zero otherwise.                    */
+  /*    lsb_delta         :: The difference between hinted and unhinted    */
+  /*                         left side bearing while autohinting is        */
+  /*                         active.  Zero otherwise.                      */
   /*                                                                       */
-  /*    rsb_delta ::                                                       */
-  /*      The difference between hinted and unhinted right side bearing    */
-  /*      while autohinting is active.  Zero otherwise.                    */
+  /*    rsb_delta         :: The difference between hinted and unhinted    */
+  /*                         right side bearing while autohinting is       */
+  /*                         active.  Zero otherwise.                      */
   /*                                                                       */
   /* <Note>                                                                */
   /*    If @FT_Load_Glyph is called with default flags (see                */
@@ -1496,32 +1496,32 @@ FT_BEGIN_HEADER
   /*    `slot->format' is also changed to `FT_GLYPH_FORMAT_BITMAP' .       */
   /*                                                                       */
   /* <Note>                                                                */
-  /*   Here a small pseudo code fragment which shows how to use            */
-  /*  `lsb_delta' and `rsb_delta':                                         */
-  /*   {                                                                   */
-  /*     FT_Pos  origin_x       = 0;                                       */
-  /*     FT_Pos  prev_rsb_delta = 0;                                       */
+  /*    Here a small pseudo code fragment which shows how to use           */
+  /*    `lsb_delta' and `rsb_delta':                                       */
+  /*                                                                       */
+  /*    {                                                                  */
+  /*      FT_Pos  origin_x       = 0;                                      */
+  /*      FT_Pos  prev_rsb_delta = 0;                                      */
   /*                                                                       */
   /*                                                                       */
-  /*     for all glyphs do                                                 */
-  /*       <compute kern between current and previous glyph and add it to  */
-  /*        `origin_x'>                                                    */
+  /*      for all glyphs do                                                */
+  /*        <compute kern between current and previous glyph and add it to */
+  /*         `origin_x'>                                                   */
   /*                                                                       */
-  /*       <load glyph with `FT_Load_Glyph'>                               */
+  /*        <load glyph with `FT_Load_Glyph'>                              */
   /*                                                                       */
-  /*       if ( prev_rsb_delta - face->glyph->lsb_delta >= 32 )            */
-  /*         origin_x -= 64;                                               */
-  /*       else if                                                         */
-  /*          ( prev_rsb_delta - face->glyph->lsb_delta < -32 )            */
-  /*         origin_x += 64;                                               */
+  /*        if ( prev_rsb_delta - face->glyph->lsb_delta >= 32 )           */
+  /*          origin_x -= 64;                                              */
+  /*        else if ( prev_rsb_delta - face->glyph->lsb_delta < -32 )      */
+  /*          origin_x += 64;                                              */
   /*                                                                       */
-  /*       prev_rsb_delta = face->glyph->rsb_delta;                        */
+  /*        prev_rsb_delta = face->glyph->rsb_delta;                       */
   /*                                                                       */
-  /*       <save glyph image, or render glyph, or ...>                     */
+  /*        <save glyph image, or render glyph, or ...>                    */
   /*                                                                       */
-  /*       origin_x += face->glyph->advance.x;                             */
-  /*     endfor                                                            */
-  /*   }                                                                   */
+  /*        origin_x += face->glyph->advance.x;                            */
+  /*      endfor                                                           */
+  /*    }                                                                  */
   /*                                                                       */
   typedef struct  FT_GlyphSlotRec_
   {

@@ -45,13 +45,11 @@
   }
 
 
-
-
   FT_EXPORT_DEF( void )
   FTC_INode_Free( FTC_INode  inode,
                   FTC_Cache  cache )
   {
-    ftc_inode_free( FTC_NODE(inode), cache );
+    ftc_inode_free( FTC_NODE( inode ), cache );
   }
 
 
@@ -108,7 +106,8 @@
     FT_ULong   size  = 0;
     FT_Glyph   glyph = inode->glyph;
 
-    FT_UNUSED(ftccache);
+    FT_UNUSED( ftccache );
+
 
     switch ( glyph->format )
     {
@@ -145,12 +144,10 @@
   }
 
 
-
-
   FT_EXPORT_DEF( FT_ULong )
   FTC_INode_Weight( FTC_INode  inode )
   {
-    return ftc_inode_weight( FTC_NODE(inode), NULL );
+    return ftc_inode_weight( FTC_NODE( inode ), NULL );
   }
 
 

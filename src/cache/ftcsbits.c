@@ -77,13 +77,11 @@
   }
 
 
-
-
   FT_EXPORT_DEF( void )
   FTC_SNode_Free( FTC_SNode  snode,
                   FTC_Cache  cache )
   {
-    ftc_snode_free( FTC_NODE(snode), cache );
+    ftc_snode_free( FTC_NODE( snode ), cache );
   }
 
 
@@ -267,6 +265,7 @@
 
     FT_UNUSED( cache );
 
+
     FT_ASSERT( snode->count <= FTC_SBIT_ITEMS_PER_NODE );
 
     /* the node itself */
@@ -292,7 +291,7 @@
   FT_EXPORT_DEF( FT_ULong )
   FTC_SNode_Weight( FTC_SNode  snode )
   {
-    return ftc_snode_weight( FTC_NODE(snode), NULL );
+    return ftc_snode_weight( FTC_NODE( snode ), NULL );
   }
 
 
@@ -333,14 +332,12 @@
   }
 
 
-
-
   FT_EXPORT_DEF( FT_Bool )
   FTC_SNode_Compare( FTC_SNode   snode,
                      FTC_GQuery  gquery,
                      FTC_Cache   cache )
   {
-    return ftc_snode_compare( FTC_NODE(snode), gquery, cache );
+    return ftc_snode_compare( FTC_NODE( snode ), gquery, cache );
   }
 
 

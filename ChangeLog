@@ -1,28 +1,61 @@
+2004-06-11  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2004-06-10  David Turner  <david@freetype.org>
 
-        * src/base/ftobject.c, src/base/fthash.c, src/base/ftexcept.c,
-        src/base/ftsysio.c, src/base/ftsysmem.c, src/base/ftlist.c:
-        removing obsolete files
+	* src/base/ftobject.c, src/base/fthash.c, src/base/ftexcept.c,
+	src/base/ftsysio.c, src/base/ftsysmem.c, src/base/ftlist.c: Removed. 
+	Obsolete.
+
+	* src/raster/ftraster.c (Alignment, PAlignment): New union to fix
+	problems with 64bit systems.
+	(AlignProfileSize): Use it.
 
 2004-06-08  David Turner  <david@freetype.org>
 
-	* include/freetype/freetype.h (FT_Glyph_Metrics, FT_GlyphSlotRec),
-	src/autofit/afloader.c, src/autohint/ahhint.c:
-	moved the definition of 'lsb_delta' and 'rsb_delta' from FT_GlyphMetrics
-	to FT_GlyphSlotRec. The old location did BREAK BINARY COMPATIBILITY
-	of the library !!
+	* include/freetype/freetype.h (FT_GlyphMetrics): Move `lsb_delta'
+	and `rsb_delta' elements to...
+	(FT_GlyphSlotRec): Here to retain binary compatibility with older
+	FreeType versions.
+	Update all users.
 
-        * src/sfnt/sfobjs.c: removing compiler warning
+	* src/sfnt/sfobjs.c (tt_face_get_name): Remove compiler warning.
 
-        * src/winfonts/winfnt.c: adding missing initialization of the
-        slot->metrics.width and slot->metrics.height when loading a Windows
-        FNT glyph. Thanks to Huw Davies
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Add missing initialization
+	of slot->metrics.width and slot->metrics.height when loading a
+	Windows FNT glyph.  Thanks to Huw Davies.
 
-        * include/freetype/cache/ftcmru.h, src/cache/ftcbasic.c,
-        src/cache/ftccache.c, src/cache/ftcglyph.c, src/cache/ftcmanag.c,
-        src/cache/ftcsbits.c:
-        fixing some annoying bugs and inefficiencies in the cache sub-system.
+	* include/freetype/cache/ftcmru.h (FTC_MruNode_CompareFunc): Change
+	return type to FT_Bool.
 
+	* src/cache/ftbasic.c (ftc_basic_family_compare): Change return
+	type to FT_Bool.
+
+	* src/cache/ftccache.c (FTC_Cache_Init, ftc_cache_init): Make
+	the former call the latter, not vice versa.
+	(FTC_Cache_Done, ftc_cache_done): Ditto.
+
+	* src/cache/ftcglyph.c (FTC_GNode_Compare, ftc_gnode_compare): Make
+	the former call the latter, not vice versa.
+	(FTC_GCache_Init, ftc_gcache_init): Ditto.
+	(FTC_GCache_Done, ftc_gcache_done): Ditto.
+
+	* src/cache/ftcimage.c (FTC_INode_Free, ftc_inode_free): Make the
+	former call the latter, not vice versa.
+	(FTC_INode_Weight, ftc_inode_weight): Ditto.
+
+	* src/cache/ftcmanag.c (ftc_size_node_compare,
+	ftc_size_node_compare_faceid, ftc_face_node_compare): Change return
+	type to FT_Bool.
+
+	* src/cache/ftcsbits.c (FTC_SNode_Free, ftc_snode_free): Make the
+	former call the latter, not vice versa.
+	(FTC_SNode_Weight, ftc_snode_weight): Ditto.
+	(FTC_SNode_Compare, ftc_snode_compare): Ditto.
+
+	* src/cache/ftcsbits.c: Fix some bugs and inefficiencies in the cache
+	sub-system.
 
 2004-06-05  Werner Lemberg  <wl@gnu.org>
 
@@ -36,6 +69,9 @@
 2004-06-04  David Chester  <davidchester@gmx.net>
 
 	Improve inter-letter spacing for autohinted glyphs.
+
+	* include/freetype/freetype.h (FT_Glyph_Metrics): Add elements
+	`lsb_delta' and `rsb_delta'.
 
 	* src/autohint/ahhint.c (ah_hinter_load): Set `lsb_delta' and
 	`rsb_delta' in slot->metrics and tune side bearings slightly.
