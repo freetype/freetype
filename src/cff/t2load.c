@@ -354,7 +354,8 @@
     if ( FILE_Seek(offset) || READ_Byte(format) )
       goto Exit;
     
-    select->format = format;
+    select->format      = format;
+    select->cache_count = 0;   /* clear cache */
     switch (format)
     {
       case 0:  /* format 0, that's simple */

@@ -363,10 +363,6 @@
     if (cff->num_subfonts >= 1)
     {
       FT_Byte  fd_index = CFF_Get_FD( &cff->fd_select, glyph_index );
-      if (fd_index >= cff->num_subfonts)
-      {
-        FT_ERROR(( "INVALID FD INDEX = %d >= %d\n", fd_index, cff->num_subfonts ));
-      }
       sub = cff->subfonts[fd_index];
     }
     
@@ -1090,32 +1086,60 @@
           break;
 
         case t2_op_rlinecurve:
-        case t2_op_rcurveline:
           {
-            FT_Int  mod6 = num_args % 6;
-
-
-            FT_TRACE4(( op == t2_op_rcurveline ? " rcurveline" :
-                                                 " rlinecurve" ));
-
-            if ( num_args < 8 || ( mod6 != 0 && mod6 != 2 ) )
+            FT_Int    num_lines = (num_args-6)/2;
+            FT_TRACE4(( " rlinecurve" ));
+            
+            if ( num_args < 8 || (num_args-6) & 1)
               goto Stack_Underflow;
-
-            if ( start_point ( builder, x, y ) ||
-                 check_points( builder, ( num_args / 6 ) * 3 + mod6 / 2 ) )
+              
+            if ( start_point( builder, x, y )           ||
+                 check_points( builder, num_lines + 3 ) )
               goto Memory_Error;
-
+              
             args = stack;
-            if ( op == t2_op_rlinecurve && mod6 )
+            
+            /* first, add the line segments */
+            while (num_lines > 0)
             {
               x += args[0];
               y += args[1];
               add_point( builder, x, y, 1 );
-              args     += 2;
-              num_args -= 2;
+              args += 2;
+              num_lines--;
             }
+            
+            /* then, the curve */
+            x += args[0];
+            y += args[1];
+            add_point( builder, x, y, 0 );
+            x += args[2];
+            y += args[3];
+            add_point( builder, x, y, 0 );
+            x += args[4];
+            y += args[5];
+            add_point( builder, x, y, 1 );
+            args = stack;     
+          }
+          break;
+          
+        case t2_op_rcurveline:
+          {
+            FT_Int  num_curves = (num_args-2)/6;
 
-            while ( num_args >= 6 )
+
+            FT_TRACE4(( " rcurveline" ));
+
+            if ( num_args < 8 || (num_args-2) % 6  )
+              goto Stack_Underflow;
+
+            if ( start_point ( builder, x, y )             ||
+                 check_points( builder, num_curves*3 + 2 ) )
+              goto Memory_Error;
+
+            args = stack;
+            /* first, add the curves */
+            while (num_curves > 0)
             {
               x += args[0];
               y += args[1];
@@ -1126,16 +1150,13 @@
               x += args[4];
               y += args[5];
               add_point( builder, x, y, 1 );
-              args     += 6;
-              num_args -= 6;
+              args += 6;
+              num_curves--;
             }
-
-            if ( op == t2_op_rcurveline && num_args )
-            {
-              x += args[0];
-              y += args[1];
-              add_point( builder, x, y, 1 );
-            }
+            /* then the final line */
+            x += args[0];
+            y += args[1];
+            add_point( builder, x, y, 1 );
             args = stack;
           }
           break;
@@ -1528,12 +1549,15 @@
     return error;
 
   Syntax_Error:
+    FT_TRACE4(( "** Syntax Error **" ));
     return T2_Err_Invalid_File_Format;
 
   Stack_Underflow:
+    FT_TRACE4(( "** Stack underflow **" ));
     return T2_Err_Too_Few_Arguments;
 
   Stack_Overflow:
+    FT_TRACE4(( "** Stack overflow**" ));
     return T2_Err_Stack_Overflow;
 
   Memory_Error:

@@ -404,7 +404,7 @@
           t2_kind_delta,                                     \
           code | T2CODE,                                     \
           (FT_UInt)(char*)&T2_REF( T2TYPE, name ),           \
-          sizeof( T2_REF( T2TYPE, name ) ),                  \
+          sizeof( T2_REF( T2TYPE, name )[0] ),               \
           0,                                                 \
           max,                                               \
           (FT_UInt)(char*)&T2_REF( T2TYPE, num_ ## name )    \
