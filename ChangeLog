@@ -1,3 +1,10 @@
+2002-24-17  Graham Asher  <graham.asher@btinternet.com>
+
+    * src/truetype/ttobjs.c: fix for bug reported by Sven Neumann [sven@gimp.org]
+    on the FreeType development forum: "If FT_CONFIG_OPTION_INCREMENTAL is undefined
+    (this is the default), the TrueType loader crashes in line 852 of src/truetype/ttgload.c
+    when it tries to access face->glyph_locations."
+
 2002-07-17  David Turner  <david@freetype.org>
 
     * include/freetype/cache/ftccache.h, src/cache/ftccache.i,
