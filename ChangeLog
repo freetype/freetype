@@ -12,6 +12,13 @@
 	corrupted transformed glyphs that were auto-hinted (the transform
 	was applied twice).
 
+        * include/internal/tttypes.h, src/truetype/ttgload.c: fixed a bug
+        that returned an invalid linear width for composite TrueType glyphs
+
+        * include/fttypes.h, src/base/ftobjs.c: fixed source code to work
+        with the new error scheme implemented by Werner
+
+
 2001-06-07  Werner Lemberg  <wl@gnu.org>
 
 	Updating to libtool 1.4.0 and autoconf 2.50.

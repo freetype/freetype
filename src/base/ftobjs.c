@@ -1240,7 +1240,7 @@
           if ( !error )
             goto Success;
 
-          if ( error != FT_Err_Unknown_File_Format )
+          if ( FT_ERROR_BASE(error) != FT_Err_Unknown_File_Format )
             goto Fail2;
         }
       }
@@ -2115,7 +2115,7 @@
         while ( renderer )
         {
           error = renderer->render( renderer, slot, render_mode, 0 );
-          if ( !error || error != FT_Err_Cannot_Render_Glyph )
+          if ( !error || FT_ERROR_BASE(error) != FT_Err_Cannot_Render_Glyph )
             break;
 
           /* FT_Err_Cannot_Render_Glyph is returned if the render mode   */
