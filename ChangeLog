@@ -1,3 +1,20 @@
+2003-11-11  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2003-11-11  John A. Boyd Jr.  <jaboydjr@netwalk.com>
+
+	Handle SETWIDTH_NAME and ADD_STYLE_NAME properties for BDF and PCF
+	fonts.
+
+	* src/bdf/bdfdrivr.c (bdf_interpret_style): New auxiliary function.
+	(BDF_Face_Init): Don't handle style properties but call
+	bdf_interpret_style.
+
+	* src/pcf/pcfread.c (pcf_interpret_style): New auxiliary function.
+	(pcf_load_font): Don't handle style properties but call
+	pcf_interpret_style.
+
 2003-11-07  Werner Lemberg  <wl@gnu.org>
 
 

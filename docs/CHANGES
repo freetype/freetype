@@ -1,4 +1,18 @@
 
+LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
+
+  I. IMPORTANT BUG FIXES
+
+
+  II. IMPORTANT CHANGES
+
+    - Both  PCF  and BDF  drivers  now  handle  the SETWIDTH_NAME  and
+      ADD_STYLE_NAME    properties.     Values    are   appended    to
+      face->style_name; example: `Bold SemiCondensed'.
+
+
+======================================================================
+
 LATEST CHANGES BETWEEN 2.1.7 and 2.1.6
 
   I. IMPORTANT BUG FIXES
