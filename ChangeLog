@@ -1,5 +1,7 @@
 2002-01-04  David Turner  <david@freetype.org>
 
+	* README.UNX: added special README file for Unix users
+
 	* builds/unix/ftsystem.c (FT_New_Stream): fixed typo
 	
 	* src/base/ftobjs.c: added #include FT_OUTLINE_H to get rid
