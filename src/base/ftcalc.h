@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Arithmetic computations (specification).                             */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -28,6 +28,7 @@
 
 
 #ifdef LONG64
+
 
   typedef INT64  FT_Int64;
 
@@ -53,7 +54,9 @@
   BASE_DEF void      FT_MulTo64  ( FT_Int32  x, FT_Int32  y, FT_Int64*  z );
   BASE_DEF FT_Int32  FT_Div64by32( FT_Int64* x, FT_Int32  y );
 
+
 #endif /* LONG64 */
+
 
 #define SQRT_32( x )       FT_Sqrt32( x )
 
@@ -73,7 +76,7 @@
 #define FLOAT_TO_FIXED( x )    ( (FT_Long)(x * 65536.0) )
 
 #define ROUND_F26DOT6( x )     ( x >= 0 ? (   ((x) + 32) & -64) \
-                                     : ( -((32 - (x)) & -64) ) )
+                                        : ( -((32 - (x)) & -64) ) )
 
 #ifdef __cplusplus
   }

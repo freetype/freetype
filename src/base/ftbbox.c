@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType bbox computation (body).                                    */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -343,7 +343,7 @@
   /*    Computes the exact bounding box of an outline.  This is slower     */
   /*    than computing the control box.  However, it uses an advanced      */
   /*    algorithm which returns _very_ quickly when the two boxes          */
-  /*    coincide. Otherwise, the outline Bezier arcs are walked over to    */
+  /*    coincide.  Otherwise, the outline Bezier arcs are walked over to   */
   /*    extract their extrema.                                             */
   /*                                                                       */
   /* <Input>                                                               */
@@ -419,10 +419,10 @@
 
       static FT_Outline_Funcs  interface =
       {
-        (FT_Outline_MoveTo_Func)  BBox_Move_To,
-        (FT_Outline_LineTo_Func)  BBox_Move_To,
-        (FT_Outline_ConicTo_Func) BBox_Conic_To,
-        (FT_Outline_CubicTo_Func) BBox_Cubic_To
+        (FT_Outline_MoveTo_Func) BBox_Move_To,
+        (FT_Outline_LineTo_Func) BBox_Move_To,
+        (FT_Outline_ConicTo_Func)BBox_Conic_To,
+        (FT_Outline_CubicTo_Func)BBox_Cubic_To
       };
 
       FT_Error   error;

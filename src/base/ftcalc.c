@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Arithmetic computations (body).                                      */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -24,7 +24,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*  Implementing basic computation routines.                             */
+  /* Implementing basic computation routines.                              */
   /*                                                                       */
   /* FT_MulDiv() and FT_MulFix() are declared in freetype.h.               */
   /*                                                                       */
@@ -39,22 +39,25 @@
   FT_Int32  FT_Sqrt32( FT_Int32 x )
   {
     FT_ULong  val, root, newroot, mask;
+
     
     root = 0;
     mask = 0x40000000;
     val  = (FT_ULong)x;
+
     do
     {
-      newroot = root+mask;
+      newroot = root + mask;
       if (newroot <= val)
       {
         val -= newroot;
         root = newroot+mask;
       }
+
       root >>= 1;
       mask >>= 2;
     }
-    while (mask != 0);
+    while ( mask != 0 );
     
     return root;
   }
@@ -93,12 +96,13 @@
   {
     FT_Int s;
 
+
     s = 1;
     if ( a < 0 ) { a = -a; s = -s; }
     if ( b < 0 ) { b = -b; s = -s; }
     if ( c < 0 ) { c = -c; s = -s; }
 
-    return s*( ((FT_Int64)a * b + (c >> 1) )/c);
+    return s * ( ( (FT_Int64)a * b + ( c >> 1 ) ) / c );
   }
 
 
@@ -109,7 +113,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(A*B)/0x10000' with maximum accuracy.  Most of the time, this is  */
+  /*    `(A*B)/0x10000' with maximum accuracy.  Most of the time this is   */
   /*    used to multiply a given value by a 16.16 fixed float factor.      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -125,7 +129,7 @@
   /*    value of `a' is less than 2048, and `b' is a 16.16 scaling factor. */
   /*    As this happens mainly when scaling from notional units to         */
   /*    fractional pixels in FreeType, it resulted in noticeable speed     */
-  /*    improvements between versions 2.0 and 1.x.                         */
+  /*    improvements between versions 2.x and 1.x.                         */
   /*                                                                       */
   /*    As a conclusion, always try to place a 16.16 factor as the         */
   /*    _second_ argument of this function; this can make a great          */
@@ -137,12 +141,14 @@
   {
     FT_Int s;
 
+
     s = 1;
     if ( a < 0 ) { a = -a; s = -s; }
     if ( b < 0 ) { b = -b; s = -s; }
 
-    return s*(FT_Long)((FT_Int64)a * b + 0x8000) >> 16);
+    return s * (FT_Long)( ( (FT_Int64)a * b + 0x8000 ) >> 16 );
   }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -152,7 +158,7 @@
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
   /*    `(A*0x10000)/B' with maximum accuracy.  Most of the time, this is  */
-  /*    used to divide  a given value by a 16.16 fixed float factor.       */
+  /*    used to divide a given value by a 16.16 fixed float factor.        */
   /*                                                                       */
   /* <Input>                                                               */
   /*    a :: The first multiplier.                                         */
@@ -163,9 +169,9 @@
   /*    The result of `(a*0x10000)/b'.                                     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The optimisation for FT_DivFix() is simple : if (a << 16) fits     */
-  /*    in 32 bits, then the division is computed directly. Otherwise,     */
-  /*    we use a specialised version of the old FT_MulDiv64                */
+  /*    The optimization for FT_DivFix() is simple: If (a << 16) fits in   */
+  /*    32 bits, then the division is computed directly.  Otherwise, we    */
+  /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
   EXPORT_FUNC
   FT_Int32  FT_DivFix( FT_Long  a,
@@ -173,6 +179,7 @@
   {
     FT_Int32   s;
     FT_Word32  q;
+
 
     s  = a; a = ABS(a);
     s ^= b; b = ABS(b);
@@ -220,7 +227,7 @@
   /*    Graham Asher.  The trick is to optimize computation if everything  */
   /*    fits within 32 bits (a rather common case).                        */
   /*                                                                       */
-  /*    We compute `a*b+c/2', then divide it by `c'. (positive values)     */
+  /*    We compute `a*b+c/2', then divide it by `c' (positive values).     */
   /*                                                                       */
   /*      46340 is FLOOR(SQRT(2^31-1)).                                    */
   /*                                                                       */
@@ -230,7 +237,7 @@
   /*                                                                       */
   /*      if ( c < 0x157F0*2 ) then ( a*b+c/2 <= 0x7FFFFFFF )              */
   /*                                                                       */
-  /*      and 2*0x157F0 = 176096                                           */
+  /*      and 2*0x157F0 = 176096.                                          */
   /*                                                                       */
   EXPORT_FUNC
   FT_Long  FT_MulDiv( FT_Long  a,
@@ -254,6 +261,7 @@
     else
     {
       FT_Int64  temp, temp2;
+
 
       FT_MulTo64( a, b, &temp );
       temp2.hi = (FT_Int32)(c >> 31);
@@ -285,23 +293,24 @@
   /*    The result of `(a*b)/0x10000'.                                     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The optimisation for FT_MulFix() is different.  We could simply be */
+  /*    The optimization for FT_MulFix() is different.  We could simply be */
   /*    happy by applying the same principles as with FT_MulDiv(), because */
   /*                                                                       */
-  /*    c = 0x10000 < 176096                                               */
+  /*      c = 0x10000 < 176096                                             */
   /*                                                                       */
   /*    However, in most cases, we have a `b' with a value around 0x10000  */
   /*    which is greater than 46340.                                       */
   /*                                                                       */
   /*    According to some testing, most cases have `a' < 2048, so a good   */
   /*    idea is to use bounds like 2048 and 1048576 (=floor((2^31-1)/2048) */
-  /*    for `a' and `b' respectively.                                      */
+  /*    for `a' and `b', respectively.                                     */
   /*                                                                       */
   EXPORT_FUNC
   FT_Long  FT_MulFix( FT_Long  a,
                       FT_Long  b )
   {
     FT_Long   s;
+
 
     if ( a == 0 || b == 0x10000L )
       return a;
@@ -316,6 +325,7 @@
     else
     {
       FT_Long  al = a & 0xFFFF;
+
 
       a = (a >> 16)*b + al*(b >> 16) + ( al*(b & 0xFFFF) >> 16 );
     }
@@ -343,9 +353,9 @@
   /*    The result of `(a*0x10000)/b'.                                     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The optimisation for FT_DivFix() is simple : if (a << 16) fits     */
-  /*    in 32 bits, then the division is computed directly. Otherwise,     */
-  /*    we use a specialised version of the old FT_MulDiv64                */
+  /*    The optimization for FT_DivFix() is simple: If (a << 16) fits in   */
+  /*    32 bits, then the division is computed directly.  Otherwise, we    */
+  /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
   EXPORT_FUNC
   FT_Long  FT_DivFix( FT_Long  a,
@@ -353,6 +363,7 @@
   {
     FT_Int32   s;
     FT_Word32  q;
+
 
     s  = a; a = ABS(a);
     s ^= b; b = ABS(b);
@@ -371,18 +382,19 @@
       /* we need more bits, we'll have to do it by hand */
       FT_Word32  c;
 
-      q  = (a/b) << 16;
-      c  = a%b;
 
-      /* we must compute C*0x10000/B, we simply shift C and B so */
+      q  = ( a / b ) << 16;
+      c  = a % b;
+
+      /* we must compute C*0x10000/B; we simply shift C and B so */
       /* C becomes smaller than 16 bits                          */
-      while (c >> 16)
+      while ( c >> 16 )
       {
         c >>= 1;
         b <<= 1;
       }
 
-      q += (c << 16)/b;
+      q += ( c << 16 ) / b;
     }
 
     return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
@@ -417,6 +429,7 @@
 
     {
       FT_Word32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
+
     
       lo1 = x & 0x0000FFFF;  hi1 = x >> 16;
       lo2 = y & 0x0000FFFF;  hi2 = y >> 16;
@@ -431,7 +444,7 @@
       if ( i1 < i2 )
         hi += 1L << 16;
 
-      hi += (i1 >> 16);
+      hi += i1 >> 16;
       i1  = i1 << 16;
 
       /* Check carry overflow of i1 + lo */
