@@ -1,3 +1,33 @@
+2003-06-09  Alexis S. L. Carvalho  <alexis@cecm.usp.br>
+
+	* src/gzip/ftgzip.c (ft_gzip_file_fill_output): Handle Z_STREAM_END
+	correctly.
+
+2003-06-09  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* src/pshinter/pshglob.c (psh_globals_new): Change calculation of
+	dim->stdw.count to avoid compiler problem.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Move the block
+	variables to the beginning of the function to avoid compiler
+	problems.
+	Add casts necessary for 16bit compilers.
+
+2003-06-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/pfr/rules.mk (PFR_DRV_SRC): Add pfrsbit.c.
+	(PFR_DRV_H): Add pfrtypes.h.
+
+	* include/freetype/config/ftconfig.h: s/__MWKS__/__MWERKS__/.
+
+2003-06-08  Karl Schultz  <kschultz@rsinc.com>
+
+	* src/pfr/pfrsbit.c (pfr_bitwriter_init): Change type of third
+	argument to FT_Bool.
+	(pfr_lookup_bitmap_data): Change type of third and fourth argument
+	to FT_UInt.  Updated caller.
+	(pfr_load_bitmap_bits): Change type of fourth argument to FT_Bool.
+
 2003-06-08  Werner Lemberg  <wl@gnu.org>
 
 	Completely revised FreeType's make management.
@@ -4713,10 +4743,10 @@
 
 2001-12-12  David Turner  <david@freetype.org>
 
-	* src/pshint/pshglob.c (psh_blues_scale_zones, psh_blues_snap_stem
+	* src/pshinter/pshglob.c (psh_blues_scale_zones, psh_blues_snap_stem
 	psh_globals_new): Adding correct BlueScale/BlueShift support, plus
 	family blues processing.
-	* src/pshint/pshglob.h (PSH_BluesRec): Updated.
+	* src/pshinter/pshglob.h (PSH_BluesRec): Updated.
 
 	Started adding support for the Postscript hinter in the CFF module.
 

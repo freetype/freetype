@@ -644,7 +644,7 @@
           read++;
         }
 
-        dim->stdw.count = write - dim->stdw.widths;
+        dim->stdw.count = priv->num_snap_widths;
       }
 
       /* copy standard heights */
@@ -663,7 +663,7 @@
           read++;
         }
 
-        dim->stdw.count = write - dim->stdw.widths;
+        dim->stdw.count = priv->num_snap_heights;
       }
 
       /* copy blue zones */

@@ -112,7 +112,7 @@ FT_BEGIN_HEADER
   /*   return an error later when trying to load the glyph).               */
   /*                                                                       */
   /*   It also check that fields that must be a multiple of 2, 4, or 8     */
-  /*   dont' have incorrect values, etc.                                   */
+  /*   don't have incorrect values, etc.                                   */
   /*                                                                       */
   /* FT_VALIDATE_PARANOID ::                                               */
   /*   Only for font debugging.  Checks that a table follows the           */

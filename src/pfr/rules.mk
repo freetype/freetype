@@ -29,12 +29,14 @@ PFR_DRV_SRC := $(PFR_DIR)/pfrload.c  \
                $(PFR_DIR)/pfrgload.c \
                $(PFR_DIR)/pfrcmap.c  \
                $(PFR_DIR)/pfrdrivr.c \
+               $(PFR_DIR)/pfrsbit.c  \
                $(PFR_DIR)/pfrobjs.c
 
 # pfr driver headers
 #
 PFR_DRV_H := $(PFR_DRV_SRC:%.c=%.h) \
-             $(PFR_DIR)/pfrerror.h
+             $(PFR_DIR)/pfrerror.h  \
+             $(PFR_DIR)/pfrtypes.h
 
 
 # Pfr driver object(s)

@@ -294,36 +294,39 @@
     FT_Int          n, n_points;
     FT_Int          byte_len   = load->byte_len;
 
+    FT_Byte         *flag, *flag_limit;
+    FT_Byte         c, count;
+    FT_Vector       *vec, *vec_limit;
+    FT_Pos          x;
+    FT_Short        *cont, *cont_limit;
+
 
     /* reading the contours endpoints & number of points */
-    {
-      short*  cur   = gloader->current.outline.contours;
-      short*  limit = cur + n_contours;
+    cont       = gloader->current.outline.contours;
+    cont_limit = cont + n_contours;
 
+    /* check space for contours array + instructions count */
+    byte_len -= 2 * ( n_contours + 1 );
+    if ( byte_len < 0 )
+      goto Invalid_Outline;
 
-      /* check space for contours array + instructions count */
-      byte_len -= 2 * ( n_contours + 1 );
-      if ( byte_len < 0 )
+    for ( ; cont < cont_limit; cont++ )
+      cont[0] = FT_GET_USHORT();
+
+    n_points = 0;
+    if ( n_contours > 0 )
+      n_points = cont[-1] + 1;
+
+    error = FT_GlyphLoader_CheckPoints( gloader, n_points + 2, 0 );
+    if ( error )
+      goto Fail;
+
+    /* we'd better check the contours table right now */
+    outline = &gloader->current.outline;
+
+    for ( cont = outline->contours + 1; cont < cont_limit; cont++ )
+      if ( cont[-1] >= cont[0] )
         goto Invalid_Outline;
-
-      for ( ; cur < limit; cur++ )
-        cur[0] = FT_GET_USHORT();
-
-      n_points = 0;
-      if ( n_contours > 0 )
-        n_points = cur[-1] + 1;
-
-      error = FT_GlyphLoader_CheckPoints( gloader, n_points + 2, 0 );
-      if ( error )
-        goto Fail;
-
-      /* we'd better check the contours table right now */
-      outline = &gloader->current.outline;
-
-      for ( cur = outline->contours + 1; cur < limit; cur++ )
-        if ( cur[-1] >= cur[0] )
-          goto Invalid_Outline;
-    }
 
     /* reading the bytecode instructions */
     slot->control_len  = 0;
@@ -331,7 +334,7 @@
 
     n_ins = FT_GET_USHORT();
 
-    FT_TRACE5(( "  Instructions size: %d\n", n_ins ));
+    FT_TRACE5(( "  Instructions size: %u\n", n_ins ));
 
     if ( n_ins > face->max_profile.maxSizeOfInstructions )
     {
@@ -340,7 +343,7 @@
       goto Fail;
     }
 
-    byte_len -= n_ins;
+    byte_len -= (FT_Int)n_ins;
     if ( byte_len < 0 )
     {
       FT_TRACE0(( "TT_Load_Simple_Glyph: Instruction count mismatch!\n" ));
@@ -357,112 +360,102 @@
       slot->control_len  = n_ins;
       slot->control_data = load->instructions;
 
-      FT_MEM_COPY( load->instructions, stream->cursor, n_ins );
+      FT_MEM_COPY( load->instructions, stream->cursor, (FT_Long)n_ins );
     }
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
-    stream->cursor += n_ins;
+    stream->cursor += (FT_Int)n_ins;
 
     /* reading the point tags */
+    flag       = (FT_Byte*)outline->tags;
+    flag_limit = flag + n_points;
+
+    while ( flag < flag_limit )
     {
-      FT_Byte*  flag  = (FT_Byte*)outline->tags;
-      FT_Byte*  limit = flag + n_points;
-      FT_Byte   c, count;
+      if ( --byte_len < 0 )
+        goto Invalid_Outline;
 
-
-      while ( flag < limit )
+      *flag++ = c = FT_GET_BYTE();
+      if ( c & 8 )
       {
         if ( --byte_len < 0 )
           goto Invalid_Outline;
 
-        *flag++ = c = FT_GET_BYTE();
-        if ( c & 8 )
-        {
-          if ( --byte_len < 0 )
-            goto Invalid_Outline;
+        count = FT_GET_BYTE();
+        if ( flag + (FT_Int)count > flag_limit )
+          goto Invalid_Outline;
 
-          count = FT_GET_BYTE();
-          if ( flag + count > limit )
-            goto Invalid_Outline;
-
-          for ( ; count > 0; count-- )
-            *flag++ = c;
-        }
+        for ( ; count > 0; count-- )
+          *flag++ = c;
       }
-
-      /* check that there is enough room to load the coordinates */
-      for ( flag = (FT_Byte*)outline->tags; flag < limit; flag++ )
-      {
-        if ( *flag & 2 )
-          byte_len -= 1;
-        else if ( ( *flag & 16 ) == 0 )
-          byte_len -= 2;
-
-        if ( *flag & 4 )
-          byte_len -= 1;
-        else if ( ( *flag & 32 ) == 0 )
-          byte_len -= 2;
-      }
-
-      if ( byte_len < 0 )
-        goto Invalid_Outline;
     }
+
+    /* check that there is enough room to load the coordinates */
+    for ( flag = (FT_Byte*)outline->tags; flag < flag_limit; flag++ )
+    {
+      if ( *flag & 2 )
+        byte_len -= 1;
+      else if ( ( *flag & 16 ) == 0 )
+        byte_len -= 2;
+
+      if ( *flag & 4 )
+        byte_len -= 1;
+      else if ( ( *flag & 32 ) == 0 )
+        byte_len -= 2;
+    }
+
+    if ( byte_len < 0 )
+      goto Invalid_Outline;
 
     /* reading the X coordinates */
 
+    vec       = outline->points;
+    vec_limit = vec + n_points;
+    flag      = (FT_Byte*)outline->tags;
+    x         = 0;
+
+    for ( ; vec < vec_limit; vec++, flag++ )
     {
-      FT_Vector*  vec   = outline->points;
-      FT_Vector*  limit = vec + n_points;
-      FT_Byte*    flag  = (FT_Byte*)outline->tags;
-      FT_Pos      x     = 0;
+      FT_Pos  y = 0;
 
 
-      for ( ; vec < limit; vec++, flag++ )
+      if ( *flag & 2 )
       {
-        FT_Pos  y = 0;
-
-
-        if ( *flag & 2 )
-        {
-          y = FT_GET_BYTE();
-          if ( ( *flag & 16 ) == 0 )
-            y = -y;
-        }
-        else if ( ( *flag & 16 ) == 0 )
-          y = FT_GET_SHORT();
-
-        x     += y;
-        vec->x = x;
+        y = (FT_Pos)FT_GET_BYTE();
+        if ( ( *flag & 16 ) == 0 )
+          y = -y;
       }
+      else if ( ( *flag & 16 ) == 0 )
+        y = (FT_Pos)FT_GET_SHORT();
+
+      x     += y;
+      vec->x = x;
     }
 
     /* reading the Y coordinates */
 
+    vec       = gloader->current.outline.points;
+    vec_limit = vec + n_points;
+    flag      = (FT_Byte*)outline->tags;
+    x         = 0;
+
+    for ( ; vec < vec_limit; vec++, flag++ )
     {
-      FT_Vector*  vec   = gloader->current.outline.points;
-      FT_Vector*  limit = vec + n_points;
-      FT_Byte*    flag  = (FT_Byte*)outline->tags;
-      FT_Pos      x     = 0;
+      FT_Pos  y = 0;
 
 
-      for ( ; vec < limit; vec++, flag++ )
+      if ( *flag & 4 )
       {
-        FT_Pos  y = 0;
-
-
-        if ( *flag & 4 )
-        {
-          y = FT_GET_BYTE();
-          if ( ( *flag & 32 ) == 0 )
-            y = -y;
-        }
-        else if ( ( *flag & 32 ) == 0 )
-          y = FT_GET_SHORT();
-
-        x     += y;
-        vec->y = x;
+        y = (FT_Pos)FT_GET_BYTE();
+        if ( ( *flag & 32 ) == 0 )
+          y = -y;
       }
+      else if ( ( *flag & 32 ) == 0 )
+        y = (FT_Pos)FT_GET_SHORT();
+
+      x     += y;
+      vec->y = x;
     }
 
     /* clear the touch tags */

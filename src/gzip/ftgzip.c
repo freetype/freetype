@@ -397,7 +397,8 @@
       if ( err == Z_STREAM_END )
       {
         zip->limit = zstream->next_out;
-        error      = FT_Err_Invalid_Stream_Operation;
+        if ( zip->limit == zip->cursor )
+          error = FT_Err_Invalid_Stream_Operation;
         break;
       }
       else if ( err != Z_OK )
