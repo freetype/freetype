@@ -301,7 +301,7 @@
   tt_face_load_cvt( TT_Face    face,
                     FT_Stream  stream )
   {
-#ifdef FT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -350,12 +350,12 @@
   Exit:
     return error;
 
-#else /* !FT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#else /* !TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     FT_UNUSED( face   );
     FT_UNUSED( stream );
 
-    return 0;
+    return TT_Err_Ok;
 
 #endif
   }
@@ -382,7 +382,7 @@
   tt_face_load_fpgm( TT_Face    face,
                      FT_Stream  stream )
   {
-#ifdef FT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     FT_Error   error;
     FT_ULong   table_len;
@@ -431,12 +431,12 @@
   Exit:
     return error;
 
-#else /* !FT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#else /* !TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     FT_UNUSED( face   );
     FT_UNUSED( stream );
 
-    return 0;
+    return TT_Err_Ok;
 
 #endif
   }

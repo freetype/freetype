@@ -368,59 +368,6 @@ FT_BEGIN_HEADER
   /* if an error occured (i.e. if 'error != 0').                           */
   /*                                                                       */
 
-
-  /*
-   *  gcc 3.3 and newer will generate tons of _stupid_ warnings if we
-   *  don't take special measures.
-   */
-#if defined ( __GNUC__ )                                       && \
-    ( __GNUC__ > 3 || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 3 ) )
-
-
-#define FT_ALLOC( _pointer_, _size_ )                  \
-          ({                                           \
-            void*  _tmp_ = NULL;                       \
-                                                       \
-                                                       \
-            error     = FT_MEM_ALLOC( _tmp_, _size_ ); \
-            _pointer_ = _tmp_;                         \
-            error != 0;                                \
-          })
-
-#define FT_REALLOC( _pointer_, _cursize_, _newsize_ )                  \
-          ({                                                           \
-            void*  _tmp_ = _pointer_;                                  \
-                                                                       \
-                                                                       \
-            error     = FT_MEM_REALLOC( _tmp_, _cursize_, _newsize_ ); \
-            _pointer_ = _tmp_;                                         \
-            error != 0;                                                \
-          })
-
-#define FT_QALLOC( _pointer_, _size_ )                  \
-          ({                                            \
-            void*  _tmp_;                               \
-                                                        \
-                                                        \
-            error     = FT_MEM_QALLOC( _tmp_, _size_ ); \
-            _pointer_ = _tmp_;                          \
-            error != 0;                                 \
-          })
-
-#define FT_QREALLOC( _pointer_, _cursize_, _newsize_ )                  \
-          ({                                                            \
-            void*  _tmp_ = _pointer_;                                   \
-                                                                        \
-                                                                        \
-            error     = FT_MEM_QREALLOC( _tmp_, _cursize_, _newsize_ ); \
-            _pointer_ = _tmp_;                                          \
-            error != 0;                                                 \
-          })
-
-
-#else /* !GCC || GCC < 3.3 */
-
-
 #define FT_ALLOC( _pointer_, _size_ )                       \
           FT_SET_ERROR( FT_MEM_ALLOC( _pointer_, _size_ ) )
 
@@ -432,8 +379,6 @@ FT_BEGIN_HEADER
 
 #define FT_QREALLOC( _pointer_, _current_, _size_ )                       \
           FT_SET_ERROR( FT_MEM_QREALLOC( _pointer_, _current_, _size_ ) )
-
-#endif /* !GCC || GCC < 3.3 */
 
 
 #define FT_FREE( _pointer_ )       \
