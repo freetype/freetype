@@ -1,6 +1,6 @@
-# generated automatically by aclocal 1.7.8 -*- Autoconf -*-
+# generated automatically by aclocal 1.8a -*- Autoconf -*-
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 # Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -10,30 +10,6 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
-
-
-# serial 2
-
-AC_DEFUN([FT_MUNMAP_PARAM],
-  [AC_MSG_CHECKING([for munmap's first parameter type])
-   AC_COMPILE_IFELSE([
-       AC_LANG_SOURCE([[
-
-#include <unistd.h>
-#include <sys/mman.h>
-int munmap(void *, size_t);
-
-       ]])
-     ],
-     [],
-     [AC_MSG_RESULT([void *])
-      AC_DEFINE([MUNMAP_USES_VOIDP],
-        [],
-        [Define to 1 if the first argument of munmap is of type void *])],
-     [AC_MSG_RESULT([char *])])
-  ])
-
-# end of ft-munmap.m4
 
 # libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
 
@@ -5867,3 +5843,4 @@ SED=$lt_cv_path_SED
 AC_MSG_RESULT([$SED])
 ])
 
+m4_include([./ft-munmap.m4])
