@@ -34,19 +34,24 @@
 
 FT_BEGIN_HEADER
 
-  /*******************************************************************
-   *
-   * <Section> Mac_Specific
-   *
-   * <Title> Mac-Specific Interface
-   *
-   * <Abstract>
-   *    Only available on the Macintosh
-   *
-   * <Description>
-   *    The following definitions are only available when FreeType
-   *    is compiled on a Macintosh.
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    Mac_Specific                                                       */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    Mac-Specific Interface                                             */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    Only available on the Macintosh.                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The following definitions are only available if FreeType is        */
+  /*    compiled on a Macintosh.                                           */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -78,7 +83,6 @@ FT_BEGIN_HEADER
   /*    {                                                                  */
   /*      fond = GetResource( 'FOND', fontName );                          */
   /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
-  /*                                                                       */
   /*    }                                                                  */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
@@ -86,7 +90,9 @@ FT_BEGIN_HEADER
                                                 FT_Long     face_index,
                                                 FT_Face    *aface );
 
+
   /* */
+
 
 FT_END_HEADER
 

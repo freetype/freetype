@@ -26,20 +26,25 @@
 
 FT_BEGIN_HEADER
 
-  /**********************************************************************
-   *
-   *  <Section> Multiple_Masters
-   *
-   *  <Title> Multiple Masters
-   *
-   *  <Abstract>
-   *     How to manage multiple masters fonts
-   *
-   *  <Description>
-   *     The following types and functions are used to manage multiple
-   *     master fonts, i.e. choose specific design instances by setting
-   *     design axis coordinates.
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    multiple_masters                                                   */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    Multiple Masters                                                   */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    How to manage Multiple Masters fonts.                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The following types and functions are used to manage Multiple      */
+  /*    Master fonts, i.e. the selection of specific design instances by   */
+  /*    setting design axis coordinates.                                   */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -180,6 +185,9 @@ FT_BEGIN_HEADER
                            FT_Face    face,
                            FT_UInt    num_coords,
                            FT_Fixed*  coords );
+
+
+  /* */
 
 
 FT_END_HEADER

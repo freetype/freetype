@@ -10,7 +10,7 @@
 
 import fileinput, sys, string, glob
 
-html_header = """
+html_header = """\
 <html>
 <header>
 <title>FreeType 2 API Reference</title>
@@ -21,54 +21,39 @@ html_header = """
   LI { text-align=justify }
 </style>
 </header>
-<body text="#000000"
-      bgcolor="#FFFFFF"
-      link="#0000EF"
-      vlink="#51188E"
-      alink="#FF0000">
+<body text=#000000
+      bgcolor=#FFFFFF
+      link=#0000EF
+      vlink=#51188E
+      alink=#FF0000>
 <center><h1>FreeType 2 API Reference</h1></center>
 """
 
-html_footer = """
+html_footer = """\
 </body>
-</html>
-"""
+</html>"""
 
-section_title_header = """
-<center><h1>
-"""
+section_title_header = "<center><h1>"
+section_title_footer = "</h1></center>"
 
-section_title_footer = """
-</h1></center>
-"""
-
-
-code_header = """
-<font color=blue><pre>
-"""
-
-code_footer = """
-</pre></font>
-"""
+code_header = "<font color=blue><pre>"
+code_footer = "</pre></font>"
 
 para_header = "<p>"
 para_footer = "</p>"
 
-block_header = """<center><hr width="750"><table width="750"><tr><td>"""
+block_header = "<center><hr width=75%><table width=75%><tr><td>"
 block_footer = "</td></tr></table></center>"
 
-description_header = """<center><table width="650"><tr><td>"""
-description_footer = """</td></tr></table></center><br>"""
+description_header = "<center><table width=65%><tr><td>"
+description_footer = "</td></tr></table></center><br>"
 
-marker_header = """<center><table width="650" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>"""
+marker_header = "<center><table width=65% cellpadding=5><tr bgcolor=#EEEEFF><td><em><b>"
 marker_inter  = "</b></em></td></tr><tr><td>"
 marker_footer = "</td></tr></table></center>"
 
-source_header = """<center><table width="650"><tr bgcolor="#D6E8FF" width="100%"><td><pre>
-"""
-source_footer = """</pre></table></center>
-<br>
-"""
+source_header = "<center><table width=65%><tr bgcolor=#D6E8FF width=100%><td><pre>"
+source_footer = "</pre></table></center><br>"
 
 
 current_section = None
@@ -206,10 +191,14 @@ class DocCode:
         while l > 0 and string.strip( self.lines[l - 1] ) == "":
             l = l - 1
 
-        print code_header
+        # the code footer should be directly appended to the last code
+        # line to avoid an additional blank line
+        #
+        sys.stdout.write( code_header )
         for line in self.lines[0 : l]:
-            print line
-        print code_footer
+            sys.stdout.write( '\n' + line )
+        sys.stdout.write( code_footer )
+
 
 
 #############################################################################
@@ -219,7 +208,6 @@ class DocCode:
 #
 # The paragraph is filled line by line by the parser.
 #
-
 class DocParagraph:
 
     def __init__( self ):
@@ -229,13 +217,13 @@ class DocParagraph:
     def add( self, line ):
         # Get rid of unwanted spaces in the paragraph.
         #
-        # The following line is the same as
+        # The following two lines are the same as
         #
         #   self.words.extend( string.split( line ) )
         #
         # but older Python versions don't have the `extend' attribute.
         #
-        last = len(self.words)
+        last = len( self.words )
         self.words[last:last] = string.split( line )
 
 
@@ -287,6 +275,7 @@ class DocParagraph:
         print para_footer
 
 
+
 #############################################################################
 #
 # DocContent is used to store the content of a given marker.
@@ -320,8 +309,6 @@ class DocParagraph:
 # The DocContent object is entirely built at creation time; you must
 # pass a list of input text lines in the "lines_list" parameter.
 #
-#
-
 class DocContent:
 
     def __init__( self, lines_list ):
@@ -390,7 +377,7 @@ class DocContent:
                     paragraph.add( line )
 
             else:
-                # we're in code mode...
+                # we are in code mode...
                 #
                 line = aline
 
@@ -454,7 +441,7 @@ class DocContent:
                 element.dump()
 
             if field:
-                print "</field>        "
+                print "</field>"
 
 
     def dump_html( self ):
@@ -475,7 +462,7 @@ class DocContent:
 
             else:
                 if not in_table:
-                    print '<table cellpadding=4><tr valign=top><td>'
+                    print "<table cellpadding=4><tr valign=top><td>"
                     in_table = 1
                 else:
                     print "</td></tr><tr valign=top><td>"
@@ -514,7 +501,7 @@ class DocContent:
 
 
 
-######################################################################################
+#############################################################################
 #
 #
 # The DocBlock class is used to store a given comment block. It contains
@@ -527,9 +514,9 @@ class DocContent:
 #   "self.source" is simply a list of text lines taken from the
 #   uncommented source itself.
 #
-#   Finally, "self.name" is a simple identifier used to
-#   uniquely identify the block. it is taken from the first word of the first
-#   paragraphe of the first marker of a given block, i.e:
+#   Finally, "self.name" is a simple identifier used to uniquely identify
+#   the block. It is taken from the first word of the first
+#   paragraph of the first marker of a given block, i.e:
 #
 #      <Type> Goo
 #      <Description> Bla bla bla
@@ -539,13 +526,13 @@ class DocContent:
 class DocBlock:
 
     def __init__( self, block_line_list = [], source_line_list = [] ):
-        self.items      = []             # current ( marker, contents ) list
-        self.section    = None           # section this block belongs to
-        
-        marker      = None               # current marker
-        content     = []                 # current content lines list
-        alphanum    = string.letters + string.digits + "_"
-        self.name   = None
+        self.items   = []                # current ( marker, contents ) list
+        self.section = None              # section this block belongs to
+
+        marker       = None              # current marker
+        content      = []                # current content lines list
+        alphanum     = string.letters + string.digits + "_"
+        self.name    = None
 
         for line in block_line_list:
             line2  = string.lstrip( line )
@@ -613,7 +600,7 @@ class DocBlock:
             content = DocContent( lines )
             self.items.append( ( string.lower( marker ), content ) )
 
-    
+
     def find_content( self, marker ):
         for item in self.items:
             if ( item[0] == marker ):
@@ -629,23 +616,24 @@ class DocBlock:
 
 
     def dump_html( self ):
-        types = [ 'type', 'struct', 'functype', 'function', 'constant',
-                  'enum', 'macro' ]
+        types      = [ 'type', 'struct', 'functype', 'function',
+                       'constant', 'enum', 'macro' ]
 
         parameters = [ 'input', 'inout', 'output', 'return' ]
 
         if not self.items:
             return
 
-        # place html anchor when needed
-        if self.name:
-            print '<a name="'+self.name+'">'
-
         # start of a block
         #
         print block_header
 
-        print "<h4>" + self.name + "</h4>"
+        # place html anchor if needed
+        #
+        if self.name:
+            print '<a name="' + self.name + '">'
+            print "<h4>" + self.name + "</h4>"
+            print "</a>"
 
         # print source code
         #
@@ -657,12 +645,13 @@ class DocBlock:
         while l >= 0 and string.strip( lines[l] ) == "":
             l = l - 1
         print source_header
+        print ""
         for line in lines[0 : l + 1]:
-            print  line
+            print line
         print source_footer
 
         in_table = 0
-        
+
         # dump each (marker,content) element
         #
         for element in self.items:
@@ -675,19 +664,19 @@ class DocBlock:
                 print description_footer
 
             elif not ( marker in types ):
-
-                print marker_header
-                print marker
-                print marker_inter
+                sys.stdout.write( marker_header )
+                sys.stdout.write( marker )
+                sys.stdout.write( marker_inter + '\n' )
                 content.dump_html()
                 print marker_footer
-                
+
         print ""
 
         print block_footer
 
 
-######################################################################################
+
+#############################################################################
 #
 # The DocSection class is used to store a given documentation section.
 #
@@ -725,7 +714,7 @@ class DocSection:
         # section
         #
         if self.elements.has_key( block.name ):
-            sys.stderr.write( "ERROR - duplicate element definition for " + 
+            sys.stderr.write( "ERROR - duplicate element definition for " +
                               "'" + block.name + "' in section '" +
                               section.name + "'" )
             sys.quit()
@@ -767,8 +756,8 @@ class DocSectionList:
         self.sections        = {}
         self.list            = []
         self.current_section = None
-        self.index           = []    # sorted list of blocks that are not sections
-
+        self.index           = []    # sorted list of blocks that
+                                     # are not sections
 
     def append_section( self, block ):
         name     = string.lower( block.name )
@@ -776,7 +765,7 @@ class DocSectionList:
 
         if self.sections.has_key( name ):
             # There is already a section with this name in our
-            # list. We'll try to complete it.
+            # list. We will try to complete it.
             #
             section = self.sections[name]
             if section.abstract:
@@ -789,7 +778,7 @@ class DocSectionList:
                                   " for '" + name + "'" )
                     sys.quit()
             else:
-                # The old section didn't contain an abstract; we're
+                # The old section didn't contain an abstract; we are
                 # now going to replace it.
                 #
                 section.abstract    = abstract
@@ -802,7 +791,7 @@ class DocSectionList:
             section = DocSection( block )
             self.sections[name] = section
             self.list.append( section )
-            
+
         self.current_section = section
 
 
@@ -822,12 +811,14 @@ class DocSectionList:
     def prepare_files( self, file_prefix = None ):
         # prepare the section list, by computing section filenames
         # and the index
+        #
         if file_prefix:
             prefix = file_prefix + "-"
         else:
             prefix = ""
 
         # compute section names
+        #
         for section in self.sections.values():
             title_content     = section.block.find_content( "title" )
             if title_content:
@@ -835,7 +826,8 @@ class DocSectionList:
             else:
                 section.title = "UNKNOWN_SECTION_TITLE!"
 
-        # compute section filenames        
+        # compute section filenames
+        #
         for section in self.sections.values():
             section.filename = prefix + section.name + ".html"
 
@@ -843,8 +835,9 @@ class DocSectionList:
         self.index_filename = prefix + "index.html"
 
         # compute the sorted block list for the index
+        #
         self.index.sort( block_lexicographical_compare )
-        
+
 
     def dump_html_toc( self ):
         # dump an html table of contents
@@ -852,7 +845,7 @@ class DocSectionList:
         old_stdout = sys.stdout
         new_file   = open( self.toc_filename, "w" )
         sys.stdout = new_file
-        
+
         print html_header
 
         print "<center><h1>Table of Contents</h1></center>"
@@ -861,9 +854,9 @@ class DocSectionList:
         for section in self.list:
             if section.abstract:
                 print "<tr valign=top><td>"
-                print '<a href="' + section.filename + '">'
-                print section.title
-                print "</a></td><td>"
+                sys.stdout.write( '<a href="' + section.filename + '">' )
+                sys.stdout.write( section.title )
+                sys.stdout.write( "</a></td><td>" + '\n' )
                 section.abstract.dump_html()
                 print "</td></tr>"
 
@@ -878,7 +871,6 @@ class DocSectionList:
         old_stdout = sys.stdout
 
         for section in self.sections.values():
-            
             if section.filename:
                 new_file   = open( section.filename, "w" )
                 sys.stdout = new_file
@@ -889,7 +881,6 @@ class DocSectionList:
 
 
     def dump_html_index( self ):
-        
         old_stdout = sys.stdout
         new_file   = open( self.index_filename, "w" )
         sys.stdout = new_file
@@ -899,36 +890,32 @@ class DocSectionList:
         line        = 0
 
         print html_header
-
         print "<center><h1>General Index</h1></center>"
-
         print "<center><table cellpadding=5><tr valign=top><td>"
 
         for block in self.index:
+            sys.stdout.write( '<a href="' + block.section.filename +
+                              '#' + block.name + '">' )
+            sys.stdout.write( block.name )
+            sys.stdout.write( "</a><br>" + '\n' )
 
-            print '<a href="'+block.section.filename+'#'+block.name+'">'
-            print block.name
-            print "</a><br>"
-
-            if line*num_columns >= total:
+            if line * num_columns >= total:
                 print "</td><td>"
                 line = 0
             else:
-                line = line+1
+                line = line + 1
 
         print "</tr></table></center>"
-
         print html_footer
-        
+
         sys.stdout = old_stdout
-        
+
 
 # Filter a given list of DocBlocks. Returns a new list
 # of DocBlock objects that only contains element whose
 # "type" (i.e. first marker) is in the "types" parameter.
 #
 def filter_blocks_by_type( block_list, types ):
-
     new_list = []
     for block in block_list:
         if block.items:
@@ -964,7 +951,6 @@ def block_lexicographical_compare( b1, b2 ):
         return 1
 
 
-
 # dump a list block as a single HTML page
 #
 def dump_html_1( block_list ):
@@ -976,18 +962,16 @@ def dump_html_1( block_list ):
     print html_footer
 
 
-
-
 def make_block_list_inner():
     """parse a file and extract comments blocks from it"""
 
     file_list = []
     sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
-    
+
     for pathname in sys.argv[1:]:
         newpath = glob.glob( pathname )
-        sys.stderr.write ( repr(newpath) + '\n' )
-        last = len(file_list)
+        sys.stderr.write( repr(newpath) + '\n' )
+        last = len( file_list )
         file_list[last:last] = newpath
 
     if len( file_list ) == 0:
@@ -1006,9 +990,9 @@ def make_block_list_inner():
     #  4 - wait for beginning of source (or comment ??)
     #  5 - process source
     #
-    comment     = []
-    source      = []
-    state       = 0
+    comment = []
+    source  = []
+    state   = 0
 
     for line in fileinput.input( file_list ):
         l = len( line )
@@ -1144,7 +1128,6 @@ def make_block_list_inner():
 # create a list of DocBlock elements
 #
 def make_block_list():
-    
     source_block_list = make_block_list_inner()
     list              = []
 
@@ -1153,7 +1136,6 @@ def make_block_list():
         list.append( docblock )
 
     return list
-
 
 
 # This function is only used for debugging
@@ -1191,8 +1173,8 @@ def main( argv ):
     section_list.dump_html_toc()
     section_list.dump_html_sections()
     section_list.dump_html_index()
-    
-    # list2 = filter_blocks( list, ['type','macro','enum','constant', 'functype'] )
+
+    # list2 = filter_blocks( list, ['type','macro','enum','constant','functype'] )
     # list2 = list
     # list2.sort( block_lexicographical_compare )
 
@@ -1203,6 +1185,7 @@ def main( argv ):
 
 
 # If called from the command line
+#
 if __name__ == '__main__':
     main( sys.argv )
 

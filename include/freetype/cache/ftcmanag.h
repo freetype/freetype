@@ -70,9 +70,14 @@
 
 FT_BEGIN_HEADER
 
-  /***
-   * <Section> cache_subsystem
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    cache_subsystem                                                    */
+  /*                                                                       */
+  /*************************************************************************/
+
 
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
@@ -362,6 +367,7 @@ FT_BEGIN_HEADER
     FT_Pointer            cache_data;   /* passed to cache node methods */
 
   } FTC_CacheRec;
+
 
   /* */
 

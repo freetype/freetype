@@ -33,11 +33,14 @@
 
 FT_BEGIN_HEADER
 
-  /***********************************************************************
-   *
-   * <Section> basic_types
-   *
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    basic_types                                                        */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -231,11 +234,13 @@ FT_BEGIN_HEADER
   } FT_Bitmap;
 
 
-  /***********************************************************************
-   *
-   * <Section> outline_processing
-   *
-   */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    outline_processing                                                 */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -528,11 +533,13 @@ FT_BEGIN_HEADER
   } FT_Outline_Funcs;
 
 
-  /***********************************************************************
-   *
-   * <Section> Basic_Types
-   *
-   */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    basic_types                                                        */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -612,18 +619,23 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*************************************************************************/
 
-  /************************************************************************
-   *
-   *  <Section> Raster
-   *
-   *  <Title> Scanline converter
-   *
-   *  <Abstract>
-   *     How vectorial outlines are converted into bitmaps and pixmaps
-   *
-   *  <Description>
-   *     This section contains technical definitions
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    Raster                                                             */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    Scanline converter                                                 */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    How vectorial outlines are converted into bitmaps and pixmaps.     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This section contains technical definitions.                       */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -692,9 +704,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Span_
   {
-    short          x;
-    unsigned short len;
-    unsigned char  coverage;
+    short           x;
+    unsigned short  len;
+    unsigned char   coverage;
 
   } FT_Span;
 
@@ -804,28 +816,33 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    ft_raster_flag_default :: This value is 0.                         */
   /*                                                                       */
-  /*    ft_raster_flag_aa      ::                                          */
-  /*      this flag is set to indicate that a anti-aliased glyph image     */
-  /*      should be generated. Otherwise, it will be monochrome (1-bit)    */
+  /*    ft_raster_flag_aa      :: This flag is set to indicate that an     */
+  /*                              anti-aliased glyph image should be       */
+  /*                              generated.  Otherwise, it will be        */
+  /*                              monochrome (1-bit)                       */
   /*                                                                       */
-  /*    ft_raster_flag_direct  ::                                          */
-  /*      this flag is set to indicate direct rendering. In this mode,     */
-  /*      client applications must provide their own span callback.        */
-  /*      this let them direct drawing or composition over an existing     */
-  /*      bitmap. If this bit is not set, the target pixmap's buffer       */
-  /*      _must_ be zeroed before rendering.                               */
+  /*    ft_raster_flag_direct  :: This flag is set to indicate direct      */
+  /*                              rendering.  In this mode, client         */
+  /*                              applications must provide their own span */
+  /*                              callback.  This lets them directly       */
+  /*                              draw or compose over an existing bitmap. */
+  /*                              If this bit is not set, the target       */
+  /*                              pixmap's buffer _must_ be zeroed before  */
+  /*                              rendering.                               */
   /*                                                                       */
-  /*      note that for now, direct rendering is only possible with        */
-  /*      anti-aliased glyphs only..                                       */
+  /*                              Note that for now, direct rendering is   */
+  /*                              only possible with anti-aliased glyphs.  */
   /*                                                                       */
-  /*    ft_raster_flag_clip    ::                                          */
-  /*      this flag is only used in direct rendering mode. When set,       */
-  /*      the output will be clipped to a box specified in the "clip_box"  */
-  /*      field of the FT_Raster_Params structure.                         */
+  /*    ft_raster_flag_clip    :: This flag is only used in direct         */
+  /*                              rendering mode.  If set, the output will */
+  /*                              be clipped to a box specified in the     */
+  /*                              "clip_box" field of the FT_Raster_Params */
+  /*                              structure.                               */
   /*                                                                       */
-  /*      note that by default, the glyph bitmap is clipped to the         */
-  /*      target pixmap, except in direct rendering mode where all         */
-  /*      spans are generated if no clipping box is set.                   */
+  /*                              Note that by default, the glyph bitmap   */
+  /*                              is clipped to the target pixmap, except  */
+  /*                              in direct rendering mode where all spans */
+  /*                              are generated if no clipping box is set. */
   /*                                                                       */
   typedef  enum
   {
@@ -1064,6 +1081,9 @@ FT_BEGIN_HEADER
     FT_Raster_Done_Func      raster_done;
 
   } FT_Raster_Funcs;
+
+
+  /* */
 
 
 FT_END_HEADER
