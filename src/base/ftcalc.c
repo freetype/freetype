@@ -30,6 +30,7 @@
   /*                                                                       */
   /*************************************************************************/
 
+
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>  /* for ABS() */
@@ -53,7 +54,9 @@
      536870912,  759250125, 1073741824, 1518500250,
     2147483647
   };
+
 #else
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -69,13 +72,13 @@
   /* <Return>                                                              */
   /*    The result of `sqrt(x)'.                                           */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Int32)  FT_Sqrt32( FT_Int32 x )
+  FT_EXPORT_FUNC( FT_Int32 )  FT_Sqrt32( FT_Int32  x )
   {
     FT_ULong  val, root, newroot, mask;
 
 
     root = 0;
-    mask = 0x40000000;
+    mask = 0x40000000L;
     val  = (FT_ULong)x;
 
     do
@@ -94,10 +97,11 @@
 
     return root;
   }
+
 #endif /* OLD_CALCS */
 
-#ifdef LONG64
 
+#ifdef LONG64
 
   /*************************************************************************/
   /*                                                                       */
@@ -106,7 +110,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation `(a*b)/c'   */
-  /*    with maximum accuracy (it uses a 64-bit intermediate integer       */
+  /*    with maximal accuracy (it uses a 64-bit intermediate integer       */
   /*    whenever necessary).                                               */
   /*                                                                       */
   /*    This function isn't necessarily as fast as some processor specific */
@@ -119,12 +123,12 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    The result of `(a*b)/c'.  This function never traps when trying to */
-  /*    divide by zero, it simply returns `MaxInt' or `MinInt' depending   */
+  /*    divide by zero; it simply returns `MaxInt' or `MinInt' depending   */
   /*    on the signs of `a' and `b'.                                       */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Long)  FT_MulDiv( FT_Long  a,
-                                      FT_Long  b,
-                                      FT_Long  c )
+  FT_EXPORT_FUNC( FT_Long )  FT_MulDiv( FT_Long  a,
+                                        FT_Long  b,
+                                        FT_Long  c )
   {
     FT_Int s;
 
@@ -145,7 +149,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(a*b)/0x10000' with maximum accuracy.  Most of the time this is   */
+  /*    `(a*b)/0x10000' with maximal accuracy.  Most of the time this is   */
   /*    used to multiply a given value by a 16.16 fixed float factor.      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -167,8 +171,8 @@
   /*    _second_ argument of this function; this can make a great          */
   /*    difference.                                                        */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Long)  FT_MulFix( FT_Long  a,
-                                      FT_Long  b )
+  FT_EXPORT_FUNC( FT_Long )  FT_MulFix( FT_Long  a,
+                                        FT_Long  b )
   {
     FT_Int s;
 
@@ -188,7 +192,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(a*0x10000)/b' with maximum accuracy.  Most of the time, this is  */
+  /*    `(a*0x10000)/b' with maximal accuracy.  Most of the time, this is  */
   /*    used to divide a given value by a 16.16 fixed float factor.        */
   /*                                                                       */
   /* <Input>                                                               */
@@ -204,8 +208,8 @@
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
   /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Long)  FT_DivFix( FT_Long  a,
-                                      FT_Long  b )
+  FT_EXPORT_FUNC( FT_Long )  FT_DivFix( FT_Long  a,
+                                        FT_Long  b )
   {
     FT_Int32   s;
     FT_Word32  q;
@@ -216,8 +220,7 @@
 
     if ( b == 0 )
       /* check for divide by 0 */
-      q = 0x7FFFFFFF;
-
+      q = 0x7FFFFFFFL;
     else
       /* compute result directly */
       q = ((FT_Int64)a << 16) / b;
@@ -227,40 +230,44 @@
 
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
+
+  /* a helper function for FT_Sqrt64() */
+
+  static
+  int  ft_order64( FT_Int64  z )
+  {
+    int  j = 0;
+
+
+    while ( z )
+    {
+      z = (unsigned INT64)z >> 1;
+      j++;
+    }
+    return j - 1;
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    FT_Sqrt64                                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Computes the square root of a 64-bits value ! Yeah, that sounds    */
-  /*    stupid, but it's needed to obtain maximum accuracy in the          */
-  /*    TrueType bytecode interpreter..                                    */
+  /*    Computes the square root of a 64-bit value.  That sounds stupid,   */
+  /*    but it is needed to obtain maximal accuracy in the TrueType        */
+  /*    bytecode interpreter.                                              */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    l :: 64-bits integer                                               */
+  /*    l :: 64-bit integer                                                */
   /*                                                                       */
   /* <Return>                                                              */
   /*    The 32-bit square-root.                                            */
   /*                                                                       */
-
-     static
-     int  ft_order64( FT_Int64  z )
-     {
-       int  j = 0;
-
-       while ( z )
-       {
-         z = (unsigned INT64)z >> 1;
-         j++;
-       }
-       return j - 1;
-     }
-
-
-  FT_EXPORT_FUNC(FT_Int32)  FT_Sqrt64( FT_Int64  l )
+  FT_EXPORT_FUNC( FT_Int32 )  FT_Sqrt64( FT_Int64  l )
   {
     FT_Int64  r, s;
+
 
     if ( l <= 0 ) return 0;
     if ( l == 1 ) return 1;
@@ -276,7 +283,8 @@
 
     return r;
   }
-#endif
+
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
 #else /* LONG64 */
@@ -289,7 +297,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation `(a*b)/c'   */
-  /*    with maximum accuracy (it uses a 64-bit intermediate integer       */
+  /*    with maximal accuracy (it uses a 64-bit intermediate integer       */
   /*    whenever necessary).                                               */
   /*                                                                       */
   /*    This function isn't necessarily as fast as some processor specific */
@@ -302,7 +310,7 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    The result of `(a*b)/c'.  This function never traps when trying to */
-  /*    divide by zero, it simply returns `MaxInt' or `MinInt' depending   */
+  /*    divide by zero; it simply returns `MaxInt' or `MinInt' depending   */
   /*    on the signs of `a' and `b'.                                       */
   /*                                                                       */
   /* <Note>                                                                */
@@ -322,9 +330,9 @@
   /*                                                                       */
   /*      and 2*0x157F0 = 176096.                                          */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Long)  FT_MulDiv( FT_Long  a,
-                                      FT_Long  b,
-                                      FT_Long  c )
+  FT_EXPORT_FUNC( FT_Long )  FT_MulDiv( FT_Long  a,
+                                        FT_Long  b,
+                                        FT_Long  c )
   {
     long   s;
 
@@ -363,7 +371,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(a*b)/0x10000' with maximum accuracy.  Most of the time, this is  */
+  /*    `(a*b)/0x10000' with maximal accuracy.  Most of the time, this is  */
   /*    used to multiply a given value by a 16.16 fixed float factor.      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -387,11 +395,12 @@
   /*    idea is to use bounds like 2048 and 1048576 (=floor((2^31-1)/2048) */
   /*    for `a' and `b', respectively.                                     */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Long)  FT_MulFix( FT_Long  a,
-                                      FT_Long  b )
+  FT_EXPORT_FUNC( FT_Long )  FT_MulFix( FT_Long  a,
+                                        FT_Long  b )
   {
     FT_Long   s;
     FT_ULong  ua, ub;
+
 
     if ( a == 0 || b == 0x10000L )
       return a;
@@ -425,8 +434,8 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(a*0x10000)/b' with maximum accuracy.  Most of the time, this is  */
-  /*    used to divide  a given value by a 16.16 fixed float factor.       */
+  /*    `(a*0x10000)/b' with maximal accuracy.  Most of the time, this is  */
+  /*    used to divide a given value by a 16.16 fixed float factor.        */
   /*                                                                       */
   /* <Input>                                                               */
   /*    a :: The first multiplier.                                         */
@@ -441,8 +450,8 @@
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
   /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Long)  FT_DivFix( FT_Long  a,
-                                      FT_Long  b )
+  FT_EXPORT_FUNC( FT_Long )  FT_DivFix( FT_Long  a,
+                                        FT_Long  b )
   {
     FT_Int32   s;
     FT_Word32  q;
@@ -453,8 +462,7 @@
 
     if ( b == 0 )
       /* check for divide by 0 */
-      q = 0x7FFFFFFF;
-
+      q = 0x7FFFFFFFL;
     else if ( (a >> 16) == 0 )
     {
       /* compute result directly */
@@ -502,11 +510,12 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the ADD_64() macro.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(void)  FT_Add64( FT_Int64*  x,
-                                  FT_Int64*  y,
-                                  FT_Int64*  z )
+  FT_EXPORT_FUNC( void )  FT_Add64( FT_Int64*  x,
+                                    FT_Int64*  y,
+                                    FT_Int64*  z )
   {
     register FT_Word32  lo, hi;
+
 
     lo = x->lo + y->lo;
     hi = x->hi + y->hi + ( lo < x->lo );
@@ -522,7 +531,7 @@
   /*    FT_MulTo64                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Multiplies two Int32 integers.  Returns a Int64 integer.           */
+  /*    Multiplies two Int32 integers.  Returns an Int64 integer.          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    x :: The first multiplier.                                         */
@@ -534,9 +543,9 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the MUL_64() macro.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(void)  FT_MulTo64( FT_Int32   x,
-                                    FT_Int32   y,
-                                    FT_Int64*  z )
+  FT_EXPORT_FUNC( void )  FT_MulTo64( FT_Int32   x,
+                                      FT_Int32   y,
+                                      FT_Int64*  z )
   {
     FT_Int32   s;
 
@@ -599,8 +608,8 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the DIV_64() macro.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Int32)  FT_Div64by32( FT_Int64*  x,
-                                          FT_Int32   y )
+  FT_EXPORT_FUNC( FT_Int32 )  FT_Div64by32( FT_Int64*  x,
+                                            FT_Int32   y )
   {
     FT_Int32   s;
     FT_Word32  q, r, i, lo;
@@ -649,8 +658,13 @@
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
+
+  /* two helper functions for FT_Sqrt64() */
+
   static
-  void  FT_Sub64( FT_Int64*  x, FT_Int64*  y, FT_Int64*  z )
+  void  FT_Sub64( FT_Int64*  x,
+                  FT_Int64*  y,
+                  FT_Int64*  z )
   {
     register FT_Word32  lo, hi;
 
@@ -662,53 +676,54 @@
     z->hi = hi;
   }
 
+  static
+  int  ft_order64( FT_Int64*  z )
+  {
+    FT_Word32  i;
+    int        j;
+
+
+    i = z->lo;
+    j = 0;
+    if ( z->hi )
+    {
+      i = z->hi;
+      j = 32;
+    }
+
+    while ( i > 0 )
+    {
+      i >>= 1;
+      j++;
+    }
+    return j - 1;
+  }
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    FT_Sqrt64                                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Computes the square root of a 64-bits value ! Yeah, that sounds    */
-  /*    stupid, but it's needed to obtain maximum accuracy in the          */
-  /*    TrueType bytecode interpreter..                                    */
+  /*    Computes the square root of a 64-bits value.  That sounds stupid,  */
+  /*    but it is needed to obtain maximal accuracy in the TrueType        */
+  /*    bytecode interpreter.                                              */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    z :: pointer to 64-bits integer                                    */
+  /*    z :: A pointer to a 64-bit integer.                                */
   /*                                                                       */
   /* <Return>                                                              */
   /*    The 32-bit square-root.                                            */
   /*                                                                       */
-
-      static
-      int  ft_order64( FT_Int64*  z )
-      {
-        FT_Word32  i;
-        int        j;
-
-        i = z->lo;
-        j = 0;
-        if ( z->hi )
-        {
-          i = z->hi;
-          j = 32;
-        }
-
-        while ( i > 0 )
-        {
-          i >>= 1;
-          j++;
-        }
-        return j-1;
-      }
-
-  FT_EXPORT_FUNC(FT_Int32)  FT_Sqrt64( FT_Int64*  l )
+  FT_EXPORT_FUNC( FT_Int32 )  FT_Sqrt64( FT_Int64*  l )
   {
     FT_Int64  l2;
     FT_Int32  r, s;
 
 
-    if ( (FT_Int32)l->hi < 0          ||
-        (l->hi == 0 && l->lo == 0) )  return 0;
+    if ( (FT_Int32)l->hi < 0        ||
+         (l->hi == 0 && l->lo == 0) )
+      return 0;
 
     s = ft_order64( l );
     if ( s == 0 ) return 1;

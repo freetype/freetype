@@ -458,9 +458,9 @@
   /*                           glyph from the font.  Thus, bbox.yMax can   */
   /*                           be seen as the `maximal ascender',          */
   /*                           bbox.yMin as the `minimal descender', and   */
-  /*                           the maximum glyph width is given by         */
+  /*                           the maximal glyph width is given by         */
   /*                           `bbox.xMax-bbox.xMin' (not to be confused   */
-  /*                           with the maximum _advance_width_).  Only    */
+  /*                           with the maximal _advance_width_).  Only    */
   /*                           relevant for scalable formats.              */
   /*                                                                       */
   /*    units_per_EM        :: The number of font units per EM square for  */
@@ -496,13 +496,13 @@
   /*                           `external leading'.  Only relevant for      */
   /*                           scalable formats.                           */
   /*                                                                       */
-  /*    max_advance_width   :: The maximum advance width, in font units,   */
+  /*    max_advance_width   :: The maximal advance width, in font units,   */
   /*                           for all glyphs in this face.  This can be   */
   /*                           used to make word wrapping computations     */
   /*                           faster.  Only relevant for scalable         */
   /*                           formats.                                    */
   /*                                                                       */
-  /*    max_advance_height  :: The maximum advance height, in font units,  */
+  /*    max_advance_height  :: The maximal advance height, in font units,  */
   /*                           for all glyphs in this face.  This is only  */
   /*                           relevant for vertical layouts, and should   */
   /*                           be set to the `height' for fonts that do    */
@@ -536,14 +536,14 @@
   /*                                                                       */
   /*    sizes_list          :: The list of child sizes for this face.      */
   /*                                                                       */
-  /*    max_points          :: The maximum number of points used to store  */
+  /*    max_points          :: The maximal number of points used to store  */
   /*                           the vectorial outline of any glyph in this  */
   /*                           face.  If this value cannot be known in     */
   /*                           advance, or if the face isn't scalable,     */
   /*                           this should be set to 0.  Only relevant for */
   /*                           scalable formats.                           */
   /*                                                                       */
-  /*    max_contours        :: The maximum number of contours used to      */
+  /*    max_contours        :: The maximal number of contours used to      */
   /*                           store the vectorial outline of any glyph in */
   /*                           this face.  If this value cannot be known   */
   /*                           in advance, or if the face isn't scalable,  */
@@ -1730,7 +1730,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation `(A*B)/C'   */
-  /*    with maximum accuracy (it uses a 64-bit intermediate integer       */
+  /*    with maximal accuracy (it uses a 64-bit intermediate integer       */
   /*    whenever necessary).                                               */
   /*                                                                       */
   /*    This function isn't necessarily as fast as some processor specific */
@@ -1758,7 +1758,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(A*B)/0x10000' with maximum accuracy.  Most of the time, this is  */
+  /*    `(A*B)/0x10000' with maximal accuracy.  Most of the time, this is  */
   /*    used to multiply a given value by a 16.16 fixed float factor.      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -1791,7 +1791,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(A*0x10000)/B' with maximum accuracy.  Most of the time, this is  */
+  /*    `(A*0x10000)/B' with maximal accuracy.  Most of the time, this is  */
   /*    used to divide  a given value by a 16.16 fixed float factor.       */
   /*                                                                       */
   /* <Input>                                                               */
@@ -1921,9 +1921,9 @@
   /*                   outline will NOT necessarily be FREED when          */
   /*                   destroying the library, by FT_Done_FreeType().      */
   /*                                                                       */
-  /*    numPoints   :: The maximum number of points within the outline.    */
+  /*    numPoints   :: The maximal number of points within the outline.    */
   /*                                                                       */
-  /*    numContours :: The maximum number of contours within the outline.  */
+  /*    numContours :: The maximal number of contours within the outline.  */
   /*                                                                       */
   /* <Output>                                                              */
   /*    outline     :: A handle to the new outline.  NULL in case of       */
