@@ -40,7 +40,7 @@
                       FT_Fixed  *ametrics_x_scale,
                       FT_Fixed  *ametrics_y_scale )
   {
-    FT_Error               error;
+    FT_Error               error = FT_Err_Ok;
     FT_Service_PfrMetrics  service;
 
 

@@ -1,3 +1,14 @@
+2003-10-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahhint.c (ah_hinter_load_glyph): Patch from
+	2003-08-18 introduced a severe bug (FT_Render_Glyph was called
+	twice under some circumstances, causing strange results).  This
+	is fixed now by clearing the FT_LOAD_RENDER bit of `load_flags'.
+
+	* src/base/ftpfr.c (FT_Get_PFR_Metrics): Initialize `error'.
+	* src/psaux/psobjs.c (ps_tobytes): Initialize `n'.
+	* src/type42/t42parse.c (t42_parse_sfnts): Initialize `string_size'.
+
 2003-10-16  Werner Lemberg  <wl@gnu.org>
 
 	Completely revised Type 42 parser.  It now handles both fonts

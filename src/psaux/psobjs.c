@@ -783,7 +783,7 @@
     FT_Error  error = PSaux_Err_Ok;
 
     FT_Byte*  cur = *acur;
-    FT_Long   n;
+    FT_Long   n   = 0;
 
 
     if ( cur >= limit )

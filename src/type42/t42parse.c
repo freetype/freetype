@@ -511,6 +511,7 @@
 
     T1_Skip_Spaces( parser );
     status          = BEFORE_START;
+    string_size     = 0;
     old_string_size = 0;
     count           = 0;
 
