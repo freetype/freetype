@@ -561,6 +561,12 @@
     FT_Memory    memory = source->memory;
     FT_GZipFile  zip;
 
+   /* check the header right now, this prevents allocating un-necessary
+    * objects when we don't need them
+    */
+    error = ft_gzip_check_header( source );
+    if ( error )
+      goto Exit;
 
     FT_ZERO( stream );
     stream->memory = memory;

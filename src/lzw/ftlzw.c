@@ -414,6 +414,16 @@
     FT_Memory   memory = source->memory;
     FT_LZWFile  zip;
 
+   /* check the header right now, this will prevent us from
+    * allocating a huge LZWFile object (400 Kb of heap memory !!)
+    * when not necessary.
+    *
+    * Did I mention that you should never use .Z compressed font
+    * file ?
+    */
+    error = ft_lzw_check_header( source );
+    if ( error )
+      goto Exit;
 
     FT_ZERO( stream );
     stream->memory = memory;
