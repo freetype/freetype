@@ -1,6 +1,9 @@
-SubDir FT2_TOP src autohint ;
+# FreeType 2 src/autohint Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src autohint ] ;
+SubDir  FT2_TOP src autohint ;
+
+SubDirHdrs  [ FT2_SubDir  src autohint ] ;
 
 {
   local  _sources ;
@@ -14,8 +17,7 @@ SubDirHdrs [ FT2_SubDir src autohint ] ;
     _sources = autohint.c ;
   }
 
-  Library $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
-
+# end of src/autohint Jamfile

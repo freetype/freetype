@@ -1,6 +1,9 @@
-SubDir FT2_TOP src pcf ;
+# FreeType 2 src/pcf Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src pcf ] ;
+SubDir  FT2_TOP src pcf ;
+
+SubDirHdrs  [ FT2_SubDir  src pcf ] ;
 
 {
   local  _sources ;
@@ -14,8 +17,7 @@ SubDirHdrs [ FT2_SubDir src pcf ] ;
     _sources = pcf.c ;
   }
 
-  Library $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
-
+# end of src/pcf Jamfile

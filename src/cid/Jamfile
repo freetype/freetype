@@ -1,6 +1,9 @@
-SubDir FT2_TOP src cid ;
+# FreeType 2 src/cid Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src cid ] ;
+SubDir  FT2_TOP src cid ;
+
+SubDirHdrs  [ FT2_SubDir  src cid ] ;
 
 {
   local  _sources ;
@@ -14,8 +17,7 @@ SubDirHdrs [ FT2_SubDir src cid ] ;
     _sources = type1cid.c ;
   }
 
-  Library $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
-
+# end of src/cid Jamfile

@@ -1,6 +1,9 @@
-SubDir FT2_TOP src truetype ;
+# FreeType 2 src/truetype Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src truetype ] ;
+SubDir  FT2_TOP src truetype ;
+
+SubDirHdrs  [ FT2_SubDir  src truetype ] ;
 
 {
   local  _sources ;
@@ -14,8 +17,7 @@ SubDirHdrs [ FT2_SubDir src truetype ] ;
     _sources = truetype.c ;
   }
 
-  Library $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
-
+# end of src/truetype Jamfile

@@ -1,16 +1,23 @@
-SubDir FT2_TOP src smooth ;
+# FreeType 2 src/smooth Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src smooth ] ;
+SubDir  FT2_TOP src smooth ;
 
-ft2_smooth_sources = ftgrays.c ftsmooth.c ;
+SubDirHdrs  [ FT2_SubDir  src smooth ] ;
 
-if $(FT2_MULTI)
 {
-  Library $(FT2_LIB) : $(ft2_smooth_sources) ;
-}
-else
-{
-  Library $(FT2_LIB) : smooth.c ;
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = ftgrays.c ftsmooth.c ;
+  }
+  else
+  {
+    _sources = smooth.c ;
+  }
+
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
+# end of src/smooth Jamfile

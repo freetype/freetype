@@ -1,17 +1,23 @@
-SubDir FT2_TOP src type1 ;
+# FreeType 2 src/type1 Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src type1 ] ;
+SubDir  FT2_TOP src type1 ;
 
-ft2_type1_sources = t1afm.c t1driver.c t1objs.c t1load.c t1gload.c
-                    t1parse.c ;
+SubDirHdrs  [ FT2_SubDir  src type1 ] ;
 
-if $(FT2_MULTI)
 {
-  Library $(FT2_LIB) : $(ft2_type1_sources) ;
-}
-else
-{
-  Library $(FT2_LIB) : type1.c ;
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = t1afm.c t1driver.c t1objs.c t1load.c t1gload.c t1parse.c ;
+  }
+  else
+  {
+    _sources = type1.c ;
+  }
+
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
+# end of src/type1 Jamfile

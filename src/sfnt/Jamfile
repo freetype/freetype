@@ -1,6 +1,9 @@
-SubDir FT2_TOP src sfnt ;
+# FreeType 2 src/sfnt Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src sfnt ] ;
+SubDir  FT2_TOP src sfnt ;
+
+SubDirHdrs  [ FT2_SubDir  src sfnt ] ;
 
 {
   local  _sources ;
@@ -14,8 +17,7 @@ SubDirHdrs [ FT2_SubDir src sfnt ] ;
     _sources = sfnt.c ;
   }
 
-  Library $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
-
+# end of src/sfnt Jamfile

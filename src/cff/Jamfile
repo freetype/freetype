@@ -1,6 +1,9 @@
-SubDir FT2_TOP src cff ;
+# FreeType 2 src/cff Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src cff ] ;
+SubDir  FT2_TOP src cff ;
+
+SubDirHdrs  [ FT2_SubDir  src cff ] ;
 
 {
   local  _sources ;
@@ -14,8 +17,7 @@ SubDirHdrs [ FT2_SubDir src cff ] ;
     _sources = cff.c ;
   }
 
-  Library $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-
-
+# end of src/cff Jamfile
