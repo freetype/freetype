@@ -1042,6 +1042,10 @@
     /* save current glyph metrics */
     metrics = slot->metrics;
 
+    /* set linear horizontal metrics */
+    slot->linearHoriAdvance = slot->metrics.horiAdvance;
+    slot->linearVertAdvance = slot->metrics.vertAdvance;
+
     switch ( slot->format )
     {
     case ft_glyph_format_outline:
