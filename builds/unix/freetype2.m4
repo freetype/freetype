@@ -14,8 +14,10 @@ AC_ARG_WITH(freetype-prefix,
 AC_ARG_WITH(freetype-exec-prefix,
 [  --with-ft-exec-prefix=PFX Exec prefix where FreeType is installed (optional)],
             ft_config_exec_prefix="$withval", ft_config_exec_prefix="")
-AC_ARG_ENABLE(freetypetest, [  --disable-freetypetest  Do not try to compile and run a test FreeType program],[],
-              enable_fttest=yes)
+AC_ARG_ENABLE(freetypetest,
+[  --disable-freetypetest    Do not try to compile and run
+                            a test FreeType program],
+            [], enable_fttest=yes)
 
 if test x$ft_config_exec_prefix != x ; then
   ft_config_args="$ft_config_args --exec-prefix=$ft_config_exec_prefix"
@@ -52,15 +54,23 @@ else
   ft_min_micro_version=`echo $min_ft_version | \
          sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
   if test "x$enable_fttest" = "xyes" ; then
-    ft_config_version=$((                   \
-           $ft_config_major_version*10000 + \
-           $ft_config_minor_version*100   + \
-           $ft_config_micro_version))
-    ft_min_version=$((                   \
-           $ft_min_major_version*10000 + \
-           $ft_min_minor_version*100   + \
-           $ft_min_micro_version))
-    if test $ft_config_version -lt $ft_min_version ; then
+    ft_config_is_lt=no
+    if test $ft_config_major_version -lt $ft_min_major_version ; then
+      ft_config_is_lt=yes
+    else
+      if test $ft_config_major_version -eq $ft_min_major_version ; then
+        if test $ft_config_minor_version -lt $ft_min_minor_version ; then
+          ft_config_is_lt=yes
+        else
+          if test $ft_config_minor_version -eq $ft_min_minor_version ; then
+            if test $ft_config_micro_version -lt $ft_min_micro_version ; then
+              ft_config_is_lt=yes
+            fi
+          fi
+        fi
+      fi
+    fi
+    if test "x$ft_config_is_lt" = "xyes" ; then
       ifelse([$3], , :, [$3])
     else
       ac_save_CFLAGS="$CFLAGS"
@@ -68,7 +78,7 @@ else
       CFLAGS="$CFLAGS $FT2_CFLAGS"
       LIBS="$FT2_LIBS $LIBS"
 dnl
-dnl Sanity checks the results of freetype-config to some extent
+dnl Sanity checks for the results of freetype-config to some extent
 dnl
       AC_TRY_RUN([
 #include <ft2build.h>
@@ -77,20 +87,20 @@ dnl
 #include <stdlib.h>
 
 int
-main ()
+main()
 {
-    FT_Library library;
-    FT_Error error;
+  FT_Library library;
+  FT_Error error;
 
-    error = FT_Init_FreeType( &library );
+  error = FT_Init_FreeType(&library);
 
-    if ( error )
-    {
-        return 1;
-    } else {
-        FT_Done_FreeType( library );
-        return 0;
-    }
+  if (error)
+    return 1;
+  else
+  {
+    FT_Done_FreeType(library);
+    return 0;
+  }
 }
 ],, no_ft=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
       CFLAGS="$ac_save_CFLAGS"
@@ -104,8 +114,8 @@ if test "x$no_ft" = x ; then
 else
    AC_MSG_RESULT(no)
    if test "$FT2_CONFIG" = "no" ; then
-     echo "*** The freetype-config script installed by FT2 could not be found"
-     echo "*** If FT2 was installed in PREFIX, make sure PREFIX/bin is in"
+     echo "*** The freetype-config script installed by FreeType 2 could not be found."
+     echo "*** If FreeType 2 was installed in PREFIX, make sure PREFIX/bin is in"
      echo "*** your path, or set the FT2_CONFIG environment variable to the"
      echo "*** full path to freetype-config."
    else
