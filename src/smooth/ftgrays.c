@@ -1486,9 +1486,9 @@
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
   static
-  int  FT_Outline_Decompose( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
-                             void*              user )
+  int  FT_Outline_Decompose( FT_Outline*              outline,
+                             const FT_Outline_Funcs*  interface,
+                             void*                    user )
   {
 #undef SCALED
 #define SCALED( x )  ( ( (x) << shift ) - delta )
@@ -1699,7 +1699,7 @@
   int  grays_convert_glyph( RAS_ARG_ FT_Outline*  outline )
   {
     static
-    FT_Outline_Funcs  interface =
+    const FT_Outline_Funcs  interface =
     {
       (FT_Outline_MoveTo_Func) Move_To,
       (FT_Outline_LineTo_Func) Line_To,
@@ -1958,7 +1958,7 @@
   }
 
 
-  FT_Raster_Funcs  ft_grays_raster =
+  const FT_Raster_Funcs  ft_grays_raster =
   {
     ft_glyph_format_outline,
 

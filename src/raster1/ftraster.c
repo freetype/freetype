@@ -3281,7 +3281,7 @@
   }
 
 
-  FT_Raster_Funcs  ft_standard_raster =
+  const FT_Raster_Funcs  ft_standard_raster =
   {
     ft_glyph_format_outline,
     (FT_Raster_New_Func)     ft_black_new,
