@@ -895,8 +895,8 @@
     /* 1000 / temp_scale, because temp_scale was already multiplied by  */
     /* 1000 (in t1_tofixed, from psobjs.c).                             */
 
-    root->units_per_EM = (FT_UShort)( FT_DivFix( 0x10000L,
-                                      FT_DivFix( temp_scale, 1000 ) ) >> 16 );
+    root->units_per_EM = (FT_UShort)FT_DivFix( 0x10000L,
+                                               FT_DivFix( temp_scale, 1000 ) );
 
     /* we need to scale the values by 1.0/temp_scale */
     if ( temp_scale != 0x10000L )
@@ -1194,7 +1194,7 @@
       return;
 
     /* initialize tables (leaving room for addition of .notdef, */
-    /* if necessary).                                           */ 
+    /* if necessary).                                           */
 
     error = psaux->ps_table_funcs->init( code_table,
                                          loader->num_glyphs + 1,
