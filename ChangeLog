@@ -1,29 +1,20 @@
 2002-05-04  David Turner  <david@freetype.org>
 
-        * src/truetype/ttgload.c (TT_Load_Glyph): finally fixing the last
-          bug that prevented FreeType 2.x and FreeType 1.x to produce
-          bit-by-bit identical monochrome glyph bitmaps with native TrueType
-          hinting. The culprit was a single-bit flag that wasn't set
-          correctly by the TrueType glyph loader !!
+	* src/truetype/ttgload.c (TT_Load_Glyph): Finally fixing the last
+	bug that prevented FreeType 2.x and FreeType 1.x to produce
+	bit-by-bit identical monochrome glyph bitmaps with native TrueType
+	hinting.  The culprit was a single-bit flag that wasn't set
+	correctly by the TrueType glyph loader.
 
-        * src/otlayout/otlayout.h,
-          src/otlayout/otlbase.c,
-          src/otlayout/otlbase.h,
-          src/otlayout/otlconf.h,
-          src/otlayout/otlgdef.c,
-          src/otlayout/otlgdef.h,
-          src/otlayout/otlgpos.c,
-          src/otlayout/otlgpos.h,
-          src/otlayout/otlgsub.c,
-          src/otlayout/otlgsub.h,
-          src/otlayout/otljstf.c,
-          src/otlayout/otljstf.h,
-          src/otlayout/otltable.c,
-          src/otlayout/otltable.h,
-          src/otlayout/otltags.h:
-          
-            adding OpenType Layout source files. Module is still incomplete
-            
+	* src/otlayout/otlayout.h, src/otlayout/otlbase.c,
+	src/otlayout/otlbase.h, src/otlayout/otlconf.h,
+	src/otlayout/otlgdef.c, src/otlayout/otlgdef.h,
+	src/otlayout/otlgpos.c, src/otlayout/otlgpos.h,
+	src/otlayout/otlgsub.c, src/otlayout/otlgsub.h,
+	src/otlayout/otljstf.c, src/otlayout/otljstf.h,
+	src/otlayout/otltable.c, src/otlayout/otltable.h,
+	src/otlayout/otltags.h: New OpenType Layout source files.  The
+	module is still incomplete.
 
 2002-05-02  Werner Lemberg  <wl@gnu.org>
 
