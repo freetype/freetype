@@ -2027,7 +2027,8 @@
   FT_LOCAL_DEF( FT_Error )
   cff_font_load( FT_Stream  stream,
                  FT_Int     face_index,
-                 CFF_Font   font )
+                 CFF_Font   font,
+                 CFF_Face   face )
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
@@ -2159,20 +2160,27 @@
     else
       font->num_subfonts = 0;
 
-    /* read the charstrings index now */
-    if ( dict->charstrings_offset == 0 )
-    {
-      FT_ERROR(( "cff_font_load: no charstrings offset!\n" ));
-      error = CFF_Err_Unknown_File_Format;
-      goto Exit;
-    }
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+	/* Incremental fonts don't need character recipes. */
+    if (!face->root.internal->incremental_interface)
+#endif
+      {
 
-    if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
-      goto Exit;
+      /* read the charstrings index now */
+      if ( dict->charstrings_offset == 0 )
+      {
+        FT_ERROR(( "cff_font_load: no charstrings offset!\n" ));
+        error = CFF_Err_Unknown_File_Format;
+        goto Exit;
+      }
 
-    error = cff_new_index( &font->charstrings_index, stream, 0 );
-    if ( error )
-      goto Exit;
+      if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
+        goto Exit;
+
+      error = cff_new_index( &font->charstrings_index, stream, 0 );
+      if ( error )
+        goto Exit;
+	  }
 
     /* explicit the global subrs */
     font->num_global_subrs = font->global_subrs_index.count;
@@ -2185,19 +2193,22 @@
       goto Exit;
 
     /* read the Charset and Encoding tables when available */
-    error = cff_charset_load( &font->charset, font->num_glyphs, stream,
+    if ( font->num_glyphs > 0 )
+    {
+      error = cff_charset_load( &font->charset, font->num_glyphs, stream,
                               base_offset, dict->charset_offset );
-    if ( error )
-      goto Exit;
+      if ( error )
+        goto Exit;
 
-    error = cff_encoding_load( &font->encoding,
-                               &font->charset,
-                               font->num_glyphs,
-                               stream,
-                               base_offset,
-                               dict->encoding_offset );
-    if ( error )
-      goto Exit;
+      error = cff_encoding_load( &font->encoding,
+                                 &font->charset,
+                                 font->num_glyphs,
+                                 stream,
+                                 base_offset,
+                                 dict->encoding_offset );
+      if ( error )
+        goto Exit;
+    }
 
     /* get the font name */
     font->font_name = cff_index_get_name( &font->name_index, face_index );
