@@ -513,12 +513,14 @@
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
   }
 
+
   static
   FT_Int  t2_lookup_glyph_by_stdcharcode( CFF_Font*  cff,
                                           FT_Int     charcode )
   {
     FT_UInt    n;
     FT_UShort  glyph_sid;
+
 
     /* check range of standard char code */
     if ( charcode < 0 || charcode > 255 )
@@ -530,13 +532,13 @@
 
     for ( n = 0; n < cff->num_glyphs; n++ )
     {
-
       if ( cff->charset.sids[n] == glyph_sid )
         return n;
     }
 
     return -1;
   }
+
 
   static
   FT_Error  t2_operator_seac( T2_Decoder*  decoder,
@@ -554,6 +556,7 @@
     FT_Byte*     charstring;
     FT_ULong     charstring_len;
 
+
     bchar_index = t2_lookup_glyph_by_stdcharcode( cff, bchar );
     achar_index = t2_lookup_glyph_by_stdcharcode( cff, achar );
 
@@ -564,7 +567,7 @@
       return T2_Err_Syntax_Error;
     }
 
-    /* if we are trying to load a composite glyph, do not load the */
+    /* If we are trying to load a composite glyph, do not load the */
     /* accent character and return the array of subglyphs.         */
     if ( decoder->builder.no_recurse )
     {
@@ -607,7 +610,6 @@
                                 &charstring, &charstring_len );
     if ( !error )
     {
-
       error = T2_Parse_CharStrings( decoder, charstring, charstring_len );
 
       if ( error )
@@ -618,7 +620,7 @@
 
     n_base_points = base->n_points;
 
-    /* save the left bearing and width of the base character */
+    /* Save the left bearing and width of the base character */
     /* as they will be erased by the next load.              */
 
     left_bearing = decoder->builder.left_bearing;
@@ -627,12 +629,11 @@
     decoder->builder.left_bearing.x = 0;
     decoder->builder.left_bearing.y = 0;
 
-    /* Now load `achar' on top of the base outline           */
+    /* Now load `achar' on top of the base outline. */
     error = CFF_Access_Element( &cff->charstrings_index, achar_index,
                                 &charstring, &charstring_len );
     if ( !error )
     {
-
       error = T2_Parse_CharStrings( decoder, charstring, charstring_len );
 
       if ( error )
@@ -641,14 +642,16 @@
       CFF_Forget_Element( &cff->charstrings_index, &charstring );
     }
 
-    /* restore the left side bearing and advance width of the base character */
+    /* Restore the left side bearing and advance width */
+    /* of the base character.                          */
     decoder->builder.left_bearing = left_bearing;
     decoder->builder.advance      = advance;
 
-    /* Finally, move the accent */
+    /* Finally, move the accent. */
     if ( decoder->builder.load_points )
     {
       FT_Outline  dummy;
+
 
       dummy.n_points = base->n_points - n_base_points;
       dummy.points   = base->points   + n_base_points;
@@ -1008,8 +1011,8 @@
               break;
 
             case t2_op_endchar:
-              /* If there is a width specified for endchar, we either have 1 */
-              /* argument or 5 arguments.  We like to argue.                 */
+              /* If there is a width specified for endchar, we either have */
+              /* 1 argument or 5 arguments.  We like to argue.             */
               set_width_ok = ( ( num_args == 5 ) || ( num_args == 1 ) );
               break;
 
@@ -1579,12 +1582,11 @@
           FT_TRACE4(( " endchar" ));
 
           /* We are going to emulate the seac operator. */
-          if ( num_args == 4)
+          if ( num_args == 4 )
           {
-
             error = t2_operator_seac( decoder, args[0] >> 16, args[1] >> 16,
                                                args[2] >> 16, args[3] >> 16 );
-             args += 4;
+            args += 4;
           }
 
           if ( !error )
@@ -2099,6 +2101,7 @@
     FT_Matrix   font_matrix;
     FT_Vector   font_offset;
 
+
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
@@ -2151,13 +2154,13 @@
     /* bearing the yMax.                                   */
     if ( !error )
     {
-
-      /* for composite glyphs, return only left side bearing and */
-      /* advance width                                           */
+      /* For composite glyphs, return only left side bearing and */
+      /* advance width.                                          */
       if ( load_flags & FT_LOAD_NO_RECURSE )
       {
         FT_Slot_Internal  internal = glyph->root.internal;
         
+
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.glyph_width;
         internal->glyph_matrix           = font_matrix;
@@ -2171,8 +2174,8 @@
 
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance          = decoder.glyph_width;
-        glyph->root.linearHoriAdvance = decoder.glyph_width;
+        metrics->horiAdvance                    = decoder.glyph_width;
+        glyph->root.linearHoriAdvance           = decoder.glyph_width;
         glyph->root.internal->glyph_transformed = 0;
 
         /* make up vertical metrics */
