@@ -1,4 +1,8 @@
-2004-13-26  George Williams  <gww@silcom.com>
+2004-03-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/descrip.mms (OBJS): Add ftbbox.obj.
+
+2004-03-26  George Williams  <gww@silcom.com>
 
 	Add vertical phantom points.
 
