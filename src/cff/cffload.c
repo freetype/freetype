@@ -1679,7 +1679,6 @@
   }
 
 
-
   static void
   cff_encoding_done( CFF_Encoding  encoding )
   {
@@ -1687,7 +1686,6 @@
     encoding->offset = 0;
     encoding->count  = 0;
   }
-
 
 
   static FT_Error

@@ -133,7 +133,7 @@
 
 
     /* first of all, read the FNT header */
-    if ( FT_STREAM_SEEK( font->offset )                   ||
+    if ( FT_STREAM_SEEK( font->offset )                        ||
          FT_STREAM_READ_FIELDS( winfnt_header_fields, header ) )
       goto Exit;
 
@@ -208,7 +208,7 @@
     face->num_fonts = 0;
 
     /* does it begin with a MZ header? */
-    if ( FT_STREAM_SEEK( 0 )                                 ||
+    if ( FT_STREAM_SEEK( 0 )                                      ||
          FT_STREAM_READ_FIELDS( winmz_header_fields, &mz_header ) )
       goto Exit;
 
@@ -219,7 +219,7 @@
       WinNE_HeaderRec  ne_header;
 
 
-      if ( FT_STREAM_SEEK( mz_header.lfanew )                  ||
+      if ( FT_STREAM_SEEK( mz_header.lfanew )                       ||
            FT_STREAM_READ_FIELDS( winne_header_fields, &ne_header ) )
         goto Exit;
 
@@ -320,7 +320,6 @@
   Exit:
     return error;
   }
-
 
 
   typedef struct  FNT_CMapRec_
