@@ -764,8 +764,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
-                                                FT_GlyphSlot*  aslot )
+  BASE_FUNC( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
+                                           FT_GlyphSlot*  aslot )
   {
     FT_Error          error;
     FT_Driver         driver;
@@ -818,7 +818,7 @@
   /* <Input>                                                               */
   /*    slot :: A handle to a target glyph slot.                           */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
+  BASE_FUNC( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
   {
     if ( slot )
     {
