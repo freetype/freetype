@@ -466,7 +466,7 @@
         CFF_Encoding   encoding = &cff->encoding;
 
 
-        for ( nn = 0; nn < (FT_UInt) root->num_charmaps; nn++ )
+        for ( nn = 0; nn < (FT_UInt)root->num_charmaps; nn++ )
         {
           cmap = root->charmaps[nn];
 
@@ -485,12 +485,12 @@
         cmaprec.encoding_id = 1;
         cmaprec.encoding    = FT_ENCODING_UNICODE;
 
-        nn = (FT_UInt) root->num_charmaps;
+        nn = (FT_UInt)root->num_charmaps;
 
         FT_CMap_New( &cff_cmap_unicode_class_rec, NULL, &cmaprec, NULL );
 
         /* if no Unicode charmap was previously selected, select this one */
-        if ( root->charmap == NULL && nn != (FT_UInt) root->num_charmaps )
+        if ( root->charmap == NULL && nn != (FT_UInt)root->num_charmaps )
           root->charmap = root->charmaps[nn];
 
       Skip_Unicode:
@@ -504,19 +504,19 @@
 
           if ( encoding->offset == 0 )
           {
-            cmaprec.encoding_id = 0;
+            cmaprec.encoding_id = TT_ADOBE_ID_STANDARD;
             cmaprec.encoding    = FT_ENCODING_ADOBE_STANDARD;
             clazz               = &cff_cmap_encoding_class_rec;
           }
           else if ( encoding->offset == 1 )
           {
-            cmaprec.encoding_id = 1;
+            cmaprec.encoding_id = TT_ADOBE_ID_EXPERT;
             cmaprec.encoding    = FT_ENCODING_ADOBE_EXPERT;
             clazz               = &cff_cmap_encoding_class_rec;
           }
           else
           {
-            cmaprec.encoding_id = 3;
+            cmaprec.encoding_id = TT_ADOBE_ID_CUSTOM;
             cmaprec.encoding    = FT_ENCODING_ADOBE_CUSTOM;
             clazz               = &cff_cmap_encoding_class_rec;
           }
