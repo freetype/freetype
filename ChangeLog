@@ -1,3 +1,7 @@
+2004-05-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_done_face): Free face->postscript_name.
+
 2004-05-15  George Williams  <gww@silcom.com>
 
 	* src/sfnt/ttload.c (tt_face_load_max_profile): Always set
