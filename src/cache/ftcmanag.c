@@ -22,6 +22,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_LIST_H
+#include FT_SIZES_H
 
 #include "ftcerror.h"
 
@@ -123,7 +124,7 @@
     error = FT_New_Size( face, &size );
     if ( !error )
     {
-      face->size = size;
+      FT_Activate_Size( size );
       error = FT_Set_Pixel_Sizes( face,
                                   font_req->width,
                                   font_req->height );
@@ -159,7 +160,7 @@
 
     if ( size->face == req->face )
     {
-      size->face->size = size;  /* set current size */
+      FT_Activate_Size(size);
       error = FT_Set_Pixel_Sizes( req->face, req->width, req->height );
       if ( error )
         FT_Done_Size( size );
@@ -267,6 +268,7 @@
     manager->max_bytes    = max_bytes;
     manager->request_face = requester;
     manager->request_data = req_data;
+
     *amanager = manager;
 
   Exit:

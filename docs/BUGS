@@ -30,6 +30,7 @@ NO-CID-CMAPS            13-09-2001     David                     always
 AUTOHINT-NO-SBITS       13-09-2001     David                     always
 BAD-TT-RENDERING        12-09-2001     Paul Pedriana             ?
 BAD-THIN-LINES          13-09-2001     David                     ?
+NOT-WINDOWS-METRICS     07-10-2001     David                     always
 
 --------------------END-OF-OPENED-BUGS-TABLE----------------------------------
 
@@ -107,3 +108,10 @@ BAD-THIN-LINES
    it seems that the anti-aliased renderer in FreeType has problems
    rendering extremely thin straight lines correctly, at least when using
    the FT_Outline_Render functions..
+
+
+NOT-WINDOWS-METRICS
+   FreeType doesn't always return the same metrics as Windows for ascender,
+   descender and text height, depending on character pixel sizes. A lot of
+   testing on Windows is needed to debug this properly. It might be due to
+   a rounding bug when computing the "x_scale" and "y_scale" values.
