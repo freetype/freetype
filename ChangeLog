@@ -1,3 +1,7 @@
+2004-03-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Fix left side bearing.
+
 2004-03-20  Steve Hartwell  <shspamsink@comcast.net>
 
 	* src/cache/ftcmru.c (FTC_MruList_RemoveSelection): Handle a NULL

@@ -720,14 +720,13 @@ THE SOFTWARE.
       }
     }
 
-    slot->bitmap_left = 0;
+    slot->bitmap_left = glyph.bbx.x_offset;
     slot->bitmap_top  = glyph.bbx.ascent;
 
     /* FZ XXX: TODO: vertical metrics */
     slot->metrics.horiAdvance  = glyph.dwidth << 6;
     slot->metrics.horiBearingX = glyph.bbx.x_offset << 6;
-    slot->metrics.horiBearingY = ( glyph.bbx.y_offset +
-                                   glyph.bbx.height ) << 6;
+    slot->metrics.horiBearingY = glyph.bbx.ascent << 6;
     slot->metrics.width        = bitmap->width << 6;
     slot->metrics.height       = bitmap->rows << 6;
 
