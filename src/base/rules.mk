@@ -25,7 +25,7 @@
 #                  in `freetype/lib/base' which are not compiled within the
 #                  base layer proper.
 
-INCLUDES += $(SRC_)base
+BASE_COMPILE := $(FT_COMPILE) $I$(SRC_)base
 
 # Base layer sources
 #
@@ -89,12 +89,12 @@ BASE_SRC_S := $(BASE_)ftbase.c
 # Multiple objects build + extensions
 #
 $(OBJ_)ft%.$O: $(BASE_)ft%.c $(PUBLIC_H) $(BASE_H)
-	$(FT_COMPILE) $T$@ $<
+	$(BASE_COMPILE) $T$@ $<
 
 
 # Base layer - single object build
 #
 $(BASE_OBJ_S): $(PUBLIC_H) $(BASE_H) $(BASE_SRC_S) $(BASE_SRC)
-	$(FT_COMPILE) $T$@ $(BASE_SRC_S)
+	$(BASE_COMPILE) $T$@ $(BASE_SRC_S)
 
 # EOF

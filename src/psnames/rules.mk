@@ -16,8 +16,6 @@
 ifndef PSNAMES_INCLUDE
   PSNAMES_INCLUDED := 1
 
-  include $(SRC_)shared/rules.mk
-
   # PSNAMES driver directory
   #
   PSNAMES_DIR  := $(SRC_)psnames
@@ -41,7 +39,7 @@ ifndef PSNAMES_INCLUDE
 
   # driver headers
   #
-  PSNAMES_DRV_H := $(SHARED_H)               \
+  PSNAMES_DRV_H := $(BASE_H)                 \
                    $(PSNAMES_DIR_)psdriver.h \
                    $(PSNAMES_DIR_)pstables.h
 
