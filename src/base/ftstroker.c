@@ -79,7 +79,7 @@
     }
 
     theta = ft_pos_abs( FT_Angle_Diff( *angle_in, *angle_out ) );
-    
+
     return FT_BOOL( theta < FT_SMALL_CONIC_THRESHOLD );
   }
 
@@ -523,11 +523,11 @@
      for ( ; count > 0; count--, read++, write++ )
      {
        if ( *read & FT_STROKE_TAG_ON )
-         *write = FT_Curve_Tag_On;
+         *write = FT_CURVE_TAG_ON;
        else if ( *read & FT_STROKE_TAG_CUBIC )
-         *write = FT_Curve_Tag_Cubic;
+         *write = FT_CURVE_TAG_CUBIC;
        else
-         *write = FT_Curve_Tag_Conic;
+         *write = FT_CURVE_TAG_CONIC;
      }
    }
 
@@ -1008,9 +1008,9 @@
     while ( arc >= bez_stack )
     {
       FT_Angle  angle_in, angle_out;
-      
+
       angle_in = angle_out = 0;  /* remove compiler warnings */
-      
+
       if ( arc < limit &&
            !ft_conic_is_small_enough( arc, &angle_in, &angle_out ) )
       {

@@ -968,7 +968,7 @@
         FT_Pos  dxi, dyi, dxo, dyo;
 
 
-        if ( !( outline->tags[n] & FT_Curve_Tag_On ) )
+        if ( !( outline->tags[n] & FT_CURVE_TAG_ON ) )
           point->flags = PSH3_POINT_OFF;
 
         dxi = vec[n].x - vec[n_prev].x;
@@ -1374,7 +1374,7 @@
         {
           FT_Pos  delta;
 
-  
+
           if ( psh3_point_is_edge_min( point ) )
           {
             point->cur_u = hint->cur_pos;
@@ -1714,7 +1714,7 @@
     {
       /* load outline coordinates into glyph */
       psh3_glyph_load_points( glyph, dimension );
-      
+
       /* compute local extrema */
       psh3_glyph_compute_extrema( glyph );
 

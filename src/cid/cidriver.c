@@ -50,7 +50,7 @@
 
 
   static FT_Module_Interface
-  CID_Get_Interface( FT_Driver         driver,
+  cid_get_interface( FT_Driver         driver,
                      const FT_String*  cid_interface )
   {
     FT_UNUSED( driver );
@@ -80,9 +80,9 @@
 
       0,
 
-      (FT_Module_Constructor)CID_Driver_Init,
-      (FT_Module_Destructor) CID_Driver_Done,
-      (FT_Module_Requester)  CID_Get_Interface
+      (FT_Module_Constructor)cid_driver_init,
+      (FT_Module_Destructor) cid_driver_done,
+      (FT_Module_Requester)  cid_get_interface
     },
 
     /* then the other font drivers fields */
@@ -90,18 +90,18 @@
     sizeof( CID_SizeRec ),
     sizeof( CID_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)       CID_Face_Init,
-    (FT_Face_DoneFunc)       CID_Face_Done,
+    (FT_Face_InitFunc)       cid_face_init,
+    (FT_Face_DoneFunc)       cid_face_done,
 
     (FT_Size_InitFunc)       CID_Size_Init,
-    (FT_Size_DoneFunc)       CID_Size_Done,
-    (FT_Slot_InitFunc)       CID_GlyphSlot_Init,
-    (FT_Slot_DoneFunc)       CID_GlyphSlot_Done,
+    (FT_Size_DoneFunc)       cid_size_done,
+    (FT_Slot_InitFunc)       cid_slot_init,
+    (FT_Slot_DoneFunc)       cid_slot_done,
 
-    (FT_Size_ResetPointsFunc)CID_Size_Reset,
-    (FT_Size_ResetPixelsFunc)CID_Size_Reset,
+    (FT_Size_ResetPointsFunc)cid_size_reset,
+    (FT_Size_ResetPixelsFunc)cid_size_reset,
 
-    (FT_Slot_LoadFunc)       CID_Load_Glyph,
+    (FT_Slot_LoadFunc)       cid_slot_load_glyph,
 
     (FT_Face_GetKerningFunc) 0,
     (FT_Face_AttachFunc)     0,

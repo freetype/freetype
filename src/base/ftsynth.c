@@ -43,7 +43,7 @@
 
 
     /* only oblique outline glyphs */
-    if ( slot->format != ft_glyph_format_outline )
+    if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
       return;
 
     /* we don't touch the advance width */
@@ -116,7 +116,7 @@
 
 
   /* Compute the orientation of path filling.  It differs between TrueType */
-  /* and Type1 formats.  We could use the `ft_outline_reverse_fill' flag,  */
+  /* and Type1 formats.  We could use the `FT_OUTLINE_REVERSE_FILL' flag,  */
   /* but it is better to re-compute it directly (it seems that this flag   */
   /* isn't correctly set for some weird composite glyphs currently).       */
   /*                                                                       */
@@ -212,7 +212,7 @@
 
 
     /* only embolden outline glyph images */
-    if ( slot->format != ft_glyph_format_outline )
+    if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
       return;
 
     /* compute control distance */

@@ -206,8 +206,8 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CID_Compute_Max_Advance( CID_Face  face,
-                           FT_Int*   max_advance )
+  cid_face_compute_max_advance( CID_Face  face,
+                                FT_Int*   max_advance )
   {
     FT_Error       error;
     T1_DecoderRec  decoder;
@@ -269,10 +269,10 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CID_Load_Glyph( CID_GlyphSlot  glyph,
-                  CID_Size       size,
-                  FT_Int         glyph_index,
-                  FT_Int         load_flags )
+  cid_slot_load_glyph( CID_GlyphSlot  glyph,
+                       CID_Size       size,
+                       FT_Int         glyph_index,
+                       FT_Int         load_flags )
   {
     FT_Error       error;
     T1_DecoderRec  decoder;
@@ -296,7 +296,7 @@
     hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
                        ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
 
-    glyph->root.format = ft_glyph_format_outline;
+    glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
     {
       error = psaux->t1_decoder_funcs->init( &decoder,
@@ -326,8 +326,8 @@
     /* bearing the yMax                                    */
     if ( !error )
     {
-      glyph->root.outline.flags &= ft_outline_owner;
-      glyph->root.outline.flags |= ft_outline_reverse_fill;
+      glyph->root.outline.flags &= FT_OUTLINE_OWNER;
+      glyph->root.outline.flags |= FT_OUTLINE_REVERSE_FILL;
 
       /* for composite glyphs, return only left side bearing and */
       /* advance width                                           */
@@ -360,10 +360,10 @@
         metrics->vertAdvance  = 0;
 
         glyph->root.linearVertAdvance = 0;
-        glyph->root.format = ft_glyph_format_outline;
+        glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
         if ( size && size->root.metrics.y_ppem < 24 )
-          glyph->root.outline.flags |= ft_outline_high_precision;
+          glyph->root.outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
         /* apply the font matrix */
         FT_Outline_Transform( &glyph->root.outline, &font_matrix );

@@ -49,7 +49,7 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CID_New_Parser( CID_Parser*    parser,
+  cid_parser_new( CID_Parser*    parser,
                   FT_Stream      stream,
                   FT_Memory      memory,
                   PSAux_Service  psaux )
@@ -138,7 +138,7 @@
 
 
   FT_LOCAL_DEF( void )
-  CID_Done_Parser( CID_Parser*  parser )
+  cid_parser_done( CID_Parser*  parser )
   {
     /* always free the private dictionary */
     if ( parser->postscript )

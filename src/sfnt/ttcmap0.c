@@ -1666,7 +1666,7 @@
   /* in the current face                                                */
   /*                                                                    */
   FT_LOCAL_DEF( FT_Error )
-  TT_Build_CMaps( TT_Face  face )
+  tt_face_build_cmaps( TT_Face  face )
   {
     FT_Byte*           table = face->cmap_table;
     FT_Byte*           limit = table + face->cmap_size;
@@ -1681,7 +1681,7 @@
     if ( TT_NEXT_USHORT( p ) != 0 )
     {
       p -= 2;
-      FT_ERROR(( "TT_Build_CMaps: unsupported `cmap' table format = %d\n",
+      FT_ERROR(( "tt_face_build_cmaps: unsupported `cmap' table format = %d\n",
                  TT_PEEK_USHORT( p ) ));
       return FT_Err_Invalid_Table;
     }
@@ -1697,7 +1697,7 @@
       charmap.platform_id = TT_NEXT_USHORT( p );
       charmap.encoding_id = TT_NEXT_USHORT( p );
       charmap.face        = FT_FACE( face );
-      charmap.encoding    = ft_encoding_none;  /* will be filled later */
+      charmap.encoding    = FT_ENCODING_NONE;  /* will be filled later */
       offset              = TT_NEXT_ULONG( p );
 
       if ( offset && table + offset + 2 < limit )
@@ -1731,7 +1731,7 @@
               (void)FT_CMap_New( (FT_CMap_Class)clazz, cmap, &charmap, NULL );
             else
             {
-              FT_ERROR(( "TT_Build_CMaps:" ));
+              FT_ERROR(( "tt_face_build_cmaps:" ));
               FT_ERROR(( " broken cmap sub-table ignored!\n" ));
             }
           }

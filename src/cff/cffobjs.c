@@ -480,7 +480,7 @@
         cmaprec.face        = root;
         cmaprec.platform_id = 3;
         cmaprec.encoding_id = 1;
-        cmaprec.encoding    = ft_encoding_unicode;
+        cmaprec.encoding    = FT_ENCODING_UNICODE;
 
         nn = (FT_UInt) root->num_charmaps;
 
@@ -503,19 +503,19 @@
           {
             case 0:
               cmaprec.encoding_id = 0;
-              cmaprec.encoding    = ft_encoding_adobe_standard;
+              cmaprec.encoding    = FT_ENCODING_ADOBE_STANDARD;
               clazz               = &cff_cmap_encoding_class_rec;
               break;
 
             case 1:
               cmaprec.encoding_id = 1;
-              cmaprec.encoding    = ft_encoding_adobe_expert;
+              cmaprec.encoding    = FT_ENCODING_ADOBE_EXPERT;
               clazz               = &cff_cmap_encoding_class_rec;
               break;
 
             default:
               cmaprec.encoding_id = 3;
-              cmaprec.encoding    = ft_encoding_adobe_custom;
+              cmaprec.encoding    = FT_ENCODING_ADOBE_CUSTOM;
               clazz               = &cff_cmap_encoding_class_rec;
           }
 

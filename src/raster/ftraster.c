@@ -1635,14 +1635,14 @@
     tag   = FT_CURVE_TAG( tags[0] );
 
     /* A contour cannot start with a cubic control point! */
-    if ( tag == FT_Curve_Tag_Cubic )
+    if ( tag == FT_CURVE_TAG_CUBIC )
       goto Invalid_Outline;
 
     /* check first point to determine origin */
-    if ( tag == FT_Curve_Tag_Conic )
+    if ( tag == FT_CURVE_TAG_CONIC )
     {
       /* first point is conic control.  Yes, this happens. */
-      if ( FT_CURVE_TAG( ras.outline.tags[last] ) == FT_Curve_Tag_On )
+      if ( FT_CURVE_TAG( ras.outline.tags[last] ) == FT_CURVE_TAG_ON )
       {
         /* start at last point if it is on the curve */
         v_start = v_last;
@@ -1674,7 +1674,7 @@
 
       switch ( tag )
       {
-      case FT_Curve_Tag_On:  /* emit a single line_to */
+      case FT_CURVE_TAG_ON:  /* emit a single line_to */
         {
           Long  x, y;
 
@@ -1689,7 +1689,7 @@
           continue;
         }
 
-      case FT_Curve_Tag_Conic:  /* consume conic arcs */
+      case FT_CURVE_TAG_CONIC:  /* consume conic arcs */
         v_control.x = SCALED( point[0].x );
         v_control.y = SCALED( point[0].y );
 
@@ -1713,14 +1713,14 @@
           if ( flipped )
             SWAP_( x, y );
 
-          if ( tag == FT_Curve_Tag_On )
+          if ( tag == FT_CURVE_TAG_ON )
           {
             if ( Conic_To( RAS_VARS v_control.x, v_control.y, x, y ) )
               goto Fail;
             continue;
           }
 
-          if ( tag != FT_Curve_Tag_Conic )
+          if ( tag != FT_CURVE_TAG_CONIC )
             goto Invalid_Outline;
 
           v_middle.x = ( v_control.x + x ) / 2;
@@ -1742,13 +1742,13 @@
 
         goto Close;
 
-      default:  /* FT_Curve_Tag_Cubic */
+      default:  /* FT_CURVE_TAG_CUBIC */
         {
           Long  x1, y1, x2, y2, x3, y3;
 
 
           if ( point + 1 > limit                             ||
-               FT_CURVE_TAG( tags[1] ) != FT_Curve_Tag_Cubic )
+               FT_CURVE_TAG( tags[1] ) != FT_CURVE_TAG_CUBIC )
             goto Invalid_Outline;
 
           point += 2;
@@ -2972,11 +2972,11 @@
 
 
     Set_High_Precision( RAS_VARS ras.outline.flags &
-                        ft_outline_high_precision );
+                        FT_OUTLINE_HIGH_PRECISION );
     ras.scale_shift    = ras.precision_shift;
     ras.dropOutControl = 2;
     ras.second_pass    = (FT_Byte)( !( ras.outline.flags &
-                                       ft_outline_single_pass ) );
+                                       FT_OUTLINE_SINGLE_PASS ) );
 
     /* Vertical Sweep */
     ras.Proc_Sweep_Init = Vertical_Sweep_Init;
@@ -3036,10 +3036,10 @@
 
 
     Set_High_Precision( RAS_VARS ras.outline.flags &
-                        ft_outline_high_precision );
+                        FT_OUTLINE_HIGH_PRECISION );
     ras.scale_shift    = ras.precision_shift + 1;
     ras.dropOutControl = 2;
-    ras.second_pass    = !( ras.outline.flags & ft_outline_single_pass );
+    ras.second_pass    = !( ras.outline.flags & FT_OUTLINE_SINGLE_PASS );
 
     /* Vertical Sweep */
 
@@ -3259,7 +3259,7 @@
       return Raster_Err_Invalid;
 
     /* this version of the raster does not support direct rendering, sorry */
-    if ( params->flags & ft_raster_flag_direct )
+    if ( params->flags & FT_RASTER_FLAG_DIRECT )
       return Raster_Err_Unsupported;
 
     if ( !target_map || !target_map->buffer )
@@ -3268,7 +3268,7 @@
     ras.outline  = *outline;
     ras.target   = *target_map;
 
-    return ( ( params->flags & ft_raster_flag_aa )
+    return ( ( params->flags & FT_RASTER_FLAG_AA )
                ? Render_Gray_Glyph( raster )
                : Render_Glyph( raster ) );
   }
@@ -3276,7 +3276,7 @@
 
   const FT_Raster_Funcs  ft_standard_raster =
   {
-    ft_glyph_format_outline,
+    FT_GLYPH_FORMAT_OUTLINE,
     (FT_Raster_New_Func)     ft_black_new,
     (FT_Raster_Reset_Func)   ft_black_reset,
     (FT_Raster_Set_Mode_Func)ft_black_set_mode,

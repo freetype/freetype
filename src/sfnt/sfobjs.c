@@ -296,20 +296,20 @@
     static
     const TEncoding  tt_encodings[] =
     {
-      { TT_PLATFORM_ISO,           -1,                  ft_encoding_unicode },
+      { TT_PLATFORM_ISO,           -1,                  FT_ENCODING_UNICODE },
 
-      { TT_PLATFORM_APPLE_UNICODE, -1,                  ft_encoding_unicode },
+      { TT_PLATFORM_APPLE_UNICODE, -1,                  FT_ENCODING_UNICODE },
 
-      { TT_PLATFORM_MACINTOSH,     TT_MAC_ID_ROMAN,     ft_encoding_apple_roman },
+      { TT_PLATFORM_MACINTOSH,     TT_MAC_ID_ROMAN,     FT_ENCODING_APPLE_ROMAN },
 
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SYMBOL_CS,  ft_encoding_symbol },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UCS_4,      ft_encoding_unicode },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UNICODE_CS, ft_encoding_unicode },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SJIS,       ft_encoding_sjis },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_GB2312,     ft_encoding_gb2312 },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_BIG_5,      ft_encoding_big5 },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_WANSUNG,    ft_encoding_wansung },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_JOHAB,      ft_encoding_johab }
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SYMBOL_CS,  FT_ENCODING_MS_SYMBOL },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UCS_4,      FT_ENCODING_UNICODE },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UNICODE_CS, FT_ENCODING_UNICODE },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SJIS,       FT_ENCODING_MS_SJIS },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_GB2312,     FT_ENCODING_MS_GB2312 },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_BIG_5,      FT_ENCODING_MS_BIG5 },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_WANSUNG,    FT_ENCODING_MS_WANSUNG },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_JOHAB,      FT_ENCODING_MS_JOHAB }
     };
 
     const TEncoding  *cur, *limit;
@@ -328,12 +328,12 @@
       }
     }
 
-    return ft_encoding_none;
+    return FT_ENCODING_NONE;
   }
 
 
   FT_LOCAL_DEF( FT_Error )
-  SFNT_Init_Face( FT_Stream      stream,
+  sfnt_init_face( FT_Stream      stream,
                   TT_Face        face,
                   FT_Int         face_index,
                   FT_Int         num_params,
@@ -397,7 +397,7 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  SFNT_Load_Face( FT_Stream      stream,
+  sfnt_load_face( FT_Stream      stream,
                   TT_Face        face,
                   FT_Int         face_index,
                   FT_Int         num_params,
@@ -434,11 +434,11 @@
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     has_outline   = FT_BOOL( face->root.internal->incremental_interface != 0 ||
-                             TT_LookUp_Table( face, TTAG_glyf ) != 0         ||
-                             TT_LookUp_Table( face, TTAG_CFF ) != 0          );
+                             tt_face_lookup_table( face, TTAG_glyf ) != 0         ||
+                             tt_face_lookup_table( face, TTAG_CFF ) != 0          );
 #else
-    has_outline   = FT_BOOL( TT_LookUp_Table( face, TTAG_glyf ) != 0 ||
-                             TT_LookUp_Table( face, TTAG_CFF ) != 0  );
+    has_outline   = FT_BOOL( tt_face_lookup_table( face, TTAG_glyf ) != 0 ||
+                             tt_face_lookup_table( face, TTAG_CFF ) != 0  );
 #endif
 
     is_apple_sbit = 0;
@@ -585,7 +585,7 @@
       /*   encoding ID of each charmap.                                    */
       /*                                                                   */
 
-      TT_Build_CMaps( face );  /* ignore errors */
+      tt_face_build_cmaps( face );  /* ignore errors */
 
 
       /* set the encoding fields */
@@ -603,7 +603,7 @@
 
 #if 0
           if ( root->charmap     == NULL &&
-               charmap->encoding == ft_encoding_unicode )
+               charmap->encoding == FT_ENCODING_UNICODE )
           {
             /* set 'root->charmap' to the first Unicode encoding we find */
             root->charmap = charmap;
@@ -753,7 +753,7 @@
 
 
   FT_LOCAL_DEF( void )
-  SFNT_Done_Face( TT_Face  face )
+  sfnt_done_face( TT_Face  face )
   {
     FT_Memory     memory = face->root.memory;
     SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;

@@ -563,7 +563,7 @@ FT_BEGIN_HEADER
 
     FT_Raster              raster;
     FT_Raster_Render_Func  raster_render;
-    FTRenderer_render      render;
+    FT_Renderer_RenderFunc render;
 
   } FT_RendererRec;
 
@@ -678,7 +678,7 @@ FT_BEGIN_HEADER
   /*                        shortcut used to avoid parsing the list on     */
   /*                        each call to FT_Outline_Render().  It is a     */
   /*                        handle to the current renderer for the         */
-  /*                        ft_glyph_format_outline format.                */
+  /*                        FT_GLYPH_FORMAT_OUTLINE format.                */
   /*                                                                       */
   /*    auto_hinter      :: XXX                                            */
   /*                                                                       */

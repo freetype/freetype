@@ -1,3 +1,38 @@
+2002-08-27  David Turner  <david@freetype.org>
+
+    * massive re-formatting changes to many, many source files. I don't
+    want to list them all here. The operations performed were all logical
+    transformations of the sources:
+    
+      - trying to convert all enums and constants to CAPITALIZED_STYLE, with
+        #define definitions like
+        
+          #define  my_old_constants   MY_NEW_CONSTANT
+
+      - big, big update of the documentation comments
+
+    * include/freetype/freetype.h, src/base/ftobjs.c, src/smooth/ftsmooth.c,
+    include/freetype/ftimage.h: adding support for LCD-optimized rendering
+    though the new constants/enums:
+    
+      FT_RENDER_MODE_LCD, FT_RENDER_MODE_LCD_V
+      FT_PIXEL_MODE_LCD,  FT_PIXEL_MODE_LCD_V
+
+    this is still work in progress, don't expect everything to work correctly
+    though most of the features have been implemented.
+
+    * adding new FT_LOAD_XXX flags, used to specify both hinting and rendering
+    targets:
+    
+      FT_LOAD_TARGET_NORMAL :: anti-aliased hinting & rendering
+      FT_LOAD_TARGET_MONO   :: monochrome bitmaps
+      FT_LOAD_TARGET_LCD    :: horizontal RGB/BGR decimated hinting & rendering
+      FT_LOAD_TARGET_LCD_V  :: vertical RGB/BGR decimated hinting & rendering
+      
+    note that FT_LOAD_TARGET_NORMAL is 0, which means that the default
+    behaviour of the font engine is _unchanged_.
+
+
 2002-08-27  Werner Lemberg  <wl@gnu.org>
 
 	* docs/VERSION.DLL: New file.

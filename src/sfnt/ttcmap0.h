@@ -63,7 +63,7 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  TT_Build_CMaps( TT_Face  face );
+  tt_face_build_cmaps( TT_Face  face );
 
 
 FT_END_HEADER

@@ -118,7 +118,7 @@
     }
 
     /* check rendering mode */
-    if ( mode != ft_render_mode_mono )
+    if ( mode != FT_RENDER_MODE_MONO )
     {
       /* raster1 is only capable of producing monochrome bitmaps */
       if ( render->clazz == &ft_raster1_renderer_class )
@@ -158,17 +158,17 @@
     }
 
     /* allocate new one, depends on pixel format */
-    if ( !( mode & ft_render_mode_mono ) )
+    if ( !( mode & FT_RENDER_MODE_MONO ) )
     {
       /* we pad to 32 bits, only for backwards compatibility with FT 1.x */
       pitch = ( width + 3 ) & -4;
-      bitmap->pixel_mode = ft_pixel_mode_grays;
+      bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
       bitmap->num_grays  = 256;
     }
     else
     {
       pitch = ( ( width + 15 ) >> 4 ) << 1;
-      bitmap->pixel_mode = ft_pixel_mode_mono;
+      bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
     }
 
     bitmap->width = width;
@@ -188,8 +188,8 @@
     params.source = outline;
     params.flags  = 0;
 
-    if ( bitmap->pixel_mode == ft_pixel_mode_grays )
-      params.flags |= ft_raster_flag_aa;
+    if ( bitmap->pixel_mode == FT_PIXEL_MODE_GRAY )
+      params.flags |= FT_RASTER_FLAG_AA;
 
     /* render outline into the bitmap */
     error = render->raster_render( render->raster, &params );
@@ -199,7 +199,7 @@
     if ( error )
       goto Exit;
 
-    slot->format      = ft_glyph_format_bitmap;
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
     slot->bitmap_left = cbox.xMin >> 6;
     slot->bitmap_top  = cbox.yMax >> 6;
 
@@ -226,12 +226,12 @@
       (FT_Module_Requester)  0
     },
 
-    ft_glyph_format_outline,
+    FT_GLYPH_FORMAT_OUTLINE,
 
-    (FTRenderer_render)   ft_raster1_render,
-    (FTRenderer_transform)ft_raster1_transform,
-    (FTRenderer_getCBox)  ft_raster1_get_cbox,
-    (FTRenderer_setMode)  ft_raster1_set_mode,
+    (FT_Renderer_RenderFunc)   ft_raster1_render,
+    (FT_Renderer_TransformFunc)ft_raster1_transform,
+    (FT_Renderer_GetCBoxFunc)  ft_raster1_get_cbox,
+    (FT_Renderer_SetModeFunc)  ft_raster1_set_mode,
 
     (FT_Raster_Funcs*)    &ft_standard_raster
   };
@@ -259,12 +259,12 @@
       (FT_Module_Requester)  0
     },
 
-    ft_glyph_format_outline,
+    FT_GLYPH_FORMAT_OUTLINE,
 
-    (FTRenderer_render)   ft_raster1_render,
-    (FTRenderer_transform)ft_raster1_transform,
-    (FTRenderer_getCBox)  ft_raster1_get_cbox,
-    (FTRenderer_setMode)  ft_raster1_set_mode,
+    (FT_Renderer_RenderFunc)   ft_raster1_render,
+    (FT_Renderer_TransformFunc)ft_raster1_transform,
+    (FT_Renderer_GetCBoxFunc)  ft_raster1_get_cbox,
+    (FT_Renderer_SetModeFunc)  ft_raster1_set_mode,
 
     (FT_Raster_Funcs*)    &ft_standard_raster
   };
