@@ -39,7 +39,7 @@ FT_BEGIN_HEADER
   /*    quickly.                                                           */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    root           :: the root T1_Parser fields                        */
+  /*    root           :: the root PS_ParserRec fields                        */
   /*                                                                       */
   /*    stream         :: The current input stream.                        */
   /*                                                                       */
@@ -57,16 +57,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  CID_Parser_
   {
-    T1_Parser  root;
-    FT_Stream  stream;
+    PS_ParserRec  root;
+    FT_Stream     stream;
 
-    FT_Byte*   postscript;
-    FT_Int     postscript_len;
+    FT_Byte*      postscript;
+    FT_Int        postscript_len;
 
-    FT_ULong   data_offset;
+    FT_ULong      data_offset;
 
-    CID_Info*  cid;
-    FT_Int     num_dict;
+    CID_Info*     cid;
+    FT_Int        num_dict;
 
   } CID_Parser;
 
@@ -75,7 +75,7 @@ FT_BEGIN_HEADER
   CID_New_Parser( CID_Parser*       parser,
                   FT_Stream         stream,
                   FT_Memory         memory,
-                  PSAux_Interface*  psaux );
+                  PSAux_Service  psaux );
 
   FT_LOCAL void
   CID_Done_Parser( CID_Parser*  parser );

@@ -34,7 +34,7 @@ FT_BEGIN_HEADER
   /*    T1_ParserRec                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A T1_ParserRec is an object used to parse a Type 1 fonts very      */
+  /*    A PS_ParserRec is an object used to parse a Type 1 fonts very      */
   /*    quickly.                                                           */
   /*                                                                       */
   /* <Fields>                                                              */
@@ -60,20 +60,20 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  T1_ParserRec_
   {
-    T1_Parser  root;
-    FT_Stream  stream;
+    PS_ParserRec  root;
+    FT_Stream     stream;
 
-    FT_Byte*   base_dict;
-    FT_Int     base_len;
+    FT_Byte*      base_dict;
+    FT_Int        base_len;
 
-    FT_Byte*   private_dict;
-    FT_Int     private_len;
+    FT_Byte*      private_dict;
+    FT_Int        private_len;
 
-    FT_Byte    in_pfb;
-    FT_Byte    in_memory;
-    FT_Byte    single_block;
+    FT_Byte       in_pfb;
+    FT_Byte       in_memory;
+    FT_Byte       single_block;
 
-  } T1_ParserRec;
+  } T1_ParserRec, *T1_Parser;
 
 
 #define T1_Add_Table( p, i, o, l )  (p)->funcs.add( (p), i, o, l )
@@ -108,22 +108,23 @@ FT_BEGIN_HEADER
 
 #define T1_Load_Field( p, f, o, m, pf )       \
           (p)->root.funcs.load_field( &(p)->root, f, o, m, pf )
+
 #define T1_Load_Field_Table( p, f, o, m, pf ) \
           (p)->root.funcs.load_field_table( &(p)->root, f, o, m, pf )
 
 
   FT_LOCAL FT_Error
-  T1_New_Parser( T1_ParserRec*     parser,
-                 FT_Stream         stream,
-                 FT_Memory         memory,
-                 PSAux_Interface*  psaux );
+  T1_New_Parser( T1_Parser      parser,
+                 FT_Stream      stream,
+                 FT_Memory      memory,
+                 PSAux_Service  psaux );
 
   FT_LOCAL FT_Error
-  T1_Get_Private_Dict( T1_ParserRec*     parser,
-                       PSAux_Interface*  psaux );
+  T1_Get_Private_Dict( T1_Parser      parser,
+                       PSAux_Service  psaux );
 
   FT_LOCAL void
-  T1_Finalize_Parser( T1_ParserRec*  parser );
+  T1_Finalize_Parser( T1_Parser  parser );
 
 
 FT_END_HEADER

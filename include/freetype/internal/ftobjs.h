@@ -137,18 +137,24 @@ FT_BEGIN_HEADER
   } FT_ValidatorRec;
 
 
+  FT_BASE( void )
+  ft_validator_init( FT_Validator        valid,
+                     FT_Byte*            base,
+                     FT_Byte*            limit,
+                     FT_ValidationLevel  level );
+
  /* sets the error field in a validator, then calls 'longjmp' to return */
  /* to high-level caller. Using 'setjmp/longjmp' avoids many stupid     */
  /* error checks within the validation routines..                       */
  /*                                                                     */
   FT_BASE( void )
-  ft_validate_error( FT_Valid  valid,
-                     FT_Error  error );
+  ft_validator_error( FT_Validator  valid,
+                      FT_Error      error );
 
  /* calls ft_validate_error. Assumes that the 'valid' local variable holds */
  /* a pointer to the current validator object..                            */
  /*                                                                        */
-#define  FT_INVALID(_error)   ft_validate_error( valid, _error )
+#define  FT_INVALID(_error)   ft_validator_error( valid, _error )
 
  /* called when a broken table is detected */
 #define  FT_INVALID_TOO_SHORT   FT_INVALID( FT_Err_Invalid_Format )
@@ -206,9 +212,6 @@ FT_BEGIN_HEADER
 
   typedef void      (*FT_CMap_DoneFunc)( FT_CMap     cmap );
 
-  typedef FT_Error  (*FT_CMap_ValidateFunc)( FT_Pointer    cmap_data,
-                                             FT_Validator  valid );
-
   typedef FT_UInt   (*FT_CMap_CharIndexFunc)( FT_Pointer   cmap_data,
                                               FT_ULong     char_code );
 
@@ -220,11 +223,22 @@ FT_BEGIN_HEADER
     FT_UInt                size;
     FT_CMap_InitFunc       init;
     FT_CMap_DoneFunc       done;
-    FT_CMap_ValidateFunc   validate;
     FT_CMap_CharIndexFunc  char_index;
     FT_CMap_CharNextFunc   char_next;
   
   } FT_CMap_ClassRec;
+
+
+ /* create a new charmap and add it to charmap->face */
+  FT_BASE( FT_Error )
+  FT_CMap_New( FT_CMap_Class  clazz,
+               FT_Pointer     data,
+               FT_CharMap     charmap,
+               FT_CMap       *acmap );
+
+ /* destroy a charmap (don't remove it from face's list though) */
+  FT_BASE( void )
+  FT_CMap_Done( FT_CMap  cmap );
 
 
   /*************************************************************************/

@@ -1101,6 +1101,20 @@ FT_BEGIN_HEADER
   } TT_CharMapRec;
 
 
+  
+  typedef const struct TT_CMap_ClassRec_*   TT_CMap_Class;
+
+  typedef FT_Error  (*TT_CMap_ValidateFunc)( FT_Byte*      data,
+                                             FT_Validator  valid );
+
+  typedef struct TT_CMap_ClassRec_
+  {
+    FT_CMap_ClassRec      clazz;
+    TT_CMap_ValidateFunc  validate;
+  
+  } TT_CMap_ClassRec;                                             
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/

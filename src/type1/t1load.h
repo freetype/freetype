@@ -36,16 +36,16 @@ FT_BEGIN_HEADER
     T1_ParserRec  parser;          /* parser used to read the stream */
 
     FT_Int        num_chars;       /* number of characters in encoding */
-    PS_Table      encoding_table;  /* PS_Table used to store the       */
+    PS_TableRec   encoding_table;  /* PS_Table used to store the       */
                                    /* encoding character names         */
 
     FT_Int        num_glyphs;
-    PS_Table      glyph_names;
-    PS_Table      charstrings;
-    PS_Table      swap_table;      /* For moving .notdef glyph to index 0. */
+    PS_TableRec   glyph_names;
+    PS_TableRec   charstrings;
+    PS_TableRec   swap_table;      /* For moving .notdef glyph to index 0. */
 
     FT_Int        num_subrs;
-    PS_Table      subrs;
+    PS_TableRec   subrs;
     FT_Bool       fontdata;
 
   } T1_Loader;

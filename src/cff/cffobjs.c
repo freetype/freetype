@@ -59,10 +59,10 @@
   static PSH_Globals_Funcs
   CFF_Size_Get_Globals_Funcs( CFF_Size  size )
   {
-    CFF_Face             face     = (CFF_Face)size->face;
-    CFF_Font*            font     = face->extra.data;
-    PSHinter_Interface*  pshinter = font->pshinter;
-    FT_Module            module;
+    CFF_Face           face     = (CFF_Face)size->face;
+    CFF_Font*          font     = face->extra.data;
+    PSHinter_Service   pshinter = font->pshinter;
+    FT_Module          module;
 
 
     module = FT_Get_Module( size->face->driver->root.library,
@@ -197,7 +197,7 @@
   {
     CFF_Face             face     = (CFF_Face)slot->root.face;
     CFF_Font*            font     = face->extra.data;
-    PSHinter_Interface*  pshinter = font->pshinter;
+    PSHinter_Service  pshinter = font->pshinter;
 
 
     if ( pshinter )
@@ -255,7 +255,7 @@
   static FT_Error
   CFF_Build_Unicode_Charmap( CFF_Face            face,
                              FT_ULong            base_offset,
-                             PSNames_Interface*  psnames )
+                             PSNames_Service  psnames )
   {
     CFF_Font*       font = (CFF_Font*)face->extra.data;
     FT_Memory       memory = FT_FACE_MEMORY(face);
@@ -449,22 +449,22 @@
                  FT_Parameter*  params )
   {
     FT_Error             error;
-    SFNT_Interface*      sfnt;
-    PSNames_Interface*   psnames;
-    PSHinter_Interface*  pshinter;
+    SFNT_Service      sfnt;
+    PSNames_Service   psnames;
+    PSHinter_Service  pshinter;
     FT_Bool              pure_cff    = 1;
     FT_Bool              sfnt_format = 0;
 
 
-    sfnt = (SFNT_Interface*)FT_Get_Module_Interface(
+    sfnt = (SFNT_Service)FT_Get_Module_Interface(
              face->root.driver->root.library, "sfnt" );
     if ( !sfnt )
       goto Bad_Format;
 
-    psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+    psnames = (PSNames_Service)FT_Get_Module_Interface(
                 face->root.driver->root.library, "psnames" );
 
-    pshinter = (PSHinter_Interface*)FT_Get_Module_Interface(
+    pshinter = (PSHinter_Service)FT_Get_Module_Interface(
                  face->root.driver->root.library, "pshinter" );
 
     /* create input stream from resource */
@@ -704,7 +704,7 @@
   CFF_Face_Done( CFF_Face  face )
   {
     FT_Memory        memory = face->root.memory;
-    SFNT_Interface*  sfnt   = (SFNT_Interface*)face->sfnt;
+    SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
 
     if ( sfnt )

@@ -119,17 +119,17 @@
 
 
   FT_LOCAL_DEF FT_Error
-  T1_New_Parser( T1_ParserRec*     parser,
-                 FT_Stream         stream,
-                 FT_Memory         memory,
-                 PSAux_Interface*  psaux )
+  T1_New_Parser( T1_Parser      parser,
+                 FT_Stream      stream,
+                 FT_Memory      memory,
+                 PSAux_Service  psaux )
   {
     FT_Error   error;
     FT_UShort  tag;
     FT_Long    size;
 
 
-    psaux->t1_parser_funcs->init( &parser->root,0, 0, memory );
+    psaux->ps_parser_funcs->init( &parser->root,0, 0, memory );
 
     parser->stream       = stream;
     parser->base_len     = 0;
@@ -228,7 +228,7 @@
 
 
   FT_LOCAL_DEF void
-  T1_Finalize_Parser( T1_ParserRec*  parser )
+  T1_Finalize_Parser( T1_Parser  parser )
   {
     FT_Memory   memory = parser->root.memory;
 
@@ -268,8 +268,8 @@
 
 
   FT_LOCAL_DEF FT_Error
-  T1_Get_Private_Dict( T1_ParserRec*     parser,
-                       PSAux_Interface*  psaux )
+  T1_Get_Private_Dict( T1_Parser      parser,
+                       PSAux_Service  psaux )
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->root.memory;
@@ -449,7 +449,7 @@
 
     /* we now decrypt the encoded binary private dictionary */
     psaux->t1_decrypt( parser->private_dict, parser->private_len, 55665U );
-    parser->root.base = parser->private_dict;
+    parser->root.base   = parser->private_dict;
     parser->root.cursor = parser->private_dict;
     parser->root.limit  = parser->root.cursor + parser->private_len;
 

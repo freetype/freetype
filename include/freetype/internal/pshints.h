@@ -607,8 +607,9 @@ FT_BEGIN_HEADER
     T1_Hints_Funcs     (*get_t1_funcs)     ( FT_Module  module );
     T2_Hints_Funcs     (*get_t2_funcs)     ( FT_Module  module );
 
-  } PSHinter_Interface, *PSHinter_InterfacePtr;
+  } PSHinter_Interface;
 
+  typedef PSHinter_Interface*  PSHinter_Service;
 
 FT_END_HEADER
 

@@ -250,11 +250,11 @@
   {
     T1_Face             face;
     FT_UInt             result = 0;
-    PSNames_Interface*  psnames;
+    PSNames_Service  psnames;
 
 
     face    = (T1_Face)charmap->face;
-    psnames = (PSNames_Interface*)face->psnames;
+    psnames = (PSNames_Service)face->psnames;
     if ( psnames )
       switch ( charmap->encoding )
       {
@@ -365,11 +365,11 @@
                  FT_Long     charcode )
   {
     T1_Face             face;
-    PSNames_Interface*  psnames;
+    PSNames_Service  psnames;
 
 
     face    = (T1_Face)charmap->face;
-    psnames = (PSNames_Interface*)face->psnames;
+    psnames = (PSNames_Service)face->psnames;
 
     if ( psnames )
       switch ( charmap->encoding )

@@ -186,19 +186,19 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    FT_Error            error;
-    FT_Library          library = face->root.driver->root.library;
-    SFNT_Interface*     sfnt;
-    SFNT_Header         sfnt_header;
+    FT_Error         error;
+    FT_Library       library = face->root.driver->root.library;
+    SFNT_Service     sfnt;
+    SFNT_Header      sfnt_header;
 
     /* for now, parameters are unused */
     FT_UNUSED( num_params );
     FT_UNUSED( params );
 
-    sfnt = (SFNT_Interface*)face->sfnt;
+    sfnt = (SFNT_Service)face->sfnt;
     if ( !sfnt )
     {
-      sfnt = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
+      sfnt = (SFNT_Service)FT_Get_Module_Interface( library, "sfnt" );
       if ( !sfnt )
       {
         error = SFNT_Err_Invalid_File_Format;
@@ -211,7 +211,7 @@
 
     if ( !face->psnames )
     {
-      face->psnames = (PSNames_Interface*)
+      face->psnames = (PSNames_Service)
                        FT_Get_Module_Interface( library, "psnames" );
     }
 
@@ -253,7 +253,7 @@
     FT_Bool          has_outline;
     FT_Bool          is_apple_sbit;
 
-    SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+    SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
     FT_UNUSED( face_index );
     FT_UNUSED( num_params );
@@ -596,7 +596,7 @@
   SFNT_Done_Face( TT_Face  face )
   {
     FT_Memory        memory = face->root.memory;
-    SFNT_Interface*  sfnt   = (SFNT_Interface*)face->sfnt;
+    SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
 
     if ( sfnt )

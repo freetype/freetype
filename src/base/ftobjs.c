@@ -1374,6 +1374,76 @@
   }
 
 
+  FT_BASE_DEF( void )
+  FT_CMap_Done( FT_CMap  cmap )
+  {
+    if ( cmap )
+    {
+      FT_CMap_Class  clazz  = cmap->clazz;
+      FT_Face        face   = cmap->charmap.face;
+      FT_Memory      memory = FT_FACE_MEMORY(face);
+      
+      if ( clazz->done )
+        clazz->done( cmap->data );
+
+      FREE( cmap );
+    }
+  }
+
+
+  FT_BASE_DEF( FT_Error )
+  FT_CMap_New( FT_CMap_Class   clazz,
+               FT_Pointer      data,
+               FT_CharMap      charmap,
+               FT_CMap        *acmap )
+  { 
+    FT_Error   error = 0;
+    FT_Face    face;
+    FT_Memory  memory;
+    FT_CMap    cmap;
+    
+    if ( clazz == NULL || charmap == NULL || charmap->face == NULL )
+      return FT_Err_Invalid_Argument;
+
+    face   = charmap->face;
+    memory = FT_FACE_MEMORY(face);
+
+    if ( !ALLOC( cmap, clazz->size ) )
+    {
+      cmap->charmap = *charmap;
+      cmap->clazz   = clazz;
+      cmap->data    = data;
+      
+      if ( clazz->init )
+      {
+        error = clazz->init( cmap, data );
+        if (error)
+          goto Fail;
+      }
+      
+      /* add it to our list of charmaps */
+      if ( REALLOC_ARRAY( face->charmaps,
+                          face->num_charmaps,
+                          face->num_charmaps+1,
+                          FT_CharMap* ) )
+        goto Fail;
+      
+      face->charmaps[ face->num_charmaps++ ] = (FT_CharMap) cmap;
+    }
+    
+  Exit:
+    if ( acmap )
+      *acmap = cmap;
+
+    return error;
+  
+  Fail:
+    FT_CMap_Done( cmap );
+    cmap = NULL;
+    goto Exit;
+  }               
+
+
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt )

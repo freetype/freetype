@@ -90,7 +90,7 @@
   static FT_Error
   cid_load_keyword( CID_Face         face,
                     CID_Loader*      loader,
-                    const T1_Field*  keyword )
+                    const T1_Field  keyword )
   {
     FT_Error     error;
     CID_Parser*  parser = &loader->parser;
@@ -100,7 +100,7 @@
 
 
     /* if the keyword has a dedicated callback, call it */
-    if ( keyword->type == t1_field_callback )
+    if ( keyword->type == T1_FIELD_TYPE_CALLBACK )
     {
       keyword->reader( (FT_Face)face, parser );
       error = parser->root.error;
@@ -147,8 +147,8 @@
     dummy_object = object;
 
     /* now, load the keyword data in the object's field(s) */
-    if ( keyword->type == t1_field_integer_array ||
-         keyword->type == t1_field_fixed_array   )
+    if ( keyword->type == T1_FIELD_TYPE_INTEGER_ARRAY ||
+         keyword->type == T1_FIELD_TYPE_FIXED_ARRAY   )
       error = CID_Load_Field_Table( &loader->parser, keyword,
                                     &dummy_object );
     else
@@ -270,7 +270,7 @@
 
 
   static
-  const T1_Field  cid_field_records[] =
+  const T1_FieldRec  cid_field_records[] =
   {
 
 #include "cidtoken.h"
@@ -278,7 +278,7 @@
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
     T1_FIELD_CALLBACK( "FDArray", parse_fd_array )
     T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
-    { 0, t1_field_cid_info, t1_field_none, 0, 0, 0, 0, 0 }
+    { 0, t1_field_cid_info, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
   };
 
 
@@ -339,7 +339,7 @@
           if ( len > 0 && len < 22 )
           {
             /* now compare the immediate name to the keyword table */
-            const T1_Field*  keyword = cid_field_records;
+            T1_Field  keyword = (T1_Field) cid_field_records;
 
 
             for (;;)
@@ -527,7 +527,7 @@
 
     parser = &loader.parser;
     error = CID_New_Parser( parser, face->root.stream, face->root.memory,
-                            (PSAux_Interface*)face->psaux );
+                            (PSAux_Service)face->psaux );
     if ( error )
       goto Exit;
 

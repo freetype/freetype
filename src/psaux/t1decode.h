@@ -30,20 +30,20 @@ FT_BEGIN_HEADER
 
 
   FT_CALLBACK_TABLE
-  const T1_Decoder_Funcs  t1_decoder_funcs;
+  const T1_Decoder_FuncsRec  t1_decoder_funcs;
 
 
   FT_LOCAL FT_Error
-  T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
+  T1_Decoder_Parse_Glyph( T1_Decoder  decoder,
                           FT_UInt      glyph_index );
 
   FT_LOCAL FT_Error
-  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
+  T1_Decoder_Parse_Charstrings( T1_Decoder  decoder,
                                 FT_Byte*     base,
                                 FT_UInt      len );
 
   FT_LOCAL FT_Error
-  T1_Decoder_Init( T1_Decoder*          decoder,
+  T1_Decoder_Init( T1_Decoder          decoder,
                    FT_Face              face,
                    FT_Size              size,
                    FT_GlyphSlot         slot,
@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
                    T1_Decoder_Callback  parse_glyph );
 
   FT_LOCAL void
-  T1_Decoder_Done( T1_Decoder*  decoder );
+  T1_Decoder_Done( T1_Decoder  decoder );
 
 
 FT_END_HEADER

@@ -162,11 +162,11 @@
   {
     FT_Error         error;
     FT_Library       library;
-    SFNT_Interface*  sfnt;
+    SFNT_Service  sfnt;
 
 
     library = face->root.driver->root.library;
-    sfnt    = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
+    sfnt    = (SFNT_Service)FT_Get_Module_Interface( library, "sfnt" );
     if ( !sfnt )
       goto Bad_Format;
 
@@ -230,7 +230,7 @@
     FT_Memory  memory = face->root.memory;
     FT_Stream  stream = face->root.stream;
 
-    SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+    SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
     /* for `extended TrueType formats' (i.e. compressed versions) */
@@ -679,7 +679,7 @@
     FT_ULong          strike_index;
     FT_Size_Metrics*  metrics;
     FT_Size_Metrics*  sbit_metrics;
-    SFNT_Interface*   sfnt;
+    SFNT_Service   sfnt;
 
 
     metrics = &size->root.metrics;
@@ -688,7 +688,7 @@
       return TT_Err_Ok;
 
     face = (TT_Face)size->root.face;
-    sfnt = (SFNT_Interface*)face->sfnt;
+    sfnt = (SFNT_Service)face->sfnt;
 
     sbit_metrics = &size->strike_metrics;
 

@@ -376,7 +376,7 @@
     /* Load table if needed */
     if ( !cmap->loaded )
     {
-      SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
       error = sfnt->load_charmap( face, cmap, face->root.stream );
@@ -423,7 +423,7 @@
     /* Load table if needed */
     if ( !cmap->loaded )
     {
-      SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
       error = sfnt->load_charmap( face, cmap, face->root.stream );
@@ -459,13 +459,13 @@
   {
     FT_Module        sfntd = FT_Get_Module( driver->root.root.library,
                                             "sfnt" );
-    SFNT_Interface*  sfnt;
+    SFNT_Service  sfnt;
 
 
     /* only return the default interface from the SFNT module */
     if ( sfntd )
     {
-      sfnt = (SFNT_Interface*)( sfntd->clazz->module_interface );
+      sfnt = (SFNT_Service)( sfntd->clazz->module_interface );
       if ( sfnt )
         return sfnt->get_interface( FT_MODULE( driver ), interface );
     }

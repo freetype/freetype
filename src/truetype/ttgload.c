@@ -1422,7 +1422,7 @@
                  FT_UShort     glyph_index,
                  FT_UInt       load_flags )
   {
-    SFNT_Interface*  sfnt;
+    SFNT_Service  sfnt;
     TT_Face          face;
     FT_Stream        stream;
     FT_Error         error;
@@ -1430,7 +1430,7 @@
 
 
     face   = (TT_Face)glyph->face;
-    sfnt   = (SFNT_Interface*)face->sfnt;
+    sfnt   = (SFNT_Service)face->sfnt;
     stream = face->root.stream;
     error  = 0;
 

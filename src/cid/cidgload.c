@@ -37,8 +37,8 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  cid_load_glyph( T1_Decoder*  decoder,
-                  FT_UInt      glyph_index )
+  cid_load_glyph( T1_Decoder  decoder,
+                  FT_UInt     glyph_index )
   {
     CID_Face   face = (CID_Face)decoder->builder.face;
     CID_Info*  cid  = &face->cid;
@@ -143,10 +143,10 @@
                            FT_Int*   max_advance )
   {
     FT_Error    error;
-    T1_Decoder  decoder;
+    T1_DecoderRec  decoder;
     FT_Int      glyph_index;
 
-    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
     *max_advance = 0;
@@ -208,13 +208,13 @@
                   FT_Int         load_flags )
   {
     FT_Error    error;
-    T1_Decoder  decoder;
+    T1_DecoderRec  decoder;
     CID_Face    face = (CID_Face)glyph->root.face;
     FT_Bool     hinting;
 
-    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
-    FT_Matrix         font_matrix;
-    FT_Vector         font_offset;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    FT_Matrix      font_matrix;
+    FT_Vector      font_offset;
 
 
     if ( load_flags & FT_LOAD_NO_RECURSE )

@@ -28,7 +28,7 @@
   T1_FIELD_STRING( "Weight", weight )
 
   T1_FIELD_NUM   ( "ItalicAngle", italic_angle )
-  T1_FIELD_BOOL  ( "isFixedPitch", is_fixed_pitch )
+  T1_FIELD_TYPE_BOOL  ( "isFixedPitch", is_fixed_pitch )
   T1_FIELD_NUM   ( "UnderlinePosition", underline_position )
   T1_FIELD_NUM   ( "UnderlineThickness", underline_thickness )
 

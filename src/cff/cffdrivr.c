@@ -22,6 +22,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
+#include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
 #include "cffdrivr.h"
 #include "cffgload.h"
@@ -231,10 +232,10 @@
     FT_Memory           memory = FT_FACE_MEMORY( face );
     FT_String*          gname;
     FT_UShort           sid;
-    PSNames_Interface*  psnames;
+    PSNames_Service  psnames;
     FT_Error            error;
 
-    psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+    psnames = (PSNames_Service)FT_Get_Module_Interface(
                 face->root.driver->root.library, "psnames" );
 
     if ( !psnames )
@@ -303,7 +304,7 @@
     /* Load table if needed */
     if ( !cmap->loaded )
     {
-      SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
       error = sfnt->load_charmap( face, cmap, face->root.stream );
@@ -347,7 +348,7 @@
     /* Load table if needed */
     if ( !cmap->loaded )
     {
-      SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
       error = sfnt->load_charmap( face, cmap, face->root.stream );
@@ -382,20 +383,20 @@
   cff_get_name_index( CFF_Face    face,
                       FT_String*  glyph_name )
   {
-    CFF_Font*           cff;
-    CFF_Charset*        charset;
-    PSNames_Interface*  psnames;
-    FT_Memory           memory = FT_FACE_MEMORY( face );
-    FT_String*          name;
-    FT_UShort           sid;
-    FT_UInt             i;
-    FT_Int              result;
+    CFF_Font*        cff;
+    CFF_Charset*     charset;
+    PSNames_Service  psnames;
+    FT_Memory        memory = FT_FACE_MEMORY( face );
+    FT_String*       name;
+    FT_UShort        sid;
+    FT_UInt          i;
+    FT_Int           result;
 
 
     cff     = face->extra.data;
     charset = &cff->charset;
 
-    psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+    psnames = (PSNames_Service)FT_Get_Module_Interface(
                 face->root.driver->root.library, "psnames" );
 
     for ( i = 0; i < cff->num_glyphs; i++ )
@@ -405,7 +406,7 @@
       if ( sid > 390 )
         name = CFF_Get_Name( &cff->string_index, sid - 391 );
       else
-        name = (FT_String *)psnames->adobe_std_strings( sid );
+        name = (FT_String *) psnames->adobe_std_strings( sid );
 
       result = strcmp( glyph_name, name );
 

@@ -1313,7 +1313,7 @@
   FT_LOCAL_DEF FT_String*
   CFF_Get_String( CFF_Index*          index,
                   FT_UInt             sid,
-                  PSNames_Interface*  interface )
+                  PSNames_Service  interface )
   {
     /* if it is not a standard string, return it */
     if ( sid > 390 )

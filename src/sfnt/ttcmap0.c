@@ -44,6 +44,35 @@
 #define  TT_NEXT_Long    FT_NEXT_LONG_BE
 #define  TT_NEXT_ULong   FT_NEXT_ULONG_BE
 
+
+  typedef struct TT_CMap_InfoRec_
+  {
+    FT_ByteP            base;
+    FT_ByteP            limit;
+    FT_ValidationLevel  level;
+
+  } TT_CMap_InfoRec, *TT_CMap_Info;
+
+
+  FT_CALLBACK_DEF  FT_Error
+  tt_cmap_init( FT_CMap       cmap,
+                TT_CMap_Info  info )
+  {
+    FT_Error         error;
+    TT_CMap_Class    clazz = (TT_CMap_Class) FT_CMAP_CLASS(cmap);
+    FT_ValidatorRec  valid;
+    
+    cmap->data = info->base;
+    
+    ft_validator_init( &valid, info->base, info->limit, info->level );
+    
+    if ( setjmp( valid->jump_buffer, 0 ) == 0 )
+      clazz->validate( info->base, &valid );
+      
+    return valid.error;
+  }                
+
+
  /************************************************************************/
  /************************************************************************/
  /*****                                                              *****/
@@ -68,7 +97,7 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_0
 
-  static void
+  FT_CALLBACK_DEF void
   tt_cmap0_validate( FT_Byte*      table,
                      FT_Validator  valid )
   {
@@ -94,7 +123,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap0_char_index( FT_Byte*   table,
                        FT_ULong   char_code )
   {
@@ -102,7 +131,7 @@
   }
 
 
-  static FT_ULong
+  FT_CALLBACK_DEF FT_ULong
   tt_cmap0_char_next( FT_Byte*  table,
                       FT_ULong  char_code,
                       FT_UInt   *agindex )
@@ -127,12 +156,21 @@
     return result;
   }
 
-  static const TT_Cmap_ClassRec  tt_cmap0_class_rec =
+
+  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap0_class_rec =
   {
-    (TT_CMap_ValidateFunc)  tt_cmap0_validate,
-    (TT_CMap_CharIndexFunc) tt_cmap0_char_index,
-    (TT_CMap_CharNextFunc)  tt_cmap0_char_next
+    {
+      sizeof( FT_CMapRec ),
+      
+      (FT_CMap_InitFunc)      tt_cmap_init,
+      (FT_CMap_DoneFunc)      NULL,
+      (FT_CMap_CharIndexFunc) tt_cmap0_char_index,
+      (FT_CMap_CharNextFunc)  tt_cmap0_char_next
+    },
+    (TT_CMap_ValidateFunc)    tt_cmap0_validate
   };
+
+  FT_LOCAL_DEF  TT_CMap_Class tt_cmap0_class = &tt_cmap0_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_0 */
 
@@ -224,7 +262,7 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_2
 
-  static void
+  FT_CALLBACK_DEF void
   tt_cmap2_validate( FT_Byte*      table,
                      FT_Validator  valid )
   {
@@ -362,7 +400,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap2_char_index( FT_Byte*   table,
                        FT_ULong   char_code )
   {
@@ -398,7 +436,7 @@
 
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap2_char_next( FT_Byte*  table,
                       FT_ULong  char_code,
                       FT_UInt   *agindex )
@@ -464,12 +502,20 @@
     return result;
   }
 
-  static const TT_Cmap_ClassRec  tt_cmap2_class_rec =
+  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap2_class_rec =
   {
-    (TT_CMap_ValidateFunc)  tt_cmap2_validate,
-    (TT_CMap_CharIndexFunc) tt_cmap2_char_index,
-    (TT_CMap_CharNextFunc)  tt_cmap2_char_next
+    {
+      sizeof( FT_CMapRec ),
+      
+      (FT_CMap_InitFunc)      tt_cmap_init,
+      (FT_CMap_DoneFunc)      NULL,
+      (FT_CMap_CharIndexFunc) tt_cmap2_char_index,
+      (FT_CMap_CharNextFunc)  tt_cmap2_char_next
+    },
+    (TT_CMap_ValidateFunc)    tt_cmap2_validate
   };
+
+  FT_LOCAL_DEF  TT_CMap_Class tt_cmap2_class = &tt_cmap2_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_2 */
 
@@ -536,7 +582,7 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_4
 
-  static void
+  FT_CALLBACK_DEF void
   tt_cmap4_validate( FT_Byte*      table,
                      FT_Validator  valid )
   {
@@ -653,7 +699,7 @@
 
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap4_char_index( FT_Byte*  table,
                        FT_ULong  char_code )
   {
@@ -703,7 +749,7 @@
 
 
 
-  static FT_ULong
+  FT_CALLBACK_DEF FT_ULong
   tt_cmap4_char_next( FT_Byte*  table,
                       FT_ULong  char_code,
                       FT_UInt  *agindex )
@@ -784,12 +830,20 @@
     return result;
   }
 
-  static const TT_Cmap_ClassRec  tt_cmap4_class_rec =
+  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap4_class_rec =
   {
-    (TT_CMap_ValidateFunc)  tt_cmap4_validate,
-    (TT_CMap_CharIndexFunc) tt_cmap4_char_index,
-    (TT_CMap_CharNextFunc)  tt_cmap4_char_next
+    {
+      sizeof( FT_CMapRec ),
+      
+      (FT_CMap_InitFunc)      tt_cmap_init,
+      (FT_CMap_DoneFunc)      NULL,
+      (FT_CMap_CharIndexFunc) tt_cmap4_char_index,
+      (FT_CMap_CharNextFunc)  tt_cmap4_char_next
+    },
+    (TT_CMap_ValidateFunc)    tt_cmap4_validate
   };
+
+  FT_LOCAL_DEF  TT_CMap_Class tt_cmap4_class = &tt_cmap4_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_4 */
 
@@ -822,7 +876,7 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_6
 
-  static void
+  FT_CALLBACK_DEF void
   tt_cmap6_validate( FT_Byte*      table,
                      FT_Validator  valid )
   {
@@ -857,7 +911,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap6_char_index( FT_Byte*   table,
                        FT_ULong   char_code )
   {
@@ -876,7 +930,7 @@
   }
 
 
-  static FT_ULong
+  FT_CALLBACK_DEF FT_ULong
   tt_cmap6_char_next( FT_Byte*    table,
                       FT_ULong    char_code,
                       FT_UInt    *agindex )
@@ -916,12 +970,21 @@
     return result;
   }
 
-  static const TT_Cmap_ClassRec  tt_cmap6_class_rec =
+
+  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap6_class_rec =
   {
-    (TT_CMap_ValidateFunc)  tt_cmap6_validate,
-    (TT_CMap_CharIndexFunc) tt_cmap6_char_index,
-    (TT_CMap_CharNextFunc)  tt_cmap6_char_next
+    {
+      sizeof( FT_CMapRec ),
+      
+      (FT_CMap_InitFunc)      tt_cmap_init,
+      (FT_CMap_DoneFunc)      NULL,
+      (FT_CMap_CharIndexFunc) tt_cmap6_char_index,
+      (FT_CMap_CharNextFunc)  tt_cmap6_char_next
+    },
+    (TT_CMap_ValidateFunc)    tt_cmap6_validate
   };
+
+  FT_LOCAL_DEF  TT_CMap_Class tt_cmap6_class = &tt_cmap6_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_6 */
 
@@ -985,7 +1048,7 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_8
 
-  static void
+  FT_CALLBACK_DEF void
   tt_cmap8_validate( FT_Byte*      table,
                      FT_Validator  valid )
   {
@@ -1075,7 +1138,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap8_char_index( FT_Byte*   table,
                        FT_ULong   char_code )
   {
@@ -1103,7 +1166,7 @@
   }
 
 
-  static FT_ULong
+  FT_CALLBACK_DEF FT_ULong
   tt_cmap8_char_next( FT_Byte*   table,
                       FT_ULong   char_code,
                       FT_UInt   *agindex )
@@ -1145,12 +1208,20 @@
   }
 
 
-  static const TT_Cmap_ClassRec  tt_cmap8_class_rec =
+  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap8_class_rec =
   {
-    (TT_CMap_ValidateFunc)  tt_cmap8_validate,
-    (TT_CMap_CharIndexFunc) tt_cmap8_char_index,
-    (TT_CMap_CharNextFunc)  tt_cmap8_char_next
+    {
+      sizeof( FT_CMapRec ),
+      
+      (FT_CMap_InitFunc)      tt_cmap_init,
+      (FT_CMap_DoneFunc)      NULL,
+      (FT_CMap_CharIndexFunc) tt_cmap8_char_index,
+      (FT_CMap_CharNextFunc)  tt_cmap8_char_next
+    },
+    (TT_CMap_ValidateFunc)    tt_cmap8_validate
   };
+
+  FT_LOCAL_DEF  TT_CMap_Class tt_cmap8_class = &tt_cmap8_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_8 */
 
@@ -1181,7 +1252,7 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_10
 
-  static void
+  FT_CALLBACK_DEF void
   tt_cmap10_validate( FT_Byte*      table,
                       FT_Validator  valid )
   {
@@ -1214,7 +1285,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap10_char_index( FT_Byte*   table,
                         FT_ULong   char_code )
   {
@@ -1233,7 +1304,7 @@
   }
 
 
-  static FT_ULong
+  FT_CALLBACK_DEF FT_ULong
   tt_cmap10_char_next( FT_Byte*    table,
                        FT_ULong    char_code,
                        FT_UInt    *agindex )
@@ -1270,12 +1341,21 @@
     return result;
   }
 
-  static const TT_Cmap_ClassRec  tt_cmap10_class_rec =
+
+  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap10_class_rec =
   {
-    (TT_CMap_ValidateFunc)  tt_cmap10_validate,
-    (TT_CMap_CharIndexFunc) tt_cmap10_char_index,
-    (TT_CMap_CharNextFunc)  tt_cmap10_char_next
+    {
+      sizeof( FT_CMapRec ),
+      
+      (FT_CMap_InitFunc)      tt_cmap_init,
+      (FT_CMap_DoneFunc)      NULL,
+      (FT_CMap_CharIndexFunc) tt_cmap10_char_index,
+      (FT_CMap_CharNextFunc)  tt_cmap10_char_next
+    },
+    (TT_CMap_ValidateFunc)    tt_cmap10_validate
   };
+
+  FT_LOCAL_DEF  TT_CMap_Class tt_cmap10_class = &tt_cmap10_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_10 */
 
@@ -1312,7 +1392,7 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_12
 
-  static void
+  FT_CALLBACK_DEF void
   tt_cmap12_validate( FT_Byte*      table,
                       FT_Validator  valid )
   {
@@ -1364,7 +1444,7 @@
 
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF FT_UInt
   tt_cmap12_char_index( FT_Byte*   table,
                         FT_ULong   char_code )
   {
@@ -1392,7 +1472,7 @@
   }
 
 
-  static FT_ULong
+  FT_CALLBACK_DEF FT_ULong
   tt_cmap12_char_next( FT_Byte*   table,
                        FT_ULong   char_code,
                        FT_UInt   *agindex )
@@ -1434,12 +1514,20 @@
   }
 
 
-  static const TT_Cmap_ClassRec  tt_cmap12_class_rec =
+  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap12_class_rec =
   {
-    (TT_CMap_ValidateFunc)  tt_cmap12_validate,
-    (TT_CMap_CharIndexFunc) tt_cmap12_char_index,
-    (TT_CMap_CharNextFunc)  tt_cmap12_char_next
+    {
+      sizeof( FT_CMapRec ),
+      
+      (FT_CMap_InitFunc)      tt_cmap_init,
+      (FT_CMap_DoneFunc)      NULL,
+      (FT_CMap_CharIndexFunc) tt_cmap12_char_index,
+      (FT_CMap_CharNextFunc)  tt_cmap12_char_next
+    },
+    (TT_CMap_ValidateFunc)    tt_cmap12_validate
   };
+
+  FT_LOCAL_DEF  TT_CMap_Class tt_cmap12_class = &tt_cmap12_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_12 */
 

@@ -226,8 +226,11 @@ FT_BEGIN_HEADER
     const unsigned short*      adobe_expert_encoding;
 
     PS_Next_Unicode_Func       next_unicode;
+
   } PSNames_Interface;
 
+
+  typedef PSNames_Interface*  PSNames_Service;
 
 FT_END_HEADER
 
