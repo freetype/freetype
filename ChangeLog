@@ -1,3 +1,8 @@
+2004-06-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/lzw/zopen.c: Comment out inclusion of signal.h and unistd.h.
+	Reported by Hyvärinen Jyrki Juhani.
+
 2004-06-11  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
