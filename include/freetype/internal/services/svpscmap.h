@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  svpsname.h                                                             */
+/*  svpscmap.h                                                             */
 /*                                                                         */
-/*    The FreeType glyph PS name services (specification).                 */
+/*    The FreeType PostScript charmap service (specification)              */
 /*                                                                         */
 /*  Copyright 2003 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -16,14 +16,14 @@
 /***************************************************************************/
 
 
-#ifndef __SVPSNAME_H__
-#define __SVPSNAME_H__
+#ifndef __SVPSCMAP_H__
+#define __SVPSCMAP_H__
 
 
 FT_BEGIN_HEADER
 
 
-#define FT_SERVICE_ID_POSTSCRIPT_NAMES  "postscript-names"
+#define FT_SERVICE_ID_POSTSCRIPT_CMAPS  "postscript-cmaps"
 
 
   /*
@@ -87,7 +87,7 @@ FT_BEGIN_HEADER
                                FT_ULong      unicode );
 
 
-  FT_DEFINE_SERVICE( PsNames )
+  FT_DEFINE_SERVICE( PsCMaps )
   {
     PS_Unicode_ValueFunc       unicode_value;
 

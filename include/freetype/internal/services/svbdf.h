@@ -19,6 +19,7 @@
 #ifndef __SVBDF_H__
 #define __SVBDF_H__
 
+#include FT_BDF_H
 #include FT_INTERNAL_SERVICE_H
 
 
@@ -26,7 +27,6 @@ FT_BEGIN_HEADER
 
 
 #define FT_SERVICE_ID_BDF  "bdf"
-
 
   typedef FT_Error
   (*FT_BDF_GetCharsetIdFunc)( FT_Face       face,
@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
 
   /* */
 
- 
+
 FT_END_HEADER
 
 

@@ -1,3 +1,28 @@
+2003-10-29  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/bdftypes.h: removed obsolete header
+
+        * include/freetype/internal/cfftypes.h, src/cff/cfftypes.h,
+        src/cff/cffload.h, src/cff/cffobjs.h, src/cff/cffparse.h,
+        include/freetype/internal/services/svbdf.h: moving "cfftypes.h" from
+        'include/freetype/internal' to 'src/cff' since no other modules needs
+        to known about these types
+
+        * include/freetype/internal/t42types.h,
+        include/freetype/internal/internal.h, src/type42/t42objs.h,
+        src/type42/t42drivr.c, src/type42/t42types.h: moving "t42types.h" from
+        'include/freetype/internal' to 'src/type42' since no other modules needs
+        to known about these types
+
+        * src/gzip/infblock.c: removing compiler warning
+
+        * include/freetype/internal/services/svpsinfo.h,
+        include/freetype/internal/ftserv.h, src/cff/cffdrivr.c,
+        src/cid/ciddrivr.c, src/type1/t1driver.c, src/type42/t42drivr.c,
+        src/base/fttype1.c: migrating to FT_SERVICE_ID_POSTSCRIPT_INFO defined
+        in "svpsinfo.h", removing some sad hacks.
+
+
 2003-10-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_encoding): Handle `/Encoding [ ... ]'.

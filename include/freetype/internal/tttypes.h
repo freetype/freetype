@@ -1500,7 +1500,7 @@ FT_BEGIN_HEADER
     /* the basic TrueType tables in the face object                */
     void*                 sfnt;
 
-    /* a typeless pointer to the FT_Service_PsNamesRec table used to */
+    /* a typeless pointer to the FT_Service_PsCMapsRec table used to */
     /* handle glyph names <-> unicode & Mac values                   */
     void*                 psnames;
 

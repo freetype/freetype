@@ -21,7 +21,7 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_CFF_TYPES_H
+#include "cfftypes.h"
 #include FT_INTERNAL_OBJECTS_H
 
 

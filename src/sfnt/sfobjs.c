@@ -23,7 +23,7 @@
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include "sferrors.h"
 
 
@@ -364,7 +364,7 @@
       face->goto_table = sfnt->goto_table;
     }
 
-    FT_FACE_FIND_GLOBAL_SERVICE( face, face->psnames, POSTSCRIPT_NAMES );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, face->psnames, POSTSCRIPT_CMAPS );
 
     /* check that we have a valid TrueType file */
     error = sfnt->load_sfnt_header( face, stream, face_index, &sfnt_header );

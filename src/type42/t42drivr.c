@@ -43,6 +43,7 @@
 #include FT_SERVICE_XFREE86_NAME_H
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
+#include FT_SERVICE_POSTSCRIPT_INFO_H
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t42
@@ -124,6 +125,33 @@
   static FT_Service_PsFontNameRec  t42_service_ps_font_name =
   {
     (FT_PsName_GetFunc)t42_get_ps_font_name
+  };
+
+
+ /*
+  *  POSTSCRIPT INFO SERVICE
+  *
+  */
+
+  static FT_Error
+  t42_ps_get_font_info( FT_Face          face,
+                        PS_FontInfoRec*  afont_info )
+  {
+    *afont_info = ((T42_Face)face)->type1.font_info;
+    return 0;
+  }
+
+  static FT_Int
+  t42_ps_has_glyph_names( FT_Face  face )
+  {
+    FT_UNUSED( face );
+    return 1;
+  }
+
+  static const FT_Service_PsInfoRec  t42_service_ps_info =
+  {
+    (PS_GetFontInfoFunc)    t42_ps_get_font_info,
+    (PS_HasGlyphNamesFunc)  t42_ps_has_glyph_names
   };
 
 

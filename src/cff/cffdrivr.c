@@ -22,7 +22,8 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
+#include FT_SERVICE_POSTSCRIPT_INFO_H
 
 #include "cffdrivr.h"
 #include "cffgload.h"
@@ -227,11 +228,11 @@
     FT_Memory           memory = FT_FACE_MEMORY( face );
     FT_String*          gname;
     FT_UShort           sid;
-    FT_Service_PsNames  psnames;
+    FT_Service_PsCMaps  psnames;
     FT_Error            error;
 
 
-    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
     if ( !psnames )
     {
       FT_ERROR(( "cff_get_glyph_name:" ));
@@ -274,7 +275,7 @@
   {
     CFF_Font            cff;
     CFF_Charset         charset;
-    FT_Service_PsNames  psnames;
+    FT_Service_PsCMaps  psnames;
     FT_Memory           memory = FT_FACE_MEMORY( face );
     FT_String*          name;
     FT_UShort           sid;
@@ -285,7 +286,7 @@
     cff     = (CFF_FontRec *)face->extra.data;
     charset = &cff->charset;
 
-    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
     for ( i = 0; i < cff->num_glyphs; i++ )
     {
       sid = charset->sids[i];
@@ -314,6 +315,25 @@
     (FT_GlyphDict_NameIndexFunc)cff_get_name_index,
   };
 
+ /*
+  *  POSTSCRIPT INFO SERVICE
+  *
+  */
+
+  static FT_Int
+  cff_ps_has_glyph_names( FT_Face  face )
+  {
+    FT_UNUSED( face );
+    return 1;
+  }
+
+  static const FT_Service_PsInfoRec  cff_service_ps_info =
+  {
+    (PS_GetFontInfoFunc)    NULL,  /* unsupported with CFF fonts */
+    (PS_HasGlyphNamesFunc)  cff_ps_has_glyph_names
+  };
+
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -329,9 +349,10 @@
 
   static const FT_ServiceDescRec  cff_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME,  FT_XF86_FORMAT_CFF },
+    { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_CFF },
+    { FT_SERVICE_ID_POSTSCRIPT_INFO, &cff_service_ps_info },
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
-    { FT_SERVICE_ID_GLYPH_DICT, &cff_service_glyph_dict },
+    { FT_SERVICE_ID_GLYPH_DICT,      &cff_service_glyph_dict },
 #endif
     { NULL, NULL }
   };

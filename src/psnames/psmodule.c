@@ -18,7 +18,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
 #include "psmodule.h"
 #include "pstables.h"
@@ -335,7 +335,7 @@
 
 
   static
-  const FT_Service_PsNamesRec  psnames_interface =
+  const FT_Service_PsCMapsRec  pscmaps_interface =
   {
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
 
@@ -361,9 +361,9 @@
   };
 
 
-  static const FT_ServiceDescRec  psnames_services[] =
+  static const FT_ServiceDescRec  pscmaps_services[] =
   {
-    { FT_SERVICE_ID_POSTSCRIPT_NAMES, &psnames_interface },
+    { FT_SERVICE_ID_POSTSCRIPT_CMAPS, &pscmaps_interface },
     { NULL, NULL }
   };
 
@@ -374,7 +374,7 @@
   {
     FT_UNUSED( module );
 
-    return ft_service_list_lookup( psnames_services, service_id );
+    return ft_service_list_lookup( pscmaps_services, service_id );
   }
 
 #endif /* !FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES */
@@ -397,7 +397,7 @@
     (FT_Module_Destructor) 0,
     (FT_Module_Requester)  0
 #else
-    (void*)&psnames_interface,   /* module specific interface */
+    (void*)&pscmaps_interface,   /* module specific interface */
     (FT_Module_Constructor)0,
     (FT_Module_Destructor) 0,
     (FT_Module_Requester)  psnames_get_service
