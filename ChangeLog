@@ -1,3 +1,13 @@
+2002-07-01  Keith Packard  <keithp@keithp.com>
+
+    * src/sfnt/ttcmap0.c: fixing the cmap 8 and 12 parsing routines
+
+2002-07-01  David Turner
+
+    * include/freetype/ftsynth.h, src/base/ftsynth.c: rewriting the automatic
+    style synthesis functions, now renamed to FT_GlyphSlot_Oblique and
+    FT_GlyphSlot_Embolden
+
 2002-06-26  David Turner
 
     * include/freetype/internal/ftobject.h: updating the object sub-system
@@ -8,8 +18,8 @@
     * include/freetype/fttrigon.h, src/base/fttrigon.c: adding
     FT_Vector_From_Polar and FT_Angle_Diff to the trigonometric functions
 
-    * include/freetype/ftstroker.h, src/base/ftstroker.c: adding path stroker
-    component (work in progress)
+    * include/freetype/ftstroker.h, src/base/ftstroker.c, src/base/Jamfile:
+    adding path stroker component (work in progress)
 
     * src/truetype/ttgload.c (TT_Load_Composite_Glyph),
     src/base/ftoutln.c (FT_Vector_Transform): fixed Werner's latest
