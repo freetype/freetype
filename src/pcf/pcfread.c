@@ -819,21 +819,29 @@ THE SOFTWARE.
         goto Bail;
     }
 
-    error = pcf_get_metric( stream, format, &(accel->minbounds) );
+    error = pcf_get_metric( stream,
+                            format & ( ~PCF_FORMAT_MASK ),
+                            &(accel->minbounds) );
     if ( error )
       goto Bail;
 
-    error = pcf_get_metric( stream, format, &(accel->maxbounds) );
+    error = pcf_get_metric( stream,
+                            format & ( ~PCF_FORMAT_MASK ),
+                            &(accel->maxbounds) );
     if ( error )
       goto Bail;
 
     if ( PCF_FORMAT_MATCH( format, PCF_ACCEL_W_INKBOUNDS ) )
     {
-      error = pcf_get_metric( stream, format, &(accel->ink_minbounds) );
+      error = pcf_get_metric( stream,
+                              format & ( ~PCF_FORMAT_MASK ),
+                              &(accel->ink_minbounds) );
       if ( error )
         goto Bail;
 
-      error = pcf_get_metric( stream, format, &(accel->ink_maxbounds) );
+      error = pcf_get_metric( stream,
+                              format & ( ~PCF_FORMAT_MASK ),
+                              &(accel->ink_maxbounds) );
       if ( error )
         goto Bail;
     }
