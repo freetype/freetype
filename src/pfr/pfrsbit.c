@@ -651,11 +651,12 @@
           error = ft_glyphslot_alloc_bitmap( &glyph->root, len );
           if ( !error )
           {
-            error = pfr_load_bitmap_bits( p,
-                                          stream->limit,
-                                          format,
-                                          FT_BOOL(face->header.color_flags & 2),
-                                          &glyph->root.bitmap );
+            error = pfr_load_bitmap_bits(
+                      p,
+                      stream->limit,
+                      format,
+                      FT_BOOL(face->header.color_flags & 2),
+                      &glyph->root.bitmap );
           }
         }
       }

@@ -1,30 +1,64 @@
+2003-09-21  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftserv.h (FT_FACE_FIND_SERVICE):
+	Fix compilation warning (s/pptr/Pptr/).
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_PFR_H,
+	FT_INTERNAL_FNT_TYPES_H): Removed.
+
 2003-09-21  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/ftserv.h,
-        include/freetype/internal/service/svpfr.h,
-        include/freetype/internal/pfr.h,
-        src/base/ftpfr.c:
+	Migrating the PFR and WINFNT drivers to the new service-based
+	internal API.
 
-          migrating the functions of "ftpfr.h" to the new
-          service-base internal API
+	* include/freetype/internal/fnttypes.h: Removed.  Most of its data
+	are moved to winfnt.h and...
+	* include/freetype/internal/services/svwinfnt.h: New file.
 
-        * src/cff/cffobjs.c, src/cid/cidobjs.c, src/pfr/pfrsbit.c,
-        src/psaux/psobjs.c, src/sfnt/sfdriver.c, src/sfnt/sfobjs.c,
-        src/truetype/ttobjs.c, src/type1/t1driver.c, src/type1/t1objs.c,
-        src/type42/t42objs.c, src/winfonts/winfnt.c:
+	* include/freetype/internal/pfr.h: Removed.  Most of its data are
+	moved to...
+	* include/freetype/internal/services/svpfr.h: New file.
 
-          removing various compiler warnings
+	* include/freetype/internal/ftserv.h (FT_FACE_FIND_SERVICE,
+	FT_FACE_LOOKUP_SERVICE): Simplify fix of 2003-09-16 by removing
+	pointer type argument.
+	Updated all callers.
+	Update macro names of services header files.
 
+	* src/base/ftobjs.c (FT_Get_Name_Index): Simplified code.
 
-        * include/freetype/internal/fnttypes.h,
-        include/freetype/internal/ftserv.h, src/base/ftbdf.c, src/base/ftmm.c,
-        src/base/ftobjs.c, src/base/ftpfr.c, src/base/ftwinfnt.c,
-        src/base/ftxf86.c, src/pfr/pfrdrivr.c, src/winfonts/winfnt.c,
-        src/winfonts/winfnt.h, include/freetype/internal/service/svwinfnt.h,:
+	* src/base/ftpfr.c: Include FT_SERVICE_PFR_H instead of
+	FT_INTERNAL_PFR_H.
+	(ft_pfr_check, FT_Get_PFR_Metrics, FT_Get_PFR_Kerning,
+	FT_Get_PFR_Advance): Use services provided in `PFR_METRICS'.
 
-          simplification of service lookup macros, updating the PFR and
-          WINFNT font drivers to new services
+	* src/base/ftwinfnt.c: Include FT_SERVICE_WINFNT_H instead of
+	FT_INTERNAL_FNT_TYPES_H.
+	(FT_Get_WinFNT_Header): Use service provided in `WINFNT'.
 
+	* src/pfr/pfrdrivr.c: Include FT_SERVICE_PFR_H and
+	FT_SERVICE_XFREE86_NAME_H instead of FT_INTERNAL_PFR_H.
+	(pfr_service_bdf): Updated.
+	(pfr_services): New services list.
+	(pfr_get_service): New function.
+	(pfr_driver_class): Updated.
+
+	* src/winfonts/winfnt.c: Include FT_SERVICE_WINFNT_H and
+	FT_SERVICE_XFREE86_NAME_H instead of FT_INTERNAL_FNT_TYPES_H.
+	(winfnt_get_header, winfnt_get_service): New functions.
+	(winfnt_service_rec): New structure providing WINFNT services.
+	(winfnt_services): New services list.
+	(winfnt_driver_class): Updated.
+	* src/winfonts/winfnt.h: Add most of the removed fnttypes.h data.
+
+	* src/sfnt/sfdriver.c (sfnt_service_ps_name): Fix typo.
+
+	* src/type1/t1driver.c (t1_service_ps_name): Fix typo.
+
+	* src/cff/cffobjs.c, src/cid/cidobjs.c, src/pfr/pfrsbit.c,
+	src/psaux/psobjs.c, src/sfnt/sfobjs.c, src/truetype/ttobjs.c,
+	src/type1/t1objs.c, src/type42/t42objs.c: Removing various compiler
+	warnings.
 
 2003-09-19  David Bevan  <dbevan@emtex.com>
 
@@ -145,7 +179,7 @@
 	* src/base/ftbdf.c: Include FT_SERVICE_BDF_H.
 	(test_font_type): Removed.
 	(FT_Get_BDF_Charset_ID, FT_Get_BDF_Property): Use services
-	provided in `FT_SERVICE_ID_BDF'
+	provided in `FT_SERVICE_ID_BDF'.
 
 	* src/base/ftmm.c: Include FT_SERVICE_MULTIPLE_MASTERS_H.
 	(ft_face_get_mm_service): New auxiliary function to get services

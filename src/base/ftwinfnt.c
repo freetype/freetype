@@ -29,6 +29,7 @@
     FT_Service_WinFnt  service;
     FT_Error           error;
 
+
     error = FT_Err_Invalid_Argument;
 
     if ( face != NULL )
@@ -40,7 +41,9 @@
         error = service->get_header( face, header );
       }
     }
-    return  error;
+
+    return error;
   }
+
 
 /* END */

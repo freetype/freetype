@@ -637,10 +637,12 @@
   {
     FNT_Font  font = ((FNT_Face)face)->font;
 
+
     *aheader = font->header;
 
     return 0;
   }
+
 
   static const FT_Service_WinFntRec  winfnt_service_rec =
   {

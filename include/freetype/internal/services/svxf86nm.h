@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  svxf86nm.h                                                             */
 /*                                                                         */
-/*    The FreeType XFree86 services (specification).                       */
+/*    The FreeType XFree86 services (specification only).                  */
 /*                                                                         */
 /*  Copyright 2003 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

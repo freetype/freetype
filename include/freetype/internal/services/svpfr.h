@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  svpfr.h                                                                */
 /*                                                                         */
-/*    Internal PFR service functions (specification only).                 */
+/*    Internal PFR service functions (specification).                      */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2003 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -21,24 +21,30 @@
 
 #include FT_INTERNAL_SERVICE_H
 
+
 FT_BEGIN_HEADER
 
-#define  FT_SERVICE_ID_PFR_METRICS   "pfr-metrics"
 
-  typedef FT_Error  (*FT_PFR_GetMetricsFunc)( FT_Face    face,
-                                              FT_UInt   *aoutline,
-                                              FT_UInt   *ametrics,
-                                              FT_Fixed  *ax_scale,
-                                              FT_Fixed  *ay_scale );
+#define FT_SERVICE_ID_PFR_METRICS  "pfr-metrics"
 
-  typedef FT_Error  (*FT_PFR_GetKerningFunc)( FT_Face     face,
-                                              FT_UInt     left,
-                                              FT_UInt     right,
-                                              FT_Vector  *avector );
 
-  typedef FT_Error  (*FT_PFR_GetAdvanceFunc)( FT_Face   face,
-                                              FT_UInt   gindex,
-                                              FT_Pos   *aadvance );
+  typedef FT_Error
+  (*FT_PFR_GetMetricsFunc)( FT_Face    face,
+                            FT_UInt   *aoutline,
+                            FT_UInt   *ametrics,
+                            FT_Fixed  *ax_scale,
+                            FT_Fixed  *ay_scale );
+
+  typedef FT_Error
+  (*FT_PFR_GetKerningFunc)( FT_Face     face,
+                            FT_UInt     left,
+                            FT_UInt     right,
+                            FT_Vector  *avector );
+
+  typedef FT_Error
+  (*FT_PFR_GetAdvanceFunc)( FT_Face   face,
+                            FT_UInt   gindex,
+                            FT_Pos   *aadvance );
 
 
   FT_DEFINE_SERVICE( PfrMetrics )
