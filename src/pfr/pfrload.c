@@ -899,8 +899,6 @@
 
           case 3:
             {
-              FT_UInt   n, len, ok;
-
              /* this seems to correspond to the font's style name,
               * padded to 16-bits with one zero when necessary
               */
