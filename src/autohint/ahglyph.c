@@ -5,7 +5,7 @@
 /*    Routines used to load and analyze a given glyph before hinting       */
 /*    (body).                                                              */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004 Catharon Productions Inc.        */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005 Catharon Productions Inc.  */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -303,11 +303,11 @@
       FT_Int  max  = outline->max_points;
 
 
-      if ( FT_RENEW_ARRAY( outline->points,        max,     news     ) ||
-           FT_RENEW_ARRAY( outline->horz_edges,    max * 2, news * 2 ) )
+      if ( FT_RENEW_ARRAY( outline->points,     max,     news     ) ||
+           FT_RENEW_ARRAY( outline->horz_edges, max * 2, news * 2 ) )
         goto Exit;
 
-      outline->vert_edges    = outline->horz_edges    + news;
+      outline->vert_edges = outline->horz_edges + news;
 
       if ( FT_RENEW_ARRAY( outline->horz_segments, max * 2, news * 2 ) )
         goto Exit;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -511,7 +511,7 @@
     (void)LOAD_( gasp );
     (void)LOAD_( kerning );
 
-    error = 0;
+    error = SFNT_Err_Ok;
 
     face->root.family_name = tt_face_get_name( face,
                                                TT_NAME_ID_PREFERRED_FAMILY );
@@ -560,7 +560,7 @@
 
 #if 0
       /* kerning available ? */
-      if ( TT_FACE_HAS_KERNING(face) )
+      if ( TT_FACE_HAS_KERNING( face ) )
         flags |= FT_FACE_FLAG_KERNING;
 #endif
 
@@ -779,6 +779,7 @@
 #ifdef FT_OPTIMIZE_MEMORY
     {
       FT_Stream  stream = FT_FACE_STREAM( face );
+
 
       FT_FRAME_RELEASE( face->horz_metrics );
       FT_FRAME_RELEASE( face->vert_metrics );

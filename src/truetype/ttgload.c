@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -97,17 +97,19 @@
   /*    near future, but I haven't decided which yet.                      */
   /*                                                                       */
 #ifdef FT_OPTIMIZE_MEMORY
+
   static void
-  tt_face_get_metrics( TT_Face       face,
-                       FT_Bool       vertical,
-                       FT_UInt       idx,
-                       FT_Short      *abearing,
-                       FT_UShort     *aadvance )
+  tt_face_get_metrics( TT_Face     face,
+                       FT_Bool     vertical,
+                       FT_UInt     idx,
+                       FT_Short   *abearing,
+                       FT_UShort  *aadvance )
   {
     TT_HoriHeader*  header;
     FT_Byte*        p;
     FT_Byte*        limit;
     FT_UShort       k;
+
 
     if ( vertical )
     {
@@ -128,25 +130,25 @@
     {
       if ( idx < (FT_UInt)k )
       {
-        p += 4*idx;
-        if ( p+4 >= limit )
+        p += 4 * idx;
+        if ( p + 4 >= limit )
           goto NoData;
           
-        *aadvance = FT_NEXT_USHORT(p);
-        *abearing = FT_NEXT_SHORT(p);
+        *aadvance = FT_NEXT_USHORT( p );
+        *abearing = FT_NEXT_SHORT( p );
       }
       else
       {
-        p += 4*(k-1);
-        if ( p+4 > limit )
+        p += 4 * ( k - 1 );
+        if ( p + 4 > limit )
           goto NoData;
           
-        *aadvance = FT_NEXT_USHORT(p);
-        p += 2 + 2*(idx-k);
-        if ( p+2 > limit )
+        *aadvance = FT_NEXT_USHORT( p );
+        p += 2 + 2 * ( idx - k );
+        if ( p + 2 > limit )
           *abearing = 0;
         else
-          *abearing = FT_PEEK_SHORT(p);
+          *abearing = FT_PEEK_SHORT( p );
       }
     }
     else
@@ -156,18 +158,20 @@
       *aadvance = 0;
     }
   }
-#else
+
+#else /* !FT_OPTIMIZE_MEMORY */
+
   static void
-  tt_face_get_metrics( TT_Face       face,
-                       FT_Bool       vertical,
-                       FT_UInt       idx,
-                       FT_Short      *abearing,
-                       FT_UShort     *aadvance )
+  tt_face_get_metrics( TT_Face     face,
+                       FT_Bool     vertical,
+                       FT_UInt     idx,
+                       FT_Short   *abearing,
+                       FT_UShort  *aadvance )
   {
-    TT_HoriHeader*  header = (vertical ? (TT_HoriHeader*)&face->vertical
-                                       :                 &face->horizontal);
+    TT_HoriHeader*  header = vertical ? (TT_HoriHeader*)&face->vertical
+                                      :                 &face->horizontal;
     TT_LongMetrics  longs_m;
-    FT_UShort       k     = header->number_Of_HMetrics;
+    FT_UShort       k      = header->number_Of_HMetrics;
 
 
     if ( k == 0 )
@@ -178,17 +182,18 @@
 
     if ( idx < (FT_UInt)k )
     {
-      longs_m   = (TT_LongMetrics )header->long_metrics + idx;
+      longs_m   = (TT_LongMetrics)header->long_metrics + idx;
       *abearing = longs_m->bearing;
       *aadvance = longs_m->advance;
     }
     else
     {
       *abearing = ((TT_ShortMetrics*)header->short_metrics)[idx - k];
-      *aadvance = ((TT_LongMetrics )header->long_metrics)[k - 1].advance;
+      *aadvance = ((TT_LongMetrics)header->long_metrics)[k - 1].advance;
     }
   }
-#endif
+
+#endif /* !FT_OPTIMIZE_MEMORY */
 
 
   /*************************************************************************/
@@ -222,11 +227,13 @@
                         FT_UInt  gindex )
   {
 #ifdef FT_OPTIMIZE_MEMORY
+
     FT_UInt   nn;
-    FT_Byte*  result = NULL;
+    FT_Byte*  result      = NULL;
     FT_ULong  record_size = face->hdmx_record_size;
     FT_Byte*  record      = face->hdmx_table + 8;
     
+
     for ( nn = 0; nn < face->hdmx_record_count; nn++ )
       if ( face->hdmx_record_sizes[nn] == ppem )
       {
@@ -237,7 +244,9 @@
       }
 
     return result;
+
 #else
+
     FT_UShort  n;
 
 
@@ -246,6 +255,7 @@
         return &face->hdmx.records[n].widths[gindex];
 
     return NULL;
+
 #endif
   }
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004 by                                          */
+/*  Copyright 2002, 2003, 2004, 2005 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -627,18 +627,18 @@
 
   typedef struct TT_CMap4Rec_
   {
-    TT_CMapRec   cmap;
-    FT_UInt32    old_charcode;   /* old charcode */
-    FT_UInt32    cur_charcode;   /* current charcode */
-    FT_UInt      cur_gindex;     /* current glyph index */
+    TT_CMapRec  cmap;
+    FT_UInt32   old_charcode;   /* old charcode */
+    FT_UInt32   cur_charcode;   /* current charcode */
+    FT_UInt     cur_gindex;     /* current glyph index */
 
-    FT_UInt      table_length;
-    FT_UInt      num_ranges;
-    FT_UInt      cur_range;
-    FT_UInt      cur_start;
-    FT_UInt      cur_end;
-    FT_Int       cur_delta;
-    FT_Byte*     cur_values;
+    FT_UInt     table_length;
+    FT_UInt     num_ranges;
+    FT_UInt     cur_range;
+    FT_UInt     cur_start;
+    FT_UInt     cur_end;
+    FT_Int      cur_delta;
+    FT_Byte*    cur_values;
 
   } TT_CMap4Rec, *TT_CMap4;
 
@@ -647,15 +647,16 @@
   tt_cmap4_init( TT_CMap4  cmap,
                  FT_Byte*  table )
   {
-    FT_Byte*   p;
+    FT_Byte*  p;
+
 
     cmap->cmap.data = table;
 
     p                  = table + 2;
-    cmap->table_length = FT_PEEK_USHORT(p);
+    cmap->table_length = FT_PEEK_USHORT( p );
 
     p                  = table + 6;
-    cmap->num_ranges   = FT_PEEK_USHORT(p) >> 1;
+    cmap->num_ranges   = FT_PEEK_USHORT( p ) >> 1;
     cmap->cur_range    = cmap->num_ranges;
     cmap->old_charcode = 0xFFFFFFFFUL;
     cmap->cur_charcode = 0;
@@ -663,7 +664,6 @@
 
     return 0;
   }
-
 
 
   static FT_Int
@@ -674,23 +674,25 @@
     FT_Byte*  p;
     FT_UInt   num_ranges = cmap->num_ranges;
 
+
     while ( range_index < num_ranges )
     {
       FT_UInt  offset;
 
-      p             = table + 14 + range_index*2;
-      cmap->cur_end = FT_PEEK_USHORT(p);
 
-      p              += 2 + num_ranges*2;
-      cmap->cur_start = FT_PEEK_USHORT(p);
+      p             = table + 14 + range_index * 2;
+      cmap->cur_end = FT_PEEK_USHORT( p );
 
-      p += num_ranges*2;
-      cmap->cur_delta = FT_PEEK_SHORT(p);
+      p              += 2 + num_ranges * 2;
+      cmap->cur_start = FT_PEEK_USHORT( p );
 
-      p += num_ranges*2;
-      offset = FT_PEEK_SHORT(p);
+      p              += num_ranges * 2;
+      cmap->cur_delta = FT_PEEK_SHORT( p );
 
-      if ( offset != 0xFFFF )
+      p     += num_ranges * 2;
+      offset = FT_PEEK_SHORT( p );
+
+      if ( offset != 0xFFFFU )
       {
         cmap->cur_values = offset ? p + offset : NULL;
         cmap->cur_range  = range_index;
@@ -712,30 +714,33 @@
   static void
   tt_cmap4_next( TT_CMap4  cmap )
   {
-    FT_UInt  num_ranges = cmap->num_ranges;
     FT_UInt  charcode   = cmap->cur_charcode + 1;
+
 
     cmap->old_charcode = cmap->cur_charcode;
 
     for ( ;; )
     {
-      FT_Byte* values = cmap->cur_values;
-      FT_UInt  end    = cmap->cur_end;
-      FT_Int   delta  = cmap->cur_delta;
+      FT_Byte*  values = cmap->cur_values;
+      FT_UInt   end    = cmap->cur_end;
+      FT_Int    delta  = cmap->cur_delta;
+
 
       if ( charcode <= end )
       {
         if ( values )
         {
-          FT_Byte*  p = values + 2*(charcode-cmap->cur_start);
+          FT_Byte*  p = values + 2 * ( charcode - cmap->cur_start );
+
 
           do
           {
-            FT_UInt  gindex = FT_NEXT_USHORT(p);
+            FT_UInt  gindex = FT_NEXT_USHORT( p );
+
 
             if ( gindex != 0 )
             {
-              gindex = (FT_UInt)((gindex + delta) & 0xFFFF);
+              gindex = (FT_UInt)( ( gindex + delta ) & 0xFFFFU );
               if ( gindex != 0 )
               {
                 cmap->cur_charcode = charcode;
@@ -743,14 +748,14 @@
                 return;
               }
             }
-          }
-          while ( ++charcode <= end );
+          } while ( ++charcode <= end );
         }
         else
         {
           do
           {
-            FT_UInt  gindex = (FT_UInt)((charcode + delta) & 0xFFFFU);
+            FT_UInt  gindex = (FT_UInt)( ( charcode + delta ) & 0xFFFFU );
+
 
             if ( gindex != 0 )
             {
@@ -758,14 +763,12 @@
               cmap->cur_gindex   = gindex;
               return;
             }
-          }
-          while ( ++charcode <= end );
+          } while ( ++charcode <= end );
         }
       }
 
-     /* we need to find another range
-      */
-      if ( tt_cmap4_set_range( cmap, cmap->cur_range+1 ) < 0 )
+      /* we need to find another range */
+      if ( tt_cmap4_set_range( cmap, cmap->cur_range + 1 ) < 0 )
         break;
 
       charcode = cmap->cur_start;
@@ -1091,6 +1094,7 @@
 #ifdef OPT_CMAP4
       {
         TT_CMap4  cmap4 = (TT_CMap4)cmap;
+
 
         if ( char_code == cmap4->old_charcode )
         {

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Memory debugger (body).                                              */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003, 2004 by                                    */
+/*  Copyright 2001, 2002, 2003, 2004, 2005 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -27,23 +27,27 @@
 
 #ifdef FT_DEBUG_MEMORY
 
-#define KEEPALIVE  /* keep-alive means that free-d blocks aren't released
-                    * to the heap. This is useful to detect double-frees
-                    * or weird heap corruption, but it will use gobs of
-                    * memory however.
+#define  KEEPALIVE /* `Keep alive' means that freed blocks aren't released
+                    * to the heap.  This is useful to detect double-frees
+                    * or weird heap corruption, but it uses large amounts of
+                    * memory, however.
                     */
 
 #include <stdio.h>
 #include <stdlib.h>
 
+
   extern void
   FT_DumpMemory( FT_Memory  memory );
+
 
   typedef struct FT_MemSourceRec_*  FT_MemSource;
   typedef struct FT_MemNodeRec_*    FT_MemNode;
   typedef struct FT_MemTableRec_*   FT_MemTable;
 
+
 #define FT_MEM_VAL( addr )  ((FT_ULong)(FT_Pointer)( addr ))
+
 
   typedef struct FT_MemSourceRec_
   {
@@ -65,10 +69,12 @@
 
   } FT_MemSourceRec;
 
-/* we don't need a resizable array for the memory sources, because
- * their number is pretty limited within FreeType.
+
+/*
+ *  We don't need a resizable array for the memory sources, because
+ *  their number is pretty limited within FreeType.
  */
-#define  FT_MEM_SOURCE_BUCKETS  128
+#define FT_MEM_SOURCE_BUCKETS  128
 
 
   typedef struct  FT_MemNodeRec_
@@ -105,7 +111,7 @@
     FT_Bool          bound_count;
     FT_ULong         alloc_count_max;
 
-    FT_MemSource     sources[ FT_MEM_SOURCE_BUCKETS ];
+    FT_MemSource     sources[FT_MEM_SOURCE_BUCKETS];
 
     const char*      file_name;
     FT_Long          line_no;
@@ -127,9 +133,9 @@
 #define FT_FILENAME( x )  ((x) ? (x) : "unknown file")
 
 
- /* I hate these prime numbers. I'd better implement L-Hashing
-  * which is 10% faster and doesn't require divisions, but
-  * I'm too lazy at the moment.
+ /*
+  *  Prime numbers are ugly to handle.  It would be better to implement
+  *  L-Hashing, which is 10% faster and doesn't require divisions.
   */
   static const FT_UInt  ft_mem_primes[] =
   {
@@ -186,9 +192,9 @@
   }
 
 
-
   extern void
-  ft_mem_debug_panic( const char*  fmt, ... )
+  ft_mem_debug_panic( const char*  fmt,
+                      ... )
   {
     va_list  ap;
 
@@ -242,13 +248,13 @@
     new_size = ft_mem_closest_prime( table->nodes );
     if ( new_size != table->size )
     {
-      FT_MemNode*  new_buckets ;
+      FT_MemNode*  new_buckets;
       FT_ULong     i;
 
 
       new_buckets = (FT_MemNode *)
-                    ft_mem_table_alloc( table,
-                                        new_size * sizeof ( FT_MemNode ) );
+                      ft_mem_table_alloc( table,
+                                          new_size * sizeof ( FT_MemNode ) );
       if ( new_buckets == NULL )
         return;
 
@@ -307,8 +313,8 @@
     table->free    = memory->free;
 
     table->buckets = (FT_MemNode *)
-                     memory->alloc( memory,
-                                    table->size * sizeof ( FT_MemNode ) );
+                       memory->alloc( memory,
+                                      table->size * sizeof ( FT_MemNode ) );
     if ( table->buckets )
       FT_ARRAY_ZERO( table->buckets, table->size );
     else
@@ -327,6 +333,7 @@
   {
     FT_ULong  i;
 
+
     FT_DumpMemory( table->memory );
 
     if ( table )
@@ -334,8 +341,7 @@
       FT_Long    leak_count = 0;
       FT_ULong   leaks = 0;
 
-     /* remove all blocks from the table, revealing leaked ones
-      */
+      /* remove all blocks from the table, revealing leaked ones */
       for ( i = 0; i < table->size; i++ )
       {
         FT_MemNode  *pnode = table->buckets + i, next, node = *pnode;
@@ -368,17 +374,18 @@
         }
         table->buckets[i] = 0;
       }
+
       ft_mem_table_free( table, table->buckets );
       table->buckets = NULL;
 
       table->size   = 0;
       table->nodes  = 0;
 
-     /* remove all sources
-      */
+      /* remove all sources */
       for ( i = 0; i < FT_MEM_SOURCE_BUCKETS; i++ )
       {
         FT_MemSource  source, next;
+
 
         for ( source = table->sources[i]; source != NULL; source = next )
         {
@@ -438,8 +445,11 @@
     FT_UInt32     hash;
     FT_MemSource  node, *pnode;
 
-    hash  = (FT_UInt32)(void*)table->file_name + (FT_UInt32)(5*table->line_no);
-    pnode = &table->sources[ hash % FT_MEM_SOURCE_BUCKETS ];
+
+    hash  = (FT_UInt32)(void*)table->file_name +
+              (FT_UInt32)( 5 * table->line_no );
+    pnode = &table->sources[hash % FT_MEM_SOURCE_BUCKETS];
+
     for ( ;; )
     {
       node = *pnode;
@@ -453,11 +463,10 @@
       pnode = &node->link;
     }
 
-    node = ft_mem_table_alloc( table, sizeof(*node) );
+    node = ft_mem_table_alloc( table, sizeof ( *node ) );
     if ( node == NULL )
       ft_mem_debug_panic(
         "not enough memory to perform memory debugging\n" );
-
 
     node->file_name = table->file_name;
     node->line_no   = table->line_no;
@@ -493,21 +502,22 @@
     {
       FT_MemSource  source;
 
+
       pnode = ft_mem_table_get_nodep( table, address );
       node  = *pnode;
       if ( node )
       {
         if ( node->size < 0 )
         {
-          /* this block was already freed.  This means that our memory is */
-          /* now completely corrupted!                                    */
-          /* this can only happen in keep-alive mode                      */
+          /* This block was already freed.  Our memory is now completely */
+          /* corrupted!                                                  */
+          /* This can only happen in keep-alive mode.                    */
           ft_mem_debug_panic(
             "memory heap corrupted (allocating freed block)" );
         }
         else
         {
-          /* this block was already allocated.  This means that our memory */
+          /* This block was already allocated.  This means that our memory */
           /* is also corrupted!                                            */
           ft_mem_debug_panic(
             "memory heap corrupted (re-allocating allocated block at"
@@ -577,6 +587,7 @@
       {
         FT_MemSource  source;
 
+
         if ( node->size < 0 )
           ft_mem_debug_panic(
             "freeing memory block at %p more than once at (%s:%ld)\n"
@@ -586,7 +597,7 @@
             FT_FILENAME( node->source->file_name ), node->source->line_no,
             FT_FILENAME( node->free_file_name ), node->free_line_no );
 
-        /* scramble the node's content for additionnals safety */
+        /* scramble the node's content for additional safety */
         FT_MEM_SET( address, 0xF3, node->size );
         table->alloc_current -= node->size;
 
@@ -599,13 +610,13 @@
         {
           /* we simply invert the node's size to indicate that the node */
           /* was freed.                                                 */
-          node->size            = -node->size;
-          node->free_file_name  = table->file_name;
-          node->free_line_no    = table->line_no;
+          node->size           = -node->size;
+          node->free_file_name = table->file_name;
+          node->free_line_no   = table->line_no;
         }
         else
         {
-          table->nodes --;
+          table->nodes--;
 
           *pnode = node->link;
 
@@ -640,12 +651,12 @@
       ft_mem_debug_panic( "negative block size allocation (%ld)", size );
 
     /* return NULL if the maximum number of allocations was reached */
-    if ( table->bound_count &&
+    if ( table->bound_count                           &&
          table->alloc_count >= table->alloc_count_max )
       return NULL;
 
     /* return NULL if this allocation would overflow the maximum heap size */
-    if ( table->bound_total &&
+    if ( table->bound_total                                             &&
          table->alloc_current + (FT_ULong)size > table->alloc_total_max )
       return NULL;
 
@@ -658,7 +669,7 @@
     table->file_name = NULL;
     table->line_no   = 0;
 
-    return (FT_Pointer) block;
+    return (FT_Pointer)block;
   }
 
 
@@ -714,7 +725,7 @@
         "trying to reallocate %p to size 0 (current is %ld) in (%s:%ld)",
         block, cur_size, file_name, line_no );
 
-    /* check 'cur_size' value */
+    /* check `cur_size' value */
     pnode = ft_mem_table_get_nodep( table, (FT_Byte*)block );
     node  = *pnode;
     if ( !node )
@@ -761,6 +772,7 @@
       {
         const char*  p;
 
+
         memory->user    = table;
         memory->alloc   = ft_mem_debug_alloc;
         memory->realloc = ft_mem_debug_realloc;
@@ -769,31 +781,34 @@
         p = getenv( "FT2_ALLOC_TOTAL_MAX" );
         if ( p != NULL )
         {
-          FT_Long   total_max = ft_atol(p);
+          FT_Long   total_max = ft_atol( p );
+
 
           if ( total_max > 0 )
           {
             table->bound_total     = 1;
-            table->alloc_total_max = (FT_ULong) total_max;
+            table->alloc_total_max = (FT_ULong)total_max;
           }
         }
 
         p = getenv( "FT2_ALLOC_COUNT_MAX" );
         if ( p != NULL )
         {
-          FT_Long  total_count = ft_atol(p);
+          FT_Long  total_count = ft_atol( p );
+
 
           if ( total_count > 0 )
           {
             table->bound_count     = 1;
-            table->alloc_count_max = (FT_ULong) total_count;
+            table->alloc_count_max = (FT_ULong)total_count;
           }
         }
 
         p = getenv( "FT2_KEEP_ALIVE" );
         if ( p != NULL )
         {
-          FT_Long  keep_alive = ft_atol(p);
+          FT_Long  keep_alive = ft_atol( p );
+
 
           if ( keep_alive > 0 )
             table->keep_alive = 1;
@@ -839,6 +854,7 @@
       table->file_name = file_name;
       table->line_no   = line_no;
     }
+
     return FT_Alloc( memory, size, P );
   }
 
@@ -859,6 +875,7 @@
       table->file_name = file_name;
       table->line_no   = line_no;
     }
+
     return FT_Realloc( memory, current, size, P );
   }
 
@@ -899,6 +916,7 @@
       table->file_name = file_name;
       table->line_no   = line_no;
     }
+
     return FT_QRealloc( memory, current, size, P );
   }
 
@@ -917,6 +935,7 @@
       table->file_name = file_name;
       table->line_no   = line_no;
     }
+
     FT_Free( memory, (void **)block );
   }
 
@@ -927,6 +946,7 @@
   {
     FT_MemSource  s1 = *(FT_MemSource*)p1;
     FT_MemSource  s2 = *(FT_MemSource*)p2;
+
 
     if ( s2->max_size > s1->max_size )
       return 1;
@@ -945,48 +965,55 @@
 
     if ( table )
     {
-      FT_MemSource* bucket = table->sources;
-      FT_MemSource* limit  = bucket + FT_MEM_SOURCE_BUCKETS;
-      FT_MemSource* sources;
-      FT_UInt       nn, count;
-      const char*   fmt;
+      FT_MemSource*  bucket = table->sources;
+      FT_MemSource*  limit  = bucket + FT_MEM_SOURCE_BUCKETS;
+      FT_MemSource*  sources;
+      FT_UInt        nn, count;
+      const char*    fmt;
+
 
       count = 0;
       for ( ; bucket < limit; bucket++ )
       {
         FT_MemSource  source = *bucket;
 
+
         for ( ; source; source = source->link )
           count++;
       }
 
-      sources = ft_mem_table_alloc( table, sizeof(*sources) * count );
+      sources = ft_mem_table_alloc( table, sizeof ( *sources ) * count );
 
       count = 0;
       for ( bucket = table->sources; bucket < limit; bucket++ )
       {
         FT_MemSource  source = *bucket;
 
+
         for ( ; source; source = source->link )
           sources[count++] = source;
       }
 
-      ft_qsort( sources, count, sizeof(*sources), ft_mem_source_compare );
+      ft_qsort( sources, count, sizeof ( *sources ), ft_mem_source_compare );
 
-      printf( "FreeType Memory Dump: current=%ld max=%ld total=%ld count=%ld\n",
-              table->alloc_current, table->alloc_max, table->alloc_total, table->alloc_count );
+      printf( "FreeType Memory Dump: "
+              "current=%ld max=%ld total=%ld count=%ld\n",
+              table->alloc_current, table->alloc_max,
+              table->alloc_total, table->alloc_count );
       printf( " block  block    sizes    sizes    sizes   source\n" );
       printf( " count   high      sum  highsum      max   location\n" );
       printf( "-------------------------------------------------\n" );
+
       fmt = "%6ld %6ld %8ld %8ld %8ld %s:%d\n";
 
       for ( nn = 0; nn < count; nn++ )
       {
         FT_MemSource  source = sources[nn];
 
+
         printf( fmt,
                 source->cur_blocks, source->max_blocks,
-                source->cur_size,   source->max_size, source->cur_max,
+                source->cur_size, source->max_size, source->cur_max,
                 FT_FILENAME( source->file_name ),
                 source->line_no );
       }

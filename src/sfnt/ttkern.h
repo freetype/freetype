@@ -2,10 +2,10 @@
 /*                                                                         */
 /*  ttkern.h                                                               */
 /*                                                                         */
-/*    Load the basic TrueType kerning table. This doesn't handle           */
+/*    Load the basic TrueType kerning table.  This doesn't handle          */
 /*    kerning data within the GPOS table at the moment.                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2005 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -42,10 +42,11 @@ FT_BEGIN_HEADER
                        FT_UInt     right_glyph );
 
 #ifdef FT_OPTIMIZE_MEMORY
-#  define  TT_FACE_HAS_KERNING(face)   ((face)->kern_avail_bits != 0)
+#  define TT_FACE_HAS_KERNING( face )  ( (face)->kern_avail_bits != 0 )
 #else
-#  define  TT_FACE_HAS_KERNING(face)   ((face)->kern_pairs != NULL)
+#  define TT_FACE_HAS_KERNING( face )  ( (face)->kern_pairs != NULL )
 #endif
+
 
 FT_END_HEADER
 

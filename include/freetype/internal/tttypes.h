@@ -5,7 +5,7 @@
 /*    Basic SFNT/TrueType type definitions and interface (specification    */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004 by                                     */
+/*  Copyright 1996-2001, 2002, 2004, 2005 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -310,7 +310,9 @@ FT_BEGIN_HEADER
 
   } TT_GaspRec;
 
+
 #ifndef FT_OPTIMIZE_MEMORY
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -360,6 +362,7 @@ FT_BEGIN_HEADER
 
   } TT_HdmxRec, *TT_Hdmx;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -385,6 +388,7 @@ FT_BEGIN_HEADER
     FT_FWord   value;  /* kerning value                */
 
   } TT_Kern0_PairRec, *TT_Kern0_Pair;
+
 #endif /* !OPTIMIZE_MEMORY */
 
 
@@ -1285,11 +1289,11 @@ FT_BEGIN_HEADER
     /*                                                                     */
     /***********************************************************************/
 
+    /* the glyph locations */
 #ifdef FT_OPTIMIZE_MEMORY
     FT_UInt               num_locations;
     FT_Byte*              glyph_locations;
 #else
-    /* the glyph locations */
     FT_UShort             num_locations;
     FT_Long*              glyph_locations;
 #endif

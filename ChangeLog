@@ -1,45 +1,163 @@
+2005-02-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttpload.c (tt_face_load_loca): Fix typo.
+
+	* src/sfnt/ttkern.c: Include `ttkern.h'.
+	(FT_COMPONENT): Updated.
+
+	* include/freetype/internal/fttrace.h: Add entry for `ttkern'.
+
+	* src/sfnt/ttsbit0.c: s/FT_Err_/SFNT_Err_/.
+	Decorate constants with `U' and `L' where necessary.
+
+	* src/sfnt/ttcmap.c (tt_cmap4_next): Remove unused variable.
+
 2005-02-28  David Turner  <david@freetype.org>
 
-  * src/base/ftdbgmem.c (FT_DumpMemory): added sorting of memory sources
-  according to decreasing maximum cumulative allocations.
-  
-  * include/freetype/internal/tttypes.h, src/sfnt/ttsbit.c, src/sfnt/ttsbit0.c,
-  src/truetype/ttobjs.c, src/cff/cffobjs.c, src/sfnt/sfobjs.c: implementing new
-  heap-optimized embedded bitmap loader. This one also fixes bug #12107
-  
-  * src/sfnt/sfobjs.c: fixed bug that prevented loading SFNT fonts without
-  a 'kern' table.
-  
+	* src/base/ftdbgmem.c (FT_DumpMemory): Added sorting of memory
+	sources according to decreasing maximum cumulative allocations.
+	(ft_mem_source_compare): New auxiliary function.
+
+	* src/sfnt/ttsbit0.c: New file, implementing a heap-optimized
+	embedded bitmap loader.
+
+	* src/sfnt/ttsbit.c: Include `ft2build.h', FT_INTERNAL_DEBUG_H,
+	FT_INTERNAL_STREAM_H, FT_TRUETYPE_TAGS_H.
+	Load `ttsbit0.c' if FT_OPTIMIZE_MEMORY is set, otherwise use
+	file contents.
+	(tt_face_load_sbit_strikes): Set up root fields to indicate the
+	strikes.  This fixes Savannah bug #12107.
+	Use `static' keyword for `sbit_line_metrics_field',
+	`strike_start_fields', `strike_end_fields'.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Define
+	`sbit_table', `sbit_table_size', `sbit_num_strikes' if
+	FT_OPTIMIZE_MEMORY is set.
+	Don't define `num_sbit_strikes' and `sbit_strikes' if
+	FT_OPTIMIZE_MEMORY is set.
+
+	* src/cff/cffobjs.c (sbit_size_reset): Handle FT_OPTIMIZE_MEMORY.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Fixed bug that prevented
+	loading SFNT fonts without a `kern' table.
+	Properly pass root->face_flags.
+	Remove code for TT_CONFIG_OPTION_EMBEDDED_BITMAPS.
+
+	* src/sfnt/sfdriver.c (sfnt_interface)
+	[TT_CONFIG_OPTION_EMBEDDED_BITMAPS]: Don't use `tt_find_sbit_image'
+	and `tt_load_sbit_metrics'.
+
+	* src/sfnt/ttcmap.c: Optimize linear charmap scanning for Format 4.
+	(OPT_CMAP4): New macro.
+	(TT_CMap4Rec) [OPT_CMAP4]: New structure.
+	(tt_cmap4_init, tt_cmap4_set_range, tt_cmap4_next, tt_cmap4_reset)
+	[OPT_CMAP4]: New functions.
+	(tt_cmap4_char_next) [OPT_CMAP4]: Use `tt_cmap4_next' and
+	`tt_cmap4_reset'.
+	(tt_cmap4_class_rec) [OPT_CMAP4]: Use `TT_CMap4Rec' and
+	`tt_cmap4_init'.
+
+	* src/truetype/ttobjs.c (Reset_SBit_Size): Handle
+	FT_OPTIMIZE_MEMORY.
+
+	* src/autofit/afhints.h (AF_PointRec, AF_SegmentRec, AF_EdgeRec):
+	Optimize member types.
+
+	* src/autofit/afloader.c (af_loader_done): Call
+	`af_glyph_hints_done'.
 
 2005-02-27  David Turner  <david@freetype.org>
 
-  * src/sfnt/ttkern.c (tt_face_load_kern): fixing a small bug which returned
-  invalid (random) values for the horizontal kerning
+	* src/sfnt/ttkern.c (tt_face_load_kern): Fix a small bug which
+	caused invalid (random) return values for the horizontal kerning.
 
 2005-02-25  David Turner  <david@freetype.org>
 
-  * many, many files: several memory optimizations were implemented to
-  drastically reduce the heap usage of FreeType, especially in the case
-  of memory-mapped files. The idea is to avoid loading and decoding tables
-  in the heap, and instead access the raw data whenever possible (i.e.
-  when it doesn't compromise performance).
-  
-  This had several impacts: first, opening vera.ttf uses a ridiculous amount
-  of memory (when the FT_Library footprint is accounted for), until you start
-  loading glyphs. Even then, you'll save at least 20 Kb compared to the non
-  optimized case. performance of various operations, including open/close
-  has also been dramatically improved.
-  
-  More optimisations to come. The auto-hinter eats memory like crazy? This
-  must be stopped...
+	Implement several memory optimizations to drastically reduce the
+	heap usage of FreeType, especially in the case of memory-mapped
+	files.  The idea is to avoid loading and decoding tables in the
+	heap, and instead access the raw data whenever possible (i.e., when
+	it doesn't compromise performance).
+
+	This has several benefits: For example, opening vera.ttf now uses
+	just a small amount of memory (even when the FT_Library footprint is
+	accounted for), until you start loading glyphs.  Even then, you save
+	at least 20KB compared to the non-optimized case.  Performance of
+	various operations, including open and close, has also been
+	dramatically improved.
+
+	More optimizations to come, especially for the auto-hinter.
+
+	* include/freetype/internal/sfnt.h (TT_Face_GetKerningFunc): New
+	function type.
+	(SFNT_Interface): Add it.
+
+	* include/freetype/internal/tttypes.h (TT_HdmxEntryRec, TT_HdmxRec,
+	TT_Kern0_PairRec): Don't define if FT_OPTIMIZE_MEMORY is set.
+	(TT_FaceRec): Define `horz_metrics', `horz_metrics_size',
+	`vert_metrics', `vert_metrics_size', `hdmx_table',
+	`hdmx_table_size', `hdmx_record_count', `hdmx_record_size',
+	`hdmx_record_sizes', `kern_table', `kern_table_size,
+	`num_kern_tables', `kern_avail_bits', `kern_order_bits' if
+	FT_OPTIMIZE_MEMORY is set.
+	Don't define `hdmx', `num_kern_pairs', `kern_table_index',
+	`kern_pairs' if FT_OPTIMIZE_MEMORY is set.
+
+	* src/base/ftdbgmem.c (ft_mem_table_set): Don't shadow variable.
+	Fix compiler warning.
+
+	* src/cff/cffdrivr.c (Get_Kerning): Renamed to...
+	(cff_get_kerning): This.  Simplify.
+	(cff_driver_class): Updated.
+
+	* src/sfnt/Jamfile (_sources): Add `ttkern'.
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add `ttkern.c'.
+
+	* src/sfnt/sfdriver.c (sfnt_interface): Add `tt_face_get_kerning'.
+
+	* src/sfnt/sfnt.c: Include `ttkern.c'.
+
+	* src/sfnt/sfobjs.c: Include `ttkern.h'.
+	(sfnt_load_face): Consider the `kern' and `gasp' table as optional.
+	(sfnt_done_face): Call `tt_face_done_kern'.
+	Handle horizontal metrics for FT_OPTIMIZE_MEMORY.
+
+	* src/sfnt/ttkern.c, src/sfnt/ttkern.h: New files.  Code has been
+	taken from `ttload.c' and `ttload.h'.
+	Provide special versions of `tt_face_load_kern',
+	`tt_face_get_kerning', and `tt_face_done_kern' for
+	FT_OPTIMIZE_MEMORY.
+
+	* src/sfnt/ttload.c (tt_face_load_metrics, tt_face_load_hdmx,
+	tt_face_free_hdmx): Provide version for FT_OPTIMIZE_MEMORY.
+	(tt_face_load_kern, tt_kern_pair_compare, TT_KERN_INDEX): Moved to
+	`ttkern.c'.
+
+	* src/sfnt/ttload.h: Updated.
+
+	* src/sfnt/ttsbit.c (sbit_metrics_field): Add `static' keyword.
+
+	* src/truetype/ttdriver.c (Get_Kerning): Renamed to...
+	(tt_get_kerning): This.  Simplify.
+	(tt_driver_class): Updated.
+
+	* src/truetype/ttgload.c (TT_Get_Metrics): Renamed to...
+	(tt_face_get_metrics): This. Provide version for FT_OPTIMIZE_MEMORY.
+	Update all callers.
+	(Get_Advance_Widths): Replaced with...
+	(Get_Advance_WidthPtr): This.  Provide version for
+	FT_OPTIMIZE_MEMORY.
+	Update all callers.
+
+	* src/truetype/ttgload.h: Updated.
 
 2005-02-22  David Turner  <david@freetype.org>
 
-	* src/base/ftdbgmem.c: adding the ability to list all allocation sites
-	in the memory debugger. Also a new function FT_DumpMemory() was added.
-	It is only available in builds with FT_DEBUG_MEMORY defined, and you
-	must declare it in your own code to use it, i.e. with something
-	like:
+	* src/base/ftdbgmem.c: Partly rewritten.  Added the ability to list
+	all allocation sites in the memory debugger.  Also a new function
+	FT_DumpMemory() was added.  It is only available in builds with
+	FT_DEBUG_MEMORY defined, and you must declare it in your own code to
+	use it, i.e., with something like:
 
 	  extern void FT_DumpMemory( FT_Memory );
 
@@ -47,26 +165,39 @@
 
 	  FT_DumpMemory( memory );
 
-	* include/freetype/config/ftoptions.h: disabling TrueType bytecode
-	interpreter !
+	* include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_BYTECODE_INTERPRETER): Comment out definition --
+	again.
+	(FT_OPTIMIZE_MEMORY): New configuration macro to control various
+	optimizations for reducing the heap footprint of memory-mapped
+	TrueType files.
 
-	* include/freetype/internal/ftmemory.h: adding FT_ARRAY_ZERO, as a
+	* include/freetype/internal/ftmemory.h (FT_ARRAY_ZERO): New
 	convenience macro.
 
-    * include/freetype/config/ftoption.h, include/freetype/internal/ttypes.h,
-    src/truetype/ttpload.c, src/truetype/ttpload.h, src/truetype/ttgload.c:
-    added the temporary configuration FT_OPTIMIZE_MEMORY to control various
-    optimizations used to reduce the heap footprint of memory-mapped TrueType
-    files.
+	* include/freetype/internal/tttypes.h (TT_FaceRec)
+	[FT_OPTIMIZE_MEMORY]: Use optimized types for `num_locations' and
+	`glyph_locations'.
 
-    * src/truetype/ttpload.c (tt_face_load_loca, tt_face_get_location,
-    tt_face_done_loca): when FT_OPTIMIZE_MEMORY is set, the locations table
-    is read directly from memory-mapped streams, instead of being decoded
-    into the heap.
+	* src/truetype/ttgload.c (load_truetype_glyph): Call
+	`tt_face_get_location'.
 
-    * src/truetype/ttpload.c: only load the CVT and fpgm tables when the
-    bytecode interpreter is compiled in.
+	* src/truetype/ttobjs.c (tt_face_init)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Improve error handling.
+	(tt_face_done): Call `tt_face_done_loca'.
 
+	* src/truetype/ttpload.c (tt_face_get_location, tt_face_done_loca):
+	New functions.  If FT_OPTIMIZE_MEMORY is set, the locations table is
+	read directly from memory-mapped streams, instead of being decoded
+	into the heap.
+	(tt_face_load_loca) [FT_OPTIMIZE_MEMORY]: New implementation.
+	(tt_face_load_cvt, tt_face_load_fpgm): Only load table if the
+	bytecode interpreter is compiled in.
+
+	* src/truetype/ttpload.h: Updated.
+
+	* src/autohint/ahglyph.c (ah_outline_load): Improve allocation
+	logic.
 
 2005-02-20  Werner Lemberg  <wl@gnu.org>
 
