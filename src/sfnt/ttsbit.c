@@ -635,9 +635,9 @@
 
     for ( i = 0; i < face->num_sbit_strikes; i++ )
     {
-      if ( ( face->sbit_strikes[i].y_ppem == y_ppem )     &&
+      if ( ( (FT_UInt)face->sbit_strikes[i].y_ppem == y_ppem )     &&
            ( ( x_ppem == 0 )                            ||
-             ( face->sbit_strikes[i].x_ppem == x_ppem ) ) )
+             ( (FT_UInt)face->sbit_strikes[i].x_ppem == x_ppem ) ) )
       {
         *astrike_index = i;
         return SFNT_Err_Ok;
