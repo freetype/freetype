@@ -285,10 +285,11 @@
     else
     {
       if (stream->pos < stream->size)
-        result = stream->base[stream->pos++];
+        result = stream->base[stream->pos];
       else
         goto Fail;
     }
+    stream->pos++;
     return result;
 
   Fail:
@@ -327,13 +328,11 @@
       }
 
       if (p)
-      {
-        result       = NEXT_Short(p);
-        stream->pos += 2;
-      }
+        result = NEXT_Short(p);
     }
     else goto Fail;
 
+    stream->pos += 2;
     return result;
 
   Fail:
@@ -372,13 +371,11 @@
       }
 
       if (p)
-      {
-        result       = NEXT_Offset(p);
-        stream->pos += 3;
-      }
+        result = NEXT_Offset(p);
     }
     else goto Fail;
 
+    stream->pos += 3;
     return result;
 
   Fail:
@@ -417,13 +414,11 @@
       }
 
       if (p)
-      {
-        result       = NEXT_Long(p);
-        stream->pos += 4;
-      }
+        result = NEXT_Long(p);
     }
     else goto Fail;
 
+    stream->pos += 4;
     return result;
 
   Fail:
