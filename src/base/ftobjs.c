@@ -297,7 +297,10 @@
   FT_EXPORT_FUNC( void )  FT_Done_Stream( FT_Stream  stream )
   {
     if ( stream && stream->close )
+    {
       stream->close( stream );
+      stream->close = 0;
+    }
   }
 
 
