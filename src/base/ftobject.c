@@ -1,5 +1,6 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECT_H
+#include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 
 #define  FT_MAGIC_DEATH   0xDEADdead
@@ -13,6 +14,10 @@
              FT_OBJECT(o)->ref_count    >= 1              && \
              FT_OBJECT(o)->clazz->magic == FT_MAGIC_CLASS )
 
+#define  FT_CLASS_CHECK(c)  \
+           ( FT_CLASS(c) != NULL && FT_CLASS(c)->magic == FT_MAGIC_CLASS )
+
+#define  FT_ASSERT_IS_CLASS(c)  FT_ASSERT( FT_CLASS_CHECK(c) )
 
  /*******************************************************************/
  /*******************************************************************/
@@ -34,7 +39,6 @@
   {
     FT_Class   clazz  = node->clazz;
     FT_Memory  memory = clazz->memory;
-    FT_Type    ctype  = clazz->type;
 
     if ( clazz->class_done )
       clazz->class_done( (FT_Object) clazz );
@@ -61,9 +65,9 @@
     /* compare parent types */
     if ( type1->super != type2->super )
     {
-      if ( type1->super == NULL             ||
-           type2->super == NULL             ||
-           !ft_type_compare( type1, type2 ) )
+      if ( type1->super == NULL           ||
+           type2->super == NULL           ||
+           !ft_type_equal( type1, type2 ) )
         goto Fail;
     }
 
@@ -298,7 +302,6 @@
   {
     if ( FT_OBJECT_CHECK(obj) )
     {
-      FT_Object  o = FT_OBJECT(obj);
       FT_Class   c = FT_OBJECT__CLASS(obj);
 
       do
@@ -327,7 +330,7 @@
 
     FT_ASSERT_IS_CLASS(clazz);
 
-    memory = FT_CLASS__MEMORY(memory);
+    memory = FT_CLASS__MEMORY(clazz);
     if ( !FT_ALLOC( obj, clazz->obj_size ) )
     {
       obj->clazz     = clazz;

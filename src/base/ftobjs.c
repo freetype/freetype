@@ -443,10 +443,12 @@
     library  = driver->root.library;
     hinter   = library->auto_hinter;
     autohint =
-      FT_BOOL( hinter                                                      &&
-               !( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) ) &&
-               FT_DRIVER_IS_SCALABLE( driver )                             &&
-               FT_DRIVER_USES_OUTLINES( driver )                           );
+      FT_BOOL( hinter                                      &&
+               !( load_flags & ( FT_LOAD_NO_SCALE    | 
+                                 FT_LOAD_NO_HINTING  | 
+                                 FT_LOAD_NO_AUTOHINT ) )   &&
+               FT_DRIVER_IS_SCALABLE( driver )             &&
+               FT_DRIVER_USES_OUTLINES( driver )           );
     if ( autohint )
     {
       if ( FT_DRIVER_HAS_HINTER( driver ) &&
