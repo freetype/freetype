@@ -1,0 +1,90 @@
+Source: freetype
+Section: libs
+Priority: optional
+Maintainer: Anthony Fok <foka@debian.org>
+Build-Depends: debhelper (>= 3.0.5), bzip2, gettext (>= 0.10.36-2), libkpathsea-dev, xlibs-dev
+Standards-Version: 3.5.4
+
+Package: libfreetype7
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}
+Suggests: libfreetype7-dev
+Conflicts: freetype
+Replaces: freetype0, freetype1
+Description: FreeType 2 font engine, shared library files.
+ The FreeType project is a team of volunteers who develop free,
+ portable and high-quality software solutions for digital typography. 
+ They specifically target embedded systems and focus on bringing small,
+ efficient and ubiquitous products.
+ .
+ The FreeType 2 library is their new software font engine.  It has been
+ designed to provide the following important features:
+  * A universal and simple API to manage font files
+  * Support for several font formats through loadable modules
+  * High-quality anti-aliasing
+  * High portability & performance
+ .
+ Supported font formats include:
+  * TrueType files (.ttf) and collections (.ttc)
+  * Type 1 font files both in ASCII (.pfa) or binary (.pfb) format
+  * Type 1 Multiple Master fonts.  The FreeType 2 API also provides
+    routines to manage design instances easily
+  * Type 1 CID-keyed fonts
+  * OpenType/CFF (.otf) fonts
+  * CFF/Type 2 fonts
+  * Adobe CEF fonts (.cef), used to embed fonts in SVG documents with
+    the Adobe SVG viewer plugin.
+  * Windows FNT/FON bitmap fonts
+ .
+ This package contains the files needed to run programs that use the
+ FreeType 2 library.
+ .
+  Home Page: http://www.freetype.org/
+  Authors: David Turner   <david.turner@freetype.org>
+           Robert Wilhelm <robert.wilhelm@freetype.org>
+           Werner Lemberg <werner.lemberg@freetype.org>
+
+Package: libfreetype7-dev
+Architecture: any
+Section: devel
+Depends: libfreetype7 (= ${Source-Version}), libc6-dev
+Conflicts: freetype0-dev, freetype1 (<= 1.0.0.1998-03-22-1), freetype1-dev
+Replaces: freetype0-dev, freetype1-dev
+Description: FreeType 2 font engine, development files
+ The FreeType project is a team of volunteers who develop free,
+ portable and high-quality software solutions for digital typography. 
+ They specifically target embedded systems and focus on bringing small,
+ efficient and ubiquitous products.
+ .
+ The FreeType 2 library is their new software font engine.  It has been
+ designed to provide the following important features:
+  * A universal and simple API to manage font files
+  * Support for several font formats through loadable modules
+  * High-quality anti-aliasing
+  * High portability & performance
+ .
+ Supported font formats include:
+  * TrueType files (.ttf) and collections (.ttc)
+  * Type 1 font files both in ASCII (.pfa) or binary (.pfb) format
+  * Type 1 Multiple Master fonts.  The FreeType 2 API also provides
+    routines to manage design instances easily
+  * Type 1 CID-keyed fonts
+  * OpenType/CFF (.otf) fonts
+  * CFF/Type 2 fonts
+  * Adobe CEF fonts (.cef), used to embed fonts in SVG documents with
+    the Adobe SVG viewer plugin.
+  * Windows FNT/FON bitmap fonts
+ .
+ This package contains all supplementary files (static library, headers
+ and documentation) you need to develop your own programs using the
+ FreeType 2 library.
+
+Package: freetype2-demos
+Architecture: any
+Section: utils
+Depends: ${shlibs:Depends}
+Replaces: freetype-tools
+Description: FreeType 2 demonstration programs.
+ This package contains some demonstration programs and utilities
+ which showcase the features of the FreeType 2 font engine.

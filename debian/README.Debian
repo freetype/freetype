@@ -1,0 +1,35 @@
+FreeType 2 for Debian
+---------------------
+
+Hurray!  FreeType 2 is finally here!  :-)  The "7" in the package name
+"libfreetype7" is the major soname of FreeType 2's libfreetype.
+
+According to the FreeType 2 FAQ,
+
+    The FreeType 2 API is a lot simpler than the one in 1.x while being
+    much more powerful. We thus encourage you to adapt your source code
+    to it as this should not involve much work.
+
+So please try your best to help migrate your software to FreeType 2.
+
+FreeType 2.0.x can co-exist peacefully with FreeType 1.x with no namespace
+conflicts.  However, the source package names must be distinguished in
+Debian.  So, to truly conform with the library naming convention outlined
+in the Debian Policy, I've decided the following names for the FreeType
+packages in Debian 2.3:
+
+  FreeType 2.0.x:
+      Source package: freetype_2.0.x.orig.tar.gz     (current version)
+     library package: libfreetype7_2.0.x-x      (libfreetype, soname 7)
+       devel package: libfreetype7-dev_2.0.x-x  (libfreetype, soname 7)
+
+  FreeType 1.x:
+      Source package: freetype1_1.x.orig.tar.gz        (for FreeType 1)
+     library package: libttf2_1.x-?                  (libttf, soname 2)
+       devel package: libttf-dev_1.x-?               (libttf, soname 2)
+
+Simple, non?
+
+Enjoy!  :-)
+
+ -- Anthony Fok <foka@debian.org>, Mon, 23 Apr 2001 23:07:16 -0600

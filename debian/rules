@@ -1,0 +1,190 @@
+#!/usr/bin/make -f
+# Made with the aid of debhelper by by Joey Hess,
+# based on the sample debian/rules file for GNU hello by Ian Jackson.
+#
+# This is free software; see the GNU General Public Licence
+# version 2 or later for copying conditions.  There is NO warranty.
+#
+# Currently maintained by Anthony Fok <foka@debian.org>
+# for Debian GNU/Linux.
+
+SHELL = /bin/bash
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This is the debhelper compatibility version to use.
+export DH_COMPAT=3
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+srcpkg = freetype2
+
+# Remember to update the following for each release.
+freetype_u := freetype-2.0.4
+ftdocs_u    := ftdocs-2.0.4
+ftdocs_d    := freetype-2.0.4
+ft2demos_u  := ft2demos-2.0.4
+
+# ver := $(shell ( head -1 | sed -e 's/^.*(\(.\+\)-.*).*/\1/' ) < debian/changelog)
+
+libpkg := libfreetype7
+devpkg := $(libpkg)-dev
+docpkg := $(libpkg)-doc
+demospkg := freetype2-demos
+docdir := usr/share/doc
+
+# These files are general documentation and should go into the lib package.
+libdoc = FTL.txt GPL.txt license.txt CHANGES todo
+
+TMP = $(PWD)/debian/tmp
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	@for i in $(freetype_u) $(ftdocs_u) $(ft2demos_u); do \
+	    if [ -f $$i.tar.bz2 ]; then \
+		echo "Unpacking $$i.tar.bz2 ..."; \
+		tar -x --bzip2 -f $$i.tar.bz2; \
+	    elif [ -f $$i.tar.gz ]; then \
+		echo "Unpacking $$i.tar.gz ..."; \
+		tar -x --gzip -f $$i.tar.gz; \
+	    else \
+		echo "Error!  $$i.tar.{bz2,gz} not found!"; \
+		exit 1; \
+	    fi \
+	done
+	# Apple's so-called patents are bogus, says me.
+	# Let's turn on the bytecode interpreter.
+	perl -pi -e 's/^#undef(?=\s+TT_CONFIG_OPTION_BYTECODE_INTERPRETER)/#define/' \
+		$(freetype_u)/include/freetype/config/ftoption.h
+
+	$(MAKE) -C $(freetype_u) setup CFG="--prefix=/usr"
+	$(MAKE) -C $(freetype_u)
+
+	$(MAKE) -C $(ft2demos_u) TOP=../$(freetype_u) X11_PATH=/usr/X11R6
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+#	-$(MAKE) distclean
+	rm -rf $(freetype_u) $(ft2demos_u) $(ftdocs_d)
+	dh_clean
+
+install: DH_OPTIONS=
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	$(MAKE) -C $(freetype_u) prefix=$(TMP)/usr install
+
+	dh_movefiles
+	@if [ "`find debian/tmp ! -type d`" ]; then \
+	    echo "Error!  Not all files are moved out of debian/tmp!"; \
+	    echo "Please fix your debian/*.files."; \
+	    exit 1; \
+	fi
+
+	dh_installdirs -p$(demospkg)/usr/bin
+	$(freetype_u)/builds/unix/libtool --mode=install \
+	    cp -av `find $(ft2demos_u)/bin -type f -perm +a=x -maxdepth 1` \
+		$(PWD)/debian/$(demospkg)/usr/bin/
+	cd debian/$(demospkg)/usr/bin && mv memtest ftmemtest
+
+# Build architecture-independent files here.
+# Pass -i to all debhelper commands in this target to reduce clutter.
+binary-indep: DH_OPTIONS=-i
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+# Pass -a to all debhelper commands in this target to reduce clutter.
+binary-arch: DH_OPTIONS=-a
+binary-arch: build $(libpkg) $(devpkg) $(demospkg)
+
+$(libpkg): DH_OPTIONS=-p$(libpkg)
+$(libpkg): build install
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	dh_installdocs $(addprefix $(freetype_u)/docs/,$(libdoc)) \
+		$(freetype_u)/src/autohint/CatharonLicense.txt \
+		$(ftdocs_d)/docs/ft2faq.html
+	ln -sf ../../common-licenses/GPL debian/$(libpkg)/$(docdir)/$(libpkg)/GPL.txt
+	mkdir debian/$(libpkg)/$(docdir)/$(libpkg)/pcf
+	cp -a $(freetype_u)/src/pcf/readme debian/$(libpkg)/$(docdir)/$(libpkg)/pcf/
+	dh_installexamples
+#	dh_installmenu
+#	dh_undocumented
+	dh_installchangelogs -k $(freetype_u)/ChangeLog
+	dh_strip
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+#	dh_makeshlibs -V $(dependency)
+	dh_makeshlibs
+
+	dh_md5sums
+	dh_builddeb
+
+$(devpkg): DH_OPTIONS=-p$(devpkg)
+$(devpkg): build install
+	dh_testdir
+	dh_testroot
+	dh_installdirs $(docdir)/$(libpkg)
+	ln -s $(libpkg) debian/$(devpkg)/$(docdir)/$(devpkg)
+	dh_installdocs $(ftdocs_d)/docs/* $(freetype_u)/docs/*
+	cd debian/$(devpkg)/usr/share/doc/$(devpkg)/ \
+		&& rm -f $(libdoc) BUILD ft2faq.html
+#	dh_installexamples
+#	dh_installmenu
+#	dh_installmanpages
+#	dh_undocumented
+#	dh_installchangelogs
+	dh_strip
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+#	dh_makeshlibs
+	dh_md5sums
+	dh_builddeb
+
+$(demospkg): DH_OPTIONS=-p$(demospkg)
+$(demospkg): build install
+	dh_testdir
+	dh_testroot
+	dh_installdirs $(docdir)/$(libpkg)
+	ln -s $(libpkg) debian/$(demospkg)/$(docdir)/$(demospkg)
+#	dh_installdocs
+#	dh_installexamples
+#	dh_installmenu
+#	dh_installmanpages
+#	dh_undocumented
+#	dh_installchangelogs
+	dh_strip
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+#	dh_makeshlibs
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary \
+	$(libpkg) $(devpkg) install
