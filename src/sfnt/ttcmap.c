@@ -802,7 +802,7 @@
     return 0;
 
   Found:
-    if ( charCode < seg4->startCount )
+    if ( charCode < (FT_ULong) seg4->startCount )
       charCode = seg4->startCount;
 
     /* if the idRangeOffset is 0, all chars in the map exist */
@@ -887,7 +887,7 @@
     
     cmap6 = &cmap->c.cmap6;
     
-    if ( charCode < cmap6->firstCode )
+    if ( charCode < (FT_ULong) cmap6->firstCode )
       charCode = cmap6->firstCode;
     
     charCode -= cmap6->firstCode;
