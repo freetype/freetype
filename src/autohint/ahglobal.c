@@ -47,7 +47,7 @@
 
     for ( i = 1; i < count; i++ )
     {
-      for ( j = i; j > 1; j-- )
+      for ( j = i; j > 0; j-- )
       {
         if ( table[j] > table[j - 1] )
           break;

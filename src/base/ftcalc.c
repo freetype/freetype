@@ -55,7 +55,8 @@
 
   FT_EXPORT_DEF( FT_Fixed )  FT_RoundFix( FT_Fixed  a )
   {
-    return( ( a + 0x8000L ) & -0x10000L );
+    return ( a >= 0 ) ?   ( a + 0x8000L ) & -0x10000L
+                      : -((-a + 0x8000L ) & -0x10000L );
   }
 
 
@@ -63,7 +64,8 @@
 
   FT_EXPORT_DEF( FT_Fixed )  FT_CeilFix( FT_Fixed  a )
   {
-    return( ( a + 0x10000L - 1 ) & -0x10000L );
+    return ( a >= 0 ) ?   ( a + 0xFFFFL ) & -0x10000L
+                      : -((-a + 0xFFFFL ) & -0x10000L );
   }
 
 
@@ -71,7 +73,8 @@
 
   FT_EXPORT_DEF( FT_Fixed )  FT_FloorFix( FT_Fixed  a )
   {
-    return( a & -0x10000L );
+    return ( a >= 0 ) ?   a & -0x10000L
+                      : -((-a) & -0x10000L );
   }
 
 
@@ -176,16 +179,16 @@
     FT_Int32   s;
     FT_UInt32  q;
 
-
-    s  = a; a = ABS(a);
-    s ^= b; b = ABS(b);
+    s = 1;
+    if ( a < 0 ) { a = -a; s = -1; }
+    if ( b < 0 ) { b = -b; s = -s; }
 
     if ( b == 0 )
       /* check for division by 0 */
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = ( ((FT_Int64)a + (b >> 1)) << 16 ) / b;
+      q = ( ((FT_Int64)a << 16) + (b >> 1)) / b;
 
     return (FT_Long)( s < 0 ? -q : q );
   }

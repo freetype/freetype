@@ -1051,13 +1051,13 @@
     switch ( slot->format )
     {
     case ft_glyph_format_outline:
-    
+
       /* translate glyph outline if we need to */
       if ( hinter->transformed )
       {
         FT_UInt     n     = slot->outline.n_points;
         FT_Vector*  point = slot->outline.points;
-        
+
 
         for ( ; n > 0; point++, n-- )
         {
@@ -1065,7 +1065,7 @@
           point->y += hinter->trans_delta.y;
         }
       }
-      
+
       /* copy the outline points in the loader's current                */
       /* extra points, which is used to keep original glyph coordinates */
       error = ah_loader_check_points( gloader, slot->outline.n_points + 2,
@@ -1365,7 +1365,11 @@
 
     ah_loader_rewind( hinter->loader );
 
+#if 1
+    load_flags = FT_LOAD_NO_SCALE;
+#else
     load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE;
+#endif
 
     error = ah_hinter_load( hinter, glyph_index, load_flags, 0 );
 
