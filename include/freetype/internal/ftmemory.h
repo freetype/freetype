@@ -260,6 +260,9 @@ FT_BEGIN_HEADER
 
 #define FT_ZERO( p )                FT_MEM_ZERO( p, sizeof ( *(p) ) )
 
+#define FT_ARRAY_ZERO( dest, count )                               \
+          FT_MEM_ZERO( dest, (count)*sizeof( *(dest) ) )
+
 #define FT_ARRAY_COPY( dest, source, count )                       \
           FT_MEM_COPY( dest, source, (count) * sizeof( *(dest) ) )
 
