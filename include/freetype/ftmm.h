@@ -125,12 +125,13 @@ FT_BEGIN_HEADER
   /*    minimum :: The axis's minimum design coordinate.                   */
   /*                                                                       */
   /*    def     :: The axis's default design coordinate.                   */
-  /*               Not meaningful for MM.                                  */
+  /*               FreeType computes meaningful default values for MM; it  */
+  /*               is then an integer value, not in 16.16 format.          */
   /*                                                                       */
   /*    maximum :: The axis's maximum design coordinate.                   */
   /*                                                                       */
   /*    tag     :: The axis's tag (the GX equivalent to `name').           */
-  /*               Not meaningful for MM.                                  */
+  /*               FreeType provides default values for MM if possible.    */
   /*                                                                       */
   /*    strid   :: The entry in `name' table (another GX version of        */
   /*               `name').                                                */

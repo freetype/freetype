@@ -1,3 +1,15 @@
+2004-05-19  George Williams  <gww@silcom.com>
+
+	* src/type1/t1load.c (mm_axis_unmap, mm_weights_unmap): New
+	auxiliary functions.
+	(T1_Get_MM_Var): Provide axis tags.
+	Use mm_axis_unmap and mm_weights_unmap to provide default values
+	for design and normalized axis coordinates.
+
+	* include/freetype/t1tables.h (PS_DesignMapRec): Change type of
+	`design_points' to FT_Long.
+	Update all users.
+
 2004-05-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftbbox.c (BBox_Conic_Check): Fix boundary cases. 
