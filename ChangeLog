@@ -1,3 +1,13 @@
+2002-03-05  David Turner    <david@freetype.org>
+
+        * src/type1/t1objs.c (T1_Face_Init),
+          src/cff/cffobjs.c (CFF_Face_Init),
+          src/cid/cidobjs.c (CID_Face_Init):
+          
+            removing the bug that returned global BBox values in
+            16.16 fixed format (instead of integer font units).
+        
+
 2002-03-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/aclocal.m4, builds/unix/ltmain.sh: Update to libtool
@@ -41,7 +51,7 @@
           typedef PS_StructRec  T1_Struct;  /* backwards-compatibility */
 
 
-        hence, we increase the coherency of the source code by effectuively
+        hence, we increase the coherency of the source code by effectively
         using the 'Rec' prefix for structure types..
 
 

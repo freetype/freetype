@@ -381,40 +381,20 @@
         root->num_fixed_sizes = 0;
         root->available_sizes = 0;
 
-        root->bbox = face->cid.font_bbox;
+        root->bbox.xMin =  face->cid.font_bbox.xMin >> 16;
+        root->bbox.yMin =  face->cid.font_bbox.yMin >> 16;
+        root->bbox.xMax = (face->cid.font_bbox.xMax + 0xFFFFU) >> 16;
+        root->bbox.yMax = (face->cid.font_bbox.yMax + 0xFFFFU) >> 16;
+
+
         if ( !root->units_per_EM )
           root->units_per_EM  = 1000;
 
-        root->ascender  = (FT_Short)( face->cid.font_bbox.yMax >> 16 );
-        root->descender = (FT_Short)( face->cid.font_bbox.yMin >> 16 );
+        root->ascender  = (FT_Short)( face->cid.font_bbox.yMax );
+        root->descender = (FT_Short)( face->cid.font_bbox.yMin );
         root->height    = (FT_Short)(
           ( ( root->ascender + root->descender ) * 12 ) / 10 );
 
-
-#if 0
-
-        /* now compute the maximum advance width */
-
-        root->max_advance_width = face->type1.private_dict.standard_width[0];
-
-        /* compute max advance width for proportional fonts */
-        if ( !face->type1.font_info.is_fixed_pitch )
-        {
-          FT_Int  max_advance;
-
-
-          error = CID_Compute_Max_Advance( face, &max_advance );
-
-          /* in case of error, keep the standard width */
-          if ( !error )
-            root->max_advance_width = max_advance;
-          else
-            error = 0;   /* clear error */
-        }
-
-        root->max_advance_height = root->height;
-
-#endif /* 0 */
 
         root->underline_position  = face->cid.font_info.underline_position;
         root->underline_thickness = face->cid.font_info.underline_thickness;
@@ -423,74 +403,6 @@
         root->internal->max_contours = 0;
       }
     }
-
-#if 0
-
-    /* charmap support - synthetize unicode charmap when possible */
-    {
-      FT_Face      root    = &face->root;
-      FT_CharMap   charmap = face->charmaprecs;
-
-
-      /* synthesize a Unicode charmap if there is support in the `psnames' */
-      /* module                                                            */
-      if ( face->psnames )
-      {
-        PSNames_Service  psnames = (PSNames_Service)face->psnames;
-
-
-        if ( psnames->unicode_value )
-        {
-          error = psnames->build_unicodes(
-                             root->memory,
-                             face->type1.num_glyphs,
-                             (const char**)face->type1.glyph_names,
-                             &face->unicode_map );
-          if ( !error )
-          {
-            root->charmap        = charmap;
-            charmap->face        = (FT_Face)face;
-            charmap->encoding    = ft_encoding_unicode;
-            charmap->platform_id = 3;
-            charmap->encoding_id = 1;
-            charmap++;
-          }
-
-          /* simply clear the error in case of failure (which really */
-          /* means that out of memory or no unicode glyph names)     */
-          error = 0;
-        }
-      }
-
-      /* now, support either the standard, expert, or custom encodings */
-      charmap->face        = (FT_Face)face;
-      charmap->platform_id = 7;  /* a new platform id for Adobe fonts? */
-
-      switch ( face->type1.encoding_type )
-      {
-      case T1_ENCODING_TYPE_STANDARD:
-        charmap->encoding    = ft_encoding_adobe_standard;
-        charmap->encoding_id = 0;
-        break;
-
-      case T1_ENCODING_TYPE_EXPORT:
-        charmap->encoding    = ft_encoding_adobe_expert;
-        charmap->encoding_id = 1;
-        break;
-
-      default:
-        charmap->encoding    = ft_encoding_adobe_custom;
-        charmap->encoding_id = 2;
-        break;
-      }
-
-      root->charmaps     = face->charmaps;
-      root->num_charmaps = charmap - face->charmaprecs + 1;
-      face->charmaps[0]  = &face->charmaprecs[0];
-      face->charmaps[1]  = &face->charmaprecs[1];
-    }
-
-#endif /* 0 */
 
   Exit:
     return error;
