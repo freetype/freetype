@@ -200,7 +200,7 @@
     if ( index && index->count > element )
     {
       /* compute start and end offsets */
-      FT_ULong  off1, off2;
+      FT_ULong  off1, off2 = 0;
 
 
       off1 = index->offsets[element];

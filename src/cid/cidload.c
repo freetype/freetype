@@ -267,9 +267,9 @@
   static
   int  is_alpha( char  c )
   {
-    return ( isalnum( c ) ||
-             c == '.'     ||
-             c == '_'     );
+    return ( isalnum( (int)c ) ||
+             c == '.'          ||
+             c == '_'          );
   }
 
 
