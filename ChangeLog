@@ -1,3 +1,13 @@
+2002-05-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/README: Mention Microsoft's SBIT tool.
+
+	* src/cff/cffdrivr.c, src/cid/cidriver.c, src/pcf/pcfdriver.c,
+	src/truetype/ttdriver.c, src/type1/t1driver.c,
+	src/winfonts/winfnt.c, src/type42/t42drivr.c, src/bdf/bdfdrivr.c
+	[FT_CONFIG_OPTION_DYNAMIC_DRIVERS]: Completely removed.  It has
+	been never used.
+
 2002-05-21  Roberto Alameda  <ojancano@geekmail.de>.
 
 	* src/type42/t42drivr.c: s/T42_ENCODING_TYPE_/T1_ENCODING_TYPE_/.
