@@ -566,9 +566,15 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_MaxProfile
 
-      FT_FRAME_START( 32 ),
-        FT_FRAME_ULONG ( version ),
+      FT_FRAME_START( 6 ),
+        FT_FRAME_LONG  ( version ),
         FT_FRAME_USHORT( numGlyphs ),
+      FT_FRAME_END
+    };
+
+    const FT_Frame_Field  maxp_fields_extra[] =
+    {
+      FT_FRAME_START( 26 ),
         FT_FRAME_USHORT( maxPoints ),
         FT_FRAME_USHORT( maxContours ),
         FT_FRAME_USHORT( maxCompositePoints ),
@@ -582,7 +588,8 @@
         FT_FRAME_USHORT( maxSizeOfInstructions ),
         FT_FRAME_USHORT( maxComponentElements ),
         FT_FRAME_USHORT( maxComponentDepth ),
-      FT_FRAME_END };
+      FT_FRAME_END
+    };
 
 
     FT_TRACE2(( "Load_TT_MaxProfile: %08p\n", face ));
@@ -594,37 +601,57 @@
     if ( READ_Fields( maxp_fields, maxProfile ) )
       goto Exit;
 
-    /* XXX: an adjustment that is necessary to load certain */
-    /*      broken fonts like `Keystrokes MT' :-(           */
-    /*                                                      */
-    /*   We allocate 64 function entries by default when    */
-    /*   the maxFunctionDefs field is null.                 */
+    maxProfile->maxPoints             = 0;
+    maxProfile->maxContours           = 0;
+    maxProfile->maxCompositePoints    = 0;
+    maxProfile->maxCompositeContours  = 0;
+    maxProfile->maxZones              = 0;
+    maxProfile->maxTwilightPoints     = 0;
+    maxProfile->maxStorage            = 0;
+    maxProfile->maxFunctionDefs       = 0;
+    maxProfile->maxInstructionDefs    = 0;
+    maxProfile->maxStackElements      = 0;
+    maxProfile->maxSizeOfInstructions = 0;
+    maxProfile->maxComponentElements  = 0;
+    maxProfile->maxComponentDepth     = 0;
 
-    if ( maxProfile->maxFunctionDefs == 0 )
-      maxProfile->maxFunctionDefs = 64;
+    if ( maxProfile->version >= 0x10000L )
+    {
+      if ( READ_Fields( maxp_fields_extra, maxProfile ) )
+        goto Exit;
 
-    face->root.num_glyphs = maxProfile->numGlyphs;
+      /* XXX: an adjustment that is necessary to load certain */
+      /*      broken fonts like `Keystrokes MT' :-(           */
+      /*                                                      */
+      /*   We allocate 64 function entries by default when    */
+      /*   the maxFunctionDefs field is null.                 */
 
-    face->root.internal->max_points =
-      (FT_UShort)MAX( maxProfile->maxCompositePoints,
-                      maxProfile->maxPoints );
+      if ( maxProfile->maxFunctionDefs == 0 )
+        maxProfile->maxFunctionDefs = 64;
 
-    face->root.internal->max_contours =
-      (FT_Short)MAX( maxProfile->maxCompositeContours,
-                     maxProfile->maxContours );
+      face->root.num_glyphs = maxProfile->numGlyphs;
 
-    face->max_components = (FT_ULong)maxProfile->maxComponentElements +
-                           maxProfile->maxComponentDepth;
+      face->root.internal->max_points =
+        (FT_UShort)MAX( maxProfile->maxCompositePoints,
+                        maxProfile->maxPoints );
 
-    /* XXX: some fonts have maxComponents set to 0; we will */
-    /*      then use 16 of them by default.                 */
-    if ( face->max_components == 0 )
-      face->max_components = 16;
+      face->root.internal->max_contours =
+        (FT_Short)MAX( maxProfile->maxCompositeContours,
+                       maxProfile->maxContours );
 
-    /* We also increase maxPoints and maxContours in order to support */
-    /* some broken fonts.                                             */
-    face->root.internal->max_points   += 8;
-    face->root.internal->max_contours += 4;
+      face->max_components = (FT_ULong)maxProfile->maxComponentElements +
+                             maxProfile->maxComponentDepth;
+
+      /* XXX: some fonts have maxComponents set to 0; we will */
+      /*      then use 16 of them by default.                 */
+      if ( face->max_components == 0 )
+        face->max_components = 16;
+
+      /* We also increase maxPoints and maxContours in order to support */
+      /* some broken fonts.                                             */
+      face->root.internal->max_points   += 8;
+      face->root.internal->max_contours += 4;
+    }
 
     FT_TRACE2(( "MAXP loaded.\n" ));
 
@@ -1211,11 +1238,11 @@
     FT_Error  error;
     TT_OS2*   os2;
 
+    const FT_Frame_Field  os2_fields[] =
+    {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_OS2
 
-    const FT_Frame_Field  os2_fields[] =
-    {
       FT_FRAME_START( 78 ),
         FT_FRAME_USHORT( version ),
         FT_FRAME_SHORT ( xAvgCharWidth ),
@@ -1304,6 +1331,11 @@
 
     os2->ulCodePageRange1 = 0;
     os2->ulCodePageRange2 = 0;
+    os2->sxHeight         = 0;
+    os2->sCapHeight       = 0;
+    os2->usDefaultChar    = 0;
+    os2->usBreakChar      = 0;
+    os2->usMaxContext     = 0;
 
     if ( os2->version >= 0x0001 )
     {

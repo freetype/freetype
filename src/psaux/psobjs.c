@@ -101,7 +101,7 @@
 
   static FT_Error
   reallocate_t1_table( PS_Table*  table,
-                       FT_Int     new_size )
+                       FT_Long    new_size )
   {
     FT_Memory  memory   = table->memory;
     FT_Byte*   old_base = table->block;
@@ -163,8 +163,8 @@
     /* grow the base block if needed */
     if ( table->cursor + length > table->capacity )
     {
-      FT_Error  error;
-      FT_Int    new_size = table->capacity;
+      FT_Error   error;
+      FT_Offset  new_size = table->capacity;
 
 
       while ( new_size < table->cursor + length )
