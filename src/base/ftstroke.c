@@ -234,6 +234,7 @@
 
   } FT_StrokeTags;
 
+#define  FT_STROKE_TAG_BEGIN_END  (FT_STROKE_TAG_BEGIN|FT_STROKE_TAG_END)
 
   typedef struct  FT_StrokeBorderRec_
   {
@@ -626,6 +627,54 @@
   }
 
 
+  static void
+  ft_stroke_border_reverse( FT_StrokeBorder  border )
+  {
+    FT_Vector*  point1 = border->points + border->start;
+    FT_Vector*  point2 = border->points + border->num_points-1;
+    FT_Byte*    tag1   = border->tags + border->start;
+    FT_Byte*    tag2   = border->tags + border->num_points-1;
+
+    while ( point1 < point2 )
+    {
+      FT_Vector  tpoint;
+      FT_Byte    ttag1, ttag2, ttag;
+
+     /* swap the points
+      */
+      tpoint  = *point1;
+      *point1 = *point2;
+      *point2 = tpoint;
+
+     /* swap the tags
+      */
+      ttag1 = *tag1;
+      ttag2 = *tag2;
+
+#if 0
+      ttag = ttag1 & FT_STROKE_TAG_BEGIN_END;
+      if ( ttag == FT_STROKE_TAG_BEGIN ||
+           ttag == FT_STROKE_TAG_END   )
+        ttag1 ^= FT_STROKE_TAG_BEGIN_END;
+
+      ttag = ttag2 & FT_STROKE_TAG_BEGIN_END;
+      if ( ttag == FT_STROKE_TAG_BEGIN ||
+           ttag == FT_STROKE_TAG_END   )
+        ttag2 ^= FT_STROKE_TAG_BEGIN_END;
+#endif
+
+      *tag1 = ttag2;
+      *tag2 = ttag1;
+
+      point1++;
+      point2--;
+      tag1++;
+      tag2--;
+    }
+  }
+
+
+
  /***************************************************************************/
  /***************************************************************************/
  /*****                                                                 *****/
@@ -805,7 +854,7 @@
   {
     FT_StrokeBorder  border = stroker->borders + side;
     FT_Angle         phi, theta, rotate;
-    FT_Fixed         length, thcos, sigma;
+    FT_Fixed         length, thcos;
     FT_Vector        delta;
     FT_Error         error = 0;
 
@@ -822,9 +871,10 @@
     phi = stroker->angle_in + theta;
 
     thcos  = FT_Cos( theta );
-    sigma  = FT_MulFix( stroker->miter_limit, thcos );
 
-    if ( sigma < 0x10000L )
+   /* TODO: find better criterion
+    */
+    if ( thcos < 0x4000 )
     {
       FT_Vector_From_Polar( &delta, stroker->radius,
                             stroker->angle_out + rotate );
@@ -1351,12 +1401,18 @@
           *dst_tag   = *src_tag;
 
           if ( open )
-            dst_tag[0] &= ~( FT_STROKE_TAG_BEGIN | FT_STROKE_TAG_END );
+            dst_tag[0] &= ~FT_STROKE_TAG_BEGIN_END;
           else
           {
+            FT_Byte  ttag = dst_tag[0] & FT_STROKE_TAG_BEGIN_END;
+
             /* switch begin/end tags if necessary.. */
-            if ( dst_tag[0] & ( FT_STROKE_TAG_BEGIN | FT_STROKE_TAG_END ) )
-              dst_tag[0] ^= ( FT_STROKE_TAG_BEGIN | FT_STROKE_TAG_END );
+            if ( ttag == FT_STROKE_TAG_BEGIN ||
+                 ttag == FT_STROKE_TAG_END   )
+            {
+              dst_tag[0] ^= FT_STROKE_TAG_BEGIN_END;
+            }
+
           }
 
           src_point--;
@@ -1440,17 +1496,17 @@
         if ( turn < 0 )
           inside_side = 1;
 
-        /* IMPORTANT: WE DO NOT PROCESS THE INSIDE BORDER HERE! */
-        /* process the inside side                              */
-        /* error = ft_stroker_inside( stroker, inside_side );   */
-        /* if ( error )                                         */
-        /*   goto Exit;                                         */
+        error = ft_stroker_inside( stroker, inside_side );
+        if ( error )
+          goto Exit;
 
         /* process the outside side */
         error = ft_stroker_outside( stroker, 1 - inside_side );
         if ( error )
           goto Exit;
       }
+
+      ft_stroke_border_reverse( stroker->borders+0 );
 
       /* then end our two subpaths */
       ft_stroke_border_close( stroker->borders + 0 );
