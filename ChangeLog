@@ -1,3 +1,7 @@
+2002-06-08  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/smakefile, builds/amiga/makefile: Updated.
+
 2002-06-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/cache/ftccache.c (ftc_node_hash_unlink, ftc_node_hash_link)
