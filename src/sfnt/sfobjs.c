@@ -159,7 +159,7 @@
 
 
     rec = face->name_table.names;
-    for ( n = 0; n < face->name_table.numNameRecords; n++, rec++ )
+    for ( n = 0; n < face->num_names; n++, rec++ )
     {
       /* According to the OpenType 1.3 specification, only Microsoft or  */
       /* Apple platform IDs might be used in the `name' table.  The      */
