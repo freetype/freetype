@@ -159,6 +159,7 @@
         
         node     = lru->elements.tail;
         lru_node = (FT_LruNode)node;
+        found    = lru_node;
         
         if ( clazz->flush_element )
           error = clazz->flush_element( lru, lru_node, key );
@@ -185,6 +186,8 @@
             FT_List_Insert( &lru->free_nodes, node );
           else
             FREE( lru_node );
+            
+          found = 0;
         }
       }
       else

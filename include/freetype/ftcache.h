@@ -154,6 +154,12 @@
   *  <Input>
   *     library   :: the parent FreeType library handle to use
   *
+  *     max_faces :: maximum number of faces to keep alive in manager
+  *                  use 0 for defaults
+  *
+  *     max_sizes :: maximum number of sizes to keep alive in manager
+  *                  use 0 for defaults
+  *
   *     requester :: an application-provided callback used to translate
   *                  face IDs into real FT_Face objects
   *
@@ -169,6 +175,8 @@
   **************************************************************************/
   
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_New( FT_Library          library,
+                                              FT_UInt             max_faces,
+					      FT_UInt             max_sizes,
                                               FTC_Face_Requester  requester,
                                               FT_Pointer          req_data,
                                               FTC_Manager*        amanager );

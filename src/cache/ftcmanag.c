@@ -104,15 +104,17 @@
     FTC_SizeRequest*  size_req = (FTC_SizeRequest*)node->key;
     FT_Size           size;
     FT_Error          error;
+    FT_Face           face = size_req->face;
     
     FT_UNUSED( lru );
 
     
     node->root.data = 0;
-    error = FT_New_Size( size_req->face, &size );
+    error = FT_New_Size( face, &size );
     if ( !error )
     {
-      error = FT_Set_Pixel_Sizes( size_req->face,
+      face->size = size;
+      error = FT_Set_Pixel_Sizes( face,
                                   size_req->width,
                                   size_req->height );
       if ( error )
@@ -200,6 +202,8 @@
 
 
   FT_EXPORT_FUNC( FT_Error )  FTC_Manager_New( FT_Library          library,
+                                               FT_UInt             max_faces,
+					       FT_UInt             max_sizes,
                                                FTC_Face_Requester  requester,
                                                FT_Pointer          req_data,
                                                FTC_Manager*        amanager )
@@ -211,9 +215,15 @@
     
     if ( ALLOC( manager, sizeof ( *manager ) ) )
       goto Exit;
+    
+    if (max_faces == 0)
+      max_faces = FTC_MAX_FACES;
+      
+    if (max_sizes == 0)
+      max_sizes = FTC_MAX_SIZES;
       
     error = FT_Lru_New( &ftc_face_lru_class,
-                        FTC_MAX_FACES,
+                        max_faces,
                         manager,
                         memory,
                         1, /* pre_alloc = TRUE */
@@ -222,7 +232,7 @@
       goto Exit;
       
     error = FT_Lru_New( &ftc_size_lru_class,
-                        FTC_MAX_SIZES,
+                        max_sizes,
                         manager,
                         memory,
                         1, /* pre_alloc = TRUE */
