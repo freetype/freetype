@@ -1,3 +1,8 @@
+2001-03-01  Antoine Leca    <Antoine.Leca@renault.fr>
+
+	* include/freetype/ttnameid.h: added some new Microsoft language
+        codes and LCIDs as found in Office Xp.
+
 2001-02-28  David Turner    <david.turner@freetype.org>
 
 	* builds/hurd/detect.mk: added support to detect the GNU Hurd operating

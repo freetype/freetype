@@ -477,6 +477,10 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_TAJIK_TAJIKISTAN                  0x0428
 #define TT_MS_LANGID_YIDDISH_GERMANY                   0x043d
 #define TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN               0x0440
+ /* alias declared in Windows 2000 */
+#define TT_MS_LANGID_KIRGHIZ_KIRGHIZ_REPUBLIC \
+                                          TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN
+
 #define TT_MS_LANGID_TURKMEN_TURKMENISTAN              0x0442
 #define TT_MS_LANGID_MONGOLIAN_MONGOLIA                0x0450
 #define TT_MS_LANGID_TIBETAN_BHUTAN                    0x0451
@@ -492,6 +496,28 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_NEPALI_NEPAL                      0x0461
 #define TT_MS_LANGID_NEPALI_INDIA                      0x0861
 #define TT_MS_LANGID_FRISIAN_NETHERLANDS               0x0462
+
+/* new as of 2001-03-01 (from Office Xp) */
+#define TT_MS_LANGID_SYRIAC_SYRIA                      0x045a
+#define TT_MS_LANGID_SINHALESE_SRI_LANKA               0x045b
+#define TT_MS_LANGID_PASHTO_AFGHANISTAN                0x0463
+#define TT_MS_LANGID_ENGLISH_HONG_KONG                 0x3c09
+#define TT_MS_LANGID_ENGLISH_INDIA                     0x4009
+#define TT_MS_LANGID_ENGLISH_MALAYSIA                  0x4409
+#define TT_MS_LANGID_ENGLISH_SINGAPORE                 0x4809
+#define TT_MS_LANGID_CHEROKEE_UNITED_STATES            0x045c
+#define TT_MS_LANGID_INUKTITUT_CANADA                  0x045d
+#define TT_MS_LANGID_AMHARIC_ETHIOPIA                  0x045e
+#define TT_MS_LANGID_TAMAZIGHT_MOROCCO                 0x045f
+#define TT_MS_LANGID_TAMAZIGHT_MOROCCO_LATIN           0x085f
+#define TT_MS_LANGID_FILIPINO_PHILIPPINES              0x0464
+#define TT_MS_LANGID_DHIVEHI_MALDIVES                  0x0465
+ /* alias declared in Windows 2000 */
+#define TT_MS_LANGID_DIVEHI_MALDIVES      TT_MS_LANGID_DHIVEHI_MALDIVES
+ /* language codes from 0x0466 to 0x0471 are unknown. */
+#define TT_MS_LANGID_OROMO_ETHIOPIA                    0x0472
+#define TT_MS_LANGID_TIGRIGNA_ETHIOPIA                 0x0473
+#define TT_MS_LANGID_TIGRIGNA_ETHIOPIA                 0x0873
 
 
 
