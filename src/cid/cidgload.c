@@ -41,7 +41,7 @@
                   FT_UInt     glyph_index )
   {
     CID_Face   face = (CID_Face)decoder->builder.face;
-    CID_Info*  cid  = &face->cid;
+    CID_FaceInfo  cid  = &face->cid;
     FT_Byte*   p;
     FT_UInt    entry_len = cid->fd_bytes + cid->gd_bytes;
     FT_UInt    fd_select;
@@ -68,8 +68,8 @@
     /* the charstrings                                                   */
     if ( glyph_len > 0 )
     {
-      CID_FontDict*  dict;
-      CID_Subrs*     cid_subrs = face->subrs + fd_select;
+      CID_FaceDict   dict;
+      CID_Subrs      cid_subrs = face->subrs + fd_select;
       FT_Byte*       charstring;
       FT_Memory      memory = face->root.memory;
 

@@ -99,13 +99,13 @@
 
     if ( funcs )
     {
-      PSH_Globals   globals;
-      CFF_Face      face    = (CFF_Face)size->face;
-      CFF_Font*     font    = face->extra.data;
-      CFF_SubFont*  subfont = &font->top_font;
+      PSH_Globals    globals;
+      CFF_Face       face    = (CFF_Face)size->face;
+      CFF_Font*      font    = face->extra.data;
+      CFF_SubFont*   subfont = &font->top_font;
 
-      CFF_Private*  cpriv   = &subfont->private_dict;
-      T1_Private    priv;
+      CFF_Private   cpriv   = &subfont->private_dict;
+      PS_PrivateRec  priv;
 
 
       /* IMPORTANT: The CFF and Type1 private dictionaries have    */

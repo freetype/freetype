@@ -2225,7 +2225,7 @@
                                   &charstring, &charstring_len );
       if ( !error )
       {
-        CFF_Index csindex = cff->charstrings_index;
+        CFF_IndexRec csindex = cff->charstrings_index;
 
 
         CFF_Prepare_Decoder( &decoder, glyph_index );

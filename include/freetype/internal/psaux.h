@@ -602,7 +602,7 @@ FT_BEGIN_HEADER
               FT_Size              size,
               FT_GlyphSlot         slot,
               FT_Byte**            glyph_names,
-              T1_Blend*            blend,
+              PS_Blend            blend,
               FT_Bool              hinting,
               T1_Decoder_Callback  callback );
 
@@ -643,7 +643,7 @@ FT_BEGIN_HEADER
     FT_Int               num_flex_vectors;
     FT_Vector            flex_vectors[7];
 
-    T1_Blend*            blend;       /* for multiple master support */
+    PS_Blend            blend;       /* for multiple master support */
 
     T1_Decoder_Callback  parse_callback;
     T1_Decoder_FuncsRec  funcs;

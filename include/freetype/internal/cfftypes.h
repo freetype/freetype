@@ -31,7 +31,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    CFF_Index                                                          */
+  /*    CFF_IndexRec                                                          */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used to model a CFF Index table.                       */
@@ -50,7 +50,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    bytes       :: If the index is loaded in memory, its bytes.        */
   /*                                                                       */
-  typedef struct  CFF_Index_
+  typedef struct  CFF_IndexRec_
   {
     FT_Stream  stream;
     FT_UInt    count;
@@ -60,10 +60,10 @@ FT_BEGIN_HEADER
     FT_ULong*  offsets;
     FT_Byte*   bytes;
 
-  } CFF_Index;
+  } CFF_IndexRec, *CFF_Index;
 
 
-  typedef struct  CFF_Encoding_
+  typedef struct  CFF_EncodingRec_
   {
     FT_UInt     format;
     FT_ULong    offset;
@@ -71,7 +71,7 @@ FT_BEGIN_HEADER
     FT_UShort*  sids;
     FT_UShort*  codes;
 
-  } CFF_Encoding;
+  } CFF_EncodingRec, *CFF_Encoding;
 
 
   typedef struct  CFF_Charset_
@@ -132,7 +132,7 @@ FT_BEGIN_HEADER
   } CFF_Font_Dict;
 
 
-  typedef struct  CFF_Private_
+  typedef struct  CFF_PrivateRec_
   {
     FT_Byte   num_blue_values;
     FT_Byte   num_other_blues;
@@ -164,7 +164,7 @@ FT_BEGIN_HEADER
     FT_Pos    default_width;
     FT_Pos    nominal_width;
 
-  } CFF_Private;
+  } CFF_PrivateRec, *CFF_Private;
 
 
   typedef struct  CFF_FD_Select_
@@ -189,9 +189,9 @@ FT_BEGIN_HEADER
   typedef struct  CFF_SubFont_
   {
     CFF_Font_Dict  font_dict;
-    CFF_Private    private_dict;
+    CFF_PrivateRec    private_dict;
 
-    CFF_Index      local_subrs_index;
+    CFF_IndexRec      local_subrs_index;
     FT_UInt        num_local_subrs;
     FT_Byte**      local_subrs;
 
@@ -215,18 +215,18 @@ FT_BEGIN_HEADER
     FT_Byte        absolute_offsize;
 
 
-    CFF_Index      name_index;
-    CFF_Index      top_dict_index;
-    CFF_Index      string_index;
-    CFF_Index      global_subrs_index;
+    CFF_IndexRec      name_index;
+    CFF_IndexRec      top_dict_index;
+    CFF_IndexRec      string_index;
+    CFF_IndexRec      global_subrs_index;
 
-    CFF_Encoding   encoding;
+    CFF_EncodingRec   encoding;
     CFF_Charset    charset;
 
-    CFF_Index      charstrings_index;
-    CFF_Index      font_dict_index;
-    CFF_Index      private_index;
-    CFF_Index      local_subrs_index;
+    CFF_IndexRec      charstrings_index;
+    CFF_IndexRec      font_dict_index;
+    CFF_IndexRec      private_index;
+    CFF_IndexRec      local_subrs_index;
 
     FT_String*     font_name;
     FT_UInt        num_global_subrs;

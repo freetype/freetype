@@ -57,7 +57,7 @@
   static FT_UInt
   afm_atoindex( FT_Byte**  start,
                 FT_Byte*   limit,
-                T1_Font*   type1 )
+                T1_Font    type1 )
   {
     FT_Byte*  p = *start;
     FT_Int    len;
@@ -167,7 +167,7 @@
     FT_Byte*       p;
     FT_Int         count = 0;
     T1_Kern_Pair*  pair;
-    T1_Font*       type1 = &((T1_Face)t1_face)->type1;
+    T1_Font       type1 = &((T1_Face)t1_face)->type1;
     T1_AFM*        afm   = 0;
 
 

@@ -656,7 +656,7 @@
         case 17:
         case 18:                    /* multiple masters */
           {
-            T1_Blend*  blend = decoder->blend;
+            PS_Blend  blend = decoder->blend;
             FT_UInt    num_points, nn, mm;
             FT_Long*   delta;
             FT_Long*   values;
@@ -1112,7 +1112,7 @@
                    FT_Size              size,
                    FT_GlyphSlot         slot,
                    FT_Byte**            glyph_names,
-                   T1_Blend*            blend,
+                   PS_Blend            blend,
                    FT_Bool              hinting,
                    T1_Decoder_Callback  parse_callback )
   {

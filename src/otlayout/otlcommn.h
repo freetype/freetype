@@ -168,7 +168,8 @@ OTL_BEGIN_HEADER
   OTL_LOCALDEF( OTL_UInt )
   otl_feature_get_count( OTL_Bytes   table );
 
- /* get several lookups from a feature. returns the number of lookups grabbed */
+ /* get several lookups indices from a feature. returns the number of lookups */
+ /* grabbed                                                                   */
   OTL_LOCALDEF( OTL_UInt )
   otl_feature_get_lookups( OTL_Bytes   table,
                            OTL_UInt    start,

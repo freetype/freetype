@@ -101,7 +101,7 @@
                      FT_UInt  num_designs,
                      FT_UInt  num_axis )
   {
-    T1_Blend*  blend;
+    PS_Blend  blend;
     FT_Memory  memory = face->root.memory;
     FT_Error   error  = 0;
 
@@ -124,8 +124,8 @@
 
 
         /* allocate the blend `private' and `font_info' dictionaries */
-        if ( ALLOC_ARRAY( blend->font_infos[1], num_designs, T1_FontInfo )  ||
-             ALLOC_ARRAY( blend->privates[1], num_designs, T1_Private )     ||
+        if ( ALLOC_ARRAY( blend->font_infos[1], num_designs, PS_FontInfoRec ) ||
+             ALLOC_ARRAY( blend->privates[1], num_designs, PS_PrivateRec )    ||
              ALLOC_ARRAY( blend->weight_vector, num_designs * 2, FT_Fixed ) )
           goto Exit;
 
@@ -184,7 +184,7 @@
   T1_Get_Multi_Master( T1_Face           face,
                        FT_Multi_Master*  master )
   {
-    T1_Blend*  blend = face->blend;
+    PS_Blend  blend = face->blend;
     FT_UInt    n;
     FT_Error   error;
 
@@ -198,8 +198,8 @@
 
       for ( n = 0; n < blend->num_axis; n++ )
       {
-        FT_MM_Axis*    axis = master->axis + n;
-        T1_DesignMap*  map = blend->design_map + n;
+        FT_MM_Axis*   axis = master->axis + n;
+        PS_DesignMap  map = blend->design_map + n;
 
 
         axis->name    = blend->axis_names[n];
@@ -217,7 +217,7 @@
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    T1_Blend*  blend = face->blend;
+    PS_Blend  blend = face->blend;
     FT_Error   error;
     FT_UInt    n, m;
 
@@ -263,7 +263,7 @@
                     FT_UInt   num_coords,
                     FT_Long*  coords )
   {
-    T1_Blend*  blend = face->blend;
+    PS_Blend  blend = face->blend;
     FT_Error   error;
     FT_UInt    n, p;
 
@@ -279,7 +279,7 @@
       {
         FT_Long        design  = coords[n];
         FT_Fixed       the_blend;
-        T1_DesignMap*  map     = blend->design_map + n;
+        PS_DesignMap  map     = blend->design_map + n;
         FT_Fixed*      designs = map->design_points;
         FT_Fixed*      blends  = map->blend_points;
         FT_Int         before  = -1, after = -1;
@@ -332,7 +332,7 @@
   T1_Done_Blend( T1_Face  face )
   {
     FT_Memory  memory = face->root.memory;
-    T1_Blend*  blend  = face->blend;
+    PS_Blend  blend  = face->blend;
 
 
     if ( blend )
@@ -368,7 +368,7 @@
       /* release design map */
       for ( n = 0; n < num_axis; n++ )
       {
-        T1_DesignMap*  dmap = blend->design_map + n;
+        PS_DesignMap  dmap = blend->design_map + n;
 
 
         FREE( dmap->design_points );
@@ -387,7 +387,7 @@
     T1_TokenRec   axis_tokens[ T1_MAX_MM_AXIS ];
     FT_Int        n, num_axis;
     FT_Error      error = 0;
-    T1_Blend*     blend;
+    PS_Blend     blend;
     FT_Memory     memory;
 
 
@@ -451,7 +451,7 @@
     T1_Parser  parser = &loader->parser;
 
     FT_Error       error = 0;
-    T1_Blend*      blend;
+    PS_Blend      blend;
 
 
     /* get the array of design tokens - compute number of designs */
@@ -529,7 +529,7 @@
   {
     FT_Error       error  = 0;
     T1_Parser  parser = &loader->parser;
-    T1_Blend*      blend;
+    PS_Blend      blend;
     T1_TokenRec       axis_tokens[ T1_MAX_MM_AXIS ];
     FT_Int         n, num_axis;
     FT_Byte*       old_cursor;
@@ -556,7 +556,7 @@
     /* now, read each axis design map */
     for ( n = 0; n < num_axis; n++ )
     {
-      T1_DesignMap* map = blend->design_map + n;
+      PS_DesignMap map = blend->design_map + n;
       T1_Token     token;
       FT_Int        p, num_points;
 
@@ -610,7 +610,7 @@
   {
     FT_Error       error  = 0;
     T1_Parser  parser = &loader->parser;
-    T1_Blend*      blend  = face->blend;
+    PS_Blend      blend  = face->blend;
     T1_TokenRec       master;
     FT_UInt        n;
     FT_Byte*       old_cursor;
@@ -698,7 +698,7 @@
     void*      dummy_object;
     void**     objects;
     FT_UInt    max_objects;
-    T1_Blend*  blend = face->blend;
+    PS_Blend  blend = face->blend;
 
 
     /* if the keyword has a dedicated callback, call it */
@@ -954,7 +954,7 @@
     /* and we must load it now                             */
     if ( (FT_Byte)( *cur - '0' ) < 10 )
     {
-      T1_Encoding*  encode     = &face->type1.encoding;
+      T1_Encoding  encode     = &face->type1.encoding;
       FT_Int        count, n;
       PS_Table      char_table = &loader->encoding_table;
       FT_Memory     memory     = parser->root.memory;
@@ -1067,7 +1067,7 @@
           cur++;
       }
 
-      face->type1.encoding_type = t1_encoding_array;
+      face->type1.encoding_type = T1_ENCODING_TYPE_ARRAY;
       parser->root.cursor       = cur;
     }
     /* Otherwise, we should have either `StandardEncoding' or */
@@ -1076,15 +1076,15 @@
     {
       if ( cur + 17 < limit &&
            strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
-        face->type1.encoding_type = t1_encoding_standard;
+        face->type1.encoding_type = T1_ENCODING_TYPE_STANDARD;
 
       else if ( cur + 15 < limit &&
                 strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
-        face->type1.encoding_type = t1_encoding_expert;
+        face->type1.encoding_type = T1_ENCODING_TYPE_EXPORT;
 
       else if ( cur + 18 < limit &&
                 strncmp( (const char*)cur, "ISOLatin1Encoding", 17 ) == 0 )
-        face->type1.encoding_type = t1_encoding_isolatin1;
+        face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
 
       else
       {
@@ -1642,7 +1642,7 @@
   {
     T1_Loader  loader;
     T1_Parser  parser;
-    T1_Font*   type1 = &face->type1;
+    T1_Font   type1 = &face->type1;
     FT_Error   error;
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
@@ -1707,7 +1707,7 @@
 
     /* we must now build type1.encoding when we have a custom */
     /* array..                                                */
-    if ( type1->encoding_type == t1_encoding_array )
+    if ( type1->encoding_type == T1_ENCODING_TYPE_ARRAY )
     {
       FT_Int    charcode, index, min_char, max_char;
       FT_Byte*  char_name;

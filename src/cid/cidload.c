@@ -96,7 +96,7 @@
     CID_Parser*  parser = &loader->parser;
     FT_Byte*     object;
     void*        dummy_object;
-    CID_Info*    cid = &face->cid;
+    CID_FaceInfo    cid = &face->cid;
 
 
     /* if the keyword has a dedicated callback, call it */
@@ -120,7 +120,7 @@
 
     default:
       {
-        CID_FontDict*  dict;
+        CID_FaceDict  dict;
 
 
         if ( parser->num_dict < 0 )
@@ -183,7 +183,7 @@
   {
     FT_Matrix*     matrix;
     FT_Vector*     offset;
-    CID_FontDict*  dict;
+    CID_FaceDict  dict;
     FT_Face        root = (FT_Face)&face->root;
     FT_Fixed       temp[6];
     FT_Fixed       temp_scale;
@@ -235,7 +235,7 @@
   parse_fd_array( CID_Face     face,
                   CID_Parser*  parser )
   {
-    CID_Info*  cid    = &face->cid;
+    CID_FaceInfo  cid    = &face->cid;
     FT_Memory  memory = face->root.memory;
     FT_Error   error  = CID_Err_Ok;
     FT_Long    num_dicts;
@@ -256,7 +256,7 @@
       /* don't forget to set a few defaults */
       for ( n = 0; n < cid->num_dicts; n++ )
       {
-        CID_FontDict*  dict = cid->font_dicts + n;
+        CID_FaceDict  dict = cid->font_dicts + n;
 
 
         /* default value for lenIV */
@@ -390,23 +390,23 @@
   static FT_Error
   cid_read_subrs( CID_Face  face )
   {
-    CID_Info*   cid    = &face->cid;
+    CID_FaceInfo   cid    = &face->cid;
     FT_Memory   memory = face->root.memory;
     FT_Stream   stream = face->root.stream;
     FT_Error    error;
     FT_Int      n;
-    CID_Subrs*  subr;
+    CID_Subrs  subr;
     FT_UInt     max_offsets = 0;
     FT_ULong*   offsets = 0;
 
 
-    if ( ALLOC_ARRAY( face->subrs, cid->num_dicts, CID_Subrs ) )
+    if ( ALLOC_ARRAY( face->subrs, cid->num_dicts, CID_SubrsRec ) )
       goto Exit;
 
     subr = face->subrs;
     for ( n = 0; n < cid->num_dicts; n++, subr++ )
     {
-      CID_FontDict*  dict  = cid->font_dicts + n;
+      CID_FaceDict  dict  = cid->font_dicts + n;
       FT_Int         lenIV = dict->private_dict.lenIV;
       FT_UInt        count, num_subrs = dict->num_subrs;
       FT_ULong       data_len;

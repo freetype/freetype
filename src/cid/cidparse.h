@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
 
     FT_ULong      data_offset;
 
-    CID_Info*     cid;
+    CID_FaceInfo     cid;
     FT_Int        num_dict;
 
   } CID_Parser;

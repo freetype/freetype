@@ -136,7 +136,7 @@
         /*                                                                 */
       case ft_encoding_adobe_custom:
         {
-          T1_Encoding*  encoding = &face->type1.encoding;
+          T1_Encoding  encoding = &face->type1.encoding;
 
 
           if ( charcode >= encoding->code_first &&
@@ -230,7 +230,7 @@
         /*                                                                 */
       case ft_encoding_adobe_custom:
         {
-          T1_Encoding*  encoding = &face->type1.encoding;
+          T1_Encoding  encoding = &face->type1.encoding;
 
 
           charcode++;

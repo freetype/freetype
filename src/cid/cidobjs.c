@@ -133,8 +133,8 @@
     {
       PSH_Globals    globals;
       CID_Face       face = (CID_Face)size->root.face;
-      CID_FontDict*  dict = face->cid.font_dicts + face->root.face_index;
-      T1_Private*    priv = &dict->private_dict;
+      CID_FaceDict  dict = face->cid.font_dicts + face->root.face_index;
+      PS_Private     priv = &dict->private_dict;
 
 
       error = funcs->create( size->root.face->memory, priv, &globals );
@@ -190,8 +190,8 @@
 
     if ( face )
     {
-      CID_Info*     cid  = &face->cid;
-      T1_FontInfo*  info = &cid->font_info;
+      CID_FaceInfo  cid  = &face->cid;
+      PS_FontInfo   info = &cid->font_info;
 
 
       memory = face->root.memory;
@@ -204,7 +204,7 @@
 
         for ( n = 0; n < cid->num_dicts; n++ )
         {
-          CID_Subrs*  subr = face->subrs + n;
+          CID_Subrs  subr = face->subrs + n;
           
 
           if ( subr->code )
@@ -468,12 +468,12 @@
 
       switch ( face->type1.encoding_type )
       {
-      case t1_encoding_standard:
+      case T1_ENCODING_TYPE_STANDARD:
         charmap->encoding    = ft_encoding_adobe_standard;
         charmap->encoding_id = 0;
         break;
 
-      case t1_encoding_expert:
+      case T1_ENCODING_TYPE_EXPORT:
         charmap->encoding    = ft_encoding_adobe_expert;
         charmap->encoding_id = 1;
         break;

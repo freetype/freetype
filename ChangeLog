@@ -1,5 +1,27 @@
 2002-02-28  David Turner   <david@freetype.org>
 
+        * include/freetype/t1tables.h: re-naming structure types. This done
+        basically:
+        
+          typedef T1_Struct_
+          {
+          } T1_Struct;
+          
+        becomes:
+        
+          typedef PS_StructRec_
+          {
+          } PS_StructRec, *PS_Struct;
+          
+          typedef PS_StructRec  T1_Struct;  /* backwards-compatibility */
+
+
+        hence, we increase the coherency of the source code by effectuively
+        using the 'Rec' prefix for structure types..
+
+
+2002-02-27  David Turner   <david@freetype.org>
+
         * src/sfnt/ttload.c (TT_Load_Names): simplifying and securing the
         names table loader. Invalid individual name entries are now handled
         correctly. This allows the loading of very buggy fonts like

@@ -68,7 +68,7 @@
 
 
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  CFF_Private
+#define FT_STRUCTURE  CFF_PrivateRec
 #undef  CFFCODE
 #define CFFCODE       CFFCODE_PRIVATE
 

@@ -46,7 +46,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    T1_Encoding                                                        */
+  /*    T1_EncodingRec                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure modeling a custom encoding.                            */
@@ -63,7 +63,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    char_name  :: An array of corresponding glyph names.               */
   /*                                                                       */
-  typedef struct  T1_Encoding_
+  typedef struct  T1_EncodingRecRec_
   {
     FT_Int       num_chars;
     FT_Int       code_first;
@@ -72,33 +72,33 @@ FT_BEGIN_HEADER
     FT_UShort*   char_index;
     FT_String**  char_name;
 
-  } T1_Encoding;
+  } T1_EncodingRec, *T1_Encoding;
 
 
   typedef enum  T1_EncodingType_
   {
-    t1_encoding_none = 0,
-    t1_encoding_array,
-    t1_encoding_standard,
-    t1_encoding_isolatin1,
-    t1_encoding_expert
+    T1_ENCODING_TYPE_NONE = 0,
+    T1_ENCODING_TYPE_ARRAY,
+    T1_ENCODING_TYPE_STANDARD,
+    T1_ENCODING_TYPE_ISOLATIN1,
+    T1_ENCODING_TYPE_EXPORT
 
   } T1_EncodingType;
 
 
-  typedef struct  T1_Font_
+  typedef struct  T1_FontRec_
   {
     /* font info dictionary */
-    T1_FontInfo      font_info;
+    PS_FontInfoRec   font_info;
 
     /* private dictionary */
-    T1_Private       private_dict;
+    PS_PrivateRec    private_dict;
 
     /* top-level dictionary */
     FT_String*       font_name;
 
     T1_EncodingType  encoding_type;
-    T1_Encoding      encoding;
+    T1_EncodingRec   encoding;
 
     FT_Byte*         subrs_block;
     FT_Byte*         charstrings_block;
@@ -122,15 +122,15 @@ FT_BEGIN_HEADER
 
     FT_Int           stroke_width;
 
-  } T1_Font;
+  } T1_FontRec, *T1_Font;
 
 
-  typedef struct  CID_Subrs_
+  typedef struct  CID_SubrsRec_
   {
     FT_UInt    num_subrs;
     FT_Byte**  code;
 
-  } CID_Subrs;
+  } CID_SubrsRec, *CID_Subrs;
 
 
   /*************************************************************************/
@@ -164,7 +164,7 @@ FT_BEGIN_HEADER
   typedef struct  T1_FaceRec_
   {
     FT_FaceRec     root;
-    T1_Font        type1;
+    T1_FontRec     type1;
     void*          psnames;
     void*          psaux;
     void*          afm_data;
@@ -173,7 +173,7 @@ FT_BEGIN_HEADER
     PS_Unicodes    unicode_map;
 
     /* support for Multiple Masters fonts */
-    T1_Blend*      blend;
+    PS_Blend      blend;
     
     /* since FT 2.1 - interface to PostScript hinter */
     void*          pshinter;
@@ -183,15 +183,15 @@ FT_BEGIN_HEADER
 
   typedef struct  CID_FaceRec_
   {
-    FT_FaceRec  root;
-    void*       psnames;
-    void*       psaux;
-    CID_Info    cid;
-    void*       afm_data;
-    CID_Subrs*  subrs;
+    FT_FaceRec        root;
+    void*             psnames;
+    void*             psaux;
+    CID_FaceInfoRec   cid;
+    void*             afm_data;
+    CID_Subrs         subrs;
     
     /* since FT 2.1 - interface to PostScript hinter */
-    void*       pshinter;
+    void*             pshinter;
 
   } CID_FaceRec;
 
