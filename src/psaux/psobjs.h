@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auxiliary functions for PostScript fonts (specification).            */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -47,15 +47,15 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  PS_Table_New( PS_Table  table,
+  PS_Table_New( PS_Table   table,
                 FT_Int     count,
                 FT_Memory  memory );
 
   FT_LOCAL( FT_Error )
   PS_Table_Add( PS_Table  table,
-                FT_Int     index,
-                void*      object,
-                FT_Int     length );
+                FT_Int    index,
+                void*     object,
+                FT_Int    length );
 
   FT_LOCAL( void )
   PS_Table_Done( PS_Table  table );
@@ -110,7 +110,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Fixed )
   PS_Parser_ToFixed( PS_Parser  parser,
-              FT_Int      power_ten );
+                     FT_Int     power_ten );
 
 
   FT_LOCAL( FT_Int )
@@ -127,9 +127,9 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   PS_Parser_Init( PS_Parser  parser,
-                  FT_Byte*    base,
-                  FT_Byte*    limit,
-                  FT_Memory   memory );
+                  FT_Byte*   base,
+                  FT_Byte*   limit,
+                  FT_Memory  memory );
 
   FT_LOCAL( void )
   PS_Parser_Done( PS_Parser  parser );
@@ -155,18 +155,18 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   T1_Builder_Check_Points( T1_Builder  builder,
-                           FT_Int       count );
+                           FT_Int      count );
 
   FT_LOCAL( void )
   T1_Builder_Add_Point( T1_Builder  builder,
-                        FT_Pos       x,
-                        FT_Pos       y,
-                        FT_Byte      flag );
+                        FT_Pos      x,
+                        FT_Pos      y,
+                        FT_Byte     flag );
 
   FT_LOCAL( FT_Error )
   T1_Builder_Add_Point1( T1_Builder  builder,
-                         FT_Pos       x,
-                         FT_Pos       y );
+                         FT_Pos      x,
+                         FT_Pos      y );
 
   FT_LOCAL( FT_Error )
   T1_Builder_Add_Contour( T1_Builder  builder );
@@ -174,8 +174,8 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   T1_Builder_Start_Point( T1_Builder  builder,
-                          FT_Pos       x,
-                          FT_Pos       y );
+                          FT_Pos      x,
+                          FT_Pos      y );
 
 
   FT_LOCAL( void )
