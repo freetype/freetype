@@ -35,7 +35,7 @@
 #ifdef AH_DEBUG
 
 #include <stdio.h>
-#define AH_LOG( x )  printf##x
+#define AH_LOG( x )  printf ## x
 
 #else
 

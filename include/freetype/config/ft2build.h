@@ -70,7 +70,8 @@
   /* installed on the particular system.                                   */
   /*                                                                       */
 #ifndef FT2_CONFIG_ROOT
-#define FT2_CONFIG_ROOT  FT2_ROOT ## / ## config
+#define FT2_CONFIG_ROOT_( x )  x ## / ## config
+#define FT2_CONFIG_ROOT        FT2_CONFIG_ROOT_(FT2_ROOT)
 #endif
 
 
@@ -208,7 +209,8 @@
 
 
   /* now include internal headers definitions from <freetype/internal/...> */
-#include FT2_INTERNAL_FILE(internal.h)
+#define FT2_INTERNAL_H  FT2_INTERNAL_FILE(internal.h)
+#include FT2_INTERNAL_H
 
 
 #endif /* __FT2_BUILD_H__ */
