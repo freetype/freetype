@@ -25,8 +25,8 @@ CFG=freetype - Win32 Debug Multithreaded
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
-# PROP Scc_ProjName ""$/DEV/freetype", KAOAAAAA"
-# PROP Scc_LocalPath "."
+# PROP Scc_ProjName ""
+# PROP Scc_LocalPath ""
 CPP=cl.exe
 RSC=rc.exe
 
@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\..\objs\release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /Za /W4 /GX /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MD /Za /W4 /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -52,7 +52,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype204.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype206.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug"
 
@@ -67,7 +67,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\..\objs\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /Za /W4 /Gm /GX /ZI /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
+# ADD CPP /nologo /MDd /Za /W4 /Gm /GX /Zi /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
 # SUBTRACT CPP /X /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -76,7 +76,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype204_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype206_D.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug Multithreaded"
 
@@ -101,7 +101,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"lib\freetype200b8_D.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype204MT_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype206MT_D.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Release Multithreaded"
 
@@ -125,7 +125,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"lib\freetype200b8.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype204MT.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype206MT.lib"
 
 !ENDIF 
 
@@ -153,6 +153,19 @@ SOURCE=..\..\..\src\base\ftbase.c
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftdebug.c
+
+!IF  "$(CFG)" == "freetype - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "freetype - Win32 Debug"
+
+# ADD CPP /Ze
+
+!ELSEIF  "$(CFG)" == "freetype - Win32 Debug Multithreaded"
+
+!ELSEIF  "$(CFG)" == "freetype - Win32 Release Multithreaded"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -177,6 +190,10 @@ SOURCE=..\..\..\src\pcf\pcf.c
 # Begin Source File
 
 SOURCE=..\..\..\src\psaux\psaux.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\pshinter\pshinter.c
 # End Source File
 # Begin Source File
 
@@ -216,23 +233,23 @@ SOURCE=..\..\..\src\winfonts\winfnt.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\include\freetype\freetype.h
+SOURCE=..\..\..\include\ft2build.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\include\freetype\config\ftconfig.h
+SOURCE=..\..\..\include\freetype\config\ftconfig.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\include\freetype\fterrors.h
+SOURCE=..\..\..\include\freetype\config\ftheader.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\include\freetype\config\ftoption.h
+SOURCE=..\..\..\include\freetype\config\ftmodule.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\include\freetype\fttypes.h
+SOURCE=..\..\..\include\freetype\config\ftoption.h
 # End Source File
 # End Group
 # End Target
