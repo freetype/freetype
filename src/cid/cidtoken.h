@@ -21,7 +21,7 @@
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_CID_INFO
 
-  T1_FIELD_STRING( "CIDFontName", cid_font_name )
+  T1_FIELD_KEY   ( "CIDFontName", cid_font_name )
   T1_FIELD_NUM   ( "CIDFontVersion", cid_version )
   T1_FIELD_NUM   ( "CIDFontType", cid_font_type )
   T1_FIELD_STRING( "Registry", registry )

@@ -956,7 +956,7 @@
         case 1:
           {
             FT_Memory  memory = parser->memory;
-            FT_Byte    *p;
+            FT_Byte*   p;
 
 
             /* with synthetic fonts, it's possible to find a field twice */
@@ -973,8 +973,8 @@
 
         case 2:
           {
-            FT_Memory  memory = parser->memory;
-            FT_UShort  *p;
+            FT_Memory   memory = parser->memory;
+            FT_UShort*  p;
 
 
             /* with synthetic fonts, it's possible to find a field twice */
@@ -991,8 +991,8 @@
 
         case 4:
           {
-            FT_Memory  memory = parser->memory;
-            FT_UInt32  *p;
+            FT_Memory   memory = parser->memory;
+            FT_UInt32*  p;
 
 
             /* with synthetic fonts, it's possible to find a field twice */
@@ -1010,7 +1010,7 @@
         default:
           {
             FT_Memory  memory = parser->memory;
-            FT_Long  *p;
+            FT_Long*   p;
 
 
             /* with synthetic fonts, it's possible to find a field twice */
@@ -1028,6 +1028,7 @@
         break;
 
       case T1_FIELD_TYPE_STRING:
+      case T1_FIELD_TYPE_KEY:
         {
           FT_Memory  memory = parser->memory;
           FT_UInt    len    = (FT_UInt)( limit - cur );
@@ -1036,6 +1037,12 @@
           /* with synthetic fonts, it's possible to find a field twice */
           if ( *(FT_String**)q )
             break;
+
+          if ( field->type == T1_FIELD_TYPE_KEY )
+          {
+            len--;
+            cur++;
+          }
 
           if ( FT_ALLOC( string, len + 1 ) )
             goto Exit;
