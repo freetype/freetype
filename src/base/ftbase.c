@@ -16,14 +16,14 @@
 /***************************************************************************/
 
 
-#include  <ft2build.h>
-#include  FT_SOURCE_FILE(base,ftcalc.c)
-#include  FT_SOURCE_FILE(base,ftobjs.c)
-#include  FT_SOURCE_FILE(base,ftstream.c)
-#include  FT_SOURCE_FILE(base,ftlist.c)
-#include  FT_SOURCE_FILE(base,ftoutln.c)
-#include  FT_SOURCE_FILE(base,ftextend.c)
-#include  FT_SOURCE_FILE(base,ftnames.c)
+#include <ft2build.h>
+#include FT_SOURCE_FILE(base,ftcalc.c)
+#include FT_SOURCE_FILE(base,ftobjs.c)
+#include FT_SOURCE_FILE(base,ftstream.c)
+#include FT_SOURCE_FILE(base,ftlist.c)
+#include FT_SOURCE_FILE(base,ftoutln.c)
+#include FT_SOURCE_FILE(base,ftextend.c)
+#include FT_SOURCE_FILE(base,ftnames.c)
 
 
 /* END */

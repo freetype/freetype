@@ -19,12 +19,15 @@
 #ifndef T1DECODE_H
 #define T1DECODE_H
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 
+
 FT_BEGIN_HEADER
+
 
   FT_CALLBACK_TABLE
   const T1_Decoder_Funcs  t1_decoder_funcs;

@@ -15,18 +15,18 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SOURCE_FILE(psnames,psmodule.h)
 #include FT_SOURCE_FILE(psnames,pstables.h)
+
 #include <stdlib.h>     /* for qsort()             */
 #include <string.h>     /* for strcmp(), strncpy() */
 
 
 #ifndef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES
-
-
 
 
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST

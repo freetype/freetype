@@ -15,6 +15,7 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
@@ -27,6 +28,7 @@
 #include FT_SOURCE_FILE(cff,cffobjs.h)
 #include FT_SOURCE_FILE(cff,cffload.h)
 #include FT_INTERNAL_CFF_ERRORS_H
+
 #include <string.h>         /* for strlen() */
 
 
@@ -87,7 +89,7 @@
     charset_offset = dict->charset_offset;
     if ( !charset_offset )
     {
-      FT_ERROR(( "CFF.Build_Unicode_Charmap: charset table is missing\n" ));
+      FT_ERROR(( "CFF_Build_Unicode_Charmap: charset table is missing\n" ));
       error = T2_Err_Invalid_File_Format;
       goto Exit;
     }
@@ -106,68 +108,71 @@
 
     switch ( format )
     {
-      case 0:  /* format 0 - one SID per glyph */
-        {
-          const char**  gname = glyph_names;
-          const char**  limit = gname + num_glyphs;
+    case 0:  /* format 0 - one SID per glyph */
+      {
+        const char**  gname = glyph_names;
+        const char**  limit = gname + num_glyphs;
 
-          if ( ACCESS_Frame( num_glyphs*2 ) )
+
+        if ( ACCESS_Frame( num_glyphs * 2 ) )
+          goto Fail;
+
+        for ( ; gname < limit; gname++ )
+          gname[0] = T2_Get_String( &font->string_index,
+                                    GET_UShort(),
+                                    psnames );
+        FORGET_Frame();
+        break;
+      }
+
+    case 1:  /* format 1 - sequential ranges                    */
+    case 2:  /* format 2 - sequential ranges with 16-bit counts */
+      {
+        const char**  gname = glyph_names;
+        const char**  limit = gname + num_glyphs;
+        FT_UInt       len = 3;
+
+
+        if ( format == 2 )
+          len++;
+
+        while ( gname < limit )
+        {
+          FT_UInt  first;
+          FT_UInt  count;
+
+
+          if ( ACCESS_Frame( len ) )
             goto Fail;
 
-          for ( ; gname < limit; gname++ )
-            gname[0] = T2_Get_String( &font->string_index,
-                                      GET_UShort(),
-                                      psnames );
+          first = GET_UShort();
+          if ( format == 3 )
+            count = GET_UShort();
+          else
+            count = GET_Byte();
+
           FORGET_Frame();
-          break;
-        }
 
-      case 1:  /* format 1 - sequential ranges                    */
-      case 2:  /* format 2 - sequential ranges with 16-bit counts */
-        {
-          const char**  gname = glyph_names;
-          const char**  limit = gname + num_glyphs;
-          FT_UInt       len = 3;
-
-          if (format == 2)
-            len++;
-
-          while (gname < limit)
+          for ( ; count > 0; count-- )
           {
-            FT_UInt   first;
-            FT_UInt   count;
-
-            if ( ACCESS_Frame( len ) )
-              goto Fail;
-
-            first = GET_UShort();
-            if (format == 3)
-              count = GET_UShort();
-            else
-              count = GET_Byte();
-
-            FORGET_Frame();
-
-            for ( ; count > 0; count-- )
-            {
-              gname[0] = T2_Get_String( &font->string_index,
-                                        first,
-                                        psnames );
-              gname++;
-              first++;
-            }
+            gname[0] = T2_Get_String( &font->string_index,
+                                      first,
+                                      psnames );
+            gname++;
+            first++;
           }
-          break;
         }
+        break;
+      }
 
-      default:   /* unknown charset format! */
-        FT_ERROR(( "CFF: unknown charset format!\n" ));
-        error = T2_Err_Invalid_File_Format;
-        goto Fail;
+    default:   /* unknown charset format! */
+      FT_ERROR(( "CFF_Build_Unicode_Charmap: unknown charset format!\n" ));
+      error = T2_Err_Invalid_File_Format;
+      goto Fail;
     }
 
-    /* all right, the glyph names were loaded, we now need to create */
-    /* the corresponding unicode charmap..                           */
+    /* all right, the glyph names were loaded; we now need to create */
+    /* the corresponding unicode charmap                             */
 
   Fail:
     for ( n = 0; n < num_glyphs; n++ )
@@ -290,20 +295,20 @@
         goto Bad_Format;
       }
 
-      /* If we are performing a simple font format check, exit immediately */
+      /* if we are performing a simple font format check, exit immediately */
       if ( face_index < 0 )
         return T2_Err_Ok;
 
       sfnt_format = 1;
 
-      /* now, the font can be either an OpenType/CFF font, or a SVG CEF */
-      /* font in the later case; it doesn't have a `head' table         */
+      /* now, the font can be either an OpenType/CFF font, or an SVG CEF */
+      /* font in the later case; it doesn't have a `head' table          */
       error = face->goto_table( face, TTAG_head, stream, 0 );
       if ( !error )
       {
         pure_cff = 0;
 
-        /* Load font directory */
+        /* load font directory */
         error = sfnt->load_face( stream, face,
                                  face_index, num_params, params );
         if ( error )
@@ -316,8 +321,9 @@
         if ( error )
           goto Exit;
 
-        /* XXX: for now, we don't load the GPOS table, as OpenType Layout */
-        /* support will be added later to FreeType 2 as a separate module */
+        /* XXX: we don't load the GPOS table, as OpenType Layout     */
+        /* support will be added later to a layout library on top of */
+        /* FreeType 2                                                */
       }
 
       /* now, load the CFF part of the file */
@@ -353,7 +359,7 @@
         goto Exit;
 
       /* Complement the root flags with some interesting information. */
-      /* Note that this is only necessary for pure CFF and CEF fonts  */
+      /* Note that this is only necessary for pure CFF and CEF fonts. */
 
       root = &face->root;
       if ( pure_cff )
@@ -390,15 +396,11 @@
         /* retrieve font family & style name */
         root->family_name  = CFF_Get_Name( &cff->name_index, face_index );
         if ( dict->cid_registry )
-        {
           root->style_name = T2_StrCopy( memory, "Regular" );  /* XXXX */
-        }
         else
-        {
           root->style_name = CFF_Get_String( &cff->string_index,
                                              dict->weight,
                                              psnames );
-        }
 
         /*******************************************************************/
         /*                                                                 */
@@ -414,7 +416,7 @@
         if ( dict->is_fixed_pitch )
           flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
-/* XXXX: WE DO NOT SUPPORT KERNING METRICS IN THE GPOS TABLE FOR NOW */
+  /* XXX: WE DO NOT SUPPORT KERNING METRICS IN THE GPOS TABLE FOR NOW */
 #if 0
         /* kerning available? */
         if ( face->kern_pairs )

@@ -19,12 +19,16 @@
 #ifndef SFDRIVER_H
 #define SFDRIVER_H
 
-#include  <ft2build.h>
-#include  FT_MODULE_H
+
+#include <ft2build.h>
+#include FT_MODULE_H
+
 
 FT_BEGIN_HEADER
 
+
   FT_EXPORT_VAR( const FT_Module_Class )  sfnt_module_class;
+
 
 FT_END_HEADER
 

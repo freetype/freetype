@@ -19,6 +19,7 @@
 #ifndef TTGLOAD_H
 #define TTGLOAD_H
 
+
 #include <ft2build.h>
 #include FT_SOURCE_FILE(truetype,ttobjs.h)
 
@@ -26,7 +27,9 @@
 #include FT_SOURCE_FILE(truetype,ttinterp.h)
 #endif
 
+
 FT_BEGIN_HEADER
+
 
   FT_LOCAL
   void  TT_Get_Metrics( TT_HoriHeader*  header,
@@ -42,6 +45,7 @@ FT_BEGIN_HEADER
                            TT_GlyphSlot  glyph,
                            FT_UShort     glyph_index,
                            FT_UInt       load_flags );
+
 
 FT_END_HEADER
 

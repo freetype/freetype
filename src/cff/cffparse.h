@@ -19,18 +19,19 @@
 #ifndef __CFF_PARSE_H__
 #define __CFF_PARSE_H__
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_CFF_TYPES_H
 #include FT_INTERNAL_OBJECTS_H
 
+
 FT_BEGIN_HEADER
+
 
 #define CFF_MAX_STACK_DEPTH  96
 
 #define CFF_CODE_TOPDICT  0x1000
 #define CFF_CODE_PRIVATE  0x2000
-
-
 
 
   typedef struct  CFF_Parser_
@@ -48,18 +49,19 @@ FT_BEGIN_HEADER
   } CFF_Parser;
 
 
-  FT_LOCAL void
-  CFF_Parser_Init( CFF_Parser*  parser,
-                   FT_UInt     code,
-                   void*       object );
+  FT_LOCAL
+  void  CFF_Parser_Init( CFF_Parser*  parser,
+                         FT_UInt     code,
+                         void*       object );
 
-  FT_LOCAL FT_Error
-  CFF_Parser_Run( CFF_Parser*  parser,
-                  FT_Byte*    start,
-                  FT_Byte*    limit );
+  FT_LOCAL
+  FT_Error  CFF_Parser_Run( CFF_Parser*  parser,
+                            FT_Byte*     start,
+                            FT_Byte*     limit );
 
 
 FT_END_HEADER
+
 
 #endif /* __CFF_PARSE_H__ */
 

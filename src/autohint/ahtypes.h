@@ -23,20 +23,26 @@
 #ifndef AHTYPES_H
 #define AHTYPES_H
 
-#include  <ft2build.h>
-#include  FT_INTERNAL_OBJECTS_H
-#include  FT_SOURCE_FILE(autohint,ahloader.h)
+
+#include <ft2build.h>
+#include FT_INTERNAL_OBJECTS_H
+#include FT_SOURCE_FILE(autohint,ahloader.h)
 
 
 #define xxAH_DEBUG
 
 
 #ifdef AH_DEBUG
-#  include <stdio.h>
-#  define AH_LOG( x )  printf##x
+
+#include <stdio.h>
+#define AH_LOG( x )  printf##x
+
 #else
-#  define AH_LOG( x )  do ; while ( 0 ) /* nothing */
-#endif
+
+#define AH_LOG( x )  do ; while ( 0 ) /* nothing */
+
+#endif /* AH_DEBUG */
+
 
 FT_BEGIN_HEADER
 

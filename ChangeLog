@@ -1,12 +1,31 @@
-2000-12-07  David Turnre  <david.turner@freetype.org>
+2000-12-07  David Turner  <david.turner@freetype.org>
 
-	* many, many files: changed source files to adhere to the new
-        header inclusion scheme. Not completely tested but works for
-        now here..
+	* many files: Changed source files to adhere to the new
+	header inclusion scheme.  Not completely tested but works for now
+	here.
+
+	* src/cff/t2driver.c: Renamed and updated to...
+	* src/cff/cffdrivr.c: New file.
+	* src/cff/t2driver.h: Renamed and updated to...
+	* src/cff/cffdrivr.h: New file.
+	* src/cff/t2load.c: Renamed and updated to...
+	* src/cff/cffload.c: New file.
+	* src/cff/t2load.h: Renamed and updated to...
+	* src/cff/cffload.h: New file.
+	* src/cff/t2objs.c: Renamed and updated to...
+	* src/cff/cffobjs.c: New file.
+	* src/cff/t2objs.h: Renamed and updated to...
+	* src/cff/cffobjs.h: New file.
+	* src/cff/t2parse.c: Renamed and updated to...
+	* src/cff/cffparse.c: New file.
+	* src/cff/t2parse.h: Renamed and updated to...
+	* src/cff/cffparse.h: New file.
+	* src/cff/t2tokens.h: Renamed and updated to...
+	* src/cff/cfftoken.h: New file.
 
 2000-12-06  David Turner  <david.turner@freetype.org>
 
-	* src/cache/ftlru.c (FT_Lru_Done): fixed a small memory leak
+	* src/cache/ftlru.c (FT_Lru_Done): Fixed memory leak.
 
 2000-12-06  Werner Lemberg  <wl@gnu.org>
 

@@ -18,9 +18,10 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_NAMES_H
-#include  FT_INTERNAL_TRUETYPE_TYPES_H
+
+#include <ft2build.h>
+#include FT_NAMES_H
+#include FT_INTERNAL_TRUETYPE_TYPES_H
 
 
 #ifdef TT_CONFIG_OPTION_SFNT_NAMES

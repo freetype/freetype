@@ -15,9 +15,11 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
+
 #include <string.h>         /* strcmp() */
 
 #include FT_SOURCE_FILE(type1,t1gload.h)

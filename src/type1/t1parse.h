@@ -19,11 +19,14 @@
 #ifndef T1PARSE_H
 #define T1PARSE_H
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_TYPE1_TYPES_H
 #include FT_INTERNAL_STREAM_H
 
+
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */

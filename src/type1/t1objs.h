@@ -19,13 +19,16 @@
 #ifndef T1OBJS_H
 #define T1OBJS_H
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_TYPE1_ERRORS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 
+
 FT_BEGIN_HEADER
+
 
   /* The following structures must be defined by the hinter */
   typedef struct T1_Size_Hints_   T1_Size_Hints;

@@ -40,8 +40,10 @@
   /*                                                                       */
   /*************************************************************************/
 
-#include  <ft2build.h>
-#include  FT_INTERNAL_DEBUG_H
+
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+
 
 #ifdef FT_DEBUG_LEVEL_TRACE
   char  ft_trace_levels[trace_max];

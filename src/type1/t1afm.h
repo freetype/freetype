@@ -22,7 +22,9 @@
 #include <ft2build.h>
 #include FT_SOURCE_FILE(type1,t1objs.h)
 
+
 FT_BEGIN_HEADER
+
 
   typedef struct  T1_Kern_Pair_
   {
@@ -54,6 +56,7 @@ FT_BEGIN_HEADER
                         FT_UInt     glyph1,
                         FT_UInt     glyph2,
                         FT_Vector*  kerning );
+
 
 FT_END_HEADER
 

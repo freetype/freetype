@@ -22,8 +22,10 @@
 #ifndef AHHINT_H
 #define AHHINT_H
 
-#include  <ft2build.h>
-#include  FT_SOURCE_FILE(autohint,ahglobal.h)
+
+#include <ft2build.h>
+#include FT_SOURCE_FILE(autohint,ahglobal.h)
+
 
 FT_BEGIN_HEADER
 

@@ -56,11 +56,12 @@
       and delegate the rest of the work to it, by calling FT_Open_Face().
   */
 
-#include  <ft2build.h>
-#include  FT_FREETYPE_H
-#include  FT_INTERNAL_STREAM_H
-#include  FT_SOURCE_FILE(truetype/ttobjs.h)
-#include  FT_SOURCE_FILE(type1/t1objs.h)
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_INTERNAL_STREAM_H
+#include FT_SOURCE_FILE(truetype/ttobjs.h)
+#include FT_SOURCE_FILE(type1/t1objs.h)
 
 #include <Resources.h>
 #include <Fonts.h>

@@ -161,35 +161,35 @@ FT_BEGIN_HEADER
   } T2_Decoder;
 
 
-  FT_LOCAL void
-  T2_Init_Decoder( T2_Decoder*   decoder,
-                   TT_Face       face,
-                   T2_Size       size,
-                   T2_GlyphSlot  slot );
+  FT_LOCAL
+  void  T2_Init_Decoder( T2_Decoder*   decoder,
+                         TT_Face       face,
+                         T2_Size       size,
+                         T2_GlyphSlot  slot );
 
-  FT_LOCAL void
-  T2_Prepare_Decoder( T2_Decoder*  decoder,
-                      FT_UInt      glyph_index );
+  FT_LOCAL
+  void  T2_Prepare_Decoder( T2_Decoder*  decoder,
+                            FT_UInt      glyph_index );
 
 #if 0  /* unused until we support pure CFF fonts */
 
   /* Compute the maximum advance width of a font through quick parsing */
-  FT_LOCAL FT_Error
-  T2_Compute_Max_Advance( TT_Face  face,
-                          FT_Int*  max_advance );
+  FT_LOCAL
+  FT_Error  T2_Compute_Max_Advance( TT_Face  face,
+                                    FT_Int*  max_advance );
 
 #endif /* 0 */
 
-  FT_LOCAL FT_Error
-  T2_Parse_CharStrings( T2_Decoder*  decoder,
-                        FT_Byte*     charstring_base,
-                        FT_Int       charstring_len );
+  FT_LOCAL
+  FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
+                                  FT_Byte*     charstring_base,
+                                  FT_Int       charstring_len );
 
-  FT_LOCAL FT_Error
-  T2_Load_Glyph( T2_GlyphSlot  glyph,
-                 T2_Size       size,
-                 FT_Int        glyph_index,
-                 FT_Int        load_flags );
+  FT_LOCAL
+  FT_Error  T2_Load_Glyph( T2_GlyphSlot  glyph,
+                           T2_Size       size,
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags );
 
 
 FT_END_HEADER

@@ -19,10 +19,13 @@
 #ifndef T1GLOAD_H
 #define T1GLOAD_H
 
+
 #include <ft2build.h>
 #include FT_SOURCE_FILE(type1,t1objs.h)
 
+
 FT_BEGIN_HEADER
+
 
   FT_LOCAL
   FT_Error  T1_Compute_Max_Advance( T1_Face  face,

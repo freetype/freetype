@@ -19,6 +19,7 @@
 #ifndef T1LOAD_H
 #define T1LOAD_H
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
@@ -26,7 +27,9 @@
 
 #include FT_SOURCE_FILE(type1,t1parse.h)
 
+
 FT_BEGIN_HEADER
+
 
   typedef struct  T1_Loader_
   {
