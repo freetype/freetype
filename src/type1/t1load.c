@@ -1489,7 +1489,7 @@
   {
     T1_Parser  parser = &loader->parser;
     FT_Byte   *limit, *start_binary;
-    FT_Bool    have_integer;
+    FT_Bool    have_integer = 0;
 
 
     parser->root.cursor = base;

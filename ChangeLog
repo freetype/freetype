@@ -1,3 +1,9 @@
+2003-02-03  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP):
+	Initialize `node'.
+	* src/type1/t1load.c (parse_dict): Initialize `have_integer'.
+
 2003-02-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_dict): Handle `RD' and `-|' commands
