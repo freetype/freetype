@@ -82,6 +82,16 @@ ifdef check_platform
     setup: make_module_list
   endif
 
+  # This rule makes sense for Unix only to remove files created by a run
+  # of the configure script which hasn't been successful (so that no
+  # `config.mk' has been created).  It uses the built-in $(RM) command of
+  # GNU make.
+  #
+  distclean:
+	$(RM) builds/unix/config.cache
+	$(RM) builds/unix/config.log
+	$(RM) builds/unix/config.status
+
   # IMPORTANT:
   #
   # `setup' must be defined by the host platform detection rules to create
