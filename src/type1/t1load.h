@@ -42,6 +42,7 @@ FT_BEGIN_HEADER
     FT_Int        num_glyphs;
     PS_Table      glyph_names;
     PS_Table      charstrings;
+    PS_Table      swap_table;      /* For moving .notdef glyph to index 0. */
 
     FT_Int        num_subrs;
     PS_Table      subrs;
