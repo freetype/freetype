@@ -264,6 +264,9 @@
         if ( face->type1.font_info.is_fixed_pitch )
           root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
+        if ( face->blend )
+          root->face_flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
+
         /* XXX : TO DO - add kerning with .afm support */
 
         /* get style name - be careful, some broken fonts only */

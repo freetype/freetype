@@ -160,7 +160,7 @@ else
   #
   # The list of demonstration programs to build.
   #
-  EXES := ftlint ftview fttimer compos ftstring memtest
+  EXES := ftlint ftview fttimer compos ftstring memtest ftmulti
 
   ifneq ($(findstring $(PLATFORM),os2 unix win32),)
     EXES += ttdebug
@@ -198,6 +198,9 @@ else
 
 
   $(OBJ_)ftview.$O: $(SRC_DIR_)ftview.c $(GRAPH_LIB)
+	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+
+  $(OBJ_)ftmulti.$O: $(SRC_DIR_)ftmulti.c $(GRAPH_LIB)
 	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
 
   $(OBJ_)ftstring.$O: $(SRC_DIR_)ftstring.c $(GRAPH_LIB)
@@ -266,6 +269,9 @@ else
 
 
   $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
+	  $(GRAPH_LINK)
+
+  $(BIN_)ftmulti$E: $(OBJ_)ftmulti.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
 	  $(GRAPH_LINK)
 
   $(BIN_)ftstring$E: $(OBJ_)ftstring.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
