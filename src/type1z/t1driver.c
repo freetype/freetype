@@ -229,9 +229,9 @@
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( FT_DriverRec ),
       
-      "type1",
-      100,
-      200,
+      "type1z",
+      0x10000,
+      0x20000,
   
       0,   /* format interface */
   

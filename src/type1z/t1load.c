@@ -1078,9 +1078,17 @@
       index = T1_ToInt(parser);
       if (!read_binary_data(parser,&size,&base)) return;
 
-      T1_Decrypt( base, size, 4330 );
-      size -= face->type1.private_dict.lenIV;
-      base += face->type1.private_dict.lenIV;
+      /* some fonts use a value of -1 for lenIV to indicate that */
+      /* the charstrings are unencoded..                         */
+      /*                                                         */
+      /* thanks to Tom Kacvinsky for pointing this out..         */
+      /*                                                         */
+      if (face->type1.private_dict.lenIV >= 0)
+      {
+        T1_Decrypt( base, size, 4330 );
+        size -= face->type1.private_dict.lenIV;
+        base += face->type1.private_dict.lenIV;
+      }
 
       error = T1_Add_Table( table, index, base, size );
       if (error) goto Fail;
@@ -1162,9 +1170,17 @@
         parser->cursor = cur2;
         if (!read_binary_data(parser,&size,&base)) return;
 
-        T1_Decrypt( base, size, 4330 );
-        size -= face->type1.private_dict.lenIV;
-        base += face->type1.private_dict.lenIV;
+        /* some fonts use a value of -1 for lenIV to indicate that */
+        /* the charstrings are unencoded..                         */
+        /*                                                         */
+        /* thanks to Tom Kacvinsky for pointing this out..         */
+        /*                                                         */
+        if (face->type1.private_dict.lenIV >= 0)
+        {
+          T1_Decrypt( base, size, 4330 );
+          size -= face->type1.private_dict.lenIV;
+          base += face->type1.private_dict.lenIV;
+        }
 
         error = T1_Add_Table( code_table, n, base, size );
         if (error) goto Fail;

@@ -719,11 +719,20 @@
     {
       FT_Byte*  base = tokzer->base + tokzer->cursor;
 
-      t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;
 
-      base  += face->type1.private_dict.lenIV;
-      count -= face->type1.private_dict.lenIV;
+      /* some fonts use a value of -1 for lenIV to indicate that */
+      /* the charstrings are unencoded..                         */
+      /*                                                         */
+      /* thanks to Tom Kacvinsky for pointing this out..         */
+      /*                                                         */
+      if (face->type1.private_dict.lenIV >= 0)
+      {
+        t1_decrypt( base, count, 4330 );
+
+        base  += face->type1.private_dict.lenIV;
+        count -= face->type1.private_dict.lenIV;
+      }
 
       error = T1_Add_Table( &parser->table, index, base, count );
     }
@@ -803,11 +812,20 @@
     {
       FT_Byte*  base = tokzer->base + tokzer->cursor;
 
-      t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;  /* skip */
+      
+      /* some fonts use a value of -1 for lenIV to indicate that */
+      /* the charstrings are unencoded..                         */
+      /*                                                         */
+      /* thanks to Tom Kacvinsky for pointing this out..         */
+      /*                                                         */
+      if (face->type1.private_dict.lenIV >= 0)
+      {
+        t1_decrypt( base, count, 4330 );
 
-      base  += face->type1.private_dict.lenIV;
-      count -= face->type1.private_dict.lenIV;
+        base  += face->type1.private_dict.lenIV;
+        count -= face->type1.private_dict.lenIV;
+      }
 
       error = T1_Add_Table( &parser->table, index*2+1, base, count );
     }
