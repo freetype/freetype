@@ -243,7 +243,6 @@ FT_BEGIN_HEADER
 #undef FT_EXPORT
 #undef FT_EXPORT_DEF
 
-
   /*************************************************************************/
   /*                                                                       */
   /* Debug level                                                           */
@@ -284,7 +283,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* This must be greater than 4kByte.                                     */
   /*                                                                       */
-#define FT_RENDER_POOL_SIZE  32768L
+#define FT_RENDER_POOL_SIZE  16384L
 
 
   /*************************************************************************/
