@@ -21,9 +21,9 @@
 
 2003-04-09  Mike Fabian  <mfabian@suse.de>
 
-	* src/bdf/bdfdrivr.h (BDF_encoding_el), src/pcf/pcf.h: Changed
-	FT_Short to FT_UShort in order to be able to access more than 32768
-	glyphs in fonts.
+	* src/bdf/bdfdrivr.h (BDF_encoding_el), src/pcf/pcf.h
+	(PCF_EncodingRec): Changed FT_Short to FT_UShort in order to be able
+	to access more than 32768 glyphs in fonts.
 
 2003-04-08  David Turner  <david@freetype.org>
 
@@ -87,13 +87,13 @@
 	* src/base/ftobjs.c: Implement them.
 	(ft_glyphslot_done): Use ft_glyphslot_free_bitmap.
 
-	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Remove unused variable
-	`memory'.
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load), src/pcf/pcfdriver.c
+	(PCF_Glyph_Load): Remove unused variable `memory'.
 	Use `ft_glyphslot_*' functions.
 	Don't set `FT_GLYPH_OWN_BITMAP'.
 
-	* src/pcf/pcfdriver.c, src/pfr/pfrsbit.c,
-	src/sfnt/ttsbit.c, src/type42/t42objs.c, src/winfonts/winfnt.c:
+	* src/pfr/pfrsbit.c, src/sfnt/ttsbit.c, src/type42/t42objs.c,
+	src/winfonts/winfnt.c:
 
 	* src/cache/ftlru.c (FT_LruList_Lookup): Fixed an invalid assertion
 	check.
@@ -294,7 +294,13 @@
 	(bdf_get_bdf_property, bdf_driver_requester): New functions.
 	(bdf_driver_class): Use `bdf_driver_requester'.
 
-	* src/pcf/pcfdrivr.c, src/pcf/pcfread.h:
+	* src/pcf/pcfdrivr.c: Include FT_BDF_H.
+	(pcf_get_bdf_property, pdc_driver_requester): New functions
+	(pcf_driver_class): Use `pcf_driver_requester'.
+
+	* src/pcf/pcfread.c: Include `pcfread.h'.
+	(pcf_find_property): Decorate it with FT_LOCAL_DEF.
+	* src/pcf/pcfread.h: New file, providing `pcf_find_property'.
 
 	* src/sfnt/ttload.c (sfnt_dir_check): Relaxed the "head" table size
 	verification to accept a few broken fonts who pad the size
@@ -627,18 +633,21 @@
 
 2002-10-31  David Turner  <david@freetype.org>
 
+	Add support for automatic handling of gzip-compressed PCF files.
+
 	* src/gzip/*: New files, taken from the zlib package (except
 	ftgzip.c).
 
-	* include/freetype/ftgzip.h, src/gzip/ftgzip.c: New files, adding
-	support for gzip compressed streams.
+	* include/freetype/ftgzip.h, src/gzip/ftgzip.c: New files.
 	* include/freetype/config/ftheader.h (FT_GZIP_H): New macro for
 	`ftgzip.h'.
 
-	* src/pcf/pcfdriver.c: Adding automatic support for gzip-compressed
-	PCF files.
-	* include/freetype/internal/pcftypes.h (PCF_Public_FaceRec): Add
-	`gzip_stream' and `gzip_source'.
+	* src/pcf/pcfdriver.c: Include FT_GZIP_H and FT_ERRORS_H.
+	(PCF_Face_Init): If normal open fails, try to open gzip stream.
+	(PCF_Face_Done): Close gzip stream.
+
+	* include/freetype/internal/pcftypes.h (PCF_Public_FaceRec),
+	src/pcf/pcf.h (PCF_FaceRec): Add `gzip_stream' and `gzip_source'.
 
 	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_USE_ZLIB):
 	New macro.
