@@ -202,6 +202,8 @@
     /* save in face object */
     ((T1_Face)t1_face)->afm_data = afm;
 
+    t1_face->face_flags |= FT_FACE_FLAG_KERNING;
+
     for ( p = start; p < limit - 3; p++ )
     {
       if ( IS_KERN_PAIR( p ) )

@@ -1,3 +1,8 @@
+2001-08-30  Anthony Feik  <afeick@hotmail.com>
+
+	* src/type1/t1afm.c (T1_Read_Afm): now correctly sets the flag
+	FT_FACE_FLAG_KERNING when appropriate for Type1 + AFM files..
+
 2001-08-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttload.c (TT_Load_CMap): Fix frame length of
