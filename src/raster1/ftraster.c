@@ -112,7 +112,7 @@
 
   /* undefine FT_RASTER_OPTION_ANTI_ALIASING if you do not want to support */
   /* 5-levels anti-aliasing                                                */
-#ifdef xxxFT_CONFIG_OPTION_5_GRAY_LEVELS
+#ifdef FT_CONFIG_OPTION_5_GRAY_LEVELS
 #define FT_RASTER_OPTION_ANTI_ALIASING
 #endif
 
