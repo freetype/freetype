@@ -251,6 +251,10 @@ SOURCE=..\..\..\src\pcf\pcf.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\pfr\pfr.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\psaux\psaux.c
 # SUBTRACT CPP /Fr
 # End Source File
