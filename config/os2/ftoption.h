@@ -31,6 +31,48 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /* Glyph Postscript Names handling                                       */
+  /*                                                                       */
+  /*   By default, FreeType 2 is built with the "psnames" module compiled  */
+  /*   in. This module is in charge of converting a glyph name string into */
+  /*   a Unicode value, or return a Macintosh standard glyph name for the  */
+  /*   use with the TrueType "post" table.                                 */
+  /*                                                                       */
+  /*   Undefine this macro if you do not want the "psnames" compiled in    */
+  /*   your build of FreeType. This has the following effects :            */
+  /*                                                                       */
+  /*   - the TrueType driver will provide its own set of glyph names,      */
+  /*     if you build it to support postscript names in the TrueType       */
+  /*     "post" table.                                                     */
+  /*                                                                       */
+  /*   - the Type 1 driver will not be able to synthetize a                */
+  /*     Unicode charmap out of the glyphs found in the fonts.             */
+  /*                                                                       */
+  /*   You would normally undefine this configuration macro when           */
+  /*   building a version of FreeType that doesn't contain a Type 1        */
+  /*   or CFF driver.                                                      */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Postscript Names to Unicode Values support                            */
+  /*                                                                       */
+  /*   By default, FreeType 2 is built with the "psnames" module compiled  */
+  /*   in. Among other things, the module is used to convert a glyph       */
+  /*   name into a unicode value. This is especially useful in order to    */
+  /*   synthetize on the fly a Unicode charmap from the CFF/Type 1 driver  */
+  /*   through a big table named the "Adobe Glyph List".                   */
+  /*                                                                       */
+  /*   Undefine this macro if you do not want the Adobe Glyph List         */
+  /*   compiled in your "psnames" module. The Type 1 driver will not       */
+  /*   be able to synthetize a Unicode charmap out of the glyphs found     */
+  /*   in the fonts..                                                      */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
+
+  /*************************************************************************/
+  /*                                                                       */
   /* GCC provides the non-ANSI `long long' 64-bit type.  You can activate  */
   /* it by defining the FTCALC_USE_LONG_LONG macro here.  Note however     */
   /* that we did not experience any improvement in speed with gcc, and     */
