@@ -122,13 +122,13 @@ def dump_html_code( lines, prefix = "" ):
 
 
 class HtmlFormatter(Formatter):
-    
+
     def __init__( self, processor, project_title, file_prefix ):
-        
+
         Formatter.__init__( self, processor )
-        
+
         global html_header_1, html_header_2, html_header_3, html_footer
-        
+
         if file_prefix:
             file_prefix = file_prefix + "-"
         else:
@@ -138,13 +138,13 @@ class HtmlFormatter(Formatter):
         self.file_prefix   = file_prefix
         self.html_header   = html_header_1 + project_title + html_header_2 + \
                              project_title + html_header_3
-    
+
         self.html_footer = "<p><center><font size=""-2"">generated on " +   \
                             time.asctime( time.localtime( time.time() ) ) + \
                            "</font></p></center>" + html_footer
-        
+
         self.columns = 3
-    
+
     def  make_section_url( self, section ):
         return self.file_prefix + section.name + ".html"
 
@@ -183,7 +183,7 @@ class HtmlFormatter(Formatter):
         if m:
             name = m.group(1)
             return '<i>'+name+'</i>'
-    
+
         m = re_bold.match( word )
         if m:
             name = m.group(1)
@@ -199,7 +199,7 @@ class HtmlFormatter(Formatter):
             line = self.make_html_word( words[0] )
             for word in words[1:]:
                 line = line + " " + self.make_html_word( word )
-        
+
         return "<p>" + line + "</p>"
 
 
@@ -233,7 +233,7 @@ class HtmlFormatter(Formatter):
             print "<table valign=top><tr><td><b>"+field.name+"</b></td><td>"
 
         print self.make_html_items( field.items )
-        
+
         if field.name:
             print "</td></tr></table>"
 
@@ -246,15 +246,15 @@ class HtmlFormatter(Formatter):
                 name   = m.group(2)
                 prefix = html_quote( m.group(1) )
                 length = len( m.group(0) )
-                
+
                 if name == block_name:
                     # this is the current block name, if any
                     result = result + prefix + '<b>' + name + '</b>'
-                
+
                 elif re_source_keywords.match(name):
                     # this is a C keyword
                     result = result + prefix + keyword_prefix + name + keyword_suffix
-                    
+
                 elif self.identifiers.has_key(name):
                     # this is a known identifier
                     block = self.identifiers[name]
@@ -267,19 +267,38 @@ class HtmlFormatter(Formatter):
             else:
                 result = result + html_quote(line)
                 line   = []
-        
+
         return result
 
 
     def print_html_field_list( self, fields ):
         print "<table valign=top cellpadding=3>"
+
+        # compute the maximum length of each field name
+        # if it is
+        #
+        max = 0
         for field in fields:
-            print "<tr><td><b>" + field.name + "</b></td><td>"
+            l = len( field.name )
+            if l > max:
+              max = l
+
+        head  = "<tr valign=top><td><b>"
+        inter = "</b></td><td>"
+        foot  = "</td></tr>"
+        if max > 18:
+            head  = "<tr><td colspan=2><b>"
+            inter = "</b></td></tr><tr><td width=5%></td><td>"
+            foot  = "<p></td></tr>"
+
+        for field in fields:
+            print head + field.name + inter
             self.print_html_items( field.items )
-            print "</td></tr>"
+            print foot
+
         print "</table>"
-    
-    
+
+
     def print_html_markup( self, markup ):
         table_fields = []
         for field in markup.fields:
@@ -289,21 +308,21 @@ class HtmlFormatter(Formatter):
                 # all of them as a single table
                 #
                 table_fields.append( field )
-                
+
             else:
                 if table_fields:
                     self.print_html_field_list( table_fields )
                     table_fields = []
-    
+
                 self.print_html_items( field.items )
-        
+
         if table_fields:
             self.print_html_field_list( table_fields )
 
     #
     #  Formatting the index
     #
-    
+
     def  index_enter( self ):
         print self.html_header
         self.index_items = {}
@@ -314,12 +333,12 @@ class HtmlFormatter(Formatter):
         self.index_items[ name ] = url
 
     def  index_exit( self ):
-        
+
         # block_index already contains the sorted list of index names
         count = len( self.block_index )
         rows  = (count + self.columns - 1)/self.columns
-        
-        print "<center><table border=0 cellpadding=0 cellspacing=0>"
+
+        print "<center><table border=0 cellpadding=0 cellspacing=2>"
         for r in range(rows):
             line = "<tr>"
             for c in range(self.columns):
@@ -338,7 +357,7 @@ class HtmlFormatter(Formatter):
         self.index_items = {}
 
     def  index_dump( self, index_filename = None ):
-        
+
         if index_filename == None:
             index_filename = self.file_prefix + "index.html"
 
@@ -346,7 +365,7 @@ class HtmlFormatter(Formatter):
 
     #
     #  Formatting the table of content
-    #    
+    #
     def  toc_enter( self ):
         print self.html_header
         print "<center><h1>Table of Contents</h1></center>"
@@ -359,7 +378,7 @@ class HtmlFormatter(Formatter):
         print "<tr valign=top><td>"
         print '<a href="' + self.make_section_url( section ) + '">' + \
                section.title + '</a></td><td>'
-        
+
         print self.make_html_para( section.abstract )
 
     def  toc_section_exit( self, section ):
@@ -379,7 +398,7 @@ class HtmlFormatter(Formatter):
     def  toc_dump( self, toc_filename = None, index_filename = None ):
         if toc_filename == None:
             toc_filename = self.file_prefix + "toc.html"
-        
+
         if index_filename == None:
             index_filename = self.file_prefix + "index.html"
 
@@ -397,14 +416,14 @@ class HtmlFormatter(Formatter):
 
         # print section synopsys
         print section_synopsis_header
-        print "<center><table cellspacing=5 cellpadding=0 border=0>"
-        
-        maxwidth = 0
+        print "<center><table cellspacing=5 cellpadding=2 border=0>"
+
+        maxwidth = 1
         for b in section.blocks.values():
             if len(b.name) > maxwidth:
                 maxwidth = len(b.name)
 
-        width  = 130  # XXX magic number
+        width  = 70  # XXX magic number
         columns = width / maxwidth
         if columns < 1:
             columns = 1
@@ -423,7 +442,7 @@ class HtmlFormatter(Formatter):
                 line = line + '</td>'
             line = line + "</tr>"
             print line
-            
+
         print "</table></center><br><br>"
         print section_synopsis_footer
 
@@ -439,7 +458,7 @@ class HtmlFormatter(Formatter):
             print '<a name="' + block.name + '">'
             print "<h4>" + block.name + "</h4>"
             print "</a>"
-        
+
         # dump the block C source lines now
         if block.code:
             print source_header
@@ -453,9 +472,9 @@ class HtmlFormatter(Formatter):
             print description_header
         else:
             print marker_header + markup.tag + marker_inter
-        
+
         self.print_html_markup( markup )
-    
+
     def  markup_exit( self, markup, block ):
         if markup.tag == "description":
             print description_footer
@@ -465,7 +484,7 @@ class HtmlFormatter(Formatter):
     def  block_exit( self, block ):
         print block_footer
 
-        
+
     def  section_exit( self, section ):
         print html_footer
 

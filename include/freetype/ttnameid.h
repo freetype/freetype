@@ -230,7 +230,7 @@ FT_BEGIN_HEADER
    *   @TT_PLATFORM_MICROSOFT charmaps and name entries.
    *
    * @values:
-   *   TT_MS_ID_SYMBOLS_CS ::
+   *   TT_MS_ID_SYMBOL_CS ::
    *     Corresponds to symbol encodings. see @FT_ENCODING_MS_SYMBOL.
    *
    *   TT_MS_ID_UNICODE_CS ::

@@ -6,7 +6,7 @@
 
 FT_BEGIN_HEADER
 
-/**************************************************************
+/*@*************************************************************
  *
  * @type: FT_Stroker
  *
@@ -16,7 +16,7 @@ FT_BEGIN_HEADER
   typedef struct FT_StrokerRec_*    FT_Stroker;
 
 
-/**************************************************************
+/*@*************************************************************
  *
  * @enum: FT_Stroker_LineJoin
  *
@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
   } FT_Stroker_LineJoin;
 
 
-/**************************************************************
+/*@*************************************************************
  *
  * @enum: FT_Stroker_LineCap
  *
@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
  *      the end of lines is rendered as a half-circle around the
  *      last point
  *
- *    FT_STROKER_LINEJOIN_MITER ::
+ *    FT_STROKER_LINECAP_SQUARE ::
  *      the end of lines is rendered as a square around the
  *      last point
  */
@@ -77,6 +77,7 @@ FT_BEGIN_HEADER
 
   } FT_Stroker_LineCap;
 
+ /* */
 
   FT_EXPORT( FT_Error )
   FT_Stroker_New( FT_Memory    memory,
