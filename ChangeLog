@@ -1,3 +1,8 @@
+2001-10-07  Richard Barber <rich@solutionuk.com>
+
+	* src/cache/ftlru.c (FT_Lru_Lookup_Node): fixed a bug that prevented
+	correct LRU behaviour
+
 2001-10-07  David Turner  <david@freetype.org>
 
 	* src/smooth/ftgrays: "setjmp/longjmp" is now used for rollback (i.e.

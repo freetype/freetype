@@ -177,7 +177,12 @@
         }
     }
 
-    if ( !found )
+    if ( found )
+    {
+      /* move element to top of list */
+      FT_List_Up( &lru->elements, node );
+    }
+    else
     {
       /* we haven't found the relevant element.  We will now try */
       /* to create a new one.                                    */
