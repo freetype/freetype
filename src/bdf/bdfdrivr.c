@@ -169,8 +169,6 @@ THE SOFTWARE.
   };
 
 
-
-
   FT_CALLBACK_DEF( FT_Error )
   BDF_Face_Done( BDF_Face  face )
   {
@@ -250,7 +248,7 @@ THE SOFTWARE.
                          FT_FACE_FLAG_HORIZONTAL  |
                          FT_FACE_FLAG_FAST_GLYPHS;
 
-      prop = bdf_get_font_property( font, (char *)"SPACING" );
+      prop = bdf_get_font_property( font, "SPACING" );
       if ( prop != NULL )
         if ( prop->format == BDF_ATOM )
           if ( prop->value.atom != NULL )
@@ -262,7 +260,7 @@ THE SOFTWARE.
       /* FZ XXX: I need a font to implement this */
 
       root->style_flags = 0;
-      prop = bdf_get_font_property( font, (char *)"SLANT" );
+      prop = bdf_get_font_property( font, "SLANT" );
       if ( prop != NULL )
         if ( prop->format == BDF_ATOM )
           if ( prop->value.atom != NULL )
@@ -270,14 +268,14 @@ THE SOFTWARE.
                  ( *(prop->value.atom) == 'I' ) )
               root->style_flags |= FT_STYLE_FLAG_ITALIC;
 
-      prop = bdf_get_font_property( font, (char *)"WEIGHT_NAME" );
+      prop = bdf_get_font_property( font, "WEIGHT_NAME" );
       if ( prop != NULL )
         if ( prop->format == BDF_ATOM )
           if ( prop->value.atom != NULL )
             if ( *(prop->value.atom) == 'B' )
               root->style_flags |= FT_STYLE_FLAG_BOLD;
 
-      prop = bdf_get_font_property( font, (char *)"FAMILY_NAME" );
+      prop = bdf_get_font_property( font, "FAMILY_NAME" );
       if ( ( prop != NULL ) && ( prop->value.atom != NULL ) )
       {
         int  l = ft_strlen( prop->value.atom ) + 1;
@@ -307,22 +305,24 @@ THE SOFTWARE.
       if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
         goto Exit;
 
-      prop = bdf_get_font_property( font, (char *)"AVERAGE_WIDTH" );
+      prop = bdf_get_font_property( font, "AVERAGE_WIDTH" );
       if ( ( prop != NULL ) && ( prop->value.int32 >= 10 ) )
         root->available_sizes->width = (short)( prop->value.int32 / 10 );
 
-      prop = bdf_get_font_property( font, (char *)"PIXEL_SIZE" );
-      if ( prop != NULL )
-        root->available_sizes->height = (short) prop->value.int32;
+      prop = bdf_get_font_property( font, "PIXEL_SIZE" );
+      if ( prop != NULL ) {
+        root->available_sizes->height =
+        root->available_sizes->width  = (short) prop->value.int32;
+      }
       else
       {
-        prop = bdf_get_font_property( font, (char *)"POINT_SIZE" );
+        prop = bdf_get_font_property( font, "POINT_SIZE" );
         if ( prop != NULL )
         {
           bdf_property_t  *yres;
 
 
-          yres = bdf_get_font_property( font, (char *)"RESOLUTION_Y" );
+          yres = bdf_get_font_property( font, "RESOLUTION_Y" );
           if ( yres != NULL )
           {
             FT_TRACE4(( "POINT_SIZE: %d  RESOLUTION_Y: %d\n",
@@ -371,9 +371,9 @@ THE SOFTWARE.
 
 
         charset_registry =
-          bdf_get_font_property( font, (char *)"CHARSET_REGISTRY" );
+          bdf_get_font_property( font, "CHARSET_REGISTRY" );
         charset_encoding =
-          bdf_get_font_property( font, (char *)"CHARSET_ENCODING" );
+          bdf_get_font_property( font, "CHARSET_ENCODING" );
         if ( ( charset_registry != NULL ) && ( charset_encoding != NULL ) )
         {
           if ( ( charset_registry->format == BDF_ATOM ) &&
@@ -640,7 +640,7 @@ THE SOFTWARE.
 
     FT_ASSERT( face && face->bdffont );
 
-    prop = bdf_get_font_property( face->bdffont, (char*)prop_name );
+    prop = bdf_get_font_property( face->bdffont, prop_name );
     if ( prop != NULL )
     {
       switch ( prop->format )
