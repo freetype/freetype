@@ -94,6 +94,7 @@
       {
         FT_Int cs_offset;
 
+
         /* Adjustment for seed bytes. */
         cs_offset = ( decoder->lenIV >= 0 ? decoder->lenIV : 0 );
 

@@ -5,8 +5,8 @@ directory.  This is only a quick starter.
 I. From the command line
 ------------------------
 
-  You need to have GNU Make  (version 3.78 or newer) installed on your
-  system  to compile  the library  from the  command line.   This will
+  You need  to have  GNU Make (version  3.78.1 or newer)  installed on
+  your system to compile the library from the command line.  This will
   _not_ work with other make tools (including BSD make)!
 
   [Well, this is not  really correct.  Recently, a perl implementation
