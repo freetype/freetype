@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftoption.h                                                             */
+/*  ftoption.h (for development)                                           */
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -567,6 +567,14 @@ FT_BEGIN_HEADER
 #define  FT_CONFIG_CHESTER_BLUE_SCALE
 
 #endif /* FT_CONFIG_OPTION_CHESTER_HINTS */
+
+/*
+ * This temporary macro is used to control various optimizations for
+ * reducing the heap footprint of memory-mapped TrueType files.
+ *
+ */
+#define  FT_OPTIMIZE_MEMORY
+
 
 FT_END_HEADER
 
