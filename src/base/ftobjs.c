@@ -434,8 +434,8 @@
     {
       new_max = ( new_max + 7 ) & -8;
 
-      if ( REALLOC_ARRAY( base->points, old_max, new_max, FT_Vector )    ||
-           REALLOC_ARRAY( base->tags,   old_max, new_max, FT_Byte   )    )
+      if ( REALLOC_ARRAY( base->points, old_max, new_max, FT_Vector ) ||
+           REALLOC_ARRAY( base->tags,   old_max, new_max, FT_Byte   ) )
        goto Exit;
 
       if ( loader->use_extra &&
