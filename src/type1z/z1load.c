@@ -1243,9 +1243,9 @@
     if ( parser->error )
       return;
 
-    /* position the parser right before the "dup" of the first subr */
+    /* position the parser right before the `dup' of the first subr */
     skip_whitespace( parser );
-    skip_blackspace( parser ); /* "array" */
+    skip_blackspace( parser );      /* `array' */
     skip_whitespace( parser );
 
     /* initialize subrs array */
@@ -1264,8 +1264,8 @@
       FT_Byte*  base;
 
 
-      /* If the next token isn't "dup", we're also done. This   */
-      /* happens when there are "holes" in the Subrs array.     */
+      /* If the next token isn't `dup', we are also done.  This */
+      /* happens when there are `holes' in the Subrs array.     */
       if ( strncmp( (char*)parser->cursor, "dup", 3 ) != 0 )
         break;
 
@@ -1274,23 +1274,24 @@
       if ( !read_binary_data( parser, &size, &base ) )
         return;
 
-      /* The binary string is followed by one token, eg. "NP"   */
-      /* (bound to "noaccess put") or by two separate tokens:   */
-      /* "noaccess" & "put". We position the parser right       */
-      /* before the next dup, if any.                           */
+      /* The binary string is followed by one token, e.g. `NP' */
+      /* (bound to `noaccess put') or by two separate tokens:  */
+      /* `noaccess' & `put'.  We position the parser right     */
+      /* before the next `dup', if any.                        */
       skip_whitespace( parser );
-      skip_blackspace( parser ); /* "NP" or "I" or "noaccess"   */
+      skip_blackspace( parser );    /* `NP' or `I' or `noaccess' */
       skip_whitespace( parser );
+
       if ( strncmp( (char*)parser->cursor, "put", 3 ) == 0 )
       {
-        skip_blackspace( parser ); /* skip "put" */
+        skip_blackspace( parser );  /* skip `put' */
         skip_whitespace( parser );
       }
 
       /* some fonts use a value of -1 for lenIV to indicate that */
-      /* the charstrings are unencoded..                         */
+      /* the charstrings are unencoded                           */
       /*                                                         */
-      /* thanks to Tom Kacvinsky for pointing this out..         */
+      /* thanks to Tom Kacvinsky for pointing this out           */
       /*                                                         */
       if ( face->type1.private_dict.lenIV >= 0 )
       {
