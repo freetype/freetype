@@ -1,8 +1,8 @@
 2000-11-22  Tom Kacvinsky  <tjk@ams.org>
 
-	* src/cff/t2objs.c (T2_Init_Face): Set `root->num_faces' when loading
-	a pure CFF font.  Set `units_per_EM' to a default of 1000 (for pure CFF
-	fonts), instead of setting it based on the FontMatrix.
+	* src/cff/t2objs.c (T2_Init_Face): For pure CFF fonts, set 
+	`root->num_faces' to `cff->num_faces' and set `units_per_EM'
+	to 1000.
 
 2000-11-16  David Turner <david@freetype.org>
 
