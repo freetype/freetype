@@ -21,14 +21,20 @@
 #include "t1driver.h"
 #include "t1gload.h"
 #include "t1load.h"
+
+#ifndef T1_CONFIG_OPTION_NO_AFM
 #include "t1afm.h"
+#endif
 
 #else
 
 #include <type1/t1driver.h>
 #include <type1/t1gload.h>
 #include <type1/t1load.h>
+
+#ifndef T1_CONFIG_OPTION_NO_AFM
 #include <type1/t1afm.h>
+#endif
 
 #endif
 

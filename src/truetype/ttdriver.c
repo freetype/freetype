@@ -225,7 +225,9 @@
     }
 
     size->ttmetrics.valid = FALSE;
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     size->strike_index    = 0xFFFF;
+#endif
 
     return TT_Reset_Size( size );
   }
@@ -262,7 +264,9 @@
     /* many things have been pre-computed by the base layer */
 
     size->ttmetrics.valid = FALSE;
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     size->strike_index    = 0xFFFF;
+#endif
 
     return TT_Reset_Size( size );
   }

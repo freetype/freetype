@@ -31,6 +31,7 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
+#include <freetype/internal/fnttypes.h>
 
 
   /*************************************************************************/

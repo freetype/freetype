@@ -27,17 +27,6 @@
 #endif
 
 
-  /* A very stupid pre-processor trick.  See K&R version 2 */
-  /* section A12.3 for details...                          */
-  /*                                                       */
-  /* It is also described in the section `Separate         */
-  /* Expansion of Macro Arguments' in the info file        */
-  /* `cpp.info', describing GNU cpp.                       */
-  /*                                                       */
-#define FT_CAT( x, y )   x ## y
-#define FT_XCAT( x, y )  FT_CAT( x, y )
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 
@@ -134,7 +123,7 @@
           do                                              \
           {                                               \
             if ( ft_trace_levels[FT_COMPONENT] >= level ) \
-              FT_XCAT( FT_Message, varformat );           \
+              FT_Message varformat;                       \
           } while ( 0 )
 
 
@@ -205,7 +194,7 @@
   /* print a message and exit */
   FT_EXPORT( void )  FT_Panic( const char*  fmt, ... );
 
-#define FT_ERROR( varformat )  FT_XCAT( FT_Message, varformat )
+#define FT_ERROR( varformat )  FT_Message varformat
 
 
 #endif /* FT_DEBUG_LEVEL_TRACE || FT_DEBUG_LEVEL_ERROR */
