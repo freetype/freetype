@@ -79,7 +79,7 @@ AC_SUBST(FTSYS_SRC)
 
 AC_CHECK_FUNCS(memcpy memmove)
 
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 dnl create the Unix-specific sub-Makefiles `builds/unix/unix-def.mk'
 dnl and 'builds/unix/unix-cc.mk' that will be used by the build system
