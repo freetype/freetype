@@ -207,10 +207,11 @@
   FT_EXPORT_DEF( FT_Error )  FT_Done_Size( FT_Size  size );
 
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
-                                               FT_GlyphSlot*  aslot );
 
-  FT_EXPORT_DEF( void )      FT_Done_GlyphSlot( FT_GlyphSlot  slot );
+  BASE_DEF( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
+                                          FT_GlyphSlot*  aslot );
+
+  BASE_DEF( void )      FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
 
   /*************************************************************************/
