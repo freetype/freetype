@@ -20,9 +20,13 @@
 
   typedef struct FT_MemNodeRec_
   {
-    FT_Byte*    address;
-    FT_Long     size;     /* < 0 if the block was freed */
-    FT_MemNode  link;
+    FT_Byte*     address;
+    FT_Long      size;     /* < 0 if the block was freed */
+    
+    const char*  file_name;
+    FT_Long      line_no;
+
+    FT_MemNode   link;
   
   } FT_MemNodeRec;
 
@@ -35,6 +39,9 @@
 
     FT_ULong     alloc_total;
     FT_ULong     alloc_current;
+  
+    const char*  file_name;
+    FT_Long      line_no;
   
   } FT_MemTableRec;
 
@@ -160,40 +167,6 @@
   }
 
 
-  static FT_MemNode
-  ft_mem_node_new( FT_MemTable  table,
-                   FT_Pointer   address,
-                   FT_ULong     size )
-  {
-    FT_MemNode  node;
-
-    node = malloc( sizeof(*node) );
-    if ( node == NULL )
-      ft_mem_debug_panic( "not enough memory to run memory tests" );
-    
-    node->link    = NULL;
-    node->address = address;
-    node->size    = size;
-
-    return node;
-  }
-
-
-  static void
-  ft_mem_node_destroy( FT_MemNode   node,
-                        FT_MemTable  table )
-  {
-    if (node)
-    {
-      node->address = NULL;
-      node->size    = 0;
-      node->link    = NULL;
-
-      free( node );
-    }
-  }
-
-
 
   static FT_MemTable
   ft_mem_table_new( void )
@@ -244,8 +217,10 @@
           
           if ( node->size > 0 )
           {
-            printf( "leaked memory block at address %p, size %ld\n",
-                     node->address, node->size );
+            printf( "leaked memory block at address %p, size %8ld (%s:%d)\n",
+                     node->address, node->size,
+                     node->file_name ? node->file_name : "unknown_file",
+                     node->line_no );
                      
             leak_count++;
             leaks += node->size;
@@ -337,9 +312,13 @@
       if ( node == NULL )
         ft_mem_debug_panic( "not enough memory to run memory tests" );
 
-      node->address = address;
-      node->size    = size;
-      node->link    = pnode[0];
+      node->address   = address;
+      node->size      = size;
+
+      node->file_name = table->file_name;
+      node->line_no   = table->line_no;
+
+      node->link      = pnode[0];
 
       pnode[0] = node;
       table->nodes++;
@@ -493,6 +472,26 @@
       memory->free = (FT_Free_Func) free;
     }
   }
+
+
+  FT_BASE_DEF( FT_Error )
+  FT_Alloc_Debug( FT_Memory    memory,
+                  FT_Long      size,
+                  void*       *P,
+                  const char*  file_name,
+                  FT_Long      line_no )
+  {
+    FT_MemTable  table = memory->user;
+    
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+    return FT_Alloc( memory, size, P );
+  }            
+
+
 
 #else  /* !FT_DEBUG_MEMORY */
  

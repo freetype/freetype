@@ -1,5 +1,10 @@
 2001-10-22  David Turner  <david@freetype.org>
 
+        * include/freetype/internal/ftmemory.h, src/base/ftdbgmem.c: modified
+        the debugging memory manager to report the location (source file name
+        + line number) where leaked memory blocks are allocated in the source
+        file..  funny, isn't it ??
+
 	* src/base/ftdbgmem.c: new debugging memory manager. You must define
 	the FT_DEBUG_MEMORY macro in "ftoption.h" to enable it. It will record
 	every memory block allocated and report simple errors like memory

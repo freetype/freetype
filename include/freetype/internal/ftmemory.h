@@ -55,6 +55,16 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
+#ifdef FT_DEBUG_MEMORY
+
+  FT_BASE( FT_Error )
+  FT_Alloc_Debug( FT_Memory    memory,
+                  FT_Long      size,
+                  void*       *P,
+                  const char*  file_name,
+                  FT_Long      line_no );
+#endif
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -82,7 +92,6 @@ FT_BEGIN_HEADER
   FT_Alloc( FT_Memory  memory,
             FT_Long    size,
             void*     *P );
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -159,6 +168,7 @@ FT_BEGIN_HEADER
 #define MEM_Move( dest, source, count )  memmove( dest, source, count )
 
 
+
   /*************************************************************************/
   /*                                                                       */
   /* We now support closures to produce completely reentrant code.  This   */
@@ -172,12 +182,26 @@ FT_BEGIN_HEADER
   /* ALLOC_ARRAY() now use an implicit variable, `memory'.  It must be     */
   /* defined at all locations where a memory operation is queried.         */
   /*                                                                       */
-#define MEM_Alloc( _pointer_, _size_ )                     \
-          FT_Alloc( memory, _size_, (void**)&(_pointer_) )
 
-#define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
-          FT_Alloc( memory, (_count_)*sizeof ( _type_ ), \
-                    (void**)&(_pointer_) )
+#ifdef FT_DEBUG_MEMORY
+
+#  define MEM_Alloc( _pointer_, _size_ )                     \
+            FT_Alloc_Debug( memory, _size_, (void**)&(_pointer_), __FILE__, __LINE__ )
+
+#  define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
+            FT_Alloc_Debug( memory, (_count_)*sizeof ( _type_ ), \
+                            (void**)&(_pointer_), __FILE__, __LINE__ )
+  
+#else  /* !FT_DEBUG_MEMORY */
+
+#  define MEM_Alloc( _pointer_, _size_ )                     \
+            FT_Alloc( memory, _size_, (void**)&(_pointer_) )
+
+#  define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
+            FT_Alloc( memory, (_count_)*sizeof ( _type_ ), \
+                      (void**)&(_pointer_) )
+
+#endif /* !FT_DEBUG_MEMORY */
 
 #define MEM_Realloc( _pointer_, _current_, _size_ )                     \
           FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
