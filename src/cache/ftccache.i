@@ -78,7 +78,6 @@
       family = (FTC_Family)lru;
       hash   = query->hash;
 
-#ifdef FTC_CACHE_USE_LINEAR_HASHING
       {
         FT_UInt  index;
 
@@ -89,9 +88,6 @@
 
         bucket  = cache->buckets + index;
       }
-#else
-      bucket  = cache->buckets + ( hash % cache->size );
-#endif
 
 #ifdef FT_DEBUG_LEVEL_ERROR
       if ( query->family     != family                        ||
