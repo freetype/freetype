@@ -1,3 +1,18 @@
+2003-07-24  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 5.
+	* builds/unix/configure.ac (version_info): Set to 10:0:3.
+	* builds/unix/configure: Updated.
+	* builds/freetype.mk (refdoc): Fix --title.
+
+	* docs/CHANGES, docs/VERSION.DLL, README: Updated.
+
+	* src/tools/docmaker/sources.py (re_crossref): Fix regular
+	expression to handle trailing punctuation characters.
+	* src/tools/docmaker/tohtml.py (make_html_word): Updated.
+
+	* docs/release: New file.
+
 2003-07-23  YAMANO-UCHI Hidetoshi  <mer@din.or.jp>
 
 	* include/freetype/internal/psaux.h (PS_Parser_FuncsRec): New
@@ -50,7 +65,7 @@
 
 	A new try to synchronize bitmap font access.
 
-	include/freetype/freetype.h (FT_Bitmap_Size): `height' is now
+	* include/freetype/freetype.h (FT_Bitmap_Size): `height' is now
 	defined to return the baseline-to-baseline distance.  This was
 	already the value returned by the BDF and PCF drivers.
 
@@ -111,7 +126,7 @@
 
 2003-06-24  Werner Lemberg  <wl@gnu.org>
 
-	* src/cff/cffdrivr.c (cff_get_glyph_name): Protect agains zero
+	* src/cff/cffdrivr.c (cff_get_glyph_name): Protect against zero
 	glyph name pointer.  Reported by Mikey Anbary <manbary@vizrt.com>.
 
 2003-06-23  Werner Lemberg  <wl@gnu.org>

@@ -687,8 +687,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_COMPOSITE ::                                       */
   /*      The glyph image is a composite of several other images.  This    */
-  /*      format is _only_ used with @FT_LOAD_FLAG_NO_RECURSE, and is      */
-  /*      used to report compound glyphs (like accented characters).       */
+  /*      format is _only_ used with @FT_LOAD_NO_RECURSE, and is used to   */
+  /*      report compound glyphs (like accented characters).               */
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_BITMAP ::                                          */
   /*      The glyph image is a bitmap, and can be described as an          */

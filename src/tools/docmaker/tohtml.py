@@ -85,7 +85,7 @@ chapter_footer = "</ul></td></tr></table></center>"
 keyword_prefix = '<font color="darkblue">'
 keyword_suffix = '</font>'
 
-section_synopsis_header = '<h2>Synopsys</h2><font color="cyan">'
+section_synopsis_header = '<h2>Synopsis</h2><font color="cyan">'
 section_synopsis_footer = '</font>'
 
 # Translate a single line of source to HTML.  This will convert
@@ -172,11 +172,12 @@ class HtmlFormatter(Formatter):
         if m:
             try:
                 name = m.group(1)
+                rest = m.group(2)
                 block = self.identifiers[ name ]
                 url   = self.make_block_url( block )
-                return '<a href="' + url + '">' + name + '</a>'
+                return '<a href="' + url + '">' + name + '</a>' + rest
             except:
-                return '?' + name + '?'
+                return '?' + name + '?' + rest
 
         # look for italics and bolds
         m = re_italic.match( word )
