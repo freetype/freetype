@@ -266,18 +266,24 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
+  /* In the PostScript Language Reference Manual (PLRM) the following */
+  /* characters are called `white-space characters'.                  */
 #define IS_T1_WHITESPACE( c )  ( (c) == ' '  || (c) == '\t' )
-#define IS_T1_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' )
+#define IS_T1_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' || (c) == '\f' )
+#define IS_T1_NULLSPACE( c )   ( (c) == '\0' )
 
-#define IS_T1_SPACE( c )  ( IS_T1_WHITESPACE( c ) || IS_T1_LINESPACE( c ) )
+  /* According to the PLRM all white-space characters are equivalent, */
+  /* except in comments and strings.                                  */
+#define IS_T1_SPACE( c )  ( IS_T1_WHITESPACE( c ) || \
+                            IS_T1_LINESPACE( c )  || \
+                            IS_T1_NULLSPACE( c )  )
 
 
-  FT_LOCAL_DEF( void )
-  ps_parser_skip_spaces( PS_Parser  parser )
+  static void
+  skip_spaces( FT_Byte**  acur,
+               FT_Byte*   limit )
   {
-    FT_Byte*  cur   = parser->cursor;
-    FT_Byte*  limit = parser->limit;
+    FT_Byte* cur = *acur;
 
 
     while ( cur < limit )
@@ -289,15 +295,16 @@
         break;
       cur++;
     }
-    parser->cursor = cur;
+
+    *acur = cur;
   }
 
 
-  FT_LOCAL_DEF( void )
-  ps_parser_skip_alpha( PS_Parser  parser )
+  static void
+  skip_alpha( FT_Byte**  acur,
+              FT_Byte*   limit )
   {
-    FT_Byte*  cur   = parser->cursor;
-    FT_Byte*  limit = parser->limit;
+    FT_Byte*  cur = *acur;
 
 
     while ( cur < limit )
@@ -309,7 +316,22 @@
         break;
       cur++;
     }
-    parser->cursor = cur;
+
+    *acur = cur;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  ps_parser_skip_spaces( PS_Parser  parser )
+  {
+    skip_spaces( &parser->cursor, parser->limit );
+  }
+
+
+  FT_LOCAL_DEF( void )
+  ps_parser_skip_alpha( PS_Parser  parser )
+  {
+    skip_alpha( &parser->cursor, parser->limit );
   }
 
 
@@ -528,6 +550,69 @@
 
     *cursor = cur;
     return result;
+  }
+
+
+  /* <...>: hexadecimal string */
+  static FT_Error
+  ps_tobytes( FT_Byte**  cursor,
+              FT_Byte*   limit,
+              FT_Int     max_bytes,
+              FT_Byte*   bytes,
+              FT_Int*    pnum_bytes )
+  {
+    FT_Error  error = PSaux_Err_Ok;
+
+    FT_Byte*  cur = *cursor;
+    FT_Int    n   = 0;
+    FT_Byte   b;
+
+
+    skip_spaces( &cur, limit );
+
+    if ( *cur != '<' )
+    {
+      error = PSaux_Err_Invalid_File_Format;
+      goto Exit;
+    }
+
+    cur++;
+
+    for ( ; cur < limit; n++ )
+    {
+      FT_Byte*  cur2 = cur;
+
+
+      if ( n + 1 > max_bytes * 2 )
+        goto Exit;
+
+      /* All white-space charcters are ignored. */
+      skip_spaces( &cur, limit );
+
+      b = T1Radix( 16, &cur, cur + 1 );
+
+      if ( cur == cur2 )
+        break;
+
+      /* <f> == <f0> != <0f> */
+      bytes[n / 2] = ( n % 2 ) ? bytes[n / 2] + b
+                               : b * 16;
+    }
+
+    skip_spaces( &cur, limit );
+
+    if ( *cur != '>' )
+    {
+      error = PSaux_Err_Invalid_File_Format;
+      goto Exit;
+    }
+
+    *cursor = ++cur;
+
+  Exit:
+    *pnum_bytes = ( n + 1 ) / 2;
+
+    return error;
   }
 
 
@@ -1168,6 +1253,20 @@
   ps_parser_to_int( PS_Parser  parser )
   {
     return t1_toint( &parser->cursor, parser->limit );
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  ps_parser_to_bytes( PS_Parser  parser,
+                      FT_Byte*   bytes,
+                      FT_Int     max_bytes,
+                      FT_Int*    pnum_bytes )
+  {
+    return ps_tobytes( &parser->cursor,
+                       parser->limit,
+                       max_bytes,
+                       bytes,
+                       pnum_bytes );
   }
 
 

@@ -352,6 +352,12 @@ FT_BEGIN_HEADER
     FT_Fixed
     (*to_fixed)( PS_Parser  parser,
                  FT_Int     power_ten );
+    FT_Error
+    (*to_bytes)( PS_Parser  parser,
+                 FT_Byte*   bytes,
+                 FT_Int     max_bytes,
+                 FT_Int*    pnum_bytes );
+
     FT_Int
     (*to_coord_array)( PS_Parser  parser,
                        FT_Int     max_coords,

@@ -1,3 +1,19 @@
+2003-07-23  YAMANO-UCHI Hidetoshi  <mer@din.or.jp>
+
+	* include/freetype/internal/psaux.h (PS_Parser_FuncsRec): New
+	member function `to_bytes'.
+
+	* src/psaux/psauxmod.c (ps_parser_funcs): New member
+	`ps_parser_to_bytes'.
+	(psaux_module_class): Increase version to 0x20000L.
+
+	* src/psaux/psobjs.c (IS_T1_LINESPACE): Add \f.
+	(IS_T1_NULLSPACE): New macro.
+	(IS_T1_SPACE): Add it.
+	(skip_spaces, skip_alpha): New functions.
+	(ps_parser_skip_spaces, ps_parser_skip_alpha): Use them.
+	(ps_tobytes, ps_parser_to_bytes): New functions.
+
 2003-07-07  Werner Lemberg  <wl@gnu.org>
 
 	* builds/freetype.mk (DOC_DIR): New variable.
