@@ -809,14 +809,14 @@
         if ( req_args & T2_COUNT_CHECK_WIDTH )
         {
           args = stack;
-          if ( decoder->read_width )
+          if ( num_args & 1 && decoder->read_width )
           {
             decoder->glyph_width = decoder->nominal_width +
                                      ( stack[0] >> 16 );
-            decoder->read_width  = 0;
             num_args--;
             args++;
           }
+          decoder->read_width  = 0;
           req_args = 0;
         }
 

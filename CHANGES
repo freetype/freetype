@@ -1,7 +1,7 @@
 LATEST CHANGES
 
-  - added support for CID-keyed fonts to the CFF driver. There are still
-    some unexplained bugs though... ???
+  - added support for CID-keyed fonts to the CFF driver.
+    maybe support for pure CFF + CEF fonts should come in ??
 
 
   - cleaned up source code in order to avoid two functions with the
