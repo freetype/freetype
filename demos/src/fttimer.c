@@ -64,7 +64,7 @@
   int             cur_point;
   unsigned short  cur_contour;
   
-  int             pixel_size   = CHARSIZE*96/72;
+  int             pixel_size   = CHARSIZE;
   int             repeat_count = 1;
 
   FT_Bitmap      Bit;
