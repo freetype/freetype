@@ -471,7 +471,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  SFNT_Interface_
   {
-    TT_Goto_Table_Func           goto_table;
+    TT_Loader_GotoTableFunc      goto_table;
 
     TT_Init_Face_Func            init_face;
     TT_Load_Face_Func            load_face;

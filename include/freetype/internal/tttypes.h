@@ -1165,7 +1165,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Goto_Table_Func                                                 */
+  /*    TT_Loader_GotoTableFunc                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Seeks a stream to the start of a given TrueType table.             */
@@ -1188,10 +1188,10 @@ FT_BEGIN_HEADER
   /*    The stream cursor must be at the font file's origin.               */
   /*                                                                       */
   typedef FT_Error
-  (*TT_Goto_Table_Func)( TT_Face    face,
-                         FT_ULong   tag,
-                         FT_Stream  stream,
-                         FT_ULong*  length );
+  (*TT_Loader_GotoTableFunc)( TT_Face    face,
+                              FT_ULong   tag,
+                              FT_Stream  stream,
+                              FT_ULong*  length );
 
 
   /*************************************************************************/
@@ -1493,7 +1493,7 @@ FT_BEGIN_HEADER
 
 #endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
-    TT_Goto_Table_Func        goto_table;
+    TT_Loader_GotoTableFunc   goto_table;
 
     TT_Loader_StartGlyphFunc  access_glyph_frame;
     TT_Loader_EndGlyphFunc    forget_glyph_frame;

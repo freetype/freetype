@@ -1,15 +1,34 @@
+/***************************************************************************/
+/*                                                                         */
+/*  t1cmap.c                                                               */
+/*                                                                         */
+/*    Type 1 character map support (body).                                 */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "t1cmap.h"
-#include <stdlib.h>
+#include <stdlib.h>     /* for qsort() */
 
 #include FT_INTERNAL_DEBUG_H
 
- /***************************************************************************/
- /***************************************************************************/
- /*****                                                                 *****/
- /*****           TYPE1 STANDARD (AND EXPERT) ENCODING CMAPS            *****/
- /*****                                                                 *****/
- /***************************************************************************/
- /***************************************************************************/
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****          TYPE1 STANDARD (AND EXPERT) ENCODING CMAPS           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   t1_cmap_std_init( T1_CMapStd  cmap,
@@ -17,6 +36,7 @@
   {
     T1_Face          face    = (T1_Face)FT_CMAP_FACE( cmap );
     PSNames_Service  psnames = (PSNames_Service)face->psnames;
+
 
     cmap->num_glyphs    = face->type1.num_glyphs;
     cmap->glyph_names   = (const char* const*)face->type1.glyph_names;
@@ -39,24 +59,27 @@
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  t1_cmap_std_char_index( T1_CMapStd   cmap,
-                          FT_UInt32    char_code )
+  t1_cmap_std_char_index( T1_CMapStd  cmap,
+                          FT_UInt32   char_code )
   {
     FT_UInt  result = 0;
+
 
     if ( char_code < 256 )
     {
       FT_UInt      code, n;
       const char*  glyph_name;
 
-      /* conver character code to Adobe SID string */
-      code       = cmap->code_to_sid[ char_code ];
+
+      /* convert character code to Adobe SID string */
+      code       = cmap->code_to_sid[char_code];
       glyph_name = cmap->sid_to_string( code );
 
       /* look for the corresponding glyph name */
       for ( n = 0; n < cmap->num_glyphs; n++ )
       {
         const char* gname = cmap->glyph_names[n];
+
 
         if ( gname && gname[0] == glyph_name[0] &&
              strcmp( gname, glyph_name ) == 0   )
@@ -66,6 +89,7 @@
         }
       }
     }
+
     return result;
   }
 
@@ -74,8 +98,9 @@
   t1_cmap_std_char_next( T1_CMapStd   cmap,
                          FT_UInt32   *pchar_code )
   {
-    FT_UInt   result    = 0;
-    FT_UInt32 char_code = *pchar_code + 1;
+    FT_UInt    result    = 0;
+    FT_UInt32  char_code = *pchar_code + 1;
+
 
     while ( char_code < 256 )
     {
@@ -104,15 +129,13 @@
   FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_standard_class_rec =
   {
-    sizeof( T1_CMapStdRec ),
+    sizeof ( T1_CMapStdRec ),
 
-    (FT_CMap_InitFunc)      t1_cmap_standard_init,
-    (FT_CMap_DoneFunc)      t1_cmap_std_done,
-    (FT_CMap_CharIndexFunc) t1_cmap_std_char_index,
-    (FT_CMap_CharNextFunc)  t1_cmap_std_char_next
+    (FT_CMap_InitFunc)     t1_cmap_standard_init,
+    (FT_CMap_DoneFunc)     t1_cmap_std_done,
+    (FT_CMap_CharIndexFunc)t1_cmap_std_char_index,
+    (FT_CMap_CharNextFunc) t1_cmap_std_char_next
   };
-
-
 
 
   FT_CALLBACK_DEF( FT_Error )
@@ -125,34 +148,33 @@
   FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_expert_class_rec =
   {
-    sizeof( T1_CMapStdRec ),
+    sizeof ( T1_CMapStdRec ),
 
-    (FT_CMap_InitFunc)      t1_cmap_expert_init,
-    (FT_CMap_DoneFunc)      t1_cmap_std_done,
-    (FT_CMap_CharIndexFunc) t1_cmap_std_char_index,
-    (FT_CMap_CharNextFunc)  t1_cmap_std_char_next
+    (FT_CMap_InitFunc)     t1_cmap_expert_init,
+    (FT_CMap_DoneFunc)     t1_cmap_std_done,
+    (FT_CMap_CharIndexFunc)t1_cmap_std_char_index,
+    (FT_CMap_CharNextFunc) t1_cmap_std_char_next
   };
 
 
-
-
- /***************************************************************************/
- /***************************************************************************/
- /*****                                                                 *****/
- /*****                    TYPE1 CUSTOM ENCODING CMAP                   *****/
- /*****                                                                 *****/
- /***************************************************************************/
- /***************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    TYPE1 CUSTOM ENCODING CMAP                 *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
 
   FT_CALLBACK_DEF( FT_Error )
   t1_cmap_custom_init( T1_CMapCustom  cmap )
   {
-    T1_Face      face     = (T1_Face) FT_CMAP_FACE(cmap);
+    T1_Face      face     = (T1_Face)FT_CMAP_FACE( cmap );
     T1_Encoding  encoding = &face->type1.encoding;
 
+
     cmap->first   = encoding->code_first;
-    cmap->count   = (FT_UInt)(encoding->code_last - cmap->first + 1);
+    cmap->count   = (FT_UInt)( encoding->code_last - cmap->first + 1 );
     cmap->indices = encoding->char_index;
 
     FT_ASSERT( cmap->indices != NULL );
@@ -176,11 +198,12 @@
                              FT_UInt32      char_code )
   {
     FT_UInt    result = 0;
-    FT_UInt32  index;
+    FT_UInt32  idx;
 
-    index = (FT_UInt32)( char_code - cmap->first );
-    if ( index < cmap->count )
-      result = cmap->indices[ index ];
+
+    idx = (FT_UInt32)( char_code - cmap->first );
+    if ( idx < cmap->count )
+      result = cmap->indices[idx];
 
     return result;
   }
@@ -190,19 +213,20 @@
   t1_cmap_custom_char_next( T1_CMapCustom  cmap,
                             FT_UInt32     *pchar_code )
   {
-    FT_UInt   result = 0;
-    FT_UInt32 char_code = *pchar_code;
-    FT_UInt32 index;
+    FT_UInt    result = 0;
+    FT_UInt32  char_code = *pchar_code;
+    FT_UInt32  idx;
+
 
     ++char_code;
 
     if ( char_code < cmap->first )
       char_code = cmap->first;
 
-    index = (FT_UInt32)( char_code - cmap->first );
-    for ( ; index < cmap->count; index++, char_code++ )
+    idx = (FT_UInt32)( char_code - cmap->first );
+    for ( ; idx < cmap->count; idx++, char_code++ )
     {
-      result = cmap->indices[index];
+      result = cmap->indices[idx];
       if ( result != 0 )
         goto Exit;
     }
@@ -218,23 +242,22 @@
   FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_custom_class_rec =
   {
-    sizeof( T1_CMapCustomRec ),
-    (FT_CMap_InitFunc)      t1_cmap_custom_init,
-    (FT_CMap_DoneFunc)      t1_cmap_custom_done,
-    (FT_CMap_CharIndexFunc) t1_cmap_custom_char_index,
-    (FT_CMap_CharNextFunc)  t1_cmap_custom_char_next
+    sizeof ( T1_CMapCustomRec ),
+
+    (FT_CMap_InitFunc)     t1_cmap_custom_init,
+    (FT_CMap_DoneFunc)     t1_cmap_custom_done,
+    (FT_CMap_CharIndexFunc)t1_cmap_custom_char_index,
+    (FT_CMap_CharNextFunc) t1_cmap_custom_char_next
   };
 
 
-
-
- /***************************************************************************/
- /***************************************************************************/
- /*****                                                                 *****/
- /*****             TYPE1 SYNTHETIC UNICODE ENCODING CMAP               *****/
- /*****                                                                 *****/
- /***************************************************************************/
- /***************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****            TYPE1 SYNTHETIC UNICODE ENCODING CMAP              *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   FT_CALLBACK_DEF( FT_Int )
   t1_cmap_uni_pair_compare( const void*  pair1,
@@ -243,6 +266,7 @@
     FT_UInt32  u1 = ((T1_CMapUniPair)pair1)->unicode;
     FT_UInt32  u2 = ((T1_CMapUniPair)pair2)->unicode;
     
+
     if ( u1 < u2 )
       return -1;
       
@@ -251,7 +275,6 @@
       
     return 0;
   }                            
-
 
 
   FT_CALLBACK_DEF( FT_Error )
@@ -281,6 +304,7 @@
       {
         const char*  gname = face->type1.glyph_names[n];
 
+
         /* build unsorted pair table by matching glyph names */
         if ( gname )
         {
@@ -298,15 +322,15 @@
       new_count = (FT_UInt)( pair - cmap->pairs );
       if ( new_count == 0 )
       {
-        /* there are no unicode characters in here !! */
+        /* there are no unicode characters in here! */
         FT_FREE( cmap->pairs );
         error = FT_Err_Invalid_Argument;
       }
       else
       {
         /* re-allocate if the new array is much smaller than the original */
-        /* one..                                                          */
-        if ( new_count != count && new_count < count/2 )
+        /* one                                                            */
+        if ( new_count != count && new_count < count / 2 )
         {
           (void)FT_RENEW_ARRAY( cmap->pairs, count, new_count );
           error = 0;
@@ -315,7 +339,7 @@
         /* sort the pairs table to allow efficient binary searches */
         qsort( cmap->pairs,
                new_count,
-               sizeof(T1_CMapUniPairRec),
+               sizeof ( T1_CMapUniPairRec ),
                t1_cmap_uni_pair_compare );
 
         cmap->num_pairs = new_count;
@@ -337,7 +361,6 @@
   }
 
 
-
   FT_CALLBACK_DEF( FT_UInt )
   t1_cmap_unicode_char_index( T1_CMapUnicode  cmap,
                               FT_UInt32       char_code )
@@ -347,16 +370,17 @@
     FT_UInt         mid;
     T1_CMapUniPair  pair;
 
+
     while ( min < max )
     {
-      mid  = min + (max - min)/2;
+      mid  = min + ( max - min ) / 2;
       pair = cmap->pairs + mid;
 
       if ( pair->unicode == char_code )
         return pair->gindex;
 
       if ( pair->unicode < char_code )
-        min = mid+1;
+        min = mid + 1;
       else
         max = mid;
     }
@@ -368,8 +392,9 @@
   t1_cmap_unicode_char_next( T1_CMapUnicode  cmap,
                              FT_UInt32      *pchar_code )
   {
-    FT_UInt      result    = 0;
-    FT_UInt32    char_code = *pchar_code + 1;
+    FT_UInt    result    = 0;
+    FT_UInt32  char_code = *pchar_code + 1;
+
 
   Restart:
     {
@@ -378,9 +403,10 @@
       FT_UInt         mid;
       T1_CMapUniPair  pair;
 
+
       while ( min < max )
       {
-        mid  = min + ((max - min) >> 1);
+        mid  = min + ( ( max - min ) >> 1 );
         pair = cmap->pairs + mid;
 
         if ( pair->unicode == char_code )
@@ -420,12 +446,13 @@
   FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_unicode_class_rec =
   {
-    sizeof( T1_CMapUnicodeRec ),
-    (FT_CMap_InitFunc)      t1_cmap_unicode_init,
-    (FT_CMap_DoneFunc)      t1_cmap_unicode_done,
-    (FT_CMap_CharIndexFunc) t1_cmap_unicode_char_index,
-    (FT_CMap_CharNextFunc)  t1_cmap_unicode_char_next
+    sizeof ( T1_CMapUnicodeRec ),
+
+    (FT_CMap_InitFunc)     t1_cmap_unicode_init,
+    (FT_CMap_DoneFunc)     t1_cmap_unicode_done,
+    (FT_CMap_CharIndexFunc)t1_cmap_unicode_char_index,
+    (FT_CMap_CharNextFunc) t1_cmap_unicode_char_next
   };
 
 
-
+/* END */
