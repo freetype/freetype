@@ -41,6 +41,8 @@
   FT_LOCAL_DEF( void )
   pfr_face_done( PFR_Face  face )
   {
+    FT_Memory   memory = face->root.driver->root.memory;
+
     /* we don't want dangling pointers */
     face->root.family_name = NULL;
     face->root.style_name  = NULL;
@@ -49,6 +51,7 @@
     pfr_phy_font_done( &face->phy_font, FT_FACE_MEMORY( face ) );
 
     /* no need to finalize the logical font or the header */
+    FT_FREE( face->root.available_sizes );
   }
 
 
@@ -179,8 +182,8 @@
          strike = phy_font->strikes;
          for ( n = 0; n < count; n++, size++, strike++ )
          {
-           size->height = strike->y_ppm;
-           size->width  = strike->x_ppm;
+           size->height = (FT_UShort) strike->y_ppm;
+           size->width  = (FT_UShort) strike->x_ppm;
          }
          root->num_fixed_sizes = count;
        }
