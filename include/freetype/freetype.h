@@ -2041,8 +2041,9 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
-  /*    @FT_Set_Pixel_Sizes provides a more convenient interface.          */
+  /*    For BDF and PCF formats, this function uses the `PIXEL_SIZE'       */
+  /*    property of the bitmap font; the `char_width' parameter is         */
+  /*    ignored.                                                           */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Char_Size( FT_Face     face,
@@ -2094,6 +2095,9 @@ FT_BEGIN_HEADER
   /*    the height of the bitmap cell.  Drivers for bitmap font formats    */
   /*    which contain a single bitmap strike only (BDF, PCF, FNT) ignore   */
   /*    `pixel_width'.                                                     */
+  /*                                                                       */
+  /*    For BDF and PCF formats, this function uses the sum of the         */
+  /*    `FONT_ASCENT' and `FONT_DESCENT' properties of the bitmap font.    */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Pixel_Sizes( FT_Face  face,
