@@ -332,7 +332,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#if 0
+#if 1
   static FT_Pos
   psh3_dimension_quantize_len( PSH_Dimension  dim,
                                FT_Pos         len,
@@ -520,7 +520,6 @@
           hint->cur_pos = pos;
           hint->cur_len = fit_len;
 
-#if 0
          /* stem adjustment tries to snap stem widths to standard
           * ones. this is important to prevent unpleasant rounding
           * artefacts...
@@ -545,7 +544,6 @@
               len = psh3_dimension_quantize_len( dim, len, 0 );
             }
           }
-#endif /* 0 */
 
           /* now that we have a good hinted stem width, try to position */
           /* the stem along a pixel grid integer coordinate             */
@@ -601,6 +599,8 @@
     }
   }
 
+
+#if 0  /* not used for now, experimental */
 
  /*
   *  A variant to perform "light" hinting (i.e. FT_RENDER_MODE_LIGHT)
@@ -779,6 +779,8 @@
 #endif
     }
   }
+
+#endif /* 0 */
 
 
   static void
