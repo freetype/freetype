@@ -291,15 +291,15 @@
       if ( post_data == NULL ) break;
       chunk_size = GetHandleSize( post_data ) - 2;
 
-      *p++ = 128;
+      *p++ = 0x80;
 
       code = (*post_data)[0];
       if ( code == 5 )
-        *p++ = 3;
+        *p++ = 0x03;  /* the end */
       else if ( code == 2 )
-        *p++ = 2;
+        *p++ = 0x02;  /* binary segment */
       else
-        *p++ = 1;
+        *p++ = 0x01;  /* ASCII segment */
       if ( code != 5 )
       {
         *p++ = chunk_size & 0xFF;
@@ -430,8 +430,11 @@ error:
  #if 0
       {
         FILE* f;
+        char * path;
 
-        f = fopen("Test.PFB", "wb");
+        path = p2c_str( lwfn_file_name );
+        strcat( path, ".PFB" );
+        f = fopen(path, "wb");
         if ( f )
         {
           fwrite( type1_data, 1, size, f );
