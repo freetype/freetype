@@ -1,3 +1,7 @@
+2001-01-18  Ian Brown  <ian.brown@printsoft.de>
+
+	* builds/win32/visualc/freetype.dsp: Updated.
+
 2002-01-13  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype2.a4: The script was still buggy.
