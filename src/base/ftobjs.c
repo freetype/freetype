@@ -23,6 +23,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TABLES_H
+#include FT_TRUETYPE_IDS_H
 #include FT_OUTLINE_H
 
 
@@ -702,6 +703,76 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    find_unicode_charmap                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function finds a Unicode charmap, if there is one.            */
+  /*    And if there is more than one, it tries to favour the more         */
+  /*    extensive one, i.e. one that supports UCS-4 against those which    */
+  /*    are limited to the BMP (said UCS-2 encoding.)                      */
+  /*                                                                       */
+  /*    This function is called from open_face() (just below), and also    */
+  /*    from FT_Select_Charmap( , FT_ENCODING_UNICODE).                    */
+  /*                                                                       */
+  static FT_Error
+  find_unicode_charmap( FT_Face  face )
+  {
+    FT_CharMap*  first;
+    FT_CharMap*  cur;
+    FT_CharMap*  unicmap = NULL;  /* some UCS-2 map, if we found it */
+
+
+    /* caller should have already checked that `face' is valid */
+    FT_ASSERT ( face );
+
+    first = face->charmaps;
+
+    if ( !first )
+      return FT_Err_Invalid_CharMap_Handle;
+
+    /* since the `interesting' table, with id's 3,10, is normally the */
+    /* last one, we loop backwards. This looses with type1 fonts with */
+    /* non-BMP characters (<.0001%), this wins with .ttf with non-BMP */
+    /* chars (.01% ?), and this is the same about 99.99% of the time! */
+
+    cur = first + face->num_charmaps;  /* points after the last one */
+
+    for ( ; --cur >= first; )
+    {
+      if ( cur[0]->encoding == FT_ENCODING_UNICODE )
+      {
+        unicmap = cur;  /* record we found a Unicode charmap */
+
+        /* XXX If some new encodings to represent UCS-4 are added,  */
+        /*     they should be added here.                           */
+        if ( ( cur[0]->platform_id == TT_PLATFORM_MICROSOFT
+                       && cur[0]->encoding_id == TT_MS_ID_UCS_4 )
+          || ( cur[0]->platform_id == TT_PLATFORM_APPLE_UNICODE
+                       && cur[0]->encoding_id == TT_APPLE_ID_UNICODE_32 ) )
+        /* Hurray! We found a UCS-4 charmap. We can stop the scan! */
+        {
+          face->charmap = cur[0];
+          return 0;
+        }
+      }
+    }
+
+    /* We do not have any UCS-4 charmap. Sigh.                           */
+    /* Let's see if we have  some other kind of Unicode charmap, though. */
+    if ( unicmap != NULL )
+    {
+      face->charmap = unicmap[0];
+      return 0;
+    }
+
+    /* Chou blanc! */
+    return FT_Err_Invalid_Argument;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    open_face                                                          */
   /*                                                                       */
   /* <Description>                                                         */
@@ -718,7 +789,7 @@
     FT_Memory         memory;
     FT_Driver_Class  clazz;
     FT_Face           face = 0;
-    FT_Error          error;
+    FT_Error          error, error2;
     FT_Face_Internal  internal;
 
 
@@ -748,7 +819,7 @@
             i++ )
         if ( params[i].tag == FT_PARAM_TAG_INCREMENTAL )
           face->internal->incremental_interface = params[i].data;
-	}
+    }
 #endif
 
     error = clazz->init_face( stream,
@@ -760,24 +831,14 @@
       goto Fail;
 
     /* select Unicode charmap by default */
+    error2 = find_unicode_charmap( face );
+    /* if no Unicode charmap can be found, return FT_Err_Invalid_Argument */
+
+    /* no error should happen, but we want to play safe. */
+    if ( error2 && error2 != FT_Err_Invalid_Argument )
     {
-      FT_Int      nn;
-      FT_CharMap  unicmap = NULL, cmap;
-
-
-      for ( nn = 0; nn < face->num_charmaps; nn++ )
-      {
-        cmap = face->charmaps[nn];
-
-        if ( cmap->encoding == FT_ENCODING_UNICODE )
-        {
-          unicmap = cmap;
-          break;
-        }
-      }
-
-      if ( unicmap != NULL )
-        face->charmap = unicmap;
+      error = error2;
+      goto Fail;
     }
 
     *aface = face;
@@ -1440,6 +1501,13 @@
 
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
+
+    /* FT_ENCODING_UNICODE is special. We try to find the `best' Unicode */
+    /* charmap available, i.e. one with UCS-4 characters, if possible.   */
+    /*                                                                   */
+    /* This is done by find_unicode_charmap() above, to share code.      */
+    if ( encoding == FT_ENCODING_UNICODE )
+      return find_unicode_charmap( face );
 
     cur = face->charmaps;
     if ( !cur )

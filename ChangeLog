@@ -1,3 +1,11 @@
+2002-12-02  Antoine Leca  <Antoine-FreetypeLeca-Marti.org>
+
+        * src/base/ftobjs.c: modified the logic to get Unicode charmaps.
+        Now it loads UCS-4 charmaps when there is one.
+        * src/base/ftobjs.c (find_unicode_charmap): new function.
+        * src/base/ftobjs.c (open_face): refer to the above one.
+        * src/base/ftobjs.c (FT_Select_Charmap): idem.
+
 2002-11-29  Antoine Leca  <Antoine-FreetypeLeca-Marti.org>
 
         * include/freetype/ftgzip.h: Correct the name of the controlling
