@@ -25,8 +25,6 @@
 
 #include "ciderrs.h"
 
-#include <string.h>         /* for strcmp() */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -58,7 +56,7 @@
     FT_UNUSED( driver );
     FT_UNUSED( interface );
 
-    if ( strcmp( (const char*)interface, "postscript_name" ) == 0 )
+    if ( ft_strcmp( (const char*)interface, "postscript_name" ) == 0 )
       return (FT_Module_Interface)cid_get_postscript_name;
 
     return 0;
@@ -175,7 +173,7 @@
 
 
             if ( gname && gname[0] == glyph_name[0] &&
-                 strcmp( gname, glyph_name ) == 0   )
+                 ft_strcmp( gname, glyph_name ) == 0   )
             {
               result = n;
               break;
@@ -275,7 +273,7 @@
 
 
             if ( gname && gname[0] == glyph_name[0] &&
-                 strcmp( gname, glyph_name ) == 0   )
+                 ft_strcmp( gname, glyph_name ) == 0   )
             {
               return charcode;
             }

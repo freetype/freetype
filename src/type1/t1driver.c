@@ -31,8 +31,6 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
-#include <string.h>     /* for strcmp() */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -57,7 +55,7 @@
 
     if ( buffer_max > 0 )
     {
-      FT_UInt  len = (FT_UInt)( strlen( gname ) );
+      FT_UInt  len = (FT_UInt)( ft_strlen( gname ) );
 
 
       if (len >= buffer_max)
@@ -100,7 +98,7 @@
     {
       gname = face->type1.glyph_names[i];
 
-      if ( !strcmp( glyph_name, gname ) )
+      if ( !ft_strcmp( glyph_name, gname ) )
         return (FT_UInt)i;
     }
 
@@ -149,23 +147,23 @@
     FT_UNUSED( driver );
     FT_UNUSED( interface );
 
-    if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
+    if ( ft_strcmp( (const char*)interface, "glyph_name" ) == 0 )
       return (FT_Module_Interface)t1_get_glyph_name;
 
-    if ( strcmp( (const char*)interface, "name_index" ) == 0 )
+    if ( ft_strcmp( (const char*)interface, "name_index" ) == 0 )
       return (FT_Module_Interface)t1_get_name_index;
 
-    if ( strcmp( (const char*)interface, "postscript_name" ) == 0 )
+    if ( ft_strcmp( (const char*)interface, "postscript_name" ) == 0 )
       return (FT_Module_Interface)t1_get_ps_name;
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
-    if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
+    if ( ft_strcmp( (const char*)interface, "get_mm" ) == 0 )
       return (FT_Module_Interface)T1_Get_Multi_Master;
 
-    if ( strcmp( (const char*)interface, "set_mm_design") == 0 )
+    if ( ft_strcmp( (const char*)interface, "set_mm_design") == 0 )
       return (FT_Module_Interface)T1_Set_MM_Design;
 
-    if ( strcmp( (const char*)interface, "set_mm_blend") == 0 )
+    if ( ft_strcmp( (const char*)interface, "set_mm_blend") == 0 )
       return (FT_Module_Interface)T1_Set_MM_Blend;
 #endif
     return 0;
@@ -333,7 +331,7 @@
 
 
             if ( gname && gname[0] == glyph_name[0] &&
-                 strcmp( gname, glyph_name ) == 0   )
+                 ft_strcmp( gname, glyph_name ) == 0   )
             {
               result = n;
               break;
@@ -448,7 +446,7 @@
 
 
             if ( gname && gname[0] == glyph_name[0] &&
-                 strcmp( gname, glyph_name ) == 0   )
+                 ft_strcmp( gname, glyph_name ) == 0   )
               return charcode;
           }
         }

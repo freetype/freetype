@@ -257,7 +257,7 @@
 
     if ( buffer_max > 0 )
     {
-      FT_UInt  len = strlen( gname );
+      FT_UInt  len = ft_strlen( gname );
 
 
       if ( len >= buffer_max )
@@ -410,7 +410,7 @@
       else
         name = (FT_String *)psnames->adobe_std_strings( sid );
 
-      result = strcmp( glyph_name, name );
+      result = ft_strcmp( glyph_name, name );
 
       if ( sid > 390 )
         FT_FREE( name );
@@ -444,10 +444,10 @@
 
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
 
-    if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
+    if ( ft_strcmp( (const char*)interface, "glyph_name" ) == 0 )
       return (FT_Module_Interface)cff_get_glyph_name;
 
-    if ( strcmp( (const char*)interface, "name_index" ) == 0 )
+    if ( ft_strcmp( (const char*)interface, "name_index" ) == 0 )
       return (FT_Module_Interface)cff_get_name_index;
 
 #endif

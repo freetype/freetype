@@ -43,8 +43,6 @@
 
 #include "t1errors.h"
 
-#include <string.h>     /* for strncmp() */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -203,9 +201,9 @@
     /* or `%!FontType'                                       */
     {
       if ( size <= 16                                    ||
-           ( strncmp( (const char*)parser->base_dict,
+           ( ft_strncmp( (const char*)parser->base_dict,
                       "%!PS-AdobeFont-1", 16 )        &&
-             strncmp( (const char*)parser->base_dict,
+             ft_strncmp( (const char*)parser->base_dict,
                       "%!FontType", 10 )              )  )
       {
         FT_TRACE2(( "[not a Type1 font]\n" ));

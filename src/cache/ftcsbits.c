@@ -26,8 +26,6 @@
 
 #include "ftcerror.h"
 
-#include <string.h>         /* memcmp() */
-
 
 #define FTC_SBIT_ITEMS_PER_NODE  16
 

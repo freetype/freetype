@@ -17,7 +17,6 @@
 
 
 #include "t1cmap.h"
-#include <stdlib.h>     /* for qsort() */
 
 #include FT_INTERNAL_DEBUG_H
 
@@ -82,7 +81,7 @@
 
 
         if ( gname && gname[0] == glyph_name[0] &&
-             strcmp( gname, glyph_name ) == 0   )
+             ft_strcmp( gname, glyph_name ) == 0   )
         {
           result = n;
           break;
@@ -337,7 +336,7 @@
         }
 
         /* sort the pairs table to allow efficient binary searches */
-        qsort( cmap->pairs,
+        ft_qsort( cmap->pairs,
                new_count,
                sizeof ( T1_CMapUniPairRec ),
                t1_cmap_uni_pair_compare );

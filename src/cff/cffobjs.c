@@ -31,8 +31,6 @@
 
 #include "cfferrs.h"
 
-#include <string.h>         /* for strlen() */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -231,7 +229,7 @@
   {
     FT_Error    error;
     FT_String*  result = 0;
-    FT_Int      len = (FT_Int)strlen( source );
+    FT_Int      len = (FT_Int)ft_strlen( source );
 
 
     if ( !FT_ALLOC( result, len + 1 ) )

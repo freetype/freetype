@@ -20,9 +20,6 @@
 #include "t1afm.h"
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_TYPE1_TYPES_H
-#include <stdlib.h>  /* for qsort()   */
-#include <string.h>  /* for strcmp()  */
-#include <ctype.h>   /* for isalnum() */
 
 
   /*************************************************************************/
@@ -48,7 +45,7 @@
 #undef  IS_KERN_PAIR
 #define IS_KERN_PAIR( p )  ( p[0] == 'K' && p[1] == 'P' )
 
-#define IS_ALPHANUM( c )  ( isalnum( c ) || \
+#define IS_ALPHANUM( c )  ( ft_isalnum( c ) || \
                             c == '_'     || \
                             c == '.'     )
 
@@ -92,7 +89,7 @@
         char*  gname = (char*)type1->glyph_names[n];
 
 
-        if ( gname && gname[0] == temp[0] && strcmp( gname, temp ) == 0 )
+        if ( gname && gname[0] == temp[0] && ft_strcmp( gname, temp ) == 0 )
         {
           result = n;
           break;
@@ -229,7 +226,7 @@
     }
 
     /* now, sort the kern pairs according to their glyph indices */
-    qsort( afm->kern_pairs, count, sizeof ( T1_Kern_Pair ),
+    ft_qsort( afm->kern_pairs, count, sizeof ( T1_Kern_Pair ),
            compare_kern_pairs );
 
   Exit:

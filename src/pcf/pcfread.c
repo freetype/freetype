@@ -36,8 +36,6 @@ THE SOFTWARE.
 
 #include "pcferror.h"
 
-#include <string.h>     /* strlen(), strcpy() */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -331,7 +329,7 @@ THE SOFTWARE.
 
     for ( i = 0 ; i < face->nprops && !found; i++ )
     {
-      if ( !strcmp( properties[i].name, prop ) )
+      if ( !ft_strcmp( properties[i].name, prop ) )
         found = 1;
     }
 
@@ -433,18 +431,18 @@ THE SOFTWARE.
     {
       /* XXX: make atom */
       if ( FT_NEW_ARRAY( properties[i].name,
-                         strlen( strings + props[i].name ) + 1 ) )
+                         ft_strlen( strings + props[i].name ) + 1 ) )
         goto Bail;
-      strcpy( properties[i].name,strings + props[i].name );
+      ft_strcpy( properties[i].name,strings + props[i].name );
 
       properties[i].isString = props[i].isString;
 
       if ( props[i].isString )
       {
         if ( FT_NEW_ARRAY( properties[i].value.atom,
-                           strlen( strings + props[i].value ) + 1 ) )
+                           ft_strlen( strings + props[i].value ) + 1 ) )
           goto Bail;
-        strcpy( properties[i].value.atom, strings + props[i].value );
+        ft_strcpy( properties[i].value.atom, strings + props[i].value );
       }
       else
         properties[i].value.integer = props[i].value;
@@ -952,12 +950,12 @@ THE SOFTWARE.
       {
         if ( prop->isString )
         {
-          int  l = strlen( prop->value.atom ) + 1;
+          int  l = ft_strlen( prop->value.atom ) + 1;
 
 
           if ( FT_NEW_ARRAY( root->family_name, l ) )
             goto Exit;
-          strcpy( root->family_name, prop->value.atom );
+          ft_strcpy( root->family_name, prop->value.atom );
         }
       }
       else
@@ -1025,15 +1023,15 @@ THE SOFTWARE.
                ( charset_encoding->isString ) )
           {
             if ( FT_NEW_ARRAY( face->charset_encoding,
-                               strlen( charset_encoding->value.atom ) + 1 ) )
+                               ft_strlen( charset_encoding->value.atom ) + 1 ) )
               goto Exit;
 
             if ( FT_NEW_ARRAY( face->charset_registry,
-                               strlen( charset_registry->value.atom ) + 1 ) )
+                               ft_strlen( charset_registry->value.atom ) + 1 ) )
               goto Exit;
 
-            strcpy( face->charset_registry, charset_registry->value.atom );
-            strcpy( face->charset_encoding, charset_encoding->value.atom );
+            ft_strcpy( face->charset_registry, charset_registry->value.atom );
+            ft_strcpy( face->charset_encoding, charset_encoding->value.atom );
           }
         }
       }

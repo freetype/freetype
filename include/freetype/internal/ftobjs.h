@@ -132,7 +132,7 @@ FT_BEGIN_HEADER
     FT_ValidationLevel  level;  /* validation level                 */
     FT_Error            error;  /* error returned. 0 means success  */
 
-    jmp_buf             jump_buffer;  /* used for exception handling */
+    ft_jmp_buf             jump_buffer;  /* used for exception handling */
 
   } FT_ValidatorRec;
 

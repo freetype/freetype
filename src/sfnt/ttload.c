@@ -26,8 +26,6 @@
 
 #include "sferrors.h"
 
-#include <stdlib.h>  /* for qsort */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -1720,7 +1718,7 @@
           {
             if ( tt_kern_pair_compare( pair0, pair0 + 1 ) != -1 )
             {
-              qsort( (void*)face->kern_pairs, (int)num_pairs,
+              ft_qsort( (void*)face->kern_pairs, (int)num_pairs,
                      sizeof ( TT_Kern0_PairRec ), tt_kern_pair_compare );
               break;
             }
