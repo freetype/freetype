@@ -207,6 +207,16 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Allow the use of FT_Incremental_Interface to load typefaces that      */
+  /* contain no glyph data, but supply it via a callback function.         */
+  /* This allows FreeType to be used with the PostScript language, using   */
+  /* the GhostScript interpreter.                                          */
+  /*                                                                       */
+#undef FT_CONFIG_OPTION_INCREMENTAL
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* DLL export compilation                                                */
   /*                                                                       */
   /*   When compiling FreeType as a DLL, some systems/compilers need a     */
