@@ -1169,9 +1169,10 @@
 	src/gzip/zutil.h: Updates to allow compilation without compiler
 	warnings with LCC-Win32.
 
-	* include/freetype/freetype.h, docs/VERSION.DLL,
-	builds/unix/configure.ac, builds/unix/configure: Updates for the
-	upcoming 2.1.4 release.
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 4.
+	* builds/unix/configure.ac (version_info): Increased to 9:3:3.
+	* builds/unix/configure: Regenerated.
+	* docs/VERSION.DLL: Updated.
 
 2002-12-23  Anthony Fok  <anthony@thizlinux.com>
 
