@@ -16,24 +16,9 @@ FT2_SRC     = [ FT2_SubDir src ] ;
 FT2_LIB     = $(LIBPREFIX)freetype ;
 
 
-# Libtool support, this is actually generated from a template in Jamfile.in !!
-# we may move this code into 'builds/unix' someday to make the top-level
-# Jamfile cleaner..
+# We don't support libtool just yet. It seems that this is not
+# so simple with Jam, but I'll study this topic later..
 #
-if $(UNIX) && ! $(FT2_DEVEL)
-{
-  LIBTOOL = [ FT2_SubDir builds unix libtool ] ;
-  
-  CCFLAGS = @XX_CFLAGS@ @XX_ANSIFLAGS@ @CFLAGS@ ;
-
-  CC      = $(LIBTOOL) --mode=compile $(CC) ;
-
-  LINK    = $(LIBTOOL) --mode=link $(LINK) -rpath @libdir@ 
-            -version_info @version_info@ ;
-
-  LINKFLAGS = @LDFLAGS@ ;
-}
-
 
 # used only when trying to debug the hinter(s)
 #
