@@ -56,6 +56,7 @@
     {
       FT_Fixed  x_scale, y_scale;
 
+
       /* this is not a PFR font */
       *aoutline_resolution = face->units_per_EM;
       *ametrics_resolution = face->units_per_EM;
@@ -88,13 +89,10 @@
 
     service = ft_pfr_check( face );
     if ( service )
-    {
       error = service->get_kerning( face, left, right, avector );
-    }
     else if ( face )
-    {
-      error = FT_Get_Kerning( face, left, right, FT_KERNING_UNSCALED, avector );
-    }
+      error = FT_Get_Kerning( face, left, right,
+                              FT_KERNING_UNSCALED, avector );
     else
       error = FT_Err_Invalid_Argument;
 
@@ -117,7 +115,7 @@
       error = service->get_advance( face, gindex, aadvance );
     }
     else
-     /* XXX: TODO: PROVIDE ADVANCE-LOADING METHOD TO ALL FONT DRIVERS */
+      /* XXX: TODO: PROVIDE ADVANCE-LOADING METHOD TO ALL FONT DRIVERS */
       error = FT_Err_Invalid_Argument;
 
     return error;

@@ -396,8 +396,10 @@
         else
           root->units_per_EM = 1000;
 
-        root->underline_position  = (FT_Short) (dict->underline_position >> 16);
-        root->underline_thickness = (FT_Short) (dict->underline_thickness >> 16);
+        root->underline_position  =
+          (FT_Short)( dict->underline_position >> 16 );
+        root->underline_thickness =
+          (FT_Short)( dict->underline_thickness >> 16 );
 
         /* retrieve font family & style name */
         root->family_name  = cff_index_get_name( &cff->name_index, face_index );

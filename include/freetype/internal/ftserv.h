@@ -46,14 +46,11 @@ FT_BEGIN_HEADER
    *   id ::
    *     A string describing the service as defined in the service's
    *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
-   *     `multi-masters'). It will be prefixed with "FT_SERVICE_ID_" !!
+   *     `multi-masters').  It is automatically prefixed with
+   *     `FT_SERVICE_ID_'.
    *
    *   face ::
    *     The source face handle.
-   *
-   *   ptrtype ::
-   *     The pointer type of `ptr'.  This is needed to make FreeType
-   *     compile cleanly with C++.
    *
    * @output:
    *   ptr ::
@@ -63,13 +60,15 @@ FT_BEGIN_HEADER
 #define FT_FACE_FIND_SERVICE( ptr, face, id )                               \
   FT_BEGIN_STMNT                                                            \
     FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
-    FT_Pointer*  pptr   = (FT_Pointer*) &(ptr);                             \
-                                                                            \
     /* the strange cast is to allow C++ compilation */                      \
-    *pptr = NULL;                                                           \
+    FT_Pointer*  Pptr = (FT_Pointer*)&(ptr);                                \
+                                                                            \
+                                                                            \
+    *Pptr = NULL;                                                           \
     if ( module->clazz->get_interface )                                     \
-      *pptr = module->clazz->get_interface( module, FT_SERVICE_ID_ ## id ); \
+      *Pptr = module->clazz->get_interface( module, FT_SERVICE_ID_ ## id ); \
   FT_END_STMNT
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -123,9 +122,9 @@ FT_BEGIN_HEADER
    *  All fields should have the type FT_Pointer to relax compilation
    *  dependencies.  We assume the developer isn't completely stupid.
    *
-   *  Each field must be named service_XXXX where XXX correspond to
-   *  the correct FT_SERVICE_ID_XXXX macro. see the definition of
-   *  FT_FACE_LOOKUP_SERVICE below to see why
+   *  Each field must be named `service_XXXX' where `XXX' corresponds to
+   *  the correct FT_SERVICE_ID_XXXX macro.  See the definition of
+   *  FT_FACE_LOOKUP_SERVICE below how this is implemented.
    *
    */
   typedef struct  FT_ServiceCacheRec_
@@ -163,20 +162,16 @@ FT_BEGIN_HEADER
    *   id ::
    *     The service ID.
    *
-   *   ptrtype ::
-   *     The pointer type of `ptr'.  This is needed to make FreeType
-   *     compile cleanly with C++.
-   *
    * @output:
    *   ptr ::
    *     A variable receiving the service data.  NULL if not available.
    */
 #define FT_FACE_LOOKUP_SERVICE( face, ptr, id )                  \
   FT_BEGIN_STMNT                                                 \
+    /* the strange cast is to allow C++ compilation */           \
     FT_Pointer*  pptr = (FT_Pointer*)&(ptr);                     \
     FT_Pointer   svc;                                            \
                                                                  \
-    /* the strange cast is to allow C++ compilation */           \
                                                                  \
     svc = FT_FACE(face)->internal->services. service_ ## id ;    \
     if ( svc == FT_SERVICE_UNAVAILABLE )                         \
@@ -191,6 +186,7 @@ FT_BEGIN_HEADER
       *pptr = svc;                                               \
     }                                                            \
   FT_END_STMNT
+
 
   /*
    *  A macro used to define new service structure types.
