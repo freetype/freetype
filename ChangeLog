@@ -1,3 +1,8 @@
+2003-04-09  Torrey Lyons  <torrey@mrcla.com>
+
+   * src/base/ftmac.c (open_face_from_buffer): removed a double-free bug that
+   had nasty consequences when trying to open an "invalid" font on a Mac.
+
 2003-04-09  Mike Fabian  <mfabian@suse.de>
 
    * src/bdf/bdfdrivr.h, src/pcf/pcf.h: changed FT_Short to FT_UShort in
