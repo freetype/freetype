@@ -3,7 +3,8 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT(ftconfig.in)
+AC_INIT
+AC_CONFIG_SRCDIR([ftconfig.in])
 
 dnl configuration file -- stay in 8.3 limit
 AC_CONFIG_HEADER(ftconfig.h:ftconfig.in)
@@ -14,7 +15,7 @@ ft_version=`echo $version_info | tr : .`
 AC_SUBST(ft_version)
 
 dnl checks for system type
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET([])
 
 dnl checks for programs
 AC_PROG_CC
@@ -84,6 +85,7 @@ AC_PROG_LIBTOOL
 dnl create the Unix-specific sub-Makefiles `builds/unix/unix-def.mk'
 dnl and 'builds/unix/unix-cc.mk' that will be used by the build system
 dnl
-AC_OUTPUT(unix-cc.mk:unix-cc.in unix-def.mk:unix-def.in freetype-config)
+AC_CONFIG_FILES([unix-cc.mk:unix-cc.in unix-def.mk:unix-def.in freetype-config])
+AC_OUTPUT
 
-dnl end of configure.in
+dnl end of configure.ac

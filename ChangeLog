@@ -1,12 +1,20 @@
-2001-06-08  David Turner    <david@freetype.org>
+2001-06-08  Werner Lemberg  <wl@gnu.org>
 
-        * src/autohint/ahhint.c (ah_hinter_load_glyph): fixed a bug that
-        corrupted transformed glyphs that were auto-hinted (the transform
-        was applied twice !!)
+	* builds/unix/configure.in: Renamed to ...
+	* builds/unix/configure.ac: This to make sure that autoconf 2.50 is
+	needed.
+	Run `autoupdate' on it.
+	* builds/unix/configure: Regenerated.
+
+2001-06-08  David Turner  <david@freetype.org>
+
+	* src/autohint/ahhint.c (ah_hinter_load_glyph): Fixed a bug that
+	corrupted transformed glyphs that were auto-hinted (the transform
+	was applied twice).
 
 2001-06-07  Werner Lemberg  <wl@gnu.org>
 
-	Updating to libtool 1.4.0.
+	Updating to libtool 1.4.0 and autoconf 2.50.
 
 	* builds/unix/ltconfig: Removed.
 	* builds/unix/ltmain.sh, builds/unix/configure.in,
