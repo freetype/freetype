@@ -25,109 +25,159 @@
   extern "C" {
 #endif
 
-  typedef struct T2_Loader_
+  #define T2_MAX_OPERANDS     48
+  #define T2_MAX_SUBRS_CALLS  32
+
+/*************************************************************************/
+/*                                                                       */
+/* <Structure> T2_Builder                                                */
+/*                                                                       */
+/* <Description>                                                         */
+/*     a structure used during glyph loading to store its outline.       */
+/*                                                                       */
+/* <Fields>                                                              */
+/*    system :: current system object                                    */
+/*    face   :: current face object                                      */
+/*    glyph  :: current glyph slot                                       */
+/*                                                                       */
+/*    current :: current glyph outline                                   */
+/*    base    :: base glyph outline                                      */
+/*                                                                       */
+/*    max_points   :: maximum points in builder outline                  */
+/*    max_contours :: maximum contours in builder outline                */
+/*                                                                       */
+/*    last     :: last point position                                    */
+/*                                                                       */
+/*    scale_x  :: horizontal scale ( FUnits to sub-pixels )              */
+/*    scale_y  :: vertical scale   ( FUnits to sub-pixels )              */
+/*    pos_x    :: horizontal translation (composite glyphs)              */
+/*    pos_y    :: vertical translation   (composite glyph)               */
+/*                                                                       */
+/*    left_bearing  :: left side bearing point                           */
+/*    advance       :: horizontal advance vector                         */
+/*                                                                       */
+/*    path_begun    :: flag, indicates that a new path has begun         */
+/*    load_points   :: flag, if not set, no points are loaded            */
+/*                                                                       */
+/*    error         :: an error code that is only used to report         */
+/*                     memory allocation problems..                      */
+/*                                                                       */
+/*    metrics_only  :: a boolean indicating that we only want to         */
+/*                     compute the metrics of a given glyph, not load    */
+/*                     all of its points..                               */
+/*                                                                       */
+
+  typedef struct T2_Builder_
   {
-    T2_Face         face;
-    T2_Size         size;
-    T2_GlyphSlot    glyph;
+    FT_Memory     memory;
+    TT_Face       face;
+    T2_GlyphSlot  glyph;
 
-    FT_ULong        load_flags;
-    FT_UInt         glyph_index;
+    FT_Outline    current;       /* the current glyph outline   */
+    FT_Outline    base;          /* the composite glyph outline */
 
-    FT_Stream       stream;
-    FT_Int          byte_len;
-    FT_Int          left_points;
-    FT_Int          left_contours;
+    FT_Int        max_points;    /* capacity of base outline in points   */
+    FT_Int        max_contours;  /* capacity of base outline in contours */
 
-    FT_BBox         bbox;
-    FT_Int          left_bearing;
-    FT_Int          advance;
-    FT_Bool         preserve_pps;
-    FT_Vector       pp1;
-    FT_Vector       pp2;
+    FT_Vector     last;
 
-    FT_ULong        glyf_offset;
+    FT_Fixed      scale_x;
+    FT_Fixed      scale_y;
 
-    /* the zone where we load our glyphs */
-    FT_GlyphZone    base;
-    FT_GlyphZone    zone;
+    FT_Pos        pos_x;
+    FT_Pos        pos_y;
 
-  } T2_Loader;
+    FT_Vector     left_bearing;
+    FT_Vector     advance;
+
+    FT_BBox       bbox;          /* bounding box */
+    FT_Bool       path_begun;
+    FT_Bool       load_points;
+    FT_Bool       no_recurse;
+
+    FT_Error      error;         /* only used for memory errors */
+    FT_Bool       metrics_only;
+
+  } T2_Builder;
 
 
-#if 0
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T2_Get_Metrics                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns the horizontal or vertical metrics in font units for a     */
-  /*    given glyph.  The metrics are the left side bearing (resp. top     */
-  /*    side bearing) and advance width (resp. advance height).            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    header  :: A pointer to either the horizontal or vertical metrics  */
-  /*               structure.                                              */
-  /*                                                                       */
-  /*    index   :: The glyph index.                                        */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    bearing :: The bearing, either left side or top side.              */
-  /*                                                                       */
-  /*    advance :: The advance width resp. advance height.                 */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function will much probably move to another component in the  */
-  /*    near future, but I haven't decided which yet.                      */
-  /*                                                                       */
+  /* execution context charstring zone */
+  typedef struct T2_Decoder_Zone_
+  {
+    FT_Byte*  base;
+    FT_Byte*  limit;
+    FT_Byte*  cursor;
+
+  } T2_Decoder_Zone;
+
+
+  typedef struct T2_Decoder_
+  {
+    T2_Builder         builder;
+    CFF_Font*          cff;
+
+    FT_Fixed           stack[ T2_MAX_OPERANDS+1 ];
+    FT_Fixed*          top;
+
+    T2_Decoder_Zone    zones[ T2_MAX_SUBRS_CALLS+1 ];
+    T2_Decoder_Zone*   zone;
+
+    FT_Int             flex_state;
+    FT_Int             num_flex_vectors;
+    FT_Vector          flex_vectors[7];
+
+    FT_Pos             glyph_width;
+    FT_Pos             nominal_width;
+    
+    FT_Bool            read_width;
+    FT_Int             num_hints;
+    FT_Fixed*          buildchar;
+    FT_Int             len_buildchar;
+
+    FT_UInt            num_locals;
+    FT_UInt            num_globals;
+    
+    FT_Int             locals_bias;
+    FT_Int             globals_bias;
+    
+    FT_Byte**          locals;
+    FT_Byte**          globals;
+
+
+  } T2_Decoder;
+
+
+
   LOCAL_DEF
-  void  T2_Get_Metrics( TT_HoriHeader*  header,
-                        FT_UInt         index,
-                        FT_Short*       bearing,
-                        FT_UShort*      advance );
+  void  T2_Init_Decoder( T2_Decoder*  decoder,
+                         TT_Face      face,
+                         T2_Size      size,
+                         T2_GlyphSlot slot );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T2_Load_Glyph                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to load a single glyph within a given glyph slot,  */
-  /*    for a given size.                                                  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    glyph       :: A handle to a target slot object where the glyph    */
-  /*                   will be loaded.                                     */
-  /*                                                                       */
-  /*    size        :: A handle to the source face size at which the glyph */
-  /*                   must be scaled/loaded.                              */
-  /*                                                                       */
-  /*    glyph_index :: The index of the glyph in the font file.            */
-  /*                                                                       */
-  /*    load_flags  :: A flag indicating what to load for this glyph.  The */
-  /*                   FT_LOAD_XXX constants can be used to control the    */
-  /*                   glyph loading process (e.g., whether the outline    */
-  /*                   should be scaled, whether to load bitmaps or not,   */
-  /*                   whether to hint the outline, etc).                  */
-  /* <Output>                                                              */
-  /*    result      :: A set of bit flags indicating the type of data that */
-  /*                   was loaded in the glyph slot (outline or bitmap,    */
-  /*                   etc).                                               */
-  /*                                                                       */
-  /*                   You can set this field to 0 if you don't want this  */
-  /*                   information.                                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+#if 0  /* unused until we support pure CFF fonts */
+  /* Compute the maximum advance width of a font through quick parsing */
   LOCAL_DEF
-  FT_Error  T2_Load_Glyph( T2_Size       size,
-                           T2_GlyphSlot  glyph,
-                           FT_UShort     glyph_index,
-                           FT_UInt       load_flags );
+  FT_Error  T2_Compute_Max_Advance( TT_Face  face,
+                                    FT_Int  *max_advance );
 #endif
+
+  /* This function is exported, because it is used by the T1Dump utility */
+  LOCAL_DEF
+  FT_Error   T2_Parse_CharStrings( T2_Decoder*  decoder,
+                                   FT_Byte*     charstring_base,
+                                   FT_Int       charstring_len );
+
+
+
+  LOCAL_DEF
+  FT_Error  T2_Load_Glyph( T2_GlyphSlot  glyph,
+                           T2_Size       size,
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags );
+
+
+
 
 #ifdef __cplusplus
   }

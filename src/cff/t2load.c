@@ -25,7 +25,7 @@
 #include <freetype/tttags.h>
 #include <t2load.h>
 #include <t2parse.h>
-#include <freetype/internal/t2errors.h>
+#include <t2errors.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttload
@@ -53,6 +53,7 @@
     FT_UShort count;
 
     MEM_Set( index, 0, sizeof(*index) );
+    index->stream = stream;
     if ( !READ_UShort( count ) &&
           count > 0            )
     {
@@ -127,7 +128,36 @@
 
 
   static
-  FT_Error  t2_access_element( CFF_Index*   index,
+  FT_Error  t2_explicit_cff_index( CFF_Index*  index,
+                                   FT_Byte**  *table )
+  {
+    FT_Error  error  = 0;
+    FT_Memory memory = index->stream->memory;
+    FT_UInt   n, offset, old_offset;
+    FT_Byte** t;
+
+    *table  = 0;
+    if ( index->count > 0 && !ALLOC_ARRAY( t, index->count+1, FT_Byte* ) )
+    {
+      old_offset = 1;
+      for ( n = 0; n <= index->count; n++ )
+      {
+        offset = index->offsets[n];
+        if (!offset)
+          offset = old_offset;
+        
+        t[n] = index->bytes + offset - 1;
+        
+        old_offset = offset;
+      }
+      *table = t;
+    }
+    return error;    
+  }
+
+
+  LOCAL_FUNC
+  FT_Error  T2_Access_Element( CFF_Index*   index,
                                FT_UInt      element,
                                FT_Byte*    *pbytes,
                                FT_ULong    *pbyte_len )
@@ -187,8 +217,8 @@
   }
 
 
-  static
-  void  t2_forget_element( CFF_Index*  index,
+  LOCAL_FUNC
+  void  T2_Forget_Element( CFF_Index*  index,
                            FT_Byte*   *pbytes )
   {
     if (index->bytes == 0)
@@ -199,8 +229,8 @@
   }                           
 
 
-  static
-  FT_String*  t2_get_name( CFF_Index*  index,
+  LOCAL_FUNC
+  FT_String*  T2_Get_Name( CFF_Index*  index,
                            FT_UInt     element )
   {
     FT_Memory  memory = index->stream->memory;
@@ -209,7 +239,7 @@
     FT_Error   error;
     FT_String* name = 0;
     
-    error = t2_access_element( index, element, &bytes, &byte_len );
+    error = T2_Access_Element( index, element, &bytes, &byte_len );
     if (error) goto Exit;
     
     if ( !ALLOC( name, byte_len+1 ) )
@@ -217,14 +247,14 @@
       MEM_Copy( name, bytes, byte_len );
       name[byte_len] = 0;
     }
-    t2_forget_element( index, &bytes );
-    
+    T2_Forget_Element( index, &bytes );
+
   Exit:
     return name;
   }                           
 
 
-#if 0
+#if 0 /* unused until we fully support pure-CFF fonts */
   LOCAL_FUNC
   FT_String*  T2_Get_String( CFF_Index*          index,
                              FT_UInt             sid,
@@ -232,7 +262,7 @@
   {
     /* if it's not a standard string, return it */
     if ( sid > 390 )
-      return t2_get_name( index, sid - 390 );
+      return T2_Get_Name( index, sid - 390 );
       
     /* that's a standard string, fetch a copy from the psnamed module */
     {
@@ -318,20 +348,39 @@
       FT_Byte*   dict;
       FT_ULong   dict_len;
       CFF_Index* index = &font->top_dict_index;
+      CFF_Top_Dict*  top = &font->top_dict;
 
       /* parse the top-level font dictionary */      
       T2_Parser_Init( &parser, T2CODE_TOPDICT, &font->top_dict );
+
+      /* set defaults */
+      memset( top, 0, sizeof(*top) );
+      top->underline_position  = -100;
+      top->underline_thickness = 50;
+      top->charstring_type     = 2;
+      top->font_matrix.xx      = 0x10000;
+      top->font_matrix.yy      = 0x10000;
+      top->cid_count           = 8720;
       
-      error = t2_access_element( index, face_index, &dict, &dict_len ) ||
+      error = T2_Access_Element( index, face_index, &dict, &dict_len ) ||
               T2_Parser_Run( &parser, dict, dict + dict_len );
 
-      t2_forget_element( &font->top_dict_index, &dict );
+      T2_Forget_Element( &font->top_dict_index, &dict );
       if (error) goto Exit;
       
       /* parse the private dictionary, if any */
       if (font->top_dict.private_offset && font->top_dict.private_size)
       {
-        T2_Parser_Init( &parser, T2CODE_PRIVATE, &font->private_dict );
+        CFF_Private*  priv = &font->private_dict;
+        
+        /* set defaults */
+        priv->blue_shift       = 7;
+        priv->blue_fuzz        = 1;
+        priv->lenIV            = -1;
+        priv->expansion_factor = (FT_Fixed)0.06*0x10000;
+        priv->blue_scale       = (FT_Fixed)0.039625*0x10000;
+
+        T2_Parser_Init( &parser, T2CODE_PRIVATE, priv );
         
         if ( FILE_Seek( base_offset + font->top_dict.private_offset ) ||
              ACCESS_Frame( font->top_dict.private_size )               )
@@ -357,10 +406,28 @@
         
       error = t2_new_cff_index( &font->charstrings_index, stream, 0 );
       if (error) goto Exit;
+
+      /* read the local subrs */      
+      if ( FILE_Seek( base_offset + font->top_dict.private_offset +
+                      font->private_dict.local_subrs_offset ) )
+        goto Exit;
+        
+      error = t2_new_cff_index( &font->local_subrs_index, stream, 1 );
+      if (error) goto Exit;
+      
+      /* explicit the global and local subrs */
+      font->num_local_subrs  = font->local_subrs_index.count;
+      font->num_global_subrs = font->global_subrs_index.count;
+      
+      error = t2_explicit_cff_index( &font->global_subrs_index,
+                                     &font->global_subrs ) ||
+              t2_explicit_cff_index( &font->local_subrs_index,
+                                     &font->local_subrs );
+      if (error) goto Exit;
     }
 
     /* get the font name */      
-    font->font_name = t2_get_name( &font->name_index, face_index );
+    font->font_name = T2_Get_Name( &font->name_index, face_index );
 
   Exit:
     return error;
@@ -369,11 +436,17 @@
   LOCAL_FUNC
   void  T2_Done_CFF_Font( CFF_Font*  font )
   {
+    FT_Memory  memory = font->memory;
+    
     t2_done_cff_index( &font->global_subrs_index );
     t2_done_cff_index( &font->string_index );
     t2_done_cff_index( &font->top_dict_index );
     t2_done_cff_index( &font->name_index );
     t2_done_cff_index( &font->charstrings_index );
+
+    FREE( font->local_subrs );
+    FREE( font->global_subrs );    
+    FREE( font->font_name );
   }
 
 

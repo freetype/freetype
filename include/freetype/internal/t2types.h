@@ -167,6 +167,11 @@
     CFF_Top_Dict   top_dict;
     CFF_Private    private_dict;
 
+    FT_UInt        num_global_subrs;
+    FT_UInt        num_local_subrs;
+    FT_Byte**      global_subrs;
+    FT_Byte**      local_subrs;
+
   } CFF_Font;
 
 #ifdef __cplusplus

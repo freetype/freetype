@@ -65,7 +65,21 @@
   /*    This is a direct typedef of FT_GlyphSlot, as there is nothing      */
   /*    specific about the OpenType glyph slot.                            */
   /*                                                                       */
-  typedef FT_GlyphSlot  T2_GlyphSlot;
+
+  typedef struct T2_GlyphSlotRec_
+  {
+    FT_GlyphSlotRec  root;
+
+    FT_Bool          hint;
+    FT_Bool          scaled;
+
+    FT_Int           max_points;
+    FT_Int           max_contours;
+
+    FT_Fixed         x_scale;
+    FT_Fixed         y_scale;
+
+  } T2_GlyphSlotRec, *T2_GlyphSlot;
 
 
 

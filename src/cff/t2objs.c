@@ -104,12 +104,19 @@
     {
       CFF_Font*  cff;
       FT_Memory  memory = face->root.memory;
+      FT_Face    root;
       
       if ( ALLOC( cff, sizeof(*cff) ) )
         goto Exit;
         
       face->other = cff;
       error = T2_Load_CFF_Font( stream, face_index, cff );
+      if (error) goto Exit;
+
+      /* complement the root flags with some interesting information  */
+      /* note that for OpenType/CFF, there is no need to do this, but */
+      /* this will be necessary for pure CFF fonts through..          */
+      root = &face->root;
     }
 
   Exit:
@@ -258,17 +265,13 @@
   LOCAL_FUNC
   FT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot )
   {
-    /* allocate the outline space */
-    FT_Face     face    = slot->face;
-    FT_Library  library = face->driver->library;
+    FT_Library  library = slot->root.face->driver->library;
 
-    FT_TRACE4(( "TT.Init_GlyphSlot: Creating outline maxp = %d, maxc = %d\n",
-                face->max_points, face->max_contours ));
+    slot->max_points         = 0;
+    slot->max_contours       = 0;
+    slot->root.bitmap.buffer = 0;
 
-    return FT_Outline_New( library,
-                           face->max_points + 2,
-                           face->max_contours,
-                           &slot->outline );
+    return FT_Outline_New( library, 0, 0, &slot->root.outline );
   }
 
 
@@ -286,13 +289,13 @@
   LOCAL_FUNC
   void  T2_Done_GlyphSlot( T2_GlyphSlot  slot )
   {
-    FT_Library  library = slot->face->driver->library;
+    FT_Library  library = slot->root.face->driver->library;
     FT_Memory   memory  = library->memory;
 
-    if (slot->flags & ft_glyph_own_bitmap)
-      FREE( slot->bitmap.buffer );
+    if (slot->root.flags & ft_glyph_own_bitmap)
+      FREE( slot->root.bitmap.buffer );
 
-    FT_Outline_Done( library, &slot->outline );
+    FT_Outline_Done( library, &slot->root.outline );
     return;
   }
 

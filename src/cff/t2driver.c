@@ -288,19 +288,15 @@
     if ( size )
     {
       /* these two object must have the same parent */
-      if ( size->face != slot->face )
+      if ( size->face != slot->root.face )
         return FT_Err_Invalid_Face_Handle;
     }
 
     /* now load the glyph outline if necessary */
-#if 1 /* XXXX: TODO */
-    error = FT_Err_Unimplemented_Feature;
-#else    
-    error = T2_Load_Glyph( size, slot, glyph_index, load_flags );
-#endif
+    error = T2_Load_Glyph( slot, size, glyph_index, load_flags );
+
     /* force drop-out mode to 2 - irrelevant now */
     /* slot->outline.dropout_mode = 2; */
-
     return error;
   }
 
@@ -382,7 +378,7 @@
     sizeof ( T2_DriverRec ),
     sizeof ( TT_FaceRec ),
     sizeof ( FT_SizeRec ),
-    sizeof ( FT_GlyphSlotRec ),
+    sizeof ( T2_GlyphSlotRec ),
 
     "cff",           /* driver name                           */
     100,             /* driver version == 1.0                 */

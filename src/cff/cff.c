@@ -45,5 +45,6 @@
 #include <t2parse.c>     /* token parser         */
 #include <t2load.c>      /* tables loader        */
 #include <t2objs.c>      /* object management    */
+#include <t2gload.c>     /* glyph loader         */
 
 /* END */

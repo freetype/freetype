@@ -64,7 +64,7 @@
     if (v == 28)
     {
       if ( p+2 > limit ) goto Bad;
-      val = ((FT_Long)p[0] << 8) | p[1];
+      val = (FT_Short)(((FT_Int)p[0] << 8) | p[1]);
       p  += 2;
     }
     else if (v == 29)
@@ -261,10 +261,10 @@
     error = T2_Err_Stack_Underflow;
     if (parser->top >= parser->stack + 4)
     {
-      bbox->xMin = t2_parse_fixed( data++ );
-      bbox->yMin = t2_parse_fixed( data++ );
-      bbox->xMax = t2_parse_fixed( data++ );
-      bbox->yMax = t2_parse_fixed( data   );
+      bbox->xMin = t2_parse_num( data++ );
+      bbox->yMin = t2_parse_num( data++ );
+      bbox->xMax = t2_parse_num( data++ );
+      bbox->yMax = t2_parse_num( data   );
       error = 0;
     }
     return error;
@@ -281,8 +281,8 @@
     error = T2_Err_Stack_Underflow;
     if (parser->top >= parser->stack + 2)
     {
-      dict->private_offset = t2_parse_num( data++ );
-      dict->private_size   = t2_parse_num( data );
+      dict->private_size   = t2_parse_num( data++ );
+      dict->private_offset = t2_parse_num( data   );
       error = 0;
     }
     return error;
@@ -319,7 +319,7 @@
 #define T2_REF(s,f)   (((s*)0)->f)
 
 #define T2_FIELD_CALLBACK( code, name ) \
-     { t2_kind_callback, code, 0, 0, parse_ ## name, 0, 0 },
+     { t2_kind_callback, code | T2CODE, 0, 0, parse_ ## name, 0, 0 },
      
 #undef  T2_FIELD
 #define T2_FIELD( code, name, kind )           \
@@ -363,7 +363,7 @@
     while (p < limit)
     {
       FT_Byte  v = *p;
-      if ( v >= 27 || v != 31 )
+      if ( v >= 27 && v != 31 )
       {
         /* its a number, we'll push its position on the stack */
         if (parser->top - parser->stack >= T2_MAX_STACK_DEPTH)
@@ -404,6 +404,7 @@
         /* first of all, a trivial check */
         if ( num_args < 1 ) goto Stack_Underflow;
 
+        *parser->top = p;
         code = v;
         if (v == 12)
         {
@@ -476,16 +477,14 @@
                   error = field->reader( parser );
                   if (error) goto Exit;
             }
-            /* clear stack */
-            parser->top = parser->stack;
+            goto Found;
           }
-          goto Found;  /* exit loop */
         }
 
         /* this is an unknown operator, or it is unsupported, we will ignore */
         /* it for now...                                                     */
-        
-      Found:
+
+  Found:        
         /* clear stack */
         parser->top = parser->stack;
       }
