@@ -43,17 +43,19 @@
   /*                                                                       */
   /* Composite font flags.                                                 */
   /*                                                                       */
-#define ARGS_ARE_WORDS       0x001
-#define ARGS_ARE_XY_VALUES   0x002
-#define ROUND_XY_TO_GRID     0x004
-#define WE_HAVE_A_SCALE      0x008
-/* reserved                  0x010 */
-#define MORE_COMPONENTS      0x020
-#define WE_HAVE_AN_XY_SCALE  0x040
-#define WE_HAVE_A_2X2        0x080
-#define WE_HAVE_INSTR        0x100
-#define USE_MY_METRICS       0x200
-
+#define ARGS_ARE_WORDS             0x0001
+#define ARGS_ARE_XY_VALUES         0x0002
+#define ROUND_XY_TO_GRID           0x0004
+#define WE_HAVE_A_SCALE            0x0008
+/* reserved                        0x0010 */
+#define MORE_COMPONENTS            0x0020
+#define WE_HAVE_AN_XY_SCALE        0x0040
+#define WE_HAVE_A_2X2              0x0080
+#define WE_HAVE_INSTR              0x0100
+#define USE_MY_METRICS             0x0200
+#define OVERLAP_COMPOUND           0x0400
+#define SCALED_COMPONENT_OFFSET    0x0800
+#define UNSCALED_COMPONENT_OFFSET  0x1000
 
 
   /*************************************************************************/
@@ -1005,7 +1007,7 @@
 
       /* if the flag FT_LOAD_NO_RECURSE is set, we return the subglyph */
       /* `as is' in the glyph slot (the client application will be     */
-      /* responsible for interpreting this data)...                    */
+      /* responsible for interpreting these data)...                   */
       /*                                                               */
       if ( loader->load_flags & FT_LOAD_NO_RECURSE )
       {
@@ -1122,6 +1124,68 @@
           {
             x = subglyph->arg1;
             y = subglyph->arg2;
+
+  /* Use a default value dependent on                                     */
+  /* TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED.  This is useful for old TT */
+  /* fonts which don't set the xxx_COMPONENT_OFFSET bit.                  */
+
+#ifdef TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED
+            if ( !( subglyph->flags & UNSCALED_COMPONENT_OFFSET ) &&
+#else
+            if (  ( subglyph->flags & SCALED_COMPONENT_OFFSET ) &&
+#endif
+                  ( subglyph->flags & ( WE_HAVE_A_SCALE     |
+                                        WE_HAVE_AN_XY_SCALE |
+                                        WE_HAVE_A_2X2       )) )
+            {
+#if 0
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* This algorithm is what Apple documents.  But it doesn't work.         */
+  /*                                                                       */
+              int  a = subglyph->transform.xx > 0 ?  subglyph->transform.xx
+                                                  : -subglyph->transform.xx;
+              int  b = subglyph->transform.yx > 0 ?  subglyph->transform.yx
+                                                  : -subglyph->transform.yx;
+              int  c = subglyph->transform.xy > 0 ?  subglyph->transform.xy
+                                                  : -subglyph->transform.xy;
+              int  d = subglyph->transform.yy > 0 ? subglyph->transform.yy
+                                                  : -subglyph->transform.yy;
+              int  m = a > b ? a : b;
+              int  n = c > d ? c : d;
+
+
+              if ( a - b <= 33 && a - b >= -33 )
+                m *= 2;
+              if ( c - d <= 33 && c - d >= -33 )
+                n *= 2;
+              x = FT_MulFix( x, m );
+              y = FT_MulFix( y, n );
+
+#else /* 0 */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* This algorithm is a guess and works much better than the above.       */
+  /*                                                                       */
+              int  mac_xscale = FT_SqrtFixed(
+                                  FT_MulFix( subglyph->transform.xx,
+                                             subglyph->transform.xx ) +
+                                  FT_MulFix( subglyph->transform.xy,
+                                             subglyph->transform.xy) );
+              int  mac_yscale = FT_SqrtFixed(
+                                  FT_MulFix( subglyph->transform.yy,
+                                             subglyph->transform.yy ) +
+                                  FT_MulFix( subglyph->transform.yx,
+                                             subglyph->transform.yx ) );
+
+
+              x = FT_MulFix( x, mac_xscale );
+              y = FT_MulFix( y, mac_yscale );
+#endif /* 0 */
+
+            }
 
             if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
             {

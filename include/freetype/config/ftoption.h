@@ -402,6 +402,25 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED to compile the        */
+  /* TrueType glyph loader to use Apple's definition of how to handle      */
+  /* component offsets in composite glyphs.                                */
+  /*                                                                       */
+  /* Apple and MS disagree on the default behavior of component offsets    */
+  /* in composites.  Apple says that they should be scaled by the scale    */
+  /* factors in the transformation matrix (roughly, it's more complex)     */
+  /* while MS says they should not.  OpenType defines two bits in the      */
+  /* composite flags array which can be used to disambiguate, but old      */
+  /* fonts will not have them.                                             */
+  /*                                                                       */
+  /*   http://partners.adobe.com/asn/developer/opentype/glyf.html          */
+  /*   http://fonts.apple.com/TTRefMan/RM06/Chap6glyf.html                 */
+  /*                                                                       */
+#undef TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****      T Y P E 1   D R I V E R    C O N F I G U R A T I O N       ****/
