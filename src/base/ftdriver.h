@@ -118,6 +118,18 @@
   typedef void*  FT_FormatInterface;
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    FT_Attach_Reader                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function is associated to the "attach_file" driver-specific   */
+  /*    interface. It is used to read additional data for a given face     */
+  /*    from another input stream/file. For example, it is used to         */
+  /*    attach a Type 1 AFM file to a given Type 1 face..                  */
+  /*                                                                       */
+  typedef FT_Error  (*FT_Attach_Reader)( FT_Face  face, FT_Stream  stream );
 
   /*************************************************************************/
   /*************************************************************************/

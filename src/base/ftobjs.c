@@ -209,6 +209,79 @@
   }
 
 
+ /***************************************************************************
+  *
+  *  ft_new_input_stream:
+  *
+  *    create a new input stream object from a FT_Open_Args structure..
+  *
+  **************************************************************************/
+  static
+  FT_Error  ft_new_input_stream( FT_Library    library,
+                                 FT_Open_Args* args,
+                                 FT_Stream    *astream )
+  {
+    FT_Error  error;
+    FT_Memory memory;
+    FT_Stream stream;
+    
+    memory = library->memory;
+    if  ( ALLOC( stream, sizeof(*stream) ) )
+      return error;
+      
+    stream->memory = memory;
+    
+    /* is it a memory stream ------------------------- ? */
+    if (args->memory_base && args->memory_size)
+    {
+      FT_New_Memory_Stream( library,
+                            args->memory_base,
+                            args->memory_size,
+                            stream );
+    }
+
+    /* do we have an 8-bit pathname ------------------ ? */
+    else if (args->pathname)
+      error = FT_New_Stream( args->pathname, stream );
+
+    /* do we have a custom stream -------------------- ? */
+    else if (args->stream)
+    {
+      /* copy the content of the argument stream into the new stream object */
+      *stream = *(args->stream);
+      stream->memory = memory;
+    }
+    else
+      error = FT_Err_Invalid_Argument;
+      
+    if (error)
+      FREE(stream);
+      
+    *astream = stream;
+    return error;
+  }
+
+
+ /***************************************************************************
+  *
+  *  ft_done_stream:
+  *
+  *    closes and destroys a stream object.
+  *
+  **************************************************************************/
+  static
+  void ft_done_stream( FT_Stream*  astream )
+  {
+    FT_Stream  stream = *astream;
+    FT_Memory  memory = stream->memory;
+    
+    if (stream->close)
+      stream->close( stream );
+      
+    FREE( stream );
+    *astream = 0;
+  }
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -258,6 +331,9 @@
     /* Now discard client data */
     if ( face->generic.finalizer )
       face->generic.finalizer( face );
+
+    /* close the stream for this face */
+    ft_done_stream( &face->stream );    
 
     /* get rid of it */
     FREE( face );
@@ -935,60 +1011,6 @@
   }
 
 
- /***************************************************************************
-  *
-  *  ft_new_input_stream:
-  *
-  *    create a new input stream object from a FT_Open_Args structure..
-  *
-  **************************************************************************/
-  static
-  FT_Error  ft_new_input_stream( FT_Library    library,
-                                 FT_Open_Args* args,
-                                 FT_Stream    *astream )
-  {
-    FT_Error  error;
-    FT_Memory memory;
-    FT_Stream stream;
-    
-    memory = library->memory;
-    if  ( ALLOC( stream, sizeof(*stream) ) )
-      return error;
-      
-    stream->memory = memory;
-    
-    /* is it a memory stream ------------------------- ? */
-    if (args->memory_base && args->memory_size)
-    {
-      FT_New_Memory_Stream( library,
-                            args->memory_base,
-                            args->memory_size,
-                            stream );
-    }
-
-    /* do we have an 8-bit pathname ------------------ ? */
-    else if (args->pathname)
-      error = FT_New_Stream( args->pathname, stream );
-
-    /* do we have a custom stream -------------------- ? */
-    else if (args->stream)
-    {
-      /* copy the content of the argument stream into the new stream object */
-      *stream = *(args->stream);
-      stream->memory = memory;
-    }
-    else
-      error = FT_Err_Invalid_Argument;
-      
-    if (error)
-      FREE(stream);
-      
-    *astream = stream;
-    return error;
-  }
-
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1024,19 +1046,20 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
+
+  static
+  const FT_Open_Args  ft_default_open_args = 
+    { 0, 0, 0, 0, 0 };
+
   EXPORT_FUNC
   FT_Error  FT_New_Face( FT_Library   library,
                          const char*  pathname,
                          FT_Long      face_index,
                          FT_Face     *aface )
   {
-    FT_Open_Args  args;
-
-    args.memory_base = 0;
-    args.memory_size = 0;
-    args.stream      = 0;
-    args.pathname    = (FT_Byte*)pathname;
+    FT_Open_Args  args = ft_default_open_args;
     
+    args.pathname = (FT_Byte*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
   }
 
@@ -1048,13 +1071,10 @@
                                 FT_Long      face_index,
                                 FT_Face*     face )
   {
-    FT_Open_Args  args;
+    FT_Open_Args  args = ft_default_open_args;
 
     args.memory_base = file_base;
     args.memory_size = file_size;
-    args.pathname    = 0;
-    args.stream      = 0;
-
     return FT_Open_Face( library, &args, face_index, face );
   }
 
@@ -1083,6 +1103,23 @@
 
     memory = library->memory;
 
+    /* if the font driver is specified in the args structure, use */
+    /* it. Otherwise, we'll scan the list of registered drivers.. */
+    if (args->driver)
+    {
+      driver = args->driver;
+      /* not all drivers directly support face objects, so check.. */
+      if (driver->interface.face_object_size)
+      {
+        error = open_face( driver, stream, face_index, &face );
+        if (!error) goto Success;
+      }
+      else
+        error = FT_Err_Invalid_Handle;
+
+      goto Fail;
+    }
+    
     {
       /* check each font driver for an appropriate format */
       FT_Driver*  cur   = library->drivers;
@@ -1091,7 +1128,7 @@
       for ( ; cur < limit; cur++ )
       {
         driver = *cur;
-       /* not all drivers directly support face object, so check.. */
+       /* not all drivers directly support face objects, so check.. */
         if (driver->interface.face_object_size)
         {
           error = open_face( driver, stream, face_index, &face );
@@ -1150,6 +1187,112 @@
     FT_TRACE4(( "FT_Open_Face: Return %d\n", error ));
     return error;
   }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Attach_File                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    "Attach" a given font file to an existing face. This is usually    */
+  /*    to read additionnal information for a single face object. For      */
+  /*    example, it is used to read the AFM files that come with Type 1    */
+  /*    fonts in order to add kerning data and other metrics..             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face         :: target face object                                 */
+  /*                                                                       */
+  /*    filepathname :: an 8-bit pathname naming the 'metrics' file.       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    If your font file is in memory, or if you want to provide your     */
+  /*    own input stream object, see FT_Attach_Stream.                     */
+  /*                                                                       */
+  /*    The meaning of the "attach" (i.e. what really happens when the     */
+  /*    new file is read) is not fixed by FreeType itself. It really       */
+  /*    depends on the font format (and thus the font driver).             */
+  /*                                                                       */
+  /*    Client applications are expected to know what they're doing        */
+  /*    when invoking this function. Most drivers simply do not implement  */
+  /*    file attachments..                                                 */
+  /*                                                                       */
+  EXPORT_FUNC
+  FT_Error  FT_Attach_File( FT_Face      face,
+                            const char*  filepathname )
+  {
+    FT_Open_Args  open = ft_default_open_args;
+
+    open.pathname = (char*)filepathname;
+    return FT_Attach_Stream( face, &open );
+  }
+                            
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Attach_Stream                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function is similar to FT_Attach_File with the exception      */
+  /*    that it reads the attachment from an arbitrary stream.             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: target face object                                         */
+  /*                                                                       */
+  /*    args :: a pointer to an FT_Open_Args structure used to describe    */
+  /*            the input stream to FreeType                               */
+  /* <Return>                                                              */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  /*    The meaning of the "attach" (i.e. what really happens when the     */
+  /*    new file is read) is not fixed by FreeType itself. It really       */
+  /*    depends on the font format (and thus the font driver).             */
+  /*                                                                       */
+  /*    Client applications are expected to know what they're doing        */
+  /*    when invoking this function. Most drivers simply do not implement  */
+  /*    file attachments..                                                 */
+  /*                                                                       */
+  EXPORT_DEF
+  FT_Error  FT_Attach_Stream( FT_Face       face,
+                              FT_Open_Args* parameters )
+  {
+    FT_Stream  stream;
+    FT_Error   error;
+    FT_Driver  driver;
+    
+    FTDriver_getInterface  get_interface;
+    
+    if ( !face || !face->driver )
+      return FT_Err_Invalid_Handle;
+      
+    driver = face->driver;
+    error = ft_new_input_stream( driver->library, parameters, &stream );
+    if (error) goto Exit;
+    
+    /* we implement FT_Attach_Stream in each driver through the */
+    /* "attach_file" interface..                                */
+    error = FT_Err_Unimplemented_Feature;
+
+    get_interface = driver->interface.get_interface;
+    if (get_interface)    
+    {
+      FT_Attach_Reader  reader;
+      
+      reader = (FT_Attach_Reader)get_interface( driver, "attach_file" );
+      if (reader)
+        error = reader( face, stream );
+    }
+    
+    /* close the attached stream */
+    ft_done_stream( &stream );
+    
+  Exit:
+    return error;
+  }
+
 
 
   /*************************************************************************/
