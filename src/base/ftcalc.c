@@ -190,7 +190,7 @@
       /* compute result directly */
       q = ( ((FT_Int64)a << 16) + (b >> 1)) / b;
 
-    return (FT_Long)( s < 0 ? -q : q );
+    return ( s < 0 ? -(FT_Long)q : (FT_Long)q );
   }
 
 
