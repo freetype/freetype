@@ -310,7 +310,14 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_CHINESE_PRC                       0x0804
 #define TT_MS_LANGID_CHINESE_HONG_KONG                 0x0c04
 #define TT_MS_LANGID_CHINESE_SINGAPORE                 0x1004
+
+#if 1  /* this used to be this value (and it still is in many places) */
 #define TT_MS_LANGID_CHINESE_MACAU                     0x1404
+#else  /* but beware, Microsoft may change its mind...
+          the most recent Word reference has the following:  :-( */
+#define TT_MS_LANGID_CHINESE_MACAU          TT_MS_LANGID_CHINESE_HONG_KONG
+#endif
+
 #define TT_MS_LANGID_CZECH_CZECH_REPUBLIC              0x0405
 #define TT_MS_LANGID_DANISH_DENMARK                    0x0406
 #define TT_MS_LANGID_GERMAN_GERMANY                    0x0407
@@ -397,7 +404,11 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_LATVIAN_LATVIA                    0x0426
 #define TT_MS_LANGID_LITHUANIAN_LITHUANIA              0x0427
 #define TT_MS_LANGID_CLASSIC_LITHUANIAN_LITHUANIA      0x0827
+
+#if 0  /* this seems to be an error that have been dropped */
 #define TT_MS_LANGID_MAORI_NEW_ZEALAND                 0x0428
+#endif
+
 #define TT_MS_LANGID_FARSI_IRAN                        0x0429
 #define TT_MS_LANGID_VIETNAMESE_VIET_NAM               0x042a
 #define TT_MS_LANGID_ARMENIAN_ARMENIA                  0x042b
@@ -418,8 +429,15 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_HINDI_INDIA                       0x0439
 #define TT_MS_LANGID_MALTESE_MALTA                     0x043a
 #define TT_MS_LANGID_SAAMI_LAPONIA                     0x043b
+
+#if 0  /* this seems to be a previous invertion */
 #define TT_MS_LANGID_IRISH_GAELIC_IRELAND              0x043c
 #define TT_MS_LANGID_SCOTTISH_GAELIC_UNITED_KINGDOM    0x083c
+#else
+#define TT_MS_LANGID_SCOTTISH_GAELIC_UNITED_KINGDOM    0x083c
+#define TT_MS_LANGID_IRISH_GAELIC_IRELAND              0x043c
+#endif
+
 #define TT_MS_LANGID_MALAY_MALAYSIA                    0x043e
 #define TT_MS_LANGID_MALAY_BRUNEI_DARUSSALAM           0x083e
 #define TT_MS_LANGID_KAZAK_KAZAKSTAN                   0x043f
@@ -439,6 +457,42 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_MARATHI_INDIA                     0x044e
 #define TT_MS_LANGID_SANSKRIT_INDIA                    0x044f
 #define TT_MS_LANGID_KONKANI_INDIA                     0x0457
+
+/* new as of 2001-01-01 */
+#define TT_MS_LANGID_ARABIC_GENERAL                    0x0001
+#define TT_MS_LANGID_CHINESE_GENERAL                   0x0004
+#define TT_MS_LANGID_ENGLISH_GENERAL                   0x0009
+#define TT_MS_LANGID_FRENCH_WEST_INDIES                0x1c0c
+#define TT_MS_LANGID_FRENCH_REUNION                    0x200c
+#define TT_MS_LANGID_FRENCH_CONGO                      0x240c
+ /* which was formerly: */
+#define TT_MS_LANGID_FRENCH_ZAIRE           TT_MS_LANGID_FRENCH_CONGO
+
+#define TT_MS_LANGID_FRENCH_SENEGAL                    0x280c
+#define TT_MS_LANGID_FRENCH_CAMEROON                   0x2c0c
+#define TT_MS_LANGID_FRENCH_COTE_D_IVOIRE              0x300c
+#define TT_MS_LANGID_FRENCH_MALI                       0x340c
+#define TT_MS_LANGID_BOSNIAN_BOSNIA_HERZEGOVINA        0x101a
+#define TT_MS_LANGID_URDU_INDIA                        0x0820
+#define TT_MS_LANGID_TAJIK_TAJIKISTAN                  0x0428
+#define TT_MS_LANGID_YIDDISH_GERMANY                   0x043d
+#define TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN               0x0440
+#define TT_MS_LANGID_TURKMEN_TURKMENISTAN              0x0442
+#define TT_MS_LANGID_MONGOLIAN_MONGOLIA                0x0450
+#define TT_MS_LANGID_TIBETAN_BHUTAN                    0x0451
+#define TT_MS_LANGID_WELSH_WALES                       0x0452
+#define TT_MS_LANGID_KHMER_CAMBODIA                    0x0453
+#define TT_MS_LANGID_LAO_LAOS                          0x0454
+#define TT_MS_LANGID_BURMESE_MYANMAR                   0x0455
+#define TT_MS_LANGID_GALICIAN_SPAIN                    0x0456
+#define TT_MS_LANGID_MANIPURI_INDIA                    0x0458
+#define TT_MS_LANGID_SINDHI_INDIA                      0x0459
+#define TT_MS_LANGID_KASHMIRI_PAKISTAN                 0x0460
+#define TT_MS_LANGID_KASHMIRI_INDIA                    0x0860
+#define TT_MS_LANGID_NEPALI_NEPAL                      0x0461
+#define TT_MS_LANGID_NEPALI_INDIA                      0x0861
+#define TT_MS_LANGID_FRISIAN_NETHERLANDS               0x0462
+
 
 
   /*************************************************************************/
