@@ -396,6 +396,9 @@
     if ( error )
       goto Exit;
 
+    copy->advance = source->advance;
+    copy->format  = source->format;
+
     if ( clazz->glyph_copy )
       error = clazz->glyph_copy( source, copy );
 
