@@ -1,7 +1,12 @@
-2001-02-13  David Turner <david.turner@freetype.org>
+2001-02-13  Werner Lemberg  <wl@gnu.org>
+
+	* docs/docmaker.py (DocSection::add_element): Use
+	`self.print_error()'.
+
+2001-02-13  David Turner  <david.turner@freetype.org>
 
 	* docs/docmaker.py, include/freetype/*.h: Updated the DocMaker script
-	to support chapters and section block ordering. Updated the public
+	to support chapters and section block ordering.  Updated the public
 	header files accordingly.
 
 2001-02-08  Tom Kacvinsky  <tjk@ams.org>

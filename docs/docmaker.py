@@ -80,7 +80,7 @@ def index_sort( s1, s2 ):
     for i in range( l1 ):
         if i >= l2 or m1[i] > m2[i]:
             return 1
-        
+
         if m1[i] < m2[i]:
             return -1
 
@@ -89,11 +89,11 @@ def index_sort( s1, s2 ):
 
         if s1[i] > s2[i]:
             return 1
-    
+
     if l2 > l1:
         return -1
-    
-    return 0    
+
+    return 0
 
 
 # sort input_list, placing the elements of order_list in front
@@ -102,7 +102,7 @@ def sort_order_list( input_list, order_list ):
     new_list = order_list[:]
     for id in input_list:
         if not id in order_list:
-            new_list.append(id)
+            new_list.append( id )
     return new_list
 
 
@@ -271,7 +271,7 @@ class DocParagraph:
         # but older Python versions don't have the `extend' attribute.
         #
         last = len( self.words )
-        self.words[last:last] = string.split( line )
+        self.words[last : last] = string.split( line )
 
 
     # This function is used to retrieve the first word of a given
@@ -301,17 +301,17 @@ class DocParagraph:
             # process cross references if needed
             #
             if identifiers and word and word[0] == '@':
-                word = word[1:]
+                word = word[1 :]
 
                 # we need to find non-alphanumeric characters
                 #
                 i = len( word )
                 while i > 0 and not word[i - 1] in alphanum:
                     i = i - 1
-                    
+
                 if i > 0:
-                    extra = word[i:]
-                    word  = word[0:i]
+                    extra = word[i :]
+                    word  = word[0 : i]
 
                 block = identifiers.get( word )
                 if block:
@@ -647,7 +647,7 @@ class DocBlock:
                             self.add( marker, content )
                         marker  = line2[1 : i]
                         content = []
-                        line2   = string.lstrip( line2[i + 1 :] )
+                        line2   = string.lstrip( line2[i+1 :] )
                         l       = len( line2 )
                         line    = " " * margin + line2
 
@@ -711,11 +711,15 @@ class DocBlock:
     def location( self ):
         return self.filename + ':' + str( self.lineno )
 
+
     def print_warning( self, message ):
-        sys.stderr.write( "WARNING:"+self.location()+": "+message+'\n')
+        sys.stderr.write( "WARNING:" +
+                          self.location() + ": " + message + '\n' )
+
 
     def print_error( self, message ):
-        sys.stderr.write( "ERROR:"+self.location()+": "+message+'\n')
+        sys.stderr.write( "ERROR:" +
+                          self.location() + ": " + message + '\n' )
         sys.exit()
 
 
@@ -727,10 +731,10 @@ class DocBlock:
 
 
     def dump_html( self, identifiers = None ):
-        types      = [ 'type', 'struct', 'functype', 'function',
-                       'constant', 'enum', 'macro', 'structure', 'also' ]
+        types      = ['type', 'struct', 'functype', 'function',
+                      'constant', 'enum', 'macro', 'structure', 'also']
 
-        parameters = [ 'input', 'inout', 'output', 'return' ]
+        parameters = ['input', 'inout', 'output', 'return']
 
         if not self.items:
             return
@@ -758,7 +762,7 @@ class DocBlock:
             l = l - 1
         print source_header
         print ""
-        for line in lines[0 : l + 1]:
+        for line in lines[0 : l+1]:
             print line
         print source_footer
 
@@ -827,19 +831,24 @@ class DocSection:
         # section
         #
         if self.elements.has_key( block.name ):
-            print_error( "duplicate element definition for " +
-                         "'" + block.name + "' in section '" + self.name + "'\n" +
-                         "previous definition in '" + self.elements[block.name].location() + "'" )
+            self.print_error( "duplicate element definition for " +
+                              "'" + block.name + "' " +
+                              "in section " +
+                              "'" + self.name + "'\n" +
+                              "previous definition in " +
+                              "'" + self.elements[block.name].location() + "'" )
 
-        self.elements[ block.name ] = block
+        self.elements[block.name] = block
         self.list.append( block )
 
 
     def print_warning( self, message ):
         self.block.print_warning( message )
 
+
     def print_error( self, message ):
         self.block.print_error( message )
+
 
     def dump_html( self, identifiers = None ):
         """make an HTML page from a given DocSection"""
@@ -875,7 +884,8 @@ class DocSectionList:
         self.list            = []    # list of sections (in creation order)
         self.current_section = None  # current section
         self.identifiers     = {}    # map identifiers to blocks
-                                     
+
+
     def append_section( self, block ):
         name     = string.lower( block.name )
         abstract = block.find_content( "abstract" )
@@ -891,12 +901,12 @@ class DocSectionList:
                 # provide a new one.
                 #
                 if abstract:
-                    print_error( "duplicate section definition" +
-                                  " for '" + name + "'\n" +
-                                  "previous definition in" +
-                                  " '" + section.block.location() + "'\n" +
-                                  "second definition in" +
-                                  " '" + block.location() + "'" )
+                    print_error( "duplicate section definition for " +
+                                 "'" + name + "'\n" +
+                                 "previous definition in " +
+                                 "'" + section.block.location() + "'\n" +
+                                 "second definition in " +
+                                 "'" + block.location() + "'" )
             else:
                 # The old section didn't contain an abstract; we are
                 # now going to replace it.
@@ -923,7 +933,7 @@ class DocSectionList:
 
             elif self.current_section:
                 self.current_section.add_element( block )
-                block.section = self.current_section
+                block.section                = self.current_section
                 self.identifiers[block.name] = block
 
 
@@ -960,7 +970,8 @@ class DocSectionList:
                         try:
                             words = element.get_words()
                         except:
-                            section.block.print_warning( "invalid content in <order> marker\n" )
+                            section.block.print_warning(
+                              "invalid content in <order> marker\n" )
                         if words:
                             for word in words:
                                 block = self.identifiers.get( word )
@@ -968,20 +979,24 @@ class DocSectionList:
                                     if block.section == section:
                                         order_list.append( block )
                                     else:
-                                        section.block.print_warning( "invalid reference to '" +
-                                                                      word + "' defined in other section" )
+                                        section.block.print_warning(
+                                          "invalid reference to " +
+                                          "'" + word + "' " +
+                                          "defined in other section" )
                                 else:
-                                    section.block.print_warning( "invalid reference to '" + word + "'" )
-                                
+                                    section.block.print_warning(
+                                      "invalid reference to " +
+                                      "'" + word + "'" )
+
                 # now sort the list of blocks according to the order list
                 #
                 new_list = order_list[:]
                 for block in section.list:
                     if not block in order_list:
-                        new_list.append(block)
+                        new_list.append( block )
 
-                section.list = new_list                    
-        
+                section.list = new_list
+
         # compute section filenames
         #
         for section in self.sections.values():
@@ -1035,7 +1050,7 @@ class DocSectionList:
                 else:
                     line = line + 1
             else:
-                sys.stderr.write( "identifier '" + ident + 
+                sys.stderr.write( "identifier '" + ident +
                                   "' has no definition" + '\n' )
 
         print "</tr></table></center>"
@@ -1045,14 +1060,16 @@ class DocSectionList:
 
 
 
-# Filter a given list of DocBlocks. Returns a new list
-# of DocBlock objects that only contains element whose
-# "type" (i.e. first marker) is in the "types" parameter.
-
+# Filter a given list of DocBlocks. Returns a new list of DocBlock objects
+# that only contains element whose "type" (i.e. first marker) is in the
+# "types" parameter.
+#
 class DocChapter:
-    def __init__(self,block):
+
+    def __init__( self, block ):
         self.sections_names = []    # ordered list of section names
-        self.sections       = []    # ordered list of DocSection objects for this chapter
+        self.sections       = []    # ordered list of DocSection objects
+                                    # for this chapter
         self.block          = block
 
         # look for chapter title
@@ -1067,58 +1084,62 @@ class DocChapter:
         if not content:
             block.print_error( "chapter has no <sections> content" )
 
-        # compute list of section names            
+        # compute list of section names
         slist = []
         for item in content.items:
             for element in item[1]:
                 try:
-                    words      = element.get_words()
-                    l          = len(slist)
-                    slist[l:l] = words
+                    words        = element.get_words()
+                    l            = len( slist )
+                    slist[l : l] = words
                 except:
-                    block.print_warning( "invalid content in <sections> marker" )
-                    
+                    block.print_warning(
+                      "invalid content in <sections> marker" )
+
         self.section_names = slist
 
-            
 
 class DocDocument:
 
     def __init__( self ):
         self.section_list  = DocSectionList()   # section list object
         self.chapters      = []                 # list of chapters
-        self.lost_sections = []                 # list of sections with no chapter
+        self.lost_sections = []                 # list of sections with
+                                                # no chapter
 
     def append_block( self, block ):
         if block.name:
             content = block.find_content( "chapter" )
             if content:
-                # it's a chapter definition - add it to our list
+                # it's a chapter definition -- add it to our list
                 chapter = DocChapter( block )
                 self.chapters.append( chapter )
             else:
                 self.section_list.append_block( block )
-                
+
+
     def prepare_chapters( self ):
-        
         # check section names
         #
         for chapter in self.chapters:
             slist = []
             for name in chapter.section_names:
-                 section = self.section_list.sections.get(name)
+                 section = self.section_list.sections.get( name )
                  if not section:
-                     chapter.block.print_warning( "invalid reference to unknown section '"+name+"'" )
+                     chapter.block.print_warning(
+                       "invalid reference to unknown section '" + name + "'" )
                  else:
                      section.chapter = chapter
                      slist.append( section )
-                    
+
             chapter.sections = slist
 
         for section in self.section_list.list:
             if not section.chapter:
-                section.block.print_warning( "section '"+section.name+"' is not in any chapter" )
+                section.block.print_warning(
+                  "section '" + section.name + "' is not in any chapter" )
                 self.lost_sections.append( section )
+
 
     def prepare_files( self, file_prefix = None ):
         self.section_list.prepare_files( file_prefix )
@@ -1137,7 +1158,6 @@ class DocDocument:
         print "<center><h1>Table of Contents</h1></center>"
 
         for chapter in self.chapters:
-            
             print chapter_header + chapter.title + chapter_inter
 
             print "<table cellpadding=5>"
@@ -1157,7 +1177,7 @@ class DocDocument:
         # list lost sections
         if self.lost_sections:
             print chapter_header + "OTHER SECTIONS:" + chapter_inter
-            
+
             print "<table cellpadding=5>"
             for section in self.lost_sections:
                 if section.abstract:
@@ -1171,7 +1191,7 @@ class DocDocument:
             print "</table>"
 
             print chapter_footer
-            
+
         print html_footer
 
         sys.stdout = old_stdout
@@ -1180,15 +1200,11 @@ class DocDocument:
     def dump_index_html( self ):
         self.section_list.dump_html_index()
 
+
     def dump_sections_html( self ):
         self.section_list.dump_html_sections()
 
 
-        
-
-        
-
-#
 def filter_blocks_by_type( block_list, types ):
     new_list = []
     for block in block_list:
@@ -1259,9 +1275,9 @@ def make_block_list():
     """parse a file and extract comments blocks from it"""
 
     file_list = []
-    # sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
+    # sys.stderr.write( repr( sys.argv[1 :] ) + '\n' )
 
-    for pathname in sys.argv[1:]:
+    for pathname in sys.argv[1 :]:
         if string.find( pathname, '*' ) >= 0:
             newpath = glob.glob( pathname )
             newpath.sort()  # sort files -- this is important because
@@ -1270,7 +1286,7 @@ def make_block_list():
             newpath = [pathname]
 
         last = len( file_list )
-        file_list[last:last] = newpath
+        file_list[last : last] = newpath
 
     if len( file_list ) == 0:
         file_list = None
@@ -1299,7 +1315,7 @@ def make_block_list():
     for line in fileinput.input( file_list ):
         l = len( line )
         if l > 0 and line[l - 1] == '\012':
-            line = line[0 : l - 1]
+            line = line[0 : l-1]
 
         # stripped version of the line
         #
@@ -1318,8 +1334,8 @@ def make_block_list():
         #    /* #.....
         #
         if format >= 4 and l > 2 and line2[0 : 2] == '/*':
-            if l < 4 or ( line2[2] != '@' and line2[2:4] != ' @' and
-                          line2[2] != '#' and line2[2:4] != ' #'):
+            if l < 4 or ( line2[2] != '@' and line2[2 : 4] != ' @' and
+                          line2[2] != '#' and line2[2 : 4] != ' #'):
                 add_new_block( list, fileinput.filename(),
                                lineno, block, source )
                 format = 0
@@ -1379,7 +1395,7 @@ def make_block_list():
                 else:
                     # otherwise simply append line to current block
                     #
-                    block.append( line2[i:] )
+                    block.append( line2[i :] )
 
                 continue
 
@@ -1464,7 +1480,7 @@ def main( argv ):
     document.dump_toc_html()
     document.dump_sections_html()
     document.dump_index_html()
-        
+
 ##    section_list = DocSectionList()
 ##    for block in list:
 ##        section_list.append_block( block )
