@@ -1,3 +1,7 @@
+2004-02-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Set_Char_Size): Fix typo.
+
 2004-02-14  Masatake YAMATO  <jet@gyve.org>
 
 	* builds/unix/ftsystem.c: Include errno.h.
