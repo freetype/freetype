@@ -51,7 +51,7 @@
   {
     FT_Vector  d1, d2;
     FT_Angle   theta;
-    FT_Bool    close1, close2;
+    FT_Int     close1, close2;
 
     d1.x = base[1].x - base[2].x;
     d1.y = base[1].y - base[2].y;
@@ -79,7 +79,8 @@
     }
 
     theta = ft_pos_abs( FT_Angle_Diff( *angle_in, *angle_out ) );
-    return ( theta < FT_SMALL_CONIC_THRESHOLD );
+    
+    return FT_BOOL( theta < FT_SMALL_CONIC_THRESHOLD );
   }
 
 
@@ -119,7 +120,7 @@
   {
     FT_Vector  d1, d2, d3;
     FT_Angle   theta1, theta2;
-    FT_Bool    close1, close2, close3;
+    FT_Int     close1, close2, close3;
 
     d1.x = base[2].x - base[3].x;
     d1.y = base[2].y - base[3].y;
@@ -163,8 +164,9 @@
     }
     theta1 = ft_pos_abs( FT_Angle_Diff( *angle_in,  *angle_mid ) );
     theta2 = ft_pos_abs( FT_Angle_Diff( *angle_mid, *angle_out ) );
-    return ( theta1 < FT_SMALL_CUBIC_THRESHOLD &&
-             theta2 < FT_SMALL_CUBIC_THRESHOLD );
+
+    return FT_BOOL( theta1 < FT_SMALL_CUBIC_THRESHOLD &&
+                    theta2 < FT_SMALL_CUBIC_THRESHOLD );
   }
 
 
@@ -546,7 +548,7 @@
      }
    }
 
-   outline->n_points += border->num_points;
+   outline->n_points  = (short)( outline->n_points + border->num_points );
 
    FT_ASSERT( FT_Outline_Check( outline ) == 0 );
  }
@@ -1006,7 +1008,9 @@
     while ( arc >= bez_stack )
     {
       FT_Angle  angle_in, angle_out;
-
+      
+      angle_in = angle_out = 0;  /* remove compiler warnings */
+      
       if ( arc < limit &&
            !ft_conic_is_small_enough( arc, &angle_in, &angle_out ) )
       {
@@ -1098,6 +1102,9 @@
     while ( arc >= bez_stack )
     {
       FT_Angle  angle_in, angle_mid, angle_out;
+
+      /* remove compiler warnings */
+      angle_in = angle_out = angle_mid = 0;
 
       if ( arc < limit &&
            !ft_cubic_is_small_enough( arc, &angle_in, &angle_mid, &angle_out ) )
