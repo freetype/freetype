@@ -2722,6 +2722,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    library :: A handle to the library object.                         */
+  /*                                                                       */
   /*    clazz   :: A pointer to class descriptor for the module.           */
   /*                                                                       */
   /* <Return>                                                              */

@@ -75,6 +75,8 @@ const FT_Module_Class*  ft_default_modules[] =
   /*                                                                       */
   /* <Description>                                                         */
   /*    Adds the set of default drivers to a given library object.         */
+  /*    This is only useful when you create a library object with          */
+  /*    FT_New_Library() (usually to plug a custom memory manager).        */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
