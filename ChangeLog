@@ -1,4 +1,4 @@
-2002-24-17  Graham Asher  <graham.asher@btinternet.com>
+2002-07-24  Graham Asher  <graham.asher@btinternet.com>
 
     * src/truetype/ttobjs.c: fix for bug reported by Sven Neumann [sven@gimp.org]
     on the FreeType development forum: "If FT_CONFIG_OPTION_INCREMENTAL is undefined
