@@ -1744,6 +1744,7 @@
     if ( !filepathname )
       return FT_Err_Invalid_Argument;
 
+    open.stream   = NULL;
     open.flags    = FT_OPEN_PATHNAME;
     open.pathname = (char*)filepathname;
 
