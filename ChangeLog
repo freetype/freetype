@@ -1,5 +1,7 @@
 2003-08-18  David Turner  <david@freetype.org>
 
+        * src/autohint/ahhint.c (ah_hinter_load_glyph): fixed bug
+
         * Jamfile: adding the "refdoc" target to the Jamfile in order to
         build the API Reference in "docs/reference" automatically
 
