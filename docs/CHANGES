@@ -8,6 +8,9 @@ LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
     Visual C++'s most pedantic warning level (/W4).  It already compiled
     fine with GCC and a few other compilers.
 
+  - fixed a bug that prevented the linear advance width of composite
+    TrueType glyphs to be correctly returned
+
   - Fixed the Visual C++ project files located in "builds/win32/visualc"
     (previous versions used older names of the library).
   
