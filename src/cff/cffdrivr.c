@@ -366,8 +366,9 @@
       FT_Face             face    = FT_CMAP_FACE( cmap );
       FT_Library          library = FT_FACE_LIBRARY( face );
       FT_Module           sfnt    = FT_Get_Module( library, "sfnt" );
-      FT_Service_TTCMaps  service = ft_module_get_service (
-                                      sfnt, FT_SERVICE_ID_TT_CMAP );
+      FT_Service_TTCMaps  service =
+        (FT_Service_TTCMaps)ft_module_get_service( sfnt,
+                                                   FT_SERVICE_ID_TT_CMAP );
 
 
       if ( service && service->get_cmap_info )
