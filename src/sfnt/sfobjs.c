@@ -481,25 +481,65 @@
         root->bbox.yMax    = face->header.yMax;
         root->units_per_EM = face->header.Units_Per_EM;
 
+
+        /* XXXXX: Computing the ascender/descender/height is very different  */
+        /*        from what the specification tells you. Apparently, we must */
+        /*        be careful because:                                        */
+        /*                                                                   */
+        /*  - not all fonts have an OS/2 table, in this case, we take the    */
+        /*    values in the horizontal header. However, these values         */
+        /*    very often are not reliable..                                  */
+        /*                                                                   */
+        /*  - otherwise, the correctly typographic values are in the         */
+        /*    sTypoAscender, sTypoDescender & sTypoLineGap fields.           */
+        /*                                                                   */
+        /*    however, certains fonts have these fields set to 0. Rather,    */
+        /*    they have usWinAscent & usWinDescent correctly set (but with   */
+        /*    different values).                                             */
+        /*                                                                   */
+        /*    As an example, Arial Narrow is implemented through four files  */
+        /*    ARIALN.TTF, ARIALNI.TTF, ARIALNB.TTF & ARIALNBI.TTF            */
+        /*                                                                   */
+        /*    Strangely, all fonts have the same values in their sTypoXXX    */
+        /*    fields, except ARIALNB which sets them to 0.                   */
+        /*                                                                   */
+        /*    On the other hand, they all have different usWinAscent/Descent */
+        /*    values.. As a conclusion, the OS/2 table cannot be used to     */
+        /*    compute the text height reliably !!                            */
+        /*                                                                   */
+        /*                                                                   */
+
         /* The ascender/descender/height are computed from the OS/2 table */
         /* when found.  Otherwise, they're taken from the horizontal      */
         /* header.                                                        */
         /*                                                                */
-        if ( face->os2.version != 0xFFFF )
+
+        root->ascender  = face->horizontal.Ascender;
+        root->descender = face->horizontal.Descender;
+        
+        root->height    = root->ascender - root->descender +
+                          face->horizontal.Line_Gap;
+                          
+        /* when the line_gap is 0, we add an extra 15 % to the text height  */
+        /* this computation is based on various versions of Times New Roman */
+        if (face->horizontal.Line_Gap == 0)
+          root->height = (root->height*115 + 50)/100;
+          
+#if 0
+        /* some fonts have the OS/2 "sTypoAscender", "sTypoDescender" & */
+        /* "sTypoLineGap" fields set to 0, like ARIALNB.TTF             */
+        if ( face->os2.version != 0xFFFF && root->ascender )
         {
+          FT_Int  height;
+          
           root->ascender  =  face->os2.sTypoAscender;
           root->descender = -face->os2.sTypoDescender;
-          root->height    =  root->ascender + root->descender +
-                               face->os2.sTypoLineGap;
+          
+          height = root->ascender + root->descender + face->os2.sTypoLineGap;
+          if (height > root->height)
+            root->height = height;
         }
-        else
-        {
-          root->ascender  = face->horizontal.Ascender;
-          root->descender = face->horizontal.Descender;
-          root->height    = root->ascender + root->descender +
-                              face->horizontal.Line_Gap;
-        }
-
+#endif
         root->max_advance_width   = face->horizontal.advance_Width_Max;
 
         root->max_advance_height  = face->vertical_info
