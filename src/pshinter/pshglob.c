@@ -5,7 +5,7 @@
 /*    PostScript hinter global hinting management (body).                  */
 /*    Inspired by the new auto-hinter module.                              */
 /*                                                                         */
-/*  Copyright 2001, 2002 by                                                */
+/*  Copyright 2001, 2002, 2003 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -78,6 +78,8 @@
   }
 
 
+#if 0
+
   /* org_width is is font units, result in device pixels, 26.6 format */
   FT_LOCAL_DEF( FT_Pos )
   psh_dimension_snap_width( PSH_Dimension  dimension,
@@ -121,6 +123,8 @@
 
     return width;
   }
+
+#endif /* 0 */
 
 
   /*************************************************************************/

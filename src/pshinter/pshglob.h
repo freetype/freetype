@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PostScript hinter global hinting management.                         */
 /*                                                                         */
-/*  Copyright 2001, 2002 by                                                */
+/*  Copyright 2001, 2002, 2003 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -159,11 +159,13 @@ FT_BEGIN_HEADER
   psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs );
 
 
+#if 0
   /* snap a stem width to fitter coordinates.  `org_width' is in font */
   /* units.  The result is in device pixels (26.6 format).            */
   FT_LOCAL( FT_Pos )
   psh_dimension_snap_width( PSH_Dimension  dimension,
                             FT_Int         org_width );
+#endif
 
   /* snap a stem to one or two blue zones */
   FT_LOCAL( void )

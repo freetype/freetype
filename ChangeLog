@@ -1,3 +1,23 @@
+2003-05-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshalgo1.[ch], src/pshinter/pshalgo2.[ch]: Removed.
+	* src/pshinter/pshalgo.h: Removed.
+
+	* src/pshinter/pshalgo3.[ch]: Renamed to...
+	* src/pshinter/pshalgo.[ch]: New files.
+	s/PSH3/PSH/.
+	s/psh3/psh/.
+	s/ps3/ps/.
+
+	* src/pshinter/pshrec.c, src/pshinter/pshinter.c: Updated.
+	* src/pshinter/rules.mk, src/pshinter/Jamfile: Updated
+
+	* src/pshinter/pshglob.[ch] (psh_dimension_snap_width): Commented
+	out.
+
+	* tests/gview.c: Remove code for pshalgo1 and pshalgo2.
+	Updated.
+
 2003-05-28  Martin Zinser  <zinser@decus.de>
 
 	* vms_make.com: Reworked support for shareable images on VMS.  The
