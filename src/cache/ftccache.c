@@ -84,6 +84,8 @@
     }
     else
     {
+      FT_ASSERT( manager->num_nodes == 0 );
+
       node->mru_next = node;
       node->mru_prev = node;
     }
@@ -98,21 +100,23 @@
   ftc_node_mru_unlink( FTC_Node     node,
                        FTC_Manager  manager )
   {
+    FTC_Node  first = manager->nodes_list;
     FTC_Node  prev  = node->mru_prev;
     FTC_Node  next  = node->mru_next;
-    FTC_Node  first = manager->nodes_list;
 
+    FT_ASSERT( first != NULL && manager->num_nodes > 0 );
+    FT_ASSERT( next->mru_prev == node );
+    FT_ASSERT( prev->mru_next == node );
 
-    prev->mru_next = next;
     next->mru_prev = prev;
+    prev->mru_next = next;
 
-    if ( node->mru_next == first )
+    if ( node == first )
     {
-      /* this is the last node in the list; update its head pointer */
-      if ( node == first )
+      if ( node == next )
         manager->nodes_list = NULL;
       else
-        first->mru_prev = prev;
+        manager->nodes_list = next;
     }
 
     node->mru_next = NULL;
@@ -848,7 +852,7 @@
             goto Exit;
           }
 
-          pnode = &(*pnode)->link;
+          pnode = &node->link;
         }
       }
 

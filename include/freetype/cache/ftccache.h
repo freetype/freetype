@@ -24,7 +24,7 @@
 #undef   FTC_CACHE_USE_INLINE
 
 /* define to use linear hash table */
-#undef   FTC_CACHE_USE_LINEAR_HASHING
+#define  FTC_CACHE_USE_LINEAR_HASHING
 
 FT_BEGIN_HEADER
 

@@ -45,7 +45,7 @@ T42_DRV_OBJ_S := $(OBJ_)type42.$O
 
 # Type42 driver source file for single build
 #
-T42_DRV_SRC_S := $(T42_DIR_)t42drivr.c
+T42_DRV_SRC_S := $(T42_DIR_)type42.c
 
 
 # Type42 driver - single object
