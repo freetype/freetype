@@ -1,3 +1,8 @@
+2001-02-08  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/cffparse.c (cff_parse_font_matrix): Removed an
+	unnecessary fprintf( stderr, ... ).
+
 2001-02-07  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/type1/t1objs.c (T1_Init_Face): Added code to get the
