@@ -133,8 +133,8 @@
   typedef enum TFlow_
   {
     Flow_None = 0,
-    Flow_Up,
-    Flow_Down
+    Flow_Up   = 1,
+    Flow_Down = -1
   
   } TFlow;
 
@@ -196,24 +196,6 @@
   static const Byte  RMask[8] =
     { 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE, 0xFF };
 
-  /* We provide two different builds of the scan-line converter  */
-  /* The static build uses global variables and isn't            */
-  /* re-entrant.                                                 */
-  /* The indirect build is re-entrant but accesses all variables */
-  /* indirectly.                                                 */
-  /*                                                             */
-  /* As a consequence, the indirect build is about 10% slower    */
-  /* than the static one on a _Pentium_ (this could get worse    */
-  /* on older processors), but the code size is reduced by       */
-  /* more than 30% !                                             */
-  /*                                                             */
-  /* The indirect build is now the default, defined in           */
-  /* ttconfig.h.  Be careful if you experiment with this.        */
-
-  /* Note also that, though its code can be re-entrant, the      */
-  /* component is always used in thread-safe mode.  This is      */
-  /* simply due to the fact that we want to use a single         */
-  /* render pool (of 64 Kb), and not to waste memory.            */
 
 #ifdef TT_STATIC_RASTER
 
@@ -398,7 +380,7 @@
 /*                                                                      */
 /************************************************************************/
 
-  static void  Set_High_Precision( RAS_ARGS Bool  High )
+  static void  Set_High_Precision( RAS_ARGS Int  High )
   {
     if ( High )
     {
@@ -1120,10 +1102,10 @@
 /* Description: Injects a new conic arc and adjusts the profile list.       */
 /*                                                                          */
 
-  static Bool  Conic_To( RAS_ARGS Long  x,
-                                  Long  y,
-                                  Long  cx,
-                                  Long  cy )
+  static Bool  Conic_To( RAS_ARGS Long  cx,
+                                  Long  cy,
+                                  Long  x,
+                                  Long  y )
   {
     Long     y1, y2, y3, x3, ymin, ymax;
     TStates  state_bez;
@@ -1211,12 +1193,12 @@
 /* Description: Injects a new cubic arc and adjusts the profile list.       */
 /*                                                                          */
 
-  static Bool  Cubic_To( RAS_ARGS Long  x,
-                                  Long  y,
-                                  Long  cx1,
+  static Bool  Cubic_To( RAS_ARGS Long  cx1,
                                   Long  cy1,
                                   Long  cx2,
-                                  Long  cy2 )
+                                  Long  cy2,
+                                  Long  x,
+                                  Long  y )
   {
     Long     y1, y2, y3, y4, x4, ymin1, ymax1, ymin2, ymax2;
     TStates  state_bez;
@@ -1333,7 +1315,7 @@
 
   static Bool  Decompose_Curve( RAS_ARGS UShort  first,
                                          UShort  last,
-                                         Bool    flipped )
+                                         int     flipped )
   {
     FT_Vector  v_last;
     FT_Vector  v_control;
@@ -1392,6 +1374,9 @@
       point--;
       tags--;
     }
+
+    ras.lastX = v_start.x;
+    ras.lastY = v_start.y;
 
     while (point < limit)
     {
@@ -1763,9 +1748,9 @@
     
     (void)max;
     
-    ras.traceIncr = - pitch;
+    ras.traceIncr = (Short)- pitch;
     ras.traceOfs  = - *min * pitch;
-    if (ras.traceIncr > 0)
+    if (pitch > 0)
       ras.traceOfs += (ras.target.rows-1)*pitch;
   
     ras.gray_min_x = 0;
@@ -2152,7 +2137,7 @@
     ras.traceOfs  = 0;
     pitch         = ras.target.pitch;
     byte_len      = -pitch;
-    ras.traceIncr = byte_len;
+    ras.traceIncr = (Short)byte_len;
     ras.traceG    = (*min/2)*byte_len;
     if (pitch > 0)
     {
@@ -2160,8 +2145,8 @@
       byte_len    = -byte_len;
     }
 
-    ras.gray_min_x =  byte_len;
-    ras.gray_max_x = -byte_len;
+    ras.gray_min_x =  (Short)byte_len;
+    ras.gray_max_x = -(Short)byte_len;
   }
 
 
@@ -2359,8 +2344,8 @@
     {
       Q = P->link;
 
-      bottom = P->start;
-      top    = P->start + P->height-1;
+      bottom = (Short)P->start;
+      top    = (Short)P->start + P->height-1;
 
       if ( min_Y > bottom ) min_Y = bottom;
       if ( max_Y < top    ) max_Y = top;
@@ -2959,8 +2944,8 @@ Scan_DropOuts :
     ras.target   = *target_map;
     
     return ( params->flags & ft_raster_flag_aa 
-           ? Render_Glyph( raster )
-           : Render_Gray_Glyph( raster ) );
+           ? Render_Gray_Glyph( raster )
+           : Render_Glyph( raster ) );
 
 #if 0
     /* Note that we always use drop-out mode 2, because it seems that */
