@@ -93,6 +93,12 @@
     FT_UShort       k = header->number_Of_HMetrics;
 
 
+    if (k == 0)
+    {
+      *bearing = *advance = 0;
+      return;
+    }
+
     if ( idx < (FT_UInt)k )
     {
       longs_m  = (TT_LongMetrics )header->long_metrics + idx;
