@@ -161,12 +161,5 @@ $(OBJ_)sf%.$O: $(SFNT_DIR_)sf%.c $(BASE_H) $(SHARED_H) $(SFNT_DRV_H)
 DRV_OBJS_S += $(SFNT_DRV_OBJ_S)
 DRV_OBJS_M += $(SFNT_DRV_OBJ_M)
 
-
-# update `ftinit' variables
-#
-FTINIT_DRIVER_PATHS  += $(SFNT_DIR) $(SHARED)
-FTINIT_DRIVER_H      += $(SFNT_DRV_H)
-FTINIT_DRIVER_MACROS += FT_SUPPORT_SFNT
-
 endif
 # END

@@ -195,11 +195,4 @@ $(OBJ_)ttpload.$O: $(TT_DIR_)ttpload.c $(BASE_H) $(SFNT_SRC) $(TT_DRV_H)
 DRV_OBJS_S += $(TT_DRV_OBJ_S)
 DRV_OBJS_M += $(TT_DRV_OBJ_M)
 
-
-# update `ftinit' variables
-#
-FTINIT_DRIVER_PATHS  += $(SFNT_DIR) $(TT_DIR) $(TT_EXT_DIR)
-FTINIT_DRIVER_H      += $(SFNT_H) $(TT_DRV_H)
-FTINIT_DRIVER_MACROS += FT_SUPPORT_TRUETYPE
-
 # END

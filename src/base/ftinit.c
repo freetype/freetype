@@ -48,47 +48,25 @@
   ************************************************************************/
 
 #include <ftobjs.h>
-#include <ftdriver.h>
 #include <ftconfig.h>
 #include <ftdebug.h>
+#include <ftdriver.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_init
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macros FT_SUPPORT_xxxx are defined by Makefile.lib when this file */
-  /* is compiled.  They come from a make variable called FTINIT_MACROS     */
-  /* which is updated by each driver Makefile.                             */
-  /*                                                                       */
-  /* This means that when a driver isn't part of the build, ftinit.o       */
-  /* won't try to reference it.                                            */
-  /*                                                                       */
-  /*************************************************************************/
+#undef  FT_DRIVER
+#define FT_DRIVER(x)  extern FT_DriverInterface x;
+#include <ftmodule.h>
 
-#define  FTINIT_DRIVER_CHAIN
-#define  FT_INIT_LAST_DRIVER_CHAIN    ((FT_DriverChain*) 0)
+#undef  FT_DRIVER
+#define FT_DRIVER(x)  &x,
 
-  /* Include the SFNT driver interface if needed */
-
-#ifdef FT_SUPPORT_SFNT
-#include "sfdriver.h"
-#endif
-
-  /* Include the TrueType driver interface if needed */
-
-#ifdef FT_SUPPORT_TRUETYPE
-#include "ttdriver.h"
-#endif
-
-
-  /* Include the Type1 driver interface if needed */
-
-#ifdef FT_SUPPORT_TYPE1
-#include "t1driver.h"
-#endif
-
-
+static
+const FT_DriverInterface*  ft_default_drivers[] = {
+#include <ftmodule.h>
+  0
+};
 
   /*************************************************************************/
   /*                                                                       */
@@ -104,23 +82,20 @@
   EXPORT_FUNC
   void  FT_Default_Drivers( FT_Library  library )
   {
-    FT_Error               error;
-    const FT_DriverChain*  chain = FT_INIT_LAST_DRIVER_CHAIN;
+    FT_Error                   error;
+    const FT_DriverInterface* *cur;
 
-    while (chain)
+    cur = ft_default_drivers;
+    while (*cur)
     {
-      error = FT_Add_Driver( library, chain->interface );
-
+      error = FT_Add_Driver( library, *cur );
       /* notify errors, but don't stop */
       if (error)
       {
         FT_ERROR(( "FT.Default_Drivers: cannot install `%s', error = %x\n",
-                   chain->interface->driver_name,
-                   error ));
+                   (*cur)->driver_name, error ));
       }
-
-      chain = chain->next;
-      error = 0;  /* clear error */
+      cur++;
     }
   }
 

@@ -573,68 +573,6 @@
 
   } FT_DriverInterface;
 
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_DriverChain                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A very structure used exclusively by "ftinit.c" in the function    */
-  /*    FT_Add_Default_Drivers. This function is in charge of loading the  */
-  /*    set of "default" font drivers into each new library object.        */
-  /*                                                                       */
-  /*    The set itself is determined at _compile_ time through various     */
-  /*    macro definitions.                                                 */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    next      :: pointer to next element in driver list chain          */
-  /*    interface :: pointer to the driver's interface                     */
-  /*                                                                       */
-  typedef struct FT_DriverChain_  FT_DriverChain;
-
-  struct FT_DriverChain_
-  {
-    const FT_DriverChain*      next;
-    const FT_DriverInterface*  interface;
-  };
-
-
-/*************************************************************************
- *
- *  Here is a template of the code that should appear in each
- *  font driver's _interface_ file (the one included by "ftinit.c").
- *
- *  It is used to build, at compile time, a simple linked list of
- *  the interfaces of the drivers which have been #included in 
- *  "ftinit.c". See the source code of the latter file for details
- *
- *  (Note that this is only required when you want your driver included
- *   in the set of default drivers loaded by FT_Init_FreeType. Other
- *   drivers can still be added manually at runtime with FT_Add_Driver.
- *
- * {
- *   #ifdef FTINIT_DRIVER_CHAIN
- *
- *   static
- *   const FT_DriverChain  ftinit_<FORMAT>_driver_chain =
- *   {
- *     FT_INIT_LAST_DRIVER_CHAIN,
- *     &<FORMAT>_driver_interface
- *   };
- * 
- *   #undef  FT_INIT_LAST_DRIVER_CHAIN
- *   #define FT_INIT_LAST_DRIVER_CHAIN   &ftinit_<FORMAT>_driver_chain
- *
- *   #endif 
- * }
- *
- *  replace <FORMAT> with your driver's prefix
- *
- *************************************************************************/
-
-
 #endif /* FTDRIVER_H */
 
 
