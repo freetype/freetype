@@ -383,10 +383,10 @@
     /*                                                        */
     {
       FT_Int  threshold = blues->blue_shift;
-      
+
       while ( threshold > 0 && FT_MulFix( threshold, scale ) > 32 )
         threshold --;
-      
+
       blues->blue_threshold = threshold;
     }
 
@@ -434,23 +434,23 @@
 
     /* process the families now */
     for ( num = 0; num < 2; num++ )
-    { 
+    {
       PSH_Blue_Zone    zone1, zone2;
       FT_UInt          count1, count2;
       PSH_Blue_Table   normal, family;
-      
+
       switch (num)
       {
         case 0:
           normal = &blues->normal_top;
           family = &blues->family_top;
           break;
-          
+
         default:
           normal = &blues->normal_bottom;
           family = &blues->family_bottom;
       }
-      
+
       zone1  = normal->zones;
       count1 = normal->count;
       for ( ; count1 > 0; count1--, zone1++ )
@@ -640,8 +640,9 @@
 
       globals->blues.blue_scale = priv->blue_scale ? priv->blue_scale
                                                    : (0.039625*0x400000L);
-      
-      globals->blues.blue_shift = priv->blue_shift;
+
+      globals->blues.blue_shift = priv->blue_shift ? priv->blue_shift
+                                                   : 7;
 
       globals->dimension[0].scale_mult  = 0;
       globals->dimension[0].scale_delta = 0;

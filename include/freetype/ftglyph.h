@@ -65,6 +65,24 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Glyph                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Handle to an object used to model generic glyph images. It's a     */
+  /*    pointer to the @FT_GlyphRec structure and can contain a glyph      */
+  /*    bitmap or pointer..                                                */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    glyph objects are not owned by the library. You must thus release  */
+  /*    them manually (through @FT_Done_Glyph) _before_ calling            */
+  /*    @FT_Done_FreeType.                                                 */
+  /*                                                                       */
+  typedef struct FT_GlyphRec_*    FT_Glyph;
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_GlyphRec                                                        */
   /*                                                                       */
@@ -88,7 +106,19 @@ FT_BEGIN_HEADER
     FT_Glyph_Format        format;
     FT_Vector              advance;
 
-  } FT_GlyphRec, *FT_Glyph;
+  } FT_GlyphRec;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_BitmapGlyph                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Handle to an object used to model a bitmap glyph image. This is    */
+  /*    a sub-class of @FT_Glyph, and a pointer to @FT_BitmapGlyphRec      */
+  /*                                                                       */
+  typedef struct FT_BitmapGlyphRec_*    FT_BitmapGlyph;
 
 
   /*************************************************************************/
@@ -128,7 +158,19 @@ FT_BEGIN_HEADER
     FT_Int       top;
     FT_Bitmap    bitmap;
 
-  } FT_BitmapGlyphRec, *FT_BitmapGlyph;
+  } FT_BitmapGlyphRec;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_OutlineGlyph                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Handle to an object used to model an outline glyph image. This is  */
+  /*    a sub-class of @FT_Glyph, and a pointer to @FT_OutlineGlyphRec     */
+  /*                                                                       */
+  typedef struct FT_OutlineGlyphRec_*    FT_OutlineGlyph;
 
 
   /*************************************************************************/
@@ -162,7 +204,7 @@ FT_BEGIN_HEADER
     FT_GlyphRec  root;
     FT_Outline   outline;
 
-  } FT_OutlineGlyphRec, *FT_OutlineGlyph;
+  } FT_OutlineGlyphRec;
 
 
   /*************************************************************************/

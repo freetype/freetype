@@ -1065,17 +1065,17 @@
           FT_TRACE4(( op == cff_op_hstem   ? " hstem"   :
                     ( op == cff_op_vstem   ? " vstem"   :
                     ( op == cff_op_hstemhm ? " hstemhm" : " vstemhm" )) ));
-          
+
           if ( hinter )
             hinter->stems( hinter->hints,
                            ( op == cff_op_vstem || op == cff_op_vstemhm ),
                            num_args/2,
                            args );
-            
+
           decoder->num_hints += num_args / 2;
           args = stack;
           break;
-        
+
 
         case cff_op_hintmask:
         case cff_op_cntrmask:
@@ -1095,7 +1095,7 @@
                                (decoder->num_hints+7) >> 3,
                                ip );
           }
-                              
+
 #ifdef FT_DEBUG_LEVEL_TRACE
           {
             FT_UInt maskbyte;
@@ -1647,7 +1647,7 @@
           {
             if (hinter->close( hinter->hints, builder->current->n_points ))
               goto Syntax_Error;
-            
+
             /* apply hints to the loaded glyph outline now */
             hinter->apply( hinter->hints,
                            builder->current,
@@ -2301,6 +2301,15 @@
 
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
+
+          if ( hinting )
+          {
+            metrics->horiAdvance = (metrics->horiAdvance+32) & -64;
+            metrics->vertAdvance = (metrics->vertAdvance+32) & -64;
+
+            metrics->vertBearingX = (metrics->vertBearingX+32) & -64;
+            metrics->vertBearingY = (metrics->vertBearingY+32) & -64;
+          }
         }
 
         /* compute the other metrics */
