@@ -55,31 +55,4 @@ LIBRARY := $(PROJECT)
 #
 NO_OUTPUT = 2> nul
 
-
-ifdef BUILD_LIBRARY
-
-  .PHONY: clean_project distclean_project
-
-  # Now include the main sub-makefile.  It contains all the rules used to
-  # build the library with the previous variables defined.
-  #
-  include $(TOP)/builds/$(PROJECT).mk
-
-  # The cleanup targets.
-  #
-  clean_project: clean_project_dos
-  distclean_project: distclean_project_dos
-
-  # This final rule is used to link all object files into a single library.
-  # It is part of the system-specific sub-Makefile because not all
-  # librarians accept a simple syntax like
-  #
-  #   librarian library_file {list of object files}
-  #
-  $(PROJECT_LIBRARY): $(OBJECTS_LIST)
-	  -$(CLEAN_LIBRARY) $(NO_OUTPUT)
-	  $(LINK_LIBRARY)
-
-endif
-
 # EOF

@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src sfnt ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = sfobjs.c sfdriver.c ttcmap.c ttpost.c ttload.c ttsbit.c ;
+    _sources = sfobjs sfdriver ttcmap ttpost ttload ttsbit ;
   }
   else
   {
-    _sources = sfnt.c ;
+    _sources = sfnt ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/sfnt Jamfile

@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src truetype ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = ttdriver.c ttobjs.c ttpload.c ttgload.c ttinterp.c ;
+    _sources = ttdriver ttobjs ttpload ttgload ttinterp ;
   }
   else
   {
-    _sources = truetype.c ;
+    _sources = truetype ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/truetype Jamfile

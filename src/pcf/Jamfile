@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src pcf ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = pcfdriver.c pcfread.c pcfutil.c ;
+    _sources = pcfdriver pcfread pcfutil ;
   }
   else
   {
-    _sources = pcf.c ;
+    _sources = pcf ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/pcf Jamfile

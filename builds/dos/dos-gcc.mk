@@ -14,9 +14,9 @@
 
 
 SEP := /
-CLEAN_LIBRARY := $(DELETE) $@
 
-include $(TOP)/builds/compiler/gcc.mk
 include $(TOP)/builds/dos/dos-def.mk
+include $(TOP)/builds/compiler/gcc.mk
+include $(TOP)/builds/link_dos.mk
 
 # EOF

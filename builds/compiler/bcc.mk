@@ -72,8 +72,7 @@ ANSIFLAGS := -A
 # Library linking
 #
 ifndef CLEAN_LIBRARY
-  CLEAN_LIBRARY = $(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY)) \
-                  $(NO_OUTPUT)
+  CLEAN_LIBRARY = $(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY))
 endif
 TARGET_OBJECTS = $(subst $(SEP),\\,$(OBJECTS_LIST))
 LINK_LIBRARY   = tlib /u $(subst $(SEP),\\,$@) $(TARGET_OBJECTS:%=+%)

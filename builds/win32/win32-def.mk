@@ -15,7 +15,7 @@
 
 DELETE   := del
 HOSTSEP  := $(strip \ )
-BUILD    := $(TOP)$(SEP)config$(SEP)win32
+BUILD    := $(TOP)$(SEP)builds$(SEP)win32
 PLATFORM := win32
 
 # by default, we use "\" as a separator on Win32

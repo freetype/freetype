@@ -10,14 +10,14 @@ SubDirHdrs  [ FT2_SubDir  src cid ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = cidobjs.c cidload.c cidgload.c cidriver.c cidparse.c ;
+    _sources = cidobjs cidload cidgload cidriver cidparse ;
   }
   else
   {
-    _sources = type1cid.c ;
+    _sources = type1cid ;
   }
 
-  Library  $(FT2_LIB) : $(_sources) ;
+  Library  $(FT2_LIB) : $(_sources).c ;
 }
 
 # end of src/cid Jamfile
