@@ -58,8 +58,8 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Raster_GetBBox( FT_Outline*  outline,
-                                           FT_BBox*     abbox );
+  FT_EXPORT_DEF(FT_Error)  FT_Raster_GetBBox( FT_Outline*  outline,
+                                              FT_BBox*     abbox );
 
 
 #ifdef __cplusplus

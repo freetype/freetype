@@ -30,7 +30,7 @@
   void ft_prepare_glyph( FT_Glyph  glyph,
                          FT_Face   face,
                          FT_Bool   vertical )
-{
+  {
     FT_Glyph_Metrics*  metrics = &face->glyph->metrics;
 
     glyph->memory   = face->memory;
@@ -95,12 +95,12 @@
   *
   ***********************************************************************/
 
-  EXPORT_FUNC(FT_Error)  FT_Get_Glyph_Bitmap( FT_Face         face,
-                                              FT_UInt         glyph_index,
-                                              FT_UInt         load_flags,
-                                              FT_Int          grays,
-                                              FT_Vector*      origin,
-                                              FT_BitmapGlyph  *abitglyph )
+  FT_EXPORT_FUNC(FT_Error)  FT_Get_Glyph_Bitmap( FT_Face         face,
+                                                 FT_UInt         glyph_index,
+                                                 FT_UInt         load_flags,
+                                                 FT_Int          grays,
+                                                 FT_Vector*      origin,
+                                                 FT_BitmapGlyph  *abitglyph )
   {
     FT_Error         error;
     FT_Memory        memory;
@@ -270,10 +270,10 @@
   *
   ***********************************************************************/
 
-  EXPORT_FUNC(FT_Error)  FT_Get_Glyph_Outline( FT_Face           face,
-                                               FT_UInt           glyph_index,
-                                               FT_UInt           load_flags,
-                                               FT_OutlineGlyph  *vecglyph )
+  FT_EXPORT_FUNC(FT_Error)  FT_Get_Glyph_Outline( FT_Face           face,
+                                                  FT_UInt           glyph_index,
+                                                  FT_UInt           load_flags,
+                                                  FT_OutlineGlyph  *vecglyph )
   {
     FT_Error         error;
     FT_Memory        memory;
@@ -358,9 +358,9 @@
   *
   ***********************************************************************/
 
-  EXPORT_FUNC(void) FT_Set_Transform( FT_Face     face,
-                                      FT_Matrix*  matrix,
-                                      FT_Vector*  delta )
+  FT_EXPORT_FUNC(void) FT_Set_Transform( FT_Face     face,
+                                         FT_Matrix*  matrix,
+                                         FT_Vector*  delta )
   {
     face->transform_flags = 0;
 
@@ -408,7 +408,7 @@
   *
   ***********************************************************************/
 
-  EXPORT_FUNC(void)  FT_Done_Glyph( FT_Glyph  glyph )
+  FT_EXPORT_FUNC(void)  FT_Done_Glyph( FT_Glyph  glyph )
   {
     if (glyph)
     {
@@ -459,8 +459,8 @@
   *
   ***********************************************************************/
 
-  EXPORT_FUNC(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
-                                       FT_BBox  *box )
+  FT_EXPORT_FUNC(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
+                                          FT_BBox  *box )
   {
     box->xMin = box->xMax = 0;
     box->yMin = box->yMax = 0;

@@ -101,6 +101,12 @@
   * <Field>
   *    metrics  :: the corresponding glyph metrics
   *    bitmap   :: a descriptor for the bitmap.
+  *    left     :: left-side bearing, i.e. the horizontal distance from
+  *                the current pen position to the left border of the glyph
+  *                bitmap.
+  *    top      :: top-side bearing, i.e. the vertical distance from the
+  *                current pen position to the top border of the glyph bitmap
+  *                this distance is positive for upwards-y !!
   *
   * <Note>
   *    the "width" and "height" fields of the metrics are expressed in
@@ -166,7 +172,7 @@
   *    FT_Get_Glyph_Bitmap
   *
   * <Description>
-  *    A function used to directly return a monochrome bitmap glyph image
+  *    A function used to directly return a bitmap glyph image
   *    from a face.
   *
   * <Input>
@@ -204,12 +210,12 @@
   *
   ***********************************************************************/
 
-  EXPORT_DEF(FT_Error)  FT_Get_Glyph_Bitmap( FT_Face         face,
-                                             FT_UInt         glyph_index,
-                                             FT_UInt         load_flags,
-                                             FT_Int          grays,
-                                             FT_Vector*      origin,
-                                             FT_BitmapGlyph  *abitglyph );
+  FT_EXPORT_DEF(FT_Error)  FT_Get_Glyph_Bitmap( FT_Face         face,
+                                                FT_UInt         glyph_index,
+                                                FT_UInt         load_flags,
+                                                FT_Int          grays,
+                                                FT_Vector*      origin,
+                                                FT_BitmapGlyph  *abitglyph );
 
 
  /***********************************************************************
@@ -218,7 +224,7 @@
   *    FT_Get_Glyph_Outline
   *
   * <Description>
-  *    A function used to directly return a bitmap glyph image from a
+  *    A function used to directly return an outline glyph image from a
   *    face. This is faster than calling FT_Load_Glyph+FT_Get_Outline_Bitmap..
   *
   * <Input>
@@ -241,10 +247,10 @@
   *
   ***********************************************************************/
 
-  EXPORT_DEF(FT_Error)  FT_Get_Glyph_Outline( FT_Face           face,
-                                              FT_UInt           glyph_index,
-                                              FT_UInt           load_flags,
-                                              FT_OutlineGlyph  *vecglyph );
+  FT_EXPORT_DEF(FT_Error)  FT_Get_Glyph_Outline( FT_Face           face,
+                                                 FT_UInt           glyph_index,
+                                                 FT_UInt           load_flags,
+                                                 FT_OutlineGlyph  *vecglyph );
 
 
  /***********************************************************************
@@ -268,9 +274,9 @@
   *
   ***********************************************************************/
 
-  EXPORT_DEF(void)  FT_Set_Transform( FT_Face     face,
-                                      FT_Matrix*  matrix,
-                                      FT_Vector*  delta );
+  FT_EXPORT_DEF(void)  FT_Set_Transform( FT_Face     face,
+                                         FT_Matrix*  matrix,
+                                         FT_Vector*  delta );
 
 
  /***********************************************************************
@@ -286,7 +292,7 @@
   *
   ***********************************************************************/
 
-  EXPORT_DEF(void)  FT_Done_Glyph( FT_Glyph  glyph );
+  FT_EXPORT_DEF(void)  FT_Done_Glyph( FT_Glyph  glyph );
 
 
  /***********************************************************************
@@ -313,8 +319,8 @@
   *
   ***********************************************************************/
 
-  EXPORT_DEF(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
-                                      FT_BBox  *box );
+  FT_EXPORT_DEF(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
+                                         FT_BBox  *box );
 
 #ifdef __cplusplus
   }

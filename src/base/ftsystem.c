@@ -173,8 +173,8 @@
   }
 
 
-  EXPORT_FUNC(int)  FT_New_Stream( const char*  filepathname,
-                                   FT_Stream    stream )
+  FT_EXPORT_FUNC(int)  FT_New_Stream( const char*  filepathname,
+                                      FT_Stream    stream )
   {
     FILE*  file;
 
@@ -196,7 +196,7 @@
   }
 
 
-  EXPORT_FUNC(FT_Memory)  FT_New_Memory( void )
+  FT_EXPORT_FUNC(FT_Memory)  FT_New_Memory( void )
   {
     FT_Memory  memory;
 

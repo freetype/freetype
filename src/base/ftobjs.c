@@ -271,7 +271,7 @@
   /* <Description>                                                         */
   /*    Closes and destroys a stream object.                               */
   /*                                                                       */
-  EXPORT_FUNC(void)  FT_Done_Stream( FT_Stream  stream )
+  FT_EXPORT_FUNC(void)  FT_Done_Stream( FT_Stream  stream )
   {
     if ( stream->close )
       stream->close( stream );
@@ -409,9 +409,9 @@
   *
   *************************************************************************/
 
-  EXPORT_FUNC(FT_Raster)  FT_Get_Raster( FT_Library        library,
-                                         FT_Glyph_Format   glyph_format,
-                                         FT_Raster_Funcs  *raster_funcs )
+  FT_EXPORT_FUNC(FT_Raster)  FT_Get_Raster( FT_Library        library,
+                                            FT_Glyph_Format   glyph_format,
+                                            FT_Raster_Funcs  *raster_funcs )
   {
     FT_Int  n;
 
@@ -454,8 +454,8 @@
   /*                                                                       */
   /*    - the new raster is registered for the glyph format                */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Set_Raster( FT_Library        library,
-                                        FT_Raster_Funcs*  raster_funcs )
+  FT_EXPORT_FUNC(FT_Error)  FT_Set_Raster( FT_Library        library,
+                                           FT_Raster_Funcs*  raster_funcs )
   {
     FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
     FT_Raster_Funcs* funcs;
@@ -528,8 +528,8 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Unset_Raster( FT_Library        library,
-                                         FT_Raster_Funcs*  raster_funcs )
+  FT_EXPORT_DEF(FT_Error)  FT_Unset_Raster( FT_Library        library,
+                                            FT_Raster_Funcs*  raster_funcs )
   {
     FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
     FT_Error         error;
@@ -574,10 +574,10 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Set_Raster_Mode( FT_Library      library,
-                                             FT_Glyph_Format format,
-                                             unsigned long   mode,
-                                             void*           args )
+  FT_EXPORT_FUNC(FT_Error)  FT_Set_Raster_Mode( FT_Library      library,
+                                                FT_Glyph_Format format,
+                                                unsigned long   mode,
+                                                void*           args )
   {
     FT_Raster_Funcs  funcs;
     FT_Raster        raster;
@@ -609,7 +609,7 @@
   /*    Currently, four debug hook slots are available, but only two (for  */
   /*    the TrueType and the Type 1 interpreter) are defined.              */
   /*                                                                       */
-  EXPORT_FUNC(void)  FT_Set_Debug_Hook( FT_Library         library,
+  FT_EXPORT_FUNC(void)  FT_Set_Debug_Hook( FT_Library         library,
                                         FT_UInt            hook_index,
                                         FT_DebugHook_Func  debug_hook )
   {
@@ -637,8 +637,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_New_Library( FT_Memory    memory,
-                                         FT_Library*  alibrary )
+  FT_EXPORT_FUNC(FT_Error)  FT_New_Library( FT_Memory    memory,
+                                            FT_Library*  alibrary )
   {
     FT_Library library = 0;
     FT_Error   error;
@@ -684,7 +684,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Done_Library( FT_Library  library )
+  FT_EXPORT_FUNC(FT_Error)  FT_Done_Library( FT_Library  library )
   {
     FT_Memory  memory;
     FT_Int     n;
@@ -761,8 +761,8 @@
   /*    This function doesn't check whether the driver is already          */
   /*    installed!                                                         */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Add_Driver( FT_Library                 library,
-                                        const FT_DriverInterface*  driver_interface )
+  FT_EXPORT_FUNC(FT_Error)  FT_Add_Driver( FT_Library                 library,
+                                           const FT_DriverInterface*  driver_interface )
   {
     FT_Error   error;
     FT_Driver  driver;
@@ -822,7 +822,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Remove_Driver( FT_Driver  driver )
+  FT_EXPORT_FUNC(FT_Error)  FT_Remove_Driver( FT_Driver  driver )
   {
     FT_Library  library;
     FT_Memory   memory;
@@ -885,8 +885,8 @@
   /* <Return>                                                              */
   /*    A handle to the driver object, 0 otherwise.                        */
   /*                                                                       */
-  EXPORT_FUNC(FT_Driver)  FT_Get_Driver( FT_Library  library,
-                                         char*       driver_name )
+  FT_EXPORT_FUNC(FT_Driver)  FT_Get_Driver( FT_Library  library,
+                                            char*       driver_name )
   {
     FT_Driver  *cur, *limit;
 
@@ -994,10 +994,10 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_New_Face( FT_Library   library,
-                                      const char*  pathname,
-                                      FT_Long      face_index,
-                                      FT_Face*     aface )
+  FT_EXPORT_FUNC(FT_Error)  FT_New_Face( FT_Library   library,
+                                         const char*  pathname,
+                                         FT_Long      face_index,
+                                         FT_Face*     aface )
   {
     FT_Open_Args  args;
 
@@ -1045,11 +1045,11 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_New_Memory_Face( FT_Library   library,
-                                             void*        file_base,
-                                             FT_Long      file_size,
-                                             FT_Long      face_index,
-                                             FT_Face*     face )
+  FT_EXPORT_FUNC(FT_Error)  FT_New_Memory_Face( FT_Library   library,
+                                                void*        file_base,
+                                                FT_Long      file_size,
+                                                FT_Long      face_index,
+                                                FT_Face*     face )
   {
     FT_Open_Args  args;
 
@@ -1099,10 +1099,10 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Open_Face( FT_Library     library,
-                                       FT_Open_Args*  args,
-                                       FT_Long        face_index,
-                                       FT_Face*       aface )
+  FT_EXPORT_FUNC(FT_Error)  FT_Open_Face( FT_Library     library,
+                                          FT_Open_Args*  args,
+                                          FT_Long        face_index,
+                                          FT_Face*       aface )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1273,8 +1273,8 @@
   /*    when invoking this function. Most  drivers simply do not implement */
   /*    file attachments.                                                  */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Attach_File( FT_Face      face,
-                                         const char*  filepathname )
+  FT_EXPORT_FUNC(FT_Error)  FT_Attach_File( FT_Face      face,
+                                            const char*  filepathname )
   {
     FT_Open_Args  open;
 
@@ -1309,8 +1309,8 @@
   /*    when invoking this function. Most drivers simply do not implement  */
   /*    file attachments..                                                 */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Attach_Stream( FT_Face       face,
-                                          FT_Open_Args* parameters )
+  FT_EXPORT_FUNC(FT_Error)  FT_Attach_Stream( FT_Face       face,
+                                              FT_Open_Args* parameters )
   {
     FT_Stream  stream;
     FT_Error   error;
@@ -1363,7 +1363,7 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Done_Face( FT_Face  face )
+  FT_EXPORT_FUNC(FT_Error)  FT_Done_Face( FT_Face  face )
   {
     FT_Error             error;
     FT_Driver            driver;
@@ -1415,8 +1415,8 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_New_Size( FT_Face   face,
-                                      FT_Size*  asize )
+  FT_EXPORT_FUNC(FT_Error)  FT_New_Size( FT_Face   face,
+                                         FT_Size*  asize )
   {
     FT_Error             error;
     FT_Memory            memory;
@@ -1480,7 +1480,7 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Done_Size( FT_Size  size )
+  FT_EXPORT_FUNC(FT_Error)  FT_Done_Size( FT_Size  size )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1543,11 +1543,11 @@
   /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
   /*    use the function FT_Set_Pixel_Sizes().                             */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Set_Char_Size( FT_Face     face,
-                                           FT_F26Dot6  char_width,
-                                           FT_F26Dot6  char_height,
-                                           FT_UInt     horz_resolution,
-                                           FT_UInt     vert_resolution )
+  FT_EXPORT_FUNC(FT_Error)  FT_Set_Char_Size( FT_Face     face,
+                                              FT_F26Dot6  char_width,
+                                              FT_F26Dot6  char_height,
+                                              FT_UInt     horz_resolution,
+                                              FT_UInt     vert_resolution )
   {
     FT_Error             error;
     FT_Driver            driver;
@@ -1620,9 +1620,9 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Set_Pixel_Sizes( FT_Face  face,
-                                             FT_UInt  pixel_width,
-                                             FT_UInt  pixel_height )
+  FT_EXPORT_FUNC(FT_Error)  FT_Set_Pixel_Sizes( FT_Face  face,
+                                                FT_UInt  pixel_width,
+                                                FT_UInt  pixel_height )
   {
     FT_Error             error;
     FT_Driver            driver;
@@ -1680,8 +1680,8 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_New_GlyphSlot( FT_Face        face,
-                                           FT_GlyphSlot*  aslot )
+  FT_EXPORT_FUNC(FT_Error)  FT_New_GlyphSlot( FT_Face        face,
+                                              FT_GlyphSlot*  aslot )
   {
     FT_Error             error;
     FT_Driver            driver;
@@ -1740,7 +1740,7 @@
   /* <Input>                                                               */
   /*    slot :: A handle to a target glyph slot.                           */
   /*                                                                       */
-  EXPORT_FUNC(void)  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
+  FT_EXPORT_FUNC(void)  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
   {
     if (slot)
     {
@@ -1803,9 +1803,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Load_Glyph( FT_Face  face,
-                                        FT_UInt  glyph_index,
-                                        FT_Int   load_flags )
+  FT_EXPORT_FUNC(FT_Error)  FT_Load_Glyph( FT_Face  face,
+                                           FT_UInt  glyph_index,
+                                           FT_Int   load_flags )
   {
     FT_Error   error;
     FT_Driver  driver;
@@ -1828,9 +1828,9 @@
   }
 
 
-  EXPORT_FUNC(FT_Error)  FT_Load_Char( FT_Face   face,
-                                       FT_ULong  char_code,
-                                       FT_Int    load_flags )
+  FT_EXPORT_FUNC(FT_Error)  FT_Load_Char( FT_Face   face,
+                                          FT_ULong  char_code,
+                                          FT_Int    load_flags )
   {
     FT_Error   error;
     FT_Driver  driver;
@@ -1881,10 +1881,10 @@
   /*    kernings, are out of the scope of this API function -- they can be */
   /*    implemented through format-specific interfaces.                    */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Get_Kerning( FT_Face     face,
-                                         FT_UInt     left_glyph,
-                                         FT_UInt     right_glyph,
-                                         FT_Vector*  kerning )
+  FT_EXPORT_FUNC(FT_Error)  FT_Get_Kerning( FT_Face     face,
+                                            FT_UInt     left_glyph,
+                                            FT_UInt     right_glyph,
+                                            FT_Vector*  kerning )
   {
     FT_Error   error;
     FT_Driver  driver;
@@ -1935,8 +1935,8 @@
   /*    This function will return an error if no charmap in the face       */
   /*    corresponds to the encoding queried here                           */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Select_Charmap( FT_Face      face,
-                                            FT_Encoding  encoding )
+  FT_EXPORT_FUNC(FT_Error)  FT_Select_Charmap( FT_Face      face,
+                                               FT_Encoding  encoding )
   {
     FT_CharMap*  cur   = face->charmaps;
     FT_CharMap*  limit = cur + face->num_charmaps;
@@ -1974,8 +1974,8 @@
   /*    of the face (i.e. if it is not listed in the face->charmaps[]      */
   /*    table).                                                            */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Set_Charmap( FT_Face     face,
-                                         FT_CharMap  charmap )
+  FT_EXPORT_FUNC(FT_Error)  FT_Set_Charmap( FT_Face     face,
+                                            FT_CharMap  charmap )
   {
     FT_CharMap*  cur   = face->charmaps;
     FT_CharMap*  limit = cur + face->num_charmaps;
@@ -2007,8 +2007,8 @@
   /* <Return>                                                              */
   /*    The glyph index.  0 means `undefined character code'.              */
   /*                                                                       */
-  EXPORT_FUNC(FT_UInt)  FT_Get_Char_Index( FT_Face  face,
-                                           FT_ULong charcode )
+  FT_EXPORT_FUNC(FT_UInt)  FT_Get_Char_Index( FT_Face  face,
+                                              FT_ULong charcode )
   {
     FT_UInt    result;
     FT_Driver  driver;
@@ -2050,8 +2050,8 @@
   ***************************************************************************/
 
 
-  EXPORT_FUNC(void*)  FT_Get_Sfnt_Table( FT_Face      face,
-                                         FT_Sfnt_Tag  tag )
+  FT_EXPORT_FUNC(void*)  FT_Get_Sfnt_Table( FT_Face      face,
+                                            FT_Sfnt_Tag  tag )
   {
     void*                   table = 0;
     FT_Get_Sfnt_Table_Func  func;
@@ -2061,7 +2061,8 @@
       goto Exit;
 
     driver = face->driver;
-    func = (FT_Get_Sfnt_Table_Func)driver->interface.get_interface( driver, "get_sfnt" );
+    func = (FT_Get_Sfnt_Table_Func)driver->interface.get_interface(
+                 driver, "get_sfnt" );
     if (func)
       table = func(face,tag);
 
@@ -2086,7 +2087,7 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Done_FreeType( FT_Library  library )
+  FT_EXPORT_FUNC(FT_Error)  FT_Done_FreeType( FT_Library  library )
   {
     /* Discard the library object */
     FT_Done_Library( library );

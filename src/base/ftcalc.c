@@ -69,7 +69,7 @@
   /* <Return>                                                              */
   /*    The result of `sqrt(x)'.                                           */
   /*                                                                       */
-  EXPORT_FUNC(FT_Int32)  FT_Sqrt32( FT_Int32 x )
+  FT_EXPORT_FUNC(FT_Int32)  FT_Sqrt32( FT_Int32 x )
   {
     FT_ULong  val, root, newroot, mask;
 
@@ -122,9 +122,9 @@
   /*    divide by zero, it simply returns `MaxInt' or `MinInt' depending   */
   /*    on the signs of `a' and `b'.                                       */
   /*                                                                       */
-  EXPORT_FUNC(FT_Long)  FT_MulDiv( FT_Long  a,
-                                   FT_Long  b,
-                                   FT_Long  c )
+  FT_EXPORT_FUNC(FT_Long)  FT_MulDiv( FT_Long  a,
+                                      FT_Long  b,
+                                      FT_Long  c )
   {
     FT_Int s;
 
@@ -167,8 +167,8 @@
   /*    _second_ argument of this function; this can make a great          */
   /*    difference.                                                        */
   /*                                                                       */
-  EXPORT_FUNC(FT_Long)  FT_MulFix( FT_Long  a,
-                                   FT_Long  b )
+  FT_EXPORT_FUNC(FT_Long)  FT_MulFix( FT_Long  a,
+                                      FT_Long  b )
   {
     FT_Int s;
 
@@ -204,8 +204,8 @@
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
   /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
-  EXPORT_FUNC(FT_Long)  FT_DivFix( FT_Long  a,
-                                   FT_Long  b )
+  FT_EXPORT_FUNC(FT_Long)  FT_DivFix( FT_Long  a,
+                                      FT_Long  b )
   {
     FT_Int32   s;
     FT_Word32  q;
@@ -258,7 +258,7 @@
      }
 
 
-  EXPORT_FUNC(FT_Int32)  FT_Sqrt64( FT_Int64  l )
+  FT_EXPORT_FUNC(FT_Int32)  FT_Sqrt64( FT_Int64  l )
   {
     FT_Int64  r, s;
 
@@ -322,9 +322,9 @@
   /*                                                                       */
   /*      and 2*0x157F0 = 176096.                                          */
   /*                                                                       */
-  EXPORT_FUNC(FT_Long)  FT_MulDiv( FT_Long  a,
-                                   FT_Long  b,
-                                   FT_Long  c )
+  FT_EXPORT_FUNC(FT_Long)  FT_MulDiv( FT_Long  a,
+                                      FT_Long  b,
+                                      FT_Long  c )
   {
     long   s;
 
@@ -387,8 +387,8 @@
   /*    idea is to use bounds like 2048 and 1048576 (=floor((2^31-1)/2048) */
   /*    for `a' and `b', respectively.                                     */
   /*                                                                       */
-  EXPORT_FUNC(FT_Long)  FT_MulFix( FT_Long  a,
-                                   FT_Long  b )
+  FT_EXPORT_FUNC(FT_Long)  FT_MulFix( FT_Long  a,
+                                      FT_Long  b )
   {
     FT_Long   s;
     FT_ULong  ua, ub;
@@ -441,8 +441,8 @@
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
   /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
-  EXPORT_FUNC(FT_Long)  FT_DivFix( FT_Long  a,
-                                   FT_Long  b )
+  FT_EXPORT_FUNC(FT_Long)  FT_DivFix( FT_Long  a,
+                                      FT_Long  b )
   {
     FT_Int32   s;
     FT_Word32  q;
@@ -502,9 +502,9 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the ADD_64() macro.                             */
   /*                                                                       */
-  EXPORT_FUNC(void)  FT_Add64( FT_Int64*  x,
-                               FT_Int64*  y,
-                               FT_Int64*  z )
+  FT_EXPORT_FUNC(void)  FT_Add64( FT_Int64*  x,
+                                  FT_Int64*  y,
+                                  FT_Int64*  z )
   {
     register FT_Word32  lo, hi;
 
@@ -534,9 +534,9 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the MUL_64() macro.                             */
   /*                                                                       */
-  EXPORT_FUNC(void)  FT_MulTo64( FT_Int32   x,
-                                 FT_Int32   y,
-                                 FT_Int64*  z )
+  FT_EXPORT_FUNC(void)  FT_MulTo64( FT_Int32   x,
+                                    FT_Int32   y,
+                                    FT_Int64*  z )
   {
     FT_Int32   s;
 
@@ -599,8 +599,8 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the DIV_64() macro.                             */
   /*                                                                       */
-  EXPORT_FUNC(FT_Int32)  FT_Div64by32( FT_Int64*  x,
-                                       FT_Int32   y )
+  FT_EXPORT_FUNC(FT_Int32)  FT_Div64by32( FT_Int64*  x,
+                                          FT_Int32   y )
   {
     FT_Int32   s;
     FT_Word32  q, r, i, lo;
@@ -701,7 +701,7 @@
         return j-1;
       }
 
-  EXPORT_FUNC(FT_Int32)  FT_Sqrt64( FT_Int64*  l )
+  FT_EXPORT_FUNC(FT_Int32)  FT_Sqrt64( FT_Int64*  l )
   {
     FT_Int64  l2;
     FT_Int32  r, s;

@@ -317,7 +317,7 @@
   /*    This function is publicly exported because it is directly          */
   /*    invoked by the TrueType debugger..                                 */
   /*                                                                       */
-  EXPORT_DEF(TT_ExecContext)  TT_New_Context( TT_Face  face );
+  FT_EXPORT_DEF(TT_ExecContext)  TT_New_Context( TT_Face  face );
 
 
   /*************************************************************************/
@@ -461,7 +461,7 @@
   /*    This function is publicly exported because it is directly          */
   /*    invoked by the TrueType debugger..                                 */
   /*                                                                       */
-  EXPORT_DEF(TT_Error)  TT_RunIns( TT_ExecContext  exec );
+  FT_EXPORT_DEF(TT_Error)  TT_RunIns( TT_ExecContext  exec );
 
 
 #ifdef __cplusplus

@@ -25,7 +25,7 @@
 #include <tterrors.h>
 
 
-  EXPORT_VAR(const FT_DriverInterface)  tt_driver_interface;
+  FT_EXPORT_VAR(const FT_DriverInterface)  tt_driver_interface;
 
 
 #endif /* TTDRIVER_H */

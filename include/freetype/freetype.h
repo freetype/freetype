@@ -42,13 +42,13 @@
   /*************************************************************************/
   /*                                                                       */
   /* To make freetype.h independent from configuration files we check      */
-  /* whether EXPORT_DEF has been defined already.                          */
+  /* whether FT_EXPORT_DEF has been defined already.                          */
   /*                                                                       */
   /* On some systems and compilers (Win32 mostly), an extra keyword is     */
   /* necessary to compile the library as a DLL.                            */
   /*                                                                       */
-#ifndef EXPORT_DEF
-#define EXPORT_DEF(x)  extern  x
+#ifndef FT_EXPORT_DEF
+#define FT_EXPORT_DEF(x)  extern  x
 #endif
 
 #include <freetype/fterrors.h>
@@ -998,7 +998,7 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Init_FreeType( FT_Library*  library );
+  FT_EXPORT_DEF(FT_Error)  FT_Init_FreeType( FT_Library*  library );
 
 
   /*************************************************************************/
@@ -1016,7 +1016,7 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Done_FreeType( FT_Library  library );
+  FT_EXPORT_DEF(FT_Error)  FT_Done_FreeType( FT_Library  library );
 
 
   /*************************************************************************/
@@ -1163,10 +1163,10 @@
   /*    through the FT_New_GlyphSlot() API function.  Slots are linked in  */
   /*    a single list through their `next' field.                          */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_New_Face( FT_Library   library,
-                                     const char*  filepathname,
-                                     FT_Long      face_index,
-                                     FT_Face*     face );
+  FT_EXPORT_DEF(FT_Error)  FT_New_Face( FT_Library   library,
+                                        const char*  filepathname,
+                                        FT_Long      face_index,
+                                        FT_Face*     face );
 
 
   /*************************************************************************/
@@ -1207,11 +1207,11 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_New_Memory_Face( FT_Library   library,
-                                            void*        file_base,
-                                            FT_Long      file_size,
-                                            FT_Long      face_index,
-                                            FT_Face*     face );
+  FT_EXPORT_DEF(FT_Error)  FT_New_Memory_Face( FT_Library   library,
+                                               void*        file_base,
+                                               FT_Long      file_size,
+                                               FT_Long      face_index,
+                                               FT_Face*     face );
 
 
   /*************************************************************************/
@@ -1249,10 +1249,10 @@
   /*    when the face is destroyed. This means calling the stream's        */
   /*    "close" function.                                                  */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Open_Face( FT_Library    library,
-                        FT_Open_Args* args,
-                        FT_Long       face_index,
-                        FT_Face*      face );
+  FT_EXPORT_DEF(FT_Error)  FT_Open_Face( FT_Library    library,
+                           FT_Open_Args* args,
+                           FT_Long       face_index,
+                           FT_Face*      face );
 
 
   /*************************************************************************/
@@ -1286,8 +1286,8 @@
   /*    when invoking this function. Most drivers simply do not implement  */
   /*    file attachments..                                                 */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Attach_File( FT_Face      face,
-                                        const char*  filepathname );
+  FT_EXPORT_DEF(FT_Error)  FT_Attach_File( FT_Face      face,
+                                           const char*  filepathname );
 
   /*************************************************************************/
   /*                                                                       */
@@ -1314,8 +1314,8 @@
   /*    when invoking this function. Most drivers simply do not implement  */
   /*    file attachments..                                                 */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Attach_Stream( FT_Face       face,
-                                          FT_Open_Args* parameters );
+  FT_EXPORT_DEF(FT_Error)  FT_Attach_Stream( FT_Face       face,
+                                             FT_Open_Args* parameters );
 
 
   /*************************************************************************/
@@ -1333,7 +1333,7 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Done_Face( FT_Face  face );
+  FT_EXPORT_DEF(FT_Error)  FT_Done_Face( FT_Face  face );
 
 
   /*************************************************************************/
@@ -1357,11 +1357,11 @@
   /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
   /*    use the function FT_Set_Pixel_Sizes().                             */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)   FT_Set_Char_Size( FT_Face     face,
-                                           FT_F26Dot6  char_width,
-                                           FT_F26Dot6  char_height,
-                                           FT_UInt     horz_resolution,
-                                           FT_UInt     vert_resolution );
+  FT_EXPORT_DEF(FT_Error)   FT_Set_Char_Size( FT_Face     face,
+                                              FT_F26Dot6  char_width,
+                                              FT_F26Dot6  char_height,
+                                              FT_UInt     horz_resolution,
+                                              FT_UInt     vert_resolution );
 
 
   /*************************************************************************/
@@ -1381,9 +1381,9 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Set_Pixel_Sizes( FT_Face    face,
-                                            FT_UInt    pixel_width,
-                                            FT_UInt    pixel_height );
+  FT_EXPORT_DEF(FT_Error)  FT_Set_Pixel_Sizes( FT_Face    face,
+                                               FT_UInt    pixel_width,
+                                               FT_UInt    pixel_height );
 
 
   /*************************************************************************/
@@ -1410,9 +1410,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)   FT_Load_Glyph( FT_Face  face,
-                                        FT_UInt  glyph_index,
-                                        FT_Int   load_flags );
+  FT_EXPORT_DEF(FT_Error)   FT_Load_Glyph( FT_Face  face,
+                                           FT_UInt  glyph_index,
+                                           FT_Int   load_flags );
 
 
   /*************************************************************************/
@@ -1444,9 +1444,9 @@
   /*    is not defined in the charmap, this function will return an        */
   /*    error..                                                            */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)   FT_Load_Char( FT_Face   face,
-                                       FT_ULong  char_code,
-                                       FT_Int    load_flags );
+  FT_EXPORT_DEF(FT_Error)   FT_Load_Char( FT_Face   face,
+                                          FT_ULong  char_code,
+                                          FT_Int    load_flags );
 
   /*************************************************************************/
   /*                                                                       */
@@ -1636,10 +1636,10 @@
   /*    kernings, are out of the scope of this API function -- they can be */
   /*    implemented through format-specific interfaces.                    */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Get_Kerning( FT_Face     face,
-                                        FT_UInt     left_glyph,
-                                        FT_UInt     right_glyph,
-                                        FT_Vector*  kerning );
+  FT_EXPORT_DEF(FT_Error)  FT_Get_Kerning( FT_Face     face,
+                                           FT_UInt     left_glyph,
+                                           FT_UInt     right_glyph,
+                                           FT_Vector*  kerning );
 
 
 
@@ -1662,8 +1662,8 @@
   /*    This function will return an error if no charmap in the face       */
   /*    corresponds to the encoding queried here                           */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Select_Charmap( FT_Face      face,
-                                           FT_Encoding  encoding );
+  FT_EXPORT_DEF(FT_Error)  FT_Select_Charmap( FT_Face      face,
+                                              FT_Encoding  encoding );
 
 
   /*************************************************************************/
@@ -1687,8 +1687,8 @@
   /*    of the face (i.e. if it is not listed in the face->charmaps[]      */
   /*    table).                                                            */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Set_Charmap( FT_Face     face,
-                                        FT_CharMap  charmap );
+  FT_EXPORT_DEF(FT_Error)  FT_Set_Charmap( FT_Face     face,
+                                           FT_CharMap  charmap );
 
   /*************************************************************************/
   /*                                                                       */
@@ -1706,8 +1706,8 @@
   /* <Return>                                                              */
   /*    The glyph index.  0 means `undefined character code'.              */
   /*                                                                       */
-  EXPORT_DEF(FT_UInt)   FT_Get_Char_Index( FT_Face   face,
-                                           FT_ULong  charcode );
+  FT_EXPORT_DEF(FT_UInt)   FT_Get_Char_Index( FT_Face   face,
+                                              FT_ULong  charcode );
 
 
   /*************************************************************************/
@@ -1733,9 +1733,9 @@
   /*    divide by zero, it simply returns `MaxInt' or `MinInt' depending   */
   /*    on the signs of `a' and `b'.                                       */
   /*                                                                       */
-  EXPORT_DEF(FT_Long)  FT_MulDiv( FT_Long  a,
-                                  FT_Long  b,
-                                  FT_Long  c );
+  FT_EXPORT_DEF(FT_Long)  FT_MulDiv( FT_Long  a,
+                                     FT_Long  b,
+                                     FT_Long  c );
 
 
   /*************************************************************************/
@@ -1767,8 +1767,8 @@
   /*    _second_ argument of this function; this can make a great          */
   /*    difference.                                                        */
   /*                                                                       */
-  EXPORT_DEF(FT_Long)  FT_MulFix( FT_Long  a,
-                                  FT_Long  b );
+  FT_EXPORT_DEF(FT_Long)  FT_MulFix( FT_Long  a,
+                                     FT_Long  b );
 
 
   /*************************************************************************/
@@ -1794,8 +1794,8 @@
   /*    in 32 bits, then the division is computed directly. Otherwise,     */
   /*    we use a specialised version of the old FT_MulDiv64                */
   /*                                                                       */
-  EXPORT_DEF(FT_Long)  FT_DivFix( FT_Long  a,
-                                  FT_Long  b );
+  FT_EXPORT_DEF(FT_Long)  FT_DivFix( FT_Long  a,
+                                     FT_Long  b );
 
 
   /*************************************************************************/
@@ -1826,9 +1826,9 @@
   /*                                                                       */
   /*    It will use the raster correponding to the default glyph format.   */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Outline_Get_Bitmap( FT_Library   library,
-                                               FT_Outline*  outline,
-                                               FT_Bitmap*   map );
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_Get_Bitmap( FT_Library   library,
+                                                  FT_Outline*  outline,
+                                                  FT_Bitmap*   bitmap );
 
   /*************************************************************************/
   /*                                                                       */
@@ -1861,9 +1861,9 @@
   /*    scan converter is called, which means that the value you give it   */
   /*    is actually ignored..                                              */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Outline_Render( FT_Library        library,
-                                           FT_Outline*       outline,
-                                           FT_Raster_Params* params );
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_Render( FT_Library        library,
+                                              FT_Outline*       outline,
+                                              FT_Raster_Params* params );
 
   /*************************************************************************/
   /*                                                                       */
@@ -1889,9 +1889,9 @@
   /* <Return>                                                              */
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
-  EXPORT_DEF(int)  FT_Outline_Decompose( FT_Outline*        outline,
-                                         FT_Outline_Funcs*  funcs,
-                                         void*              user );
+  FT_EXPORT_DEF(int)  FT_Outline_Decompose( FT_Outline*        outline,
+                                            FT_Outline_Funcs*  funcs,
+                                            void*              user );
 
 
   /*************************************************************************/
@@ -1928,10 +1928,10 @@
   /*    code of this function, replacing allocations with `malloc()' if    */
   /*    you want to control where the objects go.                          */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Outline_New( FT_Library   library,
-                                        FT_UInt      numPoints,
-                                        FT_Int       numContours,
-                                        FT_Outline*  outline );
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_New( FT_Library   library,
+                                           FT_UInt      numPoints,
+                                           FT_Int       numContours,
+                                           FT_Outline*  outline );
 
 
   /*************************************************************************/
@@ -1963,7 +1963,7 @@
   /*    of this function, replacing allocations with `malloc()' in your    */
   /*    application if you want something simpler.                         */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Outline_Done( FT_Library   library,
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_Done( FT_Library   library,
                                          FT_Outline*  outline );
 
   /*************************************************************************/
@@ -1992,8 +1992,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  EXPORT_DEF(void)  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                         FT_BBox*     cbox );
+  FT_EXPORT_DEF(void)  FT_Outline_Get_CBox( FT_Outline*  outline,
+                                            FT_BBox*     cbox );
 
 
   /*************************************************************************/
@@ -2012,9 +2012,9 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  EXPORT_DEF(void)  FT_Outline_Translate( FT_Outline*  outline,
-                                          FT_Pos       xOffset,
-                                          FT_Pos       yOffset );
+  FT_EXPORT_DEF(void)  FT_Outline_Translate( FT_Outline*  outline,
+                                             FT_Pos       xOffset,
+                                             FT_Pos       yOffset );
 
 
   /*************************************************************************/
@@ -2043,8 +2043,8 @@
   /*                                                                       */
   /*    - the new raster is registered for the glyph format                */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Set_Raster( FT_Library        library,
-                                       FT_Raster_Funcs*  raster_funcs );
+  FT_EXPORT_DEF(FT_Error)  FT_Set_Raster( FT_Library        library,
+                                          FT_Raster_Funcs*  raster_funcs );
 
 
   /*************************************************************************/
@@ -2067,8 +2067,8 @@
   /*    as FT_Set_Raster unregisters the previous raster for a given       */
   /*    glyph format..                                                     */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Unset_Raster( FT_Library        library,
-                                         FT_Raster_Funcs*  raster_funcs );
+  FT_EXPORT_DEF(FT_Error)  FT_Unset_Raster( FT_Library        library,
+                                            FT_Raster_Funcs*  raster_funcs );
 
 
  /*************************************************************************
@@ -2093,9 +2093,9 @@
   *
   *************************************************************************/
 
-  EXPORT_DEF(FT_Raster)  FT_Get_Raster( FT_Library        library,
-                                        FT_Glyph_Format   glyph_format,
-                                        FT_Raster_Funcs  *raster_funcs );
+  FT_EXPORT_DEF(FT_Raster)  FT_Get_Raster( FT_Library        library,
+                                           FT_Glyph_Format   glyph_format,
+                                           FT_Raster_Funcs  *raster_funcs );
 
 
   /*************************************************************************/
@@ -2114,10 +2114,10 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Set_Raster_Mode( FT_Library      library,
-                                            FT_Glyph_Format format,
-                                            unsigned long   mode,
-                                            void*           args );
+  FT_EXPORT_DEF(FT_Error)  FT_Set_Raster_Mode( FT_Library      library,
+                                               FT_Glyph_Format format,
+                                               unsigned long   mode,
+                                               void*           args );
 
 
  /***************************************************************************/
@@ -2153,8 +2153,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)  FT_Outline_Copy( FT_Outline*  source,
-                                         FT_Outline*  target );
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_Copy( FT_Outline*  source,
+                                            FT_Outline*  target );
 
 
 
@@ -2178,8 +2178,8 @@
   /*    You can use FT_Outline_Translate() if you need to translate the    */
   /*    outline's points.                                                  */
   /*                                                                       */
-  EXPORT_DEF(void)  FT_Outline_Transform( FT_Outline*  outline,
-                                          FT_Matrix*   matrix );
+  FT_EXPORT_DEF(void)  FT_Outline_Transform( FT_Outline*  outline,
+                                             FT_Matrix*   matrix );
 
   /*************************************************************************/
   /*                                                                       */
@@ -2200,7 +2200,7 @@
   /*    It shouldn't be used by a normal client application, unless it     */
   /*    knows what it's doing..                                            */
   /*                                                                       */
-  EXPORT_DEF(void)  FT_Outline_Reverse( FT_Outline*  outline );
+  FT_EXPORT_DEF(void)  FT_Outline_Reverse( FT_Outline*  outline );
 
 
   /*************************************************************************/
@@ -2220,8 +2220,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  EXPORT_DEF(void)  FT_Vector_Transform( FT_Vector*  vector,
-                                         FT_Matrix*  matrix );
+  FT_EXPORT_DEF(void)  FT_Vector_Transform( FT_Vector*  vector,
+                                            FT_Matrix*  matrix );
 
 
   /*************************************************************************/
@@ -2241,8 +2241,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  EXPORT_DEF(void)  FT_Matrix_Multiply( FT_Matrix*  a,
-                                        FT_Matrix*  b );
+  FT_EXPORT_DEF(void)  FT_Matrix_Multiply( FT_Matrix*  a,
+                                           FT_Matrix*  b );
 
 
   /*************************************************************************/
@@ -2263,7 +2263,7 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  EXPORT_DEF(FT_Error)   FT_Matrix_Invert( FT_Matrix*  matrix );
+  FT_EXPORT_DEF(FT_Error)   FT_Matrix_Invert( FT_Matrix*  matrix );
 
   /*************************************************************************/
   /*                                                                       */
@@ -2276,7 +2276,7 @@
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
-  EXPORT_DEF(void)  FT_Default_Drivers( FT_Library  library );
+  FT_EXPORT_DEF(void)  FT_Default_Drivers( FT_Library  library );
 
 #ifdef __cplusplus
   }

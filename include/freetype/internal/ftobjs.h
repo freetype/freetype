@@ -68,15 +68,15 @@
 
 
 
-  EXPORT_DEF(FT_Error)  FT_New_Size( FT_Face   face,
-                                     FT_Size*  size );
+  FT_EXPORT_DEF(FT_Error)  FT_New_Size( FT_Face   face,
+                                        FT_Size*  size );
 
-  EXPORT_DEF(FT_Error)  FT_Done_Size( FT_Size  size );
+  FT_EXPORT_DEF(FT_Error)  FT_Done_Size( FT_Size  size );
 
-  EXPORT_DEF(FT_Error)  FT_New_GlyphSlot( FT_Face        face,
-                                          FT_GlyphSlot*  aslot );
+  FT_EXPORT_DEF(FT_Error)  FT_New_GlyphSlot( FT_Face        face,
+                                             FT_GlyphSlot*  aslot );
 
-  EXPORT_DEF(void)      FT_Done_GlyphSlot( FT_GlyphSlot  slot );
+  FT_EXPORT_DEF(void)      FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
 
 
@@ -281,37 +281,37 @@
   } FT_LibraryRec;
 
 
-  EXPORT_DEF(FT_Error)  FT_New_Library( FT_Memory    memory,
-                                        FT_Library*  library );
+  FT_EXPORT_DEF(FT_Error)  FT_New_Library( FT_Memory    memory,
+                                           FT_Library*  library );
 
 
-  EXPORT_DEF(FT_Error)  FT_Done_Library( FT_Library  library );
+  FT_EXPORT_DEF(FT_Error)  FT_Done_Library( FT_Library  library );
 
 
 
-  EXPORT_DEF(void)  FT_Set_Debug_Hook( FT_Library         library,
-                                       FT_UInt            hook_index,
-                                       FT_DebugHook_Func  debug_hook );
+  FT_EXPORT_DEF(void)  FT_Set_Debug_Hook( FT_Library         library,
+                                          FT_UInt            hook_index,
+                                          FT_DebugHook_Func  debug_hook );
 
 
-  EXPORT_DEF(FT_Error)  FT_Add_Driver( FT_Library                 library,
-                                       const FT_DriverInterface*  driver_interface );
+  FT_EXPORT_DEF(FT_Error)  FT_Add_Driver( FT_Library                 library,
+                                          const FT_DriverInterface*  driver_interface );
 
 
-  EXPORT_DEF(FT_Error)  FT_Remove_Driver( FT_Driver  driver );
+  FT_EXPORT_DEF(FT_Error)  FT_Remove_Driver( FT_Driver  driver );
 
 
-  EXPORT_DEF(FT_Driver) FT_Get_Driver( FT_Library  library,
-                                       char*       driver_name );
+  FT_EXPORT_DEF(FT_Driver) FT_Get_Driver( FT_Library  library,
+                                          char*       driver_name );
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
-  EXPORT_DEF(FT_Error)   FT_New_Stream( const char*  filepathname,
-                                        FT_Stream    astream );
+  FT_EXPORT_DEF(FT_Error)   FT_New_Stream( const char*  filepathname,
+                                           FT_Stream    astream );
 
-  EXPORT_DEF(void)       FT_Done_Stream( FT_Stream  stream );
+  FT_EXPORT_DEF(void)       FT_Done_Stream( FT_Stream  stream );
 
-  EXPORT_DEF(FT_Memory)  FT_New_Memory( void );
+  FT_EXPORT_DEF(FT_Memory)  FT_New_Memory( void );
 
 #endif
 
@@ -320,7 +320,7 @@
 /* Client applications can register new rasters through the FT_Set_Raster API..              */
 /*                                                                                           */
 #ifndef FT_NO_DEFAULT_RASTER
-  EXPORT_VAR(FT_Raster_Funcs)  ft_default_raster;
+  FT_EXPORT_VAR(FT_Raster_Funcs)  ft_default_raster;
 #endif
 
 

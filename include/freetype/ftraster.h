@@ -32,11 +32,11 @@
   /*                                                                       */
 /* #define _STANDALONE_ */
 
-#ifndef EXPORT_VAR
-#define EXPORT_VAR(x)  extern x
+#ifndef FT_EXPORT_VAR
+#define FT_EXPORT_VAR(x)  extern x
 #endif
 
-  EXPORT_VAR(FT_Raster_Funcs)  ft_standard_raster;
+  FT_EXPORT_VAR(FT_Raster_Funcs)  ft_standard_raster;
 
 #ifdef __cplusplus
   }

@@ -575,8 +575,7 @@ error:
   /*                                                                       */
 #ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
 
-  EXPORT_FUNC
-  FT_DriverInterface*  getDriverInterface( void )
+  FT_EXPORT_FUNC(FT_DriverInterface*)  getDriverInterface( void )
   {
     return &fond_driver_interface;
   }

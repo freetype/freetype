@@ -33,20 +33,20 @@
 #endif
 
 
-  EXPORT_DEF(FT_ListNode)  FT_List_Find( FT_List  list,
-                                         void*    data );
+  FT_EXPORT_DEF(FT_ListNode)  FT_List_Find( FT_List  list,
+                                            void*    data );
 
-  EXPORT_DEF(void)  FT_List_Add( FT_List      list,
-                                 FT_ListNode  node );
-
-  EXPORT_DEF(void)  FT_List_Insert( FT_List      list,
+  FT_EXPORT_DEF(void)  FT_List_Add( FT_List      list,
                                     FT_ListNode  node );
 
-  EXPORT_DEF(void)  FT_List_Remove( FT_List      list,
-                                    FT_ListNode  node );
+  FT_EXPORT_DEF(void)  FT_List_Insert( FT_List      list,
+                                       FT_ListNode  node );
 
-  EXPORT_DEF(void)  FT_List_Up( FT_List      list,
-                                FT_ListNode  node );
+  FT_EXPORT_DEF(void)  FT_List_Remove( FT_List      list,
+                                       FT_ListNode  node );
+
+  FT_EXPORT_DEF(void)  FT_List_Up( FT_List      list,
+                                   FT_ListNode  node );
 
 
   /*************************************************************************/
@@ -67,9 +67,9 @@
                                          void*        user );
 
 
-  EXPORT_DEF(FT_Error)  FT_List_Iterate( FT_List           list,
-                                         FT_List_Iterator  iterator,
-                                         void*             user );
+  FT_EXPORT_DEF(FT_Error)  FT_List_Iterate( FT_List           list,
+                                            FT_List_Iterator  iterator,
+                                            void*             user );
 
 
   /*************************************************************************/
@@ -93,10 +93,10 @@
                                        void*      user );
 
 
-  EXPORT_DEF(void)  FT_List_Finalize( FT_List             list,
-                                      FT_List_Destructor  destroy,
-                                      FT_Memory           memory,
-                                      void*               user );
+  FT_EXPORT_DEF(void)  FT_List_Finalize( FT_List             list,
+                                         FT_List_Destructor  destroy,
+                                         FT_Memory           memory,
+                                         void*               user );
 
 
 #ifdef __cplusplus

@@ -179,16 +179,16 @@
 #define  BASE_FUNC(x)   extern  x
 #endif
 
-#ifndef  EXPORT_DEF
-#define  EXPORT_DEF(x)   extern  x
+#ifndef  FT_EXPORT_DEF
+#define  FT_EXPORT_DEF(x)   extern  x
 #endif
 
-#ifndef  EXPORT_FUNC
-#define  EXPORT_FUNC(x)  extern  x
+#ifndef  FT_EXPORT_FUNC
+#define  FT_EXPORT_FUNC(x)  extern  x
 #endif
 
-#ifndef  EXPORT_VAR
-#define  EXPORT_VAR(x)   extern  x
+#ifndef  FT_EXPORT_VAR
+#define  FT_EXPORT_VAR(x)   extern  x
 #endif
 
 #endif /* FTCONFIG_H */

@@ -147,30 +147,30 @@
   /* declarations.                                                         */
   /*                                                                       */
   /* Two macros are used within the FreeType source code to define         */
-  /* exported library functions: EXPORT_DEF and EXPORT_FUNC                */
+  /* exported library functions: FT_EXPORT_DEF and FT_EXPORT_FUNC          */
   /*                                                                       */
-  /* EXPORT_DEF(return_type) is used in a function declaration, as in:     */
+  /* FT_EXPORT_DEF(return_type) is used in a function declaration, as in:  */
   /*                                                                       */
-  /*   EXPORT_DEF(FT_Error)  FT_Init_FreeType( FT_Library *alibrary );     */
+  /*   FT_EXPORT_DEF(FT_Error)  FT_Init_FreeType( FT_Library *alibrary );  */
   /*                                                                       */
   /*                                                                       */
   /*                                                                       */
-  /* EXPORT_FUNC(return_type) is used in a function definition, as in:     */
+  /* FT_EXPORT_FUNC(return_type) is used in a function definition, as in:  */
   /*                                                                       */
-  /*   EXPORT_FUNC(FT_Error)  FT_Init_FreeType( FT_Library *alibrary )     */
+  /*   FT_EXPORT_FUNC(FT_Error)  FT_Init_FreeType( FT_Library *alibrary )  */
   /*   {                                                                   */
   /*     ... some code ...                                                 */
   /*     return FT_Err_Ok;                                                 */
   /*   }                                                                   */
   /*                                                                       */
   /*                                                                       */
-  /* You can provide your own implementation of EXPORT_DEF and EXPORT_FUNC */
-  /* here if you want. If you leave them undefined, they'll later be       */
-  /* automatically defined as "extern return_type" to allow normal         */
+  /* You can provide your own implementation of FT_EXPORT_DEF and          */
+  /* FT_EXPORT_FUNC here if you want. If you leave them undefined, they'll */
+  /* later be automatically defined as "extern return_type" to allow normal*/
   /* compilation..                                                         */
   /*                                                                       */
-#undef EXPORT_DEF
-#undef EXPORT_FUNC
+#undef FT_EXPORT_DEF
+#undef FT_EXPORT_FUNC
 
 
   /*************************************************************************/

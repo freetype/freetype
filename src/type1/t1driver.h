@@ -21,7 +21,7 @@
 #include <t1objs.h>
 #include <t1errors.h>
 
-  EXPORT_VAR(const  FT_DriverInterface)  t1_driver_interface;
+  FT_EXPORT_VAR(const  FT_DriverInterface)  t1_driver_interface;
 
 #endif /* T1DRIVER_H */
 

@@ -54,9 +54,9 @@
   /* <Return>                                                              */
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
-  EXPORT_FUNC(int)  FT_Outline_Decompose( FT_Outline*        outline,
-                                          FT_Outline_Funcs*  interface,
-                                          void*              user )
+  FT_EXPORT_FUNC(int)  FT_Outline_Decompose( FT_Outline*        outline,
+                                             FT_Outline_Funcs*  interface,
+                                             void*              user )
   {
 #undef SCALED
 #define SCALED( x )   ( ((x) << shift) - delta )
@@ -674,9 +674,9 @@
   /*                                                                       */
   /*    It will use the raster correponding to the default glyph format.   */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Outline_Get_Bitmap( FT_Library   library,
-                                                FT_Outline*  outline,
-                                                FT_Bitmap*   map )
+  FT_EXPORT_FUNC(FT_Error)  FT_Outline_Get_Bitmap( FT_Library   library,
+                                                   FT_Outline*  outline,
+                                                   FT_Bitmap*   bitmap )
   {
     FT_Error          error;
     FT_Raster         raster;
@@ -687,10 +687,10 @@
     raster = FT_Get_Raster( library, ft_glyph_format_outline, &funcs );
     if (!raster) goto Exit;
 
-    params.target = map;
+    params.target = bitmap;
     params.source = outline;
     params.flags  = 0;
-    if (map->pixel_mode == ft_pixel_mode_grays)
+    if (bitmap->pixel_mode == ft_pixel_mode_grays)
       params.flags |= ft_raster_flag_aa;
 
     error = funcs.raster_render( raster, &params );
@@ -729,9 +729,9 @@
   /*    scan converter is called, which means that the value you give it   */
   /*    is actually ignored..                                              */
   /*                                                                       */
-  EXPORT_FUNC(FT_Error)  FT_Outline_Render( FT_Library        library,
-                                            FT_Outline*       outline,
-                                            FT_Raster_Params* params )
+  FT_EXPORT_FUNC(FT_Error)  FT_Outline_Render( FT_Library        library,
+                                               FT_Outline*       outline,
+                                               FT_Raster_Params* params )
   {
     FT_Error         error;
     FT_Raster        raster;
@@ -745,6 +745,50 @@
     error = funcs.raster_render( raster, params );
   Exit:
     return error;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Outline_Transform                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Applies a simple 2x2 matrix to all of an outline's points.  Useful */
+  /*    for applying rotations, slanting, flipping, etc.                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    outline :: A pointer to the target outline descriptor.             */
+  /*    matrix  :: A pointer to the transformation matrix.                 */
+  /*                                                                       */
+  /* <MT-Note>                                                             */
+  /*    Yes.                                                               */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    You can use FT_Outline_Translate() if you need to translate the    */
+  /*    outline's points.                                                  */
+  /*                                                                       */
+  BASE_FUNC(void)  FT_Outline_Transform( FT_Outline*  outline,
+                                         FT_Matrix*   matrix )
+  {
+    FT_UShort   n;
+    FT_Vector*  vec;
+
+    vec = outline->points;
+    for ( n = 0; n < outline->n_points; n++ )
+    {
+      FT_Pos  x, y;
+
+      x = FT_MulFix( vec->x, matrix->xx ) +
+          FT_MulFix( vec->y, matrix->xy );
+
+      y = FT_MulFix( vec->x, matrix->yx ) +
+          FT_MulFix( vec->y, matrix->yy );
+
+      vec->x = x;
+      vec->y = y;
+      vec++;
+    }
   }
 
 
@@ -816,51 +860,6 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Outline_Transform                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Applies a simple 2x2 matrix to all of an outline's points.  Useful */
-  /*    for applying rotations, slanting, flipping, etc.                   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline :: A pointer to the target outline descriptor.             */
-  /*    matrix  :: A pointer to the transformation matrix.                 */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    You can use FT_Outline_Translate() if you need to translate the    */
-  /*    outline's points.                                                  */
-  /*                                                                       */
-  BASE_FUNC(void)  FT_Outline_Transform( FT_Outline*  outline,
-                                         FT_Matrix*   matrix )
-  {
-    FT_UShort   n;
-    FT_Vector*  vec;
-
-
-    vec = outline->points;
-    for ( n = 0; n < outline->n_points; n++ )
-    {
-      FT_Pos  x, y;
-
-      x = FT_MulFix( vec->x, matrix->xx ) +
-          FT_MulFix( vec->y, matrix->xy );
-
-      y = FT_MulFix( vec->x, matrix->yx ) +
-          FT_MulFix( vec->y, matrix->yy );
-
-      vec->x = x;
-      vec->y = y;
-      vec++;
-    }
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    FT_Vector_Transform                                                */
   /*                                                                       */
   /* <Description>                                                         */
@@ -875,8 +874,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  EXPORT_FUNC(void)  FT_Vector_Transform( FT_Vector*  vector,
-                                          FT_Matrix*  matrix )
+  FT_EXPORT_FUNC(void)  FT_Vector_Transform( FT_Vector*  vector,
+                                             FT_Matrix*  matrix )
   {
     FT_Pos xz, yz;
 

@@ -762,7 +762,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_FUNC(TT_ExecContext)  TT_New_Context( TT_Face  face )
+  FT_EXPORT_FUNC(TT_ExecContext)  TT_New_Context( TT_Face  face )
   {
     TT_Driver       driver = (TT_Driver)face->root.driver;
     TT_ExecContext  exec;
@@ -6667,7 +6667,7 @@
   /*************************************************************************/
 
 
-  EXPORT_FUNC(TT_Error)  TT_RunIns( TT_ExecContext  exc )
+  FT_EXPORT_FUNC(TT_Error)  TT_RunIns( TT_ExecContext  exc )
   {
     TT_Long    ins_counter = 0;  /* executed instructions counter */
 
