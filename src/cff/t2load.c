@@ -406,22 +406,35 @@
       error = t2_new_cff_index( &font->charstrings_index, stream, 0 );
       if (error) goto Exit;
 
-      /* read the local subrs */      
-      if ( FILE_Seek( base_offset + font->top_dict.private_offset +
-                      font->private_dict.local_subrs_offset ) )
-        goto Exit;
+      /* read the local subrs, if any */
+
+      if (font->private_dict.local_subrs_offset) {
+
+	if ( FILE_Seek( base_offset + font->top_dict.private_offset +
+			font->private_dict.local_subrs_offset ) )
+	  goto Exit;
         
-      error = t2_new_cff_index( &font->local_subrs_index, stream, 1 );
-      if (error) goto Exit;
+	error = t2_new_cff_index( &font->local_subrs_index, stream, 1 );
+	if (error) goto Exit;
+      }
       
       /* explicit the global and local subrs */
-      font->num_local_subrs  = font->local_subrs_index.count;
+
+      if (font->private_dict.local_subrs_offset) {
+	font->num_local_subrs  = font->local_subrs_index.count;
+      } else {
+	font->num_local_subrs = 0;
+      }
+
       font->num_global_subrs = font->global_subrs_index.count;
       
-      error = t2_explicit_cff_index( &font->global_subrs_index,
-                                     &font->global_subrs ) ||
-              t2_explicit_cff_index( &font->local_subrs_index,
-                                     &font->local_subrs );
+
+      error = t2_explicit_cff_index( &font->global_subrs_index, &font->global_subrs ) ;
+
+      if (font->private_dict.local_subrs_offset) {
+	error |= t2_explicit_cff_index( &font->local_subrs_index, &font->local_subrs ) ;
+      }
+
       if (error) goto Exit;
     }
 
