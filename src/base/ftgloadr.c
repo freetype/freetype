@@ -337,17 +337,17 @@
       FT_Outline*  in  = &source->base.outline;
 
 
-      FT_MEM_COPY( out->points, in->points,
-                   num_points * sizeof ( FT_Vector ) );
-      FT_MEM_COPY( out->tags, in->tags,
-                   num_points * sizeof ( char ) );
-      FT_MEM_COPY( out->contours, in->contours,
-                   num_contours * sizeof ( short ) );
+      FT_ARRAY_COPY( out->points, in->points,
+                     num_points );
+      FT_ARRAY_COPY( out->tags, in->tags,
+                     num_points );
+      FT_ARRAY_COPY( out->contours, in->contours,
+                     num_contours );
 
       /* do we need to copy the extra points? */
       if ( target->use_extra && source->use_extra )
-        FT_MEM_COPY( target->base.extra_points, source->base.extra_points,
-                     num_points * sizeof ( FT_Vector ) );
+        FT_ARRAY_COPY( target->base.extra_points, source->base.extra_points,
+                       num_points );
 
       out->n_points   = (short)num_points;
       out->n_contours = (short)num_contours;

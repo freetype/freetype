@@ -1494,14 +1494,14 @@
       if ( error )
         goto Exit;
 
-      FT_MEM_COPY( gloader->current.extra_points, slot->outline.points,
-                   slot->outline.n_points * sizeof ( FT_Vector ) );
+      FT_ARRAY_COPY( gloader->current.extra_points, slot->outline.points,
+                     slot->outline.n_points );
 
-      FT_MEM_COPY( gloader->current.outline.contours, slot->outline.contours,
-                   slot->outline.n_contours * sizeof ( short ) );
+      FT_ARRAY_COPY( gloader->current.outline.contours, slot->outline.contours,
+                     slot->outline.n_contours );
 
-      FT_MEM_COPY( gloader->current.outline.tags, slot->outline.tags,
-                   slot->outline.n_points * sizeof ( char ) );
+      FT_ARRAY_COPY( gloader->current.outline.tags, slot->outline.tags,
+                     slot->outline.n_points );
 
       gloader->current.outline.n_points   = slot->outline.n_points;
       gloader->current.outline.n_contours = slot->outline.n_contours;
@@ -1580,8 +1580,8 @@
         if ( error )
           goto Exit;
 
-        FT_MEM_COPY( gloader->current.subglyphs, slot->subglyphs,
-                     num_subglyphs * sizeof ( FT_SubGlyph ) );
+        FT_ARRAY_COPY( gloader->current.subglyphs, slot->subglyphs,
+                       num_subglyphs );
 
         gloader->current.num_subglyphs = num_subglyphs;
         num_base_subgs = gloader->base.num_subglyphs;

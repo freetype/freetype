@@ -163,10 +163,10 @@
 
 
 #define cur_to_org( n, zone ) \
-          FT_MEM_COPY( (zone)->org, (zone)->cur, (n) * sizeof ( FT_Vector ) )
+          FT_ARRAY_COPY( (zone)->org, (zone)->cur, (n) )
 
 #define org_to_cur( n, zone ) \
-          FT_MEM_COPY( (zone)->cur, (zone)->org, (n) * sizeof ( FT_Vector ) )
+          FT_ARRAY_COPY( (zone)->cur, (zone)->org, (n) )
 
 
   /*************************************************************************/

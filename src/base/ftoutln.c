@@ -358,14 +358,14 @@
          source->n_contours != target->n_contours )
       return FT_Err_Invalid_Argument;
 
-    FT_MEM_COPY( target->points, source->points,
-                 source->n_points * sizeof ( FT_Vector ) );
+    FT_ARRAY_COPY( target->points, source->points,
+                   source->n_points );
 
-    FT_MEM_COPY( target->tags, source->tags,
-                 source->n_points * sizeof ( FT_Byte ) );
+    FT_ARRAY_COPY( target->tags, source->tags,
+                   source->n_points );
 
-    FT_MEM_COPY( target->contours, source->contours,
-                 source->n_contours * sizeof ( FT_Short ) );
+    FT_ARRAY_COPY( target->contours, source->contours,
+                   source->n_contours );
 
     /* copy all flags, except the `FT_OUTLINE_OWNER' one */
     is_owner      = target->flags & FT_OUTLINE_OWNER;
@@ -662,10 +662,10 @@
     FT_Long  pos;
     FT_Int   first;
     FT_Int   last;
-  
+
   } FT_OrientationExtremumRec;
 
- 
+
   static FT_Orientation
   ft_orientation_extremum_compute( FT_OrientationExtremumRec*  extremum,
                                    FT_Outline*                 outline )
@@ -673,36 +673,36 @@
     FT_Vector  *point, *first, *last, *prev, *next;
     FT_Vector*  points = outline->points;
     FT_Angle    angle_in, angle_out;
-    
+
 
     /* compute the previous and next points in the same contour */
     point = points + extremum->index;
     first = points + extremum->first;
     last  = points + extremum->last;
-   
+
     do
     {
       prev = ( point == first ) ? last : point - 1;
-     
+
       if ( prev == point )
         return FT_ORIENTATION_TRUETYPE;  /* degenerate case */
-      
+
     } while ( prev->x != point->x || prev->y != point->y );
-    
+
     do
     {
       next = ( point == last ) ? first : point + 1;
-      
+
       if ( next == point )
         return FT_ORIENTATION_TRUETYPE;  /* shouldn't happen */
-        
+
     } while ( next->x != point->x || next->y != point->y );
-    
+
     /* now compute the orientation of the `out' vector relative */
     /* to the `in' vector.                                      */
     angle_in  = FT_Atan2( point->x - prev->x,  point->y - prev->y );
     angle_out = FT_Atan2( next->x  - point->x, next->y  - point->y );
-    
+
     return ( FT_Angle_Diff( angle_in, angle_out ) >= 0 )
              ? FT_ORIENTATION_TRUETYPE
              : FT_ORIENTATION_POSTSCRIPT;
@@ -713,7 +713,7 @@
   FT_Outline_Get_Orientation( FT_Outline*  outline )
   {
     FT_Orientation  result = FT_ORIENTATION_TRUETYPE;
-    
+
 
     if ( outline && outline->n_points > 0 )
     {
@@ -721,11 +721,11 @@
       FT_Int                     n;
       FT_Int                     first, last;
       FT_Vector*                 points = outline->points;
-      
+
 
       xmin.pos = ymin.pos = +32768L;
       xmax.pos = ymax.pos = -32768L;
-      
+
       xmin.index = ymin.index = xmax.index = ymax.index = -1;
 
       first = 0;
@@ -737,13 +737,13 @@
         if ( last > first + 1 )
         {
           FT_Int  i;
-          
+
 
           for ( i = first; i < last; i++ )
           {
             FT_Pos  x = points[i].x;
             FT_Pos  y = points[i].y;
-            
+
 
             if ( x < xmin.pos )
             {
@@ -775,21 +775,21 @@
             }
           }
         }
-        
+
         if ( xmin.index >= 0 )
           result = ft_orientation_extremum_compute( &xmin, outline );
-          
+
         else if ( xmax.index >= 0 )
           result = ft_orientation_extremum_compute( &xmax, outline );
-          
+
         else if ( ymin.index >= 0 )
           result = ft_orientation_extremum_compute( &ymin, outline );
-          
+
         else if ( ymax.index >= 0 )
           result = ft_orientation_extremum_compute( &ymax, outline );
       }
     }
-    
+
     return result;
   }
 

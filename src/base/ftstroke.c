@@ -580,9 +580,8 @@
                            FT_Outline*      outline )
   {
     /* copy point locations */
-    FT_MEM_COPY( outline->points + outline->n_points,
-                 border->points,
-                 border->num_points * sizeof ( FT_Vector ) );
+    FT_ARRAY_COPY( outline->points + outline->n_points,
+                   border->points, border->num_points );
 
     /* copy tags */
     {

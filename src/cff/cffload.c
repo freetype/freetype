@@ -1624,8 +1624,7 @@
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory. */
-        FT_MEM_COPY( charset->sids, cff_isoadobe_charset,
-                     num_glyphs * sizeof ( FT_UShort ) );
+        FT_ARRAY_COPY( charset->sids, cff_isoadobe_charset, num_glyphs );
 
         break;
 
@@ -1643,8 +1642,7 @@
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
-        FT_MEM_COPY( charset->sids, cff_expert_charset,
-                     num_glyphs * sizeof ( FT_UShort ) );
+        FT_ARRAY_COPY( charset->sids, cff_expert_charset, num_glyphs );
 
         break;
 
@@ -1662,8 +1660,7 @@
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
-        FT_MEM_COPY( charset->sids, cff_expertsubset_charset,
-                     num_glyphs * sizeof ( FT_UShort ) );
+        FT_ARRAY_COPY( charset->sids, cff_expertsubset_charset, num_glyphs );
 
         break;
 
@@ -1909,15 +1906,12 @@
       {
       case 0:
         /* First, copy the code to SID mapping. */
-        FT_MEM_COPY( encoding->sids, cff_standard_encoding,
-                     256 * sizeof ( FT_UShort ) );
-
+        FT_ARRAY_COPY( encoding->sids, cff_standard_encoding, 256 );
         goto Populate;
 
       case 1:
         /* First, copy the code to SID mapping. */
-        FT_MEM_COPY( encoding->sids, cff_expert_encoding,
-                     256 * sizeof ( FT_UShort ) );
+        FT_ARRAY_COPY( encoding->sids, cff_expert_encoding, 256 );
 
       Populate:
         /* Construct code to GID mapping from code to SID mapping */
