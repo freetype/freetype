@@ -720,7 +720,7 @@
       sbit_metrics->y_scale     = 1 << 16;
 #endif
 
-      sbit_metrics->ascender    = strike->hori.ascender << 6;
+      sbit_metrics->ascender    = strike->hori.ascender  << 6;
       sbit_metrics->descender   = strike->hori.descender << 6;
 
       /* XXX: Is this correct? */

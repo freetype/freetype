@@ -422,25 +422,25 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
-  /*    FT_OUTLINE_NONE                                                    */
+  /*    ft_outline_none                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This constant is deprecated.  Please use @FT_OUTLINE_NONE          */
   /*    instead.                                                           */
   /*                                                                       */
-#define zft_outline_none  FT_OUTLINE_NONE
+#define ft_outline_none  FT_OUTLINE_NONE
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
-  /*    FT_OUTLINE_OWNER                                                   */
+  /*    ft_outline_owner                                                   */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This constant is deprecated.  Please use @FT_OUTLINE_OWNER         */
   /*    instead.                                                           */
   /*                                                                       */
-#define zft_outline_owner  FT_OUTLINE_OWNER
+#define ft_outline_owner  FT_OUTLINE_OWNER
 
 
   /*************************************************************************/
@@ -452,55 +452,55 @@ FT_BEGIN_HEADER
   /*    This constant is deprecated.  Please use @FT_OUTLINE_EVEN_ODD_FILL */
   /*    instead.                                                           */
   /*                                                                       */
-#define zft_outline_even_off_fill  FT_OUTLINE_EVEN_ODD_FILL
+#define ft_outline_even_off_fill  FT_OUTLINE_EVEN_ODD_FILL
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
-  /*    FT_OUTLINE_REVERSE_FILL                                            */
+  /*    ft_outline_reverse_fill                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This constant is deprecated.  Please use @FT_OUTLINE_REVERSE_FILL  */
   /*    instead.                                                           */
   /*                                                                       */
-#define zft_outline_reverse_fill  FT_OUTLINE_REVERSE_FILL
+#define ft_outline_reverse_fill  FT_OUTLINE_REVERSE_FILL
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
-  /*    FT_OUTLINE_IGNORE_DROPOUTS                                         */
+  /*    ft_outline_ignore_dropouts                                         */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This constant is deprecated.  Please use                           */
   /*    @FT_OUTLINE_IGNORE_DROPOUTS instead.                               */
   /*                                                                       */
-#define zft_outline_ignore_dropouts  FT_OUTLINE_IGNORE_DROPOUTS
+#define ft_outline_ignore_dropouts  FT_OUTLINE_IGNORE_DROPOUTS
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
-  /*    FT_OUTLINE_HIGH_PRECISION                                          */
+  /*    ft_outline_high_precision                                          */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This constant is deprecated.  Please use                           */
   /*    @FT_OUTLINE_HIGH_PRECISION instead.                                */
   /*                                                                       */
-#define zft_outline_high_precision  FT_OUTLINE_HIGH_PRECISION
+#define ft_outline_high_precision  FT_OUTLINE_HIGH_PRECISION
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
-  /*    FT_OUTLINE_SINGLE_PASS                                             */
+  /*    ft_outline_single_pass                                             */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This constant is deprecated.  Please use @FT_OUTLINE_SINGLE_PASS   */
   /*    instead.                                                           */
   /*                                                                       */
-#define zft_outline_single_pass  FT_OUTLINE_SINGLE_PASS
+#define ft_outline_single_pass  FT_OUTLINE_SINGLE_PASS
 
   /* */
 

@@ -414,7 +414,8 @@ THE SOFTWARE.
     slot->metrics.horiAdvance  = metric->characterWidth << 6 ;
     slot->metrics.horiBearingX = metric->leftSideBearing << 6 ;
     slot->metrics.horiBearingY = metric->ascent << 6 ;
-    slot->metrics.width        = metric->characterWidth << 6 ;
+    slot->metrics.width        = ( metric->rightSideBearing -
+                                   metric->leftSideBearing ) << 6;
     slot->metrics.height       = bitmap->rows << 6;
 
     slot->linearHoriAdvance = (FT_Fixed)bitmap->width << 16;

@@ -542,16 +542,15 @@
         const CFF_Field_Handler*  field;
 
 
-        /* first of all, a trivial check */
-        if ( num_args < 1 )
-          goto Stack_Underflow;
-
         *parser->top = p;
         code = v;
         if ( v == 12 )
         {
           /* two byte operator */
           p++;
+          if ( p >= limit )
+            goto Syntax_Error;
+
           code = 0x100 | p[0];
         }
         code = code | parser->object_code;
@@ -564,6 +563,11 @@
             FT_Long   val;
             FT_Byte*  q = (FT_Byte*)parser->object + field->offset;
 
+
+            /* check that we have enough arguments -- except for */
+            /* delta encoded arrays, which can be empty          */
+            if ( field->kind != cff_kind_delta && num_args < 1 )
+              goto Stack_Underflow;
 
             switch ( field->kind )
             {

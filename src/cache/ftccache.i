@@ -89,16 +89,6 @@
         bucket  = cache->buckets + idx;
       }
 
-#ifdef FT_DEBUG_LEVEL_ERROR
-      if ( query->family     != family                        ||
-           family->fam_index >= cache->manager->families.size )
-      {
-        FT_ERROR((
-          "ftc_cache_lookup: invalid query (bad 'family' field)\n" ));
-        return FTC_Err_Invalid_Argument;
-      }
-#endif
-
       pnode = bucket;
 
       for ( ;; )
