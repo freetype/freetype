@@ -441,7 +441,6 @@
       FT_Pos  len = FT_MulFix( hint->org_len, scale );
 
       FT_Int            do_snapping;
-      FT_Pos            fit_center;
       FT_Pos            fit_len;
       PSH_AlignmentRec  align;
 

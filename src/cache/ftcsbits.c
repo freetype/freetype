@@ -221,7 +221,6 @@
       }
     }
 
-  Exit:
     return error;
   }
 
