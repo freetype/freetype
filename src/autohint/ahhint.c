@@ -124,7 +124,7 @@
 
       else if ( ( base_flags & AH_EDGE_ROUND ) )
       {
-        if ( dist < 96 )
+        if ( dist < 80 )
           dist = 64;
       }
       else if ( dist < 56 )
