@@ -723,6 +723,16 @@
     if ( index < (FT_UInt)face->num_locations - 1 )
        count = face->glyph_locations[index + 1] - offset;
 
+    /* temporary hack */
+#if 1
+    if ( count < 10 )
+    {
+      /* This glyph is corrupted -- it does not have a complete header */
+      error = TT_Err_Invalid_Outline;
+      goto Fail;
+    }
+#endif
+
     if ( count == 0 )
     {
       /* as described by Frederic Loyer, these are spaces, and */
