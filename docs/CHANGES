@@ -17,6 +17,12 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
       extended to cope with the new functionality.
 
 
+  III. MISCELLANEOUS
+
+    - A new  documentation file  `formats.txt' describes various  font
+      formats supported (and not supported) by FreeType.
+
+
 ======================================================================
 
 LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
