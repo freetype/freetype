@@ -35,7 +35,7 @@
   /*                                                                       */
 #define FREETYPE_MAJOR 2
 #define FREETYPE_MINOR 0
-#define FREETYPE_PATCH 7
+#define FREETYPE_PATCH 8
 
 
 #include <ft2build.h>
@@ -122,7 +122,6 @@ FT_BEGIN_HEADER
   /*    FT_Set_Transform                                                   */
   /*    FT_Load_Glyph                                                      */
   /*    FT_Get_Char_Index                                                  */
-  /*    FT_Get_Next_Char                                                   */
   /*    FT_Get_Name_Index                                                  */
   /*    FT_Load_Char                                                       */
   /*                                                                       */
@@ -2390,51 +2389,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Next_Char                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns the next charcode that is defined in a face's current      */
-  /*    charmap.                                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face     :: A handle to the source face object.                    */
-  /*                                                                       */
-  /*    charcode :: The current character code.                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The next character code in the current charmap.  0 means           */
-  /*    `no encoded values above charcode'.                                */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    You can always retrieve the first charcode in a given charmap      */
-  /*    by calling FT_Get_Next_Char(face,0).                               */
-  /*                                                                       */
-  /*    (This assumes that 0 is not a valid character code in any known    */
-  /*    charmap format, which is basically true for TrueType and Type1.)   */
-  /*                                                                       */
-  /*    Note that certain charmaps can map character codes to "empty"      */
-  /*    glyphs sometimes.  Here are two examples:                          */
-  /*                                                                       */
-  /*      - The embedded bitmaps were stripped from the font, and certain  */
-  /*        glyphs didn't have a corresponding outline.                    */
-  /*                                                                       */
-  /*      - The font is a subset of another one and was generated with a   */
-  /*        tool that simply changed the glyph tables, but not the         */
-  /*        charmap.                                                       */
-  /*                                                                       */
-  /*    You should thus use this function only to enumerate charmaps.  If  */
-  /*    you need to determine the list of "displayable" glyphs, you have   */
-  /*    to use `FT_Load_Glyph' or wait until we provide another API to do  */
-  /*    that.                                                              */
-  /*                                                                       */
-  FT_EXPORT( FT_ULong )
-  FT_Get_Next_Char( FT_Face   face,
-                    FT_ULong  charcode );
 
 
   /*************************************************************************/
