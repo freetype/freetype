@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1objs.c                                                               */
+/*  t1objs.c                                                               */
 /*                                                                         */
-/*    Experimental Type 1 objects manager (body).                          */
+/*    Type 1 objects manager (body).                                       */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -22,15 +22,15 @@
 
 #ifdef FT_FLAT_COMPILE
 
-#include "z1gload.h"
-#include "z1load.h"
-#include "z1afm.h"
+#include "t1gload.h"
+#include "t1load.h"
+#include "t1afm.h"
 
 #else
 
-#include <type1/z1gload.h>
-#include <type1/z1load.h>
-#include <type1/z1afm.h>
+#include <type1/t1gload.h>
+#include <type1/t1load.h>
+#include <type1/t1afm.h>
 
 #endif
 
@@ -46,7 +46,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_z1objs
+#define FT_COMPONENT  trace_t1objs
 
 
   /*************************************************************************/
@@ -59,7 +59,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Z1_Done_Face                                                       */
+  /*    T1_Done_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The face object destructor.                                        */
@@ -68,7 +68,7 @@
   /*    face :: A typeless pointer to the face object to destroy.          */
   /*                                                                       */
   LOCAL_FUNC
-  void  Z1_Done_Face( T1_Face  face )
+  void  T1_Done_Face( T1_Face  face )
   {
     FT_Memory  memory;
     T1_Font*   type1 = &face->type1;
@@ -78,9 +78,9 @@
     {
       memory = face->root.memory;
 
-#ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
       /* release multiple masters information */
-      Z1_Done_Blend( face );
+      T1_Done_Blend( face );
       face->blend = 0;
 #endif
 
@@ -111,10 +111,10 @@
       FREE( type1->encoding.char_index );
       FREE( type1->font_name );
 
-#ifndef Z1_CONFIG_OPTION_NO_AFM
+#ifndef T1_CONFIG_OPTION_NO_AFM
       /* release afm data if present */
       if ( face->afm_data )
-        Z1_Done_AFM( memory, (Z1_AFM*)face->afm_data );
+        T1_Done_AFM( memory, (T1_AFM*)face->afm_data );
 #endif
 
       /* release unicode map, if any */
@@ -130,7 +130,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Z1_Init_Face                                                       */
+  /*    T1_Init_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The face object constructor.                                       */
@@ -151,7 +151,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  Z1_Init_Face( FT_Stream      stream,
+  FT_Error  T1_Init_Face( FT_Stream      stream,
                           T1_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
@@ -188,7 +188,7 @@
     }
 
     /* open the tokenizer, this will also check the font format */
-    error = Z1_Open_Face( face );
+    error = T1_Open_Face( face );
     if ( error )
       goto Exit;
 
@@ -199,7 +199,7 @@
     /* check the face index */
     if ( face_index != 0 )
     {
-      FT_ERROR(( "Z1_Init_Face: invalid face index\n" ));
+      FT_ERROR(( "T1_Init_Face: invalid face index\n" ));
       error = T1_Err_Invalid_Argument;
       goto Exit;
     }
@@ -278,7 +278,7 @@
         FT_Int  max_advance;
 
 
-        error = Z1_Compute_Max_Advance( face, &max_advance );
+        error = T1_Compute_Max_Advance( face, &max_advance );
 
         /* in case of error, keep the standard width */
         if ( !error )
@@ -365,7 +365,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Z1_Init_Driver                                                     */
+  /*    T1_Init_Driver                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given Type 1 driver object.                          */
@@ -377,7 +377,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  Z1_Init_Driver( Z1_Driver  driver )
+  FT_Error  T1_Init_Driver( T1_Driver  driver )
   {
     FT_UNUSED( driver );
 
@@ -388,7 +388,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Z1_Done_Driver                                                     */
+  /*    T1_Done_Driver                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given Type 1 driver.                                   */
@@ -397,7 +397,7 @@
   /*    driver  :: A handle to the target Type 1 driver.                   */
   /*                                                                       */
   LOCAL_DEF
-  void  Z1_Done_Driver( Z1_Driver  driver )
+  void  T1_Done_Driver( T1_Driver  driver )
   {
     FT_UNUSED( driver );
   }

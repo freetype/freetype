@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1parse.h                                                              */
+/*  t1parse.h                                                              */
 /*                                                                         */
-/*    Experimental Type 1 parser (specification).                          */
+/*    Type 1 parser (specification).                                       */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef Z1PARSE_H
-#define Z1PARSE_H
+#ifndef T1PARSE_H
+#define T1PARSE_H
 
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/ftstream.h>
@@ -30,10 +30,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    Z1_Parser                                                          */
+  /*    T1_ParserRec                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A Z1_Parser is an object used to parse a Type 1 fonts very         */
+  /*    A T1_ParserRec is an object used to parse a Type 1 fonts very      */
   /*    quickly.                                                           */
   /*                                                                       */
   /* <Fields>                                                              */
@@ -57,7 +57,7 @@
   /*    single_block :: A boolean.  Indicates that the private dictionary  */
   /*                    is stored in lieu of the base dictionary.          */
   /*                                                                       */
-  typedef struct  Z1_Parser_
+  typedef struct  T1_ParserRec_
   {
     T1_Parser  root;
     FT_Stream  stream;
@@ -72,17 +72,17 @@
     FT_Byte    in_memory;
     FT_Byte    single_block;
 
-  } Z1_Parser;
+  } T1_ParserRec;
 
 
-#define Z1_Add_Table( p, i, o, l )  (p)->funcs.add( (p), i, o, l )
-#define Z1_Done_Table( p )          \
+#define T1_Add_Table( p, i, o, l )  (p)->funcs.add( (p), i, o, l )
+#define T1_Done_Table( p )          \
           do                        \
           {                         \
             if ( (p)->funcs.done )  \
               (p)->funcs.done( p ); \
           } while ( 0 )
-#define Z1_Release_Table( p )          \
+#define T1_Release_Table( p )          \
           do                           \
           {                            \
             if ( (p)->funcs.release )  \
@@ -90,43 +90,43 @@
           } while ( 0 )
 
 
-#define Z1_Skip_Spaces( p )  (p)->root.funcs.skip_spaces( &(p)->root )
-#define Z1_Skip_Alpha( p )   (p)->root.funcs.skip_alpha ( &(p)->root )
+#define T1_Skip_Spaces( p )  (p)->root.funcs.skip_spaces( &(p)->root )
+#define T1_Skip_Alpha( p )   (p)->root.funcs.skip_alpha ( &(p)->root )
 
-#define Z1_ToInt( p )       (p)->root.funcs.to_int( &(p)->root )
-#define Z1_ToFixed( p, t )  (p)->root.funcs.to_fixed( &(p)->root, t )
+#define T1_ToInt( p )       (p)->root.funcs.to_int( &(p)->root )
+#define T1_ToFixed( p, t )  (p)->root.funcs.to_fixed( &(p)->root, t )
 
-#define Z1_ToCoordArray( p, m, c )    \
+#define T1_ToCoordArray( p, m, c )    \
           (p)->root.funcs.to_coord_array( &(p)->root, m, c )
-#define Z1_ToFixedArray( p, m, f, t ) \
+#define T1_ToFixedArray( p, m, f, t ) \
           (p)->root.funcs.to_fixed_array( &(p)->root, m, f, t )
-#define Z1_ToToken( p, t )            \
+#define T1_ToToken( p, t )            \
           (p)->root.funcs.to_token( &(p)->root, t )
-#define Z1_ToTokenArray( p, t, m, c ) \
+#define T1_ToTokenArray( p, t, m, c ) \
           (p)->root.funcs.to_token_array( &(p)->root, t, m, c )
 
-#define Z1_Load_Field( p, f, o, m, pf )       \
+#define T1_Load_Field( p, f, o, m, pf )       \
           (p)->root.funcs.load_field( &(p)->root, f, o, m, pf )
-#define Z1_Load_Field_Table( p, f, o, m, pf ) \
+#define T1_Load_Field_Table( p, f, o, m, pf ) \
           (p)->root.funcs.load_field_table( &(p)->root, f, o, m, pf )
 
 
   LOCAL_DEF
-  FT_Error  Z1_New_Parser( Z1_Parser*        parser,
+  FT_Error  T1_New_Parser( T1_ParserRec*     parser,
                            FT_Stream         stream,
                            FT_Memory         memory,
                            PSAux_Interface*  psaux );
 
   LOCAL_DEF
-  FT_Error  Z1_Get_Private_Dict( Z1_Parser*  parser );
+  FT_Error  T1_Get_Private_Dict( T1_ParserRec*  parser );
 
   LOCAL_DEF
-  void  Z1_Decrypt( FT_Byte*   buffer,
+  void  T1_Decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed );
 
   LOCAL_DEF
-  void  Z1_Done_Parser( Z1_Parser*  parser );
+  void  T1_Done_Parser( T1_ParserRec*  parser );
 
 
 #ifdef __cplusplus
@@ -134,7 +134,7 @@
 #endif
 
 
-#endif /* Z1PARSE_H */
+#endif /* T1PARSE_H */
 
 
 /* END */

@@ -59,7 +59,7 @@
 #include <freetype/freetype.h>
 #include <freetype/internal/ftstream.h>
 #include <truetype/ttobjs.h>
-#include <type1z/z1objs.h>
+#include <type1/t1objs.h>
 
 #include <Resources.h>
 #include <Fonts.h>

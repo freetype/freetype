@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1gload.c                                                              */
+/*  t1gload.c                                                              */
 /*                                                                         */
-/*    Experimental Type 1 Glyph Loader (body).                             */
+/*    Type 1 Glyph Loader (body).                                          */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -18,11 +18,11 @@
 
 #ifdef FT_FLAT_COMPILE
 
-#include "z1gload.h"
+#include "t1gload.h"
 
 #else
 
-#include <type1/z1gload.h>
+#include <type1/t1gload.h>
 
 #endif
 
@@ -43,7 +43,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_z1gload
+#define FT_COMPONENT  trace_t1gload
 
 
   /*************************************************************************/
@@ -64,7 +64,7 @@
 
 
   LOCAL_FUNC_X
-  FT_Error  Z1_Parse_Glyph( T1_Decoder*  decoder,
+  FT_Error  T1_Parse_Glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {
     T1_Face   face  = (T1_Face)decoder->builder.face;
@@ -82,7 +82,7 @@
 
 
   LOCAL_FUNC
-  FT_Error  Z1_Compute_Max_Advance( T1_Face  face,
+  FT_Error  T1_Compute_Max_Advance( T1_Face  face,
                                     FT_Int*  max_advance )
   {
     FT_Error          error;
@@ -101,7 +101,7 @@
                                            0, /* glyph slot */
                                            (FT_Byte**)type1->glyph_names,
                                            face->blend,
-                                           Z1_Parse_Glyph );
+                                           T1_Parse_Glyph );
     if ( error )
       return error;
       
@@ -117,7 +117,7 @@
     for ( glyph_index = 0; glyph_index < type1->num_glyphs; glyph_index++ )
     {
       /* now get load the unscaled outline */
-      error = Z1_Parse_Glyph( &decoder, glyph_index );
+      error = T1_Parse_Glyph( &decoder, glyph_index );
       /* ignore the error if one occured - skip to next glyph */
     }
 
@@ -144,8 +144,8 @@
 
 
   LOCAL_FUNC
-  FT_Error  Z1_Load_Glyph( Z1_GlyphSlot  glyph,
-                           Z1_Size       size,
+  FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
+                           T1_Size       size,
                            FT_Int        glyph_index,
                            FT_Int        load_flags )
   {
@@ -180,7 +180,7 @@
                                  (FT_GlyphSlot)glyph,
                                  (FT_Byte**)type1->glyph_names,
                                  face->blend,
-                                 Z1_Parse_Glyph );
+                                 T1_Parse_Glyph );
     if ( error )
       goto Exit;
                       
@@ -192,7 +192,7 @@
    
 
     /* now load the unscaled outline */
-    error = Z1_Parse_Glyph( &decoder, glyph_index );
+    error = T1_Parse_Glyph( &decoder, glyph_index );
     if ( error )
       goto Exit;
 

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  type1.c                                                                */
 /*                                                                         */
-/*    FreeType experimental Type 1 driver component (body only).           */
+/*    FreeType Type 1 driver component (body only).                        */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -21,26 +21,26 @@
 
 #ifdef FT_FLAT_COMPILE
 
-#include "z1parse.c"
-#include "z1load.c"
-#include "z1objs.c"
-#include "z1driver.c"
-#include "z1gload.c"
+#include "t1parse.c"
+#include "t1load.c"
+#include "t1objs.c"
+#include "t1driver.c"
+#include "t1gload.c"
 
-#ifndef Z1_CONFIG_OPTION_NO_AFM
-#include "z1afm.c"
+#ifndef T1_CONFIG_OPTION_NO_AFM
+#include "t1afm.c"
 #endif
 
 #else /* FT_FLAT_COMPILE */
 
-#include <type1/z1parse.c>
-#include <type1/z1load.c>
-#include <type1/z1objs.c>
-#include <type1/z1driver.c>
-#include <type1/z1gload.c>
+#include <type1/t1parse.c>
+#include <type1/t1load.c>
+#include <type1/t1objs.c>
+#include <type1/t1driver.c>
+#include <type1/t1gload.c>
 
-#ifndef Z1_CONFIG_OPTION_NO_AFM
-#include <type1/z1afm.c>
+#ifndef T1_CONFIG_OPTION_NO_AFM
+#include <type1/t1afm.c>
 #endif
 
 #endif /* FT_FLAT_COMPILE */

@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1driver.c                                                             */
+/*  t1driver.c                                                             */
 /*                                                                         */
-/*    Experimental Type 1 driver interface (body).                         */
+/*    Type 1 driver interface (body).                                      */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -18,17 +18,17 @@
 
 #ifdef FT_FLAT_COMPILE
 
-#include "z1driver.h"
-#include "z1gload.h"
-#include "z1load.h"
-#include "z1afm.h"
+#include "t1driver.h"
+#include "t1gload.h"
+#include "t1load.h"
+#include "t1afm.h"
 
 #else
 
-#include <type1/z1driver.h>
-#include <type1/z1gload.h>
-#include <type1/z1load.h>
-#include <type1/z1afm.h>
+#include <type1/t1driver.h>
+#include <type1/t1gload.h>
+#include <type1/t1load.h>
+#include <type1/t1afm.h>
 
 #endif
 
@@ -47,11 +47,11 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_z1driver
+#define FT_COMPONENT  trace_t1driver
 
 
   static
-  FT_Error  get_z1_glyph_name( T1_Face     face,
+  FT_Error  get_t1_glyph_name( T1_Face     face,
                                FT_UInt     glyph_index,
                                FT_Pointer  buffer,
                                FT_UInt     buffer_max )
@@ -112,23 +112,23 @@
     FT_UNUSED( interface );
 
     if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
-      return (FT_Module_Interface)get_z1_glyph_name;
+      return (FT_Module_Interface)get_t1_glyph_name;
 
-#ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
-      return (FT_Module_Interface)Z1_Get_Multi_Master;
+      return (FT_Module_Interface)T1_Get_Multi_Master;
 
     if ( strcmp( (const char*)interface, "set_mm_design") == 0 )
-      return (FT_Module_Interface)Z1_Set_MM_Design;
+      return (FT_Module_Interface)T1_Set_MM_Design;
 
     if ( strcmp( (const char*)interface, "set_mm_blend") == 0 )
-      return (FT_Module_Interface)Z1_Set_MM_Blend;
+      return (FT_Module_Interface)T1_Set_MM_Blend;
 #endif
     return 0;
   }
 
 
-#ifndef Z1_CONFIG_OPTION_NO_AFM
+#ifndef T1_CONFIG_OPTION_NO_AFM
 
   /*************************************************************************/
   /*                                                                       */
@@ -168,15 +168,15 @@
                          FT_UInt     right_glyph,
                          FT_Vector*  kerning )
   {
-    Z1_AFM*  afm;
+    T1_AFM*  afm;
 
 
     kerning->x = 0;
     kerning->y = 0;
 
-    afm = (Z1_AFM*)face->afm_data;
+    afm = (T1_AFM*)face->afm_data;
     if ( afm )
-      Z1_Get_Kerning( afm, left_glyph, right_glyph, kerning );
+      T1_Get_Kerning( afm, left_glyph, right_glyph, kerning );
 
     return T1_Err_Ok;
   }
@@ -295,17 +295,17 @@
 
       0,   /* format interface */
 
-      (FT_Module_Constructor)Z1_Init_Driver,
-      (FT_Module_Destructor) Z1_Done_Driver,
+      (FT_Module_Constructor)T1_Init_Driver,
+      (FT_Module_Destructor) T1_Done_Driver,
       (FT_Module_Requester)  Get_Interface,
     },
 
     sizeof( T1_FaceRec ),
-    sizeof( Z1_SizeRec ),
-    sizeof( Z1_GlyphSlotRec ),
+    sizeof( T1_SizeRec ),
+    sizeof( T1_GlyphSlotRec ),
 
-    (FTDriver_initFace)     Z1_Init_Face,
-    (FTDriver_doneFace)     Z1_Done_Face,
+    (FTDriver_initFace)     T1_Init_Face,
+    (FTDriver_doneFace)     T1_Done_Face,
     (FTDriver_initSize)     0,
     (FTDriver_doneSize)     0,
     (FTDriver_initGlyphSlot)0,
@@ -313,15 +313,15 @@
 
     (FTDriver_setCharSizes) 0,
     (FTDriver_setPixelSizes)0,
-    (FTDriver_loadGlyph)    Z1_Load_Glyph,
+    (FTDriver_loadGlyph)    T1_Load_Glyph,
     (FTDriver_getCharIndex) Get_Char_Index,
 
-#ifdef Z1_CONFIG_OPTION_NO_AFM
+#ifdef T1_CONFIG_OPTION_NO_AFM
     (FTDriver_getKerning)   0,
     (FTDriver_attachFile)   0,
 #else
     (FTDriver_getKerning)   Get_Kerning,
-    (FTDriver_attachFile)   Z1_Read_AFM,
+    (FTDriver_attachFile)   T1_Read_AFM,
 #endif
     (FTDriver_getAdvances)  0
   };
@@ -331,7 +331,7 @@
 
   EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
   {
-    return &t1z_driver_class;
+    return &t1_driver_class;
   }
 
 #endif /* FT_CONFIG_OPTION_DYNAMIC_DRIVERS */

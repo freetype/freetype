@@ -1,14 +1,14 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftraster.h                                                             */
+/*  t1driver.h                                                             */
 /*                                                                         */
-/*    The FreeType glyph rasterizer (specification).                       */
+/*    High-level Type 1 driver interface (specification).                  */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -16,35 +16,24 @@
 /***************************************************************************/
 
 
-#ifndef FTRASTER_H
-#define FTRASTER_H
+#ifndef T1DRIVER_H
+#define T1DRIVER_H
+
+#include <freetype/internal/ftdriver.h>
 
 #ifdef __cplusplus
   extern "C" {
 #endif
 
-#include <freetype/ftimage.h>
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* Uncomment the following line if you are using ftraster.c as a         */
-  /* standalone module, fully independent of FreeType.                     */
-  /*                                                                       */
-/* #define _STANDALONE_ */
-
-#ifndef FT_EXPORT_VAR
-#define FT_EXPORT_VAR( x )  extern x
-#endif
-
-  FT_EXPORT_VAR( const FT_Raster_Funcs )  ft_standard_raster;
+  FT_EXPORT_VAR( const  FT_Driver_Class )  t1_driver_class;
 
 #ifdef __cplusplus
   }
 #endif
 
 
-#endif /* FTRASTER_H */
+#endif /* T1DRIVER_H */
 
 
 /* END */

@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1afm.h                                                                */
+/*  t1gload.h                                                              */
 /*                                                                         */
-/*    AFM support for Type 1 fonts (specification).                        */
+/*    Type 1 Glyph Loader (specification).                                 */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -16,17 +16,17 @@
 /***************************************************************************/
 
 
-#ifndef Z1AFM_H
-#define Z1AFM_H
+#ifndef T1GLOAD_H
+#define T1GLOAD_H
 
 
 #ifdef FT_FLAT_COMPILE
 
-#include "z1objs.h"
+#include "t1objs.h"
 
 #else
 
-#include <type1/z1objs.h>
+#include <type1/t1objs.h>
 
 #endif
 
@@ -36,36 +36,15 @@
 #endif
 
 
-  typedef struct  Z1_Kern_Pair_
-  {
-    FT_UInt    glyph1;
-    FT_UInt    glyph2;
-    FT_Vector  kerning;
-
-  } Z1_Kern_Pair;
-
-
-  typedef struct  Z1_AFM_
-  {
-    FT_Int         num_pairs;
-    Z1_Kern_Pair*  kern_pairs;
-
-  } Z1_AFM;
-
+  LOCAL_DEF
+  FT_Error  T1_Compute_Max_Advance( T1_Face  face,
+                                    FT_Int*  max_advance );
 
   LOCAL_DEF
-  FT_Error  Z1_Read_AFM( FT_Face    face,
-                         FT_Stream  stream );
-
-  LOCAL_DEF
-  void  Z1_Done_AFM( FT_Memory  memory,
-                     Z1_AFM*    afm );
-
-  LOCAL_DEF
-  void  Z1_Get_Kerning( Z1_AFM*     afm,
-                        FT_UInt     glyph1,
-                        FT_UInt     glyph2,
-                        FT_Vector*  kerning );
+  FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
+                           T1_Size       size,
+                           FT_Int        glyph_index,
+                           FT_Int        load_flags );
 
 
 #ifdef __cplusplus
@@ -73,7 +52,7 @@
 #endif
 
 
-#endif /* Z1AFM_H */
+#endif /* T1GLOAD_H */
 
 
 /* END */

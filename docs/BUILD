@@ -198,7 +198,7 @@ III. DETAILED COMPILATION PROCEDURE
     src/sfnt/sfnt.c           - the `sfnt' module
     src/smooth/smooth.c       - the anti-aliasing raster module
     src/truetype/truetype.c   - the TrueType font driver
-    src/type1z/type1z.c       - the Type 1 font driver
+    src/type1/type1.c         - the Type 1 font driver
 
   The last module of FreeType 2, winfonts (implementing support for
   Windows FNT format), is a single file.

@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1tokens.h                                                             */
+/*  t1tokens.h                                                             */
 /*                                                                         */
-/*    Experimental Type 1 tokenizer (specification).                       */
+/*    Type 1 tokenizer (specification).                                    */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
