@@ -1,3 +1,26 @@
+2004-06-23  David Turner   <david@freetype.org>
+
+        * include/freetype/internal/ftmemory.h, src/base/ftutil.c,
+        src/base/ftmemdbg.c: introducing the new FT_QAlloc and FT_QRealloc
+        functions that do perform allocation without zero-ing out the
+        corresponding blocks. Corresponding macros like FT_QALLOC, FT_QNEW,
+        etc.. have been defined too
+
+        * include/freetype/config/ftmodule.h: changed the order of modules
+        in order to _dramatically_ improve the performance of face open/close
+        operations. For example, putting the TrueType driver first in the
+        list results in a 5X speedup when opening Vera.ttf !!
+
+        The problem is really that the PCF and/or BDF drivers are broken
+        and do a lot more than necessary simply to detect that they
+        cannot handle the font file.
+
+        * src/sfnt/ttload.c: small optimization in the kerning table
+        verifier, speeds up TrueType face opening by about 7%.
+
+        Also changed code to use the new FT_QNEW_ARRAY call when
+        appropriate to slightly improve performance.
+
 2004-06-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfread.c (pcf_read_TOC, pcf_get_properties,
