@@ -12,6 +12,10 @@
 	* builds/unix/install-sh: Updated from
 	`texinfo' CVS module at subversions.gnu.org.
 
+	* builds/unix/ftsystem.c (FT_Stream_Open): Add proper cast for
+	ft_alloc.
+	Fix compiler warning.
+
 2004-12-27  Dirck Blaskey  <listtarget@danbala.com>
 
 	* src/cff/cffobjs.c (cff_face_init): Improve computation of
