@@ -1736,6 +1736,7 @@
     T1_LoaderRec   loader;
     T1_Parser      parser;
     T1_Font        type1 = &face->type1;
+    PS_Private     priv  = &type1->private_dict;
     FT_Error       error;
     FT_Byte        keyword_flags[T1_FIELD_COUNT];
 
@@ -1744,11 +1745,12 @@
 
     t1_init_loader( &loader, face );
 
-    /* default lenIV */
-    type1->private_dict.lenIV = 4;
-
-    /* default blue fuzz, we put it there since 0 is a valid value */
-    type1->private_dict.blue_fuzz = 1;
+    /* default values */
+    priv->blue_shift       = 7;
+    priv->blue_fuzz        = 1;
+    priv->lenIV            = 4;
+    priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
+    priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
 
     parser = &loader.parser;
     error  = T1_New_Parser( parser,

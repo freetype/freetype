@@ -1,4 +1,21 @@
-2004-02-17  Masatake YAMATO  <jet@gyve.org>
+2004-02-24  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/t1tables.h (PS_PrivateRec): Add
+	`expansion_factor'.
+
+	* src/pshinter/pshglob (psh_blues_scale_zones): Fix computation
+	of blues->no_overshoots -- `blues_scale' is stored with a
+	magnification of 1000, and `scale' returns fractional pixels.
+
+	* src/type1/t1load.c (T1_Open_Face): Initialize `blue_shift',
+	`blue_fuzz', `expansion_factor', and `blue_scale' according to the
+	Type 1 specification.
+
+	* src/type1/t1tokens.h: Handle `ExpansionFactor'.
+
+	* docs/CHANGES: Updated.
+
+2004-02-24  Masatake YAMATO  <jet@gyve.org>
 
 	Provide generic access to MacOS resource forks.
 

@@ -5,7 +5,7 @@
 /*    Basic Type 1/Type 2 tables definitions and interface (specification  */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -135,6 +135,8 @@ FT_BEGIN_HEADER
     FT_Short   snap_widths [13];  /* including std width  */
     FT_Short   snap_heights[13];  /* including std height */
 
+    FT_Fixed   expansion_factor;
+
     FT_Long    language_group;
     FT_Long    password;
 
@@ -163,7 +165,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A set of flags used to indicate which fields are present in a      */
-  /*    given blen dictionary (font info or private).  Used to support     */
+  /*    given blend dictionary (font info or private).  Used to support    */
   /*    Multiple Masters fonts.                                            */
   /*                                                                       */
   typedef enum
