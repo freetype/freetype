@@ -22,6 +22,7 @@
 #define FT_FRAME_OP_SHORT 3  /* read 2-byte value */
 #define FT_FRAME_OP_LONG  4  /* read 4-byte value */
 #define FT_FRAME_OP_OFF3  5  /* read 3-byte value */
+#define FT_FRAME_OP_BYTES 6  /* read a bytes sequence */
 
 typedef enum FT_Frame_Op_
 {
@@ -44,7 +45,9 @@ typedef enum FT_Frame_Op_
   ft_frame_uoff3_be  = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 0, 0 ),
   ft_frame_uoff3_le  = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 0, 1 ),
   ft_frame_off3_be   = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 1, 0 ),
-  ft_frame_off3_le   = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 1, 1 )
+  ft_frame_off3_le   = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 1, 1 ),
+  
+  ft_frame_bytes     = FT_MAKE_FRAME_OP( FT_FRAME_OP_BYTES, 0, 0 )
 
 } FT_Frame_Op;
 
@@ -86,6 +89,13 @@ typedef struct FT_Frame_Field_
 #define FT_FRAME_SKIP_LONG   { ft_frame_long_be, 0, 0 }
 #define FT_FRAME_SKIP_SHORT  { ft_frame_short_be, 0, 0 }
 #define FT_FRAME_SKIP_BYTE   { ft_frame_byte, 0, 0 }
+
+#define FT_FRAME_BYTES( struct_type, field, count )               \
+          {                                                       \
+            ft_frame_bytes,                                       \
+            count,                                                \
+            (FT_UShort)(char*)&FT_FIELD_REF(struct_type,field) }
+
 
 
   /*************************************************************************/

@@ -539,6 +539,21 @@
         fields++;
         continue;  /* loop! */
 
+      case ft_frame_bytes:  /* read a byte sequence */
+        {
+          FT_Int  len = stream->limit - stream->cursor;
+          
+          if (len > fields->size)
+            len = fields->size;
+
+          p = (FT_Byte*)structure + fields->offset;
+          MEM_Copy( p, stream->cursor, len );
+          stream->cursor += len;  
+          fields++;
+          continue;
+        }
+        
+
       case ft_frame_byte:
       case ft_frame_schar:  /* read a single byte */
         value = GET_Byte();
@@ -611,13 +626,12 @@
           value = 0;
           p     = stream->cursor;
 
-          if ( p + 3 < stream->limit )
+          if ( p + 2 < stream->limit )
           {
             value =   (FT_ULong)p[0]         |
                     ( (FT_ULong)p[1] << 8  ) |
-                    ( (FT_ULong)p[2] << 16 ) |
-                    ( (FT_ULong)p[3] << 24 );
-            stream->cursor += 4;
+                    ( (FT_ULong)p[2] << 16 );
+            stream->cursor += 3;
           }
           sign_shift = 8;
           break;

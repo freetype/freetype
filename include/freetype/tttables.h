@@ -418,7 +418,7 @@
         FT_Char    TypeFace[16];
 	FT_Char    CharacterComplement[8];
 	FT_Char    FileName[6];
-	FT_Char    StrokeWeight[6];
+	FT_Char    StrokeWeight;
 	FT_Char    WidthType;
 	FT_Byte    SerifStyle;
 	FT_Byte    Reserved;

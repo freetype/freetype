@@ -1330,7 +1330,7 @@
   {
     static const FT_Frame_Field  pclt_fields[] =
     {
-      FT_FRAME_START( 20 ),
+      FT_FRAME_START( 54 ),
         FT_FRAME_ULONG ( TT_PCLT, Version ),
         FT_FRAME_ULONG ( TT_PCLT, FontNumber ),
         FT_FRAME_USHORT( TT_PCLT, Pitch ),
@@ -1338,16 +1338,19 @@
         FT_FRAME_USHORT( TT_PCLT, Style ),
         FT_FRAME_USHORT( TT_PCLT, TypeFamily ),
         FT_FRAME_USHORT( TT_PCLT, CapHeight ),
+        FT_FRAME_BYTES ( TT_PCLT, TypeFace, 16 ),
+        FT_FRAME_BYTES ( TT_PCLT, CharacterComplement, 8 ),
+        FT_FRAME_BYTES ( TT_PCLT, FileName, 6 ),
+        FT_FRAME_CHAR  ( TT_PCLT, StrokeWeight ),
+        FT_FRAME_CHAR  ( TT_PCLT, WidthType ),
+        FT_FRAME_BYTE  ( TT_PCLT, SerifStyle ),
+        FT_FRAME_BYTE  ( TT_PCLT, Reserved ),
       FT_FRAME_END
     };
 
     static const FT_Frame_Field  pclt_fields2[] =
     {
       FT_FRAME_START( 4 ),
-        FT_FRAME_CHAR( TT_PCLT, StrokeWeight ),
-        FT_FRAME_CHAR( TT_PCLT, WidthType ),
-        FT_FRAME_BYTE( TT_PCLT, SerifStyle ),
-        FT_FRAME_BYTE( TT_PCLT, Reserved ),
       FT_FRAME_END
     };
 
@@ -1366,11 +1369,7 @@
       return TT_Err_Ok;
     }
 
-    if ( READ_Fields( pclt_fields, pclt )            ||
-         FILE_Read  ( pclt->TypeFace, 16 )           ||
-         FILE_Read  ( pclt->CharacterComplement, 8 ) ||
-         FILE_Read  ( pclt->FileName, 6 )            ||
-         READ_Fields( pclt_fields2, pclt )           )
+    if ( READ_Fields( pclt_fields, pclt ) )
       goto Exit;
 
     FT_TRACE2(( "loaded\n" ));
