@@ -141,7 +141,7 @@ FT_BEGIN_HEADER
   /*    debug level in your appliaciton.                                   */
   /*                                                                       */
   FT_EXPORT( const char * )
-  FT_Trace_Get_Name( FT_Int  index );
+  FT_Trace_Get_Name( FT_Int  idx );
 
 
   /*************************************************************************/
