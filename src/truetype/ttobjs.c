@@ -749,33 +749,39 @@
 
     if ( !error )
     {
+      /* XXX: TODO: move this code to the SFNT module where it belongs */
+#ifdef FT_OPTIMIZE_MEMORY
+      FT_Byte*    strike = face->sbit_table + 8 + strike_index*48;
+
+      sbit_metrics->ascender  = (FT_Char)strike[16] << 6;  /* hori.ascender */
+      sbit_metrics->descender = (FT_Char)strike[17] << 6;  /* hori.descender */
+
+      /* XXX: Is this correct? */
+      sbit_metrics->max_advance = ( (FT_Char)strike[22] + /* min_origin_SB */
+                                             strike[18] + /* max_width */
+                                    (FT_Char)strike[23]   /* min_advance_SB */
+                                                        ) << 6;
+
+#else /* !OPTIMIZE_MEMORY */
       TT_SBit_Strike  strike = face->sbit_strikes + strike_index;
 
-
-      sbit_metrics->x_ppem = metrics->x_ppem;
-      sbit_metrics->y_ppem = metrics->y_ppem;
-#if 0
-      /*
-       * sbit_metrics->?_scale
-       * are not used now.
-       */
-      sbit_metrics->x_scale = 1 << 16;
-      sbit_metrics->y_scale = 1 << 16;
-#endif
 
       sbit_metrics->ascender  = strike->hori.ascender << 6;
       sbit_metrics->descender = strike->hori.descender << 6;
 
       /* XXX: Is this correct? */
-      sbit_metrics->height = sbit_metrics->ascender -
-                             sbit_metrics->descender;
-
-      /* XXX: Is this correct? */
       sbit_metrics->max_advance = ( strike->hori.min_origin_SB  +
                                     strike->hori.max_width      +
                                     strike->hori.min_advance_SB ) << 6;
+#endif /* !OPTIMIZE_MEMORY */
 
-      size->strike_index = (FT_UInt)strike_index;
+      /* XXX: Is this correct? */
+      sbit_metrics->height = sbit_metrics->ascender -
+                             sbit_metrics->descender;
+
+      sbit_metrics->x_ppem = metrics->x_ppem;
+      sbit_metrics->y_ppem = metrics->y_ppem;
+      size->strike_index   = (FT_UInt)strike_index;
     }
     else
     {

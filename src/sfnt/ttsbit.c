@@ -15,6 +15,14 @@
 /*                                                                         */
 /***************************************************************************/
 
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_STREAM_H
+#include FT_TRUETYPE_TAGS_H
+
+#ifdef FT_OPTIMIZE_MEMORY
+#include "ttsbit0.c"
+#else /* !OPTIMIZE_MEMORY */
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
@@ -407,7 +415,7 @@
     FT_ULong   num_strikes;
     FT_ULong   table_base;
 
-    const FT_Frame_Field  sbit_line_metrics_fields[] =
+    static const FT_Frame_Field  sbit_line_metrics_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_LineMetricsRec
@@ -430,7 +438,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  strike_start_fields[] =
+    static const FT_Frame_Field  strike_start_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_StrikeRec
@@ -443,7 +451,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  strike_end_fields[] =
+    static const FT_Frame_Field  strike_end_fields[] =
     {
       /* no FT_FRAME_START */
         FT_FRAME_USHORT( start_glyph ),
@@ -574,6 +582,42 @@
         count--;
         strike++;
       }
+    }
+
+   /* now set up the root fields to indicate the strikes
+    */
+    if ( face->num_sbit_strikes )
+    {
+      FT_ULong  n;
+      FT_Face   root = FT_FACE(face);
+
+
+      if ( FT_NEW_ARRAY( root->available_sizes, face->num_sbit_strikes ) )
+        goto Exit;
+
+      for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
+      {
+        FT_Bitmap_Size*  bsize  = root->available_sizes + n;
+        TT_SBit_Strike   strike = face->sbit_strikes + n;
+        FT_UShort        fupem  = face->header.Units_Per_EM;
+        FT_Short         height = (FT_Short)( face->horizontal.Ascender -
+                                              face->horizontal.Descender +
+                                              face->horizontal.Line_Gap );
+        FT_Short         avg    = face->os2.xAvgCharWidth;
+
+
+        /* assume 72dpi */
+        bsize->height =
+          (FT_Short)( ( height * strike->y_ppem + fupem/2 ) / fupem );
+        bsize->width  =
+          (FT_Short)( ( avg * strike->y_ppem + fupem/2 ) / fupem );
+        bsize->size   = strike->y_ppem << 6;
+        bsize->x_ppem = strike->x_ppem << 6;
+        bsize->y_ppem = strike->y_ppem << 6;
+      }
+
+      root->face_flags     |= FT_FACE_FLAG_FIXED_SIZES;
+      root->num_fixed_sizes = (FT_Int)face->num_sbit_strikes;
     }
 
   Exit:
@@ -1472,3 +1516,4 @@
 
 
 /* END */
+#endif /* !OPTIMIZE_MEMORY */

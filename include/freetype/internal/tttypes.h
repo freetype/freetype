@@ -1263,8 +1263,14 @@ FT_BEGIN_HEADER
     TT_PCLT               pclt;
 
     /* embedded bitmaps support */
+#ifdef FT_OPTIMIZE_MEMORY
+    FT_Byte*              sbit_table;
+    FT_ULong              sbit_table_size;
+    FT_UInt               sbit_num_strikes;
+#else
     FT_ULong              num_sbit_strikes;
     TT_SBit_Strike        sbit_strikes;
+#endif
 
     FT_ULong              num_sbit_scales;
     TT_SBit_Scale         sbit_scales;

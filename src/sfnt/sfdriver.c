@@ -366,8 +366,8 @@
     /* see `ttsbit.h' and `sfnt.h' */
     tt_face_set_sbit_strike,
     tt_face_load_sbit_strikes,
-    tt_find_sbit_image,
-    tt_load_sbit_metrics,
+    NULL /* tt_find_sbit_image */,
+    NULL /* tt_load_sbit_metrics */,
     tt_face_load_sbit_image,
     tt_face_free_sbit_strikes,
 
@@ -376,8 +376,8 @@
     0,
     0,
     0,
-    0, 
-    0, 
+    0,
+    0,
     0,
     0,
 

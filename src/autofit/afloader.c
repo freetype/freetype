@@ -54,6 +54,8 @@
   FT_LOCAL_DEF( void )
   af_loader_done( AF_Loader   loader )
   {
+    af_glyph_hints_done( &loader->hints );
+
     loader->face    = NULL;
     loader->globals = NULL;
 
