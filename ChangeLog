@@ -1,5 +1,11 @@
 2002-01-31  David Turner  <david@freetype.org>
 
+    * docs/CHANGES, docs/VERSION.DLL, docs/TODO: updating documentation for
+    the 2.1.4 release
+
+    * builds/win32/visualc/freetype.dsp, builds/win32/visualc/index.html:
+    updating the project file for 2.1.4
+
     * src/gzip/adler32.c, src/gzip/ftgzip.c, src/gzip/infblock.c,
     src/gzip/infcodes.c, src/gzip/inflate.c, src/gzip/inftrees.c,
     src/gzip/infutil.c: removed old-style (K&R)function definitions. This
