@@ -1,9 +1,17 @@
 2002-07-11  David Turner  <david@freetype.org>
 
+    * src/sfnt/ttload.c, src/sfnt/ttload.h, src/sfnt/ttdriver.c: changing
+    the SFNT loader to check for SFNT-based font files differently. We now
+    ignore the range "helper" fields and check the "head" table's magic
+    number instead.
+
+    * src/base/ftobject.c, src/base/fthash.c: updated object sub-system and
+    dynamic hash table implementation (still experimental, don't use)
+
     * include/freetype/t1tables.h, include/freetype/internal/psaux.h,
     src/psaux/psobjs.c, src/type1/t1load.c, src/type1/t1tokens.h:
     fixing a bug in the Type 1 loader that prevented valid font bounding
-    boxes to be loaded from multiple master fonts. 
+    boxes to be loaded from multiple master fonts.
 
 2002-07-10  David Turner  <david@freetype.org>
 

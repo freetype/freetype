@@ -312,6 +312,7 @@
 
       return (clazz == NULL);
     }
+    return 0;
   }
 
 

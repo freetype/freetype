@@ -135,6 +135,91 @@
   }
 
 
+ /* in theory, we should check the values of `search_range',               */
+ /* `entry_selector' and `range_shift' to detect non-SFNT based files      */
+ /* whose header might also start with 0x100000L (yes, these exist).       */
+ /*                                                                        */
+ /* Very unfortunately, many TrueType fonts don't have these fields        */
+ /* set correctly and we must ignore them to support them. An alternative  */
+ /* way to check the font file is thus to:                                 */
+ /*                                                                        */
+ /* - check that `num_tables' is valid                                     */
+ /* - look for a "head" table, check its size, and parse it to             */
+ /*   see if its "magic" field is correctly set to                         */
+ /*                                                                        */
+ /* Voila, here comes robust though tolerant font format checking :-)      */
+ /*                                                                        */
+  static FT_Error
+  sfnt_dir_check( FT_Stream    stream,
+                  FT_ULong     offset,
+                  FT_UInt      num_tables )
+  {
+    FT_Error  error;
+    FT_UInt   nn;
+
+    static const FT_Frame_Field  sfnt_dir_entry_fields[] =
+    {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_TableRec
+
+      FT_FRAME_START( 16 ),
+        FT_FRAME_ULONG( Tag ),
+        FT_FRAME_ULONG( CheckSum ),
+        FT_FRAME_ULONG( Offset ),
+        FT_FRAME_ULONG( Length ),
+      FT_FRAME_END
+    };
+
+    /* if 'num_tables' is 0, read the table count from the file */
+    if ( num_tables == 0 )
+    {
+      FT_ULong  format_tag;
+
+      if ( FT_STREAM_SEEK( offset )     ||
+           FT_READ_ULONG ( format_tag ) ||
+           FT_READ_USHORT( num_tables ) ||
+           FT_STREAM_SKIP( 6 )          )
+        goto Bad_Format;
+
+      if ( offset + 12 + num_tables*16 > stream->size )
+        goto Bad_Format;
+    }
+    else if ( FT_STREAM_SEEK( offset + 12 ) )
+      goto Bad_Format;
+
+    for ( nn = 0; nn < num_tables; nn++ )
+    {
+      TT_TableRec  table;
+
+      if ( FT_STREAM_READ_FIELDS( sfnt_dir_entry_fields, &table ) )
+        goto Bad_Format;
+
+      if ( offset + table.Offset + table.Length > stream->size )
+        goto Bad_Format;
+
+      if ( table.Tag == TTAG_head )
+      {
+        FT_UInt32  magic;
+
+        if ( table.Length != 0x36                         ||
+             FT_STREAM_SEEK( offset + table.Offset + 12 ) ||
+             FT_READ_ULONG( magic )                       ||
+             magic != 0x5F0F3CF5U                         )
+          goto Bad_Format;
+
+        if ( FT_STREAM_SEEK( offset + 28 + 16*nn ) )
+          goto Bad_Format;
+      }
+    }
+
+  Exit:
+    return  error;
+
+  Bad_Format:
+    error = FT_Err_Unknown_File_Format;
+    goto Exit;
+  }
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -166,16 +251,16 @@
   /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_SFNT_HeaderRec( TT_Face       face,
-                          FT_Stream     stream,
-                          FT_Long       face_index,
-                          SFNT_Header   sfnt )
+  TT_Load_SFNT_Header( TT_Face       face,
+                       FT_Stream     stream,
+                       FT_Long       face_index,
+                       SFNT_Header   sfnt )
   {
     FT_Error   error;
-    FT_ULong   format_tag;
+    FT_ULong   format_tag, offset;
     FT_Memory  memory = stream->memory;
 
-    const FT_Frame_Field  sfnt_header_fields[] =
+    static const FT_Frame_Field  sfnt_header_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  SFNT_HeaderRec
@@ -188,7 +273,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  ttc_header_fields[] =
+    static const FT_Frame_Field  ttc_header_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TTC_HeaderRec
@@ -200,7 +285,7 @@
     };
 
 
-    FT_TRACE2(( "TT_Load_SFNT_HeaderRec: %08p, %ld\n",
+    FT_TRACE2(( "TT_Load_SFNT_Header: %08p, %ld\n",
                 face, face_index ));
 
     face->ttc_header.tag     = 0;
@@ -213,6 +298,8 @@
     /* file is a TrueType collection, otherwise it can be any other     */
     /* kind of font.                                                    */
     /*                                                                  */
+    offset = FT_STREAM_POS();
+
     if ( FT_READ_ULONG( format_tag ) )
       goto Exit;
 
@@ -221,7 +308,7 @@
       FT_Int  n;
 
 
-      FT_TRACE3(( "TT_Load_SFNT_HeaderRec: file is a collection\n" ));
+      FT_TRACE3(( "TT_Load_SFNT_Header: file is a collection\n" ));
 
       /* It is a TrueType collection, i.e. a file containing several */
       /* font files.  Read the font directory now                    */
@@ -246,32 +333,26 @@
       }
 
       /* seek to the appropriate TrueType file, then read tag */
-      if ( FT_STREAM_SEEK( face->ttc_header.offsets[face_index] ) ||
+      offset = face->ttc_header.offsets[ face_index ];
+
+      if ( FT_STREAM_SEEK( offset ) ||
            FT_READ_LONG( format_tag )                             )
         goto Exit;
     }
 
     /* the format tag was read, now check the rest of the header */
     sfnt->format_tag = format_tag;
+    sfnt->offset     = offset;
+
     if ( FT_STREAM_READ_FIELDS( sfnt_header_fields, sfnt ) )
       goto Exit;
 
-    /* now, check the values of `num_tables', `seach_range', etc. */
+    /* now check the sfnt directory */
+    error = sfnt_dir_check( stream, offset, sfnt->num_tables );
+    if ( error )
     {
-      FT_UInt   num_tables     = sfnt->num_tables;
-      FT_ULong  entry_selector = 1L << sfnt->entry_selector;
-
-
-      /* IMPORTANT: Many fonts have an incorrect `search_range' value, so */
-      /*            we only check the `entry_selector' correctness here.  */
-      /*                                                                  */
-      if ( num_tables == 0                  ||
-           entry_selector > num_tables      ||
-           entry_selector * 2 <= num_tables )
-      {
-        FT_TRACE2(( "TT_Load_SFNT_HeaderRec: file is not SFNT!\n" ));
-        error = SFNT_Err_Unknown_File_Format;
-      }
+      FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT!\n" ));
+      error = SFNT_Err_Unknown_File_Format;
     }
 
   Exit:
@@ -322,7 +403,8 @@
     if ( FT_NEW_ARRAY( face->dir_tables, face->num_tables ) )
       goto Exit;
 
-    if ( FT_FRAME_ENTER( face->num_tables * 16L ) )
+    if ( FT_STREAM_SEEK( sfnt->offset + 12 )      ||
+         FT_FRAME_ENTER( face->num_tables * 16L ) )
       goto Exit;
 
     entry = face->dir_tables;

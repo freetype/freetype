@@ -100,6 +100,8 @@ FT_BEGIN_HEADER
     FT_UShort  entry_selector;
     FT_UShort  range_shift;
 
+    FT_ULong   offset;  /* not in file */
+
   } SFNT_HeaderRec, *SFNT_Header;
 
 
