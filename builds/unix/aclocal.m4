@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.8a -*- Autoconf -*-
+# generated automatically by aclocal 1.9.4 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 # Free Software Foundation, Inc.
@@ -191,6 +191,8 @@ if test -n "$RANLIB"; then
   old_archive_cmds="$old_archive_cmds~\$RANLIB \$oldlib"
 fi
 
+cc_basename=`$echo X"$compiler" | $Xsed -e 's%^.*/%%'`
+
 # Only perform the check for file, if the check method requires it
 case $deplibs_check_method in
 file_magic*)
@@ -308,7 +310,7 @@ fi
 
 # The HP-UX ksh and POSIX shell print the target directory to stdout
 # if CDPATH is set.
-if test "X${CDPATH+set}" = Xset; then CDPATH=:; export CDPATH; fi
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
 
 if test -z "$ECHO"; then
 if test "X${echo_test_string+set}" != Xset; then
@@ -667,11 +669,25 @@ AC_CACHE_VAL([lt_cv_sys_max_cmd_len], [dnl
     lt_cv_sys_max_cmd_len=8192;
     ;;
 
+  netbsd* | freebsd* | openbsd* | darwin* )
+    # This has been around since 386BSD, at least.  Likely further.
+    if test -x /sbin/sysctl; then
+      lt_cv_sys_max_cmd_len=`/sbin/sysctl -n kern.argmax`
+    elif test -x /usr/sbin/sysctl; then
+      lt_cv_sys_max_cmd_len=`/usr/sbin/sysctl -n kern.argmax`
+    else
+      lt_cv_sys_max_cmd_len=65536 # usable default for *BSD
+    fi
+    # And add a safety zone
+    lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+    ;;
+
  *)
     # If test is not a shell built-in, we'll probably end up computing a
     # maximum length that is only half of the actual maximum length, but
     # we can't tell.
-    while (test "X"`$CONFIG_SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
+    SHELL=${SHELL-${CONFIG_SHELL-/bin/sh}}
+    while (test "X"`$SHELL [$]0 --fallback-echo "X$teststring" 2>/dev/null` \
 	       = "XX$teststring") >/dev/null 2>&1 &&
 	    new_result=`expr "X$teststring" : ".*" 2>&1` &&
 	    lt_cv_sys_max_cmd_len=$new_result &&
@@ -1005,8 +1021,8 @@ AC_DEFUN([AC_LIBTOOL_PROG_LD_HARDCODE_LIBPATH],
 [AC_MSG_CHECKING([how to hardcode library paths into programs])
 _LT_AC_TAGVAR(hardcode_action, $1)=
 if test -n "$_LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)" || \
-   test -n "$_LT_AC_TAGVAR(runpath_var $1)" || \
-   test "X$_LT_AC_TAGVAR(hardcode_automatic, $1)"="Xyes" ; then
+   test -n "$_LT_AC_TAGVAR(runpath_var, $1)" || \
+   test "X$_LT_AC_TAGVAR(hardcode_automatic, $1)" = "Xyes" ; then
 
   # We can hardcode non-existant directories.
   if test "$_LT_AC_TAGVAR(hardcode_direct, $1)" != no &&
@@ -1173,7 +1189,7 @@ beos*)
   shlibpath_var=LIBRARY_PATH
   ;;
 
-bsdi4*)
+bsdi[[45]]*)
   version_type=linux
   need_version=no
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
@@ -1497,7 +1513,7 @@ nto-qnx*)
 openbsd*)
   version_type=sunos
   need_lib_prefix=no
-  need_version=yes
+  need_version=no
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${shared_ext}$versuffix'
   finish_cmds='PATH="\$PATH:/sbin" ldconfig -m $libdir'
   shlibpath_var=LD_LIBRARY_PATH
@@ -1663,7 +1679,9 @@ if test -f "$ltmain" && test -n "$tagnames"; then
 
       case $tagname in
       CXX)
-	if test -n "$CXX" && test "X$CXX" != "Xno"; then
+	if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
+	    ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) || 
+	    (test "X$CXX" != "Xg++"))) ; then
 	  AC_LIBTOOL_LANG_CXX_CONFIG
 	else
 	  tagname=""
@@ -2068,6 +2086,15 @@ case $reload_flag in
 *) reload_flag=" $reload_flag" ;;
 esac
 reload_cmds='$LD$reload_flag -o $output$reload_objs'
+case $host_os in
+  darwin*)
+    if test "$GCC" = yes; then
+      reload_cmds='$CC -nostdlib ${wl}-r -o $output$reload_objs'
+    else
+      reload_cmds='$LD$reload_flag -o $output$reload_objs'
+    fi
+    ;;
+esac
 ])# AC_PROG_LD_RELOAD_FLAG
 
 
@@ -2101,7 +2128,7 @@ beos*)
   lt_cv_deplibs_check_method=pass_all
   ;;
 
-bsdi4*)
+bsdi[[45]]*)
   lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib)'
   lt_cv_file_magic_cmd='/usr/bin/file -L'
   lt_cv_file_magic_test_file=/shlib/libc.so
@@ -2174,15 +2201,6 @@ irix5* | irix6* | nonstopux*)
 
 # This must be Linux ELF.
 linux*)
-  case $host_cpu in
-  alpha*|hppa*|i*86|ia64*|m68*|mips*|powerpc*|sparc*|s390*|sh*)
-    lt_cv_deplibs_check_method=pass_all ;;
-  *)
-    # glibc up to 2.1.1 does not perform some relocations on ARM
-    # this will be overridden with pass_all, but let us keep it just in case
-    lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[LM]]SB (shared object|dynamic lib )' ;;
-  esac
-  lt_cv_file_magic_test_file=`echo /lib/libc.so* /lib/libc-*.so`
   lt_cv_deplibs_check_method=pass_all
   ;;
 
@@ -2205,12 +2223,10 @@ nto-qnx*)
   ;;
 
 openbsd*)
-  lt_cv_file_magic_cmd=/usr/bin/file
-  lt_cv_file_magic_test_file=`echo /usr/lib/libc.so.*`
   if test -z "`echo __ELF__ | $CC -E - | grep __ELF__`" || test "$host_os-$host_cpu" = "openbsd2.8-powerpc"; then
-    lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[LM]]SB shared object'
+    lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|\.so|_pic\.a)$'
   else
-    lt_cv_deplibs_check_method='file_magic OpenBSD.* shared library'
+    lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|_pic\.a)$'
   fi
   ;;
 
@@ -2400,10 +2416,21 @@ AC_DEFUN([AC_LIBTOOL_CXX],
 # ---------------
 AC_DEFUN([_LT_AC_LANG_CXX],
 [AC_REQUIRE([AC_PROG_CXX])
-AC_REQUIRE([AC_PROG_CXXCPP])
+AC_REQUIRE([_LT_AC_PROG_CXXCPP])
 _LT_AC_SHELL_INIT([tagnames=${tagnames+${tagnames},}CXX])
 ])# _LT_AC_LANG_CXX
 
+# _LT_AC_PROG_CXXCPP
+# ---------------
+AC_DEFUN([_LT_AC_PROG_CXXCPP],
+[
+AC_REQUIRE([AC_PROG_CXX])
+if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
+    ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) || 
+    (test "X$CXX" != "Xg++"))) ; then
+  AC_PROG_CXXCPP
+fi
+])# _LT_AC_PROG_CXXCPP
 
 # AC_LIBTOOL_F77
 # --------------
@@ -2539,43 +2566,6 @@ aix4* | aix5*)
   if test "$host_cpu" != ia64 && test "$aix_use_runtimelinking" = no ; then
     test "$enable_shared" = yes && enable_static=no
   fi
-  ;;
-  darwin* | rhapsody*)
-  if test "$GCC" = yes; then
-    _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
-    case "$host_os" in
-    rhapsody* | darwin1.[[012]])
-      _LT_AC_TAGVAR(allow_undefined_flag, $1)='-undefined suppress'
-      ;;
-    *) # Darwin 1.3 on
-      if test -z ${MACOSX_DEPLOYMENT_TARGET} ; then
-      	_LT_AC_TAGVAR(allow_undefined_flag, $1)='-flat_namespace -undefined suppress'
-      else
-        case ${MACOSX_DEPLOYMENT_TARGET} in
-          10.[[012]])
-            _LT_AC_TAGVAR(allow_undefined_flag, $1)='-flat_namespace -undefined suppress'
-            ;;
-          10.*)
-            _LT_AC_TAGVAR(allow_undefined_flag, $1)='-undefined dynamic_lookup'
-            ;;
-        esac
-      fi
-      ;;
-    esac
-    output_verbose_link_cmd='echo'
-    _LT_AC_TAGVAR(archive_cmds, $1)='$CC -dynamiclib $allow_undefined_flag -o $lib $libobjs $deplibs$compiler_flags -install_name $rpath/$soname $verstring'
-    _LT_AC_TAGVAR(module_cmds, $1)='$CC $allow_undefined_flag -o $lib -bundle $libobjs $deplibs$compiler_flags'
-    # Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin ld's
-    _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -dynamiclib $allow_undefined_flag  -o $lib $libobjs $deplibs$compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
-    _LT_AC_TAGVAR(module_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC $allow_undefined_flag  -o $lib -bundle $libobjs $deplibs$compiler_flags~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
-    _LT_AC_TAGVAR(hardcode_direct, $1)=no
-    _LT_AC_TAGVAR(hardcode_automatic, $1)=yes
-    _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
-    _LT_AC_TAGVAR(whole_archive_flag_spec, $1)='-all_load $convenience'
-    _LT_AC_TAGVAR(link_all_deplibs, $1)=yes
-  else
-    _LT_AC_TAGVAR(ld_shlibs, $1)=no
-  fi
     ;;
 esac
 AC_MSG_RESULT([$enable_shared])
@@ -2601,7 +2591,7 @@ AC_DEFUN([AC_LIBTOOL_LANG_CXX_CONFIG], [_LT_AC_LANG_CXX_CONFIG(CXX)])
 AC_DEFUN([_LT_AC_LANG_CXX_CONFIG],
 [AC_LANG_PUSH(C++)
 AC_REQUIRE([AC_PROG_CXX])
-AC_REQUIRE([AC_PROG_CXXCPP])
+AC_REQUIRE([_LT_AC_PROG_CXXCPP])
 
 _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
 _LT_AC_TAGVAR(allow_undefined_flag, $1)=
@@ -2853,6 +2843,7 @@ case $host_os in
     esac
     ;;
 
+
   cygwin* | mingw* | pw32*)
     # _LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1) is actually meaningless,
     # as there is no search path for DLLs.
@@ -2876,57 +2867,68 @@ case $host_os in
       _LT_AC_TAGVAR(ld_shlibs, $1)=no
     fi
   ;;
-
-  darwin* | rhapsody*)
-  if test "$GXX" = yes; then
-    _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
-    case "$host_os" in
-    rhapsody* | darwin1.[[012]])
-      _LT_AC_TAGVAR(allow_undefined_flag, $1)='-undefined suppress'
-      ;;
-    *) # Darwin 1.3 on
-      if test -z ${MACOSX_DEPLOYMENT_TARGET} ; then
-      	_LT_AC_TAGVAR(allow_undefined_flag, $1)='-flat_namespace -undefined suppress'
-      else
-        case ${MACOSX_DEPLOYMENT_TARGET} in
-          10.[[012]])
-            _LT_AC_TAGVAR(allow_undefined_flag, $1)='-flat_namespace -undefined suppress'
-            ;;
-          10.*)
-            _LT_AC_TAGVAR(allow_undefined_flag, $1)='-undefined dynamic_lookup'
-            ;;
+      darwin* | rhapsody*)
+        case "$host_os" in
+        rhapsody* | darwin1.[[012]])
+         _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}suppress'
+         ;;
+       *) # Darwin 1.3 on
+         if test -z ${MACOSX_DEPLOYMENT_TARGET} ; then
+           _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
+         else
+           case ${MACOSX_DEPLOYMENT_TARGET} in
+             10.[[012]])
+               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
+               ;;
+             10.*)
+               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}dynamic_lookup'
+               ;;
+           esac
+         fi
+         ;;
         esac
-      fi
-      ;;
-    esac
-    lt_int_apple_cc_single_mod=no
-    output_verbose_link_cmd='echo'
-    if $CC -dumpspecs 2>&1 | grep 'single_module' >/dev/null ; then
-      lt_int_apple_cc_single_mod=yes
-    fi
-    if test "X$lt_int_apple_cc_single_mod" = Xyes ; then
-      _LT_AC_TAGVAR(archive_cmds, $1)='$CC -dynamiclib -single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring'
-    else
-      _LT_AC_TAGVAR(archive_cmds, $1)='$CC -r ${wl}-bind_at_load -keep_private_externs -nostdlib -o ${lib}-master.o $libobjs~$CC -dynamiclib $allow_undefined_flag -o $lib ${lib}-master.o $deplibs $compiler_flags -install_name $rpath/$soname $verstring'
-    fi
-    _LT_AC_TAGVAR(module_cmds, $1)='$CC ${wl}-bind_at_load $allow_undefined_flag -o $lib -bundle $libobjs $deplibs$compiler_flags'
+      _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
+      _LT_AC_TAGVAR(hardcode_direct, $1)=no
+      _LT_AC_TAGVAR(hardcode_automatic, $1)=yes
+      _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
+      _LT_AC_TAGVAR(whole_archive_flag_spec, $1)=''
+      _LT_AC_TAGVAR(link_all_deplibs, $1)=yes
 
-    # Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin ld's
-    if test "X$lt_int_apple_cc_single_mod" = Xyes ; then
-      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -dynamiclib -single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
-    else
-      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -r ${wl}-bind_at_load -keep_private_externs -nostdlib -o ${lib}-master.o $libobjs~$CC -dynamiclib $allow_undefined_flag -o $lib ${lib}-master.o $deplibs $compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
-    fi
-    _LT_AC_TAGVAR(module_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC $allow_undefined_flag  -o $lib -bundle $libobjs $deplibs$compiler_flags~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
-    _LT_AC_TAGVAR(hardcode_direct, $1)=no
-    _LT_AC_TAGVAR(hardcode_automatic, $1)=yes
-    _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
-    _LT_AC_TAGVAR(whole_archive_flag_spec, $1)='-all_load $convenience'
-    _LT_AC_TAGVAR(link_all_deplibs, $1)=yes
-  else
-    _LT_AC_TAGVAR(ld_shlibs, $1)=no
-  fi
-    ;;
+    if test "$GXX" = yes ; then
+      lt_int_apple_cc_single_mod=no
+      output_verbose_link_cmd='echo'
+      if $CC -dumpspecs 2>&1 | $EGREP 'single_module' >/dev/null ; then
+       lt_int_apple_cc_single_mod=yes
+      fi
+      if test "X$lt_int_apple_cc_single_mod" = Xyes ; then
+       _LT_AC_TAGVAR(archive_cmds, $1)='$CC -dynamiclib -single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring'
+      else
+          _LT_AC_TAGVAR(archive_cmds, $1)='$CC -r -keep_private_externs -nostdlib -o ${lib}-master.o $libobjs~$CC -dynamiclib $allow_undefined_flag -o $lib ${lib}-master.o $deplibs $compiler_flags -install_name $rpath/$soname $verstring'
+        fi
+        _LT_AC_TAGVAR(module_cmds, $1)='$CC $allow_undefined_flag -o $lib -bundle $libobjs $deplibs$compiler_flags'
+        # Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin ld's
+          if test "X$lt_int_apple_cc_single_mod" = Xyes ; then
+            _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -dynamiclib -single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+          else
+            _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -r -keep_private_externs -nostdlib -o ${lib}-master.o $libobjs~$CC -dynamiclib $allow_undefined_flag -o $lib ${lib}-master.o $deplibs $compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+          fi
+            _LT_AC_TAGVAR(module_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC $allow_undefined_flag  -o $lib -bundle $libobjs $deplibs$compiler_flags~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+      else
+      case "$cc_basename" in
+        xlc*)
+         output_verbose_link_cmd='echo'
+          _LT_AC_TAGVAR(archive_cmds, $1)='$CC -qmkshrobj ${wl}-single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags ${wl}-install_name ${wl}`echo $rpath/$soname` $verstring'
+          _LT_AC_TAGVAR(module_cmds, $1)='$CC $allow_undefined_flag -o $lib -bundle $libobjs $deplibs$compiler_flags'
+          # Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin ld's
+          _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -qmkshrobj ${wl}-single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags ${wl}-install_name ${wl}$rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+          _LT_AC_TAGVAR(module_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC $allow_undefined_flag  -o $lib -bundle $libobjs $deplibs$compiler_flags~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+          ;;
+       *)
+         _LT_AC_TAGVAR(ld_shlibs, $1)=no
+          ;;
+      esac
+      fi
+        ;;
 
   dgux*)
     case $cc_basename in
@@ -3132,9 +3134,20 @@ case $host_os in
       icpc)
 	# Intel C++
 	with_gnu_ld=yes
+	# version 8.0 and above of icpc choke on multiply defined symbols
+	# if we add $predep_objects and $postdep_objects, however 7.1 and
+	# earlier do not add the objects themselves.
+	case `$CC -V 2>&1` in
+	*"Version 7."*)
+  	  _LT_AC_TAGVAR(archive_cmds, $1)='$CC -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
+  	  _LT_AC_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+	  ;;
+	*)  # Version 8.0 or newer
+  	  _LT_AC_TAGVAR(archive_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+  	_LT_AC_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
+	  ;;
+	esac
 	_LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
-	_LT_AC_TAGVAR(archive_cmds, $1)='$CC -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
-	_LT_AC_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
 	_LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
 	_LT_AC_TAGVAR(export_dynamic_flag_spec, $1)='${wl}--export-dynamic'
 	_LT_AC_TAGVAR(whole_archive_flag_spec, $1)='${wl}--whole-archive$convenience ${wl}--no-whole-archive'
@@ -3190,6 +3203,22 @@ case $host_os in
     fi
     # Workaround some broken pre-1.5 toolchains
     output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | grep conftest.$objext | $SED -e "s:-lgcc -lc -lgcc::"'
+    ;;
+  openbsd2*)
+    # C++ shared libraries are fairly broken
+    _LT_AC_TAGVAR(ld_shlibs, $1)=no
+    ;;
+  openbsd*)
+    _LT_AC_TAGVAR(hardcode_direct, $1)=yes
+    _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=no
+    _LT_AC_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $lib'
+    _LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
+    if test -z "`echo __ELF__ | $CC -E - | grep __ELF__`" || test "$host_os-$host_cpu" = "openbsd2.8-powerpc"; then
+      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $pic_flag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-retain-symbols-file,$export_symbols -o $lib'
+      _LT_AC_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
+      _LT_AC_TAGVAR(whole_archive_flag_spec, $1)="$wlarc"'--whole-archive$convenience '"$wlarc"'--no-whole-archive'
+    fi
+    output_verbose_link_cmd='echo'
     ;;
   osf3*)
     case $cc_basename in
@@ -3949,7 +3978,7 @@ Xsed="$SED -e s/^X//"
 
 # The HP-UX ksh and POSIX shell print the target directory to stdout
 # if CDPATH is set.
-if test "X\${CDPATH+set}" = Xset; then CDPATH=:; export CDPATH; fi
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
 
 # The names of the tagged configurations supported by this script.
 available_tags=
@@ -4354,6 +4383,13 @@ hpux*) # Its linker distinguishes data from code symbols
   lt_cv_sys_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^$symcode* .* \(.*\)$/extern char \1;/p'"
   lt_cv_sys_global_symbol_to_c_name_address="sed -n -e 's/^: \([[^ ]]*\) $/  {\\\"\1\\\", (lt_ptr) 0},/p' -e 's/^$symcode* \([[^ ]]*\) \([[^ ]]*\)$/  {\"\2\", (lt_ptr) \&\2},/p'"
   ;;
+linux*)
+  if test "$host_cpu" = ia64; then
+    symcode='[[ABCDGIRSTW]]'
+    lt_cv_sys_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^$symcode* .* \(.*\)$/extern char \1;/p'"
+    lt_cv_sys_global_symbol_to_c_name_address="sed -n -e 's/^: \([[^ ]]*\) $/  {\\\"\1\\\", (lt_ptr) 0},/p' -e 's/^$symcode* \([[^ ]]*\) \([[^ ]]*\)$/  {\"\2\", (lt_ptr) \&\2},/p'"
+  fi
+  ;;
 irix* | nonstopux*)
   symcode='[[BCDEGRST]]'
   ;;
@@ -4581,6 +4617,16 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
 	  ;;
 	esac
 	;;
+       darwin*)
+         # PIC is the default on this platform
+         # Common symbols not allowed in MH_DYLIB files
+         case "$cc_basename" in
+           xlc*)
+           _LT_AC_TAGVAR(lt_prog_compiler_pic, $1)='-qnocommon'
+           _LT_AC_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+           ;;
+         esac
+       ;;
       dgux*)
 	case $cc_basename in
 	  ec++)
@@ -4834,6 +4880,16 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
 	_LT_AC_TAGVAR(lt_prog_compiler_static, $1)='-bnso -bI:/lib/syscalls.exp'
       fi
       ;;
+      darwin*)
+        # PIC is the default on this platform
+        # Common symbols not allowed in MH_DYLIB files
+       case "$cc_basename" in
+         xlc*)
+         _LT_AC_TAGVAR(lt_prog_compiler_pic, $1)='-qnocommon'
+         _LT_AC_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
+         ;;
+       esac
+       ;;
 
     mingw* | pw32* | os2*)
       # This hack is so that the source file can tell whether it is being
@@ -5335,7 +5391,7 @@ $echo "local: *; };" >> $output_objdir/$libname.ver~
       _LT_AC_TAGVAR(ld_shlibs, $1)=no
       ;;
 
-    bsdi4*)
+    bsdi[[45]]*)
       _LT_AC_TAGVAR(export_dynamic_flag_spec, $1)=-rdynamic
       ;;
 
@@ -5361,52 +5417,52 @@ $echo "local: *; };" >> $output_objdir/$libname.ver~
       ;;
 
     darwin* | rhapsody*)
-    if test "$GXX" = yes ; then
-      _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
       case "$host_os" in
-      rhapsody* | darwin1.[[012]])
-	_LT_AC_TAGVAR(allow_undefined_flag, $1)='-undefined suppress'
-	;;
-      *) # Darwin 1.3 on
-      if test -z ${MACOSX_DEPLOYMENT_TARGET} ; then
-      	_LT_AC_TAGVAR(allow_undefined_flag, $1)='-flat_namespace -undefined suppress'
-      else
-        case ${MACOSX_DEPLOYMENT_TARGET} in
-          10.[[012]])
-            _LT_AC_TAGVAR(allow_undefined_flag, $1)='-flat_namespace -undefined suppress'
-            ;;
-          10.*)
-            _LT_AC_TAGVAR(allow_undefined_flag, $1)='-undefined dynamic_lookup'
-            ;;
-        esac
-      fi
-	;;
+        rhapsody* | darwin1.[[012]])
+         _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}suppress'
+         ;;
+       *) # Darwin 1.3 on
+         if test -z ${MACOSX_DEPLOYMENT_TARGET} ; then
+           _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
+         else
+           case ${MACOSX_DEPLOYMENT_TARGET} in
+             10.[[012]])
+               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-flat_namespace ${wl}-undefined ${wl}suppress'
+               ;;
+             10.*)
+               _LT_AC_TAGVAR(allow_undefined_flag, $1)='${wl}-undefined ${wl}dynamic_lookup'
+               ;;
+           esac
+         fi
+         ;;
       esac
-    	lt_int_apple_cc_single_mod=no
-    	output_verbose_link_cmd='echo'
-    	if $CC -dumpspecs 2>&1 | grep 'single_module' >/dev/null ; then
-    	  lt_int_apple_cc_single_mod=yes
-    	fi
-    	if test "X$lt_int_apple_cc_single_mod" = Xyes ; then
-    	  _LT_AC_TAGVAR(archive_cmds, $1)='$CC -dynamiclib -single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring'
-    	else
-        _LT_AC_TAGVAR(archive_cmds, $1)='$CC -r ${wl}-bind_at_load -keep_private_externs -nostdlib -o ${lib}-master.o $libobjs~$CC -dynamiclib $allow_undefined_flag -o $lib ${lib}-master.o $deplibs $compiler_flags -install_name $rpath/$soname $verstring'
-      fi
-      _LT_AC_TAGVAR(module_cmds, $1)='$CC ${wl}-bind_at_load $allow_undefined_flag -o $lib -bundle $libobjs $deplibs$compiler_flags'
-      # Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin ld's
-        if test "X$lt_int_apple_cc_single_mod" = Xyes ; then
-          _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -dynamiclib -single_module $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
-        else
-          _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -r ${wl}-bind_at_load -keep_private_externs -nostdlib -o ${lib}-master.o $libobjs~$CC -dynamiclib $allow_undefined_flag -o $lib ${lib}-master.o $deplibs $compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
-        fi
-          _LT_AC_TAGVAR(module_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC $allow_undefined_flag  -o $lib -bundle $libobjs $deplibs$compiler_flags~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+      _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
       _LT_AC_TAGVAR(hardcode_direct, $1)=no
       _LT_AC_TAGVAR(hardcode_automatic, $1)=yes
       _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
-      _LT_AC_TAGVAR(whole_archive_flag_spec, $1)='-all_load $convenience'
+      _LT_AC_TAGVAR(whole_archive_flag_spec, $1)=''
       _LT_AC_TAGVAR(link_all_deplibs, $1)=yes
+    if test "$GCC" = yes ; then
+    	output_verbose_link_cmd='echo'
+        _LT_AC_TAGVAR(archive_cmds, $1)='$CC -dynamiclib $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring'
+      _LT_AC_TAGVAR(module_cmds, $1)='$CC $allow_undefined_flag -o $lib -bundle $libobjs $deplibs$compiler_flags'
+      # Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin ld's
+      _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -dynamiclib $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags -install_name $rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+      _LT_AC_TAGVAR(module_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC $allow_undefined_flag  -o $lib -bundle $libobjs $deplibs$compiler_flags~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
     else
-      _LT_AC_TAGVAR(ld_shlibs, $1)=no
+      case "$cc_basename" in
+        xlc*)
+         output_verbose_link_cmd='echo'
+         _LT_AC_TAGVAR(archive_cmds, $1)='$CC -qmkshrobj $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags ${wl}-install_name ${wl}`echo $rpath/$soname` $verstring'
+         _LT_AC_TAGVAR(module_cmds, $1)='$CC $allow_undefined_flag -o $lib -bundle $libobjs $deplibs$compiler_flags'
+          # Don't fix this by using the ld -exported_symbols_list flag, it doesn't exist in older darwin ld's
+         _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC -qmkshrobj $allow_undefined_flag -o $lib $libobjs $deplibs $compiler_flags ${wl}-install_name ${wl}$rpath/$soname $verstring~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+          _LT_AC_TAGVAR(module_expsym_cmds, $1)='sed -e "s,#.*,," -e "s,^[    ]*,," -e "s,^\(..*\),_&," < $export_symbols > $output_objdir/${libname}-symbols.expsym~$CC $allow_undefined_flag  -o $lib -bundle $libobjs $deplibs$compiler_flags~nmedit -s $output_objdir/${libname}-symbols.expsym ${lib}'
+          ;;
+       *)
+         _LT_AC_TAGVAR(ld_shlibs, $1)=no
+          ;;
+      esac
     fi
       ;;
 
@@ -5551,6 +5607,7 @@ $echo "local: *; };" >> $output_objdir/$libname.ver~
       _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=no
       if test -z "`echo __ELF__ | $CC -E - | grep __ELF__`" || test "$host_os-$host_cpu" = "openbsd2.8-powerpc"; then
 	_LT_AC_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag -o $lib $libobjs $deplibs $compiler_flags'
+	_LT_AC_TAGVAR(archive_expsym_cmds, $1)='$CC -shared $pic_flag -o $lib $libobjs $deplibs $compiler_flags ${wl}-retain-symbols-file,$export_symbols'
 	_LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
 	_LT_AC_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
       else
@@ -5914,9 +5971,9 @@ for lt_ac_sed in $lt_ac_sed_list /usr/xpg4/bin/sed; do
     fi
   done
 done
-SED=$lt_cv_path_SED
 ])
+SED=$lt_cv_path_SED
 AC_MSG_RESULT([$SED])
 ])
 
-m4_include([./ft-munmap.m4])
+m4_include([ft-munmap.m4])
