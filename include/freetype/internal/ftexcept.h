@@ -51,32 +51,39 @@ FT_BEGIN_HEADER
 
   typedef struct FT_CleanupStackRec_
   {
-    FT_CleanupItem   top;
-    FT_CleanupChunk  chunk;
-    FT_Memory        memory;
+    FT_CleanupItem     top;
+    FT_CleanupItem     limit;
+    FT_CleanupChunk    chunk;
+    FT_CleanupChunkRec chunk_0;  /* avoids stupid dynamic allocation */
+    FT_Memory          memory;
 
   } FT_CleanupStackRec, *FT_CleanupStack;
 
 
-  FT_BASE_DEF( void )
+  FT_BASE( void )
   ft_cleanup_stack_push( FT_CleanupStack  stack,
                          FT_Pointer       item,
                          FT_CleanupFunc   item_func,
                          FT_Pointer       item_data );
 
-  FT_BASE_DEF( void )
+  FT_BASE( void )
   ft_cleanup_stack_pop( FT_CleanupStack   stack,
                         FT_Int            destroy );
 
-  FT_BASE_DEF( FT_Pointer )
+  FT_BASE( FT_CleanupItem )
   ft_cleanup_stack_peek( FT_CleanupStack  stack );
 
-  FT_BASE_DEF( void )
+  FT_BASE( void )
   ft_xhandler_enter( FT_XHandler  xhandler,
                      FT_Memory    memory );                         
 
-  FT_BASE_DEF( void )
+  FT_BASE( void )
   ft_xhandler_exit( FT_XHandler  xhandler );
+
+
+  FT_BASE( void )
+  ft_cleanup_throw( FT_CleanupStack  stack,
+                    FT_Error         error );
 
 FT_END_HEADER
 
