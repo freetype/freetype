@@ -30,7 +30,14 @@ I. QUICK COMMAND-LINE GUIDE:
 
      make
 
-  To compile the demo programs..
+
+  Note that on Unix, the first "make" invocation will run a configure
+  script (which is located in "freetype2/builds/unix/". You can also
+  pass parameters to this script with the CFG variable, as in:
+  
+     make CFG="--prefix=/usr/local"
+     make
+
 
   If this doesn't work, read the following..
 
