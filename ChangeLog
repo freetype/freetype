@@ -1,3 +1,8 @@
+2002-01-21  Antoine Leca <Antoine-Freetype@Leca-Marti.org>
+
+        * docs/PATENTS: Typo fixed (Thanks to Detlef "Hawkeye"
+        Wuerkner) in the URL for the on-line resource.
+
 2002-01-18  Ian Brown  <ian.brown@printsoft.de>
 
 	* builds/win32/ftdebug.c: New file.
