@@ -20,7 +20,12 @@ ifeq ($(PLATFORM),ansi)
   # work...
   #
   ifeq ($(OS),Windows_NT)
-    is_windows := 1
+    
+    # Check if we are running on a CygWin system by checking the OSTYPE
+    # variable.
+    ifneq ($(OSTYPE),cygwin)
+      is_windows := 1
+    endif
 
     # We test for the COMSPEC environment variable, then run the `ver'
     # command-line program to see if its output contains the word `Windows'.
@@ -28,9 +33,11 @@ ifeq ($(PLATFORM),ansi)
     # If this is true, we are running a win32 platform (or an emulation).
     #
   else
-    ifdef COMSPEC
-      is_windows := $(findstring Windows,$(strip $(shell ver)))
-    endif
+    ifneq ($(OSTYPE),cygwin)
+      ifdef COMSPEC
+        is_windows := $(findstring Windows,$(strip $(shell ver)))
+      endif
+    endif  # test CygWin
   endif  # test NT
 
   ifdef is_windows

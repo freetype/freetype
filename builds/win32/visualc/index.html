@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0043)http://www.homepages.lu/somers/freetype.htm -->
+<HTML lang=en><HEAD><TITLE>Freetype2 (for Windows)</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<META content="MSHTML 5.50.4134.600" name=GENERATOR></HEAD>
+<BODY text=#000000 vLink=#800080 link=#0000ff bgColor=#ffff00><!-- site navigation links -->
+<TABLE cellSpacing=2 cellPadding=2 summary="site navigation links">
+  <TBODY>
+  <TR>
+    <TD align=left><A 
+      href="http://www.homepages.lu/somers/index.htm"><B>welcome</B></A></TD>
+    <TD align=left><A 
+      href="http://www.homepages.lu/somers/bio-whoami.htm"><B>personal</B></A></TD>
+    <TD align=left><A 
+      href="http://www.homepages.lu/somers/zeb-intro.htm"><B>zeberdee</B></A></TD>
+    <TD align=left bgColor=maroon><FONT 
+  color=white><B>freetype</B></FONT></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=2 cellPadding=2 summary="site navigation links">
+  <TBODY>
+  <TR>
+    <TD align=left><FONT color=#ffff00><B>welcome</B></FONT></TD>
+    <TD align=left><FONT color=#ffff00><B>personal</B></FONT></TD>
+    <TD align=left><FONT color=#ffff00><B>zeberdee</B></FONT></TD>
+    <TD align=left bgColor=maroon><FONT color=white><B>for 
+    Windows</B></FONT></TD></TR></TBODY></TABLE><BR><!-- topic -->
+<HR>
+
+<H1>Freetype (for Windows)</H1><!-- block -->
+<HR>
+
+<H2>Information</H2>
+<P>To learn all about Freetype, visit <A 
+href="http://www.freetype.org">here</A>.</P><!-- block -->
+<HR>
+
+<H2>Freetype for Windows</H2>
+<P>One of the problems with The Freetype Project is that it doesn’t come with 
+any nice workspace and project files for use with MS Visual C++.</P>
+<P>So, as I’ve been using Freetype within some of my own software, I’ve had to 
+create these file for myself, and I herewith provide them back to the open 
+source community.</P>
+<P>The usual rules apply:</P>
+<UL type=square>
+  <LI>These files should be considered to be under the same licence agreement as 
+  The FreeType Project itself. 
+  <LI>Don’t blame me if they don’t work on your system... but please do <A 
+  href="http://www.homepages.lu/somers/bio-contact.htm">contact</A> me and I’ll 
+  try to sort things out. 
+  <LI>YMMV </LI></UL><!-- block -->
+<HR>
+
+<H2>Download</H2>
+<P>You can download:
+<P>
+<UL type=square>
+  <LI><A href="http://www.homepages.lu/somers/freetype200b8-msvc.zip">Just the 
+  workspace and project files</A> (for Freetype2 beta 8) </LI></UL><!-- block -->
+<HR>
+
+<H2>How to use the Workspace and Project Files</H2>
+<P>These are some quick note that I’ve put together to help you get started. I 
+hope they make sense ;-)</P>
+<P>The project files have been set up in such a manner than no changes are 
+necessary to either the Freetype2 source code, or any environment or VC settings 
+for things like include folders, etc... in other words, this is a very clean 
+implementation.</P>
+<P>Note the following:</P>
+<UL type=square>
+  <LI>The workspace and project files should be put in your ‘freetype’ 
+  directory. 
+  <LI>It is assumed that the sample applications are in a directory called 
+  ‘demos’ in your ‘freetype’ directory. </LI></UL>
+<P>When you open up the workspace, and perhaps also the project files within, 
+you might get some error message to do with Visual Source Safe... do not panic, 
+and simply ignore these warnings, choose not to use VSS in future, save the 
+workspace/project files, and all should be well.</P>
+<P>The ‘freetype’ project build a <B>static</B> library. There are four build 
+options, which will result in the following being generated into the ‘lib’ 
+directory in your ‘freetype’ directory):</P>
+<UL type=square>
+  <LI>freetype200b8.lib - release build; single-threaded 
+  <LI>freetype200b8_D.lib - debug build; single-threaded 
+  <LI>freetype200b8MT.lib - release build; multi-threaded 
+  <LI>freetype200b8MT_D.lib - debug build; multi-threaded </LI></UL>
+<P>The ‘ftdump’, ‘ftstring’, and ‘ftview’ projects build the respective sample 
+applications. The binaries are placed into the ‘bin’ directory in the ‘demos’ 
+directory. Note that if you build the debug versions, the filenames have a ‘_D’ 
+suffix.</P><!-- validated -->
+<HR>
+<BR>
+<!--  --></BODY></HTML>
