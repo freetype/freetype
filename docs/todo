@@ -2,9 +2,5 @@ Here is a list of items that need to be addressed in FreeType 2:
 
 * Add synthesized Unicode charmap processing to the CFF driver.
 
-* Fix a bug in the TrueType driver: linear horizontal advances of composites
-  are not returned properly.
-
-* Fix 64-bit issues (the code compiles and seems to work, but we've not
-  make a thorough check so some fonts could still core dump the library !!)
-
+* Add the new auto-hinting source code / native Type1/Type2 hinter
+  to the source code
