@@ -27,6 +27,7 @@
 #include "ftlist.c"
 #include "ftoutln.c"
 #include "ftnames.c"
+#include "ftdbgmem.c"
 
 #if 0
 #include "ftextend.c"

@@ -1,0 +1,502 @@
+#include <ft2build.h>
+#include FT_CONFIG_CONFIG_H
+#include FT_INTERNAL_DEBUG_H
+#include FT_SYSTEM_H
+#include FT_ERRORS_H
+#include FT_TYPES_H
+
+#ifdef FT_DEBUG_MEMORY
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+  typedef struct FT_MemNodeRec_*   FT_MemNode;
+  typedef struct FT_MemTableRec_*  FT_MemTable;
+
+#define  FT_MEM_VAL(addr)   ((FT_ULong)(FT_Pointer)(addr))
+
+  typedef struct FT_MemNodeRec_
+  {
+    FT_Byte*    address;
+    FT_Long     size;     /* < 0 if the block was freed */
+    FT_MemNode  link;
+  
+  } FT_MemNodeRec;
+
+  typedef struct FT_MemTableRec_
+  {
+    FT_Memory    memory;
+    FT_ULong     size;
+    FT_ULong     nodes;
+    FT_MemNode*  buckets;
+
+    FT_ULong     alloc_total;
+    FT_ULong     alloc_current;
+  
+  } FT_MemTableRec;
+
+#define  FT_MEM_SIZE_MIN   7
+#define  FT_MEM_SIZE_MAX   13845163
+
+  static const FT_UInt  ft_mem_primes[] =
+  {
+    7,
+    11,
+    19,
+    37,
+    73,
+    109,
+    163,
+    251,
+    367,
+    557,
+    823,
+    1237,
+    1861,
+    2777,
+    4177,
+    6247,
+    9371,
+    14057,
+    21089,
+    31627,
+    47431,
+    71143,
+    106721,
+    160073,
+    240101,
+    360163,
+    540217,
+    810343,
+    1215497,
+    1823231,
+    2734867,
+    4102283,
+    6153409,
+    9230113,
+    13845163,
+  };
+
+
+#include <stdarg.h>
+
+
+  extern void
+  ft_mem_debug_panic( const char*  fmt, ... )
+  {
+    va_list  ap;
+
+
+    printf( "FreeType.DebugMemory: " );
+
+    va_start( ap, fmt );
+    vprintf( fmt, ap );
+    va_end( ap );
+
+    printf( "\n" );
+    exit( EXIT_FAILURE );
+  }
+
+
+  static FT_ULong
+  ft_mem_closest_prime( FT_ULong  num )
+  {
+    FT_UInt  i;
+
+    for ( i = 0; i < sizeof(ft_mem_primes)/sizeof(ft_mem_primes[0]); i++ )
+      if ( ft_mem_primes[i] > num )
+        return ft_mem_primes[i];
+
+    return FT_MEM_SIZE_MAX;
+  }
+
+
+
+  static void
+  ft_mem_table_resize( FT_MemTable  table )
+  {
+    FT_ULong  new_size;
+
+    new_size = ft_mem_closest_prime( table->nodes );
+    if (new_size != table->size)
+    {
+      FT_MemNode*  new_buckets ;
+      FT_ULong     i;
+
+      new_buckets = malloc( new_size * sizeof(FT_MemNode) );
+      if ( new_buckets == NULL )
+        return;
+      
+      memset( new_buckets, 0, sizeof(FT_MemNode)*new_size );
+      
+      for ( i = 0; i < table->size; i++ )
+      {
+        FT_MemNode  node, next, *pnode;
+        FT_ULong    hash;
+
+        node = table->buckets[i];
+        while (node)
+        {
+          next  = node->link;
+          hash  = FT_MEM_VAL(node->address) % new_size;
+          pnode = new_buckets + hash;
+
+          node->link = pnode[0];
+          pnode[0]   = node;
+
+          node  = next;
+        }
+      }
+
+      if ( table->buckets )
+        free( table->buckets );
+        
+      table->buckets = new_buckets;
+      table->size    = new_size;
+    }
+  }
+
+
+  static FT_MemNode
+  ft_mem_node_new( FT_MemTable  table,
+                   FT_Pointer   address,
+                   FT_ULong     size )
+  {
+    FT_MemNode  node;
+
+    node = malloc( sizeof(*node) );
+    if ( node == NULL )
+      ft_mem_debug_panic( "not enough memory to run memory tests" );
+    
+    node->link    = NULL;
+    node->address = address;
+    node->size    = size;
+
+    return node;
+  }
+
+
+  static void
+  ft_mem_node_destroy( FT_MemNode   node,
+                        FT_MemTable  table )
+  {
+    if (node)
+    {
+      node->address = NULL;
+      node->size    = 0;
+      node->link    = NULL;
+
+      free( node );
+    }
+  }
+
+
+
+  static FT_MemTable
+  ft_mem_table_new( void )
+  {
+    FT_MemTable  table;
+
+    table = malloc( sizeof(*table) );
+    if ( table == NULL ) goto Exit;
+    
+    memset( table, 0, sizeof(*table) );
+
+    table->size  = FT_MEM_SIZE_MIN;
+    table->nodes = 0;
+
+    table->buckets = malloc( table->size * sizeof(FT_MemNode) );
+    if ( table->buckets )
+      memset( table->buckets, 0, sizeof(FT_MemNode)*table->size );
+    else
+    {
+      free( table );
+      table = NULL;
+    }
+  
+  Exit:
+    return table;
+  }
+
+
+
+  static void
+  ft_mem_table_destroy( FT_MemTable  table )
+  {
+    FT_ULong         i;
+
+    if ( table )
+    {
+      FT_Long   leak_count = 0;
+      FT_ULong  leaks = 0;
+      
+      for ( i = 0; i < table->size; i++ )
+      {
+        FT_MemNode  *pnode = table->buckets + i, next, node = *pnode;
+
+        while (node)
+        {
+          next = node->link;
+          node->link  = 0;
+          
+          if ( node->size > 0 )
+          {
+            printf( "leaked memory block at address %p, size %ld\n",
+                     node->address, node->size );
+                     
+            leak_count++;
+            leaks += node->size;
+            
+            free( node->address );
+          }
+                   
+          node->address = NULL;
+          node->size    = 0;
+          
+          free( node );
+          node = next;
+        }
+        table->buckets[i] = 0;
+      }
+      free( table->buckets );
+      table->buckets = NULL;
+
+      table->size   = 0;
+      table->nodes  = 0;
+      free( table );
+      
+      if ( leak_count > 0 )
+        ft_mem_debug_panic( "%ld bytes of memory leaked in %ld blocks\n",
+                            leaks, leak_count );
+      printf( "no FreeType memory leaks detected !!\n" );
+    }
+  }
+
+
+
+  static FT_MemNode*
+  ft_mem_table_get_nodep( FT_MemTable  table,
+                          FT_Byte*    address )
+  {
+    FT_ULong          hash;
+    FT_MemNode       *pnode, node;
+
+    hash  = FT_MEM_VAL(address);
+    pnode = table->buckets + (hash % table->size);
+
+    for (;;)
+    {
+      node = pnode[0];
+      if (!node)
+        break;
+
+      if ( node->address == address )
+        break;
+
+      pnode = &node->link;
+    }
+    return pnode;
+  }
+
+
+
+  static void
+  ft_mem_table_set( FT_MemTable  table,
+                    FT_Byte*     address,
+                    FT_ULong     size )
+  {
+    FT_MemNode  *pnode, node;
+
+    if (table)
+    {
+      pnode = ft_mem_table_get_nodep( table, address );
+      node  = *pnode;
+      if (node)
+      {
+        if ( node->size < 0 )
+        {
+          /* this block was already freed. this means that our memory is */
+          /* now completely corrupted !!                                 */
+          ft_mem_debug_panic( "memory heap corrupted" );
+        }
+        else
+        {
+          /* this block was already allocated. this means that our memory */
+          /* is also corrupted !!                                         */
+          ft_mem_debug_panic( "duplicate block allocation at address "
+                           "%p, size %ld\n",
+                           address, size );
+        }
+      }
+      
+      /* we need to create a new node in this table */
+      node = malloc( sizeof(*node) );
+      if ( node == NULL )
+        ft_mem_debug_panic( "not enough memory to run memory tests" );
+
+      node->address = address;
+      node->size    = size;
+      node->link    = pnode[0];
+
+      pnode[0] = node;
+      table->nodes++;
+
+      table->alloc_total   += size;
+      table->alloc_current += size;
+
+      if ( table->nodes*3 < table->size  ||
+           table->size *3 < table->nodes )
+        ft_mem_table_resize( table );
+    }
+  }
+
+
+  static void
+  ft_mem_table_remove( FT_MemTable  table,
+                       FT_Byte*     address )
+  {
+    if (table)
+    {
+      FT_MemNode  *pnode, node;
+
+      pnode = ft_mem_table_get_nodep( table, address );
+      node  = *pnode;
+      if (node)
+      {
+        if ( node->size < 0 )
+          ft_mem_debug_panic( "freeing memory block at %p more than once !!",
+                              address );
+        
+        /* we simply invert the node's size to indicate that the node */
+        /* was freed. We also change its content..                    */
+        memset( address, 0xF3, node->size );
+        
+        table->alloc_current -= node->size;
+        node->size            = -node->size;
+      }
+      else
+        ft_mem_debug_panic( "trying to free unknown block at %p\n",
+                            address );
+    }
+  }
+
+
+  extern FT_Pointer
+  ft_mem_debug_alloc( FT_Memory  memory,
+                      FT_Long    size )
+  {
+    FT_MemTable  table = memory->user;
+    FT_Byte*     block;
+
+    if ( size <= 0 )
+      ft_mem_debug_panic( "negative block size allocation (%ld)", size );
+    
+    block = malloc( size );
+    if ( block )
+      ft_mem_table_set( table, block, (FT_ULong)size );
+      
+    return (FT_Pointer) block;
+  }
+  
+
+  extern void
+  ft_mem_debug_free( FT_Memory   memory,
+                     FT_Pointer  block )
+  {
+    FT_MemTable  table = memory->user;
+    
+    if ( block == NULL )
+      ft_mem_debug_panic( "trying to free NULL !!" );
+    
+    ft_mem_table_remove( table, (FT_Byte*)block );
+    
+    /* we never really free the block */
+  }
+  
+
+  
+  extern FT_Pointer
+  ft_mem_debug_realloc( FT_Memory   memory,
+                        FT_Long     cur_size,
+                        FT_Long     new_size,
+                        FT_Pointer  block )
+  {
+    FT_MemTable  table = memory->user;
+    FT_MemNode   node, *pnode;
+    FT_Pointer   new_block;
+
+    if ( block == NULL || cur_size == 0 )
+      ft_mem_debug_panic( "trying to reallocate NULL" );
+    
+    if ( new_size <= 0 )
+      ft_mem_debug_panic( "trying to reallocate %p to size 0 (current is %ld)",
+                          block, cur_size );
+    
+   /* check 'cur_size' value */
+    pnode = ft_mem_table_get_nodep( table, (FT_Byte*)block );
+    node  = *pnode;
+    if (!node)
+      ft_mem_debug_panic( "trying to reallocate unknown block at %p",
+                          block );
+    
+    if ( node->size <= 0 )
+      ft_mem_debug_panic( "trying to reallocate freed block at %p",
+                          block );
+    
+    if ( node->size != cur_size )
+      ft_mem_debug_panic( "invalid realloc request for %p. cur_size is "
+                          "%ld instead of %ld", block, cur_size, node->size );
+    
+    new_block = ft_mem_debug_alloc( memory, new_size );
+    if ( new_block == NULL )
+      return NULL;
+
+    memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
+
+    ft_mem_debug_free( memory, (FT_Byte*)block );
+    
+    return new_block;
+  }
+  
+  
+  extern FT_Int
+  ft_mem_debug_init( FT_Memory  memory )
+  {
+    FT_MemTable  table;
+    FT_Int       result = 0;
+    
+    table = ft_mem_table_new();
+    if ( table )
+    {
+      memory->user    = table;
+      memory->alloc   = ft_mem_debug_alloc;
+      memory->realloc = ft_mem_debug_realloc;
+      memory->free    = ft_mem_debug_free;
+      result = 1;
+    }
+    return result;
+  }  
+  
+  
+  extern void
+  ft_mem_debug_done( FT_Memory  memory )
+  {
+    FT_MemTable  table = memory->user;
+    
+    if ( table )
+    {
+      ft_mem_table_destroy( table );
+      memory->user = NULL;
+      memory->free = (FT_Free_Func) free;
+    }
+  }
+
+#else  /* !FT_DEBUG_MEMORY */
+ 
+ /* ansi C doesn't like empty source files */
+  extern const FT_Byte  _debug_mem_dummy = 0;
+
+#endif /* !FT_DEBUG_MEMORY */

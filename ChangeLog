@@ -1,3 +1,17 @@
+2001-10-22  David Turner  <david@freetype.org>
+
+	* src/base/ftdbgmem.c: new debugging memory manager. You must define
+	the FT_DEBUG_MEMORY macro in "ftoption.h" to enable it. It will record
+	every memory block allocated and report simple errors like memory
+	leaks and double deletes.
+	
+	* include/freetype/config/ftoption.h: added the FT_DEBUG_MEMORY macro
+	definition
+	
+	* src/base/ftsystem.c (FT_New_Memory, FT_Done_Memory): modified the
+	base component to use the debugging memory manager when the macro
+	FT_DEBUG_MEMORY is defined..
+
 2001-10-21  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffload.c (CFF_Done_Font): Free subfonts array only if
