@@ -440,8 +440,8 @@
   }
 
 
-  BASE_FUNC( FT_Error )  FT_GlyphLoader_Create_Extra(
-                           FT_GlyphLoader*  loader )
+
+  BASE_FUNC(FT_Error)  FT_GlyphLoader_Create_Extra( FT_GlyphLoader*  loader )
   {
     FT_Error   error;
     FT_Memory  memory = loader->memory;
@@ -881,6 +881,8 @@
   }
 
 
+  static  FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
+  
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -926,7 +928,7 @@
     if ( !face || !face->size || !face->glyph )
       return FT_Err_Invalid_Face_Handle;
 
-    if ( glyph_index >= face->num_glyphs )
+    if ( glyph_index >= (FT_UInt)face->num_glyphs )
       return FT_Err_Invalid_Argument;
 
     slot = face->glyph;
@@ -1387,7 +1389,6 @@
         {
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
-
 
           driver = FT_DRIVER( cur[0] );
 
@@ -2213,16 +2214,20 @@
   /*************************************************************************/
 
  /* lookup a renderer by glyph format in the library's list */
-  static FT_Renderer  ft_lookup_renderer( FT_Library       library,
-                                          FT_Glyph_Format  format,
-                                          FT_ListNode*     node )
+  BASE_FUNC(FT_Renderer)  FT_Lookup_Renderer( FT_Library       library,
+                                              FT_Glyph_Format  format,
+                                              FT_ListNode     *node )
   {
     FT_ListNode   cur    = library->renderers.head;
     FT_Renderer   result = 0;
 
     
-    if ( node )
+    if (node)
+    {
+      if (*node)
+        cur = (*node)->next;
       *node = 0;
+    }
       
     while ( cur )
     {
@@ -2237,13 +2242,14 @@
         result = renderer;
         break;
       }
+      cur = cur->next;
     }
 
     return result;
   }
 
   
-  static  FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
+  static FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
   {
     FT_Face     face    = slot->face;
     FT_Library  library = FT_FACE_LIBRARY( face );
@@ -2261,7 +2267,7 @@
   {
     FT_Renderer  renderer;
 
-    renderer = ft_lookup_renderer( library, ft_glyph_format_outline, 0 );
+    renderer = FT_Lookup_Renderer( library, ft_glyph_format_outline, 0 );
     library->cur_renderer = renderer;
   }
 
@@ -2364,7 +2370,7 @@
   FT_EXPORT_FUNC( FT_Renderer )  FT_Get_Renderer( FT_Library       library,
                                                   FT_Glyph_Format  format )
   {
-    return  ft_lookup_renderer( library, format, 0 );
+    return  FT_Lookup_Renderer( library, format, 0 );
   }                                               
 
 
@@ -2409,7 +2415,7 @@
       error = FT_Err_Invalid_Argument;
       goto Exit;
     }
-      
+
     FT_List_Up( &library->renderers, node );
     
     if ( renderer->glyph_format == ft_glyph_format_outline )
@@ -2433,73 +2439,106 @@
   }                                           
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Render_Glyph                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Converts a given glyph image to a bitmap.  It does so by           */
-  /*    inspecting the glyph image format, find the relevant renderer, and */
-  /*    invoke it.                                                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot        :: A handle to the glyph slot containing the image to  */
-  /*                   convert.                                            */
-  /*                                                                       */
-  /*    render_mode :: A set of bit flags indicating which kind of bitmap  */
-  /*                   to render.  For now, only                           */
-  /*                   `ft_render_mode_anti_alias' is supported by the     */
-  /*                   available renderers, but others could appear later  */
-  /*                   (e.g. optimized for TV or LCD).                     */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    In case of success, the renderer will be used to convert glyph     */
-  /*    images in the renderer's known format into bitmaps.                */
-  /*                                                                       */
-  /*    This doesn't change the current renderer for other formats.        */
-  /*                                                                       */
-  /*    The slot's native image should be considered lost after the        */
-  /*    conversion.                                                        */
-  /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
-                                               FT_UInt       render_mode )
+<<<<<<< ftobjs.c
+ /*************************************************************************
+  *
+  *  <Function>
+  *     FT_Render_Glyph
+  *
+  *  <Description>
+  *     Converts a given glyph image to a bitmap. It does so by inspecting
+  *     the glyph image format, find the relevant renderer, and invoke it
+  *
+  *  <Input>
+  *     slot        :: handle to the glyph slot containing the image to
+  *                    convert
+  *
+  *     render_mode :: a set of bit flags indicating which kind of bitmap
+  *                    to render. For now, only 'ft_render_mode_anti_alias'
+  *                    is supported by the available renderers, but others
+  *                    could appear later (e.g. LCD or TV optimised)
+  *
+  *  <Return>
+  *     Error code. 0 means success.
+  *
+  *  <Note>
+  *     in case of success, the renderer will be used to convert glyph
+  *     images in the renderer's known format into bitmaps.
+  *
+  *     This doesn't change the current renderer for other formats..
+  *
+  *     The slot's native image should be considered lost after the
+  *     conversion..
+  *
+  *************************************************************************/
+
+  LOCAL_FUNC
+  FT_Error   FT_Render_Glyph_Internal( FT_Library    library,
+                                       FT_GlyphSlot  slot,
+                                       FT_UInt       render_mode )
   {
     FT_Error     error = FT_Err_Ok;
     FT_Renderer  renderer;
 
       
-    if ( slot )
+    /* if it's already a bitmap, no need to do anything */
+    switch (slot->format)
     {
-      FT_Face           face    = slot->face;
-      FT_Library        library = FT_FACE_LIBRARY( face );
-
-
-      /* if it is already a bitmap, no need to do anything */
-      switch ( slot->format )
-      {
-      case ft_glyph_format_bitmap:  /* already a bitmap, don't do anything */
+      case ft_glyph_format_bitmap:   /* already a bitmap, don't do anything */
         break;
-        
+      
       default:
+      {
+        FT_ListNode  node   = 0;
+        FT_Bool      update = 0;
+        
         /* small shortcut for the very common case */
-        if ( slot->format == ft_glyph_format_outline )
+        if (slot->format == ft_glyph_format_outline)
+        {
           renderer = library->cur_renderer;
+          node     = library->renderers.head;
+        }
         else
-          renderer = ft_lookup_renderer( library, slot->format, 0 );
-            
+          renderer = FT_Lookup_Renderer( library, slot->format, &node );
+
         error = FT_Err_Unimplemented_Feature;
-        if ( renderer )
-          error = renderer->render( renderer, slot, render_mode );
+        while (renderer)
+        {
+          error = renderer->render( renderer, slot, render_mode, 0 );
+          if (!error || error != FT_Err_Cannot_Render_Glyph) break;
+
+          /* FT_Err_Cannot_Render_Glyph is returned when the render mode */
+          /* is unsupported by the current renderer for this glyph image */
+          /* format..                                                    */
+          
+          /* now, look for another renderer that supports the same  */
+          /* format..                                              */
+          renderer = FT_Lookup_Renderer( library, slot->format, &node );
+          update   = 1;
+        }
+
+        /* if we changed the current renderer for the glyph image format */
+        /* we need to select it as the next current one..                */
+        if (!error && update && renderer)
+          FT_Set_Renderer( library, renderer, 0, 0 );
       }
     }
-    else
-      error = FT_Err_Invalid_Argument;
     
     return error;
+  }
+
+
+
+  FT_EXPORT_FUNC(FT_Error)  FT_Render_Glyph( FT_GlyphSlot  slot,
+                                             FT_UInt       render_mode )
+  {
+    FT_Library   library;
+    
+    if (!slot)
+      return FT_Err_Invalid_Argument;
+      
+    library = FT_FACE_LIBRARY(slot->face);
+    return FT_Render_Glyph_Internal( library, slot, render_mode );
   }
 
   
@@ -2904,7 +2943,7 @@
   FT_EXPORT_FUNC( FT_Error )  FT_Done_Library( FT_Library  library )
   {
     FT_Memory  memory;
-    FT_Int     n;
+    FT_UInt    n;
 
 
     if ( !library )

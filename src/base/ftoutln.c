@@ -604,36 +604,34 @@
                                                  FT_Outline*        outline,
                                                  FT_Raster_Params*  params )
   {
-    FT_Error           error;
-    FT_Renderer        renderer;
-
-
-    if ( !library )
-    {
-      error = FT_Err_Invalid_Library_Handle;
-      goto Exit;
-    }
-
-    if ( !outline || !params )
-    {
-      error = FT_Err_Invalid_Argument;
-      goto Exit;
-    }
-
-    /* retrieve the current outline renderer */
-    renderer = library->cur_renderer;
-    if ( !renderer )
-    {
-      /* XXXX: should use another error code */
-      error = FT_Err_Invalid_Argument;
-      goto Exit;
-    }
+    FT_Error         error;
+    FT_Bool          update   = 0;
+    FT_Renderer      renderer = library->cur_renderer;
+    FT_ListNode      node     = library->renderers.head;
 
     params->source = (void*)outline;
-    
-    error = renderer->raster_render( renderer->raster, params );
+        
+    error = FT_Err_Cannot_Render_Glyph;
+    while (renderer)
+    {
+      error = renderer->raster_render( renderer->raster, params );
+      if (!error || error != FT_Err_Cannot_Render_Glyph) break;
 
-  Exit:
+      /* FT_Err_Cannot_Render_Glyph is returned when the render mode */
+      /* is unsupported by the current renderer for this glyph image */
+      /* format..                                                    */
+      
+      /* now, look for another renderer that supports the same  */
+      /* format..                                              */
+      renderer = FT_Lookup_Renderer( library, ft_glyph_format_outline, &node );
+      update   = 1;
+    }
+
+    /* if we changed the current renderer for the glyph image format */
+    /* we need to select it as the next current one..                */
+    if (!error && update && renderer)
+      FT_Set_Renderer( library, renderer, 0, 0 );
+      
     return error;
   }
 

@@ -853,7 +853,7 @@
 
         FT_GlyphLoader_Add( gloader );
         
-        for ( n = 0; n < num_subglyphs; n++ )
+        for ( n = 0; n < (FT_Int)num_subglyphs; n++ )
         {
           FT_Vector  pp1, pp2;
           FT_Pos     x, y;
@@ -915,13 +915,12 @@
 
           if ( !( subglyph->flags & ARGS_ARE_XY_VALUES ) )
           {
-            FT_Int      k = subglyph->arg1;
+            FT_UInt     k = subglyph->arg1;
             FT_UInt     l = subglyph->arg2;
             FT_Vector*  p1;
             FT_Vector*  p2;
 
-
-            if ( start_point + k >= num_base_points          ||
+            if ( start_point + k >= (FT_UInt)num_base_points ||
                                l >= (FT_UInt)num_new_points  )
             {
               error = TT_Err_Invalid_Composite;
