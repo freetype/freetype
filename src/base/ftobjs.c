@@ -1232,6 +1232,10 @@
   }
 
 
+  /* There's a Mac-specific extended implementation of FT_New_Face()
+     in src/mac/ftmac.c   */
+#ifndef macintosh
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1287,6 +1291,8 @@
 
     return FT_Open_Face( library, &args, face_index, aface );
   }
+
+#endif  /* !macintosh */
 
 
   /*************************************************************************/
