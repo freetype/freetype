@@ -25,7 +25,8 @@ if test "x$CC" = xgcc; then
 else
   case "$host" in
     *-dec-osf*)
-      XX_CFLAGS="-std1 -O2 -g3"
+      CFLAGS=
+      XX_CFLAGS="-std1 -g3"
       XX_ANSIFLAGS=
       ;;
     *)
