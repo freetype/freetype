@@ -2,6 +2,7 @@
 
 	* src/base/ftdebug.c (ft_debug_init): Highest debug level is 7,
 	not 6.
+	* docs/DEBUG: Updated.
 
 2004-08-30  Werner Lemberg  <wl@gnu.org>
 
