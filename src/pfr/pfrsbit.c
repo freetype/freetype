@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  pfrsbit.c                                                              */
+/*                                                                         */
+/*    FreeType PFR bitmap loader (body).                                   */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "pfrsbit.h"
 #include "pfrload.h"
 #include FT_INTERNAL_DEBUG_H
@@ -8,6 +26,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pfr
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -16,7 +35,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  typedef  struct PFR_BitWriter_
+  typedef struct  PFR_BitWriter_
   {
     FT_Byte*  line;      /* current line start                    */
     FT_Int    pitch;     /* line size in bytes                    */
@@ -58,7 +77,8 @@
     FT_UInt   val  = 0;
     FT_UInt   c    = 0;
 
-    n = (FT_Int)(limit - p)*8;
+
+    n = (FT_Int)( limit - p ) * 8;
     if ( n > writer->total )
       n = writer->total;
 
@@ -66,7 +86,7 @@
 
     for ( ; n > 0; n-- )
     {
-      if ( (n & 7) == reload )
+      if ( ( n & 7 ) == reload )
         val = *p++;
 
       if ( val & 0x80 )
@@ -77,7 +97,7 @@
 
       if ( --left <= 0 )
       {
-        cur[0] = (FT_Byte) c;
+        cur[0] = (FT_Byte)c;
         left   = writer->width;
         mask   = 0x80;
 
@@ -110,6 +130,7 @@
     FT_UInt   mask = 0x80;
     FT_UInt   c    = 0;
 
+
     n = writer->total;
 
     phase     = 1;
@@ -128,12 +149,13 @@
           {
             FT_Int  v;
 
+
             if ( p >= limit )
               break;
 
             v         = *p++;
-            counts[0] = (v >> 4);
-            counts[1] = (v & 15);
+            counts[0] = v >> 4;
+            counts[1] = v & 15;
             phase     = 0;
             count     = counts[0];
           }
@@ -142,8 +164,8 @@
             phase = 1;
             count = counts[1];
           }
-        }
-        while ( count == 0 );
+
+        } while ( count == 0 );
       }
 
       if ( phase )
@@ -188,11 +210,12 @@
     FT_UInt   mask = 0x80;
     FT_UInt   c    = 0;
 
+
     n = writer->total;
 
-    phase     = 1;
-    count     = 0;
-    reload    = 1;
+    phase  = 1;
+    count  = 0;
+    reload = 1;
 
     for ( ; n > 0; n-- )
     {
@@ -205,8 +228,8 @@
 
           count = *p++;
           phase = phase ^ 1;
-        }
-        while ( count == 0 );
+
+        } while ( count == 0 );
       }
 
       if ( phase )
@@ -249,40 +272,44 @@
   /*************************************************************************/
 
   static void
-  pfr_lookup_bitmap_data( FT_Byte*    base,
-                          FT_Byte*    limit,
-                          FT_Int      count,
-                          FT_Byte     flags,
-                          FT_UInt     char_code,
-                          FT_ULong*   found_offset,
-                          FT_ULong*   found_size )
+  pfr_lookup_bitmap_data( FT_Byte*   base,
+                          FT_Byte*   limit,
+                          FT_Int     count,
+                          FT_Byte    flags,
+                          FT_UInt    char_code,
+                          FT_ULong*  found_offset,
+                          FT_ULong*  found_size )
   {
-    FT_UInt    left, right, char_len;
-    FT_Bool    two = (flags & 1);
-    FT_Byte*   buff;
+    FT_UInt   left, right, char_len;
+    FT_Bool   two = flags & 1;
+    FT_Byte*  buff;
+
 
     char_len = 4;
-    if ( two )      char_len += 1;
-    if ( flags & 2) char_len += 1;
-    if ( flags & 4) char_len += 1;
+    if ( two )       char_len += 1;
+    if ( flags & 2 ) char_len += 1;
+    if ( flags & 4 ) char_len += 1;
 
-    left      = 0;
-    right     = count;
+    left  = 0;
+    right = count;
 
     while ( left < right )
     {
       FT_UInt  middle, code;
 
-      middle = (left + right) >> 1;
-      buff   = base + middle*char_len;
 
-      /* check that we're not outside of the table */
-      /* this is possible with broken fonts...     */
+      middle = ( left + right ) >> 1;
+      buff   = base + middle * char_len;
+
+      /* check that we are not outside of the table -- */
+      /* this is possible with broken fonts...         */
       if ( buff + char_len > limit )
         goto Fail;
 
-      if (two) code = PFR_NEXT_USHORT(buff);
-         else  code = PFR_NEXT_BYTE(buff);
+      if ( two )
+        code = PFR_NEXT_USHORT( buff );
+      else
+        code = PFR_NEXT_BYTE( buff );
 
       if ( code == char_code )
         goto Found_It;
@@ -300,37 +327,42 @@
     return;
 
   Found_It:
-    if (flags & 2) *found_size = PFR_NEXT_USHORT(buff);
-              else *found_size = PFR_NEXT_BYTE(buff);
+    if ( flags & 2 )
+      *found_size = PFR_NEXT_USHORT( buff );
+    else
+      *found_size = PFR_NEXT_BYTE( buff );
 
-    if (flags & 4) *found_offset = PFR_NEXT_ULONG(buff);
-              else *found_offset = PFR_NEXT_USHORT(buff);
+    if ( flags & 4 )
+      *found_offset = PFR_NEXT_ULONG( buff );
+    else
+      *found_offset = PFR_NEXT_USHORT( buff );
   }
 
 
- /* load bitmap metrics. "*padvance" must be set to the default value */
- /* before calling this function...                                   */
- /*                                                                   */
+  /* load bitmap metrics.  "*padvance" must be set to the default value */
+  /* before calling this function...                                    */
+  /*                                                                    */
   static FT_Error
-  pfr_load_bitmap_metrics( FT_Byte** pdata,
-                           FT_Byte*  limit,
-                           FT_Long   scaled_advance,
-                           FT_Long  *axpos,
-                           FT_Long  *aypos,
-                           FT_UInt  *axsize,
-                           FT_UInt  *aysize,
-                           FT_Long  *aadvance,
-                           FT_UInt  *aformat )
+  pfr_load_bitmap_metrics( FT_Byte**  pdata,
+                           FT_Byte*   limit,
+                           FT_Long    scaled_advance,
+                           FT_Long   *axpos,
+                           FT_Long   *aypos,
+                           FT_UInt   *axsize,
+                           FT_UInt   *aysize,
+                           FT_Long   *aadvance,
+                           FT_UInt   *aformat )
   {
     FT_Error  error = 0;
-    FT_Byte    flags;
-    FT_Char    b;
-    FT_Byte*   p = *pdata;
-    FT_Long    xpos, ypos, advance;
-    FT_UInt    xsize, ysize;
+    FT_Byte   flags;
+    FT_Char   b;
+    FT_Byte*  p = *pdata;
+    FT_Long   xpos, ypos, advance;
+    FT_UInt   xsize, ysize;
 
-    PFR_CHECK(1);
-    flags = PFR_NEXT_BYTE(p);
+
+    PFR_CHECK( 1 );
+    flags = PFR_NEXT_BYTE( p );
 
     xpos    = 0;
     ypos    = 0;
@@ -338,93 +370,93 @@
     ysize   = 0;
     advance = 0;
 
-    switch (flags & 3)
+    switch ( flags & 3 )
     {
-      case 0:
-        PFR_CHECK(1);
-        b    = PFR_NEXT_INT8(p);
-        xpos = b >> 4;
-        ypos = ((FT_Char)(b << 4)) >> 4;
-        break;
+    case 0:
+      PFR_CHECK( 1 );
+      b    = PFR_NEXT_INT8( p );
+      xpos = b >> 4;
+      ypos = ( (FT_Char)( b << 4 ) ) >> 4;
+      break;
 
-      case 1:
-        PFR_CHECK(2);
-        xpos = PFR_NEXT_INT8(p);
-        ypos = PFR_NEXT_INT8(p);
-        break;
+    case 1:
+      PFR_CHECK( 2 );
+      xpos = PFR_NEXT_INT8( p );
+      ypos = PFR_NEXT_INT8( p );
+      break;
 
-      case 2:
-        PFR_CHECK(4);
-        xpos = PFR_NEXT_SHORT(p);
-        ypos = PFR_NEXT_SHORT(p);
-        break;
+    case 2:
+      PFR_CHECK( 4 );
+      xpos = PFR_NEXT_SHORT( p );
+      ypos = PFR_NEXT_SHORT( p );
+      break;
 
-      case 3:
-        PFR_CHECK(6);
-        xpos = PFR_NEXT_LONG(p);
-        ypos = PFR_NEXT_LONG(p);
-        break;
+    case 3:
+      PFR_CHECK( 6 );
+      xpos = PFR_NEXT_LONG( p );
+      ypos = PFR_NEXT_LONG( p );
+      break;
 
-      default:
-        ;
+    default:
+      ;
     }
 
     flags >>= 2;
-    switch (flags & 3)
+    switch ( flags & 3 )
     {
-      case 0:
-        /* blank image */
-        xsize = 0;
-        ysize = 0;
-        break;
+    case 0:
+      /* blank image */
+      xsize = 0;
+      ysize = 0;
+      break;
 
-      case 1:
-        PFR_CHECK(1);
-        b     = PFR_NEXT_BYTE(p);
-        xsize = (b >> 4) & 0xF;
-        ysize =  b & 0xF;
-        break;
+    case 1:
+      PFR_CHECK( 1 );
+      b     = PFR_NEXT_BYTE( p );
+      xsize = ( b >> 4 ) & 0xF;
+      ysize = b & 0xF;
+      break;
 
-      case 2:
-        PFR_CHECK(2);
-        xsize = PFR_NEXT_BYTE(p);
-        ysize = PFR_NEXT_BYTE(p);
-        break;
+    case 2:
+      PFR_CHECK( 2 );
+      xsize = PFR_NEXT_BYTE( p );
+      ysize = PFR_NEXT_BYTE( p );
+      break;
 
-      case 3:
-        PFR_CHECK(4);
-        xsize = PFR_NEXT_USHORT(p);
-        ysize = PFR_NEXT_USHORT(p);
-        break;
+    case 3:
+      PFR_CHECK( 4 );
+      xsize = PFR_NEXT_USHORT( p );
+      ysize = PFR_NEXT_USHORT( p );
+      break;
 
-      default:
-        ;
+    default:
+      ;
     }
 
     flags >>= 2;
-    switch (flags & 3)
+    switch ( flags & 3 )
     {
-      case 0:
-       advance = scaled_advance;
-       break;
+    case 0:
+      advance = scaled_advance;
+      break;
 
-      case 1:
-        PFR_CHECK(1);
-        advance = PFR_NEXT_INT8(p) << 8;
-        break;
+    case 1:
+      PFR_CHECK( 1 );
+      advance = PFR_NEXT_INT8( p ) << 8;
+      break;
 
-      case 2:
-        PFR_CHECK(2);
-        advance = PFR_NEXT_SHORT(p);
-        break;
+    case 2:
+      PFR_CHECK( 2 );
+      advance = PFR_NEXT_SHORT( p );
+      break;
 
-      case 3:
-        PFR_CHECK(3);
-        advance = PFR_NEXT_LONG(p);
-        break;
+    case 3:
+      PFR_CHECK( 3 );
+      advance = PFR_NEXT_LONG( p );
+      break;
 
-      default:
-        ;
+    default:
+      ;
     }
 
     *axpos    = xpos;
@@ -446,36 +478,37 @@
 
 
   static FT_Error
-  pfr_load_bitmap_bits( FT_Byte*        p,
-                        FT_Byte*        limit,
-                        FT_UInt         format,
-                        FT_UInt         decreasing,
-                        FT_Bitmap*      target )
+  pfr_load_bitmap_bits( FT_Byte*    p,
+                        FT_Byte*    limit,
+                        FT_UInt     format,
+                        FT_UInt     decreasing,
+                        FT_Bitmap*  target )
   {
     FT_Error          error = 0;
     PFR_BitWriterRec  writer;
+
 
     if ( target->rows > 0 && target->width > 0 )
     {
       pfr_bitwriter_init( &writer, target, decreasing );
 
-      switch (format)
+      switch ( format )
       {
-        case 0: /* packed bits */
-          pfr_bitwriter_decode_bytes( &writer, p, limit );
-          break;
+      case 0: /* packed bits */
+        pfr_bitwriter_decode_bytes( &writer, p, limit );
+        break;
 
-        case 1: /* RLE1 */
-          pfr_bitwriter_decode_rle1( &writer, p, limit );
-          break;
+      case 1: /* RLE1 */
+        pfr_bitwriter_decode_rle1( &writer, p, limit );
+        break;
 
-        case 2: /* RLE2 */
-          pfr_bitwriter_decode_rle2( &writer, p, limit );
-          break;
+      case 2: /* RLE2 */
+        pfr_bitwriter_decode_rle2( &writer, p, limit );
+        break;
 
-        default:
-          FT_ERROR(( "pfr_read_bitmap_data: invalid image type\n" ));
-          error = FT_Err_Invalid_File_Format;
+      default:
+        FT_ERROR(( "pfr_read_bitmap_data: invalid image type\n" ));
+        error = FT_Err_Invalid_File_Format;
       }
     }
 
@@ -505,22 +538,24 @@
     PFR_Char     character;
     PFR_Strike   strike;
 
+
     character = &phys->chars[glyph_index];
 
     /* Look-up a bitmap strike corresponding to the current */
     /* character dimensions                                 */
-
     {
-      FT_UInt     n;
+      FT_UInt  n;
+
 
       strike = phys->strikes;
       for ( n = 0; n < phys->num_strikes; n++ )
       {
-        if ( strike->x_ppm == (FT_UInt) size->root.metrics.x_ppem &&
-             strike->y_ppm == (FT_UInt) size->root.metrics.y_ppem )
+        if ( strike->x_ppm == (FT_UInt)size->root.metrics.x_ppem &&
+             strike->y_ppm == (FT_UInt)size->root.metrics.y_ppem )
         {
           goto Found_Strike;
         }
+
         strike++;
       }
 
@@ -532,7 +567,8 @@
 
     /* Now lookup the glyph's position within the file */
     {
-      FT_UInt   char_len;
+      FT_UInt  char_len;
+
 
       char_len = 4;
       if ( strike->flags & 1 ) char_len += 1;
@@ -541,7 +577,7 @@
 
       /* Access data directly in the frame to speed lookups */
       if ( FT_STREAM_SEEK( phys->bct_offset + strike->bct_offset ) ||
-           FT_FRAME_ENTER( char_len * strike->num_bitmaps )       )
+           FT_FRAME_ENTER( char_len * strike->num_bitmaps )        )
         goto Exit;
 
       pfr_lookup_bitmap_data( stream->cursor,
@@ -554,7 +590,7 @@
 
       FT_FRAME_EXIT();
 
-      if (gps_size == 0)
+      if ( gps_size == 0 )
       {
         /* Could not find a bitmap program string for this glyph */
         error = FT_Err_Invalid_Argument;
@@ -568,14 +604,15 @@
       FT_UInt   xsize, ysize, format;
       FT_Byte*  p;
 
+
       advance = FT_MulDiv( size->root.metrics.x_ppem << 8,
                            character->advance,
                            phys->metrics_resolution );
 
-      /* XXX: handle linearHoriAdvance correctly !! */
+      /* XXX: handle linearHoriAdvance correctly! */
 
       if ( FT_STREAM_SEEK( face->header.gps_section_offset + gps_offset ) ||
-           FT_FRAME_ENTER( gps_size )                             )
+           FT_FRAME_ENTER( gps_size )                                     )
         goto Exit;
 
       p     = stream->cursor;
@@ -589,16 +626,16 @@
         glyph->root.format = FT_GLYPH_FORMAT_BITMAP;
       
         /* Set up glyph bitmap and metrics */
-        glyph->root.bitmap.width      = (FT_Int) xsize;
-        glyph->root.bitmap.rows       = (FT_Int) ysize;
-        glyph->root.bitmap.pitch      = (FT_Long)(xsize+7) >> 3;
+        glyph->root.bitmap.width      = (FT_Int)xsize;
+        glyph->root.bitmap.rows       = (FT_Int)ysize;
+        glyph->root.bitmap.pitch      = (FT_Long)( xsize + 7 ) >> 3;
         glyph->root.bitmap.pixel_mode = FT_PIXEL_MODE_MONO;
 
         glyph->root.metrics.width        = (FT_Long)xsize << 6;
         glyph->root.metrics.height       = (FT_Long)ysize << 6;
         glyph->root.metrics.horiBearingX = xpos << 6;
         glyph->root.metrics.horiBearingY = ypos << 6;
-        glyph->root.metrics.horiAdvance  = ((advance >> 2) + 32) & -64;
+        glyph->root.metrics.horiAdvance  = ( ( advance >> 2 ) + 32 ) & -64;
         glyph->root.metrics.vertBearingX = - glyph->root.metrics.width >> 1;
         glyph->root.metrics.vertBearingY = 0;
         glyph->root.metrics.vertAdvance  = size->root.metrics.height;
@@ -609,21 +646,25 @@
         /* Allocate and read bitmap data */
         {
           FT_Memory  memory = face->root.memory;
-          FT_Long    len    = glyph->root.bitmap.pitch*ysize;
+          FT_Long    len    = glyph->root.bitmap.pitch * ysize;
+
 
           if ( !FT_ALLOC( glyph->root.bitmap.buffer, len ) )
           {
             error = pfr_load_bitmap_bits( p,
                                           stream->limit,
                                           format,
-                                          (face->header.color_flags & 2),
+                                          face->header.color_flags & 2,
                                           &glyph->root.bitmap );
           }
         }
       }
+
       FT_FRAME_EXIT();
     }
 
   Exit:
     return error;
   }
+
+/* END */

@@ -72,9 +72,9 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
       has been updated to support LCD-optimized display on non-paletted
       displays (under Win32 and X11)
 
-    - the PFR driver now supports embedded bitmaps (all formats supported)
+    - The PFR driver now supports embedded bitmaps (all formats supported).
 
-    - the TrueType charmap loader now supports certain "broken" fonts that
+    - The TrueType charmap loader now supports certain "broken" fonts that
       load under Windows without problems.
 
     - The cache API has been slightly modified (it's still a beta!):

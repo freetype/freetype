@@ -248,7 +248,7 @@
     FT_ASSERT( gindex < face->phy_font.num_chars );
 
     /* try to load an embedded bitmap */
-    if ( (load_flags & (FT_LOAD_NO_SCALE | FT_LOAD_NO_BITMAP)) == 0 )
+    if ( ( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_BITMAP ) ) == 0 )
     {
       error = pfr_slot_load_bitmap( slot, size, gindex );
       if ( error == 0 )
@@ -356,6 +356,7 @@
           sure */
 
 #if 0
+
   /* find the kerning for a given glyph pair */
   FT_LOCAL_DEF( FT_Error )
   pfr_face_get_kerning( PFR_Face    face,
@@ -398,7 +399,9 @@
   Exit:
     return 0;
   }
-#else
+
+#else /* 0 */
+
   /* find the kerning for a given glyph pair */
   FT_LOCAL_DEF( FT_Error )
   pfr_face_get_kerning( PFR_Face    face,
@@ -410,6 +413,7 @@
     PFR_PhyFont   phy_font = &face->phy_font;
     PFR_KernItem  item     = phy_font->kern_items;
     FT_UInt32     idx      = PFR_KERN_INDEX( glyph1, glyph2 );
+
 
     kerning->x = 0;
     kerning->y = 0;
@@ -433,6 +437,7 @@
       FT_Stream  stream = face->root.stream;
       FT_Byte*   p;
 
+
       if ( FT_STREAM_SEEK( item->offset )                       ||
            FT_FRAME_ENTER( item->pair_count * item->pair_size ) )
         goto Exit;
@@ -443,32 +448,33 @@
       {
         FT_UInt  char1, char2, charcode;
 
-        mid = (min + max) >> 1;
+
+        mid = ( min + max ) >> 1;
         p   = stream->cursor + mid*item->pair_size;
 
         if ( item->flags & PFR_KERN_2BYTE_CHAR )
         {
-          char1 = FT_NEXT_USHORT(p);
-          char2 = FT_NEXT_USHORT(p);
+          char1 = FT_NEXT_USHORT( p );
+          char2 = FT_NEXT_USHORT( p );
         }
         else
         {
-          char1 = FT_NEXT_USHORT(p);
-          char2 = FT_NEXT_USHORT(p);
+          char1 = FT_NEXT_USHORT( p );
+          char2 = FT_NEXT_USHORT( p );
         }
-        charcode = PFR_KERN_INDEX(char1,char2);
+        charcode = PFR_KERN_INDEX( char1, char2 );
 
         if ( idx == charcode )
         {
           if ( item->flags & PFR_KERN_2BYTE_ADJ )
-            kerning->x = item->base_adj + FT_NEXT_SHORT(p);
+            kerning->x = item->base_adj + FT_NEXT_SHORT( p );
           else
-            kerning->x = item->base_adj + FT_NEXT_CHAR(p);
+            kerning->x = item->base_adj + FT_NEXT_CHAR( p );
 
           break;
         }
         if ( idx > charcode )
-          min = mid+1;
+          min = mid + 1;
         else
           max = mid;
       }
