@@ -1,3 +1,9 @@
+2005-02-10  David Turner  <david@freetype.org>
+
+	* src/pfr/pfrgload.c (pfr_glyph_load): fixed an unbounded growing
+	dynamic array when loading a glyph from a PFR font. This fixes
+	bug #11921
+
 2005-02-10  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype-config.in: Add new flag `--ftversion' to
@@ -185,7 +191,7 @@
 2004-11-16  Owen Taylor  <otaylor@redhat.com>
 
 	* builds/unix/freetype-config.in: Supress -L$libdir for
-	/usr/lib64 as well as /usr/lib. (Reported by Dan Winship - 
+	/usr/lib64 as well as /usr/lib. (Reported by Dan Winship -
 	https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=139199)
 
 2004-11-11  Werner Lemberg  <wl@gnu.org>
@@ -426,7 +432,7 @@
 	to pass lookup count.
 	Check sequence and glyph indices.
 	(otl_gpos_subtable_validate): Update function arguments.
-	Update callers. 
+	Update callers.
 
 	* src/otlayout/otlgpos.h: Updated.
 
@@ -675,7 +681,7 @@
 	* src/otlayout/otlgsub.c: Add forward declaration for
 	otl_gsub_validate_funcs.
 	(otl_gsub_lookup1_apply, otl_gsub_lookup2_apply,
-	otl_gsub_lookup3_apply): Fix call to otl_parser_check_property. 
+	otl_gsub_lookup3_apply): Fix call to otl_parser_check_property.
 	s/otl_coverage_lookup/otl_coverage_get_index/.
 	(otl_ligature_validate): Add missing variable declaration.
 	(otl_sub_rule_validate): Fix typo.
