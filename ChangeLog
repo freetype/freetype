@@ -1,3 +1,9 @@
+2003-07-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init), src/pcf/pcfread.c
+	(pcf_load_font): Fix computation of height if PIXEL_SIZE property is
+	missing.
+
 2003-07-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/cache/ftcsbits.c (ftc_sbit_node_compare): Only add `size' if

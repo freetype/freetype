@@ -1014,8 +1014,7 @@ THE SOFTWARE.
             (FT_Pos)( ( prop->value.integer * bsize->size + 36 ) / 72 );
 
         if ( bsize->height == 0 )
-          bsize->height =
-            (FT_Short)( ( bsize->size * bsize->y_ppem + 2048 ) / 64 / 64 );
+          bsize->height = (FT_Short)( ( bsize->y_ppem + 32 ) / 64 );
 
         if ( bsize->height == 0 )
           bsize->height = 12;
