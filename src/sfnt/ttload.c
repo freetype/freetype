@@ -434,7 +434,9 @@
       size = *length;
 
     stream = face->root.stream;
-    (void)FILE_Read_At( offset, buffer, size );
+    /* the `if' is syntactic sugar for picky compilers */
+    if ( FILE_Read_At( offset, buffer, size ) )
+      ;
 
   Exit:
     return error;
@@ -941,7 +943,8 @@
         FT_ULong  upper;
 
 
-        (void)READ_Fields( name_record_fields, cur );
+        if ( READ_Fields( name_record_fields, cur ) )
+          break;
 
         upper = (FT_ULong)( cur->stringOffset + cur->stringLength );
         if ( upper > storageSize )
