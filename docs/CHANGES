@@ -36,7 +36,7 @@ LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
 
     - Three new font drivers in this release:
 
-      * A BDF font driver, contributed by Franco Narda Zapelli, heavily
+      * A BDF font driver, contributed by Franco Zappa Nardelli, heavily
         modified by Werner Lemberg.  It also supports anti-aliased bitmaps
         (using a slightly extended BDF format).
 
