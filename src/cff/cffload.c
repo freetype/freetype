@@ -1778,7 +1778,7 @@
 
       case 1:
         {
-          FT_Byte  nleft;
+          FT_UInt  nleft;
           FT_UInt  i = 1;
           FT_UInt  k;
 
