@@ -199,25 +199,25 @@ FT_BEGIN_HEADER
    *   ptr ::
    *     A variable receiving the service data.  NULL if not available.
    */
-#define FT_FACE_LOOKUP_SERVICE( face, ptr, id )                  \
-  FT_BEGIN_STMNT                                                 \
-    /* the strange cast is to allow C++ compilation */           \
-    FT_Pointer*  pptr = (FT_Pointer*)&(ptr);                     \
-    FT_Pointer   svc;                                            \
-                                                                 \
-                                                                 \
-    svc = FT_FACE(face)->internal->services. service_ ## id ;    \
-    if ( svc == FT_SERVICE_UNAVAILABLE )                         \
-      svc = NULL;                                                \
-    else if ( svc == NULL )                                      \
-    {                                                            \
-      FT_FACE_FIND_SERVICE( face, svc, id );                     \
-                                                                 \
-      FT_FACE(face)->internal->services. service_ ## id =        \
-        (FT_Pointer)( svc != NULL ? svc                          \
-                                  : FT_SERVICE_UNAVAILABLE );    \
-    }                                                            \
-    *pptr = svc;                                                 \
+#define FT_FACE_LOOKUP_SERVICE( face, ptr, id )               \
+  FT_BEGIN_STMNT                                              \
+    /* the strange cast is to allow C++ compilation */        \
+    FT_Pointer*  pptr = (FT_Pointer*)&(ptr);                  \
+    FT_Pointer   svc;                                         \
+                                                              \
+                                                              \
+    svc = FT_FACE(face)->internal->services. service_ ## id;  \
+    if ( svc == FT_SERVICE_UNAVAILABLE )                      \
+      svc = NULL;                                             \
+    else if ( svc == NULL )                                   \
+    {                                                         \
+      FT_FACE_FIND_SERVICE( face, svc, id );                  \
+                                                              \
+      FT_FACE(face)->internal->services. service_ ## id =     \
+        (FT_Pointer)( svc != NULL ? svc                       \
+                                  : FT_SERVICE_UNAVAILABLE ); \
+    }                                                         \
+    *pptr = svc;                                              \
   FT_END_STMNT
 
 
@@ -238,18 +238,18 @@ FT_BEGIN_HEADER
    *  The header files containing the services.
    */
 
+#define FT_SERVICE_BDF_H                <freetype/internal/services/svbdf.h>
+#define FT_SERVICE_GLYPH_DICT_H         <freetype/internal/services/svgldict.h>
 #define FT_SERVICE_MULTIPLE_MASTERS_H   <freetype/internal/services/svmm.h>
-#define FT_SERVICE_POSTSCRIPT_NAME_H    <freetype/internal/services/svpostnm.h>
+#define FT_SERVICE_OPENTYPE_VALIDATE_H  <freetype/internal/services/svotval.h>
+#define FT_SERVICE_PFR_H                <freetype/internal/services/svpfr.h>
 #define FT_SERVICE_POSTSCRIPT_CMAPS_H   <freetype/internal/services/svpscmap.h>
 #define FT_SERVICE_POSTSCRIPT_INFO_H    <freetype/internal/services/svpsinfo.h>
-#define FT_SERVICE_GLYPH_DICT_H         <freetype/internal/services/svgldict.h>
-#define FT_SERVICE_BDF_H                <freetype/internal/services/svbdf.h>
-#define FT_SERVICE_XFREE86_NAME_H       <freetype/internal/services/svxf86nm.h>
+#define FT_SERVICE_POSTSCRIPT_NAME_H    <freetype/internal/services/svpostnm.h>
 #define FT_SERVICE_SFNT_H               <freetype/internal/services/svsfnt.h>
-#define FT_SERVICE_PFR_H                <freetype/internal/services/svpfr.h>
-#define FT_SERVICE_WINFNT_H             <freetype/internal/services/svwinfnt.h>
 #define FT_SERVICE_TT_CMAP_H            <freetype/internal/services/svttcmap.h>
-#define FT_SERVICE_OPENTYPE_VALIDATE_H  <freetype/internal/services/svotval.h>
+#define FT_SERVICE_WINFNT_H             <freetype/internal/services/svwinfnt.h>
+#define FT_SERVICE_XFREE86_NAME_H       <freetype/internal/services/svxf86nm.h>
 
  /* */
 
