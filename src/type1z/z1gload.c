@@ -308,6 +308,24 @@
   {
     FT_Outline*  outline = builder->current;
 
+    /* XXXX : we must not include the last point in the path if it */
+    /*        is located on the first point..                      */
+    if (outline->n_points > 1)
+    {
+      FT_Int      first = 0;
+      FT_Vector*  p1    = outline->points + first;
+      FT_Vector*  p2    = outline->points + outline->n_points-1;
+      
+      if (outline->n_contours > 1)
+      {
+        first = outline->contours[outline->n_contours-2]+1;
+        p1    = outline->points + first;
+      }
+        
+      if ( p1->x == p2->x && p1->y == p2->y )
+        outline->n_points--;
+    }
+    
     if ( outline->n_contours > 0 )
       outline->contours[outline->n_contours-1] = outline->n_points-1;
   }

@@ -1235,6 +1235,23 @@
   {
     FT_Outline*  cur = builder->current;
 
+    /* XXXX : we must not include the last point in the path if it */
+    /*        is located on the first point..                      */
+    if (cur->n_points > 1)
+    {
+      FT_Int      first = 0;
+      FT_Vector*  p1    = cur->points + first;
+      FT_Vector*  p2    = cur->points + cur->n_points-1;
+      
+      if (cur->n_contours > 1)
+      {
+        first = cur->contours[cur->n_contours-2]+1;
+        p1    = cur->points + first;
+      }
+        
+      if ( p1->x == p2->x && p1->y == p2->y )
+        cur->n_points--;
+    }
 
     /* save current contour, if any */
     if ( cur->n_contours > 0 )
@@ -1686,7 +1703,7 @@
     {
       /* for composite glyphs, return only the left side bearing and the */
       /* advance width                                                   */
-      if ( load_flags & FT_LOAD_NO_RECURSE )
+      if ( glyph->root.format == ft_glyph_format_composite )
       {
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
@@ -1728,18 +1745,12 @@
 
         glyph->root.format = ft_glyph_format_outline;
 
-        glyph->root.outline.flags &= ft_outline_owner;
+        glyph->root.outline.flags = 0;
 
         if ( size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
         glyph->root.outline.flags |= ft_outline_reverse_fill;
-
-#if 0
-        glyph->root.outline.second_pass    = TRUE;
-        glyph->root.outline.high_precision = size->root.metrics.y_ppem < 24;
-        glyph->root.outline.dropout_mode   = 2;
-#endif
 
         if ( hinting )
         {

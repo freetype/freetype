@@ -485,6 +485,23 @@
   {
     FT_Outline*  outline = builder->current;
 
+    /* XXXX : we must not include the last point in the path if it */
+    /*        is located on the first point..                      */
+    if (outline->n_points > 1)
+    {
+      FT_Int      first = 0;
+      FT_Vector*  p1    = outline->points + first;
+      FT_Vector*  p2    = outline->points + outline->n_points-1;
+      
+      if (outline->n_contours > 1)
+      {
+        first = outline->contours[outline->n_contours-2]+1;
+        p1    = outline->points + first;
+      }
+        
+      if ( p1->x == p2->x && p1->y == p2->y )
+        outline->n_points--;
+    }
 
     if ( outline->n_contours > 0 )
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
@@ -1676,8 +1693,13 @@
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
-    glyph->x_scale = size->metrics.x_scale;
-    glyph->y_scale = size->metrics.y_scale;
+    glyph->x_scale = 0x10000;
+    glyph->y_scale = 0x10000;
+    if (size)
+    {
+      glyph->x_scale = size->metrics.x_scale;
+      glyph->y_scale = size->metrics.y_scale;
+    }
 
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
@@ -1685,7 +1707,7 @@
     hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
               ( load_flags & FT_LOAD_NO_HINTING ) == 0;
 
-    glyph->root.format = ft_glyph_format_none;
+    glyph->root.format = ft_glyph_format_outline;  /* by default */
 
     {
       FT_Byte*  charstring;
@@ -1719,15 +1741,10 @@
     {
       /* for composite glyphs, return only the left side bearing and the */
       /* advance width..                                                 */
-      if ( load_flags & FT_LOAD_NO_RECURSE )
+      if ( glyph->root.format == ft_glyph_format_composite )
       {
-#if 0
-        glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
-        glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
-#else
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.glyph_width;
-#endif /* 0 */
       }
       else
       {
@@ -1736,11 +1753,7 @@
 
 
         /* copy the _unscaled_ advance width */
-#if 0
-        metrics->horiAdvance  = decoder.builder.advance.x;
-#else
         metrics->horiAdvance  = decoder.glyph_width;
-#endif /* 0 */
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
@@ -1749,17 +1762,11 @@
 
         glyph->root.format = ft_glyph_format_outline;
 
-        glyph->root.outline.flags &= ft_outline_owner;
+        glyph->root.outline.flags = 0;
         if ( size && size->metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
         glyph->root.outline.flags |= ft_outline_reverse_fill;
-
-#if 0
-        glyph->root.outline.second_pass    = TRUE;
-        glyph->root.outline.high_precision = size->root.metrics.y_ppem < 24;
-        glyph->root.outline.dropout_mode   = 2;
-#endif
 
         if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
