@@ -1,4 +1,10 @@
-2000-03-24  David Turner  <david.turner@freetype.org>
+2001-03-26  Tom Kacvinsky <tjk@ams.org>
+
+	* include/freetype/config/ftconfig.h: Changed hexadecimal
+	constants to use suffix U to avoid problems with HP-UX's c89
+	compiler.  Submitted by G.W. Lucas <glucas@sonalysts.com>
+
+2001-03-24  David Turner  <david.turner@freetype.org>
 
 	* Jamrules, Jamfile, src/Jamfile, src/*/Jamfile: Adding jamfiles
 	to the source tree. see www.freetype.org/jam/index.html for details
