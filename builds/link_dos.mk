@@ -34,7 +34,7 @@ ifdef BUILD_PROJECT
     ifdef CLEAN_LIBRARY
 	  -$(CLEAN_LIBRARY) $(NO_OUTPUT)
     endif
-	$(LINK_LIBRARY)
+	  $(LINK_LIBRARY)
 
 endif
 
