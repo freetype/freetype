@@ -205,7 +205,7 @@ FT_BEGIN_HEADER
                            (FT_UInt32)(FT_Byte)(p)[0]         ) )
 
 
-#define NEXT_Char( buffer )            \
+#define NEXT_Char( buffer )          \
           ( (signed char)*buffer++ )
 
 #define NEXT_Byte( buffer )            \
@@ -214,39 +214,39 @@ FT_BEGIN_HEADER
 #define NEXT_Short( buffer )                                        \
           ( (short)( buffer += 2, FT_GET_SHORT_BE( buffer - 2 ) ) )
 
-#define NEXT_UShort( buffer )                                       \
+#define NEXT_UShort( buffer )                                                 \
           ( (unsigned short)( buffer += 2, FT_GET_USHORT_BE( buffer - 2 ) ) )
 
 #define NEXT_Offset( buffer )                                     \
           ( (long)( buffer += 3, FT_GET_OFF3_BE( buffer - 3 ) ) )
 
-#define NEXT_UOffset( buffer )                                    \
+#define NEXT_UOffset( buffer )                                              \
           ( (unsigned long)( buffer += 3, FT_GET_UOFF3_BE( buffer - 3 ) ) )
 
 #define NEXT_Long( buffer )                                       \
           ( (long)( buffer += 4, FT_GET_LONG_BE( buffer - 4 ) ) )
 
-#define NEXT_ULong( buffer )                                      \
+#define NEXT_ULong( buffer )                                                \
           ( (unsigned long)( buffer += 4, FT_GET_ULONG_BE( buffer - 4 ) ) )
 
 
 #define NEXT_ShortLE( buffer )                                      \
           ( (short)( buffer += 2, FT_GET_SHORT_LE( buffer - 2 ) ) )
 
-#define NEXT_UShortLE( buffer )                                     \
+#define NEXT_UShortLE( buffer )                                               \
           ( (unsigned short)( buffer += 2, FT_GET_USHORT_LE( buffer - 2 ) ) )
 
 #define NEXT_OffsetLE( buffer )                                   \
           ( (long)( buffer += 3, FT_GET_OFF3_LE( buffer - 3 ) ) )
 
-#define NEXT_UOffsetLE( buffer )                                  \
+#define NEXT_UOffsetLE( buffer )                                            \
           ( (unsigned long)( buffer += 3, FT_GET_UOFF3_LE( buffer - 3 ) ) )
 
 
 #define NEXT_LongLE( buffer )                                     \
           ( (long)( buffer += 4, FT_GET_LONG_LE( buffer - 4 ) ) )
 
-#define NEXT_ULongLE( buffer )                                    \
+#define NEXT_ULongLE( buffer )                                              \
           ( (unsigned long)( buffer += 4, FT_GET_ULONG_LE( buffer - 4 ) ) )
 
 
