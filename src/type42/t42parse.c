@@ -158,8 +158,8 @@
     /*   When creating a new Type 42 parser, we try to locate and load */
     /*   the base dictionary, loading the whole font into memory.      */
     /*                                                                 */
-    /*   When `loading' the base dictionary, we only setup pointers in */
-    /*   the case of a memory-based stream.  Otherwise, we allocate    */
+    /*   When `loading' the base dictionary, we only set up pointers   */
+    /*   in the case of a memory-based stream.  Otherwise, we allocate */
     /*   and load the base dictionary in it.                           */
     /*                                                                 */
     /*   parser->in_memory is set if we have a memory stream.          */
@@ -245,7 +245,7 @@
   static int
   t42_is_space( FT_Byte  c )
   {
-    return ( c == ' ' || c == '\t' || c == '\r' || c == '\n' );
+    return ( c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\f' );
   }
 
 
@@ -327,6 +327,10 @@
       FT_Error     error;
 
 
+      if ( encode->char_index )
+        /*  with synthetic fonts, it's possible we get here twice  */
+        return;
+
       /* read the number of entries in the encoding, should be 256 */
       count = (FT_Int)T1_ToInt( parser );
       if ( parser->root.error )
@@ -407,14 +411,14 @@
           {
             /* bingo, we have an immediate name -- it must be a */
             /* character name                                   */
-            FT_Byte*  cur2 = cur + 1;
-            FT_Int    len;
+            FT_Byte*    cur2 = cur + 1;
+            FT_PtrDist  len;
 
 
             while ( cur2 < limit && t42_is_alpha( *cur2 ) )
               cur2++;
 
-            len = (FT_Int)( cur2 - cur - 1 );
+            len = cur2 - cur - 1;
 
             parser->root.error = T1_Add_Table( char_table, charcode,
                                                cur + 1, len + 1 );

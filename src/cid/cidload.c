@@ -191,7 +191,7 @@
       offset->y  = temp[5] >> 16;
     }
 
-    return CID_Err_Ok;       /* this is a callback function; */
+    return CID_Err_Ok;      /* this is a callback function; */
                             /* we must return an error code */
   }
 
@@ -265,7 +265,7 @@
       FT_Byte*  limit = cur + size;
 
 
-      for ( ;cur < limit; cur++ )
+      for ( ; cur < limit; cur++ )
       {
         /* look for `%ADOBeginFontDict' */
         if ( *cur == '%' && cur + 20 < limit &&
@@ -281,7 +281,7 @@
         /* look for immediates */
         else if ( *cur == '/' && cur + 2 < limit )
         {
-          FT_Int  len;
+          FT_PtrDist  len;
 
 
           cur++;
@@ -289,11 +289,11 @@
           parser->root.cursor = cur;
           cid_parser_skip_alpha( parser );
 
-          len = (FT_Int)( parser->root.cursor - cur );
+          len = parser->root.cursor - cur;
           if ( len > 0 && len < 22 )
           {
             /* now compare the immediate name to the keyword table */
-            T1_Field  keyword = (T1_Field) cid_field_records;
+            T1_Field  keyword = (T1_Field)cid_field_records;
 
 
             for (;;)
@@ -303,12 +303,15 @@
 
               name = (FT_Byte*)keyword->ident;
               if ( !name )
-                break;
-
-              if ( cur[0] == name[0]                          &&
-                   len == (FT_Int)ft_strlen( (const char*)name ) )
               {
-                FT_Int  n;
+                cid_parser_skip_alpha( parser );
+                break;
+              }
+
+              if ( cur[0] == name[0]                     &&
+                   len == ft_strlen( (const char*)name ) )
+              {
+                FT_PtrDist  n;
 
 
                 for ( n = 1; n < len; n++ )

@@ -1,3 +1,16 @@
+2003-09-30  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidload.c (cid_parse_dict): Skip token if no keyword is
+	found.
+
+	* src/type1/t1parse.c (IS_T1_WHITESPACE, IS_T1_LINESPACE,
+	IS_T1_SPACE): Removed.
+	(PFB_Tag): Removed.
+	(read_pfb_tag): Don't use PFB_Tag.
+
+	* src/type42/t42parse.c (t42_is_space): Handle `\f' also.
+	(t42_parse_encoding): Handle synthetic fonts.
+
 2003-09-29  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/t1types.h: Don't include

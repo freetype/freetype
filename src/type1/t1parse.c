@@ -65,41 +65,28 @@
   /*************************************************************************/
 
 
-#define IS_T1_WHITESPACE( c )  ( (c) == ' '  || (c) == '\t' )
-#define IS_T1_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' )
-
-#define IS_T1_SPACE( c )  ( IS_T1_WHITESPACE( c ) || IS_T1_LINESPACE( c ) )
-
-
-  typedef struct  PFB_Tag_
+  static FT_Error
+  read_pfb_tag( FT_Stream   stream,
+                FT_UShort  *atag,
+                FT_Long    *asize )
   {
+    FT_Error   error;
     FT_UShort  tag;
     FT_Long    size;
 
-  } PFB_Tag;
 
+    *atag  = 0;
+    *asize = 0;
 
-  static FT_Error
-  read_pfb_tag( FT_Stream   stream,
-                FT_UShort*  tag,
-                FT_Long*    size )
-  {
-    FT_Error  error;
-    PFB_Tag   head;
-
-
-    *tag  = 0;
-    *size = 0;
-
-    if ( !FT_READ_USHORT( head.tag ) )
+    if ( !FT_READ_USHORT( tag ) )
     {
-      if ( head.tag == 0x8001U || head.tag == 0x8002U )
+      if ( tag == 0x8001U || tag == 0x8002U )
       {
-        if ( !FT_READ_LONG_LE( head.size ) )
-          *size = head.size;
+        if ( !FT_READ_LONG_LE( size ) )
+          *asize = size;
       }
 
-      *tag = head.tag;
+      *atag = tag;
     }
 
     return error;
