@@ -55,13 +55,13 @@
 
     /* For incremental fonts get the character data using */
     /* the callback function.                             */
-    if ( face->root.incremental_interface )
+    if ( face->root.internal->incremental_interface )
     {
       FT_Data  glyph_data;
 
 
-      error = face->root.incremental_interface->funcs->get_glyph_data(
-                face->root.incremental_interface->object,
+      error = face->root.internal->incremental_interface->funcs->get_glyph_data(
+                face->root.internal->incremental_interface->object,
                 glyph_index,
                 &glyph_data );
       if ( error )
@@ -70,15 +70,20 @@
       p         = (FT_Byte*)glyph_data.pointer;
       fd_select = (FT_UInt)cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
 
-      glyph_data.pointer += cid->fd_bytes;
-      glyph_data.length  -= cid->fd_bytes;
-      glyph_length        = glyph_data.length;
+      if ( glyph_data.length != 0 )
+	  {
+        glyph_length = glyph_data.length - cid->fd_bytes;
+        FT_ALLOC( charstring, glyph_length );
+	    if ( !error )
+          ft_memcpy( charstring, glyph_data.pointer + cid->fd_bytes, glyph_length );
+	  }
 
-      if ( glyph_length == 0 )
+	  face->root.internal->incremental_interface->funcs->free_glyph_data(
+                face->root.internal->incremental_interface->object,
+                &glyph_data );
+
+      if ( error )
         goto Exit;
-      if ( FT_ALLOC( charstring, glyph_length ) )
-        goto Exit;
-      ft_memcpy( charstring, glyph_data.pointer, glyph_length );
     }
 
     else
@@ -151,16 +156,15 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
     /* Incremental fonts can optionally override the metrics. */
-    if ( !error                                                     &&
-         face->root.incremental_interface                           &&
-         face->root.incremental_interface->funcs->get_glyph_metrics )
+    if ( !error                                       &&
+         face->root.internal->incremental_interface   &&
+         face->root.internal->incremental_interface->funcs->get_glyph_metrics )
     {
-      FT_Bool                 found = FALSE;
-      FT_Basic_Glyph_Metrics  metrics;
+      FT_Bool                    found = FALSE;
+      FT_Incremental_MetricsRec  metrics;
 
-
-      error = face->root.incremental_interface->funcs->get_glyph_metrics(
-                face->root.incremental_interface->object,
+      error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
+                face->root.internal->incremental_interface->object,
                 glyph_index, FALSE, &metrics, &found );
       if ( found )
       {
