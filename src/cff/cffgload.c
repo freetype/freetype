@@ -1066,7 +1066,6 @@
 
         case cff_op_hintmask:
         case cff_op_cntrmask:
-
           FT_TRACE4(( op == cff_op_hintmask ? " hintmask"
                                             : " cntrmask" ));
 
@@ -1078,7 +1077,9 @@
 
             FT_TRACE4(( " " ));
 
-            for ( maskbyte = 0; maskbyte < ( decoder->num_hints + 7 ) >> 3 ; maskbyte++, ip++ )
+            for ( maskbyte = 0;
+                  maskbyte < ( decoder->num_hints + 7 ) >> 3;
+                  maskbyte++, ip++ )
             {
               FT_TRACE4(( "%02X", *ip ));
             }
@@ -1839,10 +1840,8 @@
           goto Unimplemented;
 
         case cff_op_dotsection:
-          {
-            /* this operator is deprecated and ignored by the parser */
-            FT_TRACE4(( " dotsection" ));
-          }
+          /* this operator is deprecated and ignored by the parser */
+          FT_TRACE4(( " dotsection" ));
           break;
 
         case cff_op_and:

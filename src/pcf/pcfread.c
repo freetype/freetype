@@ -981,10 +981,10 @@ THE SOFTWARE.
         yres = find_property( face, "RESOLUTION_Y" );
         if ( ( xres != NULL ) && ( yres != NULL ) )
         {
-          root->available_sizes->width  = (FT_Short)
-            (prop->value.integer * 75 / xres->value.integer);
-          root->available_sizes->height = (FT_Short)
-            (prop->value.integer * 75 / yres->value.integer);
+          root->available_sizes->width =
+            (FT_Short)( prop->value.integer * 75 / xres->value.integer );
+          root->available_sizes->height =
+            (FT_Short)( prop->value.integer * 75 / yres->value.integer );
         }
       }
       else

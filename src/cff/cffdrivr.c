@@ -225,14 +225,15 @@
                                 FT_Pointer  buffer,
                                 FT_UInt     buffer_max )
   {
-    CFF_Font*           font = (CFF_Font*)face->extra.data;
+    CFF_Font*           font   = (CFF_Font*)face->extra.data;
     FT_Memory           memory = FT_FACE_MEMORY(face);
     FT_String*          gname;
     FT_UShort           sid;
     PSNames_Interface*  psnames;
     FT_Error            error;
 
-    psnames = (PSNames_Interface*)FT_Get_Module_Interface( face->root.driver->root.library, "psnames" );
+    psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+                face->root.driver->root.library, "psnames" );
 
     if ( !psnames )
     {
@@ -255,7 +256,7 @@
       FT_UInt  len = strlen( gname );
 
 
-      if (len >= buffer_max)
+      if ( len >= buffer_max )
         len = buffer_max - 1;
 
       MEM_Copy( buffer, gname, len );
@@ -268,6 +269,7 @@
     Exit:
       return error;
   }
+
 
   /*************************************************************************/
   /*                                                                       */
