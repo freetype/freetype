@@ -1105,8 +1105,6 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*                    FreeType base size metrics                         */
-  /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_Size_Metrics                                                    */
   /*                                                                       */
