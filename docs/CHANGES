@@ -9,13 +9,18 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
       cmap caches.)
 
     - `FT_Outline_Get_BBox'  sometimes returned  incorrect values  for
-      conic outlines (e.g. for TrueType fonts).
+      conic outlines (e.g., for TrueType fonts).
 
     - Handling of `bhed' table has been fixed.
 
     - The TrueType driver with enabled byte code interpreter sometimes
       returned artifacts due to incorrect rounding.  This bug has been
       introduced after version 2.1.4.
+
+    - The BDF driver dropped the last glyph in the font.
+
+    - The BDF driver now uses the DEFAULT_CHAR property (if available)
+      to select a glyph shape for the undefined glyph.
 
 
   II. IMPORTANT CHANGES
