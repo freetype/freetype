@@ -154,7 +154,8 @@ OBJECTS_LIST :=
 #
 PUBLIC_H   := $(wildcard $(PUBLIC_)*.h)
 BASE_H     := $(wildcard $(INTERNAL_)*.h)
-CONFIG_H   := $(wildcard $(CONFIG_)*.h)
+CONFIG_H   := $(wildcard $(CONFIG_)*.h) \
+              $(wildcard $(BUILD)$(SEP)freetype$(SEP)config$(SEP)*.h)
 CACHE_H    := $(wildcard $(CACHE_)*.h)
 
 FREETYPE_H := $(PUBLIC_H) $(BASE_H) $(CONFIG_H) $(CACHE_H)

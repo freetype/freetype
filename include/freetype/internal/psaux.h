@@ -520,9 +520,6 @@
 
 #if 0
 
-#define T1_MAX_CHARSTRINGS_OPERANDS  64
-#define T1_MAX_SUBRS_CALLS           16
-
   /*************************************************************************/
   /*                                                                       */
   /* T1_MAX_SUBRS_CALLS details the maximum number of nested sub-routine   */

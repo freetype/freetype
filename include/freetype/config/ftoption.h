@@ -357,7 +357,9 @@
   /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.  A     */
   /* minimum of 16 is required.                                            */
   /*                                                                       */
-#define T1_MAX_CHARSTRINGS_OPERANDS  64
+  /* The Chinese font MingTiEG-Medium (CNS 11643 character set) needs 256. */
+  /*                                                                       */
+#define T1_MAX_CHARSTRINGS_OPERANDS  256
 
 
   /*************************************************************************/
