@@ -343,7 +343,8 @@
     else
     {
       /* rewind to start of file; we are going to load a pure-CFF font */
-      (void)FILE_Seek( 0 );
+      if ( FILE_Seek( 0 ) )
+        goto Exit;
       error = FT_Err_Ok;
     }
 

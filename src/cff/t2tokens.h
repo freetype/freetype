@@ -16,10 +16,10 @@
 /***************************************************************************/
 
 
-#undef  T2TYPE
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  CFF_Font_Dict
 #undef  T2CODE
-#define T2TYPE  CFF_Font_Dict
-#define T2CODE  T2CODE_TOPDICT
+#define T2CODE        T2CODE_TOPDICT
 
   T2_FIELD_STRING  ( 0, version )
   T2_FIELD_STRING  ( 1, notice )
@@ -66,10 +66,10 @@
 #endif
 
 
-#undef  T2TYPE
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  CFF_Private
 #undef  T2CODE
-#define T2TYPE  CFF_Private
-#define T2CODE  T2CODE_PRIVATE
+#define T2CODE        T2CODE_PRIVATE
 
   T2_FIELD_DELTA( 6, blue_values, 14 )
   T2_FIELD_DELTA( 7, other_blues, 10 )

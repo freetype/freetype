@@ -16,10 +16,10 @@
 /***************************************************************************/
 
 
-#undef  T1TYPE
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  CID_Info
 #undef  T1CODE
-#define T1TYPE  CID_Info
-#define T1CODE  t1_field_cid_info
+#define T1CODE        t1_field_cid_info
 
   CID_FIELD_STRING  ( "CIDFontName", cid_font_name )
   CID_FIELD_NUM     ( "CIDFontVersion", cid_version )
@@ -36,10 +36,10 @@
   CID_FIELD_NUM     ( "CIDCount", cid_count )
 
 
-#undef  T1TYPE
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  T1_FontInfo
 #undef  T1CODE
-#define T1TYPE  T1_FontInfo
-#define T1CODE  t1_field_font_info
+#define T1CODE        t1_field_font_info
 
   CID_FIELD_STRING( "version", version )
   CID_FIELD_STRING( "Notice", notice )
@@ -52,10 +52,10 @@
   CID_FIELD_NUM   ( "UnderlineThickness", underline_thickness )
 
 
-#undef  T1TYPE
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  CID_FontDict
 #undef  T1CODE
-#define T1TYPE CID_FontDict
-#define T1CODE t1_field_font_dict
+#define T1CODE        t1_field_font_dict
 
   CID_FIELD_CALLBACK( "FontMatrix", font_matrix )
   CID_FIELD_NUM     ( "PaintType", paint_type )
@@ -69,10 +69,10 @@
   CID_FIELD_NUM     ( "StrokeWidth", stroke_width )
 
 
-#undef  T1TYPE
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  T1_Private
 #undef  T1CODE
-#define T1TYPE  T1_Private
-#define T1CODE  t1_field_private
+#define T1CODE        t1_field_private
 
   CID_FIELD_NUM       ( "UniqueID", unique_id )
   CID_FIELD_NUM       ( "lenIV", lenIV )

@@ -214,7 +214,7 @@
           if ( face->cid.cid_font_name )
           {
             root->family_name = face->cid.cid_font_name;
-            root->style_name  = "Regular";
+            root->style_name  = (char *)"Regular";
           }
         }
 

@@ -243,7 +243,7 @@
         if ( face->type1.font_name )
         {
           root->family_name = face->type1.font_name;
-          root->style_name  = "Regular";
+          root->style_name  = (char *)"Regular";
         }
       }
 
@@ -293,11 +293,8 @@
 
       /* synthesize a Unicode charmap if there is support in the `PSNames' */
       /* module                                                            */
-      if ( face->psnames )
+      if ( psnames )
       {
-        PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
-
-
         if ( psnames->unicode_value )
         {
           error = psnames->build_unicodes(

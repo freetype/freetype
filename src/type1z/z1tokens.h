@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#undef  T1TYPE
-#define T1TYPE  T1_FontInfo
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  T1_FontInfo
 
   Z1_FONTINFO_STRING( "version", version )
   Z1_FONTINFO_STRING( "Notice", notice )
@@ -31,8 +31,8 @@
   Z1_FONTINFO_NUM   ( "UnderlineThickness", underline_thickness )
 
 
-#undef  T1TYPE
-#define T1TYPE  T1_Private
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  T1_Private
 
   Z1_PRIVATE_NUM       ( "UniqueID", unique_id )
   Z1_PRIVATE_NUM       ( "lenIV", lenIV )
@@ -57,8 +57,8 @@
   Z1_PRIVATE_NUM_TABLE ( "StemSnapV", snap_heights, 12, num_snap_heights )
 
 
-#undef  T1TYPE
-#define T1TYPE  T1_Font
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  T1_Font
 
   Z1_TOPDICT_NUM( "PaintType", paint_type )
   Z1_TOPDICT_NUM( "FontType", font_type )

@@ -1029,10 +1029,10 @@
         goto Exit;
 
       /* swap between big and little endianness */
-      *size  = ( ( asize & 0xFF000000L ) >> 24 ) |
-               ( ( asize & 0x00FF0000L ) >> 8  ) |
-               ( ( asize & 0x0000FF00L ) << 8  ) |
-               ( ( asize & 0x000000FFL ) << 24 );
+      *size  = ( ( asize & 0xFF000000UL ) >> 24 ) |
+               ( ( asize & 0x00FF0000UL ) >> 8  ) |
+               ( ( asize & 0x0000FF00UL ) << 8  ) |
+               ( ( asize & 0x000000FFUL ) << 24 );
     }
 
   Exit:
@@ -1092,7 +1092,8 @@
     {
       /* assume that this is a PFA file for now; an error will */
       /* be produced later when more things are checked        */
-      (void)FILE_Seek( 0L );
+      if ( FILE_Seek( 0L ) )
+        goto Exit;
       size = stream->size;
     }
     else
@@ -1221,7 +1222,6 @@
       /* then re-read them into memory.                                */
       FT_Long    start_pos = FILE_Pos();
       FT_UShort  tag;
-      FT_Long    size;
 
 
       parser->private_len = 0;

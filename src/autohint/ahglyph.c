@@ -260,14 +260,14 @@
   void  ah_outline_save( AH_Outline*  outline,
                          AH_Loader*   gloader )
   {
-    AH_Point*   point = outline->points;
-    AH_Point*   limit = point + outline->num_points;
-    FT_Vector*  vec   = gloader->current.outline.points;
-    char*       tag   = gloader->current.outline.tags;
+    AH_Point*   point       = outline->points;
+    AH_Point*   point_limit = point + outline->num_points;
+    FT_Vector*  vec         = gloader->current.outline.points;
+    char*       tag         = gloader->current.outline.tags;
 
 
     /* we assume that the glyph loader has already been checked for storage */
-    for ( ; point < limit; point++, vec++, tag++ )
+    for ( ; point < point_limit; point++, vec++, tag++ )
     {
       vec->x = point->x;
       vec->y = point->y;
@@ -393,8 +393,8 @@
     {
       /* do one thing at a time -- it is easier to understand, and */
       /* the code is clearer                                       */
-      AH_Point*  point = points;
-      AH_Point*  limit = point + outline->num_points;
+      AH_Point*  point;
+      AH_Point*  point_limit = points + outline->num_points;
 
 
       /* compute coordinates */
@@ -404,7 +404,7 @@
         FT_Fixed    y_scale = outline->y_scale;
 
 
-        for (; point < limit; vec++, point++ )
+        for ( point = points; point < point_limit; vec++, point++ )
         {
           point->fx = vec->x;
           point->fy = vec->y;
@@ -420,7 +420,7 @@
         char*  tag = source->tags;
 
 
-        for ( point = points; point < limit; point++, tag++ )
+        for ( point = points; point < point_limit; point++, tag++ )
         {
           switch ( FT_CURVE_TAG( *tag ) )
           {
@@ -448,7 +448,7 @@
         end   = points + source->contours[0];
         prev  = end;
 
-        for ( point = points; point < limit; point++ )
+        for ( point = points; point < point_limit; point++ )
         {
           point->prev = prev;
           if ( point < end )
@@ -460,7 +460,7 @@
           {
             point->next = first;
             contour_index++;
-            if ( point + 1 < limit )
+            if ( point + 1 < point_limit )
             {
               end   = points + source->contours[contour_index];
               first = point + 1;
@@ -472,13 +472,13 @@
 
       /* set-up the contours array */
       {
-        AH_Point**  contour  = outline->contours;
-        AH_Point**  limit    = contour + outline->num_contours;
-        short*      end      = source->contours;
-        short       index    = 0;
+        AH_Point**  contour       = outline->contours;
+        AH_Point**  contour_limit = contour + outline->num_contours;
+        short*      end           = source->contours;
+        short       index         = 0;
 
 
-        for ( ; contour < limit; contour++, end++ )
+        for ( ; contour < contour_limit; contour++, end++ )
         {
           contour[0] = points + index;
           index      = end[0] + 1;
@@ -487,7 +487,7 @@
 
       /* compute directions of in & out vectors */
       {
-        for ( point = points; point < limit; point++ )
+        for ( point = points; point < point_limit; point++ )
         {
           AH_Point*  prev;
           AH_Point*  next;
@@ -546,11 +546,11 @@
   void  ah_setup_uv( AH_Outline*  outline,
                      AH_UV        source )
   {
-    AH_Point*  point = outline->points;
-    AH_Point*  limit = point + outline->num_points;
+    AH_Point*  point       = outline->points;
+    AH_Point*  point_limit = point + outline->num_points;
 
 
-    for ( ; point < limit; point++ )
+    for ( ; point < point_limit; point++ )
     {
       FT_Pos  u, v;
 
@@ -616,16 +616,16 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Point**   contour       = outline->contours;
-      AH_Point**   contour_limit = contour + outline->num_contours;
-      AH_Segment*  segment       = segments;
-      FT_Int       num_segments  = 0;
+      AH_Point**   contour       =  outline->contours;
+      AH_Point**   contour_limit =  contour + outline->num_contours;
+      AH_Segment*  segment       =  segments;
+      FT_Int       num_segments  =  0;
 
 #ifdef AH_HINT_METRICS
-      AH_Point*    min_point = 0;
-      AH_Point*    max_point = 0;
-      FT_Pos       min_coord = 32000;
-      FT_Pos       max_coord = -32000;
+      AH_Point*    min_point     =  0;
+      AH_Point*    max_point     =  0;
+      FT_Pos       min_coord     =  32000;
+      FT_Pos       max_coord     = -32000;
 #endif
 
 
@@ -747,11 +747,13 @@
             segment->contour  = contour;
             on_edge           = 1;
 
+#ifdef AH_HINT_METRICS
             if ( point == max_point )
               max_point = 0;
 
             if ( point == min_point )
               min_point = 0;
+#endif
           }
 
           point = point->next;
@@ -765,17 +767,18 @@
       /* we do this by inserting fake segments when needed            */
       if ( dimension == 0 )
       {
-        AH_Point*  point = outline->points;
-        AH_Point*  limit = point + outline->num_points;
+        AH_Point*  point       =  outline->points;
+        AH_Point*  point_limit =  point + outline->num_points;
 
-        AH_Point*  min_point = 0;
-        AH_Point*  max_point = 0;
-        FT_Pos     min_pos = 32000;
-        FT_Pos     max_pos = -32000;
+        FT_Pos     min_pos     =  32000;
+        FT_Pos     max_pos     = -32000;
 
+
+        min_point = 0;
+        max_point = 0;
 
         /* compute minimum and maximum points */
-        for ( ; point < limit; point++ )
+        for ( ; point < point_limit; point++ )
         {
           FT_Pos  x = point->fx;
 
@@ -840,14 +843,14 @@
   void  ah_outline_link_segments( AH_Outline*  outline )
   {
     AH_Segment*  segments;
-    AH_Segment*  limit;
+    AH_Segment*  segment_limit;
     int          dimension;
 
 
     ah_setup_uv( outline, ah_uv_fyx );
 
-    segments = outline->horz_segments;
-    limit    = segments + outline->num_hsegments;
+    segments      = outline->horz_segments;
+    segment_limit = segments + outline->num_hsegments;
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
@@ -856,7 +859,7 @@
 
 
       /* now compare each segment to the others */
-      for ( seg1 = segments; seg1 < limit; seg1++ )
+      for ( seg1 = segments; seg1 < segment_limit; seg1++ )
       {
         FT_Pos       best_score   = 32000;
         AH_Segment*  best_segment = 0;
@@ -867,7 +870,7 @@
         if ( seg1->first == seg1->last )
           continue;
 
-        for ( seg2 = segments; seg2 < limit; seg2++ )
+        for ( seg2 = segments; seg2 < segment_limit; seg2++ )
           if ( seg1 != seg2 && seg1->dir + seg2->dir == 0 )
           {
             FT_Pos   pos1 = seg1->pos;
@@ -937,7 +940,7 @@
       } /* edges 1 */
 
       /* now, compute the `serif' segments */
-      for ( seg1 = segments; seg1 < limit; seg1++ )
+      for ( seg1 = segments; seg1 < segment_limit; seg1++ )
       {
         seg2 = seg1->link;
 
@@ -950,8 +953,8 @@
 
       ah_setup_uv( outline, ah_uv_fxy );
 
-      segments = outline->vert_segments;
-      limit    = segments + outline->num_vsegments;
+      segments      = outline->vert_segments;
+      segment_limit = segments + outline->num_vsegments;
     }
   }
 
@@ -962,14 +965,14 @@
   void  ah_dump_segments( AH_Outline*  outline )
   {
     AH_Segment*  segments;
-    AH_Segment*  limit;
+    AH_Segment*  segment_limit;
     AH_Point*    points;
     FT_Int       dimension;
 
 
-    points   = outline->points;
-    segments = outline->horz_segments;
-    limit    = segments + outline->num_hsegments;
+    points        = outline->points;
+    segments      = outline->horz_segments;
+    segment_limit = segments + outline->num_hsegments;
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
@@ -981,7 +984,7 @@
       printf ( "  [ index |  pos |  dir  | link | serif |"
                " numl | first | start ]\n" );
 
-      for ( seg = segments; seg < limit; seg++ )
+      for ( seg = segments; seg < segment_limit; seg++ )
       {
         printf ( "  [ %5d | %4d | %5s | %4d | %5d | %4d | %5d | %5d ]\n",
                  seg - segments,
@@ -1002,8 +1005,8 @@
                  seg->last - points );
       }
 
-      segments = outline->vert_segments;
-      limit    = segments + outline->num_vsegments;
+      segments      = outline->vert_segments;
+      segment_limit = segments + outline->num_vsegments;
     }
   }
 
@@ -1285,14 +1288,14 @@
   void  ah_outline_compute_blue_edges( AH_Outline*       outline,
                                        AH_Face_Globals*  face_globals )
   {
-    AH_Edge*     edge    = outline->horz_edges;
-    AH_Edge*     limit   = edge + outline->num_hedges;
-    AH_Globals*  globals = &face_globals->design;
-    FT_Fixed     y_scale = outline->y_scale;
+    AH_Edge*     edge       = outline->horz_edges;
+    AH_Edge*     edge_limit = edge + outline->num_hedges;
+    AH_Globals*  globals    = &face_globals->design;
+    FT_Fixed     y_scale    = outline->y_scale;
 
 
     /* compute for each horizontal edge, which blue zone is closer */
-    for ( ; edge < limit; edge++ )
+    for ( ; edge < edge_limit; edge++ )
     {
       AH_Blue  blue;
       FT_Pos*  best_blue = 0;
@@ -1381,14 +1384,14 @@
   void  ah_outline_scale_blue_edges( AH_Outline*       outline,
                                      AH_Face_Globals*  globals )
   {
-    AH_Edge*  edge  = outline->horz_edges;
-    AH_Edge*  limit = edge + outline->num_hedges;
+    AH_Edge*  edge       = outline->horz_edges;
+    AH_Edge*  edge_limit = edge + outline->num_hedges;
     FT_Int    delta;
 
 
     delta = globals->scaled.blue_refs - globals->design.blue_refs;
 
-    for ( ; edge < limit; edge++ )
+    for ( ; edge < edge_limit; edge++ )
     {
       if ( edge->blue_edge )
         edge->blue_edge += delta;
@@ -1401,14 +1404,14 @@
   void  ah_dump_edges( AH_Outline*  outline )
   {
     AH_Edge*     edges;
-    AH_Edge*     limit;
+    AH_Edge*     edge_limit;
     AH_Segment*  segments;
     FT_Int       dimension;
 
 
-    edges    = outline->horz_edges;
-    limit    = edges + outline->num_hedges;
-    segments = outline->horz_segments;
+    edges      = outline->horz_edges;
+    edge_limit = edges + outline->num_hedges;
+    segments   = outline->horz_segments;
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
@@ -1420,7 +1423,7 @@
       printf ( "  [ index |  pos |  dir  | link |"
                " serif | blue | opos  |  pos  ]\n" );
 
-      for ( edge = edges; edge < limit; edge++ )
+      for ( edge = edges; edge < edge_limit; edge++ )
       {
         printf ( "  [ %5d | %4d | %5s | %4d | %5d |  %c  | %5.2f | %5.2f ]\n",
                  edge - edges,
@@ -1441,9 +1444,9 @@
                  edge->pos / 64.0 );
       }
 
-      edges = outline->vert_edges;
-      limit = edges + outline->num_vedges;
-      segments = outline->vert_segments;
+      edges      = outline->vert_edges;
+      edge_limit = edges + outline->num_vedges;
+      segments   = outline->vert_segments;
     }
   }
 

@@ -18,6 +18,7 @@
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/tterrors.h>
+#include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 
 
@@ -191,17 +192,20 @@
 
   const FT_Frame_Field  sbit_metrics_fields[] =
   {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_SBit_Metrics
+
     FT_FRAME_START( 8 ),
-      FT_FRAME_BYTE( TT_SBit_Metrics, height ),
-      FT_FRAME_BYTE( TT_SBit_Metrics, width ),
+      FT_FRAME_BYTE( height ),
+      FT_FRAME_BYTE( width ),
 
-      FT_FRAME_CHAR( TT_SBit_Metrics, horiBearingX ),
-      FT_FRAME_CHAR( TT_SBit_Metrics, horiBearingY ),
-      FT_FRAME_BYTE( TT_SBit_Metrics, horiAdvance ),
+      FT_FRAME_CHAR( horiBearingX ),
+      FT_FRAME_CHAR( horiBearingY ),
+      FT_FRAME_BYTE( horiAdvance ),
 
-      FT_FRAME_CHAR( TT_SBit_Metrics, vertBearingX ),
-      FT_FRAME_CHAR( TT_SBit_Metrics, vertBearingY ),
-      FT_FRAME_BYTE( TT_SBit_Metrics, vertAdvance ),
+      FT_FRAME_CHAR( vertBearingX ),
+      FT_FRAME_CHAR( vertBearingY ),
+      FT_FRAME_BYTE( vertAdvance ),
     FT_FRAME_END
   };
 
@@ -404,43 +408,49 @@
 
     const FT_Frame_Field  sbit_line_metrics_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_SBit_Line_Metrics
+
       /* no FT_FRAME_START */
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, ascender ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, descender ),
-        FT_FRAME_BYTE( TT_SBit_Line_Metrics, max_width ),
+        FT_FRAME_CHAR( ascender ),
+        FT_FRAME_CHAR( descender ),
+        FT_FRAME_BYTE( max_width ),
 
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, caret_slope_numerator ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, caret_slope_denominator ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, caret_offset ),
+        FT_FRAME_CHAR( caret_slope_numerator ),
+        FT_FRAME_CHAR( caret_slope_denominator ),
+        FT_FRAME_CHAR( caret_offset ),
 
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, min_origin_SB ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, min_advance_SB ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, max_before_BL ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, min_after_BL ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, pads[0] ),
-        FT_FRAME_CHAR( TT_SBit_Line_Metrics, pads[1] ),
+        FT_FRAME_CHAR( min_origin_SB ),
+        FT_FRAME_CHAR( min_advance_SB ),
+        FT_FRAME_CHAR( max_before_BL ),
+        FT_FRAME_CHAR( min_after_BL ),
+        FT_FRAME_CHAR( pads[0] ),
+        FT_FRAME_CHAR( pads[1] ),
       FT_FRAME_END
     };
 
     const FT_Frame_Field  strike_start_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_SBit_Strike
+
       /* no FT_FRAME_START */
-        FT_FRAME_ULONG( TT_SBit_Strike, ranges_offset ),
+        FT_FRAME_ULONG( ranges_offset ),
         FT_FRAME_SKIP_LONG,
-        FT_FRAME_ULONG( TT_SBit_Strike, num_ranges ),
-        FT_FRAME_ULONG( TT_SBit_Strike, color_ref ),
+        FT_FRAME_ULONG( num_ranges ),
+        FT_FRAME_ULONG( color_ref ),
       FT_FRAME_END
     };
 
     const FT_Frame_Field  strike_end_fields[] =
     {
       /* no FT_FRAME_START */
-        FT_FRAME_USHORT( TT_SBit_Strike, start_glyph ),
-        FT_FRAME_USHORT( TT_SBit_Strike, end_glyph ),
-        FT_FRAME_BYTE  ( TT_SBit_Strike, x_ppem ),
-        FT_FRAME_BYTE  ( TT_SBit_Strike, y_ppem ),
-        FT_FRAME_BYTE  ( TT_SBit_Strike, bit_depth ),
-        FT_FRAME_CHAR  ( TT_SBit_Strike, flags ),
+        FT_FRAME_USHORT( start_glyph ),
+        FT_FRAME_USHORT( end_glyph ),
+        FT_FRAME_BYTE  ( x_ppem ),
+        FT_FRAME_BYTE  ( y_ppem ),
+        FT_FRAME_BYTE  ( bit_depth ),
+        FT_FRAME_CHAR  ( flags ),
       FT_FRAME_END
     };
 
@@ -838,12 +848,15 @@
 
         const FT_Frame_Field  sbit_small_metrics_fields[] =
         {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_SBit_Small_Metrics
+
           FT_FRAME_START( 5 ),
-            FT_FRAME_BYTE( TT_SBit_Small_Metrics, height ),
-            FT_FRAME_BYTE( TT_SBit_Small_Metrics, width ),
-            FT_FRAME_CHAR( TT_SBit_Small_Metrics, bearingX ),
-            FT_FRAME_CHAR( TT_SBit_Small_Metrics, bearingY ),
-            FT_FRAME_BYTE( TT_SBit_Small_Metrics, advance ),
+            FT_FRAME_BYTE( height ),
+            FT_FRAME_BYTE( width ),
+            FT_FRAME_CHAR( bearingX ),
+            FT_FRAME_CHAR( bearingY ),
+            FT_FRAME_BYTE( advance ),
           FT_FRAME_END
         };
 

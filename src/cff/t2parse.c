@@ -28,6 +28,7 @@
 
 
 #include <freetype/internal/t2errors.h>
+#include <freetype/internal/ftstream.h>
 
 
   /*************************************************************************/
@@ -359,8 +360,8 @@
   static
   FT_Error  parse_cid_ros( T2_Parser*  parser )
   {
-    CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
-    FT_Byte**       data   = parser->stack;
+    CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
+    FT_Byte**       data = parser->stack;
     FT_Error        error;
 
 
@@ -386,10 +387,8 @@
           T2_FIELD( code, name, t2_kind_string )
 #define T2_FIELD_BOOL( code, name ) \
           T2_FIELD( code, name, t2_kind_bool )
-#define T2_FIELD_DELTA( code, name,max ) \
+#define T2_FIELD_DELTA( code, name, max ) \
           T2_FIELD( code, name, t2_kind_delta )
-
-#define T2_REF( s, f )  ( ((s*)0)->f )
 
 #define T2_FIELD_CALLBACK( code, name ) \
           {                             \
@@ -401,25 +400,25 @@
           },
 
 #undef  T2_FIELD
-#define T2_FIELD( code, name, kind )                 \
-          {                                          \
-            kind,                                    \
-            code | T2CODE,                           \
-            (FT_UInt)(char*)&T2_REF( T2TYPE, name ), \
-            sizeof( T2_REF( T2TYPE, name ) ),        \
-            0, 0, 0                                  \
+#define T2_FIELD( code, name, kind ) \
+          {                          \
+            kind,                    \
+            code | T2CODE,           \
+            FT_FIELD_OFFSET( name ), \
+            FT_FIELD_SIZE( name ),   \
+            0, 0, 0                  \
           },
 
 #undef  T2_FIELD_DELTA
-#define T2_FIELD_DELTA( code, name, max )                    \
-        {                                                    \
-          t2_kind_delta,                                     \
-          code | T2CODE,                                     \
-          (FT_UInt)(char*)&T2_REF( T2TYPE, name ),           \
-          sizeof( T2_REF( T2TYPE, name )[0] ),               \
-          0,                                                 \
-          max,                                               \
-          (FT_UInt)(char*)&T2_REF( T2TYPE, num_ ## name )    \
+#define T2_FIELD_DELTA( code, name, max ) \
+        {                                 \
+          t2_kind_delta,                  \
+          code | T2CODE,                  \
+          FT_FIELD_OFFSET( name ),        \
+          FT_FIELD_SIZE_DELTA( name ),    \
+          0,                              \
+          max,                            \
+          FT_FIELD_OFFSET( num_ ## name ) \
         },
 
 #define T2CODE_TOPDICT  0x1000

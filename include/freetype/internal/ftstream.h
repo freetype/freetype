@@ -81,48 +81,55 @@
   typedef struct  FT_Frame_Field_
   {
     FT_Frame_Op  value;
-    char         size;
+    FT_Byte      size;
     FT_UShort    offset;
 
   } FT_Frame_Field;
 
 
-  /* make-up a FT_Frame_Field out of a structure type and a field name */
-#define FT_FIELD_REF( s, f )  (((s*)0)->f)
+  /* Construct an FT_Frame_Field out of a structure type and a field name. */
+  /* The structure type must be set in the FT_STRUCTURE macro before       */
+  /* calling the FT_FRAME_START() macro.                                   */
+#define FT_FIELD_SIZE( f ) \
+          (FT_Byte)sizeof ( ((FT_STRUCTURE*)0)->f )
+#define FT_FIELD_SIZE_DELTA( f ) \
+          (FT_Byte)sizeof ( ((FT_STRUCTURE*)0)->f[0] )
+#define FT_FIELD_OFFSET( f ) \
+          (FT_UShort)( (char*)&(((FT_STRUCTURE*)0)->f) - (char*)0 )
 
-#define FT_FRAME_FIELD( frame_op, struct_type, field )            \
-          {                                                       \
-            frame_op,                                             \
-            sizeof ( FT_FIELD_REF( struct_type,field ) ),         \
-            (FT_UShort)(char*)&FT_FIELD_REF( struct_type, field ) \
+#define FT_FRAME_FIELD( frame_op, field ) \
+          {                               \
+            frame_op,                     \
+            FT_FIELD_SIZE( field ),       \
+            FT_FIELD_OFFSET( field )      \
           }
 
 #define FT_MAKE_EMPTY_FIELD( frame_op )  { frame_op, 0, 0 }
 
-#define FT_FRAME_START( s )         { ft_frame_start, 0, s }
-#define FT_FRAME_END                { ft_frame_end, 0, 0 }
+#define FT_FRAME_START( size )   { ft_frame_start, 0, size }
+#define FT_FRAME_END             { ft_frame_end, 0, 0 }
 
-#define FT_FRAME_LONG( s, f )       FT_FRAME_FIELD( ft_frame_long_be, s, f )
-#define FT_FRAME_ULONG( s, f )      FT_FRAME_FIELD( ft_frame_ulong_be, s, f )
-#define FT_FRAME_SHORT( s, f )      FT_FRAME_FIELD( ft_frame_short_be, s, f )
-#define FT_FRAME_USHORT( s, f )     FT_FRAME_FIELD( ft_frame_ushort_be, s, f )
-#define FT_FRAME_BYTE( s, f )       FT_FRAME_FIELD( ft_frame_byte, s, f )
-#define FT_FRAME_CHAR( s, f )       FT_FRAME_FIELD( ft_frame_schar, s, f )
+#define FT_FRAME_LONG( f )       FT_FRAME_FIELD( ft_frame_long_be, f )
+#define FT_FRAME_ULONG( f )      FT_FRAME_FIELD( ft_frame_ulong_be, f )
+#define FT_FRAME_SHORT( f )      FT_FRAME_FIELD( ft_frame_short_be, f )
+#define FT_FRAME_USHORT( f )     FT_FRAME_FIELD( ft_frame_ushort_be, f )
+#define FT_FRAME_BYTE( f )       FT_FRAME_FIELD( ft_frame_byte, f )
+#define FT_FRAME_CHAR( f )       FT_FRAME_FIELD( ft_frame_schar, f )
 
-#define FT_FRAME_LONG_LE( s, f )    FT_FRAME_FIELD( ft_frame_long_le, s, f )
-#define FT_FRAME_ULONG_LE( s, f )   FT_FRAME_FIELD( ft_frame_ulong_le, s, f )
-#define FT_FRAME_SHORT_LE( s, f )   FT_FRAME_FIELD( ft_frame_short_le, s, f )
-#define FT_FRAME_USHORT_LE( s, f )  FT_FRAME_FIELD( ft_frame_ushort_le, s, f )
+#define FT_FRAME_LONG_LE( f )    FT_FRAME_FIELD( ft_frame_long_le, f )
+#define FT_FRAME_ULONG_LE( f )   FT_FRAME_FIELD( ft_frame_ulong_le, f )
+#define FT_FRAME_SHORT_LE( f )   FT_FRAME_FIELD( ft_frame_short_le, f )
+#define FT_FRAME_USHORT_LE( f )  FT_FRAME_FIELD( ft_frame_ushort_le, f )
 
-#define FT_FRAME_SKIP_LONG          { ft_frame_long_be, 0, 0 }
-#define FT_FRAME_SKIP_SHORT         { ft_frame_short_be, 0, 0 }
-#define FT_FRAME_SKIP_BYTE          { ft_frame_byte, 0, 0 }
+#define FT_FRAME_SKIP_LONG       { ft_frame_long_be, 0, 0 }
+#define FT_FRAME_SKIP_SHORT      { ft_frame_short_be, 0, 0 }
+#define FT_FRAME_SKIP_BYTE       { ft_frame_byte, 0, 0 }
 
-#define FT_FRAME_BYTES( struct_type, field, count )               \
-          {                                                       \
-            ft_frame_bytes,                                       \
-            count,                                                \
-            (FT_UShort)(char*)&FT_FIELD_REF( struct_type, field ) \
+#define FT_FRAME_BYTES( field, count ) \
+          {                            \
+            ft_frame_bytes,            \
+            count,                     \
+            FT_FIELD_OFFSET( field )   \
           }
 #define FT_FRAME_SKIP_BYTES( count )  { ft_frame_skip, count, 0 }
             

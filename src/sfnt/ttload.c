@@ -19,6 +19,7 @@
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/tterrors.h>
+#include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 
 
@@ -124,11 +125,13 @@
       if ( length )
         *length = table->Length;
 
-      (void)FILE_Seek( table->Offset );
+      if ( FILE_Seek( table->Offset ) )
+       goto Exit;
     }
     else
       error = TT_Err_Table_Missing;
 
+  Exit:
     return error;
   }
 
@@ -173,19 +176,25 @@
 
     const FT_Frame_Field  sfnt_header_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  SFNT_Header
+
       FT_FRAME_START( 8 ),
-        FT_FRAME_USHORT( SFNT_Header, num_tables ),
-        FT_FRAME_USHORT( SFNT_Header, search_range ),
-        FT_FRAME_USHORT( SFNT_Header, entry_selector ),
-        FT_FRAME_USHORT( SFNT_Header, range_shift ),
+        FT_FRAME_USHORT( num_tables ),
+        FT_FRAME_USHORT( search_range ),
+        FT_FRAME_USHORT( entry_selector ),
+        FT_FRAME_USHORT( range_shift ),
       FT_FRAME_END
     };
 
     const FT_Frame_Field  ttc_header_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TTC_Header
+
       FT_FRAME_START( 8 ),
-        FT_FRAME_LONG( TTC_Header, version ),
-        FT_FRAME_LONG( TTC_Header, count   ),
+        FT_FRAME_LONG( version ),
+        FT_FRAME_LONG( count   ),
       FT_FRAME_END };
 
 
@@ -456,26 +465,29 @@
 
     static const FT_Frame_Field  header_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_Header
+
       FT_FRAME_START( 54 ),
-        FT_FRAME_ULONG(  TT_Header, Table_Version ),
-        FT_FRAME_ULONG(  TT_Header, Font_Revision ),
-        FT_FRAME_LONG(   TT_Header, CheckSum_Adjust ),
-        FT_FRAME_LONG(   TT_Header, Magic_Number ),
-        FT_FRAME_USHORT( TT_Header, Flags ),
-        FT_FRAME_USHORT( TT_Header, Units_Per_EM ),
-        FT_FRAME_LONG(   TT_Header, Created[0] ),
-        FT_FRAME_LONG(   TT_Header, Created[1] ),
-        FT_FRAME_LONG(   TT_Header, Modified[0] ),
-        FT_FRAME_LONG(   TT_Header, Modified[1] ),
-        FT_FRAME_SHORT(  TT_Header, xMin ),
-        FT_FRAME_SHORT(  TT_Header, yMin ),
-        FT_FRAME_SHORT(  TT_Header, xMax ),
-        FT_FRAME_SHORT(  TT_Header, yMax ),
-        FT_FRAME_USHORT( TT_Header, Mac_Style ),
-        FT_FRAME_USHORT( TT_Header, Lowest_Rec_PPEM ),
-        FT_FRAME_SHORT(  TT_Header, Font_Direction ),
-        FT_FRAME_SHORT(  TT_Header, Index_To_Loc_Format ),
-        FT_FRAME_SHORT(  TT_Header, Glyph_Data_Format ),
+        FT_FRAME_ULONG ( Table_Version ),
+        FT_FRAME_ULONG ( Font_Revision ),
+        FT_FRAME_LONG  ( CheckSum_Adjust ),
+        FT_FRAME_LONG  ( Magic_Number ),
+        FT_FRAME_USHORT( Flags ),
+        FT_FRAME_USHORT( Units_Per_EM ),
+        FT_FRAME_LONG  ( Created[0] ),
+        FT_FRAME_LONG  ( Created[1] ),
+        FT_FRAME_LONG  ( Modified[0] ),
+        FT_FRAME_LONG  ( Modified[1] ),
+        FT_FRAME_SHORT ( xMin ),
+        FT_FRAME_SHORT ( yMin ),
+        FT_FRAME_SHORT ( xMax ),
+        FT_FRAME_SHORT ( yMax ),
+        FT_FRAME_USHORT( Mac_Style ),
+        FT_FRAME_USHORT( Lowest_Rec_PPEM ),
+        FT_FRAME_SHORT ( Font_Direction ),
+        FT_FRAME_SHORT ( Index_To_Loc_Format ),
+        FT_FRAME_SHORT ( Glyph_Data_Format ),
       FT_FRAME_END
     };
 
@@ -527,22 +539,25 @@
 
     const FT_Frame_Field  maxp_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_MaxProfile
+
       FT_FRAME_START( 32 ),
-        FT_FRAME_ULONG(  TT_MaxProfile, version ),
-        FT_FRAME_USHORT( TT_MaxProfile, numGlyphs ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxPoints ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxContours ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxCompositePoints ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxCompositeContours ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxZones ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxTwilightPoints ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxStorage ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxFunctionDefs ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxInstructionDefs ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxStackElements ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxSizeOfInstructions ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxComponentElements ),
-        FT_FRAME_USHORT( TT_MaxProfile, maxComponentDepth ),
+        FT_FRAME_ULONG ( version ),
+        FT_FRAME_USHORT( numGlyphs ),
+        FT_FRAME_USHORT( maxPoints ),
+        FT_FRAME_USHORT( maxContours ),
+        FT_FRAME_USHORT( maxCompositePoints ),
+        FT_FRAME_USHORT( maxCompositeContours ),
+        FT_FRAME_USHORT( maxZones ),
+        FT_FRAME_USHORT( maxTwilightPoints ),
+        FT_FRAME_USHORT( maxStorage ),
+        FT_FRAME_USHORT( maxFunctionDefs ),
+        FT_FRAME_USHORT( maxInstructionDefs ),
+        FT_FRAME_USHORT( maxStackElements ),
+        FT_FRAME_USHORT( maxSizeOfInstructions ),
+        FT_FRAME_USHORT( maxComponentElements ),
+        FT_FRAME_USHORT( maxComponentDepth ),
       FT_FRAME_END };
 
 
@@ -758,24 +773,27 @@
 
     const FT_Frame_Field  metrics_header_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_HoriHeader
+
       FT_FRAME_START( 36 ),
-        FT_FRAME_ULONG(  TT_HoriHeader, Version ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Ascender ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Descender ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Line_Gap ),
-        FT_FRAME_USHORT( TT_HoriHeader, advance_Width_Max ),
-        FT_FRAME_SHORT(  TT_HoriHeader, min_Left_Side_Bearing ),
-        FT_FRAME_SHORT(  TT_HoriHeader, min_Right_Side_Bearing ),
-        FT_FRAME_SHORT(  TT_HoriHeader, xMax_Extent ),
-        FT_FRAME_SHORT(  TT_HoriHeader, caret_Slope_Rise ),
-        FT_FRAME_SHORT(  TT_HoriHeader, caret_Slope_Run ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Reserved[0] ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Reserved[1] ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Reserved[2] ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Reserved[3] ),
-        FT_FRAME_SHORT(  TT_HoriHeader, Reserved[4] ),
-        FT_FRAME_SHORT(  TT_HoriHeader, metric_Data_Format ),
-        FT_FRAME_USHORT( TT_HoriHeader, number_Of_HMetrics ),
+        FT_FRAME_ULONG ( Version ),
+        FT_FRAME_SHORT ( Ascender ),
+        FT_FRAME_SHORT ( Descender ),
+        FT_FRAME_SHORT ( Line_Gap ),
+        FT_FRAME_USHORT( advance_Width_Max ),
+        FT_FRAME_SHORT ( min_Left_Side_Bearing ),
+        FT_FRAME_SHORT ( min_Right_Side_Bearing ),
+        FT_FRAME_SHORT ( xMax_Extent ),
+        FT_FRAME_SHORT ( caret_Slope_Rise ),
+        FT_FRAME_SHORT ( caret_Slope_Run ),
+        FT_FRAME_SHORT ( Reserved[0] ),
+        FT_FRAME_SHORT ( Reserved[1] ),
+        FT_FRAME_SHORT ( Reserved[2] ),
+        FT_FRAME_SHORT ( Reserved[3] ),
+        FT_FRAME_SHORT ( Reserved[4] ),
+        FT_FRAME_SHORT ( metric_Data_Format ),
+        FT_FRAME_USHORT( number_Of_HMetrics ),
       FT_FRAME_END
     };
 
@@ -858,22 +876,28 @@
 
     const FT_Frame_Field  name_table_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_NameTable
+
       FT_FRAME_START( 6 ),
-        FT_FRAME_USHORT( TT_NameTable, format ),
-        FT_FRAME_USHORT( TT_NameTable, numNameRecords ),
-        FT_FRAME_USHORT( TT_NameTable, storageOffset ),
+        FT_FRAME_USHORT( format ),
+        FT_FRAME_USHORT( numNameRecords ),
+        FT_FRAME_USHORT( storageOffset ),
       FT_FRAME_END
     };
 
     const FT_Frame_Field  name_record_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_NameRec
+
       /* no FT_FRAME_START */
-        FT_FRAME_USHORT( TT_NameRec, platformID ),
-        FT_FRAME_USHORT( TT_NameRec, encodingID ),
-        FT_FRAME_USHORT( TT_NameRec, languageID ),
-        FT_FRAME_USHORT( TT_NameRec, nameID ),
-        FT_FRAME_USHORT( TT_NameRec, stringLength ),
-        FT_FRAME_USHORT( TT_NameRec, stringOffset ),
+        FT_FRAME_USHORT( platformID ),
+        FT_FRAME_USHORT( encodingID ),
+        FT_FRAME_USHORT( languageID ),
+        FT_FRAME_USHORT( nameID ),
+        FT_FRAME_USHORT( stringLength ),
+        FT_FRAME_USHORT( stringOffset ),
       FT_FRAME_END
     };
 
@@ -1049,18 +1073,24 @@
 
     const FT_Frame_Field  cmap_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_CMapDir
+
       FT_FRAME_START( 4 ),
-        FT_FRAME_USHORT( TT_CMapDir, tableVersionNumber ),
-        FT_FRAME_USHORT( TT_CMapDir, numCMaps ),
+        FT_FRAME_USHORT( tableVersionNumber ),
+        FT_FRAME_USHORT( numCMaps ),
       FT_FRAME_END
     };
 
     const FT_Frame_Field  cmap_rec_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_CMapTable
+
       FT_FRAME_START( 6 ),
-        FT_FRAME_USHORT( TT_CMapTable, format ),
-        FT_FRAME_USHORT( TT_CMapTable, length ),
-        FT_FRAME_USHORT( TT_CMapTable, version ),
+        FT_FRAME_USHORT( format ),
+        FT_FRAME_USHORT( length ),
+        FT_FRAME_USHORT( version ),
       FT_FRAME_END
     };
 
@@ -1154,71 +1184,74 @@
     FT_Error  error;
     TT_OS2*   os2;
 
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_OS2
+
     const FT_Frame_Field  os2_fields[] =
     {
       FT_FRAME_START( 78 ),
-        FT_FRAME_USHORT( TT_OS2, version ),
-        FT_FRAME_SHORT(  TT_OS2, xAvgCharWidth ),
-        FT_FRAME_USHORT( TT_OS2, usWeightClass ),
-        FT_FRAME_USHORT( TT_OS2, usWidthClass ),
-        FT_FRAME_SHORT(  TT_OS2, fsType ),
-        FT_FRAME_SHORT(  TT_OS2, ySubscriptXSize ),
-        FT_FRAME_SHORT(  TT_OS2, ySubscriptYSize ),
-        FT_FRAME_SHORT(  TT_OS2, ySubscriptXOffset ),
-        FT_FRAME_SHORT(  TT_OS2, ySubscriptYOffset ),
-        FT_FRAME_SHORT(  TT_OS2, ySuperscriptXSize ),
-        FT_FRAME_SHORT(  TT_OS2, ySuperscriptYSize ),
-        FT_FRAME_SHORT(  TT_OS2, ySuperscriptXOffset ),
-        FT_FRAME_SHORT(  TT_OS2, ySuperscriptYOffset ),
-        FT_FRAME_SHORT(  TT_OS2, yStrikeoutSize ),
-        FT_FRAME_SHORT(  TT_OS2, yStrikeoutPosition ),
-        FT_FRAME_SHORT(  TT_OS2, sFamilyClass ),
-        FT_FRAME_BYTE(   TT_OS2, panose[0] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[1] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[2] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[3] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[4] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[5] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[6] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[7] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[8] ),
-        FT_FRAME_BYTE(   TT_OS2, panose[9] ),
-        FT_FRAME_ULONG(  TT_OS2, ulUnicodeRange1 ),
-        FT_FRAME_ULONG(  TT_OS2, ulUnicodeRange2 ),
-        FT_FRAME_ULONG(  TT_OS2, ulUnicodeRange3 ),
-        FT_FRAME_ULONG(  TT_OS2, ulUnicodeRange4 ),
-        FT_FRAME_BYTE(   TT_OS2, achVendID[0] ),
-        FT_FRAME_BYTE(   TT_OS2, achVendID[1] ),
-        FT_FRAME_BYTE(   TT_OS2, achVendID[2] ),
-        FT_FRAME_BYTE(   TT_OS2, achVendID[3] ),
+        FT_FRAME_USHORT( version ),
+        FT_FRAME_SHORT ( xAvgCharWidth ),
+        FT_FRAME_USHORT( usWeightClass ),
+        FT_FRAME_USHORT( usWidthClass ),
+        FT_FRAME_SHORT ( fsType ),
+        FT_FRAME_SHORT ( ySubscriptXSize ),
+        FT_FRAME_SHORT ( ySubscriptYSize ),
+        FT_FRAME_SHORT ( ySubscriptXOffset ),
+        FT_FRAME_SHORT ( ySubscriptYOffset ),
+        FT_FRAME_SHORT ( ySuperscriptXSize ),
+        FT_FRAME_SHORT ( ySuperscriptYSize ),
+        FT_FRAME_SHORT ( ySuperscriptXOffset ),
+        FT_FRAME_SHORT ( ySuperscriptYOffset ),
+        FT_FRAME_SHORT ( yStrikeoutSize ),
+        FT_FRAME_SHORT ( yStrikeoutPosition ),
+        FT_FRAME_SHORT ( sFamilyClass ),
+        FT_FRAME_BYTE  ( panose[0] ),
+        FT_FRAME_BYTE  ( panose[1] ),
+        FT_FRAME_BYTE  ( panose[2] ),
+        FT_FRAME_BYTE  ( panose[3] ),
+        FT_FRAME_BYTE  ( panose[4] ),
+        FT_FRAME_BYTE  ( panose[5] ),
+        FT_FRAME_BYTE  ( panose[6] ),
+        FT_FRAME_BYTE  ( panose[7] ),
+        FT_FRAME_BYTE  ( panose[8] ),
+        FT_FRAME_BYTE  ( panose[9] ),
+        FT_FRAME_ULONG ( ulUnicodeRange1 ),
+        FT_FRAME_ULONG ( ulUnicodeRange2 ),
+        FT_FRAME_ULONG ( ulUnicodeRange3 ),
+        FT_FRAME_ULONG ( ulUnicodeRange4 ),
+        FT_FRAME_BYTE  ( achVendID[0] ),
+        FT_FRAME_BYTE  ( achVendID[1] ),
+        FT_FRAME_BYTE  ( achVendID[2] ),
+        FT_FRAME_BYTE  ( achVendID[3] ),
 
-        FT_FRAME_USHORT( TT_OS2, fsSelection ),
-        FT_FRAME_USHORT( TT_OS2, usFirstCharIndex ),
-        FT_FRAME_USHORT( TT_OS2, usLastCharIndex ),
-        FT_FRAME_SHORT(  TT_OS2, sTypoAscender ),
-        FT_FRAME_SHORT(  TT_OS2, sTypoDescender ),
-        FT_FRAME_SHORT(  TT_OS2, sTypoLineGap ),
-        FT_FRAME_USHORT( TT_OS2, usWinAscent ),
-        FT_FRAME_USHORT( TT_OS2, usWinDescent ),
+        FT_FRAME_USHORT( fsSelection ),
+        FT_FRAME_USHORT( usFirstCharIndex ),
+        FT_FRAME_USHORT( usLastCharIndex ),
+        FT_FRAME_SHORT ( sTypoAscender ),
+        FT_FRAME_SHORT ( sTypoDescender ),
+        FT_FRAME_SHORT ( sTypoLineGap ),
+        FT_FRAME_USHORT( usWinAscent ),
+        FT_FRAME_USHORT( usWinDescent ),
       FT_FRAME_END
     };
 
     const FT_Frame_Field  os2_fields_extra[] =
     {
       FT_FRAME_START( 8 ),
-        FT_FRAME_ULONG( TT_OS2, ulCodePageRange1 ),
-        FT_FRAME_ULONG( TT_OS2, ulCodePageRange2 ),
+        FT_FRAME_ULONG( ulCodePageRange1 ),
+        FT_FRAME_ULONG( ulCodePageRange2 ),
       FT_FRAME_END
     };
 
     const FT_Frame_Field  os2_fields_extra2[] =
     {
       FT_FRAME_START( 10 ),
-        FT_FRAME_SHORT( TT_OS2,  sxHeight ),
-        FT_FRAME_SHORT( TT_OS2,  sCapHeight ),
-        FT_FRAME_USHORT( TT_OS2, usDefaultChar ),
-        FT_FRAME_USHORT( TT_OS2, usBreakChar ),
-        FT_FRAME_USHORT( TT_OS2, usMaxContext ),
+        FT_FRAME_SHORT ( sxHeight ),
+        FT_FRAME_SHORT ( sCapHeight ),
+        FT_FRAME_USHORT( usDefaultChar ),
+        FT_FRAME_USHORT( usBreakChar ),
+        FT_FRAME_USHORT( usMaxContext ),
       FT_FRAME_END
     };
 
@@ -1290,16 +1323,19 @@
 
     static const FT_Frame_Field  post_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_Postscript
+
       FT_FRAME_START( 32 ),
-        FT_FRAME_ULONG( TT_Postscript, FormatType ),
-        FT_FRAME_ULONG( TT_Postscript, italicAngle ),
-        FT_FRAME_SHORT( TT_Postscript, underlinePosition ),
-        FT_FRAME_SHORT( TT_Postscript, underlineThickness ),
-        FT_FRAME_ULONG( TT_Postscript, isFixedPitch ),
-        FT_FRAME_ULONG( TT_Postscript, minMemType42 ),
-        FT_FRAME_ULONG( TT_Postscript, maxMemType42 ),
-        FT_FRAME_ULONG( TT_Postscript, minMemType1 ),
-        FT_FRAME_ULONG( TT_Postscript, maxMemType1 ),
+        FT_FRAME_ULONG( FormatType ),
+        FT_FRAME_ULONG( italicAngle ),
+        FT_FRAME_SHORT( underlinePosition ),
+        FT_FRAME_SHORT( underlineThickness ),
+        FT_FRAME_ULONG( isFixedPitch ),
+        FT_FRAME_ULONG( minMemType42 ),
+        FT_FRAME_ULONG( maxMemType42 ),
+        FT_FRAME_ULONG( minMemType1 ),
+        FT_FRAME_ULONG( maxMemType1 ),
       FT_FRAME_END
     };
 
@@ -1342,21 +1378,24 @@
   {
     static const FT_Frame_Field  pclt_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TT_PCLT
+
       FT_FRAME_START( 54 ),
-        FT_FRAME_ULONG ( TT_PCLT, Version ),
-        FT_FRAME_ULONG ( TT_PCLT, FontNumber ),
-        FT_FRAME_USHORT( TT_PCLT, Pitch ),
-        FT_FRAME_USHORT( TT_PCLT, xHeight ),
-        FT_FRAME_USHORT( TT_PCLT, Style ),
-        FT_FRAME_USHORT( TT_PCLT, TypeFamily ),
-        FT_FRAME_USHORT( TT_PCLT, CapHeight ),
-        FT_FRAME_BYTES ( TT_PCLT, TypeFace, 16 ),
-        FT_FRAME_BYTES ( TT_PCLT, CharacterComplement, 8 ),
-        FT_FRAME_BYTES ( TT_PCLT, FileName, 6 ),
-        FT_FRAME_CHAR  ( TT_PCLT, StrokeWeight ),
-        FT_FRAME_CHAR  ( TT_PCLT, WidthType ),
-        FT_FRAME_BYTE  ( TT_PCLT, SerifStyle ),
-        FT_FRAME_BYTE  ( TT_PCLT, Reserved ),
+        FT_FRAME_ULONG ( Version ),
+        FT_FRAME_ULONG ( FontNumber ),
+        FT_FRAME_USHORT( Pitch ),
+        FT_FRAME_USHORT( xHeight ),
+        FT_FRAME_USHORT( Style ),
+        FT_FRAME_USHORT( TypeFamily ),
+        FT_FRAME_USHORT( CapHeight ),
+        FT_FRAME_BYTES ( TypeFace, 16 ),
+        FT_FRAME_BYTES ( CharacterComplement, 8 ),
+        FT_FRAME_BYTES ( FileName, 6 ),
+        FT_FRAME_CHAR  ( StrokeWeight ),
+        FT_FRAME_CHAR  ( WidthType ),
+        FT_FRAME_BYTE  ( SerifStyle ),
+        FT_FRAME_BYTE  ( Reserved ),
       FT_FRAME_END
     };
 
