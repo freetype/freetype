@@ -41,6 +41,7 @@
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
+    FREE( afm );
   }
 
 
