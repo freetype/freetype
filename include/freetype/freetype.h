@@ -548,7 +548,7 @@ FT_BEGIN_HEADER
   /* <Values>                                                              */
   /*   ft_encoding_none    :: see @FT_ENCODING_NONE                        */
   /*   ft_encoding_unicode :: see @FT_ENCODING_UNICODE                     */
-  /*   ft_encoding_latin_2 :: see @FT_ENCODING_LATIN_2                     */
+  /*   ft_encoding_latin_2 :: see @FT_ENCODING_OLD_LATIN_2                 */
   /*   ft_encoding_symbol  :: see @FT_ENCODING_MS_SYMBOL                   */
   /*   ft_encoding_sjis    :: see @FT_ENCODING_MS_SJIS                     */
   /*   ft_encoding_gb2312  :: see @FT_ENCODING_MS_GB2312                   */
