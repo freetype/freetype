@@ -766,7 +766,10 @@
   static int
   is_alpha( FT_Byte  c )
   {
-    return ( isalnum( c ) || c == '.' || c == '_' || c == '-' );
+    /* Note: we must accept "+" as a valid character, as it is used in */
+    /*       embedded type1 fonts in PDF documents..                   */
+    /*                                                                 */
+    return ( isalnum( c ) || c == '.' || c == '_' || c == '-' || c == '+' );
   }
 
 
@@ -895,8 +898,9 @@
     /* 1000 / temp_scale, because temp_scale was already multiplied by  */
     /* 1000 (in t1_tofixed, from psobjs.c).                             */
 
-    root->units_per_EM = (FT_UShort)FT_DivFix( 0x10000L,
-                                               FT_DivFix( temp_scale, 1000 ) );
+    root->units_per_EM = (FT_UShort)(FT_DivFix( 1000*0x10000L,
+                                                temp_scale ) >> 16);
+
 
     /* we need to scale the values by 1.0/temp_scale */
     if ( temp_scale != 0x10000L )
