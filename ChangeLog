@@ -1,13 +1,22 @@
-2000-01-09  David Turner <david.turner@freetype.org>
+2001-01-10  Werner Lemberg  <wl@gnu.org>
 
-	* docs/docmaker.py: improved script to generate table of contents and
-	index pages. it also supports wildcards on non Unix systems
+	* docs/docmaker.py: Minor improvements to reduce unwanted spaces
+	and empty lines in output.
 
-	* include/freetype/*.h, include/freetype/cache/*.h: updated comments 
-	to include section definitions / delimitations for the API Reference
-	generator..
+2001-01-09  David Turner <david.turner@freetype.org>
 
-2000-01-04  Werner Lemberg  <wl@gnu.org>
+	* docs/docmaker.py: Improved script to generate table of contents
+	and index pages.  It also supports wildcards on non Unix systems.
+
+	* include/freetype/*.h, include/freetype/cache/*.h: Updated comments
+	to include section definitions/delimitations for the API Reference
+	generator.
+
+	* include/freetype/freetype.h: Moved declaration of
+	`FT_Generic_Finalizer' and the `FT_Generic' structure to...
+	* include/freetype/fttypes.h: here.
+
+2001-01-04  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ttnameid.h: Updated Unicode code range comments.
 

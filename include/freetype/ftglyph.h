@@ -39,20 +39,25 @@
 
 FT_BEGIN_HEADER
 
+
   /*************************************************************************/
   /*                                                                       */
-  /* <Section> glyph_management                                            */
+  /* <Section>                                                             */
+  /*    glyph_management                                                   */
   /*                                                                       */
-  /* <Title> Glyph Management                                              */
+  /* <Title>                                                               */
+  /*    Glyph Management                                                   */
   /*                                                                       */
   /* <Abstract>                                                            */
-  /*    Generic interface to manage individual glyph data                  */
+  /*    Generic interface to manage individual glyph data.                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This section contains definitions used to manage glyph data        */
-  /*    through generic FT_Glyph objects. Each one of them can contain     */
-  /*    a bitmap, a vector outline, or even images in other formats.       */
+  /*    through generic FT_Glyph objects.  Each of them can contain a      */
+  /*    bitmap, a vector outline, or even images in other formats.         */
   /*                                                                       */
+  /*************************************************************************/
+
 
   /* forward declaration to a private type */
   typedef struct FT_Glyph_Class_  FT_Glyph_Class;
@@ -296,7 +301,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    The default value for `bbox_mode' is `ft_glyph_bbox_pixels'.       */
   /*                                                                       */
-
   enum
   {
     ft_glyph_bbox_unscaled  = 0, /* return unscaled font units           */
@@ -405,9 +409,13 @@ FT_BEGIN_HEADER
 
   /* other helpful functions */
 
-  /*****
-   * <Section> base_interface
-   */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    base_interface                                                     */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -446,6 +454,9 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix );
+
+
+  /* */
 
 
 FT_END_HEADER

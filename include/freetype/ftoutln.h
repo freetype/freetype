@@ -27,21 +27,25 @@
 
 FT_BEGIN_HEADER
 
+
   /*************************************************************************/
   /*                                                                       */
-  /* <Section> outline_processing                                          */
+  /* <Section>                                                             */
+  /*    outline_processing                                                 */
   /*                                                                       */
-  /* <Title> Outline Processing                                            */
+  /* <Title>                                                               */
+  /*    Outline Processing                                                 */
   /*                                                                       */
   /* <Abstract>                                                            */
-  /*    Functions to create, transform and render vectorial glyph images   */
+  /*    Functions to create, transform, and render vectorial glyph images. */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This sections contains routines used to create and destroy         */
-  /*    scalable glyph images known as "outlines". These can also be       */
-  /*    measured, transformed and converted into bitmaps, pixmaps and      */
+  /*    This section contains routines used to create and destroy scalable */
+  /*    glyph images known as `outlines'.  These can also be measured,     */
+  /*    transformed, and converted into bitmaps and pixmaps.               */
   /*                                                                       */
-  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -329,6 +333,9 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )  FT_Outline_Render( FT_Library         library,
                                             FT_Outline*        outline,
                                             FT_Raster_Params*  params );
+
+
+  /* */
 
 
 FT_END_HEADER

@@ -55,18 +55,23 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-  /*************************************************************************
-   *
-   * <Section> base_interface
-   *
-   * <Title> Base Interface
-   *
-   * <Abstract>
-   *    The FreeType 2 base font interface
-   *
-   * <Description>
-   *    This sections details the public high-level API of FreeType 2
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    base_interface                                                     */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    Base Interface                                                     */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    The FreeType 2 base font interface.                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This section describes the public high-level API of FreeType 2.    */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2242,6 +2247,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )  FT_Vector_Transform( FT_Vector*  vec,
                                           FT_Matrix*  matrix );
+
 
   /* */
 

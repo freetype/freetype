@@ -29,17 +29,21 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Section> TrueType_Tables                                             */
+  /* <Section>                                                             */
+  /*    truetype_tables                                                    */
   /*                                                                       */
-  /* <Title> TrueType Tables                                               */
+  /* <Title>                                                               */
+  /*    TrueType Tables                                                    */
   /*                                                                       */
   /* <Abstract>                                                            */
-  /*    TrueType-specific table types and functions                        */
+  /*    TrueType-specific table types and functions.                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This sections contains the definition of TrueType-specific tables  */
+  /*    This section contains the definition of TrueType-specific tables   */
   /*    as well as some routines used to access and process them.          */
   /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -585,6 +589,7 @@ FT_BEGIN_HEADER
 
 
   /* */
+
 
 FT_END_HEADER
 

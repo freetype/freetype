@@ -29,19 +29,24 @@
 
 FT_BEGIN_HEADER
 
+
   /*************************************************************************/
   /*                                                                       */
-  /* <Section> basic_types                                                 */
+  /* <Section>                                                             */
+  /*    basic_types                                                        */
   /*                                                                       */
-  /* <Title> Basic Data Types                                              */
+  /* <Title>                                                               */
+  /*    Basic Data Types                                                   */
   /*                                                                       */
   /* <Abstract>                                                            */
-  /*    The basic data types defined by the library                        */
+  /*    The basic data types defined by the library.                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This sections contains the basic data types defined by FreeType 2, */
-  /*    rangine from simple scalar types to font specific ones             */
+  /*    This section contains the basic data types defined by FreeType 2,  */
+  /*    ranging from simple scalar types to font specific ones.            */
   /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -341,7 +346,6 @@ FT_BEGIN_HEADER
   } FT_Generic;
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -366,10 +370,14 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-  /**************************************************************************
-   *
-   *  <Section> list_processing
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    list_processing                                                    */
+  /*                                                                       */
+  /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -439,6 +447,7 @@ FT_BEGIN_HEADER
     FT_ListNode  tail;
 
   } FT_ListRec;
+
 
   /* */
 
