@@ -32,9 +32,9 @@ ifdef BUILD_PROJECT
   #
   $(PROJECT_LIBRARY): $(OBJECTS_LIST)
     ifdef CLEAN_LIBRARY
-	-$(CLEAN_LIBRARY) xx $(NO_OUTPUT)
+	  -$(CLEAN_LIBRARY) $(NO_OUTPUT)
     endif
-	$(LINK_LIBRARY)
+	  $(LINK_LIBRARY)
 
 endif
 

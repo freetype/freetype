@@ -1,3 +1,12 @@
+2001-09-10  Yao Zhang  <yzhang@sharemedia.com>
+
+	* src/sfnt/ttcmap.c (code_to_index2): Handle code values with
+	hi-byte == 0 correctly.
+
+2001-09-10  Werner Lemberg  <wl@gnu.org>
+
+	* builds/link-std.mk ($(PROJECT_LIBRARY)): Fix typo.
+
 2001-08-30  Martin Muskens  <mmuskens@aurelon.com>
 
 	* src/type1/t1load.c (parse_font_matrix): A new way to compute the

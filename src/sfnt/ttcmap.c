@@ -503,28 +503,29 @@
     {
       /* an 8-bit character code -- we use the subHeader 0 in this case */
       /* to test whether the character code is in the charmap           */
-      if ( cmap2->subHeaderKeys[char_lo] == 0 )
-        result = cmap2->glyphIdArray[char_lo];
+      index1 = cmap2->subHeaderKeys[char_lo];
+      if ( index1 != 0 )
+        return 0;
     }
     else
     {
       /* a 16-bit character code */
       index1 = cmap2->subHeaderKeys[char_hi & 0xFF];
-      if ( index1 )
-      {
-        sh2      = cmap2->subHeaders + index1;
-        char_lo -= sh2->firstCode;
+      if ( index1 == 0 )
+        return 0;
+    }
 
-        if ( char_lo < (FT_UInt)sh2->entryCount )
-        {
-          offset = sh2->idRangeOffset / 2 + char_lo;
-          if ( offset < (FT_UInt)cmap2->numGlyphId )
-          {
-            result = cmap2->glyphIdArray[offset];
-            if ( result )
-              result = ( result + sh2->idDelta ) & 0xFFFF;
-          }
-        }
+    sh2      = cmap2->subHeaders + index1;
+    char_lo -= sh2->firstCode;
+
+    if ( char_lo < (FT_UInt)sh2->entryCount )
+    {
+      offset = sh2->idRangeOffset / 2 + char_lo;
+      if ( offset < (FT_UInt)cmap2->numGlyphId )
+      {
+        result = cmap2->glyphIdArray[offset];
+        if ( result )
+          result = ( result + sh2->idDelta ) & 0xFFFF;
       }
     }
 
