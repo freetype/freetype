@@ -106,13 +106,10 @@ T1Z_COMPILE := $(FT_COMPILE) $(T1Z_INCLUDE:%=$I%)
 # Type1 driver sources (i.e., C files)
 #
 T1Z_DRV_SRC := $(T1Z_DIR_)t1parse.c   \
-              $(T1Z_DIR_)t1load.c
-#              $(T1Z_DIR_)t1parse.c   \
-#              $(T1Z_DIR_)t1tokens.c  \
-#              $(T1Z_DIR_)t1driver.c  \
-#	          $(T1Z_DIR_)t1encode.c  \
-#              $(T1Z_DIR_)t1hinter.c  \
-#              $(T1Z_DIR_)t1gload.c
+               $(T1Z_DIR_)t1load.c    \
+               $(T1Z_DIR_)t1driver.c  \
+   	           $(T1Z_DIR_)t1encode.c  \
+               $(T1Z_DIR_)t1gload.c
 
 
 # Type1 driver headers

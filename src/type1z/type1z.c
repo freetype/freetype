@@ -33,9 +33,6 @@
 #include <t1load.c>
 #include <t1objs.c>
 #include <t1driver.c>
-/*
-#include <t1hinter.c>
 #include <t1gload.c>
 #include <t1encode.c>
-*/
 

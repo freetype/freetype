@@ -44,57 +44,6 @@
 
 /*************************************************************************/
 /*                                                                       */
-/* <Structure> T1_Builder_Funcs                                          */
-/*                                                                       */
-/* <Description>                                                         */
-/*     a structure used to store the address of various functions        */
-/*     used by a glyph builder to implement the outline's "path          */
-/*     construction".                                                    */
-/*                                                                       */
-/*                                                                       */
-  typedef struct T1_Builder_  T1_Builder;
-
-  typedef T1_Error  (*T1_Builder_EndChar)( T1_Builder*  loader );
-
-  typedef T1_Error  (*T1_Builder_Sbw)    ( T1_Builder*  loader,
-                                           T1_Pos       sbx,
-                                           T1_Pos       sby,
-                                           T1_Pos       wx,
-                                           T1_Pos       wy );
-
-  typedef T1_Error  (*T1_Builder_ClosePath)( T1_Builder*  loader );
-
-  typedef T1_Error  (*T1_Builder_RLineTo)( T1_Builder*  loader,
-                                           T1_Pos       dx,
-                                           T1_Pos       dy );
-
-  typedef T1_Error  (*T1_Builder_RMoveTo)( T1_Builder*  loader,
-                                           T1_Pos       dx,
-                                           T1_Pos       dy );
-
-  typedef T1_Error  (*T1_Builder_RCurveTo)( T1_Builder*  loader,
-                                            T1_Pos       dx1,
-                                            T1_Pos       dy1,
-                                            T1_Pos       dx2,
-                                            T1_Pos       dy2,
-                                            T1_Pos       dx3,
-                                            T1_Pos       dy3 );
-
-  typedef struct T1_Builder_Funcs_
-  {
-    T1_Builder_EndChar    end_char;
-    T1_Builder_Sbw        set_bearing_point;
-    T1_Builder_ClosePath  close_path;
-    T1_Builder_RLineTo    rline_to;
-    T1_Builder_RMoveTo    rmove_to;
-    T1_Builder_RCurveTo   rcurve_to;
-
-  } T1_Builder_Funcs;
-
-
-
-/*************************************************************************/
-/*                                                                       */
 /* <Structure> T1_Builder                                                */
 /*                                                                       */
 /* <Description>                                                         */
@@ -103,7 +52,6 @@
 /* <Fields>                                                              */
 /*    system :: current system object                                    */
 /*    face   :: current face object                                      */
-/*    size   :: current size object                                      */
 /*    glyph  :: current glyph slot                                       */
 /*                                                                       */
 /*    current :: current glyph outline                                   */
@@ -125,22 +73,18 @@
 /*    path_begun    :: flag, indicates that a new path has begun         */
 /*    load_points   :: flag, if not set, no points are loaded            */
 /*                                                                       */
-/*    pass     :: pass number for multi-pass hinters                     */
+/*    error         :: an error code that is only used to report         */
+/*                     memory allocation problems..                      */
 /*                                                                       */
-/*    funcs    :: table of builder functions used to perform             */
-/*                the outline's path construction                        */
-/*                                                                       */
-/*    hint_point :: index of next point to hint..                        */
-/*                                                                       */
-/*                                                                       */
-/*                                                                       */
+/*    metrics_only  :: a boolean indicating that we only want to         */
+/*                     compute the metrics of a given glyph, not load    */
+/*                     all of its points..                               */
 /*                                                                       */
 
-  struct T1_Builder_
+  typedef struct T1_Builder_
   {
     FT_Memory     memory;
     T1_Face       face;
-    T1_Size       size;
     T1_GlyphSlot  glyph;
 
     FT_Outline    current;       /* the current glyph outline   */
@@ -163,88 +107,11 @@
     T1_BBox       bbox;          /* bounding box */
     T1_Bool       path_begun;
     T1_Bool       load_points;
-
-    T1_Int        pass;
-    T1_Int        hint_point;
-
-    /* path construction function interface */
-    T1_Builder_Funcs  funcs;
-  };
-
-
-/*************************************************************************/
-/*                                                                       */
-/* <Structure> T1_Hinter_Funcs                                           */
-/*                                                                       */
-/* <Description>                                                         */
-/*     a structure used to store the address of various functions        */
-/*     used by a Type 1 hinter to perform outline hinting.               */
-/*                                                                       */
- 
-  typedef T1_Error  (*T1_Hinter_ChangeHints)( T1_Builder*  builder );
-
-  typedef T1_Error  (*T1_Hinter_DotSection)( T1_Builder*  builder );
-
-  typedef T1_Error  (*T1_Hinter_Stem)( T1_Builder*  builder,
-                                       T1_Pos       pos,
-                                       T1_Pos       width,
-                                       T1_Bool      vertical );
-
-
-  typedef T1_Error  (*T1_Hinter_Stem3)( T1_Builder*  builder,
-                                        T1_Pos       pos0,
-                                        T1_Pos       width0,
-                                        T1_Pos       pos1,
-                                        T1_Pos       width1,
-                                        T1_Pos       pos2,
-                                        T1_Pos       width2,
-                                        T1_Bool      vertical );
-
-  typedef struct T1_Hinter_Func_
-  {
-    T1_Hinter_ChangeHints     change_hints;
-    T1_Hinter_DotSection      dot_section;
-    T1_Hinter_Stem            stem;
-    T1_Hinter_Stem3           stem3;
-
-  } T1_Hinter_Funcs;
-
-
-
-  typedef enum T1_Operator_
-  {
-    op_none = 0,
-    op_endchar,
-    op_hsbw,
-    op_seac,
-    op_sbw,
-    op_closepath,
-    op_hlineto,
-    op_hmoveto,
-    op_hvcurveto,
-    op_rlineto,
-    op_rmoveto,
-    op_rrcurveto,
-    op_vhcurveto,
-    op_vlineto,
-    op_vmoveto,
-    op_dotsection,
-    op_hstem,
-    op_hstem3,
-    op_vstem,
-    op_vstem3,
-    op_div,
-    op_callothersubr,
-    op_callsubr,
-    op_pop,
-    op_return,
-    op_setcurrentpoint,
-
-    op_max    /* never remove this one */
-
-  } T1_Operator;
-
-
+    
+    T1_Error      error;         /* only used for memory errors */
+    T1_Bool       metrics_only;
+    
+  } T1_Builder;
 
 
   /* execution context charstring zone */
@@ -260,7 +127,6 @@
   typedef struct T1_Decoder_
   {
     T1_Builder         builder;
-    T1_Hinter_Funcs    hinter;
 
     T1_Int             stack[ T1_MAX_CHARSTRINGS_OPERANDS ];
     T1_Int*            top;
@@ -276,82 +142,18 @@
 
 
 
-/*********************************************************************
- *
- * <Function>
- *    T1_Init_Builder
- *
- * <Description>
- *    Initialise a given glyph builder.
- *
- * <Input>
- *    builder :: glyph builder to initialise
- *    face    :: current face object
- *    size    :: current size object
- *    glyph   :: current glyph object
- *    funcs   :: glyph builder functions (or "methods").
- *
- * <Note>
- *    This function is exported for now because it is used by the
- *    "t1dump" utility. Later, it will be accessed through a
- *    format-specific extension
- *
- *********************************************************************/
-
-  EXPORT_DEF
+  LOCAL_DEF
   void  T1_Init_Builder( T1_Builder*             builder,
                          T1_Face                 face,
                          T1_Size                 size,
-                         T1_GlyphSlot            glyph,
-                         const T1_Builder_Funcs* funcs );
+                         T1_GlyphSlot            glyph );
 
-/*********************************************************************
- *
- * <Function>
- *    T1_Done_Builder
- *
- * <Description>
- *    Finalise a given glyph builder. Its content can still be
- *    used after the call, but the function saves important information
- *    within the corresponding glyph slot.
- *
- * <Input>
- *    builder :: glyph builder to initialise
- *
- * <Note>
- *    This function is exported for now because it is used by the
- *    "t1dump" utility. Later, it will be accessed through a
- *    format-specific extension
- *
- *********************************************************************/
-
-  EXPORT_DEF
+  LOCAL_DEF
   void T1_Done_Builder( T1_Builder*  builder );
 
 
-/*********************************************************************
- *
- * <Function>
- *    T1_Init_Decoder
- *
- * <Description>
- *    Initialise a given Type 1 decoder for parsing
- *
- * <Input>
- *    decoder :: Type 1 decoder to initialise
- *    funcs   :: hinter functions interface
- *
- * <Note>
- *    This function is exported for now because it is used by the
- *    "t1dump" utility. Later, it will be accessed through a
- *    format-specific extension
- *
- *********************************************************************/
-
-  EXPORT_DEF
-  void  T1_Init_Decoder( T1_Decoder*             decoder,
-                         const T1_Hinter_Funcs*  funcs );
-
+  LOCAL_DEF
+  void  T1_Init_Decoder( T1_Decoder* decoder );
 
 
   /* Compute the maximum advance width of a font through quick parsing */

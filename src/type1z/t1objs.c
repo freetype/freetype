@@ -21,10 +21,6 @@
 #include <t1gload.h>
 #include <t1load.h>
 
-#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-#include <t1hinter.h>
-#endif
-
 /* Required by tracing mode */
 #undef   FT_COMPONENT
 #define  FT_COMPONENT  trace_t1objs
@@ -55,13 +51,7 @@
   LOCAL_FUNC
   void  T1_Done_Size( T1_Size  size )
   {
-    if (size)
-    {
-#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-      T1_Done_Size_Hinter( size );
-#endif
-      size->valid = 0;
-    }
+    (void)size;
   }
 
 
@@ -88,13 +78,8 @@
       
     size->valid = 0;
     
-#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-    error = T1_New_Size_Hinter( size );
-    return error;
-#else
     (void)error;
     return T1_Err_Ok;
-#endif
   }
 
 
@@ -118,12 +103,8 @@
   LOCAL_FUNC
   T1_Error  T1_Reset_Size( T1_Size  size )
   {
-#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-    return T1_Reset_Size_Hinter( size );
-#else
     (void)size;
     return 0;
-#endif
   }
 
 
@@ -312,9 +293,6 @@
     FT_Memory  memory  = glyph->root.face->memory;
     FT_Library library = glyph->root.face->driver->library;
 
-#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-    T1_Done_Glyph_Hinter( glyph );
-#endif
 	/* the bitmaps are created on demand */
 	FREE( glyph->root.bitmap.buffer );
     FT_Done_Outline( library, &glyph->root.outline );
@@ -339,22 +317,12 @@
   T1_Error  T1_Init_GlyphSlot( T1_GlyphSlot  glyph )
   {
     FT_Library  library = glyph->root.face->driver->library;
-    T1_Error    error;
 
     glyph->max_points         = 0;
     glyph->max_contours       = 0;
     glyph->root.bitmap.buffer = 0;
 
-    error = FT_New_Outline( library, 0, 0, &glyph->root.outline );
-    if (error) return error;
-
-#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-    error = T1_New_Glyph_Hinter( glyph );
-    if (error)
-      FT_Done_Outline( library, &glyph->root.outline );
-#endif
-
-    return error;
+    return FT_New_Outline( library, 0, 0, &glyph->root.outline );
   }
 
 

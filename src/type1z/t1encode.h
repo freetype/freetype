@@ -56,7 +56,7 @@
   /*     (this correspond to the exclamation mark `!').                    */
   /*                                                                       */
   LOCAL_DEF
-  T1_Short  t1_standard_encoding[256];
+  T1_Byte  t1_standard_encoding[256];
 
 
   /*************************************************************************/
@@ -79,17 +79,6 @@
   T1_Short  t1_expert_encoding[256];
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  t1_expert_subset_encoding:                                           */
-  /*                                                                       */
-  /*     A simple table used to encode the Adobe ExpertEncoding subset     */
-  /*     defined in the CFF specification.  It will probably evolve into   */
-  /*     another form sooner or later, as we deal with charsets            */
-  /*     differently than with encodings.                                  */
-  /*                                                                       */
-  LOCAL_DEF
-  T1_Short  t1_expert_subset_encoding[256];
 
 
 #endif /* T1ENCODE_H */

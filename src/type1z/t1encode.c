@@ -184,14 +184,14 @@
   /*                                                                       */
   /*       t1_standard_encoding[33] == 2                                   */
   /*                                                                       */
-  /*     which means that the glyph name for character code 32 is          */
+  /*     which means that the glyph name for character code 33 is          */
   /*                                                                       */
   /*       t1_standard_strings[2] == "exclam"                              */
   /*                                                                       */
   /*     (this correspond to the exclamation mark `!').                    */
   /*                                                                       */
   LOCAL_FUNC
-  T1_Short  t1_standard_encoding[256] =
+  T1_Byte  t1_standard_encoding[256] =
   {
   /*   0 */ 
       0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
@@ -240,7 +240,7 @@
   /*                                                                       */
   /*       t1_expert_encoding[33] == 229                                   */
   /*                                                                       */
-  /*     which means that the glyph name for character code 32 is          */
+  /*     which means that the glyph name for character code 33 is          */
   /*                                                                       */
   /*       t1_standard_strings[229] == "exclamsmall"                       */
   /*                                                                       */
@@ -280,53 +280,5 @@
   /* 250 */
     373, 374, 375, 376, 377, 378
   };
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /*  t1_expert_subset_encoding:                                           */
-  /*                                                                       */
-  /*     A simple table used to encode the Adobe ExpertEncoding subset     */
-  /*     defined in the CFF specification.  It will probably evolve into   */
-  /*     another form sooner or later, as we deal with charsets            */
-  /*     differently than with encodings.                                  */
-  /*                                                                       */
-  LOCAL_FUNC
-  FT_Short  t1_expert_subset_encoding[256] =
-  {
-  /*   0 */
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   1,   0,   0,   0, 231, 232,   0,   0,
-    235, 236, 237, 238,  13,  14,  15,  99, 239, 240,
-  /*  50 */
-    241, 242, 243, 244, 245, 246, 247, 248,  27,  28,
-    249, 250, 251, 252,   0, 253, 254, 255, 256, 257,
-      0,   0,   0, 258,   0,   0, 259, 260, 261, 262,
-      0,   0, 263, 264, 265,   0, 266, 109, 110, 267,
-    268, 269,   0, 270,   0, 272,   0,   0,   0,   0,
-  /* 100 */
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0, 300, 301, 302, 303,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-  /* 150 */
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0, 304, 305,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0, 314, 315,
-      0,   0,   0,   0,   0,   0,   0,   0, 158, 155,
-    163,   0, 320, 321, 322, 323, 324, 325,   0,   0,
-  /* 200 */
-    326, 150, 164, 169, 327, 328, 329, 330, 331, 332,
-    333, 334, 335, 336, 337, 338, 339, 340, 341, 342,
-    343, 344, 345, 346,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-  /* 250 */
-      0,   0,   0,   0,   0,   0
-  };
-
 
 /* END */

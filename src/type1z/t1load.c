@@ -92,13 +92,19 @@
           FACE.##x = T1_ToString(&loader->parser);                  \
           FT_TRACE2(( "type1.parse_##x##: \"%s\"\n", FACE.##x ));   \
         }
-           
+
+#define PARSE_NUM(s,x,t)  PARSE_(x)                                 \
+        {                                                           \
+          FACE.##x = (t)T1_ToInt(&loader->parser);                  \
+          FT_TRACE2(( "type1.parse_##x##: \"%d\"\n", FACE.##x ));   \
+        }
+        
 #define PARSE_INT(s,x)   PARSE_(x)                                  \
         {                                                           \
           FACE.##x = T1_ToInt(&loader->parser);                     \
           FT_TRACE2(( "type1.parse_##x##: \"%d\"\n", FACE.##x ));   \
         }
-           
+
 #define PARSE_BOOL(s,x)   PARSE_(x)                                 \
         {                                                           \
           FACE.##x = T1_ToBool(&loader->parser);                    \
@@ -381,10 +387,12 @@
     /* "ExpertEncoding"                                       */
     else
     {
-      if ( cur+17 < limit && strncmp( cur, "StandardEncoding", 16 ) == 0 )
+      if ( cur+17 < limit &&
+           strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
         face->type1.encoding_type = t1_encoding_standard;
         
-      else if (cur+15 < limit && strncmp( cur, "ExpertEncoding", 14 ) == 0 )
+      else if ( cur+15 < limit &&
+                strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
         face->type1.encoding_type = t1_encoding_expert;
 
       else
@@ -515,6 +523,7 @@
 
 #undef PARSE_STRING
 #undef PARSE_INT
+#undef PARSE_NUM
 #undef PARSE_BOOL
 #undef PARSE_FIXED
 #undef PARSE_COORDS
@@ -527,6 +536,7 @@
 
 #define PARSE_STRING(s,x)      PARSE_(s,x)
 #define PARSE_INT(s,x)         PARSE_(s,x)
+#define PARSE_NUM(s,x,t)       PARSE_(s,x)
 #define PARSE_BOOL(s,x)        PARSE_(s,x)
 #define PARSE_FIXED(s,x)       PARSE_(s,x)
 #define PARSE_COORDS(s,c,m,x)  PARSE_(s,x)
@@ -589,7 +599,8 @@
               name = (T1_Byte*)keyword->name;
               if (!name) break;
 
-              if (cur[0] == name[0] && len == strlen(name) )
+              if ( cur[0] == name[0] &&
+                   len == (T1_Int)strlen((const char*)name) )
               {
                 T1_Int  n;
                 for ( n = 1; n < len; n++ )
@@ -718,11 +729,12 @@
         if (char_name)
           for ( index = 0; index < type1->num_glyphs; index++ )
           {
-            glyph_name = type1->glyph_names[index];
-            if ( strcmp( char_name, glyph_name ) == 0 )
+            glyph_name = (T1_Byte*)type1->glyph_names[index];
+            if ( strcmp( (const char*)char_name,
+                         (const char*)glyph_name ) == 0 )
             {
               type1->encoding.char_index[charcode] = index;
-              type1->encoding.char_name [charcode] = glyph_name;
+              type1->encoding.char_name [charcode] = (char*)glyph_name;
               
               if (charcode < min_char) min_char = charcode;
               if (charcode > max_char) max_char = charcode;
