@@ -1956,28 +1956,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*  Update                                                               */
-  /*                                                                       */
-  /*    Update all X offsets of a drawing list.                            */
-  /*                                                                       */
-  static void
-  Update( PProfile  first )
-  {
-    PProfile  current = first;
-
-
-    while ( current )
-    {
-      current->X       = *current->offset;
-      current->offset += current->flow;
-      current->height--;
-      current = current->link;
-    }
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /*  Sort                                                                 */
   /*                                                                       */
   /*    Sorts a trace list.  In 95%, the list is already sorted.  We need  */
@@ -1991,7 +1969,14 @@
 
 
     /* First, set the new X coordinate of each profile */
-    Update( *list );
+    current = *list;
+    while ( current )
+    {
+      current->X       = *current->offset;
+      current->offset += current->flow;
+      current->height--;
+      current = current->link;
+    }
 
     /* Then sort them */
     old     = list;
