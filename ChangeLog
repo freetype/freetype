@@ -15,6 +15,8 @@
 	but use a new <span> class.
 	(section_synopsis_header, section_synopsis_footer): Don't change
 	colour.
+	(code_header, code_footer): Don't change font colour directly but
+	use a special <pre> class.
 	(print_html_field): <tr> gets the `valign' attribute, not <table>.
 	(print_html_field_list): Ditto.
 	(index_exit): Don't use <center>...</center> but `align=center'
