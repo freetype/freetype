@@ -1,5 +1,8 @@
 LATEST CHANGES
 
+  - renamed the directory "freetype2/config" to "freetype2/build" and
+    updated all relevant files..
+
   - found a memory leak in the "type1" driver
   
   - incorporated Tom's patches to support flex operators correctly
