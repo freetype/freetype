@@ -51,7 +51,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Allocates a new block of memory.  The returned area is always      */
-  /*    zero-filled, this is a strong convention in many FreeType parts.   */
+  /*    zero-filled; this is a strong convention in many FreeType parts.   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    memory :: A handle to a given `memory object' where allocation     */
@@ -107,21 +107,21 @@
   /*    from the heap, possibly changing `*P'.                             */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' where allocation     */
-  /*              occurs.                                                  */
+  /*    memory  :: A handle to a given `memory object' where allocation    */
+  /*               occurs.                                                 */
   /*                                                                       */
-  /*    current :: current block size in bytes                             */
-  /*    size    :: the new block size in bytes                             */
+  /*    current :: The current block size in bytes.                        */
+  /*    size    :: The new block size in bytes.                            */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    P      :: A pointer to the fresh new block.  It should be set to   */
-  /*              NULL if `size' is 0, or in case of error.                */
+  /*    P       :: A pointer to the fresh new block.  It should be set to  */
+  /*               NULL if `size' is 0, or in case of error.               */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    All callers of FT_Realloc _must_ provide the current block size    */
+  /*    All callers of FT_Realloc() _must_ provide the current block size  */
   /*    as well as the new one.                                            */
   /*                                                                       */
   /*    If the memory object's flag FT_SYSTEM_FLAG_NO_REALLOC is set, this */
@@ -129,13 +129,13 @@
   /*    FT_Free().  Otherwise, it will call the system-specific `realloc'  */
   /*    implementation.                                                    */
   /*                                                                       */
-  /*    (Some embedded systems do not have a working realloc).             */
+  /*    (Some embedded systems do not have a working realloc function).    */
   /*                                                                       */
   BASE_FUNC
   FT_Error  FT_Realloc( FT_Memory  memory,
                         FT_Long    current,
                         FT_Long    size,
-                        void*     *P )
+                        void**     P )
   {
     void*  Q;
 
@@ -178,7 +178,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    memory :: A handle to a given `memory object' where allocation     */
-  /*              occured.                                                 */
+  /*              occurred.                                                */
   /*                                                                       */
   /*    P      :: This is the _address_ of a _pointer_ which points to the */
   /*              allocated block.  It is always set to NULL on exit.      */
@@ -193,7 +193,7 @@
   /*                                                                       */
   BASE_FUNC
   void  FT_Free( FT_Memory  memory,
-                 void*     *P )
+                 void**     P )
   {
     FT_TRACE2(( "FT_Free:" ));
     FT_TRACE2(( " Freeing block 0x%08lx, ref 0x%08lx\n",
@@ -209,73 +209,76 @@
   }
 
 
- /***************************************************************************
-  *
-  *  ft_new_input_stream:
-  *
-  *    create a new input stream object from a FT_Open_Args structure..
-  *
-  **************************************************************************/
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_new_input_stream                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new input stream object from an FT_Open_Args structure.  */
+  /*                                                                       */
   static
-  FT_Error  ft_new_input_stream( FT_Library    library,
-                                 FT_Open_Args* args,
-                                 FT_Stream    *astream )
+  FT_Error  ft_new_input_stream( FT_Library     library,
+                                 FT_Open_Args*  args,
+                                 FT_Stream*     astream )
   {
-    FT_Error  error;
-    FT_Memory memory;
-    FT_Stream stream;
+    FT_Error   error;
+    FT_Memory  memory;
+    FT_Stream  stream;
+
     
     memory = library->memory;
-    if  ( ALLOC( stream, sizeof(*stream) ) )
+    if ( ALLOC( stream, sizeof ( *stream ) ) )
       return error;
       
     stream->memory = memory;
     
-    /* is it a memory stream ------------------------- ? */
-    if (args->memory_base && args->memory_size)
-    {
+    /* is it a memory stream? */
+    if ( args->memory_base && args->memory_size )
       FT_New_Memory_Stream( library,
                             args->memory_base,
                             args->memory_size,
                             stream );
-    }
 
-    /* do we have an 8-bit pathname ------------------ ? */
-    else if (args->pathname)
+    /* do we have an 8-bit pathname? */
+    else if ( args->pathname )
       error = FT_New_Stream( args->pathname, stream );
 
-    /* do we have a custom stream -------------------- ? */
-    else if (args->stream)
+    /* do we have a custom stream? */
+    else if ( args->stream )
     {
-      /* copy the content of the argument stream into the new stream object */
+      /* copy the contents of the argument stream */
+      /* into the new stream object               */
       *stream = *(args->stream);
       stream->memory = memory;
     }
     else
       error = FT_Err_Invalid_Argument;
       
-    if (error)
-      FREE(stream);
+    if ( error )
+      FREE( stream );
       
     *astream = stream;
     return error;
   }
 
 
- /***************************************************************************
-  *
-  *  ft_done_stream:
-  *
-  *    closes and destroys a stream object.
-  *
-  **************************************************************************/
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_done_stream                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Closes and destroys a stream object.                               */
+  /*                                                                       */
   static
-  void ft_done_stream( FT_Stream*  astream )
+  void  ft_done_stream( FT_Stream*  astream )
   {
     FT_Stream  stream = *astream;
     FT_Memory  memory = stream->memory;
+
     
-    if (stream->close)
+    if ( stream->close )
       stream->close( stream );
       
     FREE( stream );
@@ -283,12 +286,13 @@
   }
 
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****                                                                 ****/
-  /****                   O B J E C T   M A N A G E M E N T             ****/
+  /****               O B J E C T   M A N A G E M E N T                 ****/
   /****                                                                 ****/
   /****                                                                 ****/
   /*************************************************************************/
@@ -343,17 +347,17 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*   Destroy_Driver                                                      */
+  /*    Destroy_Driver                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Destroys a given driver object.  This also destroys all child      */
   /*    faces.                                                             */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    driver :: A handle to the target driver object.                    */
+  /*     driver :: A handle to the target driver object.                   */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The driver _must_ be LOCKED!                                       */
+  /*     The driver _must_ be LOCKED!                                      */
   /*                                                                       */
   static
   void  Destroy_Driver( FT_Driver  driver )
@@ -502,11 +506,11 @@
   /*    font format.                                                       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library     :: A handle to the library object.                     */
-  /*    hook_index  :: The index of the debug hook.  You should use the    */
-  /*                   values defined in ftobjs.h, e.g.                    */
-  /*                   FT_DEBUG_HOOK_TRUETYPE                              */
-  /*    debug_hook  :: The function used to debug the interpreter.         */
+  /*    library    :: A handle to the library object.                      */
+  /*    hook_index :: The index of the debug hook.  You should use the     */
+  /*                  values defined in ftobjs.h, e.g.                     */
+  /*                  FT_DEBUG_HOOK_TRUETYPE                               */
+  /*    debug_hook :: The function used to debug the interpreter.          */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Currently, four debug hook slots are available, but only two (for  */
@@ -545,6 +549,7 @@
   {
     FT_Glyph_Format*  new = 0;
 
+
     {
       FT_Glyph_Format*  cur   = library->glyph_formats;
       FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
@@ -562,7 +567,7 @@
     }
 
     /* if there is no place to hold the new format, return an error */
-    if (!new)
+    if ( !new )
       return FT_Err_Too_Many_Glyph_Formats;
 
     *new = *format;
@@ -643,11 +648,11 @@
   FT_Error  FT_New_Library( FT_Memory    memory,
                             FT_Library*  alibrary )
   {
-    FT_Library library      = 0;
+    FT_Library library = 0;
     FT_Error   error;
 
 
-    /* First of all, allocate the library object */
+    /* first of all, allocate the library object */
     if ( ALLOC( library, sizeof ( *library ) ) )
       return error;
 
@@ -719,7 +724,7 @@
     }
 
     /* Destroy raster object */
-    FREE( library->raster_pool   );
+    FREE( library->raster_pool );
 
     {
       FT_Glyph_Format*  cur   = library->glyph_formats;
@@ -913,7 +918,7 @@
     {
       if ( *cur == driver )
       {
-        /* Destroy the driver object */
+        /* destroy the driver object */
         Destroy_Driver( driver );
 
         /* now move the last driver in the table to the vacant slot */
@@ -933,6 +938,7 @@
     return error;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -947,7 +953,7 @@
   /*    driver_name :: The name of the driver to look up.                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    A handle to the driver object,  0 otherwise.                       */
+  /*    A handle to the driver object, 0 otherwise.                        */
   /*                                                                       */
   EXPORT_FUNC
   FT_Driver  FT_Get_Driver( FT_Library  library,
@@ -970,6 +976,14 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    open_face                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function does some work for FT_Open_Face().                   */
+  /*                                                                       */
   static
   FT_Error  open_face( FT_Driver  driver,
                        FT_Stream  stream,
@@ -985,7 +999,7 @@
     interface = &driver->interface;
     memory    = driver->memory;
 
-    /* allocate the face object, and performs basic initialisation */
+    /* allocate the face object, and perform basic initialization */
     if ( ALLOC( face, interface->face_object_size ) )
       goto Fail;
 
@@ -1011,18 +1025,25 @@
   }
 
 
+  static
+  const FT_Open_Args  ft_default_open_args = 
+    { 0, 0, 0, 0, 0 };
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    FT_New_Face                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface       */
-  /*    index.                                                             */
+  /*    Creates a new face object from a given resource and typeface index */
+  /*    using a pathname to the font file.                                 */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library    :: A handle to the library resource.                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    resource   :: A handle to a source resource.                       */
-  /*                                                                       */
+  /*    pathname   :: A path to the font file.                             */
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
   /* <Output>                                                              */
@@ -1032,11 +1053,11 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    Unlike FreeType 1.1, this function automatically creates a glyph   */
+  /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
   /*    slot for the face object which can be accessed directly through    */
   /*    `face->glyph'.                                                     */
   /*                                                                       */
-  /*    Note that additional slots can be added to each face through the   */
+  /*    Note that additional slots can be added to each face with the      */
   /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
   /*    list through their `next' field.                                   */
   /*                                                                       */
@@ -1046,24 +1067,58 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-
-  static
-  const FT_Open_Args  ft_default_open_args = 
-    { 0, 0, 0, 0, 0 };
-
   EXPORT_FUNC
   FT_Error  FT_New_Face( FT_Library   library,
                          const char*  pathname,
                          FT_Long      face_index,
-                         FT_Face     *aface )
+                         FT_Face*     aface )
   {
     FT_Open_Args  args = ft_default_open_args;
+
     
     args.pathname = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Memory_Face                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new face object from a given resource and typeface index */
+  /*    using a font file already loaded into memory.                      */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library    :: A handle to the library resource.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    file_base  :: A pointer to the beginning of the font data.         */
+  /*    file_size  :: The size of the memory chunk used by the font data.  */
+  /*    face_index :: The index of the face within the resource.  The      */
+  /*                  first face has index 0.                              */
+  /* <Output>                                                              */
+  /*    face       :: A handle to a new face object.                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
+  /*    slot for the face object which can be accessed directly through    */
+  /*    `face->glyph'.                                                     */
+  /*                                                                       */
+  /*    Note that additional slots can be added to each face with the      */
+  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
+  /*    list through their `next' field.                                   */
+  /*                                                                       */
+  /*    FT_New_Memory_Face() can be used to determine and/or check the     */
+  /*    font format of a given font resource.  If the `face_index' field   */
+  /*    is negative, the function will _not_ return any face handle in     */
+  /*    `*face'.  Its return value should be 0 if the resource is          */
+  /*    recognized, or non-zero if not.                                    */
+  /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_New_Memory_Face( FT_Library   library,
                                 void*        file_base,
@@ -1073,12 +1128,52 @@
   {
     FT_Open_Args  args = ft_default_open_args;
 
+
     args.memory_base = file_base;
     args.memory_size = file_size;
     return FT_Open_Face( library, &args, face_index, face );
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Open_Face                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Opens a face object from a given resource and typeface index using */
+  /*    an `FT_Open_Args' structure.  If the face object doesn't exist, it */
+  /*    will be created.                                                   */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library    :: A handle to the library resource.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    args       :: A pointer to an `FT_Open_Args' structure which must  */
+  /*                  be filled by the caller.                             */
+  /*    face_index :: The index of the face within the resource.  The      */
+  /*                  first face has index 0.                              */
+  /* <Output>                                                              */
+  /*    face       :: A handle to a new face object.                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
+  /*    slot for the face object which can be accessed directly through    */
+  /*    `face->glyph'.                                                     */
+  /*                                                                       */
+  /*    Note that additional slots can be added to each face with the      */
+  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
+  /*    list through their `next' field.                                   */
+  /*                                                                       */
+  /*    FT_Open_Face() can be used to determine and/or check the font      */
+  /*    format of a given font resource.  If the `face_index' field is     */
+  /*    negative, the function will _not_ return any face handle in        */
+  /*    `*face'.  Its return value should be 0 if the resource is          */
+  /*    recognized, or non-zero if not.                                    */
+  /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_Open_Face( FT_Library     library,
                           FT_Open_Args*  args,
@@ -1092,6 +1187,7 @@
     FT_Face      face = 0;
     FT_ListNode  node = 0;
 
+
     *aface = 0;
 
     if ( !library )
@@ -1099,20 +1195,22 @@
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
     memory = library->memory;
 
-    /* if the font driver is specified in the args structure, use */
-    /* it. Otherwise, we'll scan the list of registered drivers.. */
-    if (args->driver)
+    /* if the font driver is specified in the `args' structure, use */
+    /* it.  Otherwise, we'll scan the list of registered drivers.   */
+    if ( args->driver )
     {
       driver = args->driver;
-      /* not all drivers directly support face objects, so check.. */
-      if (driver->interface.face_object_size)
+      /* not all drivers directly support face objects, so check... */
+      if ( driver->interface.face_object_size )
       {
         error = open_face( driver, stream, face_index, &face );
-        if (!error) goto Success;
+        if ( !error )
+          goto Success;
       }
       else
         error = FT_Err_Invalid_Handle;
@@ -1125,11 +1223,12 @@
       FT_Driver*  cur   = library->drivers;
       FT_Driver*  limit = cur + library->num_drivers;
 
+
       for ( ; cur < limit; cur++ )
       {
         driver = *cur;
-       /* not all drivers directly support face objects, so check.. */
-        if (driver->interface.face_object_size)
+        /* not all drivers directly support face objects, so check... */
+        if ( driver->interface.face_object_size )
         {
           error = open_face( driver, stream, face_index, &face );
           if ( !error )
@@ -1146,35 +1245,35 @@
     }
 
   Success:
-
     FT_TRACE4(( "FT_New_Face: New face object, adding to list\n" ));
 
-    /****************************************************************/
-    /* add the face object to its driver's list                     */
+    /* add the face object to its driver's list */
     if ( ALLOC( node, sizeof ( *node ) ) )
       goto Fail;
 
     node->data = face;
     FT_List_Add( &driver->faces_list, node );
 
-    /****************************************************************/
-    /* now allocate a glyph slot object for the face                */
+    /* now allocate a glyph slot object for the face */
     {
       FT_GlyphSlot  slot;
 
+
       FT_TRACE4(( "FT_Open_Face: Creating glyph slot\n" ));
       error = FT_New_GlyphSlot( face, &slot );
-      if ( error ) goto Fail;
+      if ( error )
+        goto Fail;
     }
 
-    /****************************************************************/
-    /* finally allocate a size object for the face                  */
+    /* finally allocate a size object for the face */
     {
       FT_Size  size;
 
+
       FT_TRACE4(( "FT_Open_Face: Creating size object\n" ));
       error = FT_New_Size( face, &size );
-      if ( error ) goto Fail;
+      if ( error )
+        goto Fail;
     }
 
     *aface = face;
@@ -1195,30 +1294,31 @@
   /*    FT_Attach_File                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    "Attach" a given font file to an existing face. This is usually    */
-  /*    to read additionnal information for a single face object. For      */
+  /*    `Attaches' a given font file to an existing face.  This is usually */
+  /*    to read additional information for a single face object.  For      */
   /*    example, it is used to read the AFM files that come with Type 1    */
-  /*    fonts in order to add kerning data and other metrics..             */
+  /*    fonts in order to add kerning data and other metrics.              */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face         :: The target face object.                            */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face         :: target face object                                 */
-  /*                                                                       */
-  /*    filepathname :: an 8-bit pathname naming the 'metrics' file.       */
+  /*    filepathname :: An 8-bit pathname naming the `metrics' file.       */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    If your font file is in memory, or if you want to provide your     */
-  /*    own input stream object, see FT_Attach_Stream.                     */
+  /*    own input stream object, use FT_Attach_Stream().                   */
   /*                                                                       */
-  /*    The meaning of the "attach" (i.e. what really happens when the     */
-  /*    new file is read) is not fixed by FreeType itself. It really       */
+  /*    The meaning of the `attach' action (i.e., what really happens when */
+  /*    the new file is read) is not fixed by FreeType itself.  It really  */
   /*    depends on the font format (and thus the font driver).             */
   /*                                                                       */
-  /*    Client applications are expected to know what they're doing        */
-  /*    when invoking this function. Most drivers simply do not implement  */
-  /*    file attachments..                                                 */
+  /*    Client applications are expected to know what they are doing       */
+  /*    when invoking this function. Most  drivers simply do not implement */
+  /*    file attachments.                                                  */
   /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_Attach_File( FT_Face      face,
@@ -1229,6 +1329,7 @@
     open.pathname = (char*)filepathname;
     return FT_Attach_Stream( face, &open );
   }
+
                             
   /*************************************************************************/
   /*                                                                       */

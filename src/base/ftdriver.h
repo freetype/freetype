@@ -72,8 +72,9 @@
   /*                                                                       */
   typedef FT_Error  (*FTDriver_doneDriver)( FT_Driver  driver );
 
-
   
+  typedef void  (*FTDriver_Interface)( void );
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -101,11 +102,9 @@
   /*    isn't available (i.e., wasn't compiled in the driver at build      */
   /*    time).                                                             */
   /*                                                                       */
-  typedef void  (*FTDriver_Interface)( void );
-
   typedef FTDriver_Interface  (*FTDriver_getInterface)
-                        ( FT_Driver         driver,
-                          const FT_String*  interface );
+                                ( FT_Driver         driver,
+                                  const FT_String*  interface );
 
 
   /*************************************************************************/
@@ -128,12 +127,14 @@
   /*    FT_Attach_Reader                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This function is associated to the "attach_file" driver-specific   */
-  /*    interface. It is used to read additional data for a given face     */
-  /*    from another input stream/file. For example, it is used to         */
-  /*    attach a Type 1 AFM file to a given Type 1 face..                  */
+  /*    This function is associated to the `attach_file' driver-specific   */
+  /*    interface.  It is used to read additional data for a given face    */
+  /*    from another input stream/file.  For example, it is used to        */
+  /*    attach a Type 1 AFM file to a given Type 1 face.                   */
   /*                                                                       */
   typedef FT_Error  (*FT_Attach_Reader)( FT_Face  face, FT_Stream  stream );
+
+
 
   /*************************************************************************/
   /*************************************************************************/
