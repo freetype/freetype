@@ -920,6 +920,7 @@ THE SOFTWARE.
     {
       FT_Face       root = FT_FACE( face );
       PCF_Property  prop;
+      int           size_set = 0;
 
 
       root->num_faces = 1;
@@ -981,25 +982,42 @@ THE SOFTWARE.
       prop = find_property( face, "PIXEL_SIZE" );
       if ( prop != NULL )
       {
-        PCF_Property  xres = 0, yres = 0;
-
-
-        xres = find_property( face, "RESOLUTION_X" );
-        yres = find_property( face, "RESOLUTION_Y" );
-        if ( ( xres != NULL ) && ( yres != NULL ) )
+        root->available_sizes->width  = (FT_Short)( prop->value.integer );
+        root->available_sizes->height = (FT_Short)( prop->value.integer );
+        
+        size_set = 1;
+      }
+      else 
+      {
+        prop = find_property( face, "POINT_SIZE" );
+        if ( prop != NULL )
         {
-          root->available_sizes->width =
-            (FT_Short)( prop->value.integer * 75 / xres->value.integer );
-          root->available_sizes->height =
-            (FT_Short)( prop->value.integer * 75 / yres->value.integer );
+          PCF_Property  xres = 0, yres = 0;
+
+
+          xres = find_property( face, "RESOLUTION_X" );
+          yres = find_property( face, "RESOLUTION_Y" );
+              
+          if ( ( xres != NULL ) && ( yres != NULL ) )
+          {
+            root->available_sizes->width =
+              (FT_Short)( prop->value.integer *  
+                          xres->value.integer / 720 );
+            root->available_sizes->height =
+              (FT_Short)( prop->value.integer *  
+                          yres->value.integer / 720 ); 
+                  
+            size_set = 1;
+          }
         }
       }
-      else
-      { /* XXX */
+
+      if (size_set == 0 )
+      {
 #if 0
         printf( "PCF Warning: Pixel Size undefined, assuming 12\n");
 #endif
-        root->available_sizes->width = 12;
+        root->available_sizes->width  = 12;
         root->available_sizes->height = 12;
       }
 
