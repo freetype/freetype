@@ -609,6 +609,7 @@
   }
 
 
+#ifndef FT_OPTIMIZE_MEMORY
  /*
   *  The kerning data embedded in a PFR font are (charcode,charcode)
   *  pairs; we need to translate them to (gindex,gindex) and sort
@@ -747,7 +748,7 @@
 
     return error;
   }
-
+#endif /* !FT_OPTIMIZE_MEMORY */
 
   static const PFR_ExtraItemRec  pfr_phy_font_extra_items[] =
   {
@@ -826,7 +827,10 @@
     FT_FREE( phy_font->blue_values );
     phy_font->num_blue_values = 0;
 
+#ifndef FT_OPTIMIZE_MEMORY
     FT_FREE( phy_font->kern_pairs );
+#endif
+
     {
       PFR_KernItem  item, next;
 
@@ -1065,8 +1069,10 @@
     phy_font->bct_offset = FT_STREAM_POS();
     phy_font->cursor     = NULL;
 
+#ifndef FT_OPTIMIZE_MEMORY
     /* now sort kerning pairs */
     error = pfr_sort_kerning_pairs( stream, phy_font );
+#endif
 
   Exit:
     return error;
