@@ -191,7 +191,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL
   void  T1_Decrypt( FT_Byte*   buffer,
-                    FT_Int     length,
+                    FT_Offset  length,
                     FT_UShort  seed );
 
 

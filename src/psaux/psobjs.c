@@ -1277,7 +1277,7 @@
 
   FT_LOCAL_DEF
   void  T1_Decrypt( FT_Byte*   buffer,
-                    FT_Int     length,
+                    FT_Offset  length,
                     FT_UShort  seed )
   {
     while ( length > 0 )

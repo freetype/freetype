@@ -622,7 +622,7 @@ FT_BEGIN_HEADER
     const T1_Decoder_Funcs*  t1_decoder_funcs;
 
     void                     (*t1_decrypt)( FT_Byte*   buffer,
-                                            FT_Int     length,
+                                            FT_Offset  length,
                                             FT_UShort  seed );
   } PSAux_Interface;
 

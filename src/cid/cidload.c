@@ -62,7 +62,7 @@
 
   FT_LOCAL_DEF
   void  cid_decrypt( FT_Byte*   buffer,
-                     FT_Int     length,
+                     FT_Offset  length,
                      FT_UShort  seed )
   {
     while ( length > 0 )
