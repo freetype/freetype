@@ -2401,13 +2401,14 @@
 
 #if 0
 
-      FT_FACE_LOOKUP_SERVICE( face, service,
+      FT_FACE_LOOKUP_SERVICE( face,
+                              FT_Service_GlyphDict, service,
                               glyph_dict,
                               FT_SERVICE_ID_GLYPH_DICT );
 
 #else
 
-      service = face->internal->services.glyph_dict;
+      service = (FT_Service_GlyphDict)face->internal->services.glyph_dict;
       if ( service == FT_SERVICE_UNAVAILABLE )
         service = NULL;
       else if ( service == NULL )
@@ -2416,11 +2417,11 @@
 
        
         if ( module->clazz->get_interface )
-          service = module->clazz->get_interface( module,
-                                                  FT_SERVICE_ID_GLYPH_DICT );
+          service = (FT_Service_GlyphDict)module->clazz->get_interface(
+                      module, FT_SERVICE_ID_GLYPH_DICT );
      
         face->internal->services.glyph_dict =
-          service != NULL ? service
+          service != NULL ? (FT_Pointer)service
                           : FT_SERVICE_UNAVAILABLE;
       }
 
@@ -2456,7 +2457,8 @@
       FT_Service_GlyphDict  service;
 
 
-      FT_FACE_LOOKUP_SERVICE( face, service,
+      FT_FACE_LOOKUP_SERVICE( face,
+                              FT_Service_GlyphDict, service,
                               glyph_dict,
                               FT_SERVICE_ID_GLYPH_DICT );
 
@@ -2484,7 +2486,8 @@
       FT_Service_PsName  service;
 
 
-      FT_FACE_LOOKUP_SERVICE( face, service,
+      FT_FACE_LOOKUP_SERVICE( face,
+                              FT_Service_PsName, service,
                               postscript_name,
                               FT_SERVICE_ID_POSTSCRIPT_NAME );
 
@@ -2509,7 +2512,9 @@
 
     if ( face && FT_IS_SFNT( face ) )
     {
-      FT_FACE_FIND_SERVICE( face, service, FT_SERVICE_ID_SFNT_TABLE );
+      FT_FACE_FIND_SERVICE( FT_Service_SFNT_Table, service,
+                            face,
+                            FT_SERVICE_ID_SFNT_TABLE );
       if ( service != NULL )
         table = service->get_table( face, tag );
     }
@@ -2533,7 +2538,9 @@
     if ( !face || !FT_IS_SFNT( face ) )
       return FT_Err_Invalid_Face_Handle;
 
-    FT_FACE_FIND_SERVICE( face, service, FT_SERVICE_ID_SFNT_TABLE );
+    FT_FACE_FIND_SERVICE( FT_Service_SFNT_Table, service,
+                          face,
+                          FT_SERVICE_ID_SFNT_TABLE );
     if ( service == NULL )
       return FT_Err_Unimplemented_Feature;
       

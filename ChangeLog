@@ -1,4 +1,20 @@
+2003-09-16  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftserv.h (FT_FACE_FIND_SERVICE,
+	FT_FACE_LOOKUP_SERVICE): Add parameter to pass pointer type.
+	Ugly, I know, but this is needed for compilation with C++ --
+	maybe someone knows a better solution?
+	Updated all callers.
+
+	* src/base/ftobjs.c (FT_Get_Name_Index, FT_Get_Glyph_Name): Remove
+	C++ compiler warnings.
+
+	* src/base/ftbdf.c (FT_Get_BDF_Charset_ID, FT_Get_BDF_Property):
+	Fix order of arguments passed to FT_FACE_FIND_SERVICE.
+
 2003-09-15  Werner Lemberg  <wl@gnu.org>
+
+	Avoid header files with identical names.
 
 	* include/freetype/internal/services/bdf.h: Renamed to...
 	* include/freetype/internal/services/svbdf.h: This.
