@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -23,9 +23,9 @@
 #include <ft2build.h>
 
   /*
-   * this is a special developer version of "ftoption.h", it is used
+   * This is a special developer version of "ftoption.h".  It is used
    * to define all debugging options, as well as the TrueType bytecode
-   * interpreter
+   * interpreter.
    */
 
 FT_BEGIN_HEADER

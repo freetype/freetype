@@ -81,7 +81,6 @@ AC_SUBST(FTSYS_SRC)
 
 AC_CHECK_FUNCS(memcpy memmove)
 
-
 dnl Check for system zlib
 AC_ARG_WITH(zlib,
   [  --without-zlib          use internal zlib instead of system-wide])
@@ -97,8 +96,6 @@ AC_SUBST(LIBZ)
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
 AC_SUBST(SYSTEM_ZLIB)
-
-
 
 AC_PROG_LIBTOOL
 
