@@ -187,7 +187,7 @@ FT_BEGIN_HEADER
     FT_Short   caret_Slope_Run;
     FT_Short   caret_Offset;
 
-    FT_Short   Reserved[4];
+    FT_Short   Reserved[5];
 
     FT_Short   metric_Data_Format;
     FT_UShort  number_Of_HMetrics;
@@ -309,7 +309,7 @@ FT_BEGIN_HEADER
     FT_Short   caret_Slope_Run;
     FT_Short   caret_Offset;
 
-    FT_Short   Reserved[4];
+    FT_Short   Reserved[5];
 
     FT_Short   metric_Data_Format;
     FT_UShort  number_Of_VMetrics;
