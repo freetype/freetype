@@ -247,7 +247,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  EXPORT_FUNC( FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
   {
     return &t1cid_driver_class;
   }

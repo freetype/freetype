@@ -19,14 +19,14 @@
 #include <freetype/cache/ftcimage.h>
 #include <freetype/internal/ftmemory.h>
 
-#include <string.h>
+#include <string.h>     /* memcmp() */
 
 
- /* the FT_Glyph image "glyph node" type */
+  /* the FT_Glyph image `glyph node' type */
   typedef struct  FTC_GlyphImageRec_
   {
-    FTC_GlyphNodeRec   root;
-    FT_Glyph           ft_glyph;
+    FTC_GlyphNodeRec  root;
+    FT_Glyph          ft_glyph;
 
   } FTC_GlyphImageRec, *FTC_GlyphImage;
 
@@ -70,24 +70,24 @@
 
 
   LOCAL_FUNC_X
-  FT_Error  ftc_glyph_image_node_new( FTC_GlyphSet    gset,
-                                      FT_UInt         glyph_index,
-                                      FTC_GlyphImage *anode )
+  FT_Error  ftc_glyph_image_node_new( FTC_GlyphSet     gset,
+                                      FT_UInt          glyph_index,
+                                      FTC_GlyphImage*  anode )
   {
-    FT_Memory        memory   = gset->memory;
-    FTC_ImageSet     imageset = (FTC_ImageSet)gset;
-    FT_Error         error;
-    FTC_GlyphImage   node = 0;
-    FT_Face          face;
-    FT_Size          size;
+    FT_Memory       memory   = gset->memory;
+    FTC_ImageSet    imageset = (FTC_ImageSet)gset;
+    FT_Error        error;
+    FTC_GlyphImage  node = 0;
+    FT_Face         face;
+    FT_Size         size;
 
 
     /* allocate node */
     if ( ALLOC( node, sizeof ( *node ) ) )
       goto Exit;
 
-    /* init its inner fields */
-    FTC_GlyphNode_Init( FTC_GLYPHNODE(node), gset, glyph_index );
+    /* initialize its inner fields */
+    FTC_GlyphNode_Init( FTC_GLYPHNODE( node ), gset, glyph_index );
 
     /* we will now load the glyph image */
     error = FTC_Manager_Lookup_Size( gset->manager,
@@ -154,7 +154,7 @@
 
 
   /* this function is important because it is both part of */
-  /* a FTC_GlyphSet_Class and a FTC_CacheNode_Class     */
+  /* an FTC_GlyphSet_Class and an FTC_CacheNode_Class      */
   /*                                                       */
   LOCAL_FUNC_X
   FT_ULong  ftc_glyph_image_node_size( FTC_GlyphImage  node )
@@ -262,17 +262,16 @@
                                                    FTC_Image_Cache*  acache )
   {
     return FTC_Manager_Register_Cache(
-              manager,
-              (FTC_Cache_Class*)&ftc_glyph_image_cache_class,
-              (FTC_Cache*)acache );
+             manager,
+             (FTC_Cache_Class*)&ftc_glyph_image_cache_class,
+             (FTC_Cache*)acache );
   }
 
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
-                          FTC_Image_Desc*  desc,
-                          FT_UInt          gindex,
-                          FT_Glyph*        aglyph )
+  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
+                                                     FTC_Image_Desc*  desc,
+                                                     FT_UInt          gindex,
+                                                     FT_Glyph*        aglyph )
   {
     FT_Error       error;
     FTC_GlyphSet   gset;

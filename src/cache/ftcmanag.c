@@ -54,7 +54,7 @@
     {
       /* destroy initial size object; it will be re-created later */
       face = (FT_Face)node->root.data;
-      if (face->size)
+      if ( face->size )
         FT_Done_Size( face->size );
     }
 
@@ -311,7 +311,7 @@
       FT_Lru_Reset( manager->sizes_lru );
       FT_Lru_Reset( manager->faces_lru );
     }
-    /* FIXME: flush the caches ?? */
+    /* XXX: FIXME: flush the caches? */
   }
 
 
@@ -413,10 +413,8 @@
         }
 
         /* check, just in case of general corruption :-) */
-        if (manager->num_nodes <= 0)
-        {
-          FT_ERROR(( "FTC_Manager_Compress: invalid cache node count !!\n" ));
-        }
+        if ( manager->num_nodes <= 0 )
+          FT_ERROR(( "FTC_Manager_Compress: Invalid cache node count!\n" ));
         else
           manager->num_nodes--;
       }
@@ -465,8 +463,8 @@
         cache->memory  = memory;
         cache->clazz   = clazz;
 
-        /* THIS IS VERY IMPORTANT, THIS WILL WRECH THE MANAGER */
-        /* IF IT IS NOT SET CORRECTLY..                        */
+        /* THIS IS VERY IMPORTANT! IT WILL WRETCH THE MANAGER */
+        /* IF IT IS NOT SET CORRECTLY                         */
         cache->cache_index = index;
 
         if ( clazz->init_cache )

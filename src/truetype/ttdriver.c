@@ -483,7 +483,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    getDriverInterface                                                 */
+  /*    getDriverClass                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This function is used when compiling the TrueType driver as a      */
@@ -499,7 +499,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
   {
     return &tt_driver_class;
   }

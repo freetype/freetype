@@ -80,7 +80,6 @@
   }
 
 
-
   FT_EXPORT_DEF( void )  FT_Lru_Reset( FT_Lru  lru )
   {
     FT_ListNode    node;
@@ -220,8 +219,8 @@
         /* create a new lru list node, then the element for it */
         if ( lru->nodes )
         {
-          node     = lru->free_nodes.head;
-          lru_node = (FT_LruNode)node;
+          node          = lru->free_nodes.head;
+          lru_node      = (FT_LruNode)node;
           lru_node->key = key;
 
           error = clazz->init_element( lru, lru_node );

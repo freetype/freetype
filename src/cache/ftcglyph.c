@@ -20,7 +20,7 @@
 #include <freetype/fterrors.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftlist.h>
-#include <freetype/fterrors.h>
+#include <freetype/internal/ftdebug.h>
 
 
   /*************************************************************************/
@@ -62,23 +62,25 @@
     FTC_GlyphSet  gset     = (FTC_GlyphSet)gset_lru->root.data;
     FT_UInt       hash     = node->glyph_index % gset->hash_size;
 
+
     /* remove the node from its gset's bucket list */
     {
       FTC_GlyphNode*  pnode = gset->buckets + hash;
       FTC_GlyphNode   cur;
 
+
       for (;;)
       {
         cur = *pnode;
-        if (!cur)
+        if ( !cur )
         {
-          /* that's very strange, this should not happen !! */
+          /* this should never happen */
           FT_ERROR(( "FTC_GlyphNode_Destroy:"
-                     " trying to delete an unlisted node !!!!" ));
+                     " trying to delete an unlisted node!" ));
           return;
         }
 
-        if (cur == node)
+        if ( cur == node )
         {
           *pnode = cur->gset_next;
           break;
@@ -112,8 +114,8 @@
 
   FT_CPLUSPLUS( const FTC_CacheNode_Class )  ftc_glyph_cache_node_class =
   {
-    (FTC_CacheNode_SizeFunc)    FTC_GlyphNode_Size,
-    (FTC_CacheNode_DestroyFunc) FTC_GlyphNode_Destroy
+    (FTC_CacheNode_SizeFunc)   FTC_GlyphNode_Size,
+    (FTC_CacheNode_DestroyFunc)FTC_GlyphNode_Destroy
   };
 
 
@@ -128,12 +130,12 @@
 
   FT_EXPORT_FUNC( FT_Error )  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
                                                 FT_Pointer       type,
-                                                FTC_GlyphSet    *aset )
+                                                FTC_GlyphSet*    aset )
   {
-    FT_Error        error;
-    FT_Memory       memory  = cache->root.memory;
-    FTC_Manager     manager = cache->root.manager;
-    FTC_GlyphSet    gset   = 0;
+    FT_Error                error;
+    FT_Memory               memory  = cache->root.memory;
+    FTC_Manager             manager = cache->root.manager;
+    FTC_GlyphSet            gset    = 0;
 
     FTC_Glyph_Cache_Class*  gcache_class;
     FTC_GlyphSet_Class*     clazz;
@@ -180,14 +182,14 @@
 
   FT_EXPORT_FUNC( void )  FTC_GlyphSet_Destroy( FTC_GlyphSet  gset )
   {
-    FTC_Glyph_Cache         cache        = gset->cache;
-    FTC_Manager             manager      = cache->root.manager;
-    FT_List                 glyphs_lru   = &manager->global_lru;
-    FTC_GlyphNode*          bucket       = gset->buckets;
-    FTC_GlyphNode*          bucket_limit = bucket + gset->hash_size;
-    FT_Memory               memory       = cache->root.memory;
+    FTC_Glyph_Cache      cache        = gset->cache;
+    FTC_Manager          manager      = cache->root.manager;
+    FT_List              glyphs_lru   = &manager->global_lru;
+    FTC_GlyphNode*       bucket       = gset->buckets;
+    FTC_GlyphNode*       bucket_limit = bucket + gset->hash_size;
+    FT_Memory            memory       = cache->root.memory;
 
-    FTC_GlyphSet_Class*  clazz = gset->clazz;
+    FTC_GlyphSet_Class*  clazz        = gset->clazz;
 
 
     /* for each bucket, free the list of glyph nodes */
@@ -204,7 +206,7 @@
         lrunode = FTC_GLYPHNODE_TO_LRUNODE( node );
 
         manager->num_bytes -= clazz->size_node( node, gset );
-        manager->num_nodes --;
+        manager->num_nodes--;
 
         FT_List_Remove( glyphs_lru, lrunode );
 
@@ -222,20 +224,20 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )
-  FTC_GlyphSet_Lookup_Node( FTC_GlyphSet    gset,
-                            FT_UInt         glyph_index,
-                            FTC_GlyphNode  *anode )
+  FT_EXPORT_FUNC( FT_Error )  FTC_GlyphSet_Lookup_Node(
+                                FTC_GlyphSet    gset,
+                                FT_UInt         glyph_index,
+                                FTC_GlyphNode*  anode )
   {
-    FTC_Glyph_Cache         cache      = gset->cache;
-    FTC_Manager             manager    = cache->root.manager;
-    FT_UInt                 hash_index = glyph_index % gset->hash_size;
-    FTC_GlyphNode*          bucket     = gset->buckets + hash_index;
-    FTC_GlyphNode*          pnode      = bucket;
-    FTC_GlyphNode           node;
-    FT_Error                error;
+    FTC_Glyph_Cache      cache      = gset->cache;
+    FTC_Manager          manager    = cache->root.manager;
+    FT_UInt              hash_index = glyph_index % gset->hash_size;
+    FTC_GlyphNode*       bucket     = gset->buckets + hash_index;
+    FTC_GlyphNode*       pnode      = bucket;
+    FTC_GlyphNode        node;
+    FT_Error             error;
 
-    FTC_GlyphSet_Class*  clazz = gset->clazz;
+    FTC_GlyphSet_Class*  clazz      = gset->clazz;
 
 
     *anode = 0;
@@ -243,7 +245,7 @@
     for ( ;; )
     {
       node = *pnode;
-      if (!node)
+      if ( !node )
         break;
 
       if ( node->glyph_index == glyph_index )
@@ -274,9 +276,9 @@
     FT_List_Insert( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( node ) );
 
     manager->num_bytes += clazz->size_node( node, gset );
-    manager->num_nodes ++;
+    manager->num_nodes++;
 
-    if (manager->num_bytes > manager->max_bytes)
+    if ( manager->num_bytes > manager->max_bytes )
     {
       FTC_GlyphNode_Ref   ( node );
       FTC_Manager_Compress( manager );
