@@ -24,6 +24,7 @@
 #include <tttags.h>
 
 #include <sfnt.h>
+#include <psnames.h>
 #include <ttobjs.h>
 
 #include <ttpload.h>
@@ -226,9 +227,10 @@
                           TT_Long    face_index,
                           TT_Face    face )
   {
-    TT_Error         error;
-    TT_ULong         format_tag;
-    SFNT_Interface*  sfnt;
+    TT_Error           error;
+    TT_ULong           format_tag;
+    SFNT_Interface*    sfnt;
+    PSNames_Interface* psnames;
 
     sfnt = (SFNT_Interface*)face->sfnt;
     if (!sfnt)
@@ -246,6 +248,18 @@
         
       face->sfnt       = sfnt;
       face->goto_table = sfnt->goto_table;
+    }
+    
+    psnames = (PSNames_Interface*)face->psnames;
+    if (!psnames)
+    {
+      /* look-up the PSNames driver */
+      FT_Driver  psnames_driver;
+      
+      psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
+      if (psnames_driver)
+        face->psnames = (PSNames_Interface*)
+                            (psnames_driver->interface.format_interface);
     }
     
     /* create input stream from resource */
@@ -291,13 +305,17 @@
          LOAD_( charmaps )      ||
          LOAD_( names )         ||
          LOAD_( os2 )           ||
-         LOAD_( psnames )       ||
+         LOAD_( psnames )       )
+     goto Exit;
 
-         /* the optional tables */
+    /* the optional tables */
+    
+    /* embedded bitmap support. */
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-         LOAD_( sbits )  ||
+    if (sfnt->load_sbits && LOAD_(sbits)) goto Exit;
 #endif
-         LOAD_( hdmx )          ||
+
+    if ( LOAD_( hdmx )          ||
          LOAD_( gasp )          ||
          LOAD_( kerning )       ||
 
