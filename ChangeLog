@@ -1,5 +1,10 @@
 2005-04-03  Werner Lemberg  <wl@gnu.org>
 
+	* src/type1/t1parse.c (T1_New_Parser): Relax the check for a valid
+	first line in the font.
+
+2005-04-03  Werner Lemberg  <wl@gnu.org>
+
 	* docs/CHANGES, include/freetype/freetype.h: Improve documentation
 	of FT_Set_Pixel_Sizes and FT_Set_Char_Size.
 
