@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    AFM support for Type 1 fonts (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -63,13 +63,13 @@
 
 
     /* skip whitespace */
-    while ( ( *p == ' ' || *p == '\t' || *p == ':' || *p == ';' ) &&
-            p < limit                                             )
+    while ( p < limit                                             &&
+            ( *p == ' ' || *p == '\t' || *p == ':' || *p == ';' ) )
       p++;
     *start = p;
 
     /* now, read glyph name */
-    while ( IS_ALPHANUM( *p ) && p < limit )
+    while ( p < limit && IS_ALPHANUM( *p ) )
       p++;
 
     len = p - *start;

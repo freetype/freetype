@@ -1,3 +1,8 @@
+2004-06-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1afm.c (afm_atoindex): Fix boundary test.  Reported
+	by Dirck Blaskey.
+
 2004-06-24  David Turner  <david@freetype.org>
 
         * src/truetype/ttgload.c, src/truetype/ttxgvar.c: removing
