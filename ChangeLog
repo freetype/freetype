@@ -1,3 +1,8 @@
+2003-06-19  Dirck Blaskey  <listtarget@danbala.com>
+
+	* src/cff/cffload (cff_encoding_load): `nleft' must be FT_UInt,
+	otherwise adding 1 might wrap the result.
+
 2003-06-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/psnames/psmodule.c (ps_unicode_value): Add support to
