@@ -1,3 +1,15 @@
+2003-04-28  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.ac: Generate `freetype.pc' from
+	`freetype.in'.
+	* builds/unix/configure: Regenerated.
+	* builds/unix/install.mk (install, uninstall): Handle `freetype.pc'.
+
+2003-04-28  Gustavo J. A. M. Carneiro  <gjc@inescporto.pt>
+
+	* builds/unix/freetype2.in: New file.  Contains building information
+	for the `pkg-config' package.
+
 2003-04-28  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c (FT_Load_Glyph): Fix boundary check for
