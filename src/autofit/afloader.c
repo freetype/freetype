@@ -158,9 +158,12 @@
         /* width/positioning that occured during the hinting process  */
         {
           FT_Pos        old_advance, old_rsb, old_lsb, new_lsb;
+          FT_Pos        pp1x_uh, pp2x_uh;
           AF_AxisHints  axis  = &hints->axis[ AF_DIMENSION_HORZ ];
-          AF_Edge       edge1 = axis->edges;    /* leftmost edge  */
-          AF_Edge       edge2 = edge1 + axis->num_edges - 1; /* rightmost edge */
+          AF_Edge       edge1 = axis->edges;         /* leftmost edge  */
+          AF_Edge       edge2 = edge1 +
+                                axis->num_edges - 1; /* rightmost edge */
+
 
           if ( edge2 > edge1 )
           {
@@ -169,8 +172,26 @@
             old_lsb     = edge1->opos;
             new_lsb     = edge1->pos;
 
-            loader->pp1.x = FT_PIX_ROUND( new_lsb    - old_lsb );
-            loader->pp2.x = FT_PIX_ROUND( edge2->pos + old_rsb );
+            /* remember unhinted values to later account */
+            /* for rounding errors                       */
+
+            pp1x_uh = new_lsb    - old_lsb;
+            pp2x_uh = edge2->pos + old_rsb;
+
+            /* prefer too much space over too little space */
+            /* for very small sizes                        */
+
+            if ( old_lsb < 24 )
+              pp1x_uh -= 5;
+
+            if ( old_rsb < 24 )
+              pp2x_uh += 5;
+
+            loader->pp1.x = FT_PIX_ROUND( pp1x_uh );
+            loader->pp2.x = FT_PIX_ROUND( pp2x_uh );
+
+            slot->metrics.lsb_delta = hinter->pp1.x - pp1x_uh;
+            slot->metrics.rsb_delta = hinter->pp2.x - pp2x_uh;
 
 #if 0
             /* try to fix certain bad advance computations */
