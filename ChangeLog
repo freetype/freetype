@@ -1,3 +1,15 @@
+2005-03-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afglobal.c (af_face_globals_get_metrics):
+	s/index/gidx/.
+
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): Fix compiler
+	warnings.
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add ttsbit0.c.
+
+	* src/sfnt/ttsbit0.h: Dummy file for build with `make'.
+
 2005-03-26  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	Update of the Amiga port.

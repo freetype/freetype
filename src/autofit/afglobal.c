@@ -218,7 +218,7 @@
                                AF_ScriptMetrics  *ametrics )
   {
     AF_ScriptMetrics  metrics = NULL;
-    FT_UInt           index;
+    FT_UInt           gidx;
     AF_ScriptClass    clazz;
     FT_Error          error = AF_Err_Ok;
 
@@ -229,8 +229,8 @@
       goto Exit;
     }
 
-    index   = globals->glyph_scripts[gindex];
-    clazz   = af_script_classes[index];
+    gidx    = globals->glyph_scripts[gindex];
+    clazz   = af_script_classes[gidx];
     metrics = globals->metrics[clazz->script];
     if ( metrics == NULL )
     {
