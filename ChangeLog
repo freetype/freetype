@@ -1,3 +1,9 @@
+2002-07-30  David Turner  <david@freetype.org>
+
+        * include/freetype/ftincrem.h: adding new experimental header file
+        to demonstrate a "cleaner" API to support incremental font loading.
+        comments appreciated...
+
 2002-07-28  Werner Lemberg  <wl@gnu.org>
 
 	s/ft_memset/FT_MEM_SET/.
