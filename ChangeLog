@@ -77,9 +77,11 @@
 
 	* src/cache/ftlru.c: Fixed an invalid assertion check.
 
-	* src/autohint/ahglyph.h, src/autohint/ahglyph.c,
-	src/autohint/ahglobal.c, src/autohint/ahhint.c: Fixed blue-scale
-	problem.
+	* src/autohint/ahglyph.c (ah_outline_load): Add two scaling
+	arguments.
+	* src/autohint/ahglyph.h: Updated.
+	* src/autohint/ahhint.c (ah_hinter_load): Updated.
+	* src/autohint/ahglobal.c (ah_hinter_compute_widths): Updated.
 
 	* src/cache/ftccache.c: Fixed small bug that could crash the cache
 	in rare circumstances (mostly with broken fonts).
@@ -169,8 +171,8 @@
 	Fixing the slight distortion problem that ocurred due to the latest
 	auto-hinter changes.
 
-	* src/autohint/ahhint.c: Disabled the advance width "correction"
-	which seemed to provide more trouble than benefits.
+	* src/autohint/ahhint.c (ah_hinter_load): Disabled the advance width
+	"correction" which seemed to provide more trouble than benefits.
 
 2003-02-13  Graham Asher  <graham.asher@btinternet.com>
 
@@ -203,10 +205,16 @@
 	display a waterfall with a font without a Unicode charmap (e.g. 
 	SYMBOL.TTF).
 
-	* src/autohint/ahtypes.h, src/autohint/ahhint.c, src/base/ftobjs.c,
-	src/truetype/ttobjs.c: Implemented FT_CONFIG_CHESTER_BLUE_SCALE,
-	corresponding to the last patch from David Chester, but with a much
-	simpler (and saner) implementation.
+	Implemented FT_CONFIG_CHESTER_BLUE_SCALE, corresponding to the last
+	patch from David Chester, but with a much simpler (and saner)
+	implementation.
+
+	* src/autohint/ahhint.c (ah_hinter_load_glyph)
+	[FT_CONFIG_CHESTER_BLUE_SCALE]: Try to optimize the y_scale so that
+	the top of non-capital letters is aligned on a pixel boundary
+	whenever possible.
+
+	* src/base/ftobjs.c, src/truetype/ttobjs.c:
 
 	* src/pshinter/pshalgo3.c: Improved the Postscript hinter.  Getting
 	rid of stem snapping seems to work well here (though the stems are
@@ -217,7 +225,8 @@
 
 2003-01-22  David Chester  <davidchester@qmx.net>
 
-	* src/autohint/ahhint.c: Small fix to the stem width optimization.
+	* src/autohint/ahhint.c (ah_compute_stem_width): Small fix to the
+	stem width optimization.
 
 2003-01-22  David Turner  <david@freetype.org>
 
@@ -308,8 +317,27 @@
 	[FT_CONFIG_OPTION_CHESTER_HINTS]: New macros to control individual
 	features.
 
-	* src/autohint/ahglobal.h, src/autohint/ahglobal.c,
-	src/autohint/ahglyph.c, src/autohint/ahtypes.h:
+	* src/autohint/ahglobal.c (blue_chars) [FT_CONFIG_CHESTER_SMALL_F]:
+	Add blue zone for `fijkdbh'.
+	* src/autohint/ahglobal.h (AH_IS_TOP_BLUE)
+	[FT_CONFIG_CHESTER_SMALL_F]: Use `AH_BLUE_SMALL_F_TOP'.
+	* src/autohint/ahglyph.c (ah_outline_compute_edges)
+	[FT_CONFIG_CHESTER_SERIF]: Use `AH_EDGE_SERIF'.
+	(ah_outline_compute_blue_edges) [FT_CONFIG_CHESTER_SMALL_F]:
+	Increase threshold for `best_dist'.
+	* src/autohint/ahhint.c (ah_compute_stem_width)
+	[FT_CONFIG_CHESTER_SERIF]: Provide new version for improved serif
+	handling.
+	(ah_align_linked_edge) [FT_CONFIG_CHESTER_SERIF]: Use special
+	version of `ah_compute_stem_width'.
+	(ah_hint_edges_3) [FT_CONFIG_CHESTER_STEM]: A new algorithm for stem
+	alignment when stem widths are less than 1.5 pixels wide centers the
+	stem slightly off-center of the center of a pixel (this increases
+	sharpness and consistency).
+	[FT_CONFIG_CHESTER_SERIF]: Use special version of
+	`ah_compute_stem_width'.
+	* src/autohint/ahtypes.h [FT_CONFIG_CHESTER_SMALL_F]: Add
+	`AH_BLUE_SMALL_F_TOP'.
 
 2003-01-11  David Turner  <david@freetype.org>
 
@@ -328,10 +356,15 @@
 
 2003-01-08  Owen Taylor  <owen@redhat.com>
 
-	* src/autohint/ahtypes.h, src/autohint/ahhint.c,
-	src/pshinter/pshalgo3.h, src/pshinter/pshalgo3.c: Implemented the
-	FT_RENDER_MODE_LIGHT hinting mode in the auto and postscript
-	hinters.
+	Implemented the FT_RENDER_MODE_LIGHT hinting mode in the auto and
+	postscript hinters.
+
+	* src/autohint/ahhint.c (ah_compute_stem_width): Handle
+	hinter->do_stem_adjust.
+	(ah_hinter_load_glyph): Set hinter->do_stem_adjust.
+
+	* src/autohint/ahtypes.h (AH_HinterRec): Add `do_stem_adjust'.
+	* src/pshinter/pshalgo3.h, src/pshinter/pshalgo3.c:
 
 	* include/freetype/freetype.h (FT_Render_Mode): Add
 	FT_RENDER_MODE_LIGHT.
@@ -457,9 +490,13 @@
 	support fot the first GSUB lookups.  Nothing that really compiles
 	for now though.
 
-	* src/autohint/ahhint.c: Disabled serif stem width quantization.  It
-	produces slightly better shapes though this is not distinguishable
-	with many fonts.
+	* src/autohint/ahhint.c (ah_align_serif_edge): Disabled serif stem
+	width quantization.  It produces slightly better shapes though this
+	is not distinguishable with many fonts.
+	Remove other dead code.
+
+	* src/Jamfile, src/*/Jamfile: Simplified.
+	Use $(FT2_SRC_DIR).
 
 2002-11-06  David Turner  <david@freetype.org>
 

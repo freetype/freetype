@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Glyph hinter (body).                                                 */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
+/*  Copyright 2000-2001, 2002, 2003 Catharon Productions Inc.              */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -88,7 +88,9 @@
 
 
   /* compute the snapped width of a given stem */
+
 #ifdef FT_CONFIG_CHESTER_SERIF
+
   static FT_Pos
   ah_compute_stem_width( AH_Hinter      hinter,
                          int            vertical,
@@ -218,7 +220,9 @@
 
     return dist;
   }
-#else /* !CHESTER_SERIF */
+
+#else /* !FT_CONFIG_CHESTER_SERIF */
+
   static FT_Pos
   ah_compute_stem_width( AH_Hinter  hinter,
                          int        vertical,
@@ -332,7 +336,8 @@
 
     return dist;
   }
-#endif /* !CHESTER_SERIF */
+
+#endif /* !FT_CONFIG_CHESTER_SERIF */
 
 
   /* align one stem edge relative to the previous stem edge */
@@ -345,6 +350,7 @@
     FT_Pos  dist = stem_edge->opos - base_edge->opos;
 
 #ifdef FT_CONFIG_CHESTER_SERIF
+
     FT_Pos  fitted_width = ah_compute_stem_width( hinter,
                                                   vertical,
                                                   dist,
@@ -352,10 +358,14 @@
                                                   stem_edge->flags );
 
     stem_edge->pos = base_edge->pos + fitted_width;
+
 #else
+
     stem_edge->pos = base_edge->pos +
                      ah_compute_stem_width( hinter, vertical, dist );
+
 #endif
+
   }
 
 
@@ -509,7 +519,9 @@
 
         if ( !anchor )
         {
+
 #ifdef FT_CONFIG_CHESTER_STEM
+
           FT_Pos   org_len, org_center, cur_len;
           FT_Pos   cur_pos1, error1, error2, u_off, d_off;
 
@@ -556,14 +568,18 @@
           edge->flags |= AH_EDGE_DONE;
 
           ah_align_linked_edge( hinter, edge, edge2, dimension );
-#else /* !CHESTER_STEM */
+
+#else /* !FT_CONFIG_CHESTER_STEM */
+
           edge->pos = ( edge->opos + 32 ) & -64;
           anchor    = edge;
 
           edge->flags |= AH_EDGE_DONE;
 
           ah_align_linked_edge( hinter, edge, edge2, dimension );
-#endif /* !CHESTER_STEM */
+
+#endif /* !FT_CONFIG_CHESTER_STEM */
+
         }
         else
         {
@@ -576,13 +592,19 @@
           org_center = org_pos + ( org_len >> 1 );
 
 #ifdef FT_CONFIG_CHESTER_SERIF
+
           cur_len    = ah_compute_stem_width( hinter, dimension, org_len,
                                               edge->flags, edge2->flags  );
-#else  /* !CHESTER_SERIF */
+
+
+#else  /* !FT_CONFIG_CHESTER_SERIF */
+
           cur_len    = ah_compute_stem_width( hinter, dimension, org_len );
-#endif /* !CHESTER_SERIF */
+
+#endif /* !FT_CONFIG_CHESTER_SERIF */
 
 #ifdef FT_CONFIG_CHESTER_STEM
+
           if ( cur_len < 96 )
           {
             FT_Pos  u_off, d_off;
@@ -638,7 +660,7 @@
             edge2->pos = edge->pos + cur_len;
           }
 
-#else /* !CHESTER_STEM */
+#else /* !FT_CONFIG_CHESTER_STEM */
 
           cur_pos1   = ( org_pos + 32 ) & -64;
           delta1     = ( cur_pos1 + ( cur_len >> 1 ) - org_center );
@@ -653,7 +675,7 @@
           edge->pos  = ( delta1 <= delta2 ) ? cur_pos1 : cur_pos2;
           edge2->pos = edge->pos + cur_len;
 
-#endif /* !CHESTER_STEM */
+#endif /* !FT_CONFIG_CHESTER_STEM */
 
           edge->flags  |= AH_EDGE_DONE;
           edge2->flags |= AH_EDGE_DONE;
@@ -1662,6 +1684,7 @@
     }
 
 #ifdef FT_CONFIG_CHESTER_BLUE_SCALE
+
    /* try to optimize the y_scale so that the top of non-capital letters
     * is aligned on a pixel boundary whenever possible
     */
@@ -1689,6 +1712,7 @@
         }
       }
     }
+
 #endif /* FT_CONFIG_CHESTER_BLUE_SCALE */
 
     /* now, we must check the current character pixel size to see if we */
