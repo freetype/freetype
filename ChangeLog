@@ -1,3 +1,12 @@
+2002-06-11  David Turner  <david@freetype.org>
+
+        * builds/win32/ftdebug.c: added a missing #endif
+
+        * src/sfnt/ttload.c, src/bdf/bdflib.c: removing compiler warnings
+
+        * src/type42/t42objs.c: removed the bug that prevented un-hinted
+        outlines to be loaded
+
 2002-06-08  Juliusz Chroboczek  <jch@pps.jussieu.fr>
 
 	* include/freetype/internal/ftobjs.h, src/autohint/ahglyph.c,

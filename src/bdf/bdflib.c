@@ -1772,14 +1772,14 @@
 
       /* Determine the overall font bounding box as the characters are */
       /* loaded so corrections can be done later if indicated.         */
-      p->maxas    = MAX( glyph->bbx.ascent, p->maxas );
-      p->maxds    = MAX( glyph->bbx.descent, p->maxds );
+      p->maxas    = (FT_Short) MAX( glyph->bbx.ascent, p->maxas );
+      p->maxds    = (FT_Short) MAX( glyph->bbx.descent, p->maxds );
 
       p->rbearing = (short)( glyph->bbx.width + glyph->bbx.x_offset );
 
-      p->maxrb    = MAX( p->rbearing, p->maxrb );
-      p->minlb    = MIN( glyph->bbx.x_offset, p->minlb );
-      p->maxlb    = MAX( glyph->bbx.x_offset, p->maxlb );
+      p->maxrb    = (FT_Short) MAX( p->rbearing, p->maxrb );
+      p->minlb    = (FT_Short) MIN( glyph->bbx.x_offset, p->minlb );
+      p->maxlb    = (FT_Short) MAX( glyph->bbx.x_offset, p->maxlb );
 
       if ( !( p->flags & _BDF_DWIDTH ) )
       {
@@ -2165,12 +2165,12 @@
           shift >>= 1;
         }
 
-        shift = ( bitcount > 3 ) ? 8 : ( 1 << bitcount );
+        shift = (FT_UShort)(( bitcount > 3 ) ? 8 : ( 1 << bitcount ));
 
         if ( p->font->bpp > shift || p->font->bpp != shift )
         {
           /* select next higher value */
-          p->font->bpp = shift << 1;
+          p->font->bpp = (FT_UShort)(shift << 1);
           FT_TRACE2(( "_bdf_parse_start: " ACMSG11, p->font->bpp ));
         }
       }

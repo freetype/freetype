@@ -252,6 +252,8 @@
     if ( error )
       goto Exit;
 
+    FT_Done_Size( face->ttf_face->size );
+
     /* Ignore info in FontInfo dictionary and use the info from the  */
     /* loaded TTF font.  The PostScript interpreter also ignores it. */
     root->bbox         = face->ttf_face->bbox;
@@ -635,6 +637,8 @@
     error = FT_New_Size( t42face->ttf_face, &ttsize );
     size->ttsize = ttsize;
 
+    FT_Activate_Size( ttsize );
+
     return error;
   }
 
@@ -701,6 +705,17 @@
   }
 
 
+  static void
+  t42_check_size_change( FT_Face  face )
+  {
+    FT_Face  tt_face = ((T42_Face)face)->ttf_face;
+    FT_Size  tt_size = ((T42_Size)face->size)->ttsize;
+    
+    if ( tt_face->size != tt_size )
+      FT_Activate_Size( tt_size );
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   T42_Size_SetChars( T42_Size    size,
                      FT_F26Dot6  char_width,
@@ -712,6 +727,8 @@
     T42_Face  t42face = (T42_Face)face;
 
 
+    t42_check_size_change( t42face->ttf_face );
+    
     return FT_Set_Char_Size( t42face->ttf_face,
                              char_width,
                              char_height,
@@ -729,6 +746,9 @@
     T42_Face  t42face = (T42_Face)face;
 
 
+
+    t42_check_size_change( t42face->ttf_face );
+    
     return FT_Set_Pixel_Sizes( t42face->ttf_face,
                                pixel_width,
                                pixel_height );
@@ -749,9 +769,9 @@
     }
 
     /* clear all public fields in the glyph slot */
-    FT_MEM_SET( &slot->metrics, 0, sizeof ( slot->metrics ) );
-    FT_MEM_SET( &slot->outline, 0, sizeof ( slot->outline ) );
-    FT_MEM_SET( &slot->bitmap,  0, sizeof ( slot->bitmap )  );
+    FT_ZERO( &slot->metrics );
+    FT_ZERO( &slot->outline );
+    FT_ZERO( &slot->bitmap );
 
     slot->bitmap_left   = 0;
     slot->bitmap_top    = 0;
@@ -776,8 +796,10 @@
     FT_Error         error;
     T42_GlyphSlot    t42slot = (T42_GlyphSlot)glyph;
     T42_Size         t42size = (T42_Size)size;
+    FT_Face          tt_face = ((T42_Face) glyph->face)->ttf_face;
     FT_Driver_Class  ttclazz = ((T42_Driver)glyph->face->driver)->ttclazz;
 
+    t42_check_size_change( tt_face );
 
     ft_glyphslot_clear( t42slot->ttslot );
     error = ttclazz->load_glyph( t42slot->ttslot,
@@ -798,6 +820,12 @@
       glyph->bitmap      = t42slot->ttslot->bitmap;
       glyph->bitmap_left = t42slot->ttslot->bitmap_left;
       glyph->bitmap_top  = t42slot->ttslot->bitmap_top;
+      
+      glyph->num_subglyphs = t42slot->ttslot->num_subglyphs;
+      glyph->subglyphs     = t42slot->ttslot->subglyphs;
+      
+      glyph->control_data  = t42slot->ttslot->control_data;
+      glyph->control_len   = t42slot->ttslot->control_len;
     }
 
     return error;
