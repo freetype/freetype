@@ -1,3 +1,9 @@
+2002-03-13  Antoine Leca    <antoine@oriolnet.com>
+
+        * include/freetype/config/ftoption.h: changed the automatic detection
+        of Microsoft C compilers to automatically support 64-bit integers only
+        since revision 9.00 (i.e. >= Visual C++ 2.0)
+
 2002-03-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftutil.c (FT_Realloc): Use MEM_Set instead of memset.
