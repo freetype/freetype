@@ -52,11 +52,11 @@
 	    FT_FRAME_USHORT (rangeShift),
 	FT_FRAME_END
       };
-    
+
     FT_STREAM_READ_FIELDS( fields, header );
     return error;
   }
-  
+
   static  FT_Error
   gx_LookupTable_load_raw_values ( FT_Stream stream,
 				   FT_Long value_count,
@@ -64,12 +64,11 @@
   {
     FT_Error error;
     FT_Long i;
-    
+
     for ( i = 0; i < value_count; i++)
       {
 	value_slot[i].extra.any = NULL;
-	error = FT_READ_SHORT(value_slot[i].raw.s);
-	if ( error )
+	if ( FT_READ_SHORT(value_slot[i].raw.s) )
 	  return error;
       }
     return error;
@@ -78,7 +77,7 @@
   static FT_Error
   gx_LookupTable_load_segment_generic( GX_LookupTable lookup_table,
 				       FT_Stream stream )
-				       
+
   {
     FT_Error error;
     FT_Memory memory = stream->memory;
@@ -89,15 +88,11 @@
 
     if ( FT_NEW_ARRAY( segment, binSrchHeader.nUnits ) )
       return error;
-    
+
     for ( i = 0; i < binSrchHeader.nUnits; i++ )
       {
-	error = FT_READ_USHORT(segment[i].lastGlyph);
-	if ( error )
-	  goto Failure;
-
-	error = FT_READ_USHORT(segment[i].firstGlyph);
-	if ( error )
+	if ( FT_READ_USHORT(segment[i].lastGlyph)  ||
+	     FT_READ_USHORT(segment[i].firstGlyph) )
 	  goto Failure;
 
 	error = gx_LookupTable_load_raw_values(stream, 1, &(segment[i].value));
@@ -119,8 +114,8 @@
     FT_FREE(segment_table->segments);
     segment_table->segments = NULL;
   }
-  
-					     
+
+
   static FT_Error
   gx_LookupTable_load_single_table( GX_LookupTable lookup_table,
 				    FT_Stream stream )
@@ -137,16 +132,15 @@
 
     for ( i = 0; i < binSrchHeader.nUnits; i++ )
       {
-	error = FT_READ_USHORT(single[i].glyph);
-	if ( error )
+	if ( FT_READ_USHORT(single[i].glyph) )
 	  goto Failure;
-	
+
 	gx_LookupTable_load_raw_values(stream, 1, &(single[i].value));
 	if ( error )
 	  goto Failure;
       }
     single_table->entries = single;
-    
+
     return error;
   Failure:
     FT_FREE(single);
@@ -159,12 +153,12 @@
 				    GX_LookupTable lookup_table )
   {
     GX_LookupTable_Single_Table single_table = lookup_table->fsHeader.single_table;
-    
+
     FT_FREE(single_table->entries);
     single_table->entries = NULL;
   }
 
-  static FT_Error 
+  static FT_Error
   gx_LookupTable_load_binSrch( GX_LookupTable lookup_table,
 			       FT_Stream stream )
   {
@@ -188,7 +182,7 @@
 
     if ( FT_MEM_NEW (binSrch) )
       return error;
-    
+
     binSrch->dummy = NULL;
     error = gx_load_BinSrchHeader( stream, &(binSrch->binSrchHeader) );
     if ( error )
@@ -215,7 +209,7 @@
   {
     GX_LookupTable_BinSrch binSrch = lookup_table->fsHeader.bin_srch;
     gx_LookupTable_finalizer finalizer;
-    
+
     switch (lookup_table->format)
       {
       case GX_LOOKUPTABLE_SEGMENT_SINGLE:
@@ -229,17 +223,17 @@
 	finalizer = NULL;
       }
     FT_ASSERT(finalizer);
-    
+
     finalizer ( memory, lookup_table );
-    binSrch->dummy 	   = NULL;    
+    binSrch->dummy 	   = NULL;
     FT_FREE ( lookup_table->fsHeader.bin_srch );
     lookup_table->fsHeader.bin_srch = NULL;
   }
 
-  static FT_Error 
+  static FT_Error
   gx_LookupTable_load_simple_array( GX_LookupTable lookup_table,
 				    FT_Stream stream )
-				    
+
   {
     FT_Error error;
     FT_Memory memory   = stream->memory;
@@ -247,7 +241,7 @@
 
     if ( FT_NEW_ARRAY (value_slot, lookup_table->num_glyphs) )
       return error;
-    error =  gx_LookupTable_load_raw_values ( stream, 
+    error =  gx_LookupTable_load_raw_values ( stream,
 					      lookup_table->num_glyphs,
 					      value_slot );
     if ( error )
@@ -261,7 +255,7 @@
     return error;
   }
 
-  static void 
+  static void
   gx_LookupTable_free_simple_array( FT_Memory memory,
 				    GX_LookupTable lookup_table )
   {
@@ -269,7 +263,7 @@
     lookup_table->fsHeader.simple_array = NULL;
   }
 
-  static FT_Error 
+  static FT_Error
   gx_LookupTable_load_trimmed_array( GX_LookupTable lookup_table,
 				     FT_Stream stream )
   {
@@ -279,15 +273,11 @@
     GX_LookupTable_Trimmed_Array trimmed_array;
     GX_LookupValue value_slot;
 
-    error = FT_READ_USHORT(firstGlyph);
-    if ( error ) 
+    if ( FT_READ_USHORT(firstGlyph) ||
+         FT_READ_USHORT(glyphCount) )
       return error;
-    
-    error = FT_READ_USHORT(glyphCount);
-    if ( error )
-      return error;
-    
-    if ( FT_ALLOC (trimmed_array, 
+
+    if ( FT_ALLOC (trimmed_array,
 		   sizeof (*trimmed_array) + sizeof(*trimmed_array->valueArray)  * glyphCount) )
       return error;
     trimmed_array->firstGlyph = firstGlyph;
@@ -299,7 +289,7 @@
       goto Failure;
 
     lookup_table->fsHeader.trimmed_array = trimmed_array;
-    trimmed_array->valueArray = value_slot;    
+    trimmed_array->valueArray = value_slot;
     return error;
 
   Failure:
@@ -308,19 +298,19 @@
     return error;
   }
 
-  static void 
+  static void
   gx_LookupTable_free_trimmed_array( FT_Memory memory,
 				     GX_LookupTable lookup_table )
   {
     GX_LookupTable_Trimmed_Array trimmed_array;
-    
+
     trimmed_array = lookup_table->fsHeader.trimmed_array;
     trimmed_array->valueArray = NULL;
     FT_FREE(trimmed_array);
     lookup_table->fsHeader.trimmed_array = NULL;
   }
 
-  
+
   FT_LOCAL_DEF( FT_Error )
   gx_face_load_LookupTable ( GX_Face face,
 			     FT_Stream stream,
@@ -332,10 +322,9 @@
     lookup_table->position   = FT_STREAM_POS();
     lookup_table->num_glyphs = face->root.num_glyphs;
     lookup_table->fsHeader.any = NULL;
-    error = FT_READ_SHORT(lookup_table->format);
-    if ( error )
+    if ( FT_READ_SHORT(lookup_table->format) )
       return error;
-   
+
     switch ( lookup_table->format )
       {
       case GX_LOOKUPTABLE_SIMPLE_ARRAY:
@@ -357,7 +346,7 @@
 			FT_Memory memory )
   {
     gx_LookupTable_finalizer finalizer;
-    
+
     switch ( lookup_table->format )
       {
      case GX_LOOKUPTABLE_SIMPLE_ARRAY:
@@ -385,19 +374,19 @@
       {
 	for ( i = 0; i < lookup_table->num_glyphs; i++ )
 	  {
-	    error = (* funcs->simple_array_func)(lookup_table->format, 
+	    error = (* funcs->simple_array_func)(lookup_table->format,
 						 i,
 						 &((lookup_table->fsHeader.simple_array)[i]),
 						 user);
 	    if ( error )
 	      return error;
 	  }
-      } 
+      }
     else if ( funcs->generic_func )
       {
         for ( i = 0; i < lookup_table->num_glyphs; i++ )
 	  {
-	    error = (* funcs->generic_func)(lookup_table->format, 
+	    error = (* funcs->generic_func)(lookup_table->format,
 					    &((lookup_table->fsHeader.simple_array)[i]),
 					    user);
 	    if ( error )
@@ -427,7 +416,7 @@
       segment_func = funcs->segment_array_func;
     else
       segment_func = NULL;
-    
+
     if ( segment_func )
       {
 	for ( i = 0; i < header->nUnits; i++ )
@@ -469,7 +458,7 @@
     GX_LookupSingle entries;
     GX_BinSrchHeader binSrchHeader;
     FT_Long i;
-    
+
     single_table  = lookup_table->fsHeader.single_table;
     entries 	  = single_table->entries;
     binSrchHeader = &(single_table->binSrchHeader);
@@ -547,7 +536,7 @@
 			   FT_Pointer user )
   {
     gx_LookupTable_traverser traverser;
-    
+
     switch (lookup_table->format)
       {
       case GX_LOOKUPTABLE_SIMPLE_ARRAY:
@@ -583,8 +572,8 @@
     else
       return 0;
   }
-       
-	
+
+
   static int
   lookup_lookup_single(const void *keyval, const void *datum)
   {
@@ -612,7 +601,7 @@
 
     GX_LookupTable_Trimmed_Array trimmed_array;
     FT_Long trimmed_index;
-    
+
     void * bs_key = &glyph;
     void * bs_base;
     size_t bs_n;
@@ -620,7 +609,7 @@
 
     int (* bs_cmp)(const void* keyval, const void* datum);
 
-    result.firstGlyph = GX_LOOKUP_RESULT_NO_FIRST_GLYPH;      
+    result.firstGlyph = GX_LOOKUP_RESULT_NO_FIRST_GLYPH;
     result.value      = NULL;
     switch ( lookup_table->format )
       {
@@ -674,13 +663,13 @@
     FT_Error error;
     FT_UShort glyph;
     GX_LookupResultRec result;
-    
+
     for ( glyph = 0; glyph < 0xFFFF; glyph++ )
       {
 	result = gx_LookupTable_lookup ( lookup_table, glyph );
 	if ( result.value == NULL)
 	  continue ;
-	
+
 	if (( error = func( glyph, result.value, result.firstGlyph, user ) ))
 	  return error;
       }
