@@ -694,6 +694,45 @@
   }
 
 
+  FT_BASE_DEF( FT_Error )
+  FT_QAlloc_Debug( FT_Memory    memory,
+                  FT_Long      size,
+                  void*       *P,
+                  const char*  file_name,
+                  FT_Long      line_no )
+  {
+    FT_MemTable  table = (FT_MemTable)memory->user;
+
+
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+    return FT_QAlloc( memory, size, P );
+  }
+
+
+  FT_BASE_DEF( FT_Error )
+  FT_QRealloc_Debug( FT_Memory    memory,
+                    FT_Long      current,
+                    FT_Long      size,
+                    void*       *P,
+                    const char*  file_name,
+                    FT_Long      line_no )
+  {
+    FT_MemTable  table = (FT_MemTable)memory->user;
+
+
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+    return FT_QRealloc( memory, current, size, P );
+  }
+
+  
   FT_BASE_DEF( void )
   FT_Free_Debug( FT_Memory    memory,
                  FT_Pointer   block,

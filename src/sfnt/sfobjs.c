@@ -267,7 +267,7 @@
         FT_UNUSED( error );
 
 
-        if ( FT_NEW_ARRAY  ( rec->string, rec->stringLength ) ||
+        if ( FT_QNEW_ARRAY ( rec->string, rec->stringLength ) ||
              FT_STREAM_SEEK( rec->stringOffset )              ||
              FT_STREAM_READ( rec->string, rec->stringLength ) )
         {

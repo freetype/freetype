@@ -77,6 +77,36 @@
   }
 
 
+  FT_BASE_DEF( FT_Error )
+  FT_QAlloc( FT_Memory  memory,
+             FT_Long    size,
+             void*     *P )
+  {
+    FT_ASSERT( P != 0 );
+
+    if ( size > 0 )
+    {
+      *P = memory->alloc( memory, size );
+      if ( !*P )
+      {
+        FT_ERROR(( "FT_Alloc:" ));
+        FT_ERROR(( " Out of memory? (%ld requested)\n",
+                   size ));
+
+        return FT_Err_Out_Of_Memory;
+      }
+    }
+    else
+      *P = NULL;
+
+    FT_TRACE7(( "FT_Alloc:" ));
+    FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
+                size, *P, P ));
+
+    return FT_Err_Ok;
+  }
+
+  
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
@@ -119,6 +149,42 @@
   }
 
 
+  FT_BASE_DEF( FT_Error )
+  FT_QRealloc( FT_Memory  memory,
+               FT_Long    current,
+               FT_Long    size,
+               void**     P )
+  {
+    void*  Q;
+
+
+    FT_ASSERT( P != 0 );
+
+    /* if the original pointer is NULL, call FT_Alloc() */
+    if ( !*P )
+      return FT_Alloc( memory, size, P );
+
+    /* if the new block if zero-sized, clear the current one */
+    if ( size <= 0 )
+    {
+      FT_Free( memory, P );
+      return FT_Err_Ok;
+    }
+
+    Q = memory->realloc( memory, current, size, *P );
+    if ( !Q )
+      goto Fail;
+
+    *P = Q;
+    return FT_Err_Ok;
+
+  Fail:
+    FT_ERROR(( "FT_Realloc:" ));
+    FT_ERROR(( " Failed (current %ld, requested %ld)\n",
+               current, size ));
+    return FT_Err_Out_Of_Memory;
+  }
+  
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( void )
