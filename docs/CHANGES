@@ -31,14 +31,21 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
       (they differ slightly from Microsoft/OpenType ones in the way transform
       offsets are computed).
 
+    - FreeType was very slow at opening certain asian CID/CFF fonts, due
+      to fixed increment in dynamic array re-allocations. This has been
+      changed to exponential behaviour to get acceptable performance
 
   II. IMPORTANT CHANGES
+
+    - the PCF driver now supports gzip-compressed font files natively. This
+      means that you'll be able to use all these bitmap fonts that come
+      with XFree86 with FreeType (and libXft/libXft2, by extension).
 
     - The automatic and postscript hinters have both been updated.  This
       results in a relatively important increase of rendering quality since
       many nasty defaults have been supressed.  Please visit the web page:
 
-        http://www.freetype.org/freetype2/smooth-hinting.html
+        http://www.freetype.org/hinting/smooth-hinting.html
 
       for additional details on this topic.
 
@@ -72,7 +79,8 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
       has been updated to support LCD-optimized display on non-paletted
       displays (under Win32 and X11)
 
-    - The PFR driver now supports embedded bitmaps (all formats supported).
+    - The PFR driver now supports embedded bitmaps (all formats supported),
+      and returns correct kerning metrics for all glyphs
 
     - The TrueType charmap loader now supports certain "broken" fonts that
       load under Windows without problems.
@@ -92,6 +100,10 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
 
     - Added support for the DESTDIR variable during "make install".  This
       simplifies packaging of FreeType.
+
+    - included modified copies of the ZLib sources in 'src/gzip' in order
+      to support gzip-compressed PCF fonts. We do not use the system-provided
+      zlib for now, though this is a probable enhancement for future releases
 
     - The DocMaker tool used to generate the on-line API reference has been
       completely rewritten.  It is now located in
@@ -119,7 +131,7 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
       provided by an external component, like a Postscript interpreter) has
       been added by Graham Asher.  This is still work in progress, however.
 
-    - A new, experimental, path stroker has been added.  It doesn't suffer
+    - A new, EXPERIMENTAL, path stroker has been added.  It doesn't suffer
       from severe rounding errors and treat bezier arcs directly.  Still
       work in progress (i.e. not part of the official API).  See the file
       <freetype/ftstroker.h> for some of the details.

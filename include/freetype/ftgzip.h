@@ -24,6 +24,22 @@
 
 FT_BEGIN_HEADER
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    gzip                                                               */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    GZIP Streams                                                       */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    Using gzip-compressed font files                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This section contains the declaration of Gzip-specific functions.  */
+  /*                                                                       */
+  /*************************************************************************/
+
  /************************************************************************
   *
   * @type: FT_Stream_OpenGzip
@@ -51,7 +67,7 @@ FT_BEGIN_HEADER
   *   process each time seeking backwards is needed within the stream
   *
   *   in certain builds of the library, gzip compression recognition is
-  *   automatic when calling @FT_New_Face or @FT_OpenFace. This means that
+  *   automatic when calling @FT_New_Face or @FT_Open_Face. This means that
   *   if no font driver is capable of handling the raw compressed file,
   *   the library will try to open a gzip stream from it and re-open
   *   the face with it.

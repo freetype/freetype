@@ -2207,7 +2207,8 @@ FT_BEGIN_HEADER
   /*      changes the hinting to prevent stem width quantization. This     */
   /*      results in glyph shapes that are more similar to the original,   */
   /*      while being a bit more fuzzy ("better shapes", instead of        */
-  /*      "better contrast" if you want :-)                                */
+  /*      "better contrast" if you want :-) THIS IS STILL EXPERIMENTAL,    */
+  /*      FOR NOW, THIS WILL PRODUCE RESULTS SIMILAR TO NORMAL MODE !!     */
   /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
   /*      This mode corresponds to 1-bit bitmaps.                          */
@@ -2216,7 +2217,8 @@ FT_BEGIN_HEADER
   /*      This mode corresponds to horizontal RGB/BGR sub-pixel displays,  */
   /*      like LCD-screens.  It produces 8-bit bitmaps that are 3 times    */
   /*      the width of the original glyph outline in pixels, and which use */
-  /*      the @FT_PIXEL_MODE_LCD mode.                                     */
+  /*      the @FT_PIXEL_MODE_LCD mode. THIS IS STILL EXPERIMENTAL, DO NOT  */
+  /*      USE FOR NOW !!                                                   */
   /*                                                                       */
   /*    FT_RENDER_MODE_LCD_V ::                                            */
   /*      This mode corresponds to vertical RGB/BGR sub-pixel displays     */
@@ -2227,7 +2229,8 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*   The LCD-optimized glyph bitmaps produced by FT_Render_Glyph are     */
   /*   _not filtered_ to reduce color-fringes.  It is up to the caller to  */
-  /*   perform this pass.                                                  */
+  /*   perform this pass. THIS IS STILL EXPERIMENTAL, DO NOT USE FOR NOW   */
+  /*   !!                                                                  */
   /*                                                                       */
   typedef enum  FT_Render_Mode_
   {
