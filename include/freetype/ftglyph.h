@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType convenience functions to handle glyphs (specification).     */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -391,8 +391,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    The glyph image is translated with the `origin' vector before      */
-  /*    rendering.  In case of error, it it translated back to its         */
-  /*    original position and the glyph is left untouched.                 */
+  /*    rendering.                                                         */
   /*                                                                       */
   /*    The first parameter is a pointer to a FT_Glyph handle, that will   */
   /*    be replaced by this function.  Typically, you would use (omitting  */
