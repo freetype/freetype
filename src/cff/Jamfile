@@ -10,7 +10,7 @@ SubDirHdrs  [ FT2_SubDir  src cff ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = cffdrivr cffgload cffload cffobjs cffparse ;
+    _sources = cffdrivr cffgload cffload cffobjs cffparse cffcmap ;
   }
   else
   {
