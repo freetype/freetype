@@ -9,7 +9,7 @@ I. From the command line:
   
   - Go to the `freetype2' directory.
 
-  - On Unix (any C compiler should work):
+  - On Unix or (any C compiler should work):
 
       - make setup (don't worry, this will invoke a configure script)
       - make
@@ -27,25 +27,29 @@ I. From the command line:
     We provide a version of GNU Make for Win32 on the FreeType site.
     See http://www.freetype.org/download.html for details.
 
-    If you are using gcc:
+    - if you're using gcc (Mingw, _not_ CygWin):
+    
+          - make setup
+          - make
 
-      - make setup
-      - make
 
-    If you are using Visual C++:
+    - if you're using Visual C++
     
-      - make setup visualc
-      - make
-       
-    If you are using Win32-lCC:
+          - make setup visualc
+          - make
+
+
+    - if you're using another compiler:
     
-      - make setup lcc
-      - make
-       
-    If you are using the Borland C++ Builder compiler:
-    
-      - make setup bcc32
-      - make
+          - make setup xxxx
+          - make
+          
+
+      where "xxxx" is a special target corresponding to your compiler.
+      To see a list of supported compilers in this release, type:
+      
+            make setup list
+      
 
 
 II. In your own environment (IDE):

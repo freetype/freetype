@@ -277,33 +277,6 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_BBox                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A structure used to hold an outline's bounding box, i.e., the      */
-  /*    coordinates of its extrema in the horizontal and vertical          */
-  /*    directions.                                                        */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    xMin :: The horizontal minimum (left-most).                        */
-  /*                                                                       */
-  /*    yMin :: The vertical minimum (bottom-most).                        */
-  /*                                                                       */
-  /*    xMax :: The horizontal maximum (right-most).                       */
-  /*                                                                       */
-  /*    yMax :: The vertical maximum (top-most).                           */
-  /*                                                                       */
-  typedef struct  FT_BBox_
-  {
-    FT_Pos  xMin, yMin;
-    FT_Pos  xMax, yMax;
-
-  } FT_BBox;
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* <Macro>                                                               */
   /*    FT_MAKE_TAG                                                        */
   /*                                                                       */
