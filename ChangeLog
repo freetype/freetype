@@ -1,5 +1,11 @@
 2002-06-07  Graham Asher  <graham.asher@btinternet.com>
 
+        * include/freetype/cache/ftccache.h, src/cache/ftccache.c,
+          src/cache/ftccache.i, src/cache/ftcsbits.c: adding various
+          experimental optimisations to the cache manager
+
+        * src/type42/t42parse.c: removing duplicate function
+
         * src/base/ftobjs.c (FT_Render_Glyph_Internal): changed definition
           from FT_EXPORT_DEF to FT_BASE_DEF
 
