@@ -1,3 +1,24 @@
+2005-02-22  David Turner  <david@freetype.org>
+
+	* src/base/ftdbgmem.c: adding the ability to list all allocation sites
+	in the memory debugger. Also a new function FT_DumpMemory() was added.
+	It is only available in builds with FT_DEBUG_MEMORY defined, and you
+	must declare it in your own code to use it, i.e. with something
+	like:
+
+	  extern void FT_DumpMemory( FT_Memory );
+
+	  ...
+
+	  FT_DumpMemory( memory );
+
+	* include/freetype/config/ftoptions.h: disabling TrueType bytecode
+	interpreter !
+
+	* include/freetype/internal/ftmemory.h: adding FT_ARRAY_ZERO, as a
+	convenience macro.
+
+
 2005-02-20  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
