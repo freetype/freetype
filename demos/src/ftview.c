@@ -16,6 +16,9 @@
 /****************************************************************************/
 
 #include <freetype/freetype.h>
+#include <freetype/ftraster.h>
+#include <freetype/ftgrays.h>
+
 #include "common.h"
 
 #include <stdio.h>
@@ -25,10 +28,6 @@
 
 #include "graph.h"
 #include "grfont.h"
-
-#include <freetype/ftgrays.h>
-#include "ftrast.h"
-#include "ftrast2.h"
 
 #define  DIM_X   500
 #define  DIM_Y   400
@@ -276,7 +275,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     {
       if ( !(error = LoadChar( i, hinted )) )
       {
-#ifdef DEBUG
+        #ifdef DEBUG
         if (i <= first_glyph+6)
         {
           LOG(( "metrics[%02d] = [%x %x]\n",
@@ -287,8 +286,8 @@ $\243^\250*\265\371%!\247:/;.,?<>";
           if (i == first_glyph+6)
           LOG(( "-------------------------\n"));
         }
+        #endif
         
-#endif
         Render_Glyph( x, y );
 
         x += ( glyph->metrics.horiAdvance >> 6 ) + 1;
@@ -337,7 +336,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     {
       if ( !(error = LoadChar( FT_Get_Char_Index( face, (unsigned char)*p ), hinted )) )
       {
-#ifdef DEBUG
+        #ifdef DEBUG
         if (i <= first_glyph+6)
         {
           LOG(( "metrics[%02d] = [%x %x]\n",
@@ -348,8 +347,8 @@ $\243^\250*\265\371%!\247:/;.,?<>";
           if (i == first_glyph+6)
           LOG(( "-------------------------\n"));
         }
+        #endif
         
-#endif
         Render_Glyph( x, y );
 
         x += ( glyph->metrics.horiAdvance >> 6 ) + 1;
@@ -421,19 +420,10 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
   static void  reset_raster( void )
   {
-    FT_Error  error;
-    
-    error = 1;
-    if ( !antialias)
-    {
-      error = FT_Set_Raster( library, use_grays ? &ft_black2_raster
-                                                : &ft_black_raster );
-    }                                                
-    else if ( use_grays && antialias )
-      error = FT_Set_Raster( library, &ft_grays_raster );
-      
-    if (error)
-      (void)FT_Set_Raster( library, &std_raster );
+    if ( antialias && use_grays )
+      FT_Set_Raster( library, &ft_grays_raster );
+    else
+      FT_Set_Raster( library, &std_raster );
   }
 
 
