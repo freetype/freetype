@@ -739,7 +739,7 @@
      *  however, recent updates to the Apple and OpenType specifications
      *  introduced new formats that are capable of mapping 32-bit character
      *  codes as well. And these are already used on some fonts, mainly to
-     *  map non-BMP asian ideographs as defined in Unicode.
+     *  map non-BMP Asian ideographs as defined in Unicode.
      *
      *  for compatibility purposes, these fonts generally come with
      *  *several* Unicode charmaps:

@@ -1106,7 +1106,7 @@
     if ( FT_STREAM_READ_FIELDS( name_table_fields, table ) )
       goto Exit;
 
-    /* Some popular asian fonts have an invalid `storageOffset' value   */
+    /* Some popular Asian fonts have an invalid `storageOffset' value   */
     /* (it should be at least "6 + 12*num_names").  However, the string */
     /* offsets, computed as "storageOffset + entry->stringOffset", are  */
     /* valid pointers within the name table...                          */
