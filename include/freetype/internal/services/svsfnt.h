@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  svpostnm.h                                                             */
+/*  svsfnt.h                                                               */
 /*                                                                         */
 /*    The FreeType PostScript name services (specification).               */
 /*                                                                         */

@@ -1,3 +1,11 @@
+2003-11-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfdriver.c: Include FT_SERVICE_SFNT_H.
+	(sfnt_service_sfnt_table): New service.
+	(sfnt_services): Updated.
+
+	* docs/license.txt: Reworded.
+
 2003-11-03  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/*: Add a guard to all public header files which
