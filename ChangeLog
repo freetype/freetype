@@ -1,0 +1,19 @@
+2000-11-10  Werner Lemberg  <wl@gnu.org>
+
+	* builds/cygwin/freetype-config.in, builds/unix/freetype-config.in:
+	Move test down for empty --exec-prefix.
+	Fix --version.
+	* builds/cygwin/install.mk, builds/unix/install.mk: Use
+	$(INSTALL_SCRIPT) for installation of freetype-config.
+	* builds/cygwin/install.mk: Fix clean target names.
+
+2000-11-09  David Turner  <david@freetype.org>
+
+	* Version 2.0 released.
+	=======================
+
+
+Local Variables:
+version-control: never
+coding: latin-1
+End:
