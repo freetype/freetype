@@ -113,8 +113,6 @@ FT_BEGIN_HEADER
     FT_ULong   private_size;
     FT_Long    synthetic_base;
     FT_UInt    embedded_postscript;
-    FT_UInt    base_font_name;
-    FT_UInt    postscript;
 
     /* these should only be used for the top-level font dictionary */
     FT_UInt    cid_registry;

@@ -1172,7 +1172,7 @@
   }
 
 
- /* allocate a table containing pointers to an index's elements */
+  /* allocate a table containing pointers to an index's elements */
   static FT_Error
   cff_index_get_pointers( CFF_Index   idx,
                           FT_Byte***  table )
@@ -1211,7 +1211,7 @@
                             FT_Byte**  pbytes,
                             FT_ULong*  pbyte_len )
   {
-    FT_Error  error = 0;
+    FT_Error  error = CFF_Err_Ok;
 
 
     if ( idx && idx->count > element )
@@ -1316,9 +1316,17 @@
                             FT_UInt             sid,
                             FT_Service_PsCMaps  psnames )
   {
+    /* value 0xFFFFU indicates a missing dictionary entry */
+    if ( sid == 0xFFFFU )
+      return 0;
+
     /* if it is not a standard string, return it */
     if ( sid > 390 )
       return cff_index_get_name( idx, sid - 391 );
+
+    /* CID-keyed CFF fonts don't have glyph names */
+    if ( !psnames )
+      return 0;
 
     /* that's a standard string, fetch a copy from the PSName module */
     {
@@ -1967,6 +1975,20 @@
     top->font_matrix.yy      = 0x10000L;
     top->cid_count           = 8720;
 
+    /* we use the implementation specific SID value 0xFFFF to indicate */
+    /* missing entries                                                 */
+    top->version             = 0xFFFFU;
+    top->notice              = 0xFFFFU;
+    top->copyright           = 0xFFFFU;
+    top->full_name           = 0xFFFFU;
+    top->family_name         = 0xFFFFU;
+    top->weight              = 0xFFFFU;
+    top->embedded_postscript = 0xFFFFU;
+
+    top->cid_registry        = 0xFFFFU;
+    top->cid_ordering        = 0xFFFFU;
+    top->cid_font_name       = 0xFFFFU;
+
     error = cff_index_access_element( idx, font_index, &dict, &dict_len ) ||
             cff_parser_run( &parser, dict, dict + dict_len );
 
@@ -1976,7 +1998,7 @@
       goto Exit;
 
     /* if it is a CID font, we stop there */
-    if ( top->cid_registry )
+    if ( top->cid_registry != 0xFFFFU )
       goto Exit;
 
     /* parse the private dictionary, if any */
@@ -2118,7 +2140,7 @@
       goto Exit;
 
     /* now, check for a CID font */
-    if ( dict->cid_registry )
+    if ( dict->cid_registry != 0xFFFFU )
     {
       CFF_IndexRec  fd_index;
       CFF_SubFont   sub;
@@ -2199,7 +2221,7 @@
     if ( error )
       goto Exit;
 
-    /* read the Charset and Encoding tables when available */
+    /* read the Charset and Encoding tables if available */
     if ( font->num_glyphs > 0 )
     {
       error = cff_charset_load( &font->charset, font->num_glyphs, stream,
@@ -2207,17 +2229,22 @@
       if ( error )
         goto Exit;
 
-      error = cff_encoding_load( &font->encoding,
-                                 &font->charset,
-                                 font->num_glyphs,
-                                 stream,
-                                 base_offset,
-                                 dict->encoding_offset );
-      if ( error )
-        goto Exit;
+      /* CID-keyed CFFs don't have an encoding */
+      if ( dict->cid_registry == 0xFFFFU )
+      {
+        error = cff_encoding_load( &font->encoding,
+                                   &font->charset,
+                                   font->num_glyphs,
+                                   stream,
+                                   base_offset,
+                                   dict->encoding_offset );
+        if ( error )
+          goto Exit;
+      }
     }
 
-    /* get the font name */
+    /* get the font name (/CIDFontName for CID-keyed fonts, */
+    /* /FontName otherwise)                                 */
     font->font_name = cff_index_get_name( &font->name_index, face_index );
 
   Exit:
