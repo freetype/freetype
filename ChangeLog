@@ -1,3 +1,12 @@
+2001-02-22  David Turner    <david.turner@freetype.org>
+
+	* src/base/ftgrays.c (grays_sweep): the function didn't exit
+	immediately if "num_cells" was 0 as it should. Thanks to Boris
+	for finding this out.
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): fixed memory leak when
+	bitmap rendering fails.. (thanks to Graham Asher)
+
 2001-02-13  Werner Lemberg  <wl@gnu.org>
 
 	* docs/docmaker.py (DocSection::add_element): Use

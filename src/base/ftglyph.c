@@ -602,6 +602,12 @@
     if ( !error )
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
 
+    if (error)
+    {
+      FT_Glyph_Done( FT_GLYPH(bitmap) );
+      goto Exit;
+    }
+    
     if ( !destroy && origin )
     {
       FT_Vector  v;

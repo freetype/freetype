@@ -1359,7 +1359,9 @@
 
     FT_UNUSED( target );
 
-
+    if ( ras.num_cells == 0 )
+      return;
+      
     cur   = ras.cells;
     limit = cur + ras.num_cells;
 
