@@ -1,5 +1,11 @@
 2004-08-15  Werner Lemberg  <wl@gnu.org>
 
+	* src/otlayout/otlgpos.c (otl_liga_mark2_validate): Add parameter
+	to handle possible NULL values properly.
+	Update all callers.
+
+2004-08-15  Werner Lemberg  <wl@gnu.org>
+
 	* src/otlayout/gpos.c: Rename counting variables to be more
 	meaningful.
 	Add copyright.
