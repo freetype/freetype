@@ -1,3 +1,27 @@
+2004-13-26  George Williams  <gww@silcom.com>
+
+	Add vertical phantom points.
+
+	* include/freetype/internal/tttypes.h (TT_LoaderRec): Add
+	`top_bearing', `vadvance', `pp3, and `pp4'.
+
+	* src/autofit/afloader.c (af_loader_load_g): Handle two more points.
+
+	* src/autohint/ahhint.c (ah_hinter_load): Handle two more points.
+	* src/truetype/ttgload.c (Get_VMetrics): New function.
+	(TT_Load_Simple_Glyph, TT_Process_Simple_Glyph): Handle two more
+	points.
+	(load_truetype_glyph): Use Get_VMetrics.
+	Handle two more points.
+	(compute_glyph_metrics): Thanks to vertical phantom points we now
+	can always compute `advance_height' and `top_bearing'.
+	* src/truetype/ttobjs.h (TT_SubglyphRec): Add vertical phantom
+	points.
+
+
+	* src/autohint/ahglyph.c (ah_outline_load): Fix allocation of
+	`news'.
+
 2004-03-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Fix left side bearing.

@@ -1342,11 +1342,15 @@ FT_BEGIN_HEADER
     FT_BBox          bbox;
     FT_Int           left_bearing;
     FT_Int           advance;
+    FT_Int           top_bearing;
+    FT_Int           vadvance;
     FT_Int           linear;
     FT_Bool          linear_def;
     FT_Bool          preserve_pps;
     FT_Vector        pp1;
     FT_Vector        pp2;
+    FT_Vector        pp3;
+    FT_Vector        pp4;
 
     FT_ULong         glyf_offset;
 
