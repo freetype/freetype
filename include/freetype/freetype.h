@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2254,6 +2254,21 @@ FT_BEGIN_HEADER
   *     outlines.  This doesn't prevent native format-specific hinters from
   *     being used.  This can be important for certain fonts where unhinted
   *     output is better than auto-hinted one.
+  *
+  *   FT_LOAD_TARGET_NORMAL ::
+  *     Use hinting for @FT_RENDER_MODE_NORMAL.
+  *
+  *   FT_LOAD_TARGET_LIGHT ::
+  *     Use hinting for @FT_RENDER_MODE_LIGHT.
+  *
+  *   FT_LOAD_TARGET_MONO ::
+  *     Use hinting for @FT_RENDER_MODE_MONO.
+  *
+  *   FT_LOAD_TARGET_LCD ::
+  *     Use hinting for @FT_RENDER_MODE_LCD.
+  *
+  *   FT_LOAD_TARGET_LCD_V ::
+  *     Use hinting for @FT_RENDER_MODE_LCD_V.
   */
 #define FT_LOAD_DEFAULT                      0x0
 #define FT_LOAD_NO_SCALE                     0x1
@@ -2276,35 +2291,8 @@ FT_BEGIN_HEADER
 
   /* */
 
-
 #define FT_LOAD_TARGET_( x )      ( (FT_Int32)( (x) & 15 ) << 16 )
 #define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 15 ) )
-
-
- /***************************************************************************
-  *
-  * @enum:
-  *   FT_LOAD_TARGET_XXX
-  *
-  * @description:
-  *   A list of load targets.  XXX
-  *
-  * @values:
-  *   FT_LOAD_TARGET_NORMAL ::
-  *     XXX
-  *
-  *   FT_LOAD_TARGET_LIGHT ::
-  *     XXX
-  *
-  *   FT_LOAD_TARGET_MONO ::
-  *     XXX
-  *
-  *   FT_LOAD_TARGET_LCD ::
-  *     XXX
-  *
-  *   FT_LOAD_TARGET_LCD_V ::
-  *     XXX
-  */
 
 #define FT_LOAD_TARGET_NORMAL     FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
 #define FT_LOAD_TARGET_LIGHT      FT_LOAD_TARGET_( FT_RENDER_MODE_LIGHT  )
@@ -2367,11 +2355,14 @@ FT_BEGIN_HEADER
   /*      anti-aliased bitmaps, using 256 levels of opacity.               */
   /*                                                                       */
   /*    FT_RENDER_MODE_LIGHT ::                                            */
-  /*      This is similar to @FT_RENDER_MODE_NORMAL, except that this      */
-  /*      changes the hinting to prevent stem width quantization.  This    */
-  /*      results in glyph shapes that are more similar to the original,   */
-  /*      while being a bit more fuzzy ("better shapes", instead of        */
-  /*      "better contrast" if you want :-).                               */
+  /*      This is similar to @FT_RENDER_MODE_NORMAL -- you have to use     */
+  /*      @FT_LOAD_TARGET_LIGHT in calls to @FT_Load_Glyph to get any      */
+  /*      effect since the rendering process no longer influences the      */
+  /*      positioning of glyph outlines.                                   */
+  /*                                                                       */
+  /*      The resulting glyph shapes are more similar to the original,     */
+  /*      while being a bit more fuzzy (`better shapes' instead of `better */
+  /*      contrast', so to say.                                            */
   /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
   /*      This mode corresponds to 1-bit bitmaps.                          */

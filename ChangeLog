@@ -1,3 +1,13 @@
+2004-02-18  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h: Document FT_LOAD_TARGET_XXX properly.
+
+	* src/base/ftglyph.c (ft_bitmap_glyph_class,
+	ft_outline_glyph_class): Tag with FT_CALLBACK_TABLE_DEF.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render): Handle
+	FT_RENDER_MODE_LIGHT.
+
 2004-02-17  Werner Lemberg  <wl@gnu.org>
 
 	Fix callback functions in cache module.

@@ -206,6 +206,7 @@
   }
 
 
+  FT_CALLBACK_TABLE_DEF
   const FT_Glyph_Class  ft_bitmap_glyph_class =
   {
     sizeof( FT_BitmapGlyphRec ),
@@ -324,6 +325,7 @@
   }
 
 
+  FT_CALLBACK_TABLE_DEF
   const FT_Glyph_Class  ft_outline_glyph_class =
   {
     sizeof( FT_OutlineGlyphRec ),

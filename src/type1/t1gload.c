@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 Glyph Loader (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -255,7 +255,7 @@
                                  (FT_Byte**)type1->glyph_names,
                                  face->blend,
                                  FT_BOOL( hinting ),
-                                 FT_LOAD_TARGET_MODE(load_flags),
+                                 FT_LOAD_TARGET_MODE( load_flags ),
                                  T1_Parse_Glyph );
     if ( error )
       goto Exit;
