@@ -325,6 +325,8 @@
   /*    Because of 32-bit charcodes defined in Unicode (i.e., surrogates), */
   /*    all character codes must be expressed as FT_Longs.                 */
   /*                                                                       */
+  /*    Other encodings might be defined in the future.                    */
+  /*                                                                       */
   typedef enum  FT_Encoding_
   {
     ft_encoding_none    = 0,
@@ -342,8 +344,6 @@
     ft_encoding_adobe_custom   = FT_MAKE_TAG( 'A', 'D', 'B', 'C' ),
 
     ft_encoding_apple_roman    = FT_MAKE_TAG( 'a', 'r', 'm', 'n' )
-
-    /* other encodings might be defined in the future */
 
   } FT_Encoding;
 
