@@ -24,6 +24,10 @@
 	fonts (containing e.g. form drawing characters) which intentionally
 	have a zero line gap value.
 
+	* src/truetype/ttinterp.c (Free_Project, CUR_Func_freeProj):
+	Removed.  Unused.
+	Updated all callers.
+
 2003-06-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffobjs.c (cff_face_init): Use symbolic names for

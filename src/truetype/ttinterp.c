@@ -165,9 +165,6 @@
 #define CUR_Func_dualproj( x, y ) \
           CUR.func_dualproj( EXEC_ARG_ x, y )
 
-#define CUR_Func_freeProj( x, y ) \
-          CUR.func_freeProj( EXEC_ARG_ x, y )
-
 #define CUR_Func_round( d, c ) \
           CUR.func_round( EXEC_ARG_ d, c )
 
@@ -2165,36 +2162,6 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Free_Project                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Computes the projection of the vector given by (v2-v1) along the   */
-  /*    current freedom vector.                                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    v1 :: First input vector.                                          */
-  /*    v2 :: Second input vector.                                         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The distance in F26dot6 format.                                    */
-  /*                                                                       */
-  static FT_F26Dot6
-  Free_Project( EXEC_OP_ FT_Vector*  v1,
-                         FT_Vector*  v2 )
-  {
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-    FT_ASSERT( !CUR.face->unpatented_hinting );
-#endif
-    return TT_DotFix14( v1->x - v2->x,
-                        v1->y - v2->y,
-                        CUR.GS.freeVector.x,
-                        CUR.GS.freeVector.y );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    Project_x                                                          */
   /*                                                                       */
   /* <Description>                                                         */
@@ -2277,13 +2244,11 @@
       if ( CUR.GS.both_x_axis )
       {
         CUR.func_project  = Project_x;
-        CUR.func_freeProj = Project_x;
         CUR.func_move     = Direct_Move_X;
       }
       else
       {
         CUR.func_project  = Project_y;
-        CUR.func_freeProj = Project_y;
         CUR.func_move     = Direct_Move_Y;
       }
 
@@ -2305,23 +2270,14 @@
 #endif /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING */
 
     if ( CUR.GS.freeVector.x == 0x4000 )
-    {
-      CUR.func_freeProj = (TT_Project_Func)Project_x;
       CUR.F_dot_P       = CUR.GS.projVector.x * 0x10000L;
-    }
     else
     {
       if ( CUR.GS.freeVector.y == 0x4000 )
-      {
-        CUR.func_freeProj = (TT_Project_Func)Project_y;
         CUR.F_dot_P       = CUR.GS.projVector.y * 0x10000L;
-      }
       else
-      {
-        CUR.func_freeProj = (TT_Project_Func)Free_Project;
         CUR.F_dot_P = (FT_Long)CUR.GS.projVector.x * CUR.GS.freeVector.x * 4 +
                       (FT_Long)CUR.GS.projVector.y * CUR.GS.freeVector.y * 4;
-      }
     }
 
     if ( CUR.GS.projVector.x == 0x4000 )
