@@ -22,7 +22,7 @@
 
 #else
 
-#include <type1z/z1gload.h>
+#include <type1/z1gload.h>
 
 #endif
 

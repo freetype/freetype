@@ -169,7 +169,7 @@
     FT_Error   error;
 
     FT_Int     num_glyphs;
-    FT_Int     num_names;
+    FT_UShort  num_names;
 
     FT_UShort* glyph_indices = 0;
     FT_Char**  name_strings  = 0;
@@ -229,7 +229,7 @@
 
     /* now load the name strings */
     {
-      FT_Int  n;
+      FT_UShort  n;
 
 
       if ( ALLOC_ARRAY( name_strings, num_names, FT_Char* ) )
@@ -264,7 +264,7 @@
 
   Fail1:
     {
-      FT_Int  n;
+      FT_UShort  n;
 
 
       for ( n = 0; n < num_names; n++ )
@@ -401,7 +401,7 @@
       case 0x00020000L:
         {
           TT_Post_20*  table = &names->names.format_20;
-          FT_UInt      n;
+          FT_UShort    n;
 
 
           FREE( table->glyph_indices );

@@ -15,13 +15,11 @@
 /*                                                                         */
 /***************************************************************************/
 
+
   /*************************************************************************/
   /*                                                                       */
   /* This component has a _single_ role: to compute exact outline bounding */
   /* boxes.                                                                */
-  /*                                                                       */
-  /* It is separated from the rest of the engine for various technical     */
-  /* reasons.  It may well be integrated in `ftoutln' later.               */
   /*                                                                       */
   /*************************************************************************/
 
@@ -29,6 +27,7 @@
 #include <freetype/ftbbox.h>
 #include <freetype/ftimage.h>
 #include <freetype/ftoutln.h>
+
 
   typedef struct  TBBox_Rec_
   {
@@ -45,8 +44,8 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    This function is used as a `move_to' and `line_to' emitter during  */
-  /*    FT_Outline_Decompose.  It simply records the destination point in  */
-  /*    `user->last'.                                                      */
+  /*    FT_Outline_Decompose().  It simply records the destination point   */
+  /*    in `user->last'.                                                   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    to   :: A pointer to the destination vector.                       */
@@ -55,7 +54,7 @@
   /*    user :: A pointer to the current walk context.                     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Always 0.  Needed for the interface only.                          */
   /*                                                                       */
   static
   int  BBox_Move_To( FT_Vector*  to,
@@ -151,7 +150,7 @@
   /*    user    :: The address of the current walk context.                */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Always 0.  Needed for the interface only.                          */
   /*                                                                       */
   /* <Note>                                                                */
   /*    In the case of a non-monotonous arc, we compute directly the       */
@@ -273,7 +272,7 @@
 
     Suite:
       ;
-    } while (arc >= stack);
+    } while ( arc >= stack );
   }
 
 
@@ -297,7 +296,7 @@
   /*    user     :: The address of the current walk context.               */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Always 0.  Needed for the interface only.                          */
   /*                                                                       */
   /* <Note>                                                                */
   /*    In the case of a non-monotonous arc, we don't compute directly     */
@@ -354,21 +353,24 @@
   /*    abbox   :: A pointer to the outline's exact bounding box.          */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Outline_Get_BBox( FT_Outline*  outline,
                                                    FT_BBox*     abbox )
   {
-    FT_BBox    cbox;
-    FT_BBox    bbox;
-    FT_Vector* vec;
-    FT_UShort  n;
+    FT_BBox     cbox;
+    FT_BBox     bbox;
+    FT_Vector*  vec;
+    FT_UShort   n;
 
 
-    /* if outline is empty, return (0,0,0,0) */
+    if ( !abbox )
+      return FT_Err_Invalid_Argument;
+
     if ( !outline )
       return FT_Err_Invalid_Outline;
 
+    /* if outline is empty, return (0,0,0,0) */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )
     {
       abbox->xMin = abbox->xMax = 0;

@@ -26,7 +26,7 @@
 
 #else
 
-#include <type1z/z1objs.h>
+#include <type1/z1objs.h>
 
 #endif
 

@@ -1399,7 +1399,7 @@
     FT_Bool            vertical_info;
     TT_VertHeader      vertical;     /* TT Vertical header, if present */
 
-    FT_Int             num_names;    /* number of name records  */
+    FT_UShort          num_names;    /* number of name records  */
     TT_NameTable       name_table;   /* name table              */
 
     TT_OS2             os2;          /* TrueType OS/2 table            */
@@ -1437,7 +1437,7 @@
     TT_Gasp            gasp;                 /* the `gasp' table */
 
     /* PCL 5 table */
-	TT_PCLT            pclt;
+    TT_PCLT            pclt;
 
     /* embedded bitmaps support */
     FT_Int             num_sbit_strikes;

@@ -22,7 +22,7 @@
 
 #else
 
-#include <type1z/z1afm.h>
+#include <type1/z1afm.h>
 
 #endif
 

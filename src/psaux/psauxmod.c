@@ -68,7 +68,7 @@
   };
 
 
-  LOCAL_FUNC
+  static
   const PSAux_Interface  psaux_interface =
   {
     &ps_table_funcs,
