@@ -71,6 +71,12 @@ LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 	  The complete and commented list of macros is available in the API
 	  reference under the section name "Header File Macros" in Chapter I.
 
+      For more information, see section I of the following document:
+	  
+	      http://www.freetype.org/freetype2/docs/tutorial/step1.html
+   or http://freetype.sourceforge.net/freetype2/docs/tutorial/step1.html
+
+
     - many, many comments have been added to the public source file in
 	  order to automatically generate the API Reference through the
 	  "docmaker.py" Python script.
