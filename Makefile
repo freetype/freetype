@@ -70,9 +70,25 @@ ifdef check_platform
 
 all: setup
 
+
+# if the module list $(FT_MODULE_LIST) file is not present,
+# generate it
+#
+modules: make_module_list setup
+
 include $(TOP)/config/detect.mk
+include $(TOP)/config/modules.mk
+
+ifeq ($(wildcard $(FT_MODULE_LIST)),)
+setup: make_module_list
+endif
+
 
 # "setup" must be defined by the host platform detection rules
+# to create the 'config.mk' file in the current directory.
+#
+
+
 
 else
 
@@ -82,6 +98,8 @@ else
 #
 #
 all: build_freetype
+
+modules: make_module_list
 
 BUILD_FREETYPE := yes
 include $(CONFIG_MK)
