@@ -27,7 +27,6 @@
 #include "ftcerror.h"
 
 
-
   /* create a new chunk node, setting its cache index and ref count */
   FT_EXPORT_DEF( void )
   FTC_GNode_Init( FTC_GNode   gnode,
@@ -183,9 +182,9 @@
     {
       FTC_Family  family = query->family;
 
-     /* prevent the family from being destroyed too early when an out-of-memory
-      * condition occurs during glyph node initialization.
-      */
+
+      /* prevent the family from being destroyed too early when an        */
+      /* out-of-memory condition occurs during glyph node initialization. */
       family->num_nodes++;
 
       error = FTC_Cache_Lookup( FTC_CACHE( cache ), hash, query, anode );
