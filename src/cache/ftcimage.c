@@ -271,10 +271,10 @@
   }
 
 
-  FT_EXPORT( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
-                                                 FTC_Image_Desc*  desc,
-                                                 FT_UInt          gindex,
-                                                 FT_Glyph        *aglyph )
+  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
+                                                     FTC_Image_Desc*  desc,
+                                                     FT_UInt          gindex,
+                                                     FT_Glyph        *aglyph )
   {
     FT_Error       error;
     FTC_GlyphNode  node;

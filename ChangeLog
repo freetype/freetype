@@ -1,5 +1,18 @@
 2000-11-29  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftcalc.c (FT_SqrtFixed), src/base/ftobjs.c
+	(FT_Set_Renderer): Use FT_EXPORT_DEF.
+	* src/cache/ftcimage.c (FTC_Image_Cache_Lookup),
+	src/cache/ftcmanag.c (FTC_Manager_Done, FTC_Manager_Reset,
+	FTC_Manager_Lookup_Face, FTC_Manager_Lookup_Size,
+	FTC_Manager_Register_Cache), src/cache/ftcsbits.c
+	(FTC_SBit_Cache_Lookup): Ditto.
+
+	* src/include/freetype/cache/ftcglyph.h (FTC_GlyphNode_Init),
+	src/include/freetype/ftmac.h (FT_New_Face_From_FOND): Use FT_EXPORT.
+
+2000-11-29  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/sfdriver.c: Include ttsbit.h and ttpost.h only
 	conditionally.
 
