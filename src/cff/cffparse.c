@@ -29,11 +29,11 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t2parse
+#define FT_COMPONENT  trace_cffparse
 
 
-#define T2_Err_Stack_Underflow  FT_Err_Invalid_Argument
-#define T2_Err_Syntax_Error     FT_Err_Invalid_Argument
+#define CFF_Err_Stack_Underflow  FT_Err_Invalid_Argument
+#define CFF_Err_Syntax_Error     FT_Err_Invalid_Argument
 
 
   enum
@@ -311,7 +311,7 @@
     FT_Fixed        temp;
 
 
-    error = T2_Err_Stack_Underflow;
+    error = CFF_Err_Stack_Underflow;
 
     if ( parser->top >= parser->stack + 6 )
     {
@@ -338,7 +338,7 @@
       offset->x >>= 16;
       offset->y >>= 16;
 
-      error = T2_Err_Ok;
+      error = CFF_Err_Ok;
     }
 
     return error;
@@ -354,7 +354,7 @@
     FT_Error        error;
 
 
-    error = T2_Err_Stack_Underflow;
+    error = CFF_Err_Stack_Underflow;
 
     if ( parser->top >= parser->stack + 4 )
     {
@@ -362,7 +362,7 @@
       bbox->yMin = cff_parse_num( data++ );
       bbox->xMax = cff_parse_num( data++ );
       bbox->yMax = cff_parse_num( data   );
-      error = T2_Err_Ok;
+      error = CFF_Err_Ok;
     }
 
     return error;
@@ -377,13 +377,13 @@
     FT_Error        error;
 
 
-    error = T2_Err_Stack_Underflow;
+    error = CFF_Err_Stack_Underflow;
 
     if ( parser->top >= parser->stack + 2 )
     {
       dict->private_size   = cff_parse_num( data++ );
       dict->private_offset = cff_parse_num( data   );
-      error = T2_Err_Ok;
+      error = CFF_Err_Ok;
     }
 
     return error;
@@ -398,14 +398,14 @@
     FT_Error        error;
 
 
-    error = T2_Err_Stack_Underflow;
+    error = CFF_Err_Stack_Underflow;
 
     if ( parser->top >= parser->stack + 3 )
     {
       dict->cid_registry   = (FT_UInt)cff_parse_num ( data++ );
       dict->cid_ordering   = (FT_UInt)cff_parse_num ( data++ );
       dict->cid_supplement = (FT_ULong)cff_parse_num( data );
-      error = T2_Err_Ok;
+      error = CFF_Err_Ok;
     }
 
     return error;
@@ -472,7 +472,7 @@
                             FT_Byte*     limit )
   {
     FT_Byte*  p     = start;
-    FT_Error  error = T2_Err_Ok;
+    FT_Error  error = CFF_Err_Ok;
 
 
     parser->top    = parser->stack;
@@ -648,15 +648,15 @@
     return error;
 
   Stack_Overflow:
-    error = T2_Err_Invalid_Argument;
+    error = CFF_Err_Invalid_Argument;
     goto Exit;
 
   Stack_Underflow:
-    error = T2_Err_Invalid_Argument;
+    error = CFF_Err_Invalid_Argument;
     goto Exit;
 
   Syntax_Error:
-    error = T2_Err_Invalid_Argument;
+    error = CFF_Err_Invalid_Argument;
     goto Exit;
   }
 

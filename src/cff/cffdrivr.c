@@ -25,7 +25,7 @@
 #include FT_INTERNAL_CFF_ERRORS_H
 
 #include FT_SOURCE_FILE(cff,cffdrivr.h)
-#include FT_SOURCE_FILE(cff,t2gload.h)
+#include FT_SOURCE_FILE(cff,cffgload.h)
 
 
   /*************************************************************************/
@@ -35,7 +35,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t2driver
+#define FT_COMPONENT  trace_cffdriver
 
 
   /*************************************************************************/
@@ -98,7 +98,7 @@
 
 
     if ( !face )
-      return T2_Err_Invalid_Face_Handle;
+      return CFF_Err_Invalid_Face_Handle;
 
     kerning->x = 0;
     kerning->y = 0;
@@ -133,7 +133,7 @@
     }
 
   Exit:
-    return T2_Err_Ok;
+    return CFF_Err_Ok;
 
   Found:
     kerning->x = pair->value;
@@ -171,8 +171,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
-  FT_Error  Load_Glyph( T2_GlyphSlot  slot,
-                        T2_Size       size,
+  FT_Error  Load_Glyph( CFF_GlyphSlot  slot,
+                        CFF_Size       size,
                         FT_UShort     glyph_index,
                         FT_UInt       load_flags )
   {
@@ -180,7 +180,7 @@
 
 
     if ( !slot )
-      return T2_Err_Invalid_Glyph_Handle;
+      return CFF_Err_Invalid_Glyph_Handle;
 
     /* check whether we want a scaled outline or bitmap */
     if ( !size )
@@ -194,11 +194,11 @@
     {
       /* these two object must have the same parent */
       if ( size->face != slot->root.face )
-        return T2_Err_Invalid_Face_Handle;
+        return CFF_Err_Invalid_Face_Handle;
     }
 
     /* now load the glyph outline if necessary */
-    error = T2_Load_Glyph( slot, size, glyph_index, load_flags );
+    error = CFF_Load_Glyph( slot, size, glyph_index, load_flags );
 
     /* force drop-out mode to 2 - irrelevant now */
     /* slot->outline.dropout_mode = 2; */
@@ -235,16 +235,16 @@
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
   static
-  FT_UInt  t2_get_char_index( TT_CharMap  charmap,
+  FT_UInt  cff_get_char_index( TT_CharMap  charmap,
                               FT_Long     charcode )
   {
     FT_Error       error;
-    T2_Face        face;
+    CFF_Face        face;
     TT_CMapTable*  cmap;
 
 
     cmap = &charmap->cmap;
-    face = (T2_Face)charmap->root.face;
+    face = (CFF_Face)charmap->root.face;
 
     /* Load table if needed */
     if ( !cmap->loaded )
@@ -277,7 +277,7 @@
 
 
   static
-  FT_Module_Interface  t2_get_interface( T2_Driver    driver,
+  FT_Module_Interface  cff_get_interface( CFF_Driver    driver,
                                          const char*  interface )
   {
     FT_Module  sfnt;
@@ -298,25 +298,25 @@
     /* begin with the FT_Module_Class fields */
     {
       ft_module_font_driver | ft_module_driver_scalable,
-      sizeof( T2_DriverRec ),
+      sizeof( CFF_DriverRec ),
       "cff",
       0x10000L,
       0x20000L,
 
       0,   /* module-specific interface */
 
-      (FT_Module_Constructor)T2_Init_Driver,
-      (FT_Module_Destructor) T2_Done_Driver,
-      (FT_Module_Requester)  t2_get_interface,
+      (FT_Module_Constructor)CFF_Init_Driver,
+      (FT_Module_Destructor) CFF_Done_Driver,
+      (FT_Module_Requester)  cff_get_interface,
     },
 
     /* now the specific driver fields */
     sizeof( TT_FaceRec ),
     sizeof( FT_SizeRec ),
-    sizeof( T2_GlyphSlotRec ),
+    sizeof( CFF_GlyphSlotRec ),
 
-    (FTDriver_initFace)     T2_Init_Face,
-    (FTDriver_doneFace)     T2_Done_Face,
+    (FTDriver_initFace)     CFF_Init_Face,
+    (FTDriver_doneFace)     CFF_Done_Face,
     (FTDriver_initSize)     0,
     (FTDriver_doneSize)     0,
     (FTDriver_initGlyphSlot)0,
@@ -326,7 +326,7 @@
     (FTDriver_setPixelSizes)0,
 
     (FTDriver_loadGlyph)    Load_Glyph,
-    (FTDriver_getCharIndex) t2_get_char_index,
+    (FTDriver_getCharIndex) cff_get_char_index,
 
     (FTDriver_getKerning)   Get_Kerning,
     (FTDriver_attachFile)   0,

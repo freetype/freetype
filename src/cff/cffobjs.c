@@ -39,7 +39,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t2objs
+#define FT_COMPONENT  trace_cffobjs
 
 
   /*************************************************************************/
@@ -49,7 +49,7 @@
   /*************************************************************************/
 
   static
-  FT_String*  T2_StrCopy( FT_Memory         memory,
+  FT_String*  CFF_StrCopy( FT_Memory         memory,
                           const FT_String*  source )
   {
     FT_Error    error;
@@ -71,7 +71,7 @@
   /* this function is used to build a Unicode charmap from the glyph names */
   /* in a file                                                             */
   static
-  FT_Error  CFF_Build_Unicode_Charmap( T2_Face             face,
+  FT_Error  CFF_Build_Unicode_Charmap( CFF_Face             face,
                                        FT_ULong            base_offset,
                                        PSNames_Interface*  psnames )
   {
@@ -90,7 +90,7 @@
     if ( !charset_offset )
     {
       FT_ERROR(( "CFF_Build_Unicode_Charmap: charset table is missing\n" ));
-      error = T2_Err_Invalid_File_Format;
+      error = CFF_Err_Invalid_File_Format;
       goto Exit;
     }
 
@@ -118,7 +118,7 @@
           goto Fail;
 
         for ( ; gname < limit; gname++ )
-          gname[0] = T2_Get_String( &font->string_index,
+          gname[0] = CFF_Get_String( &font->string_index,
                                     GET_UShort(),
                                     psnames );
         FORGET_Frame();
@@ -155,7 +155,7 @@
 
           for ( ; count > 0; count-- )
           {
-            gname[0] = T2_Get_String( &font->string_index,
+            gname[0] = CFF_Get_String( &font->string_index,
                                       first,
                                       psnames );
             gname++;
@@ -167,7 +167,7 @@
 
     default:   /* unknown charset format! */
       FT_ERROR(( "CFF_Build_Unicode_Charmap: unknown charset format!\n" ));
-      error = T2_Err_Invalid_File_Format;
+      error = CFF_Err_Invalid_File_Format;
       goto Fail;
     }
 
@@ -239,7 +239,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T2_Init_Face                                                       */
+  /*    CFF_Init_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given OpenType face object.                          */
@@ -260,8 +260,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL
-  FT_Error  T2_Init_Face( FT_Stream      stream,
-                          T2_Face        face,
+  FT_Error  CFF_Init_Face( FT_Stream      stream,
+                          CFF_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
                           FT_Parameter*  params )
@@ -297,7 +297,7 @@
 
       /* if we are performing a simple font format check, exit immediately */
       if ( face_index < 0 )
-        return T2_Err_Ok;
+        return CFF_Err_Ok;
 
       sfnt_format = 1;
 
@@ -370,7 +370,7 @@
         /* we need the `PSNames' module for pure-CFF and CEF formats */
         if ( !psnames )
         {
-          FT_ERROR(( "T2_Init_Face:" ));
+          FT_ERROR(( "CFF_Init_Face:" ));
           FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
           FT_ERROR(( "             " ));
           FT_ERROR(( " without the `PSNames' module\n" ));
@@ -396,7 +396,7 @@
         /* retrieve font family & style name */
         root->family_name  = CFF_Get_Name( &cff->name_index, face_index );
         if ( dict->cid_registry )
-          root->style_name = T2_StrCopy( memory, "Regular" );  /* XXXX */
+          root->style_name = CFF_StrCopy( memory, "Regular" );  /* XXXX */
         else
           root->style_name = CFF_Get_String( &cff->string_index,
                                              dict->weight,
@@ -496,7 +496,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T2_Done_Face                                                       */
+  /*    CFF_Done_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given face object.                                     */
@@ -505,7 +505,7 @@
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
   FT_LOCAL
-  void  T2_Done_Face( T2_Face  face )
+  void  CFF_Done_Face( CFF_Face  face )
   {
     FT_Memory        memory = face->root.memory;
     SFNT_Interface*  sfnt   = (SFNT_Interface*)face->sfnt;
@@ -530,7 +530,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T2_Init_Driver                                                     */
+  /*    CFF_Init_Driver                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given OpenType driver object.                        */
@@ -542,7 +542,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF
-  FT_Error  T2_Init_Driver( T2_Driver  driver )
+  FT_Error  CFF_Init_Driver( CFF_Driver  driver )
   {
     /* init extension registry if needed */
 
@@ -554,7 +554,7 @@
 
     FT_UNUSED( driver );
 
-    return T2_Err_Ok;
+    return CFF_Err_Ok;
 
 #endif
   }
@@ -563,7 +563,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T2_Done_Driver                                                     */
+  /*    CFF_Done_Driver                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given OpenType driver.                                 */
@@ -572,7 +572,7 @@
   /*    driver :: A handle to the target OpenType driver.                  */
   /*                                                                       */
   FT_LOCAL_DEF
-  void  T2_Done_Driver( T2_Driver  driver )
+  void  CFF_Done_Driver( CFF_Driver  driver )
   {
     /* destroy extensions registry if needed */
 
