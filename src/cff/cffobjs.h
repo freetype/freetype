@@ -89,15 +89,6 @@ FT_BEGIN_HEADER
   } CFF_Transform;
 
 
-  /* this is only used in the case of a pure CFF font with no charmap */
-  typedef struct  CFF_CharMapRec_
-  {
-    TT_CharMapRec  root;
-    PS_Unicodes    unicodes;
-
-  } CFF_CharMapRec, *CFF_CharMap;
-
-
   /***********************************************************************/
   /*                                                                     */
   /* TrueType driver class.                                              */
