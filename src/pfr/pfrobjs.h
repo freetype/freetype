@@ -25,9 +25,9 @@
 FT_BEGIN_HEADER
 
   typedef struct PFR_FaceRec_*  PFR_Face;
-  
+
   typedef struct PFR_SizeRec_*  PFR_Size;
-  
+
   typedef struct PFR_SlotRec_*  PFR_Slot;
 
 
@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
   typedef struct  PFR_SizeRec_
   {
     FT_SizeRec  root;
-  
+
   } PFR_SizeRec;
 
 
@@ -52,7 +52,7 @@ FT_BEGIN_HEADER
   {
     FT_GlyphSlotRec  root;
     PFR_GlyphRec     glyph;
-    
+
   } PFR_SlotRec;
 
 

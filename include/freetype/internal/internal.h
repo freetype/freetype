@@ -45,6 +45,7 @@
 #define FT_INTERNAL_FNT_TYPES_H           <freetype/internal/fnttypes.h>
 #define FT_INTERNAL_BDF_TYPES_H           <freetype/internal/bdftypes.h>
 #define FT_INTERNAL_PCF_TYPES_H           <freetype/internal/pcftypes.h>
+#define FT_INTERNAL_PFR_H                 <freetype/internal/pfr.h>
 
 #define FT_INTERNAL_POSTSCRIPT_NAMES_H    <freetype/internal/psnames.h>
 #define FT_INTERNAL_POSTSCRIPT_AUX_H      <freetype/internal/psaux.h>

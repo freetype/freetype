@@ -351,58 +351,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /* XXX: This relies on the font being spec-conformant, i.e., that the
-          kerning pairs are sorted.  We might want to sort it just to make
-          sure */
-
-#if 0
-
-  /* find the kerning for a given glyph pair */
-  FT_LOCAL_DEF( FT_Error )
-  pfr_face_get_kerning( PFR_Face    face,
-                        FT_UInt     glyph1,
-                        FT_UInt     glyph2,
-                        FT_Vector*  kerning )
-  {
-    PFR_PhyFont   phy_font = &face->phy_font;
-    PFR_KernPair  min, mid, max;
-    FT_ULong      idx = PFR_KERN_INDEX( glyph1, glyph2 );
-
-
-    /* simple binary search */
-    min = phy_font->kern_pairs;
-    max = min + phy_font->num_kern_pairs;
-
-    while ( min < max )
-    {
-      FT_ULong  midi;
-
-
-      mid  = min + ( max - min ) / 2;
-      midi = PFR_KERN_INDEX( mid->glyph1, mid->glyph2 );
-
-      if ( midi == idx )
-      {
-        *kerning = mid->kerning;
-        goto Exit;
-      }
-
-      if ( midi < idx )
-        min = mid + 1;
-      else
-        max = mid;
-    }
-
-    kerning->x = 0;
-    kerning->y = 0;
-
-  Exit:
-    return 0;
-  }
-
-#else /* 0 */
-
-  /* find the kerning for a given glyph pair */
   FT_LOCAL_DEF( FT_Error )
   pfr_face_get_kerning( PFR_Face    face,
                         FT_UInt     glyph1,
@@ -485,6 +433,5 @@
   Exit:
     return 0;
   }
-#endif
 
 /* END */
