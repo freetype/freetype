@@ -16,7 +16,7 @@
 	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
 	<op_closepath>: Accept `T1_Parse_Have_Moveto' state also which can
 	happen in empty glyphs.  Reported by Ian Brown
-	<ian.brown@printsoft.de>.
+	<ian.brown@printsoft.de> (Savannah bug #11856).
 
 2005-02-04  Werner Lemberg  <wl@gnu.org>
 
