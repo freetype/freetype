@@ -1,3 +1,8 @@
+2001-01-11  David Turner <david.turner@freetype.org>
+
+	* docs/docmaker.py: Added cross-references generation as well as  
+	more robust handling of pathname wildward matching
+
 2001-01-10  Werner Lemberg  <wl@gnu.org>
 
 	* docs/docmaker.py: Minor improvements to reduce unwanted spaces
