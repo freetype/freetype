@@ -6,4 +6,4 @@ not exactly bugs, but should be considered though:
 
 * Add synthesized Unicode charmap processing to the CFF driver.
 
-* Implement stem3/counter hints properly in the Postscript hinter
+* Implement stem3/counter hints properly in the Postscript hinter.

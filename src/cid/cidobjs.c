@@ -38,7 +38,6 @@
 #define FT_COMPONENT  trace_cidobjs
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /*                            SLOT  FUNCTIONS                            */
@@ -54,28 +53,34 @@
 
   FT_LOCAL_DEF FT_Error
   CID_GlyphSlot_Init( CID_GlyphSlot   slot )
-  {  
+  {
     CID_Face             face;
     PSHinter_Interface*  pshinter;
-    
+
+
     face     = (CID_Face) slot->root.face;
     pshinter = face->pshinter;
-    if (pshinter)
+
+    if ( pshinter )
     {
       FT_Module  module;
-      
-      module = FT_Get_Module( slot->root.face->driver->root.library, "pshinter" );
-      if (module)
+
+
+      module = FT_Get_Module( slot->root.face->driver->root.library,
+                              "pshinter" );
+      if ( module )
       {
         T1_Hints_Funcs  funcs;
-        
+
+
         funcs = pshinter->get_t1_funcs( module );
-        slot->root.internal->glyph_hints = (void*)funcs;                   
+        slot->root.internal->glyph_hints = (void*)funcs;
       }
     }
+
     return 0;
   }
-  
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -87,16 +92,16 @@
   static PSH_Globals_Funcs
   CID_Size_Get_Globals_Funcs( CID_Size  size )
   {
-    CID_Face              face     = (CID_Face) size->root.face;
+    CID_Face             face     = (CID_Face)size->root.face;
     PSHinter_Interface*  pshinter = face->pshinter;
     FT_Module            module;
-    
+
 
     module = FT_Get_Module( size->root.face->driver->root.library,
                             "pshinter" );
     return ( module && pshinter && pshinter->get_globals_funcs )
            ? pshinter->get_globals_funcs( module )
-           : 0 ;
+           : 0;
   }
 
 
@@ -106,7 +111,7 @@
     if ( size->root.internal )
     {
       PSH_Globals_Funcs  funcs;
-    
+
 
       funcs = CID_Size_Get_Globals_Funcs( size );
       if ( funcs )
@@ -122,21 +127,21 @@
   {
     FT_Error           error = 0;
     PSH_Globals_Funcs  funcs = CID_Size_Get_Globals_Funcs( size );
-    
+
 
     if ( funcs )
     {
-      PSH_Globals  globals;
-      CID_Face      face = (CID_Face)size->root.face;
-      CID_FontDict* dict = face->cid.font_dicts + face->root.face_index;
-      T1_Private*   priv = &dict->private_dict;
-      
+      PSH_Globals    globals;
+      CID_Face       face = (CID_Face)size->root.face;
+      CID_FontDict*  dict = face->cid.font_dicts + face->root.face_index;
+      T1_Private*    priv = &dict->private_dict;
+
 
       error = funcs->create( size->root.face->memory, priv, &globals );
       if ( !error )
         size->root.internal = (FT_Size_Internal)(void*)globals;
     }
-    
+
     return error;
   }
 
@@ -147,13 +152,13 @@
     PSH_Globals_Funcs  funcs = CID_Size_Get_Globals_Funcs( size );
     FT_Error           error = 0;
 
-    
+
     if ( funcs )
       error = funcs->set_scale( (PSH_Globals)size->root.internal,
                                  size->root.metrics.x_scale,
                                  size->root.metrics.y_scale,
                                  0, 0 );
-    return error;                                
+    return error;
   }
 
 
@@ -243,10 +248,10 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    FT_Error            error;
-    PSNames_Interface*  psnames;
-    PSAux_Interface*    psaux;
-    PSHinter_Interface* pshinter;
+    FT_Error             error;
+    PSNames_Interface*   psnames;
+    PSAux_Interface*     psaux;
+    PSHinter_Interface*  pshinter;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -269,21 +274,19 @@
     if ( !psaux )
     {
       psaux = (PSAux_Interface*)FT_Get_Module_Interface(
-                  FT_FACE_LIBRARY( face ), "psaux" );
+                FT_FACE_LIBRARY( face ), "psaux" );
 
       face->psaux = psaux;
     }
 
-
     pshinter = (PSHinter_Interface*)face->pshinter;
     if ( !pshinter )
     {
-      pshinter = (PSHinter_Interface*)
-                 FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "pshinter" );
+      pshinter = (PSHinter_Interface*)FT_Get_Module_Interface(
+                   FT_FACE_LIBRARY( face ), "pshinter" );
 
       face->pshinter = pshinter;
     }
-
 
     /* open the tokenizer; this will also check the font format */
     if ( FILE_Seek( 0 ) )

@@ -2633,7 +2633,6 @@
   FT_Done_Library( FT_Library  library )
   {
     FT_Memory  memory;
-    FT_UInt    n;
 
 
     if ( !library )
@@ -2646,19 +2645,24 @@
       library->generic.finalizer( library );
 
     /* Close all modules in the library */
-#if 1    
+#if 1
     while ( library->num_modules > 0 )
       FT_Remove_Module( library, library->modules[0] );
-#else    
-    for ( n = 0; n < library->num_modules; n++ )
+#else
     {
-      FT_Module  module = library->modules[n];
+      FT_UInt  n;
 
 
-      if ( module )
+      for ( n = 0; n < library->num_modules; n++ )
       {
-        Destroy_Module( module );
-        library->modules[n] = 0;
+        FT_Module  module = library->modules[n];
+
+
+        if ( module )
+        {
+          Destroy_Module( module );
+          library->modules[n] = 0;
+        }
       }
     }
 #endif

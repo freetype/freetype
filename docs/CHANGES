@@ -1,85 +1,86 @@
 LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
 
- *** IMPORTANT BUG FIXES:
- 
-  - it wasn't possible to load embedded bitmaps when the auto-hinter was
-    used. This is now fixed..
- 
-  - the TrueType font driver didn't load some composites properly
-    (the sub-glyphs were slightly shifted, and this was only noticeable
-     when using monochrome rendering)
+  I. IMPORTANT BUG FIXES
 
-  -  Various fixes to the auto-hinter.  They merely improve the output of
-     sans-serif fonts.  Note that there are still problems with serifed
-     fonts and composites (accented characters).
+    - It wasn't possible to load embedded bitmaps when the auto-hinter was
+      used.  This is now fixed.
 
-  - all scalable font drivers mistakenly returned un-fitted glyph advances
-    when hinting was requested. This created problems for a number of layout
-    applications. This is a very old bug that got undetected mainly because
-    most test/demo program perform rounding explicitely or implicitely
-    (through the cache).
+    - The TrueType font driver didn't load some composites properly (the
+      sub-glyphs were slightly shifted, and this was only noticeable when
+      using monochrome rendering).
 
-  - FT_Glyph_ToBitmap did mistakenly modify the source glyph in certain cases.
+    - Various fixes to the auto-hinter.  They merely improve the output of
+      sans-serif fonts.  Note that there are still problems with serifed
+      fonts and composites (accented characters).
 
-  - "glnames.py" still contained a bug that made FreeType return invalid
-    names for certain glyphs.
+    - All scalable font drivers erroneously returned un-fitted glyph
+      advances when hinting was requested.  This created problems for a
+      number of layout applications.  This is a very old bug that got
+      undetected mainly because most test/demo program perform rounding
+      explicitly or implicitly (through the cache).
 
+    - FT_Glyph_To_Bitmap() did erroneously modify the source glyph in
+      certain cases.
 
- *** IMPORTANT UPDATES & NEW FEATURES:
-
-  - important updates to the Mac-specific parts of the library. 
-
-  - The caching sub-system has been completely re-designed, and its API has
-    evolved (the old one is still supported for backwards).
-    
-    The documentation for it will be completed on the next release though..
-    For now, you're encouraged to continue using the old API
-
-  - A new charmap cache is provided too. See FTC_CMapCache. This is useful
-    to perform character code -> glyph index translations quickly, without
-    the need for an opened FT_Face..
-
-  - A NEW POSTSCRIPT HINTER module has been added to support native hints in
-    the following formats: Postscript Type 1, Postscript CID and CFF/CEF.
-
-    CHECK THIS OUT !! Note that the auto-hinter produces better results for
-    a number of badly-hinted fonts (mostly auto-generated ones) though..
+    - "glnames.py" still contained a bug that made FreeType return invalid
+      names for certain glyphs.
 
 
-  - A memory debugger is now part of the standard FreeType sources. To
-    enable it, define FT_DEBUG_MEMORY in <freetype/config/ftoption.h>,
-    and recompile the library.
-    
-    Now, define the _environment_ variable FT_DEBUG_MEMORY and run any
-    program using FreeType. When the library is exited, a summary of
-    memory footprints and eventual leaks will be displayed..
+  II. IMPORTANT UPDATES AND NEW FEATURES
 
-    this works transparently with _any_ program that uses FreeType..
-    you'll need _lots_ of memory to use this however (allocated blocks
-    are never released to the heap to detect double deletes easily)
+    - Important updates to the Mac-specific parts of the library.
 
- *** OTHER:
- 
-  - we're aware of subtle differences between the output of FT 1 and FT 2
-    when it comes to monochrome TrueType-hinted glyphs. These are most
-    probably due to small differences in the monochrome rasterizers and
-    will be worked out in an upcoming release.
+    - The caching sub-system has been completely re-designed, and its API
+      has evolved (the old one is still supported for backwards
+      compatibility).
 
-    
-  - the next release will be named FreeType 2.1, and will include a
-    _major_ rework of the library's internals, both to make the source
-    code more consistent, readable, etc.. as well as to implement new
-    features like:
-    
+      The documentation for it is not yet completed, sorry.  For now, you
+      are encouraged to continue using the old API.  However, the ftview
+      demo program in the ft2demos package has already been updated to use
+      the new caching functions.
+
+    - A new charmap cache is provided too.  See FTC_CMapCache().  This is
+      useful to perform character code -> glyph index translations quickly,
+      without the need for an opened FT_Face.
+
+    - A NEW POSTSCRIPT HINTER module has been added to support native hints
+      in the following formats: PostScript Type 1, PostScript CID, and
+      CFF/CEF.
+
+      Please test!  Note that the auto-hinter produces better results for a
+      number of badly-hinted fonts (mostly auto-generated ones) though.
+
+    - A memory debugger is now part of the standard FreeType sources.  To
+      enable it, define FT_DEBUG_MEMORY in <freetype/config/ftoption.h>, and
+      recompile the library.
+
+      Additionally, define the _environment_ variable FT_DEBUG_MEMORY and
+      run any program using FreeType.  When the library is exited, a summary
+      of memory footprints and possible leaks will be displayed.
+
+      This works transparently with _any_ program that uses FreeType. 
+      However, you will need a lot of memory to use this (allocated blocks
+      are never released to the heap to detect double deletes easily).
+
+
+  III. MISCELLANEOUS
+
+    - We are aware of subtle differences between the output of FreeType
+      versions 1 and 2 when it comes to monochrome TrueType-hinted glyphs. 
+      These are most probably due to small differences in the monochrome
+      rasterizers and will be worked out in an upcoming release.
+
+    - The next release will be named FreeType 2.1, and will include a
+      _major_ rework of the library's internals, both to make the source
+      code more consistent, readable, etc. as well as to implement new
+      features like:
+
       - sub-pixel filtering ("ClearType" and "CoolType" like)
       - gamma-correction
       - dynamic version and features retrieval
       - important enhancements to the auto-hinter
       - important enhancements to the monochrome rasterizer
         (especially for Postscript-based formats)
-
-
-  Merry XMas :-)
 
 ============================================================================
 
@@ -118,9 +119,9 @@ LATEST CHANGES BETWEEN 2.0.5 and 2.0.4
   - Added a new function named "FT_Get_Postscript_Name" to retrieve the
     "unique" Postscript font name of a given face.
 
-  - Added a new public header size named FT_SIZES_H (or <freetype/ftsizes.h>)
-    providing new FT_Size-management functions: FT_New_Size, FT_Activate_Size,
-    FT_Done_Size.
+  - Added a new public header size named FT_SIZES_H (or
+    <freetype/ftsizes.h>) providing new FT_Size-management functions:
+    FT_New_Size, FT_Activate_Size, FT_Done_Size.
 
   - Fixed a reallocation bug that generated a dangling pointer (and possibly
     memory leaks) with Postscript fonts (in src/psaux/psobjs.c).

@@ -1177,8 +1177,8 @@
       }
 
       /* compute lengths */
-      for ( n = 0; n < count*2; n += 2 )
-        stems[n+1] = stems[n+1] - stems[n];
+      for ( n = 0; n < count * 2; n += 2 )
+        stems[n + 1] = stems[n + 1] - stems[n];
 
       /* add them to the current dimension */
       ps_hints_stem( (PS_Hints)hints, dimension, count, stems );

@@ -7,38 +7,79 @@
 	ftc_family_table_free, FTC_Manager_Check): Ditto.
 	* src/cache/ftcsbits.c (ftc_sbit_node_load): Ditto.
 
+	* src/base/ftobjs.c (FT_Done_Library): Remove compiler warning.
+
 2001-12-20  David Turner  <david@freetype.org>
 
-	* include/freetype/config/ftoption.h: Disabling bytecode interpreter
-	for new release.
+	Added PostScript hinter support to the CFF and CID drivers.
 
-	* docs/CHANGES: Updated for 2.0.6 release.
+	* include/freetype/internal/cfftypes.h (CFF_Font): New member
+	`pshinter'.
+	* src/cff/cffload.c (CFF_Get_Standard_Encoding): New function.
+	* src/cff/cffload.h: Updated.
+	* src/cff/cffgload.c (CFF_Init_Builder): Renamed to ...
+	(CFF_Builder_Init): This.
+	Added new argument `hinting'.
+	(CFF_Done_Builder): Renamed to ...
+	(CFF_Builder_Done): This.
+	(CFF_Init_Decoder): Added new argument `hinting'.
+	(CFF_Parse_CharStrings): Implement vstem support.
+	(CFF_Load_Glyph): Updated.
+	Add hinting support.
+	(cff_lookup_glyph_by_stdcharcode): Use CFF_Get_Standard_Encoding().
+	(cff_argument_counts): Updated.
+	* src/cff/cffgload.h: Updated.
+	* src/cff/cffobjs.c: Include FT_INTERNAL_POSTSCRIPT_HINTS_H.
+	(CFF_Size_Get_Globals_Funcs, CFF_Size_Done, CFF_Size_Init,
+	CFF_Size_Reset, CFF_GlyphSlot_Done, CFF_GLyphSlot_Init): New
+	functions.
+	(CFF_Init_Face): Renamed to ...
+	(CFF_Face_Init): This.
+	Add hinter support.
+	(CFF_Done_Face): Renamed to ...
+	(CFF_Face_Done): This.
+	(CFF_Init_Driver): Renamed to ...
+	(CFF_Driver_Init): This.
+	(CFF_Done_Driver): Renamed to ...
+	(CFF_Driver_Done): This.
+	* src/cff/cffobjs.h: Updated.
+	* src/cff/cffdrivr.c (cff_driver_class): Updated.
+
+	* include/freetype/internal/t1types.h (CID_FaceRec): New member
+	`pshinter'.
+	* src/cid/cidgload.c (CID_Load_Glyph): Add hinter support.
+	* src/cid/cidobjs.c: Include FT_INTERNAL_POSTSCRIPT_HINTS_H.
+	(CID_GlyphSlot_Done, CID_GlyphSlot_Init, CID_Size_Get_Globals_Funcs,
+	CID_Size_Done, CID_Size_Init, CID_Size_Reset): New functions.
+	(CID_Done_Face): Renamed to ...
+	(CID_Face_Done): This.
+	(CID_Init_Face): Renamed to ...
+	(CID_Face_Init): This.
+	Add hinting support.
+	(CID_Init_Driver): Renamed to ...
+	(CID_Driver_Init): This.
+	(CID_Done_Driver): Renamed to ...
+	(CID_Driver_Done): This.
+	* src/cid/cidobjs.h: Updated.
+	* src/cidriver.c: Updated.
+
+	* src/pshinter/pshrec.c (t2_hint_stems): Fixed.
+
+	* src/base/ftobjs.c (FT_Done_Library): Fixed a stupid bug that
+	crashed the library on exit.
+
+	* src/type1/t1gload.c (T1_Load_Glyph): Enable font matrix
+	transformation of hinted glyphs.
 
 	* src/cff/cffload.h, src/cff/cffload.c, src/cff/cffgload.c: Updated
-	to mode the definition of encoding tables within "cffload.c" instead
-	of making them part of a shared header (causing problems in "multi"
-	builds).
+	to move the definition of encoding tables back within "cffload.c"
+	instead of making them part of a shared header (causing problems in
+	"multi" builds).  This reverts change 2001-08-08.
 
-	* docs/TODO: Added "stem3 and counter hints support" to the TODO list
-	for the Postscript hinter.
-
+	* docs/CHANGES: Updated for 2.0.6 release.
+	* docs/TODO: Added "stem3 and counter hints support" to the TODO
+	list for the Postscript hinter.
 	* docs/BUGS: Closed the AUTOHINT-NO-SBITS bug.
-
-	* src/pshinter/pshrec.c (t2_hint_stems), src/cff/cffobjs.h,
-	src/cff/cffobjs.c, src/cff/cffload.c, src/cff/cffload.h,
-	src/cff/cffgload.c, src/cff/cffgload.h, src/cff/cffdriver.c,
-	include/freetype/internal/cfftypes.h: added Postscript hinter support
-	to the CFF driver.
-
-	* src/base/ftobjs.c (FT_Done_Library): Fixed a stupid bug that crashed
-	the library on exit.
-
-	* src/type1/t1gload.c (T1_Load_Glyph): Enable font matrix transform
-	on hinted glyphs.
-
-	* src/cid/cidgload.c, src/cid/cidobjs.c, src/cid/cidobjs.h,
-	src/cid/cidriver.c, include/freetype/internal/t1types.h: Added
-	Postscript hinter support to the CID font driver.
 
 2001-12-19  David Turner  <david@freetype.org>
 
