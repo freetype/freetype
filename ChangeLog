@@ -1,3 +1,12 @@
+2004-04-15  bytesoftware  <bytesoftware@btinternet.com>
+
+	* include/freetype/config/ftconfig.h, src/base/ftstream.c
+	(FT_Stream_ReadFields): More fixes using FT_CHAR_BIT.
+
+2004-04-14  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftconfig.h (FT_CHAR_BIT): New macro.
+
 2004-04-14  Alex Strelnikov  <ptktyrf@mail.ru>
 
 	* src/cache/ftcsbits.c (ftc_snode_load): Initialize `*asize' in case
