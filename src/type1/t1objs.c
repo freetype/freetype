@@ -271,7 +271,7 @@
       /* now compute the maximum advance width */
 
 
-      root->max_advance_width = face->type1.font_bbox.xMax;
+      root->max_advance_width = (FT_Short)face->type1.font_bbox.xMax;
       {
         FT_Int  max_advance;
 
