@@ -6,6 +6,9 @@
 
 #define T2_MAX_STACK_DEPTH  96
 
+#define T2CODE_TOPDICT   0x1000
+#define T2CODE_PRIVATE   0x2000
+
   typedef struct T2_Parser_
   {
     FT_Byte*   start;

@@ -19,6 +19,7 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftstream.h>
+#include <freetype/internal/psnames.h>
 
 #include <freetype/fterrors.h>
 #include <freetype/tttags.h>
@@ -30,8 +31,8 @@
 #define FT_COMPONENT  trace_ttload
 
  /* read a CFF offset from memory */
-  LOCAL_FUNC
-  FT_ULong  T2_Get_Offset( FT_Byte*  p,
+  static
+  FT_ULong  t2_get_offset( FT_Byte*  p,
                            FT_Byte   off_size )
   {
     FT_ULong  result;
@@ -41,184 +42,221 @@
   }
 
 
-#if 0
- /* read a CFF offset from a stream */
-  LOCAL_FUNC
-  FT_ULong  T2_Read_Offset( FT_Byte    off_size,
-                            FT_Stream  stream )
-  {
-    FT_Byte   bytes[4];
-    FT_Byte*  p;
-    FT_ULong  result;
 
-    if (off_size > 4)
-      off_size = 4;
-
-    /* first of all, read or access the bytes - this should really go     */
-    /* in "src/base/ftstream.c", but there are great chances that it will */
-    /* never be used elsewhere, so..                                      */
-    if (stream->read)
-    {
-      p = bytes;
-      if ( stream->read( stream, stream->pos, (char*)bytes, off_size ) != off_size )
-        goto Fail;
-    }
-    else
-    {
-      p = (FT_Byte*)stream->base + stream->pos;
-      if (p+off_size-1 >= (FT_Byte*)stream->limit)
-        goto Fail;
-    }
-
-    result = 0;
-    while (off_size > 0)
-    {
-      result = (result <<= 8) | *p++;
-      off_size--;
-    }
-    stream->pos += off_size;
-    return result;
-
-  Fail:
-    FT_ERROR(( "T2_Read_Offset:" ));
-    FT_ERROR(( " invalid i/o, pos = 0x%lx, size = 0x%lx",
-               stream->pos, stream->size ));
-    return 0;
-  }
-#endif
-
- /* return the memory address of a CFF index's element, when the index */
- /* is already loaded in memory..                                      */
-
-  LOCAL_FUNC
-  FT_Error  T2_Access_Element( CFF_Index*   cff_index,
-                               FT_UInt      element,
-                               FT_Byte*    *pbytes,
-                               FT_ULong    *pbyte_len )
+  static
+  FT_Error  t2_new_cff_index( CFF_Index*  index,
+                              FT_Stream   stream,
+                              FT_Bool     load )
   {
     FT_Error  error;
-
-    if (cff_index && cff_index->bytes && element < (FT_UInt)cff_index->count)
-    {
-      FT_ULong  off1, off2;
-      FT_Byte   offsize = cff_index->off_size;
-      FT_Byte*  p       = cff_index->bytes + 3 + element*offsize;
-      FT_Byte*  limit   = cff_index->bytes + cff_index->data_offset;
-
-      /* read element offset */
-      off1 = T2_Get_Offset(p,offsize);
-
-      /* a value of 0 indicates no object !! */
-      if (off1)
-      {
-        /* compute offset of next element - skip empty elements */
-        do
-        {
-          p   += offsize;
-          off2 = T2_Get_Offset(p,offsize);
-        }
-        while (off2 == 0 && p < limit);
-
-        if (p >= limit)
-          off1 = 0;
-      }
-
-      *pbytes    = 0;
-      *pbyte_len = 0;
-      if (off1)
-      {
-        *pbytes    = cff_index->bytes + cff_index->data_offset + off1 - 1;
-        *pbyte_len = off2 - off1;
-      }
-      error = 0;
-    }
-    else
-      error = FT_Err_Invalid_Argument;
-
-    return error;
-  }
-
-
-  LOCAL_FUNC
-
-  LOCAL_FUNC
-  FT_Error  T2_Read_CFF_Index( CFF_Index*  index,
-                               FT_Stream   stream )
-  {
-    FT_Error  error;
-    FT_ULong  data_size;
+    FT_Memory memory = stream->memory;
+    FT_UShort count;
 
     MEM_Set( index, 0, sizeof(*index) );
-    index->file_offset = FILE_Pos();
-    if ( !READ_UShort( index->count ) &&
-         index->count > 0             )
+    if ( !READ_UShort( count ) &&
+          count > 0            )
     {
       FT_Byte*  p;
       FT_Byte   offsize;
+      FT_ULong  data_size;
+      FT_ULong* poff;
 
       /* there is at least one element, read the offset size            */
       /* then access the offset table to compute the index's total size */
       if ( READ_Byte( offsize ) )
         goto Exit;
 
-      index->off_size    = offsize;
-      index->data_offset = ((FT_Long)index->count + 1)*offsize;
+      index->stream   = stream;
+      index->count    = count;
+      index->off_size = offsize;
+      data_size       = (FT_ULong)(count+1) * offsize;
 
-      if (ACCESS_Frame( index->data_offset ))
+      if ( ALLOC_ARRAY( index->offsets, count+1, FT_ULong ) ||
+           ACCESS_Frame( data_size ))
         goto Exit;
 
-      /* now read element offset limit */
-      p         = (FT_Byte*)stream->cursor + index->data_offset - offsize;
-      data_size = T2_Get_Offset( p, offsize );
+      poff = index->offsets;
+      p    = (FT_Byte*)stream->cursor;
+      for ( ; (FT_Short)count >= 0; count-- )
+      {
+        poff[0] = t2_get_offset( p, offsize );
+        poff++;
+        p += offsize;
+      }
 
       FORGET_Frame();
 
-      index->data_offset += 3;
-      index->total_size   = index->data_offset + data_size;
+      index->data_offset = FILE_Pos();
+      data_size          = poff[-1]-1;
 
-      /* skip the data */
-      (void)FILE_Skip( data_size );
+      if (load)
+      {
+        /* load the data */
+        if ( EXTRACT_Frame( data_size, index->bytes ) )
+          goto Exit;
+      }
+      else
+      {
+        /* skip the data */
+        (void)FILE_Skip( data_size );
+      }
     }
   Exit:
+    if (error)
+      FREE( index->offsets );
+
     return error;
   }
 
 
-  LOCAL_FUNC
-  FT_Error  T2_Load_CFF_Index( CFF_Index*  index,
-                               FT_Stream   stream )
+  static
+  void  t2_done_cff_index( CFF_Index*  index )
   {
-    FT_Error   error;
-
-    /* we begin by reading the index's data */
-    error = T2_Read_CFF_Index( index, stream );
-    if (!error && index->total_size > 0)
-    {
-      /* OK, read it from the file */
-      if ( FILE_Seek( index->file_offset )                  ||
-           EXTRACT_Frame( index->total_size, index->bytes ) )
-        goto Exit;
-
-      /* done !! */
-    }
-  Exit:
-    return error;
-  }
-
-
-  LOCAL_FUNC
-  void  T2_Done_CFF_Index( CFF_Index*  index,
-                           FT_Stream   stream )
-  {
+    FT_Stream  stream = index->stream;
+    FT_Memory  memory = stream->memory;
+    
     if (index->bytes)
       RELEASE_Frame( index->bytes );
 
+    FREE( index->offsets );
     MEM_Set( index, 0, sizeof(*index) );
   }
 
 
+  static
+  FT_Error  t2_access_element( CFF_Index*   index,
+                               FT_UInt      element,
+                               FT_Byte*    *pbytes,
+                               FT_ULong    *pbyte_len )
+  {
+    FT_Error  error = 0;
+
+    if ( index && index->count > element )
+    {
+      /* compute start and end offsets */
+      FT_ULong  off1, off2;
+      
+      off1 = index->offsets[element];
+      if (off1)
+      {
+        do
+        {
+          element++;
+          off2 = index->offsets[element];
+        }
+        while (off2 == 0 && element < index->count);
+        if (!off2)
+          off1 = 0;
+      }
+    
+      /* access element */
+      if (off1)
+      {
+        *pbyte_len = off2 - off1;
+        
+        if (index->bytes)
+        {
+          /* this index was completely loaded in memory, that's easy */
+          *pbytes   = index->bytes + off1 - 1;
+        }
+        else
+        {
+          /* this index is still on disk/file, access it through a frame */
+          FT_Stream  stream = index->stream;
+          
+          if ( FILE_Seek( index->data_offset + off1 - 1 ) ||
+               EXTRACT_Frame( off2-off1, *pbytes )        )
+            goto Exit;
+        }
+      }
+      else
+      {
+        /* empty index element */
+        *pbytes    = 0;
+        *pbyte_len = 0;
+      }
+    }
+    else
+      error = FT_Err_Invalid_Argument;
+      
+  Exit:
+    return error;
+  }
+
+
+  static
+  void  t2_forget_element( CFF_Index*  index,
+                           FT_Byte*   *pbytes )
+  {
+    if (index->bytes == 0)
+    {
+      FT_Stream  stream = index->stream;
+      RELEASE_Frame( *pbytes );
+    }
+  }                           
+
+
+  static
+  FT_String*  t2_get_name( CFF_Index*  index,
+                           FT_UInt     element )
+  {
+    FT_Memory  memory = index->stream->memory;
+    FT_Byte*   bytes;
+    FT_ULong   byte_len;
+    FT_Error   error;
+    FT_String* name = 0;
+    
+    error = t2_access_element( index, element, &bytes, &byte_len );
+    if (error) goto Exit;
+    
+    if ( !ALLOC( name, byte_len+1 ) )
+    {
+      MEM_Copy( name, bytes, byte_len );
+      name[byte_len] = 0;
+    }
+    t2_forget_element( index, &bytes );
+    
+  Exit:
+    return name;
+  }                           
+
+
+#if 0
+  LOCAL_FUNC
+  FT_String*  T2_Get_String( CFF_Index*          index,
+                             FT_UInt             sid,
+                             PSNames_Interface*  interface )
+  {
+    /* if it's not a standard string, return it */
+    if ( sid > 390 )
+      return t2_get_name( index, sid - 390 );
+      
+    /* that's a standard string, fetch a copy from the psnamed module */
+    {
+      FT_String*   name       = 0;
+      const char*  adobe_name = interface->adobe_std_strings( sid );
+      FT_UInt      len;
+      
+      if (adobe_name)
+      {
+        FT_Memory memory = index->stream->memory;
+        FT_Error  error;
+        
+        len = (FT_UInt)strlen(adobe_name);
+        if ( !ALLOC( name, len+1 ) )
+        {
+          MEM_Copy( name, adobe_name, len );
+          name[len] = 0;
+        }
+      }
+      return name;
+    }
+  }                             
+#endif
+
   LOCAL_FUNC
   FT_Error  T2_Load_CFF_Font( FT_Stream   stream,
+                              FT_Int      face_index,
                               CFF_Font*   font )
   {
     static const FT_Frame_Field  cff_header_fields[] = {
@@ -230,10 +268,13 @@
                      FT_FRAME_END };
 
     FT_Error  error;
+    FT_Memory memory = stream->memory;
+    FT_ULong  base_offset;
 
     MEM_Set( font, 0, sizeof(*font) );
     font->stream = stream;
-    font->memory = stream->memory;
+    font->memory = memory;
+    base_offset  = FILE_Pos();
 
     /* read CFF font header */
     if ( READ_Fields( cff_header_fields, font ) )
@@ -252,15 +293,71 @@
     /* skip the rest of the header */
     (void)FILE_Skip( font->header_size - 4 );
 
-    /* read the name, top dict, strong and global subrs index */
-    error = T2_Load_CFF_Index( &font->name_index, stream )     ||
-            T2_Load_CFF_Index( &font->top_dict_index, stream ) ||
-            T2_Read_CFF_Index( &font->string_index, stream )   ||
-            T2_Load_CFF_Index( &font->global_subrs_index, stream );
+    /* read the name, top dict, string and global subrs index */
+    error = t2_new_cff_index( &font->name_index, stream, 0 )       ||
+            t2_new_cff_index( &font->top_dict_index, stream, 0 )   ||
+            t2_new_cff_index( &font->string_index, stream, 0 )     ||
+            t2_new_cff_index( &font->global_subrs_index, stream, 1 );
     if (error) goto Exit;
 
-    /* well, we don't really forget the "disable" fonts.. */
+    /* well, we don't really forget the "disabled" fonts.. */
     font->num_faces = font->name_index.count;
+    if (face_index >= font->num_faces)
+    {
+      FT_ERROR(( "T2.Load_Font: incorrect face index = %d\n", face_index ));
+      error = FT_Err_Invalid_Argument;
+    }
+
+    /* in case of a font format check, simply exit now */
+    if (face_index >= 0)
+    {
+      T2_Parser  parser;
+      FT_Byte*   dict;
+      FT_ULong   dict_len;
+      CFF_Index* index = &font->top_dict_index;
+
+      /* parse the top-level font dictionary */      
+      T2_Parser_Init( &parser, T2CODE_TOPDICT, &font->top_dict );
+      
+      error = t2_access_element( index, face_index, &dict, &dict_len ) ||
+              T2_Parser_Run( &parser, dict, dict + dict_len );
+
+      t2_forget_element( &font->top_dict_index, &dict );
+      if (error) goto Exit;
+      
+      /* parse the private dictionary, if any */
+      if (font->top_dict.private_offset && font->top_dict.private_size)
+      {
+        T2_Parser_Init( &parser, T2CODE_PRIVATE, &font->private_dict );
+        
+        if ( FILE_Seek( base_offset + font->top_dict.private_offset ) ||
+             ACCESS_Frame( font->top_dict.private_size )               )
+          goto Exit;
+
+        error = T2_Parser_Run( &parser,
+                               (FT_Byte*)stream->cursor,
+                               (FT_Byte*)stream->limit );        
+        FORGET_Frame();             
+        if (error) goto Exit;
+      }
+      
+      /* read the charstrings index now */
+      if ( font->top_dict.charstrings_offset == 0 )
+      {
+        FT_ERROR(( "T2.New_CFF_Font: no charstrings offset !!\n" ));
+        error = FT_Err_Unknown_File_Format;
+        goto Exit;
+      }
+      
+      if ( FILE_Seek( base_offset + font->top_dict.charstrings_offset ) )
+        goto Exit;
+        
+      error = t2_new_cff_index( &font->charstrings_index, stream, 0 );
+      if (error) goto Exit;
+    }
+
+    /* get the font name */      
+    font->font_name = t2_get_name( &font->name_index, face_index );
 
   Exit:
     return error;
@@ -269,12 +366,11 @@
   LOCAL_FUNC
   void  T2_Done_CFF_Font( CFF_Font*  font )
   {
-    FT_Stream  stream = font->stream;
-
-    T2_Done_CFF_Index( &font->global_subrs_index, stream );
-    T2_Done_CFF_Index( &font->string_index, stream );
-    T2_Done_CFF_Index( &font->top_dict_index, stream );
-    T2_Done_CFF_Index( &font->name_index, stream );
+    t2_done_cff_index( &font->global_subrs_index );
+    t2_done_cff_index( &font->string_index );
+    t2_done_cff_index( &font->top_dict_index );
+    t2_done_cff_index( &font->name_index );
+    t2_done_cff_index( &font->charstrings_index );
   }
 
 

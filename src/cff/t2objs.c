@@ -97,6 +97,21 @@
     error = sfnt->load_face( stream, face, face_index, num_params, params );
     if ( error ) goto Exit;
 
+    /* now, load the CFF part of the file.. */
+    error = face->goto_table( face, TTAG_CFF, stream, 0 );
+    if (error) goto Exit;
+
+    {
+      CFF_Font*  cff;
+      FT_Memory  memory = face->root.memory;
+      
+      if ( ALLOC( cff, sizeof(*cff) ) )
+        goto Exit;
+        
+      face->other = cff;
+      error = T2_Load_CFF_Font( stream, face_index, cff );
+    }
+
   Exit:
     return error;
   Bad_Format:    
@@ -120,16 +135,24 @@
   LOCAL_DEF
   void  T2_Done_Face( T2_Face  face )
   {
-#if 0  
     FT_Memory  memory = face->root.memory;
+#if 0  
     FT_Stream  stream = face->root.stream;
 #endif
+
     SFNT_Interface*  sfnt = face->sfnt;
 
     if (sfnt)
       sfnt->done_face(face);
 
-    /* XXXXX: TO DO */
+    {
+      CFF_Font*  cff = (CFF_Font*)face->other;
+      if (cff)
+      {
+        T2_Done_CFF_Font(cff);
+        FREE(face->other);
+      }
+    }    
   }
 
 
