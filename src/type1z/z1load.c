@@ -1553,7 +1553,7 @@
       max_char = -32000;
 
       charcode = 0;
-      for ( ; charcode < loader.encoding_table.num_elems; charcode++ )
+      for ( ; charcode < loader.encoding_table.max_elems; charcode++ )
       {
         type1->encoding.char_index[charcode] = 0;
         type1->encoding.char_name [charcode] = (char *)".notdef";
