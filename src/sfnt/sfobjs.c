@@ -838,9 +838,10 @@
     FT_FREE( face->root.style_name );
 
     /* freeing sbit size table */
+    FT_FREE( face->root.available_sizes );
     face->root.num_fixed_sizes = 0;
-    if ( face->root.available_sizes )
-      FT_FREE( face->root.available_sizes );
+
+    FT_FREE( face->postscript_name );
 
     face->sfnt = 0;
   }
