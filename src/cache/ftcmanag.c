@@ -20,7 +20,7 @@
 #include <freetype/internal/ftobjs.h>
 
 
-#define FTC_LRU_GET_MANAGER( lru )  ((FTC_Manager_Lru)lru)->manager
+#define FTC_LRU_GET_MANAGER( lru )  (FTC_Manager)lru->user_data
 
 
  /**************************************************************************/
@@ -40,6 +40,7 @@
     
 
     error = manager->request_face( (FTC_FaceID)node->key,
+                                   manager->library,
                                    manager->request_data,
                                    (FT_Face*)&node->root.data );
     if ( !error )
@@ -179,7 +180,7 @@
   static
   const FT_Lru_Class  ftc_face_lru_class =
   {
-    sizeof ( FTC_Manager_LruRec ),
+    sizeof ( FT_LruRec ),
     ftc_manager_init_face,
     ftc_manager_done_face,
     0,
@@ -190,7 +191,7 @@
   static
   const FT_Lru_Class  ftc_size_lru_class =
   {
-    sizeof ( FTC_Manager_LruRec ),
+    sizeof ( FT_LruRec ),
     ftc_manager_init_size,
     ftc_manager_done_size,
     ftc_manager_flush_size,
@@ -213,6 +214,7 @@
       
     error = FT_Lru_New( &ftc_face_lru_class,
                         FTC_MAX_FACES,
+                        manager,
                         memory,
                         1, /* pre_alloc = TRUE */
                         (FT_Lru*)&manager->faces_lru );
@@ -221,15 +223,13 @@
       
     error = FT_Lru_New( &ftc_size_lru_class,
                         FTC_MAX_SIZES,
+                        manager,
                         memory,
                         1, /* pre_alloc = TRUE */
                         (FT_Lru*)&manager->sizes_lru );                    
     if ( error )
       goto Exit;
     
-    ((FTC_Manager_Lru)manager->faces_lru)->manager = manager;
-    ((FTC_Manager_Lru)manager->sizes_lru)->manager = manager;
-
     manager->library      = library;
     manager->request_face = requester;
     manager->request_data = req_data;
@@ -275,6 +275,7 @@
   }
  
  
+ 
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
                                                       FTC_SizeID   size_id,
                                                       FT_Face*     aface,
@@ -285,24 +286,34 @@
     FT_Face          face;
     
 
-    *aface = 0;
-    *asize = 0;
+    if (aface)
+      *aface = 0;
+      
+    if (asize)
+      *asize = 0;
 
     error  = FTC_Manager_Lookup_Face( manager, size_id->face_id, &face ); 
     if ( !error )
     {
+      FT_Size  size;
+      
       req.face   = face;
       req.width  = size_id->pix_width;
       req.height = size_id->pix_height;
       
       error = FT_Lru_Lookup( manager->sizes_lru,
                              (FT_LruKey)&req,
-                             (FT_Pointer*)asize );
+                             (FT_Pointer*)&size );
       if ( !error )
       {
         /* select the size as the current one for this face */
         face->size = *asize;
-        *aface = face;
+        
+        if (asize)
+          *asize = size;
+          
+        if (aface)
+          *aface = face;
       }
     }
 
