@@ -49,19 +49,6 @@ FT_BEGIN_HEADER
   /*    FT_Byte FT_Char FT_Int FT_UInt FT_Short FT_UShort FT_Long          */
   /*    FT_ULong FT_Fixed FT_Pointer FT_Vector FT_Matrix FT_BBox           */
   /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
   /*************************************************************************/
 
 
