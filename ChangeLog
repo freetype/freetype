@@ -1,14 +1,20 @@
-2004-04-21  David Turner    <david@freetype.org>
+2004-04-21  David Turner  <david@freetype.org>
 
-        * src/cff/cffobjs.c (cff_face_init): fixed a small memory leak
+	* src/cff/cffobjs.c (cff_face_init): Fix a small memory leak.
 
-        * src/autofit/afloader.c, src/autofit/afmodule.c, src/base/ftdebug.c:
-        removed compiler warnings
+	* src/autofit/afloader.c (af_loader_load_g), src/autofit/afmodule.c
+	(af_autofitter_load_glyph), src/base/ftdebug.c (FT_Trace_Get_Name):
+	Remove compiler warnings.
 
-        * src/autofit/aftypes.h, src/lzw/zopen.c, src/pcf/pcfdrivr.c,
-        src/pcf/pcfread.c, src/psaux/psobjs.c, src/type42/t42drivr.c:
-        changed data arrays to "const" to avoid populating the ".data"
-        segment
+	* src/autofit/aftypes.h: Undefine AF_DEBUG.
+
+	* src/lzw/zopen.c (rmask), src/pcf/pcfdrivr.c (pcf_service_bdf,
+	pcf_services), src/pcf/pcfread.c (tableNames), src/psaux/psobjs.c
+	(ft_char_table), src/type42/t42drivr.c (t42_service_glyph_dict,
+	t42_service_ps_font_name): Decorate data arrays with `const' to
+	avoid populating the `.data' segment.
+
+	* src/lzw/Jamfile: New file.
 
 2004-04-20  Werner Lemberg  <wl@gnu.org>
 

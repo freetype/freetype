@@ -503,16 +503,13 @@
           char*  fullp  = full;
           char*  family = root->family_name;
 
-         /* we're going to try to extract the style name from the
-          * full name. We need to ignore spaces and dashes during
-          * the search.
-          */
+          /* We try to extract the style name from the full name.   */
+          /* We need to ignore spaces and dashes during the search. */
           if ( full )
           {
             while ( *fullp )
             {
-             /* skip common characters at the start of both strings
-              */
+              /* skip common characters at the start of both strings */
               if ( *fullp == *family )
               {
                 family++;
@@ -520,15 +517,14 @@
                 continue;
               }
 
-             /* ignore spaces or dashes in full name during comparison
-              */
+              /* ignore spaces and dashes in full name during comparison */
               if ( *fullp == ' ' || *fullp == '-' )
               {
                 fullp++;
                 continue;
               }
-             /* ignore spaces and dashes in family name during comparison
-              */
+
+              /* ignore spaces and dashes in family name during comparison */
               if ( *family == ' ' || *family == '-' )
               {
                 family++;
@@ -537,11 +533,10 @@
 
               if ( !*family && *fullp )
               {
-               /* the full name begins with the same characters than the
-                * family name, with spaces and dashes removed. In this
-                * case, the remaining string in "fullp" will be used
-                * as the style name
-                */
+                /* Rhe full name begins with the same characters as the  */
+                /* family name, with spaces and dashes removed.  In this */
+                /* case, the remaining string in `fullp' will be used as */
+                /* the style name.                                       */
                 style_name = cff_strcpy( memory, fullp );
               }
               break;
