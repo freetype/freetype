@@ -2137,8 +2137,10 @@
 
           if ( kern_mode != FT_KERNING_UNFITTED )
           {
-            akerning->x = FT_PIX_ROUND( akerning->x );
-            akerning->y = FT_PIX_ROUND( akerning->y );
+            akerning->x = akerning->x > 0 ? FT_PIX_FLOOR( akerning->x )
+                                          : FT_PIX_CEIL( akerning->x );
+            akerning->y = akerning->y > 0 ? FT_PIX_FLOOR( akerning->y )
+                                          : FT_PIX_CEIL( akerning->y );
           }
         }
       }
