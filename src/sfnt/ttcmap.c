@@ -629,7 +629,7 @@
      * This is relatively simplistic -- look for a subHeader containing
      * glyphs and then walk to the first glyph in that subHeader.
      */
-    while ( charCode < 0x10000 )
+    while ( charCode < 0x10000L )
     {
       char_lo = (FT_UInt)( charCode & 0xFF );
       char_hi = charCode >> 8;
@@ -746,7 +746,7 @@
     /* directly                                                  */
 
     if ( seg4->idRangeOffset == 0 )
-      result = ( charCode + seg4->idDelta ) & 0xFFFFU;
+      result = (FT_UInt)( charCode + seg4->idDelta ) & 0xFFFFU;
     else
     {
       /* otherwise, we must use the glyphIdArray to do it */
@@ -971,7 +971,8 @@
     cmap8_12->last_group = group;
 
   Found1:
-    return group->startGlyphID + (FT_UInt)( charCode - group->startCharCode );
+    return (FT_UInt)( group->startGlyphID +
+                      ( charCode - group->startCharCode ) );
   }
 
 

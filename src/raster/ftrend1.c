@@ -200,8 +200,8 @@
       goto Exit;
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = (FT_UInt)( cbox.xMin >> 6 );
-    slot->bitmap_top  = (FT_UInt)( cbox.yMax >> 6 );
+    slot->bitmap_left = (FT_Int)( cbox.xMin >> 6 );
+    slot->bitmap_top  = (FT_Int)( cbox.yMax >> 6 );
 
   Exit:
     return error;

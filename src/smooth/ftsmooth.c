@@ -218,8 +218,8 @@
       goto Exit;
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = cbox.xMin >> 6;
-    slot->bitmap_top  = cbox.yMax >> 6;
+    slot->bitmap_left = (FT_Int)( cbox.xMin >> 6 );
+    slot->bitmap_top  = (FT_Int)( cbox.yMax >> 6 );
 
   Exit:
     if ( outline && origin )

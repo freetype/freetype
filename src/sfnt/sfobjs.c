@@ -86,7 +86,7 @@
 
     for ( n = 0; n < len; n++ )
     {
-      code = FT_NEXT_ULONG( read );
+      code = (FT_UInt)FT_NEXT_ULONG( read );
       if ( code < 32 || code > 127 )
         code = '?';
 
@@ -515,7 +515,7 @@
     /* now set up root fields */
     {
       FT_Face    root = &face->root;
-      FT_Int     flags = 0;
+      FT_Int32   flags = 0;
       FT_Memory  memory;
 
 
@@ -617,7 +617,7 @@
 
       if ( face->num_sbit_strikes )
       {
-        FT_Int  n;
+        FT_ULong  n;
 
 
         root->face_flags |= FT_FACE_FLAG_FIXED_SIZES;
