@@ -13,7 +13,9 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       NPUSHW instruction wasn't skipped correctly in IF clauses.  Some
       fonts like `Helvetica 75 Bold' failed.
 
-    - Another bug in handling TrueType hints caused many distortions.
+    - Another  serious  bug  in  handling  TrueType hints  caused many
+      distortions.  It has been introduced in version 2.1.8, and it is
+      highly recommended to upgrade.
 
 
   II. IMPORTANT CHANGES
