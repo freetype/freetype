@@ -1,5 +1,9 @@
 LATEST CHANGES
 
+  - added the cache sub-system. See <freetype/ftcache.h> as well as the
+    sources in "src/cache". Note that it compiles but is still untested
+    for now ..
+
   - updated "docs/docmaker.py", a draft API reference is available at
     http://www.freetype.org/ft2api.html
 

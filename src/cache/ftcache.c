@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftcmanag.h                                                             */
+/*  ftcache.c                                                              */
 /*                                                                         */
-/*    XXX                                                                  */
+/*    The FreeType Caching sub-system                                      */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,41 +16,21 @@
 /***************************************************************************/
 
 
-#ifndef FTCMANAG_H
-#define FTCMANAG_H
+#define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <freetype/ftcache.h>
-#include <cache/ftlru.h>
+#ifdef FT_FLAT_COMPILE
 
+#include "ftlru.c"
+#include "ftcmanag.c"
+#include "ftcimage.c"
 
-#ifdef __cplusplus
-  extern "C" {
+#else
+
+#include <cache/ftlru.c>
+#include <cache/ftcmanag.c>
+#include <cache/ftcimage.c>
+
 #endif
-
-
-#define  FTC_MAX_FACES  4
-#define  FTC_MAX_SIZES  8
-
-
-  typedef struct  FTC_ManagerRec_
-  {
-    FT_Library          library;
-    FT_Lru              faces_lru;
-    FT_Lru              sizes_lru;
-    
-    FT_Pointer          request_data;
-    FTC_Face_Requester  request_face;
-    
-  } FTC_ManagerRec;
-
-
-
-#ifdef __cplusplus
-  }
-#endif
-
-
-#endif /* FTCMANAG_H */
 
 
 /* END */

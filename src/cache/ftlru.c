@@ -38,6 +38,7 @@
 
   FT_EXPORT_FUNC( FT_Error )  FT_Lru_New( const FT_Lru_Class*  clazz,
                                           FT_UInt              max_elements,
+                                          FT_Pointer           user_data,
                                           FT_Memory            memory,
                                           FT_Bool              pre_alloc,
                                           FT_Lru*              alru )
@@ -66,6 +67,7 @@
       lru->clazz        = (FT_Lru_Class*)clazz;
       lru->max_elements = max_elements;
       lru->memory       = memory;
+      lru->user_data    = user_data;
 
       *alru = lru;
     }

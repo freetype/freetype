@@ -40,6 +40,8 @@
 
   typedef struct FT_LruRec_*  FT_Lru;
 
+
+
   typedef struct  FT_Lru_Class_
   {
     FT_UInt   lru_size;      /* object size in bytes */
@@ -60,6 +62,7 @@
   } FT_Lru_Class;
 
 
+
   typedef FT_Bool  (*FT_Lru_Selector)( FT_Lru      lru,
                                        FT_LruNode  node,
                                        FT_Pointer  data );
@@ -72,6 +75,7 @@
     FT_UInt         num_elements;
     FT_ListRec      elements;
     FT_Memory       memory;
+    FT_Pointer      user_data;
     
     /* the following fields are only meaningful for static lru containers */
     FT_ListRec      free_nodes;
@@ -82,6 +86,7 @@
 
   FT_EXPORT_DEF( FT_Error )  FT_Lru_New( const FT_Lru_Class*  clazz,
                                          FT_UInt              max_elements,
+                                         FT_Pointer           user_data,
                                          FT_Memory            memory,
                                          FT_Bool              pre_alloc,
                                          FT_Lru*              alru );
