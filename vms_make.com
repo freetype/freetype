@@ -37,7 +37,7 @@ $!
 $! Setup variables holding "config" information
 $!
 $ Make    = ""
-$ ccopt   = ""
+$ ccopt   = "/name=as_is/float=ieee"
 $ lopts   = ""
 $ dnsrl   = ""
 $ aconf_in_file = "config.hin"
@@ -68,6 +68,7 @@ $!
 $! Pull in external libraries
 $!
 $ create libs.opt
+$ open/write libsf libs.opt
 $ gosub check_create_vmslib
 $!
 $! Create objects
@@ -197,6 +198,8 @@ all :
         set default [-.gzip]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.lzw]
+        $(MMS)$(MMSQUALIFIERS)
+        set default [-.otvalid]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.pcf]
         $(MMS)$(MMSQUALIFIERS)
@@ -343,7 +346,7 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include],[--.src.base])
 
 OBJS=ftbase.obj,ftinit.obj,ftglyph.obj,ftdebug.obj,ftbdf.obj,ftmm.obj,\
-     fttype1.obj,ftxf86.obj,ftpfr.obj,ftstroke.obj,ftwinfnt.obj
+     fttype1.obj,ftxf86.obj,ftpfr.obj,ftstroke.obj,ftwinfnt.obj,ftbbox.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
@@ -570,6 +573,36 @@ OBJS=otlbase.obj,otlcommn.obj,otlgdef.obj,otlgpos.obj,otlgsub.obj,\
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
 
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.otvalid] directory"
+$ create [.src.otvalid]descrip.mms
+$ open/append out [.src.otvalid]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 OpenType validation module compilation rules for VMS
+#
+
+
+# Copyright 2004 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.otvalid])
+
+OBJS=otvalid.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
 
 # EOF
 $ eod
@@ -1042,7 +1075,7 @@ $   type/out=vmslib.dat sys$input
 !      5.) CPP define to pass to the build to indicate availability of 
 !          the library
 !
-! Example: The following  lines show how definitions  
+! Example: The following lines show how definitions  
 !          might look like. They are site specific and the locations of the 
 !          library and include files need almost certainly to be changed.
 ! 
@@ -1050,7 +1083,7 @@ $   type/out=vmslib.dat sys$input
 !
 !   ZLIB:     http://zinser.no-ip.info/vms/sw/zlib.htmlx
 !
-!ZLIB # pubbin:libzshr.exe # public$root:[util.libs.zlib] # zlib.h # FT_CONFIG_OPTION_SYSTEM_ZLIB
+ZLIB # sys$library:libz.olb # sys$library: # zlib.h # FT_CONFIG_OPTION_SYSTEM_ZLIB
 $   write sys$output "New driver file vmslib.dat created."
 $   write sys$output "Please customize libary locations for your site"
 $   write sys$output "and afterwards re-execute ''myproc'"
@@ -1184,6 +1217,12 @@ $ then
 $   write sys$output "ANAL_SKP_SHR-i-skipshare, ''line'"
 $   goto loop
 $ endif
+$ if f$locate("/LIB",f$edit(line,"upcase")) .lt. f$length(line)
+$ then
+$   write libsf line
+$   write sys$output "ANAL_SKP_LIB-i-skiplib, ''line'"
+$   goto loop
+$ endif
 $ f= f$search(line)
 $ if f .eqs. ""
 $ then
@@ -1215,7 +1254,7 @@ $ search c.tmp "symbol:"/out=d.tmp
 $ def/user sys$output nl:
 $ edito/edt/command=sys$input d.tmp
 sub/symbol: "/symbol_vector=(/whole
-sub/"/=procedure)/whole
+sub/"/=PROCEDURE)/whole
 exit
 $ ! all data
 $ search b.tmp "EGSY$V_DEF 1"/wind=(0,1) /out=e.tmp
@@ -1223,13 +1262,14 @@ $ search e.tmp "symbol:"/out=f.tmp
 $ def/user sys$output nl:
 $ edito/edt/command=sys$input f.tmp
 sub/symbol: "/symbol_vector=(/whole
-sub/"/=data)/whole
+sub/"/=DATA)/whole
 exit
 $ sort/nodupl d.tmp,f.tmp 'p2'
 $ delete a.tmp;*,b.tmp;*,c.tmp;*,d.tmp;*,e.tmp;*,f.tmp;*
 $ if f$search("x.tmp") .nes. "" -
 	then $ delete x.tmp;*
 $!
+$ close libsf
 $ EXIT_AA:
 $ if V then set verify
 $ endsubroutine 
