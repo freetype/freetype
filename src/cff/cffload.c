@@ -2100,6 +2100,7 @@
     FT_ULong         base_offset;
     CFF_FontRecDict  dict;
 
+
     FT_ZERO( font );
 
     font->stream = stream;

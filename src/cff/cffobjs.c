@@ -464,7 +464,8 @@
       cff->psnames  = (void*)psnames;
 
       /* Complement the root flags with some interesting information. */
-      /* Note that this is only necessary for pure CFF and CEF fonts. */
+      /* Note that this is only necessary for pure CFF and CEF fonts; */
+      /* SFNT based fonts use the `name' table instead.               */
 
       cffface->num_glyphs = cff->num_glyphs;
 
@@ -486,7 +487,7 @@
         char*  style_name = NULL;
 
 
-        /* Set up num_faces. */
+        /* set up num_faces */
         cffface->num_faces = cff->num_faces;
 
         /* compute number of glyphs */
@@ -558,7 +559,7 @@
 
               if ( !*family && *fullp )
               {
-                /* Rhe full name begins with the same characters as the  */
+                /* The full name begins with the same characters as the  */
                 /* family name, with spaces and dashes removed.  In this */
                 /* case, the remaining string in `fullp' will be used as */
                 /* the style name.                                       */

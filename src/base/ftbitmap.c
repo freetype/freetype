@@ -44,7 +44,7 @@
                      FT_Bitmap        *target,
                      FT_Int            alignment )
   {
-    FT_Error   error;
+    FT_Error   error = FT_Err_Ok;
     FT_Memory  memory;
     FT_Int     i, j, old_size;
     FT_Byte    *s, *ss, *t, *tt;
