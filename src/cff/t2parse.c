@@ -153,7 +153,7 @@
                            FT_Byte*  limit,
                            FT_Int    power_ten )
   {
-    FT_Byte*  p    = start;
+    FT_Byte*  p    = ++start;
     FT_Long   num, divider, result, exp;
     FT_Int    sign = 0, exp_sign = 0;
     FT_Byte   nib;
@@ -472,6 +472,7 @@
         if ( v == 30 )
         {
           /* skip real number */
+          p++;
           for (;;)
           {
             if ( p >= limit )
@@ -484,7 +485,6 @@
               break;
             p++;
           }
-          p++;
         }
         else if ( v == 28 )
           p += 2;
@@ -525,7 +525,6 @@
             /* we found our field's handler; read it */
             FT_Long   val;
             FT_Byte*  q = (FT_Byte*)parser->object + field->offset;
-
 
             switch ( field->kind )
             {
