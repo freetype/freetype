@@ -318,12 +318,26 @@
   /* <Note>                                                                */
   /*    Other types may be defined in the future.                          */
   /*                                                                       */
+  
+#define   FTC_IMAGE_FORMAT(x)  ((x) & 7)
+
   typedef enum  FTC_Image_Type_
   {
-    ftc_image_mono = 0,         /* monochrome bitmap   */
-    ftc_image_grays,            /* anti-aliased bitmap */
-    ftc_image_outline,          /* scaled outline      */
-    ftc_image_master_outline    /* original outline    */
+    ftc_image_format_bitmap   = 0,
+    ftc_image_format_outline  = 1,
+    
+    ftc_image_flag_monochrome = 16,
+    ftc_image_flag_unhinted   = 32,
+    ftc_image_flag_autohinted = 64,
+    ftc_image_flag_unscaled   = 128,
+    ftc_image_flag_no_sbits   = 256,
+    
+    ftc_image_mono             = ftc_image_format_bitmap |
+                                 ftc_image_flag_monochrome, /* monochrome bitmap   */
+                                
+    ftc_image_grays            = ftc_image_format_bitmap,   /* anti-aliased bitmap */
+                                
+    ftc_image_outline          = ftc_image_format_outline   /* scaled outline */
   
   } FTC_Image_Type;
 
