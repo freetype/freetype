@@ -575,7 +575,8 @@
 
         case 2:                     /* add flex vectors */
           {
-            FT_Int  index;
+            FT_Int  idx;
+
 
             if ( top[0] != 0 )
               goto Unexpected_OtherSubr;
@@ -583,12 +584,12 @@
             /* note that we should not add a point for index 0; */
             /* this will move our current position to the flex  */
             /* point without adding any point to the outline    */
-            index = decoder->num_flex_vectors++;
-            if ( index > 0 && index < 7 )
+            idx = decoder->num_flex_vectors++;
+            if ( idx > 0 && idx < 7 )
               add_point( builder,
                          x,
                          y,
-                         (FT_Byte)( index == 3 || index == 6 ) );
+                         (FT_Byte)( idx == 3 || idx == 6 ) );
           }
           break;
 
@@ -933,13 +934,13 @@
 
         case op_callsubr:
           {
-            FT_Int  index;
+            FT_Int  idx;
 
 
             FT_TRACE4(( " callsubr" ));
 
-            index = top[0];
-            if ( index < 0 || index >= (FT_Int)decoder->num_subrs )
+            idx = top[0];
+            if ( idx < 0 || idx >= (FT_Int)decoder->num_subrs )
             {
               FT_ERROR(( "T1_Decoder_Parse_CharStrings: "
                          "invalid subrs index\n" ));
@@ -960,16 +961,16 @@
             /* The Type 1 driver stores subroutines without the seed bytes. */
             /* The CID driver stores subroutines with seed bytes.  This     */
             /* case is taken care of when decoder->subrs_len == 0.          */
-            zone->base = decoder->subrs[index];
+            zone->base = decoder->subrs[idx];
 
             if ( decoder->subrs_len )
-              zone->limit = zone->base + decoder->subrs_len[index];
+              zone->limit = zone->base + decoder->subrs_len[idx];
             else
             {
               /* We are using subroutines from a CID font.  We must adjust */
               /* for the seed bytes.                                       */
               zone->base  += ( decoder->lenIV >= 0 ? decoder->lenIV : 0 );
-              zone->limit  = decoder->subrs[index + 1];
+              zone->limit  = decoder->subrs[idx + 1];
             }
 
             zone->cursor = zone->base;

@@ -52,14 +52,14 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CID_GlyphSlot_Init( CID_GlyphSlot   slot )
+  CID_GlyphSlot_Init( CID_GlyphSlot  slot )
   {
-    CID_Face             face;
+    CID_Face          face;
     PSHinter_Service  pshinter;
 
 
-    face     = (CID_Face) slot->root.face;
-    pshinter = face->pshinter;
+    face     = (CID_Face)slot->root.face;
+    pshinter = (PSHinter_Service)face->pshinter;
 
     if ( pshinter )
     {
@@ -92,9 +92,9 @@
   static PSH_Globals_Funcs
   CID_Size_Get_Globals_Funcs( CID_Size  size )
   {
-    CID_Face             face     = (CID_Face)size->root.face;
-    PSHinter_Service  pshinter = face->pshinter;
-    FT_Module            module;
+    CID_Face          face     = (CID_Face)size->root.face;
+    PSHinter_Service  pshinter = (PSHinter_Service)face->pshinter;
+    FT_Module         module;
 
 
     module = FT_Get_Module( size->root.face->driver->root.library,

@@ -151,55 +151,55 @@
   /* test a bit value in a given mask */
   static FT_Int
   ps_mask_test_bit( PS_Mask  mask,
-                    FT_Int   index )
+                    FT_Int   idx )
   {
-    if ( (FT_UInt)index >= mask->num_bits )
+    if ( (FT_UInt)idx >= mask->num_bits )
       return 0;
 
-    return mask->bytes[index >> 3] & ( 0x80 >> ( index & 7 ) );
+    return mask->bytes[idx >> 3] & ( 0x80 >> ( idx & 7 ) );
   }
 
 
   /* clear a given bit */
   static void
   ps_mask_clear_bit( PS_Mask  mask,
-                     FT_Int   index )
+                     FT_Int   idx )
   {
     FT_Byte*  p;
 
 
-    if ( (FT_UInt)index >= mask->num_bits )
+    if ( (FT_UInt)idx >= mask->num_bits )
       return;
 
-    p    = mask->bytes + ( index >> 3 );
-    p[0] = (FT_Byte)( p[0] & ~( 0x80 >> ( index & 7 ) ) );
+    p    = mask->bytes + ( idx >> 3 );
+    p[0] = (FT_Byte)( p[0] & ~( 0x80 >> ( idx & 7 ) ) );
   }
 
 
   /* set a given bit, possibly grow the mask */
   static FT_Error
   ps_mask_set_bit( PS_Mask    mask,
-                   FT_Int     index,
+                   FT_Int     idx,
                    FT_Memory  memory )
   {
     FT_Error  error = 0;
     FT_Byte*  p;
 
 
-    if ( index < 0 )
+    if ( idx < 0 )
       goto Exit;
 
-    if ( (FT_UInt)index >= mask->num_bits )
+    if ( (FT_UInt)idx >= mask->num_bits )
     {
-      error = ps_mask_ensure( mask, index + 1, memory );
+      error = ps_mask_ensure( mask, idx + 1, memory );
       if ( error )
         goto Exit;
 
-      mask->num_bits = index + 1;
+      mask->num_bits = idx + 1;
     }
 
-    p    = mask->bytes + ( index >> 3 );
-    p[0] = (FT_Byte)( p[0] | ( 0x80 >> ( index & 7 ) ) );
+    p    = mask->bytes + ( idx >> 3 );
+    p[0] = (FT_Byte)( p[0] | ( 0x80 >> ( idx & 7 ) ) );
 
   Exit:
     return error;
@@ -554,7 +554,7 @@
   /* set a bit at a given index in the current hint mask */
   static FT_Error
   ps_dimension_set_mask_bit( PS_Dimension  dim,
-                             FT_UInt       index,
+                             FT_UInt       idx,
                              FT_Memory     memory )
   {
     PS_Mask  mask;
@@ -566,7 +566,7 @@
     if ( error )
       goto Exit;
 
-    error = ps_mask_set_bit( mask, index, memory );
+    error = ps_mask_set_bit( mask, idx, memory );
 
   Exit:
     return error;
@@ -665,19 +665,19 @@
     /* now, lookup stem in the current hints table */
     {
       PS_Mask  mask;
-      FT_UInt  index;
+      FT_UInt  idx;
       FT_UInt  max   = dim->hints.num_hints;
       PS_Hint  hint  = dim->hints.hints;
 
 
-      for ( index = 0; index < max; index++, hint++ )
+      for ( idx = 0; idx < max; idx++, hint++ )
       {
         if ( hint->pos == pos && hint->len == len )
           break;
       }
 
       /* we need to create a new hint in the table */
-      if ( index >= max )
+      if ( idx >= max )
       {
         error = ps_hint_table_alloc( &dim->hints, memory, &hint );
         if ( error )
@@ -693,12 +693,12 @@
       if ( error )
         goto Exit;
 
-      error = ps_mask_set_bit( mask, index, memory );
+      error = ps_mask_set_bit( mask, idx, memory );
       if ( error )
         goto Exit;
 
       if ( aindex )
-        *aindex = (FT_Int)index;
+        *aindex = (FT_Int)idx;
     }
 
   Exit:
@@ -898,7 +898,7 @@
       PS_Dimension  dim;
       FT_Memory     memory = hints->memory;
       FT_Int        count;
-      FT_Int        index[3];
+      FT_Int        idx[3];
 
 
       /* limit "dimension" to 0..1 */
@@ -918,14 +918,14 @@
         for ( count = 0; count < 3; count++, stems += 2 )
         {
           error = ps_dimension_add_t1stem( dim, stems[0], stems[1],
-                                           memory, &index[count] );
+                                           memory, &idx[count] );
           if ( error )
             goto Fail;
         }
 
         /* now, add the hints to the counters table */
-        error = ps_dimension_add_counter( dim, index[0], index[1],
-                                          index[2], memory );
+        error = ps_dimension_add_counter( dim, idx[0], idx[1], idx[2],
+                                          memory );
         if ( error )
           goto Fail;
       }

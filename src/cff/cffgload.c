@@ -1793,16 +1793,16 @@
 
         case cff_op_index:
           {
-            FT_Int  index = args[0] >> 16;
+            FT_Int  idx = args[0] >> 16;
 
 
             FT_TRACE4(( " index" ));
 
-            if ( index < 0 )
-              index = 0;
-            else if ( index > num_args - 2 )
-              index = num_args - 2;
-            args[0] = args[-( index + 1 )];
+            if ( idx < 0 )
+              idx = 0;
+            else if ( idx > num_args - 2 )
+              idx = num_args - 2;
+            args[0] = args[-( idx + 1 )];
             args++;
           }
           break;
@@ -1810,7 +1810,7 @@
         case cff_op_roll:
           {
             FT_Int  count = (FT_Int)( args[0] >> 16 );
-            FT_Int  index = (FT_Int)( args[1] >> 16 );
+            FT_Int  idx   = (FT_Int)( args[1] >> 16 );
 
 
             FT_TRACE4(( " roll" ));
@@ -1822,9 +1822,9 @@
             if ( args < stack )
               goto Stack_Underflow;
 
-            if ( index >= 0 )
+            if ( idx >= 0 )
             {
-              while ( index > 0 )
+              while ( idx > 0 )
               {
                 FT_Fixed  tmp = args[count - 1];
                 FT_Int    i;
@@ -1833,12 +1833,12 @@
                 for ( i = count - 2; i >= 0; i-- )
                   args[i + 1] = args[i];
                 args[0] = tmp;
-                index--;
+                idx--;
               }
             }
             else
             {
-              while ( index < 0 )
+              while ( idx < 0 )
               {
                 FT_Fixed  tmp = args[0];
                 FT_Int    i;
@@ -1847,7 +1847,7 @@
                 for ( i = 0; i < count - 1; i++ )
                   args[i] = args[i + 1];
                 args[count - 1] = tmp;
-                index++;
+                idx++;
               }
             }
             args += count;
@@ -1863,27 +1863,27 @@
 
         case cff_op_put:
           {
-            FT_Fixed  val   = args[0];
-            FT_Int    index = (FT_Int)( args[1] >> 16 );
+            FT_Fixed  val = args[0];
+            FT_Int    idx = (FT_Int)( args[1] >> 16 );
 
 
             FT_TRACE4(( " put" ));
 
-            if ( index >= 0 && index < decoder->len_buildchar )
-              decoder->buildchar[index] = val;
+            if ( idx >= 0 && idx < decoder->len_buildchar )
+              decoder->buildchar[idx] = val;
           }
           break;
 
         case cff_op_get:
           {
-            FT_Int   index = (FT_Int)( args[0] >> 16 );
-            FT_Fixed val   = 0;
+            FT_Int    idx = (FT_Int)( args[0] >> 16 );
+            FT_Fixed  val = 0;
 
 
             FT_TRACE4(( " get" ));
 
-            if ( index >= 0 && index < decoder->len_buildchar )
-              val = decoder->buildchar[index];
+            if ( idx >= 0 && idx < decoder->len_buildchar )
+              val = decoder->buildchar[idx];
 
             args[0] = val;
             args++;
@@ -1956,13 +1956,13 @@
 
         case cff_op_callsubr:
           {
-            FT_UInt  index = (FT_UInt)( ( args[0] >> 16 ) +
-                                        decoder->locals_bias );
+            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
+                                      decoder->locals_bias );
 
 
-            FT_TRACE4(( " callsubr(%d)", index ));
+            FT_TRACE4(( " callsubr(%d)", idx ));
 
-            if ( index >= decoder->num_locals )
+            if ( idx >= decoder->num_locals )
             {
               FT_ERROR(( "CFF_Parse_CharStrings:" ));
               FT_ERROR(( "  invalid local subr index\n" ));
@@ -1978,8 +1978,8 @@
             zone->cursor = ip;  /* save current instruction pointer */
 
             zone++;
-            zone->base   = decoder->locals[index];
-            zone->limit  = decoder->locals[index + 1];
+            zone->base   = decoder->locals[idx];
+            zone->limit  = decoder->locals[idx + 1];
             zone->cursor = zone->base;
 
             if ( !zone->base )
@@ -1996,13 +1996,13 @@
 
         case cff_op_callgsubr:
           {
-            FT_UInt  index = (FT_UInt)( ( args[0] >> 16 ) +
-                                        decoder->globals_bias );
+            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
+                                      decoder->globals_bias );
 
 
-            FT_TRACE4(( " callgsubr(%d)", index ));
+            FT_TRACE4(( " callgsubr(%d)", idx ));
 
-            if ( index >= decoder->num_globals )
+            if ( idx >= decoder->num_globals )
             {
               FT_ERROR(( "CFF_Parse_CharStrings:" ));
               FT_ERROR(( " invalid global subr index\n" ));
@@ -2018,8 +2018,8 @@
             zone->cursor = ip;  /* save current instruction pointer */
 
             zone++;
-            zone->base   = decoder->globals[index];
-            zone->limit  = decoder->globals[index+1];
+            zone->base   = decoder->globals[idx];
+            zone->limit  = decoder->globals[idx + 1];
             zone->cursor = zone->base;
 
             if ( !zone->base )

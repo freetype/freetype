@@ -1133,7 +1133,7 @@
 
     for ( n = 0; n < loader->num_subrs; n++ )
     {
-      FT_Int    index, size;
+      FT_Int    idx, size;
       FT_Byte*  base;
 
 
@@ -1142,7 +1142,7 @@
       if ( strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
         break;
 
-      index = T1_ToInt( parser );
+      idx = T1_ToInt( parser );
 
       if ( !read_binary_data( parser, &size, &base ) )
         return;
@@ -1177,12 +1177,12 @@
         MEM_Copy( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
         size -= face->type1.private_dict.lenIV;
-        error = T1_Add_Table( table, index,
+        error = T1_Add_Table( table, idx,
                               temp + face->type1.private_dict.lenIV, size );
         FREE( temp );
       }
       else
-        error = T1_Add_Table( table, index, base, size );
+        error = T1_Add_Table( table, idx, base, size );
       if ( error )
         goto Fail;
     }
@@ -1709,7 +1709,7 @@
     /* array..                                                */
     if ( type1->encoding_type == T1_ENCODING_TYPE_ARRAY )
     {
-      FT_Int    charcode, index, min_char, max_char;
+      FT_Int    charcode, idx, min_char, max_char;
       FT_Byte*  char_name;
       FT_Byte*  glyph_name;
 
@@ -1730,13 +1730,13 @@
 
         char_name = loader.encoding_table.elements[charcode];
         if ( char_name )
-          for ( index = 0; index < type1->num_glyphs; index++ )
+          for ( idx = 0; idx < type1->num_glyphs; idx++ )
           {
-            glyph_name = (FT_Byte*)type1->glyph_names[index];
+            glyph_name = (FT_Byte*)type1->glyph_names[idx];
             if ( strcmp( (const char*)char_name,
                          (const char*)glyph_name ) == 0 )
             {
-              type1->encoding.char_index[charcode] = (FT_UShort)index;
+              type1->encoding.char_index[charcode] = (FT_UShort)idx;
               type1->encoding.char_name [charcode] = (char*)glyph_name;
 
               /* Change min/max encoded char only if glyph name is */

@@ -50,7 +50,7 @@ FT_BEGIN_HEADER
   };
 
 
-  typedef struct  FT_SubGlyph_
+  struct  FT_SubGlyph_
   {
     FT_Int     index;
     FT_UShort  flags;

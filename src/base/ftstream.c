@@ -289,7 +289,7 @@
 
 
   FT_BASE_DEF( FT_Char )
-  FT_Get_Char( FT_Stream  stream )
+  FT_Stream_Get_Char( FT_Stream  stream )
   {
     FT_Char  result;
 

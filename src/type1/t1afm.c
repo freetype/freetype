@@ -251,7 +251,7 @@
                   FT_Vector*  kerning )
   {
     T1_Kern_Pair  *min, *mid, *max;
-    FT_ULong      index = KERN_INDEX( glyph1, glyph2 );
+    FT_ULong      idx = KERN_INDEX( glyph1, glyph2 );
 
 
     /* simple binary search */
@@ -266,13 +266,13 @@
       mid  = min + ( max - min ) / 2;
       midi = KERN_INDEX( mid->glyph1, mid->glyph2 );
 
-      if ( midi == index )
+      if ( midi == idx )
       {
         *kerning = mid->kerning;
         return;
       }
 
-      if ( midi < index )
+      if ( midi < idx )
         min = mid + 1;
       else
         max = mid - 1;

@@ -393,7 +393,7 @@
     FT_Int           result;
 
 
-    cff     = face->extra.data;
+    cff     = (CFF_Font *)face->extra.data;
     charset = &cff->charset;
 
     psnames = (PSNames_Service)FT_Get_Module_Interface(

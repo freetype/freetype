@@ -51,7 +51,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const T1_Builder_Funcs  t1_builder_funcs =
+  const T1_Builder_FuncsRec  t1_builder_funcs =
   {
     T1_Builder_Init,
     T1_Builder_Done,

@@ -427,7 +427,7 @@
            ( ( al * ( ub & 0xFFFF ) + 0x8000 ) >> 16 );
     }
 
-    return ( s < 0 ? -(FT_Long)ua : ua );
+    return ( s < 0 ? -(FT_Long)ua : (FT_Long)ua );
   }
 
 

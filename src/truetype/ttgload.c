@@ -70,7 +70,7 @@
   /*    header  :: A pointer to either the horizontal or vertical metrics  */
   /*               structure.                                              */
   /*                                                                       */
-  /*    index   :: The glyph index.                                        */
+  /*    idx     :: The glyph index.                                        */
   /*                                                                       */
   /* <Output>                                                              */
   /*    bearing :: The bearing, either left side or top side.              */
@@ -83,7 +83,7 @@
   /*                                                                       */
   FT_LOCAL_DEF( void )
   TT_Get_Metrics( TT_HoriHeader*  header,
-                  FT_UInt         index,
+                  FT_UInt         idx,
                   FT_Short*       bearing,
                   FT_UShort*      advance )
   {
@@ -91,15 +91,15 @@
     FT_UShort        k = header->number_Of_HMetrics;
 
 
-    if ( index < (FT_UInt)k )
+    if ( idx < (FT_UInt)k )
     {
-      longs_m  = (TT_LongMetrics*)header->long_metrics + index;
+      longs_m  = (TT_LongMetrics*)header->long_metrics + idx;
       *bearing = longs_m->bearing;
       *advance = longs_m->advance;
     }
     else
     {
-      *bearing = ((TT_ShortMetrics*)header->short_metrics)[index - k];
+      *bearing = ((TT_ShortMetrics*)header->short_metrics)[idx - k];
       *advance = ((TT_LongMetrics*)header->long_metrics)[k - 1].advance;
     }
   }
@@ -113,12 +113,12 @@
   /*                                                                       */
   static void
   Get_HMetrics( TT_Face     face,
-                FT_UInt     index,
+                FT_UInt     idx,
                 FT_Bool     check,
                 FT_Short*   lsb,
                 FT_UShort*  aw )
   {
-    TT_Get_Metrics( &face->horizontal, index, lsb, aw );
+    TT_Get_Metrics( &face->horizontal, idx, lsb, aw );
 
     if ( check && face->postscript.isFixedPitch )
       *aw = face->horizontal.advance_Width_Max;
@@ -749,22 +749,22 @@
     TT_Face          face   = (TT_Face)loader->face;
     FT_ULong         offset;
     FT_Int           contours_count;
-    FT_UInt          index, num_points, count;
+    FT_UInt          idx, num_points, count;
     FT_Fixed         x_scale, y_scale;
     FT_GlyphLoader   gloader = loader->gloader;
     FT_Bool          opened_frame = 0;
 
 
     /* check glyph index */
-    index = glyph_index;
-    if ( index >= (FT_UInt)face->root.num_glyphs )
+    idx = glyph_index;
+    if ( idx >= (FT_UInt)face->root.num_glyphs )
     {
       error = TT_Err_Invalid_Glyph_Index;
       goto Exit;
     }
 
     loader->glyph_index = glyph_index;
-    num_points   = 0;
+    num_points          = 0;
 
     x_scale = 0x10000L;
     y_scale = 0x10000L;
@@ -780,7 +780,7 @@
       FT_UShort  advance_width;
 
 
-      Get_HMetrics( face, index,
+      Get_HMetrics( face, idx,
                     (FT_Bool)!(loader->load_flags &
                                 FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH),
                     &left_bearing,
@@ -796,11 +796,11 @@
       }
     }
 
-    offset = face->glyph_locations[index];
+    offset = face->glyph_locations[idx];
     count  = 0;
 
-    if ( index < (FT_UInt)face->num_locations - 1 )
-       count = face->glyph_locations[index + 1] - offset;
+    if ( idx < (FT_UInt)face->num_locations - 1 )
+       count = face->glyph_locations[idx + 1] - offset;
 
     if ( count == 0 )
     {

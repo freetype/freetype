@@ -414,13 +414,11 @@
     return result;
   }
 
+
   static FT_Long
   FNT_Get_Next_Char( FT_CharMap  charmap,
                      FT_Long     char_code )
   {
-    FT_ULong  result = 0;
-    FT_UInt   gindex = 0;
-
     char_code++;
     if ( charmap )
     {
@@ -439,10 +437,6 @@
   }
 
 #endif /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-
-
-
 
 
   static void

@@ -85,14 +85,14 @@
   /* internal function used to record a new hint */
   static void
   psh2_hint_table_record( PSH2_Hint_Table  table,
-                          FT_UInt          index )
+                          FT_UInt          idx )
   {
-    PSH2_Hint  hint = table->hints + index;
+    PSH2_Hint  hint = table->hints + idx;
 
 
-    if ( index >= table->max_hints )
+    if ( idx >= table->max_hints )
     {
-      FT_ERROR(( "%s.activate: invalid hint index %d\n", index ));
+      FT_ERROR(( "%s.activate: invalid hint index %d\n", idx ));
       return;
     }
 
@@ -137,12 +137,12 @@
   {
     FT_Int    mask = 0, val = 0;
     FT_Byte*  cursor = hint_mask->bytes;
-    FT_UInt   index, limit;
+    FT_UInt   idx, limit;
 
 
     limit = hint_mask->num_bits;
 
-    for ( index = 0; index < limit; index++ )
+    for ( idx = 0; idx < limit; idx++ )
     {
       if ( mask == 0 )
       {
@@ -151,7 +151,7 @@
       }
 
       if ( val & mask )
-        psh2_hint_table_record( table, index );
+        psh2_hint_table_record( table, idx );
 
       mask >>= 1;
     }
@@ -235,7 +235,7 @@
   {
     FT_Int    mask = 0, val = 0;
     FT_Byte*  cursor = hint_mask->bytes;
-    FT_UInt   index, limit, count;
+    FT_UInt   idx, limit, count;
 
 
     limit = hint_mask->num_bits;
@@ -243,7 +243,7 @@
 
     psh2_hint_table_deactivate( table );
 
-    for ( index = 0; index < limit; index++ )
+    for ( idx = 0; idx < limit; idx++ )
     {
       if ( mask == 0 )
       {
@@ -253,7 +253,7 @@
 
       if ( val & mask )
       {
-        PSH2_Hint  hint = &table->hints[index];
+        PSH2_Hint  hint = &table->hints[idx];
 
 
         if ( !psh2_hint_is_active( hint ) )

@@ -58,9 +58,9 @@
   static PSH_Globals_Funcs
   T1_Size_Get_Globals_Funcs( T1_Size  size )
   {
-    T1_Face              face     = (T1_Face) size->root.face;
-    PSHinter_Service  pshinter = face->pshinter;
-    FT_Module            module;
+    T1_Face           face     = (T1_Face)size->root.face;
+    PSHinter_Service  pshinter = (PSHinter_Service)face->pshinter;
+    FT_Module         module;
 
 
     module = FT_Get_Module( size->root.face->driver->root.library,
@@ -143,14 +143,17 @@
   FT_LOCAL_DEF( FT_Error )
   T1_GlyphSlot_Init( T1_GlyphSlot   slot )
   {
-    T1_Face              face;
+    T1_Face           face;
     PSHinter_Service  pshinter;
 
-    face     = (T1_Face) slot->root.face;
-    pshinter = face->pshinter;
-    if (pshinter)
+
+    face     = (T1_Face)slot->root.face;
+    pshinter = (PSHinter_Service)face->pshinter;
+
+    if ( pshinter )
     {
       FT_Module  module;
+
 
       module = FT_Get_Module( slot->root.face->driver->root.library, "pshinter" );
       if (module)

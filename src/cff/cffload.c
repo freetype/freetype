@@ -1082,18 +1082,18 @@
 
 
   static FT_Error
-  cff_new_index( CFF_Index  index,
-                 FT_Stream   stream,
-                 FT_Bool     load )
+  cff_new_index( CFF_Index  idx,
+                 FT_Stream  stream,
+                 FT_Bool    load )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
     FT_UShort  count;
 
 
-    MEM_Set( index, 0, sizeof ( *index ) );
+    MEM_Set( idx, 0, sizeof ( *idx ) );
 
-    index->stream = stream;
+    idx->stream = stream;
     if ( !READ_UShort( count ) &&
          count > 0             )
     {
@@ -1108,16 +1108,16 @@
       if ( READ_Byte( offsize ) )
         goto Exit;
 
-      index->stream   = stream;
-      index->count    = count;
-      index->off_size = offsize;
-      data_size       = (FT_ULong)( count + 1 ) * offsize;
+      idx->stream   = stream;
+      idx->count    = count;
+      idx->off_size = offsize;
+      data_size     = (FT_ULong)( count + 1 ) * offsize;
 
-      if ( ALLOC_ARRAY( index->offsets, count + 1, FT_ULong ) ||
-           ACCESS_Frame( data_size )                          )
+      if ( ALLOC_ARRAY( idx->offsets, count + 1, FT_ULong ) ||
+           ACCESS_Frame( data_size )                        )
         goto Exit;
 
-      poff = index->offsets;
+      poff = idx->offsets;
       p    = (FT_Byte*)stream->cursor;
 
       for ( ; (FT_Short)count >= 0; count-- )
@@ -1129,13 +1129,13 @@
 
       FORGET_Frame();
 
-      index->data_offset = FILE_Pos();
-      data_size          = poff[-1] - 1;
+      idx->data_offset = FILE_Pos();
+      data_size        = poff[-1] - 1;
 
       if ( load )
       {
         /* load the data */
-        if ( EXTRACT_Frame( data_size, index->bytes ) )
+        if ( EXTRACT_Frame( data_size, idx->bytes ) )
           goto Exit;
       }
       else
@@ -1148,52 +1148,52 @@
 
   Exit:
     if ( error )
-      FREE( index->offsets );
+      FREE( idx->offsets );
 
     return error;
   }
 
 
   static void
-  cff_done_index( CFF_Index  index )
+  cff_done_index( CFF_Index  idx )
   {
-    if ( index->stream )
+    if ( idx->stream )
     {
-      FT_Stream  stream = index->stream;
+      FT_Stream  stream = idx->stream;
       FT_Memory  memory = stream->memory;
 
 
-      if ( index->bytes )
-        RELEASE_Frame( index->bytes );
+      if ( idx->bytes )
+        RELEASE_Frame( idx->bytes );
 
-      FREE( index->offsets );
-      MEM_Set( index, 0, sizeof ( *index ) );
+      FREE( idx->offsets );
+      MEM_Set( idx, 0, sizeof ( *idx ) );
     }
   }
 
 
   static FT_Error
-  cff_explicit_index( CFF_Index  index,
+  cff_explicit_index( CFF_Index   idx,
                       FT_Byte***  table )
   {
     FT_Error   error  = 0;
-    FT_Memory  memory = index->stream->memory;
+    FT_Memory  memory = idx->stream->memory;
     FT_UInt    n, offset, old_offset;
     FT_Byte**  t;
 
 
     *table = 0;
 
-    if ( index->count > 0 && !ALLOC_ARRAY( t, index->count + 1, FT_Byte* ) )
+    if ( idx->count > 0 && !ALLOC_ARRAY( t, idx->count + 1, FT_Byte* ) )
     {
       old_offset = 1;
-      for ( n = 0; n <= index->count; n++ )
+      for ( n = 0; n <= idx->count; n++ )
       {
-        offset = index->offsets[n];
+        offset = idx->offsets[n];
         if ( !offset )
           offset = old_offset;
 
-        t[n] = index->bytes + offset - 1;
+        t[n] = idx->bytes + offset - 1;
 
         old_offset = offset;
       }
@@ -1205,29 +1205,29 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CFF_Access_Element( CFF_Index  index,
-                      FT_UInt     element,
-                      FT_Byte**   pbytes,
-                      FT_ULong*   pbyte_len )
+  CFF_Access_Element( CFF_Index  idx,
+                      FT_UInt    element,
+                      FT_Byte**  pbytes,
+                      FT_ULong*  pbyte_len )
   {
     FT_Error  error = 0;
 
 
-    if ( index && index->count > element )
+    if ( idx && idx->count > element )
     {
       /* compute start and end offsets */
       FT_ULong  off1, off2 = 0;
 
 
-      off1 = index->offsets[element];
+      off1 = idx->offsets[element];
       if ( off1 )
       {
         do
         {
           element++;
-          off2 = index->offsets[element];
+          off2 = idx->offsets[element];
 
-        } while ( off2 == 0 && element < index->count );
+        } while ( off2 == 0 && element < idx->count );
 
         if ( !off2 )
           off1 = 0;
@@ -1238,18 +1238,18 @@
       {
         *pbyte_len = off2 - off1;
 
-        if ( index->bytes )
+        if ( idx->bytes )
         {
           /* this index was completely loaded in memory, that's easy */
-          *pbytes = index->bytes + off1 - 1;
+          *pbytes = idx->bytes + off1 - 1;
         }
         else
         {
           /* this index is still on disk/file, access it through a frame */
-          FT_Stream  stream = index->stream;
+          FT_Stream  stream = idx->stream;
 
 
-          if ( FILE_Seek( index->data_offset + off1 - 1 ) ||
+          if ( FILE_Seek( idx->data_offset + off1 - 1 ) ||
                EXTRACT_Frame( off2 - off1, *pbytes )      )
             goto Exit;
         }
@@ -1270,12 +1270,12 @@
 
 
   FT_LOCAL_DEF( void )
-  CFF_Forget_Element( CFF_Index  index,
-                      FT_Byte**   pbytes )
+  CFF_Forget_Element( CFF_Index  idx,
+                      FT_Byte**  pbytes )
   {
-    if ( index->bytes == 0 )
+    if ( idx->bytes == 0 )
     {
-      FT_Stream  stream = index->stream;
+      FT_Stream  stream = idx->stream;
 
 
       RELEASE_Frame( *pbytes );
@@ -1284,17 +1284,17 @@
 
 
   FT_LOCAL_DEF( FT_String* )
-  CFF_Get_Name( CFF_Index  index,
-                FT_UInt     element )
+  CFF_Get_Name( CFF_Index  idx,
+                FT_UInt    element )
   {
-    FT_Memory   memory = index->stream->memory;
+    FT_Memory   memory = idx->stream->memory;
     FT_Byte*    bytes;
     FT_ULong    byte_len;
     FT_Error    error;
     FT_String*  name = 0;
 
 
-    error = CFF_Access_Element( index, element, &bytes, &byte_len );
+    error = CFF_Access_Element( idx, element, &bytes, &byte_len );
     if ( error )
       goto Exit;
 
@@ -1303,7 +1303,7 @@
       MEM_Copy( name, bytes, byte_len );
       name[byte_len] = 0;
     }
-    CFF_Forget_Element( index, &bytes );
+    CFF_Forget_Element( idx, &bytes );
 
   Exit:
     return name;
@@ -1311,13 +1311,13 @@
 
 
   FT_LOCAL_DEF( FT_String* )
-  CFF_Get_String( CFF_Index          index,
-                  FT_UInt             sid,
+  CFF_Get_String( CFF_Index        idx,
+                  FT_UInt          sid,
                   PSNames_Service  interface )
   {
     /* if it is not a standard string, return it */
     if ( sid > 390 )
-      return CFF_Get_Name( index, sid - 391 );
+      return CFF_Get_Name( idx, sid - 391 );
 
     /* that's a standard string, fetch a copy from the PSName module */
     {
@@ -1328,7 +1328,7 @@
 
       if ( adobe_name )
       {
-        FT_Memory  memory = index->stream->memory;
+        FT_Memory  memory = idx->stream->memory;
         FT_Error   error;
 
 
@@ -1958,7 +1958,7 @@
 
   static FT_Error
   CFF_Load_SubFont( CFF_SubFont*  font,
-                    CFF_Index    index,
+                    CFF_Index     idx,
                     FT_UInt       font_index,
                     FT_Stream     stream,
                     FT_ULong      base_offset )
@@ -1983,10 +1983,10 @@
     top->font_matrix.yy      = 0x10000L;
     top->cid_count           = 8720;
 
-    error = CFF_Access_Element( index, font_index, &dict, &dict_len ) ||
+    error = CFF_Access_Element( idx, font_index, &dict, &dict_len ) ||
             CFF_Parser_Run( &parser, dict, dict + dict_len );
 
-    CFF_Forget_Element( index, &dict );
+    CFF_Forget_Element( idx, &dict );
 
     if ( error )
       goto Exit;
@@ -2034,7 +2034,7 @@
 
       font->num_local_subrs = font->local_subrs_index.count;
       error = cff_explicit_index( &font->local_subrs_index,
-                                     &font->local_subrs );
+                                  &font->local_subrs );
       if ( error )
         goto Exit;
     }
@@ -2137,9 +2137,9 @@
     /* now, check for a CID font */
     if ( dict->cid_registry )
     {
-      CFF_IndexRec     fd_index;
+      CFF_IndexRec  fd_index;
       CFF_SubFont*  sub;
-      FT_UInt       index;
+      FT_UInt       idx;
 
 
       /* this is a CID-keyed font, we must now allocate a table of */
@@ -2163,14 +2163,14 @@
         goto Fail_CID;
 
       /* setup pointer table */
-      for ( index = 0; index < fd_index.count; index++ )
-        font->subfonts[index] = sub + index;
+      for ( idx = 0; idx < fd_index.count; idx++ )
+        font->subfonts[idx] = sub + idx;
 
       /* now load each sub font independently */
-      for ( index = 0; index < fd_index.count; index++ )
+      for ( idx = 0; idx < fd_index.count; idx++ )
       {
-        sub = font->subfonts[index];
-        error = CFF_Load_SubFont( sub, &fd_index, index,
+        sub = font->subfonts[idx];
+        error = CFF_Load_SubFont( sub, &fd_index, idx,
                                   stream, base_offset );
         if ( error )
           goto Fail_CID;
@@ -2243,7 +2243,7 @@
   CFF_Done_Font( CFF_Font*  font )
   {
     FT_Memory  memory = font->memory;
-    FT_UInt    index;
+    FT_UInt    idx;
 
 
     cff_done_index( &font->global_subrs_index );
@@ -2256,8 +2256,8 @@
     /* a CID keyed CFF font                                */
     if ( font->num_subfonts > 0 )
     {
-      for ( index = 0; index < font->num_subfonts; index++ )
-        CFF_Done_SubFont( memory, font->subfonts[index] );
+      for ( idx = 0; idx < font->num_subfonts; idx++ )
+        CFF_Done_SubFont( memory, font->subfonts[idx] );
 
       FREE( font->subfonts );
     }

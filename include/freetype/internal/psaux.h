@@ -38,9 +38,8 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  typedef struct PS_TableRec_*               PS_Table;
-
-  typedef const struct PS_Table_FuncsRec_*   PS_Table_Funcs;
+  typedef struct PS_TableRec_*              PS_Table;
+  typedef const struct PS_Table_FuncsRec_*  PS_Table_Funcs;
 
   /*************************************************************************/
   /*                                                                       */
@@ -433,7 +432,9 @@ FT_BEGIN_HEADER
   (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
 
 
-  typedef struct  T1_Builder_Funcs_
+  typedef const struct T1_Builder_FuncsRec_*  T1_Builder_Funcs;
+
+  typedef struct  T1_Builder_FuncsRec_
   {
     void
     (*init)( T1_Builder*   builder,
@@ -452,8 +453,7 @@ FT_BEGIN_HEADER
     T1_Builder_Start_Point_Func    start_point;
     T1_Builder_Close_Contour_Func  close_contour;
 
-  } T1_Builder_Funcs;
-
+  } T1_Builder_FuncsRec;
 
 
   /*************************************************************************/
@@ -514,37 +514,37 @@ FT_BEGIN_HEADER
   /*                                                                       */
   struct  T1_Builder_
   {
-    FT_Memory         memory;
-    FT_Face           face;
-    FT_GlyphSlot      glyph;
-    FT_GlyphLoader    loader;
-    FT_Outline*       base;
-    FT_Outline*       current;
+    FT_Memory            memory;
+    FT_Face              face;
+    FT_GlyphSlot         glyph;
+    FT_GlyphLoader       loader;
+    FT_Outline*          base;
+    FT_Outline*          current;
 
-    FT_Vector         last;
+    FT_Vector            last;
 
-    FT_Fixed          scale_x;
-    FT_Fixed          scale_y;
+    FT_Fixed             scale_x;
+    FT_Fixed             scale_y;
 
-    FT_Pos            pos_x;
-    FT_Pos            pos_y;
+    FT_Pos               pos_x;
+    FT_Pos               pos_y;
 
-    FT_Vector         left_bearing;
-    FT_Vector         advance;
+    FT_Vector            left_bearing;
+    FT_Vector            advance;
 
-    FT_BBox           bbox;          /* bounding box */
-    FT_Bool           path_begun;
-    FT_Bool           load_points;
-    FT_Bool           no_recurse;
-    FT_Bool           shift;
+    FT_BBox              bbox;          /* bounding box */
+    FT_Bool              path_begun;
+    FT_Bool              load_points;
+    FT_Bool              no_recurse;
+    FT_Bool              shift;
 
-    FT_Error          error;         /* only used for memory errors */
-    FT_Bool           metrics_only;
+    FT_Error             error;         /* only used for memory errors */
+    FT_Bool              metrics_only;
 
-    void*             hints_funcs;    /* hinter-specific */
-    void*             hints_globals;  /* hinter-specific */
+    void*                hints_funcs;    /* hinter-specific */
+    void*                hints_globals;  /* hinter-specific */
 
-    T1_Builder_Funcs  funcs;
+    T1_Builder_FuncsRec  funcs;
   };
 
 
@@ -661,10 +661,10 @@ FT_BEGIN_HEADER
 
   typedef struct  PSAux_Interface_
   {
-    const PS_Table_Funcs     ps_table_funcs;
-    const PS_Parser_Funcs    ps_parser_funcs;
-    const T1_Builder_Funcs*  t1_builder_funcs;
-    const T1_Decoder_Funcs   t1_decoder_funcs;
+    const PS_Table_FuncsRec*    ps_table_funcs;
+    const PS_Parser_FuncsRec*   ps_parser_funcs;
+    const T1_Builder_FuncsRec*  t1_builder_funcs;
+    const T1_Decoder_FuncsRec*  t1_decoder_funcs;
 
     void
     (*t1_decrypt)( FT_Byte*   buffer,
