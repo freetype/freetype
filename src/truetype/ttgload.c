@@ -712,6 +712,12 @@
 
       loader->left_bearing = left_bearing;
       loader->advance      = advance_width;
+
+      if ( !loader->linear_def )
+      {
+        loader->linear_def = 1;
+        loader->linear     = advance_width;
+      }
     }
 
     offset = face->glyph_locations[index];
@@ -1154,7 +1160,7 @@
     /* get the device-independent horizontal advance.  It is scaled later */
     /* by the base layer.                                                 */
     {
-      FT_Pos  advance = loader->advance;
+      FT_Pos  advance = loader->linear;
 
 
       /* the flag FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH was introduced to */

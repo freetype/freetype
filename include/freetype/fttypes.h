@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*************************************************************************/
 
-   
+
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -509,6 +509,8 @@ FT_BEGIN_HEADER
 
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
 
+/* return base error code (without module-specific prefix) */
+#define FT_ERROR_BASE(x)     ((x) & 255)
 
 FT_END_HEADER
 
