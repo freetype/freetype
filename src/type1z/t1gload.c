@@ -1302,23 +1302,6 @@
         FT_BBox           cbox;
         FT_Glyph_Metrics* metrics = &glyph->root.metrics;
   
-        FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
-  
-        /* grid fit the bounding box if necessary */
-        if (hinting)
-        {
-          cbox.xMin &= -64;
-          cbox.yMin &= -64;
-          cbox.xMax = ( cbox.xMax+63 ) & -64;
-          cbox.yMax = ( cbox.yMax+63 ) & -64;
-        }
-  
-        metrics->width  = cbox.xMax - cbox.xMin;
-        metrics->height = cbox.yMax - cbox.yMin;
-  
-        metrics->horiBearingX = cbox.xMin;
-        metrics->horiBearingY = cbox.yMax;
-  
         /* copy the _unscaled_ advance width */
         metrics->horiAdvance  = decoder.builder.advance.x;
   
@@ -1330,7 +1313,7 @@
         glyph->root.format = ft_glyph_format_outline;
   
         glyph->root.outline.flags &= ft_outline_owner;
-        if ( size->root.metrics.y_ppem < 24 )
+        if ( size && size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
         glyph->root.outline.flags |= ft_outline_reverse_fill;
@@ -1356,19 +1339,34 @@
             vec->x = FT_MulFix( vec->x, x_scale );
             vec->y = FT_MulFix( vec->y, y_scale );
           }
-  
+
+          FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
+    
           /* Then scale the metrics */
-          metrics->width  = FT_MulFix( metrics->width,  x_scale );
-          metrics->height = FT_MulFix( metrics->height, y_scale );
-  
-          metrics->horiBearingX = FT_MulFix( metrics->horiBearingX, x_scale );
-          metrics->horiBearingY = FT_MulFix( metrics->horiBearingY, y_scale );
           metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
   
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
           metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
         }
+
+        /* compute the other metrics */
+        FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
+        
+        /* grid fit the bounding box if necessary */
+        if (hinting)
+        {
+          cbox.xMin &= -64;
+          cbox.yMin &= -64;
+          cbox.xMax = ( cbox.xMax+63 ) & -64;
+          cbox.yMax = ( cbox.yMax+63 ) & -64;
+        }
+
+        metrics->width  = cbox.xMax - cbox.xMin;
+        metrics->height = cbox.yMax - cbox.yMin;
+
+        metrics->horiBearingX = cbox.xMin;
+        metrics->horiBearingY = cbox.yMax;
       }
     }
     return error;
