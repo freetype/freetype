@@ -38,6 +38,11 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       `tttables.h')  is  available  to   get  the  language  ID  of  a
       TrueType/SFNT cmap.
 
+    - The hexadecimal format of  data after the `StartData' command in
+      CID-keyed Type 1 fonts is now supported.  While this can't occur
+      in  file-based   fonts,  it  can   happen  in  document-embedded
+      resources of PostScript documents.
+
     - The cache sub-system has been rewritten.
 
       - There is now support for deinstallation of faces.

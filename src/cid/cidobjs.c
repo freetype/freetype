@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID objects manager (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -234,6 +234,9 @@
 
       face->root.family_name = 0;
       face->root.style_name  = 0;
+
+      FT_FREE( face->binary_data );
+      FT_FREE( face->cid_stream );
     }
   }
 
@@ -275,7 +278,6 @@
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-    FT_UNUSED( face_index );
     FT_UNUSED( stream );
 
 
@@ -305,7 +307,7 @@
     if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
-    error = cid_face_open( face );
+    error = cid_face_open( face, face_index );
     if ( error )
       goto Exit;
 
