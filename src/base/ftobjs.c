@@ -935,6 +935,60 @@
   }
 
 
+ /***************************************************************************
+  *
+  *  ft_new_input_stream:
+  *
+  *    create a new input stream object from a FT_Open_Args structure..
+  *
+  **************************************************************************/
+  static
+  FT_Error  ft_new_input_stream( FT_Library    library,
+                                 FT_Open_Args* args,
+                                 FT_Stream    *astream )
+  {
+    FT_Error  error;
+    FT_Memory memory;
+    FT_Stream stream;
+    
+    memory = library->memory;
+    if  ( ALLOC( stream, sizeof(*stream) ) )
+      return error;
+      
+    stream->memory = memory;
+    
+    /* is it a memory stream ------------------------- ? */
+    if (args->memory_base && args->memory_size)
+    {
+      FT_New_Memory_Stream( library,
+                            args->memory_base,
+                            args->memory_size,
+                            stream );
+    }
+
+    /* do we have an 8-bit pathname ------------------ ? */
+    else if (args->pathname)
+      error = FT_New_Stream( args->pathname, stream );
+
+    /* do we have a custom stream -------------------- ? */
+    else if (args->stream)
+    {
+      /* copy the content of the argument stream into the new stream object */
+      *stream = *(args->stream);
+      stream->memory = memory;
+    }
+    else
+      error = FT_Err_Invalid_Argument;
+      
+    if (error)
+      FREE(stream);
+      
+    *astream = stream;
+    return error;
+  }
+
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -976,31 +1030,14 @@
                          FT_Long      face_index,
                          FT_Face     *aface )
   {
-    FT_Stream  stream;
-    FT_Memory  memory;
-    FT_Error   error;
+    FT_Open_Args  args;
 
-
-    memory = library->memory;
-    if ( ALLOC( stream, sizeof ( *stream ) ) )
-      goto Fail;
-
-    stream->memory = memory;
-
-    error = FT_New_Stream( pathname, stream );
-    if (error) goto Fail_Stream;
-
-    error = FT_Open_Face( library, stream, face_index, aface );
-    if ( !error )
-      return error;
-
-    /* close stream in case of error */
-    stream->close( stream );
-
-  Fail_Stream:
-    FREE( stream );
-  Fail:
-    return error;
+    args.memory_base = 0;
+    args.memory_size = 0;
+    args.stream      = 0;
+    args.pathname    = (FT_Byte*)pathname;
+    
+    return FT_Open_Face( library, &args, face_index, aface );
   }
 
 
@@ -1011,44 +1048,38 @@
                                 FT_Long      face_index,
                                 FT_Face*     face )
   {
-    FT_Stream  stream;
-    FT_Memory  memory;
-    FT_Error   error;
+    FT_Open_Args  args;
 
-    memory = library->memory;
-    if ( ALLOC( stream, sizeof(*stream) ) )
-      goto Fail;
+    args.memory_base = file_base;
+    args.memory_size = file_size;
+    args.pathname    = 0;
+    args.stream      = 0;
 
-    stream->memory = memory;
-
-    FT_New_Memory_Stream( library, (void*)file_base, file_size, stream );
-
-    error = FT_Open_Face( library, stream, face_index, face );
-    if (!error)
-      return error;
-
-    FREE(stream);
-  Fail:
-    return error;
+    return FT_Open_Face( library, &args, face_index, face );
   }
 
 
   EXPORT_FUNC
-  FT_Error  FT_Open_Face( FT_Library library,
-                          FT_Stream  stream,
-                          FT_Long    face_index,
-                          FT_Face*   aface )
+  FT_Error  FT_Open_Face( FT_Library     library,
+                          FT_Open_Args*  args,
+                          FT_Long        face_index,
+                          FT_Face*       aface )
   {
     FT_Error     error;
     FT_Driver    driver;
     FT_Memory    memory;
+    FT_Stream    stream;
     FT_Face      face = 0;
     FT_ListNode  node = 0;
 
     *aface = 0;
 
-    if ( !library || !stream )
+    if ( !library )
       return FT_Err_Invalid_Handle;
+
+    /* create input stream */
+    error = ft_new_input_stream( library, args, &stream );
+    if (error) goto Exit;
 
     memory = library->memory;
 
@@ -1060,6 +1091,7 @@
       for ( ; cur < limit; cur++ )
       {
         driver = *cur;
+       /* not all drivers directly support face object, so check.. */
         if (driver->interface.face_object_size)
         {
           error = open_face( driver, stream, face_index, &face );
@@ -1067,30 +1099,21 @@
             goto Success;
 
           if ( error != FT_Err_Unknown_File_Format )
-            goto Bad_Resource;
+            goto Fail;
         }
       }
 
       /* no driver is able to handle this format */
       error = FT_Err_Unknown_File_Format;
-      goto Bad_Resource;
+      goto Fail;
     }
 
   Success:
-    /****************************************************************/
-    /* if we were simply checking the font format, discard the face */
-    /* object, then return successfully.                            */
-    if ( face_index < 0 )
-    {
-      driver->interface.done_face( face );
-      FREE( face );
-      goto Exit;
-    }
 
     FT_TRACE4(( "FT_New_Face: New face object, adding to list\n" ));
 
     /****************************************************************/
-    /* Otherwise add the face object to its driver's list           */
+    /* add the face object to its driver's list                     */
     if ( ALLOC( node, sizeof ( *node ) ) )
       goto Fail;
 
@@ -1122,8 +1145,6 @@
 
   Fail:
     FT_Done_Face( face );
-
-  Bad_Resource:
 
   Exit:
     FT_TRACE4(( "FT_Open_Face: Return %d\n", error ));
