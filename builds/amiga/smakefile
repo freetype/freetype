@@ -9,15 +9,18 @@
 # Your programs source code should start with this
 # (uncomment the parts you do not need to keep the program small):
 # ---8<---
-#define FT_USE_AUTOHINT	// autohinter
-#define FT_USE_RASTER	// monochrome rasterizer
-#define FT_USE_SMOOTH	// anti-aliasing rasterizer
-#define FT_USE_TT	// truetype font driver
-#define FT_USE_T1	// type1 font driver
-#define FT_USE_T1CID	// cid-keyed type1 font driver
-#define FT_USE_CFF	// opentype font driver
-#define FT_USE_PCF	// pcf bitmap font driver
-#define FT_USE_WINFNT	// windows .fnt|.fon bitmap font driver
+#define FT_USE_AUTOHINT // autohinter
+#define FT_USE_RASTER   // monochrome rasterizer
+#define FT_USE_SMOOTH   // anti-aliasing rasterizer
+#define FT_USE_TT       // truetype font driver
+#define FT_USE_T1       // type1 font driver
+#define FT_USE_T42      // type42 font driver
+#define FT_USE_T1CID    // cid-keyed type1 font driver
+#define FT_USE_CFF      // opentype font driver
+#define FT_USE_BDF      // bdf bitmap font driver
+#define FT_USE_PCF      // pcf bitmap font driver
+#define FT_USE_PFR      // pfr font driver
+#define FT_USE_WINFNT   // windows .fnt|.fon bitmap font driver
 #include "FT:src/base/ftinit.c"
 # ---8<---
 #
@@ -47,23 +50,12 @@ OBJSFNT = sfnt.o
 
 OBJCACHE = ftcache.o
 
-OBJOT = cff.o
-
-OBJT1 = type1.o
-
-OBJT1C = type1cid.o
-
-OBJTT = truetype.o
-
-OBJWINFNT = winfnt.o
-
-OBJPCF = pcf.o
-
 OBJPS = $(OBJPSAUX) $(OBJPSNAM) $(OBJPSHINT)
 
 OBJRASTER = $(OBJRAST) $(OBJSMOOTH)
 
-OBJFONTD = $(OBJOT) $(OBJT1) $(OBJT1C) $(OBJTT) $(OBJWINFNT) $(OBJPCF)
+OBJFONTD = cff.o type1.o type42.o type1cid.o\
+	   truetype.o winfnt.o bdf.o pcf.o pfr.o
 
 CORE = FT:src/
 
@@ -203,6 +195,12 @@ type1.o: $(CORE)type1/type1.c
 	sc $(SCFLAGS) objname=$@ $<
 
 #
+# FreeType2 library Type42 font driver
+#
+type42.o: $(CORE)type42/t42drivr.c
+	sc $(SCFLAGS) objname=$@ $<
+
+#
 # freetype library CID-keyed Type1 font driver
 #
 type1cid.o: $(CORE)cid/type1cid.c
@@ -214,13 +212,25 @@ type1cid.o: $(CORE)cid/type1cid.c
 #	sc $(SCFLAGS) objname=$@ $<
 
 #
-# freetype library Windows FNT/FON bitmap font driver
+# freetype library BDF bitmap font driver
 #
-winfnt.o: $(CORE)winfonts/winfnt.c
+bdf.o: $(CORE)bdf/bdf.c
 	sc $(SCFLAGS) objname=$@ $<
 
 #
 # freetype library PCF bitmap font driver
 #
 pcf.o: $(CORE)pcf/pcf.c
+	sc $(SCFLAGS) objname=$@ $<
+
+#
+# freetype library PFR font driver
+#
+pfr.o: $(CORE)pfr/pfr.c
+	sc $(SCFLAGS) objname=$@ $<
+
+#
+# freetype library Windows FNT/FON bitmap font driver
+#
+winfnt.o: $(CORE)winfonts/winfnt.c
 	sc $(SCFLAGS) objname=$@ $<

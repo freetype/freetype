@@ -9,5 +9,6 @@ Note that the use of `psnames' can be controlled in ftconfig.h
   cid          psaux, pshinter, psnames
   truetype     sfnt
   type1        psaux, pshinter, psnames
+  type42       truetype
   psaux        psnames
   sfnt         psnames

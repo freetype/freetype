@@ -45,25 +45,29 @@ FT_BEGIN_HEADER
 
  /**********************************************************************
   *
-  * @function: FT_Get_BDF_Charset_ID
+  * @function:
+  *    FT_Get_BDF_Charset_ID
   *
   * @description:
-  *    retrieves a BDF font character set identity, according to
-  *    the BDF specification
+  *    Retrieves a BDF font character set identity, according to
+  *    the BDF specification.
   *
   * @input:
-  *    face  :: handle to input face
+  *    face ::
+  *       handle to input face
   *
   * @output:
-  *    acharset_encoding :: charset encoding, as a C string owned by the face
-  *    acharset_registry :: charset register, as a C string owned by the face
+  *    acharset_encoding ::
+  *       Charset encoding, as a C string, owned by the face.
+  *
+  *    acharset_registry ::
+  *       Charset registry, as a C string, owned by the face.
   *
   * @return:
-  *   error code. 0 means success
+  *   FreeType rror code.  0 means success.
   *
   * @note:
-  *   this function will only work with BDF faces, it will return an
-  *   error otherwise.
+  *   This function only works with BDF faces, returning an error otherwise.
   */
   FT_EXPORT( FT_Error )
   FT_Get_BDF_Charset_ID( FT_Face       face,

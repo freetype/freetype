@@ -11,15 +11,18 @@
 # Your programs source code should start with this
 # (uncomment the parts you do not need to keep the program small):
 # ---8<---
-#define FT_USE_AUTOHINT	// autohinter
-#define FT_USE_RASTER	// monochrome rasterizer
-#define FT_USE_SMOOTH	// anti-aliasing rasterizer
-#define FT_USE_TT	// truetype font driver
-#define FT_USE_T1	// type1 font driver
-#define FT_USE_T1CID	// cid-keyed type1 font driver
-#define FT_USE_CFF	// opentype font driver
-#define FT_USE_PCF	// pcf bitmap font driver
-#define FT_USE_WINFNT	// windows .fnt|.fon bitmap font driver
+#define FT_USE_AUTOHINT // autohinter
+#define FT_USE_RASTER   // monochrome rasterizer
+#define FT_USE_SMOOTH   // anti-aliasing rasterizer
+#define FT_USE_TT       // truetype font driver
+#define FT_USE_T1       // type1 font driver
+#define FT_USE_T42      // type42 font driver
+#define FT_USE_T1CID    // cid-keyed type1 font driver
+#define FT_USE_CFF      // opentype font driver
+#define FT_USE_BDF      // bdf bitmap font driver
+#define FT_USE_PCF      // pcf bitmap font driver
+#define FT_USE_PFR      // pfr font driver
+#define FT_USE_WINFNT   // windows .fnt|.fon bitmap font driver
 #include "FT:src/base/ftinit.c"
 # ---8<---
 #
@@ -151,21 +154,39 @@ type1.ppc.o: $(FTSRC)/type1/type1.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 #
+# FreeType2 library Type42 font driver
+#
+type42.ppc.o: $(FTSRC)/type42/t42drivr.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+#
 # FreeType2 library CID-keyed Type1 font driver
 #
 type1cid.ppc.o: $(FTSRC)/cid/type1cid.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 #
-# FreeType2 library Windows FNT/FON bitmap font driver
+# FreeType2 library BDF bitmap font driver
 #
-winfnt.ppc.o: $(FTSRC)/winfonts/winfnt.c
+bdf.ppc.o: $(FTSRC)/bdf/bdf.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 #
 # FreeType2 library PCF bitmap font driver
 #
 pcf.ppc.o: $(FTSRC)/pcf/pcf.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+#
+# FreeType2 library PFR font driver
+#
+pfr.ppc.o: $(FTSRC)/pfr/pfr.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+#
+# FreeType2 library Windows FNT/FON bitmap font driver
+#
+winfnt.ppc.o: $(FTSRC)/winfonts/winfnt.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 BASEPPC = ftbase.ppc.o ftglyph.ppc.o ftbbox.ppc.o ftmm.ppc.o ftsynth.ppc.o
@@ -178,7 +199,8 @@ PSPPC = psaux.ppc.o psnames.ppc.o pshinter.ppc.o
 
 RASTERPPC = raster.ppc.o smooth.ppc.o
 
-FONTDPPC = cff.ppc.o type1.ppc.o type1cid.ppc.o truetype.ppc.o winfnt.ppc.o pcf.ppc.o
+FONTDPPC = cff.ppc.o type1.ppc.o type42.ppc.o type1cid.ppc.o truetype.ppc.o\
+	   bdf.ppc.o pcf.ppc.o pfr.ppc.o winfnt.ppc.o
 
 libft2_ppc.a:    $(BASEPPC) $(AHINTPPC) $(PSPPC) $(RASTERPPC) sfnt.ppc.o ftcache.ppc.o $(FONTDPPC)
 	$(AR) $@ $(BASEPPC) $(AHINTPPC) $(PSPPC) $(RASTERPPC) sfnt.ppc.o ftcache.ppc.o $(FONTDPPC)
