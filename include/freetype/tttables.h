@@ -563,11 +563,8 @@
   /*    The table is owned by the face object and disappears with it.      */
   /*                                                                       */
   /*    This function is only useful to access SFNT tables that are loaded */
-  /*    by the sfnt/truetype/opentype drivers.  See FT_Sfnt_tag for a      */
+  /*    by the sfnt/truetype/opentype drivers.  See FT_Sfnt_Tag for a      */
   /*    list.                                                              */
-  /*                                                                       */
-  /*    You can load any table using the (internal) SFNT_Interface         */
-  /*    structure -- this is available via FT_Get_Module_Interface().      */
   /*                                                                       */
   FT_EXPORT( void* )  FT_Get_Sfnt_Table( FT_Face      face,
                                          FT_Sfnt_Tag  tag );
