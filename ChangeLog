@@ -1,3 +1,13 @@
+2004-05-15  George Williams  <gww@silcom.com>
+
+	* src/sfnt/ttload.c (tt_face_load_max_profile): Always set
+	face->root.num_glyphs.
+
+2004-05-14  Masatake YAMATO  <jet@gyve.org>
+	    George Williams  <gww@silcom.com>
+
+	* src/sfnt/ttload.c (sfnt_dir_check): Handle `bhed' properly.
+
 2004-05-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/cache/ftcbasic.c (ftc_basic_family_compare,
