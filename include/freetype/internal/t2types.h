@@ -17,16 +17,16 @@
 /***************************************************************************/
 
 
-#ifndef T2TYPES_H
-#define T2TYPES_H
+#ifndef __T2TYPES_H__
+#define __T2TYPES_H__
 
-
-#include <freetype/freetype.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_FREETYPE_H
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -38,7 +38,7 @@
   /*    A structure used to model a CFF Index table.                       */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    stream      :: XXX                                                 */
+  /*    stream      :: source input stream                                 */
   /*                                                                       */
   /*    count       :: The number of elements in the index.                */
   /*                                                                       */
@@ -47,7 +47,7 @@
   /*    data_offset :: The position of first data byte in the index's      */
   /*                   bytes.                                              */
   /*                                                                       */
-  /*    offsets     :: XXX                                                 */
+  /*    offsets     :: table of element offsets in the index               */
   /*                                                                       */
   /*    bytes       :: If the index is loaded in memory, its bytes.        */
   /*                                                                       */
@@ -79,6 +79,7 @@
     FT_Int     paint_type;
     FT_Int     charstring_type;
     FT_Matrix  font_matrix;
+    FT_Vector  font_offset;
     FT_ULong   unique_id;
     FT_BBox    font_bbox;
     FT_Pos     stroke_width;
@@ -217,12 +218,9 @@
   } CFF_Font;
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* T2TYPES_H */
+#endif /* __T2TYPES_H__ */
 
 
 /* END */

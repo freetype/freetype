@@ -55,15 +55,16 @@
   /*************************************************************************/
 
 
-#ifndef FTLRU_H
-#define FTLRU_H
+#ifndef __FTLRU_H__
+#define __FTLRU_H__
 
-#include <freetype/freetype.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_FREETYPE_H
+
+FT_BEGIN_HEADER
 
 
   /* generic key type */
@@ -138,40 +139,48 @@
   } FT_LruRec;
 
 
-  FT_EXPORT( FT_Error )  FT_Lru_New( const FT_Lru_Class*  clazz,
-                                     FT_UInt              max_elements,
-                                     FT_Pointer           user_data,
-                                     FT_Memory            memory,
-                                     FT_Bool              pre_alloc,
-                                     FT_Lru              *anlru );
-
-  FT_EXPORT( void )      FT_Lru_Reset( FT_Lru  lru );
-
-  FT_EXPORT( void )      FT_Lru_Done ( FT_Lru  lru );
+  FT_EXPORT( FT_Error )
+  FT_Lru_New( const FT_Lru_Class*  clazz,
+              FT_UInt              max_elements,
+              FT_Pointer           user_data,
+              FT_Memory            memory,
+              FT_Bool              pre_alloc,
+              FT_Lru              *anlru );
 
 
-  FT_EXPORT( FT_Error )  FT_Lru_Lookup_Node( FT_Lru        lru,
-                                             FT_LruKey     key,
-                                             FT_LruNode   *anode );
-
-  FT_EXPORT( FT_Error )  FT_Lru_Lookup( FT_Lru       lru,
-                                        FT_LruKey    key,
-                                        FT_Pointer  *anobject );
+  FT_EXPORT( void )
+  FT_Lru_Reset( FT_Lru  lru );
 
 
-  FT_EXPORT( void )      FT_Lru_Remove_Node( FT_Lru      lru,
-                                             FT_LruNode  node );
-
-  FT_EXPORT( void )      FT_Lru_Remove_Selection( FT_Lru           lru,
-                                                  FT_Lru_Selector  selector,
-                                                  FT_Pointer       data );
-
-#ifdef __cplusplus
-  }
-#endif
+  FT_EXPORT( void )
+  FT_Lru_Done ( FT_Lru  lru );
 
 
-#endif /* FTLRU_H */
+  FT_EXPORT( FT_Error )
+  FT_Lru_Lookup_Node( FT_Lru        lru,
+                      FT_LruKey     key,
+                      FT_LruNode   *anode );
+
+
+  FT_EXPORT( FT_Error )
+  FT_Lru_Lookup( FT_Lru       lru,
+                 FT_LruKey    key,
+                 FT_Pointer  *anobject );
+
+
+  FT_EXPORT( void )
+  FT_Lru_Remove_Node( FT_Lru      lru,
+                      FT_LruNode  node );
+		      
+
+  FT_EXPORT( void )
+  FT_Lru_Remove_Selection( FT_Lru           lru,
+                           FT_Lru_Selector  selector,
+                           FT_Pointer       data );
+
+FT_END_HEADER
+
+#endif /* __FTLRU_H__ */
 
 
 /* END */

@@ -17,17 +17,17 @@
 /***************************************************************************/
 
 
-#ifndef T1TYPES_H
-#define T1TYPES_H
+#ifndef __T1TYPES_H__
+#define __T1TYPES_H__
 
-
-#include <freetype/t1tables.h>
-#include <freetype/internal/psnames.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_TYPE1_TABLES_H
+#include   FT_INTERNAL_POSTSCRIPT_NAMES_H
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -189,12 +189,9 @@
   } CID_FaceRec;
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* T1TYPES_H */
+#endif /* __T1TYPES_H__ */
 
 
 /* END */

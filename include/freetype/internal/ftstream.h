@@ -16,16 +16,16 @@
 /***************************************************************************/
 
 
-#ifndef FTSTREAM_H
-#define FTSTREAM_H
+#ifndef __FTSTREAM_H__
+#define __FTSTREAM_H__
 
-#include <freetype/internal/ftobjs.h>
-#include <stddef.h>                     /* for offsetof() macro */
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_INTERNAL_OBJECTS_H
+
+FT_BEGIN_HEADER
 
 
   /* format of an 8-bit frame_op value = [ xxxxx | e | s ] */
@@ -358,12 +358,9 @@
         ( ( error = FT_Read_Fields( stream, fields, object ) ) != FT_Err_Ok )
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTSTREAM_H */
+#endif /* __FTSTREAM_H__ */
 
 
 /* END */

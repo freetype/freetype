@@ -16,18 +16,19 @@
 /***************************************************************************/
 
 
-#ifndef FTTYPES_H
-#define FTTYPES_H
+#ifndef __FTTYPES_H__
+#define __FTTYPES_H__
 
-
-#include <freetype/ftsystem.h>
-#include <freetype/ftimage.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
 
+#include   FT_BUILD_H
+#include   FT_SYSTEM_H
+#include   FT_IMAGE_H
+#include   <stddef.h>
+
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -395,16 +396,13 @@
 
   } FT_ListRec;
 
+  /* */
 
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
 
+FT_END_HEADER
 
-#ifdef __cplusplus
-  }
-#endif
-
-
-#endif /* FTTYPES_H */
+#endif /* __FTTYPES_H__ */
 
 
 /* END */

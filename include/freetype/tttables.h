@@ -17,17 +17,17 @@
 /***************************************************************************/
 
 
-#ifndef TTTABLES_H
-#define TTTABLES_H
+#ifndef __TTTABLES_H__
+#define __TTTABLES_H__
 
-
-#include <freetype/freetype.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
 
+#include FT_BUILD_H
+#include FT_FREETYPE_H
+
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -570,12 +570,9 @@
                                          FT_Sfnt_Tag  tag );
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* TTTABLES_H */
+#endif /* __TTTABLES_H__ */
 
 
 /* END */

@@ -23,19 +23,20 @@
   /*************************************************************************/
 
 
-#ifndef FTOBJS_H
-#define FTOBJS_H
+#ifndef __FTOBJS_H__
+#define __FTOBJS_H__
 
-#include <freetype/internal/ftmemory.h>
-#include <freetype/ftrender.h>
-#include <freetype/internal/ftdriver.h>
-#include <freetype/internal/autohint.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
 
+#include FT_BUILD_H
+#include FT_RENDER_H
+#include FT_INTERNAL_MEMORY_H
+#include FT_INTERNAL_DRIVER_H
+#include FT_INTERNAL_AUTOHINT_H
+
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -739,12 +740,9 @@
 #endif
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTOBJS_H */
+#endif /* __FTOBJS_H__ */
 
 
 /* END */

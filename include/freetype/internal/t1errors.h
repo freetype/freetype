@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef T1ERRORS_H
-#define T1ERRORS_H
+#ifndef __T1ERRORS_H__
+#define __T1ERRORS_H__
 
 
 #ifdef __cplusplus
@@ -71,7 +71,7 @@
 #endif
 
 
-#endif /* T1ERRORS_H */
+#endif /* __T1ERRORS_H__ */
 
 
 /* END */

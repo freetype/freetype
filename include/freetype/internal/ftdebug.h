@@ -16,16 +16,16 @@
 /***************************************************************************/
 
 
-#ifndef FTDEBUG_H
-#define FTDEBUG_H
+#ifndef __FTDEBUG_H__
+#define __FTDEBUG_H__
 
-#include <freetype/config/ftconfig.h>   /* for FT_DEBUG_LEVEL_TRACE, */
-                                        /* FT_DEBUG_LEVEL_ERROR      */
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_CONFIG_CONFIG_H
 
+FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
@@ -218,12 +218,9 @@
 #define FT_TRACE7( varformat )  FT_TRACE( 7, varformat )
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTDEBUG_H */
+#endif /* __FTDEBUG_H__ */
 
 
 /* END */

@@ -50,17 +50,18 @@
   /*************************************************************************/
 
 
-#ifndef FTCGLYPH_H
-#define FTCGLYPH_H
+#ifndef __FTCGLYPH_H__
+#define __FTCGLYPH_H__
 
-
-#include <freetype/cache/ftcmanag.h>
-#include <stddef.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_CACHE_H
+#include   FT_CACHE_MANAGER_H
+#include   <stddef.h>
+
+FT_BEGIN_HEADER
 
 
   /* maximum number of glyph sets per glyph cache; must be < 256 */
@@ -200,13 +201,9 @@
                                                  FT_UInt          gindex,
                                                  FTC_GlyphNode   *anode );
 
+FT_END_HEADER
 
-#ifdef __cplusplus
-  }
-#endif
-
-
-#endif /* FTCGLYPH_H */
+#endif /* __FTCGLYPH_H__ */
 
 
 /* END */

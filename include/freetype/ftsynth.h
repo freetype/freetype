@@ -34,16 +34,16 @@
   /*************************************************************************/
 
 
-#ifndef FTSYNTH_H
-#define FTSYNTH_H
+#ifndef __FTSYNTH_H__
+#define __FTSYNTH_H__
 
-#include <freetype/freetype.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_FREETYPE_H
 
+FT_BEGIN_HEADER
 
   /* This code is completely experimental -- use with care! */
   /* It will probably be completely rewritten in the future */
@@ -56,13 +56,10 @@
                                              FT_Outline*   outline,
                                              FT_Pos*       advance );
 
-
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 
-#endif /* FTSYNTH_H */
+#endif /* __FTSYNTH_H__ */
 
 
 /* END */

@@ -16,15 +16,16 @@
 /***************************************************************************/
 
 
-#ifndef FTMM_H
-#define FTMM_H
+#ifndef __FTMM_H__
+#define __FTMM_H__
 
-#include <freetype/t1tables.h>
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_TYPE1_TABLES_H
 
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -167,11 +168,9 @@
                            FT_Fixed*  coords );
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-#endif /* FTMM_H */
+#endif /* __FTMM_H__ */
 
 
 /* END */

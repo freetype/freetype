@@ -31,16 +31,24 @@
   /*************************************************************************/
 
 
-#ifndef FTCACHE_H
-#define FTCACHE_H
+#ifndef __FTCACHE_H__
+#define __FTCACHE_H__
 
-
-#include <freetype/ftglyph.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_GLYPH_H
+
+FT_BEGIN_HEADER
+
+#define  FT_CACHE_MANAGER_H               FT_PUBLIC_FILE(cache/ftcmanag.h)
+#define  FT_CACHE_IMAGE_H                 FT_PUBLIC_FILE(cache/ftcimage.h)
+#define  FT_CACHE_SMALL_BITMAPS_H         FT_PUBLIC_FILE(cache/ftcsbits.h)
+
+#define  FT_CACHE_INTERNAL_LRU_H          FT_PUBLIC_FILE(cache/ftlru.h)
+#define  FT_CACHE_INTERNAL_GLYPH_H        FT_PUBLIC_FILE(cache/ftcglyph.h)
+#define  FT_CACHE_INTERNAL_CHUNK_H        FT_PUBLIC_FILE(cache/ftcchunk.h)
 
 
   /*************************************************************************/
@@ -324,12 +332,9 @@
                            FTC_Cache        *acache );
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTCACHE_H */
+#endif /* __FTCACHE_H__ */
 
 
 /* END */
