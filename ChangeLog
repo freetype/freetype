@@ -1,5 +1,8 @@
 2003-08-18  David Turner  <david@freetype.org>
 
+        * include/freetype/config/ftoption.h: disabling TrueType bytecode
+        interpreter, until the UNPATENTED_HINTING works as advertised
+
         * src/autohint/ahhint.c (ah_hinter_load_glyph): fixed bug
 
         * Jamfile: adding the "refdoc" target to the Jamfile in order to
