@@ -1,5 +1,8 @@
 2001-12-19  David Turner  <david@freetype.org>
 
+        * src/sfnt/sfobjs.c (SFNT_Load_Face): make the "post" and "name"
+        tables optional to load PCL fonts properly
+
         * src/raster/ftrend1.c (ft_raster1_render): fixed a nasty outline
         shifting bug in the monochrome renderer.
 

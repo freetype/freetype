@@ -298,10 +298,12 @@
 
     /* load other tables */
     if ( LOAD_( max_profile ) ||
-         LOAD_( charmaps )    ||
-         LOAD_( names )       ||
-         LOAD_( psnames )     )
+         LOAD_( charmaps )    )
       goto Exit;
+      
+    /* the following tables are optional in PCL fonts, don't check for errors */
+    (void) LOAD_( names );
+    (void) LOAD_( psnames );
 
     /* do not load the metrics headers and tables if this is an Apple */
     /* sbit font file                                                 */
