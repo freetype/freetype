@@ -6,5 +6,3 @@
 #include "aflatin.c"
 #include "afloader.c"
 #include "afmodule.c"
-
-

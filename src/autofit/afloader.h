@@ -47,4 +47,3 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __AF_LOADER_H__ */
-
