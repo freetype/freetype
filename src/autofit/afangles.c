@@ -9,6 +9,7 @@
     90, 64, 38, 20, 10, 5, 3, 1, 1 
   };
 
+
   static FT_Int
   af_angle_prenorm( FT_Vector*  vec )
   {
@@ -162,3 +163,29 @@
     return delta;
   }                 
 
+ 
+ /* well, this needs to be somewhere, right :-)
+  */
+
+  FT_LOCAL_DEF( void )
+  af_sort_pos( FT_UInt   count,
+               FT_Pos*   table )
+  {
+    FT_Int  i, j;
+    FT_Pos  swap;
+
+
+    for ( i = 1; i < count; i++ )
+    {
+      for ( j = i; j > 0; j-- )
+      {
+        if ( table[j] > table[j - 1] )
+          break;
+
+        swap         = table[j];
+        table[j]     = table[j - 1];
+        table[j - 1] = swap;
+      }
+    }
+  }               
+ 

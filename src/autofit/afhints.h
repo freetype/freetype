@@ -6,8 +6,8 @@
 FT_BEGIN_HEADER
 
  /*
-  *  The definition of outline hints. These are shared by all
-  *  script analysis routines
+  *  The definition of outline glyph hints. These are shared by all
+  *  script analysis routines (until now)
   *
   */
 
@@ -17,7 +17,7 @@ FT_BEGIN_HEADER
     AF_DIMENSION_VERT = 1,  /* y coordinates, i.e. horizontal segments & edges */
 
     AF_DIMENSION_MAX  /* do not remove */
-  
+
   } AF_Dimension;
 
 
@@ -30,7 +30,7 @@ FT_BEGIN_HEADER
     AF_DIR_LEFT  = -1,
     AF_DIR_UP    =  2,
     AF_DIR_DOWN  = -2
-    
+
   } AF_Direction;
 
 
@@ -38,32 +38,32 @@ FT_BEGIN_HEADER
   typedef enum
   {
     AF_FLAG_NONE    = 0,
-    
+
    /* point type flags */
     AF_FLAG_CONIC   = (1 << 0),
     AF_FLAG_CUBIC   = (1 << 1),
     AF_FLAG_CONTROL = AF_FLAG_CONIC | AF_FLAG_CUBIC,
-    
+
    /* point extremum flags */
     AF_FLAG_EXTREMA_X = (1 << 2),
     AF_FLAG_EXTREMA_Y = (1 << 3),
-    
+
    /* point roundness flags */
     AF_FLAG_ROUND_X = (1 << 4),
     AF_FLAG_ROUND_Y = (1 << 5),
-    
+
    /* point touch flags */
     AF_FLAG_TOUCH_X = (1 << 6),
     AF_FLAG_TOUCH_Y = (1 << 7),
-    
+
    /* candidates for weak interpolation have this flag set */
     AF_FLAG_WEAK_INTERPOLATION = (1 << 8),
-    
+
    /* all inflection points in the outline have this flag set */
     AF_FLAG_INFLECTION         = (1 << 9)
-  
+
   } AF_Flags;
-  
+
 
   /* edge hint flags */
   typedef enum
@@ -72,7 +72,7 @@ FT_BEGIN_HEADER
     AF_EDGE_ROUND  = (1 << 0),
     AF_EDGE_SERIF  = (1 << 1),
     AF_EDGE_DONE   = (1 << 2)
-  
+
   } AF_Edge_Flags;
 
 
@@ -110,10 +110,10 @@ FT_BEGIN_HEADER
     AF_Edge        edge;        /* the segment's parent edge */
     AF_Segment     edge_next;   /* link to next segment in parent edge */
 
-    AF_Segment     link;        /* link segment               */
+    AF_Segment     link;        /* (stem) link segment        */
     AF_Segment     serif;       /* primary segment for serifs */
     FT_Pos         num_linked;  /* number of linked segments  */
-    FT_Pos         score;
+    FT_Pos         score;       /* used during stem matching  */
 
     AF_Point       first;       /* first point in edge segment             */
     AF_Point       last;        /* last point in edge segment              */
@@ -131,7 +131,7 @@ FT_BEGIN_HEADER
     AF_Edge_Flags  flags;      /* edge flags */
     AF_Direction   dir;        /* edge direction */
     FT_Fixed       scale;      /* used to speed up interpolation between edges */
-    FT_Pos*        blue_edge;  /* non-NULL if this is a blue edge              */
+    AF_Width       blue_edge;  /* non-NULL if this is a blue edge              */
 
     AF_Edge        link;
     AF_Edge        serif;
@@ -142,7 +142,6 @@ FT_BEGIN_HEADER
     AF_Segment     first;
     AF_Segment     last;
 
-
   } AF_EdgeRec;
 
 
@@ -150,7 +149,7 @@ FT_BEGIN_HEADER
   {
     FT_Int        num_segments;
     AF_Segment    segments;
-  
+
     FT_Int        num_edges;
     AF_Edge       edges;
 
@@ -158,8 +157,8 @@ FT_BEGIN_HEADER
 
   } AF_AxisHintsRec, *AF_AxisHints;
 
-  
-  typedef struct AF_OutlineHintsRec_
+
+  typedef struct AF_GlyphHintsRec_
   {
     FT_Memory     memory;
 
@@ -177,7 +176,7 @@ FT_BEGIN_HEADER
 
     AF_AxisHintsRec  axis[ AF_DIMENSION_MAX ];
 
-  } AF_OutlineHintsRec;
+  } AF_GlyphHintsRec;
 
 
 
@@ -188,43 +187,36 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( void )
-  af_outline_hints_init( AF_OutlineHints  hints );
+  af_glyph_hints_init( AF_GlyphHints  hints,
+                       FT_Memory      memory );
 
 
- /*  used to set the (u,v) fields of each AF_Point in a AF_OutlineHints
-  *  object.
-  */
-  typedef enum  AH_UV_
-  {
-    AH_UV_FXY,  /* (u,v) = (fx,fy) */
-    AH_UV_FYX,  /* (u,v) = (fy,fx) */
-    AH_UV_OXY,  /* (u,v) = (ox,oy) */
-    AH_UV_OYX,  /* (u,v) = (oy,ox) */
-    AH_UV_OX,   /* (u,v) = (ox,x)  */
-    AH_UV_OY,   /* (u,v) = (oy,y)  */
-    AH_UV_YX,   /* (u,v) = (y,x)   */
-    AH_UV_XY    /* (u,v) = (x,y)   *   should always be last! */
 
-  } AH_UV;
-
-  FT_LOCAL_DEF( void )
-  af_outline_hints_setup_uv( AF_OutlineHints  hints,
-                             AF_UV            source );
-
-
- /*  recomputes all AF_Point in a AF_OutlineHints from the definitions
+ /*  recomputes all AF_Point in a AF_GlyphHints from the definitions
   *  in a source outline
   */
   FT_LOCAL( FT_Error )
-  af_outline_hints_reset( AF_OutlineHints  hints,
-                          FT_Outline*      outline,
-                          FT_Fixed         x_scale,
-                          FT_Fixed         y_scale );
+  af_glyph_hints_reset( AF_GlyphHints  hints,
+                        FT_Outline*    outline,
+                        FT_Fixed       x_scale,
+                        FT_Fixed       y_scale,
+                        FT_Pos         x_delta,
+                        FT_Pos         y_delta );
 
   FT_LOCAL( void )
-  af_outline_hints_done( AF_OutlineHints  hints );
+  af_glyph_hints_align_edge_points( AF_GlyphHints  hints,
+                                    AF_Dimension   dim );
 
+  FT_LOCAL( void )
+  af_glyph_hints_align_strong_points( AF_GlyphHints  hints,
+                                      AF_Dimension   dim );
 
+  FT_LOCAL( void )
+  af_glyph_hints_align_weak_points( AF_GlyphHints  hints,
+                                    AF_Dimension   dim );
+
+  FT_LOCAL( void )
+  af_glyph_hints_done( AF_GlyphHints  hints );
 
 /* */
 

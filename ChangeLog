@@ -1,3 +1,7 @@
+2003-11-22  David Turner    <david@freetype.org>
+
+        * src/autofit/*: more updates
+
 2003-11-13  John A. Boyd Jr.  <jaboydjr@netwalk.com>
 
 	* src/bdf/bdfdrivr.c (bdf_interpret_style), src/pcf/pcfread.c
