@@ -63,26 +63,6 @@
   }
 
 
-  static FT_Bool
-  ftc_basic_gnode_compare_faceid( FTC_GNode   gnode,
-                                  FTC_FaceID  face_id,
-                                  FTC_Cache   cache )
-  {
-    FTC_BasicFamily  family = (FTC_BasicFamily) gnode->family;
-    FT_Bool          result;
-
-    result = FT_BOOL( family->attrs.scaler.face_id == face_id );
-    if ( result )
-    {
-     /* we must call this function to avoid this node from appearing
-      * in later lookups with the same face_id !!
-      */
-      FTC_GNode_UnselectFamily( gnode, cache );
-    }
-    return result;
-  }
-
-
   static FT_UInt
   ftc_basic_family_get_count( FTC_BasicFamily  family,
                               FTC_Manager      manager )
@@ -91,7 +71,7 @@
     FT_Face   face;
     FT_UInt   result = 0;
 
-    error = FTC_Manager_LookupFace( manager, &family->attrs.scaler.face_id,
+    error = FTC_Manager_LookupFace( manager, family->attrs.scaler.face_id,
                                     &face );
     if ( !error )
       result = face->num_glyphs;
@@ -166,6 +146,27 @@
   Exit:
     return error;
   }
+
+
+  static FT_Bool
+  ftc_basic_gnode_compare_faceid( FTC_GNode   gnode,
+                                  FTC_FaceID  face_id,
+                                  FTC_Cache   cache )
+  {
+    FTC_BasicFamily  family = (FTC_BasicFamily) gnode->family;
+    FT_Bool          result;
+
+    result = FT_BOOL( family->attrs.scaler.face_id == face_id );
+    if ( result )
+    {
+     /* we must call this function to avoid this node from appearing
+      * in later lookups with the same face_id !!
+      */
+      FTC_GNode_UnselectFamily( gnode, cache );
+    }
+    return result;
+  }
+
 
 
  /*
@@ -246,7 +247,7 @@
     query.attrs.scaler.pixel   = 1;
     query.attrs.load_flags     = type->flags;
 
-    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) ^ (gindex << 8);
+    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
 
     error = FTC_GCache_Lookup( FTC_GCACHE( cache ),
                                hash, gindex,
@@ -347,7 +348,7 @@
 
    /* beware, the hash must be the same for all glyph ranges !!
     */
-    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) ^
+    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
            (gindex/FTC_SBIT_ITEMS_PER_NODE);
 
     error = FTC_GCache_Lookup( FTC_GCACHE( cache ),

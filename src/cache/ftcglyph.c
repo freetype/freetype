@@ -26,7 +26,6 @@
 #include "ftcerror.h"
 
 
-
   /* create a new chunk node, setting its cache index and ref count */
   FT_EXPORT_DEF( void )
   FTC_GNode_Init( FTC_GNode   gnode,
@@ -35,7 +34,6 @@
   {
     gnode->family = family;
     gnode->gindex = gindex;
-
     family->num_nodes++;
   }
 
@@ -48,7 +46,9 @@
 
     gnode->family = NULL;
     if ( family && --family->num_nodes <= 0 )
+    {
       FTC_MruList_Remove( & FTC_GCACHE(cache)->families, (FTC_MruNode)family );
+  }
   }
 
 
@@ -138,26 +138,14 @@
                      FTC_Node    *anode )
   {
     FT_Error    error;
-    FTC_Family  family;
 
     query->gindex = gindex;
 
-    family = (FTC_Family) FTC_MruList_Lookup( &cache->families, query );
-    if ( family == NULL )
-    {
-      error = FTC_MruList_New( &cache->families, query, (FTC_MruNode*) &family );
-      if ( error )
-      {
-        *anode = NULL;
-        goto Exit;
-      }
-    }
-
-    query->family = family;
-
+    error = FTC_MruList_Lookup( &cache->families, query,
+                                (FTC_MruNode*) &query->family );
+    if ( !error )
     error = FTC_Cache_Lookup( FTC_CACHE(cache), hash, query, anode );
 
-  Exit:
     return error;
   }
 
