@@ -107,14 +107,14 @@ FT_BEGIN_HEADER
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
-  FT_LOCAL
-  void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
+  FT_LOCAL void
+  TT_Done_GlyphZone( TT_GlyphZone*  zone );
 
-  FT_LOCAL
-  FT_Error  TT_New_GlyphZone( FT_Memory      memory,
-                              FT_UShort      maxPoints,
-                              FT_Short       maxContours,
-                              TT_GlyphZone*  zone );
+  FT_LOCAL FT_Error
+  TT_New_GlyphZone( FT_Memory      memory,
+                    FT_UShort      maxPoints,
+                    FT_Short       maxContours,
+                    TT_GlyphZone*  zone );
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
@@ -378,40 +378,40 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* Face functions                                                        */
   /*                                                                       */
-  FT_LOCAL
-  FT_Error  TT_Init_Face( FT_Stream      stream,
-                          TT_Face        face,
-                          FT_Int         face_index,
-                          FT_Int         num_params,
-                          FT_Parameter*  params );
+  FT_LOCAL FT_Error
+  TT_Init_Face( FT_Stream      stream,
+                TT_Face        face,
+                FT_Int         face_index,
+                FT_Int         num_params,
+                FT_Parameter*  params );
 
-  FT_LOCAL
-  void  TT_Done_Face( TT_Face  face );
+  FT_LOCAL void
+  TT_Done_Face( TT_Face  face );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* Size functions                                                        */
   /*                                                                       */
-  FT_LOCAL
-  FT_Error  TT_Init_Size( TT_Size  size );
+  FT_LOCAL FT_Error
+  TT_Init_Size( TT_Size  size );
 
-  FT_LOCAL
-  void  TT_Done_Size( TT_Size  size );
+  FT_LOCAL void
+  TT_Done_Size( TT_Size  size );
 
-  FT_LOCAL
-  FT_Error  TT_Reset_Size( TT_Size  size );
+  FT_LOCAL FT_Error
+  TT_Reset_Size( TT_Size  size );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* Driver functions                                                      */
   /*                                                                       */
-  FT_LOCAL
-  FT_Error  TT_Init_Driver( TT_Driver  driver );
+  FT_LOCAL FT_Error
+  TT_Init_Driver( TT_Driver  driver );
 
-  FT_LOCAL
-  void  TT_Done_Driver( TT_Driver  driver );
+  FT_LOCAL void
+  TT_Done_Driver( TT_Driver  driver );
 
 
 FT_END_HEADER

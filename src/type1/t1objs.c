@@ -63,8 +63,8 @@
   /* <Input>                                                               */
   /*    face :: A typeless pointer to the face object to destroy.          */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  T1_Done_Face( T1_Face  face )
+  FT_LOCAL_DEF void
+  T1_Done_Face( T1_Face  face )
   {
     FT_Memory  memory;
     T1_Font*   type1 = &face->type1;
@@ -147,12 +147,12 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  T1_Init_Face( FT_Stream      stream,
-                          T1_Face        face,
-                          FT_Int         face_index,
-                          FT_Int         num_params,
-                          FT_Parameter*  params )
+  FT_LOCAL_DEF FT_Error
+  T1_Init_Face( FT_Stream      stream,
+                T1_Face        face,
+                FT_Int         face_index,
+                FT_Int         num_params,
+                FT_Parameter*  params )
   {
     FT_Error            error;
     PSNames_Interface*  psnames;
@@ -386,8 +386,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  T1_Init_Driver( T1_Driver  driver )
+  FT_LOCAL_DEF FT_Error
+  T1_Init_Driver( T1_Driver  driver )
   {
     FT_UNUSED( driver );
 
@@ -406,8 +406,8 @@
   /* <Input>                                                               */
   /*    driver  :: A handle to the target Type 1 driver.                   */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  T1_Done_Driver( T1_Driver  driver )
+  FT_LOCAL_DEF void
+  T1_Done_Driver( T1_Driver  driver )
   {
     FT_UNUSED( driver );
   }

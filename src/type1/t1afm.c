@@ -35,9 +35,9 @@
 #define FT_COMPONENT  trace_t1afm
 
 
-  FT_LOCAL_DEF
-  void  T1_Done_AFM( FT_Memory  memory,
-                     T1_AFM*    afm )
+  FT_LOCAL_DEF void
+  T1_Done_AFM( FT_Memory  memory,
+               T1_AFM*    afm )
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
@@ -53,10 +53,10 @@
 
 
   /* read a glyph name and return the equivalent glyph index */
-  static
-  FT_UInt  afm_atoindex( FT_Byte**  start,
-                         FT_Byte*   limit,
-                         T1_Font*   type1 )
+  static FT_UInt
+  afm_atoindex( FT_Byte**  start,
+                FT_Byte*   limit,
+                T1_Font*   type1 )
   {
     FT_Byte*  p = *start;
     FT_Int    len;
@@ -104,9 +104,9 @@
 
 
   /* read an integer */
-  static
-  int  afm_atoi( FT_Byte**  start,
-                 FT_Byte*   limit )
+  static int
+  afm_atoi( FT_Byte**  start,
+            FT_Byte*   limit )
   {
     FT_Byte*  p    = *start;
     int       sum  = 0;
@@ -139,7 +139,7 @@
 
 
   /* compare two kerning pairs */
-  FT_CALLBACK_DEF(int)
+  FT_CALLBACK_DEF( int )
   compare_kern_pairs( const void*  a,
                       const void*  b )
   {
@@ -155,9 +155,9 @@
 
 
   /* parse an AFM file -- for now, only read the kerning pairs */
-  FT_LOCAL_DEF
-  FT_Error  T1_Read_AFM( FT_Face    t1_face,
-                         FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  T1_Read_AFM( FT_Face    t1_face,
+               FT_Stream  stream )
   {
     FT_Error       error;
     FT_Memory      memory = stream->memory;
@@ -241,11 +241,11 @@
 
 
   /* find the kerning for a given glyph pair */
-  FT_LOCAL_DEF
-  void  T1_Get_Kerning( T1_AFM*     afm,
-                        FT_UInt     glyph1,
-                        FT_UInt     glyph2,
-                        FT_Vector*  kerning )
+  FT_LOCAL_DEF void
+  T1_Get_Kerning( T1_AFM*     afm,
+                  FT_UInt     glyph1,
+                  FT_UInt     glyph2,
+                  FT_Vector*  kerning )
   {
     T1_Kern_Pair  *min, *mid, *max;
     FT_ULong      index = KERN_INDEX( glyph1, glyph2 );

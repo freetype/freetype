@@ -48,13 +48,15 @@ FT_BEGIN_HEADER
   /* This code is completely experimental -- use with care! */
   /* It will probably be completely rewritten in the future */
   /* or even integrated into the library.                   */
-  FT_EXPORT( FT_Error )  FT_Outline_Embolden( FT_GlyphSlot  original,
-                                              FT_Outline*   outline,
-                                              FT_Pos*       advance );
+  FT_EXPORT( FT_Error )
+  FT_Outline_Embolden( FT_GlyphSlot  original,
+                       FT_Outline*   outline,
+                       FT_Pos*       advance );
 
-  FT_EXPORT( FT_Error )  FT_Outline_Oblique( FT_GlyphSlot  original,
-                                             FT_Outline*   outline,
-                                             FT_Pos*       advance );
+  FT_EXPORT( FT_Error )
+  FT_Outline_Oblique( FT_GlyphSlot  original,
+                      FT_Outline*   outline,
+                      FT_Pos*       advance );
 
 
 FT_END_HEADER

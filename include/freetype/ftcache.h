@@ -110,10 +110,11 @@ FT_BEGIN_HEADER
   /*    face object, like creating a new FT_Size for it, or setting a      */
   /*    transformation through FT_Set_Transform()!                         */
   /*                                                                       */
-  typedef FT_Error  (*FTC_Face_Requester)( FTC_FaceID  face_id,
-                                           FT_Library  library,
-                                           FT_Pointer  request_data,
-                                           FT_Face*    aface );
+  typedef FT_Error
+  (*FTC_Face_Requester)( FTC_FaceID  face_id,
+                         FT_Library  library,
+                         FT_Pointer  request_data,
+                         FT_Face*    aface );
 
 
   /*************************************************************************/
@@ -209,13 +210,14 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FTC_Manager_New( FT_Library          library,
-                                          FT_UInt             max_faces,
-                                          FT_UInt             max_sizes,
-                                          FT_ULong            max_bytes,
-                                          FTC_Face_Requester  requester,
-                                          FT_Pointer          req_data,
-                                          FTC_Manager        *amanager );
+  FT_EXPORT( FT_Error )
+  FTC_Manager_New( FT_Library          library,
+                   FT_UInt             max_faces,
+                   FT_UInt             max_sizes,
+                   FT_ULong            max_bytes,
+                   FTC_Face_Requester  requester,
+                   FT_Pointer          req_data,
+                   FTC_Manager        *amanager );
 
 
   /*************************************************************************/
@@ -230,7 +232,8 @@ FT_BEGIN_HEADER
   /* <InOut>                                                               */
   /*    manager :: A handle to the manager.                                */
   /*                                                                       */
-  FT_EXPORT( void )  FTC_Manager_Reset( FTC_Manager  manager );
+  FT_EXPORT( void )
+  FTC_Manager_Reset( FTC_Manager  manager );
 
 
   /*************************************************************************/
@@ -244,7 +247,8 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    manager :: A handle to the target cache manager object.            */
   /*                                                                       */
-  FT_EXPORT( void )  FTC_Manager_Done( FTC_Manager  manager );
+  FT_EXPORT( void )
+  FTC_Manager_Done( FTC_Manager  manager );
 
 
   /*************************************************************************/
@@ -279,9 +283,10 @@ FT_BEGIN_HEADER
   /*    the FT_Set_Transform() function) on a returned face!  If you need  */
   /*    to transform glyphs, do it yourself after glyph loading.           */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Face( FTC_Manager  manager,
-                                                  FTC_FaceID   face_id,
-                                                  FT_Face     *aface );
+  FT_EXPORT( FT_Error )
+  FTC_Manager_Lookup_Face( FTC_Manager  manager,
+                           FTC_FaceID   face_id,
+                           FT_Face     *aface );
 
 
   /*************************************************************************/
@@ -323,10 +328,11 @@ FT_BEGIN_HEADER
   /*    The returned size object is the face's current size, which means   */
   /*    that you can call FT_Load_Glyph() with the face if you need to.    */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
-                                                  FTC_Font     font,
-                                                  FT_Face     *aface,
-                                                  FT_Size     *asize );
+  FT_EXPORT( FT_Error )
+  FTC_Manager_Lookup_Size( FTC_Manager  manager,
+                           FTC_Font     font,
+                           FT_Face     *aface,
+                           FT_Size     *asize );
 
 
   /* a cache class is used to describe a unique cache type to the manager */
@@ -335,10 +341,10 @@ FT_BEGIN_HEADER
 
 
   /* this must be used internally for the moment */
-  FT_EXPORT( FT_Error )  FTC_Manager_Register_Cache(
-                           FTC_Manager       manager,
-                           FTC_Cache_Class*  clazz,
-                           FTC_Cache        *acache );
+  FT_EXPORT( FT_Error )
+  FTC_Manager_Register_Cache( FTC_Manager       manager,
+                              FTC_Cache_Class*  clazz,
+                              FTC_Cache        *acache );
 
 
   /* */

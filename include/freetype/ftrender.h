@@ -37,24 +37,31 @@ FT_BEGIN_HEADER
 
 
   /* create a new glyph object */
-  typedef FT_Error  (*FT_Glyph_Init_Func)     ( FT_Glyph      glyph,
-                                                FT_GlyphSlot  slot );
+  typedef FT_Error
+  (*FT_Glyph_Init_Func)( FT_Glyph      glyph,
+                         FT_GlyphSlot  slot );
 
   /* destroys a given glyph object */
-  typedef void      (*FT_Glyph_Done_Func)     ( FT_Glyph  glyph );
+  typedef void
+  (*FT_Glyph_Done_Func)( FT_Glyph  glyph );
 
-  typedef void      (*FT_Glyph_Transform_Func)( FT_Glyph    glyph,
-                                                FT_Matrix*  matrix,
-                                                FT_Vector*  delta );
+  typedef void
+  (*FT_Glyph_Transform_Func)( FT_Glyph    glyph,
+                              FT_Matrix*  matrix,
+                              FT_Vector*  delta );
 
-  typedef void      (*FT_Glyph_BBox_Func)     ( FT_Glyph  glyph,
-                                                FT_BBox*  abbox );
+  typedef void
+  (*FT_Glyph_BBox_Func)( FT_Glyph  glyph,
+                         FT_BBox*  abbox );
 
-  typedef FT_Error  (*FT_Glyph_Copy_Func)     ( FT_Glyph   source,
-                                                FT_Glyph   target );
+  typedef FT_Error
+  (*FT_Glyph_Copy_Func)( FT_Glyph   source,
+                         FT_Glyph   target );
 
-  typedef FT_Error  (*FT_Glyph_Prepare_Func)  ( FT_Glyph      glyph,
-                                                FT_GlyphSlot  slot );
+  typedef FT_Error
+  (*FT_Glyph_Prepare_Func)( FT_Glyph      glyph,
+                            FT_GlyphSlot  slot );
+
 
   struct  FT_Glyph_Class_
   {
@@ -69,23 +76,27 @@ FT_BEGIN_HEADER
   };
 
 
-  typedef FT_Error  (*FTRenderer_render)   ( FT_Renderer   renderer,
-                                             FT_GlyphSlot  slot,
-                                             FT_UInt       mode,
-                                             FT_Vector*    origin );
+  typedef FT_Error
+  (*FTRenderer_render)( FT_Renderer   renderer,
+                        FT_GlyphSlot  slot,
+                        FT_UInt       mode,
+                        FT_Vector*    origin );
 
-  typedef FT_Error  (*FTRenderer_transform)( FT_Renderer   renderer,
-                                             FT_GlyphSlot  slot,
-                                             FT_Matrix*    matrix,
-                                             FT_Vector*    delta );
+  typedef FT_Error
+  (*FTRenderer_transform)( FT_Renderer   renderer,
+                           FT_GlyphSlot  slot,
+                           FT_Matrix*    matrix,
+                           FT_Vector*    delta );
 
-  typedef void      (*FTRenderer_getCBox)  ( FT_Renderer   renderer,
-                                             FT_GlyphSlot  slot,
-                                             FT_BBox*      cbox );
+  typedef void
+  (*FTRenderer_getCBox)( FT_Renderer   renderer,
+                         FT_GlyphSlot  slot,
+                         FT_BBox*      cbox );
 
-  typedef FT_Error  (*FTRenderer_setMode)  ( FT_Renderer  renderer,
-                                             FT_ULong     mode_tag,
-                                             FT_Pointer   mode_ptr );
+  typedef FT_Error
+  (*FTRenderer_setMode)( FT_Renderer  renderer,
+                         FT_ULong     mode_tag,
+                         FT_Pointer   mode_ptr );
 
 
   /*************************************************************************/
@@ -152,8 +163,9 @@ FT_BEGIN_HEADER
   /*    To add a new renderer, simply use FT_Add_Module().  To retrieve a  */
   /*    renderer by its name, use FT_Get_Module().                         */
   /*                                                                       */
-  FT_EXPORT( FT_Renderer )  FT_Get_Renderer( FT_Library       library,
-                                             FT_Glyph_Format  format );
+  FT_EXPORT( FT_Renderer )
+  FT_Get_Renderer( FT_Library       library,
+                   FT_Glyph_Format  format );
 
 
   /*************************************************************************/
@@ -183,10 +195,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    This doesn't change the current renderer for other formats.        */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_Set_Renderer( FT_Library     library,
-                                          FT_Renderer    renderer,
-                                          FT_UInt        num_params,
-                                          FT_Parameter*  parameters );
+  FT_EXPORT( FT_Error )
+  FT_Set_Renderer( FT_Library     library,
+                   FT_Renderer    renderer,
+                   FT_UInt        num_params,
+                   FT_Parameter*  parameters );
 
 
   /* */

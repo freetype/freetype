@@ -95,10 +95,10 @@
   };
 
 
-  static
-  FT_Error  read_pfb_tag( FT_Stream   stream,
-                          FT_UShort*  tag,
-                          FT_Long*    size )
+  static FT_Error
+  read_pfb_tag( FT_Stream   stream,
+                FT_UShort*  tag,
+                FT_Long*    size )
   {
     FT_Error  error;
     PFB_Tag   head;
@@ -118,11 +118,11 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_New_Parser( T1_ParserRec*     parser,
-                           FT_Stream         stream,
-                           FT_Memory         memory,
-                           PSAux_Interface*  psaux )
+  FT_LOCAL_DEF FT_Error
+  T1_New_Parser( T1_ParserRec*     parser,
+                 FT_Stream         stream,
+                 FT_Memory         memory,
+                 PSAux_Interface*  psaux )
   {
     FT_Error   error;
     FT_UShort  tag;
@@ -227,8 +227,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  T1_Finalize_Parser( T1_ParserRec*  parser )
+  FT_LOCAL_DEF void
+  T1_Finalize_Parser( T1_ParserRec*  parser )
   {
     FT_Memory   memory = parser->root.memory;
 
@@ -245,8 +245,8 @@
 
 
   /* return the value of an hexadecimal digit */
-  static
-  int  hexa_value( char  c )
+  static int
+  hexa_value( char  c )
   {
     unsigned int  d;
 
@@ -267,9 +267,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Get_Private_Dict( T1_ParserRec*     parser,
-                                 PSAux_Interface*  psaux )
+  FT_LOCAL_DEF FT_Error
+  T1_Get_Private_Dict( T1_ParserRec*     parser,
+                       PSAux_Interface*  psaux )
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->root.memory;

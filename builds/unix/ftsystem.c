@@ -17,7 +17,7 @@
 
 
 #include <ft2build.h>
-/* we use our special ftconfig.h file, not the standard one */
+  /* we use our special ftconfig.h file, not the standard one */
 #include <ftconfig.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_SYSTEM_H
@@ -48,8 +48,9 @@
 #else
   extern
 #endif
-  int  munmap( char*  addr,
-               int    len );
+  int
+  munmap( char*  addr,
+          int    len );
 
 #define MUNMAP_ARG_CAST  char *
 

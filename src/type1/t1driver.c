@@ -44,11 +44,11 @@
 #define FT_COMPONENT  trace_t1driver
 
 
-  static
-  FT_Error  get_t1_glyph_name( T1_Face     face,
-                               FT_UInt     glyph_index,
-                               FT_Pointer  buffer,
-                               FT_UInt     buffer_max )
+  static FT_Error
+  get_t1_glyph_name( T1_Face     face,
+                     FT_UInt     glyph_index,
+                     FT_Pointer  buffer,
+                     FT_UInt     buffer_max )
   {
     FT_String*  gname;
 
@@ -98,9 +98,9 @@
   /*    isn't available (i.e., wasn't compiled in the driver at build      */
   /*    time).                                                             */
   /*                                                                       */
-  static
-  FT_Module_Interface  Get_Interface( FT_Driver         driver,
-                                      const FT_String*  interface )
+  static FT_Module_Interface
+  Get_Interface( FT_Driver         driver,
+                 const FT_String*  interface )
   {
     FT_UNUSED( driver );
     FT_UNUSED( interface );
@@ -156,11 +156,11 @@
   /*                                                                       */
   /*    They can be implemented by format-specific interfaces.             */
   /*                                                                       */
-  static
-  FT_Error  Get_Kerning( T1_Face     face,
-                         FT_UInt     left_glyph,
-                         FT_UInt     right_glyph,
-                         FT_Vector*  kerning )
+  static FT_Error
+  Get_Kerning( T1_Face     face,
+               FT_UInt     left_glyph,
+               FT_UInt     right_glyph,
+               FT_Vector*  kerning )
   {
     T1_AFM*  afm;
 
@@ -194,9 +194,9 @@
   /* <Return>                                                              */
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
-  static
-  FT_UInt  Get_Char_Index( FT_CharMap  charmap,
-                           FT_Long     charcode )
+  static FT_UInt
+  Get_Char_Index( FT_CharMap  charmap,
+                  FT_Long     charcode )
   {
     T1_Face             face;
     FT_UInt             result = 0;
@@ -344,7 +344,8 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_DEF( const FT_Driver_Class* )
+  getDriverClass( void )
   {
     return &t1_driver_class;
   }

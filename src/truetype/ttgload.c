@@ -81,11 +81,11 @@
   /*    This function will much probably move to another component in the  */
   /*    near future, but I haven't decided which yet.                      */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  TT_Get_Metrics( TT_HoriHeader*  header,
-                        FT_UInt         index,
-                        FT_Short*       bearing,
-                        FT_UShort*      advance )
+  FT_LOCAL_DEF void
+  TT_Get_Metrics( TT_HoriHeader*  header,
+                  FT_UInt         index,
+                  FT_Short*       bearing,
+                  FT_UShort*      advance )
   {
     TT_LongMetrics*  longs_m;
     FT_UShort        k = header->number_Of_HMetrics;
@@ -111,12 +111,12 @@
   /* `check' is true, take care of monospaced fonts by returning the       */
   /* advance width maximum.                                                */
   /*                                                                       */
-  static
-  void Get_HMetrics( TT_Face     face,
-                     FT_UInt     index,
-                     FT_Bool     check,
-                     FT_Short*   lsb,
-                     FT_UShort*  aw )
+  static void
+  Get_HMetrics( TT_Face     face,
+                FT_UInt     index,
+                FT_Bool     check,
+                FT_Short*   lsb,
+                FT_UShort*  aw )
   {
     TT_Get_Metrics( &face->horizontal, index, lsb, aw );
 
@@ -130,9 +130,9 @@
   /*    Returns the advance width table for a given pixel size if it is    */
   /*    found in the font's `hdmx' table (if any).                         */
   /*                                                                       */
-  static
-  FT_Byte*  Get_Advance_Widths( TT_Face    face,
-                                FT_UShort  ppem )
+  static FT_Byte*
+  Get_Advance_Widths( TT_Face    face,
+                      FT_UShort  ppem )
   {
     FT_UShort  n;
 
@@ -155,11 +155,11 @@
   /*                                                                       */
   /*    Translates an array of coordinates.                                */
   /*                                                                       */
-  static
-  void  translate_array( FT_UInt     n,
-                         FT_Vector*  coords,
-                         FT_Pos      delta_x,
-                         FT_Pos      delta_y )
+  static void
+  translate_array( FT_UInt     n,
+                   FT_Vector*  coords,
+                   FT_Pos      delta_x,
+                   FT_Pos      delta_y )
   {
     FT_UInt  k;
 
@@ -174,11 +174,11 @@
   }
 
 
-  static
-  void  tt_prepare_zone( TT_GlyphZone*  zone,
-                         FT_GlyphLoad*  load,
-                         FT_UInt        start_point,
-                         FT_UInt        start_contour )
+  static void
+  tt_prepare_zone( TT_GlyphZone*  zone,
+                   FT_GlyphLoad*  load,
+                   FT_UInt        start_point,
+                   FT_UInt        start_contour )
   {
     zone->n_points   = (FT_UShort)( load->outline.n_points - start_point );
     zone->n_contours = (FT_Short) ( load->outline.n_contours - start_contour );
@@ -201,7 +201,7 @@
   /*                                                                       */
   /*************************************************************************/
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   TT_Access_Glyph_Frame( TT_Loader*  loader,
                          FT_UInt     glyph_index,
                          FT_ULong    offset,
@@ -224,7 +224,7 @@
   }
 
 
-  FT_CALLBACK_DEF(void)
+  FT_CALLBACK_DEF( void )
   TT_Forget_Glyph_Frame( TT_Loader*  loader )
   {
     FT_Stream  stream = loader->stream;
@@ -234,7 +234,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   TT_Load_Glyph_Header( TT_Loader*  loader )
   {
     FT_Stream   stream = loader->stream;
@@ -257,7 +257,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   TT_Load_Simple_Glyph( TT_Loader*  load )
   {
     FT_Error         error;
@@ -416,7 +416,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   TT_Load_Composite_Glyph( TT_Loader*  loader )
   {
     FT_Error         error;
@@ -506,8 +506,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  TT_Init_Glyph_Loading( TT_Face  face )
+  FT_LOCAL_DEF void
+  TT_Init_Glyph_Loading( TT_Face  face )
   {
     face->access_glyph_frame   = TT_Access_Glyph_Frame;
     face->read_glyph_header    = TT_Load_Glyph_Header;
@@ -527,9 +527,9 @@
   /*    Usually, this means scaling and hinting through bytecode           */
   /*    interpretation.                                                    */
   /*                                                                       */
-  static
-  FT_Error  TT_Process_Simple_Glyph( TT_Loader*  load,
-                                     FT_Bool     debug )
+  static FT_Error
+  TT_Process_Simple_Glyph( TT_Loader*  load,
+                           FT_Bool     debug )
   {
     FT_GlyphLoader*  gloader  = load->gloader;
     FT_Outline*      outline  = &gloader->current.outline;
@@ -657,9 +657,9 @@
   /*    Loads a given truetype glyph.  Handles composites and uses a       */
   /*    TT_Loader object.                                                  */
   /*                                                                       */
-  static
-  FT_Error  load_truetype_glyph( TT_Loader*  loader,
-                                 FT_UInt     glyph_index )
+  static FT_Error
+  load_truetype_glyph( TT_Loader*  loader,
+                       FT_UInt     glyph_index )
   {
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -1110,9 +1110,9 @@
   }
 
 
-  static
-  void  compute_glyph_metrics( TT_Loader*  loader,
-                               FT_UInt     glyph_index )
+  static void
+  compute_glyph_metrics( TT_Loader*  loader,
+                         FT_UInt     glyph_index )
   {
     FT_BBox       bbox;
     TT_Face       face = (TT_Face)loader->face;
@@ -1313,11 +1313,11 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Glyph( TT_Size       size,
-                           TT_GlyphSlot  glyph,
-                           FT_UShort     glyph_index,
-                           FT_UInt       load_flags )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Glyph( TT_Size       size,
+                 TT_GlyphSlot  glyph,
+                 FT_UShort     glyph_index,
+                 FT_UInt       load_flags )
   {
     SFNT_Interface*  sfnt;
     TT_Face          face;

@@ -88,11 +88,11 @@
   /*                                                                       */
   /*    They can be implemented by format-specific interfaces.             */
   /*                                                                       */
-  static
-  FT_Error  Get_Kerning( TT_Face     face,
-                         FT_UInt     left_glyph,
-                         FT_UInt     right_glyph,
-                         FT_Vector*  kerning )
+  static FT_Error
+  Get_Kerning( TT_Face     face,
+               FT_UInt     left_glyph,
+               FT_UInt     right_glyph,
+               FT_Vector*  kerning )
   {
     TT_Kern_0_Pair*  pair;
 
@@ -183,12 +183,12 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  Set_Char_Sizes( TT_Size     size,
-                            FT_F26Dot6  char_width,
-                            FT_F26Dot6  char_height,
-                            FT_UInt     horz_resolution,
-                            FT_UInt     vert_resolution )
+  static FT_Error
+  Set_Char_Sizes( TT_Size     size,
+                  FT_F26Dot6  char_width,
+                  FT_F26Dot6  char_height,
+                  FT_UInt     horz_resolution,
+                  FT_UInt     vert_resolution )
   {
     FT_Size_Metrics*  metrics = &size->root.metrics;
     TT_Face           face    = (TT_Face)size->root.face;
@@ -246,10 +246,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  Set_Pixel_Sizes( TT_Size  size,
-                             FT_UInt  pixel_width,
-                             FT_UInt  pixel_height )
+  static FT_Error
+  Set_Pixel_Sizes( TT_Size  size,
+                   FT_UInt  pixel_width,
+                   FT_UInt  pixel_height )
   {
     FT_UNUSED( pixel_width );
     FT_UNUSED( pixel_height );
@@ -291,11 +291,11 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  Load_Glyph( TT_GlyphSlot  slot,
-                        TT_Size       size,
-                        FT_UShort     glyph_index,
-                        FT_UInt       load_flags )
+  static FT_Error
+  Load_Glyph( TT_GlyphSlot  slot,
+              TT_Size       size,
+              FT_UShort     glyph_index,
+              FT_UInt       load_flags )
   {
     FT_Error  error;
 
@@ -361,9 +361,9 @@
   /* <Return>                                                              */
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
-  static
-  FT_UInt  Get_Char_Index( TT_CharMap  charmap,
-                           FT_Long     charcode )
+  static FT_UInt
+  Get_Char_Index( TT_CharMap  charmap,
+                  FT_Long     charcode )
   {
     FT_Error       error;
     TT_Face        face;
@@ -406,9 +406,9 @@
   /*************************************************************************/
 
 
-  static
-  FT_Module_Interface  tt_get_interface( TT_Driver    driver,
-                                         const char*  interface )
+  static FT_Module_Interface
+  tt_get_interface( TT_Driver    driver,
+                    const char*  interface )
   {
     FT_Module        sfntd = FT_Get_Module( driver->root.root.library,
                                             "sfnt" );
@@ -499,7 +499,8 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_DEF( const FT_Driver_Class* )
+  getDriverClass( void )
   {
     return &tt_driver_class;
   }
