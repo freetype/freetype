@@ -152,7 +152,7 @@ FT_BEGIN_HEADER
   /*                    between abstract @FTC_FaceID values and real       */
   /*                    @FT_Face objects.                                  */
   /*                                                                       */
-  /*    families     :: XXX                                                */
+  /*    families     :: global table of families.                          */
   /*                                                                       */
   typedef struct  FTC_ManagerRec_
   {
