@@ -2239,11 +2239,9 @@
     /* read the Charset and Encoding tables if available */
     if ( font->num_glyphs > 0 )
     {
-      FT_Bool  invert;
+      FT_Bool  invert = dict->cid_registry != 0xFFFFU;
 
 
-      invert = dict->cid_registry != 0xFFFFU &&
-               font->charstrings_index.count != dict->cid_count;
       error = cff_charset_load( &font->charset, font->num_glyphs, stream,
                                 base_offset, dict->charset_offset, invert );
       if ( error )
