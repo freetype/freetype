@@ -133,7 +133,7 @@
                        FSSpec*      spec )
   {
 
-#if TARGET_API_MAC_CARBON && \
+#if !TARGET_API_MAC_OS8 && \
     !( defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO )
 
     OSErr  e;
@@ -625,7 +625,7 @@
   {
     FT_Error  error;
 
-#if TARGET_API_MAC_CARBON
+#if !TARGET_API_MAC_OS8
 
     FSRef     hostContainerRef;
 
@@ -643,7 +643,7 @@
 
     if ( error != noErr )
 
-#endif  /* TARGET_API_MAC_CARBON */
+#endif  /* !TARGET_API_MAC_OS8 */
 
     {
       *p_res_ref = FSpOpenResFile( spec, fsRdPerm );
@@ -883,7 +883,7 @@
               the_font = font;
             }
             else
-               ++(*face_index);
+              ++(*face_index);
           }
         }
 
@@ -900,6 +900,48 @@
     }
     else
       return FT_Err_Unknown_File_Format;
+  }
+
+  /* Common function to load a new FT_Face from a resource file. */
+
+  static FT_Error
+  FT_New_Face_From_Resource( FT_Library     library,
+                             const FSSpec  *spec,
+                             FT_Long        face_index,
+                             FT_Face       *aface )
+  {
+    OSType    file_type;
+    short     res_ref;
+    FT_Error  error;
+
+
+    if ( OpenFileAsResource( spec, &res_ref ) == FT_Err_Ok )
+    {
+      /* LWFN is a (very) specific file format, check for it explicitly */
+
+      file_type = get_file_type( spec );
+      if ( file_type == 'LWFN' )
+        return FT_New_Face_From_LWFN( library, spec, face_index, aface );
+    
+      /* Otherwise the file type doesn't matter (there are more than  */
+      /* `FFIL' and `tfil').  Just try opening it as a font suitcase; */
+      /* if it works, fine.                                           */
+
+      error = FT_New_Face_From_Suitcase( library, res_ref,
+                                         face_index, aface );
+      if ( error == 0 )
+        return error;
+
+      /* else forget about the resource fork and fall through to */
+      /* data fork formats                                       */
+
+      CloseResFile( res_ref );
+    }
+
+    /* let it fall through to normal loader (.ttf, .otf, etc.); */
+    /* we signal this by returning no error and no FT_Face      */
+    *aface = NULL;
+    return 0;
   }
 
 
@@ -922,9 +964,7 @@
   {
     FT_Open_Args  args;
     FSSpec        spec;
-    OSType        file_type;
-    short         res_ref;
-    FT_Error      result;
+    FT_Error      error;
 
 
     /* test for valid `library' and `aface' delayed to FT_Open_Face() */
@@ -934,28 +974,9 @@
     if ( file_spec_from_path( pathname, &spec ) )
       return FT_Err_Invalid_Argument;
 
-    if ( OpenFileAsResource( &spec, &res_ref ) == FT_Err_Ok )
-    {
-      /* LWFN is a (very) specific file format, check for it explicitly */
-
-      file_type = get_file_type( &spec );
-      if ( file_type == 'LWFN' )
-        return FT_New_Face_From_LWFN( library, &spec, face_index, aface );
-
-      /* Otherwise the file type doesn't matter (there are more than   */
-      /* `FFIL' and `tfil') -- just try opening it as a font suitcase; */
-      /* if it works, fine.                                            */
-
-      result = FT_New_Face_From_Suitcase( library, res_ref,
-                                          face_index, aface );
-      if ( result == 0 )
-        return result;
-
-      /* else forget about the resource fork and fall through to */
-      /* data fork formats                                       */
-
-      CloseResFile( res_ref );
-    }
+    error = FT_New_Face_From_Resource( library, &spec, face_index, aface );
+    if ( error != 0 || *aface != NULL )
+      return error;
 
     /* let it fall through to normal loader (.ttf, .otf, etc.) */
     args.flags    = FT_OPEN_PATHNAME;
@@ -974,14 +995,12 @@
   /*    accepts an FSSpec instead of a path.                               */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )
-  FT_New_Face_From_FSSpec( FT_Library     library,
-                           const FSSpec  *spec,
-                           FT_Long        face_index,
-                           FT_Face       *aface )
+  FT_New_Face_From_FSSpec( FT_Library    library,
+                           const FSSpec *spec,
+                           FT_Long       face_index,
+                           FT_Face      *aface )
   {
     FT_Open_Args  args;
-    OSType        file_type;
-    short         res_ref;
     FT_Error      error;
     FT_Stream     stream;
     FILE*         file;
@@ -992,35 +1011,17 @@
     if ( !spec )
       return FT_Err_Invalid_Argument;
 
-    if ( OpenFileAsResource( spec, &res_ref ) == FT_Err_Ok )
-    {
-      /* LWFN is a (very) specific file format, check for it explicitly */
-
-      file_type = get_file_type( spec );
-      if ( file_type == 'LWFN' )
-        return FT_New_Face_From_LWFN( library, spec, face_index, aface );
-    
-      /* Otherwise the file type doesn't matter (there are more than   */
-      /* `FFIL' and `tfil') -- just try opening it as a font suitcase; */
-      /* if it works, fine.                                            */
-
-      error = FT_New_Face_From_Suitcase( library, res_ref,
-                                         face_index, aface );
-      if ( error == 0 )
-        return error;
-
-      /* else forget about the resource fork and fall through to */
-      /* data fork formats                                       */
-
-      CloseResFile( res_ref );
-    }
+    error = FT_New_Face_From_Resource( library, spec, face_index, aface );
+    if ( error != 0 || *aface != NULL )
+      return error;
 
     /* let it fall through to normal loader (.ttf, .otf, etc.) */
 
 #if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
 
     /* Codewarrior's C library can open a FILE from a FSSpec */
-#include <FSp_fopen.h>
+    /* but we must compile with FSp_fopen.c in addition to   */
+    /* runtime libraries.                                    */
 
     memory = library->memory;
 
