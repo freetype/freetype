@@ -209,10 +209,10 @@
       int       has_serifs = 0;
 
 
-      if ( hinter->disable_vert_edges && !dimension )
+      if ( ah_debug_disable_vert && !dimension )
         goto Next_Dimension;
 
-      if ( hinter->disable_horz_edges && dimension )
+      if ( ah_debug_disable_horz && dimension )
         goto Next_Dimension;
 
       /* we begin by aligning all stems relative to the blue zone */
@@ -377,9 +377,10 @@
                         FT_Bool     no_horz_edges,
                         FT_Bool     no_vert_edges )
   {
-    hinter->disable_horz_edges = no_horz_edges;
-    hinter->disable_vert_edges = no_vert_edges;
-
+#if 0  
+    ah_debug_disable_horz = no_horz_edges;
+    ah_debug_disable_vert = no_vert_edges;
+#endif
     /* AH_Interpolate_Blue_Edges( hinter ); -- doesn't seem to help      */
     /* reduce the problem of the disappearing eye in the `e' of Times... */
     /* also, creates some artifacts near the blue zones?                 */
@@ -450,12 +451,12 @@
             if ( dimension )
             {
               point->y      = edge->pos;
-              point->flags |= ah_flah_touch_y;
+              point->flags |= ah_flag_touch_y;
             }
             else
             {
               point->x      = edge->pos;
-              point->flags |= ah_flah_touch_x;
+              point->flags |= ah_flag_touch_x;
             }
 
             if ( point == seg->last )
@@ -493,7 +494,7 @@
 
     edges       = outline->horz_edges;
     edge_limit  = edges + outline->num_hedges;
-    touch_flag  = ah_flah_touch_y;
+    touch_flag  = ah_flag_touch_y;
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
@@ -514,7 +515,7 @@
 #ifndef AH_OPTION_NO_WEAK_INTERPOLATION
           /* if this point is candidate to weak interpolation, we will  */
           /* interpolate it after all strong points have been processed */
-          if ( point->flags & ah_flah_weak_interpolation )
+          if ( point->flags & ah_flag_weak_interpolation )
             continue;
 #endif
 
@@ -598,7 +599,7 @@
 
       edges      = outline->vert_edges;
       edge_limit = edges + outline->num_vedges;
-      touch_flag = ah_flah_touch_x;
+      touch_flag = ah_flag_touch_x;
     }
   }
 
@@ -707,7 +708,7 @@
 
     /* PASS 1: Move segment points to edge positions */
 
-    touch_flag = ah_flah_touch_y;
+    touch_flag = ah_flag_touch_y;
 
     contour_limit = outline->contours + outline->num_contours;
 
@@ -781,7 +782,7 @@
         for ( point = points; point < point_limit; point++ )
           point->y = point->u;
 
-        touch_flag = ah_flah_touch_x;
+        touch_flag = ah_flag_touch_x;
         ah_setup_uv( outline, ah_uv_ox );
       }
       else

@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
 
  /* handle to cache class */
   typedef const struct FTC_Cache_ClassRec_*  FTC_Cache_Class;
-  
+
  /* handle to cache node */
   typedef struct FTC_NodeRec_*   FTC_Node;
 
@@ -109,21 +109,17 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    library      :: A handle to a FreeType library instance.           */
   /*                                                                       */
-  /*    faces_lru    :: The lru list of FT_Face objects in the cache.      */
+  /*    faces_list   :: The lru list of FT_Face objects in the cache.      */
   /*                                                                       */
-  /*    sizes_lru    :: The lru list of FT_Size objects in the cache.      */
+  /*    sizes_list   :: The lru list of FT_Size objects in the cache.      */
   /*                                                                       */
-  /*    max_bytes    :: The maximum number of bytes to be allocated in the */
-  /*                    cache.  This is only related to the byte size of   */
-  /*                    the nodes cached by the manager.                   */
+  /*    max_weight   :: The maximum cache pool weight..                    */
   /*                                                                       */
-  /*    num_bytes    :: The current number of bytes allocated in the       */
-  /*                    cache.  Only related to the byte size of cached    */
-  /*                    nodes.                                             */
+  /*    cur_weight   :: The current cache pool weight.                     */
   /*                                                                       */
   /*    num_nodes    :: The current number of nodes in the manager.        */
   /*                                                                       */
-  /*    global_lru   :: The global lru list of all cache nodes.            */
+  /*    nodes_list   :: The global lru list of all cache nodes.            */
   /*                                                                       */
   /*    caches       :: A table of installed/registered cache objects.     */
   /*                                                                       */
@@ -206,7 +202,7 @@ FT_BEGIN_HEADER
     FTC_Node   mru_prev;     /* circular mru list pointer           */
     FTC_Node   link;         /* used for hashing..                  */
     FT_UInt32  hash;         /* used for hashing too..              */
-    FT_UShort  cache_index;  /* index of cache this node belongs to */
+    FT_UShort  cache_index;  /* index of cache the node belongs to  */
     FT_Short   ref_count;    /* reference count for this node..     */
   
   } FTC_NodeRec;

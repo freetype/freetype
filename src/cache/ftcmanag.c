@@ -304,8 +304,11 @@
     manager->library      = library;
     manager->max_weight   = max_bytes;
     manager->cur_weight   = 0;
+
     manager->request_face = requester;
     manager->request_data = req_data;
+
+
 
     *amanager = manager;
 
@@ -348,7 +351,7 @@
         manager->caches[index] = 0;
       }
     }
-
+    
     /* discard faces and sizes */
     FT_LruList_Destroy( manager->faces_list );
     manager->faces_list = 0;

@@ -367,9 +367,9 @@
       vec->x = point->x;
       vec->y = point->y;
 
-      if ( point->flags & ah_flah_conic )
+      if ( point->flags & ah_flag_conic )
         tag[0] = FT_Curve_Tag_Conic;
-      else if ( point->flags & ah_flah_cubic )
+      else if ( point->flags & ah_flag_cubic )
         tag[0] = FT_Curve_Tag_Cubic;
       else
         tag[0] = FT_Curve_Tag_On;
@@ -504,9 +504,9 @@
           switch ( FT_CURVE_TAG( *tag ) )
           {
           case FT_Curve_Tag_Conic:
-            point->flags = ah_flah_conic; break;
+            point->flags = ah_flag_conic; break;
           case FT_Curve_Tag_Cubic:
-            point->flags = ah_flah_cubic; break;
+            point->flags = ah_flag_cubic; break;
           default:
             ;
           }
@@ -570,47 +570,50 @@
         {
           AH_Point*  prev;
           AH_Point*  next;
-          FT_Vector  vec;
+          FT_Vector  ivec, ovec;
 
 
-          prev  = point->prev;
-          vec.x = point->fx - prev->fx;
-          vec.y = point->fy - prev->fy;
+          prev   = point->prev;
+          ivec.x = point->fx - prev->fx;
+          ivec.y = point->fy - prev->fy;
 
-          point->in_dir = ah_compute_direction( vec.x, vec.y );
+          point->in_dir = ah_compute_direction( ivec.x, ivec.y );
 
-#ifndef AH_OPTION_NO_WEAK_INTERPOLATION
-          point->in_angle = ah_angle( &vec );
-#endif
+          next   = point->next;
+          ovec.x = next->fx - point->fx;
+          ovec.y = next->fy - point->fy;
 
-          next  = point->next;
-          vec.x = next->fx - point->fx;
-          vec.y = next->fy - point->fy;
-
-          point->out_dir = ah_compute_direction( vec.x, vec.y );
+          point->out_dir = ah_compute_direction( ovec.x, ovec.y );
 
 #ifndef AH_OPTION_NO_WEAK_INTERPOLATION
-          point->out_angle = ah_angle( &vec );
-
+          if ( point->flags & (ah_flag_conic | ah_flag_cubic) )
           {
-            AH_Angle  delta = point->in_angle - point->out_angle;
+          Is_Weak_Point:
+            point->flags |= ah_flag_weak_interpolation;
+          }
+          else if ( point->out_dir == point->in_dir )
+          {
+            AH_Angle  angle_in, angle_out, delta;
 
+
+            if ( point->out_dir != ah_dir_none )
+              goto Is_Weak_Point;
+            
+            angle_in  = ah_angle( &ivec );
+            angle_out = ah_angle( &ovec );
+            delta     = angle_in - angle_out;
+            
+            if ( delta > AH_PI )
+              delta = AH_2PI - delta;
 
             if ( delta < 0 )
               delta = -delta;
+
             if ( delta < 2 )
-              point->flags |= ah_flah_weak_interpolation;
+              goto Is_Weak_Point;
           }
-
-#if 0
-          if ( point->flags & ( ah_flah_conic | ah_flah_cubic ) )
-            point->flags |= ah_flah_weak_interpolation;
-#endif
-
-#endif /* !AH_OPTION_NO_WEAK_INTERPOLATION */
-
-#ifdef AH_OPTION_NO_STRONG_INTERPOLATION
-          point->flags |= ah_flah_weak_interpolation;
+          else if ( point->in_dir == -point->out_dir )
+            goto Is_Weak_Point;
 #endif
         }
       }
@@ -779,7 +782,7 @@
               /* a segment is round if either its first or last point */
               /* is a control point                                   */
               if ( ( segment->first->flags | point->flags ) &
-                     ah_flah_control                        )
+                     ah_flag_control                        )
                 segment->flags |= ah_edge_round;
 
               /* compute segment size */
@@ -997,7 +1000,7 @@
 
               /* before comparing the scores, take care that the segments */
               /* are really facing each other (often not for italics..)   */
-              if ( 4 * len >= size1 && 4 * len >= size2 )
+              if ( 16 * len >= size1 && 16 * len >= size2 )
                 if ( score < best_score )
                 {
                   best_score   = score;
