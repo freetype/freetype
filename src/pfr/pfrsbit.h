@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  pfrsbit.c                                                              */
+/*  pfrsbit.h                                                              */
 /*                                                                         */
-/*    FreeType PFR bitmap loader                                           */
+/*    FreeType PFR bitmap loader (specification).                          */
 /*                                                                         */
 /*  Copyright 2002 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -14,6 +14,7 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
+
 
 #ifndef __PFRSBIT_H__
 #define __PFRSBIT_H__
@@ -30,3 +31,6 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __PFR_SBIT_H__ */
+
+
+/* END */

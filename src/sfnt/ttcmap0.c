@@ -597,8 +597,9 @@
     FT_Byte   *ends, *starts, *offsets, *deltas, *glyph_ids;
     FT_UInt   num_segs;
 
-    /* in certain fonts, the 'length' field is invalid and goes */
-    /* out of bound. We try to correct this here...             */
+
+    /* in certain fonts, the `length' field is invalid and goes */
+    /* out of bound.  We try to correct this here...            */
     if ( length < 16 )
       FT_INVALID_TOO_SHORT;
 

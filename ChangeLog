@@ -7,21 +7,38 @@
 
 2002-10-05  David Turner  <david@freetype.org>
 
-        * src/pfr/pfrsbit.h, src/pfr/pfrsbit.c, src/pfr/pfrload.c,
-        src/pfr/pfrgload.c, src/pfr/pfrobjs.c, src/pfr/pfrtypes.h,
-        Jamfile, src/base/ftobjs.c: adding support for embedded bitmaps to
-        the PFR driver, and rewriting its kerning loader / handler to use all
-        kerning pairs in a physical font (and not just the first item).
+	Adding support for embedded bitmaps to the PFR driver, and rewriting
+	its kerning loader/handler to use all kerning pairs in a physical
+	font (and not just the first item).
 
-        * src/tools/docmaker/content.py, src/tools/docmaker/sources.py,
-        src/tools/docmaker/tohtml.py: fixing a few nasty bugs
+	* src/pfr/pfr.c: Include `pfrsbit.c'.
+	* src/pfr/pfrgload.c: Include `pfrsbit.h'.
+	* src/pfr/pfrload.c (pfr_extra_item_load_kerning_pairs): Rewritten.
+	(pfr_phy_font_done, pfr_phy_font_load): Updated.
+	* src/pfr/pfrobks.c: Include `pfrsbit.h'.
+	(pfr_face_init): Handle kerning and embedded bitmaps.
+	(pfr_slot_load): Load embedded bitmaps.
+	(PFR_KERN_INDEX): Removed.
+	(pfr_face_get_kerning): Rewritten.
+	* src/pfr/pfrsbit.c, src/pfr/pfrsbit.h: New files.
+	* src/pfr/pfrtypes.h (PFR_KernItemRec): New structure.
+	(PFR_KERN_INDEX): New macro.
+	(PFR_PhyFontRec): Add items for kerning and embedded bitmaps.
+	* src/pfr/Jamfile (_sources) [FT2_MULTI]: Add `pfrsbit'.
 
-        * src/sfnt/ttcmap0.c: the validator for format 4 sub-tables is
-        now capable of dealing with invalid "length" fields at the start
-        of the sub-table. This allows fonts like "mg______.ttf" (i.e.
-        Marriage) to return accurate charmaps.
+	* src/base/ftobjs.c (FT_Load_Glyph): Don't load bitmap fonts if
+	FT_LOAD_NO_RECURSE is set.
+	Load embedded bitmaps only if FT_LOAD_NO_BITMAP isn't set.
 
-        * docs/CHANGES: updating
+	* src/tools/docmaker/content.py, src/tools/docmaker/sources.py,
+	src/tools/docmaker/tohtml.py: Fixing a few nasty bugs.
+
+	* src/sfnt/ttcmap0.c (tt_cmap4_validate): The validator for format 4
+	sub-tables is now capable of dealing with invalid "length" fields at
+	the start of the sub-table.  This allows fonts like "mg______.ttf"
+	(i.e.  Marriage) to return accurate charmaps.
+
+	* docs/CHANGES: Updated.
 
 2002-10-05  Werner Lemberg  <wl@gnu.org>
 

@@ -192,7 +192,8 @@ FT_BEGIN_HEADER
   /************************************************************************/
 
   typedef struct PFR_KernItemRec_*  PFR_KernItem;
-  typedef struct PFR_KernItemRec_
+
+  typedef struct  PFR_KernItemRec_
   {
     PFR_KernItem  next;
     FT_UInt       pair_count;
@@ -205,7 +206,8 @@ FT_BEGIN_HEADER
 
   } PFR_KernItemRec;
 
-#define PFR_KERN_INDEX( g1, g2 )  ( ( (FT_UInt32)(g1) << 16 ) | (FT_UInt16)(g2) )
+#define PFR_KERN_INDEX( g1, g2 ) \
+  ( ( (FT_UInt32)(g1) << 16 ) | (FT_UInt16)(g2) )
 
   typedef struct  PFR_KernPairRec_
   {

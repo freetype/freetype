@@ -501,8 +501,8 @@
   }
 
 
-
 #if 0
+
   /* load kerning pair data */
   FT_CALLBACK_DEF( FT_Error )
   pfr_extra_item_load_kerning_pairs( FT_Byte*     p,
@@ -582,7 +582,9 @@
                "invalid kerning pairs table\n" ));
     goto Exit;
   }
-#else
+
+#else /* 0 */
+
   /* load kerning pair data */
   FT_CALLBACK_DEF( FT_Error )
   pfr_extra_item_load_kerning_pairs( FT_Byte*     p,
@@ -592,6 +594,7 @@
     PFR_KernItem  item;
     FT_Error      error  = 0;
     FT_Memory     memory = phy_font->memory;
+
 
     FT_TRACE2(( "pfr_extra_item_load_kerning_pairs()\n" ));
 
@@ -624,33 +627,34 @@
       FT_UInt   char1, char2;
       FT_Byte*  q;
 
+
       if ( item->flags & PFR_KERN_2BYTE_CHAR )
       {
         q     = p;
-        char1 = PFR_NEXT_USHORT(q);
-        char2 = PFR_NEXT_USHORT(q);
+        char1 = PFR_NEXT_USHORT( q );
+        char2 = PFR_NEXT_USHORT( q );
 
-        item->pair1 = PFR_KERN_INDEX(char1,char2);
+        item->pair1 = PFR_KERN_INDEX( char1, char2 );
 
-        q = p + item->pair_size*(item->pair_count-1);
-        char1 = PFR_NEXT_USHORT(q);
-        char2 = PFR_NEXT_USHORT(q);
+        q = p + item->pair_size * ( item->pair_count - 1 );
+        char1 = PFR_NEXT_USHORT( q );
+        char2 = PFR_NEXT_USHORT( q );
 
-        item->pair2 = PFR_KERN_INDEX(char1,char2);
+        item->pair2 = PFR_KERN_INDEX( char1, char2 );
       }
       else
       {
         q     = p;
-        char1 = PFR_NEXT_BYTE(q);
-        char2 = PFR_NEXT_BYTE(q);
+        char1 = PFR_NEXT_BYTE( q );
+        char2 = PFR_NEXT_BYTE( q );
 
-        item->pair1 = PFR_KERN_INDEX(char1,char2);
+        item->pair1 = PFR_KERN_INDEX( char1, char2 );
 
-        q = p + item->pair_size*(item->pair_count-1);
-        char1 = PFR_NEXT_BYTE(q);
-        char2 = PFR_NEXT_BYTE(q);
+        q = p + item->pair_size * ( item->pair_count - 1 );
+        char1 = PFR_NEXT_BYTE( q );
+        char2 = PFR_NEXT_BYTE( q );
 
-        item->pair2 = PFR_KERN_INDEX(char1,char2);
+        item->pair2 = PFR_KERN_INDEX( char1, char2 );
       }
 
       /* add new item to the current list */
@@ -661,7 +665,7 @@
     }
     else
     {
-      /* empty item !! */
+      /* empty item! */
       FT_FREE( item );
     }
 
@@ -676,7 +680,8 @@
                "invalid kerning pairs table\n" ));
     goto Exit;
   }
-#endif
+#endif /* 0 */
+
 
   static const PFR_ExtraItemRec  pfr_phy_font_extra_items[] =
   {
@@ -715,8 +720,9 @@
     {
       PFR_KernItem  item, next;
 
+
       item = phy_font->kern_items;
-      while (item)
+      while ( item )
       {
         next = item->next;
         FT_FREE( item );
@@ -725,6 +731,7 @@
       phy_font->kern_items      = NULL;
       phy_font->kern_items_tail = NULL;
     }
+
     phy_font->num_kern_pairs = 0;
   }
 
