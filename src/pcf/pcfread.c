@@ -101,7 +101,8 @@ THE SOFTWARE.
          FT_STREAM_READ_FIELDS ( pcf_toc_header, toc ) )
       return PCF_Err_Cannot_Open_Resource;
 
-    if ( toc->version != PCF_FILE_VERSION )
+    if ( toc->version != PCF_FILE_VERSION                 ||
+         toc->count   >  FT_ARRAY_MAX( face->toc.tables ) )
       return PCF_Err_Invalid_File_Format;
 
     if ( FT_NEW_ARRAY( face->toc.tables, toc->count ) )

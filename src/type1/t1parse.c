@@ -93,6 +93,40 @@
   }
 
 
+  static FT_Error
+  check_type1_format( FT_Stream    stream,
+                      const char*  header_string,
+                      size_t       header_length )
+  {
+    FT_Error   error;
+    FT_UShort  tag;
+    FT_Long    size;
+
+    if ( FT_STREAM_SEEK( 0 ) )
+      goto Exit;
+      
+    error = read_pfb_tag( stream, &tag, &size );
+    if ( error )
+      goto Exit;
+      
+    if ( tag != 0x8001U && FT_STREAM_SEEK( 0 ) )
+      goto Exit;
+      
+    if ( !FT_FRAME_ENTER( header_length ) )
+    {
+      error = 0;
+      
+      if ( ft_memcmp( stream->cursor, header_string, header_length ) != 0 )
+        error = T1_Err_Unknown_File_Format;
+
+      FT_FRAME_EXIT();
+    }
+
+  Exit:
+    return error;
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   T1_New_Parser( T1_Parser      parser,
                  FT_Stream      stream,
@@ -114,6 +148,21 @@
     parser->in_pfb       = 0;
     parser->in_memory    = 0;
     parser->single_block = 0;
+
+   /* check the header format */
+    error = check_type1_format( stream, "%!PS-AdobeFont-1", 16 );
+    if ( error )
+    {
+      if ( error != T1_Err_Unknown_File_Format )
+        goto Exit;
+
+      error = check_type1_format( stream, "%!FontType", 10 );
+      if ( error )
+      {
+        FT_TRACE2(( "[not a Type1 font]\n" ));
+        goto Exit;
+      }
+    }
 
     /******************************************************************/
     /*                                                                */
@@ -167,32 +216,16 @@
     }
     else
     {
-      /* read segment in memory */
+      /* read segment in memory - yeah that sucks, but so does the format */
       if ( FT_ALLOC( parser->base_dict, size )     ||
            FT_STREAM_READ( parser->base_dict, size ) )
         goto Exit;
       parser->base_len = size;
     }
 
-    /* Now check font format; we must see `%!PS-AdobeFont-1' */
-    /* or `%!FontType'                                       */
-    {
-      if ( size <= 16                                       ||
-           ( ft_strncmp( (const char*)parser->base_dict,
-                         "%!PS-AdobeFont-1", 16 )        &&
-             ft_strncmp( (const char*)parser->base_dict,
-                         "%!FontType", 10 )              )  )
-      {
-        FT_TRACE2(( "[not a Type1 font]\n" ));
-        error = T1_Err_Unknown_File_Format;
-      }
-      else
-      {
-        parser->root.base   = parser->base_dict;
-        parser->root.cursor = parser->base_dict;
-        parser->root.limit  = parser->root.cursor + parser->base_len;
-      }
-    }
+    parser->root.base   = parser->base_dict;
+    parser->root.cursor = parser->base_dict;
+    parser->root.limit  = parser->root.cursor + parser->base_len;
 
   Exit:
     if ( error && !parser->in_memory )
