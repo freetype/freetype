@@ -20,6 +20,7 @@
 #include "sfobjs.h"
 #include "ttload.h"
 #include "ttcmap.h"
+#include "ttkern.h"
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
@@ -503,10 +504,12 @@
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     if ( LOAD_( hdmx )    ||
-         LOAD_( gasp )    ||
-         LOAD_( kerning ) ||
          LOAD_( pclt )    )
       goto Exit;
+
+    /* consider the kerning and gasp tables as optional */
+    (void)LOAD_( gasp );
+    (void)LOAD_( kerning );
 
     face->root.family_name = tt_face_get_name( face,
                                                TT_NAME_ID_PREFERRED_FAMILY );
@@ -553,9 +556,11 @@
       if ( face->vertical_info )
         flags |= FT_FACE_FLAG_VERTICAL;
 
+#if 0
       /* kerning available ? */
-      if ( face->kern_pairs )
+      if ( TT_FACE_HAS_KERNING(face) )
         flags |= FT_FACE_FLAG_KERNING;
+#endif
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* Don't bother to load the tables unless somebody asks for them. */
@@ -802,8 +807,7 @@
     }
 
     /* freeing the kerning table */
-    FT_FREE( face->kern_pairs );
-    face->num_kern_pairs = 0;
+    tt_face_done_kern( face );
 
     /* freeing the collection table */
     FT_FREE( face->ttc_header.offsets );
@@ -823,8 +827,19 @@
     }
 
     /* freeing the horizontal metrics */
+#ifdef FT_OPTIMIZE_MEMORY
+    {
+      FT_Stream  stream = FT_FACE_STREAM( face );
+      
+      FT_FRAME_RELEASE( face->horz_metrics );
+      FT_FRAME_RELEASE( face->vert_metrics );
+      face->horz_metrics_size = 0;
+      face->vert_metrics_size = 0;
+    }
+#else
     FT_FREE( face->horizontal.long_metrics );
     FT_FREE( face->horizontal.short_metrics );
+#endif
 
     /* freeing the vertical ones, if any */
     if ( face->vertical_info )

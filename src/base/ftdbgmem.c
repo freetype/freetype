@@ -497,8 +497,6 @@
       node  = *pnode;
       if ( node )
       {
-        FT_MemSource  source;
-
         if ( node->size < 0 )
         {
           /* this block was already freed.  This means that our memory is */
@@ -536,7 +534,7 @@
       if ( source->cur_blocks > source->max_blocks )
         source->max_blocks = source->cur_blocks;
 
-      if ( size > source->cur_max )
+      if ( size > (FT_ULong)source->cur_max )
         source->cur_max = size;
 
       source->all_size += size;
@@ -937,10 +935,10 @@
 
       printf( "FreeType Memory Dump: current=%ld max=%ld total=%ld count=%ld\n",
               table->alloc_current, table->alloc_max, table->alloc_total, table->alloc_count );
-      printf( " block  block      sizes      sizes      sizes   source\n" );
-      printf( " count   high        sum    highsum        max   location\n" );
+      printf( " block  block    sizes    sizes    sizes   source\n" );
+      printf( " count   high      sum  highsum      max   location\n" );
       printf( "-------------------------------------------------\n" );
-      fmt = "%6ld %6ld %10ld %10ld %10ld %s:%d\n";
+      fmt = "%6ld %6ld %8ld %8ld %8ld %s:%d\n";
 
       for ( ; bucket < limit; bucket++ )
       {

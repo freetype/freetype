@@ -477,6 +477,24 @@ FT_BEGIN_HEADER
   typedef void
   (*TT_Free_Table_Func)( TT_Face  face );
 
+ /**
+  * @functype: TT_Face_GetKerningFunc
+  *
+  * @description:
+  *   return the horizontal kerning value between two glyphs
+  *
+  * @input:
+  *    face        :: handle to source face object
+  *    left_glyph  :: left glyph index
+  *    right_glyph :: right glyph index
+  *
+  * @return:
+  *    kerning value in font units.
+  */
+  typedef FT_Int
+  (*TT_Face_GetKerningFunc)( TT_Face   face,
+                             FT_UInt   left_glyph,
+                             FT_UInt   right_glyph );
 
   /*************************************************************************/
   /*                                                                       */
@@ -534,6 +552,9 @@ FT_BEGIN_HEADER
     TT_Load_SBit_Image_Func      load_sbit_image;
     TT_Free_Table_Func           free_sbits;
 
+    /* sett `ttkern.h' */
+    TT_Face_GetKerningFunc       get_kerning;
+    
     /* see `ttpost.h' */
     TT_Get_PS_Name_Func          get_psname;
     TT_Free_Table_Func           free_psnames;

@@ -1,3 +1,20 @@
+2005-02-25  David Turner  <david@freetype.org>
+
+  * many, many files: several memory optimizations were implemented to
+  drastically reduce the heap usage of FreeType, especially in the case
+  of memory-mapped files. The idea is to avoid loading and decoding tables
+  in the heap, and instead access the raw data whenever possible (i.e.
+  when it doesn't compromise performance).
+  
+  This had several impacts: first, opening vera.ttf uses a ridiculous amount
+  of memory (when the FT_Library footprint is accounted for), until you start
+  loading glyphs. Even then, you'll save at least 20 Kb compared to the non
+  optimized case. performance of various operations, including open/close
+  has also been dramatically improved.
+  
+  More optimisations to come. The auto-hinter eats memory like crazy? This
+  must be stopped...
+
 2005-02-22  David Turner  <david@freetype.org>
 
 	* src/base/ftdbgmem.c: adding the ability to list all allocation sites
