@@ -1,3 +1,13 @@
+2000-12-15  David Turner <david.turner@freetype.org>
+
+	* include/freetype/ftimage.h, include/freetype/fttypes.h,
+	src/smooth/ftgrays.c: added support for clipped direct rendering in
+	the smooth renderer. This should not break binary compatibility of 
+	existing applications..                                            
+	
+	* INSTALL: updated installation instructions on Win32, listing the
+	new "make setup list" target used to list supported compilers/targets
+
 2000-12-13  David Turner <david.turner@freetype.org>
 
 	* include/freetype/config/ft2build.h,

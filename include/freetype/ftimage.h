@@ -610,6 +610,33 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
+  /*    FT_BBox                                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A structure used to hold an outline's bounding box, i.e., the      */
+  /*    coordinates of its extrema in the horizontal and vertical          */
+  /*    directions.                                                        */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    xMin :: The horizontal minimum (left-most).                        */
+  /*                                                                       */
+  /*    yMin :: The vertical minimum (bottom-most).                        */
+  /*                                                                       */
+  /*    xMax :: The horizontal maximum (right-most).                       */
+  /*                                                                       */
+  /*    yMax :: The vertical maximum (top-most).                           */
+  /*                                                                       */
+  typedef struct  FT_BBox_
+  {
+    FT_Pos  xMin, yMin;
+    FT_Pos  xMax, yMax;
+
+  } FT_BBox;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
   /*    FT_Span                                                            */
   /*                                                                       */
   /* <Description>                                                         */
@@ -747,23 +774,35 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    ft_raster_flag_default :: This value is 0.                         */
   /*                                                                       */
-  /*    ft_raster_flag_aa      :: Requests the rendering of an             */
-  /*                              anti-aliased glyph bitmap.  If unset, a  */
-  /*                              monchrome bitmap will be rendered.       */
+  /*    ft_raster_flag_aa      ::                                          */
+  /*      this flag is set to indicate that a anti-aliased glyph image     */
+  /*      should be generated. Otherwise, it will be monochrome (1-bit)    */
   /*                                                                       */
-  /*    ft_raster_flag_direct  :: Requests direct rendering over the       */
-  /*                              target bitmap.  Direct rendering uses    */
-  /*                              user-provided callbacks in order to      */
-  /*                              perform direct drawing or composition    */
-  /*                              over an existing bitmap.  If this bit is */
-  /*                              unset, the content of the target bitmap  */
-  /*                              *must be zeroed*!                        */
+  /*    ft_raster_flag_direct  ::                                          */
+  /*      this flag is set to indicate direct rendering. In this mode,     */
+  /*      client applications must provide their own span callback.        */
+  /*      this let them direct drawing or composition over an existing     */
+  /*      bitmap. If this bit is not set, the target pixmap's buffer       */
+  /*      _must_ be zeroed before rendering.                               */
+  /*                                                                       */
+  /*      note that for now, direct rendering is only possible with        */
+  /*      anti-aliased glyphs only..                                       */
+  /*                                                                       */
+  /*    ft_raster_flag_clip    ::                                          */
+  /*      this flag is only used in direct rendering mode. When set,       */
+  /*      the output will be clipped to a box specified in the "clip_box"  */
+  /*      field of the FT_Raster_Params structure.                         */
+  /*                                                                       */
+  /*      note that by default, the glyph bitmap is clipped to the         */
+  /*      target pixmap, except in direct rendering mode where all         */
+  /*      spans are generated if no clipping box is set.                   */
   /*                                                                       */
   typedef  enum
   {
     ft_raster_flag_default = 0,
     ft_raster_flag_aa      = 1,
-    ft_raster_flag_direct  = 2
+    ft_raster_flag_direct  = 2,
+    ft_raster_flag_clip    = 4
 
   } FT_Raster_Flag;
 
@@ -796,6 +835,9 @@ FT_BEGIN_HEADER
   /*    user        :: User-supplied data that is passed to each drawing   */
   /*                   callback.                                           */
   /*                                                                       */
+  /*    clip_box    :: an optional clipping box. It is only used in        */
+  /*                   direct rendering mode                               */
+  /*                                                                       */
   /* <Note>                                                                */
   /*    An anti-aliased glyph bitmap is drawn if the ft_raster_flag_aa bit */
   /*    flag is set in the `flags' field, otherwise a monochrome bitmap    */
@@ -823,6 +865,7 @@ FT_BEGIN_HEADER
     FT_Raster_BitTest_Func  bit_test;
     FT_Raster_BitSet_Func   bit_set;
     void*                   user;
+    FT_BBox                 clip_box;
 
   } FT_Raster_Params;
 
