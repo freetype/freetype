@@ -836,7 +836,7 @@ FT_BEGIN_HEADER
 
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-  typedef struct GS_BlendRec_  *GX_Blend;
+  typedef struct GX_BlendRec_  *GX_Blend;
 #endif
 
 

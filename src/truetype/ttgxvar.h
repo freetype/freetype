@@ -78,7 +78,7 @@ FT_BEGIN_HEADER
   /*                        the contribution along each axis to the final  */
   /*                        interpolated font.                             */
   /*                                                                       */
-  typedef struct  GS_BlendRec_
+  typedef struct  GX_BlendRec_
   {
     FT_UInt         num_axis;
     FT_Fixed*       normalizedcoords;
