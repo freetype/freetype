@@ -66,7 +66,7 @@
   /*    zone :: A pointer to the target glyph zone.                        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  TT_Done_GlyphZone( TT_GlyphZone*  zone )
+  TT_Done_GlyphZone( TT_GlyphZone   zone )
   {
     FT_Memory  memory = zone->memory;
 
@@ -106,7 +106,7 @@
   TT_New_GlyphZone( FT_Memory      memory,
                     FT_UShort      maxPoints,
                     FT_Short       maxContours,
-                    TT_GlyphZone*  zone )
+                    TT_GlyphZone   zone )
   {
     FT_Error  error;
 
@@ -698,7 +698,7 @@
 
     if ( !error )
     {
-      TT_SBit_Strike*  strike = face->sbit_strikes + strike_index;
+      TT_SBit_Strike   strike = face->sbit_strikes + strike_index;
 
 
       sbit_metrics->x_ppem      = metrics->x_ppem;

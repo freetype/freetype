@@ -35,51 +35,51 @@
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index0( TT_CMapTable*  charmap,
+  code_to_index0( TT_CMapTable   charmap,
                   FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next0( TT_CMapTable*  charmap,
+  code_to_next0( TT_CMapTable   charmap,
                  FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index2( TT_CMapTable*  charmap,
+  code_to_index2( TT_CMapTable   charmap,
                   FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next2( TT_CMapTable*  charmap,
+  code_to_next2( TT_CMapTable   charmap,
                  FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index4( TT_CMapTable*  charmap,
+  code_to_index4( TT_CMapTable   charmap,
                   FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next4( TT_CMapTable*  charmap,
+  code_to_next4( TT_CMapTable   charmap,
                  FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index6( TT_CMapTable*  charmap,
+  code_to_index6( TT_CMapTable   charmap,
                   FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next6( TT_CMapTable*  charmap,
+  code_to_next6( TT_CMapTable   charmap,
                  FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index8_12( TT_CMapTable*  charmap,
+  code_to_index8_12( TT_CMapTable   charmap,
                      FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next8_12( TT_CMapTable*  charmap,
+  code_to_next8_12( TT_CMapTable   charmap,
                     FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index10( TT_CMapTable*  charmap,
+  code_to_index10( TT_CMapTable   charmap,
                    FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next10( TT_CMapTable*  charmap,
+  code_to_next10( TT_CMapTable   charmap,
                   FT_ULong       char_code );
 
 
@@ -108,7 +108,7 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   TT_CharMap_Load( TT_Face        face,
-                   TT_CMapTable*  cmap,
+                   TT_CMapTable   cmap,
                    FT_Stream      stream )
   {
     FT_Error      error;
@@ -118,16 +118,16 @@
 
     FT_UShort     u, l;
 
-    TT_CMap0*     cmap0;
-    TT_CMap2*     cmap2;
-    TT_CMap4*     cmap4;
-    TT_CMap6*     cmap6;
-    TT_CMap8_12*  cmap8_12;
-    TT_CMap10*    cmap10;
+    TT_CMap0      cmap0;
+    TT_CMap2      cmap2;
+    TT_CMap4      cmap4;
+    TT_CMap6      cmap6;
+    TT_CMap8_12  cmap8_12;
+    TT_CMap10    cmap10;
 
-    TT_CMap2SubHeader*  cmap2sub;
-    TT_CMap4Segment*    segments;
-    TT_CMapGroup*       groups;
+    TT_CMap2SubHeader   cmap2sub;
+    TT_CMap4Segment     segments;
+    TT_CMapGroup        groups;
 
 
     if ( cmap->loaded )
@@ -182,7 +182,7 @@
 
       if ( ALLOC_ARRAY( cmap2->subHeaders,
                         num_SH + 1,
-                        TT_CMap2SubHeader )    ||
+                        TT_CMap2SubHeaderRec )    ||
            ACCESS_Frame( ( num_SH + 1 ) * 8L ) )
       {
         FREE( cmap2->subHeaderKeys );
@@ -246,7 +246,7 @@
 
       if ( ALLOC_ARRAY( cmap4->segments,
                         num_Seg,
-                        TT_CMap4Segment )           ||
+                        TT_CMap4SegmentRec )           ||
            ACCESS_Frame( ( num_Seg * 4 + 1 ) * 2L ) )
         goto Fail;
 
@@ -338,7 +338,7 @@
 
       n = cmap8_12->nGroups;
 
-      if ( ALLOC_ARRAY( cmap8_12->groups, n, TT_CMapGroup ) ||
+      if ( ALLOC_ARRAY( cmap8_12->groups, n, TT_CMapGroupRec ) ||
            ACCESS_Frame( n * 3 * 4L )                       )
         goto Fail;
 
@@ -416,7 +416,7 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   TT_CharMap_Free( TT_Face        face,
-                   TT_CMapTable*  cmap )
+                   TT_CMapTable   cmap )
   {
     FT_Memory  memory;
 
@@ -488,10 +488,10 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index0( TT_CMapTable*  cmap,
+  code_to_index0( TT_CMapTable   cmap,
                   FT_ULong       charCode )
   {
-    TT_CMap0*  cmap0 = &cmap->c.cmap0;
+    TT_CMap0   cmap0 = &cmap->c.cmap0;
 
 
     return ( charCode <= 0xFF ? cmap0->glyphIdArray[charCode] : 0 );
@@ -516,10 +516,10 @@
   /*    Next char code.  0 if no higher one is encoded.                    */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next0( TT_CMapTable*  cmap,
+  code_to_next0( TT_CMapTable   cmap,
                  FT_ULong       charCode )
   {
-    TT_CMap0*  cmap0 = &cmap->c.cmap0;
+    TT_CMap0   cmap0 = &cmap->c.cmap0;
 
 
     while ( ++charCode <= 0xFF )
@@ -545,14 +545,14 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index2( TT_CMapTable*  cmap,
+  code_to_index2( TT_CMapTable   cmap,
                   FT_ULong       charCode )
   {
     FT_UInt             result, index1, offset;
     FT_UInt             char_lo;
     FT_ULong            char_hi;
-    TT_CMap2SubHeader*  sh2;
-    TT_CMap2*           cmap2;
+    TT_CMap2SubHeader   sh2;
+    TT_CMap2            cmap2;
 
 
     cmap2   = &cmap->c.cmap2;
@@ -610,14 +610,14 @@
   /*    Next encoded character.  0 if none exists.                         */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next2( TT_CMapTable*  cmap,
+  code_to_next2( TT_CMapTable   cmap,
                  FT_ULong       charCode )
   {
     FT_UInt             index1, offset;
     FT_UInt             char_lo;
     FT_ULong            char_hi;
-    TT_CMap2SubHeader*  sh2;
-    TT_CMap2*           cmap2;
+    TT_CMap2SubHeader   sh2;
+    TT_CMap2            cmap2;
 
 
     cmap2 = &cmap->c.cmap2;
@@ -693,12 +693,12 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index4( TT_CMapTable*  cmap,
+  code_to_index4( TT_CMapTable   cmap,
                   FT_ULong       charCode )
   {
     FT_UInt          result, index1, segCount;
-    TT_CMap4*        cmap4;
-    TT_CMap4Segment  *seg4, *limit;
+    TT_CMap4         cmap4;
+    TT_CMap4SegmentRec  *seg4, *limit;
 
 
     cmap4    = &cmap->c.cmap4;
@@ -777,12 +777,12 @@
   /*    Next encoded character.  0 if none exists.                         */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next4( TT_CMapTable*  cmap,
+  code_to_next4( TT_CMapTable   cmap,
                  FT_ULong       charCode )
   {
     FT_UInt          index1, segCount;
-    TT_CMap4*        cmap4;
-    TT_CMap4Segment  *seg4, *limit;
+    TT_CMap4         cmap4;
+    TT_CMap4SegmentRec  *seg4, *limit;
 
 
     cmap4    = &cmap->c.cmap4;
@@ -844,10 +844,10 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index6( TT_CMapTable*  cmap,
+  code_to_index6( TT_CMapTable   cmap,
                   FT_ULong       charCode )
   {
-    TT_CMap6*  cmap6;
+    TT_CMap6   cmap6;
     FT_UInt    result = 0;
 
 
@@ -877,10 +877,10 @@
   /*    Next encoded character.  0 if none exists.                         */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next6( TT_CMapTable*  cmap,
+  code_to_next6( TT_CMapTable   cmap,
                  FT_ULong       charCode )
   {
-    TT_CMap6*  cmap6;
+    TT_CMap6   cmap6;
 
 
     charCode++;
@@ -920,11 +920,11 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index8_12( TT_CMapTable*  cmap,
+  code_to_index8_12( TT_CMapTable   cmap,
                      FT_ULong       charCode )
   {
-    TT_CMap8_12*  cmap8_12;
-    TT_CMapGroup  *group, *limit;
+    TT_CMap8_12  cmap8_12;
+    TT_CMapGroupRec  *group, *limit;
 
 
     cmap8_12 = &cmap->c.cmap8_12;
@@ -984,11 +984,11 @@
   /*    Next encoded character.  0 if none exists.                         */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next8_12( TT_CMapTable*  cmap,
+  code_to_next8_12( TT_CMapTable   cmap,
                     FT_ULong       charCode )
   {
-    TT_CMap8_12*  cmap8_12;
-    TT_CMapGroup  *group, *limit;
+    TT_CMap8_12  cmap8_12;
+    TT_CMapGroupRec  *group, *limit;
 
 
     charCode++;
@@ -1030,10 +1030,10 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_UInt )
-  code_to_index10( TT_CMapTable*  cmap,
+  code_to_index10( TT_CMapTable   cmap,
                    FT_ULong       charCode )
   {
-    TT_CMap10*  cmap10;
+    TT_CMap10  cmap10;
     FT_UInt     result = 0;
 
 
@@ -1067,10 +1067,10 @@
   /*    Next encoded character.  0 if none exists.                         */
   /*                                                                       */
   FT_CALLBACK_DEF( FT_ULong )
-  code_to_next10( TT_CMapTable*  cmap,
+  code_to_next10( TT_CMapTable   cmap,
                   FT_ULong       charCode )
   {
-    TT_CMap10*  cmap10;
+    TT_CMap10  cmap10;
 
 
     charCode++;

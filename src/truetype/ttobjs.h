@@ -108,13 +108,13 @@ FT_BEGIN_HEADER
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
   FT_LOCAL( void )
-  TT_Done_GlyphZone( TT_GlyphZone*  zone );
+  TT_Done_GlyphZone( TT_GlyphZone   zone );
 
   FT_LOCAL( FT_Error )
   TT_New_GlyphZone( FT_Memory      memory,
                     FT_UShort      maxPoints,
                     FT_Short       maxContours,
-                    TT_GlyphZone*  zone );
+                    TT_GlyphZone   zone );
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
@@ -203,7 +203,7 @@ FT_BEGIN_HEADER
     FT_Pos        left_bearing;
     FT_Pos        advance;
 
-    TT_GlyphZone  zone;
+    TT_GlyphZoneRec  zone;
 
     FT_Long       arg1;         /* first argument                      */
     FT_Long       arg2;         /* second argument                     */
@@ -343,7 +343,7 @@ FT_BEGIN_HEADER
     FT_UShort          storage_size; /* The storage area is now part of */
     FT_Long*           storage;      /* the instance                    */
 
-    TT_GlyphZone       twilight;     /* The instance's twilight zone    */
+    TT_GlyphZoneRec       twilight;     /* The instance's twilight zone    */
 
     /* debugging variables */
 
@@ -367,7 +367,7 @@ FT_BEGIN_HEADER
   {
     FT_DriverRec    root;
     TT_ExecContext  context;  /* execution context        */
-    TT_GlyphZone    zone;     /* glyph loader points zone */
+    TT_GlyphZoneRec    zone;     /* glyph loader points zone */
 
     void*           extension_component;
 

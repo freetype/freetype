@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
                       FT_UInt           load_flags,
                       FT_Stream         stream,
                       FT_Bitmap        *map,
-                      TT_SBit_Metrics  *metrics );
+                      TT_SBit_MetricsRec  *metrics );
 
 
 FT_END_HEADER

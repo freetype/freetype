@@ -59,7 +59,7 @@
   {
     FT_Memory    memory = face->root.memory;
     FT_UShort    n;
-    TT_NameRec*  rec;
+    TT_NameEntryRec*  rec;
     FT_Bool      wide_chars    = 1;
     FT_Int       found_apple   = -1;
     FT_Int       found_win     = -1;
@@ -215,7 +215,7 @@
     FT_Error         error;
     FT_Library       library = face->root.driver->root.library;
     SFNT_Service     sfnt;
-    SFNT_Header      sfnt_header;
+    SFNT_HeaderRec      sfnt_header;
 
     /* for now, parameters are unused */
     FT_UNUSED( num_params );

@@ -29,7 +29,7 @@
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL( TT_Table* )
+  FT_LOCAL( TT_Table  )
   TT_LookUp_Table( TT_Face   face,
                    FT_ULong  tag );
 
@@ -41,15 +41,15 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  TT_Load_SFNT_Header( TT_Face       face,
+  TT_Load_SFNT_HeaderRec( TT_Face       face,
                        FT_Stream     stream,
                        FT_Long       face_index,
-                       SFNT_Header*  sfnt );
+                       SFNT_Header   sfnt );
 
   FT_LOCAL( FT_Error )
   TT_Load_Directory( TT_Face       face,
                      FT_Stream     stream,
-                     SFNT_Header*  sfnt );
+                     SFNT_Header   sfnt );
 
   FT_LOCAL( FT_Error )
   TT_Load_Any( TT_Face    face,

@@ -53,12 +53,12 @@
   /* <Return>                                                              */
   /*    A pointer to the table directory entry.  0 if not found.           */
   /*                                                                       */
-  FT_LOCAL_DEF( TT_Table* )
+  FT_LOCAL_DEF( TT_Table  )
   TT_LookUp_Table( TT_Face   face,
                    FT_ULong  tag  )
   {
-    TT_Table*  entry;
-    TT_Table*  limit;
+    TT_Table   entry;
+    TT_Table   limit;
 
 
     FT_TRACE3(( "TT_LookUp_Table: %08p, `%c%c%c%c' -- ",
@@ -110,7 +110,7 @@
                  FT_Stream  stream,
                  FT_ULong*  length )
   {
-    TT_Table*  table;
+    TT_Table   table;
     FT_Error   error;
 
 
@@ -134,7 +134,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_SFNT_Header                                                */
+  /*    TT_Load_SFNT_HeaderRec                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the header of a SFNT font file.  Supports collections.       */
@@ -160,10 +160,10 @@
   /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_SFNT_Header( TT_Face       face,
+  TT_Load_SFNT_HeaderRec( TT_Face       face,
                        FT_Stream     stream,
                        FT_Long       face_index,
-                       SFNT_Header*  sfnt )
+                       SFNT_Header   sfnt )
   {
     FT_Error   error;
     FT_ULong   format_tag;
@@ -172,7 +172,7 @@
     const FT_Frame_Field  sfnt_header_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  SFNT_Header
+#define FT_STRUCTURE  SFNT_HeaderRec
 
       FT_FRAME_START( 8 ),
         FT_FRAME_USHORT( num_tables ),
@@ -185,7 +185,7 @@
     const FT_Frame_Field  ttc_header_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  TTC_Header
+#define FT_STRUCTURE  TTC_HeaderRec
 
       FT_FRAME_START( 8 ),
         FT_FRAME_LONG( version ),
@@ -193,7 +193,7 @@
       FT_FRAME_END };
 
 
-    FT_TRACE2(( "TT_Load_SFNT_Header: %08p, %ld\n",
+    FT_TRACE2(( "TT_Load_SFNT_HeaderRec: %08p, %ld\n",
                 face, face_index ));
 
     face->ttc_header.tag      = 0;
@@ -213,7 +213,7 @@
       FT_Int  n;
 
 
-      FT_TRACE3(( "TT_Load_SFNT_Header: file is a collection\n" ));
+      FT_TRACE3(( "TT_Load_SFNT_HeaderRec: file is a collection\n" ));
 
       /* it's a TrueType collection, i.e. a file containing several */
       /* font files.  Read the font directory now                   */
@@ -263,7 +263,7 @@
            entry_selector > num_tables      ||
            entry_selector * 2 <= num_tables )
       {
-        FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT!\n" ));
+        FT_TRACE2(( "TT_Load_SFNT_HeaderRec: file is not SFNT!\n" ));
         error = SFNT_Err_Unknown_File_Format;
       }
     }
@@ -297,12 +297,12 @@
   FT_LOCAL_DEF( FT_Error )
   TT_Load_Directory( TT_Face       face,
                      FT_Stream     stream,
-                     SFNT_Header*  sfnt )
+                     SFNT_Header   sfnt )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    TT_Table *entry, *limit;
+    TT_TableRec *entry, *limit;
 
 
     FT_TRACE2(( "TT_Load_Directory: %08p\n", face ));
@@ -314,7 +314,7 @@
 
     if ( ALLOC_ARRAY( face->dir_tables,
                       face->num_tables,
-                      TT_Table ) )
+                      TT_TableRec ) )
       goto Exit;
 
     if ( ACCESS_Frame( face->num_tables * 16L ) )
@@ -397,7 +397,7 @@
   {
     FT_Error   error;
     FT_Stream  stream;
-    TT_Table*  table;
+    TT_Table   table;
     FT_ULong   size;
 
 
@@ -687,7 +687,7 @@
     FT_ULong   table_len;
     FT_Long    num_shorts, num_longs, num_shorts_checked;
 
-    TT_LongMetrics**   longs;
+    TT_LongMetrics *   longs;
     TT_ShortMetrics**  shorts;
 
 
@@ -715,7 +715,7 @@
       }
 
       num_longs = face->vertical.number_Of_VMetrics;
-      longs     = (TT_LongMetrics**)&face->vertical.long_metrics;
+      longs     = (TT_LongMetrics *)&face->vertical.long_metrics;
       shorts    = (TT_ShortMetrics**)&face->vertical.short_metrics;
     }
     else
@@ -729,7 +729,7 @@
       }
 
       num_longs = face->horizontal.number_Of_HMetrics;
-      longs     = (TT_LongMetrics**)&face->horizontal.long_metrics;
+      longs     = (TT_LongMetrics *)&face->horizontal.long_metrics;
       shorts    = (TT_ShortMetrics**)&face->horizontal.short_metrics;
     }
 
@@ -749,7 +749,7 @@
       goto Exit;
     }
 
-    if ( ALLOC_ARRAY( *longs,  num_longs,  TT_LongMetrics )  ||
+    if ( ALLOC_ARRAY( *longs,  num_longs,  TT_LongMetricsRec )  ||
          ALLOC_ARRAY( *shorts, num_shorts, TT_ShortMetrics ) )
       goto Exit;
 
@@ -757,8 +757,8 @@
       goto Exit;
 
     {
-      TT_LongMetrics*  cur   = *longs;
-      TT_LongMetrics*  limit = cur + num_longs;
+      TT_LongMetrics   cur   = *longs;
+      TT_LongMetrics   limit = cur + num_longs;
 
 
       for ( ; cur < limit; cur++ )
@@ -926,12 +926,12 @@
     FT_ULong   storageOffset, storageSize;
     FT_Byte*   storage;
 
-    TT_NameTable*  names;
+    TT_NameTable   names;
 
     const FT_Frame_Field  name_table_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  TT_NameTable
+#define FT_STRUCTURE  TT_NameTableRec
 
       FT_FRAME_START( 6 ),
         FT_FRAME_USHORT( format ),
@@ -943,7 +943,7 @@
     const FT_Frame_Field  name_record_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  TT_NameRec
+#define FT_STRUCTURE  TT_NameEntryRec
 
       /* no FT_FRAME_START */
         FT_FRAME_USHORT( platformID ),
@@ -988,7 +988,7 @@
 
     /* Allocate the array of name records. */
     if ( ALLOC( names->names,
-                names->numNameRecords*sizeof(TT_NameRec) + storageSize )  ||
+                names->numNameRecords*sizeof(TT_NameEntryRec) + storageSize )  ||
          ACCESS_Frame( names->numNameRecords * 12L ) )
       goto Exit;
 
@@ -997,8 +997,8 @@
     /* Load the name records and determine how much storage is needed */
     /* to hold the strings themselves.                                */
     {
-      TT_NameRec*  cur   = names->names;
-      TT_NameRec*  limit = cur + names->numNameRecords;
+      TT_NameEntryRec*  cur   = names->names;
+      TT_NameEntryRec*  limit = cur + names->numNameRecords;
 
 
       for ( ; cur < limit; cur ++ )
@@ -1033,8 +1033,8 @@
 
       /* Print Name Record Table in case of debugging */
       {
-        TT_NameRec*  cur   = names->names;
-        TT_NameRec*  limit = cur + names->numNameRecords;
+        TT_NameEntryRec*  cur   = names->names;
+        TT_NameEntryRec*  limit = cur + names->numNameRecords;
 
 
         for ( ; cur < limit; cur++ )
@@ -1093,7 +1093,7 @@
   TT_Free_Names( TT_Face  face )
   {
     FT_Memory      memory = face->root.driver->root.memory;
-    TT_NameTable*  names  = &face->name_table;
+    TT_NameTable   names  = &face->name_table;
 
 
     /* free strings table */
@@ -1128,15 +1128,15 @@
   TT_Load_CMap( TT_Face    face,
                 FT_Stream  stream )
   {
-    FT_Error    error;
-    FT_Memory   memory = stream->memory;
-    FT_Long     table_start;
-    TT_CMapDir  cmap_dir;
+    FT_Error       error;
+    FT_Memory      memory = stream->memory;
+    FT_Long        table_start;
+    TT_CMapDirRec  cmap_dir;
 
     const FT_Frame_Field  cmap_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  TT_CMapDir
+#define FT_STRUCTURE  TT_CMapDirRec
 
       FT_FRAME_START( 4 ),
         FT_FRAME_USHORT( tableVersionNumber ),
@@ -1147,7 +1147,7 @@
     const FT_Frame_Field  cmap_rec_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  TT_CMapTable
+#define FT_STRUCTURE  TT_CMapTableRec
 
       FT_FRAME_START( 4 ),
         FT_FRAME_USHORT( format ),
@@ -1188,7 +1188,7 @@
 
       for ( ; charmap < limit; charmap++ )
       {
-        TT_CMapTable*  cmap;
+        TT_CMapTable   cmap;
 
 
         charmap->root.face = (FT_Face)face;
@@ -1205,7 +1205,7 @@
       /* now read the rest of each table */
       for ( charmap = face->charmaps; charmap < limit; charmap++ )
       {
-        TT_CMapTable* cmap = &charmap->cmap;
+        TT_CMapTable  cmap = &charmap->cmap;
 
 
         if ( FILE_Seek( table_start + (FT_Long)cmap->offset ) ||
@@ -1513,7 +1513,7 @@
     FT_Memory  memory = stream->memory;
 
     FT_UInt        j,num_ranges;
-    TT_GaspRange*  gaspranges;
+    TT_GaspRange   gaspranges;
 
 
     FT_TRACE2(( "TT_Load_Gasp: %08p\n", face ));
@@ -1534,7 +1534,7 @@
     num_ranges = face->gasp.numRanges;
     FT_TRACE3(( "number of ranges = %d\n", num_ranges ));
 
-    if ( ALLOC_ARRAY( gaspranges, num_ranges, TT_GaspRange ) ||
+    if ( ALLOC_ARRAY( gaspranges, num_ranges, TT_GaspRangeRec ) ||
          ACCESS_Frame( num_ranges * 4L )                     )
       goto Exit;
 
@@ -1623,8 +1623,8 @@
       if ( coverage == 0x0001 )
       {
         FT_UInt          num_pairs;
-        TT_Kern_0_Pair*  pair;
-        TT_Kern_0_Pair*  limit;
+        TT_Kern0_Pair  pair;
+        TT_Kern0_Pair  limit;
 
 
         /* found a horizontal format 0 kerning table! */
@@ -1638,7 +1638,7 @@
         FORGET_Frame();
 
         /* allocate array of kerning pairs */
-        if ( ALLOC_ARRAY( face->kern_pairs, num_pairs, TT_Kern_0_Pair ) ||
+        if ( ALLOC_ARRAY( face->kern_pairs, num_pairs, TT_Kern0_PairRec ) ||
              ACCESS_Frame( 6L * num_pairs )                             )
           goto Exit;
 
@@ -1660,7 +1660,7 @@
         /* fonts have unsorted tables!)                            */
         {
           FT_UInt          i;
-          TT_Kern_0_Pair*  pair0;
+          TT_Kern0_Pair  pair0;
 
 
           pair0 = face->kern_pairs;
@@ -1670,7 +1670,7 @@
             if ( tt_kern_pair_compare( pair0, pair0 + 1 ) != -1 )
             {
               qsort( (void*)face->kern_pairs, (int)num_pairs,
-                     sizeof ( TT_Kern_0_Pair ), tt_kern_pair_compare );
+                     sizeof ( TT_Kern0_PairRec ), tt_kern_pair_compare );
               break;
             }
           }
@@ -1700,8 +1700,8 @@
   tt_kern_pair_compare( const void*  a,
                         const void*  b )
   {
-    TT_Kern_0_Pair*  pair1 = (TT_Kern_0_Pair*)a;
-    TT_Kern_0_Pair*  pair2 = (TT_Kern_0_Pair*)b;
+    TT_Kern0_Pair  pair1 = (TT_Kern0_Pair)a;
+    TT_Kern0_Pair  pair2 = (TT_Kern0_Pair)b;
 
     FT_ULong  index1 = TT_KERN_INDEX( pair1->left, pair1->right );
     FT_ULong  index2 = TT_KERN_INDEX( pair2->left, pair2->right );
@@ -1736,7 +1736,7 @@
     FT_Error  error;
     FT_Memory memory = stream->memory;
 
-    TT_Hdmx*  hdmx = &face->hdmx;
+    TT_Hdmx   hdmx = &face->hdmx;
     FT_Long   num_glyphs;
     FT_Long   record_size;
 
@@ -1763,15 +1763,15 @@
     if ( hdmx->version != 0 )
       goto Exit;
 
-    if ( ALLOC_ARRAY( hdmx->records, hdmx->num_records, TT_HdmxRec ) )
+    if ( ALLOC_ARRAY( hdmx->records, hdmx->num_records, TT_HdmxEntryRec ) )
       goto Exit;
 
     num_glyphs   = face->root.num_glyphs;
     record_size -= num_glyphs + 2;
 
     {
-      TT_HdmxRec*  cur   = hdmx->records;
-      TT_HdmxRec*  limit = cur + hdmx->num_records;
+      TT_HdmxEntry  cur   = hdmx->records;
+      TT_HdmxEntry  limit = cur + hdmx->num_records;
 
 
       for ( ; cur < limit; cur++ )

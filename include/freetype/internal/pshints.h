@@ -25,7 +25,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TYPE1_TABLES_H
-#include FT_INTERNAL_POSTSCRIPT_GLOBALS_H
 
 
 FT_BEGIN_HEADER

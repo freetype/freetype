@@ -241,7 +241,7 @@
 
     /* all right, set table fields and exit successfuly */
     {
-      TT_Post_20*  table = &face->postscript_names.names.format_20;
+      TT_Post_20   table = &face->postscript_names.names.format_20;
 
 
       table->num_glyphs    = (FT_UShort)num_glyphs;
@@ -316,7 +316,7 @@
 
     /* OK, set table fields and exit successfuly */
     {
-      TT_Post_25*  table = &face->postscript_names.names.format_25;
+      TT_Post_25   table = &face->postscript_names.names.format_25;
 
 
       table->num_glyphs = (FT_UShort)num_glyphs;
@@ -381,7 +381,7 @@
   TT_Free_Post_Names( TT_Face  face )
   {
     FT_Memory       memory = face->root.memory;
-    TT_Post_Names*  names  = &face->postscript_names;
+    TT_Post_Names   names  = &face->postscript_names;
 
 
     if ( names->loaded )
@@ -390,7 +390,7 @@
       {
       case 0x00020000L:
         {
-          TT_Post_20*  table = &names->names.format_20;
+          TT_Post_20   table = &names->names.format_20;
           FT_UShort    n;
 
 
@@ -407,7 +407,7 @@
 
       case 0x00028000L:
         {
-          TT_Post_25*  table = &names->names.format_25;
+          TT_Post_25   table = &names->names.format_25;
 
 
           FREE( table->offsets );
@@ -447,7 +447,7 @@
                   FT_String**  PSname )
   {
     FT_Error            error;
-    TT_Post_Names*      names;
+    TT_Post_Names       names;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     PSNames_Service  psnames;
@@ -480,7 +480,7 @@
 
     case 0x00020000L:
       {
-        TT_Post_20*  table = &names->names.format_20;
+        TT_Post_20   table = &names->names.format_20;
 
 
         if ( !names->loaded )
@@ -505,7 +505,7 @@
 
     case 0x00028000L:
       {
-        TT_Post_25*  table = &names->names.format_25;
+        TT_Post_25   table = &names->names.format_25;
 
 
         if ( !names->loaded )
