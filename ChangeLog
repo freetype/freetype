@@ -1,3 +1,11 @@
+2005-04-04  David Turner    <david@freetype.org>
+
+    * include/freetype/config/ftoption.h: commenting the definition of
+    FT_OPTIMIZE_MEMORY for the upcoming 2.1.10 release
+
+    * src/autofit/afhints.c: small tweak to use a bit less heap memory
+    within the auto-fitter
+
 2005-04-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1parse.c (T1_New_Parser): Relax the check for a valid

@@ -550,30 +550,11 @@ FT_BEGIN_HEADER
  /* */
 
 /*
- * The FT_CONFIG_OPTION_CHESTER_XXXX macros are used to toggle some recent
- * improvements to the auto-hinter contributed by David Chester.  They will
- * most likely disappear completely in the next release.  For now, you
- * should always keep them defined.
- *
- */
-#define  FT_CONFIG_OPTION_CHESTER_HINTS
-
-#ifdef   FT_CONFIG_OPTION_CHESTER_HINTS
-
-#define  FT_CONFIG_CHESTER_SMALL_F
-#define  FT_CONFIG_CHESTER_ASCENDER
-#define  FT_CONFIG_CHESTER_SERIF
-#define  FT_CONFIG_CHESTER_STEM
-#define  FT_CONFIG_CHESTER_BLUE_SCALE
-
-#endif /* FT_CONFIG_OPTION_CHESTER_HINTS */
-
-/*
  * This temporary macro is used to control various optimizations for
  * reducing the heap footprint of memory-mapped TrueType files.
  *
  */
-#define  FT_OPTIMIZE_MEMORY
+/* #define  FT_OPTIMIZE_MEMORY */
 
 
 FT_END_HEADER

@@ -42,7 +42,7 @@
         goto Exit;
       }
 
-      new_max += ( new_max >> 1 ) + 4;
+      new_max += ( new_max >> 2 ) + 4;
       if ( new_max < old_max || new_max > big_max )
         new_max = big_max;
 
@@ -85,7 +85,7 @@
         goto Exit;
       }
 
-      new_max += ( new_max >> 1 ) + 4;
+      new_max += ( new_max >> 2 ) + 4;
       if ( new_max < old_max || new_max > big_max )
         new_max = big_max;
 
