@@ -1,18 +1,46 @@
 #!/usr/bin/env python
 #
-# DocMaker is a very simple program used to generate HTML documentation
-# from the source files of the FreeType packages.
+#  DocMaker 0.1 (c) 2000-2001 David Turner <david@freetype.org>
 #
-# I should really be using regular expressions to do this, but hey,
-# i'm too lazy right now, and the damn thing seems to work :-)
+#  DocMaker is a very simple program used to generate the API Reference
+#  of programs by extracting comments from source files, and generating
+#  the equivalent HTML documentation.
+#
+#  DocMaker is very similar to other tools like Doxygen, with the
+#  following differences:
+#
+#    - it is written in Python (so it's slow, but easy to maintain and
+#      improve)
+#
+#    - the comment syntax used by DocMaker is simpler and makes for
+#      clearer comments
+#
+#  Of course, it doesn't have all the goodies of most similar tools,
+#  (e.g. C++ class hierarchies), but hey, it's only 2000 lines of
+#  python
+#  
+#  DocMaker is mainly used to generate the API references of several
+#  FreeType packages.
+#
 #   - David
 #
 
-import fileinput, sys, string, glob
+import fileinput, sys, os, string, glob, getopt
 
 # The Project's title.  This can be overridden from the command line with
-# an option.
-project_title = "Project"
+# the options "-t" or "--title"
+project_title  = "Project"
+
+# The project's filename prefix. This can be set from the command line with
+# the options "-p" or "--prefix"
+#
+project_prefix = ""
+
+# The project's documentation output directory. This can be set from the
+# command line with the options "-o" or "--output"
+#
+output_dir     = None
+
 
 # The following defines the HTML header used by all generated pages.
 #
@@ -22,7 +50,7 @@ html_header_1 = """\
 <title>"""
 
 html_header_2= """ API Reference</title>
-<basefont face="Georgia, Arial, Helvetica, Geneva">
+<basefont face="Verdana,Geneva,Arial,Helvetica">
 <style content="text/css">
   P { text-align=justify }
   H1 { text-align=center }
@@ -42,6 +70,7 @@ html_header_3=""" API Reference</h1></center>
 # This is recomputed later when the project title changes.
 #
 html_header = html_header_1 + project_title + html_header_2 + project_title + html_header_3
+
 
 # The HTML footer used by all generated pages.
 #
@@ -141,11 +170,48 @@ def sort_order_list( input_list, order_list ):
 # Translate a single line of source to HTML.  This will convert
 # a "<" into "&lt.", ">" into "&gt.", etc.
 #
-def html_format( line )
+def html_format( line ):
     result = string.replace( line, "<", "&lt." )
     result = string.replace( line, ">", "&gt." )
     result = string.replace( line, "&", "&amp." )
     return result
+
+
+# open the standard output to a given project documentation file
+# use "output_dir" to determine the filename location, when necessary
+# and save the old stdout in a tuple that is returned by this function
+#
+def open_output( filename ):
+    global output_dir
+    
+    if output_dir and output_dir != "":
+        filename = output_dir + os.sep + filename
+
+    old_stdout = sys.stdout
+    new_file   = open( filename, "w" )
+    sys.stdout = new_file
+
+    return ( new_file, old_stdout )
+
+
+# close the output that was returned by "close_output"
+#
+#
+def close_output( output ):
+    output[0].close()
+    sys.stdout = output[1]
+
+# check output directoy
+#
+def check_output( ):
+    global output_dir
+    if output_dir:
+        if output_dir != "":
+            if not os.path.isdir( output_dir ):
+                sys.stderr.write( "argument '"+output_dir+"' is not a valid directory" )
+                sys.exit(2)
+        else:
+            output_dir = None
 
 
 # The FreeType 2 reference is extracted from the source files.  These
@@ -346,11 +412,12 @@ class DocParagraph:
 
                 # we need to find non-alphanumeric characters
                 #
-                i = len( word )
-                while i > 0 and not word[i - 1] in alphanum:
-                    i = i - 1
-
-                if i > 0:
+                l = len( word )
+                i = 0
+                while i < l and word[i] in alphanum:
+                    i = i + 1
+                
+                if i < l:
                     extra = word[i :]
                     word  = word[0 : i]
 
@@ -363,7 +430,7 @@ class DocParagraph:
             if cursor + len( word ) + 1 > max_width:
                 print html_format( line )
                 cursor = 0
-                line = ""
+                line   = ""
 
             line = line + word
             if not extra:
@@ -413,7 +480,7 @@ class DocParagraph:
 # DocContent is used to store the content of a given marker.
 #
 # The "self.items" list contains (field,elements) records, where "field"
-# corresponds to a given structure fields or function parameter (indicated
+# corresponds to a given structure field or function parameter (indicated
 # by a "::"), or NULL for a normal section of text/code.
 #
 # Hence, the following example:
@@ -871,7 +938,7 @@ class DocSection:
         # section
         #
         if self.elements.has_key( block.name ):
-            self.print_error( "duplicate element definition for " +
+            block.print_error( "duplicate element definition for " +
                               "'" + block.name + "' " +
                               "in section " +
                               "'" + self.name + "'\n" +
@@ -1052,22 +1119,20 @@ class DocSectionList:
 
 
     def dump_html_sections( self ):
-        old_stdout = sys.stdout
-
+        
         for section in self.sections.values():
             if section.filename:
-                new_file   = open( section.filename, "w" )
-                sys.stdout = new_file
+                output = open_output( section.filename )
+                
                 section.dump_html( self.identifiers )
-                new_file.close()
+                
+                close_output( output )
 
-        sys.stdout = old_stdout
 
 
     def dump_html_index( self ):
-        old_stdout = sys.stdout
-        new_file   = open( self.index_filename, "w" )
-        sys.stdout = new_file
+
+        output = open_output( self.index_filename )        
 
         num_columns = 3
         total       = len( self.index )
@@ -1096,7 +1161,7 @@ class DocSectionList:
         print "</tr></table></center>"
         print html_footer
 
-        sys.stdout = old_stdout
+        close_output( output )
 
 
 
@@ -1190,9 +1255,7 @@ class DocDocument:
     def dump_toc_html( self ):
         # dump an html table of contents
         #
-        old_stdout = sys.stdout
-        new_file   = open( self.section_list.toc_filename, "w" )
-        sys.stdout = new_file
+        output = open_output( self.section_list.toc_filename )
 
         print html_header
 
@@ -1240,7 +1303,7 @@ class DocDocument:
 
         print html_footer
 
-        sys.stdout = old_stdout
+        close_output( output )
 
 
     def dump_index_html( self ):
@@ -1317,13 +1380,16 @@ def add_new_block( list, filename, lineno, block_lines, source_lines ):
     list.append( block )
 
 
-def make_block_list():
+def make_block_list( args = None ):
     """parse a file and extract comments blocks from it"""
 
     file_list = []
     # sys.stderr.write( repr( sys.argv[1 :] ) + '\n' )
 
-    for pathname in sys.argv[1 :]:
+    if not args:
+        args = sys.argv[1:]
+        
+    for pathname in args:
         if string.find( pathname, '*' ) >= 0:
             newpath = glob.glob( pathname )
             newpath.sort()  # sort files -- this is important because
@@ -1358,6 +1424,7 @@ def make_block_list():
     source  = []
     state   = 0
 
+    fileinput.close()
     for line in fileinput.input( file_list ):
         l = len( line )
         if l > 0 and line[l - 1] == '\012':
@@ -1399,7 +1466,7 @@ def make_block_list():
                     block  = []
                     source = []
                     format = 1
-                    lineno = fileinput.lineno()
+                    lineno = fileinput.filelineno()
 
                 elif i == l - 1 and line2[i] == '/':
                     # this is '/**' followed by any number of '*', followed
@@ -1408,7 +1475,7 @@ def make_block_list():
                     block  = []
                     source = []
                     format = 2
-                    lineno = fileinput.lineno()
+                    lineno = fileinput.filelineno()
 
         ##############################################################
         #
@@ -1507,38 +1574,72 @@ def dump_block_list( list ):
     print "---------the end-----------------------"
 
 
+def usage():
+    print "\nDocMaker 0.1 Usage information\n"
+    print "  docmaker [options] file1 [ file2 ... ]\n"
+    print "using the following options:\n"
+    print "  -h : print this page"
+    print "  -t : set project title, as in '-t \"My Project\"'"
+    print "  -o : set output directory, as in '-o mydir'"
+    print "  -p : set documentation prefix, as in '-p ft2'"
+    print ""
+    print "  --title  : same as -t, as in '--title=\"My Project\"'"
+    print "  --output : same as -o, as in '--output=mydir'"
+    print "  --prefix : same as -p, as in '--prefix=ft2'"
+
+
 def main( argv ):
     """main program loop"""
 
+    global output_dir, project_title, project_prefix
+    global html_header, html_header1, html_header2, html_header3
+
+    try:
+        opts, args = getopt.getopt( sys.argv[1:], "ht:o:p:", [ "help", "title=", "output=", "prefix=" ] )
+        
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+
+    if args == []:
+        usage()
+        sys.exit(1)
+
+    # process options
+    project_title  = "Project"
+    project_prefix = None 
+    output_dir     = None
+    
+    for opt in opts:
+        if opt[0] in ( "-h", "--help" ):
+            usage()
+            sys.exit(0)
+
+        if opt[0] in ( "-t", "--title" ):
+            project_title = opt[1]
+
+        if opt[0] in ( "-o", "--output" ):
+            output_dir = opt[1]
+
+        if opt[0] in ( "-p", "--prefix" ):
+            project_prefix = opt[1]
+
+    html_header = html_header_1 + project_title + html_header_2 + project_title + html_header_3
+    check_output( )
+
     # we begin by simply building a list of DocBlock elements
-    #
-    sys.stderr.write( "extracting comment blocks from sources...\n" )
-    list = make_block_list()
+    list = make_block_list( args )
 
     # now, sort the blocks into sections
-    #
     document = DocDocument()
     for block in list:
         document.append_block( block )
 
-    document.prepare_files( "ft2" )
+    document.prepare_files( project_prefix )
 
     document.dump_toc_html()
     document.dump_sections_html()
     document.dump_index_html()
-
-##    section_list = DocSectionList()
-##    for block in list:
-##        section_list.append_block( block )
-##
-##    section_list.prepare_files( "ft2" )
-
-##    # dump the section list TOC and sections
-##    #
-##    section_list.dump_html_toc()
-##    section_list.dump_html_sections()
-##    section_list.dump_html_index()
-
 
 # if called from the command line
 #
