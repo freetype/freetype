@@ -167,18 +167,20 @@
        /* create charmap */
        {
          FT_CharMapRec  charmap;
-         
+
 
          charmap.face        = root;
          charmap.platform_id = 3;
          charmap.encoding_id = 1;
          charmap.encoding    = ft_encoding_unicode;
-         
+
          FT_CMap_New( &pfr_cmap_class_rec, NULL, &charmap, NULL );
 
+#if 0
          /* Select default charmap */
          if (root->num_charmaps)
            root->charmap = root->charmaps[0];
+#endif
        }
 
        /* check whether we've loaded any kerning pairs */
