@@ -51,7 +51,7 @@ make_module_list: clean_module_list
 #
 ifneq ($(findstring $(PLATFORM),dos win32 win16 os2),)
   OPEN_MODULE  := @echo #
-  CLOSE_MODULE :=  >> $(FT_MODULE_LIST)
+  CLOSE_MODULE :=  >> $(subst /,\,$(FT_MODULE_LIST))
 else
   OPEN_MODULE  := @echo "
   CLOSE_MODULE := " >> $(FT_MODULE_LIST)
