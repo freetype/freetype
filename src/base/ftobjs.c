@@ -217,6 +217,8 @@
   /* <Description>                                                         */
   /*    Creates a new input stream object from an FT_Open_Args structure.  */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    The function expects a valid `astream' parameter.                  */
   static
   FT_Error  ft_new_input_stream( FT_Library     library,
                                  FT_Open_Args*  args,
@@ -226,6 +228,12 @@
     FT_Memory  memory;
     FT_Stream  stream;
 
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !args )
+      return FT_Err_Invalid_Argument;
 
     *astream = 0;
     memory   = library->memory;
@@ -279,7 +287,7 @@
   /*                                                                       */
   FT_EXPORT_FUNC( void )  FT_Done_Stream( FT_Stream  stream )
   {
-    if ( stream->close )
+    if ( stream && stream->close )
       stream->close( stream );
   }
 
@@ -425,6 +433,9 @@
     FT_Int  n;
 
 
+    if ( !library )
+      return 0;
+
     for ( n = 0; n < FT_MAX_GLYPH_FORMATS; n++ )
     {
       FT_Raster_Funcs*  funcs = &library->raster_funcs[n];
@@ -471,12 +482,20 @@
   FT_EXPORT_FUNC( FT_Error )  FT_Set_Raster( FT_Library        library,
                                              FT_Raster_Funcs*  raster_funcs )
   {
-    FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
+    FT_Glyph_Format  glyph_format;
     FT_Raster_Funcs* funcs;
     FT_Raster        raster;
     FT_Error         error;
     FT_Int           n, index;
 
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !raster_funcs )
+      return FT_Err_Invalid_Argument;
+
+    glyph_format = raster_funcs->glyph_format;
 
     if ( glyph_format == ft_glyph_format_none )
       return FT_Err_Invalid_Argument;
@@ -551,12 +570,20 @@
                                FT_Library        library,
                                FT_Raster_Funcs*  raster_funcs )
   {
-    FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
+    FT_Glyph_Format  glyph_format;
     FT_Error         error;
     FT_Int           n;
 
 
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
     error = FT_Err_Invalid_Argument;
+
+    if ( !raster_funcs )
+      goto Exit;
+
+    glyph_format = raster_funcs->glyph_format;
 
     if ( glyph_format == ft_glyph_format_none )
       goto Exit;
@@ -611,8 +638,11 @@
     FT_Raster        raster;
 
 
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
     raster = FT_Get_Raster( library, format, &funcs );
-    if ( raster && funcs.raster_set_mode )
+    if ( raster && args && funcs.raster_set_mode )
       return funcs.raster_set_mode( raster, mode, args );
     else
       return FT_Err_Invalid_Argument;
@@ -645,7 +675,8 @@
                                              FT_UInt            hook_index,
                                              FT_DebugHook_Func  debug_hook )
   {
-    if ( hook_index <
+    if ( library && debug_hook &&
+         hook_index <
            ( sizeof ( library->debug_hooks ) / sizeof ( void* ) ) )
       library->debug_hooks[hook_index] = debug_hook;
   }
@@ -673,9 +704,12 @@
   FT_EXPORT_FUNC( FT_Error )  FT_New_Library( FT_Memory    memory,
                                               FT_Library*  alibrary )
   {
-    FT_Library library = 0;
-    FT_Error   error;
+    FT_Library  library = 0;
+    FT_Error    error;
 
+
+    if ( !memory )
+      return FT_Err_Invalid_Argument;
 
     /* first of all, allocate the library object */
     if ( ALLOC( library, sizeof ( *library ) ) )
@@ -804,8 +838,11 @@
     FT_Memory  memory;
 
 
-    if ( !library || !driver_interface )
+    if ( !library )
       return FT_Err_Invalid_Library_Handle;
+
+    if ( !driver_interface )
+      return FT_Err_Invalid_Argument;
 
     memory = library->memory;
     error  = FT_Err_Ok;
@@ -1041,6 +1078,11 @@
     FT_Open_Args  args;
 
 
+    /* test for valid `library' and `aface' delayed to FT_Open_Face() */
+
+    if ( !pathname )
+      return FT_Err_Invalid_Argument;
+
     args.flags    = ft_open_pathname;
     args.pathname = (char*)pathname;
 
@@ -1096,6 +1138,11 @@
   {
     FT_Open_Args  args;
 
+
+    /* test for valid `library' and `face' delayed to FT_Open_Face() */
+
+    if ( !file_base )
+      return FT_Err_Invalid_Argument;
 
     args.flags       = ft_open_memory;
     args.memory_base = file_base;
@@ -1158,10 +1205,13 @@
     FT_ListNode  node = 0;
 
 
-    *aface = 0;
+    /* test for valid `library' and `args' delayed to */
+    /* ft_new_input_stream()                          */
 
-    if ( !library )
-      return FT_Err_Invalid_Handle;
+    if ( !aface )
+      return FT_Err_Invalid_Argument;
+
+    *aface = 0;
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
@@ -1328,6 +1378,11 @@
     FT_Open_Args  open;
 
 
+    /* test for valid `face' delayed to FT_Attach_Stream() */
+
+    if ( !filepathname )
+      return FT_Err_Invalid_Argument;
+
     open.flags    = ft_open_pathname;
     open.pathname = (char*)filepathname;
 
@@ -1371,11 +1426,16 @@
     FTDriver_getInterface  get_interface;
 
 
-    if ( !face || !face->driver )
-      return FT_Err_Invalid_Handle;
+    /* test for valid `parameters' delayed to ft_new_input_stream() */
+
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
 
     driver = face->driver;
-    error  = ft_new_input_stream( driver->library, parameters, &stream );
+    if ( !driver )
+      return FT_Err_Invalid_Driver_Handle;
+
+    error = ft_new_input_stream( driver->library, parameters, &stream );
     if ( error )
       goto Exit;
 
@@ -1427,10 +1487,13 @@
     FT_ListNode          node;
 
 
-    if ( !face || !face->driver )
+    if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
-    driver    = face->driver;
+    driver = face->driver;
+    if ( !driver )
+      return FT_Err_Invalid_Driver_Handle;
+
     interface = &driver->interface;
     memory    = driver->memory;
 
@@ -1482,11 +1545,18 @@
     FT_ListNode          node = 0;
 
 
-    if ( !face || !face->driver )
+    if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
-    *asize    = 0;
-    driver    = face->driver;
+    if ( !asize )
+      return FT_Err_Invalid_Argument;
+
+    *asize = 0;
+
+    driver = face->driver;
+    if ( !driver )
+      return FT_Err_Invalid_Driver_Handle;
+
     interface = &driver->interface;
     memory    = face->memory;
 
@@ -1544,17 +1614,20 @@
     FT_ListNode  node;
 
 
-    if ( !size || !size->face )
+    if ( !size )
       return FT_Err_Invalid_Size_Handle;
 
-    driver = size->face->driver;
+    face = size->face;
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
+    driver = face->driver;
     if ( !driver )
       return FT_Err_Invalid_Driver_Handle;
 
     memory = driver->memory;
 
     error = FT_Err_Ok;
-    face  = size->face;
     node  = FT_List_Find( &face->sizes_list, size );
     if ( node )
     {
@@ -1621,12 +1694,21 @@
     FT_Driver            driver;
     FT_Memory            memory;
     FT_DriverInterface*  interface;
-    FT_Size_Metrics*     metrics = &face->size->metrics;
+    FT_Size_Metrics*     metrics;
     FT_Long              dim_x, dim_y;
 
 
-    if ( !face || !face->size || !face->driver )
+    if ( !face )
       return FT_Err_Invalid_Face_Handle;
+
+    if ( !face->size )
+      return FT_Err_Invalid_Size_Handle;
+
+    driver = face->driver;
+    if ( !driver )
+      return FT_Err_Invalid_Driver_Handle;
+
+    metrics = &face->size->metrics;
 
     if ( !char_width )
       char_width = char_height;
@@ -1705,10 +1787,16 @@
     FT_Size_Metrics*     metrics = &face->size->metrics;
 
 
-    if ( !face || !face->size || !face->driver )
+    if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
-    driver    = face->driver;
+    if ( !face->size )
+      return FT_Err_Invalid_Size_Handle;
+
+    driver = face->driver;
+    if ( !driver )
+      return FT_Err_Invalid_Driver_Handle;
+
     interface = &driver->interface;
     memory    = driver->memory;
 
@@ -1770,12 +1858,18 @@
     FT_GlyphSlot         slot;
 
 
-    *aslot = 0;
-
-    if ( !face || !face->driver )
+    if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
-    driver    = face->driver;
+    if ( !aslot )
+      return FT_Err_Invalid_Argument;
+
+    *aslot = 0;
+
+    driver = face->driver;
+    if ( !driver )
+      return FT_Err_Invalid_Driver_Handle;
+
     interface = &driver->interface;
     memory    = driver->memory;
 
@@ -1880,8 +1974,14 @@
     FT_Driver  driver;
 
 
-    if ( !face || !face->size || !face->glyph )
+    if ( !face )
       return FT_Err_Invalid_Face_Handle;
+
+    if ( !face->size )
+      return FT_Err_Invalid_Size_Handle;
+
+    if ( !face->glyph )
+      return FT_Err_Invalid_Slot_Handle;
 
     if ( glyph_index >= face->num_glyphs )
       return FT_Err_Invalid_Argument;
@@ -1935,8 +2035,17 @@
     FT_UInt    glyph_index;
 
 
-    if ( !face || !face->size || !face->glyph || !face->charmap )
+    if ( !face )
       return FT_Err_Invalid_Face_Handle;
+
+    if ( !face->size )
+      return FT_Err_Invalid_Size_Handle;
+
+    if ( !face->glyph )
+      return FT_Err_Invalid_Slot_Handle;
+
+    if ( !face->charmap )
+      return FT_Err_Invalid_CharMap_Handle;
 
     driver      = face->driver;
     glyph_index = FT_Get_Char_Index( face, char_code );
@@ -1986,16 +2095,16 @@
                                               FT_UInt     right_glyph,
                                               FT_Vector*  kerning )
   {
-    FT_Error   error;
+    FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;
     FT_Memory  memory;
 
 
     if ( !face )
-    {
-      error = FT_Err_Invalid_Face_Handle;
-      goto Exit;
-    }
+      return FT_Err_Invalid_Face_Handle;
+
+    if ( !kerning )
+      return FT_Err_Invalid_Argument;
 
     driver = face->driver;
     memory = driver->memory;
@@ -2011,10 +2120,8 @@
     {
       kerning->x = 0;
       kerning->y = 0;
-      error      = FT_Err_Ok;
     }
 
-  Exit:
     return error;
   }
 
@@ -2043,9 +2150,18 @@
   FT_EXPORT_FUNC( FT_Error )  FT_Select_Charmap( FT_Face      face,
                                                  FT_Encoding  encoding )
   {
-    FT_CharMap*  cur   = face->charmaps;
-    FT_CharMap*  limit = cur + face->num_charmaps;
+    FT_CharMap*  cur;
+    FT_CharMap*  limit;
 
+
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
+    cur = face->charmaps;
+    if ( !cur )
+      return FT_Err_Invalid_CharMap_Handle;
+
+    limit = cur + face->num_charmaps;
 
     for ( ; cur < limit; cur++ )
     {
@@ -2083,9 +2199,18 @@
   FT_EXPORT_FUNC( FT_Error )  FT_Set_Charmap( FT_Face     face,
                                               FT_CharMap  charmap )
   {
-    FT_CharMap*  cur   = face->charmaps;
-    FT_CharMap*  limit = cur + face->num_charmaps;
+    FT_CharMap*  cur;
+    FT_CharMap*  limit;
 
+
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
+    cur = face->charmaps;
+    if ( !cur )
+      return FT_Err_Invalid_CharMap_Handle;
+
+    limit = cur + face->num_charmaps;
 
     for ( ; cur < limit; cur++ )
     {
@@ -2115,8 +2240,8 @@
   /* <Return>                                                              */
   /*    The glyph index.  0 means `undefined character code'.              */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_UInt )  FT_Get_Char_Index( FT_Face  face,
-                                                FT_ULong charcode )
+  FT_EXPORT_FUNC( FT_UInt )  FT_Get_Char_Index( FT_Face   face,
+                                                FT_ULong  charcode )
   {
     FT_UInt    result;
     FT_Driver  driver;
@@ -2197,6 +2322,8 @@
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Done_FreeType( FT_Library  library )
   {
+    /* test for valid `library' delayed to FT_Done_Library() */
+
     /* Discard the library object */
     FT_Done_Library( library );
 

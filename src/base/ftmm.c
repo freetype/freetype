@@ -24,10 +24,13 @@
   {
     FT_Error  error;
 
+
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
     
     error = FT_Err_Invalid_Argument;
 
-    if ( face && FT_HAS_MULTIPLE_MASTERS( face ) )
+    if ( FT_HAS_MULTIPLE_MASTERS( face ) )
     {
       FT_Driver       driver = face->driver;
       FT_Get_MM_Func  func;
@@ -51,9 +54,12 @@
     FT_Error  error;
 
     
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
     error = FT_Err_Invalid_Argument;
 
-    if ( face && FT_HAS_MULTIPLE_MASTERS( face ) )
+    if ( FT_HAS_MULTIPLE_MASTERS( face ) )
     {
       FT_Driver              driver = face->driver;
       FT_Set_MM_Design_Func  func;
@@ -77,9 +83,12 @@
     FT_Error  error;
 
     
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
     error = FT_Err_Invalid_Argument;
 
-    if ( face && FT_HAS_MULTIPLE_MASTERS( face ) )
+    if ( FT_HAS_MULTIPLE_MASTERS( face ) )
     {
       FT_Driver             driver = face->driver;
       FT_Set_MM_Blend_Func  func;

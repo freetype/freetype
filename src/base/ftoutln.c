@@ -77,10 +77,15 @@
     FT_UInt  first;     /* index of first point in contour */
     char     tag;       /* current point's state           */
 
-    FT_Int   shift = interface->shift;
-    FT_Pos   delta = interface->delta;
+    FT_Int   shift;
+    FT_Pos   delta;
 
 
+    if ( !outline || !interface )
+      return FT_Err_Invalid_Argument;
+
+    shift = interface->shift;
+    delta = interface->delta;
     first = 0;
 
     for ( n = 0; n < outline->n_contours; n++ )
@@ -718,6 +723,12 @@
     FT_Raster_Params  params;
 
 
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !outline || !bitmap )
+      return FT_Err_Invalid_Argument;
+
     error  = FT_Err_Invalid_Glyph_Format;
     raster = FT_Get_Raster( library, ft_glyph_format_outline, &funcs );
     if ( !raster )
@@ -770,14 +781,20 @@
   /*    converter is called, which means that the value you give to it is  */
   /*    actually ignored.                                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Render( FT_Library        library,
-                                                 FT_Outline*       outline,
-                                                 FT_Raster_Params* params )
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Render( FT_Library         library,
+                                                 FT_Outline*        outline,
+                                                 FT_Raster_Params*  params )
   {
     FT_Error         error;
     FT_Raster        raster;
     FT_Raster_Funcs  funcs;
 
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !outline || !params )
+      return FT_Err_Invalid_Argument;
 
     error  = FT_Err_Invalid_Glyph_Format;
     raster = FT_Get_Raster( library, ft_glyph_format_outline, &funcs );
@@ -925,11 +942,17 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    The result is undefined if either `vector' or `matrix' is invalid. */
+  /*                                                                       */
   FT_EXPORT_FUNC( void )  FT_Vector_Transform( FT_Vector*  vector,
                                                FT_Matrix*  matrix )
   {
     FT_Pos xz, yz;
 
+
+    if ( !vector || !matrix )
+      return;
 
     xz = FT_MulFix( vector->x, matrix->xx ) +
          FT_MulFix( vector->y, matrix->xy );

@@ -122,6 +122,12 @@
     FT_Extension_Registry*  registry;
 
 
+    if ( !driver )
+      return FT_Err_Invalid_Driver_Handle;
+
+    if ( !class )
+      return FT_Err_Invalid_Argument;
+
     registry = (FT_Extension_Registry*)driver->extensions;
     if ( registry )
     {
@@ -172,6 +178,9 @@
     FT_Extension_Registry*  registry;
 
 
+    if ( !face || !extension_id || !extension_interface )
+      return 0;
+
     registry = (FT_Extension_Registry*)face->driver->extensions;
     if ( registry && face->extensions )
     {
@@ -190,6 +199,7 @@
     /* could not find the extension id */
 
     *extension_interface = 0;
+
     return 0;
   }
 

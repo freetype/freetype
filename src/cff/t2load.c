@@ -112,14 +112,17 @@
   static
   void  t2_done_cff_index( CFF_Index*  index )
   {
-    FT_Stream  stream = index->stream;
-    FT_Memory  memory = stream->memory;
+    if ( index->stream )
+    {
+      FT_Stream  stream = index->stream;
+      FT_Memory  memory = stream->memory;
     
-    if (index->bytes)
-      RELEASE_Frame( index->bytes );
+      if (index->bytes)
+        RELEASE_Frame( index->bytes );
 
-    FREE( index->offsets );
-    MEM_Set( index, 0, sizeof(*index) );
+      FREE( index->offsets );
+      MEM_Set( index, 0, sizeof(*index) );
+    }
   }
 
 

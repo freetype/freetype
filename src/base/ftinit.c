@@ -74,9 +74,11 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /*                                                                       */
   FT_EXPORT_FUNC( void )  FT_Default_Drivers( FT_Library  library )
   {
-    FT_Error                   error;
-    const FT_DriverInterface* *cur;
+    FT_Error                    error;
+    const FT_DriverInterface**  cur;
 
+
+    /* test for valid library delayed to FT_Add_Driver() */
 
     cur = ft_default_drivers;
     while ( *cur )

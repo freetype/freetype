@@ -86,7 +86,7 @@
   /*                                                                       */
   /* <Note>                                                                */
   /*    If the font contains glyph outlines, these will be automatically   */
-  /*    converted to a bitmap according to the value of `grays'            */
+  /*    converted to a bitmap according to the value of `grays'.           */
   /*                                                                       */
   /*    If `grays' is set to 0, the result is a 1-bit monochrome bitmap    */
   /*    otherwise, it is an 8-bit gray-level bitmap.                       */
@@ -120,6 +120,12 @@
     FT_Pos           origin_x = 0;
     FT_Pos           origin_y = 0;
 
+
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
+    if ( !abitglyph )
+      return FT_Err_Invalid_Argument;
 
     *abitglyph = 0;
 
@@ -304,6 +310,11 @@
     FT_OutlineGlyph  glyph;
 
 
+    /* test for valid face delayed to FT_Load_Glyph() */
+
+    if ( !vecglyph )
+      return FT_Err_Invalid_Argument;
+
     *vecglyph = 0;
 
     /* check that NO_OUTLINE and NO_RECURSE are not set */
@@ -394,6 +405,9 @@
                                             FT_Matrix*  matrix,
                                             FT_Vector*  delta )
   {
+    if ( !face )
+      return;
+
     face->transform_flags = 0;
 
     if ( !matrix )
@@ -496,6 +510,9 @@
   FT_EXPORT_FUNC( void )  FT_Glyph_Get_Box( FT_Glyph  glyph,
                                             FT_BBox*  box )
   {
+    if ( !box )
+      return;
+
     box->xMin = box->xMax = 0;
     box->yMin = box->yMax = 0;
 
@@ -529,7 +546,7 @@
 
       default:
         ;
-    }
+      }
   }
 
 

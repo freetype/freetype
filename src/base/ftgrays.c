@@ -1632,7 +1632,7 @@
     return error;
 
   Invalid_Outline:
-    return -1;
+    return ErrRaster_Invalid_Outline;
   }
 
 #endif /* _STANDALONE_ */
@@ -1797,11 +1797,11 @@
       return 0;
 
     if ( !outline || !outline->contours || !outline->points )
-      return -1;
+      return ErrRaster_Invalid_Outline;
 
     if ( outline->n_points !=
            outline->contours[outline->n_contours - 1] + 1 )
-      return -1;
+      return ErrRaster_Invalid_Outline;
 
     if ( !target_map || !target_map->buffer )
       return -1;

@@ -2059,12 +2059,12 @@
   }
 
 
-  static void
-  Vertical_Sweep_Drop( RAS_ARGS Short       y,
-                                FT_F26Dot6  x1,
-                                FT_F26Dot6  x2,
-                                PProfile    left,
-                                PProfile    right )
+  static
+  void Vertical_Sweep_Drop( RAS_ARGS Short       y,
+                                     FT_F26Dot6  x1,
+                                     FT_F26Dot6  x2,
+                                     PProfile    left,
+                                     PProfile    right )
   {
     Long   e1, e2;
     Short  c1, f1;
