@@ -96,7 +96,12 @@
     FTC_Scaler  scaler0 = &node->scaler;
 
 
-    return FTC_SCALER_COMPARE( scaler0, scaler );
+    if ( FTC_SCALER_COMPARE( scaler0, scaler ) )
+    {
+      FT_Activate_Size( node->size );
+      return 1;
+    }
+    return 0;
   }
 
 
@@ -161,20 +166,20 @@
       return FTC_Err_Invalid_Cache_Handle;
 
     /* we break encapsulation for the sake of speed */
-    
+
     error = 0;
     FTC_MRULIST_LOOP( &manager->sizes, node )
     {
       FTC_Scaler  scaler0 = &node->scaler;
-      
+
 
       if ( FTC_SCALER_COMPARE( scaler0, scaler ) )
         goto Found;
     }
     FTC_MRULIST_LOOP_END();
-    
+
     error = FTC_MruList_New( &manager->sizes, scaler, (FTC_MruNode*)&node );
-    
+
   Found:
     if ( !error )
       *asize = node->size;
@@ -290,9 +295,9 @@
         goto Found;
     }
     FTC_MRULIST_LOOP_END();
-    
+
     error = FTC_MruList_New( &manager->faces, face_id, (FTC_MruNode*)&node );
-    
+
   Found:
     if ( !error )
       *aface = node->face;
