@@ -1,3 +1,7 @@
+2004-08-02  George Williams  <gww@silcom.com>
+
+	* src/base/ftobjs.c (FT_Attach_File): Initialize `open.stream'.
+
 2004-08-01  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
