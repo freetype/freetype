@@ -480,6 +480,8 @@ FT_BEGIN_HEADER
     FT_Vector         trans_delta;
     FT_Matrix         trans_matrix;
 
+    FT_Bool           disable_horz_edges;
+    FT_Bool           disable_vert_edges;
   } AH_Hinter;
 
 

@@ -602,9 +602,9 @@
     if ( !error )
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
 
-    if (error)
+    if ( error )
     {
-      FT_Glyph_Done( FT_GLYPH(bitmap) );
+      FT_Done_Glyph( FT_GLYPH( bitmap ) );
       goto Exit;
     }
     

@@ -1,25 +1,45 @@
-2001-03-01  Antoine Leca    <Antoine.Leca@renault.fr>
+2001-03-04  Werner Lemberg  <wl@gnu.org>
 
-	* include/freetype/ttnameid.h: added some new Microsoft language
-        codes and LCIDs as found in Office Xp.
+	* src/autohint/ahtypes.h (AH_Hinter): Add elements
+	`disable_horz_edges', `disable_vert_edges'.
+	* src/autohint/ahhint.c	(ah_hint_edges_3, ah_hinter_hint_edges): Use
+	them (and remove static variables with the same names).
+	* src/pcf/pcfutil.c (BitOrderInvert): Add `const'.
+	* docs/glnames.py: Updated to latest pstables.h changes.
 
-2001-02-28  David Turner    <david.turner@freetype.org>
+2001-03-04  Sander van der Wal  <svdwal@xs4all.nl>
 
-	* builds/hurd/detect.mk: added support to detect the GNU Hurd operating
-	system as Unix-like. Fix submitted by Anthony Fok <foka@debian.org>
+	* src/psnames/pstables.h: Add more `const'.
+	* src/pcf/pcfutil.c: Ditto.
 
-	* src/type1/t1gload.c (T1_Load_Glyph): set glyph control data to the
-	the Type 1 glyph charstring. (used by conversion programs).
-	submitted by Ha Shao <hashao@chinese.com>
+2001-03-04  Werner Lemberg  <wl@gnu.org>
 
-2001-02-22  David Turner    <david.turner@freetype.org>
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Fixing typo
+	(FT_Glyph_Done -> FT_Done_Glyph).
 
-	* src/base/ftgrays.c (grays_sweep): the function didn't exit
-	immediately if "num_cells" was 0 as it should. Thanks to Boris
-	for finding this out.
+2001-03-01  Antoine Leca  <Antoine.Leca@renault.fr>
 
-	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): fixed memory leak when
-	bitmap rendering fails.. (thanks to Graham Asher)
+	* include/freetype/ttnameid.h: Added some new Microsoft language
+	codes and LCIDs as found in Office Xp.
+
+2001-02-28  David Turner  <david.turner@freetype.org>
+
+	* builds/hurd/detect.mk: New file.  Added support to detect the GNU
+	Hurd operating system as Unix-like.  Fix submitted by Anthony Fok
+	<foka@debian.org>.
+
+	* src/type1/t1gload.c (T1_Load_Glyph): Set glyph control data to the
+	the Type 1 glyph charstring (used by conversion programs).
+	Submitted by Ha Shao <hashao@chinese.com>.
+
+2001-02-22  David Turner  <david.turner@freetype.org>
+
+	* src/base/ftgrays.c (grays_sweep): The function didn't exit
+	immediately if `num_cells' was 0 as it should.  Thanks to Boris for
+	finding this out.
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Fixed memory leak when
+	bitmap rendering fails (thanks to Graham Asher).
 
 2001-02-13  Werner Lemberg  <wl@gnu.org>
 
@@ -30,12 +50,12 @@
 
 2001-02-13  David Turner  <david.turner@freetype.org>
 
-	* docs/docmaker.py, include/freetype/*.h: Updated the DocMaker script
-	to support chapters and section block ordering.  Updated the public
-	header files accordingly.
+	* docs/docmaker.py, include/freetype/*.h: Updated the DocMaker
+	script to support chapters and section block ordering.  Updated the
+	public header files accordingly.
 
-	* src/base/ftglyph.c: fixed a bug in FT_Glyph_Copy, where the advance
-	and glyph format were not correctly copied..
+	* src/base/ftglyph.c (FT_Glyph_Copy): Advance width and glyph format
+	were not correctly copied.
 
 2001-02-08  Tom Kacvinsky  <tjk@ams.org>
 

@@ -1533,7 +1533,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
 
   name_list = []
 
-  write( "  static const char*  standard_glyph_names[] =\n" )
+  write( "  static const char* const  standard_glyph_names[] =\n" )
   write( "  {\n" )
 
   for name in glyph_list:
@@ -1666,7 +1666,7 @@ def main():
   name_list = dump_glyph_list( file, base_list, adobe_list )
 
   # dump t1_standard_list
-  write( "  static const char**  t1_standard_glyphs = " \
+  write( "  static const char* const * const  t1_standard_glyphs = " \
           + "standard_glyph_names + " + repr( t1_bias ) + ";\n" )
   write( "\n" )
   write( "\n" )
