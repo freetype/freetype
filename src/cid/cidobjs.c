@@ -236,7 +236,7 @@
         root->bbox         = face->cid.font_bbox;
         root->units_per_EM = 1000;
         root->ascender     =  (FT_Short)face->cid.font_bbox.yMax;
-        root->descender    = -(FT_Short)face->cid.font_bbox.yMin;
+        root->descender    =  (FT_Short)face->cid.font_bbox.yMin;
         root->height       = ( ( root->ascender + root->descender ) * 12 )
                              / 10;
 
