@@ -1,0 +1,377 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="blob">
+   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
+   <title>FreeType Glyph Conventions</title>
+</head>
+<body>
+
+<body text="#000000"
+      bgcolor="#FFFFFF"
+      link="#0000EF"
+      vlink="#51188E"
+      alink="#FF0000">
+
+<center><h1>
+FreeType Glyph Conventions
+</h1></center>
+
+<center><h2>
+version 2.1
+</h2></center>
+
+<center><h3>
+Copyright 1998-2000 David Turner (<a href="mailto:david@freetype.org">david@freetype.org</a>)<br>
+Copyright 2000 The FreeType Development Team (<a href="devel@freetype.org">devel@freetype.org</a>)
+</h3></center>
+
+<center><table width=650><tr><td>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+<a href="glyphs-5.html">Previous</a>
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+<a href="glyphs-7.html">Next</a>
+</td>
+</tr></table></center>
+
+
+<table width="100%"><tr valign=center bgcolor="#CCCCFF"><td><h2>
+VI. FreeType Outlines
+</h2></td></tr></table>
+
+<p>The purpose of this section is to present the way FreeType
+manages vectorial outlines, as well as the most common operations that
+can be applied on them.
+</p>
+
+<h3><a name="section-1">
+1. FreeType outline description and structure :
+</h3><blockquote>
+
+<h4>
+a. Outline curve decomposition :
+</h4>
+
+<p>An outline is described as a series of closed contours in the
+2D plane. Each contour is made of a series of line segments and bezier
+arcs. Depending on the file format, these can be second-order or third-order
+polynomials. The former are also called quadratic or conic arcs, and they
+come from the TrueType format. The latter are called cubic arcs and mostly
+come from the Type1 format.
+</p>
+
+<p>Each arc is described through a series of start, end and control points.
+Each point of the outline has a specific tag which indicates wether it
+is used to describe a line segment or an arc. The tags can take the
+following values :
+</p>
+
+<center><table CELLSPACING=5 CELLPADDING=5 WIDTH="80%">
+<tr VALIGN=TOP><td>
+<p><b>FT_Curve_Tag_On&nbsp;</b></p>
+</td>
+
+<td VALIGN=TOP>
+<p>Used when the point is "on" the curve. This corresponds to
+start and end points of segments and arcs. The other tags specify what
+is called an "off" point, i.e. one which isn't located on the contour itself,
+but serves as a control point for a bezier arc.</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><b>FT_Curve_Tag_Conic</b></p>
+</td>
+
+<td>
+<p>Used for an "off" point used to control a conic bezier arc.</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><b>FT_Curve_Tag_Cubic</b></p>
+</td>
+
+<td>
+<p>Used for an "off" point used to control a cubic bezier arc.</p>
+</td>
+</tr>
+</table></center>
+
+
+<p>The following rules are applied to decompose the contour's points into
+segments and arcs :
+</p>
+
+<ul>
+<li>two successive "on" points indicate a line segment joining them.</li>
+
+<li>one conic "off" point amidst two "on" points indicates a conic bezier
+arc, the "off" point being the control point, and the "on" ones the
+start and end points.</li>
+
+<li>
+Two successive cubic "off" points amidst two "on" points indicate a cubic
+bezier arc. There must be exactly two cubic control points and two on
+points for each cubic arc (using a single cubic "off" point between two
+"on" points is forbidden, for example).
+</li>
+
+<li>
+finally, two successive conic "off" points forces the rasterizer to create
+(during the scan-line conversion process exclusively) a virtual "on" point
+amidst them, at their exact middle. This greatly facilitates the definition
+of successive conic bezier arcs. Moreover, it's the way outlines are
+described in the TrueType specification.
+</li>
+</ul>
+
+<p><br>Note that it is possible to mix conic and cubic arcs in a single
+contour, even though no current font driver produces such outlines.
+<br>&nbsp;</ul>
+
+<center><table>
+<tr>
+<td>
+<blockquote><img SRC="points_segment.png" height=166 width=221></blockquote>
+</td>
+
+<td>
+<blockquote><img SRC="points_conic.png" height=183 width=236></blockquote>
+</td>
+</tr>
+
+<tr>
+<td>
+<blockquote><img SRC="points_cubic.png" height=162 width=214></blockquote>
+</td>
+
+<td>
+<blockquote><img SRC="points_conic2.png" height=204 width=225></blockquote>
+</td>
+</tr>
+</table></center>
+
+<h4>
+b. Outline descriptor :</h4>
+
+<p>A FreeType outline is described through a simple structure,
+called <tt>FT_Outline</tt>, which fields are :</p>
+
+<center><table CELLSPACING=3 CELLPADDING=3 BGCOLOR="#CCCCCC">
+<tr>
+<td>
+<p><b><tt>n_points</tt></b></p>
+</td>
+
+<td>
+<p>the number of points in the outline</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><b><tt>n_contours</tt></b></p>
+</td>
+
+<td>
+<p>the number of contours in the outline</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><b><tt>points</tt></b></p>
+</td>
+
+<td>
+<p>array of point coordinates</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><b><tt>contours</tt></b></p>
+</td>
+
+<td>
+<p>array of contour end indices</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><b><tt>tags</tt></b></p>
+</td>
+
+<td>
+<p>array of point flags</p>
+</td>
+</tr>
+</table></center>
+
+<p>Here, <b><tt>points</tt></b> is a pointer to an array of
+<tt>FT_Vector</tt> records, used to store the vectorial coordinates of each
+outline point. These are expressed in 1/64th of a pixel, which is also
+known as the <i>26.6 fixed float format</i>.
+</p>
+
+<p><b><tt>contours</tt></b> is an array of point indices used to delimit
+contours in the outline. For example, the first contour always starts at
+point 0, and ends a point <b><tt>contours[0]</tt></b>. The second contour
+starts at point "<b><tt>contours[0]+1</tt></b>" and ends at
+<b><tt>contours[1]</tt></b>, etc..
+</p>
+
+<p>Note that each contour is closed, and that <b><tt>n_points</tt></b>
+should be equal to "<b><tt>contours[n_contours-1]+1</tt></b>" for a valid
+outline.
+</p>
+
+<p>Finally, <b><tt>tags</tt></b> is an array of bytes, used to store each
+outline point's tag.
+</p>
+
+
+</blockquote><h3><a name="section-2">
+2. Bounding and control box computations :
+</h3><blockquote>
+
+<p>A <b>bounding box</b> (also called "<b>bbox</b>") is simply
+the smallest possible rectangle that encloses the shape of a given outline.
+Because of the way arcs are defined, bezier control points are not
+necessarily contained within an outline's bounding box.
+</p>
+
+<p>This situation happens when one bezier arc is, for example, the upper
+edge of an outline and an off point happens to be above the bbox. However,
+it is very rare in the case of character outlines because most font designers
+and creation tools always place on points at the extrema of each curved
+edges, as it makes hinting much easier.
+</p>
+
+<p>We thus define the <b>control box</b> (a.k.a. the "<b>cbox</b>") as
+the smallest possible rectangle that encloses all points of a given outline
+(including its off points). Clearly, it always includes the bbox, and equates
+it in most cases.
+</p>
+
+<p>Unlike the bbox, the cbox is also much faster to compute.</p>
+
+<center><table>
+<tr>
+<td><img SRC="bbox1.png" height=264 width=228></td>
+
+<td><img SRC="bbox2.png" height=229 width=217></td>
+</tr>
+</table></center>
+
+<p>Control and bounding boxes can be computed automatically through the
+functions <b><tt>FT_Get_Outline_CBox</tt></b> and <b><tt>FT_Get_Outline_BBox</tt></b>.
+The former function is always very fast, while the latter <i>may</i> be
+slow in the case of "outside" control points (as it needs to find the extreme
+of conic and cubic arcs for "perfect" computations). If this isn't the
+case, it's as fast as computing the control box.
+<p>Note also that even though most glyph outlines have equal cbox and bbox
+to ease hinting, this is not necessary the case anymore when a
+transform like rotation is applied to them.
+</p>
+
+</blockquote><h3><a name="section-3">
+&nbsp;3. Coordinates, scaling and grid-fitting :
+</h3><blockquote>
+
+<p>An outline point's vectorial coordinates are expressed in the
+26.6 format, i.e. in 1/64th of a pixel, hence coordinates (1.0, -2.5) is
+stored as the integer pair ( x:64, y: -192 ).
+</p>
+
+<p>After a master glyph outline is scaled from the EM grid to the current
+character dimensions, the hinter or grid-fitter is in charge of aligning
+important outline points (mainly edge delimiters) to the pixel grid. Even
+though this process is much too complex to be described in a few lines,
+its purpose is mainly to round point positions, while trying to preserve
+important properties like widths, stems, etc..
+</p>
+
+<p>The following operations can be used to round vectorial distances in
+the 26.6 format to the grid :
+</p>
+
+<center>
+<p><tt>round(x)&nbsp;&nbsp; ==&nbsp; (x+32) &amp; -64</tt>
+<br><tt>floor(x)&nbsp;&nbsp; ==&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x &amp;
+-64</tt>
+<br><tt>ceiling(x) ==&nbsp; (x+63) &amp; -64</tt></center>
+
+<p>Once a glyph outline is grid-fitted or transformed, it often is interesting
+to compute the glyph image's pixel dimensions before rendering it. To do
+so, one has to consider the following :
+<p>The scan-line converter draws all the pixels whose <i>centers</i> fall
+inside the glyph shape. It can also detect "<b><i>drop-outs</i></b>", i.e.
+discontinuities coming from extremely thin shape fragments, in order to
+draw the "missing" pixels. These new pixels are always located at a distance
+less than half of a pixel but one cannot predict easily where they'll appear
+before rendering.
+<p>This leads to the following computations :
+<br>&nbsp;
+<ul>
+<li>
+compute the bbox</li>
+</ul>
+
+<ul>
+<li>
+grid-fit the bounding box with the following :</li>
+</ul>
+
+<ul><p>
+<ul><tt>xmin = floor( bbox.xMin )</tt>
+<br><tt>xmax = ceiling( bbox.xMax )</tt>
+<br><tt>ymin = floor( bbox.yMin )</tt>
+<br><tt>ymax = ceiling( bbox.yMax )</tt>
+</p></ul>
+
+<li>
+return pixel dimensions, i.e.
+<tt>width = (xmax - xmin)/64</tt> and <tt>height = (ymax - ymin)/64</tt>
+</li>
+</ul>
+
+<p><br>By grid-fitting the bounding box, one guarantees that all the pixel
+centers that are to be drawn, <b><i>including those coming from drop-out
+control</i></b>, will be <b><i>within</i></b> the adjusted box. Then the
+box's dimensions in pixels can be computed.
+<p>Note also that, when <i>translating</i> a <i>grid-fitted outline</i>,
+one should <b><i>always</i></b> use <b><i>integer distances</i></b> to
+move an outline in the 2D plane. Otherwise, glyph edges won't be aligned
+on the pixel grid anymore, and the hinter's work will be lost, producing
+<b><i>very
+low quality </i></b>bitmaps and pixmaps..</blockquote>
+</blockquote>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+<a href="glyphs-5.html">Previous</a>
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+<a href="glyphs-7.html">Next</a>
+</td>
+</tr></table></center>
+
+</td></tr></table></center>
+
+</body>
+</html>

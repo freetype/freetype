@@ -1,0 +1,291 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="blob">
+   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
+   <title>FreeType Glyph Conventions</title>
+</head>
+<body>
+
+<body text="#000000"
+      bgcolor="#FFFFFF"
+      link="#0000EF"
+      vlink="#51188E"
+      alink="#FF0000">
+
+<center>
+<h1>
+FreeType Glyph Conventions</h1></center>
+
+<center>
+<h2>
+version 2.1</h2></center>
+
+<center>
+<h3>
+Copyright 1998-2000 David Turner (<a href="mailto:david@freetype.org">david@freetype.org</a>)<br>
+Copyright 2000 The FreeType Development Team (<a href="devel@freetype.org">devel@freetype.org</a>)</h3></center>
+
+<center><table width=650><tr><td>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+<a href="glyphs-6.html">Previous</a>
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+&nbsp;
+</td>
+</tr></table></center>
+
+
+<table width="100%"><tr valign=center bgcolor="#CCCCFF"><td><h2>
+VII. FreeType Bitmaps
+</h2></td></tr></table>
+
+
+<p>The purpose of this section is to present the way FreeType
+manages bitmaps and pixmaps, and how they relate to the concepts previously
+defined. The relationships between vectorial and pixel coordinates is
+explained.
+</p>
+
+<h3><a name="section-1">
+1. Vectorial versus pixel coordinates :
+</h3><blockquote>
+
+<p>This sub-section explains the differences between vectorial
+and pixel coordinates. To make things clear, brackets will be used to describe
+pixel coordinates, e.g. [3,5], while parentheses will be used for vectorial
+ones, e.g. (-2,3.5).
+<p>In the pixel case, as we use the <i>Y upwards</i> convention, the coordinate
+[0,0] always refers to the <i>lower left pixel</i> of a bitmap, while coordinate
+[width-1, rows-1] to its <i>upper right pixel</i>.
+<p>In the vectorial case, point coordinates are expressed in floating units,
+like (1.25, -2.3). Such a position doesn't refer to a given pixel, but
+simply to an immaterial point in the 2D plane
+<p>The pixels themselves are indeed <i>square boxes</i> of the 2D plane,
+which centers lie in half pixel coordinates. For example, the <i>lower
+left pixel</i> of a bitmap is delimited by the <i>square</i> (0,0)-(1,1),
+its center being at location (0.5,0.5).
+<p>This introduces some differences when computing distances. For example,
+the "<i>length</i>" in pixels of the line [0,0]-[10,0] is 11. However,
+the vectorial distance between (0,0)-(10,0) covers exactly 10 pixel centers,
+hence its length if 10.
+<center><img SRC="grid_1.png" height=390 width=402></center>
+
+
+</blockquote><h3><a name="section-2">
+2. FreeType bitmap and pixmap descriptor :
+</h3><blockquote>
+
+<p>A bitmap or pixmap is described through a single structure,
+called <tt>FT_Bitmap</tt>, defined in the file
+<tt>&lt;freetype/ftimage.h&gt;</tt>. It is a simple descriptor whose fields are:</p>
+
+<center><table CELLSPACING=3 CELLPADDING=5 BGCOLOR="#CCCCCC" width="80%" >
+<caption><tt>FT_Bitmap</tt></caption>
+
+<tr>
+<td><b>rows</b></td>
+
+<td>the number of rows, i.e. lines, in the bitmap</td>
+</tr>
+
+<tr>
+<td><b>width</b></td>
+
+<td>the number of horizontal pixels in the bitmap</td>
+</tr>
+
+<tr>
+<td><b>pitch</b></td>
+
+<td>its absolute value is the number of bytes per bitmap line.
+it can be either positive or negative depending on the bitmap's
+vertical orientation</td>
+</tr>
+
+<tr>
+<td><b>buffer</b></td>
+
+<td>a typeless pointer to the bitmap pixel bufer</td>
+</tr>
+
+<tr>
+<td><b>pixel_mode</b></td>
+
+<td>an enumeration used to describe the pixel format of the bitmap.
+Examples are: <tt>ft_pixel_mode_mono</tt> for 1-bit monochrome bitmaps
+and <tt>ft_pixel_mode_grays</tt> for 8-bit anti-aliased "gray" values
+</td>
+
+<tr>
+<td><b>num_grays</b></td>
+
+<td>this is only used for "gray" pixel modes, it gives the
+number of gray levels used to describe the anti-aliased gray levels.
+256 by default with FreeType 2.
+</td>
+</tr>
+
+</table></center>
+
+
+<p>Note that the sign of the <b><tt>pitch</tt></b> fields determines wether
+the rows in the pixel buffer are stored in ascending or descending order.
+</p>
+
+<p>Remember that FreeType uses the <i>Y upwards</i> convention in the 2D
+plane. Which means that a coordinate of (0,0) always refer to the
+<i>lower-left corner</i> of a bitmap.
+</p>
+
+<p>When the pitch is positive, the rows are stored in decreasing vertical
+position, which means that the first bytes of the pixel buffer are part
+of the <i>upper</i> bitmap row.
+</p>
+
+<p>On the opposite, when the pitch is negative, the first bytes of the
+pixel buffer are part of the <i>lower</i> bitmap row.</p>
+
+<p>In all cases, one can see the pitch as the byte increment needed
+to skip to the <em>next lower scanline</em> in a given bitmap buffer.</p>
+
+<p>The two conventions are detailed by this graphics:</p>
+
+<center><table>
+<tr>
+<td><img SRC="up_flow.png" height=261 width=275></td>
+
+<td><img SRC="down_flow.png" height=263 width=273></td>
+</tr>
+</table></center>
+
+<p>The <em>positive pitch</em> convention is very often used, though
+some systems might need otherwise.</p>
+
+
+</blockquote><h3><a name="section-3">
+3. Converting outlines into bitmaps and pixmaps :
+</h3><blockquote>
+
+<p>Generating a bitmap or pixmap image from a vectorial image
+is easy with FreeType. However, one must understand a few points regarding
+the positioning of the outline in the 2D plane before converting it to
+a bitmap. These are :</p>
+
+<ul>
+
+<li><p>
+The glyph loader and hinter always places the outline in the 2D plane so
+that (0,0) matches its character origin. This means that the glyph’s outline,
+and corresponding bounding box, can be placed anywhere in the 2D plane
+(see the graphics in section III).
+</p></li>
+
+<li><p>
+The target bitmap’s area is mapped to the 2D plane, with its lower left
+corner at (0,0). This means that a bitmap or pixmap of dimensions
+[<tt>w,h</tt>] will be mapped to a 2D rectangle window delimited by
+(0,0)-(<tt>w,h</tt>).
+</p></li>
+
+<li><p>
+When scan-converting the outline, everything that falls
+within the bitmap window is rendered, the rest is ignored.
+</p></li>
+
+<p>A common mistake made by many developers when they begin using FreeType
+is believing that a loaded outline can be directly rendered in a bitmap
+of adequate dimensions. The following images illustrate why this is a problem:
+</p>
+
+<p>
+<ul>
+
+<li>
+the first image shows a loaded outline in the 2D plane.
+</li>
+
+<li>
+the second one shows the target window for a bitmap of arbitrary dimensions
+[w,h]
+</li>
+
+<li>
+the third one shows the juxtaposition of the outline and window in the
+2D plane
+</li>
+
+<li>
+the last image shows what will really be rendered in the bitmap.
+</li>
+</ul>
+</p>
+
+</ul>
+<center><img SRC="clipping.png" height=151 width=539></center>
+
+<p><br>
+<br>
+<br>
+<p>Indeed, in nearly all cases, the loaded or transformed outline must
+be translated before it is rendered into a target bitmap, in order to adjust
+its position relative to the target window.
+</p>
+
+<p>For example, the correct way of creating a <i>standalone</i> glyph bitmap
+is thus to :
+</p>
+
+<ul>
+<li><p>
+Compute the size of the glyph bitmap. It can be computed directly from
+the glyph metrics, or by computing its bounding box (this is useful when
+a transform has been applied to the outline after the load, as the glyph
+metrics are not valid anymore).
+</p></li>
+
+<li><p>
+Create the bitmap with the computed dimensions. Don't forget to fill the
+pixel buffer with the background color.
+</p></li>
+
+<li><p>
+Translate the outline so that its lower left corner matches (0,0). Don’t
+forget that in order to preserve hinting, one should use integer, i.e.
+rounded distances (of course, this isn’t required if preserving hinting
+information doesn’t matter, like with rotated text). Usually, this means
+translating with a vector <tt>( -ROUND(xMin), -ROUND(yMin) )</tt>.
+</p></li>
+
+<li><p>
+Call the rendering function (it can be <tt>FT_Outline_Render</tt> for
+example).
+</p></li>
+
+<p><br>In the case where one wants to write glyph images directly into
+a large bitmap, the outlines must be translated so that their vectorial
+position correspond to the current text cursor/character origin.</blockquote>
+</blockquote>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+<a href="glyphs-6.html">Previous</a>
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+&nbsp;
+</td>
+</tr></table></center>
+
+</td></tr></table></center>
+
+</body>
+</html>
