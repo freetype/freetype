@@ -96,7 +96,8 @@
     buff_len = 256;
     for (;;)
     {
-      FT_Byte  *p, *limit = buffer + 256;
+      FT_Byte   *p, *limit = buffer + 256;
+      FT_ULong  top_position;
 
 
       /* fill input buffer */
@@ -104,9 +105,12 @@
       if ( buff_len > 0 )
         MEM_Move( buffer, limit, buff_len );
 
-      if ( FILE_Read( buffer, 256 + 10 - buff_len ) )
+      p = buffer + buff_len;
+
+      if ( FILE_Read( p, 256 + 10 - buff_len ) )
         goto Exit;
 
+      top_position = FILE_Pos() - buff_len;
       buff_len = 256 + 10;
 
       /* look for `StartData' */
@@ -115,7 +119,7 @@
         if ( p[0] == 'S' && strncmp( (char*)p, "StartData", 9 ) == 0 )
         {
           /* save offset of binary data after `StartData' */
-          offset = FILE_Pos() - ( limit - p ) + 10;
+          offset = top_position - ( limit - p ) + 10;
           goto Found;
         }
       }
