@@ -855,15 +855,13 @@
 
           if ( num_args > 0 && decoder->read_width )
           {
-            /* If `nominal_width' is non-zero, the number is really a      */
-            /* difference against `nominal_width'.                         */
-            if ( decoder->nominal_width )
-              decoder->glyph_width = decoder->nominal_width +
-                                       ( stack[0] >> 16 );
-            /* Else, the number here is truly a width, not a difference.   */
-            else
-              decoder->glyph_width = stack[0] >> 16;
+            /* If `nominal_width' is non-zero, the number is really a difference */
+            /* against `nominal_width'.  Else, the number here is truly a width, */
+            /* not a difference.  If the font does not set `nominal_width', then */
+            /* `nominal_width' defaults to zero, and so we can set 'glyph_width' */
+            /* to `nominal_width' plus number on the stack -- for either case.   */
 
+            decoder->glyph_width = decoder->nominal_width + ( stack[0] >> 16 );
             num_args--;
             args++;
           }
