@@ -1,3 +1,8 @@
+2004-12-03  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
+
+	* include/freetype/ttnameid.h: Updated to latest
+	specifications from Microsoft.
+
 2004-11-26  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
 
 	* vms_make.com: Include ftbbox.c.
