@@ -41,7 +41,7 @@
       else if ( ft_strcmp( driver_name, "t1cid" ) == 0 )
         font_info = &((CID_Face)face)->cid.font_info;
       else if ( ft_strcmp( driver_name, "type42" ) == 0 )
-        font_info = &((T42_Face)face)->type42.font_info;
+        font_info = &((T42_Face)face)->type1.font_info;
     }
     if ( font_info != NULL )
     {
@@ -66,8 +66,8 @@
 
     if ( face && face->driver && face->driver->root.clazz )
     {
-      /* Currently, only the type1 and cff drivers provide reliable */
-      /* glyph names...                                             */
+      /* Currently, only the type1, type42 and cff drivers provide reliable */
+      /* glyph names...                                                     */
 
       /* We could probably hack the TrueType driver to recognize    */
       /* certain cases where the glyph names are most certainly     */
@@ -75,8 +75,9 @@
       /* this will probably happen later...                         */
 
       driver_name = face->driver->root.clazz->module_name;
-      result      = ( ft_strcmp( driver_name, "type1" ) == 0 ||
-                      ft_strcmp( driver_name, "cff"   ) == 0 );
+      result      = ( ft_strcmp( driver_name, "type1"  ) == 0 ||
+                      ft_strcmp( driver_name, "type42" ) == 0 ||
+                      ft_strcmp( driver_name, "cff"    ) == 0 );
     }
 
     return result;
