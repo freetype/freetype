@@ -1,3 +1,8 @@
+2005-03-10  David Turner  <david@freetype.org>
+
+  * src/tools/glnames.py: adding comment explaining the compression
+  being used for the Adobe Glyph List.
+
 2005-03-10  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttpload.c (tt_face_load_cvt, tt_face_load_fpgm):
