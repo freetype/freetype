@@ -63,7 +63,7 @@ FT_BEGIN_HEADER
   /*   FTC_Face_Requester                                                  */
   /*                                                                       */
   /*   FTC_Manager_New                                                     */
-  /*   FTC_Manager_LookupFace                                             */
+  /*   FTC_Manager_LookupFace                                              */
   /*   FTC_Manager_Lookup_Size                                             */
   /*                                                                       */
   /*   FTC_Node                                                            */
@@ -111,7 +111,7 @@ FT_BEGIN_HEADER
   /*    An opaque pointer type that is used to identity face objects.  The */
   /*    contents of such objects is application-dependent.                 */
   /*                                                                       */
-  typedef struct FTC_FaceIDRec_*    FTC_FaceID;
+  typedef struct FTC_FaceIDRec_*  FTC_FaceID;
 
 
   /*************************************************************************/
@@ -319,7 +319,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FTC_Manager_LookupFace                                            */
+  /*    FTC_Manager_LookupFace                                             */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Retrieves the @FT_Face object that corresponds to a given face ID  */
@@ -350,8 +350,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_LookupFace( FTC_Manager  manager,
-                           FTC_FaceID   face_id,
-                           FT_Face     *aface );
+                          FTC_FaceID   face_id,
+                          FT_Face     *aface );
 
 
   /*************************************************************************/
@@ -374,10 +374,10 @@ FT_BEGIN_HEADER
                   FTC_Manager  manager );
 
 
- /* remove all nodes belonging to a given face_id */
+  /* remove all nodes belonging to a given face_id */
   FT_EXPORT( void )
   FTC_Manager_RemoveFaceID( FTC_Manager  manager,
-                             FTC_FaceID   face_id );
+                            FTC_FaceID   face_id );
 
 
   /*************************************************************************/
@@ -405,7 +405,7 @@ FT_BEGIN_HEADER
   /*    FTC_CMapCache_New                                                  */
   /*                                                                       */
   /* @description:                                                         */
-  /*    Creates a new charmap cache.                                       */
+  /*    Create a new charmap cache.                                        */
   /*                                                                       */
   /* @input:                                                               */
   /*    manager :: A handle to the cache manager.                          */
@@ -425,10 +425,10 @@ FT_BEGIN_HEADER
                      FTC_CMapCache  *acache );
 
 
- /* retrieve the index of a given charmap
-  */
+  /* retrieve the index of a given charmap */
   FT_EXPORT( FT_Int )
   FT_Get_CharMap_Index( FT_CharMap  charmap );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -436,20 +436,20 @@ FT_BEGIN_HEADER
   /*    FTC_CMapCache_Lookup                                               */
   /*                                                                       */
   /* @description:                                                         */
-  /*    Translates a character code into a glyph index, using the charmap  */
+  /*    Translate a character code into a glyph index, using the charmap   */
   /*    cache.                                                             */
   /*                                                                       */
   /* @input:                                                               */
-  /*    cache     :: A charmap cache handle.                               */
+  /*    cache      :: A charmap cache handle.                              */
   /*                                                                       */
   /*    face_id    :: source face id                                       */
   /*                                                                       */
   /*    cmap_index :: index of charmap in source face                      */
   /*                                                                       */
-  /*    char_code :: The character code (in the corresponding charmap).    */
+  /*    char_code  :: The character code (in the corresponding charmap).   */
   /*                                                                       */
   /* @return:                                                              */
-  /*    Glyph index.  0 means "no glyph".                                  */
+  /*    Glyph index.  0 means `no glyph'.                                  */
   /*                                                                       */
   FT_EXPORT( FT_UInt )
   FTC_CMapCache_Lookup( FTC_CMapCache  cache,
@@ -463,7 +463,7 @@ FT_BEGIN_HEADER
   /* <Section>                                                             */
   /*    cache_subsystem                                                    */
   /*                                                                       */
-  /**********************************************************************/
+  /*************************************************************************/
 
 
   /*************************************************************************/
@@ -564,13 +564,13 @@ FT_BEGIN_HEADER
   /*    Never try to transform or discard it manually!  You can however    */
   /*    create a copy with @FT_Glyph_Copy and modify the new one.          */
   /*                                                                       */
-  /*    If "anode" is _not_ NULL, it receives the address of the cache     */
+  /*    If `anode' is _not_ NULL, it receives the address of the cache     */
   /*    node containing the glyph image, after increasing its reference    */
   /*    count.  This ensures that the node (as well as the FT_Glyph) will  */
   /*    always be kept in the cache until you call @FTC_Node_Unref to      */
-  /*    "release" it.                                                      */
+  /*    `release' it.                                                      */
   /*                                                                       */
-  /*    If "anode" is NULL, the cache node is left unchanged, which means  */
+  /*    If `anode' is NULL, the cache node is left unchanged, which means  */
   /*    that the FT_Glyph could be flushed out of the cache on the next    */
   /*    call to one of the caching sub-system APIs.  Don't assume that it  */
   /*    is persistent!                                                     */
@@ -581,13 +581,6 @@ FT_BEGIN_HEADER
                          FT_UInt         gindex,
                          FT_Glyph       *aglyph,
                          FTC_Node       *anode );
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    cache_subsystem                                                    */
-  /*                                                                       */
-  /*************************************************************************/
 
 
   /*************************************************************************/
@@ -635,7 +628,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    yadvance  :: The vertical advance height in pixels.                */
   /*                                                                       */
-  /*    buffer   :: A pointer to the bitmap pixels.                        */
+  /*    buffer    :: A pointer to the bitmap pixels.                       */
   /*                                                                       */
   typedef struct  FTC_SBitRec_
   {
@@ -698,7 +691,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Looks up a given small glyph bitmap in a given sbit cache and      */
-  /*    "lock" it to prevent its flushing from the cache until needed      */
+  /*    `lock' it to prevent its flushing from the cache until needed.     */
   /*                                                                       */
   /* <Input>                                                               */
   /*    cache  :: A handle to the source sbit cache.                       */
@@ -726,12 +719,12 @@ FT_BEGIN_HEADER
   /*    The descriptor's `buffer' field is set to 0 to indicate a missing  */
   /*    glyph bitmap.                                                      */
   /*                                                                       */
-  /*    If "anode" is _not_ NULL, it receives the address of the cache     */
+  /*    If `anode' is _not_ NULL, it receives the address of the cache     */
   /*    node containing the bitmap, after increasing its reference count.  */
   /*    This ensures that the node (as well as the image) will always be   */
-  /*    kept in the cache until you call @FTC_Node_Unref to "release" it.  */
+  /*    kept in the cache until you call @FTC_Node_Unref to `release' it.  */
   /*                                                                       */
-  /*    If "anode" is NULL, the cache node is left unchanged, which means  */
+  /*    If `anode' is NULL, the cache node is left unchanged, which means  */
   /*    that the bitmap could be flushed out of the cache on the next      */
   /*    call to one of the caching sub-system APIs.  Don't assume that it  */
   /*    is persistent!                                                     */

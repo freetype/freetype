@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Image cache (body).                                         */
 /*                                                                         */
-/*  Copyright 2000-2001 by                                                 */
+/*  Copyright 2000-2001, 2003 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -31,6 +31,7 @@
   {
     FT_Memory  memory = cache->memory;
 
+
     if ( inode->glyph )
     {
       FT_Done_Glyph( inode->glyph );
@@ -52,6 +53,7 @@
     FT_Error   error;
     FTC_INode  inode;
 
+
     if ( !FT_NEW( inode ) )
     {
       FTC_GNode         gnode  = FTC_GNODE( inode );
@@ -59,12 +61,15 @@
       FT_UInt           gindex = gquery->gindex;
       FTC_IFamilyClass  clazz  = FTC_CACHE__IFAMILY_CLASS( cache );
 
+
       /* initialize its inner fields */
       FTC_GNode_Init( gnode, gindex, family );
 
       /* we will now load the glyph image */
-      error = clazz->family_load_glyph( family, gindex, cache, &inode->glyph );
+      error = clazz->family_load_glyph( family, gindex, cache,
+                                        &inode->glyph );
     }
+
     *pinode = inode;
     return error;
   }

@@ -19,51 +19,50 @@
   /*
    *
    *  FTC_GCache is an _abstract_ cache object optimized to store glyph
-   *  data. It works as follows:
+   *  data.  It works as follows:
    *
-   *   - it manages FTC_GNode objects. Each one of them can hold one or more
-   *     glyph "items". Item types are not specified in the FTC_GCache but in
-   *     classes that extend it
+   *   - It manages FTC_GNode objects. Each one of them can hold one or more
+   *     glyph `items'.  Item types are not specified in the FTC_GCache but
+   *     in classes that extend it.
    *
-   *   - glyph attributes, like face_id, character size, render mode, etc..
-   *     can be grouped in abstract "glyph families". This avoids storing
+   *   - Glyph attributes, like face ID, character size, render mode, etc.,
+   *     can be grouped into abstract `glyph families'.  This avoids storing
    *     the attributes within the FTC_GCache, since it is likely that many
-   *     FTC_GNodes will belong to the same family in typical uses
+   *     FTC_GNodes will belong to the same family in typical uses.
    *
-   *   - each FTC_GNode is thus a FTC_Node with two additionnal fields:
+   *   - Each FTC_GNode is thus an FTC_Node with two additional fields:
    *
-   *       * gindex :: a glyph index, or the first index in a glyph range
-   *       * family :: a pointer to a glyph "family"
+   *       * gindex: A glyph index, or the first index in a glyph range.
+   *       * family: A pointer to a glyph `family'.
    *
    *   - Family types are not fully specific in the FTC_Family type, but
    *     by classes that extend it.
    *
-   *  Note that both FTC_ImageCache and FTC_SBitCache extend FTC_GCache. They
-   *  share an FTC_Family sub-class called FTC_BasicFamily which is used to
-   *  store the following data:  face_id, pixel/point sizes, load flags.
-   *  for more details, see the file "src/cache/ftcbasic.c"
+   *  Note that both FTC_ImageCache and FTC_SBitCache extend FTC_GCache.
+   *  They share an FTC_Family sub-class called FTC_BasicFamily which is
+   *  used to store the following data: face ID, pixel/point sizes, load
+   *  flags.  For more details see the file `src/cache/ftcbasic.c'.
    *
    *  Client applications can extend FTC_GNode with their own FTC_GNode
-   *  and FTC_Family sub-classes to implement more complex caches (e.g.
-   *  handling automatic synthetis, like obliquing & emboldening, colored
-   *  glyphs, etc...)
+   *  and FTC_Family sub-classes to implement more complex caches (e.g.,
+   *  handling automatic synthesis, like obliquing & emboldening, colored
+   *  glyphs, etc.).
    *
-   *  See also the FTC_ICache & FTC_SCache classes in "ftcimage.h" and
-   *  "ftcsbits.h", which both extend FTC_GCache with additionnal
+   *  See also the FTC_ICache & FTC_SCache classes in `ftcimage.h' and
+   *  `ftcsbits.h', which both extend FTC_GCache with additional
    *  optimizations.
    *
+   *  A typical FTC_GCache implementation must provide at least the
+   *  following:
    *
-   *  a typical FTC_GCache implementation must provide at least the following:
+   *  - FTC_GNode sub-class, e.g. MyNode, with relevant methods:
+   *        my_node_new            (must call FTC_GNode_Init)
+   *        my_node_free           (must call FTC_GNode_Done)
+   *        my_node_compare        (must call FTC_GNode_Compare)
+   *        my_node_remove_faceid  (must call ftc_gnode_unselect in case
+   *                                of match)
    *
-   *  - FTC_GNode sub-class, e.g. MyNode, with relevant methods, i.e:
-   *        my_node_new            ( must call FTC_GNode_Init )
-   *        my_node_free           ( must call FTC_GNode_Done )
-   *        my_node_compare        ( must call FTC_GNode_Compare )
-   *        my_node_remove_faceid  ( must call ftc_gnode_unselect in case
-   *                                 of match )
-   *
-   *
-   *  - FTC_Family sub-class, e.g. MyFamily, with relevant methods, e.g.:
+   *  - FTC_Family sub-class, e.g. MyFamily, with relevant methods:
    *        my_family_compare
    *        my_family_init
    *        my_family_reset (optional)
@@ -72,22 +71,23 @@
    *  - FTC_GQuery sub-class, e.g. MyQuery, to hold cache-specific query
    *    data.
    *
-   *  - provide constant structures for a FTC_GNodeClass
+   *  - Constant structures for a FTC_GNodeClass.
    *
    *  - MyCacheNew() can be implemented easily as a call to the convenience
-   *    function FTC_GCache_New
+   *    function FTC_GCache_New.
    *
-   *  - implement MyCacheLookup with a call to FTC_GCache_Lookup. This
-   *    function will automatically:
+   *  - MyCacheLookup with a call to FTC_GCache_Lookup.  This function will
+   *    automatically:
    *
-   *      - search for the corresponding family in the cache, or create
-   *        a new one if necessary. put it in FTC_GQUERY(myquery).family
+   *    - Search for the corresponding family in the cache, or create
+   *      a new one if necessary.  Put it in FTC_GQUERY(myquery).family
    *
-   *      - call FTC_Cache_Lookup
+   *    - Call FTC_Cache_Lookup.
    *
-   *    if it returns NULL, you should create a new node, then call
+   *    If it returns NULL, you should create a new node, then call
    *    ftc_cache_add as usual.
    */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -125,16 +125,17 @@ FT_BEGIN_HEADER
 
 
  /*
-  *  we can group glyph in "families". Each family correspond to a
-  *  given face id, character size, transform, etc...
+  *  We can group glyphs into `families'.  Each family correspond to a
+  *  given face ID, character size, transform, etc.
   *
-  *  families are implemented as MRU list nodes. They are reference-counted
+  *  Families are implemented as MRU list nodes.  They are
+  *  reference-counted.
   */
 
   typedef struct  FTC_FamilyRec_
   {
     FTC_MruNodeRec    mrunode;
-    FT_UInt           num_nodes;   /* current number of nodes in this family */
+    FT_UInt           num_nodes; /* current number of nodes in this family */
     FTC_Cache         cache;
     FTC_MruListClass  clazz;
 
@@ -166,8 +167,6 @@ FT_BEGIN_HEADER
 #define FTC_GQUERY( x )  ( (FTC_GQuery)(x) )
 
 
-
-
   /*************************************************************************/
   /*                                                                       */
   /* These functions are exported so that they can be called from          */
@@ -177,9 +176,9 @@ FT_BEGIN_HEADER
 
   /* must be called by derived FTC_Node_InitFunc routines */
   FT_EXPORT( void )
-  FTC_GNode_Init( FTC_GNode    node,
-                  FT_UInt      gindex,  /* glyph index for node */
-                  FTC_Family   family );
+  FTC_GNode_Init( FTC_GNode   node,
+                  FT_UInt     gindex,  /* glyph index for node */
+                  FTC_Family  family );
 
   /* returns TRUE iff the query's glyph index correspond to the node;  */
   /* this assumes that the "family" and "hash" fields of the query are */
@@ -188,17 +187,16 @@ FT_BEGIN_HEADER
   FTC_GNode_Compare( FTC_GNode   gnode,
                      FTC_GQuery  gquery );
 
- /* call this function to clear a node's family. this is necessary
-  * to implement the "node_remove_faceid" cache method correctly
-  */
+  /* call this function to clear a node's family -- this is necessary */
+  /* to implement the `node_remove_faceid' cache method correctly     */
   FT_EXPORT( void )
-  FTC_GNode_UnselectFamily( FTC_GNode   gnode,
-                            FTC_Cache   cache );
+  FTC_GNode_UnselectFamily( FTC_GNode  gnode,
+                            FTC_Cache  cache );
 
   /* must be called by derived FTC_Node_DoneFunc routines */
   FT_EXPORT( void )
   FTC_GNode_Done( FTC_GNode  node,
-                  FTC_Cache      cache );
+                  FTC_Cache  cache );
 
 
   FT_EXPORT( void )
@@ -207,27 +205,26 @@ FT_BEGIN_HEADER
 
   typedef struct FTC_GCacheRec_
   {
-    FTC_CacheRec       cache;
-    FTC_MruListRec     families;
+    FTC_CacheRec    cache;
+    FTC_MruListRec  families;
 
   } FTC_GCacheRec, *FTC_GCache;
 
+#define FTC_GCACHE( x )  ((FTC_GCache)(x))
 
-#define FTC_GCACHE(x)  ((FTC_GCache)(x))
 
-
- /* can be used as @FTC_Cache_InitFunc */
+  /* can be used as @FTC_Cache_InitFunc */
   FT_EXPORT( FT_Error )
-  FTC_GCache_Init( FTC_GCache     cache );
+  FTC_GCache_Init( FTC_GCache  cache );
 
 
- /* can be used as @FTC_Cache_DoneFunc */
+  /* can be used as @FTC_Cache_DoneFunc */
   FT_EXPORT( void )
   FTC_GCache_Done( FTC_GCache  cache );
 
 
- /* the glyph cache class adds fields for the family implementation */
-  typedef struct FTC_GCacheClassRec_
+  /* the glyph cache class adds fields for the family implementation */
+  typedef struct  FTC_GCacheClassRec_
   {
     FTC_CacheClassRec  clazz;
     FTC_MruListClass   family_class;
@@ -236,13 +233,15 @@ FT_BEGIN_HEADER
 
   typedef const FTC_GCacheClassRec*   FTC_GCacheClass;
 
-#define  FTC_GCACHE_CLASS(x)  ((FTC_GCacheClass)(x))
+#define FTC_GCACHE_CLASS( x )  ((FTC_GCacheClass)(x))
 
-#define  FTC_CACHE__GCACHE_CLASS(x)  FTC_GCACHE_CLASS( FTC_CACHE(x)->org_class )
-#define  FTC_CACHE__FAMILY_CLASS(x)  ((FTC_MruListClass) FTC_CACHE__GCACHE_CLASS(x)->family_class)
+#define FTC_CACHE__GCACHE_CLASS( x ) \
+          FTC_GCACHE_CLASS( FTC_CACHE(x)->org_class )
+#define FTC_CACHE__FAMILY_CLASS( x ) \
+          ((FTC_MruListClass) FTC_CACHE__GCACHE_CLASS(x)->family_class)
 
 
- /* convenience function. use instead of FTC_Manager_Register_Cache */
+  /* convenience function; use it instead of FTC_Manager_Register_Cache */
   FT_EXPORT( FT_Error )
   FTC_GCache_New( FTC_Manager       manager,
                   FTC_GCacheClass   clazz,
@@ -256,33 +255,35 @@ FT_BEGIN_HEADER
                      FTC_Node    *anode );
 
 
-#define  FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash, gindex, query, node, error )  \
-  FT_BEGIN_STMNT                                                                   \
-    FTC_GCache               _gcache   = FTC_GCACHE( cache );                      \
-    FTC_Family               _family;                                              \
-    FTC_GQuery               _gquery   = (FTC_GQuery)( query );                    \
-    FTC_MruNode_CompareFunc  _fcompare = (FTC_MruNode_CompareFunc)(famcmp);        \
-                                                                                   \
-    _gquery->gindex = (gindex);                                                    \
-                                                                                   \
-    FTC_MRULIST_LOOP( &_gcache->families, _family )                                \
-    {                                                                      \
-      if ( _fcompare( (FTC_MruNode)_family, _gquery ) )                    \
-      {                                                                    \
-        _gquery->family = _family;                                         \
-        goto _FamilyFound;                                                 \
-      }                                                                    \
-    }                                                                      \
-    FTC_MRULIST_LOOP_END();                                                \
-                                                                           \
-    error = FTC_MruList_New( &_gcache->families,                           \
-                             _gquery,                                      \
-                             (FTC_MruNode*)&_gquery->family );             \
-    if ( !error )                                                          \
-    {                                                                      \
-    _FamilyFound:                                                          \
-      FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error );    \
-    }                                                                      \
+#define FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash,                \
+                               gindex, query, node, error )                 \
+  FT_BEGIN_STMNT                                                            \
+    FTC_GCache               _gcache   = FTC_GCACHE( cache );               \
+    FTC_Family               _family;                                       \
+    FTC_GQuery               _gquery   = (FTC_GQuery)( query );             \
+    FTC_MruNode_CompareFunc  _fcompare = (FTC_MruNode_CompareFunc)(famcmp); \
+                                                                            \
+                                                                            \
+    _gquery->gindex = (gindex);                                             \
+                                                                            \
+    FTC_MRULIST_LOOP( &_gcache->families, _family )                         \
+    {                                                                       \
+      if ( _fcompare( (FTC_MruNode)_family, _gquery ) )                     \
+      {                                                                     \
+        _gquery->family = _family;                                          \
+        goto _FamilyFound;                                                  \
+      }                                                                     \
+    }                                                                       \
+    FTC_MRULIST_LOOP_END();                                                 \
+                                                                            \
+    error = FTC_MruList_New( &_gcache->families,                            \
+                             _gquery,                                       \
+                             (FTC_MruNode*)&_gquery->family );              \
+    if ( !error )                                                           \
+    {                                                                       \
+    _FamilyFound:                                                           \
+      FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error );     \
+    }                                                                       \
   FT_END_STMNT
   /* */
 

@@ -58,14 +58,15 @@
 
 FT_BEGIN_HEADER
 
-  typedef struct FTC_MruNodeRec_*              FTC_MruNode;
+  typedef struct FTC_MruNodeRec_*  FTC_MruNode;
 
-  typedef struct FTC_MruNodeRec_
+  typedef struct  FTC_MruNodeRec_
   {
-    FTC_MruNode   next;
-    FTC_MruNode   prev;
+    FTC_MruNode  next;
+    FTC_MruNode  prev;
 
   } FTC_MruNodeRec;
+
 
   FT_EXPORT( void )
   FTC_MruNode_Prepend( FTC_MruNode  *plist,
@@ -79,42 +80,49 @@ FT_BEGIN_HEADER
   FTC_MruNode_Remove( FTC_MruNode  *plist,
                       FTC_MruNode   node );
 
+
   typedef struct FTC_MruListRec_*              FTC_MruList;
 
   typedef struct FTC_MruListClassRec_ const *  FTC_MruListClass;
 
-  typedef FT_Int       (*FTC_MruNode_CompareFunc)( FTC_MruNode  node,
-                                                   FT_Pointer   key );
 
-  typedef FT_Error     (*FTC_MruNode_InitFunc)( FTC_MruNode  node,
-                                                FT_Pointer    key,
-                                                FT_Pointer    data );
+  typedef FT_Int
+  (*FTC_MruNode_CompareFunc)( FTC_MruNode  node,
+                              FT_Pointer   key );
 
-  typedef FT_Error     (*FTC_MruNode_ResetFunc)( FTC_MruNode  node,
-                                                 FT_Pointer   key,
-                                                 FT_Pointer   data );
+  typedef FT_Error
+  (*FTC_MruNode_InitFunc)( FTC_MruNode  node,
+                           FT_Pointer   key,
+                           FT_Pointer   data );
 
-  typedef void         (*FTC_MruNode_DoneFunc)( FTC_MruNode  node,
-                                                FT_Pointer   data );
+  typedef FT_Error
+  (*FTC_MruNode_ResetFunc)( FTC_MruNode  node,
+                            FT_Pointer   key,
+                            FT_Pointer   data );
 
-  typedef struct FTC_MruListClassRec_
+  typedef void
+  (*FTC_MruNode_DoneFunc)( FTC_MruNode  node,
+                           FT_Pointer   data );
+
+
+  typedef struct  FTC_MruListClassRec_
   {
-    FT_UInt                   node_size;
-    FTC_MruNode_CompareFunc   node_compare;
-    FTC_MruNode_InitFunc      node_init;
-    FTC_MruNode_ResetFunc     node_reset;
-    FTC_MruNode_DoneFunc      node_done;
+    FT_UInt                  node_size;
+    FTC_MruNode_CompareFunc  node_compare;
+    FTC_MruNode_InitFunc     node_init;
+    FTC_MruNode_ResetFunc    node_reset;
+    FTC_MruNode_DoneFunc     node_done;
 
   } FTC_MruListClassRec;
 
-  typedef struct FTC_MruListRec_
+  typedef struct  FTC_MruListRec_
   {
-    FT_UInt                  num_nodes;
-    FT_UInt                  max_nodes;
-    FTC_MruNode              nodes;
-    FT_Pointer               data;
-    FTC_MruListClassRec      clazz;
-    FT_Memory                memory;
+    FT_UInt              num_nodes;
+    FT_UInt              max_nodes;
+    FTC_MruNode          nodes;
+    FT_Pointer           data;
+    FTC_MruListClassRec  clazz;
+    FT_Memory            memory;
 
   } FTC_MruListRec;
 
@@ -135,12 +143,12 @@ FT_BEGIN_HEADER
 
   FT_EXPORT( FTC_MruNode )
   FTC_MruList_Find( FTC_MruList  list,
-                    FT_Pointer    key );
+                    FT_Pointer   key );
 
   FT_EXPORT( FT_Error )
-  FTC_MruList_New( FTC_MruList    list,
-                   FT_Pointer     key,
-                   FTC_MruNode   *anode );
+  FTC_MruList_New( FTC_MruList   list,
+                   FT_Pointer    key,
+                   FTC_MruNode  *anode );
 
   FT_EXPORT( FT_Error )
   FTC_MruList_Lookup( FTC_MruList   list,
@@ -154,16 +162,17 @@ FT_BEGIN_HEADER
 
   FT_EXPORT( void )
   FTC_MruList_RemoveSelection( FTC_MruList              list,
-                               FTC_MruNode_CompareFunc  select,
+                               FTC_MruNode_CompareFunc  selection,
                                FT_Pointer               key );
 
 
 #ifdef FTC_INLINE
 
-#define  FTC_MRULIST_LOOKUP( list, key, node, error )                    \
+#define FTC_MRULIST_LOOKUP( list, key, node, error )                     \
   FT_BEGIN_STMNT                                                         \
     FTC_MruNode_CompareFunc  _compare = (list)->clazz.node_compare;      \
     FTC_MruNode              _first, _node;                              \
+                                                                         \
                                                                          \
     error  = 0;                                                          \
     _first = (list)->nodes;                                              \
@@ -180,8 +189,8 @@ FT_BEGIN_HEADER
           goto _Ok;                                                      \
         }                                                                \
         _node = _node->next;                                             \
-      }                                                                  \
-      while ( _node != _first) ;                                         \
+                                                                         \
+      } while ( _node != _first) ;                                       \
     }                                                                    \
                                                                          \
     error = FTC_MruList_New( (list), (key), (FTC_MruNode*)&(node) );     \
@@ -191,28 +200,31 @@ FT_BEGIN_HEADER
 
 #else  /* !FTC_INLINE */
 
-#define  FTC_MRULIST_LOOKUP_CMP( list, key, node, error )   \
+#define FTC_MRULIST_LOOKUP_CMP( list, key, node, error ) \
   error = FTC_MruList_Lookup( (list), (key), (FTC_MruNode*)&(node) ) 
 
 #endif /* !FTC_INLINE */
 
 
-#define  FTC_MRULIST_LOOP( list, node )       \
+#define FTC_MRULIST_LOOP( list, node )        \
   FT_BEGIN_STMNT                              \
-    FTC_MruNode   _first = (list)->nodes;     \
+    FTC_MruNode  _first = (list)->nodes;      \
+                                              \
                                               \
     if ( _first )                             \
     {                                         \
       FTC_MruNode  _node = _first;            \
+                                              \
+                                              \
       do                                      \
       {                                       \
         *(FTC_MruNode*)&(node) = _node;
 
 
-#define  FTC_MRULIST_LOOP_END()              \
+#define FTC_MRULIST_LOOP_END()               \
         _node = _node->next;                 \
-      }                                      \
-      while ( _node != _first );             \
+                                             \
+      } while ( _node != _first );           \
     }                                        \
   FT_END_STMNT
 

@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftcmru.c                                                               */
+/*                                                                         */
+/*    FreeType MRU support (body).                                         */
+/*                                                                         */
+/*  Copyright 2003 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <ft2build.h>
 #include FT_CACHE_H
 #include FT_CACHE_INTERNAL_MRU_H
@@ -6,29 +24,34 @@
 
 #include "ftcerror.h"
 
+
   FT_EXPORT_DEF( void )
   FTC_MruNode_Prepend( FTC_MruNode  *plist,
                        FTC_MruNode   node )
   {
     FTC_MruNode  first = *plist;
 
+
     if ( first )
     {
       FTC_MruNode  last = first->prev;
 
+
 #ifdef FT_DEBUG_ERROR
       {
         FTC_MruNode  cnode = first;
+
+
         do
         {
           if ( cnode == node )
           {
-            fprintf( stderr, "FTC_MruNode_Prepend: invalid action !!\n" );
-            exit(2);
+            fprintf( stderr, "FTC_MruNode_Prepend: invalid action!\n" );
+            exit( 2 );
           }
           cnode = cnode->next;
-        }
-        while ( cnode != first );
+
+        } while ( cnode != first );
       }
 #endif
 
@@ -52,11 +75,13 @@
   {
     FTC_MruNode  first = *plist;
 
+
     FT_ASSERT( first != NULL );
 
     if ( first != node )
     {
       FTC_MruNode  prev, next, last;
+
 
 #ifdef FT_DEBUG_ERROR
       {
@@ -66,11 +91,11 @@
           if ( cnode == node )
             goto Ok;
           cnode = cnode->next;
-        }
-        while ( cnode != first );
 
-        fprintf( stderr, "FTC_MruNode_Up: invalid action !!\n" );
-        exit(2);
+        } while ( cnode != first );
+
+        fprintf( stderr, "FTC_MruNode_Up: invalid action!\n" );
+        exit( 2 );
       Ok:
       }
 #endif
@@ -85,7 +110,7 @@
       last->next  = node;
       first->prev = node;
 
-      node->next  = first;
+      node->next = first;
       node->prev = last;
 
       *plist = node;
@@ -100,21 +125,24 @@
     FTC_MruNode  first = *plist;
     FTC_MruNode  prev, next;
 
+
     FT_ASSERT( first != NULL );
 
 #ifdef FT_DEBUG_ERROR
       {
         FTC_MruNode  cnode = first;
+
+
         do
         {
           if ( cnode == node )
             goto Ok;
           cnode = cnode->next;
-        }
-        while ( cnode != first );
 
-        fprintf( stderr, "FTC_MruNode_Remove: invalid action !!\n" );
-        exit(2);
+        } while ( cnode != first );
+
+        fprintf( stderr, "FTC_MruNode_Remove: invalid action!\n" );
+        exit( 2 );
       Ok:
       }
 #endif
@@ -134,8 +162,7 @@
     }
     else if ( node == first )
         *plist = next;
-    }
-
+  }
 
 
   FT_EXPORT_DEF( void )
@@ -171,13 +198,13 @@
   }
 
 
-
   FT_EXPORT_DEF( FTC_MruNode )
   FTC_MruList_Find( FTC_MruList  list,
-                      FT_Pointer   key )
+                    FT_Pointer   key )
   {
     FTC_MruNode_CompareFunc  compare = list->clazz.node_compare;
     FTC_MruNode              first, node;
+
 
     first = list->nodes;
     node  = NULL;
@@ -191,22 +218,23 @@
           return node;
 
         node = node->next;
+  
+      } while ( node != first);
     }
-      while ( node != first) ;
-    }
+
     return NULL;
   }
 
 
-
   FT_EXPORT_DEF( FT_Error )
-  FTC_MruList_New( FTC_MruList    list,
-                   FT_Pointer     key,
-                   FTC_MruNode   *anode )
+  FTC_MruList_New( FTC_MruList   list,
+                   FT_Pointer    key,
+                   FTC_MruNode  *anode )
   {
     FT_Error     error;
     FTC_MruNode  node;
     FT_Memory    memory = list->memory;
+
 
     if ( list->num_nodes >= list->max_nodes && list->max_nodes > 0 )
     {
@@ -254,10 +282,11 @@
 
   FT_EXPORT( FT_Error )
   FTC_MruList_Lookup( FTC_MruList   list,
-                   FT_Pointer    key,
-                   FTC_MruNode  *anode )
+                      FT_Pointer    key,
+                      FTC_MruNode  *anode )
   {
     FTC_MruNode  node;
+
 
     node = FTC_MruList_Find( list, key );
     if ( node == NULL )
@@ -269,8 +298,8 @@
 
 
   FT_EXPORT_DEF( void )
-  FTC_MruList_Remove( FTC_MruList   list,
-                      FTC_MruNode   node )
+  FTC_MruList_Remove( FTC_MruList  list,
+                      FTC_MruNode  node )
   {
     FTC_MruNode_Remove( &list->nodes, node );
     list->num_nodes--;
@@ -278,23 +307,25 @@
     {
       FT_Memory  memory = list->memory;
 
-    if ( list->clazz.node_done )
-      list->clazz.node_done( node, list->data );
 
-    FT_FREE( node );
-  }
+      if ( list->clazz.node_done )
+       list->clazz.node_done( node, list->data );
+
+      FT_FREE( node );
+    }
   }
 
 
   FT_EXPORT_DEF( void )
   FTC_MruList_RemoveSelection( FTC_MruList              list,
-                               FTC_MruNode_CompareFunc  select,
+                               FTC_MruNode_CompareFunc  selection,
                                FT_Pointer               key )
   {
     FTC_MruNode  first, node, next;
 
+
     first = list->nodes;
-    while ( first && select( first, key ) )
+    while ( first && selection( first, key ) )
     {
       FTC_MruList_Remove( list, first );
       first = list->nodes;
@@ -307,7 +338,7 @@
       {
         next = node->next;
 
-        if ( select( node, key ) )
+        if ( selection( node, key ) )
           FTC_MruList_Remove( list, node );
 
         node = next;
@@ -315,5 +346,5 @@
     }
   }
 
-/* END */
 
+/* END */

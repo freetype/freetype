@@ -62,7 +62,7 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Byte )
-  cff_fd_select_get( CFF_FDSelect  select,
+  cff_fd_select_get( CFF_FDSelect  fdselect,
                      FT_UInt       glyph_index );
 
 

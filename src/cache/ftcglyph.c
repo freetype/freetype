@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Glyph Image (FT_Glyph) cache (body).                        */
 /*                                                                         */
-/*  Copyright 2000-2001 by                                                 */
+/*  Copyright 2000-2001, 2003 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -39,16 +39,16 @@
 
 
   FT_EXPORT_DEF( void )
-  FTC_GNode_UnselectFamily( FTC_GNode   gnode,
-                            FTC_Cache   cache )
+  FTC_GNode_UnselectFamily( FTC_GNode  gnode,
+                            FTC_Cache  cache )
   {
     FTC_Family  family = gnode->family;
 
+
     gnode->family = NULL;
     if ( family && --family->num_nodes <= 0 )
-    {
-      FTC_MruList_Remove( & FTC_GCACHE(cache)->families, (FTC_MruNode)family );
-  }
+      FTC_MruList_Remove( &FTC_GCACHE( cache )->families,
+                          (FTC_MruNode)family );
   }
 
 
@@ -84,7 +84,8 @@
   FTC_Family_Init( FTC_Family  family,
                    FTC_Cache   cache )
   {
-    FTC_GCacheClass  clazz = FTC_CACHE__GCACHE_CLASS(cache);
+    FTC_GCacheClass  clazz = FTC_CACHE__GCACHE_CLASS( cache );
+
 
     family->clazz     = clazz->family_class;
     family->num_nodes = 0;
@@ -97,17 +98,18 @@
   {
     FT_Error error;
 
-    error = FTC_Cache_Init( FTC_CACHE(cache) );
+    error = FTC_Cache_Init( FTC_CACHE( cache ) );
     if ( !error )
     {
-      FTC_GCacheClass   clazz = (FTC_GCacheClass) FTC_CACHE(cache)->org_class;
+      FTC_GCacheClass   clazz = (FTC_GCacheClass)FTC_CACHE( cache )->org_class;
 
       FTC_MruList_Init( &cache->families,
                         clazz->family_class,
-                        0,  /* no maximum here !! */
+                        0,  /* no maximum here! */
                         cache,
-                        FTC_CACHE(cache)->memory );
+                        FTC_CACHE( cache )->memory );
     }
+
     return error;
   }
 
@@ -125,8 +127,8 @@
                   FTC_GCacheClass   clazz,
                   FTC_GCache       *acache )
   {
-    return FTC_Manager_RegisterCache( manager, (FTC_CacheClass) clazz,
-                                      (FTC_Cache*) acache );
+    return FTC_Manager_RegisterCache( manager, (FTC_CacheClass)clazz,
+                                      (FTC_Cache*)acache );
   }
 
 
@@ -137,13 +139,14 @@
                      FTC_GQuery   query,
                      FTC_Node    *anode )
   {
-    FT_Error    error;
+    FT_Error  error;
+
 
     query->gindex = gindex;
 
     FTC_MRULIST_LOOKUP( &cache->families, query, query->family, error );
     if ( !error )
-      error = FTC_Cache_Lookup( FTC_CACHE(cache), hash, query, anode );
+      error = FTC_Cache_Lookup( FTC_CACHE( cache ), hash, query, anode );
 
     return error;
   }

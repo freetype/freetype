@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache Manager (specification).                              */
 /*                                                                         */
-/*  Copyright 2000-2001 by                                                 */
+/*  Copyright 2000-2001, 2003 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -80,12 +80,13 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-#define FTC_MAX_FACES_DEFAULT    2
-#define FTC_MAX_SIZES_DEFAULT    4
-#define FTC_MAX_BYTES_DEFAULT    200000L  /* ~200kByte by default */
+#define FTC_MAX_FACES_DEFAULT  2
+#define FTC_MAX_SIZES_DEFAULT  4
+#define FTC_MAX_BYTES_DEFAULT  200000L  /* ~200kByte by default */
 
   /* maximum number of caches registered in a single manager */
 #define FTC_MAX_CACHES         16
+
 
   typedef struct  FTC_ManagerRec_
   {
@@ -97,7 +98,7 @@ FT_BEGIN_HEADER
     FT_ULong            cur_weight;
     FT_UInt             num_nodes;
 
-    FTC_Cache           caches[ FTC_MAX_CACHES ];
+    FTC_Cache           caches[FTC_MAX_CACHES];
     FT_UInt             num_caches;
 
     FTC_MruListRec      faces;
@@ -134,12 +135,12 @@ FT_BEGIN_HEADER
   FTC_Manager_Compress( FTC_Manager  manager );
 
 
- /* try to flush "count" old nodes from the cache. return the number
-  * of really flushed nodes
-  */
+  /* try to flush `count' old nodes from the cache; return the number
+   * of really flushed nodes
+   */
   FT_EXPORT( FT_UInt )
   FTC_Manager_FlushN( FTC_Manager  manager,
-                       FT_UInt      count );
+                      FT_UInt      count );
 
 
   /* this must be used internally for the moment */
@@ -150,19 +151,19 @@ FT_BEGIN_HEADER
 
  /* */
 
-  typedef struct FTC_ScalerRec_
+  typedef struct  FTC_ScalerRec_
   {
-    FTC_FaceID   face_id;
-    FT_UInt      width;
-    FT_UInt      height;
-    FT_Int       pixel;
-    FT_UInt      x_res;
-    FT_UInt      y_res;
+    FTC_FaceID  face_id;
+    FT_UInt     width;
+    FT_UInt     height;
+    FT_Int      pixel;
+    FT_UInt     x_res;
+    FT_UInt     y_res;
 
   } FTC_ScalerRec, *FTC_Scaler;
 
 
-#define  FTC_SCALER_COMPARE(a,b)                  \
+#define FTC_SCALER_COMPARE( a, b )                \
     ( (a)->face_id      == (b)->face_id      &&   \
       (a)->width        == (b)->width        &&   \
       (a)->height       == (b)->height       &&   \
@@ -171,16 +172,16 @@ FT_BEGIN_HEADER
         ( (a)->x_res == (b)->x_res &&             \
           (a)->y_res == (b)->y_res ) ) )
 
-#define  FTC_SCALER_HASH(q)                                  \
-    ( FTC_FACE_ID_HASH((q)->face_id) +                       \
+#define FTC_SCALER_HASH( q )                                 \
+    ( FTC_FACE_ID_HASH( (q)->face_id ) +                     \
       (q)->width + (q)->height*7 +                           \
       ( (q)->pixel ? 0 : ( (q)->x_res*33 ^ (q)->y_res*61 ) ) )
 
 
   FT_EXPORT( FT_Error )
-  FTC_Manager_LookupSize( FTC_Manager    manager,
-                           FTC_Scaler     scaler,
-                           FT_Size       *asize );
+  FTC_Manager_LookupSize( FTC_Manager  manager,
+                          FTC_Scaler   scaler,
+                          FT_Size     *asize );
 
  /* */
 

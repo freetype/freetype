@@ -27,20 +27,22 @@
   FT_EXPORT_DEF( FT_StrokerBorder )
   FT_Outline_GetInsideBorder( FT_Outline*  outline )
   {
-    FT_Orientation  or = FT_Outline_Get_Orientation( outline );
+    FT_Orientation  o = FT_Outline_Get_Orientation( outline );
 
-    return ( or == FT_ORIENTATION_TRUETYPE ) ? FT_STROKER_BORDER_RIGHT
-                                             : FT_STROKER_BORDER_LEFT ;
+
+    return o == FT_ORIENTATION_TRUETYPE ? FT_STROKER_BORDER_RIGHT
+                                        : FT_STROKER_BORDER_LEFT ;
   }
 
 
   FT_EXPORT_DEF( FT_StrokerBorder )
   FT_Outline_GetOutsideBorder( FT_Outline*  outline )
   {
-    FT_Orientation  or = FT_Outline_Get_Orientation( outline );
+    FT_Orientation  o = FT_Outline_Get_Orientation( outline );
 
-    return ( or == FT_ORIENTATION_TRUETYPE ) ? FT_STROKER_BORDER_RIGHT
-                                             : FT_STROKER_BORDER_LEFT ;
+
+    return o == FT_ORIENTATION_TRUETYPE ? FT_STROKER_BORDER_RIGHT
+                                        : FT_STROKER_BORDER_LEFT ;
   }
 
 
@@ -1457,6 +1459,7 @@
     FT_UInt   num_points = 0, num_contours = 0;
     FT_Error  error;
 
+
     if ( !stroker || border > 1 )
     {
       error = FT_Err_Invalid_Argument;
@@ -1509,12 +1512,13 @@
   FT_EXPORT_DEF( void )
   FT_Stroker_ExportBorder( FT_Stroker        stroker,
                            FT_StrokerBorder  border,
-                     FT_Outline*  outline )
+                           FT_Outline*       outline )
   {
     if ( border == FT_STROKER_BORDER_LEFT  ||
          border == FT_STROKER_BORDER_RIGHT )
     {
       FT_StrokeBorder  sborder = & stroker->borders[border];
+
 
       if ( sborder->valid )
         ft_stroke_border_export( sborder, outline );
@@ -1529,8 +1533,6 @@
     FT_Stroker_ExportBorder( stroker, FT_STROKER_BORDER_LEFT, outline );
     FT_Stroker_ExportBorder( stroker, FT_STROKER_BORDER_RIGHT, outline );
   }
-
-
 
 
   /*
