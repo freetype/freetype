@@ -1,0 +1,359 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="David Turner">
+   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
+   <title>FreeType 2 Internals - I/O Frames</title>
+</head>
+<body>
+
+<body text="#000000"
+      bgcolor="#FFFFFF"
+      link="#0000EF"
+      vlink="#51188E"
+      alink="#FF0000">
+
+<center>
+<h1>
+FreeType 2.0 Build System</h1></center>
+
+<center>
+<h3>
+&copy; 2000 David Turner (<a href="fichier :///david@freetype.org">david@freetype.org</a>)<br>
+&copy; 2000 The FreeType Development Team
+(<a href="mailto:devel@freetype.org">devel@freetype.org</a>)
+</h3></center>
+
+<p><br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<h2>Introduction:</h2>
+<ul>
+	This document describes the new build system that was introduced
+    with FreeType 2.
+</ul>
+
+<p><hr><p>
+
+<h2>I. Features and Background:</h2>
+<ul>
+	The FreeType 2 build system is a set of Makefiles and sub-Makefiles that
+	are used to build the library on a very large variety of systems. To
+	understand it properly, it must be noticed that:<p>
+	<ul>
+		<li>The build system is made of a <em>single Makefile</em>,
+			dispatched over several directories with the help of the
+			<tt>include</tt> directive. Technically speaking, it is
+			composed of the top-level "<tt>freetype2/Makefile</tt>"
+			which includes several other sub-Makefiles, whose extension
+			is always "<tt>.mk</tt>". Examples are:<p>
+			<ul>
+				<tt>freetype2/config/freetype.mk</tt><br>
+				<tt>freetype2/config/<em>system</em>/detect.mk</tt><br>
+				<tt>freetype2/src/<em>module</em>/rules.mk</tt><br>
+				etc..
+			</ul>
+			<p>
+			<font size="+2" color="red">
+			We <em>strongly</em> recommend the following article:<p>
+			<center>
+			  <a href="http://www.pcug.org.au/~millerp/rmch/recu-make-cons-harm.html">
+			  Recursive Make Considered Dangerous
+			  </a>
+			</center>
+			</font>
+			<p>
+			To understand why such a layout was chosen.
+			<p>
+
+		<li>The build system works <em>exclusively</em> with
+			<b>GNU Make</b>. Reason is that it is the only make utility
+			that has all the features required to implement the build
+			system as described below. Moreover, it is already ported
+			to hundreds of various distinct platforms and is widely and
+			freely available.
+			<p>
+			<em>You don't need a Unix-like shell on your platform</em>.
+			For example, FreeType 2 already compiles on Unix, Dos, Windows
+			and OS/2 right "out of the box"	(assuming you have GNU Make
+			installed).
+			<p>
+			Note that we have <em>no plans</em> to support a different
+			make tool, as you'll rapidly understand by reading this
+			document or looking at the Makefiles themselves.
+			<p>
+	</ul>
+	<p>
+			
+
+    The build system features some important points, which are all detailed
+    in the following sections:<p>
+	<ul>
+		<li><b>Automatic host platform detection</b><br>
+			The first time the top <tt>Makefile</tt> is invoked, it will
+			run a series of rules to detect your platform. It will then
+			create a system-specific configuration sub-Makefile in the
+			current	directory, called <b><tt>config.mk</tt></b>. You can now
+			invoke the top <tt>Makefile</tt> a second time to compile the
+			library directly.
+			<p>
+			The configuration sub-makefile can be regenerated any time
+			by invoking "<tt>make setup</tt>", which will re-run the
+			detection rules even if a <tt>config.mk</tt> is already present.
+			<p>
+
+
+		<li><b>User-selectable builds</b><br>
+			The system-specific <b><tt>config.mk</tt></b> created when
+			running <tt>make</tt> for the first time contains various
+			definitions, including compiler, compiler flags, object files
+			directories, etc.. However, a given platform has often several
+			compilers available, each with a different name and flags to be
+			used. Rather than trying to detect the compiler in the build
+			system, users can also specify which compiler they use when
+			running <tt>make</tt>.
+			<p>
+			For example, on Win32 platforms:<p>
+			<ul>
+				<table>
+					<tr valign="top">
+					<td><b><tt>make&nbsp;setup</tt></b>
+					<td>Will generate a <tt>config.mk</tt> that
+					    can be used to compile the library with
+						<b><tt>gcc</tt></b> (<em>which is the default
+						compiler for most supported platforms</em>).
+
+					<tr valign="top">
+					<td><b><tt>make&nbsp;setup&nbsp;visualc</tt></b>
+					<td>Will generate a different <tt>config.mk</tt>
+					    that can be used to compile the library
+						with the Visual C++ command-line compiler.
+
+					<tr valign="top">
+					<td><b><tt>make&nbsp;setup&nbsp;lcc</tt></b>
+					<td>Will generate a different <tt>config.mk</tt>
+						that can be used to compile the library
+						with the Win32-LCC compiler.
+				</table>
+			</ul>
+			<p>
+
+						
+
+		<li><b>Automatic detection of font drivers</b><br>
+			FreeType is made of a "base" layer that invokes several
+			separately-compiled modules. Each module is a given
+			font driver, in charge of supporting a given font format.
+			<p>
+			The list of font drivers is located in the file
+			"<tt>freetype2/config/<em>system</em>/ftmodule.h</tt>", however
+			it can be regenerated on-demand. Adding a new module to the
+			FreeType source tree is thus as easy as:<p>
+			<ul>
+				<li>create a new directory in "<tt>freetype2/src</tt>" and
+					put the new driver's source code and sub-makefiles there.
+					<p>
+
+				<li>invoke the top <tt>Makefile</tt> with target
+					"<tt>modules</tt>" (as in "<tt>make modules</tt>"),
+					as this will automatically regenerate the list of
+					available drivers by detecting the new directory and
+					its content.
+			</ul>
+			<p>
+	</ul>
+</ul>
+
+<p><hr><p>
+
+<h2>II. Host Platform Detection</h2>
+<ul>
+	When the top-level <tt>Makefile</tt> is invoked, it looks for a
+	file named <tt>config.mk</tt> in the current directory. If this
+	file is found, it is used to build the library
+	(see <a href="library">Section III</a>).
+	<p>
+	Otherwise, the file <tt>freetype2/config/detect.mk</tt> is included
+	and parsed. Its purpose is to:<p>
+	<ul>
+		<li>Define the <tt>PLATFORM</tt> variable, which indicates
+			what is the currently detected platform. It is initially
+			set to the default value "<tt>ansi</tt>".
+			<p>
+
+		<li>It searches for a <tt>detect.mk</tt> file in all
+			subdirectories of <tt>freetype2/config</tt>. Each such
+			file is included and parsed. Each of these files must
+			try to detect if the host platform is a system it knows
+			about. If so, it changes the value of the <tt>PLATFORM</tt>
+			accordingly.
+	</ul>
+	<p>
+	This is illustrated by the following graphics :<p>
+	<center>
+		<img src="platform-detection.png" border=0>
+	</center>
+	<p>
+	Note that each system-specific <tt>detect.mk</tt> is in charge
+	of copying a valid configuration makefile to the current directory
+	(i.e. the one where <tt>make</tt> was invoked), depending on the
+	current targets. For example, the Win32 <tt>detect.mk</tt> will
+	be able to detect a "<tt>visualc</tt>" or "<tt>lcc</tt>" target,
+	as described in section I. Similarly, the OS/2 <tt>detect.mk</tt>
+	can detect targets like "<tt>borlandc</tt>", "<tt>watcom</tt>"
+	or "<tt>visualage</tt>", etc..
+</ul>
+
+<p><hr><p>
+
+<h2>III. Building the library</h2>
+<ul>
+	When the top-level <tt>Makefile</tt> is invoked and that it finds
+	a <tt>config.mk</tt> file in the current directory, it defines
+    the variable <tt>BUILD_FREETYPE</tt>, then includes and parses the
+    configuration sub-makefile.
+	<p>
+	The latter defines a number of important variables that describe
+	the compilation process to the build system. Among other things:<p>
+	<ul>
+		<li>the extension to be used for object files and library files
+			(i.e. <tt>.o</tt> and <tt>.a</tt> on Unix, <tt>.obj</tt>
+			 and <tt>.lib</tt> on Dos-Windows-OS/2, etc..).
+			<p>
+
+		<li>the directory where all object files will be stored
+			(usually <tt>freetype2/obj</tt>), as well as the one
+			containing the library file (usually the same as for
+			objects).
+			<p>
+
+		<li>the command line compiler, and its compilation flags for
+			indicating a new include path (usually "<tt>-I</tt>"),
+			a new macro declaration (usually "<tt>-D</tt>") or
+			the target object file (usually "<tt>-o&nbsp;</tt>")
+	</ul>
+	<p>
+	Once these variable are defined, <tt>config.mk</tt> test for the
+	definition of the <tt>BUILD_FREETYPE</tt> variable. If it exists,
+	the makefile then includes "<tt>freetype2/config/freetype.mk</tt>"
+	which contains the rules required to compile the library.
+	<p>
+	Note that <tt>freetype.mk</tt> also scans the subdirectories of
+	"<tt>freetype2/src</tt>" for a file called "<tt>rules.mk</tt>".
+	Each <tt>rules.mk</tt> contains, as it names suggests, the rules
+    required to compile a given font driver or module.
+	<p>
+	Once all this parsing is done, the library can be compiled. Usually,
+	each font driver is compiled as a standalone object file (e.g.
+	<tt>sfnt.o</tt>, <tt>truetype.o</tt> and <tt>type1.o</tt>).
+	<p>
+	This process can be illustrated by the following graphics:<p>
+	<center>
+		<img src="library-compilation.png" border=0>
+	</center>
+	<p>
+</ul>
+
+<p><hr><p>
+
+<h2>IIV. Managing the list of modules</h2>
+<ul>
+	The makefile <tt>freetype.mk</tt> only determines how to compile
+	each one of the modules that are located in the sub-directories of
+	<tt>freetype2/src</tt>.
+	<p>
+	However, when the function <tt>FT_Init_FreeType</tt> is invoked at
+	the start of an application, it must create a new <tt>FT_Library</tt>
+	object, and registers all <em>known</em> font drivers to it by
+	repeatly calling <tt>FT_Add_Driver</tt>.
+	<p>
+	The list of <em>known</em> drivers is located in the file
+	"<tt>freetype2/config/<em>system</em>/ftmodule.h</tt>", and is used
+	exclusively by the internal function <tt>FT_Default_Drivers</tt>. The
+	list in <tt>ftmodule.h</tt> must be re-generated each time you add
+	or remove a module from <tt>freetype2/src</tt>.
+	<p>
+	This is normally performed by invoking the top-level <tt>Makefile</tt>
+	with the <tt>modules</tt> target, as in:<p>
+	<ul>
+		<tt>make modules</tt>
+	</ul>
+	<p>
+	This will trigger a special rule that will re-generate
+    <tt>ftmodule.h</tt>. To do so, the Makefile will parse all module
+	directories for a file called "<tt>module.mk</tt>". Each
+	<tt>module.mk</tt> is a tiny sub-Makefile used to add a single
+	module to the driver list.
+	<p>
+	This is illustrated by the following graphics:<p>
+	<center>
+		<img src="drivers-list.png" border=0>
+	</center>
+	<p>
+	Note that the new list of modules is displayed in a very human-friendly
+	way after a "<tt>make modules</tt>". Here's an example with the current
+	source tree (on 11 Jan 2000):<p>
+	<ul><pre>
+Regenerating the font drivers list in ./config/unix/ftmodule.h
+* driver:  sfnt      ( pseudo-driver for TrueType & OpenType formats )
+* driver:  truetype  ( Windows/Mac font files with extension *.ttf or *.ttc )
+* driver:  type1     ( Postscript font files with extension *.pfa or *.pfb )
+-- done --
+	</pre></ul>
+
+</ul>
+
+<p><hr><p>
+
+<h2>V. Building the demonstration programs</h2>
+<ul>
+	Several demonstration programs are located in the
+	"<tt>freetype2/demos</tt>" directory hierarchy. This directory also
+	includes a tiny graphics sub-system that is able to blit glyphs to
+	a great variety of surfaces, as well as display these in various
+	graphics libraries or windowed environments.
+	<p>
+	This section describes how the demonstration programs are compiled,
+	using the configuration <tt>freetype2/config.mk</tt> and their own
+	<tt>freetype2/demos/Makefile</tt>.
+	<p>
+	To compile the demonstration programs, <em>after the library</em>,
+	simply go to <tt>freetype2/demos</tt> then invoke GNU make with no
+	arguments.
+	<p>
+	The top-level Makefile will detect the <tt>config.mk</tt> in the
+	<em>upper</em> directory and include it. Because it doesn't define
+	the <tt>BUILD_FREETYPE</tt> variable, this will not force the
+	inclusion of <tt>freetype2/config/freetype.mk</tt> as described in
+	the previous section.
+	<p>
+	the <tt>Makefile</tt> will then include the makefile called
+	"<tt>freetype2/demos/graph/rules.mk</tt>". The graphics <tt>rules.mk</tt>
+	defines the rules required to compile the graphics sub-system.
+	<p>
+	Because the graphics syb-system is also designed modularly, it is able
+	to use any number of "modules" to display surfaces on the screen.
+	The graphics modules are located in the subdirectories of
+	<tt>freetype2/demos/config</tt>. Each such directory contains a file
+	named <tt>rules.mk</tt> which is in charge of:<p>
+	<ul>
+		<li>detecting wether the corresponding graphics library is
+			available at the time of compilation.
+			<p>
+		<li>if it is, alter the compilation rules to include the graphics
+			module in the build of the <tt>graph</tt> library.
+	</ul>
+	<p>
+	When the <tt>graph</tt> library is built in <tt>demos/obj</tt>, the
+	demonstration programs executables are generated by the top-level
+	Makefile.
+	<p>
+	This is illustrated by the following graphics:<p>
+	<center>
+		<img src="demo-programs.png" border="0">
+	</center>
+</ul>
+
+<p><hr>
+
