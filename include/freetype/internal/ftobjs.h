@@ -45,7 +45,7 @@
 #endif
 
 #ifndef UNUSED
-#define UNUSED( arg )  ( (void)(arg)=(arg) )
+#define UNUSED( arg )  ( (arg)=(arg) )
 #endif
 
 
