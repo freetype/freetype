@@ -68,6 +68,134 @@
   }
 
 
+  /* this function is used by ah_get_orientation (see below) to test */
+  /* the fill direction of a given bbox extrema..                    */
+  static
+  int  ah_test_extrema( FT_Outline*  outline,
+                        int          n )
+  {
+    FT_Vector  *prev, *cur, *next;
+    FT_Pos      product;
+    FT_Int      first, last, c;
+
+
+    /* we need to compute the `previous' and `next' point */
+    /* for these extrema.                                 */
+    cur   = outline->points + n;
+    prev  = cur - 1;
+    next  = cur + 1;
+
+    first = 0;
+    for ( c = 0; c < outline->n_contours; c++ )
+    {
+      last  = outline->contours[c];
+
+      if ( n == first )
+        prev = outline->points + last;
+
+      if ( n == last )
+        next = outline->points + first;
+
+      first = last + 1;
+    }
+
+    product = FT_MulDiv( cur->x  - prev->x,  /* in.x  */
+                         next->y - cur->y,   /* out.y */
+                         0x40 )
+              -
+              FT_MulDiv( cur->y  - prev->y,  /* in.y  */
+                         next->x - cur->x,   /* out.x */
+                         0x40 );
+
+    if ( product )
+      product = product > 0 ? 2 : 1;
+
+    return product;
+  }
+
+
+  /* Compute the orientation of path filling.  It differs between TrueType */
+  /* and Type1 formats.  We could use the `ft_outline_reverse_fill' flag,  */
+  /* but it is better to re-compute it directly (it seems that this flag   */
+  /* isn't correctly set for some weird composite glyphs currently).       */
+  /*                                                                       */
+  /* We do this by computing bounding box points, and computing their      */
+  /* curvature.                                                            */
+  /*                                                                       */
+  /* The function returns either 1 or -1.                                  */
+  /*                                                                       */
+  static
+  int  ah_get_orientation( FT_Outline*  outline )
+  {
+    FT_BBox  box;
+    FT_BBox  indices;
+    int      n, last;
+
+
+    indices.xMin = -1;
+    indices.yMin = -1;
+    indices.xMax = -1;
+    indices.yMax = -1;
+
+    box.xMin = box.yMin = 32767;
+    box.xMax = box.yMax = -32768;
+
+    /* is it empty ? */
+    if ( outline->n_contours < 1 )
+      return 1;
+
+    last = outline->contours[outline->n_contours - 1];
+
+    for ( n = 0; n <= last; n++ )
+    {
+      FT_Pos  x, y;
+
+
+      x = outline->points[n].x;
+      if ( x < box.xMin )
+      {
+        box.xMin     = x;
+        indices.xMin = n;
+      }
+      if ( x > box.xMax )
+      {
+        box.xMax     = x;
+        indices.xMax = n;
+      }
+
+      y = outline->points[n].y;
+      if ( y < box.yMin )
+      {
+        box.yMin     = y;
+        indices.yMin = n;
+      }
+      if ( y > box.yMax )
+      {
+        box.yMax     = y;
+        indices.yMax = n;
+      }
+    }
+
+    /* test orientation of the xmin */
+    n = ah_test_extrema( outline, indices.xMin );
+    if (n) goto Exit;
+    
+    n = ah_test_extrema( outline, indices.yMin );
+    if (n) goto Exit;
+    
+    n = ah_test_extrema( outline, indices.xMax );
+    if (n) goto Exit;
+    
+    n = ah_test_extrema( outline, indices.yMax );
+    if (!n)
+      n = 1;
+
+  Exit:
+    return n;    
+  }
+
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -218,6 +346,20 @@
     outline->num_hsegments = 0;
     outline->num_vsegments = 0;
 
+#if 1
+    /* we can't rely on the value of FT_Outline.flags to know the */
+    /* fill direction used for a glyph, given that some fonts are */
+    /* broken (e.g. the Arphic ones..). We thus recompute it each */
+    /* time we need to..                                          */
+    outline->vert_major_dir = ah_dir_up;
+    outline->horz_major_dir = ah_dir_left;
+
+    if ( ah_get_orientation( source ) > 1 )
+    {
+      outline->vert_major_dir = ah_dir_down;
+      outline->horz_major_dir = ah_dir_right;
+    }    
+#else
     /* Compute the vertical and horizontal major directions; this is     */
     /* currently done by inspecting the `ft_outline_reverse_fill' flag.  */
     /* However, some fonts have improper glyphs, and it'd be a good idea */
@@ -230,11 +372,13 @@
       outline->vert_major_dir = ah_dir_down;
       outline->horz_major_dir = ah_dir_right;
     }
-
+#endif
     outline->x_scale = face->size->metrics.x_scale;
     outline->y_scale = face->size->metrics.y_scale;
 
     points = outline->points;
+    if (outline->num_points == 0)
+      goto Exit;
 
     {
       /* do one thing at a time -- it is easier to understand, and */
