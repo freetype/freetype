@@ -103,10 +103,9 @@ if $(DEBUG_HINTER)
 HDRS += $(FT2_INCLUDE) ;
 
 
-#SubDirHdr += $(FT2_INCLUDE) ;
-
 # Uncomment the following line if you want to build individual source files
-# for each FreeType 2 module.
+# for each FreeType 2 module. this is only useful during development, and
+# is better defined as an environment variable anyway !
 #
 # FT2_MULTI = true ;
 
