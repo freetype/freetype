@@ -28,6 +28,7 @@ ifeq ($(PLATFORM),ansi)
     #
     ifneq ($(findstring devel,$(MAKECMDGOALS)),)
       CONFIG_FILE := unix-dev.mk
+      CC          := gcc
       devel: setup
     else
 
@@ -36,6 +37,7 @@ ifeq ($(PLATFORM),ansi)
       #
       ifneq ($(findstring lcc,$(MAKECMDGOALS)),)
         CONFIG_FILE := unix-lcc.mk
+        CC          := lcc
         lcc: setup
       else
         # If a Unix platform is detected, the configure script is called and
@@ -47,8 +49,9 @@ ifeq ($(PLATFORM),ansi)
         #
         # If you need to set CFLAGS or LDFLAGS, do it here also.
         #
-        # Feel free to add support for other platform specific compilers in this
-        # directory (e.g. solaris.mk + changes here to detect the platform).
+        # Feel free to add support for other platform specific compilers in
+        # this directory (e.g. solaris.mk + changes here to detect the
+        # platform).
         #
         CONFIG_FILE := unix.mk
         setup: unix-def.mk
@@ -58,7 +61,7 @@ ifeq ($(PLATFORM),ansi)
 
     setup: std_setup
 
-    unix-def.mk: builds/unix/unix-def.in
+    unix-def.mk: $(TOP)/builds/unix/unix-def.in
 	    cd builds/unix; $(USE_CFLAGS) ./configure $(CFG)
 
   endif # test Unix
