@@ -2137,10 +2137,19 @@
                                   &charstring, &charstring_len );
       if ( !error )
       {
+        CFF_Index csindex = cff->charstrings_index;
+
         CFF_Prepare_Decoder( &decoder, glyph_index );
         error = CFF_Parse_CharStrings( &decoder, charstring, charstring_len );
 
         CFF_Forget_Element( &cff->charstrings_index, &charstring );
+
+        /* We set control_data and control_len if charstrings is loaded.  */
+        /* See how charstring loads at CFF_Access_Element() in cffload.c. */
+
+        glyph->root.control_data = csindex.bytes + csindex.offsets[glyph_index] - 1;
+        glyph->root.control_len = charstring_len;
+
       }
 
       /* save new glyph tables */
