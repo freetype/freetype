@@ -144,7 +144,7 @@ doit(FT_Face face)
   FTL_FeaturesRequest request;
   FT_UInt script_index, feature_index;
   FT_Memory memory = face->stream->memory;
-  FTL_Glyphs_Array in, out;
+  FTL_GlyphArray in, out;
   FT_Int i;
   if ( FTL_New_FeaturesRequest( face, &request ) )
     {

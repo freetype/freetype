@@ -407,10 +407,10 @@
   
   FT_EXPORT_DEF( FT_Error )
   FTL_New_Glyphs_Array                  ( FT_Memory memory,
-					  FTL_Glyphs_Array * garray )
+					  FTL_GlyphArray * garray )
   {
     FT_Error error;
-    FTL_Glyphs_Array agarray;
+    FTL_GlyphArray agarray;
     
     if ( FT_NEW( agarray ) )
       return error;
@@ -425,7 +425,7 @@
   }
 
   FT_EXPORT_DEF( FT_Error )
-  FTL_Set_Glyphs_Array_Length           ( FTL_Glyphs_Array garray,
+  FTL_Set_Glyphs_Array_Length           ( FTL_GlyphArray garray,
 					  FT_ULong new_length )
   {
     FT_Error error;
@@ -442,8 +442,8 @@
   }
 
   FT_EXPORT_DEF( FT_Error )
-  FTL_Copy_Glyphs_Array                 ( FTL_Glyphs_Array in,
-					  FTL_Glyphs_Array out )
+  FTL_Copy_Glyphs_Array                 ( FTL_GlyphArray in,
+					  FTL_GlyphArray out )
   {
     FT_Error error;
     FT_ULong i;
@@ -457,7 +457,7 @@
   }
 
   FT_EXPORT_DEF( FT_Error )
-  FTL_Done_Glyphs_Array                 ( FTL_Glyphs_Array garray )
+  FTL_Done_Glyphs_Array                 ( FTL_GlyphArray garray )
   {
     FT_Memory memory = garray->memory;
     FT_FREE( garray->glyphs );
@@ -468,8 +468,8 @@
 
   FT_EXPORT_DEF( FT_Error )
   FTL_Substitute_Glyphs                 ( FT_Face face,
-					  FTL_Glyphs_Array in,
-					  FTL_Glyphs_Array out )
+					  FTL_GlyphArray in,
+					  FTL_GlyphArray out )
   {
     FT_Error error;
     FT_Service_Layout service;

@@ -214,8 +214,8 @@ gx_chain_calc_selector ( GX_MetamorphosisChain chain, GXL_FeaturesRequest reques
 FT_LOCAL_DEF( FT_Error )
 gx_mort_substitute_glyph ( GX_Mort mort,
 			   GXL_FeaturesRequest request,
-			   FTL_Glyphs_Array in,
-			   FTL_Glyphs_Array out )
+			   FTL_GlyphArray in,
+			   FTL_GlyphArray out )
 {
   FT_Error error = GX_Err_Ok;
   GX_MetamorphosisChain chain;
@@ -393,8 +393,8 @@ gx_xchain_calc_selector ( GX_XMetamorphosisChain chain, GXL_FeaturesRequest requ
 FT_LOCAL_DEF( FT_Error )
 gx_morx_substitute_glyph ( GX_Morx morx,
 			   GXL_FeaturesRequest request,
-			   FTL_Glyphs_Array in,
-			   FTL_Glyphs_Array out )
+			   FTL_GlyphArray in,
+			   FTL_GlyphArray out )
 {
   FT_Error error = GX_Err_Ok;
   GX_XMetamorphosisChain xchain;
@@ -668,7 +668,7 @@ gx_kern_get_fmt3( GX_KerningSubtableFormat3Body fmt3,
 
 FT_LOCAL_DEF( FT_Error )
 gx_kern_get_contextual_kerning( GX_Kern kern,
-				FTL_Glyphs_Array garray,
+				FTL_GlyphArray garray,
 				FTL_Direction dir,
 				GXL_Initial_State initial_state,
 				FT_Vector * kerning )

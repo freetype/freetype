@@ -67,8 +67,8 @@ FT_BEGIN_HEADER
   FT_LOCAL ( FT_Error )
   otl_substitute_glyphs ( FT_Face face,
 			  FTL_FeaturesRequest request,
-			  FTL_Glyphs_Array in,
-			  FTL_Glyphs_Array out );
+			  FTL_GlyphArray in,
+			  FTL_GlyphArray out );
 FT_END_HEADER
 
 #endif /* Not def: __OTLTYPES_H__ */

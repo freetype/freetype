@@ -120,8 +120,8 @@
   FT_LOCAL ( FT_Error )
   otl_substitute_glyphs ( FT_Face face,
 			  FTL_FeaturesRequest request,
-			  FTL_Glyphs_Array in,
-			  FTL_Glyphs_Array out )
+			  FTL_GlyphArray in,
+			  FTL_GlyphArray out )
   {
     FT_Error error = FT_Err_Ok;
     if (( error = FTL_Copy_Glyphs_Array ( in, out ) ))

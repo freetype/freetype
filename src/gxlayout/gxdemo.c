@@ -749,7 +749,7 @@ check_toggled( GtkToggleButton * toggle, gpointer setting )
 void
 run_layout_engine ( GtkButton * button, gpointer request )
 {
-  FTL_Glyphs_Array in, out;
+  FTL_GlyphArray in, out;
   FT_Face face 	   = ((FTL_FeaturesRequest)request)->font->face;
   FT_Memory memory = face->driver->root.memory;
 

@@ -58,8 +58,8 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*FTL_Substitute_Glyphs_Func) ( FT_Face face,
 				  FTL_FeaturesRequest request,
-				  FTL_Glyphs_Array in,
-				  FTL_Glyphs_Array out );
+				  FTL_GlyphArray in,
+				  FTL_GlyphArray out );
 
   FT_DEFINE_SERVICE( Layout )
   {

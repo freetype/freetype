@@ -95,7 +95,7 @@ try_lig( FT_Face face, char c1, char c2 )
 {
   FT_Error error = FT_Err_Ok;
   FTL_EngineType engine_type;
-  FTL_Glyphs_Array in, out;
+  FTL_GlyphArray in, out;
   FTL_FeaturesRequest request;
 
   /* Get the engine type */

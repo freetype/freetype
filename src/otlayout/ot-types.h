@@ -30,7 +30,7 @@ extern "C" {
 
 typedef struct _OTInfo OTInfo;
 typedef struct _OTRuleset OTRuleset;
-typedef FTL_Glyphs_ArrayRec OTGlyphString;
+typedef FTL_GlyphArrayRec OTGlyphString;
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

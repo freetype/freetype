@@ -58,8 +58,8 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error ) 
   gx_mort_substitute_glyph ( GX_Mort mort,
 			     GXL_FeaturesRequest request,
-			     FTL_Glyphs_Array in,
-			     FTL_Glyphs_Array out );
+			     FTL_GlyphArray in,
+			     FTL_GlyphArray out );
 
 /* morx */
   typedef FT_Error (* GX_Morx_Feature_Func)( GX_XMetamorphosisFeatureTable feat_Subtbl, 
@@ -75,8 +75,8 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   gx_morx_substitute_glyph ( GX_Morx morx,
 			     GXL_FeaturesRequest request,
-			     FTL_Glyphs_Array in,
-			     FTL_Glyphs_Array out );
+			     FTL_GlyphArray in,
+			     FTL_GlyphArray out );
 
 /* kern */
   FT_LOCAL( FT_Error ) gx_kern_get_pair_kerning ( GX_Kern kern, 
@@ -86,7 +86,7 @@ FT_BEGIN_HEADER
 						  FT_Vector*  kerning );
 
   FT_LOCAL( FT_Error ) gx_kern_get_contextual_kerning( GX_Kern kern,
-						       FTL_Glyphs_Array garray,
+						       FTL_GlyphArray garray,
 						       FTL_Direction dir,
 						       GXL_Initial_State initial_state,
 						       FT_Vector * kerning );

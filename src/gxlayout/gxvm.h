@@ -35,26 +35,26 @@ FT_BEGIN_HEADER
 FT_LOCAL( FT_Error )
 gx_rearrangement_subst ( GX_MetamorphosisRearrangementBody body,
 			 GXL_Initial_State initial_state,
-			 FTL_Glyphs_Array garray );
+			 FTL_GlyphArray garray );
 
 FT_LOCAL( FT_Error )
 gx_contextual_subst( GX_MetamorphosisContextualBody body,
 		     GXL_Initial_State initial_state,
-		     FTL_Glyphs_Array garray );
+		     FTL_GlyphArray garray );
 
 FT_LOCAL( FT_Error )
 gx_ligature_subst( GX_MetamorphosisLigatureBody body,
 		   GXL_Initial_State initial_state,
-		   FTL_Glyphs_Array garray );
+		   FTL_GlyphArray garray );
 
 FT_LOCAL( FT_Error )
 gx_noncontextual_subst( GX_MetamorphosisNoncontextualBody body,
-			FTL_Glyphs_Array garray );
+			FTL_GlyphArray garray );
 
 FT_LOCAL( FT_Error )
 gx_insertion_subst( GX_MetamorphosisInsertionBody body,
 		    GXL_Initial_State initial_state,
-		    FTL_Glyphs_Array garray );
+		    FTL_GlyphArray garray );
 
 /*
  * Morx
@@ -63,29 +63,29 @@ gx_insertion_subst( GX_MetamorphosisInsertionBody body,
 FT_LOCAL( FT_Error )
 gx_xcontextual_subst( GX_XMetamorphosisContextualBody body,
 		      GXL_Initial_State initial_state,
-		      FTL_Glyphs_Array garray );
+		      FTL_GlyphArray garray );
 
 FT_LOCAL( FT_Error )
 gx_xligature_subst( GX_XMetamorphosisLigatureBody body,
 		    GXL_Initial_State initial_state,
-		    FTL_Glyphs_Array garray );
+		    FTL_GlyphArray garray );
 
 FT_LOCAL( FT_Error )
 gx_xinsertion_subst( GX_XMetamorphosisInsertionBody body,
 		     GXL_Initial_State initial_state,
-		     FTL_Glyphs_Array garray );
+		     FTL_GlyphArray garray );
 
 FT_LOCAL( FT_Error )
 gx_xrearrangement_subst ( GX_XMetamorphosisRearrangementBody body,
 			  GXL_Initial_State initial_state,
-			  FTL_Glyphs_Array garray );
+			  FTL_GlyphArray garray );
 
 /*
  * Kern
  */
 FT_LOCAL( FT_Error )
 gx_contextual_kerning_calc ( GX_KerningSubtableFormat1Body kern_fmt1,
-			     FTL_Glyphs_Array garray,
+			     FTL_GlyphArray garray,
 			     FTL_Direction dir,
 			     FT_Bool cross_stream,
 			     GXL_Initial_State initial_state,

@@ -70,13 +70,13 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    FTL_Glyphs_Array                                                   */
+  /*    FTL_GlyphArray                                                   */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Data type represents glyphs array used in glyph substitution.      */
   /*    See @FTL_GlyphRec for more detail.                                 */
   /*                                                                       */
-  typedef struct FTL_Glyphs_ArrayRec_    * FTL_Glyphs_Array;
+  typedef struct FTL_GlyphArrayRec_    * FTL_GlyphArray;
 
   /*************************************************************************/
   /*                                                                       */
@@ -181,7 +181,7 @@ FT_BEGIN_HEADER
   /*    allocated :: The allocation size of glyphs. The client should not  */
   /*                 refer this field.                                     */
   /*                                                                       */
-  typedef struct FTL_Glyphs_ArrayRec_
+  typedef struct FTL_GlyphArrayRec_
   {
     FT_Memory   memory;
     FTL_Glyph   glyphs;
@@ -189,7 +189,7 @@ FT_BEGIN_HEADER
     FT_ULong    reserved1;
     FT_ULong    length;
     FT_ULong    allocated;
-  } FTL_Glyphs_ArrayRec;
+  } FTL_GlyphArrayRec;
 
 
   /*************************************************************************/
@@ -376,7 +376,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTL_New_Glyphs_Array                  ( FT_Memory memory,
-					  FTL_Glyphs_Array * garray );
+					  FTL_GlyphArray * garray );
 
   /*************************************************************************/
   /*                                                                       */
@@ -396,7 +396,7 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FTL_Set_Glyphs_Array_Length           ( FTL_Glyphs_Array garray,
+  FTL_Set_Glyphs_Array_Length           ( FTL_GlyphArray garray,
 					  FT_ULong new_length );
 
   /*************************************************************************/
@@ -417,8 +417,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FTL_Copy_Glyphs_Array                 ( FTL_Glyphs_Array in,
-					  FTL_Glyphs_Array out );
+  FTL_Copy_Glyphs_Array                 ( FTL_GlyphArray in,
+					  FTL_GlyphArray out );
 
   /*************************************************************************/
   /*                                                                       */
@@ -435,7 +435,7 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FTL_Done_Glyphs_Array                 ( FTL_Glyphs_Array garray );
+  FTL_Done_Glyphs_Array                 ( FTL_GlyphArray garray );
 
 
   /*************************************************************************/
@@ -460,8 +460,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTL_Substitute_Glyphs                 ( FT_Face face,
-					  FTL_Glyphs_Array in,
-					  FTL_Glyphs_Array out );
+					  FTL_GlyphArray in,
+					  FTL_GlyphArray out );
 
   /*************************************************************************/
   /*                                                                       */

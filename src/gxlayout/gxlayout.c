@@ -738,8 +738,8 @@ gxl_feature_initialize_for_morx ( GXL_Feature feature,
   FT_LOCAL_DEF ( FT_Error )
   gxl_substitute_glyphs ( FT_Face face,
 			  FTL_FeaturesRequest request,
-			  FTL_Glyphs_Array in,
-			  FTL_Glyphs_Array out )
+			  FTL_GlyphArray in,
+			  FTL_GlyphArray out )
   {
     FT_Error error;
     GXL_Font font;

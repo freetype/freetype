@@ -1,3 +1,8 @@
+2004-05-06  Masatake YAMATO  <jet@gyve.org>
+
+	* */*.[ch]: Rename FTL_Glyphs_Array to
+	FTL_GlyphArray.
+
 2004-05-03  Masatake YAMATO  <jet@gyve.org>
 
 	* src/gxlayout/gxdemo.c (set_trace_level): Move loca variation

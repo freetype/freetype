@@ -229,9 +229,9 @@ ligstack_ligatured_pop(LigatureStack stack)
 
   static FT_Error glist_init    ( FT_Memory memory, 
 				  GlyphsList glist,
-				  FTL_Glyphs_Array garray );
+				  FTL_GlyphArray garray );
   static FT_Error glist_store   ( GlyphsList glist, 
-				  FTL_Glyphs_Array garray );
+				  FTL_GlyphArray garray );
   static void glist_finalize    ( GlyphsList glist );
 
 /*
@@ -262,7 +262,7 @@ ligstack_ligatured_pop(LigatureStack stack)
 					       InsertionGlyphs insertion );
 
   static FT_Error
-  glist_init    ( FT_Memory memory, GlyphsList glist, FTL_Glyphs_Array garray )
+  glist_init    ( FT_Memory memory, GlyphsList glist, FTL_GlyphArray garray )
   {
     FT_Error error;
     FT_ULong i;
@@ -289,7 +289,7 @@ ligstack_ligatured_pop(LigatureStack stack)
   }
 
   static FT_Error
-  glist_store   ( GlyphsList glist, FTL_Glyphs_Array garray )
+  glist_store   ( GlyphsList glist, FTL_GlyphArray garray )
   {
     FT_Error error;
     FT_ULong length = 0, i;
@@ -475,7 +475,7 @@ ligstack_ligatured_pop(LigatureStack stack)
  *************************************************************************/ 
 FT_LOCAL_DEF( FT_Error )
 gx_noncontextual_subst( GX_MetamorphosisNoncontextualBody body,
-			FTL_Glyphs_Array garray )
+			FTL_GlyphArray garray )
 {
   FT_ULong i;
   GX_LookupTable lookup_table = &body->lookup_table;
@@ -519,7 +519,7 @@ static FT_UShort contextual_lookup_glyph( GX_MetamorphosisContextualBody body,
 FT_LOCAL_DEF( FT_Error )
 gx_contextual_subst( GX_MetamorphosisContextualBody body,
 		     GXL_Initial_State initial_state,
-		     FTL_Glyphs_Array garray )
+		     FTL_GlyphArray garray )
 {
   FT_ULong glength  = garray->length;
   FTL_Glyph glyphs = garray->glyphs;
@@ -631,7 +631,7 @@ static FT_UShort ligature_get_ligature ( GX_MetamorphosisLigatureBody body,
 FT_LOCAL_DEF( FT_Error )
 gx_ligature_subst( GX_MetamorphosisLigatureBody body,
 		   GXL_Initial_State initial_state,
-		   FTL_Glyphs_Array garray )
+		   FTL_GlyphArray garray )
 {
   FT_ULong glength  = garray->length;
   FTL_Glyph glyphs = garray->glyphs;
@@ -791,7 +791,7 @@ insertion_insert ( GX_MetamorphosisInsertionList insertion,
 FT_LOCAL_DEF( FT_Error )
 gx_insertion_subst( GX_MetamorphosisInsertionBody body,
 		    GXL_Initial_State initial_state,
-		    FTL_Glyphs_Array garray )
+		    FTL_GlyphArray garray )
 {
   FT_Error error;
   FT_Memory memory = garray->memory;
@@ -904,11 +904,11 @@ insertion_insert ( GX_MetamorphosisInsertionList insertion,
 static void rearrangement_rearrange( GX_MetamorphosisRearrangementVerb verb,
 				     FT_ULong first_glyph,
 				     FT_ULong last_glyph,
-				     FTL_Glyphs_Array garray );
+				     FTL_GlyphArray garray );
 FT_LOCAL( FT_Error )
 gx_rearrangement_subst ( GX_MetamorphosisRearrangementBody body,
 			 GXL_Initial_State initial_state,
-			 FTL_Glyphs_Array garray )
+			 FTL_GlyphArray garray )
 {
   FT_ULong glength  = garray->length;
   FTL_Glyph glyphs = garray->glyphs;
@@ -979,7 +979,7 @@ static void
 rearrangement_rearrange( GX_MetamorphosisRearrangementVerb verb,
 			 FT_ULong first_glyph,
 			 FT_ULong last_glyph,
-			 FTL_Glyphs_Array garray )
+			 FTL_GlyphArray garray )
 {
   FTL_Glyph glyphs = garray->glyphs;
   FT_ULong glength  = garray->length;
@@ -1207,7 +1207,7 @@ static FT_UShort xcontextual_lookup_glyph( GX_XMetamorphosisContextualBody body,
 FT_LOCAL_DEF( FT_Error )
 gx_xcontextual_subst( GX_XMetamorphosisContextualBody body,
 		      GXL_Initial_State initial_state,
-		      FTL_Glyphs_Array garray )
+		      FTL_GlyphArray garray )
 {
   
   FT_ULong glength  = garray->length;
@@ -1321,7 +1321,7 @@ static FT_UShort xligature_get_ligature ( GX_XMetamorphosisLigatureBody body,
 FT_LOCAL_DEF( FT_Error )
 gx_xligature_subst( GX_XMetamorphosisLigatureBody body,
 		    GXL_Initial_State initial_state,
-		    FTL_Glyphs_Array garray )
+		    FTL_GlyphArray garray )
 {
   FT_ULong glength  = garray->length;
   FTL_Glyph glyphs = garray->glyphs;
@@ -1470,7 +1470,7 @@ xligature_get_ligature ( GX_XMetamorphosisLigatureBody body,
 FT_LOCAL_DEF( FT_Error )
 gx_xinsertion_subst( GX_XMetamorphosisInsertionBody body,
 		     GXL_Initial_State initial_state,
-		     FTL_Glyphs_Array garray )
+		     FTL_GlyphArray garray )
 {
   FT_Error error;
   FT_Memory memory = garray->memory;
@@ -1562,7 +1562,7 @@ gx_xinsertion_subst( GX_XMetamorphosisInsertionBody body,
 FT_LOCAL( FT_Error )
 gx_xrearrangement_subst ( GX_XMetamorphosisRearrangementBody body,
 			  GXL_Initial_State initial_state,
-			  FTL_Glyphs_Array garray )
+			  FTL_GlyphArray garray )
 
 {
   FT_ULong glength  = garray->length;
@@ -1674,7 +1674,7 @@ kernstack_init( KerningStack stack )
 
 FT_LOCAL_DEF( FT_Error )
 gx_contextual_kerning_calc ( GX_KerningSubtableFormat1Body kern_fmt1,
-			     FTL_Glyphs_Array garray,
+			     FTL_GlyphArray garray,
 			     FTL_Direction dir,
 			     FT_Bool cross_stream,
 			     GXL_Initial_State initial_state,
