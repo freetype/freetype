@@ -1,8 +1,11 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftbase.c                                                               */
+/*  ftnames.h                                                              */
 /*                                                                         */
-/*    Single object library component (body only).                         */
+/*    Simple interface to access SFNT name tables (which are used          */
+/*    to hold font names, copyright info, notices, etc..)                  */
+/*                                                                         */
+/*    This is _not_ used to retrieve glyph names !!                        */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -15,28 +18,29 @@
 /*                                                                         */
 /***************************************************************************/
 
+#ifndef FTNAMES_H
+#define FTNAMES_H
 
-#ifdef FT_FLAT_COMPILE
+#include <freetype/freetype.h>
 
-#include "ftcalc.c"
-#include "ftobjs.c"
-#include "ftstream.c"
-#include "ftlist.c"
-#include "ftoutln.c"
-#include "ftextend.c"
-#include "ftnames.c"
-
-#else /* FT_FLAT_COMPILE */
-
-#include <base/ftcalc.c>
-#include <base/ftobjs.c>
-#include <base/ftstream.c>
-#include <base/ftlist.c>
-#include <base/ftoutln.c>
-#include <base/ftextend.c>
-#include <base/ftnames.c>
-
-#endif /* FT_FLAT_COMPILE */
+  typedef struct FT_SfntName_
+  {
+    FT_UShort  platform_id;
+    FT_UShort  encoding_id;
+    FT_UShort  language_id;
+    FT_UShort  name_id;
+  
+    FT_Byte*   string;
+    FT_UInt    string_len;  /* in bytes */
+  
+  } FT_SfntName;
 
 
-/* END */
+  FT_EXPORT_DEF(FT_UInt)  FT_Get_Sfnt_Name_Count( FT_Face  face );
+  
+  FT_EXPORT_DEF(FT_Error) FT_Get_Sfnt_Name( FT_Face       face,
+                                            FT_UInt       index,
+                                            FT_SfntName*  aname );
+                                               
+
+#endif /* FTNAMES_H */

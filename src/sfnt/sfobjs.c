@@ -318,6 +318,12 @@
               FT_FACE_FLAG_SFNT      |    /* SFNT file format  */
               FT_FACE_FLAG_HORIZONTAL;    /* horizontal data   */
 
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+      /* might need more polish to detect the presence of a Postscript name */
+      /* table in the font..                                                */
+      flags |= FT_FACE_FLAG_GLYPH_NAMES;
+#endif
+
       /* fixed width font? */
       if ( face->postscript.isFixedPitch )
         flags |= FT_FACE_FLAG_FIXED_WIDTH;

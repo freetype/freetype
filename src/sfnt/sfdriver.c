@@ -89,6 +89,32 @@
   }
 
 
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+  static
+  FT_Error   get_sfnt_glyph_name( TT_Face      face,
+                                  FT_UInt      glyph_index,
+                                  FT_Pointer   buffer,
+                                  FT_UInt      buffer_max )
+  {
+    FT_String*  gname;
+    FT_Error    error;
+    
+    error = TT_Get_PS_Name( face, glyph_index, &gname );
+    if (!error && buffer_max > 0)
+    {
+      FT_UInt  len = strlen( gname );
+      
+      if (len >= buffer_max)
+        len = buffer_max-1;
+        
+      MEM_Copy( buffer, gname, len );
+      ((FT_Byte*)buffer)[len] = 0;
+    }
+    
+    return error;
+  }                                  
+#endif
+
   static
   FT_Module_Interface  SFNT_Get_Interface( FT_Module    module,
                                            const char*  interface )
@@ -98,6 +124,10 @@
     if ( strcmp( interface, "get_sfnt" ) == 0 )
       return (FT_Module_Interface)get_sfnt_table;
 
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+    if ( strcmp( interface, "glyph_name" ) == 0 )
+      return (FT_Module_Interface)get_sfnt_glyph_name;
+#endif
     return 0;
   }
 

@@ -372,7 +372,7 @@
   /*    managing and loading font files of a given format.                 */
   /*                                                                       */
   /*  <Fields>                                                             */
-  /*     root         :: Contains the fields of the root module class.     */
+  /*     root         :: contains the fields of the root module class      */
   /*                                                                       */
   /*     clazz        :: A pointer to the font driver's class.  Note that  */
   /*                     this is NOT root.clazz.  `class' wasn't used      */
@@ -454,11 +454,14 @@
   /*                        handle to the current renderer for the         */
   /*                        ft_glyph_format_outline format.                */
   /*                                                                       */
+  /*    raster_pool_size :: size of the render pool in bytes               */
+  /*                                                                       */
   /*    raster_pool      :: The raster object's render pool.  This can     */
   /*                        ideally be changed dynamically at run-time.    */
   /*                                                                       */
-  /*    raster_pool_size :: The size of the render pool in bytes.          */
   /*                                                                       */
+  /*                                                                       */
+
   typedef struct  FT_LibraryRec_
   {
     FT_Memory           memory;           /* library's memory manager */
@@ -488,6 +491,11 @@
   BASE_DEF( FT_Error )  FT_Render_Glyph_Internal( FT_Library    library,
                                                   FT_GlyphSlot  slot,
                                                   FT_UInt       render_mode );
+
+  typedef FT_Error  (*FT_Glyph_Name_Requester)( FT_Face     face,
+                                                FT_UInt     glyph_index,
+                                                FT_Pointer  buffer,
+                                                FT_UInt     buffer_max );
 
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM

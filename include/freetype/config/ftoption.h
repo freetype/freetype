@@ -182,25 +182,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* 5-levels Anti Aliasing support                                        */
-  /*                                                                       */
-  /*   FreeType 2 provides a new `smooth' renderer that is capable of      */
-  /*   producing anti-aliased glyph bitmaps with up to 256 gray-levels.    */
-  /*                                                                       */
-  /*   However, for compatibility purposes with FreeType 1.x, the standard */
-  /*   raster is still capable of generating anti-aliased bitmaps with     */
-  /*   5 gray levels.                                                      */
-  /*                                                                       */
-  /*   If you do not need this capability (i.e., if you always use the     */
-  /*   `smooth' renderer for anti-aliased glyphs), we suggest you to       */
-  /*   undefine this configuration macro, as it will save both code and    */
-  /*   memory.                                                             */
-  /*                                                                       */
-#undef FT_CONFIG_OPTION_5_GRAY_LEVELS
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* Debug level                                                           */
   /*                                                                       */
   /*   FreeType can be compiled in debug or trace mode.  In debug mode,    */
@@ -294,6 +275,19 @@
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_SFNT_NAMES if your applications need to       */
+  /* access the internal name table in a SFNT-based format like TrueType   */
+  /* or OpenType. The name table contains various strings used to          */
+  /* describe the font, like family name, copyright, version, etc..        */
+  /* It does not contain any glyph name though..                           */
+  /*                                                                       */
+  /* Accessing sfnt names is done through the functions declared in        */
+  /* <freetype/ftnames.h>                                                  */
+  /*                                                                       */
+#define  TT_CONFIG_OPTION_SFNT_NAMES
+
+  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****    T R U E T Y P E   D R I V E R    C O N F I G U R A T I O N   ****/
@@ -365,7 +359,6 @@
   /*                                                                       */
 #define T1_MAX_CHARSTRINGS_OPERANDS  32
 
-
   /*************************************************************************/
   /*                                                                       */
   /* Define T1_CONFIG_OPTION_DISABLE_HINTER if you want to generate a      */
@@ -382,7 +375,6 @@
   /* unable to produce kerning distances.                                  */
   /*                                                                       */
 #undef T1_CONFIG_OPTION_NO_AFM
-
 
   /*************************************************************************/
   /*                                                                       */

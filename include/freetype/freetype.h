@@ -768,6 +768,16 @@
   /*                                                                       */
 #define FT_FACE_FLAG_MULTIPLE_MASTERS  0x100
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_FACE_FLAG_GLYPH_NAMES                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used to indicate that the font contains      */
+  /*    glyph names that can be retrieved through FT_Get_Glyph_Name.       */
+  /*                                                                       */
+#define FT_FACE_FLAG_GLYPH_NAMES       0x200
 
   /*************************************************************************/
   /*                                                                       */
@@ -798,6 +808,8 @@
           ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
 #define FT_HAS_FAST_GLYPHS( face ) \
           ( face->face_flags & FT_FACE_FLAG_FAST_GLYPHS )
+#define FT_HAS_GLYPH_NAMES( face ) \
+          ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
 
 #define FT_HAS_MULTIPLE_MASTERS( face ) \
           ( face->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS )
@@ -2034,6 +2046,47 @@
                                              FT_UInt     right_glyph,
                                              FT_UInt     kern_mode,
                                              FT_Vector*  kerning );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Glyph_Name                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Retrieves the ASCII name of a given glyph in a face. This only     */
+  /*    works for those faces where FT_HAS_GLYPH_NAME(face) returns        */
+  /*    true.                                                              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face        :: A handle to a source face object.                   */
+  /*    glyph_index :: the glyph index.                                    */
+  /*                                                                       */
+  /*    buffer      :: pointer to a target buffer where the name will be   */
+  /*                   copied..                                            */
+  /*                                                                       */
+  /*    buffer_max  :: the maximal number of bytes available in the buffer */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    An error is returned when the face doesn't provide glyph names     */
+  /*    or when the glyph index is invalid. In all cases of failure, the   */
+  /*    first byte of "buffer" will be set to 0 to indicate an empty       */
+  /*    name.                                                              */
+  /*                                                                       */
+  /*    The glyph name is truncated to fit within the buffer if it's too   */
+  /*    long. The returned string is always zero-terminated                */
+  /*                                                                       */
+  /*    This function is not compiled within the library if the config     */
+  /*    macro FT_CONFIG_OPTION_NO_GLYPH_NAMES is defined in                */
+  /*    <freetype/config/ftoptions.h>                                      */
+  /*                                                                       */
+  FT_EXPORT_DEF( FT_Error )  FT_Get_Glyph_Name( FT_Face     face,
+                                                FT_UInt     glyph_index,
+                                                FT_Pointer  buffer,
+                                                FT_UInt     buffer_max );
 
 
   /*************************************************************************/

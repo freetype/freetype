@@ -106,6 +106,44 @@
 #endif /* T1_CONFIG_OPTION_NO_AFM */
 
 
+  static
+  FT_Error   get_t1_glyph_name( T1_Face      face,
+                                FT_UInt      glyph_index,
+                                FT_Pointer   buffer,
+                                FT_UInt      buffer_max )
+  {
+    FT_String*  gname;
+    
+    gname = face->type1.glyph_names[glyph_index];
+    if (buffer_max > 0)
+    {
+      FT_UInt  len = strlen( gname );
+      
+      if (len >= buffer_max)
+        len = buffer_max-1;
+        
+      MEM_Copy( buffer, gname, len );
+      ((FT_Byte*)buffer)[len] = 0;
+    }
+
+    return 0;
+  }                                  
+
+
+  static
+  FT_Module_Interface  T1_Get_Interface( FT_Module    module,
+                                         const char*  interface )
+  {
+    FT_UNUSED( module );
+
+    if ( strcmp( interface, "glyph_name" ) == 0 )
+      return (FT_Module_Interface)get_t1_glyph_name;
+
+    return 0;
+  }
+
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -282,6 +320,7 @@
   }
 
 
+
   const FT_Driver_Class  t1_driver_class =
   {
     {
@@ -296,11 +335,7 @@
 
       (FT_Module_Constructor)0,
       (FT_Module_Destructor) 0,
-#ifdef T1_CONFIG_OPTION_NO_AFM
-      (FT_Module_Requester)  Get_Interface
-#else
-      (FT_Module_Requester)  0
-#endif
+      (FT_Module_Requester)  T1_Get_Interface
     },
 
     sizeof( T1_FaceRec ),

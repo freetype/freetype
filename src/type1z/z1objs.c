@@ -209,6 +209,8 @@
 
       root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
 
+      root->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
+
       if ( face->type1.font_info.is_fixed_pitch )
         root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 

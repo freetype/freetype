@@ -50,6 +50,31 @@
 #define FT_COMPONENT  trace_z1driver
 
 
+
+  static
+  FT_Error   get_z1_glyph_name( T1_Face      face,
+                                FT_UInt      glyph_index,
+                                FT_Pointer   buffer,
+                                FT_UInt      buffer_max )
+  {
+    FT_String*  gname;
+    
+    gname = face->type1.glyph_names[glyph_index];
+    if (buffer_max > 0)
+    {
+      FT_UInt  len = strlen( gname );
+      
+      if (len >= buffer_max)
+        len = buffer_max-1;
+        
+      MEM_Copy( buffer, gname, len );
+      ((FT_Byte*)buffer)[len] = 0;
+    }
+
+    return 0;
+  }                                  
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -84,6 +109,9 @@
     FT_UNUSED( driver );
     FT_UNUSED( interface );
 
+    if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
+      return (FT_Module_Interface)get_z1_glyph_name;
+
 #ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
       return (FT_Module_Interface)Z1_Get_Multi_Master;
@@ -99,7 +127,6 @@
 
 
 #ifndef Z1_CONFIG_OPTION_NO_AFM
-
 
   /*************************************************************************/
   /*                                                                       */
