@@ -1,5 +1,7 @@
 2002-02-08  David Turner  <david@freetype.org>
 
+        * docs/CHANGES: updating for 2.0.8
+
         * include/freetype/freetype.h: setting PATCH_LEVEL to 8 and
         removing FT_Get_Next_Char from the API (temporarily)
 

@@ -7,7 +7,7 @@
   systems, especially GNU based operating systems like GNU/Linux.
 
 
-  FreeType 2.0.7
+  FreeType 2.0.8
   ==============
 
   Please   read  the  docs/CHANGES   file,  it   contains  IMPORTANT
@@ -19,8 +19,8 @@
   Note  that the  FreeType 2  documentation  is now  available as  a
   separate package from our sites.  See:
 
-    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.7.tar.bz2
-    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.7.tar.gz
+    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.8.tar.bz2
+    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.0.8.tar.gz
     ftp://ftp.freetype.org/pub/freetype2/ftdoc207.zip
 
   Enjoy!
