@@ -1270,6 +1270,15 @@
                 FT_FRAME_ULONG( TT_OS2, ulCodePageRange1 ),
                 FT_FRAME_ULONG( TT_OS2, ulCodePageRange2 ),
               { ft_frame_end } };
+
+    const FT_Frame_Field  os2_fields_extra2[] = {
+              { ft_frame_start, 0, 10 },
+                FT_FRAME_SHORT( TT_OS2,  sxHeight ),
+                FT_FRAME_SHORT( TT_OS2,  sCapHeight ),
+                FT_FRAME_USHORT( TT_OS2, usDefaultChar ),
+                FT_FRAME_USHORT( TT_OS2, usBreakChar ),
+                FT_FRAME_USHORT( TT_OS2, usMaxContext ),
+              { ft_frame_end } };
 #else
     TT_Int    j;
 #endif
@@ -1354,6 +1363,25 @@
 
       FORGET_Frame();
 #endif
+
+      if ( os2->version >= 0x0002 )
+      {
+        /* only version 2 tables */
+#ifdef READ_FIELDS
+        if ( READ_Fields( os2_fields_extra2, os2 ) ) goto Exit;
+#else
+        if ( ACCESS_Frame( 10L ) )  /* read into frame */
+          goto Exit;
+
+        os2->sxHeight      = GET_Short();
+        os2->sCapHeight    = GET_Short();
+        os2->usDefaultChar = GET_UShort();
+        os2->usBreakChar   = GET_UShort();
+        os2->usMaxContext  = GET_UShort();
+
+        FORGET_Frame();
+#endif
+      }
     }
 
     FT_TRACE2(( "loaded\n" ));
