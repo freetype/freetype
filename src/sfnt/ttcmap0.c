@@ -144,7 +144,7 @@
   FT_CALLBACK_TABLE_DEF const TT_CMap_ClassRec  tt_cmap0_class_rec =
   {
     {
-      sizeof( FT_CMapRec ),
+      sizeof( TT_CMapRec ),
 
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
@@ -488,7 +488,7 @@
   FT_CALLBACK_TABLE_DEF const TT_CMap_ClassRec  tt_cmap2_class_rec =
   {
     {
-      sizeof( FT_CMapRec ),
+      sizeof( TT_CMapRec ),
 
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
@@ -817,7 +817,7 @@
   FT_CALLBACK_TABLE_DEF const TT_CMap_ClassRec  tt_cmap4_class_rec =
   {
     {
-      sizeof( FT_CMapRec ),
+      sizeof( TT_CMapRec ),
 
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
@@ -957,7 +957,7 @@
   FT_CALLBACK_TABLE_DEF const TT_CMap_ClassRec  tt_cmap6_class_rec =
   {
     {
-      sizeof( FT_CMapRec ),
+      sizeof( TT_CMapRec ),
 
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
@@ -1150,8 +1150,7 @@
 
   FT_CALLBACK_DEF( FT_UInt )
   tt_cmap8_char_next( TT_CMap    cmap,
-                      FT_UInt32 *pchar_code,
-                      FT_UInt   *agindex )
+                      FT_UInt32 *pchar_code )
   {
     FT_UInt32  result     = 0;
     FT_UInt32  char_code  = *pchar_code + 1;
@@ -1192,7 +1191,7 @@
   FT_CALLBACK_TABLE_DEF const TT_CMap_ClassRec  tt_cmap8_class_rec =
   {
     {
-      sizeof( FT_CMapRec ),
+      sizeof( TT_CMapRec ),
 
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
@@ -1323,7 +1322,7 @@
   FT_CALLBACK_TABLE_DEF const TT_CMap_ClassRec  tt_cmap10_class_rec =
   {
     {
-      sizeof( FT_CMapRec ),
+      sizeof( TT_CMapRec ),
 
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,

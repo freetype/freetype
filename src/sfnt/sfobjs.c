@@ -461,11 +461,11 @@
       
       /* set the encoding fields */
       {
-        FT_Int  n;
+        FT_Int  m;
         
-        for ( n = 0; n < root->num_charmaps; n++ )
+        for ( m = 0; m < root->num_charmaps; m++ )
         {
-          FT_CharMap  charmap = root->charmaps[n];
+          FT_CharMap  charmap = root->charmaps[m];
           
           charmap->encoding = sfnt_find_encoding( charmap->platform_id,
                                                   charmap->encoding_id );
