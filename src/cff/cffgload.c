@@ -2292,11 +2292,6 @@
     FT_Error      error;
     CFF_Decoder   decoder;
     TT_Face       face     = (TT_Face)glyph->root.face;
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    CFF_Face      cff_face = (CFF_Face)size->root.face;
-    SFNT_Service  sfnt     = (SFNT_Service)cff_face->sfnt;
-    FT_Stream     stream   = cff_face->root.stream;
-#endif
     FT_Bool       hinting;
     CFF_Font      cff      = (CFF_Font)face->extra.data;
 
@@ -2321,53 +2316,60 @@
     /*                                                 */
     /* XXX: The convention should be emphasized in     */
     /*      the documents because it can be confusing. */
-    if ( size                                    &&
-         size->strike_index != 0xFFFFU           &&
-         sfnt->load_sbits                        &&
-         ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
+    if ( size )
     {
-      TT_SBit_MetricsRec  metrics;
+      CFF_Face      cff_face = (CFF_Face)size->root.face;
+      SFNT_Service  sfnt     = (SFNT_Service)cff_face->sfnt;
+      FT_Stream     stream   = cff_face->root.stream;
 
 
-      error = sfnt->load_sbit_image( face,
-                                     (FT_ULong)size->strike_index,
-                                     (FT_UInt)glyph_index,
-                                     (FT_Int)load_flags,  
-                                     stream,
-                                     &glyph->root.bitmap,
-                                     &metrics );
-
-      if ( !error )
+      if ( size->strike_index != 0xFFFFU           &&
+           sfnt->load_sbits                        &&
+           ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
       {
-        glyph->root.outline.n_points   = 0;
-        glyph->root.outline.n_contours = 0;
+        TT_SBit_MetricsRec  metrics;
 
-        glyph->root.metrics.width  = (FT_Pos)metrics.width  << 6;
-        glyph->root.metrics.height = (FT_Pos)metrics.height << 6;
 
-        glyph->root.metrics.horiBearingX = (FT_Pos)metrics.horiBearingX << 6;
-        glyph->root.metrics.horiBearingY = (FT_Pos)metrics.horiBearingY << 6;
-        glyph->root.metrics.horiAdvance  = (FT_Pos)metrics.horiAdvance  << 6;
+        error = sfnt->load_sbit_image( face,
+                                       (FT_ULong)size->strike_index,
+                                       (FT_UInt)glyph_index,
+                                       (FT_Int)load_flags,
+                                       stream,
+                                       &glyph->root.bitmap,
+                                       &metrics );
 
-        glyph->root.metrics.vertBearingX = (FT_Pos)metrics.vertBearingX << 6;
-        glyph->root.metrics.vertBearingY = (FT_Pos)metrics.vertBearingY << 6;
-        glyph->root.metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  << 6;
-
-        glyph->root.format = FT_GLYPH_FORMAT_BITMAP;
-
-        if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
+        if ( !error )
         {
-          glyph->root.bitmap_left = metrics.vertBearingX;
-          glyph->root.bitmap_top  = metrics.vertBearingY;
+          glyph->root.outline.n_points   = 0;
+          glyph->root.outline.n_contours = 0;
+
+          glyph->root.metrics.width  = (FT_Pos)metrics.width  << 6;
+          glyph->root.metrics.height = (FT_Pos)metrics.height << 6;
+
+          glyph->root.metrics.horiBearingX = (FT_Pos)metrics.horiBearingX << 6;
+          glyph->root.metrics.horiBearingY = (FT_Pos)metrics.horiBearingY << 6;
+          glyph->root.metrics.horiAdvance  = (FT_Pos)metrics.horiAdvance  << 6;
+
+          glyph->root.metrics.vertBearingX = (FT_Pos)metrics.vertBearingX << 6;
+          glyph->root.metrics.vertBearingY = (FT_Pos)metrics.vertBearingY << 6;
+          glyph->root.metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  << 6;
+
+          glyph->root.format = FT_GLYPH_FORMAT_BITMAP;
+
+          if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
+          {
+            glyph->root.bitmap_left = metrics.vertBearingX;
+            glyph->root.bitmap_top  = metrics.vertBearingY;
+          }
+          else
+          {
+            glyph->root.bitmap_left = metrics.horiBearingX;
+            glyph->root.bitmap_top  = metrics.horiBearingY;
+          }
+          return error;
         }
-        else
-        {   
-          glyph->root.bitmap_left = metrics.horiBearingX;
-          glyph->root.bitmap_top  = metrics.horiBearingY;
-        }
-        return error;
       }
-    }  
+    }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
