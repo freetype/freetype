@@ -1842,16 +1842,21 @@
 
     FT_FRAME_EXIT();
 
+    if ( record_size < 0 || num_records < 0 )
+      return SFNT_Err_Invalid_File_Format;
+
     /* Only recognize format 0 */
     if ( hdmx->version != 0 )
       goto Exit;
 
-    if ( FT_QNEW_ARRAY( hdmx->records, num_records ) )
+    /* we can't use FT_QNEW_ARRAY here; otherwise tt_face_free_hdmx */
+    /* could fail during deallocation                               */
+    if ( FT_NEW_ARRAY( hdmx->records, num_records ) )
       goto Exit;
 
     hdmx->num_records = num_records;
-    num_glyphs   = face->root.num_glyphs;
-    record_size -= num_glyphs + 2;
+    num_glyphs        = face->root.num_glyphs;
+    record_size      -= num_glyphs + 2;
 
     {
       TT_HdmxEntry  cur   = hdmx->records;
@@ -1871,7 +1876,7 @@
 
         /* skip padding bytes */
         if ( record_size > 0 && FT_STREAM_SKIP( record_size ) )
-            goto Exit;
+          goto Exit;
       }
     }
 
