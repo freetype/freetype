@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A small-bitmap cache (specification).                                */
 /*                                                                         */
-/*  Copyright 2000-2001 by                                                 */
+/*  Copyright 2000-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -72,7 +72,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    format    :: The format of the glyph bitmap (monochrome or gray).  */
   /*                                                                       */
-  /*    max_grays :: maximum gray level value, from 1 to 255               */
+  /*    max_grays :: Maximum gray level value (in the range 1 to 255).     */
   /*                                                                       */
   /*    pitch     :: The number of bytes per bitmap line.  May be positive */
   /*                 or negative.                                          */

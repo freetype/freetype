@@ -1,14 +1,14 @@
 2002-09-17  David Turner  <david@freetype.org>
 
-        * include/freetype/freetype.h, include/freetype/ftimage.h,
-        include/freetype/ftstroker.h, include/freetype/ftsysio.h,
-        include/freetype/ftsysmem.h, include/freetype/ttnameid.h:
-        updating the in-source documentation
+	* include/freetype/freetype.h, include/freetype/ftimage.h,
+	include/freetype/ftstroker.h, include/freetype/ftsysio.h,
+	include/freetype/ftsysmem.h, include/freetype/ttnameid.h: Updating
+	the in-source documentation.
 
-        * src/tools/docmaker/tohtml.py: updating the HTML formatter in the
-        DocMaker tool
+	* src/tools/docmaker/tohtml.py: Updating the HTML formatter in the
+	DocMaker tool.
 
-        * src/tools/docmaker.py: removing obsolete file
+	* src/tools/docmaker.py: Removed.
 
 2002-09-17  Werner Lemberg  <wl@gnu.org>
 
@@ -63,42 +63,91 @@
 
 2002-09-09  David Turner  <david@freetype.org>
 
-        * src/pshinter/pshalgo2.c, src/pshinter/pshalgo3.c: adding fix to
-        prevent seg fault when hints are provided in an empty glyph !!
+	* src/pshinter/pshalgo2.c (psh2_glyph_find_strong_points),
+	src/pshinter/pshalgo3.c (psh3_glyph_find_strong_points): Adding fix
+	to prevent seg fault when hints are provided in an empty glyph.
 
-	* src/cache/ftccache.i: fixed a bug that prevented compilation in
-	debug mode of template instantiation
+	* src/cache/ftccache.i (GEN_CACHE_LOOKUP) [FT_DEBUG_LEVEL_ERROR]:
+	Removed conditional code.  This fixes a bug that prevented
+	compilation in debug mode of template instantiation.
 
-        * include/freetype/ftimage.h: removed incorrect "zft_" definitions
-        and updated constants documentation comments
+	* include/freetype/ftimage.h: Removed incorrect "zft_" definitions
+	and updated constants documentation comments.
 
-	* src/cff/cffparse.c: fixed the CFF table loader. It didn't accept
-	empty arrays, and this prevented the loading of certain fonts.
+	* src/cff/cffparse.c (cff_parser_run): Fixed the CFF table loader. 
+	It didn't accept empty arrays, and this prevented the loading of
+	certain fonts.
 
-        * include/freetype/freetype.h (FT_FaceRec): updating documentation
-        comment. The "descender" value is always *negative*, not positive !
+	* include/freetype/freetype.h (FT_FaceRec): Updating documentation
+	comment.  The "descender" value is always *negative*, not positive.
 
 2002-09-09  Owen Taylor  <owen@redhat.com>
 
-	* src/pcf/pcfdriver.c (PCF_Glyph_Load): fixing incorrect computation
+	* src/pcf/pcfdriver.c (PCF_Glyph_Load): Fixing incorrect computation
 	of bitmap metrics.
 
 2002-09-08  David Turner  <david@freetype.org>
 
-	* src/smooth/ftsmooth.c, src/base/ftobjs.c,
-	include/freetype/config/ftmodule.h: updated to correctly support
-	sub-pixel rendering
+	Various updates to correctly support sub-pixel rendering.
 
-	* include/freetype/cache/ftcimage.h, include/freetype/cache/ftcsbits.h,
-	src/cache/ftcimage.c, src/cache/ftcsbit.c: updated to support sub-pixel
-	rendering correctly. Definition of FTC_ImageTypeRec that replaces the
-	obsolete FTC_ImageDesc, and has slightly different fields. The
-	image type is now determined directly by "load_flags" values.
+	* include/freetype/config/ftmodule.h: Add two renderers for LCD.
 
-	* src/autohint/ahtypes.h, src/autohint/ahhint.c,
-	src/pshinter/pshalgo3.c, src/pshinter/pshalgo3.h: various enhancements
-	to the automatic and Postscript hinters !! and sub-pixel hinting now
-	works correctly (see demo programs)
+	* src/base/ftobjs.c (FT_Load_Glyph): Updated.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_lcd,
+	ft_smooth_render_lcd_v): Set FT_PIXEL_MODE_LCD and
+	FT_PIXEL_MODE_LCD_V, respectively.
+
+	* include/freetype/cache/ftcimage.h (FTC_ImageTypeRec): New
+	structure.
+	Updated all users.
+	(FTC_ImageDesc): Removed.
+	(FTC_ImageCache_Lookup): Second parameter is now of type
+	`FTC_ImageType'.
+	Updated all users.
+	(FTC_IMAGE_DESC_COMPARE): Updated and renamed to...
+	(FTC_IMAGE_TYPE_COMPARE): This.
+	(FTC_IMAGE_DESC_HASH): Updated and renamed to...
+	(FTC_IMAGE_TYPE_HASH): This.
+
+	* include/freetype/cache/ftcsbits.h (FTC_SBitRec): Field `num_grays'
+	replaced with `max_grays'.
+	`pitch' is now FT_Short.
+	(FTC_SBitCache_Lookup): Second parameter is now of type
+	`FTC_ImageType'.
+	Updated all users.
+
+	* src/cache/ftcimage.c (FTC_ImageQueryRec, FTC_ImageFamilyRec):
+	Updated.
+	(ftc_image_node_init): Updated.
+	Moved code to convert type flags to load flags to...
+	(FTC_Image_Cache_Lookup): This function.
+	(ftc_image_family_init): Updated.
+
+	* src/cache/ftcsbit.c (FTC_SBitQueryRec, FTC_SBitFamilyRec):
+	Updated.
+	(ftc_sbit_node_load): Updated.
+	Moved code to convert type flags to load flags to...
+	(FTC_SBitCache_Lookup): This function.
+
+	* src/autohint/ahtypes.h (AH_HinterRec): Replace `no_*_hints' with
+	`do_*_snapping'.
+	Update all users (with negation).
+	* src/autohint/ahhint.c (ah_compute_stem_width): Fix threshold for
+	`dist' for `delta' < 40.
+
+	* src/pshinter/pshalgo3.h (PSH3_GlyphRec): Replace `no_*_hints' with
+	`do_*_snapping'.
+	Update all users (with negation).
+	* src/pshinter/pshalgo3.c (psh3_dimension_quantize_len): New
+	function.
+	(psh3_hint_align): Use it.
+	Improve hinting code.
+	[STRONGER]: Removed.
+	(STRONGER): Removed.
+
+	* include/freetype/freetype.h (FT_Set_Hint_Flags, FT_HINT_*):
+	Removed.
 
 2002-09-05  Werner Lemberg  <wl@gnu.org>
 

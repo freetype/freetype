@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Image cache (specification).                                */
 /*                                                                         */
-/*  Copyright 2000-2001 by                                                 */
+/*  Copyright 2000-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -53,24 +53,24 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-
-
  /**************************************************************************
   *
-  * @struct: FTC_ImageTypeRec
+  * @struct:
+  *   FTC_ImageTypeRec
   *
   * @description:
-  *   a simple structure used to describe the type of glyph image to be
-  *   loaded into the cache
+  *   A simple structure used to describe the type of glyph image to be
+  *   loaded into the cache.
   *
   * @fields:
-  *   font  :: An @FTC_FontRec used to describe the glyph's face and size
-  *   flags :: the load flags to be applied when loading the glyph, see
-  *            the @FT_LOAD_XXX constants for details
+  *   font  :: An @FTC_FontRec used to describe the glyph's face and size.
+  *
+  *   flags :: The load flags to be applied when loading the glyph; see
+  *            the @FT_LOAD_XXX constants for details.
   *
   * @note:
-  *   this type completely replaces the @FTC_Image_Desc structure which is
-  *   now obsolete..
+  *   This type completely replaces the @FTC_Image_Desc structure which is
+  *   now obsolete.
   */
   typedef struct  FTC_ImageTypeRec_
   {
@@ -85,11 +85,11 @@ FT_BEGIN_HEADER
 
 #define FTC_IMAGE_TYPE_COMPARE( d1, d2 )                    \
           ( FTC_FONT_COMPARE( &(d1)->font, &(d2)->font ) && \
-            (d1)->flags == (d2)->flags                      )
+            (d1)->flags == (d2)->flags                   )
 
 #define FTC_IMAGE_TYPE_HASH( d )                    \
           (FT_UFast)( FTC_FONT_HASH( &(d)->font ) ^ \
-                      ( (d)->flags << 4 )           )
+                      ( (d)->flags << 4 )         )
 
 
   /*************************************************************************/
