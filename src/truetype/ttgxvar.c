@@ -304,7 +304,17 @@
     {
       segment->pairCount = FT_GET_USHORT();
       if ( FT_NEW_ARRAY( segment->correspondence, segment->pairCount ) )
+      {
+        /* Failure.  Free everything we have done so far.  We must do */
+        /* it right now since loading the `avar' table is optional.   */
+
+        for ( j = i - 1; j >= 0; --j )
+          FT_FREE( blend->avar_segment[j].correspondence );
+
+        FT_FREE( blend->avar_segment );
+        blend->avar_segment = NULL;
         goto Exit;
+      }
 
       for ( j = 0; j < segment->pairCount; ++j )
       {
@@ -387,7 +397,7 @@
     blend->tuplecount  = gvar_head.globalCoordCount;
     blend->gv_glyphcnt = gvar_head.glyphCount;
     offsetToData       = gvar_start + gvar_head.offsetToData;
-    
+
     if ( gvar_head.version != 0x00010000L              ||
          gvar_head.axisCount != blend->mmvar->num_axis )
     {
@@ -403,7 +413,7 @@
       /* long offsets (one more offset than glyphs, to mark size of last) */
       if ( FT_FRAME_ENTER( ( blend->gv_glyphcnt + 1 ) * 4L ) )
         goto Exit;
-    
+
       for ( i = 0; i <= blend->gv_glyphcnt; ++i )
         blend->glyphoffsets[i] = offsetToData + FT_GET_LONG();
 
@@ -431,7 +441,7 @@
       if ( FT_STREAM_SEEK( gvar_start + gvar_head.offsetToCoord )       ||
            FT_FRAME_ENTER( blend->tuplecount * gvar_head.axisCount * 2L )                   )
         goto Exit;
-      
+
       for ( i = 0; i < blend->tuplecount; ++i )
         for ( j = 0 ; j < gvar_head.axisCount; ++j )
           blend->tuplecoords[i * gvar_head.axisCount + j] =
@@ -482,7 +492,7 @@
     FT_UInt   i;
     FT_Fixed  apply;
     FT_Fixed  temp;
-                     
+
 
     apply = 0x10000L;
     for ( i = 0; i < blend->num_axis; ++i )
@@ -515,7 +525,7 @@
       {
         apply = 0;
         break;
-      } 
+      }
 
       else if ( blend->normalizedcoords[i] < tuple_coords[i] )
       {
@@ -651,7 +661,7 @@
         goto Exit;
 
       fvar_start = FT_STREAM_POS( );
-      
+
       if ( FT_STREAM_READ_FIELDS( fvar_fields, &fvar_head ) )
         goto Exit;
 
@@ -1033,7 +1043,7 @@
                 FT_MulDiv(
                   normalized[i] - av->correspondence[j - 1].fromCoord,
                   0x10000L,
-                  av->correspondence[j].fromCoord - 
+                  av->correspondence[j].fromCoord -
                     av->correspondence[j - 1].fromCoord ),
                 av->correspondence[j].toCoord -
                   av->correspondence[j - 1].toCoord,
