@@ -1,3 +1,9 @@
+2003-11-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftcalc.c, include/freetype/internal/ftcalc.h
+	(FT_MulDiv_No_Round): Surround code with `#ifdef
+	TT_CONFIG_OPTION_BYTECODE_INTERPRETER ... #endif'.
+
 2003-11-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftcalc.c (FT_MulDiv_No_Round): New function (32 and
