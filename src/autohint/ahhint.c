@@ -1290,8 +1290,15 @@
       slot->metrics.height       = bbox.yMax - bbox.yMin;
       slot->metrics.horiBearingX = bbox.xMin;
       slot->metrics.horiBearingY = bbox.yMax;
-      slot->metrics.horiAdvance  = hinter->pp2.x - hinter->pp1.x;
-      /* XXX: TO DO - slot->linearHoriAdvance */
+
+      /* for mono-width fonts (like Andale, Courier, etc..), we need */
+      /* to keep the original rounded advance..                     */
+      if ( !FT_IS_FIXED_WIDTH( slot->face ) )
+        slot->metrics.horiAdvance  = hinter->pp2.x - hinter->pp1.x;
+      else
+        slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance, x_scale );
+
+      slot->metrics.horiAdvance = (slot->metrics.horiAdvance+32) & -64;
 
       /* now copy outline into glyph slot */
       ah_loader_rewind( slot->internal->loader );
