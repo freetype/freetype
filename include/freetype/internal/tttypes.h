@@ -361,6 +361,7 @@ FT_BEGIN_HEADER
   } TT_HdmxRec, *TT_Hdmx;
 
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -1263,9 +1264,14 @@ FT_BEGIN_HEADER
     /*                                                                     */
     /***********************************************************************/
 
+#ifdef FT_OPTIMIZE_MEMORY
+    FT_UInt               num_locations;
+    FT_Byte*              glyph_locations;
+#else
     /* the glyph locations */
     FT_UShort             num_locations;
     FT_Long*              glyph_locations;
+#endif
 
     /* the font program, if any */
     FT_ULong              font_program_size;
@@ -1297,7 +1303,7 @@ FT_BEGIN_HEADER
     FT_Bool               doblend;
     GX_Blend              blend;
 #endif
-    
+
     /***********************************************************************/
     /*                                                                     */
     /* Other tables or fields. This is used by derivative formats like     */

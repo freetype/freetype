@@ -58,6 +58,118 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
+#ifdef FT_OPTIMIZE_MEMORY
+
+  FT_LOCAL_DEF( FT_Error )
+  tt_face_load_loca( TT_Face    face,
+                     FT_Stream  stream )
+  {
+    FT_Error   error;
+    FT_Memory  memory = stream->memory;
+    FT_ULong   table_len;
+
+
+    FT_TRACE2(( "Locations " ));
+    error = face->goto_table( face, TTAG_loca, stream, &table_len );
+    if ( error )
+    {
+      error = TT_Err_Locations_Missing;
+      goto Exit;
+    }
+
+    if ( face->header.Index_To_Loc_Format != 0 )
+    {
+      if ( table_len >= 040000 )
+      {
+        FT_TRACE2(( "table too large !!\n" ));
+        error = TT_Err_Invalid_Table;
+        goto Exit;
+      }
+      face->num_locations = (FT_UInt)(table_len >> 2);
+    }
+    else
+    {
+      if ( table_len >= 0x20000 )
+      {
+        FT_TRACE2(( "table too large !!\n" ));
+        error = TT_Err_Invalid_Table;
+        goto Exit;
+      }
+      face->num_locations = (FT_UInt)(table_len >> 1);
+    }
+
+
+   /* extract the frame. We don't need to decompress it since
+    * we'll be able to parse it directly
+    */
+    if ( FT_FRAME_EXTRACT( table_len, face->glyph_locations ) )
+      goto Exit;
+
+    FT_TRACE2(( "loaded\n" ));
+
+  Exit:
+    return error;
+  }
+
+
+  FT_LOCAL_DEF( FT_ULong )
+  tt_face_get_location( TT_Face    face,
+                        FT_UInt    gindex,
+                        FT_UInt   *asize )
+  {
+    FT_ULong  pos1, pos2;
+    FT_Byte*  p;
+    FT_Byte*  p_limit;
+
+    pos1 = pos2 = 0;
+    if ( gindex < face->num_locations )
+    {
+      if ( face->header.Index_To_Loc_Format != 0 )
+      {
+        p       = face->glyph_locations + gindex*4;
+        p_limit = face->glyph_locations + face->num_locations*4;
+
+        pos1 = FT_NEXT_ULONG(p);
+        pos2 = pos1;
+
+        if ( p+4 <= p_limit )
+          pos2 = FT_NEXT_ULONG(p);
+      }
+      else
+      {
+        p       = face->glyph_locations + gindex*2;
+        p_limit = face->glyph_locations + face->num_locations*2;
+
+        pos1 = FT_NEXT_USHORT(p);
+        pos2 = pos1;
+
+        if ( p+2 <= p_limit )
+          pos2 = FT_NEXT_USHORT(p);
+
+        pos1 <<= 1;
+        pos2 <<= 1;
+      }
+    }
+
+    *asize = (FT_UInt)(pos2 - pos1);
+
+    return pos1;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  tt_face_done_loca( TT_Face  face )
+  {
+    FT_Stream     stream = face->root.stream;
+
+    FT_FRAME_RELEASE( face->glyph_locations );
+    face->num_locations = 0;
+  }
+
+
+
+#else /* !FT_OPTIMIZE_MEMORY */
+
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_loca( TT_Face    face,
                      FT_Stream  stream )
@@ -130,6 +242,39 @@
   }
 
 
+  FT_LOCAL_DEF( FT_ULong )
+  tt_face_get_location( TT_Face    face,
+                        FT_UInt    gindex,
+                        FT_UInt   *asize )
+  {
+    FT_ULong  offset;
+    FT_UInt   count;
+
+    offset = face->glyph_locations[gindex];
+    count  = 0;
+
+    if ( gindex < (FT_UInt)face->num_locations - 1 )
+      count = (FT_UInt)( face->glyph_locations[gindex + 1] - offset );
+
+    *asize = count;
+    return offset;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  tt_face_done_loca( TT_Face  face )
+  {
+    FT_Memory     memory = face->root.memory;
+
+    FT_FREE( face->glyph_locations );
+    face->num_locations = 0;
+  }
+
+
+
+#endif /* !FT_OPTIMIZE_MEMORY */
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -151,6 +296,8 @@
   tt_face_load_cvt( TT_Face    face,
                     FT_Stream  stream )
   {
+#ifdef FT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     FT_Error   error;
     FT_Memory  memory = stream->memory;
     FT_ULong   table_len;
@@ -197,6 +344,12 @@
 
   Exit:
     return error;
+
+#else /* !BYTECODE_INTERPRETER */
+    FT_UNUSED(face);
+    FT_UNUSED(stream);
+    return 0;
+#endif
   }
 
 
@@ -221,6 +374,8 @@
   tt_face_load_fpgm( TT_Face    face,
                      FT_Stream  stream )
   {
+#ifdef FT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     FT_Error   error;
     FT_ULong   table_len;
 
@@ -267,6 +422,12 @@
 
   Exit:
     return error;
+
+#else /* !BYTECODE_INTERPRETER */
+    FT_UNUSED(face);
+    FT_UNUSED(stream);
+    return 0;
+#endif
   }
 
 
