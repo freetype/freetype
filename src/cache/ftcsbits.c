@@ -63,8 +63,8 @@
     FTC_ImageDesc       desc;
 
   } FTC_SBitFamilyRec;
- 
-  
+
+
 #define FTC_SBIT_FAMILY( x )         ( (FTC_SBitFamily)( x ) )
 #define FTC_SBIT_FAMILY_MEMORY( x )  FTC_GLYPH_FAMILY_MEMORY( &( x )->cset )
 
@@ -462,6 +462,23 @@
 
   /* documentation is in ftcsbits.h */
 
+#ifdef FTC_CACHE_USE_INLINE
+
+#  define GEN_CACHE_FAMILY_COMPARE(f,q,c)  \
+             ftc_sbit_family_compare( (FTC_SBitFamily)(f), (FTC_SBitQuery)(q) )
+
+#  define GEN_CACHE_NODE_COMPARE(n,q,c)  \
+             ftc_sbit_node_compare( (FTC_SBitNode)(n), (FTC_SBitQuery)(q), c )
+
+#  define GEN_CACHE_LOOKUP          ftc_sbit_cache_lookup
+#  include "ftccache.i"
+
+#else  /* !FTC_CACHE_USE_INLINE */
+
+#  define ftc_sbit_cache_lookup  ftc_cache_lookup
+
+#endif /* !FTC_CACHE_USE_INLINE */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_SBitCache_Lookup( FTC_SBitCache   cache,
                         FTC_ImageDesc*  desc,
@@ -486,9 +503,9 @@
     squery.gquery.gindex = gindex;
     squery.desc          = *desc;
 
-    error = ftc_cache_lookup( FTC_CACHE( cache ),
-                              FTC_QUERY( &squery ),
-                              (FTC_Node*)&node );
+    error = ftc_sbit_cache_lookup( FTC_CACHE( cache ),
+                                   FTC_QUERY( &squery ),
+                                   (FTC_Node*)&node );
     if ( !error )
     {
       *ansbit = node->sbits + ( gindex - FTC_GLYPH_NODE( node )->item_start );
@@ -520,11 +537,11 @@
                          FTC_SBit        *ansbit )
   {
     FTC_ImageDesc  desc0;
-    
+
 
     if ( !desc )
       return FTC_Err_Invalid_Argument;
-      
+
     desc0.font = desc->font;
     desc0.type = (FT_UInt32)desc->image_type;
 
