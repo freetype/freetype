@@ -1,3 +1,10 @@
+2002-03-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshglob.h (PSH_DimensionRec): s/std/stdw/.
+	* src/pshinter/pshglob.c (psh_global_scale_widths,
+	psh_dimension_snap_width, psh_globals_destroy, psh_globals_new):
+	Ditto.
+
 2002-03-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/aclocal.m4, builds/unix/ltmain.sh: Update to libtool

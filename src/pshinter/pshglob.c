@@ -42,9 +42,9 @@
                             FT_UInt      direction )
   {
     PSH_Dimension  dim   = &globals->dimension[direction];
-    PSH_Widths     std   = &dim->std;
-    FT_UInt        count = std->count;
-    PSH_Width      width = std->widths;
+    PSH_Widths     stdw  = &dim->stdw;
+    FT_UInt        count = stdw->count;
+    PSH_Width      width = stdw->widths;
     FT_Fixed       scale = dim->scale_mult;
 
 
@@ -67,13 +67,13 @@
     FT_Pos   reference = width;
 
 
-    for ( n = 0; n < dimension->std.count; n++ )
+    for ( n = 0; n < dimension->stdw.count; n++ )
     {
       FT_Pos  w;
       FT_Pos  dist;
 
 
-      w = dimension->std.widths[n].cur;
+      w = dimension->stdw.widths[n].cur;
       dist = width - w;
       if ( dist < 0 )
         dist = -dist;
@@ -560,8 +560,8 @@
 
 
       memory = globals->memory;
-      globals->dimension[0].std.count = 0;
-      globals->dimension[1].std.count = 0;
+      globals->dimension[0].stdw.count = 0;
+      globals->dimension[1].stdw.count = 0;
 
       globals->blues.normal_top.count    = 0;
       globals->blues.normal_bottom.count = 0;
@@ -597,7 +597,7 @@
       /* copy standard widths */
       {
         PSH_Dimension  dim   = &globals->dimension[1];
-        PSH_Width      write = dim->std.widths;
+        PSH_Width      write = dim->stdw.widths;
 
 
         write->org = priv->standard_width[1];
@@ -611,13 +611,13 @@
           read++;
         }
 
-        dim->std.count = write - dim->std.widths;
+        dim->stdw.count = write - dim->stdw.widths;
       }
 
       /* copy standard heights */
       {
         PSH_Dimension  dim = &globals->dimension[0];
-        PSH_Width      write = dim->std.widths;
+        PSH_Width      write = dim->stdw.widths;
 
 
         write->org = priv->standard_height[1];
@@ -631,7 +631,7 @@
           read++;
         }
 
-        dim->std.count = write - dim->std.widths;
+        dim->stdw.count = write - dim->stdw.widths;
       }
 
       /* copy blue zones */
