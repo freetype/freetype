@@ -1,3 +1,12 @@
+2001-12-06  Leonard Rosenthol  <leonardr@lazerware.com>
+
+	* src/base/ftmac.c: Added support for reading .dfont files on 
+	Mac OS X.  Aldo added a new routine (FT_GetFile_From_Mac_Name())
+	which looks up a given font by name in the Mac OS and returns
+	the disk file where it resides.
+	
+	* include/freetype/ftmac.h: Exported FT_GetFile_From_Mac_Name()
+
 2001-12-06  Werner Lemberg  <wl@gnu.org>
 
 	* INSTALL: Small update.
