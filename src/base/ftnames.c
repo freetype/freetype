@@ -23,7 +23,7 @@
 #include <freetype/internal/tttypes.h>
 
 
-#ifdef FT_CONFIG_OPTION_SFNT_NAMES
+#ifdef TT_CONFIG_OPTION_SFNT_NAMES
 
 
   FT_EXPORT_FUNC( FT_UInt )  FT_Get_Sfnt_Name_Count( FT_Face  face )
@@ -64,7 +64,7 @@
   }                                             
 
 
-#endif /* FT_CONFIG_OPTION_SFNT_NAMES */
+#endif /* TT_CONFIG_OPTION_SFNT_NAMES */
 
 
 /* END */
