@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftlru.h                                                                */
 /*                                                                         */
-/*    simple LRU list-cache                                                */
+/*    Simple LRU list-cache (specification).                               */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -41,7 +41,6 @@
   typedef struct FT_LruRec_*  FT_Lru;
 
 
-
   typedef struct  FT_Lru_Class_
   {
     FT_UInt   lru_size;      /* object size in bytes */
@@ -60,7 +59,6 @@
                                   FT_LruKey   key );
 
   } FT_Lru_Class;
-
 
 
   typedef FT_Bool  (*FT_Lru_Selector)( FT_Lru      lru,

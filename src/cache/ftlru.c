@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftlru.c                                                                */
 /*                                                                         */
-/*    simple LRU list-cache                                                */
+/*    Simple LRU list-cache (body).                                        */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -47,6 +47,9 @@
     FT_Lru    lru;
     
 
+    if ( !alru )
+      return FT_Err_Invalid_Argument;
+
     *alru = 0;
     if ( !ALLOC( lru, sizeof ( *lru ) ) )
     {
@@ -80,10 +83,17 @@
                                          
   FT_EXPORT_DEF( void )  FT_Lru_Reset( FT_Lru  lru )
   {
-    FT_ListNode    node   = lru->elements.head;
-    FT_Lru_Class*  clazz  = lru->clazz;
-    FT_Memory      memory = lru->memory;
+    FT_ListNode    node;
+    FT_Lru_Class*  clazz;
+    FT_Memory      memory;
     
+
+    if ( !lru )
+      return;
+
+    node   = lru->elements.head;
+    clazz  = lru->clazz;
+    memory = lru->memory;
 
     while ( node )
     {
@@ -108,8 +118,13 @@
 
   FT_EXPORT_DEF( void )  FT_Lru_Done( FT_Lru  lru )
   {
-    FT_Memory  memory = lru->memory;
+    FT_Memory  memory;
     
+
+    if ( !lru )
+      return;
+
+    memory = lru->memory;
 
     FT_Lru_Reset( lru );
     FREE( lru );
@@ -120,12 +135,19 @@
                                                  FT_LruKey    key,
                                                  FT_LruNode*  anode )
   {
-    FT_Error       error  = 0;
-    FT_ListNode    node   = lru->elements.head;
-    FT_Lru_Class*  clazz  = lru->clazz;
-    FT_LruNode     found  = 0; 
-    FT_Memory      memory = lru->memory;
+    FT_Error       error = 0;
+    FT_ListNode    node;
+    FT_Lru_Class*  clazz;
+    FT_LruNode     found = 0; 
+    FT_Memory      memory;
     
+
+    if ( !lru || !key || !anode )
+      return FT_Err_Invalid_Argument;
+
+    node   = lru->elements.head;
+    clazz  = lru->clazz;
+    memory = lru->memory;
 
     if ( clazz->compare_element )
     {
@@ -243,6 +265,11 @@
     FT_LruNode  node;
     
 
+    /* check for valid `lru' and `key' delayed to FT_Lru_Lookup_Node() */
+
+    if ( !aobject )
+      return FT_Err_Invalid_Argument;
+
     *aobject = 0;
     error = FT_Lru_Lookup_Node( lru, key, &node );
     if ( !error )
@@ -255,6 +282,9 @@
   FT_EXPORT_FUNC( void )  FT_Lru_Remove_Node( FT_Lru      lru,
                                               FT_LruNode  node )
   {
+    if ( !lru || !node )
+      return;
+
     if ( lru->num_elements > 0 )
     {
       FT_List_Remove( &lru->elements, (FT_ListNode)node );
@@ -279,6 +309,9 @@
                                                    FT_Lru_Selector  selector,
                                                    FT_Pointer       data )
   {
+    if ( !lru || !selector )
+      return;
+
     if ( lru->num_elements > 0 )
     {
       FT_ListNode  node = lru->elements.head;

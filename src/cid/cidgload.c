@@ -33,6 +33,7 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/ftoutln.h>
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -41,7 +42,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cidgload
-
 
 
   static
@@ -60,8 +60,8 @@
 
     /* read the CID font dict index and charstring offset from the CIDMap */
     if ( FILE_Seek( cid->data_offset + cid->cidmap_offset +
-                    glyph_index * entry_len) ||
-         ACCESS_Frame( 2 * entry_len )       )
+                    glyph_index * entry_len )               ||
+         ACCESS_Frame( 2 * entry_len )                      )
       goto Exit;
 
     p = (FT_Byte*)stream->cursor;
@@ -117,9 +117,6 @@
   }
 
 
-
-
-
 #if 0
 
 
@@ -151,6 +148,7 @@
     
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
+
     *max_advance = 0;
 
     /* Initialize load decoder */
@@ -158,10 +156,10 @@
                                            (FT_Face)face,
                                            0, /* size       */
                                            0, /* glyph slot */
-                                           0, /* glyph names !!!! XXXXX */
+                                           0, /* glyph names! XXX */
                                            0, /* blend == 0 */
                                            cid_load_glyph );
-    if (error)
+    if ( error )
       return error;
     
     decoder.builder.metrics_only = 1;
@@ -202,7 +200,6 @@
   /*************************************************************************/
 
 
-
   LOCAL_FUNC
   FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,
                             CID_Size       size,
@@ -217,6 +214,7 @@
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
     FT_Matrix         font_matrix;
     FT_Vector         font_offset;
+
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
@@ -237,12 +235,13 @@
                                              (FT_Face)face,
                                              (FT_Size)size,
                                              (FT_GlyphSlot)glyph,
-                                             0, /* glyph names -- XXXX */
+                                             0, /* glyph names -- XXX */
                                              0, /* blend == 0 */
                                              cid_load_glyph );
 
       /* set up the decoder */
-      decoder.builder.no_recurse = (load_flags & FT_LOAD_NO_RECURSE) != 0;
+      decoder.builder.no_recurse =
+        ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
 
       error = cid_load_glyph( &decoder, glyph_index );
 
@@ -270,8 +269,8 @@
       }
       else
       {
-        FT_BBox           cbox;
-        FT_Glyph_Metrics* metrics = &glyph->root.metrics;
+        FT_BBox            cbox;
+        FT_Glyph_Metrics*  metrics = &glyph->root.metrics;
 
 
         /* copy the _unscaled_ advance width */
@@ -329,8 +328,8 @@
         {
           cbox.xMin &= -64;
           cbox.yMin &= -64;
-          cbox.xMax  = ( cbox.xMax+63 ) & -64;
-          cbox.yMax  = ( cbox.yMax+63 ) & -64;
+          cbox.xMax  = ( cbox.xMax + 63 ) & -64;
+          cbox.yMax  = ( cbox.yMax + 63 ) & -64;
         }
 
         metrics->width  = cbox.xMax - cbox.xMin;

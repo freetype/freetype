@@ -67,8 +67,9 @@
   FT_Error  Z1_Parse_Glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {
-    T1_Face  face  = (T1_Face)decoder->builder.face;
-    T1_Font* type1 = &face->type1;
+    T1_Face   face  = (T1_Face)decoder->builder.face;
+    T1_Font*  type1 = &face->type1;
+
 
     decoder->font_matrix = type1->font_matrix;
     decoder->font_offset = type1->font_offset;
@@ -101,7 +102,7 @@
                                            (FT_Byte**)type1->glyph_names,
                                            face->blend,
                                            Z1_Parse_Glyph );
-    if (error)
+    if ( error )
       return error;
       
     decoder.builder.metrics_only = 1;

@@ -1019,9 +1019,9 @@
       slot->advance.y = 0;
     }
 
-    if ((load_flags & FT_LOAD_NO_RECURSE)==0)
+    if ( ( load_flags & FT_LOAD_NO_RECURSE ) == 0 )
     {
-      /* now, transform the glyph image when needed */
+      /* now, transform the glyph image if needed */
       if ( face->transform_flags )
       {
         /* get renderer */

@@ -21,17 +21,17 @@
 #undef  T1CODE
 #define T1CODE        t1_field_cid_info
 
-  T1_FIELD_STRING  ( "CIDFontName", cid_font_name )
-  T1_FIELD_NUM     ( "CIDFontVersion", cid_version )
-  T1_FIELD_NUM     ( "CIDFontType", cid_font_type )
-  T1_FIELD_STRING  ( "Registry", registry )
-  T1_FIELD_STRING  ( "Ordering", ordering )
-  T1_FIELD_NUM     ( "Supplement", supplement )
-  T1_FIELD_NUM     ( "UIDBase", uid_base )
-  T1_FIELD_NUM     ( "CIDMapOffset", cidmap_offset )
-  T1_FIELD_NUM     ( "FDBytes", fd_bytes )
-  T1_FIELD_NUM     ( "GDBytes", gd_bytes )
-  T1_FIELD_NUM     ( "CIDCount", cid_count )
+  T1_FIELD_STRING( "CIDFontName", cid_font_name )
+  T1_FIELD_NUM   ( "CIDFontVersion", cid_version )
+  T1_FIELD_NUM   ( "CIDFontType", cid_font_type )
+  T1_FIELD_STRING( "Registry", registry )
+  T1_FIELD_STRING( "Ordering", ordering )
+  T1_FIELD_NUM   ( "Supplement", supplement )
+  T1_FIELD_NUM   ( "UIDBase", uid_base )
+  T1_FIELD_NUM   ( "CIDMapOffset", cidmap_offset )
+  T1_FIELD_NUM   ( "FDBytes", fd_bytes )
+  T1_FIELD_NUM   ( "GDBytes", gd_bytes )
+  T1_FIELD_NUM   ( "CIDCount", cid_count )
 
 
 #undef  FT_STRUCTURE
@@ -55,15 +55,15 @@
 #undef  T1CODE
 #define T1CODE        t1_field_font_dict
 
-  T1_FIELD_NUM     ( "PaintType", paint_type )
-  T1_FIELD_NUM     ( "FontType", font_type )
-  T1_FIELD_NUM     ( "SubrMapOffset", subrmap_offset )
-  T1_FIELD_NUM     ( "SDBytes", sd_bytes )
-  T1_FIELD_NUM     ( "SubrCount", num_subrs )
-  T1_FIELD_NUM     ( "lenBuildCharArray", len_buildchar )
-  T1_FIELD_FIXED   ( "ForceBoldThreshold", forcebold_threshold )
-  T1_FIELD_FIXED   ( "ExpansionFactor", expansion_factor )
-  T1_FIELD_NUM     ( "StrokeWidth", stroke_width )
+  T1_FIELD_NUM  ( "PaintType", paint_type )
+  T1_FIELD_NUM  ( "FontType", font_type )
+  T1_FIELD_NUM  ( "SubrMapOffset", subrmap_offset )
+  T1_FIELD_NUM  ( "SDBytes", sd_bytes )
+  T1_FIELD_NUM  ( "SubrCount", num_subrs )
+  T1_FIELD_NUM  ( "lenBuildCharArray", len_buildchar )
+  T1_FIELD_FIXED( "ForceBoldThreshold", forcebold_threshold )
+  T1_FIELD_FIXED( "ExpansionFactor", expansion_factor )
+  T1_FIELD_NUM  ( "StrokeWidth", stroke_width )
 
 
 #undef  FT_STRUCTURE
@@ -91,7 +91,6 @@
 
   T1_FIELD_NUM_TABLE ( "StemSnapH", snap_widths, 12 )
   T1_FIELD_NUM_TABLE ( "StemSnapV", snap_heights, 12 )
-
 
 
 /* END */

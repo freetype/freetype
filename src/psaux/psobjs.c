@@ -878,7 +878,7 @@
     if ( pflags )
       *pflags |= 1L << field->flag_bit;
 #else
-    FT_UNUSED(pflags);      
+    FT_UNUSED( pflags );      
 #endif
 
     error = FT_Err_Ok;
@@ -943,7 +943,7 @@
     if ( pflags )
       *pflags |= 1L << field->flag_bit;
 #else
-    FT_UNUSED(pflags);      
+    FT_UNUSED( pflags );      
 #endif
 
     parser->cursor = old_cursor;

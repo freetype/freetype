@@ -36,8 +36,6 @@
 #endif
 
 
-
-
 #if 0
 
   /* Compute the maximum advance width of a font through quick parsing */
@@ -45,7 +43,7 @@
   FT_Error  CID_Compute_Max_Advance( CID_Face  face,
                                      FT_Int*   max_advance );
 
-#endif
+#endif /* 0 */
 
   LOCAL_DEF
   FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,

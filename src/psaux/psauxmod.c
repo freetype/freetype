@@ -1,9 +1,28 @@
+/***************************************************************************/
+/*                                                                         */
+/*  psauxmod.c                                                             */
+/*                                                                         */
+/*    FreeType auxiliary PostScript module implementation (body).          */
+/*                                                                         */
+/*  Copyright 2000 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <psaux/psauxmod.h>
 #include <psaux/psobjs.h>
 #include <psaux/t1decode.h>
 
+
   LOCAL_FUNC
-  const PS_Table_Funcs    ps_table_funcs =
+  const PS_Table_Funcs  ps_table_funcs =
   {
     PS_Table_New,
     PS_Table_Done,
@@ -13,7 +32,7 @@
 
 
   LOCAL_FUNC
-  const T1_Parser_Funcs   t1_parser_funcs =
+  const T1_Parser_Funcs  t1_parser_funcs =
   {
     T1_Init_Parser,
     T1_Done_Parser,
@@ -54,7 +73,7 @@
 
 
   LOCAL_FUNC
-  const PSAux_Interface   psaux_interface =
+  const PSAux_Interface  psaux_interface =
   {
     &ps_table_funcs,
     &t1_parser_funcs,
@@ -65,7 +84,7 @@
   };
 
 
-  FT_CPLUSPLUS(const FT_Module_Class)  psaux_module_class =
+  FT_CPLUSPLUS( const FT_Module_Class )  psaux_module_class =
   {
     0,
     sizeof( FT_ModuleRec ),
@@ -75,8 +94,10 @@
     
     &psaux_interface,  /* module-specific interface */
     
-    (FT_Module_Constructor)  0,
-    (FT_Module_Destructor)   0,
-    (FT_Module_Requester)    0
+    (FT_Module_Constructor)0,
+    (FT_Module_Destructor) 0,
+    (FT_Module_Requester)  0
   };
 
+
+/* END */

@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftcmanag.h                                                             */
+/*  ftcmanag.c                                                             */
 /*                                                                         */
-/*    FreeType Cache Manager                                               */
+/*    FreeType Cache Manager (body).                                       */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -203,23 +203,28 @@
 
   FT_EXPORT_FUNC( FT_Error )  FTC_Manager_New( FT_Library          library,
                                                FT_UInt             max_faces,
-					       FT_UInt             max_sizes,
+                                               FT_UInt             max_sizes,
                                                FTC_Face_Requester  requester,
                                                FT_Pointer          req_data,
                                                FTC_Manager*        amanager )
   {
     FT_Error     error;
-    FT_Memory    memory  = library->memory;
+    FT_Memory    memory;
     FTC_Manager  manager = 0;
     
     
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    memory = library->memory;
+
     if ( ALLOC( manager, sizeof ( *manager ) ) )
       goto Exit;
     
-    if (max_faces == 0)
+    if ( max_faces == 0 )
       max_faces = FTC_MAX_FACES;
       
-    if (max_sizes == 0)
+    if ( max_sizes == 0 )
       max_sizes = FTC_MAX_SIZES;
       
     error = FT_Lru_New( &ftc_face_lru_class,
@@ -259,8 +264,13 @@
 
   FT_EXPORT_DEF( void )  FTC_Manager_Done( FTC_Manager  manager )
   {
-    FT_Memory  memory = manager->library->memory;
+    FT_Memory  memory;
     
+
+    if ( !manager || !manager->library )
+      return;
+
+    memory = manager->library->memory;
 
     FT_Lru_Done( manager->sizes_lru );
     FT_Lru_Done( manager->faces_lru );
@@ -270,6 +280,9 @@
 
   FT_EXPORT_DEF( void )  FTC_Manager_Reset( FTC_Manager  manager )
   {
+    if ( !manager )
+      return;
+
     FT_Lru_Reset( manager->sizes_lru );
     FT_Lru_Reset( manager->faces_lru );
   }
@@ -279,11 +292,13 @@
                                                       FTC_FaceID   face_id,
                                                       FT_Face*     aface )
   {
+    if ( !manager )
+      return FT_Err_Invalid_Argument;
+
     return  FT_Lru_Lookup( manager->faces_lru,
                            (FT_LruKey)face_id, 
                            (FT_Pointer*)aface );
   }
- 
  
  
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
@@ -296,17 +311,20 @@
     FT_Face          face;
     
 
-    if (aface)
+    /* check for valid `manager' delayed to FTC_Manager_Lookup_Face() */
+
+    if ( aface )
       *aface = 0;
       
-    if (asize)
+    if ( asize )
       *asize = 0;
 
-    error  = FTC_Manager_Lookup_Face( manager, size_id->face_id, &face ); 
+    error = FTC_Manager_Lookup_Face( manager, size_id->face_id, &face ); 
     if ( !error )
     {
       FT_Size  size;
       
+
       req.face   = face;
       req.width  = size_id->pix_width;
       req.height = size_id->pix_height;
@@ -319,10 +337,10 @@
         /* select the size as the current one for this face */
         face->size = size;
         
-        if (asize)
+        if ( asize )
           *asize = size;
           
-        if (aface)
+        if ( aface )
           *aface = face;
       }
     }
