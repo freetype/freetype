@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf fonts
 
-  Copyright 2000-2001 by
+  Copyright 2000-2001, 2002 by
   Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -98,7 +98,7 @@ THE SOFTWARE.
     FT_UInt    n;
 
 
-    if ( FT_STREAM_SEEK ( 0 )                   ||
+    if ( FT_STREAM_SEEK ( 0 )                          ||
          FT_STREAM_READ_FIELDS ( pcf_toc_header, toc ) )
       return PCF_Err_Cannot_Open_Resource;
 
@@ -130,7 +130,7 @@ THE SOFTWARE.
         for( j = 0; j < sizeof ( tableNames ) / sizeof ( tableNames[0] ); j++ )
           if ( tables[i].type == (FT_UInt)( 1 << j ) )
             name = tableNames[j];
-            
+
         FT_TRACE4(( "Table %d: type=%-6s format=0x%04lX "
                     "size=0x%06lX (%8ld) offset=0x%04lX\n",
                     i, name,
@@ -200,8 +200,6 @@ THE SOFTWARE.
   };
 
 
-
-
   static FT_Error
   pcf_get_metric( FT_Stream   stream,
                   FT_ULong    format,
@@ -212,15 +210,16 @@ THE SOFTWARE.
 
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
     {
-      const FT_Frame_Field*   fields; 
-  
+      const FT_Frame_Field*  fields;
+
+
       /* parsing normal metrics */
       fields = PCF_BYTE_ORDER( format ) == MSBFirst
-             ? pcf_metric_msb_header
-             : pcf_metric_header;
+               ? pcf_metric_msb_header
+               : pcf_metric_header;
 
-      /* the following sets 'error' but doesn't return in case of failure */             
-      (void) FT_STREAM_READ_FIELDS( fields, metric );
+      /* the following sets 'error' but doesn't return in case of failure */
+      (void)FT_STREAM_READ_FIELDS( fields, metric );
     }
     else
     {
@@ -267,7 +266,7 @@ THE SOFTWARE.
 
         *asize   = tables[i].size;  /* unused - to be removed */
         *aformat = tables[i].format;
-        
+
         return PCF_Err_Ok;
       }
 
@@ -491,7 +490,7 @@ THE SOFTWARE.
 
     error = FT_READ_ULONG_LE( format );
 
-    if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )   &&
+    if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )     &&
          !PCF_FORMAT_MATCH( format, PCF_COMPRESSED_METRICS ) )
       return PCF_Err_Invalid_File_Format;
 
@@ -650,11 +649,11 @@ THE SOFTWARE.
 
 
     error = pcf_seek_to_table_type( stream,
-                           face->toc.tables,
-                           face->toc.count,
-                           PCF_BDF_ENCODINGS,
-                           &format,
-                           &size );
+                                    face->toc.tables,
+                                    face->toc.count,
+                                    PCF_BDF_ENCODINGS,
+                                    &format,
+                                    &size );
     if ( error )
       return error;
 
@@ -809,7 +808,7 @@ THE SOFTWARE.
 
     error = FT_READ_ULONG_LE( format );
 
-    if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )  &&
+    if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )    &&
          !PCF_FORMAT_MATCH( format, PCF_ACCEL_W_INKBOUNDS ) )
       goto Bail;
 
@@ -973,12 +972,12 @@ THE SOFTWARE.
       prop = pcf_find_property( face, "PIXEL_SIZE" );
       if ( prop != NULL )
       {
-        root->available_sizes->height = 
+        root->available_sizes->height =
         root->available_sizes->width  = (FT_Short)( prop->value.integer );
 
         size_set = 1;
       }
-      else 
+      else
       {
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop != NULL )
@@ -993,13 +992,13 @@ THE SOFTWARE.
           if ( ( yres != NULL ) && ( xres != NULL ) )
           {
             root->available_sizes->height =
-              (FT_Short)( prop->value.integer *  
-                          yres->value.integer / 720 ); 
+              (FT_Short)( prop->value.integer *
+                          yres->value.integer / 720 );
 
               root->available_sizes->width =
-                (FT_Short)( prop->value.integer *  
+                (FT_Short)( prop->value.integer *
                             xres->value.integer / 720 );
-                  
+
             size_set = 1;
           }
         }
@@ -1014,11 +1013,11 @@ THE SOFTWARE.
       /* set-up charset */
       {
         PCF_Property  charset_registry = 0, charset_encoding = 0;
-  
-  
+
+
         charset_registry = pcf_find_property( face, "CHARSET_REGISTRY" );
         charset_encoding = pcf_find_property( face, "CHARSET_ENCODING" );
-  
+
         if ( ( charset_registry != NULL ) &&
              ( charset_encoding != NULL ) )
         {
@@ -1028,26 +1027,26 @@ THE SOFTWARE.
             if ( FT_NEW_ARRAY( face->charset_encoding,
                                strlen( charset_encoding->value.atom ) + 1 ) )
               goto Exit;
-              
+
             if ( FT_NEW_ARRAY( face->charset_registry,
                                strlen( charset_registry->value.atom ) + 1 ) )
               goto Exit;
-              
+
             strcpy( face->charset_registry, charset_registry->value.atom );
             strcpy( face->charset_encoding, charset_encoding->value.atom );
           }
         }
       }
     }
-    
+
   Exit:
-    if (error)
+    if ( error )
     {
       /* this is done to respect the behaviour of the original */
-      /* PCF font driver..                                     */
+      /* PCF font driver.                                      */
       error = PCF_Err_Invalid_File_Format;
     }
-      
+
     return error;
   }
 

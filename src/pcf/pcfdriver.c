@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf files
 
-    Copyright (C) 2000-2001 by
+    Copyright (C) 2000-2001, 2002 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,9 +40,10 @@ THE SOFTWARE.
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pcfread
 
+
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
 
-  typedef struct PCF_CMapRec_
+  typedef struct  PCF_CMapRec_
   {
     FT_CMapRec    cmap;
     FT_UInt       num_encodings;
@@ -52,11 +53,12 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_DEF( FT_Error )
-  pcf_cmap_init( PCF_CMap   cmap )
+  pcf_cmap_init( PCF_CMap  cmap )
   {
-    PCF_Face   face   = (PCF_Face) FT_CMAP_FACE(cmap);
+    PCF_Face  face = (PCF_Face)FT_CMAP_FACE( cmap );
     
-    cmap->num_encodings = (FT_UInt) face->nencodings;
+
+    cmap->num_encodings = (FT_UInt)face->nencodings;
     cmap->encodings     = face->encodings;
     
     return FT_Err_Ok;
@@ -79,6 +81,7 @@ THE SOFTWARE.
     FT_UInt       min, max, mid;
     FT_UInt       result = 0;
     
+
     min = 0;
     max = cmap->num_encodings;
     
@@ -86,6 +89,7 @@ THE SOFTWARE.
     {
       FT_UInt32  code;
       
+
       mid  = ( min + max ) >> 1;
       code = encodings[mid].enc;
       
@@ -98,7 +102,7 @@ THE SOFTWARE.
       if ( charcode < code )
         max = mid;
       else
-        min = mid+1;
+        min = mid + 1;
     }
     
     return result;
@@ -114,6 +118,7 @@ THE SOFTWARE.
     FT_UInt32     charcode = *acharcode + 1;
     FT_UInt       result   = 0;
     
+
     min = 0;
     max = cmap->num_encodings;
     
@@ -121,6 +126,7 @@ THE SOFTWARE.
     {
       FT_UInt32  code;
       
+
       mid  = ( min + max ) >> 1;
       code = encodings[mid].enc;
       
@@ -133,7 +139,7 @@ THE SOFTWARE.
       if ( charcode < code )
         max = mid;
       else
-        min = mid+1;
+        min = mid + 1;
     }
     
     charcode = 0;
@@ -152,10 +158,10 @@ THE SOFTWARE.
   FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec  pcf_cmap_class =
   {
     sizeof( PCF_CMapRec ),
-    (FT_CMap_InitFunc)       pcf_cmap_init,
-    (FT_CMap_DoneFunc)       pcf_cmap_done,
-    (FT_CMap_CharIndexFunc)  pcf_cmap_char_index,
-    (FT_CMap_CharNextFunc)   pcf_cmap_char_next
+    (FT_CMap_InitFunc)     pcf_cmap_init,
+    (FT_CMap_DoneFunc)     pcf_cmap_done,
+    (FT_CMap_CharIndexFunc)pcf_cmap_char_index,
+    (FT_CMap_CharNextFunc) pcf_cmap_char_next
   };
 
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
@@ -243,7 +249,7 @@ THE SOFTWARE.
   FT_CALLBACK_DEF( FT_Error )
   PCF_Face_Done( PCF_Face  face )
   {
-    FT_Memory    memory = FT_FACE_MEMORY( face );
+    FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
     FT_FREE( face->encodings );
@@ -251,9 +257,10 @@ THE SOFTWARE.
 
     /* free properties */
     {
-      PCF_Property prop = face->properties;
-      FT_Int       i;
+      PCF_Property  prop = face->properties;
+      FT_Int        i;
       
+
       for ( i = 0; i < face->nprops; i++ )
       {
         prop = &face->properties[i];
@@ -298,8 +305,8 @@ THE SOFTWARE.
 
     /* set-up charmap */
     {
-      FT_String   *charset_registry, *charset_encoding;
-      FT_Bool      unicode_charmap  = 0;
+      FT_String  *charset_registry, *charset_encoding;
+      FT_Bool     unicode_charmap  = 0;
 
 
       charset_registry = face->charset_registry;
@@ -315,10 +322,12 @@ THE SOFTWARE.
       }
 
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
+
       {
         FT_CharMapRec  charmap;
         
-        charmap.face        = FT_FACE(face);
+
+        charmap.face        = FT_FACE( face );
         charmap.encoding    = ft_encoding_none;
         charmap.platform_id = 0;
         charmap.encoding_id = 0;
@@ -332,6 +341,7 @@ THE SOFTWARE.
         
         error = FT_CMap_New( &pcf_cmap_class, NULL, &charmap, NULL );
       }
+
 #else  /* !FT_CONFIG_OPTION_USE_CMAPS */
 
       /* XXX: charmaps.  For now, report unicode for Unicode and Latin 1 */
@@ -378,13 +388,13 @@ THE SOFTWARE.
 
     if ( size->metrics.y_ppem == face->root.available_sizes->height )
     {
-      size->metrics.ascender  = face->accel.fontAscent << 6;
-      size->metrics.descender = face->accel.fontDescent * (-64);
+      size->metrics.ascender    = face->accel.fontAscent << 6;
+      size->metrics.descender   = face->accel.fontDescent * (-64);
 #if 0
-      size->metrics.height    = face->accel.maxbounds.ascent << 6;
+      size->metrics.height      = face->accel.maxbounds.ascent << 6;
 #endif
-      size->metrics.height    = size->metrics.ascender -
-                                size->metrics.descender;
+      size->metrics.height      = size->metrics.ascender -
+                                  size->metrics.descender;
 
       size->metrics.max_advance = face->accel.maxbounds.characterWidth << 6;
 
@@ -407,11 +417,10 @@ THE SOFTWARE.
     PCF_Face    face   = (PCF_Face)FT_SIZE_FACE( size );
     FT_Stream   stream = face->root.stream;
     FT_Error    error  = PCF_Err_Ok;
-    FT_Memory   memory = FT_FACE(face)->memory;
+    FT_Memory   memory = FT_FACE( face )->memory;
     FT_Bitmap*  bitmap = &slot->bitmap;
     PCF_Metric  metric;
     int         bytes;
-
 
     FT_UNUSED( load_flags );
 
@@ -464,7 +473,7 @@ THE SOFTWARE.
     if ( FT_ALLOC( bitmap->buffer, bytes ) )
       goto Exit;
 
-    if ( FT_STREAM_SEEK( metric->bits )        ||
+    if ( FT_STREAM_SEEK( metric->bits )          ||
          FT_STREAM_READ( bitmap->buffer, bytes ) )
       goto Exit;
 
@@ -531,38 +540,37 @@ THE SOFTWARE.
     sizeof( FT_SizeRec ),
     sizeof( FT_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)     PCF_Face_Init,
-    (FT_Face_DoneFunc)     PCF_Face_Done,
-    (FT_Size_InitFunc)     0,
-    (FT_Size_DoneFunc)     0,
-    (FT_Slot_InitFunc)0,
-    (FT_Slot_DoneFunc)0,
+    (FT_Face_InitFunc)        PCF_Face_Init,
+    (FT_Face_DoneFunc)        PCF_Face_Done,
+    (FT_Size_InitFunc)        0,
+    (FT_Size_DoneFunc)        0,
+    (FT_Slot_InitFunc)        0,
+    (FT_Slot_DoneFunc)        0,
 
-    (FT_Size_ResetPointsFunc)  PCF_Set_Pixel_Size,
-    (FT_Size_ResetPixelsFunc)  PCF_Set_Pixel_Size,
+    (FT_Size_ResetPointsFunc) PCF_Set_Pixel_Size,
+    (FT_Size_ResetPixelsFunc) PCF_Set_Pixel_Size,
 
-    (FT_Slot_LoadFunc)         PCF_Glyph_Load,
+    (FT_Slot_LoadFunc)        PCF_Glyph_Load,
 
 #ifndef FT_CONFIG_OPTION_USE_CMAPS    
-    (FT_CharMap_CharIndexFunc) PCF_Char_Get_Index,
+    (FT_CharMap_CharIndexFunc)PCF_Char_Get_Index,
 #else
-    (FT_CharMap_CharIndexFunc)  0,
+    (FT_CharMap_CharIndexFunc)0,
 #endif
 
-    (FT_Face_GetKerningFunc)   0,
-    (FT_Face_AttachFunc)       0,
-    (FT_Face_GetAdvancesFunc)  0,
+    (FT_Face_GetKerningFunc)  0,
+    (FT_Face_AttachFunc)      0,
+    (FT_Face_GetAdvancesFunc) 0,
 
 #ifndef FT_CONFIG_OPTION_USE_CMAPS
-    (FT_CharMap_CharNextFunc)  PCF_Char_Get_Next,
+    (FT_CharMap_CharNextFunc) PCF_Char_Get_Next,
 #else
-    (FT_CharMap_CharNextFunc)  0
+    (FT_CharMap_CharNextFunc) 0
 #endif    
   };
 
 
 #ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
-
 
   /*************************************************************************/
   /*                                                                       */
