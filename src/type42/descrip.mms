@@ -15,7 +15,7 @@
 
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.type42])
 
-OBJS=t42drivr.obj
+OBJS=type42.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)

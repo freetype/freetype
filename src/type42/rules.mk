@@ -26,11 +26,13 @@ T42_COMPILE := $(FT_COMPILE) $I$(T42_DIR)
 
 # Type42 driver source
 #
-T42_DRV_SRC := $(T42_DIR_)t42drivr.c
+T42_DRV_SRC := $(T42_DIR_)t42objs.c  \
+               $(T42_DIR_)t42parse.c \
+               $(T42_DIR_)t42drivr.c
 
 # Type42 driver headers
 #
-T42_DRV_H :=
+T42_DRV_H := $(T42_DRV_SRC:%.c=%.h)
 
 
 # Type42 driver object(s)
@@ -39,7 +41,7 @@ T42_DRV_H :=
 #   T42_DRV_OBJ_S is used during `single' builds
 #
 T42_DRV_OBJ_M := $(T42_DRV_SRC:$(T42_DIR_)%.c=$(OBJ_)%.$O)
-T42_DRV_OBJ_S := $(OBJ_)t42drivr.$O
+T42_DRV_OBJ_S := $(OBJ_)type42.$O
 
 # Type42 driver source file for single build
 #

@@ -10,11 +10,11 @@ SubDirHdrs  [ FT2_SubDir  src type42 ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = t42drivr ;
+    _sources = t42objs t42parse t42drivr ;
   }
   else
   {
-    _sources = t42drivr ;
+    _sources = type42 ;
   }
 
   Library  $(FT2_LIB) : $(_sources).c ;

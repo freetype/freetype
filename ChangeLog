@@ -1,3 +1,13 @@
+2002-06-07  David Turner   <david@freetype.org>
+
+        * src/type42/t42drivr.c, src/type42/t42drivr.h, src/type42/t42parse.c,
+          src/type42/t42parse.h, src/type42/t42objs.h, src/type42/t42objs.c,
+          src/type42/type42.c:
+
+            updated the Type42 driver by splitting it into several files since
+            it makes the code easier to read and maintain. Also fixed the bug
+            that prevented the correct display of fonts with "ftview"
+
 2002-06-03  Werner Lemberg  <wl@gnu.org>
 
 	Add 8bpp support.
