@@ -1,3 +1,25 @@
+2004-08-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/gpos.c: Rename counting variables to be more
+	meaningful.
+	Add copyright.
+	(otl_liga_attach_validate): Renamed to...
+	(otl_liga_mark2_validate): This.
+	Update all callers.
+	(otl_mark2_array_validate): Removed.
+	(otl_gpos_lookup6_validate): Call otl_liga_mark2_validate, not
+	otl_mark2_array_validate.
+	(otl_pos_class_set_validate, otl_pos_class_rule_validate): Removed.
+	(otl_gpos_lookup7_validate): Complete code for format 2.
+	(otl_chain_pos_class_rule_validate,
+	otl_chaim_pos_class_set_validate): Removed.
+	(otl_gpos_lookup8_validate): Don't call
+	otl_chain_pos_class_set_validate but
+	otl_chain_pos_rule_set_validate.
+	Simplify some code.
+
+	* src/otlayout/otlgpos.h: Add copyright.
+
 2004-08-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/otlayout/otljstf.c (otl_jstf_gsub_mods_validate): Removed.

@@ -1,26 +1,46 @@
+/***************************************************************************/
+/*                                                                         */
+/*  otlgpos.c                                                              */
+/*                                                                         */
+/*    OpenType layout support, GPOS table (body).                          */
+/*                                                                         */
+/*  Copyright 2002, 2004 by                                                */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "otlgpos.h"
 #include "otlcommn.h"
+
 
  /* forward declaration */
   static OTL_ValidateFunc  otl_gpos_validate_funcs[];
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                         VALUE RECORDS                        *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                        VALUE RECORDS                          *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static OTL_UInt
   otl_value_length( OTL_UInt  format )
   {
     OTL_UInt  count;
 
-    count = (( format & 0xAA ) >> 1) + ( format & 0x55 );
-    count = (( count  & 0xCC ) >> 2) + ( count  & 0x33 );
-    count = (( count  & 0xF0 ) >> 4) + ( count  & 0x0F );
+
+    count = ( ( format & 0xAA ) >> 1 ) + ( format & 0x55 );
+    count = ( ( count  & 0xCC ) >> 2 ) + ( count  & 0x33 );
+    count = ( ( count  & 0xF0 ) >> 4 ) + ( count  & 0x0F );
 
     return count;
   }
@@ -35,7 +55,8 @@
     OTL_Bytes  p = table;
     OTL_UInt   count, device;
 
-    if ( format >= 0x100U )
+
+    if ( format >= 0x100 )
       OTL_INVALID_DATA;
 
     for ( count = 4; count > 0; count-- )
@@ -63,13 +84,13 @@
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                          ANCHORS                             *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                           ANCHORS                             *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_anchor_validate( OTL_Bytes      table,
@@ -78,48 +99,50 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 6 );
     format = OTL_NEXT_USHORT( p );
-    p += 4;
+    p += 4;     /* skip coordinates */
 
     switch ( format )
     {
-      case 1:
-        break;
+    case 1:
+      break;
 
-      case 2:
-        OTL_CHECK( 2 );  /* anchor point */
-        break;
+    case 2:
+      OTL_CHECK( 2 );  /* anchor point */
+      break;
 
-      case 3:
-        {
-          OTL_UInt  x_device, y_device;
+    case 3:
+      {
+        OTL_UInt  x_device, y_device;
 
-          OTL_CHECK( 4 );
-          x_device = OTL_NEXT_USHORT( p );
-          y_device = OTL_NEXT_USHORT( p );
 
-          if ( x_device )
-            otl_device_table_validate( table + x_device, valid );
+        OTL_CHECK( 4 );
+        x_device = OTL_NEXT_USHORT( p );
+        y_device = OTL_NEXT_USHORT( p );
 
-          if ( y_device )
-            otl_device_table_validate( table + y_device, valid );
-        }
-        break;
+        if ( x_device )
+          otl_device_table_validate( table + x_device, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        if ( y_device )
+          otl_device_table_validate( table + y_device, valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                           MARK ARRAY                         *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                          MARK ARRAY                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_mark_array_validate( OTL_Bytes      table,
@@ -140,13 +163,13 @@
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 1                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 1                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_gpos_lookup1_validate( OTL_Bytes      table,
@@ -155,57 +178,63 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
-      case 1:
+    case 1:
+      {
+        OTL_UInt  coverage, value_format;
+
+
+        OTL_CHECK( 4 );
+        coverage     = OTL_NEXT_USHORT( p );
+        value_format = OTL_NEXT_USHORT( p );
+
+        otl_coverage_validate( table + coverage, valid );
+        otl_value_validate( p, table, value_format, valid );
+      }
+      break;
+
+    case 2:
+      {
+        OTL_UInt  coverage, value_format, num_values, len_value;
+
+
+        OTL_CHECK( 6 );
+        coverage     = OTL_NEXT_USHORT( p );
+        value_format = OTL_NEXT_USHORT( p );
+        num_values   = OTL_NEXT_USHORT( p );
+
+        len_value    = otl_value_length( value_format );
+
+        otl_coverage_validate( table + coverage, valid );
+
+        OTL_CHECK( num_values * len_value );
+
+        /* scan value records */
+        for ( ; num_values > 0; num_values-- )
         {
-          OTL_UInt  coverage, value_format;
-
-          OTL_CHECK( 4 );
-          coverage     = OTL_NEXT_USHORT( p );
-          value_format = OTL_NEXT_USHORT( p );
-
-          otl_coverage_validate( table + coverage, valid );
           otl_value_validate( p, table, value_format, valid );
+          p += len_value;
         }
-        break;
+      }
+      break;
 
-      case 2:
-        {
-          OTL_UInt  coverage, value_format, count, len;
-
-          OTL_CHECK( 6 );
-          coverage     = OTL_NEXT_USHORT( p );
-          value_format = OTL_NEXT_USHORT( p );
-          count        = OTL_NEXT_USHORT( p );
-          len          = otl_value_length( value_format );
-
-          otl_coverage_validate( table + coverage, valid );
-
-          OTL_CHECK( count * len );
-          for ( ; count > 0; count-- )
-          {
-            otl_value_validate( p, table, value_format, valid );
-            p += len;
-          }
-        }
-        break;
-
-      default:
-        OTL_INVALID_DATA;
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 2                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 2                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_gpos_pairset_validate( OTL_Bytes      table,
@@ -215,24 +244,29 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   len1, len2, count;
+    OTL_UInt   value_len1, value_len2, num_pairvalues;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
-    len1  = otl_value_length( format1 );
-    len2  = otl_value_length( format2 );
+    num_pairvalues = OTL_NEXT_USHORT( p );
+    value_len1     = otl_value_length( format1 );
+    value_len2     = otl_value_length( format2 );
 
-    OTL_CHECK( count * (len1+len2+2) );
-    for ( ; count > 0; count-- )
+    OTL_CHECK( num_pairvalues * ( value_len1 + value_len2 + 2 ) );
+
+    /* scan pair value records */
+    for ( ; num_pairvalues > 0; num_pairvalues-- )
     {
-      p += 2;  /* ignore glyph id */
+      p += 2;       /* ignore glyph id */
+
       otl_value_validate( p, pos_table, format1, valid );
-      p += len1;
+      p += value_len1;
 
       otl_value_validate( p, pos_table, format2, valid );
-      p += len2;
+      p += value_len2;
     }
   }
+
 
   static void
   otl_gpos_lookup2_validate( OTL_Bytes      table,
@@ -241,78 +275,82 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
+    case 1:
+      {
+        OTL_UInt  coverage, value1, value2, num_pairsets;
+
+
+        OTL_CHECK( 8 );
+        coverage     = OTL_NEXT_USHORT( p );
+        value1       = OTL_NEXT_USHORT( p );
+        value2       = OTL_NEXT_USHORT( p );
+        num_pairsets = OTL_NEXT_USHORT( p );
+
+        otl_coverage_validate( table + coverage, valid );
+
+        OTL_CHECK( num_pairsets * 2 );
+
+        for ( ; num_pairsets > 0; num_pairsets-- )
+          otl_gpos_pairset_validate( table + OTL_NEXT_USHORT( p ),
+                                     table, value1, value2, valid );
+      }
+      break;
+
+    case 2:
+      {
+        OTL_UInt  coverage, value1, value2, class1, class2;
+        OTL_UInt  num_classes1, num_classes2, len_value1, len_value2;
+
+
+        OTL_CHECK( 14 );
+        coverage     = OTL_NEXT_USHORT( p );
+        value1       = OTL_NEXT_USHORT( p );
+        value2       = OTL_NEXT_USHORT( p );
+        class1       = OTL_NEXT_USHORT( p );
+        class2       = OTL_NEXT_USHORT( p );
+        num_classes1 = OTL_NEXT_USHORT( p );
+        num_classes2 = OTL_NEXT_USHORT( p );
+
+        len_value1 = otl_value_length( value1 );
+        len_value2 = otl_value_length( value2 );
+
+        otl_coverage_validate( table + coverage, valid );
+
+        OTL_CHECK( num_classes1 * num_classes2 *
+                     ( len_value1 + len_value2 ) );
+
+        for ( ; num_classes1 > 0; num_classes1-- )
         {
-          OTL_UInt  coverage, value1, value2, count;
-
-          OTL_CHECK( 8 );
-          coverage = OTL_NEXT_USHORT( p );
-          value1   = OTL_NEXT_USHORT( p );
-          value2   = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
-
-          otl_coverage_validate( table + coverage, valid );
-
-          OTL_CHECK( count*2 );
-          for ( ; count > 0; count-- )
+          for ( ; num_classes2 > 0; num_classes2-- )
           {
-            otl_gpos_pairset_validate( table + OTL_NEXT_USHORT( p ),
-                                       table, value1, value2, valid );
+            otl_value_validate( p, table, value1, valid );
+            p += len_value1;
+
+            otl_value_validate( p, table, value2, valid );
+            p += len_value2;
           }
         }
-        break;
+      }
+      break;
 
-      case 2:
-        {
-          OTL_UInt  coverage, value1, value2, class1, class2, count1, count2;
-          OTL_UInt  len1, len2;
-
-          OTL_CHECK( 14 );
-          coverage = OTL_NEXT_USHORT( p );
-          value1   = OTL_NEXT_USHORT( p );
-          value2   = OTL_NEXT_USHORT( p );
-          class1   = OTL_NEXT_USHORT( p );
-          class2   = OTL_NEXT_USHORT( p );
-          count1   = OTL_NEXT_USHORT( p );
-          count2   = OTL_NEXT_USHORT( p );
-
-          len1 = otl_value_length( value1 );
-          len2 = otl_value_length( value2 );
-
-          otl_coverage_validate( table + coverage, valid );
-
-          OTL_CHECK( count1*count2*(len1+len2) );
-          for ( ; count1 > 0; count1-- )
-          {
-            for ( ; count2 > 0; count2-- )
-            {
-              otl_value_validate( p, table, value1, valid );
-              p += len1;
-
-              otl_value_validate( p, table, value2, valid );
-              p += len2;
-            }
-          }
-        }
-        break;
-
-      default:
-        OTL_INVALID_DATA;
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 3                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 3                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_gpos_lookup3_validate( OTL_Bytes      table,
@@ -321,48 +359,52 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
+    case 1:
+      {
+        OTL_UInt  coverage, num_entryexit, anchor1, anchor2;
+
+
+        OTL_CHECK( 4 );
+        coverage      = OTL_NEXT_USHORT( p );
+        num_entryexit = OTL_NEXT_USHORT( p );
+
+        otl_coverage_validate( table + coverage, valid );
+
+        OTL_CHECK( num_entryexit * 4 );
+
+        /* scan entry-exit records */
+        for ( ; num_entryexit > 0; num_entryexit-- )
         {
-          OTL_UInt  coverage, count, anchor1, anchor2;
+          anchor1 = OTL_NEXT_USHORT( p );
+          anchor2 = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
+          if ( anchor1 )
+            otl_anchor_validate( table + anchor1, valid );
 
-          otl_coverage_validate( table + coverage, valid );
-
-          OTL_CHECK( count*4 );
-          for ( ; count > 0; count-- )
-          {
-            anchor1 = OTL_NEXT_USHORT( p );
-            anchor2 = OTL_NEXT_USHORT( p );
-
-            if ( anchor1 )
-              otl_anchor_validate( table + anchor1, valid );
-
-            if ( anchor2 )
-              otl_anchor_validate( table + anchor2, valid );
-          }
+          if ( anchor2 )
+            otl_anchor_validate( table + anchor2, valid );
         }
-        break;
+      }
+      break;
 
-      default:
-        OTL_INVALID_DATA;
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 4                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 4                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_base_array_validate( OTL_Bytes      table,
@@ -370,14 +412,18 @@
                            OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count, count2;
+    OTL_UInt   num_bases, count;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_bases = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( count*class_count*2 );
-    for ( ; count > 0; count-- )
-      for ( count2 = class_count; count2 > 0; count2-- )
+    OTL_CHECK( num_bases * class_count * 2 );
+
+    /* scan base array records */
+    for ( ; num_bases > 0; num_bases-- )
+      /* scan base records */
+      for ( count = class_count; count > 0; count-- )
         otl_anchor_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
@@ -389,57 +435,64 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  mark_coverage, base_coverage, class_count;
-          OTL_UInt  mark_array, base_array;
+    case 1:
+      {
+        OTL_UInt  mark_coverage, base_coverage, num_classes;
+        OTL_UInt  mark_array, base_array;
 
-          OTL_CHECK( 10 );
-          mark_coverage = OTL_NEXT_USHORT( p );
-          base_coverage = OTL_NEXT_USHORT( p );
-          class_count   = OTL_NEXT_USHORT( p );
-          mark_array    = OTL_NEXT_USHORT( p );
-          base_array    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + mark_coverage, valid );
-          otl_coverage_validate( table + base_coverage, valid );
+        OTL_CHECK( 10 );
+        mark_coverage = OTL_NEXT_USHORT( p );
+        base_coverage = OTL_NEXT_USHORT( p );
+        num_classes   = OTL_NEXT_USHORT( p );
+        mark_array    = OTL_NEXT_USHORT( p );
+        base_array    = OTL_NEXT_USHORT( p );
 
-          otl_mark_array_validate( table + mark_array, valid );
-          otl_base_array_validate( table, class_count, valid );
-        }
-        break;
+        otl_coverage_validate( table + mark_coverage, valid );
+        otl_coverage_validate( table + base_coverage, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        otl_mark_array_validate( table + mark_array, valid );
+        otl_base_array_validate( table, num_classes, valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 5                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 5                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
+  /* used by lookup type 5 and 6 */
   static void
-  otl_liga_attach_validate( OTL_Bytes      table,
-                            OTL_UInt       class_count,
-                            OTL_Validator  valid )
+  otl_liga_mark2_validate( OTL_Bytes      table,
+                           OTL_UInt       class_count,
+                           OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count, count2;
+    OTL_UInt   num_components, count;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_components = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( count*class_count*2 );
-    for ( ; count > 0; count-- )
-      for ( count2 = class_count; class_count > 0; class_count-- )
+    OTL_CHECK( num_components * class_count * 2 );
+
+    /* scan component records */
+    for ( ; num_components > 0; num_components-- )
+      /* scan ligature anchor records */
+      for ( count = class_count; class_count > 0; class_count-- )
         otl_anchor_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
@@ -450,15 +503,18 @@
                            OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count, count2;
+    OTL_UInt   ligature_count;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    ligature_count = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( count*2 );
-    for ( ; count > 0; count-- )
-      otl_liga_attach_validate( table + OTL_NEXT_USHORT( p ),
-                                class_count, valid );
+    OTL_CHECK( ligature_count * 2 );
+
+    /* scan ligature attach records */
+    for ( ; ligature_count > 0; ligature_count-- )
+      otl_liga_mark2_validate( table + OTL_NEXT_USHORT( p ), class_count,
+                               valid );
   }
 
 
@@ -469,61 +525,45 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  mark_coverage, liga_coverage, class_count;
-          OTL_UInt  mark_array, liga_array;
+    case 1:
+      {
+        OTL_UInt  mark_coverage, liga_coverage, num_classes;
+        OTL_UInt  mark_array, liga_array;
 
-          OTL_CHECK( 10 );
-          mark_coverage = OTL_NEXT_USHORT( p );
-          liga_coverage = OTL_NEXT_USHORT( p );
-          class_count   = OTL_NEXT_USHORT( p );
-          mark_array    = OTL_NEXT_USHORT( p );
-          liga_array    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + mark_coverage, valid );
-          otl_coverage_validate( table + liga_coverage, valid );
+        OTL_CHECK( 10 );
+        mark_coverage = OTL_NEXT_USHORT( p );
+        liga_coverage = OTL_NEXT_USHORT( p );
+        num_classes   = OTL_NEXT_USHORT( p );
+        mark_array    = OTL_NEXT_USHORT( p );
+        liga_array    = OTL_NEXT_USHORT( p );
 
-          otl_mark_array_validate( table + mark_array, valid );
-          otl_liga_array_validate( table + liga_array, class_count, valid );
-        }
-        break;
+        otl_coverage_validate( table + mark_coverage, valid );
+        otl_coverage_validate( table + liga_coverage, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        otl_mark_array_validate( table + mark_array, valid );
+        otl_liga_array_validate( table + liga_array, num_classes, valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 6                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
 
-
-  static void
-  otl_mark2_array_validate( OTL_Bytes      table,
-                            OTL_UInt       class_count,
-                            OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   count, count2;
-
-    OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( count*class_count*2 );
-    for ( ; count > 0; count-- )
-      for ( count2 = class_count; class_count > 0; class_count-- )
-        otl_anchor_validate( table + OTL_NEXT_USHORT( p ), valid );
-  }
-
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 6                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_gpos_lookup6_validate( OTL_Bytes      table,
@@ -532,113 +572,88 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage1, coverage2, class_count, array1, array2;
+    case 1:
+      {
+        OTL_UInt  coverage1, coverage2, num_classes, array1, array2;
 
-          OTL_CHECK( 10 );
-          coverage1   = OTL_NEXT_USHORT( p );
-          coverage2   = OTL_NEXT_USHORT( p );
-          class_count = OTL_NEXT_USHORT( p );
-          array1      = OTL_NEXT_USHORT( p );
-          array2      = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage1, valid );
-          otl_coverage_validate( table + coverage2, valid );
+        OTL_CHECK( 10 );
+        coverage1   = OTL_NEXT_USHORT( p );
+        coverage2   = OTL_NEXT_USHORT( p );
+        num_classes = OTL_NEXT_USHORT( p );
+        array1      = OTL_NEXT_USHORT( p );
+        array2      = OTL_NEXT_USHORT( p );
 
-          otl_mark_array_validate( table + array1, valid );
-          otl_mark2_array_validate( table + array2, class_count, valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage1, valid );
+        otl_coverage_validate( table + coverage2, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        otl_mark_array_validate( table + array1, valid );
+        otl_liga_mark2_validate( table + array2, num_classes, valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 7                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 7                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
+  /* used for both format 1 and 2 */
   static void
   otl_pos_rule_validate( OTL_Bytes      table,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   glyph_count, pos_count;
+    OTL_UInt   num_glyphs, num_pos;
+
 
     OTL_CHECK( 4 );
-    glyph_count = OTL_NEXT_USHORT( p );
-    pos_count   = OTL_NEXT_USHORT( p );
+    num_glyphs = OTL_NEXT_USHORT( p );
+    num_pos    = OTL_NEXT_USHORT( p );
 
-    if ( glyph_count == 0 )
+    if ( num_glyphs == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( (glyph_count-1)*2 + pos_count*4 );
+    OTL_CHECK( ( num_glyphs - 1 ) * 2 + num_pos * 4 );
 
-    /* XXX: check glyph indices and pos lookups */
+    /* XXX: check pos lookups */
+
+    /* no need to check glyph indices/classes used as input for this  */
+    /* context rule since even invalid glyph indices/classes return a */
+    /* meaningful result                                              */
   }
 
 
+  /* used for both format 1 and 2 */
   static void
   otl_pos_rule_set_validate( OTL_Bytes      table,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_posrules;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_posrules = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( count*2 );
-    for ( ; count > 0; count-- )
-      otl_pos_rule_validate( table + OTL_NEXT_USHORT(p), valid );
-  }
+    OTL_CHECK( num_posrules * 2 );
 
-
-
-  static void
-  otl_pos_class_rule_validate( OTL_Bytes      table,
-                               OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   glyph_count, pos_count;
-
-    OTL_CHECK( 4 );
-    glyph_count = OTL_NEXT_USHORT( p );
-    pos_count   = OTL_NEXT_USHORT( p );
-
-    if ( glyph_count == 0 )
-      OTL_INVALID_DATA;
-
-    OTL_CHECK( (glyph_count-1)*2 + pos_count*4 );
-
-    /* XXX: check glyph indices and pos lookups */
-  }
-
-
-  static void
-  otl_pos_class_set_validate( OTL_Bytes      table,
-                              OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   count;
-
-    OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( count*2 );
-    for ( ; count > 0; count-- )
-      otl_pos_rule_validate( table + OTL_NEXT_USHORT(p), valid );
+    /* scan posrule records */
+    for ( ; num_posrules > 0; num_posrules-- )
+      otl_pos_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
 
@@ -649,105 +664,118 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage, count;
+    case 1:
+      {
+        OTL_UInt  coverage, num_posrule_sets;
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage, valid );
+        OTL_CHECK( 4 );
+        coverage         = OTL_NEXT_USHORT( p );
+        num_posrule_sets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( count*2 );
-          for ( ; count > 0; count-- )
-            otl_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ), valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      case 2:
-        {
-          OTL_UInt  coverage, class_def, count;
+        OTL_CHECK( num_posrule_sets * 2 );
 
-          OTL_CHECK( 6 );
-          coverage  = OTL_NEXT_USHORT( p );
-          class_def = OTL_NEXT_USHORT( p );
-          count     = OTL_NEXT_USHORT( p );
+        /* scan posrule set records */
+        for ( ; num_posrule_sets > 0; num_posrule_sets-- )
+          otl_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+      }
+      break;
 
-          otl_coverage_validate        ( table + coverage, valid );
-          otl_class_definition_validate( table + class_def, valid );
+    case 2:
+      {
+        OTL_UInt  coverage, class_def, num_posclass_sets;
 
-          OTL_CHECK( count*2 );
-#if 0 /* XXX */
-          for ( ; count > 0; count-- )
-            otl_
-#endif
-        }
-        break;
 
-      case 3:
-        {
-          OTL_UInt  glyph_count, pos_count;
+        OTL_CHECK( 6 );
+        coverage          = OTL_NEXT_USHORT( p );
+        class_def         = OTL_NEXT_USHORT( p );
+        num_posclass_sets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 4 );
-          glyph_count = OTL_NEXT_USHORT( p );
-          pos_count   = OTL_NEXT_USHORT( p );
+        otl_coverage_validate( table + coverage, valid );
+        otl_class_definition_validate( table + class_def, valid );
 
-          OTL_CHECK( glyph_count*2 + pos_count*4 );
-          for ( ; glyph_count > 0; glyph_count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+        OTL_CHECK( num_posclass_sets * 2 );
 
-          /* XXX: check pos lookups */
-        }
-        break;
+        /* scan pos class set rules */
+        for ( ; num_posclass_sets > 0; num_posclass_sets-- )
+          otl_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+      }
+      break;
 
-      default:
-        OTL_INVALID_DATA;
+    case 3:
+      {
+        OTL_UInt  num_glyphs, num_pos;
+
+
+        OTL_CHECK( 4 );
+        num_glyphs = OTL_NEXT_USHORT( p );
+        num_pos    = OTL_NEXT_USHORT( p );
+
+        OTL_CHECK( num_glyphs * 2 + num_pos * 4 );
+
+        for ( ; num_glyphs > 0; num_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        /* XXX: check pos lookups */
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 8                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 8                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
+  /* used for both format 1 and 2 */
   static void
   otl_chain_pos_rule_validate( OTL_Bytes      table,
                                OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   back_count, input_count, ahead_count, pos_count;
+    OTL_UInt   num_backtrack_glyphs, num_input_glyphs, num_lookahead_glyphs;
+    OTL_UInt   num_pos;
+
 
     OTL_CHECK( 2 );
-    back_count = OTL_NEXT_USHORT( p );
+    num_backtrack_glyphs = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( back_count*2 + 2 );
-    p += back_count*2;
+    OTL_CHECK( num_backtrack_glyphs * 2 + 2 );
+    p += num_backtrack_glyphs * 2;
 
-    input_count = OTL_NEXT_USHORT( p );
-    if ( input_count == 0 )
+    num_input_glyphs = OTL_NEXT_USHORT( p );
+    if ( num_input_glyphs == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( input_count*2 );
-    p += (input_count-1)*2;
+    OTL_CHECK( num_input_glyphs * 2 );
+    p += ( num_input_glyphs - 1 ) * 2;
 
-    ahead_count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( ahead_count*2 + 2 );
-    p += ahead_count*2;
+    num_lookahead_glyphs = OTL_NEXT_USHORT( p );
+    OTL_CHECK( num_lookahead_glyphs * 2 + 2 );
+    p += num_lookahead_glyphs * 2;
 
-    pos_count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( pos_count*4 );
+    num_pos = OTL_NEXT_USHORT( p );
+    OTL_CHECK( num_pos * 4 );
+
+    /* XXX: check pos lookups */
   }
 
 
+  /* used for both format 1 and 2 */
   static void
   otl_chain_pos_rule_set_validate( OTL_Bytes      table,
                                    OTL_Validator  valid )
@@ -755,58 +783,15 @@
     OTL_Bytes  p = table;
     OTL_UInt   count;
 
+
     OTL_CHECK( 2 );
     count = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2*count );
+    OTL_CHECK( 2 * count );
+
+    /* scan chain pos rule records */
     for ( ; count > 0; count-- )
       otl_chain_pos_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
-  }
-
-
-
-  static void
-  otl_chain_pos_class_rule_validate( OTL_Bytes      table,
-                                     OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   back_count, input_count, ahead_count, pos_count;
-
-    OTL_CHECK( 2 );
-    back_count = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( back_count*2 + 2 );
-    p += back_count*2;
-
-    input_count = OTL_NEXT_USHORT( p );
-    if ( input_count == 0 )
-      OTL_INVALID_DATA;
-
-    OTL_CHECK( input_count*2 );
-    p += (input_count-1)*2;
-
-    ahead_count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( ahead_count*2 + 2 );
-    p += ahead_count*2;
-
-    pos_count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( pos_count*4 );
-  }
-
-
-  static void
-  otl_chain_pos_class_set_validate( OTL_Bytes      table,
-                                   OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   count;
-
-    OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
-      otl_chain_pos_class_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
 
@@ -817,91 +802,105 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage, count;
+    case 1:
+      {
+        OTL_UInt  coverage, num_chain_pos_rulesets;
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage, valid );
+        OTL_CHECK( 4 );
+        coverage               = OTL_NEXT_USHORT( p );
+        num_chain_pos_rulesets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( count*2 );
-          for ( ; count > 0; count-- )
-            otl_chain_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ),
-                                             valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      case 2:
-        {
-          OTL_UInt  coverage, back_class, input_class, ahead_class, count;
+        OTL_CHECK( num_chain_pos_rulesets * 2 );
 
-          OTL_CHECK( 10 );
-          coverage    = OTL_NEXT_USHORT( p );
-          back_class  = OTL_NEXT_USHORT( p );
-          input_class = OTL_NEXT_USHORT( p );
-          ahead_class = OTL_NEXT_USHORT( p );
-          count       = OTL_NEXT_USHORT( p );
+        /* scan chain pos ruleset records */
+        for ( ; num_chain_pos_rulesets > 0; num_chain_pos_rulesets-- )
+          otl_chain_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ),
+                                           valid );
+      }
+      break;
 
-          otl_coverage_validate( table + coverage, valid );
+    case 2:
+      {
+        OTL_UInt  coverage, back_class, input_class, ahead_class;
+        OTL_UInt  num_chainpos_class_sets;
 
-          otl_class_definition_validate( table + back_class,  valid );
-          otl_class_definition_validate( table + input_class, valid );
-          otl_class_definition_validate( table + ahead_class, valid );
 
-          OTL_CHECK( count*2 );
-          for ( ; count > 0; count-- )
-            otl_chain_pos_class_set_validate( table + OTL_NEXT_USHORT( p ),
-                                              valid );
-        }
-        break;
+        OTL_CHECK( 10 );
+        coverage                = OTL_NEXT_USHORT( p );
+        back_class              = OTL_NEXT_USHORT( p );
+        input_class             = OTL_NEXT_USHORT( p );
+        ahead_class             = OTL_NEXT_USHORT( p );
+        num_chainpos_class_sets = OTL_NEXT_USHORT( p );
 
-      case 3:
-        {
-          OTL_UInt  back_count, input_count, ahead_count, pos_count, count;
+        otl_coverage_validate( table + coverage, valid );
 
-          OTL_CHECK( 2 );
-          back_count = OTL_NEXT_USHORT( p );
+        otl_class_definition_validate( table + back_class,  valid );
+        otl_class_definition_validate( table + input_class, valid );
+        otl_class_definition_validate( table + ahead_class, valid );
 
-          OTL_CHECK( 2*back_count+2 );
-          for ( count = back_count; count > 0; count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+        OTL_CHECK( num_chainpos_class_sets * 2 );
 
-          input_count = OTL_NEXT_USHORT( p );
+        /* scan chainpos class set records */
+        for ( ; num_chainpos_class_sets > 0; num_chainpos_class_sets-- )
+          otl_chain_pos_rule_set_validate( table + OTL_NEXT_USHORT( p ),
+                                           valid );
+      }
+      break;
 
-          OTL_CHECK( 2*input_count+2 );
-          for ( count = input_count; count > 0; count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+    case 3:
+      {
+        OTL_UInt  num_backtrack_glyphs, num_input_glyphs;
+        OTL_UInt  num_lookahead_glyphs, num_pos;
 
-          ahead_count = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 2*ahead_count+2 );
-          for ( count = ahead_count; count > 0; count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+        OTL_CHECK( 2 );
+        num_backtrack_glyphs = OTL_NEXT_USHORT( p );
 
-          pos_count = OTL_NEXT_USHORT( p );
-          OTL_CHECK( pos_count*4 );
-        }
-        break;
+        OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
 
-      default:
-        OTL_INVALID_DATA;
+        for ( ; num_backtrack_glyphs > 0; num_backtrack_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        num_input_glyphs = OTL_NEXT_USHORT( p );
+        OTL_CHECK( 2 * num_input_glyphs + 2 );
+
+        for ( ; num_input_glyphs > 0; num_input_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        num_lookahead_glyphs = OTL_NEXT_USHORT( p );
+        OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
+
+        for ( ; num_lookahead_glyphs > 0; num_lookahead_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        num_pos = OTL_NEXT_USHORT( p );
+        OTL_CHECK( num_pos * 4 );
+
+        /* XXX: check pos lookups */
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GPOS LOOKUP TYPE 9                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     GPOS LOOKUP TYPE 9                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_gpos_lookup9_validate( OTL_Bytes      table,
@@ -910,31 +909,34 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
-    switch (format)
+    switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt          lookup_type, lookup_offset;
-          OTL_ValidateFunc  validate;
+    case 1:
+      {
+        OTL_UInt          lookup_type, lookup_offset;
+        OTL_ValidateFunc  validate;
 
-          OTL_CHECK( 6 );
-          lookup_type   = OTL_NEXT_USHORT( p );
-          lookup_offset = OTL_NEXT_ULONG( p );
 
-          if ( lookup_type == 0 || lookup_type >= 9 )
-            OTL_INVALID_DATA;
+        OTL_CHECK( 6 );
+        lookup_type   = OTL_NEXT_USHORT( p );
+        lookup_offset = OTL_NEXT_ULONG( p );
 
-          validate = otl_gpos_validate_funcs[ lookup_type-1 ];
-          validate( table + lookup_offset, valid );
-        }
-        break;
+        if ( lookup_type == 0 || lookup_type >= 9 )
+          OTL_INVALID_DATA;
 
-      default:
-        OTL_INVALID_DATA;
+        validate = otl_gpos_validate_funcs[lookup_type - 1];
+        validate( table + lookup_offset, valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
+
 
   static OTL_ValidateFunc  otl_gpos_validate_funcs[9] =
   {
@@ -946,7 +948,7 @@
     otl_gpos_lookup6_validate,
     otl_gpos_lookup7_validate,
     otl_gpos_lookup8_validate,
-    otl_gpos_lookup9_validate,
+    otl_gpos_lookup9_validate
   };
 
 
@@ -966,13 +968,13 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
   OTL_LOCALDEF( void )
   otl_gpos_validate( OTL_Bytes      table,
                      OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   scripts, features, lookups;
+
 
     OTL_CHECK( 10 );
 
@@ -987,3 +989,6 @@
     otl_feature_list_validate( table + features, table + lookups, valid );
     otl_script_list_validate( table + scripts, table + features, valid );
   }
+
+
+/* END */
