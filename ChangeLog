@@ -1,10 +1,12 @@
-2005-04-04  David Turner    <david@freetype.org>
+2005-04-04  David Turner  <david@freetype.org>
 
-    * include/freetype/config/ftoption.h: commenting the definition of
-    FT_OPTIMIZE_MEMORY for the upcoming 2.1.10 release
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(FT_OPTIMIZE_MEMORY): Comment out this macro for the upcoming 2.1.10
+	release.
+	(*_CHESTER_*): Removed.  No longer used.
 
-    * src/autofit/afhints.c: small tweak to use a bit less heap memory
-    within the auto-fitter
+	* src/autofit/afhints.c (af_axis_hints_new_segment,
+	af_axis_hints_new_edge): Small tweak to use less heap memory.
 
 2005-04-03  Werner Lemberg  <wl@gnu.org>
 
