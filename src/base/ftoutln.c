@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType outline management (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -656,13 +656,12 @@
   }
 
 
-
-  typedef FT_OrientationExtremumRec_
+  typedef struct  FT_OrientationExtremumRec_
   {
-    FT_Int   index;
-    FT_Int   pos;
-    FT_Int   first;
-    FT_Int   last;
+    FT_Int  index;
+    FT_Int  pos;
+    FT_Int  first;
+    FT_Int  last;
   
   } FT_OrientationExtremumRec;
 
@@ -675,15 +674,15 @@
     FT_Vector*  points = outline->points;
     FT_Angle    angle_in, angle_out;
     
-   /* compute the previous and next points in the same contour
-    */
+
+    /* compute the previous and next points in the same contour */
     point = points + extremum->index;
     first = points + extremum->first;
     last  = points + extremum->last;
    
     do
     {
-      prev = ( point == first ) ? last : point-1;
+      prev = ( point == first ) ? last : point - 1;
      
       if ( prev == point )
         return FT_ORIENTATION_TRUETYPE;  /* degenerate case */
@@ -692,22 +691,21 @@
     
     do
     {
-      next = ( point == last ) ? first : point+1;
+      next = ( point == last ) ? first : point + 1;
       
       if ( next == point )
         return FT_ORIENTATION_TRUETYPE;  /* shouldn't happen */
         
     } while ( next->x != point->x || next->y != point->y );
     
-   /* now, compute the orientation of the "out" vector relative
-    * to the "in" vector.
-    */
+    /* now compute the orientation of the `out' vector relative */
+    /* to the `in' vector.                                      */
     angle_in  = FT_Atan2( point->x - prev->x,  point->y - prev->y );
     angle_out = FT_Atan2( next->x  - point->x, next->y  - point->y );
     
     return ( FT_Angle_Diff( angle_in, angle_out ) >= 0 )
-           ? FT_ORIENTATION_TRUETYPE
-           : FT_ORIENTATION_POSTSCRIPT;
+             ? FT_ORIENTATION_TRUETYPE
+             : FT_ORIENTATION_POSTSCRIPT;
   }
 
 
@@ -716,6 +714,7 @@
   {
     FT_Orientation  result = FT_ORIENTATION_TRUETYPE;
     
+
     if ( outline && outline->n_points > 0 )
     {
       FT_OrientationExtremumRec  xmin, ymin, xmax, ymax;
@@ -723,27 +722,29 @@
       FT_Int                     first, last;
       FT_Vector*                 points = outline->points;
       
+
       xmin.pos = ymin.pos = +32768L;
       xmax.pos = ymax.pos = -32768L;
       
       xmin.index = ymin.index = xmax.index = ymax.index = -1;
 
       first = 0;
-      for ( n = 0; n < outline->n_contours; n++, first = last+1 )
+      for ( n = 0; n < outline->n_contours; n++, first = last + 1 )
       {
         last = outline->contours[n];
 
-       /* skip single-point contours, these are degenerated cases
-        */
-        if ( last > first+1 )
+        /* skip single-point contours; these are degenerated cases */
+        if ( last > first + 1 )
         {
           FT_Int  i;
           
+
           for ( i = first; i < last; i++ )
           {
-            x = points[i].x;
-            y = points[i].y;
+            FT_Pos  x = points[i].x;
+            FT_Pos  y = points[i].y;
             
+
             if ( x < xmin.pos )
             {
               xmin.pos   = x;
@@ -791,5 +792,6 @@
     
     return result;
   }
+
 
 /* END */

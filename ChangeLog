@@ -1,3 +1,8 @@
+2003-10-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_OrientationExtremumRec,
+	FT_Outline_Get_Orientation): Trivial typo fixes to make it compile.
+
 2003-10-02  Markus F.X.J. Oberhumer  <markus@oberhumer.com>
 
 	* src/winfonts/winfnt.c (FT_WinFNT_HeaderRec): `color_table_offset'
@@ -7,16 +12,20 @@
 
 2003-10-01  David Turner  <david@freetype.org>
 
-        * src/autofit/*: adding first sources of the new multi-script
-        "auto-fitter"
+	* src/autofit/*: Adding first source files of the new multi-script
+	`auto-fitter'.
 
-        * include/freetype/ftoutln.h, src/base/ftoutln.c: adding the
-        definition of FT_Outline_Get_Orientation, used to compute the
-        fill orientation of a given glyph outline.
+	* include/freetype/ftoutln.h (FT_Orientation): New enumeration.
+	(FT_Outline_Get_Orientation): New declaration.
 
-        * include/freetype/internal/ftserv.h: fixed trivial bug which
-        could crashed the font engine when a cached service pointer was
-        retrieved with FT_FACE_LOOKUP_SERVICE
+	* src/base/ftoutln.c (FT_OrientationExtremumRec): New structure.
+	(ft_orientation_extremum_compute): New auxiliary function.
+	(FT_Outline_Get_Orientation): New function to compute the fill
+	orientation of a given glyph outline.
+
+	* include/freetype/internal/ftserv.h (FT_FACE_LOOKUP_SERVICE): Fixed
+	trivial bug which could crash the font engine when a cached service
+	pointer was retrieved.
 
 2003-09-30  Werner Lemberg  <wl@gnu.org>
 
