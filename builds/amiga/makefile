@@ -156,7 +156,7 @@ type1.ppc.o: $(FTSRC)/type1/type1.c
 #
 # FreeType2 library Type42 font driver
 #
-type42.ppc.o: $(FTSRC)/type42/t42drivr.c
+type42.ppc.o: $(FTSRC)/type42/type42.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 #

@@ -197,7 +197,7 @@ type1.o: $(CORE)type1/type1.c
 #
 # FreeType2 library Type42 font driver
 #
-type42.o: $(CORE)type42/t42drivr.c
+type42.o: $(CORE)type42/type42.c
 	sc $(SCFLAGS) objname=$@ $<
 
 #
