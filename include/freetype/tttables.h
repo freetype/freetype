@@ -651,7 +651,7 @@ FT_BEGIN_HEADER
   *     buffer = malloc( length );
   *     if ( buffer == NULL ) { ... not enough memory ... }
   *
-  *     error = FT_Load_Sfnt_Table( face,tag, 0, buffer, &length );
+  *     error = FT_Load_Sfnt_Table( face, tag, 0, buffer, &length );
   *     if ( error ) { ... could not load table ... }
   *   }
   */
