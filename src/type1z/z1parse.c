@@ -504,16 +504,21 @@
     if ( cur >= limit )
       return 0;
 
-    /* first of all, read the integer part */
-    result  = t1_toint( &cur, limit ) << 16;
+    /* first of all, check the sign */
+    if ( *cur == '-' )
+    {
+      sign = 1;
+      cur++;
+    }
+
+    /* then, read the integer part, if any */
+    if ( *cur != '.' )
+      result = t1_toint( &cur, limit ) << 16;
+    else
+      result = 0;
+
     num     = 0;
     divider = 1;
-
-    if ( result < 0 )
-    {
-      sign   = 1;
-      result = -result;
-    }
 
     if ( cur >= limit )
       goto Exit;
