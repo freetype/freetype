@@ -1,3 +1,10 @@
+2002-06-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_Vector_Transform): Fix serious typo
+	(xy <-> yx).
+	* src/truetype/ttgload.c (load_truetype_glyph): Replace `|' with
+	`||' to make code easier to read.
+
 2002-06-18  Roberto Alameda  <ojancano@geekmail.de>.
 
 	* src/type42/t42objs.c (t42_check_size_change): Removed.
@@ -24,7 +31,7 @@
 
 2002-06-16  Leonard Rosenthol  <leonardr@lazerware.com>
 
-	Updated Win32/VC++ projects to include the new PFR driver
+	Updated Win32/VC++ projects to include the new PFR driver.
 
 	* builds\win32\visualc\freetype.dsp: Updated.
 
