@@ -98,20 +98,20 @@
 
     stream->memory = memory;
 
-    if ( args->flags & ft_open_memory )
+    if ( args->flags & FT_OPEN_MEMORY )
     {
       /* create a memory-based stream */
       FT_Stream_OpenMemory( stream,
                             (const FT_Byte*)args->memory_base,
                             args->memory_size );
     }
-    else if ( args->flags & ft_open_pathname )
+    else if ( args->flags & FT_OPEN_PATHNAME )
     {
       /* create a normal system stream */
       error = FT_Stream_Open( stream, args->pathname );
       stream->pathname.pointer = args->pathname;
     }
-    else if ( ( args->flags & ft_open_stream ) && args->stream )
+    else if ( ( args->flags & FT_OPEN_STREAM ) && args->stream )
     {
       /* use an existing, user-provided stream */
 
@@ -222,7 +222,7 @@
     slot->control_data  = 0;
     slot->control_len   = 0;
     slot->other         = 0;
-    slot->format        = ft_glyph_format_none;
+    slot->format        = FT_GLYPH_FORMAT_NONE;
 
     slot->linearHoriAdvance = 0;
     slot->linearVertAdvance = 0;
@@ -472,7 +472,7 @@
                                            glyph_index,
                                            load_flags | FT_LOAD_SBITS_ONLY );
 
-        if ( !error && slot->format == ft_glyph_format_bitmap )
+        if ( !error && slot->format == FT_GLYPH_FORMAT_BITMAP )
           goto Load_Ok;
       }
 
@@ -549,14 +549,14 @@
 
     /* do we need to render the image now? */
     if ( !error                                    &&
-         slot->format != ft_glyph_format_bitmap    &&
-         slot->format != ft_glyph_format_composite &&
+         slot->format != FT_GLYPH_FORMAT_BITMAP    &&
+         slot->format != FT_GLYPH_FORMAT_COMPOSITE &&
          load_flags & FT_LOAD_RENDER )
     {
       error = FT_Render_Glyph( slot,
                                ( load_flags & FT_LOAD_MONOCHROME )
-                                  ? ft_render_mode_mono
-                                  : ft_render_mode_normal );
+                                  ? FT_RENDER_MODE_MONO
+                                  : FT_RENDER_MODE_NORMAL );
     }
 
   Exit:
@@ -758,7 +758,7 @@
       {
         cmap = face->charmaps[nn];
 
-        if ( cmap->encoding == ft_encoding_unicode )
+        if ( cmap->encoding == FT_ENCODING_UNICODE )
         {
           unicmap = cmap;
           break;
@@ -804,7 +804,7 @@
     if ( !pathname )
       return FT_Err_Invalid_Argument;
 
-    args.flags    = ft_open_pathname;
+    args.flags    = FT_OPEN_PATHNAME;
     args.pathname = (char*)pathname;
 
     return FT_Open_Face( library, &args, face_index, aface );
@@ -829,7 +829,7 @@
     if ( !file_base )
       return FT_Err_Invalid_Argument;
 
-    args.flags       = ft_open_memory;
+    args.flags       = FT_OPEN_MEMORY;
     args.memory_base = file_base;
     args.memory_size = file_size;
 
@@ -862,7 +862,7 @@
 
     *aface = 0;
 
-    external_stream = FT_BOOL( ( args->flags & ft_open_stream ) &&
+    external_stream = FT_BOOL( ( args->flags & FT_OPEN_STREAM ) &&
                                args->stream                     );
 
     /* create input stream */
@@ -874,7 +874,7 @@
 
     /* If the font driver is specified in the `args' structure, use */
     /* it.  Otherwise, we scan the list of registered drivers.      */
-    if ( ( args->flags & ft_open_driver ) && args->driver )
+    if ( ( args->flags & FT_OPEN_DRIVER ) && args->driver )
     {
       driver = FT_DRIVER( args->driver );
 
@@ -885,7 +885,7 @@
         FT_Parameter*  params     = 0;
 
 
-        if ( args->flags & ft_open_params )
+        if ( args->flags & FT_OPEN_PARAMS )
         {
           num_params = args->num_params;
           params     = args->params;
@@ -920,7 +920,7 @@
 
           driver = FT_DRIVER( cur[0] );
 
-          if ( args->flags & ft_open_params )
+          if ( args->flags & FT_OPEN_PARAMS )
           {
             num_params = args->num_params;
             params     = args->params;
@@ -1029,7 +1029,7 @@
     if ( !filepathname )
       return FT_Err_Invalid_Argument;
 
-    open.flags    = ft_open_pathname;
+    open.flags    = FT_OPEN_PATHNAME;
     open.pathname = (char*)filepathname;
 
     return FT_Attach_Stream( face, &open );
@@ -1073,7 +1073,7 @@
     /* close the attached stream */
     ft_input_stream_free( stream,
                     (FT_Bool)( parameters->stream &&
-                               ( parameters->flags & ft_open_stream ) ) );
+                               ( parameters->flags & FT_OPEN_STREAM ) ) );
 
   Exit:
     return error;
@@ -1399,12 +1399,12 @@
                                           akerning );
       if ( !error )
       {
-        if ( kern_mode != ft_kerning_unscaled )
+        if ( kern_mode != FT_KERNING_UNSCALED )
         {
           akerning->x = FT_MulFix( akerning->x, face->size->metrics.x_scale );
           akerning->y = FT_MulFix( akerning->y, face->size->metrics.y_scale );
 
-          if ( kern_mode != ft_kerning_unfitted )
+          if ( kern_mode != FT_KERNING_UNFITTED )
           {
             akerning->x = ( akerning->x + 32 ) & -64;
             akerning->y = ( akerning->y + 32 ) & -64;
@@ -1853,7 +1853,7 @@
     FT_Renderer  renderer;
 
 
-    renderer = FT_Lookup_Renderer( library, ft_glyph_format_outline, 0 );
+    renderer = FT_Lookup_Renderer( library, FT_GLYPH_FORMAT_OUTLINE, 0 );
     library->cur_renderer = renderer;
   }
 
@@ -1879,7 +1879,7 @@
       render->glyph_format = clazz->glyph_format;
 
       /* allocate raster object if needed */
-      if ( clazz->glyph_format == ft_glyph_format_outline &&
+      if ( clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
            clazz->raster_class->raster_new )
       {
         error = clazz->raster_class->raster_new( memory, &render->raster );
@@ -1972,12 +1972,12 @@
 
     FT_List_Up( &library->renderers, node );
 
-    if ( renderer->glyph_format == ft_glyph_format_outline )
+    if ( renderer->glyph_format == FT_GLYPH_FORMAT_OUTLINE )
       library->cur_renderer = renderer;
 
     if ( num_params > 0 )
     {
-      FTRenderer_setMode  set_mode = renderer->clazz->set_mode;
+      FT_Renderer_SetModeFunc  set_mode = renderer->clazz->set_mode;
 
 
       for ( ; num_params > 0; num_params-- )
@@ -2005,7 +2005,7 @@
     /* if it is already a bitmap, no need to do anything */
     switch ( slot->format )
     {
-    case ft_glyph_format_bitmap:   /* already a bitmap, don't do anything */
+    case FT_GLYPH_FORMAT_BITMAP:   /* already a bitmap, don't do anything */
       break;
 
     default:
@@ -2015,7 +2015,7 @@
 
 
         /* small shortcut for the very common case */
-        if ( slot->format == ft_glyph_format_outline )
+        if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
         {
           renderer = library->cur_renderer;
           node     = library->renderers.head;

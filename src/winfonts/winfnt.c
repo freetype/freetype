@@ -484,7 +484,7 @@
       {
         FT_CharMapRec  charmap;
 
-        charmap.encoding    = ft_encoding_unicode;
+        charmap.encoding    = FT_ENCODING_UNICODE;
         charmap.platform_id = 3;
         charmap.encoding_id = 1;
         charmap.face        = root;
@@ -614,7 +614,7 @@
 
       bitmap->pitch      = pitch;
       bitmap->rows       = font->header.pixel_height;
-      bitmap->pixel_mode = ft_pixel_mode_mono;
+      bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
       if ( FT_ALLOC( bitmap->buffer, pitch * bitmap->rows ) )
         goto Exit;
@@ -634,7 +634,7 @@
     slot->flags       = FT_GLYPH_OWN_BITMAP;
     slot->bitmap_left = 0;
     slot->bitmap_top  = font->header.ascent;
-    slot->format      = ft_glyph_format_bitmap;
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
 
     /* now set up metrics */
     slot->metrics.horiAdvance  = bitmap->width << 6;
@@ -642,7 +642,7 @@
     slot->metrics.horiBearingY = slot->bitmap_top << 6;
 
     slot->linearHoriAdvance    = (FT_Fixed)bitmap->width << 16;
-    slot->format               = ft_glyph_format_bitmap;
+    slot->format               = FT_GLYPH_FORMAT_BITMAP;
 
   Exit:
     return error;

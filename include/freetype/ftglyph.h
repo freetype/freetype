@@ -145,7 +145,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    You can typecast FT_Glyph to FT_BitmapGlyph if you have            */
-  /*    glyph->format == ft_glyph_format_bitmap.  This lets you access     */
+  /*    glyph->format == FT_GLYPH_FORMAT_BITMAP.  This lets you access     */
   /*    the bitmap's contents easily.                                      */
   /*                                                                       */
   /*    The corresponding pixel buffer is always owned by the BitmapGlyph  */
@@ -189,7 +189,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    You can typecast FT_Glyph to FT_OutlineGlyph if you have           */
-  /*    glyph->format == ft_glyph_format_outline.  This lets you access    */
+  /*    glyph->format == FT_GLYPH_FORMAT_OUTLINE.  This lets you access    */
   /*    the outline's content easily.                                      */
   /*                                                                       */
   /*    As the outline is extracted from a glyph slot, its coordinates are */
@@ -411,7 +411,7 @@ FT_BEGIN_HEADER
   /*        error = FT_Get_Glyph( face->glyph, &glyph );                   */
   /*                                                                       */
   /*        // convert to a bitmap (default render mode + destroy old)     */
-  /*        if ( glyph->format != ft_glyph_format_bitmap )                 */
+  /*        if ( glyph->format != FT_GLYPH_FORMAT_BITMAP )                 */
   /*        {                                                              */
   /*          error = FT_Glyph_To_Bitmap( &glyph, ft_render_mode_default,  */
   /*                                      0, 1 );                          */

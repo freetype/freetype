@@ -27,7 +27,7 @@
 #include FT_OUTLINE_H
 
 
-#define FACE_GLOBALS( face )  ((AH_Face_Globals*)(face)->autohint.data)
+#define FACE_GLOBALS( face )  ((AH_Face_Globals )(face)->autohint.data)
 
 #define AH_USE_IUP
 #define OPTIM_STEM_SNAP
@@ -90,11 +90,11 @@
 
   /* compute the snapped width of a given stem */
   static FT_Pos
-  ah_compute_stem_width( AH_Hinter*  hinter,
+  ah_compute_stem_width( AH_Hinter  hinter,
                          int         vertical,
                          FT_Pos      width )
   {
-    AH_Globals*  globals = &hinter->globals->scaled;
+    AH_Globals   globals = &hinter->globals->scaled;
     FT_Pos       dist    = width;
     FT_Int       sign    = 0;
 
@@ -159,7 +159,7 @@
     {
       dist = ah_snap_width( globals->widths,  globals->num_widths, dist );
 
-      if ( hinter->flags & ah_hinter_monochrome )
+      if ( hinter->flags & AH_HINTER_MONOCHROME )
       {
         /* monochrome horizontal hinting: snap widths to integer pixels */
         /* with a different threshold                                   */
@@ -194,9 +194,9 @@
 
   /* align one stem edge relative to the previous stem edge */
   static void
-  ah_align_linked_edge( AH_Hinter*  hinter,
-                        AH_Edge*    base_edge,
-                        AH_Edge*    stem_edge,
+  ah_align_linked_edge( AH_Hinter  hinter,
+                        AH_Edge     base_edge,
+                        AH_Edge     stem_edge,
                         int         vertical )
   {
     FT_Pos  dist = stem_edge->opos - base_edge->opos;
@@ -208,9 +208,9 @@
 
 
   static void
-  ah_align_serif_edge( AH_Hinter*  hinter,
-                       AH_Edge*    base,
-                       AH_Edge*    serif,
+  ah_align_serif_edge( AH_Hinter  hinter,
+                       AH_Edge     base,
+                       AH_Edge     serif,
                        int         vertical )
   {
     FT_Pos  dist;
@@ -231,7 +231,7 @@
       dist = 32;
 #else
     /* do not strengthen serifs */
-    if ( base->flags & ah_edge_done )
+    if ( base->flags & AH_EDGE_DONE )
     {
       if ( dist >= 64 )
         dist = (dist+8) & -64;
@@ -260,11 +260,11 @@
 
   /* Another alternative edge hinting algorithm */
   static void
-  ah_hint_edges_3( AH_Hinter*  hinter )
+  ah_hint_edges_3( AH_Hinter  hinter )
   {
-    AH_Edge*     edges;
-    AH_Edge*     edge_limit;
-    AH_Outline*  outline = hinter->glyph;
+    AH_Edge      edges;
+    AH_Edge      edge_limit;
+    AH_Outline   outline = hinter->glyph;
     FT_Int       dimension;
 
 
@@ -273,8 +273,8 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Edge*  edge;
-      AH_Edge*  anchor = 0;
+      AH_Edge   edge;
+      AH_Edge   anchor = 0;
       int       has_serifs = 0;
 
 
@@ -291,10 +291,10 @@
         for ( edge = edges; edge < edge_limit; edge++ )
         {
           FT_Pos*  blue;
-          AH_Edge  *edge1, *edge2;
+          AH_EdgeRec  *edge1, *edge2;
 
 
-          if ( edge->flags & ah_edge_done )
+          if ( edge->flags & AH_EDGE_DONE )
             continue;
 
           blue  = edge->blue_edge;
@@ -316,12 +316,12 @@
             continue;
 
           edge1->pos    = blue[0];
-          edge1->flags |= ah_edge_done;
+          edge1->flags |= AH_EDGE_DONE;
 
           if ( edge2 && !edge2->blue_edge )
           {
             ah_align_linked_edge( hinter, edge1, edge2, dimension );
-            edge2->flags |= ah_edge_done;
+            edge2->flags |= AH_EDGE_DONE;
           }
 
           if ( !anchor )
@@ -333,10 +333,10 @@
       /* relative order of stems in the glyph..                    */
       for ( edge = edges; edge < edge_limit; edge++ )
       {
-        AH_Edge  *edge2;
+        AH_EdgeRec  *edge2;
 
 
-        if ( edge->flags & ah_edge_done )
+        if ( edge->flags & AH_EDGE_DONE )
           continue;
 
         /* skip all non-stem edges */
@@ -359,7 +359,7 @@
 #endif
 
           ah_align_linked_edge( hinter, edge2, edge, dimension );
-          edge->flags |= ah_edge_done;
+          edge->flags |= AH_EDGE_DONE;
           continue;
         }
 
@@ -374,7 +374,7 @@
             edge->pos = ( edge->opos + 32 ) & -64;
             anchor    = edge;
 
-            edge->flags |= ah_edge_done;
+            edge->flags |= AH_EDGE_DONE;
 
             ah_align_linked_edge( hinter, edge, edge2, dimension );
           }
@@ -403,8 +403,8 @@
             edge->pos  = ( delta1 <= delta2 ) ? cur_pos1 : cur_pos2;
             edge2->pos = edge->pos + cur_len;
 
-            edge->flags  |= ah_edge_done;
-            edge2->flags |= ah_edge_done;
+            edge->flags  |= AH_EDGE_DONE;
+            edge2->flags |= AH_EDGE_DONE;
 
             if ( edge > edges && edge->pos < edge[-1].pos )
               edge->pos = edge[-1].pos;
@@ -412,7 +412,7 @@
 #if 0
             delta = 0;
             if ( edge2 + 1 < edge_limit        &&
-                 edge2[1].flags & ah_edge_done )
+                 edge2[1].flags & AH_EDGE_DONE )
               delta = edge2[1].pos - edge2->pos;
 
             if ( delta < 0 )
@@ -421,7 +421,7 @@
               if ( !min )
                 edge->pos += delta;
             }
-            edge2->flags |= ah_edge_done;
+            edge2->flags |= AH_EDGE_DONE;
 #endif
           }
         }
@@ -434,7 +434,7 @@
       /* to complete our processing                                 */
       for ( edge = edges; edge < edge_limit; edge++ )
       {
-        if ( edge->flags & ah_edge_done )
+        if ( edge->flags & AH_EDGE_DONE )
           continue;
 
         if ( edge->serif )
@@ -448,13 +448,13 @@
           edge->pos = anchor->pos +
                       ( ( edge->opos-anchor->opos + 32 ) & -64 );
 
-        edge->flags |= ah_edge_done;
+        edge->flags |= AH_EDGE_DONE;
 
         if ( edge > edges && edge->pos < edge[-1].pos )
           edge->pos = edge[-1].pos;
 
         if ( edge + 1 < edge_limit        &&
-             edge[1].flags & ah_edge_done &&
+             edge[1].flags & AH_EDGE_DONE &&
              edge->pos > edge[1].pos      )
           edge->pos = edge[1].pos;
       }
@@ -467,7 +467,7 @@
 
 
   FT_LOCAL_DEF( void )
-  ah_hinter_hint_edges( AH_Hinter*  hinter,
+  ah_hinter_hint_edges( AH_Hinter  hinter,
                         FT_Bool     no_horz_edges,
                         FT_Bool     no_vert_edges )
   {
@@ -486,7 +486,7 @@
 
 #if 0
       /* outline optimizer removed temporarily */
-      if ( hinter->flags & ah_hinter_optimize )
+      if ( hinter->flags & AH_HINTER_OPTIMIZE )
       {
         AH_Optimizer  opt;
 
@@ -514,11 +514,11 @@
   /*************************************************************************/
 
   static void
-  ah_hinter_align_edge_points( AH_Hinter*  hinter )
+  ah_hinter_align_edge_points( AH_Hinter  hinter )
   {
-    AH_Outline*  outline = hinter->glyph;
-    AH_Edge*     edges;
-    AH_Edge*     edge_limit;
+    AH_Outline   outline = hinter->glyph;
+    AH_Edge      edges;
+    AH_Edge      edge_limit;
     FT_Int       dimension;
 
 
@@ -527,7 +527,7 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Edge*   edge;
+      AH_Edge    edge;
 
 
       edge = edges;
@@ -535,12 +535,12 @@
       {
         /* move the points of each segment     */
         /* in each edge to the edge's position */
-        AH_Segment*  seg = edge->first;
+        AH_Segment   seg = edge->first;
 
 
         do
         {
-          AH_Point*  point = seg->first;
+          AH_Point   point = seg->first;
 
 
           for (;;)
@@ -548,12 +548,12 @@
             if ( dimension )
             {
               point->y      = edge->pos;
-              point->flags |= ah_flag_touch_y;
+              point->flags |= AH_FLAG_TOUCH_Y;
             }
             else
             {
               point->x      = edge->pos;
-              point->flags |= ah_flag_touch_x;
+              point->flags |= AH_FLAG_TOUCH_X;
             }
 
             if ( point == seg->last )
@@ -575,14 +575,14 @@
 
   /* hint the strong points -- this is equivalent to the TrueType `IP' */
   static void
-  ah_hinter_align_strong_points( AH_Hinter*  hinter )
+  ah_hinter_align_strong_points( AH_Hinter  hinter )
   {
-    AH_Outline*  outline = hinter->glyph;
+    AH_Outline   outline = hinter->glyph;
     FT_Int       dimension;
-    AH_Edge*     edges;
-    AH_Edge*     edge_limit;
-    AH_Point*    points;
-    AH_Point*    point_limit;
+    AH_Edge      edges;
+    AH_Edge      edge_limit;
+    AH_Point     points;
+    AH_Point     point_limit;
     AH_Flags     touch_flag;
 
 
@@ -591,12 +591,12 @@
 
     edges       = outline->horz_edges;
     edge_limit  = edges + outline->num_hedges;
-    touch_flag  = ah_flag_touch_y;
+    touch_flag  = AH_FLAG_TOUCH_Y;
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Point*  point;
-      AH_Edge*   edge;
+      AH_Point   point;
+      AH_Edge    edge;
 
 
       if ( edges < edge_limit )
@@ -612,8 +612,8 @@
 #ifndef AH_OPTION_NO_WEAK_INTERPOLATION
           /* if this point is candidate to weak interpolation, we will  */
           /* interpolate it after all strong points have been processed */
-          if (  ( point->flags & ah_flag_weak_interpolation ) &&
-               !( point->flags & ah_flag_inflection )         )
+          if (  ( point->flags & AH_FLAG_WEAK_INTERPOLATION ) &&
+               !( point->flags & AH_FLAG_INFLECTION )         )
             continue;
 #endif
 
@@ -650,8 +650,8 @@
 
           /* otherwise, interpolate the point in between */
           {
-            AH_Edge*  before = 0;
-            AH_Edge*  after  = 0;
+            AH_Edge   before = 0;
+            AH_Edge   after  = 0;
 
 
             for ( edge = edges; edge < edge_limit; edge++ )
@@ -697,7 +697,7 @@
 
       edges      = outline->vert_edges;
       edge_limit = edges + outline->num_vedges;
-      touch_flag = ah_flag_touch_x;
+      touch_flag = AH_FLAG_TOUCH_X;
     }
   }
 
@@ -705,11 +705,11 @@
 #ifndef AH_OPTION_NO_WEAK_INTERPOLATION
 
   static void
-  ah_iup_shift( AH_Point*  p1,
-                AH_Point*  p2,
-                AH_Point*  ref )
+  ah_iup_shift( AH_Point   p1,
+                AH_Point   p2,
+                AH_Point   ref )
   {
-    AH_Point*  p;
+    AH_Point   p;
     FT_Pos     delta = ref->u - ref->v;
 
 
@@ -722,12 +722,12 @@
 
 
   static void
-  ah_iup_interp( AH_Point*  p1,
-                 AH_Point*  p2,
-                 AH_Point*  ref1,
-                 AH_Point*  ref2 )
+  ah_iup_interp( AH_Point   p1,
+                 AH_Point   p2,
+                 AH_Point   ref1,
+                 AH_Point   ref2 )
   {
-    AH_Point*  p;
+    AH_Point   p;
     FT_Pos     u;
     FT_Pos     v1 = ref1->v;
     FT_Pos     v2 = ref2->v;
@@ -791,13 +791,13 @@
 
   /* interpolate weak points -- this is equivalent to the TrueType `IUP' */
   static void
-  ah_hinter_align_weak_points( AH_Hinter*  hinter )
+  ah_hinter_align_weak_points( AH_Hinter  hinter )
   {
-    AH_Outline*  outline = hinter->glyph;
+    AH_Outline   outline = hinter->glyph;
     FT_Int       dimension;
-    AH_Point*    points;
-    AH_Point*    point_limit;
-    AH_Point**   contour_limit;
+    AH_Point     points;
+    AH_Point     point_limit;
+    AH_Point *   contour_limit;
     AH_Flags     touch_flag;
 
 
@@ -806,18 +806,18 @@
 
     /* PASS 1: Move segment points to edge positions */
 
-    touch_flag = ah_flag_touch_y;
+    touch_flag = AH_FLAG_TOUCH_Y;
 
     contour_limit = outline->contours + outline->num_contours;
 
-    ah_setup_uv( outline, ah_uv_oy );
+    ah_setup_uv( outline, AH_UV_OY );
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Point*   point;
-      AH_Point*   end_point;
-      AH_Point*   first_point;
-      AH_Point**  contour;
+      AH_Point    point;
+      AH_Point    end_point;
+      AH_Point    first_point;
+      AH_Point *  contour;
 
 
       point   = points;
@@ -834,8 +834,8 @@
 
         if ( point <= end_point )
         {
-          AH_Point*  first_touched = point;
-          AH_Point*  cur_touched   = point;
+          AH_Point   first_touched = point;
+          AH_Point   cur_touched   = point;
 
 
           point++;
@@ -880,8 +880,8 @@
         for ( point = points; point < point_limit; point++ )
           point->y = point->u;
 
-        touch_flag = ah_flag_touch_x;
-        ah_setup_uv( outline, ah_uv_ox );
+        touch_flag = AH_FLAG_TOUCH_X;
+        ah_setup_uv( outline, AH_UV_OX );
       }
       else
       {
@@ -897,7 +897,7 @@
 
 
   FT_LOCAL_DEF( void )
-  ah_hinter_align_points( AH_Hinter*  hinter )
+  ah_hinter_align_points( AH_Hinter  hinter )
   {
     ah_hinter_align_edge_points( hinter );
 
@@ -924,14 +924,14 @@
 
   /* scale and fit the global metrics */
   static void
-  ah_hinter_scale_globals( AH_Hinter*  hinter,
+  ah_hinter_scale_globals( AH_Hinter  hinter,
                            FT_Fixed    x_scale,
                            FT_Fixed    y_scale )
   {
     FT_Int            n;
-    AH_Face_Globals*  globals = hinter->globals;
-    AH_Globals*       design = &globals->design;
-    AH_Globals*       scaled = &globals->scaled;
+    AH_Face_Globals   globals = hinter->globals;
+    AH_Globals        design = &globals->design;
+    AH_Globals        scaled = &globals->scaled;
 
 
     /* copy content */
@@ -948,7 +948,7 @@
     scaled->stds[1] = ( design->num_heights > 0 ) ? scaled->heights[0] : 32000;
 
     /* scale the blue zones */
-    for ( n = 0; n < ah_blue_max; n++ )
+    for ( n = 0; n < AH_BLUE_MAX; n++ )
     {
       FT_Pos  delta, delta2;
 
@@ -980,7 +980,7 @@
 
 
   static void
-  ah_hinter_align( AH_Hinter*  hinter )
+  ah_hinter_align( AH_Hinter  hinter )
   {
     ah_hinter_align_edge_points( hinter );
     ah_hinter_align_points( hinter );
@@ -989,7 +989,7 @@
 
   /* finalize a hinter object */
   FT_LOCAL_DEF( void )
-  ah_hinter_done( AH_Hinter*  hinter )
+  ah_hinter_done( AH_Hinter  hinter )
   {
     if ( hinter )
     {
@@ -1013,9 +1013,9 @@
   /* create a new empty hinter object */
   FT_LOCAL_DEF( FT_Error )
   ah_hinter_new( FT_Library   library,
-                 AH_Hinter**  ahinter )
+                 AH_Hinter*  ahinter )
   {
-    AH_Hinter*  hinter = 0;
+    AH_Hinter  hinter = 0;
     FT_Memory   memory = library->memory;
     FT_Error    error;
 
@@ -1048,13 +1048,13 @@
 
   /* create a face's autohint globals */
   FT_LOCAL_DEF( FT_Error )
-  ah_hinter_new_face_globals( AH_Hinter*   hinter,
+  ah_hinter_new_face_globals( AH_Hinter   hinter,
                               FT_Face      face,
-                              AH_Globals*  globals )
+                              AH_Globals   globals )
   {
     FT_Error          error;
     FT_Memory         memory = hinter->memory;
-    AH_Face_Globals*  face_globals;
+    AH_Face_Globals   face_globals;
 
 
     if ( FT_NEW( face_globals ) )
@@ -1080,7 +1080,7 @@
 
   /* discard a face's autohint globals */
   FT_LOCAL_DEF( void )
-  ah_hinter_done_face_globals( AH_Face_Globals*  globals )
+  ah_hinter_done_face_globals( AH_Face_Globals   globals )
   {
     FT_Face    face   = globals->face;
     FT_Memory  memory = face->memory;
@@ -1091,7 +1091,7 @@
 
 
   static FT_Error
-  ah_hinter_load( AH_Hinter*  hinter,
+  ah_hinter_load( AH_Hinter  hinter,
                   FT_UInt     glyph_index,
                   FT_UInt     load_flags,
                   FT_UInt     depth )
@@ -1102,7 +1102,7 @@
     FT_Fixed          x_scale  = face->size->metrics.x_scale;
     FT_Fixed          y_scale  = face->size->metrics.y_scale;
     FT_Error          error;
-    AH_Outline*       outline  = hinter->glyph;
+    AH_Outline        outline  = hinter->glyph;
     AH_Loader         gloader  = hinter->loader;
     FT_Bool           no_horz_hints = FT_BOOL(
                         ( load_flags & AH_HINT_NO_HORZ_EDGES ) != 0 );
@@ -1137,7 +1137,7 @@
 
     switch ( slot->format )
     {
-    case ft_glyph_format_outline:
+    case FT_GLYPH_FORMAT_OUTLINE:
 
       /* translate glyph outline if we need to */
       if ( hinter->transformed )
@@ -1208,8 +1208,8 @@
       /* width/positioning that occured during the hinting process  */
       {
         FT_Pos    old_advance, old_rsb, old_lsb, new_lsb;
-        AH_Edge*  edge1 = outline->vert_edges;     /* leftmost edge  */
-        AH_Edge*  edge2 = edge1 +
+        AH_Edge   edge1 = outline->vert_edges;     /* leftmost edge  */
+        AH_Edge   edge2 = edge1 +
                           outline->num_vedges - 1; /* rightmost edge */
 
 
@@ -1230,7 +1230,7 @@
       ah_loader_add( gloader );
       break;
 
-    case ft_glyph_format_composite:
+    case FT_GLYPH_FORMAT_COMPOSITE:
       {
         FT_UInt      nn, num_subglyphs = slot->num_subglyphs;
         FT_UInt      num_base_subgs, start_point;
@@ -1407,7 +1407,7 @@
         goto Exit;
 
       slot->outline = slot->internal->loader->base.outline;
-      slot->format  = ft_glyph_format_outline;
+      slot->format  = FT_GLYPH_FORMAT_OUTLINE;
     }
 
 #ifdef DEBUG_HINTER
@@ -1421,7 +1421,7 @@
 
   /* load and hint a given glyph */
   FT_LOCAL_DEF( FT_Error )
-  ah_hinter_load_glyph( AH_Hinter*    hinter,
+  ah_hinter_load_glyph( AH_Hinter    hinter,
                         FT_GlyphSlot  slot,
                         FT_Size       size,
                         FT_UInt       glyph_index,
@@ -1431,7 +1431,7 @@
     FT_Error          error;
     FT_Fixed          x_scale      = size->metrics.x_scale;
     FT_Fixed          y_scale      = size->metrics.y_scale;
-    AH_Face_Globals*  face_globals = FACE_GLOBALS( face );
+    AH_Face_Globals   face_globals = FACE_GLOBALS( face );
 
 
     /* first of all, we need to check that we're using the correct face and */
@@ -1475,12 +1475,12 @@
 
   /* retrieve a face's autohint globals for client applications */
   FT_LOCAL_DEF( void )
-  ah_hinter_get_global_hints( AH_Hinter*  hinter,
+  ah_hinter_get_global_hints( AH_Hinter  hinter,
                               FT_Face     face,
                               void**      global_hints,
                               long*       global_len )
   {
-    AH_Globals*  globals = 0;
+    AH_Globals   globals = 0;
     FT_Memory    memory  = hinter->memory;
     FT_Error     error;
 
@@ -1512,7 +1512,7 @@
 
 
   FT_LOCAL_DEF( void )
-  ah_hinter_done_global_hints( AH_Hinter*  hinter,
+  ah_hinter_done_global_hints( AH_Hinter  hinter,
                                void*       global_hints )
   {
     FT_Memory  memory = hinter->memory;

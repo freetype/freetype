@@ -247,7 +247,7 @@
       /* set up remaining glyph fields */
       glyph->num_subglyphs = 2;
       glyph->subglyphs     = loader->base.subglyphs;
-      glyph->format        = ft_glyph_format_composite;
+      glyph->format        = FT_GLYPH_FORMAT_COMPOSITE;
 
       loader->current.num_subglyphs = 2;
       goto Exit;
@@ -258,7 +258,7 @@
 
     FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
 
-    error = T1_Decoder_Parse_Glyph( decoder, bchar_index );
+    error = t1_decoder_parse_glyph( decoder, bchar_index );
     if ( error )
       goto Exit;
 
@@ -280,7 +280,7 @@
 
     /* Now load `achar' on top of */
     /* the base outline           */
-    error = T1_Decoder_Parse_Glyph( decoder, achar_index );
+    error = t1_decoder_parse_glyph( decoder, achar_index );
     if ( error )
       goto Exit;
 
@@ -316,7 +316,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Decoder_Parse_Charstrings                                       */
+  /*    t1_decoder_parse_charstrings                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Parses a given Type 1 charstrings program.                         */
@@ -332,7 +332,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  T1_Decoder_Parse_Charstrings( T1_Decoder  decoder,
+  t1_decoder_parse_charstrings( T1_Decoder  decoder,
                                 FT_Byte*    charstring_base,
                                 FT_UInt     charstring_len )
   {
@@ -347,12 +347,12 @@
 
 
     /* we don't want to touch the source code -- use macro trick */
-#define start_point    T1_Builder_Start_Point
-#define check_points   T1_Builder_Check_Points
-#define add_point      T1_Builder_Add_Point
+#define start_point    t1_builder_start_point
+#define check_points   t1_builder_check_points
+#define add_point      t1_builder_add_point
 #define add_point1     T1_Builder_Add_Point1
-#define add_contour    T1_Builder_Add_Contour
-#define close_contour  T1_Builder_Close_Contour
+#define add_contour    t1_builder_add_contour
+#define close_contour  t1_builder_close_contour
 
     /* First of all, initialize the decoder */
     decoder->top  = decoder->stack;
@@ -453,7 +453,7 @@
       case 12:
         if ( ip > limit )
         {
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+          FT_ERROR(( "t1_decoder_parse_charstrings: "
                      "invalid escape (12+EOF)\n" ));
           goto Syntax_Error;
         }
@@ -489,7 +489,7 @@
           break;
 
         default:
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+          FT_ERROR(( "t1_decoder_parse_charstrings: "
                      "invalid escape (12+%d)\n",
                      ip[-1] ));
           goto Syntax_Error;
@@ -499,7 +499,7 @@
       case 255:    /* four bytes integer */
         if ( ip + 4 > limit )
         {
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+          FT_ERROR(( "t1_decoder_parse_charstrings: "
                      "unexpected EOF in integer\n" ));
           goto Syntax_Error;
         }
@@ -520,7 +520,7 @@
           {
             if ( ++ip > limit )
             {
-              FT_ERROR(( "T1_Decoder_Parse_Charstrings: " ));
+              FT_ERROR(( "t1_decoder_parse_charstrings: " ));
               FT_ERROR(( "unexpected EOF in integer\n" ));
               goto Syntax_Error;
             }
@@ -533,7 +533,7 @@
         }
         else
         {
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+          FT_ERROR(( "t1_decoder_parse_charstrings: "
                      "invalid byte (%d)\n", ip[-1] ));
           goto Syntax_Error;
         }
@@ -548,7 +548,7 @@
       {
         if ( top - decoder->stack >= T1_MAX_CHARSTRINGS_OPERANDS )
         {
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: stack overflow!\n" ));
+          FT_ERROR(( "t1_decoder_parse_charstrings: stack overflow!\n" ));
           goto Syntax_Error;
         }
 
@@ -605,7 +605,7 @@
           if ( decoder->flex_state       == 0 ||
                decoder->num_flex_vectors != 7 )
           {
-            FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+            FT_ERROR(( "t1_decoder_parse_charstrings: "
                        "unexpected flex end\n" ));
             goto Syntax_Error;
           }
@@ -616,7 +616,7 @@
                ip[2] != 12 || ip[3] != 17 || /* pop */
                ip[4] != 12 || ip[5] != 33 )  /* setcurpoint */
           {
-            FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+            FT_ERROR(( "t1_decoder_parse_charstrings: "
                        "invalid flex charstring\n" ));
             goto Syntax_Error;
           }
@@ -632,14 +632,14 @@
           /* eat the following `pop' */
           if ( ip + 2 > limit )
           {
-            FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+            FT_ERROR(( "t1_decoder_parse_charstrings: "
                        "invalid escape (12+%d)\n", ip[-1] ));
             goto Syntax_Error;
           }
 
           if ( ip[0] != 12 || ip[1] != 17 )
           {
-            FT_ERROR(( "T1_Decoder_Parse_Charstrings: " ));
+            FT_ERROR(( "t1_decoder_parse_charstrings: " ));
             FT_ERROR(( "`pop' expected, found (%d %d)\n", ip[0], ip[1] ));
             goto Syntax_Error;
           }
@@ -670,7 +670,7 @@
 
             if ( !blend )
             {
-              FT_ERROR(( "T1_Decoder_Parse_Charstrings: " ));
+              FT_ERROR(( "t1_decoder_parse_charstrings: " ));
               FT_ERROR(( "unexpected multiple masters operator!\n" ));
               goto Syntax_Error;
             }
@@ -678,7 +678,7 @@
             num_points = top[1] - 13 + ( top[1] == 18 );
             if ( top[0] != (FT_Int)( num_points * blend->num_designs ) )
             {
-              FT_ERROR(( "T1_Decoder_Parse_Charstrings: " ));
+              FT_ERROR(( "t1_decoder_parse_charstrings: " ));
               FT_ERROR(( "incorrect number of mm arguments\n" ));
               goto Syntax_Error;
             }
@@ -720,7 +720,7 @@
 
         default:
         Unexpected_OtherSubr:
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+          FT_ERROR(( "t1_decoder_parse_charstrings: "
                      "invalid othersubr [%d %d]!\n", top[0], top[1] ));
           goto Syntax_Error;
         }
@@ -933,7 +933,7 @@
           }
           else
           {
-            FT_ERROR(( "T1_Decoder_Parse_Charstrings: division by 0\n" ));
+            FT_ERROR(( "t1_decoder_parse_charstrings: division by 0\n" ));
             goto Syntax_Error;
           }
           break;
@@ -948,14 +948,14 @@
             idx = top[0];
             if ( idx < 0 || idx >= (FT_Int)decoder->num_subrs )
             {
-              FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+              FT_ERROR(( "t1_decoder_parse_charstrings: "
                          "invalid subrs index\n" ));
               goto Syntax_Error;
             }
 
             if ( zone - decoder->zones >= T1_MAX_SUBRS_CALLS )
             {
-              FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+              FT_ERROR(( "t1_decoder_parse_charstrings: "
                          "too many nested subrs\n" ));
               goto Syntax_Error;
             }
@@ -983,7 +983,7 @@
 
             if ( !zone->base )
             {
-              FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+              FT_ERROR(( "t1_decoder_parse_charstrings: "
                          "invoking empty subrs!\n" ));
               goto Syntax_Error;
             }
@@ -1006,7 +1006,7 @@
 
           if ( zone <= decoder->zones )
           {
-            FT_ERROR(( "T1_Decoder_Parse_Charstrings: unexpected return\n" ));
+            FT_ERROR(( "t1_decoder_parse_charstrings: unexpected return\n" ));
             goto Syntax_Error;
           }
 
@@ -1073,12 +1073,12 @@
         case op_setcurrentpoint:
           FT_TRACE4(( " setcurrentpoint" ));
 
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: " ));
+          FT_ERROR(( "t1_decoder_parse_charstrings: " ));
           FT_ERROR(( "unexpected `setcurrentpoint'\n" ));
           goto Syntax_Error;
 
         default:
-          FT_ERROR(( "T1_Decoder_Parse_Charstrings: "
+          FT_ERROR(( "t1_decoder_parse_charstrings: "
                      "unhandled opcode %d\n", op ));
           goto Syntax_Error;
         }
@@ -1106,7 +1106,7 @@
 
   /* parse a single Type 1 glyph */
   FT_LOCAL_DEF( FT_Error )
-  T1_Decoder_Parse_Glyph( T1_Decoder  decoder,
+  t1_decoder_parse_glyph( T1_Decoder  decoder,
                           FT_UInt     glyph )
   {
     return decoder->parse_callback( decoder, glyph );
@@ -1115,7 +1115,7 @@
 
   /* initialize T1 decoder */
   FT_LOCAL_DEF( FT_Error )
-  T1_Decoder_Init( T1_Decoder           decoder,
+  t1_decoder_init( T1_Decoder           decoder,
                    FT_Face              face,
                    FT_Size              size,
                    FT_GlyphSlot         slot,
@@ -1135,7 +1135,7 @@
                   FT_FACE_LIBRARY(face), "psnames" );
       if ( !psnames )
       {
-        FT_ERROR(( "T1_Decoder_Init: " ));
+        FT_ERROR(( "t1_decoder_init: " ));
         FT_ERROR(( "the `psnames' module is not available\n" ));
         return PSaux_Err_Unimplemented_Feature;
       }
@@ -1143,7 +1143,7 @@
       decoder->psnames = psnames;
     }
 
-    T1_Builder_Init( &decoder->builder, face, size, slot, hinting );
+    t1_builder_init( &decoder->builder, face, size, slot, hinting );
 
     decoder->num_glyphs     = face->num_glyphs;
     decoder->glyph_names    = glyph_names;
@@ -1159,9 +1159,9 @@
 
   /* finalize T1 decoder */
   FT_LOCAL_DEF( void )
-  T1_Decoder_Done( T1_Decoder  decoder )
+  t1_decoder_done( T1_Decoder  decoder )
   {
-    T1_Builder_Done( &decoder->builder );
+    t1_builder_done( &decoder->builder );
   }
 
 

@@ -253,13 +253,13 @@ THE SOFTWARE.
 
 
         charmap.face        = FT_FACE( face );
-        charmap.encoding    = ft_encoding_none;
+        charmap.encoding    = FT_ENCODING_NONE;
         charmap.platform_id = 0;
         charmap.encoding_id = 0;
 
         if ( unicode_charmap )
         {
-          charmap.encoding    = ft_encoding_unicode;
+          charmap.encoding    = FT_ENCODING_UNICODE;
           charmap.platform_id = 3;
           charmap.encoding_id = 1;
         }
@@ -348,7 +348,7 @@ THE SOFTWARE.
     bitmap->rows       = metric->ascent + metric->descent;
     bitmap->width      = metric->rightSideBearing - metric->leftSideBearing;
     bitmap->num_grays  = 1;
-    bitmap->pixel_mode = ft_pixel_mode_mono;
+    bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
     FT_TRACE6(( "BIT_ORDER %d ; BYTE_ORDER %d ; GLYPH_PAD %d\n",
                   PCF_BIT_ORDER( face->bitmapsFormat ),
@@ -418,7 +418,7 @@ THE SOFTWARE.
     slot->metrics.height       = bitmap->rows << 6;
 
     slot->linearHoriAdvance = (FT_Fixed)bitmap->width << 16;
-    slot->format            = ft_glyph_format_bitmap;
+    slot->format            = FT_GLYPH_FORMAT_BITMAP;
     slot->flags             = FT_GLYPH_OWN_BITMAP;
 
     FT_TRACE4(( " --- ok\n" ));

@@ -139,7 +139,7 @@
 
 
       outline->points[n] = *to;
-      outline->tags  [n] = FT_Curve_Tag_On;
+      outline->tags  [n] = FT_CURVE_TAG_ON;
 
       outline->n_points++;
     }
@@ -172,9 +172,9 @@
       vec[0] = *control1;
       vec[1] = *control2;
       vec[2] = *to;
-      tag[0] = FT_Curve_Tag_Cubic;
-      tag[1] = FT_Curve_Tag_Cubic;
-      tag[2] = FT_Curve_Tag_On;
+      tag[0] = FT_CURVE_TAG_CUBIC;
+      tag[1] = FT_CURVE_TAG_CUBIC;
+      tag[2] = FT_CURVE_TAG_ON;
 
       outline->n_points = (FT_Short)( outline->n_points + 3 );
     }

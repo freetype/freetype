@@ -28,7 +28,7 @@
 #define MAX_TEST_CHARACTERS  12
 
   static
-  const char*  blue_chars[ah_blue_max] =
+  const char*  blue_chars[AH_BLUE_MAX] =
   {
     "THEZOCQS",
     "HEZLOCUS",
@@ -62,10 +62,10 @@
 
 
   static FT_Error
-  ah_hinter_compute_blues( AH_Hinter*  hinter )
+  ah_hinter_compute_blues( AH_Hinter  hinter )
   {
     AH_Blue       blue;
-    AH_Globals*   globals = &hinter->globals->design;
+    AH_Globals    globals = &hinter->globals->design;
     FT_Pos        flats [MAX_TEST_CHARACTERS];
     FT_Pos        rounds[MAX_TEST_CHARACTERS];
     FT_Int        num_flats;
@@ -84,7 +84,7 @@
     charmap = face->charmap;
 
     /* do we have a Unicode charmap in there? */
-    error = FT_Select_Charmap( face, ft_encoding_unicode );
+    error = FT_Select_Charmap( face, FT_ENCODING_UNICODE );
     if ( error )
       goto Exit;
 
@@ -95,7 +95,7 @@
     AH_LOG(( "blue zones computation\n" ));
     AH_LOG(( "------------------------------------------------\n" ));
 
-    for ( blue = ah_blue_capital_top; blue < ah_blue_max; blue++ )
+    for ( blue = AH_BLUE_CAPITAL_TOP; blue < AH_BLUE_MAX; blue++ )
     {
       const char*  p     = blue_chars[blue];
       const char*  limit = p + MAX_TEST_CHARACTERS;
@@ -216,8 +216,8 @@
 
           /* now, set the `round' flag depending on the segment's kind */
           round = FT_BOOL(
-            FT_CURVE_TAG( glyph->outline.tags[prev] ) != FT_Curve_Tag_On ||
-            FT_CURVE_TAG( glyph->outline.tags[next] ) != FT_Curve_Tag_On );
+            FT_CURVE_TAG( glyph->outline.tags[prev] ) != FT_CURVE_TAG_ON ||
+            FT_CURVE_TAG( glyph->outline.tags[next] ) != FT_CURVE_TAG_ON );
 
           AH_LOG(( "%c ", round ? 'r' : 'f' ));
         }
@@ -286,13 +286,13 @@
 
 
   static FT_Error
-  ah_hinter_compute_widths( AH_Hinter*  hinter )
+  ah_hinter_compute_widths( AH_Hinter  hinter )
   {
     /* scan the array of segments in each direction */
-    AH_Outline*  outline = hinter->glyph;
-    AH_Segment*  segments;
-    AH_Segment*  limit;
-    AH_Globals*  globals = &hinter->globals->design;
+    AH_Outline   outline = hinter->glyph;
+    AH_Segment   segments;
+    AH_Segment   limit;
+    AH_Globals   globals = &hinter->globals->design;
     FT_Pos*      widths;
     FT_Int       dimension;
     FT_Int*      p_num_widths;
@@ -334,8 +334,8 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Segment*  seg = segments;
-      AH_Segment*  link;
+      AH_Segment   seg = segments;
+      AH_Segment   link;
       FT_Int       num_widths = 0;
 
 
@@ -384,7 +384,7 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  ah_hinter_compute_globals( AH_Hinter*  hinter )
+  ah_hinter_compute_globals( AH_Hinter  hinter )
   {
     return ah_hinter_compute_widths( hinter ) ||
            ah_hinter_compute_blues ( hinter );

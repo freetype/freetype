@@ -40,7 +40,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_LookUp_Table                                                    */
+  /*    tt_face_lookup_table                                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Looks for a TrueType table by name.                                */
@@ -54,14 +54,14 @@
   /*    A pointer to the table directory entry.  0 if not found.           */
   /*                                                                       */
   FT_LOCAL_DEF( TT_Table  )
-  TT_LookUp_Table( TT_Face   face,
-                   FT_ULong  tag  )
+  tt_face_lookup_table( TT_Face   face,
+                        FT_ULong  tag  )
   {
     TT_Table  entry;
     TT_Table  limit;
 
 
-    FT_TRACE3(( "TT_LookUp_Table: %08p, `%c%c%c%c' -- ",
+    FT_TRACE3(( "tt_face_lookup_table: %08p, `%c%c%c%c' -- ",
                 face,
                 (FT_Char)( tag >> 24 ),
                 (FT_Char)( tag >> 16 ),
@@ -90,7 +90,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Goto_Table                                                      */
+  /*    tt_face_goto_table                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Looks for a TrueType table by name, then seek a stream to it.      */
@@ -109,16 +109,16 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Goto_Table( TT_Face    face,
-                 FT_ULong   tag,
-                 FT_Stream  stream,
-                 FT_ULong*  length )
+  tt_face_goto_table( TT_Face    face,
+                      FT_ULong   tag,
+                      FT_Stream  stream,
+                      FT_ULong*  length )
   {
     TT_Table  table;
     FT_Error  error;
 
 
-    table = TT_LookUp_Table( face, tag );
+    table = tt_face_lookup_table( face, tag );
     if ( table )
     {
       if ( length )
@@ -239,7 +239,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_SFNT_Header                                                */
+  /*    tt_face_load_sfnt_header                                           */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the header of a SFNT font file.  Supports collections.       */
@@ -267,10 +267,10 @@
   /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_SFNT_Header( TT_Face      face,
-                       FT_Stream    stream,
-                       FT_Long      face_index,
-                       SFNT_Header  sfnt )
+  tt_face_load_sfnt_header( TT_Face      face,
+                            FT_Stream    stream,
+                            FT_Long      face_index,
+                            SFNT_Header  sfnt )
   {
     FT_Error   error;
     FT_ULong   format_tag, offset;
@@ -301,7 +301,7 @@
     };
 
 
-    FT_TRACE2(( "TT_Load_SFNT_Header: %08p, %ld\n",
+    FT_TRACE2(( "tt_face_load_sfnt_header: %08p, %ld\n",
                 face, face_index ));
 
     face->ttc_header.tag     = 0;
@@ -324,7 +324,7 @@
       FT_Int  n;
 
 
-      FT_TRACE3(( "TT_Load_SFNT_Header: file is a collection\n" ));
+      FT_TRACE3(( "tt_face_load_sfnt_header: file is a collection\n" ));
 
       /* It is a TrueType collection, i.e. a file containing several */
       /* font files.  Read the font directory now                    */
@@ -367,7 +367,7 @@
     error = sfnt_dir_check( stream, offset, sfnt->num_tables );
     if ( error )
     {
-      FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT!\n" ));
+      FT_TRACE2(( "tt_face_load_sfnt_header: file is not SFNT!\n" ));
       error = SFNT_Err_Unknown_File_Format;
     }
 
@@ -379,7 +379,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Directory                                                  */
+  /*    tt_face_load_directory                                             */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the table directory into a face object.                      */
@@ -399,9 +399,9 @@
   /*    The stream cursor must be at the font file's origin.               */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Directory( TT_Face      face,
-                     FT_Stream    stream,
-                     SFNT_Header  sfnt )
+  tt_face_load_directory( TT_Face      face,
+                          FT_Stream    stream,
+                          SFNT_Header  sfnt )
   {
     FT_Error     error;
     FT_Memory    memory = stream->memory;
@@ -409,7 +409,7 @@
     TT_TableRec  *entry, *limit;
 
 
-    FT_TRACE2(( "TT_Load_Directory: %08p\n", face ));
+    FT_TRACE2(( "tt_face_load_directory: %08p\n", face ));
 
     FT_TRACE2(( "-- Tables count:   %12u\n",  sfnt->num_tables ));
     FT_TRACE2(( "-- Format version: %08lx\n", sfnt->format_tag ));
@@ -454,7 +454,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Any                                                        */
+  /*    tt_face_load_any                                                   */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads any font table into client memory.                           */
@@ -492,11 +492,11 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Any( TT_Face    face,
-               FT_ULong   tag,
-               FT_Long    offset,
-               FT_Byte*   buffer,
-               FT_ULong*  length )
+  tt_face_load_any( TT_Face    face,
+                    FT_ULong   tag,
+                    FT_Long    offset,
+                    FT_Byte*   buffer,
+                    FT_ULong*  length )
   {
     FT_Error   error;
     FT_Stream  stream;
@@ -507,7 +507,7 @@
     if ( tag != 0 )
     {
       /* look for tag in font directory */
-      table = TT_LookUp_Table( face, tag );
+      table = tt_face_lookup_table( face, tag );
       if ( !table )
       {
         error = SFNT_Err_Table_Missing;
@@ -544,7 +544,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Generic_Header                                             */
+  /*    tt_face_load_generic_header                                        */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the TrueType table `head' or `bhed'.                         */
@@ -558,7 +558,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static FT_Error
-  TT_Load_Generic_Header( TT_Face    face,
+  tt_face_load_generic_header( TT_Face    face,
                           FT_Stream  stream,
                           FT_ULong   tag )
   {
@@ -594,7 +594,7 @@
     };
 
 
-    FT_TRACE2(( "TT_Load_Generic_Header: "
+    FT_TRACE2(( "tt_face_load_generic_header: "
                 "%08p, looking up font table `%c%c%c%c'.\n",
                 face,
                 (FT_Char)( tag >> 24 ),
@@ -605,7 +605,7 @@
     error = face->goto_table( face, tag, stream, 0 );
     if ( error )
     {
-      FT_TRACE2(( "TT_Load_Generic_Header: Font table is missing!\n" ));
+      FT_TRACE2(( "tt_face_load_generic_header: Font table is missing!\n" ));
       goto Exit;
     }
 
@@ -616,7 +616,7 @@
 
     FT_TRACE2(( "    Units per EM: %8u\n", header->Units_Per_EM ));
     FT_TRACE2(( "    IndexToLoc:   %8d\n", header->Index_To_Loc_Format ));
-    FT_TRACE2(( "TT_Load_Generic_Header: Font table loaded.\n" ));
+    FT_TRACE2(( "tt_face_load_generic_header: Font table loaded.\n" ));
 
   Exit:
     return error;
@@ -624,20 +624,20 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Header( TT_Face    face,
-                  FT_Stream  stream )
+  tt_face_load_header( TT_Face    face,
+                       FT_Stream  stream )
   {
-    return TT_Load_Generic_Header( face, stream, TTAG_head );
+    return tt_face_load_generic_header( face, stream, TTAG_head );
   }
 
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Bitmap_Header( TT_Face    face,
-                         FT_Stream  stream )
+  tt_face_load_bitmap_header( TT_Face    face,
+                              FT_Stream  stream )
   {
-    return TT_Load_Generic_Header( face, stream, TTAG_bhed );
+    return tt_face_load_generic_header( face, stream, TTAG_bhed );
   }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
@@ -646,7 +646,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_MaxProfile                                                 */
+  /*    tt_face_load_max_profile                                           */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the maximum profile into a face object.                      */
@@ -660,8 +660,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_MaxProfile( TT_Face    face,
-                      FT_Stream  stream )
+  tt_face_load_max_profile( TT_Face    face,
+                            FT_Stream  stream )
   {
     FT_Error        error;
     TT_MaxProfile*  maxProfile = &face->max_profile;
@@ -768,7 +768,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Metrics                                                    */
+  /*    tt_face_load_metrics                                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the horizontal or vertical metrics table into a face object. */
@@ -784,9 +784,9 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static FT_Error
-  TT_Load_Metrics( TT_Face    face,
-                   FT_Stream  stream,
-                   FT_Bool    vertical )
+  tt_face_load_metrics( TT_Face    face,
+                        FT_Stream  stream,
+                        FT_Bool    vertical )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -911,7 +911,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Metrics_Header                                             */
+  /*    tt_face_load_metrics_header                                        */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the horizontal or vertical header in a face object.          */
@@ -927,9 +927,9 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Metrics_Header( TT_Face    face,
-                          FT_Stream  stream,
-                          FT_Bool    vertical )
+  tt_face_load_metrics_header( TT_Face    face,
+                               FT_Stream  stream,
+                               FT_Bool    vertical )
   {
     FT_Error        error;
     TT_HoriHeader*  header;
@@ -1003,7 +1003,7 @@
 
     /* Now try to load the corresponding metrics */
 
-    error = TT_Load_Metrics( face, stream, vertical );
+    error = tt_face_load_metrics( face, stream, vertical );
 
   Exit:
     return error;
@@ -1013,7 +1013,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Names                                                      */
+  /*    tt_face_load_names                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the name records.                                            */
@@ -1027,8 +1027,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Names( TT_Face    face,
-                 FT_Stream  stream )
+  tt_face_load_names( TT_Face    face,
+                      FT_Stream  stream )
   {
     FT_Error      error;
     FT_Memory     memory = stream->memory;
@@ -1097,7 +1097,7 @@
 
     if ( storage_start > storage_limit )
     {
-      FT_ERROR(( "TT_Load_Names: invalid `name' table\n" ));
+      FT_ERROR(( "tt_face_load_names: invalid `name' table\n" ));
       error = SFNT_Err_Name_Table_Missing;
       goto Exit;
     }
@@ -1157,7 +1157,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Free_Names                                                      */
+  /*    tt_face_free_names                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Frees the name records.                                            */
@@ -1166,7 +1166,7 @@
   /*    face :: A handle to the target face object.                        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  TT_Free_Names( TT_Face  face )
+  tt_face_free_names( TT_Face  face )
   {
     FT_Memory     memory = face->root.driver->root.memory;
     TT_NameTable  table  = &face->name_table;
@@ -1192,7 +1192,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_CMap                                                       */
+  /*    tt_face_load_cmap                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the cmap directory in a face object.  The cmaps itselves are */
@@ -1208,8 +1208,8 @@
   /*                                                                       */
 
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_CMap( TT_Face    face,
-                FT_Stream  stream )
+  tt_face_load_cmap( TT_Face    face,
+                     FT_Stream  stream )
   {
     FT_Error  error;
 
@@ -1239,7 +1239,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_OS2                                                        */
+  /*    tt_face_load_os2                                                   */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the OS2 table.                                               */
@@ -1253,8 +1253,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_OS2( TT_Face    face,
-               FT_Stream  stream )
+  tt_face_load_os2( TT_Face    face,
+                    FT_Stream  stream )
   {
     FT_Error  error;
     TT_OS2*   os2;
@@ -1382,7 +1382,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Postscript                                                 */
+  /*    tt_face_load_postscript                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the Postscript table.                                        */
@@ -1396,8 +1396,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_PostScript( TT_Face    face,
-                      FT_Stream  stream )
+  tt_face_load_postscript( TT_Face    face,
+                           FT_Stream  stream )
   {
     FT_Error        error;
     TT_Postscript*  post = &face->postscript;
@@ -1441,7 +1441,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_PCLT                                                       */
+  /*    tt_face_load_pclt                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the PCL 5 Table.                                             */
@@ -1455,8 +1455,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_PCLT( TT_Face    face,
-                FT_Stream  stream )
+  tt_face_load_pclt( TT_Face    face,
+                     FT_Stream  stream )
   {
     static const FT_Frame_Field  pclt_fields[] =
     {
@@ -1509,7 +1509,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Gasp                                                       */
+  /*    tt_face_load_gasp                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the `gasp' table into a face object.                         */
@@ -1523,8 +1523,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Gasp( TT_Face    face,
-                FT_Stream  stream )
+  tt_face_load_gasp( TT_Face    face,
+                     FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -1533,7 +1533,7 @@
     TT_GaspRange   gaspranges;
 
 
-    FT_TRACE2(( "TT_Load_Gasp: %08p\n", face ));
+    FT_TRACE2(( "tt_face_load_gasp: %08p\n", face ));
 
     /* the gasp table is optional */
     error = face->goto_table( face, TTAG_gasp, stream, 0 );
@@ -1584,7 +1584,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Kern                                                       */
+  /*    tt_face_load_kern                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the first kerning table with format 0 in the font.  Only     */
@@ -1601,8 +1601,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Kern( TT_Face    face,
-                FT_Stream  stream )
+  tt_face_load_kern( TT_Face    face,
+                     FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -1737,7 +1737,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_Hdmx                                                       */
+  /*    tt_face_load_hdmx                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the horizontal device metrics table.                         */
@@ -1751,8 +1751,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Hdmx( TT_Face    face,
-                FT_Stream  stream )
+  tt_face_load_hdmx( TT_Face    face,
+                     FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -1820,7 +1820,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Free_Hdmx                                                       */
+  /*    tt_face_free_hdmx                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Frees the horizontal device metrics table.                         */
@@ -1829,7 +1829,7 @@
   /*    face :: A handle to the target face object.                        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  TT_Free_Hdmx( TT_Face  face )
+  tt_face_free_hdmx( TT_Face  face )
   {
     if ( face )
     {

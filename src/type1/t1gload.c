@@ -242,7 +242,7 @@
     hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
                        ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
 
-    glyph->root.format = ft_glyph_format_outline;
+    glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
     error = decoder_funcs->init( &decoder,
                                  (FT_Face)face,
@@ -280,8 +280,8 @@
     /* bearing the yMax                                    */
     if ( !error )
     {
-      glyph->root.outline.flags &= ft_outline_owner;
-      glyph->root.outline.flags |= ft_outline_reverse_fill;
+      glyph->root.outline.flags &= FT_OUTLINE_OWNER;
+      glyph->root.outline.flags |= FT_OUTLINE_REVERSE_FILL;
 
       /* for composite glyphs, return only left side bearing and */
       /* advance width                                           */
@@ -314,10 +314,10 @@
 
         glyph->root.linearVertAdvance = 0;
 
-        glyph->root.format = ft_glyph_format_outline;
+        glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
         if ( size && size->root.metrics.y_ppem < 24 )
-          glyph->root.outline.flags |= ft_outline_high_precision;
+          glyph->root.outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
 #if 1
         /* apply the font matrix, if any */

@@ -62,11 +62,11 @@
    /* table of Mac names.  Thus, it is possible to build a version of */
    /* FreeType without the Type 1 driver & PSNames module.            */
 
-#define MAC_NAME( x )  TT_Post_Default_Names[x]
+#define MAC_NAME( x )  tt_post_default_names[x]
 
   /* the 258 default Mac PS glyph names */
 
-  FT_String*  TT_Post_Default_Names[258] =
+  static const FT_String*  tt_post_default_names[258] =
   {
     /*   0 */
     ".notdef", ".null", "CR", "space", "exclam",
@@ -153,7 +153,7 @@
 
 
   static FT_Error
-  Load_Format_20( TT_Face    face,
+  load_format_20( TT_Face    face,
                   FT_Stream  stream )
   {
     FT_Memory   memory = stream->memory;
@@ -271,7 +271,7 @@
 
 
   static FT_Error
-  Load_Format_25( TT_Face    face,
+  load_format_25( TT_Face    face,
                   FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
@@ -334,7 +334,7 @@
 
 
   static FT_Error
-  Load_Post_Names( TT_Face  face )
+  load_post_names( TT_Face  face )
   {
     FT_Stream  stream;
     FT_Error   error;
@@ -359,11 +359,11 @@
     switch ( format )
     {
     case 0x00020000L:
-      error = Load_Format_20( face, stream );
+      error = load_format_20( face, stream );
       break;
 
     case 0x00028000L:
-      error = Load_Format_25( face, stream );
+      error = load_format_25( face, stream );
       break;
 
     default:
@@ -378,7 +378,7 @@
 
 
   FT_LOCAL_DEF( void )
-  TT_Free_Post_Names( TT_Face  face )
+  tt_face_free_ps_names( TT_Face  face )
   {
     FT_Memory      memory = face->root.memory;
     TT_Post_Names  names  = &face->postscript_names;
@@ -423,7 +423,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Get_PS_Name                                                     */
+  /*    tt_face_get_ps_name                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Gets the PostScript glyph name of a glyph.                         */
@@ -442,9 +442,9 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Get_PS_Name( TT_Face      face,
-                  FT_UInt      idx,
-                  FT_String**  PSname )
+  tt_face_get_ps_name( TT_Face      face,
+                       FT_UInt      idx,
+                       FT_String**  PSname )
   {
     FT_Error         error;
     TT_Post_Names    names;
@@ -485,7 +485,7 @@
 
         if ( !names->loaded )
         {
-          error = Load_Post_Names( face );
+          error = load_post_names( face );
           if ( error )
             break;
         }
@@ -510,7 +510,7 @@
 
         if ( !names->loaded )
         {
-          error = Load_Post_Names( face );
+          error = load_post_names( face );
           if ( error )
             break;
         }

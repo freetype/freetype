@@ -172,7 +172,7 @@
          charmap.face        = root;
          charmap.platform_id = 3;
          charmap.encoding_id = 1;
-         charmap.encoding    = ft_encoding_unicode;
+         charmap.encoding    = FT_ENCODING_UNICODE;
 
          FT_CMap_New( &pfr_cmap_class_rec, NULL, &charmap, NULL );
 
@@ -238,7 +238,7 @@
     FT_ASSERT( gindex < face->phy_font.num_chars );
 
     gchar               = face->phy_font.chars + gindex;
-    slot->root.format   = ft_glyph_format_outline;
+    slot->root.format   = FT_GLYPH_FORMAT_OUTLINE;
     outline->n_points   = 0;
     outline->n_contours = 0;
     gps_offset          = face->header.gps_section_offset;
@@ -261,11 +261,11 @@
       /* copy outline data */
       *outline = slot->glyph.loader->base.outline;
 
-      outline->flags &= ~ft_outline_owner;
-      outline->flags |= ft_outline_reverse_fill;
+      outline->flags &= ~FT_OUTLINE_OWNER;
+      outline->flags |= FT_OUTLINE_REVERSE_FILL;
 
       if ( size && size->root.metrics.y_ppem < 24 )
-        outline->flags |= ft_outline_high_precision;
+        outline->flags |= FT_OUTLINE_HIGH_PRECISION;
 
       /* compute the advance vector */
       metrics->horiAdvance = 0;

@@ -853,15 +853,15 @@ ah_draw_smooth_points( void )
 {
   if ( ah_debug_hinter && option_show_smooth )
   {
-    AH_Outline*  glyph = ah_debug_hinter->glyph;
+    AH_Outline   glyph = ah_debug_hinter->glyph;
     FT_UInt      count = glyph->num_points;
-    AH_Point*    point = glyph->points;
+    AH_Point     point = glyph->points;
 
     nv_painter_set_color( painter, SMOOTH_COLOR, 256 );
 
     for ( ; count > 0; count--, point++ )
     {
-      if ( !( point->flags & ah_flag_weak_interpolation ) )
+      if ( !( point->flags & AH_FLAG_WEAK_INTERPOLATION ) )
       {
         NV_Transform  transform, *trans = &transform;
         NV_Vector     vec;
@@ -883,9 +883,9 @@ ah_draw_edges( void )
 {
   if ( ah_debug_hinter )
   {
-    AH_Outline*  glyph = ah_debug_hinter->glyph;
+    AH_Outline   glyph = ah_debug_hinter->glyph;
     FT_UInt      count;
-    AH_Edge*     edge;
+    AH_Edge      edge;
     FT_Pos       pp1 = ah_debug_hinter->pp1.x;
 
     nv_painter_set_color( painter, EDGE_COLOR, 256 );
@@ -938,12 +938,12 @@ ah_draw_edges( void )
       /* draw vertical segments */
       if ( option_show_vert_hints )
       {
-        AH_Segment*  seg   = glyph->vert_segments;
+        AH_Segment   seg   = glyph->vert_segments;
         FT_UInt      count = glyph->num_vsegments;
 
         for ( ; count > 0; count--, seg++ )
         {
-          AH_Point  *first, *last;
+          AH_PointRec  *first, *last;
           NV_Vector  v1, v2;
           NV_Pos     y1, y2, x;
 
@@ -977,12 +977,12 @@ ah_draw_edges( void )
       /* draw horizontal segments */
       if ( option_show_horz_hints )
       {
-        AH_Segment*  seg   = glyph->horz_segments;
+        AH_Segment   seg   = glyph->horz_segments;
         FT_UInt      count = glyph->num_hsegments;
 
         for ( ; count > 0; count--, seg++ )
         {
-          AH_Point  *first, *last;
+          AH_PointRec  *first, *last;
           NV_Vector  v1, v2;
           NV_Pos     y1, y2, x;
 
@@ -1016,12 +1016,12 @@ ah_draw_edges( void )
 
       if ( option_show_vert_hints && option_show_links )
       {
-        AH_Segment*  seg   = glyph->vert_segments;
+        AH_Segment   seg   = glyph->vert_segments;
         FT_UInt      count = glyph->num_vsegments;
 
         for ( ; count > 0; count--, seg++ )
         {
-          AH_Segment*  seg2 = NULL;
+          AH_Segment   seg2 = NULL;
           NV_Path      link;
           NV_Vector    v1, v2;
 
@@ -1052,12 +1052,12 @@ ah_draw_edges( void )
 
       if ( option_show_horz_hints && option_show_links )
       {
-        AH_Segment*  seg   = glyph->horz_segments;
+        AH_Segment   seg   = glyph->horz_segments;
         FT_UInt      count = glyph->num_hsegments;
 
         for ( ; count > 0; count--, seg++ )
         {
-          AH_Segment*  seg2 = NULL;
+          AH_Segment   seg2 = NULL;
           NV_Path      link;
           NV_Vector    v1, v2;
 
@@ -1113,7 +1113,7 @@ draw_glyph( int  glyph_index )
   error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_BITMAP );
   if (error) Panic( "could not load glyph" );
 
-  if ( face->glyph->format != ft_glyph_format_outline )
+  if ( face->glyph->format != FT_GLYPH_FORMAT_OUTLINE )
     Panic( "could not load glyph outline" );
 
   error = nv_path_new_from_outline( renderer,
@@ -1167,7 +1167,7 @@ draw_glyph( int  glyph_index )
 
       for ( m = first; m <= last; m++ )
       {
-        color = (out.tags[m] & FT_Curve_Tag_On)
+        color = (out.tags[m] & FT_CURVE_TAG_ON)
               ? ON_COLOR
               : OFF_COLOR;
 

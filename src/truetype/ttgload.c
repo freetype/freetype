@@ -458,7 +458,7 @@
 
     /* clear the touch tags */
     for ( n = 0; n < n_points; n++ )
-      outline->tags[n] &= FT_Curve_Tag_On;
+      outline->tags[n] &= FT_CURVE_TAG_ON;
 
     outline->n_points   = (FT_UShort)n_points;
     outline->n_contours = (FT_Short) n_contours;
@@ -1021,7 +1021,7 @@
         FT_GlyphLoader_Add( gloader );
 
         glyph->num_subglyphs = gloader->base.num_subglyphs;
-        glyph->format        = ft_glyph_format_composite;
+        glyph->format        = FT_GLYPH_FORMAT_COMPOSITE;
         glyph->subglyphs     = gloader->base.subglyphs;
 
         goto Exit;
@@ -1299,7 +1299,7 @@
 
 
             for ( k = 0; k < num_points; k++ )
-              pts->tags[k] &= FT_Curve_Tag_On;
+              pts->tags[k] &= FT_CURVE_TAG_ON;
           }
 
           cur_to_org( num_points + 2, pts );
@@ -1363,9 +1363,9 @@
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
       y_scale = size->root.metrics.y_scale;
 
-    if ( glyph->format != ft_glyph_format_composite )
+    if ( glyph->format != FT_GLYPH_FORMAT_COMPOSITE )
     {
-      glyph->outline.flags &= ~ft_outline_single_pass;
+      glyph->outline.flags &= ~FT_OUTLINE_SINGLE_PASS;
 
       /* copy outline to our glyph slot */
       FT_GlyphLoader_CopyPoints( glyph->internal->loader, loader->gloader );
@@ -1647,7 +1647,7 @@
         glyph->metrics.vertBearingY = (FT_Pos)metrics.vertBearingY << 6;
         glyph->metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  << 6;
 
-        glyph->format = ft_glyph_format_bitmap;
+        glyph->format = FT_GLYPH_FORMAT_BITMAP;
         if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
         {
           glyph->bitmap_left = metrics.vertBearingX;
@@ -1754,7 +1754,7 @@
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     /* Main loading loop */
-    glyph->format        = ft_glyph_format_outline;
+    glyph->format        = FT_GLYPH_FORMAT_OUTLINE;
     glyph->num_subglyphs = 0;
 
     error = load_truetype_glyph( &loader, glyph_index );
@@ -1773,7 +1773,7 @@
     /* TrueType glyphs at all sizes using the bytecode interpreter. */
     /*                                                              */
     if ( size && size->root.metrics.y_ppem < 24 )
-      glyph->outline.flags |= ft_outline_high_precision;
+      glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
   Exit:
     return error;

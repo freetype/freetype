@@ -398,13 +398,13 @@ THE SOFTWARE.
 
 
               charmap.face        = FT_FACE( face );
-              charmap.encoding    = ft_encoding_none;
+              charmap.encoding    = FT_ENCODING_NONE;
               charmap.platform_id = 0;
               charmap.encoding_id = 0;
 
               if ( unicode_charmap )
               {
-                charmap.encoding    = ft_encoding_unicode;
+                charmap.encoding    = FT_ENCODING_UNICODE;
                 charmap.platform_id = 3;
                 charmap.encoding_id = 1;
               }
@@ -429,7 +429,7 @@ THE SOFTWARE.
 
 
           charmap.face        = FT_FACE( face );
-          charmap.encoding    = ft_encoding_adobe_standard;
+          charmap.encoding    = FT_ENCODING_ADOBE_STANDARD;
           charmap.platform_id = 7;
           charmap.encoding_id = 0;
 
@@ -510,7 +510,7 @@ THE SOFTWARE.
 
     if ( bpp == 1 )
     {
-      bitmap->pixel_mode = ft_pixel_mode_mono;
+      bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
       bitmap->pitch      = glyph.bpr;
 
       if ( FT_NEW_ARRAY( bitmap->buffer, glyph.bytes ) )
@@ -520,7 +520,7 @@ THE SOFTWARE.
     else
     {
       /* blow up pixmap to have 8 bits per pixel */
-      bitmap->pixel_mode = ft_pixel_mode_grays;
+      bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
       bitmap->pitch      = bitmap->width;
 
       if ( FT_NEW_ARRAY( bitmap->buffer, bitmap->rows * bitmap->pitch ) )
@@ -623,7 +623,7 @@ THE SOFTWARE.
     slot->metrics.height       = bitmap->rows << 6;
 
     slot->linearHoriAdvance = (FT_Fixed)glyph.dwidth << 16;
-    slot->format            = ft_glyph_format_bitmap;
+    slot->format            = FT_GLYPH_FORMAT_BITMAP;
     slot->flags             = FT_GLYPH_OWN_BITMAP;
 
   Exit:

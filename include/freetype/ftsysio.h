@@ -93,6 +93,7 @@ FT_BEGIN_HEADER
   typedef FT_Error  (*FT_Stream_SeekFunc)( FT_Stream   stream,
                                            FT_ULong    pos );
 
+
  /********************************************************************
   *
   * @struct: FT_Stream_ClassRec

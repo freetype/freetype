@@ -1357,7 +1357,7 @@
     if ( coverage < 0 )
       coverage = -coverage;
 
-    if ( ras.outline.flags & ft_outline_even_odd_fill )
+    if ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL )
     {
       coverage &= 511;
 
@@ -1618,14 +1618,14 @@
       tag   = FT_CURVE_TAG( tags[0] );
 
       /* A contour cannot start with a cubic control point! */
-      if ( tag == FT_Curve_Tag_Cubic )
+      if ( tag == FT_CURVE_TAG_CUBIC )
         goto Invalid_Outline;
 
       /* check first point to determine origin */
-      if ( tag == FT_Curve_Tag_Conic )
+      if ( tag == FT_CURVE_TAG_CONIC )
       {
         /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
+        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_CURVE_TAG_ON )
         {
           /* start at last point if it is on the curve */
           v_start = v_last;
@@ -1657,7 +1657,7 @@
         tag = FT_CURVE_TAG( tags[0] );
         switch ( tag )
         {
-        case FT_Curve_Tag_On:  /* emit a single line_to */
+        case FT_CURVE_TAG_ON:  /* emit a single line_to */
           {
             FT_Vector  vec;
 
@@ -1671,7 +1671,7 @@
             continue;
           }
 
-        case FT_Curve_Tag_Conic:  /* consume conic arcs */
+        case FT_CURVE_TAG_CONIC:  /* consume conic arcs */
           {
             v_control.x = SCALED( point->x );
             v_control.y = SCALED( point->y );
@@ -1690,7 +1690,7 @@
               vec.x = SCALED( point->x );
               vec.y = SCALED( point->y );
 
-              if ( tag == FT_Curve_Tag_On )
+              if ( tag == FT_CURVE_TAG_ON )
               {
                 error = func_interface->conic_to( &v_control, &vec, user );
                 if ( error )
@@ -1698,7 +1698,7 @@
                 continue;
               }
 
-              if ( tag != FT_Curve_Tag_Conic )
+              if ( tag != FT_CURVE_TAG_CONIC )
                 goto Invalid_Outline;
 
               v_middle.x = ( v_control.x + vec.x ) / 2;
@@ -1716,13 +1716,13 @@
             goto Close;
           }
 
-        default:  /* FT_Curve_Tag_Cubic */
+        default:  /* FT_CURVE_TAG_CUBIC */
           {
             FT_Vector  vec1, vec2;
 
 
             if ( point + 1 > limit                             ||
-                 FT_CURVE_TAG( tags[1] ) != FT_Curve_Tag_Cubic )
+                 FT_CURVE_TAG( tags[1] ) != FT_CURVE_TAG_CUBIC )
               goto Invalid_Outline;
 
             point += 2;
@@ -1969,16 +1969,16 @@
       return ErrRaster_Invalid_Outline;
 
     /* if direct mode is not set, we must have a target bitmap */
-    if ( ( params->flags & ft_raster_flag_direct ) == 0 &&
+    if ( ( params->flags & FT_RASTER_FLAG_DIRECT ) == 0 &&
          ( !target_map || !target_map->buffer )         )
       return -1;
 
     /* this version does not support monochrome rendering */
-    if ( !( params->flags & ft_raster_flag_aa ) )
+    if ( !( params->flags & FT_RASTER_FLAG_AA ) )
       return ErrRaster_Invalid_Mode;
 
     /* compute clipping box */
-    if ( ( params->flags & ft_raster_flag_direct ) == 0 )
+    if ( ( params->flags & FT_RASTER_FLAG_DIRECT ) == 0 )
     {
       /* compute clip box from target pixmap */
       ras.clip_box.xMin = 0;
@@ -1986,7 +1986,7 @@
       ras.clip_box.xMax = target_map->width;
       ras.clip_box.yMax = target_map->rows;
     }
-    else if ( params->flags & ft_raster_flag_clip )
+    else if ( params->flags & FT_RASTER_FLAG_CLIP )
     {
       ras.clip_box = params->clip_box;
     }
@@ -2008,7 +2008,7 @@
     ras.render_span      = (FT_Raster_Span_Func)gray_render_span;
     ras.render_span_data = &ras;
 
-    if ( params->flags & ft_raster_flag_direct )
+    if ( params->flags & FT_RASTER_FLAG_DIRECT )
     {
       ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
       ras.render_span_data = params->user;
@@ -2133,7 +2133,7 @@
 
   const FT_Raster_Funcs  ft_grays_raster =
   {
-    ft_glyph_format_outline,
+    FT_GLYPH_FORMAT_OUTLINE,
 
     (FT_Raster_New_Func)     gray_raster_new,
     (FT_Raster_Reset_Func)   gray_raster_reset,

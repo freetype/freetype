@@ -927,7 +927,7 @@
         FT_Pos  dxi, dyi, dxo, dyo;
 
 
-        if ( !( outline->tags[n] & FT_Curve_Tag_On ) )
+        if ( !( outline->tags[n] & FT_CURVE_TAG_ON ) )
           point->flags = PSH2_POINT_OFF;
 
         dxi = vec[n].x - vec[n_prev].x;

@@ -423,7 +423,7 @@
 
       point->x = x >> 16;
       point->y = y >> 16;
-      *control = (FT_Byte)( flag ? FT_Curve_Tag_On : FT_Curve_Tag_Cubic );
+      *control = (FT_Byte)( flag ? FT_CURVE_TAG_ON : FT_CURVE_TAG_CUBIC );
 
       builder->last = *point;
     }
@@ -525,7 +525,7 @@
       /* `delete' last point only if it coincides with the first    */
       /* point and if it is not a control point (which can happen). */
       if ( p1->x == p2->x && p1->y == p2->y )
-        if ( *control == FT_Curve_Tag_On )
+        if ( *control == FT_CURVE_TAG_ON )
           outline->n_points--;
     }
 
@@ -692,7 +692,7 @@
       /* set up remaining glyph fields */
       glyph->num_subglyphs = 2;
       glyph->subglyphs     = loader->base.subglyphs;
-      glyph->format        = ft_glyph_format_composite;
+      glyph->format        = FT_GLYPH_FORMAT_COMPOSITE;
 
       loader->current.num_subglyphs = 2;
     }
@@ -2291,7 +2291,7 @@
     hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
                        ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
 
-    glyph->root.format = ft_glyph_format_outline;  /* by default */
+    glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;  /* by default */
 
     {
       FT_Byte*  charstring;
@@ -2381,13 +2381,13 @@
 
         glyph->root.linearVertAdvance = 0;
 
-        glyph->root.format = ft_glyph_format_outline;
+        glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
         glyph->root.outline.flags = 0;
         if ( size && size->metrics.y_ppem < 24 )
-          glyph->root.outline.flags |= ft_outline_high_precision;
+          glyph->root.outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
-        glyph->root.outline.flags |= ft_outline_reverse_fill;
+        glyph->root.outline.flags |= FT_OUTLINE_REVERSE_FILL;
 
         /* apply the font matrix */
         FT_Outline_Transform( &glyph->root.outline, &font_matrix );

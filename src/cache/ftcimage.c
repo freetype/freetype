@@ -143,8 +143,8 @@
       error = FT_Load_Glyph( face, gindex, load_flags );
       if ( !error )
       {
-        if ( face->glyph->format == ft_glyph_format_bitmap  ||
-             face->glyph->format == ft_glyph_format_outline )
+        if ( face->glyph->format == FT_GLYPH_FORMAT_BITMAP  ||
+             face->glyph->format == FT_GLYPH_FORMAT_OUTLINE )
         {
           /* ok, copy it */
           FT_Glyph  glyph;
@@ -179,7 +179,7 @@
 
     switch ( glyph->format )
     {
-    case ft_glyph_format_bitmap:
+    case FT_GLYPH_FORMAT_BITMAP:
       {
         FT_BitmapGlyph  bitg;
 
@@ -190,7 +190,7 @@
       }
       break;
 
-    case ft_glyph_format_outline:
+    case FT_GLYPH_FORMAT_OUTLINE:
       {
         FT_OutlineGlyph  outg;
 
