@@ -478,6 +478,7 @@
   static void
   otl_liga_mark2_validate( OTL_Bytes      table,
                            OTL_UInt       class_count,
+                           OTL_Bool       maybe_zero,
                            OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
@@ -493,7 +494,15 @@
     for ( ; num_components > 0; num_components-- )
       /* scan ligature anchor records */
       for ( count = class_count; class_count > 0; class_count-- )
+      {
+        OTL_UInt  offset = OTL_NEXT_USHORT( p );
+
+
+        if ( !offset && maybe_zero )
+          continue;
+  
         otl_anchor_validate( table + OTL_NEXT_USHORT( p ), valid );
+      }
   }
 
 
@@ -513,7 +522,7 @@
 
     /* scan ligature attach records */
     for ( ; ligature_count > 0; ligature_count-- )
-      otl_liga_mark2_validate( table + OTL_NEXT_USHORT( p ), class_count,
+      otl_liga_mark2_validate( table + OTL_NEXT_USHORT( p ), class_count, 1,
                                valid );
   }
 
@@ -593,7 +602,7 @@
         otl_coverage_validate( table + coverage2, valid );
 
         otl_mark_array_validate( table + array1, valid );
-        otl_liga_mark2_validate( table + array2, num_classes, valid );
+        otl_liga_mark2_validate( table + array2, num_classes, 0, valid );
       }
       break;
 
