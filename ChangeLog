@@ -1,3 +1,14 @@
+2003-02-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_endchar>: Preserve glyph width before calling
+	cff_operator_seac.
+
+2003-02-09  Martin Muskens  <mmuskens@aurelon.com>
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Handle special
+	first argument for `hintmask' and `cntrmask' operators also.
+
 2003-02-08  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.in: Call AC_SUBST for `enable_shared',
