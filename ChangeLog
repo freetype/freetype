@@ -1,15 +1,13 @@
 2001-12-22  David Turner  <david@freetype.org>
 
-	* src/autohint/ahhint.c (ah_hinter_load): auto-hinted glyphs had an
-  incorrect glyph advance in the case of mono-width fonts (like Courier,
-  Andale Mono, etc..)
-
+	* src/autohint/ahhint.c (ah_hinter_load): Auto-hinted glyphs had an
+	incorrect glyph advance in the case of mono-width fonts (like
+	Courier, Andale Mono, and others).
 
 2001-12-22  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/*: Adaptations to latest changes.
 	Support added for MorphOS.
-
 
 2001-12-22  Werner Lemberg  <wl@gnu.org>
 
@@ -25,7 +23,6 @@
 
 	* docs/modules.txt: New file.
 
-
 2001-12-21  David Turner  <david@freetype.org>
 
 	* src/pshinter/pshrec.c (ps_hints_t2mask, ps_hints_t2counter):
@@ -39,29 +36,9 @@
 	(T1_Decoder_Parse_Charstrings), src/pshinter/pshalgo2.c (*), Fixed a
 	bug where the X and Y axis where inversed in the postscript hinter. 
 	This caused problem when displaying on non-square surfaces.
->>>>>>> 1.289
 
-<<<<<<< ChangeLog
-        * src/cff/cffgload.c: added a comment regarding "cntrmask" operator
-        
-        * src/pshinter/pshrec.c: now ignores invalid "hintmask" and "cntrmask"
-        operators (instead of returning an error). Glyph 2028 of the CFF font
-        "MSung-Light-Acro" couldn't be rendered otherwise (it seems its
-        charstring is buggy, though this requires more analysis)..
-
-        * src/cff/cffgload.c, src/psaux/t1decode.c, src/pshinter/pshrec.c,
-        src/pshinter/ahalgo2.c, src/pshinter/pshglob.h: fixed a bug where
-        the X and Y axis where inversed in the postscript hinter. this
-        caused problem when displaying on non-square surfaces..
-
-        * include/freetype/cache/ftcmanag.h, include/freetype/cache/ftcimage.h,
-        include/freetype/cache/ftcsbits.h: updating documentation to better
-        explain the use of the "anode" output parameter in lookup functions
-
-=======
 	* src/pshinter/pshalgo2.c: s/vertical/dimension/.
 
->>>>>>> 1.289
 	* src/pshinter/pshglob.c (psh_globals_new): Replaced a floating
 	point constant with a fixed-float equivalent.  For some reasons not
 	all compilers are capable of directly computing a floating pointer
