@@ -97,17 +97,22 @@
       strncpy( filename, fname, 128 );
       strncpy( alt_filename, fname, 128 );
 
+#ifndef macintosh
       if ( i >= 0 )
       {
         strncpy( filename + strlen( filename ), ".ttf", 4 );
         strncpy( alt_filename + strlen( alt_filename ), ".ttc", 4 );
       }
-
+#endif
       i     = strlen( filename );
       fname = filename;
 
       while ( i >= 0 )
+#ifndef macintosh
         if ( filename[i] == '/' || filename[i] == '\\' )
+#else
+        if ( filename[i] == ':' )
+#endif
         {
           fname = filename + i + 1;
           i = -1;
@@ -122,9 +127,9 @@
       if (error)
       {
         if (error == FT_Err_Invalid_File_Format)
-          printf( "unknow format\n" );
+          printf( "unknown format\n" );
         else
-          printf( "could not find/open file\n" );
+          printf( "could not find/open file (error: %d)\n", error );
         continue;
       }
       if (error) Panic( "Could not open file" );
