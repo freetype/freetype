@@ -432,8 +432,15 @@
     /*                                                             */
 
     /* do we have outlines in there? */
-    has_outline   = FT_BOOL( ( TT_LookUp_Table( face, TTAG_glyf ) != 0 ) ||
-                             ( TT_LookUp_Table( face, TTAG_CFF  ) != 0 ) );
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    has_outline   = FT_BOOL( face->root.incremental_interface != 0 ||
+                             TT_LookUp_Table( face, TTAG_glyf ) != 0 ||
+                             TT_LookUp_Table( face, TTAG_CFF ) != 0 );
+#else
+    has_outline   = FT_BOOL( TT_LookUp_Table( face, TTAG_glyf ) != 0 ||
+                             TT_LookUp_Table( face, TTAG_CFF ) != 0 );
+#endif
+
     is_apple_sbit = 0;
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
