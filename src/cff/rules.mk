@@ -26,7 +26,7 @@ CFF_COMPILE := $(FT_COMPILE)
 #
 CFF_DRV_SRC := $(CFF_DIR_)cffobjs.c   \
                $(CFF_DIR_)cffload.c   \
-               $(CFF_DIR_)t2gload.c   \
+               $(CFF_DIR_)cffgload.c  \
                $(CFF_DIR_)cffparse.c  \
                $(CFF_DIR_)cffdrivr.c
 
@@ -44,18 +44,18 @@ CFF_DRV_H := $(CFF_DRV_SRC:%.c=%.h) \
 CFF_DRV_OBJ_M := $(CFF_DRV_SRC:$(CFF_DIR_)%.c=$(OBJ_)%.$O)
 CFF_DRV_OBJ_S := $(OBJ_)cff.$O
 
-# T2 driver source file for single build
+# CFF driver source file for single build
 #
 CFF_DRV_SRC_S := $(CFF_DIR_)cff.c
 
 
-# T2 driver - single object
+# CFF driver - single object
 #
 $(CFF_DRV_OBJ_S): $(CFF_DRV_SRC_S) $(CFF_DRV_SRC) $(FREETYPE_H) $(CFF_DRV_H)
 	$(CFF_COMPILE) $T$@ $(CFF_DRV_SRC_S)
 
 
-# T2 driver - multiple objects
+# CFF driver - multiple objects
 #
 $(OBJ_)%.$O: $(CFF_DIR_)%.c $(FREETYPE_H) $(CFF_DRV_H)
 	$(CFF_COMPILE) $T$@ $<
