@@ -1639,7 +1639,7 @@
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
 
-    glyph->root.format = ft_glyph_format_none;
+    glyph->root.format = ft_glyph_format_outline;  /* by default */
 
     hinting = 0;
 
