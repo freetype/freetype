@@ -152,7 +152,7 @@ endif
 #
 # The list of demonstration programs to build.
 #
-EXES := ftlint t1dump ftview fttimer
+EXES := ftlint ftview fttimer
 
 ifneq ($(findstring $(PLATFORM),os2 unix),)
 EXES += ttdebug

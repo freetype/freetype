@@ -34,7 +34,6 @@
 /* When this configuration macro is defined, we rely on the "psnames" */
 /* module to grab the glyph names..                                   */
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-
 #include <psnames.h>
 #define  MAC_NAME(x)  ((TT_String*)psnames->macintosh_name(x))
 
@@ -48,7 +47,7 @@
 
   /* the 258 default Mac PS glyph names */
 
-  String*  TT_Post_Default_Names[258] =
+  FT_String*  TT_Post_Default_Names[258] =
   {
     /*   0 */
     ".notdef", ".null", "CR", "space", "exclam",
@@ -411,18 +410,21 @@
   {
     TT_Error            error;
     TT_Post_Names*      names;
+#ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     PSNames_Interface*  psnames;
-
+#endif
     if ( !face )
       return TT_Err_Invalid_Face_Handle;
 
     if ( index >= (TT_UInt)face->root.num_glyphs )
       return TT_Err_Invalid_Glyph_Index;
 
+#ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     psnames = (PSNames_Interface*)face->psnames;
     if (!psnames)
       return TT_Err_Unimplemented_Feature;
-      
+#endif
+
     names   = &face->postscript_names;
 
     /* `.notdef' by default */

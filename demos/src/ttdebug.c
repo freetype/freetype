@@ -815,8 +815,8 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
 
     TT_Error  error = 0;
 
-    TT_GlyphZone  save;
-    TT_GlyphZone  pts;
+    FT_GlyphZone  save;
+    FT_GlyphZone  pts;
 
     const FT_String*  round_str[8] =
     {
@@ -847,7 +847,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
                                        save.n_points );
     save.cur   = (TT_Vector*)malloc( 2 * sizeof( TT_F26Dot6 ) *
                                        save.n_points );
-    save.touch = (TT_Byte*)malloc( save.n_points );
+    save.flags = (TT_Byte*)malloc( save.n_points );
 
     exc->instruction_trap = 1;
 
@@ -998,7 +998,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
 
       MEM_Copy( save.org,   pts.org, pts.n_points * sizeof ( TT_Vector ) );
       MEM_Copy( save.cur,   pts.cur, pts.n_points * sizeof ( TT_Vector ) );
-      MEM_Copy( save.touch, pts.touch, pts.n_points );
+      MEM_Copy( save.flags, pts.flags, pts.n_points );
 
       /* a return indicate the last command */
       if (ch == '\r')
@@ -1052,14 +1052,14 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
         if ( save.org[A].y != pts.org[A].y ) diff |= 2;
         if ( save.cur[A].x != pts.cur[A].x ) diff |= 4;
         if ( save.cur[A].y != pts.cur[A].y ) diff |= 8;
-        if ( save.touch[A] != pts.touch[A] ) diff |= 16;
+        if ( save.flags[A] != pts.flags[A] ) diff |= 16;
 
         if ( diff )
         {
           printf( "%02hx  ", A );
 
           if ( diff & 16 ) temp = "(%01hx)"; else temp = " %01hx ";
-          printf( temp, save.touch[A] & 7 );
+          printf( temp, save.flags[A] & 7 );
 
           if ( diff & 1 ) temp = "(%08lx)"; else temp = " %08lx ";
           printf( temp, save.org[A].x );
@@ -1078,7 +1078,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
           printf( "%02hx  ", A );
 
           if ( diff & 16 ) temp = "[%01hx]"; else temp = " %01hx ";
-          printf( temp, pts.touch[A] & 7 );
+          printf( temp, pts.flags[A] & 7 );
 
           if ( diff & 1 ) temp = "[%08lx]"; else temp = " %08lx ";
           printf( temp, pts.org[A].x );
