@@ -1,4 +1,75 @@
-LATEST CHANGES - 27-jan-2000
+LATEST CHANGES - 22-feb-2000
+
+  - introduced the "psnames" module. It is used to:
+
+      o convert a Postscript glyph name into the equivalent Unicode
+        character code (used by the Type 1 driver(s) to synthetize
+        on the fly a Unicode charmap).
+
+      o provide an interface to retrieve the Postscript names of
+        the Macintosh, Adobe Standard & Adobe Expert character codes.
+        (the Macintosh names are used by the SFNT-module postscript
+         names support routines, while the other two tables are used
+         by the Type 1 driver(s)).
+
+  - introduced the "type1z" alternate Type 1 driver. This is a (still
+    experimental) driver for the Type 1 format that will ultimately
+    replace the one in "src/type1". It uses pattern matching to load
+    data from the font, instead of a finite state analyzer. It works
+    much better than the "old" driver with "broken" fonts. It is also
+    much smaller (under 15 Kb).
+
+  - the Type 1 drivers (both in "src/type1" and "src/type1z") are
+    nearly complete. They both provide automatic Unicode charmap
+    synthesis through the "psnames" module. No re-encoding vector
+    is needed. (note that they still leak memory due to some code
+    missing, and I'm getting lazy).
+
+    Trivial AFM support has been added to read kerning information
+    but wasn't exactly tested as it should ;-)
+
+  - The TrueType glyph loader has been seriously rewritten (see the
+    file "src/truetype/ttgload.c". It is now much, much simpler as
+    well as easier to read, maintain and understand :-) Preliminary
+    versions introduced a memory leak that has been reported by Jack
+    Davis, and is now fixed..
+
+  - introduced the new "ft_glyph_format_plotter", used to represent
+    stroked outlines like Windows "Vector" fonts, and certain Type 1
+    fonts like "Hershey". The corresponding raster will be written
+    soon.
+
+  - FT_New_Memory_Face is gone. Likewise, FT_Open_Face has a new
+    interface that uses a structure to describe the input stream,
+    the driver (if required), etc..
+
+TODO
+  - Write FT_Get_Glyph_Bitmap and FT_Load_Glyph_Bitmap
+
+  - Add a function like FT_Load_Character( face, char_code, load_flags )
+    that would really embbed a call to FT_Get_Char_Index then FT_Load_Glyph
+    to ease developer's work.
+
+  - Update the tutorial !!
+  - consider adding support for Multiple Master fonts in the Type 1
+    drivers.
+
+  - Test the AFM routines of the Type 1 drivers to check that kerning
+    information is returned correctly.
+
+  - write a decent auto-gridding component !! We need this to release
+    FreeType 2.0 gold !
+
+
+----- less urgent needs : ----------
+  - add a CFF/Type2 driver
+  - add a BDF driver
+  - add a FNT/PCF/HBF driver
+  - add a Speedo driver from the X11 sources
+
+
+==============================================================================
+OLDER CHANGES - 27-jan-2000
 
   - updated the "sfnt" module interface to allow several SFNT-based
     drivers to co-exist peacefully
