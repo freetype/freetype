@@ -2160,6 +2160,13 @@
     if ( error )
       goto Exit;
 
+    if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
+      goto Exit;
+
+    error = cff_new_index( &font->charstrings_index, stream, 0 );
+    if ( error )
+      goto Exit;
+
     /* now, check for a CID font */
     if ( dict->cid_registry != 0xFFFFU )
     {
@@ -2204,7 +2211,7 @@
 
       /* now load the FD Select array */
       error = CFF_Load_FD_Select( &font->fd_select,
-                                  (FT_UInt)dict->cid_count,
+                                  font->charstrings_index.count,
                                   stream,
                                   base_offset + dict->cid_fd_select_offset );
 
@@ -2224,13 +2231,6 @@
       error = CFF_Err_Unknown_File_Format;
       goto Exit;
     }
-
-    if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
-      goto Exit;
-
-    error = cff_new_index( &font->charstrings_index, stream, 0 );
-    if ( error )
-      goto Exit;
 
     /* explicit the global subrs */
     font->num_global_subrs = font->global_subrs_index.count;
