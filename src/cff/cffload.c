@@ -27,7 +27,6 @@
 #include FT_SOURCE_FILE(cff,cffload.h)
 #include FT_SOURCE_FILE(cff,cffparse.h)
 
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,6 +35,1021 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t2load
+
+  static const FT_UShort cff_isoadobe_charset[229] =
+  {
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228
+  };
+
+  static const FT_UShort cff_expert_charset[166] =
+  {
+    0,
+    1,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    13,
+    14,
+    15,
+    99,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    27,
+    28,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    109,
+    110,
+    267,
+    268,
+    269,
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    158,
+    155,
+    163,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    150,
+    164,
+    169,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365,
+    366,
+    367,
+    368,
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378
+  };
+
+  static const FT_UShort cff_expertsubset_charset[87] =
+  {
+    0,
+    1,
+    231,
+    232,
+    235,
+    236,
+    237,
+    238,
+    13,
+    14,
+    15,
+    99,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    27,
+    28,
+    249,
+    250,
+    251,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    109,
+    110,
+    267,
+    268,
+    269,
+    270,
+    272,
+    300,
+    301,
+    302,
+    305,
+    314,
+    315,
+    158,
+    155,
+    163,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    150,
+    164,
+    169,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346
+  };
+
+  static const FT_UShort cff_standard_encoding[256] =
+  {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    0,
+    111,
+    112,
+    113,
+    114,
+    0,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    0,
+    123,
+    0,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    0,
+    132,
+    133,
+    0,
+    134,
+    135,
+    136,
+    137,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    138,
+    0,
+    139,
+    0,
+    0,
+    0,
+    0,
+    140,
+    141,
+    142,
+    143,
+    0,
+    0,
+    0,
+    0,
+    0,
+    144,
+    0,
+    0,
+    0,
+    145,
+    0,
+    0,
+    146,
+    147,
+    148,
+    149,
+    0,
+    0,
+    0,
+    0
+  };
+
+
+  static const FT_UShort cff_expert_encoding[256] =
+  {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    229,
+    230,
+    0,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    13,
+    14,
+    15,
+    99,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    27,
+    28,
+    249,
+    250,
+    251,
+    252,
+    0,
+    253,
+    254,
+    255,
+    256,
+    257,
+    0,
+    0,
+    0,
+    258,
+    0,
+    0,
+    259,
+    260,
+    261,
+    262,
+    0,
+    0,
+    263,
+    264,
+    265,
+    0,
+    266,
+    109,
+    110,
+    267,
+    268,
+    269,
+    0,
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    304,
+    305,
+    306,
+    0,
+    0,
+    307,
+    308,
+    309,
+    310,
+    311,
+    0,
+    312,
+    0,
+    0,
+    312,
+    0,
+    0,
+    314,
+    315,
+    0,
+    0,
+    316,
+    317,
+    318,
+    0,
+    0,
+    0,
+    158,
+    155,
+    163,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    0,
+    0,
+    326,
+    150,
+    164,
+    169,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365,
+    366,
+    367,
+    368,
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378
+  };
 
 
   /* read a CFF offset from memory */
@@ -463,10 +1477,12 @@
     FT_Memory  memory = stream->memory;
 
 
-    FREE( encoding->bytes );
+    FREE( encoding->codes );
+    FREE( encoding->sids  );
     encoding->format = 0;
-    encoding->size   = 0;
     encoding->offset = 0;
+    encoding->codes  = 0;
+    encoding->sids   = 0;
   }
 
 
@@ -476,78 +1492,90 @@
   {
     FT_Memory  memory = stream->memory;
 
-
-    FREE( charset->bytes );
+    FREE( charset->sids );
     charset->format = 0;
     charset->offset = 0;
-    charset->size   = 0;
+    charset->sids   = 0;
   }
 
-
   static
-  FT_Error  CFF_Load_Charset( CFF_Charset*   charset,
-                              FT_UInt        num_glyphs,
-                              FT_Stream      stream,
-                              FT_ULong       base_offset,
-                              FT_ULong       offset )
+  FT_Error  CFF_Load_Charset( CFF_Charset*  charset,
+                              FT_UInt       num_glyphs,
+                              FT_Stream     stream,
+                              FT_ULong      base_offset,
+                              FT_ULong      offset )
   {
-    FT_Error   error  = 0;
-    FT_Memory  memory = stream->memory;
+    FT_Memory   memory     = stream->memory;
+    FT_Error    error      = 0;
+    FT_UShort   glyph_sid;
 
+    charset->offset = base_offset + offset;
 
+    /* Get the format of the table. */
+    if ( FILE_Seek( charset->offset ) ||
+         READ_Byte( charset->format ) )
+      goto Exit;
+
+    /* If the the offset is greater than 2, we have to parse the */
+    /* charset table.                                            */
     if ( offset > 2 )
     {
-      FT_ULong  size = 1;
+      FT_UInt  j;
 
-
-      charset->offset = base_offset + offset;
-
-      /* we need to parse the table to determine its size */
-      if ( FILE_Seek( charset->offset ) ||
-           READ_Byte( charset->format ) )
+      /* Allocate memory for sids. */
+      if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
         goto Exit;
+
+      /* assign the .notdef glyph */
+      charset->sids[0] = 0;
 
       switch ( charset->format )
       {
       case 0:
-        size += 2 * ( num_glyphs - 1 );
+
+        for ( j = 1; j < num_glyphs; j++ )
+        {
+          if ( READ_UShort( glyph_sid ) )
+            goto Exit;
+
+          charset->sids[j] = glyph_sid;
+        }
         break;
 
       case 1:
-        {
-          FT_UInt  glyph, nleft;
-
-
-          num_glyphs--;
-          while ( num_glyphs > 0 )
-          {
-            if ( READ_UShort( glyph ) ||
-                 READ_Byte( nleft )   )
-              goto Exit;
-
-            size += 3;
-            num_glyphs -= 1 + nleft;
-          }
-          break;
-        }
-
       case 2:
         {
-          FT_UInt  glyph, nleft;
+          FT_UInt  nleft;
+          FT_UInt  i;
 
+          j = 1;
 
-          num_glyphs--;
-          while ( num_glyphs > 0 )
+          while ( j < num_glyphs )
           {
-            if ( READ_UShort( glyph ) ||
-                 READ_UShort( nleft ) )
+
+            /* Read the first glyph sid of the range. */
+            if ( READ_UShort( glyph_sid ) )
               goto Exit;
 
-            size += 4;
-            num_glyphs -= 1 + nleft;
+            /* Read the number of glyphs in the range.  */
+            if ( charset->format == 2 )
+            {
+              if ( READ_UShort( nleft ) )
+                goto Exit;
+            }
+            else
+            {
+              if ( READ_Byte( nleft ) )
+                goto Exit;
+            }
+
+            /* Fill in the range of sids -- `nleft + 1' glyphs. */
+            for ( i = 0; i <= nleft; i++, j++, glyph_sid++ )
+              charset->sids[j] = glyph_sid;
+
           }
-          break;
         }
+        break;
 
       default:
         FT_ERROR(( "CFF_Load_Charset: invalid table format!\n" ));
@@ -555,39 +1583,154 @@
         goto Exit;
       }
 
-      charset->size = size;
-
-      if ( ALLOC( charset->bytes, size )     ||
-           FILE_Seek( charset->offset  )     ||
-           FILE_Read( charset->bytes, size ) )
-        goto Exit;
     }
     else
-      charset->offset = offset;
+    {
+
+      /* Parse default tables corresponding to offset == 0, 1, or 2.  */
+      /* CFF specification intimates the following:                   */
+      /*                                                              */
+      /* In order to use a predefined charset, the following must be  */
+      /* true: the charset constructed for the glyphs in the font's   */
+      /* charstrings dictionary must match the predefined charset in  */
+      /* the first num_glyphs, and hence must match the predefined    */
+      /* charset *exactly*.                                           */
+
+      switch ( offset )
+      {
+
+      case 0:
+
+        if ( num_glyphs != 229 )
+        {
+          FT_ERROR(("CFF_Load_Charset: implicit charset not equal to predefined charset!\n" ));
+          error = FT_Err_Invalid_File_Format;
+          goto Exit;
+        }
+
+        /* Allocate memory for sids. */
+        if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
+          goto Exit;
+
+        /* Copy the predefined charset into the allocated memory.     */
+        MEM_Copy( charset->sids, cff_isoadobe_charset, 
+                   num_glyphs * sizeof( FT_UShort ) );
+
+        break;
+
+      case 1:
+
+        if ( num_glyphs != 166 )
+        {
+          FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to predefined charset!\n" ));
+          error = FT_Err_Invalid_File_Format;
+          goto Exit;
+        }
+
+        /* Allocate memory for sids. */
+        if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
+          goto Exit;
+
+        /* Copy the predefined charset into the allocated memory.     */
+        MEM_Copy( charset->sids, cff_expert_charset,
+                  num_glyphs * sizeof( FT_UShort ) );
+
+        break;
+
+      case 2:
+
+        if ( num_glyphs != 87 )
+        {
+          FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to predefined charset!\n" ));
+          error = FT_Err_Invalid_File_Format;
+          goto Exit;
+        }
+
+        /* Allocate memory for sids. */
+        if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
+          goto Exit;
+
+        /* Copy the predefined charset into the allocated memory.     */
+        MEM_Copy( charset->sids, cff_expertsubset_charset,
+                  num_glyphs * sizeof( FT_UShort ) );
+
+        break;
+
+      default:
+
+        error = FT_Err_Invalid_File_Format;
+        goto Exit;
+
+      }
+    }
 
   Exit:
+
+    /* Clean up if there was an error. */
+    if ( error )
+      if ( charset->sids )
+      {
+        FT_Memory  memory = stream->memory;
+
+        if ( charset->sids )
+          FREE( charset->sids );
+        charset->format = 0;
+        charset->offset = 0;
+        charset->sids   = 0;
+      }
+
     return error;
   }
 
-
   static
   FT_Error  CFF_Load_Encoding( CFF_Encoding*  encoding,
+                               CFF_Charset*   charset,
                                FT_UInt        num_glyphs,
                                FT_Stream      stream,
                                FT_ULong       base_offset,
                                FT_ULong       offset )
   {
-    FT_Error  error  = 0;
-    FT_Memory memory = stream->memory;
-    FT_UInt   count;
+    FT_Memory   memory      = stream->memory;
+    FT_Error    error       = 0;
+    FT_UInt     count;
+    FT_UInt     j;
+    FT_UShort   glyph_sid;
+    FT_Byte     glyph_code;
 
-    FT_UNUSED( num_glyphs );
-
-
-    if ( offset > 2 )
+    /* Check for charset->sids.  If we do not have this, we fail.         */
+    if ( !charset->sids )
     {
-      FT_ULong  size = 1;
+      error = FT_Err_Invalid_File_Format;
+      goto Exit;
+    }
 
+    /* Allocate memory for sids/codes -- there are at most 256 sids/codes */
+    /* for an encoding.                                                   */
+    if ( ALLOC( encoding->sids,  256 * sizeof( FT_UShort ) ) ||
+         ALLOC( encoding->codes, 256 * sizeof( FT_UShort ) ) )
+      goto Exit;
+
+    /* Zero out the code to gid/sid mappings.                             */
+    for ( j = 0; j < 255; j++ )
+    {
+      encoding->sids [j] = 0;
+      encoding->codes[j] = 0;
+    }
+
+    /* Note:  the encoding table in a CFF font is indexed by glyph index, */
+    /* where the first encoded glyph index is 1.  Hence, we read the char */
+    /* code (`glyph_code') at index j and make the assignment:            */
+    /*                                                                    */
+    /*    encoding->codes[glyph_code] = j + 1                             */
+    /*                                                                    */
+    /* We also make the assignment:                                       */
+    /*                                                                    */
+    /*    encoding->sids[glyph_code] = charset->sids[j + 1]               */
+    /*                                                                    */
+    /* This gives us both a code to GID and a code to SID mapping.        */
+
+    if ( offset > 1 )
+    {
 
       encoding->offset = base_offset + offset;
 
@@ -600,15 +1743,65 @@
       switch ( encoding->format & 0x7F )
       {
       case 0:
-        size = 2 + count;
+
+        for ( j = 1; j <= count; j++ )
+        {
+          if ( READ_Byte( glyph_code ) )
+            goto Exit;
+
+          /* Make sure j is not too big. */
+          if ( j > num_glyphs )
+            goto Exit;
+
+          /* Assign code to GID mapping. */
+          encoding->codes[glyph_code] = j;
+
+          /* Assign code to SID mapping. */
+
+          encoding->sids[glyph_code] = charset->sids[j];
+        }
+
         break;
 
       case 1:
-        size = 2 + count * 2;
-        break;
+        {
+          FT_Byte  nleft;
+          FT_Byte  i = 1;
+          FT_Byte  k;
 
-      case 2:
-        size = 2 + count * 3;
+          /* Parse the Format1 ranges. */
+          for ( j = 0;  j < count; j++, i += nleft )
+          {
+
+            /* Read the first glyph code of the range.             */
+            if ( READ_Byte( glyph_code ) )
+              goto Exit;
+
+            /* Read the number of codes in the range.              */
+            if ( READ_Byte( nleft ) )
+              goto Exit;
+
+            /* Increment nleft, so we read `nleft + 1' codes/sids. */
+            nleft++;
+
+            /* Fill in the range of codes/sids.                    */
+            for ( k = i; k < nleft + i; k++, glyph_code++ )
+            {
+
+              /* Make sure k is not too big. */
+              if ( k > num_glyphs )
+                goto Exit;
+
+              /* Assign code to GID mapping. */
+              encoding->codes[glyph_code] = k;
+
+              /* Assign code to SID mapping. */
+              encoding->sids[glyph_code] = charset->sids[k];
+
+            }
+          }
+        }
+
         break;
 
       default:
@@ -617,28 +1810,158 @@
         goto Exit;
       }
 
+      /* Parse supplemental encodings, if any. */
       if ( encoding->format & 0x80 )
       {
-        /* count supplements */
-        if ( FILE_Seek( encoding->offset + size ) ||
-             READ_Byte( count )                   )
-          goto Exit;
-          
-        size += 1 + 3 * count;
-      }
-      
-      encoding->size = size;
+        FT_UInt glyph_id;
 
-      if ( ALLOC( encoding->bytes, size )     ||
-           FILE_Seek( encoding->offset  )     ||
-           FILE_Read( encoding->bytes, size ) )
-        goto Exit;
+        /* count supplements */
+        if ( READ_Byte( count ) )
+          goto Exit;
+
+        for ( j = 0; j < count; j++ )
+        {
+
+          /* Read supplemental glyph code.                */
+          if ( READ_Byte( glyph_code ) )
+            goto Exit;
+
+          /* Read the SID associated with this glyph code */
+          if ( READ_UShort( glyph_sid ) )
+            goto Exit;
+
+          /* Assign code to SID mapping.                  */
+          encoding->sids[glyph_code] = glyph_sid;
+
+          /* Assign code to GID mapping.                  */
+
+          /* First, lookup GID which has been assigned    */
+          /* SID glyph_sid.                               */
+          for ( glyph_id = 0; glyph_id < num_glyphs; glyph_id++ )
+          {
+            if ( charset->sids[glyph_id] == glyph_sid )
+              break;
+          }
+
+          /* Now, make the assignment.                    */
+          encoding->codes[glyph_code] = glyph_id;
+
+        }
+      }
+
     }
     else
-      encoding->offset = offset;
+    {
+      FT_UInt i;
+
+      /* We take into account the fact a CFF font can use a predefined  */
+      /* encoding without containing all of the glyphs encoded by this  */
+      /* encoding (see the note at the end of section 12 in the CFF     */
+      /* specification).                                                */
+
+      switch ( offset )
+      {
+
+      case 0:
+
+        /* First, copy the code to SID mapping.    */
+        MEM_Copy( encoding->sids, cff_standard_encoding,
+                  256 * sizeof( FT_UShort ) );
+
+        /* Construct code to GID mapping from code */
+        /* to SID mapping and charset.             */
+        for ( j = 0; j < 256; j++ )
+        {
+          /* If j is encoded, find the GID for it. */
+          if ( encoding->sids[j] )
+          {
+
+            for ( i = 1; i < num_glyphs; i++ )
+              /* We matched, so break. */
+              if ( charset->sids[i] == encoding->sids[j] )
+                break;
+
+            /* i will be equal to num_glyphs if we exited the above */
+            /* loop without a match.  In this case, we also have to */
+            /* fix the code to SID mapping.                         */
+            if ( i == num_glyphs )
+            {
+              encoding->codes[j] = 0;
+              encoding->sids [j] = 0;
+            }
+            else
+              encoding->codes[j] = i;
+          }
+        }
+
+        break;
+
+      case 1:
+
+        /* First, copy the code to SID mapping. */
+        MEM_Copy( encoding->sids, cff_expert_encoding,
+                  256 * sizeof( FT_UShort ) );
+
+        /* Construct code to GID mapping from code to SID mapping */
+        /* and charset.                                           */
+        for ( j = 0; j < 256; j++ )
+        {
+          /* If j is encoded, find the GID for it. */
+          if ( encoding->sids[j] )
+          {
+
+            for ( i = 1; i < num_glyphs; i++ )
+              /* We matched, so break. */
+              if ( charset->sids[i] == encoding->sids[j] )
+                break;
+
+            /* i will be equal to num_glyphs if we exited the above */
+            /* loop without a match.  In this case, we also have to */
+            /* fix the code to SID mapping.                         */
+            if ( i == num_glyphs )
+            {
+              encoding->codes[j] = 0;
+              encoding->sids [j] = 0;
+            }
+            else
+              encoding->codes[j] = i;
+          }
+        }
+
+        break;
+
+      default:
+        FT_ERROR(( "CFF.Load_Encoding: invalid table format!\n" ));
+        error = FT_Err_Invalid_File_Format;
+        goto Exit;
+       break;
+
+      }
+    }
 
   Exit:
+
+    /* Clean up if there was an error. */
+    if ( error )
+    {
+      if ( encoding->sids || encoding->codes )
+      {
+        FT_Memory  memory = stream->memory;
+
+        if ( encoding->sids )
+          FREE( encoding->sids );
+
+        if ( encoding->codes )
+          FREE( encoding->codes );
+
+        charset->format = 0;
+        charset->offset = 0;
+        charset->sids   = 0;
+      }
+    }
+
     return error;
+
   }
 
 
@@ -908,8 +2231,8 @@
     if ( error )
       goto Exit;
       
-    error = CFF_Load_Encoding( &font->encoding, font->num_glyphs, stream,
-                               base_offset, dict->encoding_offset );
+    error = CFF_Load_Encoding( &font->encoding, &font->charset, font->num_glyphs,
+                               stream, base_offset, dict->encoding_offset );
     if ( error )
       goto Exit;
       
