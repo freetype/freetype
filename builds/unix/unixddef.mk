@@ -23,10 +23,6 @@ HOSTSEP       := $(SEP)
 BUILD         := $(TOP)/builds/unix/devel # we use a special devel ftoption.h
 PLATFORM      := unixdev # do not set it to 'unix', or libtool will trick you
 
-# don't use `:=' here since the path stuff will be included after this file
-#
-FTSYS_SRC = @FTSYS_SRC@
-
 # The directory where all object files are placed.
 #
 OBJ_DIR := obj
@@ -40,6 +36,6 @@ OBJ_DIR := obj
 LIB_DIR := $(OBJ_DIR)
 
 #
-NO_OUTPUT := 2> /dev/nul
+NO_OUTPUT := 2> /dev/null
 
 # EOF

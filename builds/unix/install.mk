@@ -24,7 +24,9 @@
           done
 
   uninstall:
-	  -$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(LIBRARY).$A
+	  -$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(PROJECT_LIBRARY).$A
+	  -$(DELETE) $(includedir)/freetype/cache/*
+	  -$(DELDIR) $(includedir)/freetype/cache
 	  -$(DELETE) $(includedir)/freetype/config/*
 	  -$(DELDIR) $(includedir)/freetype/config
 	  -$(DELETE) $(includedir)/freetype/internal/*
@@ -45,8 +47,6 @@
 	  -$(DELETE) $(OBJ_DIR)/.libs/*
 	  -$(DELDIR) $(OBJ_DIR)/.libs
 	  -$(DELETE) *.orig *~ core *.core $(DISTCLEAN)
-
-endif
 
 
 

@@ -43,13 +43,13 @@ ifeq ($(PLATFORM),ansi)
       # directory (e.g. solaris.mk + changes here to detect the platform).
       #
       CONFIG_FILE := unix.mk
-      setup: unix.mk
+      setup: unix-def.mk
       unix: setup
     endif
 
     setup: std_setup
 
-    unix.mk: builds/unix/unix.in
+    unix-def.mk: builds/unix/unix-def.in
 	    cd builds/unix; $(USE_CFLAGS) ./configure $(CFG)
 
   endif # test Unix

@@ -81,6 +81,8 @@ endif
 	$(RM) builds/unix/config.cache
 	$(RM) builds/unix/config.log
 	$(RM) builds/unix/config.status
+	$(RM) builds/unix/unix-def.mk
+	$(RM) builds/unix/unix-cc.mk
 
   # IMPORTANT:
   #
