@@ -284,8 +284,9 @@
 
 
     blend->avar_checked = TRUE;
-    if ( ( error = face->goto_table( face, TTAG_avar, stream, &table_len ) ) )
+    if ( (error = face->goto_table( face, TTAG_avar, stream, &table_len )) != 0 )
       return;
+
     if ( FT_FRAME_ENTER( table_len ) )
       return;
 
@@ -387,7 +388,7 @@
       FT_FRAME_END
     };
 
-    if ( ( error = face->goto_table( face, TTAG_gvar, stream, &table_len ) ) )
+    if ( (error = face->goto_table( face, TTAG_gvar, stream, &table_len )) != 0 )
       goto Exit;
 
     gvar_start = FT_STREAM_POS( );
@@ -398,8 +399,8 @@
     blend->gv_glyphcnt = gvar_head.glyphCount;
     offsetToData       = gvar_start + gvar_head.offsetToData;
 
-    if ( gvar_head.version != 0x00010000L              ||
-         gvar_head.axisCount != blend->mmvar->num_axis )
+    if ( gvar_head.version   != (FT_Long)0x00010000L              ||
+         gvar_head.axisCount != (FT_UShort)blend->mmvar->num_axis )
     {
       error = TT_Err_Invalid_Table;
       goto Exit;
@@ -443,7 +444,7 @@
         goto Exit;
 
       for ( i = 0; i < blend->tuplecount; ++i )
-        for ( j = 0 ; j < gvar_head.axisCount; ++j )
+        for ( j = 0 ; j < (FT_UInt)gvar_head.axisCount; ++j )
           blend->tuplecoords[i * gvar_head.axisCount + j] =
             FT_GET_SHORT() << 2;                /* convert to FT_Fixed */
 
@@ -653,11 +654,12 @@
     if ( face->blend == NULL )
     {
       /* both `fvar' and `gvar' must be present */
-      if ( ( error = face->goto_table( face, TTAG_gvar,
-                                       stream, &table_len ) ) )
+      if ( (error = face->goto_table( face, TTAG_gvar,
+                                      stream, &table_len )) != 0 )
         goto Exit;
-      if ( ( error = face->goto_table( face, TTAG_fvar,
-                                       stream, &table_len ) ) )
+
+      if ( (error = face->goto_table( face, TTAG_fvar,
+                                      stream, &table_len )) != 0 )
         goto Exit;
 
       fvar_start = FT_STREAM_POS( );
@@ -665,7 +667,7 @@
       if ( FT_STREAM_READ_FIELDS( fvar_fields, &fvar_head ) )
         goto Exit;
 
-      if ( fvar_head.version != 0x00010000UL                              ||
+      if ( fvar_head.version != (FT_Long)0x00010000L                      ||
            fvar_head.countSizePairs != 2                                  ||
            fvar_head.axisSize != 20                                       ||
            fvar_head.instanceSize != 4 + 4 * fvar_head.axisCount          ||
@@ -855,7 +857,7 @@
 
     if ( face->blend == NULL )
     {
-      if ( ( error = TT_Get_MM_Var( face, NULL) ) )
+      if ( (error = TT_Get_MM_Var( face, NULL)) != 0 )
         goto Exit;
     }
 
@@ -876,7 +878,7 @@
       }
 
     if ( blend->glyphoffsets == NULL )
-      if ( ( error = ft_var_load_gvar( face ) ) )
+      if ( (error = ft_var_load_gvar( face )) != 0 )
         goto Exit;
 
     if ( blend->normalizedcoords == NULL )
@@ -982,7 +984,7 @@
 
     if ( face->blend == NULL )
     {
-      if ( ( error = TT_Get_MM_Var( face, NULL ) ) )
+      if ( (error = TT_Get_MM_Var( face, NULL )) != 0 )
         goto Exit;
     }
 
@@ -1035,7 +1037,7 @@
       av = blend->avar_segment;
       for ( i = 0; i < mmvar->num_axis; ++i, ++av )
       {
-        for ( j = 1; j < av->pairCount; ++j )
+        for ( j = 1; j < (FT_UInt)av->pairCount; ++j )
           if ( normalized[i] < av->correspondence[j].fromCoord )
           {
             normalized[i] =
@@ -1319,7 +1321,7 @@
       return TT_Err_Invalid_Argument;
 
     /* to be freed by the caller */
-    if ( ( error = FT_NEW_ARRAY( delta_xy, n_points ) ) )
+    if ( (error = FT_NEW_ARRAY( delta_xy, n_points )) != 0 )
       goto Exit;
     *deltas = delta_xy;
 
