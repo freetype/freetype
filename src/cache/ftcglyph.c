@@ -39,9 +39,7 @@
     FT_UInt    start = FTC_GLYPH_FAMILY_START(gfam,gindex);
 
 
-    gnode->node.fam_index = (FT_UShort) gfam->family.fam_index;
-    gnode->node.hash      = FTC_GLYPH_FAMILY_HASH(gfam,gindex);
-    gnode->item_start     = (FT_UShort) start;
+    gnode->item_start = (FT_UShort) start;
 
     len = gfam->item_total - start;
     if ( len > gfam->item_count )
@@ -68,12 +66,10 @@
   ftc_glyph_node_compare( FTC_GlyphNode    gnode,
                           FTC_GlyphQuery   gquery )
   {
-    FT_UInt  fam_index = (FT_UInt) FTC_NODE(gnode)->fam_index;
     FT_UInt  start     = (FT_UInt) gnode->item_start;
     FT_UInt  count     = (FT_UInt) gnode->item_count;
 
-    return FT_BOOL( (FT_UInt)(gquery->gindex - start) < count &&
-                     gquery->query.family->fam_index == fam_index );
+    return FT_BOOL( (FT_UInt)(gquery->gindex - start) < count );
   }
 
 
@@ -103,7 +99,7 @@
       gfam->hash       = hash;
       gfam->item_total = item_total;
       gfam->item_count = item_count;
-
+      
       FTC_GLYPH_FAMILY_FOUND(gfam,gquery);
     }
 

@@ -120,19 +120,19 @@
 
 
   static FT_Error
-  ftc_sbit_node_load( FTC_SBitNode  snode,
-                      FTC_Manager   manager,
-                      FT_UInt       gindex,
-                      FT_ULong     *asize )
+  ftc_sbit_node_load( FTC_SBitNode   snode,
+                      FTC_Manager    manager,
+                      FTC_SBitFamily sfam,
+                      FT_UInt        gindex,
+                      FT_ULong      *asize )
   {
-    FT_Error       error;
-    FTC_GlyphNode  gnode = FTC_GLYPH_NODE(snode);
-    FTC_GlyphFamily   gfam;
-    FTC_SBitFamily    sfam;
-    FT_Memory      memory;
-    FT_Face        face;
-    FT_Size        size;
-    FTC_SBit       sbit;
+    FT_Error          error;
+    FTC_GlyphNode     gnode = FTC_GLYPH_NODE(snode);
+    FTC_GlyphFamily   gfam  = FTC_GLYPH_FAMILY(sfam);
+    FT_Memory         memory;
+    FT_Face           face;
+    FT_Size           size;
+    FTC_SBit          sbit;
 
     if ( gindex <  (FT_UInt)gnode->item_start                     ||
          gindex >= (FT_UInt)gnode->item_start + gnode->item_count )
@@ -141,8 +141,6 @@
       return FTC_Err_Invalid_Argument;
     }
 
-    gfam   = FTC_GLYPH_FAMILY( manager->families.entries[ gnode->node.fam_index ].family );
-    sfam   = FTC_SBIT_FAMILY(gfam);
     memory = manager->library->memory;
 
     sbit = snode->sbits + (gindex - gnode->item_start);
@@ -275,7 +273,11 @@
                          gquery->gindex,
                          FTC_GLYPH_FAMILY(gquery->query.family) );
 
-    error = ftc_sbit_node_load( snode, cache->manager, gquery->gindex, NULL );
+    error = ftc_sbit_node_load( snode,
+                                cache->manager,
+                                FTC_SBIT_FAMILY( FTC_QUERY(gquery)->family ),
+                                gquery->gindex,
+                                NULL );
     if ( error )
       ftc_glyph_node_done( FTC_GLYPH_NODE(snode), cache );
 
@@ -336,7 +338,13 @@
       {
         FT_ULong  size;
 
-        ftc_sbit_node_load( snode, cache->manager, gindex, &size );
+        /* yes, it's safe to ignore errors here */
+        ftc_sbit_node_load( snode,
+                            cache->manager,
+                            FTC_SBIT_FAMILY( FTC_QUERY(squery)->family ),
+                            gindex,
+                            &size );
+
         cache->manager->cur_weight += size;
       }
     }

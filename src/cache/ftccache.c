@@ -559,8 +559,8 @@
         if ( ALLOC( node, clazz->node_size ) )
           goto Exit;
 
-        /* node initializer must set 'hash' field */
         node->fam_index = (FT_UShort) family->fam_index;
+        node->hash      = query->hash;
         node->ref_count = 0;
 
         error = clazz->node_init( node, query, cache );

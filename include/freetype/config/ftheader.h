@@ -420,6 +420,18 @@
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
+  /*    FT_CACHE_CHARMAP_H                                                 */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the `charmap'API of the FreeType 2 cache sub-system.               */
+  /*                                                                       */
+#define FT_CACHE_CHARMAP_H        <freetype/cache/ftccmap.h>
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
   /*    FT_MAC_H                                                           */
   /*                                                                       */
   /* @description:                                                         */
