@@ -15,7 +15,7 @@
 
 # raster1 driver directory
 #
-RAS1_DIR  := $(SRC_)raster1
+RAS1_DIR  := $(SRC_)raster
 RAS1_DIR_ := $(RAS1_DIR)$(SEP)
 
 # compilation flags for the driver
@@ -40,11 +40,11 @@ RAS1_DRV_H := $(RAS1_DRV_SRC:%.c=%.h)
 #   RAS1_DRV_OBJ_S is used during `single' builds.
 #
 RAS1_DRV_OBJ_M := $(RAS1_DRV_SRC:$(RAS1_DIR_)%.c=$(OBJ_)%.$O)
-RAS1_DRV_OBJ_S := $(OBJ_)raster1.$O
+RAS1_DRV_OBJ_S := $(OBJ_)raster.$O
 
 # raster1 driver source file for single build
 #
-RAS1_DRV_SRC_S := $(RAS1_DIR_)raster1.c
+RAS1_DRV_SRC_S := $(RAS1_DIR_)raster.c
 
 
 # raster1 driver - single object
