@@ -72,7 +72,7 @@
       goto Exit;
 
     if ( ft_strncmp( (char *)stream->cursor,
-                  "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
+                     "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
     {
       FT_TRACE2(( "[not a valid CID-keyed font]\n" ));
       error = CID_Err_Unknown_File_Format;

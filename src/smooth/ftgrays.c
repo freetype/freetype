@@ -99,17 +99,12 @@
 #define ErrRaster_MemoryOverflow   -4
 
 
-
-
-
-
-
 #ifdef _STANDALONE_
 
 #include <string.h>             /* for ft_memcpy() */
 #include <setjmp.h>
 #include <limits.h>
-#define  FT_UINT_MAX  UINT_MAX
+#define FT_UINT_MAX  UINT_MAX
 
 #define ErrRaster_Invalid_Mode     -2
 #define ErrRaster_Invalid_Outline  -1
@@ -312,7 +307,7 @@
     int  conic_level;
     int  cubic_level;
 
-    void*    memory;
+    void*       memory;
     ft_jmp_buf  jump_buffer;
 
 #ifdef GRAYS_USE_GAMMA
@@ -1088,7 +1083,7 @@
 #ifdef QUICK_SORT
 
   /* This is a non-recursive quicksort that directly process our cells     */
-  /* array.  It should be faster than calling the stdlib ft_qsort(), and we   */
+  /* array.  It should be faster than calling the stdlib qsort(), and we   */
   /* can even tailor our insertion threshold...                            */
 
 #define QSORT_THRESHOLD  9  /* below this size, a sub-array will be sorted */

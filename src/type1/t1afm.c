@@ -46,8 +46,8 @@
 #define IS_KERN_PAIR( p )  ( p[0] == 'K' && p[1] == 'P' )
 
 #define IS_ALPHANUM( c )  ( ft_isalnum( c ) || \
-                            c == '_'     || \
-                            c == '.'     )
+                            c == '_'        || \
+                            c == '.'        )
 
 
   /* read a glyph name and return the equivalent glyph index */
@@ -227,7 +227,7 @@
 
     /* now, sort the kern pairs according to their glyph indices */
     ft_qsort( afm->kern_pairs, count, sizeof ( T1_Kern_Pair ),
-           compare_kern_pairs );
+              compare_kern_pairs );
 
   Exit:
     if ( error )

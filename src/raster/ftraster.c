@@ -2094,7 +2094,7 @@
       {
         target[0] |= f1;
 
-        /* ft_memset() is slower than the following code on many platforms. */
+        /* memset() is slower than the following code on many platforms. */
         /* This is due to the fact that, in the vast majority of cases,  */
         /* the span length in bytes is relatively small.                 */
         c2--;

@@ -1724,16 +1724,16 @@
 
         case cff_op_random:
           {
-            FT_Fixed  rand;
+            FT_Fixed  Rand;
 
 
             FT_TRACE4(( " rand" ));
 
-            rand = seed;
-            if ( rand >= 0x8000 )
-              rand++;
+            Rand = seed;
+            if ( Rand >= 0x8000 )
+              Rand++;
 
-            args[0] = rand;
+            args[0] = Rand;
             seed    = FT_MulFix( seed, 0x10000L - seed );
             if ( seed == 0 )
               seed += 0x2873;

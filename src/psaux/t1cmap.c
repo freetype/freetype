@@ -80,8 +80,8 @@
         const char* gname = cmap->glyph_names[n];
 
 
-        if ( gname && gname[0] == glyph_name[0] &&
-             ft_strcmp( gname, glyph_name ) == 0   )
+        if ( gname && gname[0] == glyph_name[0]  &&
+             ft_strcmp( gname, glyph_name ) == 0 )
         {
           result = n;
           break;
@@ -337,9 +337,9 @@
 
         /* sort the pairs table to allow efficient binary searches */
         ft_qsort( cmap->pairs,
-               new_count,
-               sizeof ( T1_CMapUniPairRec ),
-               t1_cmap_uni_pair_compare );
+                  new_count,
+                  sizeof ( T1_CMapUniPairRec ),
+                  t1_cmap_uni_pair_compare );
 
         cmap->num_pairs = new_count;
       }

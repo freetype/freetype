@@ -38,7 +38,7 @@ extern void __stdargs KVPrintF( const char *formatString, const void *values );
   /*                                                                       */
   /* - release mode:                                                       */
   /*                                                                       */
-  /*   No error message is sent or generated.  The code is ft_free from any   */
+  /*   No error message is sent or generated.  The code is free from any   */
   /*   debugging parts.                                                    */
   /*                                                                       */
   /*************************************************************************/
