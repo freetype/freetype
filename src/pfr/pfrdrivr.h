@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  pfrdrivr.h                                                             */
 /*                                                                         */
-/*    High-level Type PFR driver interface                                 */
+/*    High-level Type PFR driver interface (specification).                */
 /*                                                                         */
-/*  Copyright 1996-2002 by                                                 */
+/*  Copyright 2002 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PFR_DRIVER_H__
-#define __PFR_DRIVER_H__
+#ifndef __PFRDRIVR_H__
+#define __PFRDRIVR_H__
 
 
 #include <ft2build.h>
@@ -32,7 +32,8 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __PFR_DRIVER_H__ */
+
+#endif /* __PFRDRIVR_H__ */
 
 
 /* END */

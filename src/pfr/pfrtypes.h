@@ -1,57 +1,75 @@
-#ifndef __PFR_TYPES_H__
-#define __PFR_TYPES_H__
+/***************************************************************************/
+/*                                                                         */
+/*  pfrtypes.h                                                             */
+/*                                                                         */
+/*    FreeType PFR data structures (specification only).                   */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#ifndef __PFRTYPES_H__
+#define __PFRTYPES_H__
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 
 FT_BEGIN_HEADER
 
- /************************************************************************/
+  /************************************************************************/
 
- /* the PFR Header structure */
-  typedef struct PFR_HeaderRec_
+  /* the PFR Header structure */
+  typedef struct  PFR_HeaderRec_
   {
-    FT_UInt32    signature;
-    FT_UInt      version;
-    FT_UInt      signature2;
-    FT_UInt      header_size;
+    FT_UInt32  signature;
+    FT_UInt    version;
+    FT_UInt    signature2;
+    FT_UInt    header_size;
 
-    FT_UInt      log_dir_size;
-    FT_UInt      log_dir_offset;
+    FT_UInt    log_dir_size;
+    FT_UInt    log_dir_offset;
 
-    FT_UInt      log_font_max_size;
-    FT_UInt32    log_font_section_size;
-    FT_UInt32    log_font_section_offset;
+    FT_UInt    log_font_max_size;
+    FT_UInt32  log_font_section_size;
+    FT_UInt32  log_font_section_offset;
 
-    FT_UInt32    phy_font_max_size;
-    FT_UInt32    phy_font_section_size;
-    FT_UInt32    phy_font_section_offset;
+    FT_UInt32  phy_font_max_size;
+    FT_UInt32  phy_font_section_size;
+    FT_UInt32  phy_font_section_offset;
 
-    FT_UInt      gps_max_size;
-    FT_UInt32    gps_section_size;
-    FT_UInt32    gps_section_offset;
+    FT_UInt    gps_max_size;
+    FT_UInt32  gps_section_size;
+    FT_UInt32  gps_section_offset;
 
-    FT_UInt      max_blue_values;
-    FT_UInt      max_x_orus;
-    FT_UInt      max_y_orus;
+    FT_UInt    max_blue_values;
+    FT_UInt    max_x_orus;
+    FT_UInt    max_y_orus;
     
-    FT_UInt      phy_font_max_size_high;
-    FT_UInt      color_flags;
+    FT_UInt    phy_font_max_size_high;
+    FT_UInt    color_flags;
     
-    FT_UInt32    bct_max_size;
-    FT_UInt32    bct_set_max_size;        
-    FT_UInt32    phy_bct_set_max_size;
+    FT_UInt32  bct_max_size;
+    FT_UInt32  bct_set_max_size;        
+    FT_UInt32  phy_bct_set_max_size;
     
-    FT_UInt      num_phy_fonts;
-    FT_UInt      max_vert_stem_snap;
-    FT_UInt      max_horz_stem_snap;
-    FT_UInt      max_chars;
+    FT_UInt    num_phy_fonts;
+    FT_UInt    max_vert_stem_snap;
+    FT_UInt    max_horz_stem_snap;
+    FT_UInt    max_chars;
   
   } PFR_HeaderRec, *PFR_Header;
 
 
- /* used in 'color_flags' field of the PFR_Header */
-  typedef enum PFR_HeaderFlags_
+  /* used in `color_flags' field of the PFR_Header */
+  typedef enum  PFR_HeaderFlags_
   {
     PFR_FLAG_BLACK_PIXEL   = 1,
     PFR_FLAG_INVERT_BITMAP = 2
@@ -59,9 +77,9 @@ FT_BEGIN_HEADER
   } PFR_HeaderFlags;
 
 
- /************************************************************************/
+  /************************************************************************/
 
-  typedef struct PFR_LogFontRec_
+  typedef struct  PFR_LogFontRec_
   {
     FT_UInt32  size;
     FT_UInt32  offset;
@@ -78,19 +96,19 @@ FT_BEGIN_HEADER
   } PFR_LogFontRec, *PFR_LogFont;
 
 
-  typedef enum PFR_LogFlags_
+  typedef enum  PFR_LogFlags_
   {
-    PFR_LOG_EXTRA_ITEMS    = 0x40,
-    PFR_LOG_2BYTE_BOLD     = 0x20,
-    PFR_LOG_BOLD           = 0x10,
-    PFR_LOG_2BYTE_STROKE   = 8,
-    PFR_LOG_STROKE         = 4,
-    PFR_LINE_JOIN_MASK     = 3
+    PFR_LOG_EXTRA_ITEMS  = 0x40,
+    PFR_LOG_2BYTE_BOLD   = 0x20,
+    PFR_LOG_BOLD         = 0x10,
+    PFR_LOG_2BYTE_STROKE = 8,
+    PFR_LOG_STROKE       = 4,
+    PFR_LINE_JOIN_MASK   = 3
     
   } PFR_LogFlags;
 
 
-  typedef enum PFR_LineJoinFlags_
+  typedef enum  PFR_LineJoinFlags_
   {
     PFR_LINE_JOIN_MITER = 0,
     PFR_LINE_JOIN_ROUND = 1,
@@ -99,18 +117,18 @@ FT_BEGIN_HEADER
   } PFR_LineJoinFlags;
 
 
- /************************************************************************/
+  /************************************************************************/
 
-  typedef enum PFR_BitmapFlags_
+  typedef enum  PFR_BitmapFlags_
   {
-    PFR_BITMAP_3BYTE_OFFSET    = 4,
-    PFR_BITMAP_2BYTE_SIZE      = 2,
-    PFR_BITMAP_2BYTE_CHARCODE  = 1
+    PFR_BITMAP_3BYTE_OFFSET   = 4,
+    PFR_BITMAP_2BYTE_SIZE     = 2,
+    PFR_BITMAP_2BYTE_CHARCODE = 1
   
   } PFR_BitmapFlags;
 
 
-  typedef struct PFR_BitmapCharRec_
+  typedef struct  PFR_BitmapCharRec_
   {
     FT_UInt    char_code;
     FT_UInt    gps_size;
@@ -119,7 +137,7 @@ FT_BEGIN_HEADER
   } PFR_BitmapCharRec, *PFR_BitmapChar;
 
 
-  typedef enum PFR_StrikeFlags_
+  typedef enum  PFR_StrikeFlags_
   {
     PFR_STRIKE_2BYTE_COUNT  = 0x10,
     PFR_STRIKE_3BYTE_OFFSET = 0x08,
@@ -130,7 +148,7 @@ FT_BEGIN_HEADER
   } PFR_StrikeFlags;
 
 
-  typedef struct PFR_StrikeRec_
+  typedef struct  PFR_StrikeRec_
   {
     FT_UInt         x_ppm;
     FT_UInt         y_ppm;
@@ -149,33 +167,32 @@ FT_BEGIN_HEADER
   } PFR_StrikeRec, *PFR_Strike;
 
 
+  /************************************************************************/
 
- /************************************************************************/
-
-  typedef struct PFR_CharRec_
+  typedef struct  PFR_CharRec_
   {
-    FT_UInt   char_code;
-    FT_Int    advance;
-    FT_UInt   gps_size;
-    FT_UInt32 gps_offset;
+    FT_UInt    char_code;
+    FT_Int     advance;
+    FT_UInt    gps_size;
+    FT_UInt32  gps_offset;
   
   } PFR_CharRec, *PFR_Char;
 
 
- /************************************************************************/
+  /************************************************************************/
 
-  typedef struct PFR_DimensionRec_
+  typedef struct  PFR_DimensionRec_
   {
-    FT_UInt   standard;
-    FT_UInt   num_stem_snaps;
-    FT_Int*   stem_snaps;
+    FT_UInt  standard;
+    FT_UInt  num_stem_snaps;
+    FT_Int*  stem_snaps;
   
   } PFR_DimensionRec, *PFR_Dimension;
 
 
- /************************************************************************/
+  /************************************************************************/
 
-  typedef struct PFR_PhyFontRec_
+  typedef struct  PFR_PhyFontRec_
   {
     FT_Memory          memory;
     FT_UInt32          offset;
@@ -207,7 +224,8 @@ FT_BEGIN_HEADER
   
   } PFR_PhyFontRec, *PFR_PhyFont;
 
-  typedef enum PFR_PhyFlags_
+
+  typedef enum  PFR_PhyFlags_
   {
     PFR_PHY_EXTRA_ITEMS      = 0x80,
     PFR_PHY_3BYTE_GPS_OFFSET = 0x20,
@@ -219,9 +237,10 @@ FT_BEGIN_HEADER
 
   } PFR_PhyFlags;
 
- /************************************************************************/
 
-  typedef enum PFR_GlyphFlags_
+  /************************************************************************/
+
+  typedef enum  PFR_GlyphFlags_
   {
     PFR_GLYPH_IS_COMPOUND   = 0x80,
     PFR_GLYPH_EXTRA_ITEMS   = 0x08,
@@ -231,8 +250,9 @@ FT_BEGIN_HEADER
     
   } PFR_GlyphFlags;
 
- /* controlled coordinate */
-  typedef struct PFR_CoordRec_
+
+  /* controlled coordinate */
+  typedef struct  PFR_CoordRec_
   {
     FT_UInt  org;
     FT_UInt  cur;
@@ -240,7 +260,7 @@ FT_BEGIN_HEADER
   } PFR_CoordRec, *PFR_Coord;
 
 
-  typedef struct PFR_SubGlyphRec_
+  typedef struct  PFR_SubGlyphRec_
   {
     FT_Fixed   x_scale;
     FT_Fixed   y_scale;
@@ -252,7 +272,7 @@ FT_BEGIN_HEADER
   } PFR_SubGlyphRec, *PFR_SubGlyph;
 
 
-  typedef enum PFR_SubgGlyphFlags_
+  typedef enum  PFR_SubgGlyphFlags_
   {
     PFR_SUBGLYPH_3BYTE_OFFSET = 0x80,
     PFR_SUBGLYPH_2BYTE_SIZE   = 0x40,
@@ -262,8 +282,7 @@ FT_BEGIN_HEADER
   } PFR_SubGlyphFlags;
 
 
-
-  typedef struct PFR_GlyphRec_
+  typedef struct  PFR_GlyphRec_
   {
     FT_Byte           format;
     
@@ -286,4 +305,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __PFR_TYPES_H__ */
+#endif /* __PFRTYPES_H__ */
+
+
+/* END */

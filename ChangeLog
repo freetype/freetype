@@ -1,23 +1,31 @@
+2002-04-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/pfr/pfrload.c (pfr_extra_items_farse): Fix debug message.
+	(pfr_phy_font_load): s/size/Size/ for local variable to avoid
+	compiler warning.
+	* src/pfr/pfrobjs.c (pfr_face_init): Fix debug message.
+	(pfr_slot_load): Remove redundant local variable.
+
 2002-04-19  David Turner  <david@freetype.org>
 
-        * src/type1/t1gload.h, src/type1/t1gload.c: fixed incorrect
-          parameter sign-ness in callback function
+	Adding a PFR font driver to the FreeType sources.  Note that it
+	doesn't support embedded bitmaps or kerning tables yet.
 
-        * include/freetype/config/ftmodule.h,
-          include/freetype/internal/fttrace.h,
-          src/Jamfile, src/pfr/*:
-        
-          adding a PFR font driver to the FreeType sources. Not that it
-          doesn't support embedded bitmaps or kerning tables for now..
+	src/pfr/*: New files.
 
+	* include/freetype/config/ftmodule.h,
+	include/freetype/internal/fttrace.h, src/Jamefile: Updated.
 
-        * include/freetype/internal/ftmemory.h: adding the FT_MEM_ZERO
-          and FT_ZERO macros
+	* src/type1/t1gload.h (T1_Load_Glyph), src/type1/t1gload.c
+	(T1_Load_Glyph): Fixed incorrect parameter sign-ness in callback
+	function.
 
-        * include/freetype/internal/ftstream.h: adding the FT_NEXT_OFF3,
-          FT_NEXT_UOFF3, FT_NEXT_OFF3_LE and FT_NEXT_UOFF3_LE to parse
-          in-memory 24-bit integers.
+	* include/freetype/internal/ftmemory.h (FT_MEM_ZERO, FT_ZERO): New
+	macros.
 
+	* include/freetype/internal/ftstream.h (FT_NEXT_OFF3, FT_NEXT_UOFF3,
+	FT_NEXT_OFF3_LE, FT_NEXT_UOFF3_LE): New macros to parse in-memory
+	24-bit integers.
 
 2002-04-18  David Turner  <david@freetype.org>
 

@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  pfrobjs.c                                                              */
+/*                                                                         */
+/*    FreeType PFR object methods (body).                                  */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "pfrobjs.h"
 #include "pfrload.h"
 #include "pfrgload.h"
@@ -8,19 +26,20 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pfr
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                     FACE OBJECT METHODS                       *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     FACE OBJECT METHODS                       *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   FT_LOCAL_DEF( void )
-  pfr_face_done( PFR_Face   face )
+  pfr_face_done( PFR_Face  face )
   {
     /* finalize the physical font record */
-    pfr_phy_font_done( &face->phy_font, FT_FACE_MEMORY(face) );
+    pfr_phy_font_done( &face->phy_font, FT_FACE_MEMORY( face ) );
 
     /* no need to finalize the logical font or the header */
   }
@@ -33,13 +52,15 @@
   {
     FT_Error  error;
 
+
     /* load the header and check it */
     error = pfr_header_load( &face->header, stream );
-    if ( error ) goto Exit;
+    if ( error )
+      goto Exit;
 
     if ( !pfr_header_check( &face->header ) )
     {
-      FT_TRACE4(( "PFR.Face.Init: not a valid PFR font\n" ));
+      FT_TRACE4(( "pfr_face_init: not a valid PFR font\n" ));
       error = FT_Err_Invalid_Argument;
       goto Exit;
     }
@@ -48,10 +69,12 @@
     {
       FT_UInt  num_faces;
 
+
       error = pfr_log_font_count( stream,
                                   face->header.log_dir_offset,
                                   &num_faces );
-      if ( error ) goto Exit;
+      if ( error )
+        goto Exit;
 
       face->root.num_faces = num_faces;
     }
@@ -61,7 +84,7 @@
 
     if ( face_index >= face->root.num_faces )
     {
-      FT_ERROR(( "PFR.Face.Init: invalid face index\n" ));
+      FT_ERROR(( "pfr_face_init: invalid face index\n" ));
       error = FT_Err_Invalid_Argument;
       goto Exit;
     }
@@ -83,8 +106,9 @@
 
      /* now, set-up all root face fields */
      {
-       FT_Face      root     = FT_FACE(face);
+       FT_Face      root     = FT_FACE( face );
        PFR_PhyFont  phy_font = &face->phy_font;
+
 
        root->face_index = face_index;
        root->num_glyphs = phy_font->num_chars;
@@ -98,7 +122,7 @@
        else
          root->face_flags |= FT_FACE_FLAG_VERTICAL;
 
-       /* XXXX: kerning and embedded bitmap support isn't there yet */
+       /* XXX: kerning and embedded bitmap support isn't there yet */
 
        root->family_name = phy_font->font_id;
        root->style_name  = NULL;  /* no style name in font file */
@@ -107,19 +131,22 @@
        root->available_sizes = 0;
 
        root->bbox         = phy_font->bbox;
-       root->units_per_EM = (FT_UShort) phy_font->outline_resolution;
-       root->ascender     = (FT_Short)  phy_font->bbox.yMax;
-       root->descender    = (FT_Short)  phy_font->bbox.yMin;
-       root->height       = (FT_Short)( ((root->ascender - root->descender)*12) / 10 );
+       root->units_per_EM = (FT_UShort)phy_font->outline_resolution;
+       root->ascender     = (FT_Short) phy_font->bbox.yMax;
+       root->descender    = (FT_Short) phy_font->bbox.yMin;
+       root->height       = (FT_Short)
+                              ( ( ( root->ascender - root->descender ) * 12 )
+                                / 10 );
 
        /* now compute maximum advance width */
-       if ( (phy_font->flags & PFR_PHY_PROPORTIONAL) == 0 )
-         root->max_advance_width = (FT_Short) phy_font->standard_advance;
+       if ( ( phy_font->flags & PFR_PHY_PROPORTIONAL ) == 0 )
+         root->max_advance_width = (FT_Short)phy_font->standard_advance;
        else
        {
          FT_Int    max = 0;
          FT_UInt   count = phy_font->num_chars;
          PFR_Char  gchar = phy_font->chars;
+
 
          for ( ; count > 0; count--, gchar++ )
          {
@@ -127,18 +154,19 @@
              max = gchar->advance;
          }
 
-         root->max_advance_width = (FT_Short) max;
+         root->max_advance_width = (FT_Short)max;
        }
 
        root->max_advance_height = root->height;
 
-       root->underline_position  = (FT_Short)( - root->units_per_EM/10 );
-       root->underline_thickness = (FT_Short)(   root->units_per_EM/30 );
+       root->underline_position  = (FT_Short)( - root->units_per_EM / 10 );
+       root->underline_thickness = (FT_Short)(   root->units_per_EM / 30 );
 
        /* create charmap */
        {
-         FT_CharMapRec    charmap;
+         FT_CharMapRec  charmap;
          
+
          charmap.face        = root;
          charmap.platform_id = 3;
          charmap.encoding_id = 1;
@@ -153,18 +181,18 @@
   }
 
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                    SLOT OBJECT METHOD                         *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    SLOT OBJECT METHOD                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   FT_LOCAL_DEF( FT_Error )
   pfr_slot_init( PFR_Slot  slot )
   {
-    FT_GlyphLoader  loader =  slot->root.internal->loader;
+    FT_GlyphLoader  loader = slot->root.internal->loader;
 
     pfr_glyph_init( &slot->glyph, loader );
 
@@ -186,12 +214,13 @@
                  FT_Int    load_flags )
   {
     FT_Error     error;
-    PFR_Face     face    = (PFR_Face) slot->root.face;
+    PFR_Face     face    = (PFR_Face)slot->root.face;
     PFR_Char     gchar   = face->phy_font.chars + gindex;
     FT_Outline*  outline = &slot->root.outline;
     FT_ULong     gps_offset;
 
-   /* check that the glyph index is correct */
+
+    /* check that the glyph index is correct */
     FT_ASSERT( gindex < face->phy_font.num_chars );
 
     slot->root.format   = ft_glyph_format_outline;
@@ -199,21 +228,20 @@
     outline->n_contours = 0;
     gps_offset          = face->header.gps_section_offset;
 
-
-   /* load the glyph outline ( FT_LOAD_NO_RECURSE isn't supported ) */
+    /* load the glyph outline (FT_LOAD_NO_RECURSE isn't supported) */
     error = pfr_glyph_load( &slot->glyph, face->root.stream,
                             gps_offset, gchar->gps_offset, gchar->gps_size );
 
-    if (!error)
+    if ( !error )
     {
       FT_BBox            cbox;
-      FT_Outline*        outline = &slot->root.outline;
       FT_Glyph_Metrics*  metrics = &slot->root.metrics;
       FT_Pos             advance;
       FT_Int             em_metrics, em_outline;
       FT_Bool            scaling;
 
-      scaling = FT_BOOL( (load_flags & FT_LOAD_NO_SCALE)  == 0 );
+
+      scaling = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE ) == 0 );
 
       /* copy outline data */
       *outline = slot->glyph.loader->base.outline;
@@ -243,7 +271,7 @@
       slot->root.linearHoriAdvance = metrics->horiAdvance;
       slot->root.linearVertAdvance = metrics->vertAdvance;
 
-      /* make-up vertical metrics (?) */
+      /* make-up vertical metrics(?) */
       metrics->vertBearingX = 0;
       metrics->vertBearingY = 0;
 
@@ -254,6 +282,7 @@
         FT_Fixed    x_scale = size->root.metrics.x_scale;
         FT_Fixed    y_scale = size->root.metrics.y_scale;
         FT_Vector*  vec     = outline->points;
+
 
         /* scale outline points */
         for ( n = 0; n < outline->n_points; n++, vec++ )
@@ -278,3 +307,6 @@
 
     return error;
   }
+
+
+/* END */
