@@ -125,17 +125,17 @@
   /* value of the `FT2_DEBUG' environment variable.  It must be a list of  */
   /* toggles, separated by spaces, `;', or `,'.  Example:                  */
   /*                                                                       */
-  /*    export FT2_DEBUG="any:3 memory:6 stream:5"                         */
+  /*    export FT2_DEBUG="any:3 memory:7 stream:5"                         */
   /*                                                                       */
   /* This requests that all levels be set to 3, except the trace level for */
-  /* the memory and stream components which are set to 6 and 5,            */
+  /* the memory and stream components which are set to 7 and 5,            */
   /* respectively.                                                         */
   /*                                                                       */
   /* See the file <include/freetype/internal/fttrace.h> for details of the */
   /* available toggle names.                                               */
   /*                                                                       */
-  /* The level must be between 0 and 6; 0 means quiet (except for serious  */
-  /* runtime errors), and 6 means _very_ verbose.                          */
+  /* The level must be between 0 and 7; 0 means quiet (except for serious  */
+  /* runtime errors), and 7 means _very_ verbose.                          */
   /*                                                                       */
   FT_BASE_DEF( void )
   ft_debug_init( void )
@@ -189,7 +189,7 @@
           if ( *p )
           {
             level = *p++ - '0';
-            if ( level < 0 || level > 6 )
+            if ( level < 0 || level > 7 )
               level = -1;
           }
 
