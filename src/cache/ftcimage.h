@@ -60,6 +60,7 @@
           {                             \
             (n)->root1.data = g;        \
           } while ( 0 )
+          
 #define FTC_IMAGENODE_SET_INDICES( n, g, q )              \
           do                                              \
           {                                               \

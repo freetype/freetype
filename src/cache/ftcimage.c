@@ -282,11 +282,11 @@
         inode   = (FTC_ImageNode)node;
         lrunode = FTC_IMAGENODE_TO_LISTNODE( inode );
         
-        queue->clazz->done_image( queue, inode );
-        FT_List_Remove( glyphs_lru, lrunode );
-        
         cache->num_bytes -= queue->clazz->size_image( queue, inode ) +
                             sizeof( FTC_ImageNodeRec );
+        
+        queue->clazz->done_image( queue, inode );
+        FT_List_Remove( glyphs_lru, lrunode );
         
         FTC_ImageNode_Done( cache, inode );
       }
