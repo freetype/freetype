@@ -111,9 +111,10 @@
   /* <Description>                                                         */
   /*    Adds a new module to a given library instance.                     */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    library :: A handle to the library object.                         */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    clazz   :: A pointer to class descriptor for the module.           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -159,9 +160,10 @@
   /* <Description>                                                         */
   /*    Removes a given module from a library instance.                    */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    library :: A handle to a library object.                           */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    module  :: A handle to a module object.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -194,7 +196,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Library( FT_Memory    memory,
-                                         FT_Library*  library );
+                                         FT_Library  *alibrary );
 
 
   /*************************************************************************/
@@ -228,9 +230,10 @@
   /*    Sets a debug hook function for debugging the interpreter of a font */
   /*    format.                                                            */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    library    :: A handle to the library object.                      */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    hook_index :: The index of the debug hook.  You should use the     */
   /*                  values defined in ftobjs.h, e.g.                     */
   /*                  FT_DEBUG_HOOK_TRUETYPE                               */

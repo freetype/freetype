@@ -334,7 +334,20 @@ points:
 
       FT_Int*  pointer;
 
-    As  mentioned   above,  multiple  declarations   are  vertically
+    However,  when declaring resp.   defining an  `output' parameter
+    (i.e. a  pointer which  will be assigned  by the  function), the
+    last `*' must be placed on the right in order to denote this, as
+    in:
+
+      FT_New_Face( FT_Library  library,
+                   FT_Face    *aface );
+
+    where the `*' is used  to indicate that `aface' is returned.  In
+    most cases, the name of  such an output variable starts with `a'
+    or `an'  (`aface' instead of  `face', `anlru' instead  of `lru',
+    etc.), following the English rules of the indefinite article.
+
+  . As  mentioned   above,  multiple  declarations   are  vertically
     aligned:
 
       FT_Short      foo;
@@ -359,9 +372,11 @@ points:
       x = sin( y );
       y = sizeof ( long );
 
-    Except for casts, parentheses are surrounded with space:
+    Except for  casts, empty parameters, and  the closing semicolon,
+    parentheses are surrounded with space:
 
       x = (char*)( foo + bar );
+      y = rand();
 
   . Binary operators are surrounded by spaces; unary operators have
     no space after it:
@@ -378,6 +393,12 @@ points:
 
       if ( x = 0; x < y; x++, y-- )
         do_something();
+
+    Exception:
+
+      for (;;)
+      {
+        ...
 
   . Don't use
 

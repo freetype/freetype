@@ -45,6 +45,7 @@
   /*    interface :: A table of `emitters', i.e,. function pointers called */
   /*                 during decomposition to indicate path operations.     */
   /*                                                                       */
+  /* <InOut>                                                               */
   /*    user      :: A typeless pointer which is passed to each emitter    */
   /*                 during the decomposition.  It can be used to store    */
   /*                 the state during the decomposition.                   */
@@ -77,7 +78,7 @@
   /*    numContours :: The maximal number of contours within the outline.  */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    outline     :: A handle to the new outline.  NULL in case of       */
+  /*    anoutline   :: A handle to the new outline.  NULL in case of       */
   /*                   error.                                              */
   /*                                                                       */
   /* <Return>                                                              */
@@ -93,14 +94,14 @@
   FT_EXPORT( FT_Error )  FT_Outline_New( FT_Library   library,
                                          FT_UInt      numPoints,
                                          FT_Int       numContours,
-                                         FT_Outline*  outline );
+                                         FT_Outline  *anoutline );
 
 
   FT_EXPORT( FT_Error )  FT_Outline_New_Internal(
                            FT_Memory    memory,
                            FT_UInt      numPoints,
                            FT_Int       numContours,
-                           FT_Outline*  outline );
+                           FT_Outline  *anoutline );
 
 
   /*************************************************************************/
@@ -127,7 +128,7 @@
   /*    If the outline's `owner' field is not set, only the outline        */
   /*    descriptor will be released.                                       */
   /*                                                                       */
-  /*    The reason why this function takes an `outline' parameter is       */
+  /*    The reason why this function takes an `library' parameter is       */
   /*    simply to use FT_Free().                                           */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Outline_Done( FT_Library   library,
@@ -159,13 +160,13 @@
   /*    outline :: A pointer to the source outline descriptor.             */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    cbox    :: The outline's control box.                              */
+  /*    acbox   :: The outline's control box.                              */
   /*                                                                       */
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
   FT_EXPORT( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                          FT_BBox*     cbox );
+                                          FT_BBox     *acbox );
 
 
   /*************************************************************************/
@@ -176,9 +177,10 @@
   /* <Description>                                                         */
   /*    Applies a simple translation to the points of an outline.          */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    outline :: A pointer to the target outline descriptor.             */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    xOffset :: The horizontal offset.                                  */
   /*                                                                       */
   /*    yOffset :: The vertical offset.                                    */
@@ -211,7 +213,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
-                                          FT_Outline*  target );
+                                          FT_Outline  *target );
 
 
   /*************************************************************************/
@@ -247,7 +249,7 @@
   /*    Reverses the drawing direction of an outline.  This is used to     */
   /*    ensure consistent fill conventions for mirrored glyphs.            */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    outline :: A pointer to the target outline descriptor.             */
   /*                                                                       */
   /* <Note>                                                                */
@@ -274,7 +276,8 @@
   /*                                                                       */
   /*    outline :: A pointer to the source outline descriptor.             */
   /*                                                                       */
-  /*    map     :: A pointer to the target bitmap descriptor.              */
+  /* <Output>                                                              */
+  /*    abitmap :: A pointer to the target bitmap descriptor.              */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -291,7 +294,7 @@
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Outline_Get_Bitmap( FT_Library   library,
                                                 FT_Outline*  outline,
-                                                FT_Bitmap*   bitmap );
+                                                FT_Bitmap   *abitmap );
 
 
   /*************************************************************************/
@@ -310,6 +313,7 @@
   /*                                                                       */
   /*    outline :: A pointer to the source outline descriptor.             */
   /*                                                                       */
+  /* <InOut>                                                               */
   /*    params  :: A pointer to a FT_Raster_Params structure used to       */
   /*               describe the rendering operation.                       */
   /*                                                                       */

@@ -62,11 +62,11 @@
 
   FT_EXPORT( void )  FT_Add64( FT_Int64*  x,
                                FT_Int64*  y,
-                               FT_Int64*  z );
+                               FT_Int64  *z );
 
   FT_EXPORT( void )  FT_MulTo64( FT_Int32   x,
                                  FT_Int32   y,
-                                 FT_Int64*  z );
+                                 FT_Int64  *z );
 
   FT_EXPORT( FT_Int32 )  FT_Div64by32( FT_Int64*  x,
                                        FT_Int32   y );

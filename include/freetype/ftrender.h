@@ -156,9 +156,10 @@
   /* <Description>                                                         */
   /*    Sets the current renderer to use, and set additional mode.         */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    library    :: A handle to the library object.                      */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    renderer   :: A handle to the renderer object.                     */
   /*                                                                       */
   /*    num_params :: The number of additional parameters.                 */

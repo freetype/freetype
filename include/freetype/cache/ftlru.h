@@ -146,7 +146,7 @@
                                      FT_Pointer           user_data,
                                      FT_Memory            memory,
                                      FT_Bool              pre_alloc,
-                                     FT_Lru*              alru );
+                                     FT_Lru              *anlru );
 
   FT_EXPORT( void )      FT_Lru_Reset( FT_Lru  lru );
 
@@ -155,11 +155,11 @@
 
   FT_EXPORT( FT_Error )  FT_Lru_Lookup_Node( FT_Lru        lru,
                                              FT_LruKey     key,
-                                             FT_LruNode*  anode );
+                                             FT_LruNode   *anode );
 
   FT_EXPORT( FT_Error )  FT_Lru_Lookup( FT_Lru       lru,
                                         FT_LruKey    key,
-                                        FT_Pointer*  aobject );
+                                        FT_Pointer  *anobject );
 
 
   FT_EXPORT( void )  FT_Lru_Remove_Node( FT_Lru      lru,

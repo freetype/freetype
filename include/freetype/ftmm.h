@@ -100,16 +100,16 @@
   /*    Retrieves the Multiple Master descriptor of a given font.          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face   :: A handle to the source face.                             */
+  /*    face    :: A handle to the source face.                            */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    master :: The Multiple Masters descriptor.                         */
+  /*    amaster :: The Multiple Masters descriptor.                        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Get_Multi_Master( FT_Face           face,
-                                              FT_Multi_Master*  master );
+                                              FT_Multi_Master  *amaster );
 
 
   /*************************************************************************/
@@ -121,13 +121,14 @@
   /*    For Multiple Masters fonts, choose an interpolated font design     */
   /*    through design coordinates.                                        */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face       :: A handle to the source face.                         */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    num_coords :: The number of design coordinates (must be equal to   */
   /*                  the number of axes in the font).                     */
   /*                                                                       */
-  /*    coords     :: The design coordinates.                              */
+  /*    coords     :: An array of design coordinates.                      */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -147,14 +148,15 @@
   /*    For Multiple Masters fonts, choose an interpolated font design     */
   /*    through normalized blend coordinates.                              */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face       :: A handle to the source face.                         */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    num_coords :: The number of design coordinates (must be equal to   */
   /*                  the number of axes in the font).                     */
   /*                                                                       */
-  /*    coords     :: The design coordinates (each one must be between 0   */
-  /*                  and 1.0).                                            */
+  /*    coords     :: The design coordinates array (each element must be   */
+  /*                  between 0 and 1.0).                                  */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */

@@ -120,7 +120,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
-                                              FTC_Image_Cache*  acache );
+                                              FTC_Image_Cache  *acache );
 
 
   /*************************************************************************/
@@ -157,7 +157,7 @@
   FT_EXPORT( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
                                                  FTC_Image_Desc*  desc,
                                                  FT_UInt          gindex,
-                                                 FT_Glyph*        aglyph );
+                                                 FT_Glyph        *aglyph );
 
 
 #ifdef __cplusplus

@@ -67,7 +67,7 @@
                                FT_Library  library,
                                Handle      fond,
                                FT_Long     face_index,
-                               FT_Face*    aface );
+                               FT_Face    *aface );
 
 
 #ifdef __cplusplus
@@ -76,3 +76,6 @@
 
 
 #endif /* FT_MAC_H */
+
+
+/* END */

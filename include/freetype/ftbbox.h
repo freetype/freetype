@@ -53,13 +53,13 @@
   /*    outline :: A pointer to the source outline.                        */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    bbox    :: The outline's exact bounding box.                       */
+  /*    abbox   :: The outline's exact bounding box.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Outline_Get_BBox( FT_Outline*  outline,
-                                              FT_BBox*     bbox );
+                                              FT_BBox     *abbox );
 
 
 #ifdef __cplusplus
