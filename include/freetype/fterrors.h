@@ -37,6 +37,9 @@
   /*     #include <freetype/fterrors.h>                                    */
   /*   }                                                                   */
   /*                                                                       */
+  /* For C++ it might be necessary to use `extern "C" {' and to define     */
+  /* FT_NEED_EXTERN_C also.                                                */
+  /*                                                                       */
   /*************************************************************************/
 
 
@@ -44,16 +47,19 @@
 #define FTERRORS_H
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+#undef FT_NEED_EXTERN_C
 
 #ifndef FT_ERRORDEF
 
 #define FT_ERRORDEF( e, v, s )  e = v,
 #define FT_ERROR_START_LIST     enum {
 #define FT_ERROR_END_LIST       FT_Err_Max };
+
+
+#ifdef __cplusplus
+#define FT_NEED_EXTERN_C
+  extern "C" {
+#endif
 
 #endif /* !FT_ERRORDEF */
 
@@ -186,7 +192,7 @@
 #undef FT_ERRORDEF
 
 
-#ifdef __cplusplus
+#ifdef FT_NEED_EXTERN_C
   }
 #endif
 

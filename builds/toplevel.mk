@@ -29,7 +29,7 @@
 .PHONY: setup
 
 ifndef CONFIG_MK
-CONFIG_MK := config.mk
+  CONFIG_MK := config.mk
 endif
 
 # If no configuration sub-makefile is present, or if `setup' is the target
