@@ -481,7 +481,7 @@ FT_BEGIN_HEADER
 
   /* General Scripts Area */
 
-  /* Bit  0   C0 Controls and Basic Latin */
+  /* Bit  0   Basic Latin */
 #define TT_UCR_BASIC_LATIN                     (1L <<  0) /* U+0020-U+007E */
   /* Bit  1   C1 Controls and Latin-1 Supplement */
 #define TT_UCR_LATIN1_SUPPLEMENT               (1L <<  1) /* U+0080-U+00FF */
@@ -606,8 +606,12 @@ FT_BEGIN_HEADER
 
   /* Surrogates Area */
 
-  /* Bit 57   Surrogates */
-#define TT_UCR_SURROGATES                      (1L << 25) /* U+D800-U+DFFF */
+  /* Bit 57   High Surrogates             + */
+  /*          High Private Use Surrogates + */
+  /*          Low Surrogates                */
+#define TT_UCR_SURROGATES                      (1L << 25) /* U+D800-U+DB7F */
+                                                          /* U+DB80-U+DBFF */
+                                                          /* U+DC00-U+DFFF */
   /* Bit 58 is reserved for Unicode SubRanges */
 
   /* CJK Ideographs Area */
