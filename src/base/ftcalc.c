@@ -35,6 +35,21 @@
 #include <ftobjs.h>  /* for ABS() */
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Sqrt32                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the square root of an Int32 integer (which will be        */
+  /*    as an unsigned long value).                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: The value to compute the root for.                            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The result of `sqrt(x)'.                                           */
+  /*                                                                       */
   BASE_FUNC
   FT_Int32  FT_Sqrt32( FT_Int32 x )
   {
@@ -48,10 +63,10 @@
     do
     {
       newroot = root + mask;
-      if (newroot <= val)
+      if ( newroot <= val )
       {
         val -= newroot;
-        root = newroot+mask;
+        root = newroot + mask;
       }
 
       root >>= 1;
@@ -72,7 +87,7 @@
   /*    FT_MulDiv                                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A very simple function used to perform the computation `(A*B)/C'   */
+  /*    A very simple function used to perform the computation `(a*b)/c'   */
   /*    with maximum accuracy (it uses a 64-bit intermediate integer       */
   /*    whenever necessary).                                               */
   /*                                                                       */
@@ -113,7 +128,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(A*B)/0x10000' with maximum accuracy.  Most of the time this is   */
+  /*    `(a*b)/0x10000' with maximum accuracy.  Most of the time this is   */
   /*    used to multiply a given value by a 16.16 fixed float factor.      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -157,7 +172,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(A*0x10000)/B' with maximum accuracy.  Most of the time, this is  */
+  /*    `(a*0x10000)/b' with maximum accuracy.  Most of the time, this is  */
   /*    used to divide a given value by a 16.16 fixed float factor.        */
   /*                                                                       */
   /* <Input>                                                               */
@@ -205,7 +220,7 @@
   /*    FT_MulDiv                                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A very simple function used to perform the computation `(A*B)/C'   */
+  /*    A very simple function used to perform the computation `(a*b)/c'   */
   /*    with maximum accuracy (it uses a 64-bit intermediate integer       */
   /*    whenever necessary).                                               */
   /*                                                                       */
@@ -281,7 +296,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(A*B)/0x10000' with maximum accuracy.  Most of the time, this is  */
+  /*    `(a*b)/0x10000' with maximum accuracy.  Most of the time, this is  */
   /*    used to multiply a given value by a 16.16 fixed float factor.      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -341,7 +356,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(A*0x10000)/B' with maximum accuracy.  Most of the time, this is  */
+  /*    `(a*0x10000)/b' with maximum accuracy.  Most of the time, this is  */
   /*    used to divide  a given value by a 16.16 fixed float factor.       */
   /*                                                                       */
   /* <Input>                                                               */
@@ -401,6 +416,21 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Add64                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Add two Int64 values.  Will be wrapped by the ADD_64() macro.      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: A pointer to the first value to be added.                     */
+  /*    y :: A pointer to the second value to be added.                    */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    z :: A pointer to the result of `x + y'.                           */
+  /*                                                                       */
   BASE_FUNC
   void  FT_Add64( FT_Int64*  x,
                   FT_Int64*  y,
@@ -416,6 +446,22 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_MulTo64                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Multiplies two Int32 integers.  Returns a Int64 integer.  Will be  */
+  /*    wrapped by the MUL_64() macro.                                     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: The first multiplier.                                         */
+  /*    y :: The second multiplier.                                        */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    z :: A pointer to the result of `x * y'.                           */
+  /*                                                                       */
   BASE_FUNC
   void  FT_MulTo64( FT_Int32   x,
                     FT_Int32   y,
@@ -463,6 +509,22 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Div64by32                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Divides an Int64 value by an Int32 value.  Returns an Int32        */
+  /*    integer.  Will be wrapped by the DIV_64() macro.                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: A pointer to the dividend.                                    */
+  /*    y :: The divisor.                                                  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The result of `x / y'.                                             */
+  /*                                                                       */
   BASE_FUNC
   FT_Int32  FT_Div64by32( FT_Int64*  x,
                           FT_Int32   y )
