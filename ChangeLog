@@ -1,3 +1,8 @@
+2003-12-07  Werner Lemberg  <wl@gnu.org>
+
+	* docs/raster.txt: New file, taken from FreeType 1 and completely
+	revised.
+
 2003-12-04  Masatake YAMATO  <jet@gyve.org>
 
 	* src/type1/t1driver.c (Get_Interface): Remove FT_UNUSED for
