@@ -207,7 +207,7 @@ THE SOFTWARE.
                   FT_ULong    format,
                   PCF_Metric  metric )
   {
-    FT_Error               error = PCF_Err_Ok;
+    FT_Error  error = PCF_Err_Ok;
 
 
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
@@ -481,11 +481,11 @@ THE SOFTWARE.
 
 
     error = pcf_seek_to_table_type( stream,
-                           face->toc.tables,
-                           face->toc.count,
-                           PCF_METRICS,
-                           &format,
-                           &size );
+                                    face->toc.tables,
+                                    face->toc.count,
+                                    PCF_METRICS,
+                                    &format,
+                                    &size );
     if ( error )
       return error;
 
@@ -870,8 +870,8 @@ THE SOFTWARE.
 
     /* Use the old accelerators if no BDF accelerators are in the file. */
     hasBDFAccelerators = pcf_has_table_type( face->toc.tables,
-                                     face->toc.count,
-                                     PCF_BDF_ACCELERATORS );
+                                             face->toc.count,
+                                             PCF_BDF_ACCELERATORS );
     if ( !hasBDFAccelerators )
     {
       error = pcf_get_accel( stream, face, PCF_ACCELERATORS );
