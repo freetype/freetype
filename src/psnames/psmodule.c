@@ -207,7 +207,7 @@
         {
           uni_char = ps_unicode_value( gname );
 
-          if ( uni_char != 0 && uni_char != 0xFFFF )
+          if ( uni_char != 0 && uni_char != 0xFFFFL )
           {
             map->unicode     = (FT_UInt)uni_char;
             map->glyph_index = n;
@@ -268,7 +268,7 @@
         max = mid - 1;
     }
 
-    return 0xFFFF;
+    return 0xFFFFU;
   }
 
 

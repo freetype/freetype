@@ -1184,7 +1184,7 @@
       for ( n = 0; n < count * 2; n++ )
       {
         y       += coords[n];
-        stems[n] = ( y + 0x8000 ) >> 16;
+        stems[n] = ( y + 0x8000L ) >> 16;
       }
 
       /* compute lengths */

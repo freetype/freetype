@@ -817,7 +817,7 @@
     seed = (FT_Fixed)(char*)&seed           ^
            (FT_Fixed)(char*)&decoder        ^
            (FT_Fixed)(char*)&charstring_base;
-    seed = ( seed ^ ( seed >> 10 ) ^ ( seed >> 20 ) ) & 0xFFFF;
+    seed = ( seed ^ ( seed >> 10 ) ^ ( seed >> 20 ) ) & 0xFFFFL;
     if ( seed == 0 )
       seed = 0x7384;
 
@@ -902,7 +902,7 @@
         *decoder->top++ = val;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-        if ( !( val & 0xFFFF ) )
+        if ( !( val & 0xFFFFL ) )
           FT_TRACE4(( " %d", (FT_Int32)( val >> 16 ) ));
         else
           FT_TRACE4(( " %.2f", val / 65536.0 ));
@@ -1823,7 +1823,7 @@
             FT_TRACE4(( " rand" ));
 
             Rand = seed;
-            if ( Rand >= 0x8000 )
+            if ( Rand >= 0x8000L )
               Rand++;
 
             args[0] = Rand;

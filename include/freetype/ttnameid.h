@@ -705,8 +705,8 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_SPANISH_UNITED_STATES             0x540a
   /* The following two IDs blatantly violate MS specs by using a */
   /* sublanguage > 0x1F.                                         */
-#define TT_MS_LANGID_SPANISH_LATIN_AMERICA             0xE40a
-#define TT_MS_LANGID_FRENCH_NORTH_AFRICA               0xE40c
+#define TT_MS_LANGID_SPANISH_LATIN_AMERICA             0xE40aU
+#define TT_MS_LANGID_FRENCH_NORTH_AFRICA               0xE40cU
 
 #define TT_MS_LANGID_FRENCH_MOROCCO                    0x380c
 #define TT_MS_LANGID_FRENCH_HAITI                      0x3c0c

@@ -1,3 +1,29 @@
+2003-06-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/glnames.py: Updated to AGL 2.0.
+	* src/psnames/pstables.h: Regenerated.
+
+2003-06-22  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/cache/ftcglyph.h, include/freetype/ttnameid.h,
+	src/base/ftcalc.c, src/base/fttrigon.c, src/cff/cffgload.c,
+	src/otlayout/otlgsub.c, src/pshinter/pshrec.c,
+	src/psnames/psmodule.c, src/sfnt/sfobjs.c, src/truetype/ttdriver.c:
+	Decorate constants with `U' and `L' if appropriate.
+
+	* include/freetype/ftmoderr.h: Updated to include recent module
+	additions.
+
+	* src/pshinter/pshnterr.h (FT_ERR_BASE): Define as
+	`FT_Mod_Err_PShinter'.
+	* src/type42/t42error.h (FT_ERR_BASE): Define as
+	`FT_Mod_Err_Type42'.
+
+	* src/pshinter/pshrec.h (PS_HINTS_MAGIC): Removed.  Not used.
+
+	* include/freetype/config/ftconfig.h [__MWERKS__]: Define FT_LONG64
+	and FT_INT64.
+
 2003-06-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/winfonts/winfnt.c (FNT_Load_Glyph): Use first_char in
