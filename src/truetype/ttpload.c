@@ -65,7 +65,6 @@
                      FT_Stream  stream )
   {
     FT_Error   error;
-    FT_Memory  memory = stream->memory;
     FT_ULong   table_len;
 
 
