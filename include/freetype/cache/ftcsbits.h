@@ -21,6 +21,7 @@
 
 
 #include <freetype/cache/ftcchunk.h>
+#include <freetype/cache/ftcimage.h>
 
 
 #ifdef __cplusplus

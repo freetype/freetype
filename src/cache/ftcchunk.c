@@ -22,6 +22,7 @@
 #include <freetype/internal/ftlist.h>
 #include <freetype/fterrors.h>
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -31,55 +32,55 @@
   /*************************************************************************/
 
 
-
   /* create a new chunk node, setting its cache index and ref count */
-  FT_EXPORT_FUNC( FT_Error )
-  FTC_ChunkNode_Init( FTC_ChunkNode  node,
-                      FTC_ChunkSet   cset,
-                      FT_UInt        index,
-                      FT_Bool        alloc )
+  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkNode_Init( FTC_ChunkNode  node,
+                                                  FTC_ChunkSet   cset,
+                                                  FT_UInt        index,
+                                                  FT_Bool        alloc )
   {
     FTC_Chunk_Cache      cache = cset->cache;
     FTC_CacheNode_Data*  data  = FTC_CACHENODE_TO_DATA_P( &node->root );
     FT_Error             error = 0;
 
 
-    data->cache_index  = (FT_UShort) cache->root.cache_index;
-    data->ref_count    = (FT_Short)  0;
+    data->cache_index  = (FT_UShort)cache->root.cache_index;
+    data->ref_count    = (FT_Short) 0;
     node->cset         = cset;
-    node->cset_index   = (FT_UShort) index;
-    node->num_elements = (index+1 < cset->num_chunks)
-                       ? cset->element_count
-                       : cset->element_max   - cset->element_count*index;
-    if (alloc)
+    node->cset_index   = (FT_UShort)index;
+    node->num_elements = ( index + 1 < cset->num_chunks )
+                         ? cset->element_count
+                         : cset->element_max - cset->element_count*index;
+    if ( alloc )
     {
       /* allocate elements array */
       FT_Memory   memory;
 
 
       memory = cache->root.memory;
-      error  = MEM_Alloc( node->elements, cset->element_size *
-                                          cset->element_count );
+      error  = MEM_Alloc( node->elements,
+                          cset->element_size * cset->element_count );
     }
+
     return error;
   }
 
 
-  FT_EXPORT_FUNC( void )  FTC_ChunkNode_Destroy( FTC_ChunkNode    node )
+  FT_EXPORT_FUNC( void )  FTC_ChunkNode_Destroy( FTC_ChunkNode  node )
   {
-    FTC_ChunkSet  cset     = node->cset;
+    FTC_ChunkSet  cset = node->cset;
+
 
     /* remove from parent set table */
-    cset->chunks[ node->cset_index ] = 0;
+    cset->chunks[node->cset_index] = 0;
 
     /* destroy the node */
     cset->clazz->destroy_node( node );
   }
 
 
-  FT_EXPORT_FUNC( FT_ULong )  FTC_ChunkNode_Size( FTC_ChunkNode    node )
+  FT_EXPORT_FUNC( FT_ULong )  FTC_ChunkNode_Size( FTC_ChunkNode  node )
   {
-    FTC_ChunkSet  cset     = node->cset;
+    FTC_ChunkSet  cset = node->cset;
 
 
     return cset->clazz->size_node( node );
@@ -88,8 +89,8 @@
 
   FT_CPLUSPLUS( const FTC_CacheNode_Class )  ftc_chunk_cache_node_class =
   {
-    (FTC_CacheNode_SizeFunc)    FTC_ChunkNode_Size,
-    (FTC_CacheNode_DestroyFunc) FTC_ChunkNode_Destroy
+    (FTC_CacheNode_SizeFunc)   FTC_ChunkNode_Size,
+    (FTC_CacheNode_DestroyFunc)FTC_ChunkNode_Destroy
   };
 
 
@@ -102,10 +103,9 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_FUNC( FT_Error )
-  FTC_ChunkSet_New( FTC_Chunk_Cache   cache,
-                    FT_Pointer        type,
-                    FTC_ChunkSet     *aset )
+  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
+                                                FT_Pointer       type,
+                                                FTC_ChunkSet*    aset )
   {
     FT_Error      error;
     FT_Memory     memory  = cache->root.memory;
@@ -124,19 +124,19 @@
     if ( ALLOC( cset, clazz->cset_byte_size ) )
       goto Exit;
 
-    cset->cache         = cache;
-    cset->manager       = manager;
-    cset->memory        = memory;
-    cset->clazz         = clazz;
+    cset->cache   = cache;
+    cset->manager = manager;
+    cset->memory  = memory;
+    cset->clazz   = clazz;
 
     /* now compute element_max, element_count and element_size */
-    error = clazz->sizes( cset, type);
-    if (error)
+    error = clazz->sizes( cset, type );
+    if ( error )
       goto Exit;
 
     /* compute maximum number of nodes */
-    cset->num_chunks = (cset->element_max   +
-                        cset->element_count - 1) / cset->element_count;
+    cset->num_chunks = ( cset->element_max + cset->element_count - 1 ) /
+                       cset->element_count;
 
     /* allocate chunk pointers table */
     if ( ALLOC_ARRAY( cset->chunks, cset->num_chunks, FTC_ChunkNode ) )
@@ -165,26 +165,27 @@
 
   FT_EXPORT_FUNC( void )  FTC_ChunkSet_Destroy( FTC_ChunkSet  cset )
   {
-    FTC_Chunk_Cache         cache        = cset->cache;
-    FTC_Manager             manager      = cache->root.manager;
-    FT_List                 glyphs_lru   = &manager->global_lru;
-    FTC_ChunkNode*          bucket       = cset->chunks;
-    FTC_ChunkNode*          bucket_limit = bucket + cset->num_chunks;
-    FT_Memory               memory       = cache->root.memory;
+    FTC_Chunk_Cache      cache        = cset->cache;
+    FTC_Manager          manager      = cache->root.manager;
+    FT_List              glyphs_lru   = &manager->global_lru;
+    FTC_ChunkNode*       bucket       = cset->chunks;
+    FTC_ChunkNode*       bucket_limit = bucket + cset->num_chunks;
+    FT_Memory            memory       = cache->root.memory;
 
-    FTC_ChunkSet_Class*     clazz = cset->clazz;
+    FTC_ChunkSet_Class*  clazz = cset->clazz;
 
 
     /* for each bucket, free the list of glyph nodes */
     for ( ; bucket < bucket_limit; bucket++ )
     {
-      FTC_ChunkNode   node = bucket[0];
-      FT_ListNode     lrunode;
+      FTC_ChunkNode  node = bucket[0];
+      FT_ListNode    lrunode;
+
 
       lrunode = FTC_CHUNKNODE_TO_LRUNODE( node );
 
       manager->num_bytes -= clazz->size_node( node );
-      manager->num_nodes --;
+      manager->num_nodes--;
 
       FT_List_Remove( glyphs_lru, lrunode );
 
@@ -201,32 +202,33 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )
-  FTC_ChunkSet_Lookup_Node( FTC_ChunkSet    cset,
-                            FT_UInt         glyph_index,
-                            FTC_ChunkNode  *anode,
-                            FT_UInt        *aindex )
+  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkSet_Lookup_Node(
+                                FTC_ChunkSet    cset,
+                                FT_UInt         glyph_index,
+                                FTC_ChunkNode*  anode,
+                                FT_UInt*        aindex )
   {
-    FTC_Chunk_Cache  cache   = cset->cache;
-    FTC_Manager      manager = cache->root.manager;
-    FT_Error         error   = 0;
+    FTC_Chunk_Cache      cache   = cset->cache;
+    FTC_Manager          manager = cache->root.manager;
+    FT_Error             error   = 0;
 
-    FTC_ChunkSet_Class*  clazz = cset->clazz;
+    FTC_ChunkSet_Class*  clazz   = cset->clazz;
 
 
     *anode = 0;
-    if (glyph_index >= cset->element_max)
+    if ( glyph_index >= cset->element_max )
       error = FT_Err_Invalid_Argument;
     else
     {
       FT_UInt         chunk_size  = cset->element_count;
-      FT_UInt         chunk_index = glyph_index/chunk_size;
+      FT_UInt         chunk_index = glyph_index / chunk_size;
       FTC_ChunkNode*  pnode       = cset->chunks + chunk_index;
       FTC_ChunkNode   node        = *pnode;
 
-      if (!node)
+
+      if ( !node )
       {
-        /* we didn't found the glyph image, we will now create a new one */
+        /* we didn't found the glyph image; we will now create a new one */
         error = clazz->new_node( cset, chunk_index, &node );
         if ( error )
           goto Exit;
@@ -235,12 +237,13 @@
         *pnode = node;
 
         /* insert the node at the start the global LRU glyph list */
-        FT_List_Insert( &manager->global_lru, FTC_CHUNKNODE_TO_LRUNODE( node ) );
+        FT_List_Insert( &manager->global_lru,
+                        FTC_CHUNKNODE_TO_LRUNODE( node ) );
 
         manager->num_bytes += clazz->size_node( node );
-        manager->num_nodes ++;
+        manager->num_nodes++;
 
-        if (manager->num_bytes > manager->max_bytes)
+        if ( manager->num_bytes > manager->max_bytes )
         {
           FTC_ChunkNode_Ref   ( node );
           FTC_Manager_Compress( manager );
@@ -249,7 +252,7 @@
       }
 
       *anode  = node;
-      *aindex = glyph_index - chunk_index*chunk_size;
+      *aindex = glyph_index - chunk_index * chunk_size;
     }
 
   Exit:
@@ -369,3 +372,4 @@
   }
 
 
+/* END */
