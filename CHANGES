@@ -1,4 +1,4 @@
-LATEST CHANGES
+LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 
     - changed the library header files inclusion scheme. Right now,
       a client application can do something like this:
@@ -6,6 +6,12 @@ LATEST CHANGES
          #include <ft2build.h>   -- include build and setup configuration file
          #include FT_FREETYPE_H  -- main API file
          #include FT_GLYPH_H     -- abstract glyph image handling, etc..
+
+    - the build system has changed slightly when compiling by hand (either
+      from the command line or from an IDE). You don't need to put the "src"
+      directory in the include path anymore. Rather, place each component's
+      path.. See INSTALL and "docs/BUILD" for details..
+
 
 =========================================================================
 LATEST CHANGES BETWEEN 2.0.1 and 2.0:
