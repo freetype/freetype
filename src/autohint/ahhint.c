@@ -1111,20 +1111,23 @@
       /* we now need to hint the metrics according to the change in */
       /* width/positioning that occured during the hinting process  */
       {
-        FT_Pos    old_advance;
-        FT_Pos    old_lsb, new_lsb;
+        FT_Pos    old_advance, old_rsb, old_lsb, new_lsb;
         AH_Edge*  edge1 = outline->vert_edges;     /* leftmost edge  */
         AH_Edge*  edge2 = edge1 +
                           outline->num_vedges - 1; /* rightmost edge */
 
 
         old_advance = hinter->pp2.x;
+        old_rsb     = old_advance - edge2->opos;
         old_lsb     = edge1->opos;
         new_lsb     = edge1->pos;
 
-        hinter->pp1.x = ( ( new_lsb - old_lsb ) + 32 ) & -64;
-        hinter->pp2.x = ( ( edge2->pos +
-                            ( old_advance - edge2->opos ) ) + 32 ) & -64;
+        hinter->pp1.x = ( ( new_lsb    - old_lsb ) + 32 ) & -64;
+        hinter->pp2.x = ( ( edge2->pos + old_rsb ) + 32 ) & -64;
+
+        /* try to fix certain bad advance computations */
+        if ( hinter->pp2.x + hinter->pp1.x == edge2->pos && old_rsb > 4 )
+          hinter->pp2.x += 64;
       }
 
       /* good, we simply add the glyph to our loader's base */

@@ -1,3 +1,9 @@
+2001-12-30  David Turner <david@freetype.org>
+
+	* src/autohint/ahhint.c (ah_hinter_load): improving advance width
+	computation of auto-hinted glyphs. This noticeably improves the
+	spacing of letters in KDE and Gnome :o)
+
 2001-12-25  Antoine Leca <Antoine-Freetype@Leca-Marti.org>
 
         * builds/dos/detect.mk: Correcting the order for Borland compilers:
