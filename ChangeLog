@@ -1,5 +1,10 @@
 2002-03-08  David Turner  <david@freetype.org>
 
+	* Version 2.0.9 Released.
+	=========================
+
+	* README: updating the FTP addresses of the documentation
+
 	* Jamfile.in, Jamfile: Adding the template file that will be used to
 	support libtool with Jam on Unix in the near future. I have experimented
 	with this and haven't found a valid solution for now though.. :-(
