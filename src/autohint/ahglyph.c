@@ -816,7 +816,7 @@
             segment_dir = point->out_dir;
 
             /* clear all segment fields */
-            memset( segment, 0, sizeof ( *segment ) );
+            MEM_Set( segment, 0, sizeof ( *segment ) );
 
             segment->dir      = segment_dir;
             segment->flags    = ah_edge_normal;
@@ -878,7 +878,7 @@
         if ( min_point )
         {
           /* clear all segment fields */
-          memset( segment, 0, sizeof ( *segment ) );
+          MEM_Set( segment, 0, sizeof ( *segment ) );
 
           segment->dir   = segment_dir;
           segment->flags = ah_edge_normal;
@@ -894,7 +894,7 @@
         if ( max_point )
         {
           /* clear all segment fields */
-          memset( segment, 0, sizeof ( *segment ) );
+          MEM_Set( segment, 0, sizeof ( *segment ) );
 
           segment->dir   = segment_dir;
           segment->flags = ah_edge_normal;
@@ -1122,7 +1122,7 @@
           edge_limit++;
 
           /* clear all edge fields */
-          memset( edge, 0, sizeof ( *edge ) );
+          MEM_Set( edge, 0, sizeof ( *edge ) );
 
           /* add the segment to the new edge's list */
           edge->first    = seg;

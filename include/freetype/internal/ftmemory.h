@@ -161,7 +161,7 @@ FT_BEGIN_HEADER
   /* available on all platforms we know of.                          */
 #include <string.h>
 
-#define MEM_Set( dest, byte, count )  memset( dest, byte, count )
+#define MEM_Set( dest, byte, count )     memset( dest, byte, count )
 
 #define MEM_Copy( dest, source, count )  memcpy( dest, source, count )
 

@@ -140,6 +140,10 @@
 #endif /* _STANDALONE_ */
 
 
+#ifndef    MEM_Set
+#  define  MEM_Set(d,s,c)  memset(d,s,c)
+#endif
+
   /* define this to dump debugging information */
 #define xxxDEBUG_GRAYS
 
@@ -1228,7 +1232,7 @@
     {
       if ( spans->coverage )
 #if 1
-        memset( p + spans->x, (unsigned char)spans->coverage, spans->len );
+        MEM_Set( p + spans->x, (unsigned char)spans->coverage, spans->len );
 #else /* 1 */
       {
         q     = p + spans->x;
@@ -1968,7 +1972,7 @@
 
 
     *araster = (FT_Raster)&the_raster;
-    memset( &the_raster, 0, sizeof ( the_raster ) );
+    MEM_Set( &the_raster, 0, sizeof ( the_raster ) );
 
     return 0;
   }

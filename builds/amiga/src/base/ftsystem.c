@@ -346,6 +346,18 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   }
 
 
+
+#ifdef FT_DEBUG_MEMORY
+
+  extern FT_Int
+  ft_mem_debug_init( FT_Memory  memory );
+  
+  extern void
+  ft_mem_debug_done( FT_Memory  memory );
+  
+#endif  
+      
+
   /* documentation is in ftobjs.h */
 
   FT_EXPORT_DEF( FT_Memory )
@@ -360,13 +372,19 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
     {
 //    memory->user    = 0;
       memory->user    = AsmCreatePool ( MEMF_PUBLIC, 2048, 2048, SysBase );
-      memory->alloc   = ft_alloc;
-      memory->realloc = ft_realloc;
-      memory->free    = ft_free;
       if ( memory->user == NULL )
       {
         FreeVec ( memory );
         memory = NULL;
+      }
+      else
+      {
+        memory->alloc   = ft_alloc;
+        memory->realloc = ft_realloc;
+        memory->free    = ft_free;
+#ifdef FT_DEBUG_MEMORY
+        ft_mem_debug_init( memory );
+#endif    
       }
     }
 
@@ -379,7 +397,9 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   FT_EXPORT_DEF( void )
   FT_Done_Memory( FT_Memory  memory )
   {
-//  memory->free( memory, memory );
+#ifdef FT_DEBUG_MEMORY
+    ft_mem_debug_done( memory );
+#endif  
 
     AsmDeletePool( memory->user, SysBase );
     FreeVec( memory );

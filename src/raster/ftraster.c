@@ -105,6 +105,10 @@
   /*************************************************************************/
   /*************************************************************************/
 
+#ifdef     MEM_Set
+#  define  MEM_Set(d,s,c)  memset(d,s,c)
+#endif
+
   /* define DEBUG_RASTER if you want to compile a debugging version */
 #define xxxDEBUG_RASTER
 
@@ -3141,7 +3145,7 @@
 
 
      *araster = &the_raster;
-     memset( &the_raster, sizeof ( the_raster ), 0 );
+     MEM_Set( &the_raster, sizeof ( the_raster ), 0 );
      ft_black_init( &the_raster );
 
      return 0;

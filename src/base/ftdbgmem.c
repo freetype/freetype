@@ -32,7 +32,6 @@
 
   typedef struct FT_MemTableRec_
   {
-    FT_Memory    memory;
     FT_ULong     size;
     FT_ULong     nodes;
     FT_MemNode*  buckets;
@@ -43,6 +42,12 @@
   
     const char*  file_name;
     FT_Long      line_no;
+
+    FT_Memory        memory;    
+    FT_Pointer       memory_user;
+    FT_Alloc_Func    alloc;
+    FT_Free_Func     free;
+    FT_Realloc_Func  realloc;
   
   } FT_MemTableRec;
 
@@ -122,6 +127,31 @@
   }
 
 
+  static FT_Pointer
+  ft_mem_table_alloc( FT_MemTable  table,
+                      FT_Long      size )
+  {
+    FT_Memory   memory = table->memory;
+    FT_Pointer  block;
+    
+    memory->user = table->memory_user;
+    block = table->alloc( memory, size );
+    memory->user = table;
+    
+    return block;
+  }
+
+  static void
+  ft_mem_table_free( FT_MemTable  table,
+                     FT_Pointer   block )
+  {
+    FT_Memory  memory = table->memory;
+    
+    memory->user = table->memory_user;
+    table->free( memory, block );
+    memory->user = table;
+  }
+
 
   static void
   ft_mem_table_resize( FT_MemTable  table )
@@ -134,7 +164,7 @@
       FT_MemNode*  new_buckets ;
       FT_ULong     i;
 
-      new_buckets = malloc( new_size * sizeof(FT_MemNode) );
+      new_buckets = ft_mem_table_alloc( table, new_size * sizeof(FT_MemNode) );
       if ( new_buckets == NULL )
         return;
       
@@ -160,7 +190,7 @@
       }
 
       if ( table->buckets )
-        free( table->buckets );
+        ft_mem_table_free( table, table->buckets );
         
       table->buckets = new_buckets;
       table->size    = new_size;
@@ -169,24 +199,32 @@
 
 
   static FT_MemTable
-  ft_mem_table_new( void )
+  ft_mem_table_new( FT_Memory  memory )
   {
     FT_MemTable  table;
 
-    table = malloc( sizeof(*table) );
+    table = memory->alloc( memory, sizeof(*table) );
     if ( table == NULL ) goto Exit;
     
     memset( table, 0, sizeof(*table) );
 
     table->size  = FT_MEM_SIZE_MIN;
     table->nodes = 0;
+    
+    table->memory  = memory;
 
-    table->buckets = malloc( table->size * sizeof(FT_MemNode) );
+    table->memory_user = memory->user;
+    
+    table->alloc   = memory->alloc;
+    table->realloc = memory->realloc;
+    table->free    = memory->free;
+
+    table->buckets = memory->alloc( memory, table->size * sizeof(FT_MemNode) );
     if ( table->buckets )
       memset( table->buckets, 0, sizeof(FT_MemNode)*table->size );
     else
     {
-      free( table );
+      memory->free( memory, table );
       table = NULL;
     }
   
@@ -203,8 +241,9 @@
 
     if ( table )
     {
-      FT_Long   leak_count = 0;
-      FT_ULong  leaks = 0;
+      FT_Memory  memory = table->memory;
+      FT_Long    leak_count = 0;
+      FT_ULong   leaks = 0;
       
       for ( i = 0; i < table->size; i++ )
       {
@@ -225,7 +264,7 @@
             leak_count++;
             leaks += node->size;
             
-            free( node->address );
+            ft_mem_table_free( table, node->address );
           }
                    
           node->address = NULL;
@@ -236,7 +275,7 @@
         }
         table->buckets[i] = 0;
       }
-      free( table->buckets );
+      ft_mem_table_free( table, table->buckets );
       table->buckets = NULL;
 
       table->size   = 0;
@@ -311,7 +350,7 @@
       }
       
       /* we need to create a new node in this table */
-      node = malloc( sizeof(*node) );
+      node = ft_mem_table_alloc( table, sizeof(*node) );
       if ( node == NULL )
         ft_mem_debug_panic( "not enough memory to run memory tests" );
 
@@ -378,7 +417,7 @@
     if ( size <= 0 )
       ft_mem_debug_panic( "negative block size allocation (%ld)", size );
     
-    block = malloc( size );
+    block = ft_mem_table_alloc( table, size );
     if ( block )
       ft_mem_table_set( table, block, (FT_ULong)size );
       
@@ -454,7 +493,7 @@
 
     if ( getenv( "FT_DEBUG_MEMORY") )
     {    
-      table = ft_mem_table_new();
+      table = ft_mem_table_new( memory );
       if ( table )
       {
         memory->user    = table;
@@ -475,9 +514,12 @@
     
     if ( table )
     {
+      memory->free    = table->free;
+      memory->realloc = table->realloc;
+      memory->alloc   = table->alloc;
+      
       ft_mem_table_destroy( table );
       memory->user = NULL;
-      memory->free = (FT_Free_Func) free;
     }
   }
 
