@@ -135,16 +135,18 @@
                                        FT_Long  b,
                                        FT_Long  c )
   {
-    FT_Int s;
-
+    FT_Int   s;
+    FT_Long  d;
 
     s = 1;
-    if ( a < 0 ) { a = -a; s = -s; }
+    if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
     if ( c < 0 ) { c = -c; s = -s; }
 
-    return s * ( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
-                       : 0x7FFFFFFFL );
+    d = ( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
+                : 0x7FFFFFFFL );
+
+	return ( s > 0 ) ? d : -d;
   }
 
 
@@ -153,14 +155,14 @@
   FT_EXPORT_DEF( FT_Long )  FT_MulFix( FT_Long  a,
                                        FT_Long  b )
   {
-    FT_Int  s;
+    FT_Int   s = 1;
+	FT_Long  c;
 
-
-    s = 1;
-    if ( a < 0 ) { a = -a; s = -s; }
+    if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
 
-    return s * (FT_Long)( ( (FT_Int64)a * b + 0x8000 ) >> 16 );
+    c = (FT_Long)( ( (FT_Int64)a * b + 0x8000 ) >> 16 );
+	return ( s > 0 ) ? c : -c ;
   }
 
 
@@ -181,9 +183,9 @@
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = ( (FT_Int64)a << 16 ) / b;
+      q = ( ((FT_Int64)a + (b >> 1)) << 16 ) / b;
 
-    return (FT_Int32)( s < 0 ? -q : q );
+    return (FT_Long)( s < 0 ? -q : q );
   }
 
 

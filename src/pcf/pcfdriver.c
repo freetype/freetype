@@ -158,7 +158,7 @@ THE SOFTWARE.
     metric = face->metrics + glyph_index;
   
     bitmap->rows       = metric->ascent + metric->descent;
-    bitmap->width      = metric->characterWidth;
+    bitmap->width      = metric->rightSideBearing - metric->leftSideBearing;
     bitmap->num_grays  = 1;
     bitmap->pixel_mode = ft_pixel_mode_mono;
   
