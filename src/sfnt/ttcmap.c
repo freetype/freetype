@@ -4,11 +4,11 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -22,15 +22,26 @@
 #include <ttload.h>
 #include <ttcmap.h>
 
-/* required by the tracing mode */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT      trace_ttcmap
+#define FT_COMPONENT  trace_ttcmap
 
 
-  static TT_UInt  code_to_index0( TT_CMapTable*  charmap, TT_ULong  char_code );
-  static TT_UInt  code_to_index2( TT_CMapTable*  charmap, TT_ULong  char_code );
-  static TT_UInt  code_to_index4( TT_CMapTable*  charmap, TT_ULong  char_code );
-  static TT_UInt  code_to_index6( TT_CMapTable*  charmap, TT_ULong  char_code );
+  static TT_UInt  code_to_index0( TT_CMapTable*  charmap,
+                                  TT_ULong       char_code );
+  static TT_UInt  code_to_index2( TT_CMapTable*  charmap,
+                                  TT_ULong       char_code );
+  static TT_UInt  code_to_index4( TT_CMapTable*  charmap,
+                                  TT_ULong       char_code );
+  static TT_UInt  code_to_index6( TT_CMapTable*  charmap,
+                                  TT_ULong       char_code );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -48,7 +59,7 @@
   /*    table  :: A pointer to a cmap object.                              */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The function assumes that the stream is already in use (i.e.,      */
@@ -119,7 +130,7 @@
       /* load subheaders */
 
       cmap2->numGlyphId = l =
-        ( ( cmap->length - 2L*(256+3) - num_SH*8L ) & 0xffff ) / 2;
+        ( ( cmap->length - 2L * ( 256 + 3 ) - num_SH * 8L ) & 0xffff ) / 2;
 
       if ( ALLOC_ARRAY( cmap2->subHeaders,
                         num_SH + 1,
@@ -177,8 +188,8 @@
 
       if ( ALLOC_ARRAY( cmap4->segments,
                         num_Seg,
-                        TT_CMap4Segment )         ||
-           ACCESS_Frame( (num_Seg * 4 + 1) * 2L ) )
+                        TT_CMap4Segment )           ||
+           ACCESS_Frame( ( num_Seg * 4 + 1 ) * 2L ) )
         goto Fail;
 
       segments = cmap4->segments;
@@ -200,12 +211,12 @@
       FORGET_Frame();
 
       cmap4->numGlyphId = l =
-        ( ( cmap->length - ( 16L + 8L * num_Seg ) ) & 0xFFFF ) /2;
+        ( ( cmap->length - ( 16L + 8L * num_Seg ) ) & 0xFFFF ) / 2;
 
       /* load IDs */
 
       if ( ALLOC_ARRAY( cmap4->glyphIdArray, l, TT_UShort ) ||
-           ACCESS_Frame( l*2L )                             )
+           ACCESS_Frame( l * 2L )                           )
         goto Fail;
 
       for ( i = 0; i < l; i++ )
@@ -248,6 +259,7 @@
       return TT_Err_Invalid_CharMap_Format;
 
     }
+
     return TT_Err_Ok;
 
   Fail:
@@ -269,7 +281,7 @@
   /*    cmap :: A handle to a cmap object.                                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   TT_Error  TT_CharMap_Free( TT_Face        face,
@@ -316,7 +328,6 @@
   }
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -332,14 +343,14 @@
   /*    cmap0    :: A pointer to a cmap table in format 0.                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Glyph index into the glyphs array.  0 if the glyph does not        */
-  /*    exist.                                                             */
+  /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
   TT_UInt code_to_index0( TT_CMapTable*  cmap,
                           TT_ULong       charCode )
   {
     TT_CMap0*  cmap0 = &cmap->c.cmap0;
+
 
     return ( charCode <= 0xFF ? cmap0->glyphIdArray[charCode] : 0 );
   }
@@ -358,54 +369,53 @@
   /*    cmap2    :: A pointer to a cmap table in format 2.                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Glyph index into the glyphs array.  0 if the glyph does not        */
-  /*    exist.                                                             */
+  /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
   TT_UInt  code_to_index2( TT_CMapTable*  cmap,
                            TT_ULong       charCode )
   {
-    TT_UInt            result, index1, offset;
-    TT_UInt            char_lo;
-    TT_ULong           char_hi;
-    TT_CMap2SubHeader* sh2;
-    TT_CMap2*          cmap2;
+    TT_UInt             result, index1, offset;
+    TT_UInt             char_lo;
+    TT_ULong            char_hi;
+    TT_CMap2SubHeader*  sh2;
+    TT_CMap2*           cmap2;
+
 
     cmap2   = &cmap->c.cmap2;
     result  = 0;
-    char_lo = (TT_UInt)(charCode & 0xFF);
+    char_lo = (TT_UInt)( charCode & 0xFF );
     char_hi = charCode >> 8;
 
     if ( char_hi == 0 )
     {
       /* an 8-bit character code - we use the subHeader 0 in this case */
-      /* to test wether the character code is in the charmap           */
+      /* to test whether the character code is in the charmap          */
       if ( cmap2->subHeaderKeys[char_lo] == 0 )
-      {
         result = cmap2->glyphIdArray[char_lo];
-      }
     }
     else
     {
       /* a 16-bit character code */
-      index1 = cmap2->subHeaderKeys[ char_hi & 0xFF ];
-      if (index1)
+      index1 = cmap2->subHeaderKeys[char_hi & 0xFF];
+      if ( index1 )
       {
         sh2      = cmap2->subHeaders + index1;
         char_lo -= sh2->firstCode;
 
-        if (char_lo < sh2->entryCount)
+        if ( char_lo < sh2->entryCount )
         {
-          offset = sh2->idRangeOffset/2 + char_lo;
-          if (offset < cmap2->numGlyphId)
+          offset = sh2->idRangeOffset / 2 + char_lo;
+          if ( offset < cmap2->numGlyphId )
           {
             result = cmap2->glyphIdArray[offset];
-            if (result)
-              result = (result + sh2->idDelta) & 0xFFFF;
+            if ( result )
+              result = ( result + sh2->idDelta ) & 0xFFFF;
           }
         }
       }
     }
+
     return result;
   }
 
@@ -423,8 +433,7 @@
   /*    cmap4    :: A pointer to a cmap table in format 4.                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Glyph index into the glyphs array.  0 if the glyph does not        */
-  /*    exist.                                                             */
+  /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
   TT_UInt  code_to_index4( TT_CMapTable*  cmap,
@@ -433,6 +442,7 @@
     TT_UInt          result, index1, segCount;
     TT_CMap4*        cmap4;
     TT_CMap4Segment  *seg4, *limit;
+
 
     cmap4    = &cmap->c.cmap4;
     result   = 0;
@@ -448,8 +458,8 @@
 
     for ( seg4 = cmap4->segments; seg4 < limit; seg4++, segCount-- )
     {
-      /* the ranges are sorted in increasing order, if we're out of  */
-      /* the range here, the char code isn't in the charmap, so exit */
+      /* the ranges are sorted in increasing order.  If we are out of */
+      /* the range here, the char code isn't in the charmap, so exit. */
       if ( charCode > seg4->endCount )
         continue;
         
@@ -461,24 +471,23 @@
  Found:    
     cmap4->last_segment = seg4;
     
-    /* when the idRangeOffset is 0, we can compute the glyph index */
-    /* directly..                                                  */
+    /* if the idRangeOffset is 0, we can compute the glyph index */
+    /* directly                                                  */
     
     if ( seg4->idRangeOffset == 0 )
-      result = (charCode + seg4->idDelta) & 0xFFFF;
-      
+      result = ( charCode + seg4->idDelta ) & 0xFFFF;
     else
-    /* otherwise, we must use the glyphIdArray to do it            */
     {
-      index1 = seg4->idRangeOffset/2 + (charCode - seg4->startCount)
+      /* otherwise, we must use the glyphIdArray to do it */
+      index1 = seg4->idRangeOffset / 2
+               + ( charCode - seg4->startCount )
                - segCount;
 
       if ( index1 < cmap4->numGlyphId       &&
            cmap4->glyphIdArray[index1] != 0 )
-      {
-        result = (cmap4->glyphIdArray[index1] + seg4->idDelta) & 0xFFFF;
-      }
+        result = ( cmap4->glyphIdArray[index1] + seg4->idDelta ) & 0xFFFF;
     }
+
     return result;
   }
 
@@ -496,15 +505,15 @@
   /*    cmap6    :: A pointer to a cmap table in format 6.                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Glyph index into the glyphs array.  0 if the glyph does not        */
-  /*    exist.                                                             */
+  /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
   TT_UInt  code_to_index6( TT_CMapTable*  cmap,
-                           TT_ULong   charCode )
+                           TT_ULong       charCode )
   {
     TT_CMap6*  cmap6;
     TT_UInt    result = 0;
+
 
     cmap6     = &cmap->c.cmap6;
     result    = 0;

@@ -14,8 +14,6 @@
 
 
 ifndef PSNAMES_INCLUDE
-  PSNAMES_INCLUDED := 1
-
   # PSNAMES driver directory
   #
   PSNAMES_DIR  := $(SRC_)psnames

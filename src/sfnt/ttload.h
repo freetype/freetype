@@ -5,11 +5,11 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF font (specification).                                     */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -23,9 +23,10 @@
 
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/tttypes.h>
-/*
+
+#if 0
 #include <ttobjs.h>
-*/
+#endif
 
 #ifdef __cplusplus
   extern "C" {
@@ -37,17 +38,17 @@
                               TT_ULong  tag );
 
   LOCAL_DEF
-  TT_Error   TT_Goto_Table( TT_Face    face,
-                            TT_ULong   tag,
-                            FT_Stream  stream,
-                            TT_ULong  *length );
+  TT_Error  TT_Goto_Table( TT_Face    face,
+                           TT_ULong   tag,
+                           FT_Stream  stream,
+                           TT_ULong*  length );
 
 
   LOCAL_DEF
-  TT_Error   TT_Load_SFNT_Header( TT_Face       face,
-                                  FT_Stream     stream,
-                                  TT_Long       face_index,
-                                  SFNT_Header*  sfnt );
+  TT_Error  TT_Load_SFNT_Header( TT_Face       face,
+                                 FT_Stream     stream,
+                                 TT_Long       face_index,
+                                 SFNT_Header*  sfnt );
   LOCAL_DEF
   TT_Error  TT_Load_Directory( TT_Face       face,
                                FT_Stream     stream,

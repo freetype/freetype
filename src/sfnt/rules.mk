@@ -14,17 +14,15 @@
 
 
 ifndef SFNT_INCLUDE
-  SFNT_INCLUDED := 1
-
   # SFNT driver directory
   #
   SFNT_DIR  := $(SRC_)sfnt
   SFNT_DIR_ := $(SFNT_DIR)$(SEP)
 
+
   # additional include flags used when compiling the driver
   #
   SFNT_INCLUDE := $(SHARED) $(SFNT_DIR)
-
 
   # compilation flags for the driver
   #
@@ -40,7 +38,6 @@ ifndef SFNT_INCLUDE
                   $(SFNT_DIR_)ttpost.c   \
                   $(SFNT_DIR_)sfobjs.c   \
                   $(SFNT_DIR_)sfdriver.c
-
 
   # driver headers
   #

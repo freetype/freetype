@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  sfobjs.h                                                               */
 /*                                                                         */
-/*    SFNT object management                                               */
+/*    SFNT object management (specification).                              */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -15,11 +15,13 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #ifndef SFOBJS_H
 #define SFOBJS_H
 
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/ftobjs.h>
+
 
   LOCAL_DEF
   FT_Error  SFNT_Init_Face( FT_Stream      stream,

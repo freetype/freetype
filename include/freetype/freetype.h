@@ -310,7 +310,10 @@
     ft_encoding_unicode = FT_MAKE_TAG('u','n','i','c'),
     ft_encoding_latin_2 = FT_MAKE_TAG('l','a','t','2'),
     ft_encoding_sjis    = FT_MAKE_TAG('s','j','i','s'),
+    ft_encoding_gb2312  = FT_MAKE_TAG('g','b',' ',' '),
     ft_encoding_big5    = FT_MAKE_TAG('b','i','g','5'),
+    ft_encoding_wansung = FT_MAKE_TAG('w','a','n','s'),
+    ft_encoding_johab   = FT_MAKE_TAG('j','o','h','a'),
 
     ft_encoding_adobe_standard = FT_MAKE_TAG('a','d','o','b'),
     ft_encoding_adobe_expert   = FT_MAKE_TAG('a','d','b','e'),
