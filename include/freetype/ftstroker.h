@@ -126,8 +126,8 @@ FT_BEGIN_HEADER
                         FT_UInt    *anum_contours );
 
   FT_EXPORT( void )
-  FT_Stroker_Export( FT_Stroker    stroker,
-                     FT_Outliner*  outline );
+  FT_Stroker_Export( FT_Stroker   stroker,
+                     FT_Outline*  outline );
 
   FT_EXPORT( void )
   FT_Stroker_Done( FT_Stroker  stroker );
