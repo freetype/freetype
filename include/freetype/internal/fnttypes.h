@@ -85,20 +85,10 @@ FT_BEGIN_HEADER
   } FNT_FontRec, *FNT_Font;
 
 
-  typedef struct  FNT_SizeRec_
-  {
-    FT_SizeRec  root;
-    FNT_Font    font;
-
-  } FNT_SizeRec, *FNT_Size;
-
-
   typedef struct  FNT_FaceRec_
   {
     FT_FaceRec     root;
-
-    FT_UInt        num_fonts;
-    FNT_Font       fonts;
+    FNT_Font       font;
 
     FT_CharMap     charmap_handle;
     FT_CharMapRec  charmap;  /* a single charmap per face */

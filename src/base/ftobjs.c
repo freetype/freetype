@@ -833,7 +833,7 @@
              FT_Long        face_index,
              FT_Int         num_params,
              FT_Parameter*  params,
-             FT_Face*       aface )
+             FT_Face       *aface )
   {
     FT_Memory         memory;
     FT_Driver_Class   clazz;
@@ -882,11 +882,10 @@
     /* select Unicode charmap by default */
     error2 = find_unicode_charmap( face );
 
-    /* if no Unicode charmap can be found, FT_Err_Invalid_CharMap_Handle is
-     * returned.
-     */
+    /* if no Unicode charmap can be found, FT_Err_Invalid_CharMap_Handle */
+    /* is returned.                                                      */
 
-    /* no error should happen, but we want to play safe. */
+    /* no error should happen, but we want to play safe */
     if ( error2 && error2 != FT_Err_Invalid_CharMap_Handle )
     {
       error = error2;

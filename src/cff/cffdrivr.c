@@ -165,7 +165,7 @@
   /*    glyph_index :: The index of the glyph in the font file.            */
   /*                                                                       */
   /*    load_flags  :: A flag indicating what to load for this glyph.  The */
-  /*                   FTLOAD_??? constants can be used to control the     */
+  /*                   FT_LOAD_??? constants can be used to control the    */
   /*                   glyph loading process (e.g., whether the outline    */
   /*                   should be scaled, whether to load bitmaps or not,   */
   /*                   whether to hint the outline, etc).                  */
@@ -267,7 +267,7 @@
       ((FT_Byte*)buffer)[len] = 0;
     }
 
-    FT_FREE ( gname );
+    FT_FREE( gname );
     error = CFF_Err_Ok;
 
     Exit:

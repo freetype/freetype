@@ -640,11 +640,23 @@
 
         for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
         {
-          root->available_sizes[n].width =
-            face->sbit_strikes[n].x_ppem;
+          FT_Bitmap_Size*  bsize  = root->available_sizes + n;
+          TT_SBit_Strike   strike = face->sbit_strikes + n;
+          FT_UShort        fupem  = face->header.Units_Per_EM;
+          FT_Short         height = face->horizontal.Ascender -
+                                      face->horizontal.Descender +
+                                      face->horizontal.Line_Gap;
+          FT_Short         avg    = face->os2.xAvgCharWidth;
 
-          root->available_sizes[n].height =
-            face->sbit_strikes[n].y_ppem;
+
+          /* assume 72dpi */
+          bsize->height = 
+            (FT_Short)( ( height * strike->y_ppem + fupem/2 ) / fupem );
+          bsize->width  =
+            (FT_Short)( ( avg * strike->y_ppem + fupem/2 ) / fupem );
+          bsize->size   = strike->y_ppem << 6;
+          bsize->x_ppem = strike->x_ppem << 6;
+          bsize->y_ppem = strike->y_ppem << 6;
         }
       }
       else
@@ -663,7 +675,7 @@
       if ( has_outline == TRUE )
       {
         /* XXX What about if outline header is missing */
-        /*     (e.g. sfnt wrapped outline)?            */
+        /*     (e.g. sfnt wrapped bitmap)?             */
         root->bbox.xMin    = face->header.xMin;
         root->bbox.yMin    = face->header.yMin;
         root->bbox.xMax    = face->header.xMax;

@@ -921,7 +921,7 @@ THE SOFTWARE.
       PCF_Property  prop;
 
 
-      root->num_faces = 1;
+      root->num_faces  = 1;
       root->face_index = 0;
       root->face_flags = FT_FACE_FLAG_FIXED_SIZES |
                          FT_FACE_FLAG_HORIZONTAL  |
@@ -983,33 +983,44 @@ THE SOFTWARE.
       if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
         goto Exit;
 
-      prop = pcf_find_property( face, "PIXEL_SIZE" );
-      if ( prop != NULL )
-        root->available_sizes->height = (FT_Short)( prop->value.integer );
-      else
       {
+        FT_Bitmap_Size*  bsize = root->available_sizes;
+
+
+        FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
+
+        prop = pcf_find_property( face, "PIXEL_SIZE" );
+        if ( prop != NULL )
+          bsize->height = (FT_Short)prop->value.integer;
+
+        prop = pcf_find_property( face, "AVERAGE_WIDTH" );
+        if ( prop != NULL )
+          bsize->width = (FT_Short)( ( prop->value.integer + 5 ) / 10 );
+
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop != NULL )
-        {
-          PCF_Property  yres;
+          /* convert from 722,7 decipoints to 72 points per inch */
+          bsize->size =
+            (FT_Pos)( ( prop->value.integer * 64 * 7200 + 36135L ) / 72270L );
 
+        prop = pcf_find_property( face, "RESOLUTION_X" );
+        if ( prop != NULL )
+          bsize->x_ppem =
+            (FT_Pos)( ( prop->value.integer * bsize->size + 36 ) / 72 );
 
-          yres = pcf_find_property( face, "RESOLUTION_Y" );
-          if ( yres != NULL )
-            root->available_sizes->height =
-              (FT_Short)( prop->value.integer *
-                          yres->value.integer / 720 );
-        }
+        prop = pcf_find_property( face, "RESOLUTION_Y" );
+        if ( prop != NULL )
+          bsize->y_ppem =
+            (FT_Pos)( ( prop->value.integer * bsize->size + 36 ) / 72 );
+
+        if ( bsize->height == 0 )
+          bsize->height =
+            (FT_Short)( ( bsize->size * bsize->y_ppem + 2048 ) / 64 / 64 );
+
+        if ( bsize->height == 0 )
+          bsize->height = 12;
       }
 
-      if ( root->available_sizes->height == 0 )
-        root->available_sizes->height = 12;
-
-      /* `width' is just an enumeration value for different bitmap strikes */
-      /* in a single font.  Since a PCF font has a single strike only,     */
-      /* make this value the same as the height.                           */  
-      root->available_sizes->width = root->available_sizes->height;
-                        
       /* set up charset */
       {
         PCF_Property  charset_registry = 0, charset_encoding = 0;

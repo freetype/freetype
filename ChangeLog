@@ -1,3 +1,60 @@
+2003-06-30  Werner Lemberg  <wl@gnu.org>
+
+	A new try to synchronize bitmap font access.
+
+	include/freetype/freetype.h (FT_Bitmap_Size): `height' is now
+	defined to return the baseline-to-baseline distance.  This was
+	already the value returned by the BDF and PCF drivers.
+
+	The `width' field now gives the average width.  I wasn't able to
+	find something better.  It should be taken as informative only.
+
+	New fields `size', `x_ppem', and `y_ppem'.
+
+	* src/pcf/pcfread.c (pcf_load_font): Updated to properly fill
+	FT_Bitmap_Size.
+	Do proper rounding and conversion from 72.27 to 72 points.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Updated to properly fill
+	FT_Bitmap_Size.
+	Do proper rounding and conversion from 72.27 to 72 points.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Updated to properly fill
+	FT_Bitmap_Size.
+
+	* src/winfonts/winfnt.c (FNT_Face_Init): Updated to properly fill
+	FT_Bitmap_Size.
+
+2003-06-29  Werner Lemberg  <wl@gnu.org>
+
+	Redesigning the FNT driver to return multiple faces, not multiple
+	strikes.  At least one font (app850.fon from WinME) contains
+	different FNT charmaps for its subfonts.  Consequently, the previous
+	design of having multiple bitmap strikes in a single font face fails
+	since we have only one charmap per face.
+
+	* include/freetype/internal/fnttypes.h (FNT_Size_Rec): Removed.
+	(FNT_FaceRec): Remove `num_fonts' field and replace `fonts' with
+	`font'.
+
+	* src/base/ftwinfnt.c (FT_Get_WinFNT_Header): Updated.
+
+	* src/winfonts/winfnt.c (fnt_font_load): Don't set pixel_width equal
+	to pixel_height.
+	(fnt_face_done_fonts): Removed.
+	(fnt_face_get_dll_fonts): Renamed to...
+	(fnt_face_get_dll_font): This.  Add second function argument to
+	select face index.
+	Updated to load just one subfont.
+	(fnt_font_done, FNT_Face_Done): Updated.
+	(FNT_Face_Init): Handle `face_index'.
+	Updated.
+	(FNT_Size_Set_Pixels): Simplified; similar to BDF and PCF, the
+	bitmap width is now ignored.
+	(FNT_Load_Glyph): Updated.
+	Fix glyph index computation.
+	(winfnt_driver_class): Updated.
+
 2003-06-25  Owen Taylor  <otaylor@redhat.com>
 
 	* src/sfnt/ttload.c (tt_face_load_hdmx): Don't assign

@@ -39,8 +39,8 @@
       if ( driver->clazz && driver->clazz->module_name              &&
            ft_strcmp( driver->clazz->module_name, "winfonts" ) == 0 )
       {
-        FNT_Size  size = (FNT_Size)face->size;
-        FNT_Font  font = size->font;
+        FNT_Face  fnt_face = (FNT_Face)face;
+        FNT_Font  font     = fnt_face->font;
 
 
         if ( font )

@@ -305,39 +305,47 @@ THE SOFTWARE.
       if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
         goto Exit;
 
-      prop = bdf_get_font_property( font, "PIXEL_SIZE" );
-      if ( prop != NULL )
-        root->available_sizes->height = (short) prop->value.int32;
-      else
       {
+        FT_Bitmap_Size*  bsize = root->available_sizes;
+
+
+        FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
+
+        prop = bdf_get_font_property( font, "PIXEL_SIZE" );
+        if ( prop != NULL )
+          bsize->height = (FT_Short)prop->value.int32;
+
+        prop = bdf_get_font_property( font, "AVERAGE_WIDTH" );
+        if ( prop != NULL )
+          bsize->width = (FT_Short)( ( prop->value.int32 + 5 ) / 10 );
+
         prop = bdf_get_font_property( font, "POINT_SIZE" );
         if ( prop != NULL )
+          /* convert from 722,7 decipoints to 72 points per inch */
+          bsize->size =
+            (FT_Pos)( ( prop->value.int32 * 64 * 7200 + 36135L ) / 72270L );
+
+        prop = bdf_get_font_property( font, "RESOLUTION_X" );
+        if ( prop != NULL )
+          bsize->x_ppem =
+            (FT_Pos)( ( prop->value.int32 * bsize->size + 36 ) / 72 );
+
+        prop = bdf_get_font_property( font, "RESOLUTION_Y" );
+        if ( prop != NULL )
+          bsize->y_ppem =
+            (FT_Pos)( ( prop->value.int32 * bsize->size + 36 ) / 72 );
+
+        if ( bsize->height == 0 )
+          bsize->height =
+            (FT_Short)( ( bsize->size * bsize->y_ppem + 2048 ) / 64 / 64 );
+
+        if ( bsize->height == 0 )
         {
-          bdf_property_t  *yres;
-
-
-          yres = bdf_get_font_property( font, "RESOLUTION_Y" );
-          if ( yres != NULL )
-          {
-            FT_TRACE4(( "POINT_SIZE: %d  RESOLUTION_Y: %d\n",
-                        prop->value.int32, yres->value.int32 ));
-            root->available_sizes->height =
-              (FT_Short)( prop->value.int32 * yres->value.int32 / 720 );
-          }
+          /* some fonts have a broken SIZE declaration (jiskan24.bdf) */
+          FT_ERROR(( "BDF_Face_Init: reading size\n" ));
+          bsize->height = (FT_Short)font->point_size;
         }
       }
-
-      if ( root->available_sizes->height == 0 )
-      {
-        /* some fonts have broken SIZE declaration (jiskan24.bdf) */
-        FT_ERROR(( "BDF_Face_Init: reading size\n" ));
-        root->available_sizes->height = (FT_Short)font->point_size;
-      }
-
-      /* `width' is just an enumeration value for different bitmap strikes */
-      /* in a single font.  Since a BDF font has a single strike only,     */
-      /* make this value the same as the height.                           */
-      root->available_sizes->width = root->available_sizes->height;
 
       /* encoding table */
       {
