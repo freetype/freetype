@@ -474,6 +474,7 @@
 
 #define FT_TRIGONOMETRY_H          <freetype/fttrigon.h>
 #define FT_SYNTHESIS_H             <freetype/ftsynth.h>
+#define FT_ERROR_DEFINITIONS_H     <freetype/fterrdef.h>
 
 #define FT_CACHE_MANAGER_H         <freetype/cache/ftcmanag.h>
 
