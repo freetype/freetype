@@ -91,6 +91,15 @@ SRC := $(TOP)$(SEP)src
 #
 BASE_DIR := $(SRC)$(SEP)base
 
+# The build header file used to define all public header file names
+# as macro
+#
+ifndef FT_BUILD_H
+FT_BUILD_H  := $(TOP)$(SEP)include$(SEP)ft2build.h
+FTBUILD_CMD :=
+else
+FTBUILD_CMD = $DFT_BUILD_H=$(FT_BUILD_H)
+endif
 
 # A few short-cuts in order to avoid typing $(SEP) all the time for the
 # directory separator.

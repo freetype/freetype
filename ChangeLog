@@ -1,3 +1,22 @@
+2000-12-04  David Turner  <david.turner@freetype.org>
+
+	* builds/unix/install.mk, builds/unix/ft2unix.h: the file "ft2unix.h"
+	is now installed as <ft2build.h> for Unix systems. Note that we still
+	use the "freetype2/freetype" installation path for now..
+
+	* many files: now using <ft2build.h> as the default build and setup
+	configuration file in all public headers. Internal source files still
+	need some changes though..
+
+	* builds/devel/ft2build.h, builds/devel/ftoption.h: created a new
+	directory to hold all development options for both the Unix and
+	Win32 developer builds..
+
+	* builds/win32/detect.mk, builds/win32/w32-bccd.mk,
+	builds/win32/w32-dev.mk: changed the developer build targets to
+	"devel-gcc" and "devel-bcc" in order to be able to develop with
+	the Borland C++ compiler.
+
 2000-12-01  David Turner  <david.turner@freetype.org>
 
 	* Version 2.0.1 released.

@@ -19,10 +19,7 @@
 #ifndef __FTMEMORY_H__
 #define __FTMEMORY_H__
 
-#ifndef    FT_BUILD_H
-#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
-#endif
-#include   FT_BUILD_H
+#include   <ft2build.h>
 #include   FT_CONFIG_CONFIG_H
 #include   FT_TYPES_H
 

@@ -13,8 +13,11 @@
 # fully.
 
 
-SEP := /
+SEP   := /
+
 include $(TOP)/builds/win32/win32-def.mk
+BUILD := $(TOP)/builds/devel
+
 include $(TOP)/builds/compiler/bcc-dev.mk
 
 # include linking instructions

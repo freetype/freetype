@@ -96,7 +96,14 @@ ifeq ($(PLATFORM),ansi)
       bcc32: setup
     endif
 
-    ifneq ($(findstring devel,$(MAKECMDGOALS)),)       # development target
+    ifneq ($(findstring devel-bcc,$(MAKECMDGOALS)),)   # development target
+      CONFIG_FILE := w32-bccd.mk
+      CC          := bcc32
+      SEP         := /
+      devel: setup
+    endif
+
+    ifneq ($(findstring devel-gcc,$(MAKECMDGOALS)),)   # development target
       CONFIG_FILE := w32-dev.mk
       CC          := gcc
       SEP         := /
