@@ -201,7 +201,7 @@
     }
 
     /* now load the glyph outline if necessary */
-    error = CFF_Load_Glyph( slot, size, glyph_index, load_flags );
+    error = cff_slot_load( slot, size, glyph_index, load_flags );
 
     /* force drop-out mode to 2 - irrelevant now */
     /* slot->outline.dropout_mode = 2; */
@@ -253,7 +253,7 @@
     sid = font->charset.sids[glyph_index];
 
     /* now, lookup the name itself */
-    gname = CFF_Get_String( &font->string_index, sid, psnames );
+    gname = cff_index_get_sid_string( &font->string_index, sid, psnames );
 
     if ( buffer_max > 0 )
     {
@@ -406,7 +406,7 @@
       sid = charset->sids[i];
 
       if ( sid > 390 )
-        name = CFF_Get_Name( &cff->string_index, sid - 391 );
+        name = cff_index_get_name( &cff->string_index, sid - 391 );
       else
         name = (FT_String *)psnames->adobe_std_strings( sid );
 
@@ -477,8 +477,8 @@
 
       0,   /* module-specific interface */
 
-      (FT_Module_Constructor)CFF_Driver_Init,
-      (FT_Module_Destructor) CFF_Driver_Done,
+      (FT_Module_Constructor)cff_driver_init,
+      (FT_Module_Destructor) cff_driver_done,
       (FT_Module_Requester)  cff_get_interface,
     },
 
@@ -487,15 +487,15 @@
     sizeof( FT_SizeRec ),
     sizeof( CFF_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)        CFF_Face_Init,
-    (FT_Face_DoneFunc)        CFF_Face_Done,
-    (FT_Size_InitFunc)        CFF_Size_Init,
-    (FT_Size_DoneFunc)        CFF_Size_Done,
-    (FT_Slot_InitFunc)        CFF_GlyphSlot_Init,
-    (FT_Slot_DoneFunc)        CFF_GlyphSlot_Done,
+    (FT_Face_InitFunc)        cff_face_init,
+    (FT_Face_DoneFunc)        cff_face_done,
+    (FT_Size_InitFunc)        cff_size_init,
+    (FT_Size_DoneFunc)        cff_size_done,
+    (FT_Slot_InitFunc)        cff_slot_init,
+    (FT_Slot_DoneFunc)        cff_slot_done,
 
-    (FT_Size_ResetPointsFunc) CFF_Size_Reset,
-    (FT_Size_ResetPixelsFunc) CFF_Size_Reset,
+    (FT_Size_ResetPointsFunc) cff_size_reset,
+    (FT_Size_ResetPixelsFunc) cff_size_reset,
 
     (FT_Slot_LoadFunc)        Load_Glyph,
     (FT_CharMap_CharIndexFunc)cff_get_char_index,
