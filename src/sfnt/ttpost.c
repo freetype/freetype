@@ -31,319 +31,105 @@
 #include <ttload.h>
 #include <tttags.h>
 
+/* When this configuration macro is defined, we rely on the "psnames" */
+/* module to grab the glyph names..                                   */
+#ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
+#include <psnames.h>
+#define  MAC_NAME(x)  ((TT_String*)psnames->macintosh_name(x))
+
+#else
+
+/* Otherwise, we ignore the "psnames" module, then provide our own */
+/* table of Mac names.. Thus, it is possible to build a version of */
+/* FreeType without the Type 1 driver & PSNames module             */
+
+#define  MAC_NAME(x)  TT_Post_Default_Names[x]
+
   /* the 258 default Mac PS glyph names */
 
-  const TT_String*  TT_Mac_Postscript_Names[258] =
+  String*  TT_Post_Default_Names[258] =
   {
     /*   0 */
-    ".notdef",
-    ".null",
-    "CR",
-    "space",
-    "exclam",
-    "quotedbl",
-    "numbersign",
-    "dollar",
-    "percent",
-    "ampersand",
-
+    ".notdef", ".null", "CR", "space", "exclam",
+    "quotedbl", "numbersign", "dollar", "percent", "ampersand",
     /*  10 */
-    "quotesingle",
-    "parenleft",
-    "parenright",
-    "asterisk",
-    "plus",
-    "comma",
-    "hyphen",
-    "period",
-    "slash",
-    "zero",
-
+    "quotesingle", "parenleft", "parenright", "asterisk", "plus",
+    "comma", "hyphen", "period", "slash", "zero",
     /*  20 */
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "colon",
-
+    "one", "two", "three", "four", "five",
+    "six", "seven", "eight", "nine", "colon",
     /*  30 */
-    "semicolon",
-    "less",
-    "equal",
-    "greater", "question",
-    "at",
-    "A",
-    "B",
-    "C",
-    "D",
-
+    "semicolon", "less", "equal", "greater", "question",
+    "at", "A", "B", "C", "D",
     /*  40 */
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-
+    "E", "F", "G", "H", "I",
+    "J", "K", "L", "M", "N",
     /*  50 */
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-
+    "O", "P", "Q", "R", "S",
+    "T", "U", "V", "W", "X",
     /*  60 */
-    "Y",
-    "Z",
-    "bracketleft",
-    "backslash",
-    "bracketright",
-    "asciicircum",
-    "underscore",
-    "grave",
-    "a",
-    "b",
-
+    "Y", "Z", "bracketleft", "backslash", "bracketright",
+    "asciicircum", "underscore", "grave", "a", "b",
     /*  70 */
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-
+    "c", "d", "e", "f", "g",
+    "h", "i", "j", "k", "l",
     /*  80 */
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-
+    "m", "n", "o", "p", "q",
+    "r", "s", "t", "u", "v",
     /*  90 */
-    "w",
-    "x",
-    "y",
-    "z",
-    "braceleft",
-    "bar",
-    "braceright",
-    "asciitilde",
-    "Adieresis",
-    "Aring",
-
+    "w", "x", "y", "z", "braceleft",
+    "bar", "braceright", "asciitilde", "Adieresis", "Aring",
     /* 100 */
-    "Ccedilla",
-    "Eacute",
-    "Ntilde",
-    "Odieresis",
-    "Udieresis",
-    "aacute",
-    "agrave",
-    "acircumflex",
-    "adieresis",
-    "atilde",
-
+    "Ccedilla", "Eacute", "Ntilde", "Odieresis", "Udieresis",
+    "aacute", "agrave", "acircumflex", "adieresis", "atilde",
     /* 110 */
-    "aring",
-    "ccedilla",
-    "eacute",
-    "egrave",
-    "ecircumflex",
-    "edieresis",
-    "iacute",
-    "igrave",
-    "icircumflex",
-    "idieresis",
-
+    "aring", "ccedilla", "eacute", "egrave", "ecircumflex",
+    "edieresis", "iacute", "igrave", "icircumflex", "idieresis",
     /* 120 */
-    "ntilde",
-    "oacute",
-    "ograve",
-    "ocircumflex",
-    "odieresis",
-    "otilde",
-    "uacute",
-    "ugrave",
-    "ucircumflex",
-    "udieresis",
-
+    "ntilde", "oacute", "ograve", "ocircumflex", "odieresis",
+    "otilde", "uacute", "ugrave", "ucircumflex", "udieresis",
     /* 130 */
-    "dagger",
-    "degree",
-    "cent",
-    "sterling",
-    "section",
-    "bullet",
-    "paragraph",
-    "germandbls",
-    "registered",
-    "copyright",
-
+    "dagger", "degree", "cent", "sterling", "section",
+    "bullet", "paragraph", "germandbls", "registered", "copyright",
     /* 140 */
-    "trademark",
-    "acute",
-    "dieresis",
-    "notequal",
-    "AE",
-    "Oslash",
-    "infinity",
-    "plusminus",
-    "lessequal",
-    "greaterequal",
-
+    "trademark", "acute", "dieresis", "notequal", "AE",
+    "Oslash", "infinity", "plusminus", "lessequal", "greaterequal",
     /* 150 */
-    "yen",
-    "mu",
-    "partialdiff",
-    "summation",
-    "product",
-    "pi",
-    "integral",
-    "ordfeminine",
-    "ordmasculine",
-    "Omega",
-
+    "yen", "mu", "partialdiff", "summation", "product",
+    "pi", "integral", "ordfeminine", "ordmasculine", "Omega",
     /* 160 */
-    "ae",
-    "oslash",
-    "questiondown",
-    "exclamdown",
-    "logicalnot",
-    "radical",
-    "florin",
-    "approxequal",
-    "Delta",
-    "guillemotleft",
-
+    "ae", "oslash", "questiondown", "exclamdown", "logicalnot",
+    "radical", "florin", "approxequal", "Delta", "guillemotleft",
     /* 170 */
-    "guillemotright",
-    "ellipsis",
-    "nbspace",
-    "Agrave",
-    "Atilde",
-    "Otilde",
-    "OE",
-    "oe",
-    "endash",
-    "emdash",
-
+    "guillemotright", "ellipsis", "nbspace", "Agrave", "Atilde",
+    "Otilde", "OE", "oe", "endash", "emdash",
     /* 180 */
-    "quotedblleft",
-    "quotedblright",
-    "quoteleft",
-    "quoteright",
-    "divide",
-    "lozenge",
-    "ydieresis",
-    "Ydieresis",
-    "fraction",
-    "currency",
-
+    "quotedblleft", "quotedblright", "quoteleft", "quoteright", "divide",
+    "lozenge", "ydieresis", "Ydieresis", "fraction", "currency",
     /* 190 */
-    "guilsinglleft",
-    "guilsinglright",
-    "fi",
-    "fl",
-    "daggerdbl",
-    "periodcentered",
-    "quotesinglbase",
-    "quotedblbase",
-    "perthousand",
-    "Acircumflex",
-
+    "guilsinglleft", "guilsinglright", "fi", "fl", "daggerdbl",
+    "periodcentered", "quotesinglbase", "quotedblbase", "perthousand", "Acircumflex",
     /* 200 */
-    "Ecircumflex",
-    "Aacute",
-    "Edieresis",
-    "Egrave",
-    "Iacute",
-    "Icircumflex",
-    "Idieresis",
-    "Igrave",
-    "Oacute",
-    "Ocircumflex",
-
+    "Ecircumflex", "Aacute", "Edieresis", "Egrave", "Iacute",
+    "Icircumflex", "Idieresis", "Igrave", "Oacute", "Ocircumflex",
     /* 210 */
-    "apple",
-    "Ograve",
-    "Uacute",
-    "Ucircumflex",
-    "Ugrave",
-    "dotlessi",
-    "circumflex",
-     "tilde",
-     "macron",
-     "breve",
-
+    "apple", "Ograve", "Uacute", "Ucircumflex", "Ugrave",
+    "dotlessi", "circumflex", "tilde", "macron", "breve",
     /* 220 */
-    "dotaccent",
-    "ring",
-    "cedilla",
-    "hungarumlaut",
-    "ogonek",
-    "caron",
-    "Lslash",
-    "lslash",
-    "Scaron",
-    "scaron",
-
+    "dotaccent", "ring", "cedilla", "hungarumlaut", "ogonek",
+    "caron", "Lslash", "lslash", "Scaron", "scaron",
     /* 230 */
-    "Zcaron",
-    "zcaron",
-    "brokenbar",
-    "Eth",
-    "eth",
-    "Yacute",
-    "yacute",
-    "Thorn",
-    "thorn",
-    "minus",
-
+    "Zcaron", "zcaron", "brokenbar", "Eth", "eth",
+    "Yacute", "yacute", "Thorn", "thorn", "minus",
     /* 240 */
-    "multiply",
-    "onesuperior",
-    "twosuperior",
-    "threesuperior",
-    "onehalf",
-    "onequarter",
-    "threequarters",
-    "franc",
-    "Gbreve",
-    "gbreve",
-
+    "multiply", "onesuperior", "twosuperior", "threesuperior", "onehalf",
+    "onequarter", "threequarters", "franc", "Gbreve", "gbreve",
     /* 250 */
-    "Idot",
-    "Scedilla",
-    "scedilla",
-    "Cacute",
-    "cacute",
-    "Ccaron",
-    "ccaron",
-    "dmacron",
+    "Idot", "Scedilla", "scedilla", "Cacute", "cacute",
+    "Ccaron", "ccaron", "dmacron",
   };
+#endif
 
 
   static
@@ -623,8 +409,9 @@
                             TT_UInt      index,
                             TT_String**  PSname )
   {
-    TT_Error        error;
-    TT_Post_Names*  names;
+    TT_Error            error;
+    TT_Post_Names*      names;
+    PSNames_Interface*  psnames;
 
     if ( !face )
       return TT_Err_Invalid_Face_Handle;
@@ -632,16 +419,20 @@
     if ( index >= (TT_UInt)face->root.num_glyphs )
       return TT_Err_Invalid_Glyph_Index;
 
+    psnames = (PSNames_Interface*)face->psnames;
+    if (!psnames)
+      return TT_Err_Unimplemented_Feature;
+      
     names   = &face->postscript_names;
 
     /* `.notdef' by default */
-    *PSname = (TT_String*)TT_Mac_Postscript_Names[0];
+    *PSname = MAC_NAME(0);
 
     switch ( face->postscript.FormatType )
     {
     case 0x00010000:
       if ( index < 258 )                    /* paranoid checking */
-        *PSname = (TT_String*)TT_Mac_Postscript_Names[index];
+        *PSname = MAC_NAME(index);
       break;
 
     case 0x00020000:
@@ -662,7 +453,7 @@
 
 
           if ( name_index < 258 )
-            *PSname = (TT_String*)TT_Mac_Postscript_Names[name_index];
+            *PSname = MAC_NAME(name_index);
           else
             *PSname = (TT_String*)table->glyph_names[name_index - 258];
         }
@@ -684,7 +475,7 @@
         if ( index < table->num_glyphs )    /* paranoid checking */
         {
           index  += table->offsets[index];
-          *PSname = (TT_String*)TT_Mac_Postscript_Names[index];
+          *PSname = MAC_NAME(index);
         }
       }
       break;
