@@ -10,14 +10,12 @@
 #include <t1types.h>
 #include <stdlib.h>  /* for qsort */
 
-#if 0
   LOCAL_FUNC
   void  T1_Done_AFM( FT_Memory memory, T1_AFM*  afm )
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
   }
-#endif
 
 #undef  IS_KERN_PAIR
 #define IS_KERN_PAIR(p)  ( p[0] == 'K'  &&  p[1] == 'P' )

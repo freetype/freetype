@@ -59,7 +59,7 @@ T1Z_DRV_H := $(T1Z_DIR_)t1errors.h  \
 #   T1Z_DRV_OBJ_S is used during `release' builds
 #
 T1Z_DRV_OBJ_M := $(T1Z_DRV_SRC:$(T1Z_DIR_)%.c=$(OBJ_)%.$O) \
-                $(T1SHARED:$(T1SHARED_DIR_)%.c=$(OBJ_)%.$O)
+                 $(T1SHARED:$(T1SHARED_DIR_)%.c=$(OBJ_)%.$O)
 T1Z_DRV_OBJ_S := $(OBJ_)type1z.$O
 
 

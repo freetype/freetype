@@ -285,75 +285,6 @@
   }
 
 
-  static
-  T1_Error   Init_Face( FT_Stream  stream,
-                        FT_Int     face_index,
-                        T1_Face    face )
-  {
-    T1_Error  error;
-    
-    error = T1_Init_Face(stream, face_index, face);
-    if (!error)
-    {
-      FT_Face      root    = &face->root;
-      FT_CharMap   charmap = face->charmaprecs;
-
-      /* synthesize a Unicode charmap if there is support in the "psnames" */
-      /* module..                                                          */
-      if (face->psnames)
-      {
-        PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
-        if (psnames->unicode_value)
-        {
-          error = psnames->build_unicodes( root->memory,
-                                           face->type1.num_glyphs,
-                                           (const char**)face->type1.glyph_names,
-                                           &face->unicode_map );
-          if (!error)
-          {
-            root->charmap        = charmap;
-            charmap->face        = (FT_Face)face;
-            charmap->encoding    = ft_encoding_unicode;
-            charmap->platform_id = 3;
-            charmap->encoding_id = 1;
-            charmap++;
-          }
-          
-          /* simply clear the error in case of failure (which really) */
-          /* means that out of memory or no unicode glyph names       */
-          error = 0;
-        }
-      }
-
-      /* now, support either the standard, expert, or custom encodings */
-      charmap->face        = (FT_Face)face;
-      charmap->platform_id = 7;  /* a new platform id for Adobe fonts ?? */
-      
-      switch (face->type1.encoding_type)
-      {
-        case t1_encoding_standard:
-          charmap->encoding    = ft_encoding_adobe_standard;
-          charmap->encoding_id = 0;
-          break;
-        
-        case t1_encoding_expert:
-          charmap->encoding    = ft_encoding_adobe_expert;
-          charmap->encoding_id = 1;
-          break;
-        
-        default:
-          charmap->encoding    = ft_encoding_adobe_custom;
-          charmap->encoding_id = 2;
-          break;
-      }
-      
-      root->charmaps = face->charmaps;
-      root->num_charmaps = charmap - face->charmaprecs + 1;
-      face->charmaps[0] = &face->charmaprecs[0];
-      face->charmaps[1] = &face->charmaprecs[1];
-    }
-    return error;
-  }
 
   /******************************************************************/
   /*                                                                */
@@ -452,7 +383,7 @@
     (FTDriver_getInterface)         Get_Interface,
 #endif
 
-    (FTDriver_initFace)             Init_Face,
+    (FTDriver_initFace)             T1_Init_Face,
     (FTDriver_doneFace)             T1_Done_Face,
 
 #ifdef T1_CONFIG_OPTION_NO_AFM    
