@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Simple LRU list-cache (body).                                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 by                                           */
+/*  Copyright 2000-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -188,40 +188,40 @@
       goto Exit;
     }
 
-   /* since we haven't found the relevant element in our LRU list,
+   /* Since we haven't found the relevant element in our LRU list,
     * we're going to "create" a new one.
     *
-    * the following code is a bit special, because it tries to handle
+    * The following code is a bit special, because it tries to handle
     * out-of-memory conditions (OOM) in an intelligent way.
     *
-    * more precisely, if not enough memory is available to create a
+    * More precisely, if not enough memory is available to create a
     * new node or "flush" an old one, we need to remove the oldest
-    * elements from our list, and try again. since several tries may
-    * be necessary, a loop is needed
+    * elements from our list, and try again.  Since several tries may
+    * be necessary, a loop is needed.
     *
-    * this loop will only exit when:
+    * This loop will only exit when:
     *
-    *   - a new node was succesfully created, or an old node flushed
+    *   - a new node was successfully created, or an old node flushed
     *   - an error other than FT_Err_Out_Of_Memory is detected
     *   - the list of nodes is empty, and it isn't possible to create
     *     new nodes
     *
-    * on each unsucesful attempt, one node will be removed from the list
+    * On each unsuccessful attempt, one node will be removed from the list.
     *
     */
     
     {
-      FT_Int   drop_last = ( list->max_nodes > 0 && 
-                             list->num_nodes >= list->max_nodes );
+      FT_Int  drop_last = ( list->max_nodes > 0 && 
+                            list->num_nodes >= list->max_nodes );
 
       for (;;)
       {
         node = NULL;
 
-       /* when "drop_last" is true, we should free the last node in
-        * the list to make room for a new one. note that we re-use
-        * its memory block to save allocation calls.
-        */
+        /* If "drop_last" is true, we should free the last node in
+         * the list to make room for a new one.  Note that we reuse
+         * its memory block to save allocation calls.
+         */
         if ( drop_last )
         {
          /* find the last node in the list
@@ -244,10 +244,10 @@
             node  = *pnode;
           }
   
-         /* remove it from the list, and try to "flush" it. doing this will
-          * save a significant number of dynamic allocations compared to
-          * a classic destroy/create cycle
-          */
+          /* Remove it from the list, and try to "flush" it.  Doing this will
+           * save a significant number of dynamic allocations compared to
+           * a classic destroy/create cycle.
+           */
           *pnode = NULL;
           list->num_nodes -= 1;
   
@@ -257,14 +257,14 @@
             if ( !error )
               goto Success;
 
-           /* note that if an error occured during the flush, we need to
+           /* Note that if an error occured during the flush, we need to
             * finalize it since it is potentially in incomplete state.
             */
           }
 
-         /* we finalize, but do not destroy the last node, we
-          * simply re-use its memory block !
-          */
+          /* We finalize, but do not destroy the last node, we
+           * simply reuse its memory block!
+           */
           if ( clazz->node_done )
             clazz->node_done( node, list->data );
             
@@ -272,8 +272,8 @@
         }
         else
         {
-         /* try to allocate a new node when "drop_last" is not TRUE
-          * this usually happens on the first pass, when the LRU list
+         /* Try to allocate a new node when "drop_last" is not TRUE.
+          * This usually happens on the first pass, when the LRU list
           * is not already full.
           */
           if ( FT_ALLOC( node, clazz->node_size ) )
@@ -314,7 +314,6 @@
     *anode = result;
     return error;
   }
-
 
 
   FT_EXPORT_DEF( void )

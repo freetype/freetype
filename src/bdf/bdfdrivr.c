@@ -2,7 +2,7 @@
 
     FreeType font driver for bdf files
 
-    Copyright (C) 2001-2002 by
+    Copyright (C) 2001, 2002, 2003 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -637,6 +637,7 @@ THE SOFTWARE.
   {
     bdf_property_t*  prop;
 
+
     FT_ASSERT( face && face->bdffont );
 
     prop = bdf_get_font_property( face->bdffont, (char*)prop_name );
@@ -644,26 +645,27 @@ THE SOFTWARE.
     {
       switch ( prop->format )
       {
-        case BDF_ATOM:
-          aproperty->type   = BDF_PROPERTY_TYPE_ATOM;
-          aproperty->u.atom = prop->value.atom;
-          break;
+      case BDF_ATOM:
+        aproperty->type   = BDF_PROPERTY_TYPE_ATOM;
+        aproperty->u.atom = prop->value.atom;
+        break;
 
-        case BDF_INTEGER:
-          aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
-          aproperty->u.integer = prop->value.int32;
-          break;
+      case BDF_INTEGER:
+        aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
+        aproperty->u.integer = prop->value.int32;
+        break;
 
-        case BDF_CARDINAL:
-          aproperty->type       = BDF_PROPERTY_TYPE_CARDINAL;
-          aproperty->u.cardinal = prop->value.card32;
-          break;
+      case BDF_CARDINAL:
+        aproperty->type       = BDF_PROPERTY_TYPE_CARDINAL;
+        aproperty->u.cardinal = prop->value.card32;
+        break;
 
-        default:
-          goto Fail;
+      default:
+        goto Fail;
       }
       return 0;
     }
+
   Fail:
     return FT_Err_Invalid_Argument;
   }
@@ -676,7 +678,7 @@ THE SOFTWARE.
     FT_UNUSED( module );
 
     if ( name && ft_strcmp( name, "get_bdf_property" ) == 0 )
-      return (FT_Module_Interface) bdf_get_bdf_property;
+      return (FT_Module_Interface)bdf_get_bdf_property;
 
     return NULL;
   }
