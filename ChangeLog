@@ -1,9 +1,19 @@
+2002-02-09  Werner Lemberg  <wl@gnu.org>
+
+	* README: Fix typo.
+	* docs/CHANGES: Minor fixes.
+
+
+	* Version 2.0.8 released.
+	=========================
+
+
 2002-02-08  David Turner  <david@freetype.org>
 
-        * docs/CHANGES: updating for 2.0.8
+	* docs/CHANGES: Updating for 2.0.8.
 
-        * include/freetype/freetype.h: setting PATCH_LEVEL to 8 and
-        removing FT_Get_Next_Char from the API (temporarily)
+	* include/freetype/freetype.h: Setting `PATCH_LEVEL' to 8 and
+	removing `FT_Get_Next_Char' from the API (temporarily).
 
 	* include/freetype/freetype.h: Adding comments to FT_Get_Next_Char;
 	note that this function might temporarily be removed for the 2.0.8
