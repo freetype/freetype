@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType synthesizing code for emboldening and slanting (body).      */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003 by                                     */
+/*  Copyright 2000-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -71,134 +71,6 @@
 
 
 
-  static int
-  ft_test_extrema( FT_Outline*  outline,
-                   int          n )
-  {
-    FT_Vector  *prev, *cur, *next;
-    FT_Pos      product;
-    FT_Int      c, first, last;
-
-
-    /* we need to compute the `previous' and `next' point */
-    /* for these extrema.                                 */
-    cur  = outline->points + n;
-    prev = cur - 1;
-    next = cur + 1;
-
-    first = 0;
-    for ( c = 0; c < outline->n_contours; c++ )
-    {
-      last = outline->contours[c];
-
-      if ( n == first )
-        prev = outline->points + last;
-
-      if ( n == last )
-        next = outline->points + first;
-
-      first = last + 1;
-    }
-
-    product = FT_MulDiv( cur->x - prev->x,   /* in.x  */
-                         next->y - cur->y,   /* out.y */
-                         0x40 )
-              -
-              FT_MulDiv( cur->y - prev->y,   /* in.y  */
-                         next->x - cur->x,   /* out.x */
-                         0x40 );
-
-    if ( product )
-      product = product > 0 ? 1 : -1;
-
-    return product;
-  }
-
-
-  /* Compute the orientation of path filling.  It differs between TrueType */
-  /* and Type1 formats.  We could use the `FT_OUTLINE_REVERSE_FILL' flag,  */
-  /* but it is better to re-compute it directly (it seems that this flag   */
-  /* isn't correctly set for some weird composite glyphs currently).       */
-  /*                                                                       */
-  /* We do this by computing bounding box points, and computing their      */
-  /* curvature.                                                            */
-  /*                                                                       */
-  /* The function returns either 1 or -1.                                  */
-  /*                                                                       */
-  static int
-  ft_get_orientation( FT_Outline*  outline )
-  {
-    FT_BBox  box;
-    FT_BBox  indices;
-    int      n, last;
-
-
-    indices.xMin = -1;
-    indices.yMin = -1;
-    indices.xMax = -1;
-    indices.yMax = -1;
-
-    box.xMin = box.yMin =  32767;
-    box.xMax = box.yMax = -32768;
-
-    /* is it empty ? */
-    if ( outline->n_contours < 1 )
-      return 1;
-
-    last = outline->contours[outline->n_contours - 1];
-
-    for ( n = 0; n <= last; n++ )
-    {
-      FT_Pos  x, y;
-
-
-      x = outline->points[n].x;
-      if ( x < box.xMin )
-      {
-        box.xMin     = x;
-        indices.xMin = n;
-      }
-      if ( x > box.xMax )
-      {
-        box.xMax     = x;
-        indices.xMax = n;
-      }
-
-      y = outline->points[n].y;
-      if ( y < box.yMin )
-      {
-        box.yMin     = y;
-        indices.yMin = n;
-      }
-      if ( y > box.yMax )
-      {
-        box.yMax     = y;
-        indices.yMax = n;
-      }
-    }
-
-    /* test orientation of the xmin */
-    n = ft_test_extrema( outline, indices.xMin );
-    if ( n )
-      goto Exit;
-
-    n = ft_test_extrema( outline, indices.yMin );
-    if ( n )
-      goto Exit;
-
-    n = ft_test_extrema( outline, indices.xMax );
-    if ( n )
-      goto Exit;
-
-    n = ft_test_extrema( outline, indices.yMax );
-    if ( !n )
-      n = 1;
-
-  Exit:
-    return n;
-  }
-
-
   FT_EXPORT_DEF( void )
   FT_GlyphSlot_Embolden( FT_GlyphSlot  slot )
   {
@@ -208,7 +80,7 @@
     FT_Outline*  outline = &slot->outline;
     FT_Face      face = FT_SLOT_FACE( slot );
     FT_Angle     rotate, angle_in, angle_out;
-    FT_Int       c, n, first, orientation;
+    FT_Int       c, n, first;
 
 
     /* only embolden outline glyph images */
@@ -219,8 +91,10 @@
     distance = FT_MulFix( face->units_per_EM / 60,
                           face->size->metrics.y_scale );
 
-    orientation = ft_get_orientation( outline );
-    rotate      = FT_ANGLE_PI2*orientation;
+    if ( FT_Outline_Get_Orientation( outline ) == FT_ORIENTATION_TRUETYPE )
+      rotate = -FT_ANGLE_PI2;
+    else
+      rotate = FT_ANGLE_PI2;
 
     points = outline->points;
 

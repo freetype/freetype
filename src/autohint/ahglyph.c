@@ -21,6 +21,8 @@
 
 
 #include <ft2build.h>
+#include FT_OUTLINE_H
+
 #include "ahglyph.h"
 #include "ahangles.h"
 #include "ahglobal.h"
@@ -161,144 +163,6 @@
     }
 
     return dir;
-  }
-
-
-  /* this function is used by ah_get_orientation (see below) to test */
-  /* the fill direction of given bbox extremum                       */
-  static FT_Int
-  ah_test_extremum( FT_Outline*  outline,
-                    FT_Int       n )
-  {
-    FT_Vector  *prev, *cur, *next;
-    FT_Pos      product;
-    FT_Int      first, last, c;
-    FT_Int      retval;
-
-
-    /* we need to compute the `previous' and `next' point */
-    /* for this extremum; we check whether the extremum   */
-    /* is start or end of a contour and providing         */
-    /* appropriate values if so                           */
-    cur  = outline->points + n;
-    prev = cur - 1;
-    next = cur + 1;
-
-    first = 0;
-    for ( c = 0; c < outline->n_contours; c++ )
-    {
-      last = outline->contours[c];
-
-      if ( n == first )
-        prev = outline->points + last;
-
-      if ( n == last )
-        next = outline->points + first;
-
-      first = last + 1;
-    }
-
-    /* compute the vectorial product -- since we know that the angle */
-    /* is <= 180 degrees (otherwise it wouldn't be an extremum) we   */
-    /* can determine the filling orientation if the product is       */
-    /* either positive or negative                                   */
-    product = FT_MulDiv( cur->x  - prev->x,  /* in.x  */
-                         next->y - cur->y,   /* out.y */
-                         0x40 )
-              -
-              FT_MulDiv( cur->y  - prev->y,  /* in.y  */
-                         next->x - cur->x,   /* out.x */
-                         0x40 );
-
-    retval = 0;
-    if ( product )
-      retval = product > 0 ? 2 : 1;
-
-    return retval;
-  }
-
-
-  /* Compute the orientation of path filling.  It differs between TrueType */
-  /* and Type1 formats.  We could use the `FT_OUTLINE_REVERSE_FILL' flag,  */
-  /* but it is better to re-compute it directly (it seems that this flag   */
-  /* isn't correctly set for some weird composite glyphs currently).       */
-  /*                                                                       */
-  /* We do this by computing bounding box points, and computing their      */
-  /* curvature.                                                            */
-  /*                                                                       */
-  /* The function returns either 1 or 2.                                   */
-  /*                                                                       */
-  static FT_Int
-  ah_get_orientation( FT_Outline*  outline )
-  {
-    FT_BBox  box;
-    FT_Int   indices_xMin, indices_yMin, indices_xMax, indices_yMax;
-    FT_Int   n, last;
-
-
-    indices_xMin = -1;
-    indices_yMin = -1;
-    indices_xMax = -1;
-    indices_yMax = -1;
-
-    box.xMin = box.yMin =  32767L;
-    box.xMax = box.yMax = -32768L;
-
-    /* is it empty? */
-    if ( outline->n_contours < 1 )
-      return 1;
-
-    last = outline->contours[outline->n_contours - 1];
-
-    for ( n = 0; n <= last; n++ )
-    {
-      FT_Pos  x, y;
-
-
-      x = outline->points[n].x;
-      if ( x < box.xMin )
-      {
-        box.xMin     = x;
-        indices_xMin = n;
-      }
-      if ( x > box.xMax )
-      {
-        box.xMax     = x;
-        indices_xMax = n;
-      }
-
-      y = outline->points[n].y;
-      if ( y < box.yMin )
-      {
-        box.yMin     = y;
-        indices_yMin = n;
-      }
-      if ( y > box.yMax )
-      {
-        box.yMax     = y;
-        indices_yMax = n;
-      }
-    }
-
-    /* test orientation of the extrema */
-    n = ah_test_extremum( outline, indices_xMin );
-    if ( n )
-      goto Exit;
-
-    n = ah_test_extremum( outline, indices_yMin );
-    if ( n )
-      goto Exit;
-
-    n = ah_test_extremum( outline, indices_xMax );
-    if ( n )
-      goto Exit;
-
-    n = ah_test_extremum( outline, indices_yMax );
-    if ( !n )
-      n = 1;
-
-  Exit:
-    return n;
   }
 
 
@@ -465,7 +329,7 @@
     outline->vert_major_dir = AH_DIR_UP;
     outline->horz_major_dir = AH_DIR_LEFT;
 
-    if ( ah_get_orientation( source ) > 1 )
+    if ( FT_Outline_Get_Orientation( source ) == FT_ORIENTATION_POSTSCRIPT )
     {
       outline->vert_major_dir = AH_DIR_DOWN;
       outline->horz_major_dir = AH_DIR_RIGHT;

@@ -1,3 +1,16 @@
+2004-11-23  Anders Kaseorg  <anders@kaseorg.com>
+
+	* src/base/ftoutln.c (FT_OrientationExtremumRec,
+	ft_orientation_extremum_compute): Removed.
+	(FT_Outline_Get_Orientation): Rewritten, simplified.
+
+	* src/autohint/ahglyph.c: Include FT_OUTLINE_H.
+	(ah_test_extremum, ah_get_orientation): Removed.
+	(ah_outline_load): Use FT_Outline_Get_Orientation.
+
+	* src/base/ftsynth.c (ft_test_extrama, ft_get_orientation): Removed.
+	(FT_GlyphSlot_Embolden): Use FT_Outline_Get_Orientation.
+
 2004-11-23  Fernando Papa  <fpapa@netgate.com.uy>
 
 	* src/truetype/ttinterp.h: Fix typo.

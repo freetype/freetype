@@ -653,142 +653,64 @@
   }
 
 
-  typedef struct  FT_OrientationExtremumRec_
-  {
-    FT_Int   index;
-    FT_Long  pos;
-    FT_Int   first;
-    FT_Int   last;
-
-  } FT_OrientationExtremumRec;
-
-
-  static FT_Orientation
-  ft_orientation_extremum_compute( FT_OrientationExtremumRec*  extremum,
-                                   FT_Outline*                 outline )
-  {
-    FT_Vector  *point, *first, *last, *prev, *next;
-    FT_Vector*  points = outline->points;
-    FT_Angle    angle_in, angle_out;
-
-
-    /* compute the previous and next points in the same contour */
-    point = points + extremum->index;
-    first = points + extremum->first;
-    last  = points + extremum->last;
-
-    prev = point;
-    next = point;
-
-    do
-    {
-      prev = ( prev == first ) ? last : prev - 1;
-      if ( prev == point )
-        return FT_ORIENTATION_TRUETYPE;  /* degenerate case */
-
-    } while ( prev->x != point->x || prev->y != point->y );
-
-    do
-    {
-      next = ( next == last ) ? first : next + 1;
-      if ( next == point )
-        return FT_ORIENTATION_TRUETYPE;  /* shouldn't happen */
-
-    } while ( next->x != point->x || next->y != point->y );
-
-    /* now compute the orientation of the `out' vector relative */
-    /* to the `in' vector.                                      */
-    angle_in  = FT_Atan2( point->x - prev->x,  point->y - prev->y );
-    angle_out = FT_Atan2( next->x  - point->x, next->y  - point->y );
-
-    return ( FT_Angle_Diff( angle_in, angle_out ) >= 0 )
-             ? FT_ORIENTATION_TRUETYPE
-             : FT_ORIENTATION_POSTSCRIPT;
-  }
-
+  /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline )
   {
-    FT_Orientation  result = FT_ORIENTATION_TRUETYPE;
+    FT_Pos      xmin       = 32768L;
+    FT_Vector*  xmin_point = NULL;
+    FT_Vector*  xmin_first = NULL;
+    FT_Vector*  xmin_last  = NULL;
+
+    short*      contour;
+
+    FT_Vector*  first;
+    FT_Vector*  last;
+    FT_Vector*  prev;
+    FT_Vector*  next;
 
 
-    if ( outline && outline->n_points > 0 )
+    if ( !outline || outline->n_points <= 0 )
+      return FT_ORIENTATION_TRUETYPE;
+
+    first = outline->points;
+    for ( contour = outline->contours;
+          contour < outline->contours + outline->n_contours;
+          contour++, first = last + 1 )
     {
-      FT_OrientationExtremumRec  xmin, ymin, xmax, ymax;
-      FT_Int                     n;
-      FT_Int                     first, last;
-      FT_Vector*                 points = outline->points;
+      FT_Vector*  point;
 
 
-      xmin.pos = ymin.pos = +32768L;
-      xmax.pos = ymax.pos = -32768L;
+      last = outline->points + *contour;
 
-      xmin.index = ymin.index = xmax.index = ymax.index = -1;
+      /* skip degenerate contours */
+      if ( last < first + 2 )
+        continue;
 
-      first = 0;
-      for ( n = 0; n < outline->n_contours; n++, first = last + 1 )
+      for ( point = first; point <= last; point++ )
       {
-        last = outline->contours[n];
-
-        /* skip single-point contours; these are degenerated cases */
-        if ( last > first + 1 )
+        if ( point->x < xmin )
         {
-          FT_Int  i;
-
-
-          for ( i = first; i < last; i++ )
-          {
-            FT_Pos  x = points[i].x;
-            FT_Pos  y = points[i].y;
-
-
-            if ( x < xmin.pos )
-            {
-              xmin.pos   = x;
-              xmin.index = i;
-              xmin.first = first;
-              xmin.last  = last;
-            }
-            if ( x > xmax.pos )
-            {
-              xmax.pos   = x;
-              xmax.index = i;
-              xmax.first = first;
-              xmax.last  = last;
-            }
-            if ( y < ymin.pos )
-            {
-              ymin.pos   = y;
-              ymin.index = i;
-              ymin.first = first;
-              ymin.last  = last;
-            }
-            if ( y > ymax.pos )
-            {
-              ymax.pos   = y;
-              ymax.index = i;
-              ymax.first = first;
-              ymax.last  = last;
-            }
-          }
+          xmin       = point->x;
+          xmin_point = point;
+          xmin_first = first;
+          xmin_last  = last;
         }
-
-        if ( xmin.index >= 0 )
-          result = ft_orientation_extremum_compute( &xmin, outline );
-
-        else if ( xmax.index >= 0 )
-          result = ft_orientation_extremum_compute( &xmax, outline );
-
-        else if ( ymin.index >= 0 )
-          result = ft_orientation_extremum_compute( &ymin, outline );
-
-        else if ( ymax.index >= 0 )
-          result = ft_orientation_extremum_compute( &ymax, outline );
       }
     }
 
-    return result;
+    if ( !xmin_point )
+      return FT_ORIENTATION_TRUETYPE;
+
+    prev = ( xmin_point == xmin_first ) ? xmin_last : xmin_point - 1;
+    next = ( xmin_point == xmin_last ) ? xmin_first : xmin_point + 1;
+
+    if ( FT_Atan2( prev->x - xmin_point->x, prev->y - xmin_point->y ) >
+         FT_Atan2( next->x - xmin_point->x, next->y - xmin_point->y ) )
+      return FT_ORIENTATION_POSTSCRIPT;
+    else
+      return FT_ORIENTATION_TRUETYPE;
   }
 
 
