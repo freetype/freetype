@@ -1,3 +1,23 @@
+2005-02-10  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/freetype-config.in: Add new flag `--ftversion' to
+	return the FreeType version.  Suggested by George Williams
+	<gww@silcom.com>.
+
+	* docs/CHANGES: Updated.
+
+2005-02-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/otvalid/otvmod.c (otv_validate): Deallocate arrays in case
+	of error.  Reported by YAMANO-UCHI Hidetoshi <mer@din.or.jp>.
+
+2005-02-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	<op_closepath>: Accept `T1_Parse_Have_Moveto' state also which can
+	happen in empty glyphs.  Reported by Ian Brown
+	<ian.brown@printsoft.de>.
+
 2005-02-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/otlayout/*: Removed.  Obsolete.

@@ -17,6 +17,8 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       distortions.  It has been introduced in version 2.1.8, and it is
       highly recommended to upgrade.
 
+    - FreeType didn't properly parse empty Type 1 glyphs.
+
 
   II. IMPORTANT CHANGES
 
@@ -47,6 +49,9 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       depth of 2bpp or 4bpp to a depth of 8bpp.  The documentation has
       not  mentioned  this  explicitly,  but  implementors  might have
       relied on this after looking into the source files.
+
+    - A new option `--ftversion' has been  added to freetype-config to
+      return the FreeType version.
 
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
