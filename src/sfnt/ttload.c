@@ -159,8 +159,8 @@
     FT_Error        error;
     FT_UInt         nn, has_head = 0;
 
-    const FT_ULong  glyx_tag = FT_MAKE_TAG('g','l','y','x');
-    const FT_ULong  locx_tag = FT_MAKE_TAG('l','o','c','x');
+    const FT_ULong  glyx_tag = FT_MAKE_TAG( 'g', 'l', 'y', 'x' );
+    const FT_ULong  locx_tag = FT_MAKE_TAG( 'l', 'o', 'c', 'x' );
 
     static const FT_Frame_Field  sfnt_dir_entry_fields[] =
     {

@@ -440,6 +440,10 @@ FT_BEGIN_HEADER
   /*    This macro converts four letter tags which are used to label       */
   /*    TrueType tables into an unsigned long to be used within FreeType.  */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    The produced values *must* be 32bit integers.  Don't redefine this */
+  /*    macro.                                                             */
+  /*                                                                       */
 #define FT_MAKE_TAG( _x1, _x2, _x3, _x4 ) \
           ( ( (FT_ULong)_x1 << 24 ) |     \
             ( (FT_ULong)_x2 << 16 ) |     \

@@ -580,6 +580,15 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    This macro converts four letter tags into an unsigned long.        */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    Since many 16bit compilers don't like 32bit enumerations, you      */
+  /*    should redefine this macro in case of problems to something like   */
+  /*    this:                                                              */
+  /*                                                                       */
+  /*      #define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )  (value)       */
+  /*                                                                       */
+  /*    to get a simple enumeration without assigning special numbers.     */
+  /*                                                                       */
 #ifndef FT_IMAGE_TAG
 #define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )  \
           value = ( ( (unsigned long)_x1 << 24 ) | \
