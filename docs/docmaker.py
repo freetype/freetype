@@ -18,7 +18,6 @@ html_header = """
 <style content="text/css">
   P { text-align=justify }
   H1 { text-align=center }
-  H2 { text-align=center }
   LI { text-align=justify }
 </style>
 </header>
@@ -55,13 +54,20 @@ code_footer = """
 para_header = "<p>"
 para_footer = "</p>"
 
-block_header = """<center><hr width="550"><table width="550"><tr><td>"""
-block_footer = "</table></center>"
+block_header = """<center><hr width="750"><table width="750"><tr><td>"""
+block_footer = "</td></tr></table></center>"
 
-source_header = """<center><table width="550"><tr bgcolor="#D6E8FF" width="100%"><td><pre>
+description_header = """<center><table width="650"><tr><td>"""
+description_footer = """</td></tr></table></center><br>"""
+
+marker_header = """<center><table width="650" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>"""
+marker_inter  = "</b></em></td></tr><tr><td>"
+marker_footer = "</td></tr></table></center>"
+
+source_header = """<center><table width="650"><tr bgcolor="#D6E8FF" width="100%"><td><pre>
 """
 source_footer = """</pre></table></center>
-<br><br>
+<br>
 """
 
 
@@ -213,6 +219,7 @@ class DocCode:
 #
 # The paragraph is filled line by line by the parser.
 #
+
 class DocParagraph:
 
     def __init__( self ):
@@ -314,6 +321,7 @@ class DocParagraph:
 # pass a list of input text lines in the "lines_list" parameter.
 #
 #
+
 class DocContent:
 
     def __init__( self, lines_list ):
@@ -467,7 +475,7 @@ class DocContent:
 
             else:
                 if not in_table:
-                    print "<table cellpadding=4><tr valign=top><td>"
+                    print '<table cellpadding=4><tr valign=top><td>'
                     in_table = 1
                 else:
                     print "</td></tr><tr valign=top><td>"
@@ -479,6 +487,31 @@ class DocContent:
 
         if in_table:
             print "</td></tr></table>"
+
+
+    def dump_html_in_table( self ):
+        n        = len( self.items )
+        in_table = 0
+
+        for i in range( n ):
+            item  = self.items[i]
+            field = item[0]
+
+            if not field:
+                if item[1]:
+                    print "<tr><td colspan=2>"
+                    for element in item[1]:
+                        element.dump_html()
+                    print "</td></tr>"
+
+            else:
+                print "<tr><td><b>" + field + "</b></td><td>"
+
+                for element in item[1]:
+                    element.dump_html()
+
+                print "</td></tr>"
+
 
 
 ######################################################################################
@@ -494,14 +527,21 @@ class DocContent:
 #   "self.source" is simply a list of text lines taken from the
 #   uncommented source itself.
 #
-#   Finally, "self.identifier" is a simple identifier used to
-#   uniquely identify the block.
+#   Finally, "self.name" is a simple identifier used to
+#   uniquely identify the block. it is taken from the first word of the first
+#   paragraphe of the first marker of a given block, i.e:
+#
+#      <Type> Goo
+#      <Description> Bla bla bla
+#
+#   will have a name of "Goo"
 #
 class DocBlock:
 
     def __init__( self, block_line_list = [], source_line_list = [] ):
-        self.items  = []                 # current ( marker, contents ) list
-        self.identifier = None
+        self.items      = []             # current ( marker, contents ) list
+        self.section    = None           # section this block belongs to
+        
         marker      = None               # current marker
         content     = []                 # current content lines list
         alphanum    = string.letters + string.digits + "_"
@@ -572,8 +612,6 @@ class DocBlock:
         if l > 0 and marker:
             content = DocContent( lines )
             self.items.append( ( string.lower( marker ), content ) )
-            if not self.identifier:
-                self.identifier = content.get_identifier()
 
     
     def find_content( self, marker ):
@@ -594,14 +632,20 @@ class DocBlock:
         types = [ 'type', 'struct', 'functype', 'function', 'constant',
                   'enum', 'macro' ]
 
+        parameters = [ 'input', 'inout', 'output', 'return' ]
+
         if not self.items:
             return
+
+        # place html anchor when needed
+        if self.name:
+            print '<a name="'+self.name+'">'
 
         # start of a block
         #
         print block_header
 
-        print "<h2>" + self.identifier + "</h2>"
+        print "<h4>" + self.name + "</h4>"
 
         # print source code
         #
@@ -617,6 +661,8 @@ class DocBlock:
             print  line
         print source_footer
 
+        in_table = 0
+        
         # dump each (marker,content) element
         #
         for element in self.items:
@@ -624,17 +670,19 @@ class DocBlock:
             content = element[1]
 
             if marker == "description":
-                print "<ul>"
+                print description_header
                 content.dump_html()
-                print "</ul>"
+                print description_footer
 
             elif not ( marker in types ):
-                print "<h4>" + marker + "</h4>"
-                print "<ul>"
-                content.dump_html()
-                print "</ul>"
 
-            print ""
+                print marker_header
+                print marker
+                print marker_inter
+                content.dump_html()
+                print marker_footer
+                
+        print ""
 
         print block_footer
 
@@ -648,6 +696,8 @@ class DocBlock:
 # For example, look at:
 #
 #   <Section> Basic_Data_Types
+#
+#   <Title> FreeType 2 Basic Data Types
 #
 #   <Abstract>
 #      Definitions of basic FreeType data types
@@ -663,11 +713,6 @@ class DocSection:
         self.name        = string.lower( block.name )
         self.abstract    = block.find_content( "abstract" )
         self.description = block.find_content( "description" )
-        title_content    = block.find_content( "title" )
-        if title_content:
-            self.title   = title_content.get_title()
-        else:
-            self.titles  = "UNKNOWN_SECTION_TITLE!"
         self.elements    = {}
         self.list        = []
         self.filename    = self.name + ".html"
@@ -722,6 +767,7 @@ class DocSectionList:
         self.sections        = {}
         self.list            = []
         self.current_section = None
+        self.index           = []    # sorted list of blocks that are not sections
 
 
     def append_section( self, block ):
@@ -748,6 +794,7 @@ class DocSectionList:
                 #
                 section.abstract    = abstract
                 section.description = block.find_content( "description" )
+                section.block       = block
 
         else:
             # a new section
@@ -755,7 +802,7 @@ class DocSectionList:
             section = DocSection( block )
             self.sections[name] = section
             self.list.append( section )
-
+            
         self.current_section = section
 
 
@@ -768,11 +815,44 @@ class DocSectionList:
             elif self.current_section:
                 # sys.stderr.write( "  new block" )
                 self.current_section.add_element( block )
+                block.section = self.current_section
+                self.index.append( block )
 
+
+    def prepare_files( self, file_prefix = None ):
+        # prepare the section list, by computing section filenames
+        # and the index
+        if file_prefix:
+            prefix = file_prefix + "-"
+        else:
+            prefix = ""
+
+        # compute section names
+        for section in self.sections.values():
+            title_content     = section.block.find_content( "title" )
+            if title_content:
+                section.title = title_content.get_title()
+            else:
+                section.title = "UNKNOWN_SECTION_TITLE!"
+
+        # compute section filenames        
+        for section in self.sections.values():
+            section.filename = prefix + section.name + ".html"
+
+        self.toc_filename   = prefix + "toc.html"
+        self.index_filename = prefix + "index.html"
+
+        # compute the sorted block list for the index
+        self.index.sort( block_lexicographical_compare )
+        
 
     def dump_html_toc( self ):
         # dump an html table of contents
         #
+        old_stdout = sys.stdout
+        new_file   = open( self.toc_filename, "w" )
+        sys.stdout = new_file
+        
         print html_header
 
         print "<center><h1>Table of Contents</h1></center>"
@@ -790,24 +870,64 @@ class DocSectionList:
 
         print html_footer
 
+        sys.stdout = old_stdout
+
 
     def dump_html_sections( self ):
         old_stdout = sys.stdout
+
         for section in self.sections.values():
-            new_file   = open( section.filename, "w" )
-            sys.stdout = new_file
-            section.dump_html()
-            new_file.close()
+            
+            if section.filename:
+                new_file   = open( section.filename, "w" )
+                sys.stdout = new_file
+                section.dump_html()
+                new_file.close()
 
         sys.stdout = old_stdout
 
 
+    def dump_html_index( self ):
+        
+        old_stdout = sys.stdout
+        new_file   = open( self.index_filename, "w" )
+        sys.stdout = new_file
+
+        num_columns = 3
+        total       = len( self.index )
+        line        = 0
+
+        print html_header
+
+        print "<center><h1>General Index</h1></center>"
+
+        print "<center><table cellpadding=5><tr valign=top><td>"
+
+        for block in self.index:
+
+            print '<a href="'+block.section.filename+'#'+block.name+'">'
+            print block.name
+            print "</a><br>"
+
+            if line*num_columns >= total:
+                print "</td><td>"
+                line = 0
+            else:
+                line = line+1
+
+        print "</tr></table></center>"
+
+        print html_footer
+        
+        sys.stdout = old_stdout
+        
 
 # Filter a given list of DocBlocks. Returns a new list
 # of DocBlock objects that only contains element whose
 # "type" (i.e. first marker) is in the "types" parameter.
 #
-def filter_blocks( block_list, types ):
+def filter_blocks_by_type( block_list, types ):
+
     new_list = []
     for block in block_list:
         if block.items:
@@ -819,17 +939,21 @@ def filter_blocks( block_list, types ):
     return new_list
 
 
+def filter_section_blocks( block ):
+    return block.section != None
+
+
 # Perform a lexicographical comparison of two DocBlock
 # objects. Returns -1, 0 or 1.
 #
 def block_lexicographical_compare( b1, b2 ):
-    if not b1.identifier:
+    if not b1.name:
         return -1
-    if not b2.identifier:
+    if not b2.name:
         return 1
 
-    id1 = string.lower( b1.identifier )
-    id2 = string.lower( b2.identifier )
+    id1 = string.lower( b1.name )
+    id2 = string.lower( b2.name )
 
     if id1 < id2:
         return -1
@@ -838,15 +962,6 @@ def block_lexicographical_compare( b1, b2 ):
     else:
         return 1
 
-
-def block_make_list( source_block_list ):
-    list = []
-
-    for block in source_block_list:
-        docblock = DocBlock( block[0], block[1] )
-        list.append( docblock )
-
-    return list
 
 
 # dump a list block as a single HTML page
@@ -862,7 +977,7 @@ def dump_html_1( block_list ):
 
 
 
-def make_block_list():
+def make_block_list_inner():
     """parse a file and extract comments blocks from it"""
 
     list   = []
@@ -1013,6 +1128,21 @@ def make_block_list():
     return list
 
 
+# create a list of DocBlock elements
+#
+def make_block_list():
+    
+    source_block_list = make_block_list_inner()
+    list              = []
+
+    for block in source_block_list:
+        docblock = DocBlock( block[0], block[1] )
+        list.append( docblock )
+
+    return list
+
+
+
 # This function is only used for debugging
 #
 def dump_block_list( list ):
@@ -1029,17 +1159,26 @@ def dump_block_list( list ):
 
 def main( argv ):
     """main program loop"""
+
+    # we begin by simply building a list of DocBlock elements
+    #
     sys.stderr.write( "extracting comment blocks from sources...\n" )
     list = make_block_list()
-    list = block_make_list(list)
 
+    # now, sort the blocks into sections
+    #
     section_list = DocSectionList()
     for block in list:
         section_list.append_block( block )
 
+    section_list.prepare_files( "ft2" )
+
+    # dump the section list TOC and sections
+    #
     section_list.dump_html_toc()
     section_list.dump_html_sections()
-
+    section_list.dump_html_index()
+    
     # list2 = filter_blocks( list, ['type','macro','enum','constant', 'functype'] )
     # list2 = list
     # list2.sort( block_lexicographical_compare )

@@ -1,3 +1,8 @@
+2000-01-09  David Turner <david.turner@freetype.org>
+
+	* docs/docmaker.py: improved script to generate table of contents and
+	index pages.
+
 2000-01-04  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ttnameid.h: Updated Unicode code range comments.

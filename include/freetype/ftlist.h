@@ -34,7 +34,21 @@
 
 FT_BEGIN_HEADER
 
-
+  /**************************************************************************
+   *
+   *  <Section> list_processing
+   *
+   *  <Title> List Processing
+   *
+   *  <Abstract>
+   *     simple management of lists
+   *
+   *  <Description>
+   *     This section contains various definitions related to list processing
+   *     using doubly-linked nodes.
+   *
+   */
+  
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -213,7 +227,8 @@ FT_BEGIN_HEADER
                                        FT_Memory           memory,
                                        void*               user );
 
-
+  /* */
+  
 FT_END_HEADER
 
 #endif /* __FTLIST_H__ */
