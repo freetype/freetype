@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PostScript Type 1 decoding routines (body).                          */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 by                                           */
+/*  Copyright 2000-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1148,7 +1148,6 @@
 
     decoder->num_glyphs     = (FT_UInt)face->num_glyphs;
     decoder->glyph_names    = glyph_names;
-    decoder->hint_flags     = face->internal->hint_flags;
     decoder->hint_mode      = hint_mode;
     decoder->blend          = blend;
     decoder->parse_callback = parse_callback;

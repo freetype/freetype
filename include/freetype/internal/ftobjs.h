@@ -296,9 +296,6 @@ FT_BEGIN_HEADER
   /*    transform_flags  :: Some flags used to classify the transform.     */
   /*                        Only used by the convenience functions.        */
   /*                                                                       */
-  /*    hint_flags       :: Some flags used to change the hinters'         */
-  /*                        behaviour.  Only used for debugging for now.   */
-  /*                                                                       */
   /*    postscript_name  :: Postscript font name for this face.            */
   /*                                                                       */
   /*    incremental_interface ::                                           */
@@ -317,8 +314,6 @@ FT_BEGIN_HEADER
     FT_Matrix    transform_matrix;
     FT_Vector    transform_delta;
     FT_Int       transform_flags;
-
-    FT_UInt32    hint_flags;
 
     const char*  postscript_name;
 

@@ -1,3 +1,29 @@
+2003-06-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahhint.c (ah_hinter_hint_edges): Removed.  Just a
+	wrapper for ah_hint_edges.
+	(ah_hint_edges): Renamed to...
+	(ah_hinter_hint_edges): This.
+
+	* src/base/ftobjs.c (FT_Set_Hint_Flags): Removed.  Unused.
+
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec),
+	include/freetype/internal/psaux.h (T1_DecoderRec),
+	src/cff/cffgload.h (CFF_Builder): Remove `hint_flags' field. 
+	Unused.
+
+	* src/cff/cffgload.c (cff_builder_init): Updated.
+	(cff_decoder_parse_charstrings) <cff_op_endchar>: Call hinter->apply
+	with decoder->hint_mode instead of builder->hint_flags.
+	* src/psaux/t1decode.c (t1_decoder_init): Updated.
+
+	* src/base/ftstroker.c (ft_stroke_border_export): s/index/idx/.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Commented out code which
+	increased root->height by 15% if the line gap was zero.  There exist
+	fonts (containing e.g. form drawing characters) which intentionally
+	have a zero line gap value.
+
 2003-06-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffobjs.c (cff_face_init): Use symbolic names for

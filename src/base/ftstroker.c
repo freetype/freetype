@@ -578,14 +578,14 @@
       FT_UInt    count = border->num_points;
       FT_Byte*   tags  = border->tags;
       FT_Short*  write = outline->contours + outline->n_contours;
-      FT_Short   index = (FT_Short)outline->n_points;
+      FT_Short   idx   = (FT_Short)outline->n_points;
 
 
-      for ( ; count > 0; count--, tags++, index++ )
+      for ( ; count > 0; count--, tags++, idx++ )
       {
         if ( *tags & FT_STROKE_TAG_END )
         {
-          *write++ = index;
+          *write++ = idx;
           outline->n_contours++;
         }
       }
