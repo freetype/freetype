@@ -24,14 +24,18 @@
 
 #include <freetype/internal/t2errors.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "t2driver.h"
 #include "t2gload.h"
+
 #else
+
 #include <cff/t2driver.h>
 #include <cff/t2gload.h>
-#endif
 
+#endif
 
 
   /*************************************************************************/

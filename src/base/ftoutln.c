@@ -270,15 +270,16 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_New_Internal( FT_Memory    memory,
-                                                       FT_UInt      numPoints,
-                                                       FT_Int       numContours,
-                                                       FT_Outline*  outline )
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_New_Internal(
+                                FT_Memory    memory,
+                                FT_UInt      numPoints,
+                                FT_Int       numContours,
+                                FT_Outline*  outline )
   {
-    FT_Error   error;
+    FT_Error  error;
 
 
-    if ( !outline )
+    if ( !outline || !memory )
       return FT_Err_Invalid_Argument;
 
     *outline = null_outline;
@@ -300,7 +301,6 @@
 
     return error;
   }
-
 
 
   /*************************************************************************/
@@ -340,11 +340,13 @@
                                               FT_Int       numContours,
                                               FT_Outline*  outline )
   {
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
     return FT_Outline_New_Internal( library->memory, numPoints,
                                     numContours, outline );
-    
   }
-  
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -396,6 +398,25 @@
   }
 
 
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Done_Internal( FT_Memory    memory,
+                                                        FT_Outline*  outline )
+  {
+    if ( outline )
+    {
+      if ( outline->flags & ft_outline_owner )
+      {
+        FREE( outline->points   );
+        FREE( outline->tags     );
+        FREE( outline->contours );
+      }
+      *outline = null_outline;
+
+      return FT_Err_Ok;
+    }
+    else
+      return FT_Err_Invalid_Argument;
+  }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -424,33 +445,17 @@
   /*    The reason why this function takes an `outline' parameter is       */
   /*    simply to use FT_Free().                                           */
   /*                                                                       */
-
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Done_Internal( FT_Memory    memory,
-                                                        FT_Outline*  outline )
-  {
-    if ( outline )
-    {
-      if ( outline->flags & ft_outline_owner )
-      {
-        FREE( outline->points   );
-        FREE( outline->tags    );
-        FREE( outline->contours );
-      }
-      *outline = null_outline;
-
-      return FT_Err_Ok;
-    }
-    else
-      return FT_Err_Invalid_Argument;
-  }
-                                          
-                                          
   FT_EXPORT_FUNC( FT_Error )  FT_Outline_Done( FT_Library   library,
                                                FT_Outline*  outline )
-
   {
+    /* check for valid `outline' in FT_Outline_Done_Internal() */
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
     return FT_Outline_Done_Internal( library->memory, outline );
   }
+
 
   /*************************************************************************/
   /*                                                                       */

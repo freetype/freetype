@@ -19,13 +19,19 @@
 #ifndef T1HINTER_H
 #define T1HINTER_H
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "t1objs.h"
 #include "t1gload.h"
+
 #else
+
 #include <type1/t1objs.h>
 #include <type1/t1gload.h>
+
 #endif
+
 
 #ifdef __cplusplus
   extern "C" {

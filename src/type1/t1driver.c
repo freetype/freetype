@@ -17,14 +17,19 @@
 
 
 #ifdef FT_FLAT_COMPILE
+
 #include "t1driver.h"
 #include "t1gload.h"
 #include "t1afm.h"
+
 #else
+
 #include <type1/t1driver.h>
 #include <type1/t1gload.h>
 #include <type1/t1afm.h>
+
 #endif
+
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
@@ -217,8 +222,8 @@
         result = psnames->lookup_unicode( &face->unicode_map,
                                           (FT_ULong)charcode );
 
-        /* the function returns 0xFFFF when the Unicode charcode has */
-        /* no corresponding glyph.                                   */
+        /* the function returns 0xFFFF if the Unicode charcode has */
+        /* no corresponding glyph                                  */
         if ( result == 0xFFFF )
           result = 0;
         goto Exit;
@@ -264,7 +269,7 @@
 
 
             if ( gname && gname[0] == glyph_name[0] &&
-                 strcmp( gname, glyph_name ) == 0 )
+                 strcmp( gname, glyph_name ) == 0   )
             {
               result = n;
               break;
@@ -316,7 +321,7 @@
 
 #ifdef T1_CONFIG_OPTION_NO_AFM
     (FTDriver_getKerning)   0,
-    (FTDriver_getAdvances)  0,
+    (FTDriver_attachFile)   0,
 #else
     (FTDriver_getKerning)   Get_Kerning,
     (FTDriver_attachFile)   T1_Read_AFM,

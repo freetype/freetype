@@ -34,7 +34,6 @@
                              FT_UInt             sid,
                              PSNames_Interface*  interface );
 
-
   LOCAL_DEF
   FT_Error  T2_Access_Element( CFF_Index*  index,
                                FT_UInt     element,

@@ -18,27 +18,30 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
+
 #ifdef FT_FLAT_COMPILE
 
 #include "ttdriver.c"    /* driver interface     */
 #include "ttpload.c"     /* tables loader        */
 #include "ttgload.c"     /* glyph loader         */
 #include "ttobjs.c"      /* object manager       */
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #include "ttinterp.c"    /* bytecode interpreter */
 #endif
 
-#else
+#else /* FT_FLAT_COMPILE */
 
 #include <truetype/ttdriver.c>    /* driver interface     */
 #include <truetype/ttpload.c>     /* tables loader        */
 #include <truetype/ttgload.c>     /* glyph loader         */
 #include <truetype/ttobjs.c>      /* object manager       */
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #include <truetype/ttinterp.c>    /* bytecode interpreter */
 #endif
 
-#endif
+#endif /* FT_FLAT_COMPILE */
 
 
 /* END */

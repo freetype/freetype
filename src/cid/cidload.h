@@ -21,11 +21,17 @@
 
 #include <freetype/internal/ftstream.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "cidparse.h"
+
 #else
+
 #include <cid/cidparse.h>
+
 #endif
+
 
 #ifdef __cplusplus
   extern "C" {

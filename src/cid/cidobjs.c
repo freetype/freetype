@@ -19,13 +19,19 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "cidgload.h"
 #include "cidload.h"
+
 #else
+
 #include <cid/cidgload.h>
 #include <cid/cidload.h>
+
 #endif
+
 
 #include <freetype/internal/psnames.h>
 

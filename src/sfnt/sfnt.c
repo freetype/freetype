@@ -18,6 +18,7 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
+
 #ifdef FT_FLAT_COMPILE
 
 #include "ttload.c"
@@ -31,8 +32,8 @@
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 #include "ttpost.c"
 #endif
-#include "sfdriver.c"
 
+#include "sfdriver.c"
 
 #else /* FT_FLAT_COMPILE */
 
@@ -47,12 +48,10 @@
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 #include <sfnt/ttpost.c>
 #endif
+
 #include <sfnt/sfdriver.c>
 
 #endif   /* FT_FLAT_COMPILE */
-
-
-
 
 
 /* END */

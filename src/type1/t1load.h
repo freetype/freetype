@@ -21,10 +21,15 @@
 
 #include <freetype/internal/ftstream.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "t1parse.h"
+
 #else
+
 #include <type1/t1parse.h>
+
 #endif
 
 

@@ -23,13 +23,19 @@
 #include <freetype/ftoutln.h>
 #include <freetype/tttags.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "t2load.h"
 #include "t2gload.h"
+
 #else
+
 #include <cff/t2load.h>
 #include <cff/t2gload.h>
+
 #endif
+
 
 #include <freetype/internal/t2errors.h>
 
@@ -470,7 +476,8 @@
                          FT_Pos       y )
   {
     FT_Error  error = 0;
-    
+
+
     /* test whether we are building a new contour */
     if ( !builder->path_begun )
     {
@@ -1155,7 +1162,6 @@
           }
           break;
 
-
         case t2_op_rcurveline:
           {
             FT_Int  num_curves = ( num_args - 2 ) / 6;
@@ -1196,128 +1202,131 @@
           }
           break;
 
-
-
         case t2_op_hflex1:
           {
             FT_Pos start_y;
-   
+
+
             FT_TRACE4(( " hflex1" ));
-   
+
             args = stack;
-   
-            /* Adding five more points; 4 control points, 1 on curve point. */
-            if (start_point ( builder, x, y ) || check_points ( builder, 5 ) )
+
+            /* adding five more points; 4 control points, 1 on-curve point */
+            if ( start_point( builder, x, y ) ||
+                 check_points( builder, 5 )   )
               goto Memory_Error;
-   
+
             /* Record the starting point's y postion for later use */
             start_y = y;
-   
+
             /* first control point */
             x += args[0];
             y += args[1];
             add_point( builder, x, y, 0 );
-   
+
             /* second control point */
             x += args[2];
             y += args[3];
             add_point( builder, x, y, 0 );
-   
+
             /* join point; on curve, with y-value the same as the last */
             /* control point's y-value                                 */
             x += args[4];
             add_point( builder, x, y, 1 );
-            
+
             /* third control point, with y-value the same as the join */
             /* point's y-value                                        */
             x += args[5];
             add_point( builder, x, y, 0 );
-   
+
             /* fourth control point */
             x += args[6];
             y += args[7];
             add_point( builder, x, y, 0 );
-   
-            /* ending point, with y-value the same as the start  */
-            /* point's y-value. we don't add this point, though. */
+
+            /* ending point, with y-value the same as the start   */
+            /* point's y-value -- we don't add this point, though */
             x += args[8];
             y  = start_y;
-   
+
             args = stack;
             break;
           }
-
 
         case t2_op_hflex:
           {
             FT_Pos start_y;
- 
+
+
             FT_TRACE4(( " hflex" ));
- 
+
             args = stack;
- 
-            /* Adding five more points; 4 control points, 1 on curve point. */
-            if (start_point ( builder, x, y ) || check_points ( builder, 5 ) )
- 
+
+            /* adding five more points; 4 control points, 1 on-curve point */
+            if ( start_point( builder, x, y ) ||
+                 check_points ( builder, 5 )  )
               goto Memory_Error;
- 
-            /* Record the starting point's y postion for later use */
+
+            /* record the starting point's y-position for later use */
             start_y = y;
- 
+
             /* first control point */
             x += args[0];
             add_point( builder, x, y, 0 );
- 
+
             /* second control point */
             x += args[1];
             y += args[2];
             add_point( builder, x, y, 0 );
-  
+
             /* join point; on curve, with y-value the same as the last */
             /* control point's y-value                                 */
             x += args[3];
             add_point( builder, x, y, 1 );
- 
+
             /* third control point, with y-value the same as the join */
             /* point's y-value                                        */
             x += args[4];
             add_point( builder, x, y, 0 );
- 
+
             /* fourth control point */
             x += args[5];
             y  = start_y;
             add_point( builder, x, y, 0 );
- 
+
             /* ending point, with y-value the same as the start point's */
-            /* y-value we don't add this point, though.                 */
+            /* y-value -- we don't add this point, though               */
             x += args[6];
- 
+
             args = stack;
             break;
           }
 
-
         case t2_op_flex1:
           {
-            FT_Pos start_x, start_y; /* record start x,y values for alter use */
-            FT_Int dx = 0, dy = 0;   /* used in hort./vert. algorithm below   */
-            FT_Int horizontal, count;
+            FT_Pos  start_x, start_y; /* record start x, y values for alter */
+                                      /* use                                */
+            FT_Int  dx = 0, dy = 0;   /* used in horizontal/vertical        */
+                                      /* algorithm below                    */
+            FT_Int  horizontal, count;
  
+
             FT_TRACE4(( " flex1" ));
-   
-            /* Adding five more points; 4 control points, 1 on curve point. */
-            if (start_point ( builder, x, y ) || check_points ( builder, 5 ) )
+
+            /* adding five more points; 4 control points, 1 on-curve point */
+            if ( start_point( builder, x, y ) ||
+                 check_points( builder, 5 )   )
                goto Memory_Error;
-   
-             /* Record the starting point's x,y postion for later use */
+
+            /* record the starting point's x, y postion for later use */
             start_x = x;
             start_y = y;
-   
-            /* XXXX: figure out if this is supposed to be a horizontal or */
-            /* vertical flex. The Type 2 specification is vague...        */
-   
+
+            /* XXX: figure out whether this is supposed to be a horizontal */
+            /*      or vertical flex; the Type 2 specification is vague... */
+
             args = stack;
-            
+
             /* grab up to the last argument */
             for ( count = 5; count > 0; count-- )
             {
@@ -1325,25 +1334,25 @@
               dy += args[1];
               args += 2;
             }
-   
+
             /* rewind */
             args = stack;
-   
+
             if ( dx < 0 ) dx = -dx;
             if ( dy < 0 ) dy = -dy;
-   
+
             /* strange test, but here it is... */
-            horizontal = (dx > dy);
+            horizontal = ( dx > dy );
    
             for ( count = 5; count > 0; count-- )
             {
               x += args[0];
               y += args[1];
-              add_point( builder, x, y, (FT_Bool)(count == 3) );
+              add_point( builder, x, y, (FT_Bool)( count == 3 ) );
               args += 2;
             }
    
-            if (horizontal)
+            if ( horizontal )
             {
               x += args[0];
               y  = start_y;
@@ -1353,40 +1362,37 @@
               x  = start_x;
               y += args[0];
             }
-   
+
             args = stack;
             break;
            }
-  
 
         case t2_op_flex:
           {
-            FT_UInt   count;
-            
+            FT_UInt  count;
+
+
             FT_TRACE4(( " flex" ));
-   
-             if (start_point ( builder, x, y ) || check_points ( builder, 5 ) )
-               goto Memory_Error;
-   
+
+            if ( start_point( builder, x, y ) ||
+                 check_points( builder, 5 )   )
+              goto Memory_Error;
+
             args = stack;
             for ( count = 5; count > 0; count-- )
             {
               x += args[0];
               y += args[1];
-              add_point( builder, x, y, (FT_Bool)(count == 3) );
+              add_point( builder, x, y, (FT_Bool)( count == 3 ) );
               args += 2;
             }
-            
+
             x += args[0];
             y += args[1];
-  
+
             args = stack;
           }
           break;
-
-
-
-
 
         case t2_op_endchar:
           FT_TRACE4(( " endchar" ));

@@ -19,30 +19,31 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
+
 #ifdef FT_FLAT_COMPILE
 
 #include "t1gload.h"
 #include "t1load.h"
 #include "t1afm.h"
+
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
 #include "t1hinter.h"
 #endif
 
-#else
+#else /* FT_FLAT_COMPILE */
 
 #include <type1/t1gload.h>
 #include <type1/t1load.h>
 #include <type1/t1afm.h>
+
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
 #include <type1/t1hinter.h>
 #endif
 
-#endif
-
+#endif /* FT_FLAT_COMPILE */
 
 
 #include <freetype/internal/psnames.h>
-
 
 
   /*************************************************************************/
@@ -174,7 +175,6 @@
   /*                                                                       */
   /*                            FACE  FUNCTIONS                            */
   /*                                                                       */
-  /*                                                                       */
   /*************************************************************************/
 
 
@@ -245,7 +245,8 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Function>  T1_Init_Face                                              */
+  /* <Function>                                                            */
+  /*    T1_Init_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The face object constructor.                                       */

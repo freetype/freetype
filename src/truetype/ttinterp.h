@@ -19,12 +19,16 @@
 #ifndef TTINTERP_H
 #define TTINTERP_H
 
-#ifdef FT_FLAT_COMPILE
-#include "ttobjs.h"
-#else
-#include <truetype/ttobjs.h>
-#endif
 
+#ifdef FT_FLAT_COMPILE
+
+#include "ttobjs.h"
+
+#else
+
+#include <truetype/ttobjs.h>
+
+#endif
 
 
 #ifdef __cplusplus

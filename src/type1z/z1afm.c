@@ -17,10 +17,15 @@
 
 
 #ifdef FT_FLAT_COMPILE
+
 #include "z1afm.h"
+
 #else
+
 #include <type1z/z1afm.h>
+
 #endif
+
 
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1types.h>

@@ -19,15 +19,18 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/ftoutln.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "ftsmooth.h"
 #include "ftgrays.h"
+
 #else
+
 #include <smooth/ftsmooth.h>
 #include <smooth/ftgrays.h>
+
 #endif
-
-
 
 
   /* initialize renderer -- init its raster */

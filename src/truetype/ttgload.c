@@ -23,12 +23,16 @@
 #include <freetype/tttags.h>
 #include <freetype/ftoutln.h>
 
-#ifdef FT_FLAT_COMPILE
-#include "ttgload.h"
-#else
-#include <truetype/ttgload.h>
-#endif
 
+#ifdef FT_FLAT_COMPILE
+
+#include "ttgload.h"
+
+#else
+
+#include <truetype/ttgload.h>
+
+#endif
 
 
   /*************************************************************************/
@@ -1048,7 +1052,7 @@
               pts->tags[k] &= FT_Curve_Tag_On;
           }
 
-          cur_to_org( num_points+2, pts );
+          cur_to_org( num_points + 2, pts );
 
           /* now consider hinting */
           if ( IS_HINTED( loader->load_flags ) && n_ins > 0 )

@@ -19,17 +19,21 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #ifdef FT_FLAT_COMPILE
+
 #include "cidparse.c"
 #include "cidload.c"
 #include "cidobjs.c"
 #include "cidriver.c"
 #include "cidgload.c"
+
 #else
+
 #include <cid/cidparse.c>
 #include <cid/cidload.c>
 #include <cid/cidobjs.c>
 #include <cid/cidriver.c>
 #include <cid/cidgload.c>
+
 #endif
 
 

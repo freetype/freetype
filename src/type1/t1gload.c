@@ -19,23 +19,25 @@
 #ifdef FT_FLAT_COMPILE
 
 #include <type1/t1gload.h>
+
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
 #include <type1/t1hinter.h>
 #endif
 
-#else
+#else /* FT_FLAT_COMPILE */
 
 #include <type1/t1gload.h>
+
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
 #include <type1/t1hinter.h>
 #endif
 
-#endif
+#endif /* FT_FLAT_COMPILE */
+
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/ftoutln.h>
-
 
 #include <string.h>     /* for strcmp() */
 
@@ -181,6 +183,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    funcs   :: The hinting functions interface.                        */
+  /*                                                                       */
   LOCAL_FUNC
   void  T1_Init_Decoder( T1_Decoder*             decoder,
                          const T1_Hinter_Funcs*  funcs )

@@ -636,8 +636,6 @@
   }
 
 
-
-
   BASE_FUNC( FT_Error ) FT_Read_Fields( FT_Stream              stream,
                                         const FT_Frame_Field*  fields,
                                         void*                  structure )

@@ -18,12 +18,17 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "ftraster.c"
 #include "ftrend1.c"
+
 #else
+
 #include <raster1/ftraster.c>
 #include <raster1/ftrend1.c>
+
 #endif
 
 

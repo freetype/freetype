@@ -20,12 +20,16 @@
 #include <freetype/internal/tterrors.h>
 #include <freetype/tttags.h>
 
-#ifdef FT_FLAT_COMPILE
-#include "ttsbit.h"
-#else
-#include <sfnt/ttsbit.h>
-#endif
 
+#ifdef FT_FLAT_COMPILE
+
+#include "ttsbit.h"
+
+#else
+
+#include <sfnt/ttsbit.h>
+
+#endif
 
 
   /*************************************************************************/

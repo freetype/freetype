@@ -1,32 +1,20 @@
-/*******************************************************************
- *
- *  t1parse.h                                                   2.0
- *
- *    Type1 parser.
- *
- *  Copyright 1996-1998 by
- *  David Turner, Robert Wilhelm, and Werner Lemberg.
- *
- *  This file is part of the FreeType project, and may only be used
- *  modified and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- *  The Type 1 parser is in charge of the following:
- *
- *   - provide an implementation of a growing sequence of
- *     objects called a Z1_Table (used to build various tables
- *     needed by the loader).
- *
- *   - opening .pfb and .pfa files to extract their top-level
- *     and private dictionaries
- *
- *   - read numbers, arrays & strings from any dictionary
- *
- *  See "t1load.c" to see how data is loaded from the font file
- *
- ******************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  z1parse.h                                                              */
+/*                                                                         */
+/*    Experimental Type 1 parser (specification).                          */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 
 #ifndef Z1PARSE_H
 #define Z1PARSE_H
@@ -39,7 +27,7 @@
 
 
   /* simple enumeration type used to identify token types */
-  typedef enum Z1_Token_Type_
+  typedef enum  Z1_Token_Type_
   {
     t1_token_none = 0,
     t1_token_any,
@@ -51,8 +39,9 @@
     
   } Z1_Token_Type;
 
+
   /* a simple structure used to identify tokens */
-  typedef struct Z1_Token_Rec_
+  typedef struct  Z1_Token_Rec_
   {
     FT_Byte*       start;   /* first character of token in input stream */
     FT_Byte*       limit;   /* first character after the token          */
@@ -60,8 +49,9 @@
   
   } Z1_Token_Rec;  
 
+
   /* enumeration type used to identify object fields */
-  typedef enum Z1_Field_Type_
+  typedef enum  Z1_Field_Type_
   {
     t1_field_none = 0,
     t1_field_bool,
@@ -76,8 +66,9 @@
     
   } Z1_Field_Type;
 
+
   /* structure type used to model object fields */
-  typedef struct Z1_Field_Rec_
+  typedef struct  Z1_Field_Rec_
   {
     Z1_Field_Type  type;          /* type of field                        */
     FT_UInt        offset;        /* offset of field in object            */
@@ -88,94 +79,114 @@
    
   } Z1_Field_Rec;
 
-#define Z1_FIELD_REF(s,f)  (((s*)0)->f)
 
-#define Z1_FIELD_BOOL( _ftype, _fname )               \
-    { t1_field_bool,                                  \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
-      0, 0, 0 }
+#define Z1_FIELD_REF( s, f )  ( ((s*)0)->f )
 
-#define Z1_FIELD_NUM( _ftype, _fname )                \
-    { t1_field_integer,                               \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
-      0, 0, 0 }
+#define Z1_FIELD_BOOL( _ftype, _fname )                      \
+          {                                                  \
+            t1_field_bool,                                   \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
+            0, 0, 0                                          \
+          }
 
-#define Z1_FIELD_FIXED( _ftype, _fname, _power )      \
-    { t1_field_fixed,                                 \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
-      0, 0, 0 }
+#define Z1_FIELD_NUM( _ftype, _fname )                       \
+          {                                                  \
+            t1_field_integer,                                \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
+            0, 0, 0                                          \
+          }
 
-#define Z1_FIELD_STRING( _ftype, _fname )             \
-    { t1_field_string,                                \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
-      0, 0, 0 }
+#define Z1_FIELD_FIXED( _ftype, _fname, _power )             \
+          {                                                  \
+            t1_field_fixed,                                  \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
+            0, 0, 0                                          \
+          }
 
-#define Z1_FIELD_NUM_ARRAY( _ftype, _fname, _fcount, _fmax ) \
-    { t1_field_integer,                                      \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),          \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                \
-      _fmax,                                                 \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fcount),         \
-      0 }
+#define Z1_FIELD_STRING( _ftype, _fname )                    \
+          {                                                  \
+            t1_field_string,                                 \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
+            0, 0, 0                                          \
+          }
+
+#define Z1_FIELD_NUM_ARRAY( _ftype, _fname, _fcount, _fmax )  \
+          {                                                   \
+            t1_field_integer,                                 \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ),  \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),     \
+            _fmax,                                            \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fcount ), \
+            0                                                 \
+          }
 
 #define Z1_FIELD_FIXED_ARRAY( _ftype, _fname, _fcount, _fmax ) \
-    { t1_field_fixed,                                          \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),            \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                  \
-      _fmax,                                                   \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fcount),           \
-      0 }
+          {                                                    \
+            t1_field_fixed,                                    \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ),   \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),      \
+            _fmax,                                             \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fcount ),  \
+            0                                                  \
+          }
 
 #define Z1_FIELD_NUM_ARRAY2( _ftype, _fname, _fmax )         \
-    { t1_field_integer,                                      \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),          \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                \
-      _fmax,                                                 \
-      0, 0 }
+          {                                                  \
+            t1_field_integer,                                \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),    \
+            _fmax,                                           \
+            0, 0                                             \
+          }
 
-#define Z1_FIELD_FIXED_ARRAY2( _ftype, _fname, _fmax )         \
-    { t1_field_fixed,                                          \
-      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),            \
-      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                  \
-      _fmax,                                                   \
-      0, 0 }
+#define Z1_FIELD_FIXED_ARRAY2( _ftype, _fname, _fmax )       \
+          {                                                  \
+            t1_field_fixed,                                  \
+            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
+            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),    \
+            _fmax,                                           \
+            0, 0                                             \
+          }
 
 
-
-/*************************************************************************
- *
- * <Struct> Z1_Table
- *
- * <Description>
- *    A Z1_Table is a simple object used to store an array of objects
- *    in a single memory block.
- *
- * <Fields>
- *    block     :: address in memory of the growheap's block. This
- *                 can change between two object adds, due to the use
- *                 of 'realloc'.
- *
- *    cursor    :: current top of the grow heap within its block
- *
- *    capacity  :: current size of the heap block. Increments by 1 Kb
- *
- *    init      :: boolean. set when the table has been initialized
- *                 (the table user should set this field)
- *
- *    max_elems :: maximum number of elements in table
- *    num_elems :: current number of elements in table
- *
- *    elements  :: table of element addresses within the block
- *    lengths   :: table of element sizes within the block
- *
- *    memory    :: memory object used for memory operations (alloc/realloc)
- */
-
-  typedef struct Z1_Table_
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    Z1_Table                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A Z1_Table is a simple object used to store an array of objects in */
+  /*    a single memory block.                                             */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    block     :: The address in memory of the growheap's block.  This  */
+  /*                 can change between two object adds, due to the use of */
+  /*                 reallocation.                                         */
+  /*                                                                       */
+  /*    cursor    :: The current top of the grow heap within its block.    */
+  /*                                                                       */
+  /*    capacity  :: The current size of the heap block.  Increments in    */
+  /*                 1kByte blocks.                                        */
+  /*                                                                       */
+  /*    init      :: A boolean.  Set when the table has been initialized   */
+  /*                 (the table user should set this field).               */
+  /*                                                                       */
+  /*    max_elems :: The maximum number of elements in the table.          */
+  /*                                                                       */
+  /*    num_elems :: The current number of elements in the table.          */
+  /*                                                                       */
+  /*    elements  :: A table of element addresses within the block.        */
+  /*                                                                       */
+  /*    lengths   :: A table of element sizes within the block.            */
+  /*                                                                       */
+  /*    memory    :: The memory object used for memory operations          */
+  /*                 (allocation/reallocation).                            */
+  /*                                                                       */
+  typedef struct  Z1_Table_
   {
     FT_Byte*   block;          /* current memory block           */
     FT_Int     cursor;         /* current cursor in memory block */
@@ -192,36 +203,44 @@
   } Z1_Table;
 
 
-/*************************************************************************
- *
- * <Struct> Z1_Parser
- *
- * <Description>
- *    A Z1_Parser is an object used to parse a Type 1 fonts very
- *    quickly.
- *
- * <Fields>
- *    stream        :: current input stream
- *    memory        :: current memory object
- *
- *    base_dict     :: pointer to top-level dictionary
- *    base_len      :: length in bytes of top dict
- *
- *    private_dict  :: pointer to private dictionary
- *    private_len   :: length in bytes of private dict
- *
- *    in_pfb        :: boolean. Indicates that we're in a .pfb file
- *    in_memory     :: boolean. Indicates a memory-based stream
- *    single_block  :: boolean. Indicates that the private dict
- *                     is stored in lieu of the base dict
- *
- *    cursor        :: current parser cursor
- *    limit         :: current parser limit (first byte after current
- *                     dictionary).
- *
- *    error         :: current parsing error
- */
-  typedef struct Z1_Parser_
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    Z1_Parser                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A Z1_Parser is an object used to parse a Type 1 fonts very         */
+  /*    quickly.                                                           */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    stream       :: The current input stream.                          */
+  /*                                                                       */
+  /*    memory       :: The current memory object.                         */
+  /*                                                                       */
+  /*    base_dict    :: A pointer to the top-level dictionary.             */
+  /*                                                                       */
+  /*    base_len     :: The length in bytes of the top dictionary.         */
+  /*                                                                       */
+  /*    private_dict :: A pointer to the private dictionary.               */
+  /*                                                                       */
+  /*    private_len  :: The length in bytes of the private dictionary.     */
+  /*                                                                       */
+  /*    in_pfb       :: A boolean.  Indicates that we are handling a PFB   */
+  /*                    file.                                              */
+  /*                                                                       */
+  /*    in_memory    :: A boolean.  Indicates a memory-based stream.       */
+  /*                                                                       */
+  /*    single_block :: A boolean.  Indicates that the private dictionary  */
+  /*                    is stored in lieu of the base dictionary.          */
+  /*                                                                       */
+  /*    cursor       :: The current parser cursor.                         */
+  /*                                                                       */
+  /*    limit        :: The current parser limit (first byte after the     */
+  /*                    current dictionary).                               */
+  /*                                                                       */
+  /*    error        :: The current parsing error.                         */
+  /*                                                                       */
+  typedef struct  Z1_Parser_
   {
     FT_Stream  stream;
     FT_Memory  memory;
@@ -264,41 +283,38 @@
   void  Z1_Release_Table( Z1_Table*  table );
 
   LOCAL_DEF
-  FT_Long  Z1_ToInt  ( Z1_Parser*  parser );
+  FT_Long  Z1_ToInt( Z1_Parser*  parser );
 
   LOCAL_DEF
-  FT_Long  Z1_ToFixed( Z1_Parser*  parser, FT_Int  power_ten );
+  FT_Long  Z1_ToFixed( Z1_Parser*  parser,
+                       FT_Int      power_ten );
 
   LOCAL_DEF
-  FT_Int  Z1_ToCoordArray( Z1_Parser* parser,
-                           FT_Int     max_coords,
-                           FT_Short*  coords );
+  FT_Int  Z1_ToCoordArray( Z1_Parser*  parser,
+                           FT_Int      max_coords,
+                           FT_Short*   coords );
 
   LOCAL_DEF
-  FT_Int  Z1_ToFixedArray( Z1_Parser* parser,
-                           FT_Int     max_values,
-                           FT_Fixed*  values,
-                           FT_Int     power_ten );
+  FT_Int  Z1_ToFixedArray( Z1_Parser*  parser,
+                           FT_Int      max_values,
+                           FT_Fixed*   values,
+                           FT_Int      power_ten );
 
 #if 0
   LOCAL_DEF
-  FT_String*  Z1_ToString( Z1_Parser* parser );
+  FT_String*  Z1_ToString( Z1_Parser*  parser );
 
   LOCAL_DEF
-  FT_Bool   Z1_ToBool( Z1_Parser* parser );
+  FT_Bool  Z1_ToBool( Z1_Parser*  parser );
 #endif
 
 
-
-
-
+  LOCAL_DEF
+  void  Z1_Skip_Spaces( Z1_Parser*  parser );
 
   LOCAL_DEF
-  void      Z1_Skip_Spaces( Z1_Parser*  parser );
-
-  LOCAL_DEF
-  void      Z1_ToToken( Z1_Parser*    parser,
-                        Z1_Token_Rec* token );
+  void  Z1_ToToken( Z1_Parser*     parser,
+                    Z1_Token_Rec*  token );
 
   LOCAL_FUNC
   void  Z1_ToTokenArray( Z1_Parser*     parser,
@@ -345,4 +361,3 @@
 
 
 /* END */
-

@@ -29,14 +29,18 @@
 #include <freetype/internal/tterrors.h>
 #include <freetype/tttags.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "ttpost.h"
 #include "ttload.h"
+
 #else
+
 #include <sfnt/ttpost.h>
 #include <sfnt/ttload.h>
-#endif
 
+#endif
 
 
   /*************************************************************************/

@@ -25,23 +25,27 @@
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/psnames.h>
 
+
 #ifdef FT_FLAT_COMPILE
 
 #include "ttgload.h"
 #include "ttpload.h"
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #include "ttinterp.h"
 #endif
 
-#else
+#else /* FT_FLAT_COMPILE */
 
 #include <truetype/ttgload.h>
 #include <truetype/ttpload.h>
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #include <truetype/ttinterp.h>
 #endif
 
-#endif
+#endif /* FT_FLAT_COMPILE */
+
 
 #include <freetype/internal/tterrors.h>
 

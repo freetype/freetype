@@ -123,10 +123,15 @@
 
 #else /* _STANDALONE_ */
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "ftgrays.h"
+
 #else
+
 #include <smooth/ftgrays.h>
+
 #endif
 
 

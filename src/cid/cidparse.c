@@ -22,11 +22,17 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1errors.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "cidparse.h"
+
 #else
+
 #include <cid/cidparse.h>
+
 #endif
+
 
 #include <string.h>     /* for strncmp() */
 

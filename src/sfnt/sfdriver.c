@@ -19,20 +19,25 @@
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/ftobjs.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "sfdriver.h"
 #include "ttload.h"
 #include "ttsbit.h"
 #include "ttpost.h"
 #include "ttcmap.h"
 #include "sfobjs.h"
+
 #else
+
 #include <sfnt/sfdriver.h>
 #include <sfnt/ttload.h>
 #include <sfnt/ttsbit.h>
 #include <sfnt/ttpost.h>
 #include <sfnt/ttcmap.h>
 #include <sfnt/sfobjs.h>
+
 #endif
 
 

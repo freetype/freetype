@@ -1,44 +1,33 @@
-/*******************************************************************
- *
- *  t1gload.h                                                   1.0
- *
- *    Type1 Glyph Loader.
- *
- *  Copyright 1996-1998 by
- *  David Turner, Robert Wilhelm, and Werner Lemberg.
- *
- *  This file is part of the FreeType project, and may only be used
- *  modified and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- *
- *  The Type 1 glyph loader uses three distinct objects to build
- *  scaled and hinted outlines from a charstrings program. These are :
- *
- *  - a glyph builder, Z1_Builder, used to store the built outline
- *
- *  - a glyph hinter, Z1_Hinter, used to record and apply the stem
- *    hints
- *
- *  - a charstrings interpreter, Z1_Decoder, used to parse the
- *    Type 1 charstrings stream, manage a stack and call the builder
- *    and/or hinter depending on the opcodes.
- *
- *  Ideally, a Type 2 glyph loader would only need to have its own
- *  T2_Decoder object (assuming the hinter is able to manage all
- *  kinds of hints).
- *
- ******************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  z1gload.h                                                              */
+/*                                                                         */
+/*    Experimental Type 1 Glyph Loader (specification).                    */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 
 #ifndef Z1GLOAD_H
 #define Z1GLOAD_H
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "z1objs.h"
+
 #else
+
 #include <type1z/z1objs.h>
+
 #endif
 
 
@@ -47,46 +36,55 @@
 #endif
 
 
-/*************************************************************************/
-/*                                                                       */
-/* <Structure> Z1_Builder                                                */
-/*                                                                       */
-/* <Description>                                                         */
-/*     a structure used during glyph loading to store its outline.       */
-/*                                                                       */
-/* <Fields>                                                              */
-/*    system :: current system object                                    */
-/*    face   :: current face object                                      */
-/*    glyph  :: current glyph slot                                       */
-/*                                                                       */
-/*    current :: current glyph outline                                   */
-/*    base    :: base glyph outline                                      */
-/*                                                                       */
-/*    max_points   :: maximum points in builder outline                  */
-/*    max_contours :: maximum contours in builder outline                */
-/*                                                                       */
-/*    last     :: last point position                                    */
-/*                                                                       */
-/*    scale_x  :: horizontal scale ( FUnits to sub-pixels )              */
-/*    scale_y  :: vertical scale   ( FUnits to sub-pixels )              */
-/*    pos_x    :: horizontal translation (composite glyphs)              */
-/*    pos_y    :: vertical translation   (composite glyph)               */
-/*                                                                       */
-/*    left_bearing  :: left side bearing point                           */
-/*    advance       :: horizontal advance vector                         */
-/*                                                                       */
-/*    path_begun    :: flag, indicates that a new path has begun         */
-/*    load_points   :: flag, if not set, no points are loaded            */
-/*                                                                       */
-/*    error         :: an error code that is only used to report         */
-/*                     memory allocation problems..                      */
-/*                                                                       */
-/*    metrics_only  :: a boolean indicating that we only want to         */
-/*                     compute the metrics of a given glyph, not load    */
-/*                     all of its points..                               */
-/*                                                                       */
-
-  typedef struct Z1_Builder_
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Structure>                                                           */
+  /*    Z1_Builder                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A structure used during glyph loading to store its outline.        */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    memory       :: The current memory object.                         */
+  /*                                                                       */
+  /*    face         :: The current face object.                           */
+  /*                                                                       */
+  /*    glyph        :: The current glyph slot.                            */
+  /*                                                                       */
+  /*    loader       :: The current glyph loader.                          */
+  /*                                                                       */
+  /*    current      :: The current glyph outline.                         */
+  /*                                                                       */
+  /*    base         :: The base glyph outline.                            */
+  /*                                                                       */
+  /*    last         :: The last point position.                           */
+  /*                                                                       */
+  /*    scale_x      :: The horizontal scale (FUnits to sub-pixels).       */
+  /*                                                                       */
+  /*    scale_y      :: The vertical scale (FUnits to sub-pixels).         */
+  /*                                                                       */
+  /*    pos_x        :: The horizontal translation (for composite glyphs). */
+  /*                                                                       */
+  /*    pos_y        :: The vertical translation (for composite glyphs).   */
+  /*                                                                       */
+  /*    left_bearing :: The left side bearing point.                       */
+  /*                                                                       */
+  /*    advance      :: The horizontal advance vector.                     */
+  /*                                                                       */
+  /*    no_recurse   ::                                                    */
+  /*                                                                       */
+  /*    bbox         :: The glyph's bounding box.                          */
+  /*                                                                       */
+  /*    path_begun   :: A flag which indicates that a new path has begun.  */
+  /*                                                                       */
+  /*    load_points  :: A flag which indicates, if not set, that no points */
+  /*                    are loaded.                                        */
+  /*                                                                       */
+  /*    error        :: The current error code.                            */
+  /*                                                                       */
+  /*    metrics_only :: A flag whether to compute metrics only.            */
+  /*                                                                       */
+  typedef struct  Z1_Builder_
   {
     FT_Memory        memory;
     T1_Face          face;
@@ -119,7 +117,7 @@
 
 
   /* execution context charstring zone */
-  typedef struct Z1_Decoder_Zone_
+  typedef struct  Z1_Decoder_Zone_
   {
     FT_Byte*  base;
     FT_Byte*  limit;
@@ -128,47 +126,41 @@
   } Z1_Decoder_Zone;
 
 
-  typedef struct Z1_Decoder_
+  typedef struct  Z1_Decoder_
   {
-    Z1_Builder         builder;
+    Z1_Builder        builder;
 
-    FT_Int             stack[ T1_MAX_CHARSTRINGS_OPERANDS ];
-    FT_Int*            top;
+    FT_Int            stack[T1_MAX_CHARSTRINGS_OPERANDS];
+    FT_Int*           top;
 
-    Z1_Decoder_Zone    zones[ T1_MAX_SUBRS_CALLS+1 ];
-    Z1_Decoder_Zone*   zone;
+    Z1_Decoder_Zone   zones[T1_MAX_SUBRS_CALLS + 1];
+    Z1_Decoder_Zone*  zone;
 
-    FT_Int             flex_state;
-    FT_Int             num_flex_vectors;
-    FT_Vector          flex_vectors[7];
+    FT_Int            flex_state;
+    FT_Int            num_flex_vectors;
+    FT_Vector         flex_vectors[7];
 
-    T1_Blend*          blend;  /* for multiple masters */
+    T1_Blend*         blend;  /* for multiple masters */
 
   } Z1_Decoder;
 
 
+  LOCAL_DEF
+  void  Z1_Init_Builder( Z1_Builder*   builder,
+                         T1_Face       face,
+                         Z1_Size       size,
+                         Z1_GlyphSlot  glyph );
 
   LOCAL_DEF
-  void  Z1_Init_Builder( Z1_Builder*             builder,
-                         T1_Face                 face,
-                         Z1_Size                 size,
-                         Z1_GlyphSlot            glyph );
+  void  Z1_Done_Builder( Z1_Builder*  builder );
 
   LOCAL_DEF
-  void Z1_Done_Builder( Z1_Builder*  builder );
+  void  Z1_Init_Decoder( Z1_Decoder*  decoder );
 
-
-  LOCAL_DEF
-  void  Z1_Init_Decoder( Z1_Decoder* decoder );
-
-
-  /* Compute the maximum advance width of a font through quick parsing */
   LOCAL_DEF
   FT_Error  Z1_Compute_Max_Advance( T1_Face  face,
-                                    FT_Int  *max_advance );
+                                    FT_Int*  max_advance );
 
-
-  /* This function is exported, because it is used by the T1Dump utility */
   LOCAL_DEF
   FT_Error   Z1_Parse_CharStrings( Z1_Decoder*  decoder,
                                    FT_Byte*     charstring_base,
@@ -176,8 +168,6 @@
                                    FT_Int       num_subrs,
                                    FT_Byte**    subrs_base,
                                    FT_Int*      subrs_len );
-
-
 
   LOCAL_DEF
   FT_Error  Z1_Load_Glyph( Z1_GlyphSlot  glyph,
@@ -190,4 +180,8 @@
   }
 #endif
 
+
 #endif /* Z1GLOAD_H */
+
+
+/* END */

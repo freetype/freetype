@@ -19,10 +19,15 @@
 #ifndef CIDAFM_H
 #define CIDAFM_H
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "cidobjs.h"
+
 #else
+
 #include <cid/cidobjs.h>
+
 #endif
 
 

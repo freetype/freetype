@@ -24,12 +24,17 @@
 #include <freetype/internal/t2errors.h>
 #include <freetype/tttags.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "t2load.h"
 #include "t2parse.h"
+
 #else
+
 #include <cff/t2load.h>
 #include <cff/t2parse.h>
+
 #endif
 
 
@@ -322,7 +327,6 @@
       return name;
     }
   }
-
 
 
   /*************************************************************************/

@@ -19,12 +19,16 @@
 #ifndef Z1AFM_H
 #define Z1AFM_H
 
-#ifdef FT_FLAT_COMPILE
-#include "z1objs.h"
-#else
-#include <type1z/z1objs.h>
-#endif
 
+#ifdef FT_FLAT_COMPILE
+
+#include "z1objs.h"
+
+#else
+
+#include <type1z/z1objs.h>
+
+#endif
 
 
 #ifdef __cplusplus

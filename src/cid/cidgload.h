@@ -19,11 +19,17 @@
 #ifndef CIDGLOAD_H
 #define CIDGLOAD_H
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "cidobjs.h"
+
 #else
+
 #include <cid/cidobjs.h>
+
 #endif
+
 
 #ifdef __cplusplus
   extern "C" {

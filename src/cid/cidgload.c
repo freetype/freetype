@@ -17,12 +17,17 @@
 
 
 #ifdef FT_FLAT_COMPILE
+
 #include "cidload.h"
 #include "cidgload.h"
+
 #else
+
 #include <cid/cidload.h>
 #include <cid/cidgload.h>
+
 #endif
+
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>

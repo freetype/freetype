@@ -19,13 +19,19 @@
 #include <freetype/internal/psnames.h>
 #include <freetype/internal/ftobjs.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "psmodule.h"
 #include "pstables.h"
+
 #else
+
 #include <psnames/psmodule.h>
 #include <psnames/pstables.h>
+
 #endif
+
 
 #include <stdlib.h>     /* for qsort()             */
 #include <string.h>     /* for strcmp(), strncpy() */

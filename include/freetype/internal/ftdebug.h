@@ -78,11 +78,19 @@
     trace_ttpload,   /* TT data/program loader  (ttpload.c)  */
 
     /* Type 1 driver components */
-    trace_t1objs,
-    trace_t1load,
+    trace_t1driver,
     trace_t1gload,
     trace_t1hint,
-    trace_t1driver,
+    trace_t1load,
+    trace_t1objs,
+
+    /* experimental Type 1 driver components */
+    trace_z1driver,
+    trace_z1gload,
+    trace_z1hint,
+    trace_z1load,
+    trace_z1objs,
+    trace_z1parse,
 
     /* Type 2 driver components */
     trace_t2driver,

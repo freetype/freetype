@@ -89,8 +89,8 @@
   } T2_Transform;
 
 
- /* this is only used in the case of a pure CFF font with no charmap */
-  typedef struct T2_CharMapRec_
+  /* this is only used in the case of a pure CFF font with no charmap */
+  typedef struct  T2_CharMapRec_
   {
     TT_CharMapRec  root;
     PS_Unicodes    unicodes;

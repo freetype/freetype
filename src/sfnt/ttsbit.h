@@ -19,12 +19,16 @@
 #ifndef TTSBIT_H
 #define TTSBIT_H
 
-#ifdef FT_FLAT_COMPILE
-#include "ttload.h"
-#else
-#include <sfnt/ttload.h>
-#endif
 
+#ifdef FT_FLAT_COMPILE
+
+#include "ttload.h"
+
+#else
+
+#include <sfnt/ttload.h>
+
+#endif
 
 
 #ifdef __cplusplus

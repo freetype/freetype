@@ -20,10 +20,15 @@
 #include <freetype/internal/ftcalc.h>
 #include <freetype/ftsystem.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "ttinterp.h"
+
 #else
+
 #include <truetype/ttinterp.h>
+
 #endif
 
 

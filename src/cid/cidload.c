@@ -23,11 +23,17 @@
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/t1errors.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "cidload.h"
+
 #else
+
 #include <cid/cidload.h>
+
 #endif
+
 
 #include <stdio.h>
 #include <ctype.h>  /* for isspace(), isalnum() */
@@ -243,11 +249,17 @@
   static
   const CID_Field_Rec  t1_field_records[] =
   {
+
 #ifdef FT_FLAT_COMPILE
+
 #include "cidtokens.h"
+
 #else
+
 #include <cid/cidtokens.h>
+
 #endif
+
     { 0, 0, 0, 0, 0, 0, 0, 0 }
   };
 

@@ -19,15 +19,18 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/tterrors.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "ttload.h"
 #include "ttcmap.h"
+
 #else
+
 #include <sfnt/ttload.h>
 #include <sfnt/ttcmap.h>
+
 #endif
-
-
 
 
   /*************************************************************************/

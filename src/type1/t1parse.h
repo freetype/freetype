@@ -32,10 +32,15 @@
 
 #include <freetype/internal/ftstream.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "t1tokens.h"
+
 #else
+
 #include <type1/t1tokens.h>
+
 #endif
 
 

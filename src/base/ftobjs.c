@@ -2014,7 +2014,7 @@
 
       metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
                                     face->units_per_EM );
-                                    
+
       ft_recompute_scaled_metrics( face, metrics );
     }
 

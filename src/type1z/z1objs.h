@@ -1,19 +1,20 @@
-/*******************************************************************
- *
- *  t1objs.h                                                    1.0
- *
- *    Type1 objects definition.
- *
- *  Copyright 1996-1999 by
- *  David Turner, Robert Wilhelm, and Werner Lemberg.
- *
- *  This file is part of the FreeType project, and may only be used
- *  modified and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- ******************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  z1objs.h                                                               */
+/*                                                                         */
+/*    Experimental Type 1 objects manager (specification).                 */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 
 #ifndef Z1OBJS_H
 #define Z1OBJS_H
@@ -31,86 +32,91 @@
   typedef struct Z1_Size_Hints_   Z1_Size_Hints;
   typedef struct Z1_Glyph_Hints_  Z1_Glyph_Hints;
 
-  /***********************************************************************/
-  /*                                                                     */
-  /* <Type> Z1_Driver                                                    */
-  /*                                                                     */
-  /* <Description>                                                       */
-  /*    A handle to a Type 1 driver object.                              */
-  /*                                                                     */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    Z1_Driver                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a Type 1 driver object.                                */
+  /*                                                                       */
   typedef struct Z1_DriverRec_   *Z1_Driver;
 
 
-  /***********************************************************************/
-  /*                                                                     */
-  /* <Type> Z1_Size                                                      */
-  /*                                                                     */
-  /* <Description>                                                       */
-  /*    A handle to a Type 1 size object.                                */
-  /*                                                                     */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    Z1_Size                                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a Type 1 size object.                                  */
+  /*                                                                       */
   typedef struct Z1_SizeRec_*  Z1_Size;
 
 
-  /***********************************************************************/
-  /*                                                                     */
-  /* <Type> Z1_GlyphSlot                                                 */
-  /*                                                                     */
-  /* <Description>                                                       */
-  /*    A handle to a Type 1 glyph slot object.                          */
-  /*                                                                     */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    Z1_GlyphSlot                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a Type 1 glyph slot object.                            */
+  /*                                                                       */
   typedef struct Z1_GlyphSlotRec_*  Z1_GlyphSlot;
 
 
-  /***********************************************************************/
-  /*                                                                     */
-  /* <Type> Z1_CharMap                                                   */
-  /*                                                                     */
-  /* <Description>                                                       */
-  /*    A handle to a Type 1 character mapping object.                   */
-  /*                                                                     */
-  /* <Note>                                                              */
-  /*    The Type 1 format doesn't use a charmap but an encoding table.   */
-  /*    The driver is responsible for making up charmap objects          */
-  /*    corresponding to these tables..                                  */
-  /*                                                                     */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    Z1_CharMap                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a Type 1 character mapping object.                     */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The Type 1 format doesn't use a charmap but an encoding table.     */
+  /*    The driver is responsible for making up charmap objects            */
+  /*    corresponding to these tables.                                     */
+  /*                                                                       */
   typedef struct Z1_CharMapRec_*   Z1_CharMap;
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /*                  HERE BEGINS THE TYPE1 SPECIFIC STUFF                 */
+  /*                                                                       */
+  /*************************************************************************/
 
- /**************************************************************************/
- /*                                                                        */
- /*    NOW BEGINS THE TYPE1 SPECIFIC STUFF ..............................  */
- /*                                                                        */
- /**************************************************************************/
 
-
-  /***************************************************/
-  /*                                                 */
-  /*  Z1_Size :                                      */
-  /*                                                 */
-  /*    Type 1 size record..                         */
-  /*                                                 */
-
-  typedef struct Z1_SizeRec_
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    Z1_SizeRec                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Type 1 size record.                                                */
+  /*                                                                       */
+  typedef struct  Z1_SizeRec_
   {
     FT_SizeRec      root;
     FT_Bool         valid;
     Z1_Size_Hints*  hints;  /* defined in the hinter. This allows */
                             /* us to experiment with different    */
                             /* hinting schemes without having to  */
-                            /* change 't1objs' each time..        */
+                            /* change `z1objs' each time.         */
   } Z1_SizeRec;
 
 
-
-  /***************************************************/
-  /*                                                 */
-  /*  Z1_GlyphSlot :                                 */
-  /*                                                 */
-  /*    TrueDoc glyph record..                       */
-  /*                                                 */
-
-  typedef struct Z1_GlyphSlotRec_
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    Z1_GlyphSlotRec                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Type 1 glyph slot record.                                          */
+  /*                                                                       */
+  typedef struct  Z1_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 
@@ -128,82 +134,22 @@
   } Z1_GlyphSlotRec;
 
 
-/*******************************************************************
- *
- *  <Function>  Z1_Init_Face
- *
- *  <Description>
- *     Initialise a given Type 1 face object
- *
- *  <Input>
- *     face_index :: index of font face in resource
- *     resource   :: source font resource
- *     face       ::  face record to build
- *
- *  <Return>
- *     Error code.
- *
- ******************************************************************/
-
   LOCAL_DEF
-  FT_Error  Z1_Init_Face( FT_Stream     stream,
-                          T1_Face       face,
-                          FT_Int        face_index,
-                          FT_Int        num_params,
-                          FT_Parameter* params );
-
-
-
-/*******************************************************************
- *
- *  <Function> Z1_Done_Face
- *
- *  <Description>
- *     Finalise a given face object
- *
- *  <Input>
- *     face  :: handle  to the face object to destroy
- *
- ******************************************************************/
+  FT_Error  Z1_Init_Face( FT_Stream      stream,
+                          T1_Face        face,
+                          FT_Int         face_index,
+                          FT_Int         num_params,
+                          FT_Parameter*  params );
 
   LOCAL_DEF
   void  Z1_Done_Face( T1_Face  face );
 
-
-/*******************************************************************
- *
- *  <Function>  Z1_Init_Driver
- *
- *  <Description>
- *     Initialise a given Type 1 driver object
- *
- *  <Input>
- *     driver ::  handle to target driver object
- *
- *  <Return>
- *     Error code.
- *
- ******************************************************************/
-
   LOCAL_DEF
   FT_Error  Z1_Init_Driver( Z1_Driver  driver );
 
-
-
-/*******************************************************************
- *
- *  <Function> Z1_Done_Driver
- *
- *  <Description>
- *     finalise a given Type 1 driver
- *
- *  <Input>
- *     driver  :: handle to target Type 1 driver
- *
- ******************************************************************/
-
   LOCAL_DEF
   void  Z1_Done_Driver( Z1_Driver  driver );
+
 
 #ifdef __cplusplus
   }

@@ -26,15 +26,23 @@
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/psnames.h>
 
+
 #ifdef FT_FLAT_COMPILE
+
 #include "t2objs.h"
 #include "t2load.h"
+
 #else
+
 #include <cff/t2objs.h>
 #include <cff/t2load.h>
+
 #endif
 
+
 #include <freetype/internal/t2errors.h>
+
+#include <string.h>         /* for strlen() */
 
 
   /*************************************************************************/
@@ -54,13 +62,15 @@
   /*************************************************************************/
 
   static
-  FT_String*   T2_StrCopy( FT_Memory  memory, const FT_String*  source )
+  FT_String*  T2_StrCopy( FT_Memory         memory,
+                          const FT_String*  source )
   {
-    FT_Error   error;
-    FT_String* result = 0;
-    FT_Int     len = (FT_Int)strlen(source);
-    
-    if ( !ALLOC( result, len+1 ) )
+    FT_Error    error;
+    FT_String*  result = 0;
+    FT_Int      len = (FT_Int)strlen( source );
+
+
+    if ( !ALLOC( result, len + 1 ) )
     {
       MEM_Copy( result, source, len );
       result[len] = 0;
@@ -70,12 +80,13 @@
 
 
 #if 0
+
   /* this function is used to build a Unicode charmap from the glyph names */
-  /* in a file..                                                           */
+  /* in a file                                                             */
   static
-  FT_Error   CFF_Build_Unicode_Charmap( T2_Face             face,
-                                        FT_ULong            base_offset,
-                                        PSNames_Interface*  psnames )
+  FT_Error  CFF_Build_Unicode_Charmap( T2_Face             face,
+                                       FT_ULong            base_offset,
+                                       PSNames_Interface*  psnames )
   {
     CFF_Font*       font = (CFF_Font*)face->extra.data;
     FT_Memory       memory = FT_FACE_MEMORY(face);
@@ -87,8 +98,9 @@
     FT_Byte         format;
     FT_Stream       stream = face->root.stream;
 
+
     charset_offset = dict->charset_offset;
-    if (!charset_offset)
+    if ( !charset_offset )
     {
       FT_ERROR(( "CFF.Build_Unicode_Charmap: charset table is missing\n" ));
       error = FT_Err_Invalid_File_Format;
@@ -96,7 +108,7 @@
     }
 
     /* allocate the charmap */
-    if ( ALLOC( face->charmap, 
+    if ( ALLOC( face->charmap, ...
 
     /* seek to charset table and allocate glyph names table */
     if ( FILE_Seek( base_offset + charset_offset )           ||
@@ -104,19 +116,19 @@
       goto Exit;
 
     /* now, read each glyph name and store it in the glyph name table */
-    if ( READ_Byte(format) )
+    if ( READ_Byte( format ) )
       goto Fail;
-      
-    switch (format)
+
+    switch ( format )
     {
       case 0:  /* format 0 - one SID per glyph */
         {
           const char**  gname = glyph_names;
           const char**  limit = gname + num_glyphs;
-          
+
           if ( ACCESS_Frame( num_glyphs*2 ) )
             goto Fail;
-          
+
           for ( ; gname < limit; gname++ )
             gname[0] = T2_Get_String( &font->string_index,
                                       GET_UShort(),
@@ -124,22 +136,22 @@
           FORGET_Frame();
           break;
         }
-        
+
       case 1:  /* format 1 - sequential ranges                    */
       case 2:  /* format 2 - sequential ranges with 16-bit counts */
         {
           const char**  gname = glyph_names;
           const char**  limit = gname + num_glyphs;
           FT_UInt       len = 3;
-          
+
           if (format == 2)
             len++;
-          
+
           while (gname < limit)
           {
             FT_UInt   first;
             FT_UInt   count;
-              
+
             if ( ACCESS_Frame( len ) )
               goto Fail;
 
@@ -150,7 +162,7 @@
               count = GET_Byte();
 
             FORGET_Frame();
-            
+
             for ( ; count > 0; count-- )
             {
               gname[0] = T2_Get_String( &font->string_index,
@@ -162,7 +174,7 @@
           }
           break;
         }
-        
+
       default:   /* unknown charset format  !! */
         FT_ERROR(( "CFF: unknown charset format !!\n" ));
         error = FT_Err_Invalid_File_Format;
@@ -175,14 +187,14 @@
   Fail:
     for ( n = 0; n < num_glyphs; n++ )
       FREE( glyph_names[n] );
-      
+
     FREE( glyph_names );
-        
+
   Exit:
     return error;
   }
-#endif
 
+#endif /* 0 */
 
 
   static
@@ -233,7 +245,7 @@
     return ft_encoding_none;
   }
 
-  
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -270,13 +282,14 @@
     FT_Bool             pure_cff    = 1;
     FT_Bool             sfnt_format = 0;
 
+
     sfnt = (SFNT_Interface*)FT_Get_Module_Interface(
              face->root.driver->root.library, "sfnt" );
     if ( !sfnt )
       goto Bad_Format;
 
     psnames = (PSNames_Interface*)FT_Get_Module_Interface(
-             face->root.driver->root.library, "psnames" );
+                face->root.driver->root.library, "psnames" );
 
     /* create input stream from resource */
     if ( FILE_Seek( 0 ) )
@@ -296,27 +309,28 @@
       if ( face_index < 0 )
         return T2_Err_Ok;
 
-      sfnt_format = 1;  
+      sfnt_format = 1;
 
-      /* now, the font can be either an OpenType/CFF font, or a SVG CEF font */
-      /* in the later case, it doesn't have a "head" table..                 */
+      /* now, the font can be either an OpenType/CFF font, or a SVG CEF */
+      /* font in the later case; it doesn't have a `head' table         */
       error = face->goto_table( face, TTAG_head, stream, 0 );
-      if (!error)
+      if ( !error )
       {
         pure_cff = 0;
 
         /* Load font directory */
-        error = sfnt->load_face( stream, face, face_index, num_params, params );
+        error = sfnt->load_face( stream, face,
+                                 face_index, num_params, params );
         if ( error )
           goto Exit;
       }
       else
       {
-        /* load the "cmap" table by hand */
+        /* load the `cmap' table by hand */
         error = sfnt->load_charmaps( face, stream );
-        if (error)
+        if ( error )
           goto Exit;
-          
+
         /* XXX: for now, we don't load the GPOS table, as OpenType Layout */
         /* support will be added later to FreeType 2 as a separate module */
       }
@@ -328,11 +342,10 @@
     }
     else
     {
-      /* rewind to start of file, we're going to load a pure-CFF font */
-      (void)FILE_Seek(0);
+      /* rewind to start of file; we are going to load a pure-CFF font */
+      (void)FILE_Seek( 0 );
       error = FT_Err_Ok;
     }
-
 
     /* now load and parse the CFF table in the file */
     {
@@ -347,7 +360,7 @@
         goto Exit;
 
       base_offset = FILE_Pos();
-      
+
       face->extra.data = cff;
       error = T2_Load_CFF_Font( stream, face_index, cff );
       if ( error )
@@ -355,125 +368,131 @@
 
       /* Complement the root flags with some interesting information. */
       /* Note that this is only necessary for pure CFF and CEF fonts  */
-      
+
       root = &face->root;
-      if (pure_cff)
+      if ( pure_cff )
       {
         CFF_Font_Dict*  dict = &cff->top_font.font_dict;
-      
-        /* we need the psnames module for pure-CFF and CEF formats */
-        if (!psnames)
+
+
+        /* we need the `PSNames' module for pure-CFF and CEF formats */
+        if ( !psnames )
         {
-          FT_ERROR(( "cannot open CFF & CEF fonts without the 'psnames' module\n" ));
+          FT_ERROR(( "T2_Init_Face:" ));
+          FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
+          FT_ERROR(( "             " ));
+          FT_ERROR(( " without the `PSNames' module\n" ));
           goto Bad_Format;
         }
-        
+
         /* compute number of glyphs */
-        if (dict->cid_registry)
+        if ( dict->cid_registry )
           root->num_glyphs = dict->cid_count;
         else
           root->num_glyphs = cff->charstrings_index.count;
-        
+
         /* set global bbox, as well as EM size */
-        root->units_per_EM = FT_DivFix( 1000L << 16, dict->font_matrix.yy ) >> 16;
-        root->bbox         = dict->font_bbox;
-        root->ascender     = root->bbox.yMax;
-        root->descender    = root->bbox.yMin;
-        
+        root->units_per_EM = FT_DivFix( 1000L << 16,
+                                        dict->font_matrix.yy ) >> 16;
+        root->bbox      = dict->font_bbox;
+        root->ascender  = root->bbox.yMax;
+        root->descender = root->bbox.yMin;
+
         /* retrieve font family & style name */
         root->family_name = T2_Get_Name( &cff->name_index, face_index );
-        if (dict->cid_registry)
+        if ( dict->cid_registry )
         {
-          root->style_name  = T2_StrCopy( memory, "Regular" );  /* XXXX */
+          root->style_name = T2_StrCopy( memory, "Regular" );  /* XXXX */
         }
         else
         {
-          root->style_name  = T2_Get_String( &cff->string_index,
-                                             dict->weight,
-                                             psnames );
+          root->style_name = T2_Get_String( &cff->string_index,
+                                            dict->weight,
+                                            psnames );
         }
-        
-          /*********************************************************************/
-          /*                                                                   */
-          /* Compute face flags.                                               */
-          /*                                                                   */
-          flags = FT_FACE_FLAG_SCALABLE  |    /* scalable outlines */
-                  FT_FACE_FLAG_HORIZONTAL;    /* horizontal data   */
 
-          if (sfnt_format)
-            flags |= FT_FACE_FLAG_SFNT;
-    
-          /* fixed width font? */
-          if ( dict->is_fixed_pitch )
-            flags |= FT_FACE_FLAG_FIXED_WIDTH;
+        /*******************************************************************/
+        /*                                                                 */
+        /* Compute face flags.                                             */
+        /*                                                                 */
+        flags = FT_FACE_FLAG_SCALABLE  |    /* scalable outlines */
+                FT_FACE_FLAG_HORIZONTAL;    /* horizontal data   */
+
+        if ( sfnt_format )
+          flags |= FT_FACE_FLAG_SFNT;
+
+        /* fixed width font? */
+        if ( dict->is_fixed_pitch )
+          flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
 /* XXXX: WE DO NOT SUPPORT KERNING METRICS IN THE GPOS TABLE FOR NOW */
 #if 0
-          /* kerning available ? */
-          if ( face->kern_pairs )
-            flags |= FT_FACE_FLAG_KERNING;
+        /* kerning available? */
+        if ( face->kern_pairs )
+          flags |= FT_FACE_FLAG_KERNING;
 #endif
 
-          root->face_flags = flags;
-    
-          /*********************************************************************/
-          /*                                                                   */
-          /* Compute style flags.                                              */
-          /*                                                                   */
-          flags = 0;
-    
-          if ( dict->italic_angle )
-            flags |= FT_STYLE_FLAG_ITALIC;
-            
-          /* XXXX : may not be correct .. */
-          if ( cff->top_font.private_dict.force_bold )
-            flags |= FT_STYLE_FLAG_BOLD;
-            
-          root->style_flags = flags;
-          
-          /* set the charmaps if any */
-          if (sfnt_format)
-          {
-            /*********************************************************************/
-            /*                                                                   */
-            /* Polish the charmaps.                                              */
-            /*                                                                   */
-            /*   Try to set the charmap encoding according to the platform &     */
-            /*   encoding ID of each charmap.                                    */
-            /*                                                                   */
-            TT_CharMap  charmap;
-            FT_Int      n;
+        root->face_flags = flags;
 
-            charmap            = face->charmaps;
-            root->num_charmaps = face->num_charmaps;
-      
-            /* allocate table of pointers */
-            if ( ALLOC_ARRAY( root->charmaps, root->num_charmaps, FT_CharMap ) )
-              goto Exit;
-      
-            for ( n = 0; n < root->num_charmaps; n++, charmap++ )
-            {
-              FT_Int  platform = charmap->cmap.platformID;
-              FT_Int  encoding = charmap->cmap.platformEncodingID;
-      
-      
-              charmap->root.face        = (FT_Face)face;
-              charmap->root.platform_id = platform;
-              charmap->root.encoding_id = encoding;
-              charmap->root.encoding    = find_encoding( platform, encoding );
-      
-              /* now, set root->charmap with a unicode charmap */
-              /* wherever available                            */
-              if ( !root->charmap                                &&
-                   charmap->root.encoding == ft_encoding_unicode )
-                root->charmap = (FT_CharMap)charmap;
-      
-              root->charmaps[n] = (FT_CharMap)charmap;
-            }
+        /*******************************************************************/
+        /*                                                                 */
+        /* Compute style flags.                                            */
+        /*                                                                 */
+        flags = 0;
+
+        if ( dict->italic_angle )
+          flags |= FT_STYLE_FLAG_ITALIC;
+
+        /* XXX: may not be correct */
+        if ( cff->top_font.private_dict.force_bold )
+          flags |= FT_STYLE_FLAG_BOLD;
+
+        root->style_flags = flags;
+
+        /* set the charmaps if any */
+        if ( sfnt_format )
+        {
+          /*****************************************************************/
+          /*                                                               */
+          /* Polish the charmaps.                                          */
+          /*                                                               */
+          /*   Try to set the charmap encoding according to the platform & */
+          /*   encoding ID of each charmap.                                */
+          /*                                                               */
+          TT_CharMap  charmap;
+          FT_Int      n;
+
+
+          charmap            = face->charmaps;
+          root->num_charmaps = face->num_charmaps;
+
+          /* allocate table of pointers */
+          if ( ALLOC_ARRAY( root->charmaps, root->num_charmaps, FT_CharMap ) )
+            goto Exit;
+
+          for ( n = 0; n < root->num_charmaps; n++, charmap++ )
+          {
+            FT_Int  platform = charmap->cmap.platformID;
+            FT_Int  encoding = charmap->cmap.platformEncodingID;
+
+
+            charmap->root.face        = (FT_Face)face;
+            charmap->root.platform_id = platform;
+            charmap->root.encoding_id = encoding;
+            charmap->root.encoding    = find_encoding( platform, encoding );
+
+            /* now, set root->charmap with a unicode charmap */
+            /* wherever available                            */
+            if ( !root->charmap                                &&
+                 charmap->root.encoding == ft_encoding_unicode )
+              root->charmap = (FT_CharMap)charmap;
+
+            root->charmaps[n] = (FT_CharMap)charmap;
           }
+        }
       }
     }
-    
+
   Exit:
     return error;
 

@@ -1,30 +1,35 @@
-/*******************************************************************
- *
- *  t1driver.c
- *
- *    High-level Type1 driver interface for FreeType 2.0
- *
- *  Copyright 1996-1998 by
- *  David Turner, Robert Wilhelm, and Werner Lemberg.
- *
- *  This file is part of the FreeType project, and may only be used,
- *  modified, and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- ******************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  z1driver.c                                                             */
+/*                                                                         */
+/*    Experimental Type 1 driver interface (body).                         */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 
 #ifdef FT_FLAT_COMPILE
+
 #include "z1driver.h"
 #include "z1gload.h"
 #include "z1load.h"
 #include "z1afm.h"
+
 #else
+
 #include <type1z/z1driver.h>
 #include <type1z/z1gload.h>
 #include <type1z/z1load.h>
 #include <type1z/z1afm.h>
+
 #endif
 
 
@@ -32,8 +37,18 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psnames.h>
 
+#include <string.h>     /* for strcmp() */
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t1driver
+#define FT_COMPONENT  trace_z1driver
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -66,8 +81,8 @@
   FT_Module_Interface  Get_Interface( FT_Driver         driver,
                                       const FT_String*  interface )
   {
-    FT_UNUSED(driver);
-    FT_UNUSED(interface);
+    FT_UNUSED( driver );
+    FT_UNUSED( interface );
     
 #ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
@@ -84,6 +99,8 @@
 
 
 #ifndef Z1_CONFIG_OPTION_NO_AFM
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -124,16 +141,20 @@
   {
     Z1_AFM*  afm;
 
+
     kerning->x = 0;
     kerning->y = 0;
 
     afm = (Z1_AFM*)face->afm_data;
-    if (afm)
+    if ( afm )
       Z1_Get_Kerning( afm, left_glyph, right_glyph, kerning );
 
     return T1_Err_Ok;
   }
-#endif
+
+
+#endif /* T1_CONFIG_OPTION_NO_AFM */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -158,147 +179,128 @@
     FT_UInt             result = 0;
     PSNames_Interface*  psnames;
 
-    face = (T1_Face)charmap->face;
+
+    face    = (T1_Face)charmap->face;
     psnames = (PSNames_Interface*)face->psnames;
-    if (psnames)
-      switch (charmap->encoding)
+    if ( psnames )
+      switch ( charmap->encoding )
       {
-       /********************************************************************/
-       /*                                                                  */
-       /* Unicode encoding support                                         */
-       /*                                                                  */
-        case ft_encoding_unicode:
-          {
-            /* use the "psnames" module to synthetize the Unicode charmap */
-            result = psnames->lookup_unicode( &face->unicode_map,
-                                              (FT_ULong)charcode );
+        /*******************************************************************/
+        /*                                                                 */
+        /* Unicode encoding support                                        */
+        /*                                                                 */
+      case ft_encoding_unicode:
+        /* use the `PSNames' module to synthetize the Unicode charmap */
+        result = psnames->lookup_unicode( &face->unicode_map,
+                                          (FT_ULong)charcode );
 
-            /* the function returns 0xFFFF when the Unicode charcode has */
-            /* no corresponding glyph..                                  */
-            if (result == 0xFFFF)
-              result = 0;
-            goto Exit;
-          }
+        /* the function returns 0xFFFF if the Unicode charcode has */
+        /* no corresponding glyph                                  */
+        if ( result == 0xFFFF )
+          result = 0;
+        goto Exit;
 
-       /********************************************************************/
-       /*                                                                  */
-       /* Custom Type 1 encoding                                           */
-       /*                                                                  */
-        case ft_encoding_adobe_custom:
+        /*******************************************************************/
+        /*                                                                 */
+        /* Custom Type 1 encoding                                          */
+        /*                                                                 */
+      case ft_encoding_adobe_custom:
+        {
+          T1_Encoding*  encoding = &face->type1.encoding;
+
+
+          if ( charcode >= encoding->code_first &&
+               charcode <= encoding->code_last  )
+            result = encoding->char_index[charcode];
+          goto Exit;
+        }
+
+        /*******************************************************************/
+        /*                                                                 */
+        /* Adobe Standard & Expert encoding support                        */
+        /*                                                                 */
+      default:
+        if ( charcode < 256 )
+        {
+          FT_UInt      code;
+          FT_Int       n;
+          const char*  glyph_name;
+
+
+          code = psnames->adobe_std_encoding[charcode];
+          if ( charmap->encoding == ft_encoding_adobe_expert )
+            code = psnames->adobe_expert_encoding[charcode];
+
+          glyph_name = psnames->adobe_std_strings( code );
+          if ( !glyph_name )
+            break;
+
+          for ( n = 0; n < face->type1.num_glyphs; n++ )
           {
-            T1_Encoding*  encoding = &face->type1.encoding;
-            if (charcode >= encoding->code_first &&
-                charcode <= encoding->code_last)
+            const char*  gname = face->type1.glyph_names[n];
+
+
+            if ( gname && gname[0] == glyph_name[0] &&
+                 strcmp( gname, glyph_name ) == 0   )
             {
-              result = encoding->char_index[charcode];
+              result = n;
+              break;
             }
-            goto Exit;
           }
-
-       /********************************************************************/
-       /*                                                                  */
-       /* Adobe Standard & Expert encoding support                         */
-       /*                                                                  */
-       default:
-         if (charcode < 256)
-         {
-           FT_UInt      code;
-           FT_Int       n;
-           const char*  glyph_name;
-
-           code = psnames->adobe_std_encoding[charcode];
-           if (charmap->encoding == ft_encoding_adobe_expert)
-             code = psnames->adobe_expert_encoding[charcode];
-
-           glyph_name = psnames->adobe_std_strings(code);
-           if (!glyph_name) break;
-
-           for ( n = 0; n < face->type1.num_glyphs; n++ )
-           {
-             const char*  gname = face->type1.glyph_names[n];
-
-             if ( gname && gname[0] == glyph_name[0] &&
-                  strcmp( gname, glyph_name ) == 0 )
-             {
-               result = n;
-               break;
-             }
-           }
-         }
+        }
       }
   Exit:
     return result;
   }
 
 
-  const  FT_Driver_Class  t1z_driver_class =
+  const FT_Driver_Class  t1z_driver_class =
   {
     {
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( FT_DriverRec ),
       
       "type1z",
-      0x10000,
-      0x20000,
+      0x10000L,
+      0x20000L,
   
       0,   /* format interface */
   
-      (FT_Module_Constructor)           Z1_Init_Driver,
-      (FT_Module_Destructor)            Z1_Done_Driver,
-      (FT_Module_Requester)             Get_Interface,
+      (FT_Module_Constructor)Z1_Init_Driver,
+      (FT_Module_Destructor) Z1_Done_Driver,
+      (FT_Module_Requester)  Get_Interface,
     },
 
     sizeof( T1_FaceRec ),
     sizeof( Z1_SizeRec ),
     sizeof( Z1_GlyphSlotRec ),
 
-    (FTDriver_initFace)             Z1_Init_Face,
-    (FTDriver_doneFace)             Z1_Done_Face,
-    (FTDriver_initSize)             0,
-    (FTDriver_doneSize)             0,
-    (FTDriver_initGlyphSlot)        0,
-    (FTDriver_doneGlyphSlot)        0,
+    (FTDriver_initFace)     Z1_Init_Face,
+    (FTDriver_doneFace)     Z1_Done_Face,
+    (FTDriver_initSize)     0,
+    (FTDriver_doneSize)     0,
+    (FTDriver_initGlyphSlot)0,
+    (FTDriver_doneGlyphSlot)0,
 
-    (FTDriver_setCharSizes)         0,
-    (FTDriver_setPixelSizes)        0,
-    (FTDriver_loadGlyph)            Z1_Load_Glyph,
-    (FTDriver_getCharIndex)         Get_Char_Index,
+    (FTDriver_setCharSizes) 0,
+    (FTDriver_setPixelSizes)0,
+    (FTDriver_loadGlyph)    Z1_Load_Glyph,
+    (FTDriver_getCharIndex) Get_Char_Index,
 
 #ifdef Z1_CONFIG_OPTION_NO_AFM
-    (FTDriver_getKerning)           0,
-    (FTDriver_attachFile)           0,
+    (FTDriver_getKerning)   0,
+    (FTDriver_attachFile)   0,
 #else
-    (FTDriver_getKerning)           Get_Kerning,
-    (FTDriver_attachFile)           Z1_Read_AFM,
+    (FTDriver_getKerning)   Get_Kerning,
+    (FTDriver_attachFile)   Z1_Read_AFM,
 #endif
-    (FTDriver_getAdvances)          0
-
+    (FTDriver_getAdvances)  0
   };
 
 
-  /******************************************************************/
-  /*                                                                */
-  /*  <Function> Get_FreeType_Driver_Interface                      */
-  /*                                                                */
-  /*  <Description>                                                 */
-  /*     This function is used when compiling the TrueType driver   */
-  /*     as a shared library (.DLL or .so). It will be used by the  */
-  /*     high-level library of FreeType to retrieve the address of  */
-  /*     the driver's generic interface.                            */
-  /*                                                                */
-  /*     It shouldn't be implemented in a static build, as each     */
-  /*     driver must have the same function as an exported entry    */
-  /*     point.                                                     */
-  /*                                                                */
-  /*  <Return>                                                      */
-  /*     address of TrueType's driver generic interface. The        */
-  /*     forma-specific interface can then be retrieved through     */
-  /*     the method interface->get_format_interface..               */
-  /*                                                                */
-
 #ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
 
-  EXPORT_FUNC(const FT_Driver_Class*)  getDriverClass( void )
+  EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
   {
     return &t1z_driver_class;
   }
@@ -306,3 +308,4 @@
 #endif /* FT_CONFIG_OPTION_DYNAMIC_DRIVERS */
 
 
+/* END */
