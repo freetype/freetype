@@ -19,8 +19,8 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_OUTLINE_H
-#include FT_SOURCE_FILE(raster,ftrend1.h)
-#include FT_SOURCE_FILE(raster,ftraster.h)
+#include "ftrend1.h"
+#include "ftraster.h"
 
 
   /* initialize renderer -- init its raster */

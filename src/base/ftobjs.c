@@ -2079,10 +2079,10 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  FT_Render_Glyph_Internal( FT_Library    library,
-                                      FT_GlyphSlot  slot,
-                                      FT_UInt       render_mode )
+  FT_EXPORT_DEF(FT_Error)
+  FT_Render_Glyph_Internal( FT_Library    library,
+                            FT_GlyphSlot  slot,
+                            FT_UInt       render_mode )
   {
     FT_Error     error = FT_Err_Ok;
     FT_Renderer  renderer;

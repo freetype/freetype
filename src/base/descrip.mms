@@ -13,7 +13,7 @@
 # fully.
 
 
-CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include])
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include],[--.src.base])
 
 OBJS=ftbase.obj,ftinit.obj,ftglyph.obj
 

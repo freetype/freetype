@@ -27,7 +27,7 @@ in this Software without prior written authorization from The Open Group.
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(pcf,pcfutil.h)
+#include "pcfutil.h"
 
 
   /* Utility functions for reformatting font bitmaps */

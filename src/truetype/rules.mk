@@ -21,7 +21,7 @@ TT_DIR_ := $(TT_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-TT_COMPILE := $(FT_COMPILE)
+TT_COMPILE := $(FT_COMPILE) $I$(TT_DIR)
 
 
 # TrueType driver sources (i.e., C files)

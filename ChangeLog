@@ -1,3 +1,17 @@
+2001-03-20  David Turner    <david.turner@freetype.org>
+
+	* builds/*/*-def.mk: changed the objects directory from "obj" to "objs"
+
+	* include/freetype/config/ftheader.h: removed obsolete macros like
+	FT_SOURCE_FILE, etc.. and added cache-specific macro definitions that
+	were previously defined in <freetype/ftcache.h>. Added comments to be
+	included in a new API Reference section.
+
+	* src/*/*: removed the use of FT_SOURCE_FILE, etc.. now, each component
+	needs to added its own directory to the include path at compile time.
+	Modified all "rules.mk" and "descrip.mms" accordingly..
+
+
 2001-03-20  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.in: Add $ft_version.
@@ -69,8 +83,8 @@
 	* include/freetype/internal/psaux.h:  Changed the lenIV member of
 	the T1_Decoder_ struct to be an FT_Int instead of an FT_UInt.
 
-        * src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings):  Adjust
-        for lenIV seed bytes at the start of a decrypted subroutine.
+	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings):  Adjust
+	for lenIV seed bytes at the start of a decrypted subroutine.
 
 	* src/cid/cidload.c (cid_read_subrs): Decrypt subroutines only
 	if lenIV >= 0.

@@ -22,7 +22,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_TYPE1_ERRORS_H
-#include FT_SOURCE_FILE(cid,cidparse.h)
+#include "cidparse.h"
 
 #include <string.h>     /* for strncmp() */
 

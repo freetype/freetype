@@ -17,7 +17,7 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(cff,cffparse.h)
+#include "cffparse.h"
 #include FT_INTERNAL_CFF_ERRORS_H
 #include FT_INTERNAL_STREAM_H
 
@@ -477,7 +477,7 @@
   static const CFF_Field_Handler  cff_field_handlers[] =
   {
 
-#include FT_SOURCE_FILE(cff,cfftoken.h)
+#include "cfftoken.h"
 
     { 0, 0, 0, 0, 0, 0, 0 }
   };

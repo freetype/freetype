@@ -55,6 +55,8 @@ FT_BEGIN_HEADER
   /*    FT_Long                                                            */
   /*    FT_ULong                                                           */
   /*    FT_Bool                                                            */
+  /*    FT_Offset                                                          */
+  /*    FT_PtrDist                                                         */
   /*    FT_Error                                                           */
   /*    FT_Fixed                                                           */
   /*    FT_Pointer                                                         */
@@ -266,6 +268,32 @@ FT_BEGIN_HEADER
   /*    A simple typedef for a typeless pointer.                           */
   /*                                                                       */
   typedef void*  FT_Pointer;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Offset                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This is equivalent to the ANSI C "size_t" type, i.e. it's the      */
+  /*    largest _unsigned_ integer type used to express a file size or     */
+  /*    position, or a memory block size.                                  */
+  /*                                                                       */
+  typedef size_t  FT_Offset;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_PtrDist                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This is equivalent to the ANSI C "ptrdiff_t" type, i.e. the        */
+  /*    largest _signed_ integer type used to express the distance         */
+  /*    between two pointers.                                              */
+  /*                                                                       */
+  typedef size_t  FT_PtrDist;
 
 
   /*************************************************************************/

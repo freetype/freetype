@@ -21,7 +21,7 @@ SFNT_DIR_ := $(SFNT_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-SFNT_COMPILE := $(FT_COMPILE)
+SFNT_COMPILE := $(FT_COMPILE) $I$(SFNT_DIR)
 
 
 # SFNT driver sources (i.e., C files)

@@ -31,7 +31,7 @@ PCF_DIR  := $(SRC_)pcf
 PCF_DIR_ := $(PCF_DIR)$(SEP)
 
 
-PCF_COMPILE := $(FT_COMPILE)
+PCF_COMPILE := $(FT_COMPILE) $I$(PCF_DIR)
 
 
 # pcf driver sources (i.e., C files)

@@ -15,7 +15,7 @@
 # Note that this license is compatible with the FreeType license.
 
 
-CFLAGS=$(COMP_FLAGS)$(DEBUG)/incl=[--.include]
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/incl=([--.include],[--.src.autohint])
 
 OBJS=autohint.obj
 

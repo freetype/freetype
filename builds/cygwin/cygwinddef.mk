@@ -33,7 +33,7 @@ PLATFORM := unixdev
 # The directory where all object files are placed.
 #
 ifndef OBJ_DIR
-  OBJ_DIR := $(shell cd $(TOP)/obj; pwd)
+  OBJ_DIR := $(shell cd $(TOP)/objs; pwd)
 endif
 
 

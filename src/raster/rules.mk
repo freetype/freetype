@@ -20,7 +20,7 @@ RAS1_DIR_ := $(RAS1_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-RAS1_COMPILE := $(FT_COMPILE)
+RAS1_COMPILE := $(FT_COMPILE) $I$(RAS1_DIR)
 
 
 # raster1 driver sources (i.e., C files)

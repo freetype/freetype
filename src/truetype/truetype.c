@@ -19,13 +19,13 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(truetype,ttdriver.c)   /* driver interface */
-#include FT_SOURCE_FILE(truetype,ttpload.c)    /* tables loader    */
-#include FT_SOURCE_FILE(truetype,ttgload.c)    /* glyph loader     */
-#include FT_SOURCE_FILE(truetype,ttobjs.c)     /* object manager   */
+#include "ttdriver.c"   /* driver interface */
+#include "ttpload.c"    /* tables loader    */
+#include "ttgload.c"    /* glyph loader     */
+#include "ttobjs.c"     /* object manager   */
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#include FT_SOURCE_FILE(truetype,ttinterp.c)
+#include "ttinterp.c"
 #endif
 
 

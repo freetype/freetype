@@ -22,11 +22,11 @@
 
 #include <string.h>         /* strcmp() */
 
-#include FT_SOURCE_FILE(type1,t1gload.h)
-#include FT_SOURCE_FILE(type1,t1load.h)
+#include "t1gload.h"
+#include "t1load.h"
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
-#include FT_SOURCE_FILE(type1,t1afm.h)
+#include "t1afm.h"
 #endif
 
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H

@@ -32,8 +32,8 @@ THE SOFTWARE.
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 
-#include FT_SOURCE_FILE(pcf,pcf.h)
-#include FT_SOURCE_FILE(pcf,pcfdriver.h)
+#include "pcf.h"
+#include "pcfdriver.h"
 
 #include <string.h>     /* strlen(), strcpy() */
 
@@ -856,6 +856,7 @@ THE SOFTWARE.
   }
 
 
+  FT_LOCAL_DEF
   FT_Error  pcf_load_font( FT_Stream  stream,
                            PCF_Face   face )
   {

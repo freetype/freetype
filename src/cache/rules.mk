@@ -23,7 +23,7 @@ CACHE_H_DIR_ := $(CACHE_H_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-Cache_COMPILE := $(FT_COMPILE)
+Cache_COMPILE := $(FT_COMPILE) $I$(CACHE_DIR)
 
 
 # Cache driver sources (i.e., C files)

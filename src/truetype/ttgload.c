@@ -24,7 +24,7 @@
 #include FT_TRUETYPE_TAGS_H
 #include FT_OUTLINE_H
 
-#include FT_SOURCE_FILE(truetype,ttgload.h)
+#include "ttgload.h"
 
 
   /*************************************************************************/

@@ -25,8 +25,8 @@
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
-#include FT_SOURCE_FILE(cff,cffobjs.h)
-#include FT_SOURCE_FILE(cff,cffload.h)
+#include "cffobjs.h"
+#include "cffload.h"
 #include FT_INTERNAL_CFF_ERRORS_H
 
 #include <string.h>         /* for strlen() */
@@ -388,8 +388,8 @@
 
         /* set global bbox, as well as EM size */
         root->bbox         = dict->font_bbox;
-        root->ascender     = root->bbox.yMax >> 16;
-        root->descender    = root->bbox.yMin >> 16;
+        root->ascender     = (FT_Short)(root->bbox.yMax >> 16);
+        root->descender    = (FT_Short)(root->bbox.yMin >> 16);
         root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
 
         if ( dict->units_per_em )

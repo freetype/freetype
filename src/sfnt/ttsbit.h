@@ -21,7 +21,7 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(sfnt,ttload.h)
+#include "ttload.h"
 
 
 FT_BEGIN_HEADER

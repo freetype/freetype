@@ -36,7 +36,7 @@ endif
 #   make -f %TOP%/Makefile
 #
 ifndef OBJ_DIR
-  OBJ_DIR := $(TOP)$(SEP)obj
+  OBJ_DIR := $(TOP)$(SEP)objs
 endif
 
 

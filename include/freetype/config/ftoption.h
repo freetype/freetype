@@ -311,7 +311,7 @@ FT_BEGIN_HEADER
   /* By undefining this, you will only compile the code necessary to load  */
   /* TrueType glyphs without hinting.                                      */
   /*                                                                       */
-#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#undef  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
   /*************************************************************************/

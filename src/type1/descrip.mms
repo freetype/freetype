@@ -13,7 +13,7 @@
 # fully.
 
 
-CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=[--.include]
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.type1])
 
 OBJS=type1.obj
 

@@ -17,13 +17,18 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(base,ftcalc.c)
-#include FT_SOURCE_FILE(base,ftobjs.c)
-#include FT_SOURCE_FILE(base,ftstream.c)
-#include FT_SOURCE_FILE(base,ftlist.c)
-#include FT_SOURCE_FILE(base,ftoutln.c)
-#include FT_SOURCE_FILE(base,ftextend.c)
-#include FT_SOURCE_FILE(base,ftnames.c)
 
+#define  FT_MAKE_OPTION_SINGLE_OBJECT
+
+#include "ftcalc.c"
+#include "ftobjs.c"
+#include "ftstream.c"
+#include "ftlist.c"
+#include "ftoutln.c"
+#include "ftnames.c"
+
+#if 0
+#include "ftextend.c"
+#endif
 
 /* END */
