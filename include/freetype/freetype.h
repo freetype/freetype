@@ -34,8 +34,8 @@
   /* drivers.  It starts at 2.0.                                           */
   /*                                                                       */
 #define FREETYPE_MAJOR 2
-#define FREETYPE_MINOR 0
-#define FREETYPE_PATCH 8
+#define FREETYPE_MINOR 1
+#define FREETYPE_PATCH 0
 
 
 #include <ft2build.h>
@@ -2390,6 +2390,89 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_First_Char                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function is used to return the first character code in the    */
+  /*    current charmap of a given face. It will also return the           */
+  /*    corresponding glyph index.                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face     :: A handle to the source face object.                    */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    agindex  :: glyph index of first character code. 0 if charmap      */
+  /*                is empty..                                             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    the charmap's first character code.                                */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    you should use this function with @FT_Get_Next_Char to be able     */
+  /*    to parse all character codes available in a given charmap.         */
+  /*    the code should look like:                                         */
+  /*                                                                       */
+  /*    {                                                                  */
+  /*      FT_ULong  charcode;                                              */
+  /*      FT_UInt   gindex;                                                */
+  /*                                                                       */
+  /*      charcode = FT_Get_First_Char( face, &gindex );                   */
+  /*      while ( gindex != 0 )                                            */
+  /*      {                                                                */
+  /*        .. do something with (charcode,gindex) pair                    */
+  /*                                                                       */
+  /*        charcode = FT_Get_Next_Char( face, charcode, &gindex );        */
+  /*      }                                                                */
+  /*    }                                                                  */
+  /*                                                                       */
+  /*    note that '*agindex' will be set to 0 if the charmap is empty.     */
+  /*    the result itself can be 0 in two cases: if the charmap is empty   */
+  /*    or when the value 0 is the first valid character code.             */
+  /*                                                                       */
+  FT_EXPORT( FT_ULong )
+  FT_Get_First_Char( FT_Face   face,
+                     FT_UInt  *agindex );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Next_Char                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function is used to return the next character code in the     */
+  /*    current charmap of a given face following the value 'char_code',   */
+  /*    as well as the corresponding glyph index                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face      :: A handle to the source face object.                   */
+  /*    char_code :: starting character code                               */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    agindex  :: glyph index of first character code. 0 if charmap      */
+  /*                is empty..                                             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    the charmap's next character code.                                 */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    you should use this function with @FT_Get_First_Char to be able    */
+  /*    to parse all character codes available in a given charmap. see     */
+  /*    the note for this function for a simple code example..             */
+  /*                                                                       */
+  /*    note that '*agindex' will be set to 0 when there are no more       */
+  /*    codes in the charmap..                                             */
+  /*                                                                       */
+  FT_EXPORT( FT_ULong )
+  FT_Get_Next_Char( FT_Face    face,
+                    FT_ULong   char_code,
+                    FT_UInt   *agindex );
+
 
 
   /*************************************************************************/

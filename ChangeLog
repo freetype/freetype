@@ -1,5 +1,11 @@
 2002-02-28  David Turner   <david@freetype.org>
 
+        * include/freetype/freetype.h: changing version to 2.1.0 to indicate
+        an unstable branch. Added the declarations of FT_Get_First_Char and
+        FT_Get_Next_Char
+        
+        * src/base/ftobjs.c: implemented FT_Get_First_Char and FT_Get_Next_Char
+
         * include/freetype/t1tables.h: re-naming structure types. This done
         basically:
         
