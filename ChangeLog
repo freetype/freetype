@@ -1,5 +1,8 @@
 2000-12-05  David Turner  <david.turner@freetype.org>
 
+	* src/psaux/psauxmod.c: fixed a broken inclusion of component
+	header files (a FT_FLAT_COMPILE test was missing)
+
 	* src/cache/ftcmanag.c (FTC_Manager_Done): fixed a bug that caused
         an occasional crash when the function was called (due to a dangling
         pointer)
