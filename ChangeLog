@@ -1,3 +1,8 @@
+2004-05-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftbbox.c (BBox_Conic_Check): Fix boundary cases. 
+	Reported by Mikey Anbary <manbary@vizrt.com>.
+
 2004-05-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_done_face): Free face->postscript_name.
