@@ -21,7 +21,7 @@
 
 #include <freetype/internal/ftdriver.h>
 
-  FT_EXPORT_VAR( const  FT_Driver_Class )  t1z_driver_class;
+  FT_EXPORT_VAR( const  FT_Driver_Class )  t1_driver_class;
 
 #endif /* Z1DRIVER_H */
 
