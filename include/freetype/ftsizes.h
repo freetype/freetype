@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType size objects management (specification).                    */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2003 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -101,7 +101,9 @@ FT_BEGIN_HEADER
   /*    FT_Done_Size                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Discards a given size object.                                      */
+  /*    Discards a given size object.  Note that @FT_Done_Face             */
+  /*    automatically discards all size objects allocated with             */
+  /*    @FT_New_Size.                                                      */
   /*                                                                       */
   /* <Input>                                                               */
   /*    size :: A handle to a target size object.                          */

@@ -235,7 +235,8 @@ FT_BEGIN_HEADER
   /*    FT_Glyph_Copy                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A function used to copy a glyph image.                             */
+  /*    A function used to copy a glyph image.  Note that the created      */
+  /*    @FT_Glyph object must be released with @FT_Done_Glyph.             */
   /*                                                                       */
   /* <Input>                                                               */
   /*    source :: A handle to the source glyph object.                     */
