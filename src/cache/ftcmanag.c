@@ -332,7 +332,6 @@
   {
     FTC_FontRequest  req;
     FT_Error         error;
-    FT_Face          face;
     
 
     /* check for valid `manager' delayed to FTC_Manager_Lookup_Face() */
@@ -343,13 +342,13 @@
     if ( asize )
       *asize = 0;
 
-    error = FTC_Manager_Lookup_Face( manager, font->face_id, &face ); 
+    error = FTC_Manager_Lookup_Face( manager, font->face_id, aface ); 
     if ( !error )
     {
       FT_Size  size;
       
 
-      req.face   = face;
+      req.face   = *aface;
       req.width  = font->pix_width;
       req.height = font->pix_height;
       
@@ -363,9 +362,6 @@
         
         if ( asize )
           *asize = size;
-          
-        if ( aface )
-          *aface = face;
       }
     }
 
