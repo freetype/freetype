@@ -1099,8 +1099,8 @@
   parse_subrs( T1_Face     face,
                T1_Loader*  loader )
   {
-    T1_Parser  parser = &loader->parser;
-    PS_Table      table  = &loader->subrs;
+    T1_Parser      parser = &loader->parser;
+    PS_Table       table  = &loader->subrs;
     FT_Memory      memory = parser->root.memory;
     FT_Error       error;
     FT_Int         n;
