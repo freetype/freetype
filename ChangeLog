@@ -1,5 +1,17 @@
 2003-08-18  David Turner  <david@freetype.org>
 
+        * Jamfile: adding the "refdoc" target to the Jamfile in order to
+        build the API Reference in "docs/reference" automatically
+
+        * include/freetype/t1tables.h, src/cid/cidtoken.h, src/type1/t1tokens.h,
+        src/type42/t42parse.c:
+
+        re-setting the types of "italic_angle", "underline_position" and
+        "underline_thickness" to their previous values (i.e. long, short and
+        ushort), in order to avoid breaking binary compatibility
+
+        * include/freetype/ttunpath.h: fixing documentation comment
+
         * include/freetype/config/ftoption.h, devel/ftoption.h,
         include/freetype/internal/ftobjs.h, include/freetype/internal/tttypes.h,
         src/truetype/ttinterp.c, src/truetype/ttobjs.c, src/truetype/ttobjs.h:

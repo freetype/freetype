@@ -28,10 +28,10 @@
   T1_FIELD_STRING( "Weight", weight )
 
   /* we use pointers to detect modifications made by synthetic fonts */
-  T1_FIELD_FIXED ( "ItalicAngle", italic_angle )
+  T1_FIELD_NUM   ( "ItalicAngle", italic_angle )
   T1_FIELD_BOOL  ( "isFixedPitch", is_fixed_pitch )
-  T1_FIELD_FIXED ( "UnderlinePosition", underline_position )
-  T1_FIELD_FIXED ( "UnderlineThickness", underline_thickness )
+  T1_FIELD_NUM   ( "UnderlinePosition", underline_position )
+  T1_FIELD_NUM   ( "UnderlineThickness", underline_thickness )
 
 
 #undef  FT_STRUCTURE
