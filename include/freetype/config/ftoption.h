@@ -140,19 +140,56 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /* DLL Export Compilation                                                */
+  /*                                                                       */
   /* When compiling FreeType as a DLL, some systems/compilers need a       */
-  /* special keyword in front of each function definition instead of       */
-  /* `extern'.                                                             */
+  /* special keyword in front OR after the return type of function         */
+  /* declarations.                                                         */
   /*                                                                       */
-  /* The macros EXPORT_DEF and EXPORT_FUNC are thus used to define         */
-  /* exported library function interfaces and exported library functions   */
-  /* implementations respectively.                                         */
+  /* Two macros are used within the FreeType source code to define         */
+  /* exported library functions: EXPORT_DEF and EXPORT_FUNC                */
   /*                                                                       */
-  /* If not defined here, they automatically default to `extern' and void  */
-  /* later in this header file.                                            */
+  /* EXPORT_DEF(return_type) is used in a function declaration, as in:     */
+  /*                                                                       */
+  /*   EXPORT_DEF(FT_Error)  FT_Init_FreeType( FT_Library *alibrary );     */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /* EXPORT_FUNC(return_type) is used in a function definition, as in:     */
+  /*                                                                       */
+  /*   EXPORT_FUNC(FT_Error)  FT_Init_FreeType( FT_Library *alibrary )     */
+  /*   {                                                                   */
+  /*     ... some code ...                                                 */
+  /*     return FT_Err_Ok;                                                 */
+  /*   }                                                                   */
+  /*                                                                       */
+  /*                                                                       */
+  /* You can provide your own implementation of EXPORT_DEF and EXPORT_FUNC */
+  /* here if you want. If you leave them undefined, they'll later be       */
+  /* automatically defined as "extern return_type" to allow normal         */
+  /* compilation..                                                         */
   /*                                                                       */
 #undef EXPORT_DEF
 #undef EXPORT_FUNC
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* 5-levels Anti Aliasing support:                                       */
+  /*                                                                       */
+  /*  FreeType 2 provides a new "smooth" renderer that is capable of       */
+  /*  producing anti-aliased glyph bitmaps with up to 256 gray-levels.     */
+  /*                                                                       */
+  /*  However, for compatibility purposes with FreeType 1.x, the standard  */
+  /*  raster is still capable of generating anti-aliased bitmaps with 5    */
+  /*  gray levels.                                                         */
+  /*                                                                       */
+  /*  If you do not need this capability (i.e. if you always use the       */
+  /*  "smooth" renderer for anti-aliased glyphs), we suggest you to        */
+  /*  undefine this configuration macro, as it will save both code and     */
+  /*  memory..                                                             */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_5_GRAY_LEVELS
 
 
   /*************************************************************************/
@@ -171,17 +208,6 @@
   /*                                                                       */
 #undef  FT_DEBUG_LEVEL_ERROR
 #undef  FT_DEBUG_LEVEL_TRACE
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* Anti-aliasing support                                                 */
-  /*                                                                       */
-  /*   Undefine this macro only if you want to disable the anti-aliasing   */
-  /*   support in FreeType.  This will save you about 5 Kb of code.  It    */
-  /*   may be important for some embedded systems.                         */
-  /*                                                                       */
-#define FT_CONFIG_OPTION_ANTI_ALIAS
 
 
   /*************************************************************************/
@@ -211,6 +237,7 @@
   /*   soon..                                                              */
   /*                                                                       */
 #define FT_CONFIG_OPTION_OLD_CALCS
+
 
   /*************************************************************************/
   /*                                                                       */
