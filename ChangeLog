@@ -1,3 +1,14 @@
+2002-06-19  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/base/fttype1.c: Include FT_INTERNAL_TYPE42_TYPES_H.
+	(t1_face_check_cast): Removed.
+	(FT_Get_PS_Font_Info): Make it work with CID and Type 42 drivers
+	also.
+
+2002-06-19  Sebastien BARRE  <sebastien@barre.nom.fr>
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Fix compiler warning.
+
 2002-06-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftoutln.c (FT_Vector_Transform): Fix serious typo
