@@ -2990,7 +2990,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
 #ifdef FT_RASTER_OPTION_ANTI_ALIAS
 
   /*************************************************************************/
@@ -3043,10 +3042,9 @@
                                            TPos   x1,
                                            TPos   x2 )
   {
-    TPos      e1, e2;
-    int       shift = ras.precision_bits - 6;
+    TPos   e1, e2;
+    int    shift = ras.precision_bits - 6;
     PByte  target;
-
 
     UNUSED( y );
 
@@ -3086,19 +3084,20 @@
       
       if ( e2 > 0 )
       {
-        target[0] += (Byte)(64-x1);
+        if (x1 > 0) target[0] += (Byte)(64-x1) << 1;
+               else target[0]  = 127;
         e2--;
         while (e2 > 0)
         {
-          *(++target) += 64;
+          *(++target) = 127;
           e2--;
         }
         if (x2)
-          target[1] += (Byte)x2;
+          target[1] += (Byte)x2 << 1;
       }
       else
       {
-        target[0] += (Byte)(x2-x1);
+        target[0] += (Byte)(x2-x1) << 1;
       }
     }
   }
@@ -3167,7 +3166,7 @@
       if (color < 64)
         color = 64;
 
-      *pixel = ( color >= 128 ? 128 : (unsigned char)color );
+      *pixel = ( color >= 127 ? 127 : (unsigned char)color );
     }
   }
 
@@ -3256,10 +3255,11 @@
                                              TPos   x1,
                                              TPos   x2 )
   {
-    TPos      e1, e2;
-    int       shift = ras.precision_bits - 6;
-    int       incr;
+    TPos   e1, e2;
+    int    shift = ras.precision_bits - 6;
+    int    incr;
     PByte  bits;
+    Byte   b;
 
 
     UNUSED( y );
@@ -3305,20 +3305,36 @@
       
       if ( e2 > 0 )
       {
-        bits[0] += (Byte)(64-x1);
+        b = bits[0];
+        if (b < 127) b++;
+        bits[0] = (64-x1) + (b >> 1);
+        
         e2--;
         while (e2 > 0)
         {
-          bits    += incr;
-          bits[0] += 64;
+          bits += incr;
+          b     = bits[0];
+          
+          if (b < 127)
+            bits[0] = (Byte)(63+((b+1) >> 1));  
+          
           e2--;
         }
+        
         if (x2)
-          bits[incr] += (Byte)x2;
+        {
+          bits += incr;
+          b     = bits[0];
+          if (b < 127) b++;
+          bits[0] = (Byte)(x2 + (b >> 1));
+        }
+        
       }
       else
       {
-        bits[0] += (Byte)(x2-x1);
+        b = bits[0];
+        if (b < 127) b++;
+        bits[0] = (Byte)((b >> 1)+(x2-x1));
       }
     }
   }
@@ -3391,8 +3407,9 @@
       color += *pixel;
       if (color < 64)
         color = 64;
-
-      *pixel = (color >= 128 ? 128 : (unsigned char)color );
+/*
+      *pixel = (color >= 127 ? 127 : (unsigned char)color );
+ */
     }
   }
 
