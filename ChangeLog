@@ -1,3 +1,14 @@
+2003-06-13  Werner Lemberg  <wl@gnu.org>
+
+	* builds/dos/detect.mk: Test not only for `Dos' but for `DOS' also.
+
+	* builds/dos/dos-emx.mk, builds/compiler/emx.mk: New files for
+	EMX gcc compiler.
+	* builds/dos/detect.mk: Add target `emx'.
+
+	* builds/compiler/watcom.mk (LINK_LIBRARY): GNU Make for DOS doesn't
+	like a trailing semicolon; add a dummy command.
+
 2003-06-12  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/psaux.h (T1_FieldType): Add
