@@ -1,3 +1,25 @@
+2004-01-18  David Turner  <david@freetype.org>
+
+        * src/sfnt/ttsbit.c: removed compiler warning
+
+        * src/tools/docmaker/*: updating beautifier tool
+
+2004-01-15  David Turner  <david@freetype.org>
+
+        * src/base/ftoutln.c (ft_orientation_extremum_compute): fixing
+        infinite loop bug !
+
+        * src/base/ftstroke.c, include/freetype/ftstroke.h: fixing bugs and
+        adding FT_Glyph_Stroke and FT_Glyph_StrokerBorder APIs
+
+        * include/freetype/ftcache.h, include/freetype/cache/ftcmanag.h:
+        adding FTC_Manager_LookupSize and FTC_Scaler to the public API
+        (they were previously hidden)
+
+        * src/tools/docmaker/*: updating the DocMaker tool, adding a new
+        tool named "docbeauty" to beautify the documentation comments
+        (e.g. convert them to a single block border mode)
+
 2004-01-14  David Turner  <david@freetype.org>
 
         * include/freetype/internal/ftmemory.h,
