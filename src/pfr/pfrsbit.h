@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  pfr.c                                                                  */
+/*  pfrsbit.c                                                              */
 /*                                                                         */
-/*    FreeType PFR driver component.                                       */
+/*    FreeType PFR bitmap loader                                           */
 /*                                                                         */
 /*  Copyright 2002 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -15,15 +15,18 @@
 /*                                                                         */
 /***************************************************************************/
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
+#ifndef __PFRSBIT_H__
+#define __PFRSBIT_H__
 
-#include <ft2build.h>
+#include "pfrobjs.h"
 
-#include "pfrload.c"
-#include "pfrgload.c"
-#include "pfrcmap.c"
-#include "pfrobjs.c"
-#include "pfrdrivr.c"
-#include "pfrsbit.c"
+FT_BEGIN_HEADER
 
-/* END */
+  FT_LOCAL( FT_Error )
+  pfr_slot_load_bitmap( PFR_Slot  glyph,
+                        PFR_Size  size,
+                        FT_UInt   glyph_index );
+
+FT_END_HEADER
+
+#endif /* __PFR_SBIT_H__ */

@@ -433,6 +433,7 @@
       /* disable scaling, hinting, and transformation */
       load_flags |= FT_LOAD_NO_SCALE         |
                     FT_LOAD_NO_HINTING       |
+                    FT_LOAD_NO_BITMAP        |
                     FT_LOAD_IGNORE_TRANSFORM;
 
       /* disable bitmap rendering */
@@ -466,7 +467,8 @@
       /* XXX: This is really a temporary hack that should disappear */
       /*      promptly with FreeType 2.1!                           */
       /*                                                            */
-      if ( FT_HAS_FIXED_SIZES( face ) )
+      if ( FT_HAS_FIXED_SIZES( face ) &&
+          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
       {
         error = driver->clazz->load_glyph( slot, face->size,
                                            glyph_index,

@@ -17,6 +17,7 @@
 
 
 #include "pfrgload.h"
+#include "pfrsbit.h"
 #include "pfrload.h"            /* for macro definitions */
 #include FT_INTERNAL_DEBUG_H
 
@@ -676,6 +677,9 @@
   }
 
 
+
+
+
   static FT_Error
   pfr_glyph_load_rec( PFR_Glyph  glyph,
                       FT_Stream  stream,
@@ -774,6 +778,9 @@
   Exit:
     return error;
   }
+
+
+
 
 
   FT_LOCAL_DEF( FT_Error )
