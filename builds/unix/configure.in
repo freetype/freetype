@@ -5,7 +5,7 @@ dnl
 
 AC_INIT(ftconfig.in)
 
-dnl Configuration file -- stay in 8.3 limit
+dnl configuration file -- stay in 8.3 limit
 AC_CONFIG_HEADER(ftconfig.h:ftconfig.in)
 
 version_info='6:0:0'
@@ -39,7 +39,17 @@ AC_SUBST(XX_ANSIFLAGS)
 
 AC_CHECK_PROG(RMF, rm, rm -f)
 AC_CHECK_PROG(RMDIR, rmdir, rmdir)
+
+dnl Since this file will be finally moved to another directory we make
+dnl the path of the install script absolute.  This small code snippet has
+dnl been taken from automake's `ylwrap' script.
 AC_PROG_INSTALL
+case "$INSTALL" in
+  /*)
+    ;;
+  */*)
+    INSTALL="`pwd`/$INSTALL" ;;
+esac
 
 dnl checks for header files
 AC_HEADER_STDC
@@ -50,7 +60,7 @@ AC_C_CONST
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
 
-dnl Checks for library functions.
+dnl checks for library functions
 
 dnl Here we check whether we can use our mmap file component.
 AC_FUNC_MMAP
