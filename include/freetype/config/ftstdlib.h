@@ -33,6 +33,11 @@
 #define __FTSTDLIB_H__
 
 
+#include <stddef.h>
+
+#define ft_ptrdiff_t  ptrdiff_t
+
+
   /**********************************************************************/
   /*                                                                    */
   /*                           integer limits                           */

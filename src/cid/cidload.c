@@ -324,8 +324,8 @@
               if ( !name )
                 break;
 
-              if ( cur[0] == name[0]                     &&
-                   len == ft_strlen( (const char*)name ) )
+              if ( cur[0] == name[0]                                 &&
+                   len == (FT_PtrDist)ft_strlen( (const char*)name ) )
               {
                 FT_PtrDist  n;
 

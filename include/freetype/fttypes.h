@@ -325,7 +325,7 @@ FT_BEGIN_HEADER
   /*    largest _signed_ integer type used to express the distance         */
   /*    between two pointers.                                              */
   /*                                                                       */
-  typedef size_t  FT_PtrDist;
+  typedef ft_ptrdiff_t  FT_PtrDist;
 
 
   /*************************************************************************/
