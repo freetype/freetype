@@ -884,19 +884,28 @@
       return;
     }
 
-    /* if we have a number, then the encoding is an array, */
-    /* and we must load it now                             */
-    if ( ft_isdigit( *cur ) )
+    /* if we have a number or `[', the encoding is an array, */
+    /* and we must load it now                               */
+    if ( ft_isdigit( *cur ) || *cur == '[' )
     {
-      T1_Encoding  encode     = &face->type1.encoding;
+      T1_Encoding  encode          = &face->type1.encoding;
       FT_Int       count, n;
-      PS_Table     char_table = &loader->encoding_table;
-      FT_Memory    memory     = parser->root.memory;
+      PS_Table     char_table      = &loader->encoding_table;
+      FT_Memory    memory          = parser->root.memory;
       FT_Error     error;
+      FT_Bool      only_immediates = 0;
 
 
       /* read the number of entries in the encoding; should be 256 */
-      count = (FT_Int)T1_ToInt( parser );
+      if ( *cur == '[' )
+      {
+        count           = 256;
+        only_immediates = 1;
+        parser->root.cursor++;
+      }
+      else
+        count = (FT_Int)T1_ToInt( parser );
+
       T1_Skip_Spaces( parser );
       if ( parser->root.cursor >= limit )
         return;
@@ -921,16 +930,25 @@
         T1_Add_Table( char_table, n, notdef, 8 );
       }
 
-      /* Now we need to read a record of the form               */
-      /* ... charcode /charname ... for each entry in our table */
+      /* Now we need to read records of the form                */
+      /*                                                        */
+      /*   ... charcode /charname ...                           */
+      /*                                                        */
+      /* for each entry in our table.                           */
       /*                                                        */
       /* We simply look for a number followed by an immediate   */
       /* name.  Note that this ignores correctly the sequence   */
-      /* that is often seen in Type 1 fonts:                    */
+      /* that is often seen in type1 fonts:                     */
       /*                                                        */
       /*   0 1 255 { 1 index exch /.notdef put } for dup        */
       /*                                                        */
       /* used to clean the encoding array before anything else. */
+      /*                                                        */
+      /* Alternatively, if the array is directly given as       */
+      /*                                                        */
+      /*   /Encoding [ ... ]                                    */
+      /*                                                        */
+      /* we only read immediates.                               */
 
       n = 0;
       T1_Skip_Spaces( parser );
@@ -939,7 +957,7 @@
       {
         cur = parser->root.cursor;
 
-        /* we stop when we encounter a `def' */
+        /* we stop when we encounter a `def' or `]' */
         if ( *cur == 'd' && cur + 3 < limit )
         {
           if ( cur[1] == 'e'      &&
@@ -951,18 +969,30 @@
             break;
           }
         }
+        if ( *cur == ']' )
+        {
+          FT_TRACE6(( "encoding end\n" ));
+          cur++;
+          break;
+        }
 
-        /* otherwise, we must find a number before anything else */
-        if ( ft_isdigit( *cur ) )
+        /* check whether we've found an entry */
+        if ( ft_isdigit( *cur ) || only_immediates )
         {
           FT_Int  charcode;
 
 
-          charcode = (FT_Int)T1_ToInt( parser );
-          T1_Skip_Spaces( parser );
+          if ( only_immediates )
+            charcode = n;
+          else
+          {
+            charcode = (FT_Int)T1_ToInt( parser );
+            T1_Skip_Spaces( parser );
+          }
+
           cur = parser->root.cursor;
 
-          if ( *cur == '/' && cur + 2 < limit )
+          if ( *cur == '/' && cur + 2 < limit && n < count )
           {
             FT_PtrDist  len;
 
@@ -979,6 +1009,8 @@
             char_table->elements[charcode][len] = '\0';
             if ( parser->root.error )
               return;
+
+            n++;
           }
         }
         else

@@ -288,7 +288,6 @@
 
     T1_Skip_Spaces( parser );
     cur = parser->root.cursor;
-
     if ( cur >= limit )
     {
       FT_ERROR(( "t42_parse_encoding: out of bounds!\n" ));
@@ -363,10 +362,10 @@
       /* we only read immediates.                               */
 
       n = 0;
+      T1_Skip_Spaces( parser );
 
       while ( parser->root.cursor < limit )
       {
-        T1_Skip_Spaces( parser );
         cur = parser->root.cursor;
 
         /* we stop when we encounter `def' or `]' */
@@ -427,6 +426,8 @@
         }
         else
           T1_Skip_PS_Token( parser );
+
+        T1_Skip_Spaces( parser );
       }
 
       face->type1.encoding_type  = T1_ENCODING_TYPE_ARRAY;
