@@ -1,3 +1,8 @@
+2000-11-26  Werner Lemberg  <wl@gnu.org>
+
+	* builds/compiler/ansi-cc.mk (CLEAN_LIBRARY): Fix rule and
+	conditional.
+
 2000-11-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_subrs, parse_charstrings): Use decrypt
