@@ -66,20 +66,22 @@ FT_BEGIN_HEADER
   /* a compact CFF Charset table */
   typedef struct CFF_Charset_
   {
-    FT_ULong   offset;
-    FT_UInt    size;
-    FT_UInt    format;
-    FT_Byte*   bytes;
+    FT_UInt     format;
+    FT_ULong    offset;
+
+    FT_UShort*  sids;
   
   } CFF_Charset;
+
 
   /* a compact CFF Encoding table */
   typedef struct CFF_Encoding_
   {
-    FT_ULong   offset;
-    FT_UInt    size;
-    FT_UInt    format;
-    FT_Byte*   bytes;
+    FT_UInt     format;
+    FT_ULong    offset;
+
+    FT_UShort*  sids;
+    FT_UShort*  codes;
   
   } CFF_Encoding;
 
