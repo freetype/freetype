@@ -276,7 +276,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Get_Char_Index                                                     */
+  /*    cff_get_char_index                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Uses a charmap to return a given character code's glyph index.     */
@@ -318,6 +318,55 @@
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    cff_get_name_index                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Uses the psnames module and the CFF font's charset to to return a  */
+  /*    a given glyph name's glyph index.                                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charmap    :: A handle to the source face object.                  */
+  /*    glyph_name :: The glyph name.                                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Glyph index.  0 means `undefined character code'.                  */
+  /*                                                                       */
+  static FT_UInt
+  cff_get_name_index( CFF_Face    face,
+                      FT_String*  glyph_name )
+  {
+    CFF_Font*          cff;
+    CFF_Charset*       charset;
+    PSNames_Interface* psnames;
+    FT_String*         name;
+    FT_UShort          sid;
+    FT_UInt            i;
+
+    cff = face->extra.data;
+    charset = &cff->charset;
+
+    psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+                face->root.driver->root.library, "psnames" );
+
+    for ( i = 0; i < cff->num_glyphs; i++ )
+    {
+      sid = charset->sids[i];
+
+      if (sid > 390)
+        name = CFF_Get_Name( &cff->string_index, sid - 391 );
+      else
+        name = (FT_String *)psnames->adobe_std_strings( sid );
+
+      if ( !strcmp( glyph_name, name ) )
+        return i;
+    }
+
+    return 0;
+  }
+
+  /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -336,8 +385,13 @@
     FT_Module  sfnt;
 
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+
     if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
       return (FT_Module_Interface)get_cff_glyph_name;
+
+    if ( strcmp( (const char*)interface, "name_index" ) == 0 )
+      return (FT_Module_Interface)cff_get_name_index;
+
 #endif
 
     /* we simply pass our request to the `sfnt' module */
