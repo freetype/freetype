@@ -66,6 +66,8 @@
 #include <Resources.h>
 #include <Fonts.h>
 #include <Errors.h>
+#include <Files.h>
+#include <TextUtils.h>
 
 #include <ctype.h>  /* for isupper() and isalnum() */
 
@@ -132,6 +134,22 @@
     return finfo.fdType;
   }
 
+	/* is this a Mac OS X .dfont file */
+	static Boolean is_dfont( FSSpec* spec )
+	{
+		int	nameLen = spec->name[0];
+		
+		if ( spec->name[nameLen-5] == '.' && 
+			 spec->name[nameLen-4] == 'd' && 
+			 spec->name[nameLen-3] == 'f' && 
+			 spec->name[nameLen-2] == 'o' && 
+			 spec->name[nameLen-1] == 'n' && 
+			 spec->name[nameLen]   == 't')
+			 return true;
+		else
+			return false;
+	}
+	
 
   /* Given a PostScript font name, create the Macintosh LWFN file name. */
   static void
@@ -630,6 +648,50 @@
     return error;
   }
 
+  /* Create a new FT_Face from a file spec to a suitcase file. */
+  static FT_Error
+  FT_New_Face_From_dfont( FT_Library  library,
+	                     FSSpec*     spec,
+	                     FT_Long     face_index,
+	                     FT_Face*    aface )
+  {
+	FT_Error  	error = FT_Err_Ok;
+	short     	res_ref, res_index;
+	Handle    	fond;
+	FSRef		hostContainerRef;
+
+	error = FSpMakeFSRef( spec, &hostContainerRef );
+	if ( error == noErr )
+		error = FSOpenResourceFile( &hostContainerRef, 0, NULL, fsRdPerm, &res_ref );
+
+	if ( error != noErr )
+		return FT_Err_Cannot_Open_Resource;
+		
+	UseResFile( res_ref );
+
+	/* face_index may be -1, in which case we
+	just need to do a sanity check */
+	if ( face_index < 0 )
+		res_index = 1;
+	else
+	{
+		res_index = (short)( face_index + 1 );
+		face_index = 0;
+	}
+	fond = Get1IndResource( 'FOND', res_index );
+	if ( ResError() )
+	{
+		error = FT_Err_Cannot_Open_Resource;
+		goto Error;
+	}
+
+	error = FT_New_Face_From_FOND( library, fond, face_index, aface );
+
+Error:
+	CloseResFile( res_ref );
+	return error;
+  }
+
 
   /* documentation in ftmac.h */
 
@@ -678,6 +740,72 @@
     return FT_Err_Unknown_File_Format;
   }
 
+  /* documentation in ftmac.h */
+  FT_EXPORT_DEF( FT_Error )
+	FT_GetFile_From_Mac_Name( char* fontName, FSSpec* pathSpec, FT_Long* face_index )
+{
+    OptionBits options = kFMUseGlobalScopeOption;
+    FMFontFamilyIterator famIter;
+    OSStatus status = FMCreateFontFamilyIterator(NULL, NULL, options, &famIter);
+    FMFont the_font = NULL;
+    FMFontFamily family = NULL;
+    *face_index = 0;
+    while (status == 0 && !the_font)
+    {
+            status = FMGetNextFontFamily(&famIter, &family);
+            if (status == 0)
+            {
+            		int stat2;
+                    FMFontFamilyInstanceIterator instIter;
+
+                    /* get the family name */
+                    Str255 famNameStr;
+                    char famName[256];
+                    FMGetFontFamilyName(family, famNameStr);
+                    CopyPascalStringToC(famNameStr, famName);
+
+                    /* iterate through the styles */
+                    FMCreateFontFamilyInstanceIterator(family, &instIter);
+                    *face_index = 0;
+                    stat2 = 0;
+                    while (stat2 == 0 && !the_font)
+                    {
+                            FMFontStyle style;
+                            FMFontSize size;
+                            FMFont font;
+                            stat2 = FMGetNextFontFamilyInstance(&instIter, &font, &style, &size);
+                            if (stat2 == 0 && size == 0)
+                            {
+                                    /* build up a complete face name */
+                                    char fullName[256];
+                                    strcpy( fullName, famName );
+                                    if (style & bold)
+                                            strcat( fullName, " Bold" );
+                                    if (style & italic)
+                                            strcat( fullName, " Italic" );
+
+                                    /* compare with the name we are looking for */
+                                    if (strcmp( fullName, fontName ) == 0 )
+                                    {
+                                            /* found it! */
+                                            the_font = font;
+                                    }
+                                    else
+                                            ++(*face_index);
+                            }
+                    }
+                    FMDisposeFontFamilyInstanceIterator(&instIter);
+            }
+    }
+    FMDisposeFontFamilyIterator(&famIter);
+    
+    if ( the_font ) {
+        FMGetFontContainer(the_font, pathSpec);
+        return FT_Err_Ok;
+	} else
+		return FT_Err_Unknown_File_Format;
+ 
+}
 
   /*************************************************************************/
   /*                                                                       */
@@ -713,7 +841,9 @@
       return FT_New_Face_From_Suitcase( library, &spec, face_index, aface );
     else if ( file_type == 'LWFN' )
       return FT_New_Face_From_LWFN( library, &spec, face_index, aface );
-    else
+    else if ( is_dfont( &spec ) )
+      return FT_New_Face_From_dfont( library, &spec, face_index, aface );
+    else	/* let it fall through to normal loader (.ttf, .otf, etc.) */
     {
       args.flags    = ft_open_pathname;
       args.pathname = (char*)pathname;
