@@ -4,6 +4,9 @@
         src/pshinter/pshalgo3.c: implemented the FT_RENDER_MODE_LIGHT hinting
         mode in the auto and postscript hinters
 
+        * src/truetype/ttgload.c: fixing the TrueType loader to handle invalid
+        composites correctly by limiting the recursion depth
+
 2003-01-08  David Turner  <david@freetype.org>
 
         * src/base/ftobjs.c (find_unicode_charmap): fixed the error code
