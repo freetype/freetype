@@ -1677,13 +1677,13 @@
       FT_Pos     top;      /* scaled vertical top side bearing  */
       FT_Pos     advance;  /* scaled vertical advance height    */
 
+
       /* Get the unscaled top bearing and advance height. */
       if ( face->vertical_info &&
            face->vertical.number_Of_VMetrics > 0 )
       {
-        advance_height = loader->pp4.y - loader->pp3.y;
-        top_bearing    = loader->pp3.y - bbox.yMax;
-
+        advance_height = (FT_UShort)( loader->pp4.y - loader->pp3.y );
+        top_bearing    = (FT_Short)( loader->pp3.y - bbox.yMax );
       }
       else
       {
