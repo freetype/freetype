@@ -130,7 +130,7 @@ PROJECT_LIBRARY := $(LIB_)$(LIBRARY).$A
 #                 in the `freetype/builds/<system>' directory, as these
 #                 files will override the default sources.
 #
-INCLUDES := $(BUILD) $(TOP)$(SEP)include
+INCLUDES := $(OBJ_DIR) $(BUILD) $(TOP)$(SEP)include
 
 INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 

@@ -3,7 +3,9 @@
 
 CC      := @CC@
 
-LIBTOOL := $(BUILD)/libtool
+ifndef LIBTOOL
+  LIBTOOL := $(BUILD)/libtool
+endif
 
 
 # The object file extension (for standard and static libraries).  This can be
