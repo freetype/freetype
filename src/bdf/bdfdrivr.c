@@ -46,9 +46,6 @@ THE SOFTWARE.
 #define FT_COMPONENT  trace_bdfdriver
 
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
-
   typedef struct  BDF_CMapRec_
   {
     FT_CMapRec        cmap;
@@ -171,39 +168,6 @@ THE SOFTWARE.
   };
 
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-
-  static FT_UInt
-  BDF_Get_Char_Index( FT_CharMap  charmap,
-                      FT_ULong    char_code )
-  {
-    BDF_Face          face     = (BDF_Face)charmap->face;
-    BDF_encoding_el*  en_table = face->en_table;
-    int               low, high, mid;
-
-
-    FT_TRACE4(( "BDF_Get_Char_Index %ld\n", char_code ));
-
-    low  = 0;
-    high = face->bdffont->glyphs_used - 1;
-
-    while ( low <= high )
-    {
-      mid = ( low + high ) / 2;
-      if ( char_code < en_table[mid].enc )
-        high = mid - 1;
-      else if ( char_code > en_table[mid].enc )
-        low = mid + 1;
-      else
-        return en_table[mid].glyph + 1;
-    }
-
-    return face->bdffont->default_glyph + 1;
-  }
-
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
 
   FT_CALLBACK_DEF( FT_Error )
@@ -429,8 +393,6 @@ THE SOFTWARE.
                    !ft_strcmp( face->charset_encoding, "1" )       )  )
               unicode_charmap = 1;
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
             {
               FT_CharMapRec  charmap;
 
@@ -454,31 +416,11 @@ THE SOFTWARE.
                 root->charmap = root->charmaps[0];
             }
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-            face->charmap.encoding    = ft_encoding_none;
-            face->charmap.platform_id = 0;
-            face->charmap.encoding_id = 0;
-            if ( unicode_charmap )
-            {
-              face->charmap.encoding    = ft_encoding_unicode;
-              face->charmap.platform_id = 3;
-              face->charmap.encoding_id = 1;
-            }
-            face->charmap.face        = root;
-            face->charmap_handle      = &face->charmap;
-
-            root->charmap = face->charmap_handle;
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
-
             goto Exit;
           }
         }
 
         /* otherwise assume Adobe standard encoding */
-
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
 
         {
           FT_CharMapRec  charmap;
@@ -495,19 +437,6 @@ THE SOFTWARE.
           if (root->num_charmaps)
             root->charmap = root->charmaps[0];
         }
-
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-        face->charmap.encoding    = ft_encoding_adobe_standard;
-        face->charmap.platform_id = 7; /* taken from t1objs.c */
-        face->charmap.encoding_id = 0;
-        face->charmap.face        = root;
-        face->charmap_handle      = &face->charmap;
-
-        root->charmap = face->charmap_handle;
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
-
       }
     }
 
@@ -733,21 +662,13 @@ THE SOFTWARE.
 
     (FT_Slot_LoadFunc)        BDF_Glyph_Load,
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
     (FT_CharMap_CharIndexFunc)0,
-#else
-    (FT_CharMap_CharIndexFunc)BDF_Get_Char_Index,
-#endif
 
     (FT_Face_GetKerningFunc)  0,
     (FT_Face_AttachFunc)      0,
     (FT_Face_GetAdvancesFunc) 0,
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
     (FT_CharMap_CharNextFunc) 0
-#else
-    (FT_CharMap_CharNextFunc) 0 /* BDF_Get_Next_Char */
-#endif
   };
 
 

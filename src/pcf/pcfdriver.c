@@ -41,8 +41,6 @@ THE SOFTWARE.
 #define FT_COMPONENT  trace_pcfread
 
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
   typedef struct  PCF_CMapRec_
   {
     FT_CMapRec    cmap;
@@ -164,77 +162,6 @@ THE SOFTWARE.
     (FT_CMap_CharNextFunc) pcf_cmap_char_next
   };
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-  static FT_UInt
-  PCF_Char_Get_Index( FT_CharMap  charmap,
-                      FT_Long     char_code )
-  {
-    PCF_Face      face     = (PCF_Face)charmap->face;
-    PCF_Encoding  en_table = face->encodings;
-    int           low, high, mid;
-
-
-    FT_TRACE4(( "get_char_index %ld\n", char_code ));
-
-    low = 0;
-    high = face->nencodings - 1;
-    while ( low <= high )
-    {
-      mid = ( low + high ) / 2;
-      if ( char_code < en_table[mid].enc )
-        high = mid - 1;
-      else if ( char_code > en_table[mid].enc )
-        low = mid + 1;
-      else
-        return en_table[mid].glyph + 1;
-    }
-
-    return 0;
-  }
-
-
-  static FT_Long
-  PCF_Char_Get_Next( FT_CharMap  charmap,
-                     FT_Long     char_code )
-  {
-    PCF_Face      face     = (PCF_Face)charmap->face;
-    PCF_Encoding  en_table = face->encodings;
-    int           low, high, mid;
-
-
-    FT_TRACE4(( "get_next_char %ld\n", char_code ));
-
-    char_code++;
-    low  = 0;
-    high = face->nencodings - 1;
-
-    while ( low <= high )
-    {
-      mid = ( low + high ) / 2;
-      if ( char_code < en_table[mid].enc )
-        high = mid - 1;
-      else if ( char_code > en_table[mid].enc )
-        low = mid + 1;
-      else
-        return char_code;
-    }
-
-    if ( high < 0 )
-      high = 0;
-
-    while ( high < face->nencodings )
-    {
-      if ( en_table[high].enc >= char_code )
-        return en_table[high].enc;
-      high++;
-    }
-
-    return 0;
-  }
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -321,8 +248,6 @@ THE SOFTWARE.
           unicode_charmap = 1;
       }
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
       {
         FT_CharMapRec  charmap;
 
@@ -345,30 +270,6 @@ THE SOFTWARE.
         if (face->root.num_charmaps)
           face->root.charmap = face->root.charmaps[0];
       }
-
-#else  /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-      /* XXX: charmaps.  For now, report unicode for Unicode and Latin 1 */
-      face->root.charmaps     = &face->charmap_handle;
-      face->root.num_charmaps = 1;
-
-      face->charmap.encoding    = ft_encoding_none;
-      face->charmap.platform_id = 0;
-      face->charmap.encoding_id = 0;
-
-      if ( unicode_charmap )
-      {
-        face->charmap.encoding    = ft_encoding_unicode;
-        face->charmap.platform_id = 3;
-        face->charmap.encoding_id = 1;
-      }
-
-      face->charmap.face   = &face->root;
-      face->charmap_handle = &face->charmap;
-      face->root.charmap   = face->charmap_handle;
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
-
     }
 
   Exit:
@@ -559,21 +460,13 @@ THE SOFTWARE.
 
     (FT_Slot_LoadFunc)        PCF_Glyph_Load,
 
-#ifndef FT_CONFIG_OPTION_USE_CMAPS
-    (FT_CharMap_CharIndexFunc)PCF_Char_Get_Index,
-#else
     (FT_CharMap_CharIndexFunc)0,
-#endif
 
     (FT_Face_GetKerningFunc)  0,
     (FT_Face_AttachFunc)      0,
     (FT_Face_GetAdvancesFunc) 0,
 
-#ifndef FT_CONFIG_OPTION_USE_CMAPS
-    (FT_CharMap_CharNextFunc) PCF_Char_Get_Next,
-#else
     (FT_CharMap_CharNextFunc) 0
-#endif
   };
 
 
