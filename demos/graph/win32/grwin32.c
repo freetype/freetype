@@ -73,16 +73,14 @@
     { VK_BACK,      grKeyBackSpace },
     { VK_TAB,       grKeyTab       },
     { VK_RETURN,    grKeyReturn    },
-    { VK_ESCAPE,       grKeyEsc       },
+    { VK_ESCAPE,    grKeyEsc       },
     { VK_HOME,      grKeyHome      },
     { VK_LEFT,      grKeyLeft      },
     { VK_UP,        grKeyUp        },
     { VK_RIGHT,     grKeyRight     },
     { VK_DOWN,      grKeyDown      },
-  /*
-    { VK_PAGEUP,    grKeyPageUp    },
-    { VK_PAGEDOWN,  grKeyPageDown  },
-   */
+    { VK_PRIOR,     grKeyPageUp    },
+    { VK_NEXT,      grKeyPageDown  },
     { VK_END,       grKeyEnd       },
     { VK_F1,        grKeyF1        },
     { VK_F2,        grKeyF2        },
@@ -437,6 +435,7 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
     }
 
     case WM_KEYDOWN:
+    case WM_SYSKEYDOWN:
       switch ( wParam )
       {
       case VK_ESCAPE:
