@@ -37,7 +37,6 @@ THE SOFTWARE.
 
 #include "pcf.h"
 #include "pcfdrivr.h"
-#include "pcfutil.h"
 #include "pcfread.h"
 
 #include "pcferror.h"

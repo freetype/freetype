@@ -478,10 +478,10 @@ THE SOFTWARE.
 
 
             if ( FT_NEW_ARRAY( face->charset_encoding,
-                               strlen( charset_encoding->value.atom ) + 1 ) )
+                               ft_strlen( charset_encoding->value.atom ) + 1 ) )
               goto Exit;
             if ( FT_NEW_ARRAY( face->charset_registry,
-                               strlen( charset_registry->value.atom ) + 1 ) )
+                               ft_strlen( charset_registry->value.atom ) + 1 ) )
               goto Exit;
 
             ft_strcpy( face->charset_registry, charset_registry->value.atom );

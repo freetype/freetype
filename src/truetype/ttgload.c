@@ -1729,7 +1729,7 @@
   FT_LOCAL_DEF( FT_Error )
   TT_Load_Glyph( TT_Size       size,
                  TT_GlyphSlot  glyph,
-                 FT_UShort     glyph_index,
+                 FT_UInt       glyph_index,
                  FT_Int32      load_flags )
   {
     SFNT_Service  sfnt;
@@ -1772,7 +1772,7 @@
 
       error = sfnt->load_sbit_image( face,
                                      (FT_ULong)size->strike_index,
-                                     (FT_UInt)glyph_index,
+                                     glyph_index,
                                      (FT_Int)load_flags,
                                      stream,
                                      &glyph->bitmap,
