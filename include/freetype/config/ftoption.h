@@ -291,7 +291,7 @@ FT_BEGIN_HEADER
   /*   should define FT_DEBUG_MEMORY here.                                 */
   /*                                                                       */
   /*   Note that the memory debugger is only activated at runtime when     */
-  /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
+  /*   when the _environment_ variable "FT2_DEBUG_MEMORY" is defined also! */
   /*                                                                       */
   /*   Do not #undef this macro here since the build system might define   */
   /*   it for certain configurations only.                                 */
@@ -399,18 +399,19 @@ FT_BEGIN_HEADER
   /*   Do not #undef this macro here, since the build system might         */
   /*   define it for certain configurations only.                          */
   /*                                                                       */
-/* #define  TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
   /*************************************************************************/
   /*                                                                       */
-  /* Define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING to compile the     */
-  /* unpatented work-around hinting system.  You must define this if you   */
-  /* want either to force the use of the unpatented hinting system by also */
-  /* defining TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING, or if you want to */
-  /* select it at run time using the FT_PARAM_TAG_UNPATENTED_HINTING tag.  */
+  /* Define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING (in addition to    */
+  /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER) to compile the unpatented      */
+  /* work-around hinting system.  You must define this if you want either  */
+  /* to force the use of the unpatented hinting system by also defining    */
+  /* TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING, or if you want to select   */
+  /* it at run time using the FT_PARAM_TAG_UNPATENTED_HINTING tag.         */
   /*                                                                       */
-/* #define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING */
+#define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
 
 
   /*************************************************************************/
@@ -423,7 +424,7 @@ FT_BEGIN_HEADER
   /* For this to work you must also define                                 */
   /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING.                          */
   /*                                                                       */
-/* #define TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING */
+#define TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING
 
 
   /*************************************************************************/

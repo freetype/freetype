@@ -1,3 +1,17 @@
+2003-06-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (load_truetype_glyph)
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Call
+	FT_GlyphLoader_CheckPoints before adding phantom points.  This fixes
+	a segfault bug with fonts (e.g. htst3.ttf) which have nested
+	subglyphs more than one level deep.  Reported by Anthony Fok.
+
+	* include/freetype/config/ftoption.h: Define
+	TT_CONFIG_OPTION_BYTECODE_INTERPRETER,
+	TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING, and
+	TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING to make it the new
+	default.
+
 2003-06-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahhint.c (ah_hinter_hint_edges): Removed.  Just a
