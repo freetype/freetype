@@ -74,6 +74,7 @@
 
     cff_op_hintmask,
     cff_op_cntrmask,
+    cff_op_dotsection,
 
     cff_op_abs,
     cff_op_add,
@@ -152,6 +153,7 @@
 
     0, /* hintmask */
     0, /* cntrmask */
+    0, /* dotsection */
 
     1, /* abs */
     2,
@@ -790,7 +792,7 @@
         if ( !( val & 0xFFFF ) )
           FT_TRACE4(( " %d", (FT_Int32)( val >> 16 ) ));
         else
-          FT_TRACE4(( " %.2f", val/65536.0 ));
+          FT_TRACE4(( " %.2f", val / 65536.0 ));
 #endif
 
       }
@@ -841,6 +843,9 @@
 
             switch ( v )
             {
+            case 0:
+              op = cff_op_dotsection;
+              break;
             case 3:
               op = cff_op_and;
               break;
@@ -1061,14 +1066,35 @@
 
         case cff_op_hintmask:
         case cff_op_cntrmask:
+
           FT_TRACE4(( op == cff_op_hintmask ? " hintmask"
                                             : " cntrmask" ));
 
           decoder->num_hints += num_args / 2;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          {
+            FT_UInt maskbyte;
+
+            FT_TRACE4(( " " ));
+
+            for ( maskbyte = 0; maskbyte < ( decoder->num_hints + 7 ) >> 3 ; maskbyte++, ip++ )
+            {
+              FT_TRACE4(( "%02X", *ip ));
+            }
+
+          }
+#else
           ip += ( decoder->num_hints + 7 ) >> 3;
+#endif
           if ( ip >= limit )
             goto Syntax_Error;
           args = stack;
+          break;
+
+        case cff_op_dotsection:
+
+          FT_TRACE4(( " dotsection" ));
           break;
 
         case cff_op_rmoveto:
@@ -1676,7 +1702,7 @@
 
             for (;;)
             {
-              new_root = ( root + FT_DivFix(args[0],root) + 1 ) >> 1;
+              new_root = ( root + FT_DivFix( args[0], root ) + 1 ) >> 1;
               if ( new_root == root || count <= 0 )
                 break;
               root = new_root;
@@ -1891,7 +1917,7 @@
 
             zone++;
             zone->base   = decoder->locals[index];
-            zone->limit  = decoder->locals[index+1];
+            zone->limit  = decoder->locals[index + 1];
             zone->cursor = zone->base;
 
             if ( !zone->base )
