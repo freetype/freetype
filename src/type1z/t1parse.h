@@ -196,6 +196,9 @@
                     T1_Int     length,
                     T1_UShort  seed );
 
+  LOCAL_DEF
+  void  T1_Done_Parser( T1_Parser*  parser );
+
 #ifdef __cplusplus
   }
 #endif
