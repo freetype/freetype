@@ -196,11 +196,6 @@
                "invalid argument" )
   FT_ERRORDEF_( Unimplemented_Feature,                       0x07, \
                "unimplemented feature" )
-  FT_ERRORDEF_( Invalid_Table,                               0x08, \
-                "broken table" )
-  FT_ERRORDEF_( Invalid_Offset,                              0x09, \
-                "broken offset within table" )
-
 
   /* glyph/character errors */
 
