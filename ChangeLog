@@ -1,24 +1,29 @@
+2003-04-28  David Turner  <david@freetype.org>
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Fix boundary check for
+	`glyph_index'.
+
 2003-04-25:  Graham Asher  <graham.asher@btinternet.com>
 
 	Added the optional unpatented hinting system for TrueType. It
-    allows typefaces which need hinting to produce correct glyph forms
+	allows typefaces which need hinting to produce correct glyph forms
 	(e.g., Chinese typefaces from Dynalab) to work acceptably without
 	infringing Apple patents. This system is compiled only if
 	TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING is defined in
 	ftoption.h.
 
-    * include/freetype/ttunpat.h: added header file ttunpat.h defining
-    FT_PARAM_TAG_UNPATENTED_HINTING.
+	* include/freetype/ttunpat.h: added header file ttunpat.h defining
+	FT_PARAM_TAG_UNPATENTED_HINTING.
 
 	* include/freetype/config/ftheader.h: Added macro FT_UNPATENTED_H
-    to use when including new header ttunpat.h.
+	to use when including new header ttunpat.h.
 
 	* include/freetype/config/ftoption.h: Added configuration macros
-    (not defined, but in comments) for the unpatented hinting system.
+	(not defined, but in comments) for the unpatented hinting system.
 
 	* include/freetype/internal/tttypes.h: If unpatented hinting is
-    compiled the TrueType face object acquires a new element,
-    "FT_Bool unpatented_hinting".
+	compiled the TrueType face object acquires a new element,
+	"FT_Bool unpatented_hinting".
 
 	* src/truetype/ttinterp.c, ttobjs.c, ttobjs.h: Added the unpatented
 	hinting system, which is compiled only if
@@ -50,9 +55,9 @@
 
 2003-04-24  David Turner  <david@freetype.org>
 
-	* src/pcf/pcfread.c (pcf_load_font): fixed the computation of
-	face->num_glyphs, this required increase the value by 1 to respect
-	the convention that gindex 0 always corresponds to the "missing
+	* src/pcf/pcfread.c (pcf_load_font): Fixed the computation of
+	face->num_glyphs.  We must increase the value by 1 to respect the
+	convention that glyph index 0 always corresponds to the "missing
 	glyph".
 
 2003-04-24  Werner Lemberg  <wl@gnu.org>

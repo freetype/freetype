@@ -466,7 +466,7 @@
     if ( !face || !face->size || !face->glyph )
       return FT_Err_Invalid_Face_Handle;
 
-    if ( glyph_index > (FT_UInt)face->num_glyphs )
+    if ( glyph_index >= (FT_UInt)face->num_glyphs )
       return FT_Err_Invalid_Argument;
 
     slot = face->glyph;
