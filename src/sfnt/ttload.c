@@ -1003,15 +1003,18 @@
 
       for ( ; cur < limit; cur ++ )
       {
-        FT_ULong  upper;
-
-
         if ( READ_Fields( name_record_fields, cur ) )
           break;
 
         /* invalid name entries will have "cur->string" set to NULL !! */
         if ( (FT_ULong)(cur->stringOffset + cur->stringLength) < storageSize )
           cur->string = storage + cur->stringOffset;
+        else
+        {
+          /* that's an invalid entry */
+          cur->stringOffset = 0;
+          cur->string       = NULL;
+        }
       }
     }
 
@@ -1019,6 +1022,12 @@
 
     if (error)
       goto Exit;
+
+    storageOffset -= 6 + 12*names->numNameRecords;
+    if ( FILE_Skip( storageOffset )        ||
+         FILE_Read( storage, storageSize ) )
+      goto Exit;
+
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 

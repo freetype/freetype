@@ -11,6 +11,16 @@
         caused the CID driver to return Postscript font names with a leading
         slash ("/") as in "/MOEKai-Regular"
 
+	* src/sfnt/ttload.c (TT_Load_Names), src/sfnt/sfobjs.c (Get_Name),
+	src/sfnt/sfdriver.c (get_sfnt_postscript_name): Fixed the loader so
+	that it accepts broken fonts like "foxjump.ttf", which made FreeType
+	crash when trying to load them.
+
+	Also improved the name table parser to be able to load
+	Windows-encoded entries before Macintosh or Unicode ones, since it
+	seems some fonts don't have reliable values here anyway.
+
+
 2002-03-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/aclocal.m4, builds/unix/ltmain.sh: Update to libtool
