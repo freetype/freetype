@@ -434,10 +434,9 @@ THE SOFTWARE.
     for ( i = 0; i < nprops; i++ )
     {
       /* XXX: make atom */ 
-      error = ALLOC( properties[i].name, 
+      if ( ALLOC( properties[i].name, 
                      ( strlen( strings + props[i].name ) + 1 ) *
-                       sizeof ( char ) );
-      if ( error )
+                       sizeof ( char ) ) )
         goto Bail;
       strcpy( properties[i].name,strings + props[i].name );
     
@@ -445,10 +444,9 @@ THE SOFTWARE.
    
       if ( props[i].isString )
       {
-        error = ALLOC( properties[i].value.atom, 
+        if ( ALLOC( properties[i].value.atom, 
                        ( strlen( strings + props[i].value ) + 1 ) * 
-                         sizeof ( char ) );
-        if ( error )
+                         sizeof ( char ) ) )
           goto Bail;
         strcpy( properties[i].value.atom, strings + props[i].value );
       } 
@@ -519,8 +517,7 @@ THE SOFTWARE.
   
     face->nmetrics = nmetrics;
 
-    error = ALLOC( face->metrics, nmetrics * sizeof ( PCF_MetricRec ) );
-    if ( error )
+    if ( ALLOC( face->metrics, nmetrics * sizeof ( PCF_MetricRec ) ) )
       return FT_Err_Out_Of_Memory;
 
     metrics = face->metrics;
@@ -587,8 +584,7 @@ THE SOFTWARE.
     if ( nbitmaps != face->nmetrics )
       return FT_Err_Invalid_File_Format;
 
-    error = ALLOC( offsets, nbitmaps * sizeof ( FT_ULong ) );
-    if ( error )
+    if ( ALLOC( offsets, nbitmaps * sizeof ( FT_ULong ) ) )
       return error;
 
     if ( error )
