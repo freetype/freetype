@@ -920,6 +920,7 @@
             FT_Vector*  p1;
             FT_Vector*  p2;
 
+
             if ( start_point + k >= (FT_UInt)num_base_points ||
                                l >= (FT_UInt)num_new_points  )
             {
@@ -1023,8 +1024,8 @@
           pp1[0] = loader->pp1;
           pp1[1] = loader->pp2;
 
+          pts->tags[num_points    ] = 0;
           pts->tags[num_points + 1] = 0;
-          pts->tags[num_points + 2] = 0;
 
           /* if hinting, round the phantom points */
           if ( IS_HINTED( loader->load_flags ) )

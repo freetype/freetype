@@ -233,7 +233,7 @@
     {
       FT_GlyphLoader*  loader = glyph->root.loader;
 
-      
+
       builder->loader  = loader;
       builder->base    = &loader->base.outline;
       builder->current = &loader->current.outline;
@@ -351,29 +351,31 @@
   }
 
 
- /* this function is used to select the locals subrs array */
+  /* this function is used to select the locals subrs array */
   LOCAL_DEF
-  void   T2_Prepare_Decoder( T2_Decoder*  decoder,
-                             FT_UInt      glyph_index )
+  void  T2_Prepare_Decoder( T2_Decoder*  decoder,
+                            FT_UInt      glyph_index )
   {
     CFF_Font*     cff = (CFF_Font*)decoder->builder.face->extra.data;
     CFF_SubFont*  sub = &cff->top_font;
-    
+
+
     /* manage CID fonts */
-    if (cff->num_subfonts >= 1)
+    if ( cff->num_subfonts >= 1 )
     {
       FT_Byte  fd_index = CFF_Get_FD( &cff->fd_select, glyph_index );
+
+
       sub = cff->subfonts[fd_index];
     }
-    
-    decoder->num_locals  = sub->num_local_subrs;
-    decoder->locals      = sub->local_subrs;
-    decoder->locals_bias = t2_compute_bias( decoder->num_locals );
+
+    decoder->num_locals    = sub->num_local_subrs;
+    decoder->locals        = sub->local_subrs;
+    decoder->locals_bias   = t2_compute_bias( decoder->num_locals );
 
     decoder->glyph_width   = sub->private_dict.default_width;
     decoder->nominal_width = sub->private_dict.nominal_width;
-  }                                 
-
+  }
 
 
   /* check that there is enough room for `count' more points */
@@ -382,7 +384,7 @@
                           FT_Int       count )
   {
     return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
-  }                                         
+  }
 
 
   /* add a new point, do not check space */
@@ -447,7 +449,7 @@
     {
       if ( outline->n_contours > 0 )
         outline->contours[outline->n_contours - 1] = outline->n_points - 1;
-  
+
       outline->n_contours++;
     }
 
@@ -527,6 +529,7 @@
     FT_Pos              x, y;
     FT_Fixed            seed;
     FT_Fixed*           stack;
+
 
     /* set default width */
     decoder->num_hints  = 0;
@@ -1087,10 +1090,12 @@
 
         case t2_op_rlinecurve:
           {
-            FT_Int    num_lines = (num_args-6)/2;
+            FT_Int  num_lines = ( num_args - 6 ) / 2;
+
+
             FT_TRACE4(( " rlinecurve" ));
             
-            if ( num_args < 8 || (num_args-6) & 1)
+            if ( num_args < 8 || ( num_args - 6 ) & 1 )
               goto Stack_Underflow;
               
             if ( start_point( builder, x, y )           ||
@@ -1100,7 +1105,7 @@
             args = stack;
             
             /* first, add the line segments */
-            while (num_lines > 0)
+            while ( num_lines > 0 )
             {
               x += args[0];
               y += args[1];
@@ -1109,7 +1114,7 @@
               num_lines--;
             }
             
-            /* then, the curve */
+            /* then the curve */
             x += args[0];
             y += args[1];
             add_point( builder, x, y, 0 );
@@ -1125,12 +1130,12 @@
           
         case t2_op_rcurveline:
           {
-            FT_Int  num_curves = (num_args-2)/6;
+            FT_Int  num_curves = ( num_args - 2 ) / 6;
 
 
             FT_TRACE4(( " rcurveline" ));
 
-            if ( num_args < 8 || (num_args-2) % 6  )
+            if ( num_args < 8 || ( num_args - 2 ) % 6 )
               goto Stack_Underflow;
 
             if ( start_point ( builder, x, y )             ||
@@ -1138,8 +1143,9 @@
               goto Memory_Error;
 
             args = stack;
+
             /* first, add the curves */
-            while (num_curves > 0)
+            while ( num_curves > 0 )
             {
               x += args[0];
               y += args[1];
@@ -1153,6 +1159,7 @@
               args += 6;
               num_curves--;
             }
+
             /* then the final line */
             x += args[0];
             y += args[1];
@@ -1549,15 +1556,15 @@
     return error;
 
   Syntax_Error:
-    FT_TRACE4(( "** Syntax Error **" ));
+    FT_TRACE4(( "T2_Parse_CharStrings: syntax error!" ));
     return T2_Err_Invalid_File_Format;
 
   Stack_Underflow:
-    FT_TRACE4(( "** Stack underflow **" ));
+    FT_TRACE4(( "T2_Parse_CharStrings: stack underflow!" ));
     return T2_Err_Too_Few_Arguments;
 
   Stack_Overflow:
-    FT_TRACE4(( "** Stack overflow**" ));
+    FT_TRACE4(( "T2_Parse_CharStrings: stack overflow!" ));
     return T2_Err_Stack_Overflow;
 
   Memory_Error:

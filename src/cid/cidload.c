@@ -83,8 +83,8 @@
 
 
   static
-  FT_Error  cid_load_keyword( CID_Face             face,
-                              CID_Loader*          loader,
+  FT_Error  cid_load_keyword( CID_Face              face,
+                              CID_Loader*           loader,
                               const CID_Field_Rec*  keyword )
   {
     FT_Error    error;

@@ -318,26 +318,27 @@
 
 #endif /* 0 */
 
- /**********************************************************************/
- /**********************************************************************/
- /***                                                                ***/
- /***   FD Select table support                                      ***/
- /***                                                                ***/
- /***                                                                ***/
- /**********************************************************************/
- /**********************************************************************/
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /***                                                                   ***/
+  /***   FD Select table support                                         ***/
+  /***                                                                   ***/
+  /*************************************************************************/
+  /*************************************************************************/
+
 
   static
   void  CFF_Done_FD_Select( CFF_FD_Select*  select,
                             FT_Stream       stream )
   {
-    if (select->data)
+    if ( select->data )
       RELEASE_Frame( select->data );
-      
+
     select->data_size   = 0;
     select->format      = 0;
     select->range_count = 0;
-  }                            
+  }
 
 
   static
@@ -349,42 +350,44 @@
     FT_Error       error;
     FT_Byte        format;
     FT_UInt        num_ranges;
-    
+
+
     /* read format */
-    if ( FILE_Seek(offset) || READ_Byte(format) )
+    if ( FILE_Seek( offset ) || READ_Byte( format ) )
       goto Exit;
     
     select->format      = format;
     select->cache_count = 0;   /* clear cache */
-    switch (format)
+
+    switch ( format )
     {
-      case 0:  /* format 0, that's simple */
-         {
-           select->data_size = num_glyphs;
-           goto Load_Data;
-         }
-         
-         
-      case 3:  /* format 3, a tad more complex */
-         {
-           if ( READ_UShort(num_ranges) )
-             goto Exit;
-             
-           select->data_size = num_ranges*3+2;
-           
-         Load_Data:  
-           if ( EXTRACT_Frame( select->data_size, select->data ) )
-             goto Exit;
-         }
-         break;
-         
-         
-      default: /* humm.. that's wrong */
-        error = FT_Err_Invalid_File_Format;
+    case 0:     /* format 0, that's simple */
+      {
+        select->data_size = num_glyphs;
+        goto Load_Data;
+      }
+
+    case 3:     /* format 3, a tad more complex */
+      {
+        if ( READ_UShort( num_ranges ) )
+          goto Exit;
+
+        select->data_size = num_ranges * 3 + 2;
+
+      Load_Data:
+        if ( EXTRACT_Frame( select->data_size, select->data ) )
+          goto Exit;
+      }
+      break;
+
+
+    default:    /* humm... that's wrong */
+      error = FT_Err_Invalid_File_Format;
     }
+
   Exit:
     return error;
-  }                                
+  }
 
 
   LOCAL_FUNC
@@ -392,68 +395,70 @@
                        FT_UInt         glyph_index )
   {
     FT_Byte  fd = 0;
-    
-    switch (select->format)
+
+
+    switch ( select->format )
     {
-      case 0:
-        fd = select->data[glyph_index];
+    case 0:
+      fd = select->data[glyph_index];
+      break;
+
+    case 3:
+      /* first, compare to cache */
+      if ( (FT_UInt)(glyph_index-select->cache_first) < select->cache_count )
+      {
+        fd = select->cache_fd;
         break;
-        
-      case 3:
-        /* first, compare to cache */
-        if ((FT_UInt)(glyph_index-select->cache_first) < select->cache_count)
+      }
+
+      /* then, lookup the ranges array */
+      {
+        FT_Byte*  p       = select->data;
+        FT_Byte*  p_limit = p + select->data_size;
+        FT_Byte   fd2;
+        FT_UInt   first, limit;
+
+
+        first = NEXT_UShort( p );
+        do
         {
-          fd = select->cache_fd;
-          break;
-        }
-        
-        /* then, lookup the ranges array */
-        {
-          FT_Byte*  p       = select->data;
-          FT_Byte*  p_limit = p + select->data_size;
-          FT_Byte   fd2;
-          FT_UInt   first, limit;
-          
-          first = NEXT_UShort(p);
-          do
+          if ( glyph_index < first )
+            break;
+
+          fd2   = *p++;
+          limit = NEXT_UShort( p );
+
+          if ( glyph_index < limit )
           {
-            if (glyph_index < first)
-              break;
-              
-            fd2   = *p++;
-            limit = NEXT_UShort(p);
-            
-            if (glyph_index < limit)
-            {
-              fd = fd2;
-              
-              /* update cache */
-              select->cache_first = first;
-              select->cache_count = limit-first;
-              select->cache_fd    = fd2;
-              break;
-            }
-            first = limit;
+            fd = fd2;
+
+            /* update cache */
+            select->cache_first = first;
+            select->cache_count = limit-first;
+            select->cache_fd    = fd2;
+            break;
           }
-          while (p < p_limit);
-        }
-        break;
-        
-      default:
-        ;
+          first = limit;
+        } while ( p < p_limit );
+      }
+      break;
+
+    default:
+      ;
     }
+
     return fd;
-  }                       
+  }
 
 
- /**********************************************************************/
- /**********************************************************************/
- /***                                                                ***/
- /***   CFF font support                                             ***/
- /***                                                                ***/
- /***                                                                ***/
- /**********************************************************************/
- /**********************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /***                                                                   ***/
+  /***   CFF font support                                                ***/
+  /***                                                                   ***/
+  /*************************************************************************/
+  /*************************************************************************/
+
 
   static
   FT_Error  CFF_Load_SubFont( CFF_SubFont*  font,
@@ -462,12 +467,13 @@
                               FT_Stream     stream,
                               FT_ULong      base_offset )
   {
-    FT_Error       error;
-    T2_Parser      parser;
-    FT_Byte*       dict;
-    FT_ULong       dict_len;
+    FT_Error        error;
+    T2_Parser       parser;
+    FT_Byte*        dict;
+    FT_ULong        dict_len;
     CFF_Font_Dict*  top  = &font->font_dict;
-    CFF_Private*   priv = &font->private_dict;
+    CFF_Private*    priv = &font->private_dict;
+
 
     T2_Parser_Init( &parser, T2CODE_TOPDICT, &font->font_dict );
 
@@ -494,11 +500,11 @@
       goto Exit;
 
     /* parse the private dictionary, if any */
-    if ( top->private_offset && top->private_size)
+    if ( top->private_offset && top->private_size )
     {
       /* set defaults */
-      MEM_Set( priv, 0, sizeof(*priv) );
-      
+      MEM_Set( priv, 0, sizeof ( *priv ) );
+
       priv->blue_shift       = 7;
       priv->blue_fuzz        = 1;
       priv->lenIV            = -1;
@@ -508,7 +514,7 @@
       T2_Parser_Init( &parser, T2CODE_PRIVATE, priv );
 
       if ( FILE_Seek( base_offset + font->font_dict.private_offset ) ||
-           ACCESS_Frame( font->font_dict.private_size )               )
+           ACCESS_Frame( font->font_dict.private_size )              )
         goto Exit;
 
       error = T2_Parser_Run( &parser,
@@ -529,7 +535,7 @@
       error = t2_new_cff_index( &font->local_subrs_index, stream, 1 );
       if ( error )
         goto Exit;
-        
+
       font->num_local_subrs = font->local_subrs_index.count;
       error = t2_explicit_cff_index( &font->local_subrs_index,
                                      &font->local_subrs );
@@ -544,13 +550,12 @@
   void  CFF_Done_SubFont( FT_Memory     memory,
                           CFF_SubFont*  subfont )
   {
-    if (subfont)
+    if ( subfont )
     {
       t2_done_cff_index( &subfont->local_subrs_index );
       FREE( subfont->local_subrs );
     }
-  }                          
-
+  }
 
 
   LOCAL_FUNC
@@ -599,7 +604,7 @@
 
     /* read the name, top dict, string and global subrs index */
     error = t2_new_cff_index( &font->name_index, stream, 0 )       ||
-            t2_new_cff_index( &font->font_dict_index, stream, 0 )   ||
+            t2_new_cff_index( &font->font_dict_index, stream, 0 )  ||
             t2_new_cff_index( &font->string_index, stream, 0 )     ||
             t2_new_cff_index( &font->global_subrs_index, stream, 1 );
     if ( error )
@@ -615,16 +620,16 @@
     }
 
     /* in case of a font format check, simply exit now */
-    if (face_index < 0)
+    if ( face_index < 0 )
       goto Exit;
-      
+
     /* now, parse the top-level font dictionary */
     error = CFF_Load_SubFont( &font->top_font,
                               &font->font_dict_index,
                               face_index,
                               stream,
                               base_offset );
-    if (error)
+    if ( error )
       goto Exit;
 
     /* now, check for a CID font */
@@ -634,20 +639,22 @@
       CFF_SubFont*  sub;
       FT_UInt       index;
 
+
       /* this is a CID-keyed font, we must now allocate a table of */
-      /* sub-fonts, then load each of them separately..            */
+      /* sub-fonts, then load each of them separately              */
       if ( FILE_Seek( base_offset + dict->cid_fd_array_offset ) )
         goto Exit;
-        
+
       error = t2_new_cff_index( &fd_index, stream, 0 );
-      if (error) goto Exit;
-      
-      if (fd_index.count > CFF_MAX_CID_FONTS)
+      if ( error )
+        goto Exit;
+
+      if ( fd_index.count > CFF_MAX_CID_FONTS )
       {
         FT_ERROR(( "T2_Load_CFF_Font: FD array too large in CID font\n" ));
         goto Fail_CID;
       }
-      
+
       /* allocate & read each font dict independently */
       font->num_subfonts = fd_index.count;
       if ( ALLOC_ARRAY( sub, fd_index.count, CFF_SubFont ) )
@@ -656,13 +663,15 @@
       /* setup pointer table */
       for ( index = 0; index < fd_index.count; index++ )
         font->subfonts[index] = sub + index;
-        
+
       /* now load each sub font independently */
       for ( index = 0; index < fd_index.count; index++ )
       {
         sub = font->subfonts[index];
-        error = CFF_Load_SubFont( sub, &fd_index, index, stream, base_offset );
-        if (error) goto Fail_CID;
+        error = CFF_Load_SubFont( sub, &fd_index, index,
+                                  stream, base_offset );
+        if ( error )
+          goto Fail_CID;
       }
 
       /* now load the FD Select array */
@@ -673,8 +682,8 @@
 
    Fail_CID:
       t2_done_cff_index( &fd_index );
-      
-      if (error)
+
+      if ( error )
         goto Exit;
     }
     else
@@ -713,28 +722,27 @@
   }
 
 
-
-
   LOCAL_FUNC
   void  T2_Done_CFF_Font( CFF_Font*  font )
   {
     FT_Memory  memory = font->memory;
     FT_UInt    index;
 
+
     t2_done_cff_index( &font->global_subrs_index );
     t2_done_cff_index( &font->string_index );
     t2_done_cff_index( &font->font_dict_index );
     t2_done_cff_index( &font->name_index );
     t2_done_cff_index( &font->charstrings_index );
-    
+
     /* release font dictionaries */
     for ( index = 0; index < font->num_subfonts; index++ )
       CFF_Done_SubFont( memory, font->subfonts[index] );
-    
+
     CFF_Done_SubFont( memory, &font->top_font );
-    
+
     CFF_Done_FD_Select( &font->fd_select, font->stream );
-    
+
     FREE( font->global_subrs );
     FREE( font->font_name );
   }

@@ -280,9 +280,9 @@
   FT_Error  parse_font_matrix( T2_Parser*  parser )
   {
     CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
-    FT_Matrix*     matrix = &dict->font_matrix;
-    FT_Byte**      data   = parser->stack;
-    FT_Error       error;
+    FT_Matrix*      matrix = &dict->font_matrix;
+    FT_Byte**       data   = parser->stack;
+    FT_Error        error;
 
 
     error = T2_Err_Stack_Underflow;
@@ -304,9 +304,9 @@
   FT_Error  parse_font_bbox( T2_Parser*  parser )
   {
     CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
-    FT_BBox*       bbox   = &dict->font_bbox;
-    FT_Byte**      data   = parser->stack;
-    FT_Error       error;
+    FT_BBox*        bbox   = &dict->font_bbox;
+    FT_Byte**       data   = parser->stack;
+    FT_Error        error;
 
 
     error = T2_Err_Stack_Underflow;
@@ -328,8 +328,8 @@
   FT_Error  parse_private_dict( T2_Parser*  parser )
   {
     CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
-    FT_Byte**      data = parser->stack;
-    FT_Error       error;
+    FT_Byte**       data = parser->stack;
+    FT_Error        error;
 
 
     error = T2_Err_Stack_Underflow;
@@ -349,8 +349,8 @@
   FT_Error  parse_cid_ros( T2_Parser*  parser )
   {
     CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
-    FT_Byte**      data   = parser->stack;
-    FT_Error       error;
+    FT_Byte**       data   = parser->stack;
+    FT_Error        error;
 
 
     error = T2_Err_Stack_Underflow;
@@ -395,7 +395,7 @@
             code | T2CODE,                           \
             (FT_UInt)(char*)&T2_REF( T2TYPE, name ), \
             sizeof( T2_REF( T2TYPE, name ) ),        \
-            0, 0, 0                               \
+            0, 0, 0                                  \
           },
 
 #undef  T2_FIELD_DELTA
@@ -478,7 +478,8 @@
         /* and look for it in our current list.                            */
 
         FT_UInt                  code;
-        FT_UInt                   num_args = (FT_UInt)(parser->top - parser->stack);
+        FT_UInt                  num_args = (FT_UInt)
+                                              ( parser->top - parser->stack );
         const T2_Field_Handler*  field;
 
 
@@ -516,28 +517,35 @@
             case t2_kind_fixed:
               val = t2_parse_fixed( parser->stack );
 
-            /* A slight note regarding the following:                    */
-            /*                                                           */
-            /*  SIZEOF_INT is defined in <freetype/config/ftconfig.h>    */
-            /*  and gives the size in bytes of the "int" type on the     */
-            /*  current platform..                                       */
-            /*                                                           */
-            /*  Only on 16-bit systems can the value of SIZEOF_INT be    */
-            /*  less than 4. In this case SIZEOF_LONG is always 4        */
-            /*                                                           */
-            /*  On a 64-bit system, SIZEOF_LONG can be 8, which is       */
-            /*  handled by the default case..                            */
-            /*                                                           */
-
+              /* SIZEOF_INT is defined in <freetype/config/ftconfig.h> */
+              /* and gives the size in bytes of the `int' type on the  */
+              /* current platform.                                     */
+              /*                                                       */
+              /* Only on 16-bit systems the value of SIZEOF_INT can be */
+              /* less than 4.  In this case SIZEOF_LONG is always 4.   */
+              /*                                                       */
+              /* On a 64-bit system, SIZEOF_LONG can be 8, which is    */
+              /* handled by the default case.                          */
+              /*                                                       */
             Store_Number:
               switch ( field->size )
               {
-                case 1:  *(FT_Byte*)q  = (FT_Byte)val;  break;
-                case 2:  *(FT_Short*)q = (FT_Short)val; break;
+              case 1:
+                *(FT_Byte*)q = (FT_Byte)val;
+                break;
+
+              case 2:
+                *(FT_Short*)q = (FT_Short)val;
+                break;
+
 #if SIZEOF_INT == 4
-                case 4:  *(FT_Int*)q   = (FT_Int)val;   break;
+              case 4:
+                *(FT_Int*)q = (FT_Int)val;
+                break;
 #endif
-                default: *(FT_Long*)q  = val;
+
+              default:
+                *(FT_Long*)q = val;
               }
               break;
 

@@ -103,7 +103,7 @@
     if ( component >= trace_max )
       return;
 
-    /* if component is `trace_any', then change _all_ levels at once */
+    /* if component is `trace_any', change _all_ levels at once */
     if ( component == trace_any )
     {
       int  n;

@@ -303,12 +303,12 @@
       0x20000L,
 
       0,   /* module-specific interface */
-      
+
       (FT_Module_Constructor)T2_Init_Driver,
       (FT_Module_Destructor) T2_Done_Driver,
       (FT_Module_Requester)  t2_get_interface,
     },
-    
+
     /* now the specific driver fields */
     sizeof( TT_FaceRec ),
     sizeof( FT_SizeRec ),
@@ -323,7 +323,7 @@
 
     (FTDriver_setCharSizes) 0,
     (FTDriver_setPixelSizes)0,
-    
+
     (FTDriver_loadGlyph)    Load_Glyph,
     (FTDriver_getCharIndex) Get_Char_Index,
 

@@ -38,7 +38,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    CID_Driver                                                          */
+  /*    CID_Driver                                                         */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 driver object.                                */
@@ -49,7 +49,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    CID_Size                                                            */
+  /*    CID_Size                                                           */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 size object.                                  */
@@ -60,7 +60,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    CID_GlyphSlot                                                       */
+  /*    CID_GlyphSlot                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 glyph slot object.                            */
@@ -71,7 +71,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    CID_CharMap                                                         */
+  /*    CID_CharMap                                                        */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 character mapping object.                     */
@@ -81,7 +81,7 @@
   /*    The driver is responsible for making up charmap objects            */
   /*    corresponding to these tables.                                     */
   /*                                                                       */
-  typedef struct CID_CharMapRec_*   CID_CharMap;
+  typedef struct CID_CharMapRec_*  CID_CharMap;
 
 
   /*************************************************************************/
@@ -99,7 +99,7 @@
   } CID_SizeRec;
 
 
-  typedef struct  CID_GlyphSlotRec_
+  typedef struct CID_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 

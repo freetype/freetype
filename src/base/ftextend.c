@@ -152,7 +152,8 @@
       cur->offset  = registry->cur_offset;
 
       registry->num_extensions++;
-      registry->cur_offset += ( cur->size + FT_ALIGNMENT-1 ) & -FT_ALIGNMENT;
+      registry->cur_offset +=
+        ( cur->size + FT_ALIGNMENT - 1 ) & -FT_ALIGNMENT;
 
       FT_TRACE1(( "FT_Register_Extension: `%s' successfully registered\n",
                   cur->id ));
@@ -180,12 +181,12 @@
   /*                           extension interface.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    A pointer to the extension block.                                  */
+  /*    A generic pointer to the extension block.                          */
   /*                                                                       */
   FT_EXPORT_FUNC( void* )  FT_Get_Extension(
                              FT_Face      face,
                              const char*  extension_id,
-                             void*       *extension_interface )
+                             void**       extension_interface )
   {
     FT_Extension_Registry*  registry;
 
@@ -296,7 +297,7 @@
 
     face->extensions = 0;
 
-    /* load extensions registry, exit successfully if none is there */
+    /* load extensions registry; exit successfully if none is there */
 
     registry = (FT_Extension_Registry*)face->driver->extensions;
     if ( !registry )

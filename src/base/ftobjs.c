@@ -201,6 +201,7 @@
     }
   }
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -224,6 +225,7 @@
   /*                                                                       */
   /* <Note>                                                                */
   /*    The function expects a valid `astream' parameter.                  */
+  /*                                                                       */
   static
   FT_Error  ft_new_input_stream( FT_Library     library,
                                  FT_Open_Args*  args,
@@ -314,6 +316,7 @@
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_objs
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -416,14 +419,15 @@
       FT_Memory memory = loader->memory;
 
 
-      FT_GlyphLoader_Reset(loader);
+      FT_GlyphLoader_Reset( loader );
       FREE( loader );
     }
   }
 
 
   /* re-adjust the `current' outline fields */
-  static void  FT_GlyphLoader_Adjust_Points( FT_GlyphLoader*  loader )
+  static
+  void  FT_GlyphLoader_Adjust_Points( FT_GlyphLoader*  loader )
   {
     FT_Outline*  base    = &loader->base.outline;
     FT_Outline*  current = &loader->current.outline;
@@ -432,7 +436,7 @@
     current->points   = base->points   + base->n_points;
     current->tags     = base->tags     + base->n_points;
     current->contours = base->contours + base->n_contours;
-    
+
     /* handle extra points table - if any */
     if ( loader->use_extra )
       loader->current.extra_points =
@@ -440,13 +444,13 @@
   }
 
 
-
-  BASE_FUNC(FT_Error)  FT_GlyphLoader_Create_Extra( FT_GlyphLoader*  loader )
+  BASE_FUNC( FT_Error )  FT_GlyphLoader_Create_Extra(
+                           FT_GlyphLoader*  loader )
   {
     FT_Error   error;
     FT_Memory  memory = loader->memory;
 
-    
+
     if ( !ALLOC_ARRAY( loader->base.extra_points,
                        loader->max_points, FT_Vector ) )
     {
@@ -458,7 +462,8 @@
 
 
   /* re-adjust the `current' subglyphs field */
-  static void  FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader*  loader )
+  static
+  void  FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad* base    = &loader->base;
     FT_GlyphLoad* current = &loader->current;
@@ -471,6 +476,7 @@
   /* Ensure that we can add `n_points' and `n_contours' to our glyph. this */
   /* function reallocates its outline tables if necessary.  Note that it   */
   /* DOESN'T change the number of points within the loader!                */
+  /*                                                                       */
   BASE_FUNC( FT_Error ) FT_GlyphLoader_Check_Points(
                           FT_GlyphLoader*  loader,
                           FT_UInt          n_points,
@@ -482,7 +488,7 @@
     FT_Outline*  current = &loader->current.outline;
     FT_Bool      adjust  = 1;
 
-    FT_UInt  new_max;
+    FT_UInt      new_max;
 
 
     /* check points & tags */
@@ -530,6 +536,7 @@
   /* Ensure that we can add `n_subglyphs' to our glyph. this function */
   /* reallocates its subglyphs table if necessary.  Note that it DOES */
   /* NOT change the number of subglyphs within the loader!            */
+  /*                                                                  */
   BASE_FUNC( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
                            FT_GlyphLoader*  loader,
                            FT_UInt          n_subs )
@@ -599,42 +606,41 @@
   }
 
 
-  BASE_FUNC( FT_Error )   FT_GlyphLoader_Copy_Points(
-                            FT_GlyphLoader*  target,
-                            FT_GlyphLoader*  source )
+  BASE_FUNC( FT_Error )  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
+                                                     FT_GlyphLoader*  source )
   {
     FT_Error  error;
     FT_UInt   num_points   = source->base.outline.n_points;
     FT_UInt   num_contours = source->base.outline.n_contours;
 
-    
+
     error = FT_GlyphLoader_Check_Points( target, num_points, num_contours );
     if ( !error )
     {
       FT_Outline*  out = &target->base.outline;
       FT_Outline*  in  = &source->base.outline;
 
-      
+
       MEM_Copy( out->points, in->points,
                 num_points * sizeof ( FT_Vector ) );
       MEM_Copy( out->tags, in->tags,
                 num_points * sizeof ( char ) );
       MEM_Copy( out->contours, in->contours,
                 num_contours * sizeof ( short ) );
-      
+
       /* do we need to copy the extra points? */
       if ( target->use_extra && source->use_extra )
         MEM_Copy( target->base.extra_points, source->base.extra_points,
                   num_points * sizeof ( FT_Vector ) );
-                  
+
       out->n_points   = num_points;
       out->n_contours = num_contours;
-      
+
       FT_GlyphLoader_Adjust_Points( target );
     }
 
-    return error;                                         
-  }                                           
+    return error;
+  }
 
 
   /*************************************************************************/
@@ -649,7 +655,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static  FT_Error  ft_glyphslot_init( FT_GlyphSlot  slot )
+
+  static
+  FT_Error  ft_glyphslot_init( FT_GlyphSlot  slot )
   {
     FT_Driver         driver = slot->face->driver;
     FT_Driver_Class*  clazz  = driver->clazz;
@@ -667,9 +675,11 @@
   }
 
 
-  static void  ft_glyphslot_clear( FT_GlyphSlot  slot )
+  static
+  void  ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
     /* clear all public fields in the glyph slot */
+
     MEM_Set( &slot->metrics, 0, sizeof ( slot->metrics ) );
     MEM_Set( &slot->outline, 0, sizeof ( slot->outline ) );
     MEM_Set( &slot->bitmap,  0, sizeof ( slot->bitmap )  );
@@ -688,7 +698,8 @@
   }
 
 
-  static void  ft_glyphslot_done( FT_GlyphSlot  slot )
+  static
+  void  ft_glyphslot_done( FT_GlyphSlot  slot )
   {
     FT_Driver         driver = slot->face->driver;
     FT_Driver_Class*  clazz  = driver->clazz;
@@ -741,10 +752,10 @@
     FT_GlyphSlot      slot;
 
 
-    *aslot = 0;
-
     if ( !face || !aslot || !face->driver )
       return FT_Err_Invalid_Argument;
+
+    *aslot = 0;
 
     driver = face->driver;
     clazz  = driver->clazz;
@@ -814,10 +825,6 @@
   }
 
 
-  /* forward declaration */
-  static FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -852,8 +859,8 @@
     if ( !matrix )
     {
       face->transform_matrix.xx = 0x10000L;
-      face->transform_matrix.xy = 0L;
-      face->transform_matrix.yx = 0L;
+      face->transform_matrix.xy = 0;
+      face->transform_matrix.yx = 0;
       face->transform_matrix.yy = 0x10000L;
       matrix = &face->transform_matrix;
     }
@@ -881,8 +888,9 @@
   }
 
 
-  static  FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
-  
+  static FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -964,17 +972,17 @@
     {
       /* get renderer */
       FT_Renderer  renderer = ft_lookup_glyph_renderer( slot );
-      
+
 
       if ( renderer )
         error = renderer->clazz->transform_glyph( renderer, slot,
                                                   &face->transform_matrix,
                                                   &face->transform_delta );
-      /* transform advance */                                            
-      FT_Vector_Transform( &slot->advance, &face->transform_matrix );                                                  
+      /* transform advance */
+      FT_Vector_Transform( &slot->advance, &face->transform_matrix );
     }
 
-  Exit:                                       
+  Exit:
     return error;
   }
 
@@ -1021,7 +1029,7 @@
                                             FT_ULong  char_code,
                                             FT_Int    load_flags )
   {
-    FT_UInt    glyph_index;
+    FT_UInt  glyph_index;
 
 
     if ( !face )
@@ -1092,14 +1100,15 @@
   }
 
 
-  static  void  Destroy_Driver( FT_Driver  driver )
+  static
+  void  Destroy_Driver( FT_Driver  driver )
   {
     FT_List_Finalize( &driver->faces_list,
                       (FT_List_Destructor)destroy_face,
                       driver->root.memory,
                       driver );
 
-    /* see if we need to drop the driver's glyph loader */
+    /* check whether we need to drop the driver's glyph loader */
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
       FT_GlyphLoader_Done( driver->glyph_loader );
   }
@@ -1130,7 +1139,7 @@
     clazz  = driver->clazz;
     memory = driver->root.memory;
 
-    /* allocate the face object, and perform basic initialization */
+    /* allocate the face object and perform basic initialization */
     if ( ALLOC( face, clazz->face_object_size ) )
       goto Fail;
 
@@ -1257,11 +1266,11 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_New_Memory_Face( FT_Library   library,
-                                                  void*        file_base,
-                                                  FT_Long      file_size,
-                                                  FT_Long      face_index,
-                                                  FT_Face*     face )
+  FT_EXPORT_FUNC( FT_Error )  FT_New_Memory_Face( FT_Library  library,
+                                                  void*       file_base,
+                                                  FT_Long     file_size,
+                                                  FT_Long     face_index,
+                                                  FT_Face*    face )
   {
     FT_Open_Args  args;
 
@@ -1341,12 +1350,13 @@
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
-    if ( error ) goto Exit;
+    if ( error )
+      goto Exit;
 
     memory = library->memory;
 
     /* If the font driver is specified in the `args' structure, use */
-    /* it.  Otherwise, we'll scan the list of registered drivers.   */
+    /* it.  Otherwise, we scan the list of registered drivers.      */
     if ( args->flags & ft_open_driver && args->driver )
     {
       driver = FT_DRIVER( args->driver );
@@ -1390,6 +1400,7 @@
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
 
+
           driver = FT_DRIVER( cur[0] );
 
           if ( args->flags & ft_open_params )
@@ -1418,7 +1429,7 @@
   Success:
     FT_TRACE4(( "FT_New_Face: New face object, adding to list\n" ));
 
-    /* set the EXTERNAL_STREAM bit for FT_Done_Face */
+    /* set the FT_FACE_FLAG_EXTERNAL_STREAM bit for FT_Done_Face */
     if ( args->flags & ft_open_stream && args->stream )
       face->face_flags |= FT_FACE_FLAG_EXTERNAL_STREAM;
 
@@ -1437,9 +1448,11 @@
 
 
       FT_TRACE4(( "FT_Open_Face: Creating glyph slot\n" ));
+
       error = FT_New_GlyphSlot( face, &slot );
-      if ( error ) goto Fail;
-      
+      if ( error )
+        goto Fail;
+
       face->glyph = slot;
     }
 
@@ -1449,9 +1462,11 @@
 
 
       FT_TRACE4(( "FT_Open_Face: Creating size object\n" ));
+
       error = FT_New_Size( face, &size );
-      if ( error ) goto Fail;
-      
+      if ( error )
+        goto Fail;
+
       face->size = size;
     }
 
@@ -1472,6 +1487,7 @@
 
   Exit:
     FT_TRACE4(( "FT_Open_Face: Return %d\n", error ));
+
     return error;
   }
 
@@ -1552,8 +1568,8 @@
   /*    when invoking this function.  Most drivers simply do not implement */
   /*    file attachments.                                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Attach_Stream( FT_Face       face,
-                                                FT_Open_Args* parameters )
+  FT_EXPORT_FUNC( FT_Error )  FT_Attach_Stream( FT_Face        face,
+                                                FT_Open_Args*  parameters )
   {
     FT_Stream  stream;
     FT_Error   error;
@@ -1620,7 +1636,7 @@
     {
       driver = face->driver;
       memory = driver->root.memory;
-  
+
       /* find face in driver's list */
       node = FT_List_Find( &driver->faces_list, face );
       if ( node )
@@ -1628,7 +1644,7 @@
         /* remove face object from the driver's list */
         FT_List_Remove( &driver->faces_list, node );
         FREE( node );
-  
+
         /* now destroy the object proper */
         destroy_face( memory, face, driver );
         error = FT_Err_Ok;
@@ -1667,10 +1683,10 @@
     FT_ListNode       node = 0;
 
 
-    *asize = 0;
-
     if ( !face || !asize || !face->driver )
       return FT_Err_Invalid_Handle;
+
+    *asize = 0;
 
     driver = face->driver;
     clazz  = driver->clazz;
@@ -1764,10 +1780,12 @@
   }
 
 
-  static void  ft_recompute_scaled_metrics( FT_Face           face,
-                                            FT_Size_Metrics*  metrics )
-  {                                              
+  static
+  void  ft_recompute_scaled_metrics( FT_Face           face,
+                                     FT_Size_Metrics*  metrics )
+  {
     /* Compute root ascender, descender, test height, and max_advance */
+
     metrics->ascender    = ( FT_MulFix( face->ascender,
                                         metrics->y_scale ) + 32 ) & -64;
 
@@ -1838,13 +1856,13 @@
 
     if ( !char_width )
       char_width = char_height;
-      
+
     else if ( !char_height )
       char_height = char_width;
 
     if ( !horz_resolution )
       horz_resolution = 72;
-      
+
     if ( !vert_resolution )
       vert_resolution = 72;
 
@@ -1853,15 +1871,17 @@
     memory = driver->root.memory;
 
     /* default processing -- this can be overridden by the driver */
-    if ( char_width  < 1 * 64 ) char_width  = 1 * 64;
-    if ( char_height < 1 * 64 ) char_height = 1 * 64;
+    if ( char_width  < 1 * 64 )
+      char_width  = 1 * 64;
+    if ( char_height < 1 * 64 )
+      char_height = 1 * 64;
 
     /* Compute pixel sizes in 26.6 units */
     dim_x = ( ( ( char_width  * horz_resolution ) / 72 ) + 32 ) & -64;
     dim_y = ( ( ( char_height * vert_resolution ) / 72 ) + 32 ) & -64;
 
-    metrics->x_ppem  = (FT_UShort)(dim_x >> 6);
-    metrics->y_ppem  = (FT_UShort)(dim_y >> 6);
+    metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
+    metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
 
     metrics->x_scale = 0x10000L;
     metrics->y_scale = 0x10000L;
@@ -1932,8 +1952,10 @@
     else if ( pixel_height == 0 )
       pixel_height = pixel_width;
 
-    if ( pixel_width  < 1 ) pixel_width  = 1;
-    if ( pixel_height < 1 ) pixel_height = 1;
+    if ( pixel_width  < 1 )
+      pixel_width  = 1;
+    if ( pixel_height < 1 )
+      pixel_height = 1;
 
     metrics->x_ppem = pixel_width;
     metrics->y_ppem = pixel_height;
@@ -2067,6 +2089,7 @@
         return 0;
       }
     }
+
     return FT_Err_Invalid_Argument;
   }
 
@@ -2088,8 +2111,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function will return an error when the charmap is not part    */
-  /*    of the face (i.e., if it is not listed in the face->charmaps[]     */
+  /*    This function will return an error if the charmap is not part of   */
+  /*    the face (i.e., if it is not listed in the face->charmaps[]        */
   /*    table).                                                            */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Set_Charmap( FT_Face     face,
@@ -2213,75 +2236,86 @@
   /*************************************************************************/
   /*************************************************************************/
 
- /* lookup a renderer by glyph format in the library's list */
-  BASE_FUNC(FT_Renderer)  FT_Lookup_Renderer( FT_Library       library,
-                                              FT_Glyph_Format  format,
-                                              FT_ListNode     *node )
+  /* lookup a renderer by glyph format in the library's list */
+  BASE_FUNC( FT_Renderer )  FT_Lookup_Renderer( FT_Library       library,
+                                                FT_Glyph_Format  format,
+                                                FT_ListNode*     node )
   {
-    FT_ListNode   cur    = library->renderers.head;
+    FT_ListNode   cur;
     FT_Renderer   result = 0;
 
-    
-    if (node)
+
+    if ( !library )
+      goto Exit;
+
+    cur = library->renderers.head;
+
+    if ( node )
     {
-      if (*node)
+      if ( *node )
         cur = (*node)->next;
       *node = 0;
     }
-      
+
     while ( cur )
     {
       FT_Renderer  renderer = FT_RENDERER( cur->data );
-      
+
 
       if ( renderer->glyph_format == format )
       {
         if ( node )
           *node = cur;
-        
+
         result = renderer;
         break;
       }
       cur = cur->next;
     }
 
+  Exit:
     return result;
   }
 
-  
-  static FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
-  {
-    FT_Face     face    = slot->face;
-    FT_Library  library = FT_FACE_LIBRARY( face );
-    FT_Renderer result  = library->cur_renderer;
 
-    
+  static
+  FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
+  {
+    FT_Face      face    = slot->face;
+    FT_Library   library = FT_FACE_LIBRARY( face );
+    FT_Renderer  result  = library->cur_renderer;
+
+
     if ( !result || result->glyph_format != slot->format )
       result = FT_Lookup_Renderer( library, slot->format, 0 );
     
     return result;
   }
 
-  
-  static  void  ft_set_current_renderer( FT_Library  library )
+
+  static
+  void  ft_set_current_renderer( FT_Library  library )
   {
     FT_Renderer  renderer;
+
 
     renderer = FT_Lookup_Renderer( library, ft_glyph_format_outline, 0 );
     library->cur_renderer = renderer;
   }
 
 
-  static  FT_Error  ft_add_renderer( FT_Module  module )
+  static
+  FT_Error  ft_add_renderer( FT_Module  module )
   {
     FT_Library   library = module->library;
     FT_Memory    memory  = library->memory;
     FT_Error     error;
     FT_ListNode  node;
-    
+
+
     if ( ALLOC( node, sizeof ( *node ) ) )
       goto Exit;
-      
+
     {
       FT_Renderer         render = FT_RENDERER( module );
       FT_Renderer_Class*  clazz  = (FT_Renderer_Class*)module->clazz;
@@ -2289,7 +2323,7 @@
 
       render->clazz        = clazz;
       render->glyph_format = clazz->glyph_format;
-      
+
       /* allocate raster object if needed */
       if ( clazz->glyph_format == ft_glyph_format_outline &&
            clazz->raster_class->raster_new )
@@ -2297,11 +2331,11 @@
         error = clazz->raster_class->raster_new( memory, &render->raster );
         if ( error )
           goto Fail;
-        
+
         render->raster_render = clazz->raster_class->raster_render;
         render->render        = clazz->render_glyph;
-      }           
-      
+      }
+
       /* add to list */
       node->data = module;
       FT_List_Add( &library->renderers, node );
@@ -2315,10 +2349,11 @@
 
   Exit:
     return error;
-  }                                 
+  }
 
 
-  static void  ft_remove_renderer( FT_Module  module )
+  static
+  void  ft_remove_renderer( FT_Module  module )
   {
     FT_Library   library = module->library;
     FT_Memory    memory  = library->memory;
@@ -2329,16 +2364,16 @@
     if ( node )
     {
       FT_Renderer  render = FT_RENDERER( module );
-      
+
 
       /* release raster object, if any */
       if ( render->raster )
         render->clazz->raster_class->raster_done( render->raster );
-      
+
       /* remove from list */
       FT_List_Remove( &library->renderers, node );
       FREE( node );
-      
+
       ft_set_current_renderer( library );
     }
   }
@@ -2370,8 +2405,10 @@
   FT_EXPORT_FUNC( FT_Renderer )  FT_Get_Renderer( FT_Library       library,
                                                   FT_Glyph_Format  format )
   {
+    /* test for valid `library' delayed to FT_Lookup_Renderer() */
+
     return  FT_Lookup_Renderer( library, format, 0 );
-  }                                               
+  }
 
 
   /*************************************************************************/
@@ -2400,14 +2437,20 @@
   /*                                                                       */
   /*    This doesn't change the current renderer for other formats.        */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error ) FT_Set_Renderer( FT_Library     library,
-                                             FT_Renderer    renderer,
-                                             FT_UInt        num_params,
-                                             FT_Parameter*  parameters )
+  FT_EXPORT_DEF( FT_Error )  FT_Set_Renderer( FT_Library     library,
+                                              FT_Renderer    renderer,
+                                              FT_UInt        num_params,
+                                              FT_Parameter*  parameters )
   {
     FT_ListNode  node;
     FT_Error     error = FT_Err_Ok;
-    
+
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !renderer )
+      return FT_Err_Invalid_Argument;
 
     node = FT_List_Find( &library->renderers, renderer );
     if ( !node )
@@ -2417,14 +2460,14 @@
     }
 
     FT_List_Up( &library->renderers, node );
-    
+
     if ( renderer->glyph_format == ft_glyph_format_outline )
       library->cur_renderer = renderer;
-      
+
     if ( num_params > 0 )
     {
       FTRenderer_setMode  set_mode = renderer->clazz->set_mode;
-      
+
 
       for ( ; num_params > 0; num_params-- )
       {
@@ -2433,66 +2476,35 @@
           break;
       }
     }
-    
+
   Exit:
     return error;
-  }                                           
+  }
 
-
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Render_Glyph
-  *
-  *  <Description>
-  *     Converts a given glyph image to a bitmap. It does so by inspecting
-  *     the glyph image format, find the relevant renderer, and invoke it
-  *
-  *  <Input>
-  *     slot        :: handle to the glyph slot containing the image to
-  *                    convert
-  *
-  *     render_mode :: a set of bit flags indicating which kind of bitmap
-  *                    to render. For now, only 'ft_render_mode_anti_alias'
-  *                    is supported by the available renderers, but others
-  *                    could appear later (e.g. LCD or TV optimised)
-  *
-  *  <Return>
-  *     Error code. 0 means success.
-  *
-  *  <Note>
-  *     in case of success, the renderer will be used to convert glyph
-  *     images in the renderer's known format into bitmaps.
-  *
-  *     This doesn't change the current renderer for other formats..
-  *
-  *     The slot's native image should be considered lost after the
-  *     conversion..
-  *
-  *************************************************************************/
 
   LOCAL_FUNC
-  FT_Error   FT_Render_Glyph_Internal( FT_Library    library,
-                                       FT_GlyphSlot  slot,
-                                       FT_UInt       render_mode )
+  FT_Error  FT_Render_Glyph_Internal( FT_Library    library,
+                                      FT_GlyphSlot  slot,
+                                      FT_UInt       render_mode )
   {
     FT_Error     error = FT_Err_Ok;
     FT_Renderer  renderer;
 
-      
-    /* if it's already a bitmap, no need to do anything */
-    switch (slot->format)
+
+    /* if it is already a bitmap, no need to do anything */
+    switch ( slot->format )
     {
-      case ft_glyph_format_bitmap:   /* already a bitmap, don't do anything */
-        break;
-      
-      default:
+    case ft_glyph_format_bitmap:   /* already a bitmap, don't do anything */
+      break;
+
+    default:
       {
         FT_ListNode  node   = 0;
         FT_Bool      update = 0;
-        
+
+
         /* small shortcut for the very common case */
-        if (slot->format == ft_glyph_format_outline)
+        if ( slot->format == ft_glyph_format_outline )
         {
           renderer = library->cur_renderer;
           node     = library->renderers.head;
@@ -2501,46 +2513,80 @@
           renderer = FT_Lookup_Renderer( library, slot->format, &node );
 
         error = FT_Err_Unimplemented_Feature;
-        while (renderer)
+        while ( renderer )
         {
           error = renderer->render( renderer, slot, render_mode, 0 );
-          if (!error || error != FT_Err_Cannot_Render_Glyph) break;
+          if ( !error || error != FT_Err_Cannot_Render_Glyph )
+            break;
 
-          /* FT_Err_Cannot_Render_Glyph is returned when the render mode */
+          /* FT_Err_Cannot_Render_Glyph is returned if the render mode   */
           /* is unsupported by the current renderer for this glyph image */
-          /* format..                                                    */
-          
-          /* now, look for another renderer that supports the same  */
-          /* format..                                              */
+          /* format.                                                     */
+
+          /* now, look for another renderer that supports the same */
+          /* format.                                               */
           renderer = FT_Lookup_Renderer( library, slot->format, &node );
           update   = 1;
         }
 
         /* if we changed the current renderer for the glyph image format */
-        /* we need to select it as the next current one..                */
-        if (!error && update && renderer)
+        /* we need to select it as the next current one                  */
+        if ( !error && update && renderer )
           FT_Set_Renderer( library, renderer, 0, 0 );
       }
     }
-    
+
     return error;
   }
 
 
-
-  FT_EXPORT_FUNC(FT_Error)  FT_Render_Glyph( FT_GlyphSlot  slot,
-                                             FT_UInt       render_mode )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Render_Glyph                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Converts a given glyph image to a bitmap.  It does so by           */
+  /*    inspecting the glyph image format, find the relevant renderer, and */
+  /*    invoke it.                                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    slot        :: A handle to the glyph slot containing the image to  */
+  /*                   convert.                                            */
+  /*                                                                       */
+  /*    render_mode :: A set of bit flags indicating which kind of bitmap  */
+  /*                   to render.  For now, only                           */
+  /*                   `ft_render_mode_anti_alias' is supported by the     */
+  /*                   available renderers, but others could appear later  */
+  /*                   (e.g. optimized for TV or LCD).                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    In case of success, the renderer will be used to convert glyph     */
+  /*    images in the renderer's known format into bitmaps.                */
+  /*                                                                       */
+  /*    This doesn't change the current renderer for other formats.        */
+  /*                                                                       */
+  /*    The slot's native image should be considered lost after the        */
+  /*    conversion.                                                        */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
+                                               FT_UInt       render_mode )
   {
     FT_Library   library;
-    
-    if (!slot)
+
+
+    if ( !slot )
       return FT_Err_Invalid_Argument;
-      
-    library = FT_FACE_LIBRARY(slot->face);
+
+    library = FT_FACE_LIBRARY( slot->face );
+
     return FT_Render_Glyph_Internal( library, slot, render_mode );
   }
 
-  
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -2625,10 +2671,13 @@
     FT_UInt    nn;
 
 
-#define FREETYPE_VER_FIXED ( ( (FT_Long)FREETYPE_MAJOR << 16 ) | \
-                               FREETYPE_MINOR                  )
+#define FREETYPE_VER_FIXED  ( ( (FT_Long)FREETYPE_MAJOR << 16 ) | \
+                                FREETYPE_MINOR                  )
 
-    if ( !library || !clazz )
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !clazz )
       return FT_Err_Invalid_Argument;
 
     /* check freetype version */
@@ -2665,13 +2714,13 @@
     if ( ALLOC( module,clazz->module_size ) )
       goto Exit;
 
-    /* base initialisation */
+    /* base initialization */
     module->library = library;
     module->memory  = memory;
     module->clazz   = (FT_Module_Class*)clazz;
 
-    /* if the module is a renderer - this must be performed before */
-    /* the normal module initialization.                           */
+    /* check whether the module is a renderer - this must be performed */
+    /* before the normal module initialization                         */
     if ( FT_MODULE_IS_RENDERER( module ) )
     {
       /* add to the renderers list */
@@ -2686,7 +2735,7 @@
       /* allocate glyph loader if needed */
       FT_Driver   driver = FT_DRIVER( module );
 
-      
+
       driver->clazz = (FT_Driver_Class*)module->clazz;
       if ( FT_DRIVER_USES_OUTLINES( driver ) )
       {
@@ -2705,20 +2754,20 @@
 
     /* add module to the library's table */
     library->modules[library->num_modules++] = module;
-      
+
   Exit:
     return error;
-    
+
   Fail:
     if ( FT_MODULE_IS_DRIVER( module ) )
     {
       FT_Driver  driver = FT_DRIVER( module );
-      
+
 
       if ( FT_DRIVER_USES_OUTLINES( driver ) )
         FT_GlyphLoader_Done( driver->glyph_loader );
     }
-    
+
     if ( FT_MODULE_IS_RENDERER( module ) )
     {
       FT_Renderer  renderer = FT_RENDERER( module );
@@ -2756,10 +2805,16 @@
   FT_EXPORT_FUNC( FT_Module ) FT_Get_Module( FT_Library   library,
                                              const char*  module_name )
   {
-    FT_Module  result = 0;
-    FT_Module* cur    = library->modules;
-    FT_Module* limit  = cur + library->num_modules;
+    FT_Module   result = 0;
+    FT_Module*  cur;
+    FT_Module*  limit;
 
+
+    if ( !library || !module_name )
+      return result;
+
+    cur   = library->modules;
+    limit = cur + library->num_modules;
 
     for ( ; cur < limit; cur++ )
       if ( strcmp( cur[0]->clazz->module_name, module_name ) == 0 )
@@ -2793,17 +2848,19 @@
   /*    You should better be familiar with FreeType internals to know      */
   /*    which module to look for, and what its interface is :-)            */
   /*                                                                       */
-  FT_EXPORT_FUNC(const void*)  FT_Get_Module_Interface(
-                                 FT_Library   library,
-                                 const char*  mod_name )
+  FT_EXPORT_FUNC( const void* )  FT_Get_Module_Interface(
+                                   FT_Library   library,
+                                   const char*  mod_name )
   {
     FT_Module  module;
-    
+
+
+    /* test for valid `library' delayed to FT_Get_Module() */
 
     module = FT_Get_Module( library, mod_name );
 
     return module ? module->clazz->module_interface : 0;
-  }                                                 
+  }
 
 
   /*************************************************************************/
@@ -2815,9 +2872,9 @@
   /*    Removes a given module from a library instance.                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library  :: A handle to a library object.                          */
+  /*    library :: A handle to a library object.                           */
   /*                                                                       */
-  /*    module   :: A handle to a module object.                           */
+  /*    module  :: A handle to a module object.                            */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -2829,7 +2886,11 @@
                                                 FT_Module   module )
   {
     /* try to find the module from the table, then remove it from there */
-    if ( library && module )
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( module )
     {
       FT_Module*  cur   = library->modules;
       FT_Module*  limit = cur + library->num_modules;
@@ -2837,7 +2898,7 @@
 
       for ( ; cur < limit; cur++ )
       {
-        if (cur[0] == module)
+        if ( cur[0] == module )
         {
           /* remove it from the table */
           library->num_modules--;

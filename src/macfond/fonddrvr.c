@@ -427,7 +427,7 @@ error:
         return FT_Err_Out_Of_Memory;
       }
 
- #if 0
+#if 0
       {
         FILE* f;
         char * path;

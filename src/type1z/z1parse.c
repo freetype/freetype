@@ -244,10 +244,10 @@
 /*************************************************************************/
 /*************************************************************************/
 
-  #define IS_Z1_WHITESPACE(c)  ( (c) == ' '  || (c) == '\t' )
-  #define IS_Z1_LINESPACE(c)   ( (c) == '\r' || (c) == '\n' )
+#define IS_Z1_WHITESPACE(c)  ( (c) == ' '  || (c) == '\t' )
+#define IS_Z1_LINESPACE(c)   ( (c) == '\r' || (c) == '\n' )
 
-  #define IS_Z1_SPACE(c)  ( IS_Z1_WHITESPACE(c) || IS_Z1_LINESPACE(c) )
+#define IS_Z1_SPACE(c)  ( IS_Z1_WHITESPACE(c) || IS_Z1_LINESPACE(c) )
 
   LOCAL_FUNC
   void     Z1_Skip_Spaces( Z1_Parser*  parser )

@@ -181,9 +181,9 @@
       "t1cid",   /* module name           */
       0x10000L,  /* version 1.0 of driver */
       0x20000L,  /* requires FreeType 2.0 */
-      
+
       0,
-      
+
       (FT_Module_Constructor)CID_Init_Driver,
       (FT_Module_Destructor) CID_Done_Driver,
       (FT_Module_Requester)  CID_Get_Interface

@@ -143,8 +143,8 @@
   /*    glyph   :: The current glyph object.                               */
   /*                                                                       */
   LOCAL_FUNC
-  void  CID_Init_Builder( CID_Builder*  builder,
-                          CID_Face      face,
+  void  CID_Init_Builder( CID_Builder*   builder,
+                          CID_Face       face,
                           CID_Size       size,
                           CID_GlyphSlot  glyph )
   {
@@ -159,11 +159,11 @@
     {
       FT_GlyphLoader*  loader = glyph->root.loader;
 
-      
+
       builder->loader  = loader;
       builder->base    = &loader->base.outline;
       builder->current = &loader->current.outline;
-      
+
       FT_GlyphLoader_Rewind( loader );
     }
 
@@ -201,6 +201,7 @@
   void  CID_Done_Builder( CID_Builder*  builder )
   {
     CID_GlyphSlot  glyph = builder->glyph;
+
 
     if ( glyph )
       glyph->root.outline = *builder->base;
@@ -299,7 +300,7 @@
     {
       if ( outline->n_contours > 0 )
         outline->contours[outline->n_contours - 1] = outline->n_points - 1;
-  
+
       outline->n_contours++;
     }
     return error;
@@ -454,7 +455,7 @@
       error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
       if ( error )
         goto Exit;
-      
+
       subg = loader->current.subglyphs;
 
       /* subglyph 0 = base character */
@@ -474,13 +475,13 @@
       /* set up remaining glyph fields */
       glyph->num_subglyphs = 2;
       glyph->format        = ft_glyph_format_composite;
-      
+
       loader->current.num_subglyphs = 2;
     }
 
     /* First load `bchar' in builder */
     /* now load the unscaled outline */
-    if ( decoder->builder.loader )    
+    if ( decoder->builder.loader )
       FT_GlyphLoader_Prepare( decoder->builder.loader );
 
     error = cid_load_glyph( decoder, bchar_index );  /* load one glyph */
@@ -516,7 +517,7 @@
       {
         FT_Outline  dummy;
 
-        
+
         dummy.n_points = base->n_points - n_base_points;
         dummy.points   = base->points   + n_base_points;
         FT_Outline_Translate( &dummy, adx - asb, ady );
@@ -585,9 +586,9 @@
     /* now, execute loop */
     while ( ip < limit )
     {
-      FT_Int*      top   = decoder->top;
+      FT_Int*       top   = decoder->top;
       CID_Operator  op    = op_none;
-      FT_Long      value = 0;
+      FT_Long       value = 0;
 
 
       /********************************************************************/
@@ -1376,8 +1377,8 @@
   LOCAL_FUNC
   FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,
                             CID_Size       size,
-                            FT_Int        glyph_index,
-                            FT_Int        load_flags )
+                            FT_Int         glyph_index,
+                            FT_Int         load_flags )
   {
     FT_Error     error;
     CID_Decoder  decoder;

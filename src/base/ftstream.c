@@ -374,9 +374,9 @@
   BASE_FUNC( FT_Short )  FT_Read_Short( FT_Stream  stream,
                                         FT_Error*  error )
   {
-    char     reads[2];
-    char*    p = 0;
-    FT_Short result = 0;
+    char      reads[2];
+    char*     p = 0;
+    FT_Short  result = 0;
 
 
     FT_Assert( stream );
@@ -645,27 +645,24 @@
         *(FT_UShort*)p = (FT_UShort)value;
         break;
 
-     /* A slight note regarding the following:                    */
-     /*                                                           */
-     /*  SIZEOF_INT is defined in <freetype/config/ftconfig.h>    */
-     /*  and gives the size in bytes of the "int" type on the     */
-     /*  current platform..                                       */
-     /*                                                           */
-     /*  Only on 16-bit systems can the value of SIZEOF_INT be    */
-     /*  less than 4. In this case SIZEOF_LONG is always 4        */
-     /*                                                           */
-     /*  On a 64-bit system, SIZEOF_LONG can be 8, which is       */
-     /*  handled by the default case..                            */
-     /*                                                           */
-
+        /* SIZEOF_INT is defined in <freetype/config/ftconfig.h> */
+        /* and gives the size in bytes of the `int' type on the  */
+        /* current platform.                                     */
+        /*                                                       */
+        /* Only on 16-bit systems the value of SIZEOF_INT can be */
+        /* less than 4.  In this case SIZEOF_LONG is always 4.   */
+        /*                                                       */
+        /* On a 64-bit system, SIZEOF_LONG can be 8, which is    */
+        /* handled by the default case.                          */
+        /*                                                       */
 #if SIZEOF_INT == 4
       case 4:
-         *(FT_UInt*)p = (FT_UInt)value;
-         break;
+        *(FT_UInt*)p = (FT_UInt)value;
+        break;
 #endif
 
       default:
-         *(FT_ULong*)p = (FT_ULong)value;
+        *(FT_ULong*)p = (FT_ULong)value;
       }
 
       /* go to next field */

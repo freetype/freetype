@@ -175,8 +175,8 @@
   } CFF_SubFont;
 
 
- /* maximum number of sub-fonts in a CID-keyed file */
-  #define CFF_MAX_CID_FONTS  16
+  /* maximum number of sub-fonts in a CID-keyed file */
+#define CFF_MAX_CID_FONTS  16
   
   typedef struct CFF_Font_
   {

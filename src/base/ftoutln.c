@@ -174,49 +174,47 @@
           }
 
         case FT_Curve_Tag_Conic:  /* consume conic arcs */
+          v_control.x = SCALED( point->x );
+          v_control.y = SCALED( point->y );
+
+        Do_Conic:
+          if ( point < limit )
           {
-            v_control.x = SCALED( point->x );
-            v_control.y = SCALED( point->y );
+            FT_Vector  vec;
+            FT_Vector  v_middle;
 
-          Do_Conic:
-            if ( point < limit )
+
+            point++;
+            tags++;
+            tag = FT_CURVE_TAG( tags[0] );
+
+            vec.x = SCALED( point->x );
+            vec.y = SCALED( point->y );
+
+            if ( tag == FT_Curve_Tag_On )
             {
-              FT_Vector  vec;
-              FT_Vector  v_middle;
-
-
-              point++;
-              tags++;
-              tag = FT_CURVE_TAG( tags[0] );
-
-              vec.x = SCALED( point->x );
-              vec.y = SCALED( point->y );
-
-              if ( tag == FT_Curve_Tag_On )
-              {
-                error = interface->conic_to( &v_control, &vec, user );
-                if ( error )
-                  goto Exit;
-                continue;
-              }
-
-              if ( tag != FT_Curve_Tag_Conic )
-                goto Invalid_Outline;
-
-              v_middle.x = ( v_control.x + vec.x ) / 2;
-              v_middle.y = ( v_control.y + vec.y ) / 2;
-
-              error = interface->conic_to( &v_control, &v_middle, user );
+              error = interface->conic_to( &v_control, &vec, user );
               if ( error )
                 goto Exit;
-
-              v_control = vec;
-              goto Do_Conic;
+              continue;
             }
 
-            error = interface->conic_to( &v_control, &v_start, user );
-            goto Close;
+            if ( tag != FT_Curve_Tag_Conic )
+              goto Invalid_Outline;
+
+            v_middle.x = ( v_control.x + vec.x ) / 2;
+            v_middle.y = ( v_control.y + vec.y ) / 2;
+
+            error = interface->conic_to( &v_control, &v_middle, user );
+            if ( error )
+              goto Exit;
+
+            v_control = vec;
+            goto Do_Conic;
           }
+
+          error = interface->conic_to( &v_control, &v_start, user );
+          goto Close;
 
         default:  /* FT_Curve_Tag_Cubic */
           {
@@ -256,7 +254,7 @@
       /* close the contour with a line segment */
       error = interface->line_to( &v_start, user );
 
-   Close:
+    Close:
       if ( error )
         goto Exit;
 
@@ -549,6 +547,7 @@
         char*  q = outline->tags + last;
         char   swap;
 
+
         while ( p < q )
         {
           swap = *p;
@@ -604,34 +603,46 @@
                                                  FT_Outline*        outline,
                                                  FT_Raster_Params*  params )
   {
-    FT_Error         error;
-    FT_Bool          update   = 0;
-    FT_Renderer      renderer = library->cur_renderer;
-    FT_ListNode      node     = library->renderers.head;
+    FT_Error     error;
+    FT_Bool      update = 0;
+    FT_Renderer  renderer;
+    FT_ListNode  node;
+
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !params )
+      return FT_Err_Invalid_Argument;
+
+    renderer = library->cur_renderer;
+    node     = library->renderers.head;
 
     params->source = (void*)outline;
-        
+
     error = FT_Err_Cannot_Render_Glyph;
-    while (renderer)
+    while ( renderer )
     {
       error = renderer->raster_render( renderer->raster, params );
-      if (!error || error != FT_Err_Cannot_Render_Glyph) break;
+      if ( !error || error != FT_Err_Cannot_Render_Glyph )
+        break;
 
       /* FT_Err_Cannot_Render_Glyph is returned when the render mode */
       /* is unsupported by the current renderer for this glyph image */
-      /* format..                                                    */
-      
-      /* now, look for another renderer that supports the same  */
-      /* format..                                              */
-      renderer = FT_Lookup_Renderer( library, ft_glyph_format_outline, &node );
+      /* format                                                      */
+
+      /* now, look for another renderer that supports the same */
+      /* format                                                */
+      renderer = FT_Lookup_Renderer( library, ft_glyph_format_outline,
+                                     &node );
       update   = 1;
     }
 
     /* if we changed the current renderer for the glyph image format */
-    /* we need to select it as the next current one..                */
-    if (!error && update && renderer)
+    /* we need to select it as the next current one                  */
+    if ( !error && update && renderer )
       FT_Set_Renderer( library, renderer, 0, 0 );
-      
+
     return error;
   }
 
@@ -675,7 +686,7 @@
     if ( !bitmap )
       return FT_Err_Invalid_Argument;
 
-    /* other checks are delayed to FT_Outline_Render */
+    /* other checks are delayed to FT_Outline_Render() */
 
     params.target = bitmap;
     params.flags  = 0;
@@ -712,6 +723,9 @@
   {
     FT_Pos xz, yz;
 
+
+    if ( !vector || !matrix )
+      return;
 
     xz = FT_MulFix( vector->x, matrix->xx ) +
          FT_MulFix( vector->y, matrix->xy );
@@ -750,7 +764,7 @@
   {
     FT_Vector*  vec = outline->points;
     FT_Vector*  limit = vec + outline->n_points;
-    
+
 
     for ( ; vec < limit; vec++ )
       FT_Vector_Transform( vec, matrix );

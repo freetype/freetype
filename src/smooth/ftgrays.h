@@ -42,8 +42,8 @@
 
   FT_EXPORT_VAR(FT_Raster_Funcs)  ft_grays_raster;
 
-  #ifdef __cplusplus
+#ifdef __cplusplus
   }
-  #endif
+#endif
 
 #endif

@@ -106,25 +106,25 @@
   } FT_ModuleRec;
 
   /* typecast an object to a FT_Module */
-  #define  FT_MODULE(x)          ((FT_Module)(x))
-  #define  FT_MODULE_CLASS(x)    FT_MODULE(x)->clazz
-  #define  FT_MODULE_LIBRARY(x)  FT_MODULE(x)->library
-  #define  FT_MODULE_MEMORY(x)   FT_MODULE(x)->memory
+#define  FT_MODULE(x)          ((FT_Module)(x))
+#define  FT_MODULE_CLASS(x)    FT_MODULE(x)->clazz
+#define  FT_MODULE_LIBRARY(x)  FT_MODULE(x)->library
+#define  FT_MODULE_MEMORY(x)   FT_MODULE(x)->memory
 
-  #define  FT_MODULE_IS_DRIVER(x)  (FT_MODULE_CLASS(x)->module_flags & \
-                                        ft_module_font_driver )
+#define  FT_MODULE_IS_DRIVER(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                   ft_module_font_driver )
 
-  #define  FT_MODULE_IS_DRIVER(x)  (FT_MODULE_CLASS(x)->module_flags & \
-                                        ft_module_font_driver )
+#define  FT_MODULE_IS_DRIVER(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                   ft_module_font_driver )
 
-  #define  FT_MODULE_IS_RENDERER(x)  (FT_MODULE_CLASS(x)->module_flags & \
-                                        ft_module_renderer )
+#define  FT_MODULE_IS_RENDERER(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                     ft_module_renderer )
 
-  #define  FT_DRIVER_IS_SCALABLE(x)  (FT_MODULE_CLASS(x)->module_flags & \
-                                        ft_module_driver_scalable )
+#define  FT_DRIVER_IS_SCALABLE(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                     ft_module_driver_scalable )
 
-  #define  FT_DRIVER_USES_OUTLINES(x)  !(FT_MODULE_CLASS(x)->module_flags & \
-                                         ft_module_driver_no_outlines )
+#define  FT_DRIVER_USES_OUTLINES(x)  !(FT_MODULE_CLASS(x)->module_flags & \
+                                       ft_module_driver_no_outlines )
 
 
   /*************************************************************************/
@@ -141,19 +141,19 @@
 
   /* a few macros used to perform easy typecasts with minimal brain damage */
 
-  #define  FT_FACE(x)  ((FT_Face)x)
-  #define  FT_SIZE(x)  ((FT_Size)x)
-  #define  FT_SLOT(x)  ((FT_GlyphSlot)x)
+#define  FT_FACE(x)  ((FT_Face)x)
+#define  FT_SIZE(x)  ((FT_Size)x)
+#define  FT_SLOT(x)  ((FT_GlyphSlot)x)
   
-  #define  FT_FACE_DRIVER(x)   FT_FACE(x)->driver
-  #define  FT_FACE_LIBRARY(x)  FT_FACE_DRIVER(x)->root.library
-  #define  FT_FACE_MEMORY(x)   FT_FACE(x)->memory
+#define  FT_FACE_DRIVER(x)   FT_FACE(x)->driver
+#define  FT_FACE_LIBRARY(x)  FT_FACE_DRIVER(x)->root.library
+#define  FT_FACE_MEMORY(x)   FT_FACE(x)->memory
 
-  #define  FT_SIZE_FACE(x)  FT_SIZE(x)->face
-  #define  FT_SLOT_FACE(x)  FT_SLOT(x)->face
+#define  FT_SIZE_FACE(x)  FT_SIZE(x)->face
+#define  FT_SLOT_FACE(x)  FT_SLOT(x)->face
 
-  #define  FT_FACE_SLOT(x)  FT_FACE(x)->glyph
-  #define  FT_FACE_SIZE(x)  FT_FACE(x)->size
+#define  FT_FACE_SLOT(x)  FT_FACE(x)->glyph
+#define  FT_FACE_SIZE(x)  FT_FACE(x)->size
 
 
   /* this must be kept exported - this will be used later in our own */
@@ -248,7 +248,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  #define FT_RENDERER(x)  ((FT_Renderer)(x))
+#define FT_RENDERER(x)  ((FT_Renderer)(x))
 
   typedef struct FT_RendererRec_
   {
@@ -275,10 +275,10 @@
   /*************************************************************************/
 
   /* typecast a module into a driver easily */
-  #define FT_DRIVER(x)  ((FT_Driver)(x))
+#define FT_DRIVER(x)  ((FT_Driver)(x))
 
   /* typecast a module as a driver, and get its driver class */
-  #define FT_DRIVER_CLASS(x)  FT_DRIVER(x)->clazz
+#define FT_DRIVER_CLASS(x)  FT_DRIVER(x)->clazz
 
   /*************************************************************************/
   /*                                                                       */

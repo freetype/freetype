@@ -40,7 +40,7 @@
 
   LOCAL_FUNC
   void  CID_Done_AFM( FT_Memory  memory,
-                      CID_AFM*    afm )
+                      CID_AFM*   afm )
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
@@ -162,15 +162,15 @@
   FT_Error  CID_Read_AFM( FT_Face    cid_face,
                           FT_Stream  stream )
   {
-    FT_Error       error;
-    FT_Memory      memory = stream->memory;
-    FT_Byte*       start;
-    FT_Byte*       limit;
-    FT_Byte*       p;
-    FT_Int         count = 0;
-    CID_Kern_Pair* pair;
-    T1_Font*       type1 = &((T1_Face)t1_face)->type1;
-    CID_AFM*       afm   = 0;
+    FT_Error        error;
+    FT_Memory       memory = stream->memory;
+    FT_Byte*        start;
+    FT_Byte*        limit;
+    FT_Byte*        p;
+    FT_Int          count = 0;
+    CID_Kern_Pair*  pair;
+    T1_Font*        type1 = &((T1_Face)t1_face)->type1;
+    CID_AFM*        afm   = 0;
 
 
     if ( ACCESS_Frame( stream->size ) )
@@ -194,7 +194,7 @@
       goto Exit;
 
     /* allocate the pairs */
-    if ( ALLOC( afm, sizeof ( *afm ) )                       ||
+    if ( ALLOC( afm, sizeof ( *afm ) )                        ||
          ALLOC_ARRAY( afm->kern_pairs, count, CID_Kern_Pair ) )
       goto Exit;
 
@@ -245,7 +245,7 @@
 
   /* find the kerning for a given glyph pair */
   LOCAL_FUNC
-  void  CID_Get_Kerning( CID_AFM*     afm,
+  void  CID_Get_Kerning( CID_AFM*    afm,
                          FT_UInt     glyph1,
                          FT_UInt     glyph2,
                          FT_Vector*  kerning )

@@ -42,6 +42,7 @@
 #define FT_COMPONENT  trace_glyph
 
 
+  /* a helper function to avoid duplication of code */
   static
   void  ft_prepare_glyph( FT_Glyph  glyph,
                           FT_Face   face,
@@ -122,13 +123,13 @@
                                 FT_Vector*       origin,
                                 FT_BitmapGlyph*  abitglyph )
   {
-    FT_Error         error;
-    FT_Memory        memory;
+    FT_Error        error;
+    FT_Memory       memory;
 
-    FT_BitmapGlyph   bitglyph;
-    FT_Glyph         glyph;
-    FT_Pos           origin_x = 0;
-    FT_Pos           origin_y = 0;
+    FT_BitmapGlyph  bitglyph;
+    FT_Glyph        glyph;
+    FT_Pos          origin_x = 0;
+    FT_Pos          origin_y = 0;
 
 
     if ( !face )
@@ -171,6 +172,7 @@
 
     /* now, handle bitmap and outline glyph images */
     memory = face->memory;
+
     switch ( face->glyph->format )
     {
     case ft_glyph_format_bitmap:
@@ -230,7 +232,7 @@
         else
           pitch = ( width + 7 ) >> 3;
 
-        size  = pitch * height;
+        size = pitch * height;
         if ( ALLOC( bitglyph, sizeof ( *bitglyph ) ) )
           goto Exit;
 
@@ -318,7 +320,7 @@
     FT_OutlineGlyph  glyph;
 
 
-    /* test for valid face delayed to FT_Load_Glyph() */
+    /* test for valid `face' delayed to FT_Load_Glyph() */
 
     if ( !vecglyph )
       return FT_Err_Invalid_Argument;
@@ -529,7 +531,7 @@
       v = d;
     }
 
-    /* check that we're not trying to normalize zero! */
+    /* check that we are not trying to normalize zero! */
     if ( u == 0 )
       return 0;
 
@@ -630,8 +632,8 @@
 
   /* Compute the orientation of path filling.  It differs between TrueType */
   /* and Type1 formats.  We could use the `ft_outline_reverse_fill' flag,  */
-  /* but it's better to re-compute it directly (it seems that this flag    */
-  /* isn't correctly set for some weird composite glyphs for now).         */
+  /* but it is better to re-compute it directly (it seems that this flag   */
+  /* isn't correctly set for some weird composite glyphs currently).       */
   /*                                                                       */
   /* We do this by computing bounding box points, and computing their      */
   /* curvature.                                                            */
@@ -644,6 +646,7 @@
     FT_BBox  box;
     FT_BBox  indices;
     int      n, last;
+
 
     indices.xMin = -1;
     indices.yMin = -1;
@@ -756,7 +759,7 @@
 
         d = distance;
 
-        if ( (outline->flags[n] & FT_Curve_Tag_On) == 0 )
+        if ( ( outline->flags[n] & FT_Curve_Tag_On ) == 0 )
           d *= 2;
 
         /* Check discriminant for parallel vectors */
@@ -780,6 +783,7 @@
         {
           /* Vectors are nearly parallel */
           FT_Pos  x, y;
+
 
           x = distance + cur.x + FT_MulFix( d, u.x + v.x ) / 2;
           y = distance + cur.y + FT_MulFix( d, u.y + v.y ) / 2;

@@ -84,7 +84,8 @@ const FT_Module_Class*  ft_default_modules[] =
     FT_Error                 error;
     const FT_Module_Class**  cur;
 
-    /* test for valid library delayed to FT_Add_Module() */
+
+    /* test for valid `library' delayed to FT_Add_Module() */
 
     cur = ft_default_modules;
     while ( *cur )
@@ -114,7 +115,7 @@ const FT_Module_Class*  ft_default_modules[] =
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeTyoe error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Init_FreeType( FT_Library*  library )
   {
@@ -128,13 +129,12 @@ const FT_Module_Class*  ft_default_modules[] =
     memory = FT_New_Memory();
     if ( !memory )
     {
-      FT_ERROR(( "FT_Init_FreeType:" ));
-      FT_ERROR(( " cannot find memory manager\n" ));
+      FT_ERROR(( "FT_Init_FreeType: cannot find memory manager\n" ));
       return FT_Err_Unimplemented_Feature;
     }
 
-    /* builds a library out of it, then fill it with the set of */
-    /* default drivers.                                         */
+    /* build a library out of it, then fill it with the set of */
+    /* default drivers.                                        */
 
     error = FT_New_Library( memory, library );
     if ( !error )

@@ -244,9 +244,10 @@
     FT_Error         error;
     SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
 
-    UNUSED(face_index);
-    UNUSED(num_params);
-    UNUSED(params);
+    UNUSED( face_index );
+    UNUSED( num_params );
+    UNUSED( params );
+
 
     /* Load tables */
     if ( LOAD_( header )        ||

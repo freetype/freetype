@@ -140,13 +140,13 @@
   } T1_Blend_Flags;
 
   /* maximum number of multiple-masters designs, per-se the spec */
-  #define T1_MAX_MM_DESIGNS      16
+#define T1_MAX_MM_DESIGNS      16
   
   /* maximum number of multiple-masters axis, per-se the spec */
-  #define T1_MAX_MM_AXIS         4
+#define T1_MAX_MM_AXIS         4
 
   /* maximum number of elements in a design map */
-  #define T1_MAX_MM_MAP_POINTS   20
+#define T1_MAX_MM_MAP_POINTS   20
 
   /* this structure is used to store the BlendDesignMap entry for an axis */
   typedef struct T1_DesignMap_
