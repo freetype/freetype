@@ -28,10 +28,10 @@
 FT_BEGIN_HEADER
 
 
- /* handle to Hint structure */
+  /* handle to Hint structure */
   typedef struct PSH3_HintRec_*  PSH3_Hint;
  
- /* hint bit-flags */
+  /* hint bit-flags */
   typedef enum
   {
     PSH3_HINT_GHOST  = PS_HINT_FLAG_GHOST,
@@ -50,7 +50,7 @@ FT_BEGIN_HEADER
 #define psh3_hint_deactivate( x )  (x)->flags &= ~PSH3_HINT_ACTIVE
 #define psh3_hint_set_fitted( x )  (x)->flags |=  PSH3_HINT_FITTED
 
- /* hint structure */
+  /* hint structure */
   typedef struct  PSH3_HintRec_
   {
     FT_Int     org_pos;
@@ -105,12 +105,12 @@ FT_BEGIN_HEADER
     PSH3_DIR_RIGHT =  2
   };
 
-#define  PSH3_DIR_HORIZONTAL    2
-#define  PSH3_DIR_VERTICAL      1
+#define PSH3_DIR_HORIZONTAL  2
+#define PSH3_DIR_VERTICAL    1
 
-#define  PSH3_DIR_COMPARE(d1,d2)  ( (d1) == (d2) || (d1) == -(d2) )
-#define  PSH3_DIR_IS_HORIZONTAL(d)  PSH3_DIR_COMPARE(d,PSH3_DIR_HORIZONTAL)
-#define  PSH3_DIR_IS_VERTICAL(d)    PSH3_DIR_COMPARE(d,PSH3_DIR_VERTICAL)
+#define PSH3_DIR_COMPARE( d1, d2 )  ( (d1) == (d2) || (d1) == -(d2) )
+#define PSH3_DIR_IS_HORIZONTAL( d )  PSH3_DIR_COMPARE( d, PSH3_DIR_HORIZONTAL )
+#define PSH3_DIR_IS_VERTICAL( d )    PSH3_DIR_COMPARE( d, PSH3_DIR_VERTICAL )
 
 
  /* the following bit-flags are computed once by the glyph */
@@ -122,33 +122,33 @@ FT_BEGIN_HEADER
     PSH3_POINT_INFLEX      = 4    /* point is inflection             */
   };
 
-#define psh3_point_is_smooth( p )      ( (p)->flags  & PSH3_POINT_SMOOTH )
-#define psh3_point_is_off( p )         ( (p)->flags  & PSH3_POINT_OFF    )
-#define psh3_point_is_inflection( p )  ( (p)->flags & PSH3_POINT_INFLEX )
+#define psh3_point_is_smooth( p )  ( (p)->flags & PSH3_POINT_SMOOTH )
+#define psh3_point_is_off( p )     ( (p)->flags & PSH3_POINT_OFF    )
+#define psh3_point_is_inflex( p )  ( (p)->flags & PSH3_POINT_INFLEX )
 
-#define psh3_point_set_smooth( p )  (p)->flags  |= PSH3_POINT_SMOOTH
-#define psh3_point_set_off( p )     (p)->flags  |= PSH3_POINT_OFF
-#define psh3_point_set_inflex( p )  (p)->flags  |= PSH3_POINT_INFLEX
+#define psh3_point_set_smooth( p )  (p)->flags |= PSH3_POINT_SMOOTH
+#define psh3_point_set_off( p )     (p)->flags |= PSH3_POINT_OFF
+#define psh3_point_set_inflex( p )  (p)->flags |= PSH3_POINT_INFLEX
 
- /* the following bit-flags are re-computed for each dimension */
+  /* the following bit-flags are re-computed for each dimension */
   enum
   {
-    PSH3_POINT_STRONG      = 16,   /* point is strong                             */
-    PSH3_POINT_FITTED      = 32,   /* point is already fitted                     */
-    PSH3_POINT_EXTREMUM    = 64,   /* point is local extremum                     */
-    PSH3_POINT_POSITIVE    = 128,  /* extremum has positive contour flow          */
-    PSH3_POINT_NEGATIVE    = 256,  /* extremum has negative contour flow          */
-    PSH3_POINT_EDGE_MIN    = 512,  /* point is aligned to left/bottom stem edge   */
-    PSH3_POINT_EDGE_MAX    = 1024  /* point is aligned to top/right stem edge     */
+    PSH3_POINT_STRONG   = 16,   /* point is strong                             */
+    PSH3_POINT_FITTED   = 32,   /* point is already fitted                     */
+    PSH3_POINT_EXTREMUM = 64,   /* point is local extremum                     */
+    PSH3_POINT_POSITIVE = 128,  /* extremum has positive contour flow          */
+    PSH3_POINT_NEGATIVE = 256,  /* extremum has negative contour flow          */
+    PSH3_POINT_EDGE_MIN = 512,  /* point is aligned to left/bottom stem edge   */
+    PSH3_POINT_EDGE_MAX = 1024  /* point is aligned to top/right stem edge     */
   };
 
-#define psh3_point_is_strong( p )   ( (p)->flags2 & PSH3_POINT_STRONG )
-#define psh3_point_is_fitted( p )   ( (p)->flags2 & PSH3_POINT_FITTED )
-#define psh3_point_is_extremum( p ) ( (p)->flags2 & PSH3_POINT_EXTREMUM )
-#define psh3_point_is_positive( p ) ( (p)->flags2 & PSH3_POINT_POSITIVE )
-#define psh3_point_is_negative( p ) ( (p)->flags2 & PSH3_POINT_NEGATIVE )
-#define psh3_point_is_edge_min( p ) ( (p)->flags2 & PSH3_POINT_EDGE_MIN )
-#define psh3_point_is_edge_max( p ) ( (p)->flags2 & PSH3_POINT_EDGE_MAX )
+#define psh3_point_is_strong( p )    ( (p)->flags2 & PSH3_POINT_STRONG )
+#define psh3_point_is_fitted( p )    ( (p)->flags2 & PSH3_POINT_FITTED )
+#define psh3_point_is_extremum( p )  ( (p)->flags2 & PSH3_POINT_EXTREMUM )
+#define psh3_point_is_positive( p )  ( (p)->flags2 & PSH3_POINT_POSITIVE )
+#define psh3_point_is_negative( p )  ( (p)->flags2 & PSH3_POINT_NEGATIVE )
+#define psh3_point_is_edge_min( p )  ( (p)->flags2 & PSH3_POINT_EDGE_MIN )
+#define psh3_point_is_edge_max( p )  ( (p)->flags2 & PSH3_POINT_EDGE_MAX )
 
 #define psh3_point_set_strong( p )    (p)->flags2 |= PSH3_POINT_STRONG
 #define psh3_point_set_fitted( p )    (p)->flags2 |= PSH3_POINT_FITTED
@@ -186,11 +186,11 @@ FT_BEGIN_HEADER
   } PSH3_PointRec;
 
 
-#define PSH3_POINT_EQUAL_ORG(a,b)  ( (a)->org_u == (b)->org_u && \
-                                     (a)->org_v == (b)->org_v )
+#define PSH3_POINT_EQUAL_ORG( a, b )  ( (a)->org_u == (b)->org_u && \
+                                        (a)->org_v == (b)->org_v )
 
-#define PSH3_POINT_ANGLE(a,b)  FT_Atan2( (b)->org_u - (a)->org_u,  \
-                                         (b)->org_v - (a)->org_v )
+#define PSH3_POINT_ANGLE( a, b )  FT_Atan2( (b)->org_u - (a)->org_u,  \
+                                            (b)->org_v - (a)->org_v )
 
   typedef struct  PSH3_ContourRec_
   {
