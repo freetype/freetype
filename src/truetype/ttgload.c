@@ -244,12 +244,12 @@
     if ( byte_len < 0 )
       return TT_Err_Invalid_Outline;
 
-    loader->n_contours = GET_Short();
+    loader->n_contours = FT_GET_SHORT();
 
-    loader->bbox.xMin = GET_Short();
-    loader->bbox.yMin = GET_Short();
-    loader->bbox.xMax = GET_Short();
-    loader->bbox.yMax = GET_Short();
+    loader->bbox.xMin = FT_GET_SHORT();
+    loader->bbox.yMin = FT_GET_SHORT();
+    loader->bbox.xMax = FT_GET_SHORT();
+    loader->bbox.yMax = FT_GET_SHORT();
 
     FT_TRACE5(( "  # of contours: %d\n", loader->n_contours ));
     FT_TRACE5(( "  xMin: %4d  xMax: %4d\n", loader->bbox.xMin,
@@ -289,7 +289,7 @@
         goto Invalid_Outline;
 
       for ( ; cur < limit; cur++ )
-        cur[0] = GET_UShort();
+        cur[0] = FT_GET_USHORT();
 
       n_points = 0;
       if ( n_contours > 0 )
@@ -311,7 +311,7 @@
     slot->control_len  = 0;
     slot->control_data = 0;
 
-    n_ins = GET_UShort();
+    n_ins = FT_GET_USHORT();
 
     FT_TRACE5(( "  Instructions size: %d\n", n_ins ));
 
@@ -358,13 +358,13 @@
         if ( --byte_len < 0 )
           goto Invalid_Outline;
 
-        *flag++ = c = GET_Byte();
+        *flag++ = c = FT_GET_BYTE();
         if ( c & 8 )
         {
           if ( --byte_len < 0 )
             goto Invalid_Outline;
 
-          count = GET_Byte();
+          count = FT_GET_BYTE();
           if ( flag + count > limit )
             goto Invalid_Outline;
 
@@ -407,12 +407,12 @@
 
         if ( *flag & 2 )
         {
-          y = GET_Byte();
+          y = FT_GET_BYTE();
           if ( ( *flag & 16 ) == 0 )
             y = -y;
         }
         else if ( ( *flag & 16 ) == 0 )
-          y = GET_Short();
+          y = FT_GET_SHORT();
 
         x     += y;
         vec->x = x;
@@ -435,12 +435,12 @@
 
         if ( *flag & 4 )
         {
-          y = GET_Byte();
+          y = FT_GET_BYTE();
           if ( ( *flag & 32 ) == 0 )
             y = -y;
         }
         else if ( ( *flag & 32 ) == 0 )
-          y = GET_Short();
+          y = FT_GET_SHORT();
 
         x     += y;
         vec->y = x;
@@ -497,8 +497,8 @@
 
       subglyph->arg1 = subglyph->arg2 = 0;
 
-      subglyph->flags = GET_UShort();
-      subglyph->index = GET_UShort();
+      subglyph->flags = FT_GET_USHORT();
+      subglyph->index = FT_GET_USHORT();
 
       /* check space */
       byte_len -= 2;
@@ -517,13 +517,13 @@
       /* read arguments */
       if ( subglyph->flags & ARGS_ARE_WORDS )
       {
-        subglyph->arg1 = GET_Short();
-        subglyph->arg2 = GET_Short();
+        subglyph->arg1 = FT_GET_SHORT();
+        subglyph->arg2 = FT_GET_SHORT();
       }
       else
       {
-        subglyph->arg1 = GET_Char();
-        subglyph->arg2 = GET_Char();
+        subglyph->arg1 = FT_GET_CHAR();
+        subglyph->arg2 = FT_GET_CHAR();
       }
 
       /* read transform */
@@ -532,20 +532,20 @@
 
       if ( subglyph->flags & WE_HAVE_A_SCALE )
       {
-        xx = (FT_Fixed)GET_Short() << 2;
+        xx = (FT_Fixed)FT_GET_SHORT() << 2;
         yy = xx;
       }
       else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
       {
-        xx = (FT_Fixed)GET_Short() << 2;
-        yy = (FT_Fixed)GET_Short() << 2;
+        xx = (FT_Fixed)FT_GET_SHORT() << 2;
+        yy = (FT_Fixed)FT_GET_SHORT() << 2;
       }
       else if ( subglyph->flags & WE_HAVE_A_2X2 )
       {
-        xx = (FT_Fixed)GET_Short() << 2;
-        xy = (FT_Fixed)GET_Short() << 2;
-        yx = (FT_Fixed)GET_Short() << 2;
-        yy = (FT_Fixed)GET_Short() << 2;
+        xx = (FT_Fixed)FT_GET_SHORT() << 2;
+        xy = (FT_Fixed)FT_GET_SHORT() << 2;
+        yx = (FT_Fixed)FT_GET_SHORT() << 2;
+        yy = (FT_Fixed)FT_GET_SHORT() << 2;
       }
 
       subglyph->transform.xx = xx;
@@ -1109,7 +1109,7 @@
 
           /* read size of instructions */
           if ( FT_STREAM_SEEK( ins_pos ) ||
-               READ_UShort( n_ins ) )
+               FT_READ_USHORT( n_ins ) )
             goto Fail;
           FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
 

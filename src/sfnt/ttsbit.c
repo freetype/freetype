@@ -228,7 +228,7 @@
     FT_Error  error;
 
 
-    if ( READ_ULong( range->image_size ) )
+    if ( FT_READ_ULONG( range->image_size ) )
       return error;
 
     return FT_STREAM_READ_FIELDS( sbit_metrics_fields, &range->metrics );
@@ -263,7 +263,7 @@
     FT_Memory  memory = stream->memory;
 
 
-    if ( READ_ULong( count ) )
+    if ( FT_READ_ULONG( count ) )
       goto Exit;
 
     range->num_glyphs = count;
@@ -286,11 +286,11 @@
 
     for ( n = 0; n < count; n++ )
     {
-      range->glyph_codes[n] = GET_UShort();
+      range->glyph_codes[n] = FT_GET_USHORT();
 
       if ( load_offsets )
         range->glyph_offsets[n] = (FT_ULong)range->image_offset +
-                                  GET_UShort();
+                                  FT_GET_USHORT();
     }
 
     FT_FRAME_EXIT();
@@ -347,8 +347,8 @@
 
         for ( n = 0; n < num_glyphs; n++ )
           range->glyph_offsets[n] = (FT_ULong)( range->image_offset +
-                                                  ( large ? GET_ULong()
-                                                          : GET_UShort() ) );
+                                                  ( large ? FT_GET_ULONG()
+                                                          : FT_GET_USHORT() ) );
         FT_FRAME_EXIT();
       }
       break;
@@ -463,8 +463,8 @@
     if ( FT_FRAME_ENTER( 8L ) )
       goto Exit;
 
-    version     = GET_Long();
-    num_strikes = GET_ULong();
+    version     = FT_GET_LONG();
+    num_strikes = FT_GET_ULONG();
 
     FT_FRAME_EXIT();
 
@@ -533,10 +533,10 @@
         range = strike->sbit_ranges;
         while ( count2 > 0 )
         {
-          range->first_glyph  = GET_UShort();
-          range->last_glyph   = GET_UShort();
+          range->first_glyph  = FT_GET_USHORT();
+          range->last_glyph   = FT_GET_USHORT();
           range->table_offset = table_base + strike->ranges_offset
-                                 + GET_ULong();
+                                 + FT_GET_ULONG();
           count2--;
           range++;
         }
@@ -553,9 +553,9 @@
                FT_FRAME_ENTER( 8L )               )
             goto Exit;
 
-          range->index_format = GET_UShort();
-          range->image_format = GET_UShort();
-          range->image_offset = GET_ULong();
+          range->index_format = FT_GET_USHORT();
+          range->image_format = FT_GET_USHORT();
+          range->image_offset = FT_GET_ULONG();
 
           FT_FRAME_EXIT();
 
@@ -1303,7 +1303,7 @@
       FT_UShort           num_components, count;
 
 
-      if ( READ_UShort( num_components )                                ||
+      if ( FT_READ_USHORT( num_components )                                ||
            ALLOC_ARRAY( components, num_components, TT_SBit_ComponentRec ) )
         goto Exit;
 
@@ -1314,9 +1314,9 @@
 
       for ( comp = components; count > 0; count--, comp++ )
       {
-        comp->glyph_code = GET_UShort();
-        comp->x_offset   = GET_Char();
-        comp->y_offset   = GET_Char();
+        comp->glyph_code = FT_GET_USHORT();
+        comp->x_offset   = FT_GET_CHAR();
+        comp->y_offset   = FT_GET_CHAR();
       }
 
       FT_FRAME_EXIT();

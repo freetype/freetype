@@ -153,110 +153,117 @@ FT_BEGIN_HEADER
   /* type `char*' or equivalent (1-byte elements).                         */
   /*                                                                       */
 
-#define FT_GET_SHORT_BE( p )                                   \
-          ((FT_Int16)( ( (FT_Int16)(FT_Char)(p)[0] <<  8 ) |   \
-                         (FT_Int16)(FT_Byte)(p)[1]         ) )
+#define  FT_BYTE_(p,i)   (((const FT_Byte*)(p))[(i)])
+#define  FT_INT8_(p,i)   (((const FT_Char*)(p))[(i)])
 
-#define FT_GET_USHORT_BE( p )                                   \
-          ((FT_Int16)( ( (FT_UInt16)(FT_Byte)(p)[0] <<  8 ) |   \
-                         (FT_UInt16)(FT_Byte)(p)[1]         ) )
+#define  FT_INT16(x)     ((FT_Int16)(x))
+#define  FT_UINT16(x)    ((FT_UInt16)(x))
+#define  FT_INT32(x)     ((FT_Int32)(x))
+#define  FT_UINT32(x)    ((FT_UInt32)(x))
 
-#define FT_GET_OFF3_BE( p )                                      \
-          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[0] << 16 ) |   \
-                         ( (FT_Int32)(FT_Byte)(p)[1] <<  8 ) |   \
-                           (FT_Int32)(FT_Byte)(p)[2]         ) )
+#define  FT_BYTE_I16(p,i,s)  (FT_INT16( FT_BYTE_(p,i)) << (s))
+#define  FT_BYTE_U16(p,i,s)  (FT_UINT16(FT_BYTE_(p,i)) << (s))
+#define  FT_BYTE_I32(p,i,s)  (FT_INT32( FT_BYTE_(p,i)) << (s))
+#define  FT_BYTE_U32(p,i,s)  (FT_UINT32(FT_BYTE_(p,i)) << (s))
 
-#define FT_GET_UOFF3_BE( p )                                      \
-          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[0] << 16 ) |   \
-                         ( (FT_UInt32)(FT_Byte)(p)[1] <<  8 ) |   \
-                           (FT_UInt32)(FT_Byte)(p)[2]         ) )
+#define  FT_INT8_I16(p,i,s)  (FT_INT16( FT_INT8_(p,i)) << (s))
+#define  FT_INT8_U16(p,i,s)  (FT_UINT16(FT_INT8_(p,i)) << (s))
+#define  FT_INT8_I32(p,i,s)  (FT_INT32( FT_INT8_(p,i)) << (s))
+#define  FT_INT8_U32(p,i,s)  (FT_UINT32(FT_INT8_(p,i)) << (s))
 
-#define FT_GET_LONG_BE( p )                                      \
-          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[0] << 24 ) |   \
-                         ( (FT_Int32)(FT_Byte)(p)[1] << 16 ) |   \
-                         ( (FT_Int32)(FT_Byte)(p)[2] <<  8 ) |   \
-                           (FT_Int32)(FT_Byte)(p)[3]         ) )
+#define FT_PEEK_SHORT( p )         FT_INT16(  FT_INT8_I16(p,0,8) |  \
+                                              FT_BYTE_I16(p,1,0) )
 
-#define FT_GET_ULONG_BE( p )                                      \
-          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[0] << 24 ) |   \
-                         ( (FT_UInt32)(FT_Byte)(p)[1] << 16 ) |   \
-                         ( (FT_UInt32)(FT_Byte)(p)[2] <<  8 ) |   \
-                           (FT_UInt32)(FT_Byte)(p)[3]         ) )
+#define FT_PEEK_USHORT( p )        FT_UINT16( FT_BYTE_U16(p,0,8) |  \
+                                              FT_BYTE_U16(p,1,0) )
 
-#define FT_GET_SHORT_LE( p )                                   \
-          ((FT_Int16)( ( (FT_Int16)(FT_Char)(p)[1] <<  8 ) |   \
-                         (FT_Int16)(FT_Byte)(p)[0]         ) )
+#define FT_PEEK_LONG( p )          FT_INT32(  FT_INT8_I32(p,0,24) |  \
+                                              FT_BYTE_I32(p,1,16) |  \
+                                              FT_BYTE_I32(p,2, 8) |  \
+                                              FT_BYTE_I32(p,3, 0) )
 
-#define FT_GET_USHORT_LE( p )                                   \
-          ((FT_Int16)( ( (FT_UInt16)(FT_Byte)(p)[1] <<  8 ) |   \
-                         (FT_UInt16)(FT_Byte)(p)[0]         ) )
+#define FT_PEEK_ULONG( p )         FT_UINT32( FT_BYTE_U32(p,0,24) |  \
+                                              FT_BYTE_U32(p,1,16) |  \
+                                              FT_BYTE_U32(p,2, 8) |  \
+                                              FT_BYTE_U32(p,3, 0) )
 
-#define FT_GET_OFF3_LE( p )                                      \
-          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[2] << 16 ) |   \
-                         ( (FT_Int32)(FT_Byte)(p)[1] <<  8 ) |   \
-                           (FT_Int32)(FT_Byte)(p)[0]         ) )
+#define FT_PEEK_OFF3( p )          FT_INT32(  FT_INT8_I32(p,0,16) |  \
+                                              FT_BYTE_I32(p,1, 8) |  \
+                                              FT_BYTE_I32(p,2, 0) )
 
-#define FT_GET_UOFF3_LE( p )                                      \
-          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[2] << 16 ) |   \
-                         ( (FT_UInt32)(FT_Byte)(p)[1] <<  8 ) |   \
-                           (FT_UInt32)(FT_Byte)(p)[0]         ) )
-
-#define FT_GET_LONG_LE( p )                                      \
-          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[3] << 24 ) |   \
-                         ( (FT_Int32)(FT_Byte)(p)[2] << 16 ) |   \
-                         ( (FT_Int32)(FT_Byte)(p)[1] <<  8 ) |   \
-                           (FT_Int32)(FT_Byte)(p)[0]         ) )
-
-#define FT_GET_ULONG_LE( p )                                      \
-          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[3] << 24 ) |   \
-                         ( (FT_UInt32)(FT_Byte)(p)[2] << 16 ) |   \
-                         ( (FT_UInt32)(FT_Byte)(p)[1] <<  8 ) |   \
-                           (FT_UInt32)(FT_Byte)(p)[0]         ) )
+#define FT_PEEK_UOFF3( p )         FT_UINT32( FT_BYTE_U32(p,0,16) |  \
+                                              FT_BYTE_U32(p,1, 8) |  \
+                                              FT_BYTE_U32(p,2, 0) )
 
 
-#define NEXT_Char( buffer )          \
+#define FT_PEEK_SHORT_LE( p )      FT_INT16(  FT_INT8_I16(p,1,8) |  \
+                                              FT_BYTE_I16(p,0,0) )
+
+#define FT_PEEK_USHORT_LE( p )     FT_UINT16( FT_BYTE_U16(p,1,8) |  \
+                                              FT_BYTE_U16(p,0,0) )
+
+#define FT_PEEK_LONG_LE( p )       FT_INT32(  FT_INT8_I32(p,3,24) |  \
+                                              FT_BYTE_I32(p,2,16) |  \
+                                              FT_BYTE_I32(p,1, 8) |  \
+                                              FT_BYTE_I32(p,0, 0) )
+
+#define FT_PEEK_ULONG_LE( p )      FT_UINT32( FT_BYTE_U32(p,3,24) |  \
+                                              FT_BYTE_U32(p,2,16) |  \
+                                              FT_BYTE_U32(p,1, 8) |  \
+                                              FT_BYTE_U32(p,0, 0) )
+
+#define FT_PEEK_OFF3_LE( p )       FT_INT32(  FT_INT8_I32(p,2,16) |  \
+                                              FT_BYTE_I32(p,1, 8) |  \
+                                              FT_BYTE_I32(p,0, 0) )
+
+#define FT_PEEK_UOFF3_LE( p )      FT_UINT32( FT_BYTE_U32(p,2,16) |  \
+                                              FT_BYTE_U32(p,1, 8) |  \
+                                              FT_BYTE_U32(p,0, 0) )
+
+
+#define FT_NEXT_CHAR( buffer )          \
           ( (signed char)*buffer++ )
 
-#define NEXT_Byte( buffer )            \
+#define FT_NEXT_BYTE( buffer )            \
           ( (unsigned char)*buffer++ )
 
-#define NEXT_Short( buffer )                                        \
-          ( (short)( buffer += 2, FT_GET_SHORT_BE( buffer - 2 ) ) )
+#define FT_NEXT_SHORT( buffer )                                            \
+          ( (short)( buffer += 2, FT_PEEK_SHORT( buffer - 2 ) ) )
 
-#define NEXT_UShort( buffer )                                                 \
-          ( (unsigned short)( buffer += 2, FT_GET_USHORT_BE( buffer - 2 ) ) )
+#define FT_NEXT_USHORT( buffer )                                            \
+          ( (unsigned short)( buffer += 2, FT_PEEK_USHORT( buffer - 2 ) ) )
 
-#define NEXT_Offset( buffer )                                     \
-          ( (long)( buffer += 3, FT_GET_OFF3_BE( buffer - 3 ) ) )
+#define FT_NEXT_OFF3( buffer )                                     \
+          ( (long)( buffer += 3, FT_PEEK_OFF3( buffer - 3 ) ) )
 
-#define NEXT_UOffset( buffer )                                              \
-          ( (unsigned long)( buffer += 3, FT_GET_UOFF3_BE( buffer - 3 ) ) )
+#define FT_NEXT_UOFF3( buffer )                                             \
+          ( (unsigned long)( buffer += 3, FT_PEEK_UOFF3( buffer - 3 ) ) )
 
-#define NEXT_Long( buffer )                                       \
-          ( (long)( buffer += 4, FT_GET_LONG_BE( buffer - 4 ) ) )
+#define FT_NEXT_LONG( buffer )                                       \
+          ( (long)( buffer += 4, FT_PEEK_LONG( buffer - 4 ) ) )
 
-#define NEXT_ULong( buffer )                                                \
-          ( (unsigned long)( buffer += 4, FT_GET_ULONG_BE( buffer - 4 ) ) )
-
-
-#define NEXT_ShortLE( buffer )                                      \
-          ( (short)( buffer += 2, FT_GET_SHORT_LE( buffer - 2 ) ) )
-
-#define NEXT_UShortLE( buffer )                                               \
-          ( (unsigned short)( buffer += 2, FT_GET_USHORT_LE( buffer - 2 ) ) )
-
-#define NEXT_OffsetLE( buffer )                                   \
-          ( (long)( buffer += 3, FT_GET_OFF3_LE( buffer - 3 ) ) )
-
-#define NEXT_UOffsetLE( buffer )                                            \
-          ( (unsigned long)( buffer += 3, FT_GET_UOFF3_LE( buffer - 3 ) ) )
+#define FT_NEXT_ULONG( buffer )                                             \
+          ( (unsigned long)( buffer += 4, FT_PEEK_ULONG( buffer - 4 ) ) )
 
 
-#define NEXT_LongLE( buffer )                                     \
-          ( (long)( buffer += 4, FT_GET_LONG_LE( buffer - 4 ) ) )
+#define FT_NEXT_SHORT_LE( buffer )                                      \
+          ( (short)( buffer += 2, FT_PEEK_SHORT_LE( buffer - 2 ) ) )
 
-#define NEXT_ULongLE( buffer )                                              \
-          ( (unsigned long)( buffer += 4, FT_GET_ULONG_LE( buffer - 4 ) ) )
+#define FT_NEXT_USHORT_LE( buffer )                                          \
+          ( (unsigned short)( buffer += 2, FT_PEEK_USHORT_LE( buffer - 2 ) ) )
+
+#define FT_NEXT_OFF3_LE( buffer )                                   \
+          ( (long)( buffer += 3, FT_PEEK_OFF3_LE( buffer - 3 ) ) )
+
+#define FT_NEXT_UOFF3_LE( buffer )                                           \
+          ( (unsigned long)( buffer += 3, FT_PEEK_UOFF3_LE( buffer - 3 ) ) )
+
+
+#define FT_NEXT_LONG_LE( buffer )                                     \
+          ( (long)( buffer += 4, FT_PEEK_LONG_LE( buffer - 4 ) ) )
+
+#define FT_NEXT_ULONG_LE( buffer )                                           \
+          ( (unsigned long)( buffer += 4, FT_PEEK_ULONG_LE( buffer - 4 ) ) )
 
 
   /*************************************************************************/
@@ -265,38 +272,38 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #define FT_GET_MACRO( func, type )        ( (type)func( stream ) )
 
-#define GET_Char()      FT_GET_MACRO( FT_Stream_GetChar, FT_Char )
-#define GET_Byte()      FT_GET_MACRO( FT_Stream_GetChar, FT_Byte )
-#define GET_Short()     FT_GET_MACRO( FT_Stream_GetShort, FT_Short )
-#define GET_UShort()    FT_GET_MACRO( FT_Stream_GetShort, FT_UShort )
-#define GET_Offset()    FT_GET_MACRO( FT_Stream_GetOffset, FT_Long )
-#define GET_UOffset()   FT_GET_MACRO( FT_Stream_GetOffset, FT_ULong )
-#define GET_Long()      FT_GET_MACRO( FT_Stream_GetLong, FT_Long )
-#define GET_ULong()     FT_GET_MACRO( FT_Stream_GetLong, FT_ULong )
-#define GET_Tag4()      FT_GET_MACRO( FT_Stream_GetLong, FT_ULong )
+#define FT_GET_CHAR()      FT_GET_MACRO( FT_Stream_GetChar, FT_Char )
+#define FT_GET_BYTE()      FT_GET_MACRO( FT_Stream_GetChar, FT_Byte )
+#define FT_GET_SHORT()     FT_GET_MACRO( FT_Stream_GetShort, FT_Short )
+#define FT_GET_USHORT()    FT_GET_MACRO( FT_Stream_GetShort, FT_UShort )
+#define FT_GET_OFF3()      FT_GET_MACRO( FT_Stream_GetOffset, FT_Long )
+#define FT_GET_UOFF3()     FT_GET_MACRO( FT_Stream_GetOffset, FT_ULong )
+#define FT_GET_LONG()      FT_GET_MACRO( FT_Stream_GetLong, FT_Long )
+#define FT_GET_ULONG()     FT_GET_MACRO( FT_Stream_GetLong, FT_ULong )
+#define FT_GET_TAG4()      FT_GET_MACRO( FT_Stream_GetLong, FT_ULong )
 
-#define GET_ShortLE()   FT_GET_MACRO( FT_Stream_GetShortLE, FT_Short )
-#define GET_UShortLE()  FT_GET_MACRO( FT_Stream_GetShortLE, FT_UShort )
-#define GET_LongLE()    FT_GET_MACRO( FT_Stream_GetLongLE, FT_Long )
-#define GET_ULongLE()   FT_GET_MACRO( FT_Stream_GetLongLE, FT_ULong )
+#define FT_GET_SHORT_LE()   FT_GET_MACRO( FT_Stream_GetShortLE, FT_Short )
+#define FT_GET_USHORT_LE()  FT_GET_MACRO( FT_Stream_GetShortLE, FT_UShort )
+#define FT_GET_LONG_LE()    FT_GET_MACRO( FT_Stream_GetLongLE, FT_Long )
+#define FT_GET_ULONG_LE()   FT_GET_MACRO( FT_Stream_GetLongLE, FT_ULong )
 
 #define FT_READ_MACRO( func, type, var )        \
           ( var = (type)func( stream, &error ), \
             error != FT_Err_Ok )
 
-#define READ_Byte( var )      FT_READ_MACRO( FT_Stream_ReadChar, FT_Byte, var )
-#define READ_Char( var )      FT_READ_MACRO( FT_Stream_ReadChar, FT_Char, var )
-#define READ_Short( var )     FT_READ_MACRO( FT_Stream_ReadShort, FT_Short, var )
-#define READ_UShort( var )    FT_READ_MACRO( FT_Stream_ReadShort, FT_UShort, var )
-#define READ_Offset( var )    FT_READ_MACRO( FT_Stream_ReadOffset, FT_Long, var )
-#define READ_UOffset( var )   FT_READ_MACRO( FT_Stream_ReadOffset, FT_ULong, var )
-#define READ_Long( var )      FT_READ_MACRO( FT_Stream_ReadLong, FT_Long, var )
-#define READ_ULong( var )     FT_READ_MACRO( FT_Stream_ReadLong, FT_ULong, var )
+#define FT_READ_BYTE( var )       FT_READ_MACRO( FT_Stream_ReadChar, FT_Byte, var )
+#define FT_READ_CHAR( var )       FT_READ_MACRO( FT_Stream_ReadChar, FT_Char, var )
+#define FT_READ_SHORT( var )      FT_READ_MACRO( FT_Stream_ReadShort, FT_Short, var )
+#define FT_READ_USHORT( var )     FT_READ_MACRO( FT_Stream_ReadShort, FT_UShort, var )
+#define FT_READ_OFF3( var )       FT_READ_MACRO( FT_Stream_ReadOffset, FT_Long, var )
+#define FT_READ_UOFF3( var )      FT_READ_MACRO( FT_Stream_ReadOffset, FT_ULong, var )
+#define FT_READ_LONG( var )       FT_READ_MACRO( FT_Stream_ReadLong, FT_Long, var )
+#define FT_READ_ULONG( var )      FT_READ_MACRO( FT_Stream_ReadLong, FT_ULong, var )
 
-#define READ_ShortLE( var )   FT_READ_MACRO( FT_Stream_ReadShortLE, FT_Short, var )
-#define READ_UShortLE( var )  FT_READ_MACRO( FT_Stream_ReadShortLE, FT_UShort, var )
-#define READ_LongLE( var )    FT_READ_MACRO( FT_Stream_ReadLongLE, FT_Long, var )
-#define READ_ULongLE( var )   FT_READ_MACRO( FT_Stream_ReadLongLE, FT_ULong, var )
+#define FT_READ_SHORT_LE( var )   FT_READ_MACRO( FT_Stream_ReadShortLE, FT_Short, var )
+#define FT_READ_USHORT_LE( var )  FT_READ_MACRO( FT_Stream_ReadShortLE, FT_UShort, var )
+#define FT_READ_LONG_LE( var )    FT_READ_MACRO( FT_Stream_ReadLongLE, FT_Long, var )
+#define FT_READ_ULONG_LE( var )   FT_READ_MACRO( FT_Stream_ReadLongLE, FT_ULong, var )
 
 
 

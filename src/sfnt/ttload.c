@@ -205,7 +205,7 @@
     /* first of all, read the first 4 bytes.  If it is `ttcf', then the */
     /* file is a TrueType collection, otherwise it can be any other     */
     /* kind of font.                                                    */
-    if ( READ_ULong( format_tag ) )
+    if ( FT_READ_ULONG( format_tag ) )
       goto Exit;
 
     if ( format_tag == TTAG_ttcf )
@@ -228,7 +228,7 @@
         goto Exit;
 
       for ( n = 0; n < face->ttc_header.count; n++ )
-        face->ttc_header.offsets[n] = GET_ULong();
+        face->ttc_header.offsets[n] = FT_GET_ULONG();
 
       FT_FRAME_EXIT();
 
@@ -241,7 +241,7 @@
 
       /* seek to the appropriate TrueType file, then read tag */
       if ( FT_STREAM_SEEK( face->ttc_header.offsets[face_index] ) ||
-           READ_Long( format_tag )                           )
+           FT_READ_LONG( format_tag )                           )
         goto Exit;
     }
 
@@ -325,10 +325,10 @@
 
     for ( ; entry < limit; entry++ )
     {                    /* loop through the tables and get all entries */
-      entry->Tag      = GET_Tag4();
-      entry->CheckSum = GET_ULong();
-      entry->Offset   = GET_Long();
-      entry->Length   = GET_Long();
+      entry->Tag      = FT_GET_TAG4();
+      entry->CheckSum = FT_GET_ULONG();
+      entry->Offset   = FT_GET_LONG();
+      entry->Length   = FT_GET_LONG();
 
       FT_TRACE2(( "  %c%c%c%c  -  %08lx  -  %08lx\n",
                   (FT_Char)( entry->Tag >> 24 ),
@@ -763,8 +763,8 @@
 
       for ( ; cur < limit; cur++ )
       {
-        cur->advance = GET_UShort();
-        cur->bearing = GET_Short();
+        cur->advance = FT_GET_USHORT();
+        cur->bearing = FT_GET_SHORT();
       }
     }
 
@@ -775,7 +775,7 @@
 
 
       for ( ; cur < limit; cur++ )
-        *cur = GET_Short();
+        *cur = FT_GET_SHORT();
 
       /* we fill up the missing left side bearings with the     */
       /* last valid value.  Since this will occur for buggy CJK */
@@ -1195,9 +1195,9 @@
         cmap               = &charmap->cmap;
 
         cmap->loaded             = FALSE;
-        cmap->platformID         = GET_UShort();
-        cmap->platformEncodingID = GET_UShort();
-        cmap->offset             = (FT_ULong)GET_Long();
+        cmap->platformID         = FT_GET_USHORT();
+        cmap->platformEncodingID = FT_GET_USHORT();
+        cmap->offset             = (FT_ULong)FT_GET_LONG();
       }
 
       FT_FRAME_EXIT();
@@ -1526,8 +1526,8 @@
     if ( FT_FRAME_ENTER( 4L ) )
       goto Exit;
 
-    face->gasp.version   = GET_UShort();
-    face->gasp.numRanges = GET_UShort();
+    face->gasp.version   = FT_GET_USHORT();
+    face->gasp.numRanges = FT_GET_USHORT();
 
     FT_FRAME_EXIT();
 
@@ -1542,8 +1542,8 @@
 
     for ( j = 0; j < num_ranges; j++ )
     {
-      gaspranges[j].maxPPEM  = GET_UShort();
-      gaspranges[j].gaspFlag = GET_UShort();
+      gaspranges[j].maxPPEM  = FT_GET_USHORT();
+      gaspranges[j].gaspFlag = FT_GET_USHORT();
 
       FT_TRACE3(( " [max:%d flag:%d]",
                     gaspranges[j].maxPPEM,
@@ -1600,8 +1600,8 @@
     if ( FT_FRAME_ENTER( 4L ) )
       goto Exit;
 
-    (void)GET_UShort();         /* version */
-    num_tables = GET_UShort();
+    (void)FT_GET_USHORT();         /* version */
+    num_tables = FT_GET_USHORT();
 
     FT_FRAME_EXIT();
 
@@ -1614,9 +1614,9 @@
       if ( FT_FRAME_ENTER( 6L ) )
         goto Exit;
 
-      (void)GET_UShort();           /* version                 */
-      length   = GET_UShort() - 6;  /* substract header length */
-      coverage = GET_UShort();
+      (void)FT_GET_USHORT();           /* version                 */
+      length   = FT_GET_USHORT() - 6;  /* substract header length */
+      coverage = FT_GET_USHORT();
 
       FT_FRAME_EXIT();
 
@@ -1631,7 +1631,7 @@
         if ( FT_FRAME_ENTER( 8L ) )
           goto Exit;
 
-        num_pairs = GET_UShort();
+        num_pairs = FT_GET_USHORT();
 
         /* skip the rest */
 
@@ -1646,9 +1646,9 @@
         limit = pair + num_pairs;
         for ( ; pair < limit; pair++ )
         {
-          pair->left  = GET_UShort();
-          pair->right = GET_UShort();
-          pair->value = GET_UShort();
+          pair->left  = FT_GET_USHORT();
+          pair->right = FT_GET_USHORT();
+          pair->value = FT_GET_USHORT();
         }
 
         FT_FRAME_EXIT();
@@ -1753,9 +1753,9 @@
     if ( FT_FRAME_ENTER( 8L ) )
       goto Exit;
 
-    hdmx->version     = GET_UShort();
-    hdmx->num_records = GET_Short();
-    record_size       = GET_Long();
+    hdmx->version     = FT_GET_USHORT();
+    hdmx->num_records = FT_GET_SHORT();
+    record_size       = FT_GET_LONG();
 
     FT_FRAME_EXIT();
 
@@ -1777,8 +1777,8 @@
       for ( ; cur < limit; cur++ )
       {
         /* read record */
-        if ( READ_Byte( cur->ppem      ) ||
-             READ_Byte( cur->max_width ) )
+        if ( FT_READ_BYTE( cur->ppem      ) ||
+             FT_READ_BYTE( cur->max_width ) )
           goto Exit;
 
         if ( ALLOC( cur->widths, num_glyphs )     ||

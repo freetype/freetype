@@ -1,3 +1,24 @@
+2002-03-22  David Turner    <david@freetype.org>
+
+        * include/freetype/internal/ftstream.h,
+          src/base/ftstream.c, src/cff/cffload.c, src/pcf/pcfread.c,
+          src/sfnt/ttcmap.c, src/sfnt/ttcmap0.c, src/sfnt/ttload.c,
+          src/sfnt/ttpost.c, src/sfnt/ttsbit.c,
+          src/truetype/ttgload.c, src/truetype/ttpload.c,
+          src/winfonts/winfnt.c:
+          
+            changed the definitions of stream macros. Examples:
+            
+              NEXT_Byte     => FT_NEXT_BYTE
+              NEXT_Short    => FT_NEXT_SHORT
+              NEXT_UShortLE => FT_NEXT_USHORT_LE
+              READ_Short    => FT_READ_SHORT
+              GET_Long      => FT_GET_LONG
+              etc..
+
+            also introduced the FT_PEEK_XXXX functions..
+
+
 2002-03-21  David Turner    <david@freetype.org>
 
         * src/base/ftobjs.c, src/pcf/pcfdriver.c, src/pcf/pcfread.c: updated

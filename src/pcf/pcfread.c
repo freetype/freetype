@@ -366,7 +366,7 @@ THE SOFTWARE.
     if ( error )
       goto Bail;
 
-    if ( READ_ULongLE( format ) )
+    if ( FT_READ_ULONG_LE( format ) )
       goto Bail;
 
     FT_TRACE4(( "get_prop: format = %ld\n", format ));
@@ -375,9 +375,9 @@ THE SOFTWARE.
       goto Bail;
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-      (void)READ_ULong( nprops );
+      (void)FT_READ_ULONG( nprops );
     else
-      (void)READ_ULongLE( nprops );
+      (void)FT_READ_ULONG_LE( nprops );
     if ( error )
       goto Bail;
 
@@ -412,9 +412,9 @@ THE SOFTWARE.
     }
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-      (void)READ_ULong( string_size );
+      (void)FT_READ_ULONG( string_size );
     else
-      (void)READ_ULongLE( string_size );
+      (void)FT_READ_ULONG_LE( string_size );
     if ( error )
       goto Bail;
 
@@ -491,7 +491,7 @@ THE SOFTWARE.
     if ( error )
       return error;
 
-    error = READ_ULongLE( format );
+    error = FT_READ_ULONG_LE( format );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )   &&
          !PCF_FORMAT_MATCH( format, PCF_COMPRESSED_METRICS ) )
@@ -500,16 +500,16 @@ THE SOFTWARE.
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)READ_ULong( nmetrics );
+        (void)FT_READ_ULONG( nmetrics );
       else
-        (void)READ_ULongLE( nmetrics );
+        (void)FT_READ_ULONG_LE( nmetrics );
     }
     else
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)READ_UShort( nmetrics );
+        (void)FT_READ_USHORT( nmetrics );
       else
-        (void)READ_UShortLE( nmetrics );
+        (void)FT_READ_USHORT_LE( nmetrics );
     }
     if ( error || nmetrics == -1 )
       return PCF_Err_Invalid_File_Format;
@@ -572,11 +572,11 @@ THE SOFTWARE.
     if ( error )
       return error;
 
-    format = GET_ULongLE();
+    format = FT_GET_ULONG_LE();
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-      nbitmaps  = GET_ULong();
+      nbitmaps  = FT_GET_ULONG();
     else
-      nbitmaps  = GET_ULongLE();
+      nbitmaps  = FT_GET_ULONG_LE();
 
     FT_Stream_ExitFrame( stream );
 
@@ -592,9 +592,9 @@ THE SOFTWARE.
     for ( i = 0; i < nbitmaps; i++ )
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)READ_Long( offsets[i] );
+        (void)FT_READ_LONG( offsets[i] );
       else
-        (void)READ_LongLE( offsets[i] );
+        (void)FT_READ_LONG_LE( offsets[i] );
 
       FT_TRACE4(( "bitmap %d is at offset %ld\n", i, offsets[i] ));
     }
@@ -604,9 +604,9 @@ THE SOFTWARE.
     for ( i = 0; i < GLYPHPADOPTIONS; i++ )
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)READ_Long( bitmapSizes[i] );
+        (void)FT_READ_LONG( bitmapSizes[i] );
       else
-        (void)READ_LongLE( bitmapSizes[i] );
+        (void)FT_READ_LONG_LE( bitmapSizes[i] );
       if ( error )
         goto Bail;
 
@@ -664,23 +664,23 @@ THE SOFTWARE.
     if ( error )
       return error;
 
-    format = GET_ULongLE();
+    format = FT_GET_ULONG_LE();
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
     {
-      firstCol          = GET_Short();
-      lastCol           = GET_Short();
-      firstRow          = GET_Short();
-      lastRow           = GET_Short();
-      face->defaultChar = GET_Short();
+      firstCol          = FT_GET_SHORT();
+      lastCol           = FT_GET_SHORT();
+      firstRow          = FT_GET_SHORT();
+      lastRow           = FT_GET_SHORT();
+      face->defaultChar = FT_GET_SHORT();
     }
     else
     {
-      firstCol          = GET_ShortLE();
-      lastCol           = GET_ShortLE();
-      firstRow          = GET_ShortLE();
-      lastRow           = GET_ShortLE();
-      face->defaultChar = GET_ShortLE();
+      firstCol          = FT_GET_SHORT_LE();
+      lastCol           = FT_GET_SHORT_LE();
+      firstRow          = FT_GET_SHORT_LE();
+      lastRow           = FT_GET_SHORT_LE();
+      face->defaultChar = FT_GET_SHORT_LE();
     }
 
     FT_Stream_ExitFrame( stream );
@@ -703,9 +703,9 @@ THE SOFTWARE.
     for ( i = 0, j = 0 ; i < nencoding; i++ )
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        encodingOffset = GET_Short();
+        encodingOffset = FT_GET_SHORT();
       else
-        encodingOffset = GET_ShortLE();
+        encodingOffset = FT_GET_SHORT_LE();
 
       if ( encodingOffset != -1 )
       {
@@ -808,7 +808,7 @@ THE SOFTWARE.
     if ( error )
       goto Bail;
 
-    error = READ_ULongLE( format );
+    error = FT_READ_ULONG_LE( format );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )  &&
          !PCF_FORMAT_MATCH( format, PCF_ACCEL_W_INKBOUNDS ) )
