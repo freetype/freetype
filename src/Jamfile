@@ -17,6 +17,7 @@ HDRMACRO  [ FT2_SubDir  include internal internal.h ] ;
 SubInclude  FT2_TOP src pshinter ;
 SubInclude  FT2_TOP src autohint ;
 SubInclude  FT2_TOP src base ;
+SubInclude  FT2_TOP src bdf ;
 SubInclude  FT2_TOP src cache ;
 SubInclude  FT2_TOP src cff ;
 SubInclude  FT2_TOP src cid ;
