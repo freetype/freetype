@@ -189,7 +189,6 @@
                  const FT_String*  t1_interface )
   {
     FT_UNUSED( driver );
-    FT_UNUSED( t1_interface );
 
     return ft_service_list_lookup( t1_services, t1_interface );
   }
