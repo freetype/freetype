@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType new character mapping table (cmap) support (body).          */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2003 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -701,9 +701,18 @@
           p += offset;  /* start of glyph id array */
 
           /* check that we point within the glyph ids table only */
-          if ( p < glyph_ids                                ||
-               p + ( end - start + 1 ) * 2 > table + length )
-            FT_INVALID_DATA;
+          if ( valid->level >= FT_VALIDATE_TIGHT )
+          {
+            if ( p < glyph_ids                                ||
+                 p + ( end - start + 1 ) * 2 > table + length )
+              FT_INVALID_DATA;
+          }
+          else
+          {
+            if ( p < glyph_ids                              ||
+                 p + ( end - start + 1 ) * 2 > valid->limit )
+              FT_INVALID_DATA;
+          }
 
           /* check glyph indices within the segment range */
           if ( valid->level >= FT_VALIDATE_TIGHT )
