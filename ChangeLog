@@ -1,9 +1,13 @@
+2001-08-21  Werner Lemberg  <wl@gnu.org>
+
+	* builds/dos/dos-def.mk (NO_OUTPUT): Don't use `&>' but `>'.
+
 2001-08-21  David Turner  <david@freetype.org>
 
-	* include/freetype/config/ftoption.h: changed the default setting for
-	FT_CONFIG_OPTION_USE_MODULE_ERRORS to undefined, since it breaks source
-	compatibility in a few cases.. (sorry Werner). Updated the comment to
-	explain that too..
+	* include/freetype/config/ftoption.h: Changed the default setting
+	for FT_CONFIG_OPTION_USE_MODULE_ERRORS to undefined, since it breaks
+	source compatibility in a few cases.  Updated the comment to explain
+	that too.
 
 2001-08-17  Martin Muskens  <mmuskens@aurelon.com>
 
