@@ -1,7 +1,8 @@
 2000-11-26  Tom Kacvinsky  <tjk@ams.org>
 
-	* src/cff/t2gload.c (T2_Parse_CharStrings): Modified the glyph
-	width parsing code to be more robust.
+	* src/cff/t2gload.c (T2_Parse_CharStrings): Added logic to glyph
+	width setting code to take into account even/odd argument counts
+	and glyph width operand before endchar/hmoveto/vmoveto.
 
 2000-11-26  Werner Lemberg  <wl@gnu.org>
 
