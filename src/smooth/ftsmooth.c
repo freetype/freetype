@@ -100,7 +100,7 @@
                     FT_Vector*    origin )
   {
     FT_Error     error;
-    FT_Outline*  outline;
+    FT_Outline*  outline = NULL;
     FT_BBox      cbox;
     FT_UInt      width, height, pitch;
     FT_Bitmap*   bitmap;
@@ -169,6 +169,9 @@
 
     /* render outline into the bitmap */
     error = render->raster_render( render->raster, &params );
+    
+    FT_Outline_Translate( outline, cbox.xMin, cbox.yMin );
+
     if ( error )
       goto Exit;
 
@@ -177,6 +180,9 @@
     slot->bitmap_top  = cbox.yMax >> 6;
 
   Exit:
+    if ( outline && origin )
+      FT_Outline_Translate( outline, -origin->x, -origin->y );
+
     return error;
   }
 

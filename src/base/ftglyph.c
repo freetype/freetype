@@ -574,7 +574,7 @@
     FT_GlyphSlotRec  dummy;
     FT_Error         error;
     FT_Glyph         glyph;
-    FT_BitmapGlyph   bitmap;
+    FT_BitmapGlyph   bitmap = NULL;
 
     const FT_Glyph_Class*  clazz;
 
@@ -598,27 +598,24 @@
     dummy.library = glyph->library;
     dummy.format  = clazz->glyph_format;
 
-    /* if `origin' is set, translate the glyph image */
-    if ( origin )
-      FT_Glyph_Transform( glyph, 0, origin );
-
     /* create result bitmap glyph */
     error = ft_new_glyph( glyph->library, &ft_bitmap_glyph_class,
                           (FT_Glyph*)&bitmap );
-    if ( error )
+    if (error)
       goto Exit;
+
+#if 0      
+    /* if `origin' is set, translate the glyph image */
+    if ( origin )
+      FT_Glyph_Transform( glyph, 0, origin );
+#endif
 
     /* prepare dummy slot for rendering */
     error = clazz->glyph_prepare( glyph, &dummy );
     if ( !error )
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
 
-    if ( error )
-    {
-      FT_Done_Glyph( FT_GLYPH( bitmap ) );
-      goto Exit;
-    }
-
+#if 0
     if ( !destroy && origin )
     {
       FT_Vector  v;
@@ -628,28 +625,28 @@
       v.y = -origin->y;
       FT_Glyph_Transform( glyph, 0, &v );
     }
+#endif
+
+    if (error)
+      goto Exit;
 
     /* in case of success, copy the bitmap to the glyph bitmap */
-    if ( !error )
-    {
-      error = ft_bitmap_glyph_init( bitmap, &dummy );
-      if ( error )
-      {
-        /* this should never happen, but let's be safe */
-        FT_Done_Glyph( FT_GLYPH( bitmap ) );
-        goto Exit;
-      }
+    error = ft_bitmap_glyph_init( bitmap, &dummy );
+    if ( error )
+      goto Exit;
 
-      /* copy advance */
-      bitmap->root.advance = glyph->advance;
+    /* copy advance */
+    bitmap->root.advance = glyph->advance;
 
-      if ( destroy )
-        FT_Done_Glyph( glyph );
+    if ( destroy )
+      FT_Done_Glyph( glyph );
 
-      *the_glyph = FT_GLYPH( bitmap );
-    }
+    *the_glyph = FT_GLYPH( bitmap );
 
   Exit:
+    if (error && bitmap)
+      FT_Done_Glyph( FT_GLYPH(bitmap) );
+      
     return error;
 
   Bad:
