@@ -22,6 +22,12 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       face->style_name; example: `Bold SemiCondensed'.
 
 
+  III. MISCELLANEOUS
+
+    - Wolfgang Domröse contributed support files for building FreeType
+      on the Atari using the PureC compiler.
+
+
 ======================================================================
 
 LATEST CHANGES BETWEEN 2.1.7 and 2.1.6
