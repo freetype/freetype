@@ -17,6 +17,10 @@
 #include "grwin32.h"
 #endif
 
+#ifdef macintosh
+#include "grmac.h"
+#endif
+
 
  /**********************************************************************
   *
@@ -52,7 +56,7 @@
 
     while (chain)
     {
-      /* initialie the device */
+      /* initialize the device */
       grDevice*  device;
 
       device = chain->device;
