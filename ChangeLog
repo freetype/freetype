@@ -1,3 +1,16 @@
+2003-12-29  Smith Charles  <smith.charles@free.fr>
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Handle `repeated
+	flags set' correctly.
+
+2003-12-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffobjs.c (cff_face_init): Fix memory leak by deallocating
+	`full' and `weight' properly.
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_hintmask> [FT_DEBUG_LEVEL_TRACE]: Use `0x' as prefix for
+	tracing output.
+
 2003-12-26  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/sfnt.h (TT_Set_SBit_Strike_Func):
