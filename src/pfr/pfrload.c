@@ -220,7 +220,7 @@
   FT_LOCAL_DEF( FT_Error )
   pfr_log_font_load( PFR_LogFont  log_font,
                      FT_Stream    stream,
-                     FT_UInt      index,
+                     FT_UInt      idx,
                      FT_UInt32    section_offset,
                      FT_Bool      size_increment )
   {
@@ -235,10 +235,10 @@
          FT_READ_USHORT( num_log_fonts )  )
       goto Exit;
 
-    if ( index >= num_log_fonts )
+    if ( idx >= num_log_fonts )
       return PFR_Err_Invalid_Argument;
 
-    if ( FT_STREAM_SKIP( index * 5 ) ||
+    if ( FT_STREAM_SKIP( idx * 5 ) ||
          FT_READ_USHORT( size )      ||
          FT_READ_UOFF3 ( offset )    )
       goto Exit;

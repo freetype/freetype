@@ -756,9 +756,9 @@
     FT_Bool         opened_frame = 0;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    struct FT_StreamRec_   inc_stream;
-    FT_Data                glyph_data;
-	FT_Bool                glyph_data_loaded = 0;
+    struct FT_StreamRec_  inc_stream;
+    FT_Data               glyph_data;
+    FT_Bool               glyph_data_loaded = 0;
 #endif
 
 
@@ -852,13 +852,15 @@
         goto Exit;
 
       glyph_data_loaded = 1;
-      offset = 0;
-      count  = glyph_data.length;
+      offset            = 0;
+      count             = glyph_data.length;
+
       FT_MEM_ZERO( &inc_stream, sizeof ( inc_stream ) );
-      FT_Stream_OpenMemory( &inc_stream, glyph_data.pointer, glyph_data.length );
+      FT_Stream_OpenMemory( &inc_stream,
+                            glyph_data.pointer, glyph_data.length );
+
       loader->stream = &inc_stream;
     }
-
     else
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
@@ -1266,10 +1268,10 @@
   Exit:
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    if (glyph_data_loaded)
-	  face->root.internal->incremental_interface->funcs->free_glyph_data(
-                face->root.internal->incremental_interface->object,
-                &glyph_data );
+    if ( glyph_data_loaded )
+      face->root.internal->incremental_interface->funcs->free_glyph_data(
+        face->root.internal->incremental_interface->object,
+        &glyph_data );
 #endif
 
     return error;

@@ -2652,13 +2652,13 @@
 
     Long          x1, x2, xs, e1, e2;
 
-    TProfileList  wait;
+    TProfileList  waiting;
     TProfileList  draw_left, draw_right;
 
 
     /* Init empty linked lists */
 
-    Init_Linked( &wait );
+    Init_Linked( &waiting );
 
     Init_Linked( &draw_left  );
     Init_Linked( &draw_right );
@@ -2680,7 +2680,7 @@
       if ( max_Y < top    ) max_Y = top;
 
       P->X = 0;
-      InsNew( &wait, P );
+      InsNew( &waiting, P );
 
       P = Q;
     }
@@ -2698,7 +2698,7 @@
 
     /* Then compute the distance of each profile from min_Y */
 
-    P = wait;
+    P = waiting;
 
     while ( P )
     {
@@ -2717,9 +2717,9 @@
 
     while ( ras.numTurns > 0 )
     {
-      /* look in the wait list for new activations */
+      /* look in the waiting list for new activations */
 
-      P = wait;
+      P = waiting;
 
       while ( P )
       {
@@ -2727,7 +2727,7 @@
         P->countL -= y_height;
         if ( P->countL == 0 )
         {
-          DelOld( &wait, P );
+          DelOld( &waiting, P );
 
           switch ( P->flow )
           {

@@ -1,36 +1,63 @@
-2002-08-01  Graham Asher  <graham.asher@btinternet.com>
-        * src/type1/t1load.c:
-        T1_Open_Face now tolerates a face with no charstrings if there
-        is an incremental loading interface. Type 1 faces supplied by
-        PostScript interpreters like GhostScript will typically not
-        provide any charstrings at load time, so this is essential
-        if they are to work.
+2002-08-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffcmap.c: Remove compiler warnings.
+	* src/cache/ftccache.c, src/cache/ftccache.i,
+	src/pfr/pfrload.c, src/pfr/pfrgload.c: s/index/idx/.
+	* src/cff/cffload.c: s/select/fdselect/.
+	* src/raster/ftraster.c: s/wait/waiting/.
 
 2002-08-01  Graham Asher  <graham.asher@btinternet.com>
-        * include/freetype/config/ftheader.h,
-        include/freetype/freetype.h,
-        include/freetype/ftincrem.h,
-        include/freetype/internal/ftobjs.h,
-        src/base/ftobjs.c,
-        src/cid/cidgload.c,
-        src/sfnt/sfobjs.c,
-        src/truetype/ttgload.c,
-        src/truetype/ttobjs.c,
-        src/type1/t1gload.c:
-        Modified incremental loading interface to be closer to David's
-        preferences. The header freetype.h is not now affected,
-        the interface is specified via an FT_Parameter, the pointer to
-        the interface is hidden in an internal part of the face record,
-        and all the definitions are in ftincrem.h.
+
+	* src/type1/t1load.c (T1_Open_Face): Tolerate a face with no
+	charstrings if there is an incremental loading interface.  Type 1
+	faces supplied by PostScript interpreters like GhostScript will
+	typically not provide any charstrings at load time, so this is
+	essential if they are to work.
+
+2002-08-01  Graham Asher  <graham.asher@btinternet.com>
+
+	Modified incremental loading interface to be closer to David's
+	preferences.  The header freetype.h is not now affected, the
+	interface is specified via an FT_Parameter, the pointer to the
+	interface is hidden in an internal part of the face record, and all
+	the definitions are in ftincrem.h.
+
+	* include/freetype/freeetype.h [FT_CONFIG_OPTION_INCREMENTAL]:
+	Removed.
+	* include/freetype/internal/ftobjs.h [FT_CONFIG_OPTION_INCREMENTAL]:
+	Include FT_INCREMENTAL_H.
+	(FT_Face_InternalRec) [FT_CONFIG_OPTION_INCREMENTAL]: Add
+	`incremental_interface'.
+
+	* src/base/ftobjs.c (open_face, FT_Open_Face)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Updated.
+	* src/sfnt/sfobjs.c (SFNT_Load_Face) [FT_CONFIG_OPTION_INCREMENTAL]:
+	Updated.
+
+	* src/truetype/ttgload.c (load_truetype_glyph)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Updated.
+	Free loaded glyph data properly.
+	(compute_glyph_metrics, TT_Load_Glyph)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Updated.
+	* src/truetype/ttobjs.c (TT_Face_Init)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Updated.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Updated.
+	(T1_Parse_Glyph) [FT_CONFIG_OPTION_INCREMENTAL]: Updated.
+	Free loaded glyph data properly.
+	(T1_Load_Glyph): Updated.
+	[FT_CONFIG_OPTION_INCREMENTAL]: Free loaded glyph data properly.
 
 2002-07-30  David Turner  <david@freetype.org>
 
-        * include/freetype/ftincrem.h: adding new experimental header file
-        to demonstrate a "cleaner" API to support incremental font loading.
-        comments appreciated...
+	* include/freetype/ftincrem.h: Adding new experimental header file
+	to demonstrate a "cleaner" API to support incremental font loading.
 
-        * src/tools/docmaker/*: adding new (more advanced) version of
-        the DocMaker tool. Python with regular expressions rocks..
+	* include/freetype/config/ftheader.h (FT_INCREMENTAL_H): New macro.
+
+	* src/tools/docmaker/*: Adding new (more advanced) version of
+	the DocMaker tool, using Python's sophisticated regexps.
 
 2002-07-28  Werner Lemberg  <wl@gnu.org>
 

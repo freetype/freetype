@@ -159,14 +159,14 @@
   {
     FT_Error   error = 0;
     FTC_Node  *pnode;
-    FT_UInt    index, num_buckets;
+    FT_UInt    idx, num_buckets;
 
 
-    index = (FT_UInt)( node->hash & cache->mask );
-    if ( index < cache->p )
-      index = (FT_UInt)( node->hash & ( 2 * cache->mask + 1 ) );
+    idx = (FT_UInt)( node->hash & cache->mask );
+    if ( idx < cache->p )
+      idx = (FT_UInt)( node->hash & ( 2 * cache->mask + 1 ) );
 
-    pnode = cache->buckets + index;
+    pnode = cache->buckets + idx;
 
     for (;;)
     {
@@ -239,15 +239,15 @@
                       FTC_Cache  cache )
   {
     FTC_Node  *pnode;
-    FT_UInt    index;
+    FT_UInt    idx;
     FT_Error   error = 0;
 
 
-    index = (FT_UInt)( node->hash & cache->mask );
-    if ( index < cache->p )
-      index = (FT_UInt)( node->hash & (2 * cache->mask + 1 ) );
+    idx = (FT_UInt)( node->hash & cache->mask );
+    if ( idx < cache->p )
+      idx = (FT_UInt)( node->hash & (2 * cache->mask + 1 ) );
 
-    pnode = cache->buckets + index;
+    pnode = cache->buckets + idx;
 
     node->link = *pnode;
     *pnode     = node;
@@ -603,14 +603,14 @@
       FTC_Family  family = (FTC_Family) lru;
       FT_UFast    hash    = query->hash;
       FTC_Node*   bucket;
-      FT_UInt     index;
+      FT_UInt     idx;
 
 
-      index = hash & cache->mask;
-      if ( index < cache->p )
-        index = hash & ( cache->mask * 2 + 1 );
+      idx = hash & cache->mask;
+      if ( idx < cache->p )
+        idx = hash & ( cache->mask * 2 + 1 );
 
-      bucket  = cache->buckets + index;
+      bucket  = cache->buckets + idx;
 
 
       if ( query->family     != family                        ||

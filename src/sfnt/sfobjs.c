@@ -434,8 +434,8 @@
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     has_outline   = FT_BOOL( face->root.internal->incremental_interface != 0 ||
-                             TT_LookUp_Table( face, TTAG_glyf ) != 0 ||
-                             TT_LookUp_Table( face, TTAG_CFF ) != 0  );
+                             TT_LookUp_Table( face, TTAG_glyf ) != 0         ||
+                             TT_LookUp_Table( face, TTAG_CFF ) != 0          );
 #else
     has_outline   = FT_BOOL( TT_LookUp_Table( face, TTAG_glyf ) != 0 ||
                              TT_LookUp_Table( face, TTAG_CFF ) != 0  );

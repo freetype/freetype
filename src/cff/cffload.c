@@ -1358,20 +1358,20 @@
 
 
   static void
-  CFF_Done_FD_Select( CFF_FDSelect  select,
+  CFF_Done_FD_Select( CFF_FDSelect  fdselect,
                       FT_Stream     stream )
   {
-    if ( select->data )
-      FT_FRAME_RELEASE( select->data );
+    if ( fdselect->data )
+      FT_FRAME_RELEASE( fdselect->data );
 
-    select->data_size   = 0;
-    select->format      = 0;
-    select->range_count = 0;
+    fdselect->data_size   = 0;
+    fdselect->format      = 0;
+    fdselect->range_count = 0;
   }
 
 
   static FT_Error
-  CFF_Load_FD_Select( CFF_FDSelect  select,
+  CFF_Load_FD_Select( CFF_FDSelect  fdselect,
                       FT_UInt       num_glyphs,
                       FT_Stream     stream,
                       FT_ULong      offset )
@@ -1385,23 +1385,23 @@
     if ( FT_STREAM_SEEK( offset ) || FT_READ_BYTE( format ) )
       goto Exit;
 
-    select->format      = format;
-    select->cache_count = 0;   /* clear cache */
+    fdselect->format      = format;
+    fdselect->cache_count = 0;   /* clear cache */
 
     switch ( format )
     {
     case 0:     /* format 0, that's simple */
-      select->data_size = num_glyphs;
+      fdselect->data_size = num_glyphs;
       goto Load_Data;
 
     case 3:     /* format 3, a tad more complex */
       if ( FT_READ_USHORT( num_ranges ) )
         goto Exit;
 
-      select->data_size = num_ranges * 3 + 2;
+      fdselect->data_size = num_ranges * 3 + 2;
 
     Load_Data:
-      if ( FT_FRAME_EXTRACT( select->data_size, select->data ) )
+      if ( FT_FRAME_EXTRACT( fdselect->data_size, fdselect->data ) )
         goto Exit;
       break;
 
@@ -1415,30 +1415,31 @@
 
 
   FT_LOCAL_DEF( FT_Byte )
-  cff_fd_select_get( CFF_FDSelect  select,
+  cff_fd_select_get( CFF_FDSelect  fdselect,
                      FT_UInt       glyph_index )
   {
     FT_Byte  fd = 0;
 
 
-    switch ( select->format )
+    switch ( fdselect->format )
     {
     case 0:
-      fd = select->data[glyph_index];
+      fd = fdselect->data[glyph_index];
       break;
 
     case 3:
       /* first, compare to cache */
-      if ( (FT_UInt)(glyph_index-select->cache_first) < select->cache_count )
+      if ( (FT_UInt)( glyph_index - fdselect->cache_first ) <
+                        fdselect->cache_count )
       {
-        fd = select->cache_fd;
+        fd = fdselect->cache_fd;
         break;
       }
 
       /* then, lookup the ranges array */
       {
-        FT_Byte*  p       = select->data;
-        FT_Byte*  p_limit = p + select->data_size;
+        FT_Byte*  p       = fdselect->data;
+        FT_Byte*  p_limit = p + fdselect->data_size;
         FT_Byte   fd2;
         FT_UInt   first, limit;
 
@@ -1457,9 +1458,9 @@
             fd = fd2;
 
             /* update cache */
-            select->cache_first = first;
-            select->cache_count = limit-first;
-            select->cache_fd    = fd2;
+            fdselect->cache_first = first;
+            fdselect->cache_count = limit-first;
+            fdselect->cache_fd    = fd2;
             break;
           }
           first = limit;

@@ -32,7 +32,7 @@
   cff_cmap_encoding_init( CFF_CMapStd  cmap )
   {
     TT_Face       face     = (TT_Face)FT_CMAP_FACE( cmap );
-    CFF_Font      cff      = face->extra.data;
+    CFF_Font      cff      = (CFF_Font)face->extra.data;
     CFF_Encoding  encoding = &cff->encoding;
 
 
@@ -144,9 +144,9 @@
     FT_UInt          count;
     TT_Face          face    = (TT_Face)FT_CMAP_FACE( cmap );
     FT_Memory        memory  = FT_FACE_MEMORY( face );
-    CFF_Font         cff     = face->extra.data;
+    CFF_Font         cff     = (CFF_Font)face->extra.data;
     CFF_Charset      charset = &cff->charset;
-    PSNames_Service  psnames = cff->psnames;
+    PSNames_Service  psnames = (PSNames_Service)cff->psnames;
 
 
     cmap->num_pairs = 0;

@@ -79,14 +79,14 @@
       hash   = query->hash;
 
       {
-        FT_UInt  index;
+        FT_UInt  idx;
 
 
-        index = hash & cache->mask;
-        if ( index < cache->p )
-          index = hash & ( cache->mask * 2 + 1 );
+        idx = hash & cache->mask;
+        if ( idx < cache->p )
+          idx = hash & ( cache->mask * 2 + 1 );
 
-        bucket  = cache->buckets + index;
+        bucket  = cache->buckets + idx;
       }
 
 #ifdef FT_DEBUG_LEVEL_ERROR
