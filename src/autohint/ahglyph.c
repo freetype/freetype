@@ -760,7 +760,7 @@
 
         diff_out = ah_angle_diff( angle_seg, angle_out );
 
-        if ( diff_in ^ diff_out < 0 )
+        if ( ( diff_in ^ diff_out ) < 0 )
         {
           /* diff_in and diff_out have different signs, we have */
           /* inflection points here...                          */

@@ -738,7 +738,7 @@
 
         diff_out = FT_Angle_Diff( angle_seg, angle_out );
 
-        if ( diff_in ^ diff_out < 0 )
+        if ( ( diff_in ^ diff_out ) < 0 )
         {
           /* diff_in and diff_out have different signs, we have */
           /* inflection points here...                          */
@@ -1043,9 +1043,7 @@
   static void
   psh3_glyph_compute_extrema( PSH3_Glyph  glyph )
   {
-    FT_UInt       first = 0, next, n;
-    PSH3_Point    points  = glyph->points;
-    PSH3_Contour  contour = glyph->contours;
+    FT_UInt   n;
 
     /* first of all, compute all local extrema */
     for ( n = 0; n < glyph->num_contours; n++ )
@@ -1116,12 +1114,12 @@
     {
       PSH3_Point  point, before, after;
 
-      point = &glyph->points[n];
+      point  = &glyph->points[n];
+      before = point;
+      after  = point;
+      
       if ( psh3_point_is_extremum( point ) )
       {
-        PSH3_Point  before = point;
-        PSH3_Point  after  = point;
-
         do
         {
           before = before->prev;
@@ -1172,7 +1170,6 @@
     PSH3_Hint*   sort      = table->sort;
     FT_UInt      num_hints = table->num_hints;
     FT_Int       point_dir = 0;
-    FT_UInt      flag;
 
     if ( PSH3_DIR_COMPARE( point->dir_in, major_dir ) )
       point_dir = point->dir_in;

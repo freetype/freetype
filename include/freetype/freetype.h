@@ -2043,6 +2043,8 @@ FT_BEGIN_HEADER
   /*    the function should try to auto-hint the glyphs, even if a driver  */
   /*    specific hinter is available.                                      */
   /*                                                                       */
+  /*    Note that it is ignored if @FT_LOAD_NO_AUTOHINT is also set        */
+  /*                                                                       */
 #define FT_LOAD_FORCE_AUTOHINT  32
 
 
@@ -2153,6 +2155,28 @@ FT_BEGIN_HEADER
 
   /* temporary hack! */
 #define FT_LOAD_SBITS_ONLY  16384
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_LOAD_NO_AUTOHINT                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit field constant, used with @FT_Load_Glyph to indicate that    */
+  /*    the auto-hinter should never be run. This can be important for     */
+  /*    certain fonts where un-hinted output is better than auto-hinted    */
+  /*    one.                                                               */
+  /*                                                                       */
+  /*    Note that this will _not_ prevent a native hinter to be run        */
+  /*    when available (i.e. for Postscript fonts, or for TrueType ones    */
+  /*    when the bytecode interpreter was compiled in)                     */
+  /*                                                                       */
+  /*    If you want to completely disable hinting, use @FT_LOAD_NO_HINTING */
+  /*    instead.                                                           */
+  /*                                                                       */
+  /*    The @FT_LOAD_FORCE_AUTOHINT flag will not work if this flag is set */
+  /*                                                                       */
+#define FT_LOAD_NO_AUTOHINT  32768
 
 
   /*************************************************************************/
