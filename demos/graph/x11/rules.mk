@@ -9,25 +9,37 @@
 #
 # Try to detect an X11 setup.
 #
-# We simply try to detect a `X11R6/bin', `X11R5/bin' or `X11/bin' in
-# the current path.
+# We try to detect the following directories (in that order) in the current
+# path:
 #
-ifneq ($(findstring X11R6$(SEP)bin,$(PATH)),)
-  xversion := X11R6
-else
-  ifneq ($(findstring X11R5$(SEP)bin,$(PATH)),)
-    xversion := X11R5
+#   X11   (usually a symlink to the current release)
+#   X11R6
+#   X11R5
+#
+# If the variable X11_PATH is set (to specify unusual locations of X11), no
+# other directory is searched.  More than one directory must be separated
+# with spaces.  Example:
+#
+#   make X11_PATH="/usr/openwin /usr/local/X11R6"
+#
+ifndef X11_PATH
+  ifneq ($(findstring X11$(SEP)bin,$(PATH)),)
+    xversion := X11
   else
-    ifneq ($(findstring X11$(SEP)bin,$(PATH)),)
-      xversion := X11
+    ifneq ($(findstring X11R6$(SEP)bin,$(PATH)),)
+      xversion := X11R6
+    else
+      ifneq ($(findstring X11R5$(SEP)bin,$(PATH)),)
+        xversion := X11R5
+      endif
     endif
   endif
-endif
 
-ifdef xversion
-  X11_PATH := $(subst ;, ,$(PATH)) $(subst :, ,$(PATH))
-  X11_PATH := $(filter %$(xversion)$(SEP)bin,$(X11_PATH))
-  X11_PATH := $(X11_PATH:%$(SEP)bin=%)
+  ifdef xversion
+    X11_PATH := $(subst ;, ,$(PATH)) $(subst :, ,$(PATH))
+    X11_PATH := $(filter %$(xversion)$(SEP)bin,$(X11_PATH))
+    X11_PATH := $(X11_PATH:%$(SEP)bin=%)
+  endif
 endif
 
 ##########################################################################

@@ -1,5 +1,5 @@
 #
-# FreeType 2 Configuration rules for Win32 + LCC
+# FreeType 2 Configuration rules for Win32 + Visual C/C++
 #
 
 
