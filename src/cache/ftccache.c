@@ -211,7 +211,7 @@
         cache->mask >>= 1;
         p             = cache->mask;
 
-        if ( FT_RENEW_ARRAY( cache->buckets, ( mask + 1 ) * 2, mask ) )
+        if ( FT_RENEW_ARRAY( cache->buckets, ( mask + 1 ) * 2, (mask+1) ) )
         {
           FT_ERROR(( "ftc_node_hash_unlink: couldn't shunk buckets!\n" ));
           goto Exit;
