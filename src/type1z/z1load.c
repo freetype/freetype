@@ -393,11 +393,11 @@
   void  parse_blend_axis_types( T1_Face     face,
                                 Z1_Loader*  loader )
   {
-    T1_Token  axis_tokens[ T1_MAX_MM_AXIS ];
-    FT_Int        n, num_axis;
-    FT_Error      error = 0;
-    T1_Blend*     blend;
-    FT_Memory     memory;
+    T1_Token   axis_tokens[ T1_MAX_MM_AXIS ];
+    FT_Int     n, num_axis;
+    FT_Error   error = 0;
+    T1_Blend*  blend;
+    FT_Memory  memory;
 
 
     /* take an array of objects */
@@ -423,8 +423,8 @@
     for ( n = 0; n < num_axis; n++ )
     {
       T1_Token*  token = axis_tokens + n;
-      FT_Byte*       name;
-      FT_Int         len;
+      FT_Byte*   name;
+      FT_Int     len;
 
       /* skip first slash, if any */
       if (token->start[0] == '/')
@@ -454,13 +454,13 @@
   void  parse_blend_design_positions( T1_Face     face,
                                       Z1_Loader*  loader )
   {
-    T1_Token  design_tokens[ T1_MAX_MM_DESIGNS ];
-    FT_Int        num_designs;
-    FT_Int        num_axis;
-    Z1_Parser*    parser = &loader->parser;
+    T1_Token    design_tokens[ T1_MAX_MM_DESIGNS ];
+    FT_Int      num_designs;
+    FT_Int      num_axis;
+    Z1_Parser*  parser = &loader->parser;
 
-    FT_Error      error = 0;
-    T1_Blend*     blend;
+    FT_Error    error = 0;
+    T1_Blend*   blend;
 
 
     /* get the array of design tokens - compute number of designs */
@@ -536,14 +536,14 @@
   void  parse_blend_design_map( T1_Face     face,
                                 Z1_Loader*  loader )
   {
-    FT_Error      error  = 0;
-    Z1_Parser*    parser = &loader->parser;
-    T1_Blend*     blend;
-    T1_Token  axis_tokens[ T1_MAX_MM_AXIS ];
-    FT_Int        n, num_axis;
-    FT_Byte*      old_cursor;
-    FT_Byte*      old_limit;
-    FT_Memory     memory = face->root.memory;
+    FT_Error    error  = 0;
+    Z1_Parser*  parser = &loader->parser;
+    T1_Blend*   blend;
+    T1_Token    axis_tokens[ T1_MAX_MM_AXIS ];
+    FT_Int      n, num_axis;
+    FT_Byte*    old_cursor;
+    FT_Byte*    old_limit;
+    FT_Memory   memory = face->root.memory;
 
 
     Z1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
@@ -565,9 +565,9 @@
     /* now, read each axis design map */
     for ( n = 0; n < num_axis; n++ )
     {
-      T1_DesignMap*   map = blend->design_map + n;
-      T1_Token*   token;
-      FT_Int          p, num_points;
+      T1_DesignMap* map = blend->design_map + n;
+      T1_Token*     token;
+      FT_Int        p, num_points;
 
 
       token = axis_tokens + n;
@@ -617,13 +617,13 @@
   void  parse_weight_vector( T1_Face     face,
                              Z1_Loader*  loader )
   {
-    FT_Error      error  = 0;
-    Z1_Parser*    parser = &loader->parser;
-    T1_Blend*     blend  = face->blend;
-    T1_Token  master;
-    FT_UInt       n;
-    FT_Byte*      old_cursor;
-    FT_Byte*      old_limit;
+    FT_Error    error  = 0;
+    Z1_Parser*  parser = &loader->parser;
+    T1_Blend*   blend  = face->blend;
+    T1_Token    master;
+    FT_UInt     n;
+    FT_Byte*    old_cursor;
+    FT_Byte*    old_limit;
 
 
     if ( !blend || blend->num_designs == 0 )
@@ -693,48 +693,48 @@
   /*************************************************************************/
   /*                                                                       */
   /* First of all, define the token field static variables.  This is a set */
-  /* of T1_Field variables used later.                                 */
+  /* of T1_Field variables used later.                                     */
   /*                                                                       */
   /*************************************************************************/
 
-#define Z1_NEW_STRING( _name, _field )              \
-          static                                    \
+#define Z1_NEW_STRING( _name, _field )          \
+          static                                \
           const T1_Field  z1_field_ ## _field = \
             T1_FIELD_STRING( _field );
 
-#define Z1_NEW_BOOL( _name, _field )                \
-          static                                    \
+#define Z1_NEW_BOOL( _name, _field )            \
+          static                                \
           const T1_Field  z1_field_ ## _field = \
             T1_FIELD_BOOL( _field );
 
-#define Z1_NEW_NUM( _name, _field )                 \
-          static                                    \
+#define Z1_NEW_NUM( _name, _field )             \
+          static                                \
           const T1_Field  z1_field_ ## _field = \
             T1_FIELD_NUM( _field );
 
-#define Z1_NEW_FIXED( _name, _field )                 \
-          static                                      \
-          const T1_Field  z1_field_ ## _field =   \
+#define Z1_NEW_FIXED( _name, _field )           \
+          static                                \
+          const T1_Field  z1_field_ ## _field = \
             T1_FIELD_FIXED( _field, _power );
 
-#define Z1_NEW_NUM_TABLE( _name, _field, _max, _count )         \
-          static                                                \
-          const T1_Field  z1_field_ ## _field =             \
+#define Z1_NEW_NUM_TABLE( _name, _field, _max, _count )  \
+          static                                         \
+          const T1_Field  z1_field_ ## _field =          \
             T1_FIELD_NUM_ARRAY( _field, _count, _max );
 
-#define Z1_NEW_FIXED_TABLE( _name, _field, _max, _count )         \
-          static                                                  \
-          const T1_Field  z1_field_ ## _field =               \
+#define Z1_NEW_FIXED_TABLE( _name, _field, _max, _count ) \
+          static                                          \
+          const T1_Field  z1_field_ ## _field =           \
             T1_FIELD_FIXED_ARRAY( _field, _count, _max );
 
-#define Z1_NEW_NUM_TABLE2( _name, _field, _max )         \
-          static                                         \
-          const T1_Field  z1_field_ ## _field =      \
+#define Z1_NEW_NUM_TABLE2( _name, _field, _max ) \
+          static                                 \
+          const T1_Field  z1_field_ ## _field =  \
             T1_FIELD_NUM_ARRAY2( _field, _max );
 
-#define Z1_NEW_FIXED_TABLE2( _name, _field, _max )         \
-          static                                           \
-          const T1_Field  z1_field_ ## _field =        \
+#define Z1_NEW_FIXED_TABLE2( _name, _field, _max ) \
+          static                                   \
+          const T1_Field  z1_field_ ## _field =    \
             T1_FIELD_FIXED_ARRAY2( _field, _max );
 
 
@@ -796,7 +796,7 @@
     Z1_KeyWord_Type      type;
     Z1_KeyWord_Location  location;
     Z1_Parse_Func        parsing;
-    const T1_Field*  field;
+    const T1_Field*      field;
 
   } Z1_KeyWord;
 
@@ -924,14 +924,14 @@
   static
   int  is_space( FT_Byte  c )
   {
-    return (c == ' ' || c == '\t' || c == '\r' || c == '\n' );
+    return ( c == ' ' || c == '\t' || c == '\r' || c == '\n' );
   }
 
 
   static
   int  is_alpha( FT_Byte  c )
   {
-    return (isalnum(c) || c == '.' || c == '_' );
+    return ( isalnum( c ) || c == '.' || c == '_' );
   }
 
 
@@ -964,7 +964,7 @@
       /* `RD' or `-|' token                          */
       *base = parser->root.cursor + 1;
 
-      parser->root.cursor += *size+1;
+      parser->root.cursor += *size + 1;
       return 1;
     }
 
@@ -1114,9 +1114,10 @@
 
       /* we use a Z1_Table to store our charnames */
       encode->num_chars = count;
-      if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   )       ||
-           ALLOC_ARRAY( encode->char_name,  count, FT_String* )       ||
-           ( error = psaux->ps_table_funcs->init( char_table, count, memory ) ) != 0 )
+      if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   ) ||
+           ALLOC_ARRAY( encode->char_name,  count, FT_String* ) ||
+           ( error = psaux->ps_table_funcs->init(
+                       char_table, count, memory ) ) != 0       )
       {
         parser->root.error = error;
         return;
@@ -1200,7 +1201,7 @@
       }
 
       face->type1.encoding_type = t1_encoding_array;
-      parser->root.cursor            = cur;
+      parser->root.cursor       = cur;
     }
     /* Otherwise, we should have either `StandardEncoding' or */
     /* `ExpertEncoding'                                       */
@@ -1234,6 +1235,7 @@
     FT_Int      n;
 
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+
     
     loader->num_subrs = Z1_ToInt( parser );
     if ( parser->root.error )
@@ -1333,11 +1335,15 @@
       return;
 
     /* initialize tables */
-    error = psaux->ps_table_funcs->init( code_table, loader->num_glyphs, memory );
-    if (error)
+    error = psaux->ps_table_funcs->init( code_table,
+                                         loader->num_glyphs,
+                                         memory );
+    if ( error )
       goto Fail;
 
-    error = psaux->ps_table_funcs->init( name_table, loader->num_glyphs, memory );
+    error = psaux->ps_table_funcs->init( name_table,
+                                         loader->num_glyphs,
+                                         memory );
     if ( error )
       goto Fail;
 
@@ -1555,7 +1561,9 @@
                     /* we found it -- run the parsing callback! */
                     parser->root.cursor = cur2;
                     Z1_Skip_Spaces( parser );
-                    parser->root.error = t1_load_keyword( face, loader, keyword );
+                    parser->root.error = t1_load_keyword( face,
+                                                          loader,
+                                                          keyword );
                     if ( parser->root.error )
                       return parser->root.error;
 
@@ -1620,13 +1628,17 @@
     
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
+
     t1_init_loader( &loader, face );
 
     /* default lenIV */
     type1->private_dict.lenIV = 4;
 
     parser = &loader.parser;
-    error = Z1_New_Parser( parser, face->root.stream, face->root.memory, psaux );
+    error = Z1_New_Parser( parser,
+                           face->root.stream,
+                           face->root.memory,
+                           psaux );
     if ( error )
       goto Exit;
 

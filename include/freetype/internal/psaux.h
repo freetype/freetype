@@ -37,7 +37,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
   typedef struct PS_Table_  PS_Table;
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -45,28 +47,31 @@
   /*    PS_Table_Funcs                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A set of function pointers used to manage PS_Table objects..       */
+  /*    A set of function pointers to manage PS_Table objects.             */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    table_init    :: used to initialise a a table                      */
-  /*    table_done    :: finalize/destroy a given table                    */
-  /*    table_add     :: add one new object to a table                     */
-  /*    table_release :: release table data, then finalize it              */
+  /*    table_init    :: Used to initialize a table.                       */
   /*                                                                       */
-  typedef  struct PS_Table_Funcs_
+  /*    table_done    :: Finalizes resp. destroy a given table.            */
+  /*                                                                       */
+  /*    table_add     :: Adds a new object to a table.                     */
+  /*                                                                       */
+  /*    table_release :: Releases table data, then finalizes it.           */
+  /*                                                                       */
+  typedef struct  PS_Table_Funcs_
   {
-    FT_Error   (*init)   ( PS_Table*   table,
-                           FT_Int     count,
-                           FT_Memory  memory );
+    FT_Error  (*init)   ( PS_Table*  table,
+                          FT_Int     count,
+                          FT_Memory  memory );
   
-    void       (*done)   ( PS_Table*  table );                              
+    void      (*done)   ( PS_Table*  table );                              
   
-    FT_Error   (*add)    ( PS_Table*   table,
-                           FT_Int      index,
-                           void*       object,
-                           FT_Int      length );
+    FT_Error  (*add)    ( PS_Table*  table,
+                          FT_Int     index,
+                          void*      object,
+                          FT_Int     length );
 
-    void       (*release)( PS_Table*  table );                              
+    void      (*release)( PS_Table*  table );                              
   
   } PS_Table_Funcs;
 
@@ -101,26 +106,24 @@
   /*    memory    :: The object used for memory operations                 */
   /*                 (alloc/realloc).                                      */
   /*                                                                       */
-  /*    funcs     :: table of method pointers for this object              */
+  /*    funcs     :: A table of method pointers for this object.           */
   /*                                                                       */
   struct  PS_Table_
   {
-    FT_Byte*   block;          /* current memory block           */
-    FT_Int     cursor;         /* current cursor in memory block */
-    FT_Int     capacity;       /* current size of memory block   */
-    FT_Long    init;
+    FT_Byte*        block;          /* current memory block           */
+    FT_Int          cursor;         /* current cursor in memory block */
+    FT_Int          capacity;       /* current size of memory block   */
+    FT_Long         init;
 
-    FT_Int     max_elems;
-    FT_Int     num_elems;
-    FT_Byte**  elements;       /* addresses of table elements */
-    FT_Int*    lengths;        /* lengths of table elements   */
+    FT_Int          max_elems;
+    FT_Int          num_elems;
+    FT_Byte**       elements;       /* addresses of table elements */
+    FT_Int*         lengths;        /* lengths of table elements   */
 
     FT_Memory       memory;
     PS_Table_Funcs  funcs;
 
   };
-
-
 
 
   /*************************************************************************/
@@ -130,6 +133,7 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
+
 
   /* simple enumeration type used to identify token types */
   typedef enum  T1_Token_Type_
@@ -264,27 +268,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    T1_Parser                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A T1_Parser is an object used to parse a Type 1 font very quickly. */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    cursor :: The current position in the text.                        */
-  /*                                                                       */
-  /*    base   :: Start of the processed text.                             */
-  /*                                                                       */
-  /*    limit  :: End of the processed text.                               */
-  /*                                                                       */
-  /*    error  :: The last error returned.                                 */
-  /*                                                                       */
-  /*    funcs  :: table of functions for the parser                        */
-  /*                                                                       */
-  /*                                                                       */
+
   typedef struct  T1_Parser_  T1_Parser;
+
 
   typedef struct  T1_Parser_Funcs_
   {
@@ -331,13 +317,34 @@
   } T1_Parser_Funcs;
 
   
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    T1_Parser                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A T1_Parser is an object used to parse a Type 1 font very quickly. */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    cursor :: The current position in the text.                        */
+  /*                                                                       */
+  /*    base   :: Start of the processed text.                             */
+  /*                                                                       */
+  /*    limit  :: End of the processed text.                               */
+  /*                                                                       */
+  /*    error  :: The last error returned.                                 */
+  /*                                                                       */
+  /*    memory :: The object used for memory operations (alloc/realloc).   */
+  /*                                                                       */
+  /*    funcs  :: A table of functions for the parser.                     */
+  /*                                                                       */
   struct T1_Parser_
   {
-    FT_Byte*   cursor;
-    FT_Byte*   base;
-    FT_Byte*   limit;
-    FT_Error   error;
-    FT_Memory  memory;
+    FT_Byte*         cursor;
+    FT_Byte*         base;
+    FT_Byte*         limit;
+    FT_Error         error;
+    FT_Memory        memory;
     
     T1_Parser_Funcs  funcs;
   };
@@ -352,7 +359,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
   typedef struct T1_Builder_  T1_Builder;
+
 
   typedef FT_Error  (*T1_Builder_Check_Points_Func) ( T1_Builder*  builder,
                                                      FT_Int       count );
@@ -449,38 +458,38 @@
   /*                    the metrics of a given glyph, not load all of its  */
   /*                    points.                                            */
   /*                                                                       */
-  /*    funcs        :: array of function pointers for the builder         */
+  /*    funcs        :: An array of function pointers for the builder.     */
   /*                                                                       */
   struct  T1_Builder_
   {
-    FT_Memory        memory;
-    FT_Face          face;
-    FT_GlyphSlot     glyph;
-    FT_GlyphLoader*  loader;
-    FT_Outline*      base;
-    FT_Outline*      current;
+    FT_Memory         memory;
+    FT_Face           face;
+    FT_GlyphSlot      glyph;
+    FT_GlyphLoader*   loader;
+    FT_Outline*       base;
+    FT_Outline*       current;
 
-    FT_Vector        last;
+    FT_Vector         last;
 
-    FT_Fixed         scale_x;
-    FT_Fixed         scale_y;
+    FT_Fixed          scale_x;
+    FT_Fixed          scale_y;
 
-    FT_Pos           pos_x;
-    FT_Pos           pos_y;
+    FT_Pos            pos_x;
+    FT_Pos            pos_y;
 
-    FT_Vector        left_bearing;
-    FT_Vector        advance;
+    FT_Vector         left_bearing;
+    FT_Vector         advance;
 
-    FT_BBox          bbox;          /* bounding box */
-    FT_Bool          path_begun;
-    FT_Bool          load_points;
-    FT_Bool          no_recurse;
-    FT_Bool          shift;
+    FT_BBox           bbox;          /* bounding box */
+    FT_Bool           path_begun;
+    FT_Bool           load_points;
+    FT_Bool           no_recurse;
+    FT_Bool           shift;
 
-    FT_Error         error;         /* only used for memory errors */
-    FT_Bool          metrics_only;
+    FT_Error          error;         /* only used for memory errors */
+    FT_Bool           metrics_only;
 
-    T1_Builder_Funcs funcs;
+    T1_Builder_Funcs  funcs;
   };
 
 
@@ -493,8 +502,9 @@
   /*************************************************************************/
 
 #if 0
-#define T1_MAX_CHARSTRINGS_OPERANDS   64
-#define T1_MAX_SUBRS_CALLS            16
+
+#define T1_MAX_CHARSTRINGS_OPERANDS  64
+#define T1_MAX_SUBRS_CALLS           16
 
   /*************************************************************************/
   /*                                                                       */
@@ -506,15 +516,15 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.        */
-  /* A minimum of 16 is required..                                         */
+  /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.  A     */
+  /* minimum of 16 is required.                                            */
   /*                                                                       */
 #define T1_MAX_CHARSTRINGS_OPERANDS  32
-#endif
+
+#endif /* 0 */
 
 
-
-  typedef struct T1_Decoder_Zone_
+  typedef struct  T1_Decoder_Zone_
   {
     FT_Byte*  cursor;
     FT_Byte*  base;
@@ -526,57 +536,58 @@
   typedef struct T1_Decoder_        T1_Decoder;
   typedef struct T1_Decoder_Funcs_  T1_Decoder_Funcs;
 
+
   typedef  FT_Error  (*T1_Decoder_Callback)( T1_Decoder*  decoder,
                                              FT_UInt      glyph_index );
 
-  struct T1_Decoder_Funcs_
+
+  struct  T1_Decoder_Funcs_
   {
-    FT_Error     (*init) ( T1_Decoder*          decoder,
-                           FT_Face              face,
-                           FT_Size              size,
-                           FT_GlyphSlot         slot,
-                           FT_Byte**            glyph_names,
-                           T1_Blend*            blend,
-                           T1_Decoder_Callback  callback );
+    FT_Error  (*init) ( T1_Decoder*          decoder,
+                        FT_Face              face,
+                        FT_Size              size,
+                        FT_GlyphSlot         slot,
+                        FT_Byte**            glyph_names,
+                        T1_Blend*            blend,
+                        T1_Decoder_Callback  callback );
     
-    void         (*done) ( T1_Decoder*  decoder );
+    void      (*done) ( T1_Decoder*  decoder );
     
-    FT_Error     (*parse_charstrings)( T1_Decoder*  decoder,
-                                       FT_Byte*     base,
-                                       FT_UInt      len );
+    FT_Error  (*parse_charstrings)( T1_Decoder*  decoder,
+                                    FT_Byte*     base,
+                                    FT_UInt      len );
   };
 
 
-
-  struct T1_Decoder_
+  struct  T1_Decoder_
   {
-    T1_Builder               builder;
+    T1_Builder           builder;
 
-    FT_Long                  stack[T1_MAX_CHARSTRINGS_OPERANDS];
-    FT_Long*                 top;
+    FT_Long              stack[T1_MAX_CHARSTRINGS_OPERANDS];
+    FT_Long*             top;
 
-    T1_Decoder_Zone          zones[T1_MAX_SUBRS_CALLS + 1];
-    T1_Decoder_Zone*         zone;
+    T1_Decoder_Zone      zones[T1_MAX_SUBRS_CALLS + 1];
+    T1_Decoder_Zone*     zone;
 
-    PSNames_Interface*       psnames;      /* for seac */
-    FT_UInt                  num_glyphs;
-    FT_Byte**                glyph_names;
+    PSNames_Interface*   psnames;      /* for seac */
+    FT_UInt              num_glyphs;
+    FT_Byte**            glyph_names;
 
-    FT_UInt                  lenIV;        /* internal for sub routine calls */
-    FT_UInt                  num_subrs;
-    FT_Byte**                subrs;
-    FT_Int*                  subrs_len;    /* array of subrs length (optional) */
+    FT_UInt              lenIV;        /* internal for sub routine calls */
+    FT_UInt              num_subrs;
+    FT_Byte**            subrs;
+    FT_Int*              subrs_len;    /* array of subrs length (optional) */
 
-    FT_Matrix                font_matrix;
+    FT_Matrix            font_matrix;
 
-    FT_Int                   flex_state;
-    FT_Int                   num_flex_vectors;
-    FT_Vector                flex_vectors[7];
+    FT_Int               flex_state;
+    FT_Int               num_flex_vectors;
+    FT_Vector            flex_vectors[7];
 
-    T1_Blend*                blend;       /* for multiple master support */
+    T1_Blend*            blend;       /* for multiple master support */
     
-    T1_Decoder_Callback      parse_callback;
-    T1_Decoder_Funcs         funcs;
+    T1_Decoder_Callback  parse_callback;
+    T1_Decoder_Funcs     funcs;
   };
 
 
@@ -590,14 +601,14 @@
 
   typedef struct  PSAux_Interface_
   {
-    const PS_Table_Funcs*   ps_table_funcs;
-    const T1_Parser_Funcs*  t1_parser_funcs;
-    const T1_Builder_Funcs* t1_builder_funcs;
-    const T1_Decoder_Funcs* t1_decoder_funcs;
+    const PS_Table_Funcs*    ps_table_funcs;
+    const T1_Parser_Funcs*   t1_parser_funcs;
+    const T1_Builder_Funcs*  t1_builder_funcs;
+    const T1_Decoder_Funcs*  t1_decoder_funcs;
 
-    void                  (*t1_decrypt)( FT_Byte*   buffer,
-                                         FT_Int     length,
-                                         FT_UShort  seed );
+    void                     (*t1_decrypt)( FT_Byte*   buffer,
+                                            FT_Int     length,
+                                            FT_UShort  seed );
   } PSAux_Interface;
 
 

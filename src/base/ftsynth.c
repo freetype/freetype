@@ -1,6 +1,26 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftsynth.c                                                              */
+/*                                                                         */
+/*    FreeType synthesizing code for emboldening and slanting (body).      */
+/*                                                                         */
+/*  Copyright 2000 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <freetype/ftsynth.h>
 
+
 #define FT_BOLD_THRESHOLD  0x0100
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -10,16 +30,20 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_EXPORT_DEF(FT_Error)  FT_Oblique_Outline( FT_GlyphSlot  original,
-                                               FT_Outline*   outline,
-			                       FT_Pos*       advance )
+  FT_EXPORT_DEF( FT_Error )  FT_Oblique_Outline( FT_GlyphSlot  original,
+                                                 FT_Outline*   outline,
+                                                 FT_Pos*       advance )
   {
     FT_Matrix  transform;
     
-    FT_UNUSED(original);
+    FT_UNUSED( original );
+    /* we don't touch the advance width */
+    FT_UNUSED(advance);
+
     
+
     /* For italic, simply apply a shear transform, with an angle */
-    /* of about 12 degrees..                                     */
+    /* of about 12 degrees.                                      */
     
     transform.xx = 0x10000;
     transform.yx = 0x00000;
@@ -29,11 +53,9 @@
     
     FT_Transform_Outline( outline, &transform );
     
-    /* we don't touch the advance width */
-    FT_UNUSED(advance);
-    
     return 0;
   }
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -42,6 +64,7 @@
   /****                                                                 ****/
   /*************************************************************************/
   /*************************************************************************/
+
 
   /* Compute the norm of a vector */
 
@@ -245,19 +268,19 @@
 
     /* test orientation of the xmin */
     n = ft_test_extrema( outline, indices.xMin );
-    if (n)
+    if ( n )
       goto Exit;
     
     n = ft_test_extrema( outline, indices.yMin );
-    if (n)
+    if ( n )
       goto Exit;
     
     n = ft_test_extrema( outline, indices.xMax );
-    if (n)
+    if ( n )
       goto Exit;
     
     n = ft_test_extrema( outline, indices.yMax );
-    if (!n)
+    if ( !n )
       n = 1;
 
   Exit:
@@ -269,12 +292,12 @@
                                                  FT_Outline*  outline,
                                                  FT_Pos*      advance )
   {
-    FT_Vector  u, v;
-    FT_Vector* points;
-    FT_Vector  cur, prev, next;
-    FT_Pos     distance;
-    FT_Face    face = FT_SLOT_FACE(original);
-    int        c, n, first, orientation;
+    FT_Vector   u, v;
+    FT_Vector*  points;
+    FT_Vector   cur, prev, next;
+    FT_Pos      distance;
+    FT_Face     face = FT_SLOT_FACE( original );
+    int         c, n, first, orientation;
 
     FT_UNUSED( advance );
 
@@ -369,3 +392,4 @@
   }
 
 
+/* END */

@@ -25,7 +25,7 @@ endif
 DELETE   := del
 SEP      := /
 HOSTSEP  := $(strip \ )
-BUILD    := $(TOP)/builds/win32/devel
+BUILD    := $(TOP)/builds/win32/devel # we use a special devel ftoption.h
 PLATFORM := win32
 CC       := gcc
 
