@@ -50,9 +50,9 @@ SPECIAL NOTE FOR UNIX USERS
 
     Then, to build and install the library, type:
     
-      make setup unix CFG="--prefix=<yourprefix>"
+      ./configure --prefix=<yourprefix>
       make
-      make install            (as root)
+      ./install            (as root)
     
     where "<yourprefix>"  must be replaced  by the prefix  returned by
     the "freetype-config" command.
