@@ -1,3 +1,8 @@
+2005-04-09  Werner Lemberg  <wl@gnu.org>
+
+	src/pshinter/pshalgo.c (ps_hints_apply): Change scaling values only
+	if `fitted' is not zero.
+
 2005-04-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (tt_face_get_metrics) [FT_OPTIMIZE_MEMORY]:
