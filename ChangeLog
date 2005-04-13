@@ -1,7 +1,13 @@
+2005-04-13  Werner Lemberg  <wl@gnu.org>
+
+	* docs/TODO: Updated.
+
+	* autogen.sh: Use `--force' for all commands.
+
 2005-04-09  Werner Lemberg  <wl@gnu.org>
 
-	src/pshinter/pshalgo.c (ps_hints_apply): Change scaling values only
-	if `fitted' is not zero.
+	* src/pshinter/pshalgo.c (ps_hints_apply): Change scaling values
+	only if `fitted' is not zero.
 
 2005-04-06  Werner Lemberg  <wl@gnu.org>
 

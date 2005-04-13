@@ -17,7 +17,5 @@ not exactly bugs, but should be considered though:
 
 * Add kerning (AFM file) support to the CID driver.
 
-* Possibly add support for reading PFM files.
-
 
 --- end of TODO ---
