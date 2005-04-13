@@ -19,9 +19,9 @@ fi
 
 cd builds/unix
 
-run aclocal -I .
+run aclocal -I . --force
 run libtoolize --force --copy
-run autoconf
+run autoconf --force
 
 chmod +x mkinstalldirs
 chmod +x install-sh
