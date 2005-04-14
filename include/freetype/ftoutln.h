@@ -5,7 +5,7 @@
 /*    Support for the FT_Outline type used to store glyph shapes of        */
 /*    most scalable font formats (specification).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2005 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -229,8 +229,8 @@ FT_BEGIN_HEADER
   /*    acbox   :: The outline's control box.                              */
   /*                                                                       */
   FT_EXPORT( void )
-  FT_Outline_Get_CBox( FT_Outline*  outline,
-                       FT_BBox     *acbox );
+  FT_Outline_Get_CBox( const FT_Outline*  outline,
+                       FT_BBox           *acbox );
 
 
   /*************************************************************************/
@@ -275,8 +275,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_Outline_Copy( FT_Outline*  source,
-                   FT_Outline  *target );
+  FT_Outline_Copy( const FT_Outline*  source,
+                   FT_Outline        *target );
 
 
   /*************************************************************************/
@@ -299,8 +299,8 @@ FT_BEGIN_HEADER
   /*    outline's points.                                                  */
   /*                                                                       */
   FT_EXPORT( void )
-  FT_Outline_Transform( FT_Outline*  outline,
-                        FT_Matrix*   matrix );
+  FT_Outline_Transform( FT_Outline*       outline,
+                        const FT_Matrix*  matrix );
 
 
   /*************************************************************************/
@@ -353,9 +353,9 @@ FT_BEGIN_HEADER
   /*    It will use the raster correponding to the default glyph format.   */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_Outline_Get_Bitmap( FT_Library   library,
-                         FT_Outline*  outline,
-                         FT_Bitmap   *abitmap );
+  FT_Outline_Get_Bitmap( FT_Library        library,
+                         FT_Outline*       outline,
+                         const FT_Bitmap  *abitmap );
 
 
   /*************************************************************************/

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType outline management (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -347,8 +347,8 @@
   /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Outline_Copy( FT_Outline*  source,
-                   FT_Outline  *target )
+  FT_Outline_Copy( const FT_Outline*  source,
+                   FT_Outline        *target )
   {
     FT_Int  is_owner;
 
@@ -414,8 +414,8 @@
   /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( void )
-  FT_Outline_Get_CBox( FT_Outline*  outline,
-                       FT_BBox     *acbox )
+  FT_Outline_Get_CBox( const FT_Outline*  outline,
+                       FT_BBox           *acbox )
   {
     FT_Pos  xMin, yMin, xMax, yMax;
 
@@ -591,9 +591,9 @@
   /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Outline_Get_Bitmap( FT_Library   library,
-                         FT_Outline*  outline,
-                         FT_Bitmap   *abitmap )
+  FT_Outline_Get_Bitmap( FT_Library        library,
+                         FT_Outline*       outline,
+                         const FT_Bitmap  *abitmap )
   {
     FT_Raster_Params  params;
 
@@ -618,8 +618,8 @@
   /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( void )
-  FT_Vector_Transform( FT_Vector*  vector,
-                       FT_Matrix*  matrix )
+  FT_Vector_Transform( FT_Vector*        vector,
+                       const FT_Matrix*  matrix )
   {
     FT_Pos xz, yz;
 
@@ -641,8 +641,8 @@
   /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( void )
-  FT_Outline_Transform( FT_Outline*  outline,
-                        FT_Matrix*   matrix )
+  FT_Outline_Transform( FT_Outline*       outline,
+                        const FT_Matrix*  matrix )
   {
     FT_Vector*  vec = outline->points;
     FT_Vector*  limit = vec + outline->n_points;

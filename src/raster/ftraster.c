@@ -3257,8 +3257,8 @@
   ft_black_render( TRaster_Instance*  raster,
                    FT_Raster_Params*  params )
   {
-    FT_Outline*  outline    = (FT_Outline*)params->source;
-    FT_Bitmap*   target_map = params->target;
+    FT_Outline*       outline    = (FT_Outline*)params->source;
+    const FT_Bitmap*  target_map = params->target;
 
 
     if ( !raster || !raster->buff || !raster->sizeBuff )

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003 by                                     */
+/*  Copyright 2000-2001, 2002, 2003, 2005 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1963,8 +1963,8 @@
   gray_raster_render( PRaster            raster,
                       FT_Raster_Params*  params )
   {
-    FT_Outline*  outline = (FT_Outline*)params->source;
-    FT_Bitmap*   target_map = params->target;
+    FT_Outline*       outline    = (FT_Outline*)params->source;
+    const FT_Bitmap*  target_map = params->target;
 
 
     if ( !raster || !raster->cells || !raster->max_cells )
