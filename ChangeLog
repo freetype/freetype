@@ -1,3 +1,12 @@
+2005-04-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_charstrings): Catch this non-standard
+	beginning of the /CharStrings dictionary:
+
+	  /CharStrings 118 dict def
+	  Private begin
+	  CharStrings begin
+
 2005-04-13  Werner Lemberg  <wl@gnu.org>
 
 	* docs/TODO: Updated.
