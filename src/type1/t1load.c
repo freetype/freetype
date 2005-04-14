@@ -1448,7 +1448,20 @@
         if ( cur[0] == 'd' &&
              cur[1] == 'e' &&
              cur[2] == 'f' )
-          break;
+        {
+          /* There are fonts which have this: */
+          /*                                  */
+          /*   /CharStrings 118 dict def      */
+          /*   Private begin                  */
+          /*   CharStrings begin              */
+          /*   ...                            */
+          /*                                  */
+          /* To catch this we ignore `def' if */
+          /* no charstring has actually been  */
+          /* seen.                            */
+          if ( n )
+            break;
+        }
 
         if ( cur[0] == 'e' &&
              cur[1] == 'n' &&
