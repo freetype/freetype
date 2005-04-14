@@ -3074,8 +3074,8 @@ FT_BEGIN_HEADER
   /*    The result is undefined if either `vector' or `matrix' is invalid. */
   /*                                                                       */
   FT_EXPORT( void )
-  FT_Vector_Transform( FT_Vector*  vec,
-                       FT_Matrix*  matrix );
+  FT_Vector_Transform( FT_Vector*        vec,
+                       const FT_Matrix*  matrix );
 
 
   /* */

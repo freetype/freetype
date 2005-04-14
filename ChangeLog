@@ -1,3 +1,13 @@
+2005-04-14  Kirill Smelkov  <kirr@mns.spb.ru>
+
+	* include/freetype/freetype.h (FT_Vector_Transform),
+	include/freetype/ftimage.h (FT_Raster_Params),
+	include/freetype/ftoutln.h, src/base/ftoutln.c (FT_Outline_Get_CBox,
+	FT_Outline_Copy, FT_Outline_Transform, FT_Vector_Transform,
+	FT_Outline_Get_Bitmap), src/raster/ftraster.c (ft_black_render),
+	src/smooth/ftgrays.c (gray_raster_render): Decorate parameters with
+	`const' where appropriate.
+
 2005-04-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_charstrings): Catch this non-standard
@@ -6,6 +16,9 @@
 	  /CharStrings 118 dict def
 	  Private begin
 	  CharStrings begin
+
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): Fix arguments
+	to call of tt_sbit_decoder_load_bitmap.
 
 2005-04-13  Werner Lemberg  <wl@gnu.org>
 

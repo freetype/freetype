@@ -5,7 +5,7 @@
 /*    FreeType glyph image formats and default raster interface            */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1030,7 +1030,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Raster_Params_
   {
-    FT_Bitmap*              target;
+    const FT_Bitmap*        target;
     void*                   source;
     int                     flags;
     FT_SpanFunc             gray_spans;

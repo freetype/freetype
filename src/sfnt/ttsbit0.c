@@ -927,7 +927,7 @@
 
     return tt_sbit_decoder_load_bitmap( decoder,
                                         image_format,
-                                        image_offset + image_start,
+                                        image_start,
                                         image_end,
                                         x_pos,
                                         y_pos );
