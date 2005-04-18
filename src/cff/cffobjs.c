@@ -478,6 +478,7 @@
       CFF_FontRecDict  dict;
       FT_Memory        memory = cffface->memory;
       FT_Int32         flags;
+      FT_UInt          i;
 
 
       if ( FT_NEW( cff ) )
@@ -535,10 +536,10 @@
         cffface->height    = (FT_Short)(
           ( ( cffface->ascender - cffface->descender ) * 12 ) / 10 );
 
-        if ( dict->units_per_em )
-          cffface->units_per_EM = dict->units_per_em;
-        else
-          cffface->units_per_EM = 1000;
+        if ( !dict->units_per_em )
+          dict->units_per_em = 1000;
+
+        cffface->units_per_EM = dict->units_per_em;
 
         cffface->underline_position  =
           (FT_Short)( dict->underline_position >> 16 );
@@ -683,6 +684,32 @@
             flags |= FT_STYLE_FLAG_BOLD;
 
         cffface->style_flags = flags;
+      }
+
+      /* handle font matrix settings in subfonts (if any) */
+      for ( i = cff->num_subfonts; i > 0; i-- )
+      {
+        CFF_FontRecDict  sub = &cff->subfonts[i - 1]->font_dict;
+        CFF_FontRecDict  top = &cff->top_font.font_dict;
+
+
+        if ( sub->units_per_em )
+        {
+          FT_Matrix  scale;
+
+
+          scale.xx = scale.yy = (FT_Fixed)FT_DivFix( top->units_per_em,
+                                                     sub->units_per_em );
+          scale.xy = scale.yx = 0;
+
+          FT_Matrix_Multiply( &scale, &sub->font_matrix );
+          FT_Vector_Transform( &sub->font_offset, &scale );
+        }
+        else
+        {
+          sub->font_matrix = top->font_matrix;
+          sub->font_offset = top->font_offset;
+        }
       }
 
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES

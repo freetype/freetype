@@ -39,9 +39,9 @@ reference document and whether it is supported in FreeType 2.
 
 
 Please send additions and/or corrections to wl@gnu.org or to the
-FreeType developer's list at devel@freetype (for subscribers only).  If
-you can provide a font example for a format which isn't supported yet
-please send a mail too.
+FreeType developer's list at freetype-devel@nongnu.org (for subscribers
+only).  If you can provide a font example for a format which isn't
+supported yet please send a mail too.
 
 
 file wrapper font   font    glyph      FreeType reference
@@ -65,8 +65,8 @@ MAC  SFNT    PS     CFF     ---        cff      OT spec, 5176.CFF.pdf
 MAC  SFNT    PS     CFF     CID        cff      OT spec, 5176.CFF.pdf
 ---  SFNT    PS     CFF     SYNTHETIC  ---      OT spec, 5176.CFF.pdf
 MAC  SFNT    PS     CFF     SYNTHETIC  ---      OT spec, 5176.CFF.pdf
----  SFNT    TT     SBIT    ---        ---      XFree86? (bitmaps only;
-                                                `head' table)
+---  SFNT    TT     SBIT    ---        sfnt     XFree86 (bitmaps only;
+                                                with `head' table)
 ---  SFNT    TT     MACSBIT ---        sfnt     OT spec (for the Mac;
                                                 bitmaps only; `bhed' table)
 MAC  SFNT    TT     MACSBIT ---        sfnt     OT spec (for the Mac;
