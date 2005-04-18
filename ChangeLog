@@ -1,3 +1,14 @@
+2005-04-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffobjs.c (cff_face_init): Set default upem value in top
+	font dict also.
+	Handle font matrix settings in subfonts.
+
+	* src/cff/cffgload.c (cff_slot_load): Use the correct font matrix
+	for CID-keyed fonts with subfonts.
+
+	* docs/formats.txt: Updated.
+
 2005-04-14  Kirill Smelkov  <kirr@mns.spb.ru>
 
 	* include/freetype/freetype.h (FT_Vector_Transform),
