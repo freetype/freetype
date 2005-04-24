@@ -1,3 +1,8 @@
+2005-04-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/otvalid/otvcommn.c
+	(otv_GSUBGPOS_have_MarkAttachmentType_flag): Handle table == 0.
+
 2005-04-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffobjs.c (cff_face_init): Set default upem value in top
