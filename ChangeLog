@@ -1,3 +1,7 @@
+2005-04-28  Werner Lemberg  <wl@gnu.org>
+
+	* docs/TODO: Updated.
+
 2005-04-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/otvalid/otvcommn.c
