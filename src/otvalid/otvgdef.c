@@ -174,9 +174,9 @@
     /* so we use this ugly hack to find out whether the  */
     /* table is needed actually.                         */
 
-    need_MarkAttachClassDef =
+    need_MarkAttachClassDef = FT_BOOL(
       otv_GSUBGPOS_have_MarkAttachmentType_flag( gsub ) ||
-      otv_GSUBGPOS_have_MarkAttachmentType_flag( gpos );
+      otv_GSUBGPOS_have_MarkAttachmentType_flag( gpos ) );
 
     if ( need_MarkAttachClassDef )
       table_size = 12;              /* OpenType >= 1.2 */

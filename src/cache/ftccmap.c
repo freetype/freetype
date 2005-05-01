@@ -292,7 +292,7 @@
           FT_Set_Charmap( face, old );
       }
 
-      node->indices[char_code - node->first] = gindex;
+      node->indices[char_code - node->first] = (FT_UShort)gindex;
     }
 
   Exit:

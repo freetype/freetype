@@ -164,7 +164,7 @@
     FTC_FaceID    face_id = (FTC_FaceID)ftcface_id;
 
 
-    return node->scaler.face_id == face_id;
+    return FT_BOOL(node->scaler.face_id == face_id);
   }
 
 

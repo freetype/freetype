@@ -34,6 +34,13 @@
 
 FT_BEGIN_HEADER
 
+#if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
+
+  /* we disable the warning `conditional expression is constant' here */
+  /* in order to compile cleanly with the maximum level of warnings   */
+#pragma warning( disable : 4127 )
+
+#endif /* _MSC_VER */
 
   /*
    * @macro:

@@ -69,7 +69,7 @@ FT2_COMPONENTS ?= autofit    # auto-fitter
                   cid        # PostScript CID-keyed font driver
                   gzip       # support for gzip-compressed files
                   lzw        # support for LZW-compressed files
-                  otvalid    # validation of OpenType tables
+                  #otvalid    # validation of OpenType tables
                   pcf        # PCF font driver
                   pfr        # PFR/TrueDoc font driver
                   psaux      # common PostScript routines module

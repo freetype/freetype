@@ -1687,7 +1687,7 @@
       FT_MEM_ZERO( charset->cids, sizeof ( FT_UShort ) * max_cid );
 
       for ( i = 0; i < num_glyphs; i++ )
-        charset->cids[charset->sids[i]] = i;
+        charset->cids[charset->sids[i]] = (FT_UShort)i;
     }
 
   Exit:
@@ -2240,7 +2240,7 @@
     /* read the Charset and Encoding tables if available */
     if ( font->num_glyphs > 0 )
     {
-      FT_Bool  invert = dict->cid_registry != 0xFFFFU;
+      FT_Bool  invert = FT_BOOL( dict->cid_registry != 0xFFFFU );
 
 
       error = cff_charset_load( &font->charset, font->num_glyphs, stream,
