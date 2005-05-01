@@ -688,7 +688,7 @@
           {
             /* we are just leaving an edge; record a new segment! */
             segment->last = point;
-            segment->pos  = ( min_pos + max_pos ) >> 1;
+            segment->pos  = (FT_Short)(( min_pos + max_pos ) >> 1);
 
             /* a segment is round if either its first or last point */
             /* is a control point                                   */
@@ -705,8 +705,8 @@
             if ( v > max_pos )
               max_pos = v;
 
-            segment->min_coord = min_pos;
-            segment->max_coord = max_pos;
+            segment->min_coord = (FT_Short) min_pos;
+            segment->max_coord = (FT_Short) max_pos;
 
             on_edge = 0;
             segment = NULL;
@@ -732,7 +732,7 @@
           if ( error )
             goto Exit;
 
-          segment->dir      = segment_dir;
+          segment->dir      = (FT_Char) segment_dir;
           segment->flags    = AF_EDGE_NORMAL;
           min_pos = max_pos = point->u;
           segment->first    = point;
@@ -1150,10 +1150,10 @@
         edge->dir = AF_DIR_NONE;
 
         if ( ups > downs )
-          edge->dir = up_dir;
+          edge->dir = (FT_Char) up_dir;
 
         else if ( ups < downs )
-          edge->dir = -up_dir;
+          edge->dir = (FT_Char) -up_dir;
 
         else if ( ups == downs )
           edge->dir = 0;  /* both up and down! */
@@ -1232,7 +1232,7 @@
         /* zone, check for left edges                                      */
         /*                                                                 */
         /* of course, that's for TrueType                                  */
-        is_top_blue  = ( blue->flags & AF_LATIN_BLUE_TOP ) != 0;
+        is_top_blue  = (FT_Byte)(( blue->flags & AF_LATIN_BLUE_TOP ) != 0);
         is_major_dir = FT_BOOL( edge->dir == axis->major_dir );
 
         /* if it is a top zone, the edge must be against the major    */

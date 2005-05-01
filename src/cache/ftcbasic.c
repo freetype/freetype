@@ -39,8 +39,8 @@
   } FTC_BasicAttrRec, *FTC_BasicAttrs;
 
 #define FTC_BASIC_ATTR_COMPARE( a, b )                           \
-          ( FTC_SCALER_COMPARE( &(a)->scaler, &(b)->scaler ) &&  \
-            (a)->load_flags == (b)->load_flags               )
+          FT_BOOL( FTC_SCALER_COMPARE( &(a)->scaler, &(b)->scaler ) &&  \
+                   (a)->load_flags == (b)->load_flags               )
 
 #define FTC_BASIC_ATTR_HASH( a )                                   \
           ( FTC_SCALER_HASH( &(a)->scaler ) + 31*(a)->load_flags )
@@ -266,7 +266,7 @@
                          FTC_Node       *anode )
   {
     FTC_BasicQueryRec  query;
-    FTC_INode          node;
+    FTC_INode          node = 0;  /* make compiler happy */
     FT_Error           error;
     FT_UInt32          hash;
 
@@ -385,7 +385,7 @@
   {
     FT_Error           error;
     FTC_BasicQueryRec  query;
-    FTC_SNode          node;
+    FTC_SNode          node = 0; /* make compiler happy */
     FT_UInt32          hash;
 
 

@@ -1110,7 +1110,7 @@ THE SOFTWARE.
         if ( prop )
           bsize->width = (FT_Short)( ( prop->value.integer + 5 ) / 10 );
         else
-          bsize->width = bsize->height * 2/3;
+          bsize->width = (FT_Short)( bsize->height * 2/3 );
 
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop )

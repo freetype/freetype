@@ -551,8 +551,8 @@
 
         for ( point = points; point < point_limit; point++, vec++, tag++ )
         {
-          point->fx = vec->x;
-          point->fy = vec->y;
+          point->fx = (FT_Short)vec->x;
+          point->fy = (FT_Short)vec->y;
           point->ox = point->x = FT_MulFix( vec->x, x_scale ) + x_delta;
           point->oy = point->y = FT_MulFix( vec->y, y_scale ) + y_delta;
 
@@ -634,13 +634,13 @@
           in_x   = point->fx - prev->fx;
           in_y   = point->fy - prev->fy;
 
-          point->in_dir = af_direction_compute( in_x, in_y );
+          point->in_dir = (FT_Char)af_direction_compute( in_x, in_y );
 
           next   = point->next;
           out_x  = next->fx - point->fx;
           out_y  = next->fy - point->fy;
 
-          point->out_dir = af_direction_compute( out_x, out_y );
+          point->out_dir = (FT_Char)af_direction_compute( out_x, out_y );
 
           if ( point->flags & ( AF_FLAG_CONIC | AF_FLAG_CUBIC ) )
           {
@@ -688,8 +688,8 @@
 
     for ( ; point < limit; point++, vec++, tag++ )
     {
-      vec->x = (FT_Pos)point->x;
-      vec->y = (FT_Pos)point->y;
+      vec->x = point->x;
+      vec->y = point->y;
 
       if ( point->flags & AF_FLAG_CONIC )
         tag[0] = FT_CURVE_TAG_CONIC;

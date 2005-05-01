@@ -1425,7 +1425,7 @@
             dst_tag[0] &= ~FT_STROKE_TAG_BEGIN_END;
           else
           {
-            FT_Byte  ttag = dst_tag[0] & FT_STROKE_TAG_BEGIN_END;
+            FT_Byte  ttag = (FT_Byte)(dst_tag[0] & FT_STROKE_TAG_BEGIN_END);
 
 
             /* switch begin/end tags if necessary */

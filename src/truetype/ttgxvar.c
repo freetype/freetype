@@ -154,18 +154,18 @@
       if ( runcnt & GX_PT_POINTS_ARE_WORDS )
       {
         runcnt = runcnt & GX_PT_POINT_RUN_COUNT_MASK;
-        points[i++] = first = FT_GET_USHORT();
+        first  = points[i++] = FT_GET_USHORT();
 
         /* first point not included in runcount */
         for ( j = 0; j < runcnt; ++j )
-          points[i++] = ( first += FT_GET_USHORT() );
+          points[i++] = (FT_UShort)( first += FT_GET_USHORT() );
       }
       else
       {
-        points[i++] = first = FT_GET_BYTE();
+        first = points[i++] = FT_GET_BYTE();
 
         for ( j = 0; j < runcnt; ++j )
-          points[i++] = ( first += FT_GET_BYTE() );
+          points[i++] = (FT_UShort)( first += FT_GET_BYTE() );
       }
     }
 
@@ -1209,7 +1209,7 @@
       }
 
       apply = ft_var_apply_tuple( blend,
-                                  tupleIndex,
+                                  (FT_UShort) tupleIndex,
                                   tuple_coords,
                                   im_start_coords,
                                   im_end_coords );
@@ -1238,15 +1238,19 @@
       {
         /* this means that there are deltas for every entry in cvt */
         for ( j = 0; j < face->cvt_size; ++j )
-          face->cvt[j] += (FT_Short)FT_MulFix( deltas[j],
-                                               apply );
+          face->cvt[j] = (FT_Short)( face->cvt[j] + FT_MulFix( deltas[j],
+                                                               apply ) );
       }
 
       else
       {
         for ( j = 0; j < point_count; ++j )
-          face->cvt[localpoints[j]] += (FT_Short)FT_MulFix( deltas[j],
-                                                            apply );
+        {
+          int  pindex = localpoints[j];
+          
+          face->cvt[pindex] = (FT_Short)( face->cvt[pindex] +
+                                          FT_MulFix( deltas[j], apply ) );
+        }
       }
 
       if ( localpoints != ALL_POINTS )
@@ -1314,7 +1318,7 @@
     FT_Fixed*   im_end_coords   = NULL;
     FT_UInt     point_count, spoint_count = 0;
     FT_UShort*  sharedpoints = NULL;
-    FT_UShort*  localpoints;
+    FT_UShort*  localpoints  = NULL;
     FT_UShort*  points;
     FT_Short    *deltas_x, *deltas_y;
 
@@ -1400,7 +1404,7 @@
       }
 
       apply = ft_var_apply_tuple( blend,
-                                  tupleIndex,
+                                  (FT_UShort) tupleIndex,
                                   tuple_coords,
                                   im_start_coords,
                                   im_end_coords );

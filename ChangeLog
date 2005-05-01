@@ -1,3 +1,16 @@
+2005-05-01  David Turner  <david@freetype.org>
+
+  * Jamfile: removing otvalid from the list of compiled modules
+  * include/freetype/internal/ftserv.h: added compiler pragmas to get rid
+    of annoying warnings with Visual C++ compiler in maximum warning mode
+    
+  * src/autofit/afhints.c, src/autofit/aflatin.c, src/base/ftstroke.c,
+    src/bdf/bdfdrivr.c, src/cache/ftcbasic.c, src/cache/ftccmap.c,
+    src/cache/ftcmanag.c, src/cff/cffload.c, src/cid/cidload.c,
+    src/lzw/zopen.c, src/otvalid/otvgdef.c, src/pcf/pcfread.c,
+    src/sfnt/sfobjs.c, src/truetype/ttgxvar.c: removing compiler warnings
+
+
 2005-04-28  Werner Lemberg  <wl@gnu.org>
 
 	* docs/TODO: Updated.
