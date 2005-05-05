@@ -1136,6 +1136,9 @@ FT_BEGIN_HEADER
   /*                            glyph data within the `glyf' table.        */
   /*                            Ignored for Type 2 font faces.             */
   /*                                                                       */
+  /*    glyf_len             :: The length of the `glyf' table.  Needed    */
+  /*                            for malformed `loca' tables.               */
+  /*                                                                       */
   /*    font_program_size    :: Size in bytecodes of the face's font       */
   /*                            program.  0 if none defined.  Ignored for  */
   /*                            Type 2 fonts.                              */
@@ -1297,6 +1300,8 @@ FT_BEGIN_HEADER
     FT_UShort             num_locations;
     FT_Long*              glyph_locations;
 #endif
+
+    FT_ULong              glyf_len;
 
     /* the font program, if any */
     FT_ULong              font_program_size;

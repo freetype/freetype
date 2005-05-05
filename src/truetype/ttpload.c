@@ -68,6 +68,11 @@
     FT_ULong  table_len;
 
 
+    /* we need the size of the `glyf' table for malformed `loca' tables */
+    error = face->goto_table( face, TTAG_glyf, stream, &face->glyf_len );
+    if ( error )
+      goto Exit;
+
     FT_TRACE2(( "Locations " ));
     error = face->goto_table( face, TTAG_loca, stream, &table_len );
     if ( error )
@@ -152,7 +157,16 @@
       }
     }
 
-    *asize = (FT_UInt)( pos2 - pos1 );
+    /* It isn't mentioned explicitly that the `loca' table must be  */
+    /* ordered, but implicitly it refers to the length of an entry  */
+    /* as the difference between the current and the next position. */
+    /* Anyway, there do exist (malformed) fonts which don't obey    */
+    /* this rule, so we are only able to provide an upper bound for */
+    /* the size.                                                    */
+    if ( pos2 > pos1 )
+      *asize = (FT_UInt)( pos2 - pos1 );
+    else
+      *asize = (FT_UInt)( face->glyf_len - pos1 );
 
     return pos1;
   }
@@ -181,6 +195,11 @@
     FT_Short   LongOffsets;
     FT_ULong   table_len;
 
+
+    /* we need the size of the `glyf' table for malformed `loca' tables */
+    error = face->goto_table( face, TTAG_glyf, stream, &face->glyf_len );
+    if ( error )
+      goto Exit;
 
     FT_TRACE2(( "Locations " ));
     LongOffsets = face->header.Index_To_Loc_Format;
@@ -259,7 +278,21 @@
     count  = 0;
 
     if ( gindex < (FT_UInt)face->num_locations - 1 )
-      count = (FT_UInt)( face->glyph_locations[gindex + 1] - offset );
+    {
+      FT_ULong  offset1 = face->glyph_locations[gindex + 1];
+
+
+      /* It isn't mentioned explicitly that the `loca' table must be  */
+      /* ordered, but implicitly it refers to the length of an entry  */
+      /* as the difference between the current and the next position. */
+      /* Anyway, there do exist (malformed) fonts which don't obey    */
+      /* this rule, so we are only able to provide an upper bound for */
+      /* the size.                                                    */
+      if ( offset1 > offset )
+        count = (FT_UInt)( offset1 - offset );
+      else
+        count = (FT_UInt)( face->glyf_len - offset );
+    }
 
     *asize = count;
     return offset;

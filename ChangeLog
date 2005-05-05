@@ -1,15 +1,30 @@
+2005-05-05  Werner Lemberg  <wl@gnu.org>
+
+	Handle malformed `loca' table entries.
+
+	* docs/TODO: Add some bugs which should be fixed.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Add `glyf_len'
+	element.
+
+	* src/truetype/ttpload.c (tt_face_load_loca): Get length of `glyf'
+	table.
+	(tt_face_get_location): Fix computation of `asize' for malformed
+	`loca' entries.
+
 2005-05-01  David Turner  <david@freetype.org>
 
-  * Jamfile: removing otvalid from the list of compiled modules
-  * include/freetype/internal/ftserv.h: added compiler pragmas to get rid
-    of annoying warnings with Visual C++ compiler in maximum warning mode
-    
-  * src/autofit/afhints.c, src/autofit/aflatin.c, src/base/ftstroke.c,
-    src/bdf/bdfdrivr.c, src/cache/ftcbasic.c, src/cache/ftccmap.c,
-    src/cache/ftcmanag.c, src/cff/cffload.c, src/cid/cidload.c,
-    src/lzw/zopen.c, src/otvalid/otvgdef.c, src/pcf/pcfread.c,
-    src/sfnt/sfobjs.c, src/truetype/ttgxvar.c: removing compiler warnings
+	* Jamfile: Remove `otvalid' from the list of compiled modules.
 
+	* include/freetype/internal/ftserv.h: Add compiler pragmas to get
+	rid of annoying warnings with Visual C++ compiler in maximum warning
+	mode.
+    
+	* src/autofit/afhints.c, src/autofit/aflatin.c, src/base/ftstroke.c,
+	src/bdf/bdfdrivr.c, src/cache/ftcbasic.c, src/cache/ftccmap.c,
+	src/cache/ftcmanag.c, src/cff/cffload.c, src/cid/cidload.c,
+	src/lzw/zopen.c, src/otvalid/otvgdef.c, src/pcf/pcfread.c,
+	src/sfnt/sfobjs.c, src/truetype/ttgxvar.c: Remove compiler warnings.
 
 2005-04-28  Werner Lemberg  <wl@gnu.org>
 
