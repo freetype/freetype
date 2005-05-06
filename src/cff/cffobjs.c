@@ -685,6 +685,11 @@
 
         cffface->style_flags = flags;
       }
+      else
+      {
+        if ( !dict->units_per_em )
+          dict->units_per_em = face->root.units_per_EM;
+      }
 
       /* handle font matrix settings in subfonts (if any) */
       for ( i = cff->num_subfonts; i > 0; i-- )
