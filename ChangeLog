@@ -1,3 +1,8 @@
+2005-05-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffobjs.c (cff_face_init): Set ppem value in top
+	dictionary for SFNT-based CFF.
+
 2005-05-05  Werner Lemberg  <wl@gnu.org>
 
 	Handle malformed `loca' table entries.
