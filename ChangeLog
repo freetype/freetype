@@ -1,3 +1,7 @@
+2005-05-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttpload.c (tt_face_get_location): Fix typo.
+
 2005-05-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffobjs.c (cff_face_init): Set ppem value in top
