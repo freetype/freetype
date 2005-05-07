@@ -163,7 +163,7 @@
     /* Anyway, there do exist (malformed) fonts which don't obey    */
     /* this rule, so we are only able to provide an upper bound for */
     /* the size.                                                    */
-    if ( pos2 > pos1 )
+    if ( pos2 >= pos1 )
       *asize = (FT_UInt)( pos2 - pos1 );
     else
       *asize = (FT_UInt)( face->glyf_len - pos1 );
@@ -288,7 +288,7 @@
       /* Anyway, there do exist (malformed) fonts which don't obey    */
       /* this rule, so we are only able to provide an upper bound for */
       /* the size.                                                    */
-      if ( offset1 > offset )
+      if ( offset1 >= offset )
         count = (FT_UInt)( offset1 - offset );
       else
         count = (FT_UInt)( face->glyf_len - offset );
