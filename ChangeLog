@@ -1,5 +1,22 @@
 2005-05-07  Werner Lemberg  <wl@gnu.org>
 
+	Handle unsorted SFNT type 4 cmaps correctly (reported by Dirck
+	Blaskey).
+
+	* src/sfnt/ttcmap.h (TT_CMap): Add member `unsorted'.
+	* src/sfnt/ttcmac.c: Use SFNT_Err_Ok where appropriate.
+
+	(tt_cmap0_validate, tt_cmap2_validate, tt_cmap6_validate,
+	tt_cmap8_validate, tt_cmap10_validate, tt_cmap12_validate): Use
+	`FT_Error' as return type.
+	(tt_cmap4_validate): Use `FT_Error' as return type.
+	Return error code for unsorted cmap.
+	(tt_cmap4_char_index, tt_cmap4_char_next): Use old code for unsorted
+	cmaps.
+	(tt_face_build_cmaps): Set `unsorted' variable in cmap.
+
+2005-05-07  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttpload.c (tt_face_get_location): Fix typo.
 
 2005-05-06  Werner Lemberg  <wl@gnu.org>

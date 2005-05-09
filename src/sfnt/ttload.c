@@ -134,22 +134,22 @@
   }
 
 
- /* In theory, we should check the values of `search_range',               */
- /* `entry_selector', and `range_shift' to detect non-SFNT based files     */
- /* whose header might also start with 0x100000L (yes, these exist).       */
- /*                                                                        */
- /* Very unfortunately, many TrueType fonts don't have these fields        */
- /* set correctly and we must ignore them to support them.  An alternative */
- /* way to check the font file is thus to:                                 */
- /*                                                                        */
- /* - check that `num_tables' is valid                                     */
- /* - look for a "head" table, check its size, and parse it to             */
- /*   see if its "magic" field is correctly set                            */
- /*                                                                        */
- /* When checking directory entries, ignore the tables `glyx' and `locx'   */
- /* which are hacked-out versions of `glyf' and `loca' in some PostScript  */
- /* Type 42 fonts, and will generally be invalid.                          */
- /*                                                                        */
+  /* In theory, we should check the values of `search_range',              */
+  /* `entry_selector', and `range_shift' to detect non-SFNT based files    */
+  /* whose header might also start with 0x100000L (yes, these exist).      */
+  /*                                                                       */
+  /* Very unfortunately, many TrueType fonts don't have these fields       */
+  /* set correctly and we must ignore them to support them.  An            */
+  /* alternative way to check the font file is thus to:                    */
+  /*                                                                       */
+  /* - check that `num_tables' is valid                                    */
+  /* - look for a "head" table, check its size, and parse it to            */
+  /*   see if its "magic" field is correctly set                           */
+  /*                                                                       */
+  /* When checking directory entries, ignore the tables `glyx' and `locx'  */
+  /* which are hacked-out versions of `glyf' and `loca' in some PostScript */
+  /* Type 42 fonts, and will generally be invalid.                         */
+  /*                                                                       */
   static FT_Error
   sfnt_dir_check( FT_Stream  stream,
                   FT_ULong   offset,
@@ -239,7 +239,7 @@
       goto Bad_Format;
 
   Exit:
-    return  error;
+    return error;
 
   Bad_Format:
     error = SFNT_Err_Unknown_File_Format;

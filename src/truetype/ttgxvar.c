@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType GX Font Variation loader                                    */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  David Turner, Robert Wilhelm, Werner Lemberg, and George Williams.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -92,7 +92,7 @@
   /* indicates that there is a delta for every point without needing to    */
   /* enumerate all of them.                                                */
   /*                                                                       */
-#define ALL_POINTS  (FT_UShort*)(-1)
+#define ALL_POINTS  (FT_UShort*)( -1 )
 
 
   enum
@@ -1209,7 +1209,7 @@
       }
 
       apply = ft_var_apply_tuple( blend,
-                                  (FT_UShort) tupleIndex,
+                                  (FT_UShort)tupleIndex,
                                   tuple_coords,
                                   im_start_coords,
                                   im_end_coords );
@@ -1238,8 +1238,8 @@
       {
         /* this means that there are deltas for every entry in cvt */
         for ( j = 0; j < face->cvt_size; ++j )
-          face->cvt[j] = (FT_Short)( face->cvt[j] + FT_MulFix( deltas[j],
-                                                               apply ) );
+          face->cvt[j] = (FT_Short)( face->cvt[j] +
+                                     FT_MulFix( deltas[j], apply ) );
       }
 
       else
@@ -1404,7 +1404,7 @@
       }
 
       apply = ft_var_apply_tuple( blend,
-                                  (FT_UShort) tupleIndex,
+                                  (FT_UShort)tupleIndex,
                                   tuple_coords,
                                   im_start_coords,
                                   im_end_coords );

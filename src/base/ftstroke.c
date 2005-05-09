@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType path stroker (body).                                        */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004 by                                          */
+/*  Copyright 2002, 2003, 2004, 2005 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1425,7 +1425,7 @@
             dst_tag[0] &= ~FT_STROKE_TAG_BEGIN_END;
           else
           {
-            FT_Byte  ttag = (FT_Byte)(dst_tag[0] & FT_STROKE_TAG_BEGIN_END);
+            FT_Byte  ttag = (FT_Byte)( dst_tag[0] & FT_STROKE_TAG_BEGIN_END );
 
 
             /* switch begin/end tags if necessary */

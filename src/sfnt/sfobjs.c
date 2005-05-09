@@ -208,7 +208,7 @@
             case TT_MS_ID_SYMBOL_CS:
             case TT_MS_ID_UNICODE_CS:
             case TT_MS_ID_UCS_4:
-              is_english = FT_BOOL(( rec->languageID & 0x3FF ) == 0x009);
+              is_english = FT_BOOL( ( rec->languageID & 0x3FF ) == 0x009 );
               found_win  = n;
               break;
 

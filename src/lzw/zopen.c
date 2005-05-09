@@ -35,7 +35,7 @@
 
 /*-
  *
- * Copyright (c) 2004
+ * Copyright (c) 2004, 2005
  *	Albert Chin-A-Young.
  *
  * Modified to work with FreeType's PCF driver.
@@ -276,8 +276,8 @@ middle:
 
 		/* Generate the new entry. */
 		if ((code = free_ent) < maxmaxcode) {
-			tab_prefixof(code) = (unsigned short) oldcode;
-			tab_suffixof(code) = (unsigned char)  finchar;
+			tab_prefixof(code) = (unsigned short)oldcode;
+			tab_suffixof(code) = (unsigned char)finchar;
 			free_ent = code + 1;
 		}
 
