@@ -1,3 +1,8 @@
+2005-05-08  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftserv.h (FT_FACE_FIND_GLOBAL_SERVICE)
+	[__cplusplus]: Fix typo.
+
 2005-05-07  Werner Lemberg  <wl@gnu.org>
 
 	Handle unsorted SFNT type 4 cmaps correctly (reported by Dirck

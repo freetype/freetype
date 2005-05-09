@@ -118,9 +118,9 @@ FT_BEGIN_HEADER
 
 #define FT_FACE_FIND_GLOBAL_SERVICE( face, ptr, id )               \
   FT_BEGIN_STMNT                                                   \
-    FT_Module   module = FT_MODULE( FT_FACE( face )->driver );     \
-    FT_Pointer  _tmp_;                                             \
-    FT_Pointer  _pptr_ = (FT_Pointer*)&(ptr);                      \
+    FT_Module    module = FT_MODULE( FT_FACE( face )->driver );    \
+    FT_Pointer   _tmp_;                                            \
+    FT_Pointer*  _pptr_ = (FT_Pointer*)&(ptr);                     \
                                                                    \
                                                                    \
     _tmp_ = ft_module_get_service( module, FT_SERVICE_ID_ ## id ); \
