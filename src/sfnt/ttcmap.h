@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (specification).     */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004 by                                          */
+/*  Copyright 2002, 2003, 2004, 2005 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -31,6 +31,7 @@ FT_BEGIN_HEADER
   {
     FT_CMapRec  cmap;
     FT_Byte*    data;           /* pointer to in-memory cmap table */
+    FT_Bool     unsorted;       /* for format 4 only               */
 
   } TT_CMapRec, *TT_CMap;
 
