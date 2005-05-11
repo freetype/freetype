@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType convenience functions to handle glyphs (body).              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -306,9 +306,9 @@
 
 
   FT_CALLBACK_DEF( void )
-  ft_outline_glyph_transform( FT_Glyph    outline_glyph,
-                              FT_Matrix*  matrix,
-                              FT_Vector*  delta )
+  ft_outline_glyph_transform( FT_Glyph          outline_glyph,
+                              const FT_Matrix*  matrix,
+                              const FT_Vector*  delta )
   {
     FT_OutlineGlyph  glyph = (FT_OutlineGlyph)outline_glyph;
 

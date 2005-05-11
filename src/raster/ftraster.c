@@ -108,9 +108,6 @@
   /* define DEBUG_RASTER if you want to compile a debugging version */
 #define xxxDEBUG_RASTER
 
-  /* The default render pool size in bytes */
-#define RASTER_RENDER_POOL  8192
-
   /* undefine FT_RASTER_OPTION_ANTI_ALIASING if you do not want to support */
   /* 5-levels anti-aliasing                                                */
 #ifdef FT_CONFIG_OPTION_5_GRAY_LEVELS
@@ -3254,8 +3251,8 @@
 
 
   static int
-  ft_black_render( TRaster_Instance*  raster,
-                   FT_Raster_Params*  params )
+  ft_black_render( TRaster_Instance*        raster,
+                   const FT_Raster_Params*  params )
   {
     FT_Outline*       outline    = (FT_Outline*)params->source;
     const FT_Bitmap*  target_map = params->target;

@@ -1,3 +1,26 @@
+2005-05-11  Kirill Smelkov  <kirr@mns.spb.ru>
+
+	* include/freetype/ftimage.h (FT_Raster_RenderFunc),
+	include/freetype/ftrender.h (FT_Glyph_TransformFunc,
+	FT_Renderer_Render_Func, FT_Renderer_TransformFunc),
+	src/base/ftglyph.c (ft_outline_glyph_transform),
+	src/raster/ftrend1.c (ft_raster1_transform, ft_raster1_render),
+	src/smooth/ftgrays.c (FT_Outline_Decompose, gray_raster_render),
+	src/smooth/ftsmooth.c (ft_smooth_transform,
+	ft_smooth_render_generic, ft_smooth_render, ft_smooth_render_lcd,
+	ft_smooth_render_lcd_v): Decorate parameters with `const' where
+	appropriate.
+
+	* src/raster/ftraster.c (RASTER_RENDER_POOL): Removed.  Obsolete.
+	(ft_black_render): Decorate parameters with `const' where
+	appropriate.
+
+2005-05-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttcmap.c (tt_cmap4_set_range): Fix typo (FT_PEEK_SHORT ->
+	FT_PEEK_USHORT) which caused crashes.  Reported by Ismail Donmez
+	<ismail@kde.org.tr>.
+
 2005-05-08  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftserv.h (FT_FACE_FIND_GLOBAL_SERVICE)
@@ -6,7 +29,7 @@
 2005-05-07  Werner Lemberg  <wl@gnu.org>
 
 	Handle unsorted SFNT type 4 cmaps correctly (reported by Dirck
-	Blaskey).
+	Blaskey <listtarget@danbala.com>).
 
 	* src/sfnt/ttcmap.h (TT_CMap): Add member `unsorted'.
 	* src/sfnt/ttcmac.c: Use SFNT_Err_Ok where appropriate.

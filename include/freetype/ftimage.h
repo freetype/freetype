@@ -1183,8 +1183,8 @@ FT_BEGIN_HEADER
   /*         composition).                                                 */
   /*                                                                       */
   typedef int
-  (*FT_Raster_RenderFunc)( FT_Raster          raster,
-                           FT_Raster_Params*  params );
+  (*FT_Raster_RenderFunc)( FT_Raster                raster,
+                           const FT_Raster_Params*  params );
 
 #define  FT_Raster_Render_Func    FT_Raster_RenderFunc
 
