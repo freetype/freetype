@@ -694,7 +694,7 @@
       cmap->cur_delta = FT_PEEK_SHORT( p );
 
       p     += num_ranges * 2;
-      offset = FT_PEEK_SHORT( p );
+      offset = FT_PEEK_USHORT( p );
 
       if ( offset != 0xFFFFU )
       {

@@ -1578,7 +1578,7 @@
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
   static
-  int  FT_Outline_Decompose( FT_Outline*              outline,
+  int  FT_Outline_Decompose( const FT_Outline*        outline,
                              const FT_Outline_Funcs*  func_interface,
                              void*                    user )
   {
@@ -1960,8 +1960,8 @@
 
 
   extern int
-  gray_raster_render( PRaster            raster,
-                      FT_Raster_Params*  params )
+  gray_raster_render( PRaster                  raster,
+                      const FT_Raster_Params*  params )
   {
     FT_Outline*       outline    = (FT_Outline*)params->source;
     const FT_Bitmap*  target_map = params->target;
