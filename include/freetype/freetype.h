@@ -1912,8 +1912,8 @@ FT_BEGIN_HEADER
   /*    @FT_Open_Face can be used to determine and/or check the font       */
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
-  /*    `*face'; the return value is 0 if the font format is recognized,   */
-  /*    or non-zero otherwise.                                             */
+  /*    `*aface'; the function's return value is 0 if the font format is   */
+  /*    recognized, or non-zero otherwise.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Open_Face( FT_Library           library,
