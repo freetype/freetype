@@ -1,3 +1,23 @@
+2004-05-16  Vitaliy Pasternak  <v_a_pasternak@mail.ru>
+
+	* builds/win32/visualc/freetype.vcproj: Updated.
+	Exclude debug info for `Release' versions to reduce library size.
+
+2005-05-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Open_Face): Make it work as documented, this
+	is, ignore `aface' completely if face_index < 0.  Reported by David
+	Osborn <spam@habitualhiatus.com>.
+
+2005-05-16  Kirill Smelkov  <kirr@mns.spb.ru>
+
+	* include/freetype/ftimage.h (FT_Outline_MoveToFunc,
+	FT_Outline_LineTo_Func, FT_Outline_ConicToFunc,
+	FT_Outline_CubicToFunc), src/smooth/ftgrays.c (gray_render_conic,
+	gray_render_cubic, gray_move_to, gray_line_to, gray_conic_to,
+	gray_cubic_to, gray_render_span, gray_sweep): Decorate parameters
+	with `const' where appropriate.
+
 2005-05-11  Kirill Smelkov  <kirr@mns.spb.ru>
 
 	* include/freetype/ftimage.h (FT_Raster_RenderFunc),
