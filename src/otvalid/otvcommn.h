@@ -339,16 +339,16 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 #define ChainPosClassSet  otv_x_Ox, "ChainPosClassSet"
-#define ChainPosRuleSet   otv_x_Ox, "ChainPosRuleSet" 
+#define ChainPosRuleSet   otv_x_Ox, "ChainPosRuleSet"
 #define ChainSubClassSet  otv_x_Ox, "ChainSubClassSet"
 #define ChainSubRuleSet   otv_x_Ox, "ChainSubRuleSet"
 #define JstfLangSys       otv_x_Ox, "JstfLangSys"
-#define JstfMax           otv_x_Ox, "JstfMax" 
+#define JstfMax           otv_x_Ox, "JstfMax"
 #define LigGlyph          otv_x_Ox, "LigGlyph"
 #define LigatureArray     otv_x_Ox, "LigatureArray"
 #define LigatureSet       otv_x_Ox, "LigatureSet"
 #define PosClassSet       otv_x_Ox, "PosClassSet"
-#define PosRuleSet        otv_x_Ox, "PosRuleSet" 
+#define PosRuleSet        otv_x_Ox, "PosRuleSet"
 #define SubClassSet       otv_x_Ox, "SubClassSet"
 #define SubRuleSet        otv_x_Ox, "SubRuleSet"
 
@@ -356,24 +356,24 @@ FT_BEGIN_HEADER
   otv_x_Ox ( FT_Bytes       table,
              OTV_Validator  valid );
 
-#define AlternateSubstFormat1     otv_u_C_x_Ox, "AlternateSubstFormat1"        
-#define ChainContextPosFormat1    otv_u_C_x_Ox, "ChainContextPosFormat1"       
-#define ChainContextSubstFormat1  otv_u_C_x_Ox, "ChainContextSubstFormat1"     
-#define ContextPosFormat1         otv_u_C_x_Ox, "ContextPosFormat1"            
-#define ContextSubstFormat1       otv_u_C_x_Ox, "ContextSubstFormat1"          
-#define LigatureSubstFormat1      otv_u_C_x_Ox, "LigatureSubstFormat1"         
-#define MultipleSubstFormat1      otv_u_C_x_Ox, "MultipleSubstFormat1"         
+#define AlternateSubstFormat1     otv_u_C_x_Ox, "AlternateSubstFormat1"
+#define ChainContextPosFormat1    otv_u_C_x_Ox, "ChainContextPosFormat1"
+#define ChainContextSubstFormat1  otv_u_C_x_Ox, "ChainContextSubstFormat1"
+#define ContextPosFormat1         otv_u_C_x_Ox, "ContextPosFormat1"
+#define ContextSubstFormat1       otv_u_C_x_Ox, "ContextSubstFormat1"
+#define LigatureSubstFormat1      otv_u_C_x_Ox, "LigatureSubstFormat1"
+#define MultipleSubstFormat1      otv_u_C_x_Ox, "MultipleSubstFormat1"
 
   FT_LOCAL( void )
   otv_u_C_x_Ox( FT_Bytes       table,
                 OTV_Validator  valid );
 
-#define AlternateSet     otv_x_ux, "AlternateSet"     
-#define AttachPoint      otv_x_ux, "AttachPoint"      
-#define ExtenderGlyph    otv_x_ux, "ExtenderGlyph"    
+#define AlternateSet     otv_x_ux, "AlternateSet"
+#define AttachPoint      otv_x_ux, "AttachPoint"
+#define ExtenderGlyph    otv_x_ux, "ExtenderGlyph"
 #define JstfGPOSModList  otv_x_ux, "JstfGPOSModList"
-#define JstfGSUBModList  otv_x_ux, "JstfGSUBModList"  
-#define Sequence         otv_x_ux, "Sequence"         
+#define JstfGSUBModList  otv_x_ux, "JstfGSUBModList"
+#define Sequence         otv_x_ux, "Sequence"
 
   FT_LOCAL( void )
   otv_x_ux( FT_Bytes       table,

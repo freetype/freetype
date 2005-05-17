@@ -1255,10 +1255,10 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*   x :: The x-coordinate of the segment's end point (its start point   */
-  /*        is stored in `LastX').                                         */
+  /*        is stored in `lastX').                                         */
   /*                                                                       */
   /*   y :: The y-coordinate of the segment's end point (its start point   */
-  /*        is stored in `LastY').                                         */
+  /*        is stored in `lastY').                                         */
   /*                                                                       */
   /* <Return>                                                              */
   /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
@@ -1349,10 +1349,10 @@
   /*   cy :: The y-coordinate of the arc's new control point.              */
   /*                                                                       */
   /*   x  :: The x-coordinate of the arc's end point (its start point is   */
-  /*         stored in `LastX').                                           */
+  /*         stored in `lastX').                                           */
   /*                                                                       */
   /*   y  :: The y-coordinate of the arc's end point (its start point is   */
-  /*         stored in `LastY').                                           */
+  /*         stored in `lastY').                                           */
   /*                                                                       */
   /* <Return>                                                              */
   /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
@@ -1463,10 +1463,10 @@
   /*   cy2 :: The y-coordinate of the arc's second new control point.      */
   /*                                                                       */
   /*   x   :: The x-coordinate of the arc's end point (its start point is  */
-  /*          stored in `LastX').                                          */
+  /*          stored in `lastX').                                          */
   /*                                                                       */
   /*   y   :: The y-coordinate of the arc's end point (its start point is  */
-  /*          stored in `LastY').                                          */
+  /*          stored in `lastY').                                          */
   /*                                                                       */
   /* <Return>                                                              */
   /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */

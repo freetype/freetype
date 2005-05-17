@@ -1550,10 +1550,8 @@
     /* test for valid `library' delayed to */
     /* FT_Stream_New()                     */
 
-    if ( !aface || !args )
+    if ( ( !aface && face_index >= 0 ) || !args )
       return FT_Err_Invalid_Argument;
-
-    *aface = 0;
 
     external_stream = FT_BOOL( ( args->flags & FT_OPEN_STREAM ) &&
                                args->stream                     );
@@ -1720,7 +1718,8 @@
       internal->transform_delta.y = 0;
     }
 
-    *aface = face;
+    if ( aface )
+      *aface = face;
     goto Exit;
 
   Fail:
