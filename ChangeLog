@@ -1,3 +1,7 @@
+2004-05-18  Werner Lemberg  <wl@gnu.org>
+
+	* docs/announce: Start updating.
+
 2004-05-16  Vitaliy Pasternak  <v_a_pasternak@mail.ru>
 
 	* builds/win32/visualc/freetype.vcproj: Updated.

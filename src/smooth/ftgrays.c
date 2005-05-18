@@ -235,8 +235,8 @@
   typedef long  TPos;     /* sub-pixel coordinate              */
 
   /* determine the type used to store cell areas.  This normally takes at */
-  /* least PIXEL_BITS*2 + 1 bits. On 16-bit systems, we need to use `long'*/
-  /* instead of `int', otherwise bad things happen                        */
+  /* least PIXEL_BITS*2 + 1 bits.  On 16-bit systems, we need to use      */
+  /* `long' instead of `int', otherwise bad things happen                 */
 
 #if PIXEL_BITS <= 7
 
