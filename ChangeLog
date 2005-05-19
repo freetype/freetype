@@ -1,8 +1,30 @@
-2004-05-18  Werner Lemberg  <wl@gnu.org>
+2005-05-18  Kirill Smelkov  <kirr@mns.spb.ru>
+
+	* src/raster/ftmisc.h: New file.  Only needed if ftraster.c is
+	compiled as stand-alone.
+
+	* src/raster/ftraster.c: Add comment how to compile as stand-alone.
+	s/FT_CONFIG_OPTION_STATIC_RASTER/FT_STATIC_RASTER/.
+	s/TT_STATIC_RASTER/FT_STATIC_RASTER/.
+	[_STANDALONE_]: Include ftimage.h and ftmisc.h.
+	(FT_TRACE1, FT_TRACE6, ft_memset, FT_MEM_ZERO): Define
+	conditionally.
+	(Render_Glyph, Render_Gray_Glyph): Return Raster_Err_None (or
+	Raster_Err_Unsupported).
+	(ft_black_new) [_STANDALONE_]: Fix type of `the_raster'.
+	(ft_black_init, ft_black_reset, ft_black_set_mode, ft_black_render):
+	Use `ras', not `raster'.
+	(ft_black_done): Use FT_UNUSED_RASTER.
+	(Horizontal_Sweep_Init, Horizontal_Sweep_Step,
+	Horizontal_Gray_Sweep_Span): Use FT_UNUSED_RASTER.
+
+2005-05-18  Werner Lemberg  <wl@gnu.org>
 
 	* docs/announce: Start updating.
 
-2004-05-16  Vitaliy Pasternak  <v_a_pasternak@mail.ru>
+	* docs/CHANGES: Updated.
+
+2005-05-16  Vitaliy Pasternak  <v_a_pasternak@mail.ru>
 
 	* builds/win32/visualc/freetype.vcproj: Updated.
 	Exclude debug info for `Release' versions to reduce library size.
