@@ -100,7 +100,7 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       compressed form (as a trie) which saves about 20KByte of code as
       well.
 
-    - Kyrill  Smelkov provided  patches to make  src/raster/ftraster.c
+    - Kirill  Smelkov provided  patches to make  src/raster/ftraster.c
       compile stand-alone again.
 
 
