@@ -1031,7 +1031,7 @@ FT_BEGIN_HEADER
   typedef struct  FT_Raster_Params_
   {
     const FT_Bitmap*        target;
-    void*                   source;
+    const void*             source;
     int                     flags;
     FT_SpanFunc             gray_spans;
     FT_SpanFunc             black_spans;

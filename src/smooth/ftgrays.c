@@ -1963,8 +1963,8 @@
   gray_raster_render( PRaster                  raster,
                       const FT_Raster_Params*  params )
   {
-    FT_Outline*       outline    = (FT_Outline*)params->source;
-    const FT_Bitmap*  target_map = params->target;
+    const FT_Outline*  outline    = (const FT_Outline*)params->source;
+    const FT_Bitmap*   target_map = params->target;
 
 
     if ( !raster || !raster->cells || !raster->max_cells )
@@ -2131,7 +2131,7 @@
 
   static void
   gray_raster_reset( FT_Raster    raster,
-                     const char*  pool_base,
+                     char*        pool_base,
                      long         pool_size )
   {
     PRaster  rast = (PRaster)raster;

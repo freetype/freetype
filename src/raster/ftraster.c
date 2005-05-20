@@ -3251,7 +3251,7 @@
 
   static void
   ft_black_reset( TRaster_Instance*  raster,
-                  const char*        pool_base,
+                  char*              pool_base,
                   long               pool_size )
   {
     if ( (&ras) && pool_base && pool_size >= 4096 )
@@ -3294,8 +3294,8 @@
   ft_black_render( TRaster_Instance*        raster,
                    const FT_Raster_Params*  params )
   {
-    FT_Outline*       outline    = (FT_Outline*)params->source;
-    const FT_Bitmap*  target_map = params->target;
+    const FT_Outline*  outline    = (const FT_Outline*)params->source;
+    const FT_Bitmap*   target_map = params->target;
 
 
     if ( !(&ras) || !ras.buff || !ras.sizeBuff )
