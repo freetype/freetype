@@ -348,10 +348,8 @@
     FT_GlyphSlot      slot;
 
 
-    if ( !face || !aslot || !face->driver )
+    if ( !face || !face->driver )
       return FT_Err_Invalid_Argument;
-
-    *aslot = 0;
 
     driver = face->driver;
     clazz  = driver->clazz;
@@ -370,8 +368,15 @@
         goto Exit;
       }
 
-      *aslot = slot;
+      slot->next  = face->glyph;
+      face->glyph = slot;
+
+      if ( aslot )
+        *aslot = slot;
     }
+    else if ( aslot )
+      *aslot = 0;
+
 
   Exit:
     FT_TRACE4(( "FT_New_GlyphSlot: Return %d\n", error ));
@@ -386,26 +391,31 @@
   {
     if ( slot )
     {
-      FT_Driver      driver = slot->face->driver;
-      FT_Memory      memory = driver->root.memory;
-      FT_GlyphSlot*  parent;
-      FT_GlyphSlot   cur;
+      FT_Driver     driver = slot->face->driver;
+      FT_Memory     memory = driver->root.memory;
+      FT_GlyphSlot  prev;
+      FT_GlyphSlot  cur;
 
 
       /* Remove slot from its parent face's list */
-      parent = &slot->face->glyph;
-      cur    = *parent;
+      prev = NULL;
+      cur  = slot->face->glyph;
 
       while ( cur )
       {
         if ( cur == slot )
         {
-          *parent = cur->next;
+          if ( !prev )
+            slot->face->glyph = cur->next;
+          else
+            prev->next = cur->next;
+
           ft_glyphslot_done( slot );
           FT_FREE( slot );
           break;
         }
-        cur = cur->next;
+        prev = cur;
+        cur  = cur->next;
       }
     }
   }
@@ -1677,18 +1687,11 @@
     FT_List_Add( &face->driver->faces_list, node );
 
     /* now allocate a glyph slot object for the face */
-    {
-      FT_GlyphSlot  slot;
+    FT_TRACE4(( "FT_Open_Face: Creating glyph slot\n" ));
 
-
-      FT_TRACE4(( "FT_Open_Face: Creating glyph slot\n" ));
-
-      error = FT_New_GlyphSlot( face, &slot );
-      if ( error )
-        goto Fail;
-
-      face->glyph = slot;
-    }
+    error = FT_New_GlyphSlot( face, NULL );
+    if ( error )
+      goto Fail;
 
     /* finally, allocate a size object for the face */
     {

@@ -1,3 +1,37 @@
+2005-05-20  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2005-05-20  Chia I Wu  <b90201047@ntu.edu.tw>
+
+	* src/base/ftbitmap.c: Don't include FT_FREETYPE_H and FT_IMAGE_H
+	but FT_BITMAP_H.
+	(FT_Bitmap_Copy): New function (from ftglyph.c).
+
+	* include/freetype/ftbitmap.h (FT_Bitmap_Copy): New public
+	definition.
+
+	* src/base/ftglyph.c: Include FT_BITMAP_H.
+	(ft_bitmap_copy): Move to ftbitmap.c.
+	(ft_bitmap_glyph_init): Remove `memory' variable.
+	Create new bitmap object if FT_GLYPH_OWN_BITMAP isn't set.
+	(ft_bitmap_glyph_copy): Use FT_Bitmap_Copy.
+	(ft_bitmap_glyph_done): Use FT_Bitmap_Done.
+	(ft_outline_glyph_init): Use FT_Outline_Copy.
+
+	* src/base/ftoutln.c (FT_Outline_Copy): Handle source == target.
+	(FT_Outline_Done_Internal): Check for valid `memory' pointer.
+	(FT_Outline_Translate, FT_Outline_Reverse, FT_Outline_Render,
+	FT_Outline_Transform): Check for valid `outline' pointer.
+
+	* src/base/ftobjs.c (FT_New_GlyphSlot): Prepend glyph slot to
+	face->glyph, otherwise a new second glyph slot cannot be created.
+	(FT_Done_GlyphSlot): Fix memory leak.
+	(FT_Open_Face): Updated -- face->glyph is already managed by
+	FT_New_GlyphSlot.
+
+	* src/type42/t42objs.c (T42_GlyphSlot_Done): Updated.
+
 2005-05-20  Kirill Smelkov  <kirr@mns.spb.ru>
 
 	* include/freetype/ftimage.h (FT_Raster_Params),
