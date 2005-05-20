@@ -464,9 +464,9 @@
   /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( void )
-  FT_Outline_Translate( FT_Outline*  outline,
-                        FT_Pos       xOffset,
-                        FT_Pos       yOffset )
+  FT_Outline_Translate( const FT_Outline*  outline,
+                        FT_Pos             xOffset,
+                        FT_Pos             yOffset )
   {
     FT_UShort   n;
     FT_Vector*  vec = outline->points;
@@ -641,8 +641,8 @@
   /* documentation is in ftoutln.h */
 
   FT_EXPORT_DEF( void )
-  FT_Outline_Transform( FT_Outline*       outline,
-                        const FT_Matrix*  matrix )
+  FT_Outline_Transform( const FT_Outline*  outline,
+                        const FT_Matrix*   matrix )
   {
     FT_Vector*  vec = outline->points;
     FT_Vector*  limit = vec + outline->n_points;

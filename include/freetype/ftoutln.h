@@ -250,9 +250,9 @@ FT_BEGIN_HEADER
   /*    yOffset :: The vertical offset.                                    */
   /*                                                                       */
   FT_EXPORT( void )
-  FT_Outline_Translate( FT_Outline*  outline,
-                        FT_Pos       xOffset,
-                        FT_Pos       yOffset );
+  FT_Outline_Translate( const FT_Outline*  outline,
+                        FT_Pos             xOffset,
+                        FT_Pos             yOffset );
 
 
   /*************************************************************************/
@@ -299,8 +299,8 @@ FT_BEGIN_HEADER
   /*    outline's points.                                                  */
   /*                                                                       */
   FT_EXPORT( void )
-  FT_Outline_Transform( FT_Outline*       outline,
-                        const FT_Matrix*  matrix );
+  FT_Outline_Transform( const FT_Outline*  outline,
+                        const FT_Matrix*   matrix );
 
 
   /*************************************************************************/

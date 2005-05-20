@@ -1,3 +1,15 @@
+2005-05-20  Kirill Smelkov  <kirr@mns.spb.ru>
+
+	* include/freetype/ftimage.h (FT_Raster_Params),
+	include/freetype/ftoutln.h (FT_Outline_Translate,
+	FT_Outline_Transform), src/base/ftoutln.c (FT_Outline_Translate,
+	FT_Outline_Transform): Decorate parameters with `const' where
+	appropriate.
+	Update all callers.
+
+	* src/raster/ftraster.c (ft_black_reset), src/smooth/ftgrays.c
+	(gray_raster_reset): Remove `const' from `pool_base' argument.
+
 2005-05-18  Kirill Smelkov  <kirr@mns.spb.ru>
 
 	* src/raster/ftmisc.h: New file.  Only needed if ftraster.c is
