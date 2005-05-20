@@ -5,7 +5,7 @@
 /*    FreeType utility functions for converting 1bpp, 2bpp, 4bpp, and 8bpp */
 /*    bitmaps into 8bpp format (specification).                            */  
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -64,6 +64,29 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Bitmap_New( FT_Bitmap  *abitmap );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Bitmap_Copy                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Copies an bitmap into another one.                                 */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    source :: A handle to the source bitmap.                           */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    target :: A handle to the target bitmap.                           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT_DEF( FT_Error )
+  FT_Bitmap_Copy( FT_Library        library,
+                  const FT_Bitmap  *source,
+                  FT_Bitmap        *target);
 
 
   /*************************************************************************/

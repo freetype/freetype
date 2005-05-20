@@ -358,6 +358,9 @@
          source->n_contours != target->n_contours )
       return FT_Err_Invalid_Argument;
 
+    if ( source == target )
+      return FT_Err_Ok;
+
     FT_ARRAY_COPY( target->points, source->points, source->n_points );
 
     FT_ARRAY_COPY( target->tags, source->tags, source->n_points );
@@ -379,7 +382,7 @@
   FT_Outline_Done_Internal( FT_Memory    memory,
                             FT_Outline*  outline )
   {
-    if ( outline )
+    if ( memory && outline )
     {
       if ( outline->flags & FT_OUTLINE_OWNER )
       {
@@ -472,6 +475,9 @@
     FT_Vector*  vec = outline->points;
 
 
+    if ( !outline )
+      return;
+
     for ( n = 0; n < outline->n_points; n++ )
     {
       vec->x += xOffset;
@@ -489,6 +495,9 @@
     FT_UShort  n;
     FT_Int     first, last;
 
+
+    if ( !outline )
+      return;
 
     first = 0;
 
@@ -553,7 +562,7 @@
     if ( !library )
       return FT_Err_Invalid_Library_Handle;
 
-    if ( !params )
+    if ( !outline || !params )
       return FT_Err_Invalid_Argument;
 
     renderer = library->cur_renderer;
@@ -644,9 +653,15 @@
   FT_Outline_Transform( const FT_Outline*  outline,
                         const FT_Matrix*   matrix )
   {
-    FT_Vector*  vec = outline->points;
-    FT_Vector*  limit = vec + outline->n_points;
+    FT_Vector*  vec;
+    FT_Vector*  limit;
 
+
+    if ( !outline || !matrix )
+      return;
+
+    vec   = outline->points;
+    limit = vec + outline->n_points;
 
     for ( ; vec < limit; vec++ )
       FT_Vector_Transform( vec, matrix );
