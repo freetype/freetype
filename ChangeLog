@@ -1,7 +1,24 @@
+2005-05-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftrfork.c (raccess_guess_apple_generic): Mark
+	`version_number' and `entry_length' as unused.
+	(raccess_guess_linux_double_from_file_name): Remove `memory'.
+	(raccess_make_file_name): Mark `error' as unused.
+
+	* src/bdf/bdflib.c (_bdf_parse_properties): Remove `memory'.
+
+	* src/cid/cidobjs.c (cid_face_init): Remove `psnames'.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Remove `memory'.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints,
+	ft_var_readpackeddeltas, ft_var_load_avar): Mark `error' as unused.
+
 2005-05-21  David Turner  <david@freetype.org>
 
-    * src/base/ftsynth.c (FT_GlyphSlot_Embolden): fixing a bug that produced
-    unpleasant artefacts when trying to embolden very sharp corners.
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Fix a bug that
+	produced unpleasant artefacts when trying to embolden very sharp
+	corners.
 
 2005-05-20  Werner Lemberg  <wl@gnu.org>
 
