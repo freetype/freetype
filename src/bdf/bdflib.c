@@ -1847,7 +1847,6 @@
     char*              name;
     char*              value;
     char               nbuf[128];
-    FT_Memory          memory;
     FT_Error           error = BDF_Err_Ok;
 
     FT_UNUSED( lineno );
@@ -1855,8 +1854,6 @@
 
     next = (_bdf_line_func_t *)call_data;
     p    = (_bdf_parse_t *)    client_data;
-
-    memory = p->font->memory;
 
     /* Check for the end of the properties. */
     if ( ft_memcmp( line, "ENDPROPERTIES", 13 ) == 0 )
