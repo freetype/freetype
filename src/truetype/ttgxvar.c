@@ -134,7 +134,9 @@
     FT_Int     j;
     FT_Int     first;
     FT_Memory  memory = stream->memory;
-    FT_Error   error;
+    FT_Error   error = TT_Err_Ok;
+
+    FT_UNUSED( error );
 
 
     *point_cnt = n = FT_GET_BYTE();
@@ -210,7 +212,9 @@
     FT_Int     i;
     FT_Int     j;
     FT_Memory  memory = stream->memory;
-    FT_Error   error;
+    FT_Error   error = TT_Err_Ok;
+
+    FT_UNUSED( error );
 
 
     if ( FT_NEW_ARRAY( deltas, delta_cnt ) )
@@ -276,11 +280,13 @@
     FT_Memory       memory = stream->memory;
     GX_Blend        blend  = face->blend;
     GX_AVarSegment  segment;
-    FT_Error        error;
+    FT_Error        error = TT_Err_Ok;
     FT_ULong        version;
     FT_Long         axisCount;
     FT_Int          i, j;
     FT_ULong        table_len;
+
+    FT_UNUSED( error );
 
 
     blend->avar_checked = TRUE;

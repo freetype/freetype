@@ -529,10 +529,7 @@
     {
       FT_Face    root = &face->root;
       FT_Int32   flags = root->face_flags;
-      FT_Memory  memory;
 
-
-      memory = root->memory;
 
       /*********************************************************************/
       /*                                                                   */
