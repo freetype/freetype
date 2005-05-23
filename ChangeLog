@@ -4,6 +4,9 @@
 	(CFLAGS), builds/compiler/gcc.mk (CFLAGS): Remove
 	-fno-strict-aliasing.
 
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Don't include ttsbit0.c --
+	it is currently loaded from ttsbit.c.
+
 2005-05-23  Behdad Esfahbod  <behdad@cs.toronto.edu>
 
 	Say you have `(Foo*)x' and want to assign, pass, or return it as
@@ -30,9 +33,6 @@
 	* src/base/ftinit.c (FT_USE_MODULE): Fix wrong type information.
 
 	* builds/unix/configure.ac (XX_CFLAGS): Remove -fno-strict-aliasing.
-
-	* src/sfnt/rules.mk (SFNT_DRV_SRC): Don't include ttsbit0.c --
-	it is currently loaded from ttsbit.c.
 
 2005-05-23  David Turner  <dturner@freetype.org>
 
