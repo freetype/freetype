@@ -261,6 +261,50 @@ FT_BEGIN_HEADER
 
 #endif /* !FTC_INLINE */
 
+
+/* use this macro with FTC_CACHE_TRYLOOP_END() in order to define
+ * a retry loop that will flush the cache repeatidely in case of
+ * memory overflows.
+ *
+ * this is used when creating a new cache node, or within a lookup
+ * that needs to allocate things (e.g. the sbit cache lookup)
+ * 
+ * here's an example:
+ *
+ * {
+ *   FTC_CACHE_TRYLOOP(cache)
+ *     error = load_data( ... );
+ *   FTC_CACHE_TRYLOOP_END()
+ * }
+ *
+ */
+#define  FTC_CACHE_TRYLOOP(cache)                                 \
+  {                                                               \
+    FTC_Manager   _try_manager = FTC_CACHE(cache)->manager;       \
+    FT_UInt       _try_count   = 4;                               \
+                                                                  \
+    for (;;)                                                      \
+    {                                                             \
+      FT_UInt  _try_done;
+
+
+#define  FTC_CACHE_TRYLOOP_END()                                              \
+      if ( !error || error != FT_Err_Out_Of_Memory )                          \
+        break;                                                                \
+                                                                              \
+      _try_done = FTC_Manager_FlushN( _try_manager, _try_count );             \
+      if ( _try_done == 0 )                                                   \
+        break;                                                                \
+                                                                              \
+      if ( _try_done == _try_count )                                          \
+      {                                                                       \
+        _try_count *= 2;                                                      \
+        if ( _try_count < _try_done || _try_count > _try_manager->num_nodes ) \
+          _try_count = _try_manager->num_nodes;                               \
+      }                                                                       \
+    }                                                                         \
+  }
+
  /* */
 
 FT_END_HEADER

@@ -1,3 +1,9 @@
+2005-05-23  David Turner  <dturner@freetype.org>
+
+    * include/freetype/cache/ftcache.h, src/cache/ftccache.c,
+    src/cache/ftcsbits.c: fixing bug #12213 (incorrect behaviour
+    of the cache sub-system in low-memory conditions).
+
 2005-05-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/rules.mk (BASE_SRC): Don't add ftsynth.c here but...
@@ -194,7 +200,7 @@
 	* include/freetype/internal/ftserv.h: Add compiler pragmas to get
 	rid of annoying warnings with Visual C++ compiler in maximum warning
 	mode.
-    
+
 	* src/autofit/afhints.c, src/autofit/aflatin.c, src/base/ftstroke.c,
 	src/bdf/bdfdrivr.c, src/cache/ftcbasic.c, src/cache/ftccmap.c,
 	src/cache/ftcmanag.c, src/cff/cffload.c, src/cid/cidload.c,
