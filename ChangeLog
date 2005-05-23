@@ -1,3 +1,8 @@
+2005-05-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/rules.mk (BASE_SRC): Don't add ftsynth.c here but...
+	(BASE_EXT_SRC): Here.
+
 2005-05-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftrfork.c (raccess_guess_apple_generic): Mark
