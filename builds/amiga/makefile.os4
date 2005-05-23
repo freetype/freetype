@@ -41,7 +41,7 @@ RANLIB = ppc-amigaos-ranlib
 DIRFLAGS  = -Iinclude -I/FT/src -I/FT/include -I/SDK/include
 
 WARNINGS = -Wall -W -Wundef -Wpointer-arith -Wbad-function-cast \
-	   -Waggregate-return -Wshadow -fno-strict-aliasing
+	   -Waggregate-return -Wshadow
 
 CPU      = -mcpu=604e
 

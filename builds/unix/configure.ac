@@ -28,7 +28,7 @@ AC_PROG_CPP
 # get compiler flags right
 
 if test "x$CC" = xgcc; then
-  XX_CFLAGS="-Wall -fno-strict-aliasing"
+  XX_CFLAGS="-Wall"
   XX_ANSIFLAGS="-pedantic -ansi"
 else
   case "$host" in

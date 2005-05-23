@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType internal cache interface (body).                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -424,12 +424,14 @@
     FT_Error  error;
     FTC_Node  node;
 
-   /* we use the FTC_CACHE_TRYLOOP macros in order to
-    * support out-of-memory error (OOM) correctly, i.e.
-    * by flushing the cache progressively in order to
-    * make more room
-    */
-    FTC_CACHE_TRYLOOP(cache)
+
+    /*
+     * We use the FTC_CACHE_TRYLOOP macros to support out-of-memory
+     * errors (OOM) correctly, i.e., by flushing the cache progressively
+     * in order to make more room.
+     */
+
+    FTC_CACHE_TRYLOOP( cache )
     {
       error = cache->clazz.node_new( &node, query, cache );
     }

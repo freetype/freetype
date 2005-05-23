@@ -290,43 +290,53 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_MEMORY
 
-#define FT_MEM_ALLOC( _pointer_, _size_ )                            \
-          FT_Alloc_Debug( memory, _size_,                            \
-                          (void**)&(_pointer_), __FILE__, __LINE__ )
+#define FT_MEM_ALLOC( _pointer_, _size_ )              \
+          FT_Alloc_Debug( memory, _size_,              \
+                          (void**)(void*)&(_pointer_), \
+                          __FILE__, __LINE__ )
 
-#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )                 \
-          FT_Realloc_Debug( memory, _current_, _size_,                 \
-                            (void**)&(_pointer_), __FILE__, __LINE__ )
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )   \
+          FT_Realloc_Debug( memory, _current_, _size_,   \
+                            (void**)(void*)&(_pointer_), \
+                            __FILE__, __LINE__ )
 
-#define FT_MEM_QALLOC( _pointer_, _size_ )                            \
-          FT_QAlloc_Debug( memory, _size_,                            \
-                           (void**)&(_pointer_), __FILE__, __LINE__ )
+#define FT_MEM_QALLOC( _pointer_, _size_ )              \
+          FT_QAlloc_Debug( memory, _size_,              \
+                           (void**)(void*)&(_pointer_), \
+                           __FILE__, __LINE__ )
 
-#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )                 \
-          FT_QRealloc_Debug( memory, _current_, _size_,                 \
-                             (void**)&(_pointer_), __FILE__, __LINE__ )
+#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )   \
+          FT_QRealloc_Debug( memory, _current_, _size_,   \
+                             (void**)(void*)&(_pointer_), \
+                             __FILE__, __LINE__ )
 
-#define FT_MEM_FREE( _pointer_ )                                            \
-          FT_Free_Debug( memory, (void**)&(_pointer_), __FILE__, __LINE__ )
+#define FT_MEM_FREE( _pointer_ )                              \
+          FT_Free_Debug( memory, (void**)(void*)&(_pointer_), \
+                         __FILE__, __LINE__ )
 
 
 #else  /* !FT_DEBUG_MEMORY */
 
 
-#define FT_MEM_ALLOC( _pointer_, _size_ )                  \
-          FT_Alloc( memory, _size_, (void**)&(_pointer_) )
+#define FT_MEM_ALLOC( _pointer_, _size_ )         \
+          FT_Alloc( memory, _size_,               \
+                    (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_FREE( _pointer_ )                  \
-          FT_Free( memory, (void**)&(_pointer_) )
+#define FT_MEM_FREE( _pointer_ )                 \
+          FT_Free( memory,                       \
+                   (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )                  \
-          FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ ) \
+          FT_Realloc( memory, _current_, _size_,       \
+                      (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_QALLOC( _pointer_, _size_ )                  \
-          FT_QAlloc( memory, _size_, (void**)&(_pointer_) )
+#define FT_MEM_QALLOC( _pointer_, _size_ )         \
+          FT_QAlloc( memory, _size_,               \
+                     (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )                  \
-          FT_QRealloc( memory, _current_, _size_, (void**)&(_pointer_) )
+#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ ) \
+          FT_QRealloc( memory, _current_, _size_,       \
+          (void**)(void*)&(_pointer_) )
 
 #endif /* !FT_DEBUG_MEMORY */
 
@@ -337,7 +347,7 @@ FT_BEGIN_HEADER
   /* _typed_ in order to automatically compute array element sizes.        */
   /*                                                                       */
 
-#define FT_MEM_NEW( _pointer_ )                               \
+#define FT_MEM_NEW( _pointer_ )                              \
           FT_MEM_ALLOC( _pointer_, sizeof ( *(_pointer_) ) )
 
 #define FT_MEM_NEW_ARRAY( _pointer_, _count_ )                           \
@@ -347,7 +357,7 @@ FT_BEGIN_HEADER
           FT_MEM_REALLOC( _pointer_, (_old_) * sizeof ( *(_pointer_) ),  \
                                      (_new_) * sizeof ( *(_pointer_) ) )
 
-#define FT_MEM_QNEW( _pointer_ )                               \
+#define FT_MEM_QNEW( _pointer_ )                              \
           FT_MEM_QALLOC( _pointer_, sizeof ( *(_pointer_) ) )
 
 #define FT_MEM_QNEW_ARRAY( _pointer_, _count_ )                           \

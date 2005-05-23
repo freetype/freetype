@@ -1,8 +1,49 @@
+2005-05-23  Werner Lemberg  <wl@gnu.org>
+
+	* builds/amiga/makefile.os4 (WARNINGS), builds/compiler/gcc-dev.mk
+	(CFLAGS), builds/compiler/gcc.mk (CFLAGS): Remove
+	-fno-strict-aliasing.
+
+2005-05-23  Behdad Esfahbod  <behdad@cs.toronto.edu>
+
+	Say you have `(Foo*)x' and want to assign, pass, or return it as
+	`(Bar*)'.  If you simply say `x' or `(Bar*)x', then the C compiler
+	would warn you that type casting incompatible pointer types breaks
+	strict-aliasing.  The solution is to cast to `(void*)' instead which
+	is the generic pointer type, so the compiler knows that it should
+	make no strict-aliasing assumption on `x'.  But the problem with
+	`(void*)x' is that seems like in C++, unlike C, `void*' is not a
+	generic pointer type and assigning `void*' to `Bar*' without a cast
+	causes an error.  The solution is to cast to `Bar*' too, with
+	`(Bar*)(void*)x' as the result -- this is what the patch does.
+
+	* include/freetype/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP),
+	include/freetype/cache/ftcmru.h (FTC_MRULIST_LOOKUP_CMP): Remove
+	cast on lvalue, use a temporary pointer instead.
+	Cast temporarily to (void*) to not break strict aliasing.
+
+	* include/freetype/internal/ftmemory.h (FT_MEM_ALLOC,
+	FT_MEM_REALLOC, FT_MEM_QALLOC, FT_MEM_QREALLOC, FT_MEM_FREE),
+	src/base/ftglyph.c (FT_Glyph_To_Bitmap): Cast temporarily to (void*)
+	to not break strict aliasing.
+
+	* src/base/ftinit.c (FT_USE_MODULE): Fix wrong type information.
+
+	* builds/unix/configure.ac (XX_CFLAGS): Remove -fno-strict-aliasing.
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Don't include ttsbit0.c --
+	it is currently loaded from ttsbit.c.
+
 2005-05-23  David Turner  <dturner@freetype.org>
 
-    * include/freetype/cache/ftcache.h, src/cache/ftccache.c,
-    src/cache/ftcsbits.c: fixing bug #12213 (incorrect behaviour
-    of the cache sub-system in low-memory conditions).
+	Fix Savannah bug #12213 (incorrect behaviour of the cache sub-system
+	in low-memory conditions).
+
+	* include/freetype/cache/ftccache.h (FTC_CACHE_TRYLOOP,
+	FTC_CACHE_TRYLOOP_END): New macros.
+
+	* src/cache/ftccache.c (FTC_Cache_NewNode), src/cache/ftcsbits.c
+	(ftc_snode_compare): Use FT_CACHE_TRYLOOP and FTC_CACE_TRYLOOP_END.
 
 2005-05-23  Werner Lemberg  <wl@gnu.org>
 
