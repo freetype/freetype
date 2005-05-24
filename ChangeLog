@@ -4,6 +4,8 @@
 	builds/unix/unix-cc.mk.  This fixes repeated calls of the script.
 	Reported by Nelson Beebe and Behdad Esfahbod.
 
+	* README.CVS: Mention file permissions.
+
 2005-05-23  Werner Lemberg  <wl@gnu.org>
 
 	* builds/amiga/makefile.os4 (WARNINGS), builds/compiler/gcc-dev.mk
