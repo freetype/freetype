@@ -1,3 +1,9 @@
+2005-05-24  Werner Lemberg  <wl@gnu.org>
+
+	* configure: Always remove config.mk, builds/unix/unix-def.mk, and
+	builds/unix/unix-cc.mk.  This fixes repeated calls of the script.
+	Reported by Nelson Beebe and Behdad Esfahbod.
+
 2005-05-23  Werner Lemberg  <wl@gnu.org>
 
 	* builds/amiga/makefile.os4 (WARNINGS), builds/compiler/gcc-dev.mk
