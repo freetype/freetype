@@ -94,6 +94,188 @@
   }
 
 
+  static FT_Error
+  ft_bitmap_assure_buffer( FT_Memory   memory,
+                           FT_Bitmap*  bitmap,
+                           FT_UInt     xpixels,
+                           FT_UInt     ypixels )
+  {
+    FT_Error        error;
+    int             pitch;
+    int             new_pitch;
+    FT_UInt         ppb;
+    FT_Int          i;
+    unsigned char*  buffer;
+
+
+    pitch = bitmap->pitch;
+    if ( pitch < 0 )
+      pitch = -pitch;
+
+    switch ( bitmap->pixel_mode )
+    {
+    case FT_PIXEL_MODE_MONO:
+      ppb = 8;
+      break;
+    case FT_PIXEL_MODE_GRAY2:
+      ppb = 4;
+      break;
+    case FT_PIXEL_MODE_GRAY4:
+      ppb = 2;
+      break;
+    case FT_PIXEL_MODE_GRAY:
+      ppb = 1;
+      break;
+    default:
+      return FT_Err_Invalid_Glyph_Format;
+    }
+
+    /* check whether we must allocate memory */
+    if ( ypixels == 0 && pitch * ppb >= bitmap->width + xpixels )
+      return FT_Err_Ok;
+
+    new_pitch = ( bitmap->width + xpixels + ppb - 1 ) / ppb;
+
+    if ( FT_ALLOC( buffer, new_pitch * ( bitmap->rows + ypixels ) ) )
+      return error;
+
+    if ( bitmap->pitch > 0 )
+    {
+      for ( i = 0; i < bitmap->rows; i++ )
+        FT_MEM_COPY( buffer + new_pitch * ( ypixels + i ),
+                     bitmap->buffer + pitch * i, pitch );
+    }
+    else
+    {
+      for ( i = 0; i < bitmap->rows; i++ )
+        FT_MEM_COPY( buffer + new_pitch * i,
+                     bitmap->buffer + pitch * i, pitch );
+    }
+
+    FT_FREE( bitmap->buffer );
+    bitmap->buffer = buffer;
+
+    if ( bitmap->pitch < 0 )
+      new_pitch = -new_pitch;
+
+    /* set pitch only */
+    bitmap->pitch = new_pitch;
+
+    return FT_Err_Ok;
+  }
+
+
+  /* documentation is in ftbitmap.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Bitmap_Embolden( FT_Library  library,
+                      FT_Bitmap*  bitmap,
+                      FT_Pos      xStrength,
+                      FT_Pos      yStrength )
+  {
+    FT_Error        error;
+    unsigned char*  p;
+    FT_Int          i, x, y, pitch;
+    FT_Int          xstr, ystr;
+
+
+    if ( !library )
+      return FT_Err_Invalid_Library_Handle;
+
+    if ( !bitmap )
+      return FT_Err_Invalid_Argument;
+
+    switch ( bitmap->pixel_mode )
+    {
+    case FT_PIXEL_MODE_GRAY2:
+    case FT_PIXEL_MODE_GRAY4:
+      return FT_Err_Invalid_Glyph_Format;
+    }
+
+    xstr = FT_PIX_ROUND( xStrength ) >> 6;
+    ystr = FT_PIX_ROUND( yStrength ) >> 6;
+
+    if ( xstr == 0 && ystr == 0 )
+      return FT_Err_Ok;
+    else if ( xstr < 0 || ystr < 0 || xstr > 8 )
+      return FT_Err_Invalid_Argument;
+
+    error = ft_bitmap_assure_buffer( library->memory, bitmap, xstr, ystr );
+    if ( error )
+      return error;
+
+    pitch = bitmap->pitch;
+    if ( pitch > 0 )
+      p = bitmap->buffer + pitch * ystr;
+    else
+    {
+      pitch = -pitch;
+      p = bitmap->buffer + pitch * ( bitmap->rows - ystr - 1 );
+    }
+
+    /* for each row */
+    for ( y = 0; y < bitmap->rows ; y++ )
+    {
+      /* 
+       * Horizontally:
+       *
+       * From the last pixel on, make each pixel or'ed with the
+       * `xstr' pixels before it.
+       */
+      for ( x = pitch - 1; x >= 0; x-- )
+      {
+        unsigned char tmp;
+
+
+        tmp = p[x];
+        for ( i = 1; i <= xstr; i++ )
+        {
+          if ( bitmap->pixel_mode == FT_PIXEL_MODE_MONO )
+          {
+            p[x] |= tmp >> i;
+
+            /* the maximum value of 8 for `xstr' comes from here */
+            if ( x > 0 )
+              p[x] |= p[x - 1] << ( 8 - i );
+          }
+          else if ( bitmap->pixel_mode == FT_PIXEL_MODE_GRAY )
+          {
+            if ( x - i >= 0 )
+            {
+              if ( p[x] + p[x - i] > 0xff )
+                p[x] = 0xff;
+              else
+                p[x] += p[x - i];
+            }
+          }
+        }
+      }
+
+      /* 
+       * Vertically:
+       *
+       * Make the above `ystr' rows or'ed with it.
+       */
+      for ( x = 1; x <= ystr; x++ )
+      {
+        unsigned char*  q;
+
+
+        q = p - bitmap->pitch * x;
+        for ( i = 0; i < pitch; i++ )
+          q[i] |= p[i];
+      }
+
+      p += bitmap->pitch;
+    }
+
+    bitmap->width += xstr;
+    bitmap->rows += ystr;
+
+    return FT_Err_Ok;
+  }
+
+
   /* documentation is in ftbitmap.h */
 
   FT_EXPORT_DEF( FT_Error )

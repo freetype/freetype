@@ -58,6 +58,7 @@ FT_BEGIN_HEADER
   /*    FT_Outline_Copy                                                    */
   /*    FT_Outline_Translate                                               */
   /*    FT_Outline_Transform                                               */
+  /*    FT_Outline_Embolden                                                */
   /*    FT_Outline_Reverse                                                 */
   /*    FT_Outline_Check                                                   */
   /*                                                                       */
@@ -301,6 +302,31 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Outline_Transform( const FT_Outline*  outline,
                         const FT_Matrix*   matrix );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Outline_Embolden                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Emboldens an outline.  The new outline will be at most 4 times     */
+  /*    `strength' pixels wider and higher.  You may think of the left and */
+  /*    bottom borders as unchanged.                                       */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    outline  :: A handle to the target outline.                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    strength :: How strong the glyph is emboldened.  Expressed in      */
+  /*                16.16 pixel format.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT_DEF( FT_Error )
+  FT_Outline_Embolden( FT_Outline*  outline,
+                       FT_Pos       strength );
 
 
   /*************************************************************************/

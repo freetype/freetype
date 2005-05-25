@@ -92,6 +92,42 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    FT_Bitmap_Embolden                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Emboldens a bitmap.  The new bitmap will be about `xStrength'      */
+  /*    pixels wider and `yStrength' pixels higher.  The left and bottom   */
+  /*    borders are kept unchanged.                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library   :: A handle to a library object.                         */
+  /*                                                                       */
+  /*    xStrength :: How strong the glyph is emboldened horizontally.      */
+  /*                 Expressed in 16.16 pixel format.                      */
+  /*                                                                       */
+  /*    yStrength :: How strong the glyph is emboldened vertically.        */
+  /*                 Expressed in 16.16 pixel format.                      */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    bitmap    :: A handle to the target bitmap.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The current implementation restricts `xStrength' to be less than   */
+  /*    or equal to 8.                                                     */
+  /*                                                                       */
+  FT_EXPORT_DEF( FT_Error )
+  FT_Bitmap_Embolden( FT_Library  library,
+                      FT_Bitmap*  bitmap,
+                      FT_Pos      xStrength,
+                      FT_Pos      yStrength );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    FT_Bitmap_Convert                                                  */
   /*                                                                       */
   /* <Description>                                                         */
