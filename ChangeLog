@@ -1,5 +1,26 @@
 2005-05-24  Werner Lemberg  <wl@gnu.org>
 
+	* docs/CHANGES: Updated.
+
+2005-05-24  Chia I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/ftbitmap.h (FT_Bitmap_Embolden): New declaration.
+
+	* include/freetype/ftoutln.h (FT_Outline_Embolden): New declaration.
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): New auxiliary
+	function.
+	(FT_Bitmap_Embolden): New function.
+
+	* src/base/ftoutln.c (FT_Outline_Embolden): New function.
+
+	* src/base/ftsynth.c: Don't include FT_INTERNAL_CALC_H and
+	FT_TRIGONOMETRY_H but FT_BITMAP_H.
+	(FT_GlyphSlot_Embolden): Use FT_Outline_Embolden or
+	FT_Bitmap_Embolden.
+
+2005-05-24  Werner Lemberg  <wl@gnu.org>
+
 	* configure: Always remove config.mk, builds/unix/unix-def.mk, and
 	builds/unix/unix-cc.mk.  This fixes repeated calls of the script.
 	Reported by Nelson Beebe and Behdad Esfahbod.

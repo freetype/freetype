@@ -670,6 +670,89 @@
 
   /* documentation is in ftoutln.h */
 
+  FT_EXPORT_DEF( FT_Error )
+  FT_Outline_Embolden( FT_Outline*  outline,
+                       FT_Pos       strength )
+  {
+    FT_Vector*  points;
+    FT_Vector   v_prev, v_first, v_next, v_cur;
+    FT_Angle    rotate, angle_in, angle_out;
+    FT_Int      c, n, first;
+
+
+    if ( !outline )
+      return FT_Err_Invalid_Argument;
+
+    if ( strength == 0 )
+      return FT_Err_Ok;
+
+    if ( FT_Outline_Get_Orientation( outline ) == FT_ORIENTATION_TRUETYPE )
+      rotate = -FT_ANGLE_PI2;
+    else
+      rotate = FT_ANGLE_PI2;
+
+    points = outline->points;
+
+    first = 0;
+    for ( c = 0; c < outline->n_contours; c++ )
+    {
+      int  last = outline->contours[c];
+
+
+      v_first = points[first];
+      v_prev  = points[last];
+      v_cur   = v_first;
+
+      for ( n = first; n <= last; n++ )
+      {
+        FT_Vector  in, out;
+        FT_Angle   angle_diff;
+        FT_Pos     d;
+        FT_Fixed   scale;
+
+
+        if ( n < last )
+          v_next = points[n + 1];
+        else
+          v_next = v_first;
+
+        /* compute the in and out vectors */
+        in.x = v_cur.x - v_prev.x;
+        in.y = v_cur.y - v_prev.y;
+
+        out.x = v_next.x - v_cur.x;
+        out.y = v_next.y - v_cur.y;
+
+        angle_in   = FT_Atan2( in.x, in.y );
+        angle_out  = FT_Atan2( out.x, out.y );
+        angle_diff = FT_Angle_Diff( angle_in, angle_out );
+        scale      = FT_Cos( angle_diff / 2 );
+
+        if ( scale < 0x4000L && scale > -0x4000L )
+          in.x = in.y = 0;
+        else
+        {
+          d = FT_DivFix( strength, scale );
+
+          FT_Vector_From_Polar( &in, d, angle_in + angle_diff / 2 - rotate );
+        }
+
+        outline->points[n].x = v_cur.x + strength + in.x;
+        outline->points[n].y = v_cur.y + strength + in.y;
+
+        v_prev = v_cur;
+        v_cur  = v_next;
+      }
+
+      first = last + 1;
+    }
+
+    return FT_Err_Ok;
+  }
+
+
+  /* documentation is in ftoutln.h */
+
   FT_EXPORT_DEF( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline )
   {
