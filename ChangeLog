@@ -1,3 +1,16 @@
+2005-05-26  Werner Lemberg  <wl@gnu.org>
+
+	* docs/GPL.txt: Update postal address of FSF.
+
+2005-05-26  Chia I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/ftbitmap.h (FT_Bitmap_Embolden): Improve
+	documentation.
+
+	* src/base/ftsynth.c (FT_BOLD_THRESHOLD): Removed.
+	(FT_GlyphSlot_Embolden): Check whether slot is bitmap owner.
+	Always modify the metrics.
+
 2005-05-24  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
