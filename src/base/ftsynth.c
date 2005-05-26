@@ -23,9 +23,6 @@
 #include FT_BITMAP_H
 
 
-#define FT_BOLD_THRESHOLD  0x0100
-
-
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -90,7 +87,7 @@
     if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
     {
       error = FT_Outline_Embolden( &slot->outline, xstr );
-      xstr = ( xstr * 4 ) & ~63;
+      xstr = xstr * 4 ; /* according to the documentation */
       ystr = xstr;
     }
     else if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
@@ -100,25 +97,41 @@
         xstr = 1 << 6;
       ystr = FT_PIX_FLOOR( ystr );
 
-      error = FT_Bitmap_Embolden( library, &slot->bitmap, xstr, ystr );
+      /* slot must be bitmap-owner */
+      if ( !( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
+      {
+        FT_Bitmap  bitmap;
 
-      /* XXX should we set these? */
+
+        FT_Bitmap_New( &bitmap );
+        error = FT_Bitmap_Copy( library, &slot->bitmap, &bitmap );
+
+        if ( !error )
+        {
+          slot->bitmap = bitmap;
+          slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
+        }
+      }
+
       if ( !error )
-        slot->bitmap_top += ystr >> 6;
+        error = FT_Bitmap_Embolden( library, &slot->bitmap, xstr, ystr );
     }
     else
       error = FT_Err_Invalid_Argument;
 
-    /* XXX should we set these? */
+    /* modify the metrics accordingly */
     if ( !error )
     {
-#if 0
-      slot->advance.x            += xstr;
       slot->metrics.width        += xstr;
       slot->metrics.height       += ystr;
       slot->metrics.horiBearingY += ystr;
-#endif
       slot->metrics.horiAdvance  += xstr;
+      slot->metrics.vertBearingX -= xstr / 2;
+      slot->metrics.vertBearingY += ystr;
+      slot->metrics.vertAdvance  += ystr;
+
+      if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+        slot->bitmap_top += ystr >> 6;
     }
   }
 

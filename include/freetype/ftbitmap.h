@@ -118,6 +118,10 @@ FT_BEGIN_HEADER
   /*    The current implementation restricts `xStrength' to be less than   */
   /*    or equal to 8.                                                     */
   /*                                                                       */
+  /*    Don't embolden the bitmap owned by a @FT_GlyphSlot directly!  Call */
+  /*    @FT_Bitmap_Copy to get a copy and work on the copy instead.        */
+  /*                                                                       */
+  /*                                                                       */
   FT_EXPORT_DEF( FT_Error )
   FT_Bitmap_Embolden( FT_Library  library,
                       FT_Bitmap*  bitmap,
