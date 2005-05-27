@@ -75,10 +75,12 @@ FT_BEGIN_HEADER
   /*    Copies an bitmap into another one.                                 */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    source :: A handle to the source bitmap.                           */
+  /*    library :: A handle to a library object.                           */
+  /*                                                                       */
+  /*    source  :: A handle to the source bitmap.                          */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    target :: A handle to the target bitmap.                           */
+  /*    target  :: A handle to the target bitmap.                          */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
