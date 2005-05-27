@@ -159,7 +159,7 @@ FT_BEGIN_HEADER
                FT_CharMap     charmap,
                FT_CMap       *acmap );
 
-  /* destroy a charmap (don't remove it from face's list though) */
+  /* destroy a charmap and remove it from face's list */
   FT_BASE( void )
   FT_CMap_Done( FT_CMap  cmap );
 
