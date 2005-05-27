@@ -1,3 +1,7 @@
+2005-05-27  Chia I Wu  <b90201047@ntu.edu.tw>
+
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Initialize `error'.
+
 2005-05-26  Werner Lemberg  <wl@gnu.org>
 
 	* docs/GPL.txt: Update postal address of FSF.

@@ -75,8 +75,8 @@
   {
     FT_Library  library = slot->library;
     FT_Face     face    = FT_SLOT_FACE( slot );
+    FT_Error    error   = FT_Err_Ok;
     FT_Pos      xstr, ystr;
-    FT_Error    error;
 
 
     /* some reasonable strength */
@@ -87,7 +87,7 @@
     if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
     {
       error = FT_Outline_Embolden( &slot->outline, xstr );
-      xstr = xstr * 4 ; /* according to the documentation */
+      xstr = xstr * 4;  /* according to the documentation */
       ystr = xstr;
     }
     else if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
