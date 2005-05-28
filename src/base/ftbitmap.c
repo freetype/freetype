@@ -115,6 +115,8 @@
     switch ( bitmap->pixel_mode )
     {
     case FT_PIXEL_MODE_MONO:
+    case FT_PIXEL_MODE_LCD:
+    case FT_PIXEL_MODE_LCD_V:
       ppb = 8;
       break;
     case FT_PIXEL_MODE_GRAY2:
@@ -210,7 +212,7 @@
     else
     {
       pitch = -pitch;
-      p = bitmap->buffer + pitch * ( bitmap->rows - ystr - 1 );
+      p = bitmap->buffer + pitch * ( bitmap->rows - 1 );
     }
 
     /* for each row */
@@ -237,16 +239,30 @@
             /* the maximum value of 8 for `xstr' comes from here */
             if ( x > 0 )
               p[x] |= p[x - 1] << ( 8 - i );
+
+#if 0
+            if ( p[x] == 0xff )
+              break;
+#endif
           }
           else if ( bitmap->pixel_mode == FT_PIXEL_MODE_GRAY )
           {
             if ( x - i >= 0 )
             {
-              if ( p[x] + p[x - i] > 0xff )
-                p[x] = 0xff;
+              if ( p[x] + p[x - i] > bitmap->num_grays )
+              {
+                p[x] = bitmap->num_grays;
+                break;
+              }
               else
+              {
                 p[x] += p[x - i];
+                if ( p[x] == bitmap->num_grays )
+                  break;
+              }
             }
+            else
+              break;
           }
         }
       }
