@@ -1,3 +1,15 @@
+2005-05-30  Chia I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/ftbitmap.h (FT_Bitmap_Embolden): Minor
+	documentation improvements.
+
+	* include/freetype/ftoutln.h (FT_Outline_Embolden): Fix typos.
+
+	* src/base/ftbitmap.c (FT_Bitmap_Embolden): Add support for bitmap
+	of pixel_mode FT_PIXEL_MODE_GRAY2 or FT_PIXEL_MODE_GRAY4.
+	If xstr is larger than 8 and bitmap is of pixel_mode
+	FT_PIXEL_MODE_MONO, set xstr to 8 instead of returning error.
+
 2005-05-29  Chia I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftbitmap.c (FT_Bitmap_Embolden): Fix emboldening bitmap

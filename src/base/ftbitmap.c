@@ -211,29 +211,55 @@
     if ( !library )
       return FT_Err_Invalid_Library_Handle;
 
-    if ( !bitmap )
+    if ( !bitmap || !bitmap->buffer )
       return FT_Err_Invalid_Argument;
 
     xstr = FT_PIX_ROUND( xStrength ) >> 6;
     ystr = FT_PIX_ROUND( yStrength ) >> 6;
 
+    if ( xstr == 0 && ystr == 0 )
+      return FT_Err_Ok;
+    else if ( xstr < 0 || ystr < 0 )
+      return FT_Err_Invalid_Argument;
+
     switch ( bitmap->pixel_mode )
     {
     case FT_PIXEL_MODE_GRAY2:
     case FT_PIXEL_MODE_GRAY4:
-      return FT_Err_Invalid_Glyph_Format;
+      {
+        FT_Bitmap  tmp;
+        FT_Int     align;
+
+
+        if ( bitmap->pixel_mode == FT_PIXEL_MODE_GRAY2 )
+          align = ( bitmap->width + xstr + 3 ) / 4;
+        else
+          align = ( bitmap->width + xstr + 1 ) / 2;
+
+        FT_Bitmap_New( &tmp );
+        error = FT_Bitmap_Convert( library, bitmap, &tmp, align );
+
+        if ( error )
+          return error;
+
+        FT_Bitmap_Done( library, bitmap );
+        *bitmap = tmp;
+      }
+      break;
+
+    case FT_PIXEL_MODE_MONO:
+      if ( xstr > 8 )
+        xstr = 8;
+      break;
+
     case FT_PIXEL_MODE_LCD:
       xstr *= 3;
       break;
+
     case FT_PIXEL_MODE_LCD_V:
       ystr *= 3;
       break;
     }
-
-    if ( xstr == 0 && ystr == 0 )
-      return FT_Err_Ok;
-    else if ( xstr < 0 || ystr < 0 || xstr > 8 )
-      return FT_Err_Invalid_Argument;
 
     error = ft_bitmap_assure_buffer( library->memory, bitmap, xstr, ystr );
     if ( error )

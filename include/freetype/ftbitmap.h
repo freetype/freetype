@@ -97,7 +97,7 @@ FT_BEGIN_HEADER
   /*    FT_Bitmap_Embolden                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Emboldens a bitmap.  The new bitmap will be about `xStrength'      */
+  /*    Embolden a bitmap.  The new bitmap will be about `xStrength'       */
   /*    pixels wider and `yStrength' pixels higher.  The left and bottom   */
   /*    borders are kept unchanged.                                        */
   /*                                                                       */
@@ -105,10 +105,10 @@ FT_BEGIN_HEADER
   /*    library   :: A handle to a library object.                         */
   /*                                                                       */
   /*    xStrength :: How strong the glyph is emboldened horizontally.      */
-  /*                 Expressed in 16.16 pixel format.                      */
+  /*                 Expressed in 26.6 pixel format.                       */
   /*                                                                       */
   /*    yStrength :: How strong the glyph is emboldened vertically.        */
-  /*                 Expressed in 16.16 pixel format.                      */
+  /*                 Expressed in 26.6 pixel format.                       */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    bitmap    :: A handle to the target bitmap.                        */
@@ -118,11 +118,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    The current implementation restricts `xStrength' to be less than   */
-  /*    or equal to 8.                                                     */
+  /*    or equal to 8 if bitmap is of pixel_mode @FT_PIXEL_MODE_MONO.      */
   /*                                                                       */
   /*    Don't embolden the bitmap owned by a @FT_GlyphSlot directly!  Call */
   /*    @FT_Bitmap_Copy to get a copy and work on the copy instead.        */
-  /*                                                                       */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )
   FT_Bitmap_Embolden( FT_Library  library,

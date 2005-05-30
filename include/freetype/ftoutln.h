@@ -319,7 +319,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Input>                                                               */
   /*    strength :: How strong the glyph is emboldened.  Expressed in      */
-  /*                16.16 pixel format.                                    */
+  /*                26.6 pixel format.                                     */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
