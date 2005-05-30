@@ -81,7 +81,7 @@
 
     /* some reasonable strength */
     xstr = FT_MulFix( face->units_per_EM,
-                      face->size->metrics.y_scale ) / 32;
+                      face->size->metrics.y_scale ) / 42;
     ystr = xstr;
 
     if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
@@ -122,6 +122,9 @@
     /* modify the metrics accordingly */
     if ( !error )
     {
+      slot->advance.x += xstr;
+      slot->advance.y += ystr;
+
       slot->metrics.width        += xstr;
       slot->metrics.height       += ystr;
       slot->metrics.horiBearingY += ystr;
