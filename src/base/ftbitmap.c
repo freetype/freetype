@@ -115,8 +115,6 @@
     switch ( bitmap->pixel_mode )
     {
     case FT_PIXEL_MODE_MONO:
-    case FT_PIXEL_MODE_LCD:
-    case FT_PIXEL_MODE_LCD_V:
       ppb = 8;
       break;
     case FT_PIXEL_MODE_GRAY2:
@@ -126,15 +124,44 @@
       ppb = 2;
       break;
     case FT_PIXEL_MODE_GRAY:
+    case FT_PIXEL_MODE_LCD:
+    case FT_PIXEL_MODE_LCD_V:
       ppb = 1;
       break;
     default:
       return FT_Err_Invalid_Glyph_Format;
     }
 
-    /* check whether we must allocate memory */
+    /* if no need to allocate memory */
     if ( ypixels == 0 && pitch * ppb >= bitmap->width + xpixels )
+    {
+      /* zero the padding */
+      for ( i = 0; i < bitmap->rows; i++ )
+      {
+        unsigned char*  last_byte;
+        int             bits = xpixels * ( 8 / ppb );
+        int             mask = 0;
+
+
+        last_byte = bitmap->buffer + i * pitch + ( bitmap->width - 1 ) / ppb;
+
+        if ( bits >= 8 )
+        {
+          FT_MEM_ZERO( last_byte + 1, bits / 8 );
+          bits %= 8;
+        }
+
+        if ( bits > 0 )
+        {
+          while ( bits-- > 0 )
+            mask |= 1 << bits;
+
+          *last_byte &= ~mask;
+        }
+      }
+
       return FT_Err_Ok;
+    }
 
     new_pitch = ( bitmap->width + xpixels + ppb - 1 ) / ppb;
 
@@ -187,15 +214,21 @@
     if ( !bitmap )
       return FT_Err_Invalid_Argument;
 
+    xstr = FT_PIX_ROUND( xStrength ) >> 6;
+    ystr = FT_PIX_ROUND( yStrength ) >> 6;
+
     switch ( bitmap->pixel_mode )
     {
     case FT_PIXEL_MODE_GRAY2:
     case FT_PIXEL_MODE_GRAY4:
       return FT_Err_Invalid_Glyph_Format;
+    case FT_PIXEL_MODE_LCD:
+      xstr *= 3;
+      break;
+    case FT_PIXEL_MODE_LCD_V:
+      ystr *= 3;
+      break;
     }
-
-    xstr = FT_PIX_ROUND( xStrength ) >> 6;
-    ystr = FT_PIX_ROUND( yStrength ) >> 6;
 
     if ( xstr == 0 && ystr == 0 )
       return FT_Err_Ok;
@@ -245,19 +278,19 @@
               break;
 #endif
           }
-          else if ( bitmap->pixel_mode == FT_PIXEL_MODE_GRAY )
+          else
           {
             if ( x - i >= 0 )
             {
-              if ( p[x] + p[x - i] > bitmap->num_grays )
+              if ( p[x] + p[x - i] > bitmap->num_grays - 1 )
               {
-                p[x] = bitmap->num_grays;
+                p[x] = bitmap->num_grays - 1;
                 break;
               }
               else
               {
                 p[x] += p[x - i];
-                if ( p[x] == bitmap->num_grays )
+                if ( p[x] == bitmap->num_grays - 1 )
                   break;
               }
             }
