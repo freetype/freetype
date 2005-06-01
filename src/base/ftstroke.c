@@ -868,7 +868,7 @@
   {
     FT_StrokeBorder  border = stroker->borders + side;
     FT_Angle         phi, theta, rotate;
-    FT_Fixed         length, thcos;
+    FT_Fixed         length, thcos, sigma;
     FT_Vector        delta;
     FT_Error         error = 0;
 
@@ -884,10 +884,11 @@
 
     phi = stroker->angle_in + theta;
 
-    thcos  = FT_Cos( theta );
+    thcos = FT_Cos( theta );
+    sigma = FT_MulFix( stroker->miter_limit, thcos );
 
     /* TODO: find better criterion to switch off the optimization */
-    if ( thcos < 0x4000 )
+    if ( sigma < 0x10000L )
     {
       FT_Vector_From_Polar( &delta, stroker->radius,
                             stroker->angle_out + rotate );
