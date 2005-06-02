@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for validating OpenType tables (specification).         */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -12,6 +12,17 @@
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+/***************************************************************************/
+/*                                                                         */
+/*                                                                         */
+/* Warning: This module might be moved to a different library in the       */
+/*          future to avoid a tight dependency between FreeType and the    */
+/*          OpenType specification.                                        */
+/*                                                                         */
 /*                                                                         */
 /***************************************************************************/
 

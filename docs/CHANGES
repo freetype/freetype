@@ -59,6 +59,10 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       JSTF).   After validation  it is  no longer  necessary to  check
       for errors in those tables while accessing them.
 
+      Note that  this module might  be moved to another library in the
+      future  to avoid  a tight  dependency between  FreeType and  the
+      OpenType specification.
+
     - A new API in FT_BITMAP_H  (`FT_Bitmap_New', `FT_Bitmap_Convert',
       `FT_Bitmap_Copy',  `FT_Bitmap_Embolden',  `FT_Bitmap_Done')  has
       been added.   Its  use is  to convert an  FT_Bitmap structure in
