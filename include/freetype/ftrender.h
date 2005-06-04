@@ -46,9 +46,9 @@ FT_BEGIN_HEADER
   (*FT_Glyph_DoneFunc)( FT_Glyph  glyph );
 
   typedef void
-  (*FT_Glyph_TransformFunc)( FT_Glyph          glyph,
-                             const FT_Matrix*  matrix,
-                             const FT_Vector*  delta );
+  (*FT_Glyph_TransformFunc)( FT_Glyph    glyph,
+                             FT_Matrix*  matrix,
+                             FT_Vector*  delta );
 
   typedef void
   (*FT_Glyph_GetBBoxFunc)( FT_Glyph  glyph,
@@ -85,16 +85,16 @@ FT_BEGIN_HEADER
 
 
   typedef FT_Error
-  (*FT_Renderer_RenderFunc)( FT_Renderer       renderer,
-                             FT_GlyphSlot      slot,
-                             FT_UInt           mode,
-                             const FT_Vector*  origin );
+  (*FT_Renderer_RenderFunc)( FT_Renderer   renderer,
+                             FT_GlyphSlot  slot,
+                             FT_UInt       mode,
+                             FT_Vector*    origin );
 
   typedef FT_Error
-  (*FT_Renderer_TransformFunc)( FT_Renderer       renderer,
-                                FT_GlyphSlot      slot,
-                                const FT_Matrix*  matrix,
-                                const FT_Vector*  delta );
+  (*FT_Renderer_TransformFunc)( FT_Renderer   renderer,
+                                FT_GlyphSlot  slot,
+                                FT_Matrix*    matrix,
+                                FT_Vector*    delta );
 
 
   typedef void
