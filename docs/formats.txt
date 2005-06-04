@@ -137,3 +137,17 @@ MAC  ---     PS     TYPE_1  ---        type1    T1_SPEC.pdf
       http://webapp.etsi.org/workprogram/Report_WorkItem.asp?WKI_ID=18799
 
     (free registration required).
+
+------------------------------------------------------------------------
+
+Copyright 2004, 2005 by
+David Turner, Robert Wilhelm, and Werner Lemberg.
+
+This  file  is  part  of the  FreeType  project, and may  only be  used,
+modified,  and  distributed  under  the  terms of  the FreeType  project
+license, LICENSE.TXT.   By continuing to use, modify, or distribute this
+file you  indicate that  you have  read the  license and understand  and
+accept it fully.
+
+
+--- end of formats.txt ---
