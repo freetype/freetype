@@ -1,5 +1,14 @@
-# FreeType 2 top Jamfile (c) 2001, 2002, 2003, 2004 David Turner
+# FreeType 2 top Jamfile.
 #
+# Copyright 2001, 2002, 2003, 2004 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
 
 # The HDRMACRO is already defined in FTJam and is used to add
 # the content of certain macros to the list of included header

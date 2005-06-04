@@ -1,3 +1,17 @@
+2005-06-05  Werner Lemberg  <wl@gnu.org>
+
+	* Add copyright notices to all files which don't have one.
+
+	* docs/license.txt: Renamed to...
+	* docs/LICENSE.TXT: This.
+	* docs/FTL.txt: Renamed to...
+	* docs/FTL.TXT: This.
+	* docs/GPL.txt: Renamed to...
+	* docs/GPL.TXT: This.
+
+	* docs/PATENTS: Slightly reworded.  Suggested by Sylvain Beucler
+	<beuc@gnu.org>.
+
 2005-06-04  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftimage.h (FT_Outline_MoveToFunc,
@@ -5256,7 +5270,7 @@
 	builds/unix/unixddef.mk, builds/win32/w32-bccd.mk,
 	builds/win32/w32-dev.mk (BUILD_DIR): Fix path.
 
-	* builds/unix/configure.ac, builds/unic/configure: Updated.
+	* builds/unix/configure.ac, builds/unix/configure: Updated.
 	* builds/unix/unix-def.in (DISTCLEAN): Add `freetype2.pc'.
 
 2003-06-07  Werner Lemberg  <wl@gnu.org>
@@ -11989,6 +12003,17 @@
 
 	* Version 2.0 released.
 	=======================
+
+----------------------------------------------------------------------------
+
+Copyright 2000, 2001, 2002, 2003, 2004, 2005 by
+David Turner, Robert Wilhelm, and Werner Lemberg.
+
+This file is part of the FreeType project, and may only be used, modified,
+and distributed under the terms of the FreeType project license,
+LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+indicate that you have read the license and understand and accept it
+fully.
 
 
 Local Variables:
