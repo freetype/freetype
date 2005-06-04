@@ -20,3 +20,6 @@ configure script is necessary at all; saying
   make
 
 should work on all platforms which have GNU make (or makepp).
+
+
+--- end of README.CVS ---

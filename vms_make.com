@@ -1,5 +1,15 @@
 $! make Freetype2 under OpenVMS
 $!
+$! Copyright 2003, 2004 by
+$! David Turner, Robert Wilhelm, and Werner Lemberg.
+$!
+$! This file is part of the FreeType project, and may only be used, modified,
+$! and distributed under the terms of the FreeType project license,
+$! LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+$! indicate that you have read the license and understand and accept it
+$! fully.
+$!
+$!
 $! External libraries (like Freetype, XPM, etc.) are supported via the
 $! config file VMSLIB.DAT. Please check the sample file, which is part of this
 $! distribution, for the information you need to provide
