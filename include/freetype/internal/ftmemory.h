@@ -192,7 +192,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Realloc                                                         */
+  /*    FT_QRealloc                                                        */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */

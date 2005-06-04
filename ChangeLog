@@ -1,3 +1,12 @@
+2005-06-04  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftimage.h (FT_Outline_MoveToFunc,
+	FT_Outline_LineToFunc, FT_Outline_ConicToFunc,
+	FT_Outline_CubicToFunc, FT_Raster_RenderFunc),
+	include/freetype/ftrender.h (FT_Glyph_TransformFunc,
+	FT_Renderer_RenderFunc, FT_Renderer_TransformFunc): Don't use
+	`const' to stay compatible with FreeType 2.1.9.
+
 2005-06-01  Adam D. Moss  <adam@gimp.org>
 
 	* src/base/ftstroke.c (ft_stroker_inside): Revert `sigma' patch from

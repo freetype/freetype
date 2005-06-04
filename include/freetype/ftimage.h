@@ -486,8 +486,8 @@ FT_BEGIN_HEADER
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   typedef int
-  (*FT_Outline_MoveToFunc)( const FT_Vector*  to,
-                            void*             user );
+  (*FT_Outline_MoveToFunc)( FT_Vector*  to,
+                            void*       user );
 
 #define FT_Outline_MoveTo_Func  FT_Outline_MoveToFunc
 
@@ -512,8 +512,8 @@ FT_BEGIN_HEADER
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   typedef int
-  (*FT_Outline_LineToFunc)( const FT_Vector*  to,
-                            void*             user );
+  (*FT_Outline_LineToFunc)( FT_Vector*  to,
+                            void*       user );
 
 #define  FT_Outline_LineTo_Func  FT_Outline_LineToFunc
 
@@ -542,9 +542,9 @@ FT_BEGIN_HEADER
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   typedef int
-  (*FT_Outline_ConicToFunc)( const FT_Vector*  control,
-                             const FT_Vector*  to,
-                             void*             user );
+  (*FT_Outline_ConicToFunc)( FT_Vector*  control,
+                             FT_Vector*  to,
+                             void*       user );
 
 #define  FT_Outline_ConicTo_Func  FT_Outline_ConicToFunc
 
@@ -573,10 +573,10 @@ FT_BEGIN_HEADER
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   typedef int
-  (*FT_Outline_CubicToFunc)( const FT_Vector*  control1,
-                             const FT_Vector*  control2,
-                             const FT_Vector*  to,
-                             void*             user );
+  (*FT_Outline_CubicToFunc)( FT_Vector*  control1,
+                             FT_Vector*  control2,
+                             FT_Vector*  to,
+                             void*       user );
 
 #define  FT_Outline_CubicTo_Func  FT_Outline_CubicToFunc
 
@@ -1183,8 +1183,8 @@ FT_BEGIN_HEADER
   /*         composition).                                                 */
   /*                                                                       */
   typedef int
-  (*FT_Raster_RenderFunc)( FT_Raster                raster,
-                           const FT_Raster_Params*  params );
+  (*FT_Raster_RenderFunc)( FT_Raster          raster,
+                           FT_Raster_Params*  params );
 
 #define  FT_Raster_Render_Func    FT_Raster_RenderFunc
 
