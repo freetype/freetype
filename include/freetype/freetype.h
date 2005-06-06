@@ -2370,8 +2370,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A function used to set the transformation that is applied to glyph */
-  /*    images just before they are converted to bitmaps in a glyph slot   */
-  /*    when @FT_Render_Glyph is called.                                   */
+  /*    images when they are loaded into a glyph slot through              */
+  /*    @FT_Load_Glyph.                                                    */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face   :: A handle to the source face object.                      */
