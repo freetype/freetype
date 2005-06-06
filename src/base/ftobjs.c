@@ -288,11 +288,11 @@
     FT_ZERO( &slot->metrics );
     FT_ZERO( &slot->outline );
 
-    slot->bitmap.width = 0;
-    slot->bitmap.rows  = 0;
-    slot->bitmap.pitch = 0;
+    slot->bitmap.width      = 0;
+    slot->bitmap.rows       = 0;
+    slot->bitmap.pitch      = 0;
     slot->bitmap.pixel_mode = 0;
-    /* don't touch 'slot->bitmap.buffer'! */
+    /* `slot->bitmap.buffer' has been handled by ft_glyphslot_free_bitmap */
 
     slot->bitmap_left   = 0;
     slot->bitmap_top    = 0;
