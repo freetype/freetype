@@ -3,6 +3,19 @@
 # (gcc 2.95.3 hosted on 68k-Amiga producing MorphOS-PPC-binaries from
 # http://www.morphos.de)
 #
+
+
+# Copyright 2005 by
+# Werner Lemberg and Detlef Würkner.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+#
 # to build from the builds/amiga directory call
 #
 #  make assign
@@ -246,3 +259,7 @@ FONTDPPC = cff.ppc.o type1.ppc.o type42.ppc.o type1cid.ppc.o truetype.ppc.o\
 libft2_ppc.a:    $(BASEPPC) $(AFITPPC) $(OTVPPC) $(PSPPC) $(RASTERPPC) sfnt.ppc.o ftcache.ppc.o $(FONTDPPC) gzip.ppc.o lzw.ppc.o
 	$(AR) $@ $(BASEPPC) $(AFITPPC) $(OTVPPC) $(PSPPC) $(RASTERPPC) sfnt.ppc.o ftcache.ppc.o $(FONTDPPC) gzip.ppc.o lzw.ppc.o
 	-@ ($(RANLIB) $@ || true) >/dev/null 2>&1
+
+#Local Variables:
+#coding: latin-1
+#End:

@@ -1,3 +1,7 @@
+2005-06-07  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/*: Added copyright notes, reworked some comments.
+
 2005-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* Add copyright notices to all files which don't have one.

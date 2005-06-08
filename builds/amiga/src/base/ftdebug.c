@@ -1,32 +1,11 @@
-/*
- * TetiSoft: replaced vprintf() with KVPrintF(), commented out exit(),
- * and replaced getenv() with GetVar()
- */
-
-#include <exec/types.h>
-#include <utility/tagitem.h>
-#include <dos/exall.h>
-#include <dos/var.h>
-#define __NOLIBBASE__
-#define __NOLOBALIFACE__
-#define __USE_INLINE__
-#include <proto/dos.h>
-#include <clib/debug_protos.h>
-
-#ifndef __amigaos4__
-extern struct Library *DOSBase;
-#else
-extern struct DOSIFace *IDOS;
-#endif
-
 /***************************************************************************/
 /*                                                                         */
 /*  ftdebug.c                                                              */
 /*                                                                         */
 /*    Debugging and logging component (body).                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004 by                                     */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*  Copyright 1996-2001, 2002, 2004, 2005 by                               */
+/*  David Turner, Robert Wilhelm, Werner Lemberg and Detlef Würkner.       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -60,6 +39,30 @@ extern struct DOSIFace *IDOS;
   /*   debugging parts.                                                    */
   /*                                                                       */
   /*************************************************************************/
+
+
+/*
+ * Based on the default ftdebug.c,
+ * replaced vprintf() with KVPrintF(),
+ * commented out exit(),
+ * replaced getenv() with GetVar().
+ */
+
+#include <exec/types.h>
+#include <utility/tagitem.h>
+#include <dos/exall.h>
+#include <dos/var.h>
+#define __NOLIBBASE__
+#define __NOLOBALIFACE__
+#define __USE_INLINE__
+#include <proto/dos.h>
+#include <clib/debug_protos.h>
+
+#ifndef __amigaos4__
+extern struct Library *DOSBase;
+#else
+extern struct DOSIFace *IDOS;
+#endif
 
 
 #include <ft2build.h>
@@ -268,5 +271,9 @@ extern struct DOSIFace *IDOS;
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
-
+/*
+Local Variables:
+coding: latin-1
+End:
+*/
 /* END */
