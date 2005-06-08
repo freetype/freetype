@@ -1,6 +1,18 @@
 #
 # Makefile for FreeType2 link library using Amiga SAS/C 6.58
 #
+
+
+# Copyright 2005 by
+# Werner Lemberg and Detlef Würkner.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
 # to build from the builds/amiga directory call
 #
 #  smake assign
@@ -257,3 +269,7 @@ winfnt.o: $(CORE)winfonts/winfnt.c
 #
 otvalid.o: $(CORE)otvalid/otvalid.c
 	sc $(SCFLAGS) objname=$@ $<
+
+#Local Variables:
+#coding: latin-1
+#End:

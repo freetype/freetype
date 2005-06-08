@@ -5,7 +5,7 @@
 /*    Amiga-specific FreeType low-level system interface (body).           */
 /*                                                                         */
 /*  Copyright 1996-2001, 2002, 2005 by                                     */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*  David Turner, Robert Wilhelm, Werner Lemberg and Detlef Würkner.       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -24,12 +24,22 @@
   /*************************************************************************/
 
 
-/* Maintained by Detlef Würkner <TetiSoft@apg.lahn.de> */
-
-/* TetiSoft: Modified to avoid fopen() fclose() fread() fseek() ftell()
- * malloc() realloc() and free().
- * We need exec V39+ because we use AllocPooled() etc.
- */
+  /*************************************************************************/
+  /*                                                                       */
+  /* Maintained by Detlef Würkner <TetiSoft@apg.lahn.de>                   */
+  /*                                                                       */
+  /* Based on the original ftsystem.c,                                     */
+  /* modified to avoid fopen(), fclose(), fread(), fseek(), ftell(),       */
+  /* malloc(), realloc(), and free().                                      */
+  /*                                                                       */
+  /* Those C library functions are often not thread-safe or cant be        */
+  /* used in a shared Amiga library. If thats not a problem for you,       */
+  /* you can of course use the default ftsystem.c with C library calls     */
+  /* instead.                                                              */
+  /*                                                                       */
+  /* This implementation needs exec V39+ because it uses AllocPooled() etc */
+  /*                                                                       */
+  /*************************************************************************/
 
 #define __NOLIBBASE__
 #define __NOGLOBALIFACE__
@@ -504,4 +514,9 @@ Free_VecPooled( APTR  poolHeader,
     FreeVec( memory );
   }
 
+/*
+Local Variables:
+coding: latin-1
+End:
+*/
 /* END */

@@ -1,6 +1,26 @@
-// To specify which modules you need,
-// insert the following in your source file and uncomment as needed:
+/***************************************************************************/
+/*                                                                         */
+/*  ftmodule.h                                                             */
+/*                                                                         */
+/*    Amiga-specific FreeType module selection.                            */
+/*                                                                         */
+/*  Copyright 2005 by                                                      */
+/*  Werner Lemberg and Detlef Würkner.                                     */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
 
+/*
+ * To avoid that all your programs include all FreeType modules,
+ * you copy the following piece of source code into your own
+ * source file and specify which modules you really need in your
+ * application by uncommenting the appropriate lines.
+ */
 /*
 //#define FT_USE_AUTOFIT // autofitter
 //#define FT_USE_RASTER  // monochrome rasterizer
@@ -18,8 +38,9 @@
 #include "FT:src/base/ftinit.c"
 */
 
-// Make sure that needed support modules are built in.
-// Dependencies can be found by searching for FT_Get_Module.
+/* Make sure that the needed support modules are built in.
+ * Dependencies can be found by searching for FT_Get_Module.
+ */
 
 #ifdef FT_USE_T42
 #define FT_USE_TT
@@ -55,7 +76,7 @@
 #define FT_USE_PSNAMES
 #endif
 
-// Now include the modules
+/* Now include the modules */
 
 #ifdef FT_USE_AUTOFIT
 FT_USE_MODULE(autofit_module_class)
@@ -126,3 +147,9 @@ FT_USE_MODULE(otv_module_class)
 #ifdef FT_USE_BDF
 FT_USE_MODULE(bdf_driver_class)
 #endif
+
+/*
+Local Variables:
+coding: latin-1
+End:
+*/
