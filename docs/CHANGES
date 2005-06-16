@@ -1,3 +1,32 @@
+LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
+
+  I. IMPORTANT BUG FIXES
+
+    - Vertical metrics for SFNT fonts were incorrect sometimes.
+
+  II. IMPORTANT CHANGES
+
+    - The following callback function types have  changed slightly (by
+      adding the `const' keyword where appropriate):
+
+        FT_Outline_MoveToFunc
+        FT_Outline_LineToFunc
+        FT_Outline_ConicToFunc
+        FT_Outline_CubicToFunc
+        FT_SpanFunc
+        FT_Raster_RenderFunc
+
+        FT_Glyph_TransformFunc
+        FT_Renderer_RenderFunc
+        FT_Renderer_TransformFunc
+
+      Note that this doesn't affect binary backwards compatibility.
+
+  III. MISCELLANEOUS
+
+
+======================================================================
+
 LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
 
   I. IMPORTANT BUG FIXES

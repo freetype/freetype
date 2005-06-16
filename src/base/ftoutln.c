@@ -683,6 +683,7 @@
     if ( !outline )
       return FT_Err_Invalid_Argument;
 
+    strength /= 2;
     if ( strength == 0 )
       return FT_Err_Ok;
 

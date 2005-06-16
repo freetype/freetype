@@ -52,6 +52,7 @@ systems, but not all of them:
 
     release    libtool      so
   -------------------------------
+     2.2.0      9.9.3     6.3.9
      2.1.10     9.8.3     6.3.8
      2.1.9      9.7.3     6.3.7
      2.1.8      9.6.3     6.3.6
@@ -109,7 +110,7 @@ other release numbers.
 
 ------------------------------------------------------------------------
 
-Copyright 2002, 2003, 2004 by
+Copyright 2002, 2003, 2004, 2005 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file  is  part  of the  FreeType  project, and may  only be  used,

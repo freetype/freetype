@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType common tables validation (specification).                   */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -70,8 +70,8 @@ FT_BEGIN_HEADER
 #define FT_INVALID_( _prefix, _error )                         \
           ft_validator_error( valid->root, _prefix ## _error )
 
-#define OTV_OPTIONAL_TABLE( _table )  FT_UInt   _table;      \
-                                      FT_Bytes  _table ## _p
+#define OTV_OPTIONAL_TABLE( _table )  FT_UShort  _table;      \
+                                      FT_Bytes   _table ## _p
 
 #define OTV_OPTIONAL_OFFSET( _offset )           \
           FT_BEGIN_STMNT                         \

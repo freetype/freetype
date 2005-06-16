@@ -43,8 +43,8 @@
   /* drivers.  It starts at 2.0.                                           */
   /*                                                                       */
 #define FREETYPE_MAJOR 2
-#define FREETYPE_MINOR 1
-#define FREETYPE_PATCH 10
+#define FREETYPE_MINOR 2
+#define FREETYPE_PATCH 0
 
 
 #include <ft2build.h>

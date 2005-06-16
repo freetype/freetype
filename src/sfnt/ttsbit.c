@@ -1501,7 +1501,7 @@
       /* some heuristic values */
 
       metrics->vertBearingX = (FT_Char)(-metrics->width / 2 );
-      metrics->vertBearingY = (FT_Char)( advance / 10 );
+      metrics->vertBearingY = (FT_Char)( ( advance - metrics->height ) / 2 );
       metrics->vertAdvance  = (FT_Char)( advance * 12 / 10 );
     }
 

@@ -81,7 +81,7 @@
 
     /* some reasonable strength */
     xstr = FT_MulFix( face->units_per_EM,
-                      face->size->metrics.y_scale ) / 42;
+                      face->size->metrics.y_scale ) / 24;
     ystr = xstr;
 
     if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
@@ -122,8 +122,8 @@
     /* modify the metrics accordingly */
     if ( !error )
     {
+      /* assume the layout is horizontal */
       slot->advance.x += xstr;
-      slot->advance.y += ystr;
 
       slot->metrics.width        += xstr;
       slot->metrics.height       += ystr;
