@@ -1765,41 +1765,43 @@
       if ( face->vertical_info &&
            face->vertical.number_Of_VMetrics > 0 )
       {
-        advance_height = (FT_UShort)( loader->pp4.y - loader->pp3.y );
-        top_bearing    = (FT_Short)( loader->pp3.y - bbox.yMax );
+        top_bearing = (FT_Short)FT_DivFix( loader->pp3.y - bbox.yMax,
+                                           y_scale );
+
+        if ( loader->pp3.y <= loader->pp4.y )
+          advance_height = 0;
+        else
+          advance_height = (FT_UShort)FT_DivFix( loader->pp3.y - loader->pp4.y,
+                                                 y_scale );
       }
       else
       {
-        /* Make up the distances from the horizontal header.   */
+        FT_Short  max_height, height;
+
+
+        /* XXX Compute top side bearing and advance height in  */
+        /*     Get_VMetrics instead of here.                   */
 
         /* NOTE: The OS/2 values are the only `portable' ones, */
         /*       which is why we use them, if there is an OS/2 */
         /*       table in the font.  Otherwise, we use the     */
         /*       values defined in the horizontal header.      */
-        /*                                                     */
-        /* NOTE2: The sTypoDescender is negative, which is why */
-        /*        we compute the baseline-to-baseline distance */
-        /*        here with:                                   */
-        /*             ascender - descender + linegap          */
-        /*                                                     */
-        /* NOTE3: This is different from what MS's rasterizer  */
-        /*        appears to do when getting default values    */
-        /*        for the vertical phantom points.  We leave   */
-        /*        the old code untouched, but relying on       */
-        /*        phantom points alone might be reasonable     */
-        /*        (i.e., removing the `if' above).             */
+
+        height = FT_DivFix( bbox.yMax - bbox.yMin, y_scale );
         if ( face->os2.version != 0xFFFFU )
         {
-          top_bearing    = (FT_Short)( face->os2.sTypoLineGap / 2 );
-          advance_height = (FT_UShort)( face->os2.sTypoAscender -
-                                        face->os2.sTypoDescender +
-                                        face->os2.sTypoLineGap );
+          /* sTypoDescender is negative */
+          max_height = face->os2.sTypoAscender - face->os2.sTypoDescender;
+
+          top_bearing    = (FT_Short)( ( max_height - height ) / 2 );
+          advance_height = (FT_UShort)( max_height + face->os2.sTypoLineGap );
         }
         else
         {
-          top_bearing    = (FT_Short)( face->horizontal.Line_Gap / 2 );
-          advance_height = (FT_UShort)( face->horizontal.Ascender  +
-                                        face->horizontal.Descender +
+          max_height = face->horizontal.Ascender + face->horizontal.Descender;
+
+          top_bearing    = (FT_Short)( ( max_height - height ) / 2 );
+          advance_height = (FT_UShort)( max_height +
                                         face->horizontal.Line_Gap );
         }
       }
@@ -1817,7 +1819,7 @@
 
         metrics.bearing_x = 0;
         metrics.bearing_y = top_bearing;
-        metrics.advance = advance_height;
+        metrics.advance   = advance_height;
         error =
           face->root.internal->incremental_interface->funcs->get_glyph_metrics(
             face->root.internal->incremental_interface->object,
@@ -1834,20 +1836,15 @@
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
-      /* We must adjust the top_bearing value from the bounding box given */
-      /* in the glyph header to the bounding box calculated with          */
-      /* FT_Get_Outline_CBox().                                           */
-
       /* scale the metrics */
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
       {
-        top     = FT_MulFix( top_bearing + loader->bbox.yMax, y_scale )
-                    - bbox.yMax;
+        top     = FT_MulFix( top_bearing, y_scale );
         advance = FT_MulFix( advance_height, y_scale );
       }
       else
       {
-        top     = top_bearing + loader->bbox.yMax - bbox.yMax;
+        top     = top_bearing;
         advance = advance_height;
       }
 
@@ -1864,7 +1861,8 @@
       if ( IS_HINTED( loader->load_flags ) )
       {
         left    = FT_PIX_FLOOR( left );
-        top     = FT_PIX_CEIL( top );
+        /* top should be floor'ed */
+        top     = FT_PIX_FLOOR( top );
         advance = FT_PIX_ROUND( advance );
       }
 
