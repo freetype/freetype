@@ -1,3 +1,20 @@
+2005-06-20  Chia I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c: New function
+	ft_glyphslot_grid_fit_metrics.
+
+	* src/truetype/ttgload.c (compute_glyph_metrics): Use
+	ft_glyphslot_grid_fit_metrics.
+	
+	* src/cff/cffgload.c (cff_slot_load), src/cid/cidgload.c
+	(cid_slot_load_glyph), src/type1/t1gload.c (T1_Load_Glyph): Use
+	ft_glyphslot_grid_fit_metrics.
+	FT_Outline_Get_CBox is called twice.
+
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Modify metrics to more
+	reasonable values when emboldening outline glyphs.  The theoretic
+	ones are unrealistic.
+
 2005-06-16  Chia I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftoutln.c (FT_Outline_Embolden): Strength should be

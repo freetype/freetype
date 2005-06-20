@@ -2510,11 +2510,8 @@
         glyph->root.linearHoriAdvance           = decoder.glyph_width;
         glyph->root.internal->glyph_transformed = 0;
 
-        /* make up vertical metrics */
-        metrics->vertBearingX = 0;
-        metrics->vertBearingY = 0;
+        /* make up vertical ones */
         metrics->vertAdvance  = 0;
-
         glyph->root.linearVertAdvance = 0;
 
         glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
@@ -2559,42 +2556,26 @@
               vec->y = FT_MulFix( vec->y, y_scale );
             }
 
-          FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
-
           /* Then scale the metrics */
           metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
           metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  y_scale );
-
-          metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
-          metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
-
-          if ( hinting )
-          {
-            metrics->horiAdvance  = FT_PIX_ROUND( metrics->horiAdvance );
-            metrics->vertAdvance  = FT_PIX_ROUND( metrics->vertAdvance );
-
-            metrics->vertBearingX = FT_PIX_ROUND( metrics->vertBearingX );
-            metrics->vertBearingY = FT_PIX_ROUND( metrics->vertBearingY );
-          }
         }
 
         /* compute the other metrics */
         FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
-
-        /* grid fit the bounding box if necessary */
-        if ( hinting )
-        {
-          cbox.xMin &= -64;
-          cbox.yMin &= -64;
-          cbox.xMax  = ( cbox.xMax + 63 ) & -64;
-          cbox.yMax  = ( cbox.yMax + 63 ) & -64;
-        }
 
         metrics->width  = cbox.xMax - cbox.xMin;
         metrics->height = cbox.yMax - cbox.yMin;
 
         metrics->horiBearingX = cbox.xMin;
         metrics->horiBearingY = cbox.yMax;
+
+        /* make up vertical ones */
+        metrics->vertBearingX = 0;
+        metrics->vertBearingY = 0;
+
+        if ( hinting )
+          ft_glyphslot_grid_fit_metrics( &glyph->root );
       }
     }
 

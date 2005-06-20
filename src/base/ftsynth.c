@@ -87,7 +87,10 @@
     if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
     {
       error = FT_Outline_Embolden( &slot->outline, xstr );
-      xstr = xstr * 4;  /* according to the documentation */
+
+      /* this is more than enough for most glyphs                     */
+      /* if you need accurate values, you have to FT_Outline_Get_CBox */
+      xstr = xstr * 2;
       ystr = xstr;
     }
     else if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
