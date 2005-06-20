@@ -1707,15 +1707,6 @@
       FT_Outline_Translate( &glyph->outline, -loader->pp1.x, 0 );
 
       FT_Outline_Get_CBox( &glyph->outline, &bbox );
-
-      if ( IS_HINTED( loader->load_flags ) )
-      {
-        /* grid-fit the bounding box */
-        bbox.xMin = FT_PIX_FLOOR( bbox.xMin );
-        bbox.yMin = FT_PIX_FLOOR( bbox.yMin );
-        bbox.xMax = FT_PIX_CEIL( bbox.xMax );
-        bbox.yMax = FT_PIX_CEIL( bbox.yMax );
-      }
     }
     else
       bbox = loader->bbox;
@@ -1743,10 +1734,6 @@
     glyph->metrics.horiBearingX = bbox.xMin;
     glyph->metrics.horiBearingY = bbox.yMax;
     glyph->metrics.horiAdvance  = loader->pp2.x - loader->pp1.x;
-
-    /* don't forget to hint the advance when we need to */
-    if ( IS_HINTED( loader->load_flags ) )
-      glyph->metrics.horiAdvance = FT_PIX_ROUND( glyph->metrics.horiAdvance );
 
     /* Now take care of vertical metrics.  In the case where there is    */
     /* no vertical information within the font (relatively common), make */
@@ -1857,15 +1844,6 @@
       /*                                                               */
       left = ( bbox.xMin - bbox.xMax ) / 2;
 
-      /* grid-fit them if necessary */
-      if ( IS_HINTED( loader->load_flags ) )
-      {
-        left    = FT_PIX_FLOOR( left );
-        /* top should be floor'ed */
-        top     = FT_PIX_FLOOR( top );
-        advance = FT_PIX_ROUND( advance );
-      }
-
       glyph->metrics.vertBearingX = left;
       glyph->metrics.vertBearingY = top;
       glyph->metrics.vertAdvance  = advance;
@@ -1887,6 +1865,9 @@
     /* set glyph dimensions */
     glyph->metrics.width  = bbox.xMax - bbox.xMin;
     glyph->metrics.height = bbox.yMax - bbox.yMin;
+
+    if ( IS_HINTED( loader->load_flags ) )
+      ft_glyphslot_grid_fit_metrics( glyph );
 
     return 0;
   }

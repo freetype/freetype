@@ -452,6 +452,13 @@ FT_BEGIN_HEADER
  /* */
 
  /*
+  * grid-fit slot->metrics
+  */
+  FT_BASE( void )
+  ft_glyphslot_grid_fit_metrics( FT_GlyphSlot  slot );
+
+
+ /*
   * Free the bitmap of a given glyphslot when needed
   * (i.e., only when it was allocated with ft_glyphslot_alloc_bitmap).
   */
