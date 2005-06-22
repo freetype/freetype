@@ -24,6 +24,9 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   III. MISCELLANEOUS
 
+    - The demo programs `ftview' and `ftstring' are rewritten for better
+      readability.
+
 
 ======================================================================
 
