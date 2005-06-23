@@ -88,8 +88,8 @@
     {
       error = FT_Outline_Embolden( &slot->outline, xstr );
 
-      /* this is more than enough for most glyphs                     */
-      /* if you need accurate values, you have to FT_Outline_Get_CBox */
+      /* this is more than enough for most glyphs;                         */
+      /* if you need accurate values, you have to call FT_Outline_Get_CBox */
       xstr = xstr * 2;
       ystr = xstr;
     }
