@@ -267,7 +267,7 @@
     slot->metrics.horiAdvance  = FT_PIX_ROUND( slot->metrics.horiAdvance );
 
     slot->metrics.vertBearingX = FT_PIX_FLOOR( slot->metrics.vertBearingX );
-    /* note that vertBearinY should be floor'ed */
+    /* note that vertBearingY should be floor'ed */
     slot->metrics.vertBearingY = FT_PIX_FLOOR( slot->metrics.vertBearingY );
     slot->metrics.vertAdvance  = FT_PIX_ROUND( slot->metrics.vertAdvance );
   }
