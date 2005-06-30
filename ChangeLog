@@ -1,3 +1,14 @@
+2005-06-30  David Turner  <david@freetype.org>
+
+        * src/sfnt/ftbitmap.c, src/truetype/ttgload.c, src/sfnt/ttcmap.c:
+        removing compiler warnings (Visual C++ /W4)
+
+        * Jamfile, src/otvalid/{otvcommn.h,otvgdef.c,otvgpos.c,otvgsub.c,
+        otvjstf.c}: modified the code to use a different pre-processor trick
+        to implement the OTV_NEST1, OTV_NEST2 and OTV_NEST3 macros. The code
+        now compiles neatly with Visual C++. The 'otvalid' module has been
+        put in the Jamfile build again.
+
 2005-06-20  Chia I Wu  <b90201047@ntu.edu.tw>
 
 	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c: New function
@@ -5,7 +16,7 @@
 
 	* src/truetype/ttgload.c (compute_glyph_metrics): Use
 	ft_glyphslot_grid_fit_metrics.
-	
+
 	* src/cff/cffgload.c (cff_slot_load), src/cid/cidgload.c
 	(cid_slot_load_glyph), src/type1/t1gload.c (T1_Load_Glyph): Use
 	ft_glyphslot_grid_fit_metrics.

@@ -2160,7 +2160,7 @@
           if ( clazz->format == format )
           {
             volatile TT_ValidatorRec  valid;
-            FT_Error                  error = SFNT_Err_Ok;
+            volatile FT_Error         error = SFNT_Err_Ok;
 
 
             ft_validator_init( FT_VALIDATOR( &valid ), cmap, limit,
