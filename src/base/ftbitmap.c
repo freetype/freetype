@@ -277,7 +277,7 @@
     /* for each row */
     for ( y = 0; y < bitmap->rows ; y++ )
     {
-      /* 
+      /*
        * Horizontally:
        *
        * From the last pixel on, make each pixel or'ed with the
@@ -310,12 +310,12 @@
             {
               if ( p[x] + p[x - i] > bitmap->num_grays - 1 )
               {
-                p[x] = bitmap->num_grays - 1;
+                p[x] = (unsigned char)(bitmap->num_grays - 1);
                 break;
               }
               else
               {
-                p[x] += p[x - i];
+                p[x] = (unsigned char)(p[x] + p[x-i]);
                 if ( p[x] == bitmap->num_grays - 1 )
                   break;
               }
@@ -326,7 +326,7 @@
         }
       }
 
-      /* 
+      /*
        * Vertically:
        *
        * Make the above `ystr' rows or'ed with it.

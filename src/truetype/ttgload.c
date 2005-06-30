@@ -124,9 +124,9 @@
       p      = face->horz_metrics;
       limit  = p + face->horz_metrics_size;
     }
-    
+
     k = header->number_Of_HMetrics;
-    
+
     if ( k > 0 )
     {
       if ( idx < (FT_UInt)k )
@@ -134,7 +134,7 @@
         p += 4 * idx;
         if ( p + 4 > limit )
           goto NoData;
-          
+
         *aadvance = FT_NEXT_USHORT( p );
         *abearing = FT_NEXT_SHORT( p );
       }
@@ -143,7 +143,7 @@
         p += 4 * ( k - 1 );
         if ( p + 4 > limit )
           goto NoData;
-          
+
         *aadvance = FT_NEXT_USHORT( p );
         p += 2 + 2 * ( idx - k );
         if ( p + 2 > limit )
@@ -233,7 +233,7 @@
     FT_Byte*  result      = NULL;
     FT_ULong  record_size = face->hdmx_record_size;
     FT_Byte*  record      = face->hdmx_table + 8;
-    
+
 
     for ( nn = 0; nn < face->hdmx_record_count; nn++ )
       if ( face->hdmx_record_sizes[nn] == ppem )
@@ -1774,18 +1774,20 @@
         /*       table in the font.  Otherwise, we use the     */
         /*       values defined in the horizontal header.      */
 
-        height = FT_DivFix( bbox.yMax - bbox.yMin, y_scale );
+        height = (FT_Short)FT_DivFix( bbox.yMax - bbox.yMin, y_scale );
         if ( face->os2.version != 0xFFFFU )
         {
           /* sTypoDescender is negative */
-          max_height = face->os2.sTypoAscender - face->os2.sTypoDescender;
+          max_height     = (FT_Short)(face->os2.sTypoAscender -
+                                      face->os2.sTypoDescender);
 
           top_bearing    = (FT_Short)( ( max_height - height ) / 2 );
           advance_height = (FT_UShort)( max_height + face->os2.sTypoLineGap );
         }
         else
         {
-          max_height = face->horizontal.Ascender + face->horizontal.Descender;
+          max_height = (FT_Short)(face->horizontal.Ascender +
+                                  face->horizontal.Descender);
 
           top_bearing    = (FT_Short)( ( max_height - height ) / 2 );
           advance_height = (FT_UShort)( max_height +
