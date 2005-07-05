@@ -429,9 +429,9 @@ FT_BEGIN_HEADER
 #define FT_ALLOC_ARRAY( _pointer_, _count_, _type_ )           \
           FT_ALLOC( _pointer_, (_count_) * sizeof ( _type_ ) )
 
-#define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )   \
-          FT_REALLOC( _pointer, (_old_) * sizeof ( _type_ ),  \
-                                (_new_) * sizeof ( _type_ ) )
+#define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )    \
+          FT_REALLOC( _pointer_, (_old_) * sizeof ( _type_ ),  \
+                                 (_new_) * sizeof ( _type_ ) )
 
 
  /* */

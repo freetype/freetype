@@ -1,3 +1,8 @@
+2005-07-04  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftmemory.h (FT_REALLOC_ARRAY): Fix typo. 
+	Reported by Brett Hutley.
+
 2005-06-30  David Turner  <david@freetype.org>
 
         * src/sfnt/ftbitmap.c, src/truetype/ttgload.c, src/sfnt/ttcmap.c:
