@@ -1703,10 +1703,8 @@
       FT_GlyphLoader_CopyPoints( glyph->internal->loader, loader->gloader );
       glyph->outline = glyph->internal->loader->base.outline;
 
-#if 0
       /* translate array so that (0,0) is the glyph's origin */
       FT_Outline_Translate( &glyph->outline, -loader->pp1.x, 0 );
-#endif
 
       FT_Outline_Get_CBox( &glyph->outline, &bbox );
     }
