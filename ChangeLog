@@ -1,3 +1,8 @@
+2005-07-12  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftoutln.h (FT_Outline_Embolden): Fix prototype.
+	Reported by Xerxes.
+
 2005-07-04  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftmemory.h (FT_REALLOC_ARRAY): Fix typo. 

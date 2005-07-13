@@ -324,7 +324,7 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )
+  FT_EXPORT( FT_Error )
   FT_Outline_Embolden( FT_Outline*  outline,
                        FT_Pos       strength );
 
