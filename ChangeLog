@@ -1,3 +1,11 @@
+2005-07-26  Chia I Wu  <b90201047@ntu.edu.tw>
+
+	* src/truetype/ttdriver.c (Set_Char_Sizes): Avoid unnecessary
+	computations and clean up.
+
+	* src/truetype/ttobjs.h (struct TT_SizeRec_): Comment on the
+	internal copy of metrics.
+
 2005-07-12  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftoutln.h (FT_Outline_Embolden): Fix prototype.

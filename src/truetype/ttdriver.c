@@ -167,40 +167,33 @@
                   FT_UInt     horz_resolution,
                   FT_UInt     vert_resolution )
   {
-    TT_Size           size     = (TT_Size)ttsize;
-    FT_Size_Metrics*  metrics  = &size->root.metrics;
-    FT_Size_Metrics*  metrics2 = &size->metrics;
-    TT_Face           face     = (TT_Face)size->root.face;
-    FT_Long           dim_x, dim_y;
+    TT_Size           size    = (TT_Size)ttsize;
+    FT_Size_Metrics*  metrics = &size->metrics;
+    TT_Face           face    = (TT_Face)size->root.face;
 
 
-    *metrics2 = *metrics;
+    /* copy the result from base layer */
+    *metrics = size->root.metrics;
 
     /* This bit flag, when set, indicates that the pixel size must be */
-    /* truncated to an integer.  Nearly all TrueType fonts have this  */
-    /* bit set, as hinting won't work really well otherwise.          */
+    /* rounded to integer.  Nearly all TrueType fonts have this  bit  */
+    /* set, as hinting won't work really well otherwise.              */
     /*                                                                */
     if ( ( face->header.Flags & 8 ) != 0 )
     {
-     /* we need to use rounding in the following computations. Otherwise,
-      * the resulting hinted outlines will be very slightly distorted
-      */
-      dim_x = ( ( char_width  * horz_resolution + (36+32*72) ) / 72 ) & ~63;
-      dim_y = ( ( char_height * vert_resolution + (36+32*72) ) / 72 ) & ~63;
-    }
-    else
-    {
-      dim_x = ( ( char_width  * horz_resolution + 36 ) / 72 );
-      dim_y = ( ( char_height * vert_resolution + 36 ) / 72 );
-    }
+      FT_Long  dim_x, dim_y;
 
-    /* we only modify "metrics2", not "metrics", so these changes have */
-    /* no effect on the result of the auto-hinter when it is used      */
-    /*                                                                 */
-    metrics2->x_ppem  = (FT_UShort)( dim_x >> 6 );
-    metrics2->y_ppem  = (FT_UShort)( dim_y >> 6 );
-    metrics2->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
-    metrics2->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
+      dim_x = ( char_width  * horz_resolution + 36 ) / 72;
+      dim_y = ( char_height * vert_resolution + 36 ) / 72;
+
+      dim_x = FT_PIX_ROUND(dim_x);
+      dim_y = FT_PIX_ROUND(dim_y);
+
+      metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
+      metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
+      metrics->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
+      metrics->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
+    }
 
     size->ttmetrics.valid = FALSE;
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
