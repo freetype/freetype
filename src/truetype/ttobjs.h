@@ -417,6 +417,14 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   tt_size_done( FT_Size  ttsize );          /* TT_Size */
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+  FT_LOCAL( FT_Error )
+  tt_size_run_fpgm( TT_Size  size );
+
+  FT_LOCAL( FT_Error )
+  tt_size_run_prep( TT_Size  size );
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
   FT_LOCAL( FT_Error )
   tt_size_reset( TT_Size  size );
 
