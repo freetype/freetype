@@ -121,18 +121,20 @@
     FT_Error  error;
 
 
-    if ( maxPoints > 0 )
-      maxPoints += 2;
-
     FT_MEM_ZERO( zone, sizeof ( *zone ) );
     zone->memory = memory;
 
-    if ( FT_NEW_ARRAY( zone->org,      maxPoints * 2 ) ||
-         FT_NEW_ARRAY( zone->cur,      maxPoints * 2 ) ||
-         FT_NEW_ARRAY( zone->tags,     maxPoints     ) ||
-         FT_NEW_ARRAY( zone->contours, maxContours   ) )
+    if ( FT_NEW_ARRAY( zone->org,      maxPoints   ) ||
+         FT_NEW_ARRAY( zone->cur,      maxPoints   ) ||
+         FT_NEW_ARRAY( zone->tags,     maxPoints   ) ||
+         FT_NEW_ARRAY( zone->contours, maxContours ) )
     {
       tt_glyphzone_done( zone );
+    }
+    else
+    {
+      zone->max_points = maxPoints;
+      zone->max_contours = maxContours;
     }
 
     return error;
@@ -318,6 +320,162 @@
   /*                                                                       */
   /*************************************************************************/
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    tt_size_run_fpgm                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Run the font program                                               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    size :: A handle to the size object.                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  tt_size_run_fpgm( TT_Size  size )
+  {
+    TT_Face         face = (TT_Face)size->root.face;
+    TT_ExecContext  exec;
+    FT_Error        error;
+
+
+    /* debugging instances have their own context */
+    if ( size->debug )
+      exec = size->context;
+    else
+      exec = TT_New_Context( face );
+
+    if ( !exec )
+      return TT_Err_Could_Not_Find_Context;
+
+    TT_Load_Context( exec, face, size );
+
+    exec->callTop   = 0;
+    exec->top       = 0;
+
+    exec->period    = 64;
+    exec->phase     = 0;
+    exec->threshold = 0;
+
+    exec->instruction_trap = FALSE;
+    exec->F_dot_P = 0x10000L;
+
+    {
+      FT_Size_Metrics*  metrics    = &exec->metrics;
+      TT_Size_Metrics*  tt_metrics = &exec->tt_metrics;
+
+
+      metrics->x_ppem   = 0;
+      metrics->y_ppem   = 0;
+      metrics->x_scale  = 0;
+      metrics->y_scale  = 0;
+
+      tt_metrics->ppem  = 0;
+      tt_metrics->scale = 0;
+      tt_metrics->ratio = 0x10000L;
+    }
+
+    /* allow font program execution */
+    TT_Set_CodeRange( exec,
+                      tt_coderange_font,
+                      face->font_program,
+                      face->font_program_size );
+
+    /* disable CVT and glyph programs coderange */
+    TT_Clear_CodeRange( exec, tt_coderange_cvt );
+    TT_Clear_CodeRange( exec, tt_coderange_glyph );
+
+    if ( face->font_program_size > 0 )
+    {
+      error = TT_Goto_CodeRange( exec, tt_coderange_font, 0 );
+
+      if ( !error )
+        error = face->interpreter( exec );
+    }
+    else
+      error = TT_Err_Ok;
+
+    if ( !error )
+      TT_Save_Context( exec, size );
+
+    if ( !size->debug )
+      TT_Done_Context( exec );
+
+    return error;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    tt_size_run_prep                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Run the control value program                                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    size :: A handle to the size object.                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  tt_size_run_prep( TT_Size  size )
+  {
+    TT_Face         face = (TT_Face)size->root.face;
+    TT_ExecContext  exec;
+    FT_Error        error;
+
+
+    /* debugging instances have their own context */
+    if ( size->debug )
+      exec = size->context;
+    else
+      exec = TT_New_Context( face );
+
+    if ( !exec )
+      return TT_Err_Could_Not_Find_Context;
+
+    TT_Load_Context( exec, face, size );
+
+    exec->callTop = 0;
+    exec->top     = 0;
+
+    exec->instruction_trap = FALSE;
+
+    TT_Set_CodeRange( exec,
+                      tt_coderange_cvt,
+                      face->cvt_program,
+                      face->cvt_program_size );
+
+    TT_Clear_CodeRange( exec, tt_coderange_glyph );
+
+    if ( face->cvt_program_size > 0 )
+    {
+      error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
+
+      if ( !error && !size->debug )
+        error = face->interpreter( exec );
+    }
+    else
+      error = TT_Err_Ok;
+
+    /* save as default graphics state */
+    size->GS = exec->GS;
+
+    TT_Save_Context( exec, size );
+
+    if ( !size->debug )
+      TT_Done_Context( exec );
+
+    return error;
+  }
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -338,15 +496,11 @@
   {
     TT_Size   size  = (TT_Size)ttsize;
     FT_Error  error = TT_Err_Ok;
-
-
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-
     TT_Face    face   = (TT_Face)size->root.face;
     FT_Memory  memory = face->root.memory;
     FT_Int     i;
 
-    TT_ExecContext  exec;
     FT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
 
@@ -387,16 +541,29 @@
          FT_NEW_ARRAY( size->instruction_defs, size->max_instruction_defs ) ||
          FT_NEW_ARRAY( size->cvt,              size->cvt_size             ) ||
          FT_NEW_ARRAY( size->storage,          size->storage_size         ) )
+    {
+      tt_size_done( ttsize );
 
-      goto Fail_Memory;
+      return error;
+    }
 
     /* reserve twilight zone */
     n_twilight = maxp->maxTwilightPoints;
+
+    /* there are 4 phantom points (do we need this?) */
+    n_twilight += 4;
+
     error = tt_glyphzone_new( memory, n_twilight, 0, &size->twilight );
     if ( error )
-      goto Fail_Memory;
+    {
+      tt_size_done( ttsize );
+
+      return error;
+    }
 
     size->twilight.n_points = n_twilight;
+
+    size->GS = tt_default_graphics_state;
 
     /* set `face->interpreter' according to the debug hook present */
     {
@@ -409,95 +576,17 @@
         face->interpreter = (TT_Interpreter)TT_RunIns;
     }
 
-    /* Fine, now execute the font program! */
-    exec = size->context;
-    /* size objects used during debugging have their own context */
-    if ( !size->debug )
-      exec = TT_New_Context( face );
+    /* Fine, now run the font program! */
+    error = tt_size_run_fpgm( size );
 
-    if ( !exec )
-    {
-      error = TT_Err_Could_Not_Find_Context;
-      goto Fail_Memory;
-    }
-
-    size->GS = tt_default_graphics_state;
-    TT_Load_Context( exec, face, size );
-
-    exec->callTop   = 0;
-    exec->top       = 0;
-
-    exec->period    = 64;
-    exec->phase     = 0;
-    exec->threshold = 0;
-
-    {
-      FT_Size_Metrics*  metrics    = &exec->metrics;
-      TT_Size_Metrics*  tt_metrics = &exec->tt_metrics;
-
-
-      metrics->x_ppem   = 0;
-      metrics->y_ppem   = 0;
-      metrics->x_scale  = 0;
-      metrics->y_scale  = 0;
-
-      tt_metrics->ppem  = 0;
-      tt_metrics->scale = 0;
-      tt_metrics->ratio = 0x10000L;
-    }
-
-    exec->instruction_trap = FALSE;
-
-    exec->cvtSize = size->cvt_size;
-    exec->cvt     = size->cvt;
-
-    exec->F_dot_P = 0x10000L;
-
-    /* allow font program execution */
-    TT_Set_CodeRange( exec,
-                      tt_coderange_font,
-                      face->font_program,
-                      face->font_program_size );
-
-    /* disable CVT and glyph programs coderange */
-    TT_Clear_CodeRange( exec, tt_coderange_cvt );
-    TT_Clear_CodeRange( exec, tt_coderange_glyph );
-
-    if ( face->font_program_size > 0 )
-    {
-      error = TT_Goto_CodeRange( exec, tt_coderange_font, 0 );
-      if ( !error )
-        error = face->interpreter( exec );
-
-      if ( error )
-        goto Fail_Exec;
-    }
-    else
-      error = TT_Err_Ok;
-
-    TT_Save_Context( exec, size );
-
-    if ( !size->debug )
-      TT_Done_Context( exec );
+    if ( error )
+      tt_size_done( ttsize );
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     size->ttmetrics.valid = FALSE;
+
     return error;
-
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-
-  Fail_Exec:
-    if ( !size->debug )
-      TT_Done_Context( exec );
-
-  Fail_Memory:
-
-    tt_size_done( ttsize );
-    return error;
-
-#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
-
   }
 
 
@@ -516,9 +605,7 @@
   tt_size_done( FT_Size  ttsize )           /* TT_Size */
   {
     TT_Size    size = (TT_Size)ttsize;
-
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-
     FT_Memory  memory = size->root.face->memory;
 
 
@@ -625,10 +712,8 @@
 #endif
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-
     {
-      TT_ExecContext  exec;
-      FT_UInt         i, j;
+      FT_UInt  i;
 
 
       /* Scale the cvt values to the new ppem.          */
@@ -637,12 +722,12 @@
         size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
 
       /* All twilight points are originally zero */
-      for ( j = 0; j < (FT_UInt)size->twilight.n_points; j++ )
+      for ( i = 0; i < (FT_UInt)size->twilight.n_points; i++ )
       {
-        size->twilight.org[j].x = 0;
-        size->twilight.org[j].y = 0;
-        size->twilight.cur[j].x = 0;
-        size->twilight.cur[j].y = 0;
+        size->twilight.org[i].x = 0;
+        size->twilight.org[i].y = 0;
+        size->twilight.cur[i].x = 0;
+        size->twilight.cur[i].y = 0;
       }
 
       /* clear storage area */
@@ -651,53 +736,8 @@
 
       size->GS = tt_default_graphics_state;
 
-      /* get execution context and run prep program */
-      if ( size->debug )
-        exec = size->context;
-      else
-        exec = TT_New_Context( face );
-      /* debugging instances have their own context */
-
-      if ( !exec )
-        return TT_Err_Could_Not_Find_Context;
-
-      TT_Load_Context( exec, face, size );
-
-      TT_Set_CodeRange( exec,
-                        tt_coderange_cvt,
-                        face->cvt_program,
-                        face->cvt_program_size );
-
-      TT_Clear_CodeRange( exec, tt_coderange_glyph );
-
-      exec->instruction_trap = FALSE;
-
-      exec->top     = 0;
-      exec->callTop = 0;
-
-      if ( face->cvt_program_size > 0 )
-      {
-        error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
-        if ( error )
-          goto End;
-
-        if ( !size->debug )
-          error = face->interpreter( exec );
-      }
-      else
-        error = TT_Err_Ok;
-
-      size->GS = exec->GS;
-      /* save default graphics state */
-
-    End:
-      TT_Save_Context( exec, size );
-
-      if ( !size->debug )
-        TT_Done_Context( exec );
-      /* debugging instances keep their context */
+      error = tt_size_run_prep( size );
     }
-
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     if ( !error )
