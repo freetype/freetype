@@ -117,34 +117,31 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-  /* use preprocessor's argument prescan to expand one argument into two */
 #define OTV_NEST1( x )                                     \
           FT_BEGIN_STMNT                                   \
             valid->nesting_level          = 0;             \
-            valid->func[0]                = OTV_FUNC(x);   \
-            valid->debug_function_name[0] = OTV_NAME(x);   \
+            valid->func[0]                = OTV_FUNC( x ); \
+            valid->debug_function_name[0] = OTV_NAME( x ); \
           FT_END_STMNT
 
-  /* use preprocessor's argument prescan to expand two arguments into four */
-#define OTV_NEST2( x, y )                                   \
-          FT_BEGIN_STMNT                                    \
-            valid->nesting_level          = 0;              \
-            valid->func[0]                = OTV_FUNC(x);    \
-            valid->func[1]                = OTV_FUNC(y);    \
-            valid->debug_function_name[0] = OTV_NAME(x);    \
-            valid->debug_function_name[1] = OTV_NAME(y);    \
+#define OTV_NEST2( x, y )                                  \
+          FT_BEGIN_STMNT                                   \
+            valid->nesting_level          = 0;             \
+            valid->func[0]                = OTV_FUNC( x ); \
+            valid->func[1]                = OTV_FUNC( y ); \
+            valid->debug_function_name[0] = OTV_NAME( x ); \
+            valid->debug_function_name[1] = OTV_NAME( y ); \
           FT_END_STMNT
 
-  /* use preprocessor's argument prescan to expand three arguments into six */
-#define OTV_NEST3( x, y, z )                                \
-          FT_BEGIN_STMNT                                    \
-            valid->nesting_level          = 0;              \
-            valid->func[0]                = OTV_FUNC(x);    \
-            valid->func[1]                = OTV_FUNC(y);    \
-            valid->func[2]                = OTV_FUNC(z);    \
-            valid->debug_function_name[0] = OTV_NAME(x);    \
-            valid->debug_function_name[1] = OTV_NAME(y);    \
-            valid->debug_function_name[2] = OTV_NAME(z);    \
+#define OTV_NEST3( x, y, z )                               \
+          FT_BEGIN_STMNT                                   \
+            valid->nesting_level          = 0;             \
+            valid->func[0]                = OTV_FUNC( x ); \
+            valid->func[1]                = OTV_FUNC( y ); \
+            valid->func[2]                = OTV_FUNC( z ); \
+            valid->debug_function_name[0] = OTV_NAME( x ); \
+            valid->debug_function_name[1] = OTV_NAME( y ); \
+            valid->debug_function_name[2] = OTV_NAME( z ); \
           FT_END_STMNT
 
 #define OTV_INIT  valid->debug_indent = 0
@@ -174,28 +171,25 @@ FT_BEGIN_HEADER
 
 #else   /* !FT_DEBUG_LEVEL_TRACE */
 
-  /* use preprocessor's argument prescan to expand one argument into two */
-#define OTV_NEST1( x )                          \
-          FT_BEGIN_STMNT                        \
-            valid->nesting_level = 0;           \
-            valid->func[0]       = OTV_FUNC(x); \
+#define OTV_NEST1( x )                            \
+          FT_BEGIN_STMNT                          \
+            valid->nesting_level = 0;             \
+            valid->func[0]       = OTV_FUNC( x ); \
           FT_END_STMNT
 
-  /* use preprocessor's argument prescan to expand two arguments into four */
-#define OTV_NEST2( x, y )                        \
-          FT_BEGIN_STMNT                         \
-            valid->nesting_level = 0;            \
-            valid->func[0]       = OTV_FUNC(x);  \
-            valid->func[1]       = OTV_FUNC(y);  \
+#define OTV_NEST2( x, y )                         \
+          FT_BEGIN_STMNT                          \
+            valid->nesting_level = 0;             \
+            valid->func[0]       = OTV_FUNC( x ); \
+            valid->func[1]       = OTV_FUNC( y ); \
           FT_END_STMNT
 
-  /* use preprocessor's argument prescan to expand three arguments into six */
-#define OTV_NEST3( x, y, z )                     \
-          FT_BEGIN_STMNT                         \
-            valid->nesting_level = 0;            \
-            valid->func[0]       = OTV_FUNC(x);  \
-            valid->func[1]       = OTV_FUNC(y);  \
-            valid->func[2]       = OTV_FUNC(z);  \
+#define OTV_NEST3( x, y, z )                      \
+          FT_BEGIN_STMNT                          \
+            valid->nesting_level = 0;             \
+            valid->func[0]       = OTV_FUNC( x ); \
+            valid->func[1]       = OTV_FUNC( y ); \
+            valid->func[2]       = OTV_FUNC( z ); \
           FT_END_STMNT
 
 #define OTV_INIT                do ; while ( 0 )
@@ -338,22 +332,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-#if 0
-#define ChainPosClassSet  otv_x_Ox, "ChainPosClassSet"
-#define ChainPosRuleSet   otv_x_Ox, "ChainPosRuleSet"
-#define ChainSubClassSet  otv_x_Ox, "ChainSubClassSet"
-#define ChainSubRuleSet   otv_x_Ox, "ChainSubRuleSet"
-#define JstfLangSys       otv_x_Ox, "JstfLangSys"
-#define JstfMax           otv_x_Ox, "JstfMax"
-#define LigGlyph          otv_x_Ox, "LigGlyph"
-#define LigatureArray     otv_x_Ox, "LigatureArray"
-#define LigatureSet       otv_x_Ox, "LigatureSet"
-#define PosClassSet       otv_x_Ox, "PosClassSet"
-#define PosRuleSet        otv_x_Ox, "PosRuleSet"
-#define SubClassSet       otv_x_Ox, "SubClassSet"
-#define SubRuleSet        otv_x_Ox, "SubRuleSet"
-#endif
-
 #define ChainPosClassSetFunc  otv_x_Ox
 #define ChainPosRuleSetFunc   otv_x_Ox
 #define ChainSubClassSetFunc  otv_x_Ox
@@ -372,16 +350,6 @@ FT_BEGIN_HEADER
   otv_x_Ox ( FT_Bytes       table,
              OTV_Validator  valid );
 
-#if 0
-#define AlternateSubstFormat1     otv_u_C_x_Ox, "AlternateSubstFormat1"
-#define ChainContextPosFormat1    otv_u_C_x_Ox, "ChainContextPosFormat1"
-#define ChainContextSubstFormat1  otv_u_C_x_Ox, "ChainContextSubstFormat1"
-#define ContextPosFormat1         otv_u_C_x_Ox, "ContextPosFormat1"
-#define ContextSubstFormat1       otv_u_C_x_Ox, "ContextSubstFormat1"
-#define LigatureSubstFormat1      otv_u_C_x_Ox, "LigatureSubstFormat1"
-#define MultipleSubstFormat1      otv_u_C_x_Ox, "MultipleSubstFormat1"
-#endif
-
 #define AlternateSubstFormat1Func     otv_u_C_x_Ox
 #define ChainContextPosFormat1Func    otv_u_C_x_Ox
 #define ChainContextSubstFormat1Func  otv_u_C_x_Ox
@@ -390,19 +358,10 @@ FT_BEGIN_HEADER
 #define LigatureSubstFormat1Func      otv_u_C_x_Ox
 #define MultipleSubstFormat1Func      otv_u_C_x_Ox
 
-
   FT_LOCAL( void )
   otv_u_C_x_Ox( FT_Bytes       table,
                 OTV_Validator  valid );
 
-#if 0
-#define AlternateSet     otv_x_ux, "AlternateSet"
-#define AttachPoint      otv_x_ux, "AttachPoint"
-#define ExtenderGlyph    otv_x_ux, "ExtenderGlyph"
-#define JstfGPOSModList  otv_x_ux, "JstfGPOSModList"
-#define JstfGSUBModList  otv_x_ux, "JstfGSUBModList"
-#define Sequence         otv_x_ux, "Sequence"
-#endif
 #define AlternateSetFunc     otv_x_ux
 #define AttachPointFunc      otv_x_ux
 #define ExtenderGlyphFunc    otv_x_ux
@@ -414,13 +373,6 @@ FT_BEGIN_HEADER
   otv_x_ux( FT_Bytes       table,
             OTV_Validator  valid );
 
-#if 0
-#define PosClassRule  otv_x_y_ux_sy, "PosClassRule"
-#define PosRule       otv_x_y_ux_sy, "PosRule"
-#define SubClassRule  otv_x_y_ux_sy, "SubClassRule"
-#define SubRule       otv_x_y_ux_sy, "SubRule"
-#endif
-
 #define PosClassRuleFunc  otv_x_y_ux_sy
 #define PosRuleFunc       otv_x_y_ux_sy
 #define SubClassRuleFunc  otv_x_y_ux_sy
@@ -429,13 +381,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   otv_x_y_ux_sy( FT_Bytes       table,
                  OTV_Validator  valid );
-
-#if 0
-#define ChainPosClassRule  otv_x_ux_y_uy_z_uz_p_sp, "ChainPosClassRule"
-#define ChainPosRule       otv_x_ux_y_uy_z_uz_p_sp, "ChainPosRule"
-#define ChainSubClassRule  otv_x_ux_y_uy_z_uz_p_sp, "ChainSubClassRule"
-#define ChainSubRule       otv_x_ux_y_uy_z_uz_p_sp, "ChainSubRule"
-#endif
 
 #define ChainPosClassRuleFunc  otv_x_ux_y_uy_z_uz_p_sp
 #define ChainPosRuleFunc       otv_x_ux_y_uy_z_uz_p_sp
@@ -446,22 +391,12 @@ FT_BEGIN_HEADER
   otv_x_ux_y_uy_z_uz_p_sp( FT_Bytes       table,
                            OTV_Validator  valid );
 
-#if 0
-#define ContextPosFormat2    otv_u_O_O_x_Onx, "ContextPosFormat2"
-#define ContextSubstFormat2  otv_u_O_O_x_Onx, "ContextSubstFormat2"
-#endif
-
 #define ContextPosFormat2Func    otv_u_O_O_x_Onx
 #define ContextSubstFormat2Func  otv_u_O_O_x_Onx
 
   FT_LOCAL( void )
   otv_u_O_O_x_Onx( FT_Bytes       table,
                    OTV_Validator  valid );
-
-#if 0
-#define ContextPosFormat3    otv_u_x_y_Ox_sy, "ContextPosFormat3"
-#define ContextSubstFormat3  otv_u_x_y_Ox_sy, "ContextSubstFormat3"
-#endif
 
 #define ContextPosFormat3Func    otv_u_x_y_Ox_sy
 #define ContextSubstFormat3Func  otv_u_x_y_Ox_sy
@@ -470,22 +405,12 @@ FT_BEGIN_HEADER
   otv_u_x_y_Ox_sy( FT_Bytes       table,
                    OTV_Validator  valid );
 
-#if 0
-#define ChainContextPosFormat2        otv_u_O_O_O_O_x_Onx, "ChainContextPosFormat2"
-#define ChainContextSubstFormat2      otv_u_O_O_O_O_x_Onx, "ChainContextSubstFormat2"
-#endif
-
 #define ChainContextPosFormat2Func    otv_u_O_O_O_O_x_Onx
 #define ChainContextSubstFormat2Func  otv_u_O_O_O_O_x_Onx
 
   FT_LOCAL( void )
   otv_u_O_O_O_O_x_Onx( FT_Bytes       table,
                        OTV_Validator  valid );
-
-#if 0
-#define ChainContextPosFormat3        otv_u_x_Ox_y_Oy_z_Oz_p_sp, "ChainContextPosFormat3"
-#define ChainContextSubstFormat3      otv_u_x_Ox_y_Oy_z_Oz_p_sp, "ChainContextSubstFormat3"
-#endif
 
 #define ChainContextPosFormat3Func    otv_u_x_Ox_y_Oy_z_Oz_p_sp
 #define ChainContextSubstFormat3Func  otv_u_x_Ox_y_Oy_z_Oz_p_sp

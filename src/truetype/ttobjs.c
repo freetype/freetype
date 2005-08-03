@@ -133,7 +133,7 @@
     }
     else
     {
-      zone->max_points = maxPoints;
+      zone->max_points   = maxPoints;
       zone->max_contours = maxContours;
     }
 
@@ -321,13 +321,14 @@
   /*************************************************************************/
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    tt_size_run_fpgm                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Run the font program                                               */
+  /*    Run the font program.                                              */
   /*                                                                       */
   /* <Input>                                                               */
   /*    size :: A handle to the size object.                               */
@@ -415,7 +416,7 @@
   /*    tt_size_run_prep                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Run the control value program                                      */
+  /*    Run the control value program.                                     */
   /*                                                                       */
   /* <Input>                                                               */
   /*    size :: A handle to the size object.                               */
@@ -474,6 +475,7 @@
 
     return error;
   }
+
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
 
@@ -496,7 +498,9 @@
   {
     TT_Size   size  = (TT_Size)ttsize;
     FT_Error  error = TT_Err_Ok;
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     TT_Face    face   = (TT_Face)size->root.face;
     FT_Memory  memory = face->root.memory;
     FT_Int     i;
@@ -605,7 +609,9 @@
   tt_size_done( FT_Size  ttsize )           /* TT_Size */
   {
     TT_Size    size = (TT_Size)ttsize;
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     FT_Memory  memory = size->root.face->memory;
 
 
@@ -712,6 +718,7 @@
 #endif
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     {
       FT_UInt  i;
 
@@ -738,6 +745,7 @@
 
       error = tt_size_run_prep( size );
     }
+
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     if ( !error )

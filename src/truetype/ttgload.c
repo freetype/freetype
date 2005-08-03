@@ -1778,8 +1778,8 @@
         if ( face->os2.version != 0xFFFFU )
         {
           /* sTypoDescender is negative */
-          max_height     = (FT_Short)(face->os2.sTypoAscender -
-                                      face->os2.sTypoDescender);
+          max_height = (FT_Short)(face->os2.sTypoAscender -
+                                  face->os2.sTypoDescender);
 
           top_bearing    = (FT_Short)( ( max_height - height ) / 2 );
           advance_height = (FT_UShort)( max_height + face->os2.sTypoLineGap );

@@ -176,18 +176,19 @@
     *metrics = size->root.metrics;
 
     /* This bit flag, when set, indicates that the pixel size must be */
-    /* rounded to integer.  Nearly all TrueType fonts have this  bit  */
+    /* rounded to integer.  Nearly all TrueType fonts have this bit   */
     /* set, as hinting won't work really well otherwise.              */
     /*                                                                */
     if ( ( face->header.Flags & 8 ) != 0 )
     {
       FT_Long  dim_x, dim_y;
 
+
       dim_x = ( char_width  * horz_resolution + 36 ) / 72;
       dim_y = ( char_height * vert_resolution + 36 ) / 72;
 
-      dim_x = FT_PIX_ROUND(dim_x);
-      dim_y = FT_PIX_ROUND(dim_y);
+      dim_x = FT_PIX_ROUND( dim_x );
+      dim_y = FT_PIX_ROUND( dim_y );
 
       metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
       metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );

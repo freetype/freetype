@@ -1,9 +1,16 @@
+2005-08-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/otvalid/otvcommn.h: Remove dead code.
+
 2005-07-31  Chia I Wu  <b90201047@ntu.edu.tw>
 
-	* src/truetype/ttobjs.h (tt_size_run_fpgm, tt_size_run_prep): New functions.
+	* src/truetype/ttobjs.h (tt_size_run_fpgm, tt_size_run_prep): New
+	functions.
 
-	* src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep): New functions.
-	(tt_size_init): Add 4, instead of 2, (phantom) points to twilight zone.
+	* src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep): New
+	functions.
+	(tt_size_init): Add 4, instead of 2, (phantom) points to twilight
+	zone.
 	Move code that runs fpgm to tt_size_run_fpgm.
 	(Reset_Outline_Size): Move code that runs prep to tt_size_run_prep.
 	(tt_glyphzone_new): Allocate right size of arrays.
@@ -29,14 +36,27 @@
 
 2005-06-30  David Turner  <david@freetype.org>
 
-        * src/sfnt/ftbitmap.c, src/truetype/ttgload.c, src/sfnt/ttcmap.c:
-        removing compiler warnings (Visual C++ /W4)
+	* src/sfnt/ftbitmap.c, src/truetype/ttgload.c, src/sfnt/ttcmap.c:
+	Removing compiler warnings (Visual C++ /W4).
 
-        * Jamfile, src/otvalid/{otvcommn.h,otvgdef.c,otvgpos.c,otvgsub.c,
-        otvjstf.c}: modified the code to use a different pre-processor trick
-        to implement the OTV_NEST1, OTV_NEST2 and OTV_NEST3 macros. The code
-        now compiles neatly with Visual C++. The 'otvalid' module has been
-        put in the Jamfile build again.
+
+	Implement a work-around for broken C preprocessor in Visual C++ (it
+	has been confirmed by the MS developers that it is indeed a bug
+	which won't be fixed in the very near future).
+
+	* Jamfile (FT2_COMPONENTS): Include otvalid (again).
+
+	* src/otvalid/otvcommn.h (OTV_NAME, OTV_FUNC): New macros.
+	(OTV_NEST1, OTV_NEST2, OTV_NEST3): Use OTV_NAME and OTV_FUNC to
+	avoid argument expansion by argument prescan.
+	Append `Func' to all affected macros and change them to take just a
+	single argument.  Example: `AttachList' is renamed to
+	`AttachListFunc'.
+
+	* src/otvalid/otvgdef.c, src/otvalid/otvgpos.c,
+	src/otvalid/otvgsub.c, src/otvjstf.c: Append `Func' to macros
+	affected by the changes to OTV_NESTx and modify them to take just a
+	single argument.
 
 2005-06-20  Chia I Wu  <b90201047@ntu.edu.tw>
 
