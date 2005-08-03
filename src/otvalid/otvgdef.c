@@ -88,7 +88,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define  CaretValueFunc  otv_CaretValue_validate
+#define CaretValueFunc  otv_CaretValue_validate
 
   static void
   otv_CaretValue_validate( FT_Bytes       table,

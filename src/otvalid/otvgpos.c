@@ -861,7 +861,8 @@
       /* context rules since even invalid glyph indices/classes return  */
       /* meaningful results                                             */
 
-      OTV_NEST3( ChainContextPosFormat2,ChainPosClassSet, ChainPosClassRule );
+      OTV_NEST3( ChainContextPosFormat2,
+                 ChainPosClassSet, ChainPosClassRule );
       OTV_RUN( table, valid );
       break;
 
