@@ -1,3 +1,9 @@
+2005-08-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfdriver.c (sfnt_interface) [FT_OPTIMIZE_MEMORY]:
+	Reactivate pointers to tt_find_sbit_image and tt_load_sbit_metrics
+	to make X work again.
+
 2005-08-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/otvalid/otvcommn.h: Remove dead code.
