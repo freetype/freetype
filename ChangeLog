@@ -1,3 +1,16 @@
+2005-08-08  Werner Lemberg  <wl@gnu.org>
+
+	* docs/INSTALL.ANY: Updated.
+
+2005-08-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_builder_close_contour),
+	src/psaux/psobjs.c (t1_builder_close_contour): Protect against
+	zero `outline' pointer.
+
+	* src/base/ftgloadr.c (FT_GlyphLoader_Add): Protect against zero
+	`loader' address.
+
 2005-08-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfdriver.c (sfnt_interface) [FT_OPTIMIZE_MEMORY]:
