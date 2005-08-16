@@ -283,25 +283,14 @@
     if ( !slot )
       return TT_Err_Invalid_Slot_Handle;
 
-    /* check whether we want a scaled outline or bitmap */
-    if ( !size )
-      load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
+    if ( !size || !size->ttmetrics.valid )
+      return TT_Err_Invalid_Size_Handle;
 
-    if ( load_flags & FT_LOAD_NO_SCALE )
-      size = NULL;
-
-    /* reset the size object if necessary */
-    if ( size )
+    if ( load_flags & ( FT_LOAD_NO_RECURSE | FT_LOAD_NO_SCALE ) )
     {
-      /* these two object must have the same parent */
-      if ( size->root.face != slot->face )
-        return TT_Err_Invalid_Face_Handle;
-
-      if ( !size->ttmetrics.valid )
-      {
-        if ( FT_SET_ERROR( tt_size_reset( size ) ) )
-          return error;
-      }
+      load_flags |= FT_LOAD_NO_HINTING |
+                    FT_LOAD_NO_BITMAP  |
+                    FT_LOAD_NO_SCALE;
     }
 
     /* now load the glyph outline if necessary */
@@ -409,8 +398,8 @@
     tt_face_done,
     tt_size_init,
     tt_size_done,
-    0,                      /* FT_Slot_InitFunc        */
-    0,                      /* FT_Slot_DoneFunc        */
+    tt_slot_init,
+    0,                      /* FT_Slot_DoneFunc */
 
     Set_Char_Sizes,
     Set_Pixel_Sizes,
