@@ -263,15 +263,10 @@ FT_BEGIN_HEADER
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
   FT_EXPORT( TT_ExecContext )
-  TT_New_Context( TT_Face  face );
-
+  TT_New_Context( TT_Driver  driver );
 
   FT_LOCAL( FT_Error )
   TT_Done_Context( TT_ExecContext  exec );
-
-  FT_LOCAL( FT_Error )
-  TT_Destroy_Context( TT_ExecContext  exec,
-                      FT_Memory       memory );
 
   FT_LOCAL( FT_Error )
   TT_Load_Context( TT_ExecContext  exec,

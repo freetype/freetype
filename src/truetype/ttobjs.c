@@ -348,7 +348,7 @@
     if ( size->debug )
       exec = size->context;
     else
-      exec = TT_New_Context( face );
+      exec = ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
 
     if ( !exec )
       return TT_Err_Could_Not_Find_Context;
@@ -403,9 +403,6 @@
     if ( !error )
       TT_Save_Context( exec, size );
 
-    if ( !size->debug )
-      TT_Done_Context( exec );
-
     return error;
   }
 
@@ -436,7 +433,7 @@
     if ( size->debug )
       exec = size->context;
     else
-      exec = TT_New_Context( face );
+      exec = ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
 
     if ( !exec )
       return TT_Err_Could_Not_Find_Context;
@@ -469,9 +466,6 @@
     size->GS = exec->GS;
 
     TT_Save_Context( exec, size );
-
-    if ( !size->debug )
-      TT_Done_Context( exec );
 
     return error;
   }
@@ -917,15 +911,24 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_driver_init( FT_Module  driver )       /* TT_Driver */
+  tt_driver_init( FT_Module  ttdriver )     /* TT_Driver */
   {
-    FT_Error  error;
+
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
+    TT_Driver  driver = (TT_Driver)ttdriver;
 
 
-    /* set `extra' in glyph loader */
-    error = FT_GlyphLoader_CreateExtra( FT_DRIVER( driver )->glyph_loader );
+    if ( !TT_New_Context( driver ) )
+      return TT_Err_Could_Not_Find_Context;
 
-    return error;
+#else
+
+    FT_UNUSED( ttdriver );
+
+#endif
+
+    return TT_Err_Ok;
   }
 
 
@@ -950,13 +953,34 @@
     /* destroy the execution context */
     if ( driver->context )
     {
-      TT_Destroy_Context( driver->context, driver->root.root.memory );
+      TT_Done_Context( driver->context );
       driver->context = NULL;
     }
 #else
     FT_UNUSED( ttdriver );
 #endif
 
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    tt_slot_init                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Initializes a new slot object.                                     */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    slot :: A handle to the slot object.                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  tt_slot_init( FT_GlyphSlot  slot )
+  {
+    return FT_GlyphLoader_CreateExtra( slot->internal->loader );
   }
 
 

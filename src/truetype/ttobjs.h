@@ -442,6 +442,14 @@ FT_BEGIN_HEADER
   tt_driver_done( FT_Module  ttdriver );    /* TT_Driver */
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* Slot functions                                                      */
+  /*                                                                       */
+  FT_LOCAL( FT_Error )
+  tt_slot_init( FT_GlyphSlot  slot );
+
+
 FT_END_HEADER
 
 #endif /* __TTOBJS_H__ */
