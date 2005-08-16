@@ -1,5 +1,10 @@
 2005-08-16  Chia I Wu  <b90201047@ntu.edu.tw>
 
+	* src/truetype/ttinterp.c, src/truetype/ttinterp.h: Update copyright
+	messages.
+
+2005-08-16  Chia I Wu  <b90201047@ntu.edu.tw>
+
 	* src/truetype/ttinterp.c, src/truetype/ttinterp.h: Remove original
 	TT_Done_Context and rename TT_Destroy_Context to TT_Done_Context with
 	slight changes.
