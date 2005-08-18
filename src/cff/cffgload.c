@@ -508,6 +508,9 @@
     FT_Outline*  outline = builder->current;
 
 
+    if ( !outline )
+      return;
+
     /* XXXX: We must not include the last point in the path if it */
     /*       is located on the first point.                       */
     if ( outline->n_points > 1 )
