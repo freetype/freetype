@@ -444,7 +444,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* Slot functions                                                      */
+  /* Slot functions                                                        */
   /*                                                                       */
   FT_LOCAL( FT_Error )
   tt_slot_init( FT_GlyphSlot  slot );
