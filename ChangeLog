@@ -1,3 +1,8 @@
+2005-08-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix compiler
+	warnings.
+
 2005-08-16  Chia I Wu  <b90201047@ntu.edu.tw>
 
 	* src/truetype/ttinterp.c, src/truetype/ttinterp.h: Update copyright
@@ -6,37 +11,48 @@
 2005-08-16  Chia I Wu  <b90201047@ntu.edu.tw>
 
 	* src/truetype/ttinterp.c, src/truetype/ttinterp.h: Remove original
-	TT_Done_Context and rename TT_Destroy_Context to TT_Done_Context with
-	slight changes.
+	TT_Done_Context and rename TT_Destroy_Context to TT_Done_Context
+	with slight changes.
+	Update all callers.
+	(TT_New_Context): Now takes TT_Driver argument directly.
+	Update all callers.
 
 	* src/truetype/ttobjs.h (tt_slot_init): New function.
-
-	* src/truetype/ttobjs.c (tt_driver_init): Initialize execution context
-	here.
+	* src/truetype/ttobjs.c (tt_driver_init): Initialize execution
+	context here.
 	(tt_slot_init): New function to create extra points for the internal
-	glyph loader. We then use it directly, instead of face's glyph loader,
-	when loading glyph.
+	glyph loader.  We then use it directly, instead of face's glyph
+	loader, when loading glyph.
 
-	* src/truetype/ttdriver.c: Use tt_slot_init for glyph slot
-	initialization.
-	(TT_Load_Glyph): Load flag dependencies are handled here.
-	Return error if size is NULL.
+	* src/truetype/ttdriver.c (tt_driver_class): Use tt_slot_init for
+	glyph slot initialization.
+	(Load_Glyph): Load flag dependencies are handled here.  Return error
+	if size is NULL.
 
-	* src/truetype/ttgload.c: Heavy cleanup and refactor.
+	* src/truetype/ttgload.c: Heavy cleanup and refactoring.
+	(org_to_cur): Removed.
+	(TT_Load_Simple_Glyph): Call FT_GlyphLoader_CheckPoints.
 	(TT_Hint_Glyph): New funcion to hint a zone, prepared by caller.
-	(TT_Process_Simple_Glyph): Use loader->pp's instead of recalculating.
+	(TT_Process_Simple_Glyph): s/load/loader/.
+	Use loader->pp values instead of recalculation.
 	Use TT_Hint_Glyph.
-	No need to save/restore loader->stream before/after
+	No need to save/restore loader->stream before and after
 	TT_Vary_Get_Glyph_Deltas now.
-	(TT_LOADER_SET_PP): New macro to calculate and set the four phantom points.
-	(TT_Process_Composite_Component, TT_Process_Composite_Glyph,
-	load_truetype_glyph): Refactor load_truetype_glyph into these three functions.
-	Never set exec->glyphSize to 0. (close #13107)
+	(TT_LOADER_SET_PP): New macro to calculate and set the four phantom
+	points.
+	(load_truetype_glyph): Never set exec->glyphSize to 0.  This closes
+	Savannah bug #13107.
 	Forget glyph frame before calling TT_Process_Simple_Glyph.
-	(TT_Load_Glyph, load_sbit_image, tt_loader_init): Refactor TT_Load_Glyph into
-	these three functions.
-	Set various fields of `glyph' here, instead of in load_truetype_glyph
-	and compute_glyph_metrics.
+	Use TT_LOADER_SET_PP.
+	Scale all four phantom points.
+	Split off some functionality to ...
+	(TT_Process_Composite_Component, TT_Process_Composite_Glyph): These
+	new functions.
+	(TT_Load_Glyph): Set various fields of `glyph' here, not in
+	load_truetype_glyph and compute_glyph_metrics.
+	Split off some functionality to ...
+	(load_sbit_image, tt_loader_init): These new functions.
+	(compute_glyph_metrics): Call FT_Outline_Get_CBox.
 
 2005-08-08  Werner Lemberg  <wl@gnu.org>
 

@@ -955,14 +955,14 @@
     FT_Pos          x, y;
     
 
-    have_scale = ( subglyph->flags & ( WE_HAVE_A_SCALE     |
-                                       WE_HAVE_AN_XY_SCALE |
-                                       WE_HAVE_A_2X2       ) );
+    have_scale = subglyph->flags & ( WE_HAVE_A_SCALE     |
+                                     WE_HAVE_AN_XY_SCALE |
+                                     WE_HAVE_A_2X2       );
 
     /* perform the transform required for this subglyph */
     if ( have_scale )
     {
-      FT_UInt i;
+      FT_UInt  i;
 
 
       for ( i = num_base_points; i < num_points; i++ )
@@ -978,17 +978,15 @@
       FT_Vector*  p2;
 
 
-      /* match l-th point of the newly loaded component to the k-th point of  */
-      /* the previously loaded components.                                    */
+      /* match l-th point of the newly loaded component to the k-th point */
+      /* of the previously loaded components.                             */
 
       /* change to the point numbers used by our outline */
       k += start_point;
       l += num_base_points;
-      if ( k >= (FT_UInt)num_base_points ||
-           l >= (FT_UInt)num_points  )
-      {
+      if ( k >= num_base_points ||
+           l >= num_points      )
         return TT_Err_Invalid_Composite;
-      }
 
       p1 = gloader->base.outline.points + k;
       p2 = gloader->base.outline.points + l;
@@ -1004,9 +1002,9 @@
       if ( !x && !y )
         return TT_Err_Ok;
 
-/* Use a default value dependent on                                     */
-/* TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED.  This is useful for old TT */
-/* fonts which don't set the xxx_COMPONENT_OFFSET bit.                  */
+  /* Use a default value dependent on                                     */
+  /* TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED.  This is useful for old TT */
+  /* fonts which don't set the xxx_COMPONENT_OFFSET bit.                  */
 
       if ( have_scale &&
 #ifdef TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED
@@ -1017,10 +1015,10 @@
       {
 #if 0
 
-/*************************************************************************/
-/*                                                                       */
-/* This algorithm is what Apple documents.  But it doesn't work.         */
-/*                                                                       */
+  /*************************************************************************/
+  /*                                                                       */
+  /* This algorithm is what Apple documents.  But it doesn't work.         */
+  /*                                                                       */
         int  a = subglyph->transform.xx > 0 ?  subglyph->transform.xx
                                             : -subglyph->transform.xx;
         int  b = subglyph->transform.yx > 0 ?  subglyph->transform.yx
@@ -1042,10 +1040,10 @@
 
 #else /* 0 */
 
-/*************************************************************************/
-/*                                                                       */
-/* This algorithm is a guess and works much better than the above.       */
-/*                                                                       */
+  /*************************************************************************/
+  /*                                                                       */
+  /* This algorithm is a guess and works much better than the above.       */
+  /*                                                                       */
         FT_Fixed  mac_xscale = FT_SqrtFixed(
                                  FT_MulFix( subglyph->transform.xx,
                                             subglyph->transform.xx ) +
@@ -1067,8 +1065,8 @@
 
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
       {
-        FT_Fixed    x_scale = ((TT_Size)loader->size)->metrics.x_scale;
-        FT_Fixed    y_scale = ((TT_Size)loader->size)->metrics.y_scale;
+        FT_Fixed  x_scale = ((TT_Size)loader->size)->metrics.x_scale;
+        FT_Fixed  y_scale = ((TT_Size)loader->size)->metrics.y_scale;
 
 
         x = FT_MulFix( x, x_scale );
@@ -1113,7 +1111,9 @@
     outline = &loader->gloader->base.outline;
 
     /* make room for phantom points */
-    error = FT_GlyphLoader_CheckPoints( loader->gloader, outline->n_points + 4, 0 );
+    error = FT_GlyphLoader_CheckPoints( loader->gloader,
+                                        outline->n_points + 4,
+                                        0 );
     if ( error )
       return error;
 
@@ -1137,7 +1137,7 @@
       /* TT_Load_Composite_Glyph only gives us the offset of instructions */
       /* so we read them here */
       if ( FT_STREAM_SEEK( loader->ins_pos ) ||
-           FT_READ_USHORT( n_ins ) )
+           FT_READ_USHORT( n_ins )           )
         return error;
 
       FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
@@ -1161,7 +1161,8 @@
 
 #endif
 
-    tt_prepare_zone( &loader->zone, &loader->gloader->base, start_point, start_contour );
+    tt_prepare_zone( &loader->zone, &loader->gloader->base,
+                     start_point, start_contour );
     loader->zone.n_points += 4;
 
     return TT_Hint_Glyph( loader, 1 );
@@ -1283,9 +1284,10 @@
           goto Exit;
         left_bearing  = (FT_Short)metrics.bearing_x;
         advance_width = (FT_UShort)metrics.advance;
+
 # if 0
 
-      /* GWW: Do I do the same for vertical metrics ??? */
+        /* GWW: Do I do the same for vertical metrics ??? */
         metrics.bearing_x = 0;
         metrics.bearing_y = top_bearing;
         metrics.advance = advance_height;
@@ -1316,7 +1318,7 @@
     }
 
     /* Set `offset' to the start of the glyph relative to the start of */
-    /* the 'glyf' table, and `byte_len' to the length of the glyph in  */
+    /* the `glyf' table, and `byte_len' to the length of the glyph in  */
     /* bytes.                                                          */
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -1346,7 +1348,8 @@
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
-      offset = tt_face_get_location( face, glyph_index, (FT_UInt*)&loader->byte_len );
+      offset = tt_face_get_location( face, glyph_index,
+                                     (FT_UInt*)&loader->byte_len );
 
     if ( loader->byte_len == 0 )
     {
@@ -1525,7 +1528,7 @@
       /*********************************************************************/
 
       {
-        FT_Int       n, num_base_points;
+        FT_UInt      n, num_base_points;
         FT_SubGlyph  subglyph       = 0;
 
         FT_UInt      num_points     = start_point;
@@ -1536,7 +1539,7 @@
         FT_GlyphLoader_Add( gloader );
 
         /* read each subglyph independently */
-        for ( n = 0; n < (FT_Int)num_subglyphs; n++ )
+        for ( n = 0; n < num_subglyphs; n++ )
         {
           FT_Vector  pp[4];
 
@@ -1815,6 +1818,7 @@
 
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
   static FT_Error
   load_sbit_image( TT_Size       size,
                    TT_GlyphSlot  glyph,
@@ -1826,6 +1830,7 @@
     FT_Stream           stream;
     FT_Error            error;
     TT_SBit_MetricsRec  metrics;
+
 
     face   = (TT_Face)glyph->face;
     sfnt   = (SFNT_Service)face->sfnt;
@@ -1869,7 +1874,8 @@
 
     return error;
   }
-#endif
+
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
 
   static FT_Error
@@ -1878,11 +1884,11 @@
                   TT_GlyphSlot  glyph,
                   FT_Int32      load_flags )
   {
-    TT_Face         face;
-    FT_Stream       stream;
+    TT_Face    face;
+    FT_Stream  stream;
 
 
-    face = (TT_Face)glyph->face;
+    face   = (TT_Face)glyph->face;
     stream = face->root.stream;
 
     FT_MEM_ZERO( loader, sizeof ( TT_LoaderRec ) );
@@ -1934,6 +1940,8 @@
 
     {
       FT_Error  error = face->goto_table( face, TTAG_glyf, stream, 0 );
+
+
       if ( error )
       {
         FT_ERROR(( "TT_Load_Glyph: could not access glyph table\n" ));
@@ -1945,6 +1953,7 @@
     /* get face's glyph loader */
     {
       FT_GlyphLoader  gloader = glyph->internal->loader;
+
 
       FT_GlyphLoader_Rewind( gloader );
       loader->gloader = gloader;
@@ -2010,7 +2019,7 @@
     /*                                                 */
     /* XXX: The convention should be emphasized in     */
     /*      the documents because it can be confusing. */
-    if ( size->strike_index != 0xFFFFU &&
+    if ( size->strike_index != 0xFFFFU           &&
          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );
@@ -2042,7 +2051,7 @@
       }
       else
       {
-        glyph->outline = loader.gloader->base.outline;
+        glyph->outline        = loader.gloader->base.outline;
         glyph->outline.flags &= ~FT_OUTLINE_SINGLE_PASS;
 
         /* translate array so that (0,0) is the glyph's origin */
