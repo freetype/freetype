@@ -1092,12 +1092,20 @@
     }
     else
     {
-      /* The horizontal header is mandatory; return an error if we */
-      /* don't find it.                                            */
+      /* The horizontal header is mandatory for most fonts; return */
+      /* an error if we don't find it.                             */
       error = face->goto_table( face, TTAG_hhea, stream, 0 );
       if ( error )
       {
         error = SFNT_Err_Horiz_Header_Missing;
+
+        /* No `hhea' table necessary for SFNT Mac fonts. */
+        if ( face->format_tag == TTAG_true )
+        {
+          FT_TRACE2(( "missing.  This is an SFNT Mac font.\n"));
+          error = SFNT_Err_Ok;
+        }
+
         goto Exit;
       }
 

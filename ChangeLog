@@ -1,3 +1,9 @@
+2005-08-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (tt_face_load_metrics_header): Ignore missing
+	`hhea' table for SFNT Mac fonts.  Change based on a patch by
+	mpsuzuki@hiroshima-u.ac.jp.
+
 2005-08-20  Masatake YAMATO  <jet@gyve.org>
 
 	* src/otvalid/otvmod.c (otv_validate): Use ft_validator_run instead
