@@ -283,7 +283,7 @@
     if ( !slot )
       return TT_Err_Invalid_Slot_Handle;
 
-    if ( !size || !size->ttmetrics.valid )
+    if ( !size )
       return TT_Err_Invalid_Size_Handle;
 
     if ( load_flags & ( FT_LOAD_NO_RECURSE | FT_LOAD_NO_SCALE ) )

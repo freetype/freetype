@@ -2029,6 +2029,9 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
+    if ( !size->ttmetrics.valid )
+      return TT_Err_Invalid_Size_Handle;
+
     if ( load_flags & FT_LOAD_SBITS_ONLY )
       return TT_Err_Invalid_Argument;
 
