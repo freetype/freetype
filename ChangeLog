@@ -1,3 +1,9 @@
+2005-08-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Only translate outline
+	to (0,0) if bit 1 of the `head' table isn't set.  This improves
+	rendering of buggy fonts.
+
 2005-08-20  Chia I Wu  <b90201047@ntu.edu.tw>
 
 	* src/truetype/ttdriver.c (Load_Glyph): Don't check the validity of
@@ -235,3 +241,20 @@
 2005-06-13  Werner Lemberg  <wl@gnu.org>
 
 	* docs/release: Update.
+
+----------------------------------------------------------------------------
+
+Copyright 2005 by
+David Turner, Robert Wilhelm, and Werner Lemberg.
+
+This file is part of the FreeType project, and may only be used, modified,
+and distributed under the terms of the FreeType project license,
+LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+indicate that you have read the license and understand and accept it
+fully.
+
+
+Local Variables:
+version-control: never
+coding: latin-1
+End:

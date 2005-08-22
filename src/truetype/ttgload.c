@@ -2057,8 +2057,9 @@
         glyph->outline        = loader.gloader->base.outline;
         glyph->outline.flags &= ~FT_OUTLINE_SINGLE_PASS;
 
-        /* translate array so that (0,0) is the glyph's origin */
-        if ( loader.pp1.x )
+        /* In case bit 1 of the `flags' field in the `head' table isn't */
+        /* set, translate array so that (0,0) is the glyph's origin.    */
+        if ( ( face->header.Flags & 2 ) == 0 && loader.pp1.x )
           FT_Outline_Translate( &glyph->outline, -loader.pp1.x, 0 );
       }
 
