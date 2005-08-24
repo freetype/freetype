@@ -1,3 +1,50 @@
+2005-08-23  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	Add gxvalid module to validate TrueType GX/AAT tables.
+
+	Modifications on existing files:
+
+	* Jamfile: Register gxvalid module.
+	* src/base/Jamfile: Register ftgxval.c.
+	* src/base/rule.mk: Register ftgxval.c.
+	* docs/INSTALL.ANY: Register gxvalid/gxvalid.c.
+
+	* include/freetype/config/ftheader.h: Add macro to include gxvalid
+	header file, FT_GX_VALIDATE_H.
+	* include/freetype/config/ftmodule.h: Register gxv_module_class.
+
+	* include/freetype/ftchapters.h: Add comment about gx_validation.
+	* include/freetype/ftotval.h: Change keyword FT_VALIDATE_XXX
+	to FT_VALIDATE_OTXXX to co-exist gxvalid.
+	* include/freetype/tttags.h: Add tag for TrueType GX/AAT tables.
+
+	* include/freetype/internal/ftserv.h: Add macro to use gxvalid
+	service, FT_SERVICE_GX_VALIDATE_H
+	* include/freetype/internal/fttrace.h: Add trace facilities
+	for gxvalid.
+
+	New files on existing directories:
+
+	* include/freetype/internal/services/svgxval.h: Registration of
+	validation service for TrueType GX/AAT and classic kern table.
+	* include/freetype/ftgxval.h: Public API definition to use gxvalid.
+	* src/base/ftgxval.c: Public API of gxvalid.
+
+	New files under src/gxvalid/:
+
+	* src/gxvalid/Jamfile src/gxvalid/README src/gxvalid/module.mk
+	src/gxvalid/rules.mk src/gxvalid/gxvalid.c src/gxvalid/gxvalid.h
+	src/gxvalid/gxvbsln.c src/gxvalid/gxvcommn.c src/gxvalid/gxvcommn.h
+	src/gxvalid/gxverror.h src/gxvalid/gxvfeat.c src/gxvalid/gxvfgen.c
+	src/gxvalid/gxvjust.c src/gxvalid/gxvkern.c src/gxvalid/gxvlcar.c
+	src/gxvalid/gxvmod.c src/gxvalid/gxvmod.h src/gxvalid/gxvmort.c
+	src/gxvalid/gxvmort.h src/gxvalid/gxvmort0.c src/gxvalid/gxvmort1.c
+	src/gxvalid/gxvmort2.c src/gxvalid/gxvmort4.c src/gxvalid/gxvmort5.c
+	src/gxvalid/gxvmorx.c src/gxvalid/gxvmorx.h src/gxvalid/gxvmorx0.c
+	src/gxvalid/gxvmorx1.c src/gxvalid/gxvmorx2.c src/gxvalid/gxvmorx4.c
+	src/gxvalid/gxvmorx5.c src/gxvalid/gxvopbd.c src/gxvalid/gxvprop.c
+	src/gxvalid/gxvtrak.c: New files, gxvalid body.
+
 2005-08-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Load_Glyph): Only translate outline

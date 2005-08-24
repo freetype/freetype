@@ -557,6 +557,18 @@
   /*                                                                       */
 #define FT_OPENTYPE_VALIDATE_H  <freetype/ftotval.h>
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
+  /*    FT_GX_VALIDATE_H                                                   */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the optional FreeType 2 API used to validate TrueTypeGX/AAT tables */
+  /*    (feat, mort, morx, bsln, just, kern, opbd, trak, prop).            */
+  /*                                                                       */
+#define FT_GX_VALIDATE_H  <freetype/ftgxval.h>
+
 
   /* */
 
