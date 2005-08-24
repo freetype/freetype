@@ -309,6 +309,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_POSTSCRIPT_INFO_H    <freetype/internal/services/svpsinfo.h>
 #define FT_SERVICE_POSTSCRIPT_NAME_H    <freetype/internal/services/svpostnm.h>
 #define FT_SERVICE_SFNT_H               <freetype/internal/services/svsfnt.h>
+#define FT_SERVICE_GX_VALIDATE_H        <freetype/internal/services/svgxval.h>
 #define FT_SERVICE_TT_CMAP_H            <freetype/internal/services/svttcmap.h>
 #define FT_SERVICE_WINFNT_H             <freetype/internal/services/svwinfnt.h>
 #define FT_SERVICE_XFREE86_NAME_H       <freetype/internal/services/svxf86nm.h>

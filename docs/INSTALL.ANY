@@ -69,6 +69,7 @@ I. Standard procedure
       src/cache/ftcache.c     -- cache sub-system (in beta)
       src/gzip/ftgzip.c       -- support for compressed fonts (.gz)
       src/lzw/ftlzw.c         -- support for compressed fonts (.Z)
+      src/gxvalid/gxvalid.c   -- TrueTypeGX/AAT table validation
       src/otvalid/otvalid.c   -- OpenType table validation
       src/psaux/psaux.c       -- PostScript Type 1 parsing
       src/pshinter/pshinter.c -- PS hinting module

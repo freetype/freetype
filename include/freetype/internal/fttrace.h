@@ -114,5 +114,19 @@ FT_TRACE_DEF( otvgpos )
 FT_TRACE_DEF( otvgsub )
 FT_TRACE_DEF( otvjstf )
 
+  /* TrueTypeGX/AAT validation components */
+FT_TRACE_DEF( gxvmodule )
+FT_TRACE_DEF( gxvcommon )
+FT_TRACE_DEF( gxvfeat )
+FT_TRACE_DEF( gxvmort )
+FT_TRACE_DEF( gxvmorx )
+FT_TRACE_DEF( gxvbsln )
+FT_TRACE_DEF( gxvjust )
+FT_TRACE_DEF( gxvkern )
+FT_TRACE_DEF( gxvopbd )
+FT_TRACE_DEF( gxvtrak )
+FT_TRACE_DEF( gxvprop )
+FT_TRACE_DEF( gxvlcar )
+
 
 /* END */

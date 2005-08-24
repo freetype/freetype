@@ -64,7 +64,7 @@ FT_BEGIN_HEADER
  /**********************************************************************
   *
   * @enum:
-  *    FT_VALIDATE_XXX
+  *    FT_VALIDATE_OTXXX
   *
   * @description:
   *    A list of bit-field constants used with @FT_OpenType_Validate to
@@ -121,7 +121,7 @@ FT_BEGIN_HEADER
   *
   *    validation_flags ::
   *       A bit field which specifies the tables to be validated.  See
-  *       @FT_VALIDATE_XXX for possible values.
+  *       @FT_VALIDATE_OTXXX for possible values.
   *
   * @output:
   *    BASE_table ::
