@@ -1,3 +1,8 @@
+2005-08-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale): Initialize
+	render mode properly.  Reported by chris@dokein.co.uk.
+
 2005-08-23  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	Add gxvalid module to validate TrueType GX/AAT tables.
