@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Tags for TrueType and OpenType tables (specification only).          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2004 by                                           */
+/*  Copyright 1996-2001, 2004, 2005 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -79,8 +79,8 @@ FT_BEGIN_HEADER
 #define TTAG_post  FT_MAKE_TAG( 'p', 'o', 's', 't' )
 #define TTAG_prep  FT_MAKE_TAG( 'p', 'r', 'e', 'p' )
 #define TTAG_prop  FT_MAKE_TAG( 'p', 'r', 'o', 'p' )
-#define TTAG_true  FT_MAKE_TAG( 't', 'r', 'u', 'e' )
 #define TTAG_trak  FT_MAKE_TAG( 't', 'r', 'a', 'k' )
+#define TTAG_true  FT_MAKE_TAG( 't', 'r', 'u', 'e' )
 #define TTAG_ttc   FT_MAKE_TAG( 't', 't', 'c', ' ' )
 #define TTAG_ttcf  FT_MAKE_TAG( 't', 't', 'c', 'f' )
 #define TTAG_VDMX  FT_MAKE_TAG( 'V', 'D', 'M', 'X' )

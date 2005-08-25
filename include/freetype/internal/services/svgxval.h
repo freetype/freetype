@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for validating TrueTypeGX/AAT tables (specification).   */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  Masatake YAMATO, Red Hat K.K.,                                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
@@ -17,10 +17,13 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
+
 
 #ifndef __SVGXVAL_H__
 #define __SVGXVAL_H__
@@ -35,16 +38,16 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_ID_CLASSICKERN_VALIDATE  "classickern-validate"
 
   typedef FT_Error
-  (*gxv_validate_func)( FT_Face    face,
-                        FT_UInt    gx_flags,
-                        FT_Bytes   tables[FT_VALIDATE_GX_LENGTH],
-                        FT_UInt    table_length );
+  (*gxv_validate_func)( FT_Face   face,
+                        FT_UInt   gx_flags,
+                        FT_Bytes  tables[FT_VALIDATE_GX_LENGTH],
+                        FT_UInt   table_length );
 
 
   typedef FT_Error
-  (*ckern_validate_func) ( FT_Face   face,
-                           FT_UInt   ckern_flags,
-                           FT_Bytes  *ckern_table );
+  (*ckern_validate_func)( FT_Face   face,
+                          FT_UInt   ckern_flags,
+                          FT_Bytes  *ckern_table );
 
 
   FT_DEFINE_SERVICE( GXvalidate )

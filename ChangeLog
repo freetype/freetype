@@ -1,3 +1,7 @@
+2005-08-24  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Mention gxvalid module.
+
 2005-08-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale): Initialize
@@ -14,19 +18,19 @@
 	* src/base/rule.mk: Register ftgxval.c.
 	* docs/INSTALL.ANY: Register gxvalid/gxvalid.c.
 
-	* include/freetype/config/ftheader.h: Add macro to include gxvalid
-	header file, FT_GX_VALIDATE_H.
+	* include/freetype/config/ftheader.h (FT_GX_VALIDATE_H): New macro
+	to include gxvalid header file.
 	* include/freetype/config/ftmodule.h: Register gxv_module_class.
 
 	* include/freetype/ftchapters.h: Add comment about gx_validation.
 	* include/freetype/ftotval.h: Change keyword FT_VALIDATE_XXX
-	to FT_VALIDATE_OTXXX to co-exist gxvalid.
-	* include/freetype/tttags.h: Add tag for TrueType GX/AAT tables.
+	to FT_VALIDATE_OTXXX to co-exist with gxvalid.
+	* include/freetype/tttags.h: Add tags for TrueType GX/AAT tables.
 
-	* include/freetype/internal/ftserv.h: Add macro to use gxvalid
-	service, FT_SERVICE_GX_VALIDATE_H
-	* include/freetype/internal/fttrace.h: Add trace facilities
-	for gxvalid.
+	* include/freetype/internal/ftserv.h (FT_SERVICE_GX_VALIDATE_H): New
+	macro for gxvalid service.
+	* include/freetype/internal/fttrace.h: Add trace facilities for
+	gxvalid.
 
 	New files on existing directories:
 
