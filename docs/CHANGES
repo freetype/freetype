@@ -6,6 +6,13 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   II. IMPORTANT CHANGES
 
+    - A  new API  `FT_TrueTypeGX_Validate'  (in FT_GX_VALIDATE_H)  has
+      been added to validate TrueType GX/ATT tables (feat, mort, morx,
+      bsln, just, kern, opbd, trak,  prop).  After validation it is no
+      longer  necessary to  check  for errors  in  those tables  while
+      accessing  them.  This  code  has been  contributed by  Masatake
+      Yamato and Toshiya Suzuki.
+
     - The following callback function types have  changed slightly (by
       adding the `const' keyword where appropriate):
 

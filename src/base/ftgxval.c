@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for validating TrueTyepGX/AAT tables (body).            */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  Masatake YAMATO, Redhat K.K,                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
@@ -17,22 +17,26 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
+
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_GX_VALIDATE_H
 
+
   /* documentation is in ftgxval.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_TrueTypeGX_Validate( FT_Face    face,
-                          FT_UInt    validation_flags,
-                          FT_Bytes   tables[FT_VALIDATE_GX_LENGTH],
-                          FT_UInt    table_length )
+  FT_TrueTypeGX_Validate( FT_Face   face,
+                          FT_UInt   validation_flags,
+                          FT_Bytes  tables[FT_VALIDATE_GX_LENGTH],
+                          FT_UInt   table_length )
   {
     FT_Service_GXvalidate  service;
     FT_Error               error;
@@ -66,9 +70,9 @@
 
 
   FT_EXPORT_DEF( FT_Error )
-  FT_ClassicKern_Validate( FT_Face   face,
-                           FT_UInt   validation_flags,
-                           FT_Bytes *ckern_table )
+  FT_ClassicKern_Validate( FT_Face    face,
+                           FT_UInt    validation_flags,
+                           FT_Bytes  *ckern_table )
   {
     FT_Service_CKERNvalidate  service;
     FT_Error                  error;
