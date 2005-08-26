@@ -8,4 +8,4 @@ Description: A free, high-quality, and portable font engine.
 Version: @ft_version@
 Requires:
 Libs: -L${libdir} -lfreetype @LIBZ@
-Cflags: -I${includedir}/freetype2
+Cflags: -I${includedir}/freetype2 -I${includedir}
