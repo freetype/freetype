@@ -1,3 +1,8 @@
+2005-08-28  George Williams  <gww@silcom.com>
+
+	* src/truetype/ttgload.c [TT_MAX_COMPOSITE_RECURSE]: Removed.
+	(load_truetype_glyph): Limit recursion depth by `maxComponentDepth'.
+
 2005-08-25  J. Ali Harlow  <ali@avrc.city.ac.uk>
 
 	* builds/unix/freetype2.in (CFlags): Add missing directory.

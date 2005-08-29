@@ -63,15 +63,6 @@
 #define UNSCALED_COMPONENT_OFFSET  0x1000
 
 
-/* Maximum recursion depth we allow for composite glyphs.
- * The TrueType spec doesn't say anything about recursion,
- * so it isn't clear that recursion is allowed at all. But
- * we'll be generous.
- */
-#define TT_MAX_COMPOSITE_RECURSE 5
-
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1221,7 +1212,7 @@
 #endif
 
 
-    if ( recurse_count >= TT_MAX_COMPOSITE_RECURSE )
+    if ( recurse_count >= face->max_profile.maxComponentDepth )
     {
       error = TT_Err_Invalid_Composite;
       goto Exit;
