@@ -57,6 +57,26 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    user_allocation                                                    */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    User allocation                                                    */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    How client applications should allocate FreeType data structures.  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    FreeType assumes that structures allocated by the user and passed  */
+  /*    as arguments are zeroed out except for the actual data.  With      */
+  /*    other words, it is recommended to use `calloc' (or variants of it) */
+  /*    instead of `malloc' for allocation.                                */
+  /*                                                                       */
+  /*************************************************************************/
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /*                                                                       */
   /*                        B A S I C   T Y P E S                          */

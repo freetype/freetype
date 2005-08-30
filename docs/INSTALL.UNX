@@ -1,5 +1,5 @@
 This document contains instructions on how to build the FreeType library
-on Unix systems.  This also works for emulations like  Cygwin or MSys on
+on Unix systems.  This also works  for emulations like Cygwin or MSys on
 Win32:
 
 
@@ -12,8 +12,11 @@ Win32:
 
     [Well, this is not  really correct.  Recently, a perl implementation
     of make called `makepp' has appeared which can also build FreeType 2
-    successfully  on Unix platforms.   See http://makepp.sourceforge.net
-    for more details; you need version 1.19 or newer,  and you must pass
+    successfully on Unix platforms.  See
+
+      http://makepp.sourceforge.net
+
+    for more details; you need version  1.19 or newer, and you must pass
     option `--norc-substitution'.]
 
     Trying to compile the library  with a different Make tool will print
@@ -36,7 +39,7 @@ Win32:
       make
       make install           (as root)
 
-    The default  installation path is  "/usr/local".  It can  be changed
+    The default  installation path is  `/usr/local'.  It can  be changed
     with the `--prefix=<path>' option.  Example:
 
       ./configure --prefix=/usr
@@ -49,8 +52,8 @@ Win32:
        gmake
        gmake install            (as root)
 
-    If  this  still  doesn't   work,  something's rotten on your system
-    (e.g. you are using a very old version of GNU Make).
+    If this still doesn't work, there must be a problem with your system
+    (e.g., you are using a very old version of GNU Make).
 
     It  is  possible  to  compile  FreeType in  a  different  directory.
     Assuming the  FreeType source  files in directory  `/src/freetype' a
@@ -63,13 +66,13 @@ Win32:
 
 ------------------------------------------------------------------------
 
-Copyright 2003, 2004 by
+Copyright 2003, 2004, 2005 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
-This  file  is  part  of the  FreeType  project, and may  only be  used,
-modified,  and  distributed  under  the  terms of  the FreeType  project
-license, LICENSE.TXT.   By continuing to use, modify, or distribute this
-file you  indicate that  you have  read the  license and understand  and
+This  file is  part  of the  FreeType  project, and  may  only be  used,
+modified,  and  distributed under  the  terms  of  the FreeType  project
+license, LICENSE.TXT.  By continuing  to use, modify, or distribute this
+file  you indicate that  you have  read the  license and  understand and
 accept it fully.
 
 

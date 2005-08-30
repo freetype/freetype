@@ -410,37 +410,39 @@ class HtmlFormatter(Formatter):
         print section.title
         print section_title_footer
 
-        # print section synopsys
-        print section_synopsis_header
-        print "<table align=center cellspacing=5 cellpadding=0 border=0>"
-
         maxwidth = 0
         for b in section.blocks.values():
-            if len(b.name) > maxwidth:
-                maxwidth = len(b.name)
+            if len( b.name ) > maxwidth:
+                maxwidth = len( b.name )
 
         width  = 70  # XXX magic number
-        columns = width / maxwidth
-        if columns < 1:
-            columns = 1
+        if maxwidth <> 0:
+            # print section synopsis
+            print section_synopsis_header
+            print "<table align=center cellspacing=5 cellpadding=0 border=0>"
 
-        count   = len(section.block_names)
-        rows    = (count + columns-1)/columns
-        for r in range(rows):
-            line = "<tr>"
-            for c in range(columns):
-                i = r + c*rows
-                line = line + '<td></td><td>'
-                if i < count:
-                    name = section.block_names[i]
-                    line = line + '<a href="#' + name + '">' + name + '</a>'
+            columns = width / maxwidth
+            if columns < 1:
+                columns = 1
 
-                line = line + '</td>'
-            line = line + "</tr>"
-            print line
+            count = len( section.block_names )
+            rows  = ( count + columns - 1 ) / columns
 
-        print "</table><br><br>"
-        print section_synopsis_footer
+            for r in range( rows ):
+                line = "<tr>"
+                for c in range( columns ):
+                    i = r + c * rows
+                    line = line + '<td></td><td>'
+                    if i < count:
+                        name = section.block_names[i]
+                        line = line + '<a href="#' + name + '">' + name + '</a>'
+
+                    line = line + '</td>'
+                line = line + "</tr>"
+                print line
+
+            print "</table><br><br>"
+            print section_synopsis_footer
 
         print description_header
         print self.make_html_items( section.description )

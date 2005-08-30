@@ -1,3 +1,17 @@
+2005-08-29  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h, include/freetype/ftchapters.h: Add
+	a preliminary section with some explanations about user allocation.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter.section_enter):
+	Don't abort if there are no data types, functions, etc., in a
+	section.
+	Print synopsis only if we have a data type, function, etc.
+
+	* docs/INSTALL.ANY, docs/INSTALL, docs/INSTALL.UNX, docs/CUSTOMIZE,
+	docs/INSTALL.GNU, docs/TRUETYPE, docs/DEBUG, docs/UPGRADE.UNX,
+	docs/VERSION.DLL, docs/formats.txt: Revised, formatted.
+
 2005-08-28  George Williams  <gww@silcom.com>
 
 	* src/truetype/ttgload.c [TT_MAX_COMPOSITE_RECURSE]: Removed.

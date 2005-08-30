@@ -11,20 +11,22 @@ the file INSTALL.UNX instead.
   1. Install GNU Make
   -------------------
 
-    Because  GNU  Make  is  the  only Make  tool  supported  to  compile
-    FreeType 2, you should install it on your machine.
+    Because GNU Make is the only Make tool supported to compile FreeType
+    2, you should install it on your machine.
 
     The FreeType 2  build system relies on many  features special to GNU
-    Make --  trying to build the  library with any other  Make tool will
-    *fail*.
+    Make.
 
-    NEARLY  ALL OTHER  MAKE TOOLS  WILL FAIL,  INCLUDING "BSD  MAKE", SO
-    REALLY INSTALL A RECENT VERSION OF GNU MAKE ON YOUR SYSTEM!
+    NEARLY ALL  OTHER MAKE TOOLS  FAIL, INCLUDING `BSD MAKE',  SO REALLY
+    INSTALL A RECENT VERSION OF GNU MAKE ON YOUR SYSTEM!
 
     Note  that make++,  a make  tool  written in  Perl, supports  enough
-    features    of    GNU     make    to    compile    FreeType.     See
-    http://makepp.sourceforge.net for more information; you need version
-    1.19 or newer, and you must pass option `--norc-substitution'.
+    features of GNU make to compile FreeType.  See
+    
+      http://makepp.sourceforge.net
+
+    for more information;  you need version 1.19 or  newer, and you must
+    pass option `--norc-substitution'.
 
     Make sure that  you are invoking GNU Make from  the command line, by
     typing something like:
@@ -36,7 +38,7 @@ the file INSTALL.UNX instead.
     VERSION 3.78.1 OR NEWER IS NEEDED!
 
 
-  2. Invoke 'make'
+  2. Invoke `make'
   ----------------
 
     Go to the root directory of  FreeType 2, then simply invoke GNU Make
@@ -59,13 +61,15 @@ the file INSTALL.UNX instead.
       remove the file 'config.mk' from this directory then read the
       INSTALL file for help.
 
-      Otherwise, simply type 'make' again to build the library.
+      Otherwise, simply type 'make' again to build the library
+      or 'make refdoc' to build the API reference (the latter needs
+      python).
       =============================================================
 
 
     If the  detected settings correspond to your  platform and compiler,
     skip to step  5.  Note that if your platform  is completely alien to
-    the build system, the detected platform will be 'ansi'.
+    the build system, the detected platform will be `ansi'.
 
 
   3. Configure the build system for a different compiler
@@ -90,9 +94,9 @@ the file INSTALL.UNX instead.
 
     The  <compiler> name  to  use is  platform-dependent.   The list  of
     available  compilers  for  your  system  is available  in  the  file
-    `builds/<system>/detect.mk'
+    `builds/<system>/detect.mk'.
 
-    If  you are  satisfied by  the  new configuration  summary, skip  to
+    If you  are satisfied  by the new  configuration summary,  skip to
     step 5.
 
 
@@ -131,20 +135,20 @@ the file INSTALL.UNX instead.
   Final note
   
     The  build system  builds a  statically linked  library of  the font
-    engine in the "objs" directory.   It does _not_ support the build of
+    engine in the `objs' directory.   It does _not_ support the build of
     DLLs on Windows and OS/2.  If you need these, you have to either use
-    a  IDE-specific   project  file,  or  follow   the  instructions  in
-    "INSTALL.ANY" to create your own Makefiles.
+    an  IDE-specific  project  file,   or  follow  the  instructions  in
+    `INSTALL.ANY' to create your own Makefiles.
 
 ------------------------------------------------------------------------
 
-Copyright 2003, 2004 by
+Copyright 2003, 2004, 2005 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
-This  file  is  part  of the  FreeType  project, and may  only be  used,
-modified,  and  distributed  under  the  terms of  the FreeType  project
-license, LICENSE.TXT.   By continuing to use, modify, or distribute this
-file you  indicate that  you have  read the  license and understand  and
+This  file is  part  of the  FreeType  project, and  may  only be  used,
+modified,  and  distributed under  the  terms  of  the FreeType  project
+license, LICENSE.TXT.  By continuing  to use, modify, or distribute this
+file  you indicate that  you have  read the  license and  understand and
 accept it fully.
 
 
