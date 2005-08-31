@@ -1,3 +1,7 @@
+2005-08-30  Werner Lemberg  <wl@gnu.org>
+
+	* src/gxvalid/README: Revised.
+
 2005-08-29  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h, include/freetype/ftchapters.h: Add
