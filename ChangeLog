@@ -1,6 +1,12 @@
 2005-08-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/gxvalid/README: Revised.
+	* src/gxvalid/gxvbsln.c: Fix compiler warnings.
+	* src/gxvalid/gxvcommn.c: Fix compiler warnings.
+	(gxv_XEntryTable_validate, gxv_compare_ranges): Remove unused
+	parameter.  Update all callers.
+	Improve tracing messages.
+	Some formatting.
 
 2005-08-29  Werner Lemberg  <wl@gnu.org>
 
