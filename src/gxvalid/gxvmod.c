@@ -16,9 +16,11 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
 
@@ -69,46 +71,50 @@
     return error;
   }
 
-#define GXV_TABLE_DECL( _sfnt )                 \
-        FT_Byte * _sfnt      = NULL;            \
-        FT_ULong  len_##_sfnt = 0
 
-#define GXV_TABLE_LOAD( _sfnt )                                         \
-        if ( ( FT_VALIDATE_##_sfnt##_INDEX < table_count ) &&           \
-             ( gx_flags & FT_VALIDATE_##_sfnt              )  )         \
-        {                                                               \
-          error = gxv_load_table( face, TTAG_##_sfnt, &_sfnt, &len_##_sfnt ); \
-          if ( error )                                                  \
-            goto Exit;                                                  \
-        }
+#define GXV_TABLE_DECL( _sfnt )           \
+          FT_Byte   *_sfnt        = NULL; \
+          FT_ULong  len_ ## _sfnt = 0
 
-#define GXV_TABLE_VALIDATE( _sfnt )                                     \
-        if ( _sfnt )                                                    \
-        {                                                               \
-          ft_validator_init( &valid, _sfnt, _sfnt + len_##_sfnt, FT_VALIDATE_DEFAULT ); \
-          if ( ft_validator_run( &valid ) == 0 )                    \
-            gxv_##_sfnt##_validate( _sfnt, face, &valid );              \
-          error = valid.error;                                          \
-          if ( error )                                                  \
-            goto Exit;                                                  \
-        }
+#define GXV_TABLE_LOAD( _sfnt )                                     \
+          if ( ( FT_VALIDATE_ ## _sfnt ## _INDEX < table_count ) && \
+               ( gx_flags & FT_VALIDATE_ ## _sfnt )            )    \
+          {                                                         \
+            error = gxv_load_table( face, TTAG_ ## _sfnt,           \
+                                    &_sfnt, &len_ ## _sfnt );       \
+            if ( error )                                            \
+              goto Exit;                                            \
+          }
 
-#define GXV_TABLE_SET( _sfnt )                                     \
-        if ( FT_VALIDATE_##_sfnt##_INDEX < table_count )           \
-          tables[FT_VALIDATE_##_sfnt##_INDEX] = (FT_Bytes)_sfnt
+#define GXV_TABLE_VALIDATE( _sfnt )                                  \
+          if ( _sfnt )                                               \
+          {                                                          \
+            ft_validator_init( &valid, _sfnt, _sfnt + len_ ## _sfnt, \
+                               FT_VALIDATE_DEFAULT );                \
+            if ( ft_validator_run( &valid ) == 0 )                   \
+              gxv_ ## _sfnt ## _validate( _sfnt, face, &valid );     \
+            error = valid.error;                                     \
+            if ( error )                                             \
+              goto Exit;                                             \
+          }
+
+#define GXV_TABLE_SET( _sfnt )                                        \
+          if ( FT_VALIDATE_ ## _sfnt ## _INDEX < table_count )        \
+            tables[FT_VALIDATE_ ## _sfnt ## _INDEX] = (FT_Bytes)_sfnt
+
 
   static FT_Error
-  gxv_validate( FT_Face    face,
-                FT_UInt    gx_flags,
-                FT_Bytes   tables[FT_VALIDATE_GX_LENGTH],
-                FT_UInt    table_count )
+  gxv_validate( FT_Face   face,
+                FT_UInt   gx_flags,
+                FT_Bytes  tables[FT_VALIDATE_GX_LENGTH],
+                FT_UInt   table_count )
   {
     FT_Memory        memory = FT_FACE_MEMORY( face );
 
     FT_Error         error = GXV_Err_Ok;
     FT_ValidatorRec  valid;
 
-    int i;
+    FT_UInt  i;
 
 
     GXV_TABLE_DECL( feat );
@@ -121,7 +127,6 @@
     GXV_TABLE_DECL( opbd );
     GXV_TABLE_DECL( prop );
     GXV_TABLE_DECL( lcar );
-
 
     for ( i = 0; i < table_count; i++ )
       tables[i] = 0;
@@ -137,7 +142,6 @@
     GXV_TABLE_LOAD( opbd );
     GXV_TABLE_LOAD( prop );
     GXV_TABLE_LOAD( lcar );
-
 
     /* validate tables */
     GXV_TABLE_VALIDATE( feat );
@@ -177,6 +181,7 @@
       FT_FREE( prop );
       FT_FREE( lcar );
     }
+
     return error;
   }
 
@@ -203,7 +208,8 @@
 
     if ( ckern )
     {
-      ft_validator_init( &valid, ckern, ckern + len_ckern, FT_VALIDATE_DEFAULT );
+      ft_validator_init( &valid, ckern, ckern + len_ckern,
+                         FT_VALIDATE_DEFAULT );
       if ( ft_validator_run( &valid ) == 0 )
         gxv_kern_validate_classic( ckern, face,
                                    ckern_flags & FT_VALIDATE_CKERN, &valid );
@@ -220,6 +226,7 @@
 
     return error;
   }
+
 
   static
   const FT_Service_GXvalidateRec  gxvalid_interface =
@@ -238,7 +245,7 @@
   static
   const FT_ServiceDescRec  gxvalid_services[] =
   {
-    { FT_SERVICE_ID_GX_VALIDATE,  &gxvalid_interface },
+    { FT_SERVICE_ID_GX_VALIDATE,          &gxvalid_interface },
     { FT_SERVICE_ID_CLASSICKERN_VALIDATE, &ckernvalid_interface },
     { NULL, NULL }
   };

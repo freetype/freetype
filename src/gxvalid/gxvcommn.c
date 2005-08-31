@@ -1700,12 +1700,12 @@
   FT_LOCAL_DEF( void )
   gxv_odtect_add_range( FT_Bytes          start,
                         FT_ULong          length,
-                        FT_String*        name,
+                        const FT_String*  name,
                         GXV_odtect_Range  odtect )
   {
     odtect->range[ odtect->nRanges ].start  = start;
     odtect->range[ odtect->nRanges ].length = length;
-    odtect->range[ odtect->nRanges ].name   = name;
+    odtect->range[ odtect->nRanges ].name   = (FT_String*)name;
     odtect->nRanges++;
   }
 
