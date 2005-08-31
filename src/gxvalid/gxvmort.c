@@ -16,13 +16,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
 
 #include "gxvmort.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -42,7 +45,7 @@
     {
       GXV_TRACE(( "featureType %d is out of registered range, "
                   "setting %d is unchecked\n",
-                   f->featureType, f->featureSetting ));
+                  f->featureType, f->featureSetting ));
       if ( valid->root->level >= FT_VALIDATE_PARANOID )
         FT_INVALID_DATA;
     }
@@ -50,13 +53,14 @@
     {
       GXV_TRACE(( "featureType %d is within registered area "
                   "but undefined, setting %d is unchecked\n",
-                   f->featureType, f->featureSetting ));
+                  f->featureType, f->featureSetting ));
       if ( valid->root->level >= FT_VALIDATE_PARANOID )
         FT_INVALID_DATA;
     }
     else
     {
       FT_Byte  nSettings_max;
+
 
       /* nSettings in gxvfeat.c is halved for exclusive on/off settings */
       if ( gxv_feat_registry[f->featureType].exclusive )
@@ -66,6 +70,7 @@
 
       GXV_TRACE(( "featureType %d is registered", f->featureType ));
       GXV_TRACE(( "setting %d", f->featureSetting ));
+
       if ( f->featureSetting > nSettings_max )
       {
         GXV_TRACE(( "out of defined range %d", nSettings_max ));
@@ -77,6 +82,7 @@
 
     /* TODO: enableFlags must be unique value in specified chain?  */
   }
+
 
   /*
    * nFeatureFlags is typed to FT_UInt to accept that in
@@ -90,6 +96,7 @@
   {
     FT_Bytes  p = table;
     FT_UInt   i;
+
     GXV_mort_featureRec  f = GXV_MORT_FEATURE_OFF;
 
 
@@ -105,29 +112,33 @@
       gxv_mort_feature_validate( &f, valid );
     }
 
-    if ( !IS_GXV_MORT_FEATURE_OFF(f) )
+    if ( !IS_GXV_MORT_FEATURE_OFF( f ) )
       FT_INVALID_DATA;
 
-    valid->subtable_length = ( p - table );
+    valid->subtable_length = p - table;
     GXV_EXIT;
   }
+
 
   static void
   gxv_mort_coverage_validate( FT_UShort      coverage,
                               GXV_Validator  valid )
   {
-    if ( coverage & 0x8000 )
+    if ( coverage & 0x8000U )
       GXV_TRACE(( " this subtable is for vertical text only\n" ));
     else
       GXV_TRACE(( " this subtable is for horizontal text only\n" ));
 
     if ( coverage & 0x4000 )
-      GXV_TRACE(( " this subtable is applied to glyph array in descending order\n" ));
+      GXV_TRACE(( " this subtable is applied to glyph array "
+                  "in descending order\n" ));
     else
-      GXV_TRACE(( " this subtable is applied to glyph array in ascending order\n" ));
+      GXV_TRACE(( " this subtable is applied to glyph array "
+                  "in ascending order\n" ));
 
     if ( coverage & 0x2000 )
-      GXV_TRACE(( " this subtable is forcibly applied to vertical/horizontal text\n" ));
+      GXV_TRACE(( " this subtable is forcibly applied to "
+                  "vertical/horizontal text\n" ));
 
     if ( coverage & 0x1FF8 )
       GXV_TRACE(( " coverage has non-zero bits in reserved area\n" ));
@@ -140,8 +151,9 @@
                                FT_UShort      nSubtables,
                                GXV_Validator  valid )
   {
-    FT_Bytes   p = table;
-    GXV_Validate_Func fmt_funcs_table [] =
+    FT_Bytes  p = table;
+
+    GXV_Validate_Func fmt_funcs_table[] =
     {
       gxv_mort_subtable_type0_validate, /* 0 */
       gxv_mort_subtable_type1_validate, /* 1 */
@@ -151,11 +163,12 @@
       gxv_mort_subtable_type5_validate, /* 5 */
 
     };
-    GXV_Validate_Func func;
-    FT_UShort  i;
+
+    GXV_Validate_Func  func;
+    FT_UShort          i;
 
 
-    GXV_NAME_ENTER(( "subtables in a chain" ));
+    GXV_NAME_ENTER( "subtables in a chain" );
 
     for ( i = 0; i < nSubtables; i++ )
     {
@@ -172,7 +185,7 @@
       subFeatureFlags = FT_NEXT_ULONG( p );
 
       GXV_TRACE(( "validate chain subtable %d/%d (%d bytes)\n",
-                                  i + 1, nSubtables, length ));
+                  i + 1, nSubtables, length ));
       type = coverage & 0x0007;
       rest = length - ( 2 + 2 + 4 );
 
@@ -191,7 +204,8 @@
       p += rest;
     }
 
-    valid->subtable_length = ( p - table );
+    valid->subtable_length = p - table;
+
     GXV_EXIT;
   }
 
@@ -216,13 +230,15 @@
     nFeatureFlags = FT_NEXT_USHORT( p );
     nSubtables    = FT_NEXT_USHORT( p );
 
-    gxv_mort_featurearray_validate( p, table + chainLength, nFeatureFlags, valid );
+    gxv_mort_featurearray_validate( p, table + chainLength,
+                                    nFeatureFlags, valid );
     p += valid->subtable_length;
     gxv_mort_subtables_validate( p, table + chainLength, nSubtables, valid );
     valid->subtable_length = chainLength;
 
     GXV_EXIT;
   }
+
 
   FT_LOCAL_DEF( void )
   gxv_mort_validate( FT_Bytes      table,
@@ -249,7 +265,7 @@
     version = FT_NEXT_ULONG( p );
     nChains = FT_NEXT_ULONG( p );
 
-    if (version != 0x00010000)
+    if (version != 0x00010000UL)
       FT_INVALID_FORMAT;
 
     for ( i = 0; i < nChains; i++ )

@@ -2,6 +2,19 @@
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Fix typo.
 
+	* src/gxvalid/gxvbsln.c (gxv_bsln_validate): Fix tracing message.
+
+	* src/gxvalid/gxvcommn.c (gxv_odtect_add_range): Use `const'.
+
+	* src/gxvalid/gxvfeat.c, src/gxvalid/gxvjust.c,
+	src/gxvalid/gxvkern.c, src/gxvalid/gxvlcar.c, src/gxvalid/gxvmod.c,
+	src/gxvalid/gxvmort0.c, src/gxvalid/gxvmort1.c,
+	src/gxvalid/gxvmort2.c, src/gxvalid/gxvmort4.c,
+	src/gxvalid/gxvmort5.c, src/gxvalid/gxvmort.c: Improve tracing
+	messages.
+	Decorate constants with `U' and `L' where appropriate.
+	Fix compiler warnings.
+
 2005-08-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/gxvalid/README: Revised.

@@ -295,7 +295,7 @@
     valid->table_data = bsln;
     valid->face       = face;
 
-    FT_TRACE3(( "validation bsln table\n" ));
+    FT_TRACE3(( "validating `bsln' table\n" ));
     GXV_INIT;
 
 

@@ -16,14 +16,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
+
 
 #ifndef __GXVMORT_H__
 #define __GXVMORT_H__
-
 
 #include "gxvalid.h"
 #include "gxvcommn.h"
@@ -33,21 +35,20 @@
 
   typedef struct  GXV_mort_featureRec_
   {
-    FT_UShort featureType;
-    FT_UShort featureSetting;
-    FT_ULong  enableFlags;
-    FT_ULong  disableFlags;
+    FT_UShort  featureType;
+    FT_UShort  featureSetting;
+    FT_ULong   enableFlags;
+    FT_ULong   disableFlags;
 
   } GXV_mort_featureRec, *GXV_mort_feature;
 
-#define GXV_MORT_FEATURE_OFF \
-  {0, 1, 0x00000000UL, 0x00000000UL}
+#define GXV_MORT_FEATURE_OFF  {0, 1, 0x00000000UL, 0x00000000UL}
 
-#define IS_GXV_MORT_FEATURE_OFF( f )            \
-        ( (f).featureType    == 0            || \
-          (f).featureSetting == 1            || \
-          (f).enableFlags    == 0x00000000UL || \
-          (f).disableFlags   == 0x00000000UL )
+#define IS_GXV_MORT_FEATURE_OFF( f )              \
+          ( (f).featureType    == 0            || \
+            (f).featureSetting == 1            || \
+            (f).enableFlags    == 0x00000000UL || \
+            (f).disableFlags   == 0x00000000UL )
 
 
   FT_LOCAL( void )
@@ -90,7 +91,7 @@
                                     GXV_Validator  valid );
 
 
-#endif /* Not def: __GXVMORT_H__ */
+#endif /* __GXVMORT_H__ */
 
 
 /* END */

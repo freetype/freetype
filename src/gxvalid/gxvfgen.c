@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  gxfgen.c                                                               */
 /*                                                                         */
-/*    Generate feature registry infomations for gxv feat validator.        */
+/*    Generate feature registry data for gxv `feat' validator.             */
 /*    This program is derived from gxfeatreg.c in gxlayout.                */
 /*                                                                         */
 /*  Copyright 2004, 2005 by Masatake YAMATO and Redhat K.K.                */
@@ -35,13 +35,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
-/* Development of gxfeatreg.c is support of                                */
+/*                                                                         */
+/* Development of gxfeatreg.c is supported by                              */
 /* Information-technology Promotion Agency, Japan.                         */
+/*                                                                         */
 /***************************************************************************/
+
 
 /***************************************************************************/
 /*                                                                         */
-/* This file is compiled to a standalone executable.                       */
+/* This file is compiled as a stand-alone executable.                      */
 /* This file is never compiled into `libfreetype2'.                        */
 /* The output of this file is used in `gxvfeat.c'.                         */
 /* ----------------------------------------------------------------------- */
@@ -50,21 +53,25 @@
 /*                                                                         */
 /***************************************************************************/
 
-  /***************************************************************************/
-  /* WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING */
-  /***************************************************************************/
+  /*******************************************************************/
+  /* WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING */
+  /*******************************************************************/
+
   /*
-   * If you add a new setting to a feature, check the number of setting
-   * in the feature. If the number is greater than value defined as
+   * If you add a new setting to a feature, check the number of settings
+   * in the feature.  If the number is greater than the value defined as
    * FEATREG_MAX_SETTING, update the value.
    */
-#define FEATREG_MAX_SETTING    12
-  /***************************************************************************/
-  /* WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING */
-  /***************************************************************************/
+#define FEATREG_MAX_SETTING  12
+
+  /*******************************************************************/
+  /* WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING */
+  /*******************************************************************/
+
 
 #include <stdio.h>
 #include <string.h>
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -74,7 +81,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
 #define APPLE_RESERVED         "Apple Reserved"
 #define APPLE_RESERVED_LENGTH  14
 
@@ -82,13 +88,16 @@
   {
     const char*  feat_name;
     char         exclusive;
-    char*        setting_name [FEATREG_MAX_SETTING];
+    char*        setting_name[FEATREG_MAX_SETTING];
 
   } GX_Feature_RegistryRec;
 
+
 #define EMPTYFEAT {0, 0, {NULL}}
-  static GX_Feature_RegistryRec featreg_table [] = {
-    {                                   /* 0 */
+
+
+  static GX_Feature_RegistryRec featreg_table[] = {
+    {                                       /* 0 */
       "All Typographic Features",
       0,
       {
@@ -293,7 +302,7 @@
         "Traditional Characters, Alternative Set 4",
         "Traditional Characters, Alternative Set 5",
         "Expert Characters",
-        NULL                           /* count=>12 */
+        NULL                           /* count => 12 */
       }
     }, {                                    /* 21 */
       "Number Case",
@@ -360,7 +369,7 @@
         "Proportional",
         NULL
       }
-    }, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 27-30 */
+    }, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT,         /* 27-30 */
     EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 31-35 */
     EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 36-40 */
     EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 40-45 */
@@ -374,8 +383,8 @@
     EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 81-85 */
     EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 86-90 */
     EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 91-95 */
-    EMPTYFEAT, EMPTYFEAT, EMPTYFEAT, /* 96-98 */
-    EMPTYFEAT, /* 99 */ { /* 100 => 22*/
+    EMPTYFEAT, EMPTYFEAT, EMPTYFEAT,                       /* 96-98 */
+    EMPTYFEAT, /* 99 */ {                   /* 100 => 22 */
       "Text Spacing",
       1,
       {
@@ -422,7 +431,6 @@
   };
 
 
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -447,16 +455,18 @@
       const char*  feat_name;
       int          nSettings;
 
-      feat_name =  featreg_table[i].feat_name;
+
+      feat_name = featreg_table[i].feat_name;
       for ( nSettings = 0;
             featreg_table[i].setting_name[nSettings];
             nSettings++)
-        0;                           /* Do nothing */
+        ;                           	/* Do nothing */
 
       printf( "    {%1d, %1d, %1d, %2d},   /* %s */\n",
               feat_name ? 1 : 0,
-              ( feat_name &&
-                ( strncmp( feat_name, APPLE_RESERVED, APPLE_RESERVED_LENGTH ) == 0 )
+              ( feat_name                                               &&
+                ( strncmp( feat_name, 
+                           APPLE_RESERVED, APPLE_RESERVED_LENGTH ) == 0 )
               ) ? 1 : 0,
               featreg_table[i].exclusive ? 1 : 0,
               nSettings,
@@ -467,5 +477,6 @@
 
     return 0;
   }
+
 
 /* END */

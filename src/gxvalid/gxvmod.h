@@ -17,15 +17,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
 
 #ifndef __GXVMOD_H__
 #define __GXVMOD_H__
-
 
 #include <ft2build.h>
 #include FT_MODULE_H
@@ -39,7 +40,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* Not def: __GXVMOD_H__ */
+#endif /* __GXVMOD_H__ */
 
 
 /* END */

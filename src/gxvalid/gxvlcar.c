@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT lcar table validation (body).                         */
 /*                                                                         */
-/*  Copyright 2004 by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,       */
+/*  Copyright 2004, 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K., */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,14 +16,17 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
 
 #include "gxvalid.h"
 #include "gxvcommn.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -33,7 +36,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvlcar
-
 
 
   /*************************************************************************/
@@ -50,7 +52,7 @@
 
   } GXV_lcar_DataRec, *GXV_lcar_Data;
 
-#define  GXV_LCAR_DATA(FIELD)  GXV_TABLE_DATA( lcar, FIELD )
+#define GXV_LCAR_DATA(FIELD)  GXV_TABLE_DATA( lcar, FIELD )
 
 
   /*************************************************************************/
@@ -83,15 +85,14 @@
                                  GXV_LookupValueDesc  value,
                                  GXV_Validator        valid )
   {
-    FT_Bytes      p     = valid->root->base + value.u;
-    FT_Bytes      limit = valid->root->limit;
-    FT_UShort     count;
-    FT_Short      partial;
-    unsigned int  i;
+    FT_Bytes   p     = valid->root->base + value.u;
+    FT_Bytes   limit = valid->root->limit;
+    FT_UShort  count;
+    FT_Short   partial;
+    FT_UShort  i;
 
 
     GXV_NAME_ENTER( "element in lookupTable" );
-
 
     GXV_LIMIT_CHECK( 2 );
     count = FT_NEXT_USHORT( p );
@@ -105,6 +106,7 @@
 
     GXV_EXIT;
   }
+
 
   /*
     +------ lcar --------------------+
@@ -138,7 +140,8 @@
     |
     |
     |
-    +---->  lcar values...handled by lcar callback function */
+    +---->  lcar values...handled by lcar callback function
+  */
 
   static GXV_LookupValueDesc
   gxv_lcar_LookupFmt4_transit( FT_UShort            relative_gindex,
@@ -151,8 +154,10 @@
     FT_UShort            offset;
     GXV_LookupValueDesc  value;
 
+    FT_UNUSED( lookuptbl_limit );
 
-    offset = base_value.u + ( relative_gindex * sizeof ( FT_UShort ) );
+
+    offset = base_value.u + relative_gindex * sizeof ( FT_UShort );
     p      = valid->root->base + offset;
     limit  = valid->root->limit;
 
@@ -191,19 +196,18 @@
     valid->table_data = lcar;
     valid->face       = face;
 
-    FT_TRACE3(( "validation lcar table\n" ));
+    FT_TRACE3(( "validating `lcar' table\n" ));
     GXV_INIT;
 
     GXV_LIMIT_CHECK( 4 + 2 );
     version = FT_NEXT_ULONG( p );
     GXV_LCAR_DATA( format ) = FT_NEXT_USHORT( p );
 
-    if ( version != 0x00010000)
+    if ( version != 0x00010000UL)
       FT_INVALID_FORMAT;
 
     if ( GXV_LCAR_DATA( format ) > 1 )
       FT_INVALID_FORMAT;
-
 
     valid->lookupval_sign   = GXV_LOOKUPVALUE_UNSIGNED;
     valid->lookupval_func   = gxv_lcar_LookupValue_validate;

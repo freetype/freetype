@@ -17,12 +17,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
+
 #include "gxvmort.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -46,7 +50,9 @@
   }  GXV_mort_subtable_type2_StateOptRec,
     *GXV_mort_subtable_type2_StateOptRecData;
 
-  #define  GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE ( GXV_STATETABLE_HEADER_SIZE + 2 + 2 + 2 )
+#define GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE \
+          GXV_STATETABLE_HEADER_SIZE + 2 + 2 + 2
+
 
   static void
   gxv_mort_subtable_type2_opttable_load( FT_Bytes       table,
@@ -54,7 +60,8 @@
                                          GXV_Validator  valid )
   {
     FT_Bytes p = table;
-    GXV_mort_subtable_type2_StateOptRecData  optdata = valid->statetable.optdata;
+    GXV_mort_subtable_type2_StateOptRecData  optdata =
+                                               valid->statetable.optdata;
 
 
     GXV_LIMIT_CHECK( 2 + 2 + 2 );
@@ -62,10 +69,14 @@
     optdata->componentTable = FT_NEXT_USHORT( p );
     optdata->ligatureTable  = FT_NEXT_USHORT( p );
 
-    GXV_TRACE(( "offset to ligActionTable=0x%04x\n", optdata->ligActionTable ));
-    GXV_TRACE(( "offset to componentTable=0x%04x\n", optdata->componentTable ));
-    GXV_TRACE(( "offset to ligatureTable=0x%04x\n",  optdata->ligatureTable ));
+    GXV_TRACE(( "offset to ligActionTable=0x%04x\n",
+                optdata->ligActionTable ));
+    GXV_TRACE(( "offset to componentTable=0x%04x\n",
+                optdata->componentTable ));
+    GXV_TRACE(( "offset to ligatureTable=0x%04x\n",
+                optdata->ligatureTable ));
   }
+
 
   static void
   gxv_mort_subtable_type2_subtable_setup( FT_UShort      table_size,
@@ -80,7 +91,9 @@
     FT_UShort  o[6];
     FT_UShort  *l[6];
     FT_UShort  buff[7];
-    GXV_mort_subtable_type2_StateOptRecData  optdata = valid->statetable.optdata;
+
+    GXV_mort_subtable_type2_StateOptRecData  optdata =
+                                               valid->statetable.optdata;
 
 
     GXV_NAME_ENTER( "subtable boundaries setup" );
@@ -101,32 +114,35 @@
     gxv_set_length_by_ushort_offset( o, l, buff, 6, table_size, valid );
 
     GXV_TRACE(( "classTable: offset=0x%04x length=0x%04x\n",
-                             classTable, *classTable_length_p));
+                classTable, *classTable_length_p ));
     GXV_TRACE(( "stateArray: offset=0x%04x length=0x%04x\n",
-                             stateArray, *stateArray_length_p));
+                stateArray, *stateArray_length_p ));
     GXV_TRACE(( "entryTable: offset=0x%04x length=0x%04x\n",
-                             entryTable, *entryTable_length_p));
+                entryTable, *entryTable_length_p ));
     GXV_TRACE(( "ligActionTable: offset=0x%04x length=0x%04x\n",
-                                 optdata->ligActionTable,
-                                 optdata->ligActionTable_length));
+                optdata->ligActionTable,
+                optdata->ligActionTable_length ));
     GXV_TRACE(( "componentTable: offset=0x%04x length=0x%04x\n",
-                                 optdata->componentTable,
-                                 optdata->componentTable_length));
+                optdata->componentTable,
+                optdata->componentTable_length ));
     GXV_TRACE(( "ligatureTable:  offset=0x%04x length=0x%04x\n",
-                                 optdata->ligatureTable,
-                                 optdata->ligatureTable_length));
+                optdata->ligatureTable,
+                optdata->ligatureTable_length ));
+
     GXV_EXIT;
   }
 
 
-
   static void
-  gxv_mort_subtable_type2_ligActionOffset_validate( FT_Bytes       table,
-                                                    FT_UShort      ligActionOffset,
-                                                    GXV_Validator  valid )
+  gxv_mort_subtable_type2_ligActionOffset_validate(
+    FT_Bytes       table,
+    FT_UShort      ligActionOffset,
+    GXV_Validator  valid )
   {
     /* access ligActionTable */
-    GXV_mort_subtable_type2_StateOptRecData optdata = valid->statetable.optdata;
+    GXV_mort_subtable_type2_StateOptRecData  optdata =
+                                               valid->statetable.optdata;
+
     FT_Bytes lat_base  = table + optdata->ligActionTable;
     FT_Bytes p         = table + ligActionOffset;
     FT_Bytes lat_limit = lat_base + optdata->ligActionTable;
@@ -136,18 +152,18 @@
     if ( p < lat_base )
     {
       GXV_TRACE(( "too short offset 0x%04x: p < lat_base (%d byte rewind)\n",
-                   ligActionOffset, lat_base - p ));
+                  ligActionOffset, lat_base - p ));
 
-      /* FontValidator, ftxvalidator, ftxdumperfuser warns but continues */
+      /* FontValidator, ftxvalidator, ftxdumperfuser warn but continue */
       if ( valid->root->level >= FT_VALIDATE_PARANOID )
         FT_INVALID_OFFSET;
     }
     else if ( lat_limit < p )
     {
       GXV_TRACE(( "too large offset 0x%04x: lat_limit < p (%d byte overrun)\n",
-                   ligActionOffset, p - lat_limit ));
+                  ligActionOffset, p - lat_limit ));
 
-      /* FontValidator, ftxvalidator, ftxdumperfuser warns but continues */
+      /* FontValidator, ftxvalidator, ftxdumperfuser warn but continue */
       if ( valid->root->level >= FT_VALIDATE_PARANOID )
         FT_INVALID_OFFSET;
     }
@@ -161,41 +177,52 @@
 
 
       lig_action = FT_NEXT_ULONG( p );
-      last   = (lig_action & 0x80000000) / 0x80000000;
-      store  = (lig_action & 0x40000000) / 0x40000000;
-      offset =  lig_action & 0x3FFFFFFF;
+      last   = (lig_action & 0x80000000UL) / 0x80000000UL;
+      store  = (lig_action & 0x40000000UL) / 0x40000000UL;
+      offset =  lig_action & 0x3FFFFFFFUL;
     }
   }
 
+
   static void
-  gxv_mort_subtable_type2_entry_validate( FT_Byte                         state,
-                                          FT_UShort                       flags,
-                                          GXV_StateTable_GlyphOffsetDesc  glyphOffset,
-                                          FT_Bytes                        table,
-                                          FT_Bytes                        limit,
-                                          GXV_Validator                   valid )
+  gxv_mort_subtable_type2_entry_validate(
+    FT_Byte                         state,
+    FT_UShort                       flags,
+    GXV_StateTable_GlyphOffsetDesc  glyphOffset,
+    FT_Bytes                        table,
+    FT_Bytes                        limit,
+    GXV_Validator                   valid )
   {
     FT_UShort setComponent;
     FT_UShort dontAdvance;
     FT_UShort offset;
 
+    FT_UNUSED( state );
+    FT_UNUSED( glyphOffset );
+    FT_UNUSED( limit );
 
-    setComponent  = ( flags & 0x8000 ) / 0x8000;
-    dontAdvance   = ( flags & 0x4000 ) / 0x4000;
+
+    setComponent  = ( flags & 0x8000U ) / 0x8000U;
+    dontAdvance   = ( flags & 0x4000  ) / 0x4000;
     offset        =   flags & 0x3FFF;
 
     if ( 0 < offset )
-      gxv_mort_subtable_type2_ligActionOffset_validate( table, offset, valid );
+      gxv_mort_subtable_type2_ligActionOffset_validate( table, offset,
+                                                        valid );
   }
+
 
   static void
   gxv_mort_subtable_type2_ligatureTable_validate( FT_Bytes       table,
                                                   GXV_Validator  valid )
   {
-    GXV_mort_subtable_type2_StateOptRecData optdata = valid->statetable.optdata;
+    GXV_mort_subtable_type2_StateOptRecData  optdata =
+                                               valid->statetable.optdata;
+
     FT_Bytes p     = table + optdata->ligatureTable;
     FT_Bytes limit = table + optdata->ligatureTable
                            + optdata->ligatureTable_length;
+
 
     GXV_NAME_ENTER( "mort chain subtable type2 - substitutionTable" );
     if ( 0 != optdata->ligatureTable )
@@ -213,12 +240,14 @@
     GXV_EXIT;
   }
 
+
   static void
   gxv_mort_subtable_type2_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )
   {
     FT_Bytes  p = table;
+
     GXV_mort_subtable_type2_StateOptRec  lig_rec;
 
 
@@ -226,16 +255,24 @@
 
     GXV_LIMIT_CHECK( GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE );
 
-    valid->statetable.optdata               = &lig_rec;
-    valid->statetable.optdata_load_func     = gxv_mort_subtable_type2_opttable_load;
-    valid->statetable.subtable_setup_func   = gxv_mort_subtable_type2_subtable_setup;
-    valid->statetable.entry_glyphoffset_fmt = GXV_GLYPHOFFSET_NONE;
-    valid->statetable.entry_validate_func   = gxv_mort_subtable_type2_entry_validate;
+    valid->statetable.optdata =
+      &lig_rec;
+    valid->statetable.optdata_load_func =
+      gxv_mort_subtable_type2_opttable_load;
+    valid->statetable.subtable_setup_func =
+      gxv_mort_subtable_type2_subtable_setup;
+    valid->statetable.entry_glyphoffset_fmt =
+      GXV_GLYPHOFFSET_NONE;
+    valid->statetable.entry_validate_func =
+      gxv_mort_subtable_type2_entry_validate;
+
     gxv_StateTable_validate( p, limit, valid );
+
     p += valid->subtable_length;
     gxv_mort_subtable_type2_ligatureTable_validate( table, valid );
 
-    valid->subtable_length = ( p - table );
+    valid->subtable_length = p - table;
+
     GXV_EXIT;
   }
 
