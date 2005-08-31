@@ -1,3 +1,7 @@
+2005-08-31  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix typo.
+
 2005-08-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/gxvalid/README: Revised.
