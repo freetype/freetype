@@ -16,15 +16,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
 
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
 
 
   /*************************************************************************/
@@ -45,8 +46,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define GXV_BSLN_VALUE_COUNT 32
-#define GXV_BSLN_VALUE_EMPTY 0xFFFF
+#define GXV_BSLN_VALUE_COUNT  32
+#define GXV_BSLN_VALUE_EMPTY  0xFFFF
+
 
   typedef struct  GXV_bsln_DataRec_
   {
@@ -54,7 +56,8 @@
     FT_UShort  defaultBaseline;
 
   } GXV_bsln_DataRec, *GXV_bsln_Data;
-#define GXV_BSLN_DATA(field)  GXV_TABLE_DATA( bsln, field )
+
+#define GXV_BSLN_DATA( field )  GXV_TABLE_DATA( bsln, field )
 
 
   /*************************************************************************/
@@ -70,15 +73,16 @@
                                  GXV_LookupValueDesc  value,
                                  GXV_Validator        valid )
   {
-    FT_UShort   v  = value.u;
+    FT_UShort   v = value.u;
     FT_UShort*  ctlPoints;
+
+    FT_UNUSED( glyph );
 
 
     GXV_NAME_ENTER( " lookup value" );
 
     if ( v >= GXV_BSLN_VALUE_COUNT )
       FT_INVALID_DATA;
-
 
     ctlPoints = (FT_UShort*)GXV_BSLN_DATA( ctlPoints_p );
     if ( ctlPoints && ctlPoints[v] == GXV_BSLN_VALUE_EMPTY )
@@ -126,6 +130,7 @@
     FT_UShort            offset;
     GXV_LookupValueDesc  value;
 
+
     offset = base_value.u + ( relative_gindex * sizeof ( FT_UShort ) );
 
     p     = valid->lookuptbl_head + offset;
@@ -136,6 +141,7 @@
 
     return value;
   }
+
 
   static void
   gxv_bsln_parts_fmt0_validate( FT_Bytes       tables,
@@ -163,6 +169,7 @@
   {
     FT_Bytes  p = tables;
 
+
     GXV_NAME_ENTER( " parts format 1" );
 
     /* deltas */
@@ -185,13 +192,13 @@
                                 FT_Bytes       limit,
                                 GXV_Validator  valid )
   {
-    FT_Bytes      p = tables;
+    FT_Bytes   p = tables;
 
-    FT_UShort     stdGlyph;
-    FT_UShort     ctlPoint;
-    FT_Int        i;
+    FT_UShort  stdGlyph;
+    FT_UShort  ctlPoint;
+    FT_Int     i;
 
-    FT_UShort     defaultBaseline = GXV_BSLN_DATA( defaultBaseline );
+    FT_UShort  defaultBaseline = GXV_BSLN_DATA( defaultBaseline );
 
 
     GXV_NAME_ENTER( "parts format 2" );
@@ -205,7 +212,7 @@
     gxv_glyphid_validate( stdGlyph, valid );
 
     /* Record the position of ctlPoints */
-    GXV_BSLN_DATA( ctlPoints_p) = p;
+    GXV_BSLN_DATA( ctlPoints_p ) = p;
 
     /* ctlPoints */
     for ( i = 0; i < GXV_BSLN_VALUE_COUNT; i++ )
@@ -217,9 +224,7 @@
           FT_INVALID_DATA;
       }
       else
-      {
         gxv_ctlPoint_validate( stdGlyph, (FT_Short)ctlPoint, valid );
-      }
     }
 
     GXV_EXIT;
@@ -264,13 +269,13 @@
                      FT_Face       face,
                      FT_Validator  ftvalid )
   {
-    GXV_ValidatorRec   validrec;
-    GXV_Validator      valid = &validrec;
+    GXV_ValidatorRec  validrec;
+    GXV_Validator     valid = &validrec;
 
-    GXV_bsln_DataRec   bslnrec;
-    GXV_bsln_Data      bsln = &bslnrec;
+    GXV_bsln_DataRec  bslnrec;
+    GXV_bsln_Data     bsln = &bslnrec;
 
-    FT_Bytes  p = table;
+    FT_Bytes  p     = table;
     FT_Bytes  limit = 0;
 
     FT_ULong   version;
@@ -299,11 +304,11 @@
     format          = FT_NEXT_USHORT( p );
     defaultBaseline = FT_NEXT_USHORT( p );
 
-    /* version 1.0 is only defined (1996) */
+    /* only version 1.0 is defined (1996) */
     if ( version != 0x00010000UL )
       FT_INVALID_FORMAT;
 
-    /* format 1, 2, 3 are only defined (1996) */
+    /* only format 1, 2, 3 are defined (1996) */
     GXV_TRACE(( " (format = %d)\n", format ));
     if ( format > 3 )
       FT_INVALID_FORMAT;
@@ -311,13 +316,13 @@
     if ( defaultBaseline > 31 )
       FT_INVALID_FORMAT;
 
-
     bsln->defaultBaseline = defaultBaseline;
 
     fmt_funcs_table[format]( p, limit, valid );
 
     FT_TRACE4(( "\n" ));
   }
+
 
 /* arch-tag: ebe81143-fdaa-4c68-a4d1-b57227daa3bc
    (do not change this comment) */
