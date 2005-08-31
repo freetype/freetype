@@ -1212,7 +1212,7 @@
 #endif
 
 
-    if ( recurse_count >= face->max_profile.maxComponentDepth )
+    if ( recurse_count > face->max_profile.maxComponentDepth )
     {
       error = TT_Err_Invalid_Composite;
       goto Exit;
