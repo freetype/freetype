@@ -1,3 +1,18 @@
+2005-09-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/gxvalid/gxvbsln.c (GXV_BSLN_VALUE_EMPTY): Add `U'.
+
+	* src/gxvalid/gxmort1.c (GXV_MORT_SUBTABLE_TYPE1_HEADER_SIZE),
+	src/gxvalid/gxmort2.c (GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE): Fix
+	typo.
+
+	* src/gxvalid/gxvmorx0.c, src/gxvalid/gxvmorx1.c,
+	src/gxvalid/gxvmorx2.c, src/gxvalid/gxvmorx4.c,
+	src/gxvalid/gxvmorx5.c, src/gxvalid/gxvmort.c: Improve tracing
+	messages.
+	Decorate constants with `U' and `L' where appropriate.
+	Fix compiler warnings.
+
 2005-08-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Fix typo.
