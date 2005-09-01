@@ -17,12 +17,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
+
 #include "gxvmorx.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -34,17 +38,18 @@
 #define FT_COMPONENT  trace_gxvmorx
 
 
- static void
- gxv_morx_subtable_type4_validate( FT_Bytes       table,
-                                   FT_Bytes       limit,
-                                   GXV_Validator  valid )
- {
-   GXV_NAME_ENTER( "morx chain subtable type4 (Non-Contextual Glyph Substitution)" );
+  static void
+  gxv_morx_subtable_type4_validate( FT_Bytes       table,
+                                    FT_Bytes       limit,
+                                    GXV_Validator  valid )
+  {
+    GXV_NAME_ENTER( "morx chain subtable type4 "
+                    "(Non-Contextual Glyph Substitution)" );
 
-   gxv_mort_subtable_type4_validate( table, limit, valid );
+    gxv_mort_subtable_type4_validate( table, limit, valid );
 
-   GXV_EXIT;
- }
+    GXV_EXIT;
+  }
 
 
 /* END */

@@ -16,13 +16,16 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
 
 #include "gxvmorx.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -40,8 +43,9 @@
                                FT_UShort      nSubtables,
                                GXV_Validator  valid )
   {
-    FT_Bytes   p = table;
-    GXV_Validate_Func fmt_funcs_table [] =
+    FT_Bytes  p = table;
+
+    GXV_Validate_Func fmt_funcs_table[] =
     {
       gxv_morx_subtable_type0_validate, /* 0 */
       gxv_morx_subtable_type1_validate, /* 1 */
@@ -51,11 +55,14 @@
       gxv_morx_subtable_type5_validate, /* 5 */
 
     };
-    GXV_Validate_Func func;
+
+    GXV_Validate_Func  func;
+
     FT_UShort  i;
 
 
-     GXV_NAME_ENTER(( "subtables in a chain" ));
+    GXV_NAME_ENTER( "subtables in a chain" );
+
     for ( i = 0; i < nSubtables; i++ )
     {
       FT_ULong  length;
@@ -71,7 +78,7 @@
       subFeatureFlags = FT_NEXT_ULONG( p );
 
       GXV_TRACE(( "validate chain subtable %d/%d (%d bytes)\n",
-                                  i + 1, nSubtables, length ));
+                  i + 1, nSubtables, length ));
 
       type = coverage & 0x0007;
       rest = length - ( 4 + 4 + 4 );
@@ -92,7 +99,8 @@
       p += rest;
     }
 
-    valid->subtable_length = ( p - table );
+    valid->subtable_length = p - table;
+
     GXV_EXIT;
   }
 
@@ -102,11 +110,11 @@
                            FT_Bytes       limit,
                            GXV_Validator  valid )
   {
-    FT_Bytes   p = table;
-    FT_ULong   defaultFlags;
-    FT_ULong   chainLength;
-    FT_ULong   nFeatureFlags;
-    FT_ULong   nSubtables;
+    FT_Bytes  p = table;
+    FT_ULong  defaultFlags;
+    FT_ULong  chainLength;
+    FT_ULong  nFeatureFlags;
+    FT_ULong  nSubtables;
 
 
     GXV_NAME_ENTER( "morx chain header" );
@@ -125,6 +133,7 @@
 
     GXV_EXIT;
   }
+
 
   FT_LOCAL_DEF( void )
   gxv_morx_validate( FT_Bytes      table,
@@ -150,7 +159,7 @@
     version = FT_NEXT_ULONG( p );
     nChains = FT_NEXT_ULONG( p );
 
-    if (version != 0x00020000)
+    if ( version != 0x00020000UL )
       FT_INVALID_FORMAT;
 
     for ( i = 0; i < nChains; i++ )

@@ -46,7 +46,8 @@
   }  GXV_mort_subtable_type1_StateOptRec,
     *GXV_mort_subtable_type1_StateOptRecData;
 
-#define GXV_MORT_SUBTABLE_TYPE1_HEADER_SIZE  GXV_STATETABLE_HEADER_SIZE + 2
+#define GXV_MORT_SUBTABLE_TYPE1_HEADER_SIZE \
+          ( GXV_STATETABLE_HEADER_SIZE + 2 )
 
 
   static void
