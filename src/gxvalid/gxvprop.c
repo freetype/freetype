@@ -16,14 +16,17 @@
 /***************************************************************************/
 
 /***************************************************************************/
+/*                                                                         */
 /* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout was support of Information-technology Promotion */
-/* Agency(IPA), Japan.                                                     */
+/* Development of gxlayout is supported by the Information-technology      */
+/* Promotion Agency(IPA), Japan.                                           */
+/*                                                                         */
 /***************************************************************************/
 
 
 #include "gxvalid.h"
 #include "gxvcommn.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -33,7 +36,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvprop
-
 
 
   /*************************************************************************/
@@ -52,14 +54,15 @@
     FT_Fixed  version;
 
   } GXV_prop_DataRec, *GXV_prop_Data;
-#define GXV_PROP_DATA(field)  GXV_TABLE_DATA( prop, field )
 
-#define GXV_PROP_FLOATER                      0x8000
-#define GXV_PROP_USE_COMPLEMENTARY_BRACKET    0x1000
-#define GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET 0x0F00
-#define GXV_PROP_ATTACHING_TO_RIGHT           0x0080
-#define GXV_PROP_RESERVED                     0x0060
-#define GXV_PROP_DIRECTIONALITY_CLASS         0x001F
+#define GXV_PROP_DATA( field )  GXV_TABLE_DATA( prop, field )
+
+#define GXV_PROP_FLOATER                      0x8000U
+#define GXV_PROP_USE_COMPLEMENTARY_BRACKET    0x1000U
+#define GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET 0x0F00U
+#define GXV_PROP_ATTACHING_TO_RIGHT           0x0080U
+#define GXV_PROP_RESERVED                     0x0060U
+#define GXV_PROP_DIRECTIONALITY_CLASS         0x001FU
 
 
   /*************************************************************************/
@@ -79,7 +82,7 @@
     FT_GlyphSlot  glyph;
 
 
-    GXV_NAME_ENTER(" zero advance " );
+    GXV_NAME_ENTER( "zero advance" );
 
     face = valid->face;
 
@@ -98,6 +101,7 @@
     GXV_EXIT;
   }
 
+
   /* Pass 0 as GLYPH to check the default property */
   static void
   gxv_prop_property_validate( FT_UShort      property,
@@ -105,15 +109,13 @@
                               GXV_Validator  valid )
   {
     if ( glyph != 0 && ( property & GXV_PROP_FLOATER ) )
-    {
       gxv_prop_zero_advance_validate( glyph, valid );
-    }
-
 
     if ( property & GXV_PROP_USE_COMPLEMENTARY_BRACKET )
     {
-      FT_UShort offset;
-      char complement;
+      FT_UShort  offset;
+      char       complement;
+
 
       offset = property & GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET;
       if ( offset == 0 )
@@ -122,9 +124,9 @@
       complement = offset >> 8;
       if ( complement & 0x08 )
       {
-        /* Top bit is set: nagative */
+        /* Top bit is set: negative */
 
-        /* Calculated the absolute offset */
+        /* Calculate the absolute offset */
         complement = ( complement & 0x07 ) + 1;
 
         /* The gid for complement must be greater than 0 */
@@ -136,37 +138,33 @@
         /* The gid for complement must be the face. */
         gxv_glyphid_validate( glyph + complement, valid );
       }
-
     }
     else
     {
-      if ( ( property & GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET ) )
+      if ( property & GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET )
         GXV_TRACE(( "glyph %d cannot have complementary bracketing\n",
-                     glyph ));
+                    glyph ));
     }
 
-
-    /* this is introduced in ver 2.0 */
+    /* this is introduced in version 2.0 */
     if ( property & GXV_PROP_ATTACHING_TO_RIGHT )
     {
-      if ( GXV_PROP_DATA( version ) == 0x00010000 )
+      if ( GXV_PROP_DATA( version ) == 0x00010000UL )
         FT_INVALID_DATA;
     }
 
-
     if ( property & GXV_PROP_RESERVED )
-    {
       FT_INVALID_DATA;
-    }
 
     if ( ( property & GXV_PROP_DIRECTIONALITY_CLASS ) > 11 )
     {
       /* TODO: Too restricted. Use the validation level. */
-      if ( GXV_PROP_DATA( version ) == 0x00010000 ||
-           GXV_PROP_DATA( version ) == 0x00020000 )
+      if ( GXV_PROP_DATA( version ) == 0x00010000UL ||
+           GXV_PROP_DATA( version ) == 0x00020000UL )
         FT_INVALID_DATA;
     }
   }
+
 
   static void
   gxv_prop_LookupValue_validate( FT_UShort            glyph,
@@ -216,7 +214,7 @@
     GXV_LookupValueDesc  value;
 
 
-    offset = base_value.u + ( relative_gindex * sizeof( FT_UShort ) );
+    offset = base_value.u + relative_gindex * sizeof( FT_UShort );
     p      = valid->lookuptbl_head + offset;
     limit  = lookuptbl_limit;
 
@@ -253,11 +251,11 @@
     FT_UShort         defaultProp;
 
 
-    valid->root = ftvalid;
+    valid->root       = ftvalid;
     valid->table_data = prop;
-    valid->face = face;
+    valid->face       = face;
 
-    FT_TRACE3(( "validation prop table\n" ));
+    FT_TRACE3(( "validating `prop' table\n" ));
     GXV_INIT;
 
     GXV_LIMIT_CHECK( 4 + 2 + 2 );
@@ -265,15 +263,14 @@
     format      = FT_NEXT_USHORT( p );
     defaultProp = FT_NEXT_USHORT( p );
 
-
-    /* version 1.0, 2.0, 3.0 are only defined (1996) */
-    if ( version != 0x00010000 &&
-         version != 0x00020000 &&
-         version != 0x00030000 )
+    /* only versions 1.0, 2.0, 3.0 are defined (1996) */
+    if ( version != 0x00010000UL &&
+         version != 0x00020000UL &&
+         version != 0x00030000UL )
       FT_INVALID_FORMAT;
 
 
-    /* format 0x0000, 0x0001 are only defined (1996) */
+    /* only formats 0x0000, 0x0001 are defined (1996) */
     if ( format > 1 )
       FT_INVALID_FORMAT;
 
@@ -282,7 +279,7 @@
     if ( format == 0 )
     {
       FT_TRACE3(( "(format 0, no per-glyph properties, "
-                  "rest %d bytes are skipped)", limit - p ));
+                  "remaining %d bytes are skipped)", limit - p ));
       goto Exit;
     }
 
@@ -292,6 +289,7 @@
     valid->lookupval_sign   = GXV_LOOKUPVALUE_UNSIGNED;
     valid->lookupval_func   = gxv_prop_LookupValue_validate;
     valid->lookupfmt4_trans = gxv_prop_LookupFmt4_transit;
+
     gxv_LookupTable_validate( p, limit, valid );
 
   Exit:

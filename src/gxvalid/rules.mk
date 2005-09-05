@@ -33,28 +33,29 @@ GXV_DRV_SRC := $(GXV_DIR)/gxvcommn.c \
                $(GXV_DIR)/gxvprop.c  \
                $(GXV_DIR)/gxvjust.c  \
                $(GXV_DIR)/gxvmort.c  \
-               $(GXV_DIR)/gxvmort0.c  \
-               $(GXV_DIR)/gxvmort1.c  \
-               $(GXV_DIR)/gxvmort2.c  \
-               $(GXV_DIR)/gxvmort4.c  \
-               $(GXV_DIR)/gxvmort5.c  \
+               $(GXV_DIR)/gxvmort0.c \
+               $(GXV_DIR)/gxvmort1.c \
+               $(GXV_DIR)/gxvmort2.c \
+               $(GXV_DIR)/gxvmort4.c \
+               $(GXV_DIR)/gxvmort5.c \
                $(GXV_DIR)/gxvmorx.c  \
-               $(GXV_DIR)/gxvmorx0.c  \
-               $(GXV_DIR)/gxvmorx1.c  \
-               $(GXV_DIR)/gxvmorx2.c  \
-               $(GXV_DIR)/gxvmorx4.c  \
-               $(GXV_DIR)/gxvmorx5.c  \
+               $(GXV_DIR)/gxvmorx0.c \
+               $(GXV_DIR)/gxvmorx1.c \
+               $(GXV_DIR)/gxvmorx2.c \
+               $(GXV_DIR)/gxvmorx4.c \
+               $(GXV_DIR)/gxvmorx5.c \
                $(GXV_DIR)/gxvlcar.c  \
                $(GXV_DIR)/gxvkern.c  \
                $(GXV_DIR)/gxvmod.c
 
 # GXV driver headers
 #
-GXV_DRV_H := $(GXV_DIR)/gxvalid.h \
-             $(GXV_DIR)/gxverror.h  \
+GXV_DRV_H := $(GXV_DIR)/gxvalid.h  \
+             $(GXV_DIR)/gxverror.h \
              $(GXV_DIR)/gxvcommn.h \
-             $(GXV_DIR)/gxvmod.h \
-             $(GXV_DIR)/gxvmort.h \
+             $(GXV_DIR)/gxvfeat.h  \
+             $(GXV_DIR)/gxvmod.h   \
+             $(GXV_DIR)/gxvmort.h  \
              $(GXV_DIR)/gxvmorx.h
 
 

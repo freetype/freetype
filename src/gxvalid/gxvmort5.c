@@ -73,7 +73,7 @@
                                           GXV_Validator  valid )
   {
     GXV_mort_subtable_type5_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type5_StateOptRecData)valid->statetable.optdata;
 
 
     gxv_StateTable_subtable_setup( table_size,
@@ -109,7 +109,7 @@
     FT_Bytes  p = table + offset;
 
     GXV_mort_subtable_type5_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type5_StateOptRecData)valid->statetable.optdata;
 
     if ( optdata->classTable < offset                                   &&
          offset < optdata->classTable + *(optdata->classTable_length_p) )
@@ -189,7 +189,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_mort_subtable_type5_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )

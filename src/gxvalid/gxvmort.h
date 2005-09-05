@@ -52,10 +52,6 @@
 
 
   FT_LOCAL( void )
-  gxv_mort_feature_validate( GXV_mort_feature  f,
-                             GXV_Validator     valid );
-
-  FT_LOCAL( void )
   gxv_mort_featurearray_validate( FT_Bytes       table,
                                   FT_Bytes       limit,
                                   FT_UInt        nFeatureFlags,

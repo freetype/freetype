@@ -25,6 +25,7 @@
 
 
 #include "gxvmort.h"
+#include "gxvfeat.h"
 
 
   /*************************************************************************/
@@ -88,7 +89,7 @@
    * nFeatureFlags is typed to FT_UInt to accept that in
    * mort (typed FT_UShort) and morx (typed FT_ULong).
    */
-  static void
+  FT_LOCAL_DEF( void )
   gxv_mort_featurearray_validate( FT_Bytes       table,
                                   FT_Bytes       limit,
                                   FT_UInt        nFeatureFlags,
@@ -120,7 +121,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_mort_coverage_validate( FT_UShort      coverage,
                               GXV_Validator  valid )
   {
@@ -184,7 +185,7 @@
       coverage        = FT_NEXT_USHORT( p );
       subFeatureFlags = FT_NEXT_ULONG( p );
 
-      GXV_TRACE(( "validate chain subtable %d/%d (%d bytes)\n",
+      GXV_TRACE(( "validating chain subtable %d/%d (%d bytes)\n",
                   i + 1, nSubtables, length ));
       type = coverage & 0x0007;
       rest = length - ( 2 + 2 + 4 );
@@ -258,7 +259,7 @@
     valid->face = face;
     limit       = valid->root->limit;
 
-    FT_TRACE3(( "validation mort table\n" ));
+    FT_TRACE3(( "validating `mort' table\n" ));
     GXV_INIT;
 
     GXV_LIMIT_CHECK( 4 + 4 );
@@ -270,7 +271,7 @@
 
     for ( i = 0; i < nChains; i++ )
     {
-      GXV_TRACE(( "validate chain %d/%d\n", i + 1, nChains ));
+      GXV_TRACE(( "validating chain %d/%d\n", i + 1, nChains ));
       GXV_32BIT_ALIGNMENT_VALIDATE( p - table );
       gxv_mort_chain_validate( p, limit, valid );
       p += valid->subtable_length;

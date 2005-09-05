@@ -63,7 +63,7 @@
     FT_Bytes  p = table;
 
     GXV_morx_subtable_type2_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type2_StateOptRecData)valid->xstatetable.optdata;
 
 
     GXV_LIMIT_CHECK( 4 + 4 + 4 );
@@ -95,7 +95,7 @@
     FT_ULong   buff[7];
 
     GXV_morx_subtable_type2_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type2_StateOptRecData)valid->xstatetable.optdata;
 
 
     GXV_NAME_ENTER( "subtable boundaries setup" );
@@ -146,7 +146,7 @@
   {
     /* access ligActionTable */
     GXV_morx_subtable_type2_StateOptRecData optdata =
-                                              valid->xstatetable.optdata;
+      (GXV_morx_subtable_type2_StateOptRecData)valid->xstatetable.optdata;
 
     FT_Bytes lat_base  = table + optdata->ligActionTable;
     FT_Bytes p         = lat_base +
@@ -220,7 +220,7 @@
                                                   GXV_Validator  valid )
   {
     GXV_morx_subtable_type2_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type2_StateOptRecData)valid->xstatetable.optdata;
 
     FT_Bytes p     = table + optdata->ligatureTable;
     FT_Bytes limit = table + optdata->ligatureTable
@@ -246,7 +246,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_morx_subtable_type2_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )
@@ -258,7 +258,7 @@
 
     GXV_NAME_ENTER( "morx chain subtable type2 (Ligature Substitution)" );
 
-    GXV_LIMIT_CHECK( GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE );
+    GXV_LIMIT_CHECK( GXV_MORX_SUBTABLE_TYPE2_HEADER_SIZE );
 
     valid->xstatetable.optdata =
       &lig_rec;

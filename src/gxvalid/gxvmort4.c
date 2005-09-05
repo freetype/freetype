@@ -100,7 +100,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_mort_subtable_type4_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )

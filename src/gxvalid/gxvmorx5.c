@@ -69,7 +69,7 @@
     FT_Bytes  p = table;
 
     GXV_morx_subtable_type5_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type5_StateOptRecData)valid->xstatetable.optdata;
 
 
     GXV_LIMIT_CHECK( 4 );
@@ -92,7 +92,7 @@
     FT_ULong   buff[5];
 
     GXV_morx_subtable_type5_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type5_StateOptRecData)valid->xstatetable.optdata;
 
 
     o[0] = classTable;
@@ -180,7 +180,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_morx_subtable_type5_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )

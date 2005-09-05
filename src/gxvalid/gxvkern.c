@@ -59,9 +59,10 @@
 
   typedef enum GXV_kern_Dialect_
   {
-    KERN_DIALECT_MS    = FT_VALIDATE_MS,
-    KERN_DIALECT_APPLE = FT_VALIDATE_APPLE,
-    KERN_DIALECT_ANY   = FT_VALIDATE_CKERN
+    KERN_DIALECT_UNKNOWN = 0,
+    KERN_DIALECT_MS      = FT_VALIDATE_MS,
+    KERN_DIALECT_APPLE   = FT_VALIDATE_APPLE,
+    KERN_DIALECT_ANY     = FT_VALIDATE_CKERN
 
   } GXV_kern_Dialect;
 
@@ -168,7 +169,8 @@
                                           GXV_Validator  valid )
   {
     FT_Bytes                       p = table;
-    GXV_kern_fmt1_StateOptRecData  optdata = valid->statetable.optdata;
+    GXV_kern_fmt1_StateOptRecData  optdata =
+      (GXV_kern_fmt1_StateOptRecData)valid->statetable.optdata;
 
 
     GXV_LIMIT_CHECK( 2 );
@@ -193,7 +195,8 @@
     FT_UShort  *l[4];
     FT_UShort  buff[5];
 
-    GXV_kern_fmt1_StateOptRecData  optdata = valid->statetable.optdata;
+    GXV_kern_fmt1_StateOptRecData  optdata =
+      (GXV_kern_fmt1_StateOptRecData)valid->statetable.optdata;
 
 
     o[0] = classTable;
@@ -236,7 +239,8 @@
     valueOffset =   flags & 0x3FFF;
 
     {
-      GXV_kern_fmt1_StateOptRecData vt_rec = valid->statetable.optdata;
+      GXV_kern_fmt1_StateOptRecData  vt_rec =
+        (GXV_kern_fmt1_StateOptRecData)valid->statetable.optdata;
       FT_Bytes  p;
 
 
@@ -612,10 +616,10 @@
                               FT_UShort*     format,
                               GXV_Validator  valid )
   {
-    FT_Int  result = 0;
+    GXV_kern_Dialect  result = KERN_DIALECT_UNKNOWN;
 
 
-    GXV_NAME_ENTER( "validate coverage" );
+    GXV_NAME_ENTER( "validating coverage" );
 
     GXV_TRACE(( "interprete coverage 0x%04x by Apple style\n", coverage ));
 
@@ -767,7 +771,7 @@
     KERN_DIALECT( valid ) = dialect_request;
 
     GXV_LIMIT_CHECK( 2 );
-    GXV_KERN_DATA( version ) = FT_NEXT_USHORT( p );
+    GXV_KERN_DATA( version ) = (GXV_kern_Version)FT_NEXT_USHORT( p );
     GXV_TRACE(( "version 0x%04x (higher 16bit)\n",
                 GXV_KERN_DATA( version ) ));
 
@@ -792,7 +796,7 @@
 
     for ( i = 0; i < nTables; i++ )
     {
-      GXV_TRACE(( "validate subtable %d/%d\n", i, nTables ));
+      GXV_TRACE(( "validating subtable %d/%d\n", i, nTables ));
       /* p should be 32bit-aligned? */
       gxv_kern_subtable_validate( p, 0, valid );
       p += valid->subtable_length;
@@ -820,7 +824,7 @@
     GXV_kern_Dialect  dialect_request;
 
 
-    dialect_request = dialect_flags;
+    dialect_request = (GXV_kern_Dialect)dialect_flags;
     gxv_kern_validate_generic( table, face, 1, dialect_request, ftvalid );
   }
 

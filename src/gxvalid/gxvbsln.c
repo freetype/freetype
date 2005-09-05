@@ -80,7 +80,7 @@
     FT_UNUSED( glyph );
 
 
-    GXV_NAME_ENTER( " lookup value" );
+    GXV_NAME_ENTER( "lookup value" );
 
     if ( v >= GXV_BSLN_VALUE_COUNT )
       FT_INVALID_DATA;
@@ -171,7 +171,7 @@
     FT_Bytes  p = tables;
 
 
-    GXV_NAME_ENTER( " parts format 1" );
+    GXV_NAME_ENTER( "parts format 1" );
 
     /* deltas */
     gxv_bsln_parts_fmt0_validate( p, limit, valid );

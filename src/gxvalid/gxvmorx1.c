@@ -60,7 +60,7 @@
     FT_Bytes  p = table;
 
     GXV_morx_subtable_type1_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type1_StateOptRecData)valid->xstatetable.optdata;
 
 
     GXV_LIMIT_CHECK( 2 );
@@ -83,7 +83,7 @@
     FT_ULong  buff[5];
 
     GXV_morx_subtable_type1_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type1_StateOptRecData)valid->xstatetable.optdata;
 
 
     o[0] = classTable;
@@ -115,7 +115,7 @@
     FT_Short   currentIndex;
 
     GXV_morx_subtable_type1_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type1_StateOptRecData)valid->xstatetable.optdata;
 
     FT_UNUSED( state );
     FT_UNUSED( table );
@@ -197,7 +197,7 @@
     FT_UShort  i;
 
     GXV_morx_subtable_type1_StateOptRecData  optdata =
-                                               valid->xstatetable.optdata;
+      (GXV_morx_subtable_type1_StateOptRecData)valid->xstatetable.optdata;
 
 
     /* TODO: calculate offset/length for each lookupTables */
@@ -225,7 +225,7 @@
    * In addition to classTable, stateArray, entryTable, the field
    * `substitutionTable' is added.
    */
-  static void
+  FT_LOCAL_DEF( void )
   gxv_morx_subtable_type1_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )

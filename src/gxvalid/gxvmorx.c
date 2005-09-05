@@ -77,7 +77,7 @@
       coverage        = FT_NEXT_ULONG( p );
       subFeatureFlags = FT_NEXT_ULONG( p );
 
-      GXV_TRACE(( "validate chain subtable %d/%d (%d bytes)\n",
+      GXV_TRACE(( "validating chain subtable %d/%d (%d bytes)\n",
                   i + 1, nSubtables, length ));
 
       type = coverage & 0x0007;
@@ -152,7 +152,7 @@
     valid->root = ftvalid;
     valid->face = face;
 
-    FT_TRACE3(( "validation morx table\n" ));
+    FT_TRACE3(( "validating `morx' table\n" ));
     GXV_INIT;
 
     GXV_LIMIT_CHECK( 4 + 4 );
@@ -164,7 +164,7 @@
 
     for ( i = 0; i < nChains; i++ )
     {
-      GXV_TRACE(( "validate chain %d/%d\n", i + 1, nChains ));
+      GXV_TRACE(( "validating chain %d/%d\n", i + 1, nChains ));
       GXV_32BIT_ALIGNMENT_VALIDATE( p - table );
       gxv_morx_chain_validate( p, limit, valid );
       p += valid->subtable_length;
