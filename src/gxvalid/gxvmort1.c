@@ -58,7 +58,7 @@
     FT_Bytes  p = table;
 
     GXV_mort_subtable_type1_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type1_StateOptRecData)valid->statetable.optdata;
 
 
     GXV_LIMIT_CHECK( 2 );
@@ -81,7 +81,7 @@
     FT_UShort  buff[5];
 
     GXV_mort_subtable_type1_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type1_StateOptRecData)valid->statetable.optdata;
 
 
     o[0] = classTable;
@@ -183,7 +183,7 @@
     FT_UShort  i;
 
 
-    GXV_NAME_ENTER( "validate contents in substitionTable" );
+    GXV_NAME_ENTER( "validating contents of substitionTable" );
     for ( i = 0; i < num_gids ; i ++ )
     {
       FT_UShort  dst_gid;
@@ -214,7 +214,7 @@
    * In addition to classTable, stateArray, and entryTable, the field
    * `substitutionTable' is added.
    */
-  static void
+  FT_LOCAL_DEF( void )
   gxv_mort_subtable_type1_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )

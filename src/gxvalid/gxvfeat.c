@@ -26,6 +26,7 @@
 
 #include "gxvalid.h"
 #include "gxvcommn.h"
+#include "gxvfeat.h"
 
 
   /*************************************************************************/
@@ -36,140 +37,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvfeat
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                Registry predefined by Apple                   *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
-
-  /* TODO: More compact format */
-  typedef struct  GXV_Feature_RegistryRec_
-  {
-    FT_Bool  existence;
-    FT_Bool  apple_reserved;
-    FT_Bool  exclusive;
-    FT_Byte  nSettings;
-
-  } GX_Feature_RegistryRec;
-
-
-#define gxv_feat_registry_length                  \
-          ( sizeof ( gxv_feat_registry ) /        \
-              sizeof ( GX_Feature_RegistryRec ) )
-
-
-  static GX_Feature_RegistryRec  gxv_feat_registry[] =
-  {
-    /* Generated from gxvfgen.c */
-    {1, 0, 0,  1},   /* All Typographic Features */
-    {1, 0, 0,  8},   /* Ligatures */
-    {1, 0, 1,  3},   /* Cursive Connection */
-    {1, 0, 1,  6},   /* Letter Case */
-    {1, 0, 0,  1},   /* Vertical Substitution */
-    {1, 0, 0,  1},   /* Linguistic Rearrangement */
-    {1, 0, 1,  2},   /* Number Spacing */
-    {1, 1, 0,  0},   /* Apple Reserved 1 */
-    {1, 0, 0,  5},   /* Smart Swashes */
-    {1, 0, 1,  3},   /* Diacritics */
-    {1, 0, 1,  4},   /* Vertical Position */
-    {1, 0, 1,  3},   /* Fractions */
-    {1, 1, 0,  0},   /* Apple Reserved 2 */
-    {1, 0, 0,  1},   /* Overlapping Characters */
-    {1, 0, 0,  6},   /* Typographic Extras */
-    {1, 0, 0,  5},   /* Mathematical Extras */
-    {1, 0, 1,  7},   /* Ornament Sets */
-    {1, 0, 1,  1},   /* Character Alternatives */
-    {1, 0, 1,  5},   /* Design Complexity */
-    {1, 0, 1,  6},   /* Style Options */
-    {1, 0, 1, 11},   /* Character Shape */
-    {1, 0, 1,  2},   /* Number Case */
-    {1, 0, 1,  4},   /* Text Spacing */
-    {1, 0, 1, 10},   /* Transliteration */
-    {1, 0, 1,  9},   /* Annotation */
-    {1, 0, 1,  2},   /* Kana Spacing */
-    {1, 0, 1,  2},   /* Ideographic Spacing */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {0, 0, 0,  0},   /* __EMPTY__ */
-    {1, 0, 1,  4},   /* Text Spacing */
-    {1, 0, 1,  2},   /* Kana Spacing */
-    {1, 0, 1,  2},   /* Ideographic Spacing */
-    {1, 0, 1,  4},   /* CJK Roman Spacing */
-  };
 
 
   /*************************************************************************/

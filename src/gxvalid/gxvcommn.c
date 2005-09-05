@@ -58,13 +58,13 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_set_length_by_ushort_offset( FT_UShort*     offset,
                                    FT_UShort**    length,
                                    FT_UShort*     buff,
                                    FT_UInt        nmemb,
                                    FT_UShort      limit,
-                                   GXV_Validator  valid)
+                                   GXV_Validator  valid )
   {
     FT_UInt  i;
 
@@ -123,7 +123,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_set_length_by_ulong_offset( FT_ULong*      offset,
                                   FT_ULong**     length,
                                   FT_ULong*      buff,
@@ -176,7 +176,7 @@
   /*************************************************************************/
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_array_getlimits_byte( FT_Bytes       table,
                             FT_Bytes       limit,
                             FT_Byte*       min,
@@ -205,7 +205,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_array_getlimits_ushort( FT_Bytes       table,
                               FT_Bytes       limit,
                               FT_UShort*     min,
@@ -430,7 +430,7 @@
     GXV_LookupValueDesc  value;
 
 
-    GXV_NAME_ENTER( " LookupTable format 0" );
+    GXV_NAME_ENTER( "LookupTable format 0" );
 
     GXV_LIMIT_CHECK( 2 * valid->face->num_glyphs );
 
@@ -507,7 +507,7 @@
     GXV_LookupValueDesc  value;
 
 
-    GXV_NAME_ENTER( " LookupTable format 2" );
+    GXV_NAME_ENTER( "LookupTable format 2" );
 
     unitSize = nUnits = 0;
     gxv_BinSrchHeader_validate( p, limit, &unitSize, &nUnits, valid );
@@ -581,7 +581,7 @@
     GXV_LookupValueDesc  value;
 
 
-    GXV_NAME_ENTER( " LookupTable format 4" );
+    GXV_NAME_ENTER( "LookupTable format 4" );
 
     unitSize = nUnits = 0;
     gxv_BinSrchHeader_validate( p, limit, &unitSize, &nUnits, valid );
@@ -678,7 +678,7 @@
     GXV_LookupValueDesc  value;
 
 
-    GXV_NAME_ENTER( " LookupTable format 6" );
+    GXV_NAME_ENTER( "LookupTable format 6" );
 
     unitSize = nUnits = 0;
     gxv_BinSrchHeader_validate( p, limit, &unitSize, &nUnits, valid );
@@ -731,7 +731,7 @@
     FT_UShort             glyphCount;
 
 
-    GXV_NAME_ENTER( " LookupTable format 8" );
+    GXV_NAME_ENTER( "LookupTable format 8" );
 
     /* firstGlyph + glyphCount */
     GXV_LIMIT_CHECK( 2 + 2 );
@@ -778,7 +778,7 @@
     GXV_Validate_Func  func;
 
 
-    GXV_NAME_ENTER(" LookupTable" );
+    GXV_NAME_ENTER( "LookupTable" );
 
     /* lookuptbl_head may be used in fmt4 transit function. */
     valid->lookuptbl_head = table;
@@ -1028,7 +1028,7 @@
   {
     FT_Bytes  p = table;
     FT_Bytes  limit = table + *length_p;
-    FT_Byte   class;
+    FT_Byte   clazz;
     FT_Byte   entry;
 
 
@@ -1050,7 +1050,7 @@
     while ( p + ( 1 + maxClassID ) <= limit )
     {
       (*maxState_p)++;
-      for ( class = 0; class <= maxClassID; class++ )
+      for ( clazz = 0; clazz <= maxClassID; clazz++ )
       {
         entry = FT_NEXT_BYTE( p );
         *maxEntry_p = FT_MAX( *maxEntry_p, entry );
@@ -1219,9 +1219,6 @@
     FT_UShort   classTable;     /* offset to Class(Sub)Table */
     FT_UShort   stateArray;     /* offset to StateArray */
     FT_UShort   entryTable;     /* offset to EntryTable */
-
-#define GXV_STATETABLE_HEADER_SIZE  ( 2 + 2 + 2 + 2 )
-#define GXV_STATEHEADER_SIZE        GXV_STATETABLE_HEADER_SIZE
 
     FT_UShort   classTable_length;
     FT_UShort   stateArray_length;
@@ -1416,7 +1413,7 @@
   {
     FT_Bytes   p = table;
     FT_Bytes   limit = table + *length_p;
-    FT_UShort  class;
+    FT_UShort  clazz;
     FT_UShort  entry;
 
 
@@ -1438,7 +1435,7 @@
     while ( p + ( ( 1 + maxClassID ) * 2 ) <= limit )
     {
       (*maxState_p)++;
-      for ( class = 0; class <= maxClassID; class++ )
+      for ( clazz = 0; clazz <= maxClassID; clazz++ )
       {
         entry = FT_NEXT_USHORT( p );
         *maxEntry_p = FT_MAX( *maxEntry_p, entry );
@@ -1564,9 +1561,6 @@
     FT_ULong   stateArray;      /* offset to StateArray */
     FT_ULong   entryTable;      /* offset to EntryTable */
 
-#define GXV_XSTATETABLE_HEADER_SIZE  ( 4 + 4 + 4 + 4 )
-#define GXV_XSTATEHEADER_SIZE        GXV_XSTATETABLE_HEADER_SIZE
-
     FT_ULong   classTable_length;
     FT_ULong   stateArray_length;
     FT_ULong   entryTable_length;
@@ -1669,7 +1663,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_LOCAL_DEF( int )
+  static int
   gxv_compare_ranges( FT_Bytes  table1_start,
                       FT_ULong  table1_length,
                       FT_Bytes  table2_start,
@@ -1712,7 +1706,7 @@
 
   FT_LOCAL_DEF( void )
   gxv_odtect_validate( GXV_odtect_Range  odtect,
-                       GXV_Validator     valid   )
+                       GXV_Validator     valid )
   {
     FT_UInt  i, j;
 

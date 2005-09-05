@@ -108,7 +108,7 @@
     count = FT_NEXT_ULONG( p );
     for ( i = 0; i < count; i++ )
     {
-      GXV_TRACE(( "validate wdc pair %d/%d\n", i + 1, count ));
+      GXV_TRACE(( "validating wdc pair %d/%d\n", i + 1, count ));
       gxv_just_wdp_entry_validate( p, limit, valid );
       p += valid->subtable_length;
     }

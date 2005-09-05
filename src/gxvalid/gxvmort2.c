@@ -61,7 +61,7 @@
   {
     FT_Bytes p = table;
     GXV_mort_subtable_type2_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type2_StateOptRecData)valid->statetable.optdata;
 
 
     GXV_LIMIT_CHECK( 2 + 2 + 2 );
@@ -93,7 +93,7 @@
     FT_UShort  buff[7];
 
     GXV_mort_subtable_type2_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type2_StateOptRecData)valid->statetable.optdata;
 
 
     GXV_NAME_ENTER( "subtable boundaries setup" );
@@ -141,7 +141,7 @@
   {
     /* access ligActionTable */
     GXV_mort_subtable_type2_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type2_StateOptRecData)valid->statetable.optdata;
 
     FT_Bytes lat_base  = table + optdata->ligActionTable;
     FT_Bytes p         = table + ligActionOffset;
@@ -217,7 +217,7 @@
                                                   GXV_Validator  valid )
   {
     GXV_mort_subtable_type2_StateOptRecData  optdata =
-                                               valid->statetable.optdata;
+      (GXV_mort_subtable_type2_StateOptRecData)valid->statetable.optdata;
 
     FT_Bytes p     = table + optdata->ligatureTable;
     FT_Bytes limit = table + optdata->ligatureTable
@@ -241,7 +241,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   gxv_mort_subtable_type2_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )

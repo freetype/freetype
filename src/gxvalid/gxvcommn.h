@@ -410,18 +410,74 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   FT_LOCAL( void )
+  gxv_StateTable_subtable_setup( FT_UShort      table_size,
+                                 FT_UShort      classTable,
+                                 FT_UShort      stateArray,
+                                 FT_UShort      entryTable,
+                                 FT_UShort*     classTable_length_p,
+                                 FT_UShort*     stateArray_length_p,
+                                 FT_UShort*     entryTable_length_p,
+                                 GXV_Validator  valid );
+
+  FT_LOCAL( void )
+  gxv_XStateTable_subtable_setup( FT_ULong       table_size,
+                                  FT_ULong       classTable,
+                                  FT_ULong       stateArray,
+                                  FT_ULong       entryTable,
+                                  FT_ULong*      classTable_length_p,
+                                  FT_ULong*      stateArray_length_p,
+                                  FT_ULong*      entryTable_length_p,
+                                  GXV_Validator  valid );
+
+  FT_LOCAL( void )
   gxv_StateTable_validate( FT_Bytes       table,
                            FT_Bytes       limit,
                            GXV_Validator  valid );
 
+  FT_LOCAL( void )
+  gxv_XStateTable_validate( FT_Bytes       table,
+                            FT_Bytes       limit,
+                            GXV_Validator  valid );
+
 
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                         UTILITY MACRO                         *****/
+  /*****                 UTILITY MACROS AND FUNCTIONS                  *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
+
+  FT_LOCAL( void )
+  gxv_array_getlimits_byte( FT_Bytes       table,
+                            FT_Bytes       limit,
+                            FT_Byte*       min,
+                            FT_Byte*       max,
+                            GXV_Validator  valid );
+
+  FT_LOCAL( void )
+  gxv_array_getlimits_ushort( FT_Bytes       table,
+                              FT_Bytes       limit,
+                              FT_UShort*     min,
+                              FT_UShort*     max,
+                              GXV_Validator  valid );
+
+  FT_LOCAL( void )
+  gxv_set_length_by_ushort_offset( FT_UShort*     offset,
+                                   FT_UShort**    length,
+                                   FT_UShort*     buff,
+                                   FT_UInt        nmemb,
+                                   FT_UShort      limit,
+                                   GXV_Validator  valid );
+
+  FT_LOCAL( void )
+  gxv_set_length_by_ulong_offset( FT_ULong*      offset,
+                                  FT_ULong**     length,
+                                  FT_ULong*      buff,
+                                  FT_UInt        nmemb,
+                                  FT_ULong       limit,
+                                  GXV_Validator  valid);
+
 
 #define GXV_SUBTABLE_OFFSET_CHECK( _offset )          \
           FT_BEGIN_STMNT                              \
@@ -438,6 +494,12 @@ FT_BEGIN_HEADER
 
 #define GXV_USHORT_TO_SHORT( _us )                                    \
           ( ( 0x8000U < ( _us ) ) ? ( ( _us ) - 0x8000U ) : ( _us ) )
+
+#define GXV_STATETABLE_HEADER_SIZE  ( 2 + 2 + 2 + 2 )
+#define GXV_STATEHEADER_SIZE        GXV_STATETABLE_HEADER_SIZE
+
+#define GXV_XSTATETABLE_HEADER_SIZE  ( 4 + 4 + 4 + 4 )
+#define GXV_XSTATEHEADER_SIZE        GXV_XSTATETABLE_HEADER_SIZE
 
 
   /*************************************************************************/
@@ -462,6 +524,17 @@ FT_BEGIN_HEADER
     GXV_odtect_Data  range;
 
   } GXV_odtect_RangeRec, *GXV_odtect_Range;
+
+
+  FT_LOCAL( void )
+  gxv_odtect_add_range( FT_Bytes          start,
+                        FT_ULong          length,
+                        const FT_String*  name,
+                        GXV_odtect_Range  odtect );
+
+  FT_LOCAL( void )
+  gxv_odtect_validate( GXV_odtect_Range  odtect,
+                       GXV_Validator     valid );
 
 
 #define GXV_ODTECT( n, odtect )                              \
