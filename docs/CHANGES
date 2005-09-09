@@ -4,6 +4,8 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
     - Vertical metrics for SFNT fonts were incorrect sometimes.
 
+    - The FT_HAS_KERNING macro always returned 0.
+
   II. IMPORTANT CHANGES
 
     - A  new API  `FT_TrueTypeGX_Validate'  (in FT_GX_VALIDATE_H)  has
