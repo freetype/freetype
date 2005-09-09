@@ -1,3 +1,10 @@
+2005-09-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Reactivate code to set
+	FT_FACE_FLAG_KERNING which has been commented out erroneously.
+
+	* docs/CHANGES: Document it.
+
 2005-09-05  Werner Lemberg  <wl@gnu.org>
 
 	Fixes for `make multi' and using C++ compiler.

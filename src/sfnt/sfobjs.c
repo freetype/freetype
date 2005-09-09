@@ -555,11 +555,9 @@
       if ( face->vertical_info )
         flags |= FT_FACE_FLAG_VERTICAL;
 
-#if 0
       /* kerning available ? */
       if ( TT_FACE_HAS_KERNING( face ) )
         flags |= FT_FACE_FLAG_KERNING;
-#endif
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* Don't bother to load the tables unless somebody asks for them. */
