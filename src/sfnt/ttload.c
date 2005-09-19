@@ -156,7 +156,8 @@
                   FT_UInt    num_tables )
    {
     FT_Error        error;
-    FT_UInt         nn, has_head = 0;
+    FT_UInt         nn;
+    FT_UInt         has_head = 0, has_sing = 0, has_meta = 0;
 
     const FT_ULong  glyx_tag = FT_MAKE_TAG( 'g', 'l', 'y', 'x' );
     const FT_ULong  locx_tag = FT_MAKE_TAG( 'l', 'o', 'c', 'x' );
@@ -229,12 +230,23 @@
         if ( FT_STREAM_SEEK( offset + 28 + 16*nn ) )
           goto Bad_Format;
       }
+
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
       else if ( table.Tag == TTAG_bhed )
         goto head_retry;
 #endif  /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */      
+
+      else if ( table.Tag == TTAG_SING )
+        has_sing = 1;
+      else if ( table.Tag == TTAG_META )
+        has_meta = 1;
     }
 
+    /* when sing and meta are present, head is not present */
+    if ( has_sing && has_meta && has_head == 0 )
+        goto Exit;
+
+    /* otherwise, treat a missing head as a failure */
     if ( has_head == 0 )
       goto Bad_Format;
 

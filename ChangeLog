@@ -1,3 +1,28 @@
+2005-09-19  David Somers  <dsomers@omz13.com>
+
+	* freetype2/src/sfnt/ttload.c (sfnt_dir_check): Modified to allow a
+	font to have no `head' table if tables `SING' and `META' are
+	present; this is to support `SING Glyphlet'.
+
+	`SING Glyphlet' is an extension to OpenType developed by Adobe
+	primarily to facilitate adding supplemental glyphs to an OpenType
+	font (with emphasis on, but not necessariy limited to, gaiji to a
+	CJK font).  A SING Glyphlet Font is an OpenType font that contains
+	the outline(s), either in a `glyf' or `CFF' table, for a glyph;
+	`cmap', `BASE', and `GSUB' tables are present with the same format
+	and functionaliy as a regular OpenType font; there are no `name',
+	`head', `OS/2', and `post' tables; there are two new tables, `SING'
+	which contains details about the glyphlet, and `META' which contains
+	metadata.
+
+	Further information on the SING Glyphlet format can be found at:
+
+	  http://www.adobe.com/products/indesign/sing_gaiji.html
+
+	* freetype2/include/freetype/ttags.h (TTAG_SING, TTAG_META): New
+	macros for the OpenType tables `SING' and `META'.  These two tables
+	are used in SING Glyphlet Format fonts.
+
 2005-09-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Reactivate code to set
