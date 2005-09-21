@@ -248,6 +248,21 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* <Type>                                                                */
+  /*    FTC_Family                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    An opaque handle to a cache family object. A family is used to     */
+  /*    group the attributes of several similar cache nodes.               */
+  /*                                                                       */
+  /*    Each family is reference-counted. When its count reaches 0, it     */
+  /*    is immediately destroyed.                                          */
+  /*                                                                       */
+  typedef struct FTC_FamilyRec_*   FTC_Family;
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* <Function>                                                            */
   /*    FTC_Manager_New                                                    */
   /*                                                                       */
@@ -449,11 +464,74 @@ FT_BEGIN_HEADER
                   FTC_Manager  manager );
 
 
+  /**
+   * @func: FTC_Family_Unref
+   *
+   * @description:
+   *    decrement a cache family's internal reference count. When its reaches
+   *    the value 0, it is destroyed immediately. You should always destroy
+   *    family objects as soon as possible.
+   */
+  FT_EXPORT( void )
+  FTC_Family_Unref( FTC_Family   family );
+
+
   /* remove all nodes belonging to a given face_id */
   FT_EXPORT( void )
   FTC_Manager_RemoveFaceID( FTC_Manager  manager,
                             FTC_FaceID   face_id );
 
+
+ /**
+  * @type: FTC_ImgMode
+  *
+  * @description:
+  *   this simple 32-bit unsigned integer type is used to store
+  *   styling and pixel rendering options
+  *
+  *   see @FTC_IMGMODE_MAKE, @FTC_IMGMODE_GET_RENDER, @FTC_IMGMODE_GET_EMBOLDEN
+  *   and @FTC_IMGMODE_GET_OBLIQUE
+  */
+typedef FT_UInt32    FTC_ImgMode;
+
+ /**
+  * @macro: FTC_IMGMODE_MAKE
+  *
+  * @description:
+  *   a convenient macro used to build a @FTC_ImgMode value that describes
+  *   pixel rendering mode, emboldening flag, and obliquing flag
+  *
+  * @param:
+  *   render :: pixel rendering mode, see @FT_Render_Mode
+  *   bold   :: boolean, true if emboldening is wanted
+  *   ital   :: boolean, true if obliquing is wanted
+  */
+#define  FTC_IMGMODE_MAKE(render,bold,ital)  \
+    ((FTC_ImgMode)(((render) << 2) | (((bold) != 0) << 1) | ((ital) != 0) )
+
+ /**
+  * @macro: FTC_IMGMODE_GET_RENDER (mode)
+  *
+  * @description:
+  *   retrieve the render mode of a given @FTC_ImgMode value
+  */
+#define  FTC_IMGMODE_GET_RENDER(m)    ((FT_Render_Mode)((m) >> 2))
+
+ /**
+  * @macro: FTC_IMGMODE_GET_EMBOLDEN (mode)
+  *
+  * @description:
+  *   retrieve the emboldening flags from a @FTC_ImgMode value
+  */
+#define  FTC_IMGMODE_GET_EMBOLDEN(m)  (((m) & 0x2) != 0)
+
+ /**
+  * @macro: FTC_IMGMODE_GET_OBLIQUE (mode)
+  *
+  * @description:
+  *   retrive the obliquing flag from a @FTC_ImgMode value
+  */
+#define  FTC_IMGMODE_GET_OBLIQUE(m)   (((m) & 0x1) != 0)
 
   /*************************************************************************/
   /*                                                                       */
@@ -653,6 +731,29 @@ FT_BEGIN_HEADER
                          FTC_Node       *anode );
 
 
+  FT_EXPORT( FT_Error )
+  FTC_ImageCache_GetFamily( FTC_ImageCache  cache,
+                            FTC_Scaler      scaler,
+                            FT_UInt32       load_flags,
+                            FTC_ImgMode     img_mode,
+                            FTC_Family     *afamily );
+
+  FT_EXPORT( FT_Error )
+  FTC_ImageCache_GetGlyph( FTC_ImageCache  cache,
+                           FTC_Family      family,
+                           FT_UInt         gindex,
+                           FT_Glyph       *aglyph,
+                           FTC_Node       *anode );
+
+  FT_EXPORT( FT_Error )
+  FTC_ImageCache_FindGlyph( FTC_ImageCache  cache,
+                            FTC_Scaler      scaler,
+                            FT_UInt32       load_flags,
+                            FTC_ImgMode     img_mode,
+                            FT_UInt         gindex,
+                            FT_Glyph       *aglyph,
+                            FTC_Node       *anode );
+
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -806,6 +907,96 @@ FT_BEGIN_HEADER
                         FTC_SBit        *sbit,
                         FTC_Node        *anode );
 
+ /**
+  * @func: FTC_SBitCache_GetFamily
+  *
+  * @description:
+  *   retrieve the @FTC_Family from a @FTC_SBitCache that corresponds
+  *   to a given set of scaling mode, load flags and image modes.
+  *
+  * @input:
+  *   cache       :: handle to source SBit cache
+  *   scaler      :: handle to @FTC_ScalerRec structure describing scaling parameters
+  *   load_flags  :: load flags
+  *   image_modes :: corresponds to rendering pixel mode, emboldening and obliquing
+  *
+  * @output:
+  *   afamily :: handle to family. NULL in case of error
+  *
+  * @return:
+  *   error code
+  *
+  * @note:
+  *   you should free the family handle with @FTC_Family_Unref
+  */
+  FT_EXPORT( FT_Error )
+  FTC_SBitCache_GetFamily( FTC_SBitCache  cache,
+                           FTC_Scaler     scaler,
+                           FT_UInt32      load_flags,
+                           FTC_ImgMode    img_mode,
+                           FTC_Family    *afamily );
+
+ /**
+  * @func: FTC_SBitCache_GetBitmap
+  *
+  * @description:
+  *    retrieve a bitmap from a SBit cache using a @FTC_Family previously
+  *    found with @TC_SBitCache_GetFamily. The same family can be used in
+  *    subsequent calls
+  *
+  * @input:
+  *    cache  :: handle to source SBit cache
+  *    family :: family handle
+  *    gindex :: glyph index
+  *
+  * @output:
+  *    asbit  :: handle to small bitmap descriptor
+  *
+  * @inout:
+  *    anode  :: address where the handle to the corresponding cache node
+  *              will be written. set to NULL if you don't need it.
+  *
+  * @note:
+  *   the small bitmap descriptor whose address is managed by the cache
+  *
+  *   if 'anode' is not NULL on input, you must call @FTC_Node_Unref(*anode)
+  *   when you don't need to cache node.
+  */
+  FT_EXPORT( FT_Error )
+  FTC_SBitCache_GetBitmap( FTC_SBitCache  cache,
+                           FTC_Family     family,
+                           FT_UInt        gindex,
+                           FTC_SBit      *asbit,
+                           FTC_Node      *anode );
+
+ /**
+  * @func: FTC_SBitCache_FindBitmap
+  *
+  * @description:
+  *   a convenience function equivalent to the following sequence:
+  *
+  * {
+  *   FTC_Family  family;
+  *
+  *   error = FTC_SBitCache_GetFamily( cache, scaler, load_flags, img_mode,
+  *                                    &family );
+  *   if ( !error )
+  *   {
+  *     error = FTC_SBitCache_GetBitmap( cache, family, gindex, asbit, anode );
+  *
+  *     FTC_Family_Unref( family );
+  *   }
+  * }
+  *
+  */
+  FT_EXPORT( FT_Error )
+  FTC_SBitCache_FindBitmap( FTC_SBitCache  cache,
+                            FTC_Scaler     scaler,
+                            FT_UInt32      load_flags,
+                            FTC_ImgMode    img_mode,
+                            FT_UInt        gindex,
+                            FTC_SBit      *asbit,
+                            FTC_Node      *anode );
 
  /* */
 

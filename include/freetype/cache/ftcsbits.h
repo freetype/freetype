@@ -39,8 +39,8 @@ FT_BEGIN_HEADER
 
 
 #define FTC_SNODE( x )         ( (FTC_SNode)( x ) )
-#define FTC_SNODE_GINDEX( x )  FTC_GNODE( x )->gindex
-#define FTC_SNODE_FAMILY( x )  FTC_GNODE( x )->family
+#define FTC_SNODE__COUNT(x)    ( FTC_SNODE(x)->count )
+
 
   typedef FT_UInt
   (*FTC_SFamily_GetCountFunc)( FTC_Family   family,
@@ -52,39 +52,53 @@ FT_BEGIN_HEADER
                                 FTC_Manager  manager,
                                 FT_Face     *aface );
 
-  typedef struct  FTC_SFamilyClassRec_
+  typedef struct
   {
-    FTC_MruListClassRec        clazz;
-    FTC_SFamily_GetCountFunc   family_get_count;
-    FTC_SFamily_LoadGlyphFunc  family_load_glyph;
+    FTC_GCacheClassRec         clazz;
+    FTC_SFamily_GetCountFunc   fam_get_count;
+    FTC_SFamily_LoadGlyphFunc  fam_load_glyph;
 
-  } FTC_SFamilyClassRec;
+  } FTC_SCacheClassRec;
 
-  typedef const FTC_SFamilyClassRec*  FTC_SFamilyClass;
+  typedef const FTC_SCacheClassRec*   FTC_SCacheClass;
 
-#define FTC_SFAMILY_CLASS( x )  ((FTC_SFamilyClass)(x))
+#define  FTC_SCACHE_CLASS(x)   ((FTC_SCacheClass)(x))
+#define  FTC_SCACHE__CLASS(c)  FTC_SCACHE_CLASS(FTC_CACHE__CLASS(c))
+
+#define  FTC_DEFINE_SCACHE_CLASS(_gcache_class,_get_count,_get_glyph) \
+  {                                               \
+    _gcache_class,                                \
+    (FTC_SFamily_GetCountFunc) (_get_count),      \
+    (FTC_SFamily_LoadGlyphFunc)(_get_glyph)       \
+  }
+
+#define  FTC_SFAMILY__CLASS(f)  FTC_SCACHE__CLASS(FTC_FAMILY__CACHE(f))
+
 
 #define FTC_CACHE__SFAMILY_CLASS( x )  \
           FTC_SFAMILY_CLASS( FTC_CACHE__GCACHE_CLASS( x )->family_class )
 
 
   FT_EXPORT( void )
-  FTC_SNode_Free( FTC_SNode  snode,
-                  FTC_Cache  cache );
+  FTC_SNode_Free( FTC_SNode   snode,
+                  FTC_GCache  cache );
 
   FT_EXPORT( FT_Error )
   FTC_SNode_New( FTC_SNode   *psnode,
-                 FTC_GQuery   gquery,
-                 FTC_Cache    cache );
+                 FTC_GNode    gquery,
+                 FTC_GCache   cache );
+
+#define  FTC_SNODE_EQUAL(node,query,cache)  \
+  FTC_SNode_Equal( FTC_SNODE(node), FTC_GNODE(query), FTC_CACHE(cache) )
+
+  FT_EXPORT( FT_Bool )
+  FTC_SNode_Equal( FTC_SNode  snode,
+                   FTC_GNode  gquery,
+                   FTC_Cache  cache );
 
   FT_EXPORT( FT_ULong )
   FTC_SNode_Weight( FTC_SNode  inode );
 
-
-  FT_EXPORT( FT_Bool )
-  FTC_SNode_Compare( FTC_SNode   snode,
-                     FTC_GQuery  gquery,
-                     FTC_Cache   cache );
 
   /* */
 

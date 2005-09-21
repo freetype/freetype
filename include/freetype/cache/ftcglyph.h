@@ -58,7 +58,7 @@
    *  - FTC_GNode sub-class, e.g. MyNode, with relevant methods:
    *        my_node_new            (must call FTC_GNode_Init)
    *        my_node_free           (must call FTC_GNode_Done)
-   *        my_node_compare        (must call FTC_GNode_Compare)
+   *        my_node_equal          (must call FTC_GNode_Compare)
    *        my_node_remove_faceid  (must call ftc_gnode_unselect in case
    *                                of match)
    *
@@ -67,9 +67,6 @@
    *        my_family_init
    *        my_family_reset (optional)
    *        my_family_done
-   *
-   *  - FTC_GQuery sub-class, e.g. MyQuery, to hold cache-specific query
-   *    data.
    *
    *  - Constant structures for a FTC_GNodeClass.
    *
@@ -116,12 +113,14 @@
 #ifndef __FTCGLYPH_H__
 #define __FTCGLYPH_H__
 
-
 #include <ft2build.h>
 #include FT_CACHE_INTERNAL_MANAGER_H
 
 
 FT_BEGIN_HEADER
+
+
+  typedef struct FTC_GCacheRec_*   FTC_GCache;
 
 
  /*
@@ -132,17 +131,71 @@ FT_BEGIN_HEADER
   *  reference-counted.
   */
 
+  typedef const struct FTC_FamilyClassRec_*   FTC_FamilyClass;
+
   typedef struct  FTC_FamilyRec_
   {
-    FTC_MruNodeRec    mrunode;
-    FT_UInt           num_nodes; /* current number of nodes in this family */
-    FTC_Cache         cache;
-    FTC_MruListClass  clazz;
+    FTC_Family       link;      /* used for hashing too                   */
+    FT_UInt32        hash;      /* hash value for this family             */
+    FT_Int           num_nodes; /* current number of nodes in this family */
+    FTC_GCache       cache;     /* cache the family belongs to            */
 
-  } FTC_FamilyRec, *FTC_Family;
+  } FTC_FamilyRec;
 
 #define  FTC_FAMILY(x)    ( (FTC_Family)(x) )
 #define  FTC_FAMILY_P(x)  ( (FTC_Family*)(x) )
+
+#define  FTC_FAMILY__CACHE(f)  (FTC_FAMILY(f)->cache)
+#define  FTC_FAMILY__CLASS(f)  FTC_GCACHE__FAMILY_CLASS(FTC_FAMILY__CACHE(f))
+
+ /* note that the content of 'key' has already been copied to 'family'
+  * when this method is called. This callback is only necessary when you
+  * need to perform non-trivial initialization (e.g. duplicating
+  * heap-allocated memory, like strings, owned by the family)
+  *
+  * if this method returns an error, the corresponding FTC_Family_DoneFunc,
+  * will be called, if is not defined to NULL
+  */
+  typedef FT_Error  (*FTC_Family_InitFunc)( FTC_Family  family,
+                                            FTC_Family  key );
+
+ /* finalize the content of a given family object
+  */
+  typedef void      (*FTC_Family_DoneFunc)( FTC_Family  family );
+
+ /* test wether a family matches a given key. Note that this method
+  * is only called when (family.hash == key.hash), so there is no
+  * need to test it again
+  */
+  typedef FT_Bool   (*FTC_Family_EqualFunc)( FTC_Family  family,
+                                             FTC_Family  key );
+
+ /* test wether a family matches a given FTC_FaceID
+  */
+  typedef FT_Bool   (*FTC_Family_EqualFaceIDFunc)( FTC_Family  family,
+                                                   FTC_FaceID  face_id );
+
+  typedef struct FTC_FamilyClassRec_
+  {
+    FT_UInt                     fam_size;
+    FTC_Family_InitFunc         fam_init;
+    FTC_Family_DoneFunc         fam_done;
+    FTC_Family_EqualFunc        fam_equal;
+    FTC_Family_EqualFaceIDFunc  fam_equal_faceid;
+
+  } FTC_FamilyClassRec;
+
+
+#define  FTC_FAMILY_CLASS(x)  ((FTC_FamilyClass)(x))
+
+#define  FTC_DEFINE_FAMILY_CLASS(_type,_init,_done,_equal,_equal_faceid) \
+  {                                              \
+    sizeof(_type),                               \
+    (FTC_Family_InitFunc)       (_init),         \
+    (FTC_Family_DoneFunc)       (_done),         \
+    (FTC_Family_EqualFunc)      (_equal),        \
+    (FTC_Family_EqualFaceIDFunc)(_equal_faceid)  \
+  }
 
 
   typedef struct  FTC_GNodeRec_
@@ -155,17 +208,6 @@ FT_BEGIN_HEADER
 
 #define FTC_GNODE( x )    ( (FTC_GNode)(x) )
 #define FTC_GNODE_P( x )  ( (FTC_GNode*)(x) )
-
-
-  typedef struct  FTC_GQueryRec_
-  {
-    FT_UInt      gindex;
-    FTC_Family   family;
-
-  } FTC_GQueryRec, *FTC_GQuery;
-
-#define FTC_GQUERY( x )  ( (FTC_GQuery)(x) )
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -180,35 +222,46 @@ FT_BEGIN_HEADER
                   FT_UInt     gindex,  /* glyph index for node */
                   FTC_Family  family );
 
-  /* returns TRUE iff the query's glyph index correspond to the node;  */
-  /* this assumes that the "family" and "hash" fields of the query are */
-  /* already correctly set                                             */
+  /* this macro can be used to test wether a glyph node matches a given
+   * glyph query
+   */
+#define  FTC_GNODE_EQUAL(node,key,cache)                             \
+             ( FTC_GNODE(node)->family == FTC_GNODE(key)->family &&  \
+               FTC_GNODE(node)->gindex == FTC_GNODE(key)->gindex )
+
+
+  /* same as FTC_GNODE_EQUAL, but can be used as a callback */
   FT_EXPORT( FT_Bool )
-  FTC_GNode_Compare( FTC_GNode   gnode,
-                     FTC_GQuery  gquery );
+  FTC_GNode_Equal( FTC_GNode   gnode,
+                   FTC_GNode   gquery,
+                   FTC_GCache  cache );
 
   /* call this function to clear a node's family -- this is necessary */
   /* to implement the `node_remove_faceid' cache method correctly     */
-  FT_EXPORT( void )
-  FTC_GNode_UnselectFamily( FTC_GNode  gnode,
-                            FTC_Cache  cache );
+  FT_EXPORT( FT_Bool )
+  FTC_GNode_EqualFaceID( FTC_GNode   gnode,
+                         FTC_FaceID  face_id,
+                         FTC_GCache  cache );
 
   /* must be called by derived FTC_Node_DoneFunc routines */
   FT_EXPORT( void )
-  FTC_GNode_Done( FTC_GNode  node,
-                  FTC_Cache  cache );
+  FTC_GNode_Done( FTC_GNode   node );
 
 
   FT_EXPORT( void )
   FTC_Family_Init( FTC_Family  family,
-                   FTC_Cache   cache );
+                   FT_UInt32   hash,
+                   FTC_GCache  cache );
+
 
   typedef struct FTC_GCacheRec_
   {
-    FTC_CacheRec    cache;
-    FTC_MruListRec  families;
+    FTC_CacheRec                cache;
+    FTC_Family_EqualFunc        fam_equal;
+    FTC_Family_EqualFaceIDFunc  fam_equal_faceid;
+    FTC_Family                  families;
 
-  } FTC_GCacheRec, *FTC_GCache;
+  } FTC_GCacheRec;
 
 #define FTC_GCACHE( x )  ((FTC_GCache)(x))
 
@@ -226,80 +279,112 @@ FT_BEGIN_HEADER
   /* the glyph cache class adds fields for the family implementation */
   typedef struct  FTC_GCacheClassRec_
   {
-    FTC_CacheClassRec  clazz;
-    FTC_MruListClass   family_class;
+    FTC_CacheClassRec   clazz;
+    FTC_FamilyClassRec  family_class;
 
   } FTC_GCacheClassRec;
 
   typedef const FTC_GCacheClassRec*   FTC_GCacheClass;
 
+
+#define  FTC_DEFINE_GCACHE_CLASS(_cache_class,_family_class)  \
+  {                                                           \
+    _cache_class,                                             \
+    _family_class                                             \
+  }
+
+
 #define FTC_GCACHE_CLASS( x )  ((FTC_GCacheClass)(x))
 
-#define FTC_CACHE__GCACHE_CLASS( x ) \
-          FTC_GCACHE_CLASS( FTC_CACHE(x)->org_class )
-#define FTC_CACHE__FAMILY_CLASS( x ) \
-          ( (FTC_MruListClass)FTC_CACHE__GCACHE_CLASS( x )->family_class )
+#define FTC_GCACHE__CLASS( x ) \
+          FTC_GCACHE_CLASS( FTC_CACHE__CLASS(x) )
+
+#define FTC_GCACHE__FAMILY_CLASS(c) \
+          (&FTC_GCACHE__CLASS(c)->family_class)
 
 
-  /* convenience function; use it instead of FTC_Manager_Register_Cache */
   FT_EXPORT( FT_Error )
   FTC_GCache_New( FTC_Manager       manager,
                   FTC_GCacheClass   clazz,
                   FTC_GCache       *acache );
 
-  FT_EXPORT( FT_Error )
-  FTC_GCache_Lookup( FTC_GCache   cache,
-                     FT_UInt32    hash,
-                     FT_UInt      gindex,
-                     FTC_GQuery   query,
-                     FTC_Node    *anode );
 
+  /* used by FTC_GCACHE_GET_FAMILY, don't call directly */
+  FT_EXPORT( FT_Error )
+  FTC_GCache_NewFamily( FTC_GCache   cache,
+                        FT_UInt32    hash,
+                        FTC_Family   query,
+                        FTC_Family  *afamily );
+
+  FT_EXPORT( void )
+  FTC_GCache_FreeFamily( FTC_GCache  cache,
+                         FTC_Family  family );
+
+#define  FTC_FAMILY_FREE(f)  FTC_GCache_FreeFamily( (f)->cache, (f) )
+
+  /* query.hash must be set correctly !! */
+  FT_EXPORT( FT_Error )
+  FTC_GCache_GetFamily( FTC_GCache   cache,
+                        FT_UInt32    hash,
+                        FTC_Family   query,
+                        FTC_Family  *afamily );
+
+ /* query.family and query.gindex must be set correctly !!
+  */
+  FT_EXPORT( FT_Error )
+  FTC_GCache_GetNode( FTC_GCache  cache,
+                      FT_UInt32   hash,
+                      FTC_GNode   query,
+                      FTC_Node   *anode );
 
   /* */
-
-
-#define FTC_FAMILY_FREE( family, cache )                      \
-          FTC_MruList_Remove( &FTC_GCACHE((cache))->families, \
-                              (FTC_MruNode)(family) )
 
 
 #ifdef FTC_INLINE
 
-#define FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash,                \
-                               gindex, query, node, error )                 \
-  FT_BEGIN_STMNT                                                            \
-    FTC_GCache               _gcache   = FTC_GCACHE( cache );               \
-    FTC_GQuery               _gquery   = (FTC_GQuery)( query );             \
-    FTC_MruNode_CompareFunc  _fcompare = (FTC_MruNode_CompareFunc)(famcmp); \
-                                                                            \
-                                                                            \
-    _gquery->gindex = (gindex);                                             \
-                                                                            \
-    FTC_MRULIST_LOOKUP_CMP( &_gcache->families, _gquery, _fcompare,         \
-                            _gquery->family, error );                       \
-    if ( !error )                                                           \
-    {                                                                       \
-      FTC_Family  _gqfamily = _gquery->family;                              \
-                                                                            \
-                                                                            \
-      _gqfamily->num_nodes++;                                               \
-                                                                            \
-      FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error );     \
-                                                                            \
-      if ( --_gqfamily->num_nodes == 0 )                                    \
-        FTC_FAMILY_FREE( _gqfamily, _gcache );                              \
-    }                                                                       \
+#define  FTC_GCACHE_GET_FAMILY( cache, famcmp, hash, key, family, error )  \
+  FT_BEGIN_STMNT                                                       \
+    FTC_GCache             _gcache = FTC_GCACHE( cache );              \
+    FTC_Family             _key    = FTC_FAMILY( key );                \
+    FTC_Family_EqualFunc   _fequal = (FTC_Family_EqualFunc)(famcmp);   \
+    FTC_Family*            _pfamily = &_gcache->families;              \
+    FTC_Family             _family;                                    \
+                                                                       \
+    error = 0;                                                         \
+                                                                       \
+    for (;;)                                                           \
+    {                                                                  \
+      _family = *_pfamily;                                             \
+      if ( _family == NULL )                                           \
+        goto _NewFamily;                                               \
+                                                                       \
+      if ( _family->hash == (hash) && _fequal( _family, _key ) )       \
+        break;                                                         \
+                                                                       \
+      _pfamily = &_family->link;                                       \
+    }                                                                  \
+                                                                       \
+    if ( _family != _gcache->families )                                \
+    {                                                                  \
+      *_pfamily         = _family->link;                               \
+      _family->link     = _gcache->families;                           \
+      _gcache->families = _family;                                     \
+    }                                                                  \
+    goto _FoundIt;                                                     \
+                                                                       \
+  _NewFamily:                                                          \
+    error = FTC_GCache_NewFamily( _gcache, hash, _key, &_family );     \
+  _FoundIt:                                                            \
+    if ( !error )                                                      \
+      _family->num_nodes++;                                            \
+                                                                       \
+    *(FTC_Family*)(void*)(family) = _family;                           \
   FT_END_STMNT
-  /* */
 
 #else /* !FTC_INLINE */
 
-#define FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash,               \
-                               gindex, query, node, error )                \
-   FT_BEGIN_STMNT                                                          \
-     error = FTC_GCache_Lookup( FTC_GCACHE( cache ), hash, gindex,         \
-                                FTC_GQUERY( query ), (FTC_Node*)&(node) ); \
-   FT_END_STMNT
+#define FTC_GCACHE_GET_FAMILY( cache, famcmp, key, family, error )  \
+  error = FTC_GCache_GetFamily( (cache), (key), &(family) )
 
 #endif /* !FTC_INLINE */
 

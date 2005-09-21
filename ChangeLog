@@ -1,3 +1,10 @@
+2005-09-21  David Turner  <david@freetype.org>
+
+        * massive redesign of the cache sub-system internals.
+        in order to simplify the code and even slightly improve
+        performance (ftbench shows a 3% improvements in the SBit
+        and Image caches)
+
 2005-09-19  David Somers  <dsomers@omz13.com>
 
 	* freetype2/src/sfnt/ttload.c (sfnt_dir_check): Modified to allow a

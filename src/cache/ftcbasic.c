@@ -23,7 +23,6 @@
 #include FT_CACHE_INTERNAL_SBITS_H
 #include FT_INTERNAL_MEMORY_H
 
-#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -31,77 +30,46 @@
    *  Basic Families
    *
    */
-  typedef struct  FTC_BasicAttrRec_
-  {
-    FTC_ScalerRec  scaler;
-    FT_UInt        load_flags;
-
-  } FTC_BasicAttrRec, *FTC_BasicAttrs;
-
-#define FTC_BASIC_ATTR_COMPARE( a, b )                                 \
-          FT_BOOL( FTC_SCALER_COMPARE( &(a)->scaler, &(b)->scaler ) && \
-                   (a)->load_flags == (b)->load_flags               )
-
-#define FTC_BASIC_ATTR_HASH( a )                                   \
-          ( FTC_SCALER_HASH( &(a)->scaler ) + 31*(a)->load_flags )
-
-
-  typedef struct  FTC_BasicQueryRec_
-  {
-    FTC_GQueryRec     gquery;
-    FTC_BasicAttrRec  attrs;
-
-  } FTC_BasicQueryRec, *FTC_BasicQuery;
-
-
   typedef struct  FTC_BasicFamilyRec_
   {
-    FTC_FamilyRec     family;
-    FTC_BasicAttrRec  attrs;
+    FTC_FamilyRec   family;
+    FTC_ScalerRec   scaler;
+    FT_UInt         load_flags;
 
   } FTC_BasicFamilyRec, *FTC_BasicFamily;
 
 
+#define  FTC_BASIC_FAMILY_HASH(f)  \
+     ( FTC_SCALER_HASH( &(f)->scaler ) + 31*(f)->load_flags )
+
+
   FT_CALLBACK_DEF( FT_Bool )
-  ftc_basic_family_compare( FTC_MruNode  ftcfamily,
-                            FT_Pointer   ftcquery )
+  ftc_basic_family_equal( FTC_BasicFamily  family,
+                          FTC_BasicFamily  query )
   {
-    FTC_BasicFamily  family = (FTC_BasicFamily)ftcfamily;
-    FTC_BasicQuery   query  = (FTC_BasicQuery)ftcquery;
-
-
-    return FTC_BASIC_ATTR_COMPARE( &family->attrs, &query->attrs );
+    return ( FTC_SCALER_COMPARE( &(family)->scaler, &(query)->scaler ) &&
+             family->load_flags == query->load_flags                   );
   }
 
 
-  FT_CALLBACK_DEF( FT_Error )
-  ftc_basic_family_init( FTC_MruNode  ftcfamily,
-                         FT_Pointer   ftcquery,
-                         FT_Pointer   ftccache )
+  FT_CALLBACK_DEF( FT_Bool )
+  ftc_basic_family_equal_faceid( FTC_BasicFamily  family,
+                                 FTC_FaceID       face_id )
   {
-    FTC_BasicFamily  family = (FTC_BasicFamily)ftcfamily;
-    FTC_BasicQuery   query  = (FTC_BasicQuery)ftcquery;
-    FTC_Cache        cache  = (FTC_Cache)ftccache;
-
-
-    FTC_Family_Init( FTC_FAMILY( family ), cache );
-    family->attrs = query->attrs;
-    return 0;
+    return FT_BOOL( family->scaler.face_id == face_id );
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  ftc_basic_family_get_count( FTC_Family   ftcfamily,
-                              FTC_Manager  manager )
+  ftc_basic_family_get_count( FTC_BasicFamily  family,
+                              FTC_Manager      manager )
   {
-    FTC_BasicFamily  family = (FTC_BasicFamily)ftcfamily;
-    FT_Error         error;
-    FT_Face          face;
-    FT_UInt          result = 0;
+    FT_Error  error;
+    FT_Face   face;
+    FT_UInt   result = 0;
 
 
-    error = FTC_Manager_LookupFace( manager, family->attrs.scaler.face_id,
-                                    &face );
+    error = FTC_Manager_LookupFace( manager, family->scaler.face_id, &face );
     if ( !error )
       result = face->num_glyphs;
 
@@ -110,24 +78,23 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  ftc_basic_family_load_bitmap( FTC_Family   ftcfamily,
-                                FT_UInt      gindex,
-                                FTC_Manager  manager,
-                                FT_Face     *aface )
+  ftc_basic_family_load_bitmap( FTC_BasicFamily  family,
+                                FT_UInt          gindex,
+                                FTC_Manager      manager,
+                                FT_Face         *aface )
   {
-    FTC_BasicFamily  family = (FTC_BasicFamily)ftcfamily;
     FT_Error         error;
     FT_Size          size;
 
 
-    error = FTC_Manager_LookupSize( manager, &family->attrs.scaler, &size );
+    error = FTC_Manager_LookupSize( manager, &family->scaler, &size );
     if ( !error )
     {
       FT_Face  face = size->face;
 
 
       error = FT_Load_Glyph( face, gindex,
-                             family->attrs.load_flags | FT_LOAD_RENDER );
+                             family->load_flags | FT_LOAD_RENDER );
       if ( !error )
         *aface = face;
     }
@@ -137,27 +104,24 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  ftc_basic_family_load_glyph( FTC_Family  ftcfamily,
-                               FT_UInt     gindex,
-                               FTC_Cache   cache,
-                               FT_Glyph   *aglyph )
+  ftc_basic_family_load_glyph( FTC_BasicFamily  family,
+                               FT_UInt          gindex,
+                               FTC_Manager      manager,
+                               FT_Glyph        *aglyph )
   {
-    FTC_BasicFamily  family = (FTC_BasicFamily)ftcfamily;
-    FT_Error         error;
-    FTC_Scaler       scaler = &family->attrs.scaler;
-    FT_Face          face;
-    FT_Size          size;
+    FT_Error    error;
+    FTC_Scaler  scaler = &family->scaler;
+    FT_Face     face;
+    FT_Size     size;
 
 
     /* we will now load the glyph image */
-    error = FTC_Manager_LookupSize( cache->manager,
-                                    scaler,
-                                    &size );
+    error = FTC_Manager_LookupSize( manager, scaler, &size );
     if ( !error )
     {
       face = size->face;
 
-      error = FT_Load_Glyph( face, gindex, family->attrs.load_flags );
+      error = FT_Load_Glyph( face, gindex, family->load_flags );
       if ( !error )
       {
         if ( face->glyph->format == FT_GLYPH_FORMAT_BITMAP  ||
@@ -184,29 +148,6 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_Bool )
-  ftc_basic_gnode_compare_faceid( FTC_Node    ftcgnode,
-                                  FT_Pointer  ftcface_id,
-                                  FTC_Cache   cache )
-  {
-    FTC_GNode        gnode   = (FTC_GNode)ftcgnode;
-    FTC_FaceID       face_id = (FTC_FaceID)ftcface_id;
-    FTC_BasicFamily  family  = (FTC_BasicFamily)gnode->family;
-    FT_Bool          result;
-
-
-    result = FT_BOOL( family->attrs.scaler.face_id == face_id );
-    if ( result )
-    {
-      /* we must call this function to avoid this node from appearing
-       * in later lookups with the same face_id!
-       */
-      FTC_GNode_UnselectFamily( gnode, cache );
-    }
-    return result;
-  }
-
-
  /*
   *
   * basic image cache
@@ -214,36 +155,29 @@
   */
 
   FT_CALLBACK_TABLE_DEF
-  const FTC_IFamilyClassRec  ftc_basic_image_family_class =
-  {
-    {
-      sizeof ( FTC_BasicFamilyRec ),
-      ftc_basic_family_compare,
-      ftc_basic_family_init,
-      0,                        /* FTC_MruNode_ResetFunc */
-      0                         /* FTC_MruNode_DoneFunc  */
-    },
-    ftc_basic_family_load_glyph
-  };
-
-
-  FT_CALLBACK_TABLE_DEF
-  const FTC_GCacheClassRec  ftc_basic_image_cache_class =
-  {
-    {
-      ftc_inode_new,
-      ftc_inode_weight,
-      ftc_gnode_compare,
-      ftc_basic_gnode_compare_faceid,
-      ftc_inode_free,
-
-      sizeof ( FTC_GCacheRec ),
-      ftc_gcache_init,
-      ftc_gcache_done
-    },
-    (FTC_MruListClass)&ftc_basic_image_family_class
-  };
-
+  const FTC_ICacheClassRec  ftc_basic_image_cache_class =
+  FTC_DEFINE_ICACHE_CLASS(
+      FTC_DEFINE_GCACHE_CLASS(
+          FTC_DEFINE_CACHE_CLASS(
+              FTC_INode_New,
+              FTC_INode_Weight,
+              FTC_GNode_Equal,
+              FTC_GNode_EqualFaceID,
+              FTC_INode_Free,
+              FTC_GCacheRec,
+              FTC_GCache_Init,
+              FTC_GCache_Done 
+           ),
+           FTC_DEFINE_FAMILY_CLASS(
+              FTC_BasicFamilyRec,
+              0 /* init */,
+              0 /* done */,
+              ftc_basic_family_equal,
+              ftc_basic_family_equal_faceid
+           )
+      ),
+      ftc_basic_family_load_glyph
+  );
 
   /* documentation is in ftcache.h */
 
@@ -251,8 +185,9 @@
   FTC_ImageCache_New( FTC_Manager      manager,
                       FTC_ImageCache  *acache )
   {
-    return FTC_GCache_New( manager, &ftc_basic_image_cache_class,
-                           (FTC_GCache*)acache );
+    return FTC_Manager_RegisterCache( manager,
+                          (FTC_CacheClass) &ftc_basic_image_cache_class,
+                          (FTC_Cache*)acache );
   }
 
 
@@ -265,10 +200,11 @@
                          FT_Glyph       *aglyph,
                          FTC_Node       *anode )
   {
-    FTC_BasicQueryRec  query;
-    FTC_INode          node = 0;  /* make compiler happy */
-    FT_Error           error;
-    FT_UInt32          hash;
+    FTC_BasicFamilyRec  key_family;
+    FTC_GNodeRec        key;
+    FTC_Node            node = 0;  /* make compiler happy */
+    FT_Error            error;
+    FT_UInt32           hash;
 
 
     /* some argument checks are delayed to FTC_Cache_Lookup */
@@ -282,40 +218,34 @@
     if ( anode )
       *anode  = NULL;
 
-    query.attrs.scaler.face_id = type->face_id;
-    query.attrs.scaler.width   = type->width;
-    query.attrs.scaler.height  = type->height;
-    query.attrs.scaler.pixel   = 1;
-    query.attrs.load_flags     = type->flags;
+    key_family.scaler.face_id = type->face_id;
+    key_family.scaler.width   = type->width;
+    key_family.scaler.height  = type->height;
+    key_family.scaler.pixel   = 1;
+    key_family.scaler.x_res   = 0;  /* make compilers happy */
+    key_family.scaler.y_res   = 0;
+    key_family.load_flags     = type->flags;
 
-    query.attrs.scaler.x_res   = 0;  /* make compilers happy */
-    query.attrs.scaler.y_res   = 0;
+    hash = FTC_BASIC_FAMILY_HASH( &key_family );
 
-    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
-
-#if 1  /* inlining is about 50% faster! */
-    FTC_GCACHE_LOOKUP_CMP( cache,
-                           ftc_basic_family_compare,
-                           FTC_GNode_Compare,
-                           hash, gindex,
-                           &query,
-                           node,
-                           error );
-#else
-    error = FTC_GCache_Lookup( FTC_GCACHE( cache ),
-                               hash, gindex,
-                               FTC_GQUERY( &query ),
-                               (FTC_Node*) &node );
-#endif
+    FTC_GCACHE_GET_FAMILY( cache, ftc_basic_family_equal,
+                           hash, &key_family, &key.family, error );
     if ( !error )
     {
-      *aglyph = FTC_INODE( node )->glyph;
+      hash      += gindex;
+      key.gindex = gindex;
 
-      if ( anode )
+      FTC_CACHE_LOOKUP_CMP( cache, FTC_GNODE_EQUAL, hash,
+                            &key, node, error );
+      if ( !error )
       {
-        *anode = FTC_NODE( node );
-        FTC_NODE( node )->ref_count++;
+        *aglyph = FTC_INODE( node )->glyph;
+
+        if ( anode )
+          *anode = FTC_NODE_REF( node );
       }
+
+      FTC_Family_Unref( FTC_FAMILY(key.family) );
     }
 
   Exit:
@@ -328,40 +258,31 @@
   * basic small bitmap cache
   *
   */
-
-
   FT_CALLBACK_TABLE_DEF
-  const FTC_SFamilyClassRec  ftc_basic_sbit_family_class =
-  {
-    {
-      sizeof( FTC_BasicFamilyRec ),
-      ftc_basic_family_compare,
-      ftc_basic_family_init,
-      0,                            /* FTC_MruNode_ResetFunc */
-      0                             /* FTC_MruNode_DoneFunc  */
-    },
-    ftc_basic_family_get_count,
-    ftc_basic_family_load_bitmap
-  };
-
-
-  FT_CALLBACK_TABLE_DEF
-  const FTC_GCacheClassRec  ftc_basic_sbit_cache_class =
-  {
-    {
-      ftc_snode_new,
-      ftc_snode_weight,
-      ftc_snode_compare,
-      ftc_basic_gnode_compare_faceid,
-      ftc_snode_free,
-
-      sizeof ( FTC_GCacheRec ),
-      ftc_gcache_init,
-      ftc_gcache_done
-    },
-    (FTC_MruListClass)&ftc_basic_sbit_family_class
-  };
-
+  const FTC_SCacheClassRec  ftc_basic_sbit_cache_class =
+  FTC_DEFINE_SCACHE_CLASS(
+      FTC_DEFINE_GCACHE_CLASS(
+          FTC_DEFINE_CACHE_CLASS(
+              FTC_SNode_New,
+              FTC_SNode_Weight,
+              FTC_SNode_Equal,
+              FTC_GNode_EqualFaceID,
+              FTC_SNode_Free,
+              FTC_GCacheRec,
+              FTC_GCache_Init,
+              FTC_GCache_Done
+          ),
+          FTC_DEFINE_FAMILY_CLASS(
+              FTC_BasicFamilyRec,
+              0 /* init */,
+              0 /* done */,
+              ftc_basic_family_equal,
+              ftc_basic_family_equal_faceid
+          )
+      ),
+      ftc_basic_family_get_count,
+      ftc_basic_family_load_bitmap
+  );
 
   /* documentation is in ftcache.h */
 
@@ -369,8 +290,9 @@
   FTC_SBitCache_New( FTC_Manager     manager,
                      FTC_SBitCache  *acache )
   {
-    return FTC_GCache_New( manager, &ftc_basic_sbit_cache_class,
-                           (FTC_GCache*)acache );
+    return FTC_Manager_RegisterCache( manager,
+                          (FTC_CacheClass) &ftc_basic_sbit_cache_class,
+                          (FTC_Cache*)acache );
   }
 
 
@@ -383,10 +305,11 @@
                         FTC_SBit      *ansbit,
                         FTC_Node      *anode )
   {
-    FT_Error           error;
-    FTC_BasicQueryRec  query;
-    FTC_SNode          node = 0; /* make compiler happy */
-    FT_UInt32          hash;
+    FTC_BasicFamilyRec  key_family;
+    FTC_GNodeRec        key;
+    FT_Error            error;
+    FTC_Node            node = 0; /* make compiler happy */
+    FT_UInt32           hash;
 
 
     if ( anode )
@@ -398,48 +321,39 @@
 
     *ansbit = NULL;
 
-    query.attrs.scaler.face_id = type->face_id;
-    query.attrs.scaler.width   = type->width;
-    query.attrs.scaler.height  = type->height;
-    query.attrs.scaler.pixel   = 1;
-    query.attrs.load_flags     = type->flags;
+    key_family.scaler.face_id = type->face_id;
+    key_family.scaler.width   = type->width;
+    key_family.scaler.height  = type->height;
+    key_family.scaler.pixel   = 1;
+    key_family.scaler.x_res   = 0;  /* make compilers happy */
+    key_family.scaler.y_res   = 0;
+    key_family.load_flags     = type->flags;
 
-    query.attrs.scaler.x_res   = 0;  /* make compilers happy */
-    query.attrs.scaler.y_res   = 0;
+    hash = FTC_BASIC_FAMILY_HASH( &key_family );
 
-    /* beware, the hash must be the same for all glyph ranges! */
-    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
-           gindex / FTC_SBIT_ITEMS_PER_NODE;
-
-#if 1  /* inlining is about 50% faster! */
-    FTC_GCACHE_LOOKUP_CMP( cache,
-                           ftc_basic_family_compare,
-                           FTC_SNode_Compare,
-                           hash, gindex,
-                           &query,
-                           node,
-                           error );
-#else
-    error = FTC_GCache_Lookup( FTC_GCACHE( cache ),
-                               hash,
-                               gindex,
-                               FTC_GQUERY( &query ),
-                               (FTC_Node*)&node );
-#endif
-    if ( error )
-      goto Exit;
-
-    *ansbit = node->sbits + ( gindex - FTC_GNODE( node )->gindex );
-
-    if ( anode )
+    FTC_GCACHE_GET_FAMILY( cache, ftc_basic_family_equal,
+                           hash, &key_family, &key.family, error );
+    if ( !error )
     {
-      *anode = FTC_NODE( node );
-      FTC_NODE( node )->ref_count++;
+      /* beware, the hash must be the same for all glyph ranges */
+      hash += gindex/FTC_SBIT_ITEMS_PER_NODE;
+
+      key.gindex = gindex;
+
+      FTC_CACHE_LOOKUP_CMP( cache, FTC_SNODE_EQUAL, hash,
+                            &key, node, error );
+      if ( !error )
+      {
+        *ansbit = FTC_SNODE(node)->sbits + ( gindex - FTC_GNODE(node)->gindex );
+
+        if ( anode )
+          *anode = FTC_NODE_REF(node);
+      }
+
+      FTC_Family_Unref( FTC_FAMILY(key.family) );
     }
 
-  Exit:
     return error;
   }
-
 
 /* END */

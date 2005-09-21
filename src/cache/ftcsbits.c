@@ -23,7 +23,6 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_ERRORS_H
 
-#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -58,30 +57,21 @@
   }
 
 
-  FT_LOCAL_DEF( void )
-  ftc_snode_free( FTC_Node   ftcsnode,
-                  FTC_Cache  cache )
+  FT_EXPORT_DEF( void )
+  FTC_SNode_Free( FTC_SNode   snode,
+                  FTC_GCache  cache )
   {
-    FTC_SNode  snode  = (FTC_SNode)ftcsnode;
     FTC_SBit   sbit   = snode->sbits;
     FT_UInt    count  = snode->count;
-    FT_Memory  memory = cache->memory;
+    FT_Memory  memory = FTC_CACHE__MEMORY(cache);
 
 
     for ( ; count > 0; sbit++, count-- )
       FT_FREE( sbit->buffer );
 
-    FTC_GNode_Done( FTC_GNODE( snode ), cache );
+    FTC_GNode_Done( FTC_GNODE( snode ) );
 
     FT_FREE( snode );
-  }
-
-
-  FT_EXPORT_DEF( void )
-  FTC_SNode_Free( FTC_SNode  snode,
-                  FTC_Cache  cache )
-  {
-    ftc_snode_free( FTC_NODE( snode ), cache );
   }
 
 
@@ -92,7 +82,7 @@
    *  to a bad font file), this function will mark the sbit as `unavailable'
    *  and return a value of 0.
    *
-   *  You should also read the comment within the @ftc_snode_compare
+   *  You should also read the comment within the @ftc_snode_equal
    *  function below to see how out-of-memory is handled during a lookup.
    */
   static FT_Error
@@ -107,7 +97,7 @@
     FT_Memory         memory = manager->memory;
     FT_Face           face;
     FTC_SBit          sbit;
-    FTC_SFamilyClass  clazz;
+    FTC_SCacheClass   clazz;
 
 
     if ( (FT_UInt)(gindex - gnode->gindex) >= snode->count )
@@ -117,11 +107,11 @@
     }
 
     sbit  = snode->sbits + ( gindex - gnode->gindex );
-    clazz = (FTC_SFamilyClass)family->clazz;
+    clazz = FTC_SCACHE__CLASS(FTC_FAMILY__CACHE(family));
 
     sbit->buffer = 0;
 
-    error = clazz->family_load_glyph( family, gindex, manager, &face );
+    error = clazz->fam_load_glyph( family, gindex, manager, &face );
     if ( error )
       goto BadGlyph;
 
@@ -199,20 +189,20 @@
 
   FT_EXPORT_DEF( FT_Error )
   FTC_SNode_New( FTC_SNode  *psnode,
-                 FTC_GQuery  gquery,
-                 FTC_Cache   cache )
+                 FTC_GNode   gquery,
+                 FTC_GCache  cache )
   {
-    FT_Memory   memory = cache->memory;
+    FT_Memory   memory = FTC_CACHE__MEMORY(cache);
     FT_Error    error;
     FTC_SNode   snode  = NULL;
     FT_UInt     gindex = gquery->gindex;
     FTC_Family  family = gquery->family;
 
-    FTC_SFamilyClass  clazz = FTC_CACHE__SFAMILY_CLASS( cache );
+    FTC_SCacheClass   clazz = FTC_SCACHE__CLASS(cache);
     FT_UInt           total;
 
 
-    total = clazz->family_get_count( family, cache->manager );
+    total = clazz->fam_get_count( family, FTC_CACHE__MANAGER(cache) );
     if ( total == 0 || gindex >= total )
     {
       error = FT_Err_Invalid_Argument;
@@ -234,7 +224,7 @@
       snode->count = count;
 
       error = ftc_snode_load( snode,
-                              cache->manager,
+                              FTC_CACHE__MANAGER(cache),
                               gindex,
                               NULL );
       if ( error )
@@ -250,31 +240,15 @@
   }
 
 
-  FT_LOCAL_DEF( FT_Error )
-  ftc_snode_new( FTC_Node   *ftcpsnode,
-                 FT_Pointer  ftcgquery,
-                 FTC_Cache   cache )
+
+
+  FT_EXPORT_DEF( FT_ULong )
+  FTC_SNode_Weight( FTC_SNode  snode )
   {
-    FTC_SNode  *psnode = (FTC_SNode*)ftcpsnode;
-    FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
-
-
-    return FTC_SNode_New( psnode, gquery, cache );
-  }
-
-
-  FT_LOCAL_DEF( FT_ULong )
-  ftc_snode_weight( FTC_Node   ftcsnode,
-                    FTC_Cache  cache )
-  {
-    FTC_SNode  snode = (FTC_SNode)ftcsnode;
     FT_UInt    count = snode->count;
     FTC_SBit   sbit  = snode->sbits;
     FT_Int     pitch;
     FT_ULong   size;
-
-    FT_UNUSED( cache );
-
 
     FT_ASSERT( snode->count <= FTC_SBIT_ITEMS_PER_NODE );
 
@@ -298,20 +272,11 @@
   }
 
 
-  FT_EXPORT_DEF( FT_ULong )
-  FTC_SNode_Weight( FTC_SNode  snode )
+  FT_EXPORT_DEF( FT_Bool )
+  FTC_SNode_Equal( FTC_SNode   snode,
+                   FTC_GNode   gquery,
+                   FTC_Cache   cache )
   {
-    return ftc_snode_weight( FTC_NODE( snode ), NULL );
-  }
-
-
-  FT_LOCAL_DEF( FT_Bool )
-  ftc_snode_compare( FTC_Node    ftcsnode,
-                     FT_Pointer  ftcgquery,
-                     FTC_Cache   cache )
-  {
-    FTC_SNode   snode  = (FTC_SNode)ftcsnode;
-    FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
     FTC_GNode   gnode  = FTC_GNODE( snode );
     FT_UInt     gindex = gquery->gindex;
     FT_Bool     result;
@@ -341,7 +306,7 @@
        *  However, we need to `lock' the node before this operation to
        *  prevent it from being flushed within the loop.
        *
-       *  When we exit the loop, we unlock the node, then check the `error' 
+       *  When we exit the loop, we unlock the node, then check the `error'
        *  variable.  If it is non-zero, this means that the cache was
        *  completely flushed and that no usable memory was found to load
        *  the bitmap.
@@ -363,8 +328,8 @@
         FT_Error  error;
 
 
-        ftcsnode->ref_count++;  /* lock node to prevent flushing */
-                                /* in retry loop                 */
+        FTC_NODE_REF(snode);  /* lock node to prevent flushing */
+                              /* in retry loop                 */
 
         FTC_CACHE_TRYLOOP( cache )
         {
@@ -372,7 +337,7 @@
         }
         FTC_CACHE_TRYLOOP_END();
 
-        ftcsnode->ref_count--;  /* unlock the node */
+        FTC_NODE(snode)->ref_count--;  /* unlock the node */
 
         if ( error )
           result = 0;
@@ -385,13 +350,6 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Bool )
-  FTC_SNode_Compare( FTC_SNode   snode,
-                     FTC_GQuery  gquery,
-                     FTC_Cache   cache )
-  {
-    return ftc_snode_compare( FTC_NODE( snode ), gquery, cache );
-  }
 
 
 /* END */

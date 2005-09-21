@@ -202,7 +202,7 @@
   FTC_MruList_Find( FTC_MruList  list,
                     FT_Pointer   key )
   {
-    FTC_MruNode_CompareFunc  compare = list->clazz.node_compare;
+    FTC_MruNode_EqualFunc  compare = list->clazz.node_equal;
     FTC_MruNode              first, node;
 
 
@@ -323,7 +323,7 @@
 
   FT_EXPORT_DEF( void )
   FTC_MruList_RemoveSelection( FTC_MruList              list,
-                               FTC_MruNode_CompareFunc  selection,
+                               FTC_MruNode_EqualFunc  selection,
                                FT_Pointer               key )
   {
     FTC_MruNode  first, node, next;

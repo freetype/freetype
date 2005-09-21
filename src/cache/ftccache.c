@@ -21,7 +21,6 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
-#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -272,7 +271,7 @@
     }
 #endif
 
-    manager->cur_weight -= cache->clazz.node_weight( node, cache );
+    manager->cur_weight -= cache->node_weight( node, cache );
 
     /* remove node from mru list */
     ftc_node_mru_unlink( node, manager );
@@ -281,7 +280,7 @@
     ftc_node_hash_unlink( node, cache );
 
     /* now finalize it */
-    cache->clazz.node_free( node, cache );
+    cache->clazz->node_free( node, cache );
 
 #if 0
     /* check, just in case of general corruption :-) */
@@ -304,13 +303,6 @@
   FT_EXPORT_DEF( FT_Error )
   FTC_Cache_Init( FTC_Cache  cache )
   {
-    return ftc_cache_init( cache );
-  }
-
-
-  FT_LOCAL_DEF( FT_Error )
-  ftc_cache_init( FTC_Cache  cache )
-  {
     FT_Memory  memory = cache->memory;
 
 
@@ -320,6 +312,7 @@
 
     return ( FT_MEM_NEW_ARRAY( cache->buckets, FTC_HASH_INITIAL_SIZE * 2 ) );
   }
+
 
 
   FT_EXPORT_DEF( void )
@@ -348,9 +341,9 @@
           ftc_node_mru_unlink( node, manager );
 
           /* now finalize it */
-          manager->cur_weight -= cache->clazz.node_weight( node, cache );
+          manager->cur_weight -= cache->node_weight( node, cache );
 
-          cache->clazz.node_free( node, cache );
+          cache->clazz->node_free( node, cache );
           node = next;
         }
         cache->buckets[i] = NULL;
@@ -360,8 +353,8 @@
   }
 
 
-  FT_LOCAL_DEF( void )
-  ftc_cache_done( FTC_Cache  cache )
+  FT_EXPORT_DEF( void )
+  FTC_Cache_Done( FTC_Cache  cache )
   {
     if ( cache->memory )
     {
@@ -377,13 +370,6 @@
 
       cache->memory = NULL;
     }
-  }
-
-
-  FT_EXPORT_DEF( void )
-  FTC_Cache_Done( FTC_Cache  cache )
-  {
-    ftc_cache_done( cache );
   }
 
 
@@ -403,7 +389,7 @@
       FTC_Manager  manager = cache->manager;
 
 
-      manager->cur_weight += cache->clazz.node_weight( node, cache );
+      manager->cur_weight += cache->node_weight( node, cache );
 
       if ( manager->cur_weight >= manager->max_weight )
       {
@@ -433,7 +419,7 @@
 
     FTC_CACHE_TRYLOOP( cache )
     {
-      error = cache->clazz.node_new( &node, query, cache );
+      error = cache->clazz->node_new( &node, query, cache );
     }
     FTC_CACHE_TRYLOOP_END();
 
@@ -464,7 +450,7 @@
     FTC_Node   node;
     FT_Error   error = 0;
 
-    FTC_Node_CompareFunc  compare = cache->clazz.node_compare;
+    FTC_Node_EqualFunc  compare = cache->node_equal;
 
 
     if ( cache == NULL || anode == NULL )
@@ -535,7 +521,7 @@
         if ( node == NULL )
           break;
 
-        if ( cache->clazz.node_remove_faceid( node, face_id, cache ) )
+        if ( cache->clazz->node_remove_faceid( node, face_id, cache ) )
         {
           *pnode     = node->link;
           node->link = frees;
@@ -555,10 +541,10 @@
       node  = frees;
       frees = node->link;
 
-      manager->cur_weight -= cache->clazz.node_weight( node, cache );
+      manager->cur_weight -= cache->node_weight( node, cache );
       ftc_node_mru_unlink( node, manager );
 
-      cache->clazz.node_free( node, cache );
+      cache->clazz->node_free( node, cache );
 
       cache->slack++;
     }

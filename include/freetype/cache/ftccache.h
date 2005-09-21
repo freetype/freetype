@@ -66,6 +66,8 @@ FT_BEGIN_HEADER
 #define FTC_NODE( x )    ( (FTC_Node)(x) )
 #define FTC_NODE_P( x )  ( (FTC_Node*)(x) )
 
+#define FTC_NODE_REF(n)   ( FTC_NODE(n)->ref_count += 1, (n) )
+
 #define FTC_NODE__NEXT(x)  FTC_NODE( (x)->mru.next )
 #define FTC_NODE__PREV(x)  FTC_NODE( (x)->mru.prev )
 
@@ -103,9 +105,9 @@ FT_BEGIN_HEADER
 
   /* compare a node to a given key pair */
   typedef FT_Bool
-  (*FTC_Node_CompareFunc)( FTC_Node    node,
-                           FT_Pointer  key,
-                           FTC_Cache   cache );
+  (*FTC_Node_EqualFunc)( FTC_Node    node,
+                         FT_Pointer  key,
+                         FTC_Cache   cache );
 
 
   typedef void
@@ -123,8 +125,8 @@ FT_BEGIN_HEADER
   {
     FTC_Node_NewFunc      node_new;
     FTC_Node_WeightFunc   node_weight;
-    FTC_Node_CompareFunc  node_compare;
-    FTC_Node_CompareFunc  node_remove_faceid;
+    FTC_Node_EqualFunc    node_equal;
+    FTC_Node_EqualFunc    node_remove_faceid;
     FTC_Node_FreeFunc     node_free;
 
     FT_UInt               cache_size;
@@ -134,21 +136,36 @@ FT_BEGIN_HEADER
   } FTC_CacheClassRec;
 
 
+#define  FTC_DEFINE_CACHE_CLASS(_n_new,_n_weight,_n_equal,_n_equal_faceid,_n_free,_c_type,_c_init,_c_done ) \
+  {                                           \
+    (FTC_Node_NewFunc)    (_n_new),           \
+    (FTC_Node_WeightFunc) (_n_weight),        \
+    (FTC_Node_EqualFunc)  (_n_equal),         \
+    (FTC_Node_EqualFunc)  (_n_equal_faceid),  \
+    (FTC_Node_FreeFunc)   (_n_free),          \
+                                              \
+    sizeof( _c_type ),                        \
+    (FTC_Cache_InitFunc) (_c_init),           \
+    (FTC_Cache_DoneFunc) (_c_done)            \
+  }
+
+
   /* each cache really implements a dynamic hash table to manage its nodes */
   typedef struct  FTC_CacheRec_
   {
-    FT_UFast           p;
-    FT_UFast           mask;
-    FT_Long            slack;
-    FTC_Node*          buckets;
+    FT_UFast            p;
+    FT_UFast            mask;
+    FT_Long             slack;
+    FTC_Node*           buckets;
 
-    FTC_CacheClassRec  clazz;       /* local copy, for speed  */
+    FTC_Node_EqualFunc  node_equal;  /* local copy of clazz->node_equal */
+    FTC_Node_WeightFunc node_weight; /* local copy of clazz->node_weight */
 
-    FTC_Manager        manager;
-    FT_Memory          memory;
-    FT_UInt            index;       /* in manager's table     */
+    FTC_Manager         manager;
+    FT_Memory           memory;
+    FT_UInt             index;       /* in manager's table     */
 
-    FTC_CacheClass     org_class;   /* original class pointer */
+    FTC_CacheClass      clazz;       /* class pointer */
 
   } FTC_CacheRec;
 
@@ -156,6 +173,9 @@ FT_BEGIN_HEADER
 #define FTC_CACHE( x )    ( (FTC_Cache)(x) )
 #define FTC_CACHE_P( x )  ( (FTC_Cache*)(x) )
 
+#define FTC_CACHE__CLASS(c)    (FTC_CACHE(c)->clazz)
+#define FTC_CACHE__MEMORY(c)   (FTC_CACHE(c)->memory)
+#define FTC_CACHE__MANAGER(c)  (FTC_CACHE(c)->manager)
 
   /* default cache initialize */
   FT_EXPORT( FT_Error )
@@ -201,11 +221,10 @@ FT_BEGIN_HEADER
 
 #define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error ) \
   FT_BEGIN_STMNT                                                         \
-    FTC_Node             *_bucket, *_pnode, _node;                       \
-    FTC_Cache             _cache   = FTC_CACHE(cache);                   \
-    FT_UInt32             _hash    = (FT_UInt32)(hash);                  \
-    FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);    \
-    FT_UInt               _idx;                                          \
+    FTC_Node           *_bucket, *_pnode, _node;                         \
+    FTC_Cache           _cache   = FTC_CACHE(cache);                     \
+    FT_UInt32           _hash    = (FT_UInt32)(hash);                    \
+    FT_UInt             _idx;                                            \
                                                                          \
                                                                          \
     error = 0;                                                           \
@@ -221,7 +240,7 @@ FT_BEGIN_HEADER
       if ( _node == NULL )                                               \
         goto _NewNode;                                                   \
                                                                          \
-      if ( _node->hash == _hash && _nodcomp( _node, query, _cache ) )    \
+      if ( _node->hash == _hash && nodecmp( _node, query, _cache ) )     \
         break;                                                           \
                                                                          \
       _pnode = &_node->link;                                             \
@@ -248,7 +267,7 @@ FT_BEGIN_HEADER
     error = FTC_Cache_NewNode( _cache, _hash, query, &_node );           \
                                                                          \
   _Ok:                                                                   \
-    _pnode = (FTC_Node*)(void*)&(node);                                  \
+    _pnode  = (FTC_Node*)(void*)&(node);                                 \
     *_pnode = _node;                                                     \
   FT_END_STMNT
 
@@ -269,7 +288,7 @@ FT_BEGIN_HEADER
    *
    * It is used when creating a new cache node, or within a lookup
    * that needs to allocate data (e.g., the sbit cache lookup).
-   * 
+   *
    * Example:
    *
    *   {

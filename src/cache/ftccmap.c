@@ -24,7 +24,6 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_TRUETYPE_IDS_H
 
-#include "ftccback.h"
 #include "ftcerror.h"
 
 #undef  FT_COMPONENT
@@ -153,9 +152,9 @@
 
   /* compare a cmap node to a given query */
   FT_CALLBACK_DEF( FT_Bool )
-  ftc_cmap_node_compare( FTC_Node    ftcnode,
-                         FT_Pointer  ftcquery,
-                         FTC_Cache   cache )
+  ftc_cmap_node_equal( FTC_Node    ftcnode,
+                       FT_Pointer  ftcquery,
+                       FTC_Cache   cache )
   {
     FTC_CMapNode   node  = (FTC_CMapNode)ftcnode;
     FTC_CMapQuery  query = (FTC_CMapQuery)ftcquery;
@@ -202,13 +201,13 @@
   {
     ftc_cmap_node_new,
     ftc_cmap_node_weight,
-    ftc_cmap_node_compare,
+    ftc_cmap_node_equal,
     ftc_cmap_node_remove_faceid,
     ftc_cmap_node_free,
 
     sizeof ( FTC_CacheRec ),
-    ftc_cache_init,
-    ftc_cache_done,
+    FTC_Cache_Init,
+    FTC_Cache_Done
   };
 
 
@@ -253,7 +252,7 @@
     hash = FTC_CMAP_HASH( face_id, cmap_index, char_code );
 
 #if 1
-    FTC_CACHE_LOOKUP_CMP( cache, ftc_cmap_node_compare, hash, &query,
+    FTC_CACHE_LOOKUP_CMP( cache, ftc_cmap_node_equal, hash, &query,
                           node, error );
 #else
     error = FTC_Cache_Lookup( cache, hash, &query, (FTC_Node*) &node );

@@ -23,7 +23,7 @@
   *  FTC_ICache extends FTC_GCache.  For an implementation example,
   *  see FTC_ImageCache in `src/cache/ftbasic.c'.
   */
-  
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -51,35 +51,41 @@ FT_BEGIN_HEADER
 
   } FTC_INodeRec, *FTC_INode;
 
-#define FTC_INODE( x )         ( (FTC_INode)( x ) )
-#define FTC_INODE_GINDEX( x )  FTC_GNODE(x)->gindex
-#define FTC_INODE_FAMILY( x )  FTC_GNODE(x)->family
+#define FTC_INODE( x )          ( (FTC_INode)( x ) )
+#define FTC_INODE__GLYPH(x)     ( FTC_INODE(x)->glyph )
+
 
   typedef FT_Error
-  (*FTC_IFamily_LoadGlyphFunc)( FTC_Family  family,
-                                FT_UInt     gindex,
-                                FTC_Cache   cache,
-                                FT_Glyph   *aglyph );
+  (*FTC_IFamily_LoadGlyphFunc)( FTC_Family   family,
+                                FT_UInt      gindex,
+                                FTC_Manager  manager,
+                                FT_Glyph    *aglyph );
 
-  typedef struct  FTC_IFamilyClassRec_
+  typedef struct
   {
-    FTC_MruListClassRec        clazz;
-    FTC_IFamily_LoadGlyphFunc  family_load_glyph;
+    FTC_GCacheClassRec          clazz;
+    FTC_IFamily_LoadGlyphFunc   fam_load_glyph;
 
-  } FTC_IFamilyClassRec;
+  } FTC_ICacheClassRec;
 
-  typedef const FTC_IFamilyClassRec*  FTC_IFamilyClass;
+  typedef const FTC_ICacheClassRec*   FTC_ICacheClass;
 
-#define FTC_IFAMILY_CLASS( x )  ((FTC_IFamilyClass)(x))
+#define  FTC_ICACHE_CLASS(x)  ((FTC_ICacheClass)(x))
 
-#define FTC_CACHE__IFAMILY_CLASS( x ) \
-          FTC_IFAMILY_CLASS( FTC_CACHE__GCACHE_CLASS(x)->family_class )
+#define  FTC_ICACHE__CLASS(x)       FTC_ICACHE_CLASS(FTC_GCACHE__CLASS(x))
+#define  FTC_ICACHE__LOAD_GLYPH(x)  (FTC_ICACHE__CLASS(x)->fam_load_glyph)
+
+#define  FTC_DEFINE_ICACHE_CLASS(_gcache_class,_family_load_glyph) \
+  {                                                  \
+    _gcache_class,                                   \
+    (FTC_IFamily_LoadGlyphFunc) _family_load_glyph   \
+  }
 
 
   /* can be used as a @FTC_Node_FreeFunc */
   FT_EXPORT( void )
-  FTC_INode_Free( FTC_INode  inode,
-                  FTC_Cache  cache );
+  FTC_INode_Free( FTC_INode   inode,
+                  FTC_GCache  cache );
 
   /* Can be used as @FTC_Node_NewFunc.  `gquery.index' and `gquery.family'
    * must be set correctly.  This function will call the `family_load_glyph'
@@ -87,8 +93,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FTC_INode_New( FTC_INode   *pinode,
-                 FTC_GQuery   gquery,
-                 FTC_Cache    cache );
+                 FTC_GNode    gquery,
+                 FTC_GCache   cache );
 
   /* can be used as @FTC_Node_WeightFunc */
   FT_EXPORT( FT_ULong )

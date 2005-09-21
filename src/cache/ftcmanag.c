@@ -93,7 +93,7 @@
 
 
   FT_CALLBACK_DEF( FT_Bool )
-  ftc_size_node_compare( FTC_MruNode  ftcnode,
+  ftc_size_node_equal( FTC_MruNode  ftcnode,
                          FT_Pointer   ftcscaler )
   {
     FTC_SizeNode  node    = (FTC_SizeNode)ftcnode;
@@ -148,7 +148,7 @@
   const FTC_MruListClassRec  ftc_size_list_class =
   {
     sizeof ( FTC_SizeNodeRec ),
-    ftc_size_node_compare,
+    ftc_size_node_equal,
     ftc_size_node_init,
     ftc_size_node_reset,
     ftc_size_node_done
@@ -157,7 +157,7 @@
 
   /* helper function used by ftc_face_node_done */
   static FT_Bool
-  ftc_size_node_compare_faceid( FTC_MruNode  ftcnode,
+  ftc_size_node_equal_faceid( FTC_MruNode  ftcnode,
                                 FT_Pointer   ftcface_id )
   {
     FTC_SizeNode  node    = (FTC_SizeNode)ftcnode;
@@ -189,7 +189,7 @@
 
 #ifdef FTC_INLINE
 
-    FTC_MRULIST_LOOKUP_CMP( &manager->sizes, scaler, ftc_size_node_compare,
+    FTC_MRULIST_LOOKUP_CMP( &manager->sizes, scaler, ftc_size_node_equal,
                             node, error );
 
 #else
@@ -259,7 +259,7 @@
     /* we must begin by removing all scalers for the target face */
     /* from the manager's list                                   */
     FTC_MruList_RemoveSelection( &manager->sizes,
-                                 ftc_size_node_compare_faceid,
+                                 ftc_size_node_equal_faceid,
                                  node->face_id );
 
     /* all right, we can discard the face now */
@@ -270,7 +270,7 @@
 
 
   FT_CALLBACK_DEF( FT_Bool )
-  ftc_face_node_compare( FTC_MruNode  ftcnode,
+  ftc_face_node_equal( FTC_MruNode  ftcnode,
                          FT_Pointer   ftcface_id )
   {
     FTC_FaceNode  node    = (FTC_FaceNode)ftcnode;
@@ -286,7 +286,7 @@
   {
     sizeof ( FTC_FaceNodeRec),
 
-    ftc_face_node_compare,
+    ftc_face_node_equal,
     ftc_face_node_init,
     0,                          /* FTC_MruNode_ResetFunc */
     ftc_face_node_done
@@ -315,7 +315,7 @@
     /* we break encapsulation for the sake of speed */
 #ifdef FTC_INLINE
 
-    FTC_MRULIST_LOOKUP_CMP( &manager->faces, face_id, ftc_face_node_compare,
+    FTC_MRULIST_LOOKUP_CMP( &manager->faces, face_id, ftc_face_node_equal,
                             node, error );
 
 #else
@@ -419,7 +419,7 @@
 
       if ( cache )
       {
-        cache->clazz.cache_done( cache );
+        cache->clazz->cache_done( cache );
         FT_FREE( cache );
         manager->caches[idx] = NULL;
       }
@@ -478,7 +478,7 @@
           FT_ERROR(( "FTC_Manager_Check: invalid node (cache index = %ld\n",
                      node->cache_index ));
         else
-          weight += cache->clazz.node_weight( node, cache );
+          weight += cache->node_weight( node, cache );
 
         node = FTC_NODE__NEXT( node );
 
@@ -585,10 +585,11 @@
 
       if ( !FT_ALLOC( cache, clazz->cache_size ) )
       {
-        cache->manager   = manager;
-        cache->memory    = memory;
-        cache->clazz     = clazz[0];
-        cache->org_class = clazz;
+        cache->manager     = manager;
+        cache->memory      = memory;
+        cache->node_equal  = clazz->node_equal;
+        cache->node_weight = clazz->node_weight;
+        cache->clazz       = clazz;
 
         /* THIS IS VERY IMPORTANT!  IT WILL WRETCH THE MANAGER */
         /* IF IT IS NOT SET CORRECTLY                          */
