@@ -246,7 +246,7 @@ FT_BEGIN_HEADER
       _pnode = &_node->link;                                             \
     }                                                                    \
                                                                          \
-    if ( _node != *_bucket )                                             \
+    if ( 0 && _node != *_bucket )                                        \
     {                                                                    \
       *_pnode     = _node->link;                                         \
       _node->link = *_bucket;                                            \
@@ -256,7 +256,6 @@ FT_BEGIN_HEADER
     {                                                                    \
       FTC_Manager  _manager = _cache->manager;                           \
                                                                          \
-                                                                         \
       if ( _node != _manager->nodes_list )                               \
         FTC_MruNode_Up( (FTC_MruNode*)&_manager->nodes_list,             \
                         (FTC_MruNode)_node );                            \
@@ -265,10 +264,12 @@ FT_BEGIN_HEADER
                                                                          \
   _NewNode:                                                              \
     error = FTC_Cache_NewNode( _cache, _hash, query, &_node );           \
-                                                                         \
-  _Ok:                                                                   \
-    _pnode  = (FTC_Node*)(void*)&(node);                                 \
-    *_pnode = _node;                                                     \
+    if ( !error )                                                        \
+    {                                                                    \
+    _Ok:                                                                 \
+      _pnode  = (FTC_Node*)(void*)&(node);                               \
+      *_pnode = _node;                                                   \
+    }                                                                    \
   FT_END_STMNT
 
 #else /* !FTC_INLINE */

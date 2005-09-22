@@ -378,7 +378,7 @@
                  FT_UInt32  hash,
                  FTC_Node   node )
   {
-    node->hash = hash;
+    node->hash        = hash;
     node->cache_index = (FT_UInt16) cache->index;
     node->ref_count   = 0;
 
@@ -426,12 +426,7 @@
     if ( error )
       node = NULL;
     else
-    {
-     /* don't assume that the cache has the same number of buckets, since
-      * our allocation request might have triggered global cache flushing
-      */
       ftc_cache_add( cache, hash, node );
-    }
 
     *anode = node;
     return error;

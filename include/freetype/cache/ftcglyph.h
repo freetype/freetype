@@ -253,6 +253,8 @@ FT_BEGIN_HEADER
                    FT_UInt32   hash,
                    FTC_GCache  cache );
 
+#define  FTC_FAMILY_UNREF(f)  FTC_Family_Unref( FTC_FAMILY(f) )
+
 
   typedef struct FTC_GCacheRec_
   {
@@ -350,7 +352,8 @@ FT_BEGIN_HEADER
     FTC_Family*            _pfamily = &_gcache->families;              \
     FTC_Family             _family;                                    \
                                                                        \
-    error = 0;                                                         \
+    error  = 0;                                                        \
+    family = NULL;                                                     \
                                                                        \
     for (;;)                                                           \
     {                                                                  \
@@ -374,11 +377,13 @@ FT_BEGIN_HEADER
                                                                        \
   _NewFamily:                                                          \
     error = FTC_GCache_NewFamily( _gcache, hash, _key, &_family );     \
-  _FoundIt:                                                            \
     if ( !error )                                                      \
+    {                                                                  \
+  _FoundIt:                                                            \
       _family->num_nodes++;                                            \
-                                                                       \
-    *(FTC_Family*)(void*)(family) = _family;                           \
+      _pfamily = (FTC_Family*)(void*)&(family);                        \
+      *_pfamily = _family;                                             \
+    }                                                                  \
   FT_END_STMNT
 
 #else /* !FTC_INLINE */

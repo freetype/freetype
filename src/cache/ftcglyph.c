@@ -179,6 +179,8 @@
         *pfamily = family->link;
         break;
       }
+
+      pfamily = &(*pfamily)->link;
     }
 
     if ( clazz->fam_done )
@@ -219,7 +221,7 @@
           goto Exit;
         }
       }
-      
+
       family->link    = cache->families;
       cache->families = family;
     }

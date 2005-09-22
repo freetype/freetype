@@ -40,7 +40,7 @@
 
 
 #define  FTC_BASIC_FAMILY_HASH(f)  \
-     ( FTC_SCALER_HASH( &(f)->scaler ) + 31*(f)->load_flags )
+     ( FTC_SCALER_HASH( &(f)->scaler ) + 7*(f)->load_flags )
 
 
   FT_CALLBACK_DEF( FT_Bool )
@@ -166,7 +166,7 @@
               FTC_INode_Free,
               FTC_GCacheRec,
               FTC_GCache_Init,
-              FTC_GCache_Done 
+              FTC_GCache_Done
            ),
            FTC_DEFINE_FAMILY_CLASS(
               FTC_BasicFamilyRec,
@@ -229,7 +229,7 @@
     hash = FTC_BASIC_FAMILY_HASH( &key_family );
 
     FTC_GCACHE_GET_FAMILY( cache, ftc_basic_family_equal,
-                           hash, &key_family, &key.family, error );
+                           hash, &key_family, key.family, error );
     if ( !error )
     {
       hash      += gindex;
@@ -245,7 +245,7 @@
           *anode = FTC_NODE_REF( node );
       }
 
-      FTC_Family_Unref( FTC_FAMILY(key.family) );
+      FTC_FAMILY_UNREF( key.family );
     }
 
   Exit:
@@ -332,7 +332,7 @@
     hash = FTC_BASIC_FAMILY_HASH( &key_family );
 
     FTC_GCACHE_GET_FAMILY( cache, ftc_basic_family_equal,
-                           hash, &key_family, &key.family, error );
+                           hash, &key_family, key.family, error );
     if ( !error )
     {
       /* beware, the hash must be the same for all glyph ranges */
@@ -350,7 +350,7 @@
           *anode = FTC_NODE_REF(node);
       }
 
-      FTC_Family_Unref( FTC_FAMILY(key.family) );
+      FTC_FAMILY_UNREF( key.family );
     }
 
     return error;
