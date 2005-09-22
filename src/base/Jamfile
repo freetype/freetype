@@ -32,7 +32,8 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
 #
 Library  $(FT2_LIB) : ftsystem.c   ftinit.c    ftglyph.c  ftmm.c     ftbdf.c
                       ftbbox.c     ftdebug.c   ftxf86.c   fttype1.c  ftpfr.c
-                      ftstroke.c   ftwinfnt.c  ftotval.c  ftgxval.c  ftbitmap.c ;
+                      ftstroke.c   ftwinfnt.c  ftotval.c  ftbitmap.c
+                      ftsynth.c ;
 
 # Add Macintosh-specific file to the library when necessary.
 #
