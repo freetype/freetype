@@ -2349,6 +2349,20 @@ FT_BEGIN_HEADER
   *
   *   FT_LOAD_TARGET_LCD_V ::
   *     Use hinting for @FT_RENDER_MODE_LCD_V.
+  *
+  * @note:
+  *   You should use only _one_ of the FT_LOAD_TARGET_XXX values; they
+  *   can't be ORed.
+  *
+  *   However, FreeType makes a distinction between the hinting algorithm
+  *   being used, and the pixel mode of the target bitmaps.  For example,
+  *   it is possible to use the `light' hinting algorithm and have the
+  *   results rendered in horizontal LCD pixel mode, with code like this:
+  *
+  *     FT_Load_Glyph( face, glyph_index,
+  *                    load_flags | FT_LOAD_TARGET_LIGHT );
+  *     FT_Render_Glyph( face->glyph, FT_RENDER_MODE_LCD );
+  *
   */
 #define FT_LOAD_DEFAULT                      0x0
 #define FT_LOAD_NO_SCALE                     0x1

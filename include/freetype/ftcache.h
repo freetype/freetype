@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache subsystem (specification).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -257,8 +257,10 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    library     :: The parent FreeType library handle to use.          */
   /*                                                                       */
-  /*    max_bytes   :: Maximum number of bytes to use for cached data.     */
-  /*                   Use 0 for defaults.                                 */
+  /*    max_bytes   :: Maximum number of bytes to use for cached data      */
+  /*                   nodes.  Use 0 for defaults.  Note that this value   */
+  /*                   does not account for managed FT_Face and FT_Size    */
+  /*                   objects.                                            */
   /*                                                                       */
   /*    requester   :: An application-provided callback used to translate  */
   /*                   face IDs into real @FT_Face objects.                */
@@ -272,6 +274,15 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    When you perform a lookup, out-of-memory errors are detected       */
+  /*    _within_ the lookup and force incremental flushes of the cache     */
+  /*    until enough memory is released for the lookup to succeed.         */
+  /*                                                                       */
+  /*    If a lookup fails with FT_Err_Out_Of_Memory the cache has already  */
+  /*    been completely flushed, and still no memory is available for the  */
+  /*    operation.                                                         */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_New( FT_Library          library,
