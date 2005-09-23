@@ -64,10 +64,9 @@
 
 
       /* nSettings in gxvfeat.c is halved for exclusive on/off settings */
+      nSettings_max = gxv_feat_registry[f->featureType].nSettings;
       if ( gxv_feat_registry[f->featureType].exclusive )
-        nSettings_max = 2 * gxv_feat_registry[f->featureType].nSettings;
-      else
-        nSettings_max = gxv_feat_registry[f->featureType].nSettings;
+        nSettings_max = (FT_Byte)(2*nSettings_max);
 
       GXV_TRACE(( "featureType %d is registered", f->featureType ));
       GXV_TRACE(( "setting %d", f->featureSetting ));
@@ -125,6 +124,8 @@
   gxv_mort_coverage_validate( FT_UShort      coverage,
                               GXV_Validator  valid )
   {
+    FT_UNUSED( valid );
+
     if ( coverage & 0x8000U )
       GXV_TRACE(( " this subtable is for vertical text only\n" ));
     else

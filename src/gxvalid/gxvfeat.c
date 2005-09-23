@@ -225,14 +225,15 @@
          ( featureFlags & GXV_FEAT_MASK_UNUSED ) == 0 )
       FT_INVALID_DATA;
 
-    exclusive = featureFlags & GXV_FEAT_MASK_EXCLUSIVE_SETTINGS;
+    exclusive = FT_BOOL(featureFlags & GXV_FEAT_MASK_EXCLUSIVE_SETTINGS);
     if ( exclusive )
     {
       FT_Byte  dynamic_default;
 
 
       if ( featureFlags & GXV_FEAT_MASK_DYNAMIC_DEFAULT )
-        dynamic_default = featureFlags & GXV_FEAT_MASK_DEFAULT_SETTING;
+        dynamic_default = (FT_Byte)( featureFlags &
+                                     GXV_FEAT_MASK_DEFAULT_SETTING);
       else
         dynamic_default = 0;
 

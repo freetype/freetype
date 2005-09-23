@@ -234,9 +234,9 @@
     FT_UNUSED( glyphOffset );
 
 
-    push        =   flags / 0x8000U;
-    dontAdvance = ( flags & 0x4000 ) / 0x4000;
-    valueOffset =   flags & 0x3FFF;
+    push        = (FT_UShort)( (flags >> 15) & 1 );
+    dontAdvance = (FT_UShort)( (flags >> 14) & 1 );
+    valueOffset = (FT_UShort)(  flags & 0x3FFF );
 
     {
       GXV_kern_fmt1_StateOptRecData  vt_rec =
@@ -341,7 +341,7 @@
                 tag, firstGlyph, nGlyphs ));
 
     gxv_glyphid_validate( firstGlyph, valid );
-    gxv_glyphid_validate( firstGlyph + nGlyphs - 1, valid );
+    gxv_glyphid_validate( (FT_UShort)(firstGlyph + nGlyphs - 1), valid );
 
     gxv_array_getlimits_ushort( p, p + ( 2 * nGlyphs ),
                                 &( GXV_KERN_FMT2_DATA( offset_min[spec] ) ),
@@ -517,16 +517,18 @@
     if ( coverage & 0x1FFC )
       return 0;
 
-    kernVertical    = ( coverage >> 15 ) & 1;
-    kernCrossStream = ( coverage >> 14 ) & 1;
-    kernVariation   = ( coverage >> 13 ) & 1;
-    *format         =   coverage & 0x0003;
+    kernVertical    = FT_BOOL(( coverage >> 15 ) & 1);
+    kernCrossStream = FT_BOOL(( coverage >> 14 ) & 1);
+    kernVariation   = FT_BOOL(( coverage >> 13 ) & 1);
+    *format         = (FT_UShort)( coverage & 0x0003 );
 
     GXV_TRACE(( "new Apple-dialect: "
                 "horizontal=%d, cross-stream=%d, variation=%d, format=%d\n",
                  !kernVertical, kernCrossStream, kernVariation, *format ));
 
     GXV_TRACE(( "kerning values in Apple format subtable are ignored\n" ));
+
+    FT_UNUSED( valid );
 
     return 1;
   }
@@ -550,9 +552,9 @@
     if ( coverage & 0x02FC )
       return 0;
 
-    horizontal   = ( coverage >> 15 ) & 1;
-    cross_stream = ( coverage >> 13 ) & 1;
-    *format      =   coverage & 0x0003;
+    horizontal   = FT_BOOL(( coverage >> 15 ) & 1);
+    cross_stream = FT_BOOL(( coverage >> 13 ) & 1);
+    *format      = (FT_UShort)( coverage & 0x0003 );
 
     GXV_TRACE(( "classic Apple-dialect: "
                 "horizontal=%d, cross-stream=%d, format=%d\n",
@@ -579,16 +581,17 @@
     FT_Bool  cross_stream;
     FT_Bool  override;
 
+    FT_UNUSED( valid );
 
     /* reserved bits = 0 */
     if ( coverage & 0xFDF0 )
       return 0;
 
-    horizontal   =   coverage & 1;
-    minimum      = ( coverage >> 1 ) & 1;
-    cross_stream = ( coverage >> 2 ) & 1;
-    override     = ( coverage >> 3 ) & 1;
-    *format      = ( coverage >> 8 ) & 0x0003;
+    horizontal   = FT_BOOL( coverage & 1 );
+    minimum      = FT_BOOL(( coverage >> 1 ) & 1);
+    cross_stream = FT_BOOL(( coverage >> 2 ) & 1);
+    override     = FT_BOOL(( coverage >> 3 ) & 1);
+    *format      = (FT_UShort)(( coverage >> 8 ) & 0x0003);
 
     GXV_TRACE(( "classic Microsoft-dialect: "
                 "horizontal=%d, minimum=%d, cross-stream=%d, "

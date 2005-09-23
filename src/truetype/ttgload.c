@@ -762,6 +762,8 @@
     TT_GlyphZone  zone = &loader->zone;
     FT_Pos        origin;
 
+    FT_UNUSED(is_composite);
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     FT_UInt       n_ins;
@@ -944,11 +946,11 @@
     FT_UInt         num_points = gloader->base.outline.n_points;
     FT_Bool         have_scale;
     FT_Pos          x, y;
-    
 
-    have_scale = subglyph->flags & ( WE_HAVE_A_SCALE     |
-                                     WE_HAVE_AN_XY_SCALE |
-                                     WE_HAVE_A_2X2       );
+
+    have_scale = FT_BOOL( subglyph->flags & ( WE_HAVE_A_SCALE     |
+                                              WE_HAVE_AN_XY_SCALE |
+                                              WE_HAVE_A_2X2       ) );
 
     /* perform the transform required for this subglyph */
     if ( have_scale )

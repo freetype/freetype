@@ -141,8 +141,8 @@
     FT_UNUSED( lookuptbl_limit );
     FT_UNUSED( valid );
 
-
-    value.u = base_value.u + relative_gindex * 4 * sizeof ( FT_Short );
+    /* XXX: check range ? */
+    value.u = (FT_UShort)(base_value.u + relative_gindex * 4 * sizeof ( FT_Short ));
 
     return value;
   }

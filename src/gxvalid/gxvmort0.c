@@ -80,13 +80,14 @@
     FT_UNUSED( limit );
 
 
-    markFirst   =   flags / 0x8000U;
-    dontAdvance = ( flags & 0x4000 ) / 0x4000;
-    markLast    = ( flags & 0x2000 ) / 0x2000;
-    reserved    =   flags & 0x1FF0;
-    verb        =   flags & 0x000F;
+    markFirst   = (FT_UShort)( (flags >> 15) & 1 );
+    dontAdvance = (FT_UShort)( (flags >> 14) & 1 );
+    markLast    = (FT_UShort)( (flags >> 13) & 1 );
+    reserved    = (FT_UShort)(  flags & 0x1FF0 );
+    verb        = (FT_UShort)(  flags & 0x000F );
 
     FT_UNUSED( GXV_Mort_IndicScript_Msg[verb] );
+    FT_UNUSED( glyphOffset );
 
     GXV_TRACE(( "  IndicScript MorphRule for glyphOffset 0x%04x",
                 glyphOffset.u ));
@@ -95,6 +96,8 @@
     GXV_TRACE(( " markLast=%01d", markLast ));
     GXV_TRACE(( " %02d", verb ));
     GXV_TRACE(( " %s\n", GXV_Mort_IndicScript_Msg[verb] ));
+
+
 
     if ( 0 < reserved )
     {
