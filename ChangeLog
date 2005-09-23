@@ -1,3 +1,8 @@
+2005-09-23  David Turner  <david@freetype.org>
+
+        * src/autofit/aflatin.c (af_latin_hints_init): fixed a bug that
+        prevented internal hint mode bitflags from being computed correctly
+
 2005-09-22  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Mention SING Glyphlet support.
@@ -419,7 +424,7 @@
 
 2005-07-04  Werner Lemberg  <wl@gnu.org>
 
-	* include/freetype/internal/ftmemory.h (FT_REALLOC_ARRAY): Fix typo. 
+	* include/freetype/internal/ftmemory.h (FT_REALLOC_ARRAY): Fix typo.
 	Reported by Brett Hutley.
 
 2005-06-30  David Turner  <david@freetype.org>
