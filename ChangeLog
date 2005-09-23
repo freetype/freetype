@@ -15,6 +15,11 @@
           removing _many_ compiler warnings when compiling with Visual C++
           at maximum level (/W4)
 
+        * src/autofit/afangles.c (af_angle_atan): replaced CORDIC-based
+        implementation with one using lookup tables. This simple thing
+        speeds glyph loading by 18% according to ftbench !
+
+
 2005-09-22  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Mention SING Glyphlet support.
