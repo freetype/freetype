@@ -174,9 +174,9 @@
 
 
       lig_action = FT_NEXT_ULONG( p );
-      last   = (lig_action & 0x80000000UL) / 0x80000000UL;
-      store  = (lig_action & 0x40000000UL) / 0x40000000UL;
-      offset =  lig_action & 0x3FFFFFFFUL;
+      last       = (FT_UShort)( (lig_action >> 31) & 1 );
+      store      = (FT_UShort)( (lig_action >> 30) & 1 );
+      offset     = lig_action & 0x3FFFFFFFUL;
     }
   }
 
@@ -200,10 +200,10 @@
     FT_UNUSED( limit );
 
 
-    setComponent   = ( flags & 0x8000U ) / 0x8000U;
-    dontAdvance    = ( flags & 0x4000  ) / 0x4000;
-    performAction  = ( flags & 0x2000  ) / 0x2000;
-    reserved       =   flags & 0x1FFF;
+    setComponent   = (FT_UShort)( (flags >> 15) & 1 );
+    dontAdvance    = (FT_UShort)( (flags >> 14) & 1 );
+    performAction  = (FT_UShort)( (flags >> 13) & 1 );
+    reserved       = (FT_UShort)(  flags & 0x1FFF );
     ligActionIndex = glyphOffset.u;
 
     if ( reserved > 0 )

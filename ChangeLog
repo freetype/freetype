@@ -3,6 +3,18 @@
         * src/autofit/aflatin.c (af_latin_hints_init): fixed a bug that
         prevented internal hint mode bitflags from being computed correctly
 
+        * src/base/Jamfile: adding src/base/ftgxval.c
+
+        * src/gxvalid/gxvbsln.c, src/gxvalid/gxvcommn.c, src/gxvalid/gxvfeat.c,
+        src/gxvalid/gxvjust.c, src/gxvalid/gxvkern.c, src/gxvalid/gxvlcar.c,
+        src/gxvalid/gxvmort.c, src/gxvalid/gxvmort0.c, src/gxvalid/gxvmort1.c,
+        src/gxvalid/gxvmort2.c, src/gxvalid/gxvmort4.c, src/gxvalid/gxvmort5.c,
+        src/gxvalid/gxvmorx.c, src/gxvalid/gxvmorx0.c, src/gxvalid/gxvmorx1.c,
+        src/gxvalid/gxvmorx2.c, src/gxvalid/gxvmorx5.c, src/gxvalid/gxvopbd.c,
+        src/gxvalid/gxvprop.c, src/sfnt/sfdriver.c, src/truetype/ttgload.c:
+          removing _many_ compiler warnings when compiling with Visual C++
+          at maximum level (/W4)
+
 2005-09-22  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Mention SING Glyphlet support.

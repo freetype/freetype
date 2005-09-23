@@ -85,8 +85,8 @@
       GXV_LIMIT_CHECK( rest );
 
       /* morx coverage consists of mort_coverage & 16bit padding */
-      gxv_mort_coverage_validate( ( coverage >> 16 ) | coverage, valid );
-
+      gxv_mort_coverage_validate( (FT_UShort)(( coverage >> 16 ) | coverage),
+                                  valid );
       if ( type > 5 )
         FT_INVALID_FORMAT;
 
@@ -128,7 +128,13 @@
     /* feature-array of morx is same with that of mort */
     gxv_mort_featurearray_validate( p, limit, nFeatureFlags, valid );
     p += valid->subtable_length;
-    gxv_morx_subtables_validate( p, table + chainLength, nSubtables, valid );
+
+    if ( nSubtables >= 0x10000 )
+      FT_INVALID_DATA;
+
+    gxv_morx_subtables_validate( p, table + chainLength,
+                                 (FT_UShort)nSubtables, valid );
+
     valid->subtable_length = chainLength;
 
     GXV_EXIT;

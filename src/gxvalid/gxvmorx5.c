@@ -147,7 +147,7 @@
     FT_Bool    markedIsKashidaLike;
     FT_Bool    currentInsertBefore;
     FT_Bool    markedInsertBefore;
-    FT_Bool    currentInsertCount;
+    FT_Byte    currentInsertCount;
     FT_Byte    markedInsertCount;
     FT_Byte    currentInsertList;
     FT_UShort  markedInsertList;
@@ -155,16 +155,16 @@
     FT_UNUSED( state );
 
 
-    setMark              = ( flags >> 15 ) & 1;
-    dontAdvance          = ( flags >> 14 ) & 1;
-    currentIsKashidaLike = ( flags >> 13 ) & 1;
-    markedIsKashidaLike  = ( flags >> 12 ) & 1;
-    currentInsertBefore  = ( flags >> 11 ) & 1;
-    markedInsertBefore   = ( flags >> 10 ) & 1;
-    currentInsertCount   = ( flags & 0x03E0 ) / 0x20;
-    markedInsertCount    = ( flags & 0x001F );
-    currentInsertList    = glyphOffset.ul / 0x00010000UL;
-    markedInsertList     = glyphOffset.ul & 0x0000FFFFUL;
+    setMark              = FT_BOOL(( flags >> 15 ) & 1);
+    dontAdvance          = FT_BOOL(( flags >> 14 ) & 1);
+    currentIsKashidaLike = FT_BOOL(( flags >> 13 ) & 1);
+    markedIsKashidaLike  = FT_BOOL(( flags >> 12 ) & 1);
+    currentInsertBefore  = FT_BOOL(( flags >> 11 ) & 1);
+    markedInsertBefore   = FT_BOOL(( flags >> 10 ) & 1);
+    currentInsertCount   = (FT_Byte)( (flags >> 5) & 0x1F );
+    markedInsertCount    = (FT_Byte)(  flags & 0x001F );
+    currentInsertList    = (FT_Byte)  ( glyphOffset.ul >> 16 );
+    markedInsertList     = (FT_UShort)( glyphOffset.ul );
 
     if ( currentInsertList && 0 != currentInsertCount )
       gxv_morx_subtable_type5_InsertList_validate( currentInsertList,

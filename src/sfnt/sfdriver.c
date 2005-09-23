@@ -318,12 +318,6 @@
   {
     FT_UNUSED( module );
 
-    if ( ft_strcmp( module_interface, "get_sfnt" ) == 0 )
-      return (FT_Module_Interface)get_sfnt_table;
-
-    if ( ft_strcmp( module_interface, "load_sfnt" ) == 0 )
-      return (FT_Module_Interface)tt_face_load_any;
-
     return ft_service_list_lookup( sfnt_services, module_interface );
   }
 
