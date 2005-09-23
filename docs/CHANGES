@@ -40,6 +40,11 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       (meaning `left  sidebearing  point  at x=0').   This helps  with
       some buggy fonts.
 
+    - Rudimentary support for Adobe's new `SING Glyphlet' format.  See
+
+        http://www.adobe.com/products/indesign/sing_gaiji.html
+
+      for more information.
 
 ======================================================================
 

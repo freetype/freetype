@@ -1,6 +1,11 @@
+2005-09-22  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Mention SING Glyphlet support.
+
 2005-09-22  David Turner  <david@freetype.org>
 
-        * src/base/Jamfile: fixing broken Jamfile
+	* src/base/Jamfile: Disable compilation of ftgxval module
+	temporarily.
 
 2005-09-19  David Somers  <dsomers@omz13.com>
 
