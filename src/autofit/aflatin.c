@@ -848,7 +848,7 @@
     AF_Direction  major_dir     = axis->major_dir;
     AF_Segment    seg1, seg2;
 
-  
+
     /* now compare each segment to the others */
     for ( seg1 = segments; seg1 < segment_limit; seg1++ )
     {
@@ -1310,6 +1310,8 @@
     /* compute flags depending on render mode, etc... */
 
     mode = metrics->root.scaler.render_mode;
+
+    hints->other_flags = 0;
 
     /*
      *  We snap the width of vertical stems for the monochrome and
