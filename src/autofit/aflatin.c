@@ -1409,7 +1409,7 @@
     AF_LatinAxis     axis     = & metrics->axis[dim];
     FT_Pos           dist     = width;
     FT_Int           sign     = 0;
-    FT_Int           vertical = AF_HINTS_DO_VERTICAL( hints );
+    FT_Int           vertical = ( dim == AF_DIMENSION_VERT );
 
 
     if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) )
