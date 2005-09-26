@@ -1,3 +1,9 @@
+2005-09-26  David Turner  <david@freetype.org>
+
+        * src/autofit/aflatin.c (af_latin_compute_stem_width): fixed bad
+        computation of the "vertical" flag, causing ugly things in LCD mode
+        and others.
+
 2005-09-23  David Turner  <david@freetype.org>
 
         * src/autofit/aflatin.c (af_latin_hints_init): fixed a bug that
