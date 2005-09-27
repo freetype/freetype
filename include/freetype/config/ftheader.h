@@ -571,6 +571,18 @@
 #define FT_GX_VALIDATE_H  <freetype/ftgxval.h>
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
+  /*    FT_RGB_FILTER_H                                                    */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the optional FreeType 2 API used to perform RGB decimated color    */
+  /*    filtering.                                                         */
+  /*                                                                       */
+#define FT_RGB_FILTER_H   <freetype/ftrgb.h>
+
   /* */
 
 #define FT_TRIGONOMETRY_H       <freetype/fttrigon.h>

@@ -1,3 +1,10 @@
+2005-09-27  David Turner  <david@freetype.org>
+
+        * include/freetype/config/ftheader.h, include/freetype/ftrgb.h,
+        src/rgbfilt/ftrgb.c, src/rgbfilt/ftrgbgen.h, src/rgbfilt/ftrgbgen2.h,
+        src/rgbfilt/Jamfile, src/rgbfilt/rules.mk, Jamfile: Adding color
+        filter for LCD modes, in order to reduce "fringes"
+
 2005-09-26  David Turner  <david@freetype.org>
 
         * src/autofit/aflatin.c (af_latin_compute_stem_width): fixed bad

@@ -86,6 +86,7 @@ FT2_COMPONENTS ?= autofit    # auto-fitter
                   pshinter   # PostScript hinter module
                   psnames    # PostScript names handling
                   raster     # monochrome rasterizer
+                  rgbfilt    # RGB Color Filter for LCD modes
                   smooth     # anti-aliased rasterizer
                   sfnt       # SFNT-based format support routines
                   truetype   # TrueType font driver
