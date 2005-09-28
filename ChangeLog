@@ -1,3 +1,8 @@
+2005-09-27  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/freetype2.m4: Add license exception so that the file
+	can be used in any other autoconf script.
+
 2005-09-26  David Turner  <david@freetype.org>
 
         * src/autofit/aflatin.c (af_latin_compute_stem_width): fixed bad
