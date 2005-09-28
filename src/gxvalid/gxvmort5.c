@@ -158,16 +158,18 @@
     FT_UNUSED( state );
 
 
-    setMark              = FT_BOOL(( flags >> 15 ) & 1);
-    dontAdvance          = FT_BOOL(( flags >> 14 ) & 1);
-    currentIsKashidaLike = FT_BOOL(( flags >> 13 ) & 1);
-    markedIsKashidaLike  = FT_BOOL(( flags >> 12 ) & 1);
-    currentInsertBefore  = FT_BOOL(( flags >> 11 ) & 1);
-    markedInsertBefore   = FT_BOOL(( flags >> 10 ) & 1);
-    currentInsertCount   = (FT_Byte)( (flags >> 5) & 0x1F );
-    markedInsertCount    = (FT_Byte)(  flags & 0x001F );
+    setMark              = FT_BOOL( ( flags >> 15 ) & 1 );
+    dontAdvance          = FT_BOOL( ( flags >> 14 ) & 1 );
+    currentIsKashidaLike = FT_BOOL( ( flags >> 13 ) & 1 );
+    markedIsKashidaLike  = FT_BOOL( ( flags >> 12 ) & 1 );
+    currentInsertBefore  = FT_BOOL( ( flags >> 11 ) & 1 );
+    markedInsertBefore   = FT_BOOL( ( flags >> 10 ) & 1 );
+
+    currentInsertCount   = (FT_Byte)( ( flags >> 5 ) & 0x1F   );
+    markedInsertCount    = (FT_Byte)(   flags        & 0x001F );
+
     currentInsertList    = (FT_UShort)( glyphOffset.ul >> 16 );
-    markedInsertList     = (FT_UShort)( glyphOffset.ul );
+    markedInsertList     = (FT_UShort)( glyphOffset.ul       );
 
     if ( 0 != currentInsertList && 0 != currentInsertCount )
     {

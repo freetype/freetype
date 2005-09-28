@@ -132,7 +132,8 @@
     GXV_LookupValueDesc  value;
 
     /* XXX: check range ? */
-    offset = (FT_UShort)(base_value.u + ( relative_gindex * sizeof ( FT_UShort ) ));
+    offset = (FT_UShort)( base_value.u +
+                          ( relative_gindex * sizeof ( FT_UShort ) ) );
 
     p     = valid->lookuptbl_head + offset;
     limit = lookuptbl_limit;

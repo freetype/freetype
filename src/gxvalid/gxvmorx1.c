@@ -122,11 +122,13 @@
     FT_UNUSED( limit );
 
 
-    setMark      = (FT_UShort)( (flags >> 15) & 1 );
-    dontAdvance  = (FT_UShort)( (flags >> 14) & 1 );
-    reserved     = (FT_UShort)( flags & 0x3FFF );
+    setMark      = (FT_UShort)( ( flags >> 15 ) & 1 );
+    dontAdvance  = (FT_UShort)( ( flags >> 14 ) & 1 );
+
+    reserved = (FT_UShort)( flags & 0x3FFF );
+
     markIndex    = (FT_Short)( glyphOffset.ul >> 16 );
-    currentIndex = (FT_Short)( glyphOffset.ul );
+    currentIndex = (FT_Short)( glyphOffset.ul       );
 
     GXV_TRACE(( " setMark=%01d dontAdvance=%01d\n",
                 setMark, dontAdvance ));
@@ -142,10 +144,12 @@
                 markIndex, currentIndex ));
 
     if ( optdata->substitutionTable_num_lookupTables < markIndex + 1 )
-      optdata->substitutionTable_num_lookupTables = (FT_Short)(markIndex + 1);
+      optdata->substitutionTable_num_lookupTables =
+        (FT_Short)( markIndex + 1 );
 
     if ( optdata->substitutionTable_num_lookupTables < currentIndex + 1 )
-      optdata->substitutionTable_num_lookupTables = (FT_Short)(currentIndex + 1);
+      optdata->substitutionTable_num_lookupTables =
+        (FT_Short)( currentIndex + 1 );
   }
 
 
@@ -154,9 +158,9 @@
                                                 GXV_LookupValueDesc  value,
                                                 GXV_Validator        valid )
   {
-    GXV_TRACE(( "morx subtable type1 subst.: %d -> %d\n", glyph, value.u ));
+    FT_UNUSED( glyph ); /* for the non-debugging case */
 
-    FT_UNUSED( glyph );
+    GXV_TRACE(( "morx subtable type1 subst.: %d -> %d\n", glyph, value.u ));
 
     if ( value.u > valid->face->num_glyphs )
       FT_INVALID_GLYPH_ID;
@@ -175,8 +179,9 @@
     FT_UShort            offset;
     GXV_LookupValueDesc  value;
 
-    /* XXX: check range ? */
-    offset = (FT_UShort)(base_value.u + relative_gindex * sizeof ( FT_UShort ));
+    /* XXX: check range? */
+    offset = (FT_UShort)( base_value.u +
+                          relative_gindex * sizeof ( FT_UShort ) );
 
     p     = valid->lookuptbl_head + offset;
     limit = lookuptbl_limit;

@@ -117,17 +117,17 @@
       char       complement;
 
 
-      offset = (FT_UShort)(property & GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET);
+      offset = (FT_UShort)( property & GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET );
       if ( offset == 0 )
         FT_INVALID_DATA;
 
-      complement = (char)(offset >> 8);
+      complement = (char)( offset >> 8 );
       if ( complement & 0x08 )
       {
         /* Top bit is set: negative */
 
         /* Calculate the absolute offset */
-        complement = (char)(( complement & 0x07 ) + 1);
+        complement = (char)( ( complement & 0x07 ) + 1 );
 
         /* The gid for complement must be greater than 0 */
         if ( glyph <= complement )
@@ -136,7 +136,7 @@
       else
       {
         /* The gid for complement must be the face. */
-        gxv_glyphid_validate( (FT_UShort)(glyph + complement), valid );
+        gxv_glyphid_validate( (FT_UShort)( glyph + complement ), valid );
       }
     }
     else
@@ -213,8 +213,9 @@
     FT_UShort            offset;
     GXV_LookupValueDesc  value;
 
-    /* XXX: check range ? */
-    offset = (FT_UShort)(base_value.u + relative_gindex * sizeof( FT_UShort ));
+    /* XXX: check range? */
+    offset = (FT_UShort)( base_value.u +
+                          relative_gindex * sizeof( FT_UShort ) );
     p      = valid->lookuptbl_head + offset;
     limit  = lookuptbl_limit;
 

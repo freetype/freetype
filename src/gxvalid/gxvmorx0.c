@@ -59,11 +59,12 @@
     FT_UNUSED( limit );
 
 
-    markFirst   = (FT_UShort)( (flags >> 15) & 1 );
-    dontAdvance = (FT_UShort)( (flags >> 14) & 1 );
-    markLast    = (FT_UShort)( (flags >> 13) & 1 );
-    reserved    = (FT_UShort)(  flags & 0x1FF0 );
-    verb        = (FT_UShort)(  flags & 0x000F );
+    markFirst   = (FT_UShort)( ( flags >> 15 ) & 1 );
+    dontAdvance = (FT_UShort)( ( flags >> 14 ) & 1 );
+    markLast    = (FT_UShort)( ( flags >> 13 ) & 1 );
+
+    reserved = (FT_UShort)( flags & 0x1FF0 );
+    verb     = (FT_UShort)( flags & 0x000F );
 
     if ( 0 < reserved )
     {

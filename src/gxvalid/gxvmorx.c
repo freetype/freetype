@@ -85,7 +85,7 @@
       GXV_LIMIT_CHECK( rest );
 
       /* morx coverage consists of mort_coverage & 16bit padding */
-      gxv_mort_coverage_validate( (FT_UShort)(( coverage >> 16 ) | coverage),
+      gxv_mort_coverage_validate( (FT_UShort)( ( coverage >> 16 ) | coverage ),
                                   valid );
       if ( type > 5 )
         FT_INVALID_FORMAT;

@@ -66,7 +66,7 @@
       /* nSettings in gxvfeat.c is halved for exclusive on/off settings */
       nSettings_max = gxv_feat_registry[f->featureType].nSettings;
       if ( gxv_feat_registry[f->featureType].exclusive )
-        nSettings_max = (FT_Byte)(2*nSettings_max);
+        nSettings_max = (FT_Byte)( 2 * nSettings_max );
 
       GXV_TRACE(( "featureType %d is registered", f->featureType ));
       GXV_TRACE(( "setting %d", f->featureSetting ));

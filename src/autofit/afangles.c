@@ -25,7 +25,7 @@
   /* the following table has been automatically generated with */
   /* the `mather.py' Python script                             */
 
-#define  AF_ATAN_BITS  8
+#define AF_ATAN_BITS  8
 
   static const FT_Byte  af_arctan[1L << AF_ATAN_BITS] =
   {
@@ -125,6 +125,7 @@
 
 
 #else /* 0 */
+
 /*
  * a python script used to generate the following table
  *
@@ -322,6 +323,7 @@ for n in r:
   }
 
 #endif /* 0 */
+
 
   FT_LOCAL_DEF( AF_Angle )
   af_angle_diff( AF_Angle  angle1,

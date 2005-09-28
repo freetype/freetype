@@ -755,22 +755,23 @@
   /*                                                                       */
 #define cur_to_org( n, zone ) \
           FT_ARRAY_COPY( (zone)->org, (zone)->cur, (n) )
+
   static FT_Error
-  TT_Hint_Glyph( TT_Loader     loader,
-                 FT_Bool       is_composite )
+  TT_Hint_Glyph( TT_Loader  loader,
+                 FT_Bool    is_composite )
   {
     TT_GlyphZone  zone = &loader->zone;
     FT_Pos        origin;
 
-    FT_UNUSED(is_composite);
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+    FT_UInt       n_ins;
+#else
+    FT_UNUSED( is_composite );
+#endif
+
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-
-    FT_UInt       n_ins;
-
-
     n_ins = loader->glyph->control_len;
-
 #endif
 
     origin = zone->cur[zone->n_points - 4].x;
@@ -779,16 +780,16 @@
       translate_array( zone->n_points, zone->cur, origin, 0 );
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-
     /* save original point positioin in org */
     if ( n_ins > 0 )
       cur_to_org( zone->n_points, zone );
-
 #endif
 
     /* round pp2 and pp4 */
-    zone->cur[zone->n_points - 3].x = FT_PIX_ROUND( zone->cur[zone->n_points - 3].x );
-    zone->cur[zone->n_points - 1].y = FT_PIX_ROUND( zone->cur[zone->n_points - 1].y );
+    zone->cur[zone->n_points - 3].x =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 3].x );
+    zone->cur[zone->n_points - 1].y =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 1].y );
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
@@ -803,8 +804,8 @@
       if ( error )
         return error;
 
-      loader->exec->is_composite     = is_composite;
-      loader->exec->pts              = *zone;
+      loader->exec->is_composite = is_composite;
+      loader->exec->pts          = *zone;
 
       debug = !( loader->load_flags & FT_LOAD_NO_SCALE ) &&
               ( (TT_Size)loader->size )->debug;
@@ -842,13 +843,13 @@
   static FT_Error
   TT_Process_Simple_Glyph( TT_Loader  loader )
   {
-    FT_GlyphLoader  gloader  = loader->gloader;
-    FT_Error        error    = TT_Err_Ok;
+    FT_GlyphLoader  gloader = loader->gloader;
+    FT_Error        error   = TT_Err_Ok;
     FT_Outline*     outline;
     FT_UInt         n_points;
 
 
-    outline = &gloader->current.outline;
+    outline  = &gloader->current.outline;
     n_points = outline->n_points;
 
     /* set phantom points */
@@ -870,9 +871,9 @@
     if ( ((TT_Face)loader->face)->doblend )
     {
       /* Deltas apply to the unscaled data. */
-      FT_Vector*    deltas;
-      FT_Memory     memory = loader->face->memory;
-      FT_UInt       i;
+      FT_Vector*  deltas;
+      FT_Memory   memory = loader->face->memory;
+      FT_UInt     i;
 
 
       error = TT_Vary_Get_Glyph_Deltas( (TT_Face)(loader->face),
@@ -1006,6 +1007,7 @@
             ( subglyph->flags & SCALED_COMPONENT_OFFSET ) )
 #endif
       {
+
 #if 0
 
   /*************************************************************************/
@@ -1041,7 +1043,7 @@
                                  FT_MulFix( subglyph->transform.xx,
                                             subglyph->transform.xx ) +
                                  FT_MulFix( subglyph->transform.xy,
-                                            subglyph->transform.xy) );
+                                            subglyph->transform.xy ) );
         FT_Fixed  mac_yscale = FT_SqrtFixed(
                                  FT_MulFix( subglyph->transform.yy,
                                             subglyph->transform.yy ) +
@@ -1128,7 +1130,7 @@
 
 
       /* TT_Load_Composite_Glyph only gives us the offset of instructions */
-      /* so we read them here */
+      /* so we read them here                                             */
       if ( FT_STREAM_SEEK( loader->ins_pos ) ||
            FT_READ_USHORT( n_ins )           )
         return error;
@@ -1200,17 +1202,13 @@
     FT_Bool         opened_frame = 0;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-
     FT_Vector*      deltas       = NULL;
-
 #endif
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-
     FT_StreamRec    inc_stream;
     FT_Data         glyph_data;
     FT_Bool         glyph_data_loaded = 0;
-
 #endif
 
 
@@ -1278,9 +1276,9 @@
         left_bearing  = (FT_Short)metrics.bearing_x;
         advance_width = (FT_UShort)metrics.advance;
 
-# if 0
+#if 0
 
-        /* GWW: Do I do the same for vertical metrics ??? */
+        /* GWW: Do I do the same for vertical metrics? */
         metrics.bearing_x = 0;
         metrics.bearing_y = top_bearing;
         metrics.advance = advance_height;
@@ -1292,7 +1290,7 @@
         top_bearing  = (FT_Short)metrics.bearing_y;
         advance_height = (FT_UShort)metrics.advance;
 
-# endif
+#endif /* 0 */
 
       }
 

@@ -157,8 +157,9 @@
 
     FT_UNUSED( lookuptbl_limit );
 
-    /* XXX: check range ? */
-    offset = (FT_UShort)(base_value.u + relative_gindex * sizeof ( FT_UShort ));
+    /* XXX: check range? */
+    offset = (FT_UShort)( base_value.u +
+                          relative_gindex * sizeof ( FT_UShort ) );
     p      = valid->root->base + offset;
     limit  = valid->root->limit;
 

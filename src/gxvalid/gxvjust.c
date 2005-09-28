@@ -401,10 +401,10 @@
     FT_UNUSED( valid );
 
 
-    setMark      = (FT_UShort)( (flags >> 15) & 1 );
-    dontAdvance  = (FT_UShort)( (flags >> 14) & 1);
-    markClass    = (FT_UShort)( (flags >> 7) & 0x7F );
-    currentClass = (FT_UShort)(  flags       & 0x7F );
+    setMark      = (FT_UShort)( ( flags >> 15 ) & 1    );
+    dontAdvance  = (FT_UShort)( ( flags >> 14 ) & 1    );
+    markClass    = (FT_UShort)( ( flags >> 7  ) & 0x7F );
+    currentClass = (FT_UShort)(   flags         & 0x7F );
 
     /* TODO: validate markClass & currentClass */
   }
