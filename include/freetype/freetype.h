@@ -120,6 +120,7 @@ FT_BEGIN_HEADER
   /*    FT_FACE_FLAG_GLYPH_NAMES                                           */
   /*    FT_FACE_FLAG_EXTERNAL_STREAM                                       */
   /*    FT_FACE_FLAG_FAST_GLYPHS                                           */
+  /*    FT_FACE_FLAG_HINTER                                                */
   /*                                                                       */
   /*    FT_STYLE_FLAG_BOLD                                                 */
   /*    FT_STYLE_FLAG_ITALIC                                               */
@@ -1061,6 +1062,12 @@ FT_BEGIN_HEADER
   /*      provided by the client application and should not be destroyed   */
   /*      when @FT_Done_Face is called.  Don't read or test this flag.     */
   /*                                                                       */
+  /*    FT_FACE_FLAG_HINTER ::                                             */
+  /*      Set if the font driver has a hinting machine of its own.  For    */
+  /*      example, with TrueType fonts, it makes sense to use data from    */
+  /*      the SFNT `gasp' table only if the native TrueType hinting engine */
+  /*      (with the bytecode interpreter) is available and active.         */
+  /*                                                                       */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
 #define FT_FACE_FLAG_FIXED_WIDTH       ( 1L <<  2 )
@@ -1072,6 +1079,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_MULTIPLE_MASTERS  ( 1L <<  8 )
 #define FT_FACE_FLAG_GLYPH_NAMES       ( 1L <<  9 )
 #define FT_FACE_FLAG_EXTERNAL_STREAM   ( 1L << 10 )
+#define FT_FACE_FLAG_HINTER            ( 1L << 11 )
 
   /* */
 

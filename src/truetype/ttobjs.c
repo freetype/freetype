@@ -203,7 +203,11 @@
       goto Bad_Format;
     }
 
-    /* If we are performing a simple font format check, exit immediately */
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+    face->root.face_flags |= FT_FACE_FLAG_HINTER;
+#endif
+
+    /* If we are performing a simple font format check, exit immediately. */
     if ( face_index < 0 )
       return TT_Err_Ok;
 

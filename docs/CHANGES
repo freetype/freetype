@@ -33,6 +33,13 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   III. MISCELLANEOUS
 
+    - A new  face flag `FT_FACE_FLAG_HINTER'  has been added  which is
+      set if the font's driver has  a hinting engine of its own.  This
+      makes  it possible  to check  at run-time  whether  the TrueType
+      bytecode interpreter  has been activated.  An example  use is to
+      enable  the interpretation of  the `gasp'  table only  if native
+      TrueType hinting is available.
+
     - The demo programs  `ftview' and  `ftstring' have been  rewritten
       for better readability.
 

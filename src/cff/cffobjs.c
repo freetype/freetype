@@ -636,8 +636,9 @@
         /*                                                                 */
         /* Compute face flags.                                             */
         /*                                                                 */
-        flags = FT_FACE_FLAG_SCALABLE  |    /* scalable outlines */
-                FT_FACE_FLAG_HORIZONTAL;    /* horizontal data   */
+        flags = FT_FACE_FLAG_SCALABLE   |       /* scalable outlines */
+                FT_FACE_FLAG_HORIZONTAL |       /* horizontal data   */
+                FT_FACE_FLAG_HINTER;            /* has native hinter */
 
         if ( sfnt_format )
           flags |= FT_FACE_FLAG_SFNT;

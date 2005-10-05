@@ -202,12 +202,16 @@
     root->num_charmaps = 0;
     root->face_index   = face_index;
 
-    root->face_flags  = FT_FACE_FLAG_SCALABLE;
-    root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
-    root->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
+    root->face_flags = FT_FACE_FLAG_SCALABLE    |
+                       FT_FACE_FLAG_HORIZONTAL  |
+                       FT_FACE_FLAG_GLYPH_NAMES;
 
     if ( info->is_fixed_pitch )
       root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+    root->face_flags |= FT_FACE_FLAG_HINTER;
+#endif
 
     /* XXX: TODO -- add kerning with .afm support */
 

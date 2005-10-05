@@ -536,9 +536,11 @@
       /* Compute face flags.                                               */
       /*                                                                   */
       if ( has_outline == TRUE )
-        flags |= FT_FACE_FLAG_SCALABLE;    /* scalable outlines */
+        flags |= FT_FACE_FLAG_SCALABLE;   /* scalable outlines */
 
-      flags |= FT_FACE_FLAG_SFNT      |   /* SFNT file format  */
+      /* The sfnt driver only supports bitmap fonts natively, thus we */
+      /* don't set FT_FACE_FLAG_HINTER.                               */
+      flags |= FT_FACE_FLAG_SFNT       |  /* SFNT file format  */
                FT_FACE_FLAG_HORIZONTAL;   /* horizontal data   */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES

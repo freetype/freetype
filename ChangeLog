@@ -1,3 +1,18 @@
+2005-09-05  Werner Lemberg  <wl@gnu.org>
+
+	Add FT_FACE_FLAG_HINTER to indicate that a specific font driver has
+	a hinting engine of its own.
+
+	* include/freetype/freetype.h (FT_FACE_FLAG_HINTER): New macro.
+
+	* src/cff/cffobjs.c (cff_face_init), src/cid/cidobjs.c
+	(cid_face_init), src/truetype/ttobjs.c (tt_face_init)
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER], src/type1/t1objs.c
+	(T1_Face_Init), src/type42/t42objs.c (T42_Face_Init)
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Update face flags.
+
+	* docs/CHANGES: Document it.
+
 2005-09-27  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype2.m4: Add license exception so that the file
