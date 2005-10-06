@@ -5,6 +5,8 @@
         * src/rgbfilt/ftrgbgen.h, src/rgbfilt/ftrgbgn2.h: fix some computation
         issues on 16-bit platforms.
 
+        * src/rgbfilt/ftrgb.c: fixed computation bug for vertical modes
+
 2005-09-27  David Turner  <david@freetype.org>
 
         * include/freetype/config/ftheader.h, include/freetype/ftrgb.h,

@@ -60,9 +60,9 @@ ft_rgbfilter_apply_argb_vrgb( FT_RgbFiltering  oper )
 {
 #define  HMUL   1
 #define  VMUL   3
-#define  OFF_R  0
-#define  OFF_G  1
-#define  OFF_B  2
+#define  OFF_R  (0*in_pitch)
+#define  OFF_G  (1*in_pitch)
+#define  OFF_B  (2*in_pitch)
 #include "ftrgbgen.h"
 }
 
@@ -72,9 +72,9 @@ ft_rgbfilter_apply_argb_vbgr( FT_RgbFiltering  oper )
 {
 #define  HMUL   1
 #define  VMUL   3
-#define  OFF_R  2
-#define  OFF_G  1
-#define  OFF_B  0
+#define  OFF_R  (2*in_pitch)
+#define  OFF_G  (1*in_pitch)
+#define  OFF_B  (0*in_pitch)
 #include "ftrgbgen.h"
 }
 
@@ -109,9 +109,9 @@ ft_rgbfilter_apply_inplace_vrgb( FT_RgbFiltering  oper )
 {
 #define  HMUL   1
 #define  VMUL   3
-#define  OFF_R  0
-#define  OFF_G  1
-#define  OFF_B  2
+#define  OFF_R  (0*in_pitch)
+#define  OFF_G  (1*in_pitch)
+#define  OFF_B  (2*in_pitch)
 #include "ftrgbgn2.h"
 }
 
@@ -121,9 +121,9 @@ ft_rgbfilter_apply_inplace_vbgr( FT_RgbFiltering  oper )
 {
 #define  HMUL   1
 #define  VMUL   3
-#define  OFF_R  2
-#define  OFF_G  1
-#define  OFF_B  0
+#define  OFF_R  (2*in_pitch)
+#define  OFF_G  (1*in_pitch)
+#define  OFF_B  (0*in_pitch)
 #include "ftrgbgn2.h"
 }
 
