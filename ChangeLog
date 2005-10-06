@@ -1,3 +1,10 @@
+2005-10-06  David Turner  <david@freetype.org>
+
+        * include/freetype/ftrgb.h: update documentation
+
+        * src/rgbfilt/ftrgbgen.h, src/rgbfilt/ftrgbgn2.h: fix some computation
+        issues on 16-bit platforms.
+
 2005-09-27  David Turner  <david@freetype.org>
 
         * include/freetype/config/ftheader.h, include/freetype/ftrgb.h,

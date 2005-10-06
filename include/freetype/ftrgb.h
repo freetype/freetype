@@ -52,7 +52,8 @@ typedef struct FT_RgbFilterRec_*   FT_RgbFilter;
  *                     @FT_PIXEL_MODE_LCD or @FT_PIXEL_MODE_LCD_V
  *
  *   in_bytes       :: first byte of input bitmap data in memory
- *   in_pitch       :: number of bytes in a row of input pixels. can be negative
+ *   in_pitch       :: number of bytes in a row of input pixels.
+ *                     can be negative
  *
  *   out_width      :: width in pixels of output bitmap
  *   out_height     :: width in pixels of output bitmap
@@ -70,7 +71,8 @@ typedef struct FT_RgbFilterRec_*   FT_RgbFilter;
  *
  * @note:
  *   this function returns an error if 'in_mode' isn't set to either
- *   @FT_PIXEL_MODE_LCD or @FT_PIXEL_MODE_LCD_V
+ *   @FT_PIXEL_MODE_LCD or @FT_PIXEL_MODE_LCD_V, or if the values of
+ *   the parameters are incorrect.
  *
  *   when 'in_mode' is @FT_PIXEL_MODE_LCD, this function assumes that the
  *   width of the input bitmap is three times the output's one. otherwise,
@@ -102,7 +104,7 @@ FT_RgbFilter_ApplyARGB( FT_RgbFilter   filter_or_null,
  * @description:
  *   a variant of @FT_RgbFilter_ApplyARGB that performs filtering
  *   within the input bitmap. It's up to the caller to convert the
- *   result to a format suitable
+ *   result to a suitable color format.
  *
  * @input:
  *   filter_or_null :: handle to RGB filter object, or NULL to use the
@@ -125,7 +127,8 @@ FT_RgbFilter_ApplyARGB( FT_RgbFilter   filter_or_null,
  *
  * @note:
  *   this function returns an error if 'in_mode' isn't set to either
- *   @FT_PIXEL_MODE_LCD or @FT_PIXEL_MODE_LCD_V
+ *   @FT_PIXEL_MODE_LCD or @FT_PIXEL_MODE_LCD_V, or if the values of some
+ *   parameters are incorrect.
  *
  *   when 'in_mode' is @FT_PIXEL_MODE_LCD, this function assumes that the
  *   width of the input bitmap is three times 'org_width'. otherwise,
@@ -209,6 +212,7 @@ FT_RgbFilter_Done( FT_RgbFilter  filter );
  *     green /= 65536;
  *     blue  /= 65536;
  *   }
+ *
  */
 FT_EXPORT( void )
 FT_RgbFilter_Reset( FT_RgbFilter  filter,

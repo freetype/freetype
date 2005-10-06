@@ -29,12 +29,12 @@
 
   for ( ; hh > 0; hh--, in_line += in_pitch*VMUL )
   {
-    int         ww    = oper->width;
+    int         ww   = oper->width;
     FT_Byte*    pix  = in_line;
 
     for ( ; ww > 0; ww--, pix += HMUL )
     {
-      FT_UInt    rr, gg, bb;
+      FT_UInt32  rr, gg, bb;
       FT_UInt    val;
 
       val = pix[OFF_R];

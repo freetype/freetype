@@ -37,7 +37,7 @@
 
     for ( ; ww > 0; ww--, read += HMUL, write += 1 )
     {
-      FT_UInt    rr, gg, bb;
+      FT_UInt32  rr, gg, bb;
       FT_UInt    val;
 
       val = read[OFF_R];
@@ -59,7 +59,7 @@
       gg = (gg >> 16) & 255;
       bb = (bb >> 16) & 255;
 
-      write[0] = (FT_UInt)( (gg << 24) | (rr << 16) | (gg << 8) | bb );
+      write[0] = (FT_UInt32)( (gg << 24) | (rr << 16) | (gg << 8) | bb );
     }
   }
 
