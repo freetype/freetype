@@ -42,8 +42,7 @@ CACHE_DRV_H := $(CACHE_H_DIR)/ftcmru.h   \
                $(CACHE_H_DIR)/ftcimage.h \
                $(CACHE_H_DIR)/ftccmap.h  \
                $(CACHE_DIR)/ftcerror.h   \
-               $(CACHE_DIR)/ftcint.h     \
-               $(CACHE_DIR)/ftccback.h
+               $(CACHE_DIR)/ftcint.h
 
 
 # Cache driver object(s)

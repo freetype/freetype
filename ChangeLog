@@ -23,6 +23,13 @@
 
     * MANY FILES... Mergin with main branch (HEAD)
 
+    * src/cache/ftcmanag.c (FTC_Manager_Reset): add missing cache flush
+
+    * src/cache/ftcback.h, src/cache/rules.mk: removed obsolete ftcback.h
+    which was revived by the merge operation (blooody cvs)
+
+    * src/cache/ftcsbit.c: using FTC_RETRY_LOOP ... FTC_RETRY_END
+
 2005-09-21  David Turner  <david@freetype.org>
 
     * massive redesign of the cache sub-system internals.

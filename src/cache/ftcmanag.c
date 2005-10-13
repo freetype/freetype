@@ -444,7 +444,7 @@
       FTC_MruList_Reset( &manager->sizes );
       FTC_MruList_Reset( &manager->faces );
     }
-    /* XXX: FIXME: flush the caches? */
+    FTC_Manager_FlushN( manager, manager->num_nodes );
   }
 
 
