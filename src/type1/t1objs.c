@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 objects manager (body).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -329,9 +329,10 @@
       root->num_glyphs = type1->num_glyphs;
       root->face_index = face_index;
 
-      root->face_flags  = FT_FACE_FLAG_SCALABLE;
-      root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
-      root->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
+      root->face_flags = FT_FACE_FLAG_SCALABLE    |
+                         FT_FACE_FLAG_HORIZONTAL  |
+                         FT_FACE_FLAG_GLYPH_NAMES |
+                         FT_FACE_FLAG_HINTER;
 
       if ( info->is_fixed_pitch )
         root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;

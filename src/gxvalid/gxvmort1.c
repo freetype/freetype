@@ -113,15 +113,19 @@
     FT_UNUSED( state );
 
 
-    substTable       = ((GXV_mort_subtable_type1_StateOptRec *)
-                        (valid->statetable.optdata))->substitutionTable;
-    substTable_limit = substTable +
-                       ((GXV_mort_subtable_type1_StateOptRec *)
-                        (valid->statetable.optdata))->substitutionTable_length;
+    substTable =
+      ((GXV_mort_subtable_type1_StateOptRec *)
+       (valid->statetable.optdata))->substitutionTable;
+    substTable_limit =
+      (FT_UShort)( substTable +
+                   ((GXV_mort_subtable_type1_StateOptRec *)
+                    (valid->statetable.optdata))->substitutionTable_length );
 
-    min_gid = ( substTable       - wordOffset * 2 ) / 2;
-    max_gid = ( substTable_limit - wordOffset * 2 ) / 2;
-    max_gid = FT_MAX( max_gid, valid->face->num_glyphs );
+    min_gid = (FT_UShort)( ( substTable       - wordOffset * 2 ) / 2 );
+    max_gid = (FT_UShort)( ( substTable_limit - wordOffset * 2 ) / 2 );
+    max_gid = (FT_UShort)( FT_MAX( max_gid, valid->face->num_glyphs ) );
+
+    /* XXX: check range? */
 
     /* TODO: min_gid & max_gid comparison with ClassTable contents */
   }
@@ -146,11 +150,12 @@
     FT_UNUSED( limit );
 
 
-    setMark     =   flags / 0x8000U;
-    dontAdvance = ( flags & 0x4000 ) / 0x4000;
-    reserved    =   flags & 0x3FFF;
-    markOffset    = GXV_USHORT_TO_SHORT( glyphOffset.ul / 0x00010000UL );
-    currentOffset = GXV_USHORT_TO_SHORT( glyphOffset.ul & 0x0000FFFFUL );
+    setMark       = (FT_UShort)(   flags >> 15            );
+    dontAdvance   = (FT_UShort)( ( flags >> 14 ) & 1      );
+    reserved      = (FT_Short)(    flags         & 0x3FFF );
+
+    markOffset    = (FT_Short)( glyphOffset.ul >> 16 );
+    currentOffset = (FT_Short)( glyphOffset.ul       );
 
     if ( 0 < reserved )
     {
@@ -177,9 +182,9 @@
                                                GXV_Validator  valid )
   {
     FT_Bytes   p = table;
-    FT_UShort  num_gids =
+    FT_UShort  num_gids = (FT_UShort)(
                  ((GXV_mort_subtable_type1_StateOptRec *)
-                  (valid->statetable.optdata))->substitutionTable_length / 2;
+                  (valid->statetable.optdata))->substitutionTable_length / 2 );
     FT_UShort  i;
 
 

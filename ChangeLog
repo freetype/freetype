@@ -21,12 +21,77 @@
       moving "ftc_node_destroy" to private headers, it's now a local,
       non-public, function
 
+    * MANY FILES... Mergin with main branch (HEAD)
+
 2005-09-21  David Turner  <david@freetype.org>
 
     * massive redesign of the cache sub-system internals.
     in order to simplify the code and even slightly improve
     performance (ftbench shows a 3% improvements in the SBit
     and Image caches)
+
+
+2005-09-05  Werner Lemberg  <wl@gnu.org>
+
+	Add FT_FACE_FLAG_HINTER to indicate that a specific font driver has
+	a hinting engine of its own.
+
+	* include/freetype/freetype.h (FT_FACE_FLAG_HINTER): New macro.
+
+	* src/cff/cffobjs.c (cff_face_init), src/cid/cidobjs.c
+	(cid_face_init), src/truetype/ttobjs.c (tt_face_init)
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER], src/type1/t1objs.c
+	(T1_Face_Init), src/type42/t42objs.c (T42_Face_Init)
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Update face flags.
+
+	* docs/CHANGES: Document it.
+
+2005-09-27  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/freetype2.m4: Add license exception so that the file
+	can be used in any other autoconf script.
+
+2005-09-26  David Turner  <david@freetype.org>
+
+	* src/autofit/aflatin.c (af_latin_compute_stem_width): Fix bad
+	computation of the `vertical' flag, causing ugly things in LCD mode
+	and others.
+
+2005-09-23  David Turner  <david@freetype.org>
+
+	* src/autofit/aflatin.c (af_latin_hints_init): Fix a bug that
+	prevented internal hint mode bitflags from being computed correctly.
+
+	* src/base/Jamfile: Adding src/base/ftgxval.c.
+
+	* src/gxvalid/gxvbsln.c, src/gxvalid/gxvcommn.c,
+	src/gxvalid/gxvfeat.c, src/gxvalid/gxvjust.c, src/gxvalid/gxvkern.c,
+	src/gxvalid/gxvlcar.c, src/gxvalid/gxvmort.c,
+	src/gxvalid/gxvmort0.c, src/gxvalid/gxvmort1.c,
+	src/gxvalid/gxvmort2.c, src/gxvalid/gxvmort4.c,
+	src/gxvalid/gxvmort5.c, src/gxvalid/gxvmorx.c,
+	src/gxvalid/gxvmorx0.c, src/gxvalid/gxvmorx1.c,
+	src/gxvalid/gxvmorx2.c, src/gxvalid/gxvmorx5.c,
+	src/gxvalid/gxvopbd.c, src/gxvalid/gxvprop.c,
+	src/truetype/ttgload.c: Remove _many_ compiler warnings when
+	compiling with Visual C++ at maximum level (/W4).
+
+	* src/autofit/afangles.c (af_angle_atan): Replaced CORDIC-based
+	implementation with one using lookup tables.  This simple thing
+	speeds up glyph loading by 18%, according to ftbench!
+
+	* src/sfnt/sfdriver.c (sfnt_get_interface): Don't check for
+	`get_sfnt' and `load_sfnt' module interfaces.
+
+2005-09-22  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Mention SING Glyphlet support.
+
+2005-09-22  David Turner  <david@freetype.org>
+
+	* src/base/Jamfile: Disable compilation of ftgxval module
+	temporarily.
+
 
 2005-09-19  David Somers  <dsomers@omz13.com>
 

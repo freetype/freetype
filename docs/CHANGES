@@ -33,6 +33,13 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   III. MISCELLANEOUS
 
+    - A new  face flag `FT_FACE_FLAG_HINTER'  has been added  which is
+      set if the font's driver has  a hinting engine of its own.  This
+      makes  it possible  to check  at run-time  whether  the TrueType
+      bytecode interpreter  has been activated.  An example  use is to
+      enable  the interpretation of  the `gasp'  table only  if native
+      TrueType hinting is available.
+
     - The demo programs  `ftview' and  `ftstring' have been  rewritten
       for better readability.
 
@@ -40,6 +47,19 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       (meaning `left  sidebearing  point  at x=0').   This helps  with
       some buggy fonts.
 
+    - Rudimentary support for Adobe's new `SING Glyphlet' format.  See
+
+        http://www.adobe.com/products/indesign/sing_gaiji.html
+
+      for more information.
+
+    - The Cache API has been severely updated. However, that doesn't
+      change the public API located in FT_CACHE_H, only the types and
+      functions from FT_CACHE_INTERNAL_XXXX_H headers which should
+      only be included if you want to create custom caches.
+      
+      The Cache API is still experimental, don't use it on production
+      code though !!!
 
 ======================================================================
 
