@@ -79,12 +79,6 @@ FT_BEGIN_HEADER
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  /* reserved for manager's use */
-  FT_EXPORT( void )
-  ftc_node_destroy( FTC_Node     node,
-                    FTC_Manager  manager );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/

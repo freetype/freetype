@@ -23,15 +23,6 @@
 #include "ftcerror.h"
 
 
-  FT_EXPORT_DEF( void )
-  _ftc_manager_get_debug_info( FTC_Manager  manager,
-                               FT_UInt     *p_num_caches,
-                               FT_UInt     *p_num_nodes,
-                               FT_ULong    *p_cur_weight )
-  {
-  }
-
-
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cache
 
@@ -581,6 +572,23 @@
       FT_Memory  memory = manager->memory;
 
 
+      /* look for pre-existing cache with same class */
+      {
+        FT_Int  nn;
+
+        for ( nn = 0; nn < manager->num_caches; nn++ )
+        {
+          cache = manager->caches[nn];
+
+          if ( cache->clazz == clazz )
+          {
+            error = 0;
+            goto Exit;
+          }
+        }
+        cache = NULL;
+      }
+
       if ( manager->num_caches >= FTC_MAX_CACHES )
       {
         error = FTC_Err_Too_Many_Caches;
@@ -663,9 +671,9 @@
   {
     FT_UInt  nn;
 
-    /* this will remove all FTC_SizeNode that correspond to
-     * the face_id as well
-     */
+   /* this will remove all FTC_SizeNode that correspond to
+    * the face_id as well
+    */
     FTC_MruList_RemoveSelection( &manager->faces, NULL, face_id );
 
     for ( nn = 0; nn < manager->num_caches; nn++ )
@@ -682,6 +690,89 @@
     if ( node && (FT_UInt)node->cache_index < manager->num_caches )
       node->ref_count--;
   }
+
+
+  /* see documentation for FTC_RETRY_LOOP in ftcmanag.h */
+
+  FT_EXPORT_DEF( void )
+  FTC_Manager_RetryStart( FTC_Manager  manager )
+  {
+    manager->retry_depth     = 1;
+    manager->retry_num_nodes = 8;
+    manager->retry_num_faces = 1;
+    manager->retry_overflow  = 0;
+  }
+
+  /* see documentation for FTC_RETRY_END in ftcmanag.h */
+
+  FT_EXPORT_DEF( FT_Bool )
+  FTC_Manager_RetryEnd( FTC_Manager  manager,
+                        FT_Error     error )
+  {
+    FT_Bool  retry = 0;
+    FT_UInt  count;
+
+    if ( manager->retry_depth > 1 )
+    {
+      manager->retry_depth--;
+      goto Exit;
+    }
+
+    if ( error != FTC_Err_Out_Of_Memory ||
+         manager->retry_overflow != 0   )
+      goto Exit;
+
+    count = manager->retry_num_nodes;
+    if ( count > 0 )
+    {
+      if ( FTC_Manager_FlushN( manager, count ) > 0 )
+      {
+       /* FlushN returns > 0 if we could clear some nodes from
+        * the cache. we compute the size of the next cleanup
+        * and respond with retry=1
+        */
+        FT_UInt  count2 = count*2;
+
+        if ( count2 < count || count2 > manager->num_nodes )
+          count2 = manager->num_nodes;
+
+        manager->retry_num_nodes = count2;
+        retry = 1;
+        goto Exit;
+      }
+
+     /* if FlushN returns 0, there is no more unlocked nodes
+      * in the cache. se retry_num_nodes to 0, then start
+      * clearing managed faces.
+      */
+      manager->retry_num_nodes = 0;
+    }
+    else
+    {
+     /* we try to completely flush the cache, just in case
+      * client code between RETRY_LOOP and RETRY_END created
+      * some spurious unlocked nodes.
+      */
+      FTC_Manager_FlushN( manager, manager->num_nodes );
+    }
+
+    count = manager->retry_num_faces;
+
+    if ( count >= manager->faces.num_nodes )
+      manager->retry_overflow = 1;
+
+    manager->retry_num_faces = count + (count >> 1) + 1;
+
+    for ( ; count > 0; count-- )
+      FTC_MruList_RemoveOldest( &manager->faces );
+
+    retry = 1;
+
+  Exit:
+    return  retry;
+  }
+
+
 
 
 /* END */

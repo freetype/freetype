@@ -12,6 +12,15 @@
     * include/freetype/cache/ftcmru.h, src/cache/ftcmru.c: implement
     the new convenience function FTC_MruList_RemoveOldest()
 
+    * include/freetype/cache/ftcmanag.h, src/cache/ftcint.h,
+    src/cache/ftcmanag.h:
+
+      introducing FTC_RETRY_LOOP and FTC_RETRY_END and corresponding
+      functions.
+
+      moving "ftc_node_destroy" to private headers, it's now a local,
+      non-public, function
+
 2005-09-21  David Turner  <david@freetype.org>
 
     * massive redesign of the cache sub-system internals.

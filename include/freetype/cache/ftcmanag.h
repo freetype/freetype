@@ -95,6 +95,32 @@ FT_BEGIN_HEADER
 
   } FTC_ManagerRec;
 
+  /* */
+
+ /* the following function should never be called directly. It is used
+  * by FTC_RETRY_LOOP described below
+  */
+  FT_EXPORT( void )
+  FTC_Manager_RetryStart( FTC_Manager  manager );
+
+ /* the following function should never be called directly. It is used
+  * by FTC_RETRY_END described below
+  */
+  FT_EXPORT( FT_Bool )
+  FTC_Manager_RetryEnd( FTC_Manager  manager,
+                        FT_Error     error );
+
+#define  FTC_RETRY_LOOP(m)                      \
+  FT_BEGIN_STMNT                                \
+    FTC_Manager  __retry_mgr = (m);             \
+                                                \
+    FTC_Manager_RetryStart( __retry_mgr );      \
+    do                                          \
+    {
+
+#define  FTC_RETRY_END(error)                                    \
+    } while ( FTC_Manager_RetryEnd( __retry_mgr, (error) );      \
+  FT_END_STMNT
 
   /*************************************************************************/
   /*                                                                       */
