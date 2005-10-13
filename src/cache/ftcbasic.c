@@ -16,8 +16,7 @@
 /***************************************************************************/
 
 
-#include <ft2build.h>
-#include FT_CACHE_H
+#include "ftcint.h"
 #include FT_CACHE_INTERNAL_GLYPH_H
 #include FT_CACHE_INTERNAL_IMAGE_H
 #include FT_CACHE_INTERNAL_SBITS_H

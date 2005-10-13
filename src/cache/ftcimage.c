@@ -15,9 +15,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <ft2build.h>
-#include FT_CACHE_H
+#include "ftcint.h"
 #include FT_CACHE_INTERNAL_IMAGE_H
 #include FT_INTERNAL_MEMORY_H
 
@@ -67,7 +65,7 @@
 
       /* we will now load the glyph image */
       error = clazz->fam_load_glyph( family, gindex,
-                                     FTC_CACHE__MANAGER(cache), 
+                                     FTC_CACHE__MANAGER(cache),
                                      &inode->glyph );
       if ( error )
       {

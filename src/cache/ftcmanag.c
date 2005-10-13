@@ -15,15 +15,21 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <ft2build.h>
-#include FT_CACHE_H
-#include FT_CACHE_INTERNAL_MANAGER_H
+#include "ftcint.h"
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_SIZES_H
 
 #include "ftcerror.h"
+
+
+  FT_EXPORT_DEF( void )
+  _ftc_manager_get_debug_info( FTC_Manager  manager,
+                               FT_UInt     *p_num_caches,
+                               FT_UInt     *p_num_nodes,
+                               FT_ULong    *p_cur_weight )
+  {
+  }
 
 
 #undef  FT_COMPONENT

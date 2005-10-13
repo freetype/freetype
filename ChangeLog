@@ -1,9 +1,23 @@
+2005-10-13  David Turner  <david@freetype.org>
+
+    * include/freetype/cache/ftcmanag.h, src/cache/ftcint.h,
+    src/cache/ftcbasic.c, src/cache/ftccmap.c, src/cache/ftccache.c,
+    src/cache/ftcglyph.c, src/cache/ftcimage.c, src/cache/ftcmanag.c,
+    src/cache/ftcmru.c, src/cache/ftcsbits.c, src/cache/rules.mk:
+
+      make various fields of the @FTC_ManagerRec structure private, i.e.
+      un-accessible from client applications, introducing the new private
+      "src/cache/ftcint.h" header
+
+    * include/freetype/cache/ftcmru.h, src/cache/ftcmru.c: implement
+    the new convenience function FTC_MruList_RemoveOldest()
+
 2005-09-21  David Turner  <david@freetype.org>
 
-        * massive redesign of the cache sub-system internals.
-        in order to simplify the code and even slightly improve
-        performance (ftbench shows a 3% improvements in the SBit
-        and Image caches)
+    * massive redesign of the cache sub-system internals.
+    in order to simplify the code and even slightly improve
+    performance (ftbench shows a 3% improvements in the SBit
+    and Image caches)
 
 2005-09-19  David Somers  <dsomers@omz13.com>
 
@@ -417,7 +431,7 @@
 
 2005-07-04  Werner Lemberg  <wl@gnu.org>
 
-	* include/freetype/internal/ftmemory.h (FT_REALLOC_ARRAY): Fix typo. 
+	* include/freetype/internal/ftmemory.h (FT_REALLOC_ARRAY): Fix typo.
 	Reported by Brett Hutley.
 
 2005-06-30  David Turner  <david@freetype.org>

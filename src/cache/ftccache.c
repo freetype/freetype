@@ -16,8 +16,7 @@
 /***************************************************************************/
 
 
-#include <ft2build.h>
-#include FT_CACHE_INTERNAL_MANAGER_H
+#include "ftcint.h"
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 

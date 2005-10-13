@@ -15,9 +15,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <ft2build.h>
-#include FT_CACHE_H
+#include "ftcint.h"
 #include FT_CACHE_INTERNAL_MRU_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
@@ -318,6 +316,14 @@
 
       FT_FREE( node );
     }
+  }
+
+
+  FT_EXPORT_DEF( void )
+  FTC_MruList_RemoveOldest( FTC_MruList  list )
+  {
+    if ( list && list->nodes )
+      FTC_MruList_Remove( list, list->nodes->prev );
   }
 
 

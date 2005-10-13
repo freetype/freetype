@@ -79,33 +79,19 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*************************************************************************/
 
-
-#define FTC_MAX_FACES_DEFAULT  2
-#define FTC_MAX_SIZES_DEFAULT  4
-#define FTC_MAX_BYTES_DEFAULT  200000L  /* ~200kByte by default */
-
-  /* maximum number of caches registered in a single manager */
-#define FTC_MAX_CACHES         16
-
+#ifndef FTC_MANAGER_PRIVATE
+#define FTC_MANAGER_PRIVATE
+#endif
 
   typedef struct  FTC_ManagerRec_
   {
     FT_Library          library;
     FT_Memory           memory;
 
-    FTC_Node            nodes_list;
-    FT_ULong            max_weight;
-    FT_ULong            cur_weight;
-    FT_UInt             num_nodes;
+    FT_UInt             num_nodes;    /* only used for statistics */
+    FT_ULong            cur_weight;   /* only used for statistics */
 
-    FTC_Cache           caches[FTC_MAX_CACHES];
-    FT_UInt             num_caches;
-
-    FTC_MruListRec      faces;
-    FTC_MruListRec      sizes;
-
-    FT_Pointer          request_data;
-    FTC_Face_Requester  request_face;
+    FTC_MANAGER_PRIVATE
 
   } FTC_ManagerRec;
 
@@ -135,15 +121,16 @@ FT_BEGIN_HEADER
   FTC_Manager_Compress( FTC_Manager  manager );
 
 
-  /* try to flush `count' old nodes from the cache; return the number
-   * of really flushed nodes
-   */
+ /* try to flush `count' old nodes from the cache; return the number
+  * of really flushed nodes
+  */
   FT_EXPORT( FT_UInt )
   FTC_Manager_FlushN( FTC_Manager  manager,
                       FT_UInt      count );
 
 
-  /* this must be used internally for the moment */
+ /* this must be used internally for the moment
+  */
   FT_EXPORT( FT_Error )
   FTC_Manager_RegisterCache( FTC_Manager      manager,
                              FTC_CacheClass   clazz,

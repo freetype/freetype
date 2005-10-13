@@ -172,6 +172,10 @@ FT_BEGIN_HEADER
                       FTC_MruNode  node );
 
   FT_EXPORT( void )
+  FTC_MruList_RemoveOldest( FTC_MruList  list );
+
+
+  FT_EXPORT( void )
   FTC_MruList_RemoveSelection( FTC_MruList              list,
                                FTC_MruNode_EqualFunc  selection,
                                FT_Pointer               key );
