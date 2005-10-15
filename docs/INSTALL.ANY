@@ -44,7 +44,7 @@ I. Standard procedure
 
       src/base/ftmac.c        -- only on the Macintosh
 
-    -- font drivers (optional -- at least one is needed)
+    -- font drivers (optional; at least one is needed)
 
       src/bdf/bdf.c           -- BDF font driver
       src/cff/cff.c           -- CFF/OpenType font driver
@@ -58,9 +58,9 @@ I. Standard procedure
       src/type42/type42.c     -- Type 42 font driver
       src/winfonts/winfonts.c -- Windows FONT / FNT font driver
 
-    -- rasterizers (optional -- at least one is needed)
+    -- rasterizers (optional; at least one is needed for vector formats)
 
-      src/raster/raster.c   -- monochrome rasterizer
+      src/raster/raster.c     -- monochrome rasterizer
       src/smooth/smooth.c     -- anti-aliasing rasterizer
 
     -- auxiliary modules (optional)
