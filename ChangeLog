@@ -1,4 +1,4 @@
-2005-09-05  Werner Lemberg  <wl@gnu.org>
+2005-10-05  Werner Lemberg  <wl@gnu.org>
 
 	Add FT_FACE_FLAG_HINTER to indicate that a specific font driver has
 	a hinting engine of its own.
