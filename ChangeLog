@@ -1,3 +1,8 @@
+2005-10-16  David Turner  <david@freetype.org>
+
+  * src/tools/apinames.c: adding new tool to extract public API
+  function names from header files
+
 2005-10-05  Werner Lemberg  <wl@gnu.org>
 
 	Add FT_FACE_FLAG_HINTER to indicate that a specific font driver has

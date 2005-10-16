@@ -148,6 +148,27 @@ HDRMACRO  [ FT2_SubDir  include freetype internal internal.h ] ;
 #
 SubInclude  FT2_TOP $(FT2_SRC_DIR) ;
 
+# handle the generation of the "ftexport.sym" file which contain the list
+# of exported symbols. This can be used on Unix by libtool
+#
+SubInclude FT2_TOP $(FT2_SRC_DIR) tools ;
+
+rule GenExportSymbols
+{
+  local  headers = [ Glob $(2) : *.h ] ;
+
+  APINAMES on $(1) = apinames$(SUFEXE) ;
+
+  Depends            $(1) : $(headers) ;
+  GenExportSymbols1  $(1) : $(headers) ;
+}
+
+actions GenExportSymbols1 bind APINAMES
+{
+  $(APINAMES) $(2) > $(1)
+}
+
+GenExportSymbols  ftexport.sym : include/freetype include/freetype/cache ;
 
 # Test files (hinter debugging).  Only used by FreeType developers.
 #
