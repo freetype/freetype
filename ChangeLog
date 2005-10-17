@@ -1,3 +1,11 @@
+2005-10-17  David Turner  <david@freetype.org>
+
+  * src/base/ftobjs.c (FT_Open_Face): don't call FT_New_GlyphSlot and
+  FT_New_Size if we're opening a face with face_index < 0 (which is only
+  used for testing the format).
+
+  * src/gxvalid/gxvmort0.c: removed compiler warning
+
 2005-10-16  David Turner  <david@freetype.org>
 
   * src/tools/apinames.c: adding new tool to extract public API

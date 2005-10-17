@@ -73,7 +73,7 @@
     FT_UShort  dontAdvance;
     FT_UShort  markLast;
     FT_UShort  reserved;
-    FT_UShort  verb;
+    FT_UShort  verb = 0;
 
     FT_UNUSED( state );
     FT_UNUSED( table );

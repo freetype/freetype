@@ -1716,22 +1716,25 @@
     /* now allocate a glyph slot object for the face */
     FT_TRACE4(( "FT_Open_Face: Creating glyph slot\n" ));
 
-    error = FT_New_GlyphSlot( face, NULL );
-    if ( error )
-      goto Fail;
-
-    /* finally, allocate a size object for the face */
+    if ( face_index >= 0 )
     {
-      FT_Size  size;
-
-
-      FT_TRACE4(( "FT_Open_Face: Creating size object\n" ));
-
-      error = FT_New_Size( face, &size );
+      error = FT_New_GlyphSlot( face, NULL );
       if ( error )
         goto Fail;
 
-      face->size = size;
+      /* finally, allocate a size object for the face */
+      {
+        FT_Size  size;
+
+
+        FT_TRACE4(( "FT_Open_Face: Creating size object\n" ));
+
+        error = FT_New_Size( face, &size );
+        if ( error )
+          goto Fail;
+
+        face->size = size;
+      }
     }
 
     /* initialize internal face data */
