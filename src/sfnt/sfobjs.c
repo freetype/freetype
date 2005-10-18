@@ -345,10 +345,10 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    FT_Error         error;
-    FT_Library       library = face->root.driver->root.library;
-    SFNT_Service     sfnt;
-    SFNT_HeaderRec   sfnt_header;
+    FT_Error        error;
+    FT_Library      library = face->root.driver->root.library;
+    SFNT_Service    sfnt;
+    SFNT_HeaderRec  sfnt_header;
 
     /* for now, parameters are unused */
     FT_UNUSED( num_params );
