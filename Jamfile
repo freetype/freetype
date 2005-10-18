@@ -60,14 +60,14 @@ FT2_LIB ?= $(LIBPREFIX)freetype ;
 # Define FT2_BUILD_INCLUDE to point to your build-specific directory.
 # This is prepended to FT2_INCLUDE_DIR.  It can be used to specify
 # the location of a custom <ft2build.h> which will point to custom
-# versions of "ftmodule.h" and "ftoption.h", for example.
+# versions of `ftmodule.h' and `ftoption.h', for example.
 #
 FT2_BUILD_INCLUDE ?= ;
 
 # The list of modules to compile on any given build of the library.
 # By default, this will contain _all_ modules defined in FT2_SRC_DIR.
 #
-# IMPORTANT: You'll need to change the content of "ftmodule.h" as well
+# IMPORTANT: You'll need to change the content of `ftmodule.h' as well
 #            if you modify this list or provide your own.
 #
 FT2_COMPONENTS ?= autofit    # auto-fitter
@@ -122,7 +122,7 @@ if $(DEBUG_HINTER)
 }
 
 
-# We need "freetype2/include" in the current include path in order to
+# We need `freetype2/include' in the current include path in order to
 # compile any part of FreeType 2.
 #
 HDRS += $(FT2_INCLUDE) ;
@@ -143,13 +143,13 @@ HDRMACRO  [ FT2_SubDir  include freetype config ftheader.h ] ;
 HDRMACRO  [ FT2_SubDir  include freetype internal internal.h ] ;
 
 
-# Now include the Jamfile in "freetype2/src", used to drive the compilation
+# Now include the Jamfile in `freetype2/src', used to drive the compilation
 # of each FreeType 2 component and/or module.
 #
 SubInclude  FT2_TOP $(FT2_SRC_DIR) ;
 
-# handle the generation of the "ftexport.sym" file which contain the list
-# of exported symbols. This can be used on Unix by libtool
+# Handle the generation of the `ftexport.sym' file which contain the list
+# of exported symbols.  This can be used on Unix by libtool.
 #
 SubInclude FT2_TOP $(FT2_SRC_DIR) tools ;
 

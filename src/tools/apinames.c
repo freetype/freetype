@@ -1,17 +1,21 @@
-/* this little program is used to parse the FreeType headers and
- * find the declaration of all public API. This is easy, because
+/*
+ * This little program is used to parse the FreeType headers and
+ * find the declaration of all public API.  This is easy, because
  * they all look like the following:
  *
  *   FT_EXPORT( return_type )
  *   function_name( function arguments );
  *
- * you must pass it the list of header files as arguments, wildcards
- * accepted if you're using GCC on Windows
+ * You must pass the list of header files as arguments.  Wildcards are
+ * accepted if you are using GCC for compilation (and probably by
+ * other compilers too).
  *
- * Author: David Turner
+ * Author: David Turner, 2005
  *
- * This code is explicitely placed in the public domain
+ * This code is explicitly placed into the public domain.
+ *
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 
