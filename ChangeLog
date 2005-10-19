@@ -1,3 +1,8 @@
+2005-10-19  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Allow size->ttmetrics to be
+	invalid when FT_LOAD_NO_SCALE is set.
+
 2005-10-17  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c (FT_Open_Face): Don't call FT_New_GlyphSlot and
