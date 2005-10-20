@@ -493,7 +493,8 @@
   static void
   ft_mem_table_set( FT_MemTable  table,
                     FT_Byte*     address,
-                    FT_ULong     size )
+                    FT_ULong     size,
+                    FT_Long      delta )
   {
     FT_MemNode  *pnode, node;
 
@@ -536,19 +537,33 @@
 
       node->address = address;
       node->size    = size;
+      node->source  = source = ft_mem_table_get_source( table );
 
-      node->source = source = ft_mem_table_get_source( table );
-
-      source->all_blocks++;
-      source->cur_blocks++;
-      if ( source->cur_blocks > source->max_blocks )
-        source->max_blocks = source->cur_blocks;
+      if ( delta == 0 )
+      {
+        /* this is an allocation */
+        source->all_blocks++;
+        source->cur_blocks++;
+        if ( source->cur_blocks > source->max_blocks )
+          source->max_blocks = source->cur_blocks;
+      }
 
       if ( size > (FT_ULong)source->cur_max )
         source->cur_max = size;
 
+      if ( delta != 0 )
+      {
+        /* we're growing or shrinking a realloc-ed block */
+        source->cur_size += delta;
+      }
+      else
+      {
+        /* we're allocating a new block */
+        source->cur_size += size;
+      }
+
       source->all_size += size;
-      source->cur_size += size;
+
       if ( source->cur_size > source->max_size )
         source->max_size = source->cur_size;
 
@@ -560,8 +575,16 @@
       pnode[0] = node;
       table->nodes++;
 
-      table->alloc_total   += size;
-      table->alloc_current += size;
+      if ( delta != 0 )
+      {
+        table->alloc_total   += size;
+        table->alloc_current += delta;
+      }
+      else
+      {
+        table->alloc_total   += size;
+        table->alloc_current += size;
+      }
       if ( table->alloc_current > table->alloc_max )
         table->alloc_max = table->alloc_current;
 
@@ -574,7 +597,8 @@
 
   static void
   ft_mem_table_remove( FT_MemTable  table,
-                       FT_Byte*     address )
+                       FT_Byte*     address,
+                       FT_Long      delta )
   {
     if ( table )
     {
@@ -599,12 +623,16 @@
 
         /* scramble the node's content for additional safety */
         FT_MEM_SET( address, 0xF3, node->size );
-        table->alloc_current -= node->size;
 
-        source = node->source;
+        if ( delta == 0 )
+        {
+          source = node->source;
 
-        source->cur_blocks--;
-        source->cur_size -= node->size;
+          source->cur_blocks--;
+          source->cur_size -= node->size;
+
+          table->alloc_current -= node->size;
+        }
 
         if ( table->keep_alive )
         {
@@ -662,9 +690,11 @@
 
     block = (FT_Byte *)ft_mem_table_alloc( table, size );
     if ( block )
-      ft_mem_table_set( table, block, (FT_ULong)size );
+    {
+      ft_mem_table_set( table, block, (FT_ULong)size, 0 );
 
-    table->alloc_count++;
+      table->alloc_count++;
+    }
 
     table->file_name = NULL;
     table->line_no   = 0;
@@ -685,7 +715,7 @@
                           FT_FILENAME( table->file_name ),
                           table->line_no );
 
-    ft_mem_table_remove( table, (FT_Byte*)block );
+    ft_mem_table_remove( table, (FT_Byte*)block, 0 );
 
     if ( !table->keep_alive )
       ft_mem_table_free( table, block );
@@ -706,6 +736,7 @@
     FT_MemTable  table = (FT_MemTable)memory->user;
     FT_MemNode   node, *pnode;
     FT_Pointer   new_block;
+    FT_Long      delta;
 
     const char*  file_name = FT_FILENAME( table->file_name );
     FT_Long      line_no   = table->line_no;
@@ -743,6 +774,7 @@
                           "%ld instead of %ld in (%s:%ld)",
                           block, cur_size, node->size, file_name, line_no );
 
+#if 0
     new_block = ft_mem_debug_alloc( memory, new_size );
     if ( new_block == NULL )
       return NULL;
@@ -753,6 +785,43 @@
     table->line_no   = line_no;
 
     ft_mem_debug_free( memory, (FT_Byte*)block );
+
+#else
+    /* return NULL if the maximum number of allocations was reached */
+    if ( table->bound_count                           &&
+         table->alloc_count >= table->alloc_count_max )
+      return NULL;
+
+    delta = (FT_Long)( new_size - cur_size );
+
+    /* return NULL if this allocation would overflow the maximum heap size */
+    if ( delta > 0                                                       &&
+         table->bound_total                                              &&
+         table->alloc_current + (FT_ULong)delta > table->alloc_total_max )
+      return NULL;
+
+    new_block = (FT_Byte *)ft_mem_table_alloc( table, new_size );
+    if ( new_block == NULL )
+      return NULL;
+
+    ft_mem_table_set( table, new_block, new_size, delta );
+
+    table->file_name = NULL;
+    table->line_no   = 0;
+
+    ft_memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
+
+    table->file_name = file_name;
+    table->line_no   = line_no;
+
+    ft_mem_table_remove( table, (FT_Byte*)block, delta );
+
+    if ( !table->keep_alive )
+      ft_mem_table_free( table, block );
+
+    table->alloc_current += delta;
+
+#endif
 
     return new_block;
   }
