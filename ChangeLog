@@ -1,3 +1,10 @@
+2005-10-20  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/ftbitmap.h (FT_Bitmap_Copy, FT_Bitmap_Embolden),
+	src/base/ftbdf.c (FT_Get_BDF_Property), src/cache/ftcmru.c
+	(FTC_MruList_Reset, FTC_MruList_Done, FTC_MruList_Lookup): Misuse of
+	FT_EXPORT/FT_EXPORT_DEF.
+
 2005-10-19  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/truetype/ttgload.c (TT_Load_Glyph): Allow size->ttmetrics to be

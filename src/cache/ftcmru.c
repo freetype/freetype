@@ -181,7 +181,7 @@
   }
 
 
-  FT_EXPORT( void )
+  FT_EXPORT_DEF( void )
   FTC_MruList_Reset( FTC_MruList  list )
   {
     while ( list->nodes )
@@ -191,7 +191,7 @@
   }
 
 
-  FT_EXPORT( void )
+  FT_EXPORT_DEF( void )
   FTC_MruList_Done( FTC_MruList  list )
   {
     FTC_MruList_Reset( list );
@@ -285,7 +285,7 @@
   }
 
 
-  FT_EXPORT( FT_Error )
+  FT_EXPORT_DEF( FT_Error )
   FTC_MruList_Lookup( FTC_MruList   list,
                       FT_Pointer    key,
                       FTC_MruNode  *anode )

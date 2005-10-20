@@ -85,7 +85,7 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )
+  FT_EXPORT( FT_Error )
   FT_Bitmap_Copy( FT_Library        library,
                   const FT_Bitmap  *source,
                   FT_Bitmap        *target);
@@ -123,7 +123,7 @@ FT_BEGIN_HEADER
   /*    Don't embolden the bitmap owned by a @FT_GlyphSlot directly!  Call */
   /*    @FT_Bitmap_Copy to get a copy and work on the copy instead.        */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )
+  FT_EXPORT( FT_Error )
   FT_Bitmap_Embolden( FT_Library  library,
                       FT_Bitmap*  bitmap,
                       FT_Pos      xStrength,
