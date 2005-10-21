@@ -1,22 +1,25 @@
 2005-10-20  David Turner  <david@freetype.org>
 
-  * src/base/ftdbgmem.c: fixes to better account for memory reallocations
+	* src/base/ftdbgmem.c (ft_mem_table_set, ft_mem_table_remove,
+	ft_mem_debug_alloc, ft_mem_debug_free, ft_mem_debug_realloc): Fixes
+	to better account for memory reallocations.
 
-  * src/lzw/ftlzw2.c, src/lzw/ftzopen.h, src/lzw/ftzopen.c, src/lzw/rules.mk:
-    first version of LZW loader re-implementation. Apparently, saves about
-    260 KB of heap memory when loading timR24.pcf.Z
+	* src/lzw/ftlzw2.c, src/lzw/ftzopen.h, src/lzw/ftzopen.c,
+	src/lzw/rules.mk: First version of LZW loader re-implementation. 
+	Apparently, this saves about 260 KB of heap memory when loading
+	timR24.pcf.Z.
 
 2005-10-20  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* include/freetype/ftbitmap.h (FT_Bitmap_Copy, FT_Bitmap_Embolden),
 	src/base/ftbdf.c (FT_Get_BDF_Property), src/cache/ftcmru.c
-	(FTC_MruList_Reset, FTC_MruList_Done, FTC_MruList_Lookup): Misuse of
-	FT_EXPORT/FT_EXPORT_DEF.
+	(FTC_MruList_Reset, FTC_MruList_Done, FTC_MruList_Lookup): Fix
+	FT_EXPORT/FT_EXPORT_DEF tagging.
 
 2005-10-19  Chia-I Wu  <b90201047@ntu.edu.tw>
 
-	* src/truetype/ttgload.c (TT_Load_Glyph): Allow size->ttmetrics to be
-	invalid when FT_LOAD_NO_SCALE is set.
+	* src/truetype/ttgload.c (TT_Load_Glyph): Allow size->ttmetrics to
+	be invalid when FT_LOAD_NO_SCALE is set.
 
 2005-10-17  David Turner  <david@freetype.org>
 

@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftlzw.c                                                                */
+/*  ftlzw2.c                                                               */
 /*                                                                         */
-/*    FreeType support for .Z compressed files.                            */
+/*    FreeType support for .Z compressed files (reimplementation).         */
 /*                                                                         */
 /*  This optional component relies on NetBSD's zopen().  It should mainly  */
 /*  be used to parse compressed PCF fonts, as found with many X11 server   */

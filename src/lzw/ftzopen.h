@@ -1,3 +1,23 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftzopen.h                                                              */
+/*                                                                         */
+/*    FreeType support for .Z compressed files.                            */
+/*                                                                         */
+/*  This optional component relies on NetBSD's zopen().  It should mainly  */
+/*  be used to parse compressed PCF fonts, as found with many X11 server   */
+/*  distributions.                                                         */
+/*                                                                         */
+/*  Copyright 2005 by David Turner.                                        */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 #ifndef __FT_ZOPEN_H__
 #define __FT_ZOPEN_H__
 

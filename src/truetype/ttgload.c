@@ -2020,7 +2020,7 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    /* if FT_LOAD_NO_SCALE is not set, ttmetirc must be valid */
+    /* if FT_LOAD_NO_SCALE is not set, `ttmetrics' must be valid */
     if ( !( load_flags & FT_LOAD_NO_SCALE ) && !size->ttmetrics.valid )
       return TT_Err_Invalid_Size_Handle;
 
@@ -2062,7 +2062,8 @@
     /* This is _critical_ to get correct output for monochrome      */
     /* TrueType glyphs at all sizes using the bytecode interpreter. */
     /*                                                              */
-    if ( !( load_flags & FT_LOAD_NO_SCALE ) && size->root.metrics.y_ppem < 24 )
+    if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
+         size->root.metrics.y_ppem < 24     )
       glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
     return error;
