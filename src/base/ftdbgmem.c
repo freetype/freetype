@@ -554,12 +554,14 @@
       if ( delta != 0 )
       {
         /* we're growing or shrinking a realloc-ed block */
-        source->cur_size += delta;
+        source->cur_size     += delta;
+        table->alloc_current += delta;
       }
       else
       {
         /* we're allocating a new block */
-        source->cur_size += size;
+        source->cur_size     += size;
+        table->alloc_current += size;
       }
 
       source->all_size += size;
@@ -575,16 +577,8 @@
       pnode[0] = node;
       table->nodes++;
 
-      if ( delta != 0 )
-      {
-        table->alloc_total   += size;
-        table->alloc_current += delta;
-      }
-      else
-      {
-        table->alloc_total   += size;
-        table->alloc_current += size;
-      }
+      table->alloc_total += size;
+
       if ( table->alloc_current > table->alloc_max )
         table->alloc_max = table->alloc_current;
 
@@ -742,6 +736,10 @@
     FT_Long      line_no   = table->line_no;
 
 
+    /* unlikely, but possible */
+    if ( new_size == cur_size )
+      return block;
+
     /* the following is valid according to ANSI C */
 #if 0
     if ( block == NULL || cur_size == 0 )
@@ -774,19 +772,6 @@
                           "%ld instead of %ld in (%s:%ld)",
                           block, cur_size, node->size, file_name, line_no );
 
-#if 0
-    new_block = ft_mem_debug_alloc( memory, new_size );
-    if ( new_block == NULL )
-      return NULL;
-
-    ft_memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
-
-    table->file_name = file_name;
-    table->line_no   = line_no;
-
-    ft_mem_debug_free( memory, (FT_Byte*)block );
-
-#else
     /* return NULL if the maximum number of allocations was reached */
     if ( table->bound_count                           &&
          table->alloc_count >= table->alloc_count_max )
@@ -806,22 +791,15 @@
 
     ft_mem_table_set( table, new_block, new_size, delta );
 
-    table->file_name = NULL;
-    table->line_no   = 0;
-
     ft_memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
-
-    table->file_name = file_name;
-    table->line_no   = line_no;
 
     ft_mem_table_remove( table, (FT_Byte*)block, delta );
 
+    table->file_name = NULL;
+    table->line_no   = 0;
+
     if ( !table->keep_alive )
       ft_mem_table_free( table, block );
-
-    table->alloc_current += delta;
-
-#endif
 
     return new_block;
   }

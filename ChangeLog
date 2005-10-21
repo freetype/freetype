@@ -1,3 +1,11 @@
+2005-10-21  David Turner  <david@freetype.org>
+
+  * src/base/ftdbgmem.c: another realloc memory counting bug fix
+
+  * src/tools/Jamfile: adding missing file
+
+  * src/lzw/Jamfile: fixing incorrect source file reference
+
 2005-10-20  David Turner  <david@freetype.org>
 
 	* src/base/ftdbgmem.c (ft_mem_table_set, ft_mem_table_remove,
@@ -5,8 +13,8 @@
 	to better account for memory reallocations.
 
 	* src/lzw/ftlzw2.c, src/lzw/ftzopen.h, src/lzw/ftzopen.c,
-	src/lzw/rules.mk: First version of LZW loader re-implementation. 
-	Apparently, this saves about 260 KB of heap memory when loading
+	src/lzw/rules.mk: First version of LZW loader re-implementation.
+	Apparently, this saves about 330 KB of heap memory when loading
 	timR24.pcf.Z.
 
 2005-10-20  Chia-I Wu  <b90201047@ntu.edu.tw>

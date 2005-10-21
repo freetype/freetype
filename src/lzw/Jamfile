@@ -11,7 +11,7 @@
 
 SubDir  FT2_TOP $(FT2_SRC_DIR) lzw ;
 
-Library  $(FT2_LIB) : ftlzw.c ;
+Library  $(FT2_LIB) : ftlzw2.c ;
 
 # end of src/lzw Jamfile
 
