@@ -1,10 +1,11 @@
 2005-10-21  David Turner  <david@freetype.org>
 
-  * src/base/ftdbgmem.c: another realloc memory counting bug fix
+	* src/base/ftdbgmem.c (ft_mem_table_set, ft_mem_debug_realloc):
+	Another realloc memory counting bug fix.
 
-  * src/tools/Jamfile: adding missing file
+	* src/tools/Jamfile: Add missing file.
 
-  * src/lzw/Jamfile: fixing incorrect source file reference
+	* src/lzw/Jamfile: Fix incorrect source file reference.
 
 2005-10-20  David Turner  <david@freetype.org>
 
