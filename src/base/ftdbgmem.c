@@ -49,7 +49,7 @@
 #define FT_MEM_VAL( addr )  ((FT_ULong)(FT_Pointer)( addr ))
 
 
-  typedef struct FT_MemSourceRec_
+  typedef struct  FT_MemSourceRec_
   {
     const char*   file_name;
     long          line_no;
@@ -70,10 +70,10 @@
   } FT_MemSourceRec;
 
 
-/*
- *  We don't need a resizable array for the memory sources, because
- *  their number is pretty limited within FreeType.
- */
+  /*
+   *  We don't need a resizable array for the memory sources, because
+   *  their number is pretty limited within FreeType.
+   */
 #define FT_MEM_SOURCE_BUCKETS  128
 
 
@@ -133,10 +133,10 @@
 #define FT_FILENAME( x )  ((x) ? (x) : "unknown file")
 
 
- /*
-  *  Prime numbers are ugly to handle.  It would be better to implement
-  *  L-Hashing, which is 10% faster and doesn't require divisions.
-  */
+  /*
+   *  Prime numbers are ugly to handle.  It would be better to implement
+   *  L-Hashing, which is 10% faster and doesn't require divisions.
+   */
   static const FT_UInt  ft_mem_primes[] =
   {
     7,
@@ -222,7 +222,7 @@
     block = table->alloc( memory, size );
     memory->user = table;
 
-   return block;
+    return block;
   }
 
 
@@ -338,8 +338,9 @@
 
     if ( table )
     {
-      FT_Long    leak_count = 0;
-      FT_ULong   leaks = 0;
+      FT_Long   leak_count = 0;
+      FT_ULong  leaks      = 0;
+
 
       /* remove all blocks from the table, revealing leaked ones */
       for ( i = 0; i < table->size; i++ )
@@ -378,8 +379,8 @@
       ft_mem_table_free( table, table->buckets );
       table->buckets = NULL;
 
-      table->size   = 0;
-      table->nodes  = 0;
+      table->size  = 0;
+      table->nodes = 0;
 
       /* remove all sources */
       for ( i = 0; i < FT_MEM_SOURCE_BUCKETS; i++ )
@@ -553,13 +554,13 @@
 
       if ( delta != 0 )
       {
-        /* we're growing or shrinking a realloc-ed block */
+        /* we are growing or shrinking a reallocated block */
         source->cur_size     += delta;
         table->alloc_current += delta;
       }
       else
       {
-        /* we're allocating a new block */
+        /* we are allocating a new block */
         source->cur_size     += size;
         table->alloc_current += size;
       }
