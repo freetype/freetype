@@ -61,17 +61,17 @@
 /***************************************************************************/
 /***************************************************************************/
 
-#define  FT_LZW_BUFFER_SIZE  4096
+#define FT_LZW_BUFFER_SIZE  4096
 
-  typedef struct FT_LZWFileRec_
+  typedef struct  FT_LZWFileRec_
   {
     FT_Stream       source;         /* parent/source stream        */
     FT_Stream       stream;         /* embedding stream            */
     FT_Memory       memory;         /* memory allocator            */
     FT_LzwStateRec  lzw;            /* lzw decompressor state      */
 
-    FT_Byte         buffer[ FT_LZW_BUFFER_SIZE ]; /* output buffer */
-    FT_ULong        pos;                          /* position in output */
+    FT_Byte         buffer[FT_LZW_BUFFER_SIZE]; /* output buffer      */
+    FT_ULong        pos;                        /* position in output */
     FT_Byte*        cursor;
     FT_Byte*        limit;
 
@@ -90,7 +90,7 @@
          FT_STREAM_READ( head, 2 ) )
       goto Exit;
 
-    /* head[0] && head[1] are the magic numbers     */
+    /* head[0] && head[1] are the magic numbers */
     if ( head[0] != 0x1f ||
          head[1] != 0x9d )
       error = LZW_Err_Invalid_File_Format;
@@ -194,10 +194,11 @@
   {
     FT_Error  error = LZW_Err_Ok;
 
-   /* first, we skip what we can from the output buffer
-    */
+
+    /* first, we skip what we can from the output buffer */
     {
       FT_ULong  delta = (FT_ULong)( zip->limit - zip->cursor );
+
 
       if ( delta >= count )
         delta = count;
@@ -208,12 +209,12 @@
       count -= delta;
     }
 
-   /* next, we skip as many bytes remaining as possible
-    */
+    /* next, we skip as many bytes remaining as possible */
     while ( count > 0 )
     {
       FT_ULong  delta = FT_LZW_BUFFER_SIZE;
       FT_ULong  numread;
+
 
       if ( delta > count )
         delta = count;
@@ -247,12 +248,11 @@
     /* seeking backwards. */
     if ( pos < zip->pos )
     {
-     /* if the new position is within the output buffer, simply
-      * decrement pointers, otherwise, we'll reset the stream completely !!
-      */
-      if ( (zip->pos - pos) <= (FT_ULong)(zip->cursor - zip->buffer) )
+      /* If the new position is within the output buffer, simply       */
+      /* decrement pointers, otherwise we reset the stream completely! */
+      if ( ( zip->pos - pos ) <= (FT_ULong)( zip->cursor - zip->buffer ) )
       {
-        zip->cursor -= (zip->pos - pos);
+        zip->cursor -= zip->pos - pos;
         zip->pos     = pos;
       }
       else
@@ -353,11 +353,11 @@
 
 
     /*
-     *  Check the header right now; this prevents allocation a huge
+     *  Check the header right now; this prevents allocation of a huge
      *  LZWFile object (400 KByte of heap memory) if not necessary.
      *
      *  Did I mention that you should never use .Z compressed font
-     *  file?
+     *  files?
      */
     error = ft_lzw_check_header( source );
     if ( error )
@@ -387,6 +387,7 @@
   Exit:
     return error;
   }
+
 
 #include "ftzopen.c"
 
