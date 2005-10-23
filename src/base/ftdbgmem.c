@@ -790,7 +790,7 @@
     if ( new_block == NULL )
       return NULL;
 
-    ft_mem_table_set( table, new_block, new_size, delta );
+    ft_mem_table_set( table, (FT_Byte*)new_block, new_size, delta );
 
     ft_memcpy( new_block, block, cur_size < new_size ? cur_size : new_size );
 

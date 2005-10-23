@@ -1,3 +1,8 @@
+2005-10-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftdbgmem.c (ft_mem_debug_realloc): Make it compile with
+	C++.
+
 2005-10-21  David Turner  <david@freetype.org>
 
 	* src/base/ftdbgmem.c (ft_mem_table_set, ft_mem_debug_realloc):
