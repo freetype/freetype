@@ -2728,7 +2728,7 @@ FT_BEGIN_HEADER
   /*    face     :: A handle to the source face object.                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    encoding :: A handle to the selected charmap.                      */
+  /*    encoding :: A handle to the selected encoding.                     */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
