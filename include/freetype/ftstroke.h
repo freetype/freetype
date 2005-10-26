@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType path stroker (specification).                               */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004 by                                          */
+/*  Copyright 2002, 2003, 2004, 2005 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -29,16 +29,16 @@ FT_BEGIN_HEADER
 
  /************************************************************************
   *
-  * <Section>
+  * @section:
   *    glyph_stroker
   *
-  * <Title>
+  * @title:
   *    Glyph Stroker
   *
-  * <Abstract>
+  * @abstract:
   *    Generating bordered and stroked glyphs.
   *
-  * <Description>
+  * @description:
   *    This component generates stroked outlines of a given vectorial
   *    glyph.  It also allows you to retrieve the `outside' and/or the
   *    `inside' borders of the stroke.
