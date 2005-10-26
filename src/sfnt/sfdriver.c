@@ -383,10 +383,10 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-
     /* see `ttkern.h' */
     tt_face_get_kerning,
+
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
     /* see `ttpost.h' */
     tt_face_get_ps_name,

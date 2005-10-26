@@ -1,3 +1,9 @@
+2005-10-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfdriver.c (sfnt_interface): Move out
+	`tt_face_get_kerning' from a #ifdef clause.  Reported by Tony J.
+	Ibbs <tibs@sj.co.uk>.
+
 2005-10-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftdbgmem.c (ft_mem_debug_realloc): Make it compile with
