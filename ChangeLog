@@ -1,3 +1,8 @@
+2005-10-27  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftsysmem.h, include/freetype/ftsysio.h: Removed.
+	Obsolete.
+
 2005-10-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfdriver.c (sfnt_interface): Move out

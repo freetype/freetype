@@ -473,65 +473,74 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*************************************************************************/
 
-  /************************************************************************
+  /*************************************************************************
    *
    * @type:
-   *    FTC_CMapCache
+   *   FTC_CMapCache
    *
    * @description:
-   *    An opaque handle used to manager a charmap cache.  This cache is
-   *    to hold character codes -> glyph indices mappings.
+   *   An opaque handle used to manager a charmap cache.  This cache is to
+   *   hold character codes -> glyph indices mappings.
+   *
    */
   typedef struct FTC_CMapCacheRec_*  FTC_CMapCache;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* @function:                                                            */
-  /*    FTC_CMapCache_New                                                  */
-  /*                                                                       */
-  /* @description:                                                         */
-  /*    Create a new charmap cache.                                        */
-  /*                                                                       */
-  /* @input:                                                               */
-  /*    manager :: A handle to the cache manager.                          */
-  /*                                                                       */
-  /* @output:                                                              */
-  /*    acache  :: A new cache handle.  NULL in case of error.             */
-  /*                                                                       */
-  /* @return:                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* @note:                                                                */
-  /*    Like all other caches, this one will be destroyed with the cache   */
-  /*    manager.                                                           */
-  /*                                                                       */
+  /*************************************************************************
+   *
+   * @function:
+   *   FTC_CMapCache_New
+   *
+   * @description:
+   *   Create a new charmap cache.
+   *
+   * @input:
+   *   manager ::
+   *     A handle to the cache manager.
+   *
+   * @output:
+   *   acache ::
+   *     A new cache handle.  NULL in case of error.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   *
+   * @note:
+   *   Like all other caches, this one will be destroyed with the cache
+   *   manager.
+   *
+   */
   FT_EXPORT( FT_Error )
   FTC_CMapCache_New( FTC_Manager     manager,
                      FTC_CMapCache  *acache );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* @function:                                                            */
-  /*    FTC_CMapCache_Lookup                                               */
-  /*                                                                       */
-  /* @description:                                                         */
-  /*    Translate a character code into a glyph index, using the charmap   */
-  /*    cache.                                                             */
-  /*                                                                       */
-  /* @input:                                                               */
-  /*    cache      :: A charmap cache handle.                              */
-  /*                                                                       */
-  /*    face_id    :: The source face ID.                                  */
-  /*                                                                       */
-  /*    cmap_index :: The index of the charmap in the source face.         */
-  /*                                                                       */
-  /*    char_code  :: The character code (in the corresponding charmap).   */
-  /*                                                                       */
-  /* @return:                                                              */
-  /*    Glyph index.  0 means `no glyph'.                                  */
-  /*                                                                       */
+  /************************************************************************
+   *
+   * @function:
+   *   FTC_CMapCache_Lookup
+   *
+   * @description:
+   *   Translate a character code into a glyph index, using the charmap
+   *   cache.
+   *
+   * @input:
+   *   cache ::
+   *     A charmap cache handle.
+   *
+   *   face_id ::
+   *     The source face ID.
+   *
+   *   cmap_index ::
+   *     The index of the charmap in the source face.
+   *
+   *   char_code ::
+   *     The character code (in the corresponding charmap).
+   *
+   * @return:
+   *    Glyph index.  0 means `no glyph'.
+   *
+   */
   FT_EXPORT( FT_UInt )
   FTC_CMapCache_Lookup( FTC_CMapCache  cache,
                         FTC_FaceID     face_id,
@@ -559,10 +568,10 @@ FT_BEGIN_HEADER
 
   typedef struct  FTC_ImageTypeRec_
   {
-    FTC_FaceID   face_id;
-    FT_Int       width;
-    FT_Int       height;
-    FT_Int32     flags;
+    FTC_FaceID  face_id;
+    FT_Int      width;
+    FT_Int      height;
+    FT_Int32    flags;
 
   } FTC_ImageTypeRec;
 
