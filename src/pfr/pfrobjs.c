@@ -422,8 +422,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#ifdef FT_OPTIMIZE_MEMORY
-
   FT_LOCAL_DEF( FT_Error )
   pfr_face_get_kerning( FT_Face     pfrface,        /* PFR_Face */
                         FT_UInt     glyph1,
@@ -545,52 +543,5 @@
   Exit:
     return error;
   }
-
-#else /* !FT_OPTIMIZE_MEMORY */
-
-  FT_LOCAL_DEF( FT_Error )
-  pfr_face_get_kerning( FT_Face     pfrface,        /* PFR_Face */
-                        FT_UInt     glyph1,
-                        FT_UInt     glyph2,
-                        FT_Vector*  kerning )
-  {
-    PFR_Face      face     = (PFR_Face)pfrface;
-    FT_Error      error    = PFR_Err_Ok;
-    PFR_PhyFont   phy_font = &face->phy_font;
-    PFR_KernPair  pairs    = phy_font->kern_pairs;
-    FT_UInt32     idx      = PFR_KERN_INDEX( glyph1, glyph2 );
-    FT_UInt       min, max;
-
-
-    kerning->x = 0;
-    kerning->y = 0;
-
-    min = 0;
-    max = phy_font->num_kern_pairs;
-
-    while ( min < max )
-    {
-      FT_UInt       mid  = ( min + max ) >> 1;
-      PFR_KernPair  pair = pairs + mid;
-      FT_UInt32     pidx = PFR_KERN_PAIR_INDEX( pair );
-
-
-      if ( pidx == idx )
-      {
-        kerning->x = pair->kerning;
-        break;
-      }
-
-      if ( pidx < idx )
-        min = mid + 1;
-      else
-        max = mid;
-    }
-
-    return error;
-  }
-
-#endif /* !FT_OPTIMIZE_MEMORY */
-
 
 /* END */

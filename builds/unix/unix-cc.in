@@ -90,11 +90,16 @@ CC    := $(LIBTOOL) --mode=compile $(CCraw)
 LDFLAGS := @LDFLAGS@
 
 
+# export symbols (XXX: HOW TO DEAL WITH CROSS COMPILATION ?)
+#
+EXPORTS_LIST := $(OBJ_DIR)/ftexport.sym
+CCexe        := $(CCraw)   # used to compile "apinames" only
+
+
 # Library linking
 #
 LINK_LIBRARY = $(LIBTOOL) --mode=link $(CCraw) -o $@ $(OBJECTS_LIST) \
                           -rpath $(libdir) -version-info $(version_info) \
-                          $(LDFLAGS)
-
+                          $(LDFLAGS) -export-symbols $(EXPORTS_LIST)
 
 # EOF

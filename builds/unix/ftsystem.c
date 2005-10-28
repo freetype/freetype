@@ -280,27 +280,27 @@
     else
     {
       ssize_t  total_read_count;
-    
+
 
       FT_ERROR(( "FT_Stream_Open:" ));
       FT_ERROR(( " could not `mmap' file `%s'\n", filepathname ));
-      
+
       stream->base = (unsigned char*)ft_alloc( NULL, stream->size );
-      
+
       if ( !stream->base )
       {
         FT_ERROR(( "FT_Stream_Open:" ));
         FT_ERROR(( " could not `alloc' memory\n" ));
         goto Fail_Map;
       }
-      
+
       total_read_count = 0;
       do {
         ssize_t  read_count;
 
 
-        read_count = read( file, 
-                           stream->base + total_read_count, 
+        read_count = read( file,
+                           stream->base + total_read_count,
                            stream->size - total_read_count );
 
         if ( ( read_count == -1 ) )

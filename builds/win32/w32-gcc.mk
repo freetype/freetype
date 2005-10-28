@@ -12,6 +12,11 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
+# default definitions of the export list
+#
+EXPORTS_LIST      = $(OBJ_DIR)/freetype.def
+EXPORTS_OPTIONS   = $(EXPORTS_LIST)
+APINAMES_OPTIONS := -dfreetype.dll -w
 
 # include Win32-specific definitions
 include $(TOP_DIR)/builds/win32/win32-def.mk

@@ -19,6 +19,10 @@ BUILD_DIR := $(TOP_DIR)/builds/dos
 PLATFORM  := dos
 
 
+# The executable file extension (for tools). NOTE: WE INCLUDE THE DOT HERE !!
+#
+E := .exe
+
 # The directory where all object files are placed.
 #
 # This lets you build the library in your own directory with something like

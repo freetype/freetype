@@ -51,5 +51,4 @@ LIB_DIR := $(OBJ_DIR)
 
 NO_OUTPUT := 2> /dev/null
 
-
 # EOF

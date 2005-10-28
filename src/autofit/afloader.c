@@ -138,9 +138,9 @@
 
       /* copy the outline points in the loader's current               */
       /* extra points which is used to keep original glyph coordinates */
-      error = FT_GlyphLoader_CheckPoints( gloader,
-                                          slot->outline.n_points + 4,
-                                          slot->outline.n_contours );
+      error = FT_GLYPHLOADER_CHECK_POINTS( gloader,
+                                           slot->outline.n_points + 4,
+                                           slot->outline.n_contours );
       if ( error )
         goto Exit;
 

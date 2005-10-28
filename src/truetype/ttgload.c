@@ -420,7 +420,7 @@
 
 
     /* check that we can add the contours to the glyph */
-    error = FT_GlyphLoader_CheckPoints( gloader, 0, n_contours );
+    error = FT_GLYPHLOADER_CHECK_POINTS( gloader, 0, n_contours );
     if ( error )
       goto Fail;
 
@@ -441,7 +441,7 @@
       n_points = cont[-1] + 1;
 
     /* note that we will add four phantom points later */
-    error = FT_GlyphLoader_CheckPoints( gloader, n_points + 4, 0 );
+    error = FT_GLYPHLOADER_CHECK_POINTS( gloader, n_points + 4, 0 );
     if ( error )
       goto Fail;
 
@@ -1106,9 +1106,9 @@
     outline = &loader->gloader->base.outline;
 
     /* make room for phantom points */
-    error = FT_GlyphLoader_CheckPoints( loader->gloader,
-                                        outline->n_points + 4,
-                                        0 );
+    error = FT_GLYPHLOADER_CHECK_POINTS( loader->gloader,
+                                         outline->n_points + 4,
+                                         0 );
     if ( error )
       return error;
 

@@ -142,6 +142,9 @@ FT_COMPILE = $(CC) $(ANSIFLAGS) $(FT_CFLAGS)
 #
 include $(TOP_DIR)/builds/modules.mk
 
+# Includes the 'exports' rules file.
+#
+include $(TOP_DIR)/builds/exports.mk
 
 # Initialize the list of objects.
 #
@@ -247,6 +250,8 @@ objects: $(OBJECTS_LIST)
 
 library: $(PROJECT_LIBRARY)
 
+dll: $(PROJECT_LIBRARY) exported_symbols
+
 .c.$O:
 	$(FT_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
@@ -283,7 +288,7 @@ distclean_project_std: clean_project_std
 # working correctly on Win9x.
 #
 clean_project_dos:
-	-$(DELETE) $(subst /,\,$(OBJ)/*.$O $(CLEAN) $(NO_OUTPUT))
+	-$(DELETE) $(subst /,\,$(OBJ_DIR)/*.$O $(CLEAN) $(NO_OUTPUT))
 
 distclean_project_dos: clean_project_dos
 	-$(DELETE) $(subst /,\,$(PROJECT_LIBRARY) $(DISTCLEAN) $(NO_OUTPUT))

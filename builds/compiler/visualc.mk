@@ -55,6 +55,9 @@ L := /Fl
 #
 T := /Fo
 
+# Target executable flag
+#
+TE := /Fe
 
 # C flags
 #

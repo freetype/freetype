@@ -59,7 +59,7 @@ FT_BEGIN_HEADER
     FT_Int     arg1;
     FT_Int     arg2;
     FT_Matrix  transform;
-    
+
   } FT_SubGlyphRec;
 
 
@@ -116,6 +116,22 @@ FT_BEGIN_HEADER
   FT_GlyphLoader_CheckPoints( FT_GlyphLoader  loader,
                               FT_UInt         n_points,
                               FT_UInt         n_contours );
+
+#define  FT_GLYPHLOADER_CHECK_P(_loader,_count)                         \
+   ( (_count) == 0 || (int)((_loader)->base.outline.n_points    +       \
+                            (_loader)->current.outline.n_points +       \
+                            (_count)) <= (int)(_loader)->max_points )
+
+#define  FT_GLYPHLOADER_CHECK_C(_loader,_count)                           \
+  ( (_count) == 0 || (int)((_loader)->base.outline.n_contours         +   \
+                           (_loader)->current.outline.n_contours      +   \
+                           (_count)) <= (int)(_loader)->max_contours )
+
+#define  FT_GLYPHLOADER_CHECK_POINTS(_loader,_points,_contours)       \
+  ( ( FT_GLYPHLOADER_CHECK_P(_loader,_points)   &&                    \
+      FT_GLYPHLOADER_CHECK_C(_loader,_contours) )                     \
+    ? 0                                                               \
+    : FT_GlyphLoader_CheckPoints( (_loader), (_points), (_contours) ) )
 
   /* check that there is enough space to add `n_subs' sub-glyphs to */
   /* a glyph loader                                                 */

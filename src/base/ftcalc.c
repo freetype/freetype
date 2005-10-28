@@ -394,6 +394,38 @@
   FT_MulFix( FT_Long  a,
              FT_Long  b )
   {
+#if 1
+    FT_Long   sa, sb;
+    FT_ULong  ua, ub;
+
+
+    if ( a == 0 || b == 0x10000L )
+      return a;
+
+    sa = (a >> (sizeof(a)*8 - 1)); a = (a^sa) - sa;
+    sb = (b >> (sizeof(b)*8 - 1)); b = (b^sb) - sb;
+
+    ua = (FT_ULong)a;
+    ub = (FT_ULong)b;
+
+    if ( ua <= 2048 && ub <= 1048576L )
+    {
+      ua = ( ua * ub + 0x8000 ) >> 16;
+    }
+    else
+    {
+      FT_ULong  al = ua & 0xFFFF;
+
+
+      ua = ( ua >> 16 ) * ub +  al * ( ub >> 16 ) +
+           ( ( al * ( ub & 0xFFFF ) + 0x8000 ) >> 16 );
+    }
+
+    sa ^= sb,
+    ua  = (FT_ULong)((ua ^ sa) - sa);
+
+    return (FT_Long)ua;
+#else
     FT_Long   s;
     FT_ULong  ua, ub;
 
@@ -421,6 +453,7 @@
     }
 
     return ( s < 0 ? -(FT_Long)ua : (FT_Long)ua );
+#endif
   }
 
 

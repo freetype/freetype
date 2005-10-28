@@ -155,12 +155,14 @@ SubInclude FT2_TOP $(FT2_SRC_DIR) tools ;
 
 rule GenExportSymbols
 {
-  local  headers = [ Glob $(2) : *.h ] ;
+  local  apinames = apinames$(SUFEXE) ;
+  local  headers  = [ Glob $(2) : *.h ] ;
 
   APINAMES on $(1) = apinames$(SUFEXE) ;
 
-  Depends            $(1) : $(headers) ;
+  Depends            $(1) : $(apinames) $(headers) ;
   GenExportSymbols1  $(1) : $(headers) ;
+  Clean              clean : $(1) ;
 }
 
 actions GenExportSymbols1 bind APINAMES

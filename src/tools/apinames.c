@@ -18,11 +18,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define  PROGRAM_NAME     "apinames"
 #define  PROGRAM_VERSION  "0.1"
 
 #define  LINEBUFF_SIZE  1024
+
+typedef enum
+{
+  OUTPUT_LIST = 0,      /* output the list of names, one per line             */
+  OUTPUT_WINDOWS_DEF,   /* output a Windows .DEF file for Visual C++ or Mingw */
+  OUTPUT_BORLAND_DEF,   /* output a Windows .DEF file for Borland C++         */
+  OUTPUT_WATCOM_LBC     /* output a Watcom Linker Command File                */
+
+} OutputFormat;
+
 
 static void
 panic( const char*  message )
@@ -106,29 +117,75 @@ names_sort( void )
   qsort( the_names, (size_t)num_names, sizeof(the_names[0]), name_compare );
 }
 
+
 static void
-names_dump( FILE*  out )
+names_dump( FILE*         out,
+            OutputFormat  format,
+            const char*   dll_name )
 {
   int  nn;
 
-  for ( nn = 0; nn < num_names; nn++ )
-    fprintf( out, "%s\n", the_names[nn].name );
+  switch ( format )
+  {
+    case OUTPUT_WINDOWS_DEF:
+      if ( dll_name )
+        fprintf( out, "LIBRARY %s\n", dll_name );
+
+      fprintf( out, "DESCRIPTION  FreeType 2 DLL\n" );
+      fprintf( out, "EXPORTS\n" );
+      for ( nn = 0; nn < num_names; nn++ )
+        fprintf( out, "  %s\n", the_names[nn].name );
+      break;
+
+    case OUTPUT_BORLAND_DEF:
+      if ( dll_name )
+        fprintf( out, "LIBRARY %s\n", dll_name );
+
+      fprintf( out, "DESCRIPTION  FreeType 2 DLL\n" );
+      fprintf( out, "EXPORTS\n" );
+      for ( nn = 0; nn < num_names; nn++ )
+        fprintf( out, "  _%s\n", the_names[nn].name );
+      break;
+
+    case OUTPUT_WATCOM_LBC:
+      {
+        /* we must omit the .dll suffix from the library name */
+        char   temp[512];
+        char*  dot;
+
+        if ( dll_name == NULL )
+        {
+          fprintf( stderr,
+                   "you must provide a DLL name with the -d option !!\n" );
+          exit(4);
+        }
+
+        dot = strchr( dll_name, '.' );
+        if ( dot != NULL )
+        {
+          int  len = (dot - dll_name);
+          if ( len > sizeof(temp)-1 )
+            len = sizeof(temp)-1;
+
+          memcpy( temp, dll_name, len );
+          temp[len] = 0;
+
+          dll_name = (const char*)temp;
+        }
+
+        for ( nn = 0; nn < num_names; nn++ )
+          fprintf( out, "++_%s.%s.%s\n", the_names[nn].name, dll_name,
+                        the_names[nn].name );
+      }
+      break;
+
+    default:  /* LIST */
+      for ( nn = 0; nn < num_names; nn++ )
+        fprintf( out, "%s\n", the_names[nn].name );
+  }
 }
 
 
-static void
-names_dump_windef( FILE*  out )
-{
-  int  nn;
-
- /* note that we assume that __cdecl was used when compiling the
-  * DLL object files.
-  */
-  fprintf( out, "DESCRIPTION  FreeType 2 DLL\n" );
-  fprintf( out, "EXPORTS\n" );
-  for ( nn = 0; nn < num_names; nn++ )
-    fprintf( out, "  %s\n", the_names[nn].name );
-}
 
 
 /* states of the line parser */
@@ -202,7 +259,7 @@ read_header_file( FILE*  file, int  verbose )
           char*   name = p;
           size_t  func_len;
 
-          while ( isalpha(*p) || *p == '_' )
+          while ( isalnum(*p) || *p == '_' )
             p++;
 
           if ( p > name )
@@ -240,9 +297,14 @@ usage( void )
 
            "usage: %s header1 [options] [header2 ...]\n\n"
 
-           "options:   -  : parse the content of stdin, ignore arguments\n"
-           "           -v : verbose mode\n",
-           "           -w : output windows .DEF file\n"
+           "options:   -      : parse the content of stdin, ignore arguments\n"
+           "           -v     : verbose mode, output sent to standard error\n",
+           "           -oFILE : write output to FILE instead of standard output\n"
+           "           -dNAME : indicate DLL file name, 'freetype.dll' by default\n"
+           "           -w     : output .DEF file for Visual C++ and Mingw\n"
+           "           -wB    : output .DEF file for Borland C++\n"
+           "           -wW    : output Watcom Linker Response File\n"
+           "\n"
            ,
            PROGRAM_NAME,
            PROGRAM_VERSION,
@@ -254,9 +316,11 @@ usage( void )
 
 int  main( int argc, const char* const*  argv )
 {
-  int  from_stdin = 0;
-  int  verbose = 0;
-  int  do_win_def = 0;
+  int           from_stdin = 0;
+  int           verbose = 0;
+  OutputFormat  format = OUTPUT_LIST;  /* the default */
+  FILE*         out    = stdout;
+  const char*   library_name = NULL;
 
   if ( argc < 2 )
     usage();
@@ -264,14 +328,69 @@ int  main( int argc, const char* const*  argv )
   /* '-' used as a single argument means read source file from stdin */
   while ( argc > 1 && argv[1][0] == '-' )
   {
-    switch ( argv[1][1] )
+    const char*  arg = argv[1];
+
+    switch ( arg[1] )
     {
       case 'v':
         verbose = 1;
         break;
 
+      case 'o':
+        if ( arg[2] == 0 )
+        {
+          if ( argc < 2 )
+            usage();
+
+          arg = argv[2];
+          argv++;
+          argc--;
+        }
+        else
+          arg += 2;
+
+        out = fopen( arg, "wt" );
+        if ( out == NULL )
+        {
+          fprintf( stderr, "could not open '%s' for writing\n", argv[2] );
+          exit(3);
+        }
+        break;
+
+      case 'd':
+        if ( arg[2] == 0 )
+        {
+          if ( argc < 2 )
+            usage();
+
+          arg = argv[2];
+          argv++;
+          argc--;
+        }
+        else
+          arg += 2;
+
+        library_name = arg;
+        break;
+
       case 'w':
-        do_win_def = 1;
+        format = OUTPUT_WINDOWS_DEF;
+        switch ( arg[2] )
+        {
+          case 'B':
+            format = OUTPUT_BORLAND_DEF;
+            break;
+
+          case 'W':
+            format = OUTPUT_WATCOM_LBC;
+            break;
+
+          case 0:
+            break;
+
+          default:
+            usage();
+        }
         break;
 
       case 0:
@@ -313,11 +432,10 @@ int  main( int argc, const char* const*  argv )
     panic( "could not find exported functions !!\n" );
 
   names_sort();
+  names_dump( out, format, library_name );
 
-  if ( do_win_def )
-    names_dump_windef( stdout );
-  else
-    names_dump( stdout );
+  if ( out != stdout )
+    fclose( out );
 
   return 0;
 }

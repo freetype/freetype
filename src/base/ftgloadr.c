@@ -195,7 +195,7 @@
     FT_Error     error   = FT_Err_Ok;
     FT_Outline*  base    = &loader->base.outline;
     FT_Outline*  current = &loader->current.outline;
-    FT_Bool      adjust  = 1;
+    FT_Bool      adjust  = 0;
 
     FT_UInt      new_max, old_max;
 
