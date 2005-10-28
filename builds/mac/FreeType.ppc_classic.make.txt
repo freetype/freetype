@@ -1,0 +1,133 @@
+#   File:       FreeType.ppc_classic.make
+#   Target:     FreeType.ppc_classic
+#   Created:    Thursday, October 27, 2005 07:42:43 PM
+
+
+MAKEFILE        = FreeType.ppc_classic.make
+\xA5MondoBuild\xA5    = {MAKEFILE}  # Make blank to avoid rebuilds when makefile is modified
+
+ObjDir          = :objs:
+Includes        =  \xB6
+				  -ansi strict \xB6
+				  -includes unix \xB6
+				  -i :include: \xB6
+				  -i :src:
+
+Sym-PPC         = -sym off
+
+PPCCOptions     = {Includes} {Sym-PPC} 
+
+
+### Source Files ###
+
+SrcFiles        =  \xB6
+				  :src:base:ftsystem.c \xB6
+				  :src:base:ftdebug.c \xB6
+				  :src:base:ftinit.c \xB6
+				  :src:base:ftbase.c \xB6
+				  :src:base:ftglyph.c \xB6
+				  :src:base:ftmm.c \xB6
+				  :src:base:ftbbox.c \xB6
+				  :src:cache:ftcache.c \xB6
+				  :src:cff:cff.c \xB6
+				  :src:cid:type1cid.c \xB6
+				  :src:pcf:pcf.c \xB6
+				  :src:psaux:psaux.c \xB6
+				  :src:psnames:psmodule.c \xB6
+				  :src:sfnt:sfnt.c \xB6
+				  :src:smooth:smooth.c \xB6
+				  :src:truetype:truetype.c \xB6
+				  :src:type1:type1.c \xB6
+				  :src:winfonts:winfnt.c \xB6
+				  :src:base:ftmac.c
+
+
+### Object Files ###
+
+ObjFiles-PPC    =  \xB6
+				  "{ObjDir}ftsystem.c.x" \xB6
+				  "{ObjDir}ftdebug.c.x" \xB6
+				  "{ObjDir}ftinit.c.x" \xB6
+				  "{ObjDir}ftbase.c.x" \xB6
+				  "{ObjDir}ftglyph.c.x" \xB6
+				  "{ObjDir}ftmm.c.x" \xB6
+				  "{ObjDir}ftbbox.c.x" \xB6
+				  "{ObjDir}ftcache.c.x" \xB6
+				  "{ObjDir}cff.c.x" \xB6
+				  "{ObjDir}type1cid.c.x" \xB6
+				  "{ObjDir}pcf.c.x" \xB6
+				  "{ObjDir}psaux.c.x" \xB6
+				  "{ObjDir}psmodule.c.x" \xB6
+				  "{ObjDir}sfnt.c.x" \xB6
+				  "{ObjDir}smooth.c.x" \xB6
+				  "{ObjDir}truetype.c.x" \xB6
+				  "{ObjDir}type1.c.x" \xB6
+				  "{ObjDir}winfnt.c.x" \xB6
+				  "{ObjDir}ftmac.c.x"
+
+
+### Libraries ###
+
+LibFiles-PPC    = 
+
+
+### Default Rules ###
+
+.c.x  \xC4  .c  {\xA5MondoBuild\xA5}
+	{PPCC} {depDir}{default}.c -o {targDir}{default}.c.x {PPCCOptions}
+
+
+### Build Rules ###
+
+FreeType.ppc_classic    \xC4\xC4  FreeType.ppc_classic.o
+
+FreeType.ppc_classic.o  \xC4\xC4  {ObjFiles-PPC} {LibFiles-PPC} {\xA5MondoBuild\xA5}
+	PPCLink \xB6
+		-o {Targ} \xB6
+		{ObjFiles-PPC} \xB6
+		{LibFiles-PPC} \xB6
+		{Sym-PPC} \xB6
+		-mf -d \xB6
+		-t 'XCOF' \xB6
+		-c 'MPS ' \xB6
+		-xm l
+
+
+
+### Required Dependencies ###
+
+"{ObjDir}ftsystem.c.x"  \xC4  :src:base:ftsystem.c
+"{ObjDir}ftdebug.c.x"  \xC4  :src:base:ftdebug.c
+"{ObjDir}ftinit.c.x"  \xC4  :src:base:ftinit.c
+"{ObjDir}ftbase.c.x"  \xC4  :src:base:ftbase.c
+"{ObjDir}ftglyph.c.x"  \xC4  :src:base:ftglyph.c
+"{ObjDir}ftmm.c.x"  \xC4  :src:base:ftmm.c
+"{ObjDir}ftbbox.c.x"  \xC4  :src:base:ftbbox.c
+"{ObjDir}ftcache.c.x"  \xC4  :src:cache:ftcache.c
+"{ObjDir}cff.c.x"  \xC4  :src:cff:cff.c
+"{ObjDir}type1cid.c.x"  \xC4  :src:cid:type1cid.c
+"{ObjDir}pcf.c.x"  \xC4  :src:pcf:pcf.c
+"{ObjDir}psaux.c.x"  \xC4  :src:psaux:psaux.c
+"{ObjDir}psmodule.c.x"  \xC4  :src:psnames:psmodule.c
+"{ObjDir}sfnt.c.x"  \xC4  :src:sfnt:sfnt.c
+"{ObjDir}smooth.c.x"  \xC4  :src:smooth:smooth.c
+"{ObjDir}truetype.c.x"  \xC4  :src:truetype:truetype.c
+"{ObjDir}type1.c.x"  \xC4  :src:type1:type1.c
+"{ObjDir}winfnt.c.x"  \xC4  :src:winfonts:winfnt.c
+"{ObjDir}ftmac.c.x"  \xC4  :src:base:ftmac.c
+
+
+
+### Optional Dependencies ###
+### Build this target to generate "include file" dependencies. ###
+
+Dependencies  \xC4  $OutOfDate
+	MakeDepend \xB6
+		-append {MAKEFILE} \xB6
+		-ignore "{CIncludes}" \xB6
+		-objdir "{ObjDir}" \xB6
+		-objext .x \xB6
+		{Includes} \xB6
+		{SrcFiles}
+
+

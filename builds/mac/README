@@ -1,14 +1,217 @@
 This folder contains
 
-  . a Makefile for Apple MPW build environment (currently PPC only)
+  * Makefile skeltons for Apple MPW (Macintosh's Programmers Workshop)
 
-  . supporting code and CodeWarrior Pro 7 project files to build the
-    FreeType library.
+  * Python script to generate MPW makefile from skelton
 
-Notes:
-The library will be built as a static lib in the obj/ folder.
+  * Metrowerks CodeWarrior 9.0 project file in XML format
 
-Current maintainer: Leonard Rosenthol, <leonardr@lazerware.com>
-Originally prepared by Just van Rossum, <just@letterror.com>
+------------------------------------------------------------
+
+1. What is this
+---------------
+
+Files in this directory are designed to build FreeType
+running on classic MacOS. To build FreeType running on
+Mac OS X, build as the system is UNIX.
+
+However, Mac OS X is most useful to manipulate files in
+vanilla FreeType to fit classic MacOS.
+
+2. Requirement
+--------------
+
+You can use MPW: a free-charged developer environment
+by Apple, or CodeWarrior: a commercial developer
+environment by Metrowerks. GCC for MPW and Symantec
+"Think C" are not tested at present.
+
+
+  2-1. Apple MPW
+  --------------
+
+  Following C compilers are tested:
+
+      m68k target:	Apple SC  8.9.0d3e1
+      ppc  target:	Apple MrC 5.0.0d3c1
+
+  The final MPW-GM (official release on 1999/Dec) is too
+  old and cannot compile FreeType, because bundled C
+  compilers cannot search header files in sub directories.
+  Updating by the final MPW-PR (pre-release on 2001/Feb)
+  is required.
+
+  Required files are downloadable from:
+
+      http://developer.apple.com/tools/mpw-tools/index.html
+
+  Also you can find documents how to update by MPW-PR.
+
+  Python is required to restore MPW makefiles from the
+  skeltons. Python bundled to Mac OS X is enough. For
+  classic MacOS, MacPython is available:
+
+      http://homepages.cwi.nl/~jack/macpython/
+
+  MPW requires all files are typed by resource fork.
+  ResEdit bundled to MPW is enough. In Mac OS X,
+  /Developer/Tools/SetFile of DevTool is useful to
+  manipulate from commandline.
+
+  2-2. Metrowerks CodeWarriror
+  ----------------------------
+
+  XML project file is generated and tested by
+  CodeWarriror 9.0.  Older versions are not tested
+  at all. At present, static library for ppc target
+  is available in the project file.
+
+
+3. How to build
+---------------
+
+  3-1. Apple MPW
+  --------------
+  Detailed building procedure by Apple MPW is
+  described in following.
+
+    3-1-1. Generate MPW makefiles from the skeltons
+    ------------------------------------------------
+
+    Here are 4 skeltons for following targets are
+    included.
+
+    - FreeType.m68k_far.make.txt
+      Ancient 32bit binary executable format for
+      m68k MacOS: System 6, with 32bit addressing
+      mode (far-pointer-model) So-called "Toolbox"
+      API is used.
+
+    - FreeType.m68k_cfm.make.txt
+      CFM binary executable format for m68k MacOS:
+      System 7. So-called "Toolbox" API is used.
+
+    - FreeType.ppc_classic.make.txt
+      CFM binary executable format for ppc MacOS:
+      System 7, MacOS 8, MacOS 9. So-called "Toolbox"
+      API is used.
+
+    - FreeType.ppc_classic.make.txt
+      CFM binary executable format for ppc MacOS:
+      MacOS 9. Carbon API is used.
+
+    At present, static library is only supported,
+    although targets except of m68k_far are capatble
+    to use shared library.
+
+    MPW makefile syntax uses 8bit characters. To keep
+    from violating them during version control, here
+    we store skeltons in pure ASCII format. You must
+    generate MPW makefile by Python script ascii2mpw.py.
+
+    In Mac OS X terminal, you can convert as:
+
+	python builds/mac/ascii2mpw.py \
+		< builds/mac/FreeType.m68k_far.make.txt \
+		> FreeType.m68k_far.make
+
+    The skeltons are designed to use in the top
+    directory where there are builds, include, src etc.
+    You must name the generated MPW makefile by removing
+    ".txt" from source skelton name.
+
+    3-1-2. Add resource forks to related files
+    ------------------------------------------
+
+    MPW's Make and C compilers cannot recognize files
+    without resource fork. You have to add resource
+    fork to the files that MPW uses. In Mac OS X
+    terminal of the system, you can do as:
+
+	find . -name '*.[ch]' -exec \
+		/Developer/Tools/SetFile -a l -c "MPS " -t TEXT \{\} \;
+
+	find . -name '*.make' -exec \
+		/Developer/Tools/SetFile -a l -c "MPS " -t TEXT \{\} \;
+
+
+    3-1-3. Open MPW shell and build
+    -------------------------------
+
+    Open MPW shell and go to the top directory that
+    FreeType sources are extracted (MPW makefile must
+    be located in there), from "Set Directory" in
+    "Directory" menu.
+
+    Choose "Build" from "Build" menu, and type the
+    name of project by removing ".make" from MPW
+    makefile, as: FreeType.m68k_far
+
+    If building is successfully finished, you can find
+    built library in objs/ directory.
+
+
+  3-2. Metrowerks CodeWarrior
+  ---------------------------
+
+  Detailed building procedure by Metrowerks
+  CodeWarrior (CW) 9.0 is described in following.
+
+    3-2-1. Import XML project file
+    ------------------------------
+
+    CW XML project file is not ready for double-
+    click. Start CodeWarrior IDE, and choose
+    "Import project" in "File" menu. Choose XML
+    project file: builds/mac/ftlib.prj.xml.
+    In next, you will be asked where to save CW
+    native project file: you must choose
+    "builds/mac/ftlib.prj". The project file is
+    designed with relative path from there. After
+    CW native project file is generated, it is
+    automatically loaded, small project window
+    titled "ftlib.prj" is displayed.
+
+    3-2-2. Building
+    ---------------
+    Choose "Make" from "Project" menu. If building
+    is successfully finished, you can find built
+    library at objs/FreeTypeLib.
+
+4. TODO
+-------
+
+  4-1. All modules should be included
+  -----------------------------------
+
+  At present, MPW makefiles and CW project file are
+  just updated versions of these by Leonard. Some
+  modules are added after the last maintainance, they
+  are not included.
+	  
+  4-2. Working test with ftdemos
+  ------------------------------
+
+  At present, MPW makefiles and CW project file can
+  build FreeType for classic MacOS. But their working
+  behaviours are not tested at all. Buidling ftdemos
+  for classic MacOS and working test is required.
+
+  4-3. Porting Jam onto MPW
+  -------------------------
+
+  FreeType uses Jam (and FT-Jam) for unified cross-
+  platform building tool. At present, Jam is not ported
+  to MPW. To update classic MacOS support easily,
+  building by Jam is expected on MPW.
+
+------------------------------------------------------------
+Last update: 2005/10/28, by suzuki toshiya
+
+Currently maintained by
+	suzuki toshiya, <mpsuzuki@hiroshima-u.ac.jp>
+Originally prepared by
+	Leonard Rosenthol, <leonardr@lazerware.com>
+	Just van Rossum, <just@letterror.com>
 
 This directory is now actively maintained as part of the FreeType Project.
