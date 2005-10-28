@@ -1,3 +1,9 @@
+2005-10-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c: fix invalid casts from NULL to integer typed
+	variables. Advised by David Turner, Masatake YAMATO, Sean McBride
+	and George Williams.
+
 2005-10-27  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftsysmem.h, include/freetype/ftsysio.h: Removed.
