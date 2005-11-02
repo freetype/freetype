@@ -1,3 +1,42 @@
+2005-10-28  David Turner  <david@freetype.org>
+
+	* builds/exports.mk, builds/freetype.mk, builds/compiler/visualc.mk,
+	builds/dos/dos-def.mk, builds/os2/os2-def.mk, builds/unix/unix-cc.in,
+	builds/unix/unixddef.mk, builds/win32/w32-bcc.mk,
+	builds/win32/w32-gcc.mk, builds/win32/w32-icc.mk,
+	builds/win32/w32-intl.mk, builds/win32/w32-mingw32.mk,
+	builds/win32/w32-vcc.mk, builds/win32/w32-wat.mk,
+	builds/win32/w32-def.mk, Jamfile:
+
+	updating build system to support the generation of a list of exported
+	symbols or Windows .DEF files by parsing the public headers with the
+	"apinames" tool located in src/tools/apinames.c.
+
+	only tested on Unix at the moment. On Windows, the .DEF file is
+	generated but isn't used yet to generate a DLL
+
+        * src/pfr/pfrtypes.h, src/pfr/pfrobjs.h, src/pfr/pfrload.c,
+        src/pfr/pfrobjs.c, src/pfr/pfrgload.c:
+
+        * src/base/fttrigon.c (ft_trig_prenorm), src/base/ftcalc.c (FT_MulFix):
+        performance optimizations
+
+	* include/freetype/internal/ftgloader.h, src/base/ftgloader.h:
+	introductin the FT_GLYPHLOADER_CHECKXXXX macros, and fixed a small
+	bug within FT_GlyphLoader_CheckPoints which caused "AdjustPoints" to
+	be called everytime.
+
+	* src/autofit/afloader.c, src/truetype/ttgload.c: performance
+	optimization: used FT_GLYPHLOADER_CHECK_POINTS macro on
+	profile-detected hot-spots.
+
+	* src/autofit/aftypes.h: introducing AF_ANGLE_DIFF macro to inline
+	FT_Angle_Diff
+
+	* src/autofit/afhints.c (af_direction_compute): re-implement
+	"af_direction_compute", and use AF_ANGLE_DIFF to speed up the
+	detection of inflexions.
+
 2005-10-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/mac/ftlib.prj, builds/mac/freetype.mak: Removed.
