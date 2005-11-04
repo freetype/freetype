@@ -27,7 +27,8 @@
 	generated but isn't used yet to generate a DLL.
 
         * src/pfr/pfrtypes.h, src/pfr/pfrobjs.h, src/pfr/pfrload.c,
-        src/pfr/pfrobjs.c, src/pfr/pfrgload.c:
+        src/pfr/pfrobjs.c, src/pfr/pfrgload.c: integrated memory optimization
+        without FT_OPTIMIZE_MEMORY
 
         * src/base/fttrigon.c (ft_trig_prenorm), src/base/ftcalc.c
         (FT_MulFix): Performance optimizations.
