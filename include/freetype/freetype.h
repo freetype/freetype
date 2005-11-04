@@ -1939,7 +1939,9 @@ FT_BEGIN_HEADER
   /*                  first face has index 0.                              */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    aface      :: A handle to a new face object.                       */
+  /*    aface      :: A handle to a new face object.  If `face_index' is   */
+  /*                  greater than or equal to zero, it must be non-NULL.  */
+  /*                  See note below.                                      */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -1949,11 +1951,15 @@ FT_BEGIN_HEADER
   /*    slot for the face object which can be accessed directly through    */
   /*    `face->glyph'.                                                     */
   /*                                                                       */
-  /*    @FT_Open_Face can be used to determine and/or check the font       */
-  /*    format of a given font resource.  If the `face_index' field is     */
-  /*    negative, the function does _not_ return any face handle in        */
-  /*    `*aface'; the function's return value is 0 if the font format is   */
-  /*    recognized, or non-zero otherwise.                                 */
+  /*    @FT_Open_Face can be used to quickly check whether the font format */
+  /*    of a given font resource is supported by FreeType.  If the         */
+  /*    `face_index' field is negative, the function returns a more or     */
+  /*    less empty face handle in `*aface' (if `aface' isn't NULL); the    */
+  /*    function's return value is 0 if the font format is recognized, or  */
+  /*    non-zero otherwise.  The only useful field in this special case is */
+  /*    `face->num_faces' which gives the number of faces within the font  */
+  /*    file.  After examination, the returned @FT_Face structure should   */
+  /*    be deallocated with a call to @FT_Done_Face.                       */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Open_Face( FT_Library           library,

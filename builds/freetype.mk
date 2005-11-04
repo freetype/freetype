@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2002, 2003, 2004 by
+# Copyright 1996-2000, 2001, 2002, 2003, 2004, 2005 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -133,7 +133,7 @@ INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 # $(INCLUDE_FLAGS) should come before $(CFLAGS) to avoid problems with
 # old FreeType versions.
 #
-FT_CFLAGS  = $(INCLUDE_FLAGS) $(CFLAGS)
+FT_CFLAGS  = $(CPPFLAGS) $(INCLUDE_FLAGS) $(CFLAGS)
 FT_CC      = $(CC) $(FT_CFLAGS)
 FT_COMPILE = $(CC) $(ANSIFLAGS) $(FT_CFLAGS)
 

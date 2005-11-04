@@ -1753,6 +1753,9 @@
 
     if ( aface )
       *aface = face;
+    else
+      FT_Done_Face( face );
+
     goto Exit;
 
   Fail:
