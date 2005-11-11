@@ -1,3 +1,15 @@
+2005-11-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afangles.c, src/autofit/aftypes.h (af_angle_diff):
+	Comment out.  Unused.
+
+2005-11-10  Christian Biesinger  <cbiesinger@web.de>
+
+	* builds/beos/beos.mk: Call beos-def.mk before anything else to
+	define the separator.
+
+	* builds/unix/unix-cc.in (LINK_LIBRARY): Add `-no-undefined' flag.
+
 2005-11-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1afm.c (T1_Read_PFM): Zero offset means `no kerning

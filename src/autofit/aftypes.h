@@ -125,6 +125,7 @@ FT_BEGIN_HEADER
                  FT_Pos  dy );
 
 
+#if 0
   /*
    *  compute `angle2 - angle1'; the result is always within
    *  the range [-AF_ANGLE_PI .. AF_ANGLE_PI - 1]
@@ -132,21 +133,24 @@ FT_BEGIN_HEADER
   FT_LOCAL( AF_Angle )
   af_angle_diff( AF_Angle  angle1,
                  AF_Angle  angle2 );
+#endif /* 0 */
 
-#define  AF_ANGLE_DIFF(result,angle1,angle2)  \
-  FT_BEGIN_STMNT                              \
-    AF_Angle  _delta = (angle2) - (angle1);   \
-                                              \
-                                              \
-    _delta %= AF_ANGLE_2PI;                   \
-    if ( _delta < 0 )                         \
-      _delta += AF_ANGLE_2PI;                 \
-                                              \
-    if ( _delta > AF_ANGLE_PI )               \
-      _delta -= AF_ANGLE_2PI;                 \
-                                              \
-    result = _delta;                          \
+
+#define AF_ANGLE_DIFF( result, angle1, angle2 ) \
+  FT_BEGIN_STMNT                                \
+    AF_Angle  _delta = (angle2) - (angle1);     \
+                                                \
+                                                \
+    _delta %= AF_ANGLE_2PI;                     \
+    if ( _delta < 0 )                           \
+      _delta += AF_ANGLE_2PI;                   \
+                                                \
+    if ( _delta > AF_ANGLE_PI )                 \
+      _delta -= AF_ANGLE_2PI;                   \
+                                                \
+    result = _delta;                            \
   FT_END_STMNT
+
 
   /*************************************************************************/
   /*************************************************************************/

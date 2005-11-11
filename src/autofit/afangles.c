@@ -322,8 +322,6 @@ for n in r:
     return v.y;
   }
 
-#endif /* 0 */
-
 
   FT_LOCAL_DEF( AF_Angle )
   af_angle_diff( AF_Angle  angle1,
@@ -341,6 +339,8 @@ for n in r:
 
     return delta;
   }
+
+#endif /* 0 */
 
 
   FT_LOCAL_DEF( void )
