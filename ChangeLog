@@ -3,6 +3,8 @@
 	* src/autofit/afangles.c, src/autofit/aftypes.h (af_angle_diff):
 	Comment out.  Unused.
 
+	* builds/exports.mk ($(EXPORTS_LIST)): Add TT_RunIns.
+
 2005-11-10  Christian Biesinger  <cbiesinger@web.de>
 
 	* builds/beos/beos.mk: Call beos-def.mk before anything else to

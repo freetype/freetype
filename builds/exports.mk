@@ -57,8 +57,10 @@ ifneq ($(EXPORTS_LIST),)
 
   symbols_list: $(EXPORTS_LIST)
 
+  # We manually add TT_RunIns to the API which is needed by TT debuggers.
   $(EXPORTS_LIST): $(APINAMES_EXE) $(PUBLIC_HEADERS)
 	  $(subst /,$(SEP),$(APINAMES_EXE)) -o$@ $(APINAMES_OPTIONS) $(PUBLIC_HEADERS)
+	  @echo TT_RunIns >> $(EXPORTS_LIST)
 
   $(PROJECT_LIBRARY): $(EXPORTS_LIST)
 
