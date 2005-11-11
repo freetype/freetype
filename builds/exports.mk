@@ -1,53 +1,76 @@
-# this sub-Makefile is used to compute the list of exported symbols whenever
-# the EXPORTS_LIST variable is defined by one of the platform or compiler
-# specific build files
 #
-# EXPORTS_LIST contains the name of the "list" file, which can be a Windows
-# .DEF file by the way
+# FreeType 2 exports sub-Makefile
+#
+
+
+# Copyright 2005 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+# DO NOT INVOKE THIS MAKEFILE DIRECTLY!  IT IS MEANT TO BE INCLUDED BY
+# OTHER MAKEFILES.
+
+
+# This sub-Makefile is used to compute the list of exported symbols whenever
+# the EXPORTS_LIST variable is defined by one of the platform or compiler
+# specific build files.
+#
+# EXPORTS_LIST contains the name of the `list' file, for example a Windows
+# .DEF file.
 #
 ifneq ($(EXPORTS_LIST),)
 
-  # CCexe is the compiler used to compile the "apinames" tool program
-  # on the host machine. This isn't necessarily the same than the compiler
-  # which can be a cross-compiler for a different architecture
+  # CCexe is the compiler used to compile the `apinames' tool program
+  # on the host machine.  This isn't necessarily the same as the compiler
+  # which can be a cross-compiler for a different architecture, for example.
   #
   ifeq ($(CCexe),)
     CCexe := $(CC)
   endif
 
-  # TE acts as T, but for executables instead of object files
+  # TE acts like T, but for executables instead of object files.
   ifeq ($(TE),)
     TE := $T
   endif
 
-  # the list of public headers we're going to parse
+  # The list of public headers we're going to parse.
   PUBLIC_HEADERS := $(wildcard $(PUBLIC_DIR)/*.h)
 
-  # the "apinames" source and executable. We use E as the executable
-  # suffix, which *includes* the final dot
-  # note that $(APINAMES_OPTIONS) is empty, except for Windows compilers
+  # The `apinames' source and executable.  We use $E as the executable
+  # suffix, which *includes* the final dot.
+  #
+  # Note that $(APINAMES_OPTIONS) is empty, except for Windows compilers.
   #
   APINAMES_SRC := $(TOP_DIR)/src/tools/apinames.c
   APINAMES_EXE := $(OBJ_DIR)/apinames$E
 
   $(APINAMES_EXE): $(APINAMES_SRC)
-	$(CCexe) $(TE)$@ $<
+	  $(CCexe) $(TE)$@ $<
 
-  .PHONY: symbols_list  clean_symbols_list  clean_apinames
+  .PHONY: symbols_list clean_symbols_list clean_apinames
 
   symbols_list: $(EXPORTS_LIST)
 
   $(EXPORTS_LIST): $(APINAMES_EXE) $(PUBLIC_HEADERS)
-	$(subst /,$(SEP),$(APINAMES_EXE)) -o$@ $(APINAMES_OPTIONS) $(PUBLIC_HEADERS)
+	  $(subst /,$(SEP),$(APINAMES_EXE)) -o$@ $(APINAMES_OPTIONS) $(PUBLIC_HEADERS)
 
   $(PROJECT_LIBRARY): $(EXPORTS_LIST)
 
   clean_symbols_list:
-	-$(DELETE) $(subst /,$(SEP),$(EXPORTS_LIST))
+	  -$(DELETE) $(subst /,$(SEP),$(EXPORTS_LIST))
 
   clean_apinames:
-	-$(DELETE) $(subst /,$(SEP),$(APINAMES_EXE))
+	  -$(DELETE) $(subst /,$(SEP),$(APINAMES_EXE))
 
   clean_project: clean_symbols_list clean_apinames
 
 endif
+
+
+# EOF
