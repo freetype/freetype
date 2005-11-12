@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Arithmetic computations (body).                                      */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -402,8 +402,10 @@
     if ( a == 0 || b == 0x10000L )
       return a;
 
-    sa = (a >> (sizeof(a)*8 - 1)); a = (a^sa) - sa;
-    sb = (b >> (sizeof(b)*8 - 1)); b = (b^sb) - sb;
+    sa = ( a >> ( sizeof ( a ) * 8 - 1 ) );
+     a = ( a ^ sa ) - sa;
+    sb = ( b >> ( sizeof ( b ) * 8 - 1 ) );
+     b = ( b ^ sb ) - sb;
 
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
@@ -422,10 +424,12 @@
     }
 
     sa ^= sb,
-    ua  = (FT_ULong)((ua ^ sa) - sa);
+    ua  = (FT_ULong)(( ua ^ sa ) - sa);
 
     return (FT_Long)ua;
-#else
+
+#else /* 0 */
+
     FT_Long   s;
     FT_ULong  ua, ub;
 
@@ -453,7 +457,9 @@
     }
 
     return ( s < 0 ? -(FT_Long)ua : (FT_Long)ua );
-#endif
+
+#endif /* 0 */
+
   }
 
 

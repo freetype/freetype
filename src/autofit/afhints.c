@@ -274,22 +274,25 @@
 #if 1
     AF_Direction  dir = AF_DIR_NONE;
 
+
+    /* atan(1/12) == 4.7 degrees */
+
     if ( dx < 0 )
     {
       if ( dy < 0 )
       {
-        if ( -dx*12 < -dy )
+        if ( -dx * 12 < -dy )
           dir = AF_DIR_DOWN;
 
-        else if ( -dy*12 < -dx )
+        else if ( -dy * 12 < -dx )
           dir = AF_DIR_LEFT;
       }
       else /* dy >= 0 */
       {
-        if ( -dx*12 < dy )
+        if ( -dx * 12 < dy )
           dir = AF_DIR_UP;
 
-        else if ( dy*12 < -dx )
+        else if ( dy * 12 < -dx )
           dir = AF_DIR_LEFT;
       }
     }
@@ -297,23 +300,26 @@
     {
       if ( dy < 0 )
       {
-        if ( dx*12 < -dy )
+        if ( dx * 12 < -dy )
           dir = AF_DIR_DOWN;
 
-        else if ( -dy*12 < dx )
+        else if ( -dy * 12 < dx )
           dir = AF_DIR_RIGHT;
       }
       else  /* dy >= 0 */
       {
-        if ( dx*12 < dy )
+        if ( dx * 12 < dy )
           dir = AF_DIR_UP;
 
-        else if ( dy*12 < dx )
+        else if ( dy * 12 < dx )
           dir = AF_DIR_RIGHT;
       }
     }
-    return  dir;
-#else
+
+    return dir;
+
+#else /* 0 */
+
     AF_Direction  dir;
     FT_Pos        ax = FT_ABS( dx );
     FT_Pos        ay = FT_ABS( dy );
@@ -335,7 +341,9 @@
     }
 
     return dir;
-#endif
+
+#endif /* 0 */
+
   }
 
 
@@ -394,7 +402,7 @@
 
       } while ( angle_in == angle_seg );
 
-      first   = start;
+      first = start;
 
       AF_ANGLE_DIFF( diff_in, angle_in, angle_seg );
 
