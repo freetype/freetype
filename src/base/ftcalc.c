@@ -99,6 +99,8 @@
   }
 
 
+#if 0
+
   /* documentation is in ftcalc.h */
 
   FT_EXPORT_DEF( FT_Int32 )
@@ -127,6 +129,8 @@
 
     return root;
   }
+
+#endif /* 0 */
 
 
 #ifdef FT_LONG64
@@ -293,9 +297,7 @@
   }
 
 
-  /* documentation is in ftcalc.h */
-
-  FT_EXPORT_DEF( void )
+  static void
   FT_Add64( FT_Int64*  x,
             FT_Int64*  y,
             FT_Int64  *z )
@@ -526,10 +528,10 @@
   }
 
 
-  /* documentation is in ftcalc.h */
+#if 0
 
   /* apparently, the second version of this code is not compiled correctly */
-  /* on Mac machines with the MPW C compiler..  tsss, tsss, tss...         */
+  /* on Mac machines with the MPW C compiler..  tsk, tsk, tsk...         */
 
 #if 1
 
@@ -618,6 +620,8 @@
 
     return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
   }
+
+#endif /* 0 */
 
 #endif /* 0 */
 

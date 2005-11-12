@@ -79,7 +79,7 @@ FT_BEGIN_HEADER
 
   /* reserved for manager's use */
   FT_EXPORT( void )
-  ftc_node_destroy( FTC_Node     node,
+  FTC_Node_Destroy( FTC_Node     node,
                     FTC_Manager  manager );
 
 

@@ -1,3 +1,25 @@
+2005-11-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftccache.c (FTC_Cache_Clear), src/cache/ftcmanag.c
+	(FTC_Manager_Check): Remove FT_EXPORT_DEF tag.
+
+	* src/base/ftcalc.c (FT_Add64): Remove FT_EXPORT_DEF tag. 
+	(FT_Div64by32, FT_Sqrt32): Commented out.  Unused.
+
+	* include/freetype/internal/ftcalc.h (SQRT_32): Removed.  Unused.
+	(FT_Sqrt32): Commented out.  Unused.
+
+	* include/freetype/cache/ftccache.h:
+	s/ftc_node_destroy/FTC_Node_Destroy/.
+
+	* src/cache/ftccback.h (ftc_node_destroy): New declaration.
+
+	* src/cache/ftccache.c (ftc_node_destroy): Use FT_LOCAL_DEF tag.
+	(FTC_Node_Destroy): New exported wrapper function for
+	ftc_node_destroy.
+
+	* src/cache/ftcmanag.c: Include ftccback.c.
+
 2005-11-10  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afangles.c, src/autofit/aftypes.h (af_angle_diff):

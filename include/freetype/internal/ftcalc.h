@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Arithmetic computations (specification).                             */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004,2005 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -48,8 +48,7 @@ FT_BEGIN_HEADER
   FT_SqrtFixed( FT_Int32  x );
 
 
-#define SQRT_32( x )  FT_Sqrt32( x )
-
+#if 0
 
   /*************************************************************************/
   /*                                                                       */
@@ -68,6 +67,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Int32 )
   FT_Sqrt32( FT_Int32  x );
+
+#endif /* 0 */
 
 
   /*************************************************************************/

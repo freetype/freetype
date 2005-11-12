@@ -23,6 +23,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_SIZES_H
 
+#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -453,7 +454,7 @@
 
 #ifdef FT_DEBUG_ERROR
 
-  FT_EXPORT_DEF( void )
+  static void
   FTC_Manager_Check( FTC_Manager  manager )
   {
     FTC_Node  node, first;

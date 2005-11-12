@@ -245,8 +245,16 @@
   }
 
 
-  /* remove a node from the cache manager */
   FT_EXPORT_DEF( void )
+  FTC_Node_Destroy( FTC_Node     node,
+                    FTC_Manager  manager )
+  {
+    ftc_node_destroy( node, manager );
+  }
+
+
+  /* remove a node from the cache manager */
+  FT_LOCAL_DEF( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager )
   {
@@ -322,7 +330,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )
+  static void
   FTC_Cache_Clear( FTC_Cache  cache )
   {
     if ( cache )

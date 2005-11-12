@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Callback functions of the caching sub-system (specification only).   */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -78,6 +78,11 @@
 
   FT_LOCAL( void )
   ftc_cache_done( FTC_Cache  cache );
+
+
+  FT_LOCAL( void )
+  ftc_node_destroy( FTC_Node     node,
+                    FTC_Manager  manager );
 
 
 #endif /* __FTCCBACK_H__ */
