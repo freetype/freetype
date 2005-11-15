@@ -1,9 +1,18 @@
+2005-11-15  David Turner  <david@freetype.org>
+
+	* src/base/fttrigon.c (ft_trig_prenorm): fixed a bug that created
+	invalid computations, resulting in very weird bugs in TrueType
+	bytecode hinted fonts
+
+	* src/truetype/ttinterp.c: redefined FT_UNUSED_EXEC to not perform
+	a structure copy each time. Wooot. !
+
 2005-11-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/cache/ftccache.c (FTC_Cache_Clear), src/cache/ftcmanag.c
 	(FTC_Manager_Check): Remove FT_EXPORT_DEF tag.
 
-	* src/base/ftcalc.c (FT_Add64): Remove FT_EXPORT_DEF tag. 
+	* src/base/ftcalc.c (FT_Add64): Remove FT_EXPORT_DEF tag.
 	(FT_Div64by32, FT_Sqrt32): Commented out.  Unused.
 
 	* include/freetype/internal/ftcalc.h (SQRT_32): Removed.  Unused.

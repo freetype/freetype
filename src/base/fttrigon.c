@@ -110,7 +110,6 @@
     shift = 0;
 
 #if 1
-
     /* determine msb bit index in `shift' */
     if ( z >= ( 1L << 16 ) )
     {
@@ -132,18 +131,21 @@
       z     >>= 2;
       shift  += 2;
     }
-    if ( z >= 1 )
-      shift += 1;
-
-    if ( shift < 28 )
+    if ( z >= ( 1L << 1 ) )
     {
-      shift = 28 - shift;
+      z    >>= 1;
+      shift += 1;
+    }
+
+    if ( shift <= 27 )
+    {
+      shift  = 27 - shift;
       vec->x = x << shift;
       vec->y = y << shift;
     }
-    else if ( shift > 28 )
+    else
     {
-      shift -= 28;
+      shift -= 27;
       vec->x = x >> shift;
       vec->y = y >> shift;
       shift  = -shift;
