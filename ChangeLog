@@ -1,11 +1,11 @@
 2005-11-15  David Turner  <david@freetype.org>
 
-	* src/base/fttrigon.c (ft_trig_prenorm): fixed a bug that created
+	* src/base/fttrigon.c (ft_trig_prenorm): Fix a bug that created
 	invalid computations, resulting in very weird bugs in TrueType
-	bytecode hinted fonts
+	bytecode hinted fonts.
 
-	* src/truetype/ttinterp.c: redefined FT_UNUSED_EXEC to not perform
-	a structure copy each time. Wooot. !
+	* src/truetype/ttinterp.c (FT_UNUSED_EXEC): Don't perform a
+	structure copy each time.
 
 2005-11-11  Werner Lemberg  <wl@gnu.org>
 

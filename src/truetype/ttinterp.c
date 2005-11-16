@@ -94,13 +94,18 @@
 
 #define CUR  (*exc)                             /* see ttobjs.h */
 
-#define  FT_UNUSED_EXEC  FT_UNUSED(exc)
+  /*************************************************************************/
+  /*                                                                       */
+  /* This macro is used whenever `exec' is unused in a function, to avoid  */
+  /* stupid warnings from pedantic compilers.                              */
+  /*                                                                       */
+#define FT_UNUSED_EXEC  FT_UNUSED( exc )
 
 #else                                           /* static implementation */
 
 #define CUR  cur
 
-#define  FT_UNUSED_EXEC  int  __dummy=__dummy
+#define FT_UNUSED_EXEC  int  __dummy = __dummy
 
   static
   TT_ExecContextRec  cur;   /* static exec. context variable */
@@ -117,14 +122,6 @@
   /* The instruction argument stack.                                       */
   /*                                                                       */
 #define INS_ARG  EXEC_OP_ FT_Long*  args    /* see ttobjs.h for EXEC_OP_ */
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* This macro is used whenever `exec' is unused in a function, to avoid  */
-  /* stupid warnings from pedantic compilers.                              */
-  /*                                                                       */
-/* #define FT_UNUSED_EXEC  FT_UNUSED( CUR ) */
 
 
   /*************************************************************************/
