@@ -716,7 +716,7 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    A pointer to the new memory object.  0 in case of error.           */
   /*                                                                       */
-  FT_EXPORT( FT_Memory )
+  FT_BASE( FT_Memory )
   FT_New_Memory( void );
 
 
@@ -731,7 +731,7 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    memory :: A handle to the memory manager.                          */
   /*                                                                       */
-  FT_EXPORT( void )
+  FT_BASE( void )
   FT_Done_Memory( FT_Memory  memory );
 
 #endif /* !FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM */

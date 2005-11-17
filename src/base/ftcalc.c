@@ -505,6 +505,8 @@
   }
 
 
+#if 0
+
   /* documentation is in ftcalc.h */
 
   FT_EXPORT_DEF( void )
@@ -527,8 +529,6 @@
     }
   }
 
-
-#if 0
 
   /* apparently, the second version of this code is not compiled correctly */
   /* on Mac machines with the MPW C compiler..  tsk, tsk, tsk...         */
@@ -631,7 +631,7 @@
 
   /* documentation is in ftcalc.h */
 
-  FT_EXPORT_DEF( FT_Int32 )
+  FT_BASE_DEF( FT_Int32 )
   FT_SqrtFixed( FT_Int32  x )
   {
     FT_UInt32  root, rem_hi, rem_lo, test_div;

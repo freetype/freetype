@@ -328,7 +328,7 @@ FT_BEGIN_HEADER
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
   /* initialize a stream for reading a regular system stream */
-  FT_EXPORT( FT_Error )
+  FT_BASE( FT_Error )
   FT_Stream_Open( FT_Stream    stream,
                   const char*  filepathname );
 

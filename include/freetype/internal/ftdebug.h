@@ -113,7 +113,7 @@ FT_BEGIN_HEADER
   /*    This function may be useful if you want to access elements of      */
   /*    the internal `ft_trace_levels' array by an index.                  */
   /*                                                                       */
-  FT_EXPORT( FT_Int )
+  FT_BASE( FT_Int )
   FT_Trace_Get_Count( void );
 
 
@@ -140,7 +140,7 @@ FT_BEGIN_HEADER
   /*    This function may be useful if you want to control FreeType 2's    */
   /*    debug level in your appliaciton.                                   */
   /*                                                                       */
-  FT_EXPORT( const char * )
+  FT_BASE( const char * )
   FT_Trace_Get_Name( FT_Int  idx );
 
 
@@ -213,11 +213,11 @@ FT_BEGIN_HEADER
 #include "stdio.h"  /* for vprintf() */
 
   /* print a message */
-  FT_EXPORT( void )
+  FT_BASE( void )
   FT_Message( const char*  fmt, ... );
 
   /* print a message and exit */
-  FT_EXPORT( void )
+  FT_BASE( void )
   FT_Panic( const char*  fmt, ... );
 
 #endif /* FT_DEBUG_LEVEL_ERROR */

@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    This function is not very fast.                                    */
   /*                                                                       */
-  FT_EXPORT( FT_Int32 )
+  FT_BASE( FT_Int32 )
   FT_SqrtFixed( FT_Int32  x );
 
 
