@@ -1,17 +1,29 @@
+2005-11-17  Werner Lemberg  <wl@gnu.org>
+
+	Add vertical metrics support to OpenType CFF outlines.  Based on a
+	patch from Mike Moening <MikeM@RetekSolutions.com>
+
+	* src/cff/cffgload.c (cff_face_get_vertical_metrics): New function.
+	(cff_slot_load): Use cff_face_get_vertical_metrics.
+
+	* docs/CHANGES: Updated.
+
 2005-11-17  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftcalc.c (FT_MulTo64): Commented out.
 
-	* include/freetype/internal/ftcalc.h (FT_SqrtFixed), src/base/ftcalc.c
-	(FT_SqrtFixed), include/freetype/internal/ftdebug.h
+	* include/freetype/internal/ftcalc.h (FT_SqrtFixed),
+	src/base/ftcalc.c (FT_SqrtFixed),
+	include/freetype/internal/ftdebug.h (FT_Trace_Get_Count,
+	FT_Trace_Get_Name, FT_Message, FT_Panic), src/base/ftdebug.c
 	(FT_Trace_Get_Count, FT_Trace_Get_Name, FT_Message, FT_Panic),
-	src/base/ftdebug.c (FT_Trace_Get_Count, FT_Trace_Get_Name, FT_Message,
-	FT_Panic), include/freetype/internal/ftobjs.h (FT_New_Memory,
-	FT_Done_Memory), include/freetype/internal/ftstream.h
-	(FT_Stream_Open), src/base/ftsystem.c (FT_New_Memory, FT_Done_Memory,
-	FT_Stream_Open): s/FT_EXPORT/FT_BASE/.
+	include/freetype/internal/ftobjs.h (FT_New_Memory, FT_Done_Memory),
+	include/freetype/internal/ftstream.h (FT_Stream_Open),
+	src/base/ftsystem.c (FT_New_Memory, FT_Done_Memory, FT_Stream_Open):
+	s/FT_EXPORT/FT_BASE/.
 
-	* builds/exports.mk: Manually add TT_New_Context to EXPORTS_LIST too.
+	* builds/exports.mk: Manually add TT_New_Context to EXPORTS_LIST
+	too.
 
 2005-11-15  David Turner  <david@freetype.org>
 
