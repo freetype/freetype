@@ -1,5 +1,12 @@
 2005-11-17  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
+	* builds/amiga/src/base/ftdebug.c (FT_Trace_Get_Count,
+	FT_Trace_Get_Name, FT_Message, FT_Panic),
+	builds/amiga/src/base/ftsystem.c (FT_New_Memory, FT_Done_Memory,
+	FT_Stream_Open): s/FT_EXPORT/FT_BASE/.
+
+2005-11-17  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
 	* builds/amiga/makefile,
 	builds/amiga/makefile.os4,
 	builds/amiga/smakefile.os4,
