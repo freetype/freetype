@@ -34,6 +34,7 @@
 #define FT_USE_PFR     // pfr font driver
 #define FT_USE_WINFNT  // windows .fnt|.fon bitmap font driver
 #define FT_USE_OTV     // opentype validator
+#define FT_USE_GXV     // truetype gx validator
 #include "FT:src/base/ftinit.c"
 # ---8<---
 #
@@ -99,6 +100,9 @@ ftdebugpure.ppc.o: src/base/ftdebug.c
 
 ftglyph.ppc.o: FT:src/base/ftglyph.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftglyph.c
+
+ftgxval.ppc.o: FT:src/base/ftgxval.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftgxval.c
 
 ftmm.ppc.o: FT:src/base/ftmm.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftmm.c
@@ -239,18 +243,26 @@ winfnt.ppc.o: FT:src/winfonts/winfnt.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/winfonts/winfnt.c
 
 #
+# FreeType2 library TrueTypeGX Validator
+#
+gxvalid.ppc.o: FT:src/gxvalid/gxvalid.c
+	$(CC) -c $(CFLAGS) -Wno-aggregate-return -o $@ /FT/src/gxvalid/gxvalid.c
+
+#
 # FreeType2 library OpenType validator
 #
 otvalid.ppc.o: FT:src/otvalid/otvalid.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/otvalid/otvalid.c
 
 BASE =  ftbase.ppc.o ftbbox.ppc.o ftbdf.ppc.o ftbitmap.ppc.o ftglyph.ppc.o \
-	ftmm.ppc.o ftotval.ppc.o ftpfr.ppc.o ftstroke.ppc.o ftsynth.ppc.o \
-	fttype1.ppc.o ftwinfnt.ppc.o ftxf86.ppc.o
+	ftgxval.ppc.o ftmm.ppc.o ftotval.ppc.o ftpfr.ppc.o ftstroke.ppc.o \
+	ftsynth.ppc.o fttype1.ppc.o ftwinfnt.ppc.o ftxf86.ppc.o
 
 DEBUG = ftdebug.ppc.o ftdebugpure.ppc.o
 
 AFIT = autofit.ppc.o
+
+GXV = gxvalid.ppc.o
 
 OTV = otvalid.ppc.o
 
@@ -261,8 +273,8 @@ RASTER = raster.ppc.o smooth.ppc.o
 FONTD = cff.ppc.o type1.ppc.o type42.ppc.o type1cid.ppc.o truetype.ppc.o\
 	bdf.ppc.o pcf.ppc.o pfr.ppc.o winfnt.ppc.o
 
-libft2_ppc.a:      $(BASE) $(AFIT) $(OTV) $(PS) $(RASTER) sfnt.ppc.o ftcache.ppc.o $(FONTD) gzip.ppc.o lzw.ppc.o
-	$(AR) r $@ $(BASE) $(AFIT) $(OTV) $(PS) $(RASTER) sfnt.ppc.o ftcache.ppc.o $(FONTD) gzip.ppc.o lzw.ppc.o
+libft2_ppc.a:      $(BASE) $(AFIT) $(GXV) $(OTV) $(PS) $(RASTER) sfnt.ppc.o ftcache.ppc.o $(FONTD) gzip.ppc.o lzw.ppc.o
+	$(AR) r $@ $(BASE) $(AFIT) $(GXV) $(OTV) $(PS) $(RASTER) sfnt.ppc.o ftcache.ppc.o $(FONTD) gzip.ppc.o lzw.ppc.o
 	$(RANLIB) $@
 
 #Local Variables:

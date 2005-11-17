@@ -34,6 +34,7 @@
 #define FT_USE_PFR     // pfr font driver
 #define FT_USE_WINFNT  // windows .fnt|.fon bitmap font driver
 #define FT_USE_OTV     // opentype validator
+#define FT_USE_GXV     // truetype gx validator
 #include "FT:src/base/ftinit.c"
 # ---8<---
 #
@@ -41,14 +42,16 @@
 # (and either ftdebug.o or ftdebugpure.o if you enabled FT_DEBUG_LEVEL_ERROR or
 # FT_DEBUG_LEVEL_TRACE in include/freetype/config/ftoption.h).
 
-OBJBASE = ftbase.o ftbbox.o ftbdf.o ftbitmap.o ftglyph.o ftmm.o ftotval.o \
-	  ftpfr.o ftstroke.o ftsynth.o fttype1.o ftwinfnt.o ftxf86.o
+OBJBASE = ftbase.o ftbbox.o ftbdf.o ftbitmap.o ftglyph.o ftgxval.o ftmm.o \
+	  ftotval.o ftpfr.o ftstroke.o ftsynth.o fttype1.o ftwinfnt.o ftxf86.o
 
 OBJSYSTEM = ftsystem.o ftsystempure.o
 
 OBJDEBUG = ftdebug.o ftdebugpure.o
 
 OBJAFIT = autofit.o
+
+OBJGXV = gxvalid.o
 
 OBJOTV = otvalid.o
 
@@ -128,6 +131,8 @@ ftbdf.o: $(CORE)base/ftbdf.c
 ftbitmap.o: $(CORE)base/ftbitmap.c
 	sc $(SCFLAGS) objname=$@ $<
 ftglyph.o: $(CORE)base/ftglyph.c
+	sc $(SCFLAGS) objname=$@ $<
+ftgxval.o: $(CORE)base/ftgxval.c
 	sc $(SCFLAGS) objname=$@ $<
 ftmm.o: $(CORE)base/ftmm.c
 	sc $(SCFLAGS) objname=$@ $<
@@ -262,6 +267,12 @@ pfr.o: $(CORE)pfr/pfr.c
 # freetype library Windows FNT/FON bitmap font driver
 #
 winfnt.o: $(CORE)winfonts/winfnt.c
+	sc $(SCFLAGS) objname=$@ $<
+
+#
+# freetype library TrueTypeGX validator
+#
+gxvalid.o: $(CORE)gxvalid/gxvalid.c
 	sc $(SCFLAGS) objname=$@ $<
 
 #
