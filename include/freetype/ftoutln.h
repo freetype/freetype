@@ -366,7 +366,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    outline :: A pointer to the source outline descriptor.             */
   /*                                                                       */
-  /* <Output>                                                              */
+  /* <InOut>                                                               */
   /*    abitmap :: A pointer to the target bitmap descriptor.              */
   /*                                                                       */
   /* <Return>                                                              */
