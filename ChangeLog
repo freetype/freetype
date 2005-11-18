@@ -3,6 +3,12 @@
 	* src/sfnt/ttload.c (tt_face_load_metrics): Ignore excess number
 	of metrics instead of aborting.  Patch suggested by Derek Noonburg.
 
+	* src/cff/cffgload.c (cff_slot_load), src/cid/cidgload.c
+	(cid_slot_load_glyph), src/type1/t1gload.c (T1_Load_Glyph): Scale
+	the glyph properly if no hinter is available.
+
+	* docs/CHANGES: Mention scaling bug.
+
 2005-11-18  susuzki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* include/freetype/ftgxval.h, src/base/ftgxval.c
