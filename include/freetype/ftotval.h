@@ -146,8 +146,8 @@ FT_BEGIN_HEADER
   *   This function only works with OpenType fonts, returning an error
   *   otherwise.
   *
-  *   After use, the application should deallocate the five tables by
-  *   FT_OpenType_Free(). A NULL value indicates that the table either
+  *   After use, the application should deallocate the five tables with
+  *   FT_OpenType_Free().  A NULL value indicates that the table either
   *   doesn't exist in the font, or the application hasn't asked for
   *   validation.
   */

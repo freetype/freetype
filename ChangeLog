@@ -1,3 +1,8 @@
+2005-11-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (tt_face_load_metrics): Ignore excess number
+	of metrics instead of aborting.  Patch suggested by Derek Noonburg.
+
 2005-11-18  susuzki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* include/freetype/ftgxval.h, src/base/ftgxval.c
@@ -23,16 +28,15 @@
 
 2005-11-17  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
-	* builds/amiga/makefile,
-	builds/amiga/makefile.os4,
+	* builds/amiga/makefile, builds/amiga/makefile.os4,
 	builds/amiga/smakefile.os4,
 	builds/amiga/include/freetype/config/ftmodule.h: Updated the Amiga
-	build files (added support for the gxvalid module)
+	build files (added support for the gxvalid module).
 
 2005-11-17  Werner Lemberg  <wl@gnu.org>
 
 	Add vertical metrics support to OpenType CFF outlines.  Based on a
-	patch from Mike Moening <MikeM@RetekSolutions.com>
+	patch from Mike Moening <MikeM@RetekSolutions.com>.
 
 	* src/cff/cffgload.c (cff_face_get_vertical_metrics): New function.
 	(cff_slot_load): Use cff_face_get_vertical_metrics.

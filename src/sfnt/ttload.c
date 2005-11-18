@@ -972,9 +972,14 @@
                  vertical ? "Vertical"
                           : "Horizontal" ));
 
+      /* Adobe simply ignores this problem.  So we shall do the same. */
+#if 0
       error = vertical ? SFNT_Err_Invalid_Vert_Metrics
                        : SFNT_Err_Invalid_Horiz_Metrics;
       goto Exit;
+#else
+      num_shorts = 0;
+#endif
     }
 
     if ( FT_QNEW_ARRAY( *longs,  num_longs  ) ||

@@ -206,10 +206,10 @@ FT_BEGIN_HEADER
   *   otherwise.
   *
   *   After use, the application should deallocate the buffers pointed to by
-  *   each tables' element, by calling FT_TrueTypeGX_Free(). A NULL value
-  *   indicates that the table either doesn't exist in the font,
-  *   the application hasn't asked for validation, or the validator doesn't
-  *   have the ability to validate the sfnt table.
+  *   each `tables' element, by calling FT_TrueTypeGX_Free().  A NULL value
+  *   indicates that the table either doesn't exist in the font, the
+  *   application hasn't asked for validation, or the validator doesn't have
+  *   the ability to validate the sfnt table.
   */
   FT_EXPORT( FT_Error )
   FT_TrueTypeGX_Validate( FT_Face   face,
@@ -310,8 +310,8 @@ FT_BEGIN_HEADER
   *
   * @note:
   *   After use, the application should deallocate the buffers pointed to by
-  *   ckern_table, by calling FT_ClassicKern_Free(). A NULL value indicates
-  *   that the table doesn't exist in the font.
+  *   `ckern_table', by calling FT_ClassicKern_Free().  A NULL value
+  *   indicates that the table doesn't exist in the font.
   */
   FT_EXPORT( FT_Error )
   FT_ClassicKern_Validate( FT_Face    face,
