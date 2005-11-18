@@ -69,6 +69,17 @@
   }
 
 
+  FT_EXPORT_DEF( void )
+  FT_TrueTypeGX_Free( FT_Face   face,
+                      FT_Bytes  table )
+  {
+    FT_Memory  memory = FT_FACE_MEMORY( face );
+
+
+    FT_FREE( table );
+  }
+
+
   FT_EXPORT_DEF( FT_Error )
   FT_ClassicKern_Validate( FT_Face    face,
                            FT_UInt    validation_flags,
@@ -101,6 +112,17 @@
 
   Exit:
     return error;
+  }
+
+
+  FT_EXPORT_DEF( void )
+  FT_ClassicKern_Free( FT_Face   face,
+                       FT_Bytes  table )
+  {
+    FT_Memory  memory = FT_FACE_MEMORY( face );
+
+
+    FT_FREE( table );
   }
 
 

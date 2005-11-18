@@ -146,9 +146,10 @@ FT_BEGIN_HEADER
   *   This function only works with OpenType fonts, returning an error
   *   otherwise.
   *
-  *   After use, the application should deallocate the five tables with
-  *   `free'.  A NULL value indicates that the table either doesn't exist
-  *   in the font, or the application hasn't asked for validation.
+  *   After use, the application should deallocate the five tables by
+  *   FT_OpenType_Free(). A NULL value indicates that the table either
+  *   doesn't exist in the font, or the application hasn't asked for
+  *   validation.
   */
   FT_EXPORT( FT_Error )
   FT_OpenType_Validate( FT_Face    face,
@@ -158,6 +159,33 @@ FT_BEGIN_HEADER
                         FT_Bytes  *GPOS_table, 
                         FT_Bytes  *GSUB_table, 
                         FT_Bytes  *JSTF_table );
+
+  /* */
+
+ /**********************************************************************
+  *
+  * @function:
+  *    FT_OpenType_Free
+  *
+  * @description:
+  *    Free the buffer allocated by OpenType validator.
+  *
+  * @input:
+  *    face ::
+  *       A handle to the input face.
+  *
+  *    table ::
+  *       The pointer to the buffer that is allocated by
+  *       FT_OpenType_Validate().
+  *
+  * @note:
+  *   This function must be used to free the buffer allocated by
+  *   FT_OpenType_Validate() only.
+  */
+  FT_EXPORT( void )
+  FT_OpenType_Free( FT_Face   face,
+                    FT_Bytes  table );
+
 
  /* */
 
