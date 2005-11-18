@@ -55,7 +55,7 @@
 #  include <windows.h>
 
 
-  FT_EXPORT_DEF( void )
+  FT_BASE_DEF( void )
   FT_Message( const char*  fmt, ... )
   {
     static char buf[8192];
@@ -69,7 +69,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )
+  FT_BASE_DEF( void )
   FT_Panic( const char*  fmt, ... )
   {
     static char buf[8192];
