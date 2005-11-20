@@ -1,3 +1,12 @@
+2005-11-20  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/sfnt/ttload.c (sfnt_dir_check): Clean up and return correct
+	error code.
+	(sfnt_init): New function to fill in face->ttc_header.  A non-TTC font
+	is synthesized into a TTC font with one offset table.
+	(tt_face_load_sfnt_header): Use sfnt_init.
+	Fix an invalid access when the font is TTC and face_index is -1.
+
 2005-11-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttload.c (tt_face_load_metrics): Ignore excess number

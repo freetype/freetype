@@ -151,13 +151,13 @@
   /* Type 42 fonts, and will generally be invalid.                         */
   /*                                                                       */
   static FT_Error
-  sfnt_dir_check( FT_Stream  stream,
-                  FT_ULong   offset,
-                  FT_UInt    num_tables )
-   {
+  sfnt_dir_check( SFNT_Header  sfnt,
+                  FT_Stream    stream )
+  {
     FT_Error        error;
     FT_UInt         nn;
     FT_UInt         has_head = 0, has_sing = 0, has_meta = 0;
+    FT_ULong        offset = sfnt->offset + 12;
 
     const FT_ULong  glyx_tag = FT_MAKE_TAG( 'g', 'l', 'y', 'x' );
     const FT_ULong  locx_tag = FT_MAKE_TAG( 'l', 'o', 'c', 'x' );
@@ -176,43 +176,33 @@
     };
 
 
-    /* if 'num_tables' is 0, read the table count from the file */
-    if ( num_tables == 0 )
-    {
-      if ( FT_STREAM_SEEK( offset )     ||
-           FT_STREAM_SKIP( 4 )          ||
-           FT_READ_USHORT( num_tables ) ||
-           FT_STREAM_SKIP( 6 )          )
-        goto Bad_Format;
+    if ( sfnt->num_tables == 0 ||
+         offset + sfnt->num_tables * 16 > stream->size )
+      return SFNT_Err_Unknown_File_Format;
 
-      if ( offset + 12 + num_tables*16 > stream->size )
-        goto Bad_Format;
-    }
-    else if ( FT_STREAM_SEEK( offset + 12 ) )
-      goto Bad_Format;
+    if ( FT_STREAM_SEEK( offset ) )
+      return error;
 
-    for ( nn = 0; nn < num_tables; nn++ )
+    for ( nn = 0; nn < sfnt->num_tables; nn++ )
     {
       TT_TableRec  table;
 
 
       if ( FT_STREAM_READ_FIELDS( sfnt_dir_entry_fields, &table ) )
-        goto Bad_Format;
+        return error;
 
       if ( table.Offset + table.Length > stream->size     &&
            table.Tag != glyx_tag && table.Tag != locx_tag )
-        goto Bad_Format;
+        return SFNT_Err_Unknown_File_Format;
 
-      if ( table.Tag == TTAG_head )
+      if ( table.Tag == TTAG_head || table.Tag == TTAG_bhed )
       {
         FT_UInt32  magic;
 
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-      head_retry:
-#endif  /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-        has_head = 1;
+#ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+        if ( table.Tag == TTAG_head )
+#endif
+          has_head = 1;
 
         /* The table length should be 0x36, but certain font tools
          * make it 0x38, so we will just check that it is greater.
@@ -221,41 +211,98 @@
          * the table must be padded to 32-bit lengths, but this doesn't
          * apply to the value of its "Length" field!
          */
-        if ( table.Length < 0x36                 ||
-             FT_STREAM_SEEK( table.Offset + 12 ) ||
-             FT_READ_ULONG( magic )              ||
-             magic != 0x5F0F3CF5UL               )
-          goto Bad_Format;
+        if ( table.Length < 0x36 )
+          return SFNT_Err_Unknown_File_Format;
 
-        if ( FT_STREAM_SEEK( offset + 28 + 16*nn ) )
-          goto Bad_Format;
+        if ( FT_STREAM_SEEK( table.Offset + 12 ) ||
+             FT_READ_ULONG( magic ) )
+          return error;
+
+        if ( magic != 0x5F0F3CF5UL )
+          return SFNT_Err_Unknown_File_Format;
+
+        if ( FT_STREAM_SEEK( offset + ( nn + 1 ) * 16 ) )
+          return error;
       }
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-      else if ( table.Tag == TTAG_bhed )
-        goto head_retry;
-#endif  /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */      
-
       else if ( table.Tag == TTAG_SING )
         has_sing = 1;
       else if ( table.Tag == TTAG_META )
         has_meta = 1;
     }
 
-    /* when sing and meta are present, head is not present */
-    if ( has_sing && has_meta && has_head == 0 )
-        goto Exit;
+    if ( has_head || ( has_sing && has_meta ) )
+      return SFNT_Err_Ok;
+    else
+      return SFNT_Err_Unknown_File_Format;
+  }
 
-    /* otherwise, treat a missing head as a failure */
-    if ( has_head == 0 )
-      goto Bad_Format;
 
-  Exit:
+  /* Fill in face->ttc_header.  If the font is not a TTC, it is            */
+  /* synthesized into a TTC with one offset table.                         */
+  static FT_Error
+  sfnt_init( FT_Stream  stream,
+             TT_Face    face )
+  {
+    FT_Memory  memory = stream->memory;
+    FT_Error   error;
+    FT_ULong   tag, offset;
+
+    static const FT_Frame_Field  ttc_header_fields[] =
+    {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TTC_HeaderRec
+
+      FT_FRAME_START( 8 ),
+        FT_FRAME_LONG( version ),
+        FT_FRAME_LONG( count   ),
+      FT_FRAME_END
+    };
+
+    face->ttc_header.tag = 0;
+    face->ttc_header.version = 0;
+    face->ttc_header.count = 0;
+
+    offset = FT_STREAM_POS();
+
+    if ( FT_READ_ULONG( tag ) )
+      return error;
+
+    face->ttc_header.tag = TTAG_ttcf;
+
+    if ( tag == TTAG_ttcf )
+    {
+      FT_Int  n;
+
+
+      FT_TRACE3(( "sfnt_init: file is a collection\n" ));
+
+      if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
+        return error;
+
+      /* now read the offsets of each font in the file */
+      if ( FT_NEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) )
+        return error;
+
+      if ( FT_FRAME_ENTER( face->ttc_header.count * 4L ) )
+        return error;
+
+      for ( n = 0; n < face->ttc_header.count; n++ )
+        face->ttc_header.offsets[n] = FT_GET_ULONG();
+
+      FT_FRAME_EXIT();
+    }
+    else
+    {
+      face->ttc_header.version = 1 << 16;
+      face->ttc_header.count = 1;
+
+      if ( FT_NEW( face->ttc_header.offsets) )
+        return error;
+
+      face->ttc_header.offsets[0] = offset;
+    }
+
     return error;
-
-  Bad_Format:
-    error = SFNT_Err_Unknown_File_Format;
-    goto Exit;
   }
 
 
@@ -295,9 +342,7 @@
                             FT_Long      face_index,
                             SFNT_Header  sfnt )
   {
-    FT_Error   error;
-    FT_ULong   font_format_tag, format_tag, offset;
-    FT_Memory  memory = stream->memory;
+    FT_Error  error;
 
     static const FT_Frame_Field  sfnt_header_fields[] =
     {
@@ -312,95 +357,35 @@
       FT_FRAME_END
     };
 
-    static const FT_Frame_Field  ttc_header_fields[] =
-    {
-#undef  FT_STRUCTURE
-#define FT_STRUCTURE  TTC_HeaderRec
-
-      FT_FRAME_START( 8 ),
-        FT_FRAME_LONG( version ),
-        FT_FRAME_LONG( count   ),
-      FT_FRAME_END
-    };
-
 
     FT_TRACE2(( "tt_face_load_sfnt_header: %08p, %ld\n",
                 face, face_index ));
 
-    face->ttc_header.tag     = 0;
-    face->ttc_header.version = 0;
-    face->ttc_header.count   = 0;
+    error = sfnt_init( stream, face );
+    if ( error )
+      return error;
 
-    face->num_tables = 0;
+    if ( face_index < 0 )
+      face_index = 0;
 
-    /* First of all, read the first 4 bytes.  If it is `ttcf', then the   */
-    /* file is a TrueType collection, otherwise it is a single-face font. */
-    /*                                                                    */
-    offset = FT_STREAM_POS();
+    if ( face_index >= face->ttc_header.count )
+        return SFNT_Err_Bad_Argument;
 
-    if ( FT_READ_ULONG( font_format_tag ) )
-      goto Exit;
+    sfnt->offset = face->ttc_header.offsets[face_index];
 
-    format_tag = font_format_tag;
+    if ( FT_STREAM_SEEK( sfnt->offset ) )
+      return error;
 
-    if ( font_format_tag == TTAG_ttcf )
-    {
-      FT_Int  n;
-
-
-      FT_TRACE3(( "tt_face_load_sfnt_header: file is a collection\n" ));
-
-      /* It is a TrueType collection, i.e. a file containing several */
-      /* font files.  Read the font directory now                    */
-      if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
-        goto Exit;
-
-      /* now read the offsets of each font in the file */
-      if ( FT_NEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) ||
-           FT_FRAME_ENTER( face->ttc_header.count * 4L )                    )
-        goto Exit;
-
-      for ( n = 0; n < face->ttc_header.count; n++ )
-        face->ttc_header.offsets[n] = FT_GET_ULONG();
-
-      FT_FRAME_EXIT();
-
-      /* check face index */
-      if ( face_index >= face->ttc_header.count )
-      {
-        error = SFNT_Err_Bad_Argument;
-        goto Exit;
-      }
-
-      /* seek to the appropriate TrueType file, then read tag */
-      offset = face->ttc_header.offsets[face_index];
-
-      if ( FT_STREAM_SEEK( offset )   ||
-           FT_READ_LONG( format_tag ) )
-        goto Exit;
-    }
-
-    /* the format tag was read, now check the rest of the header */
-    sfnt->format_tag = format_tag;
-    sfnt->offset     = offset;
-
-    if ( FT_STREAM_READ_FIELDS( sfnt_header_fields, sfnt ) )
-      goto Exit;
+    /* read offset table */
+    if ( FT_READ_ULONG( sfnt->format_tag ) ||
+         FT_STREAM_READ_FIELDS( sfnt_header_fields, sfnt ) )
+      return error;
 
     /* now check the sfnt directory */
-    error = sfnt_dir_check( stream, offset, sfnt->num_tables );
+    error = sfnt_dir_check( sfnt, stream );
     if ( error )
-    {
-      FT_TRACE2(( "tt_face_load_sfnt_header: file is not SFNT!\n" ));
-      error = SFNT_Err_Unknown_File_Format;
-      goto Exit;
-    }
+      FT_TRACE2(( "tt_face_load_sfnt_header: invalid SFNT!\n" ));
 
-    /* disallow face index values > 0 for non-TTC files */
-    if ( font_format_tag != TTAG_ttcf && face_index > 0 )
-      error = SFNT_Err_Bad_Argument;
-
-  Exit:
     return error;
   }
 
