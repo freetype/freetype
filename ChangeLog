@@ -1,5 +1,10 @@
 2005-11-21  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): image_offset is
+	added to image_start twice when image_format is 2 or 5.
+
+2005-11-21  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* src/sfnt/sfobjs.c (sfnt_init_face): Check that format_tag is known
 	before loading the table directory.
 

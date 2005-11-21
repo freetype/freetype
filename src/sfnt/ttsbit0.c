@@ -830,7 +830,7 @@
         if ( tt_sbit_decoder_load_metrics( decoder, &p, p_limit, 1 ) )
           goto NoBitmap;
 
-        image_start = image_offset + image_size * ( glyph_index - start );
+        image_start = image_size * ( glyph_index - start );
         image_end   = image_start  + image_size;
       }
       break;
@@ -910,7 +910,7 @@
         if ( mm >= num_glyphs )
           goto NoBitmap;
 
-        image_start = image_offset + image_size*mm;
+        image_start = image_size*mm;
         image_end   = image_start + image_size;
       }
       break;
