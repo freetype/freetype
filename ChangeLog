@@ -1,7 +1,11 @@
+2005-11-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (sfnt_init): Add tracing message.
+
 2005-11-21  Chia-I Wu  <b90201047@ntu.edu.tw>
 
-	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): image_offset is
-	added to image_start twice when image_format is 2 or 5.
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): Image_offset was
+	added twice to image_start when image_format is 2 or 5.
 
 2005-11-21  Chia-I Wu  <b90201047@ntu.edu.tw>
 

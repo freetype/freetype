@@ -134,15 +134,15 @@
   }
 
 
-  /* Here, we:                                                             */
+  /* Here, we                                                              */
   /*                                                                       */
   /* - check that `num_tables' is valid                                    */
-  /* - look for a "head" table, check its size, and parse it to            */
-  /*   see if its "magic" field is correctly set                           */
+  /* - look for a `head' table, check its size, and parse it to check      */
+  /*   whether its `magic' field is correctly set                          */
   /*                                                                       */
   /* When checking directory entries, ignore the tables `glyx' and `locx'  */
   /* which are hacked-out versions of `glyf' and `loca' in some PostScript */
-  /* Type 42 fonts, and will generally be invalid.                         */
+  /* Type 42 fonts, and which are generally invalid.                       */
   /*                                                                       */
   static FT_Error
   sfnt_dir_check( SFNT_Header  sfnt,
@@ -170,7 +170,7 @@
     };
 
 
-    if ( sfnt->num_tables == 0 ||
+    if ( sfnt->num_tables == 0                         ||
          offset + sfnt->num_tables * 16 > stream->size )
       return SFNT_Err_Unknown_File_Format;
 
@@ -185,8 +185,9 @@
       if ( FT_STREAM_READ_FIELDS( sfnt_dir_entry_fields, &table ) )
         return error;
 
-      if ( table.Offset + table.Length > stream->size     &&
-           table.Tag != glyx_tag && table.Tag != locx_tag )
+      if ( table.Offset + table.Length > stream->size &&
+           table.Tag != glyx_tag                      &&
+           table.Tag != locx_tag                      )
         return SFNT_Err_Unknown_File_Format;
 
       if ( table.Tag == TTAG_head || table.Tag == TTAG_bhed )
@@ -198,18 +199,20 @@
 #endif
           has_head = 1;
 
-        /* The table length should be 0x36, but certain font tools
-         * make it 0x38, so we will just check that it is greater.
+        /*
+         * The table length should be 0x36, but certain font tools make it
+         * 0x38, so we will just check that it is greater.
          *
-         * Note that according to the specification,
-         * the table must be padded to 32-bit lengths, but this doesn't
-         * apply to the value of its "Length" field!
+         * Note that according to the specification, the table must be
+         * padded to 32-bit lengths, but this doesn't apply to the value of
+         * its `Length' field!
+         *
          */
         if ( table.Length < 0x36 )
           return SFNT_Err_Unknown_File_Format;
 
         if ( FT_STREAM_SEEK( table.Offset + 12 ) ||
-             FT_READ_ULONG( magic ) )
+             FT_READ_ULONG( magic )              )
           return error;
 
         if ( magic != 0x5F0F3CF5UL )
@@ -224,6 +227,7 @@
         has_meta = 1;
     }
 
+    /* if `sing' and `meta' tables are present, there is no `head' table */
     if ( has_head || ( has_sing && has_meta ) )
       return SFNT_Err_Ok;
     else
@@ -231,8 +235,8 @@
   }
 
 
-  /* Fill in face->ttc_header.  If the font is not a TTC, it is            */
-  /* synthesized into a TTC with one offset table.                         */
+  /* Fill in face->ttc_header.  If the font is not a TTC, it is */
+  /* synthesized into a TTC with one offset table.              */
   static FT_Error
   sfnt_init( FT_Stream  stream,
              TT_Face    face )
@@ -252,9 +256,10 @@
       FT_FRAME_END
     };
 
-    face->ttc_header.tag = 0;
+
+    face->ttc_header.tag     = 0;
     face->ttc_header.version = 0;
-    face->ttc_header.count = 0;
+    face->ttc_header.count   = 0;
 
     offset = FT_STREAM_POS();
 
@@ -287,8 +292,10 @@
     }
     else
     {
+      FT_TRACE3(( "sfnt_init: synthesize TTC\n" ));
+
       face->ttc_header.version = 1 << 16;
-      face->ttc_header.count = 1;
+      face->ttc_header.count   = 1;
 
       if ( FT_NEW( face->ttc_header.offsets) )
         return error;
@@ -371,13 +378,13 @@
       return error;
 
     /* read offset table */
-    if ( FT_READ_ULONG( sfnt->format_tag ) ||
+    if ( FT_READ_ULONG( sfnt->format_tag )                 ||
          FT_STREAM_READ_FIELDS( sfnt_header_fields, sfnt ) )
       return error;
 
     /* many fonts don't have these fields set correctly */
 #if 0
-    if ( sfnt->search_range != 1 << ( sfnt->entry_selector + 4 ) ||
+    if ( sfnt->search_range != 1 << ( sfnt->entry_selector + 4 )         ||
          sfnt->search_range + sfnt->range_shift != sfnt->num_tables << 4 )
       return SFNT_Err_Unknown_File_Format;
 #endif
@@ -426,7 +433,8 @@
 
     /* check first */
     error = sfnt_dir_check( sfnt, stream );
-    if ( error ) {
+    if ( error )
+    {
       FT_TRACE2(( "tt_face_load_directory: directory checking failed!\n" ));
 
       return error;
