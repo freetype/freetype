@@ -1,3 +1,8 @@
+2005-11-21  Håvard Wall  <haavardw@ifi.uio.no>
+
+	* src/bdf/bdfdrivr.c (bdf_interpret_style, BDF_Face_Done): Fix small
+	memory leak.
+
 2005-11-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttload.c (sfnt_init): Add tracing message.

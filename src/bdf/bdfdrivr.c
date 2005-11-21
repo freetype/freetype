@@ -248,7 +248,10 @@ THE SOFTWARE.
     }
 
     if ( !parts || !len )
-      face->style_name = (char *)"Regular";
+    {
+      FT_ALLOC( face->style_name, ft_strlen( "Regular" ) + 1 );
+      ft_strcpy( face->style_name, "Regular" );
+    }
     else
     {
       char          *style, *s;
@@ -311,6 +314,7 @@ THE SOFTWARE.
     FT_FREE( face->charset_encoding );
     FT_FREE( face->charset_registry );
     FT_FREE( bdfface->family_name );
+    FT_FREE( bdfface->style_name );
 
     FT_FREE( bdfface->available_sizes );
 
