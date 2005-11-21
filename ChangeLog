@@ -1,3 +1,12 @@
+2005-11-21  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Check that format_tag is known
+	before loading the table directory.
+
+	* src/sfnt/ttload.c (tt_face_load_sfnt_header,
+	tt_face_load_directory): Delay sfnt_dir_check from
+	tt_face_load_sfnt_header to tt_face_load_directory.
+
 2005-11-20  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/sfnt/ttload.c (sfnt_dir_check): Clean up and return correct

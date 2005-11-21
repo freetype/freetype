@@ -134,13 +134,7 @@
   }
 
 
-  /* In theory, we should check the values of `search_range',              */
-  /* `entry_selector', and `range_shift' to detect non-SFNT based files    */
-  /* whose header might also start with 0x100000L (yes, these exist).      */
-  /*                                                                       */
-  /* Very unfortunately, many TrueType fonts don't have these fields       */
-  /* set correctly and we must ignore them to support them.  An            */
-  /* alternative way to check the font file is thus to:                    */
+  /* Here, we:                                                             */
   /*                                                                       */
   /* - check that `num_tables' is valid                                    */
   /* - look for a "head" table, check its size, and parse it to            */
@@ -381,10 +375,12 @@
          FT_STREAM_READ_FIELDS( sfnt_header_fields, sfnt ) )
       return error;
 
-    /* now check the sfnt directory */
-    error = sfnt_dir_check( sfnt, stream );
-    if ( error )
-      FT_TRACE2(( "tt_face_load_sfnt_header: invalid SFNT!\n" ));
+    /* many fonts don't have these fields set correctly */
+#if 0
+    if ( sfnt->search_range != 1 << ( sfnt->entry_selector + 4 ) ||
+         sfnt->search_range + sfnt->range_shift != sfnt->num_tables << 4 )
+      return SFNT_Err_Unknown_File_Format;
+#endif
 
     return error;
   }
@@ -427,6 +423,14 @@
 
     FT_TRACE2(( "-- Tables count:   %12u\n",  sfnt->num_tables ));
     FT_TRACE2(( "-- Format version: %08lx\n", sfnt->format_tag ));
+
+    /* check first */
+    error = sfnt_dir_check( sfnt, stream );
+    if ( error ) {
+      FT_TRACE2(( "tt_face_load_directory: directory checking failed!\n" ));
+
+      return error;
+    }
 
     face->num_tables = sfnt->num_tables;
 
