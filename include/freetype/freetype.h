@@ -2268,7 +2268,7 @@ FT_BEGIN_HEADER
   *
   *     2. If no embedded bitmap is searched or found, FreeType looks for a
   *        scalable outline.  If one is found, it is loaded from the font
-  *        file, scaled to device pixels, then "hinted" to the pixel grid in
+  *        file, scaled to device pixels, then `hinted' to the pixel grid in
   *        order to optimize it.  The outline data can be accessed from the
   *        glyph slot (see note below).
   *
@@ -2284,9 +2284,11 @@ FT_BEGIN_HEADER
   *
   *   FT_LOAD_NO_HINTING ::
   *     Don't hint glyph outlines after their scaling to device pixels.
-  *     This generally generates "blurrier" glyphs in anti-aliased modes.
+  *     This generally generates `blurrier' glyphs in anti-aliased modes.
   *
-  *     This flag is ignored if @FT_LOAD_NO_SCALE is set.
+  *     This flag is ignored if @FT_LOAD_NO_SCALE is set.  See also
+  *     FT_FACE_FLAG_HINTER (@FT_FACE_FLAG_XXX), FT_LOAD_FORCE_AUTO and
+  *     FT_LOAD_NO_AUTOHINT below.
   *
   *   FT_LOAD_RENDER ::
   *     Render the glyph outline immediately into a bitmap before the glyph
@@ -2317,6 +2319,9 @@ FT_BEGIN_HEADER
   *     Force the use of the FreeType auto-hinter when a glyph outline is
   *     loaded.  You shouldn't need this in a typical application, since it
   *     is mostly used to experiment with its algorithm.
+  *
+  *     See also FT_FACE_FLAG_HINTER (@FT_FACE_FLAG_XXX), FT_LOAD_NO_HINTING
+  *     above, and FT_LOAD_NO_AUTOHINT below.
   *
   *   FT_LOAD_CROP_BITMAP ::
   *     Indicates that the glyph loader should try to crop the bitmap (i.e.,
@@ -2370,6 +2375,9 @@ FT_BEGIN_HEADER
   *     outlines.  This doesn't prevent native format-specific hinters from
   *     being used.  This can be important for certain fonts where unhinted
   *     output is better than auto-hinted one.
+  *
+  *     See also FT_FACE_FLAG_HINTER (@FT_FACE_FLAG_XXX), FT_LOAD_FORCE_AUTO,
+  *     and FT_LOAD_NO_HINTING above.
   *
   *   FT_LOAD_TARGET_NORMAL ::
   *     Use hinting for @FT_RENDER_MODE_NORMAL.
