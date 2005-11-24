@@ -1,3 +1,11 @@
+2005-11-24  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/mac/FreeType.m68k_far.make.txt,
+	builds/mac/FreeType.m68k_cfm.make.txt,
+	builds/mac/FreeType.ppc_classic.make.txt,
+	builds/mac/FreeType.ppc_carbon.make.txt:
+	Updated for MPW to build all available modules.
+
 2005-11-21  Håvard Wall  <haavardw@ifi.uio.no>
 
 	* src/bdf/bdfdrivr.c (bdf_interpret_style, BDF_Face_Done): Fix small
