@@ -76,7 +76,7 @@ CPU       = 68000
 
 OPTIMIZER = optinlocal
 
-SCFLAGS = optimize opttime optsched strmerge strsect=near idlen=40 cpu=$(CPU)\
+SCFLAGS = optimize opttime optsched strmerge data=faronly idlen=50 cpu=$(CPU)\
 	  idir=include/ idir=$(CORE) idir=FT:include/ nostackcheck nochkabort\
 	  noicons ignore=79,85,110,306 parameters=both
 
@@ -97,8 +97,8 @@ assign:
 
 # uses separate object modules in lib to make for easier debugging
 # also, can make smaller programs if entire engine is not used
-ft2_$(CPU).lib:  $(OBJBASE) $(OBJAFIT) $(OBJOTV) $(OBJPS) $(OBJRASTER) $(OBJSFNT) $(OBJCACHE) $(OBJFONTD) lzw.o # gzip.o
-	oml $@ r $(OBJBASE) $(OBJAFIT) $(OBJOTV) $(OBJPS) $(OBJRASTER) $(OBJSFNT) $(OBJCACHE) $(OBJFONTD) lzw.o
+ft2_$(CPU).lib:  $(OBJBASE) $(OBJAFIT) $(OBJOTV) $(OBJPS) $(OBJRASTER) $(OBJSFNT) $(OBJCACHE) $(OBJFONTD) lzw.o gzip.o
+	oml $@ r $(OBJBASE) $(OBJAFIT) $(OBJOTV) $(OBJPS) $(OBJRASTER) $(OBJSFNT) $(OBJCACHE) $(OBJFONTD) lzw.o gzip.o
 
 clean:
 	-delete \#?.o
@@ -172,7 +172,7 @@ psaux.o: $(CORE)psaux/psaux.c
 # freetype library PS glyph names module
 #
 psnames.o: $(CORE)psnames/psnames.c
-	sc $(SCFLAGS) objname=$@ $<
+	sc $(SCFLAGS) code=far objname=$@ $<
 
 #
 # freetype library monochrome raster module
@@ -249,7 +249,7 @@ pcf.o: $(CORE)pcf/pcf.c
 # freetype library gzip support for compressed PCF bitmap fonts
 #
 gzip.o: $(CORE)gzip/ftgzip.c
-	sc $(SCFLAGS) objname=$@ $<
+	sc $(SCFLAGS) define FAR objname=$@ $<
 
 #
 # freetype library compress support for compressed PCF bitmap fonts
