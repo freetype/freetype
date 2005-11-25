@@ -305,7 +305,7 @@ Free_VecPooled( APTR  poolHeader,
       if ( (offset < sysfile->iobuf_start) || (offset + count > sysfile->iobuf_end) )
       {
         /* requested offset implies we need a buffer refill */
-        if ( !sysfile->iobuf_end || offset != (sysfile->iobuf_end + 1) )
+        if ( !sysfile->iobuf_end || offset != sysfile->iobuf_end )
         {
           /* a physical seek is necessary */
           Seek( sysfile->file, offset, OFFSET_BEGINNING );
