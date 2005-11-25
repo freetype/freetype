@@ -1,3 +1,13 @@
+2005-11-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/smakefile: Adjusted the compiler options
+	to the current sources, now really builds the gxvalid, gzip
+	and psnames modules.
+
+	* builds/amiga/src/base/ftsystem.c: The assumed Seek() position
+	in the file cache was off by one byte which could cause false
+	errors in font files.
+
 2005-11-24  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/mac/FreeType.m68k_far.make.txt,
@@ -75,7 +85,7 @@
 2005-11-17  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/makefile, builds/amiga/makefile.os4,
-	builds/amiga/smakefile.os4,
+	builds/amiga/smakefile,
 	builds/amiga/include/freetype/config/ftmodule.h: Updated the Amiga
 	build files (added support for the gxvalid module).
 
