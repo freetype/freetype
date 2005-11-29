@@ -1,3 +1,14 @@
+2005-11-29  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/sfnt/ttcmap.c (struct  TT_CMap12Rec_, tt_cmap12_init,
+	tt_cmap12_next): New struct/function for fast "next char".
+	(tt_cmap12_char_map_binary): New function to do "charcode => glyph
+	index" by binary search.
+	(tt_cmap12_char_index, tt_cmap12_char_next): Use
+	tt_cmap12_char_map_binary.
+	(tt_face_build_cmaps): Check table and offset correctly (equality is
+	missing).
+
 2005-11-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/smakefile: Adjusted the compiler options
