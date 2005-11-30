@@ -1044,10 +1044,14 @@
     p = cmap->data + 6;
     num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 2 );
 
+    if ( !num_segs2 )
+      return 0;
+
     num_segs = num_segs2 >> 1;
 
-    if ( !num_segs )
-      return 0;
+    /* make compiler happy */
+    mid = num_segs;
+    end = 0xFFFFU;
 
     if ( next )
       charcode++;
@@ -2052,6 +2056,10 @@
 
     if ( !num_groups )
       return 0;
+
+    /* make compiler happy */
+    mid = num_groups;
+    end = 0xFFFFFFFFUL;
 
     if ( next )
       char_code++;
