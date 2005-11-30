@@ -1139,8 +1139,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A macro that returns true whenever a face object contains a scalable
-   *   font face (true for TrueType, Type 1, CID, and OpenType/CFF font
-   *   formats.
+   *   font face (true for TrueType, Type 1, Type 42, CID, OpenType/CFF,
+   *   and PFR font formats.
    *
    */
 #define FT_IS_SCALABLE( face ) \
