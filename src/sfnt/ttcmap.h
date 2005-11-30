@@ -28,8 +28,8 @@
 FT_BEGIN_HEADER
 
 
-#define TT_CMAP_FLAG_UNSORTED   1
-#define TT_CMAP_FLAG_OVERLAPPED 2
+#define TT_CMAP_FLAG_UNSORTED     1
+#define TT_CMAP_FLAG_OVERLAPPING  2
 
   typedef struct  TT_CMapRec_
   {

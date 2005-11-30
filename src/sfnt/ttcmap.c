@@ -700,10 +700,10 @@
   }
 
 
-  /* find the index of the charcode next to cmap->cur_charcode; */
-  /* caller should call tt_cmap4_set_range with proper range    */
-  /* before calling this function                               */
-  /*                                                            */
+  /* search the index of the charcode next to cmap->cur_charcode; */
+  /* caller should call tt_cmap4_set_range with proper range      */
+  /* before calling this function                                 */
+  /*                                                              */
   static void
   tt_cmap4_next( TT_CMap4  cmap )
   {
@@ -894,7 +894,7 @@
             if ( last_start > start || last_end > end )
               error |= TT_CMAP_FLAG_UNSORTED;
             else
-              error |= TT_CMAP_FLAG_OVERLAPPED;
+              error |= TT_CMAP_FLAG_OVERLAPPING;
           }
         }
 
@@ -947,7 +947,7 @@
         }
 
         last_start = start;
-        last_end = end;
+        last_end   = end;
       }
     }
 
@@ -964,7 +964,7 @@
     FT_Int     delta;
     FT_UInt    i, num_segs;
     FT_UInt32  charcode = *pcharcode;
-    FT_UInt    gindex    = 0;
+    FT_UInt    gindex   = 0;
     FT_Byte*   p;
 
 
@@ -1029,15 +1029,15 @@
 
 
   static FT_UInt
-  tt_cmap4_char_map_binary( TT_CMap     cmap,
-                            FT_UInt*    pcharcode,
-                            FT_Bool     next )
+  tt_cmap4_char_map_binary( TT_CMap   cmap,
+                            FT_UInt*  pcharcode,
+                            FT_Bool   next )
   {
     FT_UInt   num_segs2, start, end, offset;
     FT_Int    delta;
     FT_UInt   max, min, mid, num_segs;
     FT_UInt   charcode = *pcharcode;
-    FT_UInt   gindex    = 0;
+    FT_UInt   gindex   = 0;
     FT_Byte*  p;
     
 
@@ -1074,13 +1074,13 @@
         min = mid + 1;
       else
       {
-        p      += num_segs2;
-        delta   = TT_PEEK_SHORT( p );
-        p      += num_segs2;
-        offset  = TT_PEEK_USHORT( p );
+        p     += num_segs2;
+        delta  = TT_PEEK_SHORT( p );
+        p     += num_segs2;
+        offset = TT_PEEK_USHORT( p );
 
-        /* find the first segment containing `charcode' */
-        if ( cmap->flags & TT_CMAP_FLAG_OVERLAPPED )
+        /* search the first segment containing `charcode' */
+        if ( cmap->flags & TT_CMAP_FLAG_OVERLAPPING )
         {
           FT_UInt  i;
 
@@ -1091,7 +1091,7 @@
           if ( offset == 0xFFFFU )
             mid = max + 1;
 
-          /* find in segments before the current segment */
+          /* search in segments before the current segment */
           for ( i = max ; i > 0; i-- )
           {
             FT_UInt  prev_end;
@@ -1103,13 +1103,13 @@
             if ( charcode > prev_end )
               break;
 
-            end     = prev_end;
-            p      += 2 + num_segs2;
-            start   = TT_PEEK_USHORT( p );
-            p      += num_segs2;
-            delta   = TT_PEEK_SHORT( p );
-            p      += num_segs2;
-            offset  = TT_PEEK_USHORT( p );
+            end    = prev_end;
+            p     += 2 + num_segs2;
+            start  = TT_PEEK_USHORT( p );
+            p     += num_segs2;
+            delta  = TT_PEEK_SHORT( p );
+            p     += num_segs2;
+            offset = TT_PEEK_USHORT( p );
 
             if ( offset != 0xFFFFU )
               mid = i - 1;
@@ -1120,38 +1120,38 @@
           {
             if ( i != max )
             {
-              p       = cmap->data + 14 + max * 2;
-              end     = TT_PEEK_USHORT( p );
-              p      += 2 + num_segs2;
-              start   = TT_PEEK_USHORT( p );
-              p      += num_segs2;
-              delta   = TT_PEEK_SHORT( p );
-              p      += num_segs2;
-              offset  = TT_PEEK_USHORT( p );
+              p      = cmap->data + 14 + max * 2;
+              end    = TT_PEEK_USHORT( p );
+              p     += 2 + num_segs2;
+              start  = TT_PEEK_USHORT( p );
+              p     += num_segs2;
+              delta  = TT_PEEK_SHORT( p );
+              p     += num_segs2;
+              offset = TT_PEEK_USHORT( p );
             }
 
             mid = max;
 
-            /* find in segments after the current segment */
+            /* search in segments after the current segment */
             for ( i = max + 1; i < num_segs; i++ )
             {
               FT_UInt  next_end, next_start;
 
 
-              p           = cmap->data + 14 + i * 2;
-              next_end    = TT_PEEK_USHORT( p );
-              p          += 2 + num_segs2;
-              next_start  = TT_PEEK_USHORT( p );
+              p          = cmap->data + 14 + i * 2;
+              next_end   = TT_PEEK_USHORT( p );
+              p         += 2 + num_segs2;
+              next_start = TT_PEEK_USHORT( p );
 
               if ( charcode < next_start )
                 break;
 
-              end     = next_end;
-              start   = next_start;
-              p      += num_segs2;
-              delta   = TT_PEEK_SHORT( p );
-              p      += num_segs2;
-              offset  = TT_PEEK_USHORT( p );
+              end    = next_end;
+              start  = next_start;
+              p     += num_segs2;
+              delta  = TT_PEEK_SHORT( p );
+              p     += num_segs2;
+              offset = TT_PEEK_USHORT( p );
 
               if ( offset != 0xFFFFU )
                 mid = i;
@@ -1167,17 +1167,17 @@
             }
           }
 
-          /* end, start, delta and offset are for the i'th segment */
+          /* end, start, delta, and offset are for the i'th segment */
           if ( mid != i )
           {
-            p       = cmap->data + 14 + mid * 2;
-            end     = TT_PEEK_USHORT( p );
-            p      += 2 + num_segs2;
-            start   = TT_PEEK_USHORT( p );
-            p      += num_segs2;
-            delta   = TT_PEEK_SHORT( p );
-            p      += num_segs2;
-            offset  = TT_PEEK_USHORT( p );
+            p      = cmap->data + 14 + mid * 2;
+            end    = TT_PEEK_USHORT( p );
+            p     += 2 + num_segs2;
+            start  = TT_PEEK_USHORT( p );
+            p     += num_segs2;
+            delta  = TT_PEEK_SHORT( p );
+            p     += num_segs2;
+            offset = TT_PEEK_USHORT( p );
           }
         }
         else
@@ -1247,7 +1247,7 @@
   tt_cmap4_char_index( TT_CMap    cmap,
                        FT_UInt32  char_code )
   {
-    if ( char_code >= 0x10000U )
+    if ( char_code >= 0x10000UL )
       return 0;
 
     if ( cmap->flags & TT_CMAP_FLAG_UNSORTED )
@@ -1927,14 +1927,14 @@
 
   FT_CALLBACK_DEF( FT_Error )
   tt_cmap12_init( TT_CMap12  cmap,
-                  FT_Byte*  table )
+                  FT_Byte*   table )
   {
-    cmap->cmap.data   = table;
+    cmap->cmap.data  = table;
 
-    table            += 12;
-    cmap->num_groups  = FT_PEEK_ULONG( table );
+    table           += 12;
+    cmap->num_groups = FT_PEEK_ULONG( table );
 
-    cmap->valid       = 0;
+    cmap->valid      = 0;
 
     return SFNT_Err_Ok;
   }
@@ -1992,9 +1992,9 @@
   }
 
 
-  /* find the index of the charcode next to cmap->cur_charcode */
-  /* cmap->cur_group should be set up properly by caller       */
-  /*                                                           */
+  /* search the index of the charcode next to cmap->cur_charcode */
+  /* cmap->cur_group should be set up properly by caller         */
+  /*                                                             */
   static void
   tt_cmap12_next( TT_CMap12  cmap )
   {
@@ -2071,10 +2071,10 @@
     while ( min < max )
     {
       mid = ( min + max ) >> 1;
-      p = cmap->data + 16 + 12 * mid;
+      p   = cmap->data + 16 + 12 * mid;
 
-      start    = TT_NEXT_ULONG( p );
-      end      = TT_NEXT_ULONG( p );
+      start = TT_NEXT_ULONG( p );
+      end   = TT_NEXT_ULONG( p );
 
       if ( char_code < start )
         max = mid;
@@ -2105,9 +2105,9 @@
           return 0;
       }
 
-      cmap12->valid = 1;
+      cmap12->valid        = 1;
       cmap12->cur_charcode = char_code;
-      cmap12->cur_group = mid;
+      cmap12->cur_group    = mid;
 
       if ( !gindex )
       {
@@ -2304,7 +2304,8 @@
               FT_CMap  ttcmap;
 
 
-              if ( !FT_CMap_New( (FT_CMap_Class)clazz, cmap, &charmap, &ttcmap ) )
+              if ( !FT_CMap_New( (FT_CMap_Class)clazz,
+                                 cmap, &charmap, &ttcmap ) )
               {
                 /* it is simpler to directly set `flags' than adding */
                 /* a parameter to FT_CMap_New                        */

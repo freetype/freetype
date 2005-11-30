@@ -3,6 +3,9 @@
 	* docs/CHANGES: Document ftdump's `-v' option.
 	Document latest charmap code changes.
 
+	* src/sfnt/ttcmap.c, src/sfnt/ttcmap.h:
+	s/TT_CMAP_FLAG_OVERLAPPED/TT_CMAP_FLAG_OVERLAPPING/.
+
 2005-11-30  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/sfnt/ttcmap.c (tt_cmap4_char_map_binary,
@@ -10,28 +13,27 @@
 
 2005-11-29  Chia-I Wu  <b90201047@ntu.edu.tw>
 
-	Major update to distinguish between unsorted and overlapped segments
-	for cmap format 4.  For overlapped but sorted segments, which is
-	previously considered unsorted, we still use binary search.
+	Major update to distinguish between unsorted and overlapping
+	segments for cmap format 4.  For overlapping but sorted segments,
+	which is previously considered unsorted, we still use binary search.
 
-	* src/sfnt/ttcmap.h (struct  TT_CMapRec_): Replace `unsorted' by
-	`flags'.
+	* src/sfnt/ttcmap.h (TT_CMapRec_): Replace `unsorted' by `flags'. 
 	(TT_CMAP_FLAG_UNSORTED, TT_CMAP_FLAG_OVERLAPPED): New macros.
 
 	* src/sfnt/ttcmap.c (OPT_CMAP4): Removed as it is always defined.
-	(struct TT_CMap4Rec_): Remove `old_charcode' and `table_length'.  
+	(TT_CMap4Rec_): Remove `old_charcode' and `table_length'.  
 	(tt_cmap4_reset): Removed.
 	(tt_cmap4_init): Updated accordingly.
 	(tt_cmap4_next): Updated accordingly.
-	Take care of overlapped segments.
+	Take care of overlapping segments.
 	(tt_cmap4_validate): Make sure the subtable is large enough.
 	Do not check glyph_ids because some fonts set the length wrongly.
-	Also, when all segments have offset 0, glyph_ids is always invalid. It
-	does not cause any problem so far only because the check misses
+	Also, when all segments have offset 0, glyph_ids is always invalid.
+	It does not cause any problem so far only because the check misses
 	equality.
-	Distinguish between unsorted and overlapped segments.
-	(tt_cmap4_char_map_linear, tt_cmap4_char_map_binary): New functions to
-	do "charcode => glyph index" by linear/binary search.
+	Distinguish between unsorted and overlapping segments.
+	(tt_cmap4_char_map_linear, tt_cmap4_char_map_binary): New functions
+	to do `charcode => glyph index' by linear/binary search.
 	(tt_cmap4_char_index, tt_cmap4_char_next): Use
 	tt_cmap4_char_map_linear and tt_cmap4_char_map_binary.
 	(tt_face_build_cmaps): Treat the return value of validator as flags
@@ -39,10 +41,10 @@
 
 2005-11-29  Chia-I Wu  <b90201047@ntu.edu.tw>
 
-	* src/sfnt/ttcmap.c (struct  TT_CMap12Rec_, tt_cmap12_init,
-	tt_cmap12_next): New struct/function for fast "next char".
-	(tt_cmap12_char_map_binary): New function to do "charcode => glyph
-	index" by binary search.
+	* src/sfnt/ttcmap.c (TT_CMap12Rec_, tt_cmap12_init, tt_cmap12_next):
+	New structures and functions for fast `next char'.
+	(tt_cmap12_char_map_binary): New function to do `charcode => glyph
+	index' by binary search.
 	(tt_cmap12_char_index, tt_cmap12_char_next): Use
 	tt_cmap12_char_map_binary.
 	(tt_face_build_cmaps): Check table and offset correctly (equality is
