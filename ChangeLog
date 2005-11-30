@@ -1,6 +1,7 @@
 2005-11-30  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Document ftdump's `-v' option.
+	Document latest charmap code changes.
 
 2005-11-30  Chia-I Wu  <b90201047@ntu.edu.tw>
 

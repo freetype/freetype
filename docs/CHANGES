@@ -39,6 +39,8 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   III. MISCELLANEOUS
 
+    - SFNT cmap handling has been improved, mainly to run faster.
+
     - A new  face flag `FT_FACE_FLAG_HINTER'  has been added  which is
       set if the font's driver has  a hinting engine of its own.  This
       makes  it possible  to check  at run-time  whether  the TrueType
