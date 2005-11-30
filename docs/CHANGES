@@ -59,6 +59,10 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
       for more information.
 
+    - The `ftdump' program  from the `ft2demos' bundle  now shows some
+      information about charmaps.  It also supports a new  switch `-v'
+      to increase verbosity.
+
 ======================================================================
 
 LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
