@@ -2190,11 +2190,11 @@
       if ( FT_NEW_ARRAY( sub, fd_index.count ) )
         goto Fail_CID;
 
-      /* setup pointer table */
+      /* set up pointer table */
       for ( idx = 0; idx < fd_index.count; idx++ )
         font->subfonts[idx] = sub + idx;
 
-      /* now load each sub font independently */
+      /* now load each subfont independently */
       for ( idx = 0; idx < fd_index.count; idx++ )
       {
         sub = font->subfonts[idx];
