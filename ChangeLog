@@ -6,7 +6,7 @@
 
 2005-12-02  Taek Kwan(TK) Lee  <taeklee@gmail.com>
 
-	* src/type42/t42objs.x (T42_Face_Init): Replace call to
+	* src/type42/t42objs.c (T42_Face_Init): Replace call to
 	FT_New_Memory_Face with call to FT_Open_Face to pass `params'.
 
 2005-11-30  Werner Lemberg  <wl@gnu.org>
