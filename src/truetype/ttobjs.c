@@ -507,8 +507,6 @@
     TT_MaxProfile*  maxp = &face->max_profile;
 
 
-    size->ttmetrics.valid = FALSE;
-
     size->max_function_defs    = maxp->maxFunctionDefs;
     size->max_instruction_defs = maxp->maxInstructionDefs;
 
@@ -587,6 +585,7 @@
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     size->ttmetrics.valid = FALSE;
+    size->strike_index    = 0xFFFFU;
 
     return error;
   }

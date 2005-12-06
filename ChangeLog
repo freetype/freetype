@@ -1,3 +1,9 @@
+2005-12-06  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/truetype/ttobjs.c (tt_size_init): size->ttmetrics.valid is
+	initialized twice.
+	size->strike_index is not initialized.
+
 2005-12-02  Taek Kwan(TK) Lee  <taeklee@gmail.com>
 
 	* src/type42/t42objs.x (T42_Face_Init): Replace call to
