@@ -376,13 +376,6 @@
     if ( error )
       goto Exit;
 
-    if ( sfnt_header.format_tag != 0x00010000UL                      &&
-         sfnt_header.format_tag != TTAG_ttcf                         &&
-         sfnt_header.format_tag != FT_MAKE_TAG( 'O', 'T', 'T', 'O' ) &&
-         sfnt_header.format_tag != TTAG_true                         &&
-         sfnt_header.format_tag != 0x00020000UL                      )
-      return SFNT_Err_Unknown_File_Format;
-
     face->format_tag = sfnt_header.format_tag;
     face->num_tables = sfnt_header.num_tables;
 

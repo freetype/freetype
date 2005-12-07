@@ -1,3 +1,8 @@
+2005-12-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjc.c (sfnt_init_face): Move tag check to...
+	* src/sfnt/ttload.c (sfnt_init): Here, before handling TTCs.
+
 2005-12-06  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/truetype/ttobjs.c (tt_size_init): size->ttmetrics.valid is

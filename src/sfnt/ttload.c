@@ -266,6 +266,13 @@
     if ( FT_READ_ULONG( tag ) )
       return error;
 
+    if ( tag != 0x00010000UL                      &&
+         tag != TTAG_ttcf                         &&
+         tag != FT_MAKE_TAG( 'O', 'T', 'T', 'O' ) &&
+         tag != TTAG_true                         &&
+         tag != 0x00020000UL                      )
+      return SFNT_Err_Unknown_File_Format;
+
     face->ttc_header.tag = TTAG_ttcf;
 
     if ( tag == TTAG_ttcf )
