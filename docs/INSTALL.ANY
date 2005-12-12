@@ -38,8 +38,13 @@ I. Standard procedure
 
       src/base/ftbdf.c        -- optional, see <freetype/ftbdf.h>
       src/base/ftbitmap.c     -- optional, see <freetype/ftbitmap.h>
+      src/base/ftgxval.c      -- optional, see <freetype/ftgxval.h>
       src/base/ftmm.c         -- optional, see <freetype/ftmm.h>
+      src/base/ftotval.c      -- optional, see <freetype/ftotval.h>
       src/base/ftpfr.c        -- optional, see <freetype/ftpfr.h>
+      src/base/ftstroke.c     -- optional, see <freetype/ftstroke.h>
+      src/base/ftsynth.c      -- optional, see <freetype/ftsynth.h>
+      src/base/fttype1.c      -- optional, see <freetype/t1tables.h>
       src/base/ftwinfnt.c     -- optional, see <freetype/ftwinfnt.h>
 
       src/base/ftmac.c        -- only on the Macintosh
