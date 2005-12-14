@@ -1,3 +1,13 @@
+2005-12-13  David Turner  <david@freetype.org>
+
+	* src/autofit/aflatin.c, src/autofit/afhints.c: changed the
+        implementation of the LIGHT hinting mode to completely disable
+        horizontal hinting. This is an experimental effort to integrate
+        David Chester's latest patch without fucking the other hinting
+        modes as well.
+
+        Note that this doesn't force auto-hinting for all fonts however.
+
 2005-12-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjc.c (sfnt_init_face): Move tag check to...
@@ -33,11 +43,11 @@
 	segments for cmap format 4.  For overlapping but sorted segments,
 	which is previously considered unsorted, we still use binary search.
 
-	* src/sfnt/ttcmap.h (TT_CMapRec_): Replace `unsorted' by `flags'. 
+	* src/sfnt/ttcmap.h (TT_CMapRec_): Replace `unsorted' by `flags'.
 	(TT_CMAP_FLAG_UNSORTED, TT_CMAP_FLAG_OVERLAPPED): New macros.
 
 	* src/sfnt/ttcmap.c (OPT_CMAP4): Removed as it is always defined.
-	(TT_CMap4Rec_): Remove `old_charcode' and `table_length'.  
+	(TT_CMap4Rec_): Remove `old_charcode' and `table_length'.
 	(tt_cmap4_reset): Removed.
 	(tt_cmap4_init): Updated accordingly.
 	(tt_cmap4_next): Updated accordingly.

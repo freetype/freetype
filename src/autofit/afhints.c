@@ -509,7 +509,8 @@
   af_glyph_hints_rescale( AF_GlyphHints     hints,
                           AF_ScriptMetrics  metrics )
   {
-    hints->metrics = metrics;
+    hints->metrics      = metrics;
+    hints->scaler_flags = metrics->scaler.flags;
   }
 
 
@@ -520,7 +521,6 @@
     FT_Error   error   = AF_Err_Ok;
     AF_Point   points;
     FT_UInt    old_max, new_max;
-    AF_Scaler  scaler  = &hints->metrics->scaler;
     FT_Fixed   x_scale = hints->x_scale;
     FT_Fixed   y_scale = hints->y_scale;
     FT_Pos     x_delta = hints->x_delta;
@@ -528,7 +528,6 @@
     FT_Memory  memory  = hints->memory;
 
 
-    hints->scaler_flags = scaler->flags;
     hints->num_points   = 0;
     hints->num_contours = 0;
 

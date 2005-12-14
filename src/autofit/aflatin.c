@@ -1294,6 +1294,7 @@
                        AF_LatinMetrics  metrics )
   {
     FT_Render_Mode  mode;
+    FT_UInt32       scaler_flags, other_flags;
 
 
     af_glyph_hints_rescale( hints, (AF_ScriptMetrics)metrics );
@@ -1308,33 +1309,41 @@
     hints->y_delta = metrics->axis[AF_DIMENSION_VERT].delta;
 
     /* compute flags depending on render mode, etc... */
-
     mode = metrics->root.scaler.render_mode;
 
-    hints->other_flags = 0;
+    scaler_flags = hints->scaler_flags;
+    other_flags  = 0;
 
     /*
      *  We snap the width of vertical stems for the monochrome and
      *  horizontal LCD rendering targets only.
      */
     if ( mode == FT_RENDER_MODE_MONO || mode == FT_RENDER_MODE_LCD )
-      hints->other_flags |= AF_LATIN_HINTS_HORZ_SNAP;
+      other_flags |= AF_LATIN_HINTS_HORZ_SNAP;
 
     /*
      *  We snap the width of horizontal stems for the monochrome and
      *  vertical LCD rendering targets only.
      */
     if ( mode == FT_RENDER_MODE_MONO || mode == FT_RENDER_MODE_LCD_V )
-      hints->other_flags |= AF_LATIN_HINTS_VERT_SNAP;
+      other_flags |= AF_LATIN_HINTS_VERT_SNAP;
 
     /*
      *  We adjust stems to full pixels only if we don't use the `light' mode.
      */
     if ( mode != FT_RENDER_MODE_LIGHT )
-      hints->other_flags |= AF_LATIN_HINTS_STEM_ADJUST;
+      other_flags |= AF_LATIN_HINTS_STEM_ADJUST;
 
     if ( mode == FT_RENDER_MODE_MONO )
-      hints->other_flags |= AF_LATIN_HINTS_MONO;
+      other_flags |= AF_LATIN_HINTS_MONO;
+
+    /* in 'light' hinting mode, we disable horizontal hinting completely
+     */
+    if ( mode == FT_RENDER_MODE_LIGHT )
+      scaler_flags |= AF_SCALER_FLAG_NO_HORIZONTAL;
+
+    hints->scaler_flags = scaler_flags;
+    hints->other_flags  = other_flags;
 
     return 0;
   }
