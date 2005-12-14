@@ -12,7 +12,21 @@
         same location than other generated objects (i.e. within the 'objs'
         directory of the current dir)
 
-        * src/sfnt/
+        * include/freetype/config/ftoption.h,
+        include/freetype/config/ftstdlib.h,
+        include/freetype/internal/tttypes.h,
+        src/sfnt/Jamfile, src/sfnt/rules.mk, src/sfnt/sfdriver.c,
+        src/sfnt/ttbdf.h, src/sfnt/ttbdf.c, src/sfnt/sfobjs.c:
+
+        Added support for an embedded 'BDF ' table within SFNT-based
+        bitmap font files. This is used to store atoms & properties from
+        the original BDF fonts that were used to generate the font file.
+
+        the feature is controled by TT_CONFIG_OPTION_BDF within 'ftoption.h'
+        and is used to implement FT_Get_BDF_Property for these font files.
+
+        At the moment, this is still experimental, the BDF table format isn't
+        cast into stone yet.
 
 2005-12-07  Werner Lemberg  <wl@gnu.org>
 
