@@ -27,6 +27,9 @@
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include "sferrors.h"
 
+#ifdef TT_CONFIG_OPTION_BDF
+#include "ttbdf.h"
+#endif
 
   /*************************************************************************/
   /*                                                                       */
@@ -751,6 +754,11 @@
       if ( sfnt->free_sbits )
         sfnt->free_sbits( face );
     }
+
+#ifdef TT_CONFIG_OPTION_BDF
+    /* freeing the embedded BDF properties */
+    tt_face_free_bdf_props( face );
+#endif
 
     /* freeing the kerning table */
     tt_face_done_kern( face );

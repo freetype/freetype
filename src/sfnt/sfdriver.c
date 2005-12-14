@@ -34,6 +34,11 @@
 #include "ttpost.h"
 #endif
 
+#ifdef TT_CONFIG_OPTION_BDF
+#include "ttbdf.h"
+#include FT_SERVICE_BDF_H
+#endif
+
 #include "ttcmap.h"
 #include "ttkern.h"
 
@@ -293,6 +298,51 @@
     (TT_CMap_Info_GetFunc)tt_get_cmap_info
   };
 
+#ifdef TT_CONFIG_OPTION_BDF
+
+  static FT_Error
+  sfnt_get_charset_id( TT_Face       face,
+                       const char*  *acharset_encoding,
+                       const char*  *acharset_registry )
+  {
+    BDF_PropertyRec   encoding, registry;
+    FT_Error          error;
+
+   /* XXX: I don't know if this is correct, since tt_face_find_bdf_prop
+    *      will only return something correct if we have previously
+    *      selected a size that is listed in the BDF table.
+    *      should we change the BDF table format to include single
+    *      offsets for "CHARSET_REGISTRY" and "CHARSET_ENCODING" ?
+    */
+    error = tt_face_find_bdf_prop( face, "CHARSET_REGISTRY", &registry );
+    if ( !error )
+    {
+      error = tt_face_find_bdf_prop( face, "CHARSET_ENCODING", &encoding );
+      if ( !error )
+      {
+        if ( registry.type == BDF_PROPERTY_TYPE_ATOM &&
+             encoding.type == BDF_PROPERTY_TYPE_ATOM )
+        {
+          *acharset_encoding = encoding.u.atom;
+          *acharset_registry = registry.u.atom;
+        }
+        else
+          error = FT_Err_Invalid_Argument;
+      }
+    }
+
+    return error;
+  }
+
+
+  static const FT_Service_BDFRec  sfnt_service_bdf =
+  {
+    (FT_BDF_GetCharsetIdFunc) sfnt_get_charset_id,
+    (FT_BDF_GetPropertyFunc)  tt_face_find_bdf_prop,
+  };
+
+#endif /* TT_CONFIG_OPTION_BDF */
+
 
  /*
   *  SERVICE LIST
@@ -305,6 +355,9 @@
     { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &sfnt_service_ps_name },
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
     { FT_SERVICE_ID_GLYPH_DICT,           &sfnt_service_glyph_dict },
+#endif
+#ifdef TT_CONFIG_OPTION_BDF
+    { FT_SERVICE_ID_BDF,                  &sfnt_service_bdf },
 #endif
     { FT_SERVICE_ID_TT_CMAP,              &tt_service_get_cmap_info },
 

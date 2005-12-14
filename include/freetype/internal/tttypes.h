@@ -843,6 +843,68 @@ FT_BEGIN_HEADER
   typedef struct GX_BlendRec_  *GX_Blend;
 #endif
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /***                                                                   ***/
+  /***                                                                   ***/
+  /***       EMBEDDED BDF PROPERTIES TABLE SUPPORT                       ***/
+  /***                                                                   ***/
+  /***                                                                   ***/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+/* these types are used to support a 'BDF' table that isn't part of the
+ * official TrueType specification. It is mainly used in SFNT-based bitmap
+ * fonts that were generated from a set of BDF fonts
+ *
+ * the format of the table is the following:
+ *
+ *   USHORT   version      'BDF' table version number, should be 0x0001
+ *   USHORT   strikeCount  number of strikes (bitmap sizes) in this table
+ *   ULONG    stringTable  offset (froms start of BDF table) to string table
+ *
+ * followed by an array of 'strikeCount' descriptors that look like:
+ *
+ *   USHORT   ppem         vertical pixels per EM for this strike
+ *   USHORT   numItems     number of items for this strike (properties and
+ *                         atoms), max is 255
+ *
+ * this array is followed by 'strikeCount' value sets. Each "value set"
+ * is an array of 'numItems' items that look like the following:
+ *
+ *   ULONG    item_name     offset in string table to item name
+ *   USHORT   item_type     0 => string (e.g. COMMENT)
+ *                          1 => atom   (e.g. FONT or even SIZE)
+ *                          2 => int32
+ *                          3 => uint32
+ *                       0x10 => flag for properties, ored with above values
+ *
+ *   ULONG    item_value    for strings => offset in string table without
+ *                                         the corresponding double quotes
+ *
+ *                              atoms   => offset in string table
+ *
+ *                              integers => direct value
+ *
+ * all strings in the string table are 8-bit, zero-terminated
+ */
+
+#ifdef TT_CONFIG_OPTION_BDF
+
+  typedef struct TT_BDFRec_
+  {
+    FT_Byte*       table;
+    FT_Byte*       table_end;
+    FT_Byte*       strings;
+    FT_UInt32      strings_size;
+    FT_UInt        num_strikes;
+    FT_Bool        loaded;
+
+  } TT_BDFRec, *TT_BDF;
+
+#endif /* TT_CONFIG_OPTION_BDF */
 
   /*************************************************************************/
   /*************************************************************************/
@@ -1341,6 +1403,10 @@ FT_BEGIN_HEADER
     FT_Bool               doblend;
     GX_Blend              blend;
 #endif
+
+#ifdef TT_CONFIG_OPTION_BDF
+    TT_BDFRec        bdf;
+#endif /* TT_CONFIG_OPTION_BDF */
 
     /***********************************************************************/
     /*                                                                     */

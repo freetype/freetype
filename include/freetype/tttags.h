@@ -36,6 +36,7 @@ FT_BEGIN_HEADER
 #define TTAG_avar  FT_MAKE_TAG( 'a', 'v', 'a', 'r' )
 #define TTAG_BASE  FT_MAKE_TAG( 'B', 'A', 'S', 'E' )
 #define TTAG_bdat  FT_MAKE_TAG( 'b', 'd', 'a', 't' )
+#define TTAG_BDF   FT_MAKE_TAG( 'B', 'D', 'F', ' ' )
 #define TTAG_bhed  FT_MAKE_TAG( 'b', 'h', 'e', 'd' )
 #define TTAG_bloc  FT_MAKE_TAG( 'b', 'l', 'o', 'c' )
 #define TTAG_bsln  FT_MAKE_TAG( 'b', 's', 'l', 'n' )

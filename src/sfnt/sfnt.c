@@ -33,5 +33,8 @@
 #include "ttpost.c"
 #endif
 
+#ifdef TT_CONFIG_OPTION_BDF
+#include "ttbdf.c"
+#endif
 
 /* END */

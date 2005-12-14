@@ -101,9 +101,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   FreeType now handles font files that have been compressed with the  */
   /*   'compress' program.  This is mostly used to parse many of the PCF   */
-  /*   files that come with various X11 distributions.  The implementation */
-  /*   uses NetBSD's `zopen' to partially uncompress the file on the fly   */
-  /*   (see src/lzw/ftgzip.c).                                             */
+  /*   files that come with various X11 distributions.                     */
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
   /*                                                                       */
@@ -494,6 +492,13 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_BDF if upi want to include support for        */
+  /* an embedded 'BDF' table within SFNT-based bitmap formats.             */
+  /*                                                                       */
+#define TT_CONFIG_OPTION_BDF
+
+  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****      T Y P E 1   D R I V E R    C O N F I G U R A T I O N       ****/
@@ -546,6 +551,7 @@ FT_BEGIN_HEADER
   /* driver.                                                               */
   /*                                                                       */
 #undef T1_CONFIG_OPTION_NO_MM_SUPPORT
+
 
  /* */
 
