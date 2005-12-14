@@ -158,6 +158,8 @@ rule GenExportSymbols
   local  apinames = apinames$(SUFEXE) ;
   local  headers  = [ Glob $(2) : *.h ] ;
 
+  LOCATE on $(1) = $(ALL_LOCATE_TARGET) ;
+
   APINAMES on $(1) = apinames$(SUFEXE) ;
 
   Depends            $(1) : $(apinames) $(headers) ;
