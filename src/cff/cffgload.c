@@ -2687,9 +2687,6 @@
 
         metrics->horiBearingX = cbox.xMin;
         metrics->horiBearingY = cbox.yMax;
-
-        if ( hinting )
-          ft_glyphslot_grid_fit_metrics( &glyph->root );
       }
     }
 

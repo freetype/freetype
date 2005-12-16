@@ -251,29 +251,6 @@
 
 
   FT_BASE_DEF( void )
-  ft_glyphslot_grid_fit_metrics( FT_GlyphSlot  slot )
-  {
-    FT_Pos  tmp;
-
-
-    tmp = FT_PIX_CEIL( slot->metrics.horiBearingX + slot->metrics.width );
-    slot->metrics.horiBearingX = FT_PIX_FLOOR( slot->metrics.horiBearingX );
-    slot->metrics.width        = tmp - slot->metrics.horiBearingX;
-
-    tmp = FT_PIX_FLOOR( slot->metrics.horiBearingY - slot->metrics.height );
-    slot->metrics.horiBearingY = FT_PIX_CEIL( slot->metrics.horiBearingY );
-    slot->metrics.height       = slot->metrics.horiBearingY - tmp;
-
-    slot->metrics.horiAdvance  = FT_PIX_ROUND( slot->metrics.horiAdvance );
-
-    slot->metrics.vertBearingX = FT_PIX_FLOOR( slot->metrics.vertBearingX );
-    /* note that vertBearingY should be floor'ed */
-    slot->metrics.vertBearingY = FT_PIX_FLOOR( slot->metrics.vertBearingY );
-    slot->metrics.vertAdvance  = FT_PIX_ROUND( slot->metrics.vertAdvance );
-  }
-
-
-  FT_BASE_DEF( void )
   ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
                            FT_Byte*      buffer )
   {
@@ -1983,17 +1960,17 @@
   {
     /* Compute root ascender, descender, test height, and max_advance */
 
-    metrics->ascender    = FT_PIX_CEIL( FT_MulFix( face->ascender,
-                                                   metrics->y_scale ) );
+    metrics->ascender    = FT_MulFix( face->ascender,
+                                      metrics->y_scale );
 
-    metrics->descender   = FT_PIX_FLOOR( FT_MulFix( face->descender,
-                                                    metrics->y_scale ) );
+    metrics->descender   = FT_MulFix( face->descender,
+                                      metrics->y_scale );
 
-    metrics->height      = FT_PIX_ROUND( FT_MulFix( face->height,
-                                                    metrics->y_scale ) );
+    metrics->height      = FT_MulFix( face->height,
+                                      metrics->y_scale );
 
-    metrics->max_advance = FT_PIX_ROUND( FT_MulFix( face->max_advance_width,
-                                                    metrics->x_scale ) );
+    metrics->max_advance = FT_MulFix( face->max_advance_width,
+                                      metrics->x_scale );
   }
 
 

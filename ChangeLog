@@ -1,3 +1,16 @@
+2005-12-16  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/internal/ftobjs.h (ft_glyphslot_grid_fit_metrics),
+	src/base/ftobjs.c (ft_glyphslot_grid_fit_metrics): Removed.
+
+	* src/base/ftobjs.c (ft_recompute_scaled_metrics): Do not round.
+
+	* src/cff/cffgload.c (cff_slot_load), src/cid/cidgload.c
+	(cid_slot_load_glyph), src/truetype/ttgload.c (compute_glyph_metrics),
+	src/type1/t1gload.c (T1_Load_Glyph): Do not round glyph metrics.
+
+	* doc/CHANGES: Mention the changes.
+
 2005-12-13  David Turner  <david@freetype.org>
 
 	* src/autofit/aflatin.c, src/autofit/afhints.c: changed the

@@ -1801,9 +1801,6 @@
     glyph->metrics.width  = bbox.xMax - bbox.xMin;
     glyph->metrics.height = bbox.yMax - bbox.yMin;
 
-    if ( IS_HINTED( loader->load_flags ) )
-      ft_glyphslot_grid_fit_metrics( glyph );
-
     return 0;
   }
 

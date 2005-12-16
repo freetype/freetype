@@ -359,9 +359,6 @@
         /* make up vertical ones */
         metrics->vertBearingX = 0;
         metrics->vertBearingY = 0;
-
-        if ( hinting )
-          ft_glyphslot_grid_fit_metrics( &glyph->root );
       }
 
       /* Set control data to the glyph charstrings.  Note that this is */
