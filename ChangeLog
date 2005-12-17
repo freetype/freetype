@@ -1,3 +1,8 @@
+2005-12-17  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/truetype/ttinterp.c (Update_Max): Set current size of buffer
+	correctly (so that memory debug system won't panic).
+
 2005-12-16  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* include/freetype/internal/ftobjs.h (ft_glyphslot_grid_fit_metrics),
