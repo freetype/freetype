@@ -1308,7 +1308,7 @@
     hints->y_scale = metrics->axis[AF_DIMENSION_VERT].scale;
     hints->y_delta = metrics->axis[AF_DIMENSION_VERT].delta;
 
-    /* compute flags depending on render mode, etc... */
+    /* compute flags depending on render mode, etc. */
     mode = metrics->root.scaler.render_mode;
 
     scaler_flags = hints->scaler_flags;
@@ -1337,7 +1337,8 @@
     if ( mode == FT_RENDER_MODE_MONO )
       other_flags |= AF_LATIN_HINTS_MONO;
 
-    /* in 'light' hinting mode, we disable horizontal hinting completely
+    /*
+     *  In `light' hinting mode we disable horizontal hinting completely.
      */
     if ( mode == FT_RENDER_MODE_LIGHT )
       scaler_flags |= AF_SCALER_FLAG_NO_HORIZONTAL;

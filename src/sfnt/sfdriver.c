@@ -289,14 +289,14 @@
   };
 
 
- /*
-  *  TT CMAP INFO
-  *
-  */
+  /*
+   *  TT CMAP INFO
+   */
   static const FT_Service_TTCMapsRec  tt_service_get_cmap_info =
   {
     (TT_CMap_Info_GetFunc)tt_get_cmap_info
   };
+
 
 #ifdef TT_CONFIG_OPTION_BDF
 
@@ -305,15 +305,16 @@
                        const char*  *acharset_encoding,
                        const char*  *acharset_registry )
   {
-    BDF_PropertyRec   encoding, registry;
-    FT_Error          error;
+    BDF_PropertyRec  encoding, registry;
+    FT_Error         error;
 
-   /* XXX: I don't know if this is correct, since tt_face_find_bdf_prop
-    *      will only return something correct if we have previously
-    *      selected a size that is listed in the BDF table.
-    *      should we change the BDF table format to include single
-    *      offsets for "CHARSET_REGISTRY" and "CHARSET_ENCODING" ?
-    */
+
+    /* XXX: I don't know whether this is correct, since
+     *      tt_face_find_bdf_prop only returns something correct if we have
+     *      previously selected a size that is listed in the BDF table. 
+     *      Should we change the BDF table format to include single offsets
+     *      for `CHARSET_REGISTRY' and `CHARSET_ENCODING'?
+     */
     error = tt_face_find_bdf_prop( face, "CHARSET_REGISTRY", &registry );
     if ( !error )
     {
@@ -344,10 +345,9 @@
 #endif /* TT_CONFIG_OPTION_BDF */
 
 
- /*
-  *  SERVICE LIST
-  *
-  */
+  /*
+   *  SERVICE LIST
+   */
 
   static const FT_ServiceDescRec  sfnt_services[] =
   {

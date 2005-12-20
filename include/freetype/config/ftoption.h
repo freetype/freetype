@@ -493,10 +493,11 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* Define TT_CONFIG_OPTION_BDF if upi want to include support for        */
-  /* an embedded 'BDF' table within SFNT-based bitmap formats.             */
+  /* Define TT_CONFIG_OPTION_BDF if you want to include support for        */
+  /* an embedded `BDF ' table within SFNT-based bitmap formats.            */
   /*                                                                       */
 #define TT_CONFIG_OPTION_BDF
+
 
   /*************************************************************************/
   /*************************************************************************/

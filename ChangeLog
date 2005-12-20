@@ -18,33 +18,65 @@
 
 2005-12-13  David Turner  <david@freetype.org>
 
-	* src/autofit/aflatin.c, src/autofit/afhints.c: changed the
-        implementation of the LIGHT hinting mode to completely disable
-        horizontal hinting. This is an experimental effort to integrate
-        David Chester's latest patch without fucking the other hinting
-        modes as well.
+	Change the implementation of the LIGHT hinting mode to completely
+	disable horizontal hinting.  This is an experimental effort to
+	integrate David Chester's latest patch without affecting the other
+	hinting modes as well.
 
-        Note that this doesn't force auto-hinting for all fonts however.
+	Note that this doesn't force auto-hinting for all fonts, however.
 
-        * Jamfile: small fix to ensure that ftexport.sym is placed in the
-        same location than other generated objects (i.e. within the 'objs'
-        directory of the current dir)
+	* src/autofit/afhints.c (af_glyph_hints_reload): Don't set
+	scaler_fiags here but...
+	(af_glyph_hints_rescale): Here.
 
-        * include/freetype/config/ftoption.h,
-        include/freetype/config/ftstdlib.h,
-        include/freetype/internal/tttypes.h,
-        src/sfnt/Jamfile, src/sfnt/rules.mk, src/sfnt/sfdriver.c,
-        src/sfnt/ttbdf.h, src/sfnt/ttbdf.c, src/sfnt/sfobjs.c:
+	* src/autofit/aflatin.c (af_latin_hints_init): Disable horizontal
+	hinting for `light' hinting mode.
 
-        Added support for an embedded 'BDF ' table within SFNT-based
-        bitmap font files. This is used to store atoms & properties from
-        the original BDF fonts that were used to generate the font file.
 
-        the feature is controled by TT_CONFIG_OPTION_BDF within 'ftoption.h'
-        and is used to implement FT_Get_BDF_Property for these font files.
+	* Jamfile: Small fix to ensure that ftexport.sym is placed into the
+	same location as other generated objects (i.e., within the `objs'
+	directory of the current directory).
 
-        At the moment, this is still experimental, the BDF table format isn't
-        cast into stone yet.
+
+	Add support for an embedded `BDF ' table within SFNT-based bitmap
+	font files.  This is used to store atoms & properties from the
+	original BDF fonts that were used to generate the font file.
+
+	The feature is controlled by TT_CONFIG_OPTION_BDF within
+	`ftoption.h' and is used to implement FT_Get_BDF_Property for these
+	font files.
+
+	At the moment, this is still experimental, the BDF table format
+	isn't cast into stone yet.
+
+	* include/freetype/config/ftoption.h (TT_CONFIG_OPTION_BDF): New
+	macro.
+
+	* include/freetype/config/ftstdlib.h (ft_memchr): New macro.
+
+	* include/freetype/internal/tttypes.h (TT_BDFRec, TT_BDF)
+	[TT_CONFIG_OPTION_BDF]: New structure.
+	(TT_FaceRec) [TT_CONFIG_OPTION_BDF]: New member `bdf'.
+
+	* include/freetype/ttags.h (TTAG_BDF): New macro.
+
+	* src/sfnt/Jamfile (_sources): Add ttbdf.
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add ttbdf.c.
+
+	* src/sfnt/sfdriver.c [TT_CONFIG_OPTION_BDF]: Include ttbdf.h and
+	FT_SERVICE_BDF_H.
+	(sfnt_get_charset_it) [TT_CONFIG_OPTION_BDF]: New function.
+	(sfnt_service_bdf) [TT_CONFIG_OPTION_BDF]: New service.
+	(sfnt_servives) [TT_CONFIG_OPTION_BDF]: Add sfnt_service_bdf.
+
+	* src/sfnt/sfnt.c [TT_CONFIG_OPTION_BDF]: Include ttbdf.c.
+
+	* src/sfnt/sfobjs.c [TT_CONFIG_OPTION_BDF]: Include ttbdf.h.
+	(sfnt_done_face) [TT_CONFIG_OPTION_BDF]: Call
+	tt_face_free_bdf_props.
+
+	* src/sfnt/ttbdf.h, src/sfnt/ttbdf.c: New files.
 
 2005-12-07  Werner Lemberg  <wl@gnu.org>
 

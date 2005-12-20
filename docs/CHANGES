@@ -14,8 +14,8 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   II. IMPORTANT CHANGES
 
-    - Face metrics (face->size->metrics) and glyph metrics are no
-      longer rounded.  If you do not round in your applications too,
+    - Face  metrics  (face->size->metrics)  and glyph  metrics are  no
+      longer rounded.   If you do not round  in your applications too,
       you may find glyphs become blurry.
 
     - A  new API  `FT_TrueTypeGX_Validate'  (in FT_GX_VALIDATE_H)  has
