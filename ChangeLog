@@ -1,3 +1,15 @@
+2005-12-23  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c (FT_New_Face_From_Suitcase): Counts scalable
+	faces in supported formats (sfnt, LWFN) only, and ignore bitmap
+	faces in unsupported formats (fbit, NFNT). The number of available
+	faces are passed via face->num_faces. When bitmap faces are embedded
+	in sfnt resource, face->num_fixed_size is correctly set. In public
+	API, FT_New_Face() and FT_New_Face_From_FSSpec() count the faces
+	as FT_GetFile_From_Mac_Name(), which ignores NFNT resources.
+
+	* doc/CHANGES: Mention the changes.
+
 2005-12-17  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/truetype/ttinterp.c (Update_Max): Set current size of buffer

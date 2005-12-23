@@ -23,15 +23,11 @@
     support this I use the face_index argument of FT_(Open|New)_Face()
     functions, and pretend the suitcase file is a collection.
 
-    Warning: Although the FOND driver sets face->num_faces field to the
-    number of available fonts, but the Type 1 driver sets it to 1 anyway.
-    So this field is currently not reliable, and I don't see a clean way
-    to  resolve that.  The face_index argument translates to
-
-      Get1IndResource( 'FOND', face_index + 1 );
-
-    so clients should figure out the resource index of the FOND.
-    (I'll try to provide some example code for this at some point.)
+    Warning: fbit and NFNT bitmap resources are not supported yet.
+    In old sfnt fonts, bitmap glyph data for each sizes are stored in
+    each NFNT resources, instead of bdat table in sfnt resource.
+    Therefore, face->num_fixed_sizes is set to 0, because bitmap
+    data in NFNT resource is unavailable at present.
 
     The Mac FOND support works roughly like this:
 
@@ -267,6 +263,8 @@
   }
 
 
+  /* count_faces_sfnt() counts both of sfnt & NFNT refered by FOND */
+  /* count_faces_scalable() counts sfnt only refered by FOND       */
   static short
   count_faces_sfnt( char *fond_data )
   {
@@ -274,6 +272,28 @@
     /* Isn't that cute? :-)                                */
 
     return 1 + *( (short *)( fond_data + sizeof ( FamRec ) ) );
+  }
+
+
+  static short
+  count_faces_scalable( char *fond_data )
+  {
+    AsscEntry*  assoc;
+    FamRec*     fond;
+    short       i, face, face_all;
+
+
+    fond       = (FamRec*)fond_data;
+    face_all   = *( (short *)( fond_data + sizeof ( FamRec ) ) ) + 1;
+    assoc      = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
+    face       = 0;
+
+    for ( i = 0; i < face_all; i++ )
+    {
+      if ( 0 == assoc[i].fontSize )
+        face ++;
+    }
+    return face;
   }
 
 
@@ -411,7 +431,7 @@
     if ( have_lwfn && ( !have_sfnt || PREFER_LWFN ) )
       return 1;
     else
-      return count_faces_sfnt( *fond );
+      return count_faces_scalable( *fond );
   }
 
 
@@ -744,36 +764,33 @@
                              FT_Long     face_index,
                              FT_Face    *aface )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = FT_Err_Cannot_Open_Resource;
     short     res_index;
     Handle    fond;
-    short     num_faces;
+    short     num_faces_in_res, num_faces_in_fond;
 
 
     UseResFile( res_ref );
 
+    num_faces_in_res = 0;
     for ( res_index = 1; ; ++res_index )
     {
       fond = Get1IndResource( 'FOND', res_index );
       if ( ResError() )
-      {
-        error = FT_Err_Cannot_Open_Resource;
-        goto Error;
-      }
-      if ( face_index < 0 )
         break;
 
-      num_faces = count_faces( fond );
-      if ( face_index < num_faces )
-        break;
+      num_faces_in_fond  = count_faces( fond );
+      num_faces_in_res  += num_faces_in_fond;
 
-      face_index -= num_faces;
+      if ( 0 <= face_index && face_index < num_faces_in_fond && error )
+        error = FT_New_Face_From_FOND( library, fond, face_index, aface );
+      
+      face_index -= num_faces_in_fond;
     }
 
-    error = FT_New_Face_From_FOND( library, fond, face_index, aface );
-
-  Error:
     CloseResFile( res_ref );
+    if ( FT_Err_Ok == error && NULL != aface )
+      (*aface)->num_faces = num_faces_in_res;
     return error;
   }
 
