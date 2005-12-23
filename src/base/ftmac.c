@@ -24,7 +24,7 @@
     functions, and pretend the suitcase file is a collection.
 
     Warning: fbit and NFNT bitmap resources are not supported yet.
-    In old sfnt fonts, bitmap glyph data for each sizes are stored in
+    In old sfnt fonts, bitmap glyph data for each size is stored in
     each NFNT resources, instead of bdat table in sfnt resource.
     Therefore, face->num_fixed_sizes is set to 0, because bitmap
     data in NFNT resource is unavailable at present.
@@ -266,17 +266,17 @@
   /* count_faces_sfnt() counts both of sfnt & NFNT refered by FOND */
   /* count_faces_scalable() counts sfnt only refered by FOND       */
   static short
-  count_faces_sfnt( char *fond_data )
+  count_faces_sfnt( char*  fond_data )
   {
     /* The count is 1 greater than the value in the FOND.  */
     /* Isn't that cute? :-)                                */
 
-    return 1 + *( (short *)( fond_data + sizeof ( FamRec ) ) );
+    return 1 + *( (short*)( fond_data + sizeof ( FamRec ) ) );
   }
 
 
   static short
-  count_faces_scalable( char *fond_data )
+  count_faces_scalable( char*  fond_data )
   {
     AsscEntry*  assoc;
     FamRec*     fond;
@@ -291,7 +291,7 @@
     for ( i = 0; i < face_all; i++ )
     {
       if ( 0 == assoc[i].fontSize )
-        face ++;
+        face++;
     }
     return face;
   }

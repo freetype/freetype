@@ -1,27 +1,28 @@
 2005-12-23  David Turner  <david@freetype.org>
 
-	* Jamfile, docs/reference/README: fix it so that "jam refdoc" works
-	correctly to generate the API reference in 'docs/reference'
+	* Jamfile (RefDoc), docs/reference/README: Fix it so that `jam
+	refdoc' works correctly to generate the API reference in
+	`docs/reference'.
 
-	* src/tools/docmaker/tohtml.py: update to output nicer fields lists
-	in the API reference
+	* src/tools/docmaker/tohtml.py (print_html_field,
+	print_html_field_list): Update to output nicer fields lists in the
+	API reference.
 
 	* src/base/ftobjs.c (FT_Load_Glyph): FT_LOAD_TARGET_LIGHT now
-	forces auto-hinting
+	forces auto-hinting.
 
-	* freetype/freetype.h: updating the documentation for
-	FT_LOAD_TARGET_XXX and FT_Render_Mode values
-
+	* freetype/freetype.h: Updating the documentation for
+	FT_LOAD_TARGET_XXX and FT_Render_Mode values.
 
 2005-12-23  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftmac.c (FT_New_Face_From_Suitcase): Counts scalable
-	faces in supported formats (sfnt, LWFN) only, and ignore bitmap
-	faces in unsupported formats (fbit, NFNT). The number of available
-	faces are passed via face->num_faces. When bitmap faces are embedded
-	in sfnt resource, face->num_fixed_size is correctly set. In public
-	API, FT_New_Face() and FT_New_Face_From_FSSpec() count the faces
-	as FT_GetFile_From_Mac_Name(), which ignores NFNT resources.
+	* src/base/ftmac.c (FT_New_Face_From_Suitcase): Count scalable faces
+	in supported formats (sfnt, LWFN) only, and ignore bitmap faces in
+	unsupported formats (fbit, NFNT).  The number of available faces are
+	passed via face->num_faces.  If bitmap faces are embedded in sfnt
+	resource, face->num_fixed_size is correctly set.  In public API,
+	FT_New_Face() and FT_New_Face_From_FSSpec() count the faces as
+	FT_GetFile_From_Mac_Name(), which ignores NFNT resources.
 
 	* doc/CHANGES: Mention the changes.
 

@@ -6,7 +6,7 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
     - The FT_HAS_KERNING macro always returned 0.
 
-    - CFF OpenType  fonts didn't return  correct vertical  metrics for
+    - CFF OpenType  fonts didn't  return correct vertical  metrics for
       glyphs with outlines.
 
     - If FreeType was compiled without hinters, all font formats based
@@ -14,12 +14,12 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   II. IMPORTANT CHANGES
 
-    - the LIGHT hinting algorithm produces more pleasant results. Also,
-      using the FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph will always
-      force auto-hinting, as a special exception.
+    - The  LIGHT  hinting algorithm  produces  more pleasant  results.
+      Also, using the  FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph
+      always forces auto-hinting, as a special exception.
 
-    - Face  metrics  (face->size->metrics)  and glyph  metrics are  no
-      longer rounded.   If you do not round  in your applications too,
+    - Face  metrics  (face->size->metrics) and  glyph  metrics are  no
+      longer rounded.  If  you do not round in  your applications too,
       you may find glyphs become blurry.
 
     - A  new API  `FT_TrueTypeGX_Validate'  (in FT_GX_VALIDATE_H)  has
@@ -29,7 +29,7 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       accessing  them.  This  code  has been  contributed by  Masatake
       Yamato and Toshiya Suzuki.
 
-    - The following callback function types have  changed slightly (by
+    - The following callback function  types have changed slightly (by
       adding the `const' keyword where appropriate):
 
         FT_Outline_MoveToFunc
@@ -47,15 +47,15 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   III. MISCELLANEOUS
 
-    - the documentation for FT_LOAD_TARGET_XXX and FT_RENDER_MODE_XXX
-      values have been updated to better reflect their uses and differences
-      (one set is used to specify hinting algorithm, the other to specify
-      pixel rendering mode).
+    - The documentation  for FT_LOAD_TARGET_XXX and FT_RENDER_MODE_XXX
+      values now better reflects its usage and differences: One set is
+      used to specify the hinting algorithm, the other to specify pthe
+      ixel rendering mode.
     
-    - FT_New_Face() & FT_New_Face_From_FSSpec() in ftmac.c are changed
-      to count supported scalable faces (sfnt, LWFN) only, and returns
-      the number of available faces via face->num_faces.   Unsupported
-      bitmap faces (fbit, NFNT) are ignored.
+    - FT_New_Face()  and   FT_New_Face_From_FSSpec()  in  ftmac.c  are
+      changed to count supported scalable faces (sfnt, LWFN) only, and
+      returns  the  number  of  available faces  via  face->num_faces.
+      Unsupported bitmap faces (fbit, NFNT) are ignored.
 
     - SFNT cmap handling has been improved, mainly to run faster.
 
@@ -70,8 +70,8 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       for better readability.
 
     - FreeType now honours bit 1 in the `head' table of TrueType fonts
-      (meaning `left  sidebearing  point  at x=0').   This helps  with
-      some buggy fonts.
+      (meaning `left sidebearing point at x=0').  This helps with some
+      buggy fonts.
 
     - Rudimentary support for Adobe's new `SING Glyphlet' format.  See
 
@@ -79,8 +79,8 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
       for more information.
 
-    - The `ftdump' program  from the `ft2demos' bundle  now shows some
-      information about charmaps.  It also supports a new  switch `-v'
+    - The `ftdump'  program from the `ft2demos' bundle  now shows some
+      information about charmaps.  It  also supports a new switch `-v'
       to increase verbosity.
 
 ======================================================================
