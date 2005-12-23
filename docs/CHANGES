@@ -14,6 +14,10 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   II. IMPORTANT CHANGES
 
+    - the LIGHT hinting algorithm produces more pleasant results. Also,
+      using the FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph will always
+      force auto-hinting, as a special exception.
+
     - Face  metrics  (face->size->metrics)  and glyph  metrics are  no
       longer rounded.   If you do not round  in your applications too,
       you may find glyphs become blurry.
@@ -43,6 +47,11 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   III. MISCELLANEOUS
 
+    - the documentation for FT_LOAD_TARGET_XXX and FT_RENDER_MODE_XXX
+      values have been updated to better reflect their uses and differences
+      (one set is used to specify hinting algorithm, the other to specify
+      pixel rendering mode).
+    
     - FT_New_Face() & FT_New_Face_From_FSSpec() in ftmac.c are changed
       to count supported scalable faces (sfnt, LWFN) only, and returns
       the number of available faces via face->num_faces.   Unsupported
@@ -96,15 +105,15 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       highly recommended to upgrade.
 
     - FreeType didn't properly parse empty Type 1 glyphs.
-    
+
     - An unbound dynamic buffer growth was fixed in the PFR loader.
-    
+
     - Several bugs have been fixed in the cache sub-system.
 
     - FreeType behaved incorrectly when resizing two distinct but very
       close character pixel sizes through `FT_Set_Char_Size' (Savannah
       bug #12263).
-      
+
     - The auto-hinter didn't work properly for fonts without a Unicode
       charmap -- it even refused to load the glyphs.
 
@@ -184,7 +193,7 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       PIC mode (i.e.,  when generating a  Unix shared object/dll)  put
       the array  into the non-shared  writable section of  the library
       since absolute pointers are not relocatable by nature.
-      
+
       This reduces the memory consumption by approximately 16KByte per
       process linked  to FreeType.   We now also store  the array in a
       compressed form (as a trie) which saves about 20KByte of code as

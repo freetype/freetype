@@ -2356,7 +2356,7 @@ FT_BEGIN_HEADER
   *   FT_LOAD_IGNORE_TRANSFORM ::
   *     Indicates that the glyph loader should not try to transform the
   *     loaded glyph image.  This doesn't prevent scaling, hinting, or
-  *     rendering.
+  *     rendering. See @FT_Set_Transform
   *
   *   FT_LOAD_MONOCHROME ::
   *     This flag is used with @FT_LOAD_RENDER to indicate that you want
@@ -2379,34 +2379,9 @@ FT_BEGIN_HEADER
   *     See also FT_FACE_FLAG_HINTER (@FT_FACE_FLAG_XXX), FT_LOAD_FORCE_AUTO,
   *     and FT_LOAD_NO_HINTING above.
   *
-  *   FT_LOAD_TARGET_NORMAL ::
-  *     Use hinting for @FT_RENDER_MODE_NORMAL.
-  *
-  *   FT_LOAD_TARGET_LIGHT ::
-  *     Use hinting for @FT_RENDER_MODE_LIGHT.
-  *
-  *   FT_LOAD_TARGET_MONO ::
-  *     Use hinting for @FT_RENDER_MODE_MONO.
-  *
-  *   FT_LOAD_TARGET_LCD ::
-  *     Use hinting for @FT_RENDER_MODE_LCD.
-  *
-  *   FT_LOAD_TARGET_LCD_V ::
-  *     Use hinting for @FT_RENDER_MODE_LCD_V.
-  *
   * @note:
-  *   You should use only _one_ of the FT_LOAD_TARGET_XXX values; they
-  *   can't be ORed.
-  *
-  *   However, FreeType makes a distinction between the hinting algorithm
-  *   being used, and the pixel mode of the target bitmaps.  For example,
-  *   it is possible to use the `light' hinting algorithm and have the
-  *   results rendered in horizontal LCD pixel mode, with code like this:
-  *
-  *     FT_Load_Glyph( face, glyph_index,
-  *                    load_flags | FT_LOAD_TARGET_LIGHT );
-  *     FT_Render_Glyph( face->glyph, FT_RENDER_MODE_LCD );
-  *
+  *   see also @FT_LOAD_TARGET_XXX which relate to hinting algorithm
+  *   selection.
   */
 #define FT_LOAD_DEFAULT                      0x0
 #define FT_LOAD_NO_SCALE                     0x1
@@ -2429,14 +2404,87 @@ FT_BEGIN_HEADER
 
   /* */
 
+ /**************************************************************************
+  *
+  * @enum: FT_LOAD_TARGET_XXX
+  *
+  * @description:
+  *   a list of values that are used to select a specific hinting
+  *   algorithm to the glyph loader. You should OR one of these values
+  *   to your 'load_flags' when calling @FT_Load_Glyph.
+  *
+  *   note that these values are only used by the auto-hinter, and ignored
+  *   by the native ones (e.g. the TrueType bytecode interpreter). You
+  *   must use @FT_LOAD_FORCE_AUTOHINT to ensure that they're always used.
+  *
+  *   @FT_LOAD_TARGET_LIGHT being an exception, that always forces the
+  *   auto-hinter.
+  *
+  * @values:
+  *   FT_LOAD_TARGET_NORMAL ::
+  *     correspond to the default hinting algorithm, optimized for standard
+  *     gray-level rendering. for monochrome output, use @FT_RENDER_MODE_MONO
+  *     instead.
+  *
+  *   FT_LOAD_TARGET_LIGHT ::
+  *     correspond to a lighter hinting algorithm for non-monochrome modes.
+  *     This will generate more glyphs that are more fuzzy but more faithful
+  *     to their original shape. A bit like Mac OS X.
+  *
+  *     As a special exception, this values *always* forces auto-hinting,
+  *     whatever the native hinter is.
+  *
+  *   FT_LOAD_TARGET_MONO ::
+  *     strong hinting algorithm that should only be used for monochrome
+  *     output. The result will probably be unpleasant for other rendering
+  *     modes.
+  *
+  *   FT_LOAD_TARGET_LCD ::
+  *     a variant of @FT_LOAD_TARGET_NORMAL optimized for horizontally
+  *     decimated LCD displays.
+  *
+  *   FT_LOAD_TARGET_LCD_V ::
+  *     a variant of @FT_LOAD_TARGET_NORMAL optimized for vertically decimated
+  *     LCD displays.
+  *
+  * @note:
+  *   You should use only _one_ of the FT_LOAD_TARGET_XXX values in your
+  *   'load_flags'. They can't be ORed.
+  *
+  *   If you also use the @FT_LOAD_RENDER flag, then the output will be
+  *   determined by the corresponding @FT_Render_Mode value. E.g.
+  *   @FT_LOAD_TARGET_NORMAL will generate a gray-level pixmap
+  *   (see @FT_RENDER_MODE_NORMAL)
+  *
+  *   You can use a hinting algorithm that doesn't correspond to the same
+  *   rendering mode. For example, it is possible to use the `light' hinting
+  *   algorithm and have the results rendered in horizontal LCD pixel mode,
+  *   with code like this:
+  *
+  *   {
+  *     FT_Load_Glyph( face, glyph_index,
+  *                    load_flags | FT_LOAD_TARGET_LIGHT );
+  *
+  *     FT_Render_Glyph( face->glyph, FT_RENDER_MODE_LCD );
+  *   }
+  */
+
 #define FT_LOAD_TARGET_( x )      ( (FT_Int32)( (x) & 15 ) << 16 )
-#define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 15 ) )
 
 #define FT_LOAD_TARGET_NORMAL     FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
 #define FT_LOAD_TARGET_LIGHT      FT_LOAD_TARGET_( FT_RENDER_MODE_LIGHT  )
 #define FT_LOAD_TARGET_MONO       FT_LOAD_TARGET_( FT_RENDER_MODE_MONO   )
 #define FT_LOAD_TARGET_LCD        FT_LOAD_TARGET_( FT_RENDER_MODE_LCD    )
 #define FT_LOAD_TARGET_LCD_V      FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
+
+/**
+ * @macro: FT_LOAD_TARGET_MODE
+ *
+ * @description:
+ *   return the @FT_Render_Mode corresponding to a given @FT_LOAD_TARGET_XXX
+ *   value.
+ */
+#define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 15 ) )
 
   /* */
 
@@ -2480,8 +2528,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    An enumeration type that lists the render modes supported by       */
   /*    FreeType 2.  Each mode corresponds to a specific type of scanline  */
-  /*    conversion performed on the outline, as well as specific           */
-  /*    hinting optimizations.                                             */
+  /*    conversion performed on the outline.                               */
   /*                                                                       */
   /*    For bitmap fonts the `bitmap->pixel_mode' field in the             */
   /*    @FT_GlyphSlotRec structure gives the format of the returned        */
@@ -2493,14 +2540,10 @@ FT_BEGIN_HEADER
   /*      anti-aliased bitmaps, using 256 levels of opacity.               */
   /*                                                                       */
   /*    FT_RENDER_MODE_LIGHT ::                                            */
-  /*      This is similar to @FT_RENDER_MODE_NORMAL -- you have to use     */
-  /*      @FT_LOAD_TARGET_LIGHT in calls to @FT_Load_Glyph to get any      */
-  /*      effect since the rendering process no longer influences the      */
-  /*      positioning of glyph outlines.                                   */
-  /*                                                                       */
-  /*      The resulting glyph shapes are more similar to the original,     */
-  /*      while being a bit more fuzzy (`better shapes' instead of `better */
-  /*      contrast', so to say.                                            */
+  /*      This is equivalent to @FT_RENDER_MODE_NORMAL. It is only defined */
+  /*      as a separate value because render modes are also used           */
+  /*      indirectly to define hinting algorithm selectors. See            */
+  /*      @FT_LOAD_TARGET_XXX for details.                                 */
   /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
   /*      This mode corresponds to 1-bit bitmaps.                          */
@@ -2691,7 +2734,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Retrieves the ASCII name of a given glyph in a face.  This only    */
-  /*    works for those faces where FT_HAS_GLYPH_NAME(face) returns true.  */
+  /*    works for those faces where @FT_HAS_GLYPH_NAMES(face) returns      */
+  /*    TRUE.                                                              */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face        :: A handle to a source face object.                   */

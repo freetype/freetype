@@ -523,6 +523,11 @@
                                  FT_LOAD_NO_AUTOHINT ) )   &&
                FT_DRIVER_IS_SCALABLE( driver )             &&
                FT_DRIVER_USES_OUTLINES( driver )           );
+
+    /* force auto-hinting for the LIGHT hinting mode */
+    if ( autohint && FT_LOAD_TARGET_MODE(load_flags) == FT_RENDER_MODE_LIGHT )
+      load_flags |= FT_LOAD_FORCE_AUTOHINT;
+
     if ( autohint )
     {
       if ( FT_DRIVER_HAS_HINTER( driver ) &&

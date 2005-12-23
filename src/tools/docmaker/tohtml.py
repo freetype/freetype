@@ -192,6 +192,7 @@ class HtmlFormatter(Formatter):
                 url   = self.make_block_url( block )
                 return '<a href="' + url + '">' + name + '</a>' + rest
             except:
+                # we detected a cross-reference to an unknown item
                 return '?' + name + '?' + rest
 
         # look for italics and bolds
@@ -246,7 +247,7 @@ class HtmlFormatter(Formatter):
 
     def print_html_field( self, field ):
         if field.name:
-            print "<table><tr valign=top><td><b>"+field.name+"</b></td><td>"
+            print "<table><tr valign=top><td><p><b>"+field.name+"</b></p></td><td>"
 
         print self.make_html_items( field.items )
 
@@ -288,9 +289,14 @@ class HtmlFormatter(Formatter):
 
 
     def print_html_field_list( self, fields ):
-        print "<table cellpadding=3>"
+        print "<table cellpadding=3 border=0>"
         for field in fields:
-            print "<tr valign=top><td><b>" + field.name + "</b></td><td>"
+            if len(field.name) > 22:
+              print "<tr valign=top><td colspan=0><b>"+field.name+"</b></td></tr>"
+              print "<tr valign=top><td></td><td>"
+            else:
+              print "<tr valign=top><td><b>" + field.name + "</b></td><td>"
+
             self.print_html_items( field.items )
             print "</td></tr>"
         print "</table>"
@@ -488,4 +494,4 @@ class HtmlFormatter(Formatter):
     def section_dump_all( self ):
         for section in self.sections:
             self.section_dump( section, self.file_prefix + section.name + '.html' )
-        
+

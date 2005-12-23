@@ -1,3 +1,18 @@
+2005-12-23  David Turner  <david@freetype.org>
+
+	* Jamfile, docs/reference/README: fix it so that "jam refdoc" works
+	correctly to generate the API reference in 'docs/reference'
+
+	* src/tools/docmaker/tohtml.py: update to output nicer fields lists
+	in the API reference
+
+	* src/base/ftobjs.c (FT_Load_Glyph): FT_LOAD_TARGET_LIGHT now
+	forces auto-hinting
+
+	* freetype/freetype.h: updating the documentation for
+	FT_LOAD_TARGET_XXX and FT_Render_Mode values
+
+
 2005-12-23  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (FT_New_Face_From_Suitcase): Counts scalable

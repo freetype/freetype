@@ -181,6 +181,13 @@ if $(DEBUG_HINTER)
   SubInclude FT2_TOP tests ;
 }
 
+rule RefDoc
+{
+  Depends  $1 : all ;
+  NotFile  $1 ;
+  Always   $1 ;
+}
+
 actions RefDoc
 {
   python $(FT2_SRC)/tools/docmaker/docmaker.py --prefix=ft2 --title=FreeType-2.1.10 --output=$(DOC_DIR)  $(FT2_INCLUDE)/freetype/*.h  $(FT2_INCLUDE)/freetype/config/*.h  $(FT2_INCLUDE)/freetype/cache/*.h
