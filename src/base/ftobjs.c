@@ -3011,7 +3011,7 @@
   }
 
 
-  /* documentation is in ftmodule.h */
+  /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Add_Module( FT_Library              library,
@@ -3138,7 +3138,7 @@
   }
 
 
-  /* documentation is in ftmodule.h */
+  /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Module )
   FT_Get_Module( FT_Library   library,
@@ -3227,7 +3227,7 @@
   }
 
 
-  /* documentation is in ftmodule.h */
+  /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Remove_Module( FT_Library  library,
@@ -3282,7 +3282,7 @@
   /*************************************************************************/
 
 
-  /* documentation is in ftmodule.h */
+  /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_New_Library( FT_Memory    memory,
@@ -3353,7 +3353,7 @@
   }
 
 
-  /* documentation is in ftmodule.h */
+  /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Done_Library( FT_Library  library )
@@ -3402,7 +3402,7 @@
   }
 
 
-  /* documentation is in ftmodule.h */
+  /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( void )
   FT_Set_Debug_Hook( FT_Library         library,
