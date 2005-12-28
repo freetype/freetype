@@ -1,3 +1,8 @@
+2005-12-28  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/sfnt/sfnt/ttbdf.c: add newline '\n' to the end of file,
+	for MPW compiler.
+
 2005-12-23  David Turner  <david@freetype.org>
 
 	* Jamfile (RefDoc), docs/reference/README: Fix it so that `jam
