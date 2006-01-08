@@ -66,6 +66,9 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       enable  the interpretation of  the `gasp'  table only  if native
       TrueType hinting is available.
 
+    - A new function `FT_Module_Get_Flags' (declared in `FT_MODULE_H')
+      can be used to get the module flags for a given module.
+
     - The demo programs  `ftview' and  `ftstring' have been  rewritten
       for better readability.
 
@@ -2689,7 +2692,7 @@ Extensions support:
 
 ------------------------------------------------------------------------
 
-Copyright 2000, 2001, 2002, 2003, 2004, 2005 by
+Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file  is  part  of the  FreeType  project, and may  only be  used,

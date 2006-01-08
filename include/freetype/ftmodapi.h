@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType modules public interface (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2006 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -98,27 +98,27 @@ FT_BEGIN_HEADER
   /*    The module class descriptor.                                       */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    module_flags      :: Bit flags describing the module.              */
+  /*    module_flags    :: Bit flags describing the module.                */
   /*                                                                       */
-  /*    module_size       :: The size of one module object/instance in     */
-  /*                         bytes.                                        */
+  /*    module_size     :: The size of one module object/instance in       */
+  /*                       bytes.                                          */
   /*                                                                       */
-  /*    module_name       :: The name of the module.                       */
+  /*    module_name     :: The name of the module.                         */
   /*                                                                       */
-  /*    module_version    :: The version, as a 16.16 fixed number          */
-  /*                         (major.minor).                                */
+  /*    module_version  :: The version, as a 16.16 fixed number            */
+  /*                       (major.minor).                                  */
   /*                                                                       */
-  /*    module_requires   :: The version of FreeType this module requires  */
-  /*                         (starts at version 2.0, i.e 0x20000)          */
+  /*    module_requires :: The version of FreeType this module requires    */
+  /*                       (starts at version 2.0, i.e., 0x20000)          */
   /*                                                                       */
-  /*    module_init       :: A function used to initialize (not create) a  */
-  /*                         new module object.                            */
+  /*    module_init     :: A function used to initialize (not create) a    */
+  /*                       new module object.                              */
   /*                                                                       */
-  /*    module_done       :: A function used to finalize (not destroy) a   */
-  /*                         given module object                           */
+  /*    module_done     :: A function used to finalize (not destroy) a     */
+  /*                       given module object                             */
   /*                                                                       */
-  /*    get_interface     :: Queries a given module for a specific         */
-  /*                         interface by name.                            */
+  /*    get_interface   :: Queries a given module for a specific           */
+  /*                       interface by name.                              */
   /*                                                                       */
   typedef struct  FT_Module_Class_
   {
@@ -216,6 +216,28 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    FT_Module_Get_Flags                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Gets the module flags for a given module.                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    module :: A handle to a module object.                             */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    flags  :: The module's flags.                                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Module_Get_Flags( FT_Module  module,
+                       FT_ULong*  flags );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    FT_New_Library                                                     */
   /*                                                                       */
   /* <Description>                                                         */
@@ -288,7 +310,6 @@ FT_BEGIN_HEADER
   FT_Set_Debug_Hook( FT_Library         library,
                      FT_UInt            hook_index,
                      FT_DebugHook_Func  debug_hook );
-
 
 
   /*************************************************************************/

@@ -1,5 +1,16 @@
 2006-01-08  Werner Lemberg  <wl@gnu.org>
 
+	* docs/CHANGES: Updated.
+
+2006-01-08  Huw D M Davies  <h.davies1@physics.ox.ac.uk>
+
+	* include/freetype/ftmodapi.h (FT_Module_Get_Flags): New
+	declaration.
+
+	* src/base/ftobjs.c (FT_Module_Get_Flags): New function.
+
+2006-01-07  Werner Lemberg  <wl@gnu.org>
+
 	* src/pcf/pcfread.c (pcf_get_bitmaps): Remove unused variable
 	`bitmaps'.  Reported by Yu Lei <yulei0@gmail.com>.
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3163,6 +3163,23 @@
       }
 
     return result;
+  }
+
+
+  /* documentation is in ftmodapi.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Module_Get_Flags( FT_Module  module,
+                       FT_ULong*  flags )
+  {
+    if ( !module )
+      return FT_Err_Invalid_Driver_Handle;
+
+    if ( !flags )
+      return FT_Err_Invalid_Argument;
+
+    *flags = module->clazz->module_flags;
+    return FT_Err_Ok;
   }
 
 
