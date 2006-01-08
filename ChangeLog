@@ -1,4 +1,9 @@
-2005-12-28  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2006-01-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfread.c (pcf_get_bitmaps): Remove unused variable
+	`bitmaps'.  From Yu Lei <yulei0@gmail.com>.
+
+2005-12-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/sfnt/sfnt/ttbdf.c: Add newline '\n' to the end of file, for
 	MPW compiler.
