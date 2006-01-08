@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType utility file for memory and list management (body).         */
 /*                                                                         */
-/*  Copyright 2002, 2004, 2005 by                                          */
+/*  Copyright 2002, 2004, 2005, 2006 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -399,7 +399,7 @@
   }
 
 
-  FT_BASE( FT_UInt32 )
+  FT_BASE_DEF( FT_UInt32 )
   ft_highpow2( FT_UInt32  value )
   {
     FT_UInt32  value2;

@@ -1,7 +1,10 @@
 2006-01-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfread.c (pcf_get_bitmaps): Remove unused variable
-	`bitmaps'.  From Yu Lei <yulei0@gmail.com>.
+	`bitmaps'.  Reported by Yu Lei <yulei0@gmail.com>.
+
+	* src/base/ftutil.c (ft_highpow2): s/FT_BASE/FT_BASE_DEF/.
+	Reported by Niels Boldt <nielsboldt@gmail.com>.
 
 2005-12-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
