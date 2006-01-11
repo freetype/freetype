@@ -18,6 +18,9 @@ Mac OS X, build as the system is UNIX.
 However, Mac OS X is most useful to manipulate files in
 vanilla FreeType to fit classic MacOS.
 
+The information about MacOS specific API is written in
+appendix of this document.
+
 2. Requirement
 --------------
 
@@ -205,8 +208,191 @@ environment by Metrowerks. GCC for MPW and Symantec
   to MPW. To update classic MacOS support easily,
   building by Jam is expected on MPW.
 
+
+APPENDIX I
+----------
+
+  A-1. Framework dependencies
+  ---------------------------
+
+  src/base/ftmac.c adds two Mac-specific features to
+  FreeType. These features are based on MacOS libraries.
+
+  * accessing resource-fork font
+  The fonts for classic MacOS store their graphical data
+  in resource forks which cannot be accessed via ANSI C
+  functions. FreeType2 provides functions to handle such
+  resource fork fonts, they are based on File Manager
+  framework of MacOS. In addition, HFS and HFS+ file
+  system driver of Linux is supported. Following
+  functions are for this purpose.
+
+    FT_New_Face_From_Resource()
+    FT_New_Face_From_FSSpec()
+    FT_New_Face_From_FSRef()
+
+  * resolving font name to font file
+  The font menu of MacOS application prefers font name
+  written in FOND resource than sfnt resoure. FreeType2
+  provides functions to find font file by name in MacOS
+  application, they are based on QuickDraw Font Manager
+  and Apple Type Service framework of MacOS.
+
+    FT_GetFile_From_Mac_Name()
+    FT_GetFile_From_Mac_ATS_Name()
+
+  Working functions for each MacOS are summarized as
+  following.
+
+  upto MacOS 6:
+    not tested (you have to obtain MPW 2.x)
+
+  MacOS 7.x, 8.x, 9.x (without CarbonLib):
+    FT_GetFile_From_Mac_Name()
+    FT_New_Face_From_Resource()
+    FT_New_Face_From_FSSpec()
+
+  MacOS 9.x (with CarbonLib):
+    FT_GetFile_From_Mac_Name()
+    FT_New_Face_From_Resource()
+    FT_New_Face_From_FSSpec()
+    FT_New_Face_From_FSRef()
+
+  Mac OS X upto 10.4.x:
+    FT_GetFile_From_Mac_Name()     deprecated
+    FT_New_Face_From_FSSpec()      deprecated
+    FT_GetFile_From_Mac_ATS_Name() deprecated?
+    FT_New_Face_From_FSRef()
+
+  A-2. Deprecated Functions
+  -------------------------
+
+    A-2-1. FileManager
+    ------------------
+
+    For convenience to write MacOS application, ftmac.c
+    provides functions to specify a file by FSSpec and FSRef,
+    because the file identification pathname had ever been
+    unrecommended method in MacOS programming.
+
+    Toward to MacOS X 10.4 & 5, Carbon functions using FSSpec
+    datatype is noticed as deprecated, and recommended to
+    migrate to FSRef datatype. The big differences of FSRef
+    against FSSpec are explained in Apple TechNotes 2078.
+
+    http://developer.apple.com/technotes/tn2002/tn2078.html
+
+    - filename length: the max length of file
+    name of FSRef is 255 chars (it is limit of HFS+),
+    that of FSSpec is 31 chars (it is limit of HFS).
+
+    - filename encoding: FSSpec is localized by
+    legacy encoding for each language system,
+    FSRef is Unicode enabled.
+
+    A-2-2. FontManager
+    ------------------
+
+    Following functions receive QuickDraw fontname:
+
+      FT_GetFile_From_Mac_Name()
+
+    QuickDraw is deprecated and replaced by Quartz
+    since Mac OS X 10.4. They are still kept for
+    backward compatibility. By undefinition of
+    HAVE_QUICKDRAW in building, you can change these
+    functions to return FT_Err_Unimplemented always.
+
+    Replacement functions are added for migration.
+
+      FT_GetFile_From_Mac_ATS_Name()
+
+    They are usable on Mac OS X only. On older systems,
+    these functions return FT_Err_Unimplemented always.
+
+    The detailed incompatibilities and possibility
+    of FontManager emulation without QuickDraw is
+    explained in
+
+      http://www.gyve.org/~mpsuzuki/ats_benchmark.html
+
+  A-3. Framework Availabilities 
+  -----------------------------
+
+  The framework of MacOS are often revised, especially
+  when new format of binary executable is introduced.
+  Following table is the minimum version of frameworks
+  to use functions used in FreeType2. The table is
+  extracted from MPW header files for assembly language.
+
+  *** NOTE ***
+  The conditional definition of available data type
+  in MPW compiler is insufficient. You can compile
+  program using FSRef data type for older systems
+  (MacOS 7, 8) that don't know FSRef data type.
+
+
+                                      +-------------------+-----------------------------+
+           CPU                        |      mc680x0      |           PowerPC           |
+                                      +---------+---------+---------+---------+---------+
+  Binary Executable Format            | Classic | 68K-CFM | CFM     | CFM     | Mach-O  |
+                                      +---------+---------+---------+---------+---------+
+       Framework API                  | Toolbox | Toolbox | Toolbox | Carbon  | Carbon  |
+                                      +---------+---------+---------+---------+---------+
+
+                                      +---------+---------+---------+---------+---------+
+                                      |    ?(*) |Interface|Interface|CarbonLib|Mac OS X |
+                                      |         |Lib      |Lib      |         |         |
+* Files.h                             +---------+---------+---------+---------+---------+
+PBGetFCBInfoSync()                    |    o    | 7.1-    | 7.1-    | 1.0-    |    o    |
+FSMakeFSSpec()                        |    o    | 7.1-    | 7.1-    | 1.0-    |    o    |
+FSGetForkCBInfo()                     |    o    |   (**)  | 9.0-    | 1.0-    |    o    |
+FSpMakeFSRef()                        |    o    |   (**)  | 9.0-    | 1.0-    |    o    |
+FSGetCatalogInfo()                    |    o    |   (**)  | 9.0-    | 1.0-    |   -10.3 |
+FSPathMakeRef()                       |    x    |    x    |    x    | 1.1-    |   -10.3 |
+                                      +---------+---------+---------+---------+---------+
+
+                                      +---------+---------+---------+---------+---------+
+                                      |    ?(*) |Font     |Font     |CarbonLib|Mac OS X |
+                                      |         |Manager  |Manager  |         |         |
+* Fonts.h                             +---------+---------+---------+---------+---------+
+FMCreateFontFamilyIterator()          |    x    |    x    | 9.0-    | 1.0-    |   -10.3 |
+FMDisposeFontFamilyIterator()         |    x    |    x    | 9.0-    | 1.0-    |   -10.3 |
+FMGetNextFontFamily()                 |    x    |    x    | 9.0-    | 1.0-    |   -10.3 |
+FMGetFontFamilyName()                 |    x    |    x    | 9.0-    | 1.0-    |   -10.3 |
+FMCreateFontFamilyInstanceIterator()  |    x    |    x    | 9.0-    | 1.0-    |   -10.3 |
+FMDisposeFontFamilyInstanceIterator() |    x    |    x    | 9.0-    | 1.0-    |   -10.3 |
+FMGetNextFontFamilyInstance()         |    x    |    x    | 9.0-    | 1.0-    |   -10.3 |
+                                      +---------+---------+---------+---------+---------+
+
+                                      +---------+---------+---------+---------+---------+
+                                      |    -    |    -    |    -    |CarbonLib|Mac OS X |
+* ATSFont.h (***)                     +---------+---------+---------+---------+---------+
+ATSFontFindFromName()                 |    x    |    x    |    x    |    x    |    o    |
+ATSFontGetFileSpecification()         |    x    |    x    |    x    |    x    |    o    |
+                                      +---------+---------+---------+---------+---------+
+
+    (*)
+    In the "Classic": the original binary executable
+    format, these framework functions are directly
+    transformed to MacOS system call. Therefore, the
+    exact availabilitly should be checked by running
+    system.
+
+    (**)
+    InterfaceLib is bundled to MacOS and its version
+    is usually equal to MacOS. There's no separate
+    update for InterfaceLib. It is supposed that
+    there's no InterfaceLib 9.x for m68k platforms.
+    In fact, these functions are FSRef dependent.
+
+    (***) 
+    ATSUI framework is available on ATSUnicode 8.5 on
+    ppc Toolbox CFM, CarbonLib 1.0 too. But its base:
+    ATS font manager is not published in these versions.
+
 ------------------------------------------------------------
-Last update: 2005/10/28, by suzuki toshiya
+Last update: 2006/01/10, by suzuki toshiya
 
 Currently maintained by
 	suzuki toshiya, <mpsuzuki@hiroshima-u.ac.jp>

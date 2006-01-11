@@ -45,6 +45,12 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
       Note that this doesn't affect binary backwards compatibility.
 
+    - On MacOS,  new APIs  are added  as replacements for legacy APIs:
+      `FT_New_Face_From_FSRef'    for   FT_New_Face_From_FSSpec,   and
+      `FT_GetFile_From_Mac_ATS_Name'   for   FT_GetFile_From_Mac_Name.
+      Legacy APIs are still available,  if FreeType is  built  without
+      disabling them.
+
   III. MISCELLANEOUS
 
     - The documentation  for FT_LOAD_TARGET_XXX and FT_RENDER_MODE_XXX
@@ -56,6 +62,15 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       changed to count supported scalable faces (sfnt, LWFN) only, and
       returns  the  number  of  available faces  via  face->num_faces.
       Unsupported bitmap faces (fbit, NFNT) are ignored.
+
+    - builds/unix/configure is improved for MacOS X.  It automatically
+      checks available functions in Carbon library, and prepare to use
+      newest functions by default.  Also options to specify dependency
+      of each Carbon APIs  (FSSpec, FSRef, old/new QuickDraw, ATS) are
+      available. By manual disabling of all QuickDraw, FreeType can be
+      built without "deprecated function" warning on MacOS 10.4.x, but
+      FT_GetFile_Mac_Name in ftmac.c is changed to dummy function, and
+      returns unimplemented error. For detail, see builds/mac/README.
 
     - SFNT cmap handling has been improved, mainly to run faster.
 

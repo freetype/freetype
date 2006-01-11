@@ -8,14 +8,19 @@ MAKEFILE        = FreeType.m68k_far.make
 
 ObjDir          = :objs:
 Includes        =  \xB6
-				  -ansi strict \xB6
 				  -includes unix \xB6
 				  -i :include: \xB6
 				  -i :src:
 
 Sym-68K         = -sym off
 
-COptions        = {Includes} {Sym-68K} -model far 
+COptions        = \xB6
+			-d HAVE_FSSPEC=1 \xB6
+			-d HAVE_FSREF=0 \xB6
+			-d HAVE_QUICKDRAW_TOOLBOX=1 \xB6
+			-d HAVE_QUICKDRAW_CARBON=0 \xB6
+			-d HAVE_ATS=0 \xB6
+			{Includes} {Sym-68K} -model far 
 
 
 ### Source Files ###
@@ -114,9 +119,13 @@ LibFiles-68K    =
 ### Default Rules ###
 
 .c.o  \xC4  .c  {\xA5MondoBuild\xA5}
-	{C} {depDir}{default}.c -o {targDir}{default}.c.o {COptions}
+	{C} {depDir}{default}.c -o {targDir}{default}.c.o {COptions} \xB6
+	-ansi strict
 
 ### Build Rules ###
+
+"{ObjDir}ftmac.c.o" \xC4\xC4 :src:base:ftmac.c
+	{C} :src:base:ftmac.c -o "{ObjDir}ftmac.c.o" {COptions}
 
 FreeType.m68k_far    \xC4\xC4  FreeType.m68k_far.o
 
@@ -141,7 +150,7 @@ FreeType.m68k_far.o  \xC4\xC4  {ObjFiles-68K} {LibFiles-68K} {\xA5MondoBuild\xA5
 "{ObjDir}ftglyph.c.o" \xC4 :src:base:ftglyph.c
 "{ObjDir}ftgxval.c.o" \xC4 :src:base:ftgxval.c
 "{ObjDir}ftinit.c.o" \xC4 :src:base:ftinit.c
-"{ObjDir}ftmac.c.o" \xC4 :src:base:ftmac.c
+# "{ObjDir}ftmac.c.o" \xC4 :src:base:ftmac.c
 "{ObjDir}ftmm.c.o" \xC4 :src:base:ftmm.c
 "{ObjDir}ftotval.c.o" \xC4 :src:base:ftotval.c
 "{ObjDir}ftpfr.c.o" \xC4 :src:base:ftpfr.c

@@ -147,6 +147,215 @@ else
 fi
 
 
+# Whether to use FileManager which is deprecated since Mac OS X 10.4
+
+AC_ARG_WITH([fsspec],
+  AS_HELP_STRING([--with-fsspec],
+                 [use obsolete FSSpec API of MacOS, if available (default=yes)]))
+if test x$with_fsspec = xno; then
+  CFLAGS="$CFLAGS -DHAVE_FSSPEC=0"
+elif test x$with_old_mac_fonts = xyes; then
+  AC_MSG_CHECKING([FSSpec-based FileManager])
+  AC_TRY_LINK([
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <Carbon/Carbon.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Files.h>
+#endif
+  ], [
+  FCBPBPtr             paramBlock;
+  short                vRefNum;
+  long                 dirID;
+  ConstStr255Param     fileName;
+  FSSpec*              spec;
+
+  /* FSSpec functions: deprecated sicne Mac OS X 10.4 */
+  PBGetFCBInfoSync( paramBlock );
+  FSMakeFSSpec( vRefNum, dirID, fileName, spec );
+ 
+  ], [
+    AC_MSG_RESULT([ok])
+    CFLAGS="$CFLAGS -DHAVE_FSSPEC=1"
+  ], [
+    AC_MSG_RESULT([not found])
+    CFLAGS="$CFLAGS -DHAVE_FSSPEC=0"
+  ])
+fi
+
+# Whether to use FileManager in Carbon since MacOS 9.x
+
+AC_ARG_WITH([fsref],
+  AS_HELP_STRING([--with-fsref],
+                 [use Carbon FSRef API of MacOS, if available (default=yes)]))
+if test x$with_fsref = xno; then
+  AC_MSG_WARN([
+*** WARNING
+    FreeType2 built without FSRef API cannot load
+    data-fork fonts on MacOS, except of XXX.dfont.
+])
+  CFLAGS="$CFLAGS -DHAVE_FSREF=0"
+elif test x$with_old_mac_fonts = xyes; then
+  AC_MSG_CHECKING([FSRef-based FileManager])
+  AC_TRY_LINK([
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <Carbon/Carbon.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Files.h>
+#endif
+  ], [
+  FCBPBPtr             paramBlock;
+  short                vRefNum;
+  long                 dirID;
+  ConstStr255Param     fileName;
+  FSSpec*              spec;
+
+  Boolean*             isDirectory;
+  UInt8*               path;
+  SInt16               desiredRefNum;
+  SInt16*              iterator;
+  SInt16*              actualRefNum;
+  HFSUniStr255*        outForkName;
+  FSVolumeRefNum       volume;
+  FSCatalogInfoBitmap  whichInfo;
+  FSCatalogInfo*       catalogInfo;
+  FSForkInfo*          forkInfo;
+  FSRef*               ref;
+
+
+  /* FSRef functions: no need to check? */
+  FSGetForkCBInfo( desiredRefNum, volume, iterator,
+                   actualRefNum, forkInfo, ref,
+                   outForkName );
+  FSpMakeFSRef ( spec, ref );
+  FSGetCatalogInfo( ref, whichInfo, catalogInfo,
+                    outForkName, spec, ref );
+  FSPathMakeRef( path, ref, isDirectory );
+ 
+  ], [
+    AC_MSG_RESULT([ok])
+    CFLAGS="$CFLAGS -DHAVE_FSREF=1"
+  ], [
+    AC_MSG_RESULT([not found])
+    CFLAGS="$CFLAGS -DHAVE_FSREF=0"
+  ])
+fi
+
+# Whether to use QuickDraw API in ToolBox which is deprecated since Mac OS X 10.4
+
+AC_ARG_WITH([quickdraw-toolbox],
+  AS_HELP_STRING([--with-quickdraw-toolbox],
+                 [use MacOS QuickDraw in ToolBox, if available (default=yes)]))
+if test x$with_quickdraw_toolbox = xno; then
+  CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"
+elif test x$with_old_mac_fonts = xyes; then
+  AC_MSG_CHECKING([QuickDraw FontManager functions in ToolBox])
+  AC_TRY_LINK([
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <Carbon/Carbon.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Fonts.h>
+#endif
+  ], [
+  Str255     familyName;
+  SInt16     familyID   = 0;
+  FMInput*   fmIn       = NULL;
+  FMOutput*  fmOut      = NULL;
+
+
+  GetFontName( familyID, familyName );
+  GetFNum( familyName, &familyID );
+  fmOut = FMSwapFont( fmIn );
+
+  ], [
+    AC_MSG_RESULT([ok])
+    CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=1"
+  ], [
+    AC_MSG_RESULT([not found])
+    CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"
+  ])
+fi
+
+
+# Whether to use QuickDraw API in Carbon which is deprecated since Mac OS X 10.4
+
+AC_ARG_WITH([quickdraw-carbon],
+  AS_HELP_STRING([--with-quickdraw-carbon],
+                 [use MacOS QuickDraw in Carbon, if available (default=yes)]))
+if test x$with_quickdraw_carbon = xno; then
+  CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=0"
+elif test x$with_old_mac_fonts = xyes; then
+  AC_MSG_CHECKING([QuickDraw FontManager functions in Carbon])
+  AC_TRY_LINK([
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <Carbon/Carbon.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Fonts.h>
+#endif
+  ], [
+  FMFontFamilyIterator          famIter;
+  FMFontFamily                  family;
+  Str255                        famNameStr;
+  FMFontFamilyInstanceIterator  instIter;
+  FMFontStyle                   style;
+  FMFontSize                    size;
+  FMFont                        font;
+  FSSpec*                       pathSpec;
+
+
+  FMCreateFontFamilyIterator( NULL, NULL, kFMUseGlobalScopeOption, &famIter );
+  FMGetNextFontFamily( &famIter, &family );
+  FMGetFontFamilyName( family, famNameStr );
+  FMCreateFontFamilyInstanceIterator( family, &instIter );
+  FMGetNextFontFamilyInstance( &instIter, &font, &style, &size );
+  FMDisposeFontFamilyInstanceIterator( &instIter );
+  FMDisposeFontFamilyIterator( &famIter );
+  FMGetFontContainer( font, pathSpec );
+  ], [
+    AC_MSG_RESULT([ok])
+    CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=1"
+  ], [
+    AC_MSG_RESULT([not found])
+    CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=0"
+  ])
+fi
+
+
+# Whether to use AppleTypeService since Mac OS X
+AC_ARG_WITH([ats],
+  dnl don't quote AS_HELP_STRING!
+  AS_HELP_STRING([--with-ats],
+                 [use AppleTypeService, if available (default=yes)]))
+if test x$with_ats = xno; then
+  CFLAGS="$CFLAGS -DHAVE_ATS=0"
+elif test x$with_old_mac_fonts = xyes; then
+  AC_MSG_CHECKING([AppleTypeService functions])
+  AC_TRY_LINK([
+#include <Carbon/Carbon.h>
+  ], [
+  FSSpec*  pathSpec;
+
+
+  ATSFontFindFromName( NULL, kATSOptionFlagsUnRestrictedScope );
+  ATSFontGetFileSpecification( 0, pathSpec );
+  ], [
+    AC_MSG_RESULT([ok])
+    CFLAGS="$CFLAGS -DHAVE_ATS=1"
+  ], [
+    AC_MSG_RESULT([not found])
+    CFLAGS="$CFLAGS -DHAVE_ATS=0"
+  ])
+fi
+
+
+
 AC_SUBST([LIBZ])
 AC_SUBST([CFLAGS])
 AC_SUBST([LDFLAGS])

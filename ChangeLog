@@ -1,3 +1,27 @@
+2006-01-11  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	Jumbo patch to fix "deprecated" warning to cross-build for
+	Tiger on Intel, the issue is reported by Sean McBride
+	<sean@rogue-research.com> on 2005-08-24.
+
+	* src/base/ftmac.c: Heavy change to build without deprecated
+	Carbon functions on Tiger.
+
+	* builds/unix/configure.ac: Add options and autochecks for
+	Carbon functions availabilities, for MacOS X.
+
+	* builds/mac/ascii2mpw.py: Add convertor for character "\305".
+	* builds/mac/FreeType.m68k_{far|cfm}.make.txt: Add conditional
+	macros to avoid unavailable functions. And ftmac.c must be
+	compiled without "-strict ansi", because it disables cpp macro
+	to use ToolBox system call.
+	* builds/mac/FreeType.ppc_{classic|carbon}.make.txt: Add
+	conditional macros to avoid unavailable functions.
+
+	* builds/mac/README: Detailed notes on function availabilities.
+
+	* docs/CHANGES: Notes about (possible) incompatibilities.
+
 2006-01-08  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

@@ -15,7 +15,13 @@ Includes        =  \xB6
 
 Sym-68K         = -sym off
 
-COptions        = {Includes} {Sym-68K} -model cfmseg 
+COptions        = \xB6
+			-d HAVE_FSSPEC=1 \xB6
+			-d HAVE_FSREF=0 \xB6
+			-d HAVE_QUICKDRAW_TOOLBOX=1 \xB6
+			-d HAVE_QUICKDRAW_CARBON=0 \xB6
+			-d HAVE_ATS=0 \xB6
+			{Includes} {Sym-68K} -model cfmseg 
 
 
 ### Source Files ###
@@ -119,6 +125,9 @@ LibFiles-68K    =
 
 ### Build Rules ###
 
+"{ObjDir}ftmac.c.o" \xC4\xC4 :src:base:ftmac.c
+	{C} :src:base:ftmac.c -o "{ObjDir}ftmac.c.o" {COptions}
+
 FreeType.m68k_cfm    \xC4\xC4  FreeType.m68k_cfm.o
 
 FreeType.m68k_cfm.o  \xC4\xC4  {ObjFiles-68K} {LibFiles-68K} {\xA5MondoBuild\xA5}
@@ -142,7 +151,7 @@ FreeType.m68k_cfm.o  \xC4\xC4  {ObjFiles-68K} {LibFiles-68K} {\xA5MondoBuild\xA5
 "{ObjDir}ftglyph.c.o" \xC4 :src:base:ftglyph.c
 "{ObjDir}ftgxval.c.o" \xC4 :src:base:ftgxval.c
 "{ObjDir}ftinit.c.o" \xC4 :src:base:ftinit.c
-"{ObjDir}ftmac.c.o" \xC4 :src:base:ftmac.c
+# "{ObjDir}ftmac.c.o" \xC4 :src:base:ftmac.c
 "{ObjDir}ftmm.c.o" \xC4 :src:base:ftmm.c
 "{ObjDir}ftotval.c.o" \xC4 :src:base:ftotval.c
 "{ObjDir}ftpfr.c.o" \xC4 :src:base:ftpfr.c
