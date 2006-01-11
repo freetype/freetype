@@ -12,6 +12,7 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
     - If FreeType was compiled without hinters, all font formats based
       on PS outlines weren't scaled correctly.
 
+
   II. IMPORTANT CHANGES
 
     - The  LIGHT  hinting algorithm  produces  more pleasant  results.
@@ -45,11 +46,12 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
       Note that this doesn't affect binary backwards compatibility.
 
-    - On MacOS,  new APIs  are added  as replacements for legacy APIs:
-      `FT_New_Face_From_FSRef'    for   FT_New_Face_From_FSSpec,   and
-      `FT_GetFile_From_Mac_ATS_Name'   for   FT_GetFile_From_Mac_Name.
-      Legacy APIs are still available,  if FreeType is  built  without
-      disabling them.
+    - On MacOS,  new APIs have  been added as replacements  for legacy
+      APIs:  `FT_New_Face_From_FSRef'  for  `FT_New_Face_From_FSSpec',
+      and              `FT_GetFile_From_Mac_ATS_Name'              for
+      `FT_GetFile_From_Mac_Name'.  Legacy APIs are still available, if
+      FreeType is built without disabling them.
+
 
   III. MISCELLANEOUS
 
@@ -63,14 +65,16 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       returns  the  number  of  available faces  via  face->num_faces.
       Unsupported bitmap faces (fbit, NFNT) are ignored.
 
-    - builds/unix/configure is improved for MacOS X.  It automatically
-      checks available functions in Carbon library, and prepare to use
-      newest functions by default.  Also options to specify dependency
-      of each Carbon APIs  (FSSpec, FSRef, old/new QuickDraw, ATS) are
-      available. By manual disabling of all QuickDraw, FreeType can be
-      built without "deprecated function" warning on MacOS 10.4.x, but
-      FT_GetFile_Mac_Name in ftmac.c is changed to dummy function, and
-      returns unimplemented error. For detail, see builds/mac/README.
+    - builds/unix/configure  has been  improved for  MacOS X.   It now
+      automatically checks available  functions in Carbon library, and
+      prepare to use newest  functions by default.  Options to specify
+      the  dependencies of  each Carbon  APIs (FSSpec,  FSRef, old/new
+      QuickDraw, ATS)  are available too.  By manual  disabling of all
+      QuickDraw   functionality,  FreeType   can   be  built   without
+      `deprecated   function'   warnings    on   MacOS   10.4.x,   but
+      FT_GetFile_Mac_Name  in  ftmac.c  then  is changed  to  a  dummy
+      function, and returns an `unimplemented' error.  For details see
+      builds/mac/README.
 
     - SFNT cmap handling has been improved, mainly to run faster.
 

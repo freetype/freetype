@@ -5,7 +5,7 @@
 /*    Mac FOND support.  Written by just@letterror.com.                    */
 /*  Heavily Fixed by mpsuzuki, George Williams and Sean McBride            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -24,35 +24,35 @@
     support this I use the face_index argument of FT_(Open|New)_Face()
     functions, and pretend the suitcase file is a collection.
 
-    Warning: fbit and NFNT bitmap resources are not supported yet.
-    In old sfnt fonts, bitmap glyph data for each size is stored in
-    each NFNT resources, instead of bdat table in sfnt resource.
-    Therefore, face->num_fixed_sizes is set to 0, because bitmap
-    data in NFNT resource is unavailable at present.
+    Warning: fbit and NFNT bitmap resources are not supported yet.  In old
+    sfnt fonts, bitmap glyph data for each size is stored in each `NFNT'
+    resources instead of the `bdat' table in the sfnt resource.  Therefore,
+    face->num_fixed_sizes is set to 0, because bitmap data in `NFNT'
+    resource is unavailable at present.
 
     The Mac FOND support works roughly like this:
 
-    - Check whether the offered stream points to a Mac suitcase file.
-      This is done by checking the file type: it has to be 'FFIL' or 'tfil'.
-      The stream that gets passed to our init_face() routine is a stdio
-      stream, which isn't usable for us, since the FOND resources live
-      in the resource fork.  So we just grab the stream->pathname field.
+    - Check whether the offered stream points to a Mac suitcase file.  This
+      is done by checking the file type: it has to be 'FFIL' or 'tfil'.  The
+      stream that gets passed to our init_face() routine is a stdio stream,
+      which isn't usable for us, since the FOND resources live in the
+      resource fork.  So we just grab the stream->pathname field.
 
-    - Read the FOND resource into memory, then check whether there is
-      a TrueType font and/or(!) a Type 1 font available.
+    - Read the FOND resource into memory, then check whether there is a
+      TrueType font and/or(!) a Type 1 font available.
 
-    - If there is a Type 1 font available (as a separate 'LWFN' file),
-      read its data into memory, massage it slightly so it becomes
-      PFB data, wrap it into a memory stream, load the Type 1 driver
-      and delegate the rest of the work to it by calling FT_Open_Face().
-      (XXX TODO: after this has been done, the kerning data from the FOND
-      resource should be appended to the face: On the Mac there are usually
-      no AFM files available.  However, this is tricky since we need to map
-      Mac char codes to ps glyph names to glyph ID's...)
+    - If there is a Type 1 font available (as a separate `LWFN' file), read
+      its data into memory, massage it slightly so it becomes PFB data, wrap
+      it into a memory stream, load the Type 1 driver and delegate the rest
+      of the work to it by calling FT_Open_Face().  (XXX TODO: after this
+      has been done, the kerning data from the FOND resource should be
+      appended to the face: On the Mac there are usually no AFM files
+      available.  However, this is tricky since we need to map Mac char
+      codes to ps glyph names to glyph ID's...)
 
-    - If there is a TrueType font (an 'sfnt' resource), read it into
-      memory, wrap it into a memory stream, load the TrueType driver
-      and delegate the rest of the work to it, by calling FT_Open_Face().
+    - If there is a TrueType font (an `sfnt' resource), read it into memory,
+      wrap it into a memory stream, load the TrueType driver and delegate
+      the rest of the work to it, by calling FT_Open_Face().
   */
 
 
@@ -64,7 +64,7 @@
   /* This is for Mac OS X.  Without redefinition, OS_INLINE */
   /* expands to `static inline' which doesn't survive the   */
   /* -ansi compilation flag of GCC.                         */
-#define OS_INLINE  static __inline__
+#define OS_INLINE   static __inline__
 #include <Carbon/Carbon.h>
 #else
 #include <Resources.h>
@@ -81,44 +81,44 @@
 #include FT_MAC_H
 
 
-  /* FSSpec functions are depricated since Mac OS X 10.4 */
+  /* FSSpec functions are deprecated since Mac OS X 10.4 */
 #ifndef HAVE_FSSPEC
 #if TARGET_API_MAC_OS8 || TARGET_API_MAC_CARBON
-#define HAVE_FSSPEC 1
+#define HAVE_FSSPEC  1
 #else
-#define HAVE_FSSPEC 0
+#define HAVE_FSSPEC  0
 #endif
 #endif
 
   /* most FSRef functions were introduced since Mac OS 9 */
 #ifndef HAVE_FSREF
 #if TARGET_API_MAC_OSX
-#define HAVE_FSREF 1
+#define HAVE_FSREF  1
 #else
-#define HAVE_FSREF 0
+#define HAVE_FSREF  0
 #endif
 #endif
 
 #ifndef HFS_MAXPATHLEN
-#define HFS_MAXPATHLEN 1024
+#define HFS_MAXPATHLEN  1024
 #endif
 
 
-  /* QuickDraw is depricated since Mac OS X 10.4 */
+  /* QuickDraw is deprecated since Mac OS X 10.4 */
 #ifndef HAVE_QUICKDRAW_CARBON
 #if TARGET_API_MAC_OS8 || TARGET_API_MAC_CARBON
-#define HAVE_QUICKDRAW_CARBON 1
+#define HAVE_QUICKDRAW_CARBON  1
 #else
-#define HAVE_QUICKDRAW_CARBON 0
+#define HAVE_QUICKDRAW_CARBON  0
 #endif
 #endif
 
   /* AppleTypeService is available since Mac OS X */
 #ifndef HAVE_ATS
 #if TARGET_API_MAC_OSX
-#define HAVE_ATS 1
+#define HAVE_ATS  1
 #else
-#define HAVE_ATS 0
+#define HAVE_ATS  0
 #endif
 #endif
 
@@ -126,11 +126,12 @@
      TrueType in case *both* are available (this is not common,
      but it *is* possible). */
 #ifndef PREFER_LWFN
-#define PREFER_LWFN 1
+#define PREFER_LWFN  1
 #endif
 
 
 #if !HAVE_QUICKDRAW_CARBON  /* QuickDraw is deprecated since Mac OS X 10.4 */
+
   FT_EXPORT_DEF( FT_Error )
   FT_GetFile_From_Mac_Name( const char*  fontName,
                             FSSpec*      pathSpec,
@@ -138,7 +139,9 @@
   {
     return FT_Err_Unimplemented_Feature;
   }
+
 #else
+
   FT_EXPORT_DEF( FT_Error )
   FT_GetFile_From_Mac_Name( const char*  fontName,
                             FSSpec*      pathSpec,
@@ -174,7 +177,8 @@
         FMCreateFontFamilyInstanceIterator( family, &instIter );
 
         *face_index = 0;
-        stat2 = 0;
+        stat2       = 0;
+
         while ( stat2 == 0 && !the_font )
         {
           FMFontStyle  style;
@@ -221,10 +225,12 @@
     else
       return FT_Err_Unknown_File_Format;
   }
-#endif
+
+#endif /* HAVE_QUICKDRAW_CARBON */
 
 
 #if !HAVE_ATS
+
   FT_EXPORT_DEF( FT_Error )
   FT_GetFile_From_Mac_ATS_Name( const char*  fontName,
                                 FSSpec*      pathSpec,
@@ -232,7 +238,9 @@
   {
     return FT_Err_Unimplemented_Feature;
   }
+
 #else
+
   FT_EXPORT_DEF( FT_Error )
   FT_GetFile_From_Mac_ATS_Name( const char*  fontName,
                                 FSSpec*      pathSpec,
@@ -240,24 +248,28 @@
   {
     CFStringRef  cf_fontName;
     ATSFontRef   ats_font_id;
-  
+
+
     *face_index = 0;
-  
-    cf_fontName = CFStringCreateWithCString( NULL, fontName, kCFStringEncodingMacRoman );
-    ats_font_id = ATSFontFindFromName( cf_fontName, kATSOptionFlagsUnRestrictedScope );
-  
-    if ( ats_font_id == 0 || ats_font_id == 0xFFFFFFFF )
+
+    cf_fontName = CFStringCreateWithCString( NULL, fontName,
+                                             kCFStringEncodingMacRoman );
+    ats_font_id = ATSFontFindFromName( cf_fontName,
+                                       kATSOptionFlagsUnRestrictedScope );
+
+    if ( ats_font_id == 0 || ats_font_id == 0xFFFFFFFFUL )
       return FT_Err_Unknown_File_Format;
-  
-    if ( 0 != ATSFontGetFileSpecification( ats_font_id, pathSpec ))
+
+    if ( 0 != ATSFontGetFileSpecification( ats_font_id, pathSpec ) )
       return FT_Err_Unknown_File_Format;
- 
-    /* face_index calculation by searching preceding fontIDs with same FSRef */
+
+    /* face_index calculation by searching preceding fontIDs */
+    /* with same FSRef                                       */
     {
       int     i;
       FSSpec  f;
-  
-  
+
+
       for ( i = 1; i < ats_font_id; i++ )
       {
         if ( 0 != ATSFontGetFileSpecification( ats_font_id - i,
@@ -274,7 +286,8 @@
     }
     return FT_Err_Ok;
   }
-#endif
+
+#endif /* HAVE_ATS */
 
 
 #if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
@@ -313,10 +326,11 @@
 
 
 #if HAVE_FSSPEC && !HAVE_FSREF
+
   static OSErr
-  FT_FSPathMakeSpec( const UInt8*   pathname,
-                     FSSpec*        spec_p,
-                     Boolean        isDirectory )
+  FT_FSPathMakeSpec( const UInt8*  pathname,
+                     FSSpec*       spec_p,
+                     Boolean       isDirectory )
   {
     const char  *p, *q;
     short       vRefNum;
@@ -330,10 +344,10 @@
     vRefNum = 0;
 
     while ( 1 )
-  {
+    {
       q = p + FT_MIN( 255, ft_strlen( p ) );
 
-      if ( q == p ) 
+      if ( q == p )
         return 0;
 
       if ( 255 < ft_strlen( (char *)pathname ) )
@@ -388,7 +402,7 @@
       FT_MEM_MOVE( path + node_namelen + 1, path, child_namelen );
       FT_MEM_COPY( path, node_name, node_namelen );
       if ( child_namelen > 0 )
-        path[ node_namelen ] = ':';
+        path[node_namelen] = ':';
 
       vRefNum        = spec.vRefNum;
       dirID          = spec.parID;
@@ -399,21 +413,25 @@
     }
     return noErr;
   }
-#endif
+
+#endif /* HAVE_FSSPEC && !HAVE_FSREF */
 
 
   static OSErr
   FT_FSPathMakeRes( const UInt8*  pathname,
                     short*        res )
   {
+
 #if HAVE_FSREF
+
     OSErr  err;
     FSRef  ref;
+
 
     if ( noErr != FSPathMakeRef( pathname, &ref, FALSE ) )
       return FT_Err_Cannot_Open_Resource;
 
-    /* at present, so support for dfont format */
+    /* at present, no support for dfont format */
     err = FSOpenResourceFile( &ref, 0, NULL, fsRdPerm, res );
     if ( noErr == err )
       return err;
@@ -421,18 +439,23 @@
     /* fallback to original resource-fork font */
     *res = FSOpenResFile( &ref, fsRdPerm );
     err  = ResError();
+
 #else
-    OSErr  err;
+
+    OSErr   err;
     FSSpec  spec;
+
 
     if ( noErr != FT_FSPathMakeSpec( pathname, &spec, FALSE ) )
       return FT_Err_Cannot_Open_Resource;
 
-    /* at present, so support for dfont format without FSRef */
-    /* (see above), try original resource-fork font */
+    /* at present, no support for dfont format without FSRef */
+    /* (see above), try original resource-fork font          */
     *res = FSpOpenResFile( &spec, fsRdPerm );
     err  = ResError();
-#endif
+
+#endif /* HAVE_FSREF */
+
     return err;
   }
 
@@ -441,7 +464,9 @@
   static OSType
   get_file_type_from_path( const UInt8*  pathname )
   {
+
 #if HAVE_FSREF
+
     FSRef          ref;
     FSCatalogInfo  info;
 
@@ -453,8 +478,10 @@
                                     NULL, NULL, NULL ) )
       return ( OSType ) 0;
 
-    return ((FInfo *) (info.finderInfo))->fdType;
+    return ((FInfo *)(info.finderInfo))->fdType;
+
 #else
+
     FSSpec  spec;
     FInfo  finfo;
 
@@ -466,7 +493,9 @@
       return ( OSType ) 0;
 
     return finfo.fdType;
-#endif
+
+#endif /* HAVE_FSREF */
+
   }
 
 
@@ -519,10 +548,10 @@
     short       i, face, face_all;
 
 
-    fond       = (FamRec*)fond_data;
-    face_all   = *( (short *)( fond_data + sizeof ( FamRec ) ) ) + 1;
-    assoc      = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
-    face       = 0;
+    fond     = (FamRec*)fond_data;
+    face_all = *( (short *)( fond_data + sizeof ( FamRec ) ) ) + 1;
+    assoc    = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
+    face     = 0;
 
     for ( i = 0; i < face_all; i++ )
     {
@@ -596,10 +625,10 @@
       string_count = *(unsigned short*)(p);
       p += sizeof ( short );
 
-      for ( i = 0 ; i < string_count && i < 64; i++ )
+      for ( i = 0; i < string_count && i < 64; i++ )
       {
         names[i] = p;
-        p += names[i][0];
+        p       += names[i][0];
         p++;
       }
 
@@ -647,16 +676,18 @@
   static  FT_Error
   lookup_lwfn_by_fond( const UInt8*     path_fond,
                        const StringPtr  base_lwfn,
-                       UInt8*           path_lwfn, 
+                       UInt8*           path_lwfn,
                        int              path_size )
   {
+
 #if HAVE_FSREF
+
     FSRef  ref, par_ref;
     int    dirname_len;
 
 
-    /* pathname for FSRef can be various format: HFS, HFS+ and POSIX. */
-    /* we should not extract parent directory by string manipulation  */
+    /* Pathname for FSRef can be in various formats: HFS, HFS+, and POSIX. */
+    /* We should not extract parent directory by string manipulation.      */
 
     if ( noErr != FSPathMakeRef( path_fond, &ref, FALSE ) )
       return FT_Err_Invalid_Argument;
@@ -679,9 +710,8 @@
 
     dirname_len = ft_strlen( (char *)path_lwfn );
     ft_strcat( (char *)path_lwfn, (char *)base_lwfn + 1 );
-    path_lwfn[ dirname_len + base_lwfn[0] ] = '\0';
+    path_lwfn[dirname_len + base_lwfn[0]] = '\0';
 
-    
     if ( noErr != FSPathMakeRef( path_lwfn, &ref, FALSE ) )
       return FT_Err_Cannot_Open_Resource;
 
@@ -690,7 +720,9 @@
       return FT_Err_Cannot_Open_Resource;
 
     return FT_Err_Ok;
+
 #else
+
     int     i;
     FSSpec  spec;
 
@@ -703,7 +735,7 @@
 
     i = ft_strlen( (char *)path_lwfn ) - 1;
     while ( i > 0 && ':' != path_lwfn[i] )
-      i-- ;
+      i--;
 
     if ( i + 1 + base_lwfn[0] > path_size )
       return FT_Err_Invalid_Argument;
@@ -711,20 +743,21 @@
     if ( ':' == path_lwfn[i] )
     {
       ft_strcpy( (char *)path_lwfn + i + 1, (char *)base_lwfn + 1 );
-      path_lwfn[ i + 1 + base_lwfn[0] ] = '\0';
+      path_lwfn[i + 1 + base_lwfn[0]] = '\0';
     }
     else
     {
       ft_strcpy( (char *)path_lwfn, (char *)base_lwfn + 1 );
-      path_lwfn[ base_lwfn[0] ] = '\0';
+      path_lwfn[base_lwfn[0]] = '\0';
     }
-
 
     if ( noErr != FT_FSPathMakeSpec( path_lwfn, &spec, FALSE ) )
       return FT_Err_Cannot_Open_Resource;
 
     return FT_Err_Ok;
-#endif
+
+#endif /* HAVE_FSREF */
+
   }
 
 
@@ -734,9 +767,9 @@
   {
     short     sfnt_id;
     short     have_sfnt, have_lwfn;
-    Str255  lwfn_file_name;
+    Str255    lwfn_file_name;
     UInt8     buff[HFS_MAXPATHLEN];
-    FT_Error  err; 
+    FT_Error  err;
 
 
     have_sfnt = have_lwfn = 0;
@@ -748,7 +781,7 @@
     if ( lwfn_file_name[0] )
     {
       err = lookup_lwfn_by_fond( pathname, lwfn_file_name,
-                                 buff,     sizeof( buff )  );
+                                 buff, sizeof ( buff )  );
       if ( FT_Err_Ok == err )
         have_lwfn = 1;
     }
@@ -761,9 +794,9 @@
 
 
   /* Read Type 1 data from the POST resources inside the LWFN file,
-     return a PFB buffer. This is somewhat convoluted because the FT2
+     return a PFB buffer.  This is somewhat convoluted because the FT2
      PFB parser wants the ASCII header as one chunk, and the LWFN
-     chunks are often not organized that way, so we'll glue chunks
+     chunks are often not organized that way, so we glue chunks
      of the same type together. */
   static FT_Error
   read_lwfn( FT_Memory  memory,
@@ -791,7 +824,7 @@
     {
       post_data = Get1Resource( 'POST', res_id++ );
       if ( post_data == NULL )
-        break;  /* we're done */
+        break;  /* we are done */
 
       code = (*post_data)[0];
 
@@ -821,7 +854,7 @@
     {
       post_data = Get1Resource( 'POST', res_id++ );
       if ( post_data == NULL )
-        break;  /* we're done */
+        break;  /* we are done */
 
       post_size = (FT_ULong)GetHandleSize( post_data ) - 2;
       code = (*post_data)[0];
@@ -830,7 +863,7 @@
       {
         if ( last_code != -1 )
         {
-          /* we're done adding a chunk, fill in the size field */
+          /* we are done adding a chunk, fill in the size field */
           if ( size_p != NULL )
           {
             *size_p++ = (FT_Byte)(   pfb_chunk_size         & 0xFF );
@@ -948,11 +981,11 @@
       return error;
     }
 
-    args.flags = FT_OPEN_STREAM;
+    args.flags  = FT_OPEN_STREAM;
     args.stream = stream;
     if ( driver_name )
     {
-      args.flags = args.flags | FT_OPEN_DRIVER;
+      args.flags  = args.flags | FT_OPEN_DRIVER;
       args.driver = FT_Get_Module( library, driver_name );
     }
 
@@ -974,9 +1007,9 @@
 
   /* Create a new FT_Face from a file spec to an LWFN file. */
   static FT_Error
-  FT_New_Face_From_LWFN( FT_Library     library,
+  FT_New_Face_From_LWFN( FT_Library    library,
                          const UInt8*  pathname,
-                         FT_Long        face_index,
+                         FT_Long       face_index,
                          FT_Face*      aface )
   {
     FT_Byte*  pfb_data;
@@ -1014,7 +1047,7 @@
     Handle     sfnt = NULL;
     FT_Byte*   sfnt_data;
     size_t     sfnt_size;
-    FT_Error   error = 0;
+    FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = library->memory;
     int        is_cff;
 
@@ -1051,9 +1084,9 @@
 
   /* Create a new FT_Face from a file spec to a suitcase file. */
   static FT_Error
-  FT_New_Face_From_Suitcase( FT_Library  library,
+  FT_New_Face_From_Suitcase( FT_Library    library,
                              const UInt8*  pathname,
-                             FT_Long     face_index,
+                             FT_Long       face_index,
                              FT_Face*      aface )
   {
     FT_Error  error = FT_Err_Cannot_Open_Resource;
@@ -1081,7 +1114,7 @@
 
       if ( 0 <= face_index && face_index < num_faces_in_fond && error )
         error = FT_New_Face_From_FOND( library, fond, face_index, aface );
-      
+
       face_index -= num_faces_in_fond;
     }
 
@@ -1100,10 +1133,10 @@
                          FT_Long     face_index,
                          FT_Face*    aface )
   {
-    short   sfnt_id, have_sfnt, have_lwfn = 0;
-    short   fond_id;
-    OSType  fond_type;
-    Str255  fond_name;
+    short     sfnt_id, have_sfnt, have_lwfn = 0;
+    short     fond_id;
+    OSType    fond_type;
+    Str255    fond_name;
     Str255    lwfn_file_name;
     UInt8     path_lwfn[HFS_MAXPATHLEN];
     OSErr     err;
@@ -1128,34 +1161,39 @@
         goto found_no_lwfn_file;
 
 #if HAVE_FSREF
-        {
+
+      {
         UInt8  path_fond[HFS_MAXPATHLEN];
         FSRef  ref;
+
 
         err = FSGetForkCBInfo( res, kFSInvalidVolumeRefNum,
                                NULL, NULL, NULL, &ref, NULL );
         if ( noErr != err )
           goto found_no_lwfn_file;
 
-        err = FSRefMakePath( &ref, path_fond, sizeof( path_fond ) );
+        err = FSRefMakePath( &ref, path_fond, sizeof ( path_fond ) );
         if ( noErr != err )
           goto found_no_lwfn_file;
 
         error = lookup_lwfn_by_fond( path_fond, lwfn_file_name,
-                                     path_lwfn, sizeof( path_lwfn ) );
+                                     path_lwfn, sizeof ( path_lwfn ) );
         if ( FT_Err_Ok == error )
           have_lwfn = 1;
       }
+
 #elif HAVE_FSSPEC
-          {
+
+      {
         UInt8     path_fond[HFS_MAXPATHLEN];
         FCBPBRec  pb;
         Str255    fond_file_name;
         FSSpec    spec;
 
 
-        FT_MEM_SET( &spec, 0, sizeof( FSSpec ) );
-        FT_MEM_SET( &pb,   0, sizeof( FCBPBRec ) );
+        FT_MEM_SET( &spec, 0, sizeof ( FSSpec ) );
+        FT_MEM_SET( &pb,   0, sizeof ( FCBPBRec ) );
+
         pb.ioNamePtr = fond_file_name;
         pb.ioVRefNum = 0;
         pb.ioRefNum  = res;
@@ -1165,21 +1203,24 @@
         if ( noErr != err )
           goto found_no_lwfn_file;
 
-        err = FSMakeFSSpec( pb.ioFCBVRefNum, pb.ioFCBParID, fond_file_name, &spec );
+        err = FSMakeFSSpec( pb.ioFCBVRefNum, pb.ioFCBParID,
+                            fond_file_name, &spec );
         if ( noErr != err )
           goto found_no_lwfn_file;
 
-        err = FT_FSpMakePath( &spec, path_fond, sizeof( path_fond ) );
+        err = FT_FSpMakePath( &spec, path_fond, sizeof ( path_fond ) );
         if ( noErr != err )
           goto found_no_lwfn_file;
 
         error = lookup_lwfn_by_fond( path_fond, lwfn_file_name,
-                                     path_lwfn, sizeof( path_lwfn ) );
+                                     path_lwfn, sizeof ( path_lwfn ) );
         if ( FT_Err_Ok == error )
           have_lwfn = 1;
-          }
-#endif
-        }
+      }
+
+#endif /* HAVE_FSREF, HAVE_FSSPEC */
+
+    }
 
     if ( have_lwfn && ( !have_sfnt || PREFER_LWFN ) )
       return FT_New_Face_From_LWFN( library,
@@ -1187,40 +1228,40 @@
                                     face_index,
                                     aface );
 
-found_no_lwfn_file:
+  found_no_lwfn_file:
     if ( have_sfnt )
       return FT_New_Face_From_SFNT( library,
                                     sfnt_id,
                                     face_index,
                                     aface );
 
-      return FT_Err_Unknown_File_Format;
+    return FT_Err_Unknown_File_Format;
   }
 
 
   /* Common function to load a new FT_Face from a resource file. */
   static FT_Error
-  FT_New_Face_From_Resource( FT_Library     library,
+  FT_New_Face_From_Resource( FT_Library    library,
                              const UInt8*  pathname,
-                             FT_Long        face_index,
+                             FT_Long       face_index,
                              FT_Face*      aface )
   {
     OSType    file_type;
     FT_Error  error;
 
 
-      /* LWFN is a (very) specific file format, check for it explicitly */
+    /* LWFN is a (very) specific file format, check for it explicitly */
     file_type = get_file_type_from_path( pathname );
-      if ( file_type == 'LWFN' )
+    if ( file_type == 'LWFN' )
       return FT_New_Face_From_LWFN( library, pathname, face_index, aface );
-    
-      /* Otherwise the file type doesn't matter (there are more than  */
-      /* `FFIL' and `tfil').  Just try opening it as a font suitcase; */
-      /* if it works, fine.                                           */
+
+    /* Otherwise the file type doesn't matter (there are more than  */
+    /* `FFIL' and `tfil').  Just try opening it as a font suitcase; */
+    /* if it works, fine.                                           */
 
     error = FT_New_Face_From_Suitcase( library, pathname, face_index, aface );
-      if ( error == 0 )
-        return error;
+    if ( error == 0 )
+      return error;
 
     /* let it fall through to normal loader (.ttf, .otf, etc.); */
     /* we signal this by returning no error and no FT_Face      */
@@ -1254,11 +1295,12 @@ found_no_lwfn_file:
     if ( !pathname )
       return FT_Err_Invalid_Argument;
 
-    error  = 0;
+    error  = FT_Err_Ok;
     *aface = NULL;
 
     /* try resourcefork based font: LWFN, FFIL */
-    error = FT_New_Face_From_Resource( library, (UInt8 *)pathname, face_index, aface );
+    error = FT_New_Face_From_Resource( library, (UInt8 *)pathname,
+                                       face_index, aface );
     if ( error != 0 || *aface != NULL )
       return error;
 
@@ -1281,12 +1323,16 @@ found_no_lwfn_file:
   FT_EXPORT_DEF( FT_Error )
   FT_New_Face_From_FSRef( FT_Library    library,
                           const FSRef*  ref,
-                           FT_Long       face_index,
+                          FT_Long       face_index,
                           FT_Face*      aface )
   {
+
 #if !HAVE_FSREF
+
     return FT_Err_Unimplemented_Feature;
+
 #else
+
     FT_Error      error;
     FT_Open_Args  args;
     OSErr   err;
@@ -1308,7 +1354,9 @@ found_no_lwfn_file:
     args.flags    = FT_OPEN_PATHNAME;
     args.pathname = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
-#endif
+
+#endif /* HAVE_FSREF */
+
   }
 
 
@@ -1326,41 +1374,48 @@ found_no_lwfn_file:
                            const FSSpec*  spec,
                            FT_Long        face_index,
                            FT_Face*       aface )
-    {
+  {
+
 #if HAVE_FSREF
-      FSRef  ref;
+
+    FSRef  ref;
 
 
     if ( !spec || FSpMakeFSRef( spec, &ref ) != noErr )
       return FT_Err_Invalid_Argument;
     else
       return FT_New_Face_From_FSRef( library, &ref, face_index, aface );
+
 #elif HAVE_FSSPEC
+
     FT_Error      error;
     FT_Open_Args  args;
-      OSErr  err;
-    UInt8   pathname[HFS_MAXPATHLEN];
+    OSErr         err;
+    UInt8         pathname[HFS_MAXPATHLEN];
 
 
     if ( !spec )
       return FT_Err_Invalid_Argument;
 
     err = FT_FSpMakePath( spec, pathname, sizeof ( pathname ) );
-      if ( err )
-        error = FT_Err_Cannot_Open_Resource;
+    if ( err )
+      error = FT_Err_Cannot_Open_Resource;
 
     error = FT_New_Face_From_Resource( library, pathname, face_index, aface );
     if ( error != 0 || *aface != NULL )
-    return error;
- 
+      return error;
 
     /* fallback to datafork font */
     args.flags    = FT_OPEN_PATHNAME;
     args.pathname = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
+
 #else
+
     return FT_Err_Unimplemented_Feature;
-#endif
+
+#endif /* HAVE_FSREF, HAVE_FSSPEC */
+
   }
 
 
