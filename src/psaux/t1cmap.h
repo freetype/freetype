@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 character map support (specification).                        */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2006 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -89,22 +89,13 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-  /* unicode (syntehtic) cmaps */
+  /* unicode (synthetic) cmaps */
   typedef struct T1_CMapUnicodeRec_*  T1_CMapUnicode;
-
-  typedef struct  T1_CMapUniPairRec_
-  {
-    FT_UInt32  unicode;
-    FT_UInt    gindex;
-
-  } T1_CMapUniPairRec, *T1_CMapUniPair;
-
 
   typedef struct  T1_CMapUnicodeRec_
   {
-    FT_CMapRec      cmap;
-    FT_UInt         num_pairs;
-    T1_CMapUniPair  pairs;
+    FT_CMapRec   cmap;
+    PS_Unicodes  unicodes;
 
   } T1_CMapUnicodeRec;
 

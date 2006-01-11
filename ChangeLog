@@ -1,22 +1,53 @@
-2006-01-11  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2006-01-10  Werner Lemberg  <wl@gnu.org>
 
-	Jumbo patch to fix "deprecated" warning to cross-build for
-	Tiger on Intel, the issue is reported by Sean McBride
-	<sean@rogue-research.com> on 2005-08-24.
+	Fix Savannah bug #15056 and use pscmap service in psaux module.
 
-	* src/base/ftmac.c: Heavy change to build without deprecated
-	Carbon functions on Tiger.
+	* include/freetype/internal/services/svpscmap.h (PS_UniMap): Use
+	FT_UInt32 for `glyph_index'.
+	(PS_Unicodes_InitFunc): Use FT_String for `glyph_names'.
+	(PS_Unicodes_CharIndexFunc): Use FT_UInt32 for `unicode'.
+	(PS_Unicodes_CharNextFunc): Make second argument a pointer to
+	FT_UInt32.
 
-	* builds/unix/configure.ac: Add options and autochecks for
-	Carbon functions availabilities, for MacOS X.
+	* src/psnames/psmodule.c (VARIANT_BIT, BASE_GLYPH): New macros.
+	(ps_unicode_value): Set VARIANT_BIT in return value if glyph is a
+	variant glyph (this is, it has non-leading `.' in its name).
+	(compare_uni_maps): Sort base glyphs before variant glyphs.
+	(ps_unicodes_init): Use FT_String for `glyph_names' argument.
+	Reallocate only if number of used entries is much smaller.
+	Updated to handle variant glyphs.
+	(ps_unicodes_char_index, ps_unicodes_char_next): Prefer base glyphs
+	over variant glyphs.
+	Simplify code.
 
-	* builds/mac/ascii2mpw.py: Add convertor for character "\305".
+	* src/psaux/t1cmap.c (t1_cmap_uni_pair_compare): Removed.
+	(t1_cmap_unicode_init, t1_cmap_unicode_char_index,
+	t1_cmap_unicode_char_next): Use pscmap service.
+	(t1_cmap_unicode_done): Updated.
+
+	* src/psaux/t1cmap.h (T1_CMapUniPair): Removed.
+	(T1_CMapUnicode): Use PS_Unicodes structure.
+
+2006-01-11  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Jumbo patch to fix `deprecated' warning of cross-build for Tiger on
+	Intel, as reported by Sean McBride <sean@rogue-research.com> on
+	2005-08-24.
+
+	* src/base/ftmac.c: Heavy change to build without deprecated Carbon
+	functions on Tiger.
+
+	* builds/unix/configure.ac: Add options and autochecks for Carbon
+	functions availabilities, for MacOS X.
+
+	* builds/mac/ascii2mpw.py: Add converter for character `\305'.
 	* builds/mac/FreeType.m68k_{far|cfm}.make.txt: Add conditional
-	macros to avoid unavailable functions. And ftmac.c must be
-	compiled without "-strict ansi", because it disables cpp macro
-	to use ToolBox system call.
-	* builds/mac/FreeType.ppc_{classic|carbon}.make.txt: Add
-	conditional macros to avoid unavailable functions.
+	macros to avoid unavailable functions.
+	ftmac.c must be compiled without `-strict ansi', because it disables
+	cpp macro to use ToolBox system call.
+
+	* builds/mac/FreeType.ppc_{classic|carbon}.make.txt: Add conditional
+	macros to avoid unavailable functions.
 
 	* builds/mac/README: Detailed notes on function availabilities.
 

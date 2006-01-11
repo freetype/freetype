@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType PostScript charmap service (specification).             */
 /*                                                                         */
-/*  Copyright 2003 by                                                      */
+/*  Copyright 2003, 2006 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -27,7 +27,7 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  Adobe glyph name to unicode value
+   *  Adobe glyph name to unicode value.
    */
   typedef FT_UInt32
   (*PS_Unicode_ValueFunc)( const char*  glyph_name );
@@ -58,8 +58,8 @@ FT_BEGIN_HEADER
    */
   typedef struct  PS_UniMap_
   {
-    FT_UInt  unicode;
-    FT_UInt  glyph_index;
+    FT_UInt32  unicode;      /* bit 31 set: is glyph variant */
+    FT_UInt    glyph_index;
 
   } PS_UniMap;
 
@@ -75,16 +75,16 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*PS_Unicodes_InitFunc)( FT_Memory     memory,
                            FT_UInt       num_glyphs,
-                           const char**  glyph_names,
+                           FT_String**   glyph_names,
                            PS_Unicodes*  unicodes );
 
   typedef FT_UInt
   (*PS_Unicodes_CharIndexFunc)( PS_Unicodes*  unicodes,
-                                FT_UInt       unicode );
+                                FT_UInt32     unicode );
 
   typedef FT_ULong
   (*PS_Unicodes_CharNextFunc)( PS_Unicodes*  unicodes,
-                               FT_ULong      unicode );
+                               FT_UInt32    *unicode );
 
 
   FT_DEFINE_SERVICE( PsCMaps )
