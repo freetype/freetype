@@ -39,13 +39,13 @@ FT_BEGIN_HEADER
 
   typedef struct  T1_CMapStdRec_
   {
-    FT_CMapRec                 cmap;
+    FT_CMapRec                cmap;
 
-    const FT_UShort*           code_to_sid;
-    PS_Adobe_Std_Strings_Func  sid_to_string;
+    const FT_UShort*          code_to_sid;
+    PS_Adobe_Std_StringsFunc  sid_to_string;
 
-    FT_UInt                    num_glyphs;
-    const char* const*         glyph_names;
+    FT_UInt                   num_glyphs;
+    const char* const*        glyph_names;
 
   } T1_CMapStdRec;
 
@@ -90,15 +90,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /* unicode (synthetic) cmaps */
-  typedef struct T1_CMapUnicodeRec_*  T1_CMapUnicode;
-
-  typedef struct  T1_CMapUnicodeRec_
-  {
-    FT_CMapRec   cmap;
-    PS_Unicodes  unicodes;
-
-  } T1_CMapUnicodeRec;
-
 
   FT_CALLBACK_TABLE const FT_CMap_ClassRec
   t1_cmap_unicode_class_rec;

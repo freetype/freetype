@@ -182,10 +182,11 @@
 
   /* Build a table that maps Unicode values to glyph indices. */
   static FT_Error
-  ps_unicodes_init( FT_Memory     memory,
-                    FT_UInt       num_glyphs,
-                    FT_String**   glyph_names,
-                    PS_Unicodes*  table )
+  ps_unicodes_init( FT_Memory          memory,
+                    PS_Unicodes        table,
+                    FT_UInt            num_glyphs,
+                    PS_Glyph_NameFunc  get_glyph_name,
+                    FT_Pointer         glyph_data )
   {
     FT_Error  error;
 
@@ -206,7 +207,7 @@
 
       for ( n = 0; n < num_glyphs; n++ )
       {
-        const char*  gname = glyph_names[n];
+        const char*  gname = get_glyph_name( glyph_data, n );
 
 
         if ( gname )
@@ -253,8 +254,8 @@
 
 
   static FT_UInt
-  ps_unicodes_char_index( PS_Unicodes*  table,
-                          FT_UInt32     unicode )
+  ps_unicodes_char_index( PS_Unicodes  table,
+                          FT_UInt32    unicode )
   {
     PS_UniMap  *min, *max, *mid, *result = NULL;
 
@@ -299,8 +300,8 @@
 
 
   static FT_ULong
-  ps_unicodes_char_next( PS_Unicodes*  table,
-                         FT_UInt32    *unicode )
+  ps_unicodes_char_next( PS_Unicodes  table,
+                         FT_UInt32   *unicode )
   {
     FT_UInt    result    = 0;
     FT_UInt32  char_code = *unicode + 1;
@@ -398,8 +399,8 @@
 
 #endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
-    (PS_Macintosh_Name_Func)   ps_get_macintosh_name,
-    (PS_Adobe_Std_Strings_Func)ps_get_standard_strings,
+    (PS_Macintosh_NameFunc)    ps_get_macintosh_name,
+    (PS_Adobe_Std_StringsFunc) ps_get_standard_strings,
 
     t1_standard_encoding,
     t1_expert_encoding

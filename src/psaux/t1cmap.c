@@ -257,61 +257,70 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_CALLBACK_DEF( FT_Error )
-  t1_cmap_unicode_init( T1_CMapUnicode  cmap )
+  const char *
+  t1_get_glyph_name( T1_Face  face,
+                     FT_UInt  idx )
   {
-    T1_Face             face    = (T1_Face)FT_CMAP_FACE( cmap );
+    return face->type1.glyph_names[idx];
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  t1_cmap_unicode_init( PS_Unicodes  unicodes )
+  {
+    T1_Face             face    = (T1_Face)FT_CMAP_FACE( unicodes );
     FT_Memory           memory  = FT_FACE_MEMORY( face );
     FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)face->psnames;
 
 
     return psnames->unicodes_init( memory,
+                                   unicodes,
                                    face->type1.num_glyphs,
-                                   face->type1.glyph_names,
-                                   &cmap->unicodes );
+                                   (PS_Glyph_NameFunc)&t1_get_glyph_name,
+                                   (FT_Pointer)face );
   }
 
 
   FT_CALLBACK_DEF( void )
-  t1_cmap_unicode_done( T1_CMapUnicode  cmap )
+  t1_cmap_unicode_done( PS_Unicodes  unicodes )
   {
-    FT_Face    face   = FT_CMAP_FACE( cmap );
+    FT_Face    face   = FT_CMAP_FACE( unicodes );
     FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
-    FT_FREE( cmap->unicodes.maps );
-    cmap->unicodes.num_maps = 0;
+    FT_FREE( unicodes->maps );
+    unicodes->num_maps = 0;
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  t1_cmap_unicode_char_index( T1_CMapUnicode  cmap,
-                              FT_UInt32       char_code )
+  t1_cmap_unicode_char_index( PS_Unicodes  unicodes,
+                              FT_UInt32    char_code )
   {
-    T1_Face             face    = (T1_Face)FT_CMAP_FACE( cmap );
+    T1_Face             face    = (T1_Face)FT_CMAP_FACE( unicodes );
     FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)face->psnames;
 
 
-    return psnames->unicodes_char_index( &cmap->unicodes, char_code );
+    return psnames->unicodes_char_index( unicodes, char_code );
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  t1_cmap_unicode_char_next( T1_CMapUnicode  cmap,
-                             FT_UInt32      *pchar_code )
+  t1_cmap_unicode_char_next( PS_Unicodes  unicodes,
+                             FT_UInt32   *pchar_code )
   {
-    T1_Face             face    = (T1_Face)FT_CMAP_FACE( cmap );
+    T1_Face             face    = (T1_Face)FT_CMAP_FACE( unicodes );
     FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)face->psnames;
 
 
-    return psnames->unicodes_char_next( &cmap->unicodes, pchar_code );
+    return psnames->unicodes_char_next( unicodes, pchar_code );
   }
 
 
   FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_unicode_class_rec =
   {
-    sizeof ( T1_CMapUnicodeRec ),
+    sizeof ( PS_UnicodesRec ),
 
     (FT_CMap_InitFunc)     t1_cmap_unicode_init,
     (FT_CMap_DoneFunc)     t1_cmap_unicode_done,

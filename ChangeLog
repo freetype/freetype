@@ -1,10 +1,48 @@
-2006-01-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2006-01-12  Werner Lemberg  <wl@gnu.org>
+
+	Prepare use of pscmap service within CFF module.
+
+	* include/freetype/internal/services/svpscmap.h: Include
+	FT_INTERNAL_OBJECTS_H.
+	(PS_Unicode_Index_Func): Removed.  Unused.
+	(PS_Macintosh_Name_Func): Renamed to...
+	(PS_Macintosh_NameFunc): This.
+	Update all callers.
+	(PS_Adobe_Std_Strings_Func): Renamed to...
+	(PS_Adobe_Std_StringsFunc): This.
+	Update all callers.
+	(PS_UnicodesRec): This is the former `PS_Unicodes' structure.
+	Add `cmap' member.
+	Update all callers.
+	(PS_Unicodes): This is now a typedef'd pointer to PS_UnicodesRec.
+	Update all callers.
+	(PS_Glyph_NameFunc): New typedef.
+	(PS_Unicodes_InitFunc): Change arguments to expect a function
+	and generic data pointer which returns a glyph name from a given
+	index.
+
+	* src/psnames/psmodule.c (ps_unicodes_init, ps_unicodes_char_index,
+	ps_unicodes_char_next, pscmaps_interface): Updated.
+
+	* include/freetype/internal/t1types.h (T1_FaceRec): Updated.
+
+	* src/psaux/t1cmap.h (T1_CmapStdRec): Updated.
+	(T1_CmapUnicode, T1_CmapUnicodeRec): Removed.
+
+	* src/psaux/t1cmap.c (t1_get_glyph_name): New callback function.
+	(t1_cmap_unicode_init, t1_cmap_unicode_done,
+	t1_cmap_unicode_char_index, t1_cmap_unicode_char_next,
+	t1_cmap_unicode_class_rec): Updated.
+
+	* src/type42/t42types.h (T42_FaceRec): Updated.
+
+2006-01-11  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* include/freetype/ftmac.h: Add declaration of new functions
 	FT_New_Face_From_FSRef and FT_GetFile_From_Mac_ATS_Name that
 	were introduced by the jumbo patch on  2006-01-11.
 
-2006-01-10  Werner Lemberg  <wl@gnu.org>
+2006-01-11  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #15056 and use pscmap service in psaux module.
 

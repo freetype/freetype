@@ -5,7 +5,7 @@
 /*    Basic Type1/Type2 type definitions and interface (specification      */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -148,20 +148,20 @@ FT_BEGIN_HEADER
 
   typedef struct  T1_FaceRec_
   {
-    FT_FaceRec     root;
-    T1_FontRec     type1;
-    const void*    psnames;
-    const void*    psaux;
-    const void*    afm_data;
-    FT_CharMapRec  charmaprecs[2];
-    FT_CharMap     charmaps[2];
-    PS_Unicodes    unicode_map;
+    FT_FaceRec      root;
+    T1_FontRec      type1;
+    const void*     psnames;
+    const void*     psaux;
+    const void*     afm_data;
+    FT_CharMapRec   charmaprecs[2];
+    FT_CharMap      charmaps[2];
+    PS_UnicodesRec  unicode_map;
 
     /* support for Multiple Masters fonts */
-    PS_Blend       blend;
+    PS_Blend        blend;
 
     /* since FT 2.1 - interface to PostScript hinter */
-    const void*    pshinter;
+    const void*     pshinter;
 
   } T1_FaceRec;
 
