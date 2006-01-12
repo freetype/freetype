@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Additional Mac-specific API.                                         */
 /*                                                                         */
-/*  Copyright 1996-2001, 2004 by                                           */
+/*  Copyright 1996-2001, 2004, 2006 by                                     */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -59,7 +59,7 @@ FT_BEGIN_HEADER
   /*    FT_New_Face_From_FOND                                              */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new face object from an FOND resource.                   */
+  /*    Create a new face object from a FOND resource.                     */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    library    :: A handle to the library resource.                    */
@@ -77,8 +77,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Notes>                                                               */
-  /*    This function can be used to create FT_Face abjects from fonts     */
-  /*    that are installed in the system like so:                          */
+  /*    This function can be used to create FT_Face objects from fonts     */
+  /*    that are installed in the system as follows.                       */
   /*                                                                       */
   /*    {                                                                  */
   /*      fond = GetResource( 'FOND', fontName );                          */
@@ -98,10 +98,11 @@ FT_BEGIN_HEADER
   /*    FT_GetFile_From_Mac_Name                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns an FSSpec for the disk file containing the named font.     */
+  /*    Return an FSSpec for the disk file containing the named font.      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    fontName   :: Mac OS name of the font (eg. Times New Roman Bold).  */
+  /*    fontName   :: Mac OS name of the font (e.g., Times New Roman       */
+  /*                  Bold).                                               */
   /*                                                                       */
   /* <Output>                                                              */
   /*    pathSpec   :: FSSpec to the file.  For passing to @FT_New_Face.    */
@@ -123,7 +124,7 @@ FT_BEGIN_HEADER
   /*    FT_GetFile_From_Mac_ATS_Name                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns an FSSpec for the disk file containing the named font.     */
+  /*    Return an FSSpec for the disk file containing the named font.      */
   /*                                                                       */
   /* <Input>                                                               */
   /*    fontName   :: Mac OS name of the font in ATS framework.            */
@@ -148,7 +149,7 @@ FT_BEGIN_HEADER
   /*    FT_New_Face_From_FSSpec                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface index */
+  /*    Create a new face object from a given resource and typeface index  */
   /*    using an FSSpec to the font file.                                  */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -182,7 +183,7 @@ FT_BEGIN_HEADER
   /*    FT_New_Face_From_FSRef                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface index */
+  /*    Create a new face object from a given resource and typeface index  */
   /*    using an FSRef to the font file.                                   */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -204,10 +205,10 @@ FT_BEGIN_HEADER
   /*    it accepts an FSRef instead of a path.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_New_Face_From_FSRef( FT_Library     library,
-                          const FSRef   *ref,
-                          FT_Long        face_index,
-                          FT_Face       *aface );
+  FT_New_Face_From_FSRef( FT_Library    library,
+                          const FSRef  *ref,
+                          FT_Long       face_index,
+                          FT_Face      *aface );
 
   /* */
 
