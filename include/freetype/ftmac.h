@@ -112,9 +112,34 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_GetFile_From_Mac_Name( const char*  fontName, 
+  FT_GetFile_From_Mac_Name( const char*  fontName,
                             FSSpec*      pathSpec,
                             FT_Long*     face_index );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_GetFile_From_Mac_ATS_Name                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Returns an FSSpec for the disk file containing the named font.     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    fontName   :: Mac OS name of the font in ATS framework.            */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    pathSpec   :: FSSpec to the file.  For passing to @FT_New_Face.    */
+  /*                                                                       */
+  /*    face_index :: Index of the face.  For passing to @FT_New_Face.     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_GetFile_From_Mac_ATS_Name( const char*  fontName,
+                                FSSpec*      pathSpec,
+                                FT_Long*     face_index );
 
 
   /*************************************************************************/
@@ -149,6 +174,40 @@ FT_BEGIN_HEADER
                            const FSSpec  *spec,
                            FT_Long        face_index,
                            FT_Face       *aface );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Face_From_FSRef                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new face object from a given resource and typeface index */
+  /*    using an FSRef to the font file.                                   */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library    :: A handle to the library resource.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    spec       :: FSRef to the font file.                              */
+  /*                                                                       */
+  /*    face_index :: The index of the face within the resource.  The      */
+  /*                  first face has index 0.                              */
+  /* <Output>                                                              */
+  /*    aface      :: A handle to a new face object.                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    @FT_New_Face_From_FSRef is identical to @FT_New_Face except        */
+  /*    it accepts an FSRef instead of a path.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_New_Face_From_FSRef( FT_Library     library,
+                          const FSRef   *ref,
+                          FT_Long        face_index,
+                          FT_Face       *aface );
 
   /* */
 

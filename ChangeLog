@@ -1,3 +1,9 @@
+2006-01-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* include/freetype/ftmac.h: Add declaration of new functions
+	FT_New_Face_From_FSRef and FT_GetFile_From_Mac_ATS_Name that
+	were introduced by the jumbo patch on  2006-01-11.
+
 2006-01-10  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #15056 and use pscmap service in psaux module.
