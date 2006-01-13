@@ -134,113 +134,68 @@
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Set_Char_Sizes                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to reset a size's character sizes (horizontal */
-  /*    and vertical) expressed in fractional points.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    char_width      :: The character width expressed in 26.6           */
-  /*                       fractional points.                              */
-  /*                                                                       */
-  /*    char_height     :: The character height expressed in 26.6          */
-  /*                       fractional points.                              */
-  /*                                                                       */
-  /*    horz_resolution :: The horizontal resolution of the output device. */
-  /*                                                                       */
-  /*    vert_resolution :: The vertical resolution of the output device.   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size            :: A handle to the target size object.             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   static FT_Error
-  Set_Char_Sizes( FT_Size     ttsize,       /* TT_Size */
-                  FT_F26Dot6  char_width,
-                  FT_F26Dot6  char_height,
-                  FT_UInt     horz_resolution,
-                  FT_UInt     vert_resolution )
+  tt_size_request( FT_Size          size,
+                   FT_Size_Request  req )
   {
-    TT_Size           size    = (TT_Size)ttsize;
-    FT_Size_Metrics*  metrics = &size->metrics;
-    TT_Face           face    = (TT_Face)size->root.face;
+    TT_Face   ttface = (TT_Face)size->face;
+    TT_Size   ttsize = (TT_Size)size;
+    FT_Error  error  = TT_Err_Ok;
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-    /* copy the result from base layer */
-    *metrics = size->root.metrics;
-
-    /* This bit flag, when set, indicates that the pixel size must be */
-    /* rounded to integer.  Nearly all TrueType fonts have this bit   */
-    /* set, as hinting won't work really well otherwise.              */
-    /*                                                                */
-    if ( ( face->header.Flags & 8 ) != 0 )
+    if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
-      FT_Long  dim_x, dim_y;
+      SFNT_Service      sfnt    = ttface->sfnt;
+      FT_Size_Metrics*  metrics = &size->metrics;
+      FT_ULong          index;
 
-
-      dim_x = ( char_width  * horz_resolution + 36 ) / 72;
-      dim_y = ( char_height * vert_resolution + 36 ) / 72;
-
-      dim_x = FT_PIX_ROUND( dim_x );
-      dim_y = FT_PIX_ROUND( dim_y );
-
-      metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
-      metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
-      metrics->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
-      metrics->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
+      if ( !( error = sfnt->set_sbit_strike( ttface,
+                                             req,
+                                             &index ) ) &&
+           !( error = sfnt->load_strike_metrics( ttface,
+                                                 index,
+                                                 metrics ) ) )
+        ttsize->strike_index = index;
+      else
+        ttsize->strike_index = 0xFFFFFFFFU;
     }
 
-    size->ttmetrics.valid = FALSE;
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    size->strike_index    = 0xFFFFU;
 #endif
 
-    return tt_size_reset( size );
+    if ( FT_IS_SCALABLE( size->face ) )
+      error = tt_size_reset( ttsize );
+
+    return error;
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Set_Pixel_Sizes                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to reset a size's character sizes (horizontal */
-  /*    and vertical) expressed in integer pixels.                         */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size         :: A handle to the target size object.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
   static FT_Error
-  Set_Pixel_Sizes( FT_Size  ttsize,         /* TT_Size */
-                   FT_UInt  pixel_width,
-                   FT_UInt  pixel_height )
+  tt_size_select( FT_Size   size,
+                  FT_ULong  index )
   {
-    TT_Size  size = (TT_Size)ttsize;
+    TT_Face           ttface  = (TT_Face)size->face;
+    TT_Size           ttsize  = (TT_Size)size;
+    FT_Size_Metrics*  metrics = &size->metrics;
+    SFNT_Service      sfnt    = ttface->sfnt;
+    FT_Error          error;
 
-    FT_UNUSED( pixel_width );
-    FT_UNUSED( pixel_height );
 
+    if ( FT_IS_SCALABLE( size->face ) )
+      tt_size_reset( ttsize );
 
-    /* many things have been pre-computed by the base layer */
+    error = sfnt->load_strike_metrics( ttface, index, metrics );
+    if ( error )
+      ttsize->strike_index = 0xFFFFFFFFU;
+    else
+      ttsize->strike_index = index;
 
-    size->metrics         = size->root.metrics;
-    size->ttmetrics.valid = FALSE;
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    size->strike_index    = 0xFFFFU;
-#endif
-
-    return tt_size_reset( size );
+    return error;
   }
+
+#endif
 
 
   /*************************************************************************/
@@ -401,8 +356,13 @@
     tt_slot_init,
     0,                      /* FT_Slot_DoneFunc */
 
-    Set_Char_Sizes,
-    Set_Pixel_Sizes,
+    tt_size_request,
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    tt_size_select,
+#else
+    0,                      /* FT_Size_SelectFunc      */
+#endif 
+
     Load_Glyph,
 
     tt_get_kerning,

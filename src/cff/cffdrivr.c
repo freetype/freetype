@@ -433,8 +433,13 @@
     cff_slot_init,
     cff_slot_done,
 
-    cff_point_size_reset,
-    cff_size_reset,
+    cff_size_request,
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    cff_size_select,
+#else
+    0,                      /* FT_Size_SelectFunc      */
+#endif 
 
     Load_Glyph,
 

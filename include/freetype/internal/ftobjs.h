@@ -451,6 +451,16 @@ FT_BEGIN_HEADER
 
  /* */
 
+  /*
+   * Match a size request against `available_sizes'.
+   */
+  FT_BASE( FT_Error )
+  FT_Match_Size( FT_Face          face,
+                 FT_Size_Request  req,
+                 FT_Bool          ignore_width,
+                 FT_ULong*        index );
+
+
  /*
   * Free the bitmap of a given glyphslot when needed
   * (i.e., only when it was allocated with ft_glyphslot_alloc_bitmap).

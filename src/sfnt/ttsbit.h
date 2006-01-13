@@ -36,10 +36,14 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  tt_face_set_sbit_strike( TT_Face    face,
-                           FT_UInt    x_ppem,
-                           FT_UInt    y_ppem,
-                           FT_ULong  *astrike_index );
+  tt_face_set_sbit_strike( TT_Face          face,
+                           FT_Size_Request  req,
+                           FT_ULong*        astrike_index );
+
+  FT_LOCAL( FT_Error )
+  tt_face_load_strike_metrics( TT_Face           face,
+                               FT_ULong          strike_index,
+                               FT_Size_Metrics*  metrics );
 
 #ifndef FT_OPTIMIZE_MEMORY
   FT_LOCAL( FT_Error )

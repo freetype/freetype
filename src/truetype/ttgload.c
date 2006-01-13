@@ -1825,7 +1825,7 @@
     stream = face->root.stream;
 
     error = sfnt->load_sbit_image( face,
-                                   (FT_ULong)size->strike_index,
+                                   size->strike_index,
                                    glyph_index,
                                    (FT_Int)load_flags,
                                    stream,
@@ -2007,7 +2007,7 @@
     /*                                                 */
     /* XXX: The convention should be emphasized in     */
     /*      the documents because it can be confusing. */
-    if ( size->strike_index != 0xFFFFU           &&
+    if ( size->strike_index != 0xFFFFFFFFU       &&
          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );

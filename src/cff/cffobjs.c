@@ -52,90 +52,6 @@
   /*************************************************************************/
 
 
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
-  static FT_Error
-  sbit_size_reset( CFF_Size  size )
-  {
-    CFF_Face          face;
-    FT_Error          error = CFF_Err_Ok;
-
-    FT_ULong          strike_index;
-    FT_Size_Metrics*  metrics;
-    FT_Size_Metrics*  sbit_metrics;
-    SFNT_Service      sfnt;
-
-
-    metrics = &size->root.metrics;
-
-    face = (CFF_Face)size->root.face;
-    sfnt = (SFNT_Service)face->sfnt;
-
-    sbit_metrics = &size->strike_metrics;
-
-    error = sfnt->set_sbit_strike( face,
-                                   metrics->x_ppem,
-                                   metrics->y_ppem,
-                                   &strike_index );
-
-    if ( !error )
-    {
-      /* XXX: TODO: move this code to the SFNT module where it belongs */
-
-#ifdef FT_OPTIMIZE_MEMORY
-
-      FT_Byte*    strike = face->sbit_table + 8 + strike_index*48;
-
-      sbit_metrics->ascender  = (FT_Char)strike[16] << 6;  /* hori.ascender  */
-      sbit_metrics->descender = (FT_Char)strike[17] << 6;  /* hori.descender */
-
-      /* XXX: Is this correct? */
-      sbit_metrics->max_advance = ( (FT_Char)strike[22] + /* min_origin_SB  */
-                                             strike[18] + /* max_width      */
-                                    (FT_Char)strike[23]   /* min_advance_SB */
-                                                        ) << 6;
-
-#else /* !OPTIMIZE_MEMORY */
-
-      TT_SBit_Strike  strike = face->sbit_strikes + strike_index;
-
-
-      sbit_metrics->ascender  = strike->hori.ascender << 6;
-      sbit_metrics->descender = strike->hori.descender << 6;
-
-      /* XXX: Is this correct? */
-      sbit_metrics->max_advance = ( strike->hori.min_origin_SB  +
-                                    strike->hori.max_width      +
-                                    strike->hori.min_advance_SB ) << 6;
-
-#endif /* !OPTIMIZE_MEMORY */
-
-      /* XXX: Is this correct? */
-      sbit_metrics->height = sbit_metrics->ascender -
-                             sbit_metrics->descender;
-
-      sbit_metrics->x_ppem = metrics->x_ppem;
-      sbit_metrics->y_ppem = metrics->y_ppem;
-      size->strike_index   = (FT_UInt)strike_index;
-    }
-    else
-    {
-      size->strike_index = 0xFFFFU;
-
-      sbit_metrics->x_ppem      = 0;
-      sbit_metrics->y_ppem      = 0;
-      sbit_metrics->ascender    = 0;
-      sbit_metrics->descender   = 0;
-      sbit_metrics->height      = 0;
-      sbit_metrics->max_advance = 0;
-    }
-
-    return error;
-  }
-
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-
   static PSH_Globals_Funcs
   cff_size_get_globals_funcs( CFF_Size  size )
   {
@@ -243,63 +159,89 @@
         cffsize->internal = (FT_Size_Internal)(void*)globals;
     }
 
+    size->strike_index = 0xFFFFFFFFU;
+
     return error;
   }
 
 
   FT_LOCAL_DEF( FT_Error )
-  cff_size_reset( FT_Size  cffsize,         /* CFF_Size */
-                  FT_UInt  char_width,
-                  FT_UInt  char_height )
+  cff_size_request( FT_Size          size,
+                    FT_Size_Request  req )
   {
-    CFF_Size           size  = (CFF_Size)cffsize;
-    PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
-    FT_Error           error = CFF_Err_Ok;
-    FT_Face            face  = cffsize->face;
-
-    FT_UNUSED( char_width );
-    FT_UNUSED( char_height );
-
-
-    if ( funcs )
-      error = funcs->set_scale( (PSH_Globals)cffsize->internal,
-                                 cffsize->metrics.x_scale,
-                                 cffsize->metrics.y_scale,
-                                 0, 0 );
-
+    CFF_Size           cffsize = (CFF_Size)size;
+    PSH_Globals_Funcs  funcs;
+    
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-    if ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
+    if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
-      error = sbit_size_reset( size );
+      CFF_Face          cffface = (CFF_Face)size->face;
+      SFNT_Service      sfnt    = cffface->sfnt;
+      FT_Size_Metrics*  metrics = &size->metrics;
+      FT_ULong          index;
+      FT_Error          error;
 
-      if ( !error && !( face->face_flags & FT_FACE_FLAG_SCALABLE ) )
-        cffsize->metrics = size->strike_metrics;
+
+      if ( !( error = sfnt->set_sbit_strike( cffface,
+                                             req,
+                                             &index ) ) &&
+           !( error = sfnt->load_strike_metrics( cffface,
+                                                 index,
+                                                 metrics ) ) )
+        cffsize->strike_index = index;
+      else
+        cffsize->strike_index = 0xFFFFFFFFU;
     }
 
 #endif
 
-    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
-      return CFF_Err_Ok;
-    else
-      return error;
+    FT_UNUSED( req );
+
+    funcs = cff_size_get_globals_funcs( cffsize );
+
+    if ( funcs )
+      funcs->set_scale( (PSH_Globals)size->internal,
+                        size->metrics.x_scale,
+                        size->metrics.y_scale,
+                        0, 0 );
+
+    return CFF_Err_Ok;
   }
 
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
   FT_LOCAL_DEF( FT_Error )
-  cff_point_size_reset( FT_Size     cffsize,
-                        FT_F26Dot6  char_width,
-                        FT_F26Dot6  char_height,
-                        FT_UInt     horz_resolution,
-                        FT_UInt     vert_resolution )
+  cff_size_select( FT_Size   size,
+                   FT_ULong  index )
   {
-    FT_UNUSED( char_width );
-    FT_UNUSED( char_height );
-    FT_UNUSED( horz_resolution );
-    FT_UNUSED( vert_resolution );
+    CFF_Face           cffface = (CFF_Face)size->face;
+    CFF_Size           cffsize = (CFF_Size)size;
+    FT_Size_Metrics*   metrics = &size->metrics;
+    SFNT_Interface*    sfnt    = cffface->sfnt;
+    FT_Error           error;
+    PSH_Globals_Funcs  funcs;
 
-    return cff_size_reset( cffsize, 0, 0 );
+
+    funcs = cff_size_get_globals_funcs( cffsize );
+
+    if ( funcs )
+      funcs->set_scale( (PSH_Globals)size->internal,
+                        size->metrics.x_scale,
+                        size->metrics.y_scale,
+                        0, 0 );
+
+    error = sfnt->load_strike_metrics( cffface, index, metrics );
+    if ( error )
+      cffsize->strike_index = 0xFFFFFFFFU;
+    else
+      cffsize->strike_index = index;
+
+    return error;
   }
+
+#endif
 
 
   /*************************************************************************/

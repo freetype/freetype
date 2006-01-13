@@ -1960,6 +1960,59 @@
   }
 
 
+  /* documentation is in ftobjs.h */
+
+  FT_BASE_DEF( FT_Error )
+  FT_Match_Size( FT_Face          face,
+                 FT_Size_Request  req,
+                 FT_Bool          ignore_width,
+                 FT_ULong*        index )
+  {
+    FT_Int   i;
+    FT_Long  w, h;
+
+
+    if ( !FT_HAS_FIXED_SIZES( face ) )
+      return FT_Err_Invalid_Face_Handle;
+
+    /* FT_Bitmap_Size doesn't provide enough info... */
+    if ( req->type != FT_SIZE_REQUEST_TYPE_NOMINAL )
+      return FT_Err_Unimplemented_Feature;
+
+    if ( req->horiResolution )
+      w = ( req->width  * req->horiResolution + 36 ) / 72;
+    else
+      w = req->width;
+
+    if ( req->vertResolution )
+      h = ( req->height * req->vertResolution + 36 ) / 72;
+    else
+      h = req->height;
+
+    if ( req->width && !req->height )
+      h = w;
+    else if ( !req->width && req->height )
+      w = h;
+
+    for ( i = 0; i < face->num_fixed_sizes; i++ )
+    {
+      if ( h != face->available_sizes[i].y_ppem )
+        continue;
+
+      if ( w == face->available_sizes[i].x_ppem ||
+           ignore_width )
+      {
+        if ( index )
+          *index = (FT_ULong)i;
+
+        return FT_Err_Ok;
+      }
+    }
+
+    return FT_Err_Invalid_Pixel_Size;
+  }
+
+
   static void
   ft_recompute_scaled_metrics( FT_Face           face,
                                FT_Size_Metrics*  metrics )
@@ -1983,84 +2036,185 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
+  FT_Select_Size( FT_Face  face,
+                  FT_Int   index )
+  {
+    FT_Driver_Class   clazz;
+    FT_Size_Metrics*  metrics;
+    FT_Bitmap_Size*   bsize;
+
+
+    if ( !face || !FT_HAS_FIXED_SIZES( face ) )
+      return FT_Err_Invalid_Face_Handle;
+
+    if ( index < 0 || index >= face->num_fixed_sizes )
+      return FT_Err_Invalid_Argument;
+
+    clazz   = face->driver->clazz;
+    metrics = &face->size->metrics;
+
+    bsize   = face->available_sizes + index;
+
+    metrics->x_ppem = ( bsize->x_ppem + 32 ) >> 6;
+    metrics->y_ppem = ( bsize->y_ppem + 32 ) >> 6;
+
+    if ( FT_IS_SCALABLE( face ) )
+    {
+      metrics->x_scale = FT_DivFix( bsize->x_ppem,
+                                    face->units_per_EM );
+      metrics->y_scale = FT_DivFix( bsize->y_ppem,
+                                    face->units_per_EM );
+
+      ft_recompute_scaled_metrics( face, metrics );
+    }
+    else
+    {
+      metrics->x_scale     = 0x10000;
+      metrics->y_scale     = 0x10000;
+      metrics->ascender    = bsize->y_ppem;
+      metrics->descender   = 0;
+      metrics->height      = bsize->height << 6;
+      metrics->max_advance = bsize->x_ppem;
+    }
+
+    if ( clazz->select_size )
+      return clazz->select_size( face->size, (FT_ULong)index );
+    else
+      return FT_Err_Ok;
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Request_Size( FT_Face          face,
+                   FT_Size_Request  req )
+  {
+    FT_Driver_Class   clazz;
+    FT_Size_Metrics*  metrics;
+    FT_Error          error;
+
+
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
+    if ( !req )
+      return FT_Err_Invalid_Argument;
+
+    clazz   = face->driver->clazz;
+    metrics = &face->size->metrics;
+
+    if ( FT_IS_SCALABLE( face ) )
+    {
+      FT_Long  w, h, scaled_w, scaled_h;
+
+
+      switch ( req->type )
+      {
+      case FT_SIZE_REQUEST_TYPE_NOMINAL:
+        w = h = face->units_per_EM;
+        break;
+      case FT_SIZE_REQUEST_TYPE_REAL_DIM:
+        w = h = face->ascender - face->descender;
+        break;
+      case FT_SIZE_REQUEST_TYPE_CELL:
+        w = face->max_advance_width;
+        h = face->ascender - face->descender;
+        break;
+      case FT_SIZE_REQUEST_TYPE_BBOX:
+        w = face->bbox.xMax - face->bbox.xMin;
+        h = face->bbox.yMax - face->bbox.yMin;
+        break;
+      default:
+        return FT_Err_Unimplemented_Feature;
+        break;
+      }
+
+      if ( req->horiResolution )
+        scaled_w = ( req->width  * req->horiResolution + 36 ) / 72;
+      else
+        scaled_w = req->width;
+
+      if ( req->vertResolution )
+        scaled_h = ( req->height * req->vertResolution + 36 ) / 72;
+      else
+        scaled_h = req->height;
+
+      /* determine scales */
+      if ( req->width )
+      {
+        metrics->x_scale = FT_DivFix( scaled_w, w );
+
+        if ( req->height )
+        {
+          metrics->y_scale = FT_DivFix( scaled_h, h );
+
+          if ( req->type == FT_SIZE_REQUEST_TYPE_CELL )
+          {
+            if ( metrics->y_scale > metrics->x_scale )
+              metrics->y_scale = metrics->x_scale;
+            else
+              metrics->x_scale = metrics->y_scale;
+          }
+        }
+        else
+        {
+          metrics->y_scale = metrics->x_scale;
+          scaled_h = FT_MulDiv( scaled_w, h, w );
+        }
+      }
+      else
+      {
+        metrics->x_scale = metrics->y_scale = FT_DivFix( scaled_h, h );
+        scaled_w = FT_MulDiv( scaled_h, w, h );
+      }
+
+      /* calculate ppem */
+      if ( req->type != FT_SIZE_REQUEST_TYPE_NOMINAL )
+      {
+        scaled_w = FT_MulFix( face->units_per_EM, metrics->x_scale );
+        scaled_h = FT_MulFix( face->units_per_EM, metrics->y_scale );
+      }
+
+      metrics->x_ppem = ( scaled_w + 32 ) >> 6;
+      metrics->y_ppem = ( scaled_h + 32 ) >> 6;
+
+      ft_recompute_scaled_metrics( face, metrics );
+
+      error = FT_Err_Ok;
+    }
+    else
+    {
+      FT_ZERO( metrics );
+      error = FT_Err_Invalid_Pixel_Size;
+    }
+
+    if ( clazz->request_size )
+      return clazz->request_size( face->size, req );
+    else
+      return error;
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Error )
   FT_Set_Char_Size( FT_Face     face,
                     FT_F26Dot6  char_width,
                     FT_F26Dot6  char_height,
                     FT_UInt     horz_resolution,
                     FT_UInt     vert_resolution )
   {
-    FT_Error          error = FT_Err_Ok;
-    FT_Driver         driver;
-    FT_Driver_Class   clazz;
-    FT_Size_Metrics*  metrics;
-    FT_Long           dim_x, dim_y;
+    FT_Size_RequestRec  req;
 
 
-    if ( !face || !face->size || !face->driver )
-      return FT_Err_Invalid_Face_Handle;
+    req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
+    req.width          = char_width;
+    req.height         = char_height;
+    req.horiResolution = ( horz_resolution ) ? horz_resolution : 72;
+    req.vertResolution = ( vert_resolution ) ? vert_resolution : 72;
 
-    driver  = face->driver;
-    metrics = &face->size->metrics;
-    clazz   = driver->clazz;
-
-    if ( !char_width )
-      char_width = char_height;
-
-    else if ( !char_height )
-      char_height = char_width;
-
-    if ( !horz_resolution )
-      horz_resolution = 72;
-
-    if ( !vert_resolution )
-      vert_resolution = 72;
-
-    /* default processing -- this can be overridden by the driver */
-    if ( char_width  < 1 * 64 )
-      char_width  = 1 * 64;
-    if ( char_height < 1 * 64 )
-      char_height = 1 * 64;
-
-    /* Compute pixel sizes in 26.6 units */
-    dim_x = ( char_width  * horz_resolution + 36 ) / 72;
-    dim_y = ( char_height * vert_resolution + 36 ) / 72;
-
-    {
-      FT_UShort  x_ppem = (FT_UShort)( ( dim_x + 32 ) >> 6 );
-      FT_UShort  y_ppem = (FT_UShort)( ( dim_y + 32 ) >> 6 );
-
-
-      /* Don't take, say, 12.5x12.5 equal to 13x13.  If working with */
-      /* fractional font sizes this would hide slightly different    */
-      /* font metrics.  Consequently, the next two lines are         */
-      /* disabled.                                                   */
-#if 0
-      if ( x_ppem == metrics->x_ppem && y_ppem == metrics->y_ppem )
-        return FT_Err_Ok;
-#endif
-
-      metrics->x_ppem = x_ppem;
-      metrics->y_ppem = y_ppem;
-    }
-
-    metrics->x_scale = 0x10000L;
-    metrics->y_scale = 0x10000L;
-
-    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
-    {
-      metrics->x_scale = FT_DivFix( dim_x, face->units_per_EM );
-      metrics->y_scale = FT_DivFix( dim_y, face->units_per_EM );
-
-      ft_recompute_scaled_metrics( face, metrics );
-    }
-
-    if ( clazz->set_char_sizes )
-      error = clazz->set_char_sizes( face->size,
-                                     char_width,
-                                     char_height,
-                                     horz_resolution,
-                                     vert_resolution );
-    return error;
+    return FT_Request_Size( face, &req );
   }
 
 
@@ -2071,55 +2225,16 @@
                       FT_UInt  pixel_width,
                       FT_UInt  pixel_height )
   {
-    FT_Error          error = FT_Err_Ok;
-    FT_Driver         driver;
-    FT_Driver_Class   clazz;
-    FT_Size_Metrics*  metrics;
+    FT_Size_RequestRec  req;
 
 
-    if ( !face || !face->size || !face->driver )
-      return FT_Err_Invalid_Face_Handle;
+    req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
+    req.width          = pixel_width << 6;
+    req.height         = pixel_height << 6;
+    req.horiResolution = 0;
+    req.vertResolution = 0;
 
-    driver  = face->driver;
-    metrics = &face->size->metrics;
-    clazz   = driver->clazz;
-
-    if ( pixel_width == 0 )
-      pixel_width = pixel_height;
-
-    else if ( pixel_height == 0 )
-      pixel_height = pixel_width;
-
-    if ( pixel_width  < 1 )
-      pixel_width  = 1;
-    if ( pixel_height < 1 )
-      pixel_height = 1;
-
-    /* use `>=' to avoid potential compiler warnings on 16bit platforms */
-    if ( pixel_width >= 0xFFFFU )
-      pixel_width  = 0xFFFFU;
-    if ( pixel_height >= 0xFFFFU )
-      pixel_height = 0xFFFFU;
-
-    metrics->x_ppem = (FT_UShort)pixel_width;
-    metrics->y_ppem = (FT_UShort)pixel_height;
-
-    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
-    {
-      metrics->x_scale = FT_DivFix( metrics->x_ppem << 6,
-                                    face->units_per_EM );
-
-      metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
-                                    face->units_per_EM );
-
-      ft_recompute_scaled_metrics( face, metrics );
-    }
-
-    if ( clazz->set_pixel_sizes )
-      error = clazz->set_pixel_sizes( face->size,
-                                      pixel_width,
-                                      pixel_height );
-    return error;
+    return FT_Request_Size( face, &req );
   }
 
 

@@ -190,8 +190,8 @@
     pfr_slot_init,
     pfr_slot_done,
 
-    0,                  /* FT_Size_ResetPointsFunc */
-    0,                  /* FT_Size_ResetPixelsFunc */
+    0,                  /* FT_Size_RequestFunc */
+    0,                  /* FT_Size_SelectFunc  */
     pfr_slot_load,
 
     pfr_get_kerning,

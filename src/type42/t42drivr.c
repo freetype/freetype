@@ -229,8 +229,8 @@
     (FT_Slot_InitFunc)        T42_GlyphSlot_Init,
     (FT_Slot_DoneFunc)        T42_GlyphSlot_Done,
 
-    (FT_Size_ResetPointsFunc) T42_Size_SetChars,
-    (FT_Size_ResetPixelsFunc) T42_Size_SetPixels,
+    (FT_Size_RequestFunc)     T42_Size_Request,
+    (FT_Size_SelectFunc)      T42_Size_Select,
     (FT_Slot_LoadFunc)        T42_GlyphSlot_Load,
 
     (FT_Face_GetKerningFunc)  0,

@@ -365,15 +365,12 @@ FT_BEGIN_HEADER
   /*    TT_Set_SBit_Strike_Func                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Selects an sbit strike for given horizontal and vertical ppem      */
-  /*    values.                                                            */
+  /*    Selects an sbit strike for a given size request.                   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face          :: The target face object.                           */
   /*                                                                       */
-  /*    x_ppem        :: The horizontal resolution in points per EM.       */
-  /*                                                                       */
-  /*    y_ppem        :: The vertical resolution in points per EM.         */
+  /*    req           :: The size request.                                 */
   /*                                                                       */
   /* <Output>                                                              */
   /*    astrike_index :: The index of the sbit strike.                     */
@@ -383,10 +380,35 @@ FT_BEGIN_HEADER
   /*    sbit strike exists for the selected ppem values.                   */
   /*                                                                       */
   typedef FT_Error
-  (*TT_Set_SBit_Strike_Func)( TT_Face    face,
-                              FT_UInt    x_ppem,
-                              FT_UInt    y_ppem,
-                              FT_ULong  *astrike_index );
+  (*TT_Set_SBit_Strike_Func)( TT_Face          face,
+                              FT_Size_Request  req,
+                              FT_ULong*        astrike_index );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Load_Strike_Metrics_Func                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Loads the metrics of a given strike.                               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face          :: The target face object.                           */
+  /*                                                                       */
+  /*    strike_index  :: The strike index.                                 */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    metrics       :: the metrics of the strike.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.  Returns an error if no     */
+  /*    such sbit strike exists.                                           */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Load_Strike_Metrics_Func)( TT_Face           face,
+                                  FT_ULong          strike_index,
+                                  FT_Size_Metrics*  metrics );
 
 
   /*************************************************************************/
@@ -549,6 +571,7 @@ FT_BEGIN_HEADER
 
     /* see `ttsbit.h' */
     TT_Set_SBit_Strike_Func      set_sbit_strike;
+    TT_Load_Strike_Metrics_Func  load_strike_metrics;
     TT_Load_Table_Func           load_sbits;
     TT_Find_SBit_Image_Func      find_sbit_image;
     TT_Load_SBit_Metrics_Func    load_sbit_metrics;

@@ -585,7 +585,7 @@
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     size->ttmetrics.valid = FALSE;
-    size->strike_index    = 0xFFFFU;
+    size->strike_index    = 0xFFFFFFFFU;
 
     return error;
   }
@@ -649,33 +649,56 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Reset_Outline_Size                                                 */
+  /*    tt_size_reset                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Resets a TrueType outline size when resolutions and character      */
-  /*    dimensions have been changed.                                      */
+  /*    Resets a TrueType size when resolutions and character dimensions   */
+  /*    have been changed.                                                 */
   /*                                                                       */
   /* <Input>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
-  static FT_Error
-  Reset_Outline_Size( TT_Size  size )
+  FT_LOCAL_DEF( FT_Error )
+  tt_size_reset( TT_Size  size )
   {
     TT_Face           face;
     FT_Error          error = TT_Err_Ok;
-
     FT_Size_Metrics*  metrics;
 
 
-    if ( size->ttmetrics.valid )
-      return TT_Err_Ok;
+    size->ttmetrics.valid = FALSE;
 
     face = (TT_Face)size->root.face;
 
     metrics = &size->metrics;
 
+    /* copy the result from base layer */
+    *metrics = size->root.metrics;
+
     if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
       return TT_Err_Invalid_PPem;
+
+    /* This bit flag, when set, indicates that the ppems must be      */
+    /* rounded to integer.  Nearly all TrueType fonts have this bit   */
+    /* set, as hinting won't work really well otherwise.              */
+    /*                                                                */
+    if ( face->header.Flags & 8 )
+    {
+      metrics->x_scale = FT_DivFix( metrics->x_ppem << 6,
+                                    face->root.units_per_EM );
+      metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
+                                    face->root.units_per_EM );
+
+      metrics->ascender =
+        FT_PIX_ROUND( FT_MulFix( face->root.ascender, metrics->y_scale ) );
+      metrics->descender =
+        FT_PIX_ROUND( FT_MulFix( face->root.descender, metrics->y_scale ) );
+      metrics->height =
+        FT_PIX_ROUND( FT_MulFix( face->root.height, metrics->y_scale ) );
+      metrics->max_advance =
+        FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
+                                 metrics->x_scale ) );
+    }
 
     /* compute new transformation */
     if ( metrics->x_ppem >= metrics->y_ppem )
@@ -697,22 +720,6 @@
       size->ttmetrics.y_ratio = 0x10000L;
     }
 
-    /* Compute root ascender, descender, text height, and max_advance */
-    metrics->ascender =
-      FT_PIX_ROUND( FT_MulFix( face->root.ascender, metrics->y_scale ) );
-    metrics->descender =
-      FT_PIX_ROUND( FT_MulFix( face->root.descender, metrics->y_scale ) );
-    metrics->height =
-      FT_PIX_ROUND( FT_MulFix( face->root.height, metrics->y_scale ) );
-    metrics->max_advance =
-      FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
-                               metrics->x_scale ) );
-
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    /* set to `invalid' by default */
-    size->strike_index = 0xFFFFU;
-#endif
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
@@ -749,153 +756,6 @@
       size->ttmetrics.valid = TRUE;
 
     return error;
-  }
-
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Reset_SBit_Size                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Resets a TrueType sbit size when resolutions and character         */
-  /*    dimensions have been changed.                                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  static FT_Error
-  Reset_SBit_Size( TT_Size  size )
-  {
-    TT_Face           face;
-    FT_Error          error = TT_Err_Ok;
-
-    FT_ULong          strike_index;
-    FT_Size_Metrics*  metrics;
-    FT_Size_Metrics*  sbit_metrics;
-    SFNT_Service      sfnt;
-
-
-    metrics = &size->metrics;
-
-    if ( size->strike_index != 0xFFFFU )
-      return TT_Err_Ok;
-
-    face = (TT_Face)size->root.face;
-    sfnt = (SFNT_Service)face->sfnt;
-
-    sbit_metrics = &size->strike_metrics;
-
-    error = sfnt->set_sbit_strike( face,
-                                   metrics->x_ppem, metrics->y_ppem,
-                                   &strike_index );
-
-    if ( !error )
-    {
-      /* XXX: TODO: move this code to the SFNT module where it belongs */
-
-#ifdef FT_OPTIMIZE_MEMORY
-      FT_Byte*    strike = face->sbit_table + 8 + strike_index*48;
-
-      sbit_metrics->ascender  = (FT_Char)strike[16] << 6;  /* hori.ascender  */
-      sbit_metrics->descender = (FT_Char)strike[17] << 6;  /* hori.descender */
-
-      /* XXX: Is this correct? */
-      sbit_metrics->max_advance = ( (FT_Char)strike[22] + /* min_origin_SB  */
-                                             strike[18] + /* max_width      */
-                                    (FT_Char)strike[23]   /* min_advance_SB */
-                                                        ) << 6;
-
-#else /* !FT_OPTIMIZE_MEMORY */
-
-      TT_SBit_Strike  strike = face->sbit_strikes + strike_index;
-
-
-      sbit_metrics->ascender  = strike->hori.ascender << 6;
-      sbit_metrics->descender = strike->hori.descender << 6;
-
-      /* XXX: Is this correct? */
-      sbit_metrics->max_advance = ( strike->hori.min_origin_SB  +
-                                    strike->hori.max_width      +
-                                    strike->hori.min_advance_SB ) << 6;
-
-#endif /* !FT_OPTIMIZE_MEMORY */
-
-      /* XXX: Is this correct? */
-      sbit_metrics->height = sbit_metrics->ascender -
-                             sbit_metrics->descender;
-
-      sbit_metrics->x_ppem = metrics->x_ppem;
-      sbit_metrics->y_ppem = metrics->y_ppem;
-      size->strike_index   = (FT_UInt)strike_index;
-    }
-    else
-    {
-      size->strike_index = 0xFFFFU;
-
-      sbit_metrics->x_ppem      = 0;
-      sbit_metrics->y_ppem      = 0;
-      sbit_metrics->ascender    = 0;
-      sbit_metrics->descender   = 0;
-      sbit_metrics->height      = 0;
-      sbit_metrics->max_advance = 0;
-    }
-
-    return error;
-  }
-
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    tt_size_reset                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Resets a TrueType size when resolutions and character dimensions   */
-  /*    have been changed.                                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
-  tt_size_reset( TT_Size  size )
-  {
-    FT_Face   face;
-    FT_Error  error = TT_Err_Ok;
-
-
-    face = size->root.face;
-
-    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
-    {
-      if ( !size->ttmetrics.valid )
-        error = Reset_Outline_Size( size );
-
-      if ( error )
-        return error;
-    }
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
-    if ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
-    {
-      if ( size->strike_index == 0xFFFFU )
-        error = Reset_SBit_Size( size );
-
-      if ( !error && !( face->face_flags & FT_FACE_FLAG_SCALABLE ) )
-        size->root.metrics = size->strike_metrics;
-    }
-
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
-      return TT_Err_Ok;
-    else
-      return error;
   }
 
 

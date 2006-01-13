@@ -582,62 +582,40 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_DEF( FT_Error )
-  BDF_Set_Pixel_Size( FT_Size  size,
-                      FT_UInt  char_width,
-                      FT_UInt  char_height )
+  BDF_Size_Select( FT_Size   size,
+                   FT_ULong  index )
   {
-    BDF_Face  face = (BDF_Face)FT_SIZE_FACE( size );
-    FT_Face   root = FT_FACE( face );
-
-    FT_UNUSED( char_width );
+    bdf_font_t*  bdffont = ( (BDF_Face)size->face )->bdffont;
 
 
-    if ( char_height == (FT_UInt)root->available_sizes->height )
-    {
-      size->metrics.ascender    = face->bdffont->font_ascent << 6;
-      size->metrics.descender   = -face->bdffont->font_descent << 6;
-      size->metrics.height      = ( face->bdffont->font_ascent +
-                                    face->bdffont->font_descent ) << 6;
-      size->metrics.max_advance = face->bdffont->bbx.width << 6;
+    FT_UNUSED( index );
 
-      return BDF_Err_Ok;
-    }
-    else
-      return BDF_Err_Invalid_Pixel_Size;
+    size->metrics.ascender    = bdffont->font_ascent << 6;
+    size->metrics.descender   = -bdffont->font_descent << 6;
+    size->metrics.max_advance = bdffont->bbx.width << 6;
+
+    return BDF_Err_Ok;
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
-  BDF_Set_Point_Size( FT_Size     size,
-                      FT_F26Dot6  char_width,
-                      FT_F26Dot6  char_height,
-                      FT_UInt     horz_resolution,
-                      FT_UInt     vert_resolution )
+  BDF_Size_Request( FT_Size          size,
+                    FT_Size_Request  req )
   {
-    BDF_Face  face = (BDF_Face)FT_SIZE_FACE( size );
-    FT_Face   root = FT_FACE( face );
-
-    FT_UNUSED( char_width );
-    FT_UNUSED( char_height );
-    FT_UNUSED( horz_resolution );
-    FT_UNUSED( vert_resolution );
+    FT_Face   face = size->face;
+    FT_Error  error;
 
 
-    FT_TRACE4(( "rec %d - pres %d\n",
-                size->metrics.y_ppem, root->available_sizes->y_ppem ));
+    error = FT_Match_Size( face, req, 1, NULL );
 
-    if ( size->metrics.y_ppem == root->available_sizes->y_ppem >> 6 )
-    {
-      size->metrics.ascender    = face->bdffont->font_ascent << 6;
-      size->metrics.descender   = -face->bdffont->font_descent << 6;
-      size->metrics.height      = ( face->bdffont->font_ascent +
-                                    face->bdffont->font_descent ) << 6;
-      size->metrics.max_advance = face->bdffont->bbx.width << 6;
-
-      return BDF_Err_Ok;
-    }
+    if ( error )
+      return error;
     else
-      return BDF_Err_Invalid_Pixel_Size;
+    {
+      size->metrics.height = face->available_sizes->height << 6;
+
+      return BDF_Size_Select( size, 0 );
+    }
   }
 
 
@@ -835,8 +813,8 @@ THE SOFTWARE.
     0,                          /* FT_Slot_InitFunc */
     0,                          /* FT_Slot_DoneFunc */
 
-    BDF_Set_Point_Size,
-    BDF_Set_Pixel_Size,
+    BDF_Size_Request,
+    BDF_Size_Select,
 
     BDF_Glyph_Load,
 

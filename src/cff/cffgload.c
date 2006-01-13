@@ -2420,7 +2420,7 @@
       FT_Stream     stream   = cff_face->root.stream;
 
 
-      if ( size->strike_index != 0xFFFFU           &&
+      if ( size->strike_index != 0xFFFFFFFFU       &&
            sfnt->load_sbits                        &&
            ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
       {
@@ -2428,7 +2428,7 @@
 
 
         error = sfnt->load_sbit_image( face,
-                                       (FT_ULong)size->strike_index,
+                                       size->strike_index,
                                        (FT_UInt)glyph_index,
                                        (FT_Int)load_flags,
                                        stream,

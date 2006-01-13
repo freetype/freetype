@@ -1,3 +1,53 @@
+2006-01-13  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	Introduce new size selection interface.
+
+	* include/freetype/internal/ftdriver.h (struct FT_Driver_ClassRec_):
+	Replace `set_char_sizes' and `set_pixel_sizes' by `request_size' and
+	`select_size'.
+
+	* include/freetype/freetype.h (FT_Select_Size, FT_Size_Request_Type,
+	FT_Size_Request, FT_Request_Size, FT_Select_Size), src/base/ftobjs.c
+	(FT_Select_Size, FT_Request_Size): API additions to export the new
+	size selection interface.
+
+	* src/base/ftobjs.c (FT_Set_Char_Size, FT_Set_Pixel_Sizes): Use
+	`FT_Request_Size'.
+
+	* include/freetype/internal/ftobjs.h (FT_Match_Size),
+	src/base/ftobjs.c (FT_Match_Size): New function to match a size
+	request against `available_sizes'.  Drivers supporting bitmap strikes
+	can use this function to implement `request_size'.
+
+	* src/bdf/bdfdrivr.c, src/cid/cidobjs.c, src/cid/cidobjs.h,
+	src/cid/cidriver.c, src/pcf/pcfdrivr.c, src/type1/t1driver.c,
+	src/type1/t1objs.c, src/type1/t1objs.h, src/type42/t42drivr.c,
+	src/type42/t42objs.c, src/type42/t42objs.h, src/winfonts/winfnt.c:
+	Update to new size selection interface.
+
+	* src/cff/cffdrivr.c, src/cff/cffgload.c, src/cff/cffobjs.c,
+	src/cff/cffobjs.h, src/truetype/ttdriver.c, src/truetype/ttgload.c,
+	src/truetype/ttobjs.c, src/truetype/ttobjs.h: Update to new size
+	selection interface.
+	Make `strike_index' FT_ULong and always defined.
+	Use `load_strike_metrics' provided by SFNT interface.
+
+2006-01-13  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/internal/sfnt.h (SFNT_Interface): New method
+	`load_strike_metrics' used to load the strike's metrics.
+
+	* src/sfnt/sfdriver.c, src/sfnt/ttsbit.c, src/sfnt/ttsbit.h,
+	src/sfnt/ttsbit0.c: New function `tt_face_load_strike_metrics'.
+
+	* src/pfr/pfrobjs.c (pfr_face_init): Set FT_Bitmap_Size correctly.
+
+	* src/winfonts/winfnt.c (FNT_Face_Init): Use `nominal_point_size' for
+	nominal size unless it is obviously incorrect.
+
+	* include/freetype/freetype.h (FT_Bitmap_Size): Update the comments on
+	FNT driver.
+
 2006-01-12  Werner Lemberg  <wl@gnu.org>
 
 	Prepare use of pscmap service within CFF module.

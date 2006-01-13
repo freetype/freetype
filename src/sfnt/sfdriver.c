@@ -413,6 +413,7 @@
 
     /* see `ttsbit.h' and `sfnt.h' */
     tt_face_set_sbit_strike,
+    tt_face_load_strike_metrics,
     tt_face_load_sbit_strikes,
 #ifdef FT_OPTIMIZE_MEMORY
     0,

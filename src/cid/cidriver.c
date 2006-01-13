@@ -143,8 +143,8 @@
     cid_slot_init,
     cid_slot_done,
 
-    cid_point_size_reset,
-    cid_size_reset,
+    cid_size_request,
+    0,                      /* FT_Size_SelectFunc      */
 
     cid_slot_load_glyph,
 

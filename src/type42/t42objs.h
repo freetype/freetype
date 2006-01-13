@@ -80,16 +80,14 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  T42_Size_SetChars( T42_Size    size,
-                     FT_F26Dot6  char_width,
-                     FT_F26Dot6  char_height,
-                     FT_UInt     horz_resolution,
-                     FT_UInt     vert_resolution );
+  T42_Size_Request( T42_Size         size,
+                    FT_Size_Request  req );
+
 
   FT_LOCAL( FT_Error )
-  T42_Size_SetPixels( T42_Size  size,
-                      FT_UInt   pixel_width,
-                      FT_UInt   pixel_height );
+  T42_Size_Select( T42_Size  size,
+                   FT_ULong  index );
+
 
   FT_LOCAL( void )
   T42_Size_Done( T42_Size  size );

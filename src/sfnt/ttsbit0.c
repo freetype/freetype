@@ -206,35 +206,40 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  tt_face_set_sbit_strike( TT_Face    face,
-                           FT_UInt    x_ppem,
-                           FT_UInt    y_ppem,
-                           FT_ULong  *astrike_index )
+  tt_face_set_sbit_strike( TT_Face          face,
+                           FT_Size_Request  req,
+                           FT_ULong*        astrike_index )
   {
-    FT_UInt   nn, count;
-    FT_Byte*  p;
-    FT_Byte*  p_limit;
+    return FT_Match_Size( (FT_Face)face, req, 0, astrike_index );
+  }
 
 
-    if ( x_ppem > 255               ||
-         y_ppem < 1 || y_ppem > 255 )
-      return SFNT_Err_Invalid_PPem;
+  FT_LOCAL_DEF( FT_Error )
+  tt_face_load_strike_metrics( TT_Face           face,
+                               FT_ULong          strike_index,
+                               FT_Size_Metrics*  metrics )
+  {
+    FT_Byte*    strike;
+    
 
-    p       = face->sbit_table + 8;
-    p_limit = p + face->sbit_table_size;
-    count   = face->sbit_num_strikes;
+    if ( strike_index >= (FT_ULong)face->num_sbit_strikes )
+      return SFNT_Err_Invalid_Argument;
 
-    for ( nn = 0; nn < count; nn++ )
-    {
-      if ( x_ppem == (FT_UInt)p[44] && y_ppem == (FT_UInt)p[45] )
-      {
-        *astrike_index = (FT_ULong)nn;
-        return SFNT_Err_Ok;
-      }
-      p += 48;
-    }
+    strike = face->sbit_table + 8 + strike_index * 48;
 
-    return SFNT_Err_Invalid_PPem;
+    metrics->ascender  = (FT_Char)strike[16] << 6;  /* hori.ascender  */
+    metrics->descender = (FT_Char)strike[17] << 6;  /* hori.descender */
+
+    /* XXX: Is this correct? */
+    metrics->max_advance = ( (FT_Char)strike[22] + /* min_origin_SB  */
+                                      strike[18] + /* max_width      */
+                             (FT_Char)strike[23]   /* min_advance_SB */
+                                                 ) << 6;
+
+    /* XXX: Is this correct? */
+    metrics->height = metrics->ascender - metrics->descender;
+
+    return SFNT_Err_Ok;
   }
 
 

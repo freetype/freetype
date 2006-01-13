@@ -185,6 +185,9 @@
         {
           size->height = (FT_UShort)strike->y_ppm;
           size->width  = (FT_UShort)strike->x_ppm;
+          size->size   = strike->y_ppm << 6;
+          size->x_ppem = strike->x_ppm << 6;
+          size->y_ppem = strike->y_ppm << 6;
         }
         pfrface->num_fixed_sizes = count;
       }

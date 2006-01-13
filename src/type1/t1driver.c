@@ -295,8 +295,8 @@
     (FT_Slot_InitFunc)        T1_GlyphSlot_Init,
     (FT_Slot_DoneFunc)        T1_GlyphSlot_Done,
 
-    (FT_Size_ResetPointsFunc) T1_Size_Reset,
-    (FT_Size_ResetPixelsFunc) T1_Size_Reset,
+    (FT_Size_RequestFunc)     T1_Size_Request,
+    (FT_Size_SelectFunc)      0,
     (FT_Slot_LoadFunc)        T1_Load_Glyph,
 
 #ifdef T1_CONFIG_OPTION_NO_AFM

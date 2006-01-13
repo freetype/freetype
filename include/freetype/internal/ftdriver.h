@@ -53,16 +53,12 @@ FT_BEGIN_HEADER
 
 
   typedef FT_Error
-  (*FT_Size_ResetPointsFunc)( FT_Size     size,
-                              FT_F26Dot6  char_width,
-                              FT_F26Dot6  char_height,
-                              FT_UInt     horz_resolution,
-                              FT_UInt     vert_resolution );
+  (*FT_Size_RequestFunc)( FT_Size          size,
+                          FT_Size_Request  req );
 
   typedef FT_Error
-  (*FT_Size_ResetPixelsFunc)( FT_Size  size,
-                              FT_UInt  pixel_width,
-                              FT_UInt  pixel_height );
+  (*FT_Size_SelectFunc)( FT_Size   size,
+                         FT_ULong  index );
 
   typedef FT_Error
   (*FT_Slot_LoadFunc)( FT_GlyphSlot  slot,
@@ -129,16 +125,18 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    done_slot        :: The format-specific slot destructor.           */
   /*                                                                       */
-  /*    set_char_sizes   :: A handle to a function used to set the new     */
-  /*                        character size in points + resolution.  Can be */
-  /*                        set to 0 to indicate default behaviour.        */
+  /*    request_size     :: A handle to a function used to request the new */
+  /*                        character size.  Can be set to 0 if the        */
+  /*                        scaling done in the base layer suffices.       */
   /*                                                                       */
-  /*    set_pixel_sizes  :: A handle to a function used to set the new     */
-  /*                        character size in pixels.  Can be set to 0 to  */
-  /*                        indicate default behaviour.                    */
+  /*    select_size      :: A handle to a function used to select a new    */
+  /*                        fixed size.  It is used only when              */
+  /*                        @FT_FACE_FLAG_FIXED_SIZES is set.  Can be set  */
+  /*                        to 0 if the scaling done in the base layer     */
+  /*                        suffices.                                      */
   /*                                                                       */
-  /*    load_glyph       :: A function handle to load a given glyph image  */
-  /*                        in a slot.  This field is mandatory!           */
+  /*    load_glyph       :: A function handle to load a glyph to a slot.   */
+  /*                        This field is mandatory!                       */
   /*                                                                       */
   /*    get_char_index   :: A function handle to return the glyph index of */
   /*                        a given character for a given charmap.  This   */
@@ -186,8 +184,8 @@ FT_BEGIN_HEADER
     FT_Slot_InitFunc          init_slot;
     FT_Slot_DoneFunc          done_slot;
 
-    FT_Size_ResetPointsFunc   set_char_sizes;
-    FT_Size_ResetPixelsFunc   set_pixel_sizes;
+    FT_Size_RequestFunc       request_size;
+    FT_Size_SelectFunc        select_size;
 
     FT_Slot_LoadFunc          load_glyph;
 

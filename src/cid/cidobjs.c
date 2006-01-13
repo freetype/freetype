@@ -152,41 +152,24 @@
   }
 
 
-  FT_LOCAL_DEF( FT_Error )
-  cid_size_reset( FT_Size  cidsize,             /* CID_Size */
-                  FT_UInt  char_width,
-                  FT_UInt  char_height )
+  FT_LOCAL( FT_Error )
+  cid_size_request( FT_Size          size,
+                    FT_Size_Request  req )
   {
-    CID_Size           size  = (CID_Size)cidsize;
-    PSH_Globals_Funcs  funcs = cid_size_get_globals_funcs( size );
-    FT_Error           error = 0;
+    PSH_Globals_Funcs  funcs;
 
-    FT_UNUSED( char_width );
-    FT_UNUSED( char_height );
 
+    FT_UNUSED( req );
+
+    funcs = cid_size_get_globals_funcs( (CID_Size)size );
 
     if ( funcs )
-      error = funcs->set_scale( (PSH_Globals)cidsize->internal,
-                                 cidsize->metrics.x_scale,
-                                 cidsize->metrics.y_scale,
-                                 0, 0 );
-    return error;
-  }
+      funcs->set_scale( (PSH_Globals)size->internal,
+                        size->metrics.x_scale,
+                        size->metrics.y_scale,
+                        0, 0 );
 
-
-  FT_LOCAL_DEF( FT_Error )
-  cid_point_size_reset( FT_Size     size,
-                        FT_F26Dot6  char_width,
-                        FT_F26Dot6  char_height,
-                        FT_UInt     horz_resolution,
-                        FT_UInt     vert_resolution )
-  {
-    FT_UNUSED( char_width );
-    FT_UNUSED( char_height );
-    FT_UNUSED( horz_resolution );
-    FT_UNUSED( vert_resolution );
-
-    return cid_size_reset( size, 0, 0 );
+    return CID_Err_Ok;
   }
 
 

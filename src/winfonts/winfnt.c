@@ -460,14 +460,41 @@
 
       {
         FT_Bitmap_Size*  bsize = root->available_sizes;
+        FT_UShort        x_res, y_res;
 
 
         bsize->width  = font->header.avg_width;
         bsize->height = (FT_Short)(
           font->header.pixel_height + font->header.external_leading );
         bsize->size   = font->header.nominal_point_size << 6;
-        bsize->x_ppem = font->header.pixel_width << 6;
-        bsize->y_ppem = font->header.pixel_height << 6;
+
+        x_res = font->header.horizontal_resolution;
+        if ( !x_res )
+          x_res = 72;
+
+        y_res = font->header.vertical_resolution;
+        if ( !y_res )
+          y_res = 72;
+
+        bsize->y_ppem = FT_MulDiv( bsize->size, y_res, 72 );
+        bsize->y_ppem = FT_PIX_ROUND( bsize->y_ppem );
+
+        /* 
+         * this reads:
+         *
+         * the nominal height is larger than the bbox's height
+         *
+         * => nominal_point_size contains incorrect value;
+         *    use pixel_height as the nominal height
+         */
+        if ( bsize->y_ppem > font->header.pixel_height << 6 )
+        {
+          bsize->y_ppem = font->header.pixel_height << 6;
+          bsize->size   = FT_MulDiv( bsize->y_ppem, 72, y_res );
+        }
+
+        bsize->x_ppem = FT_MulDiv( bsize->size, x_res, 72 );
+        bsize->x_ppem = FT_PIX_ROUND( bsize->x_ppem );
       }
 
       {
@@ -543,27 +570,38 @@
 
 
   static FT_Error
-  FNT_Size_Set_Pixels( FT_Size  size )
+  FNT_Size_Select( FT_Size  size )
   {
-    FNT_Face  face = (FNT_Face)FT_SIZE_FACE( size );
-    FT_Face   root = FT_FACE( face );
+    FNT_Face          face    = (FNT_Face)size->face;
+    FT_WinFNT_Header  header  = &face->font->header;
 
 
-    if ( size->metrics.y_ppem == root->available_sizes->y_ppem >> 6 )
-    {
-      FNT_Font  font = face->font;
+    size->metrics.ascender    = header->ascent * 64;
+    size->metrics.descender   = -( header->pixel_height -
+                                   header->ascent ) * 64;
+    size->metrics.max_advance = header->max_width * 64;
+
+    return FNT_Err_Ok;
+  }
 
 
-      size->metrics.ascender    = font->header.ascent * 64;
-      size->metrics.descender   = -( font->header.pixel_height -
-                                       font->header.ascent ) * 64;
-      size->metrics.height      = font->header.pixel_height * 64;
-      size->metrics.max_advance = font->header.max_width * 64;
+  static FT_Error
+  FNT_Size_Request( FT_Size          size,
+                    FT_Size_Request  req )
+  {
+    FT_Face   face = size->face;
+    FT_Error  error;
+    
+    error = FT_Match_Size( face, req, 1, NULL );
 
-      return FNT_Err_Ok;
-    }
+    if ( error )
+      return error;
     else
-      return FNT_Err_Invalid_Pixel_Size;
+    {
+      size->metrics.height = face->available_sizes->height << 6;
+
+      return FNT_Size_Select( size );
+    }
   }
 
 
@@ -741,8 +779,8 @@
     (FT_Slot_InitFunc)        0,
     (FT_Slot_DoneFunc)        0,
 
-    (FT_Size_ResetPointsFunc) FNT_Size_Set_Pixels,
-    (FT_Size_ResetPixelsFunc) FNT_Size_Set_Pixels,
+    (FT_Size_RequestFunc)     FNT_Size_Request,
+    (FT_Size_SelectFunc)      FNT_Size_Select,
     (FT_Slot_LoadFunc)        FNT_Load_Glyph,
 
     (FT_Face_GetKerningFunc)  0,

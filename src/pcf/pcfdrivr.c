@@ -363,74 +363,42 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_DEF( FT_Error )
-  PCF_Set_Pixel_Size( FT_Size  size,
-                      FT_UInt  pixel_width,
-                      FT_UInt  pixel_height )
+  PCF_Size_Select( FT_Size   size,
+                   FT_ULong  index )
   {
-    PCF_Face  face = (PCF_Face)FT_SIZE_FACE( size );
-
-    FT_UNUSED( pixel_width );
+    PCF_Face   face  = (PCF_Face)size->face;
 
 
-    if ( pixel_height == (FT_UInt)face->root.available_sizes->height )
-    {
-      size->metrics.ascender    = face->accel.fontAscent << 6;
-      size->metrics.descender   = face->accel.fontDescent * (-64);
+    FT_UNUSED( index );
+
+    size->metrics.ascender    = face->accel.fontAscent << 6;
+    size->metrics.descender   = -face->accel.fontDescent << 6;
 #if 0
-      size->metrics.height      = face->accel.maxbounds.ascent << 6;
+    size->metrics.height      = face->accel.maxbounds.ascent << 6;
 #endif
-      size->metrics.height      = size->metrics.ascender -
-                                  size->metrics.descender;
+    size->metrics.max_advance = face->accel.maxbounds.characterWidth << 6;
 
-      size->metrics.max_advance = face->accel.maxbounds.characterWidth << 6;
-
-      return PCF_Err_Ok;
-    }
-    else
-    {
-      FT_TRACE4(( "pixel size WRONG\n" ));
-      return PCF_Err_Invalid_Pixel_Size;
-    }
+    return PCF_Err_Ok;
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
-  PCF_Set_Point_Size( FT_Size     size,
-                      FT_F26Dot6  char_width,
-                      FT_F26Dot6  char_height,
-                      FT_UInt     horz_resolution,
-                      FT_UInt     vert_resolution )
+  PCF_Size_Request( FT_Size          size,
+                    FT_Size_Request  req )
   {
-    PCF_Face  face = (PCF_Face)FT_SIZE_FACE( size );
-
-    FT_UNUSED( char_width );
-    FT_UNUSED( char_height );
-    FT_UNUSED( horz_resolution );
-    FT_UNUSED( vert_resolution );
+    FT_Face   face = size->face;
+    FT_Error  error;
 
 
-    FT_TRACE4(( "rec %d - pres %d\n",
-                size->metrics.y_ppem,
-                face->root.available_sizes->y_ppem >> 6 ));
+    error = FT_Match_Size( face, req, 1, NULL );
 
-    if ( size->metrics.y_ppem == face->root.available_sizes->y_ppem >> 6 )
-    {
-      size->metrics.ascender    = face->accel.fontAscent << 6;
-      size->metrics.descender   = face->accel.fontDescent * (-64);
-#if 0
-      size->metrics.height      = face->accel.maxbounds.ascent << 6;
-#endif
-      size->metrics.height      = size->metrics.ascender -
-                                  size->metrics.descender;
-
-      size->metrics.max_advance = face->accel.maxbounds.characterWidth << 6;
-
-      return PCF_Err_Ok;
-    }
+    if ( error )
+      return error;
     else
     {
-      FT_TRACE4(( "size WRONG\n" ));
-      return PCF_Err_Invalid_Pixel_Size;
+      size->metrics.height = face->available_sizes->height << 6;
+
+      return PCF_Size_Select( size, 0 );
     }
   }
 
@@ -659,8 +627,8 @@ THE SOFTWARE.
     0,                      /* FT_Slot_InitFunc */
     0,                      /* FT_Slot_DoneFunc */
 
-    PCF_Set_Point_Size,
-    PCF_Set_Pixel_Size,
+    PCF_Size_Request,
+    PCF_Size_Select,
 
     PCF_Glyph_Load,
 

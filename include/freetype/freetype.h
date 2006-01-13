@@ -147,6 +147,11 @@ FT_BEGIN_HEADER
   /*    FT_Attach_File                                                     */
   /*    FT_Attach_Stream                                                   */
   /*                                                                       */
+  /*    FT_Select_Size                                                     */
+  /*    FT_Size_Request_Type                                               */
+  /*    FT_Size_Request                                                    */
+  /*    FT_Request_Size                                                    */
+  /*    FT_Select_Size                                                     */
   /*    FT_Set_Char_Size                                                   */
   /*    FT_Set_Pixel_Sizes                                                 */
   /*    FT_Set_Transform                                                   */
@@ -293,10 +298,10 @@ FT_BEGIN_HEADER
   /*    where `size' is in points.                                         */
   /*                                                                       */
   /*    Windows FNT:                                                       */
-  /*      The `size' parameter is not reliable: There exist fonts (e.g.,   */
-  /*      app850.fon) which have a wrong size for some subfonts; x_ppem    */
-  /*      and y_ppem are thus set equal to pixel width and height given in */
-  /*      in the Windows FNT header.                                       */
+  /*      The nominal size given in a FNT font is not reliable.  Thus when */
+  /*      the driver finds it incorrect, it sets `size' to some calculated */
+  /*      values and set `x_ppem' and `y_ppem' to pixel width and height   */
+  /*      given in the font, respectively.                                 */
   /*                                                                       */
   /*    TrueType embedded bitmaps:                                         */
   /*      `size', `width', and `height' values are not contained in the    */
@@ -2071,25 +2076,145 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    FT_Select_Size                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Selects a fixed size.                                              */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face  :: A handle to a target face object.                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    index :: The index of the fixed size in the `available_sizes'      */
+  /*             field of @FT_FaceRec structure.                           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Select_Size( FT_Face  face,
+                  FT_Int   index );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Enum>                                                                */
+  /*    FT_Size_Request_Type                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    An enumeration type that lists the size request types supported.   */
+  /*                                                                       */
+  /* <Values>                                                              */
+  /*    FT_SIZE_REQUEST_TYPE_NOMINAL ::                                    */
+  /*      The nominal size.  That is, the units_per_EM field of            */
+  /*      @FT_FaceRec.                                                     */
+  /*                                                                       */
+  /*    FT_SIZE_REQUEST_TYPE_REAL_DIM ::                                   */
+  /*      The real dimension.  That is, the sum of the Ascender and        */
+  /*      (minus of) Descender fields of @FT_FaceRec.                      */
+  /*                                                                       */
+  /*    FT_SIZE_REQUEST_TYPE_BBOX ::                                       */
+  /*      The font bounding box.  That is, the bbox field of @FT_FaceRec.  */
+  /*                                                                       */
+  /*    FT_SIZE_REQUEST_TYPE_CELL ::                                       */
+  /*      The horizontal scale is determined by the max_advance_width      */
+  /*      field of @FT_FaceRec and the vertical scale is determined the    */
+  /*      same way as @FT_SIZE_REQUEST_TYPE_REAL_DIM does.  Finally, both  */
+  /*      scales are set to the smaller one.  This type is useful when     */
+  /*      you want to specify the font size for, for example, a window of  */
+  /*      80x24 cells.                                                     */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    See the note section of @FT_Size_Metrics if you wonder how does    */
+  /*    size requesting relate to scales.                                  */
+  /*                                                                       */
+  typedef enum  FT_Size_Request_Type_
+  {
+    FT_SIZE_REQUEST_TYPE_NOMINAL,
+    FT_SIZE_REQUEST_TYPE_REAL_DIM,
+    FT_SIZE_REQUEST_TYPE_BBOX,
+    FT_SIZE_REQUEST_TYPE_CELL
+
+  } FT_Size_Request_Type;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Size_RequestRec                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A structure used to model a size request.                          */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    type           :: See @FT_Size_Request_Type.                       */
+  /*                                                                       */
+  /*    width          :: The desired width.                               */
+  /*                                                                       */
+  /*    height         :: The desired height.                              */
+  /*                                                                       */
+  /*    horiResolution :: The horizontal resolution.  If set to zero, then */
+  /*                      the width is treated as 26.6 fractional pixels.  */
+  /*                                                                       */
+  /*    vertResolution :: The vertical resolution.  If set to zero, then   */
+  /*                      the height is treated as 26.6 fractional pixels. */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    width and height cannot both be zero.  If either of them is zero,  */
+  /*    its value is chosen so that the horizontal and vertical scales are */
+  /*    equal.                                                             */
+  /*                                                                       */
+  /*    You should use @FT_Select_Size if you are intended to select some  */
+  /*    fixed size from the `available_sizes' field of @FT_FaceRec.        */
+  /*                                                                       */
+  typedef struct  FT_Size_RequestRec_
+  {
+    FT_Size_Request_Type  type;
+    FT_F26Dot6            width;
+    FT_F26Dot6            height;
+    FT_UInt               horiResolution;
+    FT_UInt               vertResolution;
+  } FT_Size_RequestRec, *FT_Size_Request;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Request_Size                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Request the size of the active size object of a given face object. */ 
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face  :: A handle to a target face object.                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    req   :: A pointer to a @FT_Size_RequestRec.                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Request_Size( FT_Face          face,
+                   FT_Size_Request  req );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    FT_Set_Char_Size                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Sets the character dimensions of a given face object.  The         */
-  /*    `char_width' and `char_height' values are used for the width and   */
-  /*    height, respectively, expressed in 26.6 fractional points.         */
-  /*                                                                       */
-  /*    If the horizontal or vertical resolution values are zero, a        */
-  /*    default value of 72dpi is used.  Similarly, if one of the          */
-  /*    character dimensions is zero, its value is set equal to the other. */
+  /*    This funcion calls @FT_Request_Size to request the nominal size,   */
+  /*    in points.                                                         */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face            :: A handle to a target face object.               */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    char_width      :: The character width, in 26.6 fractional points. */
+  /*    char_width      :: The nominal width, in 26.6 fractional points.   */
   /*                                                                       */
-  /*    char_height     :: The character height, in 26.6 fractional        */
-  /*                       points.                                         */
+  /*    char_height     :: The nominal height, in 26.6 fractional points.  */
   /*                                                                       */
   /*    horz_resolution :: The horizontal resolution.                      */
   /*                                                                       */
@@ -2099,9 +2224,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    For BDF and PCF formats, this function uses the `PIXEL_SIZE'       */
-  /*    property of the bitmap font; the `char_width' parameter is         */
-  /*    ignored.                                                           */
+  /*    If either the horizontal or vertical resolution is zero, it is set */
+  /*    to a default value of 72dpi.                                       */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Char_Size( FT_Face     face,
@@ -2117,44 +2241,19 @@ FT_BEGIN_HEADER
   /*    FT_Set_Pixel_Sizes                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Sets the character dimensions of a given face object.  The width   */
-  /*    and height are expressed in integer pixels.                        */
-  /*                                                                       */
-  /*    If one of the character dimensions is zero, its value is set equal */
-  /*    to the other.                                                      */
+  /*    This funcion calls @FT_Request_Size to request the nominal size,   */
+  /*    in pixels.                                                         */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face         :: A handle to the target face object.                */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    pixel_width  :: The character width, in integer pixels.            */
+  /*    pixel_width  :: The nominal width, in pixels.                      */
   /*                                                                       */
-  /*    pixel_height :: The character height, in integer pixels.           */
+  /*    pixel_height :: The nominal height, in pixels.                     */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The values of `pixel_width' and `pixel_height' correspond to the   */
-  /*    pixel values of the _typographic_ character size, which are NOT    */
-  /*    necessarily the same as the dimensions of the glyph `bitmap        */
-  /*    cells'.                                                            */
-  /*                                                                       */
-  /*    The `character size' is really the size of an abstract square      */
-  /*    called the `EM', used to design the font.  However, depending      */
-  /*    on the font design, glyphs is smaller or greater than the EM.      */
-  /*                                                                       */
-  /*    This means that setting the pixel size to, say, 8x8 doesn't        */
-  /*    guarantee in any way that you get glyph bitmaps that all fit       */
-  /*    within an 8x8 cell (sometimes even far from it).                   */
-  /*                                                                       */
-  /*    For bitmap fonts, `pixel_height' usually is a reliable value for   */
-  /*    the height of the bitmap cell.  Drivers for bitmap font formats    */
-  /*    which contain a single bitmap strike only (BDF, PCF, FNT) ignore   */
-  /*    `pixel_width'.                                                     */
-  /*                                                                       */
-  /*    For BDF and PCF formats, this function uses the sum of the         */
-  /*    `FONT_ASCENT' and `FONT_DESCENT' properties of the bitmap font.    */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Pixel_Sizes( FT_Face  face,

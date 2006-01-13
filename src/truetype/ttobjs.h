@@ -322,12 +322,7 @@ FT_BEGIN_HEADER
 
     TT_Size_Metrics    ttmetrics;
 
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
-    FT_UInt            strike_index;    /* 0xFFFF to indicate invalid */
-    FT_Size_Metrics    strike_metrics;  /* current strike's metrics   */
-
-#endif
+    FT_ULong           strike_index;    /* 0xFFFFFFFFU to indicate invalid */
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 

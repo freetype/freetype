@@ -489,6 +489,32 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  T42_Size_Request( T42_Size         size,
+                    FT_Size_Request  req )
+  {
+    T42_Face         face = (T42_Face)size->root.face;
+
+
+    FT_Activate_Size( size->ttsize );
+
+    return FT_Request_Size( face->ttf_face, req );
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  T42_Size_Select( T42_Size  size,
+                   FT_ULong  index )
+  {
+    T42_Face         face = (T42_Face)size->root.face;
+
+
+    FT_Activate_Size( size->ttsize );
+
+    return FT_Select_Size( face->ttf_face, index );
+  }
+
+
   FT_LOCAL_DEF( void )
   T42_Size_Done( T42_Size  size )
   {
@@ -534,45 +560,6 @@
   T42_GlyphSlot_Done( T42_GlyphSlot slot )
   {
     FT_Done_GlyphSlot( slot->ttslot );
-  }
-
-
-
-  FT_LOCAL_DEF( FT_Error )
-  T42_Size_SetChars( T42_Size    size,
-                     FT_F26Dot6  char_width,
-                     FT_F26Dot6  char_height,
-                     FT_UInt     horz_resolution,
-                     FT_UInt     vert_resolution )
-  {
-    FT_Face   face    = size->root.face;
-    T42_Face  t42face = (T42_Face)face;
-
-
-    FT_Activate_Size( size->ttsize );
-
-    return FT_Set_Char_Size( t42face->ttf_face,
-                             char_width,
-                             char_height,
-                             horz_resolution,
-                             vert_resolution );
-  }
-
-
-  FT_LOCAL_DEF( FT_Error )
-  T42_Size_SetPixels( T42_Size  size,
-                      FT_UInt   pixel_width,
-                      FT_UInt   pixel_height )
-  {
-    FT_Face   face    = size->root.face;
-    T42_Face  t42face = (T42_Face)face;
-
-
-    FT_Activate_Size( size->ttsize );
-
-    return FT_Set_Pixel_Sizes( t42face->ttf_face,
-                               pixel_width,
-                               pixel_height );
   }
 
 

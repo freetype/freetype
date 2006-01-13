@@ -671,30 +671,40 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  tt_face_set_sbit_strike( TT_Face    face,
-                           FT_UInt    x_ppem,
-                           FT_UInt    y_ppem,
-                           FT_ULong  *astrike_index )
+  tt_face_set_sbit_strike( TT_Face          face,
+                           FT_Size_Request  req,
+                           FT_ULong*        astrike_index )
   {
-    FT_ULong  i;
+    return FT_Match_Size( (FT_Face)face, req, 0, astrike_index );
+  }
 
 
-    if ( x_ppem > 255 ||
-         y_ppem < 1 || y_ppem > 255 )
-      return SFNT_Err_Invalid_PPem;
+  FT_LOCAL_DEF( FT_Error )
+  tt_face_load_strike_metrics( TT_Face           face,
+                               FT_ULong          strike_index,
+                               FT_Size_Metrics*  metrics )
+  {
+    TT_SBit_Strike  strike;
 
-    for ( i = 0; i < face->num_sbit_strikes; i++ )
-    {
-      if ( ( (FT_UInt)face->sbit_strikes[i].y_ppem == y_ppem )     &&
-           ( ( x_ppem == 0 )                                     ||
-             ( (FT_UInt)face->sbit_strikes[i].x_ppem == x_ppem ) ) )
-      {
-        *astrike_index = i;
-        return SFNT_Err_Ok;
-      }
-    }
 
-    return SFNT_Err_Invalid_PPem;
+    if ( strike_index >= face->num_sbit_strikes )
+      return SFNT_Err_Invalid_Argument;
+
+    strike = face->sbit_strikes + strike_index;
+
+
+    metrics->ascender  = strike->hori.ascender << 6;
+    metrics->descender = strike->hori.descender << 6;
+
+    /* XXX: Is this correct? */
+    metrics->max_advance = ( strike->hori.min_origin_SB  +
+                             strike->hori.max_width      +
+                             strike->hori.min_advance_SB ) << 6;
+
+    /* XXX: Is this correct? */
+    metrics->height = metrics->ascender - metrics->descender;
+
+    return SFNT_Err_Ok;
   }
 
 
