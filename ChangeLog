@@ -2,7 +2,7 @@
 
 	Introduce new size selection interface.
 
-	* include/freetype/internal/ftdriver.h (struct FT_Driver_ClassRec_):
+	* include/freetype/internal/ftdriver.h (struct FT_Driver_ClassRec):
 	Replace `set_char_sizes' and `set_pixel_sizes' by `request_size' and
 	`select_size'.
 

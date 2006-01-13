@@ -1980,7 +1980,7 @@
       return FT_Err_Unimplemented_Feature;
 
     if ( req->horiResolution )
-      w = ( req->width  * req->horiResolution + 36 ) / 72;
+      w = ( req->width * req->horiResolution + 36 ) / 72;
     else
       w = req->width;
 
@@ -2000,7 +2000,7 @@
         continue;
 
       if ( w == face->available_sizes[i].x_ppem ||
-           ignore_width )
+           ignore_width                         )
       {
         if ( index )
           *index = (FT_ULong)i;
@@ -2069,8 +2069,8 @@
     }
     else
     {
-      metrics->x_scale     = 0x10000;
-      metrics->y_scale     = 0x10000;
+      metrics->x_scale     = 0x10000L;
+      metrics->y_scale     = 0x10000L;
       metrics->ascender    = bsize->y_ppem;
       metrics->descender   = 0;
       metrics->height      = bsize->height << 6;
@@ -2114,24 +2114,28 @@
       case FT_SIZE_REQUEST_TYPE_NOMINAL:
         w = h = face->units_per_EM;
         break;
+
       case FT_SIZE_REQUEST_TYPE_REAL_DIM:
         w = h = face->ascender - face->descender;
         break;
+
       case FT_SIZE_REQUEST_TYPE_CELL:
         w = face->max_advance_width;
         h = face->ascender - face->descender;
         break;
+
       case FT_SIZE_REQUEST_TYPE_BBOX:
         w = face->bbox.xMax - face->bbox.xMin;
         h = face->bbox.yMax - face->bbox.yMin;
         break;
+
       default:
         return FT_Err_Unimplemented_Feature;
         break;
       }
 
       if ( req->horiResolution )
-        scaled_w = ( req->width  * req->horiResolution + 36 ) / 72;
+        scaled_w = ( req->width * req->horiResolution + 36 ) / 72;
       else
         scaled_w = req->width;
 

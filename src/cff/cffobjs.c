@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -159,7 +159,7 @@
         cffsize->internal = (FT_Size_Internal)(void*)globals;
     }
 
-    size->strike_index = 0xFFFFFFFFU;
+    size->strike_index = 0xFFFFFFFFUL;
 
     return error;
   }
@@ -171,8 +171,12 @@
   {
     CFF_Size           cffsize = (CFF_Size)size;
     PSH_Globals_Funcs  funcs;
+
+#ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+    FT_UNUSED( req );
     
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#else
 
     if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
@@ -183,20 +187,16 @@
       FT_Error          error;
 
 
-      if ( !( error = sfnt->set_sbit_strike( cffface,
-                                             req,
-                                             &index ) ) &&
-           !( error = sfnt->load_strike_metrics( cffface,
-                                                 index,
-                                                 metrics ) ) )
+      if ( !( error = sfnt->set_sbit_strike(
+                              cffface, req, &index ) )    &&
+           !( error = sfnt->load_strike_metrics(
+                              cffface, index, metrics ) ) )
         cffsize->strike_index = index;
       else
-        cffsize->strike_index = 0xFFFFFFFFU;
+        cffsize->strike_index = 0xFFFFFFFFUL;
     }
 
-#endif
-
-    FT_UNUSED( req );
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     funcs = cff_size_get_globals_funcs( cffsize );
 
@@ -234,7 +234,7 @@
 
     error = sfnt->load_strike_metrics( cffface, index, metrics );
     if ( error )
-      cffsize->strike_index = 0xFFFFFFFFU;
+      cffsize->strike_index = 0xFFFFFFFFUL;
     else
       cffsize->strike_index = index;
 

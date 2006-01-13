@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2420,7 +2420,7 @@
       FT_Stream     stream   = cff_face->root.stream;
 
 
-      if ( size->strike_index != 0xFFFFFFFFU       &&
+      if ( size->strike_index != 0xFFFFFFFFUL      &&
            sfnt->load_sbits                        &&
            ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
       {

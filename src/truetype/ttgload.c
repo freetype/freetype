@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2007,7 +2007,7 @@
     /*                                                 */
     /* XXX: The convention should be emphasized in     */
     /*      the documents because it can be confusing. */
-    if ( size->strike_index != 0xFFFFFFFFU       &&
+    if ( size->strike_index != 0xFFFFFFFFUL      &&
          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );

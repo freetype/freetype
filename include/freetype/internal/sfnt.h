@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level `sfnt' driver interface (specification).                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -131,7 +131,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_SFNT_HeaderRec_Func                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the header of a SFNT font file.  Supports collections.       */
+  /*    Load the header of a SFNT font file.  Supports collections.        */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face       :: A handle to the target face object.                  */
@@ -169,7 +169,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_Directory_Func                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the table directory into a face object.                      */
+  /*    Load the table directory into a face object.                       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face      :: A handle to the target face object.                   */
@@ -198,7 +198,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_Any_Func                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads any font table into client memory.                           */
+  /*    Load any font table into client memory.                            */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: The face object to look for.                             */
@@ -246,7 +246,7 @@ FT_BEGIN_HEADER
   /*    TT_Find_SBit_Image_Func                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Checks whether an embedded bitmap (an `sbit') exists for a given   */
+  /*    Check whether an embedded bitmap (an `sbit') exists for a given    */
   /*    glyph, at a given strike.                                          */
   /*                                                                       */
   /* <Input>                                                               */
@@ -283,7 +283,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_SBit_Metrics_Func                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Gets the big metrics for a given embedded bitmap.                  */
+  /*    Get the big metrics for a given embedded bitmap.                   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    stream      :: The input stream.                                   */
@@ -316,7 +316,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_SBit_Image_Func                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads a given glyph sbit image from the font resource.  This also  */
+  /*    Load a given glyph sbit image from the font resource.  This also   */
   /*    returns its metrics.                                               */
   /*                                                                       */
   /* <Input>                                                               */
@@ -365,7 +365,7 @@ FT_BEGIN_HEADER
   /*    TT_Set_SBit_Strike_Func                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Selects an sbit strike for a given size request.                   */
+  /*    Select an sbit strike for a given size request.                    */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face          :: The target face object.                           */
@@ -391,7 +391,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_Strike_Metrics_Func                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the metrics of a given strike.                               */
+  /*    Load the metrics of a given strike.                                */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face          :: The target face object.                           */
@@ -417,7 +417,7 @@ FT_BEGIN_HEADER
   /*    TT_Get_PS_Name_Func                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Gets the PostScript glyph name of a glyph.                         */
+  /*    Get the PostScript glyph name of a glyph.                          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    idx  :: The glyph index.                                           */
@@ -442,7 +442,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_Metrics_Func                                               */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the horizontal or vertical header in a face object.          */
+  /*    Load the horizontal or vertical header in a face object.           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the target face object.                    */
@@ -466,7 +466,7 @@ FT_BEGIN_HEADER
   /*    TT_Load_Table_Func                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads a given TrueType table.                                      */
+  /*    Load a given TrueType table.                                       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
@@ -491,7 +491,7 @@ FT_BEGIN_HEADER
   /*    TT_Free_Table_Func                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Frees a given TrueType table.                                      */
+  /*    Free a given TrueType table.                                       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A handle to the target face object.                        */

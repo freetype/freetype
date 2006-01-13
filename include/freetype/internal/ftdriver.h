@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver interface (specification).                      */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2006 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -130,7 +130,7 @@ FT_BEGIN_HEADER
   /*                        scaling done in the base layer suffices.       */
   /*                                                                       */
   /*    select_size      :: A handle to a function used to select a new    */
-  /*                        fixed size.  It is used only when              */
+  /*                        fixed size.  It is used only if                */
   /*                        @FT_FACE_FLAG_FIXED_SIZES is set.  Can be set  */
   /*                        to 0 if the scaling done in the base layer     */
   /*                        suffices.                                      */

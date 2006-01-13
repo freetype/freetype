@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType glyph data/program tables loader (body).                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2005 by                               */
+/*  Copyright 1996-2001, 2002, 2004, 2005, 2006 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -83,7 +83,7 @@
 
     if ( face->header.Index_To_Loc_Format != 0 )
     {
-      if ( table_len >= 0x40000 )
+      if ( table_len >= 0x40000L )
       {
         FT_TRACE2(( "table too large!\n" ));
         error = TT_Err_Invalid_Table;
@@ -93,7 +93,7 @@
     }
     else
     {
-      if ( table_len >= 0x20000 )
+      if ( table_len >= 0x20000L )
       {
         FT_TRACE2(( "table too large!\n" ));
         error = TT_Err_Invalid_Table;

@@ -5,7 +5,7 @@
 /*    TrueType and OpenType embedded bitmap support (body).                */
 /*    This is a heap-optimized version.                                    */
 /*                                                                         */
-/*  Copyright 2005 by                                                      */
+/*  Copyright 2005, 2006 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -219,7 +219,7 @@
                                FT_ULong          strike_index,
                                FT_Size_Metrics*  metrics )
   {
-    FT_Byte*    strike;
+    FT_Byte*  strike;
     
 
     if ( strike_index >= (FT_ULong)face->num_sbit_strikes )

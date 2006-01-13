@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -300,8 +300,8 @@ FT_BEGIN_HEADER
   /*    Windows FNT:                                                       */
   /*      The nominal size given in a FNT font is not reliable.  Thus when */
   /*      the driver finds it incorrect, it sets `size' to some calculated */
-  /*      values and set `x_ppem' and `y_ppem' to pixel width and height   */
-  /*      given in the font, respectively.                                 */
+  /*      values and sets `x_ppem' and `y_ppem' to the pixel width and     */
+  /*      height given in the font, respectively.                          */
   /*                                                                       */
   /*    TrueType embedded bitmaps:                                         */
   /*      `size', `width', and `height' values are not contained in the    */
@@ -1622,7 +1622,7 @@ FT_BEGIN_HEADER
   /*    FT_Init_FreeType                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a new FreeType library object.  The set of modules     */
+  /*    Initialize a new FreeType library object.  The set of modules      */
   /*    that are registered by this function is determined at build time.  */
   /*                                                                       */
   /* <Output>                                                              */
@@ -1677,7 +1677,7 @@ FT_BEGIN_HEADER
   /*    FT_Done_FreeType                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Destroys a given FreeType library object and all of its childs,    */
+  /*    Destroy a given FreeType library object and all of its childs,     */
   /*    including resources, drivers, faces, sizes, etc.                   */
   /*                                                                       */
   /* <Input>                                                               */
@@ -1834,7 +1834,7 @@ FT_BEGIN_HEADER
   /*    FT_New_Face                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface index */
+  /*    Create a new face object from a given resource and typeface index  */
   /*    using a pathname to the font file.                                 */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -1885,7 +1885,7 @@ FT_BEGIN_HEADER
   /*    FT_New_Memory_Face                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface index */
+  /*    Create a new face object from a given resource and typeface index  */
   /*    using a font file already loaded into memory.                      */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -1941,7 +1941,7 @@ FT_BEGIN_HEADER
   /*    FT_Open_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Opens a face object from a given resource and typeface index using */
+  /*    Open a face object from a given resource and typeface index using  */
   /*    an `FT_Open_Args' structure.  If the face object doesn't exist, it */
   /*    is created.                                                        */
   /*                                                                       */
@@ -1991,7 +1991,7 @@ FT_BEGIN_HEADER
   /*    FT_Attach_File                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    `Attaches' a given font file to an existing face.  This is usually */
+  /*    `Attach' a given font file to an existing face.  This is usually   */
   /*    to read additional information for a single face object.  For      */
   /*    example, it is used to read the AFM files that come with Type 1    */
   /*    fonts in order to add kerning data and other metrics.              */
@@ -2060,8 +2060,8 @@ FT_BEGIN_HEADER
   /*    FT_Done_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Discards a given face object, as well as all of its child slots    */
-  /*    and sizes.                                                         */
+  /*    Discard a given face object, as well as all of its child slots and */
+  /*    sizes.                                                             */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A handle to a target face object.                          */
@@ -2079,7 +2079,7 @@ FT_BEGIN_HEADER
   /*    FT_Select_Size                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Selects a fixed size.                                              */
+  /*    Select a fixed size .                                              */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face  :: A handle to a target face object.                         */
@@ -2102,7 +2102,7 @@ FT_BEGIN_HEADER
   /*    FT_Size_Request_Type                                               */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An enumeration type that lists the size request types supported.   */
+  /*    An enumeration type that lists the supported size request types.   */
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_SIZE_REQUEST_TYPE_NOMINAL ::                                    */
@@ -2110,23 +2110,24 @@ FT_BEGIN_HEADER
   /*      @FT_FaceRec.                                                     */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_REAL_DIM ::                                   */
-  /*      The real dimension.  That is, the sum of the Ascender and        */
-  /*      (minus of) Descender fields of @FT_FaceRec.                      */
+  /*      The real dimension.  That is, the sum of the `Ascender' and      */
+  /*      (minus of) `Descender' fields of @FT_FaceRec.                    */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_BBOX ::                                       */
-  /*      The font bounding box.  That is, the bbox field of @FT_FaceRec.  */
+  /*      The font bounding box.  That is, the `bbox' field of             */
+  /*      @FT_FaceRec.                                                     */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_CELL ::                                       */
-  /*      The horizontal scale is determined by the max_advance_width      */
-  /*      field of @FT_FaceRec and the vertical scale is determined the    */
+  /*      The horizontal scale is determined by the `max_advance_width'    */
+  /*      field of @FT_FaceRec, and the vertical scale is determined the   */
   /*      same way as @FT_SIZE_REQUEST_TYPE_REAL_DIM does.  Finally, both  */
-  /*      scales are set to the smaller one.  This type is useful when     */
-  /*      you want to specify the font size for, for example, a window of  */
+  /*      scales are set to the smaller one.  This type is useful if you   */
+  /*      want to specify the font size for, for example, a window of      */
   /*      80x24 cells.                                                     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    See the note section of @FT_Size_Metrics if you wonder how does    */
-  /*    size requesting relate to scales.                                  */
+  /*    See the note section of @FT_Size_Metrics if you wonder how size    */
+  /*    requesting relates to scales.                                      */
   /*                                                                       */
   typedef enum  FT_Size_Request_Type_
   {
@@ -2153,19 +2154,19 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    height         :: The desired height.                              */
   /*                                                                       */
-  /*    horiResolution :: The horizontal resolution.  If set to zero, then */
-  /*                      the width is treated as 26.6 fractional pixels.  */
+  /*    horiResolution :: The horizontal resolution.  If set to zero, the  */
+  /*                      width is treated as 26.6 fractional pixels.      */
   /*                                                                       */
-  /*    vertResolution :: The vertical resolution.  If set to zero, then   */
-  /*                      the height is treated as 26.6 fractional pixels. */
+  /*    vertResolution :: The vertical resolution.  If set to zero, the    */
+  /*                      height is treated as 26.6 fractional pixels.     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    width and height cannot both be zero.  If either of them is zero,  */
-  /*    its value is chosen so that the horizontal and vertical scales are */
-  /*    equal.                                                             */
+  /*    `width' and `height' cannot both be zero.  If either of them is    */
+  /*    zero, its value is chosen so that the horizontal and vertical      */
+  /*    scales are equal.                                                  */
   /*                                                                       */
-  /*    You should use @FT_Select_Size if you are intended to select some  */
-  /*    fixed size from the `available_sizes' field of @FT_FaceRec.        */
+  /*    You should use @FT_Select_Size if you intend to select some fixed  */
+  /*    size from the `available_sizes' field of @FT_FaceRec.              */
   /*                                                                       */
   typedef struct  FT_Size_RequestRec_
   {
@@ -2174,6 +2175,7 @@ FT_BEGIN_HEADER
     FT_F26Dot6            height;
     FT_UInt               horiResolution;
     FT_UInt               vertResolution;
+
   } FT_Size_RequestRec, *FT_Size_Request;
 
 
@@ -2186,10 +2188,10 @@ FT_BEGIN_HEADER
   /*    Request the size of the active size object of a given face object. */ 
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    face  :: A handle to a target face object.                         */
+  /*    face :: A handle to a target face object.                          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    req   :: A pointer to a @FT_Size_RequestRec.                       */
+  /*    req  :: A pointer to a @FT_Size_RequestRec.                        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -2709,9 +2711,8 @@ FT_BEGIN_HEADER
   /*    FT_Render_Glyph                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Converts a given glyph image to a bitmap.  It does so by           */
-  /*    inspecting the glyph image format, find the relevant renderer, and */
-  /*    invoke it.                                                         */
+  /*    Convert a given glyph image to a bitmap.  It does so by inspecting */
+  /*    the glyph image format, find the relevant renderer, and invoke it. */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    slot        :: A handle to the glyph slot containing the image to  */
@@ -2800,7 +2801,7 @@ FT_BEGIN_HEADER
   /*    FT_Get_Kerning                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns the kerning vector between two glyphs of a same face.      */
+  /*    Return the kerning vector between two glyphs of a same face.       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face        :: A handle to a source face object.                   */
@@ -2841,7 +2842,7 @@ FT_BEGIN_HEADER
   /*    FT_Get_Glyph_Name                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the ASCII name of a given glyph in a face.  This only    */
+  /*    Retriev the ASCII name of a given glyph in a face.  This only      */
   /*    works for those faces where @FT_HAS_GLYPH_NAMES(face) returns      */
   /*    TRUE.                                                              */
   /*                                                                       */
@@ -2885,7 +2886,7 @@ FT_BEGIN_HEADER
   /*    FT_Get_Postscript_Name                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the ASCII Postscript name of a given face, if available. */
+  /*    Retriev the ASCII Postscript name of a given face, if available.   */
   /*    This only works with Postscript and TrueType fonts.                */
   /*                                                                       */
   /* <Input>                                                               */
@@ -2908,7 +2909,7 @@ FT_BEGIN_HEADER
   /*    FT_Select_Charmap                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Selects a given charmap by its encoding tag (as listed in          */
+  /*    Select a given charmap by its encoding tag (as listed in           */
   /*    `freetype.h').                                                     */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -2935,8 +2936,7 @@ FT_BEGIN_HEADER
   /*    FT_Set_Charmap                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Selects a given charmap for character code to glyph index          */
-  /*    decoding.                                                          */
+  /*    Select a given charmap for character code to glyph index decoding. */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face    :: A handle to the source face object.                     */
@@ -2984,7 +2984,7 @@ FT_BEGIN_HEADER
   /*    FT_Get_Char_Index                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns the glyph index of a given character code.  This function  */
+  /*    Return the glyph index of a given character code.  This function   */
   /*    uses a charmap object to do the translation.                       */
   /*                                                                       */
   /* <Input>                                                               */
@@ -3095,7 +3095,7 @@ FT_BEGIN_HEADER
   /*    FT_Get_Name_Index                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns the glyph index of a given glyph name.  This function uses */
+  /*    Return the glyph index of a given glyph name.  This function uses  */
   /*    driver specific objects to do the translation.                     */
   /*                                                                       */
   /* <Input>                                                               */
@@ -3294,7 +3294,7 @@ FT_BEGIN_HEADER
   /*    FT_Vector_Transform                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Transforms a single vector through a 2x2 matrix.                   */
+  /*    Transform a single vector through a 2x2 matrix.                    */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    vector :: The target vector to transform.                          */

@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf files
 
-    Copyright (C) 2000, 2001, 2002, 2003, 2004 by
+    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2006 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -366,10 +366,10 @@ THE SOFTWARE.
   PCF_Size_Select( FT_Size   size,
                    FT_ULong  index )
   {
-    PCF_Face   face  = (PCF_Face)size->face;
-
+    PCF_Face  face  = (PCF_Face)size->face;
 
     FT_UNUSED( index );
+
 
     size->metrics.ascender    = face->accel.fontAscent << 6;
     size->metrics.descender   = -face->accel.fontDescent << 6;

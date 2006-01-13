@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -142,7 +142,11 @@
     TT_Size   ttsize = (TT_Size)size;
     FT_Error  error  = TT_Err_Ok;
 
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+    FT_UNUSED( req );
+
+#else
 
     if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
@@ -150,18 +154,17 @@
       FT_Size_Metrics*  metrics = &size->metrics;
       FT_ULong          index;
 
-      if ( !( error = sfnt->set_sbit_strike( ttface,
-                                             req,
-                                             &index ) ) &&
-           !( error = sfnt->load_strike_metrics( ttface,
-                                                 index,
-                                                 metrics ) ) )
+
+      if ( !( error = sfnt->set_sbit_strike(
+                              ttface, req, &index ) )    &&
+           !( error = sfnt->load_strike_metrics(
+                              ttface, index, metrics ) ) )
         ttsize->strike_index = index;
       else
-        ttsize->strike_index = 0xFFFFFFFFU;
+        ttsize->strike_index = 0xFFFFFFFFUL;
     }
 
-#endif
+#endif /*  TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     if ( FT_IS_SCALABLE( size->face ) )
       error = tt_size_reset( ttsize );
@@ -188,7 +191,7 @@
 
     error = sfnt->load_strike_metrics( ttface, index, metrics );
     if ( error )
-      ttsize->strike_index = 0xFFFFFFFFU;
+      ttsize->strike_index = 0xFFFFFFFFUL;
     else
       ttsize->strike_index = index;
 

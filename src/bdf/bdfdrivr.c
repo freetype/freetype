@@ -2,7 +2,7 @@
 
     FreeType font driver for bdf files
 
-    Copyright (C) 2001, 2002, 2003, 2004, 2005 by
+    Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -587,8 +587,8 @@ THE SOFTWARE.
   {
     bdf_font_t*  bdffont = ( (BDF_Face)size->face )->bdffont;
 
-
     FT_UNUSED( index );
+
 
     size->metrics.ascender    = bdffont->font_ascent << 6;
     size->metrics.descender   = -bdffont->font_descent << 6;

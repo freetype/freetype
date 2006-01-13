@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -66,7 +66,7 @@
   /*    tt_glyphzone_done                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Deallocates a glyph zone.                                          */
+  /*    Deallocate a glyph zone.                                           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    zone :: A pointer to the target glyph zone.                        */
@@ -97,7 +97,7 @@
   /*    tt_glyphzone_new                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Allocates a new glyph zone.                                        */
+  /*    Allocate a new glyph zone.                                         */
   /*                                                                       */
   /* <Input>                                                               */
   /*    memory      :: A handle to the current memory object.              */
@@ -148,7 +148,7 @@
   /*    tt_face_init                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a given TrueType face object.                          */
+  /*    Initialize a given TrueType face object.                           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    stream     :: The source font stream.                              */
@@ -276,7 +276,7 @@
   /*    tt_face_done                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Finalizes a given face object.                                     */
+  /*    Finalize a given face object.                                      */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
@@ -483,7 +483,7 @@
   /*    tt_size_init                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a new TrueType size object.                            */
+  /*    Initialize a new TrueType size object.                             */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    size :: A handle to the size object.                               */
@@ -585,7 +585,7 @@
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     size->ttmetrics.valid = FALSE;
-    size->strike_index    = 0xFFFFFFFFU;
+    size->strike_index    = 0xFFFFFFFFUL;
 
     return error;
   }
@@ -652,7 +652,7 @@
   /*    tt_size_reset                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Resets a TrueType size when resolutions and character dimensions   */
+  /*    Reset a TrueType size when resolutions and character dimensions    */
   /*    have been changed.                                                 */
   /*                                                                       */
   /* <Input>                                                               */
@@ -678,10 +678,10 @@
     if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
       return TT_Err_Invalid_PPem;
 
-    /* This bit flag, when set, indicates that the ppems must be      */
-    /* rounded to integer.  Nearly all TrueType fonts have this bit   */
-    /* set, as hinting won't work really well otherwise.              */
-    /*                                                                */
+    /* This bit flag, if set, indicates that the ppems must be       */
+    /* rounded to integers.  Nearly all TrueType fonts have this bit */
+    /* set, as hinting won't work really well otherwise.             */
+    /*                                                               */
     if ( face->header.Flags & 8 )
     {
       metrics->x_scale = FT_DivFix( metrics->x_ppem << 6,
@@ -765,7 +765,7 @@
   /*    tt_driver_init                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a given TrueType driver object.                        */
+  /*    Initialize a given TrueType driver object.                         */
   /*                                                                       */
   /* <Input>                                                               */
   /*    driver :: A handle to the target driver object.                    */
@@ -801,7 +801,7 @@
   /*    tt_driver_done                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Finalizes a given TrueType driver.                                 */
+  /*    Finalize a given TrueType driver.                                  */
   /*                                                                       */
   /* <Input>                                                               */
   /*    driver :: A handle to the target TrueType driver.                  */
@@ -832,7 +832,7 @@
   /*    tt_slot_init                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a new slot object.                                     */
+  /*    Initialize a new slot object.                                      */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    slot :: A handle to the slot object.                               */

@@ -1,6 +1,6 @@
 /*
  * Copyright 2000 Computing Research Labs, New Mexico State University
- * Copyright 2001, 2002, 2003, 2004, 2005 Francesco Zappa Nardelli
+ * Copyright 2001, 2002, 2003, 2004, 2005, 2006 Francesco Zappa Nardelli
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -1064,8 +1064,8 @@
                           _BDF_BBX      | \
                           _BDF_BITMAP   )
 
-#define _BDF_GLYPH_WIDTH_CHECK   0x40000000L
-#define _BDF_GLYPH_HEIGHT_CHECK  0x80000000L
+#define _BDF_GLYPH_WIDTH_CHECK   0x40000000UL
+#define _BDF_GLYPH_HEIGHT_CHECK  0x80000000UL
 
 
   /* Auto correction messages. */
