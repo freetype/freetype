@@ -375,6 +375,9 @@ THE SOFTWARE.
     size->metrics.descender   = -face->accel.fontDescent << 6;
 #if 0
     size->metrics.height      = face->accel.maxbounds.ascent << 6;
+#else
+    size->metrics.height      = size->metrics.ascender -
+                                size->metrics.descender;
 #endif
     size->metrics.max_advance = face->accel.maxbounds.characterWidth << 6;
 
@@ -386,20 +389,39 @@ THE SOFTWARE.
   PCF_Size_Request( FT_Size          size,
                     FT_Size_Request  req )
   {
-    FT_Face   face = size->face;
-    FT_Error  error;
+    PCF_Face         face    = (PCF_Face)size->face;
+    FT_Bitmap_Size*  bsize   = size->face->available_sizes;
+    FT_Error         error   = PCF_Err_Invalid_Pixel_Size;
+    FT_Long          height;
 
 
-    error = FT_Match_Size( face, req, 1, NULL );
+    if ( req->vertResolution )
+      height = ( req->height * req->vertResolution + 36 ) / 72;
+    else
+      height = req->height;
+
+    height = ( height + 32 ) >> 6;
+
+    switch ( req->type )
+    {
+    case FT_SIZE_REQUEST_TYPE_NOMINAL:
+      if ( height == ( bsize->y_ppem + 32 ) >> 6 )
+        error = PCF_Err_Ok;
+      break;
+    case FT_SIZE_REQUEST_TYPE_REAL_DIM:
+      if ( height == ( face->accel.fontAscent +
+                       face->accel.fontDescent ) )
+        error = PCF_Err_Ok;
+      break;
+    default:
+      error = PCF_Err_Unimplemented_Feature;
+      break;
+    }
 
     if ( error )
       return error;
     else
-    {
-      size->metrics.height = face->available_sizes->height << 6;
-
       return PCF_Size_Select( size, 0 );
-    }
   }
 
 

@@ -2093,6 +2093,7 @@
     FT_Driver_Class   clazz;
     FT_Size_Metrics*  metrics;
     FT_Error          error;
+    FT_Bool           bitmap_only = 0;
 
 
     if ( !face )
@@ -2190,13 +2191,36 @@
     else
     {
       FT_ZERO( metrics );
+
+      if ( FT_HAS_FIXED_SIZES( face ) )
+        bitmap_only = 1;
+
       error = FT_Err_Invalid_Pixel_Size;
     }
 
     if ( clazz->request_size )
-      return clazz->request_size( face->size, req );
-    else
-      return error;
+      error = clazz->request_size( face->size, req );
+    /*
+     * The reason that a driver not having `request_size' defined is
+     * either the scaling here suffices or the supported formats
+     * are bitmap-only and size matching is not implmented.
+     *
+     * In the latter case, a simple size matching is done.
+     */
+    else if ( bitmap_only )
+    {
+      FT_ULong  index;
+
+
+      if ( !FT_Match_Size( face, req, 0, &index ) )
+      {
+        FT_TRACE3(( "FT_Request_Size: bitmap strike %lu matched\n", index ));
+
+        error = FT_Select_Size( face, index );
+      }
+    }
+
+    return error;
   }
 
 

@@ -592,6 +592,8 @@ THE SOFTWARE.
 
     size->metrics.ascender    = bdffont->font_ascent << 6;
     size->metrics.descender   = -bdffont->font_descent << 6;
+    size->metrics.height      = ( bdffont->font_ascent +
+                                  bdffont->font_descent ) << 6;
     size->metrics.max_advance = bdffont->bbx.width << 6;
 
     return BDF_Err_Ok;
@@ -602,20 +604,40 @@ THE SOFTWARE.
   BDF_Size_Request( FT_Size          size,
                     FT_Size_Request  req )
   {
-    FT_Face   face = size->face;
-    FT_Error  error;
+    FT_Face          face    = size->face;
+    FT_Bitmap_Size*  bsize   = face->available_sizes;
+    bdf_font_t*      bdffont = ( (BDF_Face)face )->bdffont;
+    FT_Error         error   = BDF_Err_Invalid_Pixel_Size;
+    FT_Long          height;
 
 
-    error = FT_Match_Size( face, req, 1, NULL );
+    if ( req->vertResolution )
+      height = ( req->height * req->vertResolution + 36 ) / 72;
+    else
+      height = req->height;
+
+    height = ( height + 32 ) >> 6;
+
+    switch ( req->type )
+    {
+    case FT_SIZE_REQUEST_TYPE_NOMINAL:
+      if ( height == ( bsize->y_ppem + 32 ) >> 6 )
+        error = BDF_Err_Ok;
+      break;
+    case FT_SIZE_REQUEST_TYPE_REAL_DIM:
+      if ( height == ( bdffont->font_ascent +
+                       bdffont->font_descent ) )
+        error = BDF_Err_Ok;
+      break;
+    default:
+      error = BDF_Err_Unimplemented_Feature;
+      break;
+    }
 
     if ( error )
       return error;
     else
-    {
-      size->metrics.height = face->available_sizes->height << 6;
-
       return BDF_Size_Select( size, 0 );
-    }
   }
 
 

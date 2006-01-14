@@ -1,3 +1,19 @@
+2006-01-14  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* docs/CHANGES: Mention the size selection change.
+
+	* src/bdf/bdfdrivr.c (BDF_Size_Request, BDF_Size_Select),
+	src/pcf/pcfdrivr.c (PCF_Size_Request, PCF_Size_Select),
+	src/winfonts/winfnt.c (FNT_Size_Request, FNT_Size_Select): Do size
+	matching for request of type NOMINAL and REAL_DIM.
+
+	* src/winfonts/winfnt.c (FNT_Face_Init): Print trace message when
+	`pixel_height' is used for nominal height.
+
+	* src/base/ftobjs.c (FT_Request_Size): Call `FT_Match_Size' if the
+	face is bitmap only and driver doesn't provide `request_size'.  This
+	is added merely for completion as no driver satisfies the conditions.
+
 2006-01-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	Introduce new size selection interface.

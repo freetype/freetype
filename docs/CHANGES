@@ -52,6 +52,16 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       `FT_GetFile_From_Mac_Name'.  Legacy APIs are still available, if
       FreeType is built without disabling them.
 
+    - A new API `FT_Select_Size' is added to select a bitmap strike by
+      its index.  Code  using other functions to select bitmap strikes
+      should be updated to use this function.
+
+    - In 2.1.10,  the behavior of `FT_Set_Pixel_Sizes'  is changed for
+      BDF/PCF  fonts,  and only for  them.  This causes inconsistency.
+      In this release,  we undo the change.  The intent  of the change
+      in 2.1.10  is to allow  size selection through  real dimensions,
+      which can now be done through `FT_Request_Size'.
+
 
   III. MISCELLANEOUS
 

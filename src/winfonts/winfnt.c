@@ -489,6 +489,8 @@
          */
         if ( bsize->y_ppem > font->header.pixel_height << 6 )
         {
+          FT_TRACE2(( "use pixel_height as the nominal height\n" ));
+
           bsize->y_ppem = font->header.pixel_height << 6;
           bsize->size   = FT_MulDiv( bsize->y_ppem, 72, y_res );
         }
@@ -579,6 +581,8 @@
     size->metrics.ascender    = header->ascent * 64;
     size->metrics.descender   = -( header->pixel_height -
                                    header->ascent ) * 64;
+    size->metrics.height      = ( header->pixel_height +
+                                  header->external_leading ) * 64;
     size->metrics.max_advance = header->max_width * 64;
 
     return FNT_Err_Ok;
@@ -589,20 +593,39 @@
   FNT_Size_Request( FT_Size          size,
                     FT_Size_Request  req )
   {
-    FT_Face   face = size->face;
-    FT_Error  error;
-    
+    FNT_Face          face    = (FNT_Face)size->face;
+    FT_WinFNT_Header  header  = &face->font->header;
+    FT_Bitmap_Size*   bsize   = size->face->available_sizes;
+    FT_Error          error   = FNT_Err_Invalid_Pixel_Size;
+    FT_Long           height;
 
-    error = FT_Match_Size( face, req, 1, NULL );
+
+    if ( req->vertResolution )
+      height = ( req->height * req->vertResolution + 36 ) / 72;
+    else
+      height = req->height;
+
+    height = ( height + 32 ) >> 6;
+
+    switch ( req->type )
+    {
+    case FT_SIZE_REQUEST_TYPE_NOMINAL:
+      if ( height == ( bsize->y_ppem + 32 ) >> 6 )
+        error = FNT_Err_Ok;
+      break;
+    case FT_SIZE_REQUEST_TYPE_REAL_DIM:
+      if ( height == header->pixel_height )
+        error = FNT_Err_Ok;
+      break;
+    default:
+      error = FNT_Err_Unimplemented_Feature;
+      break;
+    }
 
     if ( error )
       return error;
     else
-    {
-      size->metrics.height = face->available_sizes->height << 6;
-
       return FNT_Size_Select( size );
-    }
   }
 
 
