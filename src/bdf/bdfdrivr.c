@@ -624,11 +624,13 @@ THE SOFTWARE.
       if ( height == ( bsize->y_ppem + 32 ) >> 6 )
         error = BDF_Err_Ok;
       break;
+
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
       if ( height == ( bdffont->font_ascent +
                        bdffont->font_descent ) )
         error = BDF_Err_Ok;
       break;
+
     default:
       error = BDF_Err_Unimplemented_Feature;
       break;

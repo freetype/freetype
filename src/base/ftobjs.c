@@ -2201,9 +2201,9 @@
     if ( clazz->request_size )
       error = clazz->request_size( face->size, req );
     /*
-     * The reason that a driver not having `request_size' defined is
-     * either the scaling here suffices or the supported formats
-     * are bitmap-only and size matching is not implmented.
+     * The reason that a driver doesn't have `request_size' defined is
+     * either that the scaling here suffices or that the supported formats
+     * are bitmap-only and size matching is not implemented.
      *
      * In the latter case, a simple size matching is done.
      */

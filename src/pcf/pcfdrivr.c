@@ -408,11 +408,13 @@ THE SOFTWARE.
       if ( height == ( bsize->y_ppem + 32 ) >> 6 )
         error = PCF_Err_Ok;
       break;
+
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
       if ( height == ( face->accel.fontAscent +
                        face->accel.fontDescent ) )
         error = PCF_Err_Ok;
       break;
+
     default:
       error = PCF_Err_Unimplemented_Feature;
       break;

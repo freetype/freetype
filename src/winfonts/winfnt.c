@@ -613,10 +613,12 @@
       if ( height == ( bsize->y_ppem + 32 ) >> 6 )
         error = FNT_Err_Ok;
       break;
+
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
       if ( height == header->pixel_height )
         error = FNT_Err_Ok;
       break;
+
     default:
       error = FNT_Err_Unimplemented_Feature;
       break;

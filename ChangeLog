@@ -5,7 +5,7 @@
 	* src/bdf/bdfdrivr.c (BDF_Size_Request, BDF_Size_Select),
 	src/pcf/pcfdrivr.c (PCF_Size_Request, PCF_Size_Select),
 	src/winfonts/winfnt.c (FNT_Size_Request, FNT_Size_Select): Do size
-	matching for request of type NOMINAL and REAL_DIM.
+	matching for requests of type NOMINAL and REAL_DIM.
 
 	* src/winfonts/winfnt.c (FNT_Face_Init): Print trace message when
 	`pixel_height' is used for nominal height.
