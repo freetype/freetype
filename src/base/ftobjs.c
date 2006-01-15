@@ -520,12 +520,12 @@
       load_flags |= FT_LOAD_FORCE_AUTOHINT;
 
     /* auto-hinter is preferred and should be used */
-    if ( ( !FT_DRIVER_HAS_HINTER( driver )           ||
+    if ( ( !FT_DRIVER_HAS_HINTER( driver )         ||
            ( load_flags & FT_LOAD_FORCE_AUTOHINT ) ) &&
          !( load_flags & FT_LOAD_NO_HINTING )        &&
-         !( load_flags & FT_LOAD_NO_AUTOHINT ) )
+         !( load_flags & FT_LOAD_NO_AUTOHINT )       )
     {
-      /* check if it works for this face */
+      /* check whether it works for this face */
       autohint =
         FT_BOOL( hinter                                   &&
                  FT_DRIVER_IS_SCALABLE( driver )          &&
@@ -1729,7 +1729,7 @@
 
     if ( FT_HAS_FIXED_SIZES( face ) )
     {
-      FT_Int           i;
+      FT_Int  i;
 
       
       for ( i = 0; i < face->num_fixed_sizes; i++ )
@@ -2045,6 +2045,7 @@
   ft_fake_vertical_metrics( FT_Glyph_Metrics*  metrics,
                             FT_Pos             advance )
   {
+    /* the factor 1.2 is a heuristical value */
     if ( !advance )
       advance = metrics->height * 12 / 10;
 
@@ -2110,8 +2111,8 @@
     }
     else
     {
-      metrics->x_scale     = 1 << 22;
-      metrics->y_scale     = 1 << 22;
+      metrics->x_scale     = 1L << 22;
+      metrics->y_scale     = 1L << 22;
       metrics->ascender    = bsize->y_ppem;
       metrics->descender   = 0;
       metrics->height      = bsize->height << 6;
@@ -2238,8 +2239,8 @@
     else
     {
       FT_ZERO( metrics );
-      metrics->x_scale = 1 << 22;
-      metrics->y_scale = 1 << 22;
+      metrics->x_scale = 1L << 22;
+      metrics->y_scale = 1L << 22;
 
       if ( FT_HAS_FIXED_SIZES( face ) )
         bitmap_only = 1;

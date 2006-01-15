@@ -343,8 +343,8 @@
         cidglyph->internal->glyph_transformed = 0;
 
         /* make up vertical ones */
-        metrics->vertAdvance = ( face->cid.font_bbox.yMax -
-                                 face->cid.font_bbox.yMin ) >> 16;
+        metrics->vertAdvance        = ( face->cid.font_bbox.yMax -
+                                        face->cid.font_bbox.yMin ) >> 16;
         cidglyph->linearVertAdvance = metrics->vertAdvance;
 
         cidglyph->format            = FT_GLYPH_FORMAT_OUTLINE;

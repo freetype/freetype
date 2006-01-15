@@ -1673,8 +1673,8 @@
     /* up some metrics by `hand'...                                      */
 
     {
-      FT_Pos     top;      /* scaled vertical top side bearing  */
-      FT_Pos     advance;  /* scaled vertical advance height    */
+      FT_Pos  top;      /* scaled vertical top side bearing  */
+      FT_Pos  advance;  /* scaled vertical advance height    */
 
 
       /* Get the unscaled top bearing and advance height. */
@@ -1731,6 +1731,7 @@
           metrics.bearing_x = 0;
           metrics.bearing_y = top;
           metrics.advance   = advance;
+
           error = incr->funcs->get_glyph_metrics( incr->object,
                                                   glyph_index,
                                                   TRUE,

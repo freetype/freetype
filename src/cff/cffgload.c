@@ -2610,9 +2610,9 @@
         glyph->root.linearHoriAdvance           = decoder.glyph_width;
         glyph->root.internal->glyph_transformed = 0;
 
-        has_vertical_info = ( face->vertical_info                   &&
-                              face->vertical.number_Of_VMetrics > 0 &&
-                              face->vertical.long_metrics != 0      );
+        has_vertical_info = face->vertical_info                   &&
+                            face->vertical.number_Of_VMetrics > 0 &&
+                            face->vertical.long_metrics != 0;
 
         /* get the vertical metrics from the vtmx table if we have one */
         if ( has_vertical_info )

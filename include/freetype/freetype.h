@@ -1238,16 +1238,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    y_ppem       :: The height of the scaled EM square in pixels,      */
   /*                    hence the term `ppem' (pixels per EM).  It is also */
-  /*                    refeered to as `nominal height'.                   */
+  /*                    referred to as `nominal height'.                   */
   /*                                                                       */
   /*    x_scale      :: A 16.16 fractional scale used to convert           */
   /*                    horizontal metrics from font units to 26.6         */
   /*                    fractional pixels.  Only relevant for scalable     */
-  /*                    formats.                                           */
+  /*                    font formats.                                      */
   /*                                                                       */
   /*    y_scale      :: A 16.16 fractional scale used to convert vertical  */
   /*                    metrics from font units to 26.6 fractional pixels. */
-  /*                    Only relevant for scalable formats.                */
+  /*                    Only relevant for scalable font formats.           */
   /*                                                                       */
   /*    ascender     :: The ascender in 26.6 fractional pixels.  See       */
   /*                    @FT_FaceRec for the details.                       */
@@ -1263,9 +1263,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    The scales, if relevant, are determined first during a size        */
-  /*    changing operation.  The reset fields are then set by the driver.  */
-  /*    For scalable formats, they are usually set to scaled values of the */
-  /*    corresponding fields in @FT_FaceRec.                               */
+  /*    changing operation.  The remaining fields are then set by the      */
+  /*    driver.  For scalable formats, they are usually set to scaled      */
+  /*    values of the corresponding fields in @FT_FaceRec.                 */
   /*                                                                       */
   /*    Note that due to glyph hinting, these values might not be exact    */
   /*    for certain fonts.  Thus they must be treated as unreliable        */
@@ -2432,8 +2432,8 @@ FT_BEGIN_HEADER
    *   `load_flags'.  They can't be ORed.
    *
    *   If @FT_LOAD_RENDER is also set, the glyph is rendered in the
-   *   corresponding mode (i.e., the mode best matching the algorithm used)
-   *   unless @FT_LOAD_MONOCHROME is set.
+   *   corresponding mode (i.e., the mode which matches the used algorithm
+   *   best) unless @FT_LOAD_MONOCHROME is set.
    *
    *   You can use a hinting algorithm that doesn't correspond to the same
    *   rendering mode.  As an example, it is possible to use the `light'
