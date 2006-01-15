@@ -462,12 +462,12 @@ FT_BEGIN_HEADER
 
 
   /*
-   * Use the horizontal metrics to fake the vertical metrics.
-   * If `advance' is zero, it is also faked.
+   * Use the horizontal metrics to synthesize the vertical metrics.
+   * If `advance' is zero, it is also synthesized.
    */
   FT_BASE( void )
-  ft_fake_vertical_metrics( FT_Glyph_Metrics*  metrics,
-                            FT_Pos             advance );
+  ft_synthesize_vertical_metrics( FT_Glyph_Metrics*  metrics,
+                                  FT_Pos             advance );
 
 
  /*

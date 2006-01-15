@@ -2699,8 +2699,8 @@
         if ( has_vertical_info )
           metrics->vertBearingX = -metrics->width / 2;
         else
-          ft_fake_vertical_metrics( metrics,
-                                    metrics->vertAdvance );
+          ft_synthesize_vertical_metrics( metrics,
+                                          metrics->vertAdvance );
       }
     }
 

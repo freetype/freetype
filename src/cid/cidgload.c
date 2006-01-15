@@ -401,8 +401,8 @@
         metrics->horiBearingY = cbox.yMax;
 
         /* make up vertical ones */
-        ft_fake_vertical_metrics( metrics,
-                                  metrics->vertAdvance );
+        ft_synthesize_vertical_metrics( metrics,
+                                        metrics->vertAdvance );
       }
     }
 

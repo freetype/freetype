@@ -1,5 +1,15 @@
 2006-01-15  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c,
+	src/bdf/bdfdrivr.c, src/cff/cffgload.c, src/cid/cidgload.c,
+	src/pcf/pcfdrivr.c, src/type1/t1gload.c, src/winfonts/winfnt.c:
+	s/ft_fake_vertical_metrics/ft_synthesize_vertical_metrics/.
+
+	* docs/CHANGES: Mention that vertical metrics are synthesized for
+	fonts not having this info.
+
+2006-01-15  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* include/freetype/internal/ftobjs.h (ft_fake_vertical_metrics),
 	src/base/ftobjs.c (ft_fake_vertical_metrics): New function to fake
 	vertical metrics.

@@ -2042,8 +2042,8 @@
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( void )
-  ft_fake_vertical_metrics( FT_Glyph_Metrics*  metrics,
-                            FT_Pos             advance )
+  ft_synthesize_vertical_metrics( FT_Glyph_Metrics*  metrics,
+                                  FT_Pos             advance )
   {
     /* the factor 1.2 is a heuristical value */
     if ( !advance )

@@ -98,6 +98,11 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
     - A new function `FT_Module_Get_Flags' (declared in `FT_MODULE_H')
       can be used to get the module flags for a given module.
 
+    - Vertical metrics of glyphs are  synthesized if the font does not
+      provide such information.  You can tell whether  the metrics are
+      synthesized or not by checking the FT_FACE_FLAG_VERTICAL flag of
+      the face.
+
     - The demo programs  `ftview' and  `ftstring' have been  rewritten
       for better readability.
 

@@ -724,8 +724,8 @@
     slot->metrics.horiBearingX = 0;
     slot->metrics.horiBearingY = slot->bitmap_top << 6;
 
-    ft_fake_vertical_metrics( &slot->metrics,
-                              bitmap->rows << 6 );
+    ft_synthesize_vertical_metrics( &slot->metrics,
+                                    bitmap->rows << 6 );
 
   Exit:
     return error;

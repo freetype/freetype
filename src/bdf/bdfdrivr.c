@@ -712,8 +712,8 @@ THE SOFTWARE.
      * XXX DWIDTH1 and VVECTOR should be parsed and
      * used here, provided such fonts do exist.
      */
-    ft_fake_vertical_metrics( &slot->metrics,
-                              face->bdffont->bbx.height << 6 );
+    ft_synthesize_vertical_metrics( &slot->metrics,
+                                    face->bdffont->bbx.height << 6 );
 
   Exit:
     return error;
