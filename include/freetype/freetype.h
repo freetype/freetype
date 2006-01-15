@@ -1240,11 +1240,14 @@ FT_BEGIN_HEADER
   /*                    hence the term `ppem' (pixels per EM).  It is also */
   /*                    refeered to as `nominal height'.                   */
   /*                                                                       */
-  /*    x_scale      :: A 16.16 fractional scale used to convert font      */
-  /*                    units to 26.6 fractional pixels horizontally.      */
+  /*    x_scale      :: A 16.16 fractional scale used to convert           */
+  /*                    horizontal metrics from font units to 26.6         */
+  /*                    fractional pixels.  Only relevant for scalable     */
+  /*                    formats.                                           */
   /*                                                                       */
-  /*    y_scale      :: A 16.16 fractional scale used to convert font      */
-  /*                    units to 26.6 fractional pixels vertically.        */
+  /*    y_scale      :: A 16.16 fractional scale used to convert vertical  */
+  /*                    metrics from font units to 26.6 fractional pixels. */
+  /*                    Only relevant for scalable formats.                */
   /*                                                                       */
   /*    ascender     :: The ascender in 26.6 fractional pixels.  See       */
   /*                    @FT_FaceRec for the details.                       */
@@ -1255,13 +1258,14 @@ FT_BEGIN_HEADER
   /*    height       :: The height in 26.6 fractional pixels.  See         */
   /*                    @FT_FaceRec for the details.                       */
   /*                                                                       */
-  /*    max_advance  :: Maximal horizontal advance in 26.6 fractional      */
-  /*                    pixels.  Always positive.                          */
+  /*    max_advance  :: The maximal advance width in 26.6 fractional       */
+  /*                    pixels.  See @FT_FaceRec for the details.          */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    For scalable fonts, the scales are determined first during a size  */
-  /*    changing operation.  Then other fields are set to the scaled       */
-  /*    values of the corresponding fields in @FT_FaceRec.                 */
+  /*    The scales, if relevant, are determined first during a size        */
+  /*    changing operation.  The reset fields are then set by the driver.  */
+  /*    For scalable formats, they are usually set to scaled values of the */
+  /*    corresponding fields in @FT_FaceRec.                               */
   /*                                                                       */
   /*    Note that due to glyph hinting, these values might not be exact    */
   /*    for certain fonts.  Thus they must be treated as unreliable        */
@@ -1380,22 +1384,19 @@ FT_BEGIN_HEADER
   /*                         Note that even when the glyph image is        */
   /*                         transformed, the metrics are not.             */
   /*                                                                       */
-  /*    linearHoriAdvance :: For scalable formats only, this field holds   */
-  /*                         the linearly scaled horizontal advance width  */
-  /*                         for the glyph (i.e. the scaled and unhinted   */
-  /*                         value of the hori advance).  This can be      */
+  /*    linearHoriAdvance :: The advance width of the unhinted glyph.      */
+  /*                         Its value is expressed in 16.16 fractional    */
+  /*                         pixels, unless @FT_LOAD_LINEAR_DESIGN is set  */
+  /*                         when loading the glyph.  This field can be    */
   /*                         important to perform correct WYSIWYG layout.  */
+  /*                         Only relevant for outline glyphs.             */
   /*                                                                       */
-  /*                         Note that this value is expressed by default  */
-  /*                         in 16.16 pixels. However, when the glyph is   */
-  /*                         loaded with the FT_LOAD_LINEAR_DESIGN flag,   */
-  /*                         this field contains simply the value of the   */
-  /*                         advance in original font units.               */
-  /*                                                                       */
-  /*    linearVertAdvance :: For scalable formats only, this field holds   */
-  /*                         the linearly scaled vertical advance height   */
-  /*                         for the glyph.  See linearHoriAdvance for     */
-  /*                         comments.                                     */
+  /*    linearVertAdvance :: The advance height of the unhinted glyph.     */
+  /*                         Its value is expressed in 16.16 fractional    */
+  /*                         pixels, unless @FT_LOAD_LINEAR_DESIGN is set  */
+  /*                         when loading the glyph.  This field can be    */
+  /*                         important to perform correct WYSIWYG layout.  */
+  /*                         Only relevant for outline glyphs.             */
   /*                                                                       */
   /*    advance           :: This is the transformed advance width for the */
   /*                         glyph.                                        */
@@ -2296,7 +2297,8 @@ FT_BEGIN_HEADER
    *     problematic currently.
    *
    *   FT_LOAD_FORCE_AUTOHINT ::
-   *     Disable the driver's native hinter.  See also the note below.
+   *     Indicates that the auto-hinter is preferred over the font's native
+   *     hinter.  See also the note below.
    *
    *   FT_LOAD_CROP_BITMAP ::
    *     Indicates that the font driver should crop the loaded bitmap glyph
@@ -2327,6 +2329,8 @@ FT_BEGIN_HEADER
    *     The description of sub-glyphs is not available to client
    *     applications for now.
    *
+   *     This flag implies @FT_LOAD_NO_SCALE and @FT_LOAD_IGNORE_TRANSFORM.
+   *
    *   FT_LOAD_IGNORE_TRANSFORM ::
    *     Indicates that the tranform matrix set by @FT_Set_Transform should
    *     be ignored.
@@ -2341,7 +2345,7 @@ FT_BEGIN_HEADER
    *
    *   FT_LOAD_LINEAR_DESIGN ::
    *     Indicates that the `linearHoriAdvance' and `linearVertAdvance'
-   *     fields of @FT_GlyphSlotRec should not be scaled.  See
+   *     fields of @FT_GlyphSlotRec should be kept in font units.  See
    *     @FT_GlyphSlotRec for details.
    *
    *   FT_LOAD_NO_AUTOHINT ::
@@ -2349,10 +2353,11 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   By default, hinting is enabled and the font's native hinter (see
-   *   @FT_FACE_FLAG_HINTER) is preferred over auto-hinter.  You can disable
-   *   hinting by setting @FT_LOAD_NO_HINTING, disable the font's native
-   *   hinter by setting @FT_LOAD_FORCE_AUTOHINT, and disable the
-   *   auto-hinter by setting @FT_LOAD_NO_AUTOHINT.
+   *   @FT_FACE_FLAG_HINTER) is preferred over the auto-hinter.  You can
+   *   disable hinting by setting @FT_LOAD_NO_HINTING or change the
+   *   precedence by setting @FT_LOAD_FORCE_AUTOHINT.  You can also set
+   *   @FT_LOAD_NO_AUTOHINT in case you don't want the auto-hinter to be
+   *   used at all.
    *
    *   Besides deciding which hinter to use, you can also decide which
    *   hinting algorithm to use.  See @FT_LOAD_TARGET_XXX for details.
@@ -2427,7 +2432,8 @@ FT_BEGIN_HEADER
    *   `load_flags'.  They can't be ORed.
    *
    *   If @FT_LOAD_RENDER is also set, the glyph is rendered in the
-   *   corresponding mode (i.e., the mode best matching the algorithm used).
+   *   corresponding mode (i.e., the mode best matching the algorithm used)
+   *   unless @FT_LOAD_MONOCHROME is set.
    *
    *   You can use a hinting algorithm that doesn't correspond to the same
    *   rendering mode.  As an example, it is possible to use the `light'

@@ -520,6 +520,7 @@ THE SOFTWARE.
       }
     }
 
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
     slot->bitmap_left = metric->leftSideBearing;
     slot->bitmap_top  = metric->ascent;
 
@@ -529,9 +530,6 @@ THE SOFTWARE.
     slot->metrics.width        = ( metric->rightSideBearing -
                                    metric->leftSideBearing ) << 6;
     slot->metrics.height       = bitmap->rows << 6;
-
-    slot->linearHoriAdvance = (FT_Fixed)bitmap->width << 16;
-    slot->format            = FT_GLYPH_FORMAT_BITMAP;
 
     FT_TRACE4(( " --- ok\n" ));
 

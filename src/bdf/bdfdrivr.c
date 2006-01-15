@@ -698,6 +698,7 @@ THE SOFTWARE.
       break;
     }
 
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
     slot->bitmap_left = glyph.bbx.x_offset;
     slot->bitmap_top  = glyph.bbx.ascent;
 
@@ -707,9 +708,6 @@ THE SOFTWARE.
     slot->metrics.horiBearingY = glyph.bbx.ascent << 6;
     slot->metrics.width        = bitmap->width << 6;
     slot->metrics.height       = bitmap->rows << 6;
-
-    slot->linearHoriAdvance = (FT_Fixed)glyph.dwidth << 16;
-    slot->format            = FT_GLYPH_FORMAT_BITMAP;
 
   Exit:
     return error;

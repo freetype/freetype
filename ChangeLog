@@ -1,3 +1,20 @@
+2006-01-15  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load), src/pcf/pcfdrivr.c
+	(PCF_Glyph_Load), src/winfonts/winfnt.c (FNT_Load_Glyph): Don't set
+	the linear advance fields as they are only for the outline glyphs.
+
+	* include/freetype/freetype.h: Documentation updates/clarificatoins.
+	The meaning of FT_LOAD_FORCE_AUTOHINT is changed so that no real
+	change need be made to the code.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Resolve flag dependencies and
+	decide whether to use the auto-hinter according to documentation.
+	There should to be no real difference.
+	Some checks (e.g., is text height positve?) after the glyph is loaded.
+	(FT_Select_Size, FT_Request_Size): Scales are set to wrong values.
+	Be careful that scales won't be negative.
+
 2006-01-14  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* docs/CHANGES: Mention the size selection change.

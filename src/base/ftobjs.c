@@ -485,7 +485,7 @@
     FT_Driver     driver;
     FT_GlyphSlot  slot;
     FT_Library    library;
-    FT_Bool       autohint;
+    FT_Bool       autohint = 0;
     FT_Module     hinter;
 
 
@@ -498,48 +498,43 @@
     slot = face->glyph;
     ft_glyphslot_clear( slot );
 
-    driver = face->driver;
+    driver  = face->driver;
+    library = driver->root.library;
+    hinter  = library->auto_hinter;
 
-    /* if the flag NO_RECURSE is set, we disable hinting and scaling */
+    /* resolve load flags dependencies */
+
     if ( load_flags & FT_LOAD_NO_RECURSE )
-    {
-      /* disable scaling, hinting, and transformation */
       load_flags |= FT_LOAD_NO_SCALE         |
-                    FT_LOAD_NO_HINTING       |
-                    FT_LOAD_NO_BITMAP        |
                     FT_LOAD_IGNORE_TRANSFORM;
 
-      /* disable bitmap rendering */
+    if ( load_flags & FT_LOAD_NO_SCALE )
+    {
+      load_flags |= FT_LOAD_NO_HINTING |
+                    FT_LOAD_NO_BITMAP;
+
       load_flags &= ~FT_LOAD_RENDER;
     }
 
-    /* do we need to load the glyph through the auto-hinter? */
-    library  = driver->root.library;
-    hinter   = library->auto_hinter;
-    autohint =
-      FT_BOOL( hinter                                      &&
-               !( load_flags & ( FT_LOAD_NO_SCALE    |
-                                 FT_LOAD_NO_HINTING  |
-                                 FT_LOAD_NO_AUTOHINT ) )   &&
-               FT_DRIVER_IS_SCALABLE( driver )             &&
-               FT_DRIVER_USES_OUTLINES( driver )           );
-
-    /* force auto-hinting for the LIGHT hinting mode */
-    if ( autohint &&
-         FT_LOAD_TARGET_MODE( load_flags ) == FT_RENDER_MODE_LIGHT )
+    if ( FT_LOAD_TARGET_MODE( load_flags ) == FT_RENDER_MODE_LIGHT )
       load_flags |= FT_LOAD_FORCE_AUTOHINT;
 
-    if ( autohint )
+    /* auto-hinter is preferred and should be used */
+    if ( ( !FT_DRIVER_HAS_HINTER( driver )           ||
+           ( load_flags & FT_LOAD_FORCE_AUTOHINT ) ) &&
+         !( load_flags & FT_LOAD_NO_HINTING )        &&
+         !( load_flags & FT_LOAD_NO_AUTOHINT ) )
     {
-      if ( FT_DRIVER_HAS_HINTER( driver ) &&
-           !( load_flags & FT_LOAD_FORCE_AUTOHINT ) )
-        autohint = 0;
+      /* check if it works for this face */
+      autohint =
+        FT_BOOL( hinter                                   &&
+                 FT_DRIVER_IS_SCALABLE( driver )          &&
+                 FT_DRIVER_USES_OUTLINES( driver )        &&
+                 face->internal->transform_matrix.yy > 0  &&
+                 face->internal->transform_matrix.yx == 0 );
     }
 
-    /* don't apply autohinting if glyph is vertically distorted or */
-    /* mirrored                                                    */
-    if ( autohint && !( face->internal->transform_matrix.yy <= 0 ||
-                        face->internal->transform_matrix.yx != 0 ) )
+    if ( autohint )
     {
       FT_AutoHinter_Service  hinting;
 
@@ -602,6 +597,7 @@
       FT_Size_Metrics*  metrics = &face->size->metrics;
 
 
+      /* it's tricky! */
       slot->linearHoriAdvance = FT_MulDiv( slot->linearHoriAdvance,
                                            metrics->x_scale, 64 );
 
@@ -1720,6 +1716,36 @@
       }
     }
 
+    /* some checks */
+
+    if ( FT_IS_SCALABLE( face ) )
+    {
+      if ( face->height < 0 )
+        face->height = -face->height;
+
+      if ( !FT_HAS_VERTICAL( face ) )
+        face->max_advance_height = face->height;
+    }
+
+    if ( FT_HAS_FIXED_SIZES( face ) )
+    {
+      FT_Int           i;
+
+      
+      for ( i = 0; i < face->num_fixed_sizes; i++ )
+      {
+        FT_Bitmap_Size*  bsize = face->available_sizes + i;
+
+
+        if ( bsize->height < 0 )
+          bsize->height = -bsize->height;
+        if ( bsize->x_ppem < 0 )
+          bsize->x_ppem = -bsize->x_ppem;
+        if ( bsize->y_ppem < 0 )
+          bsize->y_ppem = -bsize->y_ppem;
+      }
+    }
+
     /* initialize internal face data */
     {
       FT_Face_Internal  internal = face->internal;
@@ -2069,8 +2095,8 @@
     }
     else
     {
-      metrics->x_scale     = 0x10000L;
-      metrics->y_scale     = 0x10000L;
+      metrics->x_scale     = 1 << 22;
+      metrics->y_scale     = 1 << 22;
       metrics->ascender    = bsize->y_ppem;
       metrics->descender   = 0;
       metrics->height      = bsize->height << 6;
@@ -2099,7 +2125,7 @@
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
-    if ( !req )
+    if ( !req || req->width < 0 || req->height < 0 )
       return FT_Err_Invalid_Argument;
 
     clazz   = face->driver->clazz;
@@ -2134,6 +2160,12 @@
         return FT_Err_Unimplemented_Feature;
         break;
       }
+
+      if ( w < 0 )
+        w = -w;
+
+      if ( h < 0 )
+        h = -h;
 
       if ( req->horiResolution )
         scaled_w = ( req->width * req->horiResolution + 36 ) / 72;
@@ -2191,6 +2223,8 @@
     else
     {
       FT_ZERO( metrics );
+      metrics->x_scale = 1 << 22;
+      metrics->y_scale = 1 << 22;
 
       if ( FT_HAS_FIXED_SIZES( face ) )
         bitmap_only = 1;
