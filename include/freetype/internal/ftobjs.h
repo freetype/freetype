@@ -461,6 +461,15 @@ FT_BEGIN_HEADER
                  FT_ULong*        index );
 
 
+  /*
+   * Use the horizontal metrics to fake the vertical metrics.
+   * If `advance' is zero, it is also faked.
+   */
+  FT_BASE( void )
+  ft_fake_vertical_metrics( FT_Glyph_Metrics*  metrics,
+                            FT_Pos             advance );
+
+
  /*
   * Free the bitmap of a given glyphslot when needed
   * (i.e., only when it was allocated with ft_glyphslot_alloc_bitmap).

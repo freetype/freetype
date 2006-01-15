@@ -531,6 +531,10 @@ THE SOFTWARE.
                                    metric->leftSideBearing ) << 6;
     slot->metrics.height       = bitmap->rows << 6;
 
+    ft_fake_vertical_metrics( &slot->metrics,
+                              ( face->accel.fontAscent +
+                                face->accel.fontDescent ) << 6 );
+
     FT_TRACE4(( " --- ok\n" ));
 
   Exit:

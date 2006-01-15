@@ -1673,10 +1673,6 @@
     /* up some metrics by `hand'...                                      */
 
     {
-      FT_Short   top_bearing;    /* vertical top side bearing (EM units) */
-      FT_UShort  advance_height; /* vertical advance height   (EM units) */
-
-      FT_Pos     left;     /* scaled vertical left side bearing */
       FT_Pos     top;      /* scaled vertical top side bearing  */
       FT_Pos     advance;  /* scaled vertical advance height    */
 
@@ -1685,18 +1681,18 @@
       if ( face->vertical_info &&
            face->vertical.number_Of_VMetrics > 0 )
       {
-        top_bearing = (FT_Short)FT_DivFix( loader->pp3.y - bbox.yMax,
-                                           y_scale );
+        top = (FT_Short)FT_DivFix( loader->pp3.y - bbox.yMax,
+                                   y_scale );
 
         if ( loader->pp3.y <= loader->pp4.y )
-          advance_height = 0;
+          advance = 0;
         else
-          advance_height = (FT_UShort)FT_DivFix( loader->pp3.y - loader->pp4.y,
-                                                 y_scale );
+          advance = (FT_UShort)FT_DivFix( loader->pp3.y - loader->pp4.y,
+                                          y_scale );
       }
       else
       {
-        FT_Short  max_height, height;
+        FT_Pos  height;
 
 
         /* XXX Compute top side bearing and advance height in  */
@@ -1707,79 +1703,63 @@
         /*       table in the font.  Otherwise, we use the     */
         /*       values defined in the horizontal header.      */
 
-        height = (FT_Short)FT_DivFix( bbox.yMax - bbox.yMin, y_scale );
+        height = (FT_Short)FT_DivFix( bbox.yMax - bbox.yMin,
+                                      y_scale );
         if ( face->os2.version != 0xFFFFU )
-        {
-          /* sTypoDescender is negative */
-          max_height = (FT_Short)(face->os2.sTypoAscender -
-                                  face->os2.sTypoDescender);
-
-          top_bearing    = (FT_Short)( ( max_height - height ) / 2 );
-          advance_height = (FT_UShort)( max_height + face->os2.sTypoLineGap );
-        }
+          advance = (FT_Pos)( face->os2.sTypoAscender -
+                              face->os2.sTypoDescender );
         else
-        {
-          max_height = (FT_Short)(face->horizontal.Ascender +
-                                  face->horizontal.Descender);
+          advance = (FT_Pos)( face->horizontal.Ascender -
+                              face->horizontal.Descender );
 
-          top_bearing    = (FT_Short)( ( max_height - height ) / 2 );
-          advance_height = (FT_UShort)( max_height +
-                                        face->horizontal.Line_Gap );
-        }
+        top = ( advance - height ) / 2;
       }
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-
-      /* If this is an incrementally loaded font see if there are */
-      /* overriding metrics for this glyph.                       */
-      if ( face->root.internal->incremental_interface &&
-           face->root.internal->incremental_interface->funcs->get_glyph_metrics )
       {
-        FT_Incremental_MetricsRec  metrics;
-        FT_Error                   error = TT_Err_Ok;
+        FT_Incremental_InterfaceRec*  incr;
+        FT_Incremental_MetricsRec     metrics;
+        FT_Error                      error;
 
 
-        metrics.bearing_x = 0;
-        metrics.bearing_y = top_bearing;
-        metrics.advance   = advance_height;
-        error =
-          face->root.internal->incremental_interface->funcs->get_glyph_metrics(
-            face->root.internal->incremental_interface->object,
-            glyph_index, TRUE, &metrics );
+        incr = face->root.internal->incremental_interface;
 
-        if ( error )
-          return error;
+        /* If this is an incrementally loaded font see if there are */
+        /* overriding metrics for this glyph.                       */
+        if ( incr && incr->funcs->get_glyph_metrics )
+        {
+          metrics.bearing_x = 0;
+          metrics.bearing_y = top;
+          metrics.advance   = advance;
+          error = incr->funcs->get_glyph_metrics( incr->object,
+                                                  glyph_index,
+                                                  TRUE,
+                                                  &metrics );
+          if ( error )
+            return error;
 
-        top_bearing    = (FT_Short)metrics.bearing_y;
-        advance_height = (FT_UShort)metrics.advance;
+          top     = metrics.bearing_y;
+          advance = metrics.advance;
+        }
       }
 
       /* GWW: Do vertical metrics get loaded incrementally too? */
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
+      glyph->linearVertAdvance = advance;
+
       /* scale the metrics */
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
       {
-        top     = FT_MulFix( top_bearing, y_scale );
-        advance = FT_MulFix( advance_height, y_scale );
+        top     = FT_MulFix( top, y_scale );
+        advance = FT_MulFix( advance, y_scale );
       }
-      else
-      {
-        top     = top_bearing;
-        advance = advance_height;
-      }
-
-      /* set the advance height in design units.  It is scaled later by */
-      /* the base layer.                                                */
-      glyph->linearVertAdvance = advance_height;
 
       /* XXX: for now, we have no better algorithm for the lsb, but it */
       /*      should work fine.                                        */
       /*                                                               */
-      left = ( bbox.xMin - bbox.xMax ) / 2;
-
-      glyph->metrics.vertBearingX = left;
+      glyph->metrics.vertBearingX = ( bbox.xMin - bbox.xMax ) / 2;
       glyph->metrics.vertBearingY = top;
       glyph->metrics.vertAdvance  = advance;
     }

@@ -343,8 +343,9 @@
         cidglyph->internal->glyph_transformed = 0;
 
         /* make up vertical ones */
-        metrics->vertAdvance  = 0;
-        cidglyph->linearVertAdvance = 0;
+        metrics->vertAdvance = ( face->cid.font_bbox.yMax -
+                                 face->cid.font_bbox.yMin ) >> 16;
+        cidglyph->linearVertAdvance = metrics->vertAdvance;
 
         cidglyph->format            = FT_GLYPH_FORMAT_OUTLINE;
 
@@ -400,8 +401,8 @@
         metrics->horiBearingY = cbox.yMax;
 
         /* make up vertical ones */
-        metrics->vertBearingX = 0;
-        metrics->vertBearingY = 0;
+        ft_fake_vertical_metrics( metrics,
+                                  metrics->vertAdvance );
       }
     }
 

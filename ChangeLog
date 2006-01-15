@@ -1,5 +1,19 @@
 2006-01-15  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* include/freetype/internal/ftobjs.h (ft_fake_vertical_metrics),
+	src/base/ftobjs.c (ft_fake_vertical_metrics): New function to fake the
+	vertical metrics.
+
+	* src/cff/cffgload.c, src/cid/cidgload.c, src/pcf/pcfdrivr.c,
+	src/type1/t1gload.c, src/winfonts/winfnt.c: Fake the vertical metrics.
+	The fake metrics is monotone.
+
+	* src/truetype/ttgload.c (compute_glyph_metrics): Some fixes and
+	formattings in vertical metrics faking.  There are still rooms for
+	improvements (and so do the CFF module).
+
+2006-01-15  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* src/bdf/bdfdrivr.c (BDF_Glyph_Load), src/pcf/pcfdrivr.c
 	(PCF_Glyph_Load), src/winfonts/winfnt.c (FNT_Load_Glyph): Don't set
 	the linear advance fields as they are only for the outline glyphs.

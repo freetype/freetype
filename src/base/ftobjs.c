@@ -2039,6 +2039,21 @@
   }
 
 
+  /* documentation is in ftobjs.h */
+
+  FT_BASE_DEF( void )
+  ft_fake_vertical_metrics( FT_Glyph_Metrics*  metrics,
+                            FT_Pos             advance )
+  {
+    if ( !advance )
+      advance = metrics->height * 12 / 10;
+
+    metrics->vertBearingX = -( metrics->width / 2 );
+    metrics->vertBearingY = ( advance - metrics->height ) / 2;
+    metrics->vertAdvance  = advance;
+  }
+
+
   static void
   ft_recompute_scaled_metrics( FT_Face           face,
                                FT_Size_Metrics*  metrics )

@@ -2602,6 +2602,7 @@
         FT_BBox            cbox;
         FT_Glyph_Metrics*  metrics = &glyph->root.metrics;
         FT_Vector          advance;
+        FT_Bool            has_vertical_info;
 
 
         /* copy the _unscaled_ advance width */
@@ -2609,17 +2610,12 @@
         glyph->root.linearHoriAdvance           = decoder.glyph_width;
         glyph->root.internal->glyph_transformed = 0;
 
-        /* make up vertical ones */
-        metrics->vertAdvance  = 0;
-        metrics->vertBearingX = 0;
-        metrics->vertBearingY = 0;
-
-        glyph->root.linearVertAdvance = 0;
+        has_vertical_info = ( face->vertical_info                   &&
+                              face->vertical.number_Of_VMetrics > 0 &&
+                              face->vertical.long_metrics != 0      );
 
         /* get the vertical metrics from the vtmx table if we have one */
-        if ( face->vertical_info                   &&
-             face->vertical.number_Of_VMetrics > 0 &&
-             face->vertical.long_metrics != 0      )
+        if ( has_vertical_info )
         {
           FT_Short   vertBearingY = 0;
           FT_UShort  vertAdvance  = 0;
@@ -2630,6 +2626,18 @@
           metrics->vertBearingY = vertBearingY;
           metrics->vertAdvance  = vertAdvance;
         }
+        else
+        {
+          /* make up vertical ones */
+          if ( face->os2.version != 0xFFFFU )
+            metrics->vertAdvance = (FT_Pos)( face->os2.sTypoAscender -
+                                             face->os2.sTypoDescender );
+          else
+            metrics->vertAdvance = (FT_Pos)( face->horizontal.Ascender -
+                                             face->horizontal.Descender );
+        }
+
+        glyph->root.linearVertAdvance = metrics->vertAdvance;
 
         glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
@@ -2687,6 +2695,12 @@
 
         metrics->horiBearingX = cbox.xMin;
         metrics->horiBearingY = cbox.yMax;
+
+        if ( has_vertical_info )
+          metrics->vertBearingX = -metrics->width / 2;
+        else
+          ft_fake_vertical_metrics( metrics,
+                                    metrics->vertAdvance );
       }
     }
 

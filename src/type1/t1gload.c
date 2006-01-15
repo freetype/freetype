@@ -298,8 +298,10 @@
         glyph->root.linearHoriAdvance           = decoder.builder.advance.x;
         glyph->root.internal->glyph_transformed = 0;
 
-        metrics->vertAdvance          = 0;
-        glyph->root.linearVertAdvance = 0;
+        /* make up vertical ones */
+        metrics->vertAdvance = ( face->type1.font_bbox.yMax -
+                                 face->type1.font_bbox.yMin ) >> 16;
+        glyph->root.linearVertAdvance = metrics->vertAdvance;
 
         glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
@@ -357,8 +359,8 @@
         metrics->horiBearingY = cbox.yMax;
 
         /* make up vertical ones */
-        metrics->vertBearingX = 0;
-        metrics->vertBearingY = 0;
+        ft_fake_vertical_metrics( metrics,
+                                  metrics->vertAdvance );
       }
 
       /* Set control data to the glyph charstrings.  Note that this is */

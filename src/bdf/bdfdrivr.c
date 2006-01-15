@@ -702,12 +702,18 @@ THE SOFTWARE.
     slot->bitmap_left = glyph.bbx.x_offset;
     slot->bitmap_top  = glyph.bbx.ascent;
 
-    /* FZ XXX: TODO: vertical metrics */
     slot->metrics.horiAdvance  = glyph.dwidth << 6;
     slot->metrics.horiBearingX = glyph.bbx.x_offset << 6;
     slot->metrics.horiBearingY = glyph.bbx.ascent << 6;
     slot->metrics.width        = bitmap->width << 6;
     slot->metrics.height       = bitmap->rows << 6;
+
+    /* 
+     * XXX DWIDTH1 and VVECTOR should be parsed and
+     * used here, provided such fonts do exist.
+     */
+    ft_fake_vertical_metrics( &slot->metrics,
+                              face->bdffont->bbx.height << 6 );
 
   Exit:
     return error;
