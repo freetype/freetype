@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  psconv.h                                                               */
 /*                                                                         */
-/*    Some convenient conversions (specification).                         */
+/*    Some convenience conversions (specification).                        */
 /*                                                                         */
 /*  Copyright 2006 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -56,40 +56,41 @@ FT_BEGIN_HEADER
                           FT_UInt    n );
 
   FT_LOCAL( FT_UInt )
-  PS_Conv_EexecDecode(  FT_Byte**   cursor,
-                        FT_Byte*    limit,
-                        FT_Byte*    buffer,
-                        FT_UInt     n,
-                        FT_UShort*  seed );
+  PS_Conv_EexecDecode( FT_Byte**   cursor,
+                       FT_Byte*    limit,
+                       FT_Byte*    buffer,
+                       FT_UInt     n,
+                       FT_UShort*  seed );
+
 
 #define IS_PS_NEWLINE( ch ) \
-  ( ( ch ) == '\r'       || \
+  ( ( ch ) == '\r' ||       \
     ( ch ) == '\n' )
 
-#define IS_PS_SPACE( ch )   \
-  ( ( ch ) == ' '        || \
-    IS_PS_NEWLINE( ch )  || \
-    ( ch ) == '\t'       || \
-    ( ch ) == '\f'       || \
+#define IS_PS_SPACE( ch )  \
+  ( ( ch ) == ' '       || \
+    IS_PS_NEWLINE( ch ) || \
+    ( ch ) == '\t'      || \
+    ( ch ) == '\f'      || \
     ( ch ) == '\0' )
 
 #define IS_PS_SPECIAL( ch ) \
-  ( ( ch ) == '/'        || \
-    ( ch ) == '('        || \
-    ( ch ) == ')'        || \
-    ( ch ) == '<'        || \
-    ( ch ) == '>'        || \
-    ( ch ) == '['        || \
-    ( ch ) == ']'        || \
-    ( ch ) == '{'        || \
-    ( ch ) == '}'        || \
+  ( ( ch ) == '/' ||        \
+    ( ch ) == '(' ||        \
+    ( ch ) == ')' ||        \
+    ( ch ) == '<' ||        \
+    ( ch ) == '>' ||        \
+    ( ch ) == '[' ||        \
+    ( ch ) == ']' ||        \
+    ( ch ) == '{' ||        \
+    ( ch ) == '}' ||        \
     ( ch ) == '%' )
 
-#define IS_PS_DELIM( ch )   \
-  ( IS_PS_SPACE( ch )    || \
+#define IS_PS_DELIM( ch )  \
+  ( IS_PS_SPACE( ch )   || \
     IS_PS_SPECIAL( ch ) )
 
-#define IS_PS_DIGIT( ch ) ( ( ch ) >= '0' && ( ch ) <= '9' )
+#define IS_PS_DIGIT( ch )  ( ( ch ) >= '0' && ( ch ) <= '9' )
 
 #define IS_PS_XDIGIT( ch )                \
   ( IS_PS_DIGIT( ( ch ) )              || \

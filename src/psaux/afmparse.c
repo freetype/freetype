@@ -15,6 +15,7 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_DEBUG_H
 
@@ -22,6 +23,7 @@
 #include "psconv.h"
 
 #include "psauxerr.h"
+
 
 /***************************************************************************/
 /*                                                                         */
@@ -42,11 +44,11 @@
 
   typedef struct  AFM_StreamRec_
   {
-    FT_Byte*   cursor;
-    FT_Byte*   base;
-    FT_Byte*   limit;
+    FT_Byte*  cursor;
+    FT_Byte*  base;
+    FT_Byte*  limit;
 
-    FT_Int     status;
+    FT_Int    status;
 
   } AFM_StreamRec;
 
@@ -55,34 +57,35 @@
 #define EOF -1
 #endif
 
-/* this works because empty lines are ignored */
-#define AFM_IS_NEWLINE( ch ) ( ( ch ) == '\r' || ( ch ) == '\n' )
 
-#define AFM_IS_EOF( ch )     ( ( ch ) == EOF  || ( ch ) == '\x1a' )
-#define AFM_IS_SPACE( ch )   ( ( ch ) == ' '  || ( ch ) == '\t' )
+  /* this works because empty lines are ignored */
+#define AFM_IS_NEWLINE( ch )  ( (ch) == '\r' || (ch) == '\n' )
 
-/* column separator; there is no `column' in the spec actually */
-#define AFM_IS_SEP( ch )     ( ( ch ) == ';' )
+#define AFM_IS_EOF( ch )      ( (ch) == EOF  || (ch) == '\x1a' )
+#define AFM_IS_SPACE( ch )    ( (ch) == ' '  || (ch) == '\t' )
 
-#define AFM_GETC() \
-          ( ( ( stream )->cursor < ( stream )->limit ) \
-            ? *( stream )->cursor++                    \
-            : EOF )
+  /* column separator; there is no `column' in the spec actually */
+#define AFM_IS_SEP( ch )      ( (ch) == ';' )
 
-#define AFM_STREAM_KEY_BEGIN( stream ) \
-  (char*)( ( stream )->cursor - 1 )
+#define AFM_GETC()                                                       \
+          ( ( (stream)->cursor < (stream)->limit ) ? *(stream)->cursor++ \
+                                                   : EOF )
 
-#define AFM_STREAM_KEY_LEN( stream, key ) \
-  ( (char*)( stream )->cursor - key - 1 )
+#define AFM_STREAM_KEY_BEGIN( stream )    \
+          (char*)( (stream)->cursor - 1 )
+
+#define AFM_STREAM_KEY_LEN( stream, key )       \
+          ( (char*)(stream)->cursor - key - 1 )
 
 #define AFM_STATUS_EOC( stream ) \
-  ( ( stream )->status >= AFM_STREAM_STATUS_EOC )
+          ( (stream)->status >= AFM_STREAM_STATUS_EOC )
 
 #define AFM_STATUS_EOL( stream ) \
-  ( ( stream )->status >= AFM_STREAM_STATUS_EOL )
+          ( (stream)->status >= AFM_STREAM_STATUS_EOL )
 
 #define AFM_STATUS_EOF( stream ) \
-  ( ( stream )->status >= AFM_STREAM_STATUS_EOF )
+          ( (stream)->status >= AFM_STREAM_STATUS_EOF )
+
 
   static int
   afm_stream_skip_spaces( AFM_Stream  stream )
@@ -111,7 +114,7 @@
   }
 
 
-  /* read a key or val in current column */
+  /* read a key or value in current column */
   static char*
   afm_stream_read_one( AFM_Stream  stream )
   {
@@ -133,19 +136,16 @@
       else if ( AFM_IS_NEWLINE( ch ) )
       {
         stream->status = AFM_STREAM_STATUS_EOL;
-
         break;
       }
       else if ( AFM_IS_SEP( ch ) )
       {
         stream->status = AFM_STREAM_STATUS_EOC;
-
         break;
       }
       else if ( AFM_IS_EOF( ch ) )
       {
         stream->status = AFM_STREAM_STATUS_EOF;
-
         break;
       }
     }
@@ -175,13 +175,11 @@
       if ( AFM_IS_NEWLINE( ch ) )
       {
         stream->status = AFM_STREAM_STATUS_EOL;
-
         break;
       }
       else if ( AFM_IS_EOF( ch ) )
       {
         stream->status = AFM_STREAM_STATUS_EOF;
-
         break;
       }
     }
@@ -190,14 +188,14 @@
   }
 
 
-/***************************************************************************/
-/*                                                                         */
-/*    AFM_Parser                                                           */
-/*                                                                         */
-/*                                                                         */
+  /*************************************************************************/
+  /*                                                                       */
+  /*    AFM_Parser                                                         */
+  /*                                                                       */
+  /*                                                                       */
 
   /* all keys defined in Ch. 7-10 of 5004.AFM_Spec.pdf */
-  typedef enum
+  typedef enum  AFM_Token_
   {
     AFM_TOKEN_ASCENDER,
     AFM_TOKEN_AXISLABEL,
@@ -275,6 +273,7 @@
     AFM_TOKEN_XHEIGHT,
     N_AFM_TOKENS,
     AFM_TOKEN_UNKNOWN
+
   } AFM_Token;
 
 
@@ -357,16 +356,16 @@
   };
 
 
-#define AFM_MAX_ARGUMENTS 5
+#define AFM_MAX_ARGUMENTS  5
 
   static AFM_ValueRec  shared_vals[AFM_MAX_ARGUMENTS];
 
 
   /*
-   * `afm_parser_read_vals' and `afm_parser_next_key' provides
+   * `afm_parser_read_vals' and `afm_parser_next_key' provide
    * high-level operations to an AFM_Stream.  The rest of the
-   * parser functions should use them and should not access
-   * the AFM_Stream directly.
+   * parser functions should use them without accessing the
+   * AFM_Stream directly.
    */
 
   FT_LOCAL_DEF( FT_Int )
@@ -399,35 +398,40 @@
 
       switch ( vals[i].type )
       {
-        case AFM_VALUE_TYPE_STRING:
-        case AFM_VALUE_TYPE_NAME:
-            if ( !FT_QAlloc( parser->memory, len + 1, (void**)&vals[i].u.s  ) )
-            {
-              ft_memcpy( vals[i].u.s, str, len );
-              vals[i].u.s[len] = '\0';
-            }
-            break;
-        case AFM_VALUE_TYPE_FIXED:
-          vals[i].u.f = PS_Conv_ToFixed( (FT_Byte**)&str,
-                                         (FT_Byte*)str + len,
-                                         0 );
-          break;
-        case AFM_VALUE_TYPE_INTEGER:
-          vals[i].u.i = PS_Conv_ToInt( (FT_Byte**)&str,
-                                       (FT_Byte*)str + len );
-          break;
-        case AFM_VALUE_TYPE_BOOL:
-          vals[i].u.b = ( len == 4                          &&
-                          ft_strncmp( str, "true", 4 ) == 0 );
-          break;
-        case AFM_VALUE_TYPE_INDEX:
-          if ( parser->get_index )
-            vals[i].u.i = parser->get_index( str,
-                                             len,
-                                             parser->user_data );
-          else
-            vals[i].u.i = 0;
-          break;
+      case AFM_VALUE_TYPE_STRING:
+      case AFM_VALUE_TYPE_NAME:
+        if ( !FT_QAlloc( parser->memory, len + 1,
+                         (void**)&vals[i].u.s  ) )
+        {
+          ft_memcpy( vals[i].u.s, str, len );
+          vals[i].u.s[len] = '\0';
+        }
+        break;
+
+      case AFM_VALUE_TYPE_FIXED:
+        vals[i].u.f = PS_Conv_ToFixed( (FT_Byte**)&str,
+                                       (FT_Byte*)str + len,
+                                       0 );
+        break;
+
+      case AFM_VALUE_TYPE_INTEGER:
+        vals[i].u.i = PS_Conv_ToInt( (FT_Byte**)&str,
+                                     (FT_Byte*)str + len );
+        break;
+
+      case AFM_VALUE_TYPE_BOOL:
+        vals[i].u.b = ( len == 4                          &&
+                        ft_strncmp( str, "true", 4 ) == 0 );
+        break;
+
+      case AFM_VALUE_TYPE_INDEX:
+        if ( parser->get_index )
+          vals[i].u.i = parser->get_index( str,
+                                           len,
+                                           parser->user_data );
+        else
+          vals[i].u.i = 0;
+        break;
       }
     }
 
@@ -458,7 +462,7 @@
         /* skip empty line */
         if ( !key                      &&
              !AFM_STATUS_EOF( stream ) &&
-             AFM_STATUS_EOL( stream ) )
+             AFM_STATUS_EOL( stream )  )
           continue;
 
         break;
@@ -478,7 +482,7 @@
         /* skip empty column */
         if ( !key                      &&
              !AFM_STATUS_EOF( stream ) &&
-             AFM_STATUS_EOC( stream ) )
+             AFM_STATUS_EOC( stream )  )
           continue;
 
         break;
@@ -532,11 +536,11 @@
     if ( FT_NEW( stream ) )
       return error;
 
-    stream->cursor  = stream->base = base;
-    stream->limit   = limit;
+    stream->cursor = stream->base = base;
+    stream->limit  = limit;
 
-    /* so that the first call won't skip the first line */
-    stream->status  = AFM_STREAM_STATUS_EOL;
+    /* don't skip the first line during the first call */
+    stream->status = AFM_STREAM_STATUS_EOL;
 
     parser->memory    = memory;
     parser->stream    = stream;
@@ -656,6 +660,7 @@
 #undef  KERN_INDEX
 #define KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
 
+
   /* compare two kerning pairs */
   FT_CALLBACK_DEF( int )
   afm_compare_kern_pairs( const void*  a,
@@ -749,7 +754,6 @@
                   sizeof( AFM_KernPairRec ),
                   afm_compare_kern_pairs );
         return PSaux_Err_Ok;
-        break;
 
       case AFM_TOKEN_UNKNOWN:
         break;
@@ -793,7 +797,6 @@
       case AFM_TOKEN_ENDKERNDATA:
       case AFM_TOKEN_ENDFONTMETRICS: 
         return PSaux_Err_Ok;
-        break;
 
       case AFM_TOKEN_UNKNOWN:
         break;
@@ -814,8 +817,8 @@
                            FT_UInt     n,
                            AFM_Token   end_section )
   {
-    char*     key;
-    FT_UInt   len;
+    char*    key;
+    FT_UInt  len;
 
 
     while ( n-- > 0 )
@@ -901,7 +904,7 @@
         error = afm_parse_kern_data( parser );
         if ( error )
           goto Fail;
-        /* no break since we only support kern data */
+        /* fall through since we only support kern data */
 
       case AFM_TOKEN_ENDFONTMETRICS: 
         return PSaux_Err_Ok;
@@ -923,3 +926,6 @@
 
     return error;
   }
+
+
+/* END */

@@ -2728,7 +2728,7 @@ FT_BEGIN_HEADER
   /*    degree      :: The degree of tightness.                            */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    akerning    :: The kerning in in 16.16 fractional points.          */
+  /*    akerning    :: The kerning in 16.16 fractional points.             */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */

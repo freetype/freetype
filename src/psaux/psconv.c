@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  psconv.c                                                               */
 /*                                                                         */
-/*    Some convenient conversions (body).                                  */
+/*    Some convenience conversions (body).                                 */
 /*                                                                         */
 /*  Copyright 2006 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -24,8 +24,8 @@
 #include "psauxerr.h"
 
 
-/* The following array is used by various functions to quickly convert */
-/* digits (both decimal and non-decimal) into numbers.                 */
+  /* The following array is used by various functions to quickly convert */
+  /* digits (both decimal and non-decimal) into numbers.                 */
 
 #if 'A' == 65
   /* ASCII */
@@ -68,6 +68,7 @@
 #define OP  <
 
 #endif /* 'A' == 193 */
+
 
   FT_LOCAL_DEF( FT_Int )
   PS_Conv_Strtol( FT_Byte**  cursor,
@@ -205,7 +206,7 @@
       power_ten += PS_Conv_ToInt( &p, limit );
     }
 
-Exit:
+  Exit:
     while ( power_ten > 0 )
     {
       integral *= 10;
@@ -325,7 +326,7 @@ Exit:
 
     return r;
   }
-#endif
+#endif /* 0 */
 
 
   FT_LOCAL_DEF( FT_UInt )
@@ -369,11 +370,11 @@ Exit:
 
 
   FT_LOCAL_DEF( FT_UInt )
-  PS_Conv_EexecDecode(  FT_Byte**   cursor,
-  		        FT_Byte*    limit,
-  		        FT_Byte*    buffer,
-  		        FT_UInt     n,
-  		        FT_UShort*  seed )
+  PS_Conv_EexecDecode( FT_Byte**   cursor,
+  		       FT_Byte*    limit,
+  		       FT_Byte*    buffer,
+  		       FT_UInt     n,
+  		       FT_UShort*  seed )
   {
     FT_Byte*  p;
     FT_UInt   r;
@@ -392,3 +393,6 @@ Exit:
 
     return r;
   }
+
+
+/* END */

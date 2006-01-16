@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    AFM support for Type 1 fonts (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -98,16 +98,16 @@
                FT_Stream     stream,
                AFM_FontInfo  fi )
   {
-    FT_Error       error = T1_Err_Ok;
-    FT_Memory      memory = stream->memory;
-    FT_Byte*       start;
-    FT_Byte*       limit;
-    FT_Byte*       p;
-    AFM_KernPair   kp;
-    FT_Int         width_table_length;
-    FT_CharMap     oldcharmap;
-    FT_CharMap     charmap;
-    FT_Int         n;
+    FT_Error      error = T1_Err_Ok;
+    FT_Memory     memory = stream->memory;
+    FT_Byte*      start;
+    FT_Byte*      limit;
+    FT_Byte*      p;
+    AFM_KernPair  kp;
+    FT_Int        width_table_length;
+    FT_CharMap    oldcharmap;
+    FT_CharMap    charmap;
+    FT_Int        n;
 
 
     start = (FT_Byte*)stream->cursor;
@@ -225,11 +225,11 @@
   T1_Read_Metrics( FT_Face    t1_face,
                    FT_Stream  stream )
   {
-    PSAux_Service    psaux;
-    FT_Memory        memory = stream->memory;
-    AFM_ParserRec    parser;
-    AFM_FontInfo     fi;
-    FT_Error         error = T1_Err_Unknown_File_Format;
+    PSAux_Service  psaux;
+    FT_Memory      memory = stream->memory;
+    AFM_ParserRec  parser;
+    AFM_FontInfo   fi;
+    FT_Error       error = T1_Err_Unknown_File_Format;
 
 
     if ( FT_FRAME_ENTER( stream->size ) )

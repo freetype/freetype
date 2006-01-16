@@ -5,7 +5,7 @@
 /*    Auxiliary functions and data structures related to PostScript fonts  */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -702,6 +702,7 @@ FT_BEGIN_HEADER
     FT_Fixed  min_kern;
     FT_Fixed  max_ptsize;
     FT_Fixed  max_kern;
+
   } AFM_TrackKernRec, *AFM_TrackKern;
 
   typedef struct  AFM_KernPairRec_
@@ -710,6 +711,7 @@ FT_BEGIN_HEADER
     FT_Int  index2;
     FT_Int  x;
     FT_Int  y;
+
   } AFM_KernPairRec, *AFM_KernPair;
 
   typedef struct  AFM_FontInfoRec_
@@ -719,6 +721,7 @@ FT_BEGIN_HEADER
     FT_Int         NumTrackKern;
     AFM_KernPair   KernPairs;    /* free if non-NULL */
     FT_Int         NumKernPair;
+
   } AFM_FontInfoRec, *AFM_FontInfo;
 
   typedef struct  AFM_Parser_FuncsRec_
@@ -739,6 +742,7 @@ FT_BEGIN_HEADER
 
   typedef struct AFM_StreamRec_*  AFM_Stream;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -748,14 +752,14 @@ FT_BEGIN_HEADER
   /*    An AFM_Parser is a parser for the AFM files.                       */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    memory    :: The object used for memory operations                 */
-  /*                   (alloc/realloc).                                    */
+  /*    memory    :: The object used for memory operations (alloc and      */
+  /*                 realloc).                                             */
   /*                                                                       */
   /*    stream    :: This is an opaque object.                             */
   /*                                                                       */
   /*    FontInfo  :: The result will be stored here.                       */
   /*                                                                       */
-  /*    get_index :: An user provided function to get glyph index by its   */
+  /*    get_index :: A user provided function to get a glyph index by its  */
   /*                 name.                                                 */
   /*                                                                       */
   typedef struct  AFM_ParserRec_

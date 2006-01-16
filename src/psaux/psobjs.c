@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auxiliary functions for PostScript fonts (body).                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1117,7 +1117,7 @@
     {
       if ( *cur != '<' )
       {
-        FT_ERROR(( "ps_tobytes: Missing starting delimiter `<'\n" ));
+        FT_ERROR(( "ps_parser_to_bytes: Missing starting delimiter `<'\n" ));
         error = PSaux_Err_Invalid_File_Format;
         goto Exit;
       }

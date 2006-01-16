@@ -57,11 +57,13 @@ FT_BEGIN_HEADER
   {
     enum AFM_ValueType_  type;
     union  {
-      char*        s;
-      FT_Fixed     f;
-      FT_Int       i;
-      FT_Bool      b;
+      char*     s;
+      FT_Fixed  f;
+      FT_Int    i;
+      FT_Bool   b;
+
     } u;
+
   } AFM_ValueRec, *AFM_Value;
 
 
