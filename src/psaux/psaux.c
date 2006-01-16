@@ -23,6 +23,8 @@
 #include "psauxmod.c"
 #include "t1decode.c"
 #include "t1cmap.c"
+#include "afmparse.c"
+#include "psconv.c"
 
 
 /* END */

@@ -192,6 +192,7 @@ FT_BEGIN_HEADER
   /*    FT_Render_Mode                                                     */
   /*    FT_Get_Kerning                                                     */
   /*    FT_Kerning_Mode                                                    */
+  /*    FT_Get_Track_Kerning                                               */
   /*    FT_Get_Glyph_Name                                                  */
   /*    FT_Get_Postscript_Name                                             */
   /*                                                                       */
@@ -2709,6 +2710,34 @@ FT_BEGIN_HEADER
                   FT_UInt     right_glyph,
                   FT_UInt     kern_mode,
                   FT_Vector  *akerning );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Track_Kerning                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return the track kerning for a given face object at a given size.  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face        :: A handle to a source face object.                   */
+  /*                                                                       */
+  /*    point_size  :: The point size in 16.16 fractional points.          */
+  /*                                                                       */
+  /*    degree      :: The degree of tightness.                            */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    akerning    :: The kerning in in 16.16 fractional points.          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Get_Track_Kerning( FT_Face    face,
+                        FT_Fixed   point_size,
+                        FT_Int     degree,
+                        FT_Fixed*  akerning );
 
 
   /*************************************************************************/

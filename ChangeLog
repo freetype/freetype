@@ -1,3 +1,33 @@
+2006-01-16  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/psaux/afmparse.c, src/psaux/afmparse.h: New files which
+	implement an AFM parser.  It is used to parse an AFM file.
+
+	* src/psaux/psconv.c, src/psaux/psconv.h: New files to provide
+	conversion functions (e.g, PS real number => FT_Fixed) for the
+	PS_Parser and AFM_Parser.  Some of the functions are taken, with some
+	modifications, from the psobjs.c
+
+	* src/psaux/psobjs.c: Use functions from psconv.c.
+
+	* include/freetype/internal/psaux.h, src/psaux/psauxmod.c:: Add
+	`AFM_Parser' to the `psaux' service.
+
+	* src/psaux/psaux.c, src/psaux/rules.mk: Include those new files.
+
+	* src/tools/test_afm.c: A test program for AFM parser.
+
+	* include/freetype/internal/services/svkern.h,
+	include/freetype/internal/ftserv.h: New service `Kerning'.  It is
+	currently only used to get the track kerning information.
+
+	* src/type1/t1driver.c, src/type1/t1objs.c, src/type1/t1afm.c,
+	src/type1/t1afm.h: Update to use the AFM parser.
+	Provide the `Kerning' service.
+
+	* include/freetype/freetype.h, src/base/ftobjs.c: New API
+	`FT_Get_Track_Kerning'.
+
 2006-01-15  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c,

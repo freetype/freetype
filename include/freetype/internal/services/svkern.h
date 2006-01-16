@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  t1afm.h                                                                */
+/*  svkern.h                                                               */
 /*                                                                         */
-/*    AFM support for Type 1 fonts (specification).                        */
+/*    The FreeType Kerning service (specification).                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 2003, 2004 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,39 +16,36 @@
 /***************************************************************************/
 
 
-#ifndef __T1AFM_H__
-#define __T1AFM_H__
+#ifndef __SVKERN_H__
+#define __SVKERN_H__
 
-#include <ft2build.h>
-#include "t1objs.h"
+#include FT_INTERNAL_SERVICE_H
+#include FT_TRUETYPE_TABLES_H
 
 
 FT_BEGIN_HEADER
 
+#define FT_SERVICE_ID_KERNING  "kerning"
 
-  FT_LOCAL( FT_Error )
-  T1_Read_Metrics( FT_Face    face,
-                   FT_Stream  stream );
 
-  FT_LOCAL( void )
-  T1_Done_Metrics( FT_Memory     memory,
-                   AFM_FontInfo  fi );
+  typedef FT_Error
+  (*FT_Kerning_TrackGetFunc)( FT_Face    face,
+                              FT_Fixed   point_size,
+                              FT_Int     degree,
+                              FT_Fixed*  akerning );
 
-  FT_LOCAL( void )
-  T1_Get_Kerning( AFM_FontInfo  fi,
-                  FT_UInt       glyph1,
-                  FT_UInt       glyph2,
-                  FT_Vector*    kerning );
+  FT_DEFINE_SERVICE( Kerning )
+  {
+    FT_Kerning_TrackGetFunc  get_track;  
+  };
 
-  FT_LOCAL( FT_Error )
-  T1_Get_Track_Kerning( FT_Face    face,
-                        FT_Fixed   ptsize,
-                        FT_Int     degree,
-                        FT_Fixed*  kerning );
+  /* */
 
+ 
 FT_END_HEADER
 
-#endif /* __T1AFM_H__ */
+
+#endif /* __SVKERN_H__ */
 
 
 /* END */

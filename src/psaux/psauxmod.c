@@ -21,6 +21,7 @@
 #include "psobjs.h"
 #include "t1decode.h"
 #include "t1cmap.h"
+#include "afmparse.h"
 
 
   FT_CALLBACK_TABLE_DEF
@@ -76,6 +77,15 @@
 
 
   FT_CALLBACK_TABLE_DEF
+  const AFM_Parser_FuncsRec  afm_parser_funcs =
+  {
+    afm_parser_init,
+    afm_parser_done,
+    afm_parser_parse
+  };
+
+
+  FT_CALLBACK_TABLE_DEF
   const T1_CMap_ClassesRec  t1_cmap_classes =
   {
     &t1_cmap_standard_class_rec,
@@ -92,6 +102,7 @@
     &ps_parser_funcs,
     &t1_builder_funcs,
     &t1_decoder_funcs,
+    &afm_parser_funcs,
 
     t1_decrypt,
     
