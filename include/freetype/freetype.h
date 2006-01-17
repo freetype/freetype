@@ -147,7 +147,6 @@ FT_BEGIN_HEADER
   /*    FT_Attach_File                                                     */
   /*    FT_Attach_Stream                                                   */
   /*                                                                       */
-  /*    FT_Select_Size                                                     */
   /*    FT_Size_Request_Type                                               */
   /*    FT_Size_Request                                                    */
   /*    FT_Request_Size                                                    */
@@ -1976,18 +1975,18 @@ FT_BEGIN_HEADER
   /*    Select a bitmap strike.                                            */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    face  :: A handle to a target face object.                         */
+  /*    face :: A handle to a target face object.                          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    index :: The index of the bitmap strike in the `available_sizes'   */
-  /*             field of @FT_FaceRec structure.                           */
+  /*    idx  :: The index of the bitmap strike in the `available_sizes'    */
+  /*            field of @FT_FaceRec structure.                            */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Select_Size( FT_Face  face,
-                  FT_Int   index );
+                  FT_Int   idx );
 
 
   /*************************************************************************/

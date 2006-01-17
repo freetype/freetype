@@ -53,10 +53,10 @@ FT_BEGIN_HEADER
   };
 
 
-  typedef struct
+  typedef struct  AFM_ValueRec_
   {
     enum AFM_ValueType_  type;
-    union  {
+    union {
       char*     s;
       FT_Fixed  f;
       FT_Int    i;

@@ -1,3 +1,23 @@
+2006-01-17  Werner Lemberg  <wl@gnu.org>
+
+	Use pscmap service in CFF module.
+
+	* src/cff/cffcmap.c (cff_cmap_uni_pair_compare): Removed.
+	(cff_sid_to_glyph_name): New function.
+	(cff_cmap_unicode_init, cff_cmap_unicode_done,
+	cff_cmap_unicode_char_index, cff_cmap_unicode_char next): Use pscmap
+	service.
+	(cff_cmap_unicode_class_rec): Updated.
+	* src/cff/cffcmap.h (CFF_CMapUnicode, CFF_CMap_UniPair): Removed.
+
+
+	* src/psnames/psmodule.c (ps_unicodes_char_next): Fix `unicode'
+	return value.
+
+
+	* src/psaux/afmparse.c (afm_parser_read_vals): Use double casting
+	to avoid type-punning compiler warnings.
+
 2006-01-16  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/psaux/afmparse.c, src/psaux/afmparse.h: New files which

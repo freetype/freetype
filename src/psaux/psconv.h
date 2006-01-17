@@ -26,7 +26,7 @@
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL_DEF( FT_Int )
+  FT_LOCAL( FT_Int )
   PS_Conv_Strtol( FT_Byte**  cursor,
                   FT_Byte*   limit,
                   FT_Int     base );

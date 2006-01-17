@@ -345,9 +345,9 @@
 
       if ( min < table->num_maps )
       {
-        map    = table->maps + min;
-        result = map->glyph_index;
-        char_code = map->unicode;
+        map       = table->maps + min;
+        result    = map->glyph_index;
+        char_code = BASE_GLYPH( map->unicode );
       }
     }
 

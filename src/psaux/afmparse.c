@@ -383,10 +383,11 @@
 
     for ( i = 0; i < n; i++ )
     {
-      FT_UInt  len;
+      FT_UInt    len;
+      AFM_Value  val = vals + i;
 
 
-      if ( vals[i].type == AFM_VALUE_TYPE_STRING )
+      if ( val->type == AFM_VALUE_TYPE_STRING )
         str = afm_stream_read_string( stream );
       else
         str = afm_stream_read_one( stream );
@@ -396,41 +397,38 @@
 
       len = AFM_STREAM_KEY_LEN( stream, str );
 
-      switch ( vals[i].type )
+      switch ( val->type )
       {
       case AFM_VALUE_TYPE_STRING:
       case AFM_VALUE_TYPE_NAME:
         if ( !FT_QAlloc( parser->memory, len + 1,
-                         (void**)&vals[i].u.s  ) )
+                         (void**)&(val->u.s)  ) )
         {
-          ft_memcpy( vals[i].u.s, str, len );
-          vals[i].u.s[len] = '\0';
+          ft_memcpy( val->u.s, str, len );
+          val->u.s[len] = '\0';
         }
         break;
 
       case AFM_VALUE_TYPE_FIXED:
-        vals[i].u.f = PS_Conv_ToFixed( (FT_Byte**)&str,
-                                       (FT_Byte*)str + len,
-                                       0 );
+        val->u.f = PS_Conv_ToFixed( (FT_Byte**)(void*)&str,
+                                    (FT_Byte*)str + len, 0 );
         break;
 
       case AFM_VALUE_TYPE_INTEGER:
-        vals[i].u.i = PS_Conv_ToInt( (FT_Byte**)&str,
-                                     (FT_Byte*)str + len );
+        val->u.i = PS_Conv_ToInt( (FT_Byte**)(void*)&str,
+                                  (FT_Byte*)str + len );
         break;
 
       case AFM_VALUE_TYPE_BOOL:
-        vals[i].u.b = ( len == 4                          &&
-                        ft_strncmp( str, "true", 4 ) == 0 );
+        val->u.b = ( len == 4                          &&
+                     ft_strncmp( str, "true", 4 ) == 0 );
         break;
 
       case AFM_VALUE_TYPE_INDEX:
         if ( parser->get_index )
-          vals[i].u.i = parser->get_index( str,
-                                           len,
-                                           parser->user_data );
+          val->u.i = parser->get_index( str, len, parser->user_data );
         else
-          vals[i].u.i = 0;
+          val->u.i = 0;
         break;
       }
     }
