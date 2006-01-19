@@ -1,3 +1,8 @@
+2006-01-19  David Turner  <david@freetype.org>
+
+    * src/sfnt/ttsbit0.c (tt_face_load_strike_metrics): fixed small
+    bug that prevented compilation when FT_OPTIMIZE_MEMORY is defined
+
 2006-01-19  Brian Weed  <bw@imaginengine.com>
 
 	* builds/win32/visualc/freetype.dsp: Updated.

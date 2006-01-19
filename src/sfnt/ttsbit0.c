@@ -221,9 +221,13 @@
   {
     FT_Byte*  strike;
     
-
+#ifdef FT_OPTIMIZE_MEMORY
+    if ( strike_index >= (FT_ULong)face->sbit_num_strikes )
+      return SFNT_Err_Invalid_Argument;
+#else
     if ( strike_index >= (FT_ULong)face->num_sbit_strikes )
       return SFNT_Err_Invalid_Argument;
+#endif
 
     strike = face->sbit_table + 8 + strike_index * 48;
 
