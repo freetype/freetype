@@ -61,7 +61,7 @@ I. Standard procedure
       src/truetype/truetype.c -- TrueType font driver
       src/type1/type1.c       -- Type 1 font driver
       src/type42/type42.c     -- Type 42 font driver
-      src/winfonts/winfonts.c -- Windows FONT / FNT font driver
+      src/winfonts/winfnt.c   -- Windows FONT / FNT font driver
 
     -- rasterizers (optional; at least one is needed for vector formats)
 
@@ -123,7 +123,7 @@ II. Support for flat-directory compilation
 
 ------------------------------------------------------------------------
 
-Copyright 2003, 2005 by
+Copyright 2003, 2005, 2006 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file is  part  of the  FreeType  project, and  may  only be  used,

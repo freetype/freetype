@@ -1,3 +1,7 @@
+2006-01-19  Brian Weed  <bw@imaginengine.com>
+
+	* builds/win32/visualc/freetype.dsp: Updated.
+
 2006-01-17  Werner Lemberg  <wl@gnu.org>
 
 	Use pscmap service in CFF module.

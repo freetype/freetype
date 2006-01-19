@@ -195,8 +195,7 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\src\autohint\autohint.c
-# SUBTRACT CPP /Fr
+SOURCE=..\..\..\src\autofit\autofit.c
 # End Source File
 # Begin Source File
 
@@ -212,6 +211,10 @@ SOURCE=..\..\..\src\cff\cff.c
 
 SOURCE=..\..\..\src\base\ftbase.c
 # SUBTRACT CPP /Fr
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftbitmap.c
 # End Source File
 # Begin Source File
 
@@ -235,12 +238,12 @@ SOURCE=..\..\..\src\gzip\ftgzip.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\src\lzw\ftlzw.c
+SOURCE=..\..\..\src\base\ftinit.c
+# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\src\base\ftinit.c
-# SUBTRACT CPP /Fr
+SOURCE=..\..\..\src\lzw\ftlzw.c
 # End Source File
 # Begin Source File
 
@@ -251,6 +254,14 @@ SOURCE=..\..\..\src\base\ftmm.c
 
 SOURCE=..\..\..\src\base\ftsystem.c
 # SUBTRACT CPP /Fr
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\gxvalid\gxvalid.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\otvalid\otvalid.c
 # End Source File
 # Begin Source File
 
