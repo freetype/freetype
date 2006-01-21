@@ -1,16 +1,16 @@
 2006-01-20  David Turner  <david@freetype.org>
 
-    * src/autofit/aflatin.c, src/autofit/afwarp.h, src/autofit/afwarp.c,
-    src/autofit/aftypes.h, src/autofit/afloader.c, src/autofit/autofit.c:
-
-    adding experimental implementation of "warp hinting" (new hinting
-    algorithm for gray-level and LCD rendering). It is disabled by default,
-    you need to #define AF_USE_WARPER in aftypes.h to enable it.
+	* src/autofit/aflatin.c, src/autofit/afwarp.h, src/autofit/afwarp.c,
+	src/autofit/aftypes.h, src/autofit/afloader.c,
+	src/autofit/autofit.c: Adding experimental implementation of `warp
+	hinting' (new hinting algorithm for gray-level and LCD rendering). 
+	It is disabled by default, you need to #define AF_USE_WARPER in
+	aftypes.h to enable it.
 
 2006-01-19  David Turner  <david@freetype.org>
 
-    * src/sfnt/ttsbit0.c (tt_face_load_strike_metrics): fixed small
-    bug that prevented compilation when FT_OPTIMIZE_MEMORY is defined
+	* src/sfnt/ttsbit0.c (tt_face_load_strike_metrics): Fix small bug
+	that prevented compilation when FT_OPTIMIZE_MEMORY is defined.
 
 2006-01-19  Brian Weed  <bw@imaginengine.com>
 
@@ -34,7 +34,7 @@
 
 
 	* src/psaux/afmparse.c (afm_parser_read_vals): Use double casting
-	to avoid type-punning compiler warnings.
+	to avoid compiler warnings regarding type-punning.
 
 2006-01-16  Chia-I Wu  <b90201047@ntu.edu.tw>
 
