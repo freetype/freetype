@@ -1,3 +1,12 @@
+2006-01-20  David Turner  <david@freetype.org>
+
+    * src/autofit/aflatin.c, src/autofit/afwarp.h, src/autofit/afwarp.c,
+    src/autofit/aftypes.h, src/autofit/afloader.c, src/autofit/autofit.c:
+
+    adding experimental implementation of "warp hinting" (new hinting
+    algorithm for gray-level and LCD rendering). It is disabled by default,
+    you need to #define AF_USE_WARPER in aftypes.h to enable it.
+
 2006-01-19  David Turner  <david@freetype.org>
 
     * src/sfnt/ttsbit0.c (tt_face_load_strike_metrics): fixed small

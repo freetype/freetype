@@ -26,5 +26,8 @@
 #include "afloader.c"
 #include "afmodule.c"
 
+#ifdef AF_USE_WARPER
+#include "afwarp.c"
+#endif
 
 /* END */

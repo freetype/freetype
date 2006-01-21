@@ -272,6 +272,14 @@ FT_BEGIN_HEADER
   af_glyph_hints_align_weak_points( AF_GlyphHints  hints,
                                     AF_Dimension   dim );
 
+#ifdef AF_USE_WARPER
+  FT_LOCAL( void )
+  af_glyph_hints_scale_dim( AF_GlyphHints  hints,
+                            AF_Dimension   dim,
+                            FT_Fixed       scale,
+                            FT_Pos         delta );
+#endif
+
   FT_LOCAL( void )
   af_glyph_hints_done( AF_GlyphHints  hints );
 

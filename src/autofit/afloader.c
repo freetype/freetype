@@ -191,7 +191,7 @@
         AF_Edge       edge2 = edge1 +
                               axis->num_edges - 1; /* rightmost edge */
 
-
+#ifndef AF_USE_WARPER
         if ( axis->num_edges > 1 )
         {
           old_advance = loader->pp2.x;
@@ -228,6 +228,7 @@
 
         }
         else
+#endif /* !AF_USE_WARPER */
         {
           loader->pp1.x = FT_PIX_ROUND( loader->pp1.x );
           loader->pp2.x = FT_PIX_ROUND( loader->pp2.x );

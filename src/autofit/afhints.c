@@ -1140,5 +1140,28 @@
     }
   }
 
+#ifdef AF_USE_WARPER
+  FT_LOCAL_DEF( void )
+  af_glyph_hints_scale_dim( AF_GlyphHints  hints,
+                            AF_Dimension   dim,
+                            FT_Fixed       scale,
+                            FT_Pos         delta )
+  {
+    AF_Point  points       = hints->points;
+    AF_Point  points_limit = points + hints->num_points;
+    AF_Point  point;
+    
+    if ( dim == AF_DIMENSION_HORZ )
+    {
+      for ( point = points; point < points_limit; point++ )
+        point->x = FT_MulFix( point->fx, scale ) + delta;
+    }
+    else
+    {
+      for ( point = points; point < points_limit; point++ )
+        point->y = FT_MulFix( point->fy, scale ) + delta;
+    }
+  }
+#endif /* AF_USE_WARPER */
 
 /* END */
