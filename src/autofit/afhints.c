@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines (body).                                 */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005 by                                          */
+/*  Copyright 2003, 2004, 2005, 2006 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1140,7 +1140,9 @@
     }
   }
 
+
 #ifdef AF_USE_WARPER
+
   FT_LOCAL_DEF( void )
   af_glyph_hints_scale_dim( AF_GlyphHints  hints,
                             AF_Dimension   dim,
@@ -1151,6 +1153,7 @@
     AF_Point  points_limit = points + hints->num_points;
     AF_Point  point;
     
+
     if ( dim == AF_DIMENSION_HORZ )
     {
       for ( point = points; point < points_limit; point++ )
@@ -1162,6 +1165,7 @@
         point->y = FT_MulFix( point->fy, scale ) + delta;
     }
   }
+
 #endif /* AF_USE_WARPER */
 
 /* END */

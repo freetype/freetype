@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005 by                                          */
+/*  Copyright 2003, 2004, 2005, 2006 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -23,6 +23,7 @@
 #ifdef AF_USE_WARPER
 #include "afwarp.h"
 #endif
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -1955,9 +1956,10 @@
         if ( dim == AF_DIMENSION_HORZ &&
              metrics->root.scaler.render_mode == FT_RENDER_MODE_NORMAL )
         {
-          AF_WarperRec   warper;
-          FT_Fixed       scale;
-          FT_Pos         delta;
+          AF_WarperRec  warper;
+          FT_Fixed      scale;
+          FT_Pos        delta;
+
 
           af_warper_compute( &warper, hints, dim, &scale, &delta );
           af_glyph_hints_scale_dim( hints, dim, scale, delta );

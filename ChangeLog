@@ -1,11 +1,34 @@
+2006-01-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/rules.mk (AUTOF_DRV_SRC): Add afwarp.c.
+
 2006-01-20  David Turner  <david@freetype.org>
 
-	* src/autofit/aflatin.c, src/autofit/afwarp.h, src/autofit/afwarp.c,
-	src/autofit/aftypes.h, src/autofit/afloader.c,
-	src/autofit/autofit.c: Adding experimental implementation of `warp
-	hinting' (new hinting algorithm for gray-level and LCD rendering). 
-	It is disabled by default, you need to #define AF_USE_WARPER in
-	aftypes.h to enable it.
+	Adding experimental implementation of `warp hinting' (new hinting
+	algorithm for gray-level and LCD rendering).  It is disabled by
+	default, you need to #define AF_USE_WARPER in aftypes.h.
+
+	* src/autofit/afhints.c (af_glyph_hints_scale_dim) [AF_USE_WARPER]:
+	New function.
+	* src/autofit/afhints.h: Updated.
+
+	* src/autofit/aflatin.c [AF_USE_WARPER]: Include afwarp.h.
+	(af_latin_hints_init) [AF_USE_WARPER]: Reset mode to
+	FT_RENDER_MODE_NORMAL if an LCD mode is selected.
+	(af_latin_hints_apply) [AF_USE_WARPER]: Call af_warper_compute
+	appropriately.
+
+	* src/autofit/afloader.c (af_loader_load_g) [!AF_USER_WARPER]:
+	Isolate code for adjusting metrics.
+
+	* src/autofit/aftypes.h (AF_USE_WARPER): New macro (commented out by
+	default).
+
+	* src/autofit/afwarp.c, src/autofit/afwarp.h: New files.
+
+	* src/autofit/autofit.c [AF_USE_WARPER]: Include afwarp.c.
+
+	* src/autofit/Jamfile (_sources): Add afwarp.
 
 2006-01-19  David Turner  <david@freetype.org>
 
