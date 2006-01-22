@@ -184,6 +184,7 @@
       /* we now need to hint the metrics according to the change in */
       /* width/positioning that occured during the hinting process  */
       {
+#ifndef AF_USE_WARPER
         FT_Pos        old_advance, old_rsb, old_lsb, new_lsb;
         FT_Pos        pp1x_uh, pp2x_uh;
         AF_AxisHints  axis  = &hints->axis[AF_DIMENSION_HORZ];
@@ -191,7 +192,7 @@
         AF_Edge       edge2 = edge1 +
                               axis->num_edges - 1; /* rightmost edge */
 
-#ifndef AF_USE_WARPER
+
         if ( axis->num_edges > 1 )
         {
           old_advance = loader->pp2.x;

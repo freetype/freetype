@@ -2,6 +2,14 @@
 
 	* src/autofit/rules.mk (AUTOF_DRV_SRC): Add afwarp.c.
 
+	* src/autofit/afloader.c (af_loader_load_g): Move AF_USE_WARPER up
+	to avoid compiler warnings.
+
+	* src/autofit/afwarp.c (af_warper_compute_line_best): Remove
+	shadowing variable declarations.
+	Fix warning parameters and replace printf with AF_LOG.
+	(af_warper_compute): Remove unused variable.
+
 2006-01-20  David Turner  <david@freetype.org>
 
 	Adding experimental implementation of `warp hinting' (new hinting

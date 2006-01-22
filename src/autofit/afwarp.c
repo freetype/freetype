@@ -52,7 +52,7 @@
                                AF_Segment    segments,
                                FT_UInt       num_segments )
   {
-    FT_Int        idx_min, idx_max, idx0, xx1min, xx1max;
+    FT_Int        idx_min, idx_max, idx0;
     FT_UInt       nn;
     AF_WarpScore  scores[64];
 
@@ -81,11 +81,12 @@
 
       if ( idx_min > idx_max )
       {
-        printf( "invalid indices:\n"
-                "  min=%d max=%d, xx1=%d xx2=%d,\n"
-                "  x1min=%d x1max=%d, x2min=%d x2max=%d\n",
-                idx_min, idx_max, xx1, xx2,
-                warper->x1min, warper->x1max, warper->x2min, warper->x2max );
+        AF_LOG(( "invalid indices:\n"
+                 "  min=%d max=%d, xx1=%ld xx2=%ld,\n"
+                 "  x1min=%ld x1max=%ld, x2min=%ld x2max=%ld\n",
+                 idx_min, idx_max, xx1, xx2,
+                 warper->x1min, warper->x1max,
+                 warper->x2min, warper->x2max ));
         return;
       }
     }
@@ -252,7 +253,6 @@
 
     for ( w = warper->wmin; w <= warper->wmax; w++ )
     {
-      FT_Int    line = w - warper->wmin;
       FT_Fixed  new_scale;
       FT_Pos    new_delta;
       FT_Pos    xx1, xx2;
