@@ -1,3 +1,8 @@
+2006-01-22  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
+	`texinfo' CVS module at savannah.gnu.org.
+
 2006-01-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/rules.mk (AUTOF_DRV_SRC): Add afwarp.c.
