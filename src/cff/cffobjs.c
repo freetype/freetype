@@ -165,38 +165,19 @@
   }
 
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
   FT_LOCAL_DEF( FT_Error )
-  cff_size_request( FT_Size          size,
-                    FT_Size_Request  req )
+  cff_size_select( FT_Size   size,
+                   FT_ULong  strike_index )
   {
     CFF_Size           cffsize = (CFF_Size)size;
     PSH_Globals_Funcs  funcs;
 
-#ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-    FT_UNUSED( req );
-    
-#else
+    cffsize->strike_index = strike_index;
 
-    if ( FT_HAS_FIXED_SIZES( size->face ) )
-    {
-      CFF_Face          cffface = (CFF_Face)size->face;
-      SFNT_Service      sfnt    = cffface->sfnt;
-      FT_Size_Metrics*  metrics = &size->metrics;
-      FT_ULong          index;
-      FT_Error          error;
-
-
-      if ( !( error = sfnt->set_sbit_strike(
-                              cffface, req, &index ) )    &&
-           !( error = sfnt->load_strike_metrics(
-                              cffface, index, metrics ) ) )
-        cffsize->strike_index = index;
-      else
-        cffsize->strike_index = 0xFFFFFFFFUL;
-    }
-
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+    FT_Select_Metrics( size->face, strike_index );
 
     funcs = cff_size_get_globals_funcs( cffsize );
 
@@ -209,20 +190,34 @@
     return CFF_Err_Ok;
   }
 
+#endif
+
+
+  FT_LOCAL_DEF( FT_Error )
+  cff_size_request( FT_Size          size,
+                    FT_Size_Request  req )
+  {
+    CFF_Size           cffsize = (CFF_Size)size;
+    PSH_Globals_Funcs  funcs;
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-  FT_LOCAL_DEF( FT_Error )
-  cff_size_select( FT_Size   size,
-                   FT_ULong  index )
-  {
-    CFF_Face           cffface = (CFF_Face)size->face;
-    CFF_Size           cffsize = (CFF_Size)size;
-    FT_Size_Metrics*   metrics = &size->metrics;
-    SFNT_Interface*    sfnt    = cffface->sfnt;
-    FT_Error           error;
-    PSH_Globals_Funcs  funcs;
+    if ( FT_HAS_FIXED_SIZES( size->face ) )
+    {
+      CFF_Face      cffface = (CFF_Face)size->face;
+      SFNT_Service  sfnt    = cffface->sfnt;
+      FT_ULong      index;
 
+
+      if ( sfnt->set_sbit_strike( cffface, req, &index ) )
+        cffsize->strike_index = 0xFFFFFFFFUL;
+      else
+        return cff_size_select( size, index );
+    }
+
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+    FT_Request_Metrics( size->face, req );
 
     funcs = cff_size_get_globals_funcs( cffsize );
 
@@ -232,16 +227,8 @@
                         size->metrics.y_scale,
                         0, 0 );
 
-    error = sfnt->load_strike_metrics( cffface, index, metrics );
-    if ( error )
-      cffsize->strike_index = 0xFFFFFFFFUL;
-    else
-      cffsize->strike_index = index;
-
-    return error;
+    return CFF_Err_Ok;
   }
-
-#endif
 
 
   /*************************************************************************/

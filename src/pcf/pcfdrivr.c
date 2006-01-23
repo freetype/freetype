@@ -364,22 +364,16 @@ THE SOFTWARE.
 
   FT_CALLBACK_DEF( FT_Error )
   PCF_Size_Select( FT_Size   size,
-                   FT_ULong  index )
+                   FT_ULong  strike_index )
   {
-    PCF_Face  face  = (PCF_Face)size->face;
-
-    FT_UNUSED( index );
+    PCF_Accel  accel = &( (PCF_Face)size->face )->accel;
 
 
-    size->metrics.ascender    = face->accel.fontAscent << 6;
-    size->metrics.descender   = -face->accel.fontDescent << 6;
-#if 0
-    size->metrics.height      = face->accel.maxbounds.ascent << 6;
-#else
-    size->metrics.height      = size->metrics.ascender -
-                                size->metrics.descender;
-#endif
-    size->metrics.max_advance = face->accel.maxbounds.characterWidth << 6;
+    FT_Select_Metrics( size->face, strike_index );
+
+    size->metrics.ascender    =  accel->fontAscent << 6;
+    size->metrics.descender   = -accel->fontDescent << 6;
+    size->metrics.max_advance =  accel->maxbounds.characterWidth << 6;
 
     return PCF_Err_Ok;
   }
@@ -389,17 +383,13 @@ THE SOFTWARE.
   PCF_Size_Request( FT_Size          size,
                     FT_Size_Request  req )
   {
-    PCF_Face         face    = (PCF_Face)size->face;
-    FT_Bitmap_Size*  bsize   = size->face->available_sizes;
-    FT_Error         error   = PCF_Err_Invalid_Pixel_Size;
+    PCF_Face         face  = (PCF_Face)size->face;
+    FT_Bitmap_Size*  bsize = size->face->available_sizes;
+    FT_Error         error = PCF_Err_Invalid_Pixel_Size;
     FT_Long          height;
 
 
-    if ( req->vertResolution )
-      height = ( req->height * req->vertResolution + 36 ) / 72;
-    else
-      height = req->height;
-
+    height = FT_REQUEST_HEIGHT( req );
     height = ( height + 32 ) >> 6;
 
     switch ( req->type )

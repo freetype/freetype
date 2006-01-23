@@ -164,17 +164,12 @@
     }
 
     if ( *p != '.' )
-    {
       integral = PS_Conv_ToInt( &p, limit ) << 16;
-
-      if ( p == limit )
-        goto Exit;
-    }
     else
       integral = 0;
 
     /* read the decimal part */
-    if ( *p == '.' )
+    if ( p < limit && *p == '.' )
     {
       p++;
 
@@ -206,7 +201,6 @@
       power_ten += PS_Conv_ToInt( &p, limit );
     }
 
-  Exit:
     while ( power_ten > 0 )
     {
       integral *= 10;
@@ -339,7 +333,8 @@
     FT_UInt   r = 0;
 
 
-    for ( p = *cursor; r < 2 * n && p < limit; p++ )
+    n *= 2;
+    for ( p = *cursor; r < n && p < limit; p++ )
     {
       char  c;
 
@@ -376,20 +371,22 @@
   		       FT_UInt     n,
   		       FT_UShort*  seed )
   {
-    FT_Byte*  p;
-    FT_UInt   r;
+    FT_Byte*   p;
+    FT_UInt    r;
+    FT_UShort  s = *seed;
 
 
     for ( r = 0, p = *cursor; r < n && p < limit; r++, p++ )
     {
-      FT_Byte  b = ( *p ^ ( *seed >> 8 ) );
+      FT_Byte  b = ( *p ^ ( s >> 8 ) );
 
 
-      *seed = (FT_UShort)( ( *p + *seed ) * 52845U + 22719 );
+      s = (FT_UShort)( ( *p + s ) * 52845U + 22719 );
       *buffer++ = b;
     }
 
     *cursor = p;
+    *seed   = s;
 
     return r;
   }

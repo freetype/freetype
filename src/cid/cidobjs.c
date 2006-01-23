@@ -158,8 +158,8 @@
   {
     PSH_Globals_Funcs  funcs;
 
-    FT_UNUSED( req );
 
+    FT_Request_Metrics( size->face, req );
 
     funcs = cid_size_get_globals_funcs( (CID_Size)size );
 

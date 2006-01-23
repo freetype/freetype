@@ -1,5 +1,57 @@
 2006-01-23  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* include/freetype/freetype.h (FT_Select_Size): Rename the second
+	argument from `idx' to `strike_index'.
+	(FT_Size_Request_Type): Add FT_SIZE_REQUEST_TYPE_MAX to the end of
+	this enum.
+
+	* include/freetype/internal/ftobjs.h (FT_REQUEST_WIDTH,
+	FT_REQUEST_HEIGHT): New macros to get the width and height of a
+	request, in fractional pixels.
+
+	* include/freetype/internal/ftobjs.h (FT_Select_Metrics,
+	FT_Request_Metrics), src/base/ftobjs.c (FT_Select_Metrics,
+	FT_Request_Metrics): New base functions to set the font metrics.  They
+	were part of FT_Select_Size/FT_Request_Size and are made independent
+	functions so that metrics are not set again and again.
+
+	* src/base/ftobjs.c (FT_Select_Size, FT_Request_Size): Metrics are set
+	only when driver's size_select/size_request is NULL.  That is, drivers
+	should set the metrics themselves.
+	(FT_Match_Size): Round before matching.  This was what we did and it
+	does cause some problems without rounding.
+
+	* src/cff/cffobjs.c (cff_size_select), src/truetype/ttdriver.c
+	(tt_size_select): Set the font metrics.
+	s/index/strike_index/.
+	The scaled metrics are always preferred over strikes' metrics, even
+	when some strike is selected.  This is done because the strikes'
+	metrics are not reliable, e.g., the sign of the descender is wrong for
+	some fonts.
+
+	* src/cff/cffobjs.c (cff_size_request), src/truetype/ttdriver.c
+	(tt_size_request): Set the font metrics.
+	Call cff_size_select/tt_size_select when some strike is matched.
+
+	* src/bdf/bdfdrivr.c, src/cff/cffobjs.c, src/cid/cidobjs.c,
+	src/pcf/pcfdrivr.c, src/truetype/ttdriver.c, src/type1/t1objs.c,
+	src/type1/t1objs.h, src/type42/t42objs.c, src/winfonts/winfnt.c:
+	Set the font metrics.
+	s/index/strike_index/.
+
+	* src/tools/test_afm.c, src/psaux/psconv.c: Older versions of these
+	files were committed.  Just a catch-up.
+	(PS_Conv_ToFixed): Remove the `goto'.
+	(PS_Conv_ASCIIHexDecode, PS_Conv_EexecDecode): Speed up a little.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbit_strikes,
+	tt_face_load_strike_metrics), src/sfnt/ttsbit0.c
+	(tt_face_load_sbit_strikes, tt_face_load_strike_metrics): The
+	advertised metrics in `available_sizes' are different from those
+	actually used.
+
+2006-01-23  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* src/psaux/psaux.c src/psaux/psauxmod.c src/type1/t1driver.c: Make
 	AFM parser optional, controlled by `T1_CONFIG_OPTION_NO_AFM'.
 

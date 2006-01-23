@@ -1,3 +1,7 @@
+/*
+ * gcc -I../../include -o test_afm test_afm.c \
+ *     -L../../objs/.libs -lfreetype -lz -static
+ */
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_STREAM_H
@@ -31,7 +35,7 @@
 
     printf( "\n" );
 
-    if ( fi->NumTrackKern )
+    if ( fi->NumKernPair )
       printf( "There are %d kerning pairs:\n",
               fi->NumKernPair );
     else

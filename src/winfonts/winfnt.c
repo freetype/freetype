@@ -574,15 +574,15 @@
   static FT_Error
   FNT_Size_Select( FT_Size  size )
   {
-    FNT_Face          face    = (FNT_Face)size->face;
-    FT_WinFNT_Header  header  = &face->font->header;
+    FNT_Face          face   = (FNT_Face)size->face;
+    FT_WinFNT_Header  header = &face->font->header;
 
+
+    FT_Select_Metrics( size->face, 0 );
 
     size->metrics.ascender    = header->ascent * 64;
     size->metrics.descender   = -( header->pixel_height -
                                    header->ascent ) * 64;
-    size->metrics.height      = ( header->pixel_height +
-                                  header->external_leading ) * 64;
     size->metrics.max_advance = header->max_width * 64;
 
     return FNT_Err_Ok;
@@ -600,11 +600,7 @@
     FT_Long           height;
 
 
-    if ( req->vertResolution )
-      height = ( req->height * req->vertResolution + 36 ) / 72;
-    else
-      height = req->height;
-
+    height = FT_REQUEST_HEIGHT( req );
     height = ( height + 32 ) >> 6;
 
     switch ( req->type )

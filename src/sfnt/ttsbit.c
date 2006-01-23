@@ -599,18 +599,17 @@
         FT_Bitmap_Size*  bsize  = root->available_sizes + n;
         TT_SBit_Strike   strike = face->sbit_strikes + n;
         FT_UShort        fupem  = face->header.Units_Per_EM;
-        FT_Short         height = (FT_Short)( face->horizontal.Ascender -
-                                              face->horizontal.Descender +
-                                              face->horizontal.Line_Gap );
         FT_Short         avg    = face->os2.xAvgCharWidth;
 
 
-        /* assume 72dpi */
-        bsize->height =
-          (FT_Short)( ( height * strike->y_ppem + fupem / 2 ) / fupem );
+        /* XXX: Is this correct? */
+        bsize->height = strike->hori.ascender - strike->hori.descender;
         bsize->width  =
           (FT_Short)( ( avg * strike->y_ppem + fupem / 2 ) / fupem );
+
+        /* assume 72dpi */
         bsize->size   = strike->y_ppem << 6;
+
         bsize->x_ppem = strike->x_ppem << 6;
         bsize->y_ppem = strike->y_ppem << 6;
       }
@@ -692,6 +691,8 @@
 
     strike = face->sbit_strikes + strike_index;
 
+    metrics->x_ppem = strike->x_ppem;
+    metrics->y_ppem = strike->y_ppem;
 
     metrics->ascender  = strike->hori.ascender << 6;
     metrics->descender = strike->hori.descender << 6;
@@ -701,7 +702,6 @@
                              strike->hori.max_width      +
                              strike->hori.min_advance_SB ) << 6;
 
-    /* XXX: Is this correct? */
     metrics->height = metrics->ascender - metrics->descender;
 
     return SFNT_Err_Ok;

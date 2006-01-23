@@ -148,12 +148,8 @@
      *  depths in the FT_Bitmap_Size record.  This is a design error.
      */
     {
-      FT_Memory  memory  = face->root.stream->memory;
-      FT_UInt    em_size = (FT_UInt) face->header.Units_Per_EM;
-      FT_Short   height  = (FT_Short)( face->horizontal.Ascender -
-                                       face->horizontal.Descender +
-                                       face->horizontal.Line_Gap );
-
+      FT_Memory  memory   = face->root.stream->memory;
+      FT_UInt    em_size  = (FT_UInt)face->header.Units_Per_EM;
       FT_Short   avgwidth = face->os2.xAvgCharWidth;
 
 
@@ -164,16 +160,22 @@
       {
         FT_Bitmap_Size*  bsize = face->root.available_sizes + nn;
         FT_UInt          x_ppem, y_ppem;
+        FT_Char          ascender, descender;
 
 
-        x_ppem = p[44];
-        y_ppem = p[45];
+        ascender  = (FT_Char)p[16];
+        descender = (FT_Char)p[17];
+        x_ppem    = p[44];
+        y_ppem    = p[45];
 
         bsize->x_ppem = (FT_Pos)(x_ppem << 6);
         bsize->y_ppem = (FT_Pos)(y_ppem << 6);
 
-        bsize->height = (FT_Short)( height*y_ppem   + em_size / 2 ) / em_size;
-        bsize->width  = (FT_Short)( avgwidth*y_ppem + em_size / 2 ) / em_size;
+        /* XXX: Is this correct? */
+        bsize->height = ascender - descender;
+        bsize->width  = (FT_Short)( avgwidth * y_ppem + em_size / 2 ) / em_size;
+
+        /* assume 72dpi */
         bsize->size   = bsize->y_ppem;
 
         p += 48;
@@ -219,17 +221,19 @@
                                FT_ULong          strike_index,
                                FT_Size_Metrics*  metrics )
   {
-    FT_Byte*  strike;
+    FT_Bitmap_Size*  bsize;
+    FT_Byte*         strike;
     
-#ifdef FT_OPTIMIZE_MEMORY
+
     if ( strike_index >= (FT_ULong)face->sbit_num_strikes )
       return SFNT_Err_Invalid_Argument;
-#else
-    if ( strike_index >= (FT_ULong)face->num_sbit_strikes )
-      return SFNT_Err_Invalid_Argument;
-#endif
 
+    bsize  = ( (FT_Face)face )->available_sizes + strike_index;
     strike = face->sbit_table + 8 + strike_index * 48;
+
+    metrics->x_ppem = bsize->x_ppem >> 6;
+    metrics->y_ppem = bsize->y_ppem >> 6;
+    metrics->height = bsize->height << 6;
 
     metrics->ascender  = (FT_Char)strike[16] << 6;  /* hori.ascender  */
     metrics->descender = (FT_Char)strike[17] << 6;  /* hori.descender */
@@ -239,9 +243,6 @@
                                       strike[18] + /* max_width      */
                              (FT_Char)strike[23]   /* min_advance_SB */
                                                  ) << 6;
-
-    /* XXX: Is this correct? */
-    metrics->height = metrics->ascender - metrics->descender;
 
     return SFNT_Err_Ok;
   }

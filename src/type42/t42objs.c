@@ -494,24 +494,35 @@
                     FT_Size_Request  req )
   {
     T42_Face  face = (T42_Face)size->root.face;
+    FT_Error  error;
 
 
     FT_Activate_Size( size->ttsize );
 
-    return FT_Request_Size( face->ttf_face, req );
+    error = FT_Request_Size( face->ttf_face, req );
+    if ( !error )
+      ( (FT_Size)size )->metrics = face->ttf_face->size->metrics;
+
+    return error;
   }
 
 
   FT_LOCAL_DEF( FT_Error )
   T42_Size_Select( T42_Size  size,
-                   FT_ULong  index )
+                   FT_ULong  strike_index )
   {
     T42_Face  face = (T42_Face)size->root.face;
+    FT_Error  error;
 
 
     FT_Activate_Size( size->ttsize );
 
-    return FT_Select_Size( face->ttf_face, index );
+    error = FT_Select_Size( face->ttf_face, strike_index );
+    if ( !error )
+      ( (FT_Size)size )->metrics = face->ttf_face->size->metrics;
+
+    return error;
+
   }
 
 

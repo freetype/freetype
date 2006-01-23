@@ -1101,6 +1101,9 @@ THE SOFTWARE.
 
         FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
 
+#if 0
+        bsize->height = face->accel.maxbounds.ascent << 6;
+#endif
         bsize->height = (FT_Short)( face->accel.fontAscent +
                                     face->accel.fontDescent );
 

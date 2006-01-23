@@ -134,6 +134,43 @@
   /*************************************************************************/
 
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+  static FT_Error
+  tt_size_select( FT_Size   size,
+                  FT_ULong  strike_index )
+  {
+    TT_Face   ttface = (TT_Face)size->face;
+    TT_Size   ttsize = (TT_Size)size;
+    FT_Error  error  = TT_Err_Ok;
+
+
+    ttsize->strike_index = strike_index;
+
+    if ( FT_IS_SCALABLE( size->face ) )
+    {
+      /* use the scaled metrics, even when tt_size_reset fails */
+      FT_Select_Metrics( size->face, strike_index );
+
+      tt_size_reset( ttsize );
+    }
+    else
+    {
+      SFNT_Service      sfnt    = ttface->sfnt;
+      FT_Size_Metrics*  metrics = &size->metrics;
+
+
+      error = sfnt->load_strike_metrics( ttface, strike_index, metrics );
+      if ( error )
+        ttsize->strike_index = 0xFFFFFFFFUL;
+    }
+
+    return error;
+  }
+
+#endif
+
+
   static FT_Error
   tt_size_request( FT_Size          size,
                    FT_Size_Request  req )
@@ -142,63 +179,32 @@
     TT_Size   ttsize = (TT_Size)size;
     FT_Error  error  = TT_Err_Ok;
 
-#ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-    FT_UNUSED( req );
-
-#else
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
-      SFNT_Service      sfnt    = ttface->sfnt;
-      FT_Size_Metrics*  metrics = &size->metrics;
-      FT_ULong          index;
+      SFNT_Service  sfnt = ttface->sfnt;
+      FT_ULong      index;
 
 
-      if ( !( error = sfnt->set_sbit_strike(
-                              ttface, req, &index ) )    &&
-           !( error = sfnt->load_strike_metrics(
-                              ttface, index, metrics ) ) )
-        ttsize->strike_index = index;
-      else
+      error = sfnt->set_sbit_strike( ttface, req, &index );
+
+      if ( error )
         ttsize->strike_index = 0xFFFFFFFFUL;
+      else
+        return tt_size_select( size, index );
     }
 
 #endif /*  TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+    FT_Request_Metrics( size->face, req );
 
     if ( FT_IS_SCALABLE( size->face ) )
       error = tt_size_reset( ttsize );
 
     return error;
   }
-
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
-  static FT_Error
-  tt_size_select( FT_Size   size,
-                  FT_ULong  index )
-  {
-    TT_Face           ttface  = (TT_Face)size->face;
-    TT_Size           ttsize  = (TT_Size)size;
-    FT_Size_Metrics*  metrics = &size->metrics;
-    SFNT_Service      sfnt    = ttface->sfnt;
-    FT_Error          error;
-
-
-    if ( FT_IS_SCALABLE( size->face ) )
-      tt_size_reset( ttsize );
-
-    error = sfnt->load_strike_metrics( ttface, index, metrics );
-    if ( error )
-      ttsize->strike_index = 0xFFFFFFFFUL;
-    else
-      ttsize->strike_index = index;
-
-    return error;
-  }
-
-#endif
 
 
   /*************************************************************************/

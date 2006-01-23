@@ -109,7 +109,8 @@ FT_BEGIN_HEADER
   T1_Size_Done( T1_Size  size );
 
   FT_LOCAL( FT_Error )
-  T1_Size_Request( T1_Size  size );
+  T1_Size_Request( T1_Size          size,
+                   FT_Size_Request  req );
 
   FT_LOCAL( FT_Error )
   T1_Size_Init( T1_Size  size );

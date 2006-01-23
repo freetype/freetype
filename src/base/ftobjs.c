@@ -2006,28 +2006,26 @@
     if ( req->type != FT_SIZE_REQUEST_TYPE_NOMINAL )
       return FT_Err_Unimplemented_Feature;
 
-    if ( req->horiResolution )
-      w = ( req->width * req->horiResolution + 36 ) / 72;
-    else
-      w = req->width;
-
-    if ( req->vertResolution )
-      h = ( req->height * req->vertResolution + 36 ) / 72;
-    else
-      h = req->height;
+    w = FT_REQUEST_WIDTH( req );
+    h = FT_REQUEST_HEIGHT( req );
 
     if ( req->width && !req->height )
       h = w;
     else if ( !req->width && req->height )
       w = h;
 
+    w = FT_PIX_ROUND( w );
+    h = FT_PIX_ROUND( h );
+
     for ( i = 0; i < face->num_fixed_sizes; i++ )
     {
-      if ( h != face->available_sizes[i].y_ppem )
+      FT_Bitmap_Size*  bsize = face->available_sizes + i;
+
+
+      if ( h != FT_PIX_ROUND( bsize->y_ppem ) )
         continue;
 
-      if ( w == face->available_sizes[i].x_ppem ||
-           ignore_width                         )
+      if ( w == FT_PIX_ROUND( bsize->x_ppem ) || ignore_width )
       {
         if ( index )
           *index = (FT_ULong)i;
@@ -2076,27 +2074,16 @@
   }
 
 
-  /* documentation is in freetype.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FT_Select_Size( FT_Face  face,
-                  FT_Int   index )
+  FT_BASE_DEF( void )
+  FT_Select_Metrics( FT_Face   face,
+                     FT_ULong  strike_index )
   {
-    FT_Driver_Class   clazz;
     FT_Size_Metrics*  metrics;
     FT_Bitmap_Size*   bsize;
 
 
-    if ( !face || !FT_HAS_FIXED_SIZES( face ) )
-      return FT_Err_Invalid_Face_Handle;
-
-    if ( index < 0 || index >= face->num_fixed_sizes )
-      return FT_Err_Invalid_Argument;
-
-    clazz   = face->driver->clazz;
     metrics = &face->size->metrics;
-
-    bsize   = face->available_sizes + index;
+    bsize   = face->available_sizes + strike_index;
 
     metrics->x_ppem = ( bsize->x_ppem + 32 ) >> 6;
     metrics->y_ppem = ( bsize->y_ppem + 32 ) >> 6;
@@ -2119,31 +2106,16 @@
       metrics->height      = bsize->height << 6;
       metrics->max_advance = bsize->x_ppem;
     }
-
-    if ( clazz->select_size )
-      return clazz->select_size( face->size, (FT_ULong)index );
-    else
-      return FT_Err_Ok;
   }
 
 
-  /* documentation is in freetype.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FT_Request_Size( FT_Face          face,
-                   FT_Size_Request  req )
+  FT_BASE_DEF( void )
+  FT_Request_Metrics( FT_Face          face,
+                      FT_Size_Request  req )
   {
     FT_Driver_Class   clazz;
     FT_Size_Metrics*  metrics;
-    FT_Error          error;
-    FT_Bool           bitmap_only = 0;
 
-
-    if ( !face )
-      return FT_Err_Invalid_Face_Handle;
-
-    if ( !req || req->width < 0 || req->height < 0 )
-      return FT_Err_Invalid_Argument;
 
     clazz   = face->driver->clazz;
     metrics = &face->size->metrics;
@@ -2174,25 +2146,20 @@
         break;
 
       default:
-        return FT_Err_Unimplemented_Feature;
+        /* this never happens */
+        return;
         break;
       }
 
+      /* to be on the safe side */
       if ( w < 0 )
         w = -w;
 
       if ( h < 0 )
         h = -h;
 
-      if ( req->horiResolution )
-        scaled_w = ( req->width * req->horiResolution + 36 ) / 72;
-      else
-        scaled_w = req->width;
-
-      if ( req->vertResolution )
-        scaled_h = ( req->height * req->vertResolution + 36 ) / 72;
-      else
-        scaled_h = req->height;
+      scaled_w = FT_REQUEST_WIDTH( req );
+      scaled_h = FT_REQUEST_HEIGHT( req );
 
       /* determine scales */
       if ( req->width )
@@ -2223,7 +2190,7 @@
         scaled_w = FT_MulDiv( scaled_h, w, h );
       }
 
-      /* calculate ppem */
+      /* calculate the ppems */
       if ( req->type != FT_SIZE_REQUEST_TYPE_NOMINAL )
       {
         scaled_w = FT_MulFix( face->units_per_EM, metrics->x_scale );
@@ -2234,23 +2201,64 @@
       metrics->y_ppem = ( scaled_h + 32 ) >> 6;
 
       ft_recompute_scaled_metrics( face, metrics );
-
-      error = FT_Err_Ok;
     }
     else
     {
       FT_ZERO( metrics );
       metrics->x_scale = 1L << 22;
       metrics->y_scale = 1L << 22;
-
-      if ( FT_HAS_FIXED_SIZES( face ) )
-        bitmap_only = 1;
-
-      error = FT_Err_Invalid_Pixel_Size;
     }
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Select_Size( FT_Face  face,
+                  FT_Int   strike_index )
+  {
+    FT_Driver_Class   clazz;
+
+
+    if ( !face || !FT_HAS_FIXED_SIZES( face ) )
+      return FT_Err_Invalid_Face_Handle;
+
+    if ( strike_index < 0 || strike_index >= face->num_fixed_sizes )
+      return FT_Err_Invalid_Argument;
+
+    clazz = face->driver->clazz;
+
+    if ( clazz->select_size )
+      return clazz->select_size( face->size, (FT_ULong)strike_index );
+
+    FT_Select_Metrics( face, (FT_ULong)strike_index );
+
+    return FT_Err_Ok;
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Request_Size( FT_Face          face,
+                   FT_Size_Request  req )
+  {
+    FT_Driver_Class   clazz;
+    FT_ULong          strike_index;
+
+
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
+    if ( !req || req->width < 0 || req->height < 0 ||
+         req->type >= FT_SIZE_REQUEST_TYPE_MAX )
+      return FT_Err_Invalid_Argument;
+
+    clazz = face->driver->clazz;
 
     if ( clazz->request_size )
-      error = clazz->request_size( face->size, req );
+      return clazz->request_size( face->size, req );
+
     /*
      * The reason that a driver doesn't have `request_size' defined is
      * either that the scaling here suffices or that the supported formats
@@ -2258,20 +2266,23 @@
      *
      * In the latter case, a simple size matching is done.
      */
-    else if ( bitmap_only )
+    if ( !FT_IS_SCALABLE( face ) && FT_HAS_FIXED_SIZES( face ) )
     {
-      FT_ULong  index;
+      FT_Error  error;
 
 
-      if ( !FT_Match_Size( face, req, 0, &index ) )
-      {
-        FT_TRACE3(( "FT_Request_Size: bitmap strike %lu matched\n", index ));
+      error = FT_Match_Size( face, req, 0, &strike_index );
+      if ( error )
+        return error;
 
-        error = FT_Select_Size( face, index );
-      }
+      FT_TRACE3(( "FT_Request_Size: bitmap strike %lu matched\n", strike_index ));
+
+      return FT_Select_Size( face, (FT_Int)strike_index );
     }
 
-    return error;
+    FT_Request_Metrics( face, req );
+
+    return FT_Err_Ok;
   }
 
 

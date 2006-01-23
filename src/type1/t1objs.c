@@ -111,10 +111,13 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Size_Request( T1_Size  size )
+  T1_Size_Request( T1_Size          size,
+                   FT_Size_Request  req )
   {
     PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
-
+    
+    
+    FT_Request_Metrics( size->root.face, req );
 
     if ( funcs )
       funcs->set_scale( (PSH_Globals)size->root.internal,

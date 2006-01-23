@@ -583,17 +583,15 @@ THE SOFTWARE.
 
   FT_CALLBACK_DEF( FT_Error )
   BDF_Size_Select( FT_Size   size,
-                   FT_ULong  index )
+                   FT_ULong  strike_index )
   {
     bdf_font_t*  bdffont = ( (BDF_Face)size->face )->bdffont;
 
-    FT_UNUSED( index );
 
+    FT_Select_Metrics( size->face, strike_index );
 
     size->metrics.ascender    = bdffont->font_ascent << 6;
     size->metrics.descender   = -bdffont->font_descent << 6;
-    size->metrics.height      = ( bdffont->font_ascent +
-                                  bdffont->font_descent ) << 6;
     size->metrics.max_advance = bdffont->bbx.width << 6;
 
     return BDF_Err_Ok;
@@ -611,11 +609,7 @@ THE SOFTWARE.
     FT_Long          height;
 
 
-    if ( req->vertResolution )
-      height = ( req->height * req->vertResolution + 36 ) / 72;
-    else
-      height = req->height;
-
+    height = FT_REQUEST_HEIGHT( req );
     height = ( height + 32 ) >> 6;
 
     switch ( req->type )

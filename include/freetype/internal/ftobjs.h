@@ -451,6 +451,28 @@ FT_BEGIN_HEADER
 
  /* */
 
+#define FT_REQUEST_WIDTH( req )                                          \
+    ( ( req )->horiResolution                                            \
+        ? (FT_Pos)( ( req )->width * ( req )->horiResolution + 36 ) / 72 \
+        : ( req )->width )
+
+#define FT_REQUEST_HEIGHT( req )                                          \
+    ( ( req )->vertResolution                                             \
+        ? (FT_Pos)( ( req )->height * ( req )->vertResolution + 36 ) / 72 \
+        : ( req )->height )
+
+  /* set the metrics according to a bitmap strike */
+  FT_BASE( void )
+  FT_Select_Metrics( FT_Face   face,
+                     FT_ULong  strike_index );
+
+
+  /* set the metrics according to a size request */
+  FT_BASE( void )
+  FT_Request_Metrics( FT_Face          face,
+                      FT_Size_Request  req );
+
+
   /*
    * Match a size request against `available_sizes'.
    */
