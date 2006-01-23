@@ -178,10 +178,12 @@
     (PS_GetFontPrivateFunc)t1_ps_get_font_private,
   };
 
+#ifndef T1_CONFIG_OPTION_NO_AFM
   static const FT_Service_KerningRec  t1_service_kerning =
   {
     T1_Get_Track_Kerning,
   };
+#endif
 
  /*
   *  SERVICE LIST
@@ -194,7 +196,10 @@
     { FT_SERVICE_ID_GLYPH_DICT,           &t1_service_glyph_dict },
     { FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_TYPE_1 },
     { FT_SERVICE_ID_POSTSCRIPT_INFO,      &t1_service_ps_info },
+
+#ifndef T1_CONFIG_OPTION_NO_AFM
     { FT_SERVICE_ID_KERNING,              &t1_service_kerning },
+#endif
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
     { FT_SERVICE_ID_MULTI_MASTERS,        &t1_service_multi_masters },
