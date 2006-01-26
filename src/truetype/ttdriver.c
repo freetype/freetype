@@ -168,7 +168,7 @@
     return error;
   }
 
-#endif
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
 
   static FT_Error
@@ -196,7 +196,7 @@
         return tt_size_select( size, index );
     }
 
-#endif /*  TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     FT_Request_Metrics( size->face, req );
 

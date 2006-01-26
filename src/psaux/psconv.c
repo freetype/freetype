@@ -119,8 +119,8 @@
 
   FT_LOCAL_DEF( FT_Int )
   PS_Conv_ToInt( FT_Byte**  cursor,
-  	         FT_Byte*   limit )
-  	    
+                 FT_Byte*   limit )
+
   {
     FT_Byte*  p;
     FT_Int    num;
@@ -142,8 +142,8 @@
 
   FT_LOCAL_DEF( FT_Fixed )
   PS_Conv_ToFixed( FT_Byte**  cursor,
-  	           FT_Byte*   limit,
-  		   FT_Int     power_ten )
+                   FT_Byte*   limit,
+                   FT_Int     power_ten )
   {
     FT_Byte*  p = *cursor;
     FT_Fixed  integral;
@@ -230,9 +230,9 @@
 #if 0
   FT_LOCAL_DEF( FT_UInt )
   PS_Conv_StringDecode( FT_Byte**  cursor,
-  		        FT_Byte*   limit,
-  		        FT_Byte*   buffer,
-  		        FT_UInt    n )
+                        FT_Byte*   limit,
+                        FT_Byte*   buffer,
+                        FT_UInt    n )
   {
     FT_Byte*  p;
     FT_UInt   r = 0;
@@ -325,9 +325,9 @@
 
   FT_LOCAL_DEF( FT_UInt )
   PS_Conv_ASCIIHexDecode( FT_Byte**  cursor,
-  		          FT_Byte*   limit,
-  			  FT_Byte*   buffer,
-  			  FT_UInt    n )
+                          FT_Byte*   limit,
+                          FT_Byte*   buffer,
+                          FT_UInt    n )
   {
     FT_Byte*  p;
     FT_UInt   r = 0;
@@ -366,10 +366,10 @@
 
   FT_LOCAL_DEF( FT_UInt )
   PS_Conv_EexecDecode( FT_Byte**   cursor,
-  		       FT_Byte*    limit,
-  		       FT_Byte*    buffer,
-  		       FT_UInt     n,
-  		       FT_UShort*  seed )
+                       FT_Byte*    limit,
+                       FT_Byte*    buffer,
+                       FT_UInt     n,
+                       FT_UShort*  seed )
   {
     FT_Byte*   p;
     FT_UInt    r;

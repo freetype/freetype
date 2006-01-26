@@ -190,7 +190,7 @@
     return CFF_Err_Ok;
   }
 
-#endif
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -199,6 +199,7 @@
   {
     CFF_Size           cffsize = (CFF_Size)size;
     PSH_Globals_Funcs  funcs;
+
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 

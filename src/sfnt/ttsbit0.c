@@ -173,7 +173,8 @@
 
         /* XXX: Is this correct? */
         bsize->height = ascender - descender;
-        bsize->width  = (FT_Short)( avgwidth * y_ppem + em_size / 2 ) / em_size;
+        bsize->width  = (FT_Short)( avgwidth * y_ppem + em_size / 2 ) /
+                          em_size;
 
         /* assume 72dpi */
         bsize->size   = bsize->y_ppem;

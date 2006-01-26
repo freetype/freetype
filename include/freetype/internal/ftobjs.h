@@ -451,31 +451,30 @@ FT_BEGIN_HEADER
 
  /* */
 
-#define FT_REQUEST_WIDTH( req )                                          \
-    ( ( req )->horiResolution                                            \
-        ? (FT_Pos)( ( req )->width * ( req )->horiResolution + 36 ) / 72 \
-        : ( req )->width )
+#define FT_REQUEST_WIDTH( req )                                            \
+          ( (req)->horiResolution                                          \
+              ? (FT_Pos)( (req)->width * (req)->horiResolution + 36 ) / 72 \
+              : (req)->width )
 
-#define FT_REQUEST_HEIGHT( req )                                          \
-    ( ( req )->vertResolution                                             \
-        ? (FT_Pos)( ( req )->height * ( req )->vertResolution + 36 ) / 72 \
-        : ( req )->height )
+#define FT_REQUEST_HEIGHT( req )                                            \
+          ( (req)->vertResolution                                           \
+              ? (FT_Pos)( (req)->height * (req)->vertResolution + 36 ) / 72 \
+              : (req)->height )
 
-  /* set the metrics according to a bitmap strike */
+
+  /* Set the metrics according to a bitmap strike. */
   FT_BASE( void )
   FT_Select_Metrics( FT_Face   face,
                      FT_ULong  strike_index );
 
 
-  /* set the metrics according to a size request */
+  /* Set the metrics according to a size request. */
   FT_BASE( void )
   FT_Request_Metrics( FT_Face          face,
                       FT_Size_Request  req );
 
 
-  /*
-   * Match a size request against `available_sizes'.
-   */
+  /* Match a size request against `available_sizes'. */
   FT_BASE( FT_Error )
   FT_Match_Size( FT_Face          face,
                  FT_Size_Request  req,
@@ -483,35 +482,27 @@ FT_BEGIN_HEADER
                  FT_ULong*        index );
 
 
-  /*
-   * Use the horizontal metrics to synthesize the vertical metrics.
-   * If `advance' is zero, it is also synthesized.
-   */
+  /* Use the horizontal metrics to synthesize the vertical metrics. */
+  /* If `advance' is zero, it is also synthesized.                  */
   FT_BASE( void )
   ft_synthesize_vertical_metrics( FT_Glyph_Metrics*  metrics,
                                   FT_Pos             advance );
 
 
- /*
-  * Free the bitmap of a given glyphslot when needed
-  * (i.e., only when it was allocated with ft_glyphslot_alloc_bitmap).
-  */
+  /* Free the bitmap of a given glyphslot when needed (i.e., only when it */
+  /* was allocated with ft_glyphslot_alloc_bitmap).                       */
   FT_BASE( void )
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot );
 
 
- /*
-  * Allocate a new bitmap buffer in a glyph slot.
-  */
+  /* Allocate a new bitmap buffer in a glyph slot. */
   FT_BASE( FT_Error )
   ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,
                              FT_ULong      size );
 
 
- /*
-  * Set the bitmap buffer in a glyph slot to a given pointer.
-  * The buffer will not be freed by a later call to ft_glyphslot_free_bitmap.
-  */
+  /* Set the bitmap buffer in a glyph slot to a given pointer.  The buffer */
+  /* will not be freed by a later call to ft_glyphslot_free_bitmap.        */
   FT_BASE( void )
   ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
                            FT_Byte*      buffer );
@@ -623,17 +614,15 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-/* this hook is used by the TrueType debugger. It must be set to an alternate
- * truetype bytecode interpreter function
- */
+  /* This hook is used by the TrueType debugger.  It must be set to an */
+  /* alternate truetype bytecode interpreter function.                 */
 #define FT_DEBUG_HOOK_TRUETYPE            0
 
 
-/* set this debug hook to a non-null pointer to force unpatented hinting
- * for all faces when both TT_CONFIG_OPTION_BYTECODE_INTERPRETER and
- * TT_CONFIG_OPTION_UNPATENTED_HINTING are defined. this is only used
- * during debugging
- */
+  /* Set this debug hook to a non-null pointer to force unpatented hinting */
+  /* for all faces when both TT_CONFIG_OPTION_BYTECODE_INTERPRETER and     */
+  /* TT_CONFIG_OPTION_UNPATENTED_HINTING are defined. this is only used    */
+  /* during debugging.                                                     */
 #define FT_DEBUG_HOOK_UNPATENTED_HINTING  1
 
 

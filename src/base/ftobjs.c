@@ -314,9 +314,9 @@
   static void
   ft_glyphslot_done( FT_GlyphSlot  slot )
   {
-    FT_Driver         driver = slot->face->driver;
-    FT_Driver_Class   clazz  = driver->clazz;
-    FT_Memory         memory = driver->root.memory;
+    FT_Driver        driver = slot->face->driver;
+    FT_Driver_Class  clazz  = driver->clazz;
+    FT_Memory        memory = driver->root.memory;
 
 
     if ( clazz->done_slot )
@@ -342,11 +342,11 @@
   FT_New_GlyphSlot( FT_Face        face,
                     FT_GlyphSlot  *aslot )
   {
-    FT_Error          error;
-    FT_Driver         driver;
-    FT_Driver_Class   clazz;
-    FT_Memory         memory;
-    FT_GlyphSlot      slot;
+    FT_Error         error;
+    FT_Driver        driver;
+    FT_Driver_Class  clazz;
+    FT_Memory        memory;
+    FT_GlyphSlot     slot;
 
 
     if ( !face || !face->driver )
@@ -2006,7 +2006,7 @@
     if ( req->type != FT_SIZE_REQUEST_TYPE_NOMINAL )
       return FT_Err_Unimplemented_Feature;
 
-    w = FT_REQUEST_WIDTH( req );
+    w = FT_REQUEST_WIDTH ( req );
     h = FT_REQUEST_HEIGHT( req );
 
     if ( req->width && !req->height )
@@ -2158,7 +2158,7 @@
       if ( h < 0 )
         h = -h;
 
-      scaled_w = FT_REQUEST_WIDTH( req );
+      scaled_w = FT_REQUEST_WIDTH ( req );
       scaled_h = FT_REQUEST_HEIGHT( req );
 
       /* determine scales */
@@ -2217,7 +2217,7 @@
   FT_Select_Size( FT_Face  face,
                   FT_Int   strike_index )
   {
-    FT_Driver_Class   clazz;
+    FT_Driver_Class  clazz;
 
 
     if ( !face || !FT_HAS_FIXED_SIZES( face ) )
@@ -2243,8 +2243,8 @@
   FT_Request_Size( FT_Face          face,
                    FT_Size_Request  req )
   {
-    FT_Driver_Class   clazz;
-    FT_ULong          strike_index;
+    FT_Driver_Class  clazz;
+    FT_ULong         strike_index;
 
 
     if ( !face )
@@ -2275,7 +2275,8 @@
       if ( error )
         return error;
 
-      FT_TRACE3(( "FT_Request_Size: bitmap strike %lu matched\n", strike_index ));
+      FT_TRACE3(( "FT_Request_Size: bitmap strike %lu matched\n",
+                  strike_index ));
 
       return FT_Select_Size( face, (FT_Int)strike_index );
     }
@@ -2572,10 +2573,10 @@
 
 
   FT_BASE_DEF( FT_Error )
-  FT_CMap_New( FT_CMap_Class   clazz,
-               FT_Pointer      init_data,
-               FT_CharMap      charmap,
-               FT_CMap        *acmap )
+  FT_CMap_New( FT_CMap_Class  clazz,
+               FT_Pointer     init_data,
+               FT_CharMap     charmap,
+               FT_CMap       *acmap )
   {
     FT_Error   error = FT_Err_Ok;
     FT_Face    face;
