@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -51,7 +51,7 @@
     FT_String*  string;
     FT_UInt     len, code, n;
     FT_Byte*    read = (FT_Byte*)entry->string;
-	FT_Error    error;
+    FT_Error    error;
 
 
     len = (FT_UInt)entry->stringLength / 2;
@@ -82,7 +82,7 @@
     FT_String*  string;
     FT_UInt     len, code, n;
     FT_Byte*    read = (FT_Byte*)entry->string;
-	FT_Error    error;
+    FT_Error    error;
 
 
     len = (FT_UInt)entry->stringLength / 4;
@@ -113,7 +113,7 @@
     FT_String*  string;
     FT_UInt     len, code, n;
     FT_Byte*    read = (FT_Byte*)entry->string;
-	FT_Error    error;
+    FT_Error    error;
 
 
     len = (FT_UInt)entry->stringLength;

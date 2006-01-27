@@ -5,7 +5,7 @@
 /*    FreeType utility functions for converting 1bpp, 2bpp, 4bpp, and 8bpp */
 /*    bitmaps into 8bpp format (body).                                     */
 /*                                                                         */
-/*  Copyright 2004, 2005 by                                                */
+/*  Copyright 2004, 2005, 2006 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */

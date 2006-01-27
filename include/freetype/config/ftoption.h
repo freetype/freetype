@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -556,19 +556,21 @@ FT_BEGIN_HEADER
 
  /* */
 
-/*
- * This temporary macro is used to control various optimizations for
- * reducing the heap footprint of memory-mapped TrueType files.
- *
- */
+  /*
+   * This temporary macro is used to control various optimizations for
+   * reducing the heap footprint of memory-mapped TrueType files.
+   */
 #define  FT_OPTIMIZE_MEMORY
 
-/* this temporary macro is used to control wether we're going to
- * compile certain functions like FT_Alloc in a way that prevent recent
- * GCC releases from spouting horrible "strict aliasing" warning
- * messages each time a memory-management function is called
- */
+
+  /*
+   * This temporary macro is used to control whether we are going to
+   * compile certain functions like FT_Alloc in a way that prevents recent
+   * GCC releases from emitting zillions of `strict aliasing' warning
+   * messages each time a memory-management function is called.
+   */
 #define  FT_STRICT_ALIASING
+
 
 FT_END_HEADER
 

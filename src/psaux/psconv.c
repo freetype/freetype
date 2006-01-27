@@ -352,10 +352,10 @@
         break;
 
       if ( r % 2 )
-	  {
+      {
         *buffer = (FT_Byte)(*buffer + c);
-		buffer++;
-	  }
+        buffer++;
+      }
       else
         *buffer = (FT_Byte)(c << 4);
 

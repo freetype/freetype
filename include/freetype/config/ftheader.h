@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Build macros of the FreeType 2 library.                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -626,13 +626,16 @@
 
 #define FT_TRUETYPE_UNPATENTED_H  <freetype/ttunpat.h>
 
-/* now include internal headers definitions from <freetype/internal/...>
- * only when we're building the library !!
- */
+
+  /*
+   * Include internal headers definitions from <freetype/internal/...>
+   * only when building the library.
+   */
 #ifdef FT2_BUILD_LIBRARY
-#  define  FT_INTERNAL_INTERNAL_H  <freetype/internal/internal.h>
-#  include FT_INTERNAL_INTERNAL_H
+#define  FT_INTERNAL_INTERNAL_H  <freetype/internal/internal.h>
+#include FT_INTERNAL_INTERNAL_H
 #endif /* FT2_BUILD_LIBRARY */
+
 
 #endif /* __FT2_BUILD_H__ */
 

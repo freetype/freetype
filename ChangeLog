@@ -1,35 +1,66 @@
 2006-01-27  David Turner  <david@freetype.org>
 
-    * src/autofit/afwarp.c: simple #ifdef to prevent compilation when
-    the warp hinter isn't active (it shouldn't, still experimental)
+	* src/autofit/afwarp.c: Simple #ifdef to prevent compilation when
+	the warp hinter isn't active (it shouldn't, still experimental).
 
-    * Jamfile, include/freetype/config/ftmodule.h: removed "gxvalid"
-    and "otvalid" from the list of modules that are linked statically
-    to a given FreeType library. Functionality has been moved to the
-    "ftvalid" CVS module.
-    
-    note also that current Make-based build system still compiles the
-    modules though...
+	* Jamfile, include/freetype/config/ftmodule.h: Removed `gxvalid'
+	and `otvalid' from the list of modules that are linked statically
+	to a given FreeType library.  Functionality has been moved to the
+	`ftvalid' CVS module.
 
-    * include/freetype/config/ftoption.h: added FT_STRICT_ALIASING,
-    which controls the definitions of the memory management functions
-    to avoid warnings with recent versions of GCC. this macro is
-    only here to be disabled, in case we detect problems with the
-    new scheme.
-    
-    NOTE: disable macro to use the memory debugger. this will be fixed
-          later !!
+	Note also that current Make-based build system still compiles the
+	modules though.
 
-    * builds/win32/visualc/freetype.dsp: updating project file to
-    define FT2_BUILD_LIBRARY, and remove gxvalid+otvalid from
-    compilation
+	* include/freetype/config/ftoption.h (FT_STRICT_ALIASING): New macro
+	which controls the definitions of the memory management functions to
+	avoid warnings with recent versions of GCC.  This macro is only here
+	to be disabled, in case we detect problems with the new scheme.
 
-    * builds/freetype.mk, Jamfile: define the macro FT2_BUILD_LIBRARY
-    when compiling the library.
-    
-    * include/freetype/config/ftheader.h: remove inclusions of
-    internal headers, except if the macro FT2_BUILD_LIBRARY is defined.
-    
+	NOTE: Disable macro to use the memory debugger -- this will be fixed
+	      later!
+
+	* include/freetype/internal/ftmemory.h, src/base/ftutil.c (FT_Alloc,
+	FT_QAlloc, FT_Realloc, FT_QRealloc, FT_Free) [FT_STRICT_ALIASING]:
+	New versions.
+
+
+	* builds/win32/visualc/freetype.dsp: Updating project file to
+	define FT2_BUILD_LIBRARY, and remove gxvalid + otvalid modules from
+	compilation.
+
+
+	* builds/freetype.mk (FT_CFLAGS), Jamfile (DEFINES): Define the
+	macro FT2_BUILD_LIBRARY when compiling the library.
+
+	* include/freetype/config/ftheader.h: Remove inclusions of internal
+	headers except if the macro FT2_BUILD_LIBRARY is defined.
+
+
+	* include/freetype/internal/psaux.h (AFM_KernPair, AFM_TrackKern,
+	AFM_FontInfo): Move structure declarations to...
+	* include/freetype/internal/t1types.h: This file.
+
+
+	* (many files): Fix compiler warnings.
+	Various minor reorganizations.
+
+
+	* src/cff/cffload.c (cff_font_done): Don't free static array
+	`subfonts'.
+
+	* src/otvalid/otvcommn.c (otv_ClassDef_validate),
+	src/otvalid/otvgpos.c (otv_x_sxy): Fix debugging information.
+
+	* src/psaux/afmparse.c: Include ft2build.h and FT_FREETYPE_H.
+	(AFM_MAX_ARGUMENTS): Define...
+	* src/psaux/afmparse.h: Here.
+	* src/psaux/Jamfile (_sources): Add afmparse.
+
+	* src/psaux/psconv.c: Include psconv.h.
+
+	* src/type1/t1afm.c: Don't include FT_INTERNAL_TYPE1_TYPES_H but
+	FT_INTERNAL_POSTSCRIPT_AUX_H.
+	* src/type1/t1afm.h: Include FT_INTERNAL_TYPE1_TYPES_H.
 
 2006-01-23  Chia-I Wu  <b90201047@ntu.edu.tw>
 

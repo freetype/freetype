@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType and CFF data/program tables loader (body).                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2293,8 +2293,6 @@
     {
       for ( idx = 0; idx < font->num_subfonts; idx++ )
         cff_subfont_done( memory, font->subfonts[idx] );
-
-      /* FT_FREE( font->subfonts ); -- bug this is a static array !! */
     }
 
     cff_encoding_done( &font->encoding );

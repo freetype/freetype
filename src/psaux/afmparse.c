@@ -397,16 +397,17 @@
       {
       case AFM_VALUE_TYPE_STRING:
       case AFM_VALUE_TYPE_NAME:
-		  {
-            FT_Memory  memory = parser->memory;
-			FT_Error   error;
-        
-			if ( !FT_QALLOC( val->u.s, len + 1 ) )
-			{
-              ft_memcpy( val->u.s, str, len );
-              val->u.s[len] = '\0';
-			}
-		  }
+        {
+          FT_Memory  memory = parser->memory;
+          FT_Error   error;
+
+
+          if ( !FT_QALLOC( val->u.s, len + 1 ) )
+          {
+            ft_memcpy( val->u.s, str, len );
+            val->u.s[len] = '\0';
+          }
+        }
         break;
 
       case AFM_VALUE_TYPE_FIXED:
@@ -880,6 +881,7 @@
         {
           AFM_ValueRec  shared_vals[1];
           
+
           shared_vals[0].type = AFM_VALUE_TYPE_BOOL;
           if ( afm_parser_read_vals( parser, shared_vals, 1 ) != 1 )
             goto Fail;

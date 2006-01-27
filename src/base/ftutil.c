@@ -45,6 +45,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
 #ifdef FT_STRICT_ALIASING
 
 
@@ -53,9 +54,10 @@
             FT_Long    size,
             FT_Error  *p_error )
   {
-    FT_Error    error = 0;
+    FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
     
+
     if ( size > 0 )
     {
       block = memory->alloc( memory, size );
@@ -64,6 +66,7 @@
       else
         FT_MEM_ZERO( block, size );
     }
+
     *p_error = error;
     return block;
   }
@@ -74,15 +77,17 @@
              FT_Long    size,
              FT_Error  *p_error )
   {
-    FT_Error    error = 0;
+    FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
     
+
     if ( size > 0 )
     {
       block = memory->alloc( memory, size );
       if ( block == NULL )
         error = FT_Err_Out_Of_Memory;
     }
+
     *p_error = error;
     return block;
   }
@@ -95,8 +100,9 @@
               void*      block,
               FT_Error  *p_error )
   {
-    FT_Error    error = 0;
+    FT_Error  error = FT_Err_Ok;
     
+
     if ( size <= 0 )
     {
       FT_Free( memory, block );
@@ -112,6 +118,7 @@
     {
       FT_Pointer  block2;
 
+
       block2 = memory->realloc( memory, current, size, block );
       if ( block2 == NULL )
         error = FT_Err_Out_Of_Memory;
@@ -122,6 +129,7 @@
           FT_MEM_ZERO( (char*)block + current, size-current );
       }
     }
+
     *p_error = error;
     return block;
   }
@@ -134,8 +142,9 @@
                void*      block,
                FT_Error  *p_error )
   {
-    FT_Error  error = 0;
+    FT_Error  error = FT_Err_Ok;
     
+
     if ( size <= 0 )
     {
       FT_Free( memory, block );
@@ -151,15 +160,16 @@
     {
       FT_Pointer  block2;
 
+
       block2 = memory->realloc( memory, current, size, block );
       if ( block2 == NULL )
         error = FT_Err_Out_Of_Memory;
       else
         block = block2;
     }
+
     *p_error = error;
     return block;
-
   }               
 
   FT_BASE_DEF( void )
@@ -170,7 +180,9 @@
       memory->free( memory, (void*)P );
   }           
 
+
 #else /* !FT_STRICT_ALIASING */
+
 
   /* documentation is in ftmemory.h */
 

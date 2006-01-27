@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2002, 2003, 2004, 2005 by
+# Copyright 1996-2000, 2001, 2002, 2003, 2004, 2005, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -133,9 +133,9 @@ INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 # $(INCLUDE_FLAGS) should come before $(CFLAGS) to avoid problems with
 # old FreeType versions.
 #
-# note what we also define the macro FT2_BUILD_LIBRARY when building
-# FreeType. this is required to let our sources include the internal
-# headers (something forbidden by clients)
+# Note what we also define the macro FT2_BUILD_LIBRARY when building
+# FreeType.  This is required to let our sources include the internal
+# headers (something forbidden by clients).
 #
 FT_CFLAGS  = $(CPPFLAGS) $(INCLUDE_FLAGS) $(CFLAGS) $DFT2_BUILD_LIBRARY
 FT_CC      = $(CC) $(FT_CFLAGS)
