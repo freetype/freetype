@@ -20,7 +20,7 @@
 #include "t1afm.h"
 #include "t1errors.h"
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 
   /*************************************************************************/
@@ -232,12 +232,14 @@
     FT_Error       error = T1_Err_Unknown_File_Format;
 
 
-    if ( FT_FRAME_ENTER( stream->size ) )
+    if ( FT_NEW( fi ) )
       return error;
 
-    FT_NEW( fi );
-    if ( error )
+    if ( FT_FRAME_ENTER( stream->size ) )
+    {
+      FT_FREE( fi );
       return error;
+    }
 
     psaux = (PSAux_Service)( (T1_Face)t1_face )->psaux;
     if ( psaux && psaux->afm_parser_funcs )

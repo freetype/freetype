@@ -222,9 +222,9 @@
 
         OTV_LIMIT_CHECK( 2 );
 
-        OTV_TRACE(( " (GlyphCount = %d)\n", GlyphCount ));
-
         GlyphCount = FT_NEXT_USHORT( p );
+
+        OTV_TRACE(( " (GlyphCount = %d)\n", GlyphCount ));
 
         OTV_LIMIT_CHECK( GlyphCount * 2 );    /* ClassValueArray */
       }

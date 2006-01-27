@@ -561,7 +561,14 @@ FT_BEGIN_HEADER
  * reducing the heap footprint of memory-mapped TrueType files.
  *
  */
-/* #define  FT_OPTIMIZE_MEMORY */
+#define  FT_OPTIMIZE_MEMORY
+
+/* this temporary macro is used to control wether we're going to
+ * compile certain functions like FT_Alloc in a way that prevent recent
+ * GCC releases from spouting horrible "strict aliasing" warning
+ * messages each time a memory-management function is called
+ */
+#define  FT_STRICT_ALIASING
 
 FT_END_HEADER
 

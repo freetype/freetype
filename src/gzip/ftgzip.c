@@ -99,12 +99,12 @@
                  uInt       size )
   {
     FT_ULong    sz = (FT_ULong)size * items;
+    FT_Error    error;
     FT_Pointer  p;
 
 
-    FT_MEM_ALLOC( p, sz );
-
-    return (voidpf) p;
+    (void)FT_ALLOC( p, sz );
+    return p;
   }
 
 

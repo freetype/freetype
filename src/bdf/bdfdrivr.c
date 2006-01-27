@@ -249,7 +249,9 @@ THE SOFTWARE.
 
     if ( !parts || !len )
     {
-      FT_ALLOC( face->style_name, ft_strlen( "Regular" ) + 1 );
+      if ( FT_ALLOC( face->style_name, ft_strlen( "Regular" ) + 1 ) )
+        return error;
+        
       ft_strcpy( face->style_name, "Regular" );
     }
     else

@@ -56,7 +56,140 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-#ifdef FT_DEBUG_MEMORY
+#ifdef FT_STRICT_ALIASING
+
+ /* the allocation functions return a pointer, and the error code
+  * is written to through the 'p_error' parameter
+  */
+
+  FT_BASE( FT_Pointer )
+  FT_Alloc( FT_Memory  memory,
+            FT_Long    size,
+            FT_Error  *p_error );
+
+  FT_BASE( FT_Pointer )
+  FT_QAlloc( FT_Memory  memory,
+             FT_Long    size,
+             FT_Error  *p_error );
+
+  FT_BASE( FT_Pointer )
+  FT_Realloc( FT_Memory  memory,
+              FT_Long    current,
+              FT_Long    size,
+              void*      block,
+              FT_Error  *p_error );
+
+  FT_BASE( FT_Pointer )
+  FT_QRealloc( FT_Memory  memory,
+               FT_Long    current,
+               FT_Long    size,
+               void*      block,
+               FT_Error  *p_error );
+
+  FT_BASE( void )
+  FT_Free( FT_Memory    memory,
+           const void*  P );
+
+
+#  ifdef FT_DEBUG_MEMORY
+
+  FT_BASE( FT_Pointer )
+  FT_Alloc_Debug( FT_Memory    memory,
+                  FT_Long      size,
+                  FT_Error    *p_error,
+                  const char*  file_name,
+                  FT_Long      line_no );
+
+  FT_BASE( FT_Pointer )
+  FT_QAlloc_Debug( FT_Memory    memory,
+                   FT_Long      size,
+                   void*        P,
+                   FT_Error    *p_error,
+                   const char*  file_name,
+                   FT_Long      line_no );
+
+  FT_BASE( FT_Pointer )
+  FT_Realloc_Debug( FT_Memory    memory,
+                    FT_Long      current,
+                    FT_Long      size,
+                    void*        P,
+                    FT_Error    *p_error,
+                    const char*  file_name,
+                    FT_Long      line_no );
+
+  FT_BASE( FT_Pointer )
+  FT_QRealloc_Debug( FT_Memory    memory,
+                     FT_Long      current,
+                     FT_Long      size,
+                     void*        P,
+                     FT_Error    *p_error,
+                     const char*  file_name,
+                     FT_Long      line_no );
+
+  FT_BASE( void )
+  FT_Free_Debug( FT_Memory    memory,
+                 FT_Pointer   block,
+                 const char*  file_name,
+                 FT_Long      line_no );
+
+#    define FT_MEM_ALLOC( _pointer_, _size_ )                   \
+          (_pointer_) = FT_Alloc_Debug( memory, _size_, &error, \
+                        __FILE__, __LINE__ )
+
+#    define FT_MEM_REALLOC( _pointer_, _current_, _size_ )             \
+          (_pointer_) = FT_Realloc_Debug( memory, _current_, _size_,   \
+                            (_pointer_), &error,                       \
+                            __FILE__, __LINE__ )
+
+#    define FT_MEM_QALLOC( _pointer_, _size_ )                   \
+          (_pointer_) = FT_QAlloc_Debug( memory, _size_, &error, \
+                           __FILE__, __LINE__ )
+
+#    define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )            \
+          (_pointer_) = FT_QRealloc_Debug( memory, _current_, _size_,  \
+                             (_pointer_), &error,                      \
+                             __FILE__, __LINE__ )
+
+#    define FT_MEM_FREE( _pointer_ )                                \
+    FT_BEGIN_STMNT                                                  \
+      if ( _pointer_ ) {                                            \
+        FT_Free_Debug( memory, (_pointer_), __FILE__, __LINE__ );   \
+        (_pointer_) = NULL;                                         \
+      }                                                             \
+    FT_END_STMNT
+
+
+#  else  /* !FT_DEBUG_MEMORY */
+
+#    define FT_MEM_ALLOC( _pointer_, _size_ )         \
+          (_pointer_) = FT_Alloc( memory, _size_, &error )
+
+#    define FT_MEM_FREE( _pointer_ )             \
+    FT_BEGIN_STMNT                               \
+      if ( (_pointer_) ) {                       \
+        FT_Free( memory, (_pointer_) );          \
+        (_pointer_) = NULL;                      \
+      }                                          \
+    FT_END_STMNT
+
+#  define FT_MEM_REALLOC( _pointer_, _current_, _size_ )        \
+          (_pointer_) = FT_Realloc( memory, _current_, _size_,  \
+                                    (_pointer_), &error )
+
+#  define FT_MEM_QALLOC( _pointer_, _size_ )              \
+          (_pointer_) = FT_QAlloc( memory, _size_, &error )
+
+#  define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )        \
+          (_pointer_) = FT_QRealloc( memory, _current_, _size_,  \
+                                     (_pointer_), &error )
+
+#  endif /* !FT_DEBUG_MEMORY */
+
+#  define  FT_MEM_SET_ERROR(cond)  ( (cond), error != 0 )
+
+#else /* !FT_STRICT_ALIASING */
+
+#  ifdef FT_DEBUG_MEMORY
 
   FT_BASE( FT_Error )
   FT_Alloc_Debug( FT_Memory    memory,
@@ -94,7 +227,8 @@ FT_BEGIN_HEADER
                  const char*  file_name,
                  FT_Long      line_no );
 
-#endif
+#  endif /* FT_DEBUG_MEMORY */
+
 
 
   /*************************************************************************/
@@ -249,45 +383,6 @@ FT_BEGIN_HEADER
   FT_Free( FT_Memory  memory,
            void*     *P );
 
-
-#define FT_MEM_SET( dest, byte, count )     ft_memset( dest, byte, count )
-
-#define FT_MEM_COPY( dest, source, count )  ft_memcpy( dest, source, count )
-
-#define FT_MEM_MOVE( dest, source, count )  ft_memmove( dest, source, count )
-
-
-#define FT_MEM_ZERO( dest, count )  FT_MEM_SET( dest, 0, count )
-
-#define FT_ZERO( p )                FT_MEM_ZERO( p, sizeof ( *(p) ) )
-
-#define FT_ARRAY_ZERO( dest, count )                        \
-          FT_MEM_ZERO( dest, (count) * sizeof ( *(dest) ) )
-
-#define FT_ARRAY_COPY( dest, source, count )                        \
-          FT_MEM_COPY( dest, source, (count) * sizeof ( *(dest) ) )
-
-#define FT_ARRAY_MOVE( dest, source, count )                        \
-          FT_MEM_MOVE( dest, source, (count) * sizeof ( *(dest) ) )
-
-
-  /*
-   *  Return the maximum number of adressable elements in an array.
-   *  We limit ourselves to INT_MAX, rather than UINT_MAX, to avoid
-   *  any problems.
-   */
-#define FT_ARRAY_MAX( ptr )           ( FT_INT_MAX / sizeof ( *(ptr) ) )
-
-#define FT_ARRAY_CHECK( ptr, count )  ( (count) <= FT_ARRAY_MAX( ptr ) )
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* We first define FT_MEM_ALLOC, FT_MEM_REALLOC, and FT_MEM_FREE.  All   */
-  /* macros use an _implicit_ `memory' parameter to access the current     */
-  /* memory allocator.                                                     */
-  /*                                                                       */
-
 #ifdef FT_DEBUG_MEMORY
 
 #define FT_MEM_ALLOC( _pointer_, _size_ )              \
@@ -340,6 +435,43 @@ FT_BEGIN_HEADER
 
 #endif /* !FT_DEBUG_MEMORY */
 
+#  define  FT_MEM_SET_ERROR(cond)   ( (error = (cond)) != 0 )
+
+#endif /* !FT_STRICT_ALIASING */
+
+
+
+#define FT_MEM_SET( dest, byte, count )     ft_memset( dest, byte, count )
+
+#define FT_MEM_COPY( dest, source, count )  ft_memcpy( dest, source, count )
+
+#define FT_MEM_MOVE( dest, source, count )  ft_memmove( dest, source, count )
+
+
+#define FT_MEM_ZERO( dest, count )  FT_MEM_SET( dest, 0, count )
+
+#define FT_ZERO( p )                FT_MEM_ZERO( p, sizeof ( *(p) ) )
+
+#define FT_ARRAY_ZERO( dest, count )                        \
+          FT_MEM_ZERO( dest, (count) * sizeof ( *(dest) ) )
+
+#define FT_ARRAY_COPY( dest, source, count )                        \
+          FT_MEM_COPY( dest, source, (count) * sizeof ( *(dest) ) )
+
+#define FT_ARRAY_MOVE( dest, source, count )                        \
+          FT_MEM_MOVE( dest, source, (count) * sizeof ( *(dest) ) )
+
+
+  /*
+   *  Return the maximum number of adressable elements in an array.
+   *  We limit ourselves to INT_MAX, rather than UINT_MAX, to avoid
+   *  any problems.
+   */
+#define FT_ARRAY_MAX( ptr )           ( FT_INT_MAX / sizeof ( *(ptr) ) )
+
+#define FT_ARRAY_CHECK( ptr, count )  ( (count) <= FT_ARRAY_MAX( ptr ) )
+
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -388,17 +520,19 @@ FT_BEGIN_HEADER
   /* if an error occured (i.e. if 'error != 0').                           */
   /*                                                                       */
 
+
+
 #define FT_ALLOC( _pointer_, _size_ )                       \
-          FT_SET_ERROR( FT_MEM_ALLOC( _pointer_, _size_ ) )
+          FT_MEM_SET_ERROR( FT_MEM_ALLOC( _pointer_, _size_ ) )
 
 #define FT_REALLOC( _pointer_, _current_, _size_ )                       \
-          FT_SET_ERROR( FT_MEM_REALLOC( _pointer_, _current_, _size_ ) )
+          FT_MEM_SET_ERROR( FT_MEM_REALLOC( _pointer_, _current_, _size_ ) )
 
 #define FT_QALLOC( _pointer_, _size_ )                       \
-          FT_SET_ERROR( FT_MEM_QALLOC( _pointer_, _size_ ) )
+          FT_MEM_SET_ERROR( FT_MEM_QALLOC( _pointer_, _size_ ) )
 
 #define FT_QREALLOC( _pointer_, _current_, _size_ )                       \
-          FT_SET_ERROR( FT_MEM_QREALLOC( _pointer_, _current_, _size_ ) )
+          FT_MEM_SET_ERROR( FT_MEM_QREALLOC( _pointer_, _current_, _size_ ) )
 
 
 #define FT_FREE( _pointer_ )       \

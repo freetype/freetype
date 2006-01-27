@@ -51,11 +51,12 @@
     FT_String*  string;
     FT_UInt     len, code, n;
     FT_Byte*    read = (FT_Byte*)entry->string;
+	FT_Error    error;
 
 
     len = (FT_UInt)entry->stringLength / 2;
 
-    if ( FT_MEM_NEW_ARRAY( string, len + 1 ) )
+    if ( FT_NEW_ARRAY( string, len + 1 ) )
       return NULL;
 
     for ( n = 0; n < len; n++ )
@@ -81,11 +82,12 @@
     FT_String*  string;
     FT_UInt     len, code, n;
     FT_Byte*    read = (FT_Byte*)entry->string;
+	FT_Error    error;
 
 
     len = (FT_UInt)entry->stringLength / 4;
 
-    if ( FT_MEM_NEW_ARRAY( string, len + 1 ) )
+    if ( FT_NEW_ARRAY( string, len + 1 ) )
       return NULL;
 
     for ( n = 0; n < len; n++ )
@@ -111,11 +113,12 @@
     FT_String*  string;
     FT_UInt     len, code, n;
     FT_Byte*    read = (FT_Byte*)entry->string;
+	FT_Error    error;
 
 
     len = (FT_UInt)entry->stringLength;
 
-    if ( FT_MEM_NEW_ARRAY( string, len + 1 ) )
+    if ( FT_NEW_ARRAY( string, len + 1 ) )
       return NULL;
 
     for ( n = 0; n < len; n++ )

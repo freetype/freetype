@@ -66,12 +66,12 @@ FT_BEGIN_HEADER
 
   } AFM_ValueRec, *AFM_Value;
 
+#define  AFM_MAX_ARGUMENTS  5
 
   FT_LOCAL( FT_Int )
   afm_parser_read_vals( AFM_Parser  parser,
                         AFM_Value   vals,
                         FT_Int      n );
-
 
   /* read the next key from the next line or column */
   FT_LOCAL( char* )

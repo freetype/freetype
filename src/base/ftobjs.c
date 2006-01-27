@@ -267,7 +267,8 @@
   ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,
                              FT_ULong      size )
   {
-    FT_Memory  memory = FT_FACE_MEMORY( slot->face );
+    FT_Memory   memory = FT_FACE_MEMORY( slot->face );
+    FT_Error    error;
 
 
     if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
@@ -275,7 +276,8 @@
     else
       slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
-    return FT_MEM_ALLOC( slot->bitmap.buffer, size );
+    (void)FT_ALLOC( slot->bitmap.buffer, size );
+    return error;
   }
 
 
@@ -895,7 +897,7 @@
     FT_Driver_Class   clazz;
     FT_Face           face = 0;
     FT_Error          error, error2;
-    FT_Face_Internal  internal;
+    FT_Face_Internal  internal = NULL;
 
 
     clazz  = driver->clazz;
@@ -1722,10 +1724,10 @@
     if ( FT_IS_SCALABLE( face ) )
     {
       if ( face->height < 0 )
-        face->height = -face->height;
+        face->height = (short)-face->height;
 
       if ( !FT_HAS_VERTICAL( face ) )
-        face->max_advance_height = face->height;
+        face->max_advance_height = (short)face->height;
     }
 
     if ( FT_HAS_FIXED_SIZES( face ) )
@@ -1739,9 +1741,9 @@
 
 
         if ( bsize->height < 0 )
-          bsize->height = -bsize->height;
+          bsize->height = (FT_Short) -bsize->height;
         if ( bsize->x_ppem < 0 )
-          bsize->x_ppem = -bsize->x_ppem;
+          bsize->x_ppem = (FT_Short) -bsize->x_ppem;
         if ( bsize->y_ppem < 0 )
           bsize->y_ppem = -bsize->y_ppem;
       }
@@ -2085,8 +2087,8 @@
     metrics = &face->size->metrics;
     bsize   = face->available_sizes + strike_index;
 
-    metrics->x_ppem = ( bsize->x_ppem + 32 ) >> 6;
-    metrics->y_ppem = ( bsize->y_ppem + 32 ) >> 6;
+    metrics->x_ppem = (FT_UShort)(( bsize->x_ppem + 32 ) >> 6);
+    metrics->y_ppem = (FT_UShort)(( bsize->y_ppem + 32 ) >> 6);
 
     if ( FT_IS_SCALABLE( face ) )
     {
@@ -2197,8 +2199,8 @@
         scaled_h = FT_MulFix( face->units_per_EM, metrics->y_scale );
       }
 
-      metrics->x_ppem = ( scaled_w + 32 ) >> 6;
-      metrics->y_ppem = ( scaled_h + 32 ) >> 6;
+      metrics->x_ppem = (FT_UShort)(( scaled_w + 32 ) >> 6);
+      metrics->y_ppem = (FT_UShort)(( scaled_h + 32 ) >> 6);
 
       ft_recompute_scaled_metrics( face, metrics );
     }

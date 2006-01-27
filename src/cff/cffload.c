@@ -2294,7 +2294,7 @@
       for ( idx = 0; idx < font->num_subfonts; idx++ )
         cff_subfont_done( memory, font->subfonts[idx] );
 
-      FT_FREE( font->subfonts );
+      /* FT_FREE( font->subfonts ); -- bug this is a static array !! */
     }
 
     cff_encoding_done( &font->encoding );

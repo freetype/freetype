@@ -172,9 +172,9 @@
         bsize->y_ppem = (FT_Pos)(y_ppem << 6);
 
         /* XXX: Is this correct? */
-        bsize->height = ascender - descender;
-        bsize->width  = (FT_Short)( avgwidth * y_ppem + em_size / 2 ) /
-                          em_size;
+        bsize->height = (FT_Short)(ascender - descender);
+        bsize->width  = (FT_Short)( ( avgwidth * y_ppem + em_size / 2 ) /
+                                     em_size );
 
         /* assume 72dpi */
         bsize->size   = bsize->y_ppem;
@@ -232,9 +232,9 @@
     bsize  = ( (FT_Face)face )->available_sizes + strike_index;
     strike = face->sbit_table + 8 + strike_index * 48;
 
-    metrics->x_ppem = bsize->x_ppem >> 6;
-    metrics->y_ppem = bsize->y_ppem >> 6;
-    metrics->height = bsize->height << 6;
+    metrics->x_ppem = (FT_UShort)(bsize->x_ppem >> 6);
+    metrics->y_ppem = (FT_UShort)(bsize->y_ppem >> 6);
+    metrics->height = (FT_UShort)(bsize->height << 6);
 
     metrics->ascender  = (FT_Char)strike[16] << 6;  /* hori.ascender  */
     metrics->descender = (FT_Char)strike[17] << 6;  /* hori.descender */

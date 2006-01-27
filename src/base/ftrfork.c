@@ -657,7 +657,7 @@
     char*        tmp;
     const char*  slash;
     unsigned     new_length;
-    FT_ULong     error = FT_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
 
     FT_UNUSED( error );
 

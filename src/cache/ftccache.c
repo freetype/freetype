@@ -100,10 +100,11 @@
         if ( p >= mask )
         {
           FT_Memory  memory = cache->memory;
+          FT_Error   error;
 
 
           /* if we can't expand the array, leave immediately */
-          if ( FT_MEM_RENEW_ARRAY( cache->buckets, (mask+1)*2, (mask+1)*4 ) )
+          if ( FT_RENEW_ARRAY( cache->buckets, (mask+1)*2, (mask+1)*4 ) )
             break;
         }
 
@@ -152,11 +153,12 @@
         if ( p == 0 )
         {
           FT_Memory  memory = cache->memory;
+          FT_Error   error;
 
 
           /* if we can't shrink the array, leave immediately */
-          if ( FT_MEM_RENEW_ARRAY( cache->buckets,
-                                   ( mask + 1 ) * 2, mask + 1 ) )
+          if ( FT_RENEW_ARRAY( cache->buckets,
+                               ( mask + 1 ) * 2, mask + 1 ) )
             break;
 
           cache->mask >>= 1;
@@ -320,13 +322,15 @@
   ftc_cache_init( FTC_Cache  cache )
   {
     FT_Memory  memory = cache->memory;
+    FT_Error   error;
 
 
     cache->p     = 0;
     cache->mask  = FTC_HASH_INITIAL_SIZE - 1;
     cache->slack = FTC_HASH_INITIAL_SIZE * FTC_HASH_MAX_LOAD;
 
-    return ( FT_MEM_NEW_ARRAY( cache->buckets, FTC_HASH_INITIAL_SIZE * 2 ) );
+    (void)FT_NEW_ARRAY( cache->buckets, FTC_HASH_INITIAL_SIZE * 2 );
+    return error;
   }
 
 

@@ -73,10 +73,10 @@
       target_size = (FT_ULong)( target_pitch * target->rows );
 
       if ( target_size != size )
-        FT_QREALLOC( target->buffer, target_size, size );
+        (void)FT_QREALLOC( target->buffer, target_size, size );
     }
     else
-      FT_QALLOC( target->buffer, size );
+      (void)FT_QALLOC( target->buffer, size );
 
     if ( !error )
     {

@@ -1,6 +1,6 @@
 /*
  * This little program is used to parse the FreeType headers and
- * find the declaration of all public API.  This is easy, because
+ * find the declaration of all public APIs.  This is easy, because
  * they all look like the following:
  *
  *   FT_EXPORT( return_type )
@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define  PROGRAM_NAME     "apinames"
 #define  PROGRAM_VERSION  "0.1"
@@ -75,7 +76,7 @@ names_add( const char*  name,
   {
     nm = the_names + nn;
 
-    if ( nm->hash                      == h &&
+    if ( (int)nm->hash                 == h &&
          memcmp( name, nm->name, len ) == 0 &&
          nm->name[len]                 == 0 )
       return;
@@ -164,7 +165,7 @@ names_dump( FILE*         out,
         if ( dot != NULL )
         {
           int  len = (dot - dll_name);
-          if ( len > sizeof(temp)-1 )
+          if ( len > (int)(sizeof(temp)-1) )
             len = sizeof(temp)-1;
 
           memcpy( temp, dll_name, len );
@@ -257,7 +258,6 @@ read_header_file( FILE*  file, int  verbose )
       case STATE_TYPE:
         {
           char*   name = p;
-          size_t  func_len;
 
           while ( isalnum(*p) || *p == '_' )
             p++;

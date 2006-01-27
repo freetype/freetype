@@ -1,5 +1,29 @@
 2006-01-27  David Turner  <david@freetype.org>
 
+    * src/autofit/afwarp.c: simple #ifdef to prevent compilation when
+    the warp hinter isn't active (it shouldn't, still experimental)
+
+    * Jamfile, include/freetype/config/ftmodule.h: removed "gxvalid"
+    and "otvalid" from the list of modules that are linked statically
+    to a given FreeType library. Functionality has been moved to the
+    "ftvalid" CVS module.
+    
+    note also that current Make-based build system still compiles the
+    modules though...
+
+    * include/freetype/config/ftoption.h: added FT_STRICT_ALIASING,
+    which controls the definitions of the memory management functions
+    to avoid warnings with recent versions of GCC. this macro is
+    only here to be disabled, in case we detect problems with the
+    new scheme.
+    
+    NOTE: disable macro to use the memory debugger. this will be fixed
+          later !!
+
+    * builds/win32/visualc/freetype.dsp: updating project file to
+    define FT2_BUILD_LIBRARY, and remove gxvalid+otvalid from
+    compilation
+
     * builds/freetype.mk, Jamfile: define the macro FT2_BUILD_LIBRARY
     when compiling the library.
     

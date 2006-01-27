@@ -15,7 +15,8 @@
 /*                                                                         */
 /***************************************************************************/
 
-
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_DEBUG_H
 
@@ -90,7 +91,7 @@
   static int
   afm_stream_skip_spaces( AFM_Stream  stream )
   {
-    int  ch;
+    int  ch = 0;  /* make stupid compiler happy */
 
 
     if ( AFM_STATUS_EOC( stream ) )
@@ -277,7 +278,7 @@
   } AFM_Token;
 
 
-  static const char*  afm_key_table[N_AFM_TOKENS] =
+  static const char*  const afm_key_table[N_AFM_TOKENS] =
   {
     "Ascender",
     "AxisLabel",
@@ -356,11 +357,6 @@
   };
 
 
-#define AFM_MAX_ARGUMENTS  5
-
-  static AFM_ValueRec  shared_vals[AFM_MAX_ARGUMENTS];
-
-
   /*
    * `afm_parser_read_vals' and `afm_parser_next_key' provide
    * high-level operations to an AFM_Stream.  The rest of the
@@ -401,12 +397,16 @@
       {
       case AFM_VALUE_TYPE_STRING:
       case AFM_VALUE_TYPE_NAME:
-        if ( !FT_QAlloc( parser->memory, len + 1,
-                         (void**)&(val->u.s)  ) )
-        {
-          ft_memcpy( val->u.s, str, len );
-          val->u.s[len] = '\0';
-        }
+		  {
+            FT_Memory  memory = parser->memory;
+			FT_Error   error;
+        
+			if ( !FT_QALLOC( val->u.s, len + 1 ) )
+			{
+              ft_memcpy( val->u.s, str, len );
+              val->u.s[len] = '\0';
+			}
+		  }
         break;
 
       case AFM_VALUE_TYPE_FIXED:
@@ -420,8 +420,8 @@
         break;
 
       case AFM_VALUE_TYPE_BOOL:
-        val->u.b = ( len == 4                          &&
-                     ft_strncmp( str, "true", 4 ) == 0 );
+        val->u.b = FT_BOOL( len == 4                      &&
+                            !ft_strncmp( str, "true", 4 ) );
         break;
 
       case AFM_VALUE_TYPE_INDEX:
@@ -443,7 +443,7 @@
                        FT_UInt*    len )
   {
     AFM_Stream  stream = parser->stream;
-    char*       key;
+    char*       key    = 0;  /* make stupid compiler happy */
 
 
     if ( line )
@@ -598,13 +598,14 @@
       FT_Error   error;
 
 
-      FT_QNEW_ARRAY( fi->TrackKerns, fi->NumTrackKern );
-      if ( error )
+      if ( FT_QNEW_ARRAY( fi->TrackKerns, fi->NumTrackKern ) )
         return error;
     }
 
-    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) )
+    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
+      AFM_ValueRec  shared_vals[5];
+      
       switch ( afm_tokenize( key, len ) )
       {
       case AFM_TOKEN_TRACKKERN:
@@ -694,12 +695,11 @@
       FT_Error   error;
 
 
-      FT_QNEW_ARRAY( fi->KernPairs, fi->NumKernPair );
-      if ( error )
+      if ( FT_QNEW_ARRAY( fi->KernPairs, fi->NumKernPair ) )
         return error;
     }
 
-    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) )
+    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       AFM_Token  token = afm_tokenize( key, len );
 
@@ -710,7 +710,8 @@
       case AFM_TOKEN_KPX:
       case AFM_TOKEN_KPY:
         {
-          FT_Int  r;
+          FT_Int        r;
+          AFM_ValueRec  shared_vals[4];
 
 
           n++;
@@ -775,7 +776,7 @@
     FT_UInt   len;
 
 
-    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) )
+    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       switch ( afm_tokenize( key, len ) )
       {
@@ -826,7 +827,7 @@
         goto Fail;
     }
 
-    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) )
+    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       AFM_Token  token = afm_tokenize( key, len );
 
@@ -859,7 +860,7 @@
          ft_strncmp( key, "StartFontMetrics", 16 ) != 0 )
       return PSaux_Err_Unknown_File_Format;
 
-    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) )
+    while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       switch ( afm_tokenize( key, len ) )
       {
@@ -876,11 +877,15 @@
         break;
 
       case AFM_TOKEN_ISCIDFONT:
-        shared_vals[0].type = AFM_VALUE_TYPE_BOOL;
-        if ( afm_parser_read_vals( parser, shared_vals, 1 ) != 1 )
-          goto Fail;
+        {
+          AFM_ValueRec  shared_vals[1];
+          
+          shared_vals[0].type = AFM_VALUE_TYPE_BOOL;
+          if ( afm_parser_read_vals( parser, shared_vals, 1 ) != 1 )
+            goto Fail;
 
-        fi->IsCIDFont = shared_vals[0].u.b;
+          fi->IsCIDFont = shared_vals[0].u.b;
+        }
         break;
 
       case AFM_TOKEN_STARTCHARMETRICS:

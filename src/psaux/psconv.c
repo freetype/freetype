@@ -20,6 +20,7 @@
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_DEBUG_H
 
+#include "psconv.h"
 #include "psobjs.h"
 #include "psauxerr.h"
 
@@ -85,7 +86,7 @@
 
     if ( *p == '-' || *p == '+' )
     {
-      sign = ( *p == '-' );
+      sign = FT_BOOL( *p == '-' );
 
       p++;
       if ( p == limit )
@@ -156,7 +157,7 @@
 
     if ( *p == '-' || *p == '+' )
     {
-      sign = ( *p == '-' );
+      sign = FT_BOOL( *p == '-' );
 
       p++;
       if ( p == limit )
@@ -351,9 +352,12 @@
         break;
 
       if ( r % 2 )
-        *buffer++ += c;
+	  {
+        *buffer = (FT_Byte)(*buffer + c);
+		buffer++;
+	  }
       else
-        *buffer = c << 4;
+        *buffer = (FT_Byte)(c << 4);
 
       r++;
     }
@@ -378,7 +382,7 @@
 
     for ( r = 0, p = *cursor; r < n && p < limit; r++, p++ )
     {
-      FT_Byte  b = ( *p ^ ( s >> 8 ) );
+      FT_Byte  b = (FT_Byte)( *p ^ ( s >> 8 ) );
 
 
       s = (FT_UShort)( ( *p + s ) * 52845U + 22719 );

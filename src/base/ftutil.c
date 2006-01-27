@@ -45,6 +45,133 @@
   /*************************************************************************/
   /*************************************************************************/
 
+#ifdef FT_STRICT_ALIASING
+
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_Alloc( FT_Memory  memory,
+            FT_Long    size,
+            FT_Error  *p_error )
+  {
+    FT_Error    error = 0;
+    FT_Pointer  block = NULL;
+    
+    if ( size > 0 )
+    {
+      block = memory->alloc( memory, size );
+      if ( block == NULL )
+        error = FT_Err_Out_Of_Memory;
+      else
+        FT_MEM_ZERO( block, size );
+    }
+    *p_error = error;
+    return block;
+  }
+              
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_QAlloc( FT_Memory  memory,
+             FT_Long    size,
+             FT_Error  *p_error )
+  {
+    FT_Error    error = 0;
+    FT_Pointer  block = NULL;
+    
+    if ( size > 0 )
+    {
+      block = memory->alloc( memory, size );
+      if ( block == NULL )
+        error = FT_Err_Out_Of_Memory;
+    }
+    *p_error = error;
+    return block;
+  }
+               
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_Realloc( FT_Memory  memory,
+              FT_Long    current,
+              FT_Long    size,
+              void*      block,
+              FT_Error  *p_error )
+  {
+    FT_Error    error = 0;
+    
+    if ( size <= 0 )
+    {
+      FT_Free( memory, block );
+      block = NULL;
+    }
+    else if ( current <= 0 )
+    {
+      FT_ASSERT( block == NULL );
+      
+      block = FT_Alloc( memory, size, &error );
+    }
+    else
+    {
+      FT_Pointer  block2;
+
+      block2 = memory->realloc( memory, current, size, block );
+      if ( block2 == NULL )
+        error = FT_Err_Out_Of_Memory;
+      else
+      {
+        block = block2;
+        if ( size > current )
+          FT_MEM_ZERO( (char*)block + current, size-current );
+      }
+    }
+    *p_error = error;
+    return block;
+  }
+                
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_QRealloc( FT_Memory  memory,
+               FT_Long    current,
+               FT_Long    size,
+               void*      block,
+               FT_Error  *p_error )
+  {
+    FT_Error  error = 0;
+    
+    if ( size <= 0 )
+    {
+      FT_Free( memory, block );
+      block = NULL;
+    }
+    else if ( current <= 0 )
+    {
+      FT_ASSERT( block == NULL );
+      
+      block = FT_QAlloc( memory, size, &error );
+    }
+    else
+    {
+      FT_Pointer  block2;
+
+      block2 = memory->realloc( memory, current, size, block );
+      if ( block2 == NULL )
+        error = FT_Err_Out_Of_Memory;
+      else
+        block = block2;
+    }
+    *p_error = error;
+    return block;
+
+  }               
+
+  FT_BASE_DEF( void )
+  FT_Free( FT_Memory   memory,
+           const void *P )
+  {
+    if ( P )
+      memory->free( memory, (void*)P );
+  }           
+
+#else /* !FT_STRICT_ALIASING */
+
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
@@ -207,6 +334,8 @@
       *P = 0;
     }
   }
+
+#endif /* !FT_STRICT_ALIASING */
 
 
   /*************************************************************************/

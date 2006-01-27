@@ -67,9 +67,9 @@
 
     OTV_LIMIT_CHECK( 2 );
 
-    OTV_TRACE(( " (Count = %d)\n", Count ));
-
     Count = FT_NEXT_USHORT( p );
+
+    OTV_TRACE(( " (Count = %d)\n", Count ));
 
     OTV_LIMIT_CHECK( Count * valid->extra1 * 2 );
 

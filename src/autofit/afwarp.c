@@ -18,6 +18,7 @@
 
 #include "afwarp.h"
 
+#ifdef AF_USE_WARPER
 
 #if 1
   static const AF_WarpScore
@@ -303,5 +304,10 @@
     *a_delta = warper->best_delta;
   }
 
+#else /* !AF_USE_WARPER */
+
+char  af_warper_dummy = 0;  /* make compiler happy */
+
+#endif /* !AF_USE_WARPER */
 
 /* END */

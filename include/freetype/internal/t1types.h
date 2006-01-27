@@ -134,6 +134,48 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /***                                                                   ***/
   /***                                                                   ***/
+  /***                AFM FONT INFORMATION STRUCTURES                    ***/
+  /***                                                                   ***/
+  /***                                                                   ***/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  typedef struct  AFM_TrackKernRec_
+  {
+    FT_Int    degree;
+    FT_Fixed  min_ptsize;
+    FT_Fixed  min_kern;
+    FT_Fixed  max_ptsize;
+    FT_Fixed  max_kern;
+
+  } AFM_TrackKernRec, *AFM_TrackKern;
+
+  typedef struct  AFM_KernPairRec_
+  {
+    FT_Int  index1;
+    FT_Int  index2;
+    FT_Int  x;
+    FT_Int  y;
+
+  } AFM_KernPairRec, *AFM_KernPair;
+
+  typedef struct  AFM_FontInfoRec_
+  {
+    FT_Bool        IsCIDFont;
+    AFM_TrackKern  TrackKerns;   /* free if non-NULL */
+    FT_Int         NumTrackKern;
+    AFM_KernPair   KernPairs;    /* free if non-NULL */
+    FT_Int         NumKernPair;
+
+  } AFM_FontInfoRec, *AFM_FontInfo;
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /***                                                                   ***/
+  /***                                                                   ***/
   /***                ORIGINAL T1_FACE CLASS DEFINITION                  ***/
   /***                                                                   ***/
   /***                                                                   ***/

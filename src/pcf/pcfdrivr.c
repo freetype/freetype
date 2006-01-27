@@ -213,7 +213,7 @@ THE SOFTWARE.
 
         FT_FREE( prop->name );
         if ( prop->isString )
-          FT_FREE( prop->value );
+          FT_FREE( prop->value.atom );
       }
 
       FT_FREE( face->properties );
