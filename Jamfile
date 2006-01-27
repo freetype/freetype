@@ -127,6 +127,10 @@ if $(DEBUG_HINTER)
 #
 HDRS += $(FT2_INCLUDE) ;
 
+# We need to #define FT2_BUILD_LIBRARY so that our sources find the
+# internal headers
+#
+DEFINES += FT2_BUILD_LIBRARY ;
 
 # Uncomment the following line if you want to build individual source files
 # for each FreeType 2 module.  This is only useful during development, and

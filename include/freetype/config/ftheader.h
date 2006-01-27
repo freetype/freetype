@@ -626,11 +626,13 @@
 
 #define FT_TRUETYPE_UNPATENTED_H  <freetype/ttunpat.h>
 
-  /* now include internal headers definitions from <freetype/internal/...> */
-
-#define  FT_INTERNAL_INTERNAL_H  <freetype/internal/internal.h>
-#include FT_INTERNAL_INTERNAL_H
-
+/* now include internal headers definitions from <freetype/internal/...>
+ * only when we're building the library !!
+ */
+#ifdef FT2_BUILD_LIBRARY
+#  define  FT_INTERNAL_INTERNAL_H  <freetype/internal/internal.h>
+#  include FT_INTERNAL_INTERNAL_H
+#endif /* FT2_BUILD_LIBRARY */
 
 #endif /* __FT2_BUILD_H__ */
 
