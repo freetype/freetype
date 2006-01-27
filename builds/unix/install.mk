@@ -23,11 +23,14 @@
 .PHONY: install uninstall check
 
 # Unix installation and deinstallation targets.
+#
+# note that we don't install internal headers since 2.2.0, and
+# we remove any 'internal' directory found in $(includedir)/freetype2/freetype
+#
 install: $(PROJECT_LIBRARY)
 	$(MKINSTALLDIRS) $(DESTDIR)$(libdir)                                 \
                          $(DESTDIR)$(libdir)/pkgconfig                       \
                          $(DESTDIR)$(includedir)/freetype2/freetype/config   \
-                         $(DESTDIR)$(includedir)/freetype2/freetype/internal \
                          $(DESTDIR)$(includedir)/freetype2/freetype/cache    \
                          $(DESTDIR)$(bindir)                                 \
                          $(DESTDIR)$(datadir)/aclocal
@@ -37,10 +40,6 @@ install: $(PROJECT_LIBRARY)
           $(INSTALL_DATA)                                    \
             $$P $(DESTDIR)$(includedir)/freetype2/freetype ; \
         done
-	-for P in $(BASE_H) ; do                                      \
-          $(INSTALL_DATA)                                             \
-            $$P $(DESTDIR)$(includedir)/freetype2/freetype/internal ; \
-        done
 	-for P in $(CONFIG_H) ; do                                  \
           $(INSTALL_DATA)                                           \
             $$P $(DESTDIR)$(includedir)/freetype2/freetype/config ; \
@@ -49,6 +48,8 @@ install: $(PROJECT_LIBRARY)
           $(INSTALL_DATA)                                          \
             $$P $(DESTDIR)$(includedir)/freetype2/freetype/cache ; \
         done
+	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/internal/*
+	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/internal
 	$(INSTALL_DATA) $(BUILD_DIR)/ft2unix.h \
           $(DESTDIR)$(includedir)/ft2build.h
 	$(INSTALL_DATA) $(OBJ_BUILD)/ftconfig.h \
@@ -67,8 +68,6 @@ uninstall:
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/cache
 	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/config/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/config
-	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/internal/*
-	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/internal
 	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2

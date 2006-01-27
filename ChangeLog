@@ -1,7 +1,17 @@
 2006-01-27  David Turner  <david@freetype.org>
 
-	* src/autofit/afwarp.c: Simple #ifdef to prevent compilation when
-	the warp hinter isn't active (it shouldn't, still experimental).
+    * builds/unix/configure.ac: fixed build problem on Cygwin
+	
+    * builds/unix/install.mk: the installation now avoids installing
+    the internal headers, and removes existing ones if finds in the
+    target install directory
+
+    * src/psaux/afmparse.h, src/psaux/afmparse.c: getting rid of
+    writable static variables (i.e. the string table), and fixed
+    the compilation in FT2_MULTI mode
+	
+    * src/autofit/afwarp.c: simple #ifdef to prevent compilation when
+    the warp hinter isn't active (it shouldn't, still experimental)
 
 	* Jamfile, include/freetype/config/ftmodule.h: Removed `gxvalid'
 	and `otvalid' from the list of modules that are linked statically
