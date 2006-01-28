@@ -1,19 +1,20 @@
+2006-01-27  Werner Lemberg  <wl@gnu.org>
+
+	* README, docs/FTL.TXT: Fix email address for bug reports.
+	Other minor formatting.
+
 2006-01-27  David Turner  <david@freetype.org>
 
-    * builds/unix/configure.ac: fixed build problem on Cygwin
+	* builds/unix/configure.ac: Fix build problem on Cygwin.
 	
-    * builds/unix/install.mk: the installation now avoids installing
-    the internal headers, and removes existing ones if finds in the
-    target install directory
+	* builds/unix/install.mk (install): Don't install the internal
+	headers, and remove existing ones if found in the target install
+	directory.
 
-    * src/psaux/afmparse.h, src/psaux/afmparse.c: getting rid of
-    writable static variables (i.e. the string table), and fixed
-    the compilation in FT2_MULTI mode
-	
-    * src/autofit/afwarp.c: simple #ifdef to prevent compilation when
-    the warp hinter isn't active (it shouldn't, still experimental)
+	* src/autofit/afwarp.c: Add simple #ifdef to prevent compilation
+	if the warp hinter isn't active (it shouldn't, still experimental).
 
-	* Jamfile, include/freetype/config/ftmodule.h: Removed `gxvalid'
+	* Jamfile, include/freetype/config/ftmodule.h: Remove `gxvalid'
 	and `otvalid' from the list of modules that are linked statically
 	to a given FreeType library.  Functionality has been moved to the
 	`ftvalid' CVS module.
@@ -60,6 +61,10 @@
 
 	* src/otvalid/otvcommn.c (otv_ClassDef_validate),
 	src/otvalid/otvgpos.c (otv_x_sxy): Fix debugging information.
+
+
+	Get rid of writable static variables (i.e., the string table) in
+	afmparse, and fix compilation in FT2_MULTI mode.
 
 	* src/psaux/afmparse.c: Include ft2build.h and FT_FREETYPE_H.
 	(AFM_MAX_ARGUMENTS): Define...
