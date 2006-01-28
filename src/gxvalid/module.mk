@@ -2,8 +2,9 @@
 # FreeType 2 gxvalid module definition
 #
 
-# Copyright 2004, 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,
-# David Turner, Robert Wilhelm, and Werner Lemberg.
+# Copyright 2004, 2005, 2006
+#   by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,
+#   David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,
@@ -11,6 +12,8 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
+
+.PHONY: add_gxvalid_module
 
 make_module_list: add_gxvalid_module
 

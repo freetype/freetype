@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -12,6 +12,8 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
+
+.PHONY: add_cff_driver
 
 make_module_list: add_cff_driver
 

@@ -23,6 +23,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+
+.PHONY: add_bdf_driver
+
 make_module_list: add_bdf_driver
 
 add_bdf_driver:

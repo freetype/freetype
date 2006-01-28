@@ -13,6 +13,8 @@
 # fully.
 
 
+.PHONY: add_autofit_module
+
 make_module_list: add_autofit_module
 
 add_autofit_module:

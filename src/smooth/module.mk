@@ -13,6 +13,8 @@
 # fully.
 
 
+.PHONY: add_smooth_renderer
+
 make_module_list: add_smooth_renderer
 
 add_smooth_renderer:

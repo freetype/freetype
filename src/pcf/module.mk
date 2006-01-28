@@ -2,7 +2,7 @@
 # FreeType 2 PCF module definition
 #
 
-# Copyright 2000 by
+# Copyright 2000, 2006 by
 # Francesco Zappa Nardelli
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,6 +22,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+
+.PHONY: add_pcf_driver
 
 make_module_list: add_pcf_driver
 

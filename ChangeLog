@@ -1,3 +1,7 @@
+2006-01-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/*/module.mk (.PHONY): Add.
+
 2006-01-27  Werner Lemberg  <wl@gnu.org>
 
 	* README, docs/FTL.TXT: Fix email address for bug reports.

@@ -13,6 +13,8 @@
 # fully.
 
 
+.PHONY: add_type42_driver
+
 make_module_list: add_type42_driver
 
 add_type42_driver:

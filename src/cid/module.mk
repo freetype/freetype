@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -13,9 +13,12 @@
 # fully.
 
 
+.PHONY: add_type1cid_driver
+
 make_module_list: add_type1cid_driver
 
 add_type1cid_driver:
 	$(OPEN_DRIVER)t1cid_driver_class$(CLOSE_DRIVER)
 	$(ECHO_DRIVER)cid       $(ECHO_DRIVER_DESC)Postscript CID-keyed fonts, no known extension$(ECHO_DRIVER_DONE)
+
 # EOF
