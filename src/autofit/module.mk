@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2003, 2004, 2005 by
+# Copyright 2003, 2004, 2005, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -17,6 +17,6 @@ make_module_list: add_autofit_module
 
 add_autofit_module:
 	$(OPEN_DRIVER)autofit_module_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)autofit  $(ECHO_DRIVER_DESC)automatic hinting module$(ECHO_DRIVER_DONE)
+	$(ECHO_DRIVER)autofit   $(ECHO_DRIVER_DESC)automatic hinting module$(ECHO_DRIVER_DONE)
 
 # EOF

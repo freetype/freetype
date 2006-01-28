@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -494,6 +494,14 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_BDF if you want to include support for        */
+  /* an embedded `BDF ' table within SFNT-based bitmap formats.            */
+  /*                                                                       */
+#define TT_CONFIG_OPTION_BDF
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****      T Y P E 1   D R I V E R    C O N F I G U R A T I O N       ****/
@@ -547,14 +555,23 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #undef T1_CONFIG_OPTION_NO_MM_SUPPORT
 
+
  /* */
 
-/*
- * This temporary macro is used to control various optimizations for
- * reducing the heap footprint of memory-mapped TrueType files.
- *
- */
-/* #define  FT_OPTIMIZE_MEMORY */
+  /*
+   * This temporary macro is used to control various optimizations for
+   * reducing the heap footprint of memory-mapped TrueType files.
+   */
+#define  FT_OPTIMIZE_MEMORY
+
+
+  /*
+   * This temporary macro is used to control whether we are going to
+   * compile certain functions like FT_Alloc in a way that prevents recent
+   * GCC releases from emitting zillions of `strict aliasing' warning
+   * messages each time a memory-management function is called.
+   */
+#define  FT_STRICT_ALIASING
 
 
 FT_END_HEADER

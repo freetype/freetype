@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2002 by
+# Copyright 2002, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -17,6 +17,6 @@ make_module_list: add_type42_driver
 
 add_type42_driver:
 	$(OPEN_DRIVER)t42_driver_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)type42     $(ECHO_DRIVER_DESC)Type 42 font files with no known extension$(ECHO_DRIVER_DONE)
+	$(ECHO_DRIVER)type42    $(ECHO_DRIVER_DESC)Type 42 font files with no known extension$(ECHO_DRIVER_DONE)
 
 # EOF

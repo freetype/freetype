@@ -3,6 +3,16 @@
 	* README, docs/FTL.TXT: Fix email address for bug reports.
 	Other minor formatting.
 
+	* devel/ftoption.h: Synchronize with
+	include/freetype/config/ftoption.h.
+
+	* src/autofit/module.mk (add_autofit_module), src/bdf/module.mk
+	(add_bdf_module), src/type42/module.mk (add_type42_driver): Fix
+	whitespace.
+
+	* src/smooth/module.mk (add_smooth_renderer): Add lcd and lcdv
+	renderer classes.
+
 2006-01-27  David Turner  <david@freetype.org>
 
 	* builds/unix/configure.ac: Fix build problem on Cygwin.
