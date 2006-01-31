@@ -24,12 +24,11 @@
 # THE SOFTWARE.
 
 
-.PHONY: add_bdf_driver
+FTMODULE_H_COMMANDS += BDF_DRIVER
 
-make_module_list: add_bdf_driver
-
-add_bdf_driver:
-	$(OPEN_DRIVER)bdf_driver_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)bdf       $(ECHO_DRIVER_DESC)bdf bitmap fonts$(ECHO_DRIVER_DONE)
+define BDF_DRIVER
+$(OPEN_DRIVER)bdf_driver_class$(CLOSE_DRIVER)
+$(ECHO_DRIVER)bdf       $(ECHO_DRIVER_DESC)bdf bitmap fonts$(ECHO_DRIVER_DONE)
+endef
 
 # EOF

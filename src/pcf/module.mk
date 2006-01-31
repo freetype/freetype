@@ -24,12 +24,11 @@
 # THE SOFTWARE.
 
 
-.PHONY: add_pcf_driver
+FTMODULE_H_COMMANDS += PCF_DRIVER
 
-make_module_list: add_pcf_driver
-
-add_pcf_driver:
-	$(OPEN_DRIVER)pcf_driver_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)pcf       $(ECHO_DRIVER_DESC)pcf bitmap fonts$(ECHO_DRIVER_DONE)
+define PCF_DRIVER
+$(OPEN_DRIVER)pcf_driver_class$(CLOSE_DRIVER)
+$(ECHO_DRIVER)pcf       $(ECHO_DRIVER_DESC)pcf bitmap fonts$(ECHO_DRIVER_DONE)
+endef
 
 # EOF

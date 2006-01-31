@@ -15,6 +15,14 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   II. IMPORTANT CHANGES
 
+    - FreeType's build  mechanism has been redesigned.   With GNU make
+      it  is  now  sufficient  in   most  cases  to  edit  two  files:
+      `modules.cfg',  to  select   the  library  components,  and  the
+      configuration  file  `include/freetype/config/ftoption.h' (which
+      can be copied to the objects directory).  Removing unused module
+      directories   to    prevent   its   compilation    and   editing
+      `include/freetype/config/ftmodule.h' is no longer necessary.
+
     - The  LIGHT  hinting algorithm  produces  more pleasant  results.
       Also, using the  FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph
       always forces auto-hinting, as a special exception.

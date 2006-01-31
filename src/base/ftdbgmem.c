@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Memory debugger (body).                                              */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003, 2004, 2005 by                              */
+/*  Copyright 2001, 2002, 2003, 2004, 2005, 2006 by                        */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -887,6 +887,115 @@
   }
 
 
+#ifdef FT_STRICT_ALIASING
+
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_Alloc_Debug( FT_Memory    memory,
+                  FT_Long      size,
+                  FT_Error    *p_error,
+                  const char*  file_name,
+                  FT_Long      line_no )
+  {
+    FT_MemTable  table = (FT_MemTable)memory->user;
+
+
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+
+    return FT_Alloc( memory, size, p_error );
+  }
+
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_Realloc_Debug( FT_Memory    memory,
+                    FT_Long      current,
+                    FT_Long      size,
+                    void*        block,
+                    FT_Error    *p_error,
+                    const char*  file_name,
+                    FT_Long      line_no )
+  {
+    FT_MemTable  table = (FT_MemTable)memory->user;
+
+
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+
+    return FT_Realloc( memory, current, size, block, p_error );
+  }
+
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_QAlloc_Debug( FT_Memory    memory,
+                   FT_Long      size,
+                   FT_Error    *p_error,
+                   const char*  file_name,
+                   FT_Long      line_no )
+  {
+    FT_MemTable  table = (FT_MemTable)memory->user;
+
+
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+
+    return FT_QAlloc( memory, size, p_error );
+  }
+
+
+  FT_BASE_DEF( FT_Pointer )
+  FT_QRealloc_Debug( FT_Memory    memory,
+                     FT_Long      current,
+                     FT_Long      size,
+                     void*        block,
+                     FT_Error    *p_error,
+                     const char*  file_name,
+                     FT_Long      line_no )
+  {
+    FT_MemTable  table = (FT_MemTable)memory->user;
+
+
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+
+    return FT_QRealloc( memory, current, size, block, p_error );
+  }
+
+
+  FT_BASE_DEF( void )
+  FT_Free_Debug( FT_Memory    memory,
+                 const void  *P,
+                 const char*  file_name,
+                 FT_Long      line_no )
+  {
+    FT_MemTable  table = (FT_MemTable)memory->user;
+
+
+    if ( table )
+    {
+      table->file_name = file_name;
+      table->line_no   = line_no;
+    }
+
+    FT_Free( memory, (void *)P );
+  }
+
+
+#else /* !FT_STRICT_ALIASING */
+
+
   FT_BASE_DEF( FT_Error )
   FT_Alloc_Debug( FT_Memory    memory,
                   FT_Long      size,
@@ -987,6 +1096,8 @@
     FT_Free( memory, (void **)block );
   }
 
+
+#endif /* !FT_STRICT_ALIASING */
 
   static int
   ft_mem_source_compare( const void*  p1,

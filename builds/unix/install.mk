@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2002, 2003 by
+# Copyright 1996-2000, 2002, 2003, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -24,17 +24,17 @@
 
 # Unix installation and deinstallation targets.
 #
-# note that we don't install internal headers since 2.2.0, and
-# we remove any 'internal' directory found in $(includedir)/freetype2/freetype
+# Note that we no longer install internal headers, and we remove any
+# `internal' subdirectory found in `$(includedir)/freetype2/freetype'.
 #
 install: $(PROJECT_LIBRARY)
-	$(MKINSTALLDIRS) $(DESTDIR)$(libdir)                                 \
-                         $(DESTDIR)$(libdir)/pkgconfig                       \
-                         $(DESTDIR)$(includedir)/freetype2/freetype/config   \
-                         $(DESTDIR)$(includedir)/freetype2/freetype/cache    \
-                         $(DESTDIR)$(bindir)                                 \
+	$(MKINSTALLDIRS) $(DESTDIR)$(libdir)                               \
+                         $(DESTDIR)$(libdir)/pkgconfig                     \
+                         $(DESTDIR)$(includedir)/freetype2/freetype/config \
+                         $(DESTDIR)$(includedir)/freetype2/freetype/cache  \
+                         $(DESTDIR)$(bindir)                               \
                          $(DESTDIR)$(datadir)/aclocal
-	$(LIBTOOL) --mode=install $(INSTALL) \
+	$(LIBTOOL) --mode=install $(INSTALL)                             \
                                   $(PROJECT_LIBRARY) $(DESTDIR)$(libdir)
 	-for P in $(PUBLIC_H) ; do                           \
           $(INSTALL_DATA)                                    \
@@ -52,8 +52,10 @@ install: $(PROJECT_LIBRARY)
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/internal
 	$(INSTALL_DATA) $(BUILD_DIR)/ft2unix.h \
           $(DESTDIR)$(includedir)/ft2build.h
-	$(INSTALL_DATA) $(OBJ_BUILD)/ftconfig.h \
+	$(INSTALL_DATA) $(OBJ_BUILD)/ftconfig.h                        \
           $(DESTDIR)$(includedir)/freetype2/freetype/config/ftconfig.h
+	$(INSTALL_DATA) $(OBJ_BUILD)/ftmodule.h                        \
+          $(DESTDIR)$(includedir)/freetype2/freetype/config/ftmodule.h
 	$(INSTALL_SCRIPT) -m 755 $(OBJ_BUILD)/freetype-config \
           $(DESTDIR)$(bindir)/freetype-config
 	$(INSTALL_SCRIPT) -m 644 $(BUILD_DIR)/freetype2.m4 \

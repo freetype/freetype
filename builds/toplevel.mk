@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2003 by
+# Copyright 1996-2000, 2001, 2003, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -36,11 +36,42 @@
 
 .PHONY: all setup distclean modules
 
+
 # The `space' variable is used to avoid trailing spaces in defining the
 # `T' variable later.
 #
 empty :=
 space := $(empty) $(empty)
+
+
+# The main configuration file, defining the `XXX_MODULES' variables.  We
+# prefer a `modules.cfg' file in OBJ_DIR over TOP_DIR.
+#
+ifndef MODULES_CFG
+  MODULES_CFG := $(TOP_DIR)/modules.cfg
+  ifneq ($(wildcard $(OBJ_DIR)/modules.cfg),)
+    MODULES_CFG := $(OBJ_DIR)/modules.cfg
+  endif
+endif
+
+
+# FTMODULE_H, as its name suggests, indicates where the FreeType module
+# classes resides.
+#
+ifndef FTMODULE_H
+  FTMODULE_H := $(OBJ_DIR)/ftmodule.h
+endif
+
+
+include $(MODULES_CFG)
+
+
+# The list of modules we are using.
+#
+MODULES := $(FONT_MODULES)    \
+           $(HINTING_MODULES) \
+           $(RASTER_MODULES)  \
+           $(AUX_MODULES)
 
 
 ifndef CONFIG_MK
@@ -71,25 +102,9 @@ endif
 #
 ifdef check_platform
 
-  # This is the first rule `make' sees.
-  #
-  all: setup
-
-  ifdef USE_MODULES
-    # If the module list $(MODULE_LIST) file is not present, generate it.
-    #
-    #modules: make_module_list setup
-  endif
+  all modules: setup
 
   include $(TOP_DIR)/builds/detect.mk
-
-  ifdef USE_MODULES
-    include $(TOP_DIR)/builds/modules.mk
-
-    ifeq ($(wildcard $(MODULE_LIST)),)
-      setup: make_module_list
-    endif
-  endif
 
   # This rule makes sense for Unix only to remove files created by a run
   # of the configure script which hasn't been successful (so that no
@@ -97,7 +112,7 @@ ifdef check_platform
   # GNU make.  Similarly, `nul' is created if e.g. `make setup win32' has
   # been erroneously used.
   #
-  # note: This test is duplicated in "builds/toplevel.mk".
+  # Note: This test is duplicated in `builds/unix/detect.mk'.
   #
   is_unix := $(strip $(wildcard /sbin/init) \
                      $(wildcard /usr/sbin/init) \
@@ -126,14 +141,25 @@ else
   #
   all: single
 
-  ifdef USE_MODULES
-    modules: make_module_list
-  endif
-
   BUILD_PROJECT := yes
   include $(CONFIG_MK)
 
 endif # test check_platform
+
+
+# We always need the list of modules in ftmodule.h.
+#
+all setup: $(FTMODULE_H)
+
+
+# The `modules' target unconditionally rebuilds the module list.
+#
+modules:
+	$(FTMODULE_H_INIT)
+	$(FTMODULE_H_CREATE)
+	$(FTMODULE_H_DONE)
+
+include $(TOP_DIR)/builds/modules.mk
 
 
 # EOF

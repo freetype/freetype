@@ -13,11 +13,11 @@
 # fully.
 
 
-.PHONY: add_windows_driver
+FTMODULE_H_COMMANDS += WINDOWS_DRIVER
 
-make_module_list: add_windows_driver
+define WINDOWS_DRIVER
+$(OPEN_DRIVER)winfnt_driver_class$(CLOSE_DRIVER)
+$(ECHO_DRIVER)winfnt    $(ECHO_DRIVER_DESC)Windows bitmap fonts with extension *.fnt or *.fon$(ECHO_DRIVER_DONE)
+endef
 
-add_windows_driver:
-	$(OPEN_DRIVER)winfnt_driver_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)winfnt    $(ECHO_DRIVER_DESC)Windows bitmap fonts with extension *.fnt or *.fon$(ECHO_DRIVER_DONE)
-
+# EOF

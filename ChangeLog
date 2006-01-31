@@ -1,9 +1,123 @@
+2006-01-29  Werner Lemberg  <wl@gnu.org>
+
+	Implement new, simplified module selection.  With GNU make it is now
+	sufficient to modify a single file, `modules.cfg', to control the
+	inclusion of modules and base extension files.
+
+	This change also fixes the creation of ftmodule.h; it now depends on
+	`modules.cfg' and thus is rebuilt only if necessary.
+
+	Finally, a version of `ftoption.h' in OBJ_DIR is preferred over the
+	default location.
+
+	* modules.cfg: New file.
+
+	* builds/freetype.mk: Don't include `modules.mk'.
+	Include all `rules.mk' files as specified in `modules.cfg'.
+	(FTOPTION_FLAG, FTOPTION_H): New variables.
+	(FT_CFLAGS): Add macro definition for FT_CONFIG_MODULES_H.
+	Add FTOPTION_FLAG.
+	($(FT_INIT_OBJ)): Don't use FT_MODULE_LIST.
+	(CONFIG_H): Add FTMODULE_H and FTOPTION_H.
+	(INCLUDES): Add DEVEL_DIR.
+	(INCLUDE_FLAGS, FTSYS_SRC, FTSYS_OBJ, FTDEBUG_SRC, FTDEBUG_OBJ,
+	OBJ_M, OBJ_S): Use `:=', not `='.
+	(remove_ftmodule_h): New phony target to delete `ftmodule.h'.
+	(distclean): Add remove_ftmodule_h.
+
+	* builds/modules.mk: (MODULE_LIST): Removed.
+	(make_module_list, clean_module_list): Replace targets
+	with...
+	(FTMODULE_H_INIT, FTMODULE_H_CREATE, FTMODULE_H_DONE): New
+	variables.  Reason for the change is that it is not possible to have
+	a phony prerequisite which is run only if the target file must be
+	rebuilt (phony prerequisites act like subroutines and are *always*
+	executed).  We only want to rebuild `ftmodule.h' if `module.cfg' is
+	changed.
+	Update all callers.
+	($FTMODULE_H)): Rule to create `ftmodule.h', depending on
+	`modules.cfg'.
+
+	* builds/toplevel.mk: Rewrite and simplify module handling.
+	(MODULES_CFG, FTMODULE_H): New variables.
+	Include MODULES_CFG.
+	(MODULES): New variable to include all `module.mk' and `rules.mk'
+	files.  We no longer use make's `wildcard' function for this.
+
+	* Makefile (USE_MODULES): Remove.  Update all users.
+	(OBJ_DIR): Define it here.
+
+	* src/*/module.mk: Change
+
+	    make_module_list: foo
+	    foo: ...
+
+	to
+
+	    FTMODULE_H_COMMANDS += FOO
+	    define FOO
+	    ...
+	    endef
+
+	in all files.  `FTMODULE_H_COMMANDS' is used in `FTMODULE_H_CREATE'.
+
+	* src/base/rules.mk (BASE_EXT_SRC): Use BASE_EXTENSIONS.
+
+	* builds/unix/detect.mk (setup): Always execute `configure' script.
+	(have_mk): Rename to...
+	(have_Makefile): This.
+	Don't use `strip' function.
+
+	* builds/unix/unix.mk: Include `install.mk' only if BUILD_PROJECT is
+	defined.
+	(have_mk): Don't use `strip' function.
+	Test for unix-def.mk in OBJ_DIR, not BUILD_DIR (and invert the test
+	accordingly).
+
+	* builds/unix/install.mk (install, uninstall): Handle `ftmodule.h'.
+
+	* builds/os2/os2-dev.mk, builds/unix/unix-dev.mk,
+	builds/win32/w32-bccd.mk, builds/win32/w32-dev.mk: Don't define
+	BUILD_DIR but DEVEL_DIR for development header files.
+
+	* builds/ansi/ansi-def.mk (TOP_DIR, OBJ_DIR),
+	builds/beos/beos-def.mk (TOP_DIR, OBJ_DIR), builds/unix/unix-def.in
+	(TOP_DIR, OBJ_DIR): Removed.  Defined elsewhere.
+
+	* builds/dos/dos-def.mk (OBJ_DIR), builds/os2/os2-def.mk (OBJ_DIR),
+	builds/win32/win32-def.mk (OBJ_DIR): Removed.  Defined elsewhere.
+
+	* builds/unix/unixddef.mk: Don't define BUILD_DIR but DEVEL_DIR for
+	development header files.
+	Don't define PLATFORM.
+
+	* configure: Copy `modules.cfg' to builddir if builddir != srcdir.
+	Update snippet taken from autoconf's m4sh.m4 to current CVS version.
+	Be more verbose.
+
+	* include/freetype/config/ftmodule.h: Add comments -- this file is
+	no longer used if FreeType is built with GNU make.
+
+	* docs/CHANGES, docs/CUSTOMIZE, docs/INSTALL, docs/INSTALL.ANY,
+	docs/INSTALL.GNU, docs/INSTALL.UNX: Document new build mechanism.
+	Other minor updates.
+
+	* modules.txt: Removed.  Contents included in `modules.cfg'.
+
+
+	* include/freetype/internal/ftmemory.h (FT_QAlloc_Debug,
+	FT_Free_Debug) [FT_STRICT_ALIASING]: Fix typos.
+
+	* src/base/ftdbgmem.c (FT_Alloc_Debug, FT_Realloc_Debug,
+	FT_QAlloc_Debug, FT_QRealloc_Debug, FT_Free_Debug)
+	[FT_STRICT_ALIASING]: Implement.
+
 2006-01-31  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/cff/cffobjs.c (cff_face_init), src/cid/cidobjs.c
-	(cid_face_init), src/pfr/pfrobjs.c (pfr_face_init), src/type1/t1objs.c
-	(T1_Face_Init): Set face->height to
-	MAX(1.2 * units_per_EM, ascender - descender).
+	(cid_face_init), src/pfr/pfrobjs.c (pfr_face_init),
+	src/type1/t1objs.c (T1_Face_Init): Set face->height to MAX(1.2 *
+	units_per_EM, ascender - descender).
 
 2006-01-31  Chia-I Wu  <b90201047@ntu.edu.tw>
 
@@ -13,8 +127,8 @@
 
 	* src/type1/t1afm.c (T1_Read_Metrics): Use the metrics from the AFM.
 
-	* include/freetype/freetype.h (FT_FaceRec): Mention that fields may be
-	changed after file attachment.
+	* include/freetype/freetype.h (FT_FaceRec): Mention that fields may
+	be changed after file attachment.
 
 2006-01-28  Werner Lemberg  <wl@gnu.org>
 

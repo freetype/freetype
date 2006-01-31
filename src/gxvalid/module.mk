@@ -13,12 +13,11 @@
 # fully.
 
 
-.PHONY: add_gxvalid_module
+FTMODULE_H_COMMANDS += GXVALID_MODULE
 
-make_module_list: add_gxvalid_module
-
-add_gxvalid_module:
-	$(OPEN_DRIVER)gxvalid_module_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)gxvalid     $(ECHO_DRIVER_DESC)TrueTypeGX/AAT validation module$(ECHO_DRIVER_DONE)
+define GXVALID_MODULE
+$(OPEN_DRIVER)gxvalid_module_class$(CLOSE_DRIVER)
+$(ECHO_DRIVER)gxvalid     $(ECHO_DRIVER_DESC)TrueTypeGX/AAT validation module$(ECHO_DRIVER_DONE)
+endef
 
 # EOF

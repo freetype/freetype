@@ -13,12 +13,11 @@
 # fully.
 
 
-.PHONY: add_pfr_driver
+FTMODULE_H_COMMANDS += PFR_DRIVER
 
-make_module_list: add_pfr_driver
-
-add_pfr_driver:
-	$(OPEN_DRIVER)pfr_driver_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)pfr       $(ECHO_DRIVER_DESC)PFR/TrueDoc font files with extension *.pfr$(ECHO_DRIVER_DONE)
+define PFR_DRIVER
+$(OPEN_DRIVER)pfr_driver_class$(CLOSE_DRIVER)
+$(ECHO_DRIVER)pfr       $(ECHO_DRIVER_DESC)PFR/TrueDoc font files with extension *.pfr$(ECHO_DRIVER_DONE)
+endef
 
 # EOF

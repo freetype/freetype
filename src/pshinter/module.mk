@@ -13,12 +13,11 @@
 # fully.
 
 
-.PHONY: add_pshinter_module
+FTMODULE_H_COMMANDS += PSHINTER_MODULE
 
-make_module_list: add_pshinter_module
-
-add_pshinter_module:
-	$(OPEN_DRIVER)pshinter_module_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)pshinter  $(ECHO_DRIVER_DESC)Postscript hinter module$(ECHO_DRIVER_DONE)
+define PSHINTER_MODULE
+$(OPEN_DRIVER)pshinter_module_class$(CLOSE_DRIVER)
+$(ECHO_DRIVER)pshinter  $(ECHO_DRIVER_DESC)Postscript hinter module$(ECHO_DRIVER_DONE)
+endef
 
 # EOF

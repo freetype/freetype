@@ -108,7 +108,6 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Pointer )
   FT_QAlloc_Debug( FT_Memory    memory,
                    FT_Long      size,
-                   void*        P,
                    FT_Error    *p_error,
                    const char*  file_name,
                    FT_Long      line_no );
@@ -133,7 +132,7 @@ FT_BEGIN_HEADER
 
   FT_BASE( void )
   FT_Free_Debug( FT_Memory    memory,
-                 FT_Pointer   block,
+                 const void  *P,
                  const char*  file_name,
                  FT_Long      line_no );
 

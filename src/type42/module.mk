@@ -13,12 +13,11 @@
 # fully.
 
 
-.PHONY: add_type42_driver
+FTMODULE_H_COMMANDS += TYPE42_DRIVER
 
-make_module_list: add_type42_driver
-
-add_type42_driver:
-	$(OPEN_DRIVER)t42_driver_class$(CLOSE_DRIVER)
-	$(ECHO_DRIVER)type42    $(ECHO_DRIVER_DESC)Type 42 font files with no known extension$(ECHO_DRIVER_DONE)
+define TYPE42_DRIVER
+$(OPEN_DRIVER)t42_driver_class$(CLOSE_DRIVER)
+$(ECHO_DRIVER)type42    $(ECHO_DRIVER_DESC)Type 42 font files with no known extension$(ECHO_DRIVER_DONE)
+endef
 
 # EOF

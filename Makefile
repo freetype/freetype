@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2002 by
+# Copyright 1996-2000, 2002, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -18,14 +18,20 @@
 PROJECT := freetype
 PROJECT_TITLE := FreeType
 
-USE_MODULES := 1
-
 # The variable TOP_DIR holds the path to the topmost directory in the project
 # engine source hierarchy.  If it is not defined, default it to `.'.
 #
 ifndef TOP_DIR
   TOP_DIR := .
 endif
+
+# The variable OBJ_DIR gives the location where object files and the
+# FreeType library are built.
+#
+ifndef OBJ_DIR
+  OBJ_DIR := $(TOP_DIR)/objs
+endif
+
 
 include $(TOP_DIR)/builds/toplevel.mk
 
