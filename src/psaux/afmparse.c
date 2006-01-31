@@ -607,6 +607,7 @@
     {
       AFM_ValueRec  shared_vals[5];
       
+
       switch ( afm_tokenize( key, len ) )
       {
       case AFM_TOKEN_TRACKKERN:
@@ -863,6 +864,9 @@
 
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
+      AFM_ValueRec  shared_vals[4];
+
+
       switch ( afm_tokenize( key, len ) )
       {
       case AFM_TOKEN_METRICSSETS:
@@ -878,16 +882,41 @@
         break;
 
       case AFM_TOKEN_ISCIDFONT:
-        {
-          AFM_ValueRec  shared_vals[1];
-          
+        shared_vals[0].type = AFM_VALUE_TYPE_BOOL;
+        if ( afm_parser_read_vals( parser, shared_vals, 1 ) != 1 )
+          goto Fail;
 
-          shared_vals[0].type = AFM_VALUE_TYPE_BOOL;
-          if ( afm_parser_read_vals( parser, shared_vals, 1 ) != 1 )
-            goto Fail;
+        fi->IsCIDFont = shared_vals[0].u.b;
+        break;
 
-          fi->IsCIDFont = shared_vals[0].u.b;
-        }
+      case AFM_TOKEN_FONTBBOX:
+        shared_vals[0].type = AFM_VALUE_TYPE_FIXED;
+        shared_vals[1].type = AFM_VALUE_TYPE_FIXED;
+        shared_vals[2].type = AFM_VALUE_TYPE_FIXED;
+        shared_vals[3].type = AFM_VALUE_TYPE_FIXED;
+        if ( afm_parser_read_vals( parser, shared_vals, 4 ) != 4 )
+          goto Fail;
+
+        fi->FontBBox.xMin = shared_vals[0].u.f;
+        fi->FontBBox.yMin = shared_vals[1].u.f;
+        fi->FontBBox.xMax = shared_vals[2].u.f;
+        fi->FontBBox.yMax = shared_vals[3].u.f;
+        break;
+
+      case AFM_TOKEN_ASCENDER:
+        shared_vals[0].type = AFM_VALUE_TYPE_FIXED;
+        if ( afm_parser_read_vals( parser, shared_vals, 1 ) != 1 )
+          goto Fail;
+
+        fi->Ascender = shared_vals[0].u.f;
+        break;
+
+      case AFM_TOKEN_DESCENDER:
+        shared_vals[0].type = AFM_VALUE_TYPE_FIXED;
+        if ( afm_parser_read_vals( parser, shared_vals, 1 ) != 1 )
+          goto Fail;
+
+        fi->Descender = shared_vals[0].u.f;
         break;
 
       case AFM_TOKEN_STARTCHARMETRICS:

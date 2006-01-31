@@ -163,6 +163,9 @@ FT_BEGIN_HEADER
   typedef struct  AFM_FontInfoRec_
   {
     FT_Bool        IsCIDFont;
+    FT_BBox        FontBBox;
+    FT_Fixed       Ascender;
+    FT_Fixed       Descender;
     AFM_TrackKern  TrackKerns;   /* free if non-NULL */
     FT_Int         NumTrackKern;
     AFM_KernPair   KernPairs;    /* free if non-NULL */

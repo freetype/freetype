@@ -826,11 +826,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    num_charmaps        :: The number of charmaps in the face.         */
   /*                                                                       */
-  /*    charmaps            :: An array of the charmaps of the face.  The  */
-  /*                           array might change after a call to          */
-  /*                           @FT_Attach_File or @FT_Attach_Stream (e.g., */
-  /*                           if used to hook an additional encoding or   */
-  /*                           CMap to the face object).                   */
+  /*    charmaps            :: An array of the charmaps of the face.       */
   /*                                                                       */
   /*    generic             :: A field reserved for client uses.  See the  */
   /*                           @FT_Generic type description.               */
@@ -894,6 +890,10 @@ FT_BEGIN_HEADER
   /*    size                :: The current active size for this face.      */
   /*                                                                       */
   /*    charmap             :: The current active charmap for this face.   */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*   Fields may be changed after a call to @FT_Attach_File or            */
+  /*   @FT_Attach_Stream.                                                  */
   /*                                                                       */
   typedef struct  FT_FaceRec_
   {

@@ -230,6 +230,7 @@
     AFM_ParserRec  parser;
     AFM_FontInfo   fi;
     FT_Error       error = T1_Err_Unknown_File_Format;
+    T1_Font        t1_font = &( (T1_Face)t1_face )->type1;
 
 
     if ( FT_NEW( fi ) )
@@ -240,6 +241,10 @@
       FT_FREE( fi );
       return error;
     }
+
+    fi->FontBBox  = t1_font->font_bbox;
+    fi->Ascender  = t1_font->font_bbox.yMax;
+    fi->Descender = t1_font->font_bbox.yMin;
 
     psaux = (PSAux_Service)( (T1_Face)t1_face )->psaux;
     if ( psaux && psaux->afm_parser_funcs )
@@ -253,7 +258,7 @@
       {
         parser.FontInfo  = fi;
         parser.get_index = t1_get_index;
-        parser.user_data = &( (T1_Face)t1_face )->type1;
+        parser.user_data = t1_font;
 
         error = psaux->afm_parser_funcs->parse( &parser );
         psaux->afm_parser_funcs->done( &parser );
@@ -271,10 +276,23 @@
         error = T1_Read_PFM( t1_face, stream, fi );
     }
 
-    if ( !error && fi->NumKernPair )
+    if ( !error )
     {
-      t1_face->face_flags |= FT_FACE_FLAG_KERNING;
-      ( (T1_Face)t1_face )->afm_data = fi;
+      t1_font->font_bbox = fi->FontBBox;
+
+      t1_face->bbox.xMin =   fi->FontBBox.xMin             >> 16;
+      t1_face->bbox.yMin =   fi->FontBBox.yMin             >> 16;
+      t1_face->bbox.xMax = ( fi->FontBBox.xMax + 0xFFFFU ) >> 16;
+      t1_face->bbox.yMax = ( fi->FontBBox.yMax + 0xFFFFU ) >> 16;
+
+      t1_face->ascender  = ( fi->Ascender  + 0x8000U ) >> 16;
+      t1_face->descender = ( fi->Descender + 0x8000U ) >> 16;
+
+      if ( fi->NumKernPair )
+      {
+        t1_face->face_flags |= FT_FACE_FLAG_KERNING;
+        ( (T1_Face)t1_face )->afm_data = fi;
+      }
     }
 
     FT_FRAME_EXIT();

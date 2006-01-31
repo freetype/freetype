@@ -1,3 +1,14 @@
+2006-01-31  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/internal/t1types.h (AFM_FontInfo),
+	src/psaux/afmparse.c, src/tools/test_afm.c: Read `FontBBox',
+	`Ascender', and `Descender' from an AFM.
+
+	* src/type1/t1afm.c (T1_Read_Metrics): Use the metrics from the AFM.
+
+	* include/freetype/freetype.h (FT_FaceRec): Mention that fields may be
+	changed after file attachment.
+
 2006-01-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/*/module.mk (.PHONY): Add.

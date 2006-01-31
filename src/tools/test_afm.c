@@ -1,5 +1,5 @@
 /*
- * gcc -I../../include -o test_afm test_afm.c \
+ * gcc -DFT2_BUILD_LIBRARY -I../../include -o test_afm test_afm.c \
  *     -L../../objs/.libs -lfreetype -lz -static
  */
 #include <ft2build.h>
@@ -14,6 +14,13 @@
 
     printf( "This AFM is for %sCID font.\n\n",
             ( fi->IsCIDFont ) ? "" : "non-" );
+
+    printf( "FontBBox: %.2f %.2f %.2f %.2f\n", fi->FontBBox.xMin / 65536.,
+                                               fi->FontBBox.yMin / 65536.,
+                                               fi->FontBBox.xMax / 65536.,
+                                               fi->FontBBox.yMax / 65536. );
+    printf( "Ascender: %.2f\n", fi->Ascender / 65536. );
+    printf( "Descender: %.2f\n\n", fi->Descender / 65536. );
 
     if ( fi->NumTrackKern )
       printf( "There are %d sets of track kernings:\n",
