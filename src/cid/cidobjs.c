@@ -422,8 +422,10 @@
 
       cidface->ascender  = (FT_Short)( cidface->bbox.yMax );
       cidface->descender = (FT_Short)( cidface->bbox.yMin );
-      cidface->height    = (FT_Short)(
-        ( ( cidface->ascender - cidface->descender ) * 12 ) / 10 );
+
+      cidface->height = (FT_Short)( ( cidface->units_per_EM * 12 ) / 10 );
+      if ( cidface->height < cidface->ascender - cidface->descender )
+        cidface->height = cidface->ascender - cidface->descender;
 
       cidface->underline_position  = (FT_Short)info->underline_position;
       cidface->underline_thickness = (FT_Short)info->underline_thickness;

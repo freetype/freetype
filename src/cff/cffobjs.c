@@ -461,15 +461,17 @@
         cffface->bbox.xMax = ( dict->font_bbox.xMax + 0xFFFFU ) >> 16;
         cffface->bbox.yMax = ( dict->font_bbox.yMax + 0xFFFFU ) >> 16;
 
-        cffface->ascender  = (FT_Short)( cffface->bbox.yMax );
-        cffface->descender = (FT_Short)( cffface->bbox.yMin );
-        cffface->height    = (FT_Short)(
-          ( ( cffface->ascender - cffface->descender ) * 12 ) / 10 );
-
         if ( !dict->units_per_em )
           dict->units_per_em = 1000;
 
         cffface->units_per_EM = dict->units_per_em;
+
+        cffface->ascender  = (FT_Short)( cffface->bbox.yMax );
+        cffface->descender = (FT_Short)( cffface->bbox.yMin );
+
+        cffface->height = (FT_Short)( ( cffface->units_per_EM * 12 ) / 10 );
+        if ( cffface->height < cffface->ascender - cffface->descender )
+          cffface->height = cffface->ascender - cffface->descender;
 
         cffface->underline_position  =
           (FT_Short)( dict->underline_position >> 16 );

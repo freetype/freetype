@@ -1,5 +1,12 @@
 2006-01-31  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* src/cff/cffobjs.c (cff_face_init), src/cid/cidobjs.c
+	(cid_face_init), src/pfr/pfrobjs.c (pfr_face_init), src/type1/t1objs.c
+	(T1_Face_Init): Set face->height to
+	MAX(1.2 * units_per_EM, ascender - descender).
+
+2006-01-31  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* include/freetype/internal/t1types.h (AFM_FontInfo),
 	src/psaux/afmparse.c, src/tools/test_afm.c: Read `FontBBox',
 	`Ascender', and `Descender' from an AFM.
