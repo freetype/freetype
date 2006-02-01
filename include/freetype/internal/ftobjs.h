@@ -479,7 +479,7 @@ FT_BEGIN_HEADER
   FT_Match_Size( FT_Face          face,
                  FT_Size_Request  req,
                  FT_Bool          ignore_width,
-                 FT_ULong*        index );
+                 FT_ULong*        size_index );
 
 
   /* Use the horizontal metrics to synthesize the vertical metrics. */

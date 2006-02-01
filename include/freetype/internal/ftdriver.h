@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
 
   typedef FT_Error
   (*FT_Size_SelectFunc)( FT_Size   size,
-                         FT_ULong  index );
+                         FT_ULong  size_index );
 
   typedef FT_Error
   (*FT_Slot_LoadFunc)( FT_GlyphSlot  slot,
