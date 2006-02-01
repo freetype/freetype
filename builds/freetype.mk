@@ -105,9 +105,7 @@ CACHE_DIR    := $(PUBLIC_DIR)/cache
 
 # The documentation directory.
 #
-ifndef DOC_DIR
-  DOC_DIR := $(TOP_DIR)/docs/reference
-endif
+DOC_DIR ?= $(TOP_DIR)/docs/reference
 
 # The final name of the library file.
 #
@@ -192,9 +190,7 @@ FREETYPE_H := $(PUBLIC_H) $(BASE_H) $(CONFIG_H) $(CACHE_H) $(DEVEL_H)
 
 # ftsystem component
 #
-ifndef FTSYS_SRC
-  FTSYS_SRC := $(BASE_DIR)/ftsystem.c
-endif
+FTSYS_SRC ?= $(BASE_DIR)/ftsystem.c
 
 FTSYS_OBJ := $(OBJ_DIR)/ftsystem.$O
 
@@ -206,9 +202,7 @@ $(FTSYS_OBJ): $(FTSYS_SRC) $(FREETYPE_H)
 
 # ftdebug component
 #
-ifndef FTDEBUG_SRC
-  FTDEBUG_SRC := $(BASE_DIR)/ftdebug.c
-endif
+FTDEBUG_SRC ?= $(BASE_DIR)/ftdebug.c
 
 FTDEBUG_OBJ := $(OBJ_DIR)/ftdebug.$O
 

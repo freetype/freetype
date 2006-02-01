@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2003, 2004 by
+# Copyright 1996-2000, 2003, 2004, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -73,9 +73,7 @@ ifeq ($(PLATFORM),dos)
   # Use DJGPP (i.e. gcc) by default.
   #
   CONFIG_FILE := dos-gcc.mk
-  ifndef CC
-    CC        := gcc
-  endif
+  CC          ?= gcc
 
   # additionally, we provide hooks for various other compilers
   #

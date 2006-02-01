@@ -15,10 +15,6 @@
 # fully.
 
 
-ifndef TOP_DIR
-  TOP_DIR := .
-endif
-
 DEVEL_DIR := $(TOP_DIR)/devel
 
 # include OS/2-specific definitions

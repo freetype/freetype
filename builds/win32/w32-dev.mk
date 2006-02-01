@@ -19,10 +19,6 @@
 #       Shell (_not_ Cygwin BASH)!
 #
 
-ifndef TOP_DIR
-  TOP_DIR := .
-endif
-
 DEVEL_DIR := $(TOP_DIR)/devel
 
 include $(TOP_DIR)/builds/win32/win32-def.mk

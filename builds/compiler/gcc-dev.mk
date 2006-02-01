@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2003, 2004, 2005 by
+# Copyright 1996-2000, 2003, 2004, 2005, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -87,10 +87,8 @@ ANSIFLAGS := -ansi -pedantic
 
 # Library linking
 #
-ifndef CLEAN_LIBRARY
-  CLEAN_LIBRARY = $(DELETE) $(subst /,$(SEP),$(PROJECT_LIBRARY))
-endif
-LINK_LIBRARY = $(AR) -r $@ $(OBJECTS_LIST)
+CLEAN_LIBRARY ?= $(DELETE) $(subst /,$(SEP),$(PROJECT_LIBRARY))
+LINK_LIBRARY   = $(AR) -r $@ $(OBJECTS_LIST)
 
 
 # EOF

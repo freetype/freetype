@@ -15,22 +15,18 @@
 
 # Project names
 #
-PROJECT := freetype
+PROJECT       := freetype
 PROJECT_TITLE := FreeType
 
 # The variable TOP_DIR holds the path to the topmost directory in the project
 # engine source hierarchy.  If it is not defined, default it to `.'.
 #
-ifndef TOP_DIR
-  TOP_DIR := .
-endif
+TOP_DIR ?= .
 
 # The variable OBJ_DIR gives the location where object files and the
 # FreeType library are built.
 #
-ifndef OBJ_DIR
-  OBJ_DIR := $(TOP_DIR)/objs
-endif
+OBJ_DIR ?= $(TOP_DIR)/objs
 
 
 include $(TOP_DIR)/builds/toplevel.mk

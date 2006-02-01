@@ -58,9 +58,7 @@ endif
 # FTMODULE_H, as its name suggests, indicates where the FreeType module
 # classes resides.
 #
-ifndef FTMODULE_H
-  FTMODULE_H := $(OBJ_DIR)/ftmodule.h
-endif
+FTMODULE_H ?= $(OBJ_DIR)/ftmodule.h
 
 
 include $(MODULES_CFG)
@@ -74,9 +72,7 @@ MODULES := $(FONT_MODULES)    \
            $(AUX_MODULES)
 
 
-ifndef CONFIG_MK
-  CONFIG_MK := config.mk
-endif
+CONFIG_MK ?= config.mk
 
 # If no configuration sub-makefile is present, or if `setup' is the target
 # to be built, run the auto-detection rules to figure out which
