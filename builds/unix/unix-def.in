@@ -20,9 +20,7 @@ DELDIR    := @RMDIR@
 SEP       := /
 
 # this is used for `make distclean' and `make install'
-ifndef OBJ_BUILD
-  OBJ_BUILD := $(BUILD_DIR)
-endif
+OBJ_BUILD ?= $(BUILD_DIR)
 
 # don't use `:=' here since the path stuff will be included after this file
 #

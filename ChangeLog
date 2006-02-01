@@ -9,7 +9,8 @@
 
 	* builds/unix/install.mk (install): Fix path for ftmodule.h.
 
-	* Makefile, *.mk: Use `?=' where appropriate.
+	* Makefile, *.mk, builds/unix/unix-cc.in, builds/unix-def.in: Use
+	`?=' where appropriate.
 
 	* builds/detect.mk (TOP_DIR), builds/os2/os2-dev.mk (TOP_DIR),
 	builds/win32/w32-dev.mk (TOP_DIR): Removed.  Defined elsewhere.

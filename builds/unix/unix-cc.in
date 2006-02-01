@@ -2,7 +2,7 @@
 # FreeType 2 template for Unix-specific compiler definitions
 #
 
-# Copyright 1996-2000, 2002, 2003, 2005 by
+# Copyright 1996-2000, 2002, 2003, 2005, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -15,9 +15,7 @@
 CC           := @CC@
 COMPILER_SEP := $(SEP)
 
-ifndef LIBTOOL
-  LIBTOOL := $(BUILD_DIR)/libtool
-endif
+LIBTOOL ?= $(BUILD_DIR)/libtool
 
 
 # The object file extension (for standard and static libraries).  This can be
