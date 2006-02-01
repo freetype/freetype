@@ -7,6 +7,8 @@
 	change from 2006-01-31).
 	(TOP_DIR, OBJ_DIR): Update.
 
+	* builds/unix/install.mk (install): Fix path for ftmodule.h.
+
 2006-01-31  Werner Lemberg  <wl@gnu.org>
 
 	Implement new, simplified module selection.  With GNU make it is now

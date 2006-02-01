@@ -54,7 +54,7 @@ install: $(PROJECT_LIBRARY)
           $(DESTDIR)$(includedir)/ft2build.h
 	$(INSTALL_DATA) $(OBJ_BUILD)/ftconfig.h                        \
           $(DESTDIR)$(includedir)/freetype2/freetype/config/ftconfig.h
-	$(INSTALL_DATA) $(OBJ_BUILD)/ftmodule.h                        \
+	$(INSTALL_DATA) $(OBJ_DIR)/ftmodule.h                          \
           $(DESTDIR)$(includedir)/freetype2/freetype/config/ftmodule.h
 	$(INSTALL_SCRIPT) -m 755 $(OBJ_BUILD)/freetype-config \
           $(DESTDIR)$(bindir)/freetype-config
