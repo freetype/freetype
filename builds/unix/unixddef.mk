@@ -14,22 +14,16 @@
 # fully.
 
 
-ifndef TOP_DIR
-  TOP_DIR := .
-endif
 TOP_DIR := $(shell cd $(TOP_DIR); pwd)
+OBJ_DIR := $(shell cd $(OBJ_DIR); pwd)
+
+PLATFORM := unix
 
 DELETE := rm -f
 SEP    := /
 
 # we use a special devel ftoption.h
 DEVEL_DIR := $(TOP_DIR)/devel
-
-# The directory where all object files are placed.
-#
-ifndef OBJ_DIR
-  OBJ_DIR := $(shell cd $(TOP_DIR)/objs; pwd)
-endif
 
 
 # library file name

@@ -3,6 +3,10 @@
 	* src/otvalid/module.mk: s/otvalid_module_class/otv_module_class/.
 	* src/gxvalid/module.mk: s/gxvalid_module_class/gxv_module_class/.
 
+	* builds/unix/unixddef.mk: Actually do define PLATFORM (fixing
+	change from 2006-01-31).
+	(TOP_DIR, OBJ_DIR): Update.
+
 2006-01-31  Werner Lemberg  <wl@gnu.org>
 
 	Implement new, simplified module selection.  With GNU make it is now
