@@ -1,4 +1,9 @@
-2006-01-29  Werner Lemberg  <wl@gnu.org>
+2006-02-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/otvalid/module.mk: s/otvalid_module_class/otv_module_class/.
+	* src/gxvalid/module.mk: s/gxvalid_module_class/gxv_module_class/.
+
+2006-01-31  Werner Lemberg  <wl@gnu.org>
 
 	Implement new, simplified module selection.  With GNU make it is now
 	sufficient to modify a single file, `modules.cfg', to control the
