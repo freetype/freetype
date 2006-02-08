@@ -1,3 +1,8 @@
+2006-02-08  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.ac: Fix bug for "--with-old-mac-fonts"
+	option on UNIX platform. It has been broken since 2006-01-11.
+
 2006-02-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/otvalid/module.mk: s/otvalid_module_class/otv_module_class/.

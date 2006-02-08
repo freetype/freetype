@@ -140,10 +140,17 @@ AC_ARG_WITH([old-mac-fonts],
   AS_HELP_STRING([--with-old-mac-fonts],
                  [allow Mac resource-based fonts to be used]))
 if test x$with_old_mac_fonts = xyes; then
+  orig_LDFLAGS="${LDFLAGS}"
+  AC_MSG_CHECKING([CoreServices & ApplicationServices of Mac OS X])
   LDFLAGS="$LDFLAGS -Xlinker -framework -Xlinker CoreServices \
                     -Xlinker -framework -Xlinker ApplicationServices"
-else
-  CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"
+  AC_TRY_LINK([ ], [ ], [
+    AC_MSG_RESULT([ok])
+  ], [
+    AC_MSG_RESULT([not found])
+    LDFLAGS="${orig_LDFLAGS}"
+    CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"
+  ])
 fi
 
 
