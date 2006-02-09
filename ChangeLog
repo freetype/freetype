@@ -1,12 +1,17 @@
-2006-02-09  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2006-02-09  Werner Lemberg  <wl@gnu.org>
 
-	* src/cid/cidparse.c: Fix for abnormally short or broken CIDFont.
-	The issue was found by Taek Kwan(TK) Lee (See ft-devel 2005-11-02).
+	* src/cid/cidparse.c (cid_parse_new): Remove shadowing variable.
 
-2006-02-08  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2006-02-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.ac: Fix bug for "--with-old-mac-fonts"
-	option on UNIX platform. It has been broken since 2006-01-11.
+	* src/cid/cidparse.c (cid_parse_new): Fix for abnormally short or
+	broken CIDFont.  Reported by Taek Kwan(TK) Lee (see ft-devel
+	2005-11-02).
+
+2006-02-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.ac: Fix bug for `--with-old-mac-fonts'
+	option on UNIX platform.  It has been broken since 2006-01-11.
 
 2006-02-01  Werner Lemberg  <wl@gnu.org>
 
@@ -664,7 +669,7 @@
 	* freetype/freetype.h: Updating the documentation for
 	FT_LOAD_TARGET_XXX and FT_Render_Mode values.
 
-2005-12-23  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2005-12-23  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (FT_New_Face_From_Suitcase): Count scalable faces
 	in supported formats (sfnt, LWFN) only, and ignore bitmap faces in
@@ -834,7 +839,7 @@
 	in the file cache was off by one byte which could cause false
 	errors in font files.
 
-2005-11-24  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2005-11-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/mac/FreeType.m68k_far.make.txt,
 	builds/mac/FreeType.m68k_cfm.make.txt,
@@ -1451,7 +1456,7 @@
 	* src/autofit/aflatin.c (af_latin_metrics_scale): Initialize
 	render mode properly.  Reported by chris@dokein.co.uk.
 
-2005-08-23  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2005-08-23  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Add gxvalid module to validate TrueType GX/AAT tables.
 

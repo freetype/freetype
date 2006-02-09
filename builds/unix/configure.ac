@@ -144,13 +144,12 @@ if test x$with_old_mac_fonts = xyes; then
   AC_MSG_CHECKING([CoreServices & ApplicationServices of Mac OS X])
   LDFLAGS="$LDFLAGS -Xlinker -framework -Xlinker CoreServices \
                     -Xlinker -framework -Xlinker ApplicationServices"
-  AC_TRY_LINK([ ], [ ], [
-    AC_MSG_RESULT([ok])
-  ], [
-    AC_MSG_RESULT([not found])
-    LDFLAGS="${orig_LDFLAGS}"
-    CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"
-  ])
+  AC_TRY_LINK([],
+    [],
+    [AC_MSG_RESULT([ok])],
+    [AC_MSG_RESULT([not found])
+     LDFLAGS="${orig_LDFLAGS}"
+     CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"])
 fi
 
 
@@ -173,8 +172,8 @@ elif test x$with_old_mac_fonts = xyes; then
 # include <Files.h>
 #endif
 
-  ],
-  [
+    ],
+    [
 
   FCBPBPtr          paramBlock;
   short             vRefNum;
@@ -187,11 +186,11 @@ elif test x$with_old_mac_fonts = xyes; then
   PBGetFCBInfoSync( paramBlock );
   FSMakeFSSpec( vRefNum, dirID, fileName, spec );
  
-  ],
-  [AC_MSG_RESULT([ok])
-   CFLAGS="$CFLAGS -DHAVE_FSSPEC=1"],
-  [AC_MSG_RESULT([not found])
-   CFLAGS="$CFLAGS -DHAVE_FSSPEC=0"])
+    ],
+    [AC_MSG_RESULT([ok])
+     CFLAGS="$CFLAGS -DHAVE_FSSPEC=1"],
+    [AC_MSG_RESULT([not found])
+     CFLAGS="$CFLAGS -DHAVE_FSSPEC=0"])
 fi
 
 
@@ -205,7 +204,7 @@ if test x$with_fsref = xno; then
 *** WARNING
     FreeType2 built without FSRef API cannot load
     data-fork fonts on MacOS, except of XXX.dfont.
-])
+    ])
   CFLAGS="$CFLAGS -DHAVE_FSREF=0"
 elif test x$with_old_mac_fonts = xyes; then
   AC_MSG_CHECKING([FSRef-based FileManager])
@@ -219,8 +218,8 @@ elif test x$with_old_mac_fonts = xyes; then
 # include <Files.h>
 #endif
 
-  ],
-  [
+    ],
+    [
 
   FCBPBPtr             paramBlock;
   short                vRefNum;
@@ -250,11 +249,11 @@ elif test x$with_old_mac_fonts = xyes; then
                     outForkName, spec, ref );
   FSPathMakeRef( path, ref, isDirectory );
  
-  ],
-  [AC_MSG_RESULT([ok])
-   CFLAGS="$CFLAGS -DHAVE_FSREF=1"],
-  [AC_MSG_RESULT([not found])
-   CFLAGS="$CFLAGS -DHAVE_FSREF=0"])
+    ],
+    [AC_MSG_RESULT([ok])
+     CFLAGS="$CFLAGS -DHAVE_FSREF=1"],
+    [AC_MSG_RESULT([not found])
+     CFLAGS="$CFLAGS -DHAVE_FSREF=0"])
 fi
 
 
@@ -277,8 +276,8 @@ elif test x$with_old_mac_fonts = xyes; then
 # include <Fonts.h>
 #endif
 
-  ],
-  [
+    ],
+    [
 
   Str255     familyName;
   SInt16     familyID   = 0;
@@ -290,11 +289,11 @@ elif test x$with_old_mac_fonts = xyes; then
   GetFNum( familyName, &familyID );
   fmOut = FMSwapFont( fmIn );
 
-  ],
-  [AC_MSG_RESULT([ok])
-   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=1"],
-  [AC_MSG_RESULT([not found])
-   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"])
+    ],
+    [AC_MSG_RESULT([ok])
+     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=1"],
+    [AC_MSG_RESULT([not found])
+     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"])
 fi
 
 
@@ -317,8 +316,8 @@ elif test x$with_old_mac_fonts = xyes; then
 # include <Fonts.h>
 #endif
 
-  ],
-  [
+    ],
+    [
 
   FMFontFamilyIterator          famIter;
   FMFontFamily                  family;
@@ -339,11 +338,11 @@ elif test x$with_old_mac_fonts = xyes; then
   FMDisposeFontFamilyIterator( &famIter );
   FMGetFontContainer( font, pathSpec );
 
-  ],
-  [AC_MSG_RESULT([ok])
-   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=1"],
-  [AC_MSG_RESULT([not found])
-   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=0"])
+    ],
+    [AC_MSG_RESULT([ok])
+     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=1"],
+    [AC_MSG_RESULT([not found])
+     CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=0"])
 fi
 
 
@@ -361,8 +360,8 @@ elif test x$with_old_mac_fonts = xyes; then
 
 #include <Carbon/Carbon.h>
 
-  ],
-  [
+    ],
+    [
 
   FSSpec*  pathSpec;
 
@@ -370,11 +369,11 @@ elif test x$with_old_mac_fonts = xyes; then
   ATSFontFindFromName( NULL, kATSOptionFlagsUnRestrictedScope );
   ATSFontGetFileSpecification( 0, pathSpec );
 
-  ],
-  [AC_MSG_RESULT([ok])
-   CFLAGS="$CFLAGS -DHAVE_ATS=1"],
-  [AC_MSG_RESULT([not found])
-   CFLAGS="$CFLAGS -DHAVE_ATS=0"])
+    ],
+    [AC_MSG_RESULT([ok])
+     CFLAGS="$CFLAGS -DHAVE_ATS=1"],
+    [AC_MSG_RESULT([not found])
+     CFLAGS="$CFLAGS -DHAVE_ATS=0"])
 fi
 
 
