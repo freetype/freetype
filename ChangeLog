@@ -1,3 +1,8 @@
+2006-02-09  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/cid/cidparse.c: Fix for abnormally short or broken CIDFont.
+	The issue was found by Taek Kwan(TK) Lee (See ft-devel 2005-11-02).
+
 2006-02-08  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.ac: Fix bug for "--with-old-mac-fonts"
