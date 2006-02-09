@@ -193,7 +193,7 @@
                               axis->num_edges - 1; /* rightmost edge */
 
 
-        if ( axis->num_edges > 1 )
+        if ( axis->num_edges > 1 && AF_HINTS_DO_ADVANCE( hints ) )
         {
           old_advance = loader->pp2.x;
           old_rsb     = old_advance - edge2->opos;

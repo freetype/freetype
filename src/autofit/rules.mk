@@ -30,6 +30,7 @@ AUTOF_DRV_SRC := $(AUTOF_DIR)/afangles.c \
                  $(AUTOF_DIR)/afglobal.c \
                  $(AUTOF_DIR)/afhints.c  \
                  $(AUTOF_DIR)/aflatin.c  \
+                 $(AUTOF_DIR)/afcjk.c    \
                  $(AUTOF_DIR)/afloader.c \
                  $(AUTOF_DIR)/afmodule.c \
                  $(AUTOF_DIR)/afwarp.c

@@ -1,3 +1,25 @@
+2006-02-09  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	Introduce experimental autofit CJK module based on akito's autohint
+	patch.  You need to #define AF_MOD_CJK in afcjk.c to enable it.
+
+	* src/autofit/afglobal.c, src/autofit/afcjk.h, src/autofit/afcjk.c,
+	src/autofit/rules.mk, src/autofit/autofit.c, src/autofit/aftypes.h:
+	Add CJK module based on akito's autohint patch.
+
+	* src/autofit/afhints.h (AF_SegmentRec): New field `len' for the
+	overlap length of the segments.  (AF_SEGMENT_LEN, AF_SEGMENT_DIST):
+	New macros.
+
+	* src/autofit/aflatin.h (af_latin_metrics_init_widths),
+	src/autofit/aflatin.c (af_latin_metrics_init_widths): Made `FT_LOCAL'.
+	Use the character given by the caller.
+	(af_latin_metrics_init_widths, af_latin_hints_link_segments): Scale
+	the thresholds.
+
+	* src/autofit/afloader.c (af_loader_load_g): Respect
+	AF_SCALER_FLAG_NO_ADVANCE.
+
 2006-02-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidparse.c (cid_parse_new): Remove shadowing variable.

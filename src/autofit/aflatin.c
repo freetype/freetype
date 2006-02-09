@@ -33,9 +33,10 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static void
+  FT_LOCAL_DEF( void )
   af_latin_metrics_init_widths( AF_LatinMetrics  metrics,
-                                FT_Face          face )
+                                FT_Face          face,
+                                FT_ULong         charcode )
   {
     /* scan the array of segments in each direction */
     AF_GlyphHintsRec  hints[1];
@@ -46,7 +47,6 @@
     metrics->axis[AF_DIMENSION_HORZ].width_count = 0;
     metrics->axis[AF_DIMENSION_VERT].width_count = 0;
 
-    /* For now, compute the standard width and height from the `o'. */
     {
       FT_Error             error;
       FT_UInt              glyph_index;
@@ -55,7 +55,7 @@
       AF_Scaler            scaler = &dummy->scaler;
 
 
-      glyph_index = FT_Get_Char_Index( face, 'o' );
+      glyph_index = FT_Get_Char_Index( face, charcode );
       if ( glyph_index == 0 )
         goto Exit;
 
@@ -127,7 +127,7 @@
         /* Now, compute the edge distance threshold as a fraction of the */
         /* smallest width in the font.  Set it in `hinter->glyph' too!   */
         if ( edge_distance_threshold == 32000 )
-          edge_distance_threshold = 50;
+          edge_distance_threshold = 50 * metrics->units_per_em / 2048;
 
         /* let's try 20% */
         axis->edge_distance_threshold = edge_distance_threshold / 5;
@@ -409,7 +409,8 @@
 
     if ( !error )
     {
-      af_latin_metrics_init_widths( metrics, face );
+      /* For now, compute the standard width and height from the `o'. */
+      af_latin_metrics_init_widths( metrics, face, 'o' );
       af_latin_metrics_init_blues( metrics, face );
     }
 
@@ -746,6 +747,7 @@
           segment->last     = point;
           segment->contour  = contour;
           segment->score    = 32000;
+          segment->len      = 0;
           segment->link     = NULL;
           on_edge           = 1;
 
@@ -812,6 +814,7 @@
         segment->last  = min_point;
         segment->pos   = min_pos;
         segment->score = 32000;
+        segment->len   = 0;
         segment->link  = NULL;
 
         segment = NULL;
@@ -831,6 +834,7 @@
         segment->last  = max_point;
         segment->pos   = max_pos;
         segment->score = 32000;
+        segment->len   = 0;
         segment->link  = NULL;
 
         segment = NULL;
@@ -851,8 +855,12 @@
     AF_Segment    segments      = axis->segments;
     AF_Segment    segment_limit = segments + axis->num_segments;
     AF_Direction  major_dir     = axis->major_dir;
+    FT_UShort     len_threshold;
     AF_Segment    seg1, seg2;
 
+
+    len_threshold = ( (AF_LatinMetrics)hints->metrics )->units_per_em;
+    len_threshold = ( len_threshold * 8 ) / 2048;
 
     /* now compare each segment to the others */
     for ( seg1 = segments; seg1 < segment_limit; seg1++ )
@@ -886,7 +894,7 @@
               max = seg2->max_coord;
 
             len = max - min;
-            if ( len >= 8 )
+            if ( len >= len_threshold )
             {
               score = dist + 3000 / len;
 

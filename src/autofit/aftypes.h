@@ -259,6 +259,7 @@ FT_BEGIN_HEADER
   {
     AF_SCRIPT_NONE  = 0,
     AF_SCRIPT_LATIN = 1,
+    AF_SCRIPT_CJK   = 2,
     /* add new scripts here.  Don't forget to update the list in */
     /* `afglobal.c'.                                             */
 

@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  autofit.c                                                              */
+/*  afcjk.h                                                                */
 /*                                                                         */
-/*    Auto-fitter module (body).                                           */
+/*    Auto-fitter hinting routines for CJK script (specification).         */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006 by                                    */
+/*  Copyright 2006 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,19 +16,26 @@
 /***************************************************************************/
 
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
-#include <ft2build.h>
-#include "afangles.c"
-#include "afglobal.c"
-#include "afhints.c"
-#include "afdummy.c"
-#include "aflatin.c"
-#include "afcjk.c"
-#include "afloader.c"
-#include "afmodule.c"
+#ifndef __AFCJK_H__
+#define __AFCJK_H__
 
-#ifdef AF_USE_WARPER
-#include "afwarp.c"
-#endif
+#include "afhints.h"
+
+
+FT_BEGIN_HEADER
+
+
+  /* the CJK-specific script class */
+
+  FT_CALLBACK_TABLE const AF_ScriptClassRec
+  af_cjk_script_class;
+
+
+/* */
+
+FT_END_HEADER
+
+#endif /* __AFCJK_H__ */
+
 
 /* END */

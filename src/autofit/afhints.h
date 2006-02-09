@@ -133,6 +133,7 @@ FT_BEGIN_HEADER
     AF_Segment  serif;       /* primary segment for serifs */
     FT_Pos      num_linked;  /* number of linked segments  */
     FT_Pos      score;       /* used during stem matching  */
+    FT_Pos      len;         /* used during stem matching  */
 
     AF_Point    first;       /* first point in edge segment             */
     AF_Point    last;        /* last point in edge segment              */
@@ -284,6 +285,14 @@ FT_BEGIN_HEADER
   af_glyph_hints_done( AF_GlyphHints  hints );
 
 /* */
+
+#define AF_SEGMENT_LEN( seg ) \
+    ( ( seg )->max_coord - ( seg )->min_coord )
+
+#define AF_SEGMENT_DIST( seg1, seg2 )   \
+    ( ( ( seg1 )->pos > ( seg2 )->pos ) \
+        ? ( seg1 )->pos - ( seg2 )->pos \
+        : ( seg2 )->pos - ( seg1 )->pos )
 
 
 FT_END_HEADER
