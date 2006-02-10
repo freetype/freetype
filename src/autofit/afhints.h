@@ -286,13 +286,11 @@ FT_BEGIN_HEADER
 
 /* */
 
-#define AF_SEGMENT_LEN( seg ) \
-    ( ( seg )->max_coord - ( seg )->min_coord )
+#define AF_SEGMENT_LEN( seg )          ( (seg)->max_coord - (seg)->min_coord )
 
-#define AF_SEGMENT_DIST( seg1, seg2 )   \
-    ( ( ( seg1 )->pos > ( seg2 )->pos ) \
-        ? ( seg1 )->pos - ( seg2 )->pos \
-        : ( seg2 )->pos - ( seg1 )->pos )
+#define AF_SEGMENT_DIST( seg1, seg2 )  ( ( (seg1)->pos > (seg2)->pos )   \
+                                           ? (seg1)->pos - (seg2)->pos   \
+                                           : (seg2)->pos - (seg1)->pos )
 
 
 FT_END_HEADER

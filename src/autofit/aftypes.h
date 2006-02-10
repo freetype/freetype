@@ -16,20 +16,20 @@
 /***************************************************************************/
 
 
-/***************************************************************************
- *
- *  The auto-fitter is a complete rewrite of the old auto-hinter.
- *  Its main feature is the ability to differentiate between different
- *  scripts in order to apply language-specific rules.
- *
- *  The code has also been compartimentized into several entities that
- *  should make algorithmic experimentation easier than with the old
- *  code.
- *
- *  Finally, we get rid of the Catharon license, since this code is
- *  released under the FreeType one.
- *
- ***************************************************************************/
+  /*************************************************************************
+   *
+   *  The auto-fitter is a complete rewrite of the old auto-hinter.
+   *  Its main feature is the ability to differentiate between different
+   *  scripts in order to apply language-specific rules.
+   *
+   *  The code has also been compartimentized into several entities that
+   *  should make algorithmic experimentation easier than with the old
+   *  code.
+   *
+   *  Finally, we get rid of the Catharon license, since this code is
+   *  released under the FreeType one.
+   *
+   *************************************************************************/
 
 
 #ifndef __AFTYPES_H__

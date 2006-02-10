@@ -15,11 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-/*
- * The algorithm is based on akito's autohint patch, available here:
- *
- * http://www.kde.gr.jp/~akito/patch/freetype2/
- */
+  /*
+   *  The algorithm is based on akito's autohint patch, available here:
+   *
+   *  http://www.kde.gr.jp/~akito/patch/freetype2/
+   *
+   */
 
 #define xxAF_MOD_CJK
 
@@ -37,7 +38,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****            L A T I N   G L O B A L   M E T R I C S            *****/
+  /*****              C J K   G L O B A L   M E T R I C S              *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -107,7 +108,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****           L A T I N   G L Y P H   A N A L Y S I S             *****/
+  /*****              C J K   G L Y P H   A N A L Y S I S              *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -172,7 +173,8 @@
     len_threshold = ( (AF_LatinMetrics)hints->metrics )->units_per_em;
     len_threshold = ( len_threshold * 8 ) / 2048;
 
-    dist_threshold = ( dim == AF_DIMENSION_HORZ ) ? hints->x_scale : hints->y_scale;
+    dist_threshold = ( dim == AF_DIMENSION_HORZ ) ? hints->x_scale
+                                                  : hints->y_scale;
     dist_threshold = FT_DivFix( 64 * 3, dist_threshold );
 
     /* now compare each segment to the others */
@@ -209,7 +211,7 @@
             len = max - min;
             if ( len >= len_threshold )
             {
-              if ( dist * 8 < seg1->score * 9 &&
+              if ( dist * 8 < seg1->score * 9                        &&
                    ( dist * 8 < seg1->score * 7 || seg1->len < len ) )
               {
                 seg1->score = dist;
@@ -217,7 +219,7 @@
                 seg1->link  = seg2;
               }
 
-              if ( dist * 8 < seg2->score * 9 &&
+              if ( dist * 8 < seg2->score * 9                        &&
                    ( dist * 8 < seg2->score * 7 || seg2->len < len ) )
               {
                 seg2->score = dist;
@@ -230,11 +232,12 @@
     }
 
     /*
-     * now, compute the `serif' segments
+     *  now compute the `serif' segments
      *
-     * In Hanzi, some strokes are wider on one or both of the ends.
-     * We either identify the stems on the ends as serifs or remove
-     * the linkage, depending on the length of the stems.
+     *  In Hanzi, some strokes are wider on one or both of the ends.
+     *  We either identify the stems on the ends as serifs or remove
+     *  the linkage, depending on the length of the stems.
+     *
      */
 
     {
@@ -348,13 +351,13 @@
 
     /*********************************************************************/
     /*                                                                   */
-    /* We will begin by generating a sorted table of edges for the       */
-    /* current direction.  To do so, we simply scan each segment and try */
-    /* to find an edge in our table that corresponds to its position.    */
+    /* We begin by generating a sorted table of edges for the current    */
+    /* direction.  To do so, we simply scan each segment and try to find */
+    /* an edge in our table that corresponds to its position.            */
     /*                                                                   */
     /* If no edge is found, we create and insert a new edge in the       */
     /* sorted table.  Otherwise, we simply add the segment to the edge's */
-    /* list which will be processed in the second step to compute the    */
+    /* list which is then processed in the second step to compute the    */
     /* edge's properties.                                                */
     /*                                                                   */
     /* Note that the edges table is sorted along the segment/edge        */
@@ -400,8 +403,8 @@
           AF_Segment  link = seg->link;
 
 
-          /* check if all linked segments of the candidate edge */
-          /* can make a single edge.                            */
+          /* check whether all linked segments of the candidate edge */
+          /* can make a single edge.                                 */
           if ( link )
           {
             AF_Segment  seg1 = edge->first;
@@ -425,14 +428,14 @@
               continue;
           }
 
-          best = dist;
+          best  = dist;
           found = edge;
         }
       }
 
       if ( !found )
       {
-        AF_Edge   edge;
+        AF_Edge  edge;
 
 
         /* insert a new edge in the list and */
@@ -461,11 +464,10 @@
       }
     }
 
-
     /*********************************************************************/
     /*                                                                   */
-    /* Good, we will now compute each edge's properties according to     */
-    /* segments found on its position.  Basically, these are:            */
+    /* Good, we now compute each edge's properties according to segments */
+    /* found on its position.  Basically, these are as follows.          */
     /*                                                                   */
     /*  - edge's main direction                                          */
     /*  - stem edge, serif edge or both (which defaults to stem then)    */
@@ -474,14 +476,13 @@
     /*                                                                   */
     /*********************************************************************/
 
-    /* first of all, set the `edge' field in each segment -- this is */
-    /* required in order to compute edge links                       */
+    /* first of all, set the `edge' field in each segment -- this is     */
+    /* required in order to compute edge links                           */
+    /*                                                                   */
+    /* Note that removing this loop and setting the `edge' field of each */
+    /* segment directly in the code above slows down execution speed for */
+    /* some reasons on platforms like the Sun.                           */
 
-    /*
-     * Note that removing this loop and setting the `edge' field of each
-     * segment directly in the code above slows down execution speed for
-     * some reasons on platforms like the Sun.
-     */
     {
       AF_Edge  edges      = axis->edges;
       AF_Edge  edge_limit = edges + axis->num_edges;
@@ -500,7 +501,7 @@
           } while ( seg != edge->first );
       }
 
-      /* now, compute each edge properties */
+      /* now compute each edge properties */
       for ( edge = edges; edge < edge_limit; edge++ )
       {
         FT_Int  is_round    = 0;  /* does it contain round segments?    */
@@ -576,7 +577,7 @@
         if ( is_round > 0 && is_round >= is_straight )
           edge->flags |= AF_EDGE_ROUND;
 
-        /* gets rid of serifs if link is set                */
+        /* get rid of serifs if link is set                 */
         /* XXX: This gets rid of many unpleasant artefacts! */
         /*      Example: the `c' in cour.pfa at size 13     */
 
@@ -632,9 +633,7 @@
 
 #ifdef AF_USE_WARPER
     if ( mode == FT_RENDER_MODE_LCD || mode == FT_RENDER_MODE_LCD_V )
-    {
       metrics->root.scaler.render_mode = mode = FT_RENDER_MODE_NORMAL;
-    }
 #endif
 
     scaler_flags = hints->scaler_flags;
@@ -675,7 +674,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****        L A T I N   G L Y P H   G R I D - F I T T I N G        *****/
+  /*****          C J K   G L Y P H   G R I D - F I T T I N G          *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -743,9 +742,9 @@
     FT_Int           sign     = 0;
     FT_Int           vertical = ( dim == AF_DIMENSION_VERT );
 
-
     FT_UNUSED( base_flags );
     FT_UNUSED( stem_flags );
+
 
     if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) )
       return width;
@@ -772,7 +771,7 @@
           goto Done_Width;
         }
       }
- 
+
       if ( dist < 54 )
         dist += ( 54 - dist ) / 2 ;
       else if ( dist < 3 * 64 )
@@ -891,10 +890,10 @@
   /*************************************************************************/
 
 
- 
-#define AF_LIGHT_MODE_MAX_HORZ_GAP      9
-#define AF_LIGHT_MODE_MAX_VERT_GAP     15
-#define AF_LIGHT_MODE_MAX_DELTA_ABS    14
+#define AF_LIGHT_MODE_MAX_HORZ_GAP    9
+#define AF_LIGHT_MODE_MAX_VERT_GAP   15
+#define AF_LIGHT_MODE_MAX_DELTA_ABS  14
+
 
   static FT_Pos
   af_hint_normal_stem( AF_GlyphHints  hints,
@@ -903,17 +902,17 @@
                        FT_Pos         anchor,
                        AF_Dimension   dim )
   {
-    FT_Pos   org_len, cur_len, org_center;
-    FT_Pos   cur_pos1, cur_pos2;
-    FT_Pos   d_off1, u_off1, d_off2, u_off2, delta;
-    FT_Pos   offset;
-    FT_Pos   threshold = 64;
+    FT_Pos  org_len, cur_len, org_center;
+    FT_Pos  cur_pos1, cur_pos2;
+    FT_Pos  d_off1, u_off1, d_off2, u_off2, delta;
+    FT_Pos  offset;
+    FT_Pos  threshold = 64;
 
 
     if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) )
     {
       if ( ( edge->flags  & AF_EDGE_ROUND ) &&
-           ( edge2->flags & AF_EDGE_ROUND )  )
+           ( edge2->flags & AF_EDGE_ROUND ) )
       {
         if ( dim == AF_DIMENSION_VERT )
           threshold = 64 - AF_LIGHT_MODE_MAX_HORZ_GAP;
@@ -923,9 +922,9 @@
       else
       {
         if ( dim == AF_DIMENSION_VERT )
-          threshold = 64 - AF_LIGHT_MODE_MAX_HORZ_GAP/3;
+          threshold = 64 - AF_LIGHT_MODE_MAX_HORZ_GAP / 3;
         else
-          threshold = 64 - AF_LIGHT_MODE_MAX_VERT_GAP/3;
+          threshold = 64 - AF_LIGHT_MODE_MAX_VERT_GAP / 3;
       }
     }
 
@@ -992,6 +991,7 @@
       delta = u_off2;
 
   Exit:
+
 #if 1
     if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) )
     {
@@ -1018,7 +1018,7 @@
     return delta;
   }
 
- 
+
   static void
   af_cjk_hint_edges( AF_GlyphHints  hints,
                      AF_Dimension   dim )
@@ -1033,7 +1033,7 @@
     FT_Int        skipped  = 0;
 
 
-    /* now we will align all stem edges. */
+    /* now we align all stem edges. */
     for ( edge = edges; edge < edge_limit; edge++ )
     {
       AF_Edge  edge2;
@@ -1061,6 +1061,7 @@
 
       if ( dim != AF_DIMENSION_VERT && !anchor )
       {
+
 #if 0
         if ( fixedpitch )
         {
@@ -1079,17 +1080,17 @@
           right1 = *right->link;
           right2 = *right;
 
-          delta  = ( ( ( hinter->pp2.x + 32 ) & -64 ) - hinter->pp2.x )/2;
-          target = left->opos + ( right->opos - left->opos )/2 + delta - 16;
+          delta  = ( ( ( hinter->pp2.x + 32 ) & -64 ) - hinter->pp2.x ) / 2;
+          target = left->opos + ( right->opos - left->opos ) / 2 + delta - 16;
 
           delta1  = delta;
           delta1 += af_hint_normal_stem( hints, left, left->link,
-              delta1, 0 );
+                                         delta1, 0 );
 
           if ( left->link != right )
             af_hint_normal_stem( hints, right->link, right, delta1, 0 );
 
-          center1 = left->pos + ( right->pos - left->pos )/2;
+          center1 = left->pos + ( right->pos - left->pos ) / 2;
 
           if ( center1 >= target )
             delta2 = delta - 32;
@@ -1103,7 +1104,7 @@
             if ( left->link != right )
               af_hint_normal_stem( hints, &right1, &right2, delta2, 0 );
 
-            center2 = left1.pos + ( right2.pos - left1.pos )/2;
+            center2 = left1.pos + ( right2.pos - left1.pos ) / 2;
 
             d1 = center1 - target;
             d2 = center2 - target;
@@ -1128,17 +1129,19 @@
           right->flags       |= AF_EDGE_DONE;
         }
         else
-#endif
+
+#endif /* 0 */
+
           delta = af_hint_normal_stem( hints, edge, edge2, 0, 0 );
       }
       else
         af_hint_normal_stem( hints, edge, edge2, delta, dim );
 
 #if 0
-      printf("stem (%d,%d) adjusted (%.1f,%.1f)\n",
-              edge - edges, edge2 - edges,
-              ( edge->pos - edge->opos ) / 64.,
-              ( edge2->pos - edge2->opos ) / 64.);
+      printf( "stem (%d,%d) adjusted (%.1f,%.1f)\n",
+               edge - edges, edge2 - edges,
+               ( edge->pos - edge->opos ) / 64.0,
+               ( edge2->pos - edge2->opos ) / 64.0 );
 #endif
 
       anchor = edge;
@@ -1222,7 +1225,6 @@
       if ( edge->flags & AF_EDGE_DONE )
         continue;
 
-
       if ( edge->serif )
       {
         af_cjk_align_serif_edge( hints, edge->serif, edge );
@@ -1279,8 +1281,10 @@
     FT_Bool       snapping;
 
 
-    snapping = ( ( dim == AF_DIMENSION_HORZ && AF_LATIN_HINTS_DO_HORZ_SNAP( hints ) ) ||
-                 ( dim == AF_DIMENSION_VERT && AF_LATIN_HINTS_DO_VERT_SNAP( hints ) ) );
+    snapping = ( ( dim == AF_DIMENSION_HORZ             &&
+                   AF_LATIN_HINTS_DO_HORZ_SNAP( hints ) ) ||
+                 ( dim == AF_DIMENSION_VERT             &&
+                   AF_LATIN_HINTS_DO_VERT_SNAP( hints ) ) );
 
     for ( edge = edges; edge < edge_limit; edge++ )
     {
@@ -1364,8 +1368,8 @@
     FT_Error  error;
     int       dim;
 
-
     FT_UNUSED( metrics );
+
 
     error = af_glyph_hints_reload( hints, outline );
     if ( error )
@@ -1392,8 +1396,9 @@
       if ( ( dim == AF_DIMENSION_HORZ && AF_HINTS_DO_HORIZONTAL( hints ) ) ||
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
+
 #ifdef AF_USE_WARPER
-        if ( dim == AF_DIMENSION_HORZ &&
+        if ( dim == AF_DIMENSION_HORZ                                  &&
              metrics->root.scaler.render_mode == FT_RENDER_MODE_NORMAL )
         {
           AF_WarperRec  warper;
@@ -1405,7 +1410,8 @@
           af_glyph_hints_scale_dim( hints, dim, scale, delta );
           continue;
         }
-#endif
+#endif /* AF_USE_WARPER */
+
         af_cjk_hint_edges( hints, (AF_Dimension)dim );
         af_cjk_align_edge_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
@@ -1429,7 +1435,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****              L A T I N   S C R I P T   C L A S S              *****/
+  /*****                C J K   S C R I P T   C L A S S                *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -1478,7 +1484,7 @@
     (AF_Script_ApplyHintsFunc)  af_cjk_hints_apply
   };
 
-#else
+#else /* !AF_MOD_CJK */
 
   static const AF_Script_UniRangeRec  af_cjk_uniranges[] =
   {
@@ -1502,7 +1508,7 @@
     (AF_Script_ApplyHintsFunc)  NULL
   };
 
-#endif /* AF_MOD_CJK */
+#endif /* !AF_MOD_CJK */
 
 
 /* END */

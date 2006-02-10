@@ -8,11 +8,12 @@
 	Add CJK module based on akito's autohint patch.
 
 	* src/autofit/afhints.h (AF_SegmentRec): New field `len' for the
-	overlap length of the segments.  (AF_SEGMENT_LEN, AF_SEGMENT_DIST):
-	New macros.
+	overlap length of the segments.
+	(AF_SEGMENT_LEN, AF_SEGMENT_DIST): New macros.
 
 	* src/autofit/aflatin.h (af_latin_metrics_init_widths),
-	src/autofit/aflatin.c (af_latin_metrics_init_widths): Made `FT_LOCAL'.
+	src/autofit/aflatin.c (af_latin_metrics_init_widths): Made
+	`FT_LOCAL'.
 	Use the character given by the caller.
 	(af_latin_metrics_init_widths, af_latin_hints_link_segments): Scale
 	the thresholds.
