@@ -22,9 +22,7 @@
    *
    */
 
-#define xxAF_MOD_CJK
-
-#ifdef AF_MOD_CJK
+#ifdef AF_CONFIG_OPTION_CJK
 
 #include "afcjk.h"
 #include "aferrors.h"
@@ -54,16 +52,11 @@
 
     /* TODO are there blues? */
 
-    if ( FT_Select_Charmap( face, FT_ENCODING_UNICODE ) )
-    {
-      FT_Pos  threshold = 50 * metrics->units_per_em / 2048;
+    if ( !FT_Select_Charmap( face, FT_ENCODING_UNICODE ) )
+      face->charmap = NULL;
 
-
-      metrics->axis[0].edge_distance_threshold = threshold / 5;
-      metrics->axis[1].edge_distance_threshold = threshold / 5;
-    }
-    else
-      af_latin_metrics_init_widths( metrics, face, 0x7530 );
+    /* latin's version would suffice */
+    af_latin_metrics_init_widths( metrics, face, 0x7530 );
 
     FT_Set_Charmap( face, oldmap );
 
@@ -170,8 +163,7 @@
     FT_Pos        dist_threshold;
 
 
-    len_threshold = ( (AF_LatinMetrics)hints->metrics )->units_per_em;
-    len_threshold = ( len_threshold * 8 ) / 2048;
+    len_threshold = AF_LATIN_CONSTANT( hints->metrics, 8 );
 
     dist_threshold = ( dim == AF_DIMENSION_HORZ ) ? hints->x_scale
                                                   : hints->y_scale;
@@ -368,12 +360,7 @@
     edge_distance_threshold = FT_MulFix( laxis->edge_distance_threshold,
                                          scale );
     if ( edge_distance_threshold > 64 / 4 )
-    {
-      edge_distance_threshold = 64 / 4;
-
-      edge_distance_threshold = FT_DivFix( edge_distance_threshold,
-                                           scale );
-    }
+      edge_distance_threshold = FT_DivFix( 64 / 4, scale );
     else
       edge_distance_threshold = laxis->edge_distance_threshold;
 
@@ -1484,7 +1471,7 @@
     (AF_Script_ApplyHintsFunc)  af_cjk_hints_apply
   };
 
-#else /* !AF_MOD_CJK */
+#else /* !AF_CONFIG_OPTION_CJK */
 
   static const AF_Script_UniRangeRec  af_cjk_uniranges[] =
   {
@@ -1508,7 +1495,7 @@
     (AF_Script_ApplyHintsFunc)  NULL
   };
 
-#endif /* !AF_MOD_CJK */
+#endif /* !AF_CONFIG_OPTION_CJK */
 
 
 /* END */

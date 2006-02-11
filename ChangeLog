@@ -1,3 +1,19 @@
+2006-02-11  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/config/ftoption.h (AF_CONFIG_OPTION_CJK): #define
+	to enable autofit CJK script support. (#define'd by default)
+
+	* src/autofit/aflatin.h (AF_LATIN_CONSTANT): New macro.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Make sure that
+	`edge_distance_threshold' is always set.
+	(af_latin_hints_link_segments): Potential divide by 0 bug.
+	Use latin constant in the scoring formula.
+
+	* src/autofit/afcjk.c: Minor updates due to the above three changes.
+
+	* docs/TODO, docs/CHANGES: Updated.
+
 2006-02-09  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	Introduce experimental autofit CJK module based on akito's autohint

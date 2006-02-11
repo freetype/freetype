@@ -27,9 +27,11 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       Also, using the  FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph
       always forces auto-hinting, as a special exception.
 
-    - Face  metrics  (face->size->metrics) and  glyph  metrics are  no
-      longer rounded.  If  you do not round in  your applications too,
-      you may find glyphs become blurry.
+    - Face  metrics (face->size->metrics)  and  glyph  metrics are  no
+      longer rounded.  If you do not round or round improperly in your
+      applications, you may find glyphs clipped  or blurred.  Usually,
+      you would  like to `ceil'  the ascender, `floor'  the descender,
+      and `round' the advance.
 
     - A  new API  `FT_TrueTypeGX_Validate'  (in FT_GX_VALIDATE_H)  has
       been added to validate TrueType GX/ATT tables (feat, mort, morx,
@@ -127,6 +129,11 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
     - The `ftdump'  program from the `ft2demos' bundle  now shows some
       information about charmaps.  It  also supports a new switch `-v'
       to increase verbosity.
+
+    - Better AFM support.  This includes track kerning support.
+
+    - The  auto hinter now employs  a new algorithm, based  on akito's
+      patch, for the CJK script.
 
 ======================================================================
 

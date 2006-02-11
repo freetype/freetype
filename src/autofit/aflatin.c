@@ -82,9 +82,7 @@
         AF_LatinAxis  axis    = &metrics->axis[dim];
         AF_AxisHints  axhints = &hints->axis[dim];
         AF_Segment    seg, limit, link;
-
-        FT_UInt       num_widths              = 0;
-        FT_Pos        edge_distance_threshold = 32000;
+        FT_UInt       num_widths = 0;
 
 
         error = af_latin_hints_compute_segments( hints,
@@ -119,22 +117,24 @@
 
         af_sort_widths( num_widths, axis->widths );
         axis->width_count = num_widths;
+      }
 
-        /* we will now try to find the smallest width */
-        if ( num_widths > 0 && axis->widths[0].org < edge_distance_threshold )
-          edge_distance_threshold = axis->widths[0].org;
+  Exit:
+      for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
+      {
+        AF_LatinAxis  axis = &metrics->axis[dim];
+        FT_Pos        stdw;
 
-        /* Now, compute the edge distance threshold as a fraction of the */
-        /* smallest width in the font.  Set it in `hinter->glyph' too!   */
-        if ( edge_distance_threshold == 32000 )
-          edge_distance_threshold = 50 * metrics->units_per_em / 2048;
 
-        /* let's try 20% */
-        axis->edge_distance_threshold = edge_distance_threshold / 5;
+        stdw = ( axis->width_count > 0 )
+                 ? axis->widths[0].org
+                 : AF_LATIN_CONSTANT( metrics, 50 );
+
+        /* let's try 20% of the smallest width */
+        axis->edge_distance_threshold = stdw / 5;
       }
     }
 
-  Exit:
     af_glyph_hints_done( hints );
   }
 
@@ -855,12 +855,15 @@
     AF_Segment    segments      = axis->segments;
     AF_Segment    segment_limit = segments + axis->num_segments;
     AF_Direction  major_dir     = axis->major_dir;
-    FT_UShort     len_threshold;
+    FT_UShort     len_threshold, len_score;
     AF_Segment    seg1, seg2;
 
 
-    len_threshold = ( (AF_LatinMetrics)hints->metrics )->units_per_em;
-    len_threshold = ( len_threshold * 8 ) / 2048;
+    len_threshold = AF_LATIN_CONSTANT( hints->metrics, 8 );
+    if ( len_threshold == 0 )
+      len_threshold = 1;
+
+    len_score = AF_LATIN_CONSTANT( hints->metrics, 3000 );
 
     /* now compare each segment to the others */
     for ( seg1 = segments; seg1 < segment_limit; seg1++ )
@@ -896,7 +899,7 @@
             len = max - min;
             if ( len >= len_threshold )
             {
-              score = dist + 3000 / len;
+              score = dist + len_score / len;
 
               if ( score < seg1->score )
               {

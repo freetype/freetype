@@ -11,9 +11,7 @@ Here is a list of items that need to be addressed in FreeType 2
 
 * Add CIDCMap support to the CID driver.
 
-* Add track kerning support to the Type1 and PFR driver and the API
-  (The degree of kerning, e.g. light, normal or tight, and
-  the glyph size has to be passed as parameter).
+* Add track kerning support to the PFR driver.
 
 * Add kerning (AFM file) support to the CID driver.
 
