@@ -52,7 +52,7 @@
 
     /* TODO are there blues? */
 
-    if ( !FT_Select_Charmap( face, FT_ENCODING_UNICODE ) )
+    if ( FT_Select_Charmap( face, FT_ENCODING_UNICODE ) )
       face->charmap = NULL;
 
     /* latin's version would suffice */

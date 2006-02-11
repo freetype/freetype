@@ -51,8 +51,8 @@
       FT_Error             error;
       FT_UInt              glyph_index;
       int                  dim;
-      AF_ScriptMetricsRec  dummy[1];
-      AF_Scaler            scaler = &dummy->scaler;
+      AF_LatinMetricsRec   dummy[1];
+      AF_Scaler            scaler = &dummy->root.scaler;
 
 
       glyph_index = FT_Get_Char_Index( face, charcode );
@@ -65,13 +65,14 @@
 
       FT_ZERO( dummy );
 
+      dummy->units_per_em = metrics->units_per_em;
       scaler->x_scale     = scaler->y_scale = 0x10000L;
       scaler->x_delta     = scaler->y_delta = 0;
       scaler->face        = face;
       scaler->render_mode = FT_RENDER_MODE_NORMAL;
       scaler->flags       = 0;
 
-      af_glyph_hints_rescale( hints, dummy );
+      af_glyph_hints_rescale( hints, (AF_ScriptMetrics)dummy );
 
       error = af_glyph_hints_reload( hints, &face->glyph->outline );
       if ( error )
