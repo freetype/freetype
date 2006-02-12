@@ -33,7 +33,8 @@ FT_BEGIN_HEADER
 
 /* constants are given with units_per_em == 2048 in mind */
 #define AF_LATIN_CONSTANT( metrics, c ) \
-  ( ( ( c ) * (FT_Long)( (AF_LatinMetrics)metrics )->units_per_em ) / 2048 )
+  ( ( (c) * (FT_Long)( (AF_LatinMetrics)(metrics) )->units_per_em ) / 2048 )
+
 
   /*************************************************************************/
   /*************************************************************************/

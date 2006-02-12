@@ -132,8 +132,9 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
     - Better AFM support.  This includes track kerning support.
 
-    - The  auto hinter now employs  a new algorithm, based  on akito's
-      patch, for the CJK script.
+    - The  auto hinter  now employs  a new  algorithm,  based on Akito
+      Hirai's patch, for the CJK script.
+
 
 ======================================================================
 
