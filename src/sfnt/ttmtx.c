@@ -442,7 +442,7 @@
     FT_UShort       k      = header->number_Of_HMetrics;
 
 
-    if ( k == 0 || k >= (FT_UInt)face->max_profile.numGlyphs )
+    if ( k == 0 || gindex >= (FT_UInt)face->max_profile.numGlyphs )
     {
       *abearing = *aadvance = 0;
       return SFNT_Err_Ok;
