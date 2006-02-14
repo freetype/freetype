@@ -386,8 +386,7 @@
     sfnt_get_interface,
 
     tt_face_load_any,
-    tt_face_load_sfnt_header,
-    tt_face_load_directory,
+    tt_face_load_font_dir,
 
     tt_face_load_head,
     tt_face_load_hhea,

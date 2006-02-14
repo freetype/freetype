@@ -128,73 +128,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_SFNT_HeaderRec_Func                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Load the header of a SFNT font file.  Supports collections.        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face       :: A handle to the target face object.                  */
-  /*                                                                       */
-  /*    stream     :: The input stream.                                    */
-  /*                                                                       */
-  /*    face_index :: The index of the TrueType font, if we are opening a  */
-  /*                  collection.                                          */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    sfnt       :: The SFNT header.                                     */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The stream cursor must be at the font file's origin.               */
-  /*                                                                       */
-  /*    This function recognizes fonts embedded in a `TrueType             */
-  /*    collection'.                                                       */
-  /*                                                                       */
-  /*    This function checks that the header is valid by looking at the    */
-  /*    values of `search_range', `entry_selector', and `range_shift'.     */
-  /*                                                                       */
-  typedef FT_Error
-  (*TT_Load_SFNT_HeaderRec_Func)( TT_Face      face,
-                                  FT_Stream    stream,
-                                  FT_Long      face_index,
-                                  SFNT_Header  sfnt );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    TT_Load_Directory_Func                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Load the table directory into a face object.                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face      :: A handle to the target face object.                   */
-  /*                                                                       */
-  /*    stream    :: The input stream.                                     */
-  /*                                                                       */
-  /*    sfnt      :: The SFNT header.                                      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The stream cursor must be on the first byte after the 4-byte font  */
-  /*    format tag.  This is the case just after a call to                 */
-  /*    TT_Load_Format_Tag().                                              */
-  /*                                                                       */
-  typedef FT_Error
-  (*TT_Load_Directory_Func)( TT_Face      face,
-                             FT_Stream    stream,
-                             SFNT_Header  sfnt );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
   /*    TT_Load_Any_Func                                                   */
   /*                                                                       */
   /* <Description>                                                         */
@@ -505,7 +438,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    The function will use `face->goto_table' to seek the stream to     */
-  /*    the start of the table.                                            */
+  /*    the start of the table, except in loading font directory.          */
   /*                                                                       */
   typedef FT_Error
   (*TT_Load_Table_Func)( TT_Face    face,
@@ -570,8 +503,10 @@ FT_BEGIN_HEADER
     FT_Module_Requester          get_interface;
 
     TT_Load_Any_Func             load_any;
-    TT_Load_SFNT_HeaderRec_Func  load_sfnt_header;
-    TT_Load_Directory_Func       load_directory;
+
+    /* load the font directory, i.e. the offset table and */
+    /* the table directory                                */
+    TT_Load_Table_Func           load_font_dir;
 
     /* these functions are called by `load_face' but they can also  */
     /* be called from external modules, if there is a need to do so */

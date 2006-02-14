@@ -345,6 +345,85 @@
   }
 
 
+  /* Fill in face->ttc_header.  If the font is not a TTC, it is */
+  /* synthesized into a TTC with one offset table.              */
+  static FT_Error
+  sfnt_open_font( FT_Stream  stream,
+                  TT_Face    face )
+  {
+    FT_Memory  memory = stream->memory;
+    FT_Error   error;
+    FT_ULong   tag, offset;
+
+    static const FT_Frame_Field  ttc_header_fields[] =
+    {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  TTC_HeaderRec
+
+      FT_FRAME_START( 8 ),
+        FT_FRAME_LONG( version ),
+        FT_FRAME_LONG( count   ),
+      FT_FRAME_END
+    };
+
+
+    face->ttc_header.tag     = 0;
+    face->ttc_header.version = 0;
+    face->ttc_header.count   = 0;
+
+    offset = FT_STREAM_POS();
+
+    if ( FT_READ_ULONG( tag ) )
+      return error;
+
+    if ( tag != 0x00010000UL                      &&
+         tag != TTAG_ttcf                         &&
+         tag != FT_MAKE_TAG( 'O', 'T', 'T', 'O' ) &&
+         tag != TTAG_true                         &&
+         tag != 0x00020000UL                      )
+      return SFNT_Err_Unknown_File_Format;
+
+    face->ttc_header.tag = TTAG_ttcf;
+
+    if ( tag == TTAG_ttcf )
+    {
+      FT_Int  n;
+
+
+      FT_TRACE3(( "sfnt_open_font: file is a collection\n" ));
+
+      if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
+        return error;
+
+      /* now read the offsets of each font in the file */
+      if ( FT_NEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) )
+        return error;
+
+      if ( FT_FRAME_ENTER( face->ttc_header.count * 4L ) )
+        return error;
+
+      for ( n = 0; n < face->ttc_header.count; n++ )
+        face->ttc_header.offsets[n] = FT_GET_ULONG();
+
+      FT_FRAME_EXIT();
+    }
+    else
+    {
+      FT_TRACE3(( "sfnt_open_font: synthesize TTC\n" ));
+
+      face->ttc_header.version = 1 << 16;
+      face->ttc_header.count   = 1;
+
+      if ( FT_NEW( face->ttc_header.offsets) )
+        return error;
+
+      face->ttc_header.offsets[0] = offset;
+    }
+
+    return error;
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   sfnt_init_face( FT_Stream      stream,
                   TT_Face        face,
@@ -355,7 +434,7 @@
     FT_Error        error;
     FT_Library      library = face->root.driver->root.library;
     SFNT_Service    sfnt;
-    SFNT_HeaderRec  sfnt_header;
+
 
     /* for now, parameters are unused */
     FT_UNUSED( num_params );
@@ -367,10 +446,7 @@
     {
       sfnt = (SFNT_Service)FT_Get_Module_Interface( library, "sfnt" );
       if ( !sfnt )
-      {
-        error = SFNT_Err_Invalid_File_Format;
-        goto Exit;
-      }
+        return SFNT_Err_Invalid_File_Format;
 
       face->sfnt       = sfnt;
       face->goto_table = sfnt->goto_table;
@@ -378,24 +454,28 @@
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, face->psnames, POSTSCRIPT_CMAPS );
 
+    error = sfnt_open_font( stream, face );
+    if ( error )
+      return error;
+
+    FT_TRACE2(( "sfnt_init_face: %08p, %ld\n", face, face_index ));
+
+    if ( face_index < 0 )
+      face_index = 0;
+
+    if ( face_index >= face->ttc_header.count )
+        return SFNT_Err_Bad_Argument;
+
+    if ( FT_STREAM_SEEK( face->ttc_header.offsets[face_index] ) )
+      return error;
+
     /* check that we have a valid TrueType file */
-    error = sfnt->load_sfnt_header( face, stream, face_index, &sfnt_header );
+    error = sfnt->load_font_dir( face, stream );
     if ( error )
-      goto Exit;
-
-    face->format_tag = sfnt_header.format_tag;
-    face->num_tables = sfnt_header.num_tables;
-
-    /* Load font directory */
-    error = sfnt->load_directory( face, stream, &sfnt_header );
-    if ( error )
-      goto Exit;
+      return error;
 
     face->root.num_faces = face->ttc_header.count;
-    if ( face->root.num_faces < 1 )
-      face->root.num_faces = 1;
 
-  Exit:
     return error;
   }
 

@@ -41,15 +41,9 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  tt_face_load_sfnt_header( TT_Face      face,
-                            FT_Stream    stream,
-                            FT_Long      face_index,
-                            SFNT_Header  sfnt );
+  tt_face_load_font_dir( TT_Face      face,
+                         FT_Stream    stream );
 
-  FT_LOCAL( FT_Error )
-  tt_face_load_directory( TT_Face      face,
-                          FT_Stream    stream,
-                          SFNT_Header  sfnt );
 
   FT_LOCAL( FT_Error )
   tt_face_load_any( TT_Face    face,

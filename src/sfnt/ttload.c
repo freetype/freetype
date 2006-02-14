@@ -145,8 +145,8 @@
   /* Type 42 fonts, and which are generally invalid.                       */
   /*                                                                       */
   static FT_Error
-  sfnt_dir_check( SFNT_Header  sfnt,
-                  FT_Stream    stream )
+  check_table_dir( SFNT_Header  sfnt,
+                   FT_Stream    stream )
   {
     FT_Error        error;
     FT_UInt         nn;
@@ -156,7 +156,7 @@
     const FT_ULong  glyx_tag = FT_MAKE_TAG( 'g', 'l', 'y', 'x' );
     const FT_ULong  locx_tag = FT_MAKE_TAG( 'l', 'o', 'c', 'x' );
 
-    static const FT_Frame_Field  sfnt_dir_entry_fields[] =
+    static const FT_Frame_Field  table_dir_entry_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_TableRec
@@ -182,7 +182,7 @@
       TT_TableRec  table;
 
 
-      if ( FT_STREAM_READ_FIELDS( sfnt_dir_entry_fields, &table ) )
+      if ( FT_STREAM_READ_FIELDS( table_dir_entry_fields, &table ) )
         return error;
 
       if ( table.Offset + table.Length > stream->size &&
@@ -193,6 +193,7 @@
       if ( table.Tag == TTAG_head || table.Tag == TTAG_bhed )
       {
         FT_UInt32  magic;
+
 
 #ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
         if ( table.Tag == TTAG_head )
@@ -235,100 +236,18 @@
   }
 
 
-  /* Fill in face->ttc_header.  If the font is not a TTC, it is */
-  /* synthesized into a TTC with one offset table.              */
-  static FT_Error
-  sfnt_init( FT_Stream  stream,
-             TT_Face    face )
-  {
-    FT_Memory  memory = stream->memory;
-    FT_Error   error;
-    FT_ULong   tag, offset;
-
-    static const FT_Frame_Field  ttc_header_fields[] =
-    {
-#undef  FT_STRUCTURE
-#define FT_STRUCTURE  TTC_HeaderRec
-
-      FT_FRAME_START( 8 ),
-        FT_FRAME_LONG( version ),
-        FT_FRAME_LONG( count   ),
-      FT_FRAME_END
-    };
-
-
-    face->ttc_header.tag     = 0;
-    face->ttc_header.version = 0;
-    face->ttc_header.count   = 0;
-
-    offset = FT_STREAM_POS();
-
-    if ( FT_READ_ULONG( tag ) )
-      return error;
-
-    if ( tag != 0x00010000UL                      &&
-         tag != TTAG_ttcf                         &&
-         tag != FT_MAKE_TAG( 'O', 'T', 'T', 'O' ) &&
-         tag != TTAG_true                         &&
-         tag != 0x00020000UL                      )
-      return SFNT_Err_Unknown_File_Format;
-
-    face->ttc_header.tag = TTAG_ttcf;
-
-    if ( tag == TTAG_ttcf )
-    {
-      FT_Int  n;
-
-
-      FT_TRACE3(( "sfnt_init: file is a collection\n" ));
-
-      if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
-        return error;
-
-      /* now read the offsets of each font in the file */
-      if ( FT_NEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) )
-        return error;
-
-      if ( FT_FRAME_ENTER( face->ttc_header.count * 4L ) )
-        return error;
-
-      for ( n = 0; n < face->ttc_header.count; n++ )
-        face->ttc_header.offsets[n] = FT_GET_ULONG();
-
-      FT_FRAME_EXIT();
-    }
-    else
-    {
-      FT_TRACE3(( "sfnt_init: synthesize TTC\n" ));
-
-      face->ttc_header.version = 1 << 16;
-      face->ttc_header.count   = 1;
-
-      if ( FT_NEW( face->ttc_header.offsets) )
-        return error;
-
-      face->ttc_header.offsets[0] = offset;
-    }
-
-    return error;
-  }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    tt_face_load_sfnt_header                                           */
+  /*    tt_face_load_font_dir                                              */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the header of a SFNT font file.  Supports collections.       */
+  /*    Loads the header of a SFNT font file.                              */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face       :: A handle to the target face object.                  */
   /*                                                                       */
   /*    stream     :: The input stream.                                    */
-  /*                                                                       */
-  /*    face_index :: If the font is a collection, the number of the font  */
-  /*                  in the collection.  Must be zero otherwise.          */
   /*                                                                       */
   /* <Output>                                                              */
   /*    sfnt       :: The SFNT header.                                     */
@@ -337,22 +256,19 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The stream cursor must be at the font file's origin.               */
-  /*                                                                       */
-  /*    This function recognizes fonts embedded in a `TrueType collection' */
-  /*                                                                       */
-  /*    The header will be checked whether it is valid by looking at the   */
-  /*    values of `search_range', `entry_selector', and `range_shift'.     */
+  /*    The stream cursor must be at the beginning of the font directory.  */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_face_load_sfnt_header( TT_Face      face,
-                            FT_Stream    stream,
-                            FT_Long      face_index,
-                            SFNT_Header  sfnt )
+  tt_face_load_font_dir( TT_Face      face,
+                         FT_Stream    stream )
   {
-    FT_Error  error;
+    SFNT_HeaderRec  sfnt;
+    FT_Error        error;
+    FT_Memory       memory = stream->memory;
+    TT_TableRec*    entry;
+    TT_TableRec*    limit;
 
-    static const FT_Frame_Field  sfnt_header_fields[] =
+    static const FT_Frame_Field  offset_table_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  SFNT_HeaderRec
@@ -366,101 +282,52 @@
     };
 
 
-    FT_TRACE2(( "tt_face_load_sfnt_header: %08p, %ld\n",
-                face, face_index ));
+    FT_TRACE2(( "tt_face_load_font_dir: %08p\n", face ));
 
-    error = sfnt_init( stream, face );
-    if ( error )
-      return error;
+    /* read the offset table */
 
-    if ( face_index < 0 )
-      face_index = 0;
+    sfnt.offset = FT_STREAM_POS();
 
-    if ( face_index >= face->ttc_header.count )
-        return SFNT_Err_Bad_Argument;
-
-    sfnt->offset = face->ttc_header.offsets[face_index];
-
-    if ( FT_STREAM_SEEK( sfnt->offset ) )
-      return error;
-
-    /* read offset table */
-    if ( FT_READ_ULONG( sfnt->format_tag )                 ||
-         FT_STREAM_READ_FIELDS( sfnt_header_fields, sfnt ) )
+    if ( FT_READ_ULONG( sfnt.format_tag )                    ||
+         FT_STREAM_READ_FIELDS( offset_table_fields, &sfnt ) )
       return error;
 
     /* many fonts don't have these fields set correctly */
 #if 0
-    if ( sfnt->search_range != 1 << ( sfnt->entry_selector + 4 )         ||
-         sfnt->search_range + sfnt->range_shift != sfnt->num_tables << 4 )
+    if ( sfnt.search_range != 1 << ( sfnt.entry_selector + 4 )         ||
+         sfnt.search_range + sfnt.range_shift != sfnt.num_tables << 4 )
       return SFNT_Err_Unknown_File_Format;
 #endif
 
-    return error;
-  }
+    /* load the table directory */
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    tt_face_load_directory                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads the table directory into a face object.                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face   :: A handle to the target face object.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    stream :: The input stream.                                        */
-  /*                                                                       */
-  /*    sfnt   :: The SFNT directory header.                               */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The stream cursor must be at the font file's origin.               */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
-  tt_face_load_directory( TT_Face      face,
-                          FT_Stream    stream,
-                          SFNT_Header  sfnt )
-  {
-    FT_Error     error;
-    FT_Memory    memory = stream->memory;
-
-    TT_TableRec  *entry, *limit;
-
-
-    FT_TRACE2(( "tt_face_load_directory: %08p\n", face ));
-
-    FT_TRACE2(( "-- Tables count:   %12u\n",  sfnt->num_tables ));
-    FT_TRACE2(( "-- Format version: %08lx\n", sfnt->format_tag ));
+    FT_TRACE2(( "-- Tables count:   %12u\n",  sfnt.num_tables ));
+    FT_TRACE2(( "-- Format version: %08lx\n", sfnt.format_tag ));
 
     /* check first */
-    error = sfnt_dir_check( sfnt, stream );
+    error = check_table_dir( &sfnt, stream );
     if ( error )
     {
-      FT_TRACE2(( "tt_face_load_directory: directory checking failed!\n" ));
+      FT_TRACE2(( "tt_face_load_font_dir: invalid table directory!\n" ));
 
       return error;
     }
 
-    face->num_tables = sfnt->num_tables;
+    face->num_tables = sfnt.num_tables;
+    face->format_tag = sfnt.format_tag;
 
     if ( FT_QNEW_ARRAY( face->dir_tables, face->num_tables ) )
-      goto Exit;
+      return error;
 
-    if ( FT_STREAM_SEEK( sfnt->offset + 12 )      ||
+    if ( FT_STREAM_SEEK( sfnt.offset + 12 )       ||
          FT_FRAME_ENTER( face->num_tables * 16L ) )
-      goto Exit;
+      return error;
 
     entry = face->dir_tables;
     limit = entry + face->num_tables;
 
     for ( ; entry < limit; entry++ )
-    {                    /* loop through the tables and get all entries */
+    {
       entry->Tag      = FT_GET_TAG4();
       entry->CheckSum = FT_GET_ULONG();
       entry->Offset   = FT_GET_LONG();
@@ -477,9 +344,8 @@
 
     FT_FRAME_EXIT();
 
-    FT_TRACE2(( "Directory loaded\n\n" ));
+    FT_TRACE2(( "table directory loaded\n\n" ));
 
-  Exit:
     return error;
   }
 
