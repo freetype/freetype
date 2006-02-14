@@ -66,65 +66,40 @@
     FT_ULong*  ptable_size;
     
     
-    FT_TRACE2(( "TT_Load_%s_Metrics: %08p\n", vertical ? "Vertical"
-                                                       : "Horizontal",
-                                              face ));
+    FT_TRACE2(( "%cmtx ", vertical ? 'v' : 'h' ));
 
     if ( vertical )
     {
-      ptable      = &face->vert_metrics;
-      ptable_size = &face->vert_metrics_size;
-      
-      /* The table is optional, quit silently if it wasn't found.      */
-      /*                                                               */
-      /* XXX: Some fonts have a valid vertical header with a non-null  */
-      /*      `number_of_VMetrics' fields, but no corresponding `vmtx' */
-      /*      table to get the metrics from (e.g. mingliu).            */
-      /*                                                               */
-      /*      For safety, we set the field to 0!                       */
-      /*                                                               */
       error = face->goto_table( face, TTAG_vmtx, stream, &table_size );
       if ( error )
-      {
-        /* Set number_Of_VMetrics to 0! */
-        FT_TRACE2(( "  no vertical header in file.\n" ));
-        error = SFNT_Err_Ok;
-        goto Exit;
-      }
+        goto Fail;
+
+      ptable      = &face->vert_metrics;
+      ptable_size = &face->vert_metrics_size;
     }
     else
     {
-      ptable      = &face->horz_metrics;
-      ptable_size = &face->horz_metrics_size;
-
       error = face->goto_table( face, TTAG_hmtx, stream, &table_size );
       if ( error )
-      {
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-        /* If this is an incrementally loaded font and there are */
-        /* overriding metrics, tolerate a missing `hmtx' table.  */
-        if ( face->root.internal->incremental_interface          &&
-             face->root.internal->incremental_interface->funcs->
-               get_glyph_metrics                                 )
-        {
-          face->horizontal.number_Of_HMetrics = 0;
-          error = SFNT_Err_Ok;
-          goto Exit;
-        }
-#endif
+        goto Fail;
 
-        FT_ERROR(( " no horizontal metrics in file!\n" ));
-        error = SFNT_Err_Hmtx_Table_Missing;
-        goto Exit;
-      }
+      ptable      = &face->horz_metrics;
+      ptable_size = &face->horz_metrics_size;
     }
     
     if ( FT_FRAME_EXTRACT( table_size, *ptable ) )
-      goto Exit;
+      goto Fail;
       
     *ptable_size = table_size;
+
+    return SFNT_Err_Ok;
     
-  Exit:
+  Fail:
+    if ( error == SFNT_Err_Table_Missing )
+      FT_TRACE2(( "missing\n" ));
+    else
+      FT_TRACE2(( "failed\n" ));
+
     return error;
   }
 
@@ -145,31 +120,26 @@
     TT_ShortMetrics**  shorts;
 
 
-    FT_TRACE2(( "TT_Load_%s_Metrics: %08p\n", vertical ? "Vertical"
-                                                       : "Horizontal",
-                                              face ));
+    FT_TRACE2(( "%cmtx ", vertical ? 'v' : 'h' ));
 
     if ( vertical )
     {
-      /* The table is optional, quit silently if it wasn't found.      */
-      /*                                                               */
-      /* XXX: Some fonts have a valid vertical header with a non-null  */
-      /*      `number_of_VMetrics' fields, but no corresponding `vmtx' */
-      /*      table to get the metrics from (e.g. mingliu).            */
-      /*                                                               */
-      /*      For safety, we set the field to 0!                       */
-      /*                                                               */
       error = face->goto_table( face, TTAG_vmtx, stream, &table_len );
       if ( error )
       {
         /* Set number_Of_VMetrics to 0! */
-        FT_TRACE2(( "  no vertical header in file.\n" ));
         face->vertical.number_Of_VMetrics = 0;
-        error = SFNT_Err_Ok;
-        goto Exit;
+
+        goto Fail;
       }
 
       num_longs = face->vertical.number_Of_VMetrics;
+      if ( num_longs > table_len / 4 )
+      {
+        num_longs = table_len / 4;
+        face->vertical.number_Of_VMetrics = num_longs;
+      }
+
       longs     = (TT_LongMetrics *)&face->vertical.long_metrics;
       shorts    = (TT_ShortMetrics**)&face->vertical.short_metrics;
     }
@@ -178,26 +148,18 @@
       error = face->goto_table( face, TTAG_hmtx, stream, &table_len );
       if ( error )
       {
+        face->horizontal.number_Of_HMetrics = 0;
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-        /* If this is an incrementally loaded font and there are */
-        /* overriding metrics, tolerate a missing `hmtx' table.  */
-        if ( face->root.internal->incremental_interface          &&
-             face->root.internal->incremental_interface->funcs->
-               get_glyph_metrics                                 )
-        {
-          face->horizontal.number_Of_HMetrics = 0;
-          error = SFNT_Err_Ok;
-          goto Exit;
-        }
-#endif
-
-        FT_ERROR(( " no horizontal metrics in file!\n" ));
-        error = SFNT_Err_Hmtx_Table_Missing;
-        goto Exit;
+        goto Fail;
       }
 
       num_longs = face->horizontal.number_Of_HMetrics;
+      if ( num_longs > table_len / 4 )
+      {
+        num_longs = table_len / 4;
+        face->horizontal.number_Of_HMetrics = num_longs;
+      }
+
       longs     = (TT_LongMetrics *)&face->horizontal.long_metrics;
       shorts    = (TT_ShortMetrics**)&face->horizontal.short_metrics;
     }
@@ -209,9 +171,8 @@
 
     if ( num_shorts < 0 )
     {
-      FT_ERROR(( "TT_Load_%s_Metrics: more metrics than glyphs!\n",
-                 vertical ? "Vertical"
-                          : "Horizontal" ));
+      FT_ERROR(( "%cmtx: more metrics than glyphs!\n",
+                 vertical ? 'v' : 'h' ));
 
       /* Adobe simply ignores this problem.  So we shall do the same. */
 #if 0
@@ -225,10 +186,10 @@
 
     if ( FT_QNEW_ARRAY( *longs,  num_longs  ) ||
          FT_QNEW_ARRAY( *shorts, num_shorts ) )
-      goto Exit;
+      goto Fail;
 
     if ( FT_FRAME_ENTER( table_len ) )
-      goto Exit;
+      goto Fail;
 
     {
       TT_LongMetrics  cur   = *longs;
@@ -270,7 +231,14 @@
 
     FT_TRACE2(( "loaded\n" ));
 
-  Exit:
+    return SFNT_Err_Ok;
+
+  Fail:
+    if ( error == SFNT_Err_Table_Missing )
+      FT_TRACE2(( "missing\n" ));
+    else
+      FT_TRACE2(( "failed\n" ));
+
     return error;
   }
 
@@ -330,48 +298,27 @@
     };
 
 
-    FT_TRACE2(( vertical ? "Vertical header " : "Horizontal header " ));
+    FT_TRACE2(( "%chea ", vertical ? 'v' : 'h' ));
 
     if ( vertical )
     {
-      face->vertical_info = 0;
-
-      /* The vertical header table is optional, so return quietly if */
-      /* we don't find it.                                           */
       error = face->goto_table( face, TTAG_vhea, stream, 0 );
       if ( error )
-      {
-        error = SFNT_Err_Ok;
-        goto Exit;
-      }
+        goto Fail;
 
-      face->vertical_info = 1;
       header = (TT_HoriHeader*)&face->vertical;
     }
     else
     {
-      /* The horizontal header is mandatory for most fonts; return */
-      /* an error if we don't find it.                             */
       error = face->goto_table( face, TTAG_hhea, stream, 0 );
       if ( error )
-      {
-        error = SFNT_Err_Horiz_Header_Missing;
-
-        /* No `hhea' table necessary for SFNT Mac fonts. */
-        if ( face->format_tag == TTAG_true )
-        {
-          FT_TRACE2(( "missing.  This is an SFNT Mac font.\n"));
-          error = SFNT_Err_Ok;
-        }
-
-        goto Exit;
-      }
+        goto Fail;
 
       header = &face->horizontal;
     }
 
     if ( FT_STREAM_READ_FIELDS( metrics_header_fields, header ) )
-      goto Exit;
+      goto Fail;
 
     header->long_metrics  = NULL;
     header->short_metrics = NULL;
@@ -380,7 +327,12 @@
 
     return SFNT_Err_Ok;
 
-  Exit:
+  Fail:
+    if ( error == SFNT_Err_Table_Missing )
+      FT_TRACE2(( "missing\n" ));
+    else
+      FT_TRACE2(( "failed\n" ));
+
     return error;
   }
 
@@ -388,7 +340,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    tt_face_get_metrics                                                */
+  /*    tt_face_get_metrics                                                */ 
   /*                                                                       */
   /* <Description>                                                         */
   /*    Returns the horizontal or vertical metrics in font units for a     */
@@ -490,7 +442,7 @@
     FT_UShort       k      = header->number_Of_HMetrics;
 
 
-    if ( k == 0 )
+    if ( k == 0 || k >= (FT_UInt)face->max_profile.numGlyphs )
     {
       *abearing = *aadvance = 0;
       return SFNT_Err_Ok;

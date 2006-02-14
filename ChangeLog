@@ -1,3 +1,16 @@
+2006-02-14  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/sfnt/ttmtx.c (tt_face_load_hhea, tt_face_load_hmtx): Simply
+	return error if table is missing.
+	Check table length in non-FT_OPTIMIZE_MEMORY'ed `tt_face_load_hmtx'.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Take care of missing metrics
+	tables.  The last change makes Mac bitmap-only font not load and this
+	fixes it.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix compilation error
+	when FT_CONFIG_OPTION_INCREMENTAL is defined.
+
 2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	Clean up the SFNT_Interface.  In this final pass, `load_hmtx' is

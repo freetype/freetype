@@ -560,16 +560,54 @@
     /* sbit font file                                                 */
     if ( !is_apple_sbit )
     {
-      /* load the `hhea' and `hmtx' tables at once */
-      error = sfnt->load_hhea( face, stream, 0 ) ||
-              sfnt->load_hmtx( face, stream, 0 );
+      /* load the `hhea' and `hmtx' tables */
+      error = sfnt->load_hhea( face, stream, 0 );
+      if ( !error )
+      {
+        error = sfnt->load_hmtx( face, stream, 0 );
+
+        if ( error == SFNT_Err_Table_Missing )
+        {
+          error = SFNT_Err_Hmtx_Table_Missing;
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+          /* If this is an incrementally loaded font and there are */
+          /* overriding metrics, tolerate a missing `hmtx' table.  */
+          if ( face->root.internal->incremental_interface          &&
+               face->root.internal->incremental_interface->funcs->
+                 get_glyph_metrics                                 )
+          {
+            face->horizontal.number_Of_HMetrics = 0;
+            error = SFNT_Err_Ok;
+          }
+#endif
+        }
+      }
+      else if ( error == SFNT_Err_Table_Missing )
+      {
+        /* No `hhea' table necessary for SFNT Mac fonts. */
+        if ( face->format_tag == TTAG_true )
+        {
+          FT_TRACE2(( "This is an SFNT Mac font.\n"));
+          error = SFNT_Err_Ok;
+        }
+        else
+          error = SFNT_Err_Horiz_Header_Missing;
+      }
+
       if ( error )
         goto Exit;
 
-      /* try to load the `vhea' and `vmtx' tables at once */
-      error = sfnt->load_hhea( face, stream, 1 ) ||
-              sfnt->load_hmtx( face, stream, 1 );
-      if ( error )
+      /* try to load the `vhea' and `vmtx' tables */
+      error = sfnt->load_hhea( face, stream, 1 );
+      if ( !error )
+      {
+        error = sfnt->load_hmtx( face, stream, 1 );
+        if ( !error )
+          face->vertical_info = 1;
+      }
+
+      if ( error && error != SFNT_Err_Table_Missing )
         goto Exit;
 
       if ( LOAD_( os2 ) )

@@ -1158,7 +1158,7 @@
 
       glyph_data_loaded = 1;
       offset            = 0;
-      byte_len          = glyph_data.length;
+      loader->byte_len  = glyph_data.length;
 
       FT_MEM_ZERO( &inc_stream, sizeof ( inc_stream ) );
       FT_Stream_OpenMemory( &inc_stream,
