@@ -55,7 +55,7 @@
   /*                                                                       */
 #ifdef FT_OPTIMIZE_MEMORY
 
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   tt_face_load_hmtx( TT_Face    face,
                      FT_Stream  stream,
                      FT_Bool    vertical )
@@ -130,7 +130,7 @@
 
 #else /* !OPTIMIZE_MEMORY */
 
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   tt_face_load_hmtx( TT_Face    face,
                      FT_Stream  stream,
                      FT_Bool    vertical )
@@ -378,9 +378,7 @@
 
     FT_TRACE2(( "loaded\n" ));
 
-    /* Now try to load the corresponding metrics */
-
-    error = tt_face_load_hmtx( face, stream, vertical );
+    return SFNT_Err_Ok;
 
   Exit:
     return error;

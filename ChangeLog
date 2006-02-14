@@ -1,5 +1,15 @@
 2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	Clean up the SFNT_Interface.  In this final pass, `load_hmtx' is
+	splitted from `load_hhea'.
+
+	* include/freetype/internal/sfnt.h, src/sfnt/sfdriver.c,
+	src/sfnt/ttmtx.c, src/sfnt/ttmtx.h: Split `hmtx' from `hhea'.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Update.
+
+2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* src/sfnt/ttmtx.h, src/sfnt/ttmtx.c: Why are there two copies of
 	code...
 

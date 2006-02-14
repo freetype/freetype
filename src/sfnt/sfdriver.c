@@ -390,6 +390,7 @@
 
     tt_face_load_head,
     tt_face_load_hhea,
+    tt_face_load_hmtx,
     tt_face_load_cmap,
     tt_face_load_maxp,
     tt_face_load_os2,

@@ -561,12 +561,14 @@
     if ( !is_apple_sbit )
     {
       /* load the `hhea' and `hmtx' tables at once */
-      error = sfnt->load_hhea( face, stream, 0 );
+      error = sfnt->load_hhea( face, stream, 0 ) ||
+              sfnt->load_hmtx( face, stream, 0 );
       if ( error )
         goto Exit;
 
       /* try to load the `vhea' and `vmtx' tables at once */
-      error = sfnt->load_hhea( face, stream, 1 );
+      error = sfnt->load_hhea( face, stream, 1 ) ||
+              sfnt->load_hmtx( face, stream, 1 );
       if ( error )
         goto Exit;
 

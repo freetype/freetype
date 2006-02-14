@@ -512,6 +512,7 @@ FT_BEGIN_HEADER
     /* be called from external modules, if there is a need to do so */
     TT_Load_Table_Func           load_head;
     TT_Load_Metrics_Func         load_hhea;
+    TT_Load_Metrics_Func         load_hmtx;
     TT_Load_Table_Func           load_cmap;
     TT_Load_Table_Func           load_maxp;
     TT_Load_Table_Func           load_os2;
