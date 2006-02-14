@@ -1,5 +1,10 @@
 2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* src/sfnt/ttmtx.h, src/sfnt/ttmtx.c: Why are there two copies of
+	code...
+
+2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	Clean up the SFNT_Interface.  In this pass, we want to treat the font
 	directory (offset table and table directory) as a normal table like
 	the others.  This also means that TTC is no longer recognized there,
