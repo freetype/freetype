@@ -389,18 +389,15 @@
     tt_face_load_sfnt_header,
     tt_face_load_directory,
 
-    tt_face_load_header,
-    tt_face_load_metrics_header,
+    tt_face_load_head,
+    tt_face_load_hhea,
     tt_face_load_cmap,
-    tt_face_load_max_profile,
+    tt_face_load_maxp,
     tt_face_load_os2,
-    tt_face_load_postscript,
+    tt_face_load_post,
 
-    tt_face_load_names,
-    tt_face_free_names,
-
-    tt_face_load_hdmx,
-    tt_face_free_hdmx,
+    tt_face_load_name,
+    tt_face_free_name,
 
     tt_face_load_kern,
     tt_face_load_gasp,
@@ -409,12 +406,15 @@
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     /* see `ttload.h' */
-    tt_face_load_bitmap_header,
+    tt_face_load_bhed,
+
 
     /* see `ttsbit.h' and `sfnt.h' */
+    tt_face_load_eblc,
+    tt_face_free_eblc,
+
     tt_face_set_sbit_strike,
     tt_face_load_strike_metrics,
-    tt_face_load_sbit_strikes,
 #ifdef FT_OPTIMIZE_MEMORY
     0,
     0,
@@ -423,7 +423,6 @@
     tt_load_sbit_metrics,
 #endif
     tt_face_load_sbit_image,
-    tt_face_free_sbit_strikes,
 
 #else /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
@@ -439,6 +438,8 @@
 
     /* see `ttkern.h' */
     tt_face_get_kerning,
+
+    tt_face_get_metrics,
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 

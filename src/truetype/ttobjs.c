@@ -216,6 +216,10 @@
     if ( error )
       goto Exit;
 
+    error = tt_face_load_hdmx( face, stream );
+    if ( error )
+      goto Exit;
+
     if ( face->root.face_flags & FT_FACE_FLAG_SCALABLE )
     {
 
@@ -224,18 +228,17 @@
       if ( !face->root.internal->incremental_interface )
         error = tt_face_load_loca( face, stream );
       if ( !error )
-      {
-        error = tt_face_load_cvt( face, stream );
-        if ( !error )
-          error = tt_face_load_fpgm( face, stream );
-      }
+        error = tt_face_load_cvt( face, stream )  ||
+                tt_face_load_fpgm( face, stream ) ||
+                tt_face_load_prep( face, stream );
 
 #else
 
       if ( !error )
         error = tt_face_load_loca( face, stream ) ||
                 tt_face_load_cvt( face, stream )  ||
-                tt_face_load_fpgm( face, stream );
+                tt_face_load_fpgm( face, stream ) ||
+                tt_face_load_prep( face, stream );
 
 #endif
 
@@ -300,6 +303,8 @@
 
     /* freeing the locations table */
     tt_face_done_loca( face );
+
+    tt_face_free_hdmx( face );
 
     /* freeing the CVT */
     FT_FREE( face->cvt );

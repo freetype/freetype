@@ -569,117 +569,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    cff_face_get_vertical_metrics                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Return the vertical metrics in font units for a given glyph.  The  */
-  /*    metrics are the top side bearing and advance height.               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    header  :: A pointer to the vertical metrics structure.            */
-  /*                                                                       */
-  /*    idx     :: The glyph index.                                        */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    bearing :: The top side bearing.                                   */
-  /*                                                                       */
-  /*    advance :: The advance height.                                     */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Horizontal metric values are directly computed from the CFF data,  */
-  /*    bypassing the `hmtx' table completely.                             */
-  /*                                                                       */
-#ifdef FT_OPTIMIZE_MEMORY
-
-  static void
-  cff_face_get_vertical_metrics( TT_Face     face,
-                                 FT_UInt     idx,
-                                 FT_Short   *abearing,
-                                 FT_UShort  *aadvance )
-  {
-    TT_VertHeader*  header;
-    FT_Byte*        p;
-    FT_Byte*        limit;
-    FT_UShort       k;
-
-
-    header = &face->vertical;
-    p      = face->vert_metrics;
-    limit  = p + face->vert_metrics_size;
-    
-    k = header->number_Of_VMetrics;
-    
-    if ( k > 0 )
-    {
-      if ( idx < (FT_UInt)k )
-      {
-        p += 4 * idx;
-        if ( p + 4 > limit )
-          goto NoData;
-          
-        *aadvance = FT_NEXT_USHORT( p );
-        *abearing = FT_NEXT_SHORT( p );
-      }
-      else
-      {
-        p += 4 * ( k - 1 );
-        if ( p + 4 > limit )
-          goto NoData;
-          
-        *aadvance = FT_NEXT_USHORT( p );
-        p += 2 + 2 * ( idx - k );
-        if ( p + 2 > limit )
-          *abearing = 0;
-        else
-          *abearing = FT_PEEK_SHORT( p );
-      }
-    }
-    else
-    {
-    NoData:
-      *abearing = 0;
-      *aadvance = 0;
-    }
-  }
-
-#else /* !FT_OPTIMIZE_MEMORY */
-
-  static void
-  cff_face_get_vertical_metrics( TT_Face     face,
-                                 FT_UInt     idx,
-                                 FT_Short   *abearing,
-                                 FT_UShort  *aadvance )
-  {
-    TT_VertHeader*  header = &face->vertical;
-    TT_LongMetrics  longs_m;
-    FT_UShort       k      = header->number_Of_VMetrics;
-
-
-    if ( k == 0 )
-    {
-      *abearing = *aadvance = 0;
-      return;
-    }
-
-    if ( idx < (FT_UInt)k )
-    {
-      longs_m   = (TT_LongMetrics)header->long_metrics + idx;
-      *abearing = longs_m->bearing;
-      *aadvance = longs_m->advance;
-    }
-    else
-    {
-      *abearing = ((TT_ShortMetrics*)header->short_metrics)[idx - k];
-      *aadvance = ((TT_LongMetrics)header->long_metrics)[k - 1].advance;
-    }
-  }
-
-#endif /* !FT_OPTIMIZE_MEMORY */
-
-
   static FT_Error
   cff_get_glyph_data( TT_Face    face,
                       FT_UInt    glyph_index,
@@ -2421,7 +2310,7 @@
 
 
       if ( size->strike_index != 0xFFFFFFFFUL      &&
-           sfnt->load_sbits                        &&
+           sfnt->load_eblc                         &&
            ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
       {
         TT_SBit_MetricsRec  metrics;
@@ -2621,8 +2510,10 @@
           FT_UShort  vertAdvance  = 0;
 
 
-          cff_face_get_vertical_metrics( face, glyph_index,
-                                         &vertBearingY, &vertAdvance );
+          ( (SFNT_Service)face->sfnt )->get_metrics( face, 1,
+                                                     glyph_index,
+                                                     &vertBearingY,
+                                                     &vertAdvance );
           metrics->vertBearingY = vertBearingY;
           metrics->vertAdvance  = vertAdvance;
         }

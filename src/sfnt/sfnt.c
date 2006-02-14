@@ -20,6 +20,7 @@
 
 #include <ft2build.h>
 #include "ttload.c"
+#include "ttmtx.c"
 #include "ttcmap.c"
 #include "ttkern.c"
 #include "sfobjs.c"

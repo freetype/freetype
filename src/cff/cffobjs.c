@@ -380,7 +380,7 @@
       else
       {
         /* load the `cmap' table explicitly */
-        error = sfnt->load_charmaps( face, stream );
+        error = sfnt->load_cmap( face, stream );
         if ( error )
           goto Exit;
 

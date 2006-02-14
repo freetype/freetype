@@ -457,36 +457,36 @@
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
     if ( !has_outline )
-      is_apple_sbit = FT_BOOL( !LOAD_( bitmap_header ) );
+      is_apple_sbit = FT_BOOL( !LOAD_( bhed ) );
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     /* load the font header (`head' table) if this isn't an Apple */
     /* sbit font file                                             */
-    if ( !is_apple_sbit && LOAD_( header ) )
+    if ( !is_apple_sbit && LOAD_( head ) )
       goto Exit;
 
     /* the following tables are often not present in embedded TrueType */
     /* fonts within PDF documents, so don't check for them.            */
-    (void)LOAD_( max_profile );
-    (void)LOAD_( charmaps );
+    (void)LOAD_( maxp );
+    (void)LOAD_( cmap );
 
     /* the following tables are optional in PCL fonts -- */
     /* don't check for errors                            */
-    (void)LOAD_( names );
-    psnames_error = LOAD_( psnames );
+    (void)LOAD_( name );
+    psnames_error = LOAD_( post );
 
     /* do not load the metrics headers and tables if this is an Apple */
     /* sbit font file                                                 */
     if ( !is_apple_sbit )
     {
       /* load the `hhea' and `hmtx' tables at once */
-      error = sfnt->load_metrics( face, stream, 0 );
+      error = sfnt->load_hhea( face, stream, 0 );
       if ( error )
         goto Exit;
 
       /* try to load the `vhea' and `vmtx' tables at once */
-      error = sfnt->load_metrics( face, stream, 1 );
+      error = sfnt->load_hhea( face, stream, 1 );
       if ( error )
         goto Exit;
 
@@ -499,7 +499,7 @@
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     /* embedded bitmap support. */
-    if ( sfnt->load_sbits && LOAD_( sbits ) )
+    if ( sfnt->load_eblc && LOAD_( eblc ) )
     {
       /* return an error if this font file has no outlines */
       if ( error == SFNT_Err_Table_Missing && has_outline )
@@ -510,13 +510,12 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    if ( LOAD_( hdmx )    ||
-         LOAD_( pclt )    )
+    if ( LOAD_( pclt )    )
       goto Exit;
 
     /* consider the kerning and gasp tables as optional */
     (void)LOAD_( gasp );
-    (void)LOAD_( kerning );
+    (void)LOAD_( kern );
 
     error = SFNT_Err_Ok;
 
@@ -755,8 +754,8 @@
         sfnt->free_psnames( face );
 
       /* destroy the embedded bitmaps table if it is loaded */
-      if ( sfnt->free_sbits )
-        sfnt->free_sbits( face );
+      if ( sfnt->free_eblc )
+        sfnt->free_eblc( face );
     }
 
 #ifdef TT_CONFIG_OPTION_BDF
@@ -813,10 +812,7 @@
     face->gasp.numRanges = 0;
 
     /* freeing the name table */
-    sfnt->free_names( face );
-
-    /* freeing the hdmx table */
-    sfnt->free_hdmx( face );
+    sfnt->free_name( face );
 
     /* freeing family and style name */
     FT_FREE( face->root.family_name );

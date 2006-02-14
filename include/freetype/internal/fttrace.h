@@ -45,6 +45,7 @@ FT_TRACE_DEF( sfobjs )    /* SFNT object handler     (sfobjs.c)   */
 FT_TRACE_DEF( ttcmap )    /* charmap handler         (ttcmap.c)   */
 FT_TRACE_DEF( ttkern )    /* kerning handler         (ttkern.c)   */
 FT_TRACE_DEF( ttload )    /* basic TrueType tables   (ttload.c)   */
+FT_TRACE_DEF( ttmtx )     /* metrics-related tables  (ttmtx.c)    */
 FT_TRACE_DEF( ttpost )    /* PS table processing     (ttpost.c)   */
 FT_TRACE_DEF( ttsbit )    /* TrueType sbit handling  (ttsbit.c)   */
 

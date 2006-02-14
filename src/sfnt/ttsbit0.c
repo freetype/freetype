@@ -86,8 +86,8 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  tt_face_load_sbit_strikes( TT_Face    face,
-                             FT_Stream  stream )
+  tt_face_load_eblc( TT_Face    face,
+                     FT_Stream  stream )
   {
     FT_Error   error  = SFNT_Err_Ok;
     FT_Fixed   version;
@@ -197,7 +197,7 @@
 
 
   FT_LOCAL_DEF( void )
-  tt_face_free_sbit_strikes( TT_Face  face )
+  tt_face_free_eblc( TT_Face  face )
   {
     FT_Stream  stream = face->root.stream;
 

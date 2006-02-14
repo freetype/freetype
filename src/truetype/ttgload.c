@@ -65,131 +65,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Function>                                                            */
-  /*    tt_face_get_metrics                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns the horizontal or vertical metrics in font units for a     */
-  /*    given glyph.  The metrics are the left side bearing (resp. top     */
-  /*    side bearing) and advance width (resp. advance height).            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    header  :: A pointer to either the horizontal or vertical metrics  */
-  /*               structure.                                              */
-  /*                                                                       */
-  /*    idx     :: The glyph index.                                        */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    bearing :: The bearing, either left side or top side.              */
-  /*                                                                       */
-  /*    advance :: The advance width resp. advance height.                 */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function will much probably move to another component in the  */
-  /*    near future, but I haven't decided which yet.                      */
-  /*                                                                       */
-#ifdef FT_OPTIMIZE_MEMORY
-
-  static void
-  tt_face_get_metrics( TT_Face     face,
-                       FT_Bool     vertical,
-                       FT_UInt     idx,
-                       FT_Short   *abearing,
-                       FT_UShort  *aadvance )
-  {
-    TT_HoriHeader*  header;
-    FT_Byte*        p;
-    FT_Byte*        limit;
-    FT_UShort       k;
-
-
-    if ( vertical )
-    {
-      header = (TT_HoriHeader*)&face->vertical;
-      p      = face->vert_metrics;
-      limit  = p + face->vert_metrics_size;
-    }
-    else
-    {
-      header = &face->horizontal;
-      p      = face->horz_metrics;
-      limit  = p + face->horz_metrics_size;
-    }
-
-    k = header->number_Of_HMetrics;
-
-    if ( k > 0 )
-    {
-      if ( idx < (FT_UInt)k )
-      {
-        p += 4 * idx;
-        if ( p + 4 > limit )
-          goto NoData;
-
-        *aadvance = FT_NEXT_USHORT( p );
-        *abearing = FT_NEXT_SHORT( p );
-      }
-      else
-      {
-        p += 4 * ( k - 1 );
-        if ( p + 4 > limit )
-          goto NoData;
-
-        *aadvance = FT_NEXT_USHORT( p );
-        p += 2 + 2 * ( idx - k );
-        if ( p + 2 > limit )
-          *abearing = 0;
-        else
-          *abearing = FT_PEEK_SHORT( p );
-      }
-    }
-    else
-    {
-    NoData:
-      *abearing = 0;
-      *aadvance = 0;
-    }
-  }
-
-#else /* !FT_OPTIMIZE_MEMORY */
-
-  static void
-  tt_face_get_metrics( TT_Face     face,
-                       FT_Bool     vertical,
-                       FT_UInt     idx,
-                       FT_Short   *abearing,
-                       FT_UShort  *aadvance )
-  {
-    TT_HoriHeader*  header = vertical ? (TT_HoriHeader*)&face->vertical
-                                      :                 &face->horizontal;
-    TT_LongMetrics  longs_m;
-    FT_UShort       k      = header->number_Of_HMetrics;
-
-
-    if ( k == 0 )
-    {
-      *abearing = *aadvance = 0;
-      return;
-    }
-
-    if ( idx < (FT_UInt)k )
-    {
-      longs_m   = (TT_LongMetrics)header->long_metrics + idx;
-      *abearing = longs_m->bearing;
-      *aadvance = longs_m->advance;
-    }
-    else
-    {
-      *abearing = ((TT_ShortMetrics*)header->short_metrics)[idx - k];
-      *aadvance = ((TT_LongMetrics)header->long_metrics)[k - 1].advance;
-    }
-  }
-
-#endif /* !FT_OPTIMIZE_MEMORY */
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* Returns the horizontal metrics in font units for a given glyph.  If   */
   /* `check' is true, take care of monospaced fonts by returning the       */
   /* advance width maximum.                                                */
@@ -201,54 +76,10 @@
                 FT_Short*   lsb,
                 FT_UShort*  aw )
   {
-    tt_face_get_metrics( face, 0, idx, lsb, aw );
+    ( (SFNT_Service)face->sfnt )->get_metrics( face, 0, idx, lsb, aw );
 
     if ( check && face->postscript.isFixedPitch )
       *aw = face->horizontal.advance_Width_Max;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* Returns the advance width table for a given pixel size if it is found */
-  /* in the font's `hdmx' table (if any).                                  */
-  /*                                                                       */
-  static FT_Byte*
-  Get_Advance_WidthPtr( TT_Face  face,
-                        FT_Int   ppem,
-                        FT_UInt  gindex )
-  {
-#ifdef FT_OPTIMIZE_MEMORY
-
-    FT_UInt   nn;
-    FT_Byte*  result      = NULL;
-    FT_ULong  record_size = face->hdmx_record_size;
-    FT_Byte*  record      = face->hdmx_table + 8;
-
-
-    for ( nn = 0; nn < face->hdmx_record_count; nn++ )
-      if ( face->hdmx_record_sizes[nn] == ppem )
-      {
-        gindex += 2;
-        if ( gindex < record_size )
-          result = record + gindex;
-        break;
-      }
-
-    return result;
-
-#else
-
-    FT_UShort  n;
-
-
-    for ( n = 0; n < face->hdmx.num_records; n++ )
-      if ( face->hdmx.records[n].ppem == ppem )
-        return &face->hdmx.records[n].widths[gindex];
-
-    return NULL;
-
-#endif
   }
 
 
@@ -275,7 +106,7 @@
     FT_UNUSED( check );
 
     if ( face->vertical_info )
-      tt_face_get_metrics( face, 1, idx, tsb, ah );
+      ( (SFNT_Service)face->sfnt )->get_metrics( face, 1, idx, tsb, ah );
 
 #if 1             /* Emperically determined, at variance with what MS said */
 
@@ -1769,10 +1600,12 @@
     if ( !face->postscript.isFixedPitch &&
          IS_HINTED( loader->load_flags )        )
     {
-      FT_Byte*  widthp = Get_Advance_WidthPtr( face,
-                                               size->root.metrics.x_ppem,
-                                               glyph_index );
+      FT_Byte*  widthp;
 
+
+      widthp = tt_face_get_device_metrics( face,
+                                           size->root.metrics.x_ppem,
+                                           glyph_index );
 
       if ( widthp )
         glyph->metrics.horiAdvance = *widthp << 6;

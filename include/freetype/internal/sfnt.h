@@ -442,6 +442,31 @@ FT_BEGIN_HEADER
   /*    TT_Load_Metrics_Func                                               */
   /*                                                                       */
   /* <Description>                                                         */
+  /*    Load a metrics table, which is a table comes with a horizontal     */
+  /*    and a vertical version.                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face     :: A handle to the target face object.                    */
+  /*                                                                       */
+  /*    stream   :: The input stream.                                      */
+  /*                                                                       */
+  /*    vertical :: A boolean flag.  If set, load the vertical one.        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Load_Metrics_Func)( TT_Face    face,
+                           FT_Stream  stream,
+                           FT_Bool    vertical );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Get_Metrics_Func                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
   /*    Load the horizontal or vertical header in a face object.           */
   /*                                                                       */
   /* <Input>                                                               */
@@ -455,9 +480,11 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   typedef FT_Error
-  (*TT_Load_Metrics_Func)( TT_Face    face,
-                           FT_Stream  stream,
-                           FT_Bool    vertical );
+  (*TT_Get_Metrics_Func)( TT_Face     face,
+                          FT_Bool     vertical,
+                          FT_UInt     gindex,
+                          FT_Short*   abearing,
+                          FT_UShort*  aadvance );
 
 
   /*************************************************************************/
@@ -548,39 +575,38 @@ FT_BEGIN_HEADER
 
     /* these functions are called by `load_face' but they can also  */
     /* be called from external modules, if there is a need to do so */
-    TT_Load_Table_Func           load_header;
-    TT_Load_Metrics_Func         load_metrics;
-    TT_Load_Table_Func           load_charmaps;
-    TT_Load_Table_Func           load_max_profile;
+    TT_Load_Table_Func           load_head;
+    TT_Load_Metrics_Func         load_hhea;
+    TT_Load_Table_Func           load_cmap;
+    TT_Load_Table_Func           load_maxp;
     TT_Load_Table_Func           load_os2;
-    TT_Load_Table_Func           load_psnames;
-
-    TT_Load_Table_Func           load_names;
-    TT_Free_Table_Func           free_names;
+    TT_Load_Table_Func           load_post;
+    TT_Load_Table_Func           load_name;
+    TT_Free_Table_Func           free_name;
 
     /* optional tables */
-    TT_Load_Table_Func           load_hdmx;
-    TT_Free_Table_Func           free_hdmx;
-
-    TT_Load_Table_Func           load_kerning;
+    TT_Load_Table_Func           load_kern;
     TT_Load_Table_Func           load_gasp;
     TT_Load_Table_Func           load_pclt;
 
     /* see `ttload.h' */
-    TT_Load_Table_Func           load_bitmap_header;
+    TT_Load_Table_Func           load_bhed;
 
     /* see `ttsbit.h' */
+    TT_Load_Table_Func           load_eblc;
+    TT_Free_Table_Func           free_eblc;
+
     TT_Set_SBit_Strike_Func      set_sbit_strike;
     TT_Load_Strike_Metrics_Func  load_strike_metrics;
-    TT_Load_Table_Func           load_sbits;
     TT_Find_SBit_Image_Func      find_sbit_image;
     TT_Load_SBit_Metrics_Func    load_sbit_metrics;
     TT_Load_SBit_Image_Func      load_sbit_image;
-    TT_Free_Table_Func           free_sbits;
 
     /* see `ttkern.h' */
     TT_Face_GetKerningFunc       get_kerning;
     
+    TT_Get_Metrics_Func          get_metrics;
+
     /* see `ttpost.h' */
     TT_Get_PS_Name_Func          get_psname;
     TT_Free_Table_Func           free_psnames;
