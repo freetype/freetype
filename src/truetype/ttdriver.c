@@ -175,7 +175,6 @@
   tt_size_request( FT_Size          size,
                    FT_Size_Request  req )
   {
-    TT_Face   ttface = (TT_Face)size->face;
     TT_Size   ttsize = (TT_Size)size;
     FT_Error  error  = TT_Err_Ok;
 
@@ -184,6 +183,7 @@
 
     if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
+      TT_Face       ttface = (TT_Face)size->face;
       SFNT_Service  sfnt = ttface->sfnt;
       FT_ULong      index;
 

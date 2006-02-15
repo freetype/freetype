@@ -60,7 +60,7 @@
     TT_Table  limit;
 
 
-    FT_TRACE3(( "tt_face_lookup_table: %08p, `%c%c%c%c' -- ",
+    FT_TRACE4(( "tt_face_lookup_table: %08p, `%c%c%c%c' -- ",
                 face,
                 (FT_Char)( tag >> 24 ),
                 (FT_Char)( tag >> 16 ),
@@ -76,12 +76,12 @@
       /* tables the same as missing tables.                   */
       if ( entry->Tag == tag && entry->Length != 0 )
       {
-        FT_TRACE3(( "found table.\n" ));
+        FT_TRACE4(( "found table.\n" ));
         return entry;
       }
     }
 
-    FT_TRACE3(( "could not find table!\n" ));
+    FT_TRACE4(( "could not find table!\n" ));
     return 0;
   }
 
@@ -493,29 +493,17 @@
     };
 
 
-    FT_TRACE2(( "tt_face_load_generic_header: "
-                "%08p, looking up font table `%c%c%c%c'.\n",
-                face,
-                (FT_Char)( tag >> 24 ),
-                (FT_Char)( tag >> 16 ),
-                (FT_Char)( tag >> 8  ),
-                (FT_Char)( tag       ) ));
-
     error = face->goto_table( face, tag, stream, 0 );
     if ( error )
-    {
-      FT_TRACE2(( "tt_face_load_generic_header: Font table is missing!\n" ));
       goto Exit;
-    }
 
     header = &face->header;
 
     if ( FT_STREAM_READ_FIELDS( header_fields, header ) )
       goto Exit;
 
-    FT_TRACE2(( "    Units per EM: %8u\n", header->Units_Per_EM ));
-    FT_TRACE2(( "    IndexToLoc:   %8d\n", header->Index_To_Loc_Format ));
-    FT_TRACE2(( "tt_face_load_generic_header: Font table loaded.\n" ));
+    FT_TRACE3(( "Units per EM: %4u\n", header->Units_Per_EM ));
+    FT_TRACE3(( "IndexToLoc:   %4d\n", header->Index_To_Loc_Format ));
 
   Exit:
     return error;
@@ -596,16 +584,12 @@
     };
 
 
-    FT_TRACE2(( "Load_TT_MaxProfile: %08p\n", face ));
-
     error = face->goto_table( face, TTAG_maxp, stream, 0 );
     if ( error )
       goto Exit;
 
     if ( FT_STREAM_READ_FIELDS( maxp_fields, maxProfile ) )
       goto Exit;
-
-    face->root.num_glyphs = maxProfile->numGlyphs;
 
     maxProfile->maxPoints             = 0;
     maxProfile->maxContours           = 0;
@@ -634,30 +618,9 @@
 
       if ( maxProfile->maxFunctionDefs == 0 )
         maxProfile->maxFunctionDefs = 64;
-
-      face->root.internal->max_points =
-        (FT_UShort)FT_MAX( maxProfile->maxCompositePoints,
-                           maxProfile->maxPoints );
-
-      face->root.internal->max_contours =
-        (FT_Short)FT_MAX( maxProfile->maxCompositeContours,
-                          maxProfile->maxContours );
-
-      face->max_components = (FT_ULong)maxProfile->maxComponentElements +
-                             maxProfile->maxComponentDepth;
-
-      /* XXX: some fonts have maxComponents set to 0; we will */
-      /*      then use 16 of them by default.                 */
-      if ( face->max_components == 0 )
-        face->max_components = 16;
-
-      /* We also increase maxPoints and maxContours in order to support */
-      /* some broken fonts.                                             */
-      face->root.internal->max_points   += (FT_UShort)8;
-      face->root.internal->max_contours += (FT_Short) 4;
     }
 
-    FT_TRACE2(( "MAXP loaded.\n" ));
+    FT_TRACE3(( "numGlyphs: %u\n", maxProfile->numGlyphs ));
 
   Exit:
     return error;
@@ -722,16 +685,9 @@
     table         = &face->name_table;
     table->stream = stream;
 
-    FT_TRACE2(( "Names " ));
-
     error = face->goto_table( face, TTAG_name, stream, &table_len );
     if ( error )
-    {
-      /* The name table is required so indicate failure. */
-      FT_TRACE2(( "is missing!\n" ));
-      error = SFNT_Err_Name_Table_Missing;
       goto Exit;
-    }
 
     table_pos = FT_STREAM_POS();
 
@@ -751,7 +707,7 @@
 
     if ( storage_start > storage_limit )
     {
-      FT_ERROR(( "tt_face_load_names: invalid `name' table\n" ));
+      FT_ERROR(( "invalid `name' table\n" ));
       error = SFNT_Err_Name_Table_Missing;
       goto Exit;
     }
@@ -797,8 +753,6 @@
     }
 
     FT_FRAME_EXIT();
-
-    FT_TRACE2(( "loaded\n" ));
 
     /* everything went well, update face->num_names */
     face->num_names = (FT_UShort) table->numNameRecords;
@@ -873,19 +827,10 @@
 
     error = face->goto_table( face, TTAG_cmap, stream, &face->cmap_size );
     if ( error )
-    {
-      FT_TRACE2(( "No `cmap' table in font !\n" ));
-      error = SFNT_Err_CMap_Table_Missing;
       goto Exit;
-    }
 
-    if ( !FT_FRAME_EXTRACT( face->cmap_size, face->cmap_table ) )
-      FT_TRACE2(( "`cmap' table loaded\n" ));
-    else
-    {
-      FT_ERROR(( "`cmap' table is too short!\n" ));
+    if ( FT_FRAME_EXTRACT( face->cmap_size, face->cmap_table ) )
       face->cmap_size = 0;
-    }
 
   Exit:
     return error;
@@ -988,19 +933,12 @@
     };
 
 
-    FT_TRACE2(( "OS/2 Table " ));
-
     /* We now support old Mac fonts where the OS/2 table doesn't  */
     /* exist.  Simply put, we set the `version' field to 0xFFFF   */
     /* and test this value each time we need to access the table. */
     error = face->goto_table( face, TTAG_OS2, stream, 0 );
     if ( error )
-    {
-      FT_TRACE2(( "is missing!\n" ));
-      face->os2.version = 0xFFFFU;
-      error = SFNT_Err_Ok;
       goto Exit;
-    }
 
     os2 = &face->os2;
 
@@ -1029,7 +967,11 @@
       }
     }
 
-    FT_TRACE2(( "loaded\n" ));
+    FT_TRACE3(( "sTypoAscender:  %4d\n",   os2->sTypoAscender ));
+    FT_TRACE3(( "sTypoDescender: %4d\n",   os2->sTypoDescender ));
+    FT_TRACE3(( "usWinAscent:    %4u\n",   os2->usWinAscent ));
+    FT_TRACE3(( "usWinDescent:   %4u\n",   os2->usWinDescent ));
+    FT_TRACE3(( "fsSelection:    0x%2x\n", os2->fsSelection ));
 
   Exit:
     return error;
@@ -1078,18 +1020,19 @@
     };
 
 
-    FT_TRACE2(( "PostScript " ));
-
     error = face->goto_table( face, TTAG_post, stream, 0 );
     if ( error )
-      return SFNT_Err_Post_Table_Missing;
+      return error;
 
     if ( FT_STREAM_READ_FIELDS( post_fields, post ) )
       return error;
 
     /* we don't load the glyph names, we do that in another */
     /* module (ttpost).                                     */
-    FT_TRACE2(( "loaded\n" ));
+
+    FT_TRACE3(( "FormatType:   0x%x\n", post->FormatType ));
+    FT_TRACE3(( "isFixedPitch:   %s\n", post->isFixedPitch
+                                        ? "  yes" : "   no" ));
 
     return SFNT_Err_Ok;
   }
@@ -1142,21 +1085,13 @@
     TT_PCLT*  pclt = &face->pclt;
 
 
-    FT_TRACE2(( "PCLT " ));
-
     /* optional table */
     error = face->goto_table( face, TTAG_PCLT, stream, 0 );
     if ( error )
-    {
-      FT_TRACE2(( "missing (optional)\n" ));
-      pclt->Version = 0;
-      return SFNT_Err_Ok;
-    }
+      goto Exit;
 
     if ( FT_STREAM_READ_FIELDS( pclt_fields, pclt ) )
       goto Exit;
-
-    FT_TRACE2(( "loaded\n" ));
 
   Exit:
     return error;
@@ -1190,12 +1125,10 @@
     TT_GaspRange   gaspranges;
 
 
-    FT_TRACE2(( "tt_face_load_gasp: %08p\n", face ));
-
     /* the gasp table is optional */
     error = face->goto_table( face, TTAG_gasp, stream, 0 );
     if ( error )
-      return SFNT_Err_Ok;
+      goto Exit;
 
     if ( FT_FRAME_ENTER( 4L ) )
       goto Exit;
@@ -1206,7 +1139,7 @@
     FT_FRAME_EXIT();
 
     num_ranges = face->gasp.numRanges;
-    FT_TRACE3(( "number of ranges = %d\n", num_ranges ));
+    FT_TRACE3(( "numRanges: %u\n", num_ranges ));
 
     if ( FT_QNEW_ARRAY( gaspranges, num_ranges ) ||
          FT_FRAME_ENTER( num_ranges * 4L )      )
@@ -1219,14 +1152,13 @@
       gaspranges[j].maxPPEM  = FT_GET_USHORT();
       gaspranges[j].gaspFlag = FT_GET_USHORT();
 
-      FT_TRACE3(( " [max:%d flag:%d]",
-                    gaspranges[j].maxPPEM,
-                    gaspranges[j].gaspFlag ));
+      FT_TRACE3(( "gaspRange %d: rangeMaxPPEM %5d, rangeGaspBehavior 0x%x\n",
+                  j,
+                  gaspranges[j].maxPPEM,
+                  gaspranges[j].gaspFlag ));
     }
-    FT_TRACE3(( "\n" ));
 
     FT_FRAME_EXIT();
-    FT_TRACE2(( "GASP loaded\n" ));
 
   Exit:
     return error;

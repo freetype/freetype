@@ -216,9 +216,6 @@ FT_BEGIN_HEADER
     TT_Set_CVT_Func    func_write_cvt; /* write a cvt entry (in pixels) */
     TT_Set_CVT_Func    func_move_cvt;  /* incr a cvt entry (in pixels)  */
 
-    FT_ULong           loadSize;
-    TT_SubGlyph_Stack  loadStack;      /* loading subglyph stack */
-
     FT_Bool            grayscale;      /* are we hinting for grayscale? */
 
   } TT_ExecContextRec;

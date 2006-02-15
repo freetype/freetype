@@ -481,9 +481,36 @@
   }
 
 
-#undef  LOAD_
-#define LOAD_( x )  ( ( error = sfnt->load_##x( face, stream ) ) \
-                      != SFNT_Err_Ok )
+#define LOAD_( x )                                            \
+  do {                                                        \
+    FT_TRACE2(( "`" #x "' " ));                               \
+    FT_TRACE3(( "-->\n" ));                                   \
+                                                              \
+    error = sfnt->load_##x( face, stream );                   \
+                                                              \
+    FT_TRACE2(( "%s\n", ( !error )                            \
+                        ? "loaded"                            \
+                        : ( error == SFNT_Err_Table_Missing ) \
+                          ? "missing"                         \
+                          : "failed to load" ));              \
+    FT_TRACE3(( "\n" ));                                      \
+  } while ( 0 )
+
+#define LOADM_( x, vertical )                                 \
+  do {                                                        \
+    FT_TRACE2(( "`%s" #x "' ",                                \
+                vertical ? "vertical " : "" ));               \
+    FT_TRACE3(( "-->\n" ));                                   \
+                                                              \
+    error = sfnt->load_##x( face, stream, vertical );         \
+                                                              \
+    FT_TRACE2(( "%s\n", ( !error )                            \
+                        ? "loaded"                            \
+                        : ( error == SFNT_Err_Table_Missing ) \
+                          ? "missing"                         \
+                          : "failed to load" ));              \
+    FT_TRACE3(( "\n" ));                                      \
+  } while ( 0 )
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -521,6 +548,8 @@
     /* it doesn't contain outlines.                                */
     /*                                                             */
 
+    FT_TRACE2(( "sfnt_load_face: %08p\n\n", face ));
+
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     has_outline   = FT_BOOL( face->root.internal->incremental_interface != 0 ||
@@ -533,40 +562,50 @@
 
     is_apple_sbit = 0;
 
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
-    if ( !has_outline )
-      is_apple_sbit = FT_BOOL( !LOAD_( bhed ) );
-
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+    if ( !has_outline && sfnt->load_bhed )
+    {
+      LOAD_( bhed );
+      is_apple_sbit = !error;
+    }
 
     /* load the font header (`head' table) if this isn't an Apple */
     /* sbit font file                                             */
-    if ( !is_apple_sbit && LOAD_( head ) )
+    if ( !is_apple_sbit )
+    {
+      LOAD_( head );
+      if ( error )
+        goto Exit;
+    }
+
+    if ( face->header.Units_Per_EM == 0 )
+    {
+      error = SFNT_Err_Invalid_Table;
+
       goto Exit;
+    }
 
     /* the following tables are often not present in embedded TrueType */
     /* fonts within PDF documents, so don't check for them.            */
-    (void)LOAD_( maxp );
-    (void)LOAD_( cmap );
+    LOAD_( maxp );
+    LOAD_( cmap );
 
     /* the following tables are optional in PCL fonts -- */
     /* don't check for errors                            */
-    (void)LOAD_( name );
-    psnames_error = LOAD_( post );
+    LOAD_( name );
+    LOAD_( post );
+    psnames_error = error;
 
     /* do not load the metrics headers and tables if this is an Apple */
     /* sbit font file                                                 */
     if ( !is_apple_sbit )
     {
       /* load the `hhea' and `hmtx' tables */
-      error = sfnt->load_hhea( face, stream, 0 );
+      LOADM_( hhea, 0 );
       if ( !error )
       {
-        error = sfnt->load_hmtx( face, stream, 0 );
-
+        LOADM_( hmtx, 0 );
         if ( error == SFNT_Err_Table_Missing )
         {
           error = SFNT_Err_Hmtx_Table_Missing;
@@ -590,6 +629,7 @@
         if ( face->format_tag == TTAG_true )
         {
           FT_TRACE2(( "This is an SFNT Mac font.\n" ));
+          has_outline = 0;
           error = SFNT_Err_Ok;
         }
         else
@@ -600,10 +640,10 @@
         goto Exit;
 
       /* try to load the `vhea' and `vmtx' tables */
-      error = sfnt->load_hhea( face, stream, 1 );
+      LOADM_( hhea, 1 );
       if ( !error )
       {
-        error = sfnt->load_hmtx( face, stream, 1 );
+        LOADM_( hmtx, 1 );
         if ( !error )
           face->vertical_info = 1;
       }
@@ -611,34 +651,49 @@
       if ( error && error != SFNT_Err_Table_Missing )
         goto Exit;
 
-      if ( LOAD_( os2 ) )
-        goto Exit;
+      LOAD_( os2 );
+      if ( error )
+      {
+        if ( error != SFNT_Err_Table_Missing )
+          goto Exit;
+
+        face->os2.version = 0xFFFFU;
+      }
+
     }
 
     /* the optional tables */
 
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
     /* embedded bitmap support. */
-    if ( sfnt->load_eblc && LOAD_( eblc ) )
+    if ( sfnt->load_eblc )
     {
-      /* return an error if this font file has no outlines */
-      if ( error == SFNT_Err_Table_Missing && has_outline )
-        error = SFNT_Err_Ok;
-      else
-        goto Exit;
+      LOAD_( eblc );
+      if ( error )
+      {
+        /* return an error if this font file has no outlines */
+        if ( error == SFNT_Err_Table_Missing && has_outline )
+          error = SFNT_Err_Ok;
+        else
+          goto Exit;
+      }
     }
 
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+    LOAD_( pclt );
+    if ( error )
+    {
+      if ( error != SFNT_Err_Table_Missing )
+        goto Exit;
 
-    if ( LOAD_( pclt )    )
-      goto Exit;
+      face->pclt.Version = 0;
+    }
 
     /* consider the kerning and gasp tables as optional */
-    (void)LOAD_( gasp );
-    (void)LOAD_( kern );
+    LOAD_( gasp );
+    LOAD_( kern );
 
     error = SFNT_Err_Ok;
+
+    face->root.num_glyphs = face->max_profile.numGlyphs;
 
     face->root.family_name = tt_face_get_name( face,
                                                TT_NAME_ID_PREFERRED_FAMILY );
@@ -847,18 +902,80 @@
 
         root->underline_position  = face->postscript.underlinePosition;
         root->underline_thickness = face->postscript.underlineThickness;
-
-        /* root->max_points   -- already set up */
-        /* root->max_contours -- already set up */
       }
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+      /*
+       *  Now allocate the root array of FT_Bitmap_Size records and
+       *  populate them.  Unfortunately, it isn't possible to indicate bit
+       *  depths in the FT_Bitmap_Size record.  This is a design error.
+       */
+      {
+        FT_UInt  i, count;
+
+
+#ifdef FT_OPTIMIZE_MEMORY
+        count = face->sbit_num_strikes;
+#else
+        count = (FT_UInt)face->num_sbit_strikes;
+#endif
+
+        if ( count > 0 )
+        {
+          FT_Memory        memory   = face->root.stream->memory;
+          FT_UShort        em_size  = face->header.Units_Per_EM;
+          FT_Short         avgwidth = face->os2.xAvgCharWidth;
+          FT_Size_Metrics  metrics;
+
+
+          if ( em_size == 0 || face->os2.version == 0xFFFFU )
+          {
+            avgwidth = 0;
+            em_size = 1;
+          }
+
+          if ( FT_NEW_ARRAY( root->available_sizes, count ) )
+            goto Exit;
+
+          for ( i = 0; i < count; i++ )
+          {
+            FT_Bitmap_Size*  bsize = root->available_sizes + i;
+
+
+            error = sfnt->load_strike_metrics( face, i, &metrics );
+            if ( error )
+              goto Exit;
+
+            bsize->height = metrics.height >> 6;
+            bsize->width = (FT_Short)(
+                ( avgwidth * metrics.x_ppem + em_size / 2 ) / em_size );
+
+            bsize->x_ppem = metrics.x_ppem << 6;
+            bsize->y_ppem = metrics.y_ppem << 6;
+
+            /* assume 72dpi */
+            bsize->size   = metrics.y_ppem << 6;
+          }
+
+          root->face_flags     |= FT_FACE_FLAG_FIXED_SIZES;
+          root->num_fixed_sizes = (FT_Int)count;
+        }
+      }
+
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
     }
 
   Exit:
+    FT_TRACE2(( "sfnt_load_face: done\n" ));
+
     return error;
   }
 
 
 #undef LOAD_
+#undef LOADM_
 
 
   FT_LOCAL_DEF( void )

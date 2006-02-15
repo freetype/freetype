@@ -66,8 +66,6 @@
     FT_ULong*  ptable_size;
     
     
-    FT_TRACE2(( "%cmtx ", vertical ? 'v' : 'h' ));
-
     if ( vertical )
     {
       error = face->goto_table( face, TTAG_vmtx, stream, &table_size );
@@ -92,14 +90,7 @@
       
     *ptable_size = table_size;
 
-    return SFNT_Err_Ok;
-    
   Fail:
-    if ( error == SFNT_Err_Table_Missing )
-      FT_TRACE2(( "missing\n" ));
-    else
-      FT_TRACE2(( "failed\n" ));
-
     return error;
   }
 
@@ -120,47 +111,34 @@
     TT_ShortMetrics**  shorts;
 
 
-    FT_TRACE2(( "%cmtx ", vertical ? 'v' : 'h' ));
-
     if ( vertical )
     {
       error = face->goto_table( face, TTAG_vmtx, stream, &table_len );
       if ( error )
-      {
-        /* Set number_Of_VMetrics to 0! */
-        face->vertical.number_Of_VMetrics = 0;
-
         goto Fail;
-      }
 
       num_longs = face->vertical.number_Of_VMetrics;
       if ( num_longs > table_len / 4 )
-      {
         num_longs = table_len / 4;
-        face->vertical.number_Of_VMetrics = num_longs;
-      }
 
-      longs  = (TT_LongMetrics *) &face->vertical.long_metrics;
+      face->vertical.number_Of_VMetrics = 0;
+
+      longs  = (TT_LongMetrics *)&face->vertical.long_metrics;
       shorts = (TT_ShortMetrics**)&face->vertical.short_metrics;
     }
     else
     {
       error = face->goto_table( face, TTAG_hmtx, stream, &table_len );
       if ( error )
-      {
-        face->horizontal.number_Of_HMetrics = 0;
-
         goto Fail;
-      }
 
       num_longs = face->horizontal.number_Of_HMetrics;
       if ( num_longs > table_len / 4 )
-      {
         num_longs = table_len / 4;
-        face->horizontal.number_Of_HMetrics = num_longs;
-      }
 
-      longs  = (TT_LongMetrics *) &face->horizontal.long_metrics;
+      face->horizontal.number_Of_HMetrics = 0;
+
+      longs  = (TT_LongMetrics *)&face->horizontal.long_metrics;
       shorts = (TT_ShortMetrics**)&face->horizontal.short_metrics;
     }
 
@@ -171,8 +149,7 @@
 
     if ( num_shorts < 0 )
     {
-      FT_ERROR(( "%cmtx: more metrics than glyphs!\n",
-                 vertical ? 'v' : 'h' ));
+      FT_ERROR(( "%cmtx has more metrics than glyphs.\n" ));
 
       /* Adobe simply ignores this problem.  So we shall do the same. */
 #if 0
@@ -229,16 +206,12 @@
 
     FT_FRAME_EXIT();
 
-    FT_TRACE2(( "loaded\n" ));
-
-    return SFNT_Err_Ok;
+    if ( vertical )
+      face->vertical.number_Of_VMetrics = num_longs;
+    else
+      face->horizontal.number_Of_HMetrics = num_longs;
 
   Fail:
-    if ( error == SFNT_Err_Table_Missing )
-      FT_TRACE2(( "missing\n" ));
-    else
-      FT_TRACE2(( "failed\n" ));
-
     return error;
   }
 
@@ -298,8 +271,6 @@
     };
 
 
-    FT_TRACE2(( "%chea ", vertical ? 'v' : 'h' ));
-
     if ( vertical )
     {
       error = face->goto_table( face, TTAG_vhea, stream, 0 );
@@ -320,19 +291,14 @@
     if ( FT_STREAM_READ_FIELDS( metrics_header_fields, header ) )
       goto Fail;
 
+    FT_TRACE3(( "Ascender:          %5d\n", header->Ascender ));
+    FT_TRACE3(( "Descenter:         %5d\n", header->Descender ));
+    FT_TRACE3(( "number_Of_Metrics: %5u\n", header->number_Of_HMetrics ));
+
     header->long_metrics  = NULL;
     header->short_metrics = NULL;
 
-    FT_TRACE2(( "loaded\n" ));
-
-    return SFNT_Err_Ok;
-
   Fail:
-    if ( error == SFNT_Err_Table_Missing )
-      FT_TRACE2(( "missing\n" ));
-    else
-      FT_TRACE2(( "failed\n" ));
-
     return error;
   }
 
@@ -438,7 +404,8 @@
     FT_UShort       k = header->number_Of_HMetrics;
 
 
-    if ( k == 0 || gindex >= (FT_UInt)face->max_profile.numGlyphs )
+    if ( k == 0 || !header->long_metrics ||
+         gindex >= (FT_UInt)face->max_profile.numGlyphs )
     {
       *abearing = *aadvance = 0;
       return SFNT_Err_Ok;

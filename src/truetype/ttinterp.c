@@ -394,10 +394,6 @@
     FT_Memory  memory = exec->memory;
 
 
-    /* free composite load stack */
-    FT_FREE( exec->loadStack );
-    exec->loadSize = 0;
-
     /* points zone */
     exec->maxPoints   = 0;
     exec->maxContours = 0;
@@ -462,11 +458,9 @@
     exec->maxContours = 0;
 
     exec->stackSize = 0;
-    exec->loadSize  = 0;
     exec->glyphSize = 0;
 
     exec->stack     = NULL;
-    exec->loadStack = NULL;
     exec->glyphIns  = NULL;
 
     exec->face = NULL;
@@ -593,14 +587,6 @@
 
       exec->twilight  = size->twilight;
     }
-
-    error = Update_Max( exec->memory,
-                        &exec->loadSize,
-                        sizeof ( TT_SubGlyphRec ),
-                        (void**)&exec->loadStack,
-                        exec->face->max_components + 1 );
-    if ( error )
-      return error;
 
     /* XXX: We reserve a little more elements on the stack to deal safely */
     /*      with broken fonts like arialbs, courbs, timesbs, etc.         */

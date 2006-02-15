@@ -1102,10 +1102,6 @@ FT_BEGIN_HEADER
   /*                            table.  We thus define additional fields   */
   /*                            below to hold the computed maxima.         */
   /*                                                                       */
-  /*    max_components       :: The maximum number of glyph components     */
-  /*                            required to load any composite glyph from  */
-  /*                            this font.  Used to size the load stack.   */
-  /*                                                                       */
   /*    vertical_info        :: A boolean which is set when the font file  */
   /*                            contains vertical metrics.  If not, the    */
   /*                            value of the `vertical' field is           */
@@ -1277,7 +1273,6 @@ FT_BEGIN_HEADER
 #endif
 
     TT_MaxProfile         max_profile;
-    FT_ULong              max_components;
 
     FT_Bool               vertical_info;
     TT_VertHeader         vertical;     /* TT Vertical header, if present */

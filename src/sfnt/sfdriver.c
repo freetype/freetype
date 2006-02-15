@@ -434,6 +434,7 @@
     0,
     0,
     0,
+    0,
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 

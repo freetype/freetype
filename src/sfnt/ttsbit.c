@@ -584,40 +584,6 @@
       }
     }
 
-    /* now set up the root fields to indicate the strikes */
-    if ( face->num_sbit_strikes )
-    {
-      FT_ULong  n;
-      FT_Face   root = FT_FACE( face );
-
-
-      if ( FT_NEW_ARRAY( root->available_sizes, face->num_sbit_strikes ) )
-        goto Exit;
-
-      for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
-      {
-        FT_Bitmap_Size*  bsize  = root->available_sizes + n;
-        TT_SBit_Strike   strike = face->sbit_strikes + n;
-        FT_UShort        fupem  = face->header.Units_Per_EM;
-        FT_Short         avg    = face->os2.xAvgCharWidth;
-
-
-        /* XXX: Is this correct? */
-        bsize->height = strike->hori.ascender - strike->hori.descender;
-        bsize->width  =
-          (FT_Short)( ( avg * strike->y_ppem + fupem / 2 ) / fupem );
-
-        /* assume 72dpi */
-        bsize->size   = strike->y_ppem << 6;
-
-        bsize->x_ppem = strike->x_ppem << 6;
-        bsize->y_ppem = strike->y_ppem << 6;
-      }
-
-      root->face_flags     |= FT_FACE_FLAG_FIXED_SIZES;
-      root->num_fixed_sizes = (FT_Int)face->num_sbit_strikes;
-    }
-
   Exit:
     return error;
   }

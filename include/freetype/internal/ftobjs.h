@@ -213,9 +213,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
-    FT_UShort           max_points;
-    FT_Short            max_contours;
-
     FT_Matrix           transform_matrix;
     FT_Vector           transform_delta;
     FT_Int              transform_flags;

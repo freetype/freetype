@@ -302,9 +302,6 @@
     root->underline_position  = (FT_Short)info->underline_position;
     root->underline_thickness = (FT_Short)info->underline_thickness;
 
-    root->internal->max_points   = 0;
-    root->internal->max_contours = 0;
-
     /* compute style flags */
     root->style_flags = 0;
     if ( info->italic_angle )

@@ -429,9 +429,6 @@
 
       cidface->underline_position  = (FT_Short)info->underline_position;
       cidface->underline_thickness = (FT_Short)info->underline_thickness;
-
-      cidface->internal->max_points   = 0;
-      cidface->internal->max_contours = 0;
     }
 
   Exit:

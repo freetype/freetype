@@ -116,9 +116,13 @@ FT_BEGIN_HEADER
   cff_size_request( FT_Size          size,
                     FT_Size_Request  req );
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
   FT_LOCAL( FT_Error )
   cff_size_select( FT_Size   size,
                    FT_ULong  index );
+
+#endif
 
   FT_LOCAL( void )
   cff_slot_done( FT_GlyphSlot  slot );
