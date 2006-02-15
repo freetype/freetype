@@ -140,8 +140,8 @@
         face->vertical.number_Of_VMetrics = num_longs;
       }
 
-      longs     = (TT_LongMetrics *)&face->vertical.long_metrics;
-      shorts    = (TT_ShortMetrics**)&face->vertical.short_metrics;
+      longs  = (TT_LongMetrics *) &face->vertical.long_metrics;
+      shorts = (TT_ShortMetrics**)&face->vertical.short_metrics;
     }
     else
     {
@@ -160,8 +160,8 @@
         face->horizontal.number_Of_HMetrics = num_longs;
       }
 
-      longs     = (TT_LongMetrics *)&face->horizontal.long_metrics;
-      shorts    = (TT_ShortMetrics**)&face->horizontal.short_metrics;
+      longs  = (TT_LongMetrics *) &face->horizontal.long_metrics;
+      shorts = (TT_ShortMetrics**)&face->horizontal.short_metrics;
     }
 
     /* never trust derived values */
@@ -358,10 +358,6 @@
   /*                                                                       */
   /*    advance :: The advance width resp. advance height.                 */
   /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function will much probably move to another component in the  */
-  /*    near future, but I haven't decided which yet.                      */
-  /*                                                                       */
 #ifdef FT_OPTIMIZE_MEMORY
 
   FT_LOCAL_DEF( FT_Error )
@@ -439,7 +435,7 @@
     TT_HoriHeader*  header = vertical ? (TT_HoriHeader*)&face->vertical
                                       :                 &face->horizontal;
     TT_LongMetrics  longs_m;
-    FT_UShort       k      = header->number_Of_HMetrics;
+    FT_UShort       k = header->number_Of_HMetrics;
 
 
     if ( k == 0 || gindex >= (FT_UInt)face->max_profile.numGlyphs )

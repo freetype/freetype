@@ -22,6 +22,10 @@
    *
    */
 
+#include "aftypes.h"
+#include "aflatin.h"
+
+
 #ifdef AF_CONFIG_OPTION_CJK
 
 #include "afcjk.h"

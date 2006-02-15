@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (body).                                             */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -259,8 +259,8 @@
   /*    The stream cursor must be at the beginning of the font directory.  */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_face_load_font_dir( TT_Face      face,
-                         FT_Stream    stream )
+  tt_face_load_font_dir( TT_Face    face,
+                         FT_Stream  stream )
   {
     SFNT_HeaderRec  sfnt;
     FT_Error        error;
@@ -294,7 +294,7 @@
 
     /* many fonts don't have these fields set correctly */
 #if 0
-    if ( sfnt.search_range != 1 << ( sfnt.entry_selector + 4 )         ||
+    if ( sfnt.search_range != 1 << ( sfnt.entry_selector + 4 )        ||
          sfnt.search_range + sfnt.range_shift != sfnt.num_tables << 4 )
       return SFNT_Err_Unknown_File_Format;
 #endif

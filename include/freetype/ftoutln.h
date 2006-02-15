@@ -5,7 +5,7 @@
 /*    Support for the FT_Outline type used to store glyph shapes of        */
 /*    most scalable font formats (specification).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2005 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2005, 2006 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -314,6 +314,9 @@ FT_BEGIN_HEADER
   /*    `strength' pixels wider and higher.  You may think of the left and */
   /*    bottom borders as unchanged.                                       */
   /*                                                                       */
+  /*    Negative `strength' values to reduce the outline thickness are     */
+  /*    possible also.                                                     */
+  /*                                                                       */
   /* <InOut>                                                               */
   /*    outline  :: A handle to the target outline.                        */
   /*                                                                       */
@@ -323,6 +326,18 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The used algorithm to increase or decrease the thickness of the    */
+  /*    glyph doesn't change the number of points; this means that certain */
+  /*    situations like acute angles or intersections are sometimes        */
+  /*    handled incorrectly.                                               */
+  /*                                                                       */
+  /*    Example call:                                                      */
+  /*                                                                       */
+  /*      FT_Load_Glyph( face, index, FT_LOAD_DEFAULT );                   */
+  /*      if ( face->slot->format == FT_GLYPH_FORMAT_OUTLINE )             */
+  /*        FT_Outline_Embolden( &face->slot->outline, strength );         */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Embolden( FT_Outline*  outline,

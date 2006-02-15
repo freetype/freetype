@@ -1,3 +1,17 @@
+2006-02-14  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftoutln.h (FT_Outline_Embolden): Mention in
+	documentation that negative strength values are possible.
+	Give an example call.
+
+	* include/freetype/freetype.h (FT_GlyphSlotRec): Improve
+	documentation of `outline' field.
+
+	* src/sfnt/sfobjc.s: Inckude FT_INTERNAL_DEBUG_H.
+	* src/sfnt/sfdriver.c: Include ttmtx.h.
+
+	* src/autofit/afcjk.c: Include aftypes.h and aflatin.h.
+
 2006-02-14  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/sfnt/ttmtx.c (tt_face_get_metrics): Typo.
@@ -9,11 +23,11 @@
 	Check table length in non-FT_OPTIMIZE_MEMORY'ed `tt_face_load_hmtx'.
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Take care of missing metrics
-	tables.  The last change makes Mac bitmap-only font not load and this
-	fixes it.
+	tables.  The last change makes Mac bitmap-only font not load and
+	this fixes it.
 
-	* src/truetype/ttgload.c (load_truetype_glyph): Fix compilation error
-	when FT_CONFIG_OPTION_INCREMENTAL is defined.
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix compilation
+	error when FT_CONFIG_OPTION_INCREMENTAL is defined.
 
 2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
@@ -32,10 +46,10 @@
 
 2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
-	Clean up the SFNT_Interface.  In this pass, we want to treat the font
-	directory (offset table and table directory) as a normal table like
-	the others.  This also means that TTC is no longer recognized there,
-	but in `init_face'.
+	Clean up the SFNT_Interface.  In this pass, we want to treat the
+	font directory (offset table and table directory) as a normal table
+	like the others.  This also means that TTCs are no longer recognized
+	there but in `init_face'.
 
 	* include/freetype/internal/sfnt.h (SFNT_Interface),
 	src/sfnt/sfdriver.c: `load_sfnt_header' and `load_directory' are
@@ -52,9 +66,10 @@
 2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	Clean up the SFNT_Interface.  Table loading functions are now named
-	after the tables' tags;  `hdmx' is TrueType-specific and thus the code
-	is moved to the truetype module; `get_metrics' is moved here from the
-	truetype module so that the code can be shared with the cff module.
+	after the tables' tags; `hdmx' is TrueType-specific and thus the
+	code is moved to the truetype module; `get_metrics' is moved here
+	from the truetype module so that the code can be shared with the cff
+	module.
 
 	This pass involves no real changes.  That is, the code is moved
 	verbatim mostly.  The only exception is the return value of
@@ -65,10 +80,10 @@
 	src/sfnt/ttload.c, src/sfnt/ttload.h, src/sfnt/ttsbit.c,
 	src/sfnt/ttsbit.h, src/sfnt/ttsbit0.c: Clean up the SFNT_Interface.
 	
-	* src/sfnt/ttmtx.c, src/sfnt/ttmtx.h: Metrics-related tables' loading
-	and parsing code is moved here.
-	Move `tt_face_get_metrics' here from the truetype module.  The return
-	value is changed from `void' to `FT_Error'.
+	* src/sfnt/ttmtx.c, src/sfnt/ttmtx.h: New files.  Metrics-related
+	tables' loading and parsing code is moved to here.
+	Move `tt_face_get_metrics' here from the truetype module.  The
+	return value is changed from `void' to `FT_Error'.
 
 	* include/freetype/internal/fttrace.h: New trace: ttmtx.
 

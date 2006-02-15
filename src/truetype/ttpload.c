@@ -47,7 +47,7 @@
   /*    tt_face_load_loca                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the locations table.                                         */
+  /*    Load the locations table.                                          */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face   :: A handle to the target face object.                      */
@@ -319,7 +319,7 @@
   /*    tt_face_load_cvt                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the control value table into a face object.                  */
+  /*    Load the control value table into a face object.                   */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face   :: A handle to the target face object.                      */
@@ -400,7 +400,7 @@
   /*    tt_face_load_fpgm                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the font program.                                            */
+  /*    Load the font program.                                             */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face   :: A handle to the target face object.                      */
@@ -417,8 +417,8 @@
   {
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
-    FT_Error   error;
-    FT_ULong   table_len;
+    FT_Error  error;
+    FT_ULong  table_len;
 
 
     FT_TRACE2(( "Font program " ));
@@ -462,7 +462,7 @@
   /*    tt_face_load_prep                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the cvt program.                                             */
+  /*    Load the cvt program.                                              */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face   :: A handle to the target face object.                      */
@@ -479,8 +479,8 @@
   {
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
-    FT_Error   error;
-    FT_ULong   table_len;
+    FT_Error  error;
+    FT_ULong  table_len;
 
 
     FT_TRACE2(( "Prep program " ));
@@ -523,7 +523,7 @@
   /*    tt_face_load_hdmx                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the `hdmx' table into the face object.                       */
+  /*    Load the `hdmx' table into the face object.                        */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
@@ -699,9 +699,10 @@
 
 #endif /* !OPTIMIZE_MEMORY */
 
+
   /*************************************************************************/
   /*                                                                       */
-  /* Returns the advance width table for a given pixel size if it is found */
+  /* Return the advance width table for a given pixel size if it is found  */
   /* in the font's `hdmx' table (if any).                                  */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Byte* )

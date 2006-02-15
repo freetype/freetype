@@ -1856,9 +1856,9 @@
               /* field to deal adequately with synthetic  */
               /* fonts; /Subrs and /CharStrings are       */
               /* handled specially.                       */
-              if ( keyword_flag[0] == 0                              ||
-                   ft_strcmp( (const char*)name, "Subrs" ) == 0      ||
-                   ft_strcmp( (const char*)name, "CharStrings") == 0 )
+              if ( keyword_flag[0] == 0                               ||
+                   ft_strcmp( (const char*)name, "Subrs" ) == 0       ||
+                   ft_strcmp( (const char*)name, "CharStrings" ) == 0 )
               {
                 parser->root.error = t1_load_keyword( face,
                                                       loader,

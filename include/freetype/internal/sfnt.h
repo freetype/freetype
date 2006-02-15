@@ -34,7 +34,7 @@ FT_BEGIN_HEADER
   /*    TT_Init_Face_Func                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    First part of the SFNT face object initialization.  This will find */
+  /*    First part of the SFNT face object initialization.  This finds     */
   /*    the face in a SFNT file or collection, and load its format tag in  */
   /*    face->format_tag.                                                  */
   /*                                                                       */
@@ -77,9 +77,9 @@ FT_BEGIN_HEADER
   /*    TT_Load_Face_Func                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Second part of the SFNT face object initialization.  This will     */
-  /*    load the common SFNT tables (head, OS/2, maxp, metrics, etc.) in   */
-  /*    the face object.                                                   */
+  /*    Second part of the SFNT face object initialization.  This loads    */
+  /*    the common SFNT tables (head, OS/2, maxp, metrics, etc.) in the    */
+  /*    face object.                                                       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    stream     :: The input stream.                                    */
@@ -375,8 +375,8 @@ FT_BEGIN_HEADER
   /*    TT_Load_Metrics_Func                                               */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Load a metrics table, which is a table comes with a horizontal     */
-  /*    and a vertical version.                                            */
+  /*    Load a metrics table, which is a table with a horizontal and a     */
+  /*    vertical version.                                                  */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the target face object.                    */
@@ -437,8 +437,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The function will use `face->goto_table' to seek the stream to     */
-  /*    the start of the table, except in loading font directory.          */
+  /*    The function uses `face->goto_table' to seek the stream to the     */
+  /*    start of the table, except while loading the font directory.       */
   /*                                                                       */
   typedef FT_Error
   (*TT_Load_Table_Func)( TT_Face    face,
@@ -504,8 +504,8 @@ FT_BEGIN_HEADER
 
     TT_Load_Any_Func             load_any;
 
-    /* load the font directory, i.e. the offset table and */
-    /* the table directory                                */
+    /* load the font directory, i.e., the offset table and */
+    /* the table directory                                 */
     TT_Load_Table_Func           load_font_dir;
 
     /* these functions are called by `load_face' but they can also  */

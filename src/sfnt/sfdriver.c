@@ -41,6 +41,7 @@
 
 #include "ttcmap.h"
 #include "ttkern.h"
+#include "ttmtx.h"
 
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H

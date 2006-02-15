@@ -22,6 +22,7 @@
 #include "ttcmap.h"
 #include "ttkern.h"
 #include FT_INTERNAL_SFNT_H
+#include FT_INTERNAL_DEBUG_H
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
@@ -588,7 +589,7 @@
         /* No `hhea' table necessary for SFNT Mac fonts. */
         if ( face->format_tag == TTAG_true )
         {
-          FT_TRACE2(( "This is an SFNT Mac font.\n"));
+          FT_TRACE2(( "This is an SFNT Mac font.\n" ));
           error = SFNT_Err_Ok;
         }
         else
