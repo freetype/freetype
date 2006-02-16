@@ -829,6 +829,23 @@ FT_BEGIN_HEADER
 
  /* */
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
+  FT_EXPORT( FT_Error )
+  FTC_Manager_Lookup_Face( FTC_Manager  manager,
+                           FTC_FaceID   face_id,
+                           FT_Face     *aface );
+
+  FT_EXPORT( FT_Error )
+  FTC_Manager_Lookup_Size( FTC_Manager  manager,
+                           FTC_Font     font,
+                           FT_Face     *aface,
+                           FT_Size     *asize );
+
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
+ /* */
+
 FT_END_HEADER
 
 #endif /* __FTCACHE_H__ */

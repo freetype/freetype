@@ -113,7 +113,7 @@
 
     if ( sfnt )
       kerning->x = sfnt->get_kerning( face, left_glyph, right_glyph );
-      
+
     return 0;
   }
 
@@ -365,18 +365,22 @@
     tt_slot_init,
     0,                      /* FT_Slot_DoneFunc */
 
-    tt_size_request,
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    tt_size_select,
-#else
-    0,                      /* FT_Size_SelectFunc      */
-#endif 
-
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    ft_stub_set_char_sizes,
+    ft_stub_set_pixel_sizes,
+#endif
     Load_Glyph,
 
     tt_get_kerning,
     0,                      /* FT_Face_AttachFunc      */
-    0                       /* FT_Face_GetAdvancesFunc */
+    0,                      /* FT_Face_GetAdvancesFunc */
+
+    tt_size_request,
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    tt_size_select
+#else
+    0                       /* FT_Size_SelectFunc      */
+#endif
   };
 
 

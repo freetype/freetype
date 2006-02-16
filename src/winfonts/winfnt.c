@@ -479,7 +479,7 @@
         bsize->y_ppem = FT_MulDiv( bsize->size, y_res, 72 );
         bsize->y_ppem = FT_PIX_ROUND( bsize->y_ppem );
 
-        /* 
+        /*
          * this reads:
          *
          * the nominal height is larger than the bbox's height
@@ -801,13 +801,18 @@
     (FT_Slot_InitFunc)        0,
     (FT_Slot_DoneFunc)        0,
 
-    (FT_Size_RequestFunc)     FNT_Size_Request,
-    (FT_Size_SelectFunc)      FNT_Size_Select,
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    ft_stub_set_char_sizes,
+    ft_stub_set_pixel_sizes,
+#endif
     (FT_Slot_LoadFunc)        FNT_Load_Glyph,
 
     (FT_Face_GetKerningFunc)  0,
     (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0
+    (FT_Face_GetAdvancesFunc) 0,
+
+    (FT_Size_RequestFunc)     FNT_Size_Request,
+    (FT_Size_SelectFunc)      FNT_Size_Select
   };
 
 

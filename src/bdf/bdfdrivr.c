@@ -251,7 +251,7 @@ THE SOFTWARE.
     {
       if ( FT_ALLOC( face->style_name, ft_strlen( "Regular" ) + 1 ) )
         return error;
-        
+
       ft_strcpy( face->style_name, "Regular" );
     }
     else
@@ -475,7 +475,7 @@ THE SOFTWARE.
           (face->en_table[n]).enc = cur[n].encoding;
           FT_TRACE4(( "idx %d, val 0x%lX\n", n, cur[n].encoding ));
           (face->en_table[n]).glyph = (FT_Short)n;
-  
+
           if ( cur[n].encoding == font->default_char )
             face->default_glyph = n;
         }
@@ -639,6 +639,7 @@ THE SOFTWARE.
   }
 
 
+
   FT_CALLBACK_DEF( FT_Error )
   BDF_Glyph_Load( FT_GlyphSlot  slot,
                   FT_Size       size,
@@ -704,7 +705,7 @@ THE SOFTWARE.
     slot->metrics.width        = bitmap->width << 6;
     slot->metrics.height       = bitmap->rows << 6;
 
-    /* 
+    /*
      * XXX DWIDTH1 and VVECTOR should be parsed and
      * used here, provided such fonts do exist.
      */
@@ -837,14 +838,18 @@ THE SOFTWARE.
     0,                          /* FT_Slot_InitFunc */
     0,                          /* FT_Slot_DoneFunc */
 
-    BDF_Size_Request,
-    BDF_Size_Select,
-
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    ft_stub_set_char_sizes,
+    ft_stub_set_pixel_sizes,
+#endif
     BDF_Glyph_Load,
 
     0,                          /* FT_Face_GetKerningFunc   */
     0,                          /* FT_Face_AttachFunc       */
     0,                          /* FT_Face_GetAdvancesFunc  */
+
+    BDF_Size_Request,
+    BDF_Size_Select
   };
 
 

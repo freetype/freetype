@@ -306,8 +306,10 @@
     (FT_Slot_InitFunc)        T1_GlyphSlot_Init,
     (FT_Slot_DoneFunc)        T1_GlyphSlot_Done,
 
-    (FT_Size_RequestFunc)     T1_Size_Request,
-    (FT_Size_SelectFunc)      0,
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    ft_stub_set_char_sizes,
+    ft_stub_set_pixel_sizes,
+#endif
     (FT_Slot_LoadFunc)        T1_Load_Glyph,
 
 #ifdef T1_CONFIG_OPTION_NO_AFM
@@ -317,7 +319,9 @@
     (FT_Face_GetKerningFunc)  Get_Kerning,
     (FT_Face_AttachFunc)      T1_Read_Metrics,
 #endif
-    (FT_Face_GetAdvancesFunc) 0
+    (FT_Face_GetAdvancesFunc) 0,
+    (FT_Size_RequestFunc)     T1_Size_Request,
+    (FT_Size_SelectFunc)      0
   };
 
 

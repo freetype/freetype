@@ -229,14 +229,18 @@
     (FT_Slot_InitFunc)        T42_GlyphSlot_Init,
     (FT_Slot_DoneFunc)        T42_GlyphSlot_Done,
 
-    (FT_Size_RequestFunc)     T42_Size_Request,
-    (FT_Size_SelectFunc)      T42_Size_Select,
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    ft_stub_set_char_sizes,
+    ft_stub_set_pixel_sizes,
+#endif
     (FT_Slot_LoadFunc)        T42_GlyphSlot_Load,
 
     (FT_Face_GetKerningFunc)  0,
     (FT_Face_AttachFunc)      0,
 
-    (FT_Face_GetAdvancesFunc) 0
+    (FT_Face_GetAdvancesFunc) 0,
+    (FT_Size_RequestFunc)     T42_Size_Request,
+    (FT_Size_SelectFunc)      T42_Size_Select
   };
 
 

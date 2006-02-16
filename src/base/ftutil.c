@@ -50,13 +50,13 @@
 
 
   FT_BASE_DEF( FT_Pointer )
-  FT_Alloc( FT_Memory  memory,
+  ft_mem_alloc( FT_Memory  memory,
             FT_Long    size,
             FT_Error  *p_error )
   {
     FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
-    
+
 
     if ( size > 0 )
     {
@@ -70,16 +70,16 @@
     *p_error = error;
     return block;
   }
-              
+
 
   FT_BASE_DEF( FT_Pointer )
-  FT_QAlloc( FT_Memory  memory,
+  ft_mem_qalloc( FT_Memory  memory,
              FT_Long    size,
              FT_Error  *p_error )
   {
     FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
-    
+
 
     if ( size > 0 )
     {
@@ -91,28 +91,28 @@
     *p_error = error;
     return block;
   }
-               
+
 
   FT_BASE_DEF( FT_Pointer )
-  FT_Realloc( FT_Memory  memory,
+  ft_mem_realloc( FT_Memory  memory,
               FT_Long    current,
               FT_Long    size,
               void*      block,
               FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
-    
+
 
     if ( size <= 0 )
     {
-      FT_Free( memory, block );
+      ft_mem_free( memory, block );
       block = NULL;
     }
     else if ( current <= 0 )
     {
       FT_ASSERT( block == NULL );
-      
-      block = FT_Alloc( memory, size, &error );
+
+      block = ft_mem_alloc( memory, size, &error );
     }
     else
     {
@@ -133,28 +133,28 @@
     *p_error = error;
     return block;
   }
-                
+
 
   FT_BASE_DEF( FT_Pointer )
-  FT_QRealloc( FT_Memory  memory,
+  ft_mem_qrealloc( FT_Memory  memory,
                FT_Long    current,
                FT_Long    size,
                void*      block,
                FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
-    
+
 
     if ( size <= 0 )
     {
-      FT_Free( memory, block );
+      ft_mem_free( memory, block );
       block = NULL;
     }
     else if ( current <= 0 )
     {
       FT_ASSERT( block == NULL );
-      
-      block = FT_QAlloc( memory, size, &error );
+
+      block = ft_mem_qalloc( memory, size, &error );
     }
     else
     {
@@ -170,15 +170,15 @@
 
     *p_error = error;
     return block;
-  }               
+  }
 
   FT_BASE_DEF( void )
-  FT_Free( FT_Memory   memory,
+  ft_mem_free( FT_Memory   memory,
            const void *P )
   {
     if ( P )
       memory->free( memory, (void*)P );
-  }           
+  }
 
 
 #else /* !FT_STRICT_ALIASING */
@@ -187,7 +187,7 @@
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
-  FT_Alloc( FT_Memory  memory,
+  ft_mem_alloc( FT_Memory  memory,
             FT_Long    size,
             void*     *P )
   {
@@ -198,7 +198,7 @@
       *P = memory->alloc( memory, size );
       if ( !*P )
       {
-        FT_ERROR(( "FT_Alloc:" ));
+        FT_ERROR(( "ft_mem_alloc:" ));
         FT_ERROR(( " Out of memory? (%ld requested)\n",
                    size ));
 
@@ -209,7 +209,7 @@
     else
       *P = NULL;
 
-    FT_TRACE7(( "FT_Alloc:" ));
+    FT_TRACE7(( "ft_mem_alloc:" ));
     FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
                 size, *P, P ));
 
@@ -220,7 +220,7 @@
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
-  FT_QAlloc( FT_Memory  memory,
+  ft_mem_qalloc( FT_Memory  memory,
              FT_Long    size,
              void*     *P )
   {
@@ -231,7 +231,7 @@
       *P = memory->alloc( memory, size );
       if ( !*P )
       {
-        FT_ERROR(( "FT_QAlloc:" ));
+        FT_ERROR(( "ft_mem_qalloc:" ));
         FT_ERROR(( " Out of memory? (%ld requested)\n",
                    size ));
 
@@ -241,7 +241,7 @@
     else
       *P = NULL;
 
-    FT_TRACE7(( "FT_QAlloc:" ));
+    FT_TRACE7(( "ft_mem_qalloc:" ));
     FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
                 size, *P, P ));
 
@@ -252,7 +252,7 @@
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
-  FT_Realloc( FT_Memory  memory,
+  ft_mem_realloc( FT_Memory  memory,
               FT_Long    current,
               FT_Long    size,
               void**     P )
@@ -262,14 +262,14 @@
 
     FT_ASSERT( P != 0 );
 
-    /* if the original pointer is NULL, call FT_Alloc() */
+    /* if the original pointer is NULL, call ft_mem_alloc() */
     if ( !*P )
-      return FT_Alloc( memory, size, P );
+      return ft_mem_alloc( memory, size, P );
 
     /* if the new block if zero-sized, clear the current one */
     if ( size <= 0 )
     {
-      FT_Free( memory, P );
+      ft_mem_free( memory, P );
       return FT_Err_Ok;
     }
 
@@ -284,7 +284,7 @@
     return FT_Err_Ok;
 
   Fail:
-    FT_ERROR(( "FT_Realloc:" ));
+    FT_ERROR(( "ft_mem_realloc:" ));
     FT_ERROR(( " Failed (current %ld, requested %ld)\n",
                current, size ));
     return FT_Err_Out_Of_Memory;
@@ -294,7 +294,7 @@
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
-  FT_QRealloc( FT_Memory  memory,
+  ft_mem_qrealloc( FT_Memory  memory,
                FT_Long    current,
                FT_Long    size,
                void**     P )
@@ -304,14 +304,14 @@
 
     FT_ASSERT( P != 0 );
 
-    /* if the original pointer is NULL, call FT_QAlloc() */
+    /* if the original pointer is NULL, call ft_mem_qalloc() */
     if ( !*P )
-      return FT_QAlloc( memory, size, P );
+      return ft_mem_qalloc( memory, size, P );
 
     /* if the new block if zero-sized, clear the current one */
     if ( size <= 0 )
     {
-      FT_Free( memory, P );
+      ft_mem_free( memory, P );
       return FT_Err_Ok;
     }
 
@@ -323,7 +323,7 @@
     return FT_Err_Ok;
 
   Fail:
-    FT_ERROR(( "FT_QRealloc:" ));
+    FT_ERROR(( "ft_mem_qrealloc:" ));
     FT_ERROR(( " Failed (current %ld, requested %ld)\n",
                current, size ));
     return FT_Err_Out_Of_Memory;
@@ -333,10 +333,10 @@
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( void )
-  FT_Free( FT_Memory  memory,
+  ft_mem_free( FT_Memory  memory,
            void**     P )
   {
-    FT_TRACE7(( "FT_Free:" ));
+    FT_TRACE7(( "ft_mem_free:" ));
     FT_TRACE7(( " Freeing block 0x%08p, ref 0x%08p\n",
                 P, P ? *P : (void*)0 ));
 
@@ -561,5 +561,66 @@
     return value;
   }
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
+  FT_BASE_DEF( FT_Error )
+  FT_Alloc( FT_Memory  memory,
+            FT_Long    size,
+            void*     *P )
+  {
+    FT_Error  error;
+
+    (void)FT_ALLOC( *P, size );
+    return error;
+  }
+
+  FT_BASE_DEF( FT_Error )
+  FT_QAlloc( FT_Memory  memory,
+             FT_Long    size,
+             void*     *p )
+  {
+    FT_Error  error;
+
+    (void)FT_QALLOC( *p, size );
+    return error;
+  }
+
+  FT_BASE_DEF( FT_Error )
+  FT_Realloc( FT_Memory  memory,
+              FT_Long    current,
+              FT_Long    size,
+              void*     *P )
+  {
+    FT_Error  error;
+
+    (void)FT_REALLOC( *P, current, size );
+    return error;
+  }
+
+
+  FT_BASE_DEF( FT_Error )
+  FT_QRealloc( FT_Memory  memory,
+               FT_Long    current,
+               FT_Long    size,
+               void*     *p )
+  {
+    FT_Error  error;
+
+    (void)FT_QREALLOC( *p, current, size );
+    return error;
+  }
+
+  FT_BASE_DEF( void )
+  FT_Free( FT_Memory  memory,
+           void*     *P )
+  {
+    if ( *P )
+    {
+      ft_mem_free( memory, *P );
+      *P = NULL;
+    }
+  }
+
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 /* END */

@@ -256,7 +256,7 @@
 
 
   /* remove a node from the cache manager */
-  FT_LOCAL_DEF( void )
+  FT_BASE_DEF( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager )
   {

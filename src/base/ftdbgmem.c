@@ -891,7 +891,7 @@
 
 
   FT_BASE_DEF( FT_Pointer )
-  FT_Alloc_Debug( FT_Memory    memory,
+  ft_mem_alloc_debug( FT_Memory    memory,
                   FT_Long      size,
                   FT_Error    *p_error,
                   const char*  file_name,
@@ -906,12 +906,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_Alloc( memory, size, p_error );
+    return ft_mem_alloc( memory, size, p_error );
   }
 
 
   FT_BASE_DEF( FT_Pointer )
-  FT_Realloc_Debug( FT_Memory    memory,
+  ft_mem_realloc_debug( FT_Memory    memory,
                     FT_Long      current,
                     FT_Long      size,
                     void*        block,
@@ -928,12 +928,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_Realloc( memory, current, size, block, p_error );
+    return ft_mem_realloc( memory, current, size, block, p_error );
   }
 
 
   FT_BASE_DEF( FT_Pointer )
-  FT_QAlloc_Debug( FT_Memory    memory,
+  ft_mem_qalloc_debug( FT_Memory    memory,
                    FT_Long      size,
                    FT_Error    *p_error,
                    const char*  file_name,
@@ -948,12 +948,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_QAlloc( memory, size, p_error );
+    return ft_mem_qalloc( memory, size, p_error );
   }
 
 
   FT_BASE_DEF( FT_Pointer )
-  FT_QRealloc_Debug( FT_Memory    memory,
+  ft_mem_qrealloc_debug( FT_Memory    memory,
                      FT_Long      current,
                      FT_Long      size,
                      void*        block,
@@ -970,12 +970,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_QRealloc( memory, current, size, block, p_error );
+    return ft_mem_qrealloc( memory, current, size, block, p_error );
   }
 
 
   FT_BASE_DEF( void )
-  FT_Free_Debug( FT_Memory    memory,
+  ft_mem_free_debug( FT_Memory    memory,
                  const void  *P,
                  const char*  file_name,
                  FT_Long      line_no )
@@ -989,7 +989,7 @@
       table->line_no   = line_no;
     }
 
-    FT_Free( memory, (void *)P );
+    ft_mem_free( memory, (void *)P );
   }
 
 
@@ -997,7 +997,7 @@
 
 
   FT_BASE_DEF( FT_Error )
-  FT_Alloc_Debug( FT_Memory    memory,
+  ft_mem_alloc_debug( FT_Memory    memory,
                   FT_Long      size,
                   void*       *P,
                   const char*  file_name,
@@ -1012,12 +1012,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_Alloc( memory, size, P );
+    return ft_mem_alloc( memory, size, P );
   }
 
 
   FT_BASE_DEF( FT_Error )
-  FT_Realloc_Debug( FT_Memory    memory,
+  ft_mem_realloc_debug( FT_Memory    memory,
                     FT_Long      current,
                     FT_Long      size,
                     void*       *P,
@@ -1033,12 +1033,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_Realloc( memory, current, size, P );
+    return ft_mem_realloc( memory, current, size, P );
   }
 
 
   FT_BASE_DEF( FT_Error )
-  FT_QAlloc_Debug( FT_Memory    memory,
+  ft_mem_qalloc_debug( FT_Memory    memory,
                    FT_Long      size,
                    void*       *P,
                    const char*  file_name,
@@ -1053,12 +1053,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_QAlloc( memory, size, P );
+    return ft_mem_qalloc( memory, size, P );
   }
 
 
   FT_BASE_DEF( FT_Error )
-  FT_QRealloc_Debug( FT_Memory    memory,
+  ft_mem_qrealloc_debug( FT_Memory    memory,
                      FT_Long      current,
                      FT_Long      size,
                      void*       *P,
@@ -1074,12 +1074,12 @@
       table->line_no   = line_no;
     }
 
-    return FT_QRealloc( memory, current, size, P );
+    return ft_mem_qrealloc( memory, current, size, P );
   }
 
 
   FT_BASE_DEF( void )
-  FT_Free_Debug( FT_Memory    memory,
+  ft_mem_free_debug( FT_Memory    memory,
                  FT_Pointer   block,
                  const char*  file_name,
                  FT_Long      line_no )
@@ -1093,7 +1093,7 @@
       table->line_no   = line_no;
     }
 
-    FT_Free( memory, (void **)block );
+    ft_mem_free( memory, (void **)block );
   }
 
 

@@ -79,11 +79,11 @@
   FT_LOCAL( void )
   ftc_cache_done( FTC_Cache  cache );
 
-
+#ifndef FT_CONFIG_OPTION_OLD_INTERNALS
   FT_LOCAL( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager );
-
+#endif
 
 #endif /* __FTCCBACK_H__ */
 

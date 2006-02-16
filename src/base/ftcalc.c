@@ -99,7 +99,7 @@
   }
 
 
-#if 0
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
   /* documentation is in ftcalc.h */
 
@@ -130,7 +130,7 @@
     return root;
   }
 
-#endif /* 0 */
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 
 #ifdef FT_LONG64

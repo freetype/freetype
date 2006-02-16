@@ -1,8 +1,31 @@
+2006-02-16  David Turner  <david@freetype.org>
+
+    * builds/amiga/src/base/ftsystem.c, devel/ftoption.h
+      include/freetype/ftcache.h, include/freetype/ftoutln.h,
+      include/freetype/cache/ftccache.h, include/freetype/cache/ftccmap.h,
+      include/freetype/config/ftoption.h, include/freetype/internal/ftcalc.h,
+      include/freetype/internal/ftdriver.h,
+      include/freetype/internal/ftmemory.h,
+      include/freetype/internal/ftobjs.h, include/freetype/internal/ftrfork.h,
+      include/freetype/internal/psaux.h, include/freetype/internal/sfnt.h,
+      include/freetype/internal/t1types.h, include/freetype/internal/tttypes.h,
+      src/base/ftcalc.c, src/base/ftdbgmem.c, src/base/ftobjs.c,
+      src/base/ftsystem.c, src/base/ftutil.c, src/bdf/bdfdrivr.c,
+      src/cache/ftccache.c, src/cache/ftccback.h, src/cache/ftccmap.c,
+      src/cache/ftcmanag.c, src/cff/cffdrivr.c, src/cid/cidriver.c,
+      src/pcf/pcfdrivr.c, src/pfr/pfrdrivr.c, src/psaux/psauxmod.c,
+      src/sfnt/sfdriver.c, src/truetype/ttdriver.c, src/type1/t1driver.c,
+      src/type1/t1objs.c, src/type42/t42drivr.c, src/winfonts/winfnt.c:
+
+    massive changes to the internals to respect the internal object layouts
+    and exported functions of FreeType 2.1.7. Note that the cache sub-system
+    cannot be fully retrofitted, unfortunately.
+
 2006-02-15  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec): Remove
 	unused `max_points' and `max_contours'.
-	
+
 	* src/cid/cidobjs.c (cid_face_init), src/type1/t1objs.c
 	(T1_Face_Init), src/type42/t42objs.c (T42_Face_Init): Update.
 
@@ -127,7 +150,7 @@
 	src/sfnt/sfdriver.c, src/sfnt/sfnt.c, src/sfnt/sfobjs.c,
 	src/sfnt/ttload.c, src/sfnt/ttload.h, src/sfnt/ttsbit.c,
 	src/sfnt/ttsbit.h, src/sfnt/ttsbit0.c: Clean up the SFNT_Interface.
-	
+
 	* src/sfnt/ttmtx.c, src/sfnt/ttmtx.h: New files.  Metrics-related
 	tables' loading and parsing code is moved to here.
 	Move `tt_face_get_metrics' here from the truetype module.  The
@@ -377,7 +400,7 @@
 2006-01-27  David Turner  <david@freetype.org>
 
 	* builds/unix/configure.ac: Fix build problem on Cygwin.
-	
+
 	* builds/unix/install.mk (install): Don't install the internal
 	headers, and remove existing ones if found in the target install
 	directory.

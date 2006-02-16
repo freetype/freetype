@@ -643,14 +643,18 @@ THE SOFTWARE.
     0,                      /* FT_Slot_InitFunc */
     0,                      /* FT_Slot_DoneFunc */
 
-    PCF_Size_Request,
-    PCF_Size_Select,
-
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    ft_stub_set_char_sizes,
+    ft_stub_set_pixel_sizes,
+#endif
     PCF_Glyph_Load,
 
     0,                      /* FT_Face_GetKerningFunc  */
     0,                      /* FT_Face_AttachFunc      */
-    0                       /* FT_Face_GetAdvancesFunc */
+    0,                      /* FT_Face_GetAdvancesFunc */
+
+    PCF_Size_Request,
+    PCF_Size_Select
   };
 
 

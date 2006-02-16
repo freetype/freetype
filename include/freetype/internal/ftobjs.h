@@ -213,6 +213,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    FT_UShort           reserved1;
+    FT_Short            reserved2;
+#endif
     FT_Matrix           transform_matrix;
     FT_Vector           transform_delta;
     FT_Int              transform_flags;

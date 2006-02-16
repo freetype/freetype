@@ -311,7 +311,7 @@ FT_BEGIN_HEADER
   } TT_GaspRec;
 
 
-#ifndef FT_OPTIMIZE_MEMORY
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
   /*************************************************************************/
   /*                                                                       */
@@ -389,7 +389,7 @@ FT_BEGIN_HEADER
 
   } TT_Kern0_PairRec, *TT_Kern0_Pair;
 
-#endif /* !OPTIMIZE_MEMORY */
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 
   /*************************************************************************/
@@ -1267,19 +1267,14 @@ FT_BEGIN_HEADER
 
     TT_Header             header;       /* TrueType header table          */
     TT_HoriHeader         horizontal;   /* TrueType horizontal header     */
-#ifdef FT_OPTIMIZE_MEMORY
-    FT_Byte*              horz_metrics;
-    FT_ULong              horz_metrics_size;
-#endif
 
     TT_MaxProfile         max_profile;
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    FT_ULong              max_components;  /* stubbed to 0 */
+#endif
 
     FT_Bool               vertical_info;
     TT_VertHeader         vertical;     /* TT Vertical header, if present */
-#ifdef FT_OPTIMIZE_MEMORY
-    FT_Byte*              vert_metrics;
-    FT_ULong              vert_metrics_size;
-#endif
 
     FT_UShort             num_names;    /* number of name records  */
     TT_NameTableRec       name_table;   /* name table              */
@@ -1314,13 +1309,7 @@ FT_BEGIN_HEADER
     /***********************************************************************/
 
     /* horizontal device metrics */
-#ifdef FT_OPTIMIZE_MEMORY
-    FT_Byte*              hdmx_table;
-    FT_ULong              hdmx_table_size;
-    FT_UInt               hdmx_record_count;
-    FT_ULong              hdmx_record_size;
-    FT_Byte*              hdmx_record_sizes;
-#else
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     TT_HdmxRec            hdmx;
 #endif
 
@@ -1331,11 +1320,7 @@ FT_BEGIN_HEADER
     TT_PCLT               pclt;
 
     /* embedded bitmaps support */
-#ifdef FT_OPTIMIZE_MEMORY
-    FT_Byte*              sbit_table;
-    FT_ULong              sbit_table_size;
-    FT_UInt               sbit_num_strikes;
-#else
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     FT_ULong              num_sbit_strikes;
     TT_SBit_Strike        sbit_strikes;
 #endif
@@ -1354,15 +1339,10 @@ FT_BEGIN_HEADER
     /***********************************************************************/
 
     /* the glyph locations */
-#ifdef FT_OPTIMIZE_MEMORY
-    FT_UInt               num_locations;
-    FT_Byte*              glyph_locations;
-#else
-    FT_UShort             num_locations;
-    FT_Long*              glyph_locations;
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    FT_UShort             num_locations_stub;
+    FT_Long*              glyph_locations_stub;
 #endif
-
-    FT_ULong              glyf_len;
 
     /* the font program, if any */
     FT_ULong              font_program_size;
@@ -1376,13 +1356,7 @@ FT_BEGIN_HEADER
     FT_ULong              cvt_size;
     FT_Short*             cvt;
 
-#ifdef FT_OPTIMIZE_MEMORY
-    FT_Byte*              kern_table;
-    FT_ULong              kern_table_size;
-    FT_UInt               num_kern_tables;
-    FT_UInt32             kern_avail_bits;
-    FT_UInt32             kern_order_bits;
-#else
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     /* the format 0 kerning table, if any */
     FT_Int                num_kern_pairs;
     FT_Int                kern_table_index;
@@ -1398,15 +1372,6 @@ FT_BEGIN_HEADER
     FT_Bool               unpatented_hinting;
 #endif
 
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    FT_Bool               doblend;
-    GX_Blend              blend;
-#endif
-
-#ifdef TT_CONFIG_OPTION_BDF
-    TT_BDFRec             bdf;
-#endif /* TT_CONFIG_OPTION_BDF */
-
     /***********************************************************************/
     /*                                                                     */
     /* Other tables or fields. This is used by derivative formats like     */
@@ -1417,6 +1382,48 @@ FT_BEGIN_HEADER
     FT_Generic            extra;
 
     const char*           postscript_name;
+
+    /* since FreeType 2.1.8, but was originally placed after 'glyph_locations_stub' */
+    FT_ULong              glyf_len;
+
+    /* since FreeType 2.1.8, but was originally placed before 'extra' */
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    FT_Bool               doblend;
+    GX_Blend              blend;
+#endif
+
+    /* since FreeType 2.2 */
+
+#ifdef FT_OPTIMIZE_MEMORY
+    FT_Byte*              horz_metrics;
+    FT_ULong              horz_metrics_size;
+
+    FT_Byte*              vert_metrics;
+    FT_ULong              vert_metrics_size;
+
+    FT_UInt               num_locations;
+    FT_Byte*              glyph_locations;
+
+    FT_Byte*              hdmx_table;
+    FT_ULong              hdmx_table_size;
+    FT_UInt               hdmx_record_count;
+    FT_ULong              hdmx_record_size;
+    FT_Byte*              hdmx_record_sizes;
+
+    FT_Byte*              sbit_table;
+    FT_ULong              sbit_table_size;
+    FT_UInt               sbit_num_strikes;
+
+    FT_Byte*              kern_table;
+    FT_ULong              kern_table_size;
+    FT_UInt               num_kern_tables;
+    FT_UInt32             kern_avail_bits;
+    FT_UInt32             kern_order_bits;
+#endif
+
+#ifdef TT_CONFIG_OPTION_BDF
+    TT_BDFRec             bdf;
+#endif /* TT_CONFIG_OPTION_BDF */
 
   } TT_FaceRec;
 
@@ -1488,15 +1495,11 @@ FT_BEGIN_HEADER
     FT_BBox          bbox;
     FT_Int           left_bearing;
     FT_Int           advance;
-    FT_Int           top_bearing;
-    FT_Int           vadvance;
     FT_Int           linear;
     FT_Bool          linear_def;
     FT_Bool          preserve_pps;
     FT_Vector        pp1;
     FT_Vector        pp2;
-    FT_Vector        pp3;
-    FT_Vector        pp4;
 
     FT_ULong         glyf_offset;
 
@@ -1510,6 +1513,12 @@ FT_BEGIN_HEADER
 
     /* for possible extensibility in other formats */
     void*            other;
+
+    /* since FT 2.1.8 */
+    FT_Int           top_bearing;
+    FT_Int           vadvance;
+    FT_Vector        pp3;
+    FT_Vector        pp4;
 
   } TT_LoaderRec;
 

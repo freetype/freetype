@@ -115,8 +115,8 @@
                    FT_Size_Request  req )
   {
     PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
-    
-    
+
+
     FT_Request_Metrics( size->root.face, req );
 
     if ( funcs )
@@ -240,8 +240,11 @@
 #endif
 
       /* release unicode map, if any */
-      FT_FREE( face->unicode_map.maps );
-      face->unicode_map.num_maps = 0;
+#if 0
+      FT_FREE( face->unicode_map_rec.maps );
+      face->unicode_map_rec.num_maps = 0;
+      face->unicode_map              = NULL;
+#endif
 
       face->root.family_name = 0;
       face->root.style_name  = 0;

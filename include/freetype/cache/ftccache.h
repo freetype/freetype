@@ -82,6 +82,16 @@ FT_BEGIN_HEADER
   FTC_Node_Destroy( FTC_Node     node,
                     FTC_Manager  manager );
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+  FT_BASE( void )
+  ftc_node_destroy( FTC_Node     node,
+                    FTC_Manager  manager );
+                    
+  FT_BASE( void )
+  ftc_node_done( FTC_Node     node,
+                 FTC_Manager  manager );
+  
+#endif
 
   /*************************************************************************/
   /*************************************************************************/

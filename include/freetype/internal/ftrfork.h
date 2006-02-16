@@ -154,7 +154,7 @@ FT_BEGIN_HEADER
   /*    offsets ::                                                         */
   /*      The stream offsets for the resource data specified by `tag'.     */
   /*      This array is allocated by the function, so you have to call     */
-  /*      @FT_Free after use.                                              */
+  /*      @ft_mem_free after use.                                              */
   /*                                                                       */
   /*    count ::                                                           */
   /*      The length of offsets array.                                     */

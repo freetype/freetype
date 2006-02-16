@@ -125,6 +125,75 @@ FT_BEGIN_HEADER
   (*TT_Done_Face_Func)( TT_Face  face );
 
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Load_SFNT_HeaderRec_Func                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Loads the header of a SFNT font file.  Supports collections.       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face       :: A handle to the target face object.                  */
+  /*                                                                       */
+  /*    stream     :: The input stream.                                    */
+  /*                                                                       */
+  /*    face_index :: The index of the TrueType font, if we are opening a  */
+  /*                  collection.                                          */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    sfnt       :: The SFNT header.                                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The stream cursor must be at the font file's origin.               */
+  /*                                                                       */
+  /*    This function recognizes fonts embedded in a `TrueType             */
+  /*    collection'.                                                       */
+  /*                                                                       */
+  /*    This function checks that the header is valid by looking at the    */
+  /*    values of `search_range', `entry_selector', and `range_shift'.     */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Load_SFNT_HeaderRec_Func)( TT_Face      face,
+                                  FT_Stream    stream,
+                                  FT_Long      face_index,
+                                  SFNT_Header  sfnt );
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Load_Directory_Func                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Loads the table directory into a face object.                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face      :: A handle to the target face object.                   */
+  /*                                                                       */
+  /*    stream    :: The input stream.                                     */
+  /*                                                                       */
+  /*    sfnt      :: The SFNT header.                                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The stream cursor must be on the first byte after the 4-byte font  */
+  /*    format tag.  This is the case just after a call to                 */
+  /*    TT_Load_Format_Tag().                                              */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Load_Directory_Func)( TT_Face      face,
+                             FT_Stream    stream,
+                             SFNT_Header  sfnt );
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -291,6 +360,85 @@ FT_BEGIN_HEADER
                               FT_Bitmap           *amap,
                               TT_SBit_MetricsRec  *ametrics );
 
+
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Set_SBit_Strike_OldFunc                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Select an sbit strike for a given size request.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face          :: The target face object.                           */
+  /*                                                                       */
+  /*    req           :: The size request.                                 */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    astrike_index :: The index of the sbit strike.                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.  Returns an error if no     */
+  /*    sbit strike exists for the selected ppem values.                   */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Set_SBit_Strike_OldFunc)( TT_Face    face,
+                                 FT_UInt    x_ppem,
+                                 FT_UInt    y_ppem,
+                                 FT_ULong*  astrike_index );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_CharMap_Load_Func                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Loads a given TrueType character map into memory.                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face   :: A handle to the parent face object.                      */
+  /*                                                                       */
+  /*    stream :: A handle to the current stream object.                   */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    cmap   :: A pointer to a cmap object.                              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The function assumes that the stream is already in use (i.e.,      */
+  /*    opened).  In case of error, all partially allocated tables are     */
+  /*    released.                                                          */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_CharMap_Load_Func)( TT_Face       face,
+                           void*         cmap,
+                           FT_Stream     input );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_CharMap_Free_Func                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Destroys a character mapping table.                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: A handle to the parent face object.                        */
+  /*                                                                       */
+  /*    cmap :: A handle to a cmap object.                                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_CharMap_Free_Func)( TT_Face       face,
+                           void*         cmap );
+
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
   /*************************************************************************/
   /*                                                                       */
@@ -503,49 +651,80 @@ FT_BEGIN_HEADER
     FT_Module_Requester          get_interface;
 
     TT_Load_Any_Func             load_any;
-
-    /* load the font directory, i.e., the offset table and */
-    /* the table directory                                 */
-    TT_Load_Table_Func           load_font_dir;
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    TT_Load_SFNT_HeaderRec_Func  load_sfnt_header;
+    TT_Load_Directory_Func       load_directory;
+#endif
 
     /* these functions are called by `load_face' but they can also  */
     /* be called from external modules, if there is a need to do so */
     TT_Load_Table_Func           load_head;
     TT_Load_Metrics_Func         load_hhea;
-    TT_Load_Metrics_Func         load_hmtx;
     TT_Load_Table_Func           load_cmap;
     TT_Load_Table_Func           load_maxp;
     TT_Load_Table_Func           load_os2;
     TT_Load_Table_Func           load_post;
+
     TT_Load_Table_Func           load_name;
     TT_Free_Table_Func           free_name;
 
     /* optional tables */
-    TT_Load_Table_Func           load_kern;
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    TT_Load_Table_Func           load_hdmx_stub;
+    TT_Free_Table_Func           free_hdmx_stub;
+#endif
+    TT_Load_Table_Func           load_kern;  /* a.k.a load_kerning <= 2.1.10 */
+
     TT_Load_Table_Func           load_gasp;
     TT_Load_Table_Func           load_pclt;
 
     /* see `ttload.h' */
-    TT_Load_Table_Func           load_bhed;
+    TT_Load_Table_Func           load_bhed;  /* a.k.a load_bitmap_header <= 2.1.10 */
 
     /* see `ttsbit.h' */
-    TT_Load_Table_Func           load_eblc;
-    TT_Free_Table_Func           free_eblc;
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    TT_Set_SBit_Strike_OldFunc   set_sbit_strike_stub;
+    TT_Load_Table_Func           load_sbits_stub;
+#endif
 
-    TT_Set_SBit_Strike_Func      set_sbit_strike;
-    TT_Load_Strike_Metrics_Func  load_strike_metrics;
-    TT_Find_SBit_Image_Func      find_sbit_image;
-    TT_Load_SBit_Metrics_Func    load_sbit_metrics;
     TT_Load_SBit_Image_Func      load_sbit_image;
-
-    /* see `ttkern.h' */
-    TT_Face_GetKerningFunc       get_kerning;
-    
-    TT_Get_Metrics_Func          get_metrics;
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    TT_Free_Table_Func           free_sbits_stub;
+#endif
 
     /* see `ttpost.h' */
     TT_Get_PS_Name_Func          get_psname;
     TT_Free_Table_Func           free_psnames;
+
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS  /* the following disappeared in 2.1.8, but were there before */
+    TT_CharMap_Load_Func         load_charmap_stub;
+    TT_CharMap_Free_Func         free_charmap_stub;
+#endif
+
+    /* from here, the structure differs from 2.1.7 */
+
+    /* since FT 2.1.8, but appeared before 'get_psname' */
+    TT_Face_GetKerningFunc       get_kerning;
+
+   /* the following appeared in 2.1.8, but were placed
+    * between 'load_sbits' and 'load_sbit_image'. BOOOOH
+    */
+    TT_Find_SBit_Image_Func      find_sbit_image;    /* NULL if FT_OPTIMIZE_MEMORY */
+    TT_Load_SBit_Metrics_Func    load_sbit_metrics;  /* NULL if FT_OPTIMIZE_MEMORY */
+
+    /* since FreeType 2.2 */
+    /* load the font directory, i.e., the offset table and */
+    /* the table directory                                 */
+    TT_Load_Table_Func           load_font_dir;
+    TT_Load_Metrics_Func         load_hmtx;
+    
+    TT_Load_Table_Func           load_eblc;
+    TT_Free_Table_Func           free_eblc;
+    
+    TT_Set_SBit_Strike_Func      set_sbit_strike;
+    TT_Load_Strike_Metrics_Func  load_strike_metrics;
+    
+    TT_Get_Metrics_Func          get_metrics;
 
   } SFNT_Interface;
 

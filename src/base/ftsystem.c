@@ -46,7 +46,7 @@
   /*                                                                       */
   /* It is not necessary to do any error checking for the                  */
   /* allocation-related functions.  This will be done by the higher level  */
-  /* routines like FT_Alloc() or FT_Realloc().                             */
+  /* routines like ft_mem_alloc() or ft_mem_realloc().                             */
   /*                                                                       */
   /*************************************************************************/
 

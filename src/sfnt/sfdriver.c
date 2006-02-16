@@ -312,7 +312,7 @@
 
     /* XXX: I don't know whether this is correct, since
      *      tt_face_find_bdf_prop only returns something correct if we have
-     *      previously selected a size that is listed in the BDF table. 
+     *      previously selected a size that is listed in the BDF table.
      *      Should we change the BDF table format to include single offsets
      *      for `CHARSET_REGISTRY' and `CHARSET_ENCODING'?
      */
@@ -376,6 +376,112 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_face_load_sfnt_header_stub( TT_Face      face,
+                                 FT_Stream    stream,
+                                 FT_Long      face_index,
+                                 SFNT_Header  header )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( stream );
+    FT_UNUSED( face_index );
+    FT_UNUSED( header );
+
+    return FT_Err_Unimplemented_Feature;
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_face_load_directory_stub( TT_Face      face,
+                               FT_Stream    stream,
+                               SFNT_Header  header )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( stream );
+    FT_UNUSED( header );
+
+    return FT_Err_Unimplemented_Feature;
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_face_load_hdmx_stub( TT_Face    face,
+                          FT_Stream  stream )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( stream );
+    
+    return FT_Err_Unimplemented_Feature;
+  }                          
+
+
+  FT_CALLBACK_DEF( void )
+  tt_face_free_hdmx_stub( TT_Face   face )
+  {
+    FT_UNUSED( face );
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_face_set_sbit_strike_stub( TT_Face    face,
+                                FT_UInt    x_ppem,
+                                FT_UInt    y_ppem,
+                                FT_ULong*  astrike_index )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( x_ppem );
+    FT_UNUSED( y_ppem );
+
+    *astrike_index = 0x7FFFFFFFUL;    
+    return FT_Err_Unimplemented_Feature;
+  }                                
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_face_load_sbit_stub( TT_Face    face,
+                          FT_Stream  stream )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( stream );
+    
+    return FT_Err_Unimplemented_Feature;
+  }                          
+
+
+  FT_CALLBACK_DEF( void )
+  tt_face_free_sbit_stub( TT_Face  face )
+  {
+    FT_UNUSED( face );
+  }
+  
+  
+  FT_CALLBACK_DEF( FT_Error )
+  tt_face_load_charmap_stub( TT_Face       face,
+                             void*         cmap,
+                             FT_Stream     input )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( cmap );
+    FT_UNUSED( input );
+    
+    return FT_Err_Unimplemented_Feature;
+  }                             
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_face_free_charmap_stub( TT_Face   face,
+                             void*     cmap )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( cmap );
+    
+    return 0;
+  }                             
+  
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
   static
   const SFNT_Interface  sfnt_interface =
   {
@@ -387,11 +493,14 @@
     sfnt_get_interface,
 
     tt_face_load_any,
-    tt_face_load_font_dir,
+
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    tt_face_load_sfnt_header_stub,
+    tt_face_load_directory_stub,
+#endif
 
     tt_face_load_head,
     tt_face_load_hhea,
-    tt_face_load_hmtx,
     tt_face_load_cmap,
     tt_face_load_maxp,
     tt_face_load_os2,
@@ -400,62 +509,82 @@
     tt_face_load_name,
     tt_face_free_name,
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    tt_face_load_hdmx_stub,
+    tt_face_free_hdmx_stub,
+#endif
+
     tt_face_load_kern,
     tt_face_load_gasp,
     tt_face_load_pclt,
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
     /* see `ttload.h' */
     tt_face_load_bhed,
+#else
+    0,
+#endif
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    tt_face_set_sbit_strike_stub,
+    tt_face_load_sbit_stub,
+#endif
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    tt_face_load_sbit_image,
+#else /* !TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+    0,
+#endif /* !TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    tt_face_free_sbit_stub,
+#endif
+
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+    /* see `ttpost.h' */
+    tt_face_get_ps_name,
+    tt_face_free_ps_names,
+#else /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
+    0,
+    0,
+#endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
+
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+    tt_face_load_charmap_stub,
+    tt_face_free_charmap_stub,
+#endif
+
+    /* since FT 2.1.8 */
+
+    tt_face_get_kerning,
+
+#  ifndef FT_OPTIMIZE_MEMORY
+    tt_find_sbit_image,
+    tt_load_sbit_metrics,
+#  else
+    0,
+    0,
+#  endif    
+
+    /* since FT 2.2 */
+    tt_face_load_font_dir,
+    tt_face_load_hmtx,
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     /* see `ttsbit.h' and `sfnt.h' */
     tt_face_load_eblc,
     tt_face_free_eblc,
 
     tt_face_set_sbit_strike,
     tt_face_load_strike_metrics,
-#ifdef FT_OPTIMIZE_MEMORY
-    0,
-    0,
 #else
-    tt_find_sbit_image,
-    tt_load_sbit_metrics,
-#endif
-    tt_face_load_sbit_image,
-
-#else /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
     0,
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
+#endif    
 
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-    /* see `ttkern.h' */
-    tt_face_get_kerning,
-
-    tt_face_get_metrics,
-
-#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-
-    /* see `ttpost.h' */
-    tt_face_get_ps_name,
-    tt_face_free_ps_names,
-
-#else /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
-
-    0,
-    0,
-
-#endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
-
+    tt_face_get_metrics
   };
 
 

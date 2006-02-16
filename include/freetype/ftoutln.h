@@ -176,7 +176,7 @@ FT_BEGIN_HEADER
   /*    descriptor will be released.                                       */
   /*                                                                       */
   /*    The reason why this function takes an `library' parameter is       */
-  /*    simply to use FT_Free().                                           */
+  /*    simply to use ft_mem_free().                                           */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Done( FT_Library   library,

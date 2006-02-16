@@ -107,15 +107,15 @@
     &ps_parser_funcs,
     &t1_builder_funcs,
     &t1_decoder_funcs,
+    t1_decrypt,
+
+    (const T1_CMap_ClassesRec*) &t1_cmap_classes,
+
 #ifndef T1_CONFIG_OPTION_NO_AFM
     &afm_parser_funcs,
 #else
     0,
 #endif
-
-    t1_decrypt,
-    
-    (const T1_CMap_ClassesRec*) &t1_cmap_classes,
   };
 
 

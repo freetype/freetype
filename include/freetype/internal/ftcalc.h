@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
   FT_SqrtFixed( FT_Int32  x );
 
 
-#if 0
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
   /*************************************************************************/
   /*                                                                       */
@@ -68,7 +68,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Int32 )
   FT_Sqrt32( FT_Int32  x );
 
-#endif /* 0 */
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 
   /*************************************************************************/

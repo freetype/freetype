@@ -784,7 +784,6 @@ FT_BEGIN_HEADER
     const PS_Parser_FuncsRec*   ps_parser_funcs;
     const T1_Builder_FuncsRec*  t1_builder_funcs;
     const T1_Decoder_FuncsRec*  t1_decoder_funcs;
-    const AFM_Parser_FuncsRec*  afm_parser_funcs;
 
     void
     (*t1_decrypt)( FT_Byte*   buffer,
@@ -792,6 +791,9 @@ FT_BEGIN_HEADER
                    FT_UShort  seed );
 
     T1_CMap_Classes  t1_cmap_classes;
+
+    /* fields from here were added after 2.1.10 */
+    const AFM_Parser_FuncsRec*  afm_parser_funcs;
 
   } PSAux_ServiceRec, *PSAux_Service;
 

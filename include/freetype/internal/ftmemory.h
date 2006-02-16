@@ -67,90 +67,90 @@ FT_BEGIN_HEADER
    */
 
   FT_BASE( FT_Pointer )
-  FT_Alloc( FT_Memory  memory,
-            FT_Long    size,
-            FT_Error  *p_error );
+  ft_mem_alloc( FT_Memory  memory,
+                FT_Long    size,
+                FT_Error  *p_error );
 
   FT_BASE( FT_Pointer )
-  FT_QAlloc( FT_Memory  memory,
-             FT_Long    size,
-             FT_Error  *p_error );
+  ft_mem_qalloc( FT_Memory  memory,
+                 FT_Long    size,
+                 FT_Error  *p_error );
 
   FT_BASE( FT_Pointer )
-  FT_Realloc( FT_Memory  memory,
-              FT_Long    current,
-              FT_Long    size,
-              void*      block,
-              FT_Error  *p_error );
+  ft_mem_realloc( FT_Memory  memory,
+                  FT_Long    current,
+                  FT_Long    size,
+                  void*      block,
+                  FT_Error  *p_error );
 
   FT_BASE( FT_Pointer )
-  FT_QRealloc( FT_Memory  memory,
-               FT_Long    current,
-               FT_Long    size,
-               void*      block,
-               FT_Error  *p_error );
+  ft_mem_qrealloc( FT_Memory  memory,
+                   FT_Long    current,
+                   FT_Long    size,
+                   void*      block,
+                   FT_Error  *p_error );
 
   FT_BASE( void )
-  FT_Free( FT_Memory    memory,
-           const void*  P );
+  ft_mem_free( FT_Memory    memory,
+               const void*  P );
 
 
 #ifdef FT_DEBUG_MEMORY
 
 
   FT_BASE( FT_Pointer )
-  FT_Alloc_Debug( FT_Memory    memory,
-                  FT_Long      size,
-                  FT_Error    *p_error,
-                  const char*  file_name,
-                  FT_Long      line_no );
+  ft_mem_alloc_debug( FT_Memory    memory,
+                      FT_Long      size,
+                      FT_Error    *p_error,
+                      const char*  file_name,
+                      FT_Long      line_no );
 
   FT_BASE( FT_Pointer )
-  FT_QAlloc_Debug( FT_Memory    memory,
-                   FT_Long      size,
-                   FT_Error    *p_error,
-                   const char*  file_name,
-                   FT_Long      line_no );
+  ft_mem_qalloc_debug( FT_Memory    memory,
+                       FT_Long      size,
+                       FT_Error    *p_error,
+                       const char*  file_name,
+                       FT_Long      line_no );
 
   FT_BASE( FT_Pointer )
-  FT_Realloc_Debug( FT_Memory    memory,
-                    FT_Long      current,
-                    FT_Long      size,
-                    void*        P,
-                    FT_Error    *p_error,
-                    const char*  file_name,
-                    FT_Long      line_no );
+  ft_mem_realloc_debug( FT_Memory    memory,
+                        FT_Long      current,
+                        FT_Long      size,
+                        void*        P,
+                        FT_Error    *p_error,
+                        const char*  file_name,
+                        FT_Long      line_no );
 
   FT_BASE( FT_Pointer )
-  FT_QRealloc_Debug( FT_Memory    memory,
-                     FT_Long      current,
-                     FT_Long      size,
-                     void*        P,
-                     FT_Error    *p_error,
+  ft_mem_qrealloc_debug( FT_Memory    memory,
+                         FT_Long      current,
+                         FT_Long      size,
+                         void*        P,
+                         FT_Error    *p_error,
+                         const char*  file_name,
+                         FT_Long      line_no );
+
+  FT_BASE( void )
+  ft_mem_free_debug( FT_Memory    memory,
+                     const void  *P,
                      const char*  file_name,
                      FT_Long      line_no );
 
-  FT_BASE( void )
-  FT_Free_Debug( FT_Memory    memory,
-                 const void  *P,
-                 const char*  file_name,
-                 FT_Long      line_no );
-
 #define FT_MEM_ALLOC( _pointer_, _size_ )                       \
-          (_pointer_) = FT_Alloc_Debug( memory, _size_, &error, \
+          (_pointer_) = ft_mem_alloc_debug( memory, _size_, &error, \
                           __FILE__, __LINE__ )
 
 #define FT_MEM_REALLOC( _pointer_, _current_, _size_ )               \
-          (_pointer_) = FT_Realloc_Debug( memory, _current_, _size_, \
+          (_pointer_) = ft_mem_realloc_debug( memory, _current_, _size_, \
                           (_pointer_), &error,                       \
                           __FILE__, __LINE__ )
 
 #define FT_MEM_QALLOC( _pointer_, _size_ )                       \
-          (_pointer_) = FT_QAlloc_Debug( memory, _size_, &error, \
+          (_pointer_) = ft_mem_qalloc_debug( memory, _size_, &error, \
                           __FILE__, __LINE__ )
 
 #define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )               \
-          (_pointer_) = FT_QRealloc_Debug( memory, _current_, _size_, \
+          (_pointer_) = ft_mem_qrealloc_debug( memory, _current_, _size_, \
                           (_pointer_), &error,                        \
                           __FILE__, __LINE__ )
 
@@ -158,7 +158,7 @@ FT_BEGIN_HEADER
           FT_BEGIN_STMNT                                                \
             if ( _pointer_ )                                            \
             {                                                           \
-              FT_Free_Debug( memory, (_pointer_), __FILE__, __LINE__ ); \
+              ft_mem_free_debug( memory, (_pointer_), __FILE__, __LINE__ ); \
               (_pointer_) = NULL;                                       \
             }                                                           \
           FT_END_STMNT
@@ -168,26 +168,26 @@ FT_BEGIN_HEADER
 
 
 #define FT_MEM_ALLOC( _pointer_, _size_ )                  \
-          (_pointer_) = FT_Alloc( memory, _size_, &error )
+          (_pointer_) = ft_mem_alloc( memory, _size_, &error )
 
 #define FT_MEM_FREE( _pointer_ )              \
           FT_BEGIN_STMNT                      \
             if ( (_pointer_) )                \
             {                                 \
-              FT_Free( memory, (_pointer_) ); \
+              ft_mem_free( memory, (_pointer_) ); \
               (_pointer_) = NULL;             \
             }                                 \
           FT_END_STMNT
 
 #define FT_MEM_REALLOC( _pointer_, _current_, _size_ )         \
-          (_pointer_) = FT_Realloc( memory, _current_, _size_, \
+          (_pointer_) = ft_mem_realloc( memory, _current_, _size_, \
                                     (_pointer_), &error )
 
 #define FT_MEM_QALLOC( _pointer_, _size_ )                  \
-          (_pointer_) = FT_QAlloc( memory, _size_, &error )
+          (_pointer_) = ft_mem_qalloc( memory, _size_, &error )
 
 #define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )         \
-          (_pointer_) = FT_QRealloc( memory, _current_, _size_, \
+          (_pointer_) = ft_mem_qrealloc( memory, _current_, _size_, \
                                      (_pointer_), &error )
 
 #endif /* !FT_DEBUG_MEMORY */
@@ -203,40 +203,40 @@ FT_BEGIN_HEADER
 
 
   FT_BASE( FT_Error )
-  FT_Alloc_Debug( FT_Memory    memory,
-                  FT_Long      size,
-                  void*       *P,
-                  const char*  file_name,
-                  FT_Long      line_no );
+  ft_mem_alloc_debug( FT_Memory    memory,
+                      FT_Long      size,
+                      void*       *P,
+                      const char*  file_name,
+                      FT_Long      line_no );
 
   FT_BASE( FT_Error )
-  FT_QAlloc_Debug( FT_Memory    memory,
-                   FT_Long      size,
-                   void*       *P,
-                   const char*  file_name,
-                   FT_Long      line_no );
+  ft_mem_qalloc_debug( FT_Memory    memory,
+                       FT_Long      size,
+                       void*       *P,
+                       const char*  file_name,
+                       FT_Long      line_no );
 
   FT_BASE( FT_Error )
-  FT_Realloc_Debug( FT_Memory    memory,
-                    FT_Long      current,
-                    FT_Long      size,
-                    void*       *P,
-                    const char*  file_name,
-                    FT_Long      line_no );
+  ft_mem_realloc_debug( FT_Memory    memory,
+                        FT_Long      current,
+                        FT_Long      size,
+                        void*       *P,
+                        const char*  file_name,
+                        FT_Long      line_no );
 
   FT_BASE( FT_Error )
-  FT_QRealloc_Debug( FT_Memory    memory,
-                     FT_Long      current,
-                     FT_Long      size,
-                     void*       *P,
-                     const char*  file_name,
-                     FT_Long      line_no );
+  ft_mem_qrealloc_debug( FT_Memory    memory,
+                         FT_Long      current,
+                         FT_Long      size,
+                         void*       *P,
+                         const char*  file_name,
+                         FT_Long      line_no );
 
   FT_BASE( void )
-  FT_Free_Debug( FT_Memory    memory,
-                 FT_Pointer   block,
-                 const char*  file_name,
-                 FT_Long      line_no );
+  ft_mem_free_debug( FT_Memory    memory,
+                     FT_Pointer   block,
+                     const char*  file_name,
+                     FT_Long      line_no );
 
 
 #endif /* FT_DEBUG_MEMORY */
@@ -245,7 +245,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Alloc                                                           */
+  /*    ft_mem_alloc                                                           */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Allocates a new block of memory.  The returned area is always      */
@@ -265,15 +265,15 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_BASE( FT_Error )
-  FT_Alloc( FT_Memory  memory,
-            FT_Long    size,
-            void*     *P );
+  ft_mem_alloc( FT_Memory  memory,
+                FT_Long    size,
+                void*     *P );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_QAlloc                                                          */
+  /*    ft_mem_qalloc                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Allocates a new block of memory.  The returned area is *not*       */
@@ -293,15 +293,15 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_BASE( FT_Error )
-  FT_QAlloc( FT_Memory  memory,
-             FT_Long    size,
-             void*     *p );
+  ft_mem_qalloc( FT_Memory  memory,
+                 FT_Long    size,
+                 void*     *p );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Realloc                                                         */
+  /*    ft_mem_realloc                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */
@@ -324,20 +324,20 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    All callers of FT_Realloc() _must_ provide the current block size  */
-  /*    as well as the new one.                                            */
+  /*    All callers of ft_mem_realloc() _must_ provide the current block   */
+  /*    size as well as the new one.                                       */
   /*                                                                       */
   FT_BASE( FT_Error )
-  FT_Realloc( FT_Memory  memory,
-              FT_Long    current,
-              FT_Long    size,
-              void*     *P );
+  ft_mem_realloc( FT_Memory  memory,
+                  FT_Long    current,
+                  FT_Long    size,
+                  void*     *P );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_QRealloc                                                        */
+  /*    ft_mem_qrealloc                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */
@@ -360,23 +360,23 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    All callers of FT_Realloc() _must_ provide the current block size  */
-  /*    as well as the new one.                                            */
+  /*    All callers of ft_mem_realloc() _must_ provide the current block   */
+  /*    size as well as the new one.                                       */
   /*                                                                       */
   FT_BASE( FT_Error )
-  FT_QRealloc( FT_Memory  memory,
-               FT_Long    current,
-               FT_Long    size,
-               void*     *p );
+  ft_mem_qrealloc( FT_Memory  memory,
+                   FT_Long    current,
+                   FT_Long    size,
+                   void*     *p );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Free                                                            */
+  /*    ft_mem_free                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Releases a given block of memory allocated through FT_Alloc().     */
+  /*    Releases a given block of memory allocated through ft_mem_alloc(). */
   /*                                                                       */
   /* <Input>                                                               */
   /*    memory :: A handle to a given `memory object' which handles        */
@@ -391,35 +391,35 @@ FT_BEGIN_HEADER
   /*    drivers.                                                           */
   /*                                                                       */
   FT_BASE( void )
-  FT_Free( FT_Memory  memory,
-           void*     *P );
+  ft_mem_free( FT_Memory  memory,
+               void*     *P );
 
 
 #ifdef FT_DEBUG_MEMORY
 
 
 #define FT_MEM_ALLOC( _pointer_, _size_ )              \
-          FT_Alloc_Debug( memory, _size_,              \
+          ft_mem_alloc_debug( memory, _size_,              \
                           (void**)(void*)&(_pointer_), \
                           __FILE__, __LINE__ )
 
 #define FT_MEM_REALLOC( _pointer_, _current_, _size_ )   \
-          FT_Realloc_Debug( memory, _current_, _size_,   \
+          ft_mem_realloc_debug( memory, _current_, _size_,   \
                             (void**)(void*)&(_pointer_), \
                             __FILE__, __LINE__ )
 
 #define FT_MEM_QALLOC( _pointer_, _size_ )              \
-          FT_QAlloc_Debug( memory, _size_,              \
+          ft_mem_qalloc_debug( memory, _size_,              \
                            (void**)(void*)&(_pointer_), \
                            __FILE__, __LINE__ )
 
 #define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )   \
-          FT_QRealloc_Debug( memory, _current_, _size_,   \
+          ft_mem_qrealloc_debug( memory, _current_, _size_,   \
                              (void**)(void*)&(_pointer_), \
                              __FILE__, __LINE__ )
 
 #define FT_MEM_FREE( _pointer_ )                              \
-          FT_Free_Debug( memory, (void**)(void*)&(_pointer_), \
+          ft_mem_free_debug( memory, (void**)(void*)&(_pointer_), \
                          __FILE__, __LINE__ )
 
 
@@ -427,23 +427,23 @@ FT_BEGIN_HEADER
 
 
 #define FT_MEM_ALLOC( _pointer_, _size_ )         \
-          FT_Alloc( memory, _size_,               \
+          ft_mem_alloc( memory, _size_,               \
                     (void**)(void*)&(_pointer_) )
 
 #define FT_MEM_FREE( _pointer_ )                 \
-          FT_Free( memory,                       \
+          ft_mem_free( memory,                       \
                    (void**)(void*)&(_pointer_) )
 
 #define FT_MEM_REALLOC( _pointer_, _current_, _size_ ) \
-          FT_Realloc( memory, _current_, _size_,       \
+          ft_mem_realloc( memory, _current_, _size_,       \
                       (void**)(void*)&(_pointer_) )
 
 #define FT_MEM_QALLOC( _pointer_, _size_ )         \
-          FT_QAlloc( memory, _size_,               \
+          ft_mem_qalloc( memory, _size_,               \
                      (void**)(void*)&(_pointer_) )
 
 #define FT_MEM_QREALLOC( _pointer_, _current_, _size_ ) \
-          FT_QRealloc( memory, _current_, _size_,       \
+          ft_mem_qrealloc( memory, _current_, _size_,       \
           (void**)(void*)&(_pointer_) )
 
 
@@ -578,6 +578,36 @@ FT_BEGIN_HEADER
 #define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )    \
           FT_REALLOC( _pointer_, (_old_) * sizeof ( _type_ ),  \
                                  (_new_) * sizeof ( _type_ ) )
+
+
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
+  FT_BASE( FT_Error )
+  FT_Alloc( FT_Memory  memory,
+            FT_Long    size,
+            void*     *P );
+
+  FT_BASE( FT_Error )
+  FT_QAlloc( FT_Memory  memory,
+             FT_Long    size,
+             void*     *p );
+
+  FT_BASE( FT_Error )
+  FT_Realloc( FT_Memory  memory,
+              FT_Long    current,
+              FT_Long    size,
+              void*     *P );
+
+  FT_BASE( FT_Error )
+  FT_QRealloc( FT_Memory  memory,
+               FT_Long    current,
+               FT_Long    size,
+               void*     *p );
+  FT_BASE( void )
+  FT_Free( FT_Memory  memory,
+           void*     *P );
+
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 
  /* */
