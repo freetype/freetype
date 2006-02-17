@@ -556,13 +556,29 @@ FT_BEGIN_HEADER
 #undef T1_CONFIG_OPTION_NO_MM_SUPPORT
 
 
- /* */
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****    A U T O F I T   M O D U L E    C O N F I G U R A T I O N     ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Compile autofit module with CJK script support.                       */
+  /*                                                                       */
+#define AF_CONFIG_OPTION_CJK
+
+
+  /* */
 
   /*
    * This temporary macro is used to control various optimizations for
    * reducing the heap footprint of memory-mapped TrueType files.
    */
-#define  FT_OPTIMIZE_MEMORY
+#define FT_OPTIMIZE_MEMORY
 
 
   /*
@@ -571,7 +587,16 @@ FT_BEGIN_HEADER
    * releases from emitting zillions of `strict aliasing' warning messages
    * each time a memory-management function is called.
    */
-#define  FT_STRICT_ALIASING
+#define FT_STRICT_ALIASING
+
+
+  /*
+   * Define this variable if you want to keep the layout of internal
+   * structures that was used prior to FreeType 2.2.  This also compiles in
+   * a few obsolete functions to avoid linking problems on typical Unix
+   * distributions.
+   */
+#undef FT_CONFIG_OPTION_OLD_INTERNALS
 
 
 FT_END_HEADER
