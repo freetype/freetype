@@ -126,6 +126,7 @@ FT_BEGIN_HEADER
 
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -164,7 +165,6 @@ FT_BEGIN_HEADER
                                   SFNT_Header  sfnt );
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -174,11 +174,11 @@ FT_BEGIN_HEADER
   /*    Loads the table directory into a face object.                      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face      :: A handle to the target face object.                   */
+  /*    face   :: A handle to the target face object.                      */
   /*                                                                       */
-  /*    stream    :: The input stream.                                     */
+  /*    stream :: The input stream.                                        */
   /*                                                                       */
-  /*    sfnt      :: The SFNT header.                                      */
+  /*    sfnt   :: The SFNT header.                                         */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -192,7 +192,9 @@ FT_BEGIN_HEADER
   (*TT_Load_Directory_Func)( TT_Face      face,
                              FT_Stream    stream,
                              SFNT_Header  sfnt );
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -362,6 +364,7 @@ FT_BEGIN_HEADER
 
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -388,6 +391,7 @@ FT_BEGIN_HEADER
                                  FT_UInt    y_ppem,
                                  FT_ULong*  astrike_index );
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -413,9 +417,9 @@ FT_BEGIN_HEADER
   /*    released.                                                          */
   /*                                                                       */
   typedef FT_Error
-  (*TT_CharMap_Load_Func)( TT_Face       face,
-                           void*         cmap,
-                           FT_Stream     input );
+  (*TT_CharMap_Load_Func)( TT_Face    face,
+                           void*      cmap,
+                           FT_Stream  input );
 
 
   /*************************************************************************/
@@ -439,6 +443,7 @@ FT_BEGIN_HEADER
                            void*         cmap );
 
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -651,6 +656,7 @@ FT_BEGIN_HEADER
     FT_Module_Requester          get_interface;
 
     TT_Load_Any_Func             load_any;
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     TT_Load_SFNT_HeaderRec_Func  load_sfnt_header;
     TT_Load_Directory_Func       load_directory;
@@ -673,13 +679,16 @@ FT_BEGIN_HEADER
     TT_Load_Table_Func           load_hdmx_stub;
     TT_Free_Table_Func           free_hdmx_stub;
 #endif
-    TT_Load_Table_Func           load_kern;  /* a.k.a load_kerning <= 2.1.10 */
+
+    /* this field was called `load_kerning' up to version 2.1.10 */
+    TT_Load_Table_Func           load_kern;
 
     TT_Load_Table_Func           load_gasp;
     TT_Load_Table_Func           load_pclt;
 
-    /* see `ttload.h' */
-    TT_Load_Table_Func           load_bhed;  /* a.k.a load_bitmap_header <= 2.1.10 */
+    /* see `ttload.h'; this field was called `load_bitmap_header' up to */
+    /* version 2.1.10                                                   */
+    TT_Load_Table_Func           load_bhed;
 
     /* see `ttsbit.h' */
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
@@ -688,6 +697,7 @@ FT_BEGIN_HEADER
 #endif
 
     TT_Load_SBit_Image_Func      load_sbit_image;
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     TT_Free_Table_Func           free_sbits_stub;
 #endif
@@ -696,23 +706,24 @@ FT_BEGIN_HEADER
     TT_Get_PS_Name_Func          get_psname;
     TT_Free_Table_Func           free_psnames;
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS  /* the following disappeared in 2.1.8, but were there before */
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     TT_CharMap_Load_Func         load_charmap_stub;
     TT_CharMap_Free_Func         free_charmap_stub;
 #endif
 
-    /* from here, the structure differs from 2.1.7 */
+    /* starting here, the structure differs from version 2.1.7 */
 
-    /* since FT 2.1.8, but appeared before 'get_psname' */
+    /* this field was introduced in version 2.1.8, named `get_psname' */
     TT_Face_GetKerningFunc       get_kerning;
 
-   /* the following appeared in 2.1.8, but were placed
-    * between 'load_sbits' and 'load_sbit_image'. BOOOOH
-    */
-    TT_Find_SBit_Image_Func      find_sbit_image;    /* NULL if FT_OPTIMIZE_MEMORY */
-    TT_Load_SBit_Metrics_Func    load_sbit_metrics;  /* NULL if FT_OPTIMIZE_MEMORY */
+    /* The following appeared in 2.1.8, but were placed between     */
+    /* `load_sbits' and `load_sbit_image'.  Both fields are NULL if */
+    /* FT_OPTIMIZE_MEMORY is used.                                  */
+    TT_Find_SBit_Image_Func      find_sbit_image;
+    TT_Load_SBit_Metrics_Func    load_sbit_metrics;
 
-    /* since FreeType 2.2 */
+    /* new elements introduced after version 2.1.10 */
+
     /* load the font directory, i.e., the offset table and */
     /* the table directory                                 */
     TT_Load_Table_Func           load_font_dir;

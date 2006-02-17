@@ -136,59 +136,60 @@ FT_BEGIN_HEADER
                      const char*  file_name,
                      FT_Long      line_no );
 
-#define FT_MEM_ALLOC( _pointer_, _size_ )                       \
+
+#define FT_MEM_ALLOC( _pointer_, _size_ )                           \
           (_pointer_) = ft_mem_alloc_debug( memory, _size_, &error, \
-                          __FILE__, __LINE__ )
+                                            __FILE__, __LINE__ )
 
-#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )               \
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )                   \
           (_pointer_) = ft_mem_realloc_debug( memory, _current_, _size_, \
-                          (_pointer_), &error,                       \
-                          __FILE__, __LINE__ )
+                                              (_pointer_), &error,       \
+                                              __FILE__, __LINE__ )
 
-#define FT_MEM_QALLOC( _pointer_, _size_ )                       \
+#define FT_MEM_QALLOC( _pointer_, _size_ )                           \
           (_pointer_) = ft_mem_qalloc_debug( memory, _size_, &error, \
-                          __FILE__, __LINE__ )
+                                             __FILE__, __LINE__ )
 
-#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )               \
+#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )                   \
           (_pointer_) = ft_mem_qrealloc_debug( memory, _current_, _size_, \
-                          (_pointer_), &error,                        \
-                          __FILE__, __LINE__ )
+                                               (_pointer_), &error,       \
+                                               __FILE__, __LINE__ )
 
-#define FT_MEM_FREE( _pointer_ )                                        \
-          FT_BEGIN_STMNT                                                \
-            if ( _pointer_ )                                            \
-            {                                                           \
+#define FT_MEM_FREE( _pointer_ )                                            \
+          FT_BEGIN_STMNT                                                    \
+            if ( _pointer_ )                                                \
+            {                                                               \
               ft_mem_free_debug( memory, (_pointer_), __FILE__, __LINE__ ); \
-              (_pointer_) = NULL;                                       \
-            }                                                           \
+              (_pointer_) = NULL;                                           \
+            }                                                               \
           FT_END_STMNT
 
 
 #else  /* !FT_DEBUG_MEMORY */
 
 
-#define FT_MEM_ALLOC( _pointer_, _size_ )                  \
+#define FT_MEM_ALLOC( _pointer_, _size_ )                      \
           (_pointer_) = ft_mem_alloc( memory, _size_, &error )
 
-#define FT_MEM_FREE( _pointer_ )              \
-          FT_BEGIN_STMNT                      \
-            if ( (_pointer_) )                \
-            {                                 \
+#define FT_MEM_FREE( _pointer_ )                  \
+          FT_BEGIN_STMNT                          \
+            if ( (_pointer_) )                    \
+            {                                     \
               ft_mem_free( memory, (_pointer_) ); \
-              (_pointer_) = NULL;             \
-            }                                 \
+              (_pointer_) = NULL;                 \
+            }                                     \
           FT_END_STMNT
 
-#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )         \
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )             \
           (_pointer_) = ft_mem_realloc( memory, _current_, _size_, \
-                                    (_pointer_), &error )
+                                        (_pointer_), &error )
 
-#define FT_MEM_QALLOC( _pointer_, _size_ )                  \
+#define FT_MEM_QALLOC( _pointer_, _size_ )                      \
           (_pointer_) = ft_mem_qalloc( memory, _size_, &error )
 
-#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )         \
+#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )             \
           (_pointer_) = ft_mem_qrealloc( memory, _current_, _size_, \
-                                     (_pointer_), &error )
+                                         (_pointer_), &error )
 
 #endif /* !FT_DEBUG_MEMORY */
 
@@ -245,7 +246,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    ft_mem_alloc                                                           */
+  /*    ft_mem_alloc                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Allocates a new block of memory.  The returned area is always      */
@@ -398,53 +399,53 @@ FT_BEGIN_HEADER
 #ifdef FT_DEBUG_MEMORY
 
 
-#define FT_MEM_ALLOC( _pointer_, _size_ )              \
+#define FT_MEM_ALLOC( _pointer_, _size_ )                  \
           ft_mem_alloc_debug( memory, _size_,              \
-                          (void**)(void*)&(_pointer_), \
-                          __FILE__, __LINE__ )
+                              (void**)(void*)&(_pointer_), \
+                              __FILE__, __LINE__ )
 
-#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )   \
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )       \
           ft_mem_realloc_debug( memory, _current_, _size_,   \
-                            (void**)(void*)&(_pointer_), \
-                            __FILE__, __LINE__ )
+                                (void**)(void*)&(_pointer_), \
+                                __FILE__, __LINE__ )
 
-#define FT_MEM_QALLOC( _pointer_, _size_ )              \
+#define FT_MEM_QALLOC( _pointer_, _size_ )                  \
           ft_mem_qalloc_debug( memory, _size_,              \
-                           (void**)(void*)&(_pointer_), \
-                           __FILE__, __LINE__ )
+                               (void**)(void*)&(_pointer_), \
+                               __FILE__, __LINE__ )
 
-#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )   \
+#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )       \
           ft_mem_qrealloc_debug( memory, _current_, _size_,   \
-                             (void**)(void*)&(_pointer_), \
-                             __FILE__, __LINE__ )
+                                 (void**)(void*)&(_pointer_), \
+                                 __FILE__, __LINE__ )
 
-#define FT_MEM_FREE( _pointer_ )                              \
+#define FT_MEM_FREE( _pointer_ )                                  \
           ft_mem_free_debug( memory, (void**)(void*)&(_pointer_), \
-                         __FILE__, __LINE__ )
+                             __FILE__, __LINE__ )
 
 
 #else /* !FT_DEBUG_MEMORY */
 
 
-#define FT_MEM_ALLOC( _pointer_, _size_ )         \
+#define FT_MEM_ALLOC( _pointer_, _size_ )             \
           ft_mem_alloc( memory, _size_,               \
-                    (void**)(void*)&(_pointer_) )
+                        (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_FREE( _pointer_ )                 \
+#define FT_MEM_FREE( _pointer_ )                     \
           ft_mem_free( memory,                       \
-                   (void**)(void*)&(_pointer_) )
+                       (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_REALLOC( _pointer_, _current_, _size_ ) \
-          ft_mem_realloc( memory, _current_, _size_,       \
-                      (void**)(void*)&(_pointer_) )
+#define FT_MEM_REALLOC( _pointer_, _current_, _size_ )  \
+          ft_mem_realloc( memory, _current_, _size_,    \
+                          (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_QALLOC( _pointer_, _size_ )         \
+#define FT_MEM_QALLOC( _pointer_, _size_ )             \
           ft_mem_qalloc( memory, _size_,               \
-                     (void**)(void*)&(_pointer_) )
+                         (void**)(void*)&(_pointer_) )
 
-#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ ) \
-          ft_mem_qrealloc( memory, _current_, _size_,       \
-          (void**)(void*)&(_pointer_) )
+#define FT_MEM_QREALLOC( _pointer_, _current_, _size_ )  \
+          ft_mem_qrealloc( memory, _current_, _size_,    \
+                           (void**)(void*)&(_pointer_) )
 
 
 #endif /* !FT_DEBUG_MEMORY */

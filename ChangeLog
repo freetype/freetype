@@ -1,25 +1,53 @@
 2006-02-16  David Turner  <david@freetype.org>
 
-    * builds/amiga/src/base/ftsystem.c, devel/ftoption.h
-      include/freetype/ftcache.h, include/freetype/ftoutln.h,
-      include/freetype/cache/ftccache.h, include/freetype/cache/ftccmap.h,
-      include/freetype/config/ftoption.h, include/freetype/internal/ftcalc.h,
-      include/freetype/internal/ftdriver.h,
-      include/freetype/internal/ftmemory.h,
-      include/freetype/internal/ftobjs.h, include/freetype/internal/ftrfork.h,
-      include/freetype/internal/psaux.h, include/freetype/internal/sfnt.h,
-      include/freetype/internal/t1types.h, include/freetype/internal/tttypes.h,
-      src/base/ftcalc.c, src/base/ftdbgmem.c, src/base/ftobjs.c,
-      src/base/ftsystem.c, src/base/ftutil.c, src/bdf/bdfdrivr.c,
-      src/cache/ftccache.c, src/cache/ftccback.h, src/cache/ftccmap.c,
-      src/cache/ftcmanag.c, src/cff/cffdrivr.c, src/cid/cidriver.c,
-      src/pcf/pcfdrivr.c, src/pfr/pfrdrivr.c, src/psaux/psauxmod.c,
-      src/sfnt/sfdriver.c, src/truetype/ttdriver.c, src/type1/t1driver.c,
-      src/type1/t1objs.c, src/type42/t42drivr.c, src/winfonts/winfnt.c:
+	Massive changes to the internals to respect the internal object
+	layouts and exported functions of FreeType 2.1.7.  Note that the
+	cache sub-system cannot be fully retrofitted, unfortunately.
 
-    massive changes to the internals to respect the internal object layouts
-    and exported functions of FreeType 2.1.7. Note that the cache sub-system
-    cannot be fully retrofitted, unfortunately.
+	* include/freetype/config/ftoption.h
+	(FT_CONFIG_OPTION_OLD_INTERNALS): New macro.
+
+	* include/freetype/ftcache.h, include/freetype/cache/ftccache.h,
+	include/freetype/cache/ftccmap.h,
+	include/freetype/internal/ftcalc.h,
+	include/freetype/internal/ftdriver.h,
+	include/freetype/internal/ftmemory.h,
+	include/freetype/internal/ftobjs.h,
+	include/freetype/internal/psaux.h, include/freetype/internal/sfnt.h,
+	include/freetype/internal/t1types.h,
+	include/freetype/internal/tttypes.h, src/base/ftcalc.c,
+	src/base/ftdbgmem.c, src/base/ftobjs.c, src/base/ftutil.c,
+	src/bdf/bdfdrivr.c, src/cache/ftccache.c, src/cache/ftccback.h,
+	src/cache/ftcmanag.c, src/cff/cffdrivr.c, src/cid/cidriver.c,
+	src/pcf/pcfdrivr.c, src/pfr/pfrdrivr.c, src/psaux/psauxmod.c,
+	src/sfnt/sfdriver.c, src/truetype/ttdriver.c, src/type1/t1driver.c,
+	src/type1/t1objs.c, src/type42/t42drivr.c, src/winfonts/winfnt.c:
+	Use FT_CONFIG_OPTION_OLD_INTERNALS to revive old functions and data
+	structures.
+
+	Move newly added structure elements to the end of the affected
+	structure and add stub fields (if FT_CONFIG_OPTION_OLD_INTERNALS is
+	defined) to assure binary compatibility with older FreeType
+	versions.
+	Use FT_CONFIG_OPTION_OLD_INTERNALS to add function stubs for old
+	functions:
+
+	  ft_stub_set_char_sizes
+	  ft_stub_set_pixel_sizes
+
+	Rename the following internal functions to provide the old function
+	names as stubs:
+
+	  FT_Alloc          -> ft_mem_alloc
+	  FT_QAlloc         -> ft_mem_qalloc
+	  FT_Realloc        -> ft_mem_realloc
+	  FT_QRealloc       -> ft_mem_qrealloc
+	  FT_Free           -> ft_mem_free
+	  FT_Alloc_Debug    -> ft_mem_alloc_debug
+	  FT_QAlloc_Debug   -> ft_mem_qalloc_debug
+	  FT_Realloc_Debug  -> ft_mem_realloc_debug
+	  FT_QRealloc_Debug -> ft_mem_qrealloc_debug
+	  FT_Free_Debug     -> ft_mem_free_debug
 
 2006-02-15  Chia-I Wu  <b90201047@ntu.edu.tw>
 
@@ -47,23 +75,23 @@
 	possible segment faults for the non-FT_OPTIMIZE_MEMORY'ed versions.
 	(finally!)
 
+
 	For most OpenType tables, `tt_face_load_xxxx' simply loads the table
 	and `face->root' is set later in `sfnt_load_face'.  Here, we try to
-	make this work for _all_ tables.
+	make this work for _all_ tables.  Also improve tracing messages.
 
 	* src/sfnt/ttsbit.c, src/sfnt/ttsbit0.c, src/sfnt/ttload.c,
 	src/sfnt/ttmtx.c: all `tt_face_load_xxxx' should load the table and
 	then exit.  Error handling or setting face->root is done later in
 	`sfnt_load_face'.
-	Pretty trace messages.
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Work harder.
 	Mac bitmap-only fonts are not scalable.
 	Check that `face->header.Units_Per_EM' is not zero.
-	(LOAD_, LOADM_): Pretty trace messages.
+	(LOAD_, LOADM_): Emit pretty trace messages.
 
-	* src/sfnt/ttsbit0.c (tt_face_load_strike_metrics): Read metrics from
-	`eblc'.
+	* src/sfnt/ttsbit0.c (tt_face_load_strike_metrics): Read metrics
+	from `eblc'.
 
 	* src/sfnt/ttcmap.c (tt_face_build_cmaps), src/sfnt/ttpost.c
 	(load_format_20, load_format_25, tt_face_get_ps_name): Use

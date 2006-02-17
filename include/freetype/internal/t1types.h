@@ -200,14 +200,15 @@ FT_BEGIN_HEADER
     const void*     afm_data;
     FT_CharMapRec   charmaprecs[2];
     FT_CharMap      charmaps[2];
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-    PS_Unicodes     unicode_map;  /* apparently unused, keep for old internals */
+    PS_Unicodes     unicode_map;
 #endif    
 
     /* support for Multiple Masters fonts */
     PS_Blend        blend;
 
-    /* since FT 2.1 - interface to PostScript hinter */
+    /* since version 2.1 - interface to PostScript hinter */
     const void*     pshinter;
 
   } T1_FaceRec;
@@ -222,10 +223,10 @@ FT_BEGIN_HEADER
     void*            afm_data;
     CID_Subrs        subrs;
 
-    /* since FT 2.1 - interface to PostScript hinter */
+    /* since version 2.1 - interface to PostScript hinter */
     void*            pshinter;
 
-    /* since FT 2.1.8, but was originally after 'afm_data' */
+    /* since version 2.1.8, but was originally positioned after `afm_data' */
     FT_Byte*         binary_data; /* used if hex data has been converted */
     FT_Stream        cid_stream;
 

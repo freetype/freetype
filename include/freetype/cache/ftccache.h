@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType internal cache interface (specification).                   */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -82,16 +82,17 @@ FT_BEGIN_HEADER
   FTC_Node_Destroy( FTC_Node     node,
                     FTC_Manager  manager );
 
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
   FT_BASE( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager );
-                    
+
   FT_BASE( void )
   ftc_node_done( FTC_Node     node,
                  FTC_Manager  manager );
-  
 #endif
+
 
   /*************************************************************************/
   /*************************************************************************/

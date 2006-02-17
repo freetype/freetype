@@ -892,10 +892,10 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_alloc_debug( FT_Memory    memory,
-                  FT_Long      size,
-                  FT_Error    *p_error,
-                  const char*  file_name,
-                  FT_Long      line_no )
+                      FT_Long      size,
+                      FT_Error    *p_error,
+                      const char*  file_name,
+                      FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -912,12 +912,12 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_realloc_debug( FT_Memory    memory,
-                    FT_Long      current,
-                    FT_Long      size,
-                    void*        block,
-                    FT_Error    *p_error,
-                    const char*  file_name,
-                    FT_Long      line_no )
+                        FT_Long      current,
+                        FT_Long      size,
+                        void*        block,
+                        FT_Error    *p_error,
+                        const char*  file_name,
+                        FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -934,10 +934,10 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qalloc_debug( FT_Memory    memory,
-                   FT_Long      size,
-                   FT_Error    *p_error,
-                   const char*  file_name,
-                   FT_Long      line_no )
+                       FT_Long      size,
+                       FT_Error    *p_error,
+                       const char*  file_name,
+                       FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -954,12 +954,12 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qrealloc_debug( FT_Memory    memory,
-                     FT_Long      current,
-                     FT_Long      size,
-                     void*        block,
-                     FT_Error    *p_error,
-                     const char*  file_name,
-                     FT_Long      line_no )
+                         FT_Long      current,
+                         FT_Long      size,
+                         void*        block,
+                         FT_Error    *p_error,
+                         const char*  file_name,
+                         FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -976,9 +976,9 @@
 
   FT_BASE_DEF( void )
   ft_mem_free_debug( FT_Memory    memory,
-                 const void  *P,
-                 const char*  file_name,
-                 FT_Long      line_no )
+                     const void  *P,
+                     const char*  file_name,
+                     FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -998,10 +998,10 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_alloc_debug( FT_Memory    memory,
-                  FT_Long      size,
-                  void*       *P,
-                  const char*  file_name,
-                  FT_Long      line_no )
+                      FT_Long      size,
+                      void*       *P,
+                      const char*  file_name,
+                      FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -1018,11 +1018,11 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_realloc_debug( FT_Memory    memory,
-                    FT_Long      current,
-                    FT_Long      size,
-                    void*       *P,
-                    const char*  file_name,
-                    FT_Long      line_no )
+                        FT_Long      current,
+                        FT_Long      size,
+                        void*       *P,
+                        const char*  file_name,
+                        FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -1039,10 +1039,10 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_qalloc_debug( FT_Memory    memory,
-                   FT_Long      size,
-                   void*       *P,
-                   const char*  file_name,
-                   FT_Long      line_no )
+                       FT_Long      size,
+                       void*       *P,
+                       const char*  file_name,
+                       FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -1059,11 +1059,11 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_qrealloc_debug( FT_Memory    memory,
-                     FT_Long      current,
-                     FT_Long      size,
-                     void*       *P,
-                     const char*  file_name,
-                     FT_Long      line_no )
+                         FT_Long      current,
+                         FT_Long      size,
+                         void*       *P,
+                         const char*  file_name,
+                         FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 
@@ -1080,9 +1080,9 @@
 
   FT_BASE_DEF( void )
   ft_mem_free_debug( FT_Memory    memory,
-                 FT_Pointer   block,
-                 const char*  file_name,
-                 FT_Long      line_no )
+                     FT_Pointer   block,
+                     const char*  file_name,
+                     FT_Long      line_no )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
 

@@ -51,8 +51,8 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_alloc( FT_Memory  memory,
-            FT_Long    size,
-            FT_Error  *p_error )
+                FT_Long    size,
+                FT_Error  *p_error )
   {
     FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
@@ -74,8 +74,8 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qalloc( FT_Memory  memory,
-             FT_Long    size,
-             FT_Error  *p_error )
+                 FT_Long    size,
+                 FT_Error  *p_error )
   {
     FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
@@ -95,10 +95,10 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_realloc( FT_Memory  memory,
-              FT_Long    current,
-              FT_Long    size,
-              void*      block,
-              FT_Error  *p_error )
+                  FT_Long    current,
+                  FT_Long    size,
+                  void*      block,
+                  FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
 
@@ -137,10 +137,10 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qrealloc( FT_Memory  memory,
-               FT_Long    current,
-               FT_Long    size,
-               void*      block,
-               FT_Error  *p_error )
+                   FT_Long    current,
+                   FT_Long    size,
+                   void*      block,
+                   FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
 
@@ -174,7 +174,7 @@
 
   FT_BASE_DEF( void )
   ft_mem_free( FT_Memory   memory,
-           const void *P )
+               const void *P )
   {
     if ( P )
       memory->free( memory, (void*)P );
@@ -188,8 +188,8 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_alloc( FT_Memory  memory,
-            FT_Long    size,
-            void*     *P )
+                FT_Long    size,
+                void*     *P )
   {
     FT_ASSERT( P != 0 );
 
@@ -221,8 +221,8 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_qalloc( FT_Memory  memory,
-             FT_Long    size,
-             void*     *P )
+                 FT_Long    size,
+                 void*     *P )
   {
     FT_ASSERT( P != 0 );
 
@@ -253,9 +253,9 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_realloc( FT_Memory  memory,
-              FT_Long    current,
-              FT_Long    size,
-              void**     P )
+                  FT_Long    current,
+                  FT_Long    size,
+                  void**     P )
   {
     void*  Q;
 
@@ -295,9 +295,9 @@
 
   FT_BASE_DEF( FT_Error )
   ft_mem_qrealloc( FT_Memory  memory,
-               FT_Long    current,
-               FT_Long    size,
-               void**     P )
+                   FT_Long    current,
+                   FT_Long    size,
+                   void**     P )
   {
     void*  Q;
 
@@ -334,7 +334,7 @@
 
   FT_BASE_DEF( void )
   ft_mem_free( FT_Memory  memory,
-           void**     P )
+               void**     P )
   {
     FT_TRACE7(( "ft_mem_free:" ));
     FT_TRACE7(( " Freeing block 0x%08p, ref 0x%08p\n",
@@ -561,6 +561,7 @@
     return value;
   }
 
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
   FT_BASE_DEF( FT_Error )
@@ -570,9 +571,11 @@
   {
     FT_Error  error;
 
+
     (void)FT_ALLOC( *P, size );
     return error;
   }
+
 
   FT_BASE_DEF( FT_Error )
   FT_QAlloc( FT_Memory  memory,
@@ -581,9 +584,11 @@
   {
     FT_Error  error;
 
+
     (void)FT_QALLOC( *p, size );
     return error;
   }
+
 
   FT_BASE_DEF( FT_Error )
   FT_Realloc( FT_Memory  memory,
@@ -592,6 +597,7 @@
               void*     *P )
   {
     FT_Error  error;
+
 
     (void)FT_REALLOC( *P, current, size );
     return error;
@@ -606,9 +612,11 @@
   {
     FT_Error  error;
 
+
     (void)FT_QREALLOC( *p, current, size );
     return error;
   }
+
 
   FT_BASE_DEF( void )
   FT_Free( FT_Memory  memory,

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Amiga-specific FreeType low-level system interface (body).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2005 by                                     */
+/*  Copyright 1996-2001, 2002, 2005, 2006 by                               */
 /*  David Turner, Robert Wilhelm, Werner Lemberg and Detlef Würkner.       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -115,8 +115,8 @@ Free_VecPooled( APTR  poolHeader,
   /*************************************************************************/
   /*                                                                       */
   /* It is not necessary to do any error checking for the                  */
-  /* allocation-related functions.  This will be done by the higher level  */
-  /* routines like ft_mem_alloc() or ft_mem_realloc().                             */
+  /* allocation-related functions.  This is done by the higher level       */
+  /* routines like ft_mem_alloc() or ft_mem_realloc().                     */
   /*                                                                       */
   /*************************************************************************/
 

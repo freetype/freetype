@@ -578,22 +578,26 @@ FT_BEGIN_HEADER
    * This temporary macro is used to control various optimizations for
    * reducing the heap footprint of memory-mapped TrueType files.
    */
-#define  FT_OPTIMIZE_MEMORY
+#define FT_OPTIMIZE_MEMORY
 
 
   /*
-   * This temporary macro is used to control whether we are going to
-   * compile certain functions like ft_mem_alloc in a way that prevents recent
-   * GCC releases from emitting zillions of `strict aliasing' warning
-   * messages each time a memory-management function is called.
+   * This temporary macro is used to control whether we are going to compile
+   * certain functions like ft_mem_alloc in a way that prevents recent GCC
+   * releases from emitting zillions of `strict aliasing' warning messages
+   * each time a memory-management function is called.
    */
-#define  FT_STRICT_ALIASING
+#define FT_STRICT_ALIASING
 
-/* define this variable if you want to keep the layout of internal structures
- * that was used prior to FreeType 2.2. This also compiles in a few obsolete
- * functions to avoid linking problems on typical Unix distributions
- */
-#define  FT_CONFIG_OPTION_OLD_INTERNALS
+
+  /*
+   * Define this variable if you want to keep the layout of internal
+   * structures that was used prior to FreeType 2.2.  This also compiles in
+   * a few obsolete functions to avoid linking problems on typical Unix
+   * distributions.
+   */
+#define FT_CONFIG_OPTION_OLD_INTERNALS
+
 
 FT_END_HEADER
 

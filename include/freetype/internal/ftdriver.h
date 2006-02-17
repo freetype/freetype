@@ -59,7 +59,9 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*FT_Size_SelectFunc)( FT_Size   size,
                          FT_ULong  size_index );
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
   typedef FT_Error
   (*FT_Size_ResetPointsFunc)( FT_Size     size,
                               FT_F26Dot6  char_width,
@@ -71,6 +73,7 @@ FT_BEGIN_HEADER
   (*FT_Size_ResetPixelsFunc)( FT_Size  size,
                               FT_UInt  pixel_width,
                               FT_UInt  pixel_height );
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
   typedef FT_Error
@@ -198,8 +201,10 @@ FT_BEGIN_HEADER
     FT_Slot_DoneFunc          done_slot;
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
     FT_Size_ResetPointsFunc   set_char_sizes;
     FT_Size_ResetPixelsFunc   set_pixel_sizes;
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     FT_Slot_LoadFunc          load_glyph;
@@ -208,20 +213,22 @@ FT_BEGIN_HEADER
     FT_Face_AttachFunc        attach_file;
     FT_Face_GetAdvancesFunc   get_advances;
 
-    /* since FT 2.2. */
+    /* since version 2.2 */
     FT_Size_RequestFunc       request_size;
     FT_Size_SelectFunc        select_size;
 
   } FT_Driver_ClassRec, *FT_Driver_Class;
 
 
-/* the following are used as stubs for 'set_char_sizes'
- * and 'set_pixel_sizes'. their implementation uses
- * 'request_size' and 'select_size' functions instead
- *
- * implementation is in src/base/ftobjs.c
- */
+  /*
+   *  The following functions are used as stubs for `set_char_sizes' and
+   *  `set_pixel_sizes'; the code uses `request_size' and `select_size'
+   *  functions instead.
+   *
+   *  Implementation is in `src/base/ftobjs.c'.
+   */
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
   FT_BASE( FT_Error )
   ft_stub_set_char_sizes( FT_Size     size,
                           FT_F26Dot6  width,
@@ -230,10 +237,12 @@ FT_BEGIN_HEADER
                           FT_UInt     vert_res );
 
   FT_BASE( FT_Error )
-  ft_stub_set_pixel_sizes( FT_Size   size,
-                           FT_UInt   width,
-                           FT_UInt   height );
+  ft_stub_set_pixel_sizes( FT_Size  size,
+                           FT_UInt  width,
+                           FT_UInt  height );
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
 
 FT_END_HEADER
 

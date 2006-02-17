@@ -566,10 +566,10 @@ FT_BEGIN_HEADER
 
 
   /*
-   * This temporary macro is used to control whether we are going to
-   * compile certain functions like ft_mem_alloc in a way that prevents recent
-   * GCC releases from emitting zillions of `strict aliasing' warning
-   * messages each time a memory-management function is called.
+   * This temporary macro is used to control whether we are going to compile
+   * certain functions like ft_mem_alloc in a way that prevents recent GCC
+   * releases from emitting zillions of `strict aliasing' warning messages
+   * each time a memory-management function is called.
    */
 #define  FT_STRICT_ALIASING
 

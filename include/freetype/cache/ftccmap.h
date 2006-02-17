@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType charmap cache (specification).                              */
 /*                                                                         */
-/*  Copyright 2000-2001, 2003, 2005 by                                     */
+/*  Copyright 2000-2001, 2003, 2005, 2006 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -25,12 +25,14 @@
 
 FT_BEGIN_HEADER
 
-/* the FT 2.1.7 Charmap cache interface 
- *
- * unfortunately, it is not possible to implement it in later
- * versions, since some function signature changed too significantly
- * to do that.
- */
+
+  /*
+   *  The FreeType 2.1.7 Charmap cache interface.
+   *
+   *  Unfortunately, it is not possible to implement it in later versions,
+   *  since some function signatures changed too significantly to do that.
+   *
+   */
 
 #if 0
 
@@ -67,7 +69,6 @@ FT_BEGIN_HEADER
   } FTC_CMapDescRec, *FTC_CMapDesc;
 
 
-#if 0
   FT_EXPORT( FT_Error )
   FTC_CMapCache_New( FTC_Manager     manager,
                      FTC_CMapCache  *acache );
@@ -77,11 +78,11 @@ FT_BEGIN_HEADER
   FTC_CMapCache_Lookup( FTC_CMapCache  cache,
                         FTC_CMapDesc   cmap_desc,
                         FT_UInt32      char_code );
-#endif
                         
-#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+#endif /* 0 */
 
   /* */
+
 
 FT_END_HEADER
 

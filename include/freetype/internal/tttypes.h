@@ -5,7 +5,7 @@
 /*    Basic SFNT/TrueType type definitions and interface (specification    */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2005 by                               */
+/*  Copyright 1996-2001, 2002, 2004, 2005, 2006 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1383,16 +1383,17 @@ FT_BEGIN_HEADER
 
     const char*           postscript_name;
 
-    /* since FreeType 2.1.8, but was originally placed after 'glyph_locations_stub' */
+    /* since version 2.1.8, but was originally placed after */
+    /* `glyph_locations_stub'                               */
     FT_ULong              glyf_len;
 
-    /* since FreeType 2.1.8, but was originally placed before 'extra' */
+    /* since version 2.1.8, but was originally placed before `extra' */
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_Bool               doblend;
     GX_Blend              blend;
 #endif
 
-    /* since FreeType 2.2 */
+    /* since version 2.2 */
 
 #ifdef FT_OPTIMIZE_MEMORY
     FT_Byte*              horz_metrics;
@@ -1514,7 +1515,7 @@ FT_BEGIN_HEADER
     /* for possible extensibility in other formats */
     void*            other;
 
-    /* since FT 2.1.8 */
+    /* since version 2.1.8 */
     FT_Int           top_bearing;
     FT_Int           vadvance;
     FT_Vector        pp3;

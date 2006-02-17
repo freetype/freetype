@@ -3674,7 +3674,9 @@
       library->debug_hooks[hook_index] = debug_hook;
   }
 
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
   FT_BASE_DEF( FT_Error )
   ft_stub_set_char_sizes( FT_Size     size,
                           FT_F26Dot6  width,
@@ -3684,6 +3686,7 @@
   {
     FT_Size_RequestRec  req;
     FT_Driver           driver = size->face->driver;
+
 
     if ( driver->clazz->request_size )
     {
@@ -3705,30 +3708,34 @@
 
       return driver->clazz->request_size( size, &req );
     }
+
     return 0;
   }
 
 
   FT_BASE_DEF( FT_Error )
-  ft_stub_set_pixel_sizes( FT_Size   size,
-                           FT_UInt   width,
-                           FT_UInt   height )
+  ft_stub_set_pixel_sizes( FT_Size  size,
+                           FT_UInt  width,
+                           FT_UInt  height )
   {
     FT_Size_RequestRec  req;
     FT_Driver           driver = size->face->driver;
 
+
     if ( driver->clazz->request_size )
     {
       req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
-      req.width          = width << 6;
+      req.width          = width  << 6;
       req.height         = height << 6;
       req.horiResolution = 0;
       req.vertResolution = 0;
 
       return driver->clazz->request_size( size, &req );
     }
+
     return 0;
   }
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 /* END */

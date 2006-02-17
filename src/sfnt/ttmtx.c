@@ -292,7 +292,7 @@
       goto Fail;
 
     FT_TRACE3(( "Ascender:          %5d\n", header->Ascender ));
-    FT_TRACE3(( "Descenter:         %5d\n", header->Descender ));
+    FT_TRACE3(( "Descender:         %5d\n", header->Descender ));
     FT_TRACE3(( "number_Of_Metrics: %5u\n", header->number_Of_HMetrics ));
 
     header->long_metrics  = NULL;
@@ -404,7 +404,8 @@
     FT_UShort       k = header->number_Of_HMetrics;
 
 
-    if ( k == 0 || !header->long_metrics ||
+    if ( k == 0                                         ||
+         !header->long_metrics                          ||
          gindex >= (FT_UInt)face->max_profile.numGlyphs )
     {
       *abearing = *aadvance = 0;

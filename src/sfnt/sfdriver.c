@@ -418,7 +418,7 @@
 
 
   FT_CALLBACK_DEF( void )
-  tt_face_free_hdmx_stub( TT_Face   face )
+  tt_face_free_hdmx_stub( TT_Face  face )
   {
     FT_UNUSED( face );
   }
@@ -458,9 +458,9 @@
   
   
   FT_CALLBACK_DEF( FT_Error )
-  tt_face_load_charmap_stub( TT_Face       face,
-                             void*         cmap,
-                             FT_Stream     input )
+  tt_face_load_charmap_stub( TT_Face    face,
+                             void*      cmap,
+                             FT_Stream  input )
   {
     FT_UNUSED( face );
     FT_UNUSED( cmap );
@@ -471,8 +471,8 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  tt_face_free_charmap_stub( TT_Face   face,
-                             void*     cmap )
+  tt_face_free_charmap_stub( TT_Face  face,
+                             void*    cmap )
   {
     FT_UNUSED( face );
     FT_UNUSED( cmap );
@@ -481,6 +481,7 @@
   }                             
   
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
 
   static
   const SFNT_Interface  sfnt_interface =
@@ -532,9 +533,9 @@
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     tt_face_load_sbit_image,
-#else /* !TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+#else
     0,
-#endif /* !TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+#endif
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     tt_face_free_sbit_stub,
@@ -544,29 +545,30 @@
     /* see `ttpost.h' */
     tt_face_get_ps_name,
     tt_face_free_ps_names,
-#else /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
+#else
     0,
     0,
-#endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
+#endif
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     tt_face_load_charmap_stub,
     tt_face_free_charmap_stub,
 #endif
 
-    /* since FT 2.1.8 */
+    /* since version 2.1.8 */
 
     tt_face_get_kerning,
 
-#  ifndef FT_OPTIMIZE_MEMORY
+#ifndef FT_OPTIMIZE_MEMORY
     tt_find_sbit_image,
     tt_load_sbit_metrics,
-#  else
+#else
     0,
     0,
-#  endif    
+#endif    
 
-    /* since FT 2.2 */
+    /* since version 2.2 */
+
     tt_face_load_font_dir,
     tt_face_load_hmtx,
 

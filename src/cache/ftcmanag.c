@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache Manager (body).                                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -677,6 +677,7 @@
       node->ref_count--;
   }
 
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
   FT_EXPORT_DEF( FT_Error )
@@ -698,6 +699,7 @@
     FT_Error       error;
     FT_Size        size;
 
+
     scaler.face_id = font->face_id;
     scaler.width   = font->pix_width;
     scaler.height  = font->pix_height;
@@ -716,9 +718,11 @@
       *aface = size->face;
       *asize = size;
     }
-    return  error;
+
+    return error;
   }
 
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
 
 /* END */

@@ -792,7 +792,7 @@ FT_BEGIN_HEADER
 
     T1_CMap_Classes  t1_cmap_classes;
 
-    /* fields from here were added after 2.1.10 */
+    /* fields after this comment line were added after version 2.1.10 */
     const AFM_Parser_FuncsRec*  afm_parser_funcs;
 
   } PSAux_ServiceRec, *PSAux_Service;
