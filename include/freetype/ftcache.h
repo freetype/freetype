@@ -579,13 +579,15 @@ FT_BEGIN_HEADER
 
  /* */
 
-#define FTC_IMAGE_TYPE_COMPARE( d1, d2 )                    \
-          ( FTC_FONT_COMPARE( &(d1)->font, &(d2)->font ) && \
-            (d1)->flags == (d2)->flags                   )
+#define FTC_IMAGE_TYPE_COMPARE( d1, d2 )        \
+          ( (d1)->face_id == (d2)->face_id &&   \
+            (d1)->width   == (d2)->width   &&   \
+            (d1)->flags   == (d2)->flags        )
 
-#define FTC_IMAGE_TYPE_HASH( d )                    \
-          (FT_UFast)( FTC_FONT_HASH( &(d)->font ) ^ \
-                      ( (d)->flags << 4 )         )
+#define FTC_IMAGE_TYPE_HASH( d )                         \
+          (FT_UFast)( FTC_FACE_ID_HASH( (d)->face_id ) ^ \
+                      ((d)->width << 8) ^ (d)->height  ^ \
+                      ( (d)->flags << 4 )              )
 
 
   /*************************************************************************/

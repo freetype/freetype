@@ -224,6 +224,17 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+ /* unfortunately, it is not possible to support binary backwards
+  * compatibility in the cmap cache. the FTC_CMapCache_Lookup signature
+  * changes were too deep, and there is no clever hackish way to detect
+  * what kind of structure we're being passed.
+  *
+  * fortunately, it seems that no production code is using this function
+  * on Unix distributions.
+  */
+#endif
+
   /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_UInt )

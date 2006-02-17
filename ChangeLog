@@ -1,3 +1,15 @@
+2006-02-17  David Turner  <david@freetype.org>
+
+    * builds/unix/unix-cc.in: don't filter-out exported functions
+    anymore, this is used to ensure that all FT_BASE internal
+    functions are available for dynamic linking
+    
+    * include/freetype/ftcache.h, src/cache/ftcbasic.c, 
+    src/cache/ftccmap.c: try to revive old functions of the
+    cache sub-system. We also try to support FTC_ImageCache_Lookup
+    and FTC_ImageCache_SBit with legacy signatures through a gross
+    hack (hope it works)
+
 2006-02-17  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h: Synchronize with
