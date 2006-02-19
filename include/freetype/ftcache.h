@@ -180,10 +180,10 @@ FT_BEGIN_HEADER
             (f1)->pix_width  == (f2)->pix_width  && \
             (f1)->pix_height == (f2)->pix_height )
 
-#define FT_POINTER_TO_ULONG( p )  ((FT_ULong)(FT_Pointer)(p))
+#define FT_POINTER_TO_ULONG( p )  ( (FT_ULong)(FT_Pointer)(p) )
 
-#define FTC_FACE_ID_HASH( i )                              \
-          ((FT_UInt32)(( FT_POINTER_TO_ULONG( i ) >> 3 ) ^ \
+#define FTC_FACE_ID_HASH( i )                                \
+          ((FT_UInt32)(( FT_POINTER_TO_ULONG( i ) >> 3 ) ^   \
                        ( FT_POINTER_TO_ULONG( i ) << 7 ) ) )
 
 #define FTC_FONT_HASH( f )                              \
@@ -575,19 +575,21 @@ FT_BEGIN_HEADER
 
   } FTC_ImageTypeRec;
 
-  typedef struct FTC_ImageTypeRec_*   FTC_ImageType;
+  typedef struct FTC_ImageTypeRec_*  FTC_ImageType;
 
- /* */
 
-#define FTC_IMAGE_TYPE_COMPARE( d1, d2 )        \
-          ( (d1)->face_id == (d2)->face_id &&   \
-            (d1)->width   == (d2)->width   &&   \
-            (d1)->flags   == (d2)->flags        )
+  /* */
 
-#define FTC_IMAGE_TYPE_HASH( d )                         \
-          (FT_UFast)( FTC_FACE_ID_HASH( (d)->face_id ) ^ \
-                      ((d)->width << 8) ^ (d)->height  ^ \
-                      ( (d)->flags << 4 )              )
+
+#define FTC_IMAGE_TYPE_COMPARE( d1, d2 )      \
+          ( (d1)->face_id == (d2)->face_id && \
+            (d1)->width   == (d2)->width   && \
+            (d1)->flags   == (d2)->flags   )
+
+#define FTC_IMAGE_TYPE_HASH( d )                          \
+          (FT_UFast)( FTC_FACE_ID_HASH( (d)->face_id )  ^ \
+                      ( (d)->width << 8 ) ^ (d)->height ^ \
+                      ( (d)->flags << 4 )               )
 
 
   /*************************************************************************/

@@ -1,14 +1,18 @@
 2006-02-17  David Turner  <david@freetype.org>
 
-    * builds/unix/unix-cc.in: don't filter-out exported functions
-    anymore, this is used to ensure that all FT_BASE internal
-    functions are available for dynamic linking
-    
-    * include/freetype/ftcache.h, src/cache/ftcbasic.c, 
-    src/cache/ftccmap.c: try to revive old functions of the
-    cache sub-system. We also try to support FTC_ImageCache_Lookup
-    and FTC_ImageCache_SBit with legacy signatures through a gross
-    hack (hope it works)
+	* builds/unix/unix-cc.in (LINK_LIBRARY): Don't filter out exported
+	functions anymore.  This ensures that all FT_BASE internal functions
+	are available for dynamic linking.
+
+	* include/freetype/ftcache.h (FTC_IMAGE_TYPE_COMPARE,
+	FTC_IMAGE_TYPE_HASH), src/cache/ftcbasic.c (FTC_OldFontRec,
+	FTC_OldImageDescRec, FTC_ImageCache_Lookup, FTC_Image_Cache_New,
+	FTC_OldImage_Desc, FTC_OLD_IMAGE_FORMAT, ftc_old_image_xxx,
+	ftc_image_type_from_old_desc, FTC_Image_Cache_Lookup,
+	FTC_SBitCache_Lookup, FTC_SBit_Cache_New, FTC_SBit_Cache_Lookup)
+	[FT_CONFIG_OPTION_OLD_INTERNALS]: Try to revive old functions of the
+	cache sub-system.  We try to recognize old legacy signatures with a
+	gross hack (hope it works).
 
 2006-02-17  Werner Lemberg  <wl@gnu.org>
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType basic cache interface (body).                           */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005 by                                          */
+/*  Copyright 2003, 2004, 2005, 2006 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -26,37 +26,44 @@
 #include "ftccback.h"
 #include "ftcerror.h"
 
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
- /* these correspond to the FTC_Font and FTC_ImageDesc types
-  * that were defined in FT 2.1.7
-  */
-  typedef struct
+  /*
+   *  These structures correspond to the FTC_Font and FTC_ImageDesc types
+   *  that were defined in version 2.1.7.
+   */
+  typedef struct  FTC_OldFontRec_
   {
-    FTC_FaceID    face_id;
-    FT_UShort     pix_width;
-    FT_UShort     pix_height;
+    FTC_FaceID  face_id;
+    FT_UShort   pix_width;
+    FT_UShort   pix_height;
 
   } FTC_OldFontRec, *FTC_OldFont;
 
-  typedef struct
+
+  typedef struct  FTC_OldImageDescRec_
   {
     FTC_OldFontRec  font;
     FT_UInt32       flags;
 
   } FTC_OldImageDescRec, *FTC_OldImageDesc;
 
- /* notice that FTC_OldImageDescRec and FTC_ImageTypeRec are nearly
-  * identical, bit-wise. The only difference is that the 'width' and
-  * 'height' fields are expressed as 16-bit integers in the old structure,
-  * and as normal 'int' in the new one
-  *
-  * we're going to perform a weird hack to detect which structure is being
-  * passed to the image and sbit caches. If the new structure's 'width'
-  * is larger than 0x10000, we assume that we're really receiving a
-  * FTC_OldImageDesc.
-  */
+
+  /*
+   *  Notice that FTC_OldImageDescRec and FTC_ImageTypeRec are nearly
+   *  identical, bit-wise.  The only difference is that the `width' and
+   *  `height' fields are expressed as 16-bit integers in the old structure,
+   *  and as normal `int' in the new one.
+   *
+   *  We are going to perform a weird hack to detect which structure is
+   *  being passed to the image and sbit caches.  If the new structure's
+   *  `width' is larger than 0x10000, we assume that we are really receiving
+   *  an FTC_OldImageDesc.
+   */
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
 
   /*
    *  Basic Families
@@ -314,19 +321,24 @@
       *anode  = NULL;
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-   /* this one is a major hack used to detect wether we're passed a
-    * regular FTC_ImageType handle, or a legacy FTC_OldImageDesc one
-    */
+
+    /*
+     *  This one is a major hack used to detect whether we are passed a
+     *  regular FTC_ImageType handle, or a legacy FTC_OldImageDesc one.
+     */
     if ( type->width >= 0x10000 )
     {
       FTC_OldImageDesc  desc = (FTC_OldImageDesc)type;
+
 
       query.attrs.scaler.face_id = desc->font.face_id;
       query.attrs.scaler.width   = desc->font.pix_width;
       query.attrs.scaler.height  = desc->font.pix_height;
       query.attrs.load_flags     = desc->flags;
     }
-#endif
+
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
     {
       query.attrs.scaler.face_id = type->face_id;
       query.attrs.scaler.width   = type->width;
@@ -334,9 +346,9 @@
       query.attrs.load_flags     = type->flags;
     }
 
-    query.attrs.scaler.pixel   = 1;
-    query.attrs.scaler.x_res   = 0;  /* make compilers happy */
-    query.attrs.scaler.y_res   = 0;
+    query.attrs.scaler.pixel = 1;
+    query.attrs.scaler.x_res = 0;  /* make compilers happy */
+    query.attrs.scaler.y_res = 0;
 
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
 
@@ -380,13 +392,14 @@
   }
 
 
-  /* yet another backwards-legacy structure... yukkk */
-  typedef struct
+  /* yet another backwards-legacy structure */
+  typedef struct  FTC_OldImage_Desc_
   {
     FTC_FontRec  font;
     FT_UInt      image_type;
     
   } FTC_OldImage_Desc;
+
 
 #define FTC_OLD_IMAGE_FORMAT( x )  ( (x) & 7 )
 
@@ -403,7 +416,7 @@
 #define ftc_old_image_flag_no_sbits    0x0100
 
   /* monochrome bitmap */
-#define ftc_old_image_mono             ftc_old_image_format_bitmap | \
+#define ftc_old_image_mono             ftc_old_image_format_bitmap   | \
                                        ftc_old_image_flag_monochrome
 
   /* anti-aliased bitmap */
@@ -460,6 +473,7 @@
       typ->flags = load_flags;
     }
   }                                
+
 
   FT_EXPORT_DEF( FT_Error )
   FTC_Image_Cache_Lookup( FTC_ImageCache      icache,
@@ -561,19 +575,23 @@
     *ansbit = NULL;
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-   /* this one is a major hack used to detect wether we're passed a
-    * regular FTC_ImageType handle, or a legacy FTC_OldImageDesc one
-    */
+
+    /*  This one is a major hack used to detect whether we are passed a
+     *  regular FTC_ImageType handle, or a legacy FTC_OldImageDesc one.
+     */
     if ( type->width >= 0x10000 )
     {
       FTC_OldImageDesc  desc = (FTC_OldImageDesc)type;
+
 
       query.attrs.scaler.face_id = desc->font.face_id;
       query.attrs.scaler.width   = desc->font.pix_width;
       query.attrs.scaler.height  = desc->font.pix_height;
       query.attrs.load_flags     = desc->flags;
     }
-#endif
+
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
     {
       query.attrs.scaler.face_id = type->face_id;
       query.attrs.scaler.width   = type->width;
@@ -581,9 +599,9 @@
       query.attrs.load_flags     = type->flags;
     }
 
-    query.attrs.scaler.pixel   = 1;
-    query.attrs.scaler.x_res   = 0;  /* make compilers happy */
-    query.attrs.scaler.y_res   = 0;
+    query.attrs.scaler.pixel = 1;
+    query.attrs.scaler.x_res = 0;  /* make compilers happy */
+    query.attrs.scaler.y_res = 0;
 
     /* beware, the hash must be the same for all glyph ranges! */
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
@@ -618,6 +636,7 @@
   Exit:
     return error;
   }
+
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 

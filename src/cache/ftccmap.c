@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType CharMap cache (body)                                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -225,15 +225,19 @@
 
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
- /* unfortunately, it is not possible to support binary backwards
-  * compatibility in the cmap cache. the FTC_CMapCache_Lookup signature
-  * changes were too deep, and there is no clever hackish way to detect
-  * what kind of structure we're being passed.
-  *
-  * fortunately, it seems that no production code is using this function
-  * on Unix distributions.
-  */
+
+  /*
+   *  Unfortunately, it is not possible to support binary backwards
+   *  compatibility in the cmap cache.  The FTC_CMapCache_Lookup signature
+   *  changes were too deep, and there is no clever hackish way to detect
+   *  what kind of structure we are being passed.
+   *
+   *  On the other hand it seems that no production code is using this
+   *  function on Unix distributions.
+   */
+
 #endif
+
 
   /* documentation is in ftcache.h */
 
@@ -309,7 +313,6 @@
   Exit:
     return gindex;
   }
-
 
 
 /* END */
