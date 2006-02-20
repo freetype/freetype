@@ -1,3 +1,15 @@
+2006-02-20  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/sfnt.h, src/sfnt/sfdriver.c,
+        src/sfnt/ttsbit.h, src/sfnt/ttsbit.c: moving the definition
+        of 'set_sbit_strike' and 'load_sbit_metrics' to their 2.1.8
+        location. This is used to support binary compatibility with
+        the X.Org server's libXfont library.
+
+        note that this disables memory optimizations for the embedded
+        bitmap loader.Sigh....
+
+
 2006-02-17  David Turner  <david@freetype.org>
 
 	* builds/unix/unix-cc.in (LINK_LIBRARY): Don't filter out exported

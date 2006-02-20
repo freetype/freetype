@@ -430,12 +430,23 @@
                                 FT_UInt    y_ppem,
                                 FT_ULong*  astrike_index )
   {
-    FT_UNUSED( face );
-    FT_UNUSED( x_ppem );
-    FT_UNUSED( y_ppem );
+    /* we simply forge a FT_Size_Request and call the real function
+     * that does all the work
+     *
+     * this stub might be called by libXfont in the X.Org Xserver
+     * that was compiled against FT 2.1.8 or later.
+     */
+    FT_Size_RequestRec  req;
 
-    *astrike_index = 0x7FFFFFFFUL;    
-    return FT_Err_Unimplemented_Feature;
+    req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
+    req.width          = (FT_F26Dot6) x_ppem;
+    req.height         = (FT_F26Dot6) y_ppem;
+    req.horiResolution = 0;
+    req.vertResolution = 0;
+
+    *astrike_index = 0x7FFFFFFFUL;
+
+    return tt_face_set_sbit_strike( face, &req, astrike_index );    
   }                                
 
 
@@ -446,6 +457,11 @@
     FT_UNUSED( face );
     FT_UNUSED( stream );
     
+   /* this function was originally implemented to load the sbit
+    * table. However, it has been replaced by 'tt_face_load_eblc'
+    * and this stub is only there for crazy rogue clients who
+    * would want to call it directly (which would be stupid)
+    */
     return FT_Err_Unimplemented_Feature;
   }                          
 
@@ -453,6 +469,7 @@
   FT_CALLBACK_DEF( void )
   tt_face_free_sbit_stub( TT_Face  face )
   {
+    /* nothing to do in this stub */
     FT_UNUSED( face );
   }
   
@@ -529,6 +546,9 @@
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     tt_face_set_sbit_strike_stub,
     tt_face_load_sbit_stub,
+
+    tt_find_sbit_image,
+    tt_load_sbit_metrics,
 #endif
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -558,14 +578,6 @@
     /* since version 2.1.8 */
 
     tt_face_get_kerning,
-
-#ifndef FT_OPTIMIZE_MEMORY
-    tt_find_sbit_image,
-    tt_load_sbit_metrics,
-#else
-    0,
-    0,
-#endif    
 
     /* since version 2.2 */
 

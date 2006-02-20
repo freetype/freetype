@@ -45,7 +45,7 @@ FT_BEGIN_HEADER
                                FT_ULong          strike_index,
                                FT_Size_Metrics*  metrics );
 
-#ifndef FT_OPTIMIZE_MEMORY
+#if !defined FT_OPTIMIZE_MEMORY || defined FT_CONFIG_OPTION_OLD_INTERNALS
   FT_LOCAL( FT_Error )
   tt_find_sbit_image( TT_Face          face,
                       FT_UInt          glyph_index,
@@ -58,7 +58,8 @@ FT_BEGIN_HEADER
   tt_load_sbit_metrics( FT_Stream        stream,
                         TT_SBit_Range    range,
                         TT_SBit_Metrics  metrics );
-#endif /* !FT_OPTIMIZE_MEMORY */
+
+#endif /* !FT_OPTIMIZE_MEMORY || FT_CONFIG_OPTION_OLD_INTERNALS */
 
   FT_LOCAL( FT_Error )
   tt_face_load_sbit_image( TT_Face              face,

@@ -20,9 +20,12 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 
-#ifdef FT_OPTIMIZE_MEMORY
+/* Alas, the memory-optimized sbit loader can't be used when implementing
+ * the 'old internals' hack !!
+ */
+#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
 #include "ttsbit0.c"
-#else /* !OPTIMIZE_MEMORY */
+#else /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
@@ -886,7 +889,7 @@
       {
         TT_SBit_SmallMetricsRec  smetrics;
 
-        const FT_Frame_Field  sbit_small_metrics_fields[] =
+        static const FT_Frame_Field  sbit_small_metrics_fields[] =
         {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_SmallMetricsRec
@@ -1489,7 +1492,7 @@
     return error;
   }
 
-#endif /* !OPTIMIZE_MEMORY */
+#endif /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
 
 
 /* END */

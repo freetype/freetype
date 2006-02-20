@@ -694,7 +694,20 @@ FT_BEGIN_HEADER
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     TT_Set_SBit_Strike_OldFunc   set_sbit_strike_stub;
     TT_Load_Table_Func           load_sbits_stub;
+
+    /* The following two fields only appeared in 2.1.8, and were placed between
+     * 'load_sbits' and 'load_sbit_image'. We support them as a special exception
+     * since they're used by libXfont within the X.Org xserver, and because the
+     * probability that other rogue clients use the other 2.1.7 fields below
+     * is _extremely_ low.
+     *
+     * Note that this forces us to disable an interesting memory-saving optimization
+     * though...
+     */
+    TT_Find_SBit_Image_Func      find_sbit_image;
+    TT_Load_SBit_Metrics_Func    load_sbit_metrics;
 #endif
+
 
     TT_Load_SBit_Image_Func      load_sbit_image;
 
@@ -715,12 +728,6 @@ FT_BEGIN_HEADER
 
     /* this field was introduced in version 2.1.8, named `get_psname' */
     TT_Face_GetKerningFunc       get_kerning;
-
-    /* The following appeared in 2.1.8, but were placed between     */
-    /* `load_sbits' and `load_sbit_image'.  Both fields are NULL if */
-    /* FT_OPTIMIZE_MEMORY is used.                                  */
-    TT_Find_SBit_Image_Func      find_sbit_image;
-    TT_Load_SBit_Metrics_Func    load_sbit_metrics;
 
     /* new elements introduced after version 2.1.10 */
 
