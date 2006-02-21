@@ -35,6 +35,12 @@
 #define FT_COMPONENT  trace_ttmtx
 
 
+/* Unfortunately, we can't enable our memory optimizations when
+ * FT_CONFIG_OPTION_OLD_INTERNALS is defined. This is because some
+ * rogue clients (libXfont in the X.Org XServer) is directly accessing
+ * the metrics
+ */
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -53,7 +59,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-#ifdef FT_OPTIMIZE_MEMORY
+#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_hmtx( TT_Face    face,
@@ -94,7 +100,7 @@
     return error;
   }
 
-#else /* !OPTIMIZE_MEMORY */
+#else /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_hmtx( TT_Face    face,
@@ -215,7 +221,7 @@
     return error;
   }
 
-#endif /* !FT_OPTIMIZE_METRICS */
+#endif /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
 
 
   /*************************************************************************/
@@ -324,7 +330,7 @@
   /*                                                                       */
   /*    advance :: The advance width resp. advance height.                 */
   /*                                                                       */
-#ifdef FT_OPTIMIZE_MEMORY
+#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_get_metrics( TT_Face     face,
@@ -389,7 +395,7 @@
     return SFNT_Err_Ok;
   }
 
-#else /* !FT_OPTIMIZE_MEMORY */
+#else /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_get_metrics( TT_Face     face,
@@ -427,7 +433,7 @@
     return SFNT_Err_Ok;
   }
 
-#endif /* !FT_OPTIMIZE_MEMORY */
+#endif /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
 
 
 /* END */

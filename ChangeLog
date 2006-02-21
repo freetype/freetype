@@ -3,6 +3,10 @@
     * src/sfnt/sfobjs.c (sfnt_face_load): fixed silly bug that
     prevented embedded bitmaps from being correctly listed and used
 
+    * src/sfnt/sfmtx.c: disabling memory optimization when
+    FT_CONFIG_OPTION_OLD_INTERNALS is used. This is because libXfont
+    is directly accessing the HMTX data. Grrrrr....
+
     * src/pfr/pfrsbit.c: fixed handling of character advances
 
 2006-02-20  David Turner  <david@freetype.org>
