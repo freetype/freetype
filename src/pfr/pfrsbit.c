@@ -605,11 +605,20 @@
       FT_Byte*  p;
 
 
-      advance = FT_MulDiv( size->root.metrics.x_ppem << 8,
+      /* compute linear advance */
+      advance = character->advance;
+      if ( phys->metrics_resolution != phys->outline_resolution )
+        advance = FT_MulDiv( advance,
+                             phys->outline_resolution,
+                             phys->metrics_resolution );
+
+      glyph->root.linearHoriAdvance = advance;
+
+      /* compute default advance, i.e. scaled advance. This can be overriden */
+      /* in the bitmap header of certain glyphs...                           */
+      advance = FT_MulDiv( (FT_Fixed)size->root.metrics.x_ppem << 8,
                            character->advance,
                            phys->metrics_resolution );
-
-      /* XXX: handle linearHoriAdvance correctly! */
 
       if ( FT_STREAM_SEEK( face->header.gps_section_offset + gps_offset ) ||
            FT_FRAME_ENTER( gps_size )                                     )
