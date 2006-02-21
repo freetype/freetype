@@ -34,6 +34,7 @@
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_TT_CMAP_H
 #include FT_SERVICE_KERNING_H
+#include FT_SERVICE_TRUETYPE_ENGINE_H
 
 
   FT_BASE_DEF( FT_Pointer )
@@ -3408,23 +3409,6 @@
   }
 
 
-  /* documentation is in ftmodapi.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FT_Module_Get_Flags( FT_Module  module,
-                       FT_ULong*  flags )
-  {
-    if ( !module )
-      return FT_Err_Invalid_Driver_Handle;
-
-    if ( !flags )
-      return FT_Err_Invalid_Argument;
-
-    *flags = module->clazz->module_flags;
-    return FT_Err_Ok;
-  }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( const void* )
@@ -3674,6 +3658,29 @@
       library->debug_hooks[hook_index] = debug_hook;
   }
 
+
+  /* documentation is in ftmodapi.h */
+
+  FT_EXPORT_DEF( FT_TrueTypeEngineType )
+  FT_Get_TrueType_Engine_Type( FT_Library  library )
+  {
+    FT_TrueTypeEngineType  result = FT_TRUETYPE_ENGINE_TYPE_NONE;
+
+    if ( library )
+    {
+      FT_Module  module = FT_Get_Module( library, "truetype" );
+
+      if ( module )
+      {
+        FT_Service_TrueTypeEngine  service;
+
+        service = ft_module_get_service( module, FT_SERVICE_ID_TRUETYPE_ENGINE );
+        if ( service )
+          result = service->engine_type;
+      }
+    }
+    return result;
+  }
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 

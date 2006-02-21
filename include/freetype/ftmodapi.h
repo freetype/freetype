@@ -84,7 +84,7 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_Module_Destructor)( FT_Module  module );
 
-  typedef FT_Module_Interface 
+  typedef FT_Module_Interface
   (*FT_Module_Requester)( FT_Module    module,
                           const char*  name );
 
@@ -216,28 +216,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Module_Get_Flags                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Gets the module flags for a given module.                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    module :: A handle to a module object.                             */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    flags  :: The module's flags.                                      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_EXPORT( FT_Error )
-  FT_Module_Get_Flags( FT_Module  module,
-                       FT_ULong*  flags );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    FT_New_Library                                                     */
   /*                                                                       */
   /* <Description>                                                         */
@@ -328,6 +306,61 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Add_Default_Modules( FT_Library  library );
 
+
+ /**
+  * @enum: FT_TrueTypeEngineType
+  *
+  * @description:
+  *    a list of values describing which kind of truetype bytecode
+  *    engine is implemented in a given FT_Library instance. It is used
+  *    by the @FT_Get_TrueType_Engine_Type function
+  *
+  * @values:
+  *    FT_TRUETYPE_ENGINE_TYPE_NONE ::
+  *      the library doesn't implement any kind of bytecode interpreter
+  *
+  *    FT_TRUETYPE_ENGINE_TYPE_UNPATENTED ::
+  *      the library implements a bytecode interpreter that doesn't
+  *      support the patented operations of the TrueType virtual machine.
+  *
+  *      this interpreter can only be used to load certain Asian fonts
+  *      from Dynalabs. It will produce crap output for any other font.
+  *      see @
+  *
+  *   FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
+  *      the library implements a bytecode interpreter that covers
+  *      the full instruction set of the TrueType virtual machine.
+  *      Better check your legal department for license compliance !!
+  *
+  * @since: 2.2
+  */
+  typedef enum
+  {
+    FT_TRUETYPE_ENGINE_TYPE_NONE = 0,
+    FT_TRUETYPE_ENGINE_TYPE_UNPATENTED,
+    FT_TRUETYPE_ENGINE_TYPE_PATENTED
+
+  } FT_TrueTypeEngineType;
+
+
+ /**
+  * @func: FT_Get_TrueType_Engine_Type
+  *
+  * @description:
+  *   this function returns a @FT_TrueTypeEngineType value to indicates
+  *   which level of the TrueType virtual machine a given library instance
+  *   supports.
+  *
+  * @input:
+  *   library :: a library instance
+  *
+  * @return:
+  *   a value indicating which level is supported
+  *
+  * @since: 2.2
+  */
+  FT_EXPORT( FT_TrueTypeEngineType )
+  FT_Get_TrueType_Engine_Type( FT_Library  library );
 
   /* */
 

@@ -28,6 +28,8 @@
 #include FT_SERVICE_MULTIPLE_MASTERS_H
 #endif
 
+#include FT_SERVICE_TRUETYPE_ENGINE_H
+
 #include "ttdriver.h"
 #include "ttgload.h"
 
@@ -290,6 +292,18 @@
   };
 #endif
 
+  static const FT_Service_TrueTypeEngineRec  tt_service_truetype_engine =
+  {
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#  ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
+    FT_TRUETYPE_ENGINE_TYPE_UNPATENTED
+#  else
+    FT_TRUETYPE_ENGINE_TYPE_PATENTED
+#  endif
+#else
+    FT_TRUETYPE_ENGINE_TYPE_NONE
+#endif
+  };
 
   static const FT_ServiceDescRec  tt_services[] =
   {
@@ -297,6 +311,7 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     { FT_SERVICE_ID_MULTI_MASTERS, &tt_service_gx_multi_masters },
 #endif
+    { FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine },
     { NULL, NULL }
   };
 

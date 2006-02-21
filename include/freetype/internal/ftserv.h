@@ -314,6 +314,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_WINFNT_H             <freetype/internal/services/svwinfnt.h>
 #define FT_SERVICE_XFREE86_NAME_H       <freetype/internal/services/svxf86nm.h>
 #define FT_SERVICE_KERNING_H            <freetype/internal/services/svkern.h>
+#define FT_SERVICE_TRUETYPE_ENGINE_H    <freetype/internal/services/svtteng.h>
 
  /* */
 

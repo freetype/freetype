@@ -1,5 +1,15 @@
 2006-02-21  David Turner  <david@freetype.org>
 
+    * include/freetype/ftmodapi.h, include/internal/ftserv.h,
+    include/internal/services/svtteng.h, src/base/ftobjs.c,
+    src/truetype/ttdriver.c:
+
+    adding a new API named FT_Get_TrueType_Engine_Type to determine
+    wether we have a patented, unpatented or unimplemented TrueType
+    bytecode interpreter.
+
+    the FT_Get_Module_Flags API was removed consequently.
+
     * src/sfnt/sfobjs.c (sfnt_face_load): fixed silly bug that
     prevented embedded bitmaps from being correctly listed and used
 
@@ -11,7 +21,7 @@
 
 2006-02-20  David Turner  <david@freetype.org>
 
-	Support binary compatibility with the X.Org server's Xfont library. 
+	Support binary compatibility with the X.Org server's Xfont library.
 	Note that this change unfortunately prevents memory optimizations
 	for the embedded bitmap loader.
 
