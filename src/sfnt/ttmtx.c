@@ -124,8 +124,8 @@
         goto Fail;
 
       num_longs = face->vertical.number_Of_VMetrics;
-      if ( num_longs > table_len / 4 )
-        num_longs = table_len / 4;
+      if ( (FT_ULong)num_longs > table_len / 4 )
+        num_longs = (FT_Long)(table_len / 4);
 
       face->vertical.number_Of_VMetrics = 0;
 
@@ -139,8 +139,8 @@
         goto Fail;
 
       num_longs = face->horizontal.number_Of_HMetrics;
-      if ( num_longs > table_len / 4 )
-        num_longs = table_len / 4;
+      if ( (FT_ULong)num_longs > table_len / 4 )
+        num_longs = (FT_Long)(table_len / 4);
 
       face->horizontal.number_Of_HMetrics = 0;
 
