@@ -430,17 +430,20 @@
                                 FT_UInt    y_ppem,
                                 FT_ULong*  astrike_index )
   {
-    /* we simply forge a FT_Size_Request and call the real function
-     * that does all the work
+    /*
+     * We simply forge a FT_Size_Request and call the real function
+     * that does all the work.
      *
-     * this stub might be called by libXfont in the X.Org Xserver
-     * that was compiled against FT 2.1.8 or later.
+     * This stub might be called by libXfont in the X.Org Xserver,
+     * compiled against version 2.1.8 or newer.
      */
+
     FT_Size_RequestRec  req;
 
+
     req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
-    req.width          = (FT_F26Dot6) x_ppem;
-    req.height         = (FT_F26Dot6) y_ppem;
+    req.width          = (FT_F26Dot6)x_ppem;
+    req.height         = (FT_F26Dot6)y_ppem;
     req.horiResolution = 0;
     req.vertResolution = 0;
 
@@ -457,11 +460,12 @@
     FT_UNUSED( face );
     FT_UNUSED( stream );
     
-   /* this function was originally implemented to load the sbit
-    * table. However, it has been replaced by 'tt_face_load_eblc'
-    * and this stub is only there for crazy rogue clients who
-    * would want to call it directly (which would be stupid)
-    */
+    /*
+     *  This function was originally implemented to load the sbit table. 
+     *  However, it has been replaced by `tt_face_load_eblc', and this stub
+     *  is only there for some rogue clients which would want to call it
+     *  directly (which doesn't make much sense).
+     */
     return FT_Err_Unimplemented_Feature;
   }                          
 

@@ -1,14 +1,22 @@
 2006-02-20  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/sfnt.h, src/sfnt/sfdriver.c,
-        src/sfnt/ttsbit.h, src/sfnt/ttsbit.c: moving the definition
-        of 'set_sbit_strike' and 'load_sbit_metrics' to their 2.1.8
-        location. This is used to support binary compatibility with
-        the X.Org server's libXfont library.
+	Support binary compatibility with the X.Org server's Xfont library. 
+	Note that this change unfortunately prevents memory optimizations
+	for the embedded bitmap loader.
 
-        note that this disables memory optimizations for the embedded
-        bitmap loader.Sigh....
+	* include/freetype/internal/sfnt.h (SFNT_Interface): Move
+	`set_sbit_strike' and `load_sbit_metrics' fields to the location of
+	version 2.1.8.
 
+	* src/sfnt/sfdriver.c (tt_face_set_sbit_strike_stub): Call
+	FT_Size_Request.
+	(sfnt_interface): Updated.
+
+	* src/sfnt/ttsbit.c [FT_CONFIG_OPTION_OLD_INTERNALS]: Don't load
+	ttsbit0.c.
+	(tt_load_sbit_metrics): Make `sbit_small_metrics_fields' static.
+
+	* src/sfnt/ttsbit.h: Updated.
 
 2006-02-17  David Turner  <david@freetype.org>
 

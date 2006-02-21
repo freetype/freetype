@@ -20,11 +20,14 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 
-/* Alas, the memory-optimized sbit loader can't be used when implementing
- * the 'old internals' hack !!
- */
+  /*
+   *  Alas, the memory-optimized sbit loader can't be used when implementing
+   *  the `old internals' hack
+   */
 #if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
+
 #include "ttsbit0.c"
+
 #else /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
 
 #include <ft2build.h>

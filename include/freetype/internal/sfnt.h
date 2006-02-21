@@ -690,24 +690,27 @@ FT_BEGIN_HEADER
     /* version 2.1.10                                                   */
     TT_Load_Table_Func           load_bhed;
 
-    /* see `ttsbit.h' */
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
+    /* see `ttsbit.h' */
     TT_Set_SBit_Strike_OldFunc   set_sbit_strike_stub;
     TT_Load_Table_Func           load_sbits_stub;
 
-    /* The following two fields only appeared in 2.1.8, and were placed between
-     * 'load_sbits' and 'load_sbit_image'. We support them as a special exception
-     * since they're used by libXfont within the X.Org xserver, and because the
-     * probability that other rogue clients use the other 2.1.7 fields below
-     * is _extremely_ low.
+    /*
+     *  The following two fields appeared in version 2.1.8, and were placed
+     *  between `load_sbits' and `load_sbit_image'.  We support them as a
+     *  special exception since they are used by Xfont library within the
+     *  X.Org xserver, and because the probability that other rogue clients
+     *  use the other version 2.1.7 fields below is _extremely_ low.
      *
-     * Note that this forces us to disable an interesting memory-saving optimization
-     * though...
+     *  Note that this forces us to disable an interesting memory-saving
+     *  optimization though...
      */
+
     TT_Find_SBit_Image_Func      find_sbit_image;
     TT_Load_SBit_Metrics_Func    load_sbit_metrics;
-#endif
 
+#endif
 
     TT_Load_SBit_Image_Func      load_sbit_image;
 
