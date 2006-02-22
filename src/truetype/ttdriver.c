@@ -295,21 +295,25 @@
   static const FT_Service_TrueTypeEngineRec  tt_service_truetype_engine =
   {
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#  ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
+
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_TRUETYPE_ENGINE_TYPE_UNPATENTED
-#  else
-    FT_TRUETYPE_ENGINE_TYPE_PATENTED
-#  endif
 #else
-    FT_TRUETYPE_ENGINE_TYPE_NONE
+    FT_TRUETYPE_ENGINE_TYPE_PATENTED
 #endif
+
+#else /* !TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
+    FT_TRUETYPE_ENGINE_TYPE_NONE
+
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
   };
 
   static const FT_ServiceDescRec  tt_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME,     FT_XF86_FORMAT_TRUETYPE },
+    { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TRUETYPE },
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    { FT_SERVICE_ID_MULTI_MASTERS, &tt_service_gx_multi_masters },
+    { FT_SERVICE_ID_MULTI_MASTERS,   &tt_service_gx_multi_masters },
 #endif
     { FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine },
     { NULL, NULL }

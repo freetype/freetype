@@ -3666,21 +3666,27 @@
   {
     FT_TrueTypeEngineType  result = FT_TRUETYPE_ENGINE_TYPE_NONE;
 
+
     if ( library )
     {
       FT_Module  module = FT_Get_Module( library, "truetype" );
+
 
       if ( module )
       {
         FT_Service_TrueTypeEngine  service;
 
-        service = ft_module_get_service( module, FT_SERVICE_ID_TRUETYPE_ENGINE );
+
+        service = ft_module_get_service( module,
+                                         FT_SERVICE_ID_TRUETYPE_ENGINE );
         if ( service )
           result = service->engine_type;
       }
     }
+
     return result;
   }
+
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 

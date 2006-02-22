@@ -63,9 +63,9 @@ FT_BEGIN_HEADER
 
   FT_DEFINE_SERVICE( SFNT_Table )
   {
-    FT_SFNT_TableLoadFunc    load_table;
-    FT_SFNT_TableGetFunc     get_table;
-    FT_SFNT_TableInfoFunc    table_info;
+    FT_SFNT_TableLoadFunc  load_table;
+    FT_SFNT_TableGetFunc   get_table;
+    FT_SFNT_TableInfoFunc  table_info;
   };
 
   /* */

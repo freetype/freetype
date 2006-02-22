@@ -307,33 +307,36 @@ FT_BEGIN_HEADER
   FT_Add_Default_Modules( FT_Library  library );
 
 
- /**
-  * @enum: FT_TrueTypeEngineType
-  *
-  * @description:
-  *    a list of values describing which kind of truetype bytecode
-  *    engine is implemented in a given FT_Library instance. It is used
-  *    by the @FT_Get_TrueType_Engine_Type function
-  *
-  * @values:
-  *    FT_TRUETYPE_ENGINE_TYPE_NONE ::
-  *      the library doesn't implement any kind of bytecode interpreter
-  *
-  *    FT_TRUETYPE_ENGINE_TYPE_UNPATENTED ::
-  *      the library implements a bytecode interpreter that doesn't
-  *      support the patented operations of the TrueType virtual machine.
-  *
-  *      this interpreter can only be used to load certain Asian fonts
-  *      from Dynalabs. It will produce crap output for any other font.
-  *      see @
-  *
-  *   FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
-  *      the library implements a bytecode interpreter that covers
-  *      the full instruction set of the TrueType virtual machine.
-  *      Better check your legal department for license compliance !!
-  *
-  * @since: 2.2
-  */
+  /*
+   *  @enum:
+   *     FT_TrueTypeEngineType
+   *
+   *  @description:
+   *     A list of values describing which kind of truetype bytecode
+   *     engine is implemented in a given FT_Library instance.  It is used
+   *     by the @FT_Get_TrueType_Engine_Type function.
+   *
+   *  @values:
+   *     FT_TRUETYPE_ENGINE_TYPE_NONE ::
+   *       The library doesn't implement any kind of bytecode interpreter.
+   *
+   *     FT_TRUETYPE_ENGINE_TYPE_UNPATENTED ::
+   *       The library implements a bytecode interpreter that doesn't
+   *       support the patented operations of the TrueType virtual machine.
+   *
+   *       Its main use is to load certain Asian fonts which position and
+   *       scale glyph components with bytecode instructions.  It produces
+   *       bad output for most other fonts.
+   *
+   *    FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
+   *       The library implements a bytecode interpreter that covers
+   *       the full instruction set of the TrueType virtual machine.
+   *       See the file `docs/PATENTS' for legal aspects.
+   *
+   *  @since:
+   *       2.2
+   *
+   */
   typedef enum
   {
     FT_TRUETYPE_ENGINE_TYPE_NONE = 0,
@@ -343,24 +346,28 @@ FT_BEGIN_HEADER
   } FT_TrueTypeEngineType;
 
 
- /**
-  * @func: FT_Get_TrueType_Engine_Type
-  *
-  * @description:
-  *   this function returns a @FT_TrueTypeEngineType value to indicates
-  *   which level of the TrueType virtual machine a given library instance
-  *   supports.
-  *
-  * @input:
-  *   library :: a library instance
-  *
-  * @return:
-  *   a value indicating which level is supported
-  *
-  * @since: 2.2
-  */
+  /*
+   *  @func:
+   *     FT_Get_TrueType_Engine_Type
+   *
+   *  @description:
+   *     Return a @FT_TrueTypeEngineType value to indicate which level of
+   *     the TrueType virtual machine a given library instance supports.
+   *
+   *  @input:
+   *     library ::
+   *       A library instance.
+   *
+   *  @return:
+   *     A value indicating which level is supported.
+   *
+   *  @since:
+   *     2.2
+   *
+   */
   FT_EXPORT( FT_TrueTypeEngineType )
   FT_Get_TrueType_Engine_Type( FT_Library  library );
+
 
   /* */
 

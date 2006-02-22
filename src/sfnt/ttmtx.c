@@ -35,11 +35,12 @@
 #define FT_COMPONENT  trace_ttmtx
 
 
-/* Unfortunately, we can't enable our memory optimizations when
- * FT_CONFIG_OPTION_OLD_INTERNALS is defined. This is because some
- * rogue clients (libXfont in the X.Org XServer) is directly accessing
- * the metrics
- */
+  /*
+   *  Unfortunately, we can't enable our memory optimizations if
+   *  FT_CONFIG_OPTION_OLD_INTERNALS is defined.  This is because at least
+   *  one rogue client (libXfont in the X.Org XServer) is directly accessing
+   *  the metrics.
+   */
 
   /*************************************************************************/
   /*                                                                       */

@@ -498,7 +498,7 @@
         if ( x_pos + w > 8 )
         {
           write++;
-          wval <<= 8;
+          wval   <<= 8;
           write[0] = (FT_Byte)( write[0] | ( wval >> x_pos ) );
         }
       }
@@ -547,7 +547,7 @@
       goto Exit;
     }
 
-    if ( p + ( ( width  * height + 7 ) >> 3 ) > limit )
+    if ( p + ( ( width * height + 7 ) >> 3 ) > limit )
     {
       error = SFNT_Err_Invalid_File_Format;
       goto Exit;
@@ -558,8 +558,8 @@
     x_pos &= 7;
 
     /* the higher byte of `rval' is used as a buffer */
-    rval   = 0;
-    nbits  = 0;
+    rval  = 0;
+    nbits = 0;
 
     for ( h = height; h > 0; h--, line += pitch )
     {
@@ -583,7 +583,7 @@
         }
 
         *write++ |= ( ( rval >> nbits ) & 0xFF ) & ~( 0xFF << w );
-        rval <<= 8;
+        rval    <<= 8;
 
         w = width - w;
       }

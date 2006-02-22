@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR bitmap loader (body).                                   */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2006 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -614,8 +614,8 @@
 
       glyph->root.linearHoriAdvance = advance;
 
-      /* compute default advance, i.e. scaled advance. This can be overriden */
-      /* in the bitmap header of certain glyphs...                           */
+      /* compute default advance, i.e., scaled advance.  This can be */
+      /* overridden in the bitmap header of certain glyphs.          */
       advance = FT_MulDiv( (FT_Fixed)size->root.metrics.x_ppem << 8,
                            character->advance,
                            phys->metrics_resolution );

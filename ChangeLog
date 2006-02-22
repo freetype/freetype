@@ -7,32 +7,52 @@
 
 	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_bit_aligned,
 	tt_sbit_decoder_load_byte_aligned) [FT_OPTIMIZE_MEMORY]: Fix sbit
-	loading. (only tested with bit aligned sbit with x_pos == 0)
+	loading.  (Only tested with bit aligned sbit with x_pos == 0.)
 
 	* src/truetype/ttpload.c (tt_face_load_hdmx,
-	tt_face_get_device_metrics) [FT_OPTIMIZE_MEMORY]: hdmx is not actually
-	used.
+	tt_face_get_device_metrics) [FT_OPTIMIZE_MEMORY]: `hdmx' is not
+	actually used.
 
 2006-02-21  David Turner  <david@freetype.org>
 
-    * include/freetype/ftmodapi.h, include/internal/ftserv.h,
-    include/internal/services/svtteng.h, src/base/ftobjs.c,
-    src/truetype/ttdriver.c:
+	Add a new API named FT_Get_TrueType_Engine_Type to determine whether
+	we have a patented, unpatented, or unimplemented TrueType bytecode
+	interpreter.
 
-    adding a new API named FT_Get_TrueType_Engine_Type to determine
-    wether we have a patented, unpatented or unimplemented TrueType
-    bytecode interpreter.
+	The FT_Get_Module_Flags API was removed consequently.
 
-    the FT_Get_Module_Flags API was removed consequently.
+	* include/freetype/ftmodapi.h (FT_Module_Get_Flags): Removed. 
+	Replaced with...
+	(FT_Get_TrueType_Engine_Type): This.
+	(FT_TrueTypeEngineType): New enumeration.
 
-    * src/sfnt/sfobjs.c (sfnt_face_load): fixed silly bug that
-    prevented embedded bitmaps from being correctly listed and used
+	* include/freetype/internal/ftserv.h (FT_SERVICE_TRUETYPE_ENGINE_H):
+	New macro.
 
-    * src/sfnt/sfmtx.c: disabling memory optimization when
-    FT_CONFIG_OPTION_OLD_INTERNALS is used. This is because libXfont
-    is directly accessing the HMTX data. Grrrrr....
+	* src/base/ftobjs.c: Include FT_SERVICE_TRUETYPE_ENGINE_H.
+	(FT_Module_Get_Flags): Removed.  Replaced with...
+	(FT_Get_TrueType_Engine_Type): This.
 
-    * src/pfr/pfrsbit.c: fixed handling of character advances
+	* src/truetype/ttdriver.c: Include FT_SERVICE_TRUETYPE_ENGINE_H.
+	(tt_service_truetype_engine): New service structure.
+	(tt_services): Register it.
+
+	* include/freetype/internal/services/svtteng.h: New file.
+
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Fix silly bug that prevented
+	embedded bitmaps from being correctly listed and used.
+
+
+	* src/sfnt/ttmtx.c (tt_face_load_hmtx): Disable memory optimization
+	if FT_CONFIG_OPTION_OLD_INTERNALS is used.  The is necessary because
+	libXfont is directly accessing the HMTX data, unfortunately.
+	Fix some compiler warnings.
+	(tt_face_get_metrics): Ditto.
+
+
+	* src/pfr/pfrsbit.c (pfr_slot_load_bitmap): Fix handling of
+	character advances.
 
 2006-02-20  David Turner  <david@freetype.org>
 

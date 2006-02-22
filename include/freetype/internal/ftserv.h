@@ -302,6 +302,8 @@ FT_BEGIN_HEADER
 
 #define FT_SERVICE_BDF_H                <freetype/internal/services/svbdf.h>
 #define FT_SERVICE_GLYPH_DICT_H         <freetype/internal/services/svgldict.h>
+#define FT_SERVICE_GX_VALIDATE_H        <freetype/internal/services/svgxval.h>
+#define FT_SERVICE_KERNING_H            <freetype/internal/services/svkern.h>
 #define FT_SERVICE_MULTIPLE_MASTERS_H   <freetype/internal/services/svmm.h>
 #define FT_SERVICE_OPENTYPE_VALIDATE_H  <freetype/internal/services/svotval.h>
 #define FT_SERVICE_PFR_H                <freetype/internal/services/svpfr.h>
@@ -309,12 +311,10 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_POSTSCRIPT_INFO_H    <freetype/internal/services/svpsinfo.h>
 #define FT_SERVICE_POSTSCRIPT_NAME_H    <freetype/internal/services/svpostnm.h>
 #define FT_SERVICE_SFNT_H               <freetype/internal/services/svsfnt.h>
-#define FT_SERVICE_GX_VALIDATE_H        <freetype/internal/services/svgxval.h>
+#define FT_SERVICE_TRUETYPE_ENGINE_H    <freetype/internal/services/svtteng.h>
 #define FT_SERVICE_TT_CMAP_H            <freetype/internal/services/svttcmap.h>
 #define FT_SERVICE_WINFNT_H             <freetype/internal/services/svwinfnt.h>
 #define FT_SERVICE_XFREE86_NAME_H       <freetype/internal/services/svxf86nm.h>
-#define FT_SERVICE_KERNING_H            <freetype/internal/services/svkern.h>
-#define FT_SERVICE_TRUETYPE_ENGINE_H    <freetype/internal/services/svtteng.h>
 
  /* */
 
