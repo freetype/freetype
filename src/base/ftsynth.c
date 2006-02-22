@@ -75,9 +75,13 @@
   {
     FT_Library  library = slot->library;
     FT_Face     face    = FT_SLOT_FACE( slot );
-    FT_Error    error   = FT_Err_Ok;
+    FT_Error    error;
     FT_Pos      xstr, ystr;
 
+
+    if ( slot->format != FT_GLYPH_FORMAT_OUTLINE &&
+         slot->format != FT_GLYPH_FORMAT_BITMAP )
+      return;
 
     /* some reasonable strength */
     xstr = FT_MulFix( face->units_per_EM,
@@ -87,13 +91,22 @@
     if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
     {
       error = FT_Outline_Embolden( &slot->outline, xstr );
-
-      /* this is more than enough for most glyphs;                         */
-      /* if you need accurate values, you have to call FT_Outline_Get_CBox */
-      xstr = xstr * 2;
-      ystr = xstr;
+      if ( error )
+      {
+        error = FT_Render_Glyph( slot, FT_RENDER_MODE_NORMAL );
+        if ( error )
+          return;
+      }
+      else
+      {
+        /* this is more than enough for most glyphs;                         */
+        /* if you need accurate values, you have to call FT_Outline_Get_CBox */
+        xstr = xstr * 2;
+        ystr = xstr;
+      }
     }
-    else if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+
+    if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
     {
       xstr = FT_PIX_FLOOR( xstr );
       if ( xstr == 0 )
@@ -108,37 +121,31 @@
 
         FT_Bitmap_New( &bitmap );
         error = FT_Bitmap_Copy( library, &slot->bitmap, &bitmap );
+        if ( error )
+          return;
 
-        if ( !error )
-        {
-          slot->bitmap = bitmap;
-          slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
-        }
+        slot->bitmap = bitmap;
+        slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
       }
 
-      if ( !error )
-        error = FT_Bitmap_Embolden( library, &slot->bitmap, xstr, ystr );
+      error = FT_Bitmap_Embolden( library, &slot->bitmap, xstr, ystr );
+      if ( error )
+        return;
     }
-    else
-      error = FT_Err_Invalid_Argument;
 
-    /* modify the metrics accordingly */
-    if ( !error )
-    {
-      /* assume the layout is horizontal */
-      slot->advance.x += xstr;
+    /* assume the layout is horizontal */
+    slot->advance.x += xstr;
 
-      slot->metrics.width        += xstr;
-      slot->metrics.height       += ystr;
-      slot->metrics.horiBearingY += ystr;
-      slot->metrics.horiAdvance  += xstr;
-      slot->metrics.vertBearingX -= xstr / 2;
-      slot->metrics.vertBearingY += ystr;
-      slot->metrics.vertAdvance  += ystr;
+    slot->metrics.width        += xstr;
+    slot->metrics.height       += ystr;
+    slot->metrics.horiBearingY += ystr;
+    slot->metrics.horiAdvance  += xstr;
+    slot->metrics.vertBearingX -= xstr / 2;
+    slot->metrics.vertBearingY += ystr;
+    slot->metrics.vertAdvance  += ystr;
 
-      if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
-        slot->bitmap_top += ystr >> 6;
-    }
+    if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+      slot->bitmap_top += ystr >> 6;
   }
 
 

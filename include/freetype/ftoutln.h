@@ -465,13 +465,19 @@ FT_BEGIN_HEADER
   *     This is identical to @FT_ORIENTATION_POSTSCRIPT, but is used to
   *     remember that in Postscript, everything that is to the left of
   *     the drawing direction of a contour must be filled.
+  *
+  *   FT_ORIENTATION_NONE ::
+  *     The orientation cannot be determined.  That is, different part of the
+  *     glyph has different orientation.
+  *
   */
   typedef enum
   {
     FT_ORIENTATION_TRUETYPE   = 0,
     FT_ORIENTATION_POSTSCRIPT = 1,
     FT_ORIENTATION_FILL_RIGHT = FT_ORIENTATION_TRUETYPE,
-    FT_ORIENTATION_FILL_LEFT  = FT_ORIENTATION_POSTSCRIPT
+    FT_ORIENTATION_FILL_LEFT  = FT_ORIENTATION_POSTSCRIPT,
+    FT_ORIENTATION_NONE
   
   } FT_Orientation;
 

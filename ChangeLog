@@ -1,3 +1,18 @@
+2006-02-23  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/ftoutln.h (enum FT_Orientation): New value
+	`FT_ORIENTATION_NONE'.
+
+	* src/base/ftoutln.c (FT_OUTLINE_GET_CONTOUR, ft_contour_has,
+	ft_contour_enclosed, ft_outline_get_orientation): Another version of
+	`FT_Outline_Get_Orientation'.  This version differs from the public
+	one in that each part (contour not enclosed in another contour) of the
+	outline is checked for orientation.
+	(FT_Outline_Embolden): Use `ft_outline_get_orientation'.
+
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Render the outline and
+	use bitmap's embolden routine when the outline one failed.
+
 2006-02-22  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* modules.cfg: Compile in ftotval.c and ftxf86.c by default for ABI
