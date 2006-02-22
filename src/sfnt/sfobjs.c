@@ -1022,7 +1022,7 @@
     }
 
     /* freeing the horizontal metrics */
-#ifdef FT_OPTIMIZE_MEMORY
+#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
     {
       FT_Stream  stream = FT_FACE_STREAM( face );
 

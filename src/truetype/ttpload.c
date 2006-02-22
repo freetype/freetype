@@ -582,6 +582,7 @@
     
     face->hdmx_record_count = nn;
     face->hdmx_table_size   = table_size;
+    face->hdmx_record_size  = record_size;
 
   Exit:
     return error;
@@ -723,7 +724,7 @@
       {
         gindex += 2;
         if ( gindex < record_size )
-          result = record + gindex;
+          result = record + nn * record_size + gindex;
         break;
       }
 

@@ -1,3 +1,18 @@
+2006-02-22  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* modules.cfg: Compile in ftotval.c and ftxf86.c by default for ABI
+	compatibility.
+
+	* src/sfnt/sfobjs.c (sfnt_done_face): Fix a memory leak.
+
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_bit_aligned,
+	tt_sbit_decoder_load_byte_aligned) [FT_OPTIMIZE_MEMORY]: Fix sbit
+	loading. (only tested with bit aligned sbit with x_pos == 0)
+
+	* src/truetype/ttpload.c (tt_face_load_hdmx,
+	tt_face_get_device_metrics) [FT_OPTIMIZE_MEMORY]: hdmx is not actually
+	used.
+
 2006-02-21  David Turner  <david@freetype.org>
 
     * include/freetype/ftmodapi.h, include/internal/ftserv.h,

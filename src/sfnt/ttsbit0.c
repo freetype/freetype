@@ -489,9 +489,18 @@
         }
 
         if ( w > 0 )
-          wval = (FT_UInt)(wval | ( *p++ & ( 0xFF00U >> w ) ) );
+          wval = (FT_UInt)( wval | ( *p++ & ( 0xFF00U >> w ) ) );
+
+        /* all bits read and there are ( x_pos + w ) bits to be written */
 
         write[0] = (FT_Byte)( write[0] | ( wval >> x_pos ) );
+
+        if ( x_pos + w > 8 )
+        {
+          write++;
+          wval <<= 8;
+          write[0] = (FT_Byte)( write[0] | ( wval >> x_pos ) );
+        }
       }
     }
 
@@ -509,9 +518,9 @@
   {
     FT_Error    error = SFNT_Err_Ok;
     FT_Byte*    line;
-    FT_Int      bit_height, bit_width, pitch, width, height, h;
+    FT_Int      bit_height, bit_width, pitch, width, height, h, nbits;
     FT_Bitmap*  bitmap;
-    FT_UInt32   rval;
+    FT_UShort   rval;
 
 
     if ( !decoder->bitmap_allocated )
@@ -538,7 +547,7 @@
       goto Exit;
     }
 
-    if ( p + ( ( width + 7 ) >> 3 ) * height > limit )
+    if ( p + ( ( width  * height + 7 ) >> 3 ) > limit )
     {
       error = SFNT_Err_Invalid_File_Format;
       goto Exit;
@@ -547,39 +556,61 @@
     /* now do the blit */
     line  += y_pos * pitch + ( x_pos >> 3 );
     x_pos &= 7;
-    rval   = 0x10000UL;
+
+    /* the higher byte of `rval' is used as a buffer */
+    rval   = 0;
+    nbits  = 0;
 
     for ( h = height; h > 0; h--, line += pitch )
     {
-      FT_Byte*   write = line;
-      FT_UInt32  wval  = 0x100 << x_pos;
-      FT_Int     w;
+      FT_Byte*  write = line;
+      FT_Int    w = width;
 
 
-      for ( w = width; w >= 8; w -= 8 )
+      if ( x_pos )
       {
-        if ( rval & 0x10000UL )
-          rval = 0x100 | *p++;
+        w = ( width < 8 - x_pos ) ? width : 8 - x_pos;
 
-        wval |= rval & 0x80;
-
-        wval <<= 1;
-        rval <<= 1;
-
-        if ( wval & 0x10000UL )
+        if ( nbits < w )
         {
-          write[0] = (FT_Byte)( write[0] | ( wval >> 8 ) );
-          write   += 1;
-          wval     = 0x100;
+          rval  |= *p++;
+          nbits += 8 - w;
         }
+        else
+        {
+          rval  >>= 8;
+          nbits  -= w;
+        }
+
+        *write++ |= ( ( rval >> nbits ) & 0xFF ) & ~( 0xFF << w );
+        rval <<= 8;
+
+        w = width - w;
       }
 
-      if ( wval != 0x100 )
+      for ( ; w >= 8; w -= 8 )
       {
-        while ( wval > 0x1FF )
-          wval >>= 1;
+        rval     |= *p++;
+        *write++ |= ( rval >> nbits ) & 0xFF;
 
-        write[0] = (FT_Byte)( write[0] | wval );
+        rval <<= 8;
+      }
+
+      if ( w > 0 )
+      {
+        if ( nbits < w )
+        {
+          rval   |= *p++;
+          *write |= ( ( rval >> nbits ) & 0xFF ) & ( 0xFF00U >> w );
+          nbits  += 8 - w;
+
+          rval <<= 8;
+        }
+        else
+        {
+          *write |= ( ( rval >> nbits ) & 0xFF ) & ( 0xFF00U >> w );
+          nbits  -= w;
+        }
       }
     }
 
