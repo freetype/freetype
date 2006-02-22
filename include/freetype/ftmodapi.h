@@ -307,7 +307,8 @@ FT_BEGIN_HEADER
   FT_Add_Default_Modules( FT_Library  library );
 
 
-  /*
+  /**************************************************************************
+   *
    *  @enum:
    *     FT_TrueTypeEngineType
    *
@@ -346,7 +347,8 @@ FT_BEGIN_HEADER
   } FT_TrueTypeEngineType;
 
 
-  /*
+  /**************************************************************************
+   *
    *  @func:
    *     FT_Get_TrueType_Engine_Type
    *
