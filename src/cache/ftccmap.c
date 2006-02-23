@@ -31,6 +31,42 @@
 #define FT_COMPONENT  trace_cache
 
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+
+  typedef enum  FTC_OldCMapType_
+  {
+    FTC_OLD_CMAP_BY_INDEX    = 0,
+    FTC_OLD_CMAP_BY_ENCODING = 1,
+    FTC_OLD_CMAP_BY_ID       = 2
+
+  } FTC_OldCMapType;
+
+
+  typedef struct  FTC_OldCMapIdRec_
+  {
+    FT_UInt  platform;
+    FT_UInt  encoding;
+
+  } FTC_OldCMapIdRec, *FTC_OldCMapId;
+
+
+  typedef struct  FTC_OldCMapDescRec_
+  {
+    FTC_FaceID       face_id;
+    FTC_OldCMapType  type;
+
+    union
+    {
+      FT_UInt           index;
+      FT_Encoding       encoding;
+      FTC_OldCMapIdRec  id;
+
+    } u;
+
+  } FTC_OldCMapDescRec, *FTC_OldCMapDesc;
+
+#endif /* FT_CONFIG_OLD_INTERNALS */
+
   /*************************************************************************/
   /*                                                                       */
   /* Each FTC_CMapNode contains a simple array to map a range of character */
@@ -261,9 +297,36 @@
       return 0;
     }
 
-    query.face_id    = face_id;
-    query.cmap_index = (FT_UInt)cmap_index;
-    query.char_code  = char_code;
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+   /* detect a call from a rogue client that thinks it is linking
+    * to FreeType 2.1.7. This is possible because the third parameter
+    * is then a character code, and we've never seen any font with
+    * more than a few charmaps, so if the index is very large...
+    */
+    if ( cmap_index >= 4 )
+    {
+      FTC_OldCMapDesc  desc = (FTC_OldCMapDesc) face_id;
+
+      query.face_id = desc->face_id;
+
+      switch ( desc->type )
+      {
+        case FTC_OLD_CMAP_BY_INDEX:
+          query.cmap_index = desc->u.index;
+          query.char_code  = (FT_UInt32)cmap_index;
+          break;
+
+        default:
+          return FT_Err_Unimplemented_Feature;
+      }
+    }
+    else
+#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+    {
+      query.face_id    = face_id;
+      query.cmap_index = (FT_UInt)cmap_index;
+      query.char_code  = char_code;
+    }
 
     hash = FTC_CMAP_HASH( face_id, cmap_index, char_code );
 
