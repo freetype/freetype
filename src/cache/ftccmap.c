@@ -309,6 +309,8 @@
 
       query.face_id = desc->face_id;
 
+      char_code = (FT_UInt32)cmap_index;
+
       switch ( desc->type )
       {
         case FTC_OLD_CMAP_BY_INDEX:
