@@ -316,8 +316,40 @@
           query.char_code  = (FT_UInt32)cmap_index;
           break;
 
+        case FTC_OLD_CMAP_BY_ENCODING:
+        case FTC_OLD_CMAP_BY_ID:
+          {
+            FT_Face  face;
+            FT_Int   nn;
+
+            error = FTC_Manager_LookupFace( cache->manager, desc->face_id,
+                                            &face );
+            if ( error )
+              return error;
+
+            if ( desc->type == FTC_OLD_CMAP_BY_ENCODING )
+            {
+              for ( nn = 0; nn < face->num_charmaps; nn++ )
+                if ( face->charmaps[nn]->encoding == desc->u.encoding )
+                  break;
+            }
+            else
+            {
+              for ( nn = 0; nn < face->num_charmaps; nn++ )
+                if ( face->charmaps[nn]->platform_id == desc->u.id.platform &&
+                     face->charmaps[nn]->encoding_id == desc->u.id.encoding )
+                   break;
+            }
+
+            if ( nn >= face->num_charmaps )
+              return 0;
+
+            query.cmap_index = (FT_UInt)nn;
+          }
+          break;
+
         default:
-          return FT_Err_Unimplemented_Feature;
+          return 0;
       }
     }
     else
