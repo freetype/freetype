@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType outline management (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -668,20 +668,20 @@
   }
 
 
-#define FT_OUTLINE_GET_CONTOUR( outline, c, first, last )      \
-  do {                                                         \
-    ( first ) = ( c > 0 ) ? ( outline )->points +              \
-                            ( outline )->contours[c - 1] + 1   \
-                          : ( outline )->points;               \
-    ( last ) = ( outline )->points + ( outline )->contours[c]; \
+#define FT_OUTLINE_GET_CONTOUR( outline, c, first, last )  \
+  do {                                                     \
+    (first) = ( c > 0 ) ? (outline)->points +              \
+                            (outline)->contours[c - 1] + 1 \
+                        : (outline)->points;               \
+    (last) = (outline)->points + (outline)->contours[c];   \
   } while ( 0 )
 
 
-  /* Is a point in some contour?                  */
-  /*                                              */
-  /* We treat every point of the contour as if it */
-  /* it is ON.  That is, we allow false positive, */
-  /* but disallow false negative. (XXX really?)   */
+  /* Is a point in some contour?                     */
+  /*                                                 */
+  /* We treat every point of the contour as if it    */
+  /* it were ON.  That is, we allow false positives, */
+  /* but disallow false negatives.  (XXX really?)    */
   static FT_Bool
   ft_contour_has( FT_Outline*  outline,
                   FT_Short     c,

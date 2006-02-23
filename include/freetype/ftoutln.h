@@ -467,8 +467,8 @@ FT_BEGIN_HEADER
   *     the drawing direction of a contour must be filled.
   *
   *   FT_ORIENTATION_NONE ::
-  *     The orientation cannot be determined.  That is, different part of the
-  *     glyph has different orientation.
+  *     The orientation cannot be determined.  That is, different parts of
+  *     the glyph have different orientation.
   *
   */
   typedef enum

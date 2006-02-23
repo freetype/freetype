@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType synthesizing code for emboldening and slanting (body).      */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -99,8 +99,8 @@
       }
       else
       {
-        /* this is more than enough for most glyphs;                         */
-        /* if you need accurate values, you have to call FT_Outline_Get_CBox */
+        /* this is more than enough for most glyphs; if you need accurate */
+        /* values, you have to call FT_Outline_Get_CBox                   */
         xstr = xstr * 2;
         ystr = xstr;
       }

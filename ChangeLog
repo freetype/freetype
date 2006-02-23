@@ -1,11 +1,10 @@
 2006-02-23  David Turner  <david@freetype.org>
 
-    * src/bdf/bdflib.c: fixed a bug with zero-width glyphs
-    this patch comes from the Debian package for libfreetype6 !!
-    How come nobody mentions this on the devel list ??
+	Two patches from Debian libfreetype6 for 2.1.10.
 
-    * src/bdf/bdflib.c: fixed a problem with large encodings.
-    Again, this patch comes from Debian libfreetype6 for 2.1.10 !
+	* src/bdf/bdflib.c (_bdf_parse_glyphs): Fix a bug with zero-width
+	glyphs.
+	Fix a problem with large encodings.
 
 2006-02-23  Chia-I Wu  <b90201047@ntu.edu.tw>
 
