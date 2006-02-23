@@ -302,14 +302,17 @@
     * to FreeType 2.1.7. This is possible because the third parameter
     * is then a character code, and we've never seen any font with
     * more than a few charmaps, so if the index is very large...
+    *
+    * there is also little chance that a rogue client is interested
+    * by Unicode values 0 to 3 :-)
     */
     if ( cmap_index >= 4 )
     {
       FTC_OldCMapDesc  desc = (FTC_OldCMapDesc) face_id;
 
+      char_code     = (FT_UInt32)cmap_index;
       query.face_id = desc->face_id;
 
-      char_code = (FT_UInt32)cmap_index;
 
       switch ( desc->type )
       {
@@ -319,34 +322,17 @@
           break;
 
         case FTC_OLD_CMAP_BY_ENCODING:
-        case FTC_OLD_CMAP_BY_ID:
           {
             FT_Face  face;
-            FT_Int   nn;
 
             error = FTC_Manager_LookupFace( cache->manager, desc->face_id,
                                             &face );
             if ( error )
-              return error;
-
-            if ( desc->type == FTC_OLD_CMAP_BY_ENCODING )
-            {
-              for ( nn = 0; nn < face->num_charmaps; nn++ )
-                if ( face->charmaps[nn]->encoding == desc->u.encoding )
-                  break;
-            }
-            else
-            {
-              for ( nn = 0; nn < face->num_charmaps; nn++ )
-                if ( face->charmaps[nn]->platform_id == desc->u.id.platform &&
-                     face->charmaps[nn]->encoding_id == desc->u.id.encoding )
-                   break;
-            }
-
-            if ( nn >= face->num_charmaps )
               return 0;
 
-            query.cmap_index = (FT_UInt)nn;
+            FT_Select_Charmap( face, desc->u.encoding );
+
+            return FT_Get_Char_Index( face, char_code );
           }
           break;
 
@@ -376,7 +362,7 @@
     FT_ASSERT( (FT_UInt)( char_code - node->first ) < FTC_CMAP_INDICES_MAX );
 
     /* something rotten can happen with rogue clients */
-    if ( (FT_UInt)( char_code - node->first >= FTC_CMAP_INDICES_MAX )
+    if ( (FT_UInt)( char_code - node->first >= FTC_CMAP_INDICES_MAX ) )
       return 0;
 
     gindex = node->indices[char_code - node->first];
