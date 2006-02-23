@@ -1563,7 +1563,7 @@
 
       /* Check that the encoding is in the range [0,65536] because        */
       /* otherwise p->have (a bitmap with static size) overflows.         */
-      if ( p->glyph_enc >= sizeof(p->have)*8 )
+      if ( (size_t)p->glyph_enc >= sizeof(p->have)*8 )
       {
         error = BDF_Err_Invalid_File_Format;
         goto Exit;
@@ -1674,7 +1674,7 @@
       nibbles = glyph->bpr << 1;
       bp      = glyph->bitmap + p->row * glyph->bpr;
 
-      for ( i = 0, i < nibbles; i++ )
+      for ( i = 0; i < nibbles; i++ )
       {
         c = line[i];
         *bp = (FT_Byte)( ( *bp << 4 ) + a2i[c] );
