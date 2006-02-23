@@ -375,6 +375,10 @@
 
     FT_ASSERT( (FT_UInt)( char_code - node->first ) < FTC_CMAP_INDICES_MAX );
 
+    /* something rotten can happen with rogue clients */
+    if ( (FT_UInt)( char_code - node->first >= FTC_CMAP_INDICES_MAX )
+      return 0;
+
     gindex = node->indices[char_code - node->first];
     if ( gindex == FTC_CMAP_UNKNOWN )
     {
