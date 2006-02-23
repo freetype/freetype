@@ -1561,6 +1561,14 @@
 
       p->glyph_enc = _bdf_atol( p->list.field[1], 0, 10 );
 
+      /* Check that the encoding is in the range [0,65536] because        */
+      /* otherwise p->have (a bitmap with static size) overflows.         */
+      if ( p->glyph_enc >= sizeof(p->have)*8 )
+      {
+        error = BDF_Err_Invalid_File_Format;
+        goto Exit;
+      }
+
       /* Check to see whether this encoding has already been encountered. */
       /* If it has then change it to unencoded so it gets added if        */
       /* indicated.                                                       */
