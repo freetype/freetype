@@ -1666,7 +1666,7 @@
       nibbles = glyph->bpr << 1;
       bp      = glyph->bitmap + p->row * glyph->bpr;
 
-      for ( i = 0, *bp = 0; i < nibbles; i++ )
+      for ( i = 0, i < nibbles; i++ )
       {
         c = line[i];
         *bp = (FT_Byte)( ( *bp << 4 ) + a2i[c] );
@@ -1676,7 +1676,8 @@
 
       /* Remove possible garbage at the right. */
       mask_index = ( glyph->bbx.width * p->font->bpp ) & 7;
-      *bp &= nibble_mask[mask_index];
+      if ( glyph->bbx.width )
+        *bp &= nibble_mask[mask_index];
 
       /* If any line has extra columns, indicate they have been removed. */
       if ( ( line[nibbles] == '0' || a2i[(int)line[nibbles]] != 0 ) &&
