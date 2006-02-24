@@ -668,6 +668,7 @@
   }
 
 
+#if 0
 #define FT_OUTLINE_GET_CONTOUR( outline, c, first, last )  \
   do {                                                     \
     (first) = ( c > 0 ) ? (outline)->points +              \
@@ -828,6 +829,7 @@
 
     return orient;
   }
+#endif
 
 
   /* documentation is in ftoutln.h */
@@ -850,7 +852,7 @@
     if ( strength == 0 )
       return FT_Err_Ok;
 
-    orientation = ft_outline_get_orientation( outline );
+    orientation = FT_Outline_Get_Orientation( outline );
     if ( orientation == FT_ORIENTATION_NONE )
     {
       if ( outline->n_contours )

@@ -1,5 +1,12 @@
 2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* src/base/ftoutln.c (FT_OUTLINE_GET_CONTOUR, ft_contour_has,
+	ft_contour_enclosed, ft_outline_get_orientation): Commented out.  We
+	have to wait until `FT_GlyphSlot_Own_Bitmap' is stabilized.
+	(FT_Outline_Embolden): Use `FT_Outline_Get_Orientation'.
+
+2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* include/freetype/ftbitmap.h (FT_Bitmap_Embolden): Update
 	documentation.
 
