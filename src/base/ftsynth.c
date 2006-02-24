@@ -68,6 +68,29 @@
   /*************************************************************************/
 
 
+  FT_EXPORT_DEF( FT_Error )
+  FT_GlyphSlot_Own_Bitmap( FT_GlyphSlot  slot )
+  {
+    if ( slot && slot->format == FT_GLYPH_FORMAT_BITMAP &&
+         !( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
+    {
+      FT_Bitmap  bitmap;
+      FT_Error   error;
+
+
+      FT_Bitmap_New( &bitmap );
+      error = FT_Bitmap_Copy( slot->library, &slot->bitmap, &bitmap );
+      if ( error )
+        return error;
+
+      slot->bitmap = bitmap;
+      slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
+    }
+
+    return FT_Err_Ok;
+  }
+
+
   /* documentation is in ftsynth.h */
 
   FT_EXPORT_DEF( void )
@@ -91,42 +114,23 @@
     if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
     {
       error = FT_Outline_Embolden( &slot->outline, xstr );
-      if ( error )
-      {
-        error = FT_Render_Glyph( slot, FT_RENDER_MODE_NORMAL );
-        if ( error )
-          return;
-      }
-      else
-      {
-        /* this is more than enough for most glyphs; if you need accurate */
-        /* values, you have to call FT_Outline_Get_CBox                   */
-        xstr = xstr * 2;
-        ystr = xstr;
-      }
-    }
+      /* ignore error */
 
-    if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+      /* this is more than enough for most glyphs; if you need accurate */
+      /* values, you have to call FT_Outline_Get_CBox                   */
+      xstr = xstr * 2;
+      ystr = xstr;
+    }
+    else if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
     {
       xstr = FT_PIX_FLOOR( xstr );
       if ( xstr == 0 )
         xstr = 1 << 6;
       ystr = FT_PIX_FLOOR( ystr );
 
-      /* slot must be bitmap-owner */
-      if ( !( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
-      {
-        FT_Bitmap  bitmap;
-
-
-        FT_Bitmap_New( &bitmap );
-        error = FT_Bitmap_Copy( library, &slot->bitmap, &bitmap );
-        if ( error )
-          return;
-
-        slot->bitmap = bitmap;
-        slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
-      }
+      error = FT_GlyphSlot_Own_Bitmap( slot );
+      if ( error )
+        return;
 
       error = FT_Bitmap_Embolden( library, &slot->bitmap, xstr, ystr );
       if ( error )
