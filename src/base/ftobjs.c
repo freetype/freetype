@@ -2148,6 +2148,16 @@
         h = face->bbox.yMax - face->bbox.yMin;
         break;
 
+      case FT_SIZE_REQUEST_TYPE_SCALES:
+        metrics->x_scale = (FT_Fixed)req->width;
+        metrics->y_scale = (FT_Fixed)req->height;
+        if ( !metrics->x_scale )
+          metrics->x_scale = metrics->y_scale;
+        else if ( !metrics->y_scale )
+          metrics->y_scale = metrics->x_scale;
+        goto Calculate_Ppem;
+        break;
+
       default:
         /* this never happens */
         return;
@@ -2193,6 +2203,7 @@
         scaled_w = FT_MulDiv( scaled_h, w, h );
       }
 
+  Calculate_Ppem:
       /* calculate the ppems */
       if ( req->type != FT_SIZE_REQUEST_TYPE_NOMINAL )
       {

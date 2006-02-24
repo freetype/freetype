@@ -1,3 +1,11 @@
+2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* include/freetype/freetype.h (FT_Size_RequestRec): Change the type of
+	`width' and `height' to `FT_Long'.
+	(enum FT_Size_Request_Type), src/base/ftobjs.c (FT_Request_Metrics):
+	New request type `FT_SIZE_REQUEST_TYPE_SCALES' to specify the scales
+	directly.
+
 2006-02-23  David Turner  <david@freetype.org>
 
 	Two patches from Debian libfreetype6 for 2.1.10.
@@ -6,9 +14,8 @@
 	glyphs.
 	Fix a problem with large encodings.
 
-    * src/cache/ftccmap.c: trying to hack binary compatibility for
-    gnustep-back (GNUstep backend module) which still crashes under
-    Sarge.
+	* src/cache/ftccmap.c: trying to hack binary compatibility for
+	gnustep-back (GNUstep backend module) which still crashes under Sarge.
 
 2006-02-23  Chia-I Wu  <b90201047@ntu.edu.tw>
 

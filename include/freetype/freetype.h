@@ -2023,6 +2023,9 @@ FT_BEGIN_HEADER
   /*      useful if you want to specify the font size for, say, a window   */
   /*      of a given dimension and 80x24 cells.                            */
   /*                                                                       */
+  /*    FT_SIZE_REQUEST_TYPE_SCALES ::                                     */
+  /*      Specify the scales directly.                                     */
+  /*                                                                       */
   /* <Note>                                                                */
   /*    The above descriptions only apply to scalable formats.  For bitmap */
   /*    formats, the behavior is up to the driver.                         */
@@ -2036,6 +2039,7 @@ FT_BEGIN_HEADER
     FT_SIZE_REQUEST_TYPE_REAL_DIM,
     FT_SIZE_REQUEST_TYPE_BBOX,
     FT_SIZE_REQUEST_TYPE_CELL,
+    FT_SIZE_REQUEST_TYPE_SCALES,
 
     FT_SIZE_REQUEST_TYPE_MAX
 
@@ -2072,8 +2076,8 @@ FT_BEGIN_HEADER
   typedef struct  FT_Size_RequestRec_
   {
     FT_Size_Request_Type  type;
-    FT_F26Dot6            width;
-    FT_F26Dot6            height;
+    FT_Long               width;
+    FT_Long               height;
     FT_UInt               horiResolution;
     FT_UInt               vertResolution;
 
