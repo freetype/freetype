@@ -1,5 +1,7 @@
 2006-02-24  David Turner  <david@freetype.org>
 
+    * tagging Third release candidate with VER-2-2-0-RC3
+
     * src/cache/ftcbasic.c: correcting compatibility hack bug
 
 2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
