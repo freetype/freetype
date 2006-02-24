@@ -336,7 +336,7 @@
       query.attrs.scaler.height  = desc->font.pix_height;
       query.attrs.load_flags     = desc->flags;
     }
-
+    else
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     {
@@ -589,7 +589,7 @@
       query.attrs.scaler.height  = desc->font.pix_height;
       query.attrs.load_flags     = desc->flags;
     }
-
+    else
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     {
