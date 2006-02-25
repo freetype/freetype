@@ -28,6 +28,7 @@
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_STREAM_H
 #include FT_SYSTEM_H
 #include FT_ERRORS_H
 #include FT_TYPES_H
@@ -213,7 +214,7 @@
   }
 
 
-  /* documentation is in ftobjs.h */
+  /* documentation is in ftstream.h */
 
   FT_BASE_DEF( FT_Error )
   FT_Stream_Open( FT_Stream    stream,

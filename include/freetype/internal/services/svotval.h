@@ -19,6 +19,8 @@
 #ifndef __SVOTVAL_H__
 #define __SVOTVAL_H__
 
+#include FT_OPENTYPE_VALIDATE_H
+#include FT_INTERNAL_VALIDATE_H
 
 FT_BEGIN_HEADER
 

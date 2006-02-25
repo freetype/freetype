@@ -23,7 +23,7 @@
 #include FT_SYSTEM_H
 #include FT_ERRORS_H
 #include FT_TYPES_H
-#include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_STREAM_H
 
   /* memory-mapping includes and definitions */
 #ifdef HAVE_UNISTD_H

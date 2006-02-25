@@ -337,7 +337,7 @@ THE SOFTWARE.
     BDF_Face       face   = (BDF_Face)bdfface;
     FT_Memory      memory = FT_FACE_MEMORY( face );
 
-    bdf_font_t*    font;
+    bdf_font_t*    font = NULL;
     bdf_options_t  options;
 
     FT_UNUSED( num_params );

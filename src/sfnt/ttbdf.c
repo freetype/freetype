@@ -85,6 +85,8 @@
       FT_UInt    version     = FT_NEXT_USHORT( p );
       FT_UInt    num_strikes = FT_NEXT_USHORT( p );
       FT_UInt32  strings     = FT_NEXT_ULONG ( p );
+      FT_UInt    count;
+      FT_Byte*   strike;
 
 
       if ( version != 0x0001                 ||
@@ -98,13 +100,10 @@
       bdf->num_strikes  = num_strikes;
       bdf->strings      = bdf->table + strings;
       bdf->strings_size = length - strings;
-    }
 
-    /* check the strike descriptors */
-    {
-      FT_UInt   count  = bdf->num_strikes;
-      FT_Byte*  p      = bdf->table + 8;
-      FT_Byte*  strike = p + count * 4;
+      count  = bdf->num_strikes;
+      p      = bdf->table + 8;
+      strike = p + count * 4;
 
 
       for ( ; count > 0; count-- )

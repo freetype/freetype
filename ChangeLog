@@ -7,6 +7,17 @@
 
        solved compiler warnings as well as C++ compilation problems
 
+    * builds/unix/ftsystem.c, include/freetype/config/ftheader.h,
+    include/freetype/internal/services/svotval.h,
+    include/freetype/internal/services/svpfr.h,
+    src/base/ftsystem.c, src/bdf/bdfdrivr.c, src/cache/ftcbasic.c,
+    src/cff/cffcmap.c, src/gzip/ftgzip.c, src/lzw/ftlzw.c,
+    src/lzw/ftlzw2.c, src/psaux/t1cmap.c, src/sfnt/ttbdf.c,
+    src/smooth/ftgrays.c:
+
+       solved -Wmissing-prototypes warnings with GCC
+
+
 
 2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
 

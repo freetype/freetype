@@ -24,6 +24,7 @@
 #include FT_INTERNAL_MEMORY_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_DEBUG_H
+#include FT_GZIP_H
 #include <string.h>
 
 

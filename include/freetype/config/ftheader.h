@@ -602,6 +602,19 @@
    */
 #define FT_GX_VALIDATE_H  <freetype/ftgxval.h>
 
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_PFR_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API used to access PFR-specific data.
+   *
+   */
+#define FT_PFR_H  <freetype/ftpfr.h>
+
+
 
   /* */
 

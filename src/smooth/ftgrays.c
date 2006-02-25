@@ -1959,7 +1959,7 @@
   }
 
 
-  extern int
+  static int
   gray_raster_render( PRaster                  raster,
                       const FT_Raster_Params*  params )
   {

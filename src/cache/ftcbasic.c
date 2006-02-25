@@ -385,20 +385,12 @@
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Image_Cache_New( FTC_Manager      manager,
-                       FTC_ImageCache  *acache )
-  {
-    return FTC_ImageCache_New( manager, (FTC_ImageCache*)acache );
-  }
-
-
   /* yet another backwards-legacy structure */
   typedef struct  FTC_OldImage_Desc_
   {
     FTC_FontRec  font;
     FT_UInt      image_type;
-    
+
   } FTC_OldImage_Desc;
 
 
@@ -434,7 +426,7 @@
     typ->face_id = desc->font.face_id;
     typ->width   = desc->font.pix_width;
     typ->height  = desc->font.pix_height;
-    
+
     /* convert image type flags to load flags */
     {
       FT_UInt  load_flags = FT_LOAD_DEFAULT;
@@ -473,7 +465,27 @@
 
       typ->flags = load_flags;
     }
-  }                                
+  }
+
+
+  FT_EXPORT( FT_Error )
+  FTC_Image_Cache_New( FTC_Manager      manager,
+                       FTC_ImageCache  *acache );
+
+  FT_EXPORT( FT_Error )
+  FTC_Image_Cache_Lookup( FTC_ImageCache      icache,
+                          FTC_OldImage_Desc*  desc,
+                          FT_UInt             gindex,
+                          FT_Glyph           *aglyph );
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Image_Cache_New( FTC_Manager      manager,
+                       FTC_ImageCache  *acache )
+  {
+    return FTC_ImageCache_New( manager, (FTC_ImageCache*)acache );
+  }
+
 
 
   FT_EXPORT_DEF( FT_Error )
@@ -642,6 +654,17 @@
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
+  FT_EXPORT( FT_Error )
+  FTC_SBit_Cache_New( FTC_Manager     manager,
+                      FTC_SBitCache  *acache );
+
+  FT_EXPORT( FT_Error )
+  FTC_SBit_Cache_Lookup( FTC_SBitCache       cache,
+                         FTC_OldImage_Desc*  desc,
+                         FT_UInt             gindex,
+                         FTC_SBit           *ansbit );
+
+
   FT_EXPORT_DEF( FT_Error )
   FTC_SBit_Cache_New( FTC_Manager     manager,
                       FTC_SBitCache  *acache )
@@ -657,11 +680,11 @@
                          FTC_SBit           *ansbit )
   {
     FTC_ImageTypeRec  type0;
-    
+
 
     if ( !desc )
       return FT_Err_Invalid_Argument;
-      
+
     ftc_image_type_from_old_desc( &type0, desc );
 
     return FTC_SBitCache_Lookup( (FTC_SBitCache)cache,
