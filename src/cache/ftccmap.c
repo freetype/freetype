@@ -67,6 +67,7 @@
 
 #endif /* FT_CONFIG_OLD_INTERNALS */
 
+
   /*************************************************************************/
   /*                                                                       */
   /* Each FTC_CMapNode contains a simple array to map a range of character */
@@ -298,17 +299,20 @@
     }
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-   /* detect a call from a rogue client that thinks it is linking
-    * to FreeType 2.1.7. This is possible because the third parameter
-    * is then a character code, and we've never seen any font with
-    * more than a few charmaps, so if the index is very large...
-    *
-    * there is also little chance that a rogue client is interested
-    * by Unicode values 0 to 3 :-)
-    */
+
+    /*
+     *  Detect a call from a rogue client that thinks it is linking
+     *  to FreeType 2.1.7.  This is possible because the third parameter
+     *  is then a character code, and we have never seen any font with
+     *  more than a few charmaps, so if the index is very large...
+     *
+     *  It is also very unlikely that a rogue client is interested
+     *  in Unicode values 0 to 3.
+     */
     if ( cmap_index >= 4 )
     {
       FTC_OldCMapDesc  desc = (FTC_OldCMapDesc) face_id;
+
 
       char_code     = (FT_UInt32)cmap_index;
       query.face_id = desc->face_id;
@@ -316,32 +320,35 @@
 
       switch ( desc->type )
       {
-        case FTC_OLD_CMAP_BY_INDEX:
-          query.cmap_index = desc->u.index;
-          query.char_code  = (FT_UInt32)cmap_index;
-          break;
+      case FTC_OLD_CMAP_BY_INDEX:
+        query.cmap_index = desc->u.index;
+        query.char_code  = (FT_UInt32)cmap_index;
+        break;
 
-        case FTC_OLD_CMAP_BY_ENCODING:
-          {
-            FT_Face  face;
+      case FTC_OLD_CMAP_BY_ENCODING:
+        {
+          FT_Face  face;
 
-            error = FTC_Manager_LookupFace( cache->manager, desc->face_id,
-                                            &face );
-            if ( error )
-              return 0;
 
-            FT_Select_Charmap( face, desc->u.encoding );
+          error = FTC_Manager_LookupFace( cache->manager, desc->face_id,
+                                          &face );
+          if ( error )
+            return 0;
 
-            return FT_Get_Char_Index( face, char_code );
-          }
-          break;
+          FT_Select_Charmap( face, desc->u.encoding );
 
-        default:
-          return 0;
+          return FT_Get_Char_Index( face, char_code );
+        }
+        break;
+
+      default:
+        return 0;
       }
     }
     else
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
+
     {
       query.face_id    = face_id;
       query.cmap_index = (FT_UInt)cmap_index;

@@ -337,6 +337,7 @@
       query.attrs.load_flags     = desc->flags;
     }
     else
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     {
@@ -590,6 +591,7 @@
       query.attrs.load_flags     = desc->flags;
     }
     else
+
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     {

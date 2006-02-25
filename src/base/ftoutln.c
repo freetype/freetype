@@ -669,6 +669,7 @@
 
 
 #if 0
+
 #define FT_OUTLINE_GET_CONTOUR( outline, c, first, last )  \
   do {                                                     \
     (first) = ( c > 0 ) ? (outline)->points +              \
@@ -829,7 +830,8 @@
 
     return orient;
   }
-#endif
+
+#endif /* 0 */
 
 
   /* documentation is in ftoutln.h */

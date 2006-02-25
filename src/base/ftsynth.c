@@ -71,7 +71,7 @@
   FT_EXPORT_DEF( FT_Error )
   FT_GlyphSlot_Own_Bitmap( FT_GlyphSlot  slot )
   {
-    if ( slot && slot->format == FT_GLYPH_FORMAT_BITMAP &&
+    if ( slot && slot->format == FT_GLYPH_FORMAT_BITMAP   &&
          !( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
     {
       FT_Bitmap  bitmap;
