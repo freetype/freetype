@@ -10,7 +10,7 @@
  * accepted if you are using GCC for compilation (and probably by
  * other compilers too).
  *
- * Author: David Turner, 2005
+ * Author: David Turner, 2005, 2006
  *
  * This code is explicitly placed into the public domain.
  *

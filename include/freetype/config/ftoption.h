@@ -587,8 +587,8 @@ FT_BEGIN_HEADER
    * releases from emitting zillions of `strict aliasing' warning messages
    * each time a memory-management function is called.
    *
-   * note that it shouldn't be activated when compiling the library
-   * as C++
+   * Note that it shouldn't be activated when building the library with
+   * a C++ compiler.
    */
 #ifndef __cplusplus
 #define FT_STRICT_ALIASING
@@ -601,10 +601,9 @@ FT_BEGIN_HEADER
    * a few obsolete functions to avoid linking problems on typical Unix
    * distributions.
    *
-   * if you're on an embedded system, or if you're building a new
-   * distribution from scratch, it is recommended to disable the macro
-   * since it will reduce the library's code size and activate a few
-   * memory-saving optimizations as well.
+   * For embedded systems or building a new distribution from scratch, it
+   * is recommended to disable the macro since it reduces the library's code
+   * size and activates a few memory-saving optimizations as well.
    */
 #define FT_CONFIG_OPTION_OLD_INTERNALS
 

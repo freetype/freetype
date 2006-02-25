@@ -8,7 +8,7 @@
 /*  be used to parse compressed PCF fonts, as found with many X11 server   */
 /*  distributions.                                                         */
 /*                                                                         */
-/*  Copyright 2004, 2005 by                                                */
+/*  Copyright 2004, 2005, 2006 by                                          */
 /*  Albert Chin-A-Young.                                                   */
 /*                                                                         */
 /*  Based on code in src/gzip/ftgzip.c, Copyright 2004 by                  */

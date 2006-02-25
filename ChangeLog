@@ -1,23 +1,38 @@
 2006-02-25  David Turner  <david@freetype.org>
 
-    * include/freetype/config/ftoption.h, src/autofit/afcjk.c,
-    src/base/ftobjs.c, src/base/ftutil.c, src/cff/cffobjs.c,
-    src/psaux/afmparse.c, src/sfnt/ttbdf.c, src/tools/apinames.c,
-    src/truetype/ttdriver.c:
+	Fix compiler warnings as well as C++ compilation problems.
+	Add missing prototypes.
 
-       solved compiler warnings as well as C++ compilation problems
+	* src/autofit/afcjk.c, src/base/ftobjs.c, src/base/ftutil.c,
+	src/bdf/bdfdrivr.c, src/cff/cffcmap.c, src/cff/cffobjs.c,
+	src/psaux/afmparse.c,, src/psaux/t1cmap.c, src/smooth/ftgrays.c
+	src/tools/apinames.c, src/truetype/ttdriver.c: Add various casts,
+	initialize variables, and decorate functions with FT_CALLBACK_DEF,
+	etc., to fix compiler warnings (and C++ compiling errors).
 
-    * builds/unix/ftsystem.c, include/freetype/config/ftheader.h,
-    include/freetype/internal/services/svotval.h,
-    include/freetype/internal/services/svpfr.h,
-    src/base/ftsystem.c, src/bdf/bdfdrivr.c, src/cache/ftcbasic.c,
-    src/cff/cffcmap.c, src/gzip/ftgzip.c, src/lzw/ftlzw.c,
-    src/lzw/ftlzw2.c, src/psaux/t1cmap.c, src/sfnt/ttbdf.c,
-    src/smooth/ftgrays.c:
+	* src/cache/ftcbasic.c: Fix `-Wmissing-prototypes' warnings with
+	gcc.
 
-       solved -Wmissing-prototypes warnings with GCC
+	* builds/unix/ftsystem.c: Don't include FT_INTERNAL_OBJECTS_H but
+	FT_INTERNAL_STREAM_H.
 
+	* src/base/ftsystem.c: Include FT_INTERNAL_STREAM_H.
 
+	* include/freetype/config/ftheader.h (FT_PFR_H): New macro.
+
+	* include/freetype/config/ftoption.h (FT_STRICT_ALIASING): Don't
+	define for C++.
+
+	* include/freetype/internal/services/svotval.h: Don't include
+	FT_OPENTYPE_VALIDATE_H but FT_INTERNAL_VALIDATE_H.
+
+	* include/freetype/internal/services/svpfr.h: Include FT_PFR_H.
+
+	* src/gzip/ftgzip.c: Include FT_GZIP_H.
+
+	* src/lzw/ftlzw.c, src/lzw/ftlzw2.c: Include FT_LZW_H.
+
+	* src/sfnt/ttbdf.c (tt_face_load_bdf_props): Rearrange code.
 
 2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
 

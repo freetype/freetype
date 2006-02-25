@@ -602,6 +602,7 @@
    */
 #define FT_GX_VALIDATE_H  <freetype/ftgxval.h>
 
+
   /*************************************************************************
    *
    * @macro:
@@ -613,7 +614,6 @@
    *
    */
 #define FT_PFR_H  <freetype/ftpfr.h>
-
 
 
   /* */
