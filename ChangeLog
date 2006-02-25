@@ -3,6 +3,8 @@
 	* devel/ftoption.h: Synchronize with
 	include/freetype/config/ftoption.h.
 
+	* src/cache/ftccache.c (ftc_node_destroy): Use FT_LOCAL_DEF (again).
+
 2006-02-25  David Turner  <david@freetype.org>
 
 	Fix compiler warnings as well as C++ compilation problems.
