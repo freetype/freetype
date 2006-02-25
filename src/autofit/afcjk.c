@@ -131,7 +131,7 @@
     {
       AF_Point  pt   = seg->first;
       AF_Point  last = seg->last;
-      AF_Flags  f0   = pt->flags & AF_FLAG_CONTROL;
+      AF_Flags  f0   = (AF_Flags)(pt->flags & AF_FLAG_CONTROL);
       AF_Flags  f1;
 
 
@@ -140,7 +140,7 @@
       for ( ; pt != last; f0 = f1 )
       {
         pt = pt->next;
-        f1 = pt->flags & AF_FLAG_CONTROL;
+        f1 = (AF_Flags)(pt->flags & AF_FLAG_CONTROL);
 
         if ( !f0 && !f1 )
           break;
@@ -921,7 +921,9 @@
 
     org_len    = edge2->opos - edge->opos;
     cur_len    = af_cjk_compute_stem_width( hints, dim, org_len,
-                                            edge->flags, edge2->flags );
+                                            (AF_Edge_Flags)edge->flags,
+                                            (AF_Edge_Flags)edge2->flags );
+
     org_center = ( edge->opos + edge2->opos ) / 2 + anchor;
     cur_pos1   = org_center - cur_len / 2;
     cur_pos2   = cur_pos1 + cur_len;
@@ -1123,7 +1125,8 @@
 
 #endif /* 0 */
 
-          delta = af_hint_normal_stem( hints, edge, edge2, 0, 0 );
+          delta = af_hint_normal_stem( hints, edge, edge2, 0,
+                                       AF_DIMENSION_HORZ );
       }
       else
         af_hint_normal_stem( hints, edge, edge2, delta, dim );

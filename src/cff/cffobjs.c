@@ -206,7 +206,7 @@
     if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
       CFF_Face      cffface = (CFF_Face)size->face;
-      SFNT_Service  sfnt    = cffface->sfnt;
+      SFNT_Service  sfnt    = (SFNT_Service)cffface->sfnt;
       FT_ULong      index;
 
 

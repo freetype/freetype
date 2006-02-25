@@ -586,8 +586,13 @@ FT_BEGIN_HEADER
    * certain functions like ft_mem_alloc in a way that prevents recent GCC
    * releases from emitting zillions of `strict aliasing' warning messages
    * each time a memory-management function is called.
+   *
+   * note that it shouldn't be activated when compiling the library
+   * as C++
    */
+#ifndef __cplusplus
 #define FT_STRICT_ALIASING
+#endif
 
 
   /*
@@ -595,6 +600,11 @@ FT_BEGIN_HEADER
    * structures that was used prior to FreeType 2.2.  This also compiles in
    * a few obsolete functions to avoid linking problems on typical Unix
    * distributions.
+   *
+   * if you're on an embedded system, or if you're building a new
+   * distribution from scratch, it is recommended to disable the macro
+   * since it will reduce the library's code size and activate a few
+   * memory-saving optimizations as well.
    */
 #define FT_CONFIG_OPTION_OLD_INTERNALS
 

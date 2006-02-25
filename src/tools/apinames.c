@@ -86,14 +86,14 @@ names_add( const char*  name,
   if ( num_names >= max_names )
   {
     max_names += (max_names >> 1) + 4;
-    the_names  = realloc( the_names, sizeof(the_names[0])*max_names );
+    the_names  = (NameRec*)realloc( the_names, sizeof(the_names[0])*max_names );
     if ( the_names == NULL )
       panic( "not enough memory" );
   }
   nm = &the_names[num_names++];
 
   nm->hash = h;
-  nm->name = malloc( len+1 );
+  nm->name = (char*)malloc( len+1 );
   if ( nm->name == NULL )
     panic( "not enough memory" );
 
@@ -289,23 +289,25 @@ read_header_file( FILE*  file, int  verbose )
 static void
 usage( void )
 {
+  static const char* const  format =
+   "%s %s: extract FreeType API names from header files\n\n"
+   "this program is used to extract the list of public FreeType API\n"
+   "functions. It receives the list of header files as argument and\n"
+   "generates a sorted list of unique identifiers\n\n"
+
+   "usage: %s header1 [options] [header2 ...]\n\n"
+
+   "options:   -      : parse the content of stdin, ignore arguments\n"
+   "           -v     : verbose mode, output sent to standard error\n"
+   "           -oFILE : write output to FILE instead of standard output\n"
+   "           -dNAME : indicate DLL file name, 'freetype.dll' by default\n"
+   "           -w     : output .DEF file for Visual C++ and Mingw\n"
+   "           -wB    : output .DEF file for Borland C++\n"
+   "           -wW    : output Watcom Linker Response File\n"
+   "\n";
+
   fprintf( stderr,
-           "%s %s: extract FreeType API names from header files\n\n"
-           "this program is used to extract the list of public FreeType API\n"
-           "functions. It receives the list of header files as argument and\n"
-           "generates a sorted list of unique identifiers\n\n"
-
-           "usage: %s header1 [options] [header2 ...]\n\n"
-
-           "options:   -      : parse the content of stdin, ignore arguments\n"
-           "           -v     : verbose mode, output sent to standard error\n",
-           "           -oFILE : write output to FILE instead of standard output\n"
-           "           -dNAME : indicate DLL file name, 'freetype.dll' by default\n"
-           "           -w     : output .DEF file for Visual C++ and Mingw\n"
-           "           -wB    : output .DEF file for Borland C++\n"
-           "           -wW    : output Watcom Linker Response File\n"
-           "\n"
-           ,
+           format,
            PROGRAM_NAME,
            PROGRAM_VERSION,
            PROGRAM_NAME

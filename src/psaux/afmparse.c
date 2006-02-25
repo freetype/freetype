@@ -513,7 +513,7 @@
             return AFM_TOKEN_UNKNOWN;
 
           if ( ft_strncmp( afm_key_table[n], key, len ) == 0 )
-            return n;
+            return (AFM_Token) n;
         }
       }
     }
@@ -578,7 +578,7 @@
     else
       return PSaux_Err_Syntax_Error;
   }
-                       
+
 
   static FT_Error
   afm_parse_track_kern( AFM_Parser  parser )
@@ -606,7 +606,7 @@
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       AFM_ValueRec  shared_vals[5];
-      
+
 
       switch ( afm_tokenize( key, len ) )
       {
@@ -796,7 +796,7 @@
         break;
 
       case AFM_TOKEN_ENDKERNDATA:
-      case AFM_TOKEN_ENDFONTMETRICS: 
+      case AFM_TOKEN_ENDFONTMETRICS:
         return PSaux_Err_Ok;
 
       case AFM_TOKEN_UNKNOWN:
@@ -940,7 +940,7 @@
           goto Fail;
         /* fall through since we only support kern data */
 
-      case AFM_TOKEN_ENDFONTMETRICS: 
+      case AFM_TOKEN_ENDFONTMETRICS:
         return PSaux_Err_Ok;
         break;
 

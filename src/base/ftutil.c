@@ -334,16 +334,15 @@
 
   FT_BASE_DEF( void )
   ft_mem_free( FT_Memory  memory,
-               void**     P )
+               void*     *P )
   {
     FT_TRACE7(( "ft_mem_free:" ));
-    FT_TRACE7(( " Freeing block 0x%08p, ref 0x%08p\n",
-                P, P ? *P : (void*)0 ));
+    FT_TRACE7(( " Freeing block 0x%08p ref 0x%08p\n", P, *P ));
 
     if ( P && *P )
     {
       memory->free( memory, *P );
-      *P = 0;
+      *P = NULL;
     }
   }
 
@@ -623,10 +622,7 @@
            void*     *P )
   {
     if ( *P )
-    {
-      ft_mem_free( memory, *P );
-      *P = NULL;
-    }
+      FT_MEM_FREE( *P );
   }
 
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */

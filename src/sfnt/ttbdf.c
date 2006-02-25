@@ -92,11 +92,7 @@
            ( strings - 8 ) / 4 < num_strikes ||
            strings + 1 > length              )
       {
-      BadTable:
-        FT_FRAME_RELEASE( bdf->table );
-        FT_ZERO( bdf );
-        error = FT_Err_Invalid_Table;
-        goto Exit;
+        goto BadTable;
       }
 
       bdf->num_strikes  = num_strikes;
@@ -132,6 +128,12 @@
 
   Exit:
     return error;
+
+  BadTable:
+    FT_FRAME_RELEASE( bdf->table );
+    FT_ZERO( bdf );
+    error = FT_Err_Invalid_Table;
+    goto Exit;
   }
 
 

@@ -2125,7 +2125,7 @@
 
     if ( FT_IS_SCALABLE( face ) )
     {
-      FT_Long  w, h, scaled_w, scaled_h;
+      FT_Long  w, h, scaled_w = 0, scaled_h = 0;
 
 
       switch ( req->type )
@@ -3688,8 +3688,9 @@
         FT_Service_TrueTypeEngine  service;
 
 
-        service = ft_module_get_service( module,
-                                         FT_SERVICE_ID_TRUETYPE_ENGINE );
+        service = (FT_Service_TrueTypeEngine)
+                    ft_module_get_service( module,
+                                           FT_SERVICE_ID_TRUETYPE_ENGINE );
         if ( service )
           result = service->engine_type;
       }

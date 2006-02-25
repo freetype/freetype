@@ -1,8 +1,18 @@
+2006-02-25  David Turner  <david@freetype.org>
+
+    * include/freetype/config/ftoption.h, src/autofit/afcjk.c,
+    src/base/ftobjs.c, src/base/ftutil.c, src/cff/cffobjs.c,
+    src/psaux/afmparse.c, src/sfnt/ttbdf.c, src/tools/apinames.c,
+    src/truetype/ttdriver.c:
+
+       solved compiler warnings as well as C++ compilation problems
+
+
 2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftoutln.c (FT_OUTLINE_GET_CONTOUR, ft_contour_has,
 	ft_contour_enclosed, ft_outline_get_orientation): Commented out.  We
-	have to wait until `FT_GlyphSlot_Own_Bitmap' is stabilized. 
+	have to wait until `FT_GlyphSlot_Own_Bitmap' is stabilized.
 	(FT_Outline_Embolden): Use `FT_Outline_Get_Orientation'.
 
 2006-02-24  Chia-I Wu  <b90201047@ntu.edu.tw>
