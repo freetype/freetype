@@ -1,3 +1,10 @@
+2006-02-26  Werner Lemberg  <wl@gnu.org>
+
+	* docs/release: Minor additions and clarifications.
+
+	* docs/CHANGES: Updated to reflect many fixes for backwards
+	compatibility.  Still incomplete.
+
 2006-02-26  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c (ft_recompute_scaled_metrics): Re-enable

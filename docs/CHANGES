@@ -27,18 +27,14 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       Also, using the  FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph
       always forces auto-hinting, as a special exception.
 
-    - Face  metrics (face->size->metrics)  and  glyph  metrics are  no
-      longer rounded.  If you do not round or round improperly in your
-      applications, you may find glyphs clipped  or blurred.  Usually,
-      you would  like to `ceil'  the ascender, `floor'  the descender,
-      and `round' the advance.
-
     - A  new API  `FT_TrueTypeGX_Validate'  (in FT_GX_VALIDATE_H)  has
       been added to validate TrueType GX/ATT tables (feat, mort, morx,
       bsln, just, kern, opbd, trak,  prop).  After validation it is no
       longer  necessary to  check  for errors  in  those tables  while
       accessing  them.  This  code  has been  contributed by  Masatake
       Yamato and Toshiya Suzuki.
+
+      By default, this module is not activated.
 
     - The following callback function  types have changed slightly (by
       adding the `const' keyword where appropriate):
@@ -105,8 +101,10 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       enable  the interpretation of  the `gasp'  table only  if native
       TrueType hinting is available.
 
-    - A new function `FT_Module_Get_Flags' (declared in `FT_MODULE_H')
-      can be used to get the module flags for a given module.
+    - A   new  function   `FT_Get_TrueType_Engine_Type   (declared  in
+      `FT_MODULE_H')  is  provided  to  determine the  status  of  the
+      TrueType   bytecode  interpreter   compiled  into   the  library
+      (patented, unpatented, unimplemented).
 
     - Vertical metrics of glyphs are  synthesized if the font does not
       provide such information.  You can tell whether  the metrics are
