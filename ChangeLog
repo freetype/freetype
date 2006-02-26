@@ -1,8 +1,8 @@
 2006-02-26  David Turner  <david@freetype.org>
 
-    * src/base/ftobjs.c (ft_recompute_scaled_metrics): re-enable conservative
-    rounding of metrics to avoid breaking clients like Pango
-    (see http://bugzilla.gnome.org/show_bug.cgi?id=327852)
+	* src/base/ftobjs.c (ft_recompute_scaled_metrics): Re-enable
+	conservative rounding of metrics to avoid breaking clients like
+	Pango (see http://bugzilla.gnome.org/show_bug.cgi?id=327852).
 
 2006-02-25  Werner Lemberg  <wl@gnu.org>
 
