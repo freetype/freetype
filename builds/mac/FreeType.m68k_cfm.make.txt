@@ -11,7 +11,8 @@ Includes        =  \xB6
 				  -ansi strict \xB6
 				  -includes unix \xB6
 				  -i :include: \xB6
-				  -i :src:
+				  -i :src: \xB6
+				  -i :include:freetype:config:
 
 Sym-68K         = -sym off
 
@@ -21,6 +22,9 @@ COptions        = \xB6
 			-d HAVE_QUICKDRAW_TOOLBOX=1 \xB6
 			-d HAVE_QUICKDRAW_CARBON=0 \xB6
 			-d HAVE_ATS=0 \xB6
+			-d FT2_BUILD_LIBRARY \xB6
+			-d FT_CONFIG_CONFIG_H="<ftconfig.h>" \xB6
+			-d FT_CONFIG_MODULES_H="<ftmodule.h>" \xB6
 			{Includes} {Sym-68K} -model cfmseg 
 
 

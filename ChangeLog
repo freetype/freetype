@@ -1,3 +1,11 @@
+2006-02-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/mac/FreeType.m68k_cfm.make.txt,
+	builds/mac/FreeType.m68k_far.make.txt,
+	builds/mac/FreeType.ppc_carbon.make.txt,
+	builds/mac/FreeType.ppc_classic.make.txt:
+	Update to new header inclusion introduced on 2006-02-16.
+
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftobjs.c (ft_glyphslot_grid_fit_metrics, FT_Load_Glyph):
