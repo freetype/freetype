@@ -4,14 +4,18 @@
 	[FT_CONFIG_OPTION_OLD_INTERNALS]: Remove declaration of
 	ftc_node_done.
 
+	* src/cache/ftccache.c (ftc_node_destroy)
+	[!FT_CONFIG_OPTION_OLD_INTERNALS]: Mark as FT_LOCAL_DEF.  This
+	should now fix all possible compilation options.
+
 2006-02-27  David Turner  <david@freetype.org>
 
 	* src/base/ftutil.c (ft_mem_alloc, ft_mem_qalloc, ft_mem_realloc,
 	ft_mem_qrealloc): Return an error if a negative size is passed in
 	parameters.
 
-	* src/cache/ftccache.c: Make ftc_node_destroy FT_BASE_DEF, it needs
-	to be exported for rogue clients.
+	* src/cache/ftccache.c (ftc_node_destroy): Mark as FT_BASE_DEF since
+	it needs to be exported for rogue clients.
     
 	* src/pshinter/pshglob.c (psh_blues_set_zones_0): Prevent problems
 	with malformed fonts which have an odd number of blue values (these
@@ -25,16 +29,16 @@
 
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 
-	* src/base/ftobjs.c (FT_Set_Char_Size): Ahh.. forgot to check the case
-	width or height is 0.
+	* src/base/ftobjs.c (FT_Set_Char_Size): Check the case where width
+	or height is 0.
 
 2006-02-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/mac/FreeType.m68k_cfm.make.txt,
 	builds/mac/FreeType.m68k_far.make.txt,
 	builds/mac/FreeType.ppc_carbon.make.txt,
-	builds/mac/FreeType.ppc_classic.make.txt:
-	Update to new header inclusion introduced on 2006-02-16.
+	builds/mac/FreeType.ppc_classic.make.txt: Update to new header
+	inclusion introduced on 2006-02-16.
 
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 

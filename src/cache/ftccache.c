@@ -256,8 +256,11 @@
 
 
   /* remove a node from the cache manager */
-  /* this function is FT_BASE since it may be called by old rogue clients */
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
   FT_BASE_DEF( void )
+#else
+  FT_LOCAL_DEF( void )
+#endif
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager )
   {
