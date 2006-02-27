@@ -1235,7 +1235,7 @@
       }
 
       /* access element */
-      if ( off1 )
+      if ( off1 && off2 > off1 )
       {
         *pbyte_len = off2 - off1;
 
@@ -2011,7 +2011,7 @@
 
     if ( error )
       goto Exit;
-
+ 
     /* if it is a CID font, we stop there */
     if ( top->cid_registry != 0xFFFFU )
       goto Exit;
@@ -2040,6 +2040,9 @@
       FT_FRAME_EXIT();
       if ( error )
         goto Exit;
+
+      /* ensure that 'num_blue_values' is even */
+      priv->num_blue_values &= ~1;
     }
 
     /* read the local subrs, if any */

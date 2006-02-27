@@ -1,3 +1,19 @@
+2006-02-27  David Turner  <david@freetype.org>
+
+    * src/base/ftutil.c: ft_mem_alloc and related functions now return an
+    error if a negative size is passed in parameters.
+
+    * src/cache/ftccache.c: make ftc_node_destroy FT_BASE_DEF, it needs to
+    be exported for rogue clients
+    
+    * src/pshinter/pshglob.c: prevent problems with malformed fonts which
+    have an odd number of blue values (these are broken according to the
+    specs).
+
+    * src/cff/cffload.c, src/type1/t1load.c: modify the loaders to force
+    even-ness of 'num_blue_values'. Also change the CFF loader so that
+    invalid entries in index files are ignored.
+
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): Ahh.. forgot to check the case

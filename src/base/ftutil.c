@@ -66,6 +66,11 @@
       else
         FT_MEM_ZERO( block, size );
     }
+    else if ( size < 0 )
+    {
+      /* may help catch/prevent nasty security issues */
+      error = FT_Err_Invalid_Argument;
+    }
 
     *p_error = error;
     return block;
@@ -87,6 +92,11 @@
       if ( block == NULL )
         error = FT_Err_Out_Of_Memory;
     }
+    else
+    {
+      /* may help catch/prevent security issues */
+      error = FT_Err_Invalid_Argument;
+    }
 
     *p_error = error;
     return block;
@@ -103,12 +113,16 @@
     FT_Error  error = FT_Err_Ok;
 
 
-    if ( size <= 0 )
+    if ( size < 0 || current < 0 )
+    {
+      error = FT_Err_Invalid_Argument;
+    }  
+    else if ( size == 0 )
     {
       ft_mem_free( memory, block );
       block = NULL;
     }
-    else if ( current <= 0 )
+    else if ( current == 0 )
     {
       FT_ASSERT( block == NULL );
 
@@ -145,12 +159,16 @@
     FT_Error  error = FT_Err_Ok;
 
 
-    if ( size <= 0 )
+    if ( size < 0 || current < 0 )
+    {
+      error = FT_Err_Invalid_Argument;
+    }
+    else if ( size == 0 )
     {
       ft_mem_free( memory, block );
       block = NULL;
     }
-    else if ( current <= 0 )
+    else if ( current == 0 )
     {
       FT_ASSERT( block == NULL );
 
@@ -190,7 +208,9 @@
   ft_mem_alloc( FT_Memory  memory,
                 FT_Long    size,
                 void*     *P )
-  {
+  { 
+    FT_Error  error = FT_Err_Ok;
+    
     FT_ASSERT( P != 0 );
 
     if ( size > 0 )
@@ -207,13 +227,17 @@
       FT_MEM_ZERO( *P, size );
     }
     else
+    {
       *P = NULL;
+      if ( size < 0 )
+        error = FT_Err_Invalid_Argument;
+    }
 
     FT_TRACE7(( "ft_mem_alloc:" ));
     FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
                 size, *P, P ));
 
-    return FT_Err_Ok;
+    return error;
   }
 
 
@@ -224,6 +248,8 @@
                  FT_Long    size,
                  void*     *P )
   {
+    FT_Error  error = FT_Err_Ok;
+    
     FT_ASSERT( P != 0 );
 
     if ( size > 0 )
@@ -239,13 +265,17 @@
       }
     }
     else
+    {
       *P = NULL;
+      if ( size < 0 )
+        error = FT_Err_Invalid_Argument;
+    }
 
     FT_TRACE7(( "ft_mem_qalloc:" ));
     FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
                 size, *P, P ));
 
-    return FT_Err_Ok;
+    return error;
   }
 
 
@@ -267,11 +297,14 @@
       return ft_mem_alloc( memory, size, P );
 
     /* if the new block if zero-sized, clear the current one */
-    if ( size <= 0 )
+    if ( size == 0 )
     {
       ft_mem_free( memory, P );
       return FT_Err_Ok;
     }
+
+    if ( size < 0 || current < 0 )
+      return FT_Err_Invalid_Argument;
 
     Q = memory->realloc( memory, current, size, *P );
     if ( !Q )
@@ -309,11 +342,14 @@
       return ft_mem_qalloc( memory, size, P );
 
     /* if the new block if zero-sized, clear the current one */
-    if ( size <= 0 )
+    if ( size == 0 )
     {
       ft_mem_free( memory, P );
       return FT_Err_Ok;
     }
+
+    if ( size < 0 || current < 0 )
+      return FT_Err_Invalid_Argument;
 
     Q = memory->realloc( memory, current, size, *P );
     if ( !Q )

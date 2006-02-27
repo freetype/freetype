@@ -150,7 +150,7 @@
     FT_UNUSED( target );
 
 
-    for ( ; read_count > 0; read_count -= 2 )
+    for ( ; read_count > 1; read_count -= 2 )
     {
       FT_Int         reference, delta;
       FT_UInt        count;
