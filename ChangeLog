@@ -1,18 +1,24 @@
+2006-02-27  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/cache/ftccache.h
+	[FT_CONFIG_OPTION_OLD_INTERNALS]: Remove declaration of
+	ftc_node_done.
+
 2006-02-27  David Turner  <david@freetype.org>
 
-    * src/base/ftutil.c: ft_mem_alloc and related functions now return an
-    error if a negative size is passed in parameters.
+	* src/base/ftutil.c: `ft_mem_alloc' and related functions now return
+	an error if a negative size is passed in parameters.
 
-    * src/cache/ftccache.c: make ftc_node_destroy FT_BASE_DEF, it needs to
-    be exported for rogue clients
+	* src/cache/ftccache.c: Make ftc_node_destroy FT_BASE_DEF, it needs
+	to be exported for rogue clients.
     
-    * src/pshinter/pshglob.c: prevent problems with malformed fonts which
-    have an odd number of blue values (these are broken according to the
-    specs).
+	* src/pshinter/pshglob.c: Prevent problems with malformed fonts
+	which have an odd number of blue values (these are broken according
+	to the specs).
 
-    * src/cff/cffload.c, src/type1/t1load.c: modify the loaders to force
-    even-ness of 'num_blue_values'. Also change the CFF loader so that
-    invalid entries in index files are ignored.
+	* src/cff/cffload.c, src/type1/t1load.c: Modify the loaders to force
+	even-ness of `num_blue_values'.  Also change the CFF loader so that
+	invalid entries in index files are ignored.
 
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 
@@ -27,16 +33,18 @@
 	builds/mac/FreeType.ppc_classic.make.txt:
 	Update to new header inclusion introduced on 2006-02-16.
 
+>>>>>>> 1.1258
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftobjs.c (ft_glyphslot_grid_fit_metrics, FT_Load_Glyph):
 	Re-enable glyph metrics grid-fitting.  It is now done in the base
 	layer.
-	(FT_Set_Char_Size, FT_Set_Pixel_Sizes): Make sure the width and height
-	are not too small or too large, just like we were doing in 2.1.10.
+	(FT_Set_Char_Size, FT_Set_Pixel_Sizes): Make sure the width and
+	height are not too small or too large, just like we were doing in
+	2.1.10.
 
-	* src/autofit/afloader.c (af_loader_load_g): The vertical metrics are
-	not scaled.
+	* src/autofit/afloader.c (af_loader_load_g): The vertical metrics
+	are not scaled.
 
 2006-02-26  Werner Lemberg  <wl@gnu.org>
 

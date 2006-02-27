@@ -132,8 +132,6 @@
   /*************************************************************************/
 
 
-  /* no need for specific finalizer; we use `ftc_node_done' directly */
-
   FT_CALLBACK_DEF( void )
   ftc_cmap_node_free( FTC_Node   ftcnode,
                       FTC_Cache  cache )

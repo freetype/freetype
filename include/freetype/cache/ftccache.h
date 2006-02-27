@@ -87,10 +87,6 @@ FT_BEGIN_HEADER
   FT_BASE( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager );
-
-  FT_BASE( void )
-  ftc_node_done( FTC_Node     node,
-                 FTC_Manager  manager );
 #endif
 
 
