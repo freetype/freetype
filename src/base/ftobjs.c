@@ -2382,6 +2382,11 @@
     FT_Size_RequestRec  req;
 
 
+    if ( !char_width )
+      char_width = char_height;
+    else if ( !char_height )
+      char_height = char_width;
+
     if ( char_width  < 1 * 64 )
       char_width  = 1 * 64;
     if ( char_height < 1 * 64 )
