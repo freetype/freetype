@@ -6,19 +6,22 @@
 
 2006-02-27  David Turner  <david@freetype.org>
 
-	* src/base/ftutil.c: `ft_mem_alloc' and related functions now return
-	an error if a negative size is passed in parameters.
+	* src/base/ftutil.c (ft_mem_alloc, ft_mem_qalloc, ft_mem_realloc,
+	ft_mem_qrealloc): Return an error if a negative size is passed in
+	parameters.
 
 	* src/cache/ftccache.c: Make ftc_node_destroy FT_BASE_DEF, it needs
 	to be exported for rogue clients.
     
-	* src/pshinter/pshglob.c: Prevent problems with malformed fonts
-	which have an odd number of blue values (these are broken according
-	to the specs).
+	* src/pshinter/pshglob.c (psh_blues_set_zones_0): Prevent problems
+	with malformed fonts which have an odd number of blue values (these
+	are broken according to the specs).
 
-	* src/cff/cffload.c, src/type1/t1load.c: Modify the loaders to force
-	even-ness of `num_blue_values'.  Also change the CFF loader so that
-	invalid entries in index files are ignored.
+	* src/cff/cffload.c (cff_subfont_load), src/type1/t1load.c
+	(T1_Open_Face): Modify the loaders to force even-ness of
+	`num_blue_values'.
+
+	(cff_index_access_element): Ignore invalid entries in index files.
 
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 
@@ -33,10 +36,10 @@
 	builds/mac/FreeType.ppc_classic.make.txt:
 	Update to new header inclusion introduced on 2006-02-16.
 
->>>>>>> 1.1258
 2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
 
-	* src/base/ftobjs.c (ft_glyphslot_grid_fit_metrics, FT_Load_Glyph):
+	* src/base/ftobjs.c (GRID_FIT_METRICS): New macro.
+	(ft_glyphslot_grid_fit_metrics, FT_Load_Glyph) [GRID_FIT_METRICS]:
 	Re-enable glyph metrics grid-fitting.  It is now done in the base
 	layer.
 	(FT_Set_Char_Size, FT_Set_Pixel_Sizes): Make sure the width and

@@ -115,6 +115,7 @@
 
     if ( size < 0 || current < 0 )
     {
+      /* may help catch/prevent nasty security issues */
       error = FT_Err_Invalid_Argument;
     }  
     else if ( size == 0 )
@@ -161,6 +162,7 @@
 
     if ( size < 0 || current < 0 )
     {
+      /* may help catch/prevent nasty security issues */
       error = FT_Err_Invalid_Argument;
     }
     else if ( size == 0 )
@@ -190,6 +192,7 @@
     return block;
   }
 
+
   FT_BASE_DEF( void )
   ft_mem_free( FT_Memory   memory,
                const void *P )
@@ -211,6 +214,7 @@
   { 
     FT_Error  error = FT_Err_Ok;
     
+
     FT_ASSERT( P != 0 );
 
     if ( size > 0 )
@@ -250,6 +254,7 @@
   {
     FT_Error  error = FT_Err_Ok;
     
+
     FT_ASSERT( P != 0 );
 
     if ( size > 0 )

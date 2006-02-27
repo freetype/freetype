@@ -2041,7 +2041,7 @@
       if ( error )
         goto Exit;
 
-      /* ensure that 'num_blue_values' is even */
+      /* ensure that `num_blue_values' is even */
       priv->num_blue_values &= ~1;
     }
 
