@@ -36,6 +36,7 @@
 #include FT_SERVICE_KERNING_H
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 
+#define GRID_FIT_METRICS
 
   FT_BASE_DEF( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
@@ -478,6 +479,50 @@
   ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
 
 
+#ifdef GRID_FIT_METRICS
+  static void
+  ft_glyphslot_grid_fit_metrics( FT_GlyphSlot  slot,
+                                 FT_Bool       vertical )
+  {
+    FT_Glyph_Metrics*  metrics = &slot->metrics;
+    FT_Pos             right, bottom;
+
+
+    if ( vertical )
+    {
+      metrics->horiBearingX = FT_PIX_FLOOR( metrics->horiBearingX );
+      metrics->horiBearingY = FT_PIX_CEIL ( metrics->horiBearingY );
+
+      right  = FT_PIX_CEIL( metrics->vertBearingX + metrics->width );
+      bottom = FT_PIX_CEIL( metrics->vertBearingY + metrics->height );
+
+      metrics->vertBearingX = FT_PIX_FLOOR( metrics->vertBearingX );
+      metrics->vertBearingY = FT_PIX_FLOOR( metrics->vertBearingY );
+
+      metrics->width  = right - metrics->vertBearingX;
+      metrics->height = bottom - metrics->vertBearingY;
+    }
+    else
+    {
+      metrics->vertBearingX = FT_PIX_FLOOR( metrics->vertBearingX );
+      metrics->vertBearingY = FT_PIX_FLOOR( metrics->vertBearingY );
+
+      right  = FT_PIX_CEIL ( metrics->horiBearingX + metrics->width );
+      bottom = FT_PIX_FLOOR( metrics->horiBearingY - metrics->height );
+
+      metrics->horiBearingX = FT_PIX_FLOOR( metrics->horiBearingX );
+      metrics->horiBearingY = FT_PIX_CEIL ( metrics->horiBearingY );
+
+      metrics->width  = right - metrics->horiBearingX;
+      metrics->height = metrics->horiBearingY - bottom;
+    }
+
+    metrics->horiAdvance = FT_PIX_ROUND( metrics->horiAdvance );
+    metrics->vertAdvance = FT_PIX_ROUND( metrics->vertAdvance );
+  }
+#endif /* GRID_FIT_METRICS */
+
+
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -575,10 +620,20 @@
       if ( error )
         goto Exit;
 
-      /* check that the loaded outline is correct */
-      error = FT_Outline_Check( &slot->outline );
-      if ( error )
-        goto Exit;
+      if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
+      {
+        /* check that the loaded outline is correct */
+        error = FT_Outline_Check( &slot->outline );
+        if ( error )
+          goto Exit;
+
+#ifdef GRID_FIT_METRICS
+        if ( !( load_flags & FT_LOAD_NO_HINTING ) )
+          ft_glyphslot_grid_fit_metrics( slot,
+                                         load_flags
+                                           & FT_LOAD_VERTICAL_LAYOUT );
+#endif
+      }
     }
 
   Load_Ok:
@@ -2063,7 +2118,7 @@
   {
     /* Compute root ascender, descender, test height, and max_advance */
 
-#if 1
+#ifdef GRID_FIT_METRICS
     metrics->ascender    = FT_PIX_CEIL( FT_MulFix( face->ascender,
                                                    metrics->y_scale ) );
 
@@ -2075,7 +2130,7 @@
 
     metrics->max_advance = FT_PIX_ROUND( FT_MulFix( face->max_advance_width,
                                                     metrics->x_scale ) );
-#else
+#else /* !GRID_FIT_METRICS */
     metrics->ascender    = FT_MulFix( face->ascender,
                                       metrics->y_scale );
 
@@ -2087,7 +2142,7 @@
 
     metrics->max_advance = FT_MulFix( face->max_advance_width,
                                       metrics->x_scale );
-#endif
+#endif /* !GRID_FIT_METRICS */
   }
 
 
@@ -2327,6 +2382,11 @@
     FT_Size_RequestRec  req;
 
 
+    if ( char_width  < 1 * 64 )
+      char_width  = 1 * 64;
+    if ( char_height < 1 * 64 )
+      char_height = 1 * 64;
+
     req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
     req.width          = char_width;
     req.height         = char_height;
@@ -2346,6 +2406,22 @@
   {
     FT_Size_RequestRec  req;
 
+
+    if ( pixel_width == 0 )
+      pixel_width = pixel_height;
+    else if ( pixel_height == 0 )
+      pixel_height = pixel_width;
+
+    if ( pixel_width  < 1 )
+      pixel_width  = 1;
+    if ( pixel_height < 1 )
+      pixel_height = 1;
+
+    /* use `>=' to avoid potention compiler warning on 16bit platforms */
+    if ( pixel_width  >= 0xFFFFU )
+      pixel_width  = 0xFFFFU;
+    if ( pixel_height >= 0xFFFFU )
+      pixel_height = 0xFFFFU;
 
     req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
     req.width          = pixel_width << 6;

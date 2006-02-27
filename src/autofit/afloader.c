@@ -378,12 +378,21 @@
   Hint_Metrics:
     if ( depth == 0 )
     {
-      FT_BBox  bbox;
+      FT_BBox    bbox;
+      FT_Vector  vvector;
 
+
+      vvector.x = slot->metrics.vertBearingX - slot->metrics.horiBearingX;
+      vvector.y = slot->metrics.vertBearingY - slot->metrics.horiBearingY;
+      vvector.x = FT_MulFix( vvector.x, metrics->scaler.x_scale );
+      vvector.y = FT_MulFix( vvector.y, metrics->scaler.y_scale );
 
       /* transform the hinted outline if needed */
       if ( loader->transformed )
+      {
         FT_Outline_Transform( &gloader->base.outline, &loader->trans_matrix );
+        FT_Vector_Transform( &vvector, &loader->trans_matrix );
+      }
 
       /* we must translate our final outline by -pp1.x and compute */
       /* the new metrics                                           */
@@ -402,6 +411,9 @@
       slot->metrics.horiBearingX = bbox.xMin;
       slot->metrics.horiBearingY = bbox.yMax;
 
+      slot->metrics.vertBearingX = FT_PIX_FLOOR( bbox.xMin + vvector.x );
+      slot->metrics.vertBearingY = FT_PIX_FLOOR( bbox.yMax + vvector.y );
+
       /* for mono-width fonts (like Andale, Courier, etc.) we need */
       /* to keep the original rounded advance width                */
 #if 0
@@ -418,7 +430,11 @@
                                                metrics->scaler.x_scale );
 #endif
 
+      slot->metrics.vertAdvance = FT_MulFix( slot->metrics.vertAdvance,
+                                              metrics->scaler.y_scale );
+
       slot->metrics.horiAdvance = FT_PIX_ROUND( slot->metrics.horiAdvance );
+      slot->metrics.vertAdvance = FT_PIX_ROUND( slot->metrics.vertAdvance );
 
       /* now copy outline into glyph slot */
       FT_GlyphLoader_Rewind( internal->loader );

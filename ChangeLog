@@ -1,3 +1,14 @@
+2006-02-27  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/base/ftobjs.c (ft_glyphslot_grid_fit_metrics, FT_Load_Glyph):
+	Re-enable glyph metrics grid-fitting.  It is now done in the base
+	layer.
+	(FT_Set_Char_Size, FT_Set_Pixel_Sizes): Make sure the width and height
+	are not too small or too large, just like we were doing in 2.1.10.
+
+	* src/autofit/afloader.c (af_loader_load_g): The vertical metrics are
+	not scaled.
+
 2006-02-26  Werner Lemberg  <wl@gnu.org>
 
 	* docs/release: Minor additions and clarifications.
