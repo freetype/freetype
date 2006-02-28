@@ -1,3 +1,9 @@
+2006-02-28  David Turner    <david@freetype.org>
+
+    * tagging VER-2-2-0-RC4
+
+    * docs/CHANGES: documentation updates
+
 2006-02-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* modules.cfg: Compile in ftgxval.c by default to build

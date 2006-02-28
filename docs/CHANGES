@@ -15,6 +15,23 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   II. IMPORTANT CHANGES
 
+    - version 2.2 does not expose its internals anymore, i.e. the content
+      of 'include/freetype/internal' is not copied anymore by the
+      'make install' command. This means that this will *break* source
+      compatibility for a number of rogue clients that used to directly
+      access freetype internal functions and/or structures.
+      
+      we provide patches for most rogue clients. See the following page
+      for more information:
+      
+          http://www.freetype.org/freetype2/patches/rogue-patches.html      
+
+      Note that, as a convenience to our Unix desktop users, 2.2 is
+      *binary* compatibly with FreeType 2.1.7, which means that installing
+      this release on an existing distribution shall not break any working
+      desktop.
+      
+
     - FreeType's build  mechanism has been redesigned.   With GNU make
       it  is  now  sufficient  in   most  cases  to  edit  two  files:
       `modules.cfg',  to  select   the  library  components,  and  the
@@ -26,15 +43,6 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
     - The  LIGHT  hinting algorithm  produces  more pleasant  results.
       Also, using the  FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph
       always forces auto-hinting, as a special exception.
-
-    - A  new API  `FT_TrueTypeGX_Validate'  (in FT_GX_VALIDATE_H)  has
-      been added to validate TrueType GX/ATT tables (feat, mort, morx,
-      bsln, just, kern, opbd, trak,  prop).  After validation it is no
-      longer  necessary to  check  for errors  in  those tables  while
-      accessing  them.  This  code  has been  contributed by  Masatake
-      Yamato and Toshiya Suzuki.
-
-      By default, this module is not activated.
 
     - The following callback function  types have changed slightly (by
       adding the `const' keyword where appropriate):
@@ -68,6 +76,9 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       in 2.1.10  is to allow  size selection through  real dimensions,
       which can now be done through `FT_Request_Size'.
 
+    - some security issues were discovered and fixed in the CFF and
+      Type 1 loader, which made crashing FreeType through malformed
+      font files.
 
   III. MISCELLANEOUS
 
@@ -92,14 +103,8 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       function, and returns an `unimplemented' error.  For details see
       builds/mac/README.
 
-    - SFNT cmap handling has been improved, mainly to run faster.
-
-    - A new  face flag `FT_FACE_FLAG_HINTER'  has been added  which is
-      set if the font's driver has  a hinting engine of its own.  This
-      makes  it possible  to check  at run-time  whether  the TrueType
-      bytecode interpreter  has been activated.  An example  use is to
-      enable  the interpretation of  the `gasp'  table only  if native
-      TrueType hinting is available.
+    - SFNT cmap handling has been improved, mainly to run much faster
+      with CJK fonts.
 
     - A   new  function   `FT_Get_TrueType_Engine_Type   (declared  in
       `FT_MODULE_H')  is  provided  to  determine the  status  of  the
@@ -130,8 +135,9 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
     - Better AFM support.  This includes track kerning support.
 
-    - The  auto hinter  now employs  a new  algorithm,  based on Akito
-      Hirai's patch, for the CJK script.
+    - The  auto hinter  now employs  a new  algorithm for CJK fonts, 
+      based on Akito Hirai's patch. Note that this only works for 
+      fonts with a Unicode charmap at the moment.
 
 
 ======================================================================
