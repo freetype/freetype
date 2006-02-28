@@ -15,22 +15,21 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
   II. IMPORTANT CHANGES
 
-    - version 2.2 does not expose its internals anymore, i.e. the content
-      of 'include/freetype/internal' is not copied anymore by the
-      'make install' command. This means that this will *break* source
-      compatibility for a number of rogue clients that used to directly
-      access freetype internal functions and/or structures.
-      
-      we provide patches for most rogue clients. See the following page
-      for more information:
-      
-          http://www.freetype.org/freetype2/patches/rogue-patches.html      
+    - Version 2.2 no longer exposes its internals, this is, the header
+      files  located in  the `include/freetype/internal'  directory of
+      the source package are not  copied anymore by the `make install'
+      command.  Consequently, a number of rogue clients which directly
+      access  FreeType's  internal   functions  and  structures  won't
+      compile without modification.
+      We provide  patches for  most of those  rogue clients.   See the
+      following page for more information:
 
-      Note that, as a convenience to our Unix desktop users, 2.2 is
-      *binary* compatibly with FreeType 2.1.7, which means that installing
-      this release on an existing distribution shall not break any working
-      desktop.
-      
+          http://www.freetype.org/freetype2/patches/rogue-patches.html
+
+      Note that, as  a convenience to our Unix  desktop users, version
+      2.2 is *binary* compatible with FreeType 2.1.7, which means that
+      installing this  release on  an existing distribution  shall not
+      break any working desktop.
 
     - FreeType's build  mechanism has been redesigned.   With GNU make
       it  is  now  sufficient  in   most  cases  to  edit  two  files:
@@ -70,15 +69,16 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       its index.  Code  using other functions to select bitmap strikes
       should be updated to use this function.
 
-    - In 2.1.10,  the behavior of `FT_Set_Pixel_Sizes'  is changed for
-      BDF/PCF  fonts,  and only for  them.  This causes inconsistency.
-      In this release,  we undo the change.  The intent  of the change
+    - In 2.1.10, the behaviour  of `FT_Set_Pixel_Sizes' is changed for
+      BDF/PCF fonts,  and only  for them.  This  causes inconsistency.
+      In this release,  we undo the change.  The  intent of the change
       in 2.1.10  is to allow  size selection through  real dimensions,
       which can now be done through `FT_Request_Size'.
 
-    - some security issues were discovered and fixed in the CFF and
-      Type 1 loader, which made crashing FreeType through malformed
-      font files.
+    - Some security  issues were discovered  and fixed in the  CFF and
+      Type  1 loader, causing  crashes of  FreeType by  malformed font
+      files.
+
 
   III. MISCELLANEOUS
 
@@ -86,7 +86,7 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       values now better reflects its usage and differences: One set is
       used to specify the hinting algorithm, the other to specify pthe
       ixel rendering mode.
-    
+
     - FT_New_Face()  and   FT_New_Face_From_FSSpec()  in  ftmac.c  are
       changed to count supported scalable faces (sfnt, LWFN) only, and
       returns  the  number  of  available faces  via  face->num_faces.
@@ -103,7 +103,7 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
       function, and returns an `unimplemented' error.  For details see
       builds/mac/README.
 
-    - SFNT cmap handling has been improved, mainly to run much faster
+    - SFNT cmap handling has been  improved, mainly to run much faster
       with CJK fonts.
 
     - A   new  function   `FT_Get_TrueType_Engine_Type   (declared  in
@@ -135,9 +135,9 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
     - Better AFM support.  This includes track kerning support.
 
-    - The  auto hinter  now employs  a new  algorithm for CJK fonts, 
-      based on Akito Hirai's patch. Note that this only works for 
-      fonts with a Unicode charmap at the moment.
+    - The auto hinter now employs a new algorithm for CJK fonts, based
+      on Akito  Hirai's patch.   Note that this  only works  for fonts
+      with a Unicode charmap at the moment.
 
 
 ======================================================================
