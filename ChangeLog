@@ -1,3 +1,9 @@
+2006-02-28  Chia-I Wu  <b90201047@ntu.edu.tw>
+
+	* src/base/ftobjs.c (FT_Done_Library): Modules are removed in the
+	reversed order so that type42 module is removed before truetype
+	module.  This avoids double free in some occasions.
+
 2006-02-28  David Turner    <david@freetype.org>
 
     * tagging VER-2-2-0-RC4

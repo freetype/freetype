@@ -3721,8 +3721,12 @@
 
     /* Close all modules in the library */
 #if 1
+    /* XXX Modules are removed in the reversed order so that  */
+    /* type42 module is removed before truetype module.  This */ 
+    /* avoids double free in some occasions.  It is a hack.   */
     while ( library->num_modules > 0 )
-      FT_Remove_Module( library, library->modules[0] );
+      FT_Remove_Module( library,
+                        library->modules[library->num_modules - 1] );
 #else
     {
       FT_UInt  n;
