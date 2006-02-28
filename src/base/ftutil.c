@@ -92,7 +92,7 @@
       if ( block == NULL )
         error = FT_Err_Out_Of_Memory;
     }
-    else
+    else if ( size < 0 )
     {
       /* may help catch/prevent security issues */
       error = FT_Err_Invalid_Argument;

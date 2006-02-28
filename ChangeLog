@@ -1,5 +1,10 @@
 2006-02-28  Chia-I Wu  <b90201047@ntu.edu.tw>
 
+	* src/base/ftutil.c (ft_mem_qalloc) [FT_STRICT_ALIASING]: Do not
+	return error when size == 0.
+
+2006-02-28  Chia-I Wu  <b90201047@ntu.edu.tw>
+
 	* src/base/ftobjs.c (FT_Done_Library): Modules are removed in the
 	reversed order so that type42 module is removed before truetype
 	module.  This avoids double free in some occasions.
