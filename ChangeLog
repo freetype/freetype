@@ -1,3 +1,8 @@
+2006-03-06 David Turner  <david@freetype.org>
+
+    * src/cache/ftcmanag.c (FTC_Manager_Lookup_Size): prevent crashes
+    in Mozilla/FireFox print preview in Ubuntu Hoary
+
 2006-02-28  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	* src/base/ftutil.c (ft_mem_qalloc) [FT_STRICT_ALIASING]: Do not
@@ -40,7 +45,7 @@
 
 	* src/cache/ftccache.c (ftc_node_destroy): Mark as FT_BASE_DEF since
 	it needs to be exported for rogue clients.
-    
+
 	* src/pshinter/pshglob.c (psh_blues_set_zones_0): Prevent problems
 	with malformed fonts which have an odd number of blue values (these
 	are broken according to the specs).

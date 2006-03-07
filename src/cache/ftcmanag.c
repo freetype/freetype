@@ -698,6 +698,7 @@
     FTC_ScalerRec  scaler;
     FT_Error       error;
     FT_Size        size;
+    FT_Face        face;
 
 
     scaler.face_id = font->face_id;
@@ -710,14 +711,17 @@
     error = FTC_Manager_LookupSize( manager, &scaler, &size );
     if ( error )
     {
-      *aface = NULL;
-      *asize = NULL;
+      face = NULL;
+      size = NULL;
     }
     else
-    {
-      *aface = size->face;
+      face = size->face;
+
+    if ( aface )
+      *aface = face;
+
+    if ( asize )
       *asize = size;
-    }
 
     return error;
   }
