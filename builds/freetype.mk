@@ -101,7 +101,6 @@ PUBLIC_DIR   := $(TOP_DIR)/include/freetype
 INTERNAL_DIR := $(PUBLIC_DIR)/internal
 SERVICES_DIR := $(INTERNAL_DIR)/services
 CONFIG_DIR   := $(PUBLIC_DIR)/config
-CACHE_DIR    := $(PUBLIC_DIR)/cache
 
 # The documentation directory.
 #
@@ -169,8 +168,8 @@ OBJECTS_LIST :=
 
 
 # Define $(PUBLIC_H) as the list of all public header files located in
-# `$(TOP_DIR)/include/freetype'.  $(BASE_H), $(CACHE_H), and $(CONFIG_H) are
-# defined similarly.
+# `$(TOP_DIR)/include/freetype'.  $(BASE_H), and $(CONFIG_H) are defined
+# similarly.
 #
 # This is used to simplify the dependency rules -- if one of these files
 # changes, the whole library is recompiled.
@@ -182,10 +181,9 @@ CONFIG_H   := $(wildcard $(CONFIG_DIR)/*.h) \
               $(wildcard $(BUILD_DIR)/freetype/config/*.h) \
               $(FTMODULE_H) \
               $(FTOPTION_H)
-CACHE_H    := $(wildcard $(CACHE_DIR)/*.h)
 DEVEL_H    := $(wildcard $(TOP_DIR)/devel/*.h)
 
-FREETYPE_H := $(PUBLIC_H) $(BASE_H) $(CONFIG_H) $(CACHE_H) $(DEVEL_H)
+FREETYPE_H := $(PUBLIC_H) $(BASE_H) $(CONFIG_H) $(DEVEL_H)
 
 
 # ftsystem component

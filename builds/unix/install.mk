@@ -44,7 +44,7 @@ install: $(PROJECT_LIBRARY)
           $(INSTALL_DATA)                                           \
             $$P $(DESTDIR)$(includedir)/freetype2/freetype/config ; \
         done
-	-$(DELETE° $(DESTDIR)$(includedir)/freetype2/freetype/cache/*
+	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/cache/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/cache
 	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/internal/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/internal

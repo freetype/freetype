@@ -1364,7 +1364,7 @@
 
     /*
      *  In `light' hinting mode we disable horizontal hinting completely.
-     *  we also do it if the face is italic
+     *  We also do it if the face is italic.
      */
     if ( mode == FT_RENDER_MODE_LIGHT                    ||
          (face->style_flags & FT_STYLE_FLAG_ITALIC) != 0 )

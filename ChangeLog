@@ -1,57 +1,86 @@
-2006-03-20 David Turner  <david@freetype.org>
+2006-03-20  Werner Lemberg  <wl@gnu.org>
 
-    * src/autofit/aflatin.c (af_latin_hints_init):
-      disable horizontal hinting for italic/oblique fonts
+	* builds/freetype.mk (CACHE_DIR, CACHE_H): Remove.
+	(FREETYPE_H): Updated.
 
-    * builds/win32/visualc/freetype.dsp: updating the project file, adding
-    missing base source files (e.g. ftstroke.c, ftxf86.c, etc...)
+	* src/cache/rules.mk (CACHE_H_DIR): Remove.
+	(CACHE_DRV_H): Updated.
 
-    * src/autofit/afcjk.c, src/autofit/aflatin.c, src/base/ftobjs.c,
-    src/cff/cffobjs.c, src/cid/cidobjs.c, src/pfr/pfrobjs.c,
-    src/sfnt/sfobjs.c, src/sfnt/ttmtx.c, src/truetype/ttpload.c,
-    src/truetype/ttpload.h, src/type1/t1afm.c, src/type1/t1objs.c:
-      removing compiler warnings when building with Visual C++ 6 and /W4
+2006-03-20  David Turner  <david@freetype.org>
 
-    * builds/unix/install.mk:
-      changing the installation procedure to remove the 'freetype/cache'
-      from the target directory.
+	* include/freetype/cache/ftccache.h,
+	include/freetype/cache/ftccmap.h, include/freetype/cache/ftcglyph.h
+	include/freetype/cache/ftcimage.h include/freetype/cache/ftcmanag.h
+	include/freetype/cache/ftcmru.h include/freetype/cache/ftcsbits.h:
+	Move to...
 
-    * include/freetype/cache/ftccache.h,
-    include/freetype/cache/ftccmap.h,
-    include/freetype/cache/ftcglyph.h
-    include/freetype/cache/ftcimage.h
-    include/freetype/cache/ftcmanag.h
-    include/freetype/cache/ftcmru.h
-    include/freetype/cache/ftcsbits.h:
-      removing these header files from the public include directory.
+	* src/cache/ftccache.h, src/cache/ftcglyph.h, src/cache/ftcimage.h,
+	src/cache/ftcsbits.h, src/cache/ftcmanag.h, src/cache/ftccmap.h,
+	src/cache/ftcmru.h: This new location.
+	Update declarations according to the changes in the corresponding
+	source files.
 
-    * include/freetype/config/ftheader.h:
-      changing the definition of FT_CACHE_INTERNAL_XXX_H macros to
-      redirect to FT_CACHE_H instead
+	Note that these files are not used by FreeType clients; all public
+	APIs of the cache module have been already moved to
+	`include/freetype/ftcache.h', and all FT_CACHE_INTERNAL_XXXX_H
+	macros resolve to it.
 
-    * src/cache/ftcbasic.c, src/cache/ftccache.c, src/cache/ftccache.h,
-    src/cache/ftccback.h, src/cache/ftccmap.c, src/cache/ftcglyph.c,
-    src/cache/ftcglyph.h, src/cache/ftcimage.c, src/cache/ftcimage.h,
-    src/cache/ftcmanag.c, src/cache/ftcmanag.h, src/cache/ftcmru.c,
-    src/cache/ftcmru.h, src/cache/ftcsbits.c, src/cache/ftcsbits.h:
-      modifications to prevent using the FT_CACHE_INTERNAL_XXX_H macros,
-      and grab the headers in 'src/cache' instead (see below).
+	Reason for the move is to allow modifications of the internals
+	without interferences with rogue clients.  Note that there are no
+	known clients that access the cache internals at the moment.
 
-    * src/cache/ftccache.h, src/cache/ftcglyph.h, src/cache/ftcimage.h,
-    src/cache/ftcsbits.h, src/cache/ftcmanag.h, src/cache/ftccmap.h,
-    src/cache/ftcmru.h: copying the cache's internal header files which
-    were located in 'include/freetype/cache' to the 'src/cache' directory
-    instead.
+	* builds/unix/install.mk (install): Don't install headers from
+	$(CACHE_H).
+	Remove `freetype/cache' from the target directory.
 
-    Note that these files are not used by FreeType clients, all cache
-    public APIs have been already moved to include/freetype/ftcache.h,
-    and the FT_CACHE_INTERNAL_XXXX_H macros all resolve to it.
+	* include/freetype/config/ftheader.h (FT_CACHE_MANAGER_H,
+	FT_CACHE_INTERNAL_MRU_H, FT_CACHE_INTERNAL_MANAGER_H,
+	FT_CACHE_INTERNAL_CACHE_H, FT_CACHE_INTERNAL_GLYPH_H,
+	FT_CACHE_INTERNAL_IMAGE_H, FT_CACHE_INTERNAL_SBITS_H): Point to
+	FT_CACHE_H.
 
-    the move is to allow us to modify the internals without intereference
-    from rogue clients. Note that there are no known client that accesses
-    the cache internals at the moment.
+	* src/cache/ftcbasic.c, src/cache/ftccache.h, src/cache/ftccback.h,
+	src/cache/ftccmap.c, src/cache/ftcglyph.c, src/cache/ftcglyph.h,
+	src/cache/ftcimage.c, src/cache/ftcimage.h, src/cache/ftcmanag.c,
+	src/cache/ftcmanag.h, src/cache/ftcmru.h, src/cache/ftcsbits.c,
+	src/cache/ftcsbits.h: Don't use the FT_CACHE_INTERNAL_XXX_H macros
+	but include the headers directly (which are now in `src/cache').
 
-2006-03-06 David Turner  <david@freetype.org>
+	* src/cache/ftccache.c:  Don't use the FT_CACHE_INTERNAL_XXX_H
+	macros but include the headers directly.
+	(FTC_Cache_Init, FTC_Cache_Done, FTC_Cache_NewNode,
+	FTC_Cache_Lookup, FTC_Cache_RemoveFaceID): Declare as FT_LOCAL_DEF.
+
+	* src/cache/ftccache.c:  Don't use the FT_CACHE_INTERNAL_XXX_H
+	macros but include the headers directly.
+	(FTC_MruNode_Prepend, FTC_MruNode_Up, FTC_MruNode_Remove,
+	FTC_MruList_Init, FTC_MruList_Reset, FTC_MruList_Done,
+	FTC_MruList_New, FTC_MruList_Remove, FTC_MruList_RemoveSelection):
+	Declare as FT_LOCAL_DEF.
+	(FTC_MruListFind, FTC_MruList_Lookup) [!FTC_INLINE]: Compile
+	conditionally.
+	Declare as FT_LOCAL_DEF.
+
+
+	* builds/win32/visualc/freetype.dsp: Update project file, add
+	missing base source files (ftstroke.c, ftxf86.c, etc.).
+
+
+	* src/autofit/afcjk.c, src/autofit/aflatin.c, src/base/ftobjs.c,
+	src/cff/cffobjs.c, src/cid/cidobjs.c, src/pfr/pfrobjs.c,
+	src/sfnt/sfobjs.c, src/sfnt/ttmtx.c, src/type1/t1afm.c,
+	src/type1/t1objs.c: Remove compiler warnings when building with
+	Visual C++ 6 and /W4.
+
+	* src/autofit/aflatin.c (af_latin_hints_init): Disable horizontal
+	hinting for italic/oblique fonts.
+
+
+
+	* src/truetype/ttpload.c, src/truetype/ttpload.h
+	(tt_face_get_device_metrics): Change second argument to `FT_UInt'.
+
+2006-03-06  David Turner  <david@freetype.org>
 
 	* src/cache/ftcmanag.c (FTC_Manager_Lookup_Size): Prevent crashes in
 	Mozilla/FireFox print preview in Ubuntu Hoary.

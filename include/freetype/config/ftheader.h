@@ -624,10 +624,10 @@
 #define FT_ERROR_DEFINITIONS_H  <freetype/fterrdef.h>
 
 
-/* the internals of the cache sub-system are no longer exposed, we  */
-/* default to FT_CACHE_H at the moment just in case, but we know of */
-/* no rogue client that uses them anyway                            */
-/*                                                                  */
+  /* The internals of the cache sub-system are no longer exposed.  We */
+  /* default to FT_CACHE_H at the moment just in case, but we know of */
+  /* no rogue client that uses them.                                  */
+  /*                                                                  */
 #define FT_CACHE_MANAGER_H           <freetype/ftcache.h>
 #define FT_CACHE_INTERNAL_MRU_H      <freetype/ftcache.h>
 #define FT_CACHE_INTERNAL_MANAGER_H  <freetype/ftcache.h>
@@ -635,6 +635,7 @@
 #define FT_CACHE_INTERNAL_GLYPH_H    <freetype/ftcache.h>
 #define FT_CACHE_INTERNAL_IMAGE_H    <freetype/ftcache.h>
 #define FT_CACHE_INTERNAL_SBITS_H    <freetype/ftcache.h>
+
 
 #define FT_XFREE86_H              <freetype/ftxf86.h>
 
