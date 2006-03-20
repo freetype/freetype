@@ -575,18 +575,18 @@
     {
       if ( p + record_size > limit )
         break;
-        
+
       face->hdmx_record_sizes[nn] = p[0];
       p                          += record_size;
     }
-    
+
     face->hdmx_record_count = nn;
     face->hdmx_table_size   = table_size;
     face->hdmx_record_size  = record_size;
 
   Exit:
     return error;
-    
+
   Fail:
     FT_FRAME_RELEASE( face->hdmx_table );
     face->hdmx_table_size = 0;
@@ -599,7 +599,7 @@
   {
     FT_Stream  stream = face->root.stream;
     FT_Memory  memory = stream->memory;
-    
+
 
     FT_FREE( face->hdmx_record_sizes );
     FT_FRAME_RELEASE( face->hdmx_table );
@@ -708,7 +708,7 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Byte* )
   tt_face_get_device_metrics( TT_Face  face,
-                              FT_Byte  ppem,
+                              FT_UInt  ppem,
                               FT_UInt  gindex )
   {
 #ifdef FT_OPTIMIZE_MEMORY

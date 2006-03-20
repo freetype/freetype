@@ -64,7 +64,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Byte* )
   tt_face_get_device_metrics( TT_Face    face,
-                              FT_Byte    ppem,
+                              FT_UInt    ppem,
                               FT_UInt    gindex );
 
 FT_END_HEADER

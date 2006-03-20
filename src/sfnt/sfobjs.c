@@ -567,7 +567,7 @@
     if ( !has_outline && sfnt->load_bhed )
     {
       LOAD_( bhed );
-      is_apple_sbit = !error;
+      is_apple_sbit = FT_BOOL(!error);
     }
 
     /* load the font header (`head' table) if this isn't an Apple */
@@ -947,7 +947,7 @@
             if ( error )
               goto Exit;
 
-            bsize->height = metrics.height >> 6;
+            bsize->height = (FT_Short)(metrics.height >> 6);
             bsize->width = (FT_Short)(
                 ( avgwidth * metrics.x_ppem + em_size / 2 ) / em_size );
 

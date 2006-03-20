@@ -214,6 +214,14 @@ SOURCE=..\..\..\src\base\ftbase.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\base\ftbbox.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftbdf.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\base\ftbitmap.c
 # End Source File
 # Begin Source File
@@ -231,6 +239,10 @@ SOURCE=..\ftdebug.c
 
 SOURCE=..\..\..\src\base\ftglyph.c
 # SUBTRACT CPP /Fr
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftgxval.c
 # End Source File
 # Begin Source File
 
@@ -252,8 +264,36 @@ SOURCE=..\..\..\src\base\ftmm.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\base\ftotval.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftpfr.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftstroke.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftsynth.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\base\ftsystem.c
 # SUBTRACT CPP /Fr
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\fttype1.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftwinfnt.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftxf86.c
 # End Source File
 # Begin Source File
 

@@ -285,8 +285,8 @@
       t1_face->bbox.xMax = ( fi->FontBBox.xMax + 0xFFFFU ) >> 16;
       t1_face->bbox.yMax = ( fi->FontBBox.yMax + 0xFFFFU ) >> 16;
 
-      t1_face->ascender  = ( fi->Ascender  + 0x8000U ) >> 16;
-      t1_face->descender = ( fi->Descender + 0x8000U ) >> 16;
+      t1_face->ascender  = (FT_Short)(( fi->Ascender  + 0x8000U ) >> 16);
+      t1_face->descender = (FT_Short)(( fi->Descender + 0x8000U ) >> 16);
 
       if ( fi->NumKernPair )
       {

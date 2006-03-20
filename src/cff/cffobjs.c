@@ -471,7 +471,7 @@
 
         cffface->height = (FT_Short)( ( cffface->units_per_EM * 12 ) / 10 );
         if ( cffface->height < cffface->ascender - cffface->descender )
-          cffface->height = cffface->ascender - cffface->descender;
+          cffface->height = (FT_Short)( cffface->ascender - cffface->descender );
 
         cffface->underline_position  =
           (FT_Short)( dict->underline_position >> 16 );

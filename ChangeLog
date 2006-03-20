@@ -1,5 +1,14 @@
 2006-03-20 David Turner  <david@freetype.org>
 
+    * builds/win32/visualc/freetype.dsp: updating the project file, adding
+    missing base source files (e.g. ftstroke.c, ftxf86.c, etc...)
+
+    * src/autofit/afcjk.c, src/autofit/aflatin.c, src/base/ftobjs.c,
+    src/cff/cffobjs.c, src/cid/cidobjs.c, src/pfr/pfrobjs.c,
+    src/sfnt/sfobjs.c, src/sfnt/ttmtx.c, src/truetype/ttpload.c,
+    src/truetype/ttpload.h, src/type1/t1afm.c, src/type1/t1objs.c:
+      removing compiler warnings when building with Visual C++ 6 and /W4
+
     * builds/unix/install.mk:
       changing the installation procedure to remove the 'freetype/cache'
       from the target directory.

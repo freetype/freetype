@@ -630,8 +630,7 @@
 #ifdef GRID_FIT_METRICS
         if ( !( load_flags & FT_LOAD_NO_HINTING ) )
           ft_glyphslot_grid_fit_metrics( slot,
-                                         load_flags
-                                           & FT_LOAD_VERTICAL_LAYOUT );
+              FT_BOOL( load_flags & FT_LOAD_VERTICAL_LAYOUT ) );
 #endif
       }
     }

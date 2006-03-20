@@ -214,9 +214,9 @@
     FT_FRAME_EXIT();
 
     if ( vertical )
-      face->vertical.number_Of_VMetrics = num_longs;
+      face->vertical.number_Of_VMetrics = (FT_UShort)num_longs;
     else
-      face->horizontal.number_Of_HMetrics = num_longs;
+      face->horizontal.number_Of_HMetrics = (FT_UShort)num_longs;
 
   Fail:
     return error;

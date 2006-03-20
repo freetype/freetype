@@ -420,7 +420,7 @@
 
       root->height = (FT_Short)( ( root->units_per_EM * 12 ) / 10 );
       if ( root->height < root->ascender - root->descender )
-        root->height = root->ascender - root->descender;
+        root->height = (FT_Short)( root->ascender - root->descender );
 
       /* now compute the maximum advance width */
       root->max_advance_width =

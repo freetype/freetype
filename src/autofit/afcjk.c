@@ -163,7 +163,7 @@
     AF_Segment    segment_limit = segments + axis->num_segments;
     AF_Direction  major_dir     = axis->major_dir;
     AF_Segment    seg1, seg2;
-    FT_UShort     len_threshold;
+    FT_Pos        len_threshold;
     FT_Pos        dist_threshold;
 
 
@@ -1275,10 +1275,10 @@
     FT_Bool       snapping;
 
 
-    snapping = ( ( dim == AF_DIMENSION_HORZ             &&
-                   AF_LATIN_HINTS_DO_HORZ_SNAP( hints ) ) ||
-                 ( dim == AF_DIMENSION_VERT             &&
-                   AF_LATIN_HINTS_DO_VERT_SNAP( hints ) ) );
+    snapping = FT_BOOL( ( dim == AF_DIMENSION_HORZ             &&
+                          AF_LATIN_HINTS_DO_HORZ_SNAP( hints ) )  ||
+                        ( dim == AF_DIMENSION_VERT             &&
+                          AF_LATIN_HINTS_DO_VERT_SNAP( hints ) )  );
 
     for ( edge = edges; edge < edge_limit; edge++ )
     {
