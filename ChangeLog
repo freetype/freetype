@@ -1,5 +1,9 @@
 2006-03-20 David Turner  <david@freetype.org>
 
+    * builds/unix/install.mk:
+      changing the installation procedure to remove the 'freetype/cache'
+      from the target directory.
+
     * include/freetype/cache/ftccache.h,
     include/freetype/cache/ftccmap.h,
     include/freetype/cache/ftcglyph.h
