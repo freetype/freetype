@@ -84,8 +84,8 @@ LATEST CHANGES BETWEEN 2.2.0 and 2.1.10
 
     - The documentation  for FT_LOAD_TARGET_XXX and FT_RENDER_MODE_XXX
       values now better reflects its usage and differences: One set is
-      used to specify the hinting algorithm, the other to specify pthe
-      ixel rendering mode.
+      used to specify the hinting algorithm, the other to specify  the
+      pixel rendering mode.
 
     - FT_New_Face()  and   FT_New_Face_From_FSSpec()  in  ftmac.c  are
       changed to count supported scalable faces (sfnt, LWFN) only, and

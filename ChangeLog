@@ -1,3 +1,19 @@
+2006-03-20 David Turner  <david@freetype.org>
+
+    * src/cache/ftccache.h, src/cache/ftcglyph.h, src/cache/ftcimage.h,
+    src/cache/ftcsbits.h, src/cache/ftcmanag.h, src/cache/ftccmap.h,
+    src/cache/ftcmru.h: copying the cache's internal header files which
+    were located in 'include/freetype/cache' to the 'src/cache' directory
+    instead.
+
+    Note that these files are not used by FreeType clients, all cache
+    public APIs have been already moved to include/freetype/ftcache.h,
+    and the FT_CACHE_INTERNAL_XXXX_H macros all resolve to it.
+
+    the move is to allow us to modify the internals without intereference
+    from rogue clients. Note that there are no known client that accesses
+    the cache internals at the moment.
+
 2006-03-06 David Turner  <david@freetype.org>
 
 	* src/cache/ftcmanag.c (FTC_Manager_Lookup_Size): Prevent crashes in

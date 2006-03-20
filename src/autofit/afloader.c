@@ -220,13 +220,6 @@
 
           slot->lsb_delta = loader->pp1.x - pp1x_uh;
           slot->rsb_delta = loader->pp2.x - pp2x_uh;
-
-#if 0
-          /* try to fix certain bad advance computations */
-          if ( loader->pp2.x + loader->pp1.x == edge2->pos && old_rsb > 4 )
-            loader->pp2.x += 64;
-#endif
-
         }
         else
 #endif /* !AF_USE_WARPER */
