@@ -1,5 +1,8 @@
 2006-03-20 David Turner  <david@freetype.org>
 
+    * src/autofit/aflatin.c (af_latin_hints_init):
+      disable horizontal hinting for italic/oblique fonts
+
     * builds/win32/visualc/freetype.dsp: updating the project file, adding
     missing base source files (e.g. ftstroke.c, ftxf86.c, etc...)
 

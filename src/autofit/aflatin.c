@@ -1312,6 +1312,7 @@
   {
     FT_Render_Mode  mode;
     FT_UInt32       scaler_flags, other_flags;
+    FT_Face         face = metrics->root.scaler.face;
 
 
     af_glyph_hints_rescale( hints, (AF_ScriptMetrics)metrics );
@@ -1363,8 +1364,10 @@
 
     /*
      *  In `light' hinting mode we disable horizontal hinting completely.
+     *  we also do it if the face is italic
      */
-    if ( mode == FT_RENDER_MODE_LIGHT )
+    if ( mode == FT_RENDER_MODE_LIGHT                    ||
+         (face->style_flags & FT_STYLE_FLAG_ITALIC) != 0 )
       scaler_flags |= AF_SCALER_FLAG_NO_HORIZONTAL;
 
     hints->scaler_flags = scaler_flags;
