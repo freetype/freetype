@@ -18,7 +18,7 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_IMAGE_H
+#include "ftcimage.h"
 #include FT_INTERNAL_MEMORY_H
 
 #include "ftccback.h"

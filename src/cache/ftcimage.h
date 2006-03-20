@@ -23,7 +23,7 @@
   *  FTC_ICache extends FTC_GCache.  For an implementation example,
   *  see FTC_ImageCache in `src/cache/ftbasic.c'.
   */
-  
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -38,7 +38,7 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_GLYPH_H
+#include "ftcglyph.h"
 
 FT_BEGIN_HEADER
 

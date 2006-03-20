@@ -68,15 +68,15 @@ FT_BEGIN_HEADER
   } FTC_MruNodeRec;
 
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruNode_Prepend( FTC_MruNode  *plist,
                        FTC_MruNode   node );
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruNode_Up( FTC_MruNode  *plist,
                   FTC_MruNode   node );
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruNode_Remove( FTC_MruNode  *plist,
                       FTC_MruNode   node );
 
@@ -127,40 +127,31 @@ FT_BEGIN_HEADER
   } FTC_MruListRec;
 
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruList_Init( FTC_MruList       list,
                     FTC_MruListClass  clazz,
                     FT_UInt           max_nodes,
                     FT_Pointer        data,
                     FT_Memory         memory );
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruList_Reset( FTC_MruList  list );
 
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruList_Done( FTC_MruList  list );
 
-  FT_EXPORT( FTC_MruNode )
-  FTC_MruList_Find( FTC_MruList  list,
-                    FT_Pointer   key );
 
-  FT_EXPORT( FT_Error )
+  FT_LOCAL( FT_Error )
   FTC_MruList_New( FTC_MruList   list,
                    FT_Pointer    key,
                    FTC_MruNode  *anode );
 
-  FT_EXPORT( FT_Error )
-  FTC_MruList_Lookup( FTC_MruList   list,
-                      FT_Pointer    key,
-                      FTC_MruNode  *pnode );
-
-
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruList_Remove( FTC_MruList  list,
                       FTC_MruNode  node );
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_MruList_RemoveSelection( FTC_MruList              list,
                                FTC_MruNode_CompareFunc  selection,
                                FT_Pointer               key );
@@ -207,6 +198,15 @@ FT_BEGIN_HEADER
   FTC_MRULIST_LOOKUP_CMP( list, key, (list)->clazz.node_compare, node, error )
 
 #else  /* !FTC_INLINE */
+
+  FT_LOCAL( FTC_MruNode )
+  FTC_MruList_Find( FTC_MruList  list,
+                    FT_Pointer   key );
+
+  FT_LOCAL( FT_Error )
+  FTC_MruList_Lookup( FTC_MruList   list,
+                      FT_Pointer    key,
+                      FTC_MruNode  *pnode );
 
 #define FTC_MRULIST_LOOKUP( list, key, node, error ) \
   error = FTC_MruList_Lookup( (list), (key), (FTC_MruNode*)&(node) )

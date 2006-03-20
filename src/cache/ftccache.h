@@ -20,7 +20,7 @@
 #define __FTCCACHE_H__
 
 
-#include FT_CACHE_INTERNAL_MRU_H
+#include "ftcmru.h"
 
 FT_BEGIN_HEADER
 
@@ -165,11 +165,11 @@ FT_BEGIN_HEADER
 
 
   /* default cache initialize */
-  FT_EXPORT( FT_Error )
+  FT_LOCAL( FT_Error )
   FTC_Cache_Init( FTC_Cache  cache );
 
   /* default cache finalizer */
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_Cache_Done( FTC_Cache  cache );
 
   /* Call this function to lookup the cache.  If no corresponding
@@ -177,13 +177,13 @@ FT_BEGIN_HEADER
    * is capable of flushing the cache adequately to make room for the
    * new cache object.
    */
-  FT_EXPORT( FT_Error )
+  FT_LOCAL( FT_Error )
   FTC_Cache_Lookup( FTC_Cache   cache,
                     FT_UInt32   hash,
                     FT_Pointer  query,
                     FTC_Node   *anode );
 
-  FT_EXPORT( FT_Error )
+  FT_LOCAL( FT_Error )
   FTC_Cache_NewNode( FTC_Cache   cache,
                      FT_UInt32   hash,
                      FT_Pointer  query,
@@ -199,7 +199,7 @@ FT_BEGIN_HEADER
    * in further lookup requests, and will be flushed on demand from
    * the cache normally when its reference count reaches 0.
    */
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_Cache_RemoveFaceID( FTC_Cache   cache,
                           FTC_FaceID  face_id );
 
@@ -276,7 +276,7 @@ FT_BEGIN_HEADER
    *
    * It is used when creating a new cache node, or within a lookup
    * that needs to allocate data (e.g., the sbit cache lookup).
-   * 
+   *
    * Example:
    *
    *   {

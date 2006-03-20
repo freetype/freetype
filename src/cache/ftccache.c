@@ -17,7 +17,7 @@
 
 
 #include <ft2build.h>
-#include FT_CACHE_INTERNAL_MANAGER_H
+#include "ftcmanag.h"
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
@@ -315,7 +315,7 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_DEF( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   FTC_Cache_Init( FTC_Cache  cache )
   {
     return ftc_cache_init( cache );
@@ -396,7 +396,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )
+  FT_LOCAL_DEF( void )
   FTC_Cache_Done( FTC_Cache  cache )
   {
     ftc_cache_done( cache );
@@ -431,7 +431,7 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   FTC_Cache_NewNode( FTC_Cache   cache,
                      FT_UInt32   hash,
                      FT_Pointer  query,
@@ -468,7 +468,7 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   FTC_Cache_Lookup( FTC_Cache   cache,
                     FT_UInt32   hash,
                     FT_Pointer  query,
@@ -527,7 +527,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )
+  FT_LOCAL_DEF( void )
   FTC_Cache_RemoveFaceID( FTC_Cache   cache,
                           FTC_FaceID  face_id )
   {

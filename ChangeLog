@@ -1,5 +1,26 @@
 2006-03-20 David Turner  <david@freetype.org>
 
+    * include/freetype/cache/ftccache.h,
+    include/freetype/cache/ftccmap.h,
+    include/freetype/cache/ftcglyph.h
+    include/freetype/cache/ftcimage.h
+    include/freetype/cache/ftcmanag.h
+    include/freetype/cache/ftcmru.h
+    include/freetype/cache/ftcsbits.h:
+      removing these header files from the public include directory.
+
+    * include/freetype/config/ftheader.h:
+      changing the definition of FT_CACHE_INTERNAL_XXX_H macros to
+      redirect to FT_CACHE_H instead
+
+    * src/cache/ftcbasic.c, src/cache/ftccache.c, src/cache/ftccache.h,
+    src/cache/ftccback.h, src/cache/ftccmap.c, src/cache/ftcglyph.c,
+    src/cache/ftcglyph.h, src/cache/ftcimage.c, src/cache/ftcimage.h,
+    src/cache/ftcmanag.c, src/cache/ftcmanag.h, src/cache/ftcmru.c,
+    src/cache/ftcmru.h, src/cache/ftcsbits.c, src/cache/ftcsbits.h:
+      modifications to prevent using the FT_CACHE_INTERNAL_XXX_H macros,
+      and grab the headers in 'src/cache' instead (see below).
+
     * src/cache/ftccache.h, src/cache/ftcglyph.h, src/cache/ftcimage.h,
     src/cache/ftcsbits.h, src/cache/ftcmanag.h, src/cache/ftccmap.h,
     src/cache/ftcmru.h: copying the cache's internal header files which

@@ -18,7 +18,7 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_SBITS_H
+#include "ftcsbits.h"
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_ERRORS_H
@@ -341,7 +341,7 @@
        *  However, we need to `lock' the node before this operation to
        *  prevent it from being flushed within the loop.
        *
-       *  When we exit the loop, we unlock the node, then check the `error' 
+       *  When we exit the loop, we unlock the node, then check the `error'
        *  variable.  If it is non-zero, this means that the cache was
        *  completely flushed and that no usable memory was found to load
        *  the bitmap.

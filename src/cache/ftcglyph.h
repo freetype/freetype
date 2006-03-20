@@ -118,7 +118,7 @@
 
 
 #include <ft2build.h>
-#include FT_CACHE_INTERNAL_MANAGER_H
+#include "ftcmanag.h"
 
 
 FT_BEGIN_HEADER

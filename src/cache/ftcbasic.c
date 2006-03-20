@@ -18,9 +18,9 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_GLYPH_H
-#include FT_CACHE_INTERNAL_IMAGE_H
-#include FT_CACHE_INTERNAL_SBITS_H
+#include "ftcglyph.h"
+#include "ftcimage.h"
+#include "ftcsbits.h"
 #include FT_INTERNAL_MEMORY_H
 
 #include "ftccback.h"

@@ -65,8 +65,8 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_MRU_H
-#include FT_CACHE_INTERNAL_CACHE_H
+#include "ftcmru.h"
+#include "ftccache.h"
 
 
 FT_BEGIN_HEADER

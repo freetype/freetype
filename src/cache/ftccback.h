@@ -20,11 +20,11 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_MRU_H
-#include FT_CACHE_INTERNAL_IMAGE_H
-#include FT_CACHE_INTERNAL_MANAGER_H
-#include FT_CACHE_INTERNAL_GLYPH_H
-#include FT_CACHE_INTERNAL_SBITS_H
+#include "ftcmru.h"
+#include "ftcimage.h"
+#include "ftcmanag.h"
+#include "ftcglyph.h"
+#include "ftcsbits.h"
 
 
   FT_LOCAL( void )

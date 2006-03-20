@@ -18,7 +18,7 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_GLYPH_H
+#include "ftcglyph.h"
 #include FT_ERRORS_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
