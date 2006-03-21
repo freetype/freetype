@@ -9,6 +9,9 @@
 	Check range of `glyph_index'.
 	* src/cff/cffgload.h: Updated.
 
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Handle invalid offset
+	correctly.
+
 2006-03-21  David Turner  <david@freetype.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale): Fix small bug
