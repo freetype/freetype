@@ -1,7 +1,7 @@
 2006-03-21 David Turner  <david@freetype.org>
 
-    * src/autofit/aflatin.c (af_latin_metrics_scale): fixed small bug that
-    crash the auto-hinter (introduce by previous patch). aaah
+	* src/autofit/aflatin.c (af_latin_metrics_scale): Fix small bug
+	that crashes the auto-hinter (introduced by previous patch).
 
 2006-03-20  Werner Lemberg  <wl@gnu.org>
 
