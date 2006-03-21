@@ -567,6 +567,7 @@
                           AF_Scaler        scaler )
   {
     metrics->root.scaler.render_mode = scaler->render_mode;
+    metrics->root.scaler.face        = scaler->face;
 
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_HORZ );
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_VERT );
