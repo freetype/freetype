@@ -955,7 +955,10 @@
           contour++, first = last + 1 )
     {
       FT_Vector*  point;
-
+      FT_Int      on_curve;
+      FT_Int      on_curve_count = 0;
+      FT_Pos      tmp_xmin       = 32768L;
+      FT_Vector*  tmp_xmin_point = NULL;
 
       last = outline->points + *contour;
 
@@ -963,15 +966,26 @@
       if ( last < first + 2 )
         continue;
 
-      for ( point = first; point <= last; point++ )
+      for ( point = first; point <= last; ++point )
       {
-        if ( point->x < xmin )
+        /* Count on-curve points.  If there are less than 3 on-curve */
+        /* points, just bypass this contour.                         */
+        on_curve        = outline->tags[point - outline->points] & 1;
+        on_curve_count += on_curve;
+
+        if ( point->x < tmp_xmin && on_curve )
         {
-          xmin       = point->x;
-          xmin_point = point;
-          xmin_first = first;
-          xmin_last  = last;
+          tmp_xmin       = point->x;
+          tmp_xmin_point = point;
         }
+      }
+
+      if ( on_curve_count > 2 && tmp_xmin < xmin )
+      {
+        xmin       = tmp_xmin;
+        xmin_point = tmp_xmin_point;
+        xmin_first = first;
+        xmin_last  = last;
       }
     }
 
@@ -980,6 +994,23 @@
 
     prev = ( xmin_point == xmin_first ) ? xmin_last : xmin_point - 1;
     next = ( xmin_point == xmin_last ) ? xmin_first : xmin_point + 1;
+
+    /* Skip off-curve points */
+    while ( ( outline->tags[prev - outline->points] & 1 ) == 0 )
+    {
+      if ( prev == xmin_first )
+        prev = xmin_last;
+      else
+        --prev;
+    }
+
+    while ( ( outline->tags[next - outline->points] & 1 ) == 0 )
+    {
+      if ( next == xmin_last )
+        next = xmin_first;
+      else
+        ++next;
+    }
 
     if ( FT_Atan2( prev->x - xmin_point->x, prev->y - xmin_point->y ) >
          FT_Atan2( next->x - xmin_point->x, next->y - xmin_point->y ) )

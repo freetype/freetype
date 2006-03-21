@@ -1,3 +1,8 @@
+2006-03-21  Zhe Su  <james.su@gmail.com>
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Improve
+	algorithm.
+
 2006-03-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cfftypes.h (CFF_CharsetRec): Add `max_cid' member.
