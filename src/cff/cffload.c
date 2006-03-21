@@ -1688,6 +1688,8 @@
 
       for ( i = 0; i < num_glyphs; i++ )
         charset->cids[charset->sids[i]] = (FT_UShort)i;
+
+      charset->max_cid = max_cid;
     }
 
   Exit:

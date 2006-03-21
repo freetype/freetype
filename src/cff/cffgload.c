@@ -2272,7 +2272,7 @@
   FT_LOCAL_DEF( FT_Error )
   cff_slot_load( CFF_GlyphSlot  glyph,
                  CFF_Size       size,
-                 FT_Int         glyph_index,
+                 FT_UInt        glyph_index,
                  FT_Int32       load_flags )
   {
     FT_Error      error;
@@ -2318,7 +2318,7 @@
 
         error = sfnt->load_sbit_image( face,
                                        size->strike_index,
-                                       (FT_UInt)glyph_index,
+                                       glyph_index,
                                        (FT_Int)load_flags,
                                        stream,
                                        &glyph->root.bitmap,
@@ -2381,7 +2381,12 @@
       /* subsetted font, glyph_indices and CIDs are identical, though */
       if ( cff->top_font.font_dict.cid_registry != 0xFFFFU &&
            cff->charset.cids )
-        glyph_index = cff->charset.cids[glyph_index];
+      {
+        if ( glyph_index < cff->charset.max_cid )
+          glyph_index = cff->charset.cids[glyph_index];
+        else
+          glyph_index = 0;
+      }
 
       cff_decoder_init( &decoder, face, size, glyph, hinting,
                         FT_LOAD_TARGET_MODE( load_flags ) );

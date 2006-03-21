@@ -1,4 +1,15 @@
-2006-03-21 David Turner  <david@freetype.org>
+2006-03-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cfftypes.h (CFF_CharsetRec): Add `max_cid' member.
+
+	* src/cff/cffload.c (cff_charset_load): Set `charset->max_cid'.
+
+	* src/cff/cffgload.c (cff_slot_load): Change type of third parameter
+	to `FT_UInt'.
+	Check range of `glyph_index'.
+	* src/cff/cffgload.h: Updated.
+
+2006-03-21  David Turner  <david@freetype.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale): Fix small bug
 	that crashes the auto-hinter (introduced by previous patch).
