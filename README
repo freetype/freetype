@@ -9,20 +9,24 @@
   is called `libttf'.  They are *not* compatible!
 
 
-  FreeType 2.1.10
-  ===============
+  FreeType 2.2
+  ============
 
   Please   read   the  docs/CHANGES   file,   it  contains   IMPORTANT
   INFORMATION.
 
   Read the files `docs/INSTALL' for installation instructions.
 
-  Note  that  the FreeType  2  documentation  is  now available  as  a
-  separate package from our sites.  See:
+  Note  that  the FreeType 2  documentation  (together with  signature
+  files) is now available as a separate package from our sites.  Go to
 
-    ftp://ftp.freetype.org/freetype/freetype2/ftdocs-2.1.10.tar.bz2
-    ftp://ftp.freetype.org/freetype/freetype2/ftdocs-2.1.10.tar.gz
-    ftp://ftp.freetype.org/freetype/freetype2/ftdoc2110.zip
+    http://download.savannah.gnu.org/releases/freetype/
+
+  and download one of the following files.
+
+    freetype-doc-2.2.tar.bz2
+    freetype-doc-2.2.tar.gz
+    ftdoc22.zip
 
 
   Bugs

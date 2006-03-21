@@ -270,7 +270,7 @@ dll: $(PROJECT_LIBRARY) exported_symbols
 refdoc:
 	python $(SRC_DIR)/tools/docmaker/docmaker.py \
                --prefix=ft2                          \
-               --title=FreeType-2.1.10               \
+               --title=FreeType-2.2                  \
                --output=$(DOC_DIR)                   \
                $(PUBLIC_DIR)/*.h                     \
                $(PUBLIC_DIR)/config/*.h              \
