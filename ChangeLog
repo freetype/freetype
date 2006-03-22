@@ -1,5 +1,34 @@
 2006-03-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/cache/ftccache.c, (ftc_node_mru_up, FTC_Cache_Lookup)
+	[!FTC_INLINE]: Compile conditionally.
+	* src/cache/ftccache.h: Updated.
+
+	* src/cache/ftcglyph.c (FTC_GNode_Init, FTC_GNode_UnselectFamily,
+	FTC_GNode_Done, FTC_GNode_Compare, FTC_Family_Init, FTC_GCache_New):
+	s/FT_EXPORT/FT_LOCAL/.
+	(FTC_GCache_Init, FTC_GCache_Done): Commented out.
+	(FTC_GCache_Lookup) [!FTC_INLINE]: Compile conditionally.
+	s/FT_EXPORT/FT_LOCAL/.
+	* src/cache/ftcglyph.h: Updated.
+
+	* src/cache/ftcimage.c (FTC_INode_Free, FTC_INode_New):
+	s/FT_EXPORT/FT_LOCAL/.
+	(FTC_INode_Weight): Commented out.
+	* src/cache/ftcimage.h: Updated.
+
+	* src/cache/ftmanag.c (FTC_Manager_Compress,
+	FTC_Manager_RegisterCache, FTC_Manager_FlushN):
+	s/FT_EXPORT/FT_LOCAL/.
+	* src/cache/ftmanag.h: Updated.
+
+	* src/cache/ftcsbits.c (FTC_SNode_Free, FTC_SNode_New,
+	FTC_SNode_Compare): s/FT_EXPORT/FT_LOCAL/.
+	(FTC_SNode_Weight): Commented out.
+	* src/cache/ftcsbits.h: Updated.
+
+2006-03-22  Werner Lemberg  <wl@gnu.org>
+
 	* src/cache/ftccache.c, src/cache/ftccache.h (FTC_Node_Destroy):
 	Remove, unused.
 

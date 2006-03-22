@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
 
 
   /* can be used as a @FTC_Node_FreeFunc */
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_INode_Free( FTC_INode  inode,
                   FTC_Cache  cache );
 
@@ -85,14 +85,17 @@ FT_BEGIN_HEADER
    * must be set correctly.  This function will call the `family_load_glyph'
    * method to load the FT_Glyph into the cache node.
    */
-  FT_EXPORT( FT_Error )
+  FT_LOCAL( FT_Error )
   FTC_INode_New( FTC_INode   *pinode,
                  FTC_GQuery   gquery,
                  FTC_Cache    cache );
 
+#if 0
   /* can be used as @FTC_Node_WeightFunc */
-  FT_EXPORT( FT_ULong )
+  FT_LOCAL( FT_ULong )
   FTC_INode_Weight( FTC_INode  inode );
+#endif
+
 
  /* */
 

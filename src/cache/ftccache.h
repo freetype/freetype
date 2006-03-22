@@ -164,11 +164,14 @@ FT_BEGIN_HEADER
    * is capable of flushing the cache adequately to make room for the
    * new cache object.
    */
+
+#ifndef FTC_INLINE
   FT_LOCAL( FT_Error )
   FTC_Cache_Lookup( FTC_Cache   cache,
                     FT_UInt32   hash,
                     FT_Pointer  query,
                     FTC_Node   *anode );
+#endif
 
   FT_LOCAL( FT_Error )
   FTC_Cache_NewNode( FTC_Cache   cache,

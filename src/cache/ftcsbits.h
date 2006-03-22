@@ -68,20 +68,22 @@ FT_BEGIN_HEADER
           FTC_SFAMILY_CLASS( FTC_CACHE__GCACHE_CLASS( x )->family_class )
 
 
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_SNode_Free( FTC_SNode  snode,
                   FTC_Cache  cache );
 
-  FT_EXPORT( FT_Error )
+  FT_LOCAL( FT_Error )
   FTC_SNode_New( FTC_SNode   *psnode,
                  FTC_GQuery   gquery,
                  FTC_Cache    cache );
 
-  FT_EXPORT( FT_ULong )
+#if 0
+  FT_LOCAL( FT_ULong )
   FTC_SNode_Weight( FTC_SNode  inode );
+#endif
 
 
-  FT_EXPORT( FT_Bool )
+  FT_LOCAL( FT_Bool )
   FTC_SNode_Compare( FTC_SNode   snode,
                      FTC_GQuery  gquery,
                      FTC_Cache   cache );

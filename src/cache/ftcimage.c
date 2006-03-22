@@ -45,7 +45,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )
+  FT_LOCAL_DEF( void )
   FTC_INode_Free( FTC_INode  inode,
                   FTC_Cache  cache )
   {
@@ -54,7 +54,7 @@
 
 
   /* initialize a new glyph image node */
-  FT_EXPORT_DEF( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   FTC_INode_New( FTC_INode   *pinode,
                  FTC_GQuery   gquery,
                  FTC_Cache    cache )
@@ -149,11 +149,15 @@
   }
 
 
-  FT_EXPORT_DEF( FT_ULong )
+#if 0
+
+  FT_LOCAL_DEF( FT_ULong )
   FTC_INode_Weight( FTC_INode  inode )
   {
     return ftc_inode_weight( FTC_NODE( inode ), NULL );
   }
+
+#endif /* 0 */
 
 
 /* END */

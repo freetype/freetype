@@ -131,20 +131,20 @@ FT_BEGIN_HEADER
   /*    The reason this function is exported is to allow client-specific   */
   /*    cache classes.                                                     */
   /*                                                                       */
-  FT_EXPORT( void )
+  FT_LOCAL( void )
   FTC_Manager_Compress( FTC_Manager  manager );
 
 
   /* try to flush `count' old nodes from the cache; return the number
    * of really flushed nodes
    */
-  FT_EXPORT( FT_UInt )
+  FT_LOCAL( FT_UInt )
   FTC_Manager_FlushN( FTC_Manager  manager,
                       FT_UInt      count );
 
 
   /* this must be used internally for the moment */
-  FT_EXPORT( FT_Error )
+  FT_LOCAL( FT_Error )
   FTC_Manager_RegisterCache( FTC_Manager      manager,
                              FTC_CacheClass   clazz,
                              FTC_Cache       *acache );

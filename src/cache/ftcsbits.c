@@ -77,7 +77,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )
+  FT_LOCAL_DEF( void )
   FTC_SNode_Free( FTC_SNode  snode,
                   FTC_Cache  cache )
   {
@@ -197,7 +197,7 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   FTC_SNode_New( FTC_SNode  *psnode,
                  FTC_GQuery  gquery,
                  FTC_Cache   cache )
@@ -298,11 +298,15 @@
   }
 
 
-  FT_EXPORT_DEF( FT_ULong )
+#if 0
+
+  FT_LOCAL_DEF( FT_ULong )
   FTC_SNode_Weight( FTC_SNode  snode )
   {
     return ftc_snode_weight( FTC_NODE( snode ), NULL );
   }
+
+#endif /* 0 */
 
 
   FT_LOCAL_DEF( FT_Bool )
@@ -385,7 +389,7 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Bool )
+  FT_LOCAL_DEF( FT_Bool )
   FTC_SNode_Compare( FTC_SNode   snode,
                      FTC_GQuery  gquery,
                      FTC_Cache   cache )

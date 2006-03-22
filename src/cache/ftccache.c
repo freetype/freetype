@@ -63,6 +63,8 @@
   }
 
 
+#ifndef FTC_INLINE
+
   /* move a node to the head of the manager's MRU list */
   static void
   ftc_node_mru_up( FTC_Node     node,
@@ -71,6 +73,8 @@
     FTC_MruNode_Up( (FTC_MruNode*)&manager->nodes_list,
                     (FTC_MruNode)node );
   }
+
+#endif /* !FTC_INLINE */
 
 
   /* Note that this function cannot fail.  If we cannot re-size the
@@ -460,6 +464,8 @@
   }
 
 
+#ifndef FTC_INLINE
+
   FT_LOCAL_DEF( FT_Error )
   FTC_Cache_Lookup( FTC_Cache   cache,
                     FT_UInt32   hash,
@@ -517,6 +523,8 @@
   NewNode:
     return FTC_Cache_NewNode( cache, hash, query, anode );
   }
+
+#endif /* !FTC_INLINE */
 
 
   FT_LOCAL_DEF( void )

@@ -520,7 +520,7 @@
 
   /* documentation is in ftcmanag.h */
 
-  FT_EXPORT_DEF( void )
+  FT_LOCAL_DEF( void )
   FTC_Manager_Compress( FTC_Manager  manager )
   {
     FTC_Node   node, first;
@@ -562,7 +562,7 @@
 
   /* documentation is in ftcmanag.h */
 
-  FT_EXPORT_DEF( FT_Error )
+  FT_LOCAL_DEF( FT_Error )
   FTC_Manager_RegisterCache( FTC_Manager      manager,
                              FTC_CacheClass   clazz,
                              FTC_Cache       *acache )
@@ -613,7 +613,7 @@
   }
 
 
-  FT_EXPORT_DEF( FT_UInt )
+  FT_LOCAL_DEF( FT_UInt )
   FTC_Manager_FlushN( FTC_Manager  manager,
                       FT_UInt      count )
   {
