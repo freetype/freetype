@@ -2346,7 +2346,8 @@ FT_BEGIN_HEADER
    *
    *   FT_LOAD_MONOCHROME ::
    *     This flag is used with @FT_LOAD_RENDER to indicate that you want to
-   *     render an outline glyph to a 1-bit monochrome bitmap glyph.
+   *     render an outline glyph to a 1-bit monochrome bitmap glyph, with
+   *     8 pixels packed into each byte of the bitmap data.
    *
    *     Note that this has no effect on the hinting algorithm used.  You
    *     should use @FT_LOAD_TARGET_MONO instead so that the
