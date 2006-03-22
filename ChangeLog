@@ -1,3 +1,12 @@
+2006-03-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftccache.c, src/cache/ftccache.h (FTC_Node_Destroy):
+	Remove, unused.
+
+	* src/cache/ftccmap.h: Remove, unused.
+
+	* src/cache/rules.mk (CACHE_DRV_H): Remove ftccmap.h.
+
 2006-03-21  Zhe Su  <james.su@gmail.com>
 
 	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Improve

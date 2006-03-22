@@ -36,7 +36,6 @@ CACHE_DRV_SRC := $(CACHE_DIR)/ftcbasic.c \
 # Cache driver headers
 #
 CACHE_DRV_H := $(CACHE_DIR)/ftccback.h \
-               $(CACHE_DIR)/ftccmap.h  \
                $(CACHE_DIR)/ftcerror.h \
                $(CACHE_DIR)/ftcglyph.h \
                $(CACHE_DIR)/ftcimage.h \

@@ -66,21 +66,8 @@ FT_BEGIN_HEADER
 #define FTC_NODE( x )    ( (FTC_Node)(x) )
 #define FTC_NODE_P( x )  ( (FTC_Node*)(x) )
 
-#define FTC_NODE__NEXT(x)  FTC_NODE( (x)->mru.next )
-#define FTC_NODE__PREV(x)  FTC_NODE( (x)->mru.prev )
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* These functions are exported so that they can be called from          */
-  /* user-provided cache classes; otherwise, they are really part of the   */
-  /* cache sub-system internals.                                           */
-  /*                                                                       */
-
-  /* reserved for manager's use */
-  FT_EXPORT( void )
-  FTC_Node_Destroy( FTC_Node     node,
-                    FTC_Manager  manager );
+#define FTC_NODE__NEXT( x )  FTC_NODE( (x)->mru.next )
+#define FTC_NODE__PREV( x )  FTC_NODE( (x)->mru.prev )
 
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS

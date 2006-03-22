@@ -247,14 +247,6 @@
   }
 
 
-  FT_EXPORT_DEF( void )
-  FTC_Node_Destroy( FTC_Node     node,
-                    FTC_Manager  manager )
-  {
-    ftc_node_destroy( node, manager );
-  }
-
-
   /* remove a node from the cache manager */
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
   FT_BASE_DEF( void )
