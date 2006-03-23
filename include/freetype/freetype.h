@@ -3222,6 +3222,64 @@ FT_BEGIN_HEADER
   FT_Vector_Transform( FT_Vector*        vec,
                        const FT_Matrix*  matrix );
 
+ /**
+  * @macro: FT_SUBGLYPH_FLAG_XXX
+  *
+  * @description:
+  *   a list of constant used to describe each subglyph
+  *
+  * @values:
+  *   FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS ::
+  *   FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES ::
+  *   FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID ::
+  *   FT_SUBGLYPH_FLAG_SCALE ::
+  *   FT_SUBGLYPH_FLAG_XY_SCALE ::
+  *   FT_SUBGLYPH_FLAG_2X2 ::
+  *   FT_SUBGLYPH_FLAG_USE_MY_METRICS ::
+  */
+#define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
+#define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
+#define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
+#define FT_SUBGLYPH_FLAG_SCALE                   8
+#define FT_SUBGLYPH_FLAG_XY_SCALE             0x40
+#define FT_SUBGLYPH_FLAG_2X2                  0x80
+#define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
+
+ /**
+  * @func: FT_Get_SubGlyph_Info
+  *
+  * @description:
+  *   a function used to retrieve a description of a given subglyph.
+  *   only use it when 'glyph->format' is FT_GLYPH_FORMAT_COMPOSITE, or
+  *   an error will be returned
+  *
+  * @input:
+  *   glyph     :: source glyph slot
+  *   sub_index :: index of subglyph. must be less than 'glyph->num_subglyphs'
+  *
+  * @output:
+  *   p_index     :: subglyph glyph index
+  *   p_flags     :: subglyph flags, see @FT_SUBGLYPH_FLAG_XXX
+  *   p_arg1      :: subglyph first argument  (if any)
+  *   p_arg2      :: subglyph second argument (if any)
+  *   p_transform :: subglyph transform (if any)
+  *
+  * @return:
+  *   error code. 0 means success
+  *
+  * @note:
+  *   the values of *p_arg1, *p_arg2 and *p_transform must be interpreted
+  *   depending on the flags returns in *p_flags. See the TrueType specification
+  *   for details
+  */
+  FT_EXPORT( FT_Error )
+  FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
+                        FT_UInt       sub_index,
+						FT_Int       *p_index,
+						FT_UInt      *p_flags,
+						FT_Int       *p_arg1,
+						FT_Int       *p_arg2,
+						FT_Matrix    *p_transform );
 
   /* */
 

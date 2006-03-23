@@ -224,8 +224,14 @@
         else
 #endif /* !AF_USE_WARPER */
         {
+          FT_Pos   pp1x = loader->pp1.x;
+          FT_Pos   pp2x = loader->pp2.x;
+
           loader->pp1.x = FT_PIX_ROUND( loader->pp1.x );
           loader->pp2.x = FT_PIX_ROUND( loader->pp2.x );
+
+          slot->lsb_delta = loader->pp1.x - pp1x;
+          slot->rsb_delta = loader->pp2.x - pp2x;
         }
       }
 

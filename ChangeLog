@@ -1,3 +1,12 @@
+2006-03-23  David Turner <david@freetype.org>
+
+	* include/freetype/freetype.h, include/freetype/internal/ftgloadr.h,
+        src/base/ftobjs.c: adding FT_Get_SubGlyph_Info API to retrieve subglyph
+        data. Note that we do not expose FT_SubGlyphRec here !
+
+	* src/autofit/afloader.c: compute lsb_delta and rsb_delta correctly
+        in edge cases
+
 2006-03-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/cache/ftccache.c, (ftc_node_mru_up, FTC_Cache_Lookup)

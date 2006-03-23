@@ -43,6 +43,7 @@ FT_BEGIN_HEADER
   typedef struct FT_GlyphLoaderRec_*  FT_GlyphLoader ;
 
 
+#if 0  /* now in freetype.h since 2.2 */
 #define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
 #define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
 #define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
@@ -50,7 +51,7 @@ FT_BEGIN_HEADER
 #define FT_SUBGLYPH_FLAG_XY_SCALE             0x40
 #define FT_SUBGLYPH_FLAG_2X2                  0x80
 #define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
-
+#endif
 
   typedef struct  FT_SubGlyphRec_
   {

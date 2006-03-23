@@ -76,10 +76,8 @@ FT2_COMPONENTS ?= autofit    # auto-fitter
                   cache      # cache sub-system
                   cff        # CFF/CEF font driver
                   cid        # PostScript CID-keyed font driver
-                  #gxvalid    # validation of TrueTypeGX/AAT tables
                   gzip       # support for gzip-compressed files
                   lzw        # support for LZW-compressed files
-                  #otvalid    # validation of OpenType tables
                   pcf        # PCF font driver
                   pfr        # PFR/TrueDoc font driver
                   psaux      # common PostScript routines module
@@ -126,6 +124,7 @@ if $(DEBUG_HINTER)
 # compile any part of FreeType 2.
 #
 HDRS += $(FT2_INCLUDE) ;
+
 
 # We need to #define FT2_BUILD_LIBRARY so that our sources find the
 # internal headers
