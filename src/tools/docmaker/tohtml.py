@@ -7,7 +7,7 @@ import time
 # The following defines the HTML header used by all generated pages.
 #
 html_header_1 = """\
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
