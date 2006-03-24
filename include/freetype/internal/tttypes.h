@@ -1282,7 +1282,7 @@ FT_BEGIN_HEADER
     TT_OS2                os2;          /* TrueType OS/2 table            */
     TT_Postscript         postscript;   /* TrueType Postscript table      */
 
-    FT_Byte*              cmap_table;   /* extracted 'cmap' table */
+    FT_Byte*              cmap_table;   /* extracted `cmap' table */
     FT_ULong              cmap_size;
 
     TT_Loader_GotoTableFunc   goto_table;

@@ -462,12 +462,12 @@ FT_BEGIN_HEADER
   /*    font.                                                              */
   /*                                                                       */
   /*    Each face object owns zero or more charmaps, but only one of them  */
-  /*    can be "active" and used by @FT_Get_Char_Index or @FT_Load_Char.   */
+  /*    can be `active' and used by @FT_Get_Char_Index or @FT_Load_Char.   */
   /*                                                                       */
   /*    The list of available charmaps in a face is available through the  */
-  /*    "face->num_charmaps" and "face->charmaps" fields of @FT_FaceRec.   */
+  /*    `face->num_charmaps' and `face->charmaps' fields of @FT_FaceRec.   */
   /*                                                                       */
-  /*    The currently active charmap is available as "face->charmap".      */
+  /*    The currently active charmap is available as `face->charmap'.      */
   /*    You should call @FT_Set_Charmap to change it.                      */
   /*                                                                       */
   /* <Note>                                                                */
@@ -489,7 +489,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    This macro converts four letter tags into an unsigned long.  It is */
-  /*    used to define "encoding" identifiers (see @FT_Encoding).          */
+  /*    used to define `encoding' identifiers (see @FT_Encoding).          */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Since many 16bit compilers don't like 32bit enumerations, you      */
@@ -1599,7 +1599,7 @@ FT_BEGIN_HEADER
   /*    apatch :: The patch version number.                                */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The reason why this function takes a 'library' argument is because */
+  /*    The reason why this function takes a `library' argument is because */
   /*    certain programs implement library initialization in a custom way  */
   /*    that doesn't use `FT_Init_FreeType'.                               */
   /*                                                                       */
@@ -2974,7 +2974,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    This function is used to return the next character code in the     */
-  /*    current charmap of a given face following the value 'char_code',   */
+  /*    current charmap of a given face following the value `char_code',   */
   /*    as well as the corresponding glyph index.                          */
   /*                                                                       */
   /* <Input>                                                               */

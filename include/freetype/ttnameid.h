@@ -491,7 +491,7 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_CHINESE_MACAU  TT_MS_LANGID_CHINESE_HONG_KONG
 #endif
 
-#if 0  /* used only with .NET "cultures"; commented out */
+#if 0  /* used only with .NET `cultures'; commented out */
 #define TT_MS_LANGID_CHINESE_TRADITIONAL               0x7C04
 #endif
 

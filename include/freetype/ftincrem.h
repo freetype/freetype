@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType incremental loading (specification).                        */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2006 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -39,7 +39,7 @@ FT_BEGIN_HEADER
   *
   * @description:
   *   An opaque type describing a user-provided object used to implement
-  *   "incremental" glyph loading within FreeType.  This is used to support
+  *   `incremental' glyph loading within FreeType.  This is used to support
   *   embedded fonts in certain environments (e.g. Postscript interpreters),
   *   where the glyph data isn't in the font file, or must be overridden by
   *   different values.
@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
   *
   * @note:
   *   These correspond to horizontal or vertical metrics depending on the
-  *   value of the 'vertical' argument to the function
+  *   value of the `vertical' argument to the function
   *   @FT_Incremental_GetGlyphMetricsFunc.
   */
   typedef struct  FT_Incremental_MetricsRec_
@@ -101,8 +101,8 @@ FT_BEGIN_HEADER
   *
   *   Note that the format of the glyph's data bytes depends on the font
   *   file format.  For TrueType, it must correspond to the raw bytes within
-  *   the 'glyf' table.  For Postscript formats, it must correspond to the
-  *   *unencrypted* charstring bytes, without any 'lenIV' header.  It is
+  *   the `glyf' table.  For Postscript formats, it must correspond to the
+  *   *unencrypted* charstring bytes, without any `lenIV' header.  It is
   *   undefined for any other format.
   *
   * @input:

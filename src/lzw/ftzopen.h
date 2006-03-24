@@ -8,7 +8,7 @@
 /*  be used to parse compressed PCF fonts, as found with many X11 server   */
 /*  distributions.                                                         */
 /*                                                                         */
-/*  Copyright 2005 by David Turner.                                        */
+/*  Copyright 2005, 2006 by David Turner.                                  */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -86,7 +86,7 @@
    *    and `suffix' arrays.  This means that the corresponding `next free
    *    code' is really `256+free_ent'.
    *
-   *    Moreover, 'max_free' is the maximum value that 'free_ent' can reach.
+   *    Moreover, `max_free' is the maximum value that `free_ent' can reach.
    *
    *    `max_free' corresponds to `(1 << max_bits) - 256'.  Note that this
    *    value is always <= 0xFF00, which means that both `free_ent' and

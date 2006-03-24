@@ -181,7 +181,7 @@ FT_BEGIN_HEADER
                   FTC_Family  family );
 
   /* returns TRUE iff the query's glyph index correspond to the node;  */
-  /* this assumes that the "family" and "hash" fields of the query are */
+  /* this assumes that the `family' and `hash' fields of the query are */
   /* already correctly set                                             */
   FT_LOCAL( FT_Bool )
   FTC_GNode_Compare( FTC_GNode   gnode,

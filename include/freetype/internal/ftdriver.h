@@ -161,7 +161,7 @@ FT_BEGIN_HEADER
   /*                        face, or a CIDMap on a CID-keyed face.         */
   /*                                                                       */
   /*    get_advances     :: A function handle used to return advance       */
-  /*                        widths of 'count' glyphs (in font units),      */
+  /*                        widths of `count' glyphs (in font units),      */
   /*                        starting at `first'.  The `vertical' flag must */
   /*                        be set to get vertical advance heights.  The   */
   /*                        `advances' buffer is caller-allocated.         */

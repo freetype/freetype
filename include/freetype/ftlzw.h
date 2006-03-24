@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    LZW-compressed stream support.                                       */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2006 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -81,7 +81,7 @@ FT_BEGIN_HEADER
   *   compressed file, the library will try to open a LZW stream from it
   *   and re-open the face with it.
   *
-  *   This function may return "FT_Err_Unimplemented" if your build of
+  *   This function may return `FT_Err_Unimplemented' if your build of
   *   FreeType was not compiled with LZW support.
   */
   FT_EXPORT( FT_Error )

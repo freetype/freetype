@@ -181,7 +181,7 @@ FT_BEGIN_HEADER
 
   /* Remove all nodes that relate to a given face_id.  This is useful
    * when un-installing fonts.  Note that if a cache node relates to
-   * the face_id, but is locked (i.e., has 'ref_count > 0'), the node
+   * the face_id, but is locked (i.e., has `ref_count > 0'), the node
    * will _not_ be destroyed, but its internal face_id reference will
    * be modified.
    *

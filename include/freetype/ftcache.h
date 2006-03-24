@@ -236,9 +236,9 @@ FT_BEGIN_HEADER
   /*    reference-counted.  A node with a count of 0 might be flushed      */
   /*    out of a full cache whenever a lookup request is performed.        */
   /*                                                                       */
-  /*    If you lookup nodes, you have the ability to "acquire" them, i.e., */
+  /*    If you lookup nodes, you have the ability to `acquire' them, i.e., */
   /*    to increment their reference count.  This will prevent the node    */
-  /*    from being flushed out of the cache until you explicitly "release" */
+  /*    from being flushed out of the cache until you explicitly `release' */
   /*    it (see @FTC_Node_Unref).                                          */
   /*                                                                       */
   /*    See also @FTC_SBitCache_Lookup and @FTC_ImageCache_Lookup.         */
