@@ -21,6 +21,7 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
       command.  Consequently, a number of rogue clients which directly
       access  FreeType's  internal   functions  and  structures  won't
       compile without modification.
+
       We provide  patches for  most of those  rogue clients.   See the
       following page for more information:
 
@@ -57,7 +58,7 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
         FT_Renderer_RenderFunc
         FT_Renderer_TransformFunc
 
-      Note that this doesn't affect binary backwards compatibility.
+      Note that this doesn't affect binary backward compatibility.
 
     - On MacOS,  new APIs have  been added as replacements  for legacy
       APIs:  `FT_New_Face_From_FSRef'  for  `FT_New_Face_From_FSSpec',
@@ -65,11 +66,14 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
       `FT_GetFile_From_Mac_Name'.  Legacy APIs are still available, if
       FreeType is built without disabling them.
 
-    - A new API `FT_Select_Size' is added to select a bitmap strike by
-      its index.  Code  using other functions to select bitmap strikes
-      should be updated to use this function.
+    - A new  API `FT_Select_Size'  has been added  to select  a bitmap
+      strike  by its  index.   Code using  other  functions to  select
+      bitmap strikes should be updated to use this function.
 
-    - In 2.1.10, the behaviour  of `FT_Set_Pixel_Sizes' is changed for
+    - A  new API  `FT_Get_SubGlyph_Info'  has been  added to  retrieve
+      subglyph data.
+
+    - In 2.1.10, the behaviour of `FT_Set_Pixel_Sizes' was changed for
       BDF/PCF fonts,  and only  for them.  This  causes inconsistency.
       In this release,  we undo the change.  The  intent of the change
       in 2.1.10  is to allow  size selection through  real dimensions,
@@ -87,9 +91,9 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
       used to specify the hinting algorithm, the other to specify  the
       pixel rendering mode.
 
-    - FT_New_Face()  and   FT_New_Face_From_FSSpec()  in  ftmac.c  are
+    - FT_New_Face() and FT_New_Face_From_FSSpec() in ftmac.c have been
       changed to count supported scalable faces (sfnt, LWFN) only, and
-      returns  the  number  of  available faces  via  face->num_faces.
+      to  return the  number of  available faces  via face->num_faces.
       Unsupported bitmap faces (fbit, NFNT) are ignored.
 
     - builds/unix/configure  has been  improved for  MacOS X.   It now
@@ -1326,7 +1330,7 @@ LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
     - Important updates to the Mac-specific parts of the library.
 
     - The caching sub-system has  been completely re-designed, and its
-      API has  evolved (the old  one is still supported  for backwards
+      API has  evolved (the  old one is  still supported  for backward
       compatibility).
 
       The documentation for it is  not yet completed, sorry.  For now,

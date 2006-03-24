@@ -23,6 +23,7 @@ html_header_2= """ API Reference</title>
   p { text-align: justify; }
   h1 { text-align: center; }
   li { text-align: justify; }
+  td { padding: 0 0.5em 0 0.5em }
 
   a:link { color: #0000EF; }
   a:visited { color: #51188E; }

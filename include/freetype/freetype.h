@@ -1403,14 +1403,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    format            :: This field indicates the format of the image  */
   /*                         contained in the glyph slot.  Typically       */
-  /*                         FT_GLYPH_FORMAT_BITMAP,                       */
-  /*                         FT_GLYPH_FORMAT_OUTLINE, and                  */
-  /*                         FT_GLYPH_FORMAT_COMPOSITE, but others are     */
+  /*                         @FT_GLYPH_FORMAT_BITMAP,                      */
+  /*                         @FT_GLYPH_FORMAT_OUTLINE, or                  */
+  /*                         @FT_GLYPH_FORMAT_COMPOSITE, but others are    */
   /*                         possible.                                     */
   /*                                                                       */
   /*    bitmap            :: This field is used as a bitmap descriptor     */
   /*                         when the slot format is                       */
-  /*                         FT_GLYPH_FORMAT_BITMAP.  Note that the        */
+  /*                         @FT_GLYPH_FORMAT_BITMAP.  Note that the       */
   /*                         address and content of the bitmap buffer can  */
   /*                         change between calls of @FT_Load_Glyph and a  */
   /*                         few other functions.                          */
@@ -1418,7 +1418,7 @@ FT_BEGIN_HEADER
   /*    bitmap_left       :: This is the bitmap's left bearing expressed   */
   /*                         in integer pixels.  Of course, this is only   */
   /*                         valid if the format is                        */
-  /*                         FT_GLYPH_FORMAT_BITMAP.                       */
+  /*                         @FT_GLYPH_FORMAT_BITMAP.                      */
   /*                                                                       */
   /*    bitmap_top        :: This is the bitmap's top bearing expressed in */
   /*                         integer pixels.  Remember that this is the    */
@@ -1428,7 +1428,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    outline           :: The outline descriptor for the current glyph  */
   /*                         image if its format is                        */
-  /*                         FT_GLYPH_FORMAT_OUTLINE.  Once a glyph is     */
+  /*                         @FT_GLYPH_FORMAT_OUTLINE.  Once a glyph is    */
   /*                         loaded, `outline' can be transformed,         */
   /*                         distorted, embolded, etc.  However, it must   */
   /*                         not be freed.                                 */
@@ -1482,7 +1482,7 @@ FT_BEGIN_HEADER
   /*    Note that `slot->bitmap_left' and `slot->bitmap_top' are also used */
   /*    to specify the position of the bitmap relative to the current pen  */
   /*    position (e.g. coordinates [0,0] on the baseline).  Of course,     */
-  /*    `slot->format' is also changed to `FT_GLYPH_FORMAT_BITMAP' .       */
+  /*    `slot->format' is also changed to @FT_GLYPH_FORMAT_BITMAP.         */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Here a small pseudo code fragment which shows how to use           */
@@ -3222,21 +3222,26 @@ FT_BEGIN_HEADER
   FT_Vector_Transform( FT_Vector*        vec,
                        const FT_Matrix*  matrix );
 
- /**
-  * @macro: FT_SUBGLYPH_FLAG_XXX
-  *
-  * @description:
-  *   a list of constant used to describe each subglyph
-  *
-  * @values:
-  *   FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS ::
-  *   FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES ::
-  *   FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID ::
-  *   FT_SUBGLYPH_FLAG_SCALE ::
-  *   FT_SUBGLYPH_FLAG_XY_SCALE ::
-  *   FT_SUBGLYPH_FLAG_2X2 ::
-  *   FT_SUBGLYPH_FLAG_USE_MY_METRICS ::
-  */
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_SUBGLYPH_FLAG_XXX
+   *
+   * @description:
+   *   A list of constants used to describe subglyphs.  Please refer to the
+   *   TrueType specification for the meaning of the various flags.
+   *
+   * @values:
+   *   FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS ::
+   *   FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES ::
+   *   FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID ::
+   *   FT_SUBGLYPH_FLAG_SCALE ::
+   *   FT_SUBGLYPH_FLAG_XY_SCALE ::
+   *   FT_SUBGLYPH_FLAG_2X2 ::
+   *   FT_SUBGLYPH_FLAG_USE_MY_METRICS ::
+   *
+   */
 #define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
 #define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
 #define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
@@ -3245,41 +3250,57 @@ FT_BEGIN_HEADER
 #define FT_SUBGLYPH_FLAG_2X2                  0x80
 #define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
 
- /**
-  * @func: FT_Get_SubGlyph_Info
-  *
-  * @description:
-  *   a function used to retrieve a description of a given subglyph.
-  *   only use it when 'glyph->format' is FT_GLYPH_FORMAT_COMPOSITE, or
-  *   an error will be returned
-  *
-  * @input:
-  *   glyph     :: source glyph slot
-  *   sub_index :: index of subglyph. must be less than 'glyph->num_subglyphs'
-  *
-  * @output:
-  *   p_index     :: subglyph glyph index
-  *   p_flags     :: subglyph flags, see @FT_SUBGLYPH_FLAG_XXX
-  *   p_arg1      :: subglyph first argument  (if any)
-  *   p_arg2      :: subglyph second argument (if any)
-  *   p_transform :: subglyph transform (if any)
-  *
-  * @return:
-  *   error code. 0 means success
-  *
-  * @note:
-  *   the values of *p_arg1, *p_arg2 and *p_transform must be interpreted
-  *   depending on the flags returns in *p_flags. See the TrueType specification
-  *   for details
-  */
+
+  /*************************************************************************
+   *
+   * @func:
+   *   FT_Get_SubGlyph_Info
+   *
+   * @description:
+   *   Retrieve a description of a given subglyph.  Only use it if
+   *   `glyph->format' is @FT_GLYPH_FORMAT_COMPOSITE, or an error is
+   *   returned.
+   *
+   * @input:
+   *   glyph ::
+   *     The source glyph slot.
+   *
+   *   sub_index ::
+   *     The index of subglyph.  Must be less than `glyph->num_subglyphs'.
+   *
+   * @output:
+   *   p_index ::
+   *     The glyph index of the subglyph.
+   *
+   *   p_flags ::
+   *     The subglyph flags, see @FT_SUBGLYPH_FLAG_XXX.
+   *
+   *   p_arg1 ::
+   *     The subglyph's first argument (if any).
+   *
+   *   p_arg2 ::
+   *     The subglyph's second argument (if any).
+   *
+   *   p_transform ::
+   *     The subglyph transformation (if any).
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   *
+   * @note:
+   *   The values of *p_arg1, *p_arg2 and *p_transform must be interpreted
+   *   depending on the flags returns in *p_flags.  See the TrueType
+   *   specification for details.
+   *
+   */
   FT_EXPORT( FT_Error )
   FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
                         FT_UInt       sub_index,
-						FT_Int       *p_index,
-						FT_UInt      *p_flags,
-						FT_Int       *p_arg1,
-						FT_Int       *p_arg2,
-						FT_Matrix    *p_transform );
+                        FT_Int       *p_index,
+                        FT_UInt      *p_flags,
+                        FT_Int       *p_arg1,
+                        FT_Int       *p_arg2,
+                        FT_Matrix    *p_transform );
 
   /* */
 

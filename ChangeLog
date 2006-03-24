@@ -1,11 +1,25 @@
+2006-03-23  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+	* src/tools/docmaker/tohtml.py (html_header_2): Add horizontal
+	padding between table elements.
+
 2006-03-23  David Turner <david@freetype.org>
 
-	* include/freetype/freetype.h, include/freetype/internal/ftgloadr.h,
-        src/base/ftobjs.c: adding FT_Get_SubGlyph_Info API to retrieve subglyph
-        data. Note that we do not expose FT_SubGlyphRec here !
+	Add FT_Get_SubGlyph_Info API to retrieve subglyph data.  Note that
+        we do not expose the FT_SubGlyphRec structure.
 
-	* src/autofit/afloader.c: compute lsb_delta and rsb_delta correctly
-        in edge cases
+	* include/freetype/internal/ftgloadr.h (FT_SUBGLYPH_FLAGS_*): Moved
+	to...
+	* include/freetype/freetype.h (FT_SUBGLYPH_FLAGS_*): Here.
+	(FT_Get_SybGlyph_Info): New declaration.
+
+	* src/base/ftobjs.c (FT_Get_SubGlyph_Info): New function.
+
+
+	* src/autofit/afloader.c (af_loader_load_g): Compute lsb_delta and
+        rsb_delta correctly in edge cases.
 
 2006-03-22  Werner Lemberg  <wl@gnu.org>
 

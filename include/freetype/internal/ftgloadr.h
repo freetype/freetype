@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph loader (specification).                           */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2005 by                                          */
+/*  Copyright 2002, 2003, 2005, 2006 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -43,7 +43,7 @@ FT_BEGIN_HEADER
   typedef struct FT_GlyphLoaderRec_*  FT_GlyphLoader ;
 
 
-#if 0  /* now in freetype.h since 2.2 */
+#if 0  /* moved to freetype.h in version 2.2 */
 #define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
 #define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
 #define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
@@ -52,6 +52,7 @@ FT_BEGIN_HEADER
 #define FT_SUBGLYPH_FLAG_2X2                  0x80
 #define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
 #endif
+
 
   typedef struct  FT_SubGlyphRec_
   {
