@@ -200,12 +200,12 @@ class HtmlFormatter(Formatter):
         m = re_italic.match( word )
         if m:
             name = m.group(1)
-            return '<i>'+name+'</i>'
+            return '<i>' + name + '</i>'
 
         m = re_bold.match( word )
         if m:
             name = m.group(1)
-            return '<b>'+name+'</b>'
+            return '<b>' + name + '</b>'
 
         return html_quote(word)
 
@@ -217,8 +217,12 @@ class HtmlFormatter(Formatter):
             line = self.make_html_word( words[0] )
             for word in words[1:]:
                 line = line + " " + self.make_html_word( word )
+            # convert `...' quotations into real left and right single quotes
+            line = re.sub( r"(^|\W)`(.*?)'(\W|$)",
+                           r'\1&lsquo;\2&rsquo;\3',
+                           line )
 
-        return "<p>" + line + "</p>"
+        return para_header + line + para_footer
 
 
     def  make_html_code( self, lines ):

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType path stroker (specification).                               */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005 by                                    */
+/*  Copyright 2002, 2003, 2004, 2005, 2006 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -406,7 +406,7 @@ FT_BEGIN_HEADER
    *   FT_Stroker_ConicTo
    *
    * @description:
-   *   `Draw; a single quadratic bezier in the stroker's current sub-path,
+   *   `Draw' a single quadratic bezier in the stroker's current sub-path,
    *   from the last position.
    *
    * @input:

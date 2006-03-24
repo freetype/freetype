@@ -2,9 +2,16 @@
 
 	* docs/CHANGES: Updated.
 
+
 	* src/tools/docmaker/tohtml.py (html_header_2): Add horizontal
 	padding between table elements.
 	(html_header_1): The `DOCTYPE' comment must be in uppercase.
+	(make_html_para): Convert `...' quotations into real left and
+	right single quotes.
+	Use `para_header' and `para_footer'.
+
+	* src/tools/docmaker/sources.py (re_bold, re_italic): Accept "'"
+	also.
 
 2006-03-23  David Turner <david@freetype.org>
 
