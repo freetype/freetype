@@ -2557,8 +2557,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*   The LCD-optimized glyph bitmaps produced by FT_Render_Glyph are     */
-  /*   _not filtered_ to reduce color-fringes.  It is up to the caller to  */
-  /*   perform this pass.                                                  */
+  /*   _not_ _filtered_ to reduce color-fringes.  It is up to the caller   */
+  /*   to perform this pass.                                               */
   /*                                                                       */
   typedef enum  FT_Render_Mode_
   {
