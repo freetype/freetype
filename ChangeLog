@@ -1,3 +1,11 @@
+2006-03-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdflib.c (ERRMSG4): New macro.
+	(_bdf_parse_glyphs): Handle invalid BBX values.
+
+	* include/freetype/fterrdef.h (FT_Err_Bbx_Too_Big): New error
+	macro.
+
 2006-03-23  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

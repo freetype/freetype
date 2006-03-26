@@ -1092,6 +1092,7 @@
 #define ERRMSG1  "[line %ld] Missing \"%s\" line.\n"
 #define ERRMSG2  "[line %ld] Font header corrupted or missing fields.\n"
 #define ERRMSG3  "[line %ld] Font glyphs corrupted or missing fields.\n"
+#define ERRMSG4  "[line %ld] BBX too big.\n"
 
 
   static FT_Error
@@ -1814,6 +1815,9 @@
     /* And finally, gather up the bitmap. */
     if ( ft_memcmp( line, "BITMAP", 6 ) == 0 )
     {
+      unsigned long  bitmap_size;
+
+
       if ( !( p->flags & _BDF_BBX ) )
       {
         /* Missing BBX field. */
@@ -1824,7 +1828,16 @@
 
       /* Allocate enough space for the bitmap. */
       glyph->bpr   = ( glyph->bbx.width * p->font->bpp + 7 ) >> 3;
-      glyph->bytes = (unsigned short)( glyph->bpr * glyph->bbx.height );
+
+      bitmap_size = glyph->bpr * glyph->bbx.height;
+      if ( bitmap_size > 0xFFFFU )
+      {
+        FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG4, lineno ));
+        error = BDF_Err_Bbx_Too_Big;
+        goto Exit;
+      }
+      else
+        glyph->bytes = (unsigned short)bitmap_size;
 
       if ( FT_NEW_ARRAY( glyph->bitmap, glyph->bytes ) )
         goto Exit;
