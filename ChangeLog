@@ -1,8 +1,8 @@
 2006-03-27  David Turner  <david@freetype.org>
 
-	* src/sfnt/ttkern.c (tt_face_get_kerning): fixed a serious bug
-        that caused some programs to go into an infinite loop when dealing
-        with fonts that don't have a properly sorted kerning sub-table
+	* src/sfnt/ttkern.c (tt_face_get_kerning): Fix a serious bug that
+	causes some programs to go into an infinite loop when dealing with
+	fonts that don't have a properly sorted kerning sub-table.
 
 2006-03-26  Werner Lemberg  <wl@gnu.org>
 
