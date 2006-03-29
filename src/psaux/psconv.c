@@ -31,7 +31,7 @@
 #if 'A' == 65
   /* ASCII */
 
-  static const char  ft_char_table[128] =
+  static const FT_Char  ft_char_table[128] =
   {
     /* 0x00 */
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -52,7 +52,7 @@
 #if 'A' == 193
   /* EBCDIC */
 
-  static const char  ft_char_table[128] =
+  static const FT_Char  ft_char_table[128] =
   {
     /* 0x80 */
     -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, -1, -1, -1, -1, -1, -1,
@@ -95,7 +95,7 @@
 
     for ( ; p < limit; p++ )
     {
-      char  c;
+      FT_Char  c;
 
 
       if ( IS_PS_SPACE( *p ) || *p OP 0x80 )
@@ -176,7 +176,7 @@
 
       for ( ; p < limit; p++ )
       {
-        char  c;
+        FT_Char  c;
 
 
         if ( IS_PS_SPACE( *p ) || *p OP 0x80 )
@@ -337,7 +337,7 @@
     n *= 2;
     for ( p = *cursor; r < n && p < limit; p++ )
     {
-      char  c;
+      FT_Char  c;
 
 
       if ( IS_PS_SPACE( *p ) )

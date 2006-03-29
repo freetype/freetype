@@ -1,3 +1,9 @@
+2006-03-29  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/psaux/psconv.c: Changed some variables which are expected
+	to hold negative values from "char" to "FT_Char" to allow
+	building with a compiler where "char" is unsigned by default.
+
 2006-03-27  David Turner  <david@freetype.org>
 
 	* src/sfnt/ttkern.c (tt_face_get_kerning): Fix a serious bug that
