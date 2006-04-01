@@ -616,11 +616,57 @@
 #define FT_PFR_H  <freetype/ftpfr.h>
 
 
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_STROKER_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API used to stroke outline path
+   */
+#define FT_STROKER_H            <freetype/ftstroke.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_SYNTHESIS_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API used to perform artificial obliquing and emboldening
+   */
+#define FT_SYNTHESIS_H          <freetype/ftsynth.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_XFREE86_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API used to provide functions specific to the XFree86 and
+   *   X.Org X11 servers
+   */
+#define FT_XFREE86_H              <freetype/ftxf86.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_TRIGONOMETRY_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API used to perform trigonometric computations (e.g.
+   *   cosines and arc tangents).
+   */
+#define FT_TRIGONOMETRY_H       <freetype/fttrigon.h>
+
   /* */
 
-#define FT_TRIGONOMETRY_H       <freetype/fttrigon.h>
-#define FT_STROKER_H            <freetype/ftstroke.h>
-#define FT_SYNTHESIS_H          <freetype/ftsynth.h>
 #define FT_ERROR_DEFINITIONS_H  <freetype/fterrdef.h>
 
 
@@ -636,8 +682,6 @@
 #define FT_CACHE_INTERNAL_IMAGE_H    <freetype/ftcache.h>
 #define FT_CACHE_INTERNAL_SBITS_H    <freetype/ftcache.h>
 
-
-#define FT_XFREE86_H              <freetype/ftxf86.h>
 
 #define FT_INCREMENTAL_H          <freetype/ftincrem.h>
 
