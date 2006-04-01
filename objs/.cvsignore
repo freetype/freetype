@@ -2,3 +2,5 @@
 libfreetype.la
 freetype.lib
 .libs
+freetype.def
+ftmodule.h
