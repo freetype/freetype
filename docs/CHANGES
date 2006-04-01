@@ -42,7 +42,13 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
 
     - The  LIGHT  hinting algorithm  produces  more pleasant  results.
       Also, using the  FT_LOAD_TARGET_LIGHT flags within FT_Load_Glyph
-      always forces auto-hinting, as a special exception.
+      always forces auto-hinting, as a special exception. This allows
+      you to experiment with it even if you have enabled the TrueType
+      bytecode interpreter in your build.
+
+    - The auto hinter now employs a new algorithm for CJK fonts, based
+      on Akito  Hirai's patch.   Note that this  only works  for fonts
+      with a Unicode charmap at the moment.
 
     - The following callback function  types have changed slightly (by
       adding the `const' keyword where appropriate):
@@ -71,7 +77,8 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
       bitmap strikes should be updated to use this function.
 
     - A  new API  `FT_Get_SubGlyph_Info'  has been  added to  retrieve
-      subglyph data.
+      subglyph data. This can be used by rogue clients which used to
+      access the internal headers to get the corresponding data.
 
     - In 2.1.10, the behaviour of `FT_Set_Pixel_Sizes' was changed for
       BDF/PCF fonts,  and only  for them.  This  causes inconsistency.
@@ -138,10 +145,6 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
       to increase verbosity.
 
     - Better AFM support.  This includes track kerning support.
-
-    - The auto hinter now employs a new algorithm for CJK fonts, based
-      on Akito  Hirai's patch.   Note that this  only works  for fonts
-      with a Unicode charmap at the moment.
 
 
 ======================================================================
