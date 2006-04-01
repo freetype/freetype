@@ -623,9 +623,9 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   FreeType 2 API used to stroke outline path
+   *   FreeType 2 API used to stroke outline path.
    */
-#define FT_STROKER_H            <freetype/ftstroke.h>
+#define FT_STROKER_H  <freetype/ftstroke.h>
 
 
   /*************************************************************************
@@ -635,9 +635,9 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   FreeType 2 API used to perform artificial obliquing and emboldening
+   *   FreeType 2 API used to perform artificial obliquing and emboldening.
    */
-#define FT_SYNTHESIS_H          <freetype/ftsynth.h>
+#define FT_SYNTHESIS_H  <freetype/ftsynth.h>
 
 
   /*************************************************************************
@@ -648,9 +648,9 @@
    * @description:
    *   A macro used in #include statements to name the file containing the
    *   FreeType 2 API used to provide functions specific to the XFree86 and
-   *   X.Org X11 servers
+   *   X.Org X11 servers.
    */
-#define FT_XFREE86_H              <freetype/ftxf86.h>
+#define FT_XFREE86_H  <freetype/ftxf86.h>
 
 
   /*************************************************************************
@@ -660,10 +660,10 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   FreeType 2 API used to perform trigonometric computations (e.g.
+   *   FreeType 2 API used to perform trigonometric computations (e.g.,
    *   cosines and arc tangents).
    */
-#define FT_TRIGONOMETRY_H       <freetype/fttrigon.h>
+#define FT_TRIGONOMETRY_H  <freetype/fttrigon.h>
 
   /* */
 

@@ -1,9 +1,9 @@
-2006-04-01  David Turner   <david@freetype.org>
+2006-04-01  David Turner  <david@freetype.org>
 
-       * docs/CHANGES: update
+	* docs/CHANGES: Updated.
 
-       * include/freetype/ftcache.h, include/freetype/config/ftheader.h:
-       updating documentation comments
+	* include/freetype/ftcache.h, include/freetype/config/ftheader.h:
+	Update documentation comments.
 
 2006-04-01  Werner Lemberg  <wl@gnu.org>
 

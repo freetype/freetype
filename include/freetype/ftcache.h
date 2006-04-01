@@ -46,38 +46,39 @@ FT_BEGIN_HEADER
    *
    *   Note that all types and functions begin with the FTC_ prefix.
    *
-   *   the cache is highly portable and thus doesn't know anything about
-   *   the fonts installed on your system, or how to access them. This implies
+   *   The cache is highly portable and thus doesn't know anything about the
+   *   fonts installed on your system, or how to access them.  This implies
    *   the following scheme:
    *
-   *   first, available/installed font faces are uniquely identified by
-   *   @FTC_FaceID values provided to the cache by the client. Note that the
-   *   cache only stores and compares these values, and doesn't try to
+   *   First, available or installed font faces are uniquely identified by
+   *   @FTC_FaceID values, provided to the cache by the client.  Note that
+   *   the cache only stores and compares these values, and doesn't try to
    *   interpret them in any way.
    *
-   *   Second, the cache will call, only when needed, a client-provided
-   *   function to convert a @FTC_FaceID into a new @FT_Face object. The latter
-   *   will then be completely managed by the cache, including its termination
+   *   Second, the cache calls, only when needed, a client-provided function
+   *   to convert a @FTC_FaceID into a new @FT_Face object.  The latter is
+   *   then completely managed by the cache, including its termination
    *   through @FT_Done_Face.
    *
-   *   Clients are free to map face ids to anything. The most simple usage is
-   *   to associate them to a (pathname,face_index) pair that is used to call
-   *   @FT_New_Face. However, more complex schemes are also possible.
+   *   Clients are free to map face IDs to anything else.  The most simple
+   *   usage is to associate them to a (pathname,face_index) pair that is
+   *   used to call @FT_New_Face.  However, more complex schemes are also
+   *   possible.
    *
-   *   Note that for the cache to work correctly, the face id values must be
-   *   *persistent*, which means that the content they point to should not
+   *   Note that for the cache to work correctly, the face ID values must be
+   *   *persistent*, which means that the contents they point to should not
    *   change at runtime, or that their value should not become invalid.
    *
-   *   If this is unavoidable (e.g. when a font is uninstalled at runtime),
+   *   If this is unavoidable (e.g., when a font is uninstalled at runtime),
    *   you should call @FTC_Manager_RemoveFaceID as soon as possible, to let
    *   the cache get rid of any references to the old @FTC_FaceID it may
-   *   keep internally. Failure to do so will lead to incorrect behaviour
+   *   keep internally.  Failure to do so will lead to incorrect behaviour
    *   or even crashes.
    *
-   *   To use the cache, start by calling @FTC_Manager_New to create a new
-   *   @FTC_Manager object, which models a single cache instance. You can
-   *   then lookup @FT_Face and @FT_Size objects with @FTC_Manager_LookupFace
-   *   and @FTC_Manager_LookupSize respectively.
+   *   To use the cache, start with calling @FTC_Manager_New to create a new
+   *   @FTC_Manager object, which models a single cache instance.  You can
+   *   then look up @FT_Face and @FT_Size objects with
+   *   @FTC_Manager_LookupFace and @FTC_Manager_LookupSize, respectively.
    *
    *   If you want to use the charmap caching, call @FTC_CMapCache_New, then
    *   later use @FTC_CMapCache_Lookup to perform the equivalent of
@@ -87,14 +88,13 @@ FT_BEGIN_HEADER
    *   later use @FTC_ImageCache_Lookup to retrieve the corresponding
    *   @FT_Glyph objects from the cache.
    *
-   *   If you need lots of small bitmaps, it is much more memory efficient to
-   *   call @FTC_SBitCache_New, then later @FTC_SBitCache_Lookup, this returns
-   *   @FTC_SBitRec structures, which are used to store small bitmaps directly.
-   *   (a small bitmap is one whose metrics and dimensions all fit in 8-bit
-   *   integers).
+   *   If you need lots of small bitmaps, it is much more memory efficient
+   *   to call @FTC_SBitCache_New followed by @FTC_SBitCache_Lookup.  This
+   *   returns @FTC_SBitRec structures, which are used to store small
+   *   bitmaps directly.  (A small bitmap is one whose metrics and
+   *   dimensions all fit into 8-bit integers).
    *
-   *   We hope to also provide a kerning cache in the near future. Stay
-   *   tuned.
+   *   We hope to also provide a kerning cache in the near future.
    *
    *
    * <Order>
@@ -139,65 +139,70 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
- /*************************************************************************
-  *
-  * @type: FTC_FaceID
-  *
-  * @description:
-  *    An opaque pointer type that is used to identity face objects.  The
-  *    contents of such objects is application-dependent.
-  *
-  *    these pointers are typically used to point to a user-defined
-  *    structure containing a font file path, and face index.
-  *
-  * @note:
-  *    never use NULL as a valid @FTC_FaceID
-  *
-  *    Face ids are passed by the client to the cache manager, which will
-  *    call, when needed, the @FTC_Face_Requester to translate them into
-  *    new @FT_Face objects
-  *
-  *    if the content of a given face id changes at runtime, or if the
-  *    value becomes invalid (e.g. when uninstalling a font), you should
-  *    immediately call @FTC_Manager_RemoveFaceID before any other cache
-  *    function.
-  *
-  *    Failure to do so will result in incorrect behaviour or even
-  *    memory leaks and crashes !
-  **/
+  /*************************************************************************
+   *
+   * @type: FTC_FaceID
+   *
+   * @description:
+   *   An opaque pointer type that is used to identity face objects.  The
+   *   contents of such objects is application-dependent.
+   *
+   *   These pointers are typically used to point to a user-defined
+   *   structure containing a font file path, and face index.
+   *
+   * @note:
+   *   Never use NULL as a valid @FTC_FaceID.
+   *
+   *   Face IDs are passed by the client to the cache manager, which calls,
+   *   when needed, the @FTC_Face_Requester to translate them into new
+   *   @FT_Face objects.
+   *
+   *   If the content of a given face ID changes at runtime, or if the value
+   *   becomes invalid (e.g., when uninstalling a font), you should
+   *   immediately call @FTC_Manager_RemoveFaceID before any other cache
+   *   function.
+   *
+   *   Failure to do so will result in incorrect behaviour or even
+   *   memory leaks and crashes.
+   */
   typedef struct FTC_FaceIDRec_*  FTC_FaceID;
 
 
- /************************************************************************
-  *
-  * @functype: FTC_Face_Requester
-  *
-  * @description:
-  *    A callback function provided by client applications.  It is used
-  *    by the cache manager to translate a given @FTC_FaceID into a new
-  *    valid @FT_Face object, on demand.
-  *
-  * <Input>
-  *    face_id  :: The face ID to resolve.
-  *
-  *    library  :: A handle to a FreeType library object.
-  *
-  *    req_data :: Application-provided request data (see note below).
-  *
-  * <Output>
-  *    aface   :: A new @FT_Face handle.
-  *
-  * <Return>
-  *    FreeType error code.  0 means success.
-  *
-  * <Note>
-  *    The third parameter 'req_data' is the same than the one passed
-  *    by the client when @FTC_Manager_New is called.
-  *
-  *    The face requester should not perform funny things on the returned
-  *    face object, like creating a new @FT_Size for it, or setting a
-  *    transformation through @FT_Set_Transform!
-  **/
+  /************************************************************************
+   *
+   * @functype:
+   *   FTC_Face_Requester
+   *
+   * @description:
+   *   A callback function provided by client applications.  It is used by
+   *   the cache manager to translate a given @FTC_FaceID into a new valid
+   *   @FT_Face object, on demand.
+   *
+   * <Input>
+   *   face_id ::
+   *     The face ID to resolve.
+   *
+   *   library ::
+   *     A handle to a FreeType library object.
+   *
+   *   req_data ::
+   *     Application-provided request data (see note below).
+   *
+   * <Output>
+   *   aface ::
+   *     A new @FT_Face handle.
+   *
+   * <Return>
+   *   FreeType error code.  0 means success.
+   *
+   * <Note>
+   *   The third parameter `req_data' is the same as the one passed by the
+   *   client when @FTC_Manager_New is called.
+   *
+   *   The face requester should not perform funny things on the returned
+   *   face object, like creating a new @FT_Size for it, or setting a
+   *   transformation through @FT_Set_Transform!
+   */
   typedef FT_Error
   (*FTC_Face_Requester)( FTC_FaceID  face_id,
                          FT_Library  library,
@@ -234,12 +239,12 @@ FT_BEGIN_HEADER
   /*    It is used to cache one or more @FT_Face objects, along with       */
   /*    corresponding @FT_Size objects.                                    */
   /*                                                                       */
-  /*    the manager intentionally limits the total number of opened        */
-  /*    @FT_Face and @FT_Size objects to limit memory usage. See the       */
-  /*    'max_faces' and 'max_sizes' parameters of @FTC_Manager_New.        */
+  /*    The manager intentionally limits the total number of opened        */
+  /*    @FT_Face and @FT_Size objects to control memory usage.  See the    */
+  /*    `max_faces' and `max_sizes' parameters of @FTC_Manager_New.        */
   /*                                                                       */
-  /*    the manager is also used to cache 'nodes' of various types         */
-  /*    while limiting their total memory usage.                           */
+  /*    The manager is also used to cache `nodes' of various types while   */
+  /*    limiting their total memory usage.                                 */
   /*                                                                       */
   /*    All limitations are enforced by keeping lists of managed objects   */
   /*    in most-recently-used order, and flushing old nodes to make room   */
@@ -277,24 +282,23 @@ FT_BEGIN_HEADER
   /*    Creates a new cache manager.                                       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library     :: The parent FreeType library handle to use.          */
+  /*    library   :: The parent FreeType library handle to use.            */
   /*                                                                       */
-  /*    max_faces   :: Maximum number of opened @FT_Face objects managed   */
-  /*                   by this cache instance.                             */
+  /*    max_faces :: Maximum number of opened @FT_Face objects managed by  */
+  /*                 this cache instance.                                  */
   /*                                                                       */
-  /*    max_sizes   :: Maximum number of opened @FT_Size objects managed   */
-  /*                   by this cache instance.                             */
+  /*    max_sizes :: Maximum number of opened @FT_Size objects managed by  */
+  /*                 this cache instance.                                  */
   /*                                                                       */
-  /*    max_bytes   :: Maximum number of bytes to use for cached data      */
-  /*                   nodes.  Use 0 for defaults.  Note that this value   */
-  /*                   does not account for managed FT_Face and FT_Size    */
-  /*                   objects.                                            */
+  /*    max_bytes :: Maximum number of bytes to use for cached data nodes. */
+  /*                 Use 0 for defaults.  Note that this value does not    */
+  /*                 account for managed FT_Face and FT_Size objects.      */
   /*                                                                       */
-  /*    requester   :: An application-provided callback used to translate  */
-  /*                   face IDs into real @FT_Face objects.                */
+  /*    requester :: An application-provided callback used to translate    */
+  /*                 face IDs into real @FT_Face objects.                  */
   /*                                                                       */
-  /*    req_data    :: A generic pointer that is passed to the requester   */
-  /*                   each time it is called (see @FTC_Face_Requester).   */
+  /*    req_data  :: A generic pointer that is passed to the requester     */
+  /*                 each time it is called (see @FTC_Face_Requester).     */
   /*                                                                       */
   /* <Output>                                                              */
   /*    amanager  :: A handle to a new manager object.  0 in case of       */
@@ -376,7 +380,6 @@ FT_BEGIN_HEADER
   /*    the @FT_Set_Transform function) on a returned face!  If you need   */
   /*    to transform glyphs, do it yourself after glyph loading.           */
   /*                                                                       */
-  /* <Note>                                                                */
   /*    When you perform a lookup, out-of-memory errors are detected       */
   /*    _within_ the lookup and force incremental flushes of the cache     */
   /*    until enough memory is released for the lookup to succeed.         */
