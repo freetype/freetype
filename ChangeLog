@@ -6,6 +6,9 @@
 
 	* configure.ac: Minor fixes to improve --help output.
 
+
+	* docs/PROBLEMS: New file.
+
 2006-04-01  David Turner  <david@freetype.org>
 
 	* docs/CHANGES: Updated.
