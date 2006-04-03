@@ -54,6 +54,7 @@ L := /Fl
 # Target flag.
 #
 T := /Fo
+TE := /Fe
 
 
 # C flags
@@ -73,7 +74,7 @@ CFLAGS ?= /nologo /c /Ox /G5 /W3 /Qwd32
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS := /Qansi /Za
+ANSIFLAGS := /Qansi_alias /Za
 
 # Library linking
 #

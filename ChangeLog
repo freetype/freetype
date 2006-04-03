@@ -1,3 +1,8 @@
+2006-04-03  luoyi  <luoyi.ly@gmail.com>
+
+	* builds/compiler/intelc.mk (TE): New variable.
+	(ANSIFLAGS): Updated.
+
 2006-04-03  Werner Lemberg  <wl@gnu.org>
 
 	* builds/exports.mk (clean_symbols_list, clean_apinames): Removed.
