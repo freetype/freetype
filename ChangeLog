@@ -1,3 +1,11 @@
+2006-04-03  Werner Lemberg  <wl@gnu.org>
+
+	* builds/exports.mk (clean_symbols_list, clean_apinames): Removed.
+	(CLEAN): Add $(EXPORTS_LIST) and $(APINAMES_EXE).
+	(.PHONY): Updated.
+
+	* configure.ac: Minor fixes to improve --help output.
+
 2006-04-01  David Turner  <david@freetype.org>
 
 	* docs/CHANGES: Updated.

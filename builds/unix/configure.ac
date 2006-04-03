@@ -119,8 +119,8 @@ AC_CHECK_FUNCS([memcpy memmove])
 
 # Check for system zlib
 
+# don't quote AS_HELP_STRING!
 AC_ARG_WITH([zlib],
-  dnl don't quote AS_HELP_STRING!
   AS_HELP_STRING([--without-zlib],
                  [use internal zlib instead of system-wide]))
 if test x$with_zlib != xno && test -z "$LIBZ"; then
@@ -135,8 +135,8 @@ fi
 
 # Whether to use Mac OS resource-based fonts.
 
+# don't quote AS_HELP_STRING!
 AC_ARG_WITH([old-mac-fonts],
-  dnl don't quote AS_HELP_STRING!
   AS_HELP_STRING([--with-old-mac-fonts],
                  [allow Mac resource-based fonts to be used]))
 if test x$with_old_mac_fonts = xyes; then
@@ -348,8 +348,8 @@ fi
 
 # Whether to use AppleTypeService since Mac OS X.
 
+# don't quote AS_HELP_STRING!
 AC_ARG_WITH([ats],
-  dnl don't quote AS_HELP_STRING!
   AS_HELP_STRING([--with-ats],
                  [use AppleTypeService, if available (default=yes)]))
 if test x$with_ats = xno; then

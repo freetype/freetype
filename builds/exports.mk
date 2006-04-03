@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2005 by
+# Copyright 2005, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -53,7 +53,7 @@ ifneq ($(EXPORTS_LIST),)
   $(APINAMES_EXE): $(APINAMES_SRC)
 	  $(CCexe) $(TE)$@ $<
 
-  .PHONY: symbols_list clean_symbols_list clean_apinames
+  .PHONY: symbols_list
 
   symbols_list: $(EXPORTS_LIST)
 
@@ -67,13 +67,8 @@ ifneq ($(EXPORTS_LIST),)
 
   $(PROJECT_LIBRARY): $(EXPORTS_LIST)
 
-  clean_symbols_list:
-	  -$(DELETE) $(subst /,$(SEP),$(EXPORTS_LIST))
-
-  clean_apinames:
-	  -$(DELETE) $(subst /,$(SEP),$(APINAMES_EXE))
-
-  clean_project: clean_symbols_list clean_apinames
+  CLEAN += $(EXPORTS_LIST) \
+           $(APINAMES_EXE)
 
 endif
 
