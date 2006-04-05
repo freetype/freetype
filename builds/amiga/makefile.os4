@@ -4,7 +4,7 @@
 #
 
 
-# Copyright 2005 by
+# Copyright 2005, 2006 by
 # Werner Lemberg and Detlef Würkner.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -58,7 +58,7 @@ WARNINGS = -Wall -W -Wundef -Wpointer-arith -Wbad-function-cast \
 
 CPU      = -mcpu=604e
 
-OPTIONS  = -DNDEBUG -fno-builtin
+OPTIONS  = -DFT2_BUILD_LIBRARY -DNDEBUG -fno-builtin
 OPTIMIZE = -O2 -fomit-frame-pointer -fstrength-reduce -finline-functions
 
 CFLAGS   = $(DIRFLAGS) $(WARNINGS) $(FT2FLAGS) $(CPU) $(OPTIONS) $(OPTIMIZE)

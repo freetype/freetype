@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2005 by
+# Copyright 2005,2006 by
 # Werner Lemberg and Detlef Würkner.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -78,7 +78,7 @@ OPTIMIZER = optinlocal
 
 SCFLAGS = optimize opttime optsched strmerge data=faronly idlen=50 cpu=$(CPU)\
 	  idir=include/ idir=$(CORE) idir=FT:include/ nostackcheck nochkabort\
-	  noicons ignore=79,85,110,306 parameters=both
+	  noicons ignore=79,85,110,306 parameters=both define=FT2_BUILD_LIBRARY
 
 LIB  = ft2_$(CPU).lib
 
