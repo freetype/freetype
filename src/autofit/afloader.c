@@ -27,24 +27,11 @@
   af_loader_init( AF_Loader  loader,
                   FT_Memory  memory )
   {
-    FT_Error  error;
-
-
     FT_ZERO( loader );
 
     af_glyph_hints_init( &loader->hints, memory );
 
-    error = FT_GlyphLoader_New( memory, &loader->gloader );
-    if ( !error )
-    {
-      error = FT_GlyphLoader_CreateExtra( loader->gloader );
-      if ( error )
-      {
-        FT_GlyphLoader_Done( loader->gloader );
-        loader->gloader = NULL;
-      }
-    }
-    return error;
+    return FT_GlyphLoader_New( memory, &loader->gloader );
   }
 
 
@@ -145,10 +132,6 @@
         goto Exit;
 
       FT_ARRAY_COPY( gloader->current.outline.points,
-                     slot->outline.points,
-                     slot->outline.n_points );
-
-      FT_ARRAY_COPY( gloader->current.extra_points,
                      slot->outline.points,
                      slot->outline.n_points );
 
@@ -308,16 +291,11 @@
           {
             FT_Vector*  cur   = gloader->base.outline.points +
                                 num_base_points;
-            FT_Vector*  org   = gloader->base.extra_points +
-                                num_base_points;
             FT_Vector*  limit = cur + num_new_points;
 
 
-            for ( ; cur < limit; cur++, org++ )
-            {
+            for ( ; cur < limit; cur++ )
               FT_Vector_Transform( cur, &subglyph->transform );
-              FT_Vector_Transform( org, &subglyph->transform );
-            }
           }
 
           /* apply offset */

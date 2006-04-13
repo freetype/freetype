@@ -1,3 +1,8 @@
+2006-04-13  David Turner  <david@freetype.org>
+
+  * src/autofit/afloader.c: removing superfluous code in the auto-fitter's
+  loader
+
 2006-04-05  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/makefile, builds/amiga/makefile.os4,
