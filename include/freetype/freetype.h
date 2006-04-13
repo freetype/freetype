@@ -147,12 +147,12 @@ FT_BEGIN_HEADER
   /*    FT_Attach_File                                                     */
   /*    FT_Attach_Stream                                                   */
   /*                                                                       */
-  /*    FT_Size_Request_Type                                               */
-  /*    FT_Size_Request                                                    */
-  /*    FT_Request_Size                                                    */
-  /*    FT_Select_Size                                                     */
   /*    FT_Set_Char_Size                                                   */
   /*    FT_Set_Pixel_Sizes                                                 */
+  /*    FT_Request_Size                                                    */
+  /*    FT_Select_Size                                                     */
+  /*    FT_Size_Request_Type                                               */
+  /*    FT_Size_Request                                                    */
   /*    FT_Set_Transform                                                   */
   /*    FT_Load_Glyph                                                      */
   /*    FT_Get_Char_Index                                                  */
@@ -211,8 +211,8 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    A structure used to model the metrics of a single glyph.  The      */
   /*    values are expressed in 26.6 fractional pixel format; if the flag  */
-  /*    FT_LOAD_NO_SCALE is used, values are returned in font units        */
-  /*    instead.                                                           */
+  /*    @FT_LOAD_NO_SCALE was used when loading the glyph, values are      */
+  /*    expressed in font units instead.                                   */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    width ::                                                           */
@@ -407,20 +407,22 @@ FT_BEGIN_HEADER
   /*    FT_Size                                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A handle to a given size object which  models a face object at a   */
-  /*    given size.                                                        */
+  /*    A handle to an object used to model a face scaled to a given       */
+  /*    character size.                                                    */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    Each face object owns one or more sizes.  There is however a       */
-  /*    single _active_ size for the face at any time that is used by      */
-  /*    functions like @FT_Load_Glyph, @FT_Get_Kerning, etc.               */
+  /*    Each @FT_Face has an _active_ @FT_Size object that is used by      */
+  /*    functions like @FT_Load_Glyph to determine the scaling transform   */
+  /*    used to load and hint glyph and metrics.                           */
   /*                                                                       */
-  /*    You can use @FT_New_Size to allocate new size objects for a face   */
-  /*    object and @FT_Activate_Size to activate.                          */
+  /*    You can use @FT_Set_Char_Size, @FT_Set_Pixel_Sizes,                */
+  /*    @FT_Request_Size or even @FT_Select_Size to change the content     */
+  /*    (i.e. scale) of the active @FT_Size.                               */
   /*                                                                       */
-  /*    You can use @FT_Request_Size, @FT_Select_Size, etc., to change the */
-  /*    size that the active size object models.  Note that size changing  */
-  /*    can be expensive for some font formats.                            */
+  /*    You can use @FT_New_Size to create additionnal size objects for a  */
+  /*    given @FT_Face, but they won't be used by other functions until    */
+  /*    you activate it through @FT_Activate_Size. Only one size can be    */
+  /*    activated at any given time per face.                              */
   /*                                                                       */
   /* <Also>                                                                */
   /*    The @FT_SizeRec structure details the publicly accessible fields   */
@@ -517,16 +519,16 @@ FT_BEGIN_HEADER
   /*    FT_Encoding                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An enumeration used to specify encodings supported by charmaps.    */
-  /*    Used in the @FT_Select_Charmap API function.                       */
+  /*    An enumeration used to specify character sets supported by         */
+  /*    charmaps. Used in the @FT_Select_Charmap API function.             */
   /*                                                                       */
   /* <Note>                                                                */
+  /*    Despite the name, this enum lists specific character repertories   */
+  /*    (i.e. charsets), and not text encoding methods (e.g. UTF-8,        */
+  /*    UTF-16, GB2312_EUC, etc...)                                        */
+  /*                                                                       */
   /*    Because of 32-bit charcodes defined in Unicode (i.e., surrogates), */
   /*    all character codes must be expressed as FT_Longs.                 */
-  /*                                                                       */
-  /*    The values of this type correspond to specific character           */
-  /*    repertories (i.e. charsets), and not to text encoding methods      */
-  /*    (like UTF-8, UTF-16, GB2312_EUC, etc.).                            */
   /*                                                                       */
   /*    Other encodings might be defined in the future.                    */
   /*                                                                       */
@@ -1154,12 +1156,10 @@ FT_BEGIN_HEADER
    *   FT_HAS_FAST_GLYPHS( face )
    *
    * @description:
-   *   Deprecated; indicates that the face contains so-called `fast' glyph
-   *   bitmaps.
+   *   Deprecated;
    *
    */
-#define FT_HAS_FAST_GLYPHS( face ) \
-          ( face->face_flags & FT_FACE_FLAG_FAST_GLYPHS )
+#define FT_HAS_FAST_GLYPHS( face )   0
 
 
   /*************************************************************************
@@ -1332,6 +1332,9 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    The subglyph implementation is not part of the high-level API,     */
   /*    hence the forward structure declaration.                           */
+  /*                                                                       */
+  /*    You can however retrieve subglyph information with                 */
+  /*    @FT_Get_SubGlyph_Info                                              */
   /*                                                                       */
   typedef struct FT_SubGlyphRec_*  FT_SubGlyph;
 
@@ -1923,8 +1926,8 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    `Attach' data to a face object.  This is usually used to read      */
   /*    additional information for the face object.  For example, you can  */
-  /*    attach an AFM file that come with a Type 1 font to get the kerning */
-  /*    values and other metrics.                                          */
+  /*    attach an AFM file that comes with a Type 1 font to get the        */
+  /*    kerning values and other metrics.                                  */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face       :: The target face object.                              */
@@ -1942,7 +1945,7 @@ FT_BEGIN_HEADER
   /*    depends on the font format (and thus the font driver).             */
   /*                                                                       */
   /*    Client applications are expected to know what they are doing       */
-  /*    when invoking this function.  Most drivers simply do not implement */
+  /*    when invoking this function. Most drivers simply do not implement  */
   /*    file attachments.                                                  */
   /*                                                                       */
   FT_EXPORT( FT_Error )
@@ -2090,7 +2093,7 @@ FT_BEGIN_HEADER
   /*    FT_Request_Size                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Request the size of the active size object of a given face object. */ 
+  /*    Resize the scale of the active @FT_Size object in a face.          */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face :: A handle to a target face object.                          */
@@ -2129,9 +2132,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    char_height     :: The nominal height, in 26.6 fractional points.  */
   /*                                                                       */
-  /*    horz_resolution :: The horizontal resolution.                      */
+  /*    horz_resolution :: The horizontal resolution in dpi.               */
   /*                                                                       */
-  /*    vert_resolution :: The vertical resolution.                        */
+  /*    vert_resolution :: The vertical resolution in dpi.                 */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -2261,7 +2264,7 @@ FT_BEGIN_HEADER
    *     operation.  In this case, the following happens:
    *
    *     1. FreeType looks for a bitmap for the glyph corresponding to the
-   *        face's current size.  If one is found, the function returns. 
+   *        face's current size.  If one is found, the function returns.
    *        The bitmap data can be accessed from the glyph slot (see note
    *        below).
    *
@@ -2799,7 +2802,7 @@ FT_BEGIN_HEADER
   /*    FT_Get_Postscript_Name                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retriev the ASCII Postscript name of a given face, if available.   */
+  /*    Retrieve the ASCII Postscript name of a given face, if available.  */
   /*    This only works with Postscript and TrueType fonts.                */
   /*                                                                       */
   /* <Input>                                                               */
@@ -2909,10 +2912,11 @@ FT_BEGIN_HEADER
   /*    The glyph index.  0 means `undefined character code'.              */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    FreeType computes its own glyph indices which are not necessarily  */
-  /*    the same as used in the font in case the font is based on glyph    */
-  /*    indices.  Reason for this behaviour is to assure that index 0 is   */
-  /*    never used, representing the missing glyph.                        */
+  /*    If you use FreeType to manipulate the content of font files        */
+  /*    directly, be aware that the glyph index returned by this function  */
+  /*    doesn't always correspond to the internal indices used within      */
+  /*    the file. This is done to ensure that value 0 always correspond    */
+  /*    to 'missing glyph'                                                 */
   /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,

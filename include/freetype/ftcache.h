@@ -285,14 +285,14 @@ FT_BEGIN_HEADER
   /*    library   :: The parent FreeType library handle to use.            */
   /*                                                                       */
   /*    max_faces :: Maximum number of opened @FT_Face objects managed by  */
-  /*                 this cache instance.                                  */
+  /*                 this cache instance. Use 0 for defaults               */
   /*                                                                       */
   /*    max_sizes :: Maximum number of opened @FT_Size objects managed by  */
-  /*                 this cache instance.                                  */
+  /*                 this cache instance. Use 0 for defaults               */
   /*                                                                       */
   /*    max_bytes :: Maximum number of bytes to use for cached data nodes. */
   /*                 Use 0 for defaults.  Note that this value does not    */
-  /*                 account for managed FT_Face and FT_Size objects.      */
+  /*                 account for managed @FT_Face and @FT_Size objects.    */
   /*                                                                       */
   /*    requester :: An application-provided callback used to translate    */
   /*                 face IDs into real @FT_Face objects.                  */
@@ -384,8 +384,8 @@ FT_BEGIN_HEADER
   /*    _within_ the lookup and force incremental flushes of the cache     */
   /*    until enough memory is released for the lookup to succeed.         */
   /*                                                                       */
-  /*    If a lookup fails with FT_Err_Out_Of_Memory the cache has already  */
-  /*    been completely flushed, and still no memory is available for the  */
+  /*    If a lookup fails with @FT_Err_Out_Of_Memory the cache has already */
+  /*    been completely flushed, and still no memory was available for the */
   /*    operation.                                                         */
   /*                                                                       */
   FT_EXPORT( FT_Error )
@@ -500,7 +500,27 @@ FT_BEGIN_HEADER
                   FTC_Manager  manager );
 
 
-  /* remove all nodes belonging to a given face_id */
+ /**
+  * @function: FTC_Manager_RemoveFaceID
+  *
+  * @description:
+  *   a special function used to indicate to the cache manager that
+  *   a given @FTC_FaceID is no longer valid, either because it
+  *   content changed, or because it was deallocated/uninstalled
+  *
+  * @input:
+  *   manager :: cache manager handle
+  *   face_id :: the @FTC_FaceID to be removed
+  *
+  * @note:
+  *   this function will flush all nodes from the cache corresponding
+  *   to this face_id, with the exception of nodes with a non-0 reference
+  *   count.
+  *
+  *   these nodes are however modified internally so as to never appear
+  *   in later lookups with the same face_id value, and to be immediately
+  *   destroyed when released by all their users.
+  */
   FT_EXPORT( void )
   FTC_Manager_RemoveFaceID( FTC_Manager  manager,
                             FTC_FaceID   face_id );
@@ -519,7 +539,7 @@ FT_BEGIN_HEADER
    *   FTC_CMapCache
    *
    * @description:
-   *   An opaque handle used to manager a charmap cache.  This cache is to
+   *   An opaque handle used to model a charmap cache.  This cache is to
    *   hold character codes -> glyph indices mappings.
    *
    */
@@ -606,6 +626,18 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
+ /**
+  * @struct: FTC_ImageTypeRec
+  *
+  * @description:
+  *   a structure used to model the type of images in a glyph cache
+  *
+  * @fields:
+  *   face_id :: the face id
+  *   width   :: width in pixels
+  *   height  :: height in pixels
+  *   flags   :: load flags, as in @FT_Load_Glyph
+  */
   typedef struct  FTC_ImageTypeRec_
   {
     FTC_FaceID  face_id;
@@ -615,6 +647,12 @@ FT_BEGIN_HEADER
 
   } FTC_ImageTypeRec;
 
+ /**
+  * @type: FTC_ImageType
+  *
+  * @description:
+  *   handle to an @FTC_ImageTypeRec structure
+  */
   typedef struct FTC_ImageTypeRec_*  FTC_ImageType;
 
 

@@ -188,8 +188,7 @@ FT_BEGIN_HEADER
    *   `outside' borders of a given outline.
    *
    * @input:
-   *   outline ::
-   *     The source outline handle.
+   *   outline :: The source outline handle.
    *
    * @return:
    *   The border index.  @FT_STROKER_BORDER_LEFT for empty or invalid
@@ -208,17 +207,16 @@ FT_BEGIN_HEADER
    *   Create a new stroker object.
    *
    * @input:
-   *   memory ::
-   *     The memory manager handle.
+   *   library :: FreeType library handle
    *
    * @output:
-   *   A new stroker object handle.  NULL in case of error.
+   *   astroker :: A new stroker object handle.  NULL in case of error.
    *
    * @return:
    *    FreeType error code.  0 means success.
    */
   FT_EXPORT( FT_Error )
-  FT_Stroker_New( FT_Memory    memory,
+  FT_Stroker_New( FT_Library   library,
                   FT_Stroker  *astroker );
 
 

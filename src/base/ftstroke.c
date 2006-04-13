@@ -716,12 +716,17 @@
   /* documentation is in ftstroke.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Stroker_New( FT_Memory    memory,
+  FT_Stroker_New( FT_Library   library,
                   FT_Stroker  *astroker )
   {
     FT_Error    error;
+    FT_Memory   memory;
     FT_Stroker  stroker;
 
+    if ( !library )
+      return FT_Err_Invalid_Argument;
+
+    memory = library->memory;
 
     if ( !FT_NEW( stroker ) )
     {
