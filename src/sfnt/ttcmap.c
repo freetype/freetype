@@ -2276,7 +2276,7 @@
         FT_Byte*                       cmap   = table + offset;
         volatile FT_UInt               format = TT_PEEK_USHORT( cmap );
         const TT_CMap_Class* volatile  pclazz = tt_cmap_classes;
-        TT_CMap_Class                  clazz;
+        TT_CMap_Class volatile         clazz;
 
 
         for ( ; *pclazz; pclazz++ )

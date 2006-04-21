@@ -3,6 +3,8 @@
   * include/freetype/ftincrem.h, include/freetype/ftmodapi.h,
   include/freetype/freetype.h: Documentation update
 
+  * src/sfnt/ttcmap.c: removed compiler warnings (gcc-4.0.2)
+
 2006-04-13  David Turner  <david@freetype.org>
 
   * src/autofit/afloader.c: removing superfluous code in the auto-fitter's
