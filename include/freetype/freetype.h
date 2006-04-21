@@ -3028,6 +3028,85 @@ FT_BEGIN_HEADER
                      FT_String*  glyph_name );
 
 
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_SUBGLYPH_FLAG_XXX
+   *
+   * @description:
+   *   A list of constants used to describe subglyphs.  Please refer to the
+   *   TrueType specification for the meaning of the various flags.
+   *
+   * @values:
+   *   FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS ::
+   *   FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES ::
+   *   FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID ::
+   *   FT_SUBGLYPH_FLAG_SCALE ::
+   *   FT_SUBGLYPH_FLAG_XY_SCALE ::
+   *   FT_SUBGLYPH_FLAG_2X2 ::
+   *   FT_SUBGLYPH_FLAG_USE_MY_METRICS ::
+   *
+   */
+#define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
+#define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
+#define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
+#define FT_SUBGLYPH_FLAG_SCALE                   8
+#define FT_SUBGLYPH_FLAG_XY_SCALE             0x40
+#define FT_SUBGLYPH_FLAG_2X2                  0x80
+#define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
+
+
+  /*************************************************************************
+   *
+   * @func:
+   *   FT_Get_SubGlyph_Info
+   *
+   * @description:
+   *   Retrieve a description of a given subglyph.  Only use it if
+   *   `glyph->format' is @FT_GLYPH_FORMAT_COMPOSITE, or an error is
+   *   returned.
+   *
+   * @input:
+   *   glyph ::
+   *     The source glyph slot.
+   *
+   *   sub_index ::
+   *     The index of subglyph.  Must be less than `glyph->num_subglyphs'.
+   *
+   * @output:
+   *   p_index ::
+   *     The glyph index of the subglyph.
+   *
+   *   p_flags ::
+   *     The subglyph flags, see @FT_SUBGLYPH_FLAG_XXX.
+   *
+   *   p_arg1 ::
+   *     The subglyph's first argument (if any).
+   *
+   *   p_arg2 ::
+   *     The subglyph's second argument (if any).
+   *
+   *   p_transform ::
+   *     The subglyph transformation (if any).
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   *
+   * @note:
+   *   The values of *p_arg1, *p_arg2 and *p_transform must be interpreted
+   *   depending on the flags returns in *p_flags.  See the TrueType
+   *   specification for details.
+   *
+   */
+  FT_EXPORT( FT_Error )
+  FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
+                        FT_UInt       sub_index,
+                        FT_Int       *p_index,
+                        FT_UInt      *p_flags,
+                        FT_Int       *p_arg1,
+                        FT_Int       *p_arg2,
+                        FT_Matrix    *p_transform );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -3226,85 +3305,6 @@ FT_BEGIN_HEADER
   FT_Vector_Transform( FT_Vector*        vec,
                        const FT_Matrix*  matrix );
 
-
-  /*************************************************************************
-   *
-   * @macro:
-   *   FT_SUBGLYPH_FLAG_XXX
-   *
-   * @description:
-   *   A list of constants used to describe subglyphs.  Please refer to the
-   *   TrueType specification for the meaning of the various flags.
-   *
-   * @values:
-   *   FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS ::
-   *   FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES ::
-   *   FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID ::
-   *   FT_SUBGLYPH_FLAG_SCALE ::
-   *   FT_SUBGLYPH_FLAG_XY_SCALE ::
-   *   FT_SUBGLYPH_FLAG_2X2 ::
-   *   FT_SUBGLYPH_FLAG_USE_MY_METRICS ::
-   *
-   */
-#define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
-#define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
-#define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
-#define FT_SUBGLYPH_FLAG_SCALE                   8
-#define FT_SUBGLYPH_FLAG_XY_SCALE             0x40
-#define FT_SUBGLYPH_FLAG_2X2                  0x80
-#define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
-
-
-  /*************************************************************************
-   *
-   * @func:
-   *   FT_Get_SubGlyph_Info
-   *
-   * @description:
-   *   Retrieve a description of a given subglyph.  Only use it if
-   *   `glyph->format' is @FT_GLYPH_FORMAT_COMPOSITE, or an error is
-   *   returned.
-   *
-   * @input:
-   *   glyph ::
-   *     The source glyph slot.
-   *
-   *   sub_index ::
-   *     The index of subglyph.  Must be less than `glyph->num_subglyphs'.
-   *
-   * @output:
-   *   p_index ::
-   *     The glyph index of the subglyph.
-   *
-   *   p_flags ::
-   *     The subglyph flags, see @FT_SUBGLYPH_FLAG_XXX.
-   *
-   *   p_arg1 ::
-   *     The subglyph's first argument (if any).
-   *
-   *   p_arg2 ::
-   *     The subglyph's second argument (if any).
-   *
-   *   p_transform ::
-   *     The subglyph transformation (if any).
-   *
-   * @return:
-   *   FreeType error code.  0 means success.
-   *
-   * @note:
-   *   The values of *p_arg1, *p_arg2 and *p_transform must be interpreted
-   *   depending on the flags returns in *p_flags.  See the TrueType
-   *   specification for details.
-   *
-   */
-  FT_EXPORT( FT_Error )
-  FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
-                        FT_UInt       sub_index,
-                        FT_Int       *p_index,
-                        FT_UInt      *p_flags,
-                        FT_Int       *p_arg1,
-                        FT_Int       *p_arg2,
-                        FT_Matrix    *p_transform );
 
   /* */
 

@@ -31,6 +31,32 @@
 
 FT_BEGIN_HEADER
 
+ /***************************************************************
+  *
+  * @section:
+  *    incremental
+  *
+  * @title:
+  *    Incremental Loading
+  *
+  * @abstract:
+  *    Custom Glyph Loading
+  *
+  * @description:
+  *    This section contains various functions used to perform
+  *    so-called "incremental" glyph loading. This is a mode where
+  *    all glyphs loaded from a given FT_Face are provided by the
+  *    client application,
+  *
+  *    Apart from that, all other tables are loaded normally from
+  *    the font file. This mode is useful when FreeType is used
+  *    within another engine, e.g. a Postscript Imaging Processor.
+  *
+  *    to enable this mode, you must use @FT_Open_Face, passing
+  *    an @FT_Parameter with the @FT_PARAM_TAG_INCREMENTAL tag
+  *    and a @FT_Incremental_Interface value. See the comments
+  *    for @FT_Incremental_InterfaceRec for an example.
+  */
 
  /***************************************************************************
   *
@@ -268,6 +294,14 @@ FT_BEGIN_HEADER
     FT_Incremental                  object;
   
   } FT_Incremental_InterfaceRec;
+
+ /***
+  * @type: FT_Incremental_Interface
+  *
+  * @description:
+  *   a pointer to a @FT_Incremental_InterfaceRec structure
+  */
+  typedef FT_Incremental_InterfaceRec*   FT_Incremental_Interface;
 
 
  /***************************************************************************
