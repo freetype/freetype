@@ -307,22 +307,23 @@ FT_BEGIN_HEADER
   FT_Add_Default_Modules( FT_Library  library );
 
 
- /***************************************************************
-  *
-  * @section:
-  *    ttengine
-  *
-  * @title:
-  *    TrueType Engine
-  *
-  * @abstract:
-  *    TrueType bytecode support
-  *
-  * @description:
-  *    This section contains a function used to query the level
-  *    of TrueType bytecode support compiled in this version of
-  *    the library.
-  */
+  /**************************************************************************
+   *
+   * @section:
+   *   ttengine
+   *
+   * @title:
+   *   The TrueType Engine
+   *
+   * @abstract:
+   *   TrueType bytecode support
+   *
+   * @description:
+   *   This section contains a function used to query the level of TrueType
+   *   bytecode support compiled in this version of the library.
+   *
+   */
+
 
   /**************************************************************************
    *

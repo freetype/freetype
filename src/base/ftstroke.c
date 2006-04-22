@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType path stroker (body).                                        */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005 by                                    */
+/*  Copyright 2002, 2003, 2004, 2005, 2006 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -722,6 +722,7 @@
     FT_Error    error;
     FT_Memory   memory;
     FT_Stroker  stroker;
+
 
     if ( !library )
       return FT_Err_Invalid_Argument;

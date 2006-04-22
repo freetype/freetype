@@ -1,16 +1,25 @@
 2006-04-21  David Turner  <david@freetype.org>
 
-  * include/freetype/ftincrem.h, include/freetype/ftmodapi.h,
-  include/freetype/freetype.h: Documentation update
+	* include/freetype/ftincrem.h: Documentation updates.
+	(FT_Incremental_Interface): New typedef.
 
-  * src/sfnt/ttcmap.c: removed compiler warnings (gcc-4.0.2)
+	* include/freetype/ftmodapi.h, include/freetype/ftglyph.h:
+	Documentation updates.
+
+	* include/freetype/freetype.h: Documentation update.
+	(FT_HAS_FAST_GLYPHS): Always set to 0.
+
+	* include/freetype/ftstroke.h, src/base/ftstroke.c (FT_Stroker_New):
+	Take an FT_Library argument instead of FT_Memory.
+
+	* src/sfnt/ttcmap.c: Remove compiler warnings (gcc-4.0.2).
 
 2006-04-13  David Turner  <david@freetype.org>
 
-  * src/autofit/afloader.c: removing superfluous code in the auto-fitter's
-  loader
+	* src/autofit/afloader.c (af_loader_init, af_loader_load_g): Remove
+	superfluous code in the auto-fitter's loader.
 
-2006-04-05  Detlef Wrkner  <TetiSoft@apg.lahn.de>
+2006-04-05  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/makefile, builds/amiga/makefile.os4,
 	builds/amiga/smakefile: Added FT2_BUILD_LIBRARY define.
@@ -43,7 +52,7 @@
 	* builds/unix/install.mk (uninstall): Don't handle `cache'
 	directory which no longer exists.
 
-2006-03-29  Detlef Wrkner  <TetiSoft@apg.lahn.de>
+2006-03-29  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/psaux/psconv.c: Changed some variables which are expected to
 	hold negative values from `char' to `FT_Char' to allow building with
@@ -1622,7 +1631,7 @@
 	(tt_face_build_cmaps): Check table and offset correctly (equality is
 	missing).
 
-2005-11-15  Detlef Wrkner  <TetiSoft@apg.lahn.de>
+2005-11-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/smakefile: Adjusted the compiler options
 	to the current sources, now really builds the gxvalid, gzip
@@ -1640,7 +1649,7 @@
 	builds/mac/FreeType.ppc_carbon.make.txt:
 	Updated for MPW to build all available modules.
 
-2005-11-21  Hï¿½ard Wall  <haavardw@ifi.uio.no>
+2005-11-21  Håvard Wall  <haavardw@ifi.uio.no>
 
 	* src/bdf/bdfdrivr.c (bdf_interpret_style, BDF_Face_Done): Fix small
 	memory leak.
@@ -1699,14 +1708,14 @@
 	FT_Done_Memory), builds/win32/ftdebug.c (FT_Message, FT_Panic):
 	s/FT_EXPORT/FT_BASE/.
 
-2005-11-17  Detlef Wrkner  <TetiSoft@apg.lahn.de>
+2005-11-17  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/src/base/ftdebug.c (FT_Trace_Get_Count,
 	FT_Trace_Get_Name, FT_Message, FT_Panic),
 	builds/amiga/src/base/ftsystem.c (FT_New_Memory, FT_Done_Memory,
 	FT_Stream_Open): s/FT_EXPORT/FT_BASE/.
 
-2005-11-17  Detlef Wrkner  <TetiSoft@apg.lahn.de>
+2005-11-17  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/makefile, builds/amiga/makefile.os4,
 	builds/amiga/smakefile,
@@ -1790,7 +1799,7 @@
 	* src/type1/t1afm.c (T1_Read_PFM): Zero offset means `no kerning
 	table available'.  From Sergey Tolstov <stolstov@esri.com>.
 
-2005-11-03  Ville Syrjï¿½ï¿½ <syrjala@sci.fi>
+2005-11-03  Ville Syrjälä <syrjala@sci.fi>
 
 	* src/base/ftobjs.c (FT_Open_Face): Avoid possible memory leak.
 

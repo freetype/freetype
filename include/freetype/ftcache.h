@@ -285,10 +285,10 @@ FT_BEGIN_HEADER
   /*    library   :: The parent FreeType library handle to use.            */
   /*                                                                       */
   /*    max_faces :: Maximum number of opened @FT_Face objects managed by  */
-  /*                 this cache instance. Use 0 for defaults               */
+  /*                 this cache instance.  Use 0 for defaults.             */
   /*                                                                       */
   /*    max_sizes :: Maximum number of opened @FT_Size objects managed by  */
-  /*                 this cache instance. Use 0 for defaults               */
+  /*                 this cache instance.  Use 0 for defaults.             */
   /*                                                                       */
   /*    max_bytes :: Maximum number of bytes to use for cached data nodes. */
   /*                 Use 0 for defaults.  Note that this value does not    */
@@ -500,27 +500,33 @@ FT_BEGIN_HEADER
                   FTC_Manager  manager );
 
 
- /**
-  * @function: FTC_Manager_RemoveFaceID
-  *
-  * @description:
-  *   a special function used to indicate to the cache manager that
-  *   a given @FTC_FaceID is no longer valid, either because it
-  *   content changed, or because it was deallocated/uninstalled
-  *
-  * @input:
-  *   manager :: cache manager handle
-  *   face_id :: the @FTC_FaceID to be removed
-  *
-  * @note:
-  *   this function will flush all nodes from the cache corresponding
-  *   to this face_id, with the exception of nodes with a non-0 reference
-  *   count.
-  *
-  *   these nodes are however modified internally so as to never appear
-  *   in later lookups with the same face_id value, and to be immediately
-  *   destroyed when released by all their users.
-  */
+  /*************************************************************************
+   *
+   * @function:
+   *   FTC_Manager_RemoveFaceID
+   *
+   * @description:
+   *   A special function used to indicate to the cache manager that
+   *   a given @FTC_FaceID is no longer valid, either because its
+   *   content changed, or because it was deallocated or uninstalled.
+   *
+   * @input:
+   *   manager ::
+   *     The cache manager handle.
+   *
+   *   face_id ::
+   *     The @FTC_FaceID to be removed.
+   *
+   * @note:
+   *   This function flushes all nodes from the cache corresponding to this
+   *   `face_id', with the exception of nodes with a non-null reference
+   *   count.
+   *
+   *   Such nodes are however modified internally so as to never appear
+   *   in later lookups with the same `face_id' value, and to be immediately
+   *   destroyed when released by all their users.
+   *
+   */
   FT_EXPORT( void )
   FTC_Manager_RemoveFaceID( FTC_Manager  manager,
                             FTC_FaceID   face_id );
@@ -626,18 +632,29 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
- /**
-  * @struct: FTC_ImageTypeRec
-  *
-  * @description:
-  *   a structure used to model the type of images in a glyph cache
-  *
-  * @fields:
-  *   face_id :: the face id
-  *   width   :: width in pixels
-  *   height  :: height in pixels
-  *   flags   :: load flags, as in @FT_Load_Glyph
-  */
+
+  /*************************************************************************
+   *
+   * @struct:
+   *   FTC_ImageTypeRec
+   *
+   * @description:
+   *   A structure used to model the type of images in a glyph cache.
+   *
+   * @fields:
+   *   face_id ::
+   *     The face ID.
+   *
+   *   width ::
+   *     The width in pixels.
+   *
+   *   height ::
+   *     The height in pixels.
+   *
+   *   flags ::
+   *     The load flags, as in @FT_Load_Glyph.
+   *
+   */
   typedef struct  FTC_ImageTypeRec_
   {
     FTC_FaceID  face_id;
@@ -647,12 +664,16 @@ FT_BEGIN_HEADER
 
   } FTC_ImageTypeRec;
 
- /**
-  * @type: FTC_ImageType
-  *
-  * @description:
-  *   handle to an @FTC_ImageTypeRec structure
-  */
+
+  /*************************************************************************
+   *
+   * @type:
+   *   FTC_ImageType
+   *
+   * @description:
+   *   A handle to an @FTC_ImageTypeRec structure.
+   *
+   */
   typedef struct FTC_ImageTypeRec_*  FTC_ImageType;
 
 

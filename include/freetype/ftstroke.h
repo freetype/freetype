@@ -188,7 +188,8 @@ FT_BEGIN_HEADER
    *   `outside' borders of a given outline.
    *
    * @input:
-   *   outline :: The source outline handle.
+   *   outline ::
+   *     The source outline handle.
    *
    * @return:
    *   The border index.  @FT_STROKER_BORDER_LEFT for empty or invalid
@@ -207,10 +208,12 @@ FT_BEGIN_HEADER
    *   Create a new stroker object.
    *
    * @input:
-   *   library :: FreeType library handle
+   *   library ::
+   *     FreeType library handle
    *
    * @output:
-   *   astroker :: A new stroker object handle.  NULL in case of error.
+   *   astroker ::
+   *     A new stroker object handle.  NULL in case of error.
    *
    * @return:
    *    FreeType error code.  0 means success.
@@ -638,8 +641,8 @@ FT_BEGIN_HEADER
    *   Stroke a given outline glyph object with a given stroker.
    *
    * @inout:
-   *   pglyph :: Source glyph handle on input, new glyph handle
-   *             on output.
+   *   pglyph ::
+   *     Source glyph handle on input, new glyph handle on output.
    *
    * @input:
    *   stroker ::
