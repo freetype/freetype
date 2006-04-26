@@ -88,9 +88,9 @@
   shift_elements( PS_Table  table,
                   FT_Byte*  old_base )
   {
-    FT_Long    delta  = (FT_Long)( table->block - old_base );
-    FT_Byte**  offset = table->elements;
-    FT_Byte**  limit  = offset + table->max_elems;
+    FT_PtrDist  delta  = table->block - old_base;
+    FT_Byte**   offset = table->elements;
+    FT_Byte**   limit  = offset + table->max_elems;
 
 
     for ( ; offset < limit; offset++ )

@@ -1,3 +1,9 @@
+2006-04-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/psobjs.c (shift_elements): Don't use FT_Long but
+	FT_PtrDiff for `delta'.  Reported by Céline PILLET
+	<Celine.Pillet@Tagginfo.com>.
+
 2006-04-21  David Turner  <david@freetype.org>
 
 	* include/freetype/ftincrem.h: Documentation updates.
