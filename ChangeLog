@@ -1,6 +1,15 @@
+2006-04-27  yi luo  <luoyi.ly@gmail.com>
+
+	* builds/win32/visualc/freetype.vcproj: Updated.
+
 2006-04-26  David Turner  <david@freetype.org>
 
-        FreeType 2.2 officially release, with tag VER-2-2-0
+
+	* Version 2.2 released.
+        =======================
+
+
+	Tag sources with `VER-2-2-0'.
 
 2006-04-26  Werner Lemberg  <wl@gnu.org>
 
