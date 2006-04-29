@@ -1,3 +1,19 @@
+2006-04-29  Werner Lemberg  <wl@gnu.org>
+
+	Further C library abstraction.  Based on a patch from
+	msn2@bidyut.com.
+
+	* include/freetype/config/ftstdlib.h (FT_CHAR_BIT, FT_FILE,
+	ft_fopen, ft_fclose, ft_fseek, ft_ftell, ft_fread, ft_smalloc,
+	ft_scalloc, ft_srealloc, ft_sfree, ft_labs): New wrapper macros for
+	C library functions.  Update all users accordingly (and catch some
+	other places where the C library function was used instead of the
+	wrapper functions).
+
+	* src/base/ftsystem.c: Don't include stdio.h and stdlib.h.
+	* src/gzip/zutil.h [MSDOS && !(__TURBOC__ || __BORLANDC__)]: Don't
+	include malloc.h.
+
 2006-04-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/lzw/ftlzw.c, src/lzw/zopen.c, src/lzw/zopen.h: Removed,

@@ -65,8 +65,9 @@
 
 #include <limits.h>
 
-#define FT_UINT_MAX   UINT_MAX
+#define FT_CHAR_BIT   CHAR_BIT
 #define FT_INT_MAX    INT_MAX
+#define FT_UINT_MAX   UINT_MAX
 #define FT_ULONG_MAX  ULONG_MAX
 
 
@@ -80,19 +81,19 @@
 #include <ctype.h>
 
 #define ft_isalnum   isalnum
-#define ft_isupper   isupper
-#define ft_islower   islower
 #define ft_isdigit   isdigit
+#define ft_islower   islower
+#define ft_isupper   isupper
 #define ft_isxdigit  isxdigit
 
 
 #include <string.h>
 
+#define ft_memchr   memchr
 #define ft_memcmp   memcmp
 #define ft_memcpy   memcpy
 #define ft_memmove  memmove
 #define ft_memset   memset
-#define ft_memchr   memchr
 #define ft_strcat   strcat
 #define ft_strcmp   strcmp
 #define ft_strcpy   strcpy
@@ -102,8 +103,21 @@
 #define ft_strrchr  strrchr
 
 
+  /**********************************************************************/
+  /*                                                                    */
+  /*                           file handling                            */
+  /*                                                                    */
+  /**********************************************************************/
+
+
 #include <stdio.h>
 
+#define FT_FILE     FILE
+#define ft_fclose   fclose
+#define ft_fopen    fopen
+#define ft_fread    fread
+#define ft_fseek    fseek
+#define ft_ftell    ftell
 #define ft_sprintf  sprintf
 
 
@@ -117,9 +131,32 @@
 #include <stdlib.h>
 
 #define ft_qsort  qsort
+
 #define ft_exit   exit    /* only used to exit from unhandled exceptions */
 
+
+  /**********************************************************************/
+  /*                                                                    */
+  /*                        memory allocation                           */
+  /*                                                                    */
+  /**********************************************************************/
+
+
+#define ft_scalloc   calloc
+#define ft_sfree     free
+#define ft_smalloc   malloc
+#define ft_srealloc  realloc
+
+
+  /**********************************************************************/
+  /*                                                                    */
+  /*                          miscellaneous                             */
+  /*                                                                    */
+  /**********************************************************************/
+
+
 #define ft_atol   atol
+#define ft_labs   labs
 
 
   /**********************************************************************/
@@ -135,13 +172,13 @@
                               /*       jmp_buf is defined as a macro  */
                               /*       on certain platforms           */
 
-#define ft_setjmp   setjmp    /* same thing here */
 #define ft_longjmp  longjmp   /* likewise        */
+#define ft_setjmp   setjmp    /* same thing here */
 
 
-  /* the following is only used for debugging purposes, i.e. when */
-  /* FT_DEBUG_LEVEL_ERROR or FT_DEBUG_LEVEL_TRACE are defined     */
-  /*                                                              */
+  /* the following is only used for debugging purposes, i.e., if */
+  /* FT_DEBUG_LEVEL_ERROR or FT_DEBUG_LEVEL_TRACE are defined    */
+
 #include <stdarg.h>
 
 

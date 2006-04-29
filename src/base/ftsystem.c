@@ -33,9 +33,6 @@
 #include FT_ERRORS_H
 #include FT_TYPES_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -74,7 +71,7 @@
   {
     FT_UNUSED( memory );
 
-    return malloc( size );
+    return ft_smalloc( size );
   }
 
 
@@ -107,7 +104,7 @@
     FT_UNUSED( memory );
     FT_UNUSED( cur_size );
 
-    return realloc( block, new_size );
+    return ft_srealloc( block, new_size );
   }
 
 
@@ -130,7 +127,7 @@
   {
     FT_UNUSED( memory );
 
-    free( block );
+    ft_sfree( block );
   }
 
 
@@ -152,7 +149,7 @@
 
   /* We use the macro STREAM_FILE for convenience to extract the       */
   /* system-specific stream handle from a given FreeType stream object */
-#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
+#define STREAM_FILE( stream )  ( (FT_FILE*)stream->descriptor.pointer )
 
 
   /*************************************************************************/
@@ -169,7 +166,7 @@
   FT_CALLBACK_DEF( void )
   ft_ansi_stream_close( FT_Stream  stream )
   {
-    fclose( STREAM_FILE( stream ) );
+    ft_fclose( STREAM_FILE( stream ) );
 
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
@@ -203,14 +200,14 @@
                      unsigned char*  buffer,
                      unsigned long   count )
   {
-    FILE*  file;
+    FT_FILE*  file;
 
 
     file = STREAM_FILE( stream );
 
-    fseek( file, offset, SEEK_SET );
+    ft_fseek( file, offset, SEEK_SET );
 
-    return (unsigned long)fread( buffer, 1, count, file );
+    return (unsigned long)ft_fread( buffer, 1, count, file );
   }
 
 
@@ -220,13 +217,13 @@
   FT_Stream_Open( FT_Stream    stream,
                   const char*  filepathname )
   {
-    FILE*  file;
+    FT_FILE*  file;
 
 
     if ( !stream )
       return FT_Err_Invalid_Stream_Handle;
 
-    file = fopen( filepathname, "rb" );
+    file = ft_fopen( filepathname, "rb" );
     if ( !file )
     {
       FT_ERROR(( "FT_Stream_Open:" ));
@@ -235,9 +232,9 @@
       return FT_Err_Cannot_Open_Resource;
     }
 
-    fseek( file, 0, SEEK_END );
-    stream->size = ftell( file );
-    fseek( file, 0, SEEK_SET );
+    ft_fseek( file, 0, SEEK_END );
+    stream->size = ft_ftell( file );
+    ft_fseek( file, 0, SEEK_SET );
 
     stream->descriptor.pointer = file;
     stream->pathname.pointer   = (char*)filepathname;
@@ -273,7 +270,7 @@
     FT_Memory  memory;
 
 
-    memory = (FT_Memory)malloc( sizeof ( *memory ) );
+    memory = (FT_Memory)ft_smalloc( sizeof ( *memory ) );
     if ( memory )
     {
       memory->user    = 0;

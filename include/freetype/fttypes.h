@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType simple types definitions (specification only).              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004 by                                     */
+/*  Copyright 1996-2001, 2002, 2004, 2006 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -308,7 +308,7 @@ FT_BEGIN_HEADER
   /*    FT_Offset                                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This is equivalent to the ANSI C `size_t' type, i.e. the largest   */
+  /*    This is equivalent to the ANSI C `size_t' type, i.e., the largest  */
   /*    _unsigned_ integer type used to express a file size or position,   */
   /*    or a memory block size.                                            */
   /*                                                                       */
@@ -321,7 +321,7 @@ FT_BEGIN_HEADER
   /*    FT_PtrDist                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This is equivalent to the ANSI C `ptrdiff_t' type, i.e. the        */
+  /*    This is equivalent to the ANSI C `ptrdiff_t' type, i.e., the       */
   /*    largest _signed_ integer type used to express the distance         */
   /*    between two pointers.                                              */
   /*                                                                       */

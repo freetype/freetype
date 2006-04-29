@@ -196,9 +196,9 @@
             /* build up a complete face name */
             ft_strcpy( fullName, famName );
             if ( style & bold )
-              strcat( fullName, " Bold" );
+              ft_strcat( fullName, " Bold" );
             if ( style & italic )
-              strcat( fullName, " Italic" );
+              ft_strcat( fullName, " Italic" );
 
             /* compare with the name we are looking for */
             if ( ft_strcmp( fullName, fontName ) == 0 )
@@ -292,13 +292,13 @@
 
 #if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
 
-#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
+#define STREAM_FILE( stream )  ( (FT_FILE*)stream->descriptor.pointer )
 
 
   FT_CALLBACK_DEF( void )
   ft_FSp_stream_close( FT_Stream  stream )
   {
-    fclose( STREAM_FILE( stream ) );
+    ft_fclose( STREAM_FILE( stream ) );
 
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
@@ -312,14 +312,14 @@
                     unsigned char*  buffer,
                     unsigned long   count )
   {
-    FILE*  file;
+    FT_FILE*  file;
 
 
     file = STREAM_FILE( stream );
 
-    fseek( file, offset, SEEK_SET );
+    ft_fseek( file, offset, SEEK_SET );
 
-    return (unsigned long)fread( buffer, 1, count, file );
+    return (unsigned long)ft_fread( buffer, 1, count, file );
   }
 
 #endif  /* __MWERKS__ && !TARGET_RT_MAC_MACHO */

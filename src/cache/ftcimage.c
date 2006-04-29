@@ -122,7 +122,7 @@
 
 
         bitg = (FT_BitmapGlyph)glyph;
-        size = bitg->bitmap.rows * labs( bitg->bitmap.pitch ) +
+        size = bitg->bitmap.rows * ft_labs( bitg->bitmap.pitch ) +
                sizeof ( *bitg );
       }
       break;
