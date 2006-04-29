@@ -1,3 +1,8 @@
+2006-04-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/lzw/ftlzw.c, src/lzw/zopen.c, src/lzw/zopen.h: Removed,
+	obsolete.
+
 2006-04-27  yi luo  <luoyi.ly@gmail.com>
 
 	* builds/win32/visualc/freetype.vcproj: Updated.
