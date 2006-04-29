@@ -14,6 +14,10 @@
 	* src/gzip/zutil.h [MSDOS && !(__TURBOC__ || __BORLANDC__)]: Don't
 	include malloc.h.
 
+
+	* builds/unix/unix-def.in (datarootdir): Define, for autoconf 2.59c
+	and forthcoming versions.
+
 2006-04-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/lzw/ftlzw.c, src/lzw/zopen.c, src/lzw/zopen.h: Removed,

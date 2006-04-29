@@ -51,6 +51,7 @@ exec_prefix  := @exec_prefix@
 libdir       := @libdir@
 bindir       := @bindir@
 includedir   := @includedir@
+datarootdir  := @datarootdir@
 datadir      := @datadir@
 
 version_info := @version_info@
