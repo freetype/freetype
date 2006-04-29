@@ -8,7 +8,7 @@
 	* src/pcf/readme: Renamed to...
 	* src/pcf/README: This.
 
-2005-06-07  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2005-06-07  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/*: Added copyright notes, reworked some comments.
 
@@ -453,7 +453,7 @@
 	* docs/CHANGES, include/freetype/freetype.h: Improve documentation
 	of FT_Set_Pixel_Sizes and FT_Set_Char_Size.
 
-2005-03-26  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2005-03-26  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/src/base/ftsystem.c (ft_amiga_stream_io): Fix buffer
 	offsets after a large read.
@@ -470,7 +470,7 @@
 
 	* src/sfnt/ttsbit0.h: Dummy file for build with `make'.
 
-2005-03-26  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2005-03-26  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	Update of the Amiga port.
 
@@ -478,7 +478,7 @@
 	builds/amiga/smakefile: Included the base extension files
 	(ftbitmap.c, ftotval.c, ftpfr.c, ftstroke.c, ftxf86.c).
 
-2005-03-25  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2005-03-25  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	Update of the Amiga port.
 
@@ -1816,7 +1816,7 @@
 
 	* docs/CHANGES, docs/VERSION.DLL: Updated.
 
-2004-08-11  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2004-08-11  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/base/ftrfork.c (FT_Raccess_Guess)
 	[!FT_CONFIG_OPTION_GUESSING_EMBEDDED_FORK]: Remove compiler
@@ -1877,7 +1877,7 @@
 	(BDF_Face_Init), src/truetype/ttgxvar (TT_Get_MM_Var,
 	tt_face_vary_cvt): Fix compiler warnings.
 
-2004-07-26  Søren Sandmann  <sandmann@daimi.au.dk>
+2004-07-26  SÃ¸ren Sandmann  <sandmann@daimi.au.dk>
 
 	* src/pcf/pcfread.c (pcf_interpret_style): Always allocate memory for
 	face->style_name.
@@ -1888,7 +1888,7 @@
 	* include/freetype/config/ftconfig.h (FT_SIZEOF_LONG): Recognize
 	five-byte `long' (which is avoided then).
 
-2004-07-25  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2004-07-25  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/pcf/pcfdrivr.c (PCF_Set_Pixel_Size): Compare heights, not
 	ppem values.
@@ -2083,7 +2083,7 @@
 2004-06-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/lzw/zopen.c: Comment out inclusion of signal.h and unistd.h.
-	Reported by Hyvärinen Jyrki Juhani.
+	Reported by HyvÃ¤rinen Jyrki Juhani.
 
 2004-06-11  Werner Lemberg  <wl@gnu.org>
 
@@ -3422,7 +3422,7 @@
 	* src/winfonts/winfnt.c (FNT_Size_Set_Pixels): Fix sign of
 	size->metrics.descender.
 
-2003-12-31  Wolfgang Domröse  <porthos.domroese@harz.de>
+2003-12-31  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
 	[FT_DEBUG_LEVEL_TRACE]: Use `%ld' in FT_TRACE4.
@@ -3516,7 +3516,7 @@
 	FT_ENCODING_NONE except for FT_WinFNT_ID_MAC.
 
 	* include/freetype/freetype.h (FT_Encoding): Improve comment,
-	based on work by Detlef Würkner <TetiSoft@apg.lahn.de>.
+	based on work by Detlef WÃ¼rkner <TetiSoft@apg.lahn.de>.
 
 	* docs/CHANGES: Updated.
 
@@ -3661,12 +3661,12 @@
 
 	* docs/CHANGES: Updated.
 
-2003-12-15  Wolfgang Domröse  <porthos.domroese@harz.de>
+2003-12-15  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* builds/atari/*: New directory for building FreeType 2 on Atari
 	with the PureC compiler.
 
-2003-12-12  Wolfgang Domröse  <porthos.domroese@harz.de>
+2003-12-12  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String): Add
 	cast.
@@ -3718,7 +3718,7 @@
 	* src/cff/cfftypes.h (CFF_FontRecDictRec): Remove `base_font_name'
 	and `postscript'.
 
-2003-12-10  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2003-12-10  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/pcf/pcfdrivr.c (pcf_get_charset_id): New function (a clone
 	of the similar BDF function).
@@ -3750,7 +3750,7 @@
 	(FT_Open_Face) [!FT_MACINTOSH]: Add conditional
 	FT_CONFIG_OPTION_MAC_FONTS.
 
-2003-12-08  Wolfgang Domröse  <porthos.domroese@harz.de>
+2003-12-08  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/autohint/ahhint.c (ah_hinter_hint_edges,
 	ah_hinter_align_strong_points): Add some casts.
@@ -3955,7 +3955,7 @@
 	* src/base/fttype1.c (FT_Get_PS_Font_Info): Fix incorrectly applied
 	patch.
 
-2003-10-31  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2003-10-31  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/base/fttype1.c (FT_Get_PS_Font_Info, FT_Has_PS_Glyph_Names):
 	Fix parameter order in calls to FT_FACE_FIND_SERVICE.
@@ -4897,7 +4897,7 @@
 
 	* configure: Set DOC_DIR variable.
 
-2003-07-07  Patrik Hägglund  <patrik.hagglund@bredband.net>
+2003-07-07  Patrik HÃ¤gglund  <patrik.hagglund@bredband.net>
 
 	* builds/freetype.mk (refdoc): New target to build the
 	documentation.
@@ -5139,7 +5139,7 @@
 	(winfnt_driver_class), src/bdf/bdfdrivr.c (bdf_driver_class): Add
 	the FT_MODULE_DRIVER_NO_OUTLINES flag.
 
-2003-06-13  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2003-06-13  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/pfr/pfrobjs.c (pfr_slot_load): Apply font matrix.
 
@@ -5216,7 +5216,7 @@
 	TrueType specification.
 	(Ins_MDRP, Ins_MIRP): Fix single width cut-in test.
 
-2003-06-09  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2003-06-09  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/gzip/ftgzip.c: (inflate_mask): Replaced with...
 	(NO_INFLATE_MASK): This.
@@ -5228,7 +5228,7 @@
 	* src/gzip/ftgzip.c (ft_gzip_file_fill_output): Handle Z_STREAM_END
 	correctly.
 
-2003-06-09  Wolfgang Domröse  <porthos.domroese@harz.de>
+2003-06-09  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/pshinter/pshglob.c (psh_globals_new): Change calculation of
 	dim->stdw.count to avoid compiler problem.
@@ -5294,7 +5294,7 @@
 
 	* devel/ftoption.h: Updated.
 
-2003-06-07  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2003-06-07  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* include/freetype/internal/psaux.h, src/truetype/ttgload.h:
 	s/index/idx/ to fix compiler warnings.
@@ -5352,7 +5352,7 @@
 	* src/pshinter/pshglob.c (psh_globals_new): Fix default value of
 	blue_scale.
 
-2003-06-04  Wolfgang Domröse  <porthos.domroese@harz.de>
+2003-06-04  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* include/freetype/internal/ftdriver.h,
 	include/freetype/internal/ftobjs.h,
@@ -6674,7 +6674,7 @@
 	* include/freetype/ftcache.h (FT_POINTER_TO_ULONG): New macro.
 	(FTC_FACE_ID_HASH): Rewritten, using FT_POINTER_TO_ULONG.
 
-2002-10-22  Giuseppe Ghibò  <ghibo@mandrakesoft.com>
+2002-10-22  Giuseppe GhibÃ²  <ghibo@mandrakesoft.com>
 
 	* include/freetype/freetype.h (FT_Encoding): Fix entry for latin-2.
 
@@ -6731,7 +6731,7 @@
 	Update all casts.
 	(gray_render_line): Fix casts for `p' and `first'.
 
-2002-10-02  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-10-02  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/bdf/bdflib.c (bdf_load_font): Allocate the _bdf_parse_t
 	structure with FT_ALLOC instead of using the stack.
@@ -6745,7 +6745,7 @@
 	(find_sbit_image): Remove cast.
 	* src/raster/ftrend1.c (ft_raster1_render): Fix cast.
 
-2002-09-27  Wolfgang Domröse  <porthos.domroese@harz.de>
+2002-09-27  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/sfnt/ttload.c (tt_face_load_names): Use cast.
 	* src/sfnt/ttcmap.c (code_to_next2): Use long constant.
@@ -6811,7 +6811,7 @@
 	* src/psnames/psmodule.c (ps_unicode_value, ps_build_unicode_table):
 	Updated accordingly.
 
-2002-09-26  Wolfgang Domröse  <porthos.domroese@harz.de>
+2002-09-26  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/cff/cffdrivr.c (Get_Kerning): Use FT_Long for `middle'.
 	(cff_get_glyph_name): Use cast for result of ft_strlen.
@@ -6852,7 +6852,7 @@
 	* src/sfnt/sfnt_dir_check: Compare `magic' with unsigned long
 	constant.
 
-2002-09-26  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-09-26  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/include/freetype/config/ftmodule.h: Updated.
 
@@ -6871,14 +6871,14 @@
 	charmap that uses offset=0xFFFFU instead of 0x0000 to indicate a
 	missing glyph).
 
-2002-09-21  Wolfgang Domröse  <porthos.domroese@harz.de>
+2002-09-21  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/truetype/ttdriver.c (Load_Glyph): Fourth parameter must be
 	FT_Int32.
 	* src/truetype/ttgload.c, src/truetype/ttgload.h (TT_Load_Glyph):
 	Ditto.
 
-2002-09-19  Wolfgang Domröse  <porthos.domroese@harz.de>
+2002-09-19  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	More 16bit fixes.
 
@@ -6927,7 +6927,7 @@
 
 2002-09-16  Werner Lemberg  <wl@gnu.org>
 
-	16bit fixes from Wolfgang Domröse.
+	16bit fixes from Wolfgang DomrÃ¶se.
 
 	* src/type1/t1parse.h (T1_ParserRec): Change type of `base_len'
 	and `private_len' to FT_Long.
@@ -7890,7 +7890,7 @@
 	* src/type42/t42objs.h: Include FT_INTERNAL_TYPE42_TYPES_H.
 	(T42_Face): Removed since it is already in t42types.h.
 
-2002-06-21  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-21  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/pfrgload.c (pfr_glyph_load_compound): Fix loading of composite
 	glyphs.
@@ -7913,7 +7913,7 @@
 
 	* README, docs/CHANGES: Preparing the 2.1.2 release.
 
-2002-06-19  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-19  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/base/fttype1.c: Include FT_INTERNAL_TYPE42_TYPES_H.
 	(t1_face_check_cast): Removed.
@@ -7938,7 +7938,7 @@
 	instead.
 	(T42_GlyphSlot_Load): Remove call to t42_check_size_change.
 
-2002-06-18  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-18  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/psaux/t1cmap.c (t1_cmap_custom_char_index,
 	t1_cmap_custom_char_next): Fix index computation -- indices start
@@ -7967,7 +7967,7 @@
 
 	* builds/unix/install.mk (install, uninstall): Handle it.
 
-2002-06-16  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-16  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	Same fix for PFR driver.
 
@@ -7975,7 +7975,7 @@
 	Increase return value by 1.
 	* src/pfr/pfrobjs.c (pfr_slot_load): Decrease index by 1.
 
-2002-06-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-15  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	Fix glyph indices to make index zero always the undefined glyph.
 
@@ -7994,7 +7994,7 @@
 	* src/base/ftobjs.c (FT_Load_Glyph, FT_Get_Glyph_Name): Fix
 	bounding tests.
 
-2002-06-14  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-14  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	Add new cmap support to BDF driver.
 
@@ -8068,7 +8068,7 @@
 	bug that caused nasty memory overwrites.  The hash table's
 	buckets array wasn't correctly resized when shrinked.
 
-2002-06-08  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-08  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/smakefile, builds/amiga/makefile: Updated.
 
@@ -8189,11 +8189,11 @@
 	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Ditto.
 	* src/bdf/README: Updated.
 
-2002-06-02  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-02  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/pfr/pfrload.c (pfr_phy_font_done): Free `blue_values' array.
 
-2002-05-29  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-05-29  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/bdf/bdflib.c (_bdf_readstream): Allocate `buf' dynamically.
 	(_bdf_parse_glyphs): Use correct size for allocating
@@ -8212,7 +8212,7 @@
 	compilation.
 	* src/pshglob.c (psh_blues_scale_zones): Fix compiler warning.
 
-2002-05-28  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-05-28  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/makefile, builds/amiga/smakefile,
 	amiga/include/freetype/config/ftmodule.h: Updated to include
@@ -9435,5 +9435,5 @@ fully.
 
 Local Variables:
 version-control: never
-coding: latin-1
+coding: utf-8
 End:

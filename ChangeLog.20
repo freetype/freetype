@@ -66,7 +66,7 @@
 
 	* src/pcf/pcf.h (PCF_Done_Face): Removed.
 
-2002-02-06  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-02-06  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/pcf/pcfdriver.c (FT_Done_Face): Fixed small memory leak.
 
@@ -193,7 +193,7 @@
 
 2002-01-21  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
 
-	* docs/PATENTS: Typo fixed (thanks to Detlef `Hawkeye' Würkner) in
+	* docs/PATENTS: Typo fixed (thanks to Detlef `Hawkeye' WÃ¼rkner) in
 	the URL for the online resource.
 
 2002-01-18  Ian Brown  <ian.brown@printsoft.de>
@@ -201,7 +201,7 @@
 	* builds/win32/ftdebug.c: New file.
 	* builds/win32/visualc/freetype.dsp: Updated.
 
-2002-01-18  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-01-18  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/src/base/ftsystem.c: Updated for AmigaOS 3.9.
 	* builds/amiga/README: Updated.
@@ -339,7 +339,7 @@
 	incorrect glyph advance in the case of mono-width fonts (like
 	Courier, Andale Mono, and others).
 
-2001-12-22  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2001-12-22  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/*: Adaptations to latest changes.
 	Support added for MorphOS.
@@ -586,7 +586,7 @@
 	slightly improper results for `FT_Cos' and `FT_Sin' (example:
 	FT_Sin(0) == -1!).
 
-2001-12-11  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2001-12-11  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* include/freetype/internal/ftstream.h (GET_LongLE, GET_ULongLE):
 	Fixed incorrect argument types.
@@ -694,7 +694,7 @@
 	codes and LCIDs as found in MSDN (Passport SDK).  Also added
 	comments about the meaning of bit 57 of the `OS/2' table
 	(TT_UCR_SURROGATES) which (with OpenType v.1.3) now means `there is
-	a character beyond 0xFFFF in this font'.  Thanks to Detlef Würkner
+	a character beyond 0xFFFF in this font'.  Thanks to Detlef WÃ¼rkner
 	<TetiSoft@apg.lahn.de> for noticing this.
 
 2001-11-20  David Turner  <david@freetype.org>
@@ -1024,11 +1024,11 @@
 	(ftc_manager_init_size, ftc_manager_flush_size): Use
 	FT_Activate_Size.
 
-2001-09-20  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2001-09-20  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/*: Added port to Amiga with the SAS/C compiler.
 
-2001-09-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2001-09-15  Detlef WÃ¼rkner  <TetiSoft@apg.lahn.de>
 
 	* src/type1/t1afm.c (T1_Done_AFM): Free `afm'.
 
@@ -1216,7 +1216,7 @@
 	instead of FT_Int as type for `length' parameter.
 	* include/freetype/internal/psaux.h (PSAux_Interface): Updated.
 
-2001-06-27  Wolfgang Domröse  <porthos.domroese@harz.de>
+2001-06-27  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* src/psaux/psobjs.c, src/psaux/psobjs.h (T1_Decrypt): Use FT_Offset
 	instead of FT_Int as type for `length' parameter.
@@ -1242,7 +1242,7 @@
 	that the kerning table is correctly sorted (some problem fonts don't
 	have a correct kern table).
 
-2001-06-26  Wolfgang Domröse  <porthos.domroese@harz.de>
+2001-06-26  Wolfgang DomrÃ¶se  <porthos.domroese@harz.de>
 
 	* include/freetype/internal/ftstream.h (FT_GET_OFF3_LE): Fix typo.
 
@@ -1895,7 +1895,7 @@
 	* src/type1/t1load.c (parse_font_bbox): Changed to use FT_Fixed
 	number handling.
 
-2001-03-10  Henrik Grubbström  <grubba@roxen.com>
+2001-03-10  Henrik GrubbstrÃ¶m  <grubba@roxen.com>
 
 	* src/*/*.c: Added many casts to make code more 64bit-safe.
 
@@ -2448,7 +2448,7 @@
 2000-11-29  David Turner  <david.turner@freetype.org>
 
 	* src/base/ftbbox.c (BBox_Conic_Check): Fixed a really stupid
-	bug in the formula used to compute the conic Bézier extrema
+	bug in the formula used to compute the conic BÃ©zier extrema
 	of non-monotonous arcs.
 
 2000-11-29  Werner Lemberg  <wl@gnu.org>
@@ -2609,5 +2609,5 @@ fully.
 
 Local Variables:
 version-control: never
-coding: latin-1
+coding: utf-8
 End:
