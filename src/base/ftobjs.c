@@ -1255,7 +1255,7 @@
     pfb_data[3] = 0;
     pfb_data[4] = 0;
     pfb_data[5] = 0;
-    pfb_pos     = 7;
+    pfb_pos     = 6;
     pfb_lenpos  = 2;
 
     len = 0;
@@ -1288,7 +1288,7 @@
         len = rlen;
 
         pfb_data[pfb_pos++] = (FT_Byte)type;
-        pfb_lenpos          = (FT_Byte)pfb_pos;
+        pfb_lenpos          = pfb_pos;
         pfb_data[pfb_pos++] = 0;        /* 4-byte length, fill in later */
         pfb_data[pfb_pos++] = 0;
         pfb_data[pfb_pos++] = 0;
