@@ -52,6 +52,8 @@
                 "broken table" )
   FT_ERRORDEF_( Invalid_Offset,                              0x09, \
                 "broken offset within table" )
+  FT_ERRORDEF_( Array_Too_Large,                             0x0A, \
+                "array allocation size too large" )
 
   /* glyph/character errors */
 

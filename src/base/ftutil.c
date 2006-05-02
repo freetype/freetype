@@ -46,31 +46,16 @@
   /*************************************************************************/
 
 
-#ifdef FT_STRICT_ALIASING
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_alloc( FT_Memory  memory,
                 FT_Long    size,
                 FT_Error  *p_error )
   {
-    FT_Error    error = FT_Err_Ok;
-    FT_Pointer  block = NULL;
+    FT_Error    error;
+    FT_Pointer  block = ft_mem_qalloc( memory, size, &error );
 
-
-    if ( size > 0 )
-    {
-      block = memory->alloc( memory, size );
-      if ( block == NULL )
-        error = FT_Err_Out_Of_Memory;
-      else
-        FT_MEM_ZERO( block, size );
-    }
-    else if ( size < 0 )
-    {
-      /* may help catch/prevent nasty security issues */
-      error = FT_Err_Invalid_Argument;
-    }
+    if ( !error && size > 0 )
+      FT_MEM_ZERO( block, size );
 
     *p_error = error;
     return block;
@@ -105,45 +90,18 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_realloc( FT_Memory  memory,
-                  FT_Long    current,
-                  FT_Long    size,
+                  FT_Long    item_size,
+                  FT_Long    cur_count,
+                  FT_Long    new_count,
                   void*      block,
                   FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
 
-
-    if ( size < 0 || current < 0 )
-    {
-      /* may help catch/prevent nasty security issues */
-      error = FT_Err_Invalid_Argument;
-    }  
-    else if ( size == 0 )
-    {
-      ft_mem_free( memory, block );
-      block = NULL;
-    }
-    else if ( current == 0 )
-    {
-      FT_ASSERT( block == NULL );
-
-      block = ft_mem_alloc( memory, size, &error );
-    }
-    else
-    {
-      FT_Pointer  block2;
-
-
-      block2 = memory->realloc( memory, current, size, block );
-      if ( block2 == NULL )
-        error = FT_Err_Out_Of_Memory;
-      else
-      {
-        block = block2;
-        if ( size > current )
-          FT_MEM_ZERO( (char*)block + current, size-current );
-      }
-    }
+    block = ft_mem_qrealloc( memory, item_size, cur_count, new_count, block, &error );
+    if ( !error && new_count > cur_count )
+      FT_MEM_ZERO( (char*)block + cur_count*item_size,
+                   (new_count-cur_count)*item_size );
 
     *p_error = error;
     return block;
@@ -152,36 +110,43 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qrealloc( FT_Memory  memory,
-                   FT_Long    current,
-                   FT_Long    size,
+                   FT_Long    item_size,
+                   FT_Long    cur_count,
+                   FT_Long    new_count,
                    void*      block,
                    FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
 
 
-    if ( size < 0 || current < 0 )
+    if ( cur_count < 0 || new_count < 0 || item_size <= 0 )
     {
       /* may help catch/prevent nasty security issues */
       error = FT_Err_Invalid_Argument;
     }
-    else if ( size == 0 )
+    else if ( new_count == 0 )
     {
       ft_mem_free( memory, block );
       block = NULL;
     }
-    else if ( current == 0 )
+    else if ( new_count > FT_INT_MAX/item_size )
+    {
+      error = FT_Err_Array_Too_Large;
+    }
+    else if ( cur_count == 0 )
     {
       FT_ASSERT( block == NULL );
 
-      block = ft_mem_qalloc( memory, size, &error );
+      block = ft_mem_alloc( memory, new_count*item_size, &error );
     }
     else
     {
       FT_Pointer  block2;
+      FT_Long     cur_size = cur_count*item_size;
+      FT_Long     new_size = new_count*item_size;
 
 
-      block2 = memory->realloc( memory, current, size, block );
+      block2 = memory->realloc( memory, cur_size, new_size, block );
       if ( block2 == NULL )
         error = FT_Err_Out_Of_Memory;
       else
@@ -200,194 +165,6 @@
     if ( P )
       memory->free( memory, (void*)P );
   }
-
-
-#else /* !FT_STRICT_ALIASING */
-
-
-  /* documentation is in ftmemory.h */
-
-  FT_BASE_DEF( FT_Error )
-  ft_mem_alloc( FT_Memory  memory,
-                FT_Long    size,
-                void*     *P )
-  { 
-    FT_Error  error = FT_Err_Ok;
-    
-
-    FT_ASSERT( P != 0 );
-
-    if ( size > 0 )
-    {
-      *P = memory->alloc( memory, size );
-      if ( !*P )
-      {
-        FT_ERROR(( "ft_mem_alloc:" ));
-        FT_ERROR(( " Out of memory? (%ld requested)\n",
-                   size ));
-
-        return FT_Err_Out_Of_Memory;
-      }
-      FT_MEM_ZERO( *P, size );
-    }
-    else
-    {
-      *P = NULL;
-      if ( size < 0 )
-        error = FT_Err_Invalid_Argument;
-    }
-
-    FT_TRACE7(( "ft_mem_alloc:" ));
-    FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
-                size, *P, P ));
-
-    return error;
-  }
-
-
-  /* documentation is in ftmemory.h */
-
-  FT_BASE_DEF( FT_Error )
-  ft_mem_qalloc( FT_Memory  memory,
-                 FT_Long    size,
-                 void*     *P )
-  {
-    FT_Error  error = FT_Err_Ok;
-    
-
-    FT_ASSERT( P != 0 );
-
-    if ( size > 0 )
-    {
-      *P = memory->alloc( memory, size );
-      if ( !*P )
-      {
-        FT_ERROR(( "ft_mem_qalloc:" ));
-        FT_ERROR(( " Out of memory? (%ld requested)\n",
-                   size ));
-
-        return FT_Err_Out_Of_Memory;
-      }
-    }
-    else
-    {
-      *P = NULL;
-      if ( size < 0 )
-        error = FT_Err_Invalid_Argument;
-    }
-
-    FT_TRACE7(( "ft_mem_qalloc:" ));
-    FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
-                size, *P, P ));
-
-    return error;
-  }
-
-
-  /* documentation is in ftmemory.h */
-
-  FT_BASE_DEF( FT_Error )
-  ft_mem_realloc( FT_Memory  memory,
-                  FT_Long    current,
-                  FT_Long    size,
-                  void**     P )
-  {
-    void*  Q;
-
-
-    FT_ASSERT( P != 0 );
-
-    /* if the original pointer is NULL, call ft_mem_alloc() */
-    if ( !*P )
-      return ft_mem_alloc( memory, size, P );
-
-    /* if the new block if zero-sized, clear the current one */
-    if ( size == 0 )
-    {
-      ft_mem_free( memory, P );
-      return FT_Err_Ok;
-    }
-
-    if ( size < 0 || current < 0 )
-      return FT_Err_Invalid_Argument;
-
-    Q = memory->realloc( memory, current, size, *P );
-    if ( !Q )
-      goto Fail;
-
-    if ( size > current )
-      FT_MEM_ZERO( (char*)Q + current, size - current );
-
-    *P = Q;
-    return FT_Err_Ok;
-
-  Fail:
-    FT_ERROR(( "ft_mem_realloc:" ));
-    FT_ERROR(( " Failed (current %ld, requested %ld)\n",
-               current, size ));
-    return FT_Err_Out_Of_Memory;
-  }
-
-
-  /* documentation is in ftmemory.h */
-
-  FT_BASE_DEF( FT_Error )
-  ft_mem_qrealloc( FT_Memory  memory,
-                   FT_Long    current,
-                   FT_Long    size,
-                   void**     P )
-  {
-    void*  Q;
-
-
-    FT_ASSERT( P != 0 );
-
-    /* if the original pointer is NULL, call ft_mem_qalloc() */
-    if ( !*P )
-      return ft_mem_qalloc( memory, size, P );
-
-    /* if the new block if zero-sized, clear the current one */
-    if ( size == 0 )
-    {
-      ft_mem_free( memory, P );
-      return FT_Err_Ok;
-    }
-
-    if ( size < 0 || current < 0 )
-      return FT_Err_Invalid_Argument;
-
-    Q = memory->realloc( memory, current, size, *P );
-    if ( !Q )
-      goto Fail;
-
-    *P = Q;
-    return FT_Err_Ok;
-
-  Fail:
-    FT_ERROR(( "ft_mem_qrealloc:" ));
-    FT_ERROR(( " Failed (current %ld, requested %ld)\n",
-               current, size ));
-    return FT_Err_Out_Of_Memory;
-  }
-
-
-  /* documentation is in ftmemory.h */
-
-  FT_BASE_DEF( void )
-  ft_mem_free( FT_Memory  memory,
-               void*     *P )
-  {
-    FT_TRACE7(( "ft_mem_free:" ));
-    FT_TRACE7(( " Freeing block 0x%08p ref 0x%08p\n", P, *P ));
-
-    if ( P && *P )
-    {
-      memory->free( memory, *P );
-      *P = NULL;
-    }
-  }
-
-#endif /* !FT_STRICT_ALIASING */
 
 
   /*************************************************************************/

@@ -1,3 +1,30 @@
+2006-05-02  David Turner  <david@freetype.org>
+
+    * include/freetype/fterrdef.h, include/freetype/config/ftconfig.h,
+    include/freetype/internal/ftmemory.h, src/base/ftdbgmem.c,
+    src/base/ftutil.c: udpating the memory management functions and
+    macros to safely deal with array size buffer overflows, this
+    corresponds to attemps to allocate arrays that are too large. For
+    an example, consider the following code:
+
+         count = read_uint32_from_file();
+         array = malloc( sizeof(Item) * count );
+         for ( nn = 0; nn < count; nn++ )
+           array[nn] = read_item_from_file();
+
+    if 'count' is larger than FT_UINT_MAX/sizeof(Item), the multiplication
+    will overflow and the array allocated will be smaller than the data
+    read from the file. In this case, the heap will be trashed, and this
+    can be used as a denial-of-service, or make the engine crash later.
+
+    the FT_ARRAY_NEW and FT_ARRAY_RENEW macro now check that the new
+    count is no more than FT_INT_MAX/item_size, otherwise, a new error,
+    named 'FT_Err_Array_Too_Large' will be returned.
+
+    note that the memory debugger now works again when FT_DEBUG_MEMORY
+    is defined, and FT_STRICT_ALIASING has disappeared, the corresponding
+    code being now the default.
+
 2006-04-30 suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix bug in Mac_Read_POST_Resource() to parse PFB font with MacOS
