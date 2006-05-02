@@ -1,3 +1,7 @@
+2006-05-03  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftoption.h (FT_STRICT_ALIASING): Removed.
+
 2006-05-02  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftmemory.h: s/new/newsz/ (for C++).
@@ -8,8 +12,8 @@
 
 	* src/base/ftstream.c (FT_Stream_EnterFrame): Add cast.
 
-	* include/freetype/config.h (FT_BASE_DEF) [__cplusplus]: Remove
-	`extern'.
+	* include/freetype/config/ftconfig.h (FT_BASE_DEF) [__cplusplus]:
+	Remove `extern'.
 
 2006-05-02  David Turner  <david@freetype.org>
 

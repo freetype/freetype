@@ -582,20 +582,6 @@ FT_BEGIN_HEADER
 
 
   /*
-   * This temporary macro is used to control whether we are going to compile
-   * certain functions like ft_mem_alloc in a way that prevents recent GCC
-   * releases from emitting zillions of `strict aliasing' warning messages
-   * each time a memory-management function is called.
-   *
-   * Note that it shouldn't be activated when building the library with
-   * a C++ compiler.
-   */
-#ifndef __cplusplus
-#define FT_STRICT_ALIASING
-#endif
-
-
-  /*
    * Define this variable if you want to keep the layout of internal
    * structures that was used prior to FreeType 2.2.  This also compiles in
    * a few obsolete functions to avoid linking problems on typical Unix
