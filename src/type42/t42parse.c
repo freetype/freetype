@@ -623,6 +623,7 @@
             status         = OTHER_TABLES;
             face->ttf_size = ttf_size;
 
+            /* there are no more than 256 tables, so no size check here */
             if ( FT_REALLOC( face->ttf_data, 12 + 16 * num_tables,
                              ttf_size + 1 ) )
               goto Fail;
@@ -1071,7 +1072,7 @@
             if ( !name )
               continue;
 
-            if ( cur[0] == name[0]                                  && 
+            if ( cur[0] == name[0]                                  &&
                  len == (FT_PtrDist)ft_strlen( (const char *)name ) &&
                  ft_memcmp( cur, name, len ) == 0                   )
             {

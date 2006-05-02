@@ -134,6 +134,19 @@ FT_BASE( long )         _ft_debug_lineno;
 #define  FT_MEM_QRENEW_ARRAY(ptr,cur,new)  \
   FT_DEBUG_INNER( (ptr) = ft_mem_qrealloc( memory, sizeof(*(ptr)), (cur), (new), (ptr), &error ) )
 
+#define  FT_MEM_ALLOC_MULT(ptr,count,item_size)   \
+  FT_DEBUG_INNER( (ptr) = ft_mem_realloc( memory, (item_size), 0, (count), NULL, &error ) )
+
+#define  FT_MEM_REALLOC_MULT(ptr,oldcnt,newcnt,itmsz)  \
+  FT_DEBUG_INNER( (ptr) = ft_mem_realloc( memory, (itmsz), (oldcnt), (newcnt), (ptr), &error ) )
+
+#define  FT_MEM_QALLOC_MULT(ptr,count,item_size)   \
+  FT_DEBUG_INNER( (ptr) = ft_mem_qrealloc( memory, (item_size), 0, (count), NULL, &error ) )
+
+#define  FT_MEM_QREALLOC_MULT(ptr,oldcnt,newcnt,itmsz)  \
+  FT_DEBUG_INNER( (ptr) = ft_mem_qrealloc( memory, (itmsz), (oldcnt), (newcnt), (ptr), &error ) )
+
+
 #define  FT_MEM_SET_ERROR( cond )  ( (cond), error != 0 )
 
 
@@ -198,11 +211,23 @@ FT_BASE( long )         _ft_debug_lineno;
 #define  FT_REALLOC(ptr,cursz,newsz)  \
            FT_MEM_SET_ERROR( FT_MEM_REALLOC(ptr,cursz,newsz) )
 
+#define  FT_ALLOC_MULT(ptr,count,item_size) \
+           FT_MEM_SET_ERROR( FT_MEM_ALLOC_MULT(ptr,count,item_size) )
+
+#define  FT_REALLOC_MULT(ptr,oldcnt,newcnt,itmsz) \
+           FT_MEM_SET_ERROR( FT_MEM_REALLOC_MULT(ptr,oldcnt,newcnt,itmsz) )
+
 #define  FT_QALLOC(ptr,size)  \
            FT_MEM_SET_ERROR( FT_MEM_QALLOC(ptr,size) )
 
 #define  FT_QREALLOC(ptr,cursz,newsz)  \
            FT_MEM_SET_ERROR( FT_MEM_QREALLOC(ptr,cursz,newsz) )
+
+#define  FT_QALLOC_MULT(ptr,count,item_size) \
+           FT_MEM_SET_ERROR( FT_MEM_QALLOC_MULT(ptr,count,item_size) )
+
+#define  FT_QREALLOC_MULT(ptr,oldcnt,newcnt,itmsz) \
+           FT_MEM_SET_ERROR( FT_MEM_QREALLOC_MULT(ptr,oldcnt,newcnt,itmsz) )
 
 #define  FT_FREE(ptr)         FT_MEM_FREE( ptr )
 

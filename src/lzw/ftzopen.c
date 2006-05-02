@@ -127,10 +127,8 @@
      *  to write it literally.
      *
      */
-    if ( FT_REALLOC(
-           state->prefix,
-           old_size * (sizeof ( FT_UShort ) + sizeof ( FT_Byte ) ),
-           new_size * (sizeof ( FT_UShort ) + sizeof ( FT_Byte ) ) ) )
+    if ( FT_REALLOC_MULT( state->prefix, old_size, new_size,
+                          sizeof(FT_UShort)+sizeof(FT_Byte) ) )
       return -1;
 
     /* now adjust `suffix' and move the data accordingly */

@@ -684,15 +684,17 @@
         goto Exit;
       }
 
-      if ( FT_ALLOC( face->blend, sizeof ( GX_BlendRec ) ) )
+      if ( FT_NEW( face->blend ) )
         goto Exit;
 
+      /* XXX: TODO - check for overflows */
       face->blend->mmvar_len =
         sizeof ( FT_MM_Var ) +
         fvar_head.axisCount * sizeof ( FT_Var_Axis ) +
         fvar_head.instanceCount * sizeof ( FT_Var_Named_Style ) +
         fvar_head.instanceCount * fvar_head.axisCount * sizeof ( FT_Fixed ) +
         5 * fvar_head.axisCount;
+
       if ( FT_ALLOC( mmvar, face->blend->mmvar_len ) )
         goto Exit;
       face->blend->mmvar = mmvar;
@@ -1253,7 +1255,7 @@
         for ( j = 0; j < point_count; ++j )
         {
           int  pindex = localpoints[j];
-          
+
           face->cvt[pindex] = (FT_Short)( face->cvt[pindex] +
                                           FT_MulFix( deltas[j], apply ) );
         }

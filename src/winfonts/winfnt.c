@@ -531,7 +531,7 @@
 
       /* reserve one slot for the .notdef glyph at index 0 */
       root->num_glyphs = font->header.last_char -
-                           font->header.first_char + 1 + 1;
+                         font->header.first_char + 1 + 1;
 
       /* Some broken fonts don't delimit the face name with a final */
       /* NULL byte -- the frame is erroneously one byte too small.  */
@@ -540,14 +540,18 @@
       family_size = font->header.file_size - font->header.face_name_offset;
       if ( FT_ALLOC( font->family_name, family_size + 1 ) )
         goto Fail;
+
       FT_MEM_COPY( font->family_name,
                    font->fnt_frame + font->header.face_name_offset,
                    family_size );
+
       font->family_name[family_size] = '\0';
+
       if ( FT_REALLOC( font->family_name,
                        family_size,
                        ft_strlen( font->family_name ) + 1 ) )
         goto Fail;
+
       root->family_name = font->family_name;
       root->style_name  = (char *)"Regular";
 
@@ -693,7 +697,7 @@
 
       /* note: since glyphs are stored in columns and not in rows we */
       /*       can't use ft_glyphslot_set_bitmap                     */
-      if ( FT_ALLOC( bitmap->buffer, pitch * bitmap->rows ) )
+      if ( FT_ALLOC_MULT( bitmap->buffer, pitch, bitmap->rows ) )
         goto Exit;
 
       column = (FT_Byte*)bitmap->buffer;

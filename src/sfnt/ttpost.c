@@ -292,7 +292,7 @@
       goto Exit;
     }
 
-    if ( FT_ALLOC( offset_table, num_glyphs )       ||
+    if ( FT_NEW_ARRAY( offset_table, num_glyphs )   ||
          FT_STREAM_READ( offset_table, num_glyphs ) )
       goto Fail;
 

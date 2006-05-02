@@ -165,7 +165,7 @@
 
     new_pitch = ( bitmap->width + xpixels + ppb - 1 ) / ppb;
 
-    if ( FT_ALLOC( buffer, new_pitch * ( bitmap->rows + ypixels ) ) )
+    if ( FT_QALLOC_MULT( buffer, new_pitch, bitmap->rows + ypixels ) )
       return error;
 
     if ( bitmap->pitch > 0 )

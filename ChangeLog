@@ -1,5 +1,15 @@
 2006-05-02  David Turner  <david@freetype.org>
 
+    * include/freetype/internal/ftmemory.h, src/base/ftbitmap.c,
+    src/base/ftmac.c, src/base/ftrfork.c, src/lzw/ftzopen.c,
+    src/raster/ftrend1.c, src/sfnt/ttpost.c, src/truetype/ttgxvar.c,
+    src/type42/t42parse.c, src/winfonts/winfnt.c: hardening the code
+    against out-of-bounds conditions when allocating arrays. This is
+    for the cases where FT_NEW_ARRAY and FT_RENEW_ARRAY are not used
+    already. Introducing the new FT_ALLOC_MULT and FT_REALLOC_MULT
+    macros.
+
+
     * include/freetype/fterrdef.h, include/freetype/config/ftconfig.h,
     include/freetype/internal/ftmemory.h, src/base/ftdbgmem.c,
     src/base/ftutil.c: udpating the memory management functions and
@@ -24,6 +34,7 @@
     note that the memory debugger now works again when FT_DEBUG_MEMORY
     is defined, and FT_STRICT_ALIASING has disappeared, the corresponding
     code being now the default.
+
 
 2006-04-30 suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
