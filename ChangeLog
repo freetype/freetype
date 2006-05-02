@@ -1,5 +1,9 @@
 2006-05-02  David Turner  <david@freetype.org>
 
+    * include/freetype/ftstream.h, src/base/ftstream.c: modifying
+    various frame-related functions to report the place where the
+    frames were entered/extracted/exited/released in the memory debugger.
+
     * include/freetype/internal/ftmemory.h, src/base/ftbitmap.c,
     src/base/ftmac.c, src/base/ftrfork.c, src/lzw/ftzopen.c,
     src/raster/ftrend1.c, src/sfnt/ttpost.c, src/truetype/ttgxvar.c,
