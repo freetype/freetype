@@ -8,6 +8,9 @@
 
 	* src/base/ftstream.c (FT_Stream_EnterFrame): Add cast.
 
+	* include/freetype/config.h (FT_BASE_DEF) [__cplusplus]: Remove
+	`extern'.
+
 2006-05-02  David Turner  <david@freetype.org>
 
 	* include/freetype/ftstream.h (FT_FRAME_ENTER, FT_FRAME_EXIT,
