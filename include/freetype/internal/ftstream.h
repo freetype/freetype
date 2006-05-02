@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Stream handling (specification).                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2005 by                               */
+/*  Copyright 1996-2001, 2002, 2004, 2005, 2006 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -514,19 +514,21 @@ FT_BEGIN_HEADER
           FT_SET_ERROR( FT_Stream_ReadFields( stream, fields, object ) )
 
 
-#define FT_FRAME_ENTER( size )                                 \
-          FT_SET_ERROR( FT_DEBUG_INNER( FT_Stream_EnterFrame( stream, size ) ) )
+#define FT_FRAME_ENTER( size )                                       \
+          FT_SET_ERROR(                                              \
+            FT_DEBUG_INNER( FT_Stream_EnterFrame( stream, size ) ) )
 
 #define FT_FRAME_EXIT()                 \
           FT_DEBUG_INNER( FT_Stream_ExitFrame( stream ) )
 
-#define FT_FRAME_EXTRACT( size, bytes )                                    \
-          FT_SET_ERROR(                                                    \
-            FT_DEBUG_INNER( FT_Stream_ExtractFrame( stream, size,          \
-                                                   (FT_Byte**)&(bytes) ) ) )
+#define FT_FRAME_EXTRACT( size, bytes )                                       \
+          FT_SET_ERROR(                                                       \
+            FT_DEBUG_INNER( FT_Stream_ExtractFrame( stream, size,             \
+                                                    (FT_Byte**)&(bytes) ) ) )
 
-#define FT_FRAME_RELEASE( bytes )                               \
-        FT_DEBUG_INNER( FT_Stream_ReleaseFrame( stream, (FT_Byte**)&(bytes) ) )
+#define FT_FRAME_RELEASE( bytes )                                         \
+          FT_DEBUG_INNER( FT_Stream_ReleaseFrame( stream,                 \
+                                                  (FT_Byte**)&(bytes) ) )
 
 
 FT_END_HEADER

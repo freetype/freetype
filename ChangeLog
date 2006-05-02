@@ -1,53 +1,91 @@
+2006-05-02  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftmemory.h: s/new/newsz/ (for C++).
+	(FT_ALLOC): Remove redundant redefinition.
+
+	* builds/compiler/gcc-dev.mk (CFLAGS) [g++]: Don't use
+	`-Wstrict-prototypes'.
+
+	* src/base/ftstream.c (FT_Stream_EnterFrame): Add cast.
+
 2006-05-02  David Turner  <david@freetype.org>
 
-    * include/freetype/ftstream.h, src/base/ftstream.c: modifying
-    various frame-related functions to report the place where the
-    frames were entered/extracted/exited/released in the memory debugger.
+	* include/freetype/ftstream.h (FT_FRAME_ENTER, FT_FRAME_EXIT,
+	FT_FRAME_EXTRACT, FT_FRAME_RELEASE: Use FT_DEBUG_INNER to report the
+	place where the frames were entered, extracted, exited or released
+	in the memory debugger.
 
-    * include/freetype/internal/ftmemory.h, src/base/ftbitmap.c,
-    src/base/ftmac.c, src/base/ftrfork.c, src/lzw/ftzopen.c,
-    src/raster/ftrend1.c, src/sfnt/ttpost.c, src/truetype/ttgxvar.c,
-    src/type42/t42parse.c, src/winfonts/winfnt.c: hardening the code
-    against out-of-bounds conditions when allocating arrays. This is
-    for the cases where FT_NEW_ARRAY and FT_RENEW_ARRAY are not used
-    already. Introducing the new FT_ALLOC_MULT and FT_REALLOC_MULT
-    macros.
+	* src/base/ftstream.c (FT_Stream_ReleaseFrame) [FT_DEBUG_MEMORY]:
+	Call ft_mem_free.
+	(FT_Stream_EnterFrame) [FT_DEBUG_MEMORY]: Use ft_mem_qalloc.
+	(FT_Stream_ExitFrame) [FT_DEBUG_MEMORY]: Use ft_mem_free.
 
 
-    * include/freetype/fterrdef.h, include/freetype/config/ftconfig.h,
-    include/freetype/internal/ftmemory.h, src/base/ftdbgmem.c,
-    src/base/ftutil.c: udpating the memory management functions and
-    macros to safely deal with array size buffer overflows, this
-    corresponds to attemps to allocate arrays that are too large. For
-    an example, consider the following code:
+	Update the memory management functions and macros to safely deal
+	with array size buffer overflows.  This corresponds to attemps to
+	allocate arrays that are too large.  For an example, consider the
+	following code:
 
-         count = read_uint32_from_file();
-         array = malloc( sizeof(Item) * count );
-         for ( nn = 0; nn < count; nn++ )
-           array[nn] = read_item_from_file();
+	  count = read_uint32_from_file(); array = malloc( sizeof ( Item ) *
+	  count ); for ( nn = 0; nn < count; nn++ )
+	    array[nn] = read_item_from_file();
 
-    if 'count' is larger than FT_UINT_MAX/sizeof(Item), the multiplication
-    will overflow and the array allocated will be smaller than the data
-    read from the file. In this case, the heap will be trashed, and this
-    can be used as a denial-of-service, or make the engine crash later.
+	If `count' is larger than `FT_UINT_MAX/sizeof(Item)', the
+	multiplication overflows, and the array allocated os smaller than
+	the data read from the file.  In this case, the heap will be
+	trashed, and this can be used as a denial-of-service attack, or make
+	the engine crash later.
 
-    the FT_ARRAY_NEW and FT_ARRAY_RENEW macro now check that the new
-    count is no more than FT_INT_MAX/item_size, otherwise, a new error,
-    named 'FT_Err_Array_Too_Large' will be returned.
+	The FT_ARRAY_NEW and FT_ARRAY_RENEW macros now ensure that the new
+	count is no larger than `FT_INT_MAX/item_size', otherwise a new
+	error code `FT_Err_Array_Too_Large' will be returned.
 
-    note that the memory debugger now works again when FT_DEBUG_MEMORY
-    is defined, and FT_STRICT_ALIASING has disappeared, the corresponding
-    code being now the default.
+	Note that the memory debugger now works again when FT_DEBUG_MEMORY
+	is defined.  FT_STRICT_ALIASING has disappeared; the corresponding
+	code is now the default.
 
 
-2006-04-30 suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+	* include/freetype/config/ftconfig.h (FT_BASE_DEF) [!__cplusplus]:
+	Don't use `extern'.
 
-	Fix bug in Mac_Read_POST_Resource() to parse PFB font with MacOS
-	resource fork (bug since 2003-09-11). Patch is provided by
-	Huib-Jan Imbens <ft@imbens.nl>.
+	* include/freetype/fterrdef.h (FT_Err_Array_Too_Large): New error
+	code.
 
-	* src/base/ftobjs.c: fix pfb_pos initialization, remove extra cast
-	to copy to pfb_lenpos.
+	* include/freetype/internal/ftmemory.h (FT_DEBUG_INNER)
+	[FT_DEBUG_MEMORY]: New macro.
+	(ft_mem_realloc, ft_mem_qrealloc): Pass new object size count also.
+	(ft_mem_alloc_debug, ft_mem_qalloc_debug, ft_mem_realloc_debug,
+	ft_mem_qrealloc_debug, ft_mem_free_debug): Removed.
+	(FT_MEM_ALLOC, FT_MEM_REALLOC, FT_MEM_QALLOC, FT_MEM_QREALLOC,
+	FT_MEM_FREE): Redefine.
+	(FT_MEM_NEW_ARRAY, FT_MEM_RENEW_ARRAY, FT_MEM_QNEW_ARRAY,
+	FT_MEM_QRENEW_ARRAY): Redefine.
+	(FT_ALLOC_MULT, FT_REALLOC_MULT, FT_MEM_QALLOC_MULT,
+	FT_MEM_QREALLOC_MULT): New macros.  Update callers where
+	appropriate.
+	(FT_MEM_SET_ERROR): Slightly redefine.
+
+
+	* src/base/ftdbgmem.c (_ft_debug_file, _ft_debug_lineno)
+	[FT_DEBUG_MEMORY]: New global variables, replacing...
+	(FT_MemTable_Rec) [FT_DEBUG_MEMORY]: Remove `filename' and
+	`line_no'.  Update all callers.
+	(ft_mem_debug_alloc) [FT_DEBUG_MEMORY]: Avoid possible integer
+	overflow.
+	(ft_mem_alloc_debug, ft_mem_realloc_debug, ft_mem_qalloc_debug,
+	ft_mem_qrealloc_debug, ft_mem_free_debug): Removed.
+
+	* src/base/ftmac.c (read_lwfn): Catch integer overflow.
+	* src/base/ftrfork.c (raccess_guess_darwin_hfsplus): Ditto.
+	* src/base/ftutil.c: Remove special code for FT_STRICT_ALIASING.
+	(ft_mem_alloc. ft_mem_realloc, ft_mem_qrealloc): Rewrite.
+
+2006-04-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Correct pfb_pos
+	initialization, remove extra cast to copy to pfb_lenpos.  This fixes
+	parsing of PFB fonts with MacOS resource fork (bug introduced
+	2003-09-11).  Patch provided by Huib-Jan Imbens <ft@imbens.nl>.
 
 2006-04-29  Werner Lemberg  <wl@gnu.org>
 
@@ -82,7 +120,7 @@
 
 
 	* Version 2.2 released.
-        =======================
+	=======================
 
 
 	Tag sources with `VER-2-2-0'.
@@ -185,7 +223,7 @@
 2006-03-23  David Turner <david@freetype.org>
 
 	Add FT_Get_SubGlyph_Info API to retrieve subglyph data.  Note that
-        we do not expose the FT_SubGlyphRec structure.
+	we do not expose the FT_SubGlyphRec structure.
 
 	* include/freetype/internal/ftgloadr.h (FT_SUBGLYPH_FLAGS_*): Moved
 	to...
@@ -196,7 +234,7 @@
 
 
 	* src/autofit/afloader.c (af_loader_load_g): Compute lsb_delta and
-        rsb_delta correctly in edge cases.
+	rsb_delta correctly in edge cases.
 
 2006-03-22  Werner Lemberg  <wl@gnu.org>
 
@@ -363,7 +401,7 @@
 	order so that type42 module is removed before truetype module.  This
 	avoids double free in some occasions.
 
-2006-02-28  David Turner    <david@freetype.org>
+2006-02-28  David Turner  <david@freetype.org>
 
 	* Release candidate VER-2-2-0-RC4.
 	----------------------------------

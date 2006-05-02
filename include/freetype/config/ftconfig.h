@@ -265,7 +265,7 @@ FT_BEGIN_HEADER
 #ifndef FT_BASE_DEF
 
 #ifdef __cplusplus
-#define FT_BASE_DEF( x )  extern "C"  x
+#define FT_BASE_DEF( x )  x
 #else
 #define FT_BASE_DEF( x )  x
 #endif

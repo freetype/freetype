@@ -50,10 +50,11 @@
 
 #define FT_MEM_VAL( addr )  ((FT_ULong)(FT_Pointer)( addr ))
 
- /* this structure holds statistics for a single allocation/release
-  * site. This is useful to know where memory operations happen the
-  * most.
-  */
+  /*
+   *  This structure holds statistics for a single allocation/release
+   *  site.  This is useful to know where memory operations happen the
+   *  most.
+   */
   typedef struct  FT_MemSourceRec_
   {
     const char*   file_name;
@@ -81,12 +82,13 @@
    */
 #define FT_MEM_SOURCE_BUCKETS  128
 
- /* this structure holds information related to a single allocated
-  * memory block. if KEEPALIVE is defined, blocks that are freed by
-  * FreeType are never released to the system. Instead, their 'size'
-  * field is set to -size. This is mainly useful to detect double frees,
-  * at the price of large memory footprint during execution !!
-  */
+  /*
+   *  This structure holds information related to a single allocated
+   *  memory block.  If KEEPALIVE is defined, blocks that are freed by
+   *  FreeType are never released to the system.  Instead, their `size'
+   *  field is set to -size.  This is mainly useful to detect double frees,
+   *  at the price of large memory footprint during execution.
+   */
   typedef struct  FT_MemNodeRec_
   {
     FT_Byte*      address;
@@ -104,9 +106,10 @@
   } FT_MemNodeRec;
 
 
- /* the global structure, containing compound statistics and all hash
-  * tables
-  */
+  /*
+   *  The global structure, containing compound statistics and all hash
+   *  tables.
+   */
   typedef struct  FT_MemTableRec_
   {
     FT_ULong         size;

@@ -98,10 +98,11 @@
   {
     FT_Error  error = FT_Err_Ok;
 
-    block = ft_mem_qrealloc( memory, item_size, cur_count, new_count, block, &error );
+    block = ft_mem_qrealloc( memory, item_size,
+                             cur_count, new_count, block, &error );
     if ( !error && new_count > cur_count )
-      FT_MEM_ZERO( (char*)block + cur_count*item_size,
-                   (new_count-cur_count)*item_size );
+      FT_MEM_ZERO( (char*)block + cur_count * item_size,
+                   ( new_count - cur_count ) * item_size );
 
     *p_error = error;
     return block;

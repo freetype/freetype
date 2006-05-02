@@ -64,7 +64,8 @@ T := -o$(space)
 #
 ifndef CFLAGS
   ifeq ($(findstring g++,$(CC)),)
-    nested_externs := -Wnested-externs
+    nested_externs    := -Wnested-externs
+    strict_prototypes := -Wstrict-prototypes
   endif
 
   CFLAGS := -c -g -O0 \
@@ -74,10 +75,10 @@ ifndef CFLAGS
             -Wshadow \
             -Wpointer-arith \
             -Wwrite-strings \
-            -Wstrict-prototypes \
             -Wredundant-decls \
             -Wno-long-long \
-            $(nested_externs)
+            $(nested_externs) \
+            $(strict_prototypes)
 endif
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
