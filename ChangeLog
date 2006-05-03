@@ -1,3 +1,8 @@
+2006-05-03  David Turner  <david@freetype.org>
+
+    * include/freetype/internal/ftmemory.h: allow compilation with
+    C++ compilers
+
 2006-05-03  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/config/ftoption.h (FT_STRICT_ALIASING): Removed.
