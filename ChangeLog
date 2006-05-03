@@ -1,7 +1,11 @@
 2006-05-03  David Turner  <david@freetype.org>
 
-    * include/freetype/internal/ftmemory.h: allow compilation with
-    C++ compilers
+	Allow compilation again with C++ compilers.
+
+	* include/freetype/internal/ftmemory.h (FT_ASSIGNP,
+	FT_ASSIGNP_INNER): New macros which do the actual assignment, and
+	which exist in two variants (for C and C++).
+	Update callers accordingly.
 
 2006-05-03  Werner Lemberg  <wl@gnu.org>
 

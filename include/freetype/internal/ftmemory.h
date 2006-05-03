@@ -57,14 +57,16 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
- /* C++ absolutely hates statements like p = (void*)anything; where 'p' is
-  * a typed pointer. Since we don't have a typeof operator in standard C++,
-  * we need some really ugly casts, like:
-  */
+  /*
+   *  C++ refuses to handle statements like p = (void*)anything; where `p'
+   *  is a typed pointer.  Since we don't have a `typeof' operator in
+   *  standard C++, we have to use ugly casts.
+   */
+
 #ifdef __cplusplus
-#  define  FT_ASSIGNP(p,val)  *((void**)&(p)) = (val)
+#define FT_ASSIGNP( p, val )  *((void**)&(p)) = (val)
 #else
-#  define  FT_ASSIGNP(p,val)  (p) = (val)
+#define FT_ASSIGNP( p, val )  (p) = (val)
 #endif
 
 
@@ -74,18 +76,18 @@ FT_BEGIN_HEADER
   FT_BASE( const char* )  _ft_debug_file;
   FT_BASE( long )         _ft_debug_lineno;
 
-#  define FT_DEBUG_INNER( exp )  ( _ft_debug_file   = __FILE__, \
-                                   _ft_debug_lineno = __LINE__, \
-                                   (exp) )
+#define FT_DEBUG_INNER( exp )  ( _ft_debug_file   = __FILE__, \
+                                 _ft_debug_lineno = __LINE__, \
+                                 (exp) )
 
-#  define FT_ASSIGNP_INNER( p, exp )  ( _ft_debug_file   = __FILE__, \
-                                        _ft_debug_lineno = __LINE__, \
-                                        FT_ASSIGNP( p, exp ) )
+#define FT_ASSIGNP_INNER( p, exp )  ( _ft_debug_file   = __FILE__, \
+                                      _ft_debug_lineno = __LINE__, \
+                                      FT_ASSIGNP( p, exp ) )
 
 #else /* !FT_DEBUG_MEMORY */
 
-#  define FT_DEBUG_INNER( exp )       (exp)
-#  define FT_ASSIGNP_INNER( p, exp )  FT_ASSIGNP( p, exp )
+#define FT_DEBUG_INNER( exp )       (exp)
+#define FT_ASSIGNP_INNER( p, exp )  FT_ASSIGNP( p, exp )
 
 #endif /* !FT_DEBUG_MEMORY */
 
@@ -127,7 +129,7 @@ FT_BEGIN_HEADER
                const void*  P );
 
 
-#define FT_MEM_ALLOC( ptr, size )                                          \
+#define FT_MEM_ALLOC( ptr, size )                                         \
           FT_ASSIGNP_INNER( ptr, ft_mem_alloc( memory, (size), &error ) )
 
 #define FT_MEM_FREE( ptr )                \
@@ -144,7 +146,7 @@ FT_BEGIN_HEADER
                                                  (cursz), (newsz), \
                                                  (ptr), &error ) )
 
-#define FT_MEM_QALLOC( ptr, size )                                          \
+#define FT_MEM_QALLOC( ptr, size )                                         \
           FT_ASSIGNP_INNER( ptr, ft_mem_qalloc( memory, (size), &error ) )
 
 #define FT_MEM_QNEW( ptr )                        \
@@ -155,22 +157,22 @@ FT_BEGIN_HEADER
                                                   (cursz), (newsz), \
                                                   (ptr), &error ) )
 
-#define FT_MEM_QRENEW_ARRAY( ptr, cursz, newsz )                              \
+#define FT_MEM_QRENEW_ARRAY( ptr, cursz, newsz )                             \
           FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, sizeof ( *(ptr) ), \
                                                   (cursz), (newsz),          \
                                                   (ptr), &error ) )
 
-#define FT_MEM_ALLOC_MULT( ptr, count, item_size )                     \
+#define FT_MEM_ALLOC_MULT( ptr, count, item_size )                    \
           FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, (item_size), \
                                                  0, (count),          \
                                                  NULL, &error ) )
 
-#define FT_MEM_REALLOC_MULT( ptr, oldcnt, newcnt, itmsz )             \
+#define FT_MEM_REALLOC_MULT( ptr, oldcnt, newcnt, itmsz )            \
           FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, (itmsz),    \
                                                  (oldcnt), (newcnt), \
                                                  (ptr), &error ) )
 
-#define FT_MEM_QALLOC_MULT( ptr, count, item_size )                     \
+#define FT_MEM_QALLOC_MULT( ptr, count, item_size )                    \
           FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, (item_size), \
                                                   0, (count),          \
                                                   NULL, &error ) )
@@ -222,22 +224,22 @@ FT_BEGIN_HEADER
   /* _typed_ in order to automatically compute array element sizes.        */
   /*                                                                       */
 
-#define FT_MEM_NEW_ARRAY( ptr, count )                                       \
+#define FT_MEM_NEW_ARRAY( ptr, count )                                      \
           FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, sizeof ( *(ptr) ), \
                                                  0, (count),                \
                                                  NULL, &error ) )
 
-#define FT_MEM_RENEW_ARRAY( ptr, cursz, newsz )                              \
+#define FT_MEM_RENEW_ARRAY( ptr, cursz, newsz )                             \
           FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, sizeof ( *(ptr) ), \
                                                  (cursz), (newsz),          \
                                                  (ptr), &error ) )
 
-#define FT_MEM_QNEW_ARRAY( ptr, count )                                       \
+#define FT_MEM_QNEW_ARRAY( ptr, count )                                      \
           FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, sizeof ( *(ptr) ), \
                                                   0, (count),                \
                                                   NULL, &error ) )
 
-#define FT_MEM_QRENEW_ARRAY( ptr, cursz, newsz )                              \
+#define FT_MEM_QRENEW_ARRAY( ptr, cursz, newsz )                             \
           FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, sizeof ( *(ptr) ), \
                                                   (cursz), (newsz),          \
                                                   (ptr), &error ) )
