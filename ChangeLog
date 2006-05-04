@@ -1,3 +1,15 @@
+2006-05-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/lzw/ftlzw2.c: Renamed to...
+	* src/lzw/ftlzw.c: This.
+
+	* src/lzw/Jamfile, src/lzw/rules.mk: Updated.
+
+	* builds/mac/FreeType.m68k_cfm.make.txt,
+	builds/mac/FreeType.m68k_far.make.txt,
+	builds/mac/FreeType.ppc_carbon.make.txt,
+	builds/mac/FreeType.ppc_classic.make.txt: Updated.
+
 2006-05-03  David Turner  <david@freetype.org>
 
 	Allow compilation again with C++ compilers.
@@ -25,17 +37,6 @@
 	Remove `extern'.
 
 2006-05-02  David Turner  <david@freetype.org>
-
-	* include/freetype/ftstream.h (FT_FRAME_ENTER, FT_FRAME_EXIT,
-	FT_FRAME_EXTRACT, FT_FRAME_RELEASE: Use FT_DEBUG_INNER to report the
-	place where the frames were entered, extracted, exited or released
-	in the memory debugger.
-
-	* src/base/ftstream.c (FT_Stream_ReleaseFrame) [FT_DEBUG_MEMORY]:
-	Call ft_mem_free.
-	(FT_Stream_EnterFrame) [FT_DEBUG_MEMORY]: Use ft_mem_qalloc.
-	(FT_Stream_ExitFrame) [FT_DEBUG_MEMORY]: Use ft_mem_free.
-
 
 	Update the memory management functions and macros to safely deal
 	with array size buffer overflows.  This corresponds to attemps to
@@ -95,6 +96,17 @@
 	* src/base/ftrfork.c (raccess_guess_darwin_hfsplus): Ditto.
 	* src/base/ftutil.c: Remove special code for FT_STRICT_ALIASING.
 	(ft_mem_alloc. ft_mem_realloc, ft_mem_qrealloc): Rewrite.
+
+
+	* include/freetype/ftstream.h (FT_FRAME_ENTER, FT_FRAME_EXIT,
+	FT_FRAME_EXTRACT, FT_FRAME_RELEASE): Use FT_DEBUG_INNER to report the
+	place where the frames were entered, extracted, exited or released
+	in the memory debugger.
+
+	* src/base/ftstream.c (FT_Stream_ReleaseFrame) [FT_DEBUG_MEMORY]:
+	Call ft_mem_free.
+	(FT_Stream_EnterFrame) [FT_DEBUG_MEMORY]: Use ft_mem_qalloc.
+	(FT_Stream_ExitFrame) [FT_DEBUG_MEMORY]: Use ft_mem_free.
 
 2006-04-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
