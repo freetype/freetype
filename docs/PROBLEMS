@@ -1,16 +1,16 @@
-This file describes various problems that have been encountered in
-compiling, installing and running FreeType 2.  Suggestions for additions or
-other improvements to this file are welcome.
+This  file describes various  problems that  have been  encountered in
+compiling,  installing  and   running  FreeType  2.   Suggestions  for
+additions or other improvements to this file are welcome.
 
----------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 
 Compilation Problems
 ====================
 
 
-* I get an `internal compilation error' (ICE) while compiling FreeType 2.2.0
-  with Intel C++.
+* I get an `internal compilation error' (ICE) while compiling FreeType
+  2.2.1 with Intel C++.
 
 This has been reported for the following compiler version:
 
@@ -33,4 +33,4 @@ A solution to this problem is to apply the following patch.
        ftc_inode_new,
 
 
----------------------------------------------------------------------------
+----------------------------------------------------------------------

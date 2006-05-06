@@ -1,4 +1,18 @@
+LATEST CHANGES BETWEEN 2.2.1 and 2.2
+
+  I. IMPORTANT BUG FIXES
+
+    - Various integer overflows have been fixed.
+
+    - PFB fonts with MacOS resource fork weren't  handled correctly on
+      non-MacOS platforms.
+
+
+======================================================================
+
 LATEST CHANGES BETWEEN 2.2 and 2.1.10
+
+(not released officially)
 
   I. IMPORTANT BUG FIXES
 
@@ -128,7 +142,8 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
       the face.
 
     - The demo programs  `ftview' and  `ftstring' have been  rewritten
-      for better readability.
+      for better readability.   `ftview' has a new switch `-p' to test
+      FT_New_Memory_Face (instead of FT_New_Face).
 
     - FreeType now honours bit 1 in the `head' table of TrueType fonts
       (meaning `left sidebearing point at x=0').  This helps with some

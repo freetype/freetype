@@ -17,18 +17,18 @@
 #
 # It works as follows:
 #
-# - When invoked for the first time, this Makefile will include the rules
-#   found in `PROJECT/builds/detect.mk'.  They are in charge of detecting
-#   the current platform.
+# - When invoked for the first time, this Makefile includes the rules found
+#   in `PROJECT/builds/detect.mk'.  They are in charge of detecting the
+#   current platform.
 #
-#   A summary of the detection will be displayed, and the file `config.mk'
-#   will be created in the current directory.
+#   A summary of the detection is displayed, and the file `config.mk' is
+#   created in the current directory.
 #
-# - When invoked later, this Makefile will include the rules found in
-#   `config.mk'.  This sub-Makefile will define some system-specific
-#   variables (like compiler, compilation flags, object suffix, etc.), then
-#   include the rules found in `PROJECT/builds/PROJECT.mk', used to build
-#   the library.
+# - When invoked later, this Makefile includes the rules found in
+#   `config.mk'.  This sub-Makefile defines some system-specific variables
+#   (like compiler, compilation flags, object suffix, etc.), then includes
+#   the rules found in `PROJECT/builds/PROJECT.mk', used to build the
+#   library.
 #
 # See the comments in `builds/detect.mk' and `builds/PROJECT.mk' for more
 # details on host platform detection and library builds.
@@ -56,7 +56,7 @@ endif
 
 
 # FTMODULE_H, as its name suggests, indicates where the FreeType module
-# classes resides.
+# class file resides.
 #
 FTMODULE_H ?= $(OBJ_DIR)/ftmodule.h
 

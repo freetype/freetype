@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype220.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype221.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug"
 
@@ -78,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype220_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype221_D.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug Multithreaded"
 
@@ -103,7 +103,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"lib\freetype200b8_D.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype220MT_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype221MT_D.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Release Multithreaded"
 
@@ -127,7 +127,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"lib\freetype200b8.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype220MT.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype221MT.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Release Singlethreaded"
 
@@ -152,7 +152,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype206.lib"
-# ADD LIB32 /out:"..\..\..\objs\freetype220ST.lib"
+# ADD LIB32 /out:"..\..\..\objs\freetype221ST.lib"
 # SUBTRACT LIB32 /nologo
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug Singlethreaded"
@@ -178,7 +178,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype206_D.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype220ST_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype221ST_D.lib"
 
 !ENDIF 
 

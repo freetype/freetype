@@ -1,3 +1,24 @@
+2006-05-06  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.
+
+	* builds/unix/configure.ac (version_info): Set to 9:10:3.
+
+	* builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj, builds/freetype.mk (refdoc),
+	Jamfile (RefDoc), README: s/220/221/, s/2.2.0/2.2.1/.
+	Minor updates.
+
+	* docs/CHANGES, docs/VERSION.DLL, docs/PROBLEMS, README.CVS:
+	Updated.
+
+	* builds/unix/install-sh: Updated from `texinfo' CVS module at
+	savannah.gnu.org.
+
+	* devel/ftoption.h: Synchronize with
+	include/freetype/config/ftoption.h.
+
 2006-05-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/lzw/ftlzw2.c: Renamed to...
