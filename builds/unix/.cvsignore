@@ -6,6 +6,7 @@ config.log
 config.status
 config.sub
 configure
+configure.ac
 freetype2.pc
 freetype-config
 ftconfig.h

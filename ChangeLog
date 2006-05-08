@@ -1,3 +1,17 @@
+2006-05-07  Werner Lemberg  <wl@gnu.org>
+
+	Put version information into the configure script.  Reported by Paul
+	Watson <pwatson@redlinepy.com>.
+
+	* builds/unix/configure.ac: Renamed to...
+	* builds/unix/configure.raw: This which now serves (with appropriate
+	modifications) as a template for configure.ac.
+
+	* version.sed: New script.
+
+	* autogen.sh: Generate configure.ac from configure.raw, using
+	FREETYPE_MAJOR, FREETYPE_MINOR, and FREETYPE_PATCH from freetype.h.
+
 2006-05-06  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.

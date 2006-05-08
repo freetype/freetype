@@ -11,7 +11,7 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
-AC_INIT
+AC_INIT([FreeType], [@VERSION@], [freetype@nongnu.org], [freetype])
 AC_CONFIG_SRCDIR([ftconfig.in])
 
 
