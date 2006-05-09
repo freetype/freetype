@@ -1,3 +1,12 @@
+2006-05-09  Rajeev Pahuja  <rpahuja@esri.com>
+
+	* builds/win32/visualc/freetype.sln,
+	builds/win32/visualc/freetype.vcproj: Upgraded to VS.NET 2005 from
+	VS.NET 2003
+	Added files ftbbox.c, fttype1.c, ftwinfnt.c, ftsynth.c.
+
+	* builds/win32/visualc/index.html: Updated.
+
 2006-05-07  Werner Lemberg  <wl@gnu.org>
 
 	Put version information into the configure script.  Reported by Paul
