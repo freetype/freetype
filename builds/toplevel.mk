@@ -221,8 +221,8 @@ CONFIG_SUB   = ../../../config/config.sub
 do-dist: distclean refdoc
 	@# Without removing the files, `autoconf' and friends follow links.
 	rm -f builds/unix/aclocal.m4
-	rm -r builds/unix/configure.ac
-	rm -r builds/unix/configure
+	rm -f builds/unix/configure.ac
+	rm -f builds/unix/configure
 
 	sh autogen.sh
 	rm -rf builds/unix/autom4te.cache
