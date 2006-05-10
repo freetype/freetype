@@ -303,7 +303,7 @@
                            stream->base + total_read_count,
                            stream->size - total_read_count );
 
-        if ( ( read_count == -1 ) )
+        if ( ( read_count <= 0 ) )
         {
           if ( errno == EINTR )
             continue;

@@ -1,3 +1,9 @@
+2006-05-10  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/ftsystem.c (FT_Stream_Open): Avoid infinite loop if
+	given an empty, un-mmap()able file.  Reported and suggested fix in
+	Savannah bug #16555.
+
 2006-05-09  Rajeev Pahuja  <rpahuja@esri.com>
 
 	* builds/win32/visualc/freetype.sln,
