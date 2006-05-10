@@ -267,7 +267,11 @@ dll: $(PROJECT_LIBRARY) exported_symbols
 	$(FT_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
 
+# We write-protect the docmaker directory to suppress generation
+# of .pyc files.
+#
 refdoc:
+	-chmod -w $(SRC_DIR)/tools/docmaker
 	python $(SRC_DIR)/tools/docmaker/docmaker.py \
                --prefix=ft2                          \
                --title=FreeType-2.2.1                \
@@ -275,6 +279,7 @@ refdoc:
                $(PUBLIC_DIR)/*.h                     \
                $(PUBLIC_DIR)/config/*.h              \
                $(PUBLIC_DIR)/cache/*.h
+	-chmod +w $(SRC_DIR)/tools/docmaker
 
 
 .PHONY: clean_project_std distclean_project_std

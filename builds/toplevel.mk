@@ -34,7 +34,7 @@
 # details on host platform detection and library builds.
 
 
-.PHONY: all setup distclean modules
+.PHONY: all dist distclean modules setup
 
 
 # The `space' variable is used to avoid trailing spaces in defining the
@@ -157,5 +157,77 @@ modules:
 
 include $(TOP_DIR)/builds/modules.mk
 
+
+# This target builds the tarballs.
+#
+# Not to be run by a normal user -- there are no attempts to make it
+# generic.
+
+dist:
+	-rm -rf tmp
+	rm -f freetype-2.2.1.tar.gz
+	rm -f freetype-2.2.1.tar.bz2
+	rm -f ft221.zip
+
+	for d in `find . -wholename '*/CVS' -prune \
+	                 -o -type f \
+	                 -o -print` ; do \
+	  mkdir -p tmp/$$d ; \
+	done ;
+
+	currdir=`pwd` ; \
+	for f in `find . -wholename '*/CVS' -prune \
+	                 -o -name .cvsignore \
+	                 -o -type d \
+	                 -o -print` ; do \
+	  ln -s $$currdir/$$f tmp/$$f ; \
+	done
+
+	@# Prevent generation of .pyc files.  Python follows (soft) links if
+	@# the link's directory is write protected, so we have temporarily
+	@# disable write access here too.
+	chmod -w src/tools/docmaker
+
+	cd tmp ; \
+	$(MAKE) devel ; \
+	$(MAKE) do-dist
+
+	chmod +w src/tools/docmaker
+
+	mv tmp freetype-2.2.1
+
+	tar cfh - freetype-2.2.1 \
+	| gzip -c > freetype-2.2.1.tar.gz
+	tar cfh - freetype-2.2.1 \
+	| bzip2 -c > freetype-2.2.1.tar.bz2
+
+	@# Use CR/LF for zip files.
+	zip -lr ft221.zip freetype-2.2.1
+
+	rm -fr freetype-2.2.1
+
+
+# The locations of the latest `config.guess' and `config.sub' versions (from
+# GNU `config' CVS), relative to the `tmp' directory used during `make dist'.
+#
+CONFIG_GUESS = ../../../config/config.guess
+CONFIG_SUB   = ../../../config/config.sub
+
+
+# Don't say `make do-dist'.  Always use `make dist' instead.
+#
+.PHONY: do-dist
+
+do-dist: distclean refdoc
+	@# Without removing the files, `autoconf' and friends follow links.
+	rm -f builds/unix/aclocal.m4
+	rm -r builds/unix/configure.ac
+	rm -r builds/unix/configure
+
+	sh autogen.sh
+	rm -rf builds/unix/autom4te.cache
+
+	cp $(CONFIG_GUESS) builds/unix
+	cp $(CONFIG_SUB) builds/unix
 
 # EOF
