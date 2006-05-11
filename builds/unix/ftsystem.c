@@ -303,9 +303,9 @@
                            stream->base + total_read_count,
                            stream->size - total_read_count );
 
-        if ( ( read_count <= 0 ) )
+        if ( read_count <= 0 )
         {
-          if ( errno == EINTR )
+          if ( read_count == -1 && errno == EINTR )
             continue;
 
           FT_ERROR(( "FT_Stream_Open:" ));

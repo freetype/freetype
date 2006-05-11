@@ -1,3 +1,9 @@
+2006-05-11  Masatake YAMATO  <jet@gyve.org>
+ 
+	* builds/unix/ftsystem.c (FT_Stream_Open): Check errno only if 
+	read system call returns -1.
+	Remove a redundant parenthesis.
+
 2006-05-10  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ftsystem.c (FT_Stream_Open): Avoid infinite loop if
