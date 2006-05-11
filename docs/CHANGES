@@ -1,4 +1,4 @@
-LATEST CHANGES BETWEEN 2.2.1 and 2.2
+CHANGES BETWEEN 2.2.1 and 2.2
 
   I. IMPORTANT BUG FIXES
 
@@ -10,7 +10,7 @@ LATEST CHANGES BETWEEN 2.2.1 and 2.2
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.2 and 2.1.10
+CHANGES BETWEEN 2.2 and 2.1.10
 
 (not released officially)
 
@@ -39,7 +39,7 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
       We provide  patches for  most of those  rogue clients.   See the
       following page for more information:
 
-          http://www.freetype.org/freetype2/patches/rogue-patches.html
+        http://www.freetype.org/freetype2/patches/rogue-patches.html
 
       Note that, as  a convenience to our Unix  desktop users, version
       2.2 is *binary* compatible with FreeType 2.1.7, which means that
@@ -164,7 +164,7 @@ LATEST CHANGES BETWEEN 2.2 and 2.1.10
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
+CHANGES BETWEEN 2.1.10 and 2.1.9
 
   I. IMPORTANT BUG FIXES
 
@@ -284,7 +284,7 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
+CHANGES BETWEEN 2.1.9 and 2.1.8
 
   I. IMPORTANT BUG FIXES
 
@@ -338,7 +338,7 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
+CHANGES BETWEEN 2.1.8 and 2.1.7
 
   I. IMPORTANT BUG FIXES
 
@@ -500,7 +500,7 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.7 and 2.1.6
+CHANGES BETWEEN 2.1.7 and 2.1.6
 
   I. IMPORTANT BUG FIXES
 
@@ -516,7 +516,7 @@ LATEST CHANGES BETWEEN 2.1.7 and 2.1.6
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.6 and 2.1.5
+CHANGES BETWEEN 2.1.6 and 2.1.5
 
   I. IMPORTANT BUG FIXES
 
@@ -577,7 +577,7 @@ LATEST CHANGES BETWEEN 2.1.6 and 2.1.5
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
+CHANGES BETWEEN 2.1.5 and 2.1.4
 
   I. IMPORTANT BUG FIXES
 
@@ -679,7 +679,7 @@ LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.4 and 2.1.3
+CHANGES BETWEEN 2.1.4 and 2.1.3
 
   I. IMPORTANT BUG FIXES
 
@@ -774,7 +774,7 @@ LATEST CHANGES BETWEEN 2.1.4 and 2.1.3
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
+CHANGES BETWEEN 2.1.3 and 2.1.2
 
   I. IMPORTANT BUG FIXES
 
@@ -932,7 +932,7 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.2 and 2.1.1
+CHANGES BETWEEN 2.1.2 and 2.1.1
 
   I. IMPORTANT BUG FIXES
 
@@ -968,7 +968,7 @@ LATEST CHANGES BETWEEN 2.1.2 and 2.1.1
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
+CHANGES BETWEEN 2.1.1 and 2.1.0
 
   I. IMPORTANT BUG FIXES
 
@@ -1038,7 +1038,7 @@ LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.1.0 and 2.0.9
+CHANGES BETWEEN 2.1.0 and 2.0.9
 
   I. IMPORTANT BUG FIXES
 
@@ -1182,7 +1182,7 @@ LATEST CHANGES BETWEEN 2.1.0 and 2.0.9
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.9 and 2.0.8
+CHANGES BETWEEN 2.0.9 and 2.0.8
 
   I. IMPORTANT BUG FIXES
 
@@ -1243,7 +1243,7 @@ LATEST CHANGES BETWEEN 2.0.9 and 2.0.8
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.8 and 2.0.7
+CHANGES BETWEEN 2.0.8 and 2.0.7
 
   I. IMPORTANT BUG FIXES
 
@@ -1263,7 +1263,7 @@ LATEST CHANGES BETWEEN 2.0.8 and 2.0.7
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.7 and 2.0.6
+CHANGES BETWEEN 2.0.7 and 2.0.6
 
   I. IMPORTANT BUG FIXES
 
@@ -1306,7 +1306,7 @@ LATEST CHANGES BETWEEN 2.0.7 and 2.0.6
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
+CHANGES BETWEEN 2.0.6 and 2.0.5
 
   I. IMPORTANT BUG FIXES
 
@@ -1407,7 +1407,7 @@ LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.5 and 2.0.4
+CHANGES BETWEEN 2.0.5 and 2.0.4
 
   NOTE THAT 2.0.5 DOES NOT CONTAIN THE POSTSCRIPT HINTER.  THIS MODULE
   WILL BE PART OF THE NEXT RELEASE (EITHER 2.0.6 or 2.1)
@@ -1459,7 +1459,7 @@ LATEST CHANGES BETWEEN 2.0.5 and 2.0.4
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
+CHANGES BETWEEN 2.0.4 and 2.0.3
 
   - Fixed a rather annoying bug that was introduced in 2.0.3.  Namely,
     the font  transformation set through  FT_Set_Transform was applied
@@ -1495,7 +1495,7 @@ LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
 
 =======================================================================
 
-LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
+CHANGES BETWEEN 2.0.3 and 2.0.2
 
   I. CHANGES TO THE MODULES / FONT DRIVERS
 
@@ -1604,7 +1604,7 @@ LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
+CHANGES BETWEEN 2.0.2 and 2.0.1
 
   I. CHANGES TO THE MODULES / FONT DRIVERS
 
@@ -1727,7 +1727,7 @@ LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.1 and 2.0
+CHANGES BETWEEN 2.0.1 and 2.0
 
   2.0.1 introduces a few changes:
 
