@@ -4,6 +4,7 @@
 	boundary markers.
 	* src/tools/docmaker/content.py (re_field): Allow `.' in field names
 	(but not at the beginning or end).
+	* src/tools/docmaker/tohtml.py (html_header_1): Use `utf-8' charset.
 
 	* include/freetype/*: Many minor documentation improvements (adding
 	links, spelling errors, etc.).

@@ -407,7 +407,7 @@ FT_BEGIN_HEADER
    *   FT_Stroker_ConicTo
    *
    * @description:
-   *   `Draw' a single quadratic bezier in the stroker's current sub-path,
+   *   `Draw' a single quadratic Bézier in the stroker's current sub-path,
    *   from the last position.
    *
    * @input:
@@ -415,7 +415,7 @@ FT_BEGIN_HEADER
    *     The target stroker handle.
    *
    *   control ::
-   *     A pointer to a Bezier control point.
+   *     A pointer to a Bézier control point.
    *
    *   to ::
    *     A pointer to the destination point.
@@ -439,7 +439,7 @@ FT_BEGIN_HEADER
    *   FT_Stroker_CubicTo
    *
    * @description:
-   *   `Draw' a single cubic Bezier in the stroker's current sub-path,
+   *   `Draw' a single cubic Bézier in the stroker's current sub-path,
    *   from the last position.
    *
    * @input:
@@ -447,10 +447,10 @@ FT_BEGIN_HEADER
    *     The target stroker handle.
    *
    *   control1 ::
-   *     A pointer to the first Bezier control point.
+   *     A pointer to the first Bézier control point.
    *
    *   control2 ::
-   *     A pointer to second Bezier control point.
+   *     A pointer to second Bézier control point.
    *
    *   to ::
    *     A pointer to the destination point.
@@ -709,3 +709,8 @@ FT_END_HEADER
 
 
 /* END */
+
+
+/* Local Variables: */
+/* coding: utf-8    */
+/* End:             */

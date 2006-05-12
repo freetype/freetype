@@ -6503,7 +6503,7 @@
 	well as providing an autoconf fragment provided by Lars Clausen.
 
 	* src/smooth/ftgrays.c (gray_render_conic): Fixed small bug that
-	prevented bezier arcs with negative vertical coordinates to be
+	prevented Bézier arcs with negative vertical coordinates to be
 	rendered appropriately.
 
 2002-12-02  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>

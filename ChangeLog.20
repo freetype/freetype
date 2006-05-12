@@ -1638,7 +1638,7 @@
 	is now slower, but proves a point :-)
 
 	* src/raster/ftraster.c, src/smooth/ftgrays.c, src/base/ftbbox.c:
-	Fixed the bezier stack depths.
+	Fixed the Bézier stack depths.
 
 	* src/base/ftcalc.c (FT_MulFix): Minor rounding fix.
 
