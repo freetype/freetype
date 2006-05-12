@@ -5,6 +5,10 @@
 	* src/tools/docmaker/content.py (re_field): Allow `.' in field names
 	(but not at the beginning or end).
 	* src/tools/docmaker/tohtml.py (html_header_1): Use `utf-8' charset.
+	(block_footer): Split into...
+	(block_footer_start, block_footer_middle, block_footer_end): This to
+	add navigation buttons.
+	(HtmlFormatter::block_exit): Updated.
 
 	* include/freetype/*: Many minor documentation improvements (adding
 	links, spelling errors, etc.).

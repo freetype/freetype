@@ -70,8 +70,20 @@ para_footer = "</p>"
 
 # Block header and footer.
 #
-block_header = '<table align=center width="75%"><tr><td>'
-block_footer = '</td></tr></table><hr width="75%">'
+block_header        = '<table align=center width="75%"><tr><td>'
+block_footer_start  = """\
+</td></tr></table>
+<hr width="75%">
+<table align=center width="75%"><tr><td><font size=-2>[<a href="
+"""
+block_footer_middle = """\
+">Index</a>]</font></td>
+<td width="100%"></td>
+<td><font size=-2>[<a href="
+"""
+block_footer_end    = """\
+">TOC</a>]</font></td></tr></table>
+"""
 
 # Description header/footer.
 #
@@ -493,7 +505,9 @@ class HtmlFormatter(Formatter):
             print marker_footer
 
     def  block_exit( self, block ):
-        print block_footer
+        print block_footer_start + self.file_prefix + "index.html" + \
+              block_footer_middle + self.file_prefix + "toc.html" + \
+              block_footer_end
 
 
     def  section_exit( self, section ):
