@@ -407,9 +407,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used to model a TrueType Postscript table.  All fields */
-  /*    comply to the TrueType table.  This structure does not reference   */
-  /*    the Postscript glyph names, which can be nevertheless accessed     */
-  /*    with the `ttpost' module.                                          */
+  /*    comply to the TrueType specification.  This structure does not     */
+  /*    reference the Postscript glyph names, which can be nevertheless    */
+  /*    accessed with the `ttpost' module.                                 */
   /*                                                                       */
   typedef struct  TT_Postscript_
   {
@@ -436,7 +436,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used to model a TrueType PCLT table.  All fields       */
-  /*    comply to the TrueType table.                                      */
+  /*    comply to the TrueType specification.                              */
   /*                                                                       */
   typedef struct  TT_PCLT_
   {
@@ -594,8 +594,8 @@ FT_BEGIN_HEADER
   /*    The table is owned by the face object and disappears with it.      */
   /*                                                                       */
   /*    This function is only useful to access SFNT tables that are loaded */
-  /*    by the sfnt/truetype/opentype drivers.  See @FT_Sfnt_Tag for a     */
-  /*    list.                                                              */
+  /*    by the sfnt, truetype, and opentype drivers.  See @FT_Sfnt_Tag for */
+  /*    a list.                                                             */
   /*                                                                       */
   FT_EXPORT( void* )
   FT_Get_Sfnt_Table( FT_Face      face,
@@ -615,8 +615,8 @@ FT_BEGIN_HEADER
   *     A handle to the source face.
   *
   *   tag ::
-  *     The 4-byte tag of the table to load.  Use the value 0 if you want to
-  *     access the whole font file.  Otherwise, you can use one of the
+  *     The four-byte tag of the table to load.  Use the value 0 if you want
+  *     to access the whole font file.  Otherwise, you can use one of the
   *     definitions found in the @FT_TRUETYPE_TAGS_H file, or forge a new
   *     one with @FT_MAKE_TAG.
   *              
@@ -712,7 +712,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return TrueType/sfnt specific cmap language ID.  Definitions of    */
-  /*    language ID values are in freetype/ttnameid.h.                     */
+  /*    language ID values are in `freetype/ttnameid.h'.                   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    charmap ::                                                         */

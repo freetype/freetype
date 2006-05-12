@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
   /*    library    :: A handle to the library resource.                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    fond       :: An FOND resource.                                    */
+  /*    fond       :: A FOND resource.                                     */
   /*                                                                       */
   /*    face_index :: Only supported for the -1 `sanity check' special     */
   /*                  case.                                                */
@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Notes>                                                               */
-  /*    This function can be used to create FT_Face objects from fonts     */
+  /*    This function can be used to create @FT_Face objects from fonts    */
   /*    that are installed in the system as follows.                       */
   /*                                                                       */
   /*    {                                                                  */

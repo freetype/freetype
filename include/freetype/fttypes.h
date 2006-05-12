@@ -498,8 +498,8 @@ FT_BEGIN_HEADER
   /*    FT_ListNode                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*     Many elements and objects in FreeType are listed through a        */
-  /*     FT_List record (see FT_ListRec).  As its name suggests, a         */
+  /*     Many elements and objects in FreeType are listed through an       */
+  /*     @FT_List record (see @FT_ListRec).  As its name suggests, an      */
   /*     FT_ListNode is a handle to a single list element.                 */
   /*                                                                       */
   typedef struct FT_ListNodeRec_*  FT_ListNode;
@@ -511,7 +511,7 @@ FT_BEGIN_HEADER
   /*    FT_List                                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A handle to a list record (see FT_ListRec).                        */
+  /*    A handle to a list record (see @FT_ListRec).                       */
   /*                                                                       */
   typedef struct FT_ListRec_*  FT_List;
 

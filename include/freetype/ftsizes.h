@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
   /*    Managing multiple sizes per face.                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    When creating a new face object (e.g. with @FT_New_Face), an       */
+  /*    When creating a new face object (e.g., with @FT_New_Face), an      */
   /*    @FT_Size object is automatically created and used to store all     */
   /*    pixel-size dependent information, available in the `face->size'    */
   /*    field.                                                             */
@@ -80,7 +80,7 @@ FT_BEGIN_HEADER
   /*    FT_New_Size                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new size object from a given face object.                */
+  /*    Create a new size object from a given face object.                 */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A handle to a parent face object.                          */
@@ -107,7 +107,7 @@ FT_BEGIN_HEADER
   /*    FT_Done_Size                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Discards a given size object.  Note that @FT_Done_Face             */
+  /*    Discard a given size object.  Note that @FT_Done_Face              */
   /*    automatically discards all size objects allocated with             */
   /*    @FT_New_Size.                                                      */
   /*                                                                       */

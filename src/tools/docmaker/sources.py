@@ -151,26 +151,26 @@ re_source_crossref = re.compile( r'(\W*)(\w*)' )
 #
 # a list of reserved source keywords
 #
-re_source_keywords = re.compile( '''( typedef |
-                                       struct |
-                                       enum   |
-                                       union  |
-                                       const  |
-                                       char   |
-                                       int    |
-                                       short  |
-                                       long   |
-                                       void   |
-                                       signed |
-                                       unsigned |
-                                       \#include |
-                                       \#define  |
-                                       \#undef   |
-                                       \#if      |
-                                       \#ifdef   |
-                                       \#ifndef  |
-                                       \#else    |
-                                       \#endif   )''', re.VERBOSE )
+re_source_keywords = re.compile( '''\\b ( typedef   |
+                                          struct    |
+                                          enum      |
+                                          union     |
+                                          const     |
+                                          char      |
+                                          int       |
+                                          short     |
+                                          long      |
+                                          void      |
+                                          signed    |
+                                          unsigned  |
+                                          \#include |
+                                          \#define  |
+                                          \#undef   |
+                                          \#if      |
+                                          \#ifdef   |
+                                          \#ifndef  |
+                                          \#else    |
+                                          \#endif   ) \\b''', re.VERBOSE )
 
 ################################################################
 ##

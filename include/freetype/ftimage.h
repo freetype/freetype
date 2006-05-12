@@ -313,12 +313,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    n_points   :: The number of points in the outline.                 */
   /*                                                                       */
-  /*    points     :: A pointer to an array of `n_points' FT_Vector        */
+  /*    points     :: A pointer to an array of `n_points' @FT_Vector       */
   /*                  elements, giving the outline's point coordinates.    */
   /*                                                                       */
   /*    tags       :: A pointer to an array of `n_points' chars, giving    */
   /*                  each outline point's type.  If bit 0 is unset, the   */
-  /*                  point is `off' the curve, i.e. a Bezier control      */
+  /*                  point is `off' the curve, i.e., a Bezier control     */
   /*                  point, while it is `on' when set.                    */
   /*                                                                       */
   /*                  Bit 1 is meaningful for `off' points only.  If set,  */
@@ -333,7 +333,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    flags      :: A set of bit flags used to characterize the outline  */
   /*                  and give hints to the scan-converter and hinter on   */
-  /*                  how to convert/grid-fit it.  See FT_Outline_Flags.   */
+  /*                  how to convert/grid-fit it.  See @FT_OUTLINE_FLAGS.  */
   /*                                                                       */
   typedef struct  FT_Outline_
   {
@@ -362,7 +362,7 @@ FT_BEGIN_HEADER
   /*    FT_OUTLINE_NONE           :: Value 0 is reserved.                  */
   /*                                                                       */
   /*    FT_OUTLINE_OWNER          :: If set, this flag indicates that the  */
-  /*                                 outline's field arrays (i.e.          */
+  /*                                 outline's field arrays (i.e.,         */
   /*                                 `points', `flags' & `contours') are   */
   /*                                 `owned' by the outline object, and    */
   /*                                 should thus be freed when it is       */
@@ -611,8 +611,10 @@ FT_BEGIN_HEADER
   /*    version of the original coordinates (this is important for high    */
   /*    accuracy during scan-conversion).  The transformation is simple:   */
   /*                                                                       */
+  /*    {                                                                  */
   /*      x' = (x << shift) - delta                                        */
   /*      y' = (x << shift) - delta                                        */
+  /*    }                                                                  */
   /*                                                                       */
   /*    Set the value of `shift' and `delta' to 0 to get the original      */
   /*    point coordinates.                                                 */
@@ -811,11 +813,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    This structure is used by the span drawing callback type named     */
-  /*    FT_SpanFunc which takes the y-coordinate of the span as a          */
+  /*    @FT_SpanFunc which takes the y-coordinate of the span as a         */
   /*    a parameter.                                                       */
   /*                                                                       */
-  /*    The coverage value is always between 0 and 255, even if the number */
-  /*    of gray levels have been set through FT_Set_Gray_Levels().         */
+  /*    The coverage value is always between 0 and 255.                    */
   /*                                                                       */
   typedef struct  FT_Span_
   {
@@ -853,11 +854,11 @@ FT_BEGIN_HEADER
   /*    given background bitmap, and even perform translucency.            */
   /*                                                                       */
   /*    Note that the `count' field cannot be greater than a fixed value   */
-  /*    defined by the FT_MAX_GRAY_SPANS configuration macro in            */
-  /*    ftoption.h.  By default, this value is set to 32, which means that */
-  /*    if there are more than 32 spans on a given scanline, the callback  */
-  /*    will be called several times with the same `y' parameter in order  */
-  /*    to draw all callbacks.                                             */
+  /*    defined by the `FT_MAX_GRAY_SPANS' configuration macro in          */
+  /*    `ftoption.h'.  By default, this value is set to 32, which means    */
+  /*    that if there are more than 32 spans on a given scanline, the      */
+  /*    callback is called several times with the same `y' parameter in    */
+  /*    order to draw all callbacks.                                       */
   /*                                                                       */
   /*    Otherwise, the callback is only called once per scan-line, and     */
   /*    only for those scanlines that do have `gray' pixels on them.       */
@@ -960,8 +961,8 @@ FT_BEGIN_HEADER
   /*    FT_RASTER_FLAG_CLIP    :: This flag is only used in direct         */
   /*                              rendering mode.  If set, the output will */
   /*                              be clipped to a box specified in the     */
-  /*                              `clip_box' field of the FT_Raster_Params */
-  /*                              structure.                               */
+  /*                              `clip_box' field of the                  */
+  /*                              @FT_Raster_Params structure.             */
   /*                                                                       */
   /*                              Note that by default, the glyph bitmap   */
   /*                              is clipped to the target pixmap, except  */
@@ -992,8 +993,8 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    target      :: The target bitmap.                                  */
   /*                                                                       */
-  /*    source      :: A pointer to the source glyph image (e.g. an        */
-  /*                   FT_Outline).                                        */
+  /*    source      :: A pointer to the source glyph image (e.g., an       */
+  /*                   @FT_Outline).                                       */
   /*                                                                       */
   /*    flags       :: The rendering flags.                                */
   /*                                                                       */
@@ -1014,11 +1015,11 @@ FT_BEGIN_HEADER
   /*                   26.6 fixed-point units).                            */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    An anti-aliased glyph bitmap is drawn if the FT_RASTER_FLAG_AA bit */
-  /*    flag is set in the `flags' field, otherwise a monochrome bitmap    */
-  /*    will be generated.                                                 */
+  /*    An anti-aliased glyph bitmap is drawn if the @FT_RASTER_FLAG_AA    */
+  /*    bit flag is set in the `flags' field, otherwise a monochrome       */
+  /*    bitmap is generated.                                               */
   /*                                                                       */
-  /*    If the FT_RASTER_FLAG_DIRECT bit flag is set in `flags', the       */
+  /*    If the @FT_RASTER_FLAG_DIRECT bit flag is set in `flags', the      */
   /*    raster will call the `gray_spans' callback to draw gray pixel      */
   /*    spans, in the case of an aa glyph bitmap, it will call             */
   /*    `black_spans', and `bit_test' and `bit_set' in the case of a       */
@@ -1065,9 +1066,9 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    The `memory' parameter is a typeless pointer in order to avoid     */
   /*    un-wanted dependencies on the rest of the FreeType code.  In       */
-  /*    practice, it is a FT_Memory, i.e., a handle to the standard        */
-  /*    FreeType memory allocator.  However, this field can be completely  */
-  /*    ignored by a given raster implementation.                          */
+  /*    practice, it is an @FT_Memory object, i.e., a handle to the        */
+  /*    standard FreeType memory allocator.  However, this field can be    */
+  /*    completely ignored by a given raster implementation.               */
   /*                                                                       */
   typedef int
   (*FT_Raster_NewFunc)( void*       memory,
@@ -1162,26 +1163,26 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    raster :: A handle to the raster object.                           */
   /*                                                                       */
-  /*    params :: A pointer to a FT_Raster_Params structure used to store  */
-  /*              the rendering parameters.                                */
+  /*    params :: A pointer to an @FT_Raster_Params structure used to      */
+  /*              store the rendering parameters.                          */
   /*                                                                       */
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The exact format of the source image depends on the raster's glyph */
-  /*    format defined in its FT_Raster_Funcs structure.  It can be an     */
-  /*    FT_Outline or anything else in order to support a large array of   */
+  /*    format defined in its @FT_Raster_Funcs structure.  It can be an    */
+  /*    @FT_Outline or anything else in order to support a large array of  */
   /*    glyph formats.                                                     */
   /*                                                                       */
   /*    Note also that the render function can fail and return a           */
-  /*    FT_Err_Unimplemented_Feature error code if the raster used does    */
+  /*    `FT_Err_Unimplemented_Feature' error code if the raster used does  */
   /*    not support direct composition.                                    */
   /*                                                                       */
   /*    XXX: For now, the standard raster doesn't support direct           */
   /*         composition but this should change for the final release (see */
-  /*         the files demos/src/ftgrays.c and demos/src/ftgrays2.c for    */
-  /*         examples of distinct implementations which support direct     */
+  /*         the files `demos/src/ftgrays.c' and `demos/src/ftgrays2.c'    */
+  /*         for examples of distinct implementations which support direct */
   /*         composition).                                                 */
   /*                                                                       */
   typedef int

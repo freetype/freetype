@@ -122,8 +122,8 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    library     :: A handle to the library object from where the       */
   /*                   outline is allocated.  Note however that the new    */
-  /*                   outline will NOT necessarily be FREED, when         */
-  /*                   destroying the library, by FT_Done_FreeType().      */
+  /*                   outline will *not* necessarily be *freed*, when     */
+  /*                   destroying the library, by @FT_Done_FreeType.       */
   /*                                                                       */
   /*    numPoints   :: The maximal number of points within the outline.    */
   /*                                                                       */
@@ -160,7 +160,7 @@ FT_BEGIN_HEADER
   /*    FT_Outline_Done                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Destroys an outline created with FT_Outline_New().                 */
+  /*    Destroys an outline created with @FT_Outline_New.                  */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library :: A handle of the library object used to allocate the     */
@@ -296,7 +296,7 @@ FT_BEGIN_HEADER
   /*    matrix  :: A pointer to the transformation matrix.                 */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You can use FT_Outline_Translate() if you need to translate the    */
+  /*    You can use @FT_Outline_Translate if you need to translate the     */
   /*    outline's points.                                                  */
   /*                                                                       */
   FT_EXPORT( void )
@@ -335,9 +335,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    Example call:                                                      */
   /*                                                                       */
+  /*    {                                                                  */
   /*      FT_Load_Glyph( face, index, FT_LOAD_DEFAULT );                   */
   /*      if ( face->slot->format == FT_GLYPH_FORMAT_OUTLINE )             */
   /*        FT_Outline_Embolden( &face->slot->outline, strength );         */
+  /*    }                                                                  */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Embolden( FT_Outline*  outline,
@@ -357,7 +359,7 @@ FT_BEGIN_HEADER
   /*    outline :: A pointer to the target outline descriptor.             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This functions toggles the bit flag `FT_OUTLINE_REVERSE_FILL' in   */
+  /*    This functions toggles the bit flag @FT_OUTLINE_REVERSE_FILL in    */
   /*    the outline's `flags' field.                                       */
   /*                                                                       */
   /*    It shouldn't be used by a normal client application, unless it     */
@@ -406,7 +408,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Renders an outline within a bitmap using the current scan-convert. */
-  /*    This functions uses an FT_Raster_Params structure as an argument,  */
+  /*    This functions uses an @FT_Raster_Params structure as an argument, */
   /*    allowing advanced features like direct composition, translucency,  */
   /*    etc.                                                               */
   /*                                                                       */
@@ -416,14 +418,14 @@ FT_BEGIN_HEADER
   /*    outline :: A pointer to the source outline descriptor.             */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    params  :: A pointer to a FT_Raster_Params structure used to       */
+  /*    params  :: A pointer to an @FT_Raster_Params structure used to     */
   /*               describe the rendering operation.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You should know what you are doing and how FT_Raster_Params works  */
+  /*    You should know what you are doing and how @FT_Raster_Params works */
   /*    to use this function.                                              */
   /*                                                                       */
   /*    The field `params.source' will be set to `outline' before the scan */

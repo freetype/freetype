@@ -134,10 +134,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used for bitmap glyph images.  This really is a        */
-  /*    `sub-class' of `FT_GlyphRec'.                                      */
+  /*    `sub-class' of @FT_GlyphRec.                                       */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    root   :: The root FT_Glyph fields.                                */
+  /*    root   :: The root @FT_Glyph fields.                               */
   /*                                                                       */
   /*    left   :: The left-side bearing, i.e., the horizontal distance     */
   /*              from the current pen position to the left border of the  */
@@ -150,11 +150,11 @@ FT_BEGIN_HEADER
   /*    bitmap :: A descriptor for the bitmap.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You can typecast a @FT_Glyph to @FT_BitmapGlyph if you have        */
+  /*    You can typecast an @FT_Glyph to @FT_BitmapGlyph if you have       */
   /*    `glyph->format == FT_GLYPH_FORMAT_BITMAP'.  This lets you access   */
   /*    the bitmap's contents easily.                                      */
   /*                                                                       */
-  /*    The corresponding pixel buffer is always owned by the BitmapGlyph  */
+  /*    The corresponding pixel buffer is always owned by @FT_BitmapGlyph  */
   /*    and is thus created and destroyed with it.                         */
   /*                                                                       */
   typedef struct  FT_BitmapGlyphRec_
@@ -186,10 +186,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used for outline (vectorial) glyph images.  This       */
-  /*    really is a `sub-class' of `FT_GlyphRec'.                          */
+  /*    really is a `sub-class' of @FT_GlyphRec.                           */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    root    :: The root FT_Glyph fields.                               */
+  /*    root    :: The root @FT_Glyph fields.                              */
   /*                                                                       */
   /*    outline :: A descriptor for the outline.                           */
   /*                                                                       */
@@ -334,11 +334,11 @@ FT_BEGIN_HEADER
   /*    @FT_Glyph_BBox_Mode values instead.                                */
   /*                                                                       */
   /* <Values>                                                              */
-  /*   ft_glyph_bbox_unscaled  :: see @FT_GLYPH_BBOX_UNSCALED              */
-  /*   ft_glyph_bbox_subpixels :: see @FT_GLYPH_BBOX_SUBPIXELS             */
-  /*   ft_glyph_bbox_gridfit   :: see @FT_GLYPH_BBOX_GRIDFIT               */
-  /*   ft_glyph_bbox_truncate  :: see @FT_GLYPH_BBOX_TRUNCATE              */
-  /*   ft_glyph_bbox_pixels    :: see @FT_GLYPH_BBOX_PIXELS                */
+  /*   ft_glyph_bbox_unscaled  :: See @FT_GLYPH_BBOX_UNSCALED.             */
+  /*   ft_glyph_bbox_subpixels :: See @FT_GLYPH_BBOX_SUBPIXELS.            */
+  /*   ft_glyph_bbox_gridfit   :: See @FT_GLYPH_BBOX_GRIDFIT.              */
+  /*   ft_glyph_bbox_truncate  :: See @FT_GLYPH_BBOX_TRUNCATE.             */
+  /*   ft_glyph_bbox_pixels    :: See @FT_GLYPH_BBOX_PIXELS.               */
   /*                                                                       */
 #define ft_glyph_bbox_unscaled   FT_GLYPH_BBOX_UNSCALED
 #define ft_glyph_bbox_subpixels  FT_GLYPH_BBOX_SUBPIXELS
@@ -353,7 +353,7 @@ FT_BEGIN_HEADER
   /*    FT_Glyph_Get_CBox                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns a glyph's `control box'.  The control box encloses all the */
+  /*    Return a glyph's `control box'.  The control box encloses all the  */
   /*    outline's points, including Bezier control points.  Though it      */
   /*    coincides with the exact bounding box for most glyphs, it can be   */
   /*    slightly larger in some situations (like when rotating an outline  */
@@ -393,7 +393,7 @@ FT_BEGIN_HEADER
   /*    }                                                                  */
   /*                                                                       */
   /*    Note also that for 26.6 coordinates, if `bbox_mode' is set to      */
-  /*    `FT_GLYPH_BBOX_GRIDFIT', the coordinates will also be grid-fitted, */
+  /*    @FT_GLYPH_BBOX_GRIDFIT, the coordinates will also be grid-fitted,  */
   /*    which corresponds to:                                              */
   /*                                                                       */
   /*    {                                                                  */
@@ -446,7 +446,7 @@ FT_BEGIN_HEADER
   /*    The glyph image is translated with the `origin' vector before      */
   /*    rendering.                                                         */
   /*                                                                       */
-  /*    The first parameter is a pointer to a FT_Glyph handle, that will   */
+  /*    The first parameter is a pointer to an @FT_Glyph handle, that will */
   /*    be replaced by this function.  Typically, you would use (omitting  */
   /*    error handling):                                                   */
   /*                                                                       */
@@ -504,6 +504,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Done_Glyph( FT_Glyph  glyph );
+
+  /* */
 
 
   /* other helpful functions */

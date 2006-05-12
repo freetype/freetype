@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for validating TrueTypeGX/AAT tables (specification).   */
 /*                                                                         */
-/*  Copyright 2004, 2005 by                                                */
+/*  Copyright 2004, 2005, 2006 by                                          */
 /*  Masatake YAMATO, Redhat K.K,                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
@@ -193,7 +193,7 @@ FT_BEGIN_HEADER
   *       The size of the `tables' array.  Normally, `FT_VALIDATE_GX_LENGTH'
   *       should be passed.
   *
-  * @output
+  * @output:
   *    tables ::
   *       The array where all validated sfnt tables are stored.
   *       The array itself must be allocated by a client.
@@ -301,7 +301,7 @@ FT_BEGIN_HEADER
   *       A bit field which specifies the dialect to be validated.  See
   *       @FT_VALIDATE_CKERNXXX for possible values.
   *
-  * @output
+  * @output:
   *    ckern_table ::
   *       A pointer to the kern table.
   *

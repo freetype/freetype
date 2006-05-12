@@ -363,7 +363,7 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   definitions of TrueType 4-byte `tags' used to identify blocks in
+   *   definitions of TrueType four-byte `tags' used to identify blocks in
    *   SFNT-based font formats (i.e., TrueType and OpenType).
    *
    */

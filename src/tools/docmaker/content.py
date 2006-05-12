@@ -218,7 +218,7 @@ class DocField:
 
 # this regular expression is used to detect field definitions
 #
-re_field  = re.compile( r"\s*(\w*)\s*::" )
+re_field  = re.compile( r"\s*(\w*|\w(\w|\.)*\w)\s*::" )
 
 
 

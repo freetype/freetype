@@ -1,3 +1,13 @@
+2006-05-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/docmaker/sources.py (re_source_keywords): Add word
+	boundary markers.
+	* src/tools/docmaker/content.py (re_field): Allow `.' in field names
+	(but not at the beginning or end).
+
+	* include/freetype/*: Many minor documentation improvements (adding
+	links, spelling errors, etc.).
+
 2006-05-11  Werner Lemberg  <wl@gnu.org>
 
 	* README: Minor updates.

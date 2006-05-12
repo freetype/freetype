@@ -57,7 +57,7 @@ FT_BEGIN_HEADER
   /*    FT_Bitmap_New                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initialize a pointer to an FT_Bitmap structure.                    */
+  /*    Initialize a pointer to an @FT_Bitmap structure.                   */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    abitmap :: A pointer to the bitmap structure.                      */
@@ -121,7 +121,7 @@ FT_BEGIN_HEADER
   /*    or equal to 8 if bitmap is of pixel_mode @FT_PIXEL_MODE_MONO.      */
   /*                                                                       */
   /*    If you want to embolden the bitmap owned by a @FT_GlyphSlotRec,    */
-  /*    you should call @FT_GlyphSlot_Own_Bitmap on the slot first.        */
+  /*    you should call `FT_GlyphSlot_Own_Bitmap' on the slot first.       */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Embolden( FT_Library  library,

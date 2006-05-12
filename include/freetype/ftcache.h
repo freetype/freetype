@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
    *   objects, as well as caching information like character maps and glyph
    *   images while limiting their maximum memory usage.
    *
-   *   Note that all types and functions begin with the FTC_ prefix.
+   *   Note that all types and functions begin with the `FTC_' prefix.
    *
    *   The cache is highly portable and thus doesn't know anything about the
    *   fonts installed on your system, or how to access them.  This implies
@@ -384,9 +384,9 @@ FT_BEGIN_HEADER
   /*    _within_ the lookup and force incremental flushes of the cache     */
   /*    until enough memory is released for the lookup to succeed.         */
   /*                                                                       */
-  /*    If a lookup fails with @FT_Err_Out_Of_Memory the cache has already */
-  /*    been completely flushed, and still no memory was available for the */
-  /*    operation.                                                         */
+  /*    If a lookup fails with `FT_Err_Out_Of_Memory' the cache has        */
+  /*    already been completely flushed, and still no memory was available */
+  /*    for the operation.                                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_LookupFace( FTC_Manager  manager,
@@ -444,7 +444,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Retrieve the @FT_Size object that corresponds to a given           */
-  /*    @FTC_Scaler through a cache manager.                               */
+  /*    @FTC_ScalerRec pointer through a cache manager.                    */
   /*                                                                       */
   /* <Input>                                                               */
   /*    manager :: A handle to the cache manager.                          */
@@ -470,9 +470,9 @@ FT_BEGIN_HEADER
   /*    _within_ the lookup and force incremental flushes of the cache     */
   /*    until enough memory is released for the lookup to succeed.         */
   /*                                                                       */
-  /*    If a lookup fails with FT_Err_Out_Of_Memory the cache has already  */
-  /*    been completely flushed, and still no memory is available for the  */
-  /*    operation.                                                         */
+  /*    If a lookup fails with `FT_Err_Out_Of_Memory' the cache has        */
+  /*    already been completely flushed, and still no memory is available  */
+  /*    for the operation.                                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_LookupSize( FTC_Manager  manager,
@@ -759,12 +759,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    If `anode' is _not_ NULL, it receives the address of the cache     */
   /*    node containing the glyph image, after increasing its reference    */
-  /*    count.  This ensures that the node (as well as the FT_Glyph) will  */
+  /*    count.  This ensures that the node (as well as the @FT_Glyph) will */
   /*    always be kept in the cache until you call @FTC_Node_Unref to      */
   /*    `release' it.                                                      */
   /*                                                                       */
   /*    If `anode' is NULL, the cache node is left unchanged, which means  */
-  /*    that the FT_Glyph could be flushed out of the cache on the next    */
+  /*    that the @FT_Glyph could be flushed out of the cache on the next   */
   /*    call to one of the caching sub-system APIs.  Don't assume that it  */
   /*    is persistent!                                                     */
   /*                                                                       */
