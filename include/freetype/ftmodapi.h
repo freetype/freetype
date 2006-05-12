@@ -316,7 +316,7 @@ FT_BEGIN_HEADER
    *   The TrueType Engine
    *
    * @abstract:
-   *   TrueType bytecode support
+   *   TrueType bytecode support.
    *
    * @description:
    *   This section contains a function used to query the level of TrueType

@@ -516,9 +516,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    last         :: The last point position.                           */
   /*                                                                       */
-  /*    scale_x      :: The horizontal scale (FUnits to sub-pixels).       */
+  /*    scale_x      :: The horizontal scaling value (FUnits to            */
+  /*                    sub-pixels).                                       */
   /*                                                                       */
-  /*    scale_y      :: The vertical scale (FUnits to sub-pixels).         */
+  /*    scale_y      :: The vertical scaling value (FUnits to sub-pixels). */
   /*                                                                       */
   /*    pos_x        :: The horizontal translation (if composite glyph).   */
   /*                                                                       */

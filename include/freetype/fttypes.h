@@ -273,8 +273,8 @@ FT_BEGIN_HEADER
   /*    FT_Fixed                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This type is used to store 16.16 fixed float values, like scales   */
-  /*    or matrix coefficients.                                            */
+  /*    This type is used to store 16.16 fixed float values, like scaling  */
+  /*    values or matrix coefficients.                                     */
   /*                                                                       */
   typedef signed long  FT_Fixed;
 
@@ -409,7 +409,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Describes a function used to destroy the `client' data of any      */
-  /*    FreeType object.  See the description of the FT_Generic type for   */
+  /*    FreeType object.  See the description of the @FT_Generic type for  */
   /*    details of usage.                                                  */
   /*                                                                       */
   /* <Input>                                                               */
@@ -461,7 +461,7 @@ FT_BEGIN_HEADER
   /*    FT_MAKE_TAG                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This macro converts four letter tags which are used to label       */
+  /*    This macro converts four-letter tags which are used to label       */
   /*    TrueType tables into an unsigned long to be used within FreeType.  */
   /*                                                                       */
   /* <Note>                                                                */

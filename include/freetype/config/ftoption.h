@@ -471,7 +471,7 @@ FT_BEGIN_HEADER
   /* component offsets in composite glyphs.                                */
   /*                                                                       */
   /* Apple and MS disagree on the default behavior of component offsets    */
-  /* in composites.  Apple says that they should be scaled by the scale    */
+  /* in composites.  Apple says that they should be scaled by the scaling  */
   /* factors in the transformation matrix (roughly, it's more complex)     */
   /* while MS says they should not.  OpenType defines two bits in the      */
   /* composite flags array which can be used to disambiguate, but old      */

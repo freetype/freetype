@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
   *    Incremental Loading
   *
   * @abstract:
-  *    Custom Glyph Loading
+  *    Custom Glyph Loading.
   *
   * @description:
   *   This section contains various functions used to perform so-called

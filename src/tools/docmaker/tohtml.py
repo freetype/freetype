@@ -155,7 +155,7 @@ class HtmlFormatter(Formatter):
         self.html_header   = html_header_1 + project_title + html_header_2 + \
                              project_title + html_header_3
 
-        self.html_footer = "<center><font size=""-2"">generated on " +   \
+        self.html_footer = "<center><font size=""-2"">generated on " +      \
                             time.asctime( time.localtime( time.time() ) ) + \
                            "</font></center>" + html_footer
 
@@ -189,23 +189,27 @@ class HtmlFormatter(Formatter):
             try:
                 name = m.group(1)
                 rest = m.group(2)
-                block = self.identifiers[ name ]
+                block = self.identifiers[name]
                 url   = self.make_block_url( block )
                 return '<a href="' + url + '">' + name + '</a>' + rest
             except:
                 # we detected a cross-reference to an unknown item
+                sys.stderr.write( \
+                   "WARNING: undefined cross reference '" + name + "'.\n" )
                 return '?' + name + '?' + rest
 
         # look for italics and bolds
         m = re_italic.match( word )
         if m:
             name = m.group(1)
-            return '<i>' + name + '</i>'
+            rest = m.group(3)
+            return '<i>' + name + '</i>' + rest
 
         m = re_bold.match( word )
         if m:
             name = m.group(1)
-            return '<b>' + name + '</b>'
+            rest = m.group(3)
+            return '<b>' + name + '</b>' + rest
 
         return html_quote(word)
 
@@ -283,9 +287,9 @@ class HtmlFormatter(Formatter):
                     result = result + prefix + '<a href="' + \
                              self.make_block_url(block) + '">' + name + '</a>'
                 else:
-                    result = result + html_quote(line[ : length ])
+                    result = result + html_quote(line[:length])
 
-                line = line[ length : ]
+                line = line[length:]
             else:
                 result = result + html_quote(line)
                 line   = []
@@ -336,9 +340,9 @@ class HtmlFormatter(Formatter):
         self.index_items = {}
 
     def  index_name_enter( self, name ):
-        block = self.identifiers[ name ]
+        block = self.identifiers[name]
         url   = self.make_block_url( block )
-        self.index_items[ name ] = url
+        self.index_items[name] = url
 
     def  index_exit( self ):
 
@@ -352,8 +356,8 @@ class HtmlFormatter(Formatter):
             for c in range(self.columns):
                 i = r + c*rows
                 if i < count:
-                    bname = self.block_index[ r + c*rows ]
-                    url   = self.index_items[ bname ]
+                    bname = self.block_index[r + c * rows]
+                    url   = self.index_items[bname]
                     line = line + '<td><a href="' + url + '">' + bname + '</a></td>'
                 else:
                     line = line + '<td></td>'

@@ -490,7 +490,7 @@ FT_BEGIN_HEADER
   /*    FT_ENC_TAG                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This macro converts four letter tags into an unsigned long.  It is */
+  /*    This macro converts four-letter tags into an unsigned long.  It is */
   /*    used to define `encoding' identifiers (see @FT_Encoding).          */
   /*                                                                       */
   /* <Note>                                                                */
@@ -498,7 +498,9 @@ FT_BEGIN_HEADER
   /*    should redefine this macro in case of problems to something like   */
   /*    this:                                                              */
   /*                                                                       */
+  /*    {                                                                  */
   /*      #define FT_ENC_TAG( value, a, b, c, d )  value                   */
+  /*    }                                                                  */
   /*                                                                       */
   /*    to get a simple enumeration without assigning special numbers.     */
   /*                                                                       */
@@ -621,23 +623,24 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   FT_ENCODING_NONE is set by the BDF and PCF drivers if the charmap   */
   /*   is neither Unicode nor ISO-8859-1 (otherwise it is set to           */
-  /*   FT_ENCODING_UNICODE).  Use `FT_Get_BDF_Charset_ID' to find out      */
-  /*   which encoding is really present.  If, for example, the             */
-  /*   `cs_registry' field is `KOI8' and the `cs_encoding' field is `R',   */
-  /*   the font is encoded in KOI8-R.                                      */
+  /*   FT_ENCODING_UNICODE).  Use @FT_Get_BDF_Charset_ID to find out which */
+  /*   encoding is really present.  If, for example, the `cs_registry'     */
+  /*   field is `KOI8' and the `cs_encoding' field is `R', the font is     */
+  /*   encoded in KOI8-R.                                                  */
   /*                                                                       */
   /*   FT_ENCODING_NONE is always set (with a single exception) by the     */
-  /*   winfonts driver.  Use `FT_Get_WinFNT_Header' and examine the        */
-  /*   `charset' field of the `FT_WinFNT_HeaderRec' structure to find out  */
-  /*   which encoding is really present.  For example, FT_WinFNT_ID_CP1251 */
-  /*   (204) means Windows code page 1251 (for Russian).                   */
+  /*   winfonts driver.  Use @FT_Get_WinFNT_Header and examine the         */
+  /*   `charset' field of the @FT_WinFNT_HeaderRec structure to find out   */
+  /*   which encoding is really present.  For example,                     */
+  /*   @FT_WinFNT_ID_CP1251 (204) means Windows code page 1251 (for        */
+  /*   Russian).                                                           */
   /*                                                                       */
-  /*   FT_ENCODING_NONE is set if `platform_id' is `TT_PLATFORM_MACINTOSH' */
-  /*   and `encoding_id' is not `TT_MAC_ID_ROMAN' (otherwise it is set to  */
+  /*   FT_ENCODING_NONE is set if `platform_id' is @TT_PLATFORM_MACINTOSH  */
+  /*   and `encoding_id' is not @TT_MAC_ID_ROMAN (otherwise it is set to   */
   /*   FT_ENCODING_APPLE_ROMAN).                                           */
   /*                                                                       */
-  /*   If `platform_id' is `TT_PLATFORM_MACINTOSH', use the function       */
-  /*   `FT_Get_CMap_Language_ID' to query the Mac language ID which may be */
+  /*   If `platform_id' is @TT_PLATFORM_MACINTOSH, use the function  c     */
+  /*   @FT_Get_CMap_Language_ID  to query the Mac language ID which may be */
   /*   needed to be able to distinguish Apple encoding variants.  See      */
   /*                                                                       */
   /*     http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/README.TXT   */
@@ -645,9 +648,9 @@ FT_BEGIN_HEADER
   /*   to get an idea how to do that.  Basically, if the language ID is 0, */
   /*   dont use it, otherwise subtract 1 from the language ID.  Then       */
   /*   examine `encoding_id'.  If, for example, `encoding_id' is           */
-  /*   `TT_MAC_ID_ROMAN' and the language ID (minus 1) is                  */
+  /*   @TT_MAC_ID_ROMAN and the language ID (minus 1) is                   */
   /*   `TT_MAC_LANGID_GREEK', it is the Greek encoding, not Roman.         */
-  /*   `TT_MAC_ID_ARABIC' with `TT_MAC_LANGID_FARSI' means the Farsi       */
+  /*   @TT_MAC_ID_ARABIC with `TT_MAC_LANGID_FARSI' means the Farsi        */
   /*   variant the Arabic encoding.                                        */
   /*                                                                       */
   typedef enum  FT_Encoding_
@@ -756,7 +759,7 @@ FT_BEGIN_HEADER
   /*    FT_Face_Internal                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An opaque handle to an FT_Face_InternalRec structure, used to      */
+  /*    An opaque handle to an `FT_Face_InternalRec' structure, used to    */
   /*    model private data of a given @FT_Face object.                     */
   /*                                                                       */
   /*    This structure might change between releases of FreeType 2 and is  */
@@ -834,16 +837,17 @@ FT_BEGIN_HEADER
   /*                           @FT_Generic type description.               */
   /*                                                                       */
   /*    bbox                :: The font bounding box.  Coordinates are     */
-  /*                           expressed in font units (see units_per_EM). */
-  /*                           The box is large enough to contain any      */
-  /*                           glyph from the font.  Thus, bbox.yMax can   */
-  /*                           be seen as the `maximal ascender', and      */
-  /*                           bbox.yMin as the `minimal descender'. Only  */
-  /*                           relevant for scalable formats.              */
+  /*                           expressed in font units (see                */
+  /*                           `units_per_EM').  The box is large enough   */
+  /*                           to contain any glyph from the font.  Thus,  */
+  /*                           `bbox.yMax' can be seen as the `maximal     */
+  /*                           ascender', and `bbox.yMin' as the `minimal  */
+  /*                           descender'.  Only relevant for scalable     */
+  /*                           formats.                                    */
   /*                                                                       */
   /*    units_per_EM        :: The number of font units per EM square for  */
   /*                           this face.  This is typically 2048 for      */
-  /*                           TrueType fonts, and 1000 for Type1 fonts.   */
+  /*                           TrueType fonts, and 1000 for Type 1 fonts.  */
   /*                           Only relevant for scalable formats.         */
   /*                                                                       */
   /*    ascender            :: The typographic ascender of the face,       */
@@ -1240,14 +1244,15 @@ FT_BEGIN_HEADER
   /*                    hence the term `ppem' (pixels per EM).  It is also */
   /*                    referred to as `nominal height'.                   */
   /*                                                                       */
-  /*    x_scale      :: A 16.16 fractional scale used to convert           */
+  /*    x_scale      :: A 16.16 fractional scaling value used to convert   */
   /*                    horizontal metrics from font units to 26.6         */
   /*                    fractional pixels.  Only relevant for scalable     */
   /*                    font formats.                                      */
   /*                                                                       */
-  /*    y_scale      :: A 16.16 fractional scale used to convert vertical  */
-  /*                    metrics from font units to 26.6 fractional pixels. */
-  /*                    Only relevant for scalable font formats.           */
+  /*    y_scale      :: A 16.16 fractional scaling value used to convert   */
+  /*                    vertical metrics from font units to 26.6           */
+  /*                    fractional pixels.  Only relevant for scalable     */
+  /*                    font formats.                                      */
   /*                                                                       */
   /*    ascender     :: The ascender in 26.6 fractional pixels.  See       */
   /*                    @FT_FaceRec for the details.                       */
@@ -1262,8 +1267,8 @@ FT_BEGIN_HEADER
   /*                    pixels.  See @FT_FaceRec for the details.          */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The scales, if relevant, are determined first during a size        */
-  /*    changing operation.  The remaining fields are then set by the      */
+  /*    The scaling values, if relevant, are determined first during a     */
+  /*    size changing operation.  The remaining fields are then set by the */
   /*    driver.  For scalable formats, they are usually set to scaled      */
   /*    values of the corresponding fields in @FT_FaceRec.                 */
   /*                                                                       */
@@ -1280,8 +1285,8 @@ FT_BEGIN_HEADER
     FT_UShort  x_ppem;      /* horizontal pixels per EM               */
     FT_UShort  y_ppem;      /* vertical pixels per EM                 */
 
-    FT_Fixed   x_scale;     /* two scales used to convert font units  */
-    FT_Fixed   y_scale;     /* to 26.6 fractional pixels              */
+    FT_Fixed   x_scale;     /* scaling values used to convert font    */
+    FT_Fixed   y_scale;     /* units to 26.6 fractional pixels        */
 
     FT_Pos     ascender;    /* ascender in 26.6 frac. pixels          */
     FT_Pos     descender;   /* descender in 26.6 frac. pixels         */
@@ -2006,35 +2011,36 @@ FT_BEGIN_HEADER
   /* <Values>                                                              */
   /*    FT_SIZE_REQUEST_TYPE_NOMINAL ::                                    */
   /*      The nominal size.  The `units_per_EM' field of @FT_FaceRec is    */
-  /*      used to determine both scales.                                   */
+  /*      used to determine both scaling values.                           */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_REAL_DIM ::                                   */
   /*      The real dimension.  The sum of the the `Ascender' and (minus    */
   /*      of) the `Descender' fields of @FT_FaceRec are used to determine  */
-  /*      both scales.                                                     */
+  /*      both scaling values.                                             */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_BBOX ::                                       */
   /*      The font bounding box.  The width and height of the `bbox' field */
   /*      of @FT_FaceRec are used to determine the horizontal and vertical */
-  /*      scales respectively.                                             */
+  /*      scaling value, respectively.                                     */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_CELL ::                                       */
   /*      The `max_advance_width' field of @FT_FaceRec is used to          */
-  /*      determine the horizontal scale, and the vertical scale is        */
-  /*      determined the same way as @FT_SIZE_REQUEST_TYPE_REAL_DIM does.  */
-  /*      Finally, both scales are set to the smaller one.  This type is   */
-  /*      useful if you want to specify the font size for, say, a window   */
-  /*      of a given dimension and 80x24 cells.                            */
+  /*      determine the horizontal scaling value; the vertical scaling     */
+  /*      value is determined the same way as                              */
+  /*      @FT_SIZE_REQUEST_TYPE_REAL_DIM does.  Finally, both scaling      */
+  /*      values are set to the smaller one.  This type is useful if you   */
+  /*      want to specify the font size for, say, a window of a given      */
+  /*      dimension and 80x24 cells.                                       */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_SCALES ::                                     */
-  /*      Specify the scales directly.                                     */
+  /*      Specify the scaling values directly.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The above descriptions only apply to scalable formats.  For bitmap */
   /*    formats, the behavior is up to the driver.                         */
   /*                                                                       */
   /*    See the note section of @FT_Size_Metrics if you wonder how size    */
-  /*    requesting relates to scales.                                      */
+  /*    requesting relates to scaling values.                              */
   /*                                                                       */
   typedef enum  FT_Size_Request_Type_
   {
@@ -2073,8 +2079,8 @@ FT_BEGIN_HEADER
   /*                      value.                                           */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    If `width' is zero, then the horizontal scale is set equal to the  */
-  /*    vertical scale, and vice versa.                                    */
+  /*    If `width' is zero, then the horizontal scaling value is set      */
+  /*    equal to the vertical scaling value, and vice versa.               */
   /*                                                                       */
   typedef struct  FT_Size_RequestRec_
   {
@@ -2699,7 +2705,7 @@ FT_BEGIN_HEADER
   /*    right_glyph :: The index of the right glyph in the kern pair.      */
   /*                                                                       */
   /*    kern_mode   :: See @FT_Kerning_Mode for more information.          */
-  /*                   Determines the scale/dimension of the returned      */
+  /*                   Determines the scale and dimension of the returned  */
   /*                   kerning vector.                                     */
   /*                                                                       */
   /* <Output>                                                              */

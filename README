@@ -17,8 +17,10 @@
 
   Read the files `docs/INSTALL' for installation instructions.
 
-  Note  that  the FreeType 2  documentation  (together with  signature
-  files) is now available as a separate package from our sites.  Go to
+  The FreeType 2 API reference is located in `docs/reference'; use the
+  file   `ft2-doc.html'   as   the   top  entry   point.    Additional
+  documentation is available as a separate package from our sites.  Go
+  to
 
     http://download.savannah.gnu.org/releases/freetype/
 

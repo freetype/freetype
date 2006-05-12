@@ -1,3 +1,16 @@
+2006-05-11  Werner Lemberg  <wl@gnu.org>
+
+	* README: Minor updates.
+
+	* include/freetype/*: s/scale/scaling value/ where appropriate.
+	Many other minor documentation improvements.
+
+	* src/tools/docmaker/sources.py (re_italic, re_bold): Handle
+	trailing punctuation.
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::make_html_word): Add
+	warning message for undefined cross references.
+	Update handling of re_italic and re_bold.
+
 2006-05-11  Masatake YAMATO  <jet@gyve.org>
  
 	* builds/unix/ftsystem.c (FT_Stream_Open): Check errno only if 

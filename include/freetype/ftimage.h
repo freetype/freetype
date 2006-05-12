@@ -144,15 +144,15 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_PIXEL_MODE_LCD ::                                               */
   /*      An 8-bit bitmap, used to represent RGB or BGR decimated glyph    */
-  /*      images used for display on LCD displays; the bitmap's width is   */
-  /*      three times wider than the original glyph image.  See also       */
+  /*      images used for display on LCD displays; the bitmap is three     */
+  /*      times wider than the original glyph image.  See also             */
   /*      @FT_RENDER_MODE_LCD.                                             */
   /*                                                                       */
   /*    FT_PIXEL_MODE_LCD_V ::                                             */
   /*      An 8-bit bitmap, used to represent RGB or BGR decimated glyph    */
-  /*      images used for display on rotated LCD displays; the bitmap's    */
-  /*      height is three times taller than the original glyph image.      */
-  /*      See also @FT_RENDER_MODE_LCD_V.                                  */
+  /*      images used for display on rotated LCD displays; the bitmap      */
+  /*      is three times taller than the original glyph image.  See also   */
+  /*      @FT_RENDER_MODE_LCD_V.                                           */
   /*                                                                       */
   typedef enum  FT_Pixel_Mode_
   {
@@ -179,11 +179,11 @@ FT_BEGIN_HEADER
   /*    @FT_Pixel_Mode values instead.                                     */
   /*                                                                       */
   /* <Values>                                                              */
-  /*    ft_pixel_mode_none  :: see @FT_PIXEL_MODE_NONE                     */
-  /*    ft_pixel_mode_mono  :: see @FT_PIXEL_MODE_MONO                     */
-  /*    ft_pixel_mode_grays :: see @FT_PIXEL_MODE_GRAY                     */
-  /*    ft_pixel_mode_pal2  :: see @FT_PIXEL_MODE_GRAY2                    */
-  /*    ft_pixel_mode_pal4  :: see @FT_PIXEL_MODE_GRAY4                    */
+  /*    ft_pixel_mode_none  :: See @FT_PIXEL_MODE_NONE.                    */
+  /*    ft_pixel_mode_mono  :: See @FT_PIXEL_MODE_MONO.                    */
+  /*    ft_pixel_mode_grays :: See @FT_PIXEL_MODE_GRAY.                    */
+  /*    ft_pixel_mode_pal2  :: See @FT_PIXEL_MODE_GRAY2.                   */
+  /*    ft_pixel_mode_pal4  :: See @FT_PIXEL_MODE_GRAY4.                   */
   /*                                                                       */
 #define ft_pixel_mode_none   FT_PIXEL_MODE_NONE
 #define ft_pixel_mode_mono   FT_PIXEL_MODE_MONO
@@ -203,8 +203,8 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    THIS TYPE IS DEPRECATED.  DO NOT USE IT!                           */
   /*                                                                       */
-  /*    An enumeration type used to describe the format of a bitmap        */
-  /*    palette, used with ft_pixel_mode_pal4 and ft_pixel_mode_pal8.      */
+  /*    An enumeration type to describe the format of a bitmap palette,    */
+  /*    used with ft_pixel_mode_pal4 and ft_pixel_mode_pal8.               */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    ft_palette_mode_rgb  :: The palette is an array of 3-bytes RGB     */
@@ -258,7 +258,7 @@ FT_BEGIN_HEADER
   /*                    most cases.                                        */
   /*                                                                       */
   /*    num_grays    :: This field is only used with                       */
-  /*                    `FT_PIXEL_MODE_GRAY'; it gives the number of gray  */
+  /*                    @FT_PIXEL_MODE_GRAY; it gives the number of gray   */
   /*                    levels used in the bitmap.                         */
   /*                                                                       */
   /*    pixel_mode   :: The pixel mode, i.e., how pixel bits are stored.   */
@@ -644,14 +644,16 @@ FT_BEGIN_HEADER
   /*    FT_IMAGE_TAG                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This macro converts four letter tags into an unsigned long.        */
+  /*    This macro converts four-letter tags to an unsigned long type.     */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Since many 16bit compilers don't like 32bit enumerations, you      */
   /*    should redefine this macro in case of problems to something like   */
   /*    this:                                                              */
   /*                                                                       */
+  /*    {                                                                  */
   /*      #define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )  value         */
+  /*    }                                                                  */
   /*                                                                       */
   /*    to get a simple enumeration without assigning special numbers.     */
   /*                                                                       */
@@ -677,7 +679,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_GLYPH_FORMAT_NONE ::                                            */
-  /*      The value 0 is reserved and does describe a glyph format.        */
+  /*      The value 0 is reserved.                                         */
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_COMPOSITE ::                                       */
   /*      The glyph image is a composite of several other images.  This    */
@@ -690,13 +692,13 @@ FT_BEGIN_HEADER
   /*      the @FT_GlyphSlotRec structure to read it.                       */
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_OUTLINE ::                                         */
-  /*      The glyph image is a vertorial outline made of line segments     */
+  /*      The glyph image is a vectorial outline made of line segments     */
   /*      and Bezier arcs; it can be described as an @FT_Outline; you      */
   /*      generally want to access the `outline' field of the              */
   /*      @FT_GlyphSlotRec structure to read it.                           */
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_PLOTTER ::                                         */
-  /*      The glyph image is a vectorial path with no inside/outside       */
+  /*      The glyph image is a vectorial path with no inside and outside   */
   /*      contours.  Some Type 1 fonts, like those in the Hershey family,  */
   /*      contain glyphs in this format.  These are described as           */
   /*      @FT_Outline, but FreeType isn't currently capable of rendering   */
@@ -724,11 +726,11 @@ FT_BEGIN_HEADER
   /*    @FT_Glyph_Format values instead.                                   */
   /*                                                                       */
   /* <Values>                                                              */
-  /*    ft_glyph_format_none      :: see @FT_GLYPH_FORMAT_NONE             */
-  /*    ft_glyph_format_composite :: see @FT_GLYPH_FORMAT_COMPOSITE        */
-  /*    ft_glyph_format_bitmap    :: see @FT_GLYPH_FORMAT_BITMAP           */
-  /*    ft_glyph_format_outline   :: see @FT_GLYPH_FORMAT_OUTLINE          */
-  /*    ft_glyph_format_plotter   :: see @FT_GLYPH_FORMAT_PLOTTER          */
+  /*    ft_glyph_format_none      :: See @FT_GLYPH_FORMAT_NONE.            */
+  /*    ft_glyph_format_composite :: See @FT_GLYPH_FORMAT_COMPOSITE.       */
+  /*    ft_glyph_format_bitmap    :: See @FT_GLYPH_FORMAT_BITMAP.          */
+  /*    ft_glyph_format_outline   :: See @FT_GLYPH_FORMAT_OUTLINE.         */
+  /*    ft_glyph_format_plotter   :: See @FT_GLYPH_FORMAT_PLOTTER.         */
   /*                                                                       */
 #define ft_glyph_format_none       FT_GLYPH_FORMAT_NONE
 #define ft_glyph_format_composite  FT_GLYPH_FORMAT_COMPOSITE
