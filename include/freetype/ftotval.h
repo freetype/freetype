@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for validating OpenType tables (specification).         */
 /*                                                                         */
-/*  Copyright 2004, 2005 by                                                */
+/*  Copyright 2004, 2005, 2006 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -147,7 +147,7 @@ FT_BEGIN_HEADER
   *   otherwise.
   *
   *   After use, the application should deallocate the five tables with
-  *   FT_OpenType_Free().  A NULL value indicates that the table either
+  *   @FT_OpenType_Free.  A NULL value indicates that the table either
   *   doesn't exist in the font, or the application hasn't asked for
   *   validation.
   */
@@ -176,11 +176,11 @@ FT_BEGIN_HEADER
   *
   *    table ::
   *       The pointer to the buffer that is allocated by
-  *       FT_OpenType_Validate().
+  *       @FT_OpenType_Validate.
   *
   * @note:
   *   This function must be used to free the buffer allocated by
-  *   FT_OpenType_Validate() only.
+  *   @FT_OpenType_Validate only.
   */
   FT_EXPORT( void )
   FT_OpenType_Free( FT_Face   face,

@@ -30,6 +30,7 @@
   /* The `raster' component duplicates some of the declarations in         */
   /* freetype.h for stand-alone use if _FREETYPE_ isn't defined.           */
   /*                                                                       */
+  /*************************************************************************/
 
 
 #ifndef __FREETYPE_H__
@@ -43,85 +44,6 @@
 
 
 FT_BEGIN_HEADER
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    version                                                            */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    FreeType Version                                                   */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    Functions and macros related to FreeType versions.                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Note that those functions and macros are of limited use because    */
-  /*    even a new release of FreeType with only documentation changes     */
-  /*    increases the version number.                                      */
-  /*                                                                       */
-  /*************************************************************************/
-
-
-  /*************************************************************************
-   *
-   *  @enum:
-   *    FREETYPE_XXX
-   *
-   *  @description:
-   *    These three macros identify the FreeType source code version.
-   *    Use @FT_Library_Version to access them at runtime.
-   *
-   *  @values:
-   *    FREETYPE_MAJOR :: The major version number.
-   *    FREETYPE_MINOR :: The minor version number.
-   *    FREETYPE_PATCH :: The patch level.
-   *
-   *  @note:
-   *    The version number of FreeType if built as a dynamic link library
-   *    with the `libtool' package is _not_ controlled by these three
-   *    macros.
-   */
-#define FREETYPE_MAJOR  2
-#define FREETYPE_MINOR  2
-#define FREETYPE_PATCH  1
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Library_Version                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Return the version of the FreeType library being used.  This is    */
-  /*    useful when dynamically linking to the library, since one cannot   */
-  /*    use the macros @FREETYPE_MAJOR, @FREETYPE_MINOR, and               */
-  /*    @FREETYPE_PATCH.                                                   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A source library handle.                                */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    amajor  :: The major version number.                               */
-  /*                                                                       */
-  /*    aminor  :: The minor version number.                               */
-  /*                                                                       */
-  /*    apatch  :: The patch version number.                               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The reason why this function takes a `library' argument is because */
-  /*    certain programs implement library initialization in a custom way  */
-  /*    that doesn't use @FT_Init_FreeType.                                */
-  /*                                                                       */
-  /*    In such cases, the library version might not be available before   */
-  /*    the library object has been created.                               */
-  /*                                                                       */
-  FT_EXPORT( void )
-  FT_Library_Version( FT_Library   library,
-                      FT_Int      *amajor,
-                      FT_Int      *aminor,
-                      FT_Int      *apatch );
 
 
 
@@ -3343,6 +3265,86 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Vector_Transform( FT_Vector*        vec,
                        const FT_Matrix*  matrix );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    version                                                            */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    FreeType Version                                                   */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    Functions and macros related to FreeType versions.                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Note that those functions and macros are of limited use because    */
+  /*    even a new release of FreeType with only documentation changes     */
+  /*    increases the version number.                                      */
+  /*                                                                       */
+  /*************************************************************************/
+
+
+  /*************************************************************************
+   *
+   *  @enum:
+   *    FREETYPE_XXX
+   *
+   *  @description:
+   *    These three macros identify the FreeType source code version.
+   *    Use @FT_Library_Version to access them at runtime.
+   *
+   *  @values:
+   *    FREETYPE_MAJOR :: The major version number.
+   *    FREETYPE_MINOR :: The minor version number.
+   *    FREETYPE_PATCH :: The patch level.
+   *
+   *  @note:
+   *    The version number of FreeType if built as a dynamic link library
+   *    with the `libtool' package is _not_ controlled by these three
+   *    macros.
+   */
+#define FREETYPE_MAJOR  2
+#define FREETYPE_MINOR  2
+#define FREETYPE_PATCH  1
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Library_Version                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return the version of the FreeType library being used.  This is    */
+  /*    useful when dynamically linking to the library, since one cannot   */
+  /*    use the macros @FREETYPE_MAJOR, @FREETYPE_MINOR, and               */
+  /*    @FREETYPE_PATCH.                                                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A source library handle.                                */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    amajor  :: The major version number.                               */
+  /*                                                                       */
+  /*    aminor  :: The minor version number.                               */
+  /*                                                                       */
+  /*    apatch  :: The patch version number.                               */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The reason why this function takes a `library' argument is because */
+  /*    certain programs implement library initialization in a custom way  */
+  /*    that doesn't use @FT_Init_FreeType.                                */
+  /*                                                                       */
+  /*    In such cases, the library version might not be available before   */
+  /*    the library object has been created.                               */
+  /*                                                                       */
+  FT_EXPORT( void )
+  FT_Library_Version( FT_Library   library,
+                      FT_Int      *amajor,
+                      FT_Int      *aminor,
+                      FT_Int      *apatch );
+
 
   /* */
 

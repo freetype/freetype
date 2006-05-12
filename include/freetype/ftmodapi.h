@@ -108,8 +108,9 @@ FT_BEGIN_HEADER
   /*    module_version  :: The version, as a 16.16 fixed number            */
   /*                       (major.minor).                                  */
   /*                                                                       */
-  /*    module_requires :: The version of FreeType this module requires    */
-  /*                       (starts at version 2.0, i.e., 0x20000)          */
+  /*    module_requires :: The version of FreeType this module requires,   */
+  /*                       as a 16.16 fixed number (major.minor).  Starts  */
+  /*                       at version 2.0, i.e., 0x20000.                  */
   /*                                                                       */
   /*    module_init     :: A function used to initialize (not create) a    */
   /*                       new module object.                              */
@@ -180,8 +181,8 @@ FT_BEGIN_HEADER
   /*    A module handle.  0 if none was found.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You should better be familiar with FreeType internals to know      */
-  /*    which module to look for :-)                                       */
+  /*    FreeType's internal modules aren't documented very well, and you   */
+  /*    should look up the source code for details.                        */
   /*                                                                       */
   FT_EXPORT( FT_Module )
   FT_Get_Module( FT_Library   library,
@@ -275,14 +276,18 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Input>                                                               */
   /*    hook_index :: The index of the debug hook.  You should use the     */
-  /*                  values defined in ftobjs.h, e.g.                     */
-  /*                  FT_DEBUG_HOOK_TRUETYPE.                              */
+  /*                  values defined in `ftobjs.h', e.g.,                  */
+  /*                  `FT_DEBUG_HOOK_TRUETYPE'.                            */
   /*                                                                       */
   /*    debug_hook :: The function used to debug the interpreter.          */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Currently, four debug hook slots are available, but only two (for  */
   /*    the TrueType and the Type 1 interpreter) are defined.              */
+  /*                                                                       */
+  /*    Since the internal headers of FreeType are no longer installed,    */
+  /*    the symbol `FT_DEBUG_HOOK_TRUETYPE' isn't available publicly.      */
+  /*    This is a bug and will be fixed in a forthcoming release.          */
   /*                                                                       */
   FT_EXPORT( void )
   FT_Set_Debug_Hook( FT_Library         library,
@@ -298,13 +303,14 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    Adds the set of default drivers to a given library object.         */
   /*    This is only useful when you create a library object with          */
-  /*    FT_New_Library() (usually to plug a custom memory manager).        */
+  /*    @FT_New_Library (usually to plug a custom memory manager).         */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
   FT_EXPORT( void )
   FT_Add_Default_Modules( FT_Library  library );
+
 
 
   /**************************************************************************
@@ -331,7 +337,7 @@ FT_BEGIN_HEADER
    *     FT_TrueTypeEngineType
    *
    *  @description:
-   *     A list of values describing which kind of truetype bytecode
+   *     A list of values describing which kind of TrueType bytecode
    *     engine is implemented in a given FT_Library instance.  It is used
    *     by the @FT_Get_TrueType_Engine_Type function.
    *

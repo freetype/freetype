@@ -41,7 +41,7 @@ FT_BEGIN_HEADER
   /*   This section contains various definitions related to memory         */
   /*   management and i/o access.  You need to understand this             */
   /*   information if you want to use a custom memory manager or you own   */
-  /*   input i/o streams.                                                  */
+  /*   i/o streams.                                                        */
   /*                                                                       */
   /*************************************************************************/
 
@@ -59,7 +59,7 @@ FT_BEGIN_HEADER
    *   FT_Memory
    *
    * @description:
-   *   A handle to a given memory manager object, defined with a
+   *   A handle to a given memory manager object, defined with an
    *   @FT_MemoryRec structure.
    *
    */
@@ -203,7 +203,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A union type used to store either a long or a pointer.  This is used
-   *   to store a file descriptor or a FILE* in an input stream.
+   *   to store a file descriptor or a `FILE*' in an input stream.
    *
    */
   typedef union  FT_StreamDesc_
@@ -289,7 +289,7 @@ FT_BEGIN_HEADER
    *
    *   descriptor ::
    *     This field is a union that can hold an integer or a pointer.  It is
-   *     used by stream implementations to store file descriptors or FILE*
+   *     used by stream implementations to store file descriptors or `FILE*'
    *     pointers.
    *
    *   pathname ::

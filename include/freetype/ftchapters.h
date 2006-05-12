@@ -29,6 +29,7 @@
 /*    Core API                                                             */
 /*                                                                         */
 /* <Sections>                                                              */
+/*    version                                                              */
 /*    basic_types                                                          */
 /*    base_interface                                                       */
 /*    glyph_management                                                     */

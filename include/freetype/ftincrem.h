@@ -67,7 +67,7 @@ FT_BEGIN_HEADER
   * @description:
   *   An opaque type describing a user-provided object used to implement
   *   `incremental' glyph loading within FreeType.  This is used to support
-  *   embedded fonts in certain environments (e.g. Postscript interpreters),
+  *   embedded fonts in certain environments (e.g., Postscript interpreters),
   *   where the glyph data isn't in the font file, or must be overridden by
   *   different values.
   *

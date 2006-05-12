@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType renderer modules public interface (specification).          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2005 by                                           */
+/*  Copyright 1996-2001, 2005, 2006 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -124,7 +124,7 @@ FT_BEGIN_HEADER
   /*    The renderer module class descriptor.                              */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    root         :: The root FT_Module_Class fields.                   */
+  /*    root         :: The root @FT_Module_Class fields.                  */
   /*                                                                       */
   /*    glyph_format :: The glyph image format this renderer handles.      */
   /*                                                                       */
@@ -133,10 +133,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    set_mode     :: A method used to pass additional parameters.       */
   /*                                                                       */
-  /*    raster_class :: For `FT_GLYPH_FORMAT_OUTLINE' renderers only, this */
+  /*    raster_class :: For @FT_GLYPH_FORMAT_OUTLINE renderers only.  This */
   /*                    is a pointer to its raster's class.                */
   /*                                                                       */
-  /*    raster       :: For `FT_GLYPH_FORMAT_OUTLINE' renderers only. this */
+  /*    raster       :: For @FT_GLYPH_FORMAT_OUTLINE renderers only.  This */
   /*                    is a pointer to the corresponding raster object,   */
   /*                    if any.                                            */
   /*                                                                       */
@@ -176,8 +176,8 @@ FT_BEGIN_HEADER
   /*    An error will be returned if a module already exists by that name, */
   /*    or if the module requires a version of FreeType that is too great. */
   /*                                                                       */
-  /*    To add a new renderer, simply use FT_Add_Module().  To retrieve a  */
-  /*    renderer by its name, use FT_Get_Module().                         */
+  /*    To add a new renderer, simply use @FT_Add_Module.  To retrieve a   */
+  /*    renderer by its name, use @FT_Get_Module.                          */
   /*                                                                       */
   FT_EXPORT( FT_Renderer )
   FT_Get_Renderer( FT_Library       library,
