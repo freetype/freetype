@@ -1,5 +1,14 @@
 2006-05-12  Werner Lemberg  <wl@gnu.org>
 
+
+	* Version 2.2.1 released.
+	===============++========
+
+
+	Tag sources with `VER-2-2-1'.
+
+2006-05-12  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/sources.py (re_source_keywords): Add word
 	boundary markers.
 	* src/tools/docmaker/content.py (re_field): Allow `.' in field names
