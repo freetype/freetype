@@ -590,6 +590,7 @@
     FT_Memory     memory        = hints->memory;
     FT_Error      error         = AF_Err_Ok;
     AF_Segment    segment       = NULL;
+    AF_SegmentRec seg0;
     AF_Point*     contour       = hints->contours;
     AF_Point*     contour_limit = contour + hints->num_contours;
     AF_Direction  major_dir, segment_dir;
@@ -600,6 +601,10 @@
     FT_Pos    min_coord =  32000;
     FT_Pos    max_coord = -32000;
 #endif
+
+    FT_ZERO( &seg0 );
+    seg0.score = 32000;
+    seg0.flags = AF_EDGE_NORMAL;
 
     major_dir   = (AF_Direction)FT_ABS( axis->major_dir );
     segment_dir = major_dir;
@@ -742,15 +747,12 @@
           if ( error )
             goto Exit;
 
+          segment[0]        = seg0;
           segment->dir      = (FT_Char)segment_dir;
-          segment->flags    = AF_EDGE_NORMAL;
           min_pos = max_pos = point->u;
           segment->first    = point;
           segment->last     = point;
           segment->contour  = contour;
-          segment->score    = 32000;
-          segment->len      = 0;
-          segment->link     = NULL;
           on_edge           = 1;
 
 #ifdef AF_HINT_METRICS
@@ -810,14 +812,11 @@
         if ( error )
           goto Exit;
 
+        segment[0]     = seg0;
         segment->dir   = segment_dir;
-        segment->flags = AF_EDGE_NORMAL;
         segment->first = min_point;
         segment->last  = min_point;
         segment->pos   = min_pos;
-        segment->score = 32000;
-        segment->len   = 0;
-        segment->link  = NULL;
 
         segment = NULL;
       }
@@ -830,14 +829,11 @@
         if ( error )
           goto Exit;
 
+        segment[0]     = seg0;
         segment->dir   = segment_dir;
-        segment->flags = AF_EDGE_NORMAL;
         segment->first = max_point;
         segment->last  = max_point;
         segment->pos   = max_pos;
-        segment->score = 32000;
-        segment->len   = 0;
-        segment->link  = NULL;
 
         segment = NULL;
       }
@@ -926,7 +922,6 @@
 
       if ( seg2 )
       {
-        seg2->num_linked++;
         if ( seg2->link != seg1 )
         {
           seg1->link  = 0;

@@ -310,11 +310,14 @@
 
 #if 1
         /* apply the font matrix, if any */
-        FT_Outline_Transform( &glyph->root.outline, &font_matrix );
+        if ( font_matrix.xx != 0x10000L || font_matrix.yy != font_matrix.xx ||
+             font_matrix.xy != 0        || font_matrix.yx != 0              )
+          FT_Outline_Transform( &glyph->root.outline, &font_matrix );
 
-        FT_Outline_Translate( &glyph->root.outline,
-                              font_offset.x,
-                              font_offset.y );
+        if ( font_offset.x || font_offset.y )
+          FT_Outline_Translate( &glyph->root.outline,
+                                font_offset.x,
+                                font_offset.y );
 
         advance.x = metrics->horiAdvance;
         advance.y = 0;

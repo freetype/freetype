@@ -118,6 +118,7 @@ FT_BEGIN_HEADER
 #define AF_ANGLE_PI4  ( AF_ANGLE_PI / 4 )
 
 
+#if 0
   /*
    *  compute the angle of a given 2-D vector
    */
@@ -126,7 +127,6 @@ FT_BEGIN_HEADER
                  FT_Pos  dy );
 
 
-#if 0
   /*
    *  compute `angle2 - angle1'; the result is always within
    *  the range [-AF_ANGLE_PI .. AF_ANGLE_PI - 1]
@@ -136,6 +136,27 @@ FT_BEGIN_HEADER
                  AF_Angle  angle2 );
 #endif /* 0 */
 
+
+ /* return TRUE if a corner is flat, or nearly flat, this is equivalent
+  * to say that the angle difference between the 'in' and 'out' vectors is
+  * very small
+  */
+  FT_LOCAL( FT_Int )
+  af_corner_is_flat( FT_Pos   x_in,
+                     FT_Pos   y_in,
+                     FT_Pos   x_out,
+                     FT_Pos   y_out );
+
+ /* return a value that can be -1, 0 or +1 depending on the orientation
+  * of a given corner. We're using the Cartesian coordinate system,
+  * with positive Ys going upwards. The function returns +1 when
+  * the corner turns to the left, -1 to the right, and 0 for undecided
+  */
+  FT_LOCAL( FT_Int )
+  af_corner_orientation( FT_Pos  x_in,
+                         FT_Pos  y_in,
+                         FT_Pos  x_out,
+                         FT_Pos  y_out );
 
 #define AF_ANGLE_DIFF( result, angle1, angle2 ) \
   FT_BEGIN_STMNT                                \

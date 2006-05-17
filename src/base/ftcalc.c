@@ -396,7 +396,29 @@
   FT_MulFix( FT_Long  a,
              FT_Long  b )
   {
-#if 1
+    /* let's use inline assembly to speed things a bit */
+#if defined(__GNUC__) && defined(i386)
+
+    FT_Long  result;
+
+    __asm__ __volatile__ (
+        "imul  %%edx\n"
+        "movl  %%edx, %%ecx\n"
+        "sarl  $31, %%ecx\n"
+        "addl  $0x8000, %%ecx\n"
+        "addl  %%ecx, %%eax\n"
+        "adcl  $0, %%edx\n"
+        "shrl  $16, %%eax\n"
+        "shll  $16, %%edx\n"
+        "addl  %%edx, %%eax\n"
+        "mov  %%eax, %0\n"
+       : "=r"(result)
+       : "a"(a), "d"(b)
+       : "%ecx"
+     );
+     return result;
+
+#elif 1
     FT_Long   sa, sb;
     FT_ULong  ua, ub;
 

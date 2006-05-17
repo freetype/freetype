@@ -1521,6 +1521,10 @@ FT_BEGIN_HEADER
     FT_Vector        pp3;
     FT_Vector        pp4;
 
+    /* since version 2.2.1 */
+    FT_Byte*         cursor;
+    FT_Byte*         limit;
+
   } TT_LoaderRec;
 
 

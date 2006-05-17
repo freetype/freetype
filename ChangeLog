@@ -1,5 +1,22 @@
 2006-05-17  David Turner  <david@freetype.org>
 
+        * include/freetype/internal/tttypes.h, src/autofit/afangles.c,
+        src/autofit/afcjk.c, src/autofit/afhints.c, src/autofit/aflatin.c,
+        src/autofit/aftypes.h, src/base/ftcalc.c, src/base/ftoutln.c,
+        src/gzip/ftgzip.c, src/psaux/psconv.c, src/truetype/ttgload.c,
+        src/type1/t1gload.c:
+
+          this is a major patch used to drastically improve the performance
+          of loading glyphs. This both speeds up loading the glypn vector
+          themselves and the auto-fitter.
+
+          note that we've started using inline assembler with GCC to
+          implement FT_MulFix, given that this function is so damn
+          important for the engine's performance.
+
+          the resulting speed-up is about 25%.
+
+
         * src/ftccmap.c (FTC_CMapCache_Lookup): changed the threshold
         used to detect rogue clients from 4 to 16. This is to prevent
         some segmentation faults with fonts like KozMinProVI-Regular.otf
@@ -8,7 +25,7 @@
 2007-05-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_font_done): Deallocate subfont array.  This
-	fixes the first part of Savannah bug #16590. 
+	fixes the first part of Savannah bug #16590.
 
 2006-05-16  Werner Lemberg  <wl@gnu.org>
 
@@ -52,8 +69,8 @@
 	Update handling of re_italic and re_bold.
 
 2006-05-11  Masatake YAMATO  <jet@gyve.org>
- 
-	* builds/unix/ftsystem.c (FT_Stream_Open): Check errno only if 
+
+	* builds/unix/ftsystem.c (FT_Stream_Open): Check errno only if
 	read system call returns -1.
 	Remove a redundant parenthesis.
 
