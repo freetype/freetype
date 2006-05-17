@@ -2298,6 +2298,9 @@
     {
       for ( idx = 0; idx < font->num_subfonts; idx++ )
         cff_subfont_done( memory, font->subfonts[idx] );
+
+      /* the subfonts array has been allocated as a single block */
+      FT_FREE( font->subfonts[0] );
     }
 
     cff_encoding_done( &font->encoding );

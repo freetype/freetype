@@ -1,8 +1,17 @@
+2007-05-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_font_done): Deallocate subfont array.  This
+	fixes the first part of Savannah bug #16590. 
+
+2006-05-16  Werner Lemberg  <wl@gnu.org>
+
+	* docs/PROBLEMS: Updated icl issues.
+
 2006-05-12  Werner Lemberg  <wl@gnu.org>
 
 
 	* Version 2.2.1 released.
-	===============++========
+	=========================
 
 
 	Tag sources with `VER-2-2-1'.
