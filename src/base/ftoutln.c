@@ -1013,24 +1013,29 @@
     }
 
 #if 1
+
     {
       FT_Pos  dx1 = prev->x - xmin_point->x;
       FT_Pos  dy1 = prev->y - xmin_point->y;
       FT_Pos  dx2 = next->x - xmin_point->x;
       FT_Pos  dy2 = next->y - xmin_point->y;
 
-      if ( dy1*dx2 > dy2*dx1 )
+
+      if ( dy1 * dx2 > dy2 * dx1 )
         return FT_ORIENTATION_POSTSCRIPT;
       else
         return FT_ORIENTATION_TRUETYPE;
     }
-#else
+
+#else /* 0 */
+
     if ( FT_Atan2( prev->x - xmin_point->x, prev->y - xmin_point->y ) >
          FT_Atan2( next->x - xmin_point->x, next->y - xmin_point->y ) )
       return FT_ORIENTATION_POSTSCRIPT;
     else
       return FT_ORIENTATION_TRUETYPE;
-#endif
+
+#endif /* 0 */
   }
 
 

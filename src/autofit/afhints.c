@@ -267,15 +267,17 @@
 #endif /* AF_DEBUG */
 
 
-
   /* compute the direction value of a given vector */
   FT_LOCAL_DEF( AF_Direction )
   af_direction_compute( FT_Pos  dx,
                         FT_Pos  dy )
   {
+
 #if 1
+
     FT_Pos        ll, ss;  /* long and short arm lengths */
     AF_Direction  dir;     /* candidate direction        */
+
 
     if ( dy >= dx )
     {
@@ -309,11 +311,13 @@
     }
 
     ss *= 12;
-    if ( ll <= FT_ABS(ss) )
+    if ( ll <= FT_ABS( ss ) )
       dir = AF_DIR_NONE;
 
     return dir;
+
 #else /* 0 */
+
     AF_Direction  dir;
     FT_Pos        ax = FT_ABS( dx );
     FT_Pos        ay = FT_ABS( dy );
@@ -335,13 +339,16 @@
     }
 
     return dir;
+
 #endif /* 0 */
 
   }
 
 
   /* compute all inflex points in a given glyph */
+
 #if 1
+
   static void
   af_glyph_hints_compute_inflections( AF_GlyphHints  hints )
   {
@@ -403,7 +410,7 @@
       in_x = out_x;
       in_y = out_y;
 
-      /* now, process all segments in the contour */
+      /* now process all segments in the contour */
       do
       {
         /* first, extend current segment's end whenever possible */
@@ -439,8 +446,8 @@
           start->flags |= AF_FLAG_INFLECTION;
         }
 
-        start     = end;
-        end       = after;
+        start = end;
+        end   = after;
 
         orient_prev = orient_cur;
         in_x        = out_x;
@@ -454,6 +461,7 @@
   }
 
 #else /* old code */
+
   static void
   af_glyph_hints_compute_inflections( AF_GlyphHints  hints )
   {
@@ -560,6 +568,7 @@
       ;
     }
   }
+
 #endif /* old code */
 
 
@@ -809,7 +818,9 @@
           }
           else if ( point->out_dir == point->in_dir )
           {
+
 #if 1
+
             if ( point->out_dir != AF_DIR_NONE )
               goto Is_Weak_Point;
 
@@ -817,6 +828,7 @@
               goto Is_Weak_Point;
 
 #else /* old code */
+
             AF_Angle  angle_in, angle_out, delta;
 
 
@@ -830,7 +842,9 @@
 
             if ( delta < 2 && delta > -2 )
               goto Is_Weak_Point;
+
 #endif /* old code */
+
           }
           else if ( point->in_dir == -point->out_dir )
             goto Is_Weak_Point;

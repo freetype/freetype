@@ -561,6 +561,7 @@
     FT_ULong  old_pos;
     FT_ULong  result = 0;
 
+
     old_pos = stream->pos;
     if ( !FT_Stream_Seek( stream, stream->size - 4 ) )
     {
@@ -607,23 +608,27 @@
       stream->descriptor.pointer = zip;
     }
 
-   /* ok, here's a trick to try to dramatically improve the performance
-    * of dealing with small files. If the original stream size is less
-    * than a certain threshold, we try to load the whole font file in
-    * memory. this saves us from the 32KB buffer needed to inflate the
-    * file anyway, plus the two 4KB intermediate input/output buffers
-    * used in the FT_GZipFile structure.
-    */
+    /*
+     *  We use the following trick to try to dramatically improve the
+     *  performance while dealing with small files.  If the original stream
+     *  size is less than a certain threshold, we try to load the whole font
+     *  file into memory.  This saves us from using the 32KB buffer needed
+     *  to inflate the file, plus the two 4KB intermediate input/output
+     *  buffers used in the `FT_GZipFile' structure.
+     */
     {
-      FT_ULong    zip_size = ft_gzip_get_uncompressed_size( source );
+      FT_ULong  zip_size = ft_gzip_get_uncompressed_size( source );
 
-      if ( zip_size != 0 && zip_size < 40*1024 )
+
+      if ( zip_size != 0 && zip_size < 40 * 1024 )
       {
         FT_Byte*  zip_buff;
+
 
         if ( !FT_ALLOC( zip_buff, zip_size ) )
         {
           FT_ULong  count;
+
 
           count = ft_gzip_file_io( zip, 0, zip_buff, zip_size );
           if ( count == zip_size )
@@ -641,6 +646,7 @@
 
             goto Exit;
           }
+
           ft_gzip_file_io( zip, 0, NULL, 0 );
           FT_FREE( zip_buff );
         }

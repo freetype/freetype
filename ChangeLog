@@ -1,26 +1,69 @@
+2006-05-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Load_Composite_Glyph)
+	[FT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Make it compilable again.
+
 2006-05-17  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/tttypes.h, src/autofit/afangles.c,
-        src/autofit/afcjk.c, src/autofit/afhints.c, src/autofit/aflatin.c,
-        src/autofit/aftypes.h, src/base/ftcalc.c, src/base/ftoutln.c,
-        src/gzip/ftgzip.c, src/psaux/psconv.c, src/truetype/ttgload.c,
-        src/type1/t1gload.c:
+	This is a major patch used to drastically improve the performance of
+	loading glyphs.  This both speeds up loading the glyph vectors
+	themselves and the auto-fitter module.
 
-          this is a major patch used to drastically improve the performance
-          of loading glyphs. This both speeds up loading the glypn vector
-          themselves and the auto-fitter.
+	We now use inline assembler code with GCC to implement `FT_MulFix',
+	which is probably the most important function related to the
+	engine's performance.
 
-          note that we've started using inline assembler with GCC to
-          implement FT_MulFix, given that this function is so damn
-          important for the engine's performance.
-
-          the resulting speed-up is about 25%.
+	The resulting speed-up is about 25%.
 
 
-        * src/ftccmap.c (FTC_CMapCache_Lookup): changed the threshold
-        used to detect rogue clients from 4 to 16. This is to prevent
-        some segmentation faults with fonts like KozMinProVI-Regular.otf
-        which comes from the Japanese Adobe Reader Asian Font pack.
+	* include/freetype/internal/tttypes.h (TT_LoaderRec): Add fields
+	`cursor' and `limit'.
+
+	* src/autofit/afangles.c (af_corner_is_flat, af_corner_orientation):
+	New functions.
+	(AF_ATAN_BITS, af_arctan, af_angle_atan): Comment out.
+	[TEST]: Remove.
+
+	* src/autofit/afcjk.c (AF_Script_UniRangeRec): Comment out test
+	code.
+
+	* src/autofit/afhints.c (af_axis_hints_new_segment): Don't call
+	`FT_ZERO'
+	(af_direction_compute, af_glyph_hints_compute_inflections): Rewritten.
+	(af_glyph_hints_reload: Rewrite recognition of weak points.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Move
+	constant values out of the loops.
+
+	* src/autofit/aftypes.h: Updated.
+
+	* src/base/ftcalc.c (FT_MulFix): Use inline assembler code.
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Use vector
+	product to get orientation.
+
+	* src/gzip/ftgzip.c (ft_get_uncompressed_size): New function.
+	(FT_Stream_OpenGzip): Use it to handle small files directly in
+	memory.
+
+	* src/psaux/psconv.c (PS_Conv_ASCIIHexDecode, PS_ConvEexecDecode):
+	Improve performance.
+
+	* src/truetype/ttgload.c (TT_Access_Glyph_Frame): Set `cursor' and
+	`limit'.
+
+	(TT_Load_Glyph_Header, TT_Load_Simple_Glyph,
+	TT_Load_Composite_Glyph): Updated.  Add threshold to protect against
+	exceedingly large values of number of contours.  Speed up by
+	reducing the number of loops.
+
+	* src/type1/t1gload.c (T1_Load_Glyph): Don't apply unit matrix.
+
+
+	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Change the threshold
+	used to detect rogue clients from 4 to 16.  This is to prevent some
+	segmentation faults with fonts like `KozMinProVI-Regular.otf' which
+	comes from the Japanese Adobe Reader Asian Font pack.
 
 2007-05-17  Werner Lemberg  <wl@gnu.org>
 

@@ -602,6 +602,7 @@
     FT_Pos    max_coord = -32000;
 #endif
 
+
     FT_ZERO( &seg0 );
     seg0.score = 32000;
     seg0.flags = AF_EDGE_NORMAL;

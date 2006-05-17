@@ -1438,7 +1438,7 @@
   static const AF_Script_UniRangeRec  af_cjk_uniranges[] =
   {
 #if 0
-    { 0x0100,  0xFFFF },  /* why ?? */
+    { 0x0100,  0xFFFF },  /* why this? */
 #endif
     { 0x2E80,  0x2EFF },  /* CJK Radicals Supplement */
     { 0x2F00,  0x2FDF },  /* Kangxi Radicals */

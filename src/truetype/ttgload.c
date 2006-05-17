@@ -208,19 +208,19 @@
   FT_CALLBACK_DEF( FT_Error )
   TT_Load_Glyph_Header( TT_Loader  loader )
   {
-    FT_Byte*   p     = loader->cursor;
-    FT_Byte*   limit = loader->limit;
+    FT_Byte*  p     = loader->cursor;
+    FT_Byte*  limit = loader->limit;
 
 
     if ( p + 10 > limit )
       return TT_Err_Invalid_Outline;
 
-    loader->n_contours = FT_NEXT_SHORT(p);
+    loader->n_contours = FT_NEXT_SHORT( p );
 
-    loader->bbox.xMin = FT_NEXT_SHORT(p);
-    loader->bbox.yMin = FT_NEXT_SHORT(p);
-    loader->bbox.xMax = FT_NEXT_SHORT(p);
-    loader->bbox.yMax = FT_NEXT_SHORT(p);
+    loader->bbox.xMin = FT_NEXT_SHORT( p );
+    loader->bbox.yMin = FT_NEXT_SHORT( p );
+    loader->bbox.xMax = FT_NEXT_SHORT( p );
+    loader->bbox.yMax = FT_NEXT_SHORT( p );
 
     FT_TRACE5(( "  # of contours: %d\n", loader->n_contours ));
     FT_TRACE5(( "  xMin: %4d  xMax: %4d\n", loader->bbox.xMin,
@@ -263,11 +263,11 @@
     cont_limit = cont + n_contours;
 
     /* check space for contours array + instructions count */
-    if ( n_contours >= 0xFFF || p + (n_contours+1)*2 > limit )
+    if ( n_contours >= 0xFFF || p + (n_contours + 1) * 2 > limit )
       goto Invalid_Outline;
 
     for ( ; cont < cont_limit; cont++ )
-      cont[0] = FT_NEXT_USHORT(p);
+      cont[0] = FT_NEXT_USHORT( p );
 
     n_points = 0;
     if ( n_contours > 0 )
@@ -289,10 +289,10 @@
     load->glyph->control_len  = 0;
     load->glyph->control_data = 0;
 
-    if ( p+2 > limit )
+    if ( p + 2 > limit )
       goto Invalid_Outline;
 
-    n_ins = FT_NEXT_USHORT(p);
+    n_ins = FT_NEXT_USHORT( p );
 
     FT_TRACE5(( "  Instructions size: %u\n", n_ins ));
 
@@ -303,7 +303,7 @@
       goto Fail;
     }
 
-    if ( (limit - p) < n_ins )
+    if ( ( limit - p ) < n_ins )
     {
       FT_TRACE0(( "TT_Load_Simple_Glyph: Instruction count mismatch!\n" ));
       error = TT_Err_Too_Many_Hints;
@@ -332,16 +332,16 @@
 
     while ( flag < flag_limit )
     {
-      if ( p+1 > limit )
+      if ( p + 1 > limit )
         goto Invalid_Outline;
 
-      *flag++ = c = FT_NEXT_BYTE(p);
+      *flag++ = c = FT_NEXT_BYTE( p );
       if ( c & 8 )
       {
-        if ( p+1 > limit )
+        if ( p + 1 > limit )
           goto Invalid_Outline;
 
-        count = FT_NEXT_BYTE(p);
+        count = FT_NEXT_BYTE( p );
         if ( flag + (FT_Int)count > flag_limit )
           goto Invalid_Outline;
 
@@ -364,19 +364,19 @@
 
       if ( *flag & 2 )
       {
-        if ( p+1 > limit )
+        if ( p + 1 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_BYTE(p);
+        y = (FT_Pos)FT_NEXT_BYTE( p );
         if ( ( *flag & 16 ) == 0 )
           y = -y;
       }
       else if ( ( *flag & 16 ) == 0 )
       {
-        if ( p+2 > limit )
+        if ( p + 2 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_SHORT(p);
+        y = (FT_Pos)FT_NEXT_SHORT( p );
       }
 
       x     += y;
@@ -397,19 +397,19 @@
 
       if ( *flag & 4 )
       {
-        if ( p+1 > limit )
+        if ( p  +1 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_BYTE(p);
+        y = (FT_Pos)FT_NEXT_BYTE( p );
         if ( ( *flag & 32 ) == 0 )
           y = -y;
       }
       else if ( ( *flag & 32 ) == 0 )
       {
-        if ( p+2 > limit )
+        if ( p + 2 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_SHORT(p);
+        y = (FT_Pos)FT_NEXT_SHORT( p );
       }
 
       x     += y;
@@ -459,15 +459,15 @@
         goto Fail;
 
       /* check space */
-      if ( p+4 > limit )
+      if ( p + 4 > limit )
         goto Invalid_Composite;
 
       subglyph = gloader->current.subglyphs + num_subglyphs;
 
       subglyph->arg1 = subglyph->arg2 = 0;
 
-      subglyph->flags = FT_NEXT_USHORT(p);
-      subglyph->index = FT_NEXT_USHORT(p);
+      subglyph->flags = FT_NEXT_USHORT( p );
+      subglyph->index = FT_NEXT_USHORT( p );
 
       /* check space */
       count = 2;
@@ -486,13 +486,13 @@
       /* read arguments */
       if ( subglyph->flags & ARGS_ARE_WORDS )
       {
-        subglyph->arg1 = FT_NEXT_SHORT(p);
-        subglyph->arg2 = FT_NEXT_SHORT(p);
+        subglyph->arg1 = FT_NEXT_SHORT( p );
+        subglyph->arg2 = FT_NEXT_SHORT( p );
       }
       else
       {
-        subglyph->arg1 = FT_NEXT_CHAR(p);
-        subglyph->arg2 = FT_NEXT_CHAR(p);
+        subglyph->arg1 = FT_NEXT_CHAR( p );
+        subglyph->arg2 = FT_NEXT_CHAR( p );
       }
 
       /* read transform */
@@ -501,20 +501,20 @@
 
       if ( subglyph->flags & WE_HAVE_A_SCALE )
       {
-        xx = (FT_Fixed)FT_NEXT_SHORT(p) << 2;
+        xx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
         yy = xx;
       }
       else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
       {
-        xx = (FT_Fixed)FT_NEXT_SHORT(p) << 2;
-        yy = (FT_Fixed)FT_NEXT_SHORT(p) << 2;
+        xx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+        yy = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
       }
       else if ( subglyph->flags & WE_HAVE_A_2X2 )
       {
-        xx = (FT_Fixed)FT_NEXT_SHORT(p) << 2;
-        yx = (FT_Fixed)FT_NEXT_SHORT(p) << 2;
-        xy = (FT_Fixed)FT_NEXT_SHORT(p) << 2;
-        yy = (FT_Fixed)FT_NEXT_SHORT(p) << 2;
+        xx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+        yx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+        xy = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+        yy = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
       }
 
       subglyph->transform.xx = xx;
@@ -531,6 +531,9 @@
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     {
+      FT_Stream  stream = loader->stream;
+
+
       /* we must undo the FT_FRAME_ENTER in order to point to the */
       /* composite instructions, if we find some.               */
       /* we will process them later...                          */

@@ -5,7 +5,7 @@
 /*    Routines used to compute vector angles with limited accuracy         */
 /*    and very high speed.  It also contains sorting routines (body).      */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005 by                                          */
+/*  Copyright 2003, 2004, 2005, 2006 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -21,29 +21,40 @@
 
 
   FT_LOCAL_DEF( FT_Int )
-  af_corner_is_flat( FT_Pos   x_in,
-                     FT_Pos   y_in,
-                     FT_Pos   x_out,
-                     FT_Pos   y_out )
+  af_corner_is_flat( FT_Pos  x_in,
+                     FT_Pos  y_in,
+                     FT_Pos  x_out,
+                     FT_Pos  y_out )
   {
     FT_Pos  ax = x_in;
     FT_Pos  ay = y_in;
 
     FT_Pos  d_in, d_out, d_corner;
 
-    if ( ax < 0 ) ax = -ax;
-    if ( ay < 0 ) ay = -ay;
+
+    if ( ax < 0 )
+      ax = -ax;
+    if ( ay < 0 )
+      ay = -ay;
     d_in = ax + ay;
 
-    ax = x_out; if ( ax < 0 ) ax = -ax;
-    ay = y_out; if ( ay < 0 ) ay = -ay;
-    d_out = ax+ay;
+    ax = x_out;
+    if ( ax < 0 )
+      ax = -ax;
+    ay = y_out;
+    if ( ay < 0 )
+      ay = -ay;
+    d_out = ax + ay;
 
-    ax = x_out + x_in; if ( ax < 0 ) ax = -ax;
-    ay = y_out + y_in; if ( ay < 0 ) ay = -ay;
-    d_corner = ax+ay;
+    ax = x_out + x_in;
+    if ( ax < 0 )
+      ax = -ax;
+    ay = y_out + y_in;
+    if ( ay < 0 )
+      ay = -ay;
+    d_corner = ax + ay;
 
-    return ( d_in + d_out - d_corner ) < (d_corner >> 4);
+    return ( d_in + d_out - d_corner ) < ( d_corner >> 4 );
   }
 
 
@@ -53,30 +64,39 @@
                          FT_Pos  x_out,
                          FT_Pos  y_out )
   {
-    FT_Pos   delta;
+    FT_Pos  delta;
 
-    delta = x_in*y_out - y_in*x_out;
+
+    delta = x_in * y_out - y_in * x_out;
 
     if ( delta == 0 )
       return 0;
     else
-      return 1 - 2*(delta < 0);
+      return 1 - 2 * ( delta < 0 );
   }
 
 
-  /* we're not using af_angle_atan anymore, but we keep the source
-   * code below just in case :-)
+  /*
+   *  We are not using `af_angle_atan' anymore, but we keep the source
+   *  code below just in case...
    */
+
+
 #if 0
 
- /* the trick here is to realize that we don't need an very accurate
-  * angle approximation. We're going to use the result of af_angle_atan
-  * to only compare the sign of angle differences, or see if its magnitude
-  * is very small.
-  *
-  * the approximation (dy*PI/(|dx|+|dy|))) should be enough, and much
-  * faster to compute.
-  */
+
+  /*
+   *  The trick here is to realize that we don't need a very accurate angle
+   *  approximation.  We are going to use the result of `af_angle_atan' to
+   *  only compare the sign of angle differences, or check whether its
+   *  magnitude is very small.
+   *
+   *  The approximation
+   *
+   *    dy * PI / (|dx|+|dy|)
+   *
+   *  should be enough, and much faster to compute.
+   */
   FT_LOCAL_DEF( AF_Angle )
   af_angle_atan( FT_Fixed  dx,
                  FT_Fixed  dy )
@@ -85,8 +105,11 @@
     FT_Fixed  ax = dx;
     FT_Fixed  ay = dy;
 
-    if ( ax < 0 ) ax = -ax;
-    if ( ay < 0 ) ay = -ay;
+
+    if ( ax < 0 )
+      ax = -ax;
+    if ( ay < 0 )
+      ay = -ay;
 
     ax += ay;
 
@@ -94,7 +117,7 @@
       angle = 0;
     else
     {
-      angle = (AF_ANGLE_PI2*dy)/(ax+ay);
+      angle = ( AF_ANGLE_PI2 * dy ) / ( ax + ay );
       if ( dx < 0 )
       {
         if ( angle >= 0 )
@@ -107,7 +130,9 @@
     return angle;
   }
 
+
 #elif 0
+
 
   /* the following table has been automatically generated with */
   /* the `mather.py' Python script                             */
@@ -211,7 +236,7 @@
   }
 
 
-#endif
+#endif /* 0 */
 
 
   FT_LOCAL_DEF( void )

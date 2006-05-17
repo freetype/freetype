@@ -337,28 +337,30 @@
 
 
     n *= 2;
-#if 1
-    p  = *cursor;
-    if ( n > (FT_UInt)(limit-p) )
-      n = (FT_UInt)(limit - p);
 
-   /* we try to process two nibbles at a time to be as fast as possible
-    */
+#if 1
+
+    p  = *cursor;
+    if ( n > (FT_UInt)( limit - p ) )
+      n = (FT_UInt)( limit - p );
+
+    /* we try to process two nibbles at a time to be as fast as possible */
     for ( ; r < n; r++ )
     {
       FT_UInt  c = p[r];
 
-      if ( IS_PS_SPACE(c) )
+
+      if ( IS_PS_SPACE( c ) )
         continue;
 
       if ( c OP 0x80 )
         break;
 
-      c = ft_char_table[ c & 0x7F ];
+      c = ft_char_table[c & 0x7F];
       if ( (unsigned)c >= 16 )
         break;
 
-      pad = (pad << 4) | c;
+      pad = ( pad << 4 ) | c;
       if ( pad & 0x100 )
       {
         buffer[w++] = (FT_Byte)pad;
@@ -367,11 +369,14 @@
     }
 
     if ( pad != 0x01 )
-      buffer[w++] = (FT_Byte)(pad << 4);
+      buffer[w++] = (FT_Byte)( pad << 4 );
 
-    *cursor = p+r;
+    *cursor = p + r;
+
     return w;
-#else
+
+#else /* 0 */
+
     for ( r = 0; r < n; r++ )
     {
       FT_Char  c;
@@ -402,7 +407,9 @@
     *cursor = p;
 
     return ( r + 1 ) / 2;
-#endif
+
+#endif /* 0 */
+
   }
 
 
@@ -413,11 +420,13 @@
                        FT_UInt     n,
                        FT_UShort*  seed )
   {
-    FT_Byte*   p;
-    FT_UInt    r;
-    FT_UInt    s = *seed;
+    FT_Byte*  p;
+    FT_UInt   r;
+    FT_UInt   s = *seed;
+
 
 #if 1
+
     p = *cursor;
     if ( n > (FT_UInt)(limit - p) )
       n = (FT_UInt)(limit - p);
@@ -425,7 +434,8 @@
     for ( r = 0; r < n; r++ )
     {
       FT_UInt  val = p[r];
-      FT_UInt  b   = ( val ^ (s >> 8) );
+      FT_UInt  b   = ( val ^ ( s >> 8 ) );
+
 
       s         = ( (val + s)*52845U + 22719 ) & 0xFFFFU;
       buffer[r] = (FT_Byte) b;
@@ -433,7 +443,9 @@
 
     *cursor = p + n;
     *seed   = (FT_UShort)s;
-#else
+
+#else /* 0 */
+
     for ( r = 0, p = *cursor; r < n && p < limit; r++, p++ )
     {
       FT_Byte  b = (FT_Byte)( *p ^ ( s >> 8 ) );
@@ -444,7 +456,8 @@
     }
     *cursor = p;
     *seed   = s;
-#endif
+
+#endif /* 0 */
 
     return r;
   }

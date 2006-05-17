@@ -307,9 +307,9 @@
      *  It is also very unlikely that a rogue client is interested
      *  in Unicode values 0 to 15.
      *
-     *  NOTE: The original threshold was 4, but we found a font
-     *        from the Adobe Acrobat Reader Pack, named
-     *        "KozMinProVI-Regular.otf" which contained more than 5 charmaps.
+     *  NOTE: The original threshold was 4, but we found a font from the
+     *        Adobe Acrobat Reader Pack, named `KozMinProVI-Regular.otf',
+     *        which contains more than 5 charmaps.
      */
     if ( cmap_index >= 16 )
     {
