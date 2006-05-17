@@ -1,3 +1,10 @@
+2006-05-17  David Turner  <david@freetype.org>
+
+        * src/ftccmap.c (FTC_CMapCache_Lookup): changed the threshold
+        used to detect rogue clients from 4 to 16. This is to prevent
+        some segmentation faults with fonts like KozMinProVI-Regular.otf
+        which comes from the Japanese Adobe Reader Asian Font pack.
+
 2007-05-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_font_done): Deallocate subfont array.  This
