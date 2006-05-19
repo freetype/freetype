@@ -1010,6 +1010,8 @@
     error = FT_Open_Face( library, &args, face_index, aface );
     if ( error == FT_Err_Ok )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
+    else
+      FT_Stream_Free( stream, 0 );
 
     return error;
   }
