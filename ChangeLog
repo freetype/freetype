@@ -1,5 +1,16 @@
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Apply patch by Derek Clegg to fix 2 memory leak in MacOS resource
+	fork handler, Savannah bug #16631.
+
+	* src/base/ftobjs.c (load_face_in_embedded_rfork):
+	Replace FT_Stream_Close() by FT_Stream_Free() to fix memory leak.
+
+	* src/base/ftrfrk.c (raccess_guess_linux_double_from_file_name):
+	Replace FT_Stream_Close() by FT_Stream_Free() to fix memory leak.
+
+2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* build/unix/configure.raw: Add a fallback to disable Carbon
 	dependency, if configured with no options on Mac OS X.
 

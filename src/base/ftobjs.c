@@ -1531,7 +1531,7 @@
 
       error = IsMacResource( library, stream2, offsets[i],
                              face_index, aface );
-      FT_Stream_Close( stream2 );
+      FT_Stream_Free( stream2, 0 );
 
       FT_TRACE3(( "%s\n", error ? "failed": "successful" ));
 
