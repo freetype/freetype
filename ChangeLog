@@ -1,5 +1,10 @@
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* build/unix/configure.raw: Add a fallback to disable Carbon
+	dependency, if configured with no options on Mac OS X.
+
+2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftmac.c (open_face_from_buffer): Deallocate stream when
 	its content cannot be parsed as supported font. This fixes
 	the second part of Savannah bug #16590.

@@ -150,6 +150,14 @@ if test x$with_old_mac_fonts = xyes; then
     [AC_MSG_RESULT([not found])
      LDFLAGS="${orig_LDFLAGS}"
      CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"])
+else
+  case x$target_os in
+  xdarwin*)
+    dnl AC_MSG_WARN([target system is MacOS but configured to build without Carbon])
+    CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"
+    ;;
+  *) ;;
+  esac
 fi
 
 
