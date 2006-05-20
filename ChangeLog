@@ -1,3 +1,9 @@
+2006-05-19  Brian Weed  <bw@imaginengine.com>
+
+	* builds/win32/visualc/freetype.dsp: Release libraries no longer
+	have debug information, and debug libraries use `C7 compatible'
+	debug info.
+
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Apply patch by Derek Clegg to fix two memory leaks in the MacOS
