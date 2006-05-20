@@ -1,13 +1,13 @@
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Apply patch by Derek Clegg to fix 2 memory leak in MacOS resource
-	fork handler, Savannah bug #16631.
+	Apply patch by Derek Clegg to fix two memory leaks in the MacOS
+	resource fork handler.  This fixes savannah bug #16631.
 
-	* src/base/ftobjs.c (load_face_in_embedded_rfork):
-	Replace FT_Stream_Close() by FT_Stream_Free() to fix memory leak.
+	* src/base/ftobjs.c (load_face_in_embedded_rfork): Replace
+	`FT_Stream_Close' by `FT_Stream_Free' to fix memory leak.
 
 	* src/base/ftrfrk.c (raccess_guess_linux_double_from_file_name):
-	Replace FT_Stream_Close() by FT_Stream_Free() to fix memory leak.
+	Replace `FT_Stream_Close' by `FT_Stream_Free' to fix memory leak.
 
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -17,7 +17,7 @@
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (open_face_from_buffer): Deallocate stream when
-	its content cannot be parsed as supported font. This fixes
+	its content cannot be parsed as supported font.  This fixes
 	the second part of Savannah bug #16590.
 
 2006-05-18  Werner Lemberg  <wl@gnu.org>
