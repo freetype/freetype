@@ -1,3 +1,8 @@
+2006-05-25  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/unix-cc.in (LINK_LIBRARY): Don't comment out
+	`-no-undefined'.  Reported by Christian Biesinger.
+
 2006-05-19  Brian Weed  <bw@imaginengine.com>
 
 	* builds/win32/visualc/freetype.dsp: Release libraries no longer
