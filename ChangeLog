@@ -1,5 +1,11 @@
 2006-06-04  David Turner  <david@freetype.org>
 
+  * src/base/ftutil.c (ft_mem_qrealloc): fix the function
+  to accept 'item_size == 0' as well, though this sounds
+  weird, it can theorically happen.
+
+  see bug #16669
+
   * src/pfr/pfrobjs.c (pfr_face_init): fix the computation
   of 'face->num_glyphs' which missed the last glyph, due to
   the offset-by-1 computation, since the PFR format doesn't
