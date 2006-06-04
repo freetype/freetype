@@ -1,18 +1,14 @@
 2006-06-04  David Turner  <david@freetype.org>
 
-  * src/base/ftutil.c (ft_mem_qrealloc): fix the function
-  to accept 'item_size == 0' as well, though this sounds
-  weird, it can theorically happen.
+	* src/base/ftutil.c (ft_mem_qrealloc): Fix the function to accept
+	`item_size == 0' as well -- though this sounds weird, it can
+	theorically happen.  This fixes Savannah bug #16669.
 
-  see bug #16669
-
-  * src/pfr/pfrobjs.c (pfr_face_init): fix the computation
-  of 'face->num_glyphs' which missed the last glyph, due to
-  the offset-by-1 computation, since the PFR format doesn't
-  guarantee that glyph index 0 corresponds to the "missing
-  glyph"
-
-  should fix bug #16668
+	* src/pfr/pfrobjs.c (pfr_face_init): Fix the computation
+	of `face->num_glyphs' which missed the last glyph, due to
+	the offset-by-1 computation, since the PFR format doesn't
+	guarantee that glyph index 0 corresponds to the `missing
+	glyph.  This fixes Savannah bug #16668.
 
 2006-05-25  Werner Lemberg  <wl@gnu.org>
 
@@ -28,7 +24,7 @@
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Apply patch by Derek Clegg to fix two memory leaks in the MacOS
-	resource fork handler.  This fixes savannah bug #16631.
+	resource fork handler.  This fixes Savannah bug #16631.
 
 	* src/base/ftobjs.c (load_face_in_embedded_rfork): Replace
 	`FT_Stream_Close' by `FT_Stream_Free' to fix memory leak.
@@ -222,7 +218,7 @@
 	Updated.
 
 	* builds/unix/install-sh: Updated from `texinfo' CVS module at
-	savannah.gnu.org.
+	Savannah.gnu.org.
 
 	* devel/ftoption.h: Synchronize with
 	include/freetype/config/ftoption.h.
@@ -1507,7 +1503,7 @@
 2006-01-22  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
-	`texinfo' CVS module at savannah.gnu.org.
+	`texinfo' CVS module at Savannah.gnu.org.
 
 2006-01-21  Werner Lemberg  <wl@gnu.org>
 
