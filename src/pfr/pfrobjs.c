@@ -128,7 +128,7 @@
 
 
       pfrface->face_index = face_index;
-      pfrface->num_glyphs = phy_font->num_chars;
+      pfrface->num_glyphs = phy_font->num_chars + 1;
       pfrface->face_flags = FT_FACE_FLAG_SCALABLE;
 
       if ( (phy_font->flags & PFR_PHY_PROPORTIONAL) == 0 )

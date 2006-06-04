@@ -1,3 +1,13 @@
+2006-06-04  David Turner  <david@freetype.org>
+
+  * src/pfr/pfrobjs.c (pfr_face_init): fix the computation
+  of 'face->num_glyphs' which missed the last glyph, due to
+  the offset-by-1 computation, since the PFR format doesn't
+  guarantee that glyph index 0 corresponds to the "missing
+  glyph"
+
+  should fix bug #16668
+
 2006-05-25  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/unix-cc.in (LINK_LIBRARY): Don't comment out
