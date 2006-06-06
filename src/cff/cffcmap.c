@@ -163,7 +163,7 @@
                                    cff->num_glyphs,
                                    (PS_GetGlyphNameFunc)&cff_sid_to_glyph_name,
                                    (PS_FreeGlyphNameFunc)&cff_sid_free_glyph_name,
-                                   (FT_Pointer)cff );
+                                   (FT_Pointer)face );
   }
 
 
