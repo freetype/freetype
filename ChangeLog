@@ -1,3 +1,13 @@
+2006-06-06  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/services/svpscmap.h, src/cff/cffcmap.c,
+        src/psaux/t1cmap.c, src/psnames/psmodule.c: Fix for the memory
+        leak described in bug #16759.
+
+        We change 'ps_unicodes_init' so that it also takes a 'free_glyph_name'
+        callback to release the glyph names returned by 'get_glyph_name'
+
+
 2006-06-04  David Turner  <david@freetype.org>
 
 	* src/base/ftutil.c (ft_mem_qrealloc): Fix the function to accept
