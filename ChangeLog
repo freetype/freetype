@@ -1,11 +1,26 @@
 2006-06-06  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/services/svpscmap.h, src/cff/cffcmap.c,
-        src/psaux/t1cmap.c, src/psnames/psmodule.c: Fix for the memory
-        leak described in bug #16759.
+	Fix memory leak described in Savannah bug #16759.
 
-        We change 'ps_unicodes_init' so that it also takes a 'free_glyph_name'
-        callback to release the glyph names returned by 'get_glyph_name'
+	We change `ps_unicodes_init' so that it also takes a
+	`free_glyph_name' callback to release the glyph names returned by
+	`get_glyph_name'
+
+	* include/freetype/internal/services/svpscmap.h (PS_Glyph_NameFunc):
+	Renamed to ...
+	(PS_GetGlyphNameFunc): This.
+	(PS_FreeGlyphNameFunc): New typedef.
+	(PS_Unicodes_InitFunc): Add variable for PS_FreeGlyphNameFunc.
+
+	* src/cff/cffcmap.c (cff_sid_to_glyph_name): Use `TT_Face' for first
+	argument.
+	(cff_sid_free_glyph_name): New function.
+	(cff_cmap_unicode_init): Updated.
+
+	* src/psaux/t1cmap.c (t1_cmap_unicode_init): Updated.
+
+	* src/psnames/psmodule.c (ps_unicodes_init): Add variable for
+	PS_FreeGlyphNameFunc and use it.
 
 
 2006-06-04  David Turner  <david@freetype.org>
@@ -228,7 +243,7 @@
 	Updated.
 
 	* builds/unix/install-sh: Updated from `texinfo' CVS module at
-	Savannah.gnu.org.
+	savannah.gnu.org.
 
 	* devel/ftoption.h: Synchronize with
 	include/freetype/config/ftoption.h.
@@ -1513,7 +1528,7 @@
 2006-01-22  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
-	`texinfo' CVS module at Savannah.gnu.org.
+	`texinfo' CVS module at savannah.gnu.org.
 
 2006-01-21  Werner Lemberg  <wl@gnu.org>
 
