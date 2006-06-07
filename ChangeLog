@@ -1,3 +1,11 @@
+2006-06-07  David Turner  <david@freetype.org>
+
+  Fix memory leak described in Savannah bug #16768
+
+  * src/type1/t1afm.c (T1_Read_Metrics): fix memory leak
+  which happened when the metrics file doesn't have kerning
+  pairs.
+
 2006-06-06  David Turner  <david@freetype.org>
 
 	Fix memory leak described in Savannah bug #16759.

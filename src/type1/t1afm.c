@@ -73,7 +73,7 @@
 
 
 #undef  KERN_INDEX
-#define KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
+#define KERN_INDEX( g1, g2 )  ( ( (FT_ULong)(g1) << 16 ) | (g2) )
 
 
   /* compare two kerning pairs */
@@ -233,14 +233,9 @@
     T1_Font        t1_font = &( (T1_Face)t1_face )->type1;
 
 
-    if ( FT_NEW( fi ) )
-      return error;
-
-    if ( FT_FRAME_ENTER( stream->size ) )
-    {
-      FT_FREE( fi );
-      return error;
-    }
+    if ( FT_NEW( fi )                   ||
+         FT_FRAME_ENTER( stream->size ) )
+      goto Exit;
 
     fi->FontBBox  = t1_font->font_bbox;
     fi->Ascender  = t1_font->font_bbox.yMax;
@@ -292,10 +287,15 @@
       {
         t1_face->face_flags |= FT_FACE_FLAG_KERNING;
         ( (T1_Face)t1_face )->afm_data = fi;
+        fi = NULL;
       }
     }
 
     FT_FRAME_EXIT();
+
+  Exit:
+    if ( fi != NULL )
+      T1_Done_Metrics( memory, fi );
 
     return error;
   }
