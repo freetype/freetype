@@ -2224,7 +2224,7 @@
     error = _bdf_readstream( stream, _bdf_parse_start,
                              (void *)p, &lineno );
     if ( error )
-      goto Exit;
+      goto Fail;
 
     if ( p->font != 0 )
     {
@@ -2316,7 +2316,7 @@
         if ( FT_RENEW_ARRAY( p->font->comments,
                              p->font->comments_len,
                              p->font->comments_len + 1 ) )
-          goto Exit;
+          goto Fail;
 
         p->font->comments[p->font->comments_len] = 0;
       }
@@ -2337,6 +2337,15 @@
     }
 
     return error;
+
+  Fail:
+    bdf_free_font( p->font );
+
+    memory = extmemory;
+
+    FT_FREE( p->font );
+
+    goto Exit;
   }
 
 
