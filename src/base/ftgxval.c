@@ -62,7 +62,7 @@
                                  tables,
                                  table_length );
     else
-      error = FT_Err_Invalid_Argument;
+      error = FT_Err_Unimplemented_Feature;
 
   Exit:
     return error;
@@ -108,7 +108,7 @@
                                  validation_flags,
                                  ckern_table );
     else
-      error = FT_Err_Invalid_Argument;
+      error = FT_Err_Unimplemented_Feature;
 
   Exit:
     return error;
