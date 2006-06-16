@@ -1,20 +1,20 @@
 2006-06-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Public API of TrueTypeGX, OpenType and classic kern table validator
-	should return FT_Err_Unimplemented_Feature, when validation service
-	is unavailable (disabled by modules.cfg). It is originally suggested
-	by David Turner:
+	Public API of TrueTypeGX, OpenType, and classic kern table validator
+	should return `FT_Err_Unimplemented_Feature' if validation service
+	is unavailable (disabled in `modules.cfg').  It is originally
+	suggested by David Turner, cf.
 	http://lists.gnu.org/archive/html/freetype-devel/2005-11/msg00078.html
 
-	* src/base/ftgxval.c (FT_TrueTypeGX_Validate): return
-	FT_Err_Unimplemented_Feature, When TrueTypeGX validation service
-	is unavailable.
-	(FT_ClassicKern_Validate): return FT_Err_Unimplemented_Feature,
-	when classic kern table validation service is unavailable.
+	* src/base/ftgxval.c (FT_TrueTypeGX_Validate): Return
+	FT_Err_Unimplemented_Feature if TrueTypeGX validation service is
+	unavailable.
+	(FT_ClassicKern_Validate): Return FT_Err_Unimplemented_Feature if
+	classic kern table validation service is unavailable.
 
-	* src/base/ftotval.c (FT_OpenType_Validate): return
-	FT_Err_Unimplemented_Feature, When OpenType validation service
-	is unavailable.
+	* src/base/ftotval.c (FT_OpenType_Validate): Return
+	FT_Err_Unimplemented_Feature if OpenType validation service is
+	unavailable.
 
 2006-06-08  Werner Lemberg  <wl@gnu.org>
 
