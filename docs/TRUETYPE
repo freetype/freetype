@@ -17,17 +17,17 @@ How to enable the TrueType native hinter if you need it
 
     - locate a line that says:
 
-        #undef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+        /* #define TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     - change it to:
 
-          #define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+        #define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
   These steps must be done _before_ compiling the library.
 
 ------------------------------------------------------------------------
 
-Copyright 2003, 2005 by
+Copyright 2003, 2005, 2006 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file is  part  of the  FreeType  project, and  may  only be  used,
