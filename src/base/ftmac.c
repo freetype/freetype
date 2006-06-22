@@ -64,11 +64,13 @@
   /* This is for Mac OS X.  Without redefinition, OS_INLINE */
   /* expands to `static inline' which doesn't survive the   */
   /* -ansi compilation flag of GCC.                         */
+#undef  OS_INLINE
 #define OS_INLINE   static __inline__
 #include <Carbon/Carbon.h>
 #else
 #include <Resources.h>
 #include <Fonts.h>
+#include <Endian.h>
 #include <Errors.h>
 #include <Files.h>
 #include <TextUtils.h>
@@ -536,7 +538,7 @@
     /* The count is 1 greater than the value in the FOND.  */
     /* Isn't that cute? :-)                                */
 
-    return 1 + *( (short*)( fond_data + sizeof ( FamRec ) ) );
+    return EndianS16_BtoN( *( (short*)( fond_data + sizeof ( FamRec ) ) ) ) + 1;
   }
 
 
@@ -549,13 +551,13 @@
 
 
     fond     = (FamRec*)fond_data;
-    face_all = *( (short *)( fond_data + sizeof ( FamRec ) ) ) + 1;
+    face_all = EndianS16_BtoN( *( (short *)( fond_data + sizeof ( FamRec ) ) ) ) + 1;
     assoc    = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
     face     = 0;
 
     for ( i = 0; i < face_all; i++ )
     {
-      if ( 0 == assoc[i].fontSize )
+      if ( 0 == EndianS16_BtoN( assoc[i].fontSize ) )
         face++;
     }
     return face;
@@ -597,19 +599,19 @@
 
       /* if the face at this index is not scalable,
          fall back to the first one (old behavior) */
-      if ( assoc->fontSize == 0 )
+      if ( EndianS16_BtoN( assoc->fontSize ) == 0 )
       {
         *have_sfnt = 1;
-        *sfnt_id   = assoc->fontID;
+        *sfnt_id   = EndianS16_BtoN( assoc->fontID );
       }
       else if ( base_assoc->fontSize == 0 )
       {
         *have_sfnt = 1;
-        *sfnt_id   = base_assoc->fontID;
+        *sfnt_id   = EndianS16_BtoN( base_assoc->fontID );
       }
     }
 
-    if ( fond->ffStylOff )
+    if ( EndianS32_BtoN( fond->ffStylOff ) )
     {
       unsigned char*  p = (unsigned char*)fond_data;
       StyleTable*     style;
@@ -619,10 +621,10 @@
       int             i;
 
 
-      p += fond->ffStylOff;
+      p += EndianS32_BtoN( fond->ffStylOff );
       style = (StyleTable*)p;
       p += sizeof ( StyleTable );
-      string_count = *(unsigned short*)(p);
+      string_count = EndianS16_BtoN( *(short*)(p) );
       p += sizeof ( short );
 
       for ( i = 0; i < string_count && i < 64; i++ )
@@ -770,13 +772,13 @@
     Str255    lwfn_file_name;
     UInt8     buff[HFS_MAXPATHLEN];
     FT_Error  err;
+    short     num_faces;
 
 
     have_sfnt = have_lwfn = 0;
 
     HLock( fond );
     parse_fond( *fond, &have_sfnt, &sfnt_id, lwfn_file_name, 0 );
-    HUnlock( fond );
 
     if ( lwfn_file_name[0] )
     {
@@ -787,9 +789,12 @@
     }
 
     if ( have_lwfn && ( !have_sfnt || PREFER_LWFN ) )
-      return 1;
+      num_faces = 1;
     else
-      return count_faces_scalable( *fond );
+      num_faces = count_faces_scalable( *fond );
+
+    HUnlock( fond );
+    return num_faces;
   }
 
 
