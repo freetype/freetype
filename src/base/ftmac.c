@@ -538,7 +538,8 @@
     /* The count is 1 greater than the value in the FOND.  */
     /* Isn't that cute? :-)                                */
 
-    return EndianS16_BtoN( *( (short*)( fond_data + sizeof ( FamRec ) ) ) ) + 1;
+    return EndianS16_BtoN( *( (short*)( fond_data +
+                                        sizeof ( FamRec ) ) ) ) + 1;
   }
 
 
@@ -551,7 +552,8 @@
 
 
     fond     = (FamRec*)fond_data;
-    face_all = EndianS16_BtoN( *( (short *)( fond_data + sizeof ( FamRec ) ) ) ) + 1;
+    face_all = EndianS16_BtoN( *( (short *)( fond_data +
+                                             sizeof ( FamRec ) ) ) ) + 1;
     assoc    = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
     face     = 0;
 

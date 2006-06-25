@@ -1,32 +1,30 @@
 2006-06-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Insert EndianS16_BtoN and EndianS32_BtoN as workaround for
-	Intel Mac. The original patch was written by David Sachitano
-	and Lawrence Coopet, modified by Sean McBride for MPW
-	compatibility. Only required data are converted, unused data
-	are left in big endian.
+	Insert EndianS16_BtoN and EndianS32_BtoN as workaround for Intel
+	Mac.  The original patch was written by David Sachitano and Lawrence
+	Coopet, and modified by Sean McBride for MPW compatibility.  Only
+	required data are converted; unused data are left in big endian.
 
-	* src/base/ftmac.c:
-	Undefine existing OS_INLINE before definition.
-	Include <Endian.h> for byteorder macros for non Mac OS X
-	platforms.
-	(count_faces_sfnt): Insert EndianS16_BtoN to parse the header
-	of FontAssociation table in FOND resource.
-	(count_faces_scalable): Insert EndianS16_BtoN to parse the
-	header and fontSize at each entry of FontAssociation table
-	in FOND resource.
-	(parse_fond): Insert EndianS16_BtoN and EndianS32_BtoN to
-	parse ffStylOff of FamilyRecord header of FOND resource,
-	the header, fontSize, fontID at each entry of FontAssociation
-	table, and StyleMapping table.
-	(count_faces): HUnlock is suspended after all FOND utilization.
+	* src/base/ftmac.c: Include <Endian.h> for byteorder macros for non
+	Mac OS X platforms.
+	(OS_INLINE): Undefine before definition.
+	(count_faces_sfnt): Insert EndianS16_BtoN to parse the header of
+	FontAssociation table in FOND resource.
+	(count_faces_scalable): Insert EndianS16_BtoN to parse the header
+	and fontSize at each entry of FontAssociation table in FOND
+	resource.
+	(parse_fond): Insert EndianS16_BtoN and EndianS32_BtoN to parse
+	ffStylOff of FamilyRecord header of FOND resource, the header,
+	fontSize, fontID at each entry of FontAssociation table, and
+	StyleMapping table.
+	(count_faces): Call `HUnlock' after all FOND utilization.
 
 2006-06-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Public API of TrueTypeGX, OpenType, and classic kern table validator
 	should return `FT_Err_Unimplemented_Feature' if validation service
 	is unavailable (disabled in `modules.cfg').  It is originally
-	suggested by David Turner, cf.
+	suggested by David Turner, cf. 
 	http://lists.gnu.org/archive/html/freetype-devel/2005-11/msg00078.html
 
 	* src/base/ftgxval.c (FT_TrueTypeGX_Validate): Return
