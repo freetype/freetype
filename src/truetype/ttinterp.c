@@ -5379,9 +5379,10 @@
     if ( contour == 0 )
       first_point = 0;
     else
-      first_point = (FT_UShort)(CUR.pts.contours[contour - 1] + 1);
+      first_point = (FT_UShort)( CUR.pts.contours[contour - 1] + 1 -
+                                 CUR.pts.first_point );
 
-    last_point = CUR.pts.contours[contour];
+    last_point = CUR.pts.contours[contour] - CUR.pts.first_point;
 
     /* XXX: this is probably wrong... at least it prevents memory */
     /*      corruption when zp2 is the twilight zone              */
@@ -6315,7 +6316,7 @@
 
     do
     {
-      end_point   = CUR.pts.contours[contour];
+      end_point   = CUR.pts.contours[contour] - CUR.pts.first_point;
       first_point = point;
 
       while ( point <= end_point && (CUR.pts.tags[point] & mask) == 0 )

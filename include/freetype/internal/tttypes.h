@@ -1458,19 +1458,23 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*     contours     :: The contours end points.                          */
   /*                                                                       */
+  /*     first_point  :: Offset of the current subglyph's first point.     */
+  /*                                                                       */
   typedef struct  TT_GlyphZoneRec_
   {
     FT_Memory   memory;
     FT_UShort   max_points;
     FT_UShort   max_contours;
-    FT_UShort   n_points;   /* number of points in zone    */
-    FT_Short    n_contours; /* number of contours          */
+    FT_UShort   n_points;    /* number of points in zone    */
+    FT_Short    n_contours;  /* number of contours          */
 
-    FT_Vector*  org;        /* original point coordinates  */
-    FT_Vector*  cur;        /* current point coordinates   */
+    FT_Vector*  org;         /* original point coordinates  */
+    FT_Vector*  cur;         /* current point coordinates   */
 
-    FT_Byte*    tags;       /* current touch flags         */
-    FT_UShort*  contours;   /* contour end points          */
+    FT_Byte*    tags;        /* current touch flags         */
+    FT_UShort*  contours;    /* contour end points          */
+
+    FT_UShort   first_point; /* offset of first (#0) point  */
 
   } TT_GlyphZoneRec, *TT_GlyphZone;
 

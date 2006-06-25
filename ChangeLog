@@ -1,3 +1,19 @@
+2006-06-24  Eugeniy Meshcheryakov  <eugen@univ.kiev.ua>
+
+	Fix two hinting bugs as reported in
+	http://lists.nongnu.org/archive/html/freetype-devel/2006-06/msg00057.html.
+
+	* include/freetype/internal/tttypes.h (TT_GlyphZoneRec): Add
+	`first_point' member.
+
+	* src/truetype/ttgload.c (tt_prepare_zone): Initialize
+	`first_point'.
+	(TT_Process_Composite_Glyph): Always untouch points.
+
+	* src/truetype/ttinterp.c (Ins_SHC): Fix computation of
+	`first_point' and `last_point' in case of composite glyphs.
+	(Ins_IUP): Fix computation of `end_point'.
+
 2006-06-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Insert EndianS16_BtoN and EndianS32_BtoN as workaround for Intel

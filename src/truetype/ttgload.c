@@ -578,6 +578,7 @@
     zone->cur        = load->outline.points + start_point;
     zone->tags       = (FT_Byte*)load->outline.tags + start_point;
     zone->contours   = (FT_UShort*)load->outline.contours + start_contour;
+    zone->first_point = start_point;
   }
 
 
@@ -938,6 +939,7 @@
   {
     FT_Error     error;
     FT_Outline*  outline;
+    FT_UInt      i;
 
 
     outline = &loader->gloader->base.outline;
@@ -995,6 +997,13 @@
 
     tt_prepare_zone( &loader->zone, &loader->gloader->base,
                      start_point, start_contour );
+
+    /* Some points are likely touched during execution of  */
+    /* instructions on components.  So let's untouch them. */
+    for ( i = start_point; i < loader->zone.n_points; i++ )
+      loader->zone.tags[i] &= ~( FT_CURVE_TAG_TOUCH_X |
+                                 FT_CURVE_TAG_TOUCH_Y );
+
     loader->zone.n_points += 4;
 
     return TT_Hint_Glyph( loader, 1 );
