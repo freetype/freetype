@@ -563,8 +563,8 @@
     /* anything else */
     while ( cur < limit )
     {
-      /* `*cur' might be invalid (e.g., `)' or `}'), but this is handled */
-      /* by the caller which will see this when it continues parsing     */
+      /* *cur might be invalid (e.g., ')' or '}'), but this   */
+      /* is handled by the test `cur == parser->cursor' below */
       if ( IS_PS_DELIM( *cur ) )
         break;
 
@@ -572,6 +572,16 @@
     }
 
   Exit:
+    if ( cur == parser->cursor )
+    {
+      FT_ERROR(( "ps_parser_skip_PS_token: "
+                 "current token is `%c', which is self-delimiting "
+                 "but invalid at this point\n",
+                 *cur ));
+      
+      error = PSaux_Err_Invalid_File_Format;
+    }
+
     FT_ASSERT( parser->error == PSaux_Err_Ok );
     parser->error  = error;
     parser->cursor = cur;
