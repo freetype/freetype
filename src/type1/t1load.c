@@ -242,7 +242,7 @@
 
         return axismap->design_points[j - 1] +
                  FT_MulDiv( t,
-                            axismap->design_points[j] - 
+                            axismap->design_points[j] -
                               axismap->design_points[j - 1],
                             1L );
       }
@@ -732,7 +732,7 @@
     FT_Memory    memory = face->root.memory;
 
 
-    T1_ToTokenArray( parser, axis_tokens, 
+    T1_ToTokenArray( parser, axis_tokens,
                      T1_MAX_MM_AXIS, &num_axis );
     if ( num_axis < 0 )
     {
@@ -1724,58 +1724,31 @@
 
       cur = parser->root.cursor;
 
-      /* look for `FontDirectory' which causes problems for some fonts */
-      if ( *cur == 'F' && cur + 25 < limit                    &&
-           ft_strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
-      {
-        FT_Byte*  cur2;
-
-
-        /* skip the `FontDirectory' keyword */
-        T1_Skip_PS_Token( parser );
-        T1_Skip_Spaces  ( parser );
-        cur = cur2 = parser->root.cursor;
-
-        /* look up the `known' keyword */
-        while ( cur < limit )
-        {
-          if ( *cur == 'k' && cur + 5 < limit            &&
-               ft_strncmp( (char*)cur, "known", 5 ) == 0 )
-            break;
-
-          T1_Skip_PS_Token( parser );
-          if ( parser->root.error )
-            goto Exit;
-          T1_Skip_Spaces( parser );
-          cur = parser->root.cursor;
-        }
-
-        if ( cur < limit )
-        {
-          T1_TokenRec  token;
-
-
-          /* skip the `known' keyword and the token following it */
-          T1_Skip_PS_Token( parser );
-          T1_ToToken( parser, &token );
-
-          /* if the last token was an array, skip it! */
-          if ( token.type == T1_TOKEN_TYPE_ARRAY )
-            cur2 = parser->root.cursor;
-        }
-        parser->root.cursor = cur2;
-        have_integer = 0;
-      }
-
-      /* look for `eexec' */
-      else if ( *cur == 'e' && cur + 5 < limit &&
-                ft_strncmp( (char*)cur, "eexec", 5 ) == 0 )
+      /* cur[5] must be a token delimiter;                 */
+      /* eexec encryption is optional, so look for `eexec' */
+      if ( *cur == 'e' && cur + 5 < limit            &&
+           ft_strncmp( (char*)cur, "eexec", 5 ) == 0 )
         break;
 
+      /* cur[9] must be a token delimiter;                 */
       /* look for `closefile' which ends the eexec section */
-      else if ( *cur == 'c' && cur + 9 < limit &&
+      else if ( *cur == 'c' && cur + 9 < limit                &&
                 ft_strncmp( (char*)cur, "closefile", 9 ) == 0 )
         break;
+
+#ifdef TO_BE_DONE
+      /* in a synthetic font the base font starts after a           */
+      /* `FontDictionary' token that is placed after a Private dict */
+
+      /* cur[13] must be a token delimiter */
+      else if ( *cur == 'F' && cur + 13 < limit                    &&
+                ft_strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
+      {
+        if ( loader->private_encountered )
+          loader->fontdir_after_private = 1;
+        parser->root.cursor += 13;
+      }
+#endif
 
       /* check whether we have an integer */
       else if ( ft_isdigit( *cur ) )
@@ -1969,7 +1942,7 @@
 
     {
       FT_UInt  n;
-      
+
 
       for ( n = 0; n < T1_FIELD_COUNT; n++ )
         keyword_flags[n] = 0;
@@ -1989,7 +1962,7 @@
                         keyword_flags );
     if ( error )
       goto Exit;
- 
+
     /* ensure even-ness of `num_blue_values' */
     priv->num_blue_values &= ~1;
 

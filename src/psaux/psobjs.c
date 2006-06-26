@@ -312,45 +312,94 @@
   }
 
 
-  /* first character must be `(' */
+#define IS_OCTAL_DIGIT( c ) ( '0' <= (c) && (c) <= '7' )
 
-  static void
+
+  /* first character must be `(';                               */
+  /* *acur is positioned at the character after the closing `)' */
+
+  static FT_Error
   skip_literal_string( FT_Byte*  *acur,
                        FT_Byte*   limit )
   {
-    FT_Byte*  cur   = *acur;
-    FT_Int    embed = 0;
+    FT_Byte*      cur   = *acur;
+    FT_Int        embed = 0;
+    FT_Error      error = PSaux_Err_Invalid_File_Format;
+    unsigned int  i;
 
 
     while ( cur < limit )
     {
-      if ( *cur == '\\' )
-        cur++;
-      else if ( *cur == '(' )
+      FT_Byte  c = *cur;
+
+
+      ++cur;
+
+      if ( c == '\\' )
+      {
+        /* Red Book 3rd ed., section `Literal Text Strings', p. 29:     */
+        /* A backslash can introduce three different types              */
+        /* of escape sequences:                                         */
+        /*   - a special escaped char like \r, \n, etc.                 */
+        /*   - a one-, two-, or three-digit octal number                */
+        /*   - none of the above in which case the backslash is ignored */
+
+        if ( cur == limit )
+          /* error (or to be ignored?) */
+          break;
+
+        switch ( *cur )
+        {
+          /* skip `special' escape */
+        case 'n':
+        case 'r':
+        case 't':
+        case 'b':
+        case 'f':
+        case '\\':
+        case '(':
+        case ')':
+          ++cur;
+          break;
+
+        default:
+          /* skip octal escape or ignore backslash */
+          for ( i = 0; i < 3 && cur < limit; ++i )
+          {
+            if ( ! IS_OCTAL_DIGIT( *cur ) )
+              break;
+
+            ++cur;
+          }
+        }
+      }
+      else if ( c == '(' )
         embed++;
-      else if ( *cur == ')' )
+      else if ( c == ')' )
       {
         embed--;
         if ( embed == 0 )
         {
-          cur++;
+          error = PSaux_Err_Ok;
           break;
         }
       }
-      cur++;
     }
 
     *acur = cur;
+
+    return error;
   }
 
 
   /* first character must be `<' */
 
-  static void
-  skip_string( PS_Parser  parser )
+  static FT_Error
+  skip_string( FT_Byte*  *acur,
+               FT_Byte*   limit )
   {
-    FT_Byte*  cur   = parser->cursor;
-    FT_Byte*  limit = parser->limit;
+    FT_Byte*  cur = *acur;
+    FT_Error  err =  PSaux_Err_Ok;
 
 
     while ( ++cur < limit )
@@ -367,12 +416,72 @@
     if ( cur < limit && *cur != '>' )
     {
       FT_ERROR(( "skip_string: missing closing delimiter `>'\n" ));
-      parser->error = PSaux_Err_Invalid_File_Format;
+      err = PSaux_Err_Invalid_File_Format;
     }
     else
       cur++;
 
-    parser->cursor = cur;
+    *acur = cur;
+    return err;
+  }
+
+
+  /* first character must be the opening brace that */
+  /* starts the procedure                           */
+
+  /* NB: [ and ] need not match:                    */
+  /* `/foo {[} def' is a valid PostScript fragment, */
+  /* even within a Type1 font                       */
+
+  static FT_Error
+  skip_procedure( FT_Byte*  *acur,
+                  FT_Byte*   limit )
+  {
+    FT_Byte*  cur;
+    FT_Int    embed = 0;
+    FT_Error  error = PSaux_Err_Ok;
+
+
+    FT_ASSERT( **acur == '{' );
+
+    for ( cur = *acur; cur < limit && error == PSaux_Err_Ok; ++cur )
+    {
+      switch ( *cur )
+      {
+      case '{':
+        ++embed;
+        break;
+
+      case '}':
+        --embed;
+        if ( embed == 0 )
+        {
+          ++cur;
+          goto end;
+        }
+        break;
+
+      case '(':
+        error = skip_literal_string( &cur, limit );
+        break;
+
+      case '<':
+        error = skip_string( &cur, limit );
+        break;
+
+      case '%':
+        skip_comment( &cur, limit );
+        break;
+      }
+    }
+
+  end:
+    if ( embed != 0 )
+      error = PSaux_Err_Invalid_File_Format;
+
+    *acur = cur;
+
+    return error;
   }
 
 
@@ -393,6 +502,7 @@
 
     FT_Byte*  cur   = parser->cursor;
     FT_Byte*  limit = parser->limit;
+    FT_Error  error = PSaux_Err_Ok;
 
 
     skip_spaces( &cur, limit );             /* this also skips comments */
@@ -400,16 +510,23 @@
       goto Exit;
 
     /* self-delimiting, single-character tokens */
-    if ( *cur == '[' || *cur == ']' ||
-         *cur == '{' || *cur == '}' )
+    if ( *cur == '[' || *cur == ']' )
     {
       cur++;
       goto Exit;
     }
 
+    /* skip balanced expressions (procedures and strings) */
+
+    if ( *cur == '{' )                              /* {...} */
+    {
+      error = skip_procedure( &cur, limit );
+      goto Exit;
+    }
+
     if ( *cur == '(' )                              /* (...) */
     {
-      skip_literal_string( &cur, limit );
+      error = skip_literal_string( &cur, limit );
       goto Exit;
     }
 
@@ -419,11 +536,11 @@
       {
         cur++;
         cur++;
-        goto Exit;
       }
-      parser->cursor = cur;
-      skip_string( parser );
-      return;
+      else
+        error = skip_string( &cur, limit );
+
+      goto Exit;
     }
 
     if ( *cur == '>' )
@@ -433,7 +550,7 @@
       {
         FT_ERROR(( "ps_parser_skip_PS_token: "
                    "unexpected closing delimiter `>'\n" ));
-        parser->error = PSaux_Err_Invalid_File_Format;
+        error = PSaux_Err_Invalid_File_Format;
         goto Exit;
       }
       cur++;
@@ -446,20 +563,17 @@
     /* anything else */
     while ( cur < limit )
     {
-      if ( *cur == ')' )
-      {
-        FT_ERROR(( "ps_parser_skip_PS_token: "
-                   "unexpected closing delimiter `)'\n" ));
-        parser->error = PSaux_Err_Invalid_File_Format;
-        goto Exit;
-      }
-      else if ( IS_PS_DELIM( *cur ) )
+      /* `*cur' might be invalid (e.g., `)' or `}'), but this is handled */
+      /* by the caller which will see this when it continues parsing     */
+      if ( IS_PS_DELIM( *cur ) )
         break;
 
       cur++;
     }
 
   Exit:
+    FT_ASSERT( parser->error == PSaux_Err_Ok );
+    parser->error  = error;
     parser->cursor = cur;
   }
 
@@ -480,7 +594,6 @@
   {
     FT_Byte*  cur;
     FT_Byte*  limit;
-    FT_Byte   starter, ender;
     FT_Int    embed;
 
 
@@ -503,26 +616,27 @@
     case '(':
       token->type  = T1_TOKEN_TYPE_STRING;
       token->start = cur;
-      skip_literal_string( &cur, limit );
-      if ( cur < limit )
+
+      if ( skip_literal_string( &cur, limit ) == PSaux_Err_Ok )
         token->limit = cur;
       break;
 
       /************* check for programs/array *****************/
     case '{':
-      token->type = T1_TOKEN_TYPE_ARRAY;
-      ender = '}';
-      goto Lookup_Ender;
+      token->type  = T1_TOKEN_TYPE_ARRAY;
+      token->start = cur;
+
+      if ( skip_procedure( &cur, limit ) == PSaux_Err_Ok )
+        token->limit = cur;
+      break;
 
       /************* check for table/array ********************/
+      /* XXX: in theory we should also look for "<<"          */
+      /*      since this is semantically equivalent to "[";   */
+      /*      in practice it doesn't matter (?)               */
     case '[':
-      token->type = T1_TOKEN_TYPE_ARRAY;
-      ender = ']';
-      /* fall through */
-
-    Lookup_Ender:
+      token->type  = T1_TOKEN_TYPE_ARRAY;
       embed        = 1;
-      starter      = *cur;
       token->start = cur++;
 
       /* we need this to catch `[ ]' */
@@ -532,9 +646,11 @@
 
       while ( cur < limit && !parser->error )
       {
-        if ( *cur == starter )
+        /* XXX: this is wrong because it does not      */
+        /*      skip comments, procedures, and strings */
+        if ( *cur == '[' )
           embed++;
-        else if ( *cur == ender )
+        else if ( *cur == ']' )
         {
           embed--;
           if ( embed <= 0 )
@@ -1038,11 +1154,10 @@
     T1_FieldRec  fieldrec = *(T1_Field)field;
 
 
-#if 1
     fieldrec.type = T1_FIELD_TYPE_INTEGER;
-    if ( field->type == T1_FIELD_TYPE_FIXED_ARRAY )
+    if ( field->type == T1_FIELD_TYPE_FIXED_ARRAY ||
+         field->type == T1_FIELD_TYPE_BBOX        )
       fieldrec.type = T1_FIELD_TYPE_FIXED;
-#endif
 
     ps_parser_to_token_array( parser, elements,
                               T1_MAX_TABLE_ELEMENTS, &num_elements );
@@ -1057,9 +1172,10 @@
     old_cursor = parser->cursor;
     old_limit  = parser->limit;
 
-    /* we store the elements count */
-    *(FT_Byte*)( (FT_Byte*)objects[0] + field->count_offset ) =
-      (FT_Byte)num_elements;
+    /* we store the elements count if necessary */
+    if ( field->type != T1_FIELD_TYPE_BBOX )
+      *(FT_Byte*)( (FT_Byte*)objects[0] + field->count_offset ) =
+        (FT_Byte)num_elements;
 
     /* we now load each element, adjusting the field.offset on each one */
     token = elements;

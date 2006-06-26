@@ -1,3 +1,24 @@
+2006-06-25  Jens Claudius  <jens.claudius@yahoo.com>
+
+	The Type 1 parser now skips over top-level procedures as required
+	for a `Simplified Parser'.  This makes the parser more robust as it
+	doesn't poke around in PostScript code.  Additionally, it makes the
+	FontDirectory hackery in src/type1/t1load.c unnecessary.
+
+	* src/psaux/psobjs.c (IS_OCTAL_DIGIT): New macro.
+	(skip_literal_string): Add FT_Error as return value.
+	Handle escapes better.
+	(skip_string): Add FT_Error as return value.
+	Don't set `parser->error' but return error code directly.
+	(skip_procedure): New function.
+	(ps_parser_skip_PS_token): Handle procedures.
+	Update code.
+	(ps_parser_to_token): Update code.
+	(ps_parser_load_field_table): Handle bbox entries also.
+
+	* src/type1/t1load.c (parse_dict): Remove FontDirectory hackery.
+	Add commented-out code for synthetic fonts.
+
 2006-06-24  Eugeniy Meshcheryakov  <eugen@univ.kiev.ua>
 
 	Fix two hinting bugs as reported in
