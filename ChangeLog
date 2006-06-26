@@ -1,3 +1,15 @@
+2006-06-26  Jens Claudius  <jens.claudius@yahoo.com>
+
+	* src/psaux/t1decode.c (T1_Operator, t1_args_count): Add opcode 15.
+	(t1_decoder_parse_charstrings): Operator with
+	opcode 15 pops its two arguments.
+	Handle the case where the pops of an othersubr may be part of a
+	subroutine.
+	Handle unknown othersubrs gracefully: count their operands and let
+	the following pop operators push the operands as the results onto
+	the Type1 stack.
+	Improve handling of setcurrentpoint opcode.
+
 2006-06-25  Jens Claudius  <jens.claudius@yahoo.com>
 
 	The Type 1 parser now skips over top-level procedures as required
