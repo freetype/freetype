@@ -1,3 +1,8 @@
+2006-06-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Handle fonts correctly which
+	don't have a POINT_SIZE property.  This fixes Savannah bug #16914.
+
 2006-06-26  Jens Claudius  <jens.claudius@yahoo.com>
 
 	* src/psaux/t1decode.c (T1_Operator, t1_args_count): Add opcode 15.
