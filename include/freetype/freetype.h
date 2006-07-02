@@ -913,7 +913,8 @@ FT_BEGIN_HEADER
 
     FT_Generic        generic;
 
-    /*# the following are only relevant to scalable outlines */
+    /*# the following are only relevant to scalable outlines; */
+    /*# cf. `FT_Bitmap_Size' for bitmap fonts                 */
     FT_BBox           bbox;
 
     FT_UShort         units_per_EM;
