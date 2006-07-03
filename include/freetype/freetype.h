@@ -1271,6 +1271,8 @@ FT_BEGIN_HEADER
   /*    glyphs.  As this would be a definite performance hit, it is up to  */
   /*    client applications to perform such computations.                  */
   /*                                                                       */
+  /*    The FT_Size_Metrics structure is valid for bitmap fonts also.      */
+  /*                                                                       */
   typedef struct  FT_Size_Metrics_
   {
     FT_UShort  x_ppem;      /* horizontal pixels per EM               */
