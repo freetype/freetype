@@ -1,3 +1,29 @@
+2006-07-07  Werner Lemberg  <wl@gnu.org>
+
+	Add many checks to protect against malformed PCF files.
+
+	* src/pcf/pcfdrivr.c (PCF_Face_Done): Protect against NULL pointers.
+	(PCF_Face_Init): Add calls to PCF_Face_Done in case of errors.
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Protect against malformed table
+	data and check that tables don't overlap (using a simple
+	bubblesort).
+	(PCF_METRIC_SIZE, PCF_COMPRESSED_METRIC_SIZE, PCF_PROPERTY_SIZE):
+	New macros which give the size of data structures in the data
+	stream.
+	(pcf_get_properties): Use rough estimates to get array size limits.
+	Assign `face->nprops' and `face->properties' earlier so that a call
+	to PCF_Face_Done can do the clean-up in case of error.
+	Protect against invalid string offsets.
+	(pcf_get_metrics): Clean up code.
+	Adjust tracing message levels.
+	Use rough estimate to get array size limit.
+	(pcf_get_bitmaps): Clean up code.
+	Adjust tracing message levels.
+	Use rough estimates to get offset limits.
+	(pcf_get_encodings): Adjust tracing message level.
+	(pcf_get_accel): Clean up code.
+
 2006-06-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/bdfdrivr.c (BDF_Face_Init): Handle fonts correctly which
