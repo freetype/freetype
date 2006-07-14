@@ -208,6 +208,16 @@ FT_BEGIN_HEADER
     /* support for Multiple Masters fonts */
     PS_Blend        blend;
 
+    /* undocumented, optional: indices of subroutines that express      */
+    /* the NormalizeDesignVector and the ConvertDesignVector procedure, */
+    /* respectively, as Type 2 charstrings; -1 if keywords not present  */
+    FT_Int           ndv_idx;
+    FT_Int           cdv_idx;
+
+    /* undocumented, optional: has the same meaning as len_buildchar */
+    /* for Type 2 fonts; manipulated by othersubrs 19, 24, and 25    */
+    FT_UInt          len_buildchar;
+
     /* since version 2.1 - interface to PostScript hinter */
     const void*     pshinter;
 

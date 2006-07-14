@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 tokenizer (specification).                                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -73,12 +73,35 @@
   T1_FIELD_NUM  ( "FontType", font_type )
   T1_FIELD_FIXED( "StrokeWidth", stroke_width )
 
+
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  FT_BBox
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_BBOX
 
   T1_FIELD_BBOX("FontBBox", xMin )
+
+
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  T1_FaceRec
+#undef  T1CODE
+#define T1CODE        T1_FIELD_LOCATION_FACE
+
+  T1_FIELD_NUM      ( "NDV", ndv_idx )
+  T1_FIELD_NUM      ( "CDV", cdv_idx )
+
+
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  PS_BlendRec
+#undef  T1CODE
+#define T1CODE        T1_FIELD_LOCATION_BLEND
+
+  T1_FIELD_NUM_TABLE( "DesignVector", default_design_vector, T1_MAX_MM_DESIGNS )
+
+
+#endif /* T1_CONFIG_OPTION_NO_MM_SUPPORT */
 
 
 /* END */

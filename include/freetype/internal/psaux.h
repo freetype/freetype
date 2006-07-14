@@ -199,6 +199,9 @@ FT_BEGIN_HEADER
     T1_FIELD_LOCATION_FONT_INFO,
     T1_FIELD_LOCATION_PRIVATE,
     T1_FIELD_LOCATION_BBOX,
+    T1_FIELD_LOCATION_LOADER,
+    T1_FIELD_LOCATION_FACE,
+    T1_FIELD_LOCATION_BLEND,
 
     /* do not remove */
     T1_FIELD_LOCATION_MAX
@@ -683,6 +686,10 @@ FT_BEGIN_HEADER
     T1_Decoder_Callback  parse_callback;
     T1_Decoder_FuncsRec  funcs;
 
+    FT_Int*              buildchar;
+
+    T1_Face              face;
+
   } T1_DecoderRec;
 
 
@@ -712,7 +719,9 @@ FT_BEGIN_HEADER
 
   } AFM_Parser_FuncsRec;
 
+
   typedef struct AFM_StreamRec_*  AFM_Stream;
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -800,6 +809,57 @@ FT_BEGIN_HEADER
 
   /* backwards-compatible type definition */
   typedef PSAux_ServiceRec   PSAux_Interface;
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                 Some convenience functions                    *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+#define IS_PS_NEWLINE( ch ) \
+  ( (ch) == '\r' ||         \
+    (ch) == '\n' )
+
+#define IS_PS_SPACE( ch )  \
+  ( (ch) == ' '         || \
+    IS_PS_NEWLINE( ch ) || \
+    (ch) == '\t'        || \
+    (ch) == '\f'        || \
+    (ch) == '\0' )
+
+#define IS_PS_SPECIAL( ch )       \
+  ( (ch) == '/'                || \
+    (ch) == '(' || (ch) == ')' || \
+    (ch) == '<' || (ch) == '>' || \
+    (ch) == '[' || (ch) == ']' || \
+    (ch) == '{' || (ch) == '}' || \
+    (ch) == '%'                )
+
+#define IS_PS_DELIM( ch )  \
+  ( IS_PS_SPACE( ch )   || \
+    IS_PS_SPECIAL( ch ) )
+
+#define IS_PS_DIGIT( ch )        \
+  ( (ch) >= '0' && (ch) <= '9' )
+
+#define IS_PS_XDIGIT( ch )            \
+  ( IS_PS_DIGIT( ch )              || \
+    ( (ch) >= 'A' && (ch) <= 'F' ) || \
+    ( (ch) >= 'a' && (ch) <= 'f' ) )
+
+#define IS_PS_BASE85( ch )       \
+  ( (ch) >= '!' && (ch) <= 'u' )
+
+#define IS_PS_TOKEN( cur, limit, token )                                \
+  ( (char)(cur)[0] == (token)[0]                                     && \
+    ( (cur) + sizeof ( (token) ) == (limit) ||                          \
+      ( (cur) + sizeof( (token) ) < (limit)          &&                 \
+        IS_PS_DELIM( (cur)[sizeof ( (token) ) - 1] ) ) )             && \
+    ft_strncmp( (char*)(cur), (token), sizeof ( (token) ) - 1 ) == 0 )
+
 
 FT_END_HEADER
 

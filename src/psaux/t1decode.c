@@ -348,6 +348,14 @@
 
     hinter = (T1_Hints_Funcs)builder->hints_funcs;
 
+    /* a font that reads BuildCharArray without setting */
+    /* its values first is buggy, but ...               */
+    if ( decoder->face->len_buildchar > 0 )
+      memset( &decoder->buildchar[0],
+              0,
+              sizeof( decoder->buildchar[0] ) *
+                decoder->face->len_buildchar );
+
     FT_TRACE4(( "\nStart charstring\n" ));
 
     zone->base           = charstring_base;
@@ -582,12 +590,9 @@
         subr_no = (FT_Int)top[1];
         arg_cnt = (FT_Int)top[0];
 
-        if ( arg_cnt > top - decoder->stack )
-          goto Stack_Underflow;
-
         /***********************************************************/
         /*                                                         */
-        /* remove all operands to callsubr from the stack          */
+        /* remove all operands to callothersubr from the stack     */
         /*                                                         */
         /* for handled othersubrs, where we know the number of     */
         /* arguments, we increase the stack by the value of        */
@@ -596,10 +601,29 @@
         /* for unhandled othersubrs the following pops adjust the  */
         /* stack pointer as necessary                              */
 
+        if ( arg_cnt > top - decoder->stack )
+          goto Stack_Underflow;
+
         top -= arg_cnt;
 
         known_othersubr_result_cnt   = 0;
         unknown_othersubr_result_cnt = 0;
+
+        /* XXX TODO: The checks to `arg_count == <whatever>'       */
+        /* might not be correct; an othersubr expects a certain    */
+        /* number of operands on the PostScript stack (as opposed  */
+        /* to the T1 stack) but it doesn't have to put them there  */
+        /* by itself; previous othersubrs might have left the      */
+        /* operands there if they were not followed by an          */
+        /* appropriate number of pops                              */
+        /*                                                         */
+        /* On the other hand, Adobe Reader 7.0.8 for Linux doesn't */
+        /* accept a font that contains charstrings like            */
+        /*                                                         */
+        /*     100 200 2 20 callothersubr                          */
+        /*     300 1 20 callothersubr pop                          */
+        /*                                                         */
+        /* Perhaps this is the reason why BuildCharArray exists.   */
 
         switch ( subr_no )
         {
@@ -726,6 +750,158 @@
             break;
           }
 
+#ifdef CAN_HANDLE_NON_INTEGRAL_T1_OPERANDS
+
+          /* We cannot yet enable these since currently  */
+          /* our T1 stack stores integers which lack the */
+          /* precision to express the values             */
+
+        case 19:
+          /* <idx> 1 19 callothersubr                             */
+          /* => replace elements starting from index cvi( <idx> ) */
+          /*    of BuildCharArray with WeightVector               */
+          {
+            FT_Int    idx;
+            PS_Blend  blend = decoder->blend;
+
+
+            if ( arg_cnt != 1 || blend == NULL )
+              goto Unexpected_OtherSubr;
+
+            idx = top[0];
+
+            if ( idx < 0                                                 ||
+                 idx + blend->num_designs > decoder->face->len_buildchar )
+              goto Unexpected_OtherSubr;
+
+            memcpy( &decoder->buildchar[idx],
+                    blend->weight_vector,
+                    blend->num_designs *
+                      sizeof( blend->weight_vector[ 0 ] ) );
+          }
+          break;
+
+        case 20:
+          /* <arg1> <arg2> 2 20 callothersubr pop   */
+          /* ==> push <arg1> + <arg2> onto T1 stack */
+          if ( arg_cnt != 2 )
+            goto Unexpected_OtherSubr;
+
+          top[0] += top[1]; /* XXX (over|under)flow */
+
+          known_othersubr_result_cnt = 1;
+          break;
+
+        case 21:
+          /* <arg1> <arg2> 2 21 callothersubr pop   */
+          /* ==> push <arg1> - <arg2> onto T1 stack */
+          if ( arg_cnt != 2 )
+            goto Unexpected_OtherSubr;
+
+          top[0] -= top[1]; /* XXX (over|under)flow */
+
+          known_othersubr_result_cnt = 1;
+          break;
+
+        case 22:
+          /* <arg1> <arg2> 2 22 callothersubr pop   */
+          /* ==> push <arg1> * <arg2> onto T1 stack */
+          if ( arg_cnt != 2 )
+            goto Unexpected_OtherSubr;
+
+          top[0] *= top[1]; /* XXX (over|under)flow */
+
+          known_othersubr_result_cnt = 1;
+          break;
+
+        case 23:
+          /* <arg1> <arg2> 2 23 callothersubr pop   */
+          /* ==> push <arg1> / <arg2> onto T1 stack */
+          if ( arg_cnt != 2 || top[1] == 0 )
+            goto Unexpected_OtherSubr;
+
+          top[0] /= top[1]; /* XXX (over|under)flow */
+
+          known_othersubr_result_cnt = 1;
+          break;
+
+#endif /* CAN_HANDLE_NON_INTEGRAL_T1_OPERANDS */
+
+        case 24:
+          /* <val> <idx> 2 24 callothersubr              */
+          /* => set BuildCharArray[cvi( <idx> )] = <val> */
+          {
+            FT_Int    idx;
+            PS_Blend  blend = decoder->blend;
+
+            if ( arg_cnt != 2 || blend == NULL )
+              goto Unexpected_OtherSubr;
+
+            idx = top[1];
+
+            if ( idx < 0 || (FT_UInt) idx >= decoder->face->len_buildchar )
+              goto Unexpected_OtherSubr;
+
+            decoder->buildchar[idx] = top[0];
+          }
+          break;
+
+        case 25:
+          /* <idx> 1 25 callothersubr pop       */
+          /* => push BuildCharArray[cvi( idx )] */
+          /*    onto T1 stack                   */
+          {
+            FT_Int    idx;
+            PS_Blend  blend = decoder->blend;
+
+            if ( arg_cnt != 1 || blend == NULL )
+              goto Unexpected_OtherSubr;
+
+            idx = top[0];
+
+            if ( idx < 0 || (FT_UInt) idx >= decoder->face->len_buildchar )
+              goto Unexpected_OtherSubr;
+
+            top[0] = decoder->buildchar[idx];
+          }
+
+          known_othersubr_result_cnt = 1;
+          break;
+
+#if 0
+        case 26:
+          /* <val> mark <idx> ==> set BuildCharArray[cvi( <idx> )] = <val>, */
+          /*                      leave mark on T1 stack                    */
+          /* <val> <idx>      ==> set BuildCharArray[cvi( <idx> )] = <val>  */
+          XXX who has left his mark on the (PostScript) stack ?;
+          break;
+#endif
+
+        case 27:
+          /* <res1> <res2> <val1> <val2> 4 27 callothersubr pop */
+          /* ==> push <res1> onto T1 stack if <val1> <= <val2>,  */
+          /*     otherwise push <res2>                          */
+          if ( arg_cnt != 4 )
+            goto Unexpected_OtherSubr;
+
+          if ( top[2] > top[3] )
+            top[0] = top[1];
+
+          known_othersubr_result_cnt = 1;
+          break;
+
+#ifdef CAN_HANDLE_NON_INTEGRAL_T1_OPERANDS
+        case 28:
+          /* 0 28 callothersubr pop                               */
+          /* => push random value from interval [0, 1) onto stack */
+          if ( arg_cnt != 0 )
+            goto Unexpected_OtherSubr;
+
+          top[0] = FT_rand();
+          known_othersubr_result_cnt = 1;
+          break;
+#endif
+
         default:
           FT_ERROR(( "t1_decoder_parse_charstrings: "
                      "unknown othersubr [%d %d], wish me luck!\n",
@@ -805,8 +981,30 @@
           /* add current outline to the glyph slot */
           FT_GlyphLoader_Add( builder->loader );
 
+          FT_TRACE4(( "\n" ));
+
+          /* the compiler should optimize away this empty loop but ... */
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+          if ( decoder->face->len_buildchar > 0 )
+          {
+            FT_UInt  i;
+
+
+            FT_TRACE4(( "BuildCharArray = [ " ));
+
+            for ( i = 0; i < decoder->face->len_buildchar; ++i )
+              FT_TRACE4(( "%d ", decoder->buildchar[ i ] ));
+
+            FT_TRACE4(( "]\n" ));
+          }
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
+
+          FT_TRACE4(( "\n" ));
+
           /* return now! */
-          FT_TRACE4(( "\n\n" ));
           return PSaux_Err_Ok;
 
         case op_hsbw:
@@ -1225,6 +1423,10 @@
                    FT_Render_Mode       hint_mode,
                    T1_Decoder_Callback  parse_callback )
   {
+    FT_Error   error;
+    FT_Memory  memory = face->memory;
+
+
     FT_MEM_ZERO( decoder, sizeof ( *decoder ) );
 
     /* retrieve PSNames interface from list of current modules */
@@ -1241,6 +1443,18 @@
       }
 
       decoder->psnames = psnames;
+    }
+
+    decoder->face = (T1_Face) face;
+
+    if ( decoder->face->len_buildchar > 0 )
+    {
+      if ( FT_NEW_ARRAY( decoder->buildchar, decoder->face->len_buildchar ) )
+      {
+        FT_ERROR(( "t1_decoder_init: " ));
+        FT_ERROR(( "cannot allocate memory for BuildCharArray\n" ));
+        return error;
+      }
     }
 
     t1_builder_init( &decoder->builder, face, size, slot, hinting );
@@ -1261,7 +1475,12 @@
   FT_LOCAL_DEF( void )
   t1_decoder_done( T1_Decoder  decoder )
   {
+    FT_Memory  memory = decoder->face->root.memory;
+
+
     t1_builder_done( &decoder->builder );
+
+    FT_FREE( decoder->buildchar );
   }
 
 

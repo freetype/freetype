@@ -1,3 +1,58 @@
+2006-07-14  Jens Claudius  <jens.claudius@yahoo.com>
+
+	* freetype2/include/freetype/internal/psaux.h: New macros
+	IS_PS_NEWLINE, IS_PS_SPACE, IS_PS_SPECIAL, IS_PS_DELIM, IS_PS_DIGIT,
+	IS_PS_XDIGIT, and IS_PS_BASE85 (from freetype2/src/psaux/psconv.h).
+	(T1_FieldLocation): Add T1_FIELD_LOCATION_LOADER,
+	T1_FIELD_LOCATION_FACE, and T1_FIELD_LOCATION_BLEND.
+	(T1_DecoderRec): New fields `buildchar' and `face'.
+	(IS_PS_TOKEN): New macro.
+
+	* freetype2/include/freetype/internal/t1types.h (T1_FaceRec): New
+	fields `ndv_idx', `cdv_idx', and `len_buildchar'.
+
+	* freetype2/include/freetype/t1tables.h (PS_BlendRec): New fields
+	`default_design_vector' and `num_default_design_vector'.
+
+	* freetype2/src/psaux/psconv.h: Move macros IS_PS_NEWLINE,
+	IS_PS_SPACE, IS_PS_SPECIAL, IS_PS_DELIM, IS_PS_DIGIT, IS_PS_XDIGIT,
+	and IS_PS_BASE85 to freetype2/include/freetype/internal/psaux.h.
+
+	* freetype2/src/psaux/psobjs.c (ps_parser_to_token_array): Allow
+	`token' argument to be NULL if we want only to count the number of
+	tokens.
+	(ps_tocoordarray): Allow `coords' argument to be NULL if we just
+	want to skip the array.
+	(ps_tofixedarray): Allow `values' argument to be NULL if we just
+	want to skip the array.
+
+	* freetype2/src/psaux/t1decode.c (t1_decoder_parse_charstrings): Add
+	support for (partially commented out) othersubrs 19-25, 27, and 28.
+	(t1_decoder_init): Initialize new fields `face' and `buildchar'.
+	(t1_decoder_done): Release new field `buildchar'.
+
+	* freetype2/src/type1/t1load.c (parse_buildchar, parse_private): New
+	functions.
+	(t1_keywords): Register them.
+	(t1_allocate_blend): Updated.
+	(t1_load_keyword): Handle field types T1_FIELD_LOCATION_LOADER,
+	T1_FIELD_LOCATION_FACE and T1_FIELD_LOCATION_BLEND.
+	(parse_dict): Remove `keyword_flags' argument.
+	Use new macro IS_PS_TOKEN.
+	Changed function so that later PostScript definitions override
+	earlier ones.
+	(t1_init_loader): Initialize new field `keywords_encountered'.
+	(T1_Open_Face): Initialize new fields `ndv_idx', `cdv_idx', and
+	`len_buildchar'.
+	Remove `keywords_flags'.
+
+	* freetype2/src/type1/t1load.h (T1_LoaderRect): New field
+	`keywords_encountered'.
+	(T1_PRIVATE, T1_FONTDIR_AFTER_PRIVATE): New macros.
+
+	* freetype2/src/type1/t1tokens.h [!T1_CONFIG_OPTION_NO_MM_SUPPORT]:
+	New entries for parsing /NDV, /CDV, and /DesignVector.
+
 2006-07-07  Werner Lemberg  <wl@gnu.org>
 
 	Add many checks to protect against malformed PCF files.

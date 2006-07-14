@@ -698,6 +698,9 @@
   }
 
 
+  /* NB: `tokens' can be NULL if we only want to count */
+  /* the number of array elements                      */
+
   FT_LOCAL_DEF( void )
   ps_parser_to_token_array( PS_Parser  parser,
                             T1_Token   tokens,
@@ -733,7 +736,7 @@
         if ( !token.type )
           break;
 
-        if ( cur < limit )
+        if ( tokens != NULL && cur < limit )
           *cur = token;
 
         cur++;
@@ -748,6 +751,8 @@
 
 
   /* first character must be a delimiter or a part of a number */
+  /* NB: `coords' can be NULL if we just want to skip the      */
+  /*     array; in this case we ignore `max_coords'            */
 
   static FT_Int
   ps_tocoordarray( FT_Byte*  *acur,
@@ -780,21 +785,26 @@
     /* now, read the coordinates */
     while ( cur < limit )
     {
+      FT_Short dummy;
+
+
       /* skip whitespace in front of data */
       skip_spaces( &cur, limit );
       if ( cur >= limit )
         goto Exit;
 
-      if ( count >= max_coords )
+      if ( coords != NULL && count >= max_coords )
         break;
 
-      if ( c == ender )
+      if ( *cur == ender )
       {
         cur++;
         break;
       }
 
-      coords[count] =
+      /* call PS_Conv_ToFixed() even if coords == NULL */
+      /* to properly parse number at `cur'             */
+      *( coords != NULL ? &coords[count] : &dummy ) =
         (FT_Short)( PS_Conv_ToFixed( &cur, limit, 0 ) >> 16 );
       count++;
 
@@ -809,6 +819,8 @@
 
 
   /* first character must be a delimiter or a part of a number */
+  /* NB: `values' can be NULL if we just want to skip the      */
+  /*     array in this case we ignore `max_values'             */
 
   static FT_Int
   ps_tofixedarray( FT_Byte*  *acur,
@@ -842,21 +854,27 @@
     /* now, read the values */
     while ( cur < limit )
     {
+      FT_Fixed dummy;
+
+
       /* skip whitespace in front of data */
       skip_spaces( &cur, limit );
       if ( cur >= limit )
         goto Exit;
 
-      if ( count >= max_values )
+      if ( values != NULL && count >= max_values )
         break;
 
-      if ( c == ender )
+      if ( *cur == ender )
       {
         cur++;
         break;
       }
 
-      values[count] = PS_Conv_ToFixed( &cur, limit, power_ten );
+      /* call PS_Conv_ToFixed() even if coords == NULL */
+      /* to properly parse number at `cur'             */
+      *( values != NULL ? &values[count] : &dummy ) =
+        PS_Conv_ToFixed( &cur, limit, power_ten );
       count++;
 
       if ( !ender )
