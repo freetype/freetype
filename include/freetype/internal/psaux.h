@@ -687,8 +687,7 @@ FT_BEGIN_HEADER
     T1_Decoder_FuncsRec  funcs;
 
     FT_Int*              buildchar;
-
-    T1_Face              face;
+    FT_UInt              len_buildchar;
 
   } T1_DecoderRec;
 

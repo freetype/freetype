@@ -1,3 +1,42 @@
+2006-07-18  Jens Claudius  <jens.claudius@yahoo.com>
+
+	Move creation of field `buildchar' of T1_DecoderRec out of
+	`t1_decoder_init' and let the caller of `t1_decoder_init' take care
+	of it.
+
+	Call the finisher for T1_Decoder in `cid_face_compute_max_advance'
+	and `T1_Compute_Max_Advance'.
+
+	* freetype2/include/freetype/internal/psaux.h (T1_DecoderRec):
+	Remove field `face', add `len_buildchar'.
+
+	* freetype2/include/freetype/internal/t1types.h (T1_FaceRec): Add
+	field `buildchar'.
+
+	* freetype2/src/cid/cidgload.c (cid_face_compute_max_advance): Call
+	finisher for T1_Decoder.
+	(cid_slot_load_glyph): Do not ignore failure when initializing the
+	T1_Decoder.
+
+	* freetype2/src/psaux/t1decode.c (t1_decoder_parse_charstrings):
+	Updated.
+	(t1_decoder_init): Remove initialization of fields `buildchar' and
+	`len_buildchar'.
+	(t1_decoder_done): Remove deallocation of field `buildchar'.
+
+	* freetype/src/type1/t1gload.c (T1_Compute_Max_Advance): Initialize
+	T1_Decoder's `buildchar' and `len_buildchar'; call finisher for
+	T1_Decoder.
+	(T1_Load_Glyph): Initialize T1_Decoder's `buildchar' and
+	`len_buildchar'; make sure to call finisher for T1_Decoder even in
+	case of error.
+
+	* freetype2/src/type1/t1load.c (T1_Open_Face): Allocate new field
+	`buildchar' of T1_FaceRec.
+
+	* freetype2/src/type1/t1objs.c (T1_Face_Done): Free new field
+	`buildchar' of T1_FaceRec.
+
 2006-07-14  Jens Claudius  <jens.claudius@yahoo.com>
 
 	* freetype2/include/freetype/internal/psaux.h: New macros

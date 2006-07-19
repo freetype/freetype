@@ -350,11 +350,14 @@
 
     /* a font that reads BuildCharArray without setting */
     /* its values first is buggy, but ...               */
-    if ( decoder->face->len_buildchar > 0 )
+    FT_ASSERT( ( decoder->len_buildchar == 0 ) ==
+               ( decoder->buildchar == NULL ) );
+
+    if ( decoder->len_buildchar > 0 )
       memset( &decoder->buildchar[0],
               0,
               sizeof( decoder->buildchar[0] ) *
-                decoder->face->len_buildchar );
+                decoder->len_buildchar );
 
     FT_TRACE4(( "\nStart charstring\n" ));
 
@@ -839,7 +842,7 @@
 
             idx = top[1];
 
-            if ( idx < 0 || (FT_UInt) idx >= decoder->face->len_buildchar )
+            if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
               goto Unexpected_OtherSubr;
 
             decoder->buildchar[idx] = top[0];
@@ -859,7 +862,7 @@
 
             idx = top[0];
 
-            if ( idx < 0 || (FT_UInt) idx >= decoder->face->len_buildchar )
+            if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
               goto Unexpected_OtherSubr;
 
             top[0] = decoder->buildchar[idx];
@@ -987,14 +990,14 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-          if ( decoder->face->len_buildchar > 0 )
+          if ( decoder->len_buildchar > 0 )
           {
             FT_UInt  i;
 
 
             FT_TRACE4(( "BuildCharArray = [ " ));
 
-            for ( i = 0; i < decoder->face->len_buildchar; ++i )
+            for ( i = 0; i < decoder->len_buildchar; ++i )
               FT_TRACE4(( "%d ", decoder->buildchar[ i ] ));
 
             FT_TRACE4(( "]\n" ));
@@ -1423,10 +1426,6 @@
                    FT_Render_Mode       hint_mode,
                    T1_Decoder_Callback  parse_callback )
   {
-    FT_Error   error;
-    FT_Memory  memory = face->memory;
-
-
     FT_MEM_ZERO( decoder, sizeof ( *decoder ) );
 
     /* retrieve PSNames interface from list of current modules */
@@ -1445,19 +1444,11 @@
       decoder->psnames = psnames;
     }
 
-    decoder->face = (T1_Face) face;
-
-    if ( decoder->face->len_buildchar > 0 )
-    {
-      if ( FT_NEW_ARRAY( decoder->buildchar, decoder->face->len_buildchar ) )
-      {
-        FT_ERROR(( "t1_decoder_init: " ));
-        FT_ERROR(( "cannot allocate memory for BuildCharArray\n" ));
-        return error;
-      }
-    }
-
     t1_builder_init( &decoder->builder, face, size, slot, hinting );
+
+    /* decoder->buildchar and decoder->len_buildchar have to be  */
+    /* initialized by the caller since we cannot know the length */
+    /* of the BuildCharArray                                     */
 
     decoder->num_glyphs     = (FT_UInt)face->num_glyphs;
     decoder->glyph_names    = glyph_names;
@@ -1467,7 +1458,7 @@
 
     decoder->funcs          = t1_decoder_funcs;
 
-    return 0;
+    return PSaux_Err_Ok;
   }
 
 
@@ -1475,12 +1466,7 @@
   FT_LOCAL_DEF( void )
   t1_decoder_done( T1_Decoder  decoder )
   {
-    FT_Memory  memory = decoder->face->root.memory;
-
-
     t1_builder_done( &decoder->builder );
-
-    FT_FREE( decoder->buildchar );
   }
 
 

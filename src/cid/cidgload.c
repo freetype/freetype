@@ -230,6 +230,9 @@
     if ( error )
       return error;
 
+    /* TODO: initialize decoder.len_buildchar and decoder.buildchar */
+    /*       if we ever support CID-keyed multiple master fonts     */
+
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
 
@@ -244,6 +247,8 @@
     }
 
     *max_advance = decoder.builder.advance.x;
+
+    psaux->t1_decoder_funcs->done( &decoder );
 
     return CID_Err_Ok;
   }
@@ -295,17 +300,23 @@
                                              FT_LOAD_TARGET_MODE( load_flags ),
                                              cid_load_glyph );
 
-      /* set up the decoder */
-      decoder.builder.no_recurse = FT_BOOL(
-        ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
+      if ( !error )
+      {
+        /* TODO: initialize decoder.len_buildchar and decoder.buildchar */
+        /*       if we ever support CID-keyed multiple master fonts     */
 
-      error = cid_load_glyph( &decoder, glyph_index );
+        /* set up the decoder */
+        decoder.builder.no_recurse = FT_BOOL(
+          ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
 
-      font_matrix = decoder.font_matrix;
-      font_offset = decoder.font_offset;
+        error = cid_load_glyph( &decoder, glyph_index );
 
-      /* save new glyph tables */
-      psaux->t1_decoder_funcs->done( &decoder );
+        font_matrix = decoder.font_matrix;
+        font_offset = decoder.font_offset;
+
+        /* save new glyph tables */
+        psaux->t1_decoder_funcs->done( &decoder );
+      }
     }
 
     /* now, set the metrics -- this is rather simple, as   */

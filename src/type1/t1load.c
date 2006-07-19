@@ -2038,6 +2038,22 @@
         }
     }
 
+    if ( face->blend )
+    {
+      if ( face->len_buildchar > 0 )
+      {
+        FT_Memory  memory = face->root.memory;
+
+
+        if ( FT_NEW_ARRAY( face->buildchar, face->len_buildchar ) )
+        {
+          FT_ERROR(( "T1_Open_Face: cannot allocate BuildCharArray\n" ));
+          face->len_buildchar = 0;
+          goto Exit;
+        }
+      }
+    }
+
 #endif /* T1_CONFIG_OPTION_NO_MM_SUPPORT */
 
     /* now, propagate the subrs, charstrings, and glyphnames tables */
