@@ -1324,7 +1324,7 @@
 2006-02-13  Chia-I Wu  <b90201047@ntu.edu.tw>
 
 	Clean up the SFNT_Interface.  In this final pass, `load_hmtx' is
-	splitted from `load_hhea'.
+	split from `load_hhea'.
 
 	* include/freetype/internal/sfnt.h, src/sfnt/sfdriver.c,
 	src/sfnt/ttmtx.c, src/sfnt/ttmtx.h: Split `hmtx' from `hhea'.
@@ -1381,7 +1381,7 @@
 
 	* src/truetype/ttpload.c, src/truetype/ttpload.h: `hdmx' loading and
 	parsing code is moved here.
-	New function `tt_face_load_prep' splitted from `tt_face_load_fpgm'.
+	New function `tt_face_load_prep' split from `tt_face_load_fpgm'.
 	`tt_face_load_fpgm' returns `FT_Err_Ok' if `fpgm' doesn't exist.
 
 	* src/cff/cffgload.c, src/cff/cffobjs.c: Update.
