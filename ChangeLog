@@ -1,3 +1,29 @@
+2006-08-13  Jens Claudius  <jens.claudius@yahoo.com>
+
+	* freetype2/include/freetype/internal/psaux.h: (enum T1_TokenType_):
+	add T1_TOKEN_TYPE_KEY. (struct T1_FieldRec_) add `dict'. Add macros
+	T1_FIELD_DICT_FONTDICT and  T1_FIELD_DICT_PRIVATE. Change T1_NEW_XXX and
+	T1_FIELD_XXX macros to take the dictionary where the PS keywords is
+	expected as an additional argument.
+
+	* freetype2/src/cid/cidload.c: (T1_FieldRec): Adjust invocations
+	of T1_FIELD_XXX.
+
+	* freetype2/src/cid/cidtoken.h: Adjust invocations of T1_FIELD_XXX.
+
+	* freetype2/src/psaux/psobjs.c: Add macro FT_COMPONENT for tracing.
+	(ps_parser_to_token): Report a PostScript key as T1_TOKEN_TYPE_KEY
+	instead as T1_TOKEN_TYPE_ANY. (ps_parser_load_field): Make sure a token
+	that should be a string or name is a string or name indeed. Avoid
+	memory leak if a keyword has been already encountered and its value
+	is overwritten.
+
+	* freetype2/src/type1/t1load.c: (T1_FieldRec): Adjust invocations of
+	T1_FIELD_XXX. (parse_dict): Ignore keywords that occur in the wrong
+	dictionary (e.g., in Private instead of FontDict).
+
+	* freetype2/src/type1/t1tokens.h: Adjust invocations of T1_FIELD_XXX.
+
 2006-07-18  Jens Claudius  <jens.claudius@yahoo.com>
 
 	Move creation of field `buildchar' of T1_DecoderRec out of

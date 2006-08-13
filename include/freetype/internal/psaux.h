@@ -154,6 +154,7 @@ FT_BEGIN_HEADER
     T1_TOKEN_TYPE_ANY,
     T1_TOKEN_TYPE_STRING,
     T1_TOKEN_TYPE_ARRAY,
+    T1_TOKEN_TYPE_KEY, /* aka `name' */
 
     /* do not remove */
     T1_TOKEN_TYPE_MAX
@@ -227,86 +228,96 @@ FT_BEGIN_HEADER
                                       /* array                          */
     FT_UInt             count_offset; /* offset of element count for    */
                                       /* arrays                         */
+    FT_UInt             dict;         /* where we expect it             */
   } T1_FieldRec;
 
+#define T1_FIELD_DICT_FONTDICT ( 1 << 0 ) /* also FontInfo and FDArray */
+#define T1_FIELD_DICT_PRIVATE  ( 1 << 1 )
 
-#define T1_NEW_SIMPLE_FIELD( _ident, _type, _fname ) \
-          {                                          \
-            _ident, T1CODE, _type,                   \
-            0,                                       \
-            FT_FIELD_OFFSET( _fname ),               \
-            FT_FIELD_SIZE( _fname ),                 \
-            0, 0                                     \
+
+
+#define T1_NEW_SIMPLE_FIELD( _ident, _type, _fname, _dict ) \
+          {                                                 \
+            _ident, T1CODE, _type,                          \
+            0,                                              \
+            FT_FIELD_OFFSET( _fname ),                      \
+            FT_FIELD_SIZE( _fname ),                        \
+            0, 0,                                           \
+            _dict                                           \
           },
 
-#define T1_NEW_CALLBACK_FIELD( _ident, _reader )    \
-          {                                         \
-            _ident, T1CODE, T1_FIELD_TYPE_CALLBACK, \
-            (T1_Field_ParseFunc)_reader,            \
-            0, 0,                                   \
-            0, 0                                    \
+#define T1_NEW_CALLBACK_FIELD( _ident, _reader, _dict ) \
+          {                                             \
+            _ident, T1CODE, T1_FIELD_TYPE_CALLBACK,     \
+            (T1_Field_ParseFunc)_reader,                \
+            0, 0,                                       \
+            0, 0,                                       \
+            _dict                                       \
           },
 
-#define T1_NEW_TABLE_FIELD( _ident, _type, _fname, _max ) \
-          {                                               \
-            _ident, T1CODE, _type,                        \
-            0,                                            \
-            FT_FIELD_OFFSET( _fname ),                    \
-            FT_FIELD_SIZE_DELTA( _fname ),                \
-            _max,                                         \
-            FT_FIELD_OFFSET( num_ ## _fname )             \
+#define T1_NEW_TABLE_FIELD( _ident, _type, _fname, _max, _dict ) \
+          {                                                      \
+            _ident, T1CODE, _type,                               \
+            0,                                                   \
+            FT_FIELD_OFFSET( _fname ),                           \
+            FT_FIELD_SIZE_DELTA( _fname ),                       \
+            _max,                                                \
+            FT_FIELD_OFFSET( num_ ## _fname ),                   \
+            _dict                                                \
           },
 
-#define T1_NEW_TABLE_FIELD2( _ident, _type, _fname, _max ) \
-          {                                                \
-            _ident, T1CODE, _type,                         \
-            0,                                             \
-            FT_FIELD_OFFSET( _fname ),                     \
-            FT_FIELD_SIZE_DELTA( _fname ),                 \
-            _max, 0                                        \
+#define T1_NEW_TABLE_FIELD2( _ident, _type, _fname, _max, _dict ) \
+          {                                                       \
+            _ident, T1CODE, _type,                                \
+            0,                                                    \
+            FT_FIELD_OFFSET( _fname ),                            \
+            FT_FIELD_SIZE_DELTA( _fname ),                        \
+            _max, 0,                                              \
+            _dict                                                 \
           },
 
 
-#define T1_FIELD_BOOL( _ident, _fname )                             \
-          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BOOL, _fname )
+#define T1_FIELD_BOOL( _ident, _fname, _dict )                             \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BOOL, _fname, _dict )
 
-#define T1_FIELD_NUM( _ident, _fname )                                 \
-          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_INTEGER, _fname )
+#define T1_FIELD_NUM( _ident, _fname, _dict )                                 \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_INTEGER, _fname, _dict )
 
-#define T1_FIELD_FIXED( _ident, _fname )                             \
-          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_FIXED, _fname )
+#define T1_FIELD_FIXED( _ident, _fname, _dict )                             \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_FIXED, _fname, _dict )
 
-#define T1_FIELD_FIXED_1000( _ident, _fname )                             \
-          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_FIXED_1000, _fname )
+#define T1_FIELD_FIXED_1000( _ident, _fname, _dict )                     \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_FIXED_1000, _fname, \
+                               _dict )
 
-#define T1_FIELD_STRING( _ident, _fname )                             \
-          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_STRING, _fname )
+#define T1_FIELD_STRING( _ident, _fname, _dict )                             \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_STRING, _fname, _dict )
 
-#define T1_FIELD_KEY( _ident, _fname )                             \
-          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_KEY, _fname )
+#define T1_FIELD_KEY( _ident, _fname, _dict )                             \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_KEY, _fname, _dict )
 
-#define T1_FIELD_BBOX( _ident, _fname )                             \
-          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BBOX, _fname )
+#define T1_FIELD_BBOX( _ident, _fname, _dict )                             \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BBOX, _fname, _dict )
 
 
-#define T1_FIELD_NUM_TABLE( _ident, _fname, _fmax )                \
+#define T1_FIELD_NUM_TABLE( _ident, _fname, _fmax, _dict )         \
           T1_NEW_TABLE_FIELD( _ident, T1_FIELD_TYPE_INTEGER_ARRAY, \
-                              _fname, _fmax )
+                              _fname, _fmax, _dict )
 
-#define T1_FIELD_FIXED_TABLE( _ident, _fname, _fmax )            \
+#define T1_FIELD_FIXED_TABLE( _ident, _fname, _fmax, _dict )     \
           T1_NEW_TABLE_FIELD( _ident, T1_FIELD_TYPE_FIXED_ARRAY, \
-                              _fname, _fmax )
+                              _fname, _fmax, _dict )
 
-#define T1_FIELD_NUM_TABLE2( _ident, _fname, _fmax )                \
+#define T1_FIELD_NUM_TABLE2( _ident, _fname, _fmax, _dict )         \
           T1_NEW_TABLE_FIELD2( _ident, T1_FIELD_TYPE_INTEGER_ARRAY, \
-                               _fname, _fmax )
+                               _fname, _fmax, _dict )
 
-#define T1_FIELD_FIXED_TABLE2( _ident, _fname, _fmax )            \
+#define T1_FIELD_FIXED_TABLE2( _ident, _fname, _fmax, _dict )     \
           T1_NEW_TABLE_FIELD2( _ident, T1_FIELD_TYPE_FIXED_ARRAY, \
-                               _fname, _fmax )
+                               _fname, _fmax, _dict )
 
-#define T1_FIELD_CALLBACK( _ident, _name )       \
-          T1_NEW_CALLBACK_FIELD( _ident, _name )
+#define T1_FIELD_CALLBACK( _ident, _name, _dict )       \
+          T1_NEW_CALLBACK_FIELD( _ident, _name, _dict )
 
 
   /*************************************************************************/

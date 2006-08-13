@@ -240,10 +240,10 @@
 
 #include "cidtoken.h"
 
-    T1_FIELD_CALLBACK( "FDArray",    parse_fd_array )
-    T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
+    T1_FIELD_CALLBACK( "FDArray",    parse_fd_array, 0 )
+    T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix, 0 )
 
-    { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
+    { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0, 0 }
   };
 
 

@@ -27,6 +27,16 @@
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_psobjs
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
   /*****                             PS_TABLE                          *****/
@@ -118,7 +128,7 @@
     }
 
     /* copy elements and shift offsets */
-    if (old_base )
+    if ( old_base )
     {
       FT_MEM_COPY( table->block, old_base, table->capacity );
       shift_elements( table, old_base );
@@ -681,7 +691,7 @@
       /* ************ otherwise, it is any token **************/
     default:
       token->start = cur;
-      token->type  = T1_TOKEN_TYPE_ANY;
+      token->type  = ( *cur == '/' ? T1_TOKEN_TYPE_KEY : T1_TOKEN_TYPE_ANY );
       ps_parser_skip_PS_token( parser );
       cur = parser->cursor;
       if ( !parser->error )
@@ -1101,17 +1111,40 @@
           if ( cur >= limit )
             break;
 
-          if ( field->type == T1_FIELD_TYPE_KEY )
+          /* we allow both a string or a name   */
+          /* for cases like /FontName (foo) def */
+          if ( token.type == T1_TOKEN_TYPE_KEY )
           {
             /* don't include leading `/' */
             len--;
             cur++;
           }
-          else
+          else if ( token.type == T1_TOKEN_TYPE_STRING )
           {
-            /* don't include delimiting parentheses */
+            /* don't include delimiting parentheses    */
+            /* XXX we don't handle <<...>> here        */
+            /* XXX should we convert octal escapes?    */
+            /*     if so, what encoding should we use? */
             cur++;
             len -= 2;
+          }
+          else
+          {
+            FT_ERROR(( "ps_parser_load_field: expected a name or string "
+                       "but found token of type %d instead\n",
+                       token.type ));
+            error = PSaux_Err_Invalid_File_Format;
+            goto Exit;
+          }
+
+          /* for this to work (FT_String**)q must have been */
+          /* initialized to NULL                            */
+          if ( *(FT_String**)q != NULL )
+          {
+            FT_TRACE0(( "ps_parser_load_field: overwriting field %s\n",
+                        field->ident ));
+            FT_FREE( *(FT_String**)q );
+            *(FT_String**)q = NULL;
           }
 
           if ( FT_ALLOC( string, len + 1 ) )
