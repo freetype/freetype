@@ -1,5 +1,10 @@
 2006-08-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* modules.cfg (BASE_EXTENSIONS): Compile in ftgxval.c by default to
+	build ftvalid in ft2demos. Commit on 2006-02-28 had been slipped.
+
+2006-08-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	`ft_validator_run' wrapping `setjmp' can cause crash, found by Jens:
 	http://lists.nongnu.org/archive/html/freetype-devel/2006-08/msg00004.htm
 
