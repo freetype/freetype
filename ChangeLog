@@ -1,3 +1,13 @@
+2006-08-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	`ft_validator_run' wrapping `setjmp' can cause crash, found by Jens:
+	http://lists.nongnu.org/archive/html/freetype-devel/2006-08/msg00004.htm
+
+	* freetype2/src/otvalid/otvmod.c: replace `ft_validator_run' by
+	`ft_setjmp'. It reverts the change introduced on 2005-08-20.
+
+	* freetype2/src/gxvalid/gxvmod.c: Ditto.
+
 2006-08-13  Jens Claudius  <jens.claudius@yahoo.com>
 
 	* freetype2/include/freetype/internal/psaux.h: (enum T1_TokenType_):

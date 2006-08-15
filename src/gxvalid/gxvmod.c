@@ -91,7 +91,7 @@
           {                                                          \
             ft_validator_init( &valid, _sfnt, _sfnt + len_ ## _sfnt, \
                                FT_VALIDATE_DEFAULT );                \
-            if ( ft_validator_run( &valid ) == 0 )                   \
+            if ( ft_setjmp( valid.jump_buffer ) == 0 )               \
               gxv_ ## _sfnt ## _validate( _sfnt, face, &valid );     \
             error = valid.error;                                     \
             if ( error )                                             \
@@ -210,7 +210,7 @@
     {
       ft_validator_init( &valid, ckern, ckern + len_ckern,
                          FT_VALIDATE_DEFAULT );
-      if ( ft_validator_run( &valid ) == 0 )
+      if ( ft_setjmp( valid.jump_buffer ) == 0 )
         gxv_kern_validate_classic( ckern, face,
                                    ckern_flags & FT_VALIDATE_CKERN, &valid );
       error = valid.error;
