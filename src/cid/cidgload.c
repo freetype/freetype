@@ -289,134 +289,131 @@
 
     cidglyph->format = FT_GLYPH_FORMAT_OUTLINE;
 
-    {
-      error = psaux->t1_decoder_funcs->init( &decoder,
-                                             cidglyph->face,
-                                             cidsize,
-                                             cidglyph,
-                                             0, /* glyph names -- XXX */
-                                             0, /* blend == 0 */
-                                             hinting,
-                                             FT_LOAD_TARGET_MODE( load_flags ),
-                                             cid_load_glyph );
+    error = psaux->t1_decoder_funcs->init( &decoder,
+                                           cidglyph->face,
+                                           cidsize,
+                                           cidglyph,
+                                           0, /* glyph names -- XXX */
+                                           0, /* blend == 0 */
+                                           hinting,
+                                           FT_LOAD_TARGET_MODE( load_flags ),
+                                           cid_load_glyph );
+    if (error)
+      goto Exit;
 
-      if ( !error )
-      {
-        /* TODO: initialize decoder.len_buildchar and decoder.buildchar */
-        /*       if we ever support CID-keyed multiple master fonts     */
+    /* TODO: initialize decoder.len_buildchar and decoder.buildchar */
+    /*       if we ever support CID-keyed multiple master fonts     */
 
-        /* set up the decoder */
-        decoder.builder.no_recurse = FT_BOOL(
-          ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
+    /* set up the decoder */
+    decoder.builder.no_recurse = FT_BOOL(
+      ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
 
-        error = cid_load_glyph( &decoder, glyph_index );
+    error = cid_load_glyph( &decoder, glyph_index );
+    if (error)
+      goto Exit;
 
-        font_matrix = decoder.font_matrix;
-        font_offset = decoder.font_offset;
+    font_matrix = decoder.font_matrix;
+    font_offset = decoder.font_offset;
 
-        /* save new glyph tables */
-        psaux->t1_decoder_funcs->done( &decoder );
-      }
-    }
+    /* save new glyph tables */
+    psaux->t1_decoder_funcs->done( &decoder );
 
     /* now, set the metrics -- this is rather simple, as   */
     /* the left side bearing is the xMin, and the top side */
     /* bearing the yMax                                    */
-    if ( !error )
+    cidglyph->outline.flags &= FT_OUTLINE_OWNER;
+    cidglyph->outline.flags |= FT_OUTLINE_REVERSE_FILL;
+
+    /* for composite glyphs, return only left side bearing and */
+    /* advance width                                           */
+    if ( load_flags & FT_LOAD_NO_RECURSE )
     {
-      cidglyph->outline.flags &= FT_OUTLINE_OWNER;
-      cidglyph->outline.flags |= FT_OUTLINE_REVERSE_FILL;
+      FT_Slot_Internal  internal = cidglyph->internal;
 
-      /* for composite glyphs, return only left side bearing and */
-      /* advance width                                           */
-      if ( load_flags & FT_LOAD_NO_RECURSE )
+
+      cidglyph->metrics.horiBearingX = decoder.builder.left_bearing.x;
+      cidglyph->metrics.horiAdvance  = decoder.builder.advance.x;
+
+      internal->glyph_matrix         = font_matrix;
+      internal->glyph_delta          = font_offset;
+      internal->glyph_transformed    = 1;
+    }
+    else
+    {
+      FT_BBox            cbox;
+      FT_Glyph_Metrics*  metrics = &cidglyph->metrics;
+      FT_Vector          advance;
+
+
+      /* copy the _unscaled_ advance width */
+      metrics->horiAdvance                  = decoder.builder.advance.x;
+      cidglyph->linearHoriAdvance           = decoder.builder.advance.x;
+      cidglyph->internal->glyph_transformed = 0;
+
+      /* make up vertical ones */
+      metrics->vertAdvance        = ( face->cid.font_bbox.yMax -
+                                      face->cid.font_bbox.yMin ) >> 16;
+      cidglyph->linearVertAdvance = metrics->vertAdvance;
+
+      cidglyph->format            = FT_GLYPH_FORMAT_OUTLINE;
+
+      if ( size && cidsize->metrics.y_ppem < 24 )
+        cidglyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
+
+      /* apply the font matrix */
+      FT_Outline_Transform( &cidglyph->outline, &font_matrix );
+
+      FT_Outline_Translate( &cidglyph->outline,
+                            font_offset.x,
+                            font_offset.y );
+
+      advance.x = metrics->horiAdvance;
+      advance.y = 0;
+      FT_Vector_Transform( &advance, &font_matrix );
+      metrics->horiAdvance = advance.x + font_offset.x;
+      advance.x = 0;
+      advance.y = metrics->vertAdvance;
+      FT_Vector_Transform( &advance, &font_matrix );
+      metrics->vertAdvance = advance.y + font_offset.y;
+
+      if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
       {
-        FT_Slot_Internal  internal = cidglyph->internal;
+        /* scale the outline and the metrics */
+        FT_Int       n;
+        FT_Outline*  cur = decoder.builder.base;
+        FT_Vector*   vec = cur->points;
+        FT_Fixed     x_scale = glyph->x_scale;
+        FT_Fixed     y_scale = glyph->y_scale;
 
 
-        cidglyph->metrics.horiBearingX = decoder.builder.left_bearing.x;
-        cidglyph->metrics.horiAdvance  = decoder.builder.advance.x;
+        /* First of all, scale the points */
+        if ( !hinting || !decoder.builder.hints_funcs )
+          for ( n = cur->n_points; n > 0; n--, vec++ )
+          {
+            vec->x = FT_MulFix( vec->x, x_scale );
+            vec->y = FT_MulFix( vec->y, y_scale );
+          }
 
-        internal->glyph_matrix         = font_matrix;
-        internal->glyph_delta          = font_offset;
-        internal->glyph_transformed    = 1;
+        /* Then scale the metrics */
+        metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
+        metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  y_scale );
       }
-      else
-      {
-        FT_BBox            cbox;
-        FT_Glyph_Metrics*  metrics = &cidglyph->metrics;
-        FT_Vector          advance;
 
+      /* compute the other metrics */
+      FT_Outline_Get_CBox( &cidglyph->outline, &cbox );
 
-        /* copy the _unscaled_ advance width */
-        metrics->horiAdvance                  = decoder.builder.advance.x;
-        cidglyph->linearHoriAdvance           = decoder.builder.advance.x;
-        cidglyph->internal->glyph_transformed = 0;
+      metrics->width  = cbox.xMax - cbox.xMin;
+      metrics->height = cbox.yMax - cbox.yMin;
 
-        /* make up vertical ones */
-        metrics->vertAdvance        = ( face->cid.font_bbox.yMax -
-                                        face->cid.font_bbox.yMin ) >> 16;
-        cidglyph->linearVertAdvance = metrics->vertAdvance;
+      metrics->horiBearingX = cbox.xMin;
+      metrics->horiBearingY = cbox.yMax;
 
-        cidglyph->format            = FT_GLYPH_FORMAT_OUTLINE;
-
-        if ( size && cidsize->metrics.y_ppem < 24 )
-          cidglyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
-
-        /* apply the font matrix */
-        FT_Outline_Transform( &cidglyph->outline, &font_matrix );
-
-        FT_Outline_Translate( &cidglyph->outline,
-                              font_offset.x,
-                              font_offset.y );
-
-        advance.x = metrics->horiAdvance;
-        advance.y = 0;
-        FT_Vector_Transform( &advance, &font_matrix );
-        metrics->horiAdvance = advance.x + font_offset.x;
-        advance.x = 0;
-        advance.y = metrics->vertAdvance;
-        FT_Vector_Transform( &advance, &font_matrix );
-        metrics->vertAdvance = advance.y + font_offset.y;
-
-        if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
-        {
-          /* scale the outline and the metrics */
-          FT_Int       n;
-          FT_Outline*  cur = decoder.builder.base;
-          FT_Vector*   vec = cur->points;
-          FT_Fixed     x_scale = glyph->x_scale;
-          FT_Fixed     y_scale = glyph->y_scale;
-
-
-          /* First of all, scale the points */
-          if ( !hinting || !decoder.builder.hints_funcs )
-            for ( n = cur->n_points; n > 0; n--, vec++ )
-            {
-              vec->x = FT_MulFix( vec->x, x_scale );
-              vec->y = FT_MulFix( vec->y, y_scale );
-            }
-
-          /* Then scale the metrics */
-          metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
-          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  y_scale );
-        }
-
-        /* compute the other metrics */
-        FT_Outline_Get_CBox( &cidglyph->outline, &cbox );
-
-        metrics->width  = cbox.xMax - cbox.xMin;
-        metrics->height = cbox.yMax - cbox.yMin;
-
-        metrics->horiBearingX = cbox.xMin;
-        metrics->horiBearingY = cbox.yMax;
-
-        /* make up vertical ones */
-        ft_synthesize_vertical_metrics( metrics,
-                                        metrics->vertAdvance );
-      }
+      /* make up vertical ones */
+      ft_synthesize_vertical_metrics( metrics,
+                                      metrics->vertAdvance );
     }
 
+  Exit:
     return error;
   }
 

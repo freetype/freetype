@@ -578,7 +578,7 @@
     zone->cur        = load->outline.points + start_point;
     zone->tags       = (FT_Byte*)load->outline.tags + start_point;
     zone->contours   = (FT_UShort*)load->outline.contours + start_contour;
-    zone->first_point = start_point;
+    zone->first_point = (FT_UShort)start_point;
   }
 
 
