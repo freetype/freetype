@@ -3,6 +3,9 @@
     * src/cid/cidgload.c (cid_slot_load_glyph),
     src/truetype/ttgload.c (tt_prepare_zone): removing compiler warnings
 
+    * src/base/ftobjs.c (ft_validator_run): disabling function, it is
+    buggy by design, so it will always return -1
+
 2006-08-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* modules.cfg (BASE_EXTENSIONS): Compile in ftgxval.c by default to
