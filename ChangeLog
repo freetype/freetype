@@ -6,6 +6,14 @@
     * src/base/ftobjs.c (ft_validator_run): disabling function, it is
     buggy by design, so it will always return -1
 
+    * include/freetype/internal/ftgloadr.h,
+    include/freetype/internal/tttypes.h, src/base/ftgloadr.c,
+    src/base/ftobjs.c, src/truetype/ttgload.c, src/truetype/ttinterp.c,
+    src/truetype/ttobjs.c: improvements to native TrueType hinting,
+    this is a first try, controlled by the FIX_BYTECODE macro in
+    src/truetype/ttinterp.c
+
+
 2006-08-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* modules.cfg (BASE_EXTENSIONS): Compile in ftgxval.c by default to

@@ -16,6 +16,11 @@
 /***************************************************************************/
 
 
+/* define FIX_BYTECODE to implement the bytecode interpreter fixes needed
+ * to match Windows behaviour more accurately
+ */
+#define  FIX_BYTECODE
+
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
@@ -4781,7 +4786,31 @@
       if ( CUR.opcode & 1 )
         D = CUR_Func_project( CUR.zp0.cur + L, CUR.zp1.cur + K );
       else
+      {
+#ifdef FIX_BYTECODE
+        FT_Vector  vec1, vec2;
+
+        if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
+        {
+          FT_ARRAY_COPY( CUR.twilight.orus,
+                         CUR.twilight.org,
+                         CUR.twilight.n_points );
+        }
+
+        /* get scaled orus coordinates */
+        vec1 = CUR.zp0.orus[L];
+        vec2 = CUR.zp1.orus[K];
+
+        vec1.x = TT_MULFIX( vec1.x, CUR.metrics.x_scale );
+        vec1.y = TT_MULFIX( vec1.y, CUR.metrics.y_scale );
+        vec2.x = TT_MULFIX( vec2.x, CUR.metrics.x_scale );
+        vec2.y = TT_MULFIX( vec2.y, CUR.metrics.y_scale );
+
+        D = CUR_Func_dualproj( &vec1, &vec2 );
+#else
         D = CUR_Func_dualproj( CUR.zp0.org + L, CUR.zp1.org + K );
+#endif
+      }
     }
 
     args[0] = D;
@@ -5695,8 +5724,30 @@
     /* XXX: Is there some undocumented feature while in the */
     /*      twilight zone?                                  */
 
+#ifdef FIX_BYTECODE
+    {
+      FT_Vector  vec1, vec2;
+
+      if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
+        FT_ARRAY_COPY( CUR.twilight.orus,
+                       CUR.twilight.org,
+                       CUR.twilight.n_points );
+
+      vec1 = CUR.zp1.orus[point];
+      vec2 = CUR.zp0.orus[CUR.GS.rp0];
+
+      vec1.x = TT_MULFIX( vec1.x, CUR.metrics.x_scale );
+      vec1.y = TT_MULFIX( vec1.y, CUR.metrics.y_scale );
+
+      vec2.x = TT_MULFIX( vec2.x, CUR.metrics.x_scale );
+      vec2.y = TT_MULFIX( vec2.y, CUR.metrics.y_scale );
+
+      org_dist = CUR_Func_dualproj( &vec1, &vec2 );
+    }
+#else
     org_dist = CUR_Func_dualproj( CUR.zp1.org + point,
                                   CUR.zp0.org + CUR.GS.rp0 );
+#endif
 
     /* single width cutin test */
 
@@ -6053,7 +6104,7 @@
   {
     FT_F26Dot6  org_a, org_b, org_x,
                 cur_a, cur_b, cur_x,
-                distance;
+                distance = 0;
     FT_UShort   point;
 
     FT_UNUSED_ARG;
@@ -6064,6 +6115,22 @@
       CUR.error = TT_Err_Invalid_Reference;
       return;
     }
+
+#ifdef FIX_BYTECODE
+   /* we need to deal in a special way with the twilight zone
+    * the easiest is simply to copy the coordinates from 'org' to 'orus'
+    * whenever someone tries to perform intersections based on some
+    * of its points.
+    *
+    * otherwise, by definition value of CUR.twilight[n] is (0,0), whatever 'n'
+    */
+    if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0 )
+    {
+      FT_ARRAY_COPY( CUR.twilight.orus,
+                     CUR.twilight.org,
+                     CUR.twilight.n_points );
+    }
+#endif /* FIX_BYTECODE */
 
     /* XXX: There are some glyphs in some braindead but popular  */
     /*      fonts out there (e.g. [aeu]grave in monotype.ttf)    */
@@ -6078,8 +6145,22 @@
     }
     else
     {
+#ifdef FIX_BYTECODE
+      FT_Vector  vec1, vec2;
+
+      vec1   = CUR.zp0.orus[CUR.GS.rp1];
+      vec2   = CUR.zp1.orus[CUR.GS.rp2];
+      vec1.x = TT_MULFIX( vec1.x, CUR.metrics.x_scale );
+      vec1.y = TT_MULFIX( vec1.y, CUR.metrics.y_scale );
+      vec2.x = TT_MULFIX( vec2.x, CUR.metrics.x_scale );
+      vec2.y = TT_MULFIX( vec2.y, CUR.metrics.y_scale );
+
+      org_a = CUR_Func_dualproj( &vec1, NULL_Vector );
+      org_b = CUR_Func_dualproj( &vec2, NULL_Vector );
+#else
       org_a = CUR_Func_dualproj( CUR.zp0.org + CUR.GS.rp1, NULL_Vector );
       org_b = CUR_Func_dualproj( CUR.zp1.org + CUR.GS.rp2, NULL_Vector );
+#endif
 
       cur_a = CUR_Func_project( CUR.zp0.cur + CUR.GS.rp1, NULL_Vector );
       cur_b = CUR_Func_project( CUR.zp1.cur + CUR.GS.rp2, NULL_Vector );
@@ -6100,7 +6181,17 @@
       }
       else
       {
+#ifdef FIX_BYTECODE
+        FT_Vector  vec;
+
+        vec   = CUR.zp2.orus[point];
+        vec.x = TT_MULFIX( vec.x, CUR.metrics.x_scale );
+        vec.y = TT_MULFIX( vec.y, CUR.metrics.y_scale );
+
+        org_x = CUR_Func_dualproj( &vec, NULL_Vector );
+#else
         org_x = CUR_Func_dualproj( CUR.zp2.org + point, NULL_Vector );
+#endif
         cur_x = CUR_Func_project ( CUR.zp2.cur + point, NULL_Vector );
 
         if ( ( org_a <= org_b && org_x <= org_a ) ||
@@ -6113,7 +6204,7 @@
 
           distance = ( cur_b - org_b ) + ( org_x - cur_x );
 
-        else
+        else if ( org_b != org_a )
            /* note: it seems that rounding this value isn't a good */
            /*       idea (cf. width of capital `S' in Times)       */
 
@@ -6167,109 +6258,112 @@
 
 
   /* Local variables for Ins_IUP: */
-  struct  LOC_Ins_IUP
+  typedef struct
   {
     FT_Vector*  orgs;   /* original and current coordinate */
     FT_Vector*  curs;   /* arrays                          */
-  };
+    FT_Vector*  orus;
+
+  } IUP_WorkerRec, *IUP_Worker;
 
 
   static void
-  Shift( FT_UInt              p1,
-         FT_UInt              p2,
-         FT_UInt              p,
-         struct LOC_Ins_IUP*  LINK )
+  _iup_worker_shift( IUP_Worker  worker,
+                     FT_UInt     p1,
+                     FT_UInt     p2,
+                     FT_UInt     p )
   {
     FT_UInt     i;
-    FT_F26Dot6  x;
+    FT_F26Dot6  dx;
 
 
-    x = LINK->curs[p].x - LINK->orgs[p].x;
+    dx = worker->curs[p].x - worker->orgs[p].x;
+    if ( dx != 0 )
+    {
+      for ( i = p1; i < p; i++ )
+        worker->curs[i].x += dx;
 
-    for ( i = p1; i < p; i++ )
-      LINK->curs[i].x += x;
-
-    for ( i = p + 1; i <= p2; i++ )
-      LINK->curs[i].x += x;
+      for ( i = p + 1; i <= p2; i++ )
+        worker->curs[i].x += dx;
+    }
   }
 
 
   static void
-  Interp( FT_UInt              p1,
-          FT_UInt              p2,
-          FT_UInt              ref1,
-          FT_UInt              ref2,
-          struct LOC_Ins_IUP*  LINK )
+  _iup_worker_interpolate( IUP_Worker  worker,
+                           FT_UInt     p1,
+                           FT_UInt     p2,
+                           FT_UInt     ref1,
+                           FT_UInt     ref2 )
   {
     FT_UInt     i;
-    FT_F26Dot6  x, x1, x2, d1, d2;
+    FT_F26Dot6  orus1, orus2, org1, org2, delta1, delta2;
 
 
     if ( p1 > p2 )
       return;
 
-    x1 = LINK->orgs[ref1].x;
-    d1 = LINK->curs[ref1].x - LINK->orgs[ref1].x;
-    x2 = LINK->orgs[ref2].x;
-    d2 = LINK->curs[ref2].x - LINK->orgs[ref2].x;
+    orus1 = worker->orus[ref1].x;
+    orus2 = worker->orus[ref2].x;
 
-    if ( x1 == x2 )
+    if (orus1 > orus2)
     {
-      for ( i = p1; i <= p2; i++ )
-      {
-        x = LINK->orgs[i].x;
+      FT_F26Dot6  tmp_o;
+      FT_UInt     tmp_r;
 
-        if ( x <= x1 )
-          x += d1;
-        else
-          x += d2;
-
-        LINK->curs[i].x = x;
-      }
-      return;
+      tmp_o = orus1; orus1 = orus2; orus2 = tmp_o;
+      tmp_r = ref1;  ref1  = ref2;  ref2  = tmp_r;
     }
 
-    if ( x1 < x2 )
+    org1   = worker->orgs[ref1].x;
+    org2   = worker->orgs[ref2].x;
+    delta1 = worker->curs[ref1].x - org1;
+    delta2 = worker->curs[ref2].x - org2;
+
+    if ( orus1 == orus2 )
     {
+      /* simple shift of untouched points */
       for ( i = p1; i <= p2; i++ )
       {
-        x = LINK->orgs[i].x;
+        FT_F26Dot6  x = worker->orgs[i].x;
 
-        if ( x <= x1 )
-          x += d1;
+        if ( x <= org1 )
+          x += delta1;
+        else
+          x += delta2;
+
+        worker->curs[i].x = x;
+      }
+    }
+    else
+    {
+      FT_Fixed  scale       = 0;
+      FT_Bool   scale_valid = 0;
+
+      /* interpolation */
+      for ( i = p1; i <= p2; i++ )
+      {
+        FT_F26Dot6  x = worker->orgs[i].x;
+
+        if ( x <= org1 )
+          x += delta1;
+
+        else if ( x >= org2 )
+          x += delta2;
+
         else
         {
-          if ( x >= x2 )
-            x += d2;
-          else
-            x = LINK->curs[ref1].x +
-                  TT_MULDIV( x - x1,
-                             LINK->curs[ref2].x - LINK->curs[ref1].x,
-                             x2 - x1 );
+          if ( !scale_valid )
+          {
+            scale_valid = 1;
+            scale       = TT_MULDIV( org2+delta2 - (org1+delta1), 0x10000,
+                                     orus2 - orus1 );
+          }
+
+          x = (org1 + delta1) + TT_MULFIX( worker->orus[i].x - orus1, scale );
         }
-        LINK->curs[i].x = x;
+        worker->curs[i].x = x;
       }
-      return;
-    }
-
-    /* x2 < x1 */
-
-    for ( i = p1; i <= p2; i++ )
-    {
-      x = LINK->orgs[i].x;
-      if ( x <= x2 )
-        x += d2;
-      else
-      {
-        if ( x >= x1 )
-          x += d1;
-        else
-          x = LINK->curs[ref1].x +
-              TT_MULDIV( x - x1,
-                         LINK->curs[ref2].x - LINK->curs[ref1].x,
-                         x2 - x1 );
-      }
-      LINK->curs[i].x = x;
     }
   }
 
@@ -6283,8 +6377,8 @@
   static void
   Ins_IUP( INS_ARG )
   {
-    struct LOC_Ins_IUP  V;
-    FT_Byte             mask;
+    IUP_WorkerRec  V;
+    FT_Byte        mask;
 
     FT_UInt   first_point;   /* first point of contour        */
     FT_UInt   end_point;     /* end point (last+1) of contour */
@@ -6303,12 +6397,14 @@
       mask   = FT_CURVE_TAG_TOUCH_X;
       V.orgs = CUR.pts.org;
       V.curs = CUR.pts.cur;
+      V.orus = CUR.pts.orus;
     }
     else
     {
       mask   = FT_CURVE_TAG_TOUCH_Y;
       V.orgs = (FT_Vector*)( (FT_Pos*)CUR.pts.org + 1 );
       V.curs = (FT_Vector*)( (FT_Pos*)CUR.pts.cur + 1 );
+      V.orus = (FT_Vector*)( (FT_Pos*)CUR.pts.orus + 1 );
     }
 
     contour = 0;
@@ -6334,11 +6430,11 @@
           if ( ( CUR.pts.tags[point] & mask ) != 0 )
           {
             if ( point > 0 )
-              Interp( cur_touched + 1,
-                      point - 1,
-                      cur_touched,
-                      point,
-                      &V );
+              _iup_worker_interpolate( &V,
+                                       cur_touched + 1,
+                                       point - 1,
+                                       cur_touched,
+                                       point );
             cur_touched = point;
           }
 
@@ -6346,21 +6442,21 @@
         }
 
         if ( cur_touched == first_touched )
-          Shift( first_point, end_point, cur_touched, &V );
+          _iup_worker_shift( &V, first_point, end_point, cur_touched );
         else
         {
-          Interp( (FT_UShort)( cur_touched + 1 ),
-                  end_point,
-                  cur_touched,
-                  first_touched,
-                  &V );
+          _iup_worker_interpolate( &V,
+                                   (FT_UShort)( cur_touched + 1 ),
+                                   end_point,
+                                   cur_touched,
+                                   first_touched );
 
           if ( first_touched > 0 )
-            Interp( first_point,
-                    first_touched - 1,
-                    cur_touched,
-                    first_touched,
-                    &V );
+            _iup_worker_interpolate( &V,
+                                     first_point,
+                                     first_touched - 1,
+                                     cur_touched,
+                                     first_touched );
         }
       }
       contour++;

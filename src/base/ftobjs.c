@@ -79,6 +79,7 @@
   ft_validator_run( FT_Validator  valid )
   {
     /* this function is so buggy, none should be calling it */
+    FT_UNUSED(valid);
     return -1;
   }
 

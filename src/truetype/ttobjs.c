@@ -83,6 +83,7 @@
       FT_FREE( zone->tags );
       FT_FREE( zone->cur );
       FT_FREE( zone->org );
+      FT_FREE( zone->orus );
 
       zone->max_points   = zone->n_points   = 0;
       zone->max_contours = zone->n_contours = 0;
@@ -126,6 +127,7 @@
 
     if ( FT_NEW_ARRAY( zone->org,      maxPoints   ) ||
          FT_NEW_ARRAY( zone->cur,      maxPoints   ) ||
+         FT_NEW_ARRAY( zone->orus,     maxPoints   ) ||
          FT_NEW_ARRAY( zone->tags,     maxPoints   ) ||
          FT_NEW_ARRAY( zone->contours, maxContours ) )
     {

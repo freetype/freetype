@@ -1470,6 +1470,7 @@ FT_BEGIN_HEADER
 
     FT_Vector*  org;         /* original point coordinates  */
     FT_Vector*  cur;         /* current point coordinates   */
+    FT_Vector*  orus;        /* original (unscaled) point coordinates */
 
     FT_Byte*    tags;        /* current touch flags         */
     FT_UShort*  contours;    /* contour end points          */

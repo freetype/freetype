@@ -576,6 +576,7 @@
     zone->n_contours = (FT_Short) ( load->outline.n_contours - start_contour );
     zone->org        = load->extra_points + start_point;
     zone->cur        = load->outline.points + start_point;
+    zone->orus       = load->extra_points2 + start_point;
     zone->tags       = (FT_Byte*)load->outline.tags + start_point;
     zone->contours   = (FT_UShort*)load->outline.contours + start_contour;
     zone->first_point = (FT_UShort)start_point;
@@ -591,9 +592,6 @@
   /*    Hint the glyph using the zone prepared by the caller.  Note that   */
   /*    the zone is supposed to include four phantom points.               */
   /*                                                                       */
-#define cur_to_org( n, zone ) \
-          FT_ARRAY_COPY( (zone)->org, (zone)->cur, (n) )
-
   static FT_Error
   TT_Hint_Glyph( TT_Loader  loader,
                  FT_Bool    is_composite )
@@ -620,7 +618,7 @@
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     /* save original point positioin in org */
     if ( n_ins > 0 )
-      cur_to_org( zone->n_points, zone );
+      FT_ARRAY_COPY( zone->org,  zone->cur, zone->n_points );
 #endif
 
     /* round pp2 and pp4 */
@@ -732,6 +730,14 @@
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
+    if ( IS_HINTED( loader->load_flags ) )
+    {
+      tt_prepare_zone( &loader->zone, &gloader->current, 0, 0 );
+
+      FT_ARRAY_COPY( loader->zone.orus, loader->zone.cur,
+                     loader->zone.n_points + 4 );
+    }
+
     /* scale the glyph */
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
     {
@@ -755,7 +761,6 @@
 
     if ( IS_HINTED( loader->load_flags ) )
     {
-      tt_prepare_zone( &loader->zone, &gloader->current, 0, 0 );
       loader->zone.n_points += 4;
 
       error = TT_Hint_Glyph( loader, 0 );
