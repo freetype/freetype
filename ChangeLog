@@ -1,3 +1,20 @@
+2006-08-18  Jens Claudius  <jens.claudius@yahoo.com>
+
+	* freetype2/src/gxvalid/gxvmod.c (GXV_TABLE_DECL): Mark local
+	variable `_sfnt' as volatile since it must keep its value across
+	a call to ft_setjmp.
+	(gxv_validate): Same for local variables `memory' and `valid'.
+	(classic_kern_validate): Same for local variables `memory',
+	`ckern', and `valid'.
+
+	* freetype2/src/otvalid/otvmod.c (otv_validate): Same for function
+	parameter `face' and local variables `base', `gdef', `gpos', `gsub',
+	`jstf', and 'valid'.
+
+	* freetype2/src/sfnt/ttcmap.c (tt_face_build_cmaps): Same for
+	local variable `cmap'.
+
+
 2006-08-16  David Turner  <david@freetype.org>
 
     * src/cid/cidgload.c (cid_slot_load_glyph),

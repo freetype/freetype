@@ -72,9 +72,9 @@
   }
 
 
-#define GXV_TABLE_DECL( _sfnt )           \
-          FT_Byte   *_sfnt        = NULL; \
-          FT_ULong  len_ ## _sfnt = 0
+#define GXV_TABLE_DECL( _sfnt )                  \
+          FT_Byte* volatile _sfnt        = NULL; \
+          FT_ULong           len_ ## _sfnt = 0
 
 #define GXV_TABLE_LOAD( _sfnt )                                     \
           if ( ( FT_VALIDATE_ ## _sfnt ## _INDEX < table_count ) && \
@@ -109,10 +109,10 @@
                 FT_Bytes  tables[FT_VALIDATE_GX_LENGTH],
                 FT_UInt   table_count )
   {
-    FT_Memory        memory = FT_FACE_MEMORY( face );
+    FT_Memory volatile       memory = FT_FACE_MEMORY( face );
 
-    FT_Error         error = GXV_Err_Ok;
-    FT_ValidatorRec  valid;
+    FT_Error                 error = GXV_Err_Ok;
+    FT_ValidatorRec volatile valid;
 
     FT_UInt  i;
 
@@ -191,13 +191,13 @@
                          FT_UInt    ckern_flags,
                          FT_Bytes*  ckern_table )
   {
-    FT_Memory        memory = FT_FACE_MEMORY( face );
+    FT_Memory volatile        memory = FT_FACE_MEMORY( face );
 
-    FT_Byte*         ckern     = NULL;
-    FT_ULong         len_ckern = 0;
+    FT_Byte* volatile         ckern     = NULL;
+    FT_ULong                  len_ckern = 0;
 
-    FT_Error         error = GXV_Err_Ok;
-    FT_ValidatorRec  valid;
+    FT_Error                  error = GXV_Err_Ok;
+    FT_ValidatorRec volatile  valid;
 
 
     *ckern_table = NULL;
