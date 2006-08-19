@@ -298,7 +298,7 @@
                                            hinting,
                                            FT_LOAD_TARGET_MODE( load_flags ),
                                            cid_load_glyph );
-    if (error)
+    if ( error )
       goto Exit;
 
     /* TODO: initialize decoder.len_buildchar and decoder.buildchar */
@@ -309,7 +309,7 @@
       ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
 
     error = cid_load_glyph( &decoder, glyph_index );
-    if (error)
+    if ( error )
       goto Exit;
 
     font_matrix = decoder.font_matrix;
@@ -318,7 +318,7 @@
     /* save new glyph tables */
     psaux->t1_decoder_funcs->done( &decoder );
 
-    /* now, set the metrics -- this is rather simple, as   */
+    /* now set the metrics -- this is rather simple, as    */
     /* the left side bearing is the xMin, and the top side */
     /* bearing the yMax                                    */
     cidglyph->outline.flags &= FT_OUTLINE_OWNER;
@@ -334,9 +334,9 @@
       cidglyph->metrics.horiBearingX = decoder.builder.left_bearing.x;
       cidglyph->metrics.horiAdvance  = decoder.builder.advance.x;
 
-      internal->glyph_matrix         = font_matrix;
-      internal->glyph_delta          = font_offset;
-      internal->glyph_transformed    = 1;
+      internal->glyph_matrix      = font_matrix;
+      internal->glyph_delta       = font_offset;
+      internal->glyph_transformed = 1;
     }
     else
     {
@@ -371,6 +371,7 @@
       advance.y = 0;
       FT_Vector_Transform( &advance, &font_matrix );
       metrics->horiAdvance = advance.x + font_offset.x;
+
       advance.x = 0;
       advance.y = metrics->vertAdvance;
       FT_Vector_Transform( &advance, &font_matrix );
@@ -395,8 +396,8 @@
           }
 
         /* Then scale the metrics */
-        metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
-        metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  y_scale );
+        metrics->horiAdvance = FT_MulFix( metrics->horiAdvance, x_scale );
+        metrics->vertAdvance = FT_MulFix( metrics->vertAdvance, y_scale );
       }
 
       /* compute the other metrics */

@@ -618,7 +618,7 @@
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     /* save original point positioin in org */
     if ( n_ins > 0 )
-      FT_ARRAY_COPY( zone->org,  zone->cur, zone->n_points );
+      FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
 #endif
 
     /* round pp2 and pp4 */

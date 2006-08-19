@@ -14,63 +14,99 @@
 	* freetype2/src/sfnt/ttcmap.c (tt_face_build_cmaps): Same for
 	local variable `cmap'.
 
-
 2006-08-16  David Turner  <david@freetype.org>
 
-    * src/cid/cidgload.c (cid_slot_load_glyph),
-    src/truetype/ttgload.c (tt_prepare_zone): removing compiler warnings
+	* src/cid/cidgload.c (cid_slot_load_glyph): Remove compiler
+	warnings.
 
-    * src/base/ftobjs.c (ft_validator_run): disabling function, it is
-    buggy by design, so it will always return -1
+	* src/base/ftobjs.c (ft_validator_run): Disable function; it is
+	buggy by design.  Always return -1.
 
-    * include/freetype/internal/ftgloadr.h,
-    include/freetype/internal/tttypes.h, src/base/ftgloadr.c,
-    src/base/ftobjs.c, src/truetype/ttgload.c, src/truetype/ttinterp.c,
-    src/truetype/ttobjs.c: improvements to native TrueType hinting,
-    this is a first try, controlled by the FIX_BYTECODE macro in
-    src/truetype/ttinterp.c
 
+	Improvements to native TrueType hinting. This is a first try,
+	controlled by the FIX_BYTECODE macro in src/truetype/ttinterp.c.
+
+	* include/freetype/internal/ftgloadr.h (FT_GlyphLoadRec): Add member
+	`extra_points2'.
+
+	* include/freetype/internal/tttypes.h (TT_GlyphZoneRec): Add member
+	`orus'.
+
+	* src/base/ftgloadr.c (FT_GlyphLoader_Reset,
+	FT_GlyphLoader_Adjust_Points, FT_GlyphLoader_CreateExtra,
+	FT_GlyphLoader_CheckPoints, FT_GlyphLoader_CopyPoints): Updated to
+	handle `extra_points2'.
+
+	* src/truetype/ttgload.c (tt_prepare_zone): Handle `orus'.
+	Remove compiler warning.
+	(cur_to_arg): Remove macro.
+	(TT_Hint_Glyph): Updated.
+	(TT_Process_Simple_Glyph): Handle `orus'.
+
+	* src/truetype/ttinterp.c (FIX_BYTECODE): New macro.
+	(Ins_MD, Ins_MDRP, Ins_IP) [FIX_BYTECODE]: Handle `orus'.
+	(LOC_Ins_IUP): Renamed to...
+	(IUP_WorkerRec): This.
+	Add `orus' member.
+	(Shift): Renamed to...
+	(_iup_worker_shift): This.
+	Updated.
+	(Interp): Renamed to...
+	(_iup_worker_interpolate): This.
+	Updated to handle `orus'.
+	(Ins_IUP): Updated.
+
+	* src/truetype/ttobjs.c (tt_glyphzone_done, tt_glyphzone_new):
+	Handle `orus'.
 
 2006-08-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* modules.cfg (BASE_EXTENSIONS): Compile in ftgxval.c by default to
-	build ftvalid in ft2demos. Commit on 2006-02-28 had been slipped.
+	build ftvalid in ft2demos.  This has been inadvertedly changed
+	2006-08-13.
 
 2006-08-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	`ft_validator_run' wrapping `setjmp' can cause crash, found by Jens:
-	http://lists.nongnu.org/archive/html/freetype-devel/2006-08/msg00004.htm
+	`ft_validator_run' wrapping `setjmp' can cause a crash, as found by
+	Jens:
+	http://lists.nongnu.org/archive/html/freetype-devel/2006-08/msg00004.htm.
 
-	* freetype2/src/otvalid/otvmod.c: replace `ft_validator_run' by
-	`ft_setjmp'. It reverts the change introduced on 2005-08-20.
+	* freetype2/src/otvalid/otvmod.c: Replace `ft_validator_run' by
+	`ft_setjmp'.  It reverts the change introduced on 2005-08-20.
 
 	* freetype2/src/gxvalid/gxvmod.c: Ditto.
 
 2006-08-13  Jens Claudius  <jens.claudius@yahoo.com>
 
-	* freetype2/include/freetype/internal/psaux.h: (enum T1_TokenType_):
-	add T1_TOKEN_TYPE_KEY. (struct T1_FieldRec_) add `dict'. Add macros
-	T1_FIELD_DICT_FONTDICT and  T1_FIELD_DICT_PRIVATE. Change T1_NEW_XXX and
-	T1_FIELD_XXX macros to take the dictionary where the PS keywords is
-	expected as an additional argument.
+	* freetype2/include/freetype/internal/psaux.h: (T1_TokenType): Add
+	T1_TOKEN_TYPE_KEY.
+	(T1_FieldRec): Add `dict'.
+	(T1_FIELD_DICT_FONTDICT, T1_FIELD_DICT_PRIVATE): New macros.
+	(T1_NEW_XXX, T1_FIELD_XXX): Update to take the dictionary where a PS
+	keyword is expected as an additional argument.
 
-	* freetype2/src/cid/cidload.c: (T1_FieldRec): Adjust invocations
-	of T1_FIELD_XXX.
+	* freetype2/src/cid/cidload.c: (cid_field_records): Adjust
+	invocations of T1_FIELD_XXX.
 
 	* freetype2/src/cid/cidtoken.h: Adjust invocations of T1_FIELD_XXX.
 
 	* freetype2/src/psaux/psobjs.c: Add macro FT_COMPONENT for tracing.
-	(ps_parser_to_token): Report a PostScript key as T1_TOKEN_TYPE_KEY
-	instead as T1_TOKEN_TYPE_ANY. (ps_parser_load_field): Make sure a token
-	that should be a string or name is a string or name indeed. Avoid
-	memory leak if a keyword has been already encountered and its value
-	is overwritten.
+	(ps_parser_to_token): Report a PostScript key as T1_TOKEN_TYPE_KEY,
+	not T1_TOKEN_TYPE_ANY.
+	(ps_parser_load_field): Make sure a token that should be a string or
+	name is really a string or name.
+	Avoid memory leak if a keyword has been already encountered and its
+	value is overwritten.
+	* freetype2/src/type1/t1load.c: (t1_keywords): Adjust invocations of
+	T1_FIELD_XXX.
+	(parse_dict): Ignore keywords that occur in the wrong dictionary
+	(e.g., in `Private' instead of `FontDict').
 
-	* freetype2/src/type1/t1load.c: (T1_FieldRec): Adjust invocations of
-	T1_FIELD_XXX. (parse_dict): Ignore keywords that occur in the wrong
-	dictionary (e.g., in Private instead of FontDict).
+	* freetype2/src/type1/t1tokens.h: Adjust invocations of
+	T1_FIELD_XXX.
 
-	* freetype2/src/type1/t1tokens.h: Adjust invocations of T1_FIELD_XXX.
+	* freetype2/src/type42/t42parse.c: (t42_keywords): Adjust
+	invocations of T1_FIELD_XXX.
 
 2006-07-18  Jens Claudius  <jens.claudius@yahoo.com>
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph loader (body).                                    */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005 by                                    */
+/*  Copyright 2002, 2003, 2004, 2005, 2006 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -168,7 +168,7 @@
     FT_Memory  memory = loader->memory;
 
 
-    if ( !FT_NEW_ARRAY( loader->base.extra_points, 2*loader->max_points ) )
+    if ( !FT_NEW_ARRAY( loader->base.extra_points, 2 * loader->max_points ) )
     {
       loader->use_extra          = 1;
       loader->base.extra_points2 = loader->base.extra_points +
@@ -224,7 +224,8 @@
 
       if ( loader->use_extra )
       {
-        if ( FT_RENEW_ARRAY( loader->base.extra_points, old_max*2, new_max*2 ) )
+        if ( FT_RENEW_ARRAY( loader->base.extra_points,
+                             old_max * 2, new_max * 2 ) )
           goto Exit;
 
         FT_ARRAY_MOVE( loader->base.extra_points + new_max,

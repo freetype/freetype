@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    FreeType's TrueTypeGX/AAT validation module implementation (body).   */
 /*                                                                         */
-/*  Copyright 2004, 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K., */
+/*  Copyright 2004, 2005, 2006                                             */
+/*  by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -72,9 +73,9 @@
   }
 
 
-#define GXV_TABLE_DECL( _sfnt )                  \
-          FT_Byte* volatile _sfnt        = NULL; \
-          FT_ULong           len_ ## _sfnt = 0
+#define GXV_TABLE_DECL( _sfnt )                     \
+          FT_Byte* volatile  _sfnt          = NULL; \
+          FT_ULong            len_ ## _sfnt = 0
 
 #define GXV_TABLE_LOAD( _sfnt )                                     \
           if ( ( FT_VALIDATE_ ## _sfnt ## _INDEX < table_count ) && \
@@ -109,10 +110,10 @@
                 FT_Bytes  tables[FT_VALIDATE_GX_LENGTH],
                 FT_UInt   table_count )
   {
-    FT_Memory volatile       memory = FT_FACE_MEMORY( face );
+    FT_Memory volatile        memory = FT_FACE_MEMORY( face );
 
-    FT_Error                 error = GXV_Err_Ok;
-    FT_ValidatorRec volatile valid;
+    FT_Error                  error = GXV_Err_Ok;
+    FT_ValidatorRec volatile  valid;
 
     FT_UInt  i;
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType's OpenType validation module implementation (body).         */
 /*                                                                         */
-/*  Copyright 2004, 2005 by                                                */
+/*  Copyright 2004, 2005, 2006 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -67,20 +67,20 @@
   static FT_Error
   otv_validate( FT_Face volatile   face,
                 FT_UInt            ot_flags,
-                FT_Bytes           *ot_base,
-                FT_Bytes           *ot_gdef,
-                FT_Bytes           *ot_gpos,
-                FT_Bytes           *ot_gsub,
-                FT_Bytes           *ot_jstf )
+                FT_Bytes          *ot_base,
+                FT_Bytes          *ot_gdef,
+                FT_Bytes          *ot_gpos,
+                FT_Bytes          *ot_gsub,
+                FT_Bytes          *ot_jstf )
   {
-    FT_Error                 error = OTV_Err_Ok;
-    FT_Byte* volatile        base;
-    FT_Byte* volatile        gdef;
-    FT_Byte* volatile        gpos;
-    FT_Byte* volatile        gsub;
-    FT_Byte* volatile        jstf;
-    FT_ULong                 len_base, len_gdef, len_gpos, len_gsub, len_jstf;
-    FT_ValidatorRec volatile valid;
+    FT_Error                  error = OTV_Err_Ok;
+    FT_Byte* volatile         base;
+    FT_Byte* volatile         gdef;
+    FT_Byte* volatile         gpos;
+    FT_Byte* volatile         gsub;
+    FT_Byte* volatile         jstf;
+    FT_ULong                  len_base, len_gdef, len_gpos, len_gsub, len_jstf;
+    FT_ValidatorRec volatile  valid;
 
 
     base     = gdef     = gpos     = gsub     = jstf     = NULL;

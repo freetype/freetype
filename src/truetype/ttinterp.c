@@ -16,10 +16,10 @@
 /***************************************************************************/
 
 
-/* define FIX_BYTECODE to implement the bytecode interpreter fixes needed
- * to match Windows behaviour more accurately
- */
+  /* define FIX_BYTECODE to implement the bytecode interpreter fixes */
+  /* needed to match Windows behaviour more accurately               */
 #define  FIX_BYTECODE
+
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
@@ -4787,15 +4787,16 @@
         D = CUR_Func_project( CUR.zp0.cur + L, CUR.zp1.cur + K );
       else
       {
+
 #ifdef FIX_BYTECODE
+
         FT_Vector  vec1, vec2;
 
+
         if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
-        {
           FT_ARRAY_COPY( CUR.twilight.orus,
                          CUR.twilight.org,
                          CUR.twilight.n_points );
-        }
 
         /* get scaled orus coordinates */
         vec1 = CUR.zp0.orus[L];
@@ -4807,9 +4808,12 @@
         vec2.y = TT_MULFIX( vec2.y, CUR.metrics.y_scale );
 
         D = CUR_Func_dualproj( &vec1, &vec2 );
+
 #else
+
         D = CUR_Func_dualproj( CUR.zp0.org + L, CUR.zp1.org + K );
-#endif
+
+#endif /* FIX_BYTECODE */
       }
     }
 
@@ -5725,8 +5729,10 @@
     /*      twilight zone?                                  */
 
 #ifdef FIX_BYTECODE
+
     {
       FT_Vector  vec1, vec2;
+
 
       if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
         FT_ARRAY_COPY( CUR.twilight.orus,
@@ -5744,12 +5750,15 @@
 
       org_dist = CUR_Func_dualproj( &vec1, &vec2 );
     }
+
 #else
+
     org_dist = CUR_Func_dualproj( CUR.zp1.org + point,
                                   CUR.zp0.org + CUR.GS.rp0 );
-#endif
 
-    /* single width cutin test */
+#endif /* FIX_BYTECODE */
+
+    /* single width cut-in test */
 
     if ( FT_ABS( org_dist - CUR.GS.single_width_value ) <
          CUR.GS.single_width_cutin )
@@ -6117,19 +6126,22 @@
     }
 
 #ifdef FIX_BYTECODE
-   /* we need to deal in a special way with the twilight zone
-    * the easiest is simply to copy the coordinates from 'org' to 'orus'
-    * whenever someone tries to perform intersections based on some
-    * of its points.
-    *
-    * otherwise, by definition value of CUR.twilight[n] is (0,0), whatever 'n'
-    */
+
+    /* We need to deal in a special way with the twilight zone.  The easiest
+     * solution is simply to copy the coordinates from `org' to `orus'
+     * whenever someone tries to perform intersections based on some of its
+     * points.
+     *
+     * Otherwise, by definition, value of CUR.twilight[n] is (0,0),
+     * whatever value of `n'.
+     */
     if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0 )
     {
       FT_ARRAY_COPY( CUR.twilight.orus,
                      CUR.twilight.org,
                      CUR.twilight.n_points );
     }
+
 #endif /* FIX_BYTECODE */
 
     /* XXX: There are some glyphs in some braindead but popular  */
@@ -6145,8 +6157,11 @@
     }
     else
     {
+
 #ifdef FIX_BYTECODE
+
       FT_Vector  vec1, vec2;
+
 
       vec1   = CUR.zp0.orus[CUR.GS.rp1];
       vec2   = CUR.zp1.orus[CUR.GS.rp2];
@@ -6157,10 +6172,13 @@
 
       org_a = CUR_Func_dualproj( &vec1, NULL_Vector );
       org_b = CUR_Func_dualproj( &vec2, NULL_Vector );
+
 #else
+
       org_a = CUR_Func_dualproj( CUR.zp0.org + CUR.GS.rp1, NULL_Vector );
       org_b = CUR_Func_dualproj( CUR.zp1.org + CUR.GS.rp2, NULL_Vector );
-#endif
+
+#endif /* FIX_BYTECODE */
 
       cur_a = CUR_Func_project( CUR.zp0.cur + CUR.GS.rp1, NULL_Vector );
       cur_b = CUR_Func_project( CUR.zp1.cur + CUR.GS.rp2, NULL_Vector );
@@ -6181,17 +6199,24 @@
       }
       else
       {
+
 #ifdef FIX_BYTECODE
+
         FT_Vector  vec;
+
 
         vec   = CUR.zp2.orus[point];
         vec.x = TT_MULFIX( vec.x, CUR.metrics.x_scale );
         vec.y = TT_MULFIX( vec.y, CUR.metrics.y_scale );
 
         org_x = CUR_Func_dualproj( &vec, NULL_Vector );
+
 #else
+
         org_x = CUR_Func_dualproj( CUR.zp2.org + point, NULL_Vector );
-#endif
+
+#endif /* FIX_BYTECODE */
+
         cur_x = CUR_Func_project ( CUR.zp2.cur + point, NULL_Vector );
 
         if ( ( org_a <= org_b && org_x <= org_a ) ||
@@ -6306,13 +6331,19 @@
     orus1 = worker->orus[ref1].x;
     orus2 = worker->orus[ref2].x;
 
-    if (orus1 > orus2)
+    if ( orus1 > orus2 )
     {
       FT_F26Dot6  tmp_o;
       FT_UInt     tmp_r;
 
-      tmp_o = orus1; orus1 = orus2; orus2 = tmp_o;
-      tmp_r = ref1;  ref1  = ref2;  ref2  = tmp_r;
+
+      tmp_o = orus1;
+      orus1 = orus2;
+      orus2 = tmp_o;
+
+      tmp_r = ref1;
+      ref1  = ref2;
+      ref2  = tmp_r;
     }
 
     org1   = worker->orgs[ref1].x;
@@ -6327,6 +6358,7 @@
       {
         FT_F26Dot6  x = worker->orgs[i].x;
 
+
         if ( x <= org1 )
           x += delta1;
         else
@@ -6340,10 +6372,12 @@
       FT_Fixed  scale       = 0;
       FT_Bool   scale_valid = 0;
 
+
       /* interpolation */
       for ( i = p1; i <= p2; i++ )
       {
         FT_F26Dot6  x = worker->orgs[i].x;
+
 
         if ( x <= org1 )
           x += delta1;
@@ -6356,11 +6390,12 @@
           if ( !scale_valid )
           {
             scale_valid = 1;
-            scale       = TT_MULDIV( org2+delta2 - (org1+delta1), 0x10000,
-                                     orus2 - orus1 );
+            scale       = TT_MULDIV( org2 + delta2 - ( org1 + delta1 ),
+                                     0x10000, orus2 - orus1 );
           }
 
-          x = (org1 + delta1) + TT_MULFIX( worker->orus[i].x - orus1, scale );
+          x = ( org1 + delta1 ) +
+              TT_MULFIX( worker->orus[i].x - orus1, scale );
         }
         worker->curs[i].x = x;
       }
