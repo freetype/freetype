@@ -48,10 +48,10 @@
 
 
   static FT_Error
-  gxv_load_table( FT_Face    face,
-                  FT_Tag     tag,
-                  FT_Byte**  table,
-                  FT_ULong*  table_len )
+  gxv_load_table( FT_Face             face,
+                  FT_Tag              tag,
+                  FT_Byte* volatile*  table,
+                  FT_ULong*           table_len )
   {
     FT_Error   error;
     FT_Memory  memory = FT_FACE_MEMORY( face );

@@ -1,3 +1,18 @@
+2006-08-22  Jens Claudius  <jens.claudius@yahoo.com>
+	Fix for previous commit, which caused many compiler warnings/errors
+	about addresses of volatile objects passed as function arguments
+	as non-volatile pointers.
+
+
+	* freetype2/include/freetype/internal/ftvalid.h: Make
+	FT_Validator typedef a pointer to a volatile object.
+
+	* freetype2/src/gxvalid/gxvmod.c (gxv_load_table): Make function
+	argument `table' a pointer to a volatile object.
+
+	* freetype2/src/otvalid/otvmod.c (otv_load_table): Make function
+	argument `table' a pointer to a volatile object.
+
 2006-08-18  Jens Claudius  <jens.claudius@yahoo.com>
 
 	* freetype2/src/gxvalid/gxvmod.c (GXV_TABLE_DECL): Mark local

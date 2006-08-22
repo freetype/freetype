@@ -39,7 +39,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /* handle to a validation object */
-  typedef struct FT_ValidatorRec_*  FT_Validator;
+  typedef struct FT_ValidatorRec_ volatile*  FT_Validator;
 
 
   /*************************************************************************/
