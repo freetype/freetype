@@ -594,6 +594,16 @@ FT_BEGIN_HEADER
 #define FT_CONFIG_OPTION_OLD_INTERNALS
 
 
+ /*
+  * this variable is defined if either unpatented or native TrueType
+  * hinting is requested by the definitions above.
+  */
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#  define  TT_USE_BYTECODE_INTERPRETER
+#elif defined TT_CONFIG_OPTION_UNPATENTED_HINTING
+#  define  TT_USE_BYTECODE_INTERPRETER
+#endif
+
 FT_END_HEADER
 
 

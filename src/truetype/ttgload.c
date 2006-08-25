@@ -310,7 +310,7 @@
       goto Fail;
     }
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
     if ( IS_HINTED( load->load_flags ) )
     {
@@ -320,7 +320,7 @@
       FT_MEM_COPY( load->exec->glyphIns, p, (FT_Long)n_ins );
     }
 
-#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#endif /* TT_USE_BYTECODE_INTERPRETER */
 
     p += n_ins;
 
@@ -528,7 +528,7 @@
 
     gloader->current.num_subglyphs = num_subglyphs;
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
     {
       FT_Stream  stream = loader->stream;
@@ -599,14 +599,14 @@
     TT_GlyphZone  zone = &loader->zone;
     FT_Pos        origin;
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
     FT_UInt       n_ins;
 #else
     FT_UNUSED( is_composite );
 #endif
 
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
     n_ins = loader->glyph->control_len;
 #endif
 
@@ -615,7 +615,7 @@
     if ( origin )
       translate_array( zone->n_points, zone->cur, origin, 0 );
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
     /* save original point positioin in org */
     if ( n_ins > 0 )
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
@@ -627,7 +627,7 @@
     zone->cur[zone->n_points - 1].y =
       FT_PIX_ROUND( zone->cur[zone->n_points - 1].y );
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
     if ( n_ins > 0 )
     {
@@ -966,7 +966,7 @@
     outline->tags[outline->n_points + 2] = 0;
     outline->tags[outline->n_points + 3] = 0;
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
     {
       FT_Stream  stream = loader->stream;
@@ -1435,7 +1435,7 @@
         loader->ins_pos = ins_pos;
         if ( IS_HINTED( loader->load_flags ) &&
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
              subglyph->flags & WE_HAVE_INSTR &&
 
@@ -1715,7 +1715,7 @@
 
     FT_MEM_ZERO( loader, sizeof ( TT_LoaderRec ) );
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
     /* load execution context */
     {
@@ -1746,7 +1746,7 @@
       loader->instructions = exec->glyphIns;
     }
 
-#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#endif /* TT_USE_BYTECODE_INTERPRETER */
 
     /* seek to the beginning of the glyph table.  For Type 42 fonts      */
     /* the table might be accessed from a Postscript stream or something */

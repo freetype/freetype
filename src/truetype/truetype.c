@@ -24,7 +24,7 @@
 #include "ttgload.c"    /* glyph loader        */
 #include "ttobjs.c"     /* object manager      */
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 #include "ttinterp.c"
 #endif
 

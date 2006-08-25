@@ -32,7 +32,7 @@
 #include "tterrors.h"
 
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
 
 
 #define TT_MULFIX           FT_MulFix
@@ -7816,7 +7816,7 @@
   }
 
 
-#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#endif /* TT_USE_BYTECODE_INTERPRETER */
 
 
 /* END */

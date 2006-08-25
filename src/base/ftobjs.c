@@ -567,6 +567,9 @@
     if ( FT_LOAD_TARGET_MODE( load_flags ) == FT_RENDER_MODE_LIGHT )
       load_flags |= FT_LOAD_FORCE_AUTOHINT;
 
+    if ( face->internal->force_autohint )
+      load_flags |= FT_LOAD_FORCE_AUTOHINT;
+
     /* auto-hinter is preferred and should be used */
     if ( ( !FT_DRIVER_HAS_HINTER( driver )         ||
            ( load_flags & FT_LOAD_FORCE_AUTOHINT ) ) &&
