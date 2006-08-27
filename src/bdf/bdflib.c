@@ -2204,7 +2204,7 @@
                  bdf_options_t*  opts,
                  bdf_font_t*    *font )
   {
-    unsigned long  lineno;
+    unsigned long  lineno = 0; /* make compiler happy */
     _bdf_parse_t   *p;
 
     FT_Memory      memory = extmemory;

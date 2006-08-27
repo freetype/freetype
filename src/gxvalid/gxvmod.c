@@ -197,7 +197,10 @@
     FT_Byte* volatile         ckern     = NULL;
     FT_ULong                  len_ckern = 0;
 
-    FT_Error                  error = GXV_Err_Ok;
+    /* without volatile on `error' GCC 4.1.1. emits:                         */
+    /*  warning: variable 'error' might be clobbered by 'longjmp' or 'vfork' */
+    /* this warning seems spurious but ---                                   */
+    FT_Error volatile         error = GXV_Err_Ok;
     FT_ValidatorRec volatile  valid;
 
 

@@ -211,7 +211,7 @@ FT_BEGIN_HEADER
   /*      this data when first opened.  This field exists only if          */
   /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
-  /*    force_autohing ::
+  /*    force_autohing ::                                                  */
   /*      this boolean flag is used to instruct the glyph loader to        */
   /*      ignore the format-specific hinter, and use the auto-hinter       */
   /*      instead to load all glyphs.                                      */

@@ -89,8 +89,17 @@
   ft_validator_error( FT_Validator  valid,
                       FT_Error      error )
   {
+    /* since the cast below also disables the compiler's */
+    /* type check, we introduce a dummy variable, which  */
+    /* will be optimized away                            */
+    volatile jmp_buf* jump_buffer = &valid->jump_buffer;
+
+
     valid->error = error;
-    ft_longjmp( valid->jump_buffer, 1 );
+
+    /* throw away volatileness; use `jump_buffer' or the  */
+    /* compiler may warn about an unused local variable   */
+    ft_longjmp( *(jmp_buf*) jump_buffer, 1 );
   }
 
 

@@ -1,3 +1,24 @@
+2006-08-27  Jens Claudius  <jens.claudius@yahoo.com>
+
+	Fix miscellaneous compiler warnings.
+
+	* freetype2/include/freetype/internal/ftobjs.h: close
+	comment with `*/' to avoid `/* in comment' compiler warning.
+
+	* freetype2/src/base/ftdbgmem.c (ft_mem_table_get_source): Turn
+	cast `(FT_UInt32)(void*)' into `(FT_UInt32)(FT_PtrDist)(void*)'
+	since on 64-bit platforms void* is larger than FT_UInt32.
+
+	* freetype2/src/base/ftobjs.c (t_validator_error): cast
+	away volatileness of argument to ft_longjmp. Spotted by
+	Werner `Putzfrau' Lemberg.
+
+	* freetype2/src/bdf/bdflib.c (bdf_load_font): initialize
+	local variable `lineno'.
+
+	* freetype2/src/gxvalid/gxvmod.c (classic_kern_validate):
+	mark local variable `error' volatile.
+
 2006-08-27  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ftconfig.in: Synchronize with main ftconfig.h.
