@@ -91,6 +91,10 @@ fi
 
 # call make
 
-CFG="$@" $GNUMAKE setup unix
+CFG=
+for x in ${1+"$@"}; do
+  CFG="$CFG \"$x\""
+done
+CFG=$CFG $GNUMAKE setup unix
 
 # eof

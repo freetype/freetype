@@ -1,3 +1,12 @@
+2006-08-29  Dr. Werner Fink  <werner@suse.de>
+
+	* configure: Make it possible to handle configure options which
+	have strings containing spaces.
+
+2006-08-27  David Turner  <david@freetype.org>
+
+	<TO BE WRITTEN>
+
 2006-08-27  Jens Claudius  <jens.claudius@yahoo.com>
 
 	Fix miscellaneous compiler warnings.
