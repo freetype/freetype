@@ -266,9 +266,28 @@
     */
     if ( !face->unpatented_hinting )
     {
-      /* XXX: TODO: */
-      if ( strcmp( ttface->family_name, "What?" ) == 0 )
-        face->unpatented_hinting = 1;
+      static const char* const  trick_names[] =
+      {
+        "DFKaiSho-SB",     /* dfkaisb.ttf */
+        "DFKai-SB",        /* kaiu.ttf */
+        "HuaTianSongTi?",  /* htst3.ttf */
+        "MingLiU",         /* mingliu.ttf & mingliu.ttc */
+        "PMingLiU",        /* mingliu.ttc */
+        NULL
+      };
+      int   nn;
+
+     /* note that we only check the face name at the moment, it might
+      * be worthy to do more checks for a few special cases
+      */
+      for ( nn = 0; trick_names[nn] != NULL; nn++ )
+      {
+        if ( ft_strcmp( ttface->family_name, trick_names[nn] ) == 0 )
+        {
+          face->unpatented_hinting = 1;
+          break;
+        }
+      }
     }
 
     ttface->internal->force_autohint = !face->unpatented_hinting;

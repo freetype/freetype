@@ -1,3 +1,8 @@
+2006-09-01  David Turner  <david@freetype.org>
+
+        * src/truetype/ttobjs.c: updated the TrueType loader to recognize
+        a few fonts that require the automatic unpatented loader
+
 2006-08-29  Dr. Werner Fink  <werner@suse.de>
 
 	* configure: Make it possible to handle configure options which
