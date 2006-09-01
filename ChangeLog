@@ -1,7 +1,11 @@
 2006-09-01  David Turner  <david@freetype.org>
 
-        * src/truetype/ttobjs.c: updated the TrueType loader to recognize
-        a few fonts that require the automatic unpatented loader
+    * src/truetype/ttobjs.c: updated the TrueType loader to recognize
+    a few fonts that require the automatic unpatented loader
+
+    * src/smooth/ftgrays.c: optmized the performance of the anti-aliased
+    rasterizer. The speed gains is between 15% and 25%, depending on
+    content
 
 2006-08-29  Dr. Werner Fink  <werner@suse.de>
 
@@ -1243,6 +1247,11 @@
 	structures and enumerations.
 	(FTC_CMapCache_Lookup) [FT_CONFIG_OPTION_OLD_INTERNALS]: New
 	compatibility code.
+
+    * src/cache/ftcbasic.c: fixed a silly bug that prevented our super-duper
+    "hack" to support rogue clients compiled against 2.1.7 to work correctly.
+    Probably explains the GNUstep crashes with the second release
+    candidate.
 
 2006-02-23  Chia-I Wu  <b90201047@ntu.edu.tw>
 

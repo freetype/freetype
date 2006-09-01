@@ -81,11 +81,6 @@
   /*************************************************************************/
 
 
-
-/* experimental support for gamma correction within the rasterizer */
-#define xxxGRAYS_USE_GAMMA
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -257,30 +252,17 @@
   /* maximal number of gray spans in a call to the span callback */
 #define FT_MAX_GRAY_SPANS  32
 
+typedef struct TCell_*   PCell;
 
-#ifdef GRAYS_COMPACT
+typedef struct TCell_
+{
+  int     x;
+  int     cover;
+  TArea   area;
+  PCell   next;
 
-  typedef struct  TCell_
-  {
-    short  x     : 14;
-    short  y     : 14;
-    int    cover : PIXEL_BITS + 2;
-    int    area  : PIXEL_BITS * 2 + 2;
+} TCell;
 
-  } TCell, *PCell;
-
-#else /* GRAYS_COMPACT */
-
-  typedef struct  TCell_
-  {
-    TCoord  x;
-    TCoord  y;
-    int     cover;
-    TArea   area;
-
-  } TCell, *PCell;
-
-#endif /* GRAYS_COMPACT */
 
 
   typedef struct  TRaster_
@@ -324,9 +306,11 @@
     void*       memory;
     ft_jmp_buf  jump_buffer;
 
-#ifdef GRAYS_USE_GAMMA
-    unsigned char  gamma[257];
-#endif
+    void*       buffer;
+    long        buffer_size;
+
+    PCell*     ycells;
+    int        ycount;
 
   } TRaster, *PRaster;
 
@@ -339,8 +323,12 @@
   gray_init_cells( RAS_ARG_ void*  buffer,
                    long            byte_size )
   {
-    ras.cells     = (PCell)buffer;
-    ras.max_cells = (int)( byte_size / sizeof ( TCell ) );
+    ras.buffer      = buffer;
+    ras.buffer_size = byte_size;
+
+    ras.ycells    = (PCell*) buffer;
+    ras.cells     = NULL;
+    ras.max_cells = 0;
     ras.num_cells = 0;
     ras.area      = 0;
     ras.cover     = 0;
@@ -396,6 +384,42 @@
   /*                                                                       */
   /* Record the current cell in the table.                                 */
   /*                                                                       */
+  static PCell*
+  gray_find_cell( RAS_ARG_  TCoord  x,
+                            TCoord  y )
+  {
+    PCell  *pnode, node;
+
+    pnode = &ras.ycells[y];
+    for (;;)
+    {
+      node = *pnode;
+      if ( node == NULL || node->x >= x )
+        break;
+
+      pnode = &node->next;
+    }
+    return  pnode;
+  }
+
+
+  static PCell
+  gray_alloc_cell( RAS_ARG_  TCoord  x )
+  {
+    PCell  cell;
+
+    if ( ras.num_cells >= ras.max_cells )
+      ft_longjmp( ras.jump_buffer, 1 );
+
+    cell        = ras.cells + ras.num_cells++;
+    cell->x     = x;
+    cell->area  = 0;
+    cell->cover = 0;
+
+    return cell;
+  }
+
+
   static void
   gray_record_cell( RAS_ARG )
   {
@@ -404,17 +428,22 @@
 
     if ( !ras.invalid && ( ras.area | ras.cover ) )
     {
-      if ( ras.num_cells >= ras.max_cells )
-        ft_longjmp( ras.jump_buffer, 1 );
+      TCoord  x       = (TCoord)(ras.ex - ras.min_ex);
+      TCoord  y       = (TCoord)(ras.ey - ras.min_ey);
+      PCell  *pparent = gray_find_cell( RAS_VAR_ x, y );
+      PCell   cell    = *pparent;
 
-      cell        = ras.cells + ras.num_cells++;
-      cell->x     = (TCoord)(ras.ex - ras.min_ex);
-      cell->y     = (TCoord)(ras.ey - ras.min_ey);
-      cell->area  = ras.area;
-      cell->cover = ras.cover;
+      if ( cell == NULL || cell->x != x )
+      {
+        cell = gray_alloc_cell( RAS_VAR_ x );
+        cell->next  = *pparent;
+        *pparent    = cell;
+      }
+
+      cell->area  += ras.area;
+      cell->cover += ras.cover;
     }
   }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -1036,197 +1065,6 @@
   }
 
 
-  /* a macro comparing two cell pointers.  Returns true if a <= b. */
-#if 1
-
-#define PACK( a )          ( ( (long)(a)->y << 16 ) + (a)->x )
-#define LESS_THAN( a, b )  ( PACK( a ) < PACK( b ) )
-
-#else /* 1 */
-
-#define LESS_THAN( a, b )  ( (a)->y < (b)->y || \
-                             ( (a)->y == (b)->y && (a)->x < (b)->x ) )
-
-#endif /* 1 */
-
-#define SWAP_CELLS( a, b, temp )  do             \
-                                  {              \
-                                    temp = *(a); \
-                                    *(a) = *(b); \
-                                    *(b) = temp; \
-                                  } while ( 0 )
-#define DEBUG_SORT
-#define QUICK_SORT
-
-#ifdef SHELL_SORT
-
-  /* a simple shell sort algorithm that works directly on our */
-  /* cells table                                              */
-  static void
-  gray_shell_sort ( PCell  cells,
-                    int    count )
-  {
-    PCell  i, j, limit = cells + count;
-    TCell  temp;
-    int    gap;
-
-
-    /* compute initial gap */
-    for ( gap = 0; ++gap < count; gap *= 3 )
-      ;
-
-    while ( gap /= 3 )
-    {
-      for ( i = cells + gap; i < limit; i++ )
-      {
-        for ( j = i - gap; ; j -= gap )
-        {
-          PCell  k = j + gap;
-
-
-          if ( LESS_THAN( j, k ) )
-            break;
-
-          SWAP_CELLS( j, k, temp );
-
-          if ( j < cells + gap )
-            break;
-        }
-      }
-    }
-  }
-
-#endif /* SHELL_SORT */
-
-
-#ifdef QUICK_SORT
-
-  /* This is a non-recursive quicksort that directly process our cells     */
-  /* array.  It should be faster than calling the stdlib qsort(), and we   */
-  /* can even tailor our insertion threshold...                            */
-
-#define QSORT_THRESHOLD  9  /* below this size, a sub-array will be sorted */
-                            /* through a normal insertion sort             */
-
-  static void
-  gray_quick_sort( PCell  cells,
-                   int    count )
-  {
-    PCell   stack[40];  /* should be enough ;-) */
-    PCell*  top;        /* top of stack */
-    PCell   base, limit;
-    TCell   temp;
-
-
-    limit = cells + count;
-    base  = cells;
-    top   = stack;
-
-    for (;;)
-    {
-      int    len = (int)( limit - base );
-      PCell  i, j, pivot;
-
-
-      if ( len > QSORT_THRESHOLD )
-      {
-        /* we use base + len/2 as the pivot */
-        pivot = base + len / 2;
-        SWAP_CELLS( base, pivot, temp );
-
-        i = base + 1;
-        j = limit - 1;
-
-        /* now ensure that *i <= *base <= *j */
-        if ( LESS_THAN( j, i ) )
-          SWAP_CELLS( i, j, temp );
-
-        if ( LESS_THAN( base, i ) )
-          SWAP_CELLS( base, i, temp );
-
-        if ( LESS_THAN( j, base ) )
-          SWAP_CELLS( base, j, temp );
-
-        for (;;)
-        {
-          do i++; while ( LESS_THAN( i, base ) );
-          do j--; while ( LESS_THAN( base, j ) );
-
-          if ( i > j )
-            break;
-
-          SWAP_CELLS( i, j, temp );
-        }
-
-        SWAP_CELLS( base, j, temp );
-
-        /* now, push the largest sub-array */
-        if ( j - base > limit - i )
-        {
-          top[0] = base;
-          top[1] = j;
-          base   = i;
-        }
-        else
-        {
-          top[0] = i;
-          top[1] = limit;
-          limit  = j;
-        }
-        top += 2;
-      }
-      else
-      {
-        /* the sub-array is small, perform insertion sort */
-        j = base;
-        i = j + 1;
-
-        for ( ; i < limit; j = i, i++ )
-        {
-          for ( ; LESS_THAN( j + 1, j ); j-- )
-          {
-            SWAP_CELLS( j + 1, j, temp );
-            if ( j == base )
-              break;
-          }
-        }
-        if ( top > stack )
-        {
-          top  -= 2;
-          base  = top[0];
-          limit = top[1];
-        }
-        else
-          break;
-      }
-    }
-  }
-
-#endif /* QUICK_SORT */
-
-
-#ifdef DEBUG_GRAYS
-#ifdef DEBUG_SORT
-
-  static int
-  gray_check_sort( PCell  cells,
-                   int    count )
-  {
-    PCell  p, q;
-
-
-    for ( p = cells + count - 2; p >= cells; p-- )
-    {
-      q = p + 1;
-      if ( !LESS_THAN( p, q ) )
-        return 0;
-    }
-    return 1;
-  }
-
-#endif /* DEBUG_SORT */
-#endif /* DEBUG_GRAYS */
-
 
   static int
   gray_move_to( const FT_Vector*  to,
@@ -1301,10 +1139,6 @@
       unsigned char  coverage = spans->coverage;
 
 
-#ifdef GRAYS_USE_GAMMA
-      coverage = raster->gamma[coverage];
-#endif
-
       if ( coverage )
 #if 1
         FT_MEM_SET( p + spans->x, (unsigned char)coverage, spans->len );
@@ -1318,36 +1152,6 @@
 #endif /* 1 */
     }
   }
-
-
-#ifdef DEBUG_GRAYS
-
-#include <stdio.h>
-
-  static void
-  gray_dump_cells( RAS_ARG )
-  {
-    PCell  cell, limit;
-    int    y = -1;
-
-
-    cell  = ras.cells;
-    limit = cell + ras.num_cells;
-
-    for ( ; cell < limit; cell++ )
-    {
-      if ( cell->y != y )
-      {
-        fprintf( stderr, "\n%2d: ", cell->y );
-        y = cell->y;
-      }
-      fprintf( stderr, "[%d %d %d]",
-               cell->x, cell->area, cell->cover );
-    }
-    fprintf(stderr, "\n" );
-  }
-
-#endif /* DEBUG_GRAYS */
 
 
   static void
@@ -1449,98 +1253,46 @@
   static void
   gray_sweep( RAS_ARG_ const FT_Bitmap*  target )
   {
-    TCoord  x, y, cover;
-    TArea   area;
-    PCell   start, cur, limit;
+    int  yindex;
 
     FT_UNUSED( target );
-
 
     if ( ras.num_cells == 0 )
       return;
 
-    cur   = ras.cells;
-    limit = cur + ras.num_cells;
-
-    cover              = 0;
-    ras.span_y         = -1;
     ras.num_gray_spans = 0;
 
-    for (;;)
+    for ( yindex = 0; yindex < ras.ycount; yindex++ )
     {
-      start  = cur;
-      y      = start->y;
-      x      = start->x;
+      PCell   cell  = ras.ycells[yindex];
+      TCoord  cover = 0;
+      TCoord  x     = 0;
 
-      area   = start->area;
-      cover += start->cover;
-
-      /* accumulate all start cells */
-      for (;;)
+      for ( ; cell != NULL; cell = cell->next )
       {
-        ++cur;
-        if ( cur >= limit || cur->y != start->y || cur->x != start->x )
-          break;
+        TArea  area;
 
-        area  += cur->area;
-        cover += cur->cover;
+        if ( cell->x > x && cover != 0 )
+          gray_hline( RAS_VAR_ x, yindex, cover*(ONE_PIXEL*2), cell->x - x );
+
+        cover += cell->cover;
+        area   = cover*(ONE_PIXEL*2) - cell->area;
+
+        if ( area != 0 && cell->x >= 0 )
+          gray_hline( RAS_VAR_ cell->x, yindex, area, 1 );
+
+        x = cell->x + 1;
       }
 
-      /* if the start cell has a non-null area, we must draw an */
-      /* individual gray pixel there                            */
-      if ( area && x >= 0 )
-      {
-        gray_hline( RAS_VAR_ x, y, cover * ( ONE_PIXEL * 2 ) - area, 1 );
-        x++;
-      }
-
-      if ( x < 0 )
-        x = 0;
-
-      if ( cur < limit && start->y == cur->y )
-      {
-        /* draw a gray span between the start cell and the current one */
-        if ( cur->x > x )
-          gray_hline( RAS_VAR_ x, y,
-                      cover * ( ONE_PIXEL * 2 ), cur->x - x );
-      }
-      else
-      {
-        /* draw a gray span until the end of the clipping region */
-        if ( cover && x < ras.max_ex - ras.min_ex )
-          gray_hline( RAS_VAR_ x, y,
-                      cover * ( ONE_PIXEL * 2 ),
-                      (int)( ras.max_ex - x - ras.min_ex ) );
-        cover = 0;
-      }
-
-      if ( cur >= limit )
-        break;
+      if ( cover != 0 )
+        gray_hline( RAS_VAR_ x, yindex, cover*(ONE_PIXEL*2),
+                    (ras.max_ex - x) );
     }
 
     if ( ras.render_span && ras.num_gray_spans > 0 )
       ras.render_span( ras.span_y, ras.num_gray_spans,
                        ras.gray_spans, ras.render_span_data );
-
-#ifdef DEBUG_GRAYS
-
-    {
-      int       n;
-      FT_Span*  span;
-
-
-      fprintf( stderr, "y=%3d ", ras.span_y );
-      span = ras.gray_spans;
-      for ( n = 0; n < ras.num_gray_spans; n++, span++ )
-        fprintf( stderr, "[%d..%d]:%02x ",
-                 span->x, span->x + span->len - 1, span->coverage );
-      fprintf( stderr, "\n" );
-    }
-
-#endif /* DEBUG_GRAYS */
-
   }
-
 
 #ifdef _STANDALONE_
 
@@ -1893,32 +1645,41 @@
         TPos  bottom, top, middle;
         int   error;
 
+        {
+          PCell   cells_max;
+          int     yindex, ycount;
+          long    cell_start, cell_mod;
+
+          ras.ycells = (PCell*)ras.buffer;
+          ras.ycount = band->max - band->min;
+
+          for ( yindex = 0; yindex < ras.ycount; yindex++ )
+            ras.ycells[yindex] = NULL;
+
+          cell_start = sizeof(PCell)*ras.ycount;
+          cell_mod   = cell_start % sizeof(TCell);
+          if ( cell_mod > 0 )
+            cell_start += sizeof(TCell) - cell_mod;
+
+          cells_max = (PCell)(ras.buffer + ras.buffer_size);
+          ras.cells = (PCell)((char*)ras.buffer + cell_start);
+          if ( ras.cells >= cells_max )
+            goto ReduceBands;
+
+          ras.max_cells = (cells_max - ras.cells);
+          if (ras.max_cells < 2)
+            goto ReduceBands;
+        }
 
         ras.num_cells = 0;
         ras.invalid   = 1;
         ras.min_ey    = band->min;
         ras.max_ey    = band->max;
 
-#if 1
         error = gray_convert_glyph_inner( RAS_VAR );
-#else
-        error = FT_Outline_Decompose( outline, &func_interface, &ras ) ||
-                gray_record_cell( RAS_VAR );
-#endif
 
         if ( !error )
         {
-#ifdef SHELL_SORT
-          gray_shell_sort( ras.cells, ras.num_cells );
-#else
-          gray_quick_sort( ras.cells, ras.num_cells );
-#endif
-
-#ifdef DEBUG_GRAYS
-          gray_check_sort( ras.cells, ras.num_cells );
-          gray_dump_cells( RAS_VAR );
-#endif
-
           gray_sweep( RAS_VAR_  &ras.target );
           band--;
           continue;
@@ -1926,6 +1687,7 @@
         else if ( error != ErrRaster_MemoryOverflow )
           return 1;
 
+      ReduceBands:
         /* render pool overflow, we will reduce the render band by half */
         bottom = band->min;
         top    = band->max;
@@ -1967,7 +1729,7 @@
     const FT_Bitmap*   target_map = params->target;
 
 
-    if ( !raster || !raster->cells || !raster->max_cells )
+    if ( !raster || !raster->buffer || !raster->buffer_size )
       return -1;
 
     /* return immediately if the outline is empty */
@@ -2033,35 +1795,6 @@
 
   /**** RASTER OBJECT CREATION: In standalone mode, we simply use *****/
   /****                         a static object.                  *****/
-
-#ifdef GRAYS_USE_GAMMA
-
-  /* initialize the "gamma" table. Yes, this is really a crummy function */
-  /* but the results look pretty good for something that simple.         */
-  /*                                                                     */
-#define M_MAX  255
-#define M_X    128
-#define M_Y    192
-
-  static void
-  grays_init_gamma( PRaster  raster )
-  {
-    unsigned int  x, a;
-
-
-    for ( x = 0; x < 256; x++ )
-    {
-      if ( x <= M_X )
-        a = ( x * M_Y + M_X / 2) / M_X;
-      else
-        a = M_Y + ( ( x - M_X ) * ( M_MAX - M_Y ) +
-            ( M_MAX - M_X ) / 2 ) / ( M_MAX - M_X );
-
-      raster->gamma[x] = (unsigned char)a;
-    }
-  }
-
-#endif /* GRAYS_USE_GAMMA */
 
 #ifdef _STANDALONE_
 
