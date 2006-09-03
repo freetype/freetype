@@ -212,25 +212,25 @@ FT_BEGIN_HEADER
   /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
   /*    force_autohing ::                                                  */
-  /*      this boolean flag is used to instruct the glyph loader to        */
-  /*      ignore the format-specific hinter, and use the auto-hinter       */
-  /*      instead to load all glyphs.                                      */
+  /*      This boolean flag instructs the glyph loader to ignore the       */
+  /*      format-specific hinter, and to use the auto-hinter instead to    */
+  /*      load all glyphs.                                                 */
   /*                                                                       */
-  /*      if the unpatented bytecode interpreter was compiled withing      */
-  /*      the library then:                                                */
+  /*      If the unpatented bytecode interpreter is compiled into the      */
+  /*      library, then:                                                   */
   /*                                                                       */
   /*      - if this is one of the tricky Asian fonts, like Gulim, which    */
   /*        absolutely require a bytecode interpreter to load anything     */
-  /*        properly, the flag will be set to FALSE                        */
+  /*        properly, the flag is set to FALSE                             */
   /*                                                                       */
-  /*      - for other fonts, the flag will be set to TRUE, and the         */
-  /*        auto-hinter will be used to scale the glyphs.                  */
+  /*      - for other fonts, the flag is set to TRUE, and the auto-hinter  */
+  /*        is used to scale the glyphs.                                   */
   /*                                                                       */
-  /*      if the unpatented bytecode interpretr was *not* compiled         */
-  /*      within the librayr, the flag will always be FALSE                */
+  /*      If the unpatented bytecode interpreter is not compiled into      */
+  /*      the library, the flag is always set to FALSE.                    */
   /*                                                                       */
-  /*      the detection of "tricky" fonts is located in the TrueType       */
-  /*      face loader.                                                     */
+  /*      The detection of `tricky' fonts is located in the TrueType       */
+  /*      face loader, testing against a bunch of font names.              */
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
@@ -644,8 +644,8 @@ FT_BEGIN_HEADER
 
 
   /* Set this debug hook to a non-null pointer to force unpatented hinting */
-  /* for all faces when both TT_USE_BYTECODE_INTERPRETER and     */
-  /* TT_CONFIG_OPTION_UNPATENTED_HINTING are defined. this is only used    */
+  /* for all faces when both TT_USE_BYTECODE_INTERPRETER and               */
+  /* TT_CONFIG_OPTION_UNPATENTED_HINTING are defined.  This is only used   */
   /* during debugging.                                                     */
 #define FT_DEBUG_HOOK_UNPATENTED_HINTING  1
 

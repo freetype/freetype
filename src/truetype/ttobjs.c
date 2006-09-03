@@ -261,9 +261,8 @@
           face->unpatented_hinting = TRUE;
     }
 
-   /* compare the face with a list of well-known "tricky' fonts !!
-    * this list shall be expanded as we find them
-    */
+    /* Compare the face with a list of well-known `tricky' fonts. */
+    /* This list shall be expanded as we find more of them.       */
     if ( !face->unpatented_hinting )
     {
       static const char* const  trick_names[] =
@@ -275,11 +274,11 @@
         "PMingLiU",        /* mingliu.ttc */
         NULL
       };
-      int   nn;
+      int  nn;
 
-     /* note that we only check the face name at the moment, it might
-      * be worthy to do more checks for a few special cases
-      */
+
+      /* Note that we only check the face name at the moment; it might */
+      /* be worth to do more checks for a few special cases.           */
       for ( nn = 0; trick_names[nn] != NULL; nn++ )
       {
         if ( ft_strcmp( ttface->family_name, trick_names[nn] ) == 0 )

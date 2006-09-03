@@ -1,11 +1,38 @@
+2006-09-03  Werner Lemberg  <wl@gnu.org>
+
+	* devel/ftoption.h: Synchronize with
+	include/freetype/config/ftoption.h.
+
+	* src/smooth/ftgrays.c (gray_record_cell): Remove shadowing
+	variable declaration.
+	(gray_convert_glyph): Fix compiler warnings.
+
 2006-09-01  David Turner  <david@freetype.org>
 
-    * src/truetype/ttobjs.c: updated the TrueType loader to recognize
-    a few fonts that require the automatic unpatented loader
+	* src/truetype/ttobjs.c (tt_face_init): Update the TrueType loader
+	to recognize a few fonts that require the automatic unpatented
+	loader.
 
-    * src/smooth/ftgrays.c: optmized the performance of the anti-aliased
-    rasterizer. The speed gains is between 15% and 25%, depending on
-    content
+	* src/smooth/ftgrays.c: Optmize the performance of the anti-aliased
+	rasterizer.  The speed improvement is between 15% and 25%, depending
+	on the font data.
+
+	(GRAYS_USE_GAMMA, GRAYS_COMPACT): Removed, and all associated code.
+	(TCell): Redefine.
+	(TRaster): New members `buffer', `buffer_size', `ycells', `ycount'.
+	(gray_init_cells): Updated.
+	(gray_find_cell, gray_alloc_cell): New functions.
+	(gray_record_cell): Rewritten to use `gray_find_cell' and
+	`gray_alloc_cell'.
+	(PACK, LESS_THAN, SWAP_CELLS, DEBUG_SORT, QUICK_SORT, SHELL_SORT,
+	QSORT_THRESHOLD):
+	Removed.
+	(gray_shell_sort, gray_quick_sort, gray_check_sort,
+	gray_dump_cells): Removed.
+	(gray_sweep): Rewritten.
+	(gray_convert_glyph): Rewrite code which used one of the sorting
+	functions.
+	(gray_raster_render): Updated.
 
 2006-08-29  Dr. Werner Fink  <werner@suse.de>
 
@@ -14,28 +41,45 @@
 
 2006-08-27  David Turner  <david@freetype.org>
 
-	<TO BE WRITTEN>
+	* include/freetype/config/ftoption.h (TT_USE_BYTECODE_INTERPRETER):
+	New macro, defined if either TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+	or TT_CONFIG_OPTION_UNPATENTED_HINTING is defined.
+
+	* include/freetype/internal/ftcalc.h, src/base/ftcalc.c,
+	src/truetype/truetype.c, src/truetype/ttdriver.c,
+	src/truetype/ttgload.c, src/truetype/ttgload.h,
+	src/truetype/ttinterp.c, src/truetype/ttobjs.c,
+	src/truetype/ttobjs.h, src/truetype/ttpload.c, src/type42/t42drivr.c:
+	s/TT_CONFIG_OPTION_BYTECODE_INTERPRETER/TT_USE_BYTECODE_INTERPRETER/.
+
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec): New
+	member `force_autohint'.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Use `force_autohint'.
+
+	* src/truetype/ttobjs.c (tt_face_init): Prepare code for testing
+	against a list of font names which need the bytecode interpreter.
 
 2006-08-27  Jens Claudius  <jens.claudius@yahoo.com>
 
 	Fix miscellaneous compiler warnings.
 
-	* freetype2/include/freetype/internal/ftobjs.h: close
-	comment with `*/' to avoid `/* in comment' compiler warning.
+	* freetype2/include/freetype/internal/ftobjs.h: Close comment with
+	`*/' to avoid `/* in comment' compiler warning.
 
-	* freetype2/src/base/ftdbgmem.c (ft_mem_table_get_source): Turn
-	cast `(FT_UInt32)(void*)' into `(FT_UInt32)(FT_PtrDist)(void*)'
-	since on 64-bit platforms void* is larger than FT_UInt32.
+	* freetype2/src/base/ftdbgmem.c (ft_mem_table_get_source): Turn cast
+	`(FT_UInt32)(void*)' into `(FT_UInt32)(FT_PtrDist)(void*)' since on
+	64-bit platforms void* is larger than FT_UInt32.
 
-	* freetype2/src/base/ftobjs.c (t_validator_error): cast
-	away volatileness of argument to ft_longjmp. Spotted by
-	Werner `Putzfrau' Lemberg.
+	* freetype2/src/base/ftobjs.c (t_validator_error): Cast away
+	volatileness of argument to ft_longjmp.  Spotted by Werner
+	`Putzfrau' Lemberg.
 
-	* freetype2/src/bdf/bdflib.c (bdf_load_font): initialize
-	local variable `lineno'.
+	* freetype2/src/bdf/bdflib.c (bdf_load_font): Initialize local
+	variable `lineno'.
 
-	* freetype2/src/gxvalid/gxvmod.c (classic_kern_validate):
-	mark local variable `error' volatile.
+	* freetype2/src/gxvalid/gxvmod.c (classic_kern_validate): Mark local
+	variable `error' as volatile.
 
 2006-08-27  Werner Lemberg  <wl@gnu.org>
 
@@ -1248,10 +1292,10 @@
 	(FTC_CMapCache_Lookup) [FT_CONFIG_OPTION_OLD_INTERNALS]: New
 	compatibility code.
 
-    * src/cache/ftcbasic.c: fixed a silly bug that prevented our super-duper
-    "hack" to support rogue clients compiled against 2.1.7 to work correctly.
-    Probably explains the GNUstep crashes with the second release
-    candidate.
+	* src/cache/ftcbasic.c: Fix a silly bug that prevented our `hack' to
+	support rogue clients compiled against 2.1.7 to work correctly. 
+	This probably explains the GNUstep crashes with the second release
+	candidate.
 
 2006-02-23  Chia-I Wu  <b90201047@ntu.edu.tw>
 

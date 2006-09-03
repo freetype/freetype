@@ -133,9 +133,7 @@
 #define FT_TRACE( x )  do ; while ( 0 )     /* nothing */
 #endif
 
-
 #else /* _STANDALONE_ */
-
 
 #include <ft2build.h>
 #include "ftgrays.h"
@@ -147,7 +145,6 @@
 
 #define ErrRaster_Invalid_Mode     Smooth_Err_Cannot_Render_Glyph
 #define ErrRaster_Invalid_Outline  Smooth_Err_Invalid_Outline
-
 
 #endif /* _STANDALONE_ */
 
@@ -326,13 +323,13 @@ typedef struct TCell_
     ras.buffer      = buffer;
     ras.buffer_size = byte_size;
 
-    ras.ycells    = (PCell*) buffer;
-    ras.cells     = NULL;
-    ras.max_cells = 0;
-    ras.num_cells = 0;
-    ras.area      = 0;
-    ras.cover     = 0;
-    ras.invalid   = 1;
+    ras.ycells      = (PCell*) buffer;
+    ras.cells       = NULL;
+    ras.max_cells   = 0;
+    ras.num_cells   = 0;
+    ras.area        = 0;
+    ras.cover       = 0;
+    ras.invalid     = 1;
   }
 
 
@@ -385,10 +382,11 @@ typedef struct TCell_
   /* Record the current cell in the table.                                 */
   /*                                                                       */
   static PCell*
-  gray_find_cell( RAS_ARG_  TCoord  x,
-                            TCoord  y )
+  gray_find_cell( RAS_ARG_ TCoord  x,
+                           TCoord  y )
   {
     PCell  *pnode, node;
+
 
     pnode = &ras.ycells[y];
     for (;;)
@@ -399,14 +397,16 @@ typedef struct TCell_
 
       pnode = &node->next;
     }
-    return  pnode;
+
+    return pnode;
   }
 
 
   static PCell
-  gray_alloc_cell( RAS_ARG_  TCoord  x )
+  gray_alloc_cell( RAS_ARG_ TCoord  x )
   {
     PCell  cell;
+
 
     if ( ras.num_cells >= ras.max_cells )
       ft_longjmp( ras.jump_buffer, 1 );
@@ -423,13 +423,10 @@ typedef struct TCell_
   static void
   gray_record_cell( RAS_ARG )
   {
-    PCell  cell;
-
-
     if ( !ras.invalid && ( ras.area | ras.cover ) )
     {
-      TCoord  x       = (TCoord)(ras.ex - ras.min_ex);
-      TCoord  y       = (TCoord)(ras.ey - ras.min_ey);
+      TCoord  x       = (TCoord)( ras.ex - ras.min_ex );
+      TCoord  y       = (TCoord)( ras.ey - ras.min_ey );
       PCell  *pparent = gray_find_cell( RAS_VAR_ x, y );
       PCell   cell    = *pparent;
 
@@ -444,6 +441,7 @@ typedef struct TCell_
       cell->cover += ras.cover;
     }
   }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1257,6 +1255,7 @@ typedef struct TCell_
 
     FT_UNUSED( target );
 
+
     if ( ras.num_cells == 0 )
       return;
 
@@ -1268,15 +1267,18 @@ typedef struct TCell_
       TCoord  cover = 0;
       TCoord  x     = 0;
 
+
       for ( ; cell != NULL; cell = cell->next )
       {
         TArea  area;
 
+
         if ( cell->x > x && cover != 0 )
-          gray_hline( RAS_VAR_ x, yindex, cover*(ONE_PIXEL*2), cell->x - x );
+          gray_hline( RAS_VAR_ x, yindex, cover * ( ONE_PIXEL * 2 ),
+                      cell->x - x );
 
         cover += cell->cover;
-        area   = cover*(ONE_PIXEL*2) - cell->area;
+        area   = cover * ( ONE_PIXEL * 2 ) - cell->area;
 
         if ( area != 0 && cell->x >= 0 )
           gray_hline( RAS_VAR_ cell->x, yindex, area, 1 );
@@ -1285,14 +1287,15 @@ typedef struct TCell_
       }
 
       if ( cover != 0 )
-        gray_hline( RAS_VAR_ x, yindex, cover*(ONE_PIXEL*2),
-                    (ras.max_ex - x) );
+        gray_hline( RAS_VAR_ x, yindex, cover * ( ONE_PIXEL * 2 ),
+                    ras.max_ex - x );
     }
 
     if ( ras.render_span && ras.num_gray_spans > 0 )
       ras.render_span( ras.span_y, ras.num_gray_spans,
                        ras.gray_spans, ras.render_span_data );
   }
+
 
 #ifdef _STANDALONE_
 
@@ -1646,9 +1649,10 @@ typedef struct TCell_
         int   error;
 
         {
-          PCell   cells_max;
-          int     yindex, ycount;
-          long    cell_start, cell_mod;
+          PCell  cells_max;
+          int    yindex;
+          long   cell_start, cell_mod;
+
 
           ras.ycells = (PCell*)ras.buffer;
           ras.ycount = band->max - band->min;
@@ -1656,18 +1660,18 @@ typedef struct TCell_
           for ( yindex = 0; yindex < ras.ycount; yindex++ )
             ras.ycells[yindex] = NULL;
 
-          cell_start = sizeof(PCell)*ras.ycount;
-          cell_mod   = cell_start % sizeof(TCell);
+          cell_start = sizeof ( PCell ) * ras.ycount;
+          cell_mod   = cell_start % sizeof ( TCell );
           if ( cell_mod > 0 )
-            cell_start += sizeof(TCell) - cell_mod;
+            cell_start += sizeof ( TCell ) - cell_mod;
 
-          cells_max = (PCell)(ras.buffer + ras.buffer_size);
-          ras.cells = (PCell)((char*)ras.buffer + cell_start);
+          cells_max = (PCell)( (char*)ras.buffer + ras.buffer_size );
+          ras.cells = (PCell)( (char*)ras.buffer + cell_start );
           if ( ras.cells >= cells_max )
             goto ReduceBands;
 
-          ras.max_cells = (cells_max - ras.cells);
-          if (ras.max_cells < 2)
+          ras.max_cells = cells_max - ras.cells;
+          if ( ras.max_cells < 2 )
             goto ReduceBands;
         }
 
