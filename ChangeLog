@@ -1,3 +1,7 @@
+2006-09-04  David Turner  <david@freetype.org>
+
+  * src/smooth/ftgrays.c: fix for the latest rasterizer optimization
+
 2006-09-03  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h: Synchronize with
@@ -1293,7 +1297,7 @@
 	compatibility code.
 
 	* src/cache/ftcbasic.c: Fix a silly bug that prevented our `hack' to
-	support rogue clients compiled against 2.1.7 to work correctly. 
+	support rogue clients compiled against 2.1.7 to work correctly.
 	This probably explains the GNUstep crashes with the second release
 	candidate.
 

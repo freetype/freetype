@@ -1651,21 +1651,21 @@ typedef struct TCell_
         {
           PCell  cells_max;
           int    yindex;
-          long   cell_start, cell_mod;
+          long   cell_start, cell_end, cell_mod;
 
 
           ras.ycells = (PCell*)ras.buffer;
           ras.ycount = band->max - band->min;
-
-          for ( yindex = 0; yindex < ras.ycount; yindex++ )
-            ras.ycells[yindex] = NULL;
 
           cell_start = sizeof ( PCell ) * ras.ycount;
           cell_mod   = cell_start % sizeof ( TCell );
           if ( cell_mod > 0 )
             cell_start += sizeof ( TCell ) - cell_mod;
 
-          cells_max = (PCell)( (char*)ras.buffer + ras.buffer_size );
+          cell_end  = ras.buffer_size;
+          cell_end -= cell_end % sizeof( TCell );
+
+          cells_max = (PCell)( (char*)ras.buffer + cell_end );
           ras.cells = (PCell)( (char*)ras.buffer + cell_start );
           if ( ras.cells >= cells_max )
             goto ReduceBands;
@@ -1673,6 +1673,9 @@ typedef struct TCell_
           ras.max_cells = cells_max - ras.cells;
           if ( ras.max_cells < 2 )
             goto ReduceBands;
+
+          for ( yindex = 0; yindex < ras.ycount; yindex++ )
+            ras.ycells[yindex] = NULL;
         }
 
         ras.num_cells = 0;
