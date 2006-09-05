@@ -1689,6 +1689,7 @@ typedef struct TCell_
         ras.invalid   = 1;
         ras.min_ey    = band->min;
         ras.max_ey    = band->max;
+	ras.count_ey  = band->max - band->min;
 
         error = gray_convert_glyph_inner( RAS_VAR );
 
