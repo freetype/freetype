@@ -91,7 +91,7 @@
 #define FT_COMPONENT  trace_smooth
 
 
-#define ErrRaster_MemoryOverflow   -4
+#define ErrRaster_MemoryOverflow  -4
 
 
 #ifdef _STANDALONE_
@@ -160,6 +160,7 @@
   /* define this to dump debugging information */
 #define xxxDEBUG_GRAYS
 
+
   /* as usual, for the speed hungry :-) */
 
 #ifndef FT_STATIC_RASTER
@@ -207,6 +208,7 @@
 #define DOWNSCALE( x )  ( (x) << ( 6 - PIXEL_BITS ) )
 #endif
 
+
   /*************************************************************************/
   /*                                                                       */
   /*   TYPE DEFINITIONS                                                    */
@@ -225,7 +227,7 @@
 
 #if PIXEL_BITS <= 7
 
-  typedef int   TArea;
+  typedef int  TArea;
 
 #else /* PIXEL_BITS >= 8 */
 
@@ -233,7 +235,7 @@
 #if FT_UINT_MAX == 0xFFFFU
   typedef long  TArea;
 #else
-  typedef int  TArea;
+  typedef int   TArea;
 #endif
 
 #endif /* PIXEL_BITS >= 8 */
@@ -242,17 +244,17 @@
   /* maximal number of gray spans in a call to the span callback */
 #define FT_MAX_GRAY_SPANS  32
 
-typedef struct TCell_*   PCell;
 
-typedef struct TCell_
-{
-  int     x;
-  int     cover;
-  TArea   area;
-  PCell   next;
+  typedef struct TCell_*  PCell;
 
-} TCell;
+  typedef struct  TCell_
+  {
+    int    x;
+    int    cover;
+    TArea  area;
+    PCell  next;
 
+  } TCell;
 
 
   typedef struct  TRaster_
@@ -382,7 +384,7 @@ typedef struct TCell_
     int     x = ras.ex;
 
 
-    pcell = &ras.ycells[ ras.ey ];
+    pcell = &ras.ycells[ras.ey];
     for (;;)
     {
       cell = *pcell;
@@ -414,9 +416,10 @@ typedef struct TCell_
   static void
   gray_record_cell( RAS_ARG )
   {
-    if ( !ras.invalid && (ras.area | ras.cover) )
+    if ( !ras.invalid && ( ras.area | ras.cover ) )
     {
-      PCell   cell = gray_find_cell( RAS_VAR );
+      PCell  cell = gray_find_cell( RAS_VAR );
+
 
       cell->area  += ras.area;
       cell->cover += ras.cover;
@@ -463,7 +466,7 @@ typedef struct TCell_
     ras.ex      = ex;
     ras.ey      = ey;
     ras.invalid = ( (unsigned)ey >= (unsigned)ras.count_ey ||
-                              ex >= ras.count_ex );
+                              ex >= ras.count_ex           );
   }
 
 
@@ -472,11 +475,11 @@ typedef struct TCell_
   /* Start a new contour at a given cell.                                  */
   /*                                                                       */
   static void
-  gray_start_cell( RAS_ARG_  TCoord  ex,
-                             TCoord  ey )
+  gray_start_cell( RAS_ARG_ TCoord  ex,
+                            TCoord  ey )
   {
     if ( ex < ras.min_ex )
-      ex = (TCoord)(ras.min_ex - 1);
+      ex = (TCoord)( ras.min_ex - 1 );
 
     ras.area    = 0;
     ras.cover   = 0;
@@ -494,11 +497,11 @@ typedef struct TCell_
   /* Render a scanline as one or more cells.                               */
   /*                                                                       */
   static void
-  gray_render_scanline( RAS_ARG_  TCoord  ey,
-                                  TPos    x1,
-                                  TCoord  y1,
-                                  TPos    x2,
-                                  TCoord  y2 )
+  gray_render_scanline( RAS_ARG_ TCoord  ey,
+                                 TPos    x1,
+                                 TCoord  y1,
+                                 TPos    x2,
+                                 TCoord  y2 )
   {
     TCoord  ex1, ex2, fx1, fx2, delta;
     long    p, first, dx;
@@ -611,7 +614,7 @@ typedef struct TCell_
 
 
     ey1 = TRUNC( ras.last_ey );
-    ey2 = TRUNC( to_y ); /* if (ey2 >= ras.max_ey) ey2 = ras.max_ey-1; */
+    ey2 = TRUNC( to_y );     /* if (ey2 >= ras.max_ey) ey2 = ras.max_ey-1; */
     fy1 = (TCoord)( ras.y - ras.last_ey );
     fy2 = (TCoord)( to_y - SUBPIXELS( ey2 ) );
 
@@ -675,12 +678,14 @@ typedef struct TCell_
         ras.area  += area;
         ras.cover += delta;
         ey1       += incr;
+
         gray_set_cell( raster, ex, ey1 );
       }
 
       delta      = (int)( fy2 - ONE_PIXEL + first );
       ras.area  += (TArea)two_fx * delta;
       ras.cover += delta;
+
       goto End;
     }
 
@@ -807,7 +812,7 @@ typedef struct TCell_
     {
       /* we compute the mid-point directly in order to avoid */
       /* calling gray_split_conic()                          */
-      TPos   to_x, to_y, mid_x, mid_y;
+      TPos  to_x, to_y, mid_x, mid_y;
 
 
       to_x  = UPSCALE( to->x );
@@ -817,6 +822,7 @@ typedef struct TCell_
 
       gray_render_line( RAS_VAR_ mid_x, mid_y );
       gray_render_line( RAS_VAR_ to_x, to_y );
+
       return;
     }
 
@@ -878,6 +884,7 @@ typedef struct TCell_
         arc -= 2;
       }
     }
+
     return;
   }
 
@@ -1026,6 +1033,7 @@ typedef struct TCell_
         arc -= 3;
       }
     }
+
     return;
   }
 
@@ -1106,27 +1114,28 @@ typedef struct TCell_
 
       if ( coverage )
       {
-       /* for small-spans, it's faster to do it ourselves than
-        * calling memset. this is mainly due to the cost of the
-        * function call.
-        */
+        /* For small-spans it is faster to do it by ourselves than
+         * calling `memset'.  This is mainly due to the cost of the
+         * function call.
+         */
         if ( spans->len >= 8 )
           FT_MEM_SET( p + spans->x, (unsigned char)coverage, spans->len );
         else
         {
           unsigned char*  q = p + spans->x;
 
+
           switch ( spans->len )
           {
-            case 7: *q++ = (unsigned char)coverage;
-            case 6: *q++ = (unsigned char)coverage;
-            case 5: *q++ = (unsigned char)coverage;
-            case 4: *q++ = (unsigned char)coverage;
-            case 3: *q++ = (unsigned char)coverage;
-            case 2: *q++ = (unsigned char)coverage;
-            case 1: *q   = (unsigned char)coverage;
-            default:
-               ;
+          case 7: *q++ = (unsigned char)coverage;
+          case 6: *q++ = (unsigned char)coverage;
+          case 5: *q++ = (unsigned char)coverage;
+          case 4: *q++ = (unsigned char)coverage;
+          case 3: *q++ = (unsigned char)coverage;
+          case 2: *q++ = (unsigned char)coverage;
+          case 1: *q   = (unsigned char)coverage;
+          default:
+            ;
           }
         }
       }
@@ -1140,9 +1149,9 @@ typedef struct TCell_
                        TPos    area,
                        int     acount )
   {
-    FT_Span*   span;
-    int        count;
-    int        coverage;
+    FT_Span*  span;
+    int       count;
+    int       coverage;
 
 
     /* compute the coverage line's coverage, depending on the    */
@@ -1176,13 +1185,13 @@ typedef struct TCell_
 
     if ( coverage )
     {
-      /* see if we can add this span to the current list */
+      /* see whether we can add this span to the current list */
       count = ras.num_gray_spans;
       span  = ras.gray_spans + count - 1;
       if ( count > 0                          &&
            ras.span_y == y                    &&
            (int)span->x + span->len == (int)x &&
-           span->coverage == coverage )
+           span->coverage == coverage         )
       {
         span->len = (unsigned short)( span->len + acount );
         return;
@@ -1225,6 +1234,7 @@ typedef struct TCell_
       span->x        = (short)x;
       span->len      = (unsigned short)acount;
       span->coverage = (unsigned char)coverage;
+
       ras.num_gray_spans++;
     }
   }
@@ -1237,9 +1247,11 @@ typedef struct TCell_
   {
     int  yindex;
 
+
     for ( yindex = 0; yindex < ras.ycount; yindex++ )
     {
       PCell  cell;
+
 
       printf( "%3d:", yindex );
 
@@ -1380,8 +1392,11 @@ typedef struct TCell_
       v_start = outline->points[first];
       v_last  = outline->points[last];
 
-      v_start.x = SCALED( v_start.x ); v_start.y = SCALED( v_start.y );
-      v_last.x  = SCALED( v_last.x );  v_last.y  = SCALED( v_last.y );
+      v_start.x = SCALED( v_start.x );
+      v_start.y = SCALED( v_start.y );
+
+      v_last.x  = SCALED( v_last.x );
+      v_last.y  = SCALED( v_last.y );
 
       v_control = v_start;
 
@@ -1464,7 +1479,8 @@ typedef struct TCell_
 
               if ( tag == FT_CURVE_TAG_ON )
               {
-                error = func_interface->conic_to( &v_control, &vec, user );
+                error = func_interface->conic_to( &v_control, &vec,
+                                                  user );
                 if ( error )
                   goto Exit;
                 continue;
@@ -1476,7 +1492,8 @@ typedef struct TCell_
               v_middle.x = ( v_control.x + vec.x ) / 2;
               v_middle.y = ( v_control.y + vec.y ) / 2;
 
-              error = func_interface->conic_to( &v_control, &v_middle, user );
+              error = func_interface->conic_to( &v_control, &v_middle,
+                                                user );
               if ( error )
                 goto Exit;
 
@@ -1484,7 +1501,8 @@ typedef struct TCell_
               goto Do_Conic;
             }
 
-            error = func_interface->conic_to( &v_control, &v_start, user );
+            error = func_interface->conic_to( &v_control, &v_start,
+                                              user );
             goto Close;
           }
 
@@ -1500,8 +1518,11 @@ typedef struct TCell_
             point += 2;
             tags  += 2;
 
-            vec1.x = SCALED( point[-2].x ); vec1.y = SCALED( point[-2].y );
-            vec2.x = SCALED( point[-1].x ); vec2.y = SCALED( point[-1].y );
+            vec1.x = SCALED( point[-2].x );
+            vec1.y = SCALED( point[-2].y );
+
+            vec2.x = SCALED( point[-1].x );
+            vec2.y = SCALED( point[-1].y );
 
             if ( point <= limit )
             {
@@ -1689,13 +1710,13 @@ typedef struct TCell_
         ras.invalid   = 1;
         ras.min_ey    = band->min;
         ras.max_ey    = band->max;
-	ras.count_ey  = band->max - band->min;
+        ras.count_ey  = band->max - band->min;
 
         error = gray_convert_glyph_inner( RAS_VAR );
 
         if ( !error )
         {
-          gray_sweep( RAS_VAR_  &ras.target );
+          gray_sweep( RAS_VAR_ &ras.target );
           band--;
           continue;
         }
@@ -1703,13 +1724,13 @@ typedef struct TCell_
           return 1;
 
       ReduceBands:
-        /* render pool overflow, we will reduce the render band by half */
+        /* render pool overflow; we will reduce the render band by half */
         bottom = band->min;
         top    = band->max;
         middle = bottom + ( ( top - bottom ) >> 1 );
 
-        /* waoow! This is too complex for a single scanline, something */
-        /* must be really rotten here!                                 */
+        /* This is too complex for a single scanline; there must */
+        /* be some problems.                                     */
         if ( middle == bottom )
         {
 #ifdef DEBUG_GRAYS
@@ -1825,10 +1846,6 @@ typedef struct TCell_
     *araster = (FT_Raster)&the_raster;
     FT_MEM_ZERO( &the_raster, sizeof ( the_raster ) );
 
-#ifdef GRAYS_USE_GAMMA
-    grays_init_gamma( (PRaster)*araster );
-#endif
-
     return 0;
   }
 
@@ -1855,10 +1872,6 @@ typedef struct TCell_
     {
       raster->memory = memory;
       *araster = (FT_Raster)raster;
-
-#ifdef GRAYS_USE_GAMMA
-      grays_init_gamma( raster );
-#endif
     }
 
     return error;
@@ -1878,9 +1891,9 @@ typedef struct TCell_
 
 
   static void
-  gray_raster_reset( FT_Raster    raster,
-                     char*        pool_base,
-                     long         pool_size )
+  gray_raster_reset( FT_Raster  raster,
+                     char*      pool_base,
+                     long       pool_size )
   {
     PRaster  rast = (PRaster)raster;
 

@@ -1,10 +1,28 @@
+2006-09-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttpload.c (tt_face_load_hdmx): Handle `record_size'
+	values which have the upper two bytes set to 0xFF instead of 0xFF
+	(as it happens in at least two CJKV fonts, `HAN NOM A.ttf' and
+	`HAN NOM B.ttf').
+
+	* src/smooth/ftgrays.c [GRAYS_USE_GAMMA]: Really remove all code.
+
 2006-09-05  David Turner  <david@freetype.org>
 
-        * src/smooth/ftgrays.c: minor source cleanups and optimization
+	Minor source cleanups and optimizations.
 
-        * src/smooth/ftgrays.c (gray_sweep): Avoid buffer overwrites
-        when to drawing the end of a bitmap scanline. The fun never ends ;-)
-
+	* src/smooth/ftgrays.c (GRAYS_COMPACT): Removed.
+	(TRaster): Remove `count_ex' and `count_ey'.
+	(gray_find_cell): Remove 2nd and 3rd argument.
+	(gray_alloc_cell): Merged with `gray_find_cell'.
+	(gray_record_cell): Simplify.
+	(gray_set_cell): Rewrite.
+	(gray_start_cell): Apply offsets to `ras.ex' and `ras.ey'.
+	(gray_render_span): Don't use FT_MEM_SET for small values.
+	(gray_dump_cells) [DEBUG_GRAYS]: New function.
+	(gray_sweep): Avoid buffer overwrites when to drawing the end of a
+	bitmap scanline.
+	(gray_convert_glyph): Fix speed-up.
 
 2006-09-04  David Turner  <david@freetype.org>
 
