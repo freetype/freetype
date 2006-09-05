@@ -1,6 +1,7 @@
 2006-09-04  David Turner  <david@freetype.org>
 
-  * src/smooth/ftgrays.c: fix for the latest rasterizer optimization
+	* src/smooth/ftgrays.c (gray_convert_glyphs): Make it work with
+	64bit processors.
 
 2006-09-03  Werner Lemberg  <wl@gnu.org>
 
