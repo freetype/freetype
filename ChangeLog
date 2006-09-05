@@ -1,3 +1,8 @@
+2006-09-05  David Turner  <david@freetype.org>
+
+        * src/smooth/ftgrays.c (gray_sweep): Avoid buffer overwrites
+        when to the end of a bitmap scanline. The fun never ends ;-)
+
 2006-09-04  David Turner  <david@freetype.org>
 
 	* src/smooth/ftgrays.c (gray_convert_glyphs): Make it work with

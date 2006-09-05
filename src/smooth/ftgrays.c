@@ -381,32 +381,25 @@ typedef struct TCell_
   /*                                                                       */
   /* Record the current cell in the table.                                 */
   /*                                                                       */
-  static PCell*
+  static PCell
   gray_find_cell( RAS_ARG_ TCoord  x,
                            TCoord  y )
   {
-    PCell  *pnode, node;
+    PCell  *pcell, cell;
 
 
-    pnode = &ras.ycells[y];
+    pcell = &ras.ycells[y];
     for (;;)
     {
-      node = *pnode;
-      if ( node == NULL || node->x >= x )
+      cell = *pcell;
+      if ( cell == NULL || cell->x > x )
         break;
 
-      pnode = &node->next;
+      if ( cell->x == x )
+        goto Exit;
+
+      pcell = &cell->next;
     }
-
-    return pnode;
-  }
-
-
-  static PCell
-  gray_alloc_cell( RAS_ARG_ TCoord  x )
-  {
-    PCell  cell;
-
 
     if ( ras.num_cells >= ras.max_cells )
       ft_longjmp( ras.jump_buffer, 1 );
@@ -416,6 +409,10 @@ typedef struct TCell_
     cell->area  = 0;
     cell->cover = 0;
 
+    cell->next  = *pcell;
+    *pcell      = cell;
+
+  Exit:
     return cell;
   }
 
@@ -423,19 +420,11 @@ typedef struct TCell_
   static void
   gray_record_cell( RAS_ARG )
   {
-    if ( !ras.invalid && ( ras.area | ras.cover ) )
+    if ( !ras.invalid && (ras.area | ras.cover) )
     {
-      TCoord  x       = (TCoord)( ras.ex - ras.min_ex );
-      TCoord  y       = (TCoord)( ras.ey - ras.min_ey );
-      PCell  *pparent = gray_find_cell( RAS_VAR_ x, y );
-      PCell   cell    = *pparent;
-
-      if ( cell == NULL || cell->x != x )
-      {
-        cell = gray_alloc_cell( RAS_VAR_ x );
-        cell->next  = *pparent;
-        *pparent    = cell;
-      }
+      TCoord  x    = (TCoord)( ras.ex - ras.min_ex );
+      TCoord  y    = (TCoord)( ras.ey - ras.min_ey );
+      PCell   cell = gray_find_cell( RAS_VAR_ x, y );
 
       cell->area  += ras.area;
       cell->cover += ras.cover;
@@ -464,37 +453,23 @@ typedef struct TCell_
     /* Note that if a cell is to the left of the clipping region, it is    */
     /* actually set to the (min_ex-1) horizontal position.                 */
 
-    record  = 0;
-    clean   = 1;
+    /* All cells that are on the left of the clipping region go to the */
+    /* min_ex - 1 horizontal position.                                 */
+    if ( ex < ras.min_ex )
+      ex = (TCoord)(ras.min_ex - 1);
 
-    invalid = ( ey < ras.min_ey || ey >= ras.max_ey || ex >= ras.max_ex );
-    if ( !invalid )
+    /* are we moving to a different cell ? */
+    if ( ex != ras.ex || ey != ras.ey )
     {
-      /* All cells that are on the left of the clipping region go to the */
-      /* min_ex - 1 horizontal position.                                 */
-      if ( ex < ras.min_ex )
-        ex = (TCoord)(ras.min_ex - 1);
+      /* record the current one if it is valid */
+      if ( !ras.invalid )
+        gray_record_cell( RAS_VAR );
 
-      /* if our position is new, then record the previous cell */
-      if ( ex != ras.ex || ey != ras.ey )
-        record = 1;
-      else
-        clean = ras.invalid;  /* do not clean if we didn't move from */
-                              /* a valid cell                        */
-    }
-
-    /* record the previous cell if needed (i.e., if we changed the cell */
-    /* position, or changed the `invalid' flag)                         */
-    if ( ras.invalid != invalid || record )
-      gray_record_cell( RAS_VAR );
-
-    if ( clean )
-    {
       ras.area  = 0;
       ras.cover = 0;
     }
 
-    ras.invalid = invalid;
+    ras.invalid = ( ey < ras.min_ey || ey >= ras.max_ey || ex >= ras.max_ex );
     ras.ex      = ex;
     ras.ey      = ey;
   }
@@ -1248,6 +1223,24 @@ typedef struct TCell_
   }
 
 
+#if 1
+  gray_dump_cells( RAS_ARG )
+  {
+    int  yindex;
+
+    for ( yindex = 0; yindex < ras.ycount; yindex++ )
+    {
+      PCell  cell;
+
+      printf( "%3d:", yindex );
+
+      for ( cell = ras.ycells[yindex]; cell != NULL; cell = cell->next )
+        printf( " (%3d, c:%4d, a:%6d)", cell->x, cell->cover, cell->area );
+      printf( "\n" );
+    }
+  }
+#endif
+
   static void
   gray_sweep( RAS_ARG_ const FT_Bitmap*  target )
   {
@@ -1288,7 +1281,7 @@ typedef struct TCell_
 
       if ( cover != 0 )
         gray_hline( RAS_VAR_ x, yindex, cover * ( ONE_PIXEL * 2 ),
-                    ras.max_ex - x );
+                    (ras.max_ex - ras.min_ex) - x );
     }
 
     if ( ras.render_span && ras.num_gray_spans > 0 )
