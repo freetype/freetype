@@ -207,13 +207,6 @@
 #define DOWNSCALE( x )  ( (x) << ( 6 - PIXEL_BITS ) )
 #endif
 
-  /* Define this if you want to use a more compact storage scheme.  This   */
-  /* increases the number of cells available in the render pool but slows  */
-  /* down the rendering a bit.  It is useful if you have a really tiny     */
-  /* render pool.                                                          */
-#undef GRAYS_COMPACT
-
-
   /*************************************************************************/
   /*                                                                       */
   /*   TYPE DEFINITIONS                                                    */
@@ -264,18 +257,19 @@ typedef struct TCell_
 
   typedef struct  TRaster_
   {
-    PCell   cells;
-    int     max_cells;
-    int     num_cells;
-
+    TCoord  ex, ey;
     TPos    min_ex, max_ex;
     TPos    min_ey, max_ey;
+    TPos    count_ex, count_ey;
 
     TArea   area;
     int     cover;
     int     invalid;
 
-    TCoord  ex, ey;
+    PCell   cells;
+    int     max_cells;
+    int     num_cells;
+
     TCoord  cx, cy;
     TPos    x,  y;
 
@@ -382,13 +376,13 @@ typedef struct TCell_
   /* Record the current cell in the table.                                 */
   /*                                                                       */
   static PCell
-  gray_find_cell( RAS_ARG_ TCoord  x,
-                           TCoord  y )
+  gray_find_cell( RAS_ARG )
   {
     PCell  *pcell, cell;
+    int     x = ras.ex;
 
 
-    pcell = &ras.ycells[y];
+    pcell = &ras.ycells[ ras.ey ];
     for (;;)
     {
       cell = *pcell;
@@ -422,9 +416,7 @@ typedef struct TCell_
   {
     if ( !ras.invalid && (ras.area | ras.cover) )
     {
-      TCoord  x    = (TCoord)( ras.ex - ras.min_ex );
-      TCoord  y    = (TCoord)( ras.ey - ras.min_ey );
-      PCell   cell = gray_find_cell( RAS_VAR_ x, y );
+      PCell   cell = gray_find_cell( RAS_VAR );
 
       cell->area  += ras.area;
       cell->cover += ras.cover;
@@ -440,9 +432,6 @@ typedef struct TCell_
   gray_set_cell( RAS_ARG_ TCoord  ex,
                           TCoord  ey )
   {
-    int  invalid, record, clean;
-
-
     /* Move the cell pointer to a new position.  We set the `invalid'      */
     /* flag to indicate that the cell isn't part of those we're interested */
     /* in during the render phase.  This means that:                       */
@@ -455,8 +444,10 @@ typedef struct TCell_
 
     /* All cells that are on the left of the clipping region go to the */
     /* min_ex - 1 horizontal position.                                 */
-    if ( ex < ras.min_ex )
-      ex = (TCoord)(ras.min_ex - 1);
+    ey -= ras.min_ey;
+    ex -= ras.min_ex;
+    if ( ex < 0 )
+      ex = -1;
 
     /* are we moving to a different cell ? */
     if ( ex != ras.ex || ey != ras.ey )
@@ -469,9 +460,10 @@ typedef struct TCell_
       ras.cover = 0;
     }
 
-    ras.invalid = ( ey < ras.min_ey || ey >= ras.max_ey || ex >= ras.max_ex );
     ras.ex      = ex;
     ras.ey      = ey;
+    ras.invalid = ( (unsigned)ey >= (unsigned)ras.count_ey ||
+                              ex >= ras.count_ex );
   }
 
 
@@ -488,8 +480,8 @@ typedef struct TCell_
 
     ras.area    = 0;
     ras.cover   = 0;
-    ras.ex      = ex;
-    ras.ey      = ey;
+    ras.ex      = ex - ras.min_ex;
+    ras.ey      = ey - ras.min_ey;
     ras.last_ey = SUBPIXELS( ey );
     ras.invalid = 0;
 
@@ -515,8 +507,8 @@ typedef struct TCell_
 
     dx = x2 - x1;
 
-    ex1 = TRUNC( x1 ); /* if (ex1 >= ras.max_ex) ex1 = ras.max_ex-1; */
-    ex2 = TRUNC( x2 ); /* if (ex2 >= ras.max_ex) ex2 = ras.max_ex-1; */
+    ex1 = TRUNC( x1 );
+    ex2 = TRUNC( x2 );
     fx1 = (TCoord)( x1 - SUBPIXELS( ex1 ) );
     fx2 = (TCoord)( x2 - SUBPIXELS( ex2 ) );
 
@@ -1113,16 +1105,31 @@ typedef struct TCell_
 
 
       if ( coverage )
-#if 1
-        FT_MEM_SET( p + spans->x, (unsigned char)coverage, spans->len );
-#else /* 1 */
       {
-        q     = p + spans->x;
-        limit = q + spans->len;
-        for ( ; q < limit; q++ )
-          q[0] = (unsigned char)coverage;
+       /* for small-spans, it's faster to do it ourselves than
+        * calling memset. this is mainly due to the cost of the
+        * function call.
+        */
+        if ( spans->len >= 8 )
+          FT_MEM_SET( p + spans->x, (unsigned char)coverage, spans->len );
+        else
+        {
+          unsigned char*  q = p + spans->x;
+
+          switch ( spans->len )
+          {
+            case 7: *q++ = (unsigned char)coverage;
+            case 6: *q++ = (unsigned char)coverage;
+            case 5: *q++ = (unsigned char)coverage;
+            case 4: *q++ = (unsigned char)coverage;
+            case 3: *q++ = (unsigned char)coverage;
+            case 2: *q++ = (unsigned char)coverage;
+            case 1: *q   = (unsigned char)coverage;
+            default:
+               ;
+          }
+        }
       }
-#endif /* 1 */
     }
   }
 
@@ -1223,7 +1230,9 @@ typedef struct TCell_
   }
 
 
-#if 1
+#ifdef DEBUG_GRAYS
+
+  /* to be called while in the debugger */
   gray_dump_cells( RAS_ARG )
   {
     int  yindex;
@@ -1239,7 +1248,9 @@ typedef struct TCell_
       printf( "\n" );
     }
   }
-#endif
+
+#endif /* DEBUG_GRAYS */
+
 
   static void
   gray_sweep( RAS_ARG_ const FT_Bitmap*  target )
@@ -1281,7 +1292,7 @@ typedef struct TCell_
 
       if ( cover != 0 )
         gray_hline( RAS_VAR_ x, yindex, cover * ( ONE_PIXEL * 2 ),
-                    (ras.max_ex - ras.min_ex) - x );
+                    ras.count_ex - x );
     }
 
     if ( ras.render_span && ras.num_gray_spans > 0 )
@@ -1597,6 +1608,9 @@ typedef struct TCell_
     if ( ras.max_ex > clip->xMax ) ras.max_ex = clip->xMax;
     if ( ras.max_ey > clip->yMax ) ras.max_ey = clip->yMax;
 
+    ras.count_ex = ras.max_ex - ras.min_ex;
+    ras.count_ey = ras.max_ey - ras.min_ey;
+
     /* simple heuristic used to speed-up the bezier decomposition -- see */
     /* the code in gray_render_conic() and gray_render_cubic() for more  */
     /* details                                                           */
@@ -1607,9 +1621,9 @@ typedef struct TCell_
       int level = 0;
 
 
-      if ( ras.max_ex > 24 || ras.max_ey > 24 )
+      if ( ras.count_ex > 24 || ras.count_ey > 24 )
         level++;
-      if ( ras.max_ex > 120 || ras.max_ey > 120 )
+      if ( ras.count_ex > 120 || ras.count_ey > 120 )
         level++;
 
       ras.conic_level <<= level;
