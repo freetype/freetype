@@ -165,9 +165,11 @@
     FT_String*        result = NULL;
     FT_UShort         n;
     TT_NameEntryRec*  rec;
-    FT_Int            found_apple   = -1;
-    FT_Int            found_win     = -1;
-    FT_Int            found_unicode = -1;
+    FT_Int            found_apple         = -1;
+    FT_Int            found_apple_roman   = -1;
+    FT_Int            found_apple_english = -1;
+    FT_Int            found_win           = -1;
+    FT_Int            found_unicode       = -1;
 
     FT_Bool           is_english = 0;
 
@@ -200,8 +202,14 @@
           break;
 
         case TT_PLATFORM_MACINTOSH:
+          /* This is a bit special, because some fonts will use either
+           * an English language id, or a Roman encoding id, to indicate
+           * the English version of their font name
+           */
           if ( rec->languageID == TT_MAC_LANGID_ENGLISH )
-            found_apple = n;
+            found_apple_english = n;
+          else if ( rec->encodingID == TT_MAC_ID_ROMAN )
+            found_apple_roman = n;
 
           break;
 
@@ -231,6 +239,10 @@
         }
       }
     }
+
+    found_apple = found_apple_roman;
+    if ( found_apple_english >= 0 )
+      found_apple = found_apple_english;
 
     /* some fonts contain invalid Unicode or Macintosh formatted entries; */
     /* we will thus favor names encoded in Windows formats if available   */

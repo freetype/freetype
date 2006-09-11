@@ -272,6 +272,7 @@
         "HuaTianSongTi?",  /* htst3.ttf */
         "MingLiU",         /* mingliu.ttf & mingliu.ttc */
         "PMingLiU",        /* mingliu.ttc */
+        "MingLi43",        /* mingli.ttf */
         NULL
       };
       int  nn;

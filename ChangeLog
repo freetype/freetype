@@ -1,3 +1,15 @@
+2006-09-11  David Turner  <david@freetype.org>
+
+        * src/sfnt/sfobjs.c (tt_face_get_name): support some function
+        which report their English names through an Apple Roman
+        (platform,encoding) pair, with language_id != English
+
+        if the font uses another name entry with language_id == English,
+        it will be selected correctly though.
+
+        * src/truetype/ttobjs.c: add unpatent-hinting selection for
+        "mingli.ttf"
+
 2006-09-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttpload.c (tt_face_load_hdmx): Handle `record_size'
