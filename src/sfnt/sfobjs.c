@@ -202,15 +202,14 @@
           break;
 
         case TT_PLATFORM_MACINTOSH:
-          /* This is a bit special, because some fonts will use either
-           * an English language id, or a Roman encoding id, to indicate
-           * the English version of their font name
-           */
+          /* This is a bit special because some fonts will use either    */
+          /* an English language id, or a Roman encoding id, to indicate */
+          /* the English version of its font name.                       */
+          /*                                                             */
           if ( rec->languageID == TT_MAC_LANGID_ENGLISH )
             found_apple_english = n;
           else if ( rec->encodingID == TT_MAC_ID_ROMAN )
             found_apple_roman = n;
-
           break;
 
         case TT_PLATFORM_MICROSOFT:

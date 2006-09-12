@@ -1,19 +1,19 @@
 2006-09-11  David Turner  <david@freetype.org>
 
-        * src/sfnt/sfobjs.c (tt_face_get_name): support some function
-        which report their English names through an Apple Roman
-        (platform,encoding) pair, with language_id != English
+	* src/sfnt/sfobjs.c (tt_face_get_name): Support some fonts which
+	report their English names through an Apple Roman
+	(platform,encoding) pair, with language_id != English.
 
-        if the font uses another name entry with language_id == English,
-        it will be selected correctly though.
+	If the font uses another name entry with language_id == English, it
+	will be selected correctly, though.
 
-        * src/truetype/ttobjs.c: add unpatent-hinting selection for
-        "mingli.ttf"
+	* src/truetype/ttobjs.c (tt_face_init): Add unpatented hinting
+	selection for `mingli.ttf'.
 
 2006-09-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttpload.c (tt_face_load_hdmx): Handle `record_size'
-	values which have the upper two bytes set to 0xFF instead of 0xFF
+	values which have the upper two bytes set to 0xFF instead of 0x00
 	(as it happens in at least two CJKV fonts, `HAN NOM A.ttf' and
 	`HAN NOM B.ttf').
 
