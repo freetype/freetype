@@ -1,3 +1,8 @@
+2006-09-18  Garrick Meeker  <garrick@digitalanarchy.com>
+
+	* src/base/ftmac.c (FT_New_Face_From_FOND): Fall back to SFNT if
+	LWFN fails and both are available.
+
 2006-09-11  David Turner  <david@freetype.org>
 
 	* src/sfnt/sfobjs.c (tt_face_get_name): Support some fonts which

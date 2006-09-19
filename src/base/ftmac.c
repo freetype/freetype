@@ -53,6 +53,12 @@
     - If there is a TrueType font (an `sfnt' resource), read it into memory,
       wrap it into a memory stream, load the TrueType driver and delegate
       the rest of the work to it, by calling FT_Open_Face().
+
+    - Some suitcase fonts (notably Onyx) might point the `LWFN' file to
+      itself, even though it doesn't contains `POST' resources.  To handle
+      this special case without opening the file an extra time, we just
+      ignore errors from the `LWFN' and fallback to the `sfnt' if both are
+      available.
   */
 
 
@@ -1242,19 +1248,21 @@
     }
 
     if ( have_lwfn && ( !have_sfnt || PREFER_LWFN ) )
-      return FT_New_Face_From_LWFN( library,
-                                    path_lwfn,
-                                    face_index,
-                                    aface );
+      error = FT_New_Face_From_LWFN( library,
+                                     path_lwfn,
+                                     face_index,
+                                     aface );
+    else
+      error = FT_Err_Unknown_File_Format;
 
   found_no_lwfn_file:
-    if ( have_sfnt )
-      return FT_New_Face_From_SFNT( library,
-                                    sfnt_id,
-                                    face_index,
-                                    aface );
+    if ( have_sfnt && FT_Err_Ok != error )
+      error = FT_New_Face_From_SFNT( library,
+                                     sfnt_id,
+                                     face_index,
+                                     aface );
 
-    return FT_Err_Unknown_File_Format;
+    return error;
   }
 
 
