@@ -105,7 +105,7 @@
     FT_Error     error;
     FT_Outline*  outline = NULL;
     FT_BBox      cbox;
-    FT_UInt      width, height, pitch;
+    FT_UInt      width, height, height_org, width_org, pitch;
     FT_Bitmap*   bitmap;
     FT_Memory    memory;
 
@@ -141,6 +141,9 @@
     height = (FT_UInt)( ( cbox.yMax - cbox.yMin ) >> 6 );
     bitmap = &slot->bitmap;
     memory = render->root.memory;
+
+    width_org  = width;
+    height_org = height;
 
     /* release old bitmap buffer */
     if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
@@ -179,6 +182,7 @@
     params.source = outline;
     params.flags  = FT_RASTER_FLAG_AA;
 
+#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     /* implode outline if needed */
     {
       FT_Int      n;
@@ -211,6 +215,55 @@
         for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
           vec->y /= vmul;
     }
+#else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
+    /* render outline into bitmap */
+    error = render->raster_render( render->raster, &params );
+
+    /* expand it horizontally */
+    if ( hmul > 1 )
+    {
+      FT_Byte*  line = bitmap->buffer + (height - height_org)*pitch;
+      FT_UInt   hh;
+
+      for ( hh = height_org; hh > 0; hh--, line += pitch )
+      {
+        FT_UInt   xx;
+        FT_Byte*  end = line + width;
+
+        for ( xx = width_org; xx > 0; xx-- )
+        {
+          FT_UInt  pixel = line[xx-1];
+          FT_UInt  count = hmul;
+
+          for ( count = hmul; count > 0; count-- )
+            end[-count] = (FT_Byte)pixel;
+
+          end -= hmul;
+        }
+      }
+    }
+
+    /* expand it vertically */
+    if ( vmul > 1 )
+    {
+      FT_Byte*    read  = bitmap->buffer + (height-height_org)*pitch;
+      FT_Byte*    write = bitmap->buffer;
+      FT_UInt     hh;
+
+      for ( hh = height_org; hh > 0; hh-- )
+      {
+        FT_UInt  count = vmul;
+
+        for ( count = vmul; count > 0; count-- )
+        {
+          memcpy( write, read, pitch );
+          write += pitch;
+        }
+        read += pitch;
+      }
+    }
+
+#endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
     FT_Outline_Translate( outline, cbox.xMin, cbox.yMin );
 

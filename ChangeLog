@@ -5,6 +5,18 @@
         horizontal and vertical hinting for the purpose of debugging
         the auto-fitter
 
+        * include/freetype/config/ftoption.h, devel/ftoption.h:
+        introducing the new FT_CONFIG_OPTION_SUBPIXEL_RENDERING to
+        control wether we want to compile LCD-optimized rendering code
+        (à la ClearType) or not. The macro *must* be disabled in default
+        builds of the library for patent reasons.
+
+        * src/smooth/ftsmooth.c: disabling LCD-specific rendering when
+        FT_CONFIG_OPTION_SUBPIXEL_RENDERING isn't defined at compile
+        time. This only changes the content of the rendered glyph to
+        match the one of normal gray-level rendering, hence clients
+        should not need to be modified.
+
 2006-09-18  Garrick Meeker  <garrick@digitalanarchy.com>
 
 	* src/base/ftmac.c (FT_New_Face_From_FOND): Fall back to SFNT if
