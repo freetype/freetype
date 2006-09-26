@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Anti-aliasing renderer interface (body).                             */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005 by                         */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -183,6 +183,7 @@
     params.flags  = FT_RASTER_FLAG_AA;
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+
     /* implode outline if needed */
     {
       FT_Int      n;
@@ -190,11 +191,15 @@
 
 
       if ( hmul )
-        for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
+        for ( vec = outline->points, n = 0;
+              n < outline->n_points;
+              n++, vec++ )
           vec->x *= hmul;
 
       if ( vmul )
-        for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
+        for ( vec = outline->points, n = 0;
+              n < outline->n_points;
+              n++, vec++ )
           vec->y *= vmul;
     }
 
@@ -208,32 +213,41 @@
 
 
       if ( hmul )
-        for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
+        for ( vec = outline->points, n = 0;
+              n < outline->n_points;
+              n++, vec++ )
           vec->x /= hmul;
 
       if ( vmul )
-        for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
+        for ( vec = outline->points, n = 0;
+              n < outline->n_points;
+              n++, vec++ )
           vec->y /= vmul;
     }
+
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
+
     /* render outline into bitmap */
     error = render->raster_render( render->raster, &params );
 
     /* expand it horizontally */
     if ( hmul > 1 )
     {
-      FT_Byte*  line = bitmap->buffer + (height - height_org)*pitch;
+      FT_Byte*  line = bitmap->buffer + ( height - height_org ) * pitch;
       FT_UInt   hh;
+
 
       for ( hh = height_org; hh > 0; hh--, line += pitch )
       {
         FT_UInt   xx;
         FT_Byte*  end = line + width;
 
+
         for ( xx = width_org; xx > 0; xx-- )
         {
           FT_UInt  pixel = line[xx-1];
           FT_UInt  count = hmul;
+
 
           for ( count = hmul; count > 0; count-- )
             end[-count] = (FT_Byte)pixel;
@@ -246,13 +260,15 @@
     /* expand it vertically */
     if ( vmul > 1 )
     {
-      FT_Byte*    read  = bitmap->buffer + (height-height_org)*pitch;
-      FT_Byte*    write = bitmap->buffer;
-      FT_UInt     hh;
+      FT_Byte*  read  = bitmap->buffer + ( height - height_org ) * pitch;
+      FT_Byte*  write = bitmap->buffer;
+      FT_UInt   hh;
+
 
       for ( hh = height_org; hh > 0; hh-- )
       {
         FT_UInt  count = vmul;
+
 
         for ( count = vmul; count > 0; count-- )
         {

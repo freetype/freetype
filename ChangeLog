@@ -1,21 +1,28 @@
 2006-09-26  David Turner  <david@freetype.org>
 
-        * src/autofit/aftypes.h, src/autofit/afhints.h,
-        src/autofit/afmodule.c: adding support for disabling
-        horizontal and vertical hinting for the purpose of debugging
-        the auto-fitter
+	* src/autofit/afhints.h (AF_HINTS_DO_HORIZONTAL,
+	AF_HINTS_DO_VERTICAL, AF_HINTS_DO_ADVANCE): New macros to disable
+	horizontal and vertical hinting for the purpose of debugging the
+	auto-fitter.
 
-        * include/freetype/config/ftoption.h, devel/ftoption.h:
-        introducing the new FT_CONFIG_OPTION_SUBPIXEL_RENDERING to
-        control wether we want to compile LCD-optimized rendering code
-        (à la ClearType) or not. The macro *must* be disabled in default
-        builds of the library for patent reasons.
+	* src/autofit/afmodule.c (_af_debug_disable_horz_hints,
+	_af_debug_disable_vert_hints) [AF_DEBUG]: New global variables.
 
-        * src/smooth/ftsmooth.c: disabling LCD-specific rendering when
-        FT_CONFIG_OPTION_SUBPIXEL_RENDERING isn't defined at compile
-        time. This only changes the content of the rendered glyph to
-        match the one of normal gray-level rendering, hence clients
-        should not need to be modified.
+	* src/autofit/aftypes.h [AF_DEBUG]: Declare above variables.
+
+	* include/freetype/config/ftoption.h, devel/ftoption.h
+	(FT_CONFIG_OPTION_SUBPIXEL_RENDERING): New macro to control whether
+	we want to compile LCD-optimized rendering code (à la ClearType) or
+	not.  The macro *must* be disabled in default builds of the library
+	for patent reasons.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Disable
+	LCD-specific rendering when FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+	isn't defined at compile time.  This only changes the content of the
+	rendered glyph to match the one of normal gray-level rendering,
+	hence clients should not need to be modified.
+
+	* docs/CHANGES: Updated.
 
 2006-09-18  Garrick Meeker  <garrick@digitalanarchy.com>
 

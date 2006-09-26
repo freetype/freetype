@@ -2,65 +2,71 @@ CHANGES BETWEEN 2.2.2 and 2.2.1
 
   I. IMPORTANT BUG FIXES
 
-    - The PCF font loarder has been seriously hardened against malformed
-      font files.
+    - The  PCF font  loader  is  now much  more  robust while  loading
+      malformed font files.
 
-    - various memory leaks have been found and squashed
+    - Various memory leaks have been found and fixed.
+
 
   II. IMPORTANT CHANGES
 
-    - the unpatented hinter is now part of the default build of the
-      library, and we added code to automatically support "tricky"
+    - The unpatented  hinter is now part  of the default  build of the
+      library; we  have added  code to automatically  support `tricky'
       fonts that need it.
 
-      what this means is that FreeType should "just work" with certain
-      Asian fonts, like MingLiU, which cannot properly load without a
-      bytecode interpreter, but fortunately do not use any of the
-      patented bytecode opcodes. We detect these fonts by name, so
-      report any font file that doesn't seem to work with this,
-      and we'll do what we can to support it in a next release.
+      This means  that FreeType should `just work'  with certain Asian
+      fonts, like  MingLiU, which cannot properly be  loaded without a
+      bytecode interpreter,  but which fortunately  do not use  any of
+      the patented  bytecode opcodes.  We detect these  fonts by name,
+      so please  report any font file  that doesn't seem  to work with
+      FreeType, and  we shall do what we  can to support it  in a next
+      release.
 
-      Note that the API didn't change, so you can still force
-      unpatented hinting with a special parameter to FT_Open_Face
-      as well. This might be useful, for example, a PDF reader
-      might present a user option to activate it to deal with certain
-      "tricky" embedded fonts which cannot be clearly identified.
+      Note  that  the API  hasn't  changed,  so  you can  still  force
+      unpatented hinting  with a special parameter  to FT_Open_Face as
+      well.  This  might be useful in  same cases; for  example, a PDF
+      reader might present  a user option to activate  it to deal with
+      certain  `tricky'   embedded  fonts  which   cannot  be  clearly
+      identified.
 
-      if you're an embedded systems developer, you might want to
-      *disable* the feature to save code space by undefining
+      If you are  a developer for embedded systems,  you might want to
+      *disable*  the   feature  to  save  code   space  by  undefining
       TT_CONFIG_OPTION_UNPATENTED_HINTING in ftoption.h.
 
-    - LCD-optimized rendering is now DISABLED in all default builds
-      of the library, mainly due to PATENTS. For more information
+    - LCD-optimized rendering is now DISABLED in all default builds of
+      the library, mainly due  to PATENT issues.  For more information
       see:
 
       http://lists.gnu.org/archive/html/freetype/2006-09/msg00064.html
 
-      a new configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING has
-      been introduced in ftoption.h; manually define it in this file
-      if you want to re-enable the feature.
+      A  new  configuration macro  FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+      has been  introduced in ftoption.h;  manually define it  in this
+      file if you want to re-enable the feature.
 
-      the change only affects the implementation, not the FreeType API.
-      This means that clients don't need to be modified, because the
-      library still generates LCD decimated bitmaps, but with the added
-      constraint that R=G=B on each triplet.
+      The  change only  affects the  implementation, not  the FreeType
+      API.  This means that clients don't need to be modified, because
+      the library still generates  LCD decimated bitmaps, but with the
+      added constraint that R=G=B on each triplet.
 
-      the displayed result should be equal to normal anti-aliased
+      The  displayed result  should  be equal  to normal  anti-aliased
       rendering.
 
-   - Some computation bugs in the TrueType bytecode interpreter were found,
-     which allow us to get rid of very subtle and rare differences we had
-     with the Windows renderer.
+    - Some computation bugs in  the TrueType bytecode interpreter were
+      found,  which  allow us  to  get rid  of  very  subtle and  rare
+      differences we had experienced with the Windows renderer.
+
 
   III. MISCELLANEOUS
 
     - TrueType glyph loading is now about 25% faster.
 
-    - the anti-aliased rasterizer has been optimized and is now 15% to 25%
-      percent faster than the previous one, depending on content
+    - The anti-aliased rasterizer has been optimized and is now 15% to
+      25%  percent  faster than  in  previous  versions, depending  on
+      content.
 
-    - the Type 1 loader has been improved; as an example, it now skips
-      over top-level dictionaries properly
+    - The Type 1 loader has been improved; as an example, it now skips
+      top-level dictionaries properly.
+
 
 ======================================================================
 
@@ -557,7 +563,7 @@ CHANGES BETWEEN 2.1.8 and 2.1.7
 
   III. MISCELLANEOUS
 
-    - Wolfgang Domr�e contributed support files for building FreeType
+    - Wolfgang Domröse contributed support files for building FreeType
       on the Atari using the PureC compiler.  Note that the Atari is a
       16bit platform.
 
@@ -1141,7 +1147,7 @@ CHANGES BETWEEN 2.1.0 and 2.0.9
       to use the following text in your documentation:
 
       """
-        Portions of this software are copyright  1996-2002 The
+        Portions of this software are copyright © 1996-2002 The
         FreeType Project (www.freetype.org).  All rights reserved.
       """
 
@@ -2843,5 +2849,10 @@ license, LICENSE.TXT.   By continuing to use, modify, or distribute this
 file you  indicate that  you have  read the  license and understand  and
 accept it fully.
 
+
+Local Variables:
+version-control: never
+coding: utf-8
+End:
 
 --- end of CHANGES ---

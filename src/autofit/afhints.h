@@ -213,17 +213,22 @@ FT_BEGIN_HEADER
 #define AF_HINTS_TEST_SCALER( h, f )  ( (h)->scaler_flags & (f) )
 #define AF_HINTS_TEST_OTHER( h, f )   ( (h)->other_flags  & (f) )
 
-#ifdef AF_DEBUG
-#define AF_HINTS_DO_HORIZONTAL( h )                                \
-          ( !_af_debug_disable_horz_hints && !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_HORIZONTAL ) )
 
-#define AF_HINTS_DO_VERTICAL( h )                                \
-          ( !_af_debug_disable_vert_hints && !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_VERTICAL ) )
+#ifdef AF_DEBUG
+
+#define AF_HINTS_DO_HORIZONTAL( h )                                     \
+          ( !_af_debug_disable_horz_hints                            && \
+            !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_HORIZONTAL ) )
+
+#define AF_HINTS_DO_VERTICAL( h )                                     \
+          ( !_af_debug_disable_vert_hints                          && \
+            !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_VERTICAL ) )
 
 #define AF_HINTS_DO_ADVANCE( h )                                \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_ADVANCE )
 
 #else /* !AF_DEBUG */
+
 #define AF_HINTS_DO_HORIZONTAL( h )                                \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_HORIZONTAL )
 
@@ -234,6 +239,7 @@ FT_BEGIN_HEADER
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_ADVANCE )
 
 #endif /* !AF_DEBUG */
+
 
   FT_LOCAL( AF_Direction )
   af_direction_compute( FT_Pos  dx,
