@@ -19,6 +19,11 @@
 #include "afmodule.h"
 #include "afloader.h"
 
+#ifdef AF_DEBUG
+  int  _af_debug_disable_horz_hints;
+  int  _af_debug_disable_vert_hints;
+#endif
+
 #include FT_INTERNAL_OBJECTS_H
 
 

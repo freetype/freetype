@@ -1,3 +1,10 @@
+2006-09-26  David Turner  <david@freetype.org>
+
+        * src/autofit/aftypes.h, src/autofit/afhints.h,
+        src/autofit/afmodule.c: adding support for disabling
+        horizontal and vertical hinting for the purpose of debugging
+        the auto-fitter
+
 2006-09-18  Garrick Meeker  <garrick@digitalanarchy.com>
 
 	* src/base/ftmac.c (FT_New_Face_From_FOND): Fall back to SFNT if
