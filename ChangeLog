@@ -19,6 +19,9 @@
         * src/base/Jamfile, src/base/rules.mk, vms_make.com: adding
         'ftlcdfil.c' to the list of compiled source files
 
+        * modules.cfg: adding ftlcdfil.c to the list of default base
+        extensions
+
 2006-09-26  David Bustin
 
 	* src/pfr/pfrobjs.c (pfr_face_get_kerning): Skip adjustment bytes
