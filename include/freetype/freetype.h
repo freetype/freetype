@@ -3311,7 +3311,7 @@ FT_BEGIN_HEADER
    */
 #define FREETYPE_MAJOR  2
 #define FREETYPE_MINOR  2
-#define FREETYPE_PATCH  1
+#define FREETYPE_PATCH  2
 
 
   /*************************************************************************/
@@ -3348,7 +3348,6 @@ FT_BEGIN_HEADER
                       FT_Int      *amajor,
                       FT_Int      *aminor,
                       FT_Int      *apatch );
-
 
   /* */
 

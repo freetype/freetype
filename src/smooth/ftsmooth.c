@@ -98,9 +98,7 @@
                             FT_GlyphSlot      slot,
                             FT_Render_Mode    mode,
                             const FT_Vector*  origin,
-                            FT_Render_Mode    required_mode,
-                            FT_Int            hmul,
-                            FT_Int            vmul )
+                            FT_Render_Mode    required_mode )
   {
     FT_Error     error;
     FT_Outline*  outline = NULL;
@@ -108,6 +106,9 @@
     FT_UInt      width, height, height_org, width_org, pitch;
     FT_Bitmap*   bitmap;
     FT_Memory    memory;
+    FT_Int       hmul = (mode == FT_RENDER_MODE_LCD);
+    FT_Int       vmul = (mode == FT_RENDER_MODE_LCD_V);
+    FT_Pos       x_shift, y_shift, x_left, y_top;
 
     FT_Raster_Params  params;
 
@@ -156,12 +157,36 @@
     pitch = width;
     if ( hmul )
     {
-      width = width * hmul;
+      width = width * 3;
       pitch = FT_PAD_CEIL( width, 4 );
     }
 
     if ( vmul )
-      height *= vmul;
+      height *= 3;
+
+    x_shift = (FT_Int) cbox.xMin;
+    y_shift = (FT_Int) cbox.yMin;
+    x_left  = (FT_Int)( cbox.xMin >> 6 );
+    y_top   = (FT_Int)( cbox.yMax >> 6 );
+
+#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+    if ( slot->library->lcd_filter )
+    {
+      if ( hmul )
+      {
+        x_shift -= 64;
+        width   += 6;
+        pitch    = FT_PAD_CEIL( width, 4 );
+        x_left  -= 1;
+      }
+      if ( vmul )
+      {
+        y_shift -= 64;
+        height  += 6;
+        y_top   += 1;
+      }
+    }
+#endif
 
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
     bitmap->num_grays  = 256;
@@ -169,13 +194,13 @@
     bitmap->rows       = height;
     bitmap->pitch      = pitch;
 
+    /* translate outline to render it into the bitmap */
+    FT_Outline_Translate( outline, -x_shift, -y_shift );
+
     if ( FT_ALLOC( bitmap->buffer, (FT_ULong)pitch * height ) )
       goto Exit;
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
-
-    /* translate outline to render it into the bitmap */
-    FT_Outline_Translate( outline, -cbox.xMin, -cbox.yMin );
 
     /* set up parameters */
     params.target = bitmap;
@@ -194,13 +219,13 @@
         for ( vec = outline->points, n = 0;
               n < outline->n_points;
               n++, vec++ )
-          vec->x *= hmul;
+          vec->x *= 3;
 
       if ( vmul )
         for ( vec = outline->points, n = 0;
               n < outline->n_points;
               n++, vec++ )
-          vec->y *= vmul;
+          vec->y *= 3;
     }
 
     /* render outline into the bitmap */
@@ -216,14 +241,18 @@
         for ( vec = outline->points, n = 0;
               n < outline->n_points;
               n++, vec++ )
-          vec->x /= hmul;
+          vec->x /= 3;
 
       if ( vmul )
         for ( vec = outline->points, n = 0;
               n < outline->n_points;
               n++, vec++ )
-          vec->y /= vmul;
+          vec->y /= 3;
     }
+
+    if ( slot->library->lcd_filter )
+      slot->library->lcd_filter( bitmap, mode,
+                                 slot->library->lcd_filter_weights );
 
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
@@ -231,7 +260,7 @@
     error = render->raster_render( render->raster, &params );
 
     /* expand it horizontally */
-    if ( hmul > 1 )
+    if ( hmul )
     {
       FT_Byte*  line = bitmap->buffer + ( height - height_org ) * pitch;
       FT_UInt   hh;
@@ -246,19 +275,18 @@
         for ( xx = width_org; xx > 0; xx-- )
         {
           FT_UInt  pixel = line[xx-1];
-          FT_UInt  count = hmul;
 
 
-          for ( count = hmul; count > 0; count-- )
-            end[-count] = (FT_Byte)pixel;
-
-          end -= hmul;
+          end[-3] = (FT_Byte)pixel;
+          end[-2] = (FT_Byte)pixel;
+          end[-1] = (FT_Byte)pixel;
+          end    -= 3;
         }
       }
     }
 
     /* expand it vertically */
-    if ( vmul > 1 )
+    if ( vmul )
     {
       FT_Byte*  read  = bitmap->buffer + ( height - height_org ) * pitch;
       FT_Byte*  write = bitmap->buffer;
@@ -267,28 +295,28 @@
 
       for ( hh = height_org; hh > 0; hh-- )
       {
-        FT_UInt  count = vmul;
+        memcpy( write, read, pitch );
+        write += pitch;
 
+        memcpy( write, read, pitch );
+        write += pitch;
 
-        for ( count = vmul; count > 0; count-- )
-        {
-          memcpy( write, read, pitch );
-          write += pitch;
-        }
-        read += pitch;
+        memcpy( write, read, pitch );
+        write += pitch;
+        read  += pitch;
       }
     }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
-    FT_Outline_Translate( outline, cbox.xMin, cbox.yMin );
+    FT_Outline_Translate( outline, x_shift, y_shift );
 
     if ( error )
       goto Exit;
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = (FT_Int)( cbox.xMin >> 6 );
-    slot->bitmap_top  = (FT_Int)( cbox.yMax >> 6 );
+    slot->bitmap_left = x_left;
+    slot->bitmap_top  = y_top;
 
   Exit:
     if ( outline && origin )
@@ -309,8 +337,7 @@
       mode = FT_RENDER_MODE_NORMAL;
 
     return ft_smooth_render_generic( render, slot, mode, origin,
-                                     FT_RENDER_MODE_NORMAL,
-                                     0, 0 );
+                                     FT_RENDER_MODE_NORMAL );
   }
 
 
@@ -324,8 +351,7 @@
     FT_Error  error;
 
     error = ft_smooth_render_generic( render, slot, mode, origin,
-                                      FT_RENDER_MODE_LCD,
-                                      3, 0 );
+                                      FT_RENDER_MODE_LCD );
     if ( !error )
       slot->bitmap.pixel_mode = FT_PIXEL_MODE_LCD;
 
@@ -343,8 +369,7 @@
     FT_Error  error;
 
     error = ft_smooth_render_generic( render, slot, mode, origin,
-                                      FT_RENDER_MODE_LCD_V,
-                                      0, 3 );
+                                      FT_RENDER_MODE_LCD_V );
     if ( !error )
       slot->bitmap.pixel_mode = FT_PIXEL_MODE_LCD_V;
 

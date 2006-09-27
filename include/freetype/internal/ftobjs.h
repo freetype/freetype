@@ -650,6 +650,10 @@ FT_BEGIN_HEADER
 #define FT_DEBUG_HOOK_UNPATENTED_HINTING  1
 
 
+  typedef void  (*FT_Bitmap_LcdFilterFunc)( FT_Bitmap*      bitmap,
+                                            FT_Render_Mode  render_mode,
+                                            FT_Byte*        weights );
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -722,6 +726,11 @@ FT_BEGIN_HEADER
     FT_ULong           raster_pool_size; /* size of render pool in bytes */
 
     FT_DebugHook_Func  debug_hooks[4];
+
+#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+    FT_Byte                  lcd_filter_weights[5];
+    FT_Bitmap_LcdFilterFunc  lcd_filter;
+#endif
 
   } FT_LibraryRec;
 
