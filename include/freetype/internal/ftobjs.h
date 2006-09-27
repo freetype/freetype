@@ -211,26 +211,11 @@ FT_BEGIN_HEADER
   /*      this data when first opened.  This field exists only if          */
   /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
-  /*    force_autohing ::                                                  */
-  /*      This boolean flag instructs the glyph loader to ignore the       */
-  /*      format-specific hinter, and to use the auto-hinter instead to    */
-  /*      load all glyphs.                                                 */
-  /*                                                                       */
-  /*      If the unpatented bytecode interpreter is compiled into the      */
-  /*      library, then:                                                   */
-  /*                                                                       */
-  /*      - if this is one of the tricky Asian fonts, like Gulim, which    */
-  /*        absolutely require a bytecode interpreter to load anything     */
-  /*        properly, the flag is set to FALSE                             */
-  /*                                                                       */
-  /*      - for other fonts, the flag is set to TRUE, and the auto-hinter  */
-  /*        is used to scale the glyphs.                                   */
-  /*                                                                       */
-  /*      If the unpatented bytecode interpreter is not compiled into      */
-  /*      the library, the flag is always set to FALSE.                    */
-  /*                                                                       */
-  /*      The detection of `tricky' fonts is located in the TrueType       */
-  /*      face loader, testing against a bunch of font names.              */
+  /*    unpatented_hinting ::                                              */
+  /*      This boolean flag instructs the glyph loader that this font      */
+  /*      can only be loaded through the unpatented bytecode interpreter.  */
+  /*      in this case, the auto-hinter will never be called for it.       */
+  /*      except if you use FT_LOAD_FORCE_AUTOHINT                         */
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
@@ -248,7 +233,7 @@ FT_BEGIN_HEADER
     FT_Incremental_InterfaceRec*  incremental_interface;
 #endif
 
-    FT_Bool             force_autohint;
+    FT_Bool             unpatented_hinting;
 
   } FT_Face_InternalRec;
 

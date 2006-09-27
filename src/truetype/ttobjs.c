@@ -290,7 +290,7 @@
       }
     }
 
-    ttface->internal->force_autohint = !face->unpatented_hinting;
+    ttface->internal->unpatented_hinting = face->unpatented_hinting;
 #endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING */
 
     /* initialize standard glyph loading routines */

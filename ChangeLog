@@ -1,3 +1,13 @@
+2006-09-28  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/ftobjs.h, src/truetype/ttobjs.c,
+        src/base/ftobjs.c: fixed a bug in the automatic unpatented
+        hinting support which prevented normal bytecode hinting to
+        work properly
+
+        * src/autofit/aftypes.h: undefining AF_DEBUG to get rid of
+        traces
+
 2006-09-27  David Turner  <david@freetype.org>
 
         * include/freetype/freetype.h: bumping FT_FREETYPE_PATCH to 2
