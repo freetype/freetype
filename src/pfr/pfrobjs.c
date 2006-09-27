@@ -476,13 +476,14 @@
         goto Exit;
 
       {
-        FT_UInt    count    = item->pair_count;
-        FT_UInt    size     = item->pair_size;
-        FT_UInt    power    = (FT_UInt)ft_highpow2( (FT_UInt32)count );
-        FT_UInt    probe    = power * size;
-        FT_UInt    extra    = count - power;
-        FT_Byte*   base     = stream->cursor;
-        FT_Bool    twobytes = FT_BOOL( item->flags & 1 );
+        FT_UInt    count       = item->pair_count;
+        FT_UInt    size        = item->pair_size;
+        FT_UInt    power       = (FT_UInt)ft_highpow2( (FT_UInt32)count );
+        FT_UInt    probe       = power * size;
+        FT_UInt    extra       = count - power;
+        FT_Byte*   base        = stream->cursor;
+        FT_Bool    twobytes    = FT_BOOL( item->flags & 1 );
+        FT_Bool    twobyte_adj = FT_BOOL( item->flags & 2 );
         FT_Byte*   p;
         FT_UInt32  cpair;
 
@@ -500,7 +501,13 @@
             goto Found;
 
           if ( cpair < pair )
+          {
+            if ( twobyte_adj )
+              p += 2;
+            else
+              p++;
             base = p;
+          }
         }
 
         while ( probe > size )
@@ -533,7 +540,7 @@
 
 
         Found:
-          if ( item->flags & 2 )
+          if ( twobyte_adj )
             value = FT_PEEK_SHORT( p );
           else
             value = p[0];
