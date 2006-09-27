@@ -15,24 +15,24 @@ $! config file VMSLIB.DAT. Please check the sample file, which is part of this
 $! distribution, for the information you need to provide
 $!
 $! This procedure currently does support the following commandline options
-$! in arbitrary order 
+$! in arbitrary order
 $!
-$! * DEBUG - Compile modules with /noopt/debug and link shareable image 
+$! * DEBUG - Compile modules with /noopt/debug and link shareable image
 $!           with /debug
 $! * LOPTS - Options to be passed to the link command
 $! * CCOPT - Options to be passed to the C compiler
 $!
 $! In case of problems with the install you might contact me at
-$! zinser@zinser.no-ip.info(preferred) or 
+$! zinser@zinser.no-ip.info(preferred) or
 $! zinser@sysdev.deutsche-boerse.com (work)
 $!
 $! Make procedure history for Freetype2
-$! 
+$!
 $!------------------------------------------------------------------------------
 $! Version history
 $! 0.01 20040401 First version to receive a number
 $! 0.02 20041030 Add error handling, Freetype 2.1.9
-$! 
+$!
 $ on error then goto err_exit
 $ true  = 1
 $ false = 0
@@ -83,12 +83,12 @@ $ gosub check_create_vmslib
 $!
 $! Create objects
 $!
-$ if libdefs .nes. "" 
-$ then 
+$ if libdefs .nes. ""
+$ then
 $   ccopt = ccopt + "/define=(" + f$extract(0,f$length(libdefs)-1,libdefs) + ")"
 $ endif
 $!
-$ if f$locate("AS_IS",f$edit(ccopt,"UPCASE")) .lt. f$length(ccopt) - 
+$ if f$locate("AS_IS",f$edit(ccopt,"UPCASE")) .lt. f$length(ccopt) -
     then s_case = true
 $ gosub crea_mms
 $!
@@ -103,7 +103,7 @@ $  if (file .nes. "")
 $  then
 $    if f$locate("DEMOS",file) .eqs. f$length(file) then write optf file
 $    goto floop
-$  endif 
+$  endif
 $!
 $ close optf
 $!
@@ -117,7 +117,7 @@ $   call anal_obj_axp 'optfile' _link.opt
 $   open/append  optf 'optfile'
 $   if s_case then WRITE optf "case_sensitive=YES"
 $   close optf
-$   LINK_/NODEB/SHARE=[.lib]freetype2shr.exe - 
+$   LINK_/NODEB/SHARE=[.lib]freetype2shr.exe -
                             'optfile'/opt,libs.opt/opt,_link.opt/opt
 $ endif
 $!
@@ -143,7 +143,7 @@ $ exit 2
 $!
 $!------------------------------------------------------------------------------
 $!
-$! If MMS/MMK are available dump out the descrip.mms if required 
+$! If MMS/MMK are available dump out the descrip.mms if required
 $!
 $CREA_MMS:
 $ write sys$output "Creating descrip.mms files ..."
@@ -169,25 +169,25 @@ $ EOD
 $ write out "CFLAGS = ", ccopt
 $ copy sys$input: out
 $ deck
- 
+
 
 all :
-        define freetype [--.include.freetype] 
-        define psaux [-.psaux] 
-        define autofit [-.autofit] 
-        define autohint [-.autohint] 
-        define base [-.base] 
-        define cache [-.cache] 
-        define cff [-.cff] 
-        define cid [-.cid] 
-        define pcf [-.pcf] 
-        define psnames [-.psnames] 
-        define raster [-.raster] 
-        define sfnt [-.sfnt] 
-        define smooth [-.smooth] 
-        define truetype [-.truetype] 
-        define type1 [-.type1] 
-        define winfonts [-.winfonts] 
+        define freetype [--.include.freetype]
+        define psaux [-.psaux]
+        define autofit [-.autofit]
+        define autohint [-.autohint]
+        define base [-.base]
+        define cache [-.cache]
+        define cff [-.cff]
+        define cid [-.cid]
+        define pcf [-.pcf]
+        define psnames [-.psnames]
+        define raster [-.raster]
+        define sfnt [-.sfnt]
+        define smooth [-.smooth]
+        define truetype [-.truetype]
+        define type1 [-.type1]
+        define winfonts [-.winfonts]
         if f$search("lib.dir") .eqs. "" then create/directory [.lib]
         set default [.builds.vms]
         $(MMS)$(MMSQUALIFIERS)
@@ -357,7 +357,7 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include],[--.src.base]
 
 OBJS=ftbase.obj,ftinit.obj,ftglyph.obj,ftdebug.obj,ftbdf.obj,ftmm.obj,\
      fttype1.obj,ftxf86.obj,ftpfr.obj,ftstroke.obj,ftwinfnt.obj,ftbbox.obj,\
-     ftbitmap.obj
+     ftbitmap.obj ftlcdfil.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
@@ -423,7 +423,7 @@ all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
 
 ftcache.obj : ftcache.c ftcbasic.c ftccache.c ftccmap.c ftcglyph.c ftcimage.c \
-              ftcmanag.c ftcmru.c ftcsbits.c 
+              ftcmanag.c ftcmru.c ftcsbits.c
 
 # EOF
 $ eod
@@ -1015,41 +1015,41 @@ $     len   = f$length(cparm) - start
 $     ccopt = ccopt + f$extract(start,len,cparm)
 $   endif
 $   if cparm .eqs. "LINK" then linkonly = true
-$   if f$locate("LOPTS=",cparm) .lt. f$length(cparm) 
+$   if f$locate("LOPTS=",cparm) .lt. f$length(cparm)
 $   then
 $     start = f$locate("=",cparm) + 1
 $     len   = f$length(cparm) - start
 $     lopts = lopts + f$extract(start,len,cparm)
 $   endif
-$   if f$locate("CC=",cparm) .lt. f$length(cparm) 
+$   if f$locate("CC=",cparm) .lt. f$length(cparm)
 $   then
 $     start  = f$locate("=",cparm) + 1
 $     len    = f$length(cparm) - start
 $     cc_com = f$extract(start,len,cparm)
-      if (cc_com .nes. "DECC") .and. - 
-         (cc_com .nes. "VAXC") .and. - 
+      if (cc_com .nes. "DECC") .and. -
+         (cc_com .nes. "VAXC") .and. -
 	 (cc_com .nes. "GNUC")
 $     then
 $       write sys$output "Unsupported compiler choice ''cc_com' ignored"
 $       write sys$output "Use DECC, VAXC, or GNUC instead"
-$     else 
-$     	if cc_com .eqs. "DECC" then its_decc = true   
-$     	if cc_com .eqs. "VAXC" then its_vaxc = true   
-$     	if cc_com .eqs. "GNUC" then its_gnuc = true   
-$     endif 
+$     else
+$     	if cc_com .eqs. "DECC" then its_decc = true
+$     	if cc_com .eqs. "VAXC" then its_vaxc = true
+$     	if cc_com .eqs. "GNUC" then its_gnuc = true
+$     endif
 $   endif
-$   if f$locate("MAKE=",cparm) .lt. f$length(cparm) 
+$   if f$locate("MAKE=",cparm) .lt. f$length(cparm)
 $   then
 $     start  = f$locate("=",cparm) + 1
 $     len    = f$length(cparm) - start
 $     mmks = f$extract(start,len,cparm)
-$     if (mmks .eqs. "MMK") .or. (mmks .eqs. "MMS") 
+$     if (mmks .eqs. "MMK") .or. (mmks .eqs. "MMS")
 $     then
 $       make = mmks
-$     else 
+$     else
 $       write sys$output "Unsupported make choice ''mmks' ignored"
 $       write sys$output "Use MMK or MMS instead"
-$     endif 
+$     endif
 $   endif
 $   i = i + 1
 $   goto opt_loop
@@ -1062,7 +1062,7 @@ $!
 $! Version history
 $! 0.01 20040220 First version to receive a number
 $! 0.02 20040229 Echo current procedure name; use general error exit handler
-$!               Remove xpm hack -> Replaced by more general dnsrl handling 
+$!               Remove xpm hack -> Replaced by more general dnsrl handling
 $CHECK_CREATE_VMSLIB:
 $!
 $ if f$search("VMSLIB.DAT") .eqs. ""
@@ -1078,18 +1078,18 @@ $   type/out=vmslib.dat sys$input
 !    - Lines starting with ! are treated as comments
 !    - Elements in a data line are separated by # signs
 !    - The elements need to be listed in the following order
-!      1.) Name of the Library (only used for informative messages 
+!      1.) Name of the Library (only used for informative messages
 !                               from vms_make.com)
 !      2.) Location where the object library can be found
 !      3.) Location where the include files for the library can be found
 !      4.) Include file used to verify library location
-!      5.) CPP define to pass to the build to indicate availability of 
+!      5.) CPP define to pass to the build to indicate availability of
 !          the library
 !
-! Example: The following lines show how definitions  
-!          might look like. They are site specific and the locations of the 
+! Example: The following lines show how definitions
+!          might look like. They are site specific and the locations of the
 !          library and include files need almost certainly to be changed.
-! 
+!
 ! Location: All of the libaries can be found at the following addresses
 !
 !   ZLIB:     http://zinser.no-ip.info/vms/sw/zlib.htmlx
@@ -1159,7 +1159,7 @@ $   if ((f$search("freetype:freetype.h") .nes. "") .and. -
 $   then
 $     write sys$output "Will use local definition of freetype logical"
 $   else
-$     ft2elem = 0 
+$     ft2elem = 0
 $FT2_LOOP:
 $     ft2srcdir = f$element(ft2elem,",",libsrc)
 $     if f$search("''ft2srcdir'''testinc'") .nes. ""
@@ -1185,7 +1185,7 @@ $     else
 $       ft2elem = ft2elem + 1
 $       goto ft2_loop
 $     endif
-$   endif	 
+$   endif
 $ endif
 $ goto LIB_LOOP
 $END_LIB:
@@ -1193,7 +1193,7 @@ $ close libdata
 $ return
 $!------------------------------------------------------------------------------
 $!
-$! Analyze Object files for OpenVMS AXP to extract Procedure and Data 
+$! Analyze Object files for OpenVMS AXP to extract Procedure and Data
 $! information to build a symbol vector for a shareable image
 $! All the "brains" of this logic was suggested by Hartmut Becker
 $! (Hartmut.Becker@compaq.com). All the bugs were introduced by me
@@ -1203,10 +1203,10 @@ $!
 $! Version history
 $! 0.01 20040006 Skip over shareable images in option file
 $!
-$ ANAL_OBJ_AXP: Subroutine   
+$ ANAL_OBJ_AXP: Subroutine
 $ V = 'F$Verify(0)
 $ SAY := "WRITE_ SYS$OUTPUT"
-$ 
+$
 $ IF F$SEARCH("''P1'") .EQS. ""
 $ THEN
 $    SAY "ANAL_OBJ_AXP-E-NOSUCHFILE:  Error, inputfile ''p1' not available"
@@ -1283,4 +1283,4 @@ $!
 $ close libsf
 $ EXIT_AA:
 $ if V then set verify
-$ endsubroutine 
+$ endsubroutine

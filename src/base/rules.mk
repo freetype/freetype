@@ -42,6 +42,7 @@ BASE_SRC := $(BASE_DIR)/ftapi.c    \
             $(BASE_DIR)/ftrfork.c  \
             $(BASE_DIR)/ftstream.c \
             $(BASE_DIR)/fttrigon.c \
+            $(BASE_DIR)/ftlcdfil.c \
             $(BASE_DIR)/ftutil.c
 
 # Base layer `extensions' sources

@@ -16,6 +16,9 @@
         * include/freetype/config/ftheader.h: adding FT_LCD_FILTER_H
         macro that points to <freetype/ftlcdfil.h>
 
+        * src/base/Jamfile, src/base/rules.mk, vms_make.com: adding
+        'ftlcdfil.c' to the list of compiled source files
+
 2006-09-26  David Bustin
 
 	* src/pfr/pfrobjs.c (pfr_face_get_kerning): Skip adjustment bytes
