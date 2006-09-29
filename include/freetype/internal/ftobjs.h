@@ -214,8 +214,8 @@ FT_BEGIN_HEADER
   /*    unpatented_hinting ::                                              */
   /*      This boolean flag instructs the glyph loader that this font      */
   /*      can only be loaded through the unpatented bytecode interpreter.  */
-  /*      in this case, the auto-hinter will never be called for it.       */
-  /*      except if you use FT_LOAD_FORCE_AUTOHINT                         */
+  /*      In that case, the auto-hinter is never called for it, except if  */
+  /*      you use FT_LOAD_FORCE_AUTOHINT.                                  */
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
@@ -638,6 +638,7 @@ FT_BEGIN_HEADER
   typedef void  (*FT_Bitmap_LcdFilterFunc)( FT_Bitmap*      bitmap,
                                             FT_Render_Mode  render_mode,
                                             FT_Byte*        weights );
+
 
   /*************************************************************************/
   /*                                                                       */

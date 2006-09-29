@@ -5,37 +5,48 @@
 
 2006-09-28  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/ftobjs.h, src/truetype/ttobjs.c,
-        src/base/ftobjs.c: fixed a bug in the automatic unpatented
-        hinting support which prevented normal bytecode hinting to
-        work properly
+	Fix a bug in the automatic unpatented hinting support which prevents
+	normal bytecode hinting to work properly.
 
-        * src/autofit/aftypes.h: undefining AF_DEBUG to get rid of
-        traces
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec):
+	s/force_autohint/unpatented_hinting/.  Update all callers.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Updated code.
+
+	* src/autofit/aftypes.h (AF_DEBUG): Undefine to get rid of traces.
 
 2006-09-27  David Turner  <david@freetype.org>
 
-        * include/freetype/freetype.h: bumping FT_FREETYPE_PATCH to 2
-        for an upcoming 2.2.2 release
+	* include/freetype/freetype.h (FT_FREETYPE_PATCH): Set to 2.
 
-        * include/freetype/ftlcdfil.h, src/freetype/ftlcdfil.c:
-        added a new API to support color filtering of subpixel glyph
-        bitmaps. In default build, the function FT_Library_SetLcdFilter
-        returns FT_Err_Unimplemented_Feature; you need to #define
-        FT_CONFIG_OPTION_SUBPIXEL_RENDERING in ftoption.h to compile
-        the real implementation
 
-        * src/smooth/ftsmooth.c: adding support for sub-pixel color
-        filtering; simplifying a few function calls
+	Add a new API to support color filtering of subpixel glyph bitmaps. 
+	In a default build, the function `FT_Library_SetLcdFilter' returns
+	`FT_Err_Unimplemented_Feature'; you need to #define
+	FT_CONFIG_OPTION_SUBPIXEL_RENDERING in ftoption.h to compile the
+	real implementation.
 
-        * include/freetype/config/ftheader.h: adding FT_LCD_FILTER_H
-        macro that points to <freetype/ftlcdfil.h>
+	* include/freetype/ftlcdfil.h, src/base/ftlcdfil.c: New files.
 
-        * src/base/Jamfile, src/base/rules.mk, vms_make.com: adding
-        'ftlcdfil.c' to the list of compiled source files
+	* include/freetype/internal/ftobjs.h (FT_Bitmap_LcdFilterFunc): New
+	typedef.
+	(FT_LibraryRec) [FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: New members
+	`lcd_filter_weights' and `lcd_filter'.
 
-        * modules.cfg: adding ftlcdfil.c to the list of default base
-        extensions
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Remove arguments
+	`hmul' and `vmul'.
+	Handle subpixel rendering.
+	Simplify function.
+	(ft_smooth_render_lcd): Use `FT_RENDER_MODE_LCD'.
+	(ft_smooth_render_lcd_v): Use `FT_RENDER_MODE_LCD_V'.
+
+	* include/freetype/config/ftheader.h (FT_LCD_FILTER_H): New macro,
+	pointing to <freetype/ftlcdfil.h>.
+
+	* src/base/Jamfile (_sources), src/base/rules.mk (BASE_SRC),
+	vms_make.com: Add `ftlcdfil.c' to the list of compiled source files.
+
+	* modules.cfg (BASE_EXTENSIONS): Add ftlcdfil.c.
 
 2006-09-26  David Bustin
 

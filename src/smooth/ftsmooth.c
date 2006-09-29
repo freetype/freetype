@@ -106,8 +106,8 @@
     FT_UInt      width, height, height_org, width_org, pitch;
     FT_Bitmap*   bitmap;
     FT_Memory    memory;
-    FT_Int       hmul = (mode == FT_RENDER_MODE_LCD);
-    FT_Int       vmul = (mode == FT_RENDER_MODE_LCD_V);
+    FT_Int       hmul = mode == FT_RENDER_MODE_LCD;
+    FT_Int       vmul = mode == FT_RENDER_MODE_LCD_V;
     FT_Pos       x_shift, y_shift, x_left, y_top;
 
     FT_Raster_Params  params;
@@ -170,6 +170,7 @@
     y_top   = (FT_Int)( cbox.yMax >> 6 );
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+
     if ( slot->library->lcd_filter )
     {
       if ( hmul )
@@ -186,6 +187,7 @@
         y_top   += 1;
       }
     }
+
 #endif
 
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
