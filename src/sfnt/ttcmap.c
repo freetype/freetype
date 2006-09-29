@@ -1094,14 +1094,19 @@
           /* search in segments before the current segment */
           for ( i = max ; i > 0; i-- )
           {
-            FT_UInt  prev_end;
+            FT_UInt   prev_end;
+            FT_Byte*  old_p;
 
 
-            p = cmap->data + 14 + ( i - 1 ) * 2;
+            old_p    = p;
+            p        = cmap->data + 14 + ( i - 1 ) * 2;
             prev_end = TT_PEEK_USHORT( p );
 
             if ( charcode > prev_end )
+            {
+              p = old_p;
               break;
+            }
 
             end    = prev_end;
             p     += 2 + num_segs2;

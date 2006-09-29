@@ -1,3 +1,8 @@
+2006-09-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttcmap.c (tt_cmap4_char_map_binary): Fix algorithm for
+	overlapping segments.  Bug reported by Stefan Koch.
+
 2006-09-28  David Turner  <david@freetype.org>
 
         * include/freetype/internal/ftobjs.h, src/truetype/ttobjs.c,
