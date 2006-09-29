@@ -32,17 +32,19 @@ BASE_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(SRC_DIR)/base)
 #
 #   ftsystem, ftinit, and ftdebug are handled by freetype.mk
 #
-BASE_SRC := $(BASE_DIR)/ftapi.c    \
-            $(BASE_DIR)/ftcalc.c   \
+# All files listed here should be included in `ftbase.c' (for a `single'
+# build).
+#
+BASE_SRC := $(BASE_DIR)/ftcalc.c   \
             $(BASE_DIR)/ftdbgmem.c \
             $(BASE_DIR)/ftgloadr.c \
+            $(BASE_DIR)/ftlcdfil.c \
             $(BASE_DIR)/ftnames.c  \
             $(BASE_DIR)/ftobjs.c   \
             $(BASE_DIR)/ftoutln.c  \
             $(BASE_DIR)/ftrfork.c  \
             $(BASE_DIR)/ftstream.c \
             $(BASE_DIR)/fttrigon.c \
-            $(BASE_DIR)/ftlcdfil.c \
             $(BASE_DIR)/ftutil.c
 
 # Base layer `extensions' sources

@@ -1,3 +1,10 @@
+2006-09-30  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/rules.mk (BASE_SRC): Remove `ftapi.c' (which is no longer
+	in use).
+
+	* src/base/ftbase.c: Include `ftlcdfil.c'.
+
 2006-09-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c (tt_cmap4_char_map_binary): Fix algorithm for
