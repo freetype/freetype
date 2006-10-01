@@ -23,7 +23,6 @@
 #include "ftcalc.c"
 #include "ftdbgmem.c"
 #include "ftgloadr.c"
-#include "ftlcdfil.c"
 #include "ftnames.c"
 #include "ftobjs.c"
 #include "ftoutln.c"

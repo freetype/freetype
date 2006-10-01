@@ -1,7 +1,16 @@
-2006-09-30  Werner Lemberg  <wl@gnu.org>
+2006-10-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftbase.c: Undo change from 2006-09-30.
+
+	* src/base/rules.mk (BASE_SRC): Remove `ftlcdfil.c'.
+
+2006-09-30  David Turner  <david@freetype.org>
+
 	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c,
 	src/truetype/ttobjs.c: fixes related to the unpatented hinter
 	
+2006-09-30  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/rules.mk (BASE_SRC): Remove `ftapi.c' (which is no longer
 	in use).
 
