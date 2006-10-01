@@ -1,5 +1,7 @@
 2006-09-30  Werner Lemberg  <wl@gnu.org>
-
+	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c,
+	src/truetype/ttobjs.c: fixes related to the unpatented hinter
+	
 	* src/base/rules.mk (BASE_SRC): Remove `ftapi.c' (which is no longer
 	in use).
 

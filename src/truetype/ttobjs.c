@@ -246,51 +246,53 @@
 
     }
 
-#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-
-    /* Determine whether unpatented hinting is to be used for this face. */
-    face->unpatented_hinting = FT_BOOL
-       ( library->debug_hooks[ FT_DEBUG_HOOK_UNPATENTED_HINTING ] != NULL );
+#if defined(TT_CONFIG_OPTION_UNPATENTED_HINTING) && \
+    !defined(TT_CONFIG_OPTION_BYTECODE_INTERPRETER)
 
     {
-      int  i;
+      FT_Bool  unpatented_hinting;
+      int      i;
 
+      /* Determine whether unpatented hinting is to be used for this face. */
+      unpatented_hinting = FT_BOOL
+       ( library->debug_hooks[ FT_DEBUG_HOOK_UNPATENTED_HINTING ] != NULL );
 
       for ( i = 0; i < num_params && !face->unpatented_hinting; i++ )
         if ( params[i].tag == FT_PARAM_TAG_UNPATENTED_HINTING )
-          face->unpatented_hinting = TRUE;
-    }
+          unpatented_hinting = TRUE;
 
-    /* Compare the face with a list of well-known `tricky' fonts. */
-    /* This list shall be expanded as we find more of them.       */
-    if ( !face->unpatented_hinting )
-    {
-      static const char* const  trick_names[] =
+      /* Compare the face with a list of well-known `tricky' fonts. */
+      /* This list shall be expanded as we find more of them.       */
+      if ( !unpatented_hinting )
       {
-        "DFKaiSho-SB",     /* dfkaisb.ttf */
-        "DFKai-SB",        /* kaiu.ttf */
-        "HuaTianSongTi?",  /* htst3.ttf */
-        "MingLiU",         /* mingliu.ttf & mingliu.ttc */
-        "PMingLiU",        /* mingliu.ttc */
-        "MingLi43",        /* mingli.ttf */
-        NULL
-      };
-      int  nn;
-
-
-      /* Note that we only check the face name at the moment; it might */
-      /* be worth to do more checks for a few special cases.           */
-      for ( nn = 0; trick_names[nn] != NULL; nn++ )
-      {
-        if ( ft_strcmp( ttface->family_name, trick_names[nn] ) == 0 )
+        static const char* const  trick_names[] =
         {
-          face->unpatented_hinting = 1;
-          break;
+          "DFKaiSho-SB",     /* dfkaisb.ttf */
+          "DFKai-SB",        /* kaiu.ttf */
+          "HuaTianSongTi?",  /* htst3.ttf */
+          "MingLiU",         /* mingliu.ttf & mingliu.ttc */
+          "PMingLiU",        /* mingliu.ttc */
+          "MingLi43",        /* mingli.ttf */
+          NULL
+        };
+        int  nn;
+
+
+        /* Note that we only check the face name at the moment; it might */
+        /* be worth to do more checks for a few special cases.           */
+        for ( nn = 0; trick_names[nn] != NULL; nn++ )
+        {
+          if ( ft_strcmp( ttface->family_name, trick_names[nn] ) == 0 )
+          {
+            unpatented_hinting = 1;
+            break;
+          }
         }
       }
+
+      ttface->internal->ignore_unpatented_hinter = !unpatented_hinting;
     }
 
-    ttface->internal->unpatented_hinting = face->unpatented_hinting;
 #endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING */
 
     /* initialize standard glyph loading routines */

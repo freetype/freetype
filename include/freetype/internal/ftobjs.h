@@ -211,11 +211,11 @@ FT_BEGIN_HEADER
   /*      this data when first opened.  This field exists only if          */
   /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
-  /*    unpatented_hinting ::                                              */
-  /*      This boolean flag instructs the glyph loader that this font      */
-  /*      can only be loaded through the unpatented bytecode interpreter.  */
-  /*      In that case, the auto-hinter is never called for it, except if  */
-  /*      you use FT_LOAD_FORCE_AUTOHINT.                                  */
+  /*    ignore_unpatented_hinter ::                                        */
+  /*      This boolean flag instructs the glyph loader to ignore           */
+  /*      the native font hinter, if one is found. This is exclusively     */
+  /*      used in the case when the unpatented hinter is compiled within   */
+  /*      the library.                                                    */
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
@@ -233,7 +233,7 @@ FT_BEGIN_HEADER
     FT_Incremental_InterfaceRec*  incremental_interface;
 #endif
 
-    FT_Bool             unpatented_hinting;
+    FT_Bool             ignore_unpatented_hinter;
 
   } FT_Face_InternalRec;
 

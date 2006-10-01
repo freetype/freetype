@@ -573,23 +573,45 @@
       load_flags &= ~FT_LOAD_RENDER;
     }
 
-    if ( FT_LOAD_TARGET_MODE( load_flags ) == FT_RENDER_MODE_LIGHT )
-      load_flags |= FT_LOAD_FORCE_AUTOHINT;
+    /* determine wether we need to auto-hint or not
+    * the general rules are:
+    *
+    * - only auto-hint if we have a hinter module, a
+    *   scalable font format dealing with outlines,
+    *   no transforms except simple slants
+    *
+    * - then, autohint if FT_LOAD_FORCE_AUTOHINT is set
+    *   or if we don't have a native font hinter
+    *
+    * - otherwise, autohint for LIGHT hinting mode
+    *
+    * - except if the font requires the unpatented
+    *   bytecode interpreter to load properly
+    */
 
-    /* auto-hinter is preferred and should be used */
-    if ( ( !FT_DRIVER_HAS_HINTER( driver )         ||
-           ( load_flags & FT_LOAD_FORCE_AUTOHINT ) ) &&
-         !( load_flags & FT_LOAD_NO_HINTING )        &&
-         !( load_flags & FT_LOAD_NO_AUTOHINT )       )
+    autohint = 0;
+    if ( hinter &&
+         (load_flags & FT_LOAD_NO_HINTING) == 0   &&
+         (load_flags & FT_LOAD_NO_AUTOHINT) == 0  &&
+         FT_DRIVER_IS_SCALABLE( driver )          &&
+         FT_DRIVER_USES_OUTLINES( driver )        &&
+         face->internal->transform_matrix.yy > 0  &&
+         face->internal->transform_matrix.yx == 0 )
     {
-      /* check whether it works for this face */
-      autohint =
-        FT_BOOL( hinter                                   &&
-                 FT_DRIVER_IS_SCALABLE( driver )          &&
-                 FT_DRIVER_USES_OUTLINES( driver )        &&
-                 face->internal->transform_matrix.yy > 0  &&
-                 face->internal->transform_matrix.yx == 0 &&
-                 !face->internal->unpatented_hinting      );
+      if ( (load_flags & FT_LOAD_FORCE_AUTOHINT) != 0 ||
+           !FT_DRIVER_HAS_HINTER( driver ) )
+        autohint = 1;
+
+      else
+      {
+        FT_Render_Mode  mode = FT_LOAD_TARGET_MODE(load_flags);
+
+        if ( mode == FT_RENDER_MODE_LIGHT             ||
+             face->internal->ignore_unpatented_hinter )
+        {
+          autohint = 1;
+        }
+      }
     }
 
     if ( autohint )
