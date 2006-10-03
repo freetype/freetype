@@ -6,8 +6,14 @@
 
 2006-09-30  David Turner  <david@freetype.org>
 
-	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c,
-	src/truetype/ttobjs.c: fixes related to the unpatented hinter
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec):
+	s/unpatented_hinting/ignore_unpatented_hinter/.
+	Update all callers.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Refine the algorithm whether
+	auto-hinting shall be used or not.
+
+	* src/truetype/ttobjs.c (tt_face_init): Ditto.
 	
 2006-09-30  Werner Lemberg  <wl@gnu.org>
 

@@ -246,16 +246,17 @@
 
     }
 
-#if defined(TT_CONFIG_OPTION_UNPATENTED_HINTING) && \
-    !defined(TT_CONFIG_OPTION_BYTECODE_INTERPRETER)
+#if defined( TT_CONFIG_OPTION_UNPATENTED_HINTING    ) && \
+    !defined( TT_CONFIG_OPTION_BYTECODE_INTERPRETER )
 
     {
       FT_Bool  unpatented_hinting;
       int      i;
 
+
       /* Determine whether unpatented hinting is to be used for this face. */
       unpatented_hinting = FT_BOOL
-       ( library->debug_hooks[ FT_DEBUG_HOOK_UNPATENTED_HINTING ] != NULL );
+        ( library->debug_hooks[FT_DEBUG_HOOK_UNPATENTED_HINTING] != NULL );
 
       for ( i = 0; i < num_params && !face->unpatented_hinting; i++ )
         if ( params[i].tag == FT_PARAM_TAG_UNPATENTED_HINTING )
@@ -293,7 +294,8 @@
       ttface->internal->ignore_unpatented_hinter = !unpatented_hinting;
     }
 
-#endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING */
+#endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING &&
+          !TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     /* initialize standard glyph loading routines */
     TT_Init_Glyph_Loading( face );

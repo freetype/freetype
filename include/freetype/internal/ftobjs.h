@@ -212,10 +212,10 @@ FT_BEGIN_HEADER
   /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
   /*    ignore_unpatented_hinter ::                                        */
-  /*      This boolean flag instructs the glyph loader to ignore           */
-  /*      the native font hinter, if one is found. This is exclusively     */
-  /*      used in the case when the unpatented hinter is compiled within   */
-  /*      the library.                                                    */
+  /*      This boolean flag instructs the glyph loader to ignore the       */
+  /*      native font hinter, if one is found.  This is exclusively used   */
+  /*      in the case when the unpatented hinter is compiled within the    */
+  /*      library.                                                         */
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {

@@ -573,44 +573,43 @@
       load_flags &= ~FT_LOAD_RENDER;
     }
 
-    /* determine wether we need to auto-hint or not
-    * the general rules are:
-    *
-    * - only auto-hint if we have a hinter module, a
-    *   scalable font format dealing with outlines,
-    *   no transforms except simple slants
-    *
-    * - then, autohint if FT_LOAD_FORCE_AUTOHINT is set
-    *   or if we don't have a native font hinter
-    *
-    * - otherwise, autohint for LIGHT hinting mode
-    *
-    * - except if the font requires the unpatented
-    *   bytecode interpreter to load properly
-    */
+    /*
+     * Determine whether we need to auto-hint or not.
+     * The general rules are:
+     *
+     * - Do only auto-hinting if we have a hinter module,
+     *   a scalable font format dealing with outlines,
+     *   and no transforms except simple slants.
+     *
+     * - Then, autohint if FT_LOAD_FORCE_AUTOHINT is set
+     *   or if we don't have a native font hinter.
+     *
+     * - Otherwise, auto-hint for LIGHT hinting mode.
+     *
+     * - Exception: The font requires the unpatented
+     *   bytecode interpreter to load properly.
+     */
 
     autohint = 0;
-    if ( hinter &&
-         (load_flags & FT_LOAD_NO_HINTING) == 0   &&
-         (load_flags & FT_LOAD_NO_AUTOHINT) == 0  &&
-         FT_DRIVER_IS_SCALABLE( driver )          &&
-         FT_DRIVER_USES_OUTLINES( driver )        &&
-         face->internal->transform_matrix.yy > 0  &&
-         face->internal->transform_matrix.yx == 0 )
+    if ( hinter                                    &&
+         ( load_flags & FT_LOAD_NO_HINTING  ) == 0 &&
+         ( load_flags & FT_LOAD_NO_AUTOHINT ) == 0 &&
+         FT_DRIVER_IS_SCALABLE( driver )           &&
+         FT_DRIVER_USES_OUTLINES( driver )         &&
+         face->internal->transform_matrix.yy > 0   &&
+         face->internal->transform_matrix.yx == 0  )
     {
-      if ( (load_flags & FT_LOAD_FORCE_AUTOHINT) != 0 ||
-           !FT_DRIVER_HAS_HINTER( driver ) )
+      if ( ( load_flags & FT_LOAD_FORCE_AUTOHINT ) != 0 ||
+           !FT_DRIVER_HAS_HINTER( driver )              )
         autohint = 1;
-
       else
       {
-        FT_Render_Mode  mode = FT_LOAD_TARGET_MODE(load_flags);
+        FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
+
 
         if ( mode == FT_RENDER_MODE_LIGHT             ||
              face->internal->ignore_unpatented_hinter )
-        {
           autohint = 1;
-        }
       }
     }
 
