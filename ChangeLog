@@ -1,3 +1,11 @@
+2006-10-03  Jens Claudius  <jens.claudius@yahoo.com>
+
+	* include/freetype/config/ftstdlib.h: Cast away volatileness from
+	argument to ft_setjmp.
+
+	* include/freetype/internal/ftvalid.h: Add comment that
+	ft_validator_run must not be used.
+
 2006-10-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftbase.c: Undo change from 2006-09-30.
