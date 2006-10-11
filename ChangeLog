@@ -1,3 +1,8 @@
+2006-10-11  Werner Lemberg  <wl@gnu.org>
+
+	* devel/ftoption.h (FT_CONFIG_OPTION_SUBPIXEL_RENDERING): Define for
+	development.
+
 2006-10-03  Jens Claudius  <jens.claudius@yahoo.com>
 
 	* include/freetype/config/ftstdlib.h: Cast away volatileness from
