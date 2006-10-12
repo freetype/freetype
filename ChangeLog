@@ -1,3 +1,13 @@
+2006-10-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.raw: Introduce new macro to embed optional
+	dependency: FT2_EXTRA_LIBS, which is embedded in freetype2.pc and
+	freetype-config. Use it to record Carbon dependency of MacOSX.
+
+	* builds/unix/freetype2.in: Embed FT2_EXTRA_LIBS.
+
+	* builds/unix/freetype-config.in: Ditto.
+
 2006-10-11  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h (FT_CONFIG_OPTION_SUBPIXEL_RENDERING): Define for
