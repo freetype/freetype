@@ -1,3 +1,9 @@
+2006-10-12  Werner Lemberg  <wl@gnu.org>
+
+	* docs/INSTALL.UNX, docs/UPGRADE.UNX: Renamed to...
+	* docs/INSTALL.UNIX, docs/UPGRADE.UNIX: This.  Update all documents
+	which reference those files.
+
 2006-10-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: Introduce new macro to embed optional

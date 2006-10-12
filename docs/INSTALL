@@ -15,7 +15,7 @@ I. Normal installation and upgrades
 
   2. Unix Systems (as well as Cygwin or MSys on Windows)
 
-    Please read  *both* `UPGRADE.UNX' and `INSTALL.UNX'  to install or
+    Please read *both* `UPGRADE.UNIX' and `INSTALL.UNIX' to install or
     upgrade FreeType  2 on  a Unix system.   Note that you  *need* GNU
     Make for automatic compilation,  since other make tools won't work
     (this includes BSD Make).

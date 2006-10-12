@@ -1,7 +1,7 @@
   Special notes to Unix users
   ===========================
 
-  Please  read  the file  `docs/UPGRADE.UNX'.   It contains  important
+  Please  read  the file  `docs/UPGRADE.UNIX'.  It contains  important
   information regarding the installation  of FreeType on Unix systems,
   especially GNU based operating systems like GNU/Linux.
 

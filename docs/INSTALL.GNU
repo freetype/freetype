@@ -1,7 +1,7 @@
 This document contains instructions  how to build the FreeType library
 on non-Unix systems  with the help of GNU Make.  Note  that if you are
 running Cygwin or MSys in  Windows, you should follow the instructions
-in the file INSTALL.UNX instead.
+in the file INSTALL.UNIX instead.
 
 
   FreeType 2 includes a powerful and flexible build system that allows
