@@ -1,3 +1,19 @@
+2006-10-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* docs/INSTALL.CROSS: New document file for cross-building.
+
+	* builds/unix/configure.raw: Preliminary cross-building support.
+	Find native C compiler and pass it by CC_BUILD, and
+	find suffix for native executable and pass it by EXEEXT_BUILD.
+	Also suffix for target executable is passed by EXEEXT.
+
+	* builds/unix/unix-cc.in: CCraw_build and E_BUILD are introduced
+	to build apinames which runs on building system. They are set by
+	CC_BUILD and EXEEXT_BUILD.
+
+	* builds/exports.mk: Change the extension for apinames from the
+	suffix for target (E) to that for building host (E_BUILD).
+
 2006-10-12  Werner Lemberg  <wl@gnu.org>
 
 	* docs/INSTALL.UNX, docs/UPGRADE.UNX: Renamed to...

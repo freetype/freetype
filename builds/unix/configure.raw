@@ -25,6 +25,8 @@ AC_SUBST([ft_version])
 
 # checks for system type
 
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 
@@ -32,6 +34,42 @@ AC_CANONICAL_TARGET
 
 AC_PROG_CC
 AC_PROG_CPP
+AC_SUBST(EXEEXT)
+
+
+# checks for native programs to generate building tool
+
+if test ${cross_compiling} = yes; then
+  AC_CHECK_PROG(CC_BUILD, ${build}-gcc, ${build-gcc})
+  test -z "${CC_BUILD}" && AC_CHECK_PROG(CC_BUILD, gcc, gcc)
+  test -z "${CC_BUILD}" && AC_CHECK_PROG(CC_BUILD, cc, cc, , , /usr/ucb/cc)
+  test -z "${CC_BUILD}" && AC_MSG_ERROR([cannot find native C compiler])
+
+  AC_MSG_CHECKING([for suffix of native executables])
+  rm -f a.* b.* a_out.exe conftest.*
+  echo > conftest.c "int main() { return 0;}"
+  ${CC_BUILD} conftest.c || AC_MSG_ERROR([native C compiler is not working])
+  rm -f conftest.c
+  if test -x a.out -o -x b.out -o -x conftest; then
+    EXEEXT_BUILD=""
+  elif test -x a_out.exe -o -x conftest.exe; then
+    EXEEXT_BUILD=".exe"
+  elif test -x conftest.* ; then
+    EXEEXT_BUILD=`echo conftest.* | sed -n '1s/^.*\.//g'`
+  fi
+  AC_MSG_RESULT($EXEEXT_BUILD)
+else
+  CC_BUILD=${CC}
+  EXEEXT_BUILD=${EXEEXT}
+fi
+
+
+if test ! -z ${EXEEXT_BUILD}; then
+  EXEEXT_BUILD=."${EXEEXT_BUILD}"
+fi
+AC_SUBST(CC_BUILD)
+AC_SUBST(EXEEXT_BUILD)
+
 
 
 # get compiler flags right

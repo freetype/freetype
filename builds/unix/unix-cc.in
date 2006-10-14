@@ -25,6 +25,12 @@ O  := lo
 SO := o
 
 
+# The executable file extension. Although most Unix platform use no extension,
+# we copy the extension detected by autoconf, useful for cross building on
+# Unix system for non-Unix system.
+#
+E  := @EXEEXT@
+
 # The library file extension (for standard and static libraries).  This can
 # be .a, .lib, etc., depending on the platform.
 #
@@ -88,10 +94,12 @@ CC    := $(LIBTOOL) --mode=compile $(CCraw)
 LDFLAGS := @LDFLAGS@
 
 
-# export symbols (XXX: HOW TO DEAL WITH CROSS COMPILATION ?)
+# export symbols
 #
+CCraw_build  := @CC_BUILD@	# native CC of building system
+E_BUILD      := @EXEEXT_BUILD@	# extension for exexutable on building system
 EXPORTS_LIST := $(OBJ_DIR)/ftexport.sym
-CCexe        := $(CCraw)   # used to compile "apinames" only
+CCexe        := $(CCraw_build)	# used to compile "apinames" only
 
 
 # Library linking

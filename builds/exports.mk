@@ -48,7 +48,7 @@ ifneq ($(EXPORTS_LIST),)
   # Note that $(APINAMES_OPTIONS) is empty, except for Windows compilers.
   #
   APINAMES_SRC := $(TOP_DIR)/src/tools/apinames.c
-  APINAMES_EXE := $(OBJ_DIR)/apinames$E
+  APINAMES_EXE := $(OBJ_DIR)/apinames$(E_BUILD)
 
   $(APINAMES_EXE): $(APINAMES_SRC)
 	  $(CCexe) $(TE)$@ $<
