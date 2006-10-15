@@ -1,3 +1,8 @@
+2006-10-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c (FT_New_Face_From_FOND): Initialize variable
+	`error' by FT_Err_Ok.
+
 2006-10-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* docs/INSTALL.CROSS: New document file for cross-building.

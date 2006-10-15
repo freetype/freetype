@@ -1165,7 +1165,7 @@
     Str255    lwfn_file_name;
     UInt8     path_lwfn[HFS_MAXPATHLEN];
     OSErr     err;
-    FT_Error  error;
+    FT_Error  error = FT_Err_Ok;
 
 
     GetResInfo( fond, &fond_id, &fond_type, fond_name );
