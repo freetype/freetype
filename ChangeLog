@@ -1,3 +1,9 @@
+2006-10-23  Zhe Su  <zsu@novell.com>
+
+        * src/base/ftoutln.c: re-implementing FT_Outline_Get_Orientation to
+        better deal with broken Asian fonts with funky glyphs with
+        self-intersections and other stupid things
+
 2006-10-23  David Turner  <david@freetype.org>
 
 	* src/sfnt/ttmtx.c, src/cff/cffload.c: speeding up the CFF font
