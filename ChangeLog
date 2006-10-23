@@ -1,3 +1,8 @@
+2006-10-23  David Turner  <david@freetype.org>
+
+    * src/pshinter/pshalgo.c: major speed improvements to the Postscript
+    hinter, more than 100% speed increase on my machine
+
 2006-10-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (FT_New_Face_From_FOND): Initialize variable
@@ -65,7 +70,7 @@
 	auto-hinting shall be used or not.
 
 	* src/truetype/ttobjs.c (tt_face_init): Ditto.
-	
+
 2006-09-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/rules.mk (BASE_SRC): Remove `ftapi.c' (which is no longer
@@ -95,7 +100,7 @@
 	* include/freetype/freetype.h (FT_FREETYPE_PATCH): Set to 2.
 
 
-	Add a new API to support color filtering of subpixel glyph bitmaps. 
+	Add a new API to support color filtering of subpixel glyph bitmaps.
 	In a default build, the function `FT_Library_SetLcdFilter' returns
 	`FT_Err_Unimplemented_Feature'; you need to #define
 	FT_CONFIG_OPTION_SUBPIXEL_RENDERING in ftoption.h to compile the
