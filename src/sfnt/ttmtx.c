@@ -71,8 +71,8 @@
     FT_ULong   table_size;
     FT_Byte**  ptable;
     FT_ULong*  ptable_size;
-    
-    
+
+
     if ( vertical )
     {
       error = face->goto_table( face, TTAG_vmtx, stream, &table_size );
@@ -91,10 +91,10 @@
       ptable      = &face->horz_metrics;
       ptable_size = &face->horz_metrics_size;
     }
-    
+
     if ( FT_FRAME_EXTRACT( table_size, *ptable ) )
       goto Fail;
-      
+
     *ptable_size = table_size;
 
   Fail:
@@ -116,6 +116,7 @@
 
     TT_LongMetrics *   longs;
     TT_ShortMetrics**  shorts;
+    FT_Byte*           p;
 
 
     if ( vertical )
@@ -175,6 +176,8 @@
     if ( FT_FRAME_ENTER( table_len ) )
       goto Fail;
 
+    p = stream->cursor;
+
     {
       TT_LongMetrics  cur   = *longs;
       TT_LongMetrics  limit = cur + num_longs;
@@ -182,8 +185,8 @@
 
       for ( ; cur < limit; cur++ )
       {
-        cur->advance = FT_GET_USHORT();
-        cur->bearing = FT_GET_SHORT();
+        cur->advance = FT_NEXT_USHORT(p);
+        cur->bearing = FT_NEXT_SHORT(p);
       }
     }
 
@@ -195,7 +198,7 @@
 
 
       for ( ; cur < limit; cur++ )
-        *cur = FT_GET_SHORT();
+        *cur = FT_NEXT_SHORT(p);
 
       /* We fill up the missing left side bearings with the     */
       /* last valid value.  Since this will occur for buggy CJK */
@@ -313,7 +316,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    tt_face_get_metrics                                                */ 
+  /*    tt_face_get_metrics                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Returns the horizontal or vertical metrics in font units for a     */

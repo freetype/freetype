@@ -1,7 +1,10 @@
 2006-10-23  David Turner  <david@freetype.org>
 
-    * src/pshinter/pshalgo.c: major speed improvements to the Postscript
-    hinter, more than 100% speed increase on my machine
+	* src/sfnt/ttmtx.c, src/cff/cffload.c: speeding up the CFF font
+	loader, with some large CFF fonts, FT_Open_Face is now 350% faster !
+
+	* src/pshinter/pshalgo.c: major speed improvements to the Postscript
+	hinter, more than 100% speed increase on my machine
 
 2006-10-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -115,6 +118,7 @@
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Remove arguments
 	`hmul' and `vmul'.
+	5A
 	Handle subpixel rendering.
 	Simplify function.
 	(ft_smooth_render_lcd): Use `FT_RENDER_MODE_LCD'.
