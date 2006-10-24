@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PostScript hinting algorithm (body).                                 */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003, 2004, 2005 by                              */
+/*  Copyright 2001, 2002, 2003, 2004, 2005, 2006 by                        */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -927,6 +927,7 @@
   {
     FT_Int  result;
 
+
     /* deal with the trivial cases quickly */
     if ( in_y == 0 )
     {
@@ -958,14 +959,15 @@
     }
     else /* general case */
     {
-      long long  delta = (long long)in_x*out_y - (long long)in_y*out_x;
+      long long  delta = (long long)in_x * out_y - (long long)in_y * out_x;
 
       if ( delta == 0 )
         result = 0;
       else
-        result = 1 - 2*(delta < 0);
+        result = 1 - 2 * ( delta < 0 );
     }
-    return  result;
+
+    return result;
   }
 
 
@@ -1023,9 +1025,9 @@
 
       } while ( orient_prev != 0 );
 
-      first   = start;
-      in_x    = out_x;
-      in_y    = out_y;
+      first = start;
+      in_x  = out_x;
+      in_y  = out_y;
 
       /* now, process all segments in the contour */
       do
@@ -1050,7 +1052,7 @@
 
         } while ( orient_cur == 0 );
 
-        if ( (orient_cur ^ orient_prev) < 0 )
+        if ( ( orient_cur ^ orient_prev ) < 0 )
         {
           do
           {
@@ -1294,11 +1296,9 @@
 
         else if ( point->dir_in == point->dir_out )
         {
-          if ( point->dir_out != PSH_DIR_NONE ||
+          if ( point->dir_out != PSH_DIR_NONE           ||
                psh_corner_is_flat( dxi, dyi, dxo, dyo ) )
-          {
             point->flags |= PSH_POINT_SMOOTH;
-          }
         }
       }
     }
@@ -1468,10 +1468,12 @@
     PSH_Hint*  sort      = table->sort;
     FT_UInt    num_hints = table->num_hints;
 
+
     for ( ; count > 0; count--, point++ )
     {
-      FT_Int     point_dir = 0;
-      FT_Pos     org_u     = point->org_u;
+      FT_Int  point_dir = 0;
+      FT_Pos  org_u     = point->org_u;
+
 
       if ( psh_point_is_strong( point ) )
         continue;
@@ -1488,10 +1490,12 @@
         {
           FT_UInt  nn;
 
+
           for ( nn = 0; nn < num_hints; nn++ )
           {
             PSH_Hint  hint = sort[nn];
             FT_Pos    d    = org_u - hint->org_pos;
+
 
             if ( d < threshold && -d < threshold )
             {
@@ -1506,10 +1510,12 @@
         {
           FT_UInt  nn;
 
+
           for ( nn = 0; nn < num_hints; nn++ )
           {
             PSH_Hint  hint = sort[nn];
             FT_Pos    d    = org_u - hint->org_pos - hint->org_len;
+
 
             if ( d < threshold && -d < threshold )
             {
@@ -1547,6 +1553,7 @@
             PSH_Hint  hint = sort[nn];
             FT_Pos    d    = org_u - hint->org_pos;
 
+
             if ( d < threshold && -d < threshold )
             {
               point->flags2 |= PSH_POINT_EDGE_MIN;
@@ -1563,6 +1570,7 @@
             PSH_Hint  hint = sort[nn];
             FT_Pos    d    = org_u - hint->org_pos - hint->org_len;
 
+
             if ( d < threshold && -d < threshold )
             {
               point->flags2 |= PSH_POINT_EDGE_MAX;
@@ -1578,6 +1586,7 @@
           for ( nn = 0; nn < num_hints; nn++ )
           {
             PSH_Hint  hint = sort[nn];
+
 
             if ( org_u >= hint->org_pos                 &&
                 org_u <= hint->org_pos + hint->org_len )
@@ -1821,12 +1830,13 @@
     FT_Memory      memory = glyph->memory;
 
     PSH_Point*     strongs     = NULL;
-    PSH_Point      strongs_0[ PSH_MAX_STRONG_INTERNAL ];
+    PSH_Point      strongs_0[PSH_MAX_STRONG_INTERNAL];
     FT_UInt        num_strongs = 0;
 
     PSH_Point      points = glyph->points;
     PSH_Point      points_end = points + glyph->num_points;
     PSH_Point      point;
+
 
     /* first count the number of strong points */
     for ( point = points; point < points_end; point++ )
@@ -1838,12 +1848,14 @@
     if ( num_strongs == 0 )  /* nothing to do here */
       return;
 
-    /* allocate an array to store a list of points, stored in increasing org_u order */
+    /* allocate an array to store a list of points, */
+    /* stored in increasing org_u order             */
     if ( num_strongs <= PSH_MAX_STRONG_INTERNAL )
       strongs = strongs_0;
     else
     {
       FT_Error  error;
+
 
       if ( !FT_NEW_ARRAY( strongs, num_strongs ) )
         return;
@@ -1852,7 +1864,8 @@
     num_strongs = 0;
     for ( point = points; point < points_end; point++ )
     {
-      PSH_Point*   insert;
+      PSH_Point*  insert;
+
 
       if ( !psh_point_is_strong( point ) )
         continue;
@@ -1893,6 +1906,7 @@
         PSH_Point   before, after;
         FT_UInt     nn;
 
+
         for ( nn = 0; nn < num_strongs; nn++ )
           if ( strongs[nn]->org_u > point->org_u )
             break;
@@ -1902,26 +1916,29 @@
           after = strongs[0];
 
           point->cur_u = after->cur_u +
-              FT_MulFix( point->org_u - after->org_u, scale );
+                           FT_MulFix( point->org_u - after->org_u,
+                                      scale );
         }
         else
         {
-          before = strongs[nn-1];
+          before = strongs[nn - 1];
 
           for ( nn = num_strongs; nn > 0; nn-- )
-            if ( strongs[nn-1]->org_u < point->org_u )
+            if ( strongs[nn - 1]->org_u < point->org_u )
               break;
 
           if ( nn == num_strongs )  /* point is after last strong point */
           {
-            before = strongs[nn-1];
+            before = strongs[nn - 1];
 
             point->cur_u = before->cur_u +
-                FT_MulFix( point->org_u - before->org_u, scale );
+                             FT_MulFix( point->org_u - before->org_u,
+                                        scale );
           }
           else
           {
             FT_Pos  u;
+
 
             after = strongs[nn];
 
@@ -1936,9 +1953,9 @@
 
             else
               point->cur_u = before->cur_u +
-                  FT_MulDiv( u - before->org_u,
-                             after->cur_u - before->cur_u,
-                             after->org_u - before->org_u );
+                               FT_MulDiv( u - before->org_u,
+                                          after->cur_u - before->cur_u,
+                                          after->org_u - before->org_u );
           }
         }
         psh_point_set_fitted( point );
@@ -1947,6 +1964,7 @@
 
     if ( strongs != strongs_0 )
       FT_FREE( strongs );
+
 #endif /* 1 */
 
   }

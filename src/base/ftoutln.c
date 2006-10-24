@@ -947,21 +947,28 @@
     FT_Vector*  point;
 
     int         i;
-    FT_Pos      ray_y [3];
-    int         result [3];
+    FT_Pos      ray_y[3];
+    int         result[3];
+
 
     if ( !outline || outline->n_points <= 0 )
       return FT_ORIENTATION_TRUETYPE;
+
+    /* We use the nonzero winding rule to find the orientation.       */
+    /* Since glyph outlines behave much more `regular' than arbitrary */
+    /* cubic or quadratic curves, this test deals with the polygon    */
+    /* only which is spanned up by the control points.                */
 
     first = outline->points;
     for ( contour = outline->contours;
           contour < outline->contours + outline->n_contours;
           contour++, first = last + 1 )
     {
-      FT_Pos contour_xmin = 32768L;
-      FT_Pos contour_xmax = -32768L;
-      FT_Pos contour_ymin = 32768L;
-      FT_Pos contour_ymax = -32768L;
+      FT_Pos  contour_xmin = 32768L;
+      FT_Pos  contour_xmax = -32768L;
+      FT_Pos  contour_ymin = 32768L;
+      FT_Pos  contour_ymax = -32768L;
+
 
       last = outline->points + *contour;
 
@@ -999,9 +1006,9 @@
     if ( xmin == 32768 )
       return FT_ORIENTATION_TRUETYPE;
 
-    ray_y[0] = (xmin_ymin*3 + xmin_ymax)   >> 2;
-    ray_y[1] = (xmin_ymin   + xmin_ymax)   >> 1;
-    ray_y[2] = (xmin_ymin   + xmin_ymax*3) >> 2;
+    ray_y[0] = ( xmin_ymin * 3 + xmin_ymax     ) >> 2;
+    ray_y[1] = ( xmin_ymin     + xmin_ymax     ) >> 1;
+    ray_y[2] = ( xmin_ymin     + xmin_ymax * 3 ) >> 2;
 
     for ( i = 0; i < 3; i++ )
     {
@@ -1011,6 +1018,7 @@
       FT_Vector*  left2;
       FT_Vector*  right1;
       FT_Vector*  right2;
+
 
     RedoRay:
       left_x  = 32768L;
@@ -1023,19 +1031,20 @@
       {
         FT_Pos  tmp_x;
 
+
         if ( point->y == ray_y[i] || prev->y == ray_y[i] )
         {
-          ++ ray_y[i];
+          ray_y[i]++;
           goto RedoRay;
         }
 
-        if ( (point->y < ray_y[i] && prev->y < ray_y[i]) ||
-             (point->y > ray_y[i] && prev->y > ray_y[i]) )
-        {
+        if ( ( point->y < ray_y[i] && prev->y < ray_y[i] ) ||
+             ( point->y > ray_y[i] && prev->y > ray_y[i] ) )
           continue;
-        }
 
-        tmp_x = FT_MulDiv( point->x - prev->x, ray_y[i] - prev->y, point->y - prev->y ) + prev->x;
+        tmp_x = FT_MulDiv( point->x - prev->x,
+                           ray_y[i] - prev->y,
+                           point->y - prev->y ) + prev->x;
 
         if ( tmp_x < left_x )
         {
@@ -1063,8 +1072,8 @@
       }
     }
 
-    if ( result[0] != FT_ORIENTATION_NONE &&
-         (result[0] == result[1] || result[0] == result[2]) )
+    if ( result[0] != FT_ORIENTATION_NONE                     &&
+         ( result[0] == result[1] || result[0] == result[2] ) )
       return result[0];
 
     if ( result[1] != FT_ORIENTATION_NONE && result[1] == result[2] )

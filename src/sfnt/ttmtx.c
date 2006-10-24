@@ -185,8 +185,8 @@
 
       for ( ; cur < limit; cur++ )
       {
-        cur->advance = FT_NEXT_USHORT(p);
-        cur->bearing = FT_NEXT_SHORT(p);
+        cur->advance = FT_NEXT_USHORT( p );
+        cur->bearing = FT_NEXT_SHORT( p );
       }
     }
 
@@ -198,7 +198,7 @@
 
 
       for ( ; cur < limit; cur++ )
-        *cur = FT_NEXT_SHORT(p);
+        *cur = FT_NEXT_SHORT( p );
 
       /* We fill up the missing left side bearings with the     */
       /* last valid value.  Since this will occur for buggy CJK */

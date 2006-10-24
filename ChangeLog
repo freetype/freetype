@@ -1,16 +1,40 @@
 2006-10-23  Zhe Su  <zsu@novell.com>
 
-        * src/base/ftoutln.c: re-implementing FT_Outline_Get_Orientation to
-        better deal with broken Asian fonts with funky glyphs with
-        self-intersections and other stupid things
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Re-implement to
+	better deal with broken Asian fonts with strange glyphs, having
+	self-intersections and other peculiarities.  The used algorithm is
+	based on the nonzero winding rule.
 
 2006-10-23  David Turner  <david@freetype.org>
 
-	* src/sfnt/ttmtx.c, src/cff/cffload.c: speeding up the CFF font
-	loader, with some large CFF fonts, FT_Open_Face is now 350% faster !
+	Speed up the CFF font loader.  With some large CFF fonts,
+	FT_Open_Face is now more than three times faster.
 
-	* src/pshinter/pshalgo.c: major speed improvements to the Postscript
-	hinter, more than 100% speed increase on my machine
+	* src/cff/cffload.c (cff_get_offset): Removed.
+	(cff_new_index): Inline functionality of `cff_get_offset'.
+	(cff_charset_compute_cids, cff_charset_free_cids): New functions.
+	(cff_charset_done): Call `cff_charset_free_cids'.
+	(cff_charset_load): Call `cff_charset_compute_cids'.
+	(cff_encoding_load) <Populate>: Ditto, to replace inefficient loop.
+
+	* src/sfnt/ttmtx.c (tt_face_load_hmtx): Replace calls to FT_GET_XXX
+	with FT_NEXT_XXX.
+
+
+	Speed up the Postscript hinter, with more than 100% speed increase
+	on my machine.
+
+	* src/pshinter/pshalgo.c (psh_corner_is_flat,
+	psh_corner_orientation): New functions.
+	(psh_glyph_compute_inflections): Merge loops for efficiency.
+	Use `psh_corner_orientation'.
+	(psh_glyph_init): Use `psh_corner_is_flat'.
+	(psh_hint_table_find_strong_point): Renamed to...
+	(psh_hint_table_find_strong_points): This.
+	Rewrite, adding argument to handle all points at once.
+	Update all callers.
+	(PSH_MAX_STRONG_INTERNAL): New macro.
+	(psh_glyph_interpolate_normal_points): Rewrite for efficiency.
 
 2006-10-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -124,7 +148,7 @@
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Remove arguments
 	`hmul' and `vmul'.
-	5A
+
 	Handle subpixel rendering.
 	Simplify function.
 	(ft_smooth_render_lcd): Use `FT_RENDER_MODE_LCD'.

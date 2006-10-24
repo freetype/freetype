@@ -1112,24 +1112,24 @@
 
       switch ( offsize )
       {
-        case 1:
-          for ( ; p < p_end; p++, poff++ )
-            poff[0] = p[0];
-          break;
+      case 1:
+        for ( ; p < p_end; p++, poff++ )
+          poff[0] = p[0];
+        break;
 
-        case 2:
-          for ( ; p < p_end; p += 2, poff++ )
-            poff[0] = FT_PEEK_USHORT(p);
-          break;
+      case 2:
+        for ( ; p < p_end; p += 2, poff++ )
+          poff[0] = FT_PEEK_USHORT( p );
+        break;
 
-        case 3:
-          for ( ; p < p_end; p += 3, poff++ )
-            poff[0] = FT_PEEK_OFF3(p);
-          break;
+      case 3:
+        for ( ; p < p_end; p += 3, poff++ )
+          poff[0] = FT_PEEK_OFF3( p );
+        break;
 
-        default:
-          for ( ; p < p_end; p += 4, poff++ )
-            poff[0] = FT_PEEK_ULONG(p);
+      default:
+        for ( ; p < p_end; p += 4, poff++ )
+          poff[0] = FT_PEEK_ULONG( p );
       }
 
       FT_FRAME_EXIT();
@@ -1503,9 +1503,10 @@
                             FT_UInt      num_glyphs,
                             FT_Memory    memory )
   {
-    FT_Error   error = 0;
+    FT_Error   error   = FT_Err_Ok;
     FT_UInt    i;
     FT_UShort  max_cid = 0;
+
 
     if ( charset->max_cid > 0 )
       goto Exit;
@@ -1524,7 +1525,7 @@
     charset->max_cid = max_cid;
 
   Exit:
-      return error;
+    return error;
   }
 
 
@@ -1543,13 +1544,13 @@
   {
     FT_Memory  memory = stream->memory;
 
+
     cff_charset_free_cids( charset, memory );
 
     FT_FREE( charset->sids );
     charset->format = 0;
     charset->offset = 0;
   }
-
 
 
   static FT_Error
@@ -1949,13 +1950,14 @@
         encoding->count = 0;
 
         error = cff_charset_compute_cids( charset, num_glyphs, stream->memory );
-        if (error)
+        if ( error )
           goto Exit;
 
         for ( j = 0; j < 256; j++ )
         {
           FT_UInt  sid = encoding->sids[j];
           FT_UInt  gid = 0;
+
 
           if ( sid )
             gid = charset->cids[sid];
@@ -1964,8 +1966,8 @@
           {
             encoding->codes[j] = (FT_UShort)gid;
 
-            if ( encoding->count < j+1 )
-              encoding->count = j+1;
+            if ( encoding->count < j + 1 )
+              encoding->count = j + 1;
           }
           else
           {
