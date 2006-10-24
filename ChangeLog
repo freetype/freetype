@@ -1,3 +1,10 @@
+2006-10-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_encoding_load): Remove unused variable.
+
+	* src/base/ftobjs.c (FT_Select_Charmap): Disallow FT_ENCODING_NONE
+	as argument.
+
 2006-10-23  Zhe Su  <zsu@novell.com>
 
 	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Re-implement to

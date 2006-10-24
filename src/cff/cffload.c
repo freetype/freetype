@@ -1924,9 +1924,6 @@
     }
     else
     {
-      FT_UInt i;
-
-
       /* We take into account the fact a CFF font can use a predefined */
       /* encoding without containing all of the glyphs encoded by this */
       /* encoding (see the note at the end of section 12 in the CFF    */
