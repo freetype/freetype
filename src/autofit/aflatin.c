@@ -949,6 +949,7 @@
     AF_Direction  up_dir;
     FT_Fixed      scale;
     FT_Pos        edge_distance_threshold;
+    FT_Pos        segment_length_threshold;
 
 
     axis->num_edges = 0;
@@ -958,6 +959,16 @@
 
     up_dir = ( dim == AF_DIMENSION_HORZ ) ? AF_DIR_UP
                                           : AF_DIR_RIGHT;
+
+    /* we want to ignore all segments that are less than 1.5
+     * pixels in length, to avoid many problems with serif
+     * fonts. we compute the corresponding threshold in font
+     * units
+     */
+    if ( dim == AF_DIMENSION_VERT )
+        segment_length_threshold = FT_DivFix( 64, hints->y_scale );
+    else
+        segment_length_threshold = 0;
 
     /*********************************************************************/
     /*                                                                   */
@@ -988,6 +999,8 @@
       AF_Edge  found = 0;
       FT_Int   ee;
 
+      if ( seg->max_coord - seg->min_coord < segment_length_threshold )
+        continue;
 
       /* look for an edge corresponding to the segment */
       for ( ee = 0; ee < axis->num_edges; ee++ )
@@ -1106,9 +1119,10 @@
 
           /* check for links -- if seg->serif is set, then seg->link must */
           /* be ignored                                                   */
-          is_serif = (FT_Bool)( seg->serif && seg->serif->edge != edge );
+          is_serif = (FT_Bool)( seg->serif && seg->serif->edge &&
+                                seg->serif->edge != edge );
 
-          if ( seg->link || is_serif )
+          if ( (seg->link && seg->link->edge != NULL) || is_serif )
           {
             AF_Edge     edge2;
             AF_Segment  seg2;
@@ -1700,7 +1714,7 @@
       /* this should not happen, but it's better to be safe */
       if ( edge2->blue_edge || edge2 < edge )
       {
-        AF_LOG(( "BLUE: ASSERT FAILED for edge %d\n", edge2-edges ));
+        AF_LOG(( "ASSERT FAILED for edge %d\n", edge2-edges ));
         af_latin_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;
         continue;
@@ -1774,7 +1788,11 @@
                    (AF_Edge_Flags)edge->flags,
                    (AF_Edge_Flags)edge2->flags );
 
-        if ( cur_len < 96 )
+        if ( edge2->flags & AF_EDGE_DONE )
+        {
+            edge->pos = edge2->pos - cur_len;
+        }
+        else if ( cur_len < 96 )
         {
           FT_Pos  u_off, d_off;
 

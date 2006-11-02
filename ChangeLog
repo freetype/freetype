@@ -1,5 +1,10 @@
 2006-11-02  David Turner  <david@freetype.org>
 
+	* src/autofit/aflatin.c: adding a few tweaks to better handle
+	serif fonts (we now ignore vertical segments that are less than
+	1 pixels in height, which get rids of *many* corner cases with
+	serifs)
+
 	* src/autofit/afhints.c, src/autofit/afmodule.c,
 	src/autofit/aftypes.h: adding more debug messages and fixing a small
 	bug in af_compute_direction which produced garbage by missing lots of
