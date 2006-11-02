@@ -1586,8 +1586,11 @@
                              (AF_Edge_Flags)base_edge->flags,
                              (AF_Edge_Flags)stem_edge->flags );
 
-
     stem_edge->pos = base_edge->pos + fitted_width;
+
+    AF_LOG(( "LINK: edge %d (opos=%.2f) linked to (%.2f), dist was %.2f now %.2f\n",
+             stem_edge-hints->axis[dim].edges, stem_edge->opos/64.0,
+             stem_edge->pos/64.0, dist/64., fitted_width/64. ));
   }
 
 
@@ -1629,7 +1632,7 @@
     /* we begin by aligning all stems relative to the blue zone */
     /* if needed -- that's only for horizontal edges            */
 
-    if ( dim == AF_DIMENSION_VERT )
+    if ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_BLUES(hints) )
     {
       for ( edge = edges; edge < edge_limit; edge++ )
       {
@@ -1658,6 +1661,8 @@
         if ( !edge1 )
           continue;
 
+        AF_LOG(( "BLUE: edge %d (opos=%.2f) snapped to (%.2f) was (%.2f)\n",
+                 edge1-edges, edge1->opos/64., blue->fit/64., edge1->pos/64.0 ));
         edge1->pos    = blue->fit;
         edge1->flags |= AF_EDGE_DONE;
 
@@ -1695,6 +1700,7 @@
       /* this should not happen, but it's better to be safe */
       if ( edge2->blue_edge || edge2 < edge )
       {
+        AF_LOG(( "BLUE: ASSERT FAILED for edge %d\n", edge2-edges ));
         af_latin_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;
         continue;
@@ -1745,6 +1751,8 @@
         else
           edge->pos = FT_PIX_ROUND( edge->opos );
 
+        AF_LOG(( "ANCHOR: edge %d (opos=%.2f) snapped to (%.2f)\n",
+                 edge-edges, edge->opos/64., edge->pos/64. ));
         anchor = edge;
 
         edge->flags |= AF_EDGE_DONE;
@@ -1796,6 +1804,9 @@
 
           edge->pos  = cur_pos1 - cur_len / 2;
           edge2->pos = cur_pos1 + cur_len / 2;
+          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f) snapped to (%.2f) and (%.2f)\n",
+                   edge-edges, edge->opos/64., edge2-edges, edge2->opos/64.,
+                   edge->pos/64., edge2->pos/64. ));
         }
         else
         {
@@ -1820,13 +1831,21 @@
 
           edge->pos  = ( delta1 < delta2 ) ? cur_pos1 : cur_pos2;
           edge2->pos = edge->pos + cur_len;
+
+          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f) snapped to (%.2f) and (%.2f)\n",
+                   edge-edges, edge->opos/64., edge2-edges, edge2->opos/64.,
+                   edge->pos/64., edge2->pos/64. ));
         }
 
         edge->flags  |= AF_EDGE_DONE;
         edge2->flags |= AF_EDGE_DONE;
 
         if ( edge > edges && edge->pos < edge[-1].pos )
+        {
+          AF_LOG(( "BOUND: %d (pos=%.2f) to (%.2f)\n", edge-edges,
+                   edge->pos/64., edge[-1].pos/64. ));
           edge->pos = edge[-1].pos;
+        }
       }
     }
 

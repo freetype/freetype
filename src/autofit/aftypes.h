@@ -63,6 +63,8 @@ FT_BEGIN_HEADER
 
 extern int  _af_debug_disable_horz_hints;
 extern int  _af_debug_disable_vert_hints;
+extern int  _af_debug_disable_blue_hints;
+extern void*  _af_debug_hints;
 
 #else /* !AF_DEBUG */
 

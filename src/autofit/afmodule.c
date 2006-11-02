@@ -22,6 +22,8 @@
 #ifdef AF_DEBUG
   int  _af_debug_disable_horz_hints;
   int  _af_debug_disable_vert_hints;
+  int  _af_debug_disable_blue_hints;
+  void*  _af_debug_hints;
 #endif
 
 #include FT_INTERNAL_OBJECTS_H

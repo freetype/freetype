@@ -311,7 +311,7 @@
     }
 
     ss *= 12;
-    if ( ll <= FT_ABS( ss ) )
+    if ( FT_ABS(ll) <= FT_ABS(ss) )
       dir = AF_DIR_NONE;
 
     return dir;

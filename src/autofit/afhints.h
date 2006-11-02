@@ -227,6 +227,8 @@ FT_BEGIN_HEADER
 #define AF_HINTS_DO_ADVANCE( h )                                \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_ADVANCE )
 
+#define AF_HINTS_DO_BLUES( h )    ( !_af_debug_disable_blue_hints )
+
 #else /* !AF_DEBUG */
 
 #define AF_HINTS_DO_HORIZONTAL( h )                                \
@@ -237,6 +239,8 @@ FT_BEGIN_HEADER
 
 #define AF_HINTS_DO_ADVANCE( h )                                \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_ADVANCE )
+
+#define AF_HINTS_DO_BLUES( h )   1
 
 #endif /* !AF_DEBUG */
 

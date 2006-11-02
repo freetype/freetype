@@ -30,7 +30,9 @@
     FT_ZERO( loader );
 
     af_glyph_hints_init( &loader->hints, memory );
-
+#ifdef AF_DEBUG
+    _af_debug_hints = &loader->hints;
+#endif
     return FT_GlyphLoader_New( memory, &loader->gloader );
   }
 
@@ -71,6 +73,9 @@
     loader->face    = NULL;
     loader->globals = NULL;
 
+#ifdef AF_DEBUG
+    _af_debug_hints = NULL;
+#endif
     FT_GlyphLoader_Done( loader->gloader );
     loader->gloader = NULL;
   }
