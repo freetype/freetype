@@ -54,13 +54,14 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 #define xxAF_USE_WARPER  /* only define to use warp hinting */
-#define xxAF_DEBUG
+#define AF_DEBUG
 
 #ifdef AF_DEBUG
 
 #  include <stdio.h>
-#  define AF_LOG( x )  printf x
+#  define AF_LOG( x )  do { if (_af_debug) printf x ; } while (0)
 
+extern int  _af_debug;
 extern int  _af_debug_disable_horz_hints;
 extern int  _af_debug_disable_vert_hints;
 extern int  _af_debug_disable_blue_hints;
@@ -139,30 +140,6 @@ extern void*  _af_debug_hints;
   af_angle_diff( AF_Angle  angle1,
                  AF_Angle  angle2 );
 #endif /* 0 */
-
-
-  /*
-   *  Return TRUE if a corner is flat or nearly flat.  This is equivalent to
-   *  saying that the angle difference between the `in' and `out' vectors is
-   *  very small.
-   */
-  FT_LOCAL( FT_Int )
-  af_corner_is_flat( FT_Pos  x_in,
-                     FT_Pos  y_in,
-                     FT_Pos  x_out,
-                     FT_Pos  y_out );
-
-  /*
-   *  Return -1, 0, or +1, depending on the orientation of a given corner.
-   *  We use the Cartesian coordinate system, with positive vertical values
-   *  going upwards.  The function returns +1 when the corner turns to the
-   *  left, -1 to the right, and 0 for undecided.
-   */
-  FT_LOCAL( FT_Int )
-  af_corner_orientation( FT_Pos  x_in,
-                         FT_Pos  y_in,
-                         FT_Pos  x_out,
-                         FT_Pos  y_out );
 
 
 #define AF_ANGLE_DIFF( result, angle1, angle2 ) \

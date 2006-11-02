@@ -110,6 +110,28 @@ FT_BEGIN_HEADER
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
+  /*
+   *  Return -1, 0, or +1, depending on the orientation of a given corner.
+   *  We use the Cartesian coordinate system, with positive vertical values
+   *  going upwards.  The function returns +1 when the corner turns to the
+   *  left, -1 to the right, and 0 for undecided.
+   */
+  FT_BASE( FT_Int )
+  ft_corner_orientation( FT_Pos   in_x,
+                         FT_Pos   in_y,
+                         FT_Pos   out_x,
+                         FT_Pos   out_y );
+
+  /*
+   *  Return TRUE if a corner is flat or nearly flat.  This is equivalent to
+   *  saying that the angle difference between the `in' and `out' vectors is
+   *  very small.
+   */
+  FT_BASE( FT_Int )
+  ft_corner_is_flat( FT_Pos   in_x,
+                     FT_Pos   in_y,
+                     FT_Pos   out_x,
+                     FT_Pos   out_y );
 
 #define INT_TO_F26DOT6( x )    ( (FT_Long)(x) << 6  )
 #define INT_TO_F2DOT14( x )    ( (FT_Long)(x) << 14 )

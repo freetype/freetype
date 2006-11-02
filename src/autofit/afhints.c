@@ -18,7 +18,7 @@
 
 #include "afhints.h"
 #include "aferrors.h"
-
+#include FT_INTERNAL_CALC_H
 
   FT_LOCAL_DEF( FT_Error )
   af_axis_hints_new_segment( AF_AxisHints  axis,
@@ -401,7 +401,7 @@
 
         } while ( out_x == 0 && out_y == 0 );
 
-        orient_prev = af_corner_orientation( in_x, in_y, out_x, out_y );
+        orient_prev = ft_corner_orientation( in_x, in_y, out_x, out_y );
 
       } while ( orient_prev == 0 );
 
@@ -429,7 +429,7 @@
 
           } while ( out_x == 0 && out_y == 0 );
 
-          orient_cur = af_corner_orientation( in_x, in_y, out_x, out_y );
+          orient_cur = ft_corner_orientation( in_x, in_y, out_x, out_y );
 
         } while ( orient_cur == 0 );
 
@@ -824,7 +824,7 @@
             if ( point->out_dir != AF_DIR_NONE )
               goto Is_Weak_Point;
 
-            if ( af_corner_is_flat( in_x, in_y, out_x, out_y ) )
+            if ( ft_corner_is_flat( in_x, in_y, out_x, out_y ) )
               goto Is_Weak_Point;
 
 #else /* old code */

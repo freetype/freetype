@@ -20,6 +20,7 @@
 #include "afloader.h"
 
 #ifdef AF_DEBUG
+  int  _af_debug;
   int  _af_debug_disable_horz_hints;
   int  _af_debug_disable_vert_hints;
   int  _af_debug_disable_blue_hints;

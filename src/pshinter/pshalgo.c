@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
 #include "pshalgo.h"
 
 #include "pshnterr.h"
@@ -879,6 +880,12 @@
   /*************************************************************************/
   /*************************************************************************/
 
+#if 1
+
+#define  psh_corner_is_flat      ft_corner_is_flat
+#define  psh_corner_orientation  ft_corner_orientation
+
+#else
   FT_LOCAL_DEF( FT_Int )
   psh_corner_is_flat( FT_Pos  x_in,
                       FT_Pos  y_in,
@@ -915,9 +922,6 @@
 
     return ( d_in + d_out - d_corner ) < ( d_corner >> 4 );
   }
-
-
-#ifdef COMPUTE_INFLEXS
 
   static FT_Int
   psh_corner_orientation( FT_Pos  in_x,
@@ -970,6 +974,9 @@
     return result;
   }
 
+#endif
+
+#ifdef COMPUTE_INFLEXS
 
   /* compute all inflex points in a given glyph */
   static void

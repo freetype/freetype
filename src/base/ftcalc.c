@@ -302,12 +302,11 @@
             FT_Int64*  y,
             FT_Int64  *z )
   {
-    register FT_UInt32  lo, hi, max;
+    register FT_UInt32  lo, hi;
 
 
-    max = x->lo > y->lo ? x->lo : y->lo;
     lo  = x->lo + y->lo;
-    hi  = x->hi + y->hi + ( lo < max );
+    hi  = x->hi + y->hi + ( lo < x->lo );
 
     z->lo = lo;
     z->hi = hi;
@@ -685,4 +684,111 @@
   }
 
 
+
+  FT_BASE_DEF( FT_Int )
+  ft_corner_orientation( FT_Pos   in_x,
+                         FT_Pos   in_y,
+                         FT_Pos   out_x,
+                         FT_Pos   out_y )
+  {
+    FT_Int  result;
+
+
+    /* deal with the trivial cases quickly */
+    if ( in_y == 0 )
+    {
+      if ( in_x >= 0 )
+        result = out_y;
+      else
+        result = -out_y;
+    }
+    else if ( in_x == 0 )
+    {
+      if ( in_y >= 0 )
+        result = -out_x;
+      else
+        result = out_x;
+    }
+    else if ( out_y == 0 )
+    {
+      if ( out_x >= 0 )
+        result = in_y;
+      else
+        result = -in_y;
+    }
+    else if ( out_x == 0 )
+    {
+      if ( out_y >= 0 )
+        result = -in_x;
+      else
+        result =  in_x;
+    }
+    else /* general case */
+    {
+#ifdef FT_LONG64
+      FT_Int64  delta = (long long)in_x * out_y - (long long)in_y * out_x;
+
+      if ( delta == 0 )
+        result = 0;
+      else
+        result = 1 - 2 * ( delta < 0 );
+#else
+      FT_Int64   z1, z2;
+
+      ft_multo64( in_x, out_y, &z1 );
+      ft_multo64( in_y, out_x, &z2 );
+
+      if ( z1.hi > z2.hi )
+        result = +1;
+      else if ( z1.hi < z2.hi )
+        result = -1;
+      else if ( z1.lo > z2.lo )
+        result = +1;
+      else if ( z1.lo < z2.lo )
+        result = -1;
+      else
+        result = 0;
+#endif
+    }
+
+    return result;
+  }
+
+
+  FT_BASE_DEF( FT_Int )
+  ft_corner_is_flat( FT_Pos  in_x,
+                     FT_Pos  in_y,
+                     FT_Pos  out_x,
+                     FT_Pos  out_y )
+  {
+    FT_Pos  ax = in_x;
+    FT_Pos  ay = in_y;
+
+    FT_Pos  d_in, d_out, d_corner;
+
+
+    if ( ax < 0 )
+      ax = -ax;
+    if ( ay < 0 )
+      ay = -ay;
+    d_in = ax + ay;
+
+    ax = out_x;
+    if ( ax < 0 )
+      ax = -ax;
+    ay = out_y;
+    if ( ay < 0 )
+      ay = -ay;
+    d_out = ax + ay;
+
+    ax = out_x + in_x;
+    if ( ax < 0 )
+      ax = -ax;
+    ay = out_y + in_y;
+    if ( ay < 0 )
+      ay = -ay;
+    d_corner = ax + ay;
+
+    return ( d_in + d_out - d_corner ) < ( d_corner >> 4 );
+  }
 /* END */
