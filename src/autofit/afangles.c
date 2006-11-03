@@ -19,7 +19,9 @@
 
 #include "aftypes.h"
 
+
 #if 0
+
   FT_LOCAL_DEF( FT_Int )
   af_corner_is_flat( FT_Pos  x_in,
                      FT_Pos  y_in,
@@ -74,7 +76,9 @@
     else
       return 1 - 2 * ( delta < 0 );
   }
+
 #endif
+
 
   /*
    *  We are not using `af_angle_atan' anymore, but we keep the source

@@ -960,10 +960,10 @@
     up_dir = ( dim == AF_DIMENSION_HORZ ) ? AF_DIR_UP
                                           : AF_DIR_RIGHT;
 
-    /* we want to ignore all segments that are less than 1.5
-     * pixels in length, to avoid many problems with serif
-     * fonts. we compute the corresponding threshold in font
-     * units
+    /*
+     *  We ignore all segments that are less than 1.5 pixels in length,
+     *  to avoid many problems with serif fonts.  We compute the
+     *  corresponding threshold in font units.
      */
     if ( dim == AF_DIMENSION_VERT )
         segment_length_threshold = FT_DivFix( 64, hints->y_scale );
@@ -998,6 +998,7 @@
     {
       AF_Edge  found = 0;
       FT_Int   ee;
+
 
       if ( seg->max_coord - seg->min_coord < segment_length_threshold )
         continue;
@@ -1119,10 +1120,11 @@
 
           /* check for links -- if seg->serif is set, then seg->link must */
           /* be ignored                                                   */
-          is_serif = (FT_Bool)( seg->serif && seg->serif->edge &&
+          is_serif = (FT_Bool)( seg->serif               &&
+                                seg->serif->edge         &&
                                 seg->serif->edge != edge );
 
-          if ( (seg->link && seg->link->edge != NULL) || is_serif )
+          if ( ( seg->link && seg->link->edge != NULL ) || is_serif )
           {
             AF_Edge     edge2;
             AF_Segment  seg2;
@@ -1600,11 +1602,13 @@
                              (AF_Edge_Flags)base_edge->flags,
                              (AF_Edge_Flags)stem_edge->flags );
 
+
     stem_edge->pos = base_edge->pos + fitted_width;
 
-    AF_LOG(( "LINK: edge %d (opos=%.2f) linked to (%.2f), dist was %.2f now %.2f\n",
-             stem_edge-hints->axis[dim].edges, stem_edge->opos/64.0,
-             stem_edge->pos/64.0, dist/64., fitted_width/64. ));
+    AF_LOG(( "LINK: edge %d (opos=%.2f) linked to (%.2f), "
+             "dist was %.2f, now %.2f\n",
+             stem_edge-hints->axis[dim].edges, stem_edge->opos / 64.0,
+             stem_edge->pos / 64.0, dist / 64.0, fitted_width / 64.0 ));
   }
 
 
@@ -1646,7 +1650,7 @@
     /* we begin by aligning all stems relative to the blue zone */
     /* if needed -- that's only for horizontal edges            */
 
-    if ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_BLUES(hints) )
+    if ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_BLUES( hints ) )
     {
       for ( edge = edges; edge < edge_limit; edge++ )
       {
@@ -1675,8 +1679,11 @@
         if ( !edge1 )
           continue;
 
-        AF_LOG(( "BLUE: edge %d (opos=%.2f) snapped to (%.2f) was (%.2f)\n",
-                 edge1-edges, edge1->opos/64., blue->fit/64., edge1->pos/64.0 ));
+        AF_LOG(( "BLUE: edge %d (opos=%.2f) snapped to (%.2f), "
+                 "was (%.2f)\n",
+                 edge1-edges, edge1->opos / 64.0, blue->fit / 64.0,
+                 edge1->pos / 64.0 ));
+
         edge1->pos    = blue->fit;
         edge1->flags |= AF_EDGE_DONE;
 
@@ -1714,7 +1721,8 @@
       /* this should not happen, but it's better to be safe */
       if ( edge2->blue_edge || edge2 < edge )
       {
-        AF_LOG(( "ASSERT FAILED for edge %d\n", edge2-edges ));
+        AF_LOG(( "ASSERTION FAILED for edge %d\n", edge2-edges ));
+
         af_latin_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;
         continue;
@@ -1766,7 +1774,7 @@
           edge->pos = FT_PIX_ROUND( edge->opos );
 
         AF_LOG(( "ANCHOR: edge %d (opos=%.2f) snapped to (%.2f)\n",
-                 edge-edges, edge->opos/64., edge->pos/64. ));
+                 edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
         anchor = edge;
 
         edge->flags |= AF_EDGE_DONE;
@@ -1789,9 +1797,8 @@
                    (AF_Edge_Flags)edge2->flags );
 
         if ( edge2->flags & AF_EDGE_DONE )
-        {
-            edge->pos = edge2->pos - cur_len;
-        }
+          edge->pos = edge2->pos - cur_len;
+
         else if ( cur_len < 96 )
         {
           FT_Pos  u_off, d_off;
@@ -1822,10 +1829,14 @@
 
           edge->pos  = cur_pos1 - cur_len / 2;
           edge2->pos = cur_pos1 + cur_len / 2;
-          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f) snapped to (%.2f) and (%.2f)\n",
-                   edge-edges, edge->opos/64., edge2-edges, edge2->opos/64.,
-                   edge->pos/64., edge2->pos/64. ));
+
+          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f) "
+                   "snapped to (%.2f) and (%.2f)\n",
+                   edge-edges, edge->opos / 64.0,
+                   edge2-edges, edge2->opos / 64.0,
+                   edge->pos / 64.0, edge2->pos / 64.0 ));
         }
+
         else
         {
           org_pos    = anchor->pos + ( edge->opos - anchor->opos );
@@ -1850,9 +1861,11 @@
           edge->pos  = ( delta1 < delta2 ) ? cur_pos1 : cur_pos2;
           edge2->pos = edge->pos + cur_len;
 
-          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f) snapped to (%.2f) and (%.2f)\n",
-                   edge-edges, edge->opos/64., edge2-edges, edge2->opos/64.,
-                   edge->pos/64., edge2->pos/64. ));
+          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f) "
+                   "snapped to (%.2f) and (%.2f)\n",
+                   edge-edges, edge->opos / 64.0,
+                   edge2-edges, edge2->opos / 64.0,
+                   edge->pos / 64.0, edge2->pos / 64.0 ));
         }
 
         edge->flags  |= AF_EDGE_DONE;
@@ -1860,8 +1873,8 @@
 
         if ( edge > edges && edge->pos < edge[-1].pos )
         {
-          AF_LOG(( "BOUND: %d (pos=%.2f) to (%.2f)\n", edge-edges,
-                   edge->pos/64., edge[-1].pos/64. ));
+          AF_LOG(( "BOUND: %d (pos=%.2f) to (%.2f)\n",
+                   edge-edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
           edge->pos = edge[-1].pos;
         }
       }

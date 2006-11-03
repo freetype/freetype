@@ -228,7 +228,7 @@
   }
 
 
-#else /* FT_LONG64 */
+#else /* !FT_LONG64 */
 
 
   static void
@@ -305,8 +305,8 @@
     register FT_UInt32  lo, hi;
 
 
-    lo  = x->lo + y->lo;
-    hi  = x->hi + y->hi + ( lo < x->lo );
+    lo = x->lo + y->lo;
+    hi = x->hi + y->hi + ( lo < x->lo );
 
     z->lo = lo;
     z->hi = hi;
@@ -684,12 +684,13 @@
   }
 
 
+  /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Int )
-  ft_corner_orientation( FT_Pos   in_x,
-                         FT_Pos   in_y,
-                         FT_Pos   out_x,
-                         FT_Pos   out_y )
+  ft_corner_orientation( FT_Pos  in_x,
+                         FT_Pos  in_y,
+                         FT_Pos  out_x,
+                         FT_Pos  out_y )
   {
     FT_Int  result;
 
@@ -725,15 +726,21 @@
     }
     else /* general case */
     {
+
 #ifdef FT_LONG64
-      FT_Int64  delta = (long long)in_x * out_y - (long long)in_y * out_x;
+
+      FT_Int64  delta = (FT_Int64)in_x * out_y - (FT_Int64)in_y * out_x;
+
 
       if ( delta == 0 )
         result = 0;
       else
         result = 1 - 2 * ( delta < 0 );
+
 #else
-      FT_Int64   z1, z2;
+
+      FT_Int64  z1, z2;
+
 
       ft_multo64( in_x, out_y, &z1 );
       ft_multo64( in_y, out_x, &z2 );
@@ -748,12 +755,15 @@
         result = -1;
       else
         result = 0;
+
 #endif
     }
 
     return result;
   }
 
+
+  /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Int )
   ft_corner_is_flat( FT_Pos  in_x,
@@ -791,4 +801,6 @@
 
     return ( d_in + d_out - d_corner ) < ( d_corner >> 4 );
   }
+
+
 /* END */

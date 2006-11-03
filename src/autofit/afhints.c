@@ -20,6 +20,7 @@
 #include "aferrors.h"
 #include FT_INTERNAL_CALC_H
 
+
   FT_LOCAL_DEF( FT_Error )
   af_axis_hints_new_segment( AF_AxisHints  axis,
                              FT_Memory     memory,

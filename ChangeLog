@@ -1,14 +1,53 @@
+2006-11-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftcalc.c: Don't use `long long' but `FT_Int64'.
+
 2006-11-02  David Turner  <david@freetype.org>
 
-	* src/autofit/aflatin.c: adding a few tweaks to better handle
-	serif fonts (we now ignore vertical segments that are less than
-	1 pixels in height, which get rids of *many* corner cases with
-	serifs)
+	Add a few tweaks to better handle serif fonts.
+	Add more debugging messages.
 
-	* src/autofit/afhints.c, src/autofit/afmodule.c,
-	src/autofit/aftypes.h: adding more debug messages and fixing a small
-	bug in af_compute_direction which produced garbage by missing lots of
-	segments
+	* src/autofit/aflatin.c (af_latin_hints_compute_edges): Ignore
+	segments that are less than 1.5 pixels high.  This gets rid of
+	*many* corner cases with serifs.
+	(af_latin_align_linked_edge): Add logging message.
+	(af_latin_hint_edges): Use AF_HINTS_DO_BLUES.
+	Add logging messages.
+	Handle AF_EDGE_FLAG flag specially.
+
+	* src/autofit/afmodule.c [AF_DEBUG]: Add _af_debug,
+	_af_debug_disable_blue_hints, and _af_debug_hints variables.
+
+	* src/autofit/aftypes.h (AF_LOG) [AF_DEBUG]: Use _af_debug.
+	Update external declarations.
+	(af_corner_orientation, af_corner_is_flat): Replaced by...
+
+	* include/freetype/internal/ftcalc.h (ft_corner_orientation,
+	ft_corner_is_flat): These declarations.
+
+	* src/autofit/afangles.c (af_corner_orientation, af_corner_is_flat):
+	Comment out.  Replaced by...
+
+	* src/base/ftcalc.h (ft_corner_orientation, ft_corner_is_flat):
+	These functions.  Update all callers.
+	(FT_Add64) [!FT_LONG64]: Simplify.
+
+	* src/autofit/afhints.c: Include FT_INTERNAL_CALC_H.
+	(af_direction_compute): Add a missing FT_ABS call.  This bug caused
+	production of garbage by missing lots of segments.
+
+	* src/autofit/afhints.h (AF_HINTS_DO_BLUES): New macro.
+
+	* src/autofit/afloader.c (af_loader_init, af_loader_done)
+	[AF_DEBUG]: Set _af_debug_hints.
+
+
+	* src/pshinter/pshalgo.c: Include FT_INTERNAL_CALC_H.
+	(psh_corner_is_flat, psh_corner_orientation): Use ft_corner_is_flat
+	and ft_corner_orientation.
+
+
+	* src/gzip/inftrees.c (huft_build): Remove compiler warning.
 
 2006-10-24  Werner Lemberg  <wl@gnu.org>
 

@@ -886,6 +886,7 @@
 #define  psh_corner_orientation  ft_corner_orientation
 
 #else
+
   FT_LOCAL_DEF( FT_Int )
   psh_corner_is_flat( FT_Pos  x_in,
                       FT_Pos  y_in,
@@ -974,7 +975,8 @@
     return result;
   }
 
-#endif
+#endif /* !1 */
+
 
 #ifdef COMPUTE_INFLEXS
 

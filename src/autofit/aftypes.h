@@ -58,18 +58,18 @@ FT_BEGIN_HEADER
 
 #ifdef AF_DEBUG
 
-#  include <stdio.h>
-#  define AF_LOG( x )  do { if (_af_debug) printf x ; } while (0)
+#include <stdio.h>
+#define AF_LOG( x )  do { if ( _af_debug ) printf x; } while ( 0 )
 
-extern int  _af_debug;
-extern int  _af_debug_disable_horz_hints;
-extern int  _af_debug_disable_vert_hints;
-extern int  _af_debug_disable_blue_hints;
+extern int    _af_debug;
+extern int    _af_debug_disable_horz_hints;
+extern int    _af_debug_disable_vert_hints;
+extern int    _af_debug_disable_blue_hints;
 extern void*  _af_debug_hints;
 
 #else /* !AF_DEBUG */
 
-#  define AF_LOG( x )  do ; while ( 0 )        /* nothing */
+#define AF_LOG( x )  do ; while ( 0 )        /* nothing */
 
 #endif /* !AF_DEBUG */
 
