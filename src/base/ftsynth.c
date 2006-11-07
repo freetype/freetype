@@ -137,10 +137,10 @@
         return;
     }
 
-    if (slot->advance.x)
+    if ( slot->advance.x )
       slot->advance.x += xstr;
 
-    if (slot->advance.y)
+    if ( slot->advance.y )
       slot->advance.y += ystr;
 
     slot->metrics.width        += xstr;
