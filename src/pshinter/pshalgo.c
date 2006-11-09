@@ -1012,7 +1012,7 @@
         in_x = end->org_u - start->org_u;
         in_y = end->org_v - start->org_v;
 
-      } while ( in_x == 0 && out_x == 0 );
+      } while ( in_x == 0 && in_y == 0 );
 
       /* extend the segment start whenever possible */
       before = start;
