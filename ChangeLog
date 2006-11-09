@@ -1,7 +1,7 @@
 2006-11-09  David Turner  <david@freetype.org>
 
-        * src/pshinter/pshalgo.c (psh_glyph_compute_inflections): fixed
-        a stupid typo which created a variable-used-before-initialized bug
+	* src/pshinter/pshalgo.c (psh_glyph_compute_inflections): Fix
+	typo which created a variable-used-before-initialized bug.
 
 2006-11-07  Zhe Su  <james.su@gmail.com>
 
