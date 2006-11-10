@@ -29,6 +29,7 @@
 #include <ft2build.h>
 #include FT_RENDER_H
 #include FT_SIZES_H
+#include FT_LCD_FILTER_H
 #include FT_INTERNAL_MEMORY_H
 #include FT_INTERNAL_GLYPH_LOADER_H
 #include FT_INTERNAL_DRIVER_H
@@ -637,7 +638,7 @@ FT_BEGIN_HEADER
 
   typedef void  (*FT_Bitmap_LcdFilterFunc)( FT_Bitmap*      bitmap,
                                             FT_Render_Mode  render_mode,
-                                            FT_Byte*        weights );
+                                            FT_Library      library );
 
 
   /*************************************************************************/
@@ -714,8 +715,10 @@ FT_BEGIN_HEADER
     FT_DebugHook_Func  debug_hooks[4];
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    FT_Byte                  lcd_filter_weights[5];
-    FT_Bitmap_LcdFilterFunc  lcd_filter;
+    FT_LcdFilter             lcd_filter;
+    FT_Int                   lcd_extra;        /* number of extra pixels */
+    FT_Byte                  lcd_weights[7];   /* filter weights, if any */
+    FT_Bitmap_LcdFilterFunc  lcd_filter_func;  /* filtering callback     */
 #endif
 
   } FT_LibraryRec;

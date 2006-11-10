@@ -1,3 +1,16 @@
+2006-11-10  David Turner  <david@freetype.org>
+
+       * include/freetype/ftlcdfil.h, include/internal/ftobjs.h,
+       src/base/ftlcdfilt.c, src/smooth/ftsmooth.c: API change for
+       the LCD filter, the FT_LcdFilter value is a enum describing
+       which filter to apply, new values FT_LCD_FILTER_LIGHT and
+       FT_LCD_FILTER_LEGACY (the latter implements the LibXft original
+       algorithm which produces incredible color fringes for everything
+       except very-well hinted text)
+
+       * src/autofit/aflatin.c: various tiny improvements that drastically
+       improve the handling of serif fonts and of LCD/LCD_V hinting modes.
+
 2006-11-09  David Turner  <david@freetype.org>
 
 	* src/pshinter/pshalgo.c (psh_glyph_compute_inflections): Fix

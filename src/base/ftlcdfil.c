@@ -24,14 +24,17 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
-  /* The smooth rasterizer invokes this function. */
+#define  USE_LEGACY
+
+  /* FIR filter used by the default and light filters */
   static void
-  _ft_lcd_filter( FT_Bitmap*      bitmap,
-                  FT_Render_Mode  mode,
-                  FT_Byte*        weights )
+  _ft_lcd_filter_fir( FT_Bitmap*      bitmap,
+                      FT_Render_Mode  mode,
+                      FT_Library      library )
   {
-    FT_UInt  width  = (FT_UInt)bitmap->width;
-    FT_UInt  height = (FT_UInt)bitmap->rows;
+    FT_Byte* weights = library->lcd_weights;
+    FT_UInt  width   = (FT_UInt)bitmap->width;
+    FT_UInt  height  = (FT_UInt)bitmap->rows;
 
 
     /* horizontal in-place FIR filter */
@@ -155,39 +158,160 @@
   }
 
 
-  FT_EXPORT( FT_Error )
-  FT_Library_SetLcdFilter( FT_Library      library,
-                           const FT_Byte*  filter_weights )
+#ifdef USE_LEGACY
+  /* FIR filter used by the default and light filters */
+  static void
+  _ft_lcd_filter_legacy( FT_Bitmap*      bitmap,
+                         FT_Render_Mode  mode,
+                         FT_Library      library )
   {
-    static const FT_Byte  default_filter[5] = { 0x10, 0x40, 0x70, 0x40, 0x10 };
+    FT_UInt  width   = (FT_UInt)bitmap->width;
+    FT_UInt  height  = (FT_UInt)bitmap->rows;
+    FT_Int   pitch   = bitmap->pitch;
 
+    static const int    filters[3][3] =
+    {
+      { 65538*9/13, 65538*1/6,  65538*1/13 },
+      { 65538*3/13, 65538*4/6,  65538*3/13 },
+      { 65538*1/13, 65538*1/6,  65538*9/13 }
+    };
+
+    FT_UNUSED(library);
+
+    /* horizontal in-place FIR filter */
+    if ( mode == FT_RENDER_MODE_LCD && width >= 3 )
+    {
+      FT_Byte*  line = bitmap->buffer;
+
+
+      for ( ; height > 0; height--, line += pitch )
+      {
+        FT_UInt  xx;
+
+        for ( xx = 0; xx < width; xx += 3 )
+        {
+          FT_UInt  r = 0;
+          FT_UInt  g = 0;
+          FT_UInt  b = 0;
+          FT_UInt  p;
+
+          p  = line[xx];
+          r += filters[0][0]*p;
+          g += filters[0][1]*p;
+          b += filters[0][2]*p;
+
+          p = line[xx+1];
+          r += filters[1][0]*p;
+          g += filters[1][1]*p;
+          b += filters[1][2]*p;
+
+          p  = line[xx+2];
+          r += filters[2][0]*p;
+          g += filters[2][1]*p;
+          b += filters[2][2]*p;
+
+          line[xx]   = (FT_Byte)( r / 65536 );
+          line[xx+1] = (FT_Byte)( g / 65536 );
+          line[xx+2] = (FT_Byte)( b / 65536 );
+        }
+      }
+    }
+    else if ( mode == FT_RENDER_MODE_LCD_V && height >= 3 )
+    {
+      FT_Byte*   column = bitmap->buffer;
+
+      for ( ; width > 0; width--, column++ )
+      {
+        FT_Byte*   col     = column;
+        FT_Byte*   col_end = col + height*pitch;
+
+        for ( ; col < col_end; col += 3*pitch )
+        {
+          FT_UInt  r = 0;
+          FT_UInt  g = 0;
+          FT_UInt  b = 0;
+          FT_UInt  p;
+
+          p  = col[0];
+          r += filters[0][0]*p;
+          g += filters[0][1]*p;
+          b += filters[0][2]*p;
+
+          p = col[pitch];
+          r += filters[1][0]*p;
+          g += filters[1][1]*p;
+          b += filters[1][2]*p;
+
+          p  = col[pitch*2];
+          r += filters[2][0]*p;
+          g += filters[2][1]*p;
+          b += filters[2][2]*p;
+
+          col[0]       = (FT_Byte)( r / 65536 );
+          col[pitch]   = (FT_Byte)( g / 65536 );
+          col[2*pitch] = (FT_Byte)( b / 65536 );
+        }
+      }
+    }
+  }
+#endif /* USE_LEGACY */
+
+  FT_EXPORT( FT_Error )
+  FT_Library_SetLcdFilter( FT_Library     library,
+                           FT_LcdFilter   filter )
+  {
+    static const FT_Byte  light_filter[5]   = { 0, 85, 86, 85, 0 };
+    static const FT_Byte  default_filter[5] = { 0x10, 0x40, 0x70, 0x40, 0x10 };
 
     if ( library == NULL )
       return FT_Err_Invalid_Argument;
 
-    if ( filter_weights == FT_LCD_FILTER_NONE )
+    switch ( filter )
     {
-      library->lcd_filter = NULL;
-      return 0;
+        case FT_LCD_FILTER_NONE:
+            library->lcd_filter_func = NULL;
+            library->lcd_extra       = 0;
+            break;
+
+        case FT_LCD_FILTER_DEFAULT:
+#if 0  /* DEBUGGING */
+            library->lcd_filter_func = _ft_lcd_filter_legacy;
+            library->lcd_extra       = 0;
+#else
+            memcpy( library->lcd_weights, default_filter, 5 );
+            library->lcd_filter_func = _ft_lcd_filter_fir;
+            library->lcd_extra       = 2;
+#endif
+            break;
+
+        case FT_LCD_FILTER_LIGHT:
+            memcpy( library->lcd_weights, light_filter, 5 );
+            library->lcd_filter_func = _ft_lcd_filter_fir;
+            library->lcd_extra       = 2;
+            break;
+
+#ifdef USE_LEGACY
+        case FT_LCD_FILTER_LEGACY:
+            library->lcd_filter_func = _ft_lcd_filter_legacy;
+            library->lcd_extra       = 0;
+            break;
+#endif
+        default:
+            return FT_Err_Invalid_Argument;
     }
 
-    if ( filter_weights == FT_LCD_FILTER_DEFAULT )
-      filter_weights = default_filter;
-
-    memcpy( library->lcd_filter_weights, filter_weights, 5 );
-    library->lcd_filter = _ft_lcd_filter;
-
+    library->lcd_filter = filter;
     return 0;
   }
 
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
   FT_EXPORT( FT_Error )
-  FT_Library_SetLcdFilter( FT_Library      library,
-                           const FT_Byte*  filter_weights )
+  FT_Library_SetLcdFilter( FT_Library    library,
+                           FT_LcdFilter  filter )
   {
     FT_UNUSED( library );
-    FT_UNUSED( filter_weights );
+    FT_UNUSED( filter );
 
     return FT_Err_Unimplemented_Feature;
   }

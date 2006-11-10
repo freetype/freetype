@@ -965,7 +965,7 @@
      *  to avoid many problems with serif fonts.  We compute the
      *  corresponding threshold in font units.
      */
-    if ( dim == AF_DIMENSION_VERT )
+    if ( dim == AF_DIMENSION_HORZ )
         segment_length_threshold = FT_DivFix( 64, hints->y_scale );
     else
         segment_length_threshold = 0;
@@ -1536,6 +1536,7 @@
     else
     {
       /* strong hinting process: snap the stem width to integer pixels */
+      FT_Pos  org_dist = dist;
 
       dist = af_latin_snap_width( axis->widths, axis->width_count, dist );
 
@@ -1571,7 +1572,27 @@
             dist = ( dist + 64 ) >> 1;
 
           else if ( dist < 128 )
+          {
+           /* ok, we're only going to round to an integer width if
+            * the corresponding distorsion is less than 1/4 pixel
+            * otherwise, this really screws everything, since the
+            * diagonals, which are not hinted, will appear a lot
+            * more bolder or thinner than the vertical stems
+            */
+            FT_Int  delta;
+
             dist = ( dist + 22 ) & ~63;
+            delta = dist - org_dist;
+            if ( delta < 0 )
+              delta = -delta;
+
+            if (delta >= 16)
+            {
+              dist = org_dist;
+              if ( dist < 48 )
+                dist = (dist + 64) >> 1;
+            }
+          }
           else
             /* round otherwise to prevent color fringes in LCD mode */
             dist = ( dist + 32 ) & ~63;

@@ -171,20 +171,22 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
-    if ( slot->library->lcd_filter )
+    if ( slot->library->lcd_filter_func )
     {
+      FT_Int  extra = slot->library->lcd_extra;
+
       if ( hmul )
       {
-        x_shift -= 64;
-        width   += 6;
+        x_shift -= 64*(extra >> 1);
+        width   += 3*extra;
         pitch    = FT_PAD_CEIL( width, 4 );
-        x_left  -= 1;
+        x_left  -= (extra >> 1);
       }
       if ( vmul )
       {
-        y_shift -= 64;
-        height  += 6;
-        y_top   += 1;
+        y_shift -= 64*(extra >> 1);
+        height  += 3*extra;
+        y_top   += (extra >> 1);
       }
     }
 
@@ -213,20 +215,17 @@
 
     /* implode outline if needed */
     {
-      FT_Int      n;
+      FT_Vector*  points     = outline->points;
+      FT_Vector*  points_end = points + outline->n_points;
       FT_Vector*  vec;
 
 
       if ( hmul )
-        for ( vec = outline->points, n = 0;
-              n < outline->n_points;
-              n++, vec++ )
+        for ( vec = points; vec < points_end; vec++ )
           vec->x *= 3;
 
       if ( vmul )
-        for ( vec = outline->points, n = 0;
-              n < outline->n_points;
-              n++, vec++ )
+        for ( vec = points; vec < points_end; vec++ )
           vec->y *= 3;
     }
 
@@ -235,26 +234,22 @@
 
     /* deflate outline if needed */
     {
-      FT_Int      n;
+      FT_Vector*  points     = outline->points;
+      FT_Vector*  points_end = points + outline->n_points;
       FT_Vector*  vec;
 
 
       if ( hmul )
-        for ( vec = outline->points, n = 0;
-              n < outline->n_points;
-              n++, vec++ )
+        for ( vec = points; vec < points_end; vec++ )
           vec->x /= 3;
 
       if ( vmul )
-        for ( vec = outline->points, n = 0;
-              n < outline->n_points;
-              n++, vec++ )
+        for ( vec = points; vec < points_end; vec++ )
           vec->y /= 3;
     }
 
-    if ( slot->library->lcd_filter )
-      slot->library->lcd_filter( bitmap, mode,
-                                 slot->library->lcd_filter_weights );
+    if ( slot->library->lcd_filter_func )
+      slot->library->lcd_filter_func( bitmap, mode, slot->library );
 
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
@@ -264,7 +259,7 @@
     /* expand it horizontally */
     if ( hmul )
     {
-      FT_Byte*  line = bitmap->buffer + ( height - height_org ) * pitch;
+      FT_Byte*  line = bitmap->buffer;
       FT_UInt   hh;
 
 

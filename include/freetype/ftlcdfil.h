@@ -27,6 +27,51 @@
 FT_BEGIN_HEADER
 
 
+ /****************************************************************************
+  *
+  * @func:
+  *   FT_LcdFilter
+  *
+  * @description:
+  *    a list of values used to identify various types of LCD filters
+  *
+  * @values:
+  *   FT_LCD_FILTER_NONE :: value 0 means do not perform filtering. when
+  *     used with subpixel rendering, this will result in sometimes severe
+  *     color fringes
+  *
+  *   FT_LCD_FILTER_DEFAULT ::
+  *      the default filter reduces color fringes considerably, at the cost of
+  *      a slight bluriness in the output
+  *
+  *   FT_LCD_FILTER_LIGHT ::
+  *      the light filter is a variant that produces less bluriness
+  *      at the cost of slightly more color fringes than the default one. It
+  *      might be better than the default one, depending on your monitor and
+  *      personal vision.
+  *
+  *   FT_LCD_FILTER_LEGACY ::
+  *      this filter corresponds to the original libXft color filter, this
+  *      provides high contrast output, but can exhibit really bad color fringes
+  *      if your glyphs are not extremely well hinted to the pixel grid. In
+  *      other words, it only works well when enabling the TrueType bytecode
+  *      interpreter *and* using high-quality hinted fonts. It will suck for
+  *      all other cases.
+  *
+  *      this filter is only provided for comparison purposes, and might be
+  *      disabled/unsupported in the future...
+  */
+  typedef enum
+  {
+    FT_LCD_FILTER_NONE    = 0,
+    FT_LCD_FILTER_DEFAULT = 1,
+    FT_LCD_FILTER_LIGHT   = 2,
+    FT_LCD_FILTER_LEGACY  = 16,
+
+    FT_LCD_FILTER_MAX   /* do not remove */
+
+  } FT_LcdFilter;
+
 
   /**************************************************************************
    *
@@ -85,34 +130,8 @@ FT_BEGIN_HEADER
    *
    */
   FT_EXPORT( FT_Error )
-  FT_Library_SetLcdFilter( FT_Library      library,
-                           const FT_Byte*  filter_weights );
-
-
-
-  /**************************************************************************
-   *
-   * @enum:
-   *   FT_LCD_FILTER_XXX
-   *
-   * @description:
-   *   A list of constants which correspond to useful lcd filter settings
-   *   for the @FT_Library_SetLcdFilter function.
-   *
-   * @values:
-   *   FT_LCD_FILTER_NONE ::
-   *     The value NULL is reserved to indicate that LCD color filtering
-   *     should be disabled.
-   *
-   *   FT_LCD_FILTER_DEFAULT ::
-   *     This value is reserved to indicate a default FIR filter that should
-   *     work well on most LCD screen.  It corresponds to the array 0x10,
-   *     0x40, 0x70, 0x40, 0x10.
-   *
-   */
-#define FT_LCD_FILTER_NONE     ( (const FT_Byte*)NULL )
- 
-#define FT_LCD_FILTER_DEFAULT  ( (const FT_Byte*)(void*)(ft_ptrdiff_t)1 )
+  FT_Library_SetLcdFilter( FT_Library    library,
+                           FT_LcdFilter  filter );
 
   /* */
 
