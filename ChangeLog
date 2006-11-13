@@ -4,6 +4,11 @@
       since the interpreter "enhancements" are still too buggy for
       general use
 
+      * src/base/ftlcdfil.c: added support for FT_FORCE_LIGHT_LCD_FILTER
+      and FT_FORCE_LEGACY_LCD_FILTER at compile time. Define these macros
+      when building the library to change the default LCD filter to be
+      used. This is only useful for experimentation
+
 2006-11-10  David Turner  <david@freetype.org>
 
        * include/freetype/ftlcdfil.h, include/internal/ftobjs.h,

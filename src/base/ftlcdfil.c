@@ -24,6 +24,7 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
+/* define USE_LEGACY to implement the legacy filter */
 #define  USE_LEGACY
 
   /* FIR filter used by the default and light filters */
@@ -274,9 +275,13 @@
             break;
 
         case FT_LCD_FILTER_DEFAULT:
-#if 0  /* DEBUGGING */
+#if defined(FT_FORCE_LEGACY_LCD_FILTER)
             library->lcd_filter_func = _ft_lcd_filter_legacy;
             library->lcd_extra       = 0;
+#elif defined(FT_FORCE_LIGHT_LCD_FILTER)
+            memcpy( library->lcd_weights, default_filter, 5 );
+            library->lcd_filter_func = _ft_lcd_filter_fir;
+            library->lcd_extra       = 2;
 #else
             memcpy( library->lcd_weights, default_filter, 5 );
             library->lcd_filter_func = _ft_lcd_filter_fir;
