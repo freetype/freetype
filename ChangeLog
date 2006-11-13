@@ -1,3 +1,9 @@
+2006-11-13  David Turner  <david@freetype.org>
+
+      * src/truetype/ttinterp.c: undefined the FIX_BYTECODE macro,
+      since the interpreter "enhancements" are still too buggy for
+      general use
+
 2006-11-10  David Turner  <david@freetype.org>
 
        * include/freetype/ftlcdfil.h, include/internal/ftobjs.h,

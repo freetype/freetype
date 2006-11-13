@@ -18,7 +18,7 @@
 
   /* define FIX_BYTECODE to implement the bytecode interpreter fixes */
   /* needed to match Windows behaviour more accurately               */
-#define  FIX_BYTECODE
+/* #define  FIX_BYTECODE */
 
 
 #include <ft2build.h>
