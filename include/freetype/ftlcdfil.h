@@ -84,15 +84,9 @@ FT_BEGIN_HEADER
    *   @FT_RENDER_MODE_LCD or @FT_RENDER_MODE_LCD_V.
    *
    * @input:
-   *   library ::
-   *     A handle to the target library instance.
+   *   library :: A handle to the target library instance.
    *
-   *   filter_weights ::
-   *     A pointer to an array of 5 bytes corresponding to the weights of a
-   *     5-tap FIR filter.  Each weight must be positive, and their sum
-   *     should be at least 256 to avoid loss of darkness in the rendered
-   *     glyphs.  The sum can be greater than 256 to darken the glyphs
-   *     (`el-cheapo gamma').
+   *   filter  :: filter type.
    *
    *     You can use @FT_LCD_FILTER_NONE here to disable this feature, or
    *     @FT_LCD_FILTER_DEFAULT to use a default filter that should work
@@ -103,7 +97,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This feature is always disabled by default.  Clients must make an
-   *   explicit call to this function with a `filter_weights' value other
+   *   explicit call to this function with a `filter' value other
    *   than @FT_LCD_FILTER_NONE in order to enable it.
    *
    *   Due to *PATENTS* covering subpixel rendering, this function doesn't
