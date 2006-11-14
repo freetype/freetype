@@ -27,40 +27,39 @@
 FT_BEGIN_HEADER
 
 
- /****************************************************************************
-  *
-  * @func:
-  *   FT_LcdFilter
-  *
-  * @description:
-  *    a list of values used to identify various types of LCD filters
-  *
-  * @values:
-  *   FT_LCD_FILTER_NONE :: value 0 means do not perform filtering. when
-  *     used with subpixel rendering, this will result in sometimes severe
-  *     color fringes
-  *
-  *   FT_LCD_FILTER_DEFAULT ::
-  *      the default filter reduces color fringes considerably, at the cost of
-  *      a slight bluriness in the output
-  *
-  *   FT_LCD_FILTER_LIGHT ::
-  *      the light filter is a variant that produces less bluriness
-  *      at the cost of slightly more color fringes than the default one. It
-  *      might be better than the default one, depending on your monitor and
-  *      personal vision.
-  *
-  *   FT_LCD_FILTER_LEGACY ::
-  *      this filter corresponds to the original libXft color filter, this
-  *      provides high contrast output, but can exhibit really bad color fringes
-  *      if your glyphs are not extremely well hinted to the pixel grid. In
-  *      other words, it only works well when enabling the TrueType bytecode
-  *      interpreter *and* using high-quality hinted fonts. It will suck for
-  *      all other cases.
-  *
-  *      this filter is only provided for comparison purposes, and might be
-  *      disabled/unsupported in the future...
-  */
+  /****************************************************************************
+   *
+   * @func:
+   *   FT_LcdFilter
+   *
+   * @description:
+   *   A list of values to identify various types of LCD filters.
+   *
+   * @values:
+   *   FT_LCD_FILTER_NONE ::
+   *     Do not perform filtering.  When used with subpixel rendering, this
+   *     results in sometimes severe color fringes.
+   *
+   *   FT_LCD_FILTER_DEFAULT ::
+   *     The default filter reduces color fringes considerably, at the cost
+   *     of a slight blurriness in the output.
+   *
+   *   FT_LCD_FILTER_LIGHT ::
+   *     The light filter is a variant that produces less blurriness at the
+   *     cost of slightly more color fringes than the default one.  It might
+   *     be better than the default one, depending on the monitor, personal
+   *     vision, and taste.
+   *
+   *   FT_LCD_FILTER_LEGACY ::
+   *     This filter corresponds to the original libXft color filter.  It
+   *     provides high contrast output but can exhibit really bad color
+   *     fringes if glyphs are not extremely well hinted to the pixel grid. 
+   *     In other words, it only works well if the TrueType bytecode
+   *     interpreter is enabled *and* high-quality hinted fonts are used.
+   *
+   *     This filter is only provided for comparison purposes, and might be
+   *     disabled or stay unsupported in the future.
+   */
   typedef enum
   {
     FT_LCD_FILTER_NONE    = 0,
@@ -84,9 +83,11 @@ FT_BEGIN_HEADER
    *   @FT_RENDER_MODE_LCD or @FT_RENDER_MODE_LCD_V.
    *
    * @input:
-   *   library :: A handle to the target library instance.
+   *   library ::
+   *     A handle to the target library instance.
    *
-   *   filter  :: filter type.
+   *   filter ::
+   *     The filter type.
    *
    *     You can use @FT_LCD_FILTER_NONE here to disable this feature, or
    *     @FT_LCD_FILTER_DEFAULT to use a default filter that should work
@@ -97,8 +98,8 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This feature is always disabled by default.  Clients must make an
-   *   explicit call to this function with a `filter' value other
-   *   than @FT_LCD_FILTER_NONE in order to enable it.
+   *   explicit call to this function with a `filter' value other than
+   *   @FT_LCD_FILTER_NONE in order to enable it.
    *
    *   Due to *PATENTS* covering subpixel rendering, this function doesn't
    *   do anything except returning @FT_Err_Unimplemented_Feature if the
@@ -106,8 +107,8 @@ FT_BEGIN_HEADER
    *   defined in your build of the library, which should correspond to all
    *   default builds of the library.
    *
-   *   The filter affects glyph bitmaps rendered through FT_Render_Glyph,
-   *   @@FT_Glyph_Get_Bitmap, @FT_Load_Glyph, and FT_Load_Char.
+   *   The filter affects glyph bitmaps rendered through @FT_Render_Glyph,
+   *   @FT_Glyph_Get_Bitmap, @FT_Load_Glyph, and @FT_Load_Char.
    *
    *   It does _not_ affect the output of @FT_Outline_Render and
    *   @FT_Outline_Get_Bitmap.

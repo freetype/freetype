@@ -175,18 +175,20 @@
     {
       FT_Int  extra = slot->library->lcd_extra;
 
+
       if ( hmul )
       {
-        x_shift -= 64*(extra >> 1);
-        width   += 3*extra;
+        x_shift -= 64 * ( extra >> 1 );
+        width   += 3 * extra;
         pitch    = FT_PAD_CEIL( width, 4 );
-        x_left  -= (extra >> 1);
+        x_left  -= extra >> 1;
       }
+
       if ( vmul )
       {
-        y_shift -= 64*(extra >> 1);
-        height  += 3*extra;
-        y_top   += (extra >> 1);
+        y_shift -= 64 * ( extra >> 1 );
+        height  += 3 * extra;
+        y_top   += extra >> 1;
       }
     }
 

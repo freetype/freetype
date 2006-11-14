@@ -1538,6 +1538,7 @@
       /* strong hinting process: snap the stem width to integer pixels */
       FT_Pos  org_dist = dist;
 
+
       dist = af_latin_snap_width( axis->widths, axis->width_count, dist );
 
       if ( vertical )
@@ -1573,13 +1574,14 @@
 
           else if ( dist < 128 )
           {
-           /* ok, we're only going to round to an integer width if
-            * the corresponding distorsion is less than 1/4 pixel
-            * otherwise, this really screws everything, since the
-            * diagonals, which are not hinted, will appear a lot
-            * more bolder or thinner than the vertical stems
-            */
+            /* We only round to an integer width if the corresponding */
+            /* distortion is less than 1/4 pixel.  Otherwise this     */
+            /* makes everything worse since the diagonals, which are  */
+            /* not hinted, appear a lot bolder or thinner than the    */
+            /* vertical stems.                                        */
+
             FT_Int  delta;
+
 
             dist = ( dist + 22 ) & ~63;
             delta = dist - org_dist;
@@ -1590,7 +1592,7 @@
             {
               dist = org_dist;
               if ( dist < 48 )
-                dist = (dist + 64) >> 1;
+                dist = ( dist + 64 ) >> 1;
             }
           }
           else

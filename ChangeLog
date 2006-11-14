@@ -1,28 +1,48 @@
 2006-11-13  David Turner  <david@freetype.org>
 
-      * src/truetype/ttinterp.c: undefined the FIX_BYTECODE macro,
-      since the interpreter "enhancements" are still too buggy for
-      general use
+	* src/truetype/ttinterp.c (FIX_BYTECODE): Undefine.  The interpreter
+	`enhancements' are still too buggy for general use.
 
-      * src/base/ftlcdfil.c: added support for FT_FORCE_LIGHT_LCD_FILTER
-      and FT_FORCE_LEGACY_LCD_FILTER at compile time. Define these macros
-      when building the library to change the default LCD filter to be
-      used. This is only useful for experimentation
+	* src/base/ftlcdfil.c: Add support for FT_FORCE_LIGHT_LCD_FILTER and
+	FT_FORCE_LEGACY_LCD_FILTER at compile time.  Define these macros
+	when building the library to change the default LCD filter to be
+	used.  This is only useful for experimentation.
 
-      * include/freetype/ftlcdfil.h: updating documentation
+	* include/freetype/ftlcdfil.h: Update documentation.
 
 2006-11-10  David Turner  <david@freetype.org>
 
-       * include/freetype/ftlcdfil.h, include/internal/ftobjs.h,
-       src/base/ftlcdfilt.c, src/smooth/ftsmooth.c: API change for
-       the LCD filter, the FT_LcdFilter value is a enum describing
-       which filter to apply, new values FT_LCD_FILTER_LIGHT and
-       FT_LCD_FILTER_LEGACY (the latter implements the LibXft original
-       algorithm which produces incredible color fringes for everything
-       except very-well hinted text)
+	* src/smooth/ftsmooth.c: API change for the LCD
+	filter.  The FT_LcdFilter value is an enumeration describing which
+	filter to apply, with new values FT_LCD_FILTER_LIGHT and
+	FT_LCD_FILTER_LEGACY (the latter implements the LibXft original
+	algorithm which produces strong color fringes for everything
+	except very-well hinted text).
 
-       * src/autofit/aflatin.c: various tiny improvements that drastically
-       improve the handling of serif fonts and of LCD/LCD_V hinting modes.
+	* include/freetype/ftlcdfil.h (FT_Library_SetLcdFilter): Change
+	second parameter to an enum type.
+
+	* src/base/ftlcdfil.c (USE_LEGACY): Define.
+	(_ft_lcd_filter): Rename to...
+	(_ft_lcd_filter_fir): This.
+	Update parameters.
+	(_ft_lcd_filter_legacy) [USE_LEGACY]: New filter function.
+	(FT_Library_Set_LcdFilter): Update parameters.
+	Handle new filter modes.
+
+	* include/internal/ftobjs.h: Include FT_LCD_FILTER_H.
+	(FT_Bitmap_LcdFilterFunc): Change third argument to `FT_Library'.
+	(FT_LibraryRec) [FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Add filtering
+	callback and update other fields.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic)
+	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Update.
+	Other minor improvements.
+
+	* src/autofit/aflatin.c: Various tiny improvements that drastically
+	improve the handling of serif fonts and of LCD/LCD_V hinting modes.
+	(af_latin_hints_compute_edges): Fix typo.
+	(af_latin_compute_stem_width): Take better care of diagonal stems.
 
 2006-11-09  David Turner  <david@freetype.org>
 
