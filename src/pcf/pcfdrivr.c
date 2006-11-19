@@ -442,7 +442,7 @@ THE SOFTWARE.
 
     FT_TRACE4(( "load_glyph %d ---", glyph_index ));
 
-    if ( !face )
+    if ( !face || glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
       error = PCF_Err_Invalid_Argument;
       goto Exit;

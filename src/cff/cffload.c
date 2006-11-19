@@ -1946,7 +1946,8 @@
 
         encoding->count = 0;
 
-        error = cff_charset_compute_cids( charset, num_glyphs, stream->memory );
+        error = cff_charset_compute_cids( charset, num_glyphs,
+                                          stream->memory );
         if ( error )
           goto Exit;
 

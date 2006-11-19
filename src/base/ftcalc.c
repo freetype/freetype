@@ -315,6 +315,23 @@
 
   /* documentation is in freetype.h */
 
+  /* The FT_MulDiv function has been optimized thanks to ideas from      */
+  /* Graham Asher.  The trick is to optimize computation when everything */
+  /* fits within 32-bits (a rather common case).                         */
+  /*                                                                     */
+  /*  we compute 'a*b+c/2', then divide it by 'c'. (positive values)     */
+  /*                                                                     */
+  /*  46340 is FLOOR(SQRT(2^31-1)).                                      */
+  /*                                                                     */
+  /*  if ( a <= 46340 && b <= 46340 ) then ( a*b <= 0x7FFEA810 )         */
+  /*                                                                     */
+  /*  0x7FFFFFFF - 0x7FFEA810 = 0x157F0                                  */
+  /*                                                                     */
+  /*  if ( c < 0x157F0*2 ) then ( a*b+c/2 <= 0x7FFFFFFF )                */
+  /*                                                                     */
+  /*  and 2*0x157F0 = 176096                                             */
+  /*                                                                     */
+
   FT_EXPORT_DEF( FT_Long )
   FT_MulDiv( FT_Long  a,
              FT_Long  b,
@@ -551,7 +568,7 @@
 
 
   /* apparently, the second version of this code is not compiled correctly */
-  /* on Mac machines with the MPW C compiler..  tsk, tsk, tsk...         */
+  /* on Mac machines with the MPW C compiler..  tsk, tsk, tsk...           */
 
 #if 1
 
@@ -588,7 +605,7 @@
     if ( r >= (FT_UInt32)y ) /* we know y is to be treated as unsigned here */
       return ( s < 0 ? 0x80000001UL : 0x7FFFFFFFUL );
                              /* Return Max/Min Int32 if division overflow. */
-                             /* This includes division by zero! */
+                             /* This includes division by zero!            */
     q = 0;
     for ( i = 0; i < 32; i++ )
     {

@@ -2285,6 +2285,20 @@
     FT_Vector     font_offset;
 
 
+    /* in a CID-keyed font, consider `glyph_index' as a CID and map */
+    /* it immediately to the real glyph_index -- if it isn't a      */
+    /* subsetted font, glyph_indices and CIDs are identical, though */
+    if ( cff->top_font.font_dict.cid_registry != 0xFFFFU &&
+         cff->charset.cids )
+    {
+      if ( glyph_index < cff->charset.max_cid )
+        glyph_index = cff->charset.cids[glyph_index];
+      else
+        return CFF_Err_Invalid_Argument;
+    }
+    else if ( glyph_index >= cff->num_glyphs )
+      return CFF_Err_Invalid_Argument;
+
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
@@ -2375,18 +2389,6 @@
       FT_Byte*  charstring;
       FT_ULong  charstring_len;
 
-
-      /* in a CID-keyed font, consider `glyph_index' as a CID and map */
-      /* it immediately to the real glyph_index -- if it isn't a      */
-      /* subsetted font, glyph_indices and CIDs are identical, though */
-      if ( cff->top_font.font_dict.cid_registry != 0xFFFFU &&
-           cff->charset.cids )
-      {
-        if ( glyph_index < cff->charset.max_cid )
-          glyph_index = cff->charset.cids[glyph_index];
-        else
-          glyph_index = 0;
-      }
 
       cff_decoder_init( &decoder, face, size, glyph, hinting,
                         FT_LOAD_TARGET_MODE( load_flags ) );

@@ -549,8 +549,8 @@
     if ( !face || !face->size || !face->glyph )
       return FT_Err_Invalid_Face_Handle;
 
-    if ( glyph_index >= (FT_UInt)face->num_glyphs )
-      return FT_Err_Invalid_Argument;
+    /* The validity test for `glyph_index' is performed by the */
+    /* font drivers.                                           */
 
     slot = face->glyph;
     ft_glyphslot_clear( slot );

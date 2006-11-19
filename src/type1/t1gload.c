@@ -225,6 +225,12 @@
 #endif
 
 
+    if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
+    {
+      error = T1_Err_Invalid_Argument;
+      goto Exit;
+    }
+
     FT_ASSERT( ( face->len_buildchar == 0 ) == ( face->buildchar == NULL ) );
 
     if ( load_flags & FT_LOAD_NO_RECURSE )

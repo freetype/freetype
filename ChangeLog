@@ -1,3 +1,17 @@
+2006-11-18  Werner Lemberg  <wl@gnu.org>
+
+	Because FT_Load_Glyph expects CID values for CID-keyed fonts, the
+	test for a valid glyph index must be deferred to the font drivers. 
+	This patch fixes Savannah bug #18301.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Don't check `glyph_index'.
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load), src/cff/cffgload.c
+	(cff_slot_load), src/cid/cidgload.c (cid_slot_load_glyph),
+	src/pcf/pcfdrivr.c (PCF_Glyph_Load), src/pfr/pfrobjs.c
+	(pfr_slot_load), src/truetype/ttdriver.c (Load_Glyph),
+	src/type1/t1gload.c (T1_Load_Glyph), src/winfonts/winfnt.c
+	(FNT_Load_Glyph): Check validity of `glyph_index'.
+
 2006-11-13  David Turner  <david@freetype.org>
 
 	* src/truetype/ttinterp.c (FIX_BYTECODE): Undefine.  The interpreter

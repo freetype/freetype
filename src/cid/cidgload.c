@@ -275,6 +275,12 @@
     FT_Vector      font_offset;
 
 
+    if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
+    {
+      error = CID_Err_Invalid_Argument;
+      goto Exit;
+    }
+
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
