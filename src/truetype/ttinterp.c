@@ -6513,11 +6513,14 @@
     FT_ULong   C;
     FT_Long    B;
 
+
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     /* Delta hinting is covered by US Patent 5159668. */
     if ( CUR.face->unpatented_hinting )
-      {
-      FT_Long n = args[0] * 2;
+    {
+      FT_Long  n = args[0] * 2;
+
+
       if ( CUR.args < n )
       {
         CUR.error = TT_Err_Too_Few_Arguments;
