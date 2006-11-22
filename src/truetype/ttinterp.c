@@ -6721,7 +6721,7 @@
 
     /* Are we hinting for grayscale? */
     if ( ( args[0] & 32 ) != 0 && CUR.grayscale )
-      K |= (1 << 12);
+      K |= 1 << 12;
 
     args[0] = K;
   }
