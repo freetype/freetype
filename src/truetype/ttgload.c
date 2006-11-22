@@ -1720,6 +1720,7 @@
     /* load execution context */
     {
       TT_ExecContext  exec;
+      FT_Bool         grayscale;
 
 
       /* query new execution context */
@@ -1728,7 +1729,24 @@
       if ( !exec )
         return TT_Err_Could_Not_Find_Context;
 
+      grayscale =
+        FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) != FT_RENDER_MODE_MONO );
+
       TT_Load_Context( exec, face, size );
+
+      /* a change from mono to grayscale rendering (and vice versa) */
+      /* requires a re-execution of the CVT program                 */
+      if ( grayscale != exec->grayscale )
+      {
+        FT_UInt  i;
+
+
+        exec->grayscale = grayscale;
+
+        for ( i = 0; i < size->cvt_size; i++ )
+          size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
+        tt_size_run_prep( size );
+      }
 
       /* see if the cvt program has disabled hinting */
       if ( exec->GS.instruct_control & 1 )
@@ -1739,9 +1757,6 @@
         exec->GS = tt_default_graphics_state;
 
       exec->pedantic_hinting = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
-      exec->grayscale =
-        FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) != FT_LOAD_TARGET_MONO );
-
       loader->exec = exec;
       loader->instructions = exec->glyphIns;
     }

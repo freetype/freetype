@@ -1,3 +1,11 @@
+2006-11-22  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #15553.
+
+	* src/truetype/ttgload.c (tt_loader_init): Re-execute the CVT
+	program after a change from mono to grayscaling (and vice versa).
+	Use correct constant for comparison to get `exec->grayscale'.
+
 2006-11-18  Werner Lemberg  <wl@gnu.org>
 
 	Because FT_Load_Glyph expects CID values for CID-keyed fonts, the
