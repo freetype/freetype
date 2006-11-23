@@ -206,19 +206,18 @@
       printf ( "Table of %s segments:\n",
                dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
       printf ( "  [ index |  pos |  dir  | link | serif |"
-               " numl | first | start ]\n" );
+               " height  | extra ]\n" );
 
       for ( seg = segments; seg < limit; seg++ )
       {
-        printf ( "  [ %5d | %4d | %5s | %4d | %5d | %4d | %5d | %5d ]\n",
+        printf ( "  [ %5d | %4d | %5s | %4d | %5d | %5d | %5d ]\n",
                  seg - segments,
                  (int)seg->pos,
                  af_dir_str( seg->dir ),
                  AF_INDEX_NUM( seg->link, segments ),
                  AF_INDEX_NUM( seg->serif, segments ),
-                 (int)seg->num_linked,
-                 seg->first - points,
-                 seg->last - points );
+                 seg->height,
+                 seg->height - (seg->max_coord - seg->min_coord) );
       }
       printf( "\n" );
     }

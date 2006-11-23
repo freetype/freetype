@@ -125,6 +125,7 @@ FT_BEGIN_HEADER
     FT_Short    pos;         /* position of segment                 */
     FT_Short    min_coord;   /* minimum coordinate of segment       */
     FT_Short    max_coord;   /* maximum coordinate of segment       */
+    FT_Short    height;
 
     AF_Edge     edge;        /* the segment's parent edge           */
     AF_Segment  edge_next;   /* link to next segment in parent edge */

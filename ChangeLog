@@ -1,3 +1,8 @@
+2006-11-23  David Turner    <david@freetype.org>
+
+	* src/autofit/afhints.c, src/autofit/afhints.h, src/autofit/aflatin.c,
+	src/autofit/aftypes.h: Misc. auto-hinter improvements
+
 2006-11-22  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #15553.
@@ -9,7 +14,7 @@
 2006-11-18  Werner Lemberg  <wl@gnu.org>
 
 	Because FT_Load_Glyph expects CID values for CID-keyed fonts, the
-	test for a valid glyph index must be deferred to the font drivers. 
+	test for a valid glyph index must be deferred to the font drivers.
 	This patch fixes Savannah bug #18301.
 
 	* src/base/ftobjs.c (FT_Load_Glyph): Don't check `glyph_index'.
