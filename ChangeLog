@@ -1,3 +1,8 @@
+2006-11-25  David Turner    <david@freetype.org>
+
+        * src/autofit/afhints.c: add stubs to link the "ftgrid" test program
+        when debugging is disabled in the auto-hinter
+
 2006-11-23  David Turner    <david@freetype.org>
 
 	* src/autofit/afhints.c, src/autofit/afhints.h, src/autofit/aflatin.c,

@@ -264,6 +264,28 @@
     }
   }
 
+#else
+ /* these empty stubs are only used to link the "ftgrid" test program
+  * when debugging is disabled
+  */
+  void
+  af_glyph_hints_dump_points( AF_GlyphHints  hints )
+  {
+    FT_UNUSED(hints);
+  }
+
+  void
+  af_glyph_hints_dump_segments( AF_GlyphHints  hints )
+  {
+    FT_UNUSED(hints);
+  }
+
+  void
+  af_glyph_hints_dump_edges( AF_GlyphHints  hints )
+  {
+    FT_UNUSED(hints);
+  }
+
 #endif /* AF_DEBUG */
 
 
