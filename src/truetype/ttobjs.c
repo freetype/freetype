@@ -283,7 +283,8 @@
         /* be worth to do more checks for a few special cases.           */
         for ( nn = 0; trick_names[nn] != NULL; nn++ )
         {
-          if ( ft_strcmp( ttface->family_name, trick_names[nn] ) == 0 )
+          if ( ttface->family                                         &&
+               ft_strcmp( ttface->family_name, trick_names[nn] ) == 0 )
           {
             unpatented_hinting = 1;
             break;

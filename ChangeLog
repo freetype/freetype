@@ -1,3 +1,7 @@
+2006-11-26  Pierre Hanser  <hanser@club-internet.fr>
+
+	* src/truetype/ttobjs.c (tt_face_init): Protect against NULL pointer.
+
 2006-11-25  David Turner    <david@freetype.org>
 
         * src/autofit/afhints.c: add stubs to link the "ftgrid" test program
