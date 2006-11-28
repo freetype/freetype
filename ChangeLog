@@ -1,5 +1,9 @@
 2006-11-28  David Turner    <david@freetype.org>
 
+    * src/smooth/ftgrays.c (gray_raster_render): return 0 when we're
+    trying to rendering into a zero-width/height bitmap, instead of an
+    error code.
+
     * src/truetype/ttobjs.c (tt_face_init): Fix typo in previous patch
 
     * src/smooth/ftgrays.c: remove hard-coded error values, use FreeType
