@@ -1,3 +1,13 @@
+2006-11-28  David Turner    <david@freetype.org>
+
+    * src/truetype/ttobjs.c (tt_face_init): Fix typo in previous patch
+
+    * src/smooth/ftgrays.c: remove hard-coded error values, use FreeType
+    ones instead
+
+    * src/autofit/afhints.c (af_glyph_hints_dump_segments): remove unused
+    variable
+
 2006-11-26  Pierre Hanser  <hanser@club-internet.fr>
 
 	* src/truetype/ttobjs.c (tt_face_init): Protect against NULL pointer.

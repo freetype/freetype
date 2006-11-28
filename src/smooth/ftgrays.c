@@ -91,7 +91,6 @@
 #define FT_COMPONENT  trace_smooth
 
 
-#define ErrRaster_MemoryOverflow  -4
 
 
 #ifdef _STANDALONE_
@@ -108,8 +107,10 @@
 #define ft_jmp_buf  jmp_buf
 
 
-#define ErrRaster_Invalid_Mode     -2
-#define ErrRaster_Invalid_Outline  -1
+#define ErrRaster_Invalid_Mode      -2
+#define ErrRaster_Invalid_Outline   -1
+#define ErrRaster_Invalid_Argument  -3
+#define ErrRaster_Memory_Overflow   -4
 
 #define FT_BEGIN_HEADER
 #define FT_END_HEADER
@@ -133,7 +134,7 @@
 #define FT_TRACE( x )  do ; while ( 0 )     /* nothing */
 #endif
 
-#else /* _STANDALONE_ */
+#else /* !_STANDALONE_ */
 
 #include <ft2build.h>
 #include "ftgrays.h"
@@ -145,8 +146,10 @@
 
 #define ErrRaster_Invalid_Mode     Smooth_Err_Cannot_Render_Glyph
 #define ErrRaster_Invalid_Outline  Smooth_Err_Invalid_Outline
+#define ErrRaster_Memory_Overflow  Smooth_Err_Out_Of_Memory
+#define ErrRaster_Invalid_Argument Smooth_Err_Bad_Argument
 
-#endif /* _STANDALONE_ */
+#endif /* !_STANDALONE_ */
 
 
 #ifndef FT_MEM_SET
@@ -1596,7 +1599,7 @@
     }
     else
     {
-      error = ErrRaster_MemoryOverflow;
+      error = ErrRaster_Memory_Overflow;
     }
 
     return error;
@@ -1720,7 +1723,7 @@
           band--;
           continue;
         }
-        else if ( error != ErrRaster_MemoryOverflow )
+        else if ( error != ErrRaster_Memory_Overflow )
           return 1;
 
       ReduceBands:
@@ -1766,7 +1769,7 @@
 
 
     if ( !raster || !raster->buffer || !raster->buffer_size )
-      return -1;
+      return ErrRaster_Invalid_Argument;
 
     /* return immediately if the outline is empty */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )
@@ -1782,7 +1785,7 @@
     /* if direct mode is not set, we must have a target bitmap */
     if ( ( params->flags & FT_RASTER_FLAG_DIRECT ) == 0 &&
          ( !target_map || !target_map->buffer )         )
-      return -1;
+      return ErrRaster_Invalid_Argument;
 
     /* this version does not support monochrome rendering */
     if ( !( params->flags & FT_RASTER_FLAG_AA ) )

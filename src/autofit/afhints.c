@@ -191,7 +191,6 @@
   void
   af_glyph_hints_dump_segments( AF_GlyphHints  hints )
   {
-    AF_Point  points = hints->points;
     FT_Int    dimension;
 
 

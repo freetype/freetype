@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 #define xxAF_USE_WARPER  /* only define to use warp hinting */
-#define xxAF_DEBUG
+#define AF_DEBUG
 
 #ifdef AF_DEBUG
 
