@@ -102,13 +102,13 @@ FT_BEGIN_HEADER
    *   @FT_LCD_FILTER_NONE in order to enable it.
    *
    *   Due to *PATENTS* covering subpixel rendering, this function doesn't
-   *   do anything except returning @FT_Err_Unimplemented_Feature if the
+   *   do anything except returning `FT_Err_Unimplemented_Feature' if the
    *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
    *   defined in your build of the library, which should correspond to all
    *   default builds of the library.
    *
    *   The filter affects glyph bitmaps rendered through @FT_Render_Glyph,
-   *   @FT_Glyph_Get_Bitmap, @FT_Load_Glyph, and @FT_Load_Char.
+   *   @FT_Outline_Get_Bitmap, @FT_Load_Glyph, and @FT_Load_Char.
    *
    *   It does _not_ affect the output of @FT_Outline_Render and
    *   @FT_Outline_Get_Bitmap.

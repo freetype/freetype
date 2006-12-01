@@ -75,37 +75,6 @@
   }
 
 
-  /* convert a UCS-4 name entry to ASCII */
-  static FT_String*
-  tt_name_entry_ascii_from_ucs4( TT_NameEntry  entry,
-                                 FT_Memory     memory )
-  {
-    FT_String*  string;
-    FT_UInt     len, code, n;
-    FT_Byte*    read = (FT_Byte*)entry->string;
-    FT_Error    error;
-
-
-    len = (FT_UInt)entry->stringLength / 4;
-
-    if ( FT_NEW_ARRAY( string, len + 1 ) )
-      return NULL;
-
-    for ( n = 0; n < len; n++ )
-    {
-      code = (FT_UInt)FT_NEXT_ULONG( read );
-      if ( code < 32 || code > 127 )
-        code = '?';
-
-      string[n] = (char)code;
-    }
-
-    string[len] = 0;
-
-    return string;
-  }
-
-
   /* convert an Apple Roman or symbol name entry to ASCII */
   static FT_String*
   tt_name_entry_ascii_from_other( TT_NameEntry  entry,
@@ -253,13 +222,11 @@
       rec = face->name_table.names + found_win;
       switch ( rec->encodingID )
       {
+        /* all Unicode strings are encoded using UTF-16BE */
       case TT_MS_ID_UNICODE_CS:
       case TT_MS_ID_SYMBOL_CS:
-        convert = tt_name_entry_ascii_from_utf16;
-        break;
-
       case TT_MS_ID_UCS_4:
-        convert = tt_name_entry_ascii_from_ucs4;
+        convert = tt_name_entry_ascii_from_utf16;
         break;
 
       default:

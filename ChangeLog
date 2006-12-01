@@ -1,30 +1,61 @@
-2006-11-28  David Turner    <david@freetype.org>
+2006-12-01  Werner Lemberg  <wl@gnu.org>
 
-    * src/smooth/ftgrays.c (gray_raster_render): return 0 when we're
-    trying to rendering into a zero-width/height bitmap, instead of an
-    error code.
+	* src/sfnt/sfobjs.c (tt_face_get_name): All Unicode strings are
+	encoded in UTF-16BE.  Patch from Rajeev Pahuja <rpahuja@esri.com>.
+	(tt_name_entry_ascii_from_ucs4): Removed.
 
-    * src/truetype/ttobjs.c (tt_face_init): Fix typo in previous patch
 
-    * src/smooth/ftgrays.c: remove hard-coded error values, use FreeType
-    ones instead
+	* include/freetype/ftxf86.h: Fix and extend comment so that it
+	appears in the documentation.
 
-    * src/autofit/afhints.c (af_glyph_hints_dump_segments): remove unused
-    variable
+	* include/freetype/ftchapters.h: Add `font_format' section.
+
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::index_exit): Add link
+	to TOC in index page.
+
+2006-11-28  David Turner  <david@freetype.org>
+
+	* src/smooth/ftgrays.c (gray_raster_render): Return 0 when we are
+	trying to render into a zero-width/height bitmap, not an error code.
+
+	* src/truetype/ttobjs.c (tt_face_init): Fix typo in previous patch.
+
+	* src/smooth/ftgrays.c: Remove hard-coded error values; use FreeType
+	ones instead.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_segments): Remove unused
+	variable.
 
 2006-11-26  Pierre Hanser  <hanser@club-internet.fr>
 
 	* src/truetype/ttobjs.c (tt_face_init): Protect against NULL pointer.
 
-2006-11-25  David Turner    <david@freetype.org>
+2006-11-25  David Turner  <david@freetype.org>
 
-        * src/autofit/afhints.c: add stubs to link the "ftgrid" test program
-        when debugging is disabled in the auto-hinter
+	* src/autofit/afhints.c	(af_glyph_hints_dump_points,
+	af_glyph_hints_dump_segments, af_glyph_hints_dumpedges) [!AF_DEBUG]:
+	Add stubs to link the `ftgrid' test program when debugging is
+	disabled in the auto-hinter.
 
-2006-11-23  David Turner    <david@freetype.org>
+2006-11-23  David Turner  <david@freetype.org>
 
 	* src/autofit/afhints.c, src/autofit/afhints.h, src/autofit/aflatin.c,
-	src/autofit/aftypes.h: Misc. auto-hinter improvements
+	src/autofit/aftypes.h: Miscellaneous auto-hinter improvements.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_segments) [AF_DEBUG]:
+	Emit more sensible information.
+
+	* src/autofit/afhints.h (AF_SegmentRec): Add `height' member.
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Improve
+	rounding of blue values.
+	(af_latin_hints_compute_segments): Hint segment heights.
+	(af_latin_hints_link_segments): Reduce `len_score' value.
+	(af_latin_hints_compute_edges): Increase `segment_length_threshold'
+	value and use `height' member for comparisons.
+	(af_latin_hint_edges): Extend logging message.
+	Improve handling of remaining edges.
 
 2006-11-22  Werner Lemberg  <wl@gnu.org>
 

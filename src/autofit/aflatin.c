@@ -471,7 +471,7 @@
       if ( blue )
       {
         FT_Pos  scaled = FT_MulFix( blue->shoot.org, scaler->y_scale );
-        FT_Pos  fitted = (scaled + 40) & ~63;
+        FT_Pos  fitted = ( scaled + 40 ) & ~63;
 
 
         if ( scaled != fitted )
@@ -772,19 +772,20 @@
     } /* contours */
 
 
-   /* now slightly increase the height of segments when this makes sense
-    * this is used to better detect and ignore serifs
-    */
+    /* now slightly increase the height of segments when this makes */
+    /* sense -- this is used to better detect and ignore serifs     */
     {
-      AF_Segment  segments      = axis->segments;
+      AF_Segment  segments     = axis->segments;
       AF_Segment  segments_end = segments + axis->num_segments;
+
 
       for ( segment = segments; segment < segments_end; segment++ )
       {
-        AF_Point  first = segment->first;
-        AF_Point  last  = segment->last;
+        AF_Point  first   = segment->first;
+        AF_Point  last    = segment->last;
         FT_Pos    first_v = first->v;
         FT_Pos    last_v  = last->v;
+
 
         if ( first == last )
           continue;
@@ -793,25 +794,27 @@
         {
           AF_Point  p;
 
+
           p = first->prev;
           if ( p->v < first_v )
-            segment->height += (first_v - p->v) >> 1;
+            segment->height += ( first_v - p->v ) >> 1;
 
           p = last->next;
           if ( p->v > last_v )
-            segment->height += (p->v - last_v) >> 1;
+            segment->height += ( p->v - last_v ) >> 1;
         }
         else
         {
           AF_Point  p;
 
+
           p = first->prev;
           if ( p->v > first_v )
-            segment->height += (p->v - first_v) >> 1;
+            segment->height += ( p->v - first_v ) >> 1;
 
           p = last->next;
           if ( p->v < last_v )
-            segment->height += (last_v - p->v) >> 1;
+            segment->height += ( last_v - p->v ) >> 1;
         }
       }
     }
@@ -1841,9 +1844,11 @@
         else
           edge->pos = FT_PIX_ROUND( edge->opos );
 
-        AF_LOG(( "ANCHOR: edge %d (opos=%.2f) and %d (opos=%.2f) snapped to (%.2f) (%.2f)\n",
-                 edge-edges, edge->opos / 64., edge2-edges, edge2->opos/64.,
-                 edge->pos / 64., edge2->pos / 64. ));
+        AF_LOG(( "ANCHOR: edge %d (opos=%.2f) and %d (opos=%.2f) "
+                 "snapped to (%.2f) (%.2f)\n",
+                 edge-edges, edge->opos / 64.0,
+                 edge2-edges, edge2->opos / 64.0,
+                 edge->pos / 64.0, edge2->pos / 64.0 ));
         anchor = edge;
 
         edge->flags |= AF_EDGE_DONE;
@@ -2020,10 +2025,12 @@
       {
         FT_Pos  delta;
 
+
         if ( edge->flags & AF_EDGE_DONE )
           continue;
 
         delta = 1000;
+
         if ( edge->serif )
         {
           delta = edge->serif->opos - edge->opos;
@@ -2031,45 +2038,49 @@
             delta = -delta;
         }
 
-        if ( delta < 64+16 )
+        if ( delta < 64 + 16 )
         {
           af_latin_align_serif_edge( hints, edge->serif, edge );
-          AF_LOG(( "SERIF: edge %d (opos=%.2f) serif to %d (opos=%.2f) aligned to (%.2f)\n", edge-edges,
-                   edge->opos/64., edge->serif - edges, edge->serif->opos/64., edge->pos/64.0 ));
+          AF_LOG(( "SERIF: edge %d (opos=%.2f) serif to %d (opos=%.2f) "
+                   "aligned to (%.2f)\n",
+                   edge-edges, edge->opos / 64.0,
+                   edge->serif - edges, edge->serif->opos / 64.0,
+                   edge->pos / 64.0 ));
         }
         else if ( !anchor )
         {
           AF_LOG(( "SERIF_ANCHOR: edge %d (opos=%.2f) snapped to (%.2f)\n",
-                   edge-edges, edge->opos/64., edge->pos/64. ));
+                   edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
           edge->pos = FT_PIX_ROUND( edge->opos );
           anchor    = edge;
         }
         else
         {
-          AF_Edge   before, after;
+          AF_Edge  before, after;
 
-          for ( before = edge-1; before >= edges; before-- )
+
+          for ( before = edge - 1; before >= edges; before-- )
             if ( before->flags & AF_EDGE_DONE )
-                break;
+              break;
 
-          for ( after = edge+1; after < edge_limit; after++ )
+          for ( after = edge + 1; after < edge_limit; after++ )
             if ( after->flags & AF_EDGE_DONE )
-                break;
+              break;
 
-          if ( before >= edges && before < edge &&
-               after  < edge_limit && after > edge )
-          {
-              edge->pos = before->pos + FT_MulDiv( edge->opos - before->opos,
-                                                   after->pos - before->pos,
-                                                   after->opos - before->opos );
-          }
+          if ( before >= edges && before < edge   &&
+               after < edge_limit && after > edge )
+            edge->pos = before->pos +
+                          FT_MulDiv( edge->opos - before->opos,
+                                     after->pos - before->pos,
+                                     after->opos - before->opos );
           else
-              edge->pos = anchor->pos +
+            edge->pos = anchor->pos +
                           FT_PIX_ROUND( edge->opos - anchor->opos );
 
           AF_LOG(( "SERIF_LINK: edge %d (opos=%.2f) snapped to (%.2f)\n",
-                   edge-edges, edge->opos/64., edge->pos/64. ));
+                   edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
         }
+
         edge->flags |= AF_EDGE_DONE;
 
         if ( edge > edges && edge->pos < edge[-1].pos )

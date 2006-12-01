@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* Uncomment the line below if you want to active sub-pixel rendering    */
+  /* Uncomment the line below if you want to activate sub-pixel rendering  */
   /* (a.k.a. LCD rendering, or ClearType) in this build of the library.    */
   /*                                                                       */
   /* Note that this feature is covered by several Microsoft patents        */

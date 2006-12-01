@@ -1783,17 +1783,17 @@
       return ErrRaster_Invalid_Outline;
 
     /* if direct mode is not set, we must have a target bitmap */
-    if ( (params->flags & FT_RASTER_FLAG_DIRECT) == 0 )
+    if ( ( params->flags & FT_RASTER_FLAG_DIRECT ) == 0 )
     {
-        if ( !target_map )
-            return ErrRaster_Invalid_Argument;
+      if ( !target_map )
+        return ErrRaster_Invalid_Argument;
 
-        /* nothing to do */
-        if ( !target_map->width || !target_map->rows )
-            return 0;
+      /* nothing to do */
+      if ( !target_map->width || !target_map->rows )
+        return 0;
 
-        if ( !target_map->buffer )
-            return ErrRaster_Invalid_Argument;
+      if ( !target_map->buffer )
+        return ErrRaster_Invalid_Argument;
     }
 
     /* this version does not support monochrome rendering */
