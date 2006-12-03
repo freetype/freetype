@@ -222,7 +222,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_SBit_Const_Metrics                                         */
+  /*    Load_SBit_Const_Metrics                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the metrics for `EBLC' index tables format 2 and 5.          */
@@ -252,7 +252,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_SBit_Range_Codes                                           */
+  /*    Load_SBit_Range_Codes                                              */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the range codes for `EBLC' index tables format 4 and 5.      */
@@ -317,7 +317,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_SBit_Range                                                 */
+  /*    Load_SBit_Range                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads a given `EBLC' index/range table.                            */
@@ -398,7 +398,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    tt_face_load_sbit_strikes                                          */
+  /*    tt_face_load_eblc                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the table of embedded bitmap sizes for this face.            */
@@ -598,7 +598,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    tt_face_free_sbit_strikes                                          */
+  /*    tt_face_free_eblc                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Releases the embedded bitmap tables.                               */
