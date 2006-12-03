@@ -137,7 +137,7 @@
      *  paranoid there and don't trust the data.
      */
     count = (FT_UInt)num_strikes;
-    if ( 8 +48UL * count > table_size )
+    if ( 8 + 48UL * count > table_size )
       count = (FT_UInt)( ( p_limit - p ) / 48 );
 
     face->sbit_num_strikes = count;
