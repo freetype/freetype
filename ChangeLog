@@ -1,3 +1,7 @@
+2006-12-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add ttsbit0.c.
+
 2006-12-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (tt_face_get_name): All Unicode strings are
