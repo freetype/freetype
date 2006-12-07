@@ -206,6 +206,12 @@
           loader->pp1.x = FT_PIX_ROUND( pp1x_uh );
           loader->pp2.x = FT_PIX_ROUND( pp2x_uh );
 
+          if ( loader->pp1.x >= new_lsb )
+            loader->pp1.x -= 64;
+
+          if ( loader->pp2.x <= pp2x_uh )
+            loader->pp2.x += 64;
+
           slot->lsb_delta = loader->pp1.x - pp1x_uh;
           slot->rsb_delta = loader->pp2.x - pp2x_uh;
         }
