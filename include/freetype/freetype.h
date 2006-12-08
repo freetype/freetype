@@ -1799,6 +1799,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    You must not deallocate the memory before calling @FT_Face_Done.   */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_New_Memory_Face( FT_Library      library,
                       const FT_Byte*  file_base,
