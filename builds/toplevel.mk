@@ -163,11 +163,22 @@ include $(TOP_DIR)/builds/modules.mk
 # Not to be run by a normal user -- there are no attempts to make it
 # generic.
 
+ifneq ($(findstring dist,$(MAKECMDGOALS)),)
+  FT_H := include/freetype/freetype.h
+
+  major := $(shell sed -n 's/.*FREETYPE_MAJOR.*\([0-9]\+\)/\1/p' < $(FT_H))
+  minor := $(shell sed -n 's/.*FREETYPE_MINOR.*\([0-9]\+\)/\1/p' < $(FT_H))
+  patch := $(shell sed -n 's/.*FREETYPE_PATCH.*\([0-9]\+\)/\1/p' < $(FT_H))
+
+  version    := $(major).$(minor).$(patch)
+  winversion := $(major)$(minor)$(patch)
+endif
+
 dist:
 	-rm -rf tmp
-	rm -f freetype-2.2.1.tar.gz
-	rm -f freetype-2.2.1.tar.bz2
-	rm -f ft221.zip
+	rm -f freetype-$(version).tar.gz
+	rm -f freetype-$(version).tar.bz2
+	rm -f ft$(winversion).zip
 
 	for d in `find . -wholename '*/CVS' -prune \
 	                 -o -type f \
@@ -194,17 +205,17 @@ dist:
 
 	chmod +w src/tools/docmaker
 
-	mv tmp freetype-2.2.1
+	mv tmp freetype-$(version)
 
-	tar cfh - freetype-2.2.1 \
-	| gzip -c > freetype-2.2.1.tar.gz
-	tar cfh - freetype-2.2.1 \
-	| bzip2 -c > freetype-2.2.1.tar.bz2
+	tar cfh - freetype-$(version) \
+	| gzip -c > freetype-$(version).tar.gz
+	tar cfh - freetype-$(version) \
+	| bzip2 -c > freetype-$(version).tar.bz2
 
 	@# Use CR/LF for zip files.
-	zip -lr ft221.zip freetype-2.2.1
+	zip -lr ft$(winversion).zip freetype-$(version)
 
-	rm -fr freetype-2.2.1
+	rm -fr freetype-$(version)
 
 
 # The locations of the latest `config.guess' and `config.sub' versions (from

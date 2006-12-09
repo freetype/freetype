@@ -1,3 +1,7 @@
+2006-12-08  Werner Lemberg  <wl@gnu.org>
+
+	* builds/toplevel.mk (dist): Extract version number from freetype.h.
+
 2006-12-08  Vladimir Volovich  <vvv@vsu.ru>
 
 	* src/tools/apinames (State): Remove final comma in structure -- xlc

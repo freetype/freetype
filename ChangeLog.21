@@ -2758,7 +2758,7 @@
 	Add vertical phantom points.
 
 	* include/freetype/internal/tttypes.h (TT_LoaderRec): Add
-	`top_bearing', `vadvance', `pp3, and `pp4'.
+	`top_bearing', `vadvance', `pp3', and `pp4'.
 
 	* src/autofit/afloader.c (af_loader_load_g): Handle two more points.
 
