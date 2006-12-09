@@ -1,3 +1,12 @@
+2006-12-09  Werner Lemberg  <wl@gnu.org>
+
+	* builds/*/*def.mk, builds/*/detect.mk (CAT): Define to either `cat'
+	or `type'.
+
+	* builds/freetype.mk (version): Extracted from freetype.h, using
+	GNU make's built-in string functions.
+	(refdoc): Use $(version) instead of static version number.
+
 2006-12-08  Werner Lemberg  <wl@gnu.org>
 
 	* builds/toplevel.mk (dist): Extract version number from freetype.h.

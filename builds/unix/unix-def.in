@@ -17,6 +17,7 @@ TOP_DIR := $(shell cd $(TOP_DIR); pwd)
 
 DELETE    := @RMF@
 DELDIR    := @RMDIR@
+CAT       := cat
 SEP       := /
 
 # this is used for `make distclean' and `make install'

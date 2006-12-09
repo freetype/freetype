@@ -14,6 +14,7 @@
 
 
 DELETE    := del
+CAT       := type
 SEP       := $(strip \ )
 BUILD_DIR := $(TOP_DIR)/builds/dos
 PLATFORM  := dos

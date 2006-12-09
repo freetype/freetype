@@ -16,6 +16,7 @@
 
 
 DELETE    := rm -f
+CAT       := cat
 SEP       := /
 BUILD_DIR := $(TOP_DIR)/builds/beos
 PLATFORM  := beos

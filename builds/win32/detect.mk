@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2003, 2004 by
+# Copyright 1996-2000, 2003, 2004, 2006 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -65,6 +65,7 @@ endif # test PLATFORM ansi
 ifeq ($(PLATFORM),win32)
 
   DELETE := del
+  CAT    := type
   SEP    := $(BACKSLASH)
 
   # Setting COPY is a bit trickier.  Plain COPY on NT will not work

@@ -267,6 +267,29 @@ dll: $(PROJECT_LIBRARY) exported_symbols
 	$(FT_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
 
+ifneq ($(findstring refdoc,$(MAKECMDGOALS)),)
+  # poor man's `sed' emulation with make's built-in string functions
+  work := $(strip $(shell $(CAT) $(PUBLIC_DIR)/freetype.h))
+  work := $(subst |,x,$(work))
+  work := $(subst $(space),|,$(work))
+  work := $(subst \#define|FREETYPE_MAJOR|,$(space),$(work))
+  work := $(word 2,$(work))
+  major := $(subst |,$(space),$(work))
+  major := $(firstword $(major))
+
+  work := $(subst \#define|FREETYPE_MINOR|,$(space),$(work))
+  work := $(word 2,$(work))
+  minor := $(subst |,$(space),$(work))
+  minor := $(firstword $(minor))
+
+  work := $(subst \#define|FREETYPE_PATCH|,$(space),$(work))
+  work := $(word 2,$(work))
+  patch := $(subst |,$(space),$(work))
+  patch := $(firstword $(patch))
+
+  version := $(major).$(minor).$(patch)
+endif
+
 # We write-protect the docmaker directory to suppress generation
 # of .pyc files.
 #
@@ -274,7 +297,7 @@ refdoc:
 	-chmod -w $(SRC_DIR)/tools/docmaker
 	python $(SRC_DIR)/tools/docmaker/docmaker.py \
                --prefix=ft2                          \
-               --title=FreeType-2.2.1                \
+               --title=FreeType-$(version)           \
                --output=$(DOC_DIR)                   \
                $(PUBLIC_DIR)/*.h                     \
                $(PUBLIC_DIR)/config/*.h              \

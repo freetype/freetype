@@ -116,10 +116,12 @@ ifeq ($(PLATFORM),dos)
     SEP    := /
     DELETE := rm
     COPY   := cp
+    CAT    := cat
     setup: std_setup
   else
     SEP    := $(BACKSLASH)
     DELETE := del
+    CAT    := type
 
     # Setting COPY is a bit trickier.  We can be running DJGPP on some
     # Windows NT derivatives, like XP.  See builds/win32/detect.mk for
