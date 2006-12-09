@@ -1,3 +1,8 @@
+2006-12-08  Vladimir Volovich  <vvv@vsu.ru>
+
+	* src/tools/apinames (State): Remove final comma in structure -- xlc
+	v5 under AIX 4.3 doesn't like this.
+
 2006-12-07  David Turner  <david@freetype.org>
 
 	* src/autofit/afloader.c (af_loader_load_g): Small adjustment

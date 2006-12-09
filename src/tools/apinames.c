@@ -194,7 +194,7 @@ names_dump( FILE*         out,
 typedef enum
 {
   STATE_START = 0,  /* waiting for FT_EXPORT keyword and return type */
-  STATE_TYPE,       /* type was read, waiting for function name      */
+  STATE_TYPE        /* type was read, waiting for function name      */
 
 } State;
 
