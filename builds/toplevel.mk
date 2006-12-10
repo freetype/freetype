@@ -163,7 +163,8 @@ include $(TOP_DIR)/builds/modules.mk
 # Not to be run by a normal user -- there are no attempts to make it
 # generic.
 
-ifneq ($(findstring dist,$(MAKECMDGOALS)),)
+# we check for `dist', not `distclean'
+ifneq ($(findstring distx,$(MAKECMDGOALS)x),)
   FT_H := include/freetype/freetype.h
 
   major := $(shell sed -n 's/.*FREETYPE_MAJOR.*\([0-9]\+\)/\1/p' < $(FT_H))

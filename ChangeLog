@@ -1,3 +1,7 @@
+2006-12-10  Werner Lemberg  <wl@gnu.org>
+
+	* builds/toplevel.mk (version): Protect against `distclean' target.
+
 2006-12-09  Werner Lemberg  <wl@gnu.org>
 
 	* builds/*/*def.mk, builds/*/detect.mk (CAT): Define to either `cat'
