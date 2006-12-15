@@ -100,7 +100,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #if ( defined( __APPLE__ ) && !defined( DARWIN_NO_CARBON ) ) || \
     ( defined( __MWERKS__ ) && defined( macintosh )        )
+#if defined( __ppc64__ ) /* no Carbon for ppc64 */
+#define DARWIN_NO_CARBON 1
+#else
 #define FT_MACINTOSH 1
+#endif
 #endif
 
 

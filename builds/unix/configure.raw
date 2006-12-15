@@ -182,8 +182,23 @@ if test x$with_old_mac_fonts = xyes; then
   AC_MSG_CHECKING([CoreServices & ApplicationServices of Mac OS X])
   FT2_EXTRA_LIBS="-Wl,-framework,CoreServices,-framework,ApplicationServices"
   LDFLAGS="$LDFLAGS $FT2_EXTRA_LIBS"
-  AC_TRY_LINK([],
-    [],
+  AC_TRY_LINK([
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <Carbon/Carbon.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Files.h>
+#endif
+    ],
+    [
+
+      short res = 0;
+
+
+      UseResFile( res );
+
+    ],
     [AC_MSG_RESULT([ok])],
     [AC_MSG_RESULT([not found])
      LDFLAGS="${orig_LDFLAGS}"
@@ -206,7 +221,7 @@ AC_ARG_WITH([fsspec],
                  [use obsolete FSSpec API of MacOS, if available (default=yes)]))
 if test x$with_fsspec = xno; then
   CFLAGS="$CFLAGS -DHAVE_FSSPEC=0"
-elif test x$with_old_mac_fonts = xyes; then
+elif test x$with_old_mac_fonts = xyes -a x$with_fsspec != x; then
   AC_MSG_CHECKING([FSSpec-based FileManager])
   AC_TRY_LINK([
 
@@ -252,7 +267,7 @@ if test x$with_fsref = xno; then
     data-fork fonts on MacOS, except of XXX.dfont.
     ])
   CFLAGS="$CFLAGS -DHAVE_FSREF=0"
-elif test x$with_old_mac_fonts = xyes; then
+elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
   AC_MSG_CHECKING([FSRef-based FileManager])
   AC_TRY_LINK([
 
@@ -310,7 +325,7 @@ AC_ARG_WITH([quickdraw-toolbox],
                  [use MacOS QuickDraw in ToolBox, if available (default=yes)]))
 if test x$with_quickdraw_toolbox = xno; then
   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_TOOLBOX=0"
-elif test x$with_old_mac_fonts = xyes; then
+elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_toolbox != x; then
   AC_MSG_CHECKING([QuickDraw FontManager functions in ToolBox])
   AC_TRY_LINK([
 
@@ -350,7 +365,7 @@ AC_ARG_WITH([quickdraw-carbon],
                  [use MacOS QuickDraw in Carbon, if available (default=yes)]))
 if test x$with_quickdraw_carbon = xno; then
   CFLAGS="$CFLAGS -DHAVE_QUICKDRAW_CARBON=0"
-elif test x$with_old_mac_fonts = xyes; then
+elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_carbon != x; then
   AC_MSG_CHECKING([QuickDraw FontManager functions in Carbon])
   AC_TRY_LINK([
 
@@ -400,7 +415,7 @@ AC_ARG_WITH([ats],
                  [use AppleTypeService, if available (default=yes)]))
 if test x$with_ats = xno; then
   CFLAGS="$CFLAGS -DHAVE_ATS=0"
-elif test x$with_old_mac_fonts = xyes; then
+elif test x$with_old_mac_fonts = xyes -a x$with_ats != x ; then
   AC_MSG_CHECKING([AppleTypeService functions])
   AC_TRY_LINK([
 
@@ -421,6 +436,19 @@ elif test x$with_old_mac_fonts = xyes; then
     [AC_MSG_RESULT([not found])
      CFLAGS="$CFLAGS -DHAVE_ATS=0"])
 fi
+
+case "$CFLAGS" in
+  *HAVE_FSSPEC* | *HAVE_FSREF* | *HAVE_QUICKDRAW* | *HAVE_ATS* )
+    AC_MSG_WARN([
+*** WARNING
+    FSSpec/FSRef/QuickDraw/ATS options are explicitly given.
+    use legacy builds/mac/ftmac.c instead of src/base/ftmac.c
+    ])
+    CFLAGS="$CFLAGS "'-I$(TOP_DIR)/builds/mac/'
+    ;;
+  *)
+    ;;
+esac
 
 
 AC_SUBST([LIBZ])
