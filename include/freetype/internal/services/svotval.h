@@ -29,7 +29,7 @@ FT_BEGIN_HEADER
 
 
   typedef FT_Error
-  (*otv_validate_func)( FT_Face    face,
+  (*otv_validate_func)( FT_Face volatile  face,
                         FT_UInt    ot_flags,
                         FT_Bytes  *base,
                         FT_Bytes  *gdef,
