@@ -1371,6 +1371,7 @@
     FT_Long    flag_offset;
     FT_Long    rlen;
     int        is_cff;
+    FT_Long    face_index_in_resource = 0;
 
 
     if ( face_index == -1 )
@@ -1402,7 +1403,7 @@
     error = open_face_from_buffer( library,
                                    sfnt_data,
                                    rlen,
-                                   face_index,
+                                   face_index_in_resource,
                                    is_cff ? "cff" : "truetype",
                                    aface );
 
@@ -1444,6 +1445,8 @@
       error = Mac_Read_POST_Resource( library, stream, data_offsets, count,
                                       face_index, aface );
       FT_FREE( data_offsets );
+      /* POST exists in a LWFN providing single face */
+      (*aface)->num_faces = 1;
       return error;
     }
 
@@ -1453,9 +1456,13 @@
                                         &data_offsets, &count );
     if ( !error )
     {
+      FT_Long face_index_internal = face_index % count;
+
+
       error = Mac_Read_sfnt_Resource( library, stream, data_offsets, count,
-                                      face_index, aface );
+                                      face_index_internal, aface );
       FT_FREE( data_offsets );
+      (*aface)->num_faces = count;
     }
 
     return error;
