@@ -30,6 +30,7 @@ COptions        = \xB6
 ### Source Files ###
 
 SrcFiles        =  \xB6
+				  :builds:mac:ftmac.c \xB6
 				  :src:autofit:autofit.c \xB6
 				  :src:base:ftbase.c \xB6
 				  :src:base:ftbbox.c \xB6
@@ -39,7 +40,6 @@ SrcFiles        =  \xB6
 				  :src:base:ftglyph.c \xB6
 				  :src:base:ftgxval.c \xB6
 				  :src:base:ftinit.c \xB6
-				  :src:base:ftmac.c \xB6
 				  :src:base:ftmm.c \xB6
 				  :src:base:ftotval.c \xB6
 				  :src:base:ftpfr.c \xB6
@@ -128,8 +128,8 @@ LibFiles-68K    =
 
 ### Build Rules ###
 
-"{ObjDir}ftmac.c.o" \xC4\xC4 :src:base:ftmac.c
-	{C} :src:base:ftmac.c -o "{ObjDir}ftmac.c.o" {COptions}
+"{ObjDir}ftmac.c.o" \xC4\xC4 :builds:mac:ftmac.c
+	{C} :builds:mac:ftmac.c -o "{ObjDir}ftmac.c.o" {COptions}
 
 FreeType.m68k_far    \xC4\xC4  FreeType.m68k_far.o
 
