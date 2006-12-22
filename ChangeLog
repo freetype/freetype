@@ -1,3 +1,11 @@
+2006-12-22  David Turner  <david@freetype.org>
+
+	* src/autofit/aflatin.c, src/truetype/ttgload.c: removing compiler
+	warnings
+
+	* builds/win32/visualc/freetype.vcproj: adding _CRT_SECURE_NO_DEPRECATE
+	to avoid deprecation warnings with Visual C++ 8
+
 2006-12-16  Anders Kaseorg  <anders@kaseorg.com>
 
 	* src/base/ftlcdfil.c (FT_Library_SetLcdFilter)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1251"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -412,7 +412,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\include"
-				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY"
+				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;_CRT_SECURE_NO_DEPRECATE"
 				GeneratePreprocessedFile="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
