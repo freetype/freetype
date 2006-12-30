@@ -106,6 +106,58 @@
   /* ============================= format 0 ============================== */
 
   static void
+  gxv_kern_subtable_fmt0_pairs_validate( FT_Bytes       table,
+                                         FT_Bytes       limit,
+                                         FT_UShort      nPairs,
+                                         GXV_Validator  valid )
+  {
+    FT_Bytes   p = table;
+    FT_UShort  i;
+
+    FT_UShort  last_gid_left  = 0;
+    FT_UShort  last_gid_right = 0;
+
+
+    GXV_NAME_ENTER( "kern format 0 paris" );
+
+    for ( i = 0; i < nPairs; i++ )
+    {
+      FT_UShort  gid_left;
+      FT_UShort  gid_right;
+      FT_Short   kernValue;
+
+
+      gid_left  = FT_NEXT_USHORT( p );
+      gid_right = FT_NEXT_USHORT( p );
+
+      GXV_TRACE(( "left gid = %u, right gid = %u\n", gid_left, gid_right ));
+      gxv_glyphid_validate( gid_left, valid );
+      gxv_glyphid_validate( gid_right, valid );
+
+      /* A pair of left and right gid must be uniqe and be sorted. */
+      if ( gid_left == last_gid_left )
+      {
+        if ( last_gid_right < gid_right )
+          last_gid_right = gid_right;
+        else
+          FT_INVALID_DATA;
+      }
+      else if ( last_gid_left < gid_left )
+      {
+        last_gid_left  = gid_left;
+        last_gid_right = gid_right;
+      }
+      else
+        FT_INVALID_DATA;
+
+      /* skip the kern value */
+      kernValue = FT_NEXT_SHORT( p );
+    }
+
+    GXV_EXIT;
+  }
+
+  static void
   gxv_kern_subtable_fmt0_validate( FT_Bytes       table,
                                    FT_Bytes       limit,
                                    GXV_Validator  valid )
@@ -114,7 +166,6 @@
 
     FT_UShort  nPairs;
     FT_UShort  unitSize;
-    FT_UShort  i;
 
 
     GXV_NAME_ENTER( "kern subtable format0" );
@@ -127,26 +178,7 @@
     gxv_BinSrchHeader_validate( p, limit, &unitSize, &nPairs, valid );
     p += 2 + 2 + 2 + 2;
 
-    for ( i = 0; i < nPairs; i++ )
-    {
-      FT_UShort  gid_left;
-      FT_UShort  gid_right;
-      FT_Short   kernValue;
-
-      /* TODO: should be checked pairs are unique. */
-
-
-      /* left */
-      gid_left  = FT_NEXT_USHORT( p );
-      gxv_glyphid_validate( gid_left, valid );
-
-      /* right */
-      gid_right = FT_NEXT_USHORT( p );
-      gxv_glyphid_validate( gid_right, valid );
-
-      /* skip the kern value */
-      kernValue = FT_NEXT_SHORT( p );
-    }
+    gxv_kern_subtable_fmt0_pairs_validate( p, limit, nPairs, valid );
 
     GXV_EXIT;
   }
