@@ -127,14 +127,16 @@
       FT_Short   kernValue;
 
 
+      /* left */
       gid_left  = FT_NEXT_USHORT( p );
-      gid_right = FT_NEXT_USHORT( p );
-
-      GXV_TRACE(( "left gid = %u, right gid = %u\n", gid_left, gid_right ));
       gxv_glyphid_validate( gid_left, valid );
+
+      /* right */
+      gid_right = FT_NEXT_USHORT( p );
       gxv_glyphid_validate( gid_right, valid );
 
       /* A pair of left and right gid must be uniqe and be sorted. */
+      GXV_TRACE(( "left gid = %u, right gid = %u\n", gid_left, gid_right ));
       if ( gid_left == last_gid_left )
       {
         if ( last_gid_right < gid_right )
