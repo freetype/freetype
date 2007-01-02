@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT kern table validation (body).                         */
 /*                                                                         */
-/*  Copyright 2004, 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K., */
+/*  Copyright 2004, 2005, 2006, 2007                                       */
+/*  by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -117,8 +118,10 @@
     FT_UShort  last_gid_left  = 0;
     FT_UShort  last_gid_right = 0;
 
+    FT_UNUSED( limit );
 
-    GXV_NAME_ENTER( "kern format 0 paris" );
+
+    GXV_NAME_ENTER( "kern format 0 pairs" );
 
     for ( i = 0; i < nPairs; i++ )
     {
@@ -135,7 +138,7 @@
       gid_right = FT_NEXT_USHORT( p );
       gxv_glyphid_validate( gid_right, valid );
 
-      /* A pair of left and right gid must be uniqe and be sorted. */
+      /* Pairs of left and right GIDs must be unique and sorted. */
       GXV_TRACE(( "left gid = %u, right gid = %u\n", gid_left, gid_right ));
       if ( gid_left == last_gid_left )
       {
@@ -170,7 +173,7 @@
     FT_UShort  unitSize;
 
 
-    GXV_NAME_ENTER( "kern subtable format0" );
+    GXV_NAME_ENTER( "kern subtable format 0" );
 
     unitSize = 2 + 2 + 2;
     nPairs   = 0;
@@ -300,7 +303,7 @@
     GXV_kern_fmt1_StateOptRec  vt_rec;
 
 
-    GXV_NAME_ENTER( "kern subtable format1" );
+    GXV_NAME_ENTER( "kern subtable format 1" );
 
     valid->statetable.optdata =
       &vt_rec;
@@ -402,7 +405,7 @@
     FT_UShort  rightOffsetTable;
 
 
-    GXV_NAME_ENTER( "kern subtable format2" );
+    GXV_NAME_ENTER( "kern subtable format 2" );
 
     GXV_ODTECT_INIT( odtect );
     fmt2_rec.odtect = odtect;
@@ -459,7 +462,7 @@
     FT_Byte    flags;
 
 
-    GXV_NAME_ENTER( "kern subtable format3" );
+    GXV_NAME_ENTER( "kern subtable format 3" );
 
     GXV_LIMIT_CHECK( 2 + 1 + 1 + 1 + 1 );
     glyphCount      = FT_NEXT_USHORT( p );

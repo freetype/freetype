@@ -644,7 +644,7 @@
       loader->exec->pts          = *zone;
 
       debug = FT_BOOL( !( loader->load_flags & FT_LOAD_NO_SCALE ) &&
-                        ((TT_Size)loader->size)->debug );
+                       ((TT_Size)loader->size)->debug             );
 
       error = TT_Run_Context( loader->exec, debug );
       if ( error && loader->exec->pedantic_hinting )

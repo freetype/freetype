@@ -797,11 +797,13 @@
 
           p = first->prev;
           if ( p->v < first_v )
-            segment->height = (FT_Short)(segment->height + (( first_v - p->v ) >> 1));
+            segment->height = (FT_Short)( segment->height +
+                                          ( ( first_v - p->v ) >> 1 ) );
 
           p = last->next;
           if ( p->v > last_v )
-            segment->height = (FT_Short)(segment->height + (( p->v - last_v ) >> 1));
+            segment->height = (FT_Short)( segment->height +
+                                          ( ( p->v - last_v ) >> 1 ) );
         }
         else
         {
@@ -810,11 +812,13 @@
 
           p = first->prev;
           if ( p->v > first_v )
-            segment->height = (FT_Short)(segment->height + (( p->v - first_v ) >> 1));
+            segment->height = (FT_Short)( segment->height +
+                                          ( ( p->v - first_v ) >> 1 ) );
 
           p = last->next;
           if ( p->v < last_v )
-            segment->height = (FT_Short)(segment->height + (( last_v - p->v ) >> 1));
+            segment->height = (FT_Short)( segment->height +
+                                          ( ( last_v - p->v ) >> 1 ) );
         }
       }
     }

@@ -229,11 +229,11 @@
         break;
 
       case TT_MS_ID_UCS_4:
-       /* apparently, when this value is found in a name table entry,
-        * it is documented as "Full Unicode repertoire". Experience
-        * with the MsGothic shipped with Windows Vista shows that this is
-        * really UTF-16 names  (the real UCS-4 is only used for charmaps)
-        */
+        /* Apparently, if this value is found in a name table entry, it is */
+        /* documented as `full Unicode repertoire'.  Experience with the   */
+        /* MsGothic font shipped with Windows Vista shows that this really */
+        /* means UTF-16 encoded names (UCS-4 values are only used within   */
+        /* charmaps).                                                      */
         convert = tt_name_entry_ascii_from_utf16;
         break;
 
