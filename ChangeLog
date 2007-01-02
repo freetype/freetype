@@ -1,3 +1,7 @@
+2007-01-02  David Turner  <david@freetype.org>
+
+	* src/sfnt/sfobjs.c: adding documentation comment
+
 2006-12-31  Masatake YAMATO  <jet@gyve.org>
 
 	* src/gxvalid/gxvkern.c (gxv_kern_subtable_fmt0_pairs_validate): New function.

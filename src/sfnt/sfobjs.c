@@ -225,7 +225,15 @@
         /* all Unicode strings are encoded using UTF-16BE */
       case TT_MS_ID_UNICODE_CS:
       case TT_MS_ID_SYMBOL_CS:
+        convert = tt_name_entry_ascii_from_utf16;
+        break;
+
       case TT_MS_ID_UCS_4:
+       /* apparently, when this value is found in a name table entry,
+        * it is documented as "Full Unicode repertoire". Experience
+        * with the MsGothic shipped with Windows Vista shows that this is
+        * really UTF-16 names  (the real UCS-4 is only used for charmaps)
+        */
         convert = tt_name_entry_ascii_from_utf16;
         break;
 
