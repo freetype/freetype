@@ -1395,7 +1395,6 @@ FT_BEGIN_HEADER
 
     /* since version 2.2 */
 
-#ifdef FT_OPTIMIZE_MEMORY
     FT_Byte*              horz_metrics;
     FT_ULong              horz_metrics_size;
 
@@ -1420,7 +1419,6 @@ FT_BEGIN_HEADER
     FT_UInt               num_kern_tables;
     FT_UInt32             kern_avail_bits;
     FT_UInt32             kern_order_bits;
-#endif
 
 #ifdef TT_CONFIG_OPTION_BDF
     TT_BDFRec             bdf;

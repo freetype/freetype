@@ -24,7 +24,7 @@
    *  Alas, the memory-optimized sbit loader can't be used when implementing
    *  the `old internals' hack
    */
-#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
+#if !defined FT_CONFIG_OPTION_OLD_INTERNALS
 
 #include "ttsbit0.c"
 

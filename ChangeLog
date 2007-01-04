@@ -1,5 +1,11 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/sfnt/sfobjs.c, src/sfnt/ttkern.c, src/sfnt/ttkern.h,
+	src/sfnt/ttmtx.c, src/sfnt/ttsbit.c, src/sfnt/ttsbit.h,
+	src/truetype/ttpload.c, include/freetype/config/ftoption.h:
+	remove FT_OPTIMIZE_MEMORY macro, since the optimization is
+	no longer experimental
+
 	* src/pshinter/pshalgo.c: remove a stupid typo that results in no
 	hinting and a memory leak with some large Asian CFF fonts
 

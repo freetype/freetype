@@ -41,11 +41,7 @@ FT_BEGIN_HEADER
                        FT_UInt     left_glyph,
                        FT_UInt     right_glyph );
 
-#ifdef FT_OPTIMIZE_MEMORY
 #  define TT_FACE_HAS_KERNING( face )  ( (face)->kern_avail_bits != 0 )
-#else
-#  define TT_FACE_HAS_KERNING( face )  ( (face)->kern_pairs != NULL )
-#endif
 
 
 FT_END_HEADER

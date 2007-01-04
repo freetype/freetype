@@ -60,7 +60,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
+#if !defined FT_CONFIG_OPTION_OLD_INTERNALS
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_hmtx( TT_Face    face,
@@ -334,7 +334,7 @@
   /*                                                                       */
   /*    advance :: The advance width resp. advance height.                 */
   /*                                                                       */
-#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
+#if !defined FT_CONFIG_OPTION_OLD_INTERNALS
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_get_metrics( TT_Face     face,

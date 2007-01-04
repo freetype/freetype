@@ -594,12 +594,6 @@ FT_BEGIN_HEADER
 
   /* */
 
-  /*
-   * This temporary macro is used to control various optimizations for
-   * reducing the heap footprint of memory-mapped TrueType files.
-   */
-#define FT_OPTIMIZE_MEMORY
-
 
   /*
    * Define this variable if you want to keep the layout of internal

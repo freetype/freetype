@@ -901,7 +901,7 @@
         FT_UInt  i, count;
 
 
-#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
+#if !defined FT_CONFIG_OPTION_OLD_INTERNALS
         count = face->sbit_num_strikes;
 #else
         count = (FT_UInt)face->num_sbit_strikes;
@@ -1008,7 +1008,7 @@
     }
 
     /* freeing the horizontal metrics */
-#if defined FT_OPTIMIZE_MEMORY && !defined FT_CONFIG_OPTION_OLD_INTERNALS
+#if !defined FT_CONFIG_OPTION_OLD_INTERNALS
     {
       FT_Stream  stream = FT_FACE_STREAM( face );
 
