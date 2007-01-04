@@ -1834,6 +1834,8 @@
       ras.clip_box.yMax =  32767L;
     }
 
+    gray_init_cells( worker, raster->buffer, raster->buffer_size );
+
     ras.outline   = *outline;
     ras.num_cells = 0;
     ras.invalid   = 1;
@@ -1927,7 +1929,7 @@
 
     if ( raster )
     {
-      if ( pool_base && pool_size >= sizeof(TWorker) + 2048 )
+      if ( pool_base && pool_size >= (long)sizeof(TWorker) + 2048 )
       {
         PWorker  worker = (PWorker) pool_base;
 
@@ -1935,8 +1937,6 @@
         rast->buffer      = pool_base + ((sizeof(TWorker) + sizeof(TCell)-1) & ~(sizeof(TCell)-1));
         rast->buffer_size = (long)((pool_base + pool_size) - (char*)rast->buffer) & ~(sizeof(TCell)-1);
         rast->band_size   = (int)( rast->buffer_size/(sizeof(TCell)*8) );
-
-        gray_init_cells( RAS_VAR_ rast->buffer, rast->buffer_size );
       }
       else
       {
