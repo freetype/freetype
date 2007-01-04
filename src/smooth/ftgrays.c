@@ -169,13 +169,13 @@
 #ifndef FT_STATIC_RASTER
 
 
-#define RAS_ARG   PRaster  raster
-#define RAS_ARG_  PRaster  raster,
+#define RAS_ARG   PWorker  worker
+#define RAS_ARG_  PWorker  worker,
 
-#define RAS_VAR   raster
-#define RAS_VAR_  raster,
+#define RAS_VAR   worker
+#define RAS_VAR_  worker,
 
-#define ras       (*raster)
+#define ras       (*worker)
 
 
 #else /* FT_STATIC_RASTER */
@@ -186,7 +186,7 @@
 #define RAS_VAR   /* empty */
 #define RAS_VAR_  /* empty */
 
-  static TRaster  ras;
+  static TWorker  ras;
 
 
 #endif /* FT_STATIC_RASTER */
@@ -260,7 +260,7 @@
   } TCell;
 
 
-  typedef struct  TRaster_
+  typedef struct  TWorker_
   {
     TCoord  ex, ey;
     TPos    min_ex, max_ex;
@@ -299,7 +299,6 @@
     int  conic_level;
     int  cubic_level;
 
-    void*       memory;
     ft_jmp_buf  jump_buffer;
 
     void*       buffer;
@@ -308,7 +307,19 @@
     PCell*     ycells;
     int        ycount;
 
+  } TWorker, *PWorker;
+
+
+  typedef struct TRaster_
+  {
+    void*    buffer;
+    long     buffer_size;
+    int      band_size;
+    void*    memory;
+    PWorker  worker;
+
   } TRaster, *PRaster;
+
 
 
   /*************************************************************************/
@@ -672,7 +683,7 @@
       ras.cover += delta;
       ey1       += incr;
 
-      gray_set_cell( raster, ex, ey1 );
+      gray_set_cell( &ras, ex, ey1 );
 
       delta = (int)( first + first - ONE_PIXEL );
       area  = (TArea)two_fx * delta;
@@ -682,7 +693,7 @@
         ras.cover += delta;
         ey1       += incr;
 
-        gray_set_cell( raster, ex, ey1 );
+        gray_set_cell( &ras, ex, ey1 );
       }
 
       delta      = (int)( fy2 - ONE_PIXEL + first );
@@ -1044,32 +1055,31 @@
 
   static int
   gray_move_to( const FT_Vector*  to,
-                FT_Raster         raster )
+                PWorker           worker )
   {
     TPos  x, y;
 
 
     /* record current cell, if any */
-    gray_record_cell( (PRaster)raster );
+    gray_record_cell( worker );
 
     /* start to a new position */
     x = UPSCALE( to->x );
     y = UPSCALE( to->y );
 
-    gray_start_cell( (PRaster)raster, TRUNC( x ), TRUNC( y ) );
+    gray_start_cell( worker, TRUNC( x ), TRUNC( y ) );
 
-    ((PRaster)raster)->x = x;
-    ((PRaster)raster)->y = y;
+    worker->x = x;
+    worker->y = y;
     return 0;
   }
 
 
   static int
   gray_line_to( const FT_Vector*  to,
-                FT_Raster         raster )
+                PWorker           worker )
   {
-    gray_render_line( (PRaster)raster,
-                      UPSCALE( to->x ), UPSCALE( to->y ) );
+    gray_render_line( worker, UPSCALE( to->x ), UPSCALE( to->y ) );
     return 0;
   }
 
@@ -1077,9 +1087,9 @@
   static int
   gray_conic_to( const FT_Vector*  control,
                  const FT_Vector*  to,
-                 FT_Raster         raster )
+                 PWorker           worker )
   {
-    gray_render_conic( (PRaster)raster, control, to );
+    gray_render_conic( worker, control, to );
     return 0;
   }
 
@@ -1088,9 +1098,9 @@
   gray_cubic_to( const FT_Vector*  control1,
                  const FT_Vector*  control2,
                  const FT_Vector*  to,
-                 FT_Raster         raster )
+                 PWorker           worker )
   {
-    gray_render_cubic( (PRaster)raster, control1, control2, to );
+    gray_render_cubic( worker, control1, control2, to );
     return 0;
   }
 
@@ -1099,10 +1109,10 @@
   gray_render_span( int             y,
                     int             count,
                     const FT_Span*  spans,
-                    PRaster         raster )
+                    PWorker         worker )
   {
     unsigned char*  p;
-    FT_Bitmap*      map = &raster->target;
+    FT_Bitmap*      map = &worker->target;
 
 
     /* first of all, compute the scanline offset */
@@ -1766,6 +1776,7 @@
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
+    PWorker            worker;
 
 
     if ( !raster || !raster->buffer || !raster->buffer_size )
@@ -1781,6 +1792,8 @@
     if ( outline->n_points !=
            outline->contours[outline->n_contours - 1] + 1 )
       return ErrRaster_Invalid_Outline;
+
+    worker = raster->worker;
 
     /* if direct mode is not set, we must have a target bitmap */
     if ( ( params->flags & FT_RASTER_FLAG_DIRECT ) == 0 )
@@ -1824,6 +1837,8 @@
     ras.outline   = *outline;
     ras.num_cells = 0;
     ras.invalid   = 1;
+    ras.band_size = raster->band_size;
+    ras.num_gray_spans = 0;
 
     if ( target_map )
       ras.target = *target_map;
@@ -1837,7 +1852,7 @@
       ras.render_span_data = params->user;
     }
 
-    return gray_convert_glyph( (PRaster)raster );
+    return gray_convert_glyph( worker );
   }
 
 
@@ -1910,10 +1925,26 @@
     PRaster  rast = (PRaster)raster;
 
 
-    if ( raster && pool_base && pool_size >= 4096 )
-      gray_init_cells( rast, (char*)pool_base, pool_size );
+    if ( raster )
+    {
+      if ( pool_base && pool_size >= sizeof(TWorker) + 2048 )
+      {
+        PWorker  worker = (PWorker) pool_base;
 
-    rast->band_size  = (int)( ( pool_size / sizeof ( TCell ) ) / 8 );
+        rast->worker      = worker;
+        rast->buffer      = pool_base + ((sizeof(TWorker) + sizeof(TCell)-1) & ~(sizeof(TCell)-1));
+        rast->buffer_size = (long)((pool_base + pool_size) - (char*)rast->buffer) & ~(sizeof(TCell)-1);
+        rast->band_size   = (int)( rast->buffer_size/(sizeof(TCell)*8) );
+
+        gray_init_cells( RAS_VAR_ rast->buffer, rast->buffer_size );
+      }
+      else
+      {
+        rast->buffer      = NULL;
+        rast->buffer_size = 0;
+        rast->worker      = NULL;
+      }
+    }
   }
 
 

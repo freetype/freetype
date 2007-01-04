@@ -1,5 +1,9 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/smooth/ftgrays.c: small optimization, the rasterizer now
+	uses the render pool to store its state during its operation,
+	this saves about 4 KB of heap for each FT_Library instance
+
 	* src/sfnt/sfobjs.c, src/sfnt/ttkern.c, src/sfnt/ttkern.h,
 	src/sfnt/ttmtx.c, src/sfnt/ttsbit.c, src/sfnt/ttsbit.h,
 	src/truetype/ttpload.c, include/freetype/config/ftoption.h:
