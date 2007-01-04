@@ -13,6 +13,19 @@ The  versions given  in  parentheses  are known  to  work.  Note  that
 autogen.sh also sets up proper  file permissions for the configure and
 auxiliary scripts.
 
+Note that a very common problem is that the script complains that
+the aclocal program doesn't accept a --force option:
+
+  generating `configure.ac'
+  running `aclocal -I . --force'
+  aclocal: unrecognized option -- `--force'
+  Try `aclocal --help' for more information.
+  error while running `aclocal -I . --force'
+
+What this really means that your version of Automake is too old,
+please update it before trying to build FreeType.
+
+
 For static builds which  don't use platform specific optimizations, no
 configure script is necessary at all; saying
 

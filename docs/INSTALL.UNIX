@@ -10,26 +10,43 @@ or MSys on Win32:
     will  not be  able to  compile the  library with  the instructions
     below using any other alternative (including BSD Make).
 
-    [Well,  this  is not  really  correct.  A  few  years  ago a  perl
-    implementation of make called `makepp' has appeared which can also
-    build FreeType 2 successfully on Unix platforms.  See
+    Check that you have GNU make by running the command:
 
-      http://makepp.sourceforge.net
+       make -v
 
-    for more  details; you  need version 1.19  or newer, and  you must
-    pass option `--norc-substitution'.]
+    This should dump some text that begins with:
 
-    Trying  to compile  the library  with a  different Make  tool will
-    print a message like:
+       GNU Make  <version number>
+       Copyright (C) <year> Free Software Foundation Inc.
 
-      Sorry, GNU make is required to build FreeType2.
+    Note that version 3.78.1 or higher is *required*, or the build will
+    fail.
 
-    and the build  process will be aborted.  If  this happens, install
-    GNU Make on your system,  and use the GNUMAKE environment variable
-    to name it, if necessary.
+    It's also OK to have GNU Make under another name (e.g. 'gmake')
+    if you use the GNUMAKE trick described below.
+
+    As a special exception, 'makepp' can also be used to build
+    FreeType 2. See the file docs/MAKEPP for details
 
 
-  2. Build and install the library
+  2. Regenerate the configure script when needed
+  ----------------------------------------------
+
+   This only applies if you're building a CVS snapshot or checkout,
+   *not* if you grabbed the sources of an official release.
+
+   you need to invoke the "autogen.sh" script in the top-level
+   directory in order to re-generate the configure script for your
+   platform. Normally, this simply means typing:
+
+     sh autogen.sh <your configure options>
+
+   in case of problems, you may need to install or upgrade Automake,
+   Autoconf or Libtool. See README.CVS in the top-level directory for
+   the gory details.
+    
+
+  3. Build and install the library
   --------------------------------
 
     The following  should work  on all Unix  systems where  the `make'

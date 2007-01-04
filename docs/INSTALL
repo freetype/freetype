@@ -13,7 +13,7 @@ I. Normal installation and upgrades
     need it, read the file `TRUETYPE' for information.
 
 
-  2. Unix Systems (as well as Cygwin or MSys on Windows)
+  2. Unix Systems (including Mac OS X, as well as Cygwin or MSys on Windows)
 
     Please read *both* `UPGRADE.UNIX' and `INSTALL.UNIX' to install or
     upgrade FreeType  2 on  a Unix system.   Note that you  *need* GNU

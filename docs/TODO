@@ -3,12 +3,6 @@ Here is a list of items that need to be addressed in FreeType 2
 
 * Implement stem3/counter hints properly in the Postscript hinter.
 
-* Finalize the cache sub-system.  It has been in beta far too long :-)
-
-* The automatic and Postscript hinters have been improved to increase
-  the quality of AA text, but Monochrome and LCD hinting still suck.  We
-  need to do something about that.
-
 * Add CIDCMap support to the CID driver.
 
 * Add track kerning support to the PFR driver.
