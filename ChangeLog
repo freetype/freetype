@@ -1,5 +1,17 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* docs/INSTALL.UNIX: simplified some parts, add reference to
+	autogen.sh and pointer to README.CVS
+
+	* README.CVS: add common problem description and solution
+	when running autogen.sh
+
+	* docs/INSTALL: add reference to MacOS X
+
+	* docs/MAKEPP, docs/INSTALL.MAC: add new documentation files
+
+	* docs/TODO: remove obsolete items
+
 	* src/raster/ftraster.c: removing dynamically generated "count_table",
 	and replace it with a constant array of bytes
 
