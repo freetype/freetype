@@ -1866,7 +1866,7 @@
       FT_Error  error;
 
 
-      if ( !FT_NEW_ARRAY( strongs, num_strongs ) )
+      if ( FT_NEW_ARRAY( strongs, num_strongs ) )
         return;
     }
 
