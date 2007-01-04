@@ -1,5 +1,8 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/raster/ftraster.c: removing dynamically generated "count_table",
+	and replace it with a constant array of bytes
+
 	* src/raster/ftraster.c, src/smooth/ftgrays.c: small optimization, the
 	rasterizers now	uses the render pool to store their state during scanline
 	convertion. this saves about 6 KB of heap space for each FT_Library instance

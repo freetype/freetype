@@ -498,8 +498,6 @@
     TBand     band_stack[16];       /* band stack used for sub-banding     */
     Int       band_top;             /* band stack top                      */
 
-    Int*      count_table;
-
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
 
     Byte*     grays;
@@ -528,8 +526,6 @@
     long      buffer_size;
     void*     memory;
     PWorker   worker;
-    Int       count_table[256];     /* Look-up table used to quickly count */
-                                    /* set bits in a gray 2x2 cell         */
     Byte      grays[5];
     Short     gray_width;
 
@@ -545,6 +541,27 @@
 #define ras  (*worker)
 
 #endif /* FT_STATIC_RASTER */
+
+
+static const char  count_table[256] =
+{
+  0 , 1 , 1 , 2 , 1 , 2 , 2 , 3 , 1 , 2 , 2 , 3 , 2 , 3 , 3 , 4,
+  1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
+  1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
+  2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
+  1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
+  2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
+  2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
+  3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
+  1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
+  2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
+  2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
+  3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
+  2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
+  3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
+  3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
+  4 , 5 , 5 , 6 , 5 , 6 , 6 , 7 , 5 , 6 , 6 , 7 , 6 , 7 , 7 , 8 };
+
 
 
   /*************************************************************************/
@@ -2494,7 +2511,7 @@
   {
     Int    c1, c2;
     PByte  pix, bit, bit2;
-    Int*   count = ras.count_table;
+    char*  count = (char*)count_table;
     Byte*  grays;
 
 
@@ -3155,24 +3172,10 @@
   static void
   ft_black_init( PRaster  raster )
   {
-    FT_UInt  n;
-    FT_ULong c;
-
-
-    /* setup count table */
-    for ( n = 0; n < 256; n++ )
-    {
-      c = ( n & 0x55 ) + ( ( n & 0xAA ) >> 1 );
-
-      c = ( ( c << 6 ) & 0x3000 ) |
-          ( ( c << 4 ) & 0x0300 ) |
-          ( ( c << 2 ) & 0x0030 ) |
-                   (c  & 0x0003 );
-
-      raster->count_table[n] = (UInt)c;
-    }
+    FT_UNUSED( raster );
 
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
+    FT_UInt  n;
 
     /* set default 5-levels gray palette */
     for ( n = 0; n < 5; n++ )
@@ -3335,7 +3338,6 @@
     ras.outline  = *outline;
     ras.target   = *target_map;
 
-    worker->count_table = raster->count_table;
     worker->buff        = (PLong) raster->buffer;
     worker->sizeBuff    = worker->buff + raster->buffer_size/sizeof(Long);
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
