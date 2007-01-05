@@ -1718,10 +1718,18 @@
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
     /* load execution context */
+    if ( IS_HINTED( load_flags ) )
     {
       TT_ExecContext  exec;
       FT_Bool         grayscale;
 
+
+      if ( !size->cvt_ready )
+      {
+        FT_Error  error = tt_size_ready_bytecode( size );
+        if ( error )
+          return error;
+      }
 
       /* query new execution context */
       exec = size->debug ? size->context

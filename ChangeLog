@@ -1,5 +1,10 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/truetype/ttobjs.h, src/truetype/ttobjs.c, 
+	src/truetype/ttgload.c: do not allocate interpreter-specific
+	tables in memory if we're not going to load glyphs with it
+	anyway.
+	
 	* src/sfnt/ttmtx.c, include/freetype/internal/tttypes.h:
 	don't extract the metrics table from the SFNT font file.
 	Instead, reparse it on each glyph load, since the runtime

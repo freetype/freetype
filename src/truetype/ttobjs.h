@@ -358,6 +358,9 @@ FT_BEGIN_HEADER
     FT_Bool            debug;
     TT_ExecContext     context;
 
+    FT_Bool            bytecode_ready;
+    FT_Bool            cvt_ready;
+
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
   } TT_SizeRec;
@@ -424,6 +427,9 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   tt_size_reset( TT_Size  size );
+
+  FT_LOCAL( FT_Error )
+  tt_size_ready_bytecode( TT_Size  size );
 
 
   /*************************************************************************/
