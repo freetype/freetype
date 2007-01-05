@@ -39,6 +39,9 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    stream      :: The source input stream.                            */
   /*                                                                       */
+  /*    start       :: The position of the first index byte in the         */
+  /*                   input stream                                        */
+  /*                                                                       */
   /*    count       :: The number of elements in the index.                */
   /*                                                                       */
   /*    off_size    :: The size in bytes of object offsets in index.       */
@@ -46,16 +49,21 @@ FT_BEGIN_HEADER
   /*    data_offset :: The position of first data byte in the index's      */
   /*                   bytes.                                              */
   /*                                                                       */
-  /*    offsets     :: A table of element offsets in the index.            */
+  /*    data_size   :: size of data table in this index                    */
+  /*                                                                       */
+  /*    offsets     :: A table of element offsets in the index. must be    */
+  /*                   loaded explicitely                                  */
   /*                                                                       */
   /*    bytes       :: If the index is loaded in memory, its bytes.        */
   /*                                                                       */
   typedef struct  CFF_IndexRec_
   {
     FT_Stream  stream;
+    FT_ULong   start;
     FT_UInt    count;
     FT_Byte    off_size;
     FT_ULong   data_offset;
+    FT_ULong   data_size;
 
     FT_ULong*  offsets;
     FT_Byte*   bytes;
@@ -85,6 +93,8 @@ FT_BEGIN_HEADER
     FT_UShort*  cids;       /* the inverse mapping of `sids'; only needed */
                             /* for CID-keyed fonts                        */
     FT_UInt     max_cid;
+    FT_UInt     num_glyphs;
+
   } CFF_CharsetRec, *CFF_Charset;
 
 

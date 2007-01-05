@@ -2291,9 +2291,8 @@
     if ( cff->top_font.font_dict.cid_registry != 0xFFFFU &&
          cff->charset.cids )
     {
-      if ( glyph_index < cff->charset.max_cid )
-        glyph_index = cff->charset.cids[glyph_index];
-      else
+      glyph_index = cff_charset_cid_to_gindex( &cff->charset, glyph_index );
+      if ( glyph_index == 0 )
         return CFF_Err_Invalid_Argument;
     }
     else if ( glyph_index >= cff->num_glyphs )
@@ -2423,13 +2422,13 @@
         /* See how charstring loads at cff_index_access_element() in      */
         /* cffload.c.                                                     */
         {
-          CFF_IndexRec csindex = cff->charstrings_index;
+          CFF_Index csindex = &cff->charstrings_index;
 
-
-          glyph->root.control_data =
-            csindex.bytes + csindex.offsets[glyph_index] - 1;
-          glyph->root.control_len =
-            charstring_len;
+          if (csindex->offsets)
+          {
+            glyph->root.control_data = csindex->bytes + csindex->offsets[glyph_index] - 1;
+            glyph->root.control_len  = charstring_len;
+          }
         }
       }
 

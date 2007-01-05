@@ -52,6 +52,10 @@ FT_BEGIN_HEADER
                             FT_Byte**  pbytes );
 
 
+  FT_LOCAL( FT_UInt )
+  cff_charset_cid_to_gindex( CFF_Charset  charset,
+                             FT_UInt      cid );
+
   FT_LOCAL( FT_Error )
   cff_font_load( FT_Stream  stream,
                  FT_Int     face_index,

@@ -193,11 +193,33 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cffload
 
+  /* read an offset from the index's stream current position */
+  static FT_ULong
+  cff_index_read_offset( CFF_Index  idx,
+                         FT_Error  *perror )
+  {
+    FT_Error   error;
+    FT_Stream  stream = idx->stream;
+    FT_Byte    tmp[4];
+    FT_ULong   result = 0;
+
+    if ( !FT_STREAM_READ( tmp, idx->off_size ) )
+    {
+      FT_Int  nn;
+
+      for ( nn = 0; nn < idx->off_size; nn++ )
+        result = (result << 8) | tmp[nn];
+    }
+
+    *perror = error;
+    return result;
+  }
+
 
   static FT_Error
-  cff_new_index( CFF_Index  idx,
-                 FT_Stream  stream,
-                 FT_Bool    load )
+  cff_index_init( CFF_Index  idx,
+                  FT_Stream  stream,
+                  FT_Bool    load )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -207,14 +229,12 @@
     FT_MEM_ZERO( idx, sizeof ( *idx ) );
 
     idx->stream = stream;
+    idx->start  = FT_STREAM_POS();
     if ( !FT_READ_USHORT( count ) &&
          count > 0                )
     {
-      FT_Byte*   p;
       FT_Byte    offsize;
-      FT_ULong   data_size;
-      FT_ULong*  poff;
-      FT_Byte*   p_end;
+      FT_ULong   size, last_offset;
 
 
       /* there is at least one element; read the offset size,           */
@@ -228,12 +248,86 @@
         goto Exit;
       }
 
-      idx->stream   = stream;
       idx->count    = count;
       idx->off_size = offsize;
-      data_size     = (FT_ULong)( count + 1 ) * offsize;
+      size          = (FT_ULong)( count + 1 ) * offsize;
 
-      if ( FT_NEW_ARRAY( idx->offsets, count + 1 ) ||
+      idx->data_offset = idx->start + 3 + size;
+
+      if ( FT_STREAM_SKIP( size - offsize ) )
+        goto Exit;
+
+      size = cff_index_read_offset( idx, &error );
+      if (error)
+        goto Exit;
+
+      if ( size == 0 )
+      {
+        error = CFF_Err_Invalid_Table;
+        goto Exit;
+      }
+
+      idx->data_size = --size;
+
+      if ( load )
+      {
+        /* load the data */
+        if ( FT_FRAME_EXTRACT( size, idx->bytes ) )
+          goto Exit;
+      }
+      else
+      {
+        /* skip the data */
+        if ( FT_STREAM_SKIP( size ) )
+          goto Exit;
+      }
+    }
+
+  Exit:
+    if ( error )
+      FT_FREE( idx->offsets );
+
+    return error;
+  }
+
+
+  static void
+  cff_index_done( CFF_Index  idx )
+  {
+    if ( idx->stream )
+    {
+      FT_Stream  stream = idx->stream;
+      FT_Memory  memory = stream->memory;
+
+
+      if ( idx->bytes )
+        FT_FRAME_RELEASE( idx->bytes );
+
+      FT_FREE( idx->offsets );
+      FT_MEM_ZERO( idx, sizeof ( *idx ) );
+    }
+  }
+
+
+  static FT_Error
+  cff_index_load_offsets( CFF_Index  idx )
+  {
+    FT_Error   error  = 0;
+    FT_Stream  stream = idx->stream;
+    FT_Memory  memory = stream->memory;
+
+    if ( idx->count > 0 && idx->offsets == NULL ) 
+    {
+      FT_Byte    offsize = idx->off_size;
+      FT_ULong   data_size;
+      FT_Byte*   p;
+      FT_Byte*   p_end;
+      FT_ULong*  poff;
+
+      data_size     = (FT_ULong)( idx->count + 1 ) * offsize;
+
+      if ( FT_NEW_ARRAY( idx->offsets, idx->count + 1 ) ||
+           FT_STREAM_SEEK( idx->start + 3 )        ||
            FT_FRAME_ENTER( data_size )             )
         goto Exit;
 
@@ -264,48 +358,16 @@
       }
 
       FT_FRAME_EXIT();
-
-      idx->data_offset = FT_STREAM_POS();
-      data_size        = poff[-1] - 1;
-
-      if ( load )
-      {
-        /* load the data */
-        if ( FT_FRAME_EXTRACT( data_size, idx->bytes ) )
-          goto Exit;
-      }
-      else
-      {
-        /* skip the data */
-        if ( FT_STREAM_SKIP( data_size ) )
-          goto Exit;
-      }
     }
 
   Exit:
-    if ( error )
+    if (error)
       FT_FREE( idx->offsets );
 
     return error;
   }
 
 
-  static void
-  cff_done_index( CFF_Index  idx )
-  {
-    if ( idx->stream )
-    {
-      FT_Stream  stream = idx->stream;
-      FT_Memory  memory = stream->memory;
-
-
-      if ( idx->bytes )
-        FT_FRAME_RELEASE( idx->bytes );
-
-      FT_FREE( idx->offsets );
-      FT_MEM_ZERO( idx, sizeof ( *idx ) );
-    }
-  }
 
 
   /* allocate a table containing pointers to an index's elements */
@@ -321,6 +383,13 @@
 
     *table = 0;
 
+    if ( idx->offsets == NULL )
+    {
+      error = cff_index_load_offsets( idx );
+      if ( error )
+        goto Exit;
+    }
+
     if ( idx->count > 0 && !FT_NEW_ARRAY( t, idx->count + 1 ) )
     {
       old_offset = 1;
@@ -330,6 +399,10 @@
         if ( !offset )
           offset = old_offset;
 
+        /* sanity check for invalid offset tables */
+        else if ( offset < old_offset || offset-1 >= idx->data_size )
+          offset = old_offset;
+
         t[n] = idx->bytes + offset - 1;
 
         old_offset = offset;
@@ -337,6 +410,7 @@
       *table = t;
     }
 
+  Exit:
     return error;
   }
 
@@ -353,21 +427,43 @@
     if ( idx && idx->count > element )
     {
       /* compute start and end offsets */
-      FT_ULong  off1, off2 = 0;
+      FT_Stream  stream = idx->stream;
+      FT_ULong   off1, off2 = 0;
 
 
-      off1 = idx->offsets[element];
-      if ( off1 )
+      /* load offsets from file or the offset table */
+      if ( !idx->offsets )
       {
-        do
+        FT_ULong  pos = element*idx->off_size;
+
+        if ( FT_STREAM_SEEK( idx->start + 3 + pos ) )
+          goto Exit;
+
+        off1 = cff_index_read_offset( idx, &error );
+        if (error) goto Exit;
+
+        if ( off1 != 0 )
         {
-          element++;
-          off2 = idx->offsets[element];
+          do
+          {
+            element++;
+            off2 = cff_index_read_offset( idx, &error );
+          }
+          while ( off2 == 0 && element < idx->count );
+        }
+      }
+      else   /* use offsets table */
+      {
+        off1 = idx->offsets[element];
+        if ( off1 )
+        {
+          do
+          {
+            element++;
+            off2 = idx->offsets[element];
 
-        } while ( off2 == 0 && element < idx->count );
-
-        if ( !off2 )
-          off1 = 0;
+          } while ( off2 == 0 && element < idx->count );
+        }
       }
 
       /* access element */
@@ -383,9 +479,6 @@
         else
         {
           /* this index is still on disk/file, access it through a frame */
-          FT_Stream  stream = idx->stream;
-
-
           if ( FT_STREAM_SEEK( idx->data_offset + off1 - 1 ) ||
                FT_FRAME_EXTRACT( off2 - off1, *pbytes )      )
             goto Exit;
@@ -659,6 +752,18 @@
     return error;
   }
 
+
+  FT_LOCAL_DEF( FT_UInt )
+  cff_charset_cid_to_gindex( CFF_Charset  charset,
+                             FT_UInt      cid )
+  {
+    FT_UInt  result = 0;
+
+    if ( cid < charset->max_cid )
+      result = charset->cids[cid];
+
+    return result;
+  }
 
   static void
   cff_charset_free_cids( CFF_Charset  charset,
@@ -1209,7 +1314,7 @@
                            priv->local_subrs_offset ) )
         goto Exit;
 
-      error = cff_new_index( &font->local_subrs_index, stream, 1 );
+      error = cff_index_init( &font->local_subrs_index, stream, 1 );
       if ( error )
         goto Exit;
 
@@ -1231,7 +1336,7 @@
   {
     if ( subfont )
     {
-      cff_done_index( &subfont->local_subrs_index );
+      cff_index_done( &subfont->local_subrs_index );
       FT_FREE( subfont->local_subrs );
     }
   }
@@ -1287,10 +1392,10 @@
       goto Exit;
 
     /* read the name, top dict, string and global subrs index */
-    if ( FT_SET_ERROR( cff_new_index( &font->name_index,         stream, 0 )) ||
-         FT_SET_ERROR( cff_new_index( &font->font_dict_index,    stream, 0 )) ||
-         FT_SET_ERROR( cff_new_index( &font->string_index,       stream, 0 )) ||
-         FT_SET_ERROR( cff_new_index( &font->global_subrs_index, stream, 1 )) )
+    if ( FT_SET_ERROR( cff_index_init( &font->name_index,         stream, 0 )) ||
+         FT_SET_ERROR( cff_index_init( &font->font_dict_index,    stream, 0 )) ||
+         FT_SET_ERROR( cff_index_init( &font->string_index,       stream, 0 )) ||
+         FT_SET_ERROR( cff_index_init( &font->global_subrs_index, stream, 1 )) )
       goto Exit;
 
     /* well, we don't really forget the `disabled' fonts... */
@@ -1318,7 +1423,7 @@
     if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
       goto Exit;
 
-    error = cff_new_index( &font->charstrings_index, stream, 0 );
+    error = cff_index_init( &font->charstrings_index, stream, 0 );
     if ( error )
       goto Exit;
 
@@ -1335,7 +1440,7 @@
       if ( FT_STREAM_SEEK( base_offset + dict->cid_fd_array_offset ) )
         goto Exit;
 
-      error = cff_new_index( &fd_index, stream, 0 );
+      error = cff_index_init( &fd_index, stream, 0 );
       if ( error )
         goto Exit;
 
@@ -1371,7 +1476,7 @@
                                   base_offset + dict->cid_fd_select_offset );
 
     Fail_CID:
-      cff_done_index( &fd_index );
+      cff_index_done( &fd_index );
 
       if ( error )
         goto Exit;
@@ -1441,11 +1546,11 @@
     FT_UInt    idx;
 
 
-    cff_done_index( &font->global_subrs_index );
-    cff_done_index( &font->string_index );
-    cff_done_index( &font->font_dict_index );
-    cff_done_index( &font->name_index );
-    cff_done_index( &font->charstrings_index );
+    cff_index_done( &font->global_subrs_index );
+    cff_index_done( &font->string_index );
+    cff_index_done( &font->font_dict_index );
+    cff_index_done( &font->name_index );
+    cff_index_done( &font->charstrings_index );
 
     /* release font dictionaries, but only if working with */
     /* a CID keyed CFF font                                */

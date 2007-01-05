@@ -1,6 +1,10 @@
 2007-01-04  David Turner  <david@freetype.org>
 
-	* src/cff/cffload.c: formatting
+	* src/cff/cffload.c, src/cff/cffload.h, src/cff/cffgload.c,
+	src/cff/cfftypes.h: formatting + do not load the CFF index
+	offsets into memory, since this wastes a *lot* of heap memory
+	with large Asian CFF fonts. There is no significant performance
+	loss
 
 2007-01-04  David Turner  <david@freetype.org>
 
