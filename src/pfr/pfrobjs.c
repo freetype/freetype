@@ -131,6 +131,19 @@
       pfrface->num_glyphs = phy_font->num_chars + 1;
       pfrface->face_flags = FT_FACE_FLAG_SCALABLE;
 
+      /* if all characters point to the same gps_offset 0, we */
+      /* assume the font only contains bitmaps                */
+      {
+        FT_UInt  nn;
+
+        for ( nn = 0; nn < phy_font->num_chars; nn++ )
+          if ( phy_font->chars[nn].gps_offset != 0 )
+            break;
+
+        if ( nn == phy_font->num_chars )
+          pfrface->face_flags = 0;  /* not SCALABLE !! */
+      }
+
       if ( (phy_font->flags & PFR_PHY_PROPORTIONAL) == 0 )
         pfrface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 

@@ -1,5 +1,8 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/pfr/pfrobjs.c (pfr_face_init): detect non-scalable fonts
+	correctly. fixes bug #17876
+
 	* src/truetype/ttobjs.h, src/truetype/ttobjs.c, 
 	src/truetype/ttgload.c: do not allocate interpreter-specific
 	tables in memory if we're not going to load glyphs with it
