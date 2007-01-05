@@ -358,7 +358,7 @@
       table_size = face->horz_metrics_size;
     }
 
-    table_end = table_pos + table_end;
+    table_end = table_pos + table_size;
 
     k = header->number_Of_HMetrics;
 
