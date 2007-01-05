@@ -57,7 +57,7 @@
 	large Asian CFF fonts.
 
 	* src/base/ftobjs.c (FT_Done_Library): Remove a subtle memory leak
-	which happens when FT_Done_Library is called with still open
+	which happens when FT_Done_Library is called with still opened
 	CFF_Faces in it.  We need to close all faces before destroying the
 	modules, or else some bad things (memory leaks) may happen.
 
