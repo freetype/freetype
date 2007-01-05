@@ -1,5 +1,9 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/cff/cffload.c: formatting
+
+2007-01-04  David Turner  <david@freetype.org>
+
 	* docs/INSTALL.UNIX: Simplify some parts, add reference to
 	autogen.sh and pointer to README.CVS.
 
