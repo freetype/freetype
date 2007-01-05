@@ -19,32 +19,32 @@ or MSys on Win32:
        GNU Make  <version number>
        Copyright (C) <year> Free Software Foundation Inc.
 
-    Note that version 3.78.1 or higher is *required*, or the build will
+    Note that version 3.78.1 or higher is *required* or the build will
     fail.
 
-    It's also OK to have GNU Make under another name (e.g. 'gmake')
-    if you use the GNUMAKE trick described below.
+    It is also fine to have GNU Make under another name (e.g. 'gmake')
+    if you use the GNUMAKE variable as described below.
 
-    As a special exception, 'makepp' can also be used to build
-    FreeType 2. See the file docs/MAKEPP for details
+    As  a  special exception,  'makepp'  can  also  be used  to  build
+    FreeType 2.  See the file docs/MAKEPP for details.
 
 
-  2. Regenerate the configure script when needed
-  ----------------------------------------------
+  2. Regenerate the configure script if needed
+  --------------------------------------------
 
-   This only applies if you're building a CVS snapshot or checkout,
-   *not* if you grabbed the sources of an official release.
+    This only applies if you  are building a CVS snapshot or checkout,
+    *not* if you grabbed the sources of an official release.
 
-   you need to invoke the "autogen.sh" script in the top-level
-   directory in order to re-generate the configure script for your
-   platform. Normally, this simply means typing:
+    You  need  to invoke  the  `autogen.sh'  script  in the  top-level
+    directory  in order  to  create the  `configure'  script for  your
+    platform.  Normally, this simply means typing:
 
-     sh autogen.sh <your configure options>
+      sh autogen.sh
 
-   in case of problems, you may need to install or upgrade Automake,
-   Autoconf or Libtool. See README.CVS in the top-level directory for
-   the gory details.
-    
+    In case of problems, you  may need to install or upgrade Automake,
+    Autoconf or  Libtool.  See  README.CVS in the  top-level directory
+    for more information.
+
 
   3. Build and install the library
   --------------------------------
@@ -83,7 +83,7 @@ or MSys on Win32:
 
 ----------------------------------------------------------------------
 
-Copyright 2003, 2004, 2005, 2006 by
+Copyright 2003, 2004, 2005, 2006, 2007 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file is  part of  the FreeType  project, and  may only  be used,

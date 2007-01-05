@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3758,33 +3758,33 @@
     if ( library->generic.finalizer )
       library->generic.finalizer( library );
 
-    /* Close all faces in the library. if we don't do
+    /* Close all faces in the library.  If we don't do
      * this, we can have some subtle memory leaks.
-     * for example:
+     * Example:
      *
      *  - the cff font driver uses the pshinter module in cff_size_done
      *  - if the pshinter module is destroyed before the cff font driver,
-     *    opened FT_Face objects managed by the driver will not be properly
+     *    opened FT_Face objects managed by the driver are not properly
      *    destroyed, resulting in a memory leak
      */
     {
       FT_UInt  n;
+
 
       for ( n = 0; n < library->num_modules; n++ )
       {
         FT_Module  module = library->modules[n];
         FT_List    faces;
 
-        if ( (module->clazz->module_flags & FT_MODULE_FONT_DRIVER) == 0 )
+
+        if ( ( module->clazz->module_flags & FT_MODULE_FONT_DRIVER ) == 0 )
           continue;
 
         faces = &FT_DRIVER(module)->faces_list;
-        while ( faces->head ) {
-          FT_Done_Face( FT_FACE(faces->head->data) );
-        }
+        while ( faces->head )
+          FT_Done_Face( FT_FACE( faces->head->data ) );
       }
     }
-
 
     /* Close all other modules in the library */
 #if 1

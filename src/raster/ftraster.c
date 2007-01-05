@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2005 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2005, 2007 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3177,6 +3177,7 @@ static const char  count_table[256] =
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
     FT_UInt  n;
 
+
     /* set default 5-levels gray palette */
     for ( n = 0; n < 5; n++ )
       raster->grays[n] = n * 255 / 4;
@@ -3263,8 +3264,10 @@ static const char  count_table[256] =
       {
         PWorker  worker = (PWorker)pool_base;
 
-        raster->buffer      = pool_base + ((sizeof(*worker) + 7) & ~7);
-        raster->buffer_size = ((pool_base + pool_size) - (char*)raster->buffer)/sizeof(Long);
+
+        raster->buffer      = pool_base + ( (sizeof ( *worker ) + 7 ) & ~7 );
+        raster->buffer_size = ( ( pool_base + pool_size ) -
+                                (char*)raster->buffer ) / sizeof ( Long );
         raster->worker      = worker;
       }
       else
@@ -3339,7 +3342,8 @@ static const char  count_table[256] =
     ras.target   = *target_map;
 
     worker->buff        = (PLong) raster->buffer;
-    worker->sizeBuff    = worker->buff + raster->buffer_size/sizeof(Long);
+    worker->sizeBuff    = worker->buff +
+                            raster->buffer_size / sizeof ( Long );
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
     worker->grays       = raster->grays;
     worker->gray_width  = raster->gray_width;

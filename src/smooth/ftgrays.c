@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2005, 2006 by                         */
+/*  Copyright 2000-2001, 2002, 2003, 2005, 2006, 2007 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1929,14 +1929,20 @@
 
     if ( raster )
     {
-      if ( pool_base && pool_size >= (long)sizeof(TWorker) + 2048 )
+      if ( pool_base && pool_size >= (long)sizeof ( TWorker ) + 2048 )
       {
-        PWorker  worker = (PWorker) pool_base;
+        PWorker  worker = (PWorker)pool_base;
+
 
         rast->worker      = worker;
-        rast->buffer      = pool_base + ((sizeof(TWorker) + sizeof(TCell)-1) & ~(sizeof(TCell)-1));
-        rast->buffer_size = (long)((pool_base + pool_size) - (char*)rast->buffer) & ~(sizeof(TCell)-1);
-        rast->band_size   = (int)( rast->buffer_size/(sizeof(TCell)*8) );
+        rast->buffer      = pool_base +
+                              ( ( sizeof ( TWorker ) + sizeof ( TCell ) - 1 ) &
+                                ~( sizeof ( TCell ) - 1 ) );
+        rast->buffer_size = (long)( ( pool_base + pool_size ) -
+                                    (char*)rast->buffer ) &
+                                      ~( sizeof ( TCell ) - 1 );
+        rast->band_size   = (int)( rast->buffer_size /
+                                     ( sizeof ( TCell ) * 8 ) );
       }
       else
       {
