@@ -862,18 +862,19 @@
       FT_UInt  start, end, offset, n;
       FT_UInt  last_start = 0, last_end = 0;
       FT_Int   delta;
+      FT_Byte*  p_start   = starts;
+      FT_Byte*  p_end     = ends;
+      FT_Byte*  p_delta   = deltas;
+      FT_Byte*  p_offset  = offsets;
 
 
       for ( n = 0; n < num_segs; n++ )
       {
-        p = starts + n * 2;
-        start = TT_PEEK_USHORT( p );
-        p = ends + n * 2;
-        end = TT_PEEK_USHORT( p );
-        p = deltas + n * 2;
-        delta = TT_PEEK_SHORT( p );
-        p = offsets + n * 2;
-        offset = TT_PEEK_USHORT( p );
+        p      = p_offset;
+        start  = TT_NEXT_USHORT( p_start );
+        end    = TT_NEXT_USHORT( p_end );
+        delta  = TT_NEXT_SHORT( p_delta );
+        offset = TT_NEXT_USHORT( p_offset );
 
         if ( start > end )
           FT_INVALID_DATA;

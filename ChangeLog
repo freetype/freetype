@@ -1,5 +1,7 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/sfnt/ttcmap.c: slight optimization in the CMAP 4 validator
+
 	* src/cff/cffload.c, src/cff/cffload.h, src/cff/cffgload.c,
 	src/cff/cfftypes.h: formatting + do not load the CFF index
 	offsets into memory, since this wastes a *lot* of heap memory
