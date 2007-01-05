@@ -1424,6 +1424,10 @@ FT_BEGIN_HEADER
     TT_BDFRec             bdf;
 #endif /* TT_CONFIG_OPTION_BDF */
 
+    /* since 2.2.2 */
+    FT_ULong              horz_metrics_offset;
+    FT_ULong              vert_metrics_offset;
+
   } TT_FaceRec;
 
 

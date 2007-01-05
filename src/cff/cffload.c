@@ -746,7 +746,8 @@
     for ( i = 0; i < num_glyphs; i++ )
       charset->cids[charset->sids[i]] = (FT_UShort)i;
 
-    charset->max_cid = max_cid;
+    charset->max_cid    = max_cid;
+    charset->num_glyphs = num_glyphs;
 
   Exit:
     return error;
@@ -1194,7 +1195,7 @@
 
 
           if ( sid )
-            gid = charset->cids[sid];
+            gid = cff_charset_cid_to_gindex( charset, sid );
 
           if ( gid != 0 )
           {

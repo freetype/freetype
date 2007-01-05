@@ -1,5 +1,11 @@
 2007-01-04  David Turner  <david@freetype.org>
 
+	* src/sfnt/ttmtx.c: don't extract the metrics table from the
+	SFNT font file. Instead, reparse it on each glyph load,
+	since the runtime difference will not be noticeable, and
+	it can save a lot of heap memory when memory-mapped files
+	are not used.
+
 	* src/sfnt/ttcmap.c: slight optimization in the CMAP 4 validator
 
 	* src/cff/cffload.c, src/cff/cffload.h, src/cff/cffgload.c,
