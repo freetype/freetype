@@ -72,6 +72,7 @@
     FT_ULong*  ptable_offset;
     FT_ULong*  ptable_size;
 
+
     if ( vertical )
     {
       tag           = TTAG_vmtx;
@@ -86,7 +87,7 @@
     }
 
     error = face->goto_table( face, tag, stream, &table_size );
-    if (error)
+    if ( error )
       goto Fail;
 
     *ptable_size   = table_size;
@@ -366,27 +367,27 @@
     {
       if ( gindex < (FT_UInt)k )
       {
-        table_pos += 4*gindex;
-        if ( table_pos+6 > table_end )
+        table_pos += 4 * gindex;
+        if ( table_pos + 6 > table_end )
           goto NoData;
 
         if ( FT_STREAM_SEEK( table_pos ) ||
              FT_READ_USHORT( *aadvance)  ||
-             FT_READ_SHORT( *abearing ) )
+             FT_READ_SHORT( *abearing )  )
           goto NoData;
       }
       else
       {
-        table_pos += 4*(k-1);
-        if ( table_pos+4 > table_end )
+        table_pos += 4 * ( k - 1 );
+        if ( table_pos + 4 > table_end )
           goto NoData;
 
         if ( FT_STREAM_SEEK( table_pos ) ||
              FT_READ_USHORT( *aadvance ) )
           goto NoData;
 
-        table_pos += 4 + 2*(gindex - k);
-        if ( table_pos+2 > table_end )
+        table_pos += 4 + 2 * ( gindex - k );
+        if ( table_pos + 2 > table_end )
           *abearing = 0;
         else
         {

@@ -5,7 +5,7 @@
 /*    Basic OpenType/CFF type definitions and interface (specification     */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2006 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2006, 2007 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
   /*    stream      :: The source input stream.                            */
   /*                                                                       */
   /*    start       :: The position of the first index byte in the         */
-  /*                   input stream                                        */
+  /*                   input stream.                                       */
   /*                                                                       */
   /*    count       :: The number of elements in the index.                */
   /*                                                                       */
@@ -49,10 +49,10 @@ FT_BEGIN_HEADER
   /*    data_offset :: The position of first data byte in the index's      */
   /*                   bytes.                                              */
   /*                                                                       */
-  /*    data_size   :: size of data table in this index                    */
+  /*    data_size   :: The size of the data table in this index.           */
   /*                                                                       */
-  /*    offsets     :: A table of element offsets in the index. must be    */
-  /*                   loaded explicitely                                  */
+  /*    offsets     :: A table of element offsets in the index.  Must be   */
+  /*                   loaded explicitly.                                  */
   /*                                                                       */
   /*    bytes       :: If the index is loaded in memory, its bytes.        */
   /*                                                                       */

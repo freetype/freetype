@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2275,14 +2275,14 @@
                  FT_UInt        glyph_index,
                  FT_Int32       load_flags )
   {
-    FT_Error      error;
-    CFF_Decoder   decoder;
-    TT_Face       face     = (TT_Face)glyph->root.face;
-    FT_Bool       hinting;
-    CFF_Font      cff      = (CFF_Font)face->extra.data;
+    FT_Error     error;
+    CFF_Decoder  decoder;
+    TT_Face      face     = (TT_Face)glyph->root.face;
+    FT_Bool      hinting;
+    CFF_Font     cff      = (CFF_Font)face->extra.data;
 
-    FT_Matrix     font_matrix;
-    FT_Vector     font_offset;
+    FT_Matrix    font_matrix;
+    FT_Vector    font_offset;
 
 
     /* in a CID-keyed font, consider `glyph_index' as a CID and map */
@@ -2424,9 +2424,11 @@
         {
           CFF_Index csindex = &cff->charstrings_index;
 
-          if (csindex->offsets)
+
+          if ( csindex->offsets )
           {
-            glyph->root.control_data = csindex->bytes + csindex->offsets[glyph_index] - 1;
+            glyph->root.control_data = csindex->bytes +
+                                         csindex->offsets[glyph_index] - 1;
             glyph->root.control_len  = charstring_len;
           }
         }

@@ -1,26 +1,61 @@
 2007-01-04  David Turner  <david@freetype.org>
 
-	* src/pfr/pfrobjs.c (pfr_face_init): detect non-scalable fonts
-	correctly. fixes bug #17876
+	* src/pfr/pfrobjs.c (pfr_face_init): Detect non-scalable fonts
+	correctly.  This fixes Savannah bug #17876.
 
-	* src/truetype/ttobjs.h, src/truetype/ttobjs.c, 
-	src/truetype/ttgload.c: do not allocate interpreter-specific
-	tables in memory if we're not going to load glyphs with it
-	anyway.
+
+	Do not allocate interpreter-specific tables in memory if we are not
+	going to load glyphs with the bytecode interpreter anyway.
+
+	* src/truetype/ttgload.c (tt_loader_init): Load execution context
+	only if glyph is hinted.
+	Updated.
+	* src/truetype/ttobjs.h (TT_SizeRec): Add members `bytecode_ready'
+	and `cvs_ready'.
+	Add `tt_size_ready_bytecode' declaration.
+	* src/truetype/ttobjs.c (tt_size_done_bytecode,
+	tt_size_init_bytecode, tt_size_ready_bytecode): New functions.
+	(tt_size_init): Move most code into `tt_size_init_bytecode'.
+	(tt_size_done): Move most code into `tt_size_done_bytecode'.
+	(tt_size_reset): Move some code to `tt_size_ready_bytecode'.
 	
-	* src/sfnt/ttmtx.c, include/freetype/internal/tttypes.h:
-	don't extract the metrics table from the SFNT font file.
-	Instead, reparse it on each glyph load, since the runtime
-	difference will not be noticeable, and it can save a lot
-	of heap memory when memory-mapped files are not used.
 
-	* src/sfnt/ttcmap.c: slight optimization in the CMAP 4 validator
+	Don't extract the metrics table from the SFNT font file.  Instead,
+	reparse it on each glyph load.  The runtime difference is not
+	noticeable, and it can save a lot of heap memory when memory-mapped
+	files are not used.
 
-	* src/cff/cffload.c, src/cff/cffload.h, src/cff/cffgload.c,
-	src/cff/cfftypes.h: formatting + do not load the CFF index
-	offsets into memory, since this wastes a *lot* of heap memory
-	with large Asian CFF fonts. There is no significant performance
-	loss
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Add members
+	`horz_metrics_offset' and `vert_metrics_ofset'.
+	* src/sfnt/ttmtx.c (tt_face_load_hmtx, tt_face_get_metrics):
+	Updated.
+
+
+	* src/sfnt/ttcmap.c (tt_cmap4_validate): Slight optimization.
+
+
+	Do not load the CFF index offsets into memory, since this wastes a
+	*lot* of heap memory with large Asian CFF fonts.  There is no
+	significant performance loss.
+
+	* src/cff/cffload.h: Add `cff_charset_cid_to_gindex' declaration.
+	* src/cff/cfftypes.h (CFF_IndexRec): Add fields `start' and
+	`data_size'.
+	(CFF_CharsetRec): Add field `num_glyphs'.
+
+	* src/cff/cffload.c (cff_index_read_offset, cff_index_load_offsets,
+	cff_charset_cid_to_gindex): New functions.
+	(cff_new_index): Renamed to...
+	(cff_index_init): This.  Update all callers.
+	Updated -- some code has been moved to `cff_index_load_offsets'.
+	(cff_done_index): Renamed to...
+	(cff_index_done): This.  Update all callers.
+	(cff_index_get_pointers, cff_index_access_element): Updated to use
+	stream offsets.
+	(cff_charset_compute_cids): Set `num_glyphs' field.
+	(cff_encoding_load): Updated.
+
+	* src/cff/cffgload.c (cff_slot_load): Updated.
 
 2007-01-04  David Turner  <david@freetype.org>
 

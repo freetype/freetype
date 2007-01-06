@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -524,9 +524,10 @@
   static void
   tt_size_done_bytecode( FT_Size  ftsize )
   {
-    TT_Size    size = (TT_Size)ftsize;
-    TT_Face    face = (TT_Face)ftsize->face;
+    TT_Size    size   = (TT_Size)ftsize;
+    TT_Face    face   = (TT_Face)ftsize->face;
     FT_Memory  memory = face->root.memory;
+
 
     if ( size->debug )
     {
@@ -561,10 +562,8 @@
   }
 
 
- /* initialize bytecode-related fields in the size object,
-  * should only be needed when bytecode interpretation is
-  * really needed
-  */
+  /* Initialize bytecode-related fields in the size object.       */
+  /* We do this only if bytecode interpretation is really needed. */
   static FT_Error
   tt_size_init_bytecode( FT_Size  ftsize )
   {
@@ -646,7 +645,7 @@
     error = tt_size_run_fpgm( size );
 
   Exit:
-    if (error)
+    if ( error )
       tt_size_done_bytecode( ftsize );
 
     return error;
@@ -656,7 +655,8 @@
   FT_LOCAL_DEF( FT_Error )
   tt_size_ready_bytecode( TT_Size  size )
   {
-    FT_Error  error = 0;
+    FT_Error  error = TT_Err_Ok;
+
 
     if ( !size->bytecode_ready )
     {
@@ -677,7 +677,7 @@
       for ( i = 0; i < size->cvt_size; i++ )
         size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
 
-      /* All twilight points are originally zero */
+      /* all twilight points are originally zero */
       for ( i = 0; i < (FT_UInt)size->twilight.n_points; i++ )
       {
         size->twilight.org[i].x = 0;
@@ -703,12 +703,12 @@
   FT_LOCAL_DEF( FT_Error )
   tt_size_ready_bytecode( TT_Size  size )
   {
-    FT_UNUSED(ftsize);
+    FT_UNUSED( ftsize );
     return 0;
   }
 
-
 #endif /* !TT_USE_BYTECODE_INTERPRETER */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -756,7 +756,8 @@
   FT_LOCAL_DEF( void )
   tt_size_done( FT_Size  ttsize )           /* TT_Size */
   {
-    TT_Size    size = (TT_Size)ttsize;
+    TT_Size  size = (TT_Size)ttsize;
+
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
     if ( size->bytecode_ready )

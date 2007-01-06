@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR object methods (body).                                  */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005, 2006 by                              */
+/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007 by                        */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -122,7 +122,7 @@
     if ( error )
       goto Exit;
 
-    /* now, set-up all root face fields */
+    /* now set up all root face fields */
     {
       PFR_PhyFont  phy_font = &face->phy_font;
 
@@ -132,16 +132,17 @@
       pfrface->face_flags = FT_FACE_FLAG_SCALABLE;
 
       /* if all characters point to the same gps_offset 0, we */
-      /* assume the font only contains bitmaps                */
+      /* assume that the font only contains bitmaps           */
       {
         FT_UInt  nn;
+
 
         for ( nn = 0; nn < phy_font->num_chars; nn++ )
           if ( phy_font->chars[nn].gps_offset != 0 )
             break;
 
         if ( nn == phy_font->num_chars )
-          pfrface->face_flags = 0;  /* not SCALABLE !! */
+          pfrface->face_flags = 0;        /* not scalable */
       }
 
       if ( (phy_font->flags & PFR_PHY_PROPORTIONAL) == 0 )

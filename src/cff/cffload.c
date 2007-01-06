@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType and CFF data/program tables loader (body).                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -193,6 +193,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cffload
 
+
   /* read an offset from the index's stream current position */
   static FT_ULong
   cff_index_read_offset( CFF_Index  idx,
@@ -203,12 +204,14 @@
     FT_Byte    tmp[4];
     FT_ULong   result = 0;
 
+
     if ( !FT_STREAM_READ( tmp, idx->off_size ) )
     {
       FT_Int  nn;
 
+
       for ( nn = 0; nn < idx->off_size; nn++ )
-        result = (result << 8) | tmp[nn];
+        result = ( result << 8 ) | tmp[nn];
     }
 
     *perror = error;
@@ -233,8 +236,8 @@
     if ( !FT_READ_USHORT( count ) &&
          count > 0                )
     {
-      FT_Byte    offsize;
-      FT_ULong   size, last_offset;
+      FT_Byte   offsize;
+      FT_ULong  size, last_offset;
 
 
       /* there is at least one element; read the offset size,           */
@@ -258,7 +261,7 @@
         goto Exit;
 
       size = cff_index_read_offset( idx, &error );
-      if (error)
+      if ( error )
         goto Exit;
 
       if ( size == 0 )
@@ -316,6 +319,7 @@
     FT_Stream  stream = idx->stream;
     FT_Memory  memory = stream->memory;
 
+
     if ( idx->count > 0 && idx->offsets == NULL ) 
     {
       FT_Byte    offsize = idx->off_size;
@@ -324,11 +328,12 @@
       FT_Byte*   p_end;
       FT_ULong*  poff;
 
-      data_size     = (FT_ULong)( idx->count + 1 ) * offsize;
+
+      data_size = (FT_ULong)( idx->count + 1 ) * offsize;
 
       if ( FT_NEW_ARRAY( idx->offsets, idx->count + 1 ) ||
-           FT_STREAM_SEEK( idx->start + 3 )        ||
-           FT_FRAME_ENTER( data_size )             )
+           FT_STREAM_SEEK( idx->start + 3 )             ||
+           FT_FRAME_ENTER( data_size )                  )
         goto Exit;
 
       poff   = idx->offsets;
@@ -361,13 +366,11 @@
     }
 
   Exit:
-    if (error)
+    if ( error )
       FT_FREE( idx->offsets );
 
     return error;
   }
-
-
 
 
   /* allocate a table containing pointers to an index's elements */
@@ -400,7 +403,7 @@
           offset = old_offset;
 
         /* sanity check for invalid offset tables */
-        else if ( offset < old_offset || offset-1 >= idx->data_size )
+        else if ( offset < old_offset || offset - 1 >= idx->data_size )
           offset = old_offset;
 
         t[n] = idx->bytes + offset - 1;
@@ -434,13 +437,15 @@
       /* load offsets from file or the offset table */
       if ( !idx->offsets )
       {
-        FT_ULong  pos = element*idx->off_size;
+        FT_ULong  pos = element * idx->off_size;
+
 
         if ( FT_STREAM_SEEK( idx->start + 3 + pos ) )
           goto Exit;
 
         off1 = cff_index_read_offset( idx, &error );
-        if (error) goto Exit;
+        if ( error )
+          goto Exit;
 
         if ( off1 != 0 )
         {
@@ -760,11 +765,13 @@
   {
     FT_UInt  result = 0;
 
+
     if ( cid < charset->max_cid )
       result = charset->cids[cid];
 
     return result;
   }
+
 
   static void
   cff_charset_free_cids( CFF_Charset  charset,
@@ -1393,10 +1400,14 @@
       goto Exit;
 
     /* read the name, top dict, string and global subrs index */
-    if ( FT_SET_ERROR( cff_index_init( &font->name_index,         stream, 0 )) ||
-         FT_SET_ERROR( cff_index_init( &font->font_dict_index,    stream, 0 )) ||
-         FT_SET_ERROR( cff_index_init( &font->string_index,       stream, 0 )) ||
-         FT_SET_ERROR( cff_index_init( &font->global_subrs_index, stream, 1 )) )
+    if ( FT_SET_ERROR( cff_index_init( &font->name_index,
+                                       stream, 0 ) )              ||
+         FT_SET_ERROR( cff_index_init( &font->font_dict_index,
+                                       stream, 0 ) )              ||
+         FT_SET_ERROR( cff_index_init( &font->string_index,
+                                       stream, 0 ) )              ||
+         FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
+                                       stream, 1 ) )              )
       goto Exit;
 
     /* well, we don't really forget the `disabled' fonts... */
