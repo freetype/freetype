@@ -1,3 +1,8 @@
+2007-01-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_index_init): Remove unused variable.
+	(cff_index_read_offset): s/perror/errorp/ to avoid global shadowing.
+
 2007-01-04  David Turner  <david@freetype.org>
 
 	* src/pfr/pfrobjs.c (pfr_face_init): Detect non-scalable fonts

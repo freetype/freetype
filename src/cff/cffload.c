@@ -197,7 +197,7 @@
   /* read an offset from the index's stream current position */
   static FT_ULong
   cff_index_read_offset( CFF_Index  idx,
-                         FT_Error  *perror )
+                         FT_Error  *errorp )
   {
     FT_Error   error;
     FT_Stream  stream = idx->stream;
@@ -214,7 +214,7 @@
         result = ( result << 8 ) | tmp[nn];
     }
 
-    *perror = error;
+    *errorp = error;
     return result;
   }
 
@@ -237,7 +237,7 @@
          count > 0                )
     {
       FT_Byte   offsize;
-      FT_ULong  size, last_offset;
+      FT_ULong  size;
 
 
       /* there is at least one element; read the offset size,           */
