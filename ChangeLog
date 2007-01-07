@@ -1,7 +1,12 @@
 2007-01-07  Werner Lemberg  <wl@gnu.org>
 
-	* src/cid/cidparse.c (cid_parser_new): Reject Type 42 CID-keyed
-	fonts.
+	* src/cid/cidparse.c (cid_parser_new): Improve error message for
+	Type 11 fonts.
+	Scan for `/sfnts' token.
+
+2007-01-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidparse.c (cid_parser_new): Reject Type 11 fonts.
 
 2007-01-06  Werner Lemberg  <wl@gnu.org>
 
