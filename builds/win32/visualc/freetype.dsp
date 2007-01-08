@@ -226,6 +226,10 @@ SOURCE=..\..\..\src\base\ftbitmap.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\base\ftgasp.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\cache\ftcache.c
 # SUBTRACT CPP /Fr
 # End Source File

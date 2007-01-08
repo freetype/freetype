@@ -1,3 +1,20 @@
+2007-01-08  David Turner  <david@freetype.org>
+
+	* include/freetype/ftgasp.h, src/base/ftgasp.c: adding a
+	new API FT_Get_Gasp to return entries of the GASP table
+	corresponding to a given character pixel size.
+
+	* src/sfnt/ttload.c: add version check for the GASP table,
+	in order to be better future-proof
+
+	* include/freetype/config/ftheader.h: add definition of
+	FT_GASP_H, corresponding to <freetype/ftgasp.h>
+
+	* src/base/rules.mk, src/base/Jamfile, modules.cfg,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj: Adding src/base/ftgasp.c
+	to the default build
+
 2007-01-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidparse.c (cid_parser_new): Improve error message for

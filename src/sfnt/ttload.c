@@ -1138,6 +1138,14 @@
 
     FT_FRAME_EXIT();
 
+    /* only support versions 0 and 1 of the table */
+    if ( face->gasp.version >= 2 )
+    {
+      face->gasp.numRanges = 0;
+      error = FT_Err_Invalid_Table;
+      goto Exit;
+    }
+
     num_ranges = face->gasp.numRanges;
     FT_TRACE3(( "numRanges: %u\n", num_ranges ));
 

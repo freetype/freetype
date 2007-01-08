@@ -675,6 +675,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\base\ftgasp.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\cache\ftcache.c"
 				>
 				<FileConfiguration

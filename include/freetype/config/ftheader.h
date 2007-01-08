@@ -677,6 +677,19 @@
    */
 #define FT_LCD_FILTER_H    <freetype/ftlcdfil.h>
 
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_GASP_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API which returns entries from the TrueType GASP table
+   */
+#define FT_GASP_H    <freetype/ftgasp.h>
+
+
   /* */
 
 #define FT_ERROR_DEFINITIONS_H  <freetype/fterrdef.h>
