@@ -1,21 +1,22 @@
 2007-01-08  David Turner  <david@freetype.org>
 
-	* docs/CHANGES: updating documentation
+	* docs/CHANGES: Updated.
 
-	* include/freetype/ftgasp.h, src/base/ftgasp.c: adding a
-	new API FT_Get_Gasp to return entries of the GASP table
+	* include/freetype/ftgasp.h, src/base/ftgasp.c: New files which add
+	a new API `FT_Get_Gasp' to return entries of the `gasp' table
 	corresponding to a given character pixel size.
 
-	* src/sfnt/ttload.c: add version check for the GASP table,
-	in order to be better future-proof
+	* src/sfnt/ttload.c (tt_face_load_gasp): Add version check for the
+	`gasp' table, in order to avoid potential problems with later
+	versions.
 
-	* include/freetype/config/ftheader.h: add definition of
-	FT_GASP_H, corresponding to <freetype/ftgasp.h>
+	* include/freetype/config/ftheader.h (FT_GASP_H): New macro for
+	<freetype/ftgasp.h>.
 
-	* src/base/rules.mk, src/base/Jamfile, modules.cfg,
-	builds/win32/visualc/freetype.dsp,
-	builds/win32/visualc/freetype.vcproj: Adding src/base/ftgasp.c
-	to the default build
+	* src/base/rules.mk (BASE_SRC), src/base/Jamfile (_sources),
+	modules.cfg (BASE_EXTENSIONS), builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj: Add src/base/ftgasp.c to the
+	default build.
 
 2007-01-07  Werner Lemberg  <wl@gnu.org>
 

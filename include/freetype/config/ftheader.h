@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Build macros of the FreeType 2 library.                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -675,7 +675,7 @@
    *   A macro used in #include statements to name the file containing the
    *   FreeType 2 API which performs color filtering for subpixel rendering.
    */
-#define FT_LCD_FILTER_H    <freetype/ftlcdfil.h>
+#define FT_LCD_FILTER_H  <freetype/ftlcdfil.h>
 
 
   /*************************************************************************
@@ -685,9 +685,9 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   FreeType 2 API which returns entries from the TrueType GASP table
+   *   FreeType 2 API which returns entries from the TrueType GASP table.
    */
-#define FT_GASP_H    <freetype/ftgasp.h>
+#define FT_GASP_H  <freetype/ftgasp.h>
 
 
   /* */
