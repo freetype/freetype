@@ -1,5 +1,7 @@
 2007-01-08  David Turner  <david@freetype.org>
 
+	* docs/CHANGES: updating documentation
+
 	* include/freetype/ftgasp.h, src/base/ftgasp.c: adding a
 	new API FT_Get_Gasp to return entries of the GASP table
 	corresponding to a given character pixel size.
