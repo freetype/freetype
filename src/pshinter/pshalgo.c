@@ -1032,7 +1032,7 @@
 
         orient_prev = psh_corner_orientation( in_x, in_y, out_x, out_y );
 
-      } while ( orient_prev != 0 );
+      } while ( orient_prev == 0 );
 
       first = start;
       in_x  = out_x;

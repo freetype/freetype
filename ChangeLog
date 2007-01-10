@@ -1,3 +1,9 @@
+2007-01-10  David Turner  <david@freetype.org>
+
+	* src/pshinter/pshalgo.c (psh_glyph_compute_inflections):
+	fixed a typo which created an endless loop with some malformed
+	font files
+
 2007-01-10  Derek Clegg  <dclegg@apple.com>
 
 	* src/type1/t1load.c (T1_Get_MM_Var): Always return fixed point
