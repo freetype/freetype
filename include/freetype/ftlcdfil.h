@@ -26,6 +26,27 @@
 
 FT_BEGIN_HEADER
 
+ /***************************************************************************
+  *
+  * @section:
+  *    lcd_filtering
+  *
+  * @title:
+  *    LCD Filtering
+  *
+  * @abstract:
+  *    Reduce color fringes of LCD-optimized bitmaps
+  *
+  * @description:
+  *   The @FT_Library_SetLcdFilter API can be used to specify a low-pass filter
+  *   to be applied to LCD-optimized bitmaps generated through @FT_Render_Glyph.
+  *   This is useful to reduce color fringes when compared to unfiltered rendering.
+  *
+  *   Note that no filter is active by default, and that this function is
+  *   *not* implemented in default builds of the library. You need to #define
+  *   FT_CONFIG_OPTION_SUBPIXEL_RENDERING in your ftoption.h file in order to
+  *   activate it.
+  */
 
   /****************************************************************************
    *
@@ -47,8 +68,7 @@ FT_BEGIN_HEADER
    *   FT_LCD_FILTER_LIGHT ::
    *     The light filter is a variant that produces less blurriness at the
    *     cost of slightly more color fringes than the default one.  It might
-   *     be better than the default one, depending on the monitor, personal
-   *     vision, and taste.
+   *     be better, depending on taste, your monitor or your personal vision.
    *
    *   FT_LCD_FILTER_LEGACY ::
    *     This filter corresponds to the original libXft color filter.  It
@@ -59,6 +79,8 @@ FT_BEGIN_HEADER
    *
    *     This filter is only provided for comparison purposes, and might be
    *     disabled or stay unsupported in the future.
+   *
+   * @since: 2.3.0
    */
   typedef enum
   {
@@ -105,7 +127,7 @@ FT_BEGIN_HEADER
    *   do anything except returning `FT_Err_Unimplemented_Feature' if the
    *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
    *   defined in your build of the library, which should correspond to all
-   *   default builds of the library.
+   *   default builds of FreeType.
    *
    *   The filter affects glyph bitmaps rendered through @FT_Render_Glyph,
    *   @FT_Outline_Get_Bitmap, @FT_Load_Glyph, and @FT_Load_Char.
@@ -123,6 +145,7 @@ FT_BEGIN_HEADER
    *   need to modify their layout and glyph positioning code when enabling
    *   the filter.
    *
+   * @since: 2.3.0
    */
   FT_EXPORT( FT_Error )
   FT_Library_SetLcdFilter( FT_Library    library,

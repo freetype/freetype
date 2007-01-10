@@ -42,8 +42,8 @@ ifneq ($(EXPORTS_LIST),)
   # The list of public headers we're going to parse.
   PUBLIC_HEADERS := $(wildcard $(PUBLIC_DIR)/*.h)
 
-  # The `apinames' source and executable.  We use $E as the executable
-  # suffix, which *includes* the final dot.
+  # The `apinames' source and executable.  We use $E_BUILD as the host
+  # executable suffix, which *includes* the final dot.
   #
   # Note that $(APINAMES_OPTIONS) is empty, except for Windows compilers.
   #

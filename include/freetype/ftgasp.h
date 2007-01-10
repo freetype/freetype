@@ -22,6 +22,24 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+ /***************************************************************************
+  *
+  * @section:
+  *    gasp_table
+  *
+  * @title:
+  *    Gasp Table
+  *
+  * @abstract:
+  *    Retrieving TrueType GASP table entries
+  *
+  * @description:
+  *   The function @FT_Get_Gasp can be used to query a TrueType or OpenType
+  *   font for specific entries in their GASP table, if any. This is mainly
+  *   useful when implementing native TrueType hinting with the bytecode
+  *   interpreter and when one wants to duplicate the Windows text rendering
+  *   results
+  */
 
   /*************************************************************************
    *
@@ -53,6 +71,8 @@
    * @note:
    *   `ClearType' is Microsoft's implementation of LCD rendering, partly
    *   protected by patents.
+   *
+   * @since: 2.3.0
    */
 #define FT_GASP_NO_TABLE               -1
 #define FT_GASP_DO_GRIDFIT           0x01
@@ -77,6 +97,8 @@
    * @return:
    *   Bit flags (see @FT_GASP_XXX), or @FT_GASP_NO_TABLE is there is no
    *   `gasp' table in the face.
+   *
+   * @since: 2.3.0
    */
   FT_EXPORT( FT_Int )
   FT_Get_Gasp( FT_Face  face,

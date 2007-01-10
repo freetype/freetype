@@ -256,7 +256,7 @@ FT_BEGIN_HEADER
 
     FT_BBox*         bboxes    [T1_MAX_MM_DESIGNS + 1];
 
-    /* since 2.2.2 */
+    /* since 2.3.0 */
 
     /* undocumented, optional: the default design instance;   */
     /* corresponds to default_weight_vector --                */

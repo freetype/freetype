@@ -3313,8 +3313,8 @@ FT_BEGIN_HEADER
    *    macros.
    */
 #define FREETYPE_MAJOR  2
-#define FREETYPE_MINOR  2
-#define FREETYPE_PATCH  2
+#define FREETYPE_MINOR  3
+#define FREETYPE_PATCH  0
 
 
   /*************************************************************************/
