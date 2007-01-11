@@ -1,5 +1,8 @@
 2007-01-11  David Turner  <david@freetype.org>
 
+	* src/base/ftobjs.c (IsMacResource): fixed a small bug that caused a
+	crash with some Mac OS X .dfont files. Submitted by Masatake Yamoto.
+
 	* autogen.sh: small fix to get it working on Mac OS X properly,
 	the issue is that GNU libtool is called "glibtool" on this platform,
 	and we must call "glibtoolize", since "libtoolize" doesn't exist
