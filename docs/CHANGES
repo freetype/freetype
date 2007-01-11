@@ -127,6 +127,8 @@ CHANGES BETWEEN 2.2.2 and 2.2.1
     - Better support for Mac  Fonts on POSIX systems, plus compilation
       fixes for PPC64.
 
+    - The TrueTypeGX validator (gxvalid) checks the order of glyph ids
+      in the kern table
 
 ======================================================================
 

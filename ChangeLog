@@ -1,5 +1,7 @@
 2007-01-11  David Turner  <david@freetype.org>
 
+	* docs/CHANGES: small update
+
 	* builds/unix/configure.ac: updating libtool version number to 9.11.3
 
 	* src/base/ftobjs.c (IsMacResource): fixed a small bug that caused a
