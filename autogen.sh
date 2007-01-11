@@ -40,8 +40,16 @@ echo "generating \`configure.ac'"
 sed -e "s;@VERSION@;$freetype_major$freetype_minor$freetype_patch;" \
     < configure.raw > configure.ac
 
+# on MacOS X, the GNU libtool is named "glibtool"
+HOSTOS=$(uname)
+LIBTOOLIZE=libtoolize
+if [ "$HOSTOS"x == Darwinx ] ; then
+  LIBTOOLIZE=glibtoolize
+fi
+
+
 run aclocal -I . --force
-run libtoolize --force --copy
+run $LIBTOOLIZE --force --copy
 run autoconf --force
 
 chmod +x mkinstalldirs

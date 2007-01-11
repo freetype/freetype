@@ -1,3 +1,9 @@
+2007-01-11  David Turner  <david@freetype.org>
+
+	* autogen.sh: small fix to get it working on Mac OS X properly,
+	the issue is that GNU libtool is called "glibtool" on this platform,
+	and we must call "glibtoolize", since "libtoolize" doesn't exist
+
 2007-01-10  David Turner  <david@freetype.org>
 
 	* all-sources: tagging all sources with VER-2-3-0-RC1 and
