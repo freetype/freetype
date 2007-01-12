@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2005, 2006 by
+# Copyright 2005, 2006, 2007 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -40,13 +40,12 @@ echo "generating \`configure.ac'"
 sed -e "s;@VERSION@;$freetype_major$freetype_minor$freetype_patch;" \
     < configure.raw > configure.ac
 
-# on MacOS X, the GNU libtool is named "glibtool"
-HOSTOS=$(uname)
+# On MacOS X, the GNU libtool is named `glibtool'.
+HOSTOS=`uname`
 LIBTOOLIZE=libtoolize
-if [ "$HOSTOS"x == Darwinx ] ; then
+if test "$HOSTOS"x = Darwinx; then
   LIBTOOLIZE=glibtoolize
 fi
-
 
 run aclocal -I . --force
 run $LIBTOOLIZE --force --copy

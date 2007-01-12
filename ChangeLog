@@ -1,34 +1,44 @@
+2007-01-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (is_space): Removed.
+	(parse_encoding, parse_charstrings): Use IS_PS_DELIM.
+	(parse_charstrings): Use IS_PS_TOKEN.
+
+
+	* autogen.sh: Avoid bash specific syntax.
+
 2007-01-11  David Turner  <david@freetype.org>
 
-	* docs/CHANGES: small update
+	* docs/CHANGES: Small update.
 
-	* builds/unix/configure.ac: updating libtool version number to 9.11.3
+	* builds/unix/configure.raw (version_info): Set to 9:11:3.
 
-	* src/base/ftobjs.c (IsMacResource): fixed a small bug that caused a
-	crash with some Mac OS X .dfont files. Submitted by Masatake Yamoto.
+	* src/base/ftobjs.c (IsMacResource): Fix a small bug that caused a
+	crash with some Mac OS X .dfont files.  Submitted by Masatake
+	Yamoto.
 
-	* autogen.sh: small fix to get it working on Mac OS X properly,
-	the issue is that GNU libtool is called "glibtool" on this platform,
-	and we must call "glibtoolize", since "libtoolize" doesn't exist
+	* autogen.sh: Small fix to get it working on Mac OS X properly:
+	The issue is that GNU libtool is called `glibtool' on this platform,
+	and we must call `glibtoolize', since `libtoolize' doesn't exist.
 
 2007-01-10  David Turner  <david@freetype.org>
 
-	* all-sources: tagging all sources with VER-2-3-0-RC1 and
-	VER-2-3-0
+	* all-sources: Tag all sources with VER-2-3-0-RC1 and
+	VER-2-3-0.
 
-	* Jamfile, README, builds/win32/visualc/freetype.dsp,
-	builds/win32/visualc/freetype.vcproj, docs/VERSION.DLL,
-	include/freetype/freetype.h, include/freetype/t1tables.h,
-	include/freetype/internal/tttypes.h: updating version
-	number to 2.3.0 !!
+	* Jamfile (RefDoc), README, builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj, docs/VERSION.DLL: Update
+	version number to 2.3.0.
+
+	* include/freetype/freetype.h (FREETYPE_MINOR): Set to 3.
+	(FREETYPE_PATCH): Set to 0.
 
 	* include/freetype/ftchapters.h, include/freetype/ftgasp.h,
-	include/freetype/ftlcdfil.h: updating reference documentation
-	with GASP support and LCD filtering sections
+	include/freetype/ftlcdfil.h: Update reference documentation with
+	GASP support and LCD filtering sections.
 
-	* src/pshinter/pshalgo.c (psh_glyph_compute_inflections):
-	fixed a typo which created an endless loop with some malformed
-	font files
+	* src/pshinter/pshalgo.c (psh_glyph_compute_inflections): Fix a typo
+	which created an endless loop with some malformed font files.
 
 2007-01-10  Derek Clegg  <dclegg@apple.com>
 

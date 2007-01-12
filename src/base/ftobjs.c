@@ -1446,7 +1446,7 @@
                                       face_index, aface );
       FT_FREE( data_offsets );
       /* POST exists in an LWFN providing a single face */
-      if (!error)
+      if ( !error )
         (*aface)->num_faces = 1;
       return error;
     }
@@ -1463,7 +1463,7 @@
       error = Mac_Read_sfnt_Resource( library, stream, data_offsets, count,
                                       face_index_internal, aface );
       FT_FREE( data_offsets );
-      if (!error)
+      if ( !error )
         (*aface)->num_faces = count;
     }
 
