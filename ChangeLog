@@ -1,3 +1,8 @@
+2007-01-12  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
+	`automake' CVS module from sources.redhat.com.
+
 2007-01-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (is_space): Removed.
