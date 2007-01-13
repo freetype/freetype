@@ -104,10 +104,11 @@
     int             pitch;
     int             new_pitch;
     FT_UInt         ppb;
-    FT_Int          i;
+    FT_Int          i, width;
     unsigned char*  buffer;
 
 
+    width = bitmap->width;
     pitch = bitmap->pitch;
     if ( pitch < 0 )
       pitch = -pitch;
@@ -170,15 +171,19 @@
 
     if ( bitmap->pitch > 0 )
     {
+      FT_Int   len = ( width + ppb - 1 ) / ppb;
+
       for ( i = 0; i < bitmap->rows; i++ )
         FT_MEM_COPY( buffer + new_pitch * ( ypixels + i ),
-                     bitmap->buffer + pitch * i, pitch );
+                     bitmap->buffer + pitch * i, len );
     }
     else
     {
+      FT_Int  len = ( width + ppb - 1 ) / ppb;
+
       for ( i = 0; i < bitmap->rows; i++ )
         FT_MEM_COPY( buffer + new_pitch * i,
-                     bitmap->buffer + pitch * i, pitch );
+                     bitmap->buffer + pitch * i, len );
     }
 
     FT_FREE( bitmap->buffer );

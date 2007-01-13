@@ -510,15 +510,16 @@
   Update_Max( FT_Memory  memory,
               FT_ULong*  size,
               FT_Long    multiplier,
-              void**     buff,
+              void*      _pbuff,
               FT_ULong   new_max )
   {
     FT_Error  error;
+    void**    pbuff = (void**)_pbuff;
 
 
     if ( *size < new_max )
     {
-      if ( FT_REALLOC( *buff, *size * multiplier, new_max * multiplier ) )
+      if ( FT_REALLOC( *pbuff, *size * multiplier, new_max * multiplier ) )
         return error;
       *size = new_max;
     }
@@ -599,7 +600,7 @@
     error = Update_Max( exec->memory,
                         &tmp,
                         sizeof ( FT_F26Dot6 ),
-                        (void**)&exec->stack,
+                        (void*)&exec->stack,
                         maxp->maxStackElements + 32 );
     exec->stackSize = (FT_UInt)tmp;
     if ( error )
@@ -609,7 +610,7 @@
     error = Update_Max( exec->memory,
                         &tmp,
                         sizeof ( FT_Byte ),
-                        (void**)&exec->glyphIns,
+                        (void*)&exec->glyphIns,
                         maxp->maxSizeOfInstructions );
     exec->glyphSize = (FT_UShort)tmp;
     if ( error )
