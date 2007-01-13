@@ -27,7 +27,7 @@
 
 	* src/base/ftobjs.c (IsMacResource): Fix a small bug that caused a
 	crash with some Mac OS X .dfont files.  Submitted by Masatake
-	Yamoto.
+	Yamato.
 
 	* autogen.sh: Small fix to get it working on Mac OS X properly:
 	The issue is that GNU libtool is called `glibtool' on this platform,
