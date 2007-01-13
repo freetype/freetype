@@ -18,6 +18,8 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
     - FT_GlyphSlot_Embolden  now supports  vertical  layouts correctly
       (it mangled the vertical advance height).
 
+    - Fixed byte endian issues of ftmac.c to support Mac OS X on i386.
+
 
   II. NEW API FUNCTIONS
 
@@ -105,6 +107,15 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
     - It is now possible to cross-compile the library easily.  See the
       file docs/INSTALL.CROSS for details.
 
+    - The file `src/base/ftmac.c' now contains code for Mac OS X only;
+      its  deprecated function  `FT_GetFile_From_Mac_Font_Name' always
+      returns an error even  if QuickDraw framework is available.  The
+      previous version has been moved to `builds/mac/ftmac.c'.
+
+      Selecting  configure option `--with-quickdraw-carbon'  makes the
+      build process use the original `ftmac.c' file instead of the Mac
+      OS X-only version.
+
 
   III. MISCELLANEOUS
 
@@ -124,12 +135,11 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
     - The  PFR  font loader  no  longer  erroneously  tags font  files
       without any outlines as FT_FACE_FLAG_SCALABLE.
 
-    - Better support for Mac  Fonts on POSIX systems, plus compilation
-      fixes for PPC64.
+    - Better support for Mac  fonts on POSIX systems, plus compilation
+      fixes for Mac OS X on ppc64 where `ftmac.c' cannot be built.
 
-      If you  use ftmac.c, please note  that it is now  Mac OS X-only,
-      and that some old APIs now return errors.  Thus your code should
-      still build unchanged, but may change in behaviour.
+    - Configuration  without `--with-old-mac-fonts'  does  not include
+      `ftmac.c' (this was the behaviour in FreeType version 2.1.10).
 
     - The TrueTypeGX validator (gxvalid) checks the order of glyph IDs
       in the kern table.

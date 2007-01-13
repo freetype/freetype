@@ -1,3 +1,7 @@
+2007-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* docs/CHANGES, docs/INSTALL.MAC: Improvements.
+
 2007-01-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1afm.c (T1_Read_Metrics): MS Windows allows PFM
