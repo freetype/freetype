@@ -1,3 +1,8 @@
+2007-01-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1afm.c (T1_Read_Metrics): MS Windows allows PFM
+	versions up to 0x3FF without complaining.
+
 2007-01-13  Derek Clegg  <dclegg@apple.com>
 
 	Add FT_Get_PS_Font_Info interface to CFF driver.
