@@ -28,7 +28,7 @@
 
 #include "ttsbit0.c"
 
-#else /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
+#else /* !FT_CONFIG_OPTION_OLD_INTERNALS */
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
@@ -1495,7 +1495,7 @@
     return error;
   }
 
-#endif /* !OPTIMIZE_MEMORY || OLD_INTERNALS */
+#endif /* !FT_CONFIG_OPTION_OLD_INTERNALS */
 
 
 /* END */

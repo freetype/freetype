@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines (body).                                 */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006 by                                    */
+/*  Copyright 2003, 2004, 2005, 2006, 2007 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -191,7 +191,7 @@
   void
   af_glyph_hints_dump_segments( AF_GlyphHints  hints )
   {
-    FT_Int    dimension;
+    FT_Int  dimension;
 
 
     for ( dimension = 1; dimension >= 0; dimension-- )
@@ -212,7 +212,7 @@
         printf ( "  [ %5d | %4d | %5s | %4d | %5d | %5d | %5d ]\n",
                  seg - segments,
                  (int)seg->pos,
-                 af_dir_str( seg->dir ),
+                 af_dir_str( (AF_Direction)seg->dir ),
                  AF_INDEX_NUM( seg->link, segments ),
                  AF_INDEX_NUM( seg->serif, segments ),
                  seg->height,
@@ -252,7 +252,7 @@
                  " %5d |   %c  | %5.2f | %5.2f ]\n",
                  edge - edges,
                  (int)edge->fpos,
-                 af_dir_str( edge->dir ),
+                 af_dir_str( (AF_Direction)edge->dir ),
                  AF_INDEX_NUM( edge->link, edges ),
                  AF_INDEX_NUM( edge->serif, edges ),
                  edge->blue_edge ? 'y' : 'n',

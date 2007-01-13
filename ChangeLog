@@ -1,3 +1,18 @@
+2007-01-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Fix compilation
+	with C++ compiler.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_segments,
+	af_glyph_hints_dump_edges): Ditto.
+
+	* src/base/rules.mk (BASE_SRC): Remove ftgasp.c (it's already in
+	`modules.cfg').
+
+	* src/sfnt/ttsbit0.h: Remove.
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Don't include ttsbit0.c.
+
 2007-01-12  David Turner  <david@freetype.org>
 
 	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Fix memory stomping

@@ -5,7 +5,7 @@
 /*    TrueType and OpenType embedded bitmap support (body).                */
 /*    This is a heap-optimized version.                                    */
 /*                                                                         */
-/*  Copyright 2005, 2006 by                                                */
+/*  Copyright 2005, 2006, 2007 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -15,6 +15,9 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
+
+
+/* This file is included by ttsbit.c */
 
 
 #include <ft2build.h>
