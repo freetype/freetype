@@ -5,7 +5,7 @@
 /*    FreeType utility functions for converting 1bpp, 2bpp, 4bpp, and 8bpp */
 /*    bitmaps into 8bpp format (body).                                     */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006 by                                          */
+/*  Copyright 2004, 2005, 2006, 2007 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -171,7 +171,8 @@
 
     if ( bitmap->pitch > 0 )
     {
-      FT_Int   len = ( width + ppb - 1 ) / ppb;
+      FT_Int  len = ( width + ppb - 1 ) / ppb;
+
 
       for ( i = 0; i < bitmap->rows; i++ )
         FT_MEM_COPY( buffer + new_pitch * ( ypixels + i ),
@@ -180,6 +181,7 @@
     else
     {
       FT_Int  len = ( width + ppb - 1 ) / ppb;
+
 
       for ( i = 0; i < bitmap->rows; i++ )
         FT_MEM_COPY( buffer + new_pitch * i,

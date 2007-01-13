@@ -1,11 +1,13 @@
+2007-01-12  David Turner  <david@freetype.org>
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Fix memory stomping
+	bug in the bitmap emboldener if the pitch of the source bitmap is
+	much larger than its width.
+
+	* src/truetype/ttinterp.c (Update_Max): Fix aliasing-related
+	compilation warning.
+
 2007-01-12  Werner Lemberg  <wl@gnu.org>
-
-	* src/base/ftbitmap.c: fixing memory stomping bug in the
-	bitmap embolderner when the pitch of the source bitmap is
-	*much* larger than its width
-
-	* src/truetype/ttinterp.c: fixing aliasing-related compilation
-	warning
 
 	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
 	`automake' CVS module from sources.redhat.com.
