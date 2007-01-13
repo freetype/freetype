@@ -23,6 +23,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_TYPE1_TABLES_H
 
 
 FT_BEGIN_HEADER
@@ -254,6 +255,9 @@ FT_BEGIN_HEADER
 
     /* interface to Postscript Names service */
     void*            psnames;
+
+    /* since version 2.3.0 */
+    PS_FontInfoRec*  font_info;   /* font info dictionary */
 
   } CFF_FontRec, *CFF_Font;
 

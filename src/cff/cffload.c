@@ -22,6 +22,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_TRUETYPE_TAGS_H
+#include FT_TYPE1_TABLES_H
 
 #include "cffload.h"
 #include "cffparse.h"
@@ -1581,6 +1582,16 @@
     cff_subfont_done( memory, &font->top_font );
 
     CFF_Done_FD_Select( &font->fd_select, font->stream );
+
+    if (font->font_info != NULL)
+    {
+      FT_FREE( font->font_info->version );
+      FT_FREE( font->font_info->notice );
+      FT_FREE( font->font_info->full_name );
+      FT_FREE( font->font_info->family_name );
+      FT_FREE( font->font_info->weight );
+      FT_FREE( font->font_info );
+    }
 
     FT_FREE( font->global_subrs );
     FT_FREE( font->font_name );

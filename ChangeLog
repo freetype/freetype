@@ -1,3 +1,16 @@
+2007-01-13  Derek Clegg  <dclegg@apple.com>
+
+	Add FT_Get_PS_Font_Info interface to CFF driver.
+
+	* src/cff/cfftypes.h: Include FT_TYPE1_TABLES_H.
+	(CFF_FontRec): Add `font_info' field.
+
+	* src/cff/cffload.c: Include FT_TYPE1_TABLES_H.
+	(cff_font_done): Free font->font_info if necessary.
+
+	* src/cff/cffdrvr.c (cff_ps_get_font_info): New function.
+	(cff_service_ps_info): Register cff_ps_get_font_info.
+
 2007-01-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Fix compilation
