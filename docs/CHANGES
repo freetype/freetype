@@ -127,6 +127,10 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
     - Better support for Mac  Fonts on POSIX systems, plus compilation
       fixes for PPC64.
 
+      If you  use ftmac.c, please note  that it is now  Mac OS X-only,
+      and that some old APIs now return errors.  Thus your code should
+      still build unchanged, but may change in behaviour.
+
     - The TrueTypeGX validator (gxvalid) checks the order of glyph IDs
       in the kern table.
 
