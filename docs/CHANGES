@@ -117,7 +117,7 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
       OS X-only version.
 
 
-  III. MISCELLANEOUS
+  IV. MISCELLANEOUS
 
     - Various performance and memory footprint optimizations have been
       performed on  the TrueType and CFF font  loaders, sometimes with

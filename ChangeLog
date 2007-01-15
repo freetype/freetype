@@ -1,3 +1,19 @@
+2007-01-14  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	Fix various compiler warnings.
+
+	* src/truetype/ttdriver.c (tt_size_select), src/cff/cffobjs.h,
+	src/cff/cffobjs.c (cff_size_request), src/type42/t42objs.h:
+	s/index/strike_index/.
+	* src/base/ftobjs.c (FT_Match_Size): s/index/size_index/.
+
+	* src/gxvalid/gxvmorx5.c
+	(gxv_morx_subtable_type5_InsertList_validate): s/index/table_index/.
+
+	* src/truetype/ttinterp.c (Compute_Point_Displacement),
+	src/pcf/pcfread.c (pcf_seek_to_table_type): Avoid possibly
+	uninitialized variables.
+
 2007-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* docs/CHANGES, docs/INSTALL.MAC: Improvements.

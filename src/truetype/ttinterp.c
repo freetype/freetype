@@ -5249,6 +5249,7 @@
     {
       if ( CUR.pedantic_hinting )
         CUR.error = TT_Err_Invalid_Reference;
+      *refp = 0;
       return FAILURE;
     }
 

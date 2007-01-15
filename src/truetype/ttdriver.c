@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -187,15 +187,15 @@
     {
       TT_Face       ttface = (TT_Face)size->face;
       SFNT_Service  sfnt   = (SFNT_Service) ttface->sfnt;
-      FT_ULong      index;
+      FT_ULong      strike_index;
 
 
-      error = sfnt->set_sbit_strike( ttface, req, &index );
+      error = sfnt->set_sbit_strike( ttface, req, &strike_index );
 
       if ( error )
         ttsize->strike_index = 0xFFFFFFFFUL;
       else
-        return tt_size_select( size, index );
+        return tt_size_select( size, strike_index );
     }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */

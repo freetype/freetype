@@ -2089,7 +2089,7 @@
   FT_Match_Size( FT_Face          face,
                  FT_Size_Request  req,
                  FT_Bool          ignore_width,
-                 FT_ULong*        index )
+                 FT_ULong*        size_index )
   {
     FT_Int   i;
     FT_Long  w, h;
@@ -2123,8 +2123,8 @@
 
       if ( w == FT_PIX_ROUND( bsize->x_ppem ) || ignore_width )
       {
-        if ( index )
-          *index = (FT_ULong)i;
+        if ( size_index )
+          *size_index = (FT_ULong)i;
 
         return FT_Err_Ok;
       }

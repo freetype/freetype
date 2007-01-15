@@ -5,7 +5,7 @@
 /*    TrueTypeGX/AAT morx table validation                                 */
 /*    body for type5 (Contextual Glyph Insertion) subtable.                */
 /*                                                                         */
-/*  Copyright 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,       */
+/*  Copyright 2005, 2007 by suzuki toshiya, Masatake YAMATO, Red Hat K.K., */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -109,16 +109,16 @@
 
 
   static void
-  gxv_morx_subtable_type5_InsertList_validate( FT_UShort      index,
+  gxv_morx_subtable_type5_InsertList_validate( FT_UShort      table_index,
                                                FT_UShort      count,
                                                FT_Bytes       table,
                                                FT_Bytes       limit,
                                                GXV_Validator  valid )
   {
-    FT_Bytes p = table + index * 2;
+    FT_Bytes p = table + table_index * 2;
 
 
-    while ( p < table + count * 2 + index * 2 )
+    while ( p < table + count * 2 + table_index * 2 )
     {
       FT_UShort  insert_glyphID;
 

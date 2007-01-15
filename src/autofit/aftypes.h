@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter types (specification only).                              */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006 by                                    */
+/*  Copyright 2003, 2004, 2005, 2006, 2007 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 #define xxAF_USE_WARPER  /* only define to use warp hinting */
-#define AF_DEBUG
+#define xxAF_DEBUG
 
 #ifdef AF_DEBUG
 
