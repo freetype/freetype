@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2005,2006 by
+# Copyright 2005,2006, 2007 by
 # Werner Lemberg and Detlef Würkner.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -42,8 +42,9 @@
 # (and either ftdebug.o or ftdebugpure.o if you enabled FT_DEBUG_LEVEL_ERROR or
 # FT_DEBUG_LEVEL_TRACE in include/freetype/config/ftoption.h).
 
-OBJBASE = ftbase.o ftbbox.o ftbdf.o ftbitmap.o ftglyph.o ftgxval.o ftmm.o \
-	  ftotval.o ftpfr.o ftstroke.o ftsynth.o fttype1.o ftwinfnt.o ftxf86.o
+OBJBASE = ftbase.o ftbbox.o ftbdf.o ftbitmap.o ftgasp.o ftglyph.o  \
+	  ftgxval.o ftlcdfil.o ftmm.o ftotval.o ftpfr.o ftstroke.o \
+	  ftsynth.o fttype1.o ftwinfnt.o ftxf86.o
 
 OBJSYSTEM = ftsystem.o ftsystempure.o
 
@@ -130,9 +131,13 @@ ftbdf.o: $(CORE)base/ftbdf.c
 	sc $(SCFLAGS) objname=$@ $<
 ftbitmap.o: $(CORE)base/ftbitmap.c
 	sc $(SCFLAGS) objname=$@ $<
+ftgasp.o: $(CORE)base/ftgasp.c
+	sc $(SCFLAGS) objname=$@ $<
 ftglyph.o: $(CORE)base/ftglyph.c
 	sc $(SCFLAGS) objname=$@ $<
 ftgxval.o: $(CORE)base/ftgxval.c
+	sc $(SCFLAGS) objname=$@ $<
+ftlcdfil.o: $(CORE)base/ftlcdfil.c
 	sc $(SCFLAGS) objname=$@ $<
 ftmm.o: $(CORE)base/ftmm.c
 	sc $(SCFLAGS) objname=$@ $<

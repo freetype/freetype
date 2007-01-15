@@ -1,3 +1,10 @@
+2007-01-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/makefile, builds/amiga/makefile.os4,
+	builds/amiga/smakefile: Add `ftgasp.c' and `ftlcdfil.c'.
+
+	* builds/amiga/include/freetype/config/ftconfig.h: Synchronize.
+
 2007-01-14  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	Fix various compiler warnings.

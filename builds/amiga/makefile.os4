@@ -1,10 +1,10 @@
 #
-# Makefile for FreeType2 link library using gcc 3.4.3 from the
+# Makefile for FreeType2 link library using gcc 4.0.3 from the
 # AmigaOS4 SDK
 #
 
 
-# Copyright 2005, 2006 by
+# Copyright 2005, 2006, 2007 by
 # Werner Lemberg and Detlef Würkner.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -16,7 +16,7 @@
 
 # to build from the builds/amiga directory call
 #
-#  make
+#  make -f makefile.os4
 #
 # Your programs source code should start with this
 # (uncomment the parts you do not need to keep the program small):
@@ -54,14 +54,12 @@ RANLIB = ppc-amigaos-ranlib
 DIRFLAGS  = -Iinclude -I/FT/src -I/FT/include -I/SDK/include
 
 WARNINGS = -Wall -W -Wundef -Wpointer-arith -Wbad-function-cast \
-	   -Waggregate-return -Wshadow
-
-CPU      = -mcpu=604e
+	   -Waggregate-return -Wwrite-strings -Wshadow
 
 OPTIONS  = -DFT2_BUILD_LIBRARY -DNDEBUG -fno-builtin
 OPTIMIZE = -O2 -fomit-frame-pointer -fstrength-reduce -finline-functions
 
-CFLAGS   = $(DIRFLAGS) $(WARNINGS) $(FT2FLAGS) $(CPU) $(OPTIONS) $(OPTIMIZE)
+CFLAGS   = -mcrt=clib2 $(DIRFLAGS) $(WARNINGS) $(FT2FLAGS) $(OPTIONS) $(OPTIMIZE)
 
 #
 # FreeType2 library base
@@ -98,11 +96,17 @@ ftdebug.ppc.o: FT:src/base/ftdebug.c
 ftdebugpure.ppc.o: src/base/ftdebug.c
 	$(CC) -c $(CFLAGS) -o $@ src/base/ftdebug.c
 
+ftgasp.ppc.o: FT:src/base/ftgasp.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftgasp.c
+
 ftglyph.ppc.o: FT:src/base/ftglyph.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftglyph.c
 
 ftgxval.ppc.o: FT:src/base/ftgxval.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftgxval.c
+
+ftlcdfil.ppc.o: FT:src/base/ftlcdfil.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftlcdfil.c
 
 ftmm.ppc.o: FT:src/base/ftmm.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftmm.c
@@ -254,8 +258,9 @@ gxvalid.ppc.o: FT:src/gxvalid/gxvalid.c
 otvalid.ppc.o: FT:src/otvalid/otvalid.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/otvalid/otvalid.c
 
-BASE =  ftbase.ppc.o ftbbox.ppc.o ftbdf.ppc.o ftbitmap.ppc.o ftglyph.ppc.o \
-	ftgxval.ppc.o ftmm.ppc.o ftotval.ppc.o ftpfr.ppc.o ftstroke.ppc.o \
+BASE =  ftbase.ppc.o ftbbox.ppc.o ftbdf.ppc.o ftbitmap.ppc.o    \
+	ftgasp.ppc.o ftglyph.ppc.o ftgxval.ppc.o ftlcdfil.ppc.o \
+	ftmm.ppc.o ftotval.ppc.o ftpfr.ppc.o ftstroke.ppc.o     \
 	ftsynth.ppc.o fttype1.ppc.o ftwinfnt.ppc.o ftxf86.ppc.o
 
 DEBUG = ftdebug.ppc.o ftdebugpure.ppc.o
