@@ -5417,7 +5417,7 @@
       first_point = (FT_UShort)( CUR.pts.contours[contour - 1] + 1 -
                                  CUR.pts.first_point );
 
-    last_point = CUR.pts.contours[contour] - CUR.pts.first_point;
+    last_point = (FT_UShort)(CUR.pts.contours[contour] - CUR.pts.first_point);
 
     /* XXX: this is probably wrong... at least it prevents memory */
     /*      corruption when zp2 is the twilight zone              */

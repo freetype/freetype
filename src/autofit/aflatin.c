@@ -723,7 +723,7 @@
 
             segment->min_coord = (FT_Short)min_pos;
             segment->max_coord = (FT_Short)max_pos;
-            segment->height    = segment->max_coord - segment->min_coord;
+            segment->height    = (FT_Short)(segment->max_coord - segment->min_coord);
 
             on_edge = 0;
             segment = NULL;

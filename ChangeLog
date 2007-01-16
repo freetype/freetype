@@ -1,3 +1,8 @@
+2007-01-16  David Turner  <david@freetype.org>
+
+        * src/autofit/aflatin.c, src/cff/cffdriver.c, src/truetype/ttobjs.c,
+        src/truetype/ttinterp.c: fixing compiler warnings
+
 2007-01-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/makefile, builds/amiga/makefile.os4,
