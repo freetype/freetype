@@ -78,7 +78,7 @@ its code:
 
 
   3. FT_TRACE( level, (message...) )
- 
+
     The  FT_TRACE  macro  is  used  to  send  general-purpose  debugging
     messages during  program execution.   This macro uses  an *implicit*
     macro named FT_COMPONENT used to name the current FreeType component
@@ -168,19 +168,19 @@ behaviour of FreeType at runtime.
     performed by FreeType.   This is very useful to  test the robustness
     of  the  font  engine and  programs  that  use  it in  tight  memory
     conditions.
-    
+
     If it is  undefined, or if its value is  not strictly positive, then
     no allocation bounds are checked at runtime.
 
 
   FT2_ALLOC_COUNT_MAX
-  
+
     This  variable is ignored  if FT2_DEBUG_MEMORY  is not  defined.  It
     allows  you  to  specify  a  maximum number  of  memory  allocations
     performed    by     FreeType    before    returning     the    error
     FT_Err_Out_Of_Memory.  This is useful  for debugging and testing the
     engine's robustness.
-    
+
     If it is  undefined, or if its value is  not strictly positive, then
     no allocation bounds are checked at runtime.
 

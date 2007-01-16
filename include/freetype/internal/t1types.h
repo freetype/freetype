@@ -203,7 +203,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
     PS_Unicodes     unicode_map;
-#endif    
+#endif
 
     /* support for Multiple Masters fonts */
     PS_Blend        blend;

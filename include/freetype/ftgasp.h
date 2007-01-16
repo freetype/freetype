@@ -51,11 +51,11 @@
    *
    * @values:
    *   FT_GASP_NO_TABLE ::
-   *     This special value means that there is no GASP table in this face. 
+   *     This special value means that there is no GASP table in this face.
    *     It is up to the client to decide what to do.
    *
    *   FT_GASP_DO_GRIDFIT ::
-   *     Grid-fitting and hinting should be performed at the specified ppem. 
+   *     Grid-fitting and hinting should be performed at the specified ppem.
    *     This *really* means TrueType bytecode interpretation.
    *
    *   FT_GASP_DO_GRAY ::

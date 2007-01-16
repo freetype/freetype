@@ -183,7 +183,7 @@
                                FT_Size_Metrics*  metrics )
   {
     FT_Byte*         strike;
-    
+
 
     if ( strike_index >= (FT_ULong)face->sbit_num_strikes )
       return SFNT_Err_Invalid_Argument;

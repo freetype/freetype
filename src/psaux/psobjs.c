@@ -588,7 +588,7 @@
                  "current token is `%c', which is self-delimiting "
                  "but invalid at this point\n",
                  *cur ));
-      
+
       error = PSaux_Err_Invalid_File_Format;
     }
 
@@ -1282,8 +1282,8 @@
   {
     FT_Error  error = PSaux_Err_Ok;
     FT_Byte*  cur;
-    
-    
+
+
     ps_parser_skip_spaces( parser );
     cur = parser->cursor;
 

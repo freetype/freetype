@@ -52,7 +52,7 @@
     {
       AFM_KernPair  kp = fi->KernPairs + i;
 
-      
+
       printf( "\t%3d + %3d => (%4d, %4d)\n", kp->index1,
                                              kp->index2,
                                              kp->x,

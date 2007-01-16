@@ -550,7 +550,7 @@ THE SOFTWARE.
     }
 
     error = PCF_Err_Ok;
-    
+
   Bail:
     FT_FREE( props );
     FT_FREE( strings );
@@ -1183,7 +1183,7 @@ THE SOFTWARE.
       else
         root->family_name = NULL;
 
-      /* 
+      /*
        * Note: We shift all glyph indices by +1 since we must
        * respect the convention that glyph 0 always corresponds
        * to the `missing glyph'.

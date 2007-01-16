@@ -174,7 +174,7 @@
 	(tt_size_init): Move most code into `tt_size_init_bytecode'.
 	(tt_size_done): Move most code into `tt_size_done_bytecode'.
 	(tt_size_reset): Move some code to `tt_size_ready_bytecode'.
-	
+
 
 	Don't extract the metrics table from the SFNT font file.  Instead,
 	reparse it on each glyph load.  The runtime difference is not
@@ -280,7 +280,7 @@
 	* src/gxvalid/gxvkern.c (gxv_kern_subtable_fmt0_pairs_validate): New
 	function.
 	Check uniqueness of the gid pairs.
-	(gxv_kern_subtable_fmt0_validate): Move some code to 
+	(gxv_kern_subtable_fmt0_validate): Move some code to
 	`gxv_kern_subtable_fmt0_pairs_validate'.
 
 2006-12-22  David Turner  <david@freetype.org>
@@ -298,7 +298,7 @@
 
 2006-12-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* include/freetype/internal/services/svotval.h: Add `volatile' to 
+	* include/freetype/internal/services/svotval.h: Add `volatile' to
 	sync with the modification by Jens Claudius on 2006-08-22; cf.
 	  http://cvs.savannah.gnu.org/viewcvs/freetype/freetype2/src/otvalid/otvmod.c?r1=1.4&r2=1.5
 

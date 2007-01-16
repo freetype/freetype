@@ -708,7 +708,7 @@
   tt_cmap4_next( TT_CMap4  cmap )
   {
     FT_UInt  charcode;
-    
+
 
     if ( cmap->cur_charcode >= 0xFFFFUL )
       goto Fail;
@@ -984,7 +984,7 @@
     for ( ; charcode <= 0xFFFFU; charcode++ )
     {
       FT_Byte*  q;
-      
+
 
       p = cmap->data + 14;               /* ends table   */
       q = cmap->data + 16 + num_segs2;   /* starts table */
@@ -1040,7 +1040,7 @@
     FT_UInt   charcode = *pcharcode;
     FT_UInt   gindex   = 0;
     FT_Byte*  p;
-    
+
 
     p = cmap->data + 6;
     num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 2 );

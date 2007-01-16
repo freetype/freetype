@@ -11,7 +11,7 @@ SPECIAL NOTE FOR UNIX USERS
   -----------------------------------------------------
 
     See the instructions in the file `TRUETYPE' of this directory.
-   
+
     Note  that FreeType  supports  TrueType fonts  without the  bytecode
     interpreter through its  auto-hinter, which now generates relatively
     good results with most fonts.

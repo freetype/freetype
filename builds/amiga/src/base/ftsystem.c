@@ -457,7 +457,7 @@ Free_VecPooled( APTR  poolHeader,
 
   extern void
   ft_mem_debug_done( FT_Memory  memory );
-  
+
 #endif
 
 
@@ -493,7 +493,7 @@ Free_VecPooled( APTR  poolHeader,
         memory->free    = ft_free;
 #ifdef FT_DEBUG_MEMORY
         ft_mem_debug_init( memory );
-#endif    
+#endif
       }
     }
 
@@ -508,7 +508,7 @@ Free_VecPooled( APTR  poolHeader,
   {
 #ifdef FT_DEBUG_MEMORY
     ft_mem_debug_done( memory );
-#endif  
+#endif
 
     DeletePool( memory->user );
     FreeVec( memory );

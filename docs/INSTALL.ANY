@@ -10,9 +10,9 @@ I. Standard procedure
 
   * DISABLE PRE-COMPILED  HEADERS!  This is very  important for Visual
     C++, because FreeType uses lines like:
-    
+
       #include FT_FREETYPE_H
-    
+
     which are not correctly supported by this compiler while being ISO
     C compliant!
 

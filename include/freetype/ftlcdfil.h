@@ -75,7 +75,7 @@ FT_BEGIN_HEADER
    *   FT_LCD_FILTER_LEGACY ::
    *     This filter corresponds to the original libXft color filter.  It
    *     provides high contrast output but can exhibit really bad color
-   *     fringes if glyphs are not extremely well hinted to the pixel grid. 
+   *     fringes if glyphs are not extremely well hinted to the pixel grid.
    *     In other words, it only works well if the TrueType bytecode
    *     interpreter is enabled *and* high-quality hinted fonts are used.
    *

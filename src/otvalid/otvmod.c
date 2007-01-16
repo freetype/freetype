@@ -198,14 +198,14 @@
 
 
   static
-  const FT_Service_OTvalidateRec  otvalid_interface = 
+  const FT_Service_OTvalidateRec  otvalid_interface =
   {
     otv_validate
   };
 
 
   static
-  const FT_ServiceDescRec  otvalid_services[] = 
+  const FT_ServiceDescRec  otvalid_services[] =
   {
     { FT_SERVICE_ID_OPENTYPE_VALIDATE, &otvalid_interface },
     { NULL, NULL }

@@ -205,7 +205,7 @@
 
     setComponent = (FT_UShort)( ( flags >> 15 ) & 1 );
     dontAdvance  = (FT_UShort)( ( flags >> 14 ) & 1 );
-    
+
     offset = (FT_UShort)( flags & 0x3FFFU );
 
     if ( 0 < offset )

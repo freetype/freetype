@@ -36,12 +36,12 @@ FT_BEGIN_HEADER
 
   FT_DEFINE_SERVICE( Kerning )
   {
-    FT_Kerning_TrackGetFunc  get_track;  
+    FT_Kerning_TrackGetFunc  get_track;
   };
 
   /* */
 
- 
+
 FT_END_HEADER
 
 

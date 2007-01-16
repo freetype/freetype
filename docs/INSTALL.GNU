@@ -22,7 +22,7 @@ in the file INSTALL.UNIX instead.
 
     Note that  make++, a  make tool written  in Perl,  supports enough
     features of GNU make to compile FreeType.  See
-    
+
       http://makepp.sourceforge.net
 
     for more information; you need version 1.19 or newer, and you must
@@ -137,7 +137,7 @@ in the file INSTALL.UNIX instead.
 
 
   Final note
-  
+
     The build  system builds a  statically linked library of  the font
     engine in the  `objs' directory.  It does _not_  support the build
     of  DLLs on  Windows and  OS/2.  If  you need  these, you  have to

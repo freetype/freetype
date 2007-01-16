@@ -321,7 +321,7 @@
     FT_Memory  memory = stream->memory;
 
 
-    if ( idx->count > 0 && idx->offsets == NULL ) 
+    if ( idx->count > 0 && idx->offsets == NULL )
     {
       FT_Byte    offsize = idx->off_size;
       FT_ULong   data_size;
