@@ -1,5 +1,14 @@
 2007-01-17  Werner Lemberg  <wl@gnu.org>
 
+
+	* Version 2.3.0 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-0-FINAL'.
+
+2007-01-17  Werner Lemberg  <wl@gnu.org>
+
 	* docs/release: Updated.
 
 2007-01-16  David Turner  <david@freetype.org>
