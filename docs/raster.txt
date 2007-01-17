@@ -331,7 +331,7 @@ II. Rendering Technology
 
     The  render pool doesn't  need to  be large.   A 4KByte  pool is
     enough for nearly all renditions, though nearly 100% slower than
-    a more confortable 16KByte or 32KByte pool (that was tested with
+    a more comfortable 16KByte or 32KByte pool (that was tested with
     complex glyphs at sizes over 500 pixels).
 
 
@@ -545,8 +545,8 @@ II. Rendering Technology
                                  compute its intersections with the
                                  drawn scanlines.  As already
       ---------------------      mentioned this can be done
-                                 directly, but the involed algorithm
-          * P2         _---# P3  is far too slow.
+                                 directly, but the involved
+          * P2         _---# P3  algorithm is far too slow.
       ------------- _--  --
                   _-
                 _/               Instead, it is still possible to

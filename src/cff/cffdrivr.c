@@ -337,8 +337,8 @@
                                                          cff->psnames );
       font_info->italic_angle        = dict->italic_angle;
       font_info->is_fixed_pitch      = dict->is_fixed_pitch;
-      font_info->underline_position  = (FT_Short) dict->underline_position;
-      font_info->underline_thickness = (FT_Short) dict->underline_thickness;
+      font_info->underline_position  = (FT_Short)dict->underline_position;
+      font_info->underline_thickness = (FT_Short)dict->underline_thickness;
 
       cff->font_info = font_info;
     }

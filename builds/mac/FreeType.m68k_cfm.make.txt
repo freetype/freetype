@@ -25,7 +25,7 @@ COptions        = \xB6
 			-d FT2_BUILD_LIBRARY \xB6
 			-d FT_CONFIG_CONFIG_H="<ftconfig.h>" \xB6
 			-d FT_CONFIG_MODULES_H="<ftmodule.h>" \xB6
-			{Includes} {Sym-68K} -model cfmseg 
+			{Includes} {Sym-68K} -model cfmseg
 
 
 ### Source Files ###
@@ -118,7 +118,7 @@ ObjFiles-68K    =  \xB6
 
 ### Libraries ###
 
-LibFiles-68K    = 
+LibFiles-68K    =
 
 
 ### Default Rules ###

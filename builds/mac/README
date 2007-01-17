@@ -191,7 +191,7 @@ environment by Metrowerks. GCC for MPW and Symantec
   just updated versions of these by Leonard. Some
   modules are added after the last maintainance, they
   are not included.
-	  
+
   4-2. Working test with ftdemos
   ------------------------------
 
@@ -316,7 +316,7 @@ APPENDIX I
 
       http://www.gyve.org/~mpsuzuki/ats_benchmark.html
 
-  A-3. Framework Availabilities 
+  A-3. Framework Availabilities
   -----------------------------
 
   The framework of MacOS are often revised, especially
@@ -386,7 +386,7 @@ ATSFontGetFileSpecification()         |    x    |    x    |    x    |    x    | 
     there's no InterfaceLib 9.x for m68k platforms.
     In fact, these functions are FSRef dependent.
 
-    (***) 
+    (***)
     ATSUI framework is available on ATSUnicode 8.5 on
     ppc Toolbox CFM, CarbonLib 1.0 too. But its base:
     ATS font manager is not published in these versions.

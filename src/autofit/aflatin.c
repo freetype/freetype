@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006 by                                    */
+/*  Copyright 2003, 2004, 2005, 2006, 2007 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -723,7 +723,8 @@
 
             segment->min_coord = (FT_Short)min_pos;
             segment->max_coord = (FT_Short)max_pos;
-            segment->height    = (FT_Short)(segment->max_coord - segment->min_coord);
+            segment->height    = (FT_Short)( segment->max_coord -
+                                             segment->min_coord );
 
             on_edge = 0;
             segment = NULL;

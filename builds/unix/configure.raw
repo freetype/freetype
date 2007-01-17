@@ -246,7 +246,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsspec != x; then
   /* FSSpec functions: deprecated sicne Mac OS X 10.4 */
   PBGetFCBInfoSync( paramBlock );
   FSMakeFSSpec( vRefNum, dirID, fileName, spec );
- 
+
     ],
     [AC_MSG_RESULT([ok])
      CFLAGS="$CFLAGS -DHAVE_FSSPEC=1"],
@@ -309,7 +309,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
   FSGetCatalogInfo( ref, whichInfo, catalogInfo,
                     outForkName, spec, ref );
   FSPathMakeRef( path, ref, isDirectory );
- 
+
     ],
     [AC_MSG_RESULT([ok])
      CFLAGS="$CFLAGS -DHAVE_FSREF=1"],

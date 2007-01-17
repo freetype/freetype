@@ -77,7 +77,7 @@ in the file INSTALL.UNIX instead.
 
     If the build system correctly detected your platform, but you want
     to use a different compiler  than the one specified in the summary
-    (for most platforms, gcc is  the defaut compiler), invoke GNU Make
+    (for most platforms, gcc is the default compiler), invoke GNU Make
     with
 
       make setup <compiler>

@@ -292,7 +292,8 @@
         }
       }
 
-      ttface->internal->ignore_unpatented_hinter = FT_BOOL(!unpatented_hinting);
+      ttface->internal->ignore_unpatented_hinter =
+        FT_BOOL( !unpatented_hinting );
     }
 
 #endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING &&

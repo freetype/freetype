@@ -79,8 +79,8 @@ INSTALL.UNIX for required tools and the basic self-building procedure.
   3. Building command
   -------------------
 
-    If the configuration finishes successfuly, invoking GNU make builds
-    FreeType2.  Just say
+    If  the  configuration  finishes successfully,  invoking  GNU make
+    builds FreeType2.  Just say
 
       make
 

@@ -25,7 +25,7 @@ PPCCOptions     = \xB6
 			-d FT2_BUILD_LIBRARY \xB6
 			-d FT_CONFIG_CONFIG_H="<ftconfig.h>" \xB6
 			-d FT_CONFIG_MODULES_H="<ftmodule.h>" \xB6
-			{Includes} {Sym-PPC} 
+			{Includes} {Sym-PPC}
 
 
 ### Source Files ###
@@ -118,7 +118,7 @@ ObjFiles-PPC    =  \xB6
 
 ### Libraries ###
 
-LibFiles-PPC    = 
+LibFiles-PPC    =
 
 
 ### Default Rules ###

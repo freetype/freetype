@@ -15,10 +15,14 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
       monochrome/gray  issues  when   scaling  the  CVT.   Some  fonts
       exhibited bad rendering artifacts otherwise.
 
-    - FT_GlyphSlot_Embolden  now supports  vertical  layouts correctly
+    - `FT_GlyphSlot_Embolden' now  supports vertical layouts correctly
       (it mangled the vertical advance height).
 
-    - Fixed byte endian issues of ftmac.c to support Mac OS X on i386.
+    - Fixed byte  endian issues  of `ftmac.c' to  support Mac OS  X on
+      i386.
+
+    - The  PFR  font loader  no  longer  erroneously  tags font  files
+      without any outlines as FT_FACE_FLAG_SCALABLE.
 
 
   II. NEW API FUNCTIONS
@@ -40,7 +44,7 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
 
     - `FT_Get_Gasp'  allows you  to query  the flags  of  the TrueType
       `gasp' table for  a given character pixel size.   This is useful
-      to duplicate the  text rendering of MS Windows,  when the native
+      to duplicate  the text rendering  of MS Windows when  the native
       bytecode  interpreter is  enabled (which  isn't the  default for
       other patent reasons).
 
@@ -68,7 +72,7 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
       release.
 
       Note  that  the API  hasn't  changed,  so  you can  still  force
-      unpatented hinting  with a special parameter  to FT_Open_Face as
+      unpatented hinting with a special parameter to `FT_Open_Face' as
       well.  This  might be useful in  same cases; for  example, a PDF
       reader might present  a user option to activate  it to deal with
       certain  `tricky'   embedded  fonts  which   cannot  be  clearly
@@ -76,16 +80,16 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
 
       If you are  a developer for embedded systems,  you might want to
       *disable*  the   feature  to  save  code   space  by  undefining
-      TT_CONFIG_OPTION_UNPATENTED_HINTING in ftoption.h.
+      TT_CONFIG_OPTION_UNPATENTED_HINTING in file `ftoption.h'.
 
-    - LCD-optimized rendering is now DISABLED in all default builds of
-      the library, mainly due  to PATENT issues.  For more information
-      see:
+    - LCD-optimized rendering is now  *disabled* in all default builds
+      of  the  library,  mainly   due  to  patent  issues.   For  more
+      information see:
 
       http://lists.gnu.org/archive/html/freetype/2006-09/msg00064.html
 
       A  new  configuration macro  FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-      has been  introduced in ftoption.h;  manually define it  in this
+      has been introduced in  `ftoption.h'; manually define it in this
       file if you want to re-enable the feature.
 
       The  change only  affects the  implementation, not  the FreeType
@@ -105,12 +109,12 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
       differences we had experienced with the Windows renderer.
 
     - It is now possible to cross-compile the library easily.  See the
-      file docs/INSTALL.CROSS for details.
+      file `docs/INSTALL.CROSS' for details.
 
     - The file `src/base/ftmac.c' now contains code for Mac OS X only;
       its  deprecated function  `FT_GetFile_From_Mac_Font_Name' always
-      returns an error even  if QuickDraw framework is available.  The
-      previous version has been moved to `builds/mac/ftmac.c'.
+      returns an  error even if the QuickDraw  framework is available.
+      The previous version has been moved to `builds/mac/ftmac.c'.
 
       Selecting  configure option `--with-quickdraw-carbon'  makes the
       build process use the original `ftmac.c' file instead of the Mac
@@ -123,7 +127,7 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
       performed on  the TrueType and CFF font  loaders, sometimes with
       very drastic  benefits (e.g., the  TrueType loader is  now about
       25% faster;  FreeType should use  less heap memory  under nearly
-      all conditions)
+      all conditions).
 
     - The anti-aliased rasterizer has been optimized and is now 15% to
       25%  percent  faster than  in  previous  versions, depending  on
@@ -131,9 +135,6 @@ CHANGES BETWEEN 2.3.0 and 2.2.1
 
     - The Type 1 loader has been improved; as an example, it now skips
       top-level dictionaries properly.
-
-    - The  PFR  font loader  no  longer  erroneously  tags font  files
-      without any outlines as FT_FACE_FLAG_SCALABLE.
 
     - Better support for Mac  fonts on POSIX systems, plus compilation
       fixes for Mac OS X on ppc64 where `ftmac.c' cannot be built.
@@ -627,7 +628,7 @@ CHANGES BETWEEN 2.1.8 and 2.1.7
         of  various programming  tricks.   Cache hits  are  up to  70%
         faster than in the old code.
 
-      - The  FTC_CMapCache has  been simplied.   Charmaps can  only be
+      - The  FTC_CMapCache has  been simplified.  Charmaps can only be
         accessed by  index right now.  There  is also a  new API named
         `FT_Charmap_GetIndex' for this purpose.
 
@@ -974,7 +975,7 @@ CHANGES BETWEEN 2.1.3 and 2.1.2
 
     - The  automatic and  postscript hinters  have both  been updated.
       This  results in  a relatively  important increase  of rendering
-      quality since  many nasty defaults have  been supressed.  Please
+      quality since  many nasty defaults have been suppressed.  Please
       visit the web page:
 
         http://www.freetype.org/hinting/smooth-hinting.html
@@ -1140,7 +1141,7 @@ CHANGES BETWEEN 2.1.1 and 2.1.0
       glyph bitmaps produced by FreeType 1.x and FreeType 2.x with the
       bytecode  interpreter enabled.   This was  caused by  an invalid
       flag setting in the TrueType glyph loader, making the rasterizer
-      change  its  drop-out   control  mode.   Now  theresults  should
+      change  its  drop-out   control  mode.   Now  the results should
       _really_ be completely identical.
 
     - The TrueType name table loader has been improved to support many
@@ -1638,7 +1639,7 @@ CHANGES BETWEEN 2.0.4 and 2.0.3
   - Updated  the  Unix-specific  portions  of the  build  system  (new
     libtool version, etc.).
 
-  - The  SFNT kerning  lodaer now  ensures  that the  table is  sorted
+  - The  SFNT kerning  loader now  ensures  that the  table is  sorted
     (since some problem fonts do not meet this requirement).
 
 
@@ -1651,7 +1652,7 @@ CHANGES BETWEEN 2.0.3 and 2.0.2
     - THE  AUTO-HINTER HAS  BEEN SLIGHTLY  IMPROVED, in  order  to fix
       several annoying artefacts, mainly:
 
-        - Blue  zone alignement of  horizontal stems  wasn't performed
+        - Blue  zone alignment  of  horizontal stems  wasn't performed
           correctly, resulting in artefacts  like the `d' being placed
           one pixel below the `b' in some fonts like Time New Roman.
 
@@ -1931,7 +1932,7 @@ CHANGES BETWEEN beta8 and 2.0
     * Incorrect glyph names for certain TrueType fonts.
     * The  glyph advance  was not  copied when  FT_Glyph_To_Bitmap was
       called.
-    * The  linearHoriAdvance  and  linerVertAdvance  fields  were  not
+    * The  linearHoriAdvance  and  linearVertAdvance  fields  were not
       correctly returned for glyphs processed by the auto-hinter.
     * `type1z'  renamed back to  `type1'; the  old `type1'  module has
       been removed.
@@ -2554,7 +2555,7 @@ OLD CHANGES - 22-feb-2000
   - introduced the `psnames' module.  It is used to:
 
       o convert  a Postscript glyph  name into the  equivalent Unicode
-        character code (used by the  Type 1 driver(s) to synthetize on
+        character code (used by the  Type 1 driver(s) to synthesize on
         the fly a Unicode charmap).
 
       o provide an  interface to retrieve the Postscript  names of the
@@ -2599,8 +2600,8 @@ TODO
 
   - Write FT_Get_Glyph_Bitmap and FT_Load_Glyph_Bitmap
 
-  - Add a function like FT_Load_Character( face, char_code, load_flags
-    )  that  would really  embbed  a  call  to FT_Get_Char_Index  then
+  - Add a function like FT_Load_Character(face, char_code, load_flags)
+    that  would   really  embed  a  call   to  FT_Get_Char_Index  then
     FT_Load_Glyph to ease developer's work.
 
   - Update the tutorial!
@@ -2639,7 +2640,7 @@ OLDER CHANGES - 27-jan-2000
     fonts.
 
   - very minor  changes in the implementation  of FT_Set_Char_Size and
-    FT_Set_Pixel_Sizes (they now implement default to ligthen the font
+    FT_Set_Pixel_Sizes (they now implement default to lighten the font
     driver's code).
 
 
@@ -2647,8 +2648,8 @@ OLDER CHANGES - 27-jan-2000
 
 OLD MESSAGE
 
-This file summarizes the changes that occured since the last `beta' of
-FreeType 2.  Because  the list is important, it  has been divided into
+This file summarizes the changes  that occurred  since the last `beta'
+of FreeType 2. Because the list is important, it has been divided into
 separate sections:
 
 Table Of Contents:
@@ -2735,7 +2736,7 @@ Glyph Image Formats:
   Drivers are now able to  register new glyph image formats within the
   library.  For  now, the  base layer supports  of course  bitmaps and
   vector  outlines, but  one  could imagine  something different  like
-  colored bitmaps, bi-color vectors or wathever else (Metafonts anyone
+  colored bitmaps, bi-color vectors or whatever else (Metafonts anyone
   ??).
 
   See  the   file  `include/ftimage.h'.   Note  also  that   the  type
