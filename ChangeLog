@@ -1,7 +1,13 @@
+2007-01-17  Werner Lemberg  <wl@gnu.org>
+
+	* docs/release: Updated.
+
 2007-01-16  David Turner  <david@freetype.org>
 
-        * src/autofit/aflatin.c, src/cff/cffdriver.c, src/truetype/ttobjs.c,
-        src/truetype/ttinterp.c: fixing compiler warnings
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments),
+	src/cff/cffdriver.c (cff_ps_get_font_info), src/truetype/ttobjs.c
+	(tt_face_init), src/truetype/ttinterp.c (Ins_SHC): Fix compiler
+	warnings.
 
 2007-01-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
