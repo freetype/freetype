@@ -1,3 +1,13 @@
+CHANGES BETWEEN 2.3.0 and 2.3.1
+
+  I. IMPORTANT BUG FIXES
+
+    - The TrueType interpreter sometimes returned incorrect horizontal
+      metrics due to a bug in the handling of the SHZ instruction.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.3.0 and 2.2.1
 
   I. IMPORTANT BUG FIXES

@@ -1,5 +1,14 @@
 2007-01-21  Werner Lemberg  <wl@gnu.org>
 
+	* docs/CHANGES: Document SHZ fix.
+
+2007-01-21  George Williams  <gww@silcom.com>
+
+	* src/truetype/ttinterp.c (Ins_SHZ): SHZ doesn't move phantom
+	points.
+
+2007-01-21  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/ttmtx.c (tt_face_get_metrics)
 	[!FT_CONFIG_OPTION_OLD_INTERNALS]: Fix limit check.
 

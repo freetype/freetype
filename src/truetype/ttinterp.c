@@ -2769,12 +2769,12 @@
     CUR.GS.single_width_cutin = (FT_F26Dot6)args[0];
 
 
-    /* XXX: UNDOCUMENTED! or bug in the Windows engine? */
-    /*                                                  */
-    /* It seems that the value that is read here is     */
-    /* expressed in 16.16 format rather than in font    */
-    /* units.                                           */
-    /*                                                  */
+    /* XXX: UNDOCUMENTED! or bug in the Windows engine?   */
+    /*                                                    */
+    /*      It seems that the value that is read here is  */
+    /*      expressed in 16.16 format rather than in font */
+    /*      units.                                        */
+    /*                                                    */
 #define DO_SSW                                                 \
     CUR.GS.single_width_value = (FT_F26Dot6)( args[0] >> 10 );
 
@@ -5430,7 +5430,7 @@
         last_point = 0;
     }
 
-    /* XXX: UNDOCUMENTED! SHC does touch the points */
+    /* XXX: UNDOCUMENTED! SHC touches the points */
     for ( i = first_point; i <= last_point; i++ )
     {
       if ( zp.cur != CUR.zp2.cur || refp != i )
@@ -5466,8 +5466,14 @@
     if ( COMPUTE_Point_Displacement( &dx, &dy, &zp, &refp ) )
       return;
 
-    if ( CUR.zp2.n_points > 0 )
-      last_point = (FT_UShort)(CUR.zp2.n_points - 1);
+    /* XXX: UNDOCUMENTED! SHZ doesn't move the phantom points.  */
+    /*      Twilight zone has no contours, so use `n_points'.   */
+    /*      Normal zone's `n_points' includes phantoms, so must */
+    /*      use end of last contour.                            */
+    if ( CUR.GS.gep2 == 0 && CUR.zp2.n_points > 0 )
+      last_point = (FT_UShort)( CUR.zp2.n_points - 1 );
+    else if ( CUR.GS.gep2 == 1 && CUR.zp2.n_contours > 0 )
+      last_point = (FT_UShort)( CUR.zp2.contours[CUR.zp2.n_contours - 1] );
     else
       last_point = 0;
 
