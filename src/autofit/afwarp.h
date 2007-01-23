@@ -33,7 +33,6 @@ FT_BEGIN_HEADER
 
   typedef struct  AF_WarperRec_
   {
-    FT_Int        X1, X2;
     FT_Pos        x1, x2;
     FT_Pos        t1, t2;
     FT_Pos        x1min, x1max;

@@ -1,3 +1,10 @@
+2007-01-23  David Turner  <david@freetype.org>
+
+	* src/autofit/aflatin.c, src/autofit/aftypes.h, src/autofit/afwarp.h,
+	src/autofit/afwarp.c: fix and enable the warper to improve "light"
+	hinting mode. This is not necessarily a final version, but it seems
+	to work well
+
 2007-01-21  Werner Lemberg  <wl@gnu.org>
 
 	* ChangeLog: Split off older entries into...

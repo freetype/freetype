@@ -1396,7 +1396,7 @@
     /* compute flags depending on render mode, etc. */
     mode = metrics->root.scaler.render_mode;
 
-#ifdef AF_USE_WARPER
+#ifdef zzAF_USE_WARPER
     if ( mode == FT_RENDER_MODE_LCD || mode == FT_RENDER_MODE_LCD_V )
     {
       metrics->root.scaler.render_mode = mode = FT_RENDER_MODE_NORMAL;
@@ -2114,7 +2114,12 @@
       goto Exit;
 
     /* analyze glyph outline */
+#ifdef AF_USE_WARPER
+    if ( metrics->root.scaler.render_mode == FT_RENDER_MODE_LIGHT ||
+         AF_HINTS_DO_HORIZONTAL( hints ) )
+#else
     if ( AF_HINTS_DO_HORIZONTAL( hints ) )
+#endif
     {
       error = af_latin_hints_detect_features( hints, AF_DIMENSION_HORZ );
       if ( error )
@@ -2133,23 +2138,24 @@
     /* grid-fit the outline */
     for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
     {
+#ifdef AF_USE_WARPER
+      if ( ( dim == AF_DIMENSION_HORZ && 
+             metrics->root.scaler.render_mode == FT_RENDER_MODE_LIGHT ) )
+      {
+        AF_WarperRec  warper;
+        FT_Fixed      scale;
+        FT_Pos        delta;
+
+
+        af_warper_compute( &warper, hints, dim, &scale, &delta );
+        af_glyph_hints_scale_dim( hints, dim, scale, delta );
+        continue;
+      }
+#endif
+
       if ( ( dim == AF_DIMENSION_HORZ && AF_HINTS_DO_HORIZONTAL( hints ) ) ||
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
-#ifdef AF_USE_WARPER
-        if ( dim == AF_DIMENSION_HORZ &&
-             metrics->root.scaler.render_mode == FT_RENDER_MODE_NORMAL )
-        {
-          AF_WarperRec  warper;
-          FT_Fixed      scale;
-          FT_Pos        delta;
-
-
-          af_warper_compute( &warper, hints, dim, &scale, &delta );
-          af_glyph_hints_scale_dim( hints, dim, scale, delta );
-          continue;
-        }
-#endif
         af_latin_hint_edges( hints, (AF_Dimension)dim );
         af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
