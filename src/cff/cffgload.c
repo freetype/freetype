@@ -2089,7 +2089,7 @@
             zone->limit  = decoder->locals[idx + 1];
             zone->cursor = zone->base;
 
-            if ( !zone->base )
+            if ( !zone->base || zone->limit == zone->base )
             {
               FT_ERROR(( "cff_decoder_parse_charstrings:"
                          " invoking empty subrs!\n" ));
@@ -2131,7 +2131,7 @@
             zone->limit  = decoder->globals[idx + 1];
             zone->cursor = zone->base;
 
-            if ( !zone->base )
+            if ( !zone->base || zone->limit == zone->base )
             {
               FT_ERROR(( "cff_decoder_parse_charstrings:"
                          " invoking empty subrs!\n" ));

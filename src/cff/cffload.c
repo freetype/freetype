@@ -403,11 +403,13 @@
         if ( !offset )
           offset = old_offset;
 
-        /* sanity check for invalid offset tables */
-        else if ( offset     < old_offset     ||
-                  offset - 1 > idx->data_size )
+        /* two sanity checks for invalid offset tables */
+        else if ( offset < old_offset )
           offset = old_offset;
 
+	else if ( offset-1 >= idx->data_size && n < idx->count )
+          offset = old_offset;
+	
         t[n] = idx->bytes + offset - 1;
 
         old_offset = offset;
