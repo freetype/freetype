@@ -1,13 +1,30 @@
+2007-01-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_index_get_pointers): Handle last entry
+	correctly.  This fixes Savannah bug #18867.
+
+	* docs/CHANGES: Document it.
+
 2007-01-23  David Turner  <david@freetype.org>
 
-	* src/truetype/ttobjs.c: fixed typo that prevented compilation when
-	disabling both the unpatented and the bytecode interpreter in the
-	TrueType font driver
+	* src/truetype/ttobjs.c (tt_size_ready_bytecode): Fix typo that
+	prevented compilation when disabling both the unpatented and the
+	bytecode interpreter in the TrueType font driver.
 
-	* src/autofit/aflatin.c, src/autofit/aftypes.h, src/autofit/afwarp.h,
-	src/autofit/afwarp.c: fix and enable the warper to improve "light"
-	hinting mode. This is not necessarily a final version, but it seems
-	to work well
+
+	Fix and enable the warper to improve `light' hinting mode.  This is
+	not necessarily a final version, but it seems to work well.
+
+	* src/autofit/aflatin.c (af_latin_hints_init) [AF_USE_WARPER]:
+	Disable code.
+	(af_latin_hints_apply) [AF_USE_WARPER]: Handle FT_RENDER_MODE_LIGHT.
+	* src/autofit/aftypes.h: Activate AF_USE_WARPER.
+
+	* src/autofit/afwarp.c (AF_WarpScore): Tune table.
+	(af_warper_compute_line_best): Fix array size of `scores'.
+	(af_warper_compute): Better handling of border cases.
+	* src/autofit/afwarp.h (AF_WarperRec): Remove unused members `X1'
+	and `X2'.
 
 2007-01-21  Werner Lemberg  <wl@gnu.org>
 

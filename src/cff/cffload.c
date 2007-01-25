@@ -404,7 +404,8 @@
           offset = old_offset;
 
         /* sanity check for invalid offset tables */
-        else if ( offset < old_offset || offset - 1 >= idx->data_size )
+        else if ( offset     < old_offset     ||
+                  offset - 1 > idx->data_size )
           offset = old_offset;
 
         t[n] = idx->bytes + offset - 1;

@@ -5,6 +5,9 @@ CHANGES BETWEEN 2.3.0 and 2.3.1
     - The TrueType interpreter sometimes returned incorrect horizontal
       metrics due to a bug in the handling of the SHZ instruction.
 
+    - A typo  in  a  security  check  introduced  after  version 2.2.1
+      prevented FreeType to render some glyphs in CFF fonts.
+
 
 ======================================================================
 

@@ -1385,8 +1385,8 @@
     af_glyph_hints_rescale( hints, (AF_ScriptMetrics)metrics );
 
     /*
-     *  correct x_scale and y_scale when needed, since they may have
-     *  been modified af_latin_scale_dim above
+     *  correct x_scale and y_scale if needed, since they may have
+     *  been modified `af_latin_metrics_scale_dim' above
      */
     hints->x_scale = metrics->axis[AF_DIMENSION_HORZ].scale;
     hints->x_delta = metrics->axis[AF_DIMENSION_HORZ].delta;
@@ -1396,7 +1396,7 @@
     /* compute flags depending on render mode, etc. */
     mode = metrics->root.scaler.render_mode;
 
-#ifdef zzAF_USE_WARPER
+#if 0 /* #ifdef AF_USE_WARPER */
     if ( mode == FT_RENDER_MODE_LCD || mode == FT_RENDER_MODE_LCD_V )
     {
       metrics->root.scaler.render_mode = mode = FT_RENDER_MODE_NORMAL;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter warping algorithm (body).                                */
 /*                                                                         */
-/*  Copyright 2006 by                                                      */
+/*  Copyright 2006, 2007 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -240,6 +240,7 @@
 #if 1
     {
       int  margin = 16;
+
 
       if ( warper->w0 <= 128 )
       {
