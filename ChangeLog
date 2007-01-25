@@ -1,19 +1,20 @@
 2007-01-25  David Turner  <david@freetype.org>
 
-	* src/cff/cffload.c (cff_index_get_pointers): fixed a bug in the
-	sanity check which caused the last entry in each index to become
-	empty. since this function is only used to load local and global
-	functions, this meant that any charstring that called the last
-	local/global function would fail.
+	* src/cff/cffload.c (cff_index_get_pointers): Improve previous fix.
 
-	* src/cff/cffgload.c: fixed sanity check for empty functions
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_callsubr, cff_op_callgsubr>: Fix sanity check for empty
+	functions.
 
-	* docs/CHANGES: document light auto-hinting improvement
+	* docs/CHANGES: Document light auto-hinting improvement.
 
 2007-01-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_index_get_pointers): Handle last entry
-	correctly.  This fixes Savannah bug #18867.
+	correctly in a sanity check.  Since this function is only used to
+	load local and global functions, any charstring that called the last
+	local/global function would fail otherwise.  This fixes Savannah bug
+	#18867.
 
 	* docs/CHANGES: Document it.
 
