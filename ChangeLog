@@ -1,3 +1,7 @@
+2007-01-25  Werner Lemberg  <wl@gnu.org>
+
+	* docs/release: Updated -- Savannah uses a new uploading scheme.
+
 2007-01-25  David Turner  <david@freetype.org>
 
 	* src/cff/cffload.c (cff_index_get_pointers): Improve previous fix.
