@@ -1,8 +1,19 @@
 2007-01-25  David Turner  <david@freetype.org>
 
-	* src/autofit/afhints.h, src/autofit/afhints.c, src/autofit/aftypes.h,
-	src/autofit/afwarp.c: light auto-hinting, improve glyph advance widths
-	and ressurect normal/full hinting to its normal quality
+	For light auto-hinting, improve glyph advance widths and resurrect
+	normal/full hinting to its normal quality.
+
+	* src/autofit/afhints.h (AF_GlyphHintsRec): New members `xmin_delta'
+	and `xmax_delta'.
+	* src/autofit/afhints.c (af_glyph_hints_reload): Reset `xmin_delta'
+	and `xmax_delta'.
+
+	* src/autofit/afloader.c (af_loader_load_g) <AF_USE_WARPER>: Replace
+	preprocessor conditional with if-clause, handling both light and
+	normal mode.
+
+	* src/autofit/afwarp.c (AF_WarpScore): Fine-tune again.
+	(af_warper_compute): Handle `xmin_delta' and `xmax_delta'.
 
 2007-01-25  Werner Lemberg  <wl@gnu.org>
 
