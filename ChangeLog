@@ -1,3 +1,9 @@
+2007-01-25  David Turner  <david@freetype.org>
+
+	* src/autofit/afhints.h, src/autofit/afhints.c, src/autofit/aftypes.h,
+	src/autofit/afwarp.c: light auto-hinting, improve glyph advance widths
+	and ressurect normal/full hinting to its normal quality
+
 2007-01-25  Werner Lemberg  <wl@gnu.org>
 
 	* docs/release: Updated -- Savannah uses a new uploading scheme.

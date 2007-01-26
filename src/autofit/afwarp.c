@@ -24,11 +24,11 @@
   static const AF_WarpScore
   af_warper_weights[64] =
   {
-    35, 32, 30, 20, 15, 12, 10,  5,  2,  1,  0,  0,  0,  0,  0,  0,
+    35, 32, 30, 25, 20, 15, 12, 10,  5,  1,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0, -1, -2, -5, -8,-10,-10,-20,-20,-30,-30,
 
    -30,-30,-20,-20,-10,-10, -8, -5, -2, -1,  0,  0,  0,  0,  0,  0,
-     0,  0,  0,  0,  0,  0,  0,  1,  2,  5, 10, 12, 15, 20, 30, 32,
+     0,  0,  0,  0,  0,  0,  0,  1,  5, 10, 12, 15, 20, 25, 30, 32,
   };
 #else
   static const AF_WarpScore
@@ -314,8 +314,16 @@
                                    segments, num_segments );
     }
 
-    *a_scale = warper->best_scale;
-    *a_delta = warper->best_delta;
+    {
+      FT_Fixed  best_scale = warper->best_scale;
+      FT_Pos    best_delta = warper->best_delta;
+     
+      hints->xmin_delta = FT_MulFix( X1, best_scale-org_scale ) + best_delta;
+      hints->xmax_delta = FT_MulFix( X2, best_scale-org_scale ) + best_delta;
+
+      *a_scale = best_scale;
+      *a_delta = best_delta;
+    }
   }
 
 #else /* !AF_USE_WARPER */
