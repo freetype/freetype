@@ -170,7 +170,7 @@
                                           metrics );
 
       /* we now need to hint the metrics according to the change in */
-      /* width/positioning that occured during the hinting process  */
+      /* width/positioning that occurred during the hinting process */
       if ( scaler->render_mode != FT_RENDER_MODE_LIGHT )
       {
         FT_Pos        old_advance, old_rsb, old_lsb, new_lsb;

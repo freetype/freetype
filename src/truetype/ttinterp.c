@@ -53,7 +53,7 @@
   /*                                                                       */
   /* In order to detect infinite loops in the code, we set up a counter    */
   /* within the run loop.  A single stroke of interpretation is now        */
-  /* limitet to a maximal number of opcodes defined below.                 */
+  /* limited to a maximal number of opcodes defined below.                 */
   /*                                                                       */
 #define MAX_RUNNABLE_OPCODES  1000000L
 
@@ -140,7 +140,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* The following macros hide the use of EXEC_ARG and EXEC_ARG_ to        */
-  /* increase readabilty of the code.                                      */
+  /* increase readability of the code.                                     */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4319,7 +4319,7 @@
 
     /* Exit the current call frame.                      */
 
-    /* NOTE: If the last intruction of a program is a    */
+    /* NOTE: If the last instruction of a program is a   */
     /*       CALL or LOOPCALL, the return address is     */
     /*       always out of the code range.  This is a    */
     /*       valid address, and it is why we do not test */
@@ -7078,7 +7078,7 @@
   /*  - After executing one single opcode, if the flag `Instruction_Trap'  */
   /*    is set to TRUE (returns TRUE).                                     */
   /*                                                                       */
-  /*  On exit whith TRUE, test IP < CodeSize to know wether it comes from  */
+  /*  On exit with TRUE, test IP < CodeSize to know whether it comes from  */
   /*  an instruction trap or a normal termination.                         */
   /*                                                                       */
   /*                                                                       */

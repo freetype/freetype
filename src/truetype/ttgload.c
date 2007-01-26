@@ -616,7 +616,7 @@
       translate_array( zone->n_points, zone->cur, origin, 0 );
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    /* save original point positioin in org */
+    /* save original point position in org */
     if ( n_ins > 0 )
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
 #endif
