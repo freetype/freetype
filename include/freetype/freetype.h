@@ -637,7 +637,7 @@ FT_BEGIN_HEADER
   /*     http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/README.TXT   */
   /*                                                                       */
   /*   to get an idea how to do that.  Basically, if the language ID is 0, */
-  /*   dont use it, otherwise subtract 1 from the language ID.  Then       */
+  /*   don't use it, otherwise subtract 1 from the language ID.  Then      */
   /*   examine `encoding_id'.  If, for example, `encoding_id' is           */
   /*   @TT_MAC_ID_ROMAN and the language ID (minus 1) is                   */
   /*   `TT_MAC_LANGID_GREEK', it is the Greek encoding, not Roman.         */
@@ -1585,7 +1585,7 @@ FT_BEGIN_HEADER
   /*    FT_Done_FreeType                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Destroy a given FreeType library object and all of its childs,     */
+  /*    Destroy a given FreeType library object and all of its children,   */
   /*    including resources, drivers, faces, sizes, etc.                   */
   /*                                                                       */
   /* <Input>                                                               */

@@ -1445,7 +1445,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*     max_points   :: The maximal size in points of the zone.           */
   /*                                                                       */
-  /*     max_contours :: Max size in links contours of thez one.           */
+  /*     max_contours :: Max size in links contours of the zone.           */
   /*                                                                       */
   /*     n_points     :: The current number of points in the zone.         */
   /*                                                                       */
