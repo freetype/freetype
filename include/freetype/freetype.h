@@ -1725,6 +1725,10 @@ FT_BEGIN_HEADER
   /*    If the `FT_OPEN_PARAMS' bit is set, the parameters given by        */
   /*    `num_params' and `params' is used.  They are ignored otherwise.    */
   /*                                                                       */
+  /*    Ideally, both the `pathname' and `params' fields should be tagged  */
+  /*    as `const'; this is missing for API backwards compatibility.  With */
+  /*    other words, applications should treat them as read-only.          */
+  /*                                                                       */
   typedef struct  FT_Open_Args_
   {
     FT_UInt         flags;
@@ -2311,7 +2315,7 @@ FT_BEGIN_HEADER
    *     This flag implies @FT_LOAD_NO_SCALE and @FT_LOAD_IGNORE_TRANSFORM.
    *
    *   FT_LOAD_IGNORE_TRANSFORM ::
-   *     Indicates that the tranform matrix set by @FT_Set_Transform should
+   *     Indicates that the transform matrix set by @FT_Set_Transform should
    *     be ignored.
    *
    *   FT_LOAD_MONOCHROME ::

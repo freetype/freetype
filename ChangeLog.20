@@ -2207,7 +2207,7 @@
 	* src/autohint/ahhint.c (ah_hinter_load, ah_hinter_load_glyph):
 	Changed so that fonts with a non-standard FontMatrix render
 	correctly.  Previously, the first glyph rendered from such a
-	font did not have the tranformation matrix applied.
+	font did not have the transformation matrix applied.
 
 2000-12-17  Werner Lemberg  <wl@gnu.org>
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType memory management macros (specification).               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2005, 2006 by                         */
+/*  Copyright 1996-2001, 2002, 2004, 2005, 2006, 2007 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -209,7 +209,7 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  Return the maximum number of adressable elements in an array.
+   *  Return the maximum number of addressable elements in an array.
    *  We limit ourselves to INT_MAX, rather than UINT_MAX, to avoid
    *  any problems.
    */
