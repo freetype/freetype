@@ -9,18 +9,6 @@ CHANGES BETWEEN 2.3.0 and 2.3.1
       prevented FreeType to render some glyphs in CFF fonts.
 
 
-  II. IMPORTANT CHANGES
-
-    - The  light  auto-hinting  mode  has  been  improved  and  should
-      generate  less  blurry  text  in many  cases,  without  changing
-      spacing.   This  is done  by  slightly translating/dilating  the
-      outline in the horizontal direction in order to better align its
-      features to the pixel grid.
-
-      Since the transformation is entirely linear, this still provides
-      very good approximations to the original glyph shapes.
-
-
 ======================================================================
 
 CHANGES BETWEEN 2.3.0 and 2.2.1

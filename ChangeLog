@@ -1,5 +1,11 @@
 2007-01-30  David Turner  <david@freetype.org>
 
+	* all-sources: tagging with VER-2-3-1 to prepare release
+
+	* docs/CHANGES, docs/VERSION.DLL, include/freetype/freetype.h,
+	docs/release, README, builds/unix/configure.raw, Jamfile: updating
+	version	numbers to 2.3.1
+
 	* src/autofit/aftypes.h, src/autofit/afloader.c: disabling the
 	warper (i.e. light hinting improvements) to make a 2.3.1 bugfix
 	release before introducing a new feature. This should give us

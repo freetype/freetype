@@ -41,7 +41,7 @@ How to prepare a new release
 
     #!/bin/sh
 
-    VERSION=2.3.0
+    VERSION=2.3.1
     SAVANNAH_USER=wl
 
     #####################################################################
