@@ -1,3 +1,10 @@
+2007-01-30  David Turner  <david@freetype.org>
+
+	* src/autofit/aftypes.h, src/autofit/afloader.c: disabling the
+	warper (i.e. light hinting improvements) to make a 2.3.1 bugfix
+	release before introducing a new feature. This should give us
+	more time to tune and improve the warper for the next release
+
 2007-01-25  David Turner  <david@freetype.org>
 
 	For light auto-hinting, improve glyph advance widths and resurrect

@@ -233,7 +233,7 @@
         FT_Pos   pp2x = loader->pp2.x;
 
         loader->pp1.x = FT_PIX_ROUND( pp1x + hints->xmin_delta );
-        loader->pp2.x = FT_PIX_ROUND( pp2x + hints->xmax_delta + 16 );
+        loader->pp2.x = FT_PIX_ROUND( pp2x + hints->xmax_delta );
 
         slot->lsb_delta = loader->pp1.x - pp1x;
         slot->rsb_delta = loader->pp2.x - pp2x;
