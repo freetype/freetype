@@ -1,15 +1,37 @@
+2007-01-31  Werner Lemberg  <wl@gnu.org>
+
+
+	* Version 2.3.1 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-1-FINAL'.
+
+	* builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj: s/230/231/.
+	* builds/win32/visualc/index.html: s/221/231/.
+
+	* vms_make.com: Add `ftgasp'.
+
 2007-01-30  David Turner  <david@freetype.org>
 
-	* all-sources: tagging with VER-2-3-1 to prepare release
+	Tag sources with VER-2-3-1 to prepare release.
 
-	* docs/CHANGES, docs/VERSION.DLL, include/freetype/freetype.h,
-	docs/release, README, builds/unix/configure.raw, Jamfile: updating
-	version	numbers to 2.3.1
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.
 
-	* src/autofit/aftypes.h, src/autofit/afloader.c: disabling the
-	warper (i.e. light hinting improvements) to make a 2.3.1 bugfix
-	release before introducing a new feature. This should give us
-	more time to tune and improve the warper for the next release
+	* docs/VERSION.DLL docs/release, README, Jamfile (RefDoc):
+	s/2.3.0/2.3.1/.
+
+	* builds/unix/configure.raw (version_info): Set to 9:12:3.
+
+
+	* src/autofit/aftypes.h (AF_USE_WARPER), src/autofit/afloader.c
+	(af_loader_load_g): Disable the warper (i.e., the light hinting
+	improvements) to make a 2.3.1 bugfix release before introducing a
+	new feature.  This should give us more time to tune and improve the
+	warper for the next release.
+
+	* docs/CHANGES: Update accordingly.
 
 2007-01-25  David Turner  <david@freetype.org>
 

@@ -2335,7 +2335,7 @@
 
 	Fixes for `make multi' and using C++ compiler.
 
-	* gxvalid/gxvcommn.c (gxv_set_length_by_ushort_offset,
+	* src/gxvalid/gxvcommn.c (gxv_set_length_by_ushort_offset,
 	gxv_set_length_by_ulong_offset, gxv_array_getlimits_byte,
 	gxv_array_getlimits_ushort): Declare with FT_LOCAL_DEF.
 	(gxv_compare_ranges): Make it static.
@@ -2348,7 +2348,7 @@
 	GXV_XSTATETABLE_HEADER_SIZE, GXV_XSTATEHEADER_SIZE): Move to
 	gxvcommn.h.
 
-	* gxvalid/gxvcommn.h: Add prototypes for
+	* src/gxvalid/gxvcommn.h: Add prototypes for
 	gxv_StateTable_subtable_setup, gxv_XStateTable_subtable_setup,
 	gxv_XStateTable_validate, gxv_array_getlimits_byte,
 	gxv_array_getlimits_ushort, gxv_set_length_by_ushort_offset,
@@ -2361,13 +2361,13 @@
 	* src/gxvalid/gxvbsln.c (gxv_bsln_LookupValue_validate,
 	gxv_bsln_parts_fmt1_validate): Improve trace messages.
 
-	* gxvalid/gxvfeat.c: Split off predefined registry stuff to...
-	* gxvalid/gxvfeat.h: New file.
+	* src/gxvalid/gxvfeat.c: Split off predefined registry stuff to...
+	* src/gxvalid/gxvfeat.h: New file.
 
-	* gxvalid/gxvjust.c (gxv_just_wdc_entry_validate): Improve trace
+	* src/gxvalid/gxvjust.c (gxv_just_wdc_entry_validate): Improve trace
 	message.
 
-	* gxvalid/gxvkern.c (GXV_kern_Dialect): Add KERN_DIALECT_UNKNOWN.
+	* src/gxvalid/gxvkern.c (GXV_kern_Dialect): Add KERN_DIALECT_UNKNOWN.
 	(gxv_kern_subtable_fmt1_valueTable_load,
 	gxv_kern_subtable_fmt1_subtable_setup,
 	gxv_kern_subtable_fmt1_entry_validate): Fix C++ compiler errors.
@@ -2377,43 +2377,43 @@
 	Improve trace message.
 	(gxv_kern_validate_classic): Fix C++ compiler error.
 
-	* gxvalid/gxvmort0.c (gxv_mort_subtable_type0_validate): Declare
+	* src/gxvalid/gxvmort0.c (gxv_mort_subtable_type0_validate): Declare
 	with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmort1.c
+	* src/gxvalid/gxvmort1.c
 	(gxv_mort_subtable_type1_substitutionTable_load,
 	gxv_mort_subtable_type1_subtable_setup): Fix C++ compiler errors.
 	(gxv_mort_subtable_type1_substTable_validate): Improve trace
 	message.
 	(gxv_mort_subtable_type1_validate): Declare with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmort2.c (gxv_mort_subtable_type2_opttable_load,
+	* src/gxvalid/gxvmort2.c (gxv_mort_subtable_type2_opttable_load,
 	gxv_mort_subtable_type2_subtable_setup,
 	gxv_mort_subtable_type2_ligActionOffset_validate,
 	gxv_mort_subtable_type2_ligatureTable_validate): Fix C++ compiler
 	errors.
 	(gxv_mort_subtable_type2_validate): Declare with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmort4.c (gxv_mort_subtable_type4_validate): Declare
+	* src/gxvalid/gxvmort4.c (gxv_mort_subtable_type4_validate): Declare
 	with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmort5.c (gxv_mort_subtable_type5_subtable_setup,
+	* src/gxvalid/gxvmort5.c (gxv_mort_subtable_type5_subtable_setup,
 	gxv_mort_subtable_type5_InsertList_validate): Fix C++ compiler
 	errors.
 	(gxv_mort_subtable_type5_validate): Declare with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmort.c: Include gxvfeat.h.
+	* src/gxvalid/gxvmort.c: Include gxvfeat.h.
 	(gxv_mort_featurearray_validate, gxv_mort_coverage_validate):
 	Declare with FT_LOCAL_DEF.
 	(gxv_mort_subtables_validate, gxv_mort_validate): Improve trace
 	messages.
 
-	* gxvalid/gxvmort.h (gxv_mort_feature_validate): Remove.
+	* src/gxvalid/gxvmort.h (gxv_mort_feature_validate): Remove.
 
-	* gxvalid/gxvmorx0.c (gxv_morx_subtable_type0_validate): Declare
+	* src/gxvalid/gxvmorx0.c (gxv_morx_subtable_type0_validate): Declare
 	with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmorx1.c
+	* src/gxvalid/gxvmorx1.c
 	(gxv_morx_subtable_type1_substitutionTable_load,
 	gxv_morx_subtable_type1_subtable_setup,
 	gxv_morx_subtable_type1_entry_validate,
@@ -2421,7 +2421,7 @@
 	compiler errors.
 	(gxv_morx_subtable_type1_validate): Declare with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmorx2.c (gxv_morx_subtable_type2_opttable_load,
+	* src/gxvalid/gxvmorx2.c (gxv_morx_subtable_type2_opttable_load,
 	gxv_morx_subtable_type2_subtable_setup,
 	gxv_morx_subtable_type2_ligActionIndex_validate,
 	gxv_morx_subtable_type2_ligatureTable_validate): Fix C++ compiler
@@ -2429,26 +2429,26 @@
 	(gxv_morx_subtable_type2_validate): Declare with FT_LOCAL_DEF.
 	Fix typo.
 
-	* gxvalid/gxvmorx4.c (gxv_morx_subtable_type4_validate): Declare
+	* src/gxvalid/gxvmorx4.c (gxv_morx_subtable_type4_validate): Declare
 	with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmorx5.c (gxv_morx_subtable_type5_insertionGlyph_load,
+	* src/gxvalid/gxvmorx5.c (gxv_morx_subtable_type5_insertionGlyph_load,
 	gxv_morx_subtable_type5_subtable_setup): Fix C++ compiler error.
 	(gxv_morx_subtable_type5_validate): Declare with FT_LOCAL_DEF.
 
-	* gxvalid/gxvmorx.c (gxv_morx_subtables_validate,
+	* src/gxvalid/gxvmorx.c (gxv_morx_subtables_validate,
 	gxv_morx_validate): Improve trace message.
 
-	* gxvalid/gxvopbd.c (gxv_opbd_LookupFmt4_transit): Fix compiler
+	* src/gxvalid/gxvopbd.c (gxv_opbd_LookupFmt4_transit): Fix compiler
 	warnings.
 	(gxv_opbd_validate): Improve trace message.
 
-	* gxvalid/gxvprop.c: Decorate constants with `U' and `L' where
+	* src/gxvalid/gxvprop.c: Decorate constants with `U' and `L' where
 	appropriate.
 	(gxv_prop_zero_advance_validate, gxv_prop_validate): Improve trace
 	message.
 
-	* gxvalid/gxvtrak.c (gxv_trak_trackTable_validate): Remove unused
+	* src/gxvalid/gxvtrak.c (gxv_trak_trackTable_validate): Remove unused
 	parameter.  Update all callers.
 	(gxv_trak_validate): Improve trace message.
 

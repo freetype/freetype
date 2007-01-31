@@ -1,6 +1,6 @@
 $! make Freetype2 under OpenVMS
 $!
-$! Copyright 2003, 2004, 2006 by
+$! Copyright 2003, 2004, 2006, 2007 by
 $! David Turner, Robert Wilhelm, and Werner Lemberg.
 $!
 $! This file is part of the FreeType project, and may only be used, modified,
@@ -357,7 +357,7 @@ CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include],[--.src.base]
 
 OBJS=ftbase.obj,ftinit.obj,ftglyph.obj,ftdebug.obj,ftbdf.obj,ftmm.obj,\
      fttype1.obj,ftxf86.obj,ftpfr.obj,ftstroke.obj,ftwinfnt.obj,ftbbox.obj,\
-     ftbitmap.obj ftlcdfil.obj
+     ftbitmap.obj ftlcdfil.obj ftgasp.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)

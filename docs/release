@@ -5,7 +5,7 @@ How to prepare a new release
   and FREETYPE_PATCH.
 
 . Update version numbers in all files where necessary (for example, do
-  a grep for both `2.3.0' and `230' for release 2.3.0).
+  a grep for both `2.3.1' and `231' for release 2.3.1).
 
 . builds/unix/configure.raw: Update `version_info'.
 
