@@ -1,7 +1,7 @@
 # Configure paths for FreeType2
 # Marcelo Magallon 2001-10-26, based on gtk.m4 by Owen Taylor
 #
-# Copyright 2001, 2003 by
+# Copyright 2001, 2003, 2007 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -176,7 +176,7 @@ main()
   The FreeType test program failed to run.  If your system uses
   shared libraries and they are installed outside the normal
   system library path, make sure the variable LD_LIBRARY_PATH
-  (or whatever is appropiate for your system) is correctly set.
+  (or whatever is appropriate for your system) is correctly set.
          ])
        fi
      fi

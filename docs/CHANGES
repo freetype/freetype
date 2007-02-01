@@ -2692,7 +2692,7 @@ High-Level Interface:
       FT_New_Size or FT_New_Glyph.
 
     - similarly,  FT_Load_Glyph  now  only  takes  a  `face'  argument
-      (instead  of a  glyph  slot  and a  size).  Also, it's  `result'
+      (instead  of a  glyph  slot  and a  size).  Also,  its  `result'
       parameter is  gone, as the glyph  image type is  returned in the
       field `face->glyph.format'
 

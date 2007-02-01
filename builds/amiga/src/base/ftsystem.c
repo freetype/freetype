@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Amiga-specific FreeType low-level system interface (body).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2005, 2006 by                               */
+/*  Copyright 1996-2001, 2002, 2005, 2006, 2007 by                         */
 /*  David Turner, Robert Wilhelm, Werner Lemberg and Detlef Würkner.       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -33,7 +33,7 @@
   /* malloc(), realloc(), and free().                                      */
   /*                                                                       */
   /* Those C library functions are often not thread-safe or cant be        */
-  /* used in a shared Amiga library. If thats not a problem for you,       */
+  /* used in a shared Amiga library. If that's not a problem for you,       */
   /* you can of course use the default ftsystem.c with C library calls     */
   /* instead.                                                              */
   /*                                                                       */

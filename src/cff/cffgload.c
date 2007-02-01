@@ -1563,7 +1563,7 @@
                  check_points( builder, 6 )               )
               goto Fail;
 
-            /* Record the starting point's y postion for later use */
+            /* Record the starting point's y position for later use */
             start_y = y;
 
             /* first control point */
@@ -1666,7 +1666,7 @@
                  check_points( builder, 6 )               )
               goto Fail;
 
-            /* record the starting point's x, y postion for later use */
+            /* record the starting point's x, y position for later use */
             start_x = x;
             start_y = y;
 

@@ -108,7 +108,7 @@
     if ( face->vertical_info )
       ( (SFNT_Service)face->sfnt )->get_metrics( face, 1, idx, tsb, ah );
 
-#if 1             /* Emperically determined, at variance with what MS said */
+#if 1             /* Empirically determined, at variance with what MS said */
 
     else
     {
@@ -934,7 +934,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    This is slightly different from TT_Process_Simple_Glyph, in that   */
-  /*    it's sole purpose is to hint the glyph.  Thus this function is     */
+  /*    its sole purpose is to hint the glyph.  Thus this function is      */
   /*    only available when bytecode interpreter is enabled.               */
   /*                                                                       */
   static FT_Error

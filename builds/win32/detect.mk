@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2003, 2004, 2006 by
+# Copyright 1996-2000, 2003, 2004, 2006, 2007 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -48,7 +48,7 @@ ifeq ($(PLATFORM),ansi)
     #
     # Note that on Windows NT, such an environment variable will not be seen
     # from DOS-based tools like DJGPP's make; this is not actually a problem
-    # since NT is detected independantly above.  But do not try to be clever!
+    # since NT is detected independently above.  But do not try to be clever!
     #
     ifdef winbootdir
       ifdef windir

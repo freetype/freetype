@@ -104,7 +104,7 @@ environment by Metrowerks. GCC for MPW and Symantec
       MacOS 9. Carbon API is used.
 
     At present, static library is only supported,
-    although targets except of m68k_far are capatble
+    although targets except of m68k_far are capable
     to use shared library.
 
     MPW makefile syntax uses 8bit characters. To keep
@@ -189,7 +189,7 @@ environment by Metrowerks. GCC for MPW and Symantec
 
   At present, MPW makefiles and CW project file are
   just updated versions of these by Leonard. Some
-  modules are added after the last maintainance, they
+  modules are added after the last maintenance, they
   are not included.
 
   4-2. Working test with ftdemos
@@ -197,7 +197,7 @@ environment by Metrowerks. GCC for MPW and Symantec
 
   At present, MPW makefiles and CW project file can
   build FreeType for classic MacOS. But their working
-  behaviours are not tested at all. Buidling ftdemos
+  behaviours are not tested at all. Building ftdemos
   for classic MacOS and working test is required.
 
   4-3. Porting Jam onto MPW
@@ -233,7 +233,7 @@ APPENDIX I
 
   * resolving font name to font file
   The font menu of MacOS application prefers font name
-  written in FOND resource than sfnt resoure. FreeType2
+  written in FOND resource than sfnt resource. FreeType2
   provides functions to find font file by name in MacOS
   application, they are based on QuickDraw Font Manager
   and Apple Type Service framework of MacOS.
@@ -376,7 +376,7 @@ ATSFontGetFileSpecification()         |    x    |    x    |    x    |    x    | 
     In the "Classic": the original binary executable
     format, these framework functions are directly
     transformed to MacOS system call. Therefore, the
-    exact availabilitly should be checked by running
+    exact availability should be checked by running
     system.
 
     (**)
@@ -392,7 +392,7 @@ ATSFontGetFileSpecification()         |    x    |    x    |    x    |    x    | 
     ATS font manager is not published in these versions.
 
 ------------------------------------------------------------
-Last update: 2006/01/10, by suzuki toshiya
+Last update: 2007-Feb-01, by Alexei Podtelezhnikov.
 
 Currently maintained by
 	suzuki toshiya, <mpsuzuki@hiroshima-u.ac.jp>

@@ -143,7 +143,7 @@
 2006-05-02  David Turner  <david@freetype.org>
 
 	Update the memory management functions and macros to safely deal
-	with array size buffer overflows.  This corresponds to attemps to
+	with array size buffer overflows.  This corresponds to attempts to
 	allocate arrays that are too large.  For an example, consider the
 	following code:
 
@@ -1531,7 +1531,7 @@
 	* src/base/ftobjs.c (FT_Load_Glyph): Resolve flag dependencies and
 	decide whether to use the auto-hinter according to documentation.
 	There should to be no real difference.
-	Some checks (e.g., is text height positve?) after the glyph is
+	Some checks (e.g., is text height positive?) after the glyph is
 	loaded.
 	(FT_Select_Size, FT_Request_Size): Scales are set to wrong values.
 	Be careful that scales won't be negative.
@@ -1823,7 +1823,7 @@
 	FT_SERVICE_BDF_H.
 	(sfnt_get_charset_it) [TT_CONFIG_OPTION_BDF]: New function.
 	(sfnt_service_bdf) [TT_CONFIG_OPTION_BDF]: New service.
-	(sfnt_servives) [TT_CONFIG_OPTION_BDF]: Add sfnt_service_bdf.
+	(sfnt_services) [TT_CONFIG_OPTION_BDF]: Add sfnt_service_bdf.
 
 	* src/sfnt/sfnt.c [TT_CONFIG_OPTION_BDF]: Include ttbdf.c.
 
@@ -2307,7 +2307,7 @@
 
 	`SING Glyphlet' is an extension to OpenType developed by Adobe
 	primarily to facilitate adding supplemental glyphs to an OpenType
-	font (with emphasis on, but not necessariy limited to, gaiji to a
+	font (with emphasis on, but not necessarily limited to, gaiji to a
 	CJK font).  A SING Glyphlet Font is an OpenType font that contains
 	the outline(s), either in a `glyf' or `CFF' table, for a glyph;
 	`cmap', `BASE', and `GSUB' tables are present with the same format
@@ -2637,7 +2637,7 @@
 	* src/truetype/ttgload.c: Heavy cleanup and refactoring.
 	(org_to_cur): Removed.
 	(TT_Load_Simple_Glyph): Call FT_GlyphLoader_CheckPoints.
-	(TT_Hint_Glyph): New funcion to hint a zone, prepared by caller.
+	(TT_Hint_Glyph): New function to hint a zone, prepared by caller.
 	(TT_Process_Simple_Glyph): s/load/loader/.
 	Use loader->pp values instead of recalculation.
 	Use TT_Hint_Glyph.
@@ -2821,7 +2821,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2005, 2006 by
+Copyright 2005, 2006, 2007 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,
