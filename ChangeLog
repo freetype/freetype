@@ -1,3 +1,8 @@
+2007-02-01  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ttnameid.h (TT_MS_LANGID_DZONGHKA_BHUTAN):
+	Explain why applications shouldn't use it.  Found by Alexei.
+
 2007-02-01  Alexei Podtelezhnikov  >apodtele@gmail.com>
 
 	* builds/unix/freetype2.m4 (AC_CHECK_FT2): Fix spelling of warning

@@ -698,6 +698,15 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_MONGOLIAN_MONGOLIA /* Cyrillic */ 0x0450
 #define TT_MS_LANGID_MONGOLIAN_MONGOLIA_MONGOLIAN      0x0850
 #define TT_MS_LANGID_TIBETAN_CHINA                     0x0451
+  /* Don't use the next constant!  It has            */
+  /*   (1) the wrong spelling (Dzonghka)             */
+  /*   (2) Microsoft doesn't officially define it -- */
+  /*       at least it is not in the List of Local   */
+  /*       ID Values.                                */
+  /*   (3) Dzongkha is not the same language as      */
+  /*       Tibetan, so merging it is wrong anyway.   */
+  /*                                                 */
+  /* TT_MS_LANGID_TIBETAN_BHUTAN is correct, BTW.    */
 #define TT_MS_LANGID_DZONGHKA_BHUTAN                   0x0851
 
 #if 0
