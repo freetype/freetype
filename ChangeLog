@@ -1,5 +1,11 @@
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* include/freetype/ftmac.h: Fixed wrong comment, FSSpec of
+	FT_GetFile_From_Mac_Name, FT_GetFile_From_Mac_ATS_Name are
+	for passing to FT_New_Face_From_FSSpec.
+
+2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* builds/unix/configure.raw: Checks if Mac OS X system headers
 	can be built under ANSI C mode.
 	* src/base/ftmac.c (OS_INLINE): Redefine OS_INLINE by ANSI C

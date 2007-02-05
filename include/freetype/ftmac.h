@@ -105,9 +105,11 @@ FT_BEGIN_HEADER
   /*                  Bold).                                               */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    pathSpec   :: FSSpec to the file.  For passing to @FT_New_Face.    */
+  /*    pathSpec   :: FSSpec to the file. For passing to                   */
+  /*                  @FT_New_Face_From_FSSpec.                            */
   /*                                                                       */
-  /*    face_index :: Index of the face.  For passing to @FT_New_Face.     */
+  /*    face_index :: Index of the face. For passing to                    */
+  /*                  @FT_New_Face_From_FSSpec.                            */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -130,9 +132,11 @@ FT_BEGIN_HEADER
   /*    fontName   :: Mac OS name of the font in ATS framework.            */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    pathSpec   :: FSSpec to the file.  For passing to @FT_New_Face.    */
+  /*    pathSpec   :: FSSpec to the file. For passing to                   */
+  /*                  @FT_New_Face_From_FSSpec.                            */
   /*                                                                       */
-  /*    face_index :: Index of the face.  For passing to @FT_New_Face.     */
+  /*    face_index :: Index of the face. For passing to                    */
+  /*                  @FT_New_Face_From_FSSpec.                            */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
