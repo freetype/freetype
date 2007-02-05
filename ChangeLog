@@ -1,5 +1,14 @@
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* include/freetype/ftmac.h (FT_GetFilePath_From_Mac_ATS_Name):
+	Introduced as replacement of FT_GetFile_From_Mac_ATS_Name.
+	* src/base/ftmac.c (FT_GetFilePath_From_Mac_ATS_Name): Ditto.
+	(FT_GetFile_From_Mac_ATS_Name): Rewritten as wrapper of
+	FT_GetFilePath_From_Mac_ATS_Name.
+	* builds/mac/ftmac.c: Ditto.
+
+2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* include/freetype/ftmac.h: Fixed wrong comment, FSSpec of
 	FT_GetFile_From_Mac_Name, FT_GetFile_From_Mac_ATS_Name are
 	for passing to FT_New_Face_From_FSSpec.

@@ -150,6 +150,37 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    FT_GetFilePath_From_Mac_ATS_Name                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return a pathname of the disk file and face index for given font   */
+  /*    name which is handled by ATS framework.                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    fontName    :: Mac OS name of the font in ATS framework.           */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    path        :: Buffer to store pathname of the file. For passing   */
+  /*                   to @FT_New_Face. The client must allocate this      */
+  /*                   buffer before calling this function.                */
+  /*                                                                       */
+  /*    maxPathSize :: Lengths of the buffer `path' that client allocated. */
+  /*                                                                       */
+  /*    face_index  :: Index of the face.  For passing to @FT_New_Face.    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_GetFilePath_From_Mac_ATS_Name( const char*  fontName,
+                                    UInt8*       path,
+                                    UInt32       maxPathSize,
+                                    FT_Long*     face_index );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    FT_New_Face_From_FSSpec                                            */
   /*                                                                       */
   /* <Description>                                                         */
