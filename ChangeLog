@@ -1,5 +1,18 @@
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* include/freetype/ftmac.h (FT_DEPRECATED_ATTRIBUTE):
+	Introduce __attribute((deprecated))__ to warn functions
+	which use non ANSI data types in their interfaces.
+	(FT_GetFile_From_Mac_Name): Deprecated, using FSSpec.
+	(FT_GetFile_From_Mac_ATS_Name): Deprecated, using FSSpec.
+	(FT_New_Face_From_FSSpec): Deprecated, using FSSpec.
+	(FT_New_Face_From_FSRef): Deprecated, using FSRef.
+	* src/base/ftmac.c: predefine FT_DEPRECATED_ATTRIBUTE as blank
+	to avoid warning in building freetype.
+	* builds/mac/ftmac.c: Ditto.
+
+2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftbase.c: Fix to use builds/mac/ftmac.c, if configured
 	"--with-fsspec" etc. Replace #include "ftmac.c" by
 	#include <ftmac.c>.

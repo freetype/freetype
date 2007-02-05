@@ -82,6 +82,7 @@
 #define HFS_MAXPATHLEN  1024
 #endif
 
+#define FT_DEPRECATED_ATTRIBUTE
 
 #include FT_MAC_H
 

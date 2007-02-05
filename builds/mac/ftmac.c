@@ -88,6 +88,8 @@
 #include <FSp_fopen.h>
 #endif
 
+#define FT_DEPRECATED_ATTRIBUTE
+
 #include FT_MAC_H
 
 #undef FT_GetFile_From_Mac_Name
