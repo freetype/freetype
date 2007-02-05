@@ -199,7 +199,34 @@ if test x$with_old_mac_fonts = xyes; then
       UseResFile( res );
 
     ],
-    [AC_MSG_RESULT([ok])],
+    [AC_MSG_RESULT([ok])
+     AC_MSG_CHECKING([OS_INLINE macro is ANSI compatible])
+     orig_CFLAGS="$CFLAGS"
+     CFLAGS="$CFLAGS $XX_CFLAGS $XX_ANSIFLAGS"
+     AC_TRY_COMPILE([
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <Carbon/Carbon.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Files.h>
+#endif
+       ],
+       [
+         /* OSHostByteOrder() is typed as 'OS_INLINE' */
+         int32_t os_byte_order = OSHostByteOrder();
+         if ( OSBigEndian != os_byte_order )
+           return 1;
+       ],
+       [
+         AC_MSG_RESULT([ok])
+         CFLAGS="$orig_CFLAGS"
+         CFLAGS="$CFLAGS -DHAVE_ANSI_OS_INLINE=1"
+       ],[
+         AC_MSG_RESULT([no, ANSI incompatible])
+         CFLAGS="$orig_CFLAGS"
+       ])
+    ],
     [AC_MSG_RESULT([not found])
      LDFLAGS="${orig_LDFLAGS}"
      CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"])
