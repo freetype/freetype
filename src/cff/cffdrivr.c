@@ -270,6 +270,9 @@
       else
         name = (FT_String *)psnames->adobe_std_strings( sid );
 
+      if ( !name )
+        continue;
+
       result = ft_strcmp( glyph_name, name );
 
       if ( sid > 390 )

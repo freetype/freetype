@@ -1,3 +1,8 @@
+2007-02-07  Tom Parker  <palfrey@tevp.net>
+
+	* src/cff/cffdrivr.c (cff_get_name_index): Protect against NULL
+	pointer.
+
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* include/freetype/ftmac.h (FT_DEPRECATED_ATTRIBUTE):
