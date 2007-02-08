@@ -7,19 +7,20 @@
 
 	* include/freetype/ftmac.h (FT_DEPRECATED_ATTRIBUTE):
 	Introduce __attribute((deprecated))__ to warn functions
-	which use non ANSI data types in their interfaces.
+	which use non-ANSI data types in its interfaces.
 	(FT_GetFile_From_Mac_Name): Deprecated, using FSSpec.
 	(FT_GetFile_From_Mac_ATS_Name): Deprecated, using FSSpec.
 	(FT_New_Face_From_FSSpec): Deprecated, using FSSpec.
 	(FT_New_Face_From_FSRef): Deprecated, using FSRef.
-	* src/base/ftmac.c: predefine FT_DEPRECATED_ATTRIBUTE as blank
-	to avoid warning in building freetype.
+
+	* src/base/ftmac.c: Predefine FT_DEPRECATED_ATTRIBUTE as void
+	to avoid warning in building FreeType.
 	* builds/mac/ftmac.c: Ditto.
 
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftbase.c: Fix to use builds/mac/ftmac.c, if configured
-	"--with-fsspec" etc. Replace #include "ftmac.c" by
+	`--with-fsspec' etc.  Replace #include "ftmac.c" with
 	#include <ftmac.c>.
 
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -33,16 +34,17 @@
 
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* include/freetype/ftmac.h: Fixed wrong comment, FSSpec of
+	* include/freetype/ftmac.h: Fixed wrong comment: FSSpec of
 	FT_GetFile_From_Mac_Name, FT_GetFile_From_Mac_ATS_Name are
 	for passing to FT_New_Face_From_FSSpec.
 
 2007-02-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.raw: Checks if Mac OS X system headers
+	* builds/unix/configure.raw: Check whether Mac OS X system headers
 	can be built under ANSI C mode.
-	* src/base/ftmac.c (OS_INLINE): Redefine OS_INLINE by ANSI C
-	compatible one, if system headers are ANSI C incompatible.
+
+	* src/base/ftmac.c (OS_INLINE): Redefine OS_INLINE by a version
+	compatible to ANSI C in case system headers are ANSI C incompatible.
 	* builds/mac/ftmac.c (OS_INLINE): Ditto.
 
 2007-02-01  Werner Lemberg  <wl@gnu.org>

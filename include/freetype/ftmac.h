@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Additional Mac-specific API.                                         */
 /*                                                                         */
-/*  Copyright 1996-2001, 2004, 2006 by                                     */
+/*  Copyright 1996-2001, 2004, 2006, 2007 by                               */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -35,10 +35,11 @@
 FT_BEGIN_HEADER
 
 
-/* gcc-3.4.1 and later can warn the functions attributed as deprecated */
+/* gcc-3.4.1 and later can warn about functions tagged as deprecated */
 #ifndef FT_DEPRECATED_ATTRIBUTE
-#if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
-#define FT_DEPRECATED_ATTRIBUTE __attribute__((deprecated))
+#if defined(__GNUC__)                                               && \
+    ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
+#define FT_DEPRECATED_ATTRIBUTE  __attribute__((deprecated))
 #else
 #define FT_DEPRECATED_ATTRIBUTE
 #endif
@@ -115,10 +116,10 @@ FT_BEGIN_HEADER
   /*                  Bold).                                               */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    pathSpec   :: FSSpec to the file. For passing to                   */
+  /*    pathSpec   :: FSSpec to the file.  For passing to                  */
   /*                  @FT_New_Face_From_FSSpec.                            */
   /*                                                                       */
-  /*    face_index :: Index of the face. For passing to                    */
+  /*    face_index :: Index of the face.  For passing to                   */
   /*                  @FT_New_Face_From_FSSpec.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -172,8 +173,8 @@ FT_BEGIN_HEADER
   /*    fontName    :: Mac OS name of the font in ATS framework.           */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    path        :: Buffer to store pathname of the file. For passing   */
-  /*                   to @FT_New_Face. The client must allocate this      */
+  /*    path        :: Buffer to store pathname of the file.  For passing  */
+  /*                   to @FT_New_Face.  The client must allocate this     */
   /*                   buffer before calling this function.                */
   /*                                                                       */
   /*    maxPathSize :: Lengths of the buffer `path' that client allocated. */

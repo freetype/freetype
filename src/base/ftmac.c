@@ -8,7 +8,7 @@
 /*  This file is for Mac OS X only; see builds/mac/ftoldmac.c for          */
 /*  classic platforms built by MPW.                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -74,7 +74,7 @@
   /* -ansi compilation flag of GCC.                         */
 #if !HAVE_ANSI_OS_INLINE
 #undef  OS_INLINE
-#define OS_INLINE   static __inline__
+#define OS_INLINE  static __inline__
 #endif
 #include <Carbon/Carbon.h>
 
@@ -118,14 +118,13 @@
   FT_ATSFontGetFileReference( ATSFontRef  ats_font_id,
                               FSRef*      ats_font_ref )
   {
-    OSStatus    err;
-    FSSpec      spec;
+    OSStatus  err;
+    FSSpec    spec;
+
 
     err = ATSFontGetFileSpecification( ats_font_id, &spec );
     if ( noErr == err )
-    {
       err = FSpMakeFSRef( &spec, ats_font_ref );
-    }
 
     return err;
   }
@@ -204,10 +203,14 @@
                                 FT_Long*     face_index )
   {
 #if __LP64__
+
     return FT_Err_Unimplemented_Feature;
+
 #else
+
     FSRef     ref;
     FT_Error  err;
+
 
     err = FT_GetFileRef_From_Mac_ATS_Name( fontName, &ref, face_index );
     if ( FT_Err_Ok != err )
@@ -218,6 +221,7 @@
       return FT_Err_Unknown_File_Format;
 
     return FT_Err_Ok;
+
 #endif
   }
 

@@ -183,6 +183,7 @@ if test x$with_old_mac_fonts = xyes; then
   FT2_EXTRA_LIBS="-Wl,-framework,CoreServices,-framework,ApplicationServices"
   LDFLAGS="$LDFLAGS $FT2_EXTRA_LIBS"
   AC_TRY_LINK([
+
 #if defined(__GNUC__) && defined(__APPLE_CC__)
 # include <Carbon/Carbon.h>
 # include <ApplicationServices/ApplicationServices.h>
@@ -190,6 +191,7 @@ if test x$with_old_mac_fonts = xyes; then
 # include <ConditionalMacros.h>
 # include <Files.h>
 #endif
+
     ],
     [
 
@@ -204,6 +206,7 @@ if test x$with_old_mac_fonts = xyes; then
      orig_CFLAGS="$CFLAGS"
      CFLAGS="$CFLAGS $XX_CFLAGS $XX_ANSIFLAGS"
      AC_TRY_COMPILE([
+
 #if defined(__GNUC__) && defined(__APPLE_CC__)
 # include <Carbon/Carbon.h>
 # include <ApplicationServices/ApplicationServices.h>
@@ -211,20 +214,24 @@ if test x$with_old_mac_fonts = xyes; then
 # include <ConditionalMacros.h>
 # include <Files.h>
 #endif
+
        ],
        [
-         /* OSHostByteOrder() is typed as 'OS_INLINE' */
-         int32_t os_byte_order = OSHostByteOrder();
+
+         /* OSHostByteOrder() is typed as `OS_INLINE' */
+         int32_t  os_byte_order = OSHostByteOrder();
+
+
          if ( OSBigEndian != os_byte_order )
            return 1;
+
        ],
-       [
-         AC_MSG_RESULT([ok])
-         CFLAGS="$orig_CFLAGS"
-         CFLAGS="$CFLAGS -DHAVE_ANSI_OS_INLINE=1"
-       ],[
-         AC_MSG_RESULT([no, ANSI incompatible])
-         CFLAGS="$orig_CFLAGS"
+       [AC_MSG_RESULT([ok])
+        CFLAGS="$orig_CFLAGS"
+        CFLAGS="$CFLAGS -DHAVE_ANSI_OS_INLINE=1"
+       ],
+       [AC_MSG_RESULT([no, ANSI incompatible])
+        CFLAGS="$orig_CFLAGS"
        ])
     ],
     [AC_MSG_RESULT([not found])
@@ -263,16 +270,16 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsspec != x; then
     ],
     [
 
-  FCBPBPtr          paramBlock;
-  short             vRefNum;
-  long              dirID;
-  ConstStr255Param  fileName;
-  FSSpec*           spec;
+      FCBPBPtr          paramBlock;
+      short             vRefNum;
+      long              dirID;
+      ConstStr255Param  fileName;
+      FSSpec*           spec;
 
 
-  /* FSSpec functions: deprecated sicne Mac OS X 10.4 */
-  PBGetFCBInfoSync( paramBlock );
-  FSMakeFSSpec( vRefNum, dirID, fileName, spec );
+      /* FSSpec functions: deprecated since Mac OS X 10.4 */
+      PBGetFCBInfoSync( paramBlock );
+      FSMakeFSSpec( vRefNum, dirID, fileName, spec );
 
     ],
     [AC_MSG_RESULT([ok])
@@ -309,33 +316,33 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
     ],
     [
 
-  FCBPBPtr             paramBlock;
-  short                vRefNum;
-  long                 dirID;
-  ConstStr255Param     fileName;
-  FSSpec*              spec;
+      FCBPBPtr             paramBlock;
+      short                vRefNum;
+      long                 dirID;
+      ConstStr255Param     fileName;
+      FSSpec*              spec;
 
-  Boolean*             isDirectory;
-  UInt8*               path;
-  SInt16               desiredRefNum;
-  SInt16*              iterator;
-  SInt16*              actualRefNum;
-  HFSUniStr255*        outForkName;
-  FSVolumeRefNum       volume;
-  FSCatalogInfoBitmap  whichInfo;
-  FSCatalogInfo*       catalogInfo;
-  FSForkInfo*          forkInfo;
-  FSRef*               ref;
+      Boolean*             isDirectory;
+      UInt8*               path;
+      SInt16               desiredRefNum;
+      SInt16*              iterator;
+      SInt16*              actualRefNum;
+      HFSUniStr255*        outForkName;
+      FSVolumeRefNum       volume;
+      FSCatalogInfoBitmap  whichInfo;
+      FSCatalogInfo*       catalogInfo;
+      FSForkInfo*          forkInfo;
+      FSRef*               ref;
 
 
-  /* FSRef functions: no need to check? */
-  FSGetForkCBInfo( desiredRefNum, volume, iterator,
-                   actualRefNum, forkInfo, ref,
-                   outForkName );
-  FSpMakeFSRef ( spec, ref );
-  FSGetCatalogInfo( ref, whichInfo, catalogInfo,
-                    outForkName, spec, ref );
-  FSPathMakeRef( path, ref, isDirectory );
+      /* FSRef functions: no need to check? */
+      FSGetForkCBInfo( desiredRefNum, volume, iterator,
+                       actualRefNum, forkInfo, ref,
+                       outForkName );
+      FSpMakeFSRef ( spec, ref );
+      FSGetCatalogInfo( ref, whichInfo, catalogInfo,
+                        outForkName, spec, ref );
+      FSPathMakeRef( path, ref, isDirectory );
 
     ],
     [AC_MSG_RESULT([ok])
@@ -345,7 +352,8 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
 fi
 
 
-# Whether to use QuickDraw API in ToolBox which is deprecated since Mac OS X 10.4.
+# Whether to use QuickDraw API in ToolBox which is deprecated since
+# Mac OS X 10.4.
 
 AC_ARG_WITH([quickdraw-toolbox],
   AS_HELP_STRING([--with-quickdraw-toolbox],
@@ -367,15 +375,15 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_toolbox != x; then
     ],
     [
 
-  Str255     familyName;
-  SInt16     familyID   = 0;
-  FMInput*   fmIn       = NULL;
-  FMOutput*  fmOut      = NULL;
+      Str255     familyName;
+      SInt16     familyID   = 0;
+      FMInput*   fmIn       = NULL;
+      FMOutput*  fmOut      = NULL;
 
 
-  GetFontName( familyID, familyName );
-  GetFNum( familyName, &familyID );
-  fmOut = FMSwapFont( fmIn );
+      GetFontName( familyID, familyName );
+      GetFNum( familyName, &familyID );
+      fmOut = FMSwapFont( fmIn );
 
     ],
     [AC_MSG_RESULT([ok])
@@ -385,7 +393,8 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_toolbox != x; then
 fi
 
 
-# Whether to use QuickDraw API in Carbon which is deprecated since Mac OS X 10.4.
+# Whether to use QuickDraw API in Carbon which is deprecated since
+# Mac OS X 10.4.
 
 AC_ARG_WITH([quickdraw-carbon],
   AS_HELP_STRING([--with-quickdraw-carbon],
@@ -407,24 +416,25 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_carbon != x; then
     ],
     [
 
-  FMFontFamilyIterator          famIter;
-  FMFontFamily                  family;
-  Str255                        famNameStr;
-  FMFontFamilyInstanceIterator  instIter;
-  FMFontStyle                   style;
-  FMFontSize                    size;
-  FMFont                        font;
-  FSSpec*                       pathSpec;
+      FMFontFamilyIterator          famIter;
+      FMFontFamily                  family;
+      Str255                        famNameStr;
+      FMFontFamilyInstanceIterator  instIter;
+      FMFontStyle                   style;
+      FMFontSize                    size;
+      FMFont                        font;
+      FSSpec*                       pathSpec;
 
 
-  FMCreateFontFamilyIterator( NULL, NULL, kFMUseGlobalScopeOption, &famIter );
-  FMGetNextFontFamily( &famIter, &family );
-  FMGetFontFamilyName( family, famNameStr );
-  FMCreateFontFamilyInstanceIterator( family, &instIter );
-  FMGetNextFontFamilyInstance( &instIter, &font, &style, &size );
-  FMDisposeFontFamilyInstanceIterator( &instIter );
-  FMDisposeFontFamilyIterator( &famIter );
-  FMGetFontContainer( font, pathSpec );
+      FMCreateFontFamilyIterator( NULL, NULL, kFMUseGlobalScopeOption,
+                                  &famIter );
+      FMGetNextFontFamily( &famIter, &family );
+      FMGetFontFamilyName( family, famNameStr );
+      FMCreateFontFamilyInstanceIterator( family, &instIter );
+      FMGetNextFontFamilyInstance( &instIter, &font, &style, &size );
+      FMDisposeFontFamilyInstanceIterator( &instIter );
+      FMDisposeFontFamilyIterator( &famIter );
+      FMGetFontContainer( font, pathSpec );
 
     ],
     [AC_MSG_RESULT([ok])
@@ -451,11 +461,11 @@ elif test x$with_old_mac_fonts = xyes -a x$with_ats != x ; then
     ],
     [
 
-  FSSpec*  pathSpec;
+      FSSpec*  pathSpec;
 
 
-  ATSFontFindFromName( NULL, kATSOptionFlagsUnRestrictedScope );
-  ATSFontGetFileSpecification( 0, pathSpec );
+      ATSFontFindFromName( NULL, kATSOptionFlagsUnRestrictedScope );
+      ATSFontGetFileSpecification( 0, pathSpec );
 
     ],
     [AC_MSG_RESULT([ok])
@@ -503,7 +513,7 @@ AC_CONFIG_HEADERS([ftconfig.h:ftconfig.in],
    rm ftconfig.tmp])
 
 # create the Unix-specific sub-Makefiles `builds/unix/unix-def.mk'
-# and 'builds/unix/unix-cc.mk' that will be used by the build system
+# and `builds/unix/unix-cc.mk' that will be used by the build system
 #
 AC_CONFIG_FILES([unix-cc.mk:unix-cc.in
                  unix-def.mk:unix-def.in
@@ -516,4 +526,4 @@ AC_CONFIG_FILES([unix-cc.mk:unix-cc.in
 
 AC_OUTPUT
 
-# end of configure.ac
+# end of configure.raw

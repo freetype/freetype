@@ -5,7 +5,7 @@
 /*    Mac FOND support.  Written by just@letterror.com.                    */
 /*  Heavily Fixed by mpsuzuki, George Williams and Sean McBride            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -256,14 +256,13 @@
   FT_ATSFontGetFileReference( ATSFontRef  ats_font_id,
                               FSRef*      ats_font_ref )
   {
-    OSStatus    err;
-    FSSpec      spec;
+    OSStatus  err;
+    FSSpec    spec;
+
 
     err = ATSFontGetFileSpecification( ats_font_id, &spec );
     if ( noErr == err )
-    {
       err = FSpMakeFSRef( &spec, ats_font_ref );
-    }
 
     return err;
   }
@@ -305,7 +304,7 @@
         if ( noErr != FSCompareFSRefs( ats_font_ref, &ref2 ) )
           break;
 
-        id2 --;
+        id2--;
       }
       *face_index = ats_font_id - ( id2 + 1 );
     }
@@ -363,7 +362,7 @@
 
 #else
 
-  /* This function is deprecated because FSSpec is deprecated in Mac OS X  */
+  /* This function is deprecated because FSSpec is deprecated in Mac OS X. */
   FT_EXPORT_DEF( FT_Error )
   FT_GetFile_From_Mac_ATS_Name( const char*  fontName,
                                 FSSpec*      pathSpec,
@@ -371,6 +370,7 @@
   {
     FSRef     ref;
     FT_Error  err;
+
 
     err = FT_GetFileRef_From_Mac_ATS_Name( fontName, &ref, face_index );
     if ( FT_Err_Ok != err )
@@ -579,7 +579,7 @@
 #else
 
     FSSpec  spec;
-    FInfo  finfo;
+    FInfo   finfo;
 
 
     if ( noErr != FT_FSPathMakeSpec( pathname, &spec, FALSE ) )
@@ -666,7 +666,6 @@
      Thanks to Paul Miller (paulm@profoundeffects.com) for the fix
      to load a face OTHER than the first one in the FOND!
   */
-
 
   static void
   parse_fond( char*   fond_data,
