@@ -2813,6 +2813,11 @@ FT_BEGIN_HEADER
   /*    This function returns an error if no charmap in the face           */
   /*    corresponds to the encoding queried here.                          */
   /*                                                                       */
+  /*    Because many fonts contain more than a single cmap for Unicode     */
+  /*    encoding, this function has some special code to select the one    */
+  /*    which covers Unicode best.  It is thus preferable to               */
+  /*    @FT_Set_Charmap in this case.                                      */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Select_Charmap( FT_Face      face,
                      FT_Encoding  encoding );
