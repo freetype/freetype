@@ -1,3 +1,8 @@
+2007-02-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afloader.c (af_loader_load_g): Don't change width for
+	non-spacing glyphs.
+
 2007-02-07  Tom Parker  <palfrey@tevp.net>
 
 	* src/cff/cffdrivr.c (cff_get_name_index): Protect against NULL

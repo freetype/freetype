@@ -422,7 +422,11 @@
                                                x_scale );
 #else
       if ( !FT_IS_FIXED_WIDTH( slot->face ) )
-        slot->metrics.horiAdvance = loader->pp2.x - loader->pp1.x;
+      {
+        /* non-spacing glyphs must stay as-is */
+        if ( slot->metrics.horiAdvance )
+          slot->metrics.horiAdvance = loader->pp2.x - loader->pp1.x;
+      }
       else
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                metrics->scaler.x_scale );
