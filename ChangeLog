@@ -1,5 +1,9 @@
 2007-02-12  David Turner  <david@freetype.org>
 
+	* src/autofit/afloader.c: improve spacing adjustments for the
+	non-light auto-hinted modes. Gets rid of "inter-letter spacing
+	is too wide"
+
 	* src/truetype/ttinterp.h, src/truetype/ttinterp.c: simplify
 	projection and dual-projection code interface
 
@@ -12,7 +16,7 @@
 	get rid of various uses of strcpy and other "evil" functions,
 	as well as simplify a few things
 
-	
+
 2007-02-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afloader.c (af_loader_load_g): Don't change width for
@@ -241,6 +245,7 @@
 	src/pcf/pcfread.c (pcf_seek_to_table_type): Avoid possibly
 	uninitialized variables.
 
+>>>>>>> 1.1516
 2007-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* docs/CHANGES, docs/INSTALL.MAC: Improvements.
@@ -283,9 +288,12 @@
 	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Fix memory stomping
 	bug in the bitmap emboldener if the pitch of the source bitmap is
 	much larger than its width.
+>>>>>>> 1.1484
 
 	* src/truetype/ttinterp.c (Update_Max): Fix aliasing-related
 	compilation warning.
+
+2007-01-12  Werner Lemberg  <wl@gnu.org>
 
 2007-01-12  Werner Lemberg  <wl@gnu.org>
 

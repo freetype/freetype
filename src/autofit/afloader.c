@@ -183,8 +183,8 @@
 
         if ( axis->num_edges > 1 && AF_HINTS_DO_ADVANCE( hints ) )
         {
-          old_advance = loader->pp2.x;
-          old_rsb     = old_advance - edge2->opos;
+          old_advance = loader->pp2.x - loader->pp1.x;
+          old_rsb     = loader->pp2.x - edge2->opos;
           old_lsb     = edge1->opos;
           new_lsb     = edge1->pos;
 
@@ -198,18 +198,18 @@
           /* for very small sizes                        */
 
           if ( old_lsb < 24 )
-            pp1x_uh -= 5;
+            pp1x_uh -= 8;
 
           if ( old_rsb < 24 )
-            pp2x_uh += 5;
+            pp2x_uh += 8;
 
           loader->pp1.x = FT_PIX_ROUND( pp1x_uh );
           loader->pp2.x = FT_PIX_ROUND( pp2x_uh );
 
-          if ( loader->pp1.x >= new_lsb )
+          if ( loader->pp1.x >= new_lsb && old_lsb > 0 )
             loader->pp1.x -= 64;
 
-          if ( loader->pp2.x <= pp2x_uh )
+          if ( loader->pp2.x <= edge2->pos && old_rsb > 0 )
             loader->pp2.x += 64;
 
           slot->lsb_delta = loader->pp1.x - pp1x_uh;
