@@ -255,7 +255,6 @@
 	src/pcf/pcfread.c (pcf_seek_to_table_type): Avoid possibly
 	uninitialized variables.
 
->>>>>>> 1.1516
 2007-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* docs/CHANGES, docs/INSTALL.MAC: Improvements.
@@ -298,7 +297,6 @@
 	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Fix memory stomping
 	bug in the bitmap emboldener if the pitch of the source bitmap is
 	much larger than its width.
->>>>>>> 1.1484
 
 	* src/truetype/ttinterp.c (Update_Max): Fix aliasing-related
 	compilation warning.
