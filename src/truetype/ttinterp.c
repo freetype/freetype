@@ -163,17 +163,11 @@
 #define INS_Goto_CodeRange( range, ip ) \
           Ins_Goto_CodeRange( EXEC_ARG_ range, ip )
 
-#define CUR_Func_project( x, y ) \
-          CUR.func_project( EXEC_ARG_ x, y )
-
 #define CUR_Func_move( z, p, d ) \
           CUR.func_move( EXEC_ARG_ z, p, d )
 
 #define CUR_Func_move_orig( z, p, d ) \
           CUR.func_move_orig( EXEC_ARG_ z, p, d )
-
-#define CUR_Func_dualproj( x, y ) \
-          CUR.func_dualproj( EXEC_ARG_ x, y )
 
 #define CUR_Func_round( d, c ) \
           CUR.func_round( EXEC_ARG_ d, c )
@@ -210,6 +204,19 @@
 
 #define MOVE_Zp2_Point( a, b, c, t ) \
           Move_Zp2_Point( EXEC_ARG_ a, b, c, t )
+
+
+#  define CUR_Func_project( v1, v2 )  \
+  CUR.func_project( EXEC_ARG_ (v1)->x - (v2)->x, (v1)->y - (v2)->y )
+
+#  define  CUR_Func_dualproj( v1, v2 )  \
+  CUR.func_dualproj( EXEC_ARG_ (v1)->x - (v2)->x, (v1)->y - (v2)->y )
+
+#  define  CUR_fast_project(v)  \
+  CUR.func_project( EXEC_ARG_ (v)->x, (v)->y )
+
+#  define  CUR_fast_dualproj(v)  \
+  CUR.func_dualproj( EXEC_ARG_ (v)->x, (v)->y )
 
 
   /*************************************************************************/
@@ -2150,18 +2157,17 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Project( EXEC_OP_ FT_Vector*  v1,
-                    FT_Vector*  v2 )
-  {
+  Project( EXEC_OP_ FT_Pos  dx,
+                    FT_Pos  dy )
+{
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
 
-    return TT_DotFix14( v1->x - v2->x,
-                        v1->y - v2->y,
+    return TT_DotFix14( dx, dy,
                         CUR.GS.projVector.x,
                         CUR.GS.projVector.y );
-  }
+}
 
   /*************************************************************************/
   /*                                                                       */
@@ -2180,15 +2186,13 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Dual_Project( EXEC_OP_ FT_Vector*  v1,
-                         FT_Vector*  v2 )
+  Dual_Project( EXEC_OP_ FT_Pos  dx,
+                         FT_Pos  dy )
   {
-    return TT_DotFix14( v1->x - v2->x,
-                        v1->y - v2->y,
+    return TT_DotFix14( dx, dy,
                         CUR.GS.dualVector.x,
                         CUR.GS.dualVector.y );
   }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -2207,14 +2211,13 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Project_x( EXEC_OP_ FT_Vector*  v1,
-                      FT_Vector*  v2 )
+  Project_x( EXEC_OP_ FT_Pos  dx,
+                      FT_Pos  dy )
   {
     FT_UNUSED_EXEC;
 
-    return ( v1->x - v2->x );
+    return dx;
   }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -2233,14 +2236,13 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Project_y( EXEC_OP_ FT_Vector*  v1,
-                      FT_Vector*  v2 )
+  Project_y( EXEC_OP_ FT_Pos  dx,
+                      FT_Pos  dy )
   {
     FT_UNUSED_EXEC;
 
-   return ( v1->y - v2->y );
+    return dy;
   }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -4701,9 +4703,9 @@
     else
     {
       if ( CUR.opcode & 1 )
-        R = CUR_Func_dualproj( CUR.zp2.org + L, NULL_Vector );
+        R = CUR_fast_dualproj( &CUR.zp2.org[L] );
       else
-        R = CUR_Func_project( CUR.zp2.cur + L, NULL_Vector );
+        R = CUR_fast_project( &CUR.zp2.cur[L] );
     }
 
     args[0] = R;
@@ -4736,7 +4738,7 @@
       return;
     }
 
-    K = CUR_Func_project( CUR.zp2.cur + L, NULL_Vector );
+    K = CUR_fast_project( &CUR.zp2.cur[L] );
 
     CUR_Func_move( &CUR.zp2, L, args[1] - K );
 
@@ -5623,7 +5625,7 @@
     /*      twilight zone? ?                                */
     if ( ( CUR.opcode & 1 ) != 0 )
     {
-      cur_dist = CUR_Func_project( CUR.zp0.cur + point, NULL_Vector );
+      cur_dist = CUR_fast_project( &CUR.zp0.cur[point] );
       distance = CUR_Func_round( cur_dist,
                                  CUR.tt_metrics.compensations[0] ) - cur_dist;
     }
@@ -5694,7 +5696,7 @@
       CUR.zp0.cur[point]   = CUR.zp0.org[point];
     }
 
-    org_dist = CUR_Func_project( CUR.zp0.cur + point, NULL_Vector );
+    org_dist = CUR_fast_project( &CUR.zp0.cur[point] );
 
     if ( ( CUR.opcode & 1 ) != 0 )   /* rounding and control cutin flag */
     {
@@ -6179,18 +6181,18 @@
       vec2.x = TT_MULFIX( vec2.x, CUR.metrics.x_scale );
       vec2.y = TT_MULFIX( vec2.y, CUR.metrics.y_scale );
 
-      org_a = CUR_Func_dualproj( &vec1, NULL_Vector );
-      org_b = CUR_Func_dualproj( &vec2, NULL_Vector );
+      org_a = CUR_fast_dualproj( &vec1 );
+      org_b = CUR_fast_dualproj( &vec2 );
 
 #else
 
-      org_a = CUR_Func_dualproj( CUR.zp0.org + CUR.GS.rp1, NULL_Vector );
-      org_b = CUR_Func_dualproj( CUR.zp1.org + CUR.GS.rp2, NULL_Vector );
+      org_a = CUR_fast_dualproj( &CUR.zp0.org[CUR.GS.rp1] );
+      org_b = CUR_fast_dualproj( &CUR.zp1.org[CUR.GS.rp2] );
 
 #endif /* FIX_BYTECODE */
 
-      cur_a = CUR_Func_project( CUR.zp0.cur + CUR.GS.rp1, NULL_Vector );
-      cur_b = CUR_Func_project( CUR.zp1.cur + CUR.GS.rp2, NULL_Vector );
+      cur_a = CUR_fast_project( &CUR.zp0.cur[CUR.GS.rp1] );
+      cur_b = CUR_fast_project( &CUR.zp1.cur[CUR.GS.rp2] );
     }
 
     while ( CUR.GS.loop > 0 )
@@ -6218,15 +6220,15 @@
         vec.x = TT_MULFIX( vec.x, CUR.metrics.x_scale );
         vec.y = TT_MULFIX( vec.y, CUR.metrics.y_scale );
 
-        org_x = CUR_Func_dualproj( &vec, NULL_Vector );
+        org_x = CUR_fast_dualproj( &vec );
 
 #else
 
-        org_x = CUR_Func_dualproj( CUR.zp2.org + point, NULL_Vector );
+        org_x = CUR_fast_dualproj( &CUR.zp2.org[point] );
 
 #endif /* FIX_BYTECODE */
 
-        cur_x = CUR_Func_project ( CUR.zp2.cur + point, NULL_Vector );
+        cur_x = CUR_fast_project ( &CUR.zp2.cur[point] );
 
         if ( ( org_a <= org_b && org_x <= org_a ) ||
              ( org_a >  org_b && org_x >= org_a ) )

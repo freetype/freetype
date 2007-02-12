@@ -1,5 +1,8 @@
 2007-02-12  David Turner  <david@freetype.org>
 
+	* src/truetype/ttinterp.h, src/truetype/ttinterp.c: simplify
+	projection and dual-projection code interface
+
 	* include/freetype/internal/ftmemory.h, src/base/ftutils.c,
 	src/bfd/bfddrivr.c, src/bdf/bdflib.c, src/pcf/pcfread.c,
 	src/cff/cffdrivr.c, src/cff/cffload.c, src/cff/cffobjs.c,

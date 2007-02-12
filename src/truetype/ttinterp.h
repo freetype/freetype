@@ -19,7 +19,6 @@
 #ifndef __TTINTERP_H__
 #define __TTINTERP_H__
 
-
 #include <ft2build.h>
 #include "ttobjs.h"
 
@@ -79,8 +78,8 @@ FT_BEGIN_HEADER
 
   /* Distance projection along one of the projection vectors */
   typedef FT_F26Dot6
-  (*TT_Project_Func)( EXEC_OP_ FT_Vector*  v1,
-                               FT_Vector*  v2 );
+  (*TT_Project_Func)( EXEC_OP_ FT_Pos   dx,
+                               FT_Pos   dy );
 
   /* reading a cvt value.  Take care of non-square pixels if necessary */
   typedef FT_F26Dot6
