@@ -923,11 +923,11 @@
     {
       /* the fake segments are introduced to hint the metrics -- */
       /* we must never link them to anything                     */
-      if ( seg1->first == seg1->last || seg1->dir != major_dir )
+      if ( seg1->first == seg1->last )
         continue;
 
-      for ( seg2 = segments; seg2 < segment_limit; seg2++ )
-        if ( seg2 != seg1 && seg1->dir + seg2->dir == 0 )
+      for ( seg2 = seg1+1; seg2 < segment_limit; seg2++ )
+        if ( seg1->dir + seg2->dir == 0 )
         {
           FT_Pos  pos1 = seg1->pos;
           FT_Pos  pos2 = seg2->pos;
@@ -935,7 +935,7 @@
 
 
           if ( dist < 0 )
-            continue;
+            dist = -dist;
 
           {
             FT_Pos  min = seg1->min_coord;
@@ -1020,7 +1020,7 @@
      *  corresponding threshold in font units.
      */
     if ( dim == AF_DIMENSION_HORZ )
-        segment_length_threshold = FT_DivFix( 96, hints->y_scale );
+        segment_length_threshold = FT_DivFix( 64, hints->y_scale );
     else
         segment_length_threshold = 0;
 
@@ -1055,6 +1055,12 @@
 
 
       if ( seg->height < segment_length_threshold )
+        continue;
+
+     /* a special case for serif edges, if they're smaller than 1.5
+      * pixels, we ignore them
+      */
+      if ( seg->serif && 2*seg->height < 3*segment_length_threshold )
         continue;
 
       /* look for an edge corresponding to the segment */
@@ -2139,7 +2145,7 @@
     for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
     {
 #ifdef AF_USE_WARPER
-      if ( ( dim == AF_DIMENSION_HORZ && 
+      if ( ( dim == AF_DIMENSION_HORZ &&
              metrics->root.scaler.render_mode == FT_RENDER_MODE_LIGHT ) )
       {
         AF_WarperRec  warper;

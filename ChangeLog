@@ -8,7 +8,25 @@
 
 2007-02-12  David Turner  <david@freetype.org>
 
-	Simplify projection and dual-projection code interface.
+	* src/autofit/aflatin.c: slight optimization of the segment linker
+	and better handling of serif segments to get rid of broken "9" in
+	Arial 9 pts (96dpi)
+
+	* src/autofit/afloader.c: improve spacing adjustments for the
+	non-light auto-hinted modes. Gets rid of "inter-letter spacing
+	is too wide"
+
+	* src/truetype/ttinterp.h, src/truetype/ttinterp.c: simplify
+	projection and dual-projection code interface
+
+	* include/freetype/internal/ftmemory.h, src/base/ftutils.c,
+	src/bfd/bfddrivr.c, src/bdf/bdflib.c, src/pcf/pcfread.c,
+	src/cff/cffdrivr.c, src/cff/cffload.c, src/cff/cffobjs.c,
+	src/sfnt/sfdriver.c, src/type1/t1driver.c, src/type42/t42drivr.c:
+	introduce ft_mem_strdup, ft_mem_dup, ft_mem_strcpyn and the
+	corresponding macros, and modify code to use them. This is to
+	get rid of various uses of strcpy and other "evil" functions,
+	as well as simplify a few things
 
 	* src/truetype/ttinterp.h (TT_Project_Func): Use `FT_Pos', not
 	FT_Vector' as argument type.
@@ -44,6 +62,7 @@
 	src/sfnt/sfdriver.c (sfnt_get_glyph_name), src/type1/t1driver.c
 	(t1_get_glyph_name), src/type42/t42drivr.c (t42_get_glyph_name,
 	t42_get_name_index): Use new functions and simplify code.
+>>>>>>> 1.1522
 
 	* builds/mac/ftmac.c (FT_FSPathMakeSpec): Don't use FT_MIN.
 
