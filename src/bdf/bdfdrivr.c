@@ -2,7 +2,7 @@
 
     FreeType font driver for bdf files
 
-    Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 by
+    Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -198,6 +198,7 @@ THE SOFTWARE.
     char*  strings[4] = { NULL, NULL, NULL, NULL };
     int    lengths[4];
 
+
     face->style_flags = 0;
 
     prop = bdf_get_font_property( font, (char *)"SLANT" );
@@ -225,35 +226,31 @@ THE SOFTWARE.
     if ( prop && prop->format == BDF_ATOM                              &&
          prop->value.atom && *(prop->value.atom)                       &&
          !( *(prop->value.atom) == 'N' || *(prop->value.atom) == 'n' ) )
-    {
       strings[3] = (char *)(prop->value.atom);
-    }
 
     prop = bdf_get_font_property( font, (char *)"ADD_STYLE_NAME" );
     if ( prop && prop->format == BDF_ATOM                              &&
          prop->value.atom && *(prop->value.atom)                       &&
          !( *(prop->value.atom) == 'N' || *(prop->value.atom) == 'n' ) )
-    {
       strings[0] = (char *)(prop->value.atom);
-    }
 
-    len   = 0;
+    len = 0;
 
-    for (len = 0, nn = 0; nn < 4; nn++)
+    for ( len = 0, nn = 0; nn < 4; nn++ )
     {
       lengths[nn] = 0;
-      if (strings[nn]) 
+      if ( strings[nn] )
       {
-        lengths[nn] = ft_strlen(strings[nn]);
-        len        += lengths[nn]+1;
+        lengths[nn] = ft_strlen( strings[nn] );
+        len        += lengths[nn] + 1;
       }
     }
 
     if ( len == 0 )
     {
       strings[0] = "Regular";
-      lengths[0] = ft_strlen(strings[0]);
-      len        = lengths[0]+1;
+      lengths[0] = ft_strlen( strings[0] );
+      len        = lengths[0] + 1;
     }
 
     {
@@ -265,27 +262,30 @@ THE SOFTWARE.
 
       s = face->style_name;
 
-      for (nn = 0; nn < 4; nn++)
+      for ( nn = 0; nn < 4; nn++ )
       {
         char*  src = strings[nn];
         int    len = lengths[nn];
+
 
         if ( src == NULL )
           continue;
 
         /* separate elements with a space */
-        if (s != face->style_name)
+        if ( s != face->style_name )
           *s++ = ' ';
 
-        memcpy( s, src, len );
+        ft_memcpy( s, src, len );
 
-        /* need to convert spaces to dashes for add_style_name and setwidth_name */
-        if (nn == 0 || nn == 3) 
+        /* need to convert spaces to dashes for */
+        /* add_style_name and setwidth_name     */
+        if ( nn == 0 || nn == 3 )
         {
           int  mm;
 
-          for (mm = 0; mm < len; mm++)
-            if (s[mm] == ' ')
+
+          for ( mm = 0; mm < len; mm++ )
+            if ( s[mm] == ' ' )
               s[mm] = '-';
         }
 
@@ -495,12 +495,14 @@ THE SOFTWARE.
             const char*  s;
 
 
-            if ( FT_STRDUP( face->charset_encoding, charset_encoding->value.atom ) ||
-                 FT_STRDUP( face->charset_registry, charset_registry->value.atom ) )
+            if ( FT_STRDUP( face->charset_encoding,
+                            charset_encoding->value.atom ) ||
+                 FT_STRDUP( face->charset_registry,
+                            charset_registry->value.atom ) )
               goto Exit;
 
-            /* Uh, oh, compare first letters manually to avoid dependency
-               on locales. */
+            /* Uh, oh, compare first letters manually to avoid dependency */
+            /* on locales.                                                */
             s = face->charset_registry;
             if ( ( s[0] == 'i' || s[0] == 'I' ) &&
                  ( s[1] == 's' || s[1] == 'S' ) &&

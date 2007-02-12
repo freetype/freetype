@@ -287,7 +287,8 @@
     FT_Error    error;
     FT_String*  result;
 
-    result = ft_mem_strdup(memory, source, &error);
+
+    result = ft_mem_strdup( memory, source, &error );
 
     return result;
   }

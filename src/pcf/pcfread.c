@@ -1002,9 +1002,9 @@ THE SOFTWARE.
            *(prop->value.atom) == 'I' || *(prop->value.atom) == 'i' ) )
     {
       face->style_flags |= FT_STYLE_FLAG_ITALIC;
-      strings[2] = ( *(prop->value.atom) == 'O' || *(prop->value.atom) == 'o' )
-          ? (char *)"Oblique"
-        : (char *)"Italic";
+      strings[2] = ( *(prop->value.atom) == 'O' ||
+                     *(prop->value.atom) == 'o' ) ? (char *)"Oblique"
+                                                  : (char *)"Italic";
     }
 
     prop = pcf_find_property( pcf, "WEIGHT_NAME" );
@@ -1019,33 +1019,29 @@ THE SOFTWARE.
     if ( prop && prop->isString                                        &&
          *(prop->value.atom)                                           &&
          !( *(prop->value.atom) == 'N' || *(prop->value.atom) == 'n' ) )
-    {
       strings[3] = (char *)(prop->value.atom);
-    }
 
     prop = pcf_find_property( pcf, "ADD_STYLE_NAME" );
     if ( prop && prop->isString                                        &&
          *(prop->value.atom)                                           &&
          !( *(prop->value.atom) == 'N' || *(prop->value.atom) == 'n' ) )
-    {
       strings[0] = (char *)(prop->value.atom);
-    }
 
-    for (len = 0, nn = 0; nn < 4; nn++)
+    for ( len = 0, nn = 0; nn < 4; nn++ )
     {
       lengths[nn] = 0;
-      if (strings[nn]) 
+      if ( strings[nn] )
       {
-        lengths[nn] = ft_strlen(strings[nn]);
-        len        += lengths[nn]+1;
+        lengths[nn] = ft_strlen( strings[nn] );
+        len        += lengths[nn] + 1;
       }
     }
 
     if ( len == 0 )
     {
       strings[0] = "Regular";
-      lengths[0] = ft_strlen(strings[0]);
-      len        = lengths[0]+1;
+      lengths[0] = ft_strlen( strings[0] );
+      len        = lengths[0] + 1;
     }
 
     {
@@ -1057,26 +1053,29 @@ THE SOFTWARE.
 
       s = face->style_name;
 
-      for (nn = 0; nn < 4; nn++)
+      for ( nn = 0; nn < 4; nn++ )
       {
         char*  src = strings[nn];
         int    len = lengths[nn];
+
 
         if ( src == NULL )
           continue;
 
         /* separate elements with a space */
-        if (s != face->style_name)
+        if ( s != face->style_name )
           *s++ = ' ';
 
-        memcpy( s, src, len );
+        ft_memcpy( s, src, len );
 
-        /* need to convert spaces to dashes for add_style_name and setwidth_name */
-        if (nn == 0 || nn == 3) 
+        /* need to convert spaces to dashes for */
+        /* add_style_name and setwidth_name     */
+        if ( nn == 0 || nn == 3 )
         {
           int  mm;
 
-          for (mm = 0; mm < len; mm++)
+
+          for ( mm = 0; mm < len; mm++ )
             if (s[mm] == ' ')
               s[mm] = '-';
         }
@@ -1243,8 +1242,10 @@ THE SOFTWARE.
         if ( charset_registry && charset_registry->isString &&
              charset_encoding && charset_encoding->isString )
         {
-          if ( FT_STRDUP( face->charset_encoding, charset_encoding->value.atom ) ||
-               FT_STRDUP( face->charset_registry, charset_registry->value.atom ) )
+          if ( FT_STRDUP( face->charset_encoding,
+                          charset_encoding->value.atom ) ||
+               FT_STRDUP( face->charset_registry,
+                          charset_registry->value.atom ) )
             goto Exit;
         }
       }

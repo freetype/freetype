@@ -333,26 +333,29 @@ FT_BEGIN_HEADER
               FT_ULong     size,
               FT_Error    *p_error );
 
-#define  FT_MEM_STRDUP(dst,str)    \
-    (dst) = ft_mem_strdup( memory, (const char*)(str), &error )
+#define FT_MEM_STRDUP( dst, str )                                     \
+          (dst) = ft_mem_strdup( memory, (const char*)(str), &error )
 
-#define  FT_STRDUP(dst,str)   \
-    FT_MEM_SET_ERROR( FT_MEM_STRDUP(dst,str) )
+#define FT_STRDUP( dst, str )                           \
+          FT_MEM_SET_ERROR( FT_MEM_STRDUP( dst, str ) )
 
-#define  FT_MEM_DUP(dst, address,size)   \
-    (dst) = ft_mem_dup( memory, (address), (FT_ULong)(size), &error )
+#define FT_MEM_DUP( dst, address, size )                                    \
+          (dst) = ft_mem_dup( memory, (address), (FT_ULong)(size), &error )
 
-#define  FT_DUP(dst,address,size)  \
-    FT_MEM_SET_ERROR( FT_MEM_DUP(dst,address,size) )
+#define FT_DUP( dst, address, size )                           \
+          FT_MEM_SET_ERROR( FT_MEM_DUP( dst, address, size ) )
 
-  /* returns 1 or more if a trunction occured, 0 if the source string fitted the buffer */
-  /* this is *not* the same than the normal strlcpy() call                              */
+
+  /* Return >= 1 if a truncation occurs.            */
+  /* Return 0 if the source string fits the buffer. */
+  /* This is *not* the same as strlcpy().           */
   FT_BASE( FT_Int )
   ft_mem_strcpyn( char*        dst,
                   const char*  src,
                   FT_ULong     size );
 
-#define  FT_STRCPYN(dst,src,size)   ft_mem_strcpyn( (char*)dst, (const char*)(src), (FT_ULong)(size) )
+#define FT_STRCPYN( dst, src, size )                                         \
+          ft_mem_strcpyn( (char*)dst, (const char*)(src), (FT_ULong)(size) )
 
  /* */
 

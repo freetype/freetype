@@ -1,21 +1,32 @@
 2007-02-12  David Turner  <david@freetype.org>
 
-	* src/autofit/afloader.c: improve spacing adjustments for the
-	non-light auto-hinted modes. Gets rid of "inter-letter spacing
-	is too wide"
+	* src/truetype/ttinterp.h, src/truetype/ttinterp.c: Simplify
+	projection and dual-projection code interface.
 
-	* src/truetype/ttinterp.h, src/truetype/ttinterp.c: simplify
-	projection and dual-projection code interface
+	* src/autofit/afloader.c: Improve spacing adjustments for the
+	non-light auto-hinted modes.  Gets rid of `inter-letter spacing is
+	too wide' problems.
 
-	* include/freetype/internal/ftmemory.h, src/base/ftutils.c,
-	src/bfd/bfddrivr.c, src/bdf/bdflib.c, src/pcf/pcfread.c,
-	src/cff/cffdrivr.c, src/cff/cffload.c, src/cff/cffobjs.c,
-	src/sfnt/sfdriver.c, src/type1/t1driver.c, src/type42/t42drivr.c:
-	introduce ft_mem_strdup, ft_mem_dup, ft_mem_strcpyn and the
-	corresponding macros, and modify code to use them. This is to
-	get rid of various uses of strcpy and other "evil" functions,
-	as well as simplify a few things
 
+	Introduce new string functions and the corresponding macros to get
+	rid of various uses of strcpy and other `evil' functions, as well as
+	to simplify a few things.
+
+	* include/freetype/internal/ftmemory.h (ft_mem_strdup, ft_mem_dup,
+	ft_mem_strcpyn): New declarations.
+	(FT_MEM_STRDUP, FT_STRDUP, FT_MEM_DUP, FT_DUP, FT_STRCPYN): New
+	macros.
+	* src/base/ftutil.c (ft_mem_dup, ft_mem_strdup, ft_mem_strcpyn): New
+	functions.
+
+	* src/bfd/bfddrivr.c (bdf_interpret_style, BDF_Face_Init),
+	src/bdf/bdflib.c (_bdf_add_property), src/pcf/pcfread.c
+	(pcf_get_properties, pcf_interpret_style, pcf_load_font),
+	src/cff/cffdrivr.c (cff_get_glyph_name), src/cff/cffload.c
+	(cff_index_get_sid_string), src/cff/cffobjs.c (cff_strcpy),
+	src/sfnt/sfdriver.c (sfnt_get_glyph_name), src/type1/t1driver.c
+	(t1_get_glyph_name), src/type42/t42drivr.c (t42_get_glyph_name,
+	t42_get_name_index): Use new functions and simplify code.
 
 2007-02-11  Werner Lemberg  <wl@gnu.org>
 
@@ -85,7 +96,6 @@
 	(gxv_mort_subtable_type1_substTable_validate): Fix debugging
 	message.
 
->>>>>>> 1.1514
 2007-01-31  Werner Lemberg  <wl@gnu.org>
 
 

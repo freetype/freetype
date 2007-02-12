@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level Type 42 driver interface (body).                          */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2006 by Roberto Alameda.                   */
+/*  Copyright 2002, 2003, 2004, 2006, 2007 by Roberto Alameda.             */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -62,6 +62,7 @@
                       FT_UInt     buffer_max )
   {
     FT_STRCPYN( buffer, face->type1.glyph_names[glyph_index], buffer_max );
+
     return T42_Err_Ok;
   }
 
