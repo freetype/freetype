@@ -1253,7 +1253,6 @@
   {
     unsigned long   propid;
     hashnode        hn;
-    int             len;
     bdf_property_t  *prop, *fp;
     FT_Memory       memory = font->memory;
     FT_Error        error = BDF_Err_Ok;
@@ -1272,19 +1271,11 @@
         /* Delete the current atom if it exists. */
         FT_FREE( fp->value.atom );
 
-        if ( value == 0 )
-          len = 1;
-        else
-          len = ft_strlen( value ) + 1;
-
-        if ( len > 1 )
+        if ( value && value[0] != 0 )
         {
-          if ( FT_NEW_ARRAY( fp->value.atom, len ) )
+          if ( FT_STRDUP( fp->value.atom, value ) )
             goto Exit;
-          FT_MEM_COPY( fp->value.atom, value, len );
         }
-        else
-          fp->value.atom = 0;
         break;
 
       case BDF_INTEGER:
@@ -1349,19 +1340,12 @@
     switch ( prop->format )
     {
     case BDF_ATOM:
-      if ( value == 0 )
-        len = 1;
-      else
-        len = ft_strlen( value ) + 1;
-
-      if ( len > 1 )
+      fp->value.atom = 0;
+      if ( value != 0 && value[0] )
       {
-        if ( FT_NEW_ARRAY( fp->value.atom, len ) )
+        if ( FT_STRDUP( fp->value.atom, value ) )
           goto Exit;
-        FT_MEM_COPY( fp->value.atom, value, len );
       }
-      else
-        fp->value.atom = 0;
       break;
 
     case BDF_INTEGER:

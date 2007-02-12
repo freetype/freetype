@@ -61,23 +61,7 @@
                       FT_Pointer  buffer,
                       FT_UInt     buffer_max )
   {
-    FT_String*  gname;
-
-
-    gname = face->type1.glyph_names[glyph_index];
-
-    if ( buffer_max > 0 )
-    {
-      FT_UInt  len = (FT_UInt)( ft_strlen( gname ) );
-
-
-      if ( len >= buffer_max )
-        len = buffer_max - 1;
-
-      FT_MEM_COPY( buffer, gname, len );
-      ((FT_Byte*)buffer)[len] = 0;
-    }
-
+    FT_STRCPYN( buffer, face->type1.glyph_names[glyph_index], buffer_max );
     return T42_Err_Ok;
   }
 
@@ -94,7 +78,7 @@
     {
       gname = face->type1.glyph_names[i];
 
-      if ( !ft_strcmp( glyph_name, gname ) )
+      if ( glyph_name[0] == gname[0] && !ft_strcmp( glyph_name, gname ) )
         return (FT_UInt)ft_atol( (const char *)face->type1.charstrings[i] );
     }
 

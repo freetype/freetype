@@ -144,17 +144,8 @@
 
 
     error = tt_face_get_ps_name( face, glyph_index, &gname );
-    if ( !error && buffer_max > 0 )
-    {
-      FT_UInt  len = (FT_UInt)( ft_strlen( gname ) );
-
-
-      if ( len >= buffer_max )
-        len = buffer_max - 1;
-
-      FT_MEM_COPY( buffer, gname, len );
-      ((FT_Byte*)buffer)[len] = 0;
-    }
+    if ( !error )
+      FT_STRCPYN( buffer, gname, buffer_max );
 
     return error;
   }

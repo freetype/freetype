@@ -570,7 +570,6 @@
     {
       FT_String*   name       = 0;
       const char*  adobe_name = psnames->adobe_std_strings( sid );
-      FT_UInt      len;
 
 
       if ( adobe_name )
@@ -579,12 +578,7 @@
         FT_Error   error;
 
 
-        len = (FT_UInt)ft_strlen( adobe_name );
-        if ( !FT_ALLOC( name, len + 1 ) )
-        {
-          FT_MEM_COPY( name, adobe_name, len );
-          name[len] = 0;
-        }
+        (void)FT_STRDUP( name, adobe_name );
 
         FT_UNUSED( error );
       }

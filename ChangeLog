@@ -1,3 +1,15 @@
+2007-02-12  David Turner  <david@freetype.org>
+
+	* include/freetype/internal/ftmemory.h, src/base/ftutils.c,
+	src/bfd/bfddrivr.c, src/bdf/bdflib.c, src/pcf/pcfread.c,
+	src/cff/cffdrivr.c, src/cff/cffload.c, src/cff/cffobjs.c,
+	src/sfnt/sfdriver.c, src/type1/t1driver.c, src/type42/t42drivr.c:
+	introduce ft_mem_strdup, ft_mem_dup, ft_mem_strcpyn and the
+	corresponding macros, and modify code to use them. This is to
+	get rid of various uses of strcpy and other "evil" functions,
+	as well as simplify a few things
+
+	
 2007-02-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afloader.c (af_loader_load_g): Don't change width for
@@ -66,6 +78,7 @@
 	(gxv_mort_subtable_type1_substTable_validate): Fix debugging
 	message.
 
+>>>>>>> 1.1514
 2007-01-31  Werner Lemberg  <wl@gnu.org>
 
 

@@ -441,7 +441,12 @@
 
     while ( 1 )
     {
-      q = p + FT_MIN( 255, ft_strlen( p ) );
+      int  len = ft_strlen( p );
+
+      if (len > 255)
+        len = 255;
+
+      q = p + len;
 
       if ( q == p )
         return 0;

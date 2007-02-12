@@ -172,6 +172,48 @@
   }
 
 
+  FT_BASE_DEF( FT_Pointer )
+  ft_mem_dup( FT_Memory    memory,
+              const void*  address,
+              FT_ULong     size,
+              FT_Error    *p_error )
+  {
+    FT_Error    error;
+    FT_Pointer  p = ft_mem_qalloc( memory, size, &error );
+
+    if (!error && address)
+      ft_memcpy( p, address, size );
+
+    *p_error = error;
+    return p;
+  }
+
+
+  FT_BASE_DEF( FT_Pointer )
+  ft_mem_strdup( FT_Memory    memory,
+                 const char*  str,
+                 FT_Error    *p_error )
+  {
+    FT_ULong  len = str ? (FT_ULong)ft_strlen(str)+1 : 0;
+
+    return ft_mem_dup( memory, str, len, p_error );
+  }
+
+
+  FT_BASE_DEF( FT_Int )
+  ft_mem_strcpyn( char*        dst,
+                  const char*  src,
+                  FT_ULong     size )
+  {
+    while ( size > 1 && *src != 0 )
+      *dst++ = *src++;
+
+    *dst = 0;  /* always zero-terminate */
+
+    return (*src != 0);
+  }
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
