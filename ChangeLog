@@ -303,8 +303,6 @@
 
 2007-01-12  Werner Lemberg  <wl@gnu.org>
 
-2007-01-12  Werner Lemberg  <wl@gnu.org>
-
 	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
 	`automake' CVS module from sources.redhat.com.
 
