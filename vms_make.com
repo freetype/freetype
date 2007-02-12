@@ -57,7 +57,7 @@ $ optfile =  name + ".opt"
 $ s_case  = false
 $ liblist = ""
 $!
-$ whoami = f$parse(f$enviornment("Procedure"),,,,"NO_CONCEAL")
+$ whoami = f$parse(f$environment("Procedure"),,,,"NO_CONCEAL")
 $ mydef  = F$parse(whoami,,,"DEVICE")
 $ mydir  = f$parse(whoami,,,"DIRECTORY") - "]["
 $ myproc = f$parse(whoami,,,"Name") + f$parse(whoami,,,"type")
