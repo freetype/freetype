@@ -206,17 +206,17 @@
           Move_Zp2_Point( EXEC_ARG_ a, b, c, t )
 
 
-#  define CUR_Func_project( v1, v2 )  \
-  CUR.func_project( EXEC_ARG_ (v1)->x - (v2)->x, (v1)->y - (v2)->y )
+#define CUR_Func_project( v1, v2 )  \
+          CUR.func_project( EXEC_ARG_ (v1)->x - (v2)->x, (v1)->y - (v2)->y )
 
-#  define  CUR_Func_dualproj( v1, v2 )  \
-  CUR.func_dualproj( EXEC_ARG_ (v1)->x - (v2)->x, (v1)->y - (v2)->y )
+#define CUR_Func_dualproj( v1, v2 )  \
+          CUR.func_dualproj( EXEC_ARG_ (v1)->x - (v2)->x, (v1)->y - (v2)->y )
 
-#  define  CUR_fast_project(v)  \
-  CUR.func_project( EXEC_ARG_ (v)->x, (v)->y )
+#define CUR_fast_project( v ) \
+          CUR.func_project( EXEC_ARG_ (v)->x, (v)->y )
 
-#  define  CUR_fast_dualproj(v)  \
-  CUR.func_dualproj( EXEC_ARG_ (v)->x, (v)->y )
+#define CUR_fast_dualproj( v ) \
+          CUR.func_dualproj( EXEC_ARG_ (v)->x, (v)->y )
 
 
   /*************************************************************************/
@@ -2159,7 +2159,7 @@
   static FT_F26Dot6
   Project( EXEC_OP_ FT_Pos  dx,
                     FT_Pos  dy )
-{
+  {
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
@@ -2167,7 +2167,8 @@
     return TT_DotFix14( dx, dy,
                         CUR.GS.projVector.x,
                         CUR.GS.projVector.y );
-}
+  }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2194,6 +2195,7 @@
                         CUR.GS.dualVector.y );
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2219,6 +2221,7 @@
     return dx;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2243,6 +2246,7 @@
 
     return dy;
   }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -5670,7 +5674,7 @@
     /* The behaviour of an MIAP instruction is quite     */
     /* different when used in the twilight zone.         */
     /*                                                   */
-    /* First, no control value cutin test is performed   */
+    /* First, no control value cut-in test is performed  */
     /* as it would fail anyway.  Second, the original    */
     /* point, i.e. (org_x,org_y) of zp0.point, is set    */
     /* to the absolute, unrounded distance found in      */

@@ -443,7 +443,8 @@
     {
       int  len = ft_strlen( p );
 
-      if (len > 255)
+
+      if ( len > 255 )
         len = 255;
 
       q = p + len;

@@ -1,11 +1,20 @@
 2007-02-12  David Turner  <david@freetype.org>
 
-	* src/truetype/ttinterp.h, src/truetype/ttinterp.c: Simplify
-	projection and dual-projection code interface.
+	Simplify projection and dual-projection code interface.
 
-	* src/autofit/afloader.c: Improve spacing adjustments for the
-	non-light auto-hinted modes.  Gets rid of `inter-letter spacing is
-	too wide' problems.
+	* src/truetype/ttinterp.h (TT_Project_Func): Use `FT_Pos', not
+	FT_Vector' as argument type.
+	* src/truetype/ttinterp.c (CUR_Func_project, CUR_Func_dualproj):
+	Updated.
+	(CUR_fast_project, CUR_fast_dualproj): New macros.
+	(Project, Dual_Project, Project_x, Project_y): Updated.
+	(Ins_GC, Ins_SCFS, Ins_MDAP, Ins_MIAP, Ins_IP): Use new `fast'
+	macros.
+
+
+	* src/autofit/afloader.c (af_loader_load_g): Improve spacing
+	adjustments for the non-light auto-hinted modes.  Gets rid of
+	`inter-letter spacing is too wide' problems.
 
 
 	Introduce new string functions and the corresponding macros to get
@@ -27,6 +36,8 @@
 	src/sfnt/sfdriver.c (sfnt_get_glyph_name), src/type1/t1driver.c
 	(t1_get_glyph_name), src/type42/t42drivr.c (t42_get_glyph_name,
 	t42_get_name_index): Use new functions and simplify code.
+
+	* builds/mac/ftmac.c (FT_FSPathMakeSpec): Don't use FT_MIN.
 
 2007-02-11  Werner Lemberg  <wl@gnu.org>
 
