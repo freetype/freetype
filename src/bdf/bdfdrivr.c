@@ -248,7 +248,7 @@ THE SOFTWARE.
 
     if ( len == 0 )
     {
-      strings[0] = "Regular";
+      strings[0] = (char *)"Regular";
       lengths[0] = ft_strlen( strings[0] );
       len        = lengths[0] + 1;
     }
@@ -265,8 +265,9 @@ THE SOFTWARE.
       for ( nn = 0; nn < 4; nn++ )
       {
         char*  src = strings[nn];
-        int    len = lengths[nn];
 
+
+        len = lengths[nn];
 
         if ( src == NULL )
           continue;

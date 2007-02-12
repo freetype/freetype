@@ -1858,8 +1858,8 @@
   {
     FT_F26Dot6  val;
 
-
     FT_UNUSED_EXEC;
+
 
     if ( distance >= 0 )
     {
@@ -2217,6 +2217,7 @@
                       FT_Pos  dy )
   {
     FT_UNUSED_EXEC;
+    FT_UNUSED( dy );
 
     return dx;
   }
@@ -2243,6 +2244,7 @@
                       FT_Pos  dy )
   {
     FT_UNUSED_EXEC;
+    FT_UNUSED( dx );
 
     return dy;
   }
