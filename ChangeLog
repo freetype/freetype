@@ -1,3 +1,9 @@
+2007-02-14  David Turner  <david@freetype.org>
+
+	* src/truetype/ttinterp.c: improved the FIX_BYTECODE code which is now
+	the default, it seems to get rid of most known problems with my fonts,
+	but more testing is needed though.
+
 2007-02-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (Project_x, Project_y): Remove compiler
