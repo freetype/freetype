@@ -907,7 +907,6 @@
     AF_AxisHints  axis          = &hints->axis[dim];
     AF_Segment    segments      = axis->segments;
     AF_Segment    segment_limit = segments + axis->num_segments;
-    AF_Direction  major_dir     = axis->major_dir;
     FT_Pos        len_threshold, len_score;
     AF_Segment    seg1, seg2;
 

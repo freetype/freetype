@@ -4835,7 +4835,7 @@
 
 #ifdef FIX_BYTECODE
 
-        FT_Vector  vec1, vec2;
+        FT_Vector  vec1;
 
 
         if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
