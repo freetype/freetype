@@ -926,7 +926,7 @@
       if ( seg1->first == seg1->last )
         continue;
 
-      for ( seg2 = seg1+1; seg2 < segment_limit; seg2++ )
+      for ( seg2 = seg1 + 1; seg2 < segment_limit; seg2++ )
         if ( seg1->dir + seg2->dir == 0 )
         {
           FT_Pos  pos1 = seg1->pos;
@@ -1057,10 +1057,10 @@
       if ( seg->height < segment_length_threshold )
         continue;
 
-     /* a special case for serif edges, if they're smaller than 1.5
-      * pixels, we ignore them
-      */
-      if ( seg->serif && 2*seg->height < 3*segment_length_threshold )
+      /* A special case for serif edges: If they are smaller than */
+      /* 1.5 pixels we ignore them.                               */
+      if ( seg->serif                                     &&
+           2 * seg->height < 3 * segment_length_threshold )
         continue;
 
       /* look for an edge corresponding to the segment */

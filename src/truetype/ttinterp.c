@@ -1144,34 +1144,40 @@
 
 
 #if 1
+
   static FT_Int32
   TT_MulFix14( FT_Int32  a,
                FT_Int    b )
-{
-  FT_Int32   sign;
-  FT_UInt32  ah, al, mid, lo, hi;
+  {
+    FT_Int32   sign;
+    FT_UInt32  ah, al, mid, lo, hi;
 
-  sign = a^b;
 
-  if (a < 0) a = -a;
-  if (b < 0) b = -b;
+    sign = a ^ b;
 
-  ah = (FT_UInt32)((a >> 16) & 0xFFFFU);
-  al = (FT_UInt32)( a & 0xFFFFU );
+    if ( a < 0 )
+      a = -a;
+    if ( b < 0 )
+      b = -b;
 
-  lo    = al*b;
-  mid   = ah*b;
-  hi    = (mid >> 16);
-  mid   = (mid << 16) + (1 << 13); /* rounding */
-  lo   += mid;
-  if (lo < mid)
-    hi += 1;
+    ah = (FT_UInt32)( ( a >> 16 ) & 0xFFFFU );
+    al = (FT_UInt32)( a & 0xFFFFU );
 
-  mid = (lo >> 14) | (hi << 18);
+    lo    = al * b;
+    mid   = ah * b;
+    hi    = mid >> 16;
+    mid   = ( mid << 16 ) + ( 1 << 13 ); /* rounding */
+    lo   += mid;
+    if ( lo < mid )
+      hi += 1;
 
-  return  sign >= 0 ? (FT_Int32)mid : -(FT_Int32)mid;
-}
+    mid = ( lo >> 14 ) | ( hi << 18 );
+
+    return sign >= 0 ? (FT_Int32)mid : -(FT_Int32)mid;
+  }
+
 #else
+
   /* compute (a*b)/2^14 with maximal accuracy and rounding */
   static FT_Int32
   TT_MulFix14( FT_Int32  a,
@@ -4838,8 +4844,10 @@
                          CUR.twilight.n_points );
 
         /* get scaled orus coordinates */
-        vec1.x = TT_MULFIX( CUR.zp0.orus[L].x - CUR.zp1.orus[K].x, CUR.metrics.x_scale );
-        vec1.y = TT_MULFIX( CUR.zp0.orus[L].y - CUR.zp1.orus[L].y, CUR.metrics.y_scale );
+        vec1.x = TT_MULFIX( CUR.zp0.orus[L].x - CUR.zp1.orus[K].x,
+                            CUR.metrics.x_scale );
+        vec1.y = TT_MULFIX( CUR.zp0.orus[L].y - CUR.zp1.orus[L].y,
+                            CUR.metrics.y_scale );
 
         D = CUR_fast_dualproj( &vec1 );
 
@@ -5920,8 +5928,10 @@
       CUR.zp1.cur[point] = CUR.zp0.cur[point];
     }
 
-    org_dist = CUR_Func_dualproj( &CUR.zp1.org[point], &CUR.zp0.org[CUR.GS.rp0] );
-    cur_dist = CUR_Func_project ( &CUR.zp1.cur[point], &CUR.zp0.cur[CUR.GS.rp0] );
+    org_dist = CUR_Func_dualproj( &CUR.zp1.org[point],
+                                  &CUR.zp0.org[CUR.GS.rp0] );
+    cur_dist = CUR_Func_project ( &CUR.zp1.cur[point],
+                                  &CUR.zp0.cur[CUR.GS.rp0] );
 
     /* auto-flip test */
 
@@ -6154,7 +6164,9 @@
   /*                                                                       */
 
   /* SOMETIMES, DUMBER CODE IS BETTER CODE */
+
 #ifdef FIX_BYTECODE
+
   static void
   Ins_IP( INS_ARG )
   {
@@ -6171,20 +6183,19 @@
       return;
     }
 
-   /* We need to deal in a special way with the twilight zone.  The easiest
-    * solution is simply to copy the coordinates from `org' to `orus'
-    * whenever someone tries to perform intersections based on some of its
-    * points.
-    *
-    * Otherwise, by definition, value of CUR.twilight.orus[n] is (0,0),
-    * whatever value of `n'.
-    */
+    /*
+     * We need to deal in a special way with the twilight zone.  The easiest
+     * solution is simply to copy the coordinates from `org' to `orus'
+     * whenever a font tries to perform intersections based on some of its
+     * points.
+     *
+     * Otherwise, by definition, the value of CUR.twilight.orus[n] is (0,0),
+     * whatever value of `n'.
+     */
     if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0 )
-    {
-        FT_ARRAY_COPY( CUR.twilight.orus,
-                       CUR.twilight.org,
-                       CUR.twilight.n_points );
-    }
+      FT_ARRAY_COPY( CUR.twilight.orus,
+                     CUR.twilight.org,
+                     CUR.twilight.n_points );
 
     orus_base = &CUR.zp0.orus[CUR.GS.rp1];
     cur_base  = &CUR.zp0.cur[CUR.GS.rp1];
@@ -6207,8 +6218,9 @@
 
     for ( ; CUR.GS.loop > 0; --CUR.GS.loop )
     {
-      FT_UInt     point = (FT_UInt) CUR.stack[--CUR.args];
+      FT_UInt     point = (FT_UInt)CUR.stack[--CUR.args];
       FT_F26Dot6  org_dist, cur_dist, new_dist;
+
 
       /* check point bounds */
       if ( BOUNDS( point, CUR.zp2.n_points ) )
@@ -6223,15 +6235,18 @@
 
       org_dist = CUR_Func_dualproj( &CUR.zp2.orus[point], orus_base );
       cur_dist = CUR_Func_project ( &CUR.zp2.cur[point], cur_base );
-      new_dist = (old_range != 0) ? TT_MULDIV( org_dist, cur_range, old_range )
-                                  : cur_dist;
+      new_dist = (old_range != 0)
+                   ? TT_MULDIV( org_dist, cur_range, old_range )
+                   : cur_dist;
 
       CUR_Func_move( &CUR.zp2, point, new_dist - cur_dist );
     }
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-#else /* OLD CODE */
+
+#else /* !FIX_BYTECODE */
+
   static void
   Ins_IP( INS_ARG )
   {
@@ -6314,7 +6329,9 @@
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-#endif
+
+#endif /* !FIX_BYTECODE */
+
 
   /*************************************************************************/
   /*                                                                       */

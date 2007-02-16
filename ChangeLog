@@ -1,8 +1,13 @@
 2007-02-14  David Turner  <david@freetype.org>
 
-	* src/truetype/ttinterp.c: improved the FIX_BYTECODE code which is now
-	the default, it seems to get rid of most known problems with my fonts,
-	but more testing is needed though.
+	It seems that the following changes fix most of the known
+	interpreter problems with my fonts, but more testing is needed,
+	though.
+
+	* src/truetype/ttinterp.c (FIX_BYTECODE): Activate.
+	(TT_MulFix14): Rewrite.
+	(Ins_MD, Ins_MDRP, Ins_IP) [FIX_BYTECODE]: Improved and updated.
+	(Ins_MIRP): Ditto.
 
 2007-02-12  Werner Lemberg  <wl@gnu.org>
 
@@ -13,6 +18,8 @@
 	(bdf_interpret_style): Ditto.
 
 2007-02-12  David Turner  <david@freetype.org>
+
+	Simplify projection and dual-projection code interface.
 
 	* src/truetype/ttinterp.h (TT_Project_Func): Use `FT_Pos', not
 	FT_Vector' as argument type.
@@ -28,9 +35,10 @@
 	adjustments for the non-light auto-hinted modes.  Gets rid of
 	`inter-letter spacing is too wide' problems.
 
-	* src/autofit/aflatin.c: Slight optimization of the segment linker
-	and better handling of serif segments to get rid of broken `9' in
-	Arial at 9pt (96dpi).
+	* src/autofit/aflatin.c (af_latin_hints_link_segments,
+	af_latin_hints_compute_edges): Slight optimization of the segment
+	linker and better handling of serif segments to get rid of broken
+	`9' in Arial at 9pt (96dpi).
 
 
 	Introduce new string functions and the corresponding macros to get
