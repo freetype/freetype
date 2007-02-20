@@ -283,6 +283,7 @@
                                              kCFStringEncodingMacRoman );
     ats_font_id = ATSFontFindFromName( cf_fontName,
                                        kATSOptionFlagsUnRestrictedScope );
+    CFRelease(cf_fontName);
 
     if ( ats_font_id == 0 || ats_font_id == 0xFFFFFFFFUL )
       return FT_Err_Unknown_File_Format;

@@ -1,3 +1,9 @@
+2007-02-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c (FT_GetFileRef_From_Mac_ATS_Name): Fix memory
+	leak, patch by "Jjgod Jiang" <gzjjgod@gmail.com>.
+	* builds/mac/ftmac.c (FT_GetFileRef_From_Mac_ATS_Name): Ditto.
+
 2007-02-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (Ins_MD): Remove unused variable.
