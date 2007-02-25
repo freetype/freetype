@@ -1,7 +1,7 @@
 2007-02-21  David Turner  <david@freetype.org>
 
-	* src/pshinter/pshalgo.c: fixed a bug in the hinting of small
-	and ghost stems in the Postscript interpreter
+	* src/pshinter/pshalgo.c (psh_hint_align): Fix a bug in the hinting
+	of small and ghost stems in the Postscript interpreter.
 
 2007-02-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
