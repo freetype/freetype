@@ -124,7 +124,11 @@
     /* default drivers.                                        */
 
     error = FT_New_Library( memory, alibrary );
-    if ( !error )
+    if (error)
+    {
+      FT_Done_Memory(memory);
+    }
+    else
     {
       (*alibrary)->version_major = FREETYPE_MAJOR;
       (*alibrary)->version_minor = FREETYPE_MINOR;
