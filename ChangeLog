@@ -1,5 +1,9 @@
 2007-03-05  David Turner  <david@freetype.org>
 
+	* src/truetype/ttobs.c (tt_size_init_bytecode): bugfix, we need to
+	clear the x_ppem and y_ppem fields of the TT_Size.metrics structure,
+	note those of TT_Size.root.metrics. duh !!
+
 	* src/type1/t1afm.c (T1_Read_PFM): bug fix: read the kerning values
 	as 16-bit *signed* values, not unsigned ones.
 

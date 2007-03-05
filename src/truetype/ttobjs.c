@@ -595,9 +595,8 @@
 
     /* Set default metrics */
     {
-      FT_Size_Metrics*  metrics  = &size->root.metrics;
+      FT_Size_Metrics*  metrics  = &size->metrics;
       TT_Size_Metrics*  metrics2 = &size->ttmetrics;
-
 
       metrics->x_ppem = 0;
       metrics->y_ppem = 0;
