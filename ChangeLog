@@ -8,15 +8,18 @@
 
 2007-03-05  David Turner  <david@freetype.org>
 
-	* src/base/ftinit.c (FT_Init_FreeType): fixed a small memory leak
-	when FT_Init_FreeType fails for some reason
+	* src/base/ftinit.c (FT_Init_FreeType): Fix a small memory leak in
+	case FT_Init_FreeType fails for some reason.  Problem reported by
+	Maximilian Schwerin <maximilian.schwerin@buelowssiege.de>.
 
-	* src/truetype/ttobs.c (tt_size_init_bytecode): bugfix, we need to
-	clear the x_ppem and y_ppem fields of the TT_Size.metrics structure,
-	note those of TT_Size.root.metrics. duh !!
+	* src/truetype/ttobs.c (tt_size_init_bytecode): Clear the `x_ppem'
+	and `y_ppem' fields of the `TT_Size.metrics' structure, not those of
+	`TT_Size.root.metrics'.  Problem reported by Daniel Glöckner
+	<daniel-gl@gmx.net>.
 
-	* src/type1/t1afm.c (T1_Read_PFM): bug fix: read the kerning values
-	as 16-bit *signed* values, not unsigned ones.
+	* src/type1/t1afm.c (T1_Read_PFM): Read kerning values as 16-bit
+	signed values, not unsigned ones.  Problem reported by Johannes
+	Walther <joh_walt@yahoo.de>.
 
 2007-02-21  David Turner  <david@freetype.org>
 
