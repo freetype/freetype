@@ -1,3 +1,11 @@
+2007-03-05  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftstdlib.h (ft_strstr): New wrapper
+	macro for `strstr'.
+
+	* src/truetype/ttobjs.c (tt_face_init): Use ft_strstr for scanning
+	`trick_names', as suggested by Ivan Nincic.
+
 2007-03-05  David Turner  <david@freetype.org>
 
 	* src/base/ftinit.c (FT_Init_FreeType): fixed a small memory leak

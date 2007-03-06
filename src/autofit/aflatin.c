@@ -479,7 +479,7 @@
           if ( dim == AF_DIMENSION_HORZ )
           {
             if ( fitted < scaled )
-              scale -= scale/50;  /* x_scale = x_scale*0.98 */
+              scale -= scale / 50;  /* scale *= 0.98 */
           }
           else
           {

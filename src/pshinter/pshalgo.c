@@ -2220,11 +2220,11 @@
       PSH_Dimension  dim_x = &glyph->globals->dimension[0];
       PSH_Dimension  dim_y = &glyph->globals->dimension[1];
 
-      FT_Fixed x_scale = dim_x->scale_mult;
-      FT_Fixed y_scale = dim_y->scale_mult;
+      FT_Fixed  x_scale = dim_x->scale_mult;
+      FT_Fixed  y_scale = dim_y->scale_mult;
 
-      FT_Fixed scaled;
-      FT_Fixed fitted;
+      FT_Fixed  scaled;
+      FT_Fixed  fitted;
 
 
       scaled = FT_MulFix( globals->blues.normal_top.zones->org_ref, y_scale );
