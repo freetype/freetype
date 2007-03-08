@@ -1,8 +1,14 @@
 2007-03-08  David Turner  <david@freetype.org>
 
+	* docs/CHANGES, docs/VERSION.DLL: updating documentation for upcoming release
+
+	* builds/unix/configure.raw, include/freetype/freetype.h, README, Jamfile:
+	updating version number to 2.3.2
+
 	* src/base/ftutil.c (ft_mem_strcpyn): Fix a bug that prevented the
 	function to work properly, over-writing user-provided buffers in
 	some cases.  Reported by James Cloos <cloos@jhcloos.com>.
+
 
 2007-03-05  Werner Lemberg  <wl@gnu.org>
 

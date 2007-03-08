@@ -1,3 +1,34 @@
+CHANGES BETWEEN 2.3.2 and 2.3.1
+
+  I. IMPORTANT BUG FIXES
+
+    - fix a bug that prevented FreeType from returning correct kerning
+      information from TrueType fonts when the bytecode interpreter is
+      enabled. this is due to a typo introduced in 2.3.0
+
+    - negative kerning values from PFM files are now reported correctly
+      (they were read as 16-bit unsigned values from the file)
+
+    - fix a small memory leak when FT_Init_FreeType fails for some reason
+
+    - fix a bug in the Postscript hinter that prevented very thin and ghost
+      stems to be placed/sized correctly
+
+    - changes to the TrueType bytecode interpreter that seems to fix most
+      of the rare differences we had with the Windows font loader.
+
+  II. IMPORTANT CHANGES
+
+    - improved the auto-hinter to better deal with serifs and corner cases
+      (e.g. the '9' in Arial at 9pt / 96dpi). Also improve spacing
+      adjustments and don't change width for non-spacing glyphs.
+
+    - many Mac-specific functions are deprecated (but still available),
+      and modern replacements have been provided for them. See the
+      documentation in ftmac.h
+
+======================================================================
+
 CHANGES BETWEEN 2.3.1 and 2.3.0
 
   I. IMPORTANT BUG FIXES
