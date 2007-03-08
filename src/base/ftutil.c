@@ -209,7 +209,10 @@
                   FT_ULong     size )
   {
     while ( size > 1 && *src != 0 )
+    {
       *dst++ = *src++;
+      size--;
+    }
 
     *dst = 0;  /* always zero-terminate */
 
