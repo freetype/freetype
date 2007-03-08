@@ -1,8 +1,8 @@
 2007-03-08  David Turner  <david@freetype.org>
 
-	* src/base/ftutil.c (ft_mem_strcpyn): fix a silly bug that prevented
-	the function to work properly, over-writing user-provided buffers in
-	some cases. Doh !
+	* src/base/ftutil.c (ft_mem_strcpyn): Fix a bug that prevented the
+	function to work properly, over-writing user-provided buffers in
+	some cases.  Reported by James Cloos <cloos@jhcloos.com>.
 
 2007-03-05  Werner Lemberg  <wl@gnu.org>
 
