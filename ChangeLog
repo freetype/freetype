@@ -1,9 +1,25 @@
+2007-03-09  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.3.2 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-2'.
+
+	* builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproc, README: s/2.3.1/2.3.2/,
+	s/231/232/.
+
 2007-03-08  David Turner  <david@freetype.org>
 
-	* docs/CHANGES, docs/VERSION.DLL: updating documentation for upcoming release
+	* docs/CHANGES, docs/VERSION.DLL: Updated for upcoming release.
 
-	* builds/unix/configure.raw, include/freetype/freetype.h, README, Jamfile:
-	updating version number to 2.3.2
+	* builds/unix/configure.raw (version_info): Set to 9:13:3.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 2.
+
+	* README, Jamfile (RefDoc): s/2.3.1/2.3.2/.
 
 	* src/base/ftutil.c (ft_mem_strcpyn): Fix a bug that prevented the
 	function to work properly, over-writing user-provided buffers in
@@ -203,7 +219,7 @@
 
 	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.
 
-	* docs/VERSION.DLL docs/release, README, Jamfile (RefDoc):
+	* docs/VERSION.DLL, docs/release, README, Jamfile (RefDoc):
 	s/2.3.0/2.3.1/.
 
 	* builds/unix/configure.raw (version_info): Set to 9:12:3.
