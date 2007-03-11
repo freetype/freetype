@@ -381,8 +381,7 @@ FT_BEGIN_HEADER
   /*                                 the outline uses the opposite         */
   /*                                 direction (typically for Type 1       */
   /*                                 fonts).  This flag is ignored by the  */
-  /*                                 scan-converter.  However, it is very  */
-  /*                                 important for the auto-hinter.        */
+  /*                                 scan-converter.                       */
   /*                                                                       */
   /*   FT_OUTLINE_IGNORE_DROPOUTS :: By default, the scan converter will   */
   /*                                 try to detect drop-outs in an outline */
