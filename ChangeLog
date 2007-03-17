@@ -1,3 +1,8 @@
+2007-03-17  David Turner   <david@freetype.org>
+
+	* src/truetype/ttinterp.c (Ins_IP): fixing wrong handling
+	of the (undocumented) twilight zone special case.
+
 2007-03-09  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.2 released.

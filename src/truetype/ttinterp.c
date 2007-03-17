@@ -5790,13 +5790,13 @@
                        CUR.twilight.org,
                        CUR.twilight.n_points );
 
-      if ( CUR.metrics.x_scale == CUR.metrics.y_scale ) 
+      if ( CUR.metrics.x_scale == CUR.metrics.y_scale )
       {
         /* this should be faster */
         org_dist = CUR_Func_dualproj( vec1, vec2 );
         org_dist = TT_MULFIX( org_dist, CUR.metrics.x_scale );
       }
-      else 
+      else
       {
         FT_Vector  vec;
 
@@ -6173,6 +6173,7 @@
     FT_F26Dot6  old_range, cur_range;
     FT_Vector*  orus_base;
     FT_Vector*  cur_base;
+    FT_Int      twilight;
 
     FT_UNUSED_ARG;
 
@@ -6184,21 +6185,18 @@
     }
 
     /*
-     * We need to deal in a special way with the twilight zone.  The easiest
-     * solution is simply to copy the coordinates from `org' to `orus'
-     * whenever a font tries to perform intersections based on some of its
-     * points.
-     *
+     * We need to deal in a special way with the twilight zone.
      * Otherwise, by definition, the value of CUR.twilight.orus[n] is (0,0),
-     * whatever value of `n'.
+     * for every n.
      */
-    if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0 )
-      FT_ARRAY_COPY( CUR.twilight.orus,
-                     CUR.twilight.org,
-                     CUR.twilight.n_points );
+    twilight = ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0 );
 
-    orus_base = &CUR.zp0.orus[CUR.GS.rp1];
-    cur_base  = &CUR.zp0.cur[CUR.GS.rp1];
+    if (twilight)
+        orus_base = &CUR.zp0.org[CUR.GS.rp1];
+    else
+        orus_base = &CUR.zp0.orus[CUR.GS.rp1];
+
+    cur_base = &CUR.zp0.cur[CUR.GS.rp1];
 
     /* XXX: There are some glyphs in some braindead but popular  */
     /*      fonts out there (e.g. [aeu]grave in monotype.ttf)    */
@@ -6212,7 +6210,11 @@
     }
     else
     {
-      old_range = CUR_Func_dualproj( &CUR.zp1.orus[CUR.GS.rp2], orus_base );
+      if (twilight)
+        old_range = CUR_Func_dualproj( &CUR.zp1.org[CUR.GS.rp2], orus_base );
+      else
+        old_range = CUR_Func_dualproj( &CUR.zp1.orus[CUR.GS.rp2], orus_base );
+
       cur_range = CUR_Func_project ( &CUR.zp1.cur[CUR.GS.rp2],  cur_base );
     }
 
@@ -6233,7 +6235,11 @@
         continue;
       }
 
-      org_dist = CUR_Func_dualproj( &CUR.zp2.orus[point], orus_base );
+      if (twilight)
+        org_dist = CUR_Func_dualproj( &CUR.zp2.org[point], orus_base );
+      else
+        org_dist = CUR_Func_dualproj( &CUR.zp2.orus[point], orus_base );
+
       cur_dist = CUR_Func_project ( &CUR.zp2.cur[point], cur_base );
       new_dist = (old_range != 0)
                    ? TT_MULDIV( org_dist, cur_range, old_range )
