@@ -4844,7 +4844,7 @@
                          CUR.twilight.n_points );
 
         /* get scaled orus coordinates */
-        vec1.x = TT_MULFIX( CUR.zp0.orus[L].x - CUR.zp1.orus[K].x,
+        vec1.x = TT_MULFIX( CUR.zp0.org[L].x - CUR.zp1.orus[K].x,
                             CUR.metrics.x_scale );
         vec1.y = TT_MULFIX( CUR.zp0.orus[L].y - CUR.zp1.orus[L].y,
                             CUR.metrics.y_scale );
@@ -5780,15 +5780,20 @@
 
 #ifdef FIX_BYTECODE
 
+    /* UNDOCUMENTED: twilight zone special case */
+
+    if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
+    {
+      FT_Vector*  vec1 = &CUR.zp1.org[point];
+      FT_Vector*  vec2 = &CUR.zp0.org[CUR.GS.rp0];
+
+      org_dist = CUR_Func_dualproj( vec1, vec2 );
+    }
+    else
     {
       FT_Vector*  vec1 = &CUR.zp1.orus[point];
       FT_Vector*  vec2 = &CUR.zp0.orus[CUR.GS.rp0];
 
-
-      if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
-        FT_ARRAY_COPY( CUR.twilight.orus,
-                       CUR.twilight.org,
-                       CUR.twilight.n_points );
 
       if ( CUR.metrics.x_scale == CUR.metrics.y_scale )
       {
