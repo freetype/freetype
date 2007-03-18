@@ -3,6 +3,9 @@
 	* src/truetype/ttinterp.c (Ins_MDRP): another bytecode
 	regression fix; testing still needed
 
+	* src/truetype/ttinterp.c (Ins_MD): another bytecode
+	regression fix
+
 2007-03-17  David Turner   <david@freetype.org>
 
 	* src/truetype/ttinterp.c (Ins_IP): fixing wrong handling

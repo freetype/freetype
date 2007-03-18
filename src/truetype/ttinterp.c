@@ -4839,16 +4839,18 @@
 
 
         if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
-          FT_ARRAY_COPY( CUR.twilight.orus,
-                         CUR.twilight.org,
-                         CUR.twilight.n_points );
-
-        /* get scaled orus coordinates */
-        vec1.x = TT_MULFIX( CUR.zp0.org[L].x - CUR.zp1.orus[K].x,
-                            CUR.metrics.x_scale );
-        vec1.y = TT_MULFIX( CUR.zp0.orus[L].y - CUR.zp1.orus[L].y,
-                            CUR.metrics.y_scale );
-
+        {
+            vec1.x = CUR.zp0.org[L].x - CUR.zp1.org[K].x;
+            vec1.y = CUR.zp0.org[L].y - CUR.zp1.org[K].y;
+        }
+        else
+        {
+          /* get scaled orus coordinates */
+          vec1.x = TT_MULFIX( CUR.zp0.orus[L].x - CUR.zp1.orus[K].x,
+                              CUR.metrics.x_scale );
+          vec1.y = TT_MULFIX( CUR.zp0.orus[L].y - CUR.zp1.orus[K].y,
+                              CUR.metrics.y_scale );
+        }
         D = CUR_fast_dualproj( &vec1 );
 
 #else
