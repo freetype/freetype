@@ -218,7 +218,7 @@ if test x$with_old_mac_fonts = xyes; then
        ],
        [
 
-         /* OSHostByteOrder() is typed as `OS_INLINE' */
+         /* OSHostByteOrder() is typed as OS_INLINE */
          int32_t  os_byte_order = OSHostByteOrder();
 
 

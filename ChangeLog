@@ -1,3 +1,9 @@
+2007-03-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.raw: Dequote `OS_INLINE' in
+	comment conftest.c, to avoid unexpected shell evaluation.
+	Possibly it is a bug or undocumented behaviour of autoconf.
+
 2007-03-18  David Turner   <david@freetype.org>
 
 	* src/truetype/ttinterp.c (Ins_MDRP): another bytecode
