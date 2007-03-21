@@ -1,21 +1,20 @@
 2007-03-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.raw: Dequote `OS_INLINE' in
-	comment conftest.c, to avoid unexpected shell evaluation.
-	Possibly it is a bug or undocumented behaviour of autoconf.
+	* builds/unix/configure.raw: Dequote `OS_INLINE' in comment of
+	conftest.c, to avoid unexpected shell evaluation.  Possibly it is a
+	bug or undocumented behaviour of autoconf.
 
 2007-03-18  David Turner   <david@freetype.org>
 
-	* src/truetype/ttinterp.c (Ins_MDRP): another bytecode
-	regression fix; testing still needed
+	* src/truetype/ttinterp.c (Ins_MDRP): Another bytecode regression
+	fix; testing still needed.
 
-	* src/truetype/ttinterp.c (Ins_MD): another bytecode
-	regression fix
+	* src/truetype/ttinterp.c (Ins_MD): Another bytecode regression fix.
 
 2007-03-17  David Turner   <david@freetype.org>
 
-	* src/truetype/ttinterp.c (Ins_IP): fixing wrong handling
-	of the (undocumented) twilight zone special case.
+	* src/truetype/ttinterp.c (Ins_IP): Fix wrong handling of the
+	(undocumented) twilight zone special case.
 
 2007-03-09  Werner Lemberg  <wl@gnu.org>
 

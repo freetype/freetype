@@ -1201,7 +1201,7 @@
     lo  = l;
 
     l   = lo + 0x2000U;
-    hi += (l < lo);
+    hi += l < lo;
 
     return ( hi << 18 ) | ( l >> 14 );
   }
@@ -2165,7 +2165,7 @@
       break;
     }
 
-    if ( (selector & 0x0F) == 0 )
+    if ( ( selector & 0x0F ) == 0 )
       CUR.threshold = CUR.period - 1;
     else
       CUR.threshold = ( (FT_Int)( selector & 0x0F ) - 4 ) * CUR.period / 8;
@@ -4663,7 +4663,7 @@
     FT_UShort  L, K;
 
 
-    L = (FT_UShort)(CUR.opcode - 0xB0 + 1);
+    L = (FT_UShort)( CUR.opcode - 0xB0 + 1 );
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
@@ -4688,7 +4688,7 @@
     FT_UShort  L, K;
 
 
-    L = (FT_UShort)(CUR.opcode - 0xB8 + 1);
+    L = (FT_UShort)( CUR.opcode - 0xB8 + 1 );
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
@@ -4840,8 +4840,8 @@
 
         if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
         {
-            vec1.x = CUR.zp0.org[L].x - CUR.zp1.org[K].x;
-            vec1.y = CUR.zp0.org[L].y - CUR.zp1.org[K].y;
+          vec1.x = CUR.zp0.org[L].x - CUR.zp1.org[K].x;
+          vec1.y = CUR.zp0.org[L].y - CUR.zp1.org[K].y;
         }
         else
         {
@@ -5111,25 +5111,25 @@
     A *= 64;
 
 #if 0
-    if ( (args[0] & 0x100) != 0 && CUR.metrics.pointSize <= A )
+    if ( ( args[0] & 0x100 ) != 0 && CUR.metrics.pointSize <= A )
       CUR.GS.scan_control = TRUE;
 #endif
 
-    if ( (args[0] & 0x200) != 0 && CUR.tt_metrics.rotated )
+    if ( ( args[0] & 0x200 ) != 0 && CUR.tt_metrics.rotated )
       CUR.GS.scan_control = TRUE;
 
-    if ( (args[0] & 0x400) != 0 && CUR.tt_metrics.stretched )
+    if ( ( args[0] & 0x400 ) != 0 && CUR.tt_metrics.stretched )
       CUR.GS.scan_control = TRUE;
 
 #if 0
-    if ( (args[0] & 0x800) != 0 && CUR.metrics.pointSize > A )
+    if ( ( args[0] & 0x800 ) != 0 && CUR.metrics.pointSize > A )
       CUR.GS.scan_control = FALSE;
 #endif
 
-    if ( (args[0] & 0x1000) != 0 && CUR.tt_metrics.rotated )
+    if ( ( args[0] & 0x1000 ) != 0 && CUR.tt_metrics.rotated )
       CUR.GS.scan_control = FALSE;
 
-    if ( (args[0] & 0x2000) != 0 && CUR.tt_metrics.stretched )
+    if ( ( args[0] & 0x2000 ) != 0 && CUR.tt_metrics.stretched )
       CUR.GS.scan_control = FALSE;
   }
 
@@ -5634,7 +5634,7 @@
     CUR.GS.rp1 = CUR.GS.rp0;
     CUR.GS.rp2 = point;
 
-    if ( (CUR.opcode & 1) != 0 )
+    if ( ( CUR.opcode & 1 ) != 0 )
       CUR.GS.rp0 = point;
   }
 
@@ -5706,7 +5706,7 @@
       return;
     }
 
-    /* UNDOCUMENTED!                                     */
+    /* XXX: UNDOCUMENTED!                                */
     /*                                                   */
     /* The behaviour of an MIAP instruction is quite     */
     /* different when used in the twilight zone.         */
@@ -5782,12 +5782,13 @@
 
 #ifdef FIX_BYTECODE
 
-    /* UNDOCUMENTED: twilight zone special case */
+    /* XXX: UNDOCUMENTED: twilight zone special case */
 
     if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
     {
       FT_Vector*  vec1 = &CUR.zp1.org[point];
       FT_Vector*  vec2 = &CUR.zp0.org[CUR.GS.rp0];
+
 
       org_dist = CUR_Func_dualproj( vec1, vec2 );
     }
@@ -5806,6 +5807,7 @@
       else
       {
         FT_Vector  vec;
+
 
         vec.x = TT_MULFIX( vec1->x - vec2->x, CUR.metrics.x_scale );
         vec.y = TT_MULFIX( vec1->y - vec2->y, CUR.metrics.y_scale );
@@ -6196,19 +6198,19 @@
      * Otherwise, by definition, the value of CUR.twilight.orus[n] is (0,0),
      * for every n.
      */
-    twilight = ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0 );
+    twilight = CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0;
 
-    if (twilight)
-        orus_base = &CUR.zp0.org[CUR.GS.rp1];
+    if ( twilight )
+      orus_base = &CUR.zp0.org[CUR.GS.rp1];
     else
-        orus_base = &CUR.zp0.orus[CUR.GS.rp1];
+      orus_base = &CUR.zp0.orus[CUR.GS.rp1];
 
     cur_base = &CUR.zp0.cur[CUR.GS.rp1];
 
-    /* XXX: There are some glyphs in some braindead but popular  */
-    /*      fonts out there (e.g. [aeu]grave in monotype.ttf)    */
-    /*      calling IP[] with bad values of rp[12].              */
-    /*      Do something sane when this odd thing happens.       */
+    /* XXX: There are some glyphs in some braindead but popular */
+    /*      fonts out there (e.g. [aeu]grave in monotype.ttf)   */
+    /*      calling IP[] with bad values of rp[12].             */
+    /*      Do something sane when this odd thing happens.      */
     if ( BOUNDS( CUR.GS.rp1, CUR.zp0.n_points ) ||
          BOUNDS( CUR.GS.rp2, CUR.zp1.n_points ) )
     {
@@ -6217,12 +6219,14 @@
     }
     else
     {
-      if (twilight)
-        old_range = CUR_Func_dualproj( &CUR.zp1.org[CUR.GS.rp2], orus_base );
+      if ( twilight )
+        old_range = CUR_Func_dualproj( &CUR.zp1.org[CUR.GS.rp2],
+                                       orus_base );
       else
-        old_range = CUR_Func_dualproj( &CUR.zp1.orus[CUR.GS.rp2], orus_base );
+        old_range = CUR_Func_dualproj( &CUR.zp1.orus[CUR.GS.rp2],
+                                       orus_base );
 
-      cur_range = CUR_Func_project ( &CUR.zp1.cur[CUR.GS.rp2],  cur_base );
+      cur_range = CUR_Func_project ( &CUR.zp1.cur[CUR.GS.rp2], cur_base );
     }
 
     for ( ; CUR.GS.loop > 0; --CUR.GS.loop )
@@ -6242,13 +6246,13 @@
         continue;
       }
 
-      if (twilight)
+      if ( twilight )
         org_dist = CUR_Func_dualproj( &CUR.zp2.org[point], orus_base );
       else
         org_dist = CUR_Func_dualproj( &CUR.zp2.orus[point], orus_base );
 
       cur_dist = CUR_Func_project ( &CUR.zp2.cur[point], cur_base );
-      new_dist = (old_range != 0)
+      new_dist = ( old_range != 0 )
                    ? TT_MULDIV( org_dist, cur_range, old_range )
                    : cur_dist;
 
@@ -6548,7 +6552,7 @@
       end_point   = CUR.pts.contours[contour] - CUR.pts.first_point;
       first_point = point;
 
-      while ( point <= end_point && (CUR.pts.tags[point] & mask) == 0 )
+      while ( point <= end_point && ( CUR.pts.tags[point] & mask ) == 0 )
         point++;
 
       if ( point <= end_point )
