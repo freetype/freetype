@@ -266,7 +266,21 @@
       goto Fail_Map;
     }
 
-    stream->size = stat_buf.st_size;
+    /* XXX: TODO -- real 64bit platform support                        */
+    /* stream->size is typed to unsigned long (freetype/ftsystem.h)    */
+    /* stat_buf.st_size is usually typed to off_t (sys/stat.h)         */
+    /* On some platforms, the former is 32bit and the latter is 64bit. */
+    /* To avoid overflow caused by font in huge file larger than 2G,   */
+    /* do a test. Temporal fix proposed by Sean McBride                */
+    /*                                                                 */
+    if ( stat_buf.st_size > ULONG_MAX )
+    {
+      FT_ERROR(( "FT_Stream_Open: file is too big" ));
+      goto Fail_Map;
+    }
+
+    /* This cast potentially truncates a 64bit to 32bit! */
+    stream->size = (unsigned long)stat_buf.st_size;
     stream->pos  = 0;
     stream->base = (unsigned char *)mmap( NULL,
                                           stream->size,
