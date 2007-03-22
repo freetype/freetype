@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Unix-specific FreeType low-level system interface (body).            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2005, 2006 by                         */
+/*  Copyright 1996-2001, 2002, 2004, 2005, 2006, 2007 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -267,11 +267,13 @@
     }
 
     /* XXX: TODO -- real 64bit platform support                        */
-    /* stream->size is typed to unsigned long (freetype/ftsystem.h)    */
-    /* stat_buf.st_size is usually typed to off_t (sys/stat.h)         */
+    /*                                                                 */
+    /* `stream->size' is typedef'd to unsigned long (in                */
+    /* freetype/ftsystem.h); `stat_buf.st_size', however, is usually   */
+    /* typedef'd to off_t (in sys/stat.h).                             */
     /* On some platforms, the former is 32bit and the latter is 64bit. */
-    /* To avoid overflow caused by font in huge file larger than 2G,   */
-    /* do a test. Temporal fix proposed by Sean McBride                */
+    /* To avoid overflow caused by fonts in huge files larger than     */
+    /* 2GB, do a test.  Temporary fix proposed by Sean McBride.        */
     /*                                                                 */
     if ( stat_buf.st_size > ULONG_MAX )
     {
