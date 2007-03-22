@@ -108,6 +108,14 @@ FT_BEGIN_HEADER
 #endif
 
 
+  /* Fix compiler warning with sgi compiler */
+#if defined( __sgi ) && !defined( __GNUC__ )
+#if defined( _COMPILER_VERSION ) && ( _COMPILER_VERSION >= 730 )
+#pragma set woff 3505
+#endif
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* IntN types                                                            */
