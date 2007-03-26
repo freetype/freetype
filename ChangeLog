@@ -3,6 +3,11 @@
 	* src/truetype/ttinterp.c: last fix for the MD instruction bytecode and
 	remove the FIX_BYTECODE macros from the sources. Woot, this looks good.
 
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): fix blues computations
+	in order to ignore 1-point contours. These are never rasterized and in certain
+	fonts correspond to mark-attach points that are very far from the glyph's
+	real outline, ruining the computation.
+
 2007-03-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/ftconfig.in: disable Carbon framework dependency on

@@ -193,10 +193,8 @@
       for ( ; p < limit && *p; p++ )
       {
         FT_UInt     glyph_index;
-        FT_Vector*  extremum;
+        FT_Int      best_point, best_y, best_first, best_last;
         FT_Vector*  points;
-        FT_Vector*  point_limit;
-        FT_Vector*  point;
         FT_Bool     round;
 
 
@@ -213,85 +211,97 @@
 
         /* now compute min or max point indices and coordinates */
         points      = glyph->outline.points;
-        point_limit = points + glyph->outline.n_points;
-        point       = points;
-        extremum    = point;
-        point++;
+        best_point  = -1;
+        best_y      = 0;  /* make compiler happy */
+        best_first  = 0;  /* ditto */
+        best_last   = 0;  /* ditto */
 
-        if ( AF_LATIN_IS_TOP_BLUE( bb ) )
         {
-          for ( ; point < point_limit; point++ )
-            if ( point->y > extremum->y )
-              extremum = point;
-        }
-        else
-        {
-          for ( ; point < point_limit; point++ )
-            if ( point->y < extremum->y )
-              extremum = point;
-        }
+          FT_Int  nn;
+          FT_Int  first = 0;
+          FT_Int  last  = -1;
 
-        AF_LOG(( "%5d", (int)extremum->y ));
+
+          for ( nn = 0; nn < glyph->outline.n_contours; first = last+1, nn++ )
+          {
+            FT_Int  old_best_point = best_point;
+            FT_Int  pp;
+
+            last = glyph->outline.contours[nn];
+
+           /* avoid 1-point contours, they're never rasterized and
+            * in some fonts, they correspond to mark attachement
+            * points that are way outside the glyph's real outline.
+            */
+            if (last <= first)
+                continue;
+
+            if ( AF_LATIN_IS_TOP_BLUE( bb ) )
+            {
+              for ( pp = first; pp <= last; pp++ )
+                if ( best_point < 0 || points[pp].y > best_y )
+                {
+                  best_point = pp;
+                  best_y     = points[pp].y;
+                }
+            }
+            else
+            {
+              for ( pp = first; pp <= last; pp++ )
+                if ( best_point < 0 || points[pp].y < best_y )
+                {
+                    best_point = pp;
+                    best_y     = points[pp].y;
+                }
+            }
+
+            if (best_point != old_best_point)
+            {
+              best_first = first;
+              best_last  = last;
+            }
+          }
+          AF_LOG(( "%5d", best_y ));
+        }
 
         /* now, check whether the point belongs to a straight or round  */
         /* segment; we first need to find in which contour the extremum */
         /* lies, then see its previous and next points                  */
         {
-          FT_Int  idx = (FT_Int)( extremum - points );
-          FT_Int  n;
-          FT_Int  first, last, prev, next, end;
+          FT_Int  prev, next;
           FT_Pos  dist;
 
 
-          last  = -1;
-          first = 0;
-
-          for ( n = 0; n < glyph->outline.n_contours; n++ )
-          {
-            end = glyph->outline.contours[n];
-            if ( end >= idx )
-            {
-              last = end;
-              break;
-            }
-            first = end + 1;
-          }
-
-          /* XXX: should never happen! */
-          if ( last < 0 )
-            continue;
-
           /* now look for the previous and next points that are not on the */
           /* same Y coordinate.  Threshold the `closeness'...              */
-
-          prev = idx;
+          prev = best_point;
           next = prev;
 
           do
           {
-            if ( prev > first )
+            if ( prev > best_first )
               prev--;
             else
-              prev = last;
+              prev = best_last;
 
-            dist = points[prev].y - extremum->y;
+            dist = points[prev].y - best_y;
             if ( dist < -5 || dist > 5 )
               break;
 
-          } while ( prev != idx );
+          } while ( prev != best_point );
 
           do
           {
-            if ( next < last )
+            if ( next < best_last )
               next++;
             else
-              next = first;
+              next = best_first;
 
-            dist = points[next].y - extremum->y;
+            dist = points[next].y - best_y;
             if ( dist < -5 || dist > 5 )
               break;
 
-          } while ( next != idx );
+          } while ( next != best_point );
 
           /* now, set the `round' flag depending on the segment's kind */
           round = FT_BOOL(
@@ -302,9 +312,9 @@
         }
 
         if ( round )
-          rounds[num_rounds++] = extremum->y;
+          rounds[num_rounds++] = best_y;
         else
-          flats[num_flats++] = extremum->y;
+          flats[num_flats++]   = best_y;
       }
 
       AF_LOG(( "\n" ));
