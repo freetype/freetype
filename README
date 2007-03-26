@@ -9,7 +9,7 @@
   is called `libttf'.  They are *not* compatible!
 
 
-  FreeType 2.3.2
+  FreeType 2.3.3
   ==============
 
   Please   read   the  docs/CHANGES   file,   it  contains   IMPORTANT
@@ -26,8 +26,8 @@
 
   and download one of the following files.
 
-    freetype-doc-2.3.2.tar.bz2
-    freetype-doc-2.3.2.tar.gz
+    freetype-doc-2.3.3.tar.bz2
+    freetype-doc-2.3.3.tar.gz
     ftdoc232.zip
 
 

@@ -8,6 +8,14 @@
 	fonts correspond to mark-attach points that are very far from the glyph's
 	real outline, ruining the computation.
 
+	* src/autofit/afloader.c (af_loader_load_g): in the case of monospaced fonts,
+	always set "rsb_delta" and "lsb_delta" to 0. Otherwise code that uses them
+	will most certainly ruin the fixed advance property.
+
+	* docs/CHANGES, docs/VERSION, include/freetype/freetype.h, 
+	builds/unix/configure.raw, README, Jamfile: update documentation and bump version
+	number to 2.3.3
+
 2007-03-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/ftconfig.in: disable Carbon framework dependency on
