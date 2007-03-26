@@ -1,3 +1,8 @@
+2007-03-26  David Turner  <david@freetype.org>
+
+	* src/truetype/ttinterp.c: last fix for the MD instruction bytecode and
+	remove the FIX_BYTECODE macros from the sources. Woot, this looks good.
+
 2007-03-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/ftconfig.in: disable Carbon framework dependency on

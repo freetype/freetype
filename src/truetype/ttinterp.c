@@ -16,11 +16,6 @@
 /***************************************************************************/
 
 
-  /* define FIX_BYTECODE to implement the bytecode interpreter fixes */
-  /* needed to match Windows behaviour more accurately               */
-#define  FIX_BYTECODE
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
@@ -4831,34 +4826,7 @@
       if ( CUR.opcode & 1 )
         D = CUR_Func_project( CUR.zp0.cur + L, CUR.zp1.cur + K );
       else
-      {
-
-#ifdef FIX_BYTECODE
-
-        FT_Vector  vec1;
-
-
-        if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
-        {
-          vec1.x = CUR.zp0.org[L].x - CUR.zp1.org[K].x;
-          vec1.y = CUR.zp0.org[L].y - CUR.zp1.org[K].y;
-        }
-        else
-        {
-          /* get scaled orus coordinates */
-          vec1.x = TT_MULFIX( CUR.zp0.orus[L].x - CUR.zp1.orus[K].x,
-                              CUR.metrics.x_scale );
-          vec1.y = TT_MULFIX( CUR.zp0.orus[L].y - CUR.zp1.orus[K].y,
-                              CUR.metrics.y_scale );
-        }
-        D = CUR_fast_dualproj( &vec1 );
-
-#else
-
         D = CUR_Func_dualproj( CUR.zp0.org + L, CUR.zp1.org + K );
-
-#endif /* FIX_BYTECODE */
-      }
     }
 
     args[0] = D;
@@ -5780,8 +5748,6 @@
     /* XXX: Is there some undocumented feature while in the */
     /*      twilight zone?                                  */
 
-#ifdef FIX_BYTECODE
-
     /* XXX: UNDOCUMENTED: twilight zone special case */
 
     if ( CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 )
@@ -5815,13 +5781,6 @@
         org_dist = CUR_fast_dualproj( &vec );
       }
     }
-
-#else
-
-    org_dist = CUR_Func_dualproj( CUR.zp1.org + point,
-                                  CUR.zp0.org + CUR.GS.rp0 );
-
-#endif /* FIX_BYTECODE */
 
     /* single width cut-in test */
 
@@ -6174,8 +6133,6 @@
 
   /* SOMETIMES, DUMBER CODE IS BETTER CODE */
 
-#ifdef FIX_BYTECODE
-
   static void
   Ins_IP( INS_ARG )
   {
@@ -6261,93 +6218,6 @@
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-
-#else /* !FIX_BYTECODE */
-
-  static void
-  Ins_IP( INS_ARG )
-  {
-    FT_F26Dot6  org_a, org_b, org_x,
-                cur_a, cur_b, cur_x,
-                distance = 0;
-    FT_UShort   point;
-
-    FT_UNUSED_ARG;
-
-
-    if ( CUR.top < CUR.GS.loop )
-    {
-      CUR.error = TT_Err_Invalid_Reference;
-      return;
-    }
-
-    /* XXX: There are some glyphs in some braindead but popular  */
-    /*      fonts out there (e.g. [aeu]grave in monotype.ttf)    */
-    /*      calling IP[] with bad values of rp[12].              */
-    /*      Do something sane when this odd thing happens.       */
-
-    if ( BOUNDS( CUR.GS.rp1, CUR.zp0.n_points ) ||
-         BOUNDS( CUR.GS.rp2, CUR.zp1.n_points ) )
-    {
-      org_a = cur_a = 0;
-      org_b = cur_b = 0;
-    }
-    else
-    {
-      org_a = CUR_fast_dualproj( &CUR.zp0.org[CUR.GS.rp1] );
-      org_b = CUR_fast_dualproj( &CUR.zp1.org[CUR.GS.rp2] );
-
-      cur_a = CUR_fast_project( &CUR.zp0.cur[CUR.GS.rp1] );
-      cur_b = CUR_fast_project( &CUR.zp1.cur[CUR.GS.rp2] );
-    }
-
-    while ( CUR.GS.loop > 0 )
-    {
-      CUR.args--;
-
-      point = (FT_UShort)CUR.stack[CUR.args];
-      if ( BOUNDS( point, CUR.zp2.n_points ) )
-      {
-        if ( CUR.pedantic_hinting )
-        {
-          CUR.error = TT_Err_Invalid_Reference;
-          return;
-        }
-      }
-      else
-      {
-        org_x = CUR_fast_dualproj( &CUR.zp2.org[point] );
-        cur_x = CUR_fast_project ( &CUR.zp2.cur[point] );
-
-        if ( ( org_a <= org_b && org_x <= org_a ) ||
-             ( org_a >  org_b && org_x >= org_a ) )
-
-          distance = ( cur_a - org_a ) + ( org_x - cur_x );
-
-        else if ( ( org_a <= org_b  &&  org_x >= org_b ) ||
-                  ( org_a >  org_b  &&  org_x <  org_b ) )
-
-          distance = ( cur_b - org_b ) + ( org_x - cur_x );
-
-        else if ( org_b != org_a )
-           /* note: it seems that rounding this value isn't a good */
-           /*       idea (cf. width of capital `S' in Times)       */
-
-           distance = TT_MULDIV( cur_b - cur_a,
-                                 org_x - org_a,
-                                 org_b - org_a ) + ( cur_a - cur_x );
-
-        CUR_Func_move( &CUR.zp2, point, distance );
-      }
-
-      CUR.GS.loop--;
-    }
-
-    CUR.GS.loop = 1;
-    CUR.new_top = CUR.args;
-  }
-
-#endif /* !FIX_BYTECODE */
 
 
   /*************************************************************************/
