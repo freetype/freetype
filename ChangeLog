@@ -1,3 +1,10 @@
+2007-03-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/ftconfig.in: disable Carbon framework dependency on
+	64bit ABI on Mac OS X 10.4.x (ppc & i386), found by Sean McBride.
+	* builds/vms/ftconfig.h: Ditto.
+	* include/freetype/config/ftconfig.h: Ditto.
+
 2007-03-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/ftsystem.c (FT_Stream_Open): Temporary fix to prevent

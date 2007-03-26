@@ -126,7 +126,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #if ( defined( __APPLE__ ) && !defined( DARWIN_NO_CARBON ) ) || \
     ( defined( __MWERKS__ ) && defined( macintosh )        )
+  /* no Carbon frameworks for 64bit 10.4.x */
+#include "AvailabilityMacros.h"
+#if defined( __LP64__ ) && \
+    ( MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4 )
+#define DARWIN_NO_CARBON 1
+#else
 #define FT_MACINTOSH 1
+#endif
 #endif
 
 
