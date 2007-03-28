@@ -1,3 +1,8 @@
+2007-03-28  David Turner  <david@freetype.org>
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): fix zero-ing of the
+	padding.
+
 2007-03-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/bdflib.c (setsbit, sbitset): Handle values >= 128
