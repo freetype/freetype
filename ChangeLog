@@ -1,6 +1,6 @@
 2007-03-28  David Turner  <david@freetype.org>
 
-	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): fix zero-ing of the
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Fix zero-ing of the
 	padding.
 
 2007-03-28  Werner Lemberg  <wl@gnu.org>
@@ -12,29 +12,41 @@
 	(_bdf_parse_glyphs): Limit allowed number of glyphs in font to the
 	number of code points in Unicode.
 
+	* builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproc, README: s/2.3.2/2.3.3/,
+	s/232/233/.
+
+	* docs/CHANGES: Mention ftdiff.
+
 2007-03-26  David Turner  <david@freetype.org>
 
-	* src/truetype/ttinterp.c: Last fix for the `MD' instruction
-	bytecode and remove the FIX_BYTECODE macros from the sources.
+	* src/truetype/ttinterp.c [FIX_BYTECODE]: Remove it and
+	corresponding code.
+	(Ins_MD): Last regression fix.
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Fix blues
-	computations in order to ignore 1-point contours.  These are never
-	rasterized and correspond in certain fonts mark-attach points that
-	are very far from the glyph's real outline, ruining the computation.
+	computations in order to ignore single-point contours.  These are
+	never rasterized and correspond in certain fonts to mark-attach
+	points that are very far from the glyph's real outline, ruining the
+	computation.
 
 	* src/autofit/afloader.c (af_loader_load_g): In the case of
 	monospaced fonts, always set `rsb_delta' and `lsb_delta' to 0. 
 	Otherwise code that uses them will most certainly ruin the fixed
 	advance property.
 
-	* docs/CHANGES, docs/VERSION, include/freetype/freetype.h,
-	builds/unix/configure.raw, README, Jamfile: Update documentation and
-	bump version number to 2.3.3.
+	* docs/CHANGES, docs/VERSION.DLL, README, Jamfile (RefDoc): Update
+	documentation and bump version number to 2.3.3.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
+
+	* builds/unix/configure.raw (version_info): Set to 9:14:3.
 
 2007-03-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/ftconfig.in: disable Carbon framework dependency on
-	64bit ABI on Mac OS X 10.4.x (ppc & i386), found by Sean McBride.
+	* builds/unix/ftconfig.in: Disable Carbon framework dependency on
+	64bit ABI on Mac OS X 10.4.x (ppc & i386).  Found by Sean McBride.
 	* builds/vms/ftconfig.h: Ditto.
 	* include/freetype/config/ftconfig.h: Ditto.
 

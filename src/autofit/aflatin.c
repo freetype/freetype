@@ -227,13 +227,13 @@
             FT_Int  old_best_point = best_point;
             FT_Int  pp;
 
+
             last = glyph->outline.contours[nn];
 
-           /* avoid 1-point contours, they're never rasterized and
-            * in some fonts, they correspond to mark attachement
-            * points that are way outside the glyph's real outline.
-            */
-            if (last <= first)
+            /* Avoid single-point contours since they are never rasterized. */
+            /* In some fonts, they correspond to mark attachment points     */
+            /* which are way outside of the glyph's real outline.           */
+            if ( last <= first )
                 continue;
 
             if ( AF_LATIN_IS_TOP_BLUE( bb ) )
@@ -250,12 +250,12 @@
               for ( pp = first; pp <= last; pp++ )
                 if ( best_point < 0 || points[pp].y < best_y )
                 {
-                    best_point = pp;
-                    best_y     = points[pp].y;
+                  best_point = pp;
+                  best_y     = points[pp].y;
                 }
             }
 
-            if (best_point != old_best_point)
+            if ( best_point != old_best_point )
             {
               best_first = first;
               best_last  = last;
@@ -264,9 +264,9 @@
           AF_LOG(( "%5d", best_y ));
         }
 
-        /* now, check whether the point belongs to a straight or round  */
+        /* now check whether the point belongs to a straight or round   */
         /* segment; we first need to find in which contour the extremum */
-        /* lies, then see its previous and next points                  */
+        /* lies, then inspect its previous and next points              */
         {
           FT_Int  prev, next;
           FT_Pos  dist;

@@ -3,25 +3,33 @@ CHANGES BETWEEN 2.3.3 and 2.3.2
   I. IMPORTANT BUG FIXES
 
     - Remove a serious regression in the TrueType bytecode interpreter
-      that was introduced in 2.3.2. Sorry ! Note that this doesn't not
-      disable the improvements introduced to the intepreter in 2.3.2,
-      only some ill cases that occured with certain fonts (though a
-      few popular ones).
+      that was introduced  in version 2.3.2.  Note that  this does not
+      disable the improvements introduced to the intepreter in version
+      2.3.2,  only some  ill cases  that occurred  with  certain fonts
+      (though a few popular ones).
 
-    - Fixed some Autoconf/compilation issues on some 64-bit platforms
-      (see ChangeLog for details)
+    - The auto-hinter now  ignores single-point contours for computing
+      blue zones.   This bug  created `wavy' baselines  when rendering
+      text  with  various  fonts  that  use these  contours  to  model
+      mark-attach points  (these are points that  are never rasterized
+      and are placed outside of the glyph's real outline).
 
-    - The auto-hinter now ignores 1-point contours when computing blue
-      zones. This bug created "wavy" baselines when rendering text with
-      various fonts that use these contours to model mark-attach points
-      that are never rasterized and are placed outside of the glyph's
-      real outline
-
-    - the "rsb_delta" and "lsb_delta" glyph slot fields are set to 0
-      for mono-spaced fonts. Otherwise code that uses them would
+    - The `rsb_delta'  and `lsb_delta' glyph  slot fields are  now set
+      to 0 for mono-spaced fonts.  Otherwise code that uses them would
       essentially ruin the fixed-advance property.
 
+  II. MISCELLANEOUS
+
+    - Fixed compilation issues on some 64-bit platforms (see ChangeLog
+      for details).
+
+    - A new demo  program `ftdiff' has been added  to compare TrueType
+      hinting, FreeType's auto  hinting, and rendering without hinting
+      in three columns.
+
+
 ======================================================================
+
 CHANGES BETWEEN 2.3.2 and 2.3.1
 
   I. IMPORTANT BUG FIXES

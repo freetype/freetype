@@ -432,8 +432,8 @@
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                metrics->scaler.x_scale );
 
-        /* also reset the rsb_delta and lsb_delta to 0. Otherwise code */
-        /* that uses them is going to ruin the fixed advance width     */
+        /* Set delta values to 0.  Otherwise code that uses them is */
+        /* going to ruin the fixed advance width.                   */
         slot->lsb_delta = 0;
         slot->rsb_delta = 0;
       }
