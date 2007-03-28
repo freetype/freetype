@@ -1,20 +1,30 @@
+2007-03-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdflib.c (setsbit, sbitset): Handle values >= 128
+	gracefully.
+	(_bdf_set_default_spacing): Increase `name' buffer size to 256 and
+	issue an error for longer names.
+	(_bdf_parse_glyphs): Limit allowed number of glyphs in font to the
+	number of code points in Unicode.
+
 2007-03-26  David Turner  <david@freetype.org>
 
-	* src/truetype/ttinterp.c: last fix for the MD instruction bytecode and
-	remove the FIX_BYTECODE macros from the sources. Woot, this looks good.
+	* src/truetype/ttinterp.c: Last fix for the `MD' instruction
+	bytecode and remove the FIX_BYTECODE macros from the sources.
 
-	* src/autofit/aflatin.c (af_latin_metrics_init_blues): fix blues computations
-	in order to ignore 1-point contours. These are never rasterized and in certain
-	fonts correspond to mark-attach points that are very far from the glyph's
-	real outline, ruining the computation.
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Fix blues
+	computations in order to ignore 1-point contours.  These are never
+	rasterized and correspond in certain fonts mark-attach points that
+	are very far from the glyph's real outline, ruining the computation.
 
-	* src/autofit/afloader.c (af_loader_load_g): in the case of monospaced fonts,
-	always set "rsb_delta" and "lsb_delta" to 0. Otherwise code that uses them
-	will most certainly ruin the fixed advance property.
+	* src/autofit/afloader.c (af_loader_load_g): In the case of
+	monospaced fonts, always set `rsb_delta' and `lsb_delta' to 0. 
+	Otherwise code that uses them will most certainly ruin the fixed
+	advance property.
 
-	* docs/CHANGES, docs/VERSION, include/freetype/freetype.h, 
-	builds/unix/configure.raw, README, Jamfile: update documentation and bump version
-	number to 2.3.3
+	* docs/CHANGES, docs/VERSION, include/freetype/freetype.h,
+	builds/unix/configure.raw, README, Jamfile: Update documentation and
+	bump version number to 2.3.3.
 
 2007-03-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
