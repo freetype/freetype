@@ -142,30 +142,34 @@
     if ( ypixels == 0 && new_pitch <= pitch )
     {
       /* zero the padding */
-      FT_Int   bit_width =  pitch*8;
-      FT_Int   bit_last  =  (width + xpixels)*bpp;
+      FT_Int  bit_width = pitch * 8;
+      FT_Int  bit_last  = ( width + xpixels ) * bpp;
+
 
       if ( bit_last < bit_width )
       {
-        FT_Byte*  line  = bitmap->buffer + (bit_last >> 3);
-        FT_Int    shift = (bit_last & 7);
+        FT_Byte*  line  = bitmap->buffer + ( bit_last >> 3 );
+        FT_Int    shift = bit_last & 7;
         FT_UInt   mask  = 0xFF00U >> shift;
         FT_Int    count = height;
+
 
         for ( ; count > 0; count--, line += pitch )
         {
           FT_Byte*  write = line;
           FT_Byte*  end   = line + pitch;
 
+
           if ( shift > 0 )
           {
-            write[0] = (FT_Byte)(write[0] & mask);
+            write[0] = (FT_Byte)( write[0] & mask );
             write++;
           }
-          if (write < end)
+          if ( write < end )
             FT_MEM_ZERO( write, end-write );
         }
       }
+
       return FT_Err_Ok;
     }
 
@@ -174,7 +178,7 @@
 
     if ( bitmap->pitch > 0 )
     {
-      FT_Int  len = (width*bpp + 7) >> 3;
+      FT_Int  len = ( width * bpp + 7 ) >> 3;
 
 
       for ( i = 0; i < bitmap->rows; i++ )
@@ -183,7 +187,7 @@
     }
     else
     {
-      FT_Int  len = (width*bpp + 7) >> 3;
+      FT_Int  len = ( width * bpp + 7 ) >> 3;
 
 
       for ( i = 0; i < bitmap->rows; i++ )
