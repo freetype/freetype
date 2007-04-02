@@ -133,6 +133,8 @@
 
         /* let's try 20% of the smallest width */
         axis->edge_distance_threshold = stdw / 5;
+        axis->standard_width          = stdw;
+        axis->extra_light             = 0;
       }
     }
 
@@ -522,6 +524,11 @@
       width->cur = FT_MulFix( width->org, scale );
       width->fit = width->cur;
     }
+
+   /* an extra-light axis corresponds to a standard width that is smaller
+    * than 0.75 pixels
+   */
+    axis->extra_light = (FT_MulFix(axis->standard_width, scale) < 32+8);
 
     if ( dim == AF_DIMENSION_VERT )
     {
@@ -1531,7 +1538,8 @@
     FT_Int           vertical = ( dim == AF_DIMENSION_VERT );
 
 
-    if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) )
+    if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) ||
+          axis->extra_light )
       return width;
 
     if ( dist < 0 )

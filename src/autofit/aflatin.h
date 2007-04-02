@@ -102,6 +102,8 @@ FT_BEGIN_HEADER
     FT_UInt          width_count;
     AF_WidthRec      widths[AF_LATIN_MAX_WIDTHS];
     FT_Pos           edge_distance_threshold;
+    FT_Pos           standard_width;
+    FT_Bool          extra_light;
 
     /* ignored for horizontal metrics */
     FT_Bool          control_overshoot;

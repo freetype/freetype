@@ -1,3 +1,9 @@
+2007-04-02  David Turner  <david@freetype.org>
+
+	* src/autofit/aflatin.h, src/autofit/aflatin.c: add special code to
+	detect "extra-light" fonts and do not snap their stem widths too much
+	to avoid bizarre hinting effects.
+
 2007-03-28  David Turner  <david@freetype.org>
 
 	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Fix zero-ing of the
