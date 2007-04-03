@@ -1,8 +1,15 @@
 2007-04-02  David Turner  <david@freetype.org>
 
-	* src/autofit/aflatin.h, src/autofit/aflatin.c: add special code to
-	detect "extra-light" fonts and do not snap their stem widths too much
-	to avoid bizarre hinting effects.
+	Add special code to detect `extra-light' fonts and do not snap their
+	stem widths too much to avoid bizarre hinting effects.
+
+	* src/autofit/aflatin.h (AF_LatinAxisRec): Add `standard_width' and
+	`extra_light' members.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Initialize
+	them.
+	(af_latin_metrics_scale_dim): Set `extra_light'.
+	(af_latin_compute_stem_width): Use `extra_light'.
 
 2007-03-28  David Turner  <david@freetype.org>
 

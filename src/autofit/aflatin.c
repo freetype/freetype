@@ -525,10 +525,9 @@
       width->fit = width->cur;
     }
 
-   /* an extra-light axis corresponds to a standard width that is smaller
-    * than 0.75 pixels
-   */
-    axis->extra_light = (FT_MulFix(axis->standard_width, scale) < 32+8);
+    /* an extra-light axis corresponds to a standard width that is */
+    /* smaller than 0.75 pixels                                    */
+    axis->extra_light = FT_MulFix( axis->standard_width, scale ) < 32 + 8;
 
     if ( dim == AF_DIMENSION_VERT )
     {
@@ -1539,7 +1538,7 @@
 
 
     if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) ||
-          axis->extra_light )
+          axis->extra_light                      )
       return width;
 
     if ( dist < 0 )
