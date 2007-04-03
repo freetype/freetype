@@ -2425,9 +2425,9 @@
     else if ( !char_height )
       char_height = char_width;
 
-    if (!horz_resolution)
+    if ( !horz_resolution )
       horz_resolution = vert_resolution;
-    else if (!vert_resolution)
+    else if ( !vert_resolution )
       vert_resolution = horz_resolution;
 
     if ( char_width  < 1 * 64 )

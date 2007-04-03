@@ -1,8 +1,8 @@
 2007-04-03  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): As suggested by James Cloos,
-	if one of the resolution is 0, treat it as if it was the same than
-	the other value.
+	if one of the resolution values is 0, treat it as if it were the
+	same as the other value.
 
 2007-04-02  David Turner  <david@freetype.org>
 
