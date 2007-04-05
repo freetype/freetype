@@ -1,3 +1,13 @@
+2007-04-04  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.3.3 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-3'.
+
+	* docs/CHANGES: Mention CVE-2007-1351.
+
 2007-04-03  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): As suggested by James Cloos,
@@ -27,7 +37,7 @@
 	* src/bdf/bdflib.c (setsbit, sbitset): Handle values >= 128
 	gracefully.
 	(_bdf_set_default_spacing): Increase `name' buffer size to 256 and
-	issue an error for longer names.
+	issue an error for longer names.  This fixes CVE-2007-1351.
 	(_bdf_parse_glyphs): Limit allowed number of glyphs in font to the
 	number of code points in Unicode.
 

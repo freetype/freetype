@@ -18,6 +18,10 @@ CHANGES BETWEEN 2.3.3 and 2.3.2
       to 0 for mono-spaced fonts.  Otherwise code that uses them would
       essentially ruin the fixed-advance property.
 
+    - Fix  CVE-2007-1351  which can  cause an  integer overflow  while
+      parsing BDF  fonts, leading  to a potentially  exploitable  heap
+      overflow condition.
+
   II. MISCELLANEOUS
 
     - Fixed compilation issues on some 64-bit platforms (see ChangeLog
