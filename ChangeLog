@@ -1,7 +1,7 @@
 2007-04-06  David Turner  <david@freetype.org>
 
-	* src/base/ftbimap.c (ft_bitmap_assure_buffer): fixed buffer-overwrite bug
-
+	* src/base/ftbimap.c (ft_bitmap_assure_buffer): Fix buffer-overwrite bug
+	(Savannah bug #19536).
 
 2007-04-04  Werner Lemberg  <wl@gnu.org>
 
