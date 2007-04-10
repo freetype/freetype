@@ -1,3 +1,8 @@
+2007-04-10  Martin Horak  <horakm@centrum.cz>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face) [FT_CONFIG_OPTION_INCREMENTAL]:
+	Ignore `hhea' table.  This fixes Savannah bug #19261.
+
 2007-04-09  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.4 released.
