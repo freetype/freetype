@@ -1,3 +1,10 @@
+2007-04-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Check for negative
+	number of points in contours.  Problem reported by Victor Stinner
+	<victor.stinner@haypocalc.com>.
+	(TT_Process_Simple_Glyph): Synchronize variable types.
+
 2007-04-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftglyph.c (FT_Glyph_Copy): Always set second argument to
