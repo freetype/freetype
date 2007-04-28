@@ -575,7 +575,10 @@
     /* the following tables are often not present in embedded TrueType */
     /* fonts within PDF documents, so don't check for them.            */
     LOAD_( maxp );
+
     LOAD_( cmap );
+    if ( error )
+      goto Exit;
 
     /* the following tables are optional in PCL fonts -- */
     /* don't check for errors                            */
