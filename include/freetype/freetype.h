@@ -2111,9 +2111,16 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    If either the horizontal or vertical resolution is zero, it is set */
-  /*    to a default value of 72dpi.                                       */
+  /*    If either the character width or height is zero, it is set equal   */
+  /*    to the other value.                                                */
   /*                                                                       */
+  /*    If either the horizontal or vertical resolution is zero, it is set */
+  /*    equal to the other value.                                          */
+  /*                                                                       */
+  /*    A character width or height smaller than 1pt is set to 1pt; if     */
+  /*    both resolution values are zero, they are set to 72dpi.            */
+  /*                                                                       */
+
   FT_EXPORT( FT_Error )
   FT_Set_Char_Size( FT_Face     face,
                     FT_F26Dot6  char_width,

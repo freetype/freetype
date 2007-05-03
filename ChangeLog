@@ -1,3 +1,9 @@
+2007-05-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Set_Char_Size): Simplify code.
+	* include/freetype/freetype.h (FT_Set_Char_Size): Update
+	documentation.
+
 2007-04-28  Victor Stinner  <victor.stinner@inl.fr>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Check error code after loading

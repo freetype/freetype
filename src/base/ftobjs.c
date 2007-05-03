@@ -2435,11 +2435,14 @@
     if ( char_height < 1 * 64 )
       char_height = 1 * 64;
 
+    if ( !horz_resolution )
+      horz_resolution = vert_resolution = 72;
+
     req.type           = FT_SIZE_REQUEST_TYPE_NOMINAL;
     req.width          = char_width;
     req.height         = char_height;
-    req.horiResolution = ( horz_resolution ) ? horz_resolution : 72;
-    req.vertResolution = ( vert_resolution ) ? vert_resolution : 72;
+    req.horiResolution = horz_resolution;
+    req.vertResolution = vert_resolution;
 
     return FT_Request_Size( face, &req );
   }
