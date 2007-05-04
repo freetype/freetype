@@ -1,4 +1,11 @@
-2007-05-04  harry@kdevelop.org
+2007-05-04  Vincent RICHOMME  <richom.v@free.fr>
+
+	* builds/win32/visualce/*: Add Visual C++ project files for Pocket
+	PC targets.
+
+	* docs/CHANGES: Document them.
+
+2007-05-04  <harry@kdevelop.org>
 
 	* builds/unix/ftsystem.c (FT_Stream_Open): Handle return value 0 of
 	mmap (which might happen on some RTOS).  From Savannah patch #5909.
