@@ -1,3 +1,8 @@
+2007-05-04  harry@kdevelop.org
+
+	* builds/unix/ftsystem.c (FT_Stream_Open): Handle return value 0 of
+	mmap (which might happen on some RTOS).  From Savannah patch #5909.
+
 2007-05-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): Simplify code.

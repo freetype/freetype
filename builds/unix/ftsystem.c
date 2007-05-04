@@ -291,7 +291,8 @@
                                           file,
                                           0 );
 
-    if ( (long)stream->base != -1 )
+    /* on some RTOS, mmap might return 0 */
+    if ( (long)stream->base != -1 && stream->base != NULL )
       stream->close = ft_close_stream_by_munmap;
     else
     {
