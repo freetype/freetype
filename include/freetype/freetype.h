@@ -648,8 +648,8 @@ FT_BEGIN_HEADER
   {
     FT_ENC_TAG( FT_ENCODING_NONE, 0, 0, 0, 0 ),
 
-    FT_ENC_TAG( FT_ENCODING_MS_SYMBOL,  's', 'y', 'm', 'b' ),
-    FT_ENC_TAG( FT_ENCODING_UNICODE,    'u', 'n', 'i', 'c' ),
+    FT_ENC_TAG( FT_ENCODING_MS_SYMBOL, 's', 'y', 'm', 'b' ),
+    FT_ENC_TAG( FT_ENCODING_UNICODE,   'u', 'n', 'i', 'c' ),
 
     FT_ENC_TAG( FT_ENCODING_SJIS,    's', 'j', 'i', 's' ),
     FT_ENC_TAG( FT_ENCODING_GB2312,  'g', 'b', ' ', ' ' ),

@@ -595,7 +595,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    This function is only useful to access SFNT tables that are loaded */
   /*    by the sfnt, truetype, and opentype drivers.  See @FT_Sfnt_Tag for */
-  /*    a list.                                                             */
+  /*    a list.                                                            */
   /*                                                                       */
   FT_EXPORT( void* )
   FT_Get_Sfnt_Table( FT_Face      face,
