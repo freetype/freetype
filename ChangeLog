@@ -1,3 +1,8 @@
+2007-05-06  Werner Lemberg  <wl@gnu.org>
+
+	* builds/win32/visualce/freetype.sln: Removed, as requested by
+	Vincent.
+
 2007-05-04  Vincent RICHOMME  <richom.v@free.fr>
 
 	* builds/win32/visualce/*: Add Visual C++ project files for Pocket
