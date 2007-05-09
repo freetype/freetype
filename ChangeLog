@@ -1,3 +1,8 @@
+2007-05-09  Graham Asher  <graham.asher@btinternet.com>
+
+	* src/truetype/ttinterp.c (Ins_IP), src/autofit/aflatin.c
+	(af_latin_metrics_scale_dim): Fix compiler warnings.
+
 2007-05-06  Werner Lemberg  <wl@gnu.org>
 
 	* builds/win32/visualce/freetype.sln: Removed, as requested by

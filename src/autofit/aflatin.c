@@ -527,7 +527,8 @@
 
     /* an extra-light axis corresponds to a standard width that is */
     /* smaller than 0.75 pixels                                    */
-    axis->extra_light = FT_MulFix( axis->standard_width, scale ) < 32 + 8;
+    axis->extra_light =
+      (FT_Bool)( FT_MulFix( axis->standard_width, scale ) < 32 + 8 );
 
     if ( dim == AF_DIMENSION_VERT )
     {

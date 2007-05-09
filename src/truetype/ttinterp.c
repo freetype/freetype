@@ -6213,7 +6213,7 @@
                    ? TT_MULDIV( org_dist, cur_range, old_range )
                    : cur_dist;
 
-      CUR_Func_move( &CUR.zp2, point, new_dist - cur_dist );
+      CUR_Func_move( &CUR.zp2, (FT_UShort)point, new_dist - cur_dist );
     }
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
