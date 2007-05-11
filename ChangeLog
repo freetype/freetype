@@ -43,6 +43,11 @@
 	* src/base/ftglyph.c (FT_Glyph_Copy): Always set second argument to
 	zero in case of error.  This fixes Savannah bug #19689.
 
+2007-04-25  Boris Letocha <b.letocha@cz.gmc.net>
+
+	* src/truetype/ttobjs.c: fix a typo that created a speed regression
+	in the TrueType bytecode loader
+
 2007-04-10  Martin Horak  <horakm@centrum.cz>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face) [FT_CONFIG_OPTION_INCREMENTAL]:
