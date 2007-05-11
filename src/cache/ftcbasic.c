@@ -383,6 +383,63 @@
   }
 
 
+
+  /* documentation is in ftcache.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_ImageCache_LookupScaler( FTC_ImageCache  cache,
+                               FTC_Scaler      scaler,
+                               FT_ULong        load_flags,
+                               FT_UInt         gindex,
+                               FT_Glyph       *aglyph,
+                               FTC_Node       *anode )
+  {
+    FTC_BasicQueryRec  query;
+    FTC_INode          node = 0;  /* make compiler happy */
+    FT_Error           error;
+    FT_UInt32          hash;
+
+
+    /* some argument checks are delayed to FTC_Cache_Lookup */
+    if ( !aglyph || !scaler )
+    {
+      error = FTC_Err_Invalid_Argument;
+      goto Exit;
+    }
+
+    *aglyph = NULL;
+    if ( anode )
+      *anode  = NULL;
+
+    query.attrs.scaler     = scaler[0];
+    query.attrs.load_flags = load_flags;
+
+    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
+
+    FTC_GCACHE_LOOKUP_CMP( cache,
+                           ftc_basic_family_compare,
+                           FTC_GNode_Compare,
+                           hash, gindex,
+                           &query,
+                           node,
+                           error );
+    if ( !error )
+    {
+      *aglyph = FTC_INODE( node )->glyph;
+
+      if ( anode )
+      {
+        *anode = FTC_NODE( node );
+        FTC_NODE( node )->ref_count++;
+      }
+    }
+
+  Exit:
+    return error;
+  }
+
+
+  
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
   /* yet another backwards-legacy structure */
@@ -636,6 +693,59 @@
                                FTC_GQUERY( &query ),
                                (FTC_Node*)&node );
 #endif
+    if ( error )
+      goto Exit;
+
+    *ansbit = node->sbits + ( gindex - FTC_GNODE( node )->gindex );
+
+    if ( anode )
+    {
+      *anode = FTC_NODE( node );
+      FTC_NODE( node )->ref_count++;
+    }
+
+  Exit:
+    return error;
+  }
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_SBitCache_LookupScaler( FTC_SBitCache  cache,
+                              FTC_Scaler     scaler,
+                              FT_ULong       load_flags,
+                              FT_UInt        gindex,
+                              FTC_SBit      *ansbit,
+                              FTC_Node      *anode )
+  {
+    FT_Error           error;
+    FTC_BasicQueryRec  query;
+    FTC_SNode          node = 0; /* make compiler happy */
+    FT_UInt32          hash;
+
+
+    if ( anode )
+        *anode = NULL;
+
+    /* other argument checks delayed to FTC_Cache_Lookup */
+    if ( !ansbit || !scaler )
+        return FTC_Err_Invalid_Argument;
+
+    *ansbit = NULL;
+
+    query.attrs.scaler     = scaler[0];
+    query.attrs.load_flags = load_flags;
+
+    /* beware, the hash must be the same for all glyph ranges! */
+    hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
+            gindex / FTC_SBIT_ITEMS_PER_NODE;
+
+    FTC_GCACHE_LOOKUP_CMP( cache,
+                           ftc_basic_family_compare,
+                           FTC_SNode_Compare,
+                           hash, gindex,
+                           &query,
+                           node,
+                           error );
     if ( error )
       goto Exit;
 
