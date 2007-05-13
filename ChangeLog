@@ -1,3 +1,8 @@
+2007-05-13  Derek Clegg  <dclegg@apple.com>
+
+	* src/base/ftobjs.c (FT_New_Library): Only allocate rendering pool
+	if FT_RENDER_POOL_SIZE is > 0.  From Savannah patch #5928.
+
 2007-05-11  David Turner  <david@freetype.org>
 
 	* src/cache/ftbasic.c, include/freetype/ftcache.h: introduce

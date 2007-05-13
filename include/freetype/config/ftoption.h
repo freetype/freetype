@@ -302,7 +302,9 @@ FT_BEGIN_HEADER
   /* The size in bytes of the render pool used by the scan-line converter  */
   /* to do all of its work.                                                */
   /*                                                                       */
-  /* This must be greater than 4KByte.                                     */
+  /* This must be greater than 4KByte if you use FreeType to rasterize     */
+  /* glyphs; otherwise, you may set it to zero to avoid unnecessary        */
+  /* allocation of the render pool.                                        */
   /*                                                                       */
 #define FT_RENDER_POOL_SIZE  16384L
 
