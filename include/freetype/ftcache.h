@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache subsystem (specification).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -782,25 +782,25 @@ FT_BEGIN_HEADER
   /*    FTC_ImageCache_LookupScaler                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A variant of @FTC_ImageCache_Lookup that uses a @FTC_ScalerRec     */
-  /*    to specify the face id and its size                                */
+  /*    A variant of @FTC_ImageCache_Lookup that uses an @FTC_ScalerRec    */
+  /*    to specify the face ID and its size.                               */
   /*                                                                       */
   /* <Input>                                                               */
   /*    cache      :: A handle to the source glyph image cache.            */
   /*                                                                       */
   /*    scaler     :: A pointer to a scaler descriptor.                    */
   /*                                                                       */
-  /*    load_flags :: corresponding load flags                             */
+  /*    load_flags :: The corresponding load flags.                        */
   /*                                                                       */
-  /*    gindex :: The glyph index to retrieve.                             */
+  /*    gindex     :: The glyph index to retrieve.                         */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    aglyph :: The corresponding @FT_Glyph object.  0 in case of        */
-  /*              failure.                                                 */
+  /*    aglyph     :: The corresponding @FT_Glyph object.  0 in case of    */
+  /*                  failure.                                             */
   /*                                                                       */
-  /*    anode  :: Used to return the address of of the corresponding cache */
-  /*              node after incrementing its reference count (see note    */
-  /*              below).                                                  */
+  /*    anode      :: Used to return the address of of the corresponding   */
+  /*                  cache node after incrementing its reference count    */
+  /*                  (see note below).                                    */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -828,6 +828,7 @@ FT_BEGIN_HEADER
                                FT_UInt         gindex,
                                FT_Glyph       *aglyph,
                                FTC_Node       *anode );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -982,30 +983,31 @@ FT_BEGIN_HEADER
                         FTC_SBit        *sbit,
                         FTC_Node        *anode );
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    FTC_SBitCache_LookupScaler                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A variant of @FTC_SBitCache_Lookup that uses a @FTC_ScalerRec      */
-  /*    to specify the face id and its size.                               */
+  /*    A variant of @FTC_SBitCache_Lookup that uses an @FTC_ScalerRec     */
+  /*    to specify the face ID and its size.                               */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    cache  :: A handle to the source sbit cache.                       */
+  /*    cache      :: A handle to the source sbit cache.                   */
   /*                                                                       */
-  /*    scaler :: A pointer to the scaler descriptor.                      */
+  /*    scaler     :: A pointer to the scaler descriptor.                  */
   /*                                                                       */
-  /*    load_flags :: corresponding load flags                             */
+  /*    load_flags :: The corresponding load flags.                        */
   /*                                                                       */
-  /*    gindex :: The glyph index.                                         */
+  /*    gindex     :: The glyph index.                                     */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    sbit   :: A handle to a small bitmap descriptor.                   */
+  /*    sbit       :: A handle to a small bitmap descriptor.               */
   /*                                                                       */
-  /*    anode  :: Used to return the address of of the corresponding cache */
-  /*              node after incrementing its reference count (see note    */
-  /*              below).                                                  */
+  /*    anode      :: Used to return the address of of the corresponding   */
+  /*                  cache node after incrementing its reference count    */
+  /*                  (see note below).                                    */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */

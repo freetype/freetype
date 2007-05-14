@@ -693,7 +693,7 @@
       size->GS = tt_default_graphics_state;
 
       error = tt_size_run_prep( size );
-      if (!error)
+      if ( !error )
           size->cvt_ready = 1;
     }
   Exit:

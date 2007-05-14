@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType basic cache interface (body).                           */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006 by                                    */
+/*  Copyright 2003, 2004, 2005, 2006, 2007 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -383,7 +383,6 @@
   }
 
 
-
   /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -709,6 +708,8 @@
   }
 
 
+  /* documentation is in ftcache.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_SBitCache_LookupScaler( FTC_SBitCache  cache,
                               FTC_Scaler     scaler,
@@ -737,7 +738,7 @@
 
     /* beware, the hash must be the same for all glyph ranges! */
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
-            gindex / FTC_SBIT_ITEMS_PER_NODE;
+             gindex / FTC_SBIT_ITEMS_PER_NODE;
 
     FTC_GCACHE_LOOKUP_CMP( cache,
                            ftc_basic_family_compare,

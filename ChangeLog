@@ -5,11 +5,14 @@
 
 2007-05-11  David Turner  <david@freetype.org>
 
-	* src/cache/ftbasic.c, include/freetype/ftcache.h: introduce
-	two new functions FTC_ImageCache_LookupScaler and
-	FTC_SBitCache_LookupScaler that allows us to lookup glyphs using a
-	FTC_Scaler object to specify the size. This allows fractional pixel
-	sizes
+	* src/cache/ftbasic.c, include/freetype/ftcache.h
+	(FTC_ImageCache_LookupScaler, FTC_SBit_Cache_LookupScaler): Two new
+	functions that allow us to look up glyphs using an FTC_Scaler object
+	to specify the size, making it possible to use fractional pixel
+	sizes.
+
+	* src/truetype/ttobjs.c (tt_size_ready_bytecode): Set
+	`size->cvt_ready'.  Reported by Boris Letocha.
 
 2007-05-09  Graham Asher  <graham.asher@btinternet.com>
 
