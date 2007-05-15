@@ -1,3 +1,33 @@
+2007-05-15  Graham Asher  <graham.asher@btinternet.com>
+
+	* src/autofit/afcjk.c (af_cjk_hints_compute_edges): Remove unused
+	variable.
+	* src/autofit/afloader.c (af_loader_load_g): Ditto.
+
+	* src/base/ftobjs.c (ft_validator_error): Use `ft_jmp_buf'.
+	(open_face_from_buffer): Initialize `stream'.
+	(FT_Request_Metrics): Remove unused variable.
+	Remove redundant `break' statements.
+	(FT_Get_Track_Kerning): Remove unused variable.
+
+	* src/psaux/afmparse.c (afm_parse_track_kern, afm_parse_kern_pairs,
+	afm_parse_kern_data): Remove redundant
+	`break' statements.
+	(afm_parser_parse): Ditto.
+	Don't use uninitialized variables.
+
+	* src/psnames/psmodule.c (VARIANT_BIT): Define as unsigned long.
+	Use `|' operator instead of `^' to set it.
+	Update all users.
+
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Use `ft_jmp_buf'.
+	* src/sfnt/ttkern.c (tt_face_load_kern): Remove unused variable.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Remove redundant
+	comparison.
+	(TT_Process_Simple_Glyph): Use FT_UInt for `n_points' and `i'.
+	(TT_Load_Glyph): Remove unused variable.
+
 2007-05-13  Derek Clegg  <dclegg@apple.com>
 
 	* src/base/ftobjs.c (FT_New_Library): Only allocate rendering pool

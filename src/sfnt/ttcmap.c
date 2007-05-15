@@ -2299,7 +2299,8 @@
 
             valid.num_glyphs = (FT_UInt)face->max_profile.numGlyphs;
 
-            if ( ft_setjmp( FT_VALIDATOR( &valid )->jump_buffer ) == 0 )
+            if ( ft_setjmp(
+              *((ft_jmp_buf*)&FT_VALIDATOR( &valid )->jump_buffer) ) == 0 )
             {
               /* validate this cmap sub-table */
               error = clazz->validate( cmap, FT_VALIDATOR( &valid ) );

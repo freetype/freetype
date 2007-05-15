@@ -92,14 +92,14 @@
     /* since the cast below also disables the compiler's */
     /* type check, we introduce a dummy variable, which  */
     /* will be optimized away                            */
-    volatile jmp_buf* jump_buffer = &valid->jump_buffer;
+    volatile ft_jmp_buf* jump_buffer = &valid->jump_buffer;
 
 
     valid->error = error;
 
     /* throw away volatileness; use `jump_buffer' or the  */
     /* compiler may warn about an unused local variable   */
-    ft_longjmp( *(jmp_buf*) jump_buffer, 1 );
+    ft_longjmp( *(ft_jmp_buf*) jump_buffer, 1 );
   }
 
 
@@ -1198,7 +1198,7 @@
   {
     FT_Open_Args  args;
     FT_Error      error;
-    FT_Stream     stream;
+    FT_Stream     stream = NULL;
     FT_Memory     memory = library->memory;
 
 
@@ -2223,11 +2223,9 @@
   FT_Request_Metrics( FT_Face          face,
                       FT_Size_Request  req )
   {
-    FT_Driver_Class   clazz;
     FT_Size_Metrics*  metrics;
 
 
-    clazz   = face->driver->clazz;
     metrics = &face->size->metrics;
 
     if ( FT_IS_SCALABLE( face ) )
@@ -2263,12 +2261,10 @@
         else if ( !metrics->y_scale )
           metrics->y_scale = metrics->x_scale;
         goto Calculate_Ppem;
-        break;
 
       default:
         /* this never happens */
         return;
-        break;
       }
 
       /* to be on the safe side */
@@ -2554,7 +2550,6 @@
   {
     FT_Service_Kerning  service;
     FT_Error            error = FT_Err_Ok;
-    FT_Driver           driver;
 
 
     if ( !face )
@@ -2562,8 +2557,6 @@
 
     if ( !akerning )
       return FT_Err_Invalid_Argument;
-
-    driver = face->driver;
 
     FT_FACE_FIND_SERVICE( face, service, KERNING );
     if ( !service )

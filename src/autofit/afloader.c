@@ -173,7 +173,7 @@
       /* width/positioning that occurred during the hinting process */
       if ( scaler->render_mode != FT_RENDER_MODE_LIGHT )
       {
-        FT_Pos        old_advance, old_rsb, old_lsb, new_lsb;
+        FT_Pos        old_rsb, old_lsb, new_lsb;
         FT_Pos        pp1x_uh, pp2x_uh;
         AF_AxisHints  axis  = &hints->axis[AF_DIMENSION_HORZ];
         AF_Edge       edge1 = axis->edges;         /* leftmost edge  */
@@ -183,7 +183,6 @@
 
         if ( axis->num_edges > 1 && AF_HINTS_DO_ADVANCE( hints ) )
         {
-          old_advance = loader->pp2.x - loader->pp1.x;
           old_rsb     = loader->pp2.x - edge2->opos;
           old_lsb     = edge1->opos;
           new_lsb     = edge1->pos;

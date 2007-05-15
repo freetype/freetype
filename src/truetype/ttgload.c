@@ -271,11 +271,7 @@
 
     n_points = 0;
     if ( n_contours > 0 )
-    {
       n_points = cont[-1] + 1;
-      if ( n_points < 0 )
-        goto Invalid_Outline;
-    }
 
     /* note that we will add four phantom points later */
     error = FT_GLYPHLOADER_CHECK_POINTS( gloader, n_points + 4, 0 );
@@ -686,7 +682,7 @@
     FT_GlyphLoader  gloader = loader->gloader;
     FT_Error        error   = TT_Err_Ok;
     FT_Outline*     outline;
-    FT_Int          n_points;
+    FT_UInt         n_points;
 
 
     outline  = &gloader->current.outline;
@@ -713,7 +709,7 @@
       /* Deltas apply to the unscaled data. */
       FT_Vector*  deltas;
       FT_Memory   memory = loader->face->memory;
-      FT_Int      i;
+      FT_UInt     i;
 
 
       error = TT_Vary_Get_Glyph_Deltas( (TT_Face)(loader->face),
@@ -1856,13 +1852,11 @@
                  FT_Int32      load_flags )
   {
     TT_Face       face;
-    FT_Stream     stream;
     FT_Error      error;
     TT_LoaderRec  loader;
 
 
     face   = (TT_Face)glyph->face;
-    stream = face->root.stream;
     error  = TT_Err_Ok;
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
