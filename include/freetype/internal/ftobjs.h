@@ -89,24 +89,23 @@ FT_BEGIN_HEADER
   ft_highpow2( FT_UInt32  value );
 
 
- /*
-  *  character classification functions. Since these are used to parse font
-  *  files, we must not use those in <ctypes.h> which are locale-dependent !!
-  */
-#define  ft_isdigit(x)   (((unsigned)(x) - '0') < 10U)
+  /*
+   *  character classification functions -- since these are used to parse
+   *  font files, we must not use those in <ctypes.h> which are
+   *  locale-dependent
+   */
+#define  ft_isdigit( x )   ( ( (unsigned)(x) - '0' ) < 10U )
 
-#define  ft_isxdigit(x)  ( ((unsigned)(x) - '0') < 10U ||  \
-                           ((unsigned)(x) - 'a') < 6U  ||  \
-                           ((unsigned)(x) - 'A') < 6U  )
+#define  ft_isxdigit( x )  ( ( (unsigned)(x) - '0' ) < 10U || \
+                             ( (unsigned)(x) - 'a' ) < 6U  || \
+                             ( (unsigned)(x) - 'A' ) < 6U  )
 
-#define  ft_isupper(x)   ( ((unsigned)(x) - 'A') < 26U )
+  /* the next two macros assume ASCII representation */
+#define  ft_isupper( x )  ( ( (unsigned)(x) - 'A' ) < 26U )
+#define  ft_islower( x )  ( ( (unsigned)(x) - 'a' ) < 26U )
 
-#define  ft_islower(x)   ( ((unsigned)(x) - 'a') < 26U )
-
-#define  ft_isalpha(x)   ( ft_is_upper(x) || ft_is_lower(x) )
-
-#define  ft_isalnum(x)   ( ft_isdigit(x) || ft_isalpha(x) )
-
+#define  ft_isalpha( x )  ( ft_isupper( x ) || ft_islower( x ) )
+#define  ft_isalnum( x )  ( ft_isdigit( x ) || ft_isalpha( x ) )
 
 
   /*************************************************************************/

@@ -1,10 +1,10 @@
 2007-05-15  David Turner  <david@freetype.org>
 
 	* include/freetype/config/ftstdlib.h,
-	include/freetype/internal/ftobjs.h: as suggested by Graham Asher,
-	ensure that ft_isalnum, ft_isdigit, etc... use hard-coded values
+	include/freetype/internal/ftobjs.h: As suggested by Graham Asher,
+	ensure that ft_isalnum, ft_isdigit, etc., use hard-coded values
 	instead on relying on the locale-dependent functions provided by
-	<ctypes.h>
+	<ctypes.h>.
 
 2007-05-15  Graham Asher  <graham.asher@btinternet.com>
 
