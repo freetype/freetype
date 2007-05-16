@@ -271,7 +271,11 @@
 
     n_points = 0;
     if ( n_contours > 0 )
+    {
       n_points = cont[-1] + 1;
+      if ( n_points < 0 )
+        goto Invalid_Outline;
+    }
 
     /* note that we will add four phantom points later */
     error = FT_GLYPHLOADER_CHECK_POINTS( gloader, n_points + 4, 0 );
