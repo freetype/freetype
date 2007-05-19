@@ -359,7 +359,10 @@
 
     if ( vertical )
     {
-      header     = (TT_HoriHeader*)&face->vertical;
+      void*  v = &face->vertical;
+
+
+      header     = (TT_HoriHeader*)v;
       table_pos  = face->vert_metrics_offset;
       table_size = face->vert_metrics_size;
     }
