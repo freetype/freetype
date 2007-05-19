@@ -1,7 +1,20 @@
 
 CHANGES BETWEEN 2.3.5 and 2.3.4
 
-  I. MISCELLANEOUS
+  I. IMPORTANT BUG FIXES
+
+    - Some subglyphs in TrueType fonts were handled incorrectly due to
+      a missing graphics state reinitialization.
+
+
+  II. IMPORTANT CHANGES
+
+    - A new API  `FT_Get_CMap_Format)' has been  added to get the cmap
+      format of  a TrueType  font.   This  is useful  in handling  PDF
+      files.  The code has been contributed by Derek Clegg.
+
+
+  III. MISCELLANEOUS
 
     - Vincent Richomme contributed Visual C++ project files for Pocket
       PCs.
