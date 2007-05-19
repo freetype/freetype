@@ -1288,9 +1288,9 @@
     /* otherwise, load a composite! */
     else if ( loader->n_contours == -1 )
     {
-      FT_UInt       start_point;
-      FT_UInt       start_contour;
-      FT_ULong      ins_pos;  /* position of composite instructions, if any */
+      FT_UInt   start_point;
+      FT_UInt   start_contour;
+      FT_ULong  ins_pos;  /* position of composite instructions, if any */
 
 
       start_point   = gloader->base.outline.n_points;
@@ -1360,7 +1360,6 @@
       /* if the flag FT_LOAD_NO_RECURSE is set, we return the subglyph */
       /* `as is' in the glyph slot (the client application will be     */
       /* responsible for interpreting these data)...                   */
-      /*                                                               */
       if ( loader->load_flags & FT_LOAD_NO_RECURSE )
       {
         FT_GlyphLoader_Add( gloader );
@@ -1374,14 +1373,16 @@
       /*********************************************************************/
 
       {
-        FT_UInt      n, num_base_points;
-        FT_SubGlyph  subglyph       = 0;
+        FT_UInt           n, num_base_points;
+        FT_SubGlyph       subglyph       = 0;
 
-        FT_UInt      num_points     = start_point;
-        FT_UInt      num_subglyphs  = gloader->current.num_subglyphs;
-        FT_UInt      num_base_subgs = gloader->base.num_subglyphs;
+        FT_UInt           num_points     = start_point;
+        FT_UInt           num_subglyphs  = gloader->current.num_subglyphs;
+        FT_UInt           num_base_subgs = gloader->base.num_subglyphs;
 
-        FT_Stream    old_stream     = loader->stream;
+        FT_Stream         old_stream     = loader->stream;
+
+        TT_GraphicsState  saved_GS       = loader->exec->GS;
 
 
         FT_GlyphLoader_Add( gloader );
@@ -1391,6 +1392,9 @@
         {
           FT_Vector  pp[4];
 
+
+          /* reinitialize graphics state */
+          loader->exec->GS = saved_GS;
 
           /* Each time we call load_truetype_glyph in this loop, the   */
           /* value of `gloader.base.subglyphs' can change due to table */
@@ -1426,12 +1430,12 @@
           if ( num_points == num_base_points )
             continue;
 
-          /* gloader->base.outline consists of three part:                  */
-          /* 0 -(1)-> start_point -(2)-> num_base_points -(3)-> n_points.   */
-          /*                                                                */
-          /* (1): exist from the beginning                                  */
-          /* (2): components that have been loaded so far                   */
-          /* (3): the newly loaded component                                */
+          /* gloader->base.outline consists of three parts:               */
+          /* 0 -(1)-> start_point -(2)-> num_base_points -(3)-> n_points. */
+          /*                                                              */
+          /* (1): exists from the beginning                               */
+          /* (2): components that have been loaded so far                 */
+          /* (3): the newly loaded component                              */
           TT_Process_Composite_Component( loader, subglyph, start_point,
                                           num_base_points );
         }
@@ -1455,7 +1459,7 @@
     }
     else
     {
-      /* invalid composite count ( negative but not -1 ) */
+      /* invalid composite count (negative but not -1) */
       error = TT_Err_Invalid_Outline;
       goto Exit;
     }
@@ -1483,8 +1487,8 @@
 
 
   static FT_Error
-  compute_glyph_metrics( TT_Loader   loader,
-                         FT_UInt     glyph_index )
+  compute_glyph_metrics( TT_Loader  loader,
+                         FT_UInt    glyph_index )
   {
     FT_BBox       bbox;
     TT_Face       face = (TT_Face)loader->face;
@@ -1502,8 +1506,8 @@
     else
       bbox = loader->bbox;
 
-    /* get the device-independent horizontal advance.  It is scaled later */
-    /* by the base layer.                                                 */
+    /* get the device-independent horizontal advance; it is scaled later */
+    /* by the base layer.                                                */
     {
       FT_Pos  advance = loader->linear;
 
@@ -1763,11 +1767,11 @@
         tt_size_run_prep( size );
       }
 
-      /* see if the cvt program has disabled hinting */
+      /* see whether the cvt program has disabled hinting */
       if ( exec->GS.instruct_control & 1 )
         load_flags |= FT_LOAD_NO_HINTING;
 
-      /* load default graphics state - if needed */
+      /* load default graphics state -- if needed */
       if ( exec->GS.instruct_control & 2 )
         exec->GS = tt_default_graphics_state;
 
@@ -1778,7 +1782,7 @@
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
-    /* seek to the beginning of the glyph table.  For Type 42 fonts      */
+    /* seek to the beginning of the glyph table -- for Type 42 fonts     */
     /* the table might be accessed from a Postscript stream or something */
     /* else...                                                           */
 
@@ -1894,7 +1898,7 @@
     glyph->num_subglyphs = 0;
     glyph->outline.flags = 0;
 
-    /* Main loading loop */
+    /* main loading loop */
     error = load_truetype_glyph( &loader, glyph_index, 0 );
     if ( !error )
     {
