@@ -9,8 +9,8 @@ CHANGES BETWEEN 2.3.5 and 2.3.4
 
   II. IMPORTANT CHANGES
 
-    - A new API  `FT_Get_CMap_Format)' has been  added to get the cmap
-      format of  a TrueType  font.   This  is useful  in handling  PDF
+    - A new API  `FT_Get_CMap_Format)' has been added to  get the cmap
+      format  of a  TrueType font.   This  is useful  in handling  PDF
       files.  The code has been contributed by Derek Clegg.
 
 
@@ -38,9 +38,9 @@ CHANGES BETWEEN 2.3.3 and 2.3.2
 
     - Remove a serious regression in the TrueType bytecode interpreter
       that was introduced  in version 2.3.2.  Note that  this does not
-      disable the improvements introduced to the intepreter in version
-      2.3.2,  only some  ill cases  that occurred  with  certain fonts
-      (though a few popular ones).
+      disable  the  improvements  introduced  to  the  interpreter  in
+      version 2.3.2,  only some ill  cases that occurred  with certain
+      fonts (though a few popular ones).
 
     - The auto-hinter now  ignores single-point contours for computing
       blue zones.   This bug  created `wavy' baselines  when rendering
@@ -48,12 +48,12 @@ CHANGES BETWEEN 2.3.3 and 2.3.2
       mark-attach points  (these are points that  are never rasterized
       and are placed outside of the glyph's real outline).
 
-    - The `rsb_delta'  and `lsb_delta' glyph  slot fields are  now set
-      to 0 for mono-spaced fonts.  Otherwise code that uses them would
+    - The `rsb_delta' and `lsb_delta' glyph slot fields are now set to
+      0 for  mono-spaced fonts.  Otherwise  code that uses  them would
       essentially ruin the fixed-advance property.
 
-    - Fix  CVE-2007-1351  which can  cause an  integer overflow  while
-      parsing BDF  fonts, leading  to a potentially  exploitable  heap
+    - Fix  CVE-2007-1351 which  can  cause an  integer overflow  while
+      parsing  BDF fonts,  leading to  a potentially  exploitable heap
       overflow condition.
 
   II. MISCELLANEOUS
