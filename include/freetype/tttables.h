@@ -725,6 +725,26 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_ULong )
   FT_Get_CMap_Language_ID( FT_CharMap  charmap );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_CMap_Format                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return TrueType/sfnt specific cmap format.                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charmap ::                                                         */
+  /*      The target charmap.                                              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The format of `charmap'.  If `charmap' doesn't belong to a         */
+  /*    TrueType/sfnt face, return -1.                                     */
+  /*                                                                       */
+  FT_EXPORT( FT_Long )
+  FT_Get_CMap_Format( FT_CharMap  charmap );
+
   /* */
 
 

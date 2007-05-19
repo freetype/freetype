@@ -1,3 +1,15 @@
+2007-05-19  Derek Clegg  <dclegg@apple.com>
+
+	Savannah patch #5929.
+
+	* include/freetype/tttables.h, src/base/ftobjcs.c
+	(FT_Get_CMap_Format): New function.
+
+	* include/freetype/internal/services/svttcmap.c (TT_CMapInfo): Add
+	`format' member.
+	* src/sfnt/ttcmap.c (tt_cmap{0,2,4,6,8,10,12}_get_info): Set
+	cmap_info->format.
+
 2007-05-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Save graphics state
