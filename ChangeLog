@@ -1,3 +1,8 @@
+2007-06-20  Ismail Dönmez  <ismail@pardus.org.tr>
+
+	* src/pshinter/pshrec.c (ps_mask_table_set_bits): Add `const'.
+	(ps_dimension_set_mask_bits): Remove `const'.
+
 2007-06-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttmtx.c (tt_face_get_metrics)
