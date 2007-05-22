@@ -1382,7 +1382,10 @@
 
         FT_Stream         old_stream     = loader->stream;
 
-        TT_GraphicsState  saved_GS       = loader->exec->GS;
+        TT_GraphicsState  saved_GS;
+
+        if (loader->exec)
+          saved_GS = loader->exec->GS;
 
 
         FT_GlyphLoader_Add( gloader );
@@ -1394,7 +1397,8 @@
 
 
           /* reinitialize graphics state */
-          loader->exec->GS = saved_GS;
+          if (loader->exec)
+            loader->exec->GS = saved_GS;
 
           /* Each time we call load_truetype_glyph in this loop, the   */
           /* value of `gloader.base.subglyphs' can change due to table */

@@ -1,5 +1,8 @@
 2007-05-22  David Turner  <david@freetype.org>
 
+	* src/truetype/ttgload.c: fix Werner's recent graphics state
+	patch to avoid crashes when we don't use the bytecode interpreter !
+
 	* src/lzw/ftzopen.h, src/lzw/ftzopen.c: fix for bug #19910
 	(heap blowup with very large .Z font file). The .Z format is
 	*really* crappy :-(
