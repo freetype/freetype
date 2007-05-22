@@ -128,7 +128,7 @@
     FT_UInt      free_ent;    /* index of next free entry */
     FT_UInt      free_bits;   /* if reached by free_ent, increment num_bits */
     FT_UInt      old_code;
-    FT_UInt      old_char;
+    FT_UInt      last_char;
     FT_UInt      in_code;
 
     FT_UShort*   prefix;      /* always dynamically allocated / reallocated */

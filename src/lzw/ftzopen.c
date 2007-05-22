@@ -87,6 +87,11 @@
       FT_UInt    old_size = state->stack_size;
       FT_UInt    new_size = old_size;
 
+      /* limit stack size to detect invalid files                           */
+      /* the magic number comes from the origin NetBSD zopen implementation */
+      if (state->stack_size >= 69001 )
+          return -1;
+
       new_size = new_size + ( new_size >> 1 ) + 4;
 
       if ( state->stack == state->stack_0 )
@@ -110,6 +115,7 @@
   {
     FT_UInt    old_size = state->prefix_size;
     FT_UInt    new_size = old_size;
+    FT_UInt    max_size = INT_MAX/(sizeof(FT_UShort)+sizeof(FT_Byte));
     FT_Memory  memory   = state->memory;
     FT_Error   error;
 
@@ -118,6 +124,13 @@
       new_size = 512;
     else
       new_size += new_size >> 2;  /* don't grow too fast */
+
+    if (new_size < old_size || new_size > max_size)
+    {
+        new_size = max_size;
+        if (new_size == old_size)
+            return -1;
+    }
 
     /*
      *  Note that the `suffix' array is located in the same memory block
@@ -213,11 +226,11 @@
   {
     FT_ULong  result = 0;
 
-    FT_UInt  num_bits = state->num_bits;
-    FT_UInt  free_ent = state->free_ent;
-    FT_UInt  old_char = state->old_char;
-    FT_UInt  old_code = state->old_code;
-    FT_UInt  in_code  = state->in_code;
+    FT_UInt  num_bits  = state->num_bits;
+    FT_UInt  free_ent  = state->free_ent;
+    FT_UInt  last_char = state->last_char;
+    FT_UInt  old_code  = state->old_code;
+    FT_UInt  in_code   = state->in_code;
 
 
     if ( out_size == 0 )
@@ -255,15 +268,15 @@
         if ( c < 0 )
           goto Eof;
 
-        old_code = old_char = (FT_UInt)c;
+        old_code = last_char = (FT_UInt)c;
 
         if ( buffer )
-          buffer[result] = (FT_Byte)old_char;
+          buffer[result] = (FT_Byte)last_char;
+
+        state->phase = FT_LZW_PHASE_CODE;
 
         if ( ++result >= out_size )
           goto Exit;
-
-        state->phase = FT_LZW_PHASE_CODE;
       }
       /* fall-through */
 
@@ -303,7 +316,7 @@
           /* special case for KwKwKwK */
           if ( code - 256U >= free_ent )
           {
-            FTLZW_STACK_PUSH( old_char );
+            FTLZW_STACK_PUSH( last_char );
             code = old_code;
           }
 
@@ -314,8 +327,8 @@
           }
         }
 
-        old_char = code;
-        FTLZW_STACK_PUSH( old_char );
+        last_char = code;
+        FTLZW_STACK_PUSH( last_char );
 
         state->phase = FT_LZW_PHASE_STACK;
       }
@@ -344,7 +357,7 @@
           FT_ASSERT( free_ent < state->prefix_size );
 
           state->prefix[free_ent] = (FT_UShort)old_code;
-          state->suffix[free_ent] = (FT_Byte)  old_char;
+          state->suffix[free_ent] = (FT_Byte)  last_char;
 
           if ( ++free_ent == state->free_bits )
           {
@@ -367,11 +380,11 @@
     }
 
   Exit:
-    state->num_bits = num_bits;
-    state->free_ent = free_ent;
-    state->old_code = old_code;
-    state->old_char = old_char;
-    state->in_code  = in_code;
+    state->num_bits  = num_bits;
+    state->free_ent  = free_ent;
+    state->old_code  = old_code;
+    state->last_char = last_char;
+    state->in_code   = in_code;
 
     return result;
 
