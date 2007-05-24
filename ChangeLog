@@ -1,3 +1,13 @@
+2007-05-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttobjs.h (tt_size_ready_bytecode): Move declaration
+	into TT_USE_BYTECODE_INTERPRETER preprocessor block.
+
+2007-05-24  Graham Asher  <graham.asher@btinternet.com>
+
+	* src/truetype/ttobjs.c (tt_size_ready_bytecode)
+	[!TT_USE_BYTECODE_INTERPRETER]: Removed.  Unused.
+
 2007-05-22  David Turner  <david@freetype.org>
 
 	* src/truetype/ttgload.c: fix Werner's recent graphics state
