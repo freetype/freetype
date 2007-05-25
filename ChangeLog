@@ -1,3 +1,7 @@
+2007-05-25  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2007-05-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttobjs.h (tt_size_ready_bytecode): Move declaration
@@ -10,12 +14,21 @@
 
 2007-05-22  David Turner  <david@freetype.org>
 
-	* src/truetype/ttgload.c: fix Werner's recent graphics state
-	patch to avoid crashes when we don't use the bytecode interpreter !
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix last change to
+	avoid crashes in case the bytecode interpreter is not used.
 
-	* src/lzw/ftzopen.h, src/lzw/ftzopen.c: fix for bug #19910
-	(heap blowup with very large .Z font file). The .Z format is
-	*really* crappy :-(
+
+	Avoid heap blowup with very large .Z font files.  This fixes
+	Savannah bug #19910.
+
+	* src/lzw/ftzopen.h (FT_LzwStateRec): Remove `in_cursor',
+	`in_limit', `pad', `pad_bits', and `in_buff' members.
+	Add `buf_tab', `buf_offset', `buf_size', `buf_clear', and
+	`buf_total' members.
+
+	* src/lzw/ftzopen.c (ft_lzwstate_get_code): Rewritten.  It now takes
+	only one argument.
+	(ft_lzwstate_refill, ft_lzwstate_reset, ft_lzwstate_io): Updated.
 
 2007-05-20  Ismail Dönmez  <ismail@pardus.org.tr>
 
@@ -154,8 +167,8 @@
 
 2007-04-25  Boris Letocha <b.letocha@cz.gmc.net>
 
-	* src/truetype/ttobjs.c: fix a typo that created a speed regression
-	in the TrueType bytecode loader
+	* src/truetype/ttobjs.c: Fix a typo that created a speed regression
+	in the TrueType bytecode loader.
 
 2007-04-10  Martin Horak  <horakm@centrum.cz>
 

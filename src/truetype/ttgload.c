@@ -1384,9 +1384,9 @@
 
         TT_GraphicsState  saved_GS;
 
-        if (loader->exec)
-          saved_GS = loader->exec->GS;
 
+        if ( loader->exec )
+          saved_GS = loader->exec->GS;
 
         FT_GlyphLoader_Add( gloader );
 
@@ -1397,7 +1397,7 @@
 
 
           /* reinitialize graphics state */
-          if (loader->exec)
+          if ( loader->exec )
             loader->exec->GS = saved_GS;
 
           /* Each time we call load_truetype_glyph in this loop, the   */

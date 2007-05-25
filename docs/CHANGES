@@ -6,8 +6,17 @@ CHANGES BETWEEN 2.3.5 and 2.3.4
     - Some subglyphs in TrueType fonts were handled incorrectly due to
       a missing graphics state reinitialization.
 
+    - Large .Z files  (as distributed with some X11  packages) weren't
+      handled correctly, making FreeType increase the heap stack in an
+      endless loop.
+
 
   II. IMPORTANT CHANGES
+
+    - The  two new  cache functions  `FTC_ImageCache_LookupScaler' and
+      `FTC_SBit_Cache_LookupScaler' have been added to allow lookup of
+      glyphs using an  `FTC_Scaler' object;  this makes it possible to
+      use fractional pixel sizes in the cache.
 
     - A new API  `FT_Get_CMap_Format)' has been added to  get the cmap
       format  of a  TrueType font.   This  is useful  in handling  PDF
