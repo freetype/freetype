@@ -2281,7 +2281,6 @@
     FT_Bool      hinting;
     CFF_Font     cff      = (CFF_Font)face->extra.data;
 
-    FT_Bool      use_font_matrix;
     FT_Matrix    font_matrix;
     FT_Vector    font_offset;
 
