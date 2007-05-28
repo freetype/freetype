@@ -4,6 +4,8 @@
 	if it is the identity. this cuts a significant percent of CFF glyph
 	loading time
 
+	* docs/CHANGES: updating
+
 	* src/autofit/afglobal.c: change default hinting script to
 	CJK, since it works well with a larger array of scripts. thanks to
 	"Rahul Bhalerao" <b.rahul.pm@gmail.com> for pointing this out !

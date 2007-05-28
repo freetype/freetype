@@ -22,6 +22,10 @@ CHANGES BETWEEN 2.3.5 and 2.3.4
       format  of a  TrueType font.   This  is useful  in handling  PDF
       files.  The code has been contributed by Derek Clegg.
 
+    - The auto-hinter now produces better output by default for
+      non-Latin scripts like Indic. this was done by using the CJK
+      hinting module as default, instead of the Latin one. thanks to
+      Rahul Bhalerao for suggesting this.
 
   III. MISCELLANEOUS
 
