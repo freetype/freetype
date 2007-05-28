@@ -1,3 +1,9 @@
+2007-05-28  David Turner  <david@freetype.org>
+
+	* src/autofit/afglobal.c: change default hinting script to
+	CJK, since it works well with a larger array of scripts. thanks to
+	"Rahul Bhalerao" <b.rahul.pm@gmail.com> for pointing this out !
+
 2007-05-25  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
@@ -12,6 +18,7 @@
 	* src/truetype/ttobjs.c (tt_size_ready_bytecode)
 	[!TT_USE_BYTECODE_INTERPRETER]: Removed.  Unused.
 
+>>>>>>> 1.1589
 2007-05-22  David Turner  <david@freetype.org>
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Fix last change to

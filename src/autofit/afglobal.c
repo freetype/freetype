@@ -34,7 +34,7 @@
   };
 
   /* index of default script in `af_script_classes' */
-#define AF_SCRIPT_LIST_DEFAULT  1
+#define AF_SCRIPT_LIST_DEFAULT  2
   /* indicates an uncovered glyph                   */
 #define AF_SCRIPT_LIST_NONE   255
 
