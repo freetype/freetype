@@ -1,5 +1,9 @@
 2007-05-28  David Turner  <david@freetype.org>
 
+	* src/cff/cffgload.c: do not apply the font transform to loaded glyph
+	if it is the identity. this cuts a significant percent of CFF glyph
+	loading time
+
 	* src/autofit/afglobal.c: change default hinting script to
 	CJK, since it works well with a larger array of scripts. thanks to
 	"Rahul Bhalerao" <b.rahul.pm@gmail.com> for pointing this out !

@@ -2281,6 +2281,7 @@
     FT_Bool      hinting;
     CFF_Font     cff      = (CFF_Font)face->extra.data;
 
+    FT_Bool      use_font_matrix;
     FT_Matrix    font_matrix;
     FT_Vector    font_offset;
 
@@ -2547,11 +2548,16 @@
         glyph->root.outline.flags |= FT_OUTLINE_REVERSE_FILL;
 
         /* apply the font matrix */
-        FT_Outline_Transform( &glyph->root.outline, &font_matrix );
+        if ( font_matrix.xx != 0x10000 && font_matrix.yy != 0x10000 &&
+             font_matrix.xy != 0       && font_matrix.yx != 0 )
+        {
+          FT_Outline_Transform( &glyph->root.outline, &font_matrix );
+        }
 
-        FT_Outline_Translate( &glyph->root.outline,
-                              font_offset.x,
-                              font_offset.y );
+        if ( font_offset.x != 0 || font_offset.y != 0 )
+          FT_Outline_Translate( &glyph->root.outline,
+                                font_offset.x,
+                                font_offset.y );
 
         advance.x = metrics->horiAdvance;
         advance.y = 0;
