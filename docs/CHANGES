@@ -16,16 +16,18 @@ CHANGES BETWEEN 2.3.5 and 2.3.4
     - The  two new  cache functions  `FTC_ImageCache_LookupScaler' and
       `FTC_SBit_Cache_LookupScaler' have been added to allow lookup of
       glyphs using an  `FTC_Scaler' object;  this makes it possible to
-      use fractional pixel sizes in the cache.
+      use fractional pixel sizes in the cache.  The demo programs have
+      been updated accordingly to use this feature.
 
-    - A new API  `FT_Get_CMap_Format)' has been added to  get the cmap
+    - A new API  `FT_Get_CMap_Format' has been added to  get the  cmap
       format  of a  TrueType font.   This  is useful  in handling  PDF
       files.  The code has been contributed by Derek Clegg.
 
-    - The auto-hinter now produces better output by default for
-      non-Latin scripts like Indic. this was done by using the CJK
-      hinting module as default, instead of the Latin one. thanks to
-      Rahul Bhalerao for suggesting this.
+    - The  auto-hinter  now  produces  better  output  by  default for
+      non-Latin scripts  like Indic.   This was done by  using the CJK
+      hinting module  as the default instead of the Latin one.  Thanks
+      to Rahul Bhalerao for this suggestion.
+
 
   III. MISCELLANEOUS
 
@@ -62,12 +64,13 @@ CHANGES BETWEEN 2.3.3 and 2.3.2
       and are placed outside of the glyph's real outline).
 
     - The `rsb_delta' and `lsb_delta' glyph slot fields are now set to
-      0 for  mono-spaced fonts.  Otherwise  code that uses  them would
+      zero for mono-spaced fonts.  Otherwise code that uses them would
       essentially ruin the fixed-advance property.
 
     - Fix  CVE-2007-1351 which  can  cause an  integer overflow  while
       parsing  BDF fonts,  leading to  a potentially  exploitable heap
       overflow condition.
+
 
   II. MISCELLANEOUS
 
