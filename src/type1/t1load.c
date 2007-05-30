@@ -1379,6 +1379,12 @@
         FT_Byte*  temp;
 
 
+        if ( size <= face->type1.private_dict.lenIV )
+        {
+          error = T1_Err_Invalid_File_Format;
+          goto Fail;
+        }
+
         /* t1_decrypt() shouldn't write to base -- make temporary copy */
         if ( FT_ALLOC( temp, size ) )
           goto Fail;
@@ -1548,11 +1554,17 @@
           notdef_found = 1;
         }
 
-        if ( face->type1.private_dict.lenIV >= 0   &&
-             n < num_glyphs + TABLE_EXTEND )
+        if ( face->type1.private_dict.lenIV >= 0 &&
+             n < num_glyphs + TABLE_EXTEND       )
         {
           FT_Byte*  temp;
 
+
+          if ( size <= face->type1.private_dict.lenIV )
+          {
+            error = T1_Err_Invalid_File_Format;
+            goto Fail;
+          }
 
           /* t1_decrypt() shouldn't write to base -- make temporary copy */
           if ( FT_ALLOC( temp, size ) )

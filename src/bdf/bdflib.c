@@ -1537,6 +1537,12 @@
 
       s = _bdf_list_join( &p->list, ' ', &slen );
 
+      if ( !s )
+      {
+        error = BDF_Err_Invalid_File_Format;
+        goto Exit;
+      }
+
       if ( FT_NEW_ARRAY( p->glyph_name, slen + 1 ) )
         goto Exit;
 
