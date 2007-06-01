@@ -2,6 +2,7 @@
 
 	* src/cid/cidparse.c (cid_parser_new): Don't continue second search
 	pass for `StartData' if an error has occurred.
+	Exit properly if no `StartData' has been seen at all.
 
 	* builds/unix/ftsystem.c (FT_Stream_Open): Don't use ULONG_MAX but
 	LONG_MAX to avoid compiler warning.  Suggested by Sean McBride.
