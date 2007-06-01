@@ -384,7 +384,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    FT_Data	                                                           */
+  /*    FT_Data                                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Read-only binary data represented as a pointer and a length.       */
