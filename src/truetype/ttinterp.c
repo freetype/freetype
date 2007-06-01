@@ -1127,16 +1127,7 @@
     1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1
   };
 
-  static
-  const FT_Vector  Null_Vector = {0,0};
-
-
 #undef PACK
-
-
-#undef  NULL_Vector
-#define NULL_Vector  (FT_Vector*)&Null_Vector
-
 
 #if 1
 
