@@ -165,7 +165,10 @@
     while ( cur < limit )
     {
       if ( parser->root.error )
-        break;
+      {
+        error = parser->root.error;
+        goto Exit;
+      }
 
       if ( cur[0] == 'S' && ft_strncmp( (char*)cur, "StartData", 9 ) == 0 )
       {
