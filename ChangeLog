@@ -1,3 +1,12 @@
+2007-06-02  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/fterrdef.h (FT_Err_Corrupted_Font_Header,
+	FT_Err_Corrupted_Font_Glyphs): New error codes for BDF files.
+
+	* src/bdf/bdflib.c (bdf_load_font): Use them.
+
+	* src/bdf/bdflib.c (_bdf_parse_start): Check `FONT' better.
+
 2007-06-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Request_Metrics), src/cache/ftccmap.c
