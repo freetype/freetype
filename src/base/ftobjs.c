@@ -2243,14 +2243,14 @@
         w = h = face->ascender - face->descender;
         break;
 
-      case FT_SIZE_REQUEST_TYPE_CELL:
-        w = face->max_advance_width;
-        h = face->ascender - face->descender;
-        break;
-
       case FT_SIZE_REQUEST_TYPE_BBOX:
         w = face->bbox.xMax - face->bbox.xMin;
         h = face->bbox.yMax - face->bbox.yMin;
+        break;
+
+      case FT_SIZE_REQUEST_TYPE_CELL:
+        w = face->max_advance_width;
+        h = face->ascender - face->descender;
         break;
 
       case FT_SIZE_REQUEST_TYPE_SCALES:
@@ -2262,9 +2262,8 @@
           metrics->y_scale = metrics->x_scale;
         goto Calculate_Ppem;
 
-      default:
-        /* this never happens */
-        return;
+      case FT_SIZE_REQUEST_TYPE_MAX:
+        break;
       }
 
       /* to be on the safe side */

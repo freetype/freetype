@@ -1,3 +1,8 @@
+2007-06-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Request_Metrics), src/cache/ftccmap.c
+	(FTC_CMapCache_Lookup): Remove unused code.
+
 2007-06-01  Sean McBride  <sean@rogue-research.com>
 
 	* src/truetype/ttinterp.c (Null_Vector, NULL_Vector): Removed,
