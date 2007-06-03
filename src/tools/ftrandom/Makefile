@@ -25,11 +25,9 @@ LIBS = -lm \
        -lfreetype \
        -lz
 
-all: ftrandom fttest
+all: ftrandom
 
-ftrandom: $(SRC_DIR)/ftrandom.c $(SRC_DIR)/fttest.c
+ftrandom: $(SRC_DIR)/ftrandom.c
 	$(CC) -o $(OBJ_DIR)/ftrandom $(CFLAGS) $(SRC_DIR)/ftrandom.c $(LIBS)
-fttest: $(SRC_DIR)/fttest.c
-	$(CC) -o $(OBJ_DIR)/fttest -DSTANDALONE $(CFLAGS) $(SRC_DIR)/fttest.c $(LIBS)
 
 # EOF

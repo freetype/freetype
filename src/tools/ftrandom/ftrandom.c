@@ -56,7 +56,7 @@
   static int    rasterize      = false;
   static char*  results_dir    = "results";
 
-#define GOOD_FONTS_DIR        "/home/wl/freetype-testfonts"
+#define GOOD_FONTS_DIR  "/home/wl/freetype-testfonts"
 
   static char*  default_dir_list[] =
   {
@@ -95,6 +95,124 @@
   } *fontlist;
 
   static int  fcnt;
+
+
+  static int
+  FT_MoveTo( const FT_Vector  *to,
+             void             *user )
+  {
+    return 0;
+  }
+
+
+  static int
+  FT_LineTo( const FT_Vector  *to,
+             void             *user )
+  {
+    return 0;
+  }
+
+
+  static int
+  FT_ConicTo( const FT_Vector  *_cp,
+              const FT_Vector  *to,
+              void             *user )
+  {
+    return 0;
+  }
+
+
+  static int
+  FT_CubicTo( const FT_Vector  *cp1,
+              const FT_Vector  *cp2,
+              const FT_Vector  *to,
+              void             *user )
+  {
+    return 0;
+  }
+
+
+  static FT_Outline_Funcs outlinefuncs =
+  {
+    FT_MoveTo,
+    FT_LineTo,
+    FT_ConicTo,
+    FT_CubicTo,
+    0, 0          /* No shift, no delta */
+  };
+
+
+  static void
+  TestFace( FT_Face  face )
+  {
+    int  gid;
+    int  load_flags = FT_LOAD_DEFAULT;
+
+
+    if ( check_outlines                               &&
+         ( face->face_flags & FT_FACE_FLAG_SCALABLE ) )
+      load_flags = FT_LOAD_NO_BITMAP;
+
+    if ( nohints )
+      load_flags |= FT_LOAD_NO_HINTING;
+
+    FT_Set_Char_Size( face, 0, (int)( 12 * 64 ), 72, 72 );
+
+    for ( gid = 0; gid < face->num_glyphs; ++gid )
+    {
+      if ( check_outlines                               &&
+           ( face->face_flags & FT_FACE_FLAG_SCALABLE ) )
+      {
+        if ( !FT_Load_Glyph( face, gid, load_flags ) )
+          FT_Outline_Decompose( &face->glyph->outline, &outlinefuncs, NULL );
+      }
+      else
+        FT_Load_Glyph( face, gid, load_flags );
+
+      if ( rasterize )
+        FT_Render_Glyph( face->glyph, ft_render_mode_normal );
+    }
+
+    FT_Done_Face( face );
+  }
+
+
+  static void
+  ExecuteTest( char*  testfont )
+  {
+    FT_Library  context;
+    FT_Face     face;
+    int         i, num;
+
+
+    if ( FT_Init_FreeType( &context ) )
+    {
+      fprintf( stderr, "Can't initialize FreeType.\n" );
+      exit( 1 );
+    }
+
+    if ( FT_New_Face( context, testfont, 0, &face ) )
+    {
+      /* The font is erroneous, so if this fails that's ok. */
+      exit( 0 );
+    }
+
+    if ( face->num_faces == 1 )
+      TestFace( face );
+    else
+    {
+      num = face->num_faces;
+      FT_Done_Face( face );
+
+      for ( i = 0; i < num; ++i )
+      {
+        if ( !FT_New_Face( context, testfont, i, &face ) )
+          TestFace( face );
+      }
+    }
+
+    exit( 0 );
+  }
 
 
   static int
@@ -354,9 +472,6 @@
 
     return true;
   }
-
-
-#include "fttest.c"
 
 
   static int  child_pid;
