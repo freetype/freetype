@@ -2230,7 +2230,7 @@
 
     if ( FT_IS_SCALABLE( face ) )
     {
-      FT_Long  w, h, scaled_w = 0, scaled_h = 0;
+      FT_Long  w = 0, h = 0, scaled_w = 0, scaled_h = 0;
 
 
       switch ( req->type )

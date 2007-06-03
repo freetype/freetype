@@ -1,3 +1,7 @@
+2007-06-03  Ismail Dönmez  <ismail@pardus.org.tr>
+
+	* src/base/ftobjs.c (FT_Request_Metrics): Fix compiler warning.
+
 2007-06-02  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/fterrdef.h (FT_Err_Corrupted_Font_Header,
