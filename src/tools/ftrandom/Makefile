@@ -25,9 +25,9 @@ LIBS = -lm \
        -lfreetype \
        -lz
 
-all: ftrandom
+all: $(OBJ_DIR)/ftrandom
 
-ftrandom: $(SRC_DIR)/ftrandom.c
+$(OBJ_DIR)/ftrandom: $(SRC_DIR)/ftrandom.c
 	$(CC) -o $(OBJ_DIR)/ftrandom $(CFLAGS) $(SRC_DIR)/ftrandom.c $(LIBS)
 
 # EOF
