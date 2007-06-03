@@ -1,5 +1,10 @@
 2007-06-03  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/ftrandom/*: Add the `ftrandom' test program written by
+	George Williams (with some modifications).
+
+2007-06-03  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftobjs.c (destroy_charmaps), src/type1/t1objs.c
 	(T1_Face_Done), src/winfonts/winfnt.c (FNT_Face_Done): Check for
 	face == NULL.  Suggested by Graham Asher.
