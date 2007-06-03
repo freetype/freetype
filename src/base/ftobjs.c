@@ -787,6 +787,9 @@
     FT_Int  n;
 
 
+    if ( !face )
+      return;
+
     for ( n = 0; n < face->num_charmaps; n++ )
     {
       FT_CMap  cmap = FT_CMAP( face->charmaps[n] );

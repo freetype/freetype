@@ -1,3 +1,9 @@
+2007-06-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (destroy_charmaps), src/type1/t1objs.c
+	(T1_Face_Done), src/winfonts/winfnt.c (FNT_Face_Done): Check for
+	face == NULL.  Suggested by Graham Asher.
+
 2007-06-03  Ismail Dönmez  <ismail@pardus.org.tr>
 
 	* src/base/ftobjs.c (FT_Request_Metrics): Fix compiler warning.

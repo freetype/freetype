@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver for Windows FNT/FON files                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2006 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2007 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -386,13 +386,16 @@
   static void
   FNT_Face_Done( FNT_Face  face )
   {
-    FT_Memory  memory = FT_FACE_MEMORY( face );
+    if ( face )
+    {
+      FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
-    fnt_font_done( face );
+      fnt_font_done( face );
 
-    FT_FREE( face->root.available_sizes );
-    face->root.num_fixed_sizes = 0;
+      FT_FREE( face->root.available_sizes );
+      face->root.num_fixed_sizes = 0;
+    }
   }
 
 
