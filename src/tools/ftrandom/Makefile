@@ -5,6 +5,8 @@ TOP_DIR ?= ../../..
 OBJ_DIR ?= $(TOP_DIR)/objs
 
 
+# The setup below is for gcc on a Unix-like platform.
+
 SRC_DIR = $(TOP_DIR)/src/tools/ftrandom
 
 CC = gcc
@@ -27,7 +29,7 @@ LIBS = -lm \
 
 all: $(OBJ_DIR)/ftrandom
 
-$(OBJ_DIR)/ftrandom: $(SRC_DIR)/ftrandom.c
+$(OBJ_DIR)/ftrandom: $(SRC_DIR)/ftrandom.c $(OBJ_DIR)/libfreetype.a
 	$(CC) -o $(OBJ_DIR)/ftrandom $(CFLAGS) $(SRC_DIR)/ftrandom.c $(LIBS)
 
 # EOF

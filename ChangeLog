@@ -1,3 +1,9 @@
+2007-06-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidgload.c (cid_load_glyph): Check `fd_select'.
+
+	* src/tools/ftrandom/Makefile: Depend on `libfreetype.a'.
+
 2007-06-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/ftrandom/*: Add the `ftrandom' test program written by
