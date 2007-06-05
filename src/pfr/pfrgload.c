@@ -133,7 +133,12 @@
 
 
     /* check that we have begun a new path */
-    FT_ASSERT( glyph->path_begun != 0 );
+    if ( !glyph->path_begun )
+    {
+      error = PFR_Err_Invalid_Table;
+      FT_ERROR(( "pfr_glyph_line_to: invalid glyph data\n" ));
+      goto Exit;
+    }
 
     error = FT_GLYPHLOADER_CHECK_POINTS( loader, 1, 0 );
     if ( !error )
@@ -147,6 +152,7 @@
       outline->n_points++;
     }
 
+  Exit:
     return error;
   }
 
@@ -163,7 +169,12 @@
 
 
     /* check that we have begun a new path */
-    FT_ASSERT( glyph->path_begun != 0 );
+    if ( !glyph->path_begun )
+    {
+      error = PFR_Err_Invalid_Table;
+      FT_ERROR(( "pfr_glyph_line_to: invalid glyph data\n" ));
+      goto Exit;
+    }
 
     error = FT_GLYPHLOADER_CHECK_POINTS( loader, 3, 0 );
     if ( !error )
@@ -182,6 +193,7 @@
       outline->n_points = (FT_Short)( outline->n_points + 3 );
     }
 
+  Exit:
     return error;
   }
 

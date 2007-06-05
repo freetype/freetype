@@ -4,8 +4,8 @@
 	(pfr_glyph_load_simple): Convert assertion into normal FreeType
 	error.
 	Check `idx'.
-	(pfr_glyph_load_compound): Convert assertion into normal FreeType
-	error.
+	(pfr_glyph_load_compound, pfr_glyph_curve_to, pfr_glyph_line_to):
+	Convert assertion into normal FreeType error.
 
 	* src/pfr/pfrtypes.h (PFR_GlyphRec): Comment out unused code.
 
