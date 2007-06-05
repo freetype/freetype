@@ -1066,9 +1066,16 @@
     FT_Face     root   = (FT_Face)&face->root;
     FT_Fixed    temp[6];
     FT_Fixed    temp_scale;
+    FT_Int      result;
 
 
-    (void)T1_ToFixedArray( parser, 6, temp, 3 );
+    result = T1_ToFixedArray( parser, 6, temp, 3 );
+
+    if ( result < 0 )
+    {
+      parser->root.error = T1_Err_Invalid_File_Format;
+      return;
+    }
 
     temp_scale = FT_ABS( temp[3] );
 

@@ -12,6 +12,13 @@
 
 	* src/winfnt/winfnt.c (FNT_Face_Init): Check `family_size'.
 
+
+	* src/psaux/psobjs.c (ps_tocoordarray, ps_tofixedarray): Return -1
+	in case of parsing error.
+	(ps_parser_load_field): Updated.
+
+	* src/type1/t1load.c (parse_font_matrix): Updated.
+
 2007-06-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidgload.c (cid_load_glyph): Check `fd_select'.

@@ -785,8 +785,7 @@
 
     if ( c == '[' )
       ender = ']';
-
-    if ( c == '{' )
+    else if ( c == '{' )
       ender = '}';
 
     if ( ender )
@@ -795,7 +794,8 @@
     /* now, read the coordinates */
     while ( cur < limit )
     {
-      FT_Short dummy;
+      FT_Short  dummy;
+      FT_Byte*  old_cur;
 
 
       /* skip whitespace in front of data */
@@ -812,11 +812,20 @@
         break;
       }
 
+      old_cur = cur;
+
       /* call PS_Conv_ToFixed() even if coords == NULL */
       /* to properly parse number at `cur'             */
       *( coords != NULL ? &coords[count] : &dummy ) =
         (FT_Short)( PS_Conv_ToFixed( &cur, limit, 0 ) >> 16 );
-      count++;
+
+      if ( old_cur == cur )
+      {
+        count = -1;
+        goto Exit;
+      }
+      else
+        count++;
 
       if ( !ender )
         break;
@@ -830,7 +839,7 @@
 
   /* first character must be a delimiter or a part of a number */
   /* NB: `values' can be NULL if we just want to skip the      */
-  /*     array in this case we ignore `max_values'             */
+  /*     array; in this case we ignore `max_values'            */
 
   static FT_Int
   ps_tofixedarray( FT_Byte*  *acur,
@@ -854,8 +863,7 @@
 
     if ( c == '[' )
       ender = ']';
-
-    if ( c == '{' )
+    else if ( c == '{' )
       ender = '}';
 
     if ( ender )
@@ -864,7 +872,8 @@
     /* now, read the values */
     while ( cur < limit )
     {
-      FT_Fixed dummy;
+      FT_Fixed  dummy;
+      FT_Byte*  old_cur;
 
 
       /* skip whitespace in front of data */
@@ -881,11 +890,20 @@
         break;
       }
 
+      old_cur = cur;
+
       /* call PS_Conv_ToFixed() even if coords == NULL */
       /* to properly parse number at `cur'             */
       *( values != NULL ? &values[count] : &dummy ) =
         PS_Conv_ToFixed( &cur, limit, power_ten );
-      count++;
+
+      if ( old_cur == cur )
+      {
+        count = -1;
+        goto Exit;
+      }
+      else
+        count++;
 
       if ( !ender )
         break;
@@ -1161,9 +1179,18 @@
         {
           FT_Fixed  temp[4];
           FT_BBox*  bbox = (FT_BBox*)q;
+          FT_Int    result;
 
 
-          (void)ps_tofixedarray( &token.start, token.limit, 4, temp, 0 );
+          result = ps_tofixedarray( &token.start, token.limit, 4, temp, 0 );
+
+          if ( result < 0 )
+          {
+            FT_ERROR(( "ps_parser_load_field: "
+                       "expected four integers in bounding box\n" ));
+            error = PSaux_Err_Invalid_File_Format;
+            goto Exit;
+          }
 
           bbox->xMin = FT_RoundFix( temp[0] );
           bbox->yMin = FT_RoundFix( temp[1] );
