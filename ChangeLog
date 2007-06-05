@@ -9,6 +9,9 @@
 
 	* src/pfr/pfrtypes.h (PFR_GlyphRec): Comment out unused code.
 
+
+	* src/winfnt/winfnt.c (FNT_Face_Init): Check `family_size'.
+
 2007-06-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidgload.c (cid_load_glyph): Check `fd_select'.

@@ -536,11 +536,17 @@
       root->num_glyphs = font->header.last_char -
                          font->header.first_char + 1 + 1;
 
+      if ( font->header.face_name_offset >= font->header.file_size )
+      {
+        FT_TRACE2(( "invalid family name offset!\n" ));
+        error = FNT_Err_Invalid_File_Format;
+        goto Fail;
+      }
+      family_size = font->header.file_size - font->header.face_name_offset;
       /* Some broken fonts don't delimit the face name with a final */
       /* NULL byte -- the frame is erroneously one byte too small.  */
       /* We thus allocate one more byte, setting it explicitly to   */
       /* zero.                                                      */
-      family_size = font->header.file_size - font->header.face_name_offset;
       if ( FT_ALLOC( font->family_name, family_size + 1 ) )
         goto Fail;
 
