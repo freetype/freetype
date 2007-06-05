@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR glyph loader (body).                                    */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2005 by                                          */
+/*  Copyright 2002, 2003, 2005, 2007 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -59,8 +59,10 @@
     glyph->y_control = NULL;
 
     glyph->max_xy_control = 0;
+#if 0
     glyph->num_x_control  = 0;
     glyph->num_y_control  = 0;
+#endif
 
     FT_FREE( glyph->subs );
 
@@ -244,7 +246,8 @@
     flags = PFR_NEXT_BYTE( p );
 
     /* test for composite glyphs */
-    FT_ASSERT( ( flags & PFR_GLYPH_IS_COMPOUND ) == 0 );
+    if ( flags & PFR_GLYPH_IS_COMPOUND )
+      goto Failure;
 
     x_count = 0;
     y_count = 0;
@@ -410,7 +413,8 @@
         cur = pos;
         for ( n = 0; n < args_count; n++ )
         {
-          FT_Int  idx, delta;
+          FT_UInt  idx;
+          FT_Int   delta;
 
 
           /* read the X argument */
@@ -419,6 +423,8 @@
           case 0:                           /* 8-bit index */
             PFR_CHECK( 1 );
             idx  = PFR_NEXT_BYTE( p );
+            if ( idx > x_count )
+              goto Failure;
             cur->x = glyph->x_control[idx];
             FT_TRACE7(( " cx#%d", idx ));
             break;
@@ -447,6 +453,8 @@
           case 0:                           /* 8-bit index */
             PFR_CHECK( 1 );
             idx  = PFR_NEXT_BYTE( p );
+            if ( idx > y_count )
+              goto Failure;
             cur->y = glyph->y_control[idx];
             FT_TRACE7(( " cy#%d", idx ));
             break;
@@ -519,6 +527,7 @@
   Exit:
     return error;
 
+  Failure:
   Too_Short:
     error = PFR_Err_Invalid_Table;
     FT_ERROR(( "pfr_glyph_load_simple: invalid glyph data\n" ));
@@ -544,7 +553,8 @@
     flags = PFR_NEXT_BYTE( p );
 
     /* test for composite glyphs */
-    FT_ASSERT( ( flags & PFR_GLYPH_IS_COMPOUND ) != 0 );
+    if ( !( flags & PFR_GLYPH_IS_COMPOUND ) )
+      goto Failure;
 
     count = flags & 0x3F;
 
@@ -670,14 +680,12 @@
   Exit:
     return error;
 
+  Failure:
   Too_Short:
     error = PFR_Err_Invalid_Table;
     FT_ERROR(( "pfr_glyph_load_compound: invalid glyph data\n" ));
     goto Exit;
   }
-
-
-
 
 
   static FT_Error

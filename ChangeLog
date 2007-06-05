@@ -1,3 +1,14 @@
+2007-06-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/pfr/pfrgload.c (pfr_glyph_done): Comment out unused code.
+	(pfr_glyph_load_simple): Convert assertion into normal FreeType
+	error.
+	Check `idx'.
+	(pfr_glyph_load_compound): Convert assertion into normal FreeType
+	error.
+
+	* src/pfr/pfrtypes.h (PFR_GlyphRec): Comment out unused code.
+
 2007-06-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidgload.c (cid_load_glyph): Check `fd_select'.
