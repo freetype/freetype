@@ -2071,7 +2071,7 @@
             if ( idx >= decoder->num_locals )
             {
               FT_ERROR(( "cff_decoder_parse_charstrings:" ));
-              FT_ERROR(( "  invalid local subr index\n" ));
+              FT_ERROR(( " invalid local subr index\n" ));
               goto Syntax_Error;
             }
 
