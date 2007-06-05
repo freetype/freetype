@@ -302,7 +302,8 @@
 
     if ( n_ins > face->max_profile.maxSizeOfInstructions )
     {
-      FT_TRACE0(( "TT_Load_Simple_Glyph: Too many instructions!\n" ));
+      FT_TRACE0(( "TT_Load_Simple_Glyph: Too many instructions (%d)\n",
+                  n_ins ));
       error = TT_Err_Too_Many_Hints;
       goto Fail;
     }
@@ -988,7 +989,8 @@
       /* check it */
       if ( n_ins > ((TT_Face)loader->face)->max_profile.maxSizeOfInstructions )
       {
-        FT_TRACE0(( "Too many instructions (%d)\n", n_ins ));
+        FT_TRACE0(( "TT_Process_Composite_Glyph: Too many instructions (%d)\n",
+                    n_ins ));
 
         return TT_Err_Too_Many_Hints;
       }
