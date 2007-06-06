@@ -1079,6 +1079,13 @@
 
     temp_scale = FT_ABS( temp[3] );
 
+    if ( temp_scale == 0 )
+    {
+      FT_ERROR(( "parse_font_matrix: invalid font matrix\n" ));
+      parser->root.error = T1_Err_Invalid_File_Format;
+      return;
+    }
+
     /* Set Units per EM based on FontMatrix values.  We set the value to */
     /* 1000 / temp_scale, because temp_scale was already multiplied by   */
     /* 1000 (in t1_tofixed, from psobjs.c).                              */

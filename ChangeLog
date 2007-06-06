@@ -6,6 +6,20 @@
 	* src/pfr/pfrcmap.c (pfr_cmap_init): Convert assertion into normal
 	FreeType error.
 
+
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Do a rough check of
+	`font_count'.
+
+
+	* src/type1/t1load.c (parse_font_matrix): Check `temp_scale'.
+
+
+	* src/cff/cffgload.c (cff_decoder_prepare): Change return type to
+	`FT_Error'.
+	Check `fd_index'.
+	(cff_slot_load): Updated.
+	* src/cff/cffgload.h: Updated.
+
 2007-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrgload.c (pfr_glyph_done): Comment out unused code.
@@ -18,7 +32,7 @@
 	* src/pfr/pfrtypes.h (PFR_GlyphRec): Comment out unused code.
 
 
-	* src/winfnt/winfnt.c (FNT_Face_Init): Check `family_size'.
+	* src/winfonts/winfnt.c (FNT_Face_Init): Check `family_size'.
 
 
 	* src/psaux/psobjs.c (ps_tocoordarray, ps_tofixedarray): Return -1

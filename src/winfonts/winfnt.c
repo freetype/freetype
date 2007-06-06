@@ -267,6 +267,15 @@
           goto Exit;
         }
 
+        /* loading `winfnt_header_fields' needs at least 118 bytes;    */
+        /* use this as a rough measure to check the expected font size */
+        if ( font_count * 118UL > stream->size )
+        {
+          FT_TRACE2(( "invalid number of faces\n" ));
+          error = FNT_Err_Invalid_File_Format;
+          goto Exit;
+        }
+
         face->root.num_faces = font_count;
 
         if ( face_index >= font_count )
