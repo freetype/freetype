@@ -1,3 +1,7 @@
+2007-06-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_Outline_Decompose): Check `last'.
+
 2007-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrgload.c (pfr_glyph_done): Comment out unused code.
