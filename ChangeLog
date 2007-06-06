@@ -2,6 +2,10 @@
 
 	* src/base/ftoutln.c (FT_Outline_Decompose): Check `last'.
 
+
+	* src/pfr/pfrcmap.c (pfr_cmap_init): Convert assertion into normal
+	FreeType error.
+
 2007-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrgload.c (pfr_glyph_done): Comment out unused code.
