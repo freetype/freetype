@@ -354,14 +354,15 @@
 
       for (;;)
       {
-        FT_Int  format, args_format = 0, args_count, n;
+        FT_UInt  format, format_low, args_format = 0, args_count, n;
 
 
         /***************************************************************/
         /*  read instruction                                           */
         /*                                                             */
         PFR_CHECK( 1 );
-        format = PFR_NEXT_BYTE( p );
+        format     = PFR_NEXT_BYTE( p );
+        format_low = format & 15;
 
         switch ( format >> 4 )
         {
@@ -381,30 +382,34 @@
         case 5:                             /* move to outside contour */
           FT_TRACE6(( "- move to outside" ));
         Line1:
-          args_format = format & 15;
+          args_format = format_low;
           args_count  = 1;
           break;
 
         case 2:                             /* horizontal line to */
-          FT_TRACE6(( "- horizontal line to cx.%d", format & 15 ));
+          FT_TRACE6(( "- horizontal line to cx.%d", format_low ));
+          if ( format_low > x_count )
+            goto Failure;
+          pos[0].x   = glyph->x_control[format_low];
           pos[0].y   = pos[3].y;
-          pos[0].x   = glyph->x_control[format & 15];
           pos[3]     = pos[0];
           args_count = 0;
           break;
 
         case 3:                             /* vertical line to */
-          FT_TRACE6(( "- vertical line to cy.%d", format & 15 ));
+          FT_TRACE6(( "- vertical line to cy.%d", format_low ));
+          if ( format_low > y_count )
+            goto Failure;
           pos[0].x   = pos[3].x;
-          pos[0].y   = glyph->y_control[format & 15];
-          pos[3] = pos[0];
+          pos[0].y   = glyph->y_control[format_low];
+          pos[3]     = pos[0];
           args_count = 0;
           break;
 
         case 6:                             /* horizontal to vertical curve */
           FT_TRACE6(( "- hv curve " ));
-          args_format  = 0xB8E;
-          args_count   = 3;
+          args_format = 0xB8E;
+          args_count  = 3;
           break;
 
         case 7:                             /* vertical to horizontal curve */
@@ -416,7 +421,7 @@
         default:                            /* general curve to */
           FT_TRACE6(( "- general curve" ));
           args_count  = 4;
-          args_format = format & 15;
+          args_format = format_low;
         }
 
         /***********************************************************/
