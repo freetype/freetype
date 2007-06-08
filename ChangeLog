@@ -1,3 +1,13 @@
+2007-06-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Undo change from 2007-04-28. 
+	Fonts without a cmap must be handled correctly by FreeType (anything
+	else would be a bug).
+
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	[FT_DEBUG_LEVEL_TRACE]: Improve tracing message.
+
 2007-06-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttsbit0.c (tt_sbit_decoder_init,
