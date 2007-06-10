@@ -463,12 +463,26 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* Define TT_CONFIG_OPTION_UNPATENTED_HINTING (in addition to            */
-  /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER) to compile the unpatented      */
-  /* work-around hinting system.  Note that for the moment, the algorithm  */
-  /* is only used when selected at runtime through the parameter tag       */
-  /* FT_PARAM_TAG_UNPATENTED_HINTING; or when the debug hook               */
-  /* FT_DEBUG_HOOK_UNPATENTED_HINTING is globally activated.               */
+  /* The TT_CONFIG_OPTION_UNPATENTED_HINTING macro is *ignored* if you     */
+  /* have defined TT_CONFIG_OPTION_BYTECODE_INTERPRETER. If not, it will   */
+  /* compile a special work-around TrueType bytecode interpreter that      */
+  /* doesn't implement any of the patented opcodes/algorithms.             */
+  /*                                                                       */
+  /* this is only useful for a small number of font files (mostly Asian)   */
+  /* that require bytecode interpretation to properly load glyphs. For all */
+  /* other fonts, this will produce unpleasant results.                    */
+  /*                                                                       */
+  /* for this reason, the unpatented interpreter is never used by to load  */
+  /* glyphs from TrueType fonts, unless one of the following happens:      */
+  /*                                                                       */
+  /*   - the unpatented interpreter is explicitely activated by the        */
+  /*     user through the FT_PARAM_TAG_UNPATENTED_HINTING parameter tag    */
+  /*     when opening the FT_Face                                          */
+  /*                                                                       */
+  /*   - FreeType detects that the FT_Face corresponds to one of the       */
+  /*     'trick' fonts (e.g. Mingliu) it knows about. The font engine      */
+  /*     contains a hard-coded list of font names and other matching       */
+  /*     parameters.                                                       */
   /*                                                                       */
 #define TT_CONFIG_OPTION_UNPATENTED_HINTING
 

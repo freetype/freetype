@@ -3368,6 +3368,31 @@ FT_BEGIN_HEADER
                       FT_Int      *aminor,
                       FT_Int      *apatch );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Face_CheckTrueTypePatents                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Parses the whole content of a TrueType font file and returns       */
+  /*    true if it uses any of the patented opcodes. this is only useful   */
+  /*    if you want to be able to use the unpatented hinter with           */
+  /*    fonts that do *not* use these opcodes.                             */
+  /*                                                                       */
+  /*    note that this function parses *all* glyph instructions in the     */
+  /*    font file, and may be *slow*                                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: a face handle                                              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    TRUE if this is a TrueType font that uses one of the patented       */
+  /*    opcodes. FALSE otherwise                                           */
+  /*                                                                       */
+  FT_EXPORT( FT_Bool )
+  FT_Face_CheckTrueTypePatents( FT_Face   face );
+
   /* */
 
 

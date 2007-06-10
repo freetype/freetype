@@ -1,6 +1,18 @@
+2007-06-10  David Turner  <david@freetype.org>
+
+	* include/freetype/config/ftoption.h: clarify documentation regarding
+	unpatented hinting
+
+	* include/freetype/freetype.h, src/base/ftpatent.c, src/truetype/ttdriver.c,
+	include/freetype/internal/services/svttglyf.h, modules.cfg,:
+	include/freetype/internal/ftserv.h,:
+	Fonts without a cmap must be handled correctly by FreeType (anything
+	Adding the FT_Face_CheckTrueTypePatents API to FT_FREETYPE_H, it is
+	implemented by the optional src/base/ftpatent.c
+
 2007-06-08  Werner Lemberg  <wl@gnu.org>
 
-	* src/sfnt/sfobjs.c (sfnt_load_face): Undo change from 2007-04-28. 
+	* src/sfnt/sfobjs.c (sfnt_load_face): Undo change from 2007-04-28.
 	Fonts without a cmap must be handled correctly by FreeType (anything
 	else would be a bug).
 
@@ -399,7 +411,7 @@
 	computation.
 
 	* src/autofit/afloader.c (af_loader_load_g): In the case of
-	monospaced fonts, always set `rsb_delta' and `lsb_delta' to 0. 
+	monospaced fonts, always set `rsb_delta' and `lsb_delta' to 0.
 	Otherwise code that uses them will most certainly ruin the fixed
 	advance property.
 
