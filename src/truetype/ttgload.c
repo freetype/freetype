@@ -244,7 +244,7 @@
     FT_Outline*     outline;
     TT_Face         face       = (TT_Face)load->face;
     FT_UShort       n_ins;
-    FT_Int          n, n_points;
+    FT_Int          n_points;
 
     FT_Byte         *flag, *flag_limit;
     FT_Byte         c, count;
