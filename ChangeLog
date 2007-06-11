@@ -1,6 +1,6 @@
 2007-06-11  Werner Lemberg  <wl@gnu.org>
 
-	* docs/CHANGES: Document FT_Face_CheckTrueTypePatents).
+	* docs/CHANGES: Document FT_Face_CheckTrueTypePatents.
 
 2007-06-10  David Turner  <david@freetype.org>
 
