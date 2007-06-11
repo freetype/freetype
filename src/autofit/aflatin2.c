@@ -1913,11 +1913,14 @@
         org_left  = org_pos + ((org_len - cur_len) >> 1);
         org_right = org_pos + ((org_len + cur_len) >> 1);
 
+        AF_LOG(( "ALIGN: left=%.2f right=%.2f ", org_left/64.0, org_right/64.0 ));
         cur_center = org_center;
 
         if ( edge2->flags & AF_EDGE_DONE )
+        {
+          AF_LOG(( "\n" ));
           edge->pos = edge2->pos - cur_len;
-
+        }
         else
         {
          /* we want to compare several displacement, and choose
@@ -1929,18 +1932,24 @@
 
           /* note: don't even try to fit tiny stems */
           if ( cur_len < 32 )
+          {
+            AF_LOG(( "tiny stem\n" ));
             goto AlignStem;
+          }
 
           /* if the span is within a single pixel, don't touch it */
           if ( FT_PIX_FLOOR(org_left) == FT_PIX_CEIL(org_right) )
+          {
+            AF_LOG(( "single pixel stem\n" ));
             goto AlignStem;
+          }
 
           if (cur_len <= 96)
           {
            /* we want to avoid the absolute worst case which is
             * when the left and right edges of the span each represent
             * about 50% of the gray. we'd better want to change this
-            * to 20/80%, since this is much more pleasant to the eye with
+            * to 25/75%, since this is much more pleasant to the eye with
             * very acceptable distortion
             */
             FT_Pos  frac_left  = (org_left) & 63;
@@ -1950,16 +1959,18 @@
                  frac_right >= 22 && frac_right <= 42 )
             {
               org = frac_left;
-              fit = (org <= 32) ? 13 : 51;
+              fit = (org <= 32) ? 16 : 48;
               delta = FT_ABS(fit - org);
               displacements[count] = fit - org;
               scores[count++]      = delta;
+              AF_LOG(( "dispA=%.2f (%d) ", (fit - org)/64.0, delta ));
 
               org = frac_right;
-              fit = (org <= 32) ? 13 : 51;
+              fit = (org <= 32) ? 16 : 48;
               delta = FT_ABS(fit - org);
-              displacement[count] = fit - org;
+              displacements[count] = fit - org;
               scores[count++]     = delta;
+              AF_LOG(( "dispB=%.2f (%d) ", (fit - org)/64.0, delta ));
             }
           }
 
@@ -1969,6 +1980,7 @@
           delta = FT_ABS(fit - org);
           displacements[count] = fit - org;
           scores[count++]      = delta;
+          AF_LOG(( "dispC=%.2f (%d) ", (fit - org)/64.0, delta ));
 
           /* snapping the right edge to the grid */
           org   = org_right;
@@ -1976,6 +1988,7 @@
           delta = FT_ABS(fit - org);
           displacements[count] = fit - org;
           scores[count++]      = delta;
+          AF_LOG(( "dispD=%.2f (%d) ", (fit - org)/64.0, delta ));
 
           /* now find the best displacement */
           {
@@ -1994,6 +2007,7 @@
 
             cur_center = org_center + best_disp;
           }
+          AF_LOG(( "\n" ));
         }
 
       AlignStem:
@@ -2033,7 +2047,7 @@
     /* We don't handle horizontal edges since we can't easily assure that */
     /* the third (lowest) stem aligns with the base line; it might end up */
     /* one pixel higher or lower.                                         */
-
+#if 0
     n_edges = edge_limit - edges;
     if ( dim == AF_DIMENSION_HORZ && ( n_edges == 6 || n_edges == 12 ) )
     {
@@ -2080,7 +2094,7 @@
           edge3->link->flags |= AF_EDGE_DONE;
       }
     }
-
+#endif
     if ( has_serifs || !anchor )
     {
       /*
