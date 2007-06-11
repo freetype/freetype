@@ -251,6 +251,7 @@
     FT_Vector       *vec, *vec_limit;
     FT_Pos          x;
     FT_Short        *cont, *cont_limit;
+    FT_Int          xy_size = 0;
 
 
     /* check that we can add the contours to the glyph */
@@ -362,23 +363,27 @@
     flag      = (FT_Byte*)outline->tags;
     x         = 0;
 
+    if ( p + xy_size > limit )
+      goto Invalid_Outline;
+
     for ( ; vec < vec_limit; vec++, flag++ )
     {
       FT_Pos  y = 0;
+      FT_Byte f = *flag;
 
 
-      if ( *flag & 2 )
+      if ( f & 2 )
       {
-        if ( p + 1 > limit )
+        if (p + 1 > limit)
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_BYTE( p );
-        if ( ( *flag & 16 ) == 0 )
+        if ( ( f & 16 ) == 0 )
           y = -y;
       }
-      else if ( ( *flag & 16 ) == 0 )
+      else if ( ( f & 16 ) == 0 )
       {
-        if ( p + 2 > limit )
+        if (p + 2 > limit)
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_SHORT( p );
@@ -386,6 +391,7 @@
 
       x     += y;
       vec->x = x;
+      *flag  = f & ~(2|16);
     }
 
     /* reading the Y coordinates */
@@ -398,20 +404,21 @@
     for ( ; vec < vec_limit; vec++, flag++ )
     {
       FT_Pos  y = 0;
+      FT_Byte f = *flag;
 
 
-      if ( *flag & 4 )
+      if ( f & 4 )
       {
-        if ( p  +1 > limit )
+        if (p + 1 > limit)
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_BYTE( p );
-        if ( ( *flag & 32 ) == 0 )
+        if ( ( f & 32 ) == 0 )
           y = -y;
       }
-      else if ( ( *flag & 32 ) == 0 )
+      else if ( ( f & 32 ) == 0 )
       {
-        if ( p + 2 > limit )
+        if (p + 2 > limit)
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_SHORT( p );
@@ -419,11 +426,8 @@
 
       x     += y;
       vec->y = x;
+      *flag  = f & ~(4|32);
     }
-
-    /* clear the touch tags */
-    for ( n = 0; n < n_points; n++ )
-      outline->tags[n] &= FT_CURVE_TAG_ON;
 
     outline->n_points   = (FT_UShort)n_points;
     outline->n_contours = (FT_Short) n_contours;

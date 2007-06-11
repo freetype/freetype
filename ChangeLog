@@ -1,5 +1,7 @@
 2007-06-10  David Turner  <david@freetype.org>
 
+	* src/truetype/ttgload.c: slight speed-up to the TrueType glyph loader
+
 	* include/freetype/config/ftoption.h: clarify documentation regarding
 	unpatented hinting
 
