@@ -902,7 +902,7 @@
         continue;
 
       for ( seg2 = segments; seg2 < segment_limit; seg2++ )
-        if ( seg1->dir + seg2->dir == 0 )
+        if ( seg1->dir + seg2->dir == 0 && seg2->pos > seg1->pos )
 #endif
         {
           FT_Pos  pos1 = seg1->pos;
@@ -1940,24 +1940,26 @@
            /* we want to avoid the absolute worst case which is
             * when the left and right edges of the span each represent
             * about 50% of the gray. we'd better want to change this
-            * to 25/75%, since this is much more pleasant to the eye with
+            * to 20/80%, since this is much more pleasant to the eye with
             * very acceptable distortion
             */
             FT_Pos  frac_left  = (org_left) & 63;
             FT_Pos  frac_right = (org_right) & 63;
 
-            if (frac_left >= 20 && frac_left <= 44)
+            if ( frac_left  >= 22 && frac_left  <= 42 &&
+                 frac_right >= 22 && frac_right <= 42 )
             {
-              FT_Pos  ref = (frac_left <= 32) ? 16 : 48;
-              displacements[count] = delta = ref - frac_left;
-              scores[count++]      = FT_ABS(delta) + 8;
-            }
+              org = frac_left;
+              fit = (org <= 32) ? 13 : 51;
+              delta = FT_ABS(fit - org);
+              displacements[count] = fit - org;
+              scores[count++]      = delta;
 
-            if (frac_right >= 20 && frac_right <= 44)
-            {
-              FT_Pos  ref = (frac_right < 32) ? 16 : 48;
-              displacements[count] = delta = ref - frac_right;
-              scores[count++]      = FT_ABS(delta) + 8;
+              org = frac_right;
+              fit = (org <= 32) ? 13 : 51;
+              delta = FT_ABS(fit - org);
+              displacement[count] = fit - org;
+              scores[count++]     = delta;
             }
           }
 

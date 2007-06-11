@@ -1,5 +1,9 @@
 2007-06-11  David Turner  <david@freetype.org>
 
+	* src/autofit/aflatin,c: fix incorrect segment linking computation,
+	this was the root cause of bug #19565.
+
+
 	* src/autofit/*: some very experimental changes to improve the Latin
 	auto-hinter. note that the new code is disabled by default since this
 	is not stablizied yet.

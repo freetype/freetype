@@ -843,11 +843,11 @@
     {
       /* the fake segments are introduced to hint the metrics -- */
       /* we must never link them to anything                     */
-      if ( seg1->first == seg1->last )
+      if ( seg1->dir != axis->major_dir || seg1->first == seg1->last )
         continue;
 
-      for ( seg2 = seg1 + 1; seg2 < segment_limit; seg2++ )
-        if ( seg1->dir + seg2->dir == 0 )
+      for ( seg2 = segments; seg2 < segment_limit; seg2++ )
+        if ( seg1->dir + seg2->dir == 0 && seg2->pos > seg1->pos )
         {
           FT_Pos  pos1 = seg1->pos;
           FT_Pos  pos2 = seg2->pos;
