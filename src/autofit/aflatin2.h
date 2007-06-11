@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  autofit.c                                                              */
+/*  aflatin2.h                                                             */
 /*                                                                         */
-/*    Auto-fitter module (body).                                           */
+/*    Auto-fitter hinting routines for latin script (specification).       */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006 by                                    */
+/*  Copyright 2003, 2004, 2005, 2006, 2007 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,22 +16,25 @@
 /***************************************************************************/
 
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
-#include <ft2build.h>
-#include "afangles.c"
-#include "afglobal.c"
-#include "afhints.c"
-#include "afdummy.c"
-#include "aflatin.c"
-#ifdef FT_OPTION_AUTOFIT2
-#include "aflatin2.c"
-#endif
-#include "afcjk.c"
-#include "afloader.c"
-#include "afmodule.c"
+#ifndef __AFLATIN2_H__
+#define __AFLATIN2_H__
 
-#ifdef AF_USE_WARPER
-#include "afwarp.c"
-#endif
+#include "afhints.h"
+
+
+FT_BEGIN_HEADER
+
+
+  /* the latin-specific script class */
+
+  FT_CALLBACK_TABLE const AF_ScriptClassRec
+  af_latin2_script_class;
+
+/* */
+
+FT_END_HEADER
+
+#endif /* __AFLATIN_H__ */
+
 
 /* END */

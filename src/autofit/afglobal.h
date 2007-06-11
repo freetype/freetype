@@ -50,6 +50,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   af_face_globals_get_metrics( AF_FaceGlobals     globals,
                                FT_UInt            gindex,
+                               FT_UInt            options,
                                AF_ScriptMetrics  *ametrics );
 
   FT_LOCAL( void )

@@ -390,12 +390,12 @@
         FT_Outline_Transform( &gloader->base.outline, &loader->trans_matrix );
         FT_Vector_Transform( &vvector, &loader->trans_matrix );
       }
-
+#if 1
       /* we must translate our final outline by -pp1.x and compute */
       /* the new metrics                                           */
       if ( loader->pp1.x )
         FT_Outline_Translate( &gloader->base.outline, -loader->pp1.x, 0 );
-
+#endif
       FT_Outline_Get_CBox( &gloader->base.outline, &bbox );
 
       bbox.xMin = FT_PIX_FLOOR( bbox.xMin );
@@ -492,10 +492,16 @@
     if ( !error )
     {
       AF_ScriptMetrics  metrics;
+      FT_UInt           options = 0;
 
+#ifdef FT_OPTION_AUTOFIT2
+      /* XXX: undocumented hook to activate the latin2 hinter */
+      if (load_flags & (1UL << 20))
+        options = 2;
+#endif
 
       error = af_face_globals_get_metrics( loader->globals, gindex,
-                                           &metrics );
+                                           options, &metrics );
       if ( !error )
       {
         loader->metrics = metrics;

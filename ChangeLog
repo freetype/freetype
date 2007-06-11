@@ -1,3 +1,9 @@
+2007-06-11  David Turner  <david@freetype.org>
+
+	* src/autofit/*: some very experimental changes to improve the Latin
+	auto-hinter. note that the new code is disabled by default since this
+	is not stablizied yet.
+
 2007-06-11  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Document FT_Face_CheckTrueTypePatents.

@@ -22,11 +22,17 @@
 #include "afcjk.h"
 #include "aferrors.h"
 
+#ifdef FT_OPTION_AUTOFIT2
+#include "aflatin2.h"
+#endif
 
   /* populate this list when you add new scripts */
   static AF_ScriptClass const  af_script_classes[] =
   {
     &af_dummy_script_class,
+#ifdef FT_OPTION_AUTOFIT2
+    &af_latin2_script_class,
+#endif
     &af_latin_script_class,
     &af_cjk_script_class,
 
@@ -217,11 +223,15 @@
   FT_LOCAL_DEF( FT_Error )
   af_face_globals_get_metrics( AF_FaceGlobals     globals,
                                FT_UInt            gindex,
+                               FT_UInt            options,
                                AF_ScriptMetrics  *ametrics )
   {
     AF_ScriptMetrics  metrics = NULL;
     FT_UInt           gidx;
     AF_ScriptClass    clazz;
+    FT_UInt           script     = (options & 15);
+    const FT_UInt     script_max = sizeof(af_script_classes)/
+                                   sizeof(af_script_classes[0]);
     FT_Error          error = AF_Err_Ok;
 
 
@@ -231,8 +241,14 @@
       goto Exit;
     }
 
-    gidx    = globals->glyph_scripts[gindex];
+    gidx = script;
+    if (gidx == 0 || gidx+1 >= script_max)
+      gidx = globals->glyph_scripts[gindex];
+
     clazz   = af_script_classes[gidx];
+    if (script == 0)
+      script = clazz->script;
+
     metrics = globals->metrics[clazz->script];
     if ( metrics == NULL )
     {

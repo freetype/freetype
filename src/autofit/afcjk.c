@@ -427,7 +427,7 @@
 
         /* insert a new edge in the list and */
         /* sort according to the position    */
-        error = af_axis_hints_new_edge( axis, seg->pos, memory, &edge );
+        error = af_axis_hints_new_edge( axis, seg->pos, seg->dir, memory, &edge );
         if ( error )
           goto Exit;
 
@@ -1361,7 +1361,7 @@
     FT_UNUSED( metrics );
 
 
-    error = af_glyph_hints_reload( hints, outline );
+    error = af_glyph_hints_reload( hints, outline, 0 );
     if ( error )
       goto Exit;
 
