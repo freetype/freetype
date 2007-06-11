@@ -463,26 +463,47 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* The TT_CONFIG_OPTION_UNPATENTED_HINTING macro is *ignored* if you     */
-  /* have defined TT_CONFIG_OPTION_BYTECODE_INTERPRETER. If not, it will   */
-  /* compile a special work-around TrueType bytecode interpreter that      */
-  /* doesn't implement any of the patented opcodes/algorithms.             */
+  /* If you define TT_CONFIG_OPTION_UNPATENTED_HINTING, a special version  */
+  /* of the TrueType bytecode interpreter is used that doesn't implement   */
+  /* any of the patented opcodes and algorithms.  Note that the            */
+  /* the TT_CONFIG_OPTION_UNPATENTED_HINTING macro is *ignored* if you     */
+  /* define TT_CONFIG_OPTION_BYTECODE_INTERPRETER; with other words,       */
+  /* either define TT_CONFIG_OPTION_BYTECODE_INTERPRETER or                */
+  /* TT_CONFIG_OPTION_UNPATENTED_HINTING but not both at the same time.    */
   /*                                                                       */
-  /* this is only useful for a small number of font files (mostly Asian)   */
-  /* that require bytecode interpretation to properly load glyphs. For all */
-  /* other fonts, this will produce unpleasant results.                    */
+  /* This macro is only useful for a small number of font files (mostly    */
+  /* for Asian scripts) that require bytecode interpretation to properly   */
+  /* load glyphs.  For all other fonts, this produces unpleasant results,  */
+  /* thus the unpatented interpreter is never used to load glyphs from     */
+  /* TrueType fonts unless one of the following two options is used.       */
   /*                                                                       */
-  /* for this reason, the unpatented interpreter is never used by to load  */
-  /* glyphs from TrueType fonts, unless one of the following happens:      */
-  /*                                                                       */
-  /*   - the unpatented interpreter is explicitely activated by the        */
-  /*     user through the FT_PARAM_TAG_UNPATENTED_HINTING parameter tag    */
-  /*     when opening the FT_Face                                          */
+  /*   - The unpatented interpreter is explicitly activated by the user    */
+  /*     through the FT_PARAM_TAG_UNPATENTED_HINTING parameter tag         */
+  /*     when opening the FT_Face.                                         */
   /*                                                                       */
   /*   - FreeType detects that the FT_Face corresponds to one of the       */
-  /*     'trick' fonts (e.g. Mingliu) it knows about. The font engine      */
+  /*     `trick' fonts (e.g., `Mingliu') it knows about.  The font engine  */
   /*     contains a hard-coded list of font names and other matching       */
-  /*     parameters.                                                       */
+  /*     parameters (see function `tt_face_init' in file                   */
+  /*     `src/truetype/ttobjs.c').                                         */
+  /*                                                                       */
+  /* Here a sample code snippet for using FT_PARAM_TAG_UNPATENTED_HINTING. */
+  /*                                                                       */
+  /*   {                                                                   */
+  /*     FT_Parameter  parameter;                                          */
+  /*     FT_Open_Args  open_args;                                          */
+  /*                                                                       */
+  /*                                                                       */
+  /*     parameter.tag = FT_PARAM_TAG_UNPATENTED_HINTING;                  */
+  /*                                                                       */
+  /*     open_args.flags      = FT_OPEN_PATHNAME | FT_OPEN_PARAMS;         */
+  /*     open_args.pathname   = my_font_pathname;                          */
+  /*     open_args.num_params = 1;                                         */
+  /*     open_args.params     = &parameter;                                */
+  /*                                                                       */
+  /*     error = FT_Open_Face( library, &open_args, index, &face );        */
+  /*     ...                                                               */
+  /*   }                                                                   */
   /*                                                                       */
 #define TT_CONFIG_OPTION_UNPATENTED_HINTING
 

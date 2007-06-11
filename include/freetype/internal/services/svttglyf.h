@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  svsttglyf.h                                                            */
+/*  svttglyf.h                                                             */
 /*                                                                         */
 /*    The FreeType TrueType glyph service.                                 */
 /*                                                                         */
@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __SVTTCMAP_H__ */
+#endif /* __SVTTGLYF_H__ */
 
 
 /* END */

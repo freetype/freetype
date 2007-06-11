@@ -1,16 +1,34 @@
+2007-06-11  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Document FT_Face_CheckTrueTypePatents).
+
 2007-06-10  David Turner  <david@freetype.org>
 
-	* src/truetype/ttgload.c: slight speed-up to the TrueType glyph loader
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Slight speed-up to
+	the TrueType glyph loader.
 
-	* include/freetype/config/ftoption.h: clarify documentation regarding
-	unpatented hinting
+	* include/freetype/config/ftoption.h: Clarify documentation
+	regarding unpatented hinting.
 
-	* include/freetype/freetype.h, src/base/ftpatent.c, src/truetype/ttdriver.c,
-	include/freetype/internal/services/svttglyf.h, modules.cfg,:
-	include/freetype/internal/ftserv.h,:
-	Fonts without a cmap must be handled correctly by FreeType (anything
-	Adding the FT_Face_CheckTrueTypePatents API to FT_FREETYPE_H, it is
-	implemented by the optional src/base/ftpatent.c
+
+	Add new `FT_Face_CheckTrueTypePatents' API.
+
+	* include/freetype/freetype.h (FT_Face_CheckTrueTypePatents): New
+	declaration.
+
+	* include/freetype/internal/services/svttglyf.h,
+	src/base/ftpatent.c: New files.
+
+	* include/freetype/internal/ftserv.h (FT_SERVICE_TRUETYPE_GLYF_H):
+	New macro.
+
+	* src/truetype/ttdriver.c: Include FT_SERVICE_TRUETYPE_GLYF_H and
+	`ttpload.h'.
+	(tt_service_truetype_glyf): New service structure.
+	(tt_services): Register it.
+
+	* modules.cfg (BASE_EXTENSIONS), src/base/Jamfile (_sources): Add
+	`ftpatent.c'.
 
 2007-06-08  Werner Lemberg  <wl@gnu.org>
 

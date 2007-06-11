@@ -411,14 +411,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    height  :: The character height.                                   */
   /*                                                                       */
-  /*    pixel   :: A Boolean.  If TRUE, the `width' and `height' fields    */
-  /*               are interpreted as integer pixel character sizes.       */
+  /*    pixel   :: A Boolean.  If 1, the `width' and `height' fields are   */
+  /*               interpreted as integer pixel character sizes.           */
   /*               Otherwise, they are expressed as 1/64th of points.      */
   /*                                                                       */
-  /*    x_res   :: Only used when `pixel' is FALSE to indicate the         */
+  /*    x_res   :: Only used when `pixel' is value 0 to indicate the       */
   /*               horizontal resolution in dpi.                           */
   /*                                                                       */
-  /*    y_res   :: Only used when `pixel' is FALSE to indicate the         */
+  /*    y_res   :: Only used when `pixel' is value 0 to indicate the       */
   /*               vertical resolution in dpi.                             */
   /*                                                                       */
   /* <Note>                                                                */

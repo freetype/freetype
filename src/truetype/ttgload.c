@@ -374,7 +374,7 @@
 
       if ( f & 2 )
       {
-        if (p + 1 > limit)
+        if ( p + 1 > limit )
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_BYTE( p );
@@ -383,7 +383,7 @@
       }
       else if ( ( f & 16 ) == 0 )
       {
-        if (p + 2 > limit)
+        if ( p + 2 > limit )
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_SHORT( p );
@@ -391,7 +391,7 @@
 
       x     += y;
       vec->x = x;
-      *flag  = f & ~(2|16);
+      *flag  = f & ~( 2 | 16 );
     }
 
     /* reading the Y coordinates */
@@ -409,7 +409,7 @@
 
       if ( f & 4 )
       {
-        if (p + 1 > limit)
+        if ( p + 1 > limit )
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_BYTE( p );
@@ -418,7 +418,7 @@
       }
       else if ( ( f & 32 ) == 0 )
       {
-        if (p + 2 > limit)
+        if ( p + 2 > limit )
           goto Invalid_Outline;
 
         y = (FT_Pos)FT_NEXT_SHORT( p );
@@ -426,7 +426,7 @@
 
       x     += y;
       vec->y = x;
-      *flag  = f & ~(4|32);
+      *flag  = f & ~( 4 | 32 );
     }
 
     outline->n_points   = (FT_UShort)n_points;

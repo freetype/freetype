@@ -1,3 +1,20 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftpatent.c                                                             */
+/*                                                                         */
+/*    FreeType API for checking patented TrueType bytecode instructions    */
+/*    (body).                                                              */
+/*                                                                         */
+/*  Copyright 2007 by David Turner.                                        */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TRUETYPE_TAGS_H
@@ -6,21 +23,23 @@
 #include FT_SERVICE_SFNT_H
 #include FT_SERVICE_TRUETYPE_GLYF_H
 
+
   static FT_Bool
   _tt_check_patents_in_range( FT_Stream  stream,
                               FT_ULong   size )
   {
-    FT_Bool   result = 0;
+    FT_Bool   result = FALSE;
     FT_Error  error;
     FT_Bytes  p, end;
 
-    if ( FT_FRAME_ENTER(size) )
+
+    if ( FT_FRAME_ENTER( size ) )
       return 0;
 
     p   = stream->cursor;
     end = p + size;
 
-    while (p < end)
+    while ( p < end )
     {
       switch (p[0])
       {
@@ -28,23 +47,23 @@
       case 0x07:  /* SPvTL +  */
       case 0x08:  /* SFvTL // */
       case 0x09:  /* SFvTL +  */
-      case 0x0A:  /* SPvFS */
-      case 0x0B:  /* SFvFS */
-        result = 1;
+      case 0x0A:  /* SPvFS    */
+      case 0x0B:  /* SFvFS    */
+        result = TRUE;
         goto Exit;
 
       case 0x40:
-        if ( p+1 >= end )
+        if ( p + 1 >= end )
           goto Exit;
 
         p += p[1] + 2;
         break;
 
       case 0x41:
-        if ( p+1 >= end )
+        if ( p + 1 >= end )
           goto Exit;
 
-        p += p[1]*2 + 2;
+        p += p[1] * 2 + 2;
         break;
 
       case 0x71:  /* DELTAP2 */
@@ -52,7 +71,7 @@
       case 0x73:  /* DELTAC0 */
       case 0x74:  /* DELTAC1 */
       case 0x75:  /* DELTAC2 */
-        result = 1;
+        result = TRUE;
         goto Exit;
 
       case 0xB0:
@@ -63,7 +82,7 @@
       case 0xB5:
       case 0xB6:
       case 0xB7:
-        p += (p[0] - 0xB0) + 2;
+        p += ( p[0] - 0xB0 ) + 2;
         break;
 
       case 0xB8:
@@ -74,7 +93,7 @@
       case 0xBD:
       case 0xBE:
       case 0xBF:
-        p += (p[0] - 0xB8) * 2 + 3;
+        p += ( p[0] - 0xB8 ) * 2 + 3;
         break;
 
       default:
@@ -96,13 +115,15 @@
     FT_Stream              stream = face->stream;
     FT_Error               error;
     FT_Service_SFNT_Table  service;
-    FT_Bool                result = 0;
+    FT_Bool                result = FALSE;
+
 
     FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
 
-    if (service)
+    if ( service )
     {
       FT_ULong  offset, size;
+
 
       error = service->table_info( face, tag, &offset, &size );
       if ( error                    ||
@@ -111,6 +132,7 @@
 
       result = _tt_check_patents_in_range( stream, size );
     }
+
   Exit:
     return result;
   }
@@ -126,39 +148,42 @@
 
     FT_Service_TTGlyf  service;
 
+
     result = _tt_check_patents_in_table( face, TTAG_fpgm );
-    if (result)
+    if ( result )
       goto Exit;
 
     result = _tt_check_patents_in_table( face, TTAG_prep );
-    if (result)
+    if ( result )
       goto Exit;
 
     FT_FACE_FIND_SERVICE( face, service, TT_GLYF );
-    if (service == NULL)
+    if ( service == NULL )
       goto Exit;
 
-    for (gindex = 0; gindex < (FT_UInt)face->num_glyphs; gindex++)
+    for ( gindex = 0; gindex < (FT_UInt)face->num_glyphs; gindex++ )
     {
       FT_ULong  offset, num_ins, size;
       FT_Int    num_contours;
 
+
       offset = service->get_location( face, gindex, &size );
-      if (size == 0)
+      if ( size == 0 )
         continue;
 
-      if ( FT_STREAM_SEEK(offset)      ||
-           FT_READ_SHORT(num_contours) )
+      if ( FT_STREAM_SEEK( offset )      ||
+           FT_READ_SHORT( num_contours ) )
         continue;
 
-      if (num_contours >= 0)  /* simple glyph */
+      if ( num_contours >= 0 )  /* simple glyph */
       {
-        if ( FT_STREAM_SKIP( 8 + num_contours*2 ) )
+        if ( FT_STREAM_SKIP( 8 + num_contours * 2 ) )
           continue;
       }
       else  /* compound glyph */
       {
         FT_Bool  has_instr = 0;
+
 
         if ( FT_STREAM_SKIP( 8 ) )
           continue;
@@ -168,56 +193,65 @@
         {
           FT_UInt  flags, toskip;
 
-          if( FT_READ_USHORT(flags) )
+
+          if( FT_READ_USHORT( flags ) )
             break;
 
           toskip = 2 + 1 + 1;
 
-          if ((flags & (1 << 0)) != 0)  /* ARGS_ARE_WORDS */
+          if ( ( flags & ( 1 << 0 ) ) != 0 )       /* ARGS_ARE_WORDS */
             toskip += 2;
 
-          if ((flags & (1 << 3)) != 0)  /* WE_HAVE_A_SCALE */
+          if ( ( flags & ( 1 << 3 ) ) != 0 )       /* WE_HAVE_A_SCALE */
             toskip += 2;
-          else if ((flags & (1 << 6)) != 0)  /* WE_HAVE_X_Y_SCALE */
+          else if ( ( flags & ( 1 << 6 ) ) != 0 )  /* WE_HAVE_X_Y_SCALE */
             toskip += 4;
-          else if ((flags & (1 << 7)) != 0)  /* WE_HAVE_A_2x2 */
+          else if ( ( flags & ( 1 << 7 ) ) != 0 )  /* WE_HAVE_A_2x2 */
             toskip += 8;
 
-          if ((flags & (1 << 8)) != 0)  /* WE_HAVE_INSTRUCTIONS */
+          if ( ( flags & ( 1 << 8 ) ) != 0 )       /* WE_HAVE_INSTRUCTIONS */
             has_instr = 1;
 
           if ( FT_STREAM_SKIP( toskip ) )
             goto NextGlyph;
 
-          if ((flags & (1 << 5)) == 0)  /* MORE_COMPONENTS */
+          if ( ( flags & ( 1 << 5 ) ) == 0 )       /* MORE_COMPONENTS */
             break;
         }
-        if (!has_instr)
+
+        if ( !has_instr )
           goto NextGlyph;
       }
 
-      if ( FT_READ_USHORT(num_ins) )
+      if ( FT_READ_USHORT( num_ins ) )
         continue;
 
       result = _tt_check_patents_in_range( stream, num_ins );
-      if (result)
+      if ( result )
         goto Exit;
 
     NextGlyph:
       ;
     }
+
   Exit:
     return result;
   }
 
-  FT_EXPORT_DEF( FT_Bool )
-  FT_Face_CheckTrueTypePatents( FT_Face   face )
-  {
-    FT_Bool  result = 0;
 
-    if ( face && FT_IS_SFNT(face) )
-    {
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Bool )
+  FT_Face_CheckTrueTypePatents( FT_Face  face )
+  {
+    FT_Bool  result = FALSE;
+
+  
+    if ( face && FT_IS_SFNT( face ) )
       result = _tt_face_check_patents( face );
-    }
-    return  result;
+
+    return result;
   }
+
+
+/* END */

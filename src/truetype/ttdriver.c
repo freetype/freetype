@@ -317,7 +317,7 @@
 
   static const FT_Service_TTGlyfRec  tt_service_truetype_glyf =
   {
-    (TT_Glyf_GetLocationFunc)     tt_face_get_location
+    (TT_Glyf_GetLocationFunc)tt_face_get_location
   };
 
   static const FT_ServiceDescRec  tt_services[] =

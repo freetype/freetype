@@ -2738,8 +2738,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Retrieve the ASCII name of a given glyph in a face.  This only     */
-  /*    works for those faces where @FT_HAS_GLYPH_NAMES(face) returns      */
-  /*    TRUE.                                                              */
+  /*    works for those faces where @FT_HAS_GLYPH_NAMES(face) returns 1.   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face        :: A handle to a source face object.                   */
@@ -3375,23 +3374,23 @@ FT_BEGIN_HEADER
   /*    FT_Face_CheckTrueTypePatents                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Parses the whole content of a TrueType font file and returns       */
-  /*    true if it uses any of the patented opcodes. this is only useful   */
+  /*    Parse all bytecode instructions of a TrueType font file to check   */
+  /*    whether any of the patented opcodes are used.  This is only useful */
   /*    if you want to be able to use the unpatented hinter with           */
   /*    fonts that do *not* use these opcodes.                             */
   /*                                                                       */
-  /*    note that this function parses *all* glyph instructions in the     */
-  /*    font file, and may be *slow*                                       */
+  /*    Note that this function parses *all* glyph instructions in the     */
+  /*    font file, which may be slow.                                      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face :: a face handle                                              */
+  /*    face :: A face handle.                                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TRUE if this is a TrueType font that uses one of the patented       */
-  /*    opcodes. FALSE otherwise                                           */
+  /*    1 if this is a TrueType font that uses one of the patented         */
+  /*    opcodes, 0 otherwise.                                              */
   /*                                                                       */
   FT_EXPORT( FT_Bool )
-  FT_Face_CheckTrueTypePatents( FT_Face   face );
+  FT_Face_CheckTrueTypePatents( FT_Face  face );
 
   /* */
 
