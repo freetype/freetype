@@ -229,10 +229,10 @@
     AF_ScriptMetrics  metrics = NULL;
     FT_UInt           gidx;
     AF_ScriptClass    clazz;
-    FT_UInt           script     = (options & 15);
-    const FT_UInt     script_max = sizeof(af_script_classes)/
-                                   sizeof(af_script_classes[0]);
-    FT_Error          error = AF_Err_Ok;
+    FT_UInt           script     = options & 15;
+    const FT_UInt     script_max = sizeof ( af_script_classes ) /
+                                     sizeof ( af_script_classes[0] );
+    FT_Error          error      = AF_Err_Ok;
 
 
     if ( gindex >= globals->glyph_count )
@@ -242,11 +242,11 @@
     }
 
     gidx = script;
-    if (gidx == 0 || gidx+1 >= script_max)
+    if ( gidx == 0 || gidx + 1 >= script_max )
       gidx = globals->glyph_scripts[gindex];
 
-    clazz   = af_script_classes[gidx];
-    if (script == 0)
+    clazz = af_script_classes[gidx];
+    if ( script == 0 )
       script = clazz->script;
 
     metrics = globals->metrics[clazz->script];

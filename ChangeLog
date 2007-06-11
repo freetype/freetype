@@ -1,12 +1,49 @@
 2007-06-11  David Turner  <david@freetype.org>
 
-	* src/autofit/aflatin,c: fix incorrect segment linking computation,
-	this was the root cause of bug #19565.
+	* src/autofit/aflatin.c (af_latin_hints_link_segments): Fix
+	incorrect segment linking computation.  This was the root cause of
+	Savannah bug #19565.
 
 
-	* src/autofit/*: some very experimental changes to improve the Latin
-	auto-hinter. note that the new code is disabled by default since this
-	is not stablizied yet.
+	* src/autofit/* [FT_OPTION_AUTOFIT2]: Some very experimental changes
+	to improve the Latin auto-hinter.  Note that the new code is
+	disabled by default since it is not stabilized yet.
+
+	* src/autofit/aflatin2.c, src/autofit/aflatin2.h: New files
+	(disabled currently).
+
+	* src/autofit/afhints.c: Remove dead code.
+	(af_axis_hints_new_edge): Add argument to handle segment directions.
+	(af_edge_flags_to_string): New function.
+	(af_glyph_hints_dump_segments, af_glyph_hints_dump_edges): Handle
+	option flags.
+	(af_glyph_hints_reload): Add argument to handle inflections.
+	Simplify.
+	(af_direction_compute): Fine tuning.
+	(af_glyph_hints_align_edge_points): Fix logic.
+	(af_glyph_hints_align_strong_points): Do linear search for small
+	edge counts.
+	(af_glyph_hints_align_weak_points): Skip any touched neighbors.
+	(af_iup_shift): Handle zero `delta'.
+
+	* src/autofit/afhints.h: Updated.
+	(AF_SORT_SEGMENTS): New macro (disabled).
+	(AF_AxisHintsRec) [AF_SORT_SEGMENTS]: New member `mid_segments'.
+
+	* src/autofit/afglobal.c (af_face_globals_get_metrics): Add
+	argument to pass option flags for handling scripts.
+	* src/autofit/afglobal.h: Updated.
+
+	* src/autofit/afcjk.c: Updated.
+	* src/autofit/aflatin.c: Updated.
+	(af_latin_metrics_scale_dim): Don't reduce scale by 2%.
+
+	(af_latin_hints_compute_segments) [AF_HINT_METRICS]: Remove dead code.
+	(af_latin_hints_compute_edges) [AF_HINT_METRICS]: Remove dead code.
+	Don't set `edge->dir'
+	(af_latin_hint_edges): Add more logging.
+
+	* src/autofit/afloader.c: Updated.
 
 2007-06-11  Werner Lemberg  <wl@gnu.org>
 

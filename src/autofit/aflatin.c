@@ -2009,13 +2009,16 @@
                           FT_MulDiv( edge->opos - before->opos,
                                      after->pos - before->pos,
                                      after->opos - before->opos );
-            AF_LOG(( "SERIF_LINK1: edge %d (opos=%.2f) snapped to (%.2f) from %d (opos=%.2f)\n",
-                     edge-edges, edge->opos / 64.0, edge->pos / 64.0, before - edges, before->opos / 64.0 ));
+            AF_LOG(( "SERIF_LINK1: edge %d (opos=%.2f) snapped to (%.2f) "
+                     "from %d (opos=%.2f)\n",
+                     edge-edges, edge->opos / 64.0,
+                     edge->pos / 64.0, before - edges,
+                     before->opos / 64.0 ));
           }
           else
           {
-              edge->pos = anchor->pos + (( edge->opos - anchor->opos + 16) & ~31);
-
+            edge->pos = anchor->pos +
+                        ( ( edge->opos - anchor->opos + 16 ) & ~31 );
             AF_LOG(( "SERIF_LINK2: edge %d (opos=%.2f) snapped to (%.2f)\n",
                      edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
           }

@@ -101,13 +101,12 @@
 
     while ( edge > edges )
     {
-      if (edge[-1].fpos < fpos)
+      if ( edge[-1].fpos < fpos )
         break;
 
-     /* we want the edge with same position and minor direction
-      * to appear before those in the major one in the list
-      */
-      if (edge[-1].fpos == fpos && dir == axis->major_dir)
+      /* we want the edge with same position and minor direction */
+      /* to appear before those in the major one in the list     */
+      if ( edge[-1].fpos == fpos && dir == axis->major_dir )
         break;
 
       edge[0] = edge[-1];
@@ -198,27 +197,30 @@
   static const char*
   af_edge_flags_to_string( AF_Edge_Flags  flags )
   {
-    static  char  temp[32];
-    int     pos = 0;
+    static char  temp[32];
+    int          pos = 0;
+
 
     if ( flags & AF_EDGE_ROUND )
     {
-      memcpy( temp+pos, "round", 5 );
+      memcpy( temp + pos, "round", 5 );
       pos += 5;
     }
     if ( flags & AF_EDGE_SERIF )
     {
-      if (pos > 0)
+      if ( pos > 0 )
         temp[pos++] = ' ';
-      memcpy( temp+pos, "serif", 5 );
+      memcpy( temp + pos, "serif", 5 );
       pos += 5;
     }
-    if (pos == 0)
+    if ( pos == 0 )
       return "normal";
 
     temp[pos] = 0;
+
     return temp;
   }
+
 
   /* A function to dump the array of linked segments. */
   void
@@ -244,13 +246,14 @@
       {
         printf ( "  [ %5d | %5.2g | %5s | %4d | %5d | %5d | %5d | %s ]\n",
                  seg - segments,
-                 dimension == AF_DIMENSION_HORZ ? (int)seg->first->ox/64.0 : (int)seg->first->oy/64.0,
+                 dimension == AF_DIMENSION_HORZ ? (int)seg->first->ox / 64.0
+                                                : (int)seg->first->oy / 64.0,
                  af_dir_str( (AF_Direction)seg->dir ),
                  AF_INDEX_NUM( seg->link, segments ),
                  AF_INDEX_NUM( seg->serif, segments ),
                  seg->height,
                  seg->height - ( seg->max_coord - seg->min_coord ),
-                 af_edge_flags_to_string(seg->flags));
+                 af_edge_flags_to_string( seg->flags ) );
       }
       printf( "\n" );
     }
@@ -285,14 +288,14 @@
         printf ( "  [ %5d | %5.2g | %5s | %4d |"
                  " %5d |   %c  | %5.2f | %5.2f | %s ]\n",
                  edge - edges,
-                 (int)edge->opos/64.0,
+                 (int)edge->opos / 64.0,
                  af_dir_str( (AF_Direction)edge->dir ),
                  AF_INDEX_NUM( edge->link, edges ),
                  AF_INDEX_NUM( edge->serif, edges ),
                  edge->blue_edge ? 'y' : 'n',
                  edge->opos / 64.0,
                  edge->pos / 64.0,
-                 af_edge_flags_to_string(edge->flags) );
+                 af_edge_flags_to_string( edge->flags ) );
       }
       printf( "\n" );
     }
@@ -367,7 +370,7 @@
     }
 
     ss *= 14;
-    if ( FT_ABS(ll) <= FT_ABS(ss) )
+    if ( FT_ABS( ll ) <= FT_ABS( ss ) )
       dir = AF_DIR_NONE;
 
     return dir;
@@ -634,12 +637,13 @@
 
       /* compute coordinates & Bezier flags, next and prev */
       {
-        FT_Vector*  vec = outline->points;
-        char*       tag = outline->tags;
-        AF_Point    first = points;
-        AF_Point    end   = points + outline->contours[0];
-        AF_Point    prev  = end;
+        FT_Vector*  vec           = outline->points;
+        char*       tag           = outline->tags;
+        AF_Point    first         = points;
+        AF_Point    end           = points + outline->contours[0];
+        AF_Point    prev          = end;
         FT_Int      contour_index = 0;
+
 
         for ( point = points; point < point_limit; point++, vec++, tag++ )
         {
@@ -664,7 +668,7 @@
           prev->next  = point;
           prev        = point;
 
-          if (point == end)
+          if ( point == end )
           {
             if ( ++contour_index < outline->n_contours )
             {
@@ -699,10 +703,12 @@
         FT_Pos        in_y   = 0;
         AF_Direction  in_dir = AF_DIR_NONE;
 
+
         for ( point = points; point < point_limit; point++ )
         {
           AF_Point  next;
           FT_Pos    out_x, out_y;
+
 
           if ( point == first )
           {
@@ -713,14 +719,14 @@
             first  = prev + 1;
           }
 
-          point->in_dir = (FT_Char) in_dir;
+          point->in_dir = (FT_Char)in_dir;
 
-          next   = point->next;
-          out_x  = next->fx - point->fx;
-          out_y  = next->fy - point->fy;
+          next  = point->next;
+          out_x = next->fx - point->fx;
+          out_y = next->fy - point->fy;
 
           in_dir         = af_direction_compute( out_x, out_y );
-          point->out_dir = (FT_Char) in_dir;
+          point->out_dir = (FT_Char)in_dir;
 
           if ( point->flags & ( AF_FLAG_CONIC | AF_FLAG_CUBIC ) )
           {
@@ -745,8 +751,9 @@
       }
     }
 
-    /* compute inflection points -- disable due to no longer perceived benefits */
-    if (0 && get_inflections)
+    /* compute inflection points --                 */
+    /* disabled due to no longer perceived benefits */
+    if ( 0 && get_inflections )
       af_glyph_hints_compute_inflections( hints );
 
   Exit:
@@ -1021,7 +1028,7 @@
     AF_Point  p;
     FT_Pos    delta = ref->u - ref->v;
 
-    if (delta == 0)
+    if ( delta == 0 )
       return;
 
     for ( p = p1; p < ref; p++ )
@@ -1141,7 +1148,8 @@
 
     for ( ; contour < contour_limit; contour++ )
     {
-      AF_Point   first_touched, last_touched;
+      AF_Point  first_touched, last_touched;
+
 
       point       = *contour;
       end_point   = point->prev;
@@ -1164,10 +1172,11 @@
 
       for (;;)
       {
-        FT_ASSERT( point <= end_point && (point->flags & touch_flag) != 0 );
+        FT_ASSERT( point <= end_point &&
+                   ( point->flags & touch_flag ) != 0 );
 
         /* skip any touched neighbhours */
-        while ( point < end_point && (point[1].flags & touch_flag) != 0 )
+        while ( point < end_point && ( point[1].flags & touch_flag ) != 0 )
           point++;
 
         last_touched = point;
@@ -1179,7 +1188,7 @@
           if ( point > end_point )
             goto EndContour;
 
-          if ( (point->flags & touch_flag) != 0 )
+          if ( ( point->flags & touch_flag ) != 0 )
             break;
 
           point++;

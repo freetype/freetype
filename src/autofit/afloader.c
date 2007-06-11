@@ -494,9 +494,10 @@
       AF_ScriptMetrics  metrics;
       FT_UInt           options = 0;
 
+
 #ifdef FT_OPTION_AUTOFIT2
       /* XXX: undocumented hook to activate the latin2 hinter */
-      if (load_flags & (1UL << 20))
+      if ( load_flags & ( 1UL << 20 ) )
         options = 2;
 #endif
 
