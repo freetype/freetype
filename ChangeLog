@@ -1,3 +1,11 @@
+2006-06-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_latin_uniranges): Expand structure to
+	cover all ranges which could possibly be handled by the aflatin
+	module (since the default fallback for unknown ranges is now the
+	afcjk module).  It might be necessary to fine-tune this further by
+	splitting off modules for Greek, Cyrillic, or other blocks.
+
 2007-06-11  David Turner  <david@freetype.org>
 
 	* src/autofit/aflatin.c (af_latin_hints_link_segments): Fix
