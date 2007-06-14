@@ -1,3 +1,8 @@
+2006-06-14  Dmitry Timoshkov  <dmitry@codeweavers.com>
+
+	* builds/win32/ftdebug.c (FT_Message): Send debug output to the
+	console as well as to the debugger.
+
 2006-06-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_uniranges): Expand structure to

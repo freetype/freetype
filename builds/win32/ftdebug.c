@@ -63,6 +63,8 @@
 
 
     va_start( ap, fmt );
+    vprintf( fmt, ap );
+    /* send the string to the debugger as well */
     vsprintf( buf, fmt, ap );
     OutputDebugStringA( buf );
     va_end( ap );
