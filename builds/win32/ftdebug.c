@@ -175,7 +175,7 @@
           if ( *p )
           {
             level = *p++ - '0';
-            if ( level < 0 || level > 6 )
+            if ( level < 0 || level > 7 )
               level = -1;
           }
 

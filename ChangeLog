@@ -1,3 +1,8 @@
+2006-06-15  Dmitry Timoshkov  <dmitry@codeweavers.com>
+
+	* builds/win32/ftdebug.c: Unify debug level handling with other
+	platforms.
+
 2006-06-14  Dmitry Timoshkov  <dmitry@codeweavers.com>
 
 	* builds/win32/ftdebug.c (FT_Message): Send debug output to the
