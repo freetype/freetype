@@ -1,3 +1,9 @@
+2006-06-16  David Turner  <david@freetype.org>
+
+	* src/smooth/ftgrays.c (gray_hline): prevent integer overflows
+	when rendering *very* large outlines
+
+
 2006-06-16  Dmitry Timoshkov  <dmitry@codeweavers.com>
 
 	* src/winfonts/winfnt.h: Add necessary structures for PE resource

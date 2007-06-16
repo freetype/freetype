@@ -397,6 +397,8 @@
     PCell  *pcell, cell;
     int     x = ras.ex;
 
+    if (x > ras.max_ex)
+      x = ras.max_ex;
 
     pcell = &ras.ycells[ras.ey];
     for (;;)
@@ -462,6 +464,10 @@
     /* All cells that are on the left of the clipping region go to the */
     /* min_ex - 1 horizontal position.                                 */
     ey -= ras.min_ey;
+
+    if (ex > ras.max_ex)
+      ex = ras.max_ex;
+
     ex -= ras.min_ex;
     if ( ex < 0 )
       ex = -1;
@@ -492,6 +498,9 @@
   gray_start_cell( RAS_ARG_ TCoord  ex,
                             TCoord  ey )
   {
+    if ( ex > ras.max_ex )
+      ex = (TCoord)( ras.max_ex );
+
     if ( ex < ras.min_ex )
       ex = (TCoord)( ras.min_ex - 1 );
 
@@ -1195,6 +1204,10 @@
 
     y += (TCoord)ras.min_ey;
     x += (TCoord)ras.min_ex;
+
+    /* FT_Span.x is a 16-bit short, so limit our coordinates appropriately */
+    if (x >= 32768)
+      x = 32767;
 
     if ( coverage )
     {
