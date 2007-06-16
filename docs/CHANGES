@@ -32,6 +32,9 @@ CHANGES BETWEEN 2.3.5 and 2.3.4
       out  whether  a  given  TrueType  font  uses  patented  bytecode
       instructions.
 
+    - Support for Windows FON files in PE format  has been contributed
+      by Dmitry Timoshkov.
+
 
   III. MISCELLANEOUS
 

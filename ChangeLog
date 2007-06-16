@@ -1,3 +1,17 @@
+2006-06-16  Dmitry Timoshkov  <dmitry@codeweavers.com>
+
+	* src/winfonts/winfnt.h: Add necessary structures for PE resource
+	parsing.
+	(WinPE32_HeaderRec): New structure.
+	(WinPE32_SectionRec): New structure.
+	(WinPE_RsrcDirRec): New structure.
+	(WinPE_RsrcDirEntryRec): New structure.
+	(WinPE_RsrcDataEntryRec): New structure.
+	(FNT_FontRec): Remove unused `size_shift' field.
+
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Add support for
+	loading bitmap .fon files in PE format.
+
 2006-06-15  Dmitry Timoshkov  <dmitry@codeweavers.com>
 
 	* builds/win32/ftdebug.c: Unify debug level handling with other
