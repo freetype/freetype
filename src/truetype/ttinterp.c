@@ -620,6 +620,9 @@
 
     exec->pts.n_points   = 0;
     exec->pts.n_contours = 0;
+    exec->zp1 = exec->pts;
+    exec->zp2 = exec->pts;
+    exec->zp0 = exec->pts;
 
     exec->instruction_trap = FALSE;
 
@@ -6148,6 +6151,13 @@
      */
     twilight = CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0;
 
+    if ( BOUNDS(CUR.GS.rp1, CUR.zp0.n_points) )
+    {
+      if ( CUR.pedantic_hinting )
+        CUR.error = TT_Err_Invalid_Reference;
+      return;
+    }
+
     if ( twilight )
       orus_base = &CUR.zp0.org[CUR.GS.rp1];
     else
@@ -6251,6 +6261,7 @@
     FT_Vector*  orgs;   /* original and current coordinate */
     FT_Vector*  curs;   /* arrays                          */
     FT_Vector*  orus;
+    FT_UInt     max_points;
 
   } IUP_WorkerRec, *IUP_Worker;
 
@@ -6289,6 +6300,10 @@
 
 
     if ( p1 > p2 )
+      return;
+
+    if ( BOUNDS(ref1, worker->max_points) ||
+         BOUNDS(ref2, worker->max_points) )
       return;
 
     orus1 = worker->orus[ref1].x;
@@ -6389,6 +6404,9 @@
 
     FT_UNUSED_ARG;
 
+    /* ignore empty outlines */
+    if ( CUR.pts.n_contours == 0 )
+      return;
 
     if ( CUR.opcode & 1 )
     {

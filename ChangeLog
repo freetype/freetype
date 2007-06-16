@@ -3,6 +3,12 @@
 	* src/smooth/ftgrays.c (gray_hline): prevent integer overflows
 	when rendering *very* large outlines
 
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): check the well-formedness
+	of the contours array when loading a glyph
+
+	* src/truetype/ttinterp.c (Ins_IP): check argument ranges to reject
+	bogus operations properly
+
 
 2006-06-16  Dmitry Timoshkov  <dmitry@codeweavers.com>
 

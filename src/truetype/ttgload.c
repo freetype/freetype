@@ -250,7 +250,7 @@
     FT_Byte         c, count;
     FT_Vector       *vec, *vec_limit;
     FT_Pos          x;
-    FT_Short        *cont, *cont_limit;
+    FT_Short        *cont, *cont_limit, prev_cont;
     FT_Int          xy_size = 0;
 
 
@@ -267,8 +267,18 @@
     if ( n_contours >= 0xFFF || p + (n_contours + 1) * 2 > limit )
       goto Invalid_Outline;
 
-    for ( ; cont < cont_limit; cont++ )
+    cont[0] = prev_cont = FT_NEXT_USHORT( p );
+    for ( cont++; cont < cont_limit; cont++ )
+    {
       cont[0] = FT_NEXT_USHORT( p );
+      if (cont[0] > prev_cont)
+      {
+        /* unordered contours, this is invalid */
+        error = FT_Err_Invalid_Table;
+        goto Fail;
+      }
+      prev_cont = cont[0];
+    }
 
     n_points = 0;
     if ( n_contours > 0 )
