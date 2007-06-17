@@ -264,16 +264,16 @@
     cont_limit = cont + n_contours;
 
     /* check space for contours array + instructions count */
-    if ( n_contours >= 0xFFF || p + (n_contours + 1) * 2 > limit )
+    if ( n_contours >= 0xFFF || p + ( n_contours + 1 ) * 2 > limit )
       goto Invalid_Outline;
 
     cont[0] = prev_cont = FT_NEXT_USHORT( p );
     for ( cont++; cont < cont_limit; cont++ )
     {
       cont[0] = FT_NEXT_USHORT( p );
-      if (cont[0] > prev_cont)
+      if ( cont[0] > prev_cont )
       {
-        /* unordered contours, this is invalid */
+        /* unordered contours: this is invalid */
         error = FT_Err_Invalid_Table;
         goto Fail;
       }
@@ -591,13 +591,14 @@
                    FT_UInt       start_point,
                    FT_UInt       start_contour )
   {
-    zone->n_points   = (FT_UShort)( load->outline.n_points - start_point );
-    zone->n_contours = (FT_Short) ( load->outline.n_contours - start_contour );
-    zone->org        = load->extra_points + start_point;
-    zone->cur        = load->outline.points + start_point;
-    zone->orus       = load->extra_points2 + start_point;
-    zone->tags       = (FT_Byte*)load->outline.tags + start_point;
-    zone->contours   = (FT_UShort*)load->outline.contours + start_contour;
+    zone->n_points    = (FT_UShort)( load->outline.n_points - start_point );
+    zone->n_contours  = (FT_Short) ( load->outline.n_contours -
+                                       start_contour );
+    zone->org         = load->extra_points + start_point;
+    zone->cur         = load->outline.points + start_point;
+    zone->orus        = load->extra_points2 + start_point;
+    zone->tags        = (FT_Byte*)load->outline.tags + start_point;
+    zone->contours    = (FT_UShort*)load->outline.contours + start_contour;
     zone->first_point = (FT_UShort)start_point;
   }
 
@@ -1336,11 +1337,11 @@
         /* this provides additional offsets */
         /* for each component's translation */
 
-        if ( (error = TT_Vary_Get_Glyph_Deltas(
-                        face,
-                        glyph_index,
-                        &deltas,
-                        gloader->current.num_subglyphs + 4 )) != 0 )
+        if ( ( error = TT_Vary_Get_Glyph_Deltas(
+                         face,
+                         glyph_index,
+                         &deltas,
+                         gloader->current.num_subglyphs + 4 )) != 0 )
           goto Exit;
 
         subglyph = gloader->current.subglyphs + gloader->base.num_subglyphs;

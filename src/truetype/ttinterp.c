@@ -620,6 +620,7 @@
 
     exec->pts.n_points   = 0;
     exec->pts.n_contours = 0;
+
     exec->zp1 = exec->pts;
     exec->zp2 = exec->pts;
     exec->zp0 = exec->pts;
@@ -6151,7 +6152,7 @@
      */
     twilight = CUR.GS.gep0 == 0 || CUR.GS.gep1 == 0 || CUR.GS.gep2 == 0;
 
-    if ( BOUNDS(CUR.GS.rp1, CUR.zp0.n_points) )
+    if ( BOUNDS( CUR.GS.rp1, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
         CUR.error = TT_Err_Invalid_Reference;
@@ -6302,8 +6303,8 @@
     if ( p1 > p2 )
       return;
 
-    if ( BOUNDS(ref1, worker->max_points) ||
-         BOUNDS(ref2, worker->max_points) )
+    if ( BOUNDS( ref1, worker->max_points ) ||
+         BOUNDS( ref2, worker->max_points ) )
       return;
 
     orus1 = worker->orus[ref1].x;
@@ -6403,6 +6404,7 @@
     FT_Short  contour;       /* current contour */
 
     FT_UNUSED_ARG;
+
 
     /* ignore empty outlines */
     if ( CUR.pts.n_contours == 0 )

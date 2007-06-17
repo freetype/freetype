@@ -1,14 +1,24 @@
+2006-06-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/ftrandom.c (font_size): New global variable.
+	(TestFace): Use it.
+	(main): Handle new option `--size' to set `font_size'.
+	(Usage): Updated.
+
 2006-06-16  David Turner  <david@freetype.org>
 
-	* src/smooth/ftgrays.c (gray_hline): prevent integer overflows
-	when rendering *very* large outlines
+	* src/smooth/ftgrays.c (gray_find_cell, gray_set_cell, gray_hline):
+	Prevent integer overflows when rendering very large outlines.
 
-	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): check the well-formedness
-	of the contours array when loading a glyph
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Check the
+	well-formedness of the contours array when loading a glyph.
 
-	* src/truetype/ttinterp.c (Ins_IP): check argument ranges to reject
-	bogus operations properly
-
+	* src/truetype/ttinterp.c (TT_Load_Context): Initialize `zp0', `zp1',
+	and `zp2'.
+	(Ins_IP): Check argument ranges to reject bogus operations properly.
+	(IUP_WorkerRec): Add `max_points' member.
+	(_iup_worker_interpolate): Check argument ranges.
+	(Ins_IUP): Ignore empty outlines.
 
 2006-06-16  Dmitry Timoshkov  <dmitry@codeweavers.com>
 

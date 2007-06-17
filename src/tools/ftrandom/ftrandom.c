@@ -84,6 +84,8 @@
   static int  error_count    = 1;
   static int  error_fraction = 0;
 
+  static FT_F26Dot6  font_size = 12 * 64;
+
   static struct fontlist
   {
     char*         name;
@@ -156,7 +158,7 @@
     if ( nohints )
       load_flags |= FT_LOAD_NO_HINTING;
 
-    FT_Set_Char_Size( face, 0, (int)( 12 * 64 ), 72, 72 );
+    FT_Set_Char_Size( face, 0, font_size, 72, 72 );
 
     for ( gid = 0; gid < face->num_glyphs; ++gid )
     {
@@ -543,6 +545,7 @@
     fprintf( out, "  --nohints                Turn off hinting.\n" );
     fprintf( out, "  --rasterize              Attempt to rasterize each glyph.\n" );
     fprintf( out, "  --results <dir>          Directory in which to place the test fonts.\n" );
+    fprintf( out, "  --size <float>           Use the given font size for the tests.\n" );
     fprintf( out, "  --test <file>            Run a single test on an already existing file.\n" );
   }
 
@@ -611,6 +614,15 @@
         rasterize = true;
       else if ( strcmp( pt, "-results" ) == 0 )
         results_dir = argv[++i];
+      else if ( strcmp( pt, "-size" ) == 0 )
+      {
+        font_size = (FT_F26Dot6)( strtod( argv[++i], &end ) * 64 );
+        if ( *end != '\0' || font_size < 64 )
+        {
+          fprintf( stderr, "Bad value for size: %s\n", argv[i] );
+          exit( 1 );
+        }
+      }
       else if ( strcmp( pt, "-test" ) == 0 )
         testfile = argv[++i];
       else
