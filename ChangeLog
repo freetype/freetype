@@ -5,6 +5,10 @@
 	(main): Handle new option `--size' to set `font_size'.
 	(Usage): Updated.
 
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Exit in case of
+	invalid font.
+	(FNT_Load_Glyph): Protect against invalid bitmap width.
+
 2006-06-16  David Turner  <david@freetype.org>
 
 	* src/smooth/ftgrays.c (gray_find_cell, gray_set_cell, gray_hline):

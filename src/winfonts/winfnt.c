@@ -536,8 +536,11 @@
 
                   error = fnt_font_load( face->font, stream );
                   if ( error )
+                  {
                     FT_TRACE2(( "font #%lu load error %d\n",
                                 dir_entry2.name, error ));
+                    goto Fail;
+                  }
                   else
                     FT_TRACE2(( "font #%lu successfully loaded\n",
                                 dir_entry2.name ));
@@ -967,6 +970,13 @@
       bitmap->pitch      = pitch;
       bitmap->rows       = font->header.pixel_height;
       bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
+
+      if ( offset + pitch * bitmap->rows >= font->header.file_size )
+      {
+        FT_TRACE2(( "invalid bitmap width\n" ));
+        error = FNT_Err_Invalid_File_Format;
+        goto Exit;
+      }
 
       /* note: since glyphs are stored in columns and not in rows we */
       /*       can't use ft_glyphslot_set_bitmap                     */
