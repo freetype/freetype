@@ -7,6 +7,9 @@
 	(ps_parser_load_field_table): Use `fields->array_max' instead of
 	T1_MAX_TABLE_ELEMENTS to limit the number of arguments.
 
+	* src/cff/cffgload.c (cff_decoder_prepare): Fix change from
+	2007-06-06.
+
 2006-06-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/ftrandom.c (font_size): New global variable.

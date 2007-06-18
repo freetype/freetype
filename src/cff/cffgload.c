@@ -387,7 +387,7 @@
       FT_Byte  fd_index = cff_fd_select_get( &cff->fd_select, glyph_index );
 
 
-      if ( fd_index > CFF_MAX_CID_FONTS )
+      if ( fd_index >= cff->num_subfonts )
       {
         FT_TRACE4(( "cff_decoder_prepare: invalid CID subfont index\n" ));
         error = CFF_Err_Invalid_File_Format;
