@@ -393,7 +393,7 @@
           break;
         }
 
-        /* check whether we've found an entry */
+        /* check whether we have found an entry */
         if ( ft_isdigit( *cur ) || only_immediates )
         {
           FT_Int  charcode;
@@ -433,7 +433,11 @@
           }
         }
         else
+        {
           T1_Skip_PS_Token( parser );
+          if ( parser->root.error )
+            return;
+        }
 
         T1_Skip_Spaces( parser );
       }

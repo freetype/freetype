@@ -4,11 +4,11 @@
 	assertion.
 	(ps_parser_to_bytes): Fix error message.
 
-	* src/type42/t42objs.c (T42_Open_Face): Handle one more error
-	return.
+	* src/type42/t42objs.c (T42_Open_Face): Handle one more error.
 	* src/type42/t42parse.c (t42_parse_sfnts): s/alloc/allocated/.
 	Don't allow mixed binary and hex strings.
 	Handle zero string_size == 0 and string_buf == 0.
+	(t42_parse_encoding): Handle one more error.
 
 2006-06-18  Werner Lemberg  <wl@gnu.org>
 
