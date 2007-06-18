@@ -1,3 +1,12 @@
+2006-06-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/psobjs.c (ps_tofixedarray, ps_tocoordarray): Fix exit
+	logic.
+	(ps_parser_load_field) <T1_FIELD_TYPE_BBOX>: Skip delimiters
+	correctly.
+	(ps_parser_load_field_table): Use `fields->array_max' instead of
+	T1_MAX_TABLE_ELEMENTS to limit the number of arguments.
+
 2006-06-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/ftrandom.c (font_size): New global variable.

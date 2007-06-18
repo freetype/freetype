@@ -803,9 +803,6 @@
       if ( cur >= limit )
         goto Exit;
 
-      if ( coords != NULL && count >= max_coords )
-        break;
-
       if ( *cur == ender )
       {
         cur++;
@@ -813,6 +810,9 @@
       }
 
       old_cur = cur;
+
+      if ( coords != NULL && count >= max_coords )
+        break;
 
       /* call PS_Conv_ToFixed() even if coords == NULL */
       /* to properly parse number at `cur'             */
@@ -881,9 +881,6 @@
       if ( cur >= limit )
         goto Exit;
 
-      if ( values != NULL && count >= max_values )
-        break;
-
       if ( *cur == ender )
       {
         cur++;
@@ -891,6 +888,9 @@
       }
 
       old_cur = cur;
+
+      if ( values != NULL && count >= max_values )
+        break;
 
       /* call PS_Conv_ToFixed() even if coords == NULL */
       /* to properly parse number at `cur'             */
@@ -1182,7 +1182,7 @@
           FT_Int    result;
 
 
-          result = ps_tofixedarray( &token.start, token.limit, 4, temp, 0 );
+          result = ps_tofixedarray( &cur, limit, 4, temp, 0 );
 
           if ( result < 0 )
           {
@@ -1254,8 +1254,8 @@
       error = PSaux_Err_Ignore;
       goto Exit;
     }
-    if ( num_elements > T1_MAX_TABLE_ELEMENTS )
-      num_elements = T1_MAX_TABLE_ELEMENTS;
+    if ( (FT_UInt)num_elements > field->array_max )
+      num_elements = field->array_max;
 
     old_cursor = parser->cursor;
     old_limit  = parser->limit;
