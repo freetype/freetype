@@ -592,7 +592,6 @@
       error = PSaux_Err_Invalid_File_Format;
     }
 
-    FT_ASSERT( parser->error == PSaux_Err_Ok );
     parser->error  = error;
     parser->cursor = cur;
   }
@@ -1338,7 +1337,7 @@
     {
       if ( cur < parser->limit && *cur != '>' )
       {
-        FT_ERROR(( "ps_tobytes: Missing closing delimiter `>'\n" ));
+        FT_ERROR(( "ps_parser_to_bytes: Missing closing delimiter `>'\n" ));
         error = PSaux_Err_Invalid_File_Format;
         goto Exit;
       }

@@ -1,5 +1,17 @@
 2006-06-18  Werner Lemberg  <wl@gnu.org>
 
+	* src/psaux/psobjs.c (ps_parser_skip_PS_token): Remove incorrect
+	assertion.
+	(ps_parser_to_bytes): Fix error message.
+
+	* src/type42/t42objs.c (T42_Open_Face): Handle one more error
+	return.
+	* src/type42/t42parse.c (t42_parse_sfnts): s/alloc/allocated/.
+	Don't allow mixed binary and hex strings.
+	Handle zero string_size == 0 and string_buf == 0.
+
+2006-06-18  Werner Lemberg  <wl@gnu.org>
+
 	* src/psaux/psobjs.c (ps_tofixedarray, ps_tocoordarray): Fix exit
 	logic.
 	(ps_parser_load_field) <T1_FIELD_TYPE_BBOX>: Skip delimiters
