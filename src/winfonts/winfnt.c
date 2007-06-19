@@ -343,7 +343,7 @@
         if ( !font_count || !font_offset )
         {
           FT_TRACE2(( "this file doesn't contain any FNT resources!\n" ));
-          error = FNT_Err_Unknown_File_Format;
+          error = FNT_Err_Invalid_File_Format;
           goto Exit;
         }
 
@@ -413,6 +413,7 @@
              pe32_header.size_of_optional_header != 0xe0 /* FIXME */         ||
              pe32_header.magic32 != 0x10b                                    )
         {
+          FT_TRACE2(( "this file has an invalid PE header\n" ));
           error = FNT_Err_Invalid_File_Format;
           goto Exit;
         }
@@ -435,6 +436,7 @@
             goto Found_rsrc_section;
         }
 
+        FT_TRACE2(( "this file doesn't contain any resources\n" ));
         error = FNT_Err_Invalid_File_Format;
         goto Exit;
 
@@ -551,6 +553,13 @@
             }
           }
         }
+      }
+
+      if ( !face->root.num_faces )
+      {
+        FT_TRACE2(( "this file doesn't contain any RT_FONT resources\n" ));
+        error = FNT_Err_Invalid_File_Format;
+        goto Exit;
       }
 
       if ( face_index >= face->root.num_faces )
@@ -681,11 +690,17 @@
 
     /* try to load font from a DLL */
     error = fnt_face_get_dll_font( face, face_index );
-    if ( error )
+    if ( error == FNT_Err_Unknown_File_Format )
     {
       /* this didn't work; try to load a single FNT font */
       FNT_Font  font;
 
+
+      if ( face_index > 0 )
+      {
+        error = FNT_Err_Bad_Argument;
+        goto Exit;
+      }
 
       if ( FT_NEW( face->font ) )
         goto Exit;
@@ -697,9 +712,10 @@
       font->fnt_size = stream->size;
 
       error = fnt_font_load( font, stream );
-      if ( error )
-        goto Fail;
     }
+
+    if ( error )
+      goto Fail;
 
     /* we now need to fill the root FT_Face fields */
     /* with relevant information                   */

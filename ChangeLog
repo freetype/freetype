@@ -1,3 +1,16 @@
+2007-06-19  Dmitry Timoshkov  <dmitry@codeweavers.com>
+
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Return error
+	FNT_Err_Invalid_File_Format if file format was recognized but
+	the file doesn't contain any FNT(NE) or RT_FONT(PE) resources.
+	Add verbose debug logs to make it easier to debug failing load
+	attempts.
+	(FNT_Face_Init): A single FNT font can't contain more than 1 face,
+	so return an error if requested face index is > 0.
+	Do not do further attempt to load fonts if a previous attempt has
+	failed but returned error FNT_Err_Invalid_File_Format, i.e., the
+	file format has been recognized but no fonts found in the file.
+
 2007-07-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c: Apply patches proposed by Sean McBride.
