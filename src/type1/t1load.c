@@ -1267,7 +1267,11 @@
           }
         }
         else
+        {
           T1_Skip_PS_Token( parser );
+          if ( parser->root.error )
+            return;
+        }
 
         T1_Skip_Spaces( parser );
       }

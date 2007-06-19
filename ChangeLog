@@ -1,3 +1,7 @@
+2007-06-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_encoding): Handle one more error.
+
 2007-06-19  Dmitry Timoshkov  <dmitry@codeweavers.com>
 
 	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Return error
