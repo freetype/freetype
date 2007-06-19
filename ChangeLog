@@ -1,4 +1,25 @@
-2006-06-18  Werner Lemberg  <wl@gnu.org>
+2007-07-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c: Apply patches proposed by Sean McBride.
+	(FT_GetFile_From_Mac_Name): Insert FT_UNUSED macros to fix
+	the compiler warnings against unused arguments.
+	(FT_ATSFontGetFileReference): Ditto.
+	(FT_GetFile_From_Mac_ATS_Name): Ditto.
+	(FT_New_Face_From_FSSpec): Ditto.
+	(lookup_lwfn_by_fond): Fix wrong comment.
+	Replace `const StringPtr' by more appropriate type
+	`ConstStr255Param'.
+	FSRefMakePathPath always returns UTF8 POSIX pathname in
+	Mach-O, thus HFS pathname support is dropped.
+	(count_faces): Remove HLock and HUnlock which is not
+	required on Mac OS X anymore.
+	(FT_New_Face_From_SFNT): Ditto.
+	(FT_New_Face_From_FOND): Ditto.
+	* builds/mac/ftmac.c: Synchronize to src/base/ftmac.c,
+	except of HFS pathname support and HLock/HUnlock.
+	They are required on classic CFM environment.
+
+2007-06-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psobjs.c (ps_parser_skip_PS_token): Remove incorrect
 	assertion.
@@ -10,7 +31,7 @@
 	Handle zero string_size == 0 and string_buf == 0.
 	(t42_parse_encoding): Handle one more error.
 
-2006-06-18  Werner Lemberg  <wl@gnu.org>
+2007-06-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psobjs.c (ps_tofixedarray, ps_tocoordarray): Fix exit
 	logic.
@@ -22,7 +43,7 @@
 	* src/cff/cffgload.c (cff_decoder_prepare): Fix change from
 	2007-06-06.
 
-2006-06-17  Werner Lemberg  <wl@gnu.org>
+2007-06-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/ftrandom.c (font_size): New global variable.
 	(TestFace): Use it.
@@ -33,7 +54,7 @@
 	invalid font.
 	(FNT_Load_Glyph): Protect against invalid bitmap width.
 
-2006-06-16  David Turner  <david@freetype.org>
+2007-06-16  David Turner  <david@freetype.org>
 
 	* src/smooth/ftgrays.c (gray_find_cell, gray_set_cell, gray_hline):
 	Prevent integer overflows when rendering very large outlines.
@@ -48,7 +69,7 @@
 	(_iup_worker_interpolate): Check argument ranges.
 	(Ins_IUP): Ignore empty outlines.
 
-2006-06-16  Dmitry Timoshkov  <dmitry@codeweavers.com>
+2007-06-16  Dmitry Timoshkov  <dmitry@codeweavers.com>
 
 	* src/winfonts/winfnt.h: Add necessary structures for PE resource
 	parsing.
@@ -62,17 +83,17 @@
 	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Add support for
 	loading bitmap .fon files in PE format.
 
-2006-06-15  Dmitry Timoshkov  <dmitry@codeweavers.com>
+2007-06-15  Dmitry Timoshkov  <dmitry@codeweavers.com>
 
 	* builds/win32/ftdebug.c: Unify debug level handling with other
 	platforms.
 
-2006-06-14  Dmitry Timoshkov  <dmitry@codeweavers.com>
+2007-06-14  Dmitry Timoshkov  <dmitry@codeweavers.com>
 
 	* builds/win32/ftdebug.c (FT_Message): Send debug output to the
 	console as well as to the debugger.
 
-2006-06-14  Werner Lemberg  <wl@gnu.org>
+2007-06-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_uniranges): Expand structure to
 	cover all ranges which could possibly be handled by the aflatin

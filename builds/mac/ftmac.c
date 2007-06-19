@@ -153,6 +153,10 @@
                             FSSpec*      pathSpec,
                             FT_Long*     face_index )
   {
+    FT_UNUSED( fontName );
+    FT_UNUSED( pathSpec );
+    FT_UNUSED( face_index );
+
     return FT_Err_Unimplemented_Feature;
   }
 
@@ -323,6 +327,11 @@
                                     UInt32       maxPathSize,
                                     FT_Long*     face_index )
   {
+    FT_UNUSED( fontName );
+    FT_UNUSED( path );
+    FT_UNUSED( maxPathSize );
+    FT_UNUSED( face_index );
+
     return FT_Err_Unimplemented_Feature;
   }
 
@@ -358,6 +367,10 @@
                                 FSSpec*      pathSpec,
                                 FT_Long*     face_index )
   {
+    FT_UNUSED( fontName );
+    FT_UNUSED( pathSpec );
+    FT_UNUSED( face_index );
+
     return FT_Err_Unimplemented_Feature;
   }
 
@@ -778,10 +791,10 @@
 
 
   static  FT_Error
-  lookup_lwfn_by_fond( const UInt8*     path_fond,
-                       const StringPtr  base_lwfn,
-                       UInt8*           path_lwfn,
-                       int              path_size )
+  lookup_lwfn_by_fond( const UInt8*      path_fond,
+                       ConstStr255Param  base_lwfn,
+                       UInt8*            path_lwfn,
+                       int               path_size )
   {
 
 #if HAVE_FSREF
@@ -806,7 +819,7 @@
     if ( ft_strlen( (char *)path_lwfn ) + 1 + base_lwfn[0] > path_size )
       return FT_Err_Invalid_Argument;
 
-    /* now we have absolute dirname in lookup_path */
+    /* now we have absolute dirname in path_lwfn */
     if ( path_lwfn[0] == '/' )
       ft_strcat( (char *)path_lwfn, "/" );
     else
@@ -1450,6 +1463,11 @@
 
 #if !HAVE_FSREF
 
+    FT_UNUSED( library );
+    FT_UNUSED( ref );
+    FT_UNUSED( face_index );
+    FT_UNUSED( aface );
+
     return FT_Err_Unimplemented_Feature;
 
 #else
@@ -1532,6 +1550,11 @@
     return FT_Open_Face( library, &args, face_index, aface );
 
 #else
+
+    FT_UNUSED( library );
+    FT_UNUSED( spec );
+    FT_UNUSED( face_index );
+    FT_UNUSED( aface );
 
     return FT_Err_Unimplemented_Feature;
 
