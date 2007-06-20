@@ -2566,14 +2566,14 @@
         glyph->root.outline.flags |= FT_OUTLINE_REVERSE_FILL;
 
         /* apply the font matrix */
-        if ( font_matrix.xx != 0x10000L &&
-             font_matrix.yy != 0x10000L &&
-             font_matrix.xy != 0        &&
-             font_matrix.yx != 0        )
+        if ( !( font_matrix.xx == 0x10000L &&
+                font_matrix.yy == 0x10000L &&
+                font_matrix.xy == 0        &&
+                font_matrix.yx == 0        ) )
           FT_Outline_Transform( &glyph->root.outline, &font_matrix );
 
-        if ( font_offset.x != 0 ||
-             font_offset.y != 0 )
+        if ( !( font_offset.x == 0 &&
+                font_offset.y == 0 ) )
           FT_Outline_Translate( &glyph->root.outline,
                                 font_offset.x, font_offset.y );
 
