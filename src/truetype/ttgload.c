@@ -271,7 +271,7 @@
     for ( cont++; cont < cont_limit; cont++ )
     {
       cont[0] = FT_NEXT_USHORT( p );
-      if ( cont[0] > prev_cont )
+      if ( cont[0] <= prev_cont )
       {
         /* unordered contours: this is invalid */
         error = FT_Err_Invalid_Table;
