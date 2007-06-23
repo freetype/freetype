@@ -1,7 +1,8 @@
 2007-06-23  David Turner  <david@freetype.org>
 
-	* src/truetype/ttgload.c (TT_Load_Simple): fix typo that prevented
-	the truetype loader from loading most glyphs. ooops !
+	* src/truetype/ttgload.c (TT_Load_Simple): Fix change from
+	2007-06-16 that prevented the TrueType module from loading most
+	glyphs.
 
 2007-06-20  Werner Lemberg  <wl@gnu.org>
 
