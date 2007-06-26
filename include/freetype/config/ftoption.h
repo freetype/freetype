@@ -628,6 +628,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #define AF_CONFIG_OPTION_CJK
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* Compile autofit module with Indic script support.                     */
+  /*                                                                       */
+#define AF_CONFIG_OPTION_INDIC
 
   /* */
 

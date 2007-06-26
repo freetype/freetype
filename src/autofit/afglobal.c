@@ -20,6 +20,8 @@
 #include "afdummy.h"
 #include "aflatin.h"
 #include "afcjk.h"
+#include "afindic.h"
+
 #include "aferrors.h"
 
 #ifdef FT_OPTION_AUTOFIT2
@@ -35,7 +37,7 @@
 #endif
     &af_latin_script_class,
     &af_cjk_script_class,
-
+    &af_indic_script_class, 
     NULL  /* do not remove */
   };
 

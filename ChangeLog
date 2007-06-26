@@ -1,3 +1,21 @@
+2007-06-26  Rahul Bhalerao  <b.rahul.pm@gmail.com>
+
+	Add autofit module for Indic scripts.  This currently just reuses
+	the CJK-specific functions.
+
+	* include/freetype/config/ftoption.h (AF_CONFIG_OPTION_INDIC): New
+	macro.
+	* devel/ftoption.h: Synchronize with
+	include/freetype/config/ftoption.h.
+
+	* src/autofit/afindic.c, src/autofit/afindic.h: New files.
+
+	* src/autofit/afglobal.c, src/autofit/aftypes.h,
+	src/autofit/autofit.c: Updated.
+
+	* src/autofit/Jamfile (_sources), * src/autofit/rules.mk
+	(AUTOF_DRV_SRC): Updated.
+
 2007-06-23  David Turner  <david@freetype.org>
 
 	* src/truetype/ttgload.c (TT_Load_Simple): Fix change from
