@@ -1,3 +1,11 @@
+2007-06-30  David Turner  <david@freetype.org>
+
+	* src/truetype/ttinterp.c: add missing variable initialization,
+	gets rid of Valgrind fixes.
+
+	* src/autofit/aflatin.c: get rid of an infinite loop in the case
+	of degenerate fonts.
+
 2007-06-26  Rahul Bhalerao  <b.rahul.pm@gmail.com>
 
 	Add autofit module for Indic scripts.  This currently just reuses

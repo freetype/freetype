@@ -6424,6 +6424,7 @@
       V.curs = (FT_Vector*)( (FT_Pos*)CUR.pts.cur + 1 );
       V.orus = (FT_Vector*)( (FT_Pos*)CUR.pts.orus + 1 );
     }
+    V.max_points = CUR.pts.n_points;
 
     contour = 0;
     point   = 0;

@@ -269,6 +269,7 @@
         /* now check whether the point belongs to a straight or round   */
         /* segment; we first need to find in which contour the extremum */
         /* lies, then inspect its previous and next points              */
+        if ( best_point >= 0 )
         {
           FT_Int  prev, next;
           FT_Pos  dist;
