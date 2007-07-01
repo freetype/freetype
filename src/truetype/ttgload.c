@@ -436,7 +436,7 @@
 
       x     += y;
       vec->y = x;
-      *flag  = f & ~( 4 | 32 );
+      *flag  = f & FT_CURVE_TAG_ON;
     }
 
     outline->n_points   = (FT_UShort)n_points;

@@ -1,3 +1,8 @@
+2007-07-01  David Turner  <david@freetype.org>
+
+	* src/truetype/ttgload.c: fix a small bug that created distortions
+	in the bytecode interpreter results
+
 2007-06-30  David Turner  <david@freetype.org>
 
 	* src/truetype/ttinterp.c: add missing variable initialization,
