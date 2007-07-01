@@ -1,5 +1,9 @@
 2007-07-01  David Turner  <david@freetype.org>
 
+	* include/freetype/freetype.h, src/base/ftpatent.c: adding
+	FT_Face_SetUnpatentedHinting to dynamically change the setting
+	after a face is created.
+
 	* src/truetype/ttgload.c: fix a small bug that created distortions
 	in the bytecode interpreter results
 
