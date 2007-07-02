@@ -3389,7 +3389,8 @@ FT_BEGIN_HEADER
   /*    1 if this is a TrueType font that uses one of the patented         */
   /*    opcodes, 0 otherwise.                                              */
   /*                                                                       */
-  /* <Since> 2.3.5                                                         */
+  /* <Since>                                                               */
+  /*    2.3.5                                                              */
   /*                                                                       */
   FT_EXPORT( FT_Bool )
   FT_Face_CheckTrueTypePatents( FT_Face  face );
@@ -3407,18 +3408,20 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Input>                                                               */
   /*    face  :: A face handle.                                            */
-  /*    value :: new boolean setting                                       */
+  /*                                                                       */
+  /*    value :: New boolean setting.                                      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    the old setting value. this will always be false if this is not    */
-  /*    a SFNT font, or if the unpatented hinter is not compiled in the    */
-  /*    this instance of the library.                                      */
+  /*    The old setting value.  This will always be false if this is not   */
+  /*    a SFNT font, or if the unpatented hinter is not compiled in this   */
+  /*    instance of the library.                                           */
   /*                                                                       */
-  /* <Since> 2.3.5                                                         */
+  /* <Since>                                                               */
+  /*    2.3.5                                                              */
   /*                                                                       */
   FT_EXPORT( FT_Bool )
-  FT_Face_SetUnpatentedHinting( FT_Face   face,
-                                FT_Bool   value );
+  FT_Face_SetUnpatentedHinting( FT_Face  face,
+                                FT_Bool  value );
 
   /* */
 

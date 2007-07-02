@@ -1,19 +1,19 @@
 2007-07-01  David Turner  <david@freetype.org>
 
-	* include/freetype/freetype.h, src/base/ftpatent.c: adding
-	FT_Face_SetUnpatentedHinting to dynamically change the setting
-	after a face is created.
+	* include/freetype/freetype.h, src/base/ftpatent.c
+	(FT_Face_SetUnpatentedHinting): New function to dynamically change
+	the setting after a face is created.
 
-	* src/truetype/ttgload.c: fix a small bug that created distortions
-	in the bytecode interpreter results
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Fix a small bug
+	that created distortions in the bytecode interpreter results.
 
 2007-06-30  David Turner  <david@freetype.org>
 
-	* src/truetype/ttinterp.c: add missing variable initialization,
-	gets rid of Valgrind fixes.
+	* src/truetype/ttinterp.c (Ins_IUP): Add missing variable
+	initialization.
 
-	* src/autofit/aflatin.c: get rid of an infinite loop in the case
-	of degenerate fonts.
+	* src/autofit/aflatin.c (af_latin_metric_init_blues): Get rid of an
+	infinite loop in the case of degenerate fonts.
 
 2007-06-26  Rahul Bhalerao  <b.rahul.pm@gmail.com>
 

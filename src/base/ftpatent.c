@@ -254,25 +254,28 @@
   }
 
 
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Bool )
-  FT_Face_SetUnpatentedHinting( FT_Face   face,
-                                FT_Bool   value )
+  FT_Face_SetUnpatentedHinting( FT_Face  face,
+                                FT_Bool  value )
   {
     FT_Bool  result = 0;
 
-#if defined(TT_CONFIG_OPTION_UNPATENTED_HINTING) && \
-   !defined(TT_CONFIG_OPTION_BYTECODE_INTEPRETER)
-    if ( face && FT_IS_SFNT(face) )
+
+#if defined( TT_CONFIG_OPTION_UNPATENTED_HINTING ) && \
+    !defined( TT_CONFIG_OPTION_BYTECODE_INTEPRETER )
+    if ( face && FT_IS_SFNT( face ) )
     {
       result = !face->internal->ignore_unpatented_hinter;
       face->internal->ignore_unpatented_hinter = !value;
     }
 #else
-    FT_UNUSED(face);
-    FT_UNUSED(value);
+    FT_UNUSED( face );
+    FT_UNUSED( value );
 #endif
 
-    return  result;
+    return result;
   }
 
 /* END */
