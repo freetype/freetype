@@ -1,3 +1,31 @@
+2007-07-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Initialize
+	`round' to pacify compiler.
+
+2007-07-02  Werner Lemberg  <wl@gnu.org>
+
+
+	* Version 2.3.5 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-5'.
+
+	* docs/CHANGES, docs/VERSION.DLL: Update documentation and bump
+	version number to 2.3.5.
+
+	* README, Jamfile (RefDoc), builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj: s/2.3.4/2.3.5/, s/234/235/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 5.
+
+	* builds/unix/configure.raw (version_info): Set to 9:16:3.
+
 2007-07-01  David Turner  <david@freetype.org>
 
 	* include/freetype/freetype.h, src/base/ftpatent.c
@@ -553,6 +581,7 @@
 
 2007-04-09  Werner Lemberg  <wl@gnu.org>
 
+
 	* Version 2.3.4 released.
 	=========================
 
@@ -582,6 +611,7 @@
 	(Savannah bug #19536).
 
 2007-04-04  Werner Lemberg  <wl@gnu.org>
+
 
 	* Version 2.3.3 released.
 	=========================
@@ -694,6 +724,7 @@
 	(undocumented) twilight zone special case.
 
 2007-03-09  Werner Lemberg  <wl@gnu.org>
+
 
 	* Version 2.3.2 released.
 	=========================
