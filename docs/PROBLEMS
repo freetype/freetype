@@ -4,6 +4,29 @@ additions or other improvements to this file are welcome.
 
 ----------------------------------------------------------------------
 
+Running Problems
+================
+
+
+* Some Type 1, Multiple Masters, and CID-keyed PostScript fonts aren't
+  handled correctly.
+
+-----
+
+Of course,  there might be  bugs in FreeType,  but some fonts based on
+the  PostScript  format can't  behandled indeed.  The  reason  is that
+FreeType  doesn't contain a full  PostScript  interpreter  but applies
+pattern matching instead.  In case a font doesn't follow the  standard
+structure of the given font format, FreeType fails.  A typical example
+is Adobe's `Optima'  font family which  contains extra code  to switch
+between low and high resolution versions of the glyphs.
+
+It might be  possible to patch  FreeType in  some situations,  though.
+Please report failing fonts so that we investigate the problem and set
+up a list of such problematic fonts.
+
+----------------------------------------------------------------------
+
 
 Compilation Problems
 ====================
@@ -50,3 +73,5 @@ or newer.  If this isn't feasible, apply the following patch.
 
 
 ----------------------------------------------------------------------
+
+--- end of PROBLEMS ---
