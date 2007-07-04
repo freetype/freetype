@@ -1084,7 +1084,9 @@
 #endif
 
 
-    if ( recurse_count > face->max_profile.maxComponentDepth )
+    /* some fonts haven't this field set correctly, */
+    /* thus we add 1 to catch the majority of them  */
+    if ( recurse_count > (FT_UInt)face->max_profile.maxComponentDepth + 1 )
     {
       error = TT_Err_Invalid_Composite;
       goto Exit;

@@ -202,7 +202,7 @@
 
       if ( dst_gid > valid->face->num_glyphs )
       {
-        GXV_TRACE(( "substTable include toolarge gid[%d]=%d >"
+        GXV_TRACE(( "substTable include too large gid[%d]=%d >"
                     " max defined gid #%d\n",
                     i, dst_gid, valid->face->num_glyphs ));
         if ( valid->root->level >= FT_VALIDATE_PARANOID )

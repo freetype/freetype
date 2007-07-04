@@ -3,6 +3,13 @@
 	* docs/PROBLEMS: Mention that some PS based fonts can't be
 	handled correctly by FreeType.
 
+	* src/truetype/ttgload.c (load_truetype_glyph): Always allow a
+	recursion depth of 1.  This was the maximum value in TrueType 1.0,
+	and some older fonts don't set this field correctly.
+
+	* src/gxvalid/gxvmort1.c
+	(gxv_mort_subtable_type1_substTable_validate): Fix tracing message.
+
 2007-07-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Initialize
