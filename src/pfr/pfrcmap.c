@@ -20,6 +20,8 @@
 #include "pfrobjs.h"
 #include FT_INTERNAL_DEBUG_H
 
+#include "pfrerror.h"
+
 
   FT_CALLBACK_DEF( FT_Error )
   pfr_cmap_init( PFR_CMap  cmap )

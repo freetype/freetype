@@ -1004,12 +1004,14 @@
 
       if ( !found )
       {
-        AF_Edge   edge;
+        AF_Edge  edge;
 
 
         /* insert a new edge in the list and */
         /* sort according to the position    */
-        error = af_axis_hints_new_edge( axis, seg->pos, seg->dir, memory, &edge );
+        error = af_axis_hints_new_edge( axis, seg->pos,
+                                        (AF_Direction)seg->dir,
+                                        memory, &edge );
         if ( error )
           goto Exit;
 

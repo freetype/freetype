@@ -1013,7 +1013,8 @@
       for ( i = 0; i < num_params && !face->internal->incremental_interface;
             i++ )
         if ( params[i].tag == FT_PARAM_TAG_INCREMENTAL )
-          face->internal->incremental_interface = params[i].data;
+          face->internal->incremental_interface =
+            (FT_Incremental_Interface)params[i].data;
     }
 #endif
 

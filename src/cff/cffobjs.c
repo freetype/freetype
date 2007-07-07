@@ -288,7 +288,9 @@
     FT_String*  result;
 
 
-    result = ft_mem_strdup( memory, source, &error );
+    (void)FT_STRDUP( result, source );
+
+    FT_UNUSED( error );
 
     return result;
   }

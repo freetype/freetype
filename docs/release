@@ -18,6 +18,21 @@ How to prepare a new release
 . ChangeLog: Announce  new release  (both in  freetype2  and  ft2demos
   modules).
 
+. Copy the CVS archive to another directory and run
+
+    make distclean; make devel; make
+    make distclean; make devel; make multi
+    make distclean; make devel CC=g++; make CC=g++
+    make distclean; make devel CC=g++; make multi CC=g++
+
+    sh autogen.sh
+    make distclean; ./configure; make
+    make distclean; ./configure CC=g++; make
+
+  to test compilation with both gcc and g++.
+
+. Test C++ compilation for ft2demos too.
+
 . Tag the CVS (freetype2, ft2demos).
 
   TODO: Tag the home page CVS on savannah.nongnu.org.

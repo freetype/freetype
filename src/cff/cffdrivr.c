@@ -306,9 +306,10 @@
 
     if ( cff && cff->font_info == NULL )
     {
-      CFF_FontRecDict  dict = &cff->top_font.font_dict;
-      PS_FontInfoRec  *font_info;
-      FT_Memory        memory = face->root.memory;
+      CFF_FontRecDict     dict    = &cff->top_font.font_dict;
+      PS_FontInfoRec     *font_info;
+      FT_Memory           memory  = face->root.memory;
+      FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)cff->psnames;
 
 
       if ( FT_ALLOC( font_info, sizeof ( *font_info ) ) )
@@ -316,19 +317,19 @@
 
       font_info->version     = cff_index_get_sid_string( &cff->string_index,
                                                          dict->version,
-                                                         cff->psnames );
+                                                         psnames );
       font_info->notice      = cff_index_get_sid_string( &cff->string_index,
                                                          dict->notice,
-                                                         cff->psnames );
+                                                         psnames );
       font_info->full_name   = cff_index_get_sid_string( &cff->string_index,
                                                          dict->full_name,
-                                                         cff->psnames );
+                                                         psnames );
       font_info->family_name = cff_index_get_sid_string( &cff->string_index,
                                                          dict->family_name,
-                                                         cff->psnames );
+                                                         psnames );
       font_info->weight      = cff_index_get_sid_string( &cff->string_index,
                                                          dict->weight,
-                                                         cff->psnames );
+                                                         psnames );
       font_info->italic_angle        = dict->italic_angle;
       font_info->is_fixed_pitch      = dict->is_fixed_pitch;
       font_info->underline_position  = (FT_Short)dict->underline_position;

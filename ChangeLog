@@ -1,3 +1,21 @@
+2007-07-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/pfr/pfrcmap.c: Include pfrerror.h.
+
+	* src/autofit/afindic.c: Add some external declarations to pacify
+	`make multi' compilation.
+
+	* src/cid/cidgload.c (cid_load_glyph): Pacify compiler.
+
+	* src/cff/cffdrivr.c (cff_ps_get_font_info), src/cff/cffobjs.c
+	(cff_strcpy), include/freetype/internal/ftmemory.h (FT_MEM_STRDUP),
+	src/autofit/aflatin.c (af_latin_hints_compute_edges),
+	src/autofit/afcjk.c (af_cjk_hints_compute_edges), src/sfnt/ttmtx.c
+	(tt_face_get_metrics), src/base/ftobjs.c (open_face)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Fix compilation with C++ compiler.
+
+	* docs/release: Mention test compilation targets.
+
 2007-07-04  Werner Lemberg  <wl@gnu.org>
 
 	* docs/PROBLEMS: Mention that some PS based fonts can't be
