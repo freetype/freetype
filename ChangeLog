@@ -1,3 +1,8 @@
+2007-07-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftglyph.c (FT_Glyph_Copy): Fix initialization of
+	`target'.  Reported by Sean McBride.
+
 2007-07-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrcmap.c: Include pfrerror.h.
