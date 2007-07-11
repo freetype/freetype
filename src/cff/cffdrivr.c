@@ -24,6 +24,7 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H
+#include FT_SERVICE_POSTSCRIPT_NAME_H
 #include FT_SERVICE_TT_CMAP_H
 
 #include "cffdrivr.h"
@@ -354,6 +355,27 @@
 
 
   /*
+  *  POSTSCRIPT NAME SERVICE
+  *
+  */
+
+  static const char*
+  cff_get_ps_name( CFF_Face  face )
+  {
+    CFF_Font  cff = (CFF_Font)face->extra.data;
+
+
+    return (const char*)cff->font_name;
+  }
+
+
+  static const FT_Service_PsFontNameRec  cff_service_ps_name =
+  {
+    (FT_PsName_GetFunc)cff_get_ps_name
+  };
+
+
+  /*
    * TT CMAP INFO
    *
    * If the charmap is a synthetic Unicode encoding cmap or
@@ -412,12 +434,13 @@
 
   static const FT_ServiceDescRec  cff_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_CFF },
-    { FT_SERVICE_ID_POSTSCRIPT_INFO, &cff_service_ps_info },
+    { FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_CFF },
+    { FT_SERVICE_ID_POSTSCRIPT_INFO,      &cff_service_ps_info },
+    { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &cff_service_ps_name },
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
-    { FT_SERVICE_ID_GLYPH_DICT,      &cff_service_glyph_dict },
+    { FT_SERVICE_ID_GLYPH_DICT,           &cff_service_glyph_dict },
 #endif
-    { FT_SERVICE_ID_TT_CMAP,         &cff_service_get_cmap_info },
+    { FT_SERVICE_ID_TT_CMAP,              &cff_service_get_cmap_info },
     { NULL, NULL }
   };
 

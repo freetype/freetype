@@ -1,3 +1,12 @@
+2007-07-11  Derek Clegg  <dclegg@apple.com>
+
+	Add support for postscript name service to CFF driver.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_POSTSCRIPT_NAME_H.
+	(cff_get_ps_name): New function.
+	(cff_service_ps_name): New service structure.
+	(cff_services): Register it.
+
 2007-07-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftglyph.c (FT_Glyph_Copy): Fix initialization of
