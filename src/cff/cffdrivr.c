@@ -22,6 +22,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
+#include FT_SERVICE_CID_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
@@ -420,6 +421,66 @@
   };
 
 
+  /*
+   * CID INFO SERVICE
+   *
+   */
+  static FT_Error
+  cff_get_ros( CFF_Face      face,
+               const char*  *registry,
+               const char*  *ordering,
+               FT_Int       *supplement )
+  {
+    FT_Error  error = CFF_Err_Ok;
+    CFF_Font  cff   = (CFF_Font)face->extra.data;
+
+
+    if ( cff )
+    {
+      CFF_FontRecDict     dict    = &cff->top_font.font_dict;
+      FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)cff->psnames;
+
+
+      if ( dict->cid_registry == 0xFFFFU )
+      {
+        error = CFF_Err_Invalid_Argument;
+        goto Fail;
+      }
+
+      if ( registry )
+      {
+        if ( cff->registry == NULL )
+          cff->registry = cff_index_get_sid_string( &cff->string_index,
+                                                    dict->cid_registry,
+                                                    psnames );
+        *registry = cff->registry;
+      }
+      
+      if ( ordering )
+      {
+        if ( cff->ordering == NULL )
+          cff->ordering = cff_index_get_sid_string( &cff->string_index,
+                                                    dict->cid_ordering,
+                                                    psnames );
+        *ordering = cff->ordering;
+      }
+
+      if ( supplement )
+        *supplement = dict->cid_supplement;
+
+    }
+      
+    Fail:
+      return error;
+  }
+
+
+  static const FT_Service_CIDRec  cff_service_cid_info =
+  {
+    (FT_CID_GetRegistryOrderingSupplementFunc)cff_get_ros
+  };
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -441,6 +502,7 @@
     { FT_SERVICE_ID_GLYPH_DICT,           &cff_service_glyph_dict },
 #endif
     { FT_SERVICE_ID_TT_CMAP,              &cff_service_get_cmap_info },
+    { FT_SERVICE_ID_CID,                  &cff_service_cid_info },
     { NULL, NULL }
   };
 

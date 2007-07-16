@@ -54,6 +54,7 @@
 /*    type1_tables                                                         */
 /*    sfnt_names                                                           */
 /*    bdf_fonts                                                            */
+/*    cid_fonts                                                            */
 /*    pfr_fonts                                                            */
 /*    winfnt_fonts                                                         */
 /*    font_formats                                                         */

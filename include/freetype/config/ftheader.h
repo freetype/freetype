@@ -386,6 +386,20 @@
   /*************************************************************************
    *
    * @macro:
+   *   FT_CID_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   definitions of an API which access CID font information from a
+   *   face.
+   *
+   */
+#define FT_CID_H  <freetype/ftcid.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
    *   FT_GZIP_H
    *
    * @description:

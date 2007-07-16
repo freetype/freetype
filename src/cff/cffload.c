@@ -1590,6 +1590,9 @@
       FT_FREE( font->font_info );
     }
 
+    FT_FREE( font->registry );
+    FT_FREE( font->ordering );
+
     FT_FREE( font->global_subrs );
     FT_FREE( font->font_name );
   }

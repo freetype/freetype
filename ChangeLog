@@ -1,3 +1,30 @@
+2007-07-16  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2007-07-16  Derek Clegg  <dclegg@apple.com>
+
+	Add new service for getting the ROS from a CID font.
+
+	* include/freetype/config/ftheader.h (FT_CID_H): New macro.
+	* include/freetype/ftcid.h: New file.
+
+	* include/freetype/internal/ftserv.h (FT_SERVIVE_CID_H): New macro.
+	* include/freetype/internal/services/svcid.h: New file.
+
+	* src/base/ftcid.c: New file.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_CID_H.
+	(cff_get_ros): New function.
+	(cff_service_cid_info): New service structure.
+	(cff_services): Register it.
+
+	* src/cff/cffload.c (cff_font_done): Free registry and ordering.
+
+	* src/cff/cfftypes.h (CFF_FontRec): Add `registry' and `ordering'.
+
+	* modules.cfg (BASE_EXTENSIONS): Add ftcid.c.
+
 2007-07-11  Derek Clegg  <dclegg@apple.com>
 
 	Add support for postscript name service to CFF driver.
