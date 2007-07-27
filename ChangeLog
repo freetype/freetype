@@ -1,3 +1,8 @@
+2007-07-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_Outline_Translate): Check `outline' before
+	first usage.  From Savannah patch #6115.
+
 2007-07-16  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

@@ -474,11 +474,13 @@
                         FT_Pos             yOffset )
   {
     FT_UShort   n;
-    FT_Vector*  vec = outline->points;
+    FT_Vector*  vec;
 
 
     if ( !outline )
       return;
+
+    vec = outline->points;
 
     for ( n = 0; n < outline->n_points; n++ )
     {
