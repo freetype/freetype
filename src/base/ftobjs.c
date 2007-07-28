@@ -3726,9 +3726,10 @@
 
     /* allocate the render pool */
     library->raster_pool_size = FT_RENDER_POOL_SIZE;
-    if ( FT_RENDER_POOL_SIZE > 0 )
-      if ( FT_ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
-        goto Fail;
+#if FT_RENDER_POOL_SIZE > 0
+    if ( FT_ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
+      goto Fail;
+#endif
 
     /* That's ok now */
     *alibrary = library;

@@ -1,3 +1,9 @@
+2007-07-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/raster/ftraster.c (count_table): Make it conditional.
+	* src/base/ftobjs.c (FT_New_Library): Check FT_RENDER_POOL_SIZE with
+	a preprocessor statement.
+
 2007-07-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftoutln.c (FT_Outline_Translate): Check `outline' before
