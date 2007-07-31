@@ -1,3 +1,11 @@
+2007-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c (open_face_from_buffer): The argument
+	`driver_name' is typed as `const char*' to match with the
+	callers in FT_New_Face_From_LWFN and FT_New_Face_From_SFNT.
+	This is same with open_face_from_buffer in src/base/ftobjs.c.
+	Found and fixed by Sean McBride.
+
 2007-07-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (count_table): Make it conditional.

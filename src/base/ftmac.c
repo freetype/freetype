@@ -707,12 +707,12 @@
 
   /* Create a new FT_Face given a buffer and a driver name. */
   static FT_Error
-  open_face_from_buffer( FT_Library  library,
-                         FT_Byte*    base,
-                         FT_ULong    size,
-                         FT_Long     face_index,
-                         char*       driver_name,
-                         FT_Face*    aface )
+  open_face_from_buffer( FT_Library   library,
+                         FT_Byte*     base,
+                         FT_ULong     size,
+                         FT_Long      face_index,
+                         const char*  driver_name,
+                         FT_Face*     aface )
   {
     FT_Open_Args  args;
     FT_Error      error;
