@@ -26,7 +26,7 @@
 #include "psnamerr.h"
 
 
-#ifndef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES
+#ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
 
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
@@ -427,7 +427,7 @@
     return ft_service_list_lookup( pscmaps_services, service_id );
   }
 
-#endif /* !FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES */
+#endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
 
@@ -441,7 +441,7 @@
     0x10000L,   /* driver version                      */
     0x20000L,   /* driver requires FreeType 2 or above */
 
-#ifdef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES
+#ifndef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     0,
     (FT_Module_Constructor)0,
     (FT_Module_Destructor) 0,

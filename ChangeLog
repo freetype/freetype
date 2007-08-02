@@ -1,3 +1,8 @@
+2007-08-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/psnames/psmodule.c: Fix usage of
+	FT_CONFIG_OPTION_POSTSCRIPT_NAMES macro.  Reported by Graham Asher.
+
 2007-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (open_face_from_buffer): The argument
