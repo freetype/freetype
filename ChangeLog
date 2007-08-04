@@ -1,3 +1,8 @@
+2007-08-04  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.raw: Add call to AC_LIBTOOL_WIN32_DLL. 
+	Fixes Savannah bug #20686.
+
 2007-08-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/psnames/psmodule.c: Fix usage of

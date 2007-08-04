@@ -495,6 +495,8 @@ AC_SUBST([FT2_EXTRA_LIBS])
 AC_SUBST([SYSTEM_ZLIB])
 
 
+AC_LIBTOOL_WIN32_DLL
+
 AC_PROG_LIBTOOL
 # urgh -- these are internal libtool variables...
 AC_SUBST([enable_shared])
