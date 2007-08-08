@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType GSUB table validation (body).                               */
 /*                                                                         */
-/*  Copyright 2004, 2005 by                                                */
+/*  Copyright 2004, 2005, 2007 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -103,7 +103,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -144,7 +144,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -185,7 +185,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -259,7 +259,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -318,7 +318,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -379,7 +379,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -434,7 +434,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -509,7 +509,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -560,7 +560,7 @@
     OTV_LIMIT_CHECK( 10 );
 
     if ( FT_NEXT_ULONG( p ) != 0x10000UL )      /* Version */
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
 
     ScriptList  = FT_NEXT_USHORT( p );
     FeatureList = FT_NEXT_USHORT( p );

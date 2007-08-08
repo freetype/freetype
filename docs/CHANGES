@@ -7,6 +7,9 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
       access to  those fields in a CID-keyed font.  The code  has been
       contributed by Derek Clegg.
 
+    - George Williams  contributed  code  to validate  the new  `MATH'
+      OpenType  table (within  the `otvalid'  module).  The  `ftvalid'
+      demo program has been extended accordingly.
 
 ======================================================================
 

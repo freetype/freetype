@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType common tables validation (body).                            */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006 by                                          */
+/*  Copyright 2004, 2005, 2006, 2007 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -291,7 +291,10 @@
     EndSize     = FT_NEXT_USHORT( p );
     DeltaFormat = FT_NEXT_USHORT( p );
 
-    if ( DeltaFormat < 1 || DeltaFormat > 3 || EndSize < StartSize )
+    if ( DeltaFormat < 1 || DeltaFormat > 3 )
+      FT_INVALID_FORMAT;
+
+    if ( EndSize < StartSize )
       FT_INVALID_DATA;
 
     count = EndSize - StartSize + 1;

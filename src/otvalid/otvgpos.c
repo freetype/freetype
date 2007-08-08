@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType GPOS table validation (body).                               */
 /*                                                                         */
-/*  Copyright 2002, 2004, 2005, 2006 by                                    */
+/*  Copyright 2002, 2004, 2005, 2006, 2007 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -191,7 +191,7 @@
 #endif
 
     if ( format >= 0x100 )
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
 
     for ( count = 4; count > 0; count-- )
     {
@@ -294,7 +294,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -409,7 +409,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -558,7 +558,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -629,7 +629,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -670,7 +670,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -711,7 +711,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -752,7 +752,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -811,7 +811,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -872,7 +872,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -925,7 +925,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
@@ -989,7 +989,7 @@
     OTV_LIMIT_CHECK( 10 );
 
     if ( FT_NEXT_ULONG( p ) != 0x10000UL )      /* Version */
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
 
     ScriptList  = FT_NEXT_USHORT( p );
     FeatureList = FT_NEXT_USHORT( p );

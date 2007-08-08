@@ -1,3 +1,29 @@
+2007-08-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/otvalid/otvbase.c, src/otvalid/otvcommn.c,
+	src/otvalid/otvgdef.c, src/otvalid/otvgpos.c, src/otvalid/otvgsub.c,
+	src/otvalid/otvjstf.c: s/FT_INVALID_DATA/FT_INVALID_FORMAT/ where
+	appropriate.  Reported by George.
+
+	* include/freetype/internal/fttrace.h: Define `trace_otvmath'.
+
+	* src/otvalid/rules.mk (OTV_DRV_SRC): Add otvmath.c.
+
+	* docs/CHANGES: Updated.
+
+2007-08-08  George Williams  <gww@silcom.com>
+
+	Add `MATH' validating support to otvalid module.
+
+	* include/freetype/tttags.h (TTAG_MATH): New macro.
+	* include/freetype/ftotval.h (FT_VALIDATE_MATH): New macro.
+	(FT_VALIDATE_OT): Updated.
+
+	* src/otvalid/otmath.c: New file.
+
+	* src/otvalid/otvalid.c: Include otvmath.c.
+	* src/otvalid/otvmod.c (otv_validate): Handle `MATH' table.
+
 2007-08-04  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.raw: Add call to AC_LIBTOOL_WIN32_DLL. 

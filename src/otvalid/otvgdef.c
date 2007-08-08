@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType GDEF table validation (body).                               */
 /*                                                                         */
-/*  Copyright 2004, 2005 by                                                */
+/*  Copyright 2004, 2005, 2007 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -126,7 +126,7 @@
       break;
 
     default:
-      FT_INVALID_DATA;
+      FT_INVALID_FORMAT;
     }
 
     OTV_EXIT;
