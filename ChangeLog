@@ -1,3 +1,9 @@
+2007-08-11  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.raw: Fix a bug which sets CC_BUILD by
+	${build-gcc} (unchecked) instead of by ${build}-gcc (checked).
+	Found by Ryan Hill.
+
 2007-08-11  George Williams  <gww@silcom.com>
 
 	* src/otvalid/otvcommn.c, src/otvalid/otvcommn.h
