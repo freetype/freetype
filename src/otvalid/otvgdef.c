@@ -61,7 +61,7 @@
 
     OTV_TRACE(( " (GlyphCount = %d)\n", GlyphCount ));
 
-    otv_Coverage_validate( Coverage, valid );
+    otv_Coverage_validate( Coverage, valid, GlyphCount );
     if ( GlyphCount != otv_Coverage_get_count( Coverage ) )
       FT_INVALID_DATA;
 

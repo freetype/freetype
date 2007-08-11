@@ -55,12 +55,12 @@
 
     OTV_NAME_ENTER( "MathConstants" );
 
-    /* 57 constants, 52 have device tables */
-    OTV_LIMIT_CHECK( 2 * ( 57 + 52 ) );
-    table_size = 2 * ( 57 + 52 );
+    /* 56 constants, 51 have device tables */
+    OTV_LIMIT_CHECK( 2 * ( 56 + 51 ) );
+    table_size = 2 * ( 56 + 51 );
 
     p += 4 * 2;                 /* First 4 constants have no device tables */
-    for ( i = 0; i < 52; ++i )
+    for ( i = 0; i < 51; ++i )
     {
       p += 2;                                            /* skip the value */
       OTV_OPTIONAL_OFFSET( DeviceTableOffset );
@@ -106,7 +106,7 @@
     table_size = 4 + 4 * cnt;
 
     OTV_SIZE_CHECK( Coverage );
-    otv_Coverage_validate( table + Coverage, valid );
+    otv_Coverage_validate( table + Coverage, valid, cnt );
 
     for ( i = 0; i < cnt; ++i )
     {
@@ -194,7 +194,7 @@
     table_size = 4 + 8 * cnt;
 
     OTV_SIZE_CHECK( Coverage );
-    otv_Coverage_validate( table + Coverage, valid );
+    otv_Coverage_validate( table + Coverage, valid, cnt );
 
     for ( i = 0; i < cnt; ++i )
     {
@@ -248,7 +248,7 @@
 
     if ( ExtendedShapeCoverage ) {
       OTV_NAME_ENTER( "ExtendedShapeCoverage" );
-      otv_Coverage_validate( table + ExtendedShapeCoverage, valid );
+      otv_Coverage_validate( table + ExtendedShapeCoverage, valid, -1 );
       OTV_EXIT;
     }
 
@@ -273,6 +273,7 @@
   {
     FT_Bytes  p = table;
     FT_UInt   pcnt, table_size;
+    FT_UInt   i;
 
     OTV_OPTIONAL_TABLE( DeviceTableOffset );
 
@@ -292,6 +293,17 @@
     if ( DeviceTableOffset )
       otv_Device_validate( table + DeviceTableOffset, valid );
 
+    for ( i = 0; i < pcnt; ++i )
+    {
+      FT_UInt  gid;
+
+
+      gid = FT_NEXT_USHORT( p );
+      if ( gid >= valid->glyph_count )
+        FT_INVALID_GLYPH_ID;
+      p += 2*4;             /* skip the Start, End, Full, and Flags fields */
+    }
+
     /* OTV_EXIT; */
   }
 
@@ -302,6 +314,7 @@
   {
     FT_Bytes  p = table;
     FT_UInt   vcnt, table_size;
+    FT_UInt   i;
 
     OTV_OPTIONAL_TABLE( GlyphAssembly );
 
@@ -315,6 +328,17 @@
 
     OTV_LIMIT_CHECK( 4 * vcnt );
     table_size = 4 + 4 * vcnt;
+
+    for ( i = 0; i < vcnt; ++i )
+    {
+      FT_UInt  gid;
+
+
+      gid = FT_NEXT_USHORT( p );
+      if ( gid >= valid->glyph_count )
+        FT_INVALID_GLYPH_ID;
+      p += 2;                          /* skip the size */
+    }
 
     OTV_SIZE_CHECK( GlyphAssembly );
     if ( GlyphAssembly )
@@ -351,11 +375,11 @@
 
     OTV_SIZE_CHECK( VCoverage );
     if ( VCoverage )
-      otv_Coverage_validate( table + VCoverage, valid );
+      otv_Coverage_validate( table + VCoverage, valid, vcnt );
 
     OTV_SIZE_CHECK( HCoverage );
     if ( HCoverage )
-      otv_Coverage_validate( table + HCoverage, valid );
+      otv_Coverage_validate( table + HCoverage, valid, hcnt );
 
     for ( i = 0; i < vcnt; ++i )
     {

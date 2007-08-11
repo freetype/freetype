@@ -68,15 +68,19 @@
         Coverage     = table + FT_NEXT_USHORT( p );
         DeltaGlyphID = FT_NEXT_SHORT( p );
 
-        otv_Coverage_validate( Coverage, valid );
+        otv_Coverage_validate( Coverage, valid, -1 );
 
         idx = otv_Coverage_get_first( Coverage ) + DeltaGlyphID;
-        if ( idx < 0 )
-          FT_INVALID_DATA;
+        if ( idx < 0                                           ||
+             idx + DeltaGlyphID < 0                            ||
+             (FT_UInt)idx + DeltaGlyphID >= valid->glyph_count )
+          FT_INVALID_GLYPH_ID;
 
         idx = otv_Coverage_get_last( Coverage ) + DeltaGlyphID;
-        if ( (FT_UInt)idx >= valid->glyph_count )
-          FT_INVALID_DATA;
+        if ( (FT_UInt)idx >= valid->glyph_count                ||
+             idx + DeltaGlyphID < 0                            ||
+             (FT_UInt)idx + DeltaGlyphID >= valid->glyph_count )
+          FT_INVALID_GLYPH_ID;
       }
       break;
 
@@ -91,14 +95,14 @@
 
         OTV_TRACE(( " (GlyphCount = %d)\n", GlyphCount ));
 
-        otv_Coverage_validate( table + Coverage, valid );
+        otv_Coverage_validate( table + Coverage, valid, GlyphCount );
 
         OTV_LIMIT_CHECK( GlyphCount * 2 );
 
         /* Substitute */
         for ( ; GlyphCount > 0; GlyphCount-- )
           if ( FT_NEXT_USHORT( p ) >= valid->glyph_count )
-            FT_INVALID_DATA;
+            FT_INVALID_GLYPH_ID;
       }
       break;
 
@@ -476,12 +480,12 @@
 
       OTV_TRACE(( " (BacktrackGlyphCount = %d)\n", BacktrackGlyphCount ));
 
-      otv_Coverage_validate( Coverage, valid );
+      otv_Coverage_validate( Coverage, valid, -1 );
 
       OTV_LIMIT_CHECK( BacktrackGlyphCount * 2 + 2 );
 
       for ( ; BacktrackGlyphCount > 0; BacktrackGlyphCount-- )
-        otv_Coverage_validate( table + FT_NEXT_USHORT( p ), valid );
+        otv_Coverage_validate( table + FT_NEXT_USHORT( p ), valid, -1 );
 
       LookaheadGlyphCount = FT_NEXT_USHORT( p );
 
@@ -490,7 +494,7 @@
       OTV_LIMIT_CHECK( LookaheadGlyphCount * 2 + 2 );
 
       for ( ; LookaheadGlyphCount > 0; LookaheadGlyphCount-- )
-        otv_Coverage_validate( table + FT_NEXT_USHORT( p ), valid );
+        otv_Coverage_validate( table + FT_NEXT_USHORT( p ), valid, -1 );
 
       GlyphCount = FT_NEXT_USHORT( p );
 

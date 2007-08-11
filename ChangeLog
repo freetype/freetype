@@ -1,3 +1,19 @@
+2007-08-11  George Williams  <gww@silcom.com>
+
+	* src/otvalid/otvcommn.c, src/otvalid/otvcommn.h
+	(otv_Coverage_validate): Add fourth argument to pass an expected
+	count value.  Update all users.
+	Check glyph IDs.
+	(otv_ClassDef_validate): Check `StartGlyph'.
+
+	* src/otvalid/otvgsub.c (otv_SingleSubst_validate): More glyph ID
+	checks.
+
+	* src/otvalid/otvmath.c (otv_MathConstants_validate): There are only
+	56 constants.
+	(otv_GlyphAssembly_validate, otv_MathGlyphConstruction_validate):
+	Check glyph IDs.
+
 2007-08-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/otvalid/otvbase.c, src/otvalid/otvcommn.c,
