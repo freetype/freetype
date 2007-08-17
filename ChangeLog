@@ -1,3 +1,8 @@
+2007-08-17  George Williams  <gww@silcom.com>
+
+	* src/otvalid/otvgsub.c (otv_SingleSubst_validate): Fix handling of
+	SingleSubstFormat1.
+
 2007-08-11  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: Fix a bug which sets CC_BUILD by
