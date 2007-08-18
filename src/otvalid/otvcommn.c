@@ -360,7 +360,7 @@
 
     OTV_TRACE(( " (type %d)\n", LookupType ));
 
-    if ( LookupType == 0 || LookupType >= valid->type_count )
+    if ( LookupType == 0 || LookupType > valid->type_count )
       FT_INVALID_DATA;
 
     validate = valid->type_funcs[LookupType - 1];
@@ -759,6 +759,7 @@
       FT_INVALID_DATA;
 
     OTV_LIMIT_CHECK( ( Count1 - 1 ) * 2 + Count2 * 4 );
+    p += ( Count1 - 1 ) * 2;
 
     for ( ; Count2 > 0; Count2-- )
     {

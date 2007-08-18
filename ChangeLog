@@ -1,3 +1,11 @@
+2007-08-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/otvalid/otvcmmn.c (otv_x_y_ux_sy): Skip context glyphs.  Found
+	by Imran Yousaf.  Fixes Savannah bug #20773.
+
+	(otv_Lookup_validate): Correct handling of LookupType.  Found by
+	Imran Yousaf.  Fixes Savannah bug #20782.
+
 2007-08-17  George Williams  <gww@silcom.com>
 
 	* src/otvalid/otvgsub.c (otv_SingleSubst_validate): Fix handling of
