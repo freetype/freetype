@@ -360,7 +360,7 @@
 #endif /* HAVE_ATS */
 
 
-#if !HAVE_FSSPEC
+#if !HAVE_FSSPEC || !HAVE_ATS
 
   FT_EXPORT_DEF( FT_Error )
   FT_GetFile_From_Mac_ATS_Name( const char*  fontName,
@@ -437,6 +437,7 @@
 
 #if HAVE_FSSPEC && !HAVE_FSREF
 
+  /* isDirectory is a dummy to synchronize API with FSPathMakeRef() */
   static OSErr
   FT_FSPathMakeSpec( const UInt8*  pathname,
                      FSSpec*       spec_p,
@@ -447,6 +448,7 @@
     long        dirID;
     Str255      nodeName;
     OSErr       err;
+    FT_UNUSED( isDirectory );
 
 
     p = q = (const char *)pathname;
@@ -534,8 +536,8 @@
 
 
   static OSErr
-  FT_FSPathMakeRes( const UInt8*  pathname,
-                    short*        res )
+  FT_FSPathMakeRes( const UInt8*    pathname,
+                    ResFileRefNum*  res )
   {
 
 #if HAVE_FSREF
@@ -690,7 +692,7 @@
   static void
   parse_fond( char*   fond_data,
               short*  have_sfnt,
-              short*  sfnt_id,
+              ResID*  sfnt_id,
               Str255  lwfn_file_name,
               short   face_index )
   {
@@ -882,7 +884,7 @@
   count_faces( Handle        fond,
                const UInt8*  pathname )
   {
-    short     sfnt_id;
+    ResID     sfnt_id;
     short     have_sfnt, have_lwfn;
     Str255    lwfn_file_name;
     UInt8     buff[HFS_MAXPATHLEN];
@@ -919,13 +921,13 @@
      chunks are often not organized that way, so we glue chunks
      of the same type together. */
   static FT_Error
-  read_lwfn( FT_Memory  memory,
-             short      res,
-             FT_Byte**  pfb_data,
-             FT_ULong*  size )
+  read_lwfn( FT_Memory      memory,
+             ResFileRefNum  res,
+             FT_Byte**      pfb_data,
+             FT_ULong*      size )
   {
     FT_Error       error = FT_Err_Ok;
-    short          res_id;
+    ResID          res_id;
     unsigned char  *buffer, *p, *size_p = NULL;
     FT_ULong       total_size = 0;
     FT_ULong       old_total_size = 0;
@@ -1144,10 +1146,10 @@
                          FT_Long       face_index,
                          FT_Face*      aface )
   {
-    FT_Byte*  pfb_data;
-    FT_ULong  pfb_size;
-    FT_Error  error;
-    short     res;
+    FT_Byte*       pfb_data;
+    FT_ULong       pfb_size;
+    FT_Error       error;
+    ResFileRefNum  res;
 
 
     if ( noErr != FT_FSPathMakeRes( pathname, &res ) )
@@ -1172,7 +1174,7 @@
   /* Create a new FT_Face from an SFNT resource, specified by res ID. */
   static FT_Error
   FT_New_Face_From_SFNT( FT_Library  library,
-                         short       sfnt_id,
+                         ResID       sfnt_id,
                          FT_Long     face_index,
                          FT_Face*    aface )
   {
@@ -1221,10 +1223,11 @@
                              FT_Long       face_index,
                              FT_Face*      aface )
   {
-    FT_Error  error = FT_Err_Cannot_Open_Resource;
-    short     res_ref, res_index;
-    Handle    fond;
-    short     num_faces_in_res, num_faces_in_fond;
+    FT_Error       error = FT_Err_Cannot_Open_Resource;
+    ResFileRefNum  res_ref;
+    short          res_index;
+    Handle         fond;
+    short          num_faces_in_res, num_faces_in_fond;
 
 
     if ( noErr != FT_FSPathMakeRes( pathname, &res_ref ) )
@@ -1265,8 +1268,8 @@
                          FT_Long     face_index,
                          FT_Face*    aface )
   {
-    short     sfnt_id, have_sfnt, have_lwfn = 0;
-    short     fond_id;
+    short     have_sfnt, have_lwfn = 0;
+    ResID     sfnt_id, fond_id;
     OSType    fond_type;
     Str255    fond_name;
     Str255    lwfn_file_name;
@@ -1285,7 +1288,7 @@
 
     if ( lwfn_file_name[0] )
     {
-      short  res;
+      ResFileRefNum  res;
 
 
       res = HomeResFile( fond );

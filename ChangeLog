@@ -1,3 +1,12 @@
+2007-08-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c: Introduction of abstract "short" data types,
+	ResFileRefNum and ResID. These types were introduced for Copland,
+	then backported to MPW. The variables exchanged with FileManager
+	QuickDraw frameworks are redefined by these data types. Patch was
+	proposed by Sean McBride.
+	* builds/mac/ftmac.c: Ditto.
+
 2007-08-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/otvalid/otvcmmn.c (otv_x_y_ux_sy): Skip context glyphs.  Found
