@@ -1,3 +1,9 @@
+2007-10-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (find_unicode_charmap): If search for a UCS-4
+	charmap fails, do the loop again while searching a UCS-2 charmap. 
+	This favours MS charmaps over Apple ones.
+
 2007-08-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c: Introduction of abstract "short" data types,

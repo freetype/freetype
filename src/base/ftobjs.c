@@ -883,14 +883,13 @@
   /*    are limited to the BMP (said UCS-2 encoding.)                      */
   /*                                                                       */
   /*    This function is called from open_face() (just below), and also    */
-  /*    from FT_Select_Charmap( ..., FT_ENCODING_UNICODE).                 */
+  /*    from FT_Select_Charmap( ..., FT_ENCODING_UNICODE ).                */
   /*                                                                       */
   static FT_Error
   find_unicode_charmap( FT_Face  face )
   {
     FT_CharMap*  first;
     FT_CharMap*  cur;
-    FT_CharMap*  unicmap = NULL;  /* some UCS-2 map, if we found it */
 
 
     /* caller should have already checked that `face' is valid */
@@ -935,32 +934,32 @@
     {
       if ( cur[0]->encoding == FT_ENCODING_UNICODE )
       {
-        unicmap = cur;  /* record we found a Unicode charmap */
-
-        /* XXX If some new encodings to represent UCS-4 are added,  */
-        /*     they should be added here.                           */
+        /* XXX If some new encodings to represent UCS-4 are added, */
+        /*     they should be added here.                          */
         if ( ( cur[0]->platform_id == TT_PLATFORM_MICROSOFT &&
-               cur[0]->encoding_id == TT_MS_ID_UCS_4        )          ||
+               cur[0]->encoding_id == TT_MS_ID_UCS_4        )     ||
              ( cur[0]->platform_id == TT_PLATFORM_APPLE_UNICODE &&
-               cur[0]->encoding_id == TT_APPLE_ID_UNICODE_32    )      )
-
-        /* Hurray!  We found a UCS-4 charmap.  We can stop the scan! */
+               cur[0]->encoding_id == TT_APPLE_ID_UNICODE_32    ) )
         {
           face->charmap = cur[0];
-          return 0;
+          return FT_Err_Ok;
         }
       }
     }
 
-    /* We do not have any UCS-4 charmap.  Sigh.                         */
-    /* Let's see if we have some other kind of Unicode charmap, though. */
-    if ( unicmap != NULL )
+    /* We do not have any UCS-4 charmap.                */
+    /* Do the loop again and search for UCS-2 charmaps. */
+    cur = first + face->num_charmaps;
+
+    for ( ; --cur >= first; )
     {
-      face->charmap = unicmap[0];
-      return 0;
+      if ( cur[0]->encoding == FT_ENCODING_UNICODE )
+      {
+        face->charmap = cur[0];
+        return FT_Err_Ok;
+      }
     }
 
-    /* Chou blanc! */
     return FT_Err_Invalid_CharMap_Handle;
   }
 
