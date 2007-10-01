@@ -2821,7 +2821,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    Because many fonts contain more than a single cmap for Unicode     */
   /*    encoding, this function has some special code to select the one    */
-  /*    which covers Unicode best.  It is thus preferable to               */
+  /*    which covers Unicode best (`best' in the sense that a UCS-4 cmap   */
+  /*    is preferred to a UCS-2 cmap).  It is thus preferable to           */
   /*    @FT_Set_Charmap in this case.                                      */
   /*                                                                       */
   FT_EXPORT( FT_Error )
