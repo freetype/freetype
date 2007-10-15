@@ -1,3 +1,48 @@
+2007-10-15  George Williams  <gww@silcom.com>
+
+	Add support for cmap type 14.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(TT_CONFIG_CMAP_FORMAT_14): New macro.
+
+	* include/freetype/internal/ftobjs.h (FT_CMap_CharVarIndexFunc,
+	FT_CMap_CharVarIsDefaultFunc, FT_CMap_VariantListFunc,
+	FT_CMap_CharVariantListFunc, FT_CMap_VariantCharListFunc): New
+	support function prototypes.
+	(FT_CMap_ClassRec): Add them.
+	Update all users.
+
+	* include/freetype/ttnameid.h (TT_APPLE_ID_VARIANT_SELECTOR): New
+	macro.
+
+	* include/freetype/freetype.h (FT_Get_Char_Variant_Index,
+	FT_Get_Char_Variant_IsDefault, FT_Get_Variant_Selectors,
+	FT_Get_Variants_Of_Char, FT_Get_Chars_Of_Variant): New API
+	functions.
+
+	* src/base/ftobjs.c (find_variant_selector_charmap): New auxiliary
+	function.
+	(FT_Set_Charmap): Disallow cmaps of type 14.
+	(FT_Get_Char_Variant_Index, FT_Get_Char_Variant_IsDefault,
+	FT_Get_Variant_Selectors, FT_Get_Variants_Of_Char,
+	FT_Get_Chars_Of_Variant): New API functions.
+
+	* src/sfnt/ttcmap.c (TT_PEEK_UINT24, TT_NEXT_UINT24): New macros.
+
+	(TT_CMap14Rec, tt_cmap14_init, tt_cmap14_validate,
+	tt_cmap14_char_index, tt_cmap14_char_next, tt_cmap14_get_info,
+	tt_cmap14_char_map_def_binary, tt_cmap14_char_map_nondef_binary,
+	tt_cmap14_find_variant, tt_cmap14_char_var_index,
+	tt_cmap14_char_var_isdefault, tt_cmap14_variants,
+	tt_cmap14_char_variants, tt_cmap14_def_char_count,
+	tt_cmap14_get_def_chars, tt_cmap14_get_nondef_chars,
+	tt_cmap14_variant_chars, tt_cmap14_class_rec): New functions and
+	structures for cmap 14 support.
+	(tt_cmap_classes): Register tt_cmap14_class_rec.
+	(tt_face_build_cmaps): One more error message.
+
+	* docs/CHANGES: Mention cmap 14 support.
+
 2007-10-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (find_unicode_charmap): If search for a UCS-4
@@ -6,10 +51,10 @@
 
 2007-08-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftmac.c: Introduction of abstract "short" data types,
-	ResFileRefNum and ResID. These types were introduced for Copland,
-	then backported to MPW. The variables exchanged with FileManager
-	QuickDraw frameworks are redefined by these data types. Patch was
+	* src/base/ftmac.c: Introduction of abstract `short' data types,
+	ResFileRefNum and ResID.  These types were introduced for Copland,
+	then backported to MPW.  The variables exchanged with FileManager
+	QuickDraw frameworks are redefined by these data types.  Patch was
 	proposed by Sean McBride.
 	* builds/mac/ftmac.c: Ditto.
 

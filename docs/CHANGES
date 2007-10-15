@@ -1,6 +1,16 @@
 
 CHANGES BETWEEN 2.3.6 and 2.3.5
 
+  I. IMPORTANT BUG FIXES
+
+    - Microsoft  Unicode  cmaps  in  TrueType  fonts  are  now  always
+      preferred over Apple cmaps.  This is not a bug per se, but there
+      exist some buggy  fonts created for MS which  have broken  Apple
+      cmaps.  This affects  only the automatic  selection of FreeType;
+      it's always possible to manually select an Apple Unicode cmap if
+      desired.
+
+
   II. IMPORTANT CHANGES
 
     - The new function `FT_Get_CID_Registry_Ordering_Supplement' gives
@@ -10,6 +20,9 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
     - George Williams  contributed  code  to validate  the new  `MATH'
       OpenType  table (within  the `otvalid'  module).  The  `ftvalid'
       demo program has been extended accordingly.
+
+    - An API for cmap 14 support  (for Unicode Variant Selectors, UVS)
+      has been contributed by George Williams.
 
 ======================================================================
 

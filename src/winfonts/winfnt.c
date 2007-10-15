@@ -652,7 +652,9 @@
     (FT_CMap_InitFunc)     fnt_cmap_init,
     (FT_CMap_DoneFunc)     NULL,
     (FT_CMap_CharIndexFunc)fnt_cmap_char_index,
-    (FT_CMap_CharNextFunc) fnt_cmap_char_next
+    (FT_CMap_CharNextFunc) fnt_cmap_char_next,
+
+    NULL, NULL, NULL, NULL, NULL
   };
 
   static FT_CMap_Class const  fnt_cmap_class = &fnt_cmap_class_rec;

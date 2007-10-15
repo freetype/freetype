@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf files
 
-    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2006 by
+    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2006, 2007 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -187,7 +187,9 @@ THE SOFTWARE.
     pcf_cmap_init,
     pcf_cmap_done,
     pcf_cmap_char_index,
-    pcf_cmap_char_next
+    pcf_cmap_char_next,
+
+    NULL, NULL, NULL, NULL, NULL
   };
 
 

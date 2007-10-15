@@ -160,6 +160,31 @@ FT_BEGIN_HEADER
   (*FT_CMap_CharNextFunc)( FT_CMap     cmap,
                            FT_UInt32  *achar_code );
 
+  typedef FT_UInt
+  (*FT_CMap_CharVarIndexFunc)( FT_CMap    cmap,
+                               FT_CMap    unicode_cmap,
+                               FT_UInt32  char_code,
+                               FT_UInt32  variant_selector );
+
+  typedef FT_Bool
+  (*FT_CMap_CharVarIsDefaultFunc)( FT_CMap    cmap,
+                                   FT_UInt32  char_code,
+                                   FT_UInt32  variant_selector );
+
+  typedef FT_UInt32 *
+  (*FT_CMap_VariantListFunc)( FT_CMap    cmap,
+                              FT_Memory  mem );
+
+  typedef FT_UInt32 *
+  (*FT_CMap_CharVariantListFunc)( FT_CMap    cmap,
+                                  FT_Memory  mem,
+                                  FT_UInt32  char_code );
+
+  typedef FT_UInt32 *
+  (*FT_CMap_VariantCharListFunc)( FT_CMap    cmap,
+                                  FT_Memory  mem,
+                                  FT_UInt32  variant_selector );
+
 
   typedef struct  FT_CMap_ClassRec_
   {
@@ -168,6 +193,15 @@ FT_BEGIN_HEADER
     FT_CMap_DoneFunc       done;
     FT_CMap_CharIndexFunc  char_index;
     FT_CMap_CharNextFunc   char_next;
+
+    /* Subsequent entries are special ones for format 14 -- the variant */
+    /* selector subtable which behaves like no other                    */
+
+    FT_CMap_CharVarIndexFunc      char_var_index;
+    FT_CMap_CharVarIsDefaultFunc  char_var_default;
+    FT_CMap_VariantListFunc       variant_list;
+    FT_CMap_CharVariantListFunc   charvariant_list;
+    FT_CMap_VariantCharListFunc   variantchar_list;
 
   } FT_CMap_ClassRec;
 

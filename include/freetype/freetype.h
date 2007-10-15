@@ -2852,6 +2852,8 @@ FT_BEGIN_HEADER
   /*    the face (i.e., if it is not listed in the `face->charmaps'        */
   /*    table).                                                            */
   /*                                                                       */
+  /*    It also fails if a type 14 charmap is selected.                    */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Charmap( FT_Face     face,
                   FT_CharMap  charmap );
@@ -2988,6 +2990,162 @@ FT_BEGIN_HEADER
   FT_Get_Next_Char( FT_Face    face,
                     FT_ULong   char_code,
                     FT_UInt   *agindex );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Char_Variant_Index                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return the glyph index of a given character code as modified by    */
+  /*    the variation selector.                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face ::                                                            */
+  /*      A handle to the source face object.                              */
+  /*                                                                       */
+  /*    charcode ::                                                        */
+  /*      The character code point in Unicode.                             */
+  /*                                                                       */
+  /*    variantSelector ::                                                 */
+  /*      The Unicode code point of the variation selector.                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The glyph index.  0 means either `undefined character code', or    */
+  /*    `undefined selector code', or `no variation selector cmap          */
+  /*    subtable', or `current CharMap is not Unicode'.                    */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    If you use FreeType to manipulate the contents of font files       */
+  /*    directly, be aware that the glyph index returned by this function  */
+  /*    doesn't always correspond to the internal indices used within      */
+  /*    the file.  This is done to ensure that value 0 always corresponds  */
+  /*    to the `missing glyph'.                                            */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function is only meaningful if:                               */
+  /*      a) the font has a variation selector cmap sub table              */
+  /*      b) the current charmap has a Unicode encoding                    */
+  /*                                                                       */
+  FT_EXPORT( FT_UInt )
+  FT_Get_Char_Variant_Index( FT_Face   face,
+                             FT_ULong  charcode,
+                             FT_ULong  variantSelector );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Char_Variant_IsDefault                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Check whether this variant of this Unicode character is the one to */
+  /*    be found in the `cmap'.                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face ::                                                            */
+  /*      A handle to the source face object.                              */
+  /*                                                                       */
+  /*    charcode ::                                                        */
+  /*      The character codepoint in Unicode.                              */
+  /*                                                                       */
+  /*    variantSelector ::                                                 */
+  /*      The Unicode codepoint of the variation selector.                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    1 if found in the standard (Unicode) cmap, 0 if found in the       */
+  /*    variation selector cmap, or -1 if it is not a variant.             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function is only meaningful if the font has a variation       */
+  /*    selector cmap subtable.                                            */
+  /*                                                                       */
+  FT_EXPORT( FT_Int )
+  FT_Get_Char_Variant_IsDefault( FT_Face   face,
+                                 FT_ULong  charcode,
+                                 FT_ULong  variantSelector );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Variant_Selectors                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return a zero-terminated list of Unicode variant selectors found   */
+  /*    in the font.                                                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: A handle to the source face object.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A list of all the variant selector code points in the cmap         */
+  /*    or NULL if there is no valid variant selector cmap subtable.       */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    User is responsible for deallocating the returned list.            */
+  /*                                                                       */
+  FT_EXPORT( FT_UInt32* )
+  FT_Get_Variant_Selectors( FT_Face  face );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Variants_Of_Char                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return a zero-terminated list of Unicode variant selectors found   */
+  /*    for the specified character code.                                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face ::                                                            */
+  /*      A handle to the source face object.                              */
+  /*                                                                       */
+  /*    charcode ::                                                        */
+  /*      The character codepoint in Unicode.                              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A list of all the variant selector code points which are active    */
+  /*    for the given character or NULL if there is no valid variant       */
+  /*    selector cmap subtable (or if if this character has no variants).  */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    User is responsible for deallocating the returned list.            */
+  /*                                                                       */
+  FT_EXPORT( FT_UInt32* )
+  FT_Get_Variants_Of_Char( FT_Face   face,
+                           FT_ULong  charcode );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Chars_Of_Variant                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return a zero-terminated list of Unicode character codes found for */
+  /*    the specified variant selector.                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face ::                                                            */
+  /*      A handle to the source face object.                              */
+  /*                                                                       */
+  /*    variantSelector ::                                                 */
+  /*      The variant selector code point in Unicode.                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A list of all the code points which are specified by this selector */
+  /*    (both default and non-default codes are returned) or NULL if there */
+  /*    is no valid cmap or the variant selector is invalid.               */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    User is responsible for deallocating the returned list.            */
+  /*                                                                       */
+  FT_EXPORT( FT_UInt32* )
+  FT_Get_Chars_Of_Variant( FT_Face   face,
+                           FT_ULong  variantSelector );
 
 
   /*************************************************************************/

@@ -108,13 +108,18 @@ FT_BEGIN_HEADER
    *
    *   TT_APPLE_ID_UNICODE_32 ::
    *     Unicode 3.1 and beyond, using UTF-32.
+   *
+   *   TT_APPLE_ID_VARIANT_SELECTOR ::
+   *     From Adobe, not Apple.  Not a normal cmap.  Specifies variations
+   *     on a real cmap.
    */
 
-#define TT_APPLE_ID_DEFAULT      0 /* Unicode 1.0 */
-#define TT_APPLE_ID_UNICODE_1_1  1 /* specify Hangul at U+34xx */
-#define TT_APPLE_ID_ISO_10646    2 /* deprecated */
-#define TT_APPLE_ID_UNICODE_2_0  3 /* or later */
-#define TT_APPLE_ID_UNICODE_32   4 /* 2.0 or later, full repertoire */
+#define TT_APPLE_ID_DEFAULT           0 /* Unicode 1.0 */
+#define TT_APPLE_ID_UNICODE_1_1       1 /* specify Hangul at U+34xx */
+#define TT_APPLE_ID_ISO_10646         2 /* deprecated */
+#define TT_APPLE_ID_UNICODE_2_0       3 /* or later */
+#define TT_APPLE_ID_UNICODE_32        4 /* 2.0 or later, full repertoire */
+#define TT_APPLE_ID_VARIANT_SELECTOR  5 /* variation selector data */
 
 
   /***********************************************************************
