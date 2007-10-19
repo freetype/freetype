@@ -2995,7 +2995,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Get_Char_Variant_Index                                          */
+  /*    FT_Face_GetCharVariantIndex                                        */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return the glyph index of a given character code as modified by    */
@@ -3029,15 +3029,15 @@ FT_BEGIN_HEADER
   /*      b) the current charmap has a Unicode encoding                    */
   /*                                                                       */
   FT_EXPORT( FT_UInt )
-  FT_Get_Char_Variant_Index( FT_Face   face,
-                             FT_ULong  charcode,
-                             FT_ULong  variantSelector );
+  FT_Face_GetCharVariantIndex( FT_Face   face,
+                               FT_ULong  charcode,
+                               FT_ULong  variantSelector );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Get_Char_Variant_IsDefault                                      */
+  /*    FT_Face_GetCharVariantIsDefault                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Check whether this variant of this Unicode character is the one to */
@@ -3062,15 +3062,15 @@ FT_BEGIN_HEADER
   /*    selector cmap subtable.                                            */
   /*                                                                       */
   FT_EXPORT( FT_Int )
-  FT_Get_Char_Variant_IsDefault( FT_Face   face,
-                                 FT_ULong  charcode,
-                                 FT_ULong  variantSelector );
+  FT_Face_GetCharVariantIsDefault( FT_Face   face,
+                                   FT_ULong  charcode,
+                                   FT_ULong  variantSelector );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Get_Variant_Selectors                                           */
+  /*    FT_Face_GetVariantSelectors                                        */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return a zero-terminated list of Unicode variant selectors found   */
@@ -3080,20 +3080,22 @@ FT_BEGIN_HEADER
   /*    face :: A handle to the source face object.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    A list of all the variant selector code points in the cmap         */
-  /*    or NULL if there is no valid variant selector cmap subtable.       */
+  /*    A pointer to an array of selector code points, or NULL if there is */
+  /*    no valid variant selector cmap subtable.                           */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    User is responsible for deallocating the returned list.            */
+  /*    the last item in the array is 0. the array is owned by the FT_Face */
+  /*    but can be overwritten or released on the next call to a FreeType  */
+  /*    function.                                                          */
   /*                                                                       */
   FT_EXPORT( FT_UInt32* )
-  FT_Get_Variant_Selectors( FT_Face  face );
+  FT_Face_GetVariantSelectors( FT_Face  face );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Get_Variants_Of_Char                                            */
+  /*    FT_Face_GetVariantsOfChar                                          */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return a zero-terminated list of Unicode variant selectors found   */
@@ -3107,22 +3109,24 @@ FT_BEGIN_HEADER
   /*      The character codepoint in Unicode.                              */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    A list of all the variant selector code points which are active    */
-  /*    for the given character or NULL if there is no valid variant       */
-  /*    selector cmap subtable (or if if this character has no variants).  */
+  /*    A pointer to an array of variant selector code points which are    */
+  /*    active for the given character, or NULL if the corresponding list  */
+  /*    is empty.                                                          */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    User is responsible for deallocating the returned list.            */
+  /*    the last item in the array is 0. the array is owned by the FT_Face */
+  /*    but can be overwritten or released on the next call to a FreeType  */
+  /*    function.                                                          */
   /*                                                                       */
   FT_EXPORT( FT_UInt32* )
-  FT_Get_Variants_Of_Char( FT_Face   face,
-                           FT_ULong  charcode );
+  FT_Face_GetVariantsOfChar( FT_Face   face,
+                             FT_ULong  charcode );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Get_Chars_Of_Variant                                            */
+  /*    FT_Face_GetCharsOfVariant                                          */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return a zero-terminated list of Unicode character codes found for */
@@ -3141,11 +3145,13 @@ FT_BEGIN_HEADER
   /*    is no valid cmap or the variant selector is invalid.               */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    User is responsible for deallocating the returned list.            */
+  /*    the last item in the array is 0. the array is owned by the FT_Face */
+  /*    but can be overwritten or released on the next call to a FreeType  */
+  /*    function.                                                          */
   /*                                                                       */
   FT_EXPORT( FT_UInt32* )
-  FT_Get_Chars_Of_Variant( FT_Face   face,
-                           FT_ULong  variantSelector );
+  FT_Face_GetCharsOfVariant( FT_Face   face,
+                             FT_ULong  variantSelector );
 
 
   /*************************************************************************/

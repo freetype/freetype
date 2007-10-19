@@ -2287,7 +2287,7 @@
   /*   GID            3     USHORT  and its GID                            */
   /*                                                                       */
   /* Ranges are sorted by `uniStart'.                                      */
-  
+
 #ifdef TT_CONFIG_CMAP_FORMAT_14
 
   typedef struct  TT_CMap14Rec_
@@ -2295,7 +2295,48 @@
     TT_CMapRec  cmap;
     FT_ULong    num_selectors;
 
+   /* this array is used to store the results of various
+    * cmap 14 query functions. its content is overwritten
+    * on each call to these functions
+    */
+    FT_UInt     max_results;
+    FT_UInt32*  results;
+    FT_Memory   memory;
+
   } TT_CMap14Rec, *TT_CMap14;
+
+
+  FT_CALLBACK_DEF( void )
+  tt_cmap14_done( TT_CMap14  cmap )
+  {
+    FT_Memory  memory = cmap->memory;
+
+    cmap->max_results = 0;
+    if (memory != NULL && cmap->results != NULL)
+      FT_FREE( cmap->results );
+  }
+
+
+  static FT_Error
+  tt_cmap14_ensure( TT_CMap14  cmap,
+                    FT_UInt    num_results,
+                    FT_Memory  memory )
+  {
+    FT_UInt   old_max = cmap->max_results;
+    FT_Error  error   = 0;
+
+
+    if (num_results > cmap->max_results)
+    {
+       cmap->memory = memory;
+
+       if ( FT_QRENEW_ARRAY( cmap->results, old_max, num_results ) )
+         return error;
+
+       cmap->max_results = num_results;
+    }
+    return error;
+  }
 
 
   FT_CALLBACK_DEF( FT_Error )
@@ -2306,6 +2347,8 @@
 
     table               += 6;
     cmap->num_selectors = FT_PEEK_ULONG( table );
+    cmap->max_results   = 0;
+    cmap->results       = NULL;
 
     return SFNT_Err_Ok;
   }
@@ -2325,21 +2368,26 @@
 
     /* check selectors, they must be in increasing order */
     {
-      FT_ULong  n, varSel, defOff, nondefOff, last = 0;
+     /* we start lastVarSel at 1 because a variant selector value of 0
+      * isn't legal.
+      */
+      FT_ULong  n, lastVarSel = 1;
 
 
       for ( n = 0; n < num_selectors; n++ )
       {
-        varSel    = TT_NEXT_UINT24( p );
-        defOff    = TT_NEXT_ULONG( p );
-        nondefOff = TT_NEXT_ULONG( p );
+        FT_ULong  varSel    = TT_NEXT_UINT24( p );
+        FT_ULong  defOff    = TT_NEXT_ULONG( p );
+        FT_ULong  nondefOff = TT_NEXT_ULONG( p );
+
 
         if ( defOff >= length || nondefOff >= length )
           FT_INVALID_TOO_SHORT;
 
-        if ( n > 0 && varSel <= last )
+        if ( varSel < lastVarSel )
           FT_INVALID_DATA;
-        last = varSel;
+
+        lastVarSel = varSel + 1;
 
         /* check the default table (these glyphs should be reached     */
         /* through the normal Unicode cmap, no GIDs, just check order) */
@@ -2347,20 +2395,25 @@
         {
           FT_Byte*  defp      = table + defOff;
           FT_ULong  numRanges = TT_NEXT_ULONG( defp );
-          FT_ULong  i, base, cnt;
+          FT_ULong  i;
+          FT_ULong  lastBase  = 0;
 
+          if ( defp + numRanges*4 > valid->limit )
+            FT_INVALID_TOO_SHORT;
 
           for ( i = 0; i < numRanges; ++i )
           {
-            base = TT_NEXT_UINT24( defp );
-            cnt  = FT_NEXT_BYTE( defp );
+            FT_ULong  base = TT_NEXT_UINT24( defp );
+            FT_ULong  cnt  = FT_NEXT_BYTE( defp );
+
 
             if ( base + cnt >= 0x110000UL )              /* end of Unicode */
               FT_INVALID_DATA;
 
-            if ( i > 0 && base <= last )
+            if ( base < lastBase )
               FT_INVALID_DATA;
-            last = base + cnt;
+
+            lastBase = base + cnt + 1U;
           }
         }
 
@@ -2368,20 +2421,25 @@
         if ( nondefOff != 0 ) {
           FT_Byte*  ndp         = table + nondefOff;
           FT_ULong  numMappings = TT_NEXT_ULONG( ndp );
-          FT_ULong  i, uni, gid;
+          FT_ULong  i, lastUni = 0;
 
+
+          if ( ndp + numMappings*4 > valid->limit )
+            FT_INVALID_TOO_SHORT;
 
           for ( i = 0; i < numMappings; ++i )
           {
-            uni = TT_NEXT_UINT24( ndp );
-            gid = TT_NEXT_USHORT( ndp );
+            FT_ULong  uni = TT_NEXT_UINT24( ndp );
+            FT_ULong  gid = TT_NEXT_USHORT( ndp );
+
 
             if ( uni >= 0x110000UL )                     /* end of Unicode */
               FT_INVALID_DATA;
 
-            if ( i > 0 && uni <= last )
+            if ( uni < lastUni )
               FT_INVALID_DATA;
-            last = uni;
+
+            lastUni = uni + 1U;
 
             if ( valid->level >= FT_VALIDATE_TIGHT    &&
                  gid >= TT_VALID_GLYPH_COUNT( valid ) )
@@ -2437,29 +2495,23 @@
   tt_cmap14_char_map_def_binary( FT_Byte    *base,
                                  FT_UInt32   char_code )
   {
-    FT_Byte*   p;
     FT_UInt32  numRanges = TT_PEEK_ULONG( base );
-    FT_UInt32  start, cnt;
-    FT_UInt32  max, min, mid;
+    FT_UInt32  max, min;
 
-
-    if ( !numRanges )
-      return FALSE;
-
-    /* make compiler happy */
-    mid = numRanges;
 
     min = 0;
     max = numRanges;
 
+    base += 4;
+
     /* binary search */
     while ( min < max )
     {
-      mid = ( min + max ) >> 1;
-      p   = base + 4 + 4 * mid;
+      FT_UInt32  mid   = ( min + max ) >> 1;
+      FT_Byte*   p     = base + 4 * mid;
+      FT_ULong   start = TT_NEXT_UINT24( p );
+      FT_UInt    cnt   = FT_NEXT_BYTE( p );
 
-      start = TT_NEXT_UINT24( p );
-      cnt   = FT_NEXT_BYTE( p );
 
       if ( char_code < start )
         max = mid;
@@ -2477,38 +2529,30 @@
   tt_cmap14_char_map_nondef_binary( FT_Byte    *base,
                                     FT_UInt32   char_code )
   {
-    FT_Byte*   p;
     FT_UInt32  numMappings = TT_PEEK_ULONG( base );
-    FT_UInt32  uni, gid;
-    FT_UInt32  max, min, mid;
+    FT_UInt32  max, min;
 
-
-    if ( !numMappings )
-      return 0;
-
-    /* make compiler happy */
-    mid = numMappings;
 
     min = 0;
     max = numMappings;
 
+    base += 4;
+
     /* binary search */
     while ( min < max )
     {
-      mid = ( min + max ) >> 1;
-      p   = base + 4 + 5 * mid;
+      FT_UInt32  mid = ( min + max ) >> 1;
+      FT_Byte*   p   = base + 5 * mid;
+      FT_UInt32  uni = TT_PEEK_UINT24( p );
 
-      uni = TT_NEXT_UINT24( p );
-      gid = TT_NEXT_USHORT( p );
 
       if ( char_code < uni )
         max = mid;
       else if ( char_code > uni )
         min = mid + 1;
       else
-        return gid;
+        return TT_PEEK_USHORT( p );
     }
-
     return 0;
   }
 
@@ -2517,28 +2561,22 @@
   tt_cmap14_find_variant( FT_Byte    *base,
                           FT_UInt32   variantCode )
   {
-    FT_Byte*   p;
     FT_UInt32  numVar = TT_PEEK_ULONG( base );
-    FT_ULong   varSel;
-    FT_UInt32  max, min, mid;
+    FT_UInt32  max, min;
 
-
-    if ( !numVar )
-      return NULL;
-
-    /* make compiler happy */
-    mid = numVar;
 
     min = 0;
     max = numVar;
 
+    base += 4;
+
     /* binary search */
     while ( min < max )
     {
-      mid = ( min + max ) >> 1;
-      p   = base + 4 + 11 * mid;
+      FT_UInt32  mid    = ( min + max ) >> 1;
+      FT_Byte*   p      = base + 11 * mid;
+      FT_ULong   varSel = TT_PEEK_UINT24( p );
 
-      varSel = TT_NEXT_UINT24( p );
 
       if ( variantCode < varSel )
         max = mid;
@@ -2558,7 +2596,7 @@
                             FT_ULong  charcode,
                             FT_ULong  variantSelector)
   {
-    FT_Byte   *p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
+    FT_Byte*   p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
     FT_ULong   defOff;
     FT_ULong   nondefOff;
 
@@ -2567,7 +2605,7 @@
       return 0;
 
     defOff    = TT_NEXT_ULONG( p );
-    nondefOff = TT_NEXT_ULONG( p );
+    nondefOff = TT_PEEK_ULONG( p );
 
     if ( defOff != 0                                                    &&
          tt_cmap14_char_map_def_binary( cmap->data + defOff, charcode ) )
@@ -2590,7 +2628,7 @@
                                 FT_ULong  charcode,
                                 FT_ULong  variantSelector )
   {
-    FT_Byte   *p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
+    FT_Byte*   p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
     FT_ULong   defOff;
     FT_ULong   nondefOff;
 
@@ -2619,24 +2657,23 @@
                       FT_Memory  memory )
   {
     TT_CMap14   cmap14 = (TT_CMap14)cmap;
+    FT_UInt     count  = cmap14->num_selectors;
     FT_Byte*    p      = cmap->data + 10;
-    FT_UInt32*  ret;
+    FT_UInt32*  result;
     FT_UInt     i;
-    FT_Error    error;
 
-
-    if ( FT_ALLOC( ret,
-                   ( cmap14->num_selectors + 1 ) * sizeof ( FT_UInt32 ) ) )
+    if ( tt_cmap14_ensure( cmap14, (count + 1), memory ) )
       return NULL;
 
-    for ( i = 0; i < cmap14->num_selectors; ++i )
+    result = cmap14->results;
+    for ( i = 0; i < count; ++i )
     {
-      ret[i] = TT_NEXT_UINT24( p );
-      p += 8;
+      result[i] = TT_NEXT_UINT24( p );
+      p        += 8;
     }
-    ret[i] = 0;
+    result[i] = 0;
 
-    return ret;
+    return result;
   }
 
 
@@ -2646,108 +2683,109 @@
                            FT_ULong   charCode )
   {
     TT_CMap14   cmap14 = (TT_CMap14)  cmap;
-    FT_Byte*    p = cmap->data + 10;
-    FT_UInt32  *ret;
-    FT_UInt     i, j;
-    FT_UInt32   varSel;
-    FT_ULong    defOff;
-    FT_ULong    nondefOff;
-    FT_Error    error;
+    FT_UInt     count  = cmap14->num_selectors;
+    FT_Byte*    p      = cmap->data + 10;
+    FT_UInt32*  q;
 
 
-    if ( FT_ALLOC( ret,
-                   ( cmap14->num_selectors + 1 ) * sizeof ( FT_UInt32 ) ) )
+    if ( tt_cmap14_ensure( cmap14, (count + 1), memory ) )
       return NULL;
 
-    for ( i = j = 0; i < cmap14->num_selectors; ++i )
+    for ( q = cmap14->results; count > 0; --count )
     {
-      varSel    = TT_NEXT_UINT24( p );
-      defOff    = TT_NEXT_ULONG( p );
-      nondefOff = TT_NEXT_ULONG( p );
+      FT_UInt32  varSel    = TT_NEXT_UINT24( p );
+      FT_ULong   defOff    = TT_NEXT_ULONG( p );
+      FT_ULong   nondefOff = TT_NEXT_ULONG( p );
+
+
       if ( ( defOff != 0                                               &&
              tt_cmap14_char_map_def_binary( cmap->data + defOff,
                                             charCode )                 ) ||
            ( nondefOff != 0                                            &&
              tt_cmap14_char_map_nondef_binary( cmap->data + nondefOff,
                                                charCode ) != 0         ) )
-        ret[j++] = varSel;
+      {
+        q[0] = varSel;
+        q++;
+      }
     }
-    ret[j] = 0;
+    q[0] = 0;
 
-    return ret;
+    return cmap14->results;
   }
 
 
   static FT_UInt
   tt_cmap14_def_char_count( FT_Byte  *p )
   {
-    FT_UInt32  numRanges;
-    FT_UInt    tot;
-    FT_UInt    cnt;
-    FT_UInt    i;
+    FT_UInt32  numRanges = TT_NEXT_ULONG( p );
+    FT_UInt    tot       = 0;
 
 
-    numRanges = TT_NEXT_ULONG( p );
-
-    tot = 0;
-    for ( i = 0; i < numRanges; ++i )
+    p += 3;  /* point to the first 'cnt' field */
+    for ( ; numRanges > 0; numRanges-- )
     {
-      p += 3;
-      cnt = FT_NEXT_BYTE( p );
-      tot += cnt + 1;
+      tot += 1 + p[0];
+      p   += 4;
     }
 
     return tot;
   }
 
 
-  static FT_UInt*
-  tt_cmap14_get_def_chars( FT_Byte    *p,
+  static FT_UInt32*
+  tt_cmap14_get_def_chars( TT_CMap     cmap,
+                           FT_Byte*    p,
                            FT_Memory   memory )
   {
+    TT_CMap14   cmap14 = (TT_CMap14) cmap;
     FT_UInt32   numRanges;
-    FT_UInt     uni;
     FT_UInt     cnt;
-    FT_UInt     i, j, k;
-    FT_UInt32  *ret;
-    FT_Error    error;
+    FT_UInt32*  q;
 
 
     cnt       = tt_cmap14_def_char_count( p );
     numRanges = TT_NEXT_ULONG( p );
 
-    if ( FT_ALLOC( ret , ( cnt + 1 ) * sizeof ( FT_UInt32 ) ) )
+    if ( tt_cmap14_ensure( cmap14, (cnt + 1), memory ) )
       return NULL;
 
-    for ( i = j = 0; i < numRanges; ++i )
+    for ( q = cmap14->results; numRanges > 0; --numRanges )
     {
-      uni = TT_NEXT_UINT24( p );
-      cnt = FT_NEXT_BYTE( p );
+      FT_UInt  uni = TT_NEXT_UINT24( p );
+      FT_UInt  cnt = FT_NEXT_BYTE( p ) + 1;
 
-      for ( k = 0; k <= cnt; ++k )
-        ret[j++] = uni + k;
+      do
+      {
+        q[0]  = uni;
+        uni  += 1;
+        q    += 1;
+      }
+      while ( --cnt != 0 );
     }
-    ret[j] = 0;
+    q[0] = 0;
 
-    return ret;
+    return cmap14->results;
   }
-    
+
 
   static FT_UInt*
-  tt_cmap14_get_nondef_chars( FT_Byte    *p,
+  tt_cmap14_get_nondef_chars( TT_CMap     cmap,
+                              FT_Byte    *p,
                               FT_Memory   memory )
   {
+    TT_CMap14   cmap14 = (TT_CMap14) cmap;
     FT_UInt32   numMappings;
     FT_UInt     i;
     FT_UInt32  *ret;
-    FT_Error    error;
 
 
     numMappings = TT_NEXT_ULONG( p );
 
-    if ( FT_ALLOC( ret, ( numMappings + 1 ) * sizeof ( FT_UInt32 ) ) )
+    if ( tt_cmap14_ensure( cmap14, (numMappings + 1), memory ) )
       return NULL;
 
+    ret = cmap14->results;
     for ( i = 0; i < numMappings; ++i )
     {
       ret[i] = TT_NEXT_UINT24( p );
@@ -2755,9 +2793,9 @@
     }
     ret[i] = 0;
 
-    return( ret );
+    return ret;
   }
-  
+
 
   FT_CALLBACK_DEF( FT_UInt32 * )
   tt_cmap14_variant_chars( TT_CMap    cmap,
@@ -2782,13 +2820,14 @@
       return NULL;
 
     if ( defOff == 0 )
-      return tt_cmap14_get_nondef_chars( cmap->data + nondefOff, memory );
+      return tt_cmap14_get_nondef_chars( cmap, cmap->data + nondefOff, memory );
     else if ( nondefOff == 0 )
-      return tt_cmap14_get_def_chars( cmap->data + defOff, memory );
+      return tt_cmap14_get_def_chars( cmap, cmap->data + defOff, memory );
     else
     {
       /* Both a default and a non-default glyph set?  That's probably not */
       /* good font design, but the spec allows for it...                  */
+      TT_CMap14  cmap14 = (TT_CMap14) cmap;
       FT_UInt32  numRanges;
       FT_UInt32  numMappings;
       FT_UInt32  duni;
@@ -2796,7 +2835,6 @@
       FT_UInt32  nuni;
       FT_Byte*   dp;
       FT_UInt    di, ni, k;
-      FT_Error   error;
 
 
       p  = cmap->data + nondefOff;
@@ -2807,14 +2845,14 @@
       numRanges   = TT_NEXT_ULONG( dp );
 
       if ( numMappings == 0 )
-        return tt_cmap14_get_def_chars( cmap->data + defOff, memory );
+        return tt_cmap14_get_def_chars( cmap, cmap->data + defOff, memory );
       if ( dcnt == 0 )
-        return tt_cmap14_get_nondef_chars( cmap->data + nondefOff, memory );
+        return tt_cmap14_get_nondef_chars( cmap, cmap->data + nondefOff, memory );
 
-      if ( FT_ALLOC( ret,
-           ( dcnt + numMappings + 1 ) * sizeof ( FT_UInt32 ) ) )
+      if ( tt_cmap14_ensure( cmap14, (dcnt + numMappings + 1), memory ) )
         return NULL;
 
+      ret  = cmap14->results;
       duni = TT_NEXT_UINT24( dp );
       dcnt = FT_NEXT_BYTE( dp );
       di   = 1;
@@ -2832,13 +2870,11 @@
 
           ++di;
 
-          if ( di <= numRanges )
-          {
-            duni = TT_NEXT_UINT24( dp );
-            dcnt = FT_NEXT_BYTE( dp );
-          }
-          else
+          if ( di > numRanges )
             break;
+
+          duni = TT_NEXT_UINT24( dp );
+          dcnt = FT_NEXT_BYTE( dp );
         }
         else
         {
@@ -2847,13 +2883,11 @@
           /* If it is within the default range then ignore it -- */
           /* that should not have happened                       */
           ++ni;
-          if ( ni <= numMappings )
-          {
-            nuni = TT_NEXT_UINT24( p );
-            p += 2;
-          }
-          else
+          if ( ni > numMappings )
             break;
+
+          nuni = TT_NEXT_UINT24( p );
+          p += 2;
         }
       }
 
@@ -2903,7 +2937,7 @@
       sizeof ( TT_CMap14Rec ),
 
       (FT_CMap_InitFunc)     tt_cmap14_init,
-      (FT_CMap_DoneFunc)     NULL,
+      (FT_CMap_DoneFunc)     tt_cmap14_done,
       (FT_CMap_CharIndexFunc)tt_cmap14_char_index,
       (FT_CMap_CharNextFunc) tt_cmap14_char_next,
       /* Format 14 extension functions */

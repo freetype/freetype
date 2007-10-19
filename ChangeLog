@@ -1,3 +1,15 @@
+2007-10-18  David Turner  <david@freetype.org>
+
+	* include/freetype/freetype.h, src/base/ftobjs.c: renamed
+	cmap14-related new APIs to the FT_Object_ActionName scheme.
+	update the documentation for these APIs
+
+	* src/sfnt/ttcmap.c: stronger cmap 14 validation, make the
+	code a little more consistent with FreeType coding conventions
+	and modify the cmap14 functions that returned a newly allocated
+	array to use a persistent vector from the TT_CMap14 object
+	instead.
+
 2007-10-15  George Williams  <gww@silcom.com>
 
 	Add support for cmap type 14.
@@ -46,7 +58,7 @@
 2007-10-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (find_unicode_charmap): If search for a UCS-4
-	charmap fails, do the loop again while searching a UCS-2 charmap. 
+	charmap fails, do the loop again while searching a UCS-2 charmap.
 	This favours MS charmaps over Apple ones.
 
 2007-08-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -121,7 +133,7 @@
 
 2007-08-04  Werner Lemberg  <wl@gnu.org>
 
-	* builds/unix/configure.raw: Add call to AC_LIBTOOL_WIN32_DLL. 
+	* builds/unix/configure.raw: Add call to AC_LIBTOOL_WIN32_DLL.
 	Fixes Savannah bug #20686.
 
 2007-08-03  Werner Lemberg  <wl@gnu.org>

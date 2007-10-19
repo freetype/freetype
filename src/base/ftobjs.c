@@ -2893,9 +2893,9 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt )
-  FT_Get_Char_Variant_Index( FT_Face   face,
-                             FT_ULong  charcode,
-                             FT_ULong  variantSelector )
+  FT_Face_GetCharVariantIndex( FT_Face   face,
+                               FT_ULong  charcode,
+                               FT_ULong  variantSelector )
   {
     FT_UInt  result = 0;
 
@@ -2924,9 +2924,9 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Int )
-  FT_Get_Char_Variant_IsDefault( FT_Face   face,
-                                 FT_ULong  charcode,
-                                 FT_ULong  variantSelector )
+  FT_Face_GetCharVariantIsDefault( FT_Face   face,
+                                   FT_ULong  charcode,
+                                   FT_ULong  variantSelector )
   {
     FT_Int  result = -1;
 
@@ -2953,7 +2953,7 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt32* )
-  FT_Get_Variant_Selectors( FT_Face  face )
+  FT_Face_GetVariantSelectors( FT_Face  face )
   {
     FT_UInt32  *result = NULL;
 
@@ -2980,8 +2980,8 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt32* )
-  FT_Get_Variants_Of_Char( FT_Face   face,
-                           FT_ULong  charcode )
+  FT_Face_GetVariantsOfChar( FT_Face   face,
+                             FT_ULong  charcode )
   {
     FT_UInt32  *result = NULL;
 
@@ -3007,8 +3007,8 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt32* )
-  FT_Get_Chars_Of_Variant( FT_Face   face,
-                           FT_ULong  variantSelector )
+  FT_Face_GetCharsOfVariant( FT_Face   face,
+                             FT_ULong  variantSelector )
   {
     FT_UInt32  *result = NULL;
 
