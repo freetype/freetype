@@ -26,7 +26,9 @@ html_header_2= """ API Reference</title>
   p { text-align: justify; }
   h1 { text-align: center; }
   li { text-align: justify; }
-  td { padding: 0 0.5em 0 0.5em }
+  td { padding: 0 0.5em 0 0.5em; }
+  td.left { padding: 0 0.5em 0 0.5em;
+            text-align: left; }
 
   a:link { color: #0000EF; }
   a:visited { color: #51188E; }
@@ -416,7 +418,7 @@ class HtmlFormatter(Formatter):
         print "<table cellpadding=5>"
 
     def  toc_section_enter( self, section ):
-        print "<tr valign=top><td>"
+        print '<tr valign=top><td class="left">'
         print '<a href="' + self.make_section_url( section ) + '">' + \
                section.title + '</a></td><td>'
 
