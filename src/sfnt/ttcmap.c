@@ -2295,10 +2295,10 @@
     TT_CMapRec  cmap;
     FT_ULong    num_selectors;
 
-   /* this array is used to store the results of various
-    * cmap 14 query functions. its content is overwritten
-    * on each call to these functions
-    */
+    /* This array is used to store the results of various
+     * cmap 14 query functions.  The data is overwritten
+     * on each call to these functions.
+     */
     FT_UInt     max_results;
     FT_UInt32*  results;
     FT_Memory   memory;
@@ -2311,8 +2311,9 @@
   {
     FT_Memory  memory = cmap->memory;
 
+
     cmap->max_results = 0;
-    if (memory != NULL && cmap->results != NULL)
+    if ( memory != NULL && cmap->results != NULL )
       FT_FREE( cmap->results );
   }
 
@@ -2326,7 +2327,7 @@
     FT_Error  error   = 0;
 
 
-    if (num_results > cmap->max_results)
+    if ( num_results > cmap->max_results )
     {
        cmap->memory = memory;
 
@@ -2335,6 +2336,7 @@
 
        cmap->max_results = num_results;
     }
+
     return error;
   }
 
@@ -2368,9 +2370,9 @@
 
     /* check selectors, they must be in increasing order */
     {
-     /* we start lastVarSel at 1 because a variant selector value of 0
-      * isn't legal.
-      */
+      /* we start lastVarSel at 1 because a variant selector value of 0
+       * isn't valid.
+       */
       FT_ULong  n, lastVarSel = 1;
 
 
@@ -2398,7 +2400,8 @@
           FT_ULong  i;
           FT_ULong  lastBase  = 0;
 
-          if ( defp + numRanges*4 > valid->limit )
+
+          if ( defp + numRanges * 4 > valid->limit )
             FT_INVALID_TOO_SHORT;
 
           for ( i = 0; i < numRanges; ++i )
@@ -2424,7 +2427,7 @@
           FT_ULong  i, lastUni = 0;
 
 
-          if ( ndp + numMappings*4 > valid->limit )
+          if ( ndp + numMappings * 4 > valid->limit )
             FT_INVALID_TOO_SHORT;
 
           for ( i = 0; i < numMappings; ++i )
@@ -2553,6 +2556,7 @@
       else
         return TT_PEEK_USHORT( p );
     }
+
     return 0;
   }
 
@@ -2596,9 +2600,9 @@
                             FT_ULong  charcode,
                             FT_ULong  variantSelector)
   {
-    FT_Byte*   p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
-    FT_ULong   defOff;
-    FT_ULong   nondefOff;
+    FT_Byte*  p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
+    FT_ULong  defOff;
+    FT_ULong  nondefOff;
 
 
     if ( !p )
@@ -2628,9 +2632,9 @@
                                 FT_ULong  charcode,
                                 FT_ULong  variantSelector )
   {
-    FT_Byte*   p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
-    FT_ULong   defOff;
-    FT_ULong   nondefOff;
+    FT_Byte*  p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
+    FT_ULong  defOff;
+    FT_ULong  nondefOff;
 
 
     if ( !p )
@@ -2652,7 +2656,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt32 * )
+  FT_CALLBACK_DEF( FT_UInt32* )
   tt_cmap14_variants( TT_CMap    cmap,
                       FT_Memory  memory )
   {
@@ -2662,7 +2666,8 @@
     FT_UInt32*  result;
     FT_UInt     i;
 
-    if ( tt_cmap14_ensure( cmap14, (count + 1), memory ) )
+
+    if ( tt_cmap14_ensure( cmap14, ( count + 1 ), memory ) )
       return NULL;
 
     result = cmap14->results;
@@ -2688,7 +2693,7 @@
     FT_UInt32*  q;
 
 
-    if ( tt_cmap14_ensure( cmap14, (count + 1), memory ) )
+    if ( tt_cmap14_ensure( cmap14, ( count + 1 ), memory ) )
       return NULL;
 
     for ( q = cmap14->results; count > 0; --count )
@@ -2747,21 +2752,21 @@
     cnt       = tt_cmap14_def_char_count( p );
     numRanges = TT_NEXT_ULONG( p );
 
-    if ( tt_cmap14_ensure( cmap14, (cnt + 1), memory ) )
+    if ( tt_cmap14_ensure( cmap14, ( cnt + 1 ), memory ) )
       return NULL;
 
     for ( q = cmap14->results; numRanges > 0; --numRanges )
     {
       FT_UInt  uni = TT_NEXT_UINT24( p );
-      FT_UInt  cnt = FT_NEXT_BYTE( p ) + 1;
 
+
+      cnt = FT_NEXT_BYTE( p ) + 1;
       do
       {
         q[0]  = uni;
         uni  += 1;
         q    += 1;
-      }
-      while ( --cnt != 0 );
+      } while ( --cnt != 0 );
     }
     q[0] = 0;
 
@@ -2782,7 +2787,7 @@
 
     numMappings = TT_NEXT_ULONG( p );
 
-    if ( tt_cmap14_ensure( cmap14, (numMappings + 1), memory ) )
+    if ( tt_cmap14_ensure( cmap14, ( numMappings + 1 ), memory ) )
       return NULL;
 
     ret = cmap14->results;
@@ -2820,9 +2825,11 @@
       return NULL;
 
     if ( defOff == 0 )
-      return tt_cmap14_get_nondef_chars( cmap, cmap->data + nondefOff, memory );
+      return tt_cmap14_get_nondef_chars( cmap, cmap->data + nondefOff,
+                                         memory );
     else if ( nondefOff == 0 )
-      return tt_cmap14_get_def_chars( cmap, cmap->data + defOff, memory );
+      return tt_cmap14_get_def_chars( cmap, cmap->data + defOff,
+                                      memory );
     else
     {
       /* Both a default and a non-default glyph set?  That's probably not */
@@ -2845,11 +2852,13 @@
       numRanges   = TT_NEXT_ULONG( dp );
 
       if ( numMappings == 0 )
-        return tt_cmap14_get_def_chars( cmap, cmap->data + defOff, memory );
+        return tt_cmap14_get_def_chars( cmap, cmap->data + defOff,
+                                        memory );
       if ( dcnt == 0 )
-        return tt_cmap14_get_nondef_chars( cmap, cmap->data + nondefOff, memory );
+        return tt_cmap14_get_nondef_chars( cmap, cmap->data + nondefOff,
+                                           memory );
 
-      if ( tt_cmap14_ensure( cmap14, (dcnt + numMappings + 1), memory ) )
+      if ( tt_cmap14_ensure( cmap14, ( dcnt + numMappings + 1 ), memory ) )
         return NULL;
 
       ret  = cmap14->results;
@@ -2940,6 +2949,7 @@
       (FT_CMap_DoneFunc)     tt_cmap14_done,
       (FT_CMap_CharIndexFunc)tt_cmap14_char_index,
       (FT_CMap_CharNextFunc) tt_cmap14_char_next,
+
       /* Format 14 extension functions */
       (FT_CMap_CharVarIndexFunc)    tt_cmap14_char_var_index,
       (FT_CMap_CharVarIsDefaultFunc)tt_cmap14_char_var_isdefault,

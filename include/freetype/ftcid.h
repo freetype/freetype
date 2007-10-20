@@ -73,10 +73,14 @@ FT_BEGIN_HEADER
    *       The supplement.
    *
    * @return:
-   *   FreeType error code.  0 means success.
+   *    FreeType error code.  0 means success.
    *
    * @note:
-   *   This function only works with CID faces, returning an error otherwise.
+   *    This function only works with CID faces, returning an error
+   *    otherwise.
+   *
+   * @since:
+   *    2.3.6
    */
   FT_EXPORT( FT_Error )
   FT_Get_CID_Registry_Ordering_Supplement( FT_Face       face,

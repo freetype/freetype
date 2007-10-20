@@ -56,7 +56,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    This section contains the declaration of functions to validate     */
-  /*    some OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF).               */
+  /*    some OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF, MATH).         */
   /*                                                                       */
   /*************************************************************************/
 

@@ -32,6 +32,7 @@
 /*    version                                                              */
 /*    basic_types                                                          */
 /*    base_interface                                                       */
+/*    glyph_variants                                                       */
 /*    glyph_management                                                     */
 /*    mac_specific                                                         */
 /*    sizes_management                                                     */

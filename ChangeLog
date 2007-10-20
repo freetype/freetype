@@ -1,14 +1,32 @@
 2007-10-18  David Turner  <david@freetype.org>
 
-	* include/freetype/freetype.h, src/base/ftobjs.c: renamed
-	cmap14-related new APIs to the FT_Object_ActionName scheme.
-	update the documentation for these APIs
+	* include/freetype/freetype.h, src/base/ftobjs.c: Rename API
+	functions related to cmap type 14 support to the
+	`FT_Object_ActionName' scheme:
 
-	* src/sfnt/ttcmap.c: stronger cmap 14 validation, make the
-	code a little more consistent with FreeType coding conventions
-	and modify the cmap14 functions that returned a newly allocated
-	array to use a persistent vector from the TT_CMap14 object
+	  FT_Get_Char_Variant_index     -> FT_Face_GetCharVariantIndex
+	  FT_Get_Char_Variant_IsDefault -> FT_Face_GetCharVariantIsDefault
+	  FT_Get_Variant_Selectors      -> FT_Face_GetVariantSelectors
+	  FT_Get_Variants_Of_Char       -> FT_Face_GetVariantsOfChar
+	  FT_Get_Chars_Of_Variant       -> FT_Face_GetCharsOfVariant
+
+	Update documentation accordingly.
+
+	* src/sfnt/ttcmap.c: Stronger cmap 14 validation.
+	Make the code a little more consistent with FreeType coding
+	conventions and modify the cmap14 functions that returned a newly
+	allocated array to use a persistent vector from the TT_CMap14 object
 	instead.
+
+	(TT_CMap14Rec): Provide array and auxiliary data for result.
+	(tt_cmap14_done, tt_cmap14_ensure): New functions.
+
+	(tt_cmap14_init, tt_cmap14_validate, tt_cmap14_char_map_def_binary,
+	tt_cmap14_char_map_nondef_binary, tt_cmap14_find_variant,
+	tt_cmap14_char_var_index, tt_cmap14_variants,
+	tt_cmap14_char_variants, tt_cmap14_def_char_count,
+	tt_cmap14_get_def_chars, tt_cmap14_get_nondef_chars,
+	tt_cmap14_variant_chars, tt_cmap14_class_rec): Updated and improved.
 
 2007-10-15  George Williams  <gww@silcom.com>
 
