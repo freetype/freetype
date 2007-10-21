@@ -1198,10 +1198,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_STYLE_FLAG_ITALIC ::                                            */
-  /*      Indicates that a given face is italicized.                       */
+  /*      Indicates that a given face style is italic or oblique.          */
   /*                                                                       */
   /*    FT_STYLE_FLAG_BOLD ::                                              */
   /*      Indicates that a given face is bold.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The style information as provided by FreeType is very basic.  More */
+  /*    details are beyond the scope and should be done on a higher level  */
+  /*    (for example, by analyzing various fields of the `OS/2' table in   */
+  /*    SFNT based fonts).                                                 */
   /*                                                                       */
 #define FT_STYLE_FLAG_ITALIC  ( 1 << 0 )
 #define FT_STYLE_FLAG_BOLD    ( 1 << 1 )

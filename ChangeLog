@@ -1,3 +1,11 @@
+2006-10-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Support bit 9 and prepare
+	support for bit 8 in the `OS/2' table.  MS is already using this;
+	hopefully, this becomes part of OpenType 1.5.
+	Prepare also support for `name' IDs 21 (WWS_FAMILY) and 22
+	(WWS_SUBFAMILY).
+
 2006-10-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/docmaker/tohtml.py (html_header_2): Fix typo.
