@@ -1,3 +1,10 @@
+2006-10-29  Daniel Svoboda  <dasvo@planeta@cz>
+
+	* src/winfonts/winfnt.c (FNT_Face_Init): Check first that the driver
+	can handle the font at all, then check `face_index'.  Otherwise, the
+	driver might return the wrong error code.  This fixes Savannah bug
+	#21468.
+
 2006-10-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Support bit 9 and prepare

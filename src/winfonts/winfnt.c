@@ -697,13 +697,6 @@
       /* this didn't work; try to load a single FNT font */
       FNT_Font  font;
 
-
-      if ( face_index > 0 )
-      {
-        error = FNT_Err_Bad_Argument;
-        goto Exit;
-      }
-
       if ( FT_NEW( face->font ) )
         goto Exit;
 
@@ -714,6 +707,9 @@
       font->fnt_size = stream->size;
 
       error = fnt_font_load( font, stream );
+
+      if ( !error && face_index > 0 )
+        error = FNT_Err_Bad_Argument;
     }
 
     if ( error )
