@@ -1096,7 +1096,8 @@
     face->gasp.numRanges = 0;
 
     /* freeing the name table */
-    sfnt->free_name( face );
+    if ( sfnt )
+      sfnt->free_name( face );
 
     /* freeing family and style name */
     FT_FREE( face->root.family_name );
