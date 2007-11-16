@@ -1,16 +1,54 @@
-2006-11-01  Werner Lemberg  <wl@gnu.org>
+2007-11-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix for Carbon incompatibilities since Mac OS X 10.5.
+
+	* doc/INSTALL.MAC: Comment on MACOSX_DEPLOYMENT_TARGET.
+
+	* include/freetype/ftmac.h: Deprecate FT_New_Face_From_FOND and
+	FT_GetFilePath_From_Mac_ATS_Name. Since Mac OS X 10.5, calling
+	Carbon functions from a forked process is classified as unsafe
+	by Apple. All Carbon-dependent functions should be deprecated.
+
+	* src/base/ftmac.c: Use essential header files <Carbon/Carbon.h>
+	and <ApplicationServices/ApplicationServices.h> instead of
+	all-in-one header file <CoreServices/CoreServices.h>.
+
+	Include <sys/syslimits.h> and replace HFS_MAXPATHLEN by Apple
+	genuine macro PATH_MAX.
+
+	Add fallback macro for kATSOptionFlagsUnRestrictedScope which
+	is not found in Mac OS X 10.0.
+
+	Multi-character constants ('POST', 'sfnt' etc) are replaced by
+	64bit constants calculated by FT_MAKE_TAG() macro.
+
+	For the index in the segment of resource fork, new portable
+	type ResourceIndex is introduced for better compatibility.
+	This type is since Mac OS X 10.5, so it is defined as short
+	when built on older platforms.
+
+	(FT_ATSFontGetFileReference): If build target is only the systems
+	10.5 and newer, it calls Apple genuine ATSFontGetFileReference().
+
+	(FT_GetFile_From_Mac_ATS_Name): Return an error if system is 10.5
+	and newer or 64bit platform, because legacy type FSSpec type is
+	removed completely.
+
+	(FT_New_Face_From_FSSpec): Ditto.
+
+2007-11-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_done_face): Check `sfnt' everywhere.  This
 	fixes Savannah bug #21485.
 
-2006-10-29  Daniel Svoboda  <dasvo@planeta@cz>
+2007-10-29  Daniel Svoboda  <dasvo@planeta@cz>
 
 	* src/winfonts/winfnt.c (FNT_Face_Init): Check first that the driver
 	can handle the font at all, then check `face_index'.  Otherwise, the
 	driver might return the wrong error code.  This fixes Savannah bug
 	#21468.
 
-2006-10-21  Werner Lemberg  <wl@gnu.org>
+2007-10-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Support bit 9 and prepare
 	support for bit 8 of the `fsSelection' field in the `OS/2' table. 
@@ -19,7 +57,7 @@
 	Prepare also support for `name' IDs 21 (WWS_FAMILY) and 22
 	(WWS_SUBFAMILY).
 
-2006-10-20  Werner Lemberg  <wl@gnu.org>
+2007-10-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/docmaker/tohtml.py (html_header_2): Fix typo.
 	Add `td.left' element to CSS.

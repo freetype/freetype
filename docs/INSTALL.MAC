@@ -1,4 +1,19 @@
 Please follow the instructions  in INSTALL.UNIX to install FreeType on
 Mac OS X.
 
+Since Mac OS X 10.5, when environment variable MACOSX_DEPLOYMENT_TARGET
+is not given, Apple's diversion of gcc configures the conditional macros
+to Mac OS X 10.5 and newer. If you want to use the built binaries on
+older platforms, you must set the variable to the lowest system you care.
+For example, if you are working on Bourne shell,
+
+	export MACOSX_DEPLOYMENT_TARGET=10.0
+
+or, if you are working on C shell,
+
+	setenv MACOSX_DEPLOYMENT_TARGET 10.0
+
+makes gcc to configure the conditional macros to 10.0-capable values.
+
+
 For classic Mac OS (Mac OS 7, 8, 9) please refer to builds/mac/README.

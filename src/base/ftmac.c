@@ -76,11 +76,15 @@
 #undef  OS_INLINE
 #define OS_INLINE  static __inline__
 #endif
-#include <Carbon/Carbon.h>
 
-#ifndef HFS_MAXPATHLEN
-#define HFS_MAXPATHLEN  1024
+/* Some portable types are unavailable on legacy SDKs */
+#ifndef MAC_OS_X_VERSION_10_5
+typedef	short	ResourceIndex;
 #endif
+
+#include <CoreServices/CoreServices.h>
+#include <ApplicationServices/ApplicationServices.h>
+#include <sys/syslimits.h>	/* PATH_MAX */
 
 #define FT_DEPRECATED_ATTRIBUTE
 
@@ -89,7 +93,13 @@
   /* undefine blocking-macros in ftmac.h */
 #undef FT_GetFile_From_Mac_Name( a, b, c )
 #undef FT_GetFile_From_Mac_ATS_Name( a, b, c )
+#undef FT_New_Face_From_FOND( a, b, c, d )
 #undef FT_New_Face_From_FSSpec( a, b, c, d )
+#undef FT_New_Face_From_FSRef( a, b, c, d )
+
+#ifndef kATSOptionFlagsUnRestrictedScope /* since Mac OS X 10.1 */
+#define kATSOptionFlagsUnRestrictedScope kATSOptionFlagsDefault
+#endif
 
 
   /* Set PREFER_LWFN to 1 if LWFN (Type 1) is preferred over
@@ -116,19 +126,28 @@
 
   /* Private function.                                         */
   /* The FSSpec type has been discouraged for a long time,     */
-  /* but for some reason, there is no FSRef version of         */
-  /* ATSFontGetFileSpecification(), so we made our own.        */
-  /* Apple will provide one eventually.                        */
+  /* unfortunately an FSRef replacement API for                */
+  /* ATSFontGetFileSpecification() is only available in        */
+  /* Mac OS X 10.5 and later.                                  */
   static OSStatus
   FT_ATSFontGetFileReference( ATSFontRef  ats_font_id,
                               FSRef*      ats_font_ref )
   {
-#if __LP64__
+#if defined( MAC_OS_X_VERSION_10_5 ) && \
+    MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+ 
+    OSStatus  err;
+
+    err = ATSFontGetFileReference( ats_font_id, ats_font_ref );
+	
+    return err;
+#elif __LP64__ /* No 64bit Carbon API on legacy platforms */
     FT_UNUSED( ats_font_id );
     FT_UNUSED( ats_font_ref );
 
+
     return fnfErr;
-#else
+#else /* 32bit Carbon API on legacy platforms */
     OSStatus  err;
     FSSpec    spec;
 
@@ -215,7 +234,8 @@
                                 FSSpec*      pathSpec,
                                 FT_Long*     face_index )
   {
-#if __LP64__
+#if ( __LP64__ ) || ( defined( MAC_OS_X_VERSION_10_5 ) && \
+      MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 )
     FT_UNUSED( fontName );
     FT_UNUSED( pathSpec );
     FT_UNUSED( face_index );
@@ -508,7 +528,7 @@
     ResID     sfnt_id;
     short     have_sfnt, have_lwfn;
     Str255    lwfn_file_name;
-    UInt8     buff[HFS_MAXPATHLEN];
+    UInt8     buff[PATH_MAX];
     FT_Error  err;
     short     num_faces;
 
@@ -564,7 +584,8 @@
 
     for (;;)
     {
-      post_data = Get1Resource( 'POST', res_id++ );
+      post_data = Get1Resource( FT_MAKE_TAG( 'P', 'O', 'S', 'T' ),
+                                res_id++ );
       if ( post_data == NULL )
         break;  /* we are done */
 
@@ -603,7 +624,8 @@
 
     for (;;)
     {
-      post_data = Get1Resource( 'POST', res_id++ );
+      post_data = Get1Resource( FT_MAKE_TAG( 'P', 'O', 'S', 'T' ),
+                                res_id++ );
       if ( post_data == NULL )
         break;  /* we are done */
 
@@ -805,7 +827,7 @@
     int        is_cff;
 
 
-    sfnt = GetResource( 'sfnt', sfnt_id );
+    sfnt = GetResource( FT_MAKE_TAG( 's', 'f', 'n', 't' ), sfnt_id );
     if ( ResError() )
       return FT_Err_Invalid_Handle;
 
@@ -842,7 +864,7 @@
   {
     FT_Error       error = FT_Err_Cannot_Open_Resource;
     ResFileRefNum  res_ref;
-    short          res_index;
+    ResourceIndex  res_index;
     Handle         fond;
     short          num_faces_in_res, num_faces_in_fond;
 
@@ -857,7 +879,8 @@
     num_faces_in_res = 0;
     for ( res_index = 1; ; ++res_index )
     {
-      fond = Get1IndResource( 'FOND', res_index );
+      fond = Get1IndResource( FT_MAKE_TAG( 'F', 'O', 'N', 'D' ),
+                              res_index );
       if ( ResError() )
         break;
 
@@ -890,13 +913,13 @@
     OSType    fond_type;
     Str255    fond_name;
     Str255    lwfn_file_name;
-    UInt8     path_lwfn[HFS_MAXPATHLEN];
+    UInt8     path_lwfn[PATH_MAX];
     OSErr     err;
     FT_Error  error = FT_Err_Ok;
 
 
     GetResInfo( fond, &fond_id, &fond_type, fond_name );
-    if ( ResError() != noErr || fond_type != 'FOND' )
+    if ( ResError() != noErr || fond_type != FT_MAKE_TAG( 'F', 'O', 'N', 'D' ) )
       return FT_Err_Invalid_File_Format;
 
     parse_fond( *fond, &have_sfnt, &sfnt_id, lwfn_file_name, face_index );
@@ -911,7 +934,7 @@
         goto found_no_lwfn_file;
 
       {
-        UInt8  path_fond[HFS_MAXPATHLEN];
+        UInt8  path_fond[PATH_MAX];
         FSRef  ref;
 
 
@@ -963,7 +986,7 @@
 
     /* LWFN is a (very) specific file format, check for it explicitly */
     file_type = get_file_type_from_path( pathname );
-    if ( file_type == 'LWFN' )
+    if ( file_type == FT_MAKE_TAG( 'L', 'W', 'F', 'N' ) )
       return FT_New_Face_From_LWFN( library, pathname, face_index, aface );
 
     /* Otherwise the file type doesn't matter (there are more than  */
@@ -1031,6 +1054,8 @@
   /*    FT_New_Face_From_FSRef is identical to FT_New_Face except it       */
   /*    accepts an FSRef instead of a path.                                */
   /*                                                                       */
+  /* This function is deprecated because Carbon data types (FSRef)         */
+  /* are not cross-platform, and thus not suitable for the freetype API.   */
   FT_EXPORT_DEF( FT_Error )
   FT_New_Face_From_FSRef( FT_Library    library,
                           const FSRef*  ref,
@@ -1040,7 +1065,7 @@
     FT_Error      error;
     FT_Open_Args  args;
     OSErr   err;
-    UInt8   pathname[HFS_MAXPATHLEN];
+    UInt8   pathname[PATH_MAX];
 
 
     if ( !ref )
@@ -1077,7 +1102,8 @@
                            FT_Long        face_index,
                            FT_Face*       aface )
   {
-#if __LP64__
+#if ( __LP64__ ) || ( defined( MAC_OS_X_VERSION_10_5 ) && \
+      MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 )
     FT_UNUSED( library );
     FT_UNUSED( spec );
     FT_UNUSED( face_index );
