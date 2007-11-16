@@ -1,6 +1,7 @@
 2007-11-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Fix for Carbon incompatibilities since Mac OS X 10.5.
+	Fix for Carbon incompatibilities since Mac OS X 10.5,
+	proposed by Sean McBride.
 
 	* doc/INSTALL.MAC: Comment on MACOSX_DEPLOYMENT_TARGET.
 
