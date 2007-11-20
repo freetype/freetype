@@ -339,7 +339,11 @@
     for ( i = 0; i < FT_RACCESS_N_RULES; i++ )
     {
       new_names[i] = NULL;
-      errors[i] = FT_Stream_Seek( stream, 0 );
+      if ( NULL != stream )
+        errors[i] = FT_Stream_Seek( stream, 0 );
+      else
+        errors[i] = FT_Err_Ok;
+
       if ( errors[i] )
         continue ;
 
@@ -362,6 +366,9 @@
 
 
     *result_file_name = NULL;
+    if ( NULL == stream )
+      return FT_Err_Cannot_Open_Stream;
+
     return raccess_guess_apple_generic( library, stream, base_file_name,
                                         magic, result_offset );
   }
@@ -378,6 +385,9 @@
 
 
     *result_file_name = NULL;
+    if ( NULL == stream )
+      return FT_Err_Cannot_Open_Stream;
+
     return raccess_guess_apple_generic( library, stream, base_file_name,
                                         magic, result_offset );
   }

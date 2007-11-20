@@ -1527,6 +1527,9 @@
     FT_Long        dlen, offset;
 
 
+    if ( NULL == stream )
+      return FT_Err_Invalid_Stream_Operation;
+
     error = FT_Stream_Seek( stream, 0 );
     if ( error )
       goto Exit;
@@ -1714,7 +1717,7 @@
     /* create input stream */
     error = FT_Stream_New( library, args, &stream );
     if ( error )
-      goto Exit;
+      goto Fail3;
 
     memory = library->memory;
 
@@ -1786,7 +1789,8 @@
     /* If we are on the mac, and we get an FT_Err_Invalid_Stream_Operation */
     /* it may be because we have an empty data fork, so we need to check   */
     /* the resource fork.                                                  */
-    if ( FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format      &&
+    if ( FT_ERROR_BASE( error ) != FT_Err_Cannot_Open_Stream       &&
+         FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format      &&
          FT_ERROR_BASE( error ) != FT_Err_Invalid_Stream_Operation )
       goto Fail2;
 

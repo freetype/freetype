@@ -1,3 +1,36 @@
+2007-11-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix to use MacOS legacy font support by Masatake Yamato,
+	on Mac OS X. It is not working since 2.3.5. In FT_Open_New(),
+	if FT_New_Stream() cannot mmap() specified file and cannot
+	seek to head of specified file, it returns NULL stream
+	and FT_Open_New() returns the error immediately. On MacOS,
+	most legacy MacOS font falls into such scenario because
+	their data forks are zero-sized and cannot seek. To proceed
+	to guessing of resource fork fonts, the functions for legacy
+	MacOS font must lay by NULL stream returned by FT_New_Stream().
+
+	* src/base/ftobjs.c (IsMacBinary): Returns an error
+	FT_Err_Invalid_Stream_Operation immediately when NULL stream
+	is passed.
+
+	(FT_Open_Face): Even when FT_New_Stream() returns an error,
+	proceed to fallback. Originally, legacy MacOS font is tested
+	in the cases of FT_Err_Invalid_Stream_Operation (occurs when
+	data fork is empty) or FT_Err_Unknown_File_Format (occurs when
+	AppleSingle header or .dfont header is combined).
+	Now the case of FT_Err_Cannot_Open_Stream is included.
+
+	* src/base/ftrfork.c (FT_Raccess_Guess): When passed stream
+	is NULL, skipping FT_Stream_Seek() to the head of stream
+	and proceed to unit testing of raccess_guess_XXX().
+	FT_Stream_Seek() for NULL stream causes Bus error on Mac OS X.
+
+	(raccess_guess_apple_double): Returns FT_Err_Cannot_Open_Stream
+	immediately if passed stream is NULL.
+
+	(raccess_guess_apple_single): Ditto.
+
 2007-11-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix for Carbon incompatibilities since Mac OS X 10.5,
