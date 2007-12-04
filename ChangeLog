@@ -1,3 +1,8 @@
+2007-12-04  Sean McBride  <sean@rogue-research.com>
+
+	* src/pfr/pfrgload.c (pfr_glyph_load_compound): Remove compiler
+	warning.
+
 2007-11-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix MacOS legacy font support by Masatake Yamato on Mac OS X. It is
