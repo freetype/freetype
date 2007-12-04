@@ -1272,8 +1272,9 @@
     top->cid_ordering        = 0xFFFFU;
     top->cid_font_name       = 0xFFFFU;
 
-    error = cff_index_access_element( idx, font_index, &dict, &dict_len ) ||
-            cff_parser_run( &parser, dict, dict + dict_len );
+    error = cff_index_access_element( idx, font_index, &dict, &dict_len );
+    if ( !error )
+      error = cff_parser_run( &parser, dict, dict + dict_len );
 
     cff_index_forget_element( idx, &dict );
 
