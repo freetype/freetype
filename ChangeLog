@@ -1,3 +1,8 @@
+2007-12-04  Graham Asher  <graham.asher@btinternet.com>
+
+	* src/truetype/ttobjs.c (tt_face_init): Don't use logical OR to
+	concatenate error codes.
+
 2007-12-04  Sean McBride  <sean@rogue-research.com>
 
 	* src/pfr/pfrgload.c (pfr_glyph_load_compound): Remove compiler
