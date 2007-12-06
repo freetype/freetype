@@ -34,7 +34,7 @@ FT_BEGIN_HEADER
 
   /* Number of guessing rules supported in `FT_Raccess_Guess'.            */
   /* Don't forget to increment the number if you add a new guessing rule. */
-#define FT_RACCESS_N_RULES  8
+#define FT_RACCESS_N_RULES  9
 
 
   /*************************************************************************/

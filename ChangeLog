@@ -1,5 +1,16 @@
 2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftrfork.c (raccess_guess_darwin_newvfs): New function
+	to support new pathname syntax "..namedfork/rsrc" to access
+	a resource fork on Mac OS X. The legacy syntax "/rsrc" does not
+	work on case-sensitive HFS+.
+	(raccess_guess_darwin_hfsplus): Fix a bug in the calculation of
+	buffer size to store a pathname.
+	* include/freetype/internal/ftrfork.h: Increment the number of
+	resource fork guessing rule.
+
+2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* builds/unix/configure.raw: improve the compile tests to search
 	Carbon functions.
 	* builds/mac/ftmac.c: import fixes for Carbon incompatibilities
