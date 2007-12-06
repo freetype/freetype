@@ -316,11 +316,9 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
     ],
     [
 
-      FCBPBPtr             paramBlock;
       short                vRefNum;
       long                 dirID;
       ConstStr255Param     fileName;
-      FSSpec*              spec;
 
       Boolean*             isDirectory;
       UInt8*               path;
@@ -334,16 +332,21 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
       FSForkInfo*          forkInfo;
       FSRef*               ref;
 
+#if HAVE_FSSPEC
+      FSSpec*              spec;
+#endif
 
       /* FSRef functions: no need to check? */
       FSGetForkCBInfo( desiredRefNum, volume, iterator,
                        actualRefNum, forkInfo, ref,
                        outForkName );
+      FSPathMakeRef( path, ref, isDirectory );
+
+#if HAVE_FSSPEC
       FSpMakeFSRef ( spec, ref );
       FSGetCatalogInfo( ref, whichInfo, catalogInfo,
                         outForkName, spec, ref );
-      FSPathMakeRef( path, ref, isDirectory );
-
+#endif
     ],
     [AC_MSG_RESULT([ok])
      CFLAGS="$CFLAGS -DHAVE_FSREF=1"],
@@ -465,7 +468,9 @@ elif test x$with_old_mac_fonts = xyes -a x$with_ats != x ; then
 
 
       ATSFontFindFromName( NULL, kATSOptionFlagsUnRestrictedScope );
+#if HAVE_FSSPEC
       ATSFontGetFileSpecification( 0, pathSpec );
+#endif
 
     ],
     [AC_MSG_RESULT([ok])

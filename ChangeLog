@@ -1,5 +1,12 @@
 2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* builds/unix/configure.raw: improve the compile tests to search
+	Carbon functions.
+	* builds/mac/ftmac.c: import fixes for Carbon incompatibilities
+	proposed by Sean McBride from src/base/ftmac.c (see 2007-11-16).
+
+2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	The documents and comments for Mac OS X are improved by Sean
 	McBride.
 
