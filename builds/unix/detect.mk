@@ -79,9 +79,9 @@ ifeq ($(PLATFORM),unix)
   ifdef must_configure
     ifneq ($(have_Makefile),)
       # we are building FT2 not in the src tree
-	      $(TOP_DIR)/builds/unix/configure $(CFG)
+	      $(TOP_DIR)/builds/unix/configure $(value CFG)
     else
-	      cd builds/unix; ./configure $(CFG)
+	      cd builds/unix; ./configure $(value CFG)
     endif
   endif
 

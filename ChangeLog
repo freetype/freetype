@@ -1,9 +1,36 @@
+2007-12-06  Fix  <4d876b82@gmail.com>
+
+	Pass options from one configure script to another as-is (not
+	expanded).  This is needed for options like
+	--includedir='${prefix}/include'.
+
+	* builds/unix/detect.mk, configure: Prevent argument expansion in
+	call to the (real) `configure' script.
+
+2007-12-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix compilation if
+	TT_USE_BYTECODE_INTERPRETER isn't defined.
+
+2007-12-06  Werner Lemberg  <wl@gnu.org>
+
+	There exist CFFs which contain opcodes for the Type 1 operators
+	`hsbw' and `closepath' which are both invalid in Type 2 charstrings.
+	However, it doesn't harm to support them.
+
+	* src/cff/cffgload.c (CFF_Operator): Add `cff_op_hsbw' and
+	`cff_op_closepath.'
+	(cff_argument_counts): Ditto.
+
+	(cff_decoder_parse_charstrings): Handle Type 1 opcodes 9 (closepath)
+	and 13 (hsbw) which are invalid in Type 2 charstrings.
+
 2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftrfork.c (raccess_guess_darwin_newvfs): New function
-	to support new pathname syntax "..namedfork/rsrc" to access
-	a resource fork on Mac OS X. The legacy syntax "/rsrc" does not
-	work on case-sensitive HFS+.
+	* src/base/ftrfork.c (raccess_guess_darwin_newvfs): New function to
+	support new pathname syntax `..namedfork/rsrc' to access a resource
+	fork on Mac OS X.  The legacy syntax `/rsrc' does not work on
+	case-sensitive HFS+.
 	(raccess_guess_darwin_hfsplus): Fix a bug in the calculation of
 	buffer size to store a pathname.
 	* include/freetype/internal/ftrfork.h: Increment the number of
@@ -11,9 +38,9 @@
 
 2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.raw: improve the compile tests to search
+	* builds/unix/configure.raw: Improve the compile tests to search
 	Carbon functions.
-	* builds/mac/ftmac.c: import fixes for Carbon incompatibilities
+	* builds/mac/ftmac.c: Import fixes for Carbon incompatibilities
 	proposed by Sean McBride from src/base/ftmac.c (see 2007-11-16).
 
 2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>

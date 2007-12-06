@@ -110,6 +110,9 @@
     cff_op_callgsubr,
     cff_op_return,
 
+    cff_op_hsbw,        /* Type 1 opcode: invalid but seen in real life */
+    cff_op_closepath,   /* ditto */
+
     /* do not remove */
     cff_op_max
 
@@ -187,6 +190,9 @@
 
     1, /* callsubr */
     1,
+    0,
+
+    2, /* hsbw */
     0
   };
 
@@ -393,7 +399,7 @@
         error = CFF_Err_Invalid_File_Format;
         goto Exit;
       }
-        
+
       sub = cff->subfonts[fd_index];
     }
 
@@ -954,6 +960,9 @@
         case 8:
           op = cff_op_rrcurveto;
           break;
+        case 9:
+          op = cff_op_closepath;
+          break;
         case 10:
           op = cff_op_callsubr;
           break;
@@ -1054,6 +1063,9 @@
               ip--;
             }
           }
+          break;
+        case 13:
+          op = cff_op_hsbw;
           break;
         case 14:
           op = cff_op_endchar;
@@ -1168,7 +1180,7 @@
           req_args            = 0;
         }
 
-        req_args &= 15;
+        req_args &= 0x000F;
         if ( num_args < req_args )
           goto Stack_Underflow;
         args     -= req_args;
@@ -2020,6 +2032,30 @@
         case cff_op_dotsection:
           /* this operator is deprecated and ignored by the parser */
           FT_TRACE4(( " dotsection" ));
+          break;
+
+        case cff_op_closepath:
+          /* this is an invalid Type 2 operator; however, there        */
+          /* exist fonts which are incorrectly converted from probably */
+          /* Type 1 to CFF, and some parsers seem to accept it         */
+
+          FT_TRACE4(( " closepath (invalid op)" ));
+
+          args = stack;
+          break;
+
+        case cff_op_hsbw:
+          /* this is an invalid Type 2 operator; however, there        */
+          /* exist fonts which are incorrectly converted from probably */
+          /* Type 1 to CFF, and some parsers seem to accept it         */
+
+          FT_TRACE4(( " hsbw (invalid op)" ));
+
+          decoder->glyph_width = decoder->nominal_width +
+                                   (args[1] >> 16);
+          x    = args[0];
+          y    = 0;
+          args = stack;
           break;
 
         case cff_op_and:

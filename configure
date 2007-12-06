@@ -93,7 +93,7 @@ fi
 
 CFG=
 for x in ${1+"$@"}; do
-  CFG="$CFG \"$x\""
+  CFG="$CFG '$x'"
 done
 CFG=$CFG $GNUMAKE setup unix
 

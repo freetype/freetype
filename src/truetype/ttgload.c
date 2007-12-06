@@ -1402,11 +1402,13 @@
 
         FT_Stream         old_stream     = loader->stream;
 
+#ifdef TT_USE_BYTECODE_INTERPRETER
         TT_GraphicsState  saved_GS;
 
 
         if ( loader->exec )
           saved_GS = loader->exec->GS;
+#endif
 
         FT_GlyphLoader_Add( gloader );
 
@@ -1416,9 +1418,11 @@
           FT_Vector  pp[4];
 
 
+#ifdef TT_USE_BYTECODE_INTERPRETER
           /* reinitialize graphics state */
           if ( loader->exec )
             loader->exec->GS = saved_GS;
+#endif
 
           /* Each time we call load_truetype_glyph in this loop, the   */
           /* value of `gloader.base.subglyphs' can change due to table */
