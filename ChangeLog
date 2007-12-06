@@ -1,3 +1,13 @@
+2007-12-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	The documents and comments for Mac OS X are improved by Sean
+	McBride.
+
+	* src/base/ftmac.c: Fix a comment.
+	* include/freetype/ftmac.h: Ditto.
+	* docs/INSTALL.MAC: Improve English and add comment on lowest
+	system version specified by MACOSX_DEPLOYMENT_TARGET.
+
 2007-12-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_subfont_load): Don't use logical OR to

@@ -18,9 +18,9 @@
 
 /***************************************************************************/
 /*                                                                         */
-/* NOTE: Include this file after <freetype/freetype.h> and after the       */
-/*       Mac-specific <Types.h> header (or any other Mac header that       */
-/*       includes <Types.h>); we use Handle type.                          */
+/* NOTE: Include this file after <freetype/freetype.h> and after any       */
+/*       Mac-specific headers (because this header uses Mac types such as  */
+/*       Handle, FSSpec, FSRef, etc.)                                      */
 /*                                                                         */
 /***************************************************************************/
 

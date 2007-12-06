@@ -77,7 +77,7 @@
 #define OS_INLINE  static __inline__
 #endif
 
-/* Some portable types are unavailable on legacy SDKs */
+  /* The ResourceIndex type was only added in the 10.5 SDK */
 #ifndef MAC_OS_X_VERSION_10_5
 typedef	short	ResourceIndex;
 #endif
