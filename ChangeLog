@@ -1,3 +1,10 @@
+2007-12-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffparse.c (cff_parse_real): Don't apply `power_ten'
+	division too early; otherwise the most significant digit(s) of the
+	final result are lost as the value is truncated to an integer.  This
+	fixes Savannah bug #21794 (where the patch has been posted too).
+
 2007-12-06  Fix  <4d876b82@gmail.com>
 
 	Pass options from one configure script to another as-is (not

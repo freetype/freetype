@@ -248,29 +248,30 @@
       power_ten += (FT_Int)exponent;
     }
 
-    /* raise to power of ten if needed */
-    while ( power_ten > 0 )
-    {
-      result = result * 10;
-      num    = num * 10;
-
-      power_ten--;
-    }
-
-    while ( power_ten < 0 )
-    {
-      result  = result / 10;
-      divider = divider * 10;
-
-      power_ten++;
-    }
-
     /* Move the integer part into the high 16 bits. */
     result <<= 16;
 
     /* Place the decimal part into the low 16 bits. */
     if ( num )
       result |= FT_DivFix( num, divider );
+
+    /* apply power of 10 if needed */
+    if ( power_ten > 0 )
+    {
+      divider = 10; /* actually, this will be used as multiplier here */
+      while ( --power_ten > 0 )
+        divider = divider * 10;
+
+      result = FT_MulFix( divider << 16, result );
+    }
+    else if ( power_ten < 0 )
+    {
+      divider = 10;
+      while ( ++power_ten < 0 )
+        divider = divider * 10;
+
+      result = FT_DivFix( result, divider << 16 );
+    }
 
     if ( sign )
       result = -result;
