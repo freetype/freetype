@@ -132,6 +132,19 @@
   }
 
 
+  static int
+  ft_raccess_sort_ref_by_id( FT_RFork_Ref*  a,
+                             FT_RFork_Ref*  b )
+  {
+    if ( a->res_id < b->res_id )
+      return ( -1 );
+    else if ( a->res_id > b->res_id )
+      return ( 1 );
+    else
+      return ( 0 );
+  }
+
+
   FT_BASE_DEF( FT_Error )
   FT_Raccess_Get_DataOffsets( FT_Library  library,
                               FT_Stream   stream,
@@ -147,6 +160,7 @@
     FT_Memory  memory = library->memory;
     FT_Long    temp;
     FT_Long    *offsets_internal;
+    FT_RFork_Ref  *ref;
 
 
     error = FT_Stream_Seek( stream, map_offset );
@@ -179,28 +193,42 @@
         if ( error )
           return error;
 
-        if ( FT_NEW_ARRAY( offsets_internal, *count ) )
+        if ( FT_NEW_ARRAY( ref, *count ) )
           return error;
 
         for ( j = 0; j < *count; ++j )
         {
-          (void)FT_STREAM_SKIP( 2 ); /* resource id */
-          (void)FT_STREAM_SKIP( 2 ); /* rsource name */
-
+          if ( FT_READ_USHORT( ref[j].res_id ) )
+            goto Exit;
+          if ( FT_STREAM_SKIP( 2 ) ) /* resource name */
+            goto Exit;
           if ( FT_READ_LONG( temp ) )
-          {
-            FT_FREE( offsets_internal );
-            return error;
-          }
+            goto Exit;
+          if ( FT_STREAM_SKIP( 4 ) ) /* mbz */
+            goto Exit;
 
-          offsets_internal[j] = rdata_pos + ( temp & 0xFFFFFFL );
-
-          (void)FT_STREAM_SKIP( 4 ); /* mbz */
+          ref[j].offset = temp & 0xFFFFFFL;
         }
 
-        *offsets = offsets_internal;
+	ft_qsort( ref, *count, sizeof( FT_RFork_Ref ),
+                  ( int(*)(const void*, const void*) )
+                  ft_raccess_sort_ref_by_id );
 
-        return FT_Err_Ok;
+        if ( FT_NEW_ARRAY( offsets_internal, *count ) )
+          goto Exit;
+
+        /* XXX: duplicated reference ID,
+         *      gap between reference IDs are acceptable?
+         *      further investigation on Apple implementation is needed.
+         */
+        for ( j = 0; j < *count; ++j )
+          offsets_internal[j] = rdata_pos + ref[j].offset;
+
+        *offsets = offsets_internal;
+        error = FT_Err_Ok;
+Exit:
+        FT_FREE( ref );
+        return error;
       }
     }
 

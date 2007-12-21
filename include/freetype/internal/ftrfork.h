@@ -36,6 +36,13 @@ FT_BEGIN_HEADER
   /* Don't forget to increment the number if you add a new guessing rule. */
 #define FT_RACCESS_N_RULES  9
 
+  /* Structure to describe a reference in resource, by its resource id    */
+  /* and internal offset. `POST' resource expects to be concatenated by   */
+  /* the order of resource id, instead of its appearance in the file.     */
+  typedef struct FT_RFork_Ref_ {
+      FT_UShort  res_id;
+      FT_ULong   offset;
+  } FT_RFork_Ref;
 
   /*************************************************************************/
   /*                                                                       */
