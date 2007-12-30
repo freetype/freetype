@@ -28,7 +28,7 @@
 #define __FTIMAGE_H__
 
 
-/* _STANDALONE_ is from ftgrays.c */
+  /* _STANDALONE_ is from ftgrays.c */
 #ifndef _STANDALONE_
 #include <ft2build.h>
 #endif
@@ -1075,6 +1075,7 @@ FT_BEGIN_HEADER
 
 #define  FT_Raster_New_Func    FT_Raster_NewFunc
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1090,6 +1091,7 @@ FT_BEGIN_HEADER
   (*FT_Raster_DoneFunc)( FT_Raster  raster );
 
 #define  FT_Raster_Done_Func   FT_Raster_DoneFunc
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1125,6 +1127,7 @@ FT_BEGIN_HEADER
 
 #define  FT_Raster_Reset_Func   FT_Raster_ResetFunc
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1149,6 +1152,7 @@ FT_BEGIN_HEADER
                             void*          args );
 
 #define  FT_Raster_Set_Mode_Func  FT_Raster_SetModeFunc
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1190,6 +1194,7 @@ FT_BEGIN_HEADER
 
 #define  FT_Raster_Render_Func    FT_Raster_RenderFunc
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -1211,12 +1216,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Raster_Funcs_
   {
-    FT_Glyph_Format         glyph_format;
-    FT_Raster_NewFunc       raster_new;
-    FT_Raster_ResetFunc     raster_reset;
-    FT_Raster_SetModeFunc   raster_set_mode;
-    FT_Raster_RenderFunc    raster_render;
-    FT_Raster_DoneFunc      raster_done;
+    FT_Glyph_Format        glyph_format;
+    FT_Raster_NewFunc      raster_new;
+    FT_Raster_ResetFunc    raster_reset;
+    FT_Raster_SetModeFunc  raster_set_mode;
+    FT_Raster_RenderFunc   raster_render;
+    FT_Raster_DoneFunc     raster_done;
 
   } FT_Raster_Funcs;
 

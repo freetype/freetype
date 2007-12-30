@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Embedded resource forks accessor (body).                             */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006 by                                          */
+/*  Copyright 2004, 2005, 2006, 2007 by                                    */
 /*  Masatake YAMATO and Redhat K.K.                                        */
 /*                                                                         */
 /*  FT_Raccess_Get_HeaderInfo() and raccess_guess_darwin_hfsplus() are     */
@@ -137,11 +137,11 @@
                              FT_RFork_Ref*  b )
   {
     if ( a->res_id < b->res_id )
-      return ( -1 );
+      return -1;
     else if ( a->res_id > b->res_id )
-      return ( 1 );
+      return 1;
     else
-      return ( 0 );
+      return 0;
   }
 
 
@@ -154,12 +154,12 @@
                               FT_Long   **offsets,
                               FT_Long    *count )
   {
-    FT_Error   error;
-    int        i, j, cnt, subcnt;
-    FT_Long    tag_internal, rpos;
-    FT_Memory  memory = library->memory;
-    FT_Long    temp;
-    FT_Long    *offsets_internal;
+    FT_Error      error;
+    int           i, j, cnt, subcnt;
+    FT_Long       tag_internal, rpos;
+    FT_Memory     memory = library->memory;
+    FT_Long       temp;
+    FT_Long       *offsets_internal;
     FT_RFork_Ref  *ref;
 
 
@@ -210,7 +210,7 @@
           ref[j].offset = temp & 0xFFFFFFL;
         }
 
-	ft_qsort( ref, *count, sizeof( FT_RFork_Ref ),
+        ft_qsort( ref, *count, sizeof ( FT_RFork_Ref ),
                   ( int(*)(const void*, const void*) )
                   ft_raccess_sort_ref_by_id );
 
@@ -225,8 +225,9 @@
           offsets_internal[j] = rdata_pos + ref[j].offset;
 
         *offsets = offsets_internal;
-        error = FT_Err_Ok;
-Exit:
+        error    = FT_Err_Ok;
+
+      Exit:
         FT_FREE( ref );
         return error;
       }

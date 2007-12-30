@@ -1,20 +1,24 @@
+2007-12-30  Werner Lemberg  <wl@gnu.org>
+
+	* src/smooth/ftgrays.c (gray_raster_render): Check `outline'
+	correctly.
+
 2007-12-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Improvement of POSIX resource-fork accessor to load unsorted
-	references in a resource. In HelveLTMM (resource-fork
-	PostScript Type1 font bundled to Mac OS X since 10.3.x),
-	the appearance order of PFB chunks is not sorted.
-	Sorting the chunks by reference IDs is required.
+	references in a resource.  In HelveLTMM (resource-fork PostScript
+	Type1 font bundled with Mac OS X since 10.3.x), the appearance order
+	of PFB chunks is not sorted; sorting the chunks by reference IDs is
+	required.
 
-	* include/freetype/internal/ftrfork.h (FT_RFork_Ref):
-	New structure type to store a pair of reference ID and offset
-	to the chunk.
+	* include/freetype/internal/ftrfork.h (FT_RFork_Ref): New structure
+	type to store a pair of reference ID and offset to the chunk.
 
-	* src/base/ftrfork.c (ft_raccess_sort_ref_by_id):
-	New function to sort FT_RFork_Ref by their reference ID.
+	* src/base/ftrfork.c (ft_raccess_sort_ref_by_id): New function to
+	sort FT_RFork_Ref by their reference IDs.
 
-	(FT_Raccess_Get_DataOffsets): Returns an array of offsets
-	that is sorted by reference ID.
+	(FT_Raccess_Get_DataOffsets): Returns an array of offsets that is
+	sorted by reference ID.
 
 2007-12-14  Werner Lemberg  <wl@gnu.org>
 
