@@ -44,7 +44,7 @@
       FT_FACE_FIND_SERVICE( face, service, CID );
 
       if ( service && service->get_ros )
-	  error = service->get_ros( face, &r, &o, &s );
+        error = service->get_ros( face, &r, &o, &s );
     }
 
     if ( registry )

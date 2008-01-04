@@ -79,12 +79,12 @@
 
   /* The ResourceIndex type was only added in the 10.5 SDK */
 #ifndef MAC_OS_X_VERSION_10_5
-typedef	short	ResourceIndex;
+typedef short ResourceIndex;
 #endif
 
 #include <CoreServices/CoreServices.h>
 #include <ApplicationServices/ApplicationServices.h>
-#include <sys/syslimits.h>	/* PATH_MAX */
+#include <sys/syslimits.h> /* PATH_MAX */
 
 #define FT_DEPRECATED_ATTRIBUTE
 
@@ -139,7 +139,7 @@ typedef	short	ResourceIndex;
     OSStatus  err;
 
     err = ATSFontGetFileReference( ats_font_id, ats_font_ref );
-	
+
     return err;
 #elif __LP64__ /* No 64bit Carbon API on legacy platforms */
     FT_UNUSED( ats_font_id );

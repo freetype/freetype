@@ -1,3 +1,12 @@
+2008-01-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Formatting suggested by Sean McBride.
+
+	* builds/mac/ftmac.c: Formatting (tab expanded).
+	* src/autofit/afindic.c: Ditto.
+	* src/base/ftcid.c: Ditto.
+	* src/base/ftmac.c: Ditto.
+
 2007-12-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/smooth/ftgrays.c (gray_raster_render): Check `outline'

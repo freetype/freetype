@@ -76,7 +76,7 @@
 #endif
 #include <CoreServices/CoreServices.h>
 #include <ApplicationServices/ApplicationServices.h>
-#include <sys/syslimits.h>      /* PATH_MAX */
+#include <sys/syslimits.h> /* PATH_MAX */
 #else
 #include <Resources.h>
 #include <Fonts.h>
@@ -87,7 +87,7 @@
 #endif
 
 #ifndef PATH_MAX
-#define PATH_MAX  1024	/* same with Mac OS X's syslimits.h */
+#define PATH_MAX 1024 /* same with Mac OS X's syslimits.h */
 #endif
 
 #if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
