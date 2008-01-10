@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1217,10 +1217,24 @@
       offset = tt_face_get_location( face, glyph_index,
                                      (FT_UInt*)&loader->byte_len );
 
-    if ( loader->byte_len == 0 )
+    if ( loader->byte_len > 0 )
     {
-      /* as described by Frederic Loyer, these are spaces or */
-      /* the unknown glyph.                                  */
+      error = face->access_glyph_frame( loader, glyph_index,
+                                        loader->glyf_offset + offset,
+                                        loader->byte_len );
+      if ( error )
+        goto Exit;
+
+      opened_frame = 1;
+
+      /* read first glyph header */
+      error = face->read_glyph_header( loader );
+      if ( error )
+        goto Exit;
+    }
+
+    if ( loader->byte_len == 0 || loader->n_contours == 0 )
+    {
       loader->bbox.xMin = 0;
       loader->bbox.xMax = 0;
       loader->bbox.yMin = 0;
@@ -1263,19 +1277,6 @@
       goto Exit;
     }
 
-    error = face->access_glyph_frame( loader, glyph_index,
-                                      loader->glyf_offset + offset,
-                                      loader->byte_len );
-    if ( error )
-      goto Exit;
-
-    opened_frame = 1;
-
-    /* read first glyph header */
-    error = face->read_glyph_header( loader );
-    if ( error )
-      goto Exit;
-
     TT_LOADER_SET_PP( loader );
 
     /***********************************************************************/
@@ -1284,7 +1285,7 @@
 
     /* if it is a simple glyph, load it */
 
-    if ( loader->n_contours >= 0 )
+    if ( loader->n_contours > 0 )
     {
       error = face->read_simple_glyph( loader );
       if ( error )

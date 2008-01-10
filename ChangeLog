@@ -1,3 +1,10 @@
+2008-01-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Handle the case
+	where the number of contours in a simple glyph is zero (and which
+	does contain an entry in the `glyf' table).  This fixes Savannah bug
+	#21990.
+
 2008-01-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Formatting suggested by Sean McBride.
