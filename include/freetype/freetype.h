@@ -799,6 +799,8 @@ FT_BEGIN_HEADER
   /*                           provide localized and Unicode versions of   */
   /*                           this string.  Applications should use the   */
   /*                           format specific interface to access them.   */
+  /*                           Can be NULL (e.g., in fonts embedded in a   */
+  /*                           PDF file).                                  */
   /*                                                                       */
   /*    style_name          :: The face's style name.  This is an ASCII    */
   /*                           string, usually in English, which describes */
