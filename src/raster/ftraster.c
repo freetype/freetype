@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2005, 2007 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2005, 2007, 2008 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -144,9 +144,7 @@
 
   /* undefine FT_RASTER_OPTION_ANTI_ALIASING if you do not want to support */
   /* 5-levels anti-aliasing                                                */
-#ifdef FT_CONFIG_OPTION_5_GRAY_LEVELS
-#define FT_RASTER_OPTION_ANTI_ALIASING
-#endif
+#undef FT_RASTER_OPTION_ANTI_ALIASING
 
   /* The size of the two-lines intermediate bitmap used */
   /* for anti-aliasing, in bytes.                       */
@@ -3176,8 +3174,6 @@ static const char  count_table[256] =
   static void
   ft_black_init( PRaster  raster )
   {
-    FT_UNUSED( raster );
-
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
     FT_UInt  n;
 
@@ -3188,6 +3184,8 @@ static const char  count_table[256] =
 
     raster->gray_width = RASTER_GRAY_LINES / 2;
 
+#else
+    FT_UNUSED( raster );
 #endif
   }
 
