@@ -458,11 +458,12 @@ FT_BEGIN_HEADER
 #define FT_CURVE_TAG_TOUCH_BOTH  ( FT_CURVE_TAG_TOUCH_X | \
                                    FT_CURVE_TAG_TOUCH_Y )
 
-#define  FT_Curve_Tag_On       FT_CURVE_TAG_ON
-#define  FT_Curve_Tag_Conic    FT_CURVE_TAG_CONIC
-#define  FT_Curve_Tag_Cubic    FT_CURVE_TAG_CUBIC
-#define  FT_Curve_Tag_Touch_X  FT_CURVE_TAG_TOUCH_X
-#define  FT_Curve_Tag_Touch_Y  FT_CURVE_TAG_TOUCH_Y
+#define FT_Curve_Tag_On       FT_CURVE_TAG_ON
+#define FT_Curve_Tag_Conic    FT_CURVE_TAG_CONIC
+#define FT_Curve_Tag_Cubic    FT_CURVE_TAG_CUBIC
+#define FT_Curve_Tag_Touch_X  FT_CURVE_TAG_TOUCH_X
+#define FT_Curve_Tag_Touch_Y  FT_CURVE_TAG_TOUCH_Y
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -514,7 +515,7 @@ FT_BEGIN_HEADER
   (*FT_Outline_LineToFunc)( const FT_Vector*  to,
                             void*             user );
 
-#define  FT_Outline_LineTo_Func  FT_Outline_LineToFunc
+#define FT_Outline_LineTo_Func  FT_Outline_LineToFunc
 
   /*************************************************************************/
   /*                                                                       */
@@ -545,7 +546,7 @@ FT_BEGIN_HEADER
                              const FT_Vector*  to,
                              void*             user );
 
-#define  FT_Outline_ConicTo_Func  FT_Outline_ConicToFunc
+#define FT_Outline_ConicTo_Func  FT_Outline_ConicToFunc
 
   /*************************************************************************/
   /*                                                                       */
@@ -577,7 +578,7 @@ FT_BEGIN_HEADER
                              const FT_Vector*  to,
                              void*             user );
 
-#define  FT_Outline_CubicTo_Func  FT_Outline_CubicToFunc
+#define FT_Outline_CubicTo_Func  FT_Outline_CubicToFunc
 
 
   /*************************************************************************/
@@ -1073,7 +1074,7 @@ FT_BEGIN_HEADER
   (*FT_Raster_NewFunc)( void*       memory,
                         FT_Raster*  raster );
 
-#define  FT_Raster_New_Func    FT_Raster_NewFunc
+#define FT_Raster_New_Func    FT_Raster_NewFunc
 
 
   /*************************************************************************/
@@ -1090,7 +1091,7 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_Raster_DoneFunc)( FT_Raster  raster );
 
-#define  FT_Raster_Done_Func   FT_Raster_DoneFunc
+#define FT_Raster_Done_Func   FT_Raster_DoneFunc
 
 
   /*************************************************************************/
@@ -1125,7 +1126,7 @@ FT_BEGIN_HEADER
                           unsigned char*  pool_base,
                           unsigned long   pool_size );
 
-#define  FT_Raster_Reset_Func   FT_Raster_ResetFunc
+#define FT_Raster_Reset_Func   FT_Raster_ResetFunc
 
 
   /*************************************************************************/
@@ -1151,7 +1152,7 @@ FT_BEGIN_HEADER
                             unsigned long  mode,
                             void*          args );
 
-#define  FT_Raster_Set_Mode_Func  FT_Raster_SetModeFunc
+#define FT_Raster_Set_Mode_Func  FT_Raster_SetModeFunc
 
 
   /*************************************************************************/
@@ -1192,7 +1193,7 @@ FT_BEGIN_HEADER
   (*FT_Raster_RenderFunc)( FT_Raster                raster,
                            const FT_Raster_Params*  params );
 
-#define  FT_Raster_Render_Func    FT_Raster_RenderFunc
+#define FT_Raster_Render_Func    FT_Raster_RenderFunc
 
 
   /*************************************************************************/
