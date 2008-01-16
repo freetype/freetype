@@ -1,3 +1,8 @@
+2008-01-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/raster/ftraster.c (ft_black_render): Check `outline' before
+	using it.  Reported by Allan Yang.
+
 2008-01-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (FT_CONFIG_OPTION_5_GRAY_LEVELS): Remove.

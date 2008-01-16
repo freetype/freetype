@@ -3321,11 +3321,14 @@ static const char  count_table[256] =
     if ( !raster || !raster->buffer || !raster->buffer_size )
       return Raster_Err_Not_Ini;
 
+    if ( !outline )
+      return Raster_Err_Invalid;
+
     /* return immediately if the outline is empty */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )
       return Raster_Err_None;
 
-    if ( !outline || !outline->contours || !outline->points )
+    if ( !outline->contours || !outline->points )
       return Raster_Err_Invalid;
 
     if ( outline->n_points != outline->contours[outline->n_contours - 1] + 1 )
