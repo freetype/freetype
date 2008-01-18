@@ -1,4 +1,4 @@
-#  Sources (c) 2002, 2003, 2004, 2006, 2007
+#  Sources (c) 2002, 2003, 2004, 2006, 2007, 2008
 #    David Turner <david@freetype.org>
 #
 #
@@ -18,10 +18,8 @@
 # the classes and methods found here only deal with text parsing
 # and basic documentation block extraction
 #
+
 import fileinput, re, sys, os, string
-
-
-
 
 
 
@@ -38,7 +36,7 @@ import fileinput, re, sys, os, string
 ##
 class SourceBlockFormat:
 
-    def __init__( self, id, start, column, end ):
+    def  __init__( self, id, start, column, end ):
         """create a block pattern, used to recognize special documentation blocks"""
 
         self.id     = id
@@ -76,6 +74,7 @@ column = r'''
 
 re_source_block_format1 = SourceBlockFormat( 1, start, column, start )
 
+
 #
 # format 2 documentation comment blocks look like the following:
 #
@@ -107,11 +106,12 @@ end = r'''
 
 re_source_block_format2 = SourceBlockFormat( 2, start, column, end )
 
+
 #
 # the list of supported documentation block formats, we could add new ones
 # relatively easily
 #
-re_source_block_formats = [ re_source_block_format1, re_source_block_format2 ]
+re_source_block_formats = [re_source_block_format1, re_source_block_format2]
 
 
 #
@@ -128,7 +128,7 @@ re_markup_tag2 = re.compile( r'''\s*@(\w*):''' )  # @xxxx: format
 # the list of supported markup tags, we could add new ones relatively
 # easily
 #
-re_markup_tags = [ re_markup_tag1, re_markup_tag2 ]
+re_markup_tags = [re_markup_tag1, re_markup_tag2]
 
 #
 # used to detect a cross-reference, after markup tags have been stripped
@@ -175,6 +175,7 @@ re_source_keywords = re.compile( '''\\b ( typedef   |
                                           \#else    |
                                           \#endif   ) \\b''', re.VERBOSE )
 
+
 ################################################################
 ##
 ##  SOURCE BLOCK CLASS
@@ -199,7 +200,7 @@ re_source_keywords = re.compile( '''\\b ( typedef   |
 ##                     markup tag)
 ##
 class SourceBlock:
-    def __init__( self, processor, filename, lineno, lines ):
+    def  __init__( self, processor, filename, lineno, lines ):
         self.processor = processor
         self.filename  = filename
         self.lineno    = lineno
@@ -218,24 +219,23 @@ class SourceBlock:
         for line0 in self.lines:
             m = self.format.column.match( line0 )
             if m:
-                lines.append( m.group(1) )
+                lines.append( m.group( 1 ) )
 
         # now, look for a markup tag
         for l in lines:
-            l = string.strip(l)
-            if len(l) > 0:
+            l = string.strip( l )
+            if len( l ) > 0:
                 for tag in re_markup_tags:
                     if tag.match( l ):
                         self.content = lines
                 return
 
-    def location( self ):
-        return "(" + self.filename + ":" + repr(self.lineno) + ")"
+    def  location( self ):
+        return "(" + self.filename + ":" + repr( self.lineno ) + ")"
 
 
     # debugging only - not used in normal operations
-    def dump( self ):
-
+    def  dump( self ):
         if self.content:
             print "{{{content start---"
             for l in self.content:
@@ -245,10 +245,11 @@ class SourceBlock:
 
         fmt = ""
         if self.format:
-            fmt = repr(self.format.id) + " "
+            fmt = repr( self.format.id ) + " "
 
         for line in self.lines:
             print line
+
 
 
 ################################################################
@@ -281,7 +282,6 @@ class SourceProcessor:
         self.blocks = []
         self.format = None
 
-
     def  parse_file( self, filename ):
         """parse a C source file, and adds its blocks to the processor's list"""
 
@@ -290,12 +290,11 @@ class SourceProcessor:
         self.filename = filename
 
         fileinput.close()
-        self.format    = None
-        self.lineno    = 0
-        self.lines     = []
+        self.format = None
+        self.lineno = 0
+        self.lines  = []
 
         for line in fileinput.input( filename ):
-
             # strip trailing newlines, important on Windows machines !!
             if  line[-1] == '\012':
                 line = line[0:-1]
@@ -325,9 +324,7 @@ class SourceProcessor:
         # record the last lines
         self.add_block_lines()
 
-
-
-    def process_normal_line( self, line ):
+    def  process_normal_line( self, line ):
         """process a normal line and check if it's the start of a new block"""
         for f in re_source_block_formats:
           if f.start.match( line ):
@@ -337,9 +334,7 @@ class SourceProcessor:
 
         self.lines.append( line )
 
-
-
-    def add_block_lines( self ):
+    def  add_block_lines( self ):
         """add the current accumulated lines, and create a new block"""
         if self.lines != []:
             block = SourceBlock( self, self.filename, self.lineno, self.lines )
@@ -348,9 +343,8 @@ class SourceProcessor:
             self.format = None
             self.lines  = []
 
-
     # debugging only, not used in normal operations
-    def dump( self ):
+    def  dump( self ):
         """print all blocks in a processor"""
         for b in self.blocks:
             b.dump()

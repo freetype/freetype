@@ -48,8 +48,8 @@ re_identifier = re.compile( r'(\w*)' )
 class DocCode:
 
     def  __init__( self, margin, lines ):
-        self.lines  = []
-        self.words  = None
+        self.lines = []
+        self.words = None
 
         # remove margin spaces
         for l in lines:
@@ -220,7 +220,7 @@ class DocField:
 
 # this regular expression is used to detect field definitions
 #
-re_field  = re.compile( r"\s*(\w*|\w(\w|\.)*\w)\s*::" )
+re_field = re.compile( r"\s*(\w*|\w(\w|\.)*\w)\s*::" )
 
 
 
@@ -473,12 +473,12 @@ class DocBlock:
     def  __init__( self, source, follow, processor ):
         processor.reset()
 
-        self.source    = source
-        self.code      = []
-        self.type      = "ERRTYPE"
-        self.name      = "ERRNAME"
-        self.section   = processor.section
-        self.markups   = processor.process_content( source.content )
+        self.source  = source
+        self.code    = []
+        self.type    = "ERRTYPE"
+        self.name    = "ERRNAME"
+        self.section = processor.section
+        self.markups = processor.process_content( source.content )
 
         # compute block type from first markup tag
         try:
