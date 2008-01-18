@@ -295,7 +295,7 @@ class SourceProcessor:
         self.lines  = []
 
         for line in fileinput.input( filename ):
-            # strip trailing newlines, important on Windows machines !!
+            # strip trailing newlines, important on Windows machines!
             if  line[-1] == '\012':
                 line = line[0:-1]
 
