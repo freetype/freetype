@@ -26,7 +26,6 @@ class Formatter:
         # store all blocks in a dictionary
         self.blocks = []
         for section in self.sections:
-            self.add_identifier( section.name, section );
             for block in section.blocks.values():
                 self.add_identifier( block.name, block )
 
