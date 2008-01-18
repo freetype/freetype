@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2545,9 +2545,11 @@ FT_BEGIN_HEADER
   /*      glyph outline in pixels and use the @FT_PIXEL_MODE_LCD_V mode.   */
   /*                                                                       */
   /* <Note>                                                                */
-  /*   The LCD-optimized glyph bitmaps produced by FT_Render_Glyph are     */
-  /*   _not_ _filtered_ to reduce color-fringes.  It is up to the caller   */
-  /*   to perform this pass.                                               */
+  /*   The LCD-optimized glyph bitmaps produced by FT_Render_Glyph can be  */
+  /*   filtered to reduce color-fringes by using @FT_Library_SetLcdFilter  */
+  /*   (not active in the default builds).  It is up to the caller to      */
+  /*   either call @FT_Library_SetLcdFilter (if available) or do the       */
+  /*   filtering itself.                                                   */
   /*                                                                       */
   typedef enum  FT_Render_Mode_
   {

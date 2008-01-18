@@ -1,3 +1,11 @@
+2008-01-18  Sylvain Pasche  <sylvain.pasche@gmail.com>
+
+	* src/base/ftlcdfil.c (_ft_lcd_filter_legacy): Updated comment to
+	mention intra-pixel algorithm.
+
+	* include/freetype/freetype.h (FT_Render_Mode): Mention that
+	FT_Library_SetLcdFilter can be used to reduce fringes.
+
 2008-01-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (ft_black_render): Check `outline' before
@@ -2923,7 +2931,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2006, 2007 by
+Copyright 2006, 2007, 2008 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,
