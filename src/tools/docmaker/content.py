@@ -1,4 +1,4 @@
-#  Content (c) 2002, 2004, 2006, 2007 David Turner <david@freetype.org>
+#  Content (c) 2002, 2004, 2006, 2007, 2008 David Turner <david@freetype.org>
 #
 #  This file contains routines used to parse the content of documentation
 #  comment blocks and build more structured objects out of them.
@@ -34,6 +34,7 @@ re_code_end   = re.compile( r"(\s*)}\s*$" )
 re_identifier = re.compile( r'(\w*)' )
 
 
+
 #############################################################################
 #
 # The DocCode class is used to store source code lines.
@@ -46,7 +47,7 @@ re_identifier = re.compile( r'(\w*)' )
 #
 class DocCode:
 
-    def __init__( self, margin, lines ):
+    def  __init__( self, margin, lines ):
         self.lines  = []
         self.words  = None
 
@@ -56,12 +57,12 @@ class DocCode:
                 l = l[margin:]
             self.lines.append( l )
 
-    def dump( self, prefix = "", width=60 ):
+    def  dump( self, prefix = "", width=60 ):
         lines = self.dump_lines( 0, width )
         for l in lines:
             print prefix + l
 
-    def dump_lines( self, margin=0, width=60 ):
+    def  dump_lines( self, margin=0, width=60 ):
         result = []
         for l in self.lines:
             result.append( " "*margin + l )
@@ -77,32 +78,32 @@ class DocCode:
 #
 class DocPara:
 
-    def __init__( self, lines ):
+    def  __init__( self, lines ):
         self.lines = None
         self.words = []
         for l in lines:
-            l = string.strip(l)
+            l = string.strip( l )
             self.words.extend( string.split( l ) )
 
-    def dump( self, prefix = "", width = 60 ):
+    def  dump( self, prefix = "", width = 60 ):
         lines = self.dump_lines( 0, width )
         for l in lines:
             print prefix + l
 
-    def dump_lines( self, margin=0, width = 60 ):
+    def  dump_lines( self, margin=0, width = 60 ):
         cur    = ""  # current line
         col    = 0   # current width
         result = []
 
         for word in self.words:
-            ln = len(word)
+            ln = len( word )
             if col > 0:
                 ln = ln+1
 
             if col + ln > width:
                 result.append( " "*margin + cur )
                 cur = word
-                col = len(word)
+                col = len( word )
             else:
                 if col > 0:
                     cur = cur + " "
@@ -116,7 +117,6 @@ class DocPara:
 
 
 
-
 #############################################################################
 #
 #  The DocField class is used to store a list containing either DocPara or
@@ -125,8 +125,7 @@ class DocPara:
 #
 class DocField:
 
-    def __init__( self, name, lines ):
-
+    def  __init__( self, name, lines ):
         self.name  = name  # can be None for normal paragraphs/sources
         self.items = []     # list of items
 
@@ -148,7 +147,7 @@ class DocField:
             if mode == mode_code:
 
                 m = re_code_end.match( l )
-                if m and len(m.group(1)) <= margin:
+                if m and len( m.group( 1 ) ) <= margin:
                     # that's it, we finised the code sequence
                     code = DocCode( 0, cur_lines )
                     self.items.append( code )
@@ -169,7 +168,7 @@ class DocField:
                         cur_lines = []
 
                     # switch to code extraction mode
-                    margin = len(m.group(1))
+                    margin = len( m.group( 1 ) )
                     mode   = mode_code
 
                 else:
@@ -193,7 +192,7 @@ class DocField:
             para = DocPara( cur_lines )
             self.items.append( para )
 
-    def dump( self, prefix = "" ):
+    def  dump( self, prefix = "" ):
         if self.field:
             print prefix + self.field + " ::"
             prefix = prefix + "----"
@@ -205,7 +204,7 @@ class DocField:
             p.dump( prefix )
             first = 0
 
-    def dump_lines( self, margin=0, width=60 ):
+    def  dump_lines( self, margin=0, width=60 ):
         result = []
         nl     = None
         for p in self.items:
@@ -217,6 +216,8 @@ class DocField:
 
         return result
 
+
+
 # this regular expression is used to detect field definitions
 #
 re_field  = re.compile( r"\s*(\w*|\w(\w|\.)*\w)\s*::" )
@@ -225,9 +226,9 @@ re_field  = re.compile( r"\s*(\w*|\w(\w|\.)*\w)\s*::" )
 
 class DocMarkup:
 
-    def __init__( self, tag, lines ):
-        self.tag       = string.lower(tag)
-        self.fields    = []
+    def  __init__( self, tag, lines ):
+        self.tag    = string.lower( tag )
+        self.fields = []
 
         cur_lines = []
         field     = None
@@ -245,10 +246,10 @@ class DocMarkup:
                     cur_lines = []
                     field     = None
 
-                field     = m.group(1)   # record field name
-                ln        = len(m.group(0))
+                field     = m.group( 1 )   # record field name
+                ln        = len( m.group( 0 ) )
                 l         = " "*ln + l[ln:]
-                cur_lines = [ l ]
+                cur_lines = [l]
             else:
                 cur_lines.append( l )
 
@@ -256,14 +257,14 @@ class DocMarkup:
             f = DocField( field, cur_lines )
             self.fields.append( f )
 
-    def get_name( self ):
+    def  get_name( self ):
         try:
             return self.fields[0].items[0].words[0]
 
         except:
             return None
 
-    def get_start( self ):
+    def  get_start( self ):
         try:
             result = ""
             for word in self.fields[0].items[0].words:
@@ -273,7 +274,7 @@ class DocMarkup:
         except:
             return "ERROR"
 
-    def dump( self, margin ):
+    def  dump( self, margin ):
         print " "*margin + "<" + self.tag + ">"
         for f in self.fields:
             f.dump( "  " )
@@ -281,26 +282,25 @@ class DocMarkup:
 
 
 
-
 class DocChapter:
 
-    def __init__( self, block ):
+    def  __init__( self, block ):
         self.block    = block
         self.sections = []
         if block:
-            self.name     = block.name
-            self.title    = block.get_markup_words( "title" )
-            self.order    = block.get_markup_words( "sections" )
+            self.name  = block.name
+            self.title = block.get_markup_words( "title" )
+            self.order = block.get_markup_words( "sections" )
         else:
-            self.name     = "Other"
-            self.title    = string.split( "Miscellaneous" )
-            self.order    = []
+            self.name  = "Other"
+            self.title = string.split( "Miscellaneous" )
+            self.order = []
 
 
 
 class DocSection:
 
-    def __init__( self, name = "Other" ):
+    def  __init__( self, name = "Other" ):
         self.name        = name
         self.blocks      = {}
         self.block_names = []  # ordered block names in section
@@ -311,14 +311,14 @@ class DocSection:
         self.title       = "ERROR"
         self.chapter     = None
 
-    def add_def( self, block ):
+    def  add_def( self, block ):
         self.defs.append( block )
 
-    def add_block( self, block ):
+    def  add_block( self, block ):
         self.block_names.append( block.name )
-        self.blocks[ block.name ] = block
+        self.blocks[block.name] = block
 
-    def process( self ):
+    def  process( self ):
         # lookup one block that contains a valid section description
         for block in self.defs:
             title = block.get_markup_text( "title" )
@@ -329,14 +329,14 @@ class DocSection:
                 self.order       = block.get_markup_words( "order" )
                 return
 
-    def reorder( self ):
-
+    def  reorder( self ):
         self.block_names = sort_order_list( self.block_names, self.order )
+
 
 
 class ContentProcessor:
 
-    def __init__( self ):
+    def  __init__( self ):
         """initialize a block content processor"""
         self.reset()
 
@@ -345,33 +345,33 @@ class ContentProcessor:
 
         self.chapters = []        # list of chapters
 
-    def set_section( self, section_name ):
+    def  set_section( self, section_name ):
         """set current section during parsing"""
         if not self.sections.has_key( section_name ):
             section = DocSection( section_name )
-            self.sections[ section_name ] = section
-            self.section                  = section
+            self.sections[section_name] = section
+            self.section                = section
         else:
-            self.section = self.sections[ section_name ]
+            self.section = self.sections[section_name]
 
-    def add_chapter( self, block ):
+    def  add_chapter( self, block ):
         chapter = DocChapter( block )
         self.chapters.append( chapter )
 
 
-    def reset( self ):
+    def  reset( self ):
         """reset the content processor for a new block"""
         self.markups      = []
         self.markup       = None
         self.markup_lines = []
 
-    def add_markup( self ):
+    def  add_markup( self ):
         """add a new markup section"""
         if self.markup and self.markup_lines:
 
             # get rid of last line of markup if it's empty
             marks = self.markup_lines
-            if len(marks) > 0 and not string.strip(marks[-1]):
+            if len( marks ) > 0 and not string.strip( marks[-1] ):
                 self.markup_lines = marks[:-1]
 
             m = DocMarkup( self.markup, self.markup_lines )
@@ -381,8 +381,7 @@ class ContentProcessor:
             self.markup       = None
             self.markup_lines = []
 
-
-    def process_content( self, content ):
+    def  process_content( self, content ):
         """process a block content and return a list of DocMarkup objects
            corresponding to it"""
         markup       = None
@@ -394,8 +393,8 @@ class ContentProcessor:
             for t in re_markup_tags:
                 m = t.match( line )
                 if m:
-                    found  = string.lower(m.group(1))
-                    prefix = len(m.group(0))
+                    found  = string.lower( m.group( 1 ) )
+                    prefix = len( m.group( 0 ) )
                     line   = " "*prefix + line[prefix:]   # remove markup from line
                     break
 
@@ -404,7 +403,7 @@ class ContentProcessor:
                 first = 0
                 self.add_markup()  # add current markup content
                 self.markup = found
-                if len(string.strip( line )) > 0:
+                if len( string.strip( line ) ) > 0:
                     self.markup_lines.append( line )
             elif first == 0:
                 self.markup_lines.append( line )
@@ -413,11 +412,10 @@ class ContentProcessor:
 
         return self.markups
 
-
     def  parse_sources( self, source_processor ):
         blocks = source_processor.blocks
-        count  = len(blocks)
-        for n in range(count):
+        count  = len( blocks )
+        for n in range( count ):
 
             source = blocks[n]
             if source.content:
@@ -432,9 +430,7 @@ class ContentProcessor:
 
                 doc_block = DocBlock( source, follow, self )
 
-
     def  finish( self ):
-
         # process all sections to extract their abstract, description
         # and ordered list of items
         #
@@ -445,8 +441,8 @@ class ContentProcessor:
         # listed there
         for chap in self.chapters:
             for sec in chap.order:
-                if self.sections.has_key(sec):
-                    section = self.sections[ sec ]
+                if self.sections.has_key( sec ):
+                    section = self.sections[sec]
                     section.chapter = chap
                     section.reorder()
                     chap.sections.append( section )
@@ -460,7 +456,7 @@ class ContentProcessor:
         others = []
         for sec in self.sections.values():
             if not sec.chapter:
-                others.append(sec)
+                others.append( sec )
 
         # create a new special chapter for all remaining sections
         # when necessary
@@ -474,8 +470,7 @@ class ContentProcessor:
 
 class DocBlock:
 
-    def __init__( self, source, follow, processor ):
-
+    def  __init__( self, source, follow, processor ):
         processor.reset()
 
         self.source    = source
@@ -491,7 +486,6 @@ class DocBlock:
         except:
             pass
 
-
         # compute block name from first markup paragraph
         try:
             markup = self.markups[0]
@@ -499,7 +493,7 @@ class DocBlock:
             name   = para.words[0]
             m = re_identifier.match( name )
             if m:
-                name = m.group(1)
+                name = m.group( 1 )
             self.name = name
         except:
             pass
@@ -542,21 +536,17 @@ class DocBlock:
 
         self.code = source
 
-
-    def location( self ):
+    def  location( self ):
         return self.source.location()
 
-
-
-    def get_markup( self, tag_name ):
+    def  get_markup( self, tag_name ):
         """return the DocMarkup corresponding to a given tag in a block"""
         for m in self.markups:
-            if m.tag == string.lower(tag_name):
+            if m.tag == string.lower( tag_name ):
                 return m
         return None
 
-
-    def get_markup_name( self, tag_name ):
+    def  get_markup_name( self, tag_name ):
         """return the name of a given primary markup in a block"""
         try:
             m = self.get_markup( tag_name )
@@ -564,21 +554,18 @@ class DocBlock:
         except:
             return None
 
-
-    def get_markup_words( self, tag_name ):
+    def  get_markup_words( self, tag_name ):
         try:
             m = self.get_markup( tag_name )
             return m.fields[0].items[0].words
         except:
             return []
 
-
-    def get_markup_text( self, tag_name ):
+    def  get_markup_text( self, tag_name ):
         result = self.get_markup_words( tag_name )
         return string.join( result )
 
-
-    def get_markup_items( self, tag_name ):
+    def  get_markup_items( self, tag_name ):
         try:
             m = self.get_markup( tag_name )
             return m.fields[0].items
