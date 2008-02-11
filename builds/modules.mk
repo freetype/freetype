@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2003, 2006 by
+# Copyright 1996-2000, 2003, 2006, 2008 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -30,8 +30,8 @@ $(FTMODULE_H): $(MODULES_CFG)
 
 ifneq ($(findstring $(PLATFORM),dos win32 win16 os2),)
   OPEN_MODULE   := @echo$(space)
-  CLOSE_MODULE  :=  >> $(subst /,\,$(FTMODULE_H))
-  REMOVE_MODULE := @-$(DELETE) $(subst /,\,$(FTMODULE_H))
+  CLOSE_MODULE  :=  >> $(subst /,$(SEP),$(FTMODULE_H))
+  REMOVE_MODULE := @-$(DELETE) $(subst /,$(SEP),$(FTMODULE_H))
 else
   OPEN_MODULE   := @echo "
   CLOSE_MODULE  := " >> $(FTMODULE_H)

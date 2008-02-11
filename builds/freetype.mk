@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2002, 2003, 2004, 2005, 2006 by
+# Copyright 1996-2000, 2001, 2002, 2003, 2004, 2005, 2006, 2008 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -327,10 +327,10 @@ distclean_project_std: clean_project_std
 # working correctly on Win9x.
 #
 clean_project_dos:
-	-$(DELETE) $(subst /,\,$(OBJ_DIR)/*.$O $(CLEAN) $(NO_OUTPUT))
+	-$(DELETE) $(subst /,$(SEP),$(OBJ_DIR)/*.$O $(CLEAN) $(NO_OUTPUT))
 
 distclean_project_dos: clean_project_dos
-	-$(DELETE) $(subst /,\,$(PROJECT_LIBRARY) $(DISTCLEAN) $(NO_OUTPUT))
+	-$(DELETE) $(subst /,$(SEP),$(PROJECT_LIBRARY) $(DISTCLEAN) $(NO_OUTPUT))
 
 
 .PHONY: remove_config_mk remove_ftmodule_h

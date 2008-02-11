@@ -1,3 +1,10 @@
+2008-02-11  Werner Lemberg  <wl@gnu.org>
+
+	* builds/modules.mk (CLOSE_MODULE, REMOVE_MODULE), builds/detect.mk
+	(dos_setup), builds/freetype.mk (clean_project_dos,
+	distclean_project_dos): Don't use \ but $(SEP).  Reported by Duncan
+	Murdoch.
+
 2008-01-18  Sylvain Pasche  <sylvain.pasche@gmail.com>
 
 	* src/base/ftlcdfil.c (_ft_lcd_filter_legacy): Updated comment to
