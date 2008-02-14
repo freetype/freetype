@@ -32,7 +32,7 @@
 #include "ftutil.c"
 
 #if defined( __APPLE__ ) && !defined ( DARWIN_NO_CARBON )
-#include <ftmac.c>
+#include "ftmac.c"
 #endif
 
 /* END */

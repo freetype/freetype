@@ -484,7 +484,7 @@ case "$CFLAGS" in
     AC_MSG_WARN([
 *** WARNING
     FSSpec/FSRef/QuickDraw/ATS options are explicitly given,
-    thus using legacy builds/mac/ftmac.c instead of src/base/ftmac.c.
+    thus it is recommended to replace src/base/ftmac.c by builds/mac/ftmac.c.
     ])
     CFLAGS="$CFLAGS "'-I$(TOP_DIR)/builds/mac/'
     ;;

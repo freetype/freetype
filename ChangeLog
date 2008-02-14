@@ -1,3 +1,13 @@
+2008-02-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftbase.c: <ftmac.c> is replaced by "ftmac.c" as other
+	inclusion styles. Now it always includes src/base/ftmac.c,
+	builds/mac/ftmac.c is never included in any configuration.
+	* builds/unix/configure.raw: Prints warning when configure is
+	executed with options to specify Carbon functionalities explicitly.
+	* docs/INSTALL.MAC: Note the legacy builds/mac/ftmac.c is not 
+	included automatically and manual replacement is required.
+
 2008-02-11  Werner Lemberg  <wl@gnu.org>
 
 	* builds/modules.mk (CLOSE_MODULE, REMOVE_MODULE), builds/detect.mk
