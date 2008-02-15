@@ -1207,7 +1207,7 @@ typedef short   ResourceIndex;
 
 
     sfnt = GetResource( FT_MAKE_TAG( 's', 'f', 'n', 't' ), sfnt_id );
-    if ( ResError() )
+    if ( sfnt == NULL )
       return FT_Err_Invalid_Handle;
 
     sfnt_size = (FT_ULong)GetHandleSize( sfnt );

@@ -1,3 +1,15 @@
+2008-02-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c (FT_New_Face_From_SFNT): Check the sfnt resource
+	handle by its value instead of ResError(), fix provided by Deron
+	Kazmaier. According to Resource Manager Reference, GetResource(),
+	Get1Resource(), GetNamedResource(), Get1NamedResource()
+	and RGetResource() set noErr but returns NULL handle when they can
+	not find requested resource. These functions never return undefined
+	values, so it is sufficient to check if the handle is not NULL.
+
+	* builds/mac/ftmac.c (FT_New_Face_From_SFNT): Ditto.
+
 2008-02-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftbase.c: <ftmac.c> is replaced by "ftmac.c" as other
