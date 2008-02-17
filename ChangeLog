@@ -1,3 +1,8 @@
+2008-02-17  Jonathan Blow  <jon@number-none.com>
+
+	* src/autofit/afloader.c (af_loader_load_g, af_loader_load_glyph):
+	Check for valid callback pointers.
+
 2008-02-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (FT_New_Face_From_SFNT): Check the sfnt resource
