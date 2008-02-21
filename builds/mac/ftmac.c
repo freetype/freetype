@@ -727,6 +727,10 @@ typedef short   ResourceIndex;
     assoc      = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
     base_assoc = assoc;
 
+    /* the maximum faces in a FOND is 48, size of StyleTable.indexes[] */
+    if ( 47 < face_index )
+      return;
+
     /* Let's do a little range checking before we get too excited here */
     if ( face_index < count_faces_sfnt( fond_data ) )
     {
@@ -778,9 +782,10 @@ typedef short   ResourceIndex;
           ft_memcpy(ps_name, names[0] + 1, ps_name_len);
           ps_name[ps_name_len] = 0;
         }
-        if ( style->indexes[0] > 1 )
+        if ( style->indexes[face_index] > 1 &&
+             style->indexes[face_index] <= FT_MIN( string_count, 64 ) )
         {
-          unsigned char*  suffixes = names[style->indexes[0] - 1];
+          unsigned char*  suffixes = names[style->indexes[face_index] - 1];
 
 
           for ( i = 1; i <= suffixes[0]; i++ )
