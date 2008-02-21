@@ -1,11 +1,11 @@
 2008-02-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.raw: Split compiler option to link
-	Carbon frameworks to one option for CoreServices framework
-	and another option for ApplicationServices framework.
-	The splitted options can be managed by GNU libtool to avoid
-	unrequired duplication when freetype is linked with other
-	applications. Suggested by Daniel Macks, Savannah bug #22366.
+	* builds/unix/configure.raw: Split compiler option to link Carbon
+	frameworks to one option for CoreServices framework and another
+	option for ApplicationServices framework.  The split options can be
+	managed by GNU libtool to avoid unrequired duplication when FreeType
+	is linked with other applications.  Suggested by Daniel Macks,
+	Savannah bug #22366.
 
 2008-02-18  Victor Stinner  <victor.stinner@haypocalc.com>
 
