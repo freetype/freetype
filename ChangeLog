@@ -1,11 +1,10 @@
 2008-02-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftmac.c: Fix a bug of PostScript font name synthesis
-	in parse_fond(). For any face of a specified FOND, always the
-	name for the first face was used. Except of a FOND that refers
-	multiple Type1 font files, wrong synthesized font names are not
-	used at all, so this is invisible bug. A few limit checks are
-	added to parse_fond().
+	* src/base/ftmac.c (parse_fond): Fix a bug of PostScript font name
+	synthesis.  For any face of a specified FOND, always the name for
+	the first face was used.  Except of a FOND that refers multiple
+	Type1 font files, wrong synthesized font names are not used at all,
+	so this is an invisible bug.  A few limit checks are added too.
 
 	* builds/mac/ftmac.c: Ditto.
 
