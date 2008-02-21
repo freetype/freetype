@@ -180,7 +180,7 @@ AC_ARG_WITH([old-mac-fonts],
 if test x$with_old_mac_fonts = xyes; then
   orig_LDFLAGS="${LDFLAGS}"
   AC_MSG_CHECKING([CoreServices & ApplicationServices of Mac OS X])
-  FT2_EXTRA_LIBS="-Wl,-framework,CoreServices,-framework,ApplicationServices"
+  FT2_EXTRA_LIBS="-Wl,-framework,CoreServices -Wl,-framework,ApplicationServices"
   LDFLAGS="$LDFLAGS $FT2_EXTRA_LIBS"
   AC_TRY_LINK([
 
