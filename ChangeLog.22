@@ -2808,7 +2808,7 @@
 	  . loader->pp3.y and loader->pp4.y are in 26.6 format, not in font
 	    units.
 	  . As we use the glyph's cbox to calculate the top bearing now
-	    there iss no need to adjust `top'.
+	    there is no need to adjust `top'.
 
 2005-06-15  Werner Lemberg  <wl@gnu.org>
 
@@ -2821,7 +2821,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2005, 2006, 2007 by
+Copyright 2005, 2006, 2007, 2008 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,

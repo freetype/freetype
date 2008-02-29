@@ -1,3 +1,9 @@
+2008-02-29  Wolf
+
+	Add build support for symbian platform.  From Savannah bug #22440.
+
+	* builds/symbian/*: New files.
+
 2008-02-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (parse_fond): Fix a bug of PostScript font name
