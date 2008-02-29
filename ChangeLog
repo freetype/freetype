@@ -1,3 +1,7 @@
+2008-02-29  Wermer Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2008-02-29  Wolf
 
 	Add build support for symbian platform.  From Savannah bug #22440.

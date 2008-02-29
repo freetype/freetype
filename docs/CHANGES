@@ -10,6 +10,8 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
       it's always possible to manually select an Apple Unicode cmap if
       desired.
 
+    - Improved Mac support.
+
 
   II. IMPORTANT CHANGES
 
@@ -23,6 +25,12 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
 
     - An API for cmap 14 support  (for Unicode Variant Selectors, UVS)
       has been contributed by George Williams.
+
+
+  III. MISCELANEOUS
+
+    - Build support for symbian has been contributed.
+
 
 ======================================================================
 
@@ -3096,7 +3104,7 @@ Extensions support:
 
 ------------------------------------------------------------------------
 
-Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007 by
+Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file  is  part  of the  FreeType  project, and may  only be  used,
