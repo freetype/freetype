@@ -2546,7 +2546,7 @@
     {
       FT_UInt32  mid = ( min + max ) >> 1;
       FT_Byte*   p   = base + 5 * mid;
-      FT_UInt32  uni = TT_PEEK_UINT24( p );
+      FT_UInt32  uni = TT_NEXT_UINT24( p );
 
 
       if ( char_code < uni )
@@ -2579,7 +2579,7 @@
     {
       FT_UInt32  mid    = ( min + max ) >> 1;
       FT_Byte*   p      = base + 11 * mid;
-      FT_ULong   varSel = TT_PEEK_UINT24( p );
+      FT_ULong   varSel = TT_NEXT_UINT24( p );
 
 
       if ( variantCode < varSel )
@@ -2913,7 +2913,7 @@
           ++ni;
         }
       }
-      else if ( di < numRanges )
+      else if ( di <= numRanges )
       {
         /* If we get here then we have run out of all non-default     */
         /* mappings.  We have read one default range which we haven't */

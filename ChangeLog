@@ -1,3 +1,9 @@
+2008-03-03  Masatoshi Kimura  <VYV03354@nifty.ne.jp>
+
+	* src/sfnt/ttcmap.c (tt_cmap14_char_map_nondef_binary,
+	tt_cmap14_find_variant): Return correct value.
+	(tt_cmap14_variant_chars): Fix check for `di'.
+
 2008-02-29  Wermer Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
