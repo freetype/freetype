@@ -1,3 +1,8 @@
+2008-03-13  Derek Clegg  <dclegg@apple.com>
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Fix named style loop. 
+	Patch from Savannah bug #22541.
+
 2008-03-03  Masatoshi Kimura  <VYV03354@nifty.ne.jp>
 
 	* src/sfnt/ttcmap.c (tt_cmap14_char_map_nondef_binary,

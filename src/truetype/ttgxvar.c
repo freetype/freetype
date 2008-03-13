@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType GX Font Variation loader                                    */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006, 2007 by                                    */
+/*  Copyright 2004, 2005, 2006, 2007, 2008 by                              */
 /*  David Turner, Robert Wilhelm, Werner Lemberg, and George Williams.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -754,7 +754,7 @@
       }
 
       ns = mmvar->namedstyle;
-      for ( i = 0; i < fvar_head.instanceCount; ++i )
+      for ( i = 0; i < fvar_head.instanceCount; ++i, ++ns )
       {
         if ( FT_FRAME_ENTER( 4L + 4L * fvar_head.axisCount ) )
           goto Exit;
