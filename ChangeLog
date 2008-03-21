@@ -1,3 +1,8 @@
+2008-03-21  Laurence Darby  <ldarby>
+
+	* src/type1/t1objs.c (T1_Face_Init): Use `/Weight'.  Patch from
+	Savannah bug #22675.
+
 2008-03-13  Derek Clegg  <dclegg@apple.com>
 
 	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Fix named style loop. 
