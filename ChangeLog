@@ -1,3 +1,13 @@
+2008-04-01  Werner Lemberg  <wl@gnu.org>
+
+	Fix compilation with g++ 4.1 (with both `single' and `multi'
+	targets).
+
+	* src/base/ftobjs.c (FT_Open_Face): Don't define a variable in block
+	which is crossed by a `goto'.
+
+	* src/otvalid/otvalid.h (otv_MATH_validate): Add prototype.
+
 2008-03-31  Werner Lemberg  <wl@gnu.org>
 
 	Fix support for subsetted CID-keyed CFFs.

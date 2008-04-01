@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1703,6 +1703,8 @@
     FT_Face      face = 0;
     FT_ListNode  node = 0;
     FT_Bool      external_stream;
+    FT_Module*   cur;
+    FT_Module*   limit;
 
 
     /* test for valid `library' delayed to */
@@ -1754,8 +1756,8 @@
     else
     {
       /* check each font driver for an appropriate format */
-      FT_Module*  cur   = library->modules;
-      FT_Module*  limit = cur + library->num_modules;
+      cur   = library->modules;
+      limit = cur + library->num_modules;
 
 
       for ( ; cur < limit; cur++ )
