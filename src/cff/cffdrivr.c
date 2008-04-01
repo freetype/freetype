@@ -38,6 +38,7 @@
 #include FT_SERVICE_XFREE86_NAME_H
 #include FT_SERVICE_GLYPH_DICT_H
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -165,10 +166,10 @@
     if ( !size )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
+    /* reset the size object if necessary */
     if ( load_flags & FT_LOAD_NO_SCALE )
       size = NULL;
 
-    /* reset the size object if necessary */
     if ( size )
     {
       /* these two objects must have the same parent */
@@ -186,10 +187,10 @@
   }
 
 
- /*
-  *  GLYPH DICT SERVICE
-  *
-  */
+  /*
+   *  GLYPH DICT SERVICE
+   *
+   */
 
   static FT_Error
   cff_get_glyph_name( CFF_Face    face,
@@ -286,10 +287,10 @@
   };
 
 
- /*
-  *  POSTSCRIPT INFO SERVICE
-  *
-  */
+  /*
+   *  POSTSCRIPT INFO SERVICE
+   *
+   */
 
   static FT_Int
   cff_ps_has_glyph_names( FT_Face  face )
@@ -356,9 +357,9 @@
 
 
   /*
-  *  POSTSCRIPT NAME SERVICE
-  *
-  */
+   *  POSTSCRIPT NAME SERVICE
+   *
+   */
 
   static const char*
   cff_get_ps_name( CFF_Face  face )
@@ -422,7 +423,7 @@
 
 
   /*
-   * CID INFO SERVICE
+   *  CID INFO SERVICE
    *
    */
   static FT_Error
@@ -467,11 +468,10 @@
 
       if ( supplement )
         *supplement = dict->cid_supplement;
-
     }
       
-    Fail:
-      return error;
+  Fail:
+    return error;
   }
 
 

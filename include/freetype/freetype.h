@@ -1021,6 +1021,15 @@ FT_BEGIN_HEADER
   /*      the SFNT `gasp' table only if the native TrueType hinting engine */
   /*      (with the bytecode interpreter) is available and active.         */
   /*                                                                       */
+  /*    FT_FACE_FLAG_CID_KEYED ::                                          */
+  /*      Set if the font is CID-keyed.  In that case, the font is not     */
+  /*      accessed by glyph indices but by CID values.  For subsetted      */
+  /*      CID-keyed fonts this has the consequence that not all index      */
+  /*      values are a valid argument to FT_Load_Glyph.  Only the CID      */
+  /*      values for which corresponding glyphs in the subsetted font      */
+  /*      exist make FT_Load_Glyph return successfully; in all other cases */
+  /*      you get an `FT_Err_Invalid_Argument' error.                      */
+  /*                                                                       */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
 #define FT_FACE_FLAG_FIXED_WIDTH       ( 1L <<  2 )
@@ -1033,6 +1042,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_GLYPH_NAMES       ( 1L <<  9 )
 #define FT_FACE_FLAG_EXTERNAL_STREAM   ( 1L << 10 )
 #define FT_FACE_FLAG_HINTER            ( 1L << 11 )
+#define FT_FACE_FLAG_CID_KEYED         ( 1L << 12 )
 
   /* */
 
@@ -1187,6 +1197,24 @@ FT_BEGIN_HEADER
    */
 #define FT_HAS_MULTIPLE_MASTERS( face ) \
           ( face->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS )
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_IS_CID_KEYED( face )
+   *
+   * @description:
+   *   A macro that returns true whenever a face object contains a CID-keyed
+   *   font.  See the discussion of @FT_FACE_FLAG_CID_KEYED for more
+   *   details.
+   *
+   *   If this macro is true, all functions defined in @FT_CID_H are
+   *   available.
+   *
+   */
+#define FT_IS_CID_KEYED( face ) \
+          ( face->face_flags & FT_FACE_FLAG_CID_KEYED )
 
 
   /*************************************************************************/
@@ -2193,6 +2221,11 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    The loaded glyph may be transformed.  See @FT_Set_Transform for    */
   /*    the details.                                                       */
+  /*                                                                       */
+  /*    For subsetted CID-keyed fonts, `FT_Err_Invalid_Argument' is        */
+  /*    returned for invalid CID values (this is, for CID values which     */
+  /*    don't have a corresponding glyph in the font).  See the discussion */
+  /*    of the @FT_FACE_FLAG_CID_KEYED flag for more details.              */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Load_Glyph( FT_Face   face,

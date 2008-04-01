@@ -1,3 +1,32 @@
+2008-03-31  Werner Lemberg  <wl@gnu.org>
+
+	Fix support for subsetted CID-keyed CFFs.
+
+	* include/freetype/freetype.h (FT_FACE_FLAG_CID_KEYED,
+	FT_IS_CID_KEYED): New macros.
+
+	* src/cff/cffobjs.c (cff_face_init): Set number of glyphs to the
+	maximum CID value in CID-keyed CFFs.
+	Handle FT_FACE_FLAG_CID_KEYED flag.
+
+	* docs/CHANGES: Document it.
+
+
+	Fix CFF font matrix calculation and improve precision.
+
+	* src/cff/cffparse.c (cff_parse_real): Increase precision if integer
+	part is zero.
+	(cff_parse_font_matrix): Simplify computation of `units_per_em';
+	this prevents overflow also.
+
+
+	Support FT_Get_CID_Registry_Ordering_Supplement for PS CID fonts.
+
+	* src/cid/cidriver.c: Include FT_SERVICE_CID_H.
+	(cid_get_ros): New function.
+	(cid_service_cid_info): New service structure.
+	(cid_services): Register it.
+
 2008-03-23  Werner Lemberg  <wl@gnu.org>
 
 	Adjustments for Visual C++ 8.0, as reported by Rainer Deyke.

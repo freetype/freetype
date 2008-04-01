@@ -12,6 +12,8 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
 
     - Improved Mac support.
 
+    - Subsetted CID-keyed CFFs are now supported correctly.
+
 
   II. IMPORTANT CHANGES
 
@@ -25,6 +27,10 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
 
     - An API for cmap 14 support  (for Unicode Variant Selectors, UVS)
       has been contributed by George Williams.
+
+    - A new face flag FT_FACE_FLAG_CID_KEYED has been added,  together
+      with a macro FT_IS_CID_KEYED which evaluates to 1 if the font is
+      CID-keyed.
 
 
   III. MISCELLANEOUS

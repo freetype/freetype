@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CFF token stream parser (body)                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2007 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2007, 2008 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -202,10 +202,20 @@
         if ( nib >= 10 )
           break;
 
-        if ( divider < 10000000L )
+        /* Increase precision if the integer part is zero */
+        /* and we have to scale the real number.          */
+        if ( !result && power_ten )
         {
-          num      = num * 10 + nib;
-          divider *= 10;
+          power_ten--;
+          num = num * 10 + nib;
+        }
+        else
+        {
+          if ( divider < 10000000L )
+          {
+            num      = num * 10 + nib;
+            divider *= 10;
+          }
         }
       }
 
@@ -248,10 +258,10 @@
       power_ten += (FT_Int)exponent;
     }
 
-    /* Move the integer part into the high 16 bits. */
+    /* Move the integer part into the higher 16 bits. */
     result <<= 16;
 
-    /* Place the decimal part into the low 16 bits. */
+    /* Place the decimal part into the lower 16 bits. */
     if ( num )
       result |= FT_DivFix( num, divider );
 
@@ -337,7 +347,10 @@
 
       temp = FT_ABS( matrix->yy );
 
-      *upm = (FT_UShort)FT_DivFix( 0x10000L, FT_DivFix( temp, 1000 ) );
+      *upm = (FT_UShort)FT_DivFix( 1000, temp );
+
+      /* we normalize the matrix so that `matrix->xx' is 1; */
+      /* the scaling is done with `units_per_em' then       */
 
       if ( temp != 0x10000L )
       {
