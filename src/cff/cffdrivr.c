@@ -154,7 +154,7 @@
               FT_UInt       glyph_index,
               FT_Int32      load_flags )
   {
-    FT_Error  error;
+    FT_Error       error;
     CFF_GlyphSlot  slot = (CFF_GlyphSlot)cffslot;
     CFF_Size       size = (CFF_Size)cffsize;
 
@@ -229,8 +229,8 @@
     FT_FREE( gname );
     error = CFF_Err_Ok;
 
-    Exit:
-      return error;
+  Exit:
+    return error;
   }
 
 

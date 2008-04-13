@@ -1,3 +1,8 @@
+2008-04-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/psconv.c (PS_Conv_ToFixed): Increase precision if
+	integer part is zero.
+
 2008-04-01  Werner Lemberg  <wl@gnu.org>
 
 	Fix compilation with g++ 4.1 (with both `single' and `multi'

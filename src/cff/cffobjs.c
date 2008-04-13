@@ -689,7 +689,7 @@
         if ( pure_cff && cff->top_font.font_dict.cid_registry != 0xFFFFU )
           goto Exit;
 
-        /* we didn't find a Unicode charmap -- synthetize one */
+        /* we didn't find a Unicode charmap -- synthesize one */
         cmaprec.face        = cffface;
         cmaprec.platform_id = 3;
         cmaprec.encoding_id = 1;
