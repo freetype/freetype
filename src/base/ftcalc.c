@@ -512,8 +512,8 @@
     FT_UInt32  q;
 
 
-    s  = a; a = FT_ABS(a);
-    s ^= b; b = FT_ABS(b);
+    s  = a; a = FT_ABS( a );
+    s ^= b; b = FT_ABS( b );
 
     if ( b == 0 )
     {
