@@ -1,3 +1,9 @@
+2008-04-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfdrivr.c (PCF_Face_Init): Protect call to
+	`FT_Stream_OpenLZW' with `FT_CONFIG_OPTION_USE_LZ'.  From Savannah
+	bug #22909.
+
 2008-04-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psconv.c (PS_Conv_ToFixed): Increase precision if

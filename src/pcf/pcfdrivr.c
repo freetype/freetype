@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf files
 
-    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2006, 2007 by
+    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2008 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -273,6 +273,7 @@ THE SOFTWARE.
 
       error = error2;
       if ( error )
+#ifdef FT_CONFIG_OPTION_USE_LZW
       {
         FT_Error  error3;
 
@@ -295,6 +296,9 @@ THE SOFTWARE.
         if ( error )
           goto Fail;
       }
+#else
+        goto Fail;
+#endif
       else
       {
         face->gzip_source = stream;
