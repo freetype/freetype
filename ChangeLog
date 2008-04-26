@@ -1,3 +1,13 @@
+2008-04-26  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/psaux.h (T1_BuilderRec): Mark `scale_x'
+	and `scale_y' as obsolete since they aren't used.
+	* src/psaux/psobjs.c (t1_builder_init): Updated.
+
+	* src/cff/cffgload.h (CFF_Builder): Mark `scale_x' and `scale_y' as
+	obsolete since they aren't used.
+	* src/cff/cffgload.c (cff_builder_init): Updated.
+
 2008-04-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfdrivr.c (PCF_Face_Init): Protect call to

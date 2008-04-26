@@ -1483,12 +1483,6 @@
         builder->hints_funcs = glyph->internal->glyph_hints;
     }
 
-    if ( size )
-    {
-      builder->scale_x = size->metrics.x_scale;
-      builder->scale_y = size->metrics.y_scale;
-    }
-
     builder->pos_x = 0;
     builder->pos_y = 0;
 
