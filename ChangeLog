@@ -1,3 +1,9 @@
+2008-05-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Call the auto-hinter without
+	transformation since it recursively calls FT_Load_Glyph.  This fixes
+	Savannah bug #23143.
+
 2008-04-26  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/psaux.h (T1_BuilderRec): Mark `scale_x'

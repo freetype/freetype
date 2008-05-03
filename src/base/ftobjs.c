@@ -634,12 +634,24 @@
           goto Load_Ok;
       }
 
-      /* load auto-hinted outline */
-      hinting = (FT_AutoHinter_Service)hinter->clazz->module_interface;
+      {
+        FT_Face_Internal  internal        = face->internal;
+        FT_Int            transform_flags = internal->transform_flags;
 
-      error   = hinting->load_glyph( (FT_AutoHinter)hinter,
-                                     slot, face->size,
-                                     glyph_index, load_flags );
+
+        /* since the auto-hinter calls FT_Load_Glyph by itself, */
+        /* make sure that glyphs aren't transformed             */
+        internal->transform_flags = 0;
+
+        /* load auto-hinted outline */
+        hinting = (FT_AutoHinter_Service)hinter->clazz->module_interface;
+
+        error   = hinting->load_glyph( (FT_AutoHinter)hinter,
+                                       slot, face->size,
+                                       glyph_index, load_flags );
+
+        internal->transform_flags = transform_flags;
+      }
     }
     else
     {
