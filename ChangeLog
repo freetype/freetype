@@ -1,3 +1,16 @@
+2008-05-04  Werner Lemberg  <wl@gnu.org>
+
+	First steps to fix the scaling bug of CID-keyed CFF subfonts,
+	reported by Ding Li on 2008/03/28 on freetype-devel.
+
+	* src/base/cff/cffparse.c (power_tens): New array.
+	(cff_parse_real): Rewritten to introduce a fourth parameter which
+	returns the `scaling' of the real number so that we have no
+	precision loss.  This is not used yet.
+	Update all callers.
+	(cff_parse_fixed_thousand): Replace with...
+	(cff_parse_fixed_scaled): This function.  Update all callers.
+
 2008-05-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Load_Glyph): Call the auto-hinter without

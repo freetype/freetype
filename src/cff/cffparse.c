@@ -136,24 +136,51 @@
   }
 
 
+  static const FT_Long power_tens[] =
+  {
+    1L,
+    10L,
+    100L,
+    1000L,
+    10000L,
+    100000L,
+    1000000L,
+    10000000L,
+    100000000L,
+    1000000000L
+  };
+
+
   /* read a real */
   static FT_Fixed
   cff_parse_real( FT_Byte*  start,
                   FT_Byte*  limit,
-                  FT_Int    power_ten )
+                  FT_Int    power_ten,
+                  FT_Int*   scaling )
   {
-    FT_Byte*  p    = start;
-    FT_Long   num, divider, result, exponent;
-    FT_Int    sign = 0, exponent_sign = 0;
+    FT_Byte*  p = start;
     FT_UInt   nib;
     FT_UInt   phase;
 
+    FT_Long   result, number, rest, exponent;
+    FT_Int    sign = 0, exponent_sign = 0;
+    FT_Int    exponent_add, integer_length, fraction_length;
 
-    result  = 0;
-    num     = 0;
-    divider = 1;
 
-    /* first of all, read the integer part */
+    if ( scaling )
+      *scaling  = 0;
+
+    result = 0;
+
+    number   = 0;
+    rest     = 0;
+    exponent = 0;
+
+    exponent_add    = 0;
+    integer_length  = 0;
+    fraction_length = 0;
+
+    /* First of all, read the integer part. */
     phase = 4;
 
     for (;;)
@@ -166,7 +193,7 @@
 
         /* Make sure we don't read past the end. */
         if ( p >= limit )
-          goto Bad;
+          goto Exit;
       }
 
       /* Get the nibble. */
@@ -178,10 +205,20 @@
       else if ( nib > 9 )
         break;
       else
-        result = result * 10 + nib;
+      {
+        /* Increase exponent if we can't add the digit. */
+        if ( number >= 0xCCCCCCCL )
+          exponent_add++;
+        /* Skip leading zeros. */
+        else if ( nib || number )
+        {
+          integer_length++;
+          number = number * 10 + nib;
+        }
+      }
     }
 
-    /* read decimal part, if any */
+    /* Read fraction part, if any. */
     if ( nib == 0xa )
       for (;;)
       {
@@ -193,7 +230,7 @@
 
           /* Make sure we don't read past the end. */
           if ( p >= limit )
-            goto Bad;
+            goto Exit;
         }
 
         /* Get the nibble. */
@@ -202,24 +239,18 @@
         if ( nib >= 10 )
           break;
 
-        /* Increase precision if the integer part is zero */
-        /* and we have to scale the real number.          */
-        if ( !result && power_ten )
+        /* Skip leading zeros if possible. */
+        if ( !nib && !number )
+          exponent_add--;
+        /* Only add digit if we don't overflow. */
+        else if ( number < 0xCCCCCCCL )
         {
-          power_ten--;
-          num = num * 10 + nib;
-        }
-        else
-        {
-          if ( divider < 10000000L )
-          {
-            num      = num * 10 + nib;
-            divider *= 10;
-          }
+          fraction_length++;
+          number = number * 10 + nib;
         }
       }
 
-    /* read exponent, if any */
+    /* Read exponent, if any. */
     if ( nib == 12 )
     {
       exponent_sign = 1;
@@ -228,19 +259,17 @@
 
     if ( nib == 11 )
     {
-      exponent = 0;
-
       for (;;)
       {
-        /* If we entered this iteration with phase == 4, we need */
-        /* to read a new byte.                                   */
+        /* If we entered this iteration with phase == 4, */
+        /* we need to read a new byte.                   */
         if ( phase )
         {
           p++;
 
           /* Make sure we don't read past the end. */
           if ( p >= limit )
-            goto Bad;
+            goto Exit;
         }
 
         /* Get the nibble. */
@@ -250,37 +279,98 @@
           break;
 
         exponent = exponent * 10 + nib;
+
+        /* Arbitrarily limit exponent. */
+        if ( exponent > 1000 )
+          goto Exit;
       }
 
       if ( exponent_sign )
         exponent = -exponent;
-
-      power_ten += (FT_Int)exponent;
     }
 
-    /* Move the integer part into the higher 16 bits. */
-    result <<= 16;
+    /* We don't check `power_ten' and `exponent_add'. */
+    exponent += power_ten + exponent_add;
 
-    /* Place the decimal part into the lower 16 bits. */
-    if ( num )
-      result |= FT_DivFix( num, divider );
-
-    /* apply power of 10 if needed */
-    if ( power_ten > 0 )
+    if ( scaling )
     {
-      divider = 10; /* actually, this will be used as multiplier here */
-      while ( --power_ten > 0 )
-        divider = divider * 10;
+      /* Only use `fraction_length'. */
+      fraction_length += integer_length;
+      exponent        += integer_length;
 
-      result = FT_MulFix( divider << 16, result );
+      if ( fraction_length <= 5 )
+      {
+        if ( number > 0x7FFFL )
+        {
+          result   = FT_DivFix( number, 10 );
+          *scaling = exponent - fraction_length + 1;
+        }
+        else
+        {
+          if ( exponent > 0 )
+          {
+            FT_Int  new_fraction_length, shift;
+
+
+            /* Make `scaling' as small as possible. */
+            new_fraction_length = FT_MIN( exponent, 5 );
+            exponent           -= new_fraction_length;
+            shift               = new_fraction_length - fraction_length;
+
+            number *= power_tens[shift];
+            if ( number > 0x7FFFL )
+            {
+              number   /= 10;
+              exponent += 1;
+            }
+          }
+          else
+            exponent -= fraction_length;
+
+          result   = number << 16;
+          *scaling = exponent;
+        }
+      }
+      else
+      {
+        if ( ( number / power_tens[fraction_length - 5] ) > 0x7FFFL )
+        {
+          result   = FT_DivFix( number, power_tens[fraction_length - 4] );
+          *scaling = exponent - 4;
+        }
+        else
+        {
+          result   = FT_DivFix( number, power_tens[fraction_length - 5] );
+          *scaling = exponent - 5;
+        }
+      }
     }
-    else if ( power_ten < 0 )
+    else
     {
-      divider = 10;
-      while ( ++power_ten < 0 )
-        divider = divider * 10;
+      integer_length  += exponent;
+      fraction_length -= exponent;
 
-      result = FT_DivFix( result, divider << 16 );
+      /* Check for overflow and underflow. */
+      if ( FT_ABS( integer_length ) > 5 )
+        goto Exit;
+
+      /* Convert into 16.16 format. */
+      if ( fraction_length > 0 )
+      {
+        if ( ( number / power_tens[fraction_length] ) > 0x7FFFL )
+          goto Exit;
+
+        result = FT_DivFix( number, power_tens[fraction_length] );
+      }
+      else
+      {
+        number *= power_tens[-fraction_length];
+
+        if ( number > 0x7FFFL )
+          goto Exit;
+
+        result = number << 16;
+      }
     }
 
     if ( sign )
@@ -288,10 +378,6 @@
 
   Exit:
     return result;
-
-  Bad:
-    result = 0;
-    goto Exit;
   }
 
 
@@ -299,8 +385,8 @@
   static FT_Long
   cff_parse_num( FT_Byte**  d )
   {
-    return ( **d == 30 ? ( cff_parse_real   ( d[0], d[1], 0 ) >> 16 )
-                       :   cff_parse_integer( d[0], d[1] ) );
+    return **d == 30 ? ( cff_parse_real( d[0], d[1], 0, NULL ) >> 16 )
+                     :   cff_parse_integer( d[0], d[1] );
   }
 
 
@@ -308,19 +394,23 @@
   static FT_Fixed
   cff_parse_fixed( FT_Byte**  d )
   {
-    return ( **d == 30 ? cff_parse_real   ( d[0], d[1], 0 )
-                       : cff_parse_integer( d[0], d[1] ) << 16 );
+    return **d == 30 ? cff_parse_real( d[0], d[1], 0, NULL )
+                     : cff_parse_integer( d[0], d[1] ) << 16;
   }
 
+
   /* read a floating point number, either integer or real, */
-  /* but return 1000 times the number read in.             */
+  /* but return `10^scaling' times the number read in      */
   static FT_Fixed
-  cff_parse_fixed_thousand( FT_Byte**  d )
+  cff_parse_fixed_scaled( FT_Byte**  d,
+                          FT_Int     scaling )
   {
     return **d ==
-      30 ? cff_parse_real     ( d[0], d[1], 3 )
-         : (FT_Fixed)FT_MulFix( cff_parse_integer( d[0], d[1] ) << 16, 1000 );
+      30 ? cff_parse_real( d[0], d[1], scaling, NULL )
+         : (FT_Fixed)FT_MulFix( cff_parse_integer( d[0], d[1] ) << 16,
+                                                   power_tens[scaling] );
   }
+
 
   static FT_Error
   cff_parse_font_matrix( CFF_Parser  parser )
@@ -330,20 +420,18 @@
     FT_Vector*       offset = &dict->font_offset;
     FT_UShort*       upm    = &dict->units_per_em;
     FT_Byte**        data   = parser->stack;
-    FT_Error         error;
+    FT_Error         error  = CFF_Err_Stack_Underflow;
     FT_Fixed         temp;
 
 
-    error = CFF_Err_Stack_Underflow;
-
     if ( parser->top >= parser->stack + 6 )
     {
-      matrix->xx = cff_parse_fixed_thousand( data++ );
-      matrix->yx = cff_parse_fixed_thousand( data++ );
-      matrix->xy = cff_parse_fixed_thousand( data++ );
-      matrix->yy = cff_parse_fixed_thousand( data++ );
-      offset->x  = cff_parse_fixed_thousand( data++ );
-      offset->y  = cff_parse_fixed_thousand( data   );
+      matrix->xx = cff_parse_fixed_scaled( data++, 3 );
+      matrix->yx = cff_parse_fixed_scaled( data++, 3 );
+      matrix->xy = cff_parse_fixed_scaled( data++, 3 );
+      matrix->yy = cff_parse_fixed_scaled( data++, 3 );
+      offset->x  = cff_parse_fixed_scaled( data++, 3 );
+      offset->y  = cff_parse_fixed_scaled( data,   3 );
 
       temp = FT_ABS( matrix->yy );
 
@@ -599,7 +687,7 @@
               goto Store_Number;
 
             case cff_kind_fixed_thousand:
-              val = cff_parse_fixed_thousand( parser->stack );
+              val = cff_parse_fixed_scaled( parser->stack, 3 );
 
             Store_Number:
               switch ( field->size )
