@@ -2585,22 +2585,22 @@
 
 	Fix miscellaneous compiler warnings.
 
-	* freetype2/include/freetype/internal/ftobjs.h: Close comment with
-	`*/' to avoid `/* in comment' compiler warning.
+	* include/freetype/internal/ftobjs.h: Close comment with `*/' to
+	avoid `/* in comment' compiler warning.
 
-	* freetype2/src/base/ftdbgmem.c (ft_mem_table_get_source): Turn cast
+	* src/base/ftdbgmem.c (ft_mem_table_get_source): Turn cast
 	`(FT_UInt32)(void*)' into `(FT_UInt32)(FT_PtrDist)(void*)' since on
 	64-bit platforms void* is larger than FT_UInt32.
 
-	* freetype2/src/base/ftobjs.c (t_validator_error): Cast away
+	* src/base/ftobjs.c (t_validator_error): Cast away
 	volatileness of argument to ft_longjmp.  Spotted by Werner
 	`Putzfrau' Lemberg.
 
-	* freetype2/src/bdf/bdflib.c (bdf_load_font): Initialize local
+	* src/bdf/bdflib.c (bdf_load_font): Initialize local
 	variable `lineno'.
 
-	* freetype2/src/gxvalid/gxvmod.c (classic_kern_validate): Mark local
-	variable `error' as volatile.
+	* src/gxvalid/gxvmod.c (classic_kern_validate): Mark local variable
+	`error' as volatile.
 
 2006-08-27  Werner Lemberg  <wl@gnu.org>
 
@@ -2613,30 +2613,29 @@
 	about addresses of volatile objects passed as function arguments as
 	non-volatile pointers.
 
-	* freetype2/include/freetype/internal/ftvalid.h: Make FT_Validator
-	typedef a pointer to a volatile object.
+	* include/freetype/internal/ftvalid.h: Make FT_Validator typedef a
+	pointer to a volatile object.
 
-	* freetype2/src/gxvalid/gxvmod.c (gxv_load_table): Make function
-	argument `table' a pointer to a volatile object.
+	* src/gxvalid/gxvmod.c (gxv_load_table): Make function argument
+	`table' a pointer to a volatile object.
 
-	* freetype2/src/otvalid/otvmod.c (otv_load_table): Make function
-	argument `table' a pointer to a volatile object.
+	* src/otvalid/otvmod.c (otv_load_table): Make function argument
+	`table' a pointer to a volatile object.
 
 2006-08-18  Jens Claudius  <jens.claudius@yahoo.com>
 
-	* freetype2/src/gxvalid/gxvmod.c (GXV_TABLE_DECL): Mark local
-	variable `_sfnt' as volatile since it must keep its value across
-	a call to ft_setjmp.
+	* src/gxvalid/gxvmod.c (GXV_TABLE_DECL): Mark local variable `_sfnt'
+	as volatile since it must keep its value across a call to ft_setjmp.
 	(gxv_validate): Same for local variables `memory' and `valid'.
 	(classic_kern_validate): Same for local variables `memory',
 	`ckern', and `valid'.
 
-	* freetype2/src/otvalid/otvmod.c (otv_validate): Same for function
-	parameter `face' and local variables `base', `gdef', `gpos', `gsub',
-	`jstf', and 'valid'.
+	* src/otvalid/otvmod.c (otv_validate): Same for function parameter
+	`face' and local variables `base', `gdef', `gpos', `gsub', `jstf',
+	and 'valid'.
 
-	* freetype2/src/sfnt/ttcmap.c (tt_face_build_cmaps): Same for
-	local variable `cmap'.
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Same for local variable
+	`cmap'.
 
 2006-08-16  David Turner  <david@freetype.org>
 
@@ -2695,42 +2694,41 @@
 	Jens:
 	http://lists.nongnu.org/archive/html/freetype-devel/2006-08/msg00004.htm.
 
-	* freetype2/src/otvalid/otvmod.c: Replace `ft_validator_run' by
-	`ft_setjmp'.  It reverts the change introduced on 2005-08-20.
+	* src/otvalid/otvmod.c: Replace `ft_validator_run' by `ft_setjmp'. 
+	It reverts the change introduced on 2005-08-20.
 
-	* freetype2/src/gxvalid/gxvmod.c: Ditto.
+	* src/gxvalid/gxvmod.c: Ditto.
 
 2006-08-13  Jens Claudius  <jens.claudius@yahoo.com>
 
-	* freetype2/include/freetype/internal/psaux.h: (T1_TokenType): Add
+	* finclude/freetype/internal/psaux.h: (T1_TokenType): Add
 	T1_TOKEN_TYPE_KEY.
 	(T1_FieldRec): Add `dict'.
 	(T1_FIELD_DICT_FONTDICT, T1_FIELD_DICT_PRIVATE): New macros.
 	(T1_NEW_XXX, T1_FIELD_XXX): Update to take the dictionary where a PS
 	keyword is expected as an additional argument.
 
-	* freetype2/src/cid/cidload.c: (cid_field_records): Adjust
-	invocations of T1_FIELD_XXX.
+	* src/cid/cidload.c: (cid_field_records): Adjust invocations of
+	T1_FIELD_XXX.
 
-	* freetype2/src/cid/cidtoken.h: Adjust invocations of T1_FIELD_XXX.
+	* src/cid/cidtoken.h: Adjust invocations of T1_FIELD_XXX.
 
-	* freetype2/src/psaux/psobjs.c: Add macro FT_COMPONENT for tracing.
+	* src/psaux/psobjs.c: Add macro FT_COMPONENT for tracing. 
 	(ps_parser_to_token): Report a PostScript key as T1_TOKEN_TYPE_KEY,
 	not T1_TOKEN_TYPE_ANY.
 	(ps_parser_load_field): Make sure a token that should be a string or
 	name is really a string or name.
 	Avoid memory leak if a keyword has been already encountered and its
 	value is overwritten.
-	* freetype2/src/type1/t1load.c: (t1_keywords): Adjust invocations of
+	* src/type1/t1load.c: (t1_keywords): Adjust invocations of
 	T1_FIELD_XXX.
 	(parse_dict): Ignore keywords that occur in the wrong dictionary
 	(e.g., in `Private' instead of `FontDict').
 
-	* freetype2/src/type1/t1tokens.h: Adjust invocations of
-	T1_FIELD_XXX.
+	* src/type1/t1tokens.h: Adjust invocations of T1_FIELD_XXX.
 
-	* freetype2/src/type42/t42parse.c: (t42_keywords): Adjust
-	invocations of T1_FIELD_XXX.
+	* src/type42/t42parse.c: (t42_keywords): Adjust invocations of
+	T1_FIELD_XXX.
 
 2006-07-18  Jens Claudius  <jens.claudius@yahoo.com>
 
@@ -2741,19 +2739,18 @@
 	Call the finisher for T1_Decoder in `cid_face_compute_max_advance'
 	and `T1_Compute_Max_Advance'.
 
-	* freetype2/include/freetype/internal/psaux.h (T1_DecoderRec):
-	Remove field `face', add `len_buildchar'.
+	* include/freetype/internal/psaux.h (T1_DecoderRec): Remove field
+	`face', add `len_buildchar'.
 
-	* freetype2/include/freetype/internal/t1types.h (T1_FaceRec): Add
-	field `buildchar'.
+	* include/freetype/internal/t1types.h (T1_FaceRec): Add field
+	`buildchar'.
 
-	* freetype2/src/cid/cidgload.c (cid_face_compute_max_advance): Call
-	finisher for T1_Decoder.
+	* src/cid/cidgload.c (cid_face_compute_max_advance): Call finisher
+	for T1_Decoder.
 	(cid_slot_load_glyph): Do not ignore failure when initializing the
 	T1_Decoder.
 
-	* freetype2/src/psaux/t1decode.c (t1_decoder_parse_charstrings):
-	Updated.
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Updated.
 	(t1_decoder_init): Remove initialization of fields `buildchar' and
 	`len_buildchar'.
 	(t1_decoder_done): Remove deallocation of field `buildchar'.
@@ -2765,46 +2762,45 @@
 	`len_buildchar'; make sure to call finisher for T1_Decoder even in
 	case of error.
 
-	* freetype2/src/type1/t1load.c (T1_Open_Face): Allocate new field
-	`buildchar' of T1_FaceRec.
+	* src/type1/t1load.c (T1_Open_Face): Allocate new field `buildchar'
+	of T1_FaceRec.
 
-	* freetype2/src/type1/t1objs.c (T1_Face_Done): Free new field
-	`buildchar' of T1_FaceRec.
+	* src/type1/t1objs.c (T1_Face_Done): Free new field `buildchar' of
+	T1_FaceRec.
 
 2006-07-14  Jens Claudius  <jens.claudius@yahoo.com>
 
-	* freetype2/include/freetype/internal/psaux.h: New macros
-	IS_PS_NEWLINE, IS_PS_SPACE, IS_PS_SPECIAL, IS_PS_DELIM, IS_PS_DIGIT,
-	IS_PS_XDIGIT, and IS_PS_BASE85 (from freetype2/src/psaux/psconv.h).
+	* include/freetype/internal/psaux.h: New macros IS_PS_NEWLINE,
+	IS_PS_SPACE, IS_PS_SPECIAL, IS_PS_DELIM, IS_PS_DIGIT, IS_PS_XDIGIT,
+	and IS_PS_BASE85 (from src/psaux/psconv.h).
 	(T1_FieldLocation): Add T1_FIELD_LOCATION_LOADER,
 	T1_FIELD_LOCATION_FACE, and T1_FIELD_LOCATION_BLEND.
 	(T1_DecoderRec): New fields `buildchar' and `face'.
 	(IS_PS_TOKEN): New macro.
 
-	* freetype2/include/freetype/internal/t1types.h (T1_FaceRec): New
-	fields `ndv_idx', `cdv_idx', and `len_buildchar'.
+	* include/freetype/internal/t1types.h (T1_FaceRec): New fields
+	`ndv_idx', `cdv_idx', and `len_buildchar'.
 
-	* freetype2/include/freetype/t1tables.h (PS_BlendRec): New fields
+	* include/freetype/t1tables.h (PS_BlendRec): New fields
 	`default_design_vector' and `num_default_design_vector'.
 
-	* freetype2/src/psaux/psconv.h: Move macros IS_PS_NEWLINE,
-	IS_PS_SPACE, IS_PS_SPECIAL, IS_PS_DELIM, IS_PS_DIGIT, IS_PS_XDIGIT,
-	and IS_PS_BASE85 to freetype2/include/freetype/internal/psaux.h.
+	* src/psaux/psconv.h: Move macros IS_PS_NEWLINE, IS_PS_SPACE,
+	IS_PS_SPECIAL, IS_PS_DELIM, IS_PS_DIGIT, IS_PS_XDIGIT, and
+	IS_PS_BASE85 to include/freetype/internal/psaux.h.
 
-	* freetype2/src/psaux/psobjs.c (ps_parser_to_token_array): Allow
-	`token' argument to be NULL if we want only to count the number of
-	tokens.
+	* src/psaux/psobjs.c (ps_parser_to_token_array): Allow `token'
+	argument to be NULL if we want only to count the number of tokens.
 	(ps_tocoordarray): Allow `coords' argument to be NULL if we just
 	want to skip the array.
 	(ps_tofixedarray): Allow `values' argument to be NULL if we just
 	want to skip the array.
 
-	* freetype2/src/psaux/t1decode.c (t1_decoder_parse_charstrings): Add
-	support for (partially commented out) othersubrs 19-25, 27, and 28.
-	(t1_decoder_init): Initialize new fields `face' and `buildchar'.
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Add support
+	for (partially commented out) othersubrs 19-25, 27, and 28. 
+	(t1_decoder_init): Initialize new fields `face' and `buildchar'. 
 	(t1_decoder_done): Release new field `buildchar'.
 
-	* freetype2/src/type1/t1load.c (parse_buildchar, parse_private): New
+	* src/type1/t1load.c (parse_buildchar, parse_private): New
 	functions.
 	(t1_keywords): Register them.
 	(t1_allocate_blend): Updated.
@@ -2819,12 +2815,12 @@
 	`len_buildchar'.
 	Remove `keywords_flags'.
 
-	* freetype2/src/type1/t1load.h (T1_LoaderRect): New field
+	* src/type1/t1load.h (T1_LoaderRect): New field
 	`keywords_encountered'.
 	(T1_PRIVATE, T1_FONTDIR_AFTER_PRIVATE): New macros.
 
-	* freetype2/src/type1/t1tokens.h [!T1_CONFIG_OPTION_NO_MM_SUPPORT]:
-	New entries for parsing /NDV, /CDV, and /DesignVector.
+	* src/type1/t1tokens.h [!T1_CONFIG_OPTION_NO_MM_SUPPORT]: New
+	entries for parsing /NDV, /CDV, and /DesignVector.
 
 2006-07-07  Werner Lemberg  <wl@gnu.org>
 
