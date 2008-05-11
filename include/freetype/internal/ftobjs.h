@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2008 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -340,7 +340,28 @@ FT_BEGIN_HEADER
   } FT_GlyphSlot_InternalRec;
 
 
+#if 0
+
   /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Size_InternalRec                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This structure contains the internal fields of each FT_Size        */
+  /*    object.  Currently, it's empty.                                    */
+  /*                                                                       */
+  /*************************************************************************/
+
+  typedef struct  FT_Size_InternalRec_
+  {
+    /* empty */
+
+  } FT_Size_InternalRec;
+
+#endif
+
+
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
