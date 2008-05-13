@@ -14,6 +14,8 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
 
     - Subsetted CID-keyed CFFs are now supported correctly.
 
+    - A call to FT_Open_Face with `face_index' < 0 crashed FreeType if
+      the font was a Windows (bitmap) FNT/FON.
 
   II. IMPORTANT CHANGES
 

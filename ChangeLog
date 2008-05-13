@@ -1,3 +1,9 @@
+2008-05-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font, FNT_Face_Init):
+	Handle case `face_index < 0'.
+	* docs/CHANGES: Document it.
+
 2008-05-04  Werner Lemberg  <wl@gnu.org>
 
 	First steps to fix the scaling bug of CID-keyed CFF subfonts,
