@@ -1,3 +1,11 @@
+2008-05-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_subrs): Accept fonts with a subrs array
+	which contain a single but empty entry.  This is technically
+	invalid (since it must end with `return', but...)
+
+	Reported by Martin McBride.
+
 2008-05-14  Werner Lemberg  <wl@gnu.org>
 
 	Finish fix of scaling bug of CID-keyed CFF subfonts.
