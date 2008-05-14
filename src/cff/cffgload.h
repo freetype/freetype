@@ -173,6 +173,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   cff_decoder_prepare( CFF_Decoder*  decoder,
+                       CFF_Size      size,
                        FT_UInt       glyph_index );
 
 #if 0  /* unused until we support pure CFF fonts */

@@ -412,51 +412,103 @@
   }
 
 
+  /* read a floating point number, either integer or real,     */
+  /* and return it as precise as possible -- `scaling' returns */
+  /* the scaling factor (as a power of 10)                     */
+  static FT_Fixed
+  cff_parse_fixed_dynamic( FT_Byte**  d,
+                           FT_Int*    scaling )
+  {
+    FT_ASSERT( scaling );
+
+    if ( **d == 30 )
+      return cff_parse_real( d[0], d[1], 0, scaling );
+    else
+    {
+      FT_Long  number;
+      FT_Int   integer_length;
+
+
+      number = cff_parse_integer( d[0], d[1] );
+
+      if ( number > 0x7FFFL )
+      {
+        for ( integer_length = 5; integer_length < 10; integer_length++ )
+          if ( number < power_tens[integer_length] )
+            break;
+
+        if ( ( number / power_tens[integer_length - 5] ) > 0x7FFFL )
+        {
+          *scaling = integer_length - 4;
+          return FT_DivFix( number, power_tens[integer_length - 4] );
+        }
+        else
+        {
+          *scaling = integer_length - 5;
+          return FT_DivFix( number, power_tens[integer_length - 5] );
+        }
+      }
+      else
+      {
+        *scaling = 0;
+        return number << 16;
+      }
+    }
+  }
+
+
   static FT_Error
   cff_parse_font_matrix( CFF_Parser  parser )
   {
     CFF_FontRecDict  dict   = (CFF_FontRecDict)parser->object;
     FT_Matrix*       matrix = &dict->font_matrix;
     FT_Vector*       offset = &dict->font_offset;
-    FT_UShort*       upm    = &dict->units_per_em;
+    FT_ULong*        upm    = &dict->units_per_em;
     FT_Byte**        data   = parser->stack;
     FT_Error         error  = CFF_Err_Stack_Underflow;
-    FT_Fixed         temp;
 
 
     if ( parser->top >= parser->stack + 6 )
     {
-      matrix->xx = cff_parse_fixed_scaled( data++, 3 );
-      matrix->yx = cff_parse_fixed_scaled( data++, 3 );
-      matrix->xy = cff_parse_fixed_scaled( data++, 3 );
-      matrix->yy = cff_parse_fixed_scaled( data++, 3 );
-      offset->x  = cff_parse_fixed_scaled( data++, 3 );
-      offset->y  = cff_parse_fixed_scaled( data,   3 );
+      FT_Int  scaling;
 
-      temp = FT_ABS( matrix->yy );
-
-      *upm = (FT_UShort)FT_DivFix( 1000, temp );
-
-      /* we normalize the matrix so that `matrix->xx' is 1; */
-      /* the scaling is done with `units_per_em' then       */
-
-      if ( temp != 0x10000L )
-      {
-        matrix->xx = FT_DivFix( matrix->xx, temp );
-        matrix->yx = FT_DivFix( matrix->yx, temp );
-        matrix->xy = FT_DivFix( matrix->xy, temp );
-        matrix->yy = FT_DivFix( matrix->yy, temp );
-        offset->x  = FT_DivFix( offset->x,  temp );
-        offset->y  = FT_DivFix( offset->y,  temp );
-      }
-
-      /* note that the offsets must be expressed in integer font units */
-      offset->x >>= 16;
-      offset->y >>= 16;
 
       error = CFF_Err_Ok;
+
+      /* We expect a well-formed font matrix, this is, the matrix elements */
+      /* `xx' and `yy' are of approximately the same magnitude.  To avoid  */
+      /* loss of precision, we use the magnitude of element `xx' to scale  */
+      /* all other elements.  The scaling factor is then contained in the  */
+      /* `units_per_em' value.                                             */
+
+      matrix->xx = cff_parse_fixed_dynamic( data++, &scaling );
+
+      scaling = -scaling;
+
+      if ( scaling < 0 || scaling > 9 )
+      {
+        /* Return default matrix in case of unlikely values. */
+        matrix->xx = 0x10000L;
+        matrix->yx = 0;
+        matrix->yx = 0;
+        matrix->yy = 0x10000L;
+        offset->x  = 0;
+        offset->y  = 0;
+        *upm       = 1;
+
+        goto Exit;
+      }
+
+      matrix->yx = cff_parse_fixed_scaled( data++, scaling );
+      matrix->xy = cff_parse_fixed_scaled( data++, scaling );
+      matrix->yy = cff_parse_fixed_scaled( data++, scaling );
+      offset->x  = cff_parse_fixed_scaled( data++, scaling );
+      offset->y  = cff_parse_fixed_scaled( data,   scaling );
+
+      *upm = power_tens[scaling];
     }
 
+  Exit:
     return error;
   }
 

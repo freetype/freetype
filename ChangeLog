@@ -1,3 +1,40 @@
+2008-05-14  Werner Lemberg  <wl@gnu.org>
+
+	Finish fix of scaling bug of CID-keyed CFF subfonts.
+
+	* include/freetype/internal/ftcalc.h, src/base/ftcalc.c
+	(FT_Matrix_Multiply_Scaled, FT_Vector_Transform_Scaled): New
+	functions.
+
+	* src/cff/cffobjs.h (CFF_Internal): New struct.  It is used to
+	provide global hinting data for both the top-font and all subfonts
+	(with proper scaling).
+
+	* src/cff/cffobjs.c (cff_make_private_dict): New function, using
+	code from `cff_size_init'.
+	(cff_size_init, cff_size_done, cff_size_select, cff_size_request):
+	Use CFF_Internal and handle subfonts.
+	(cff_face_init): Handle top-dict and subfont matrices correctly;
+	apply some heuristic in case of unlikely matrix concatenation
+	results.  This has been discussed with people from Adobe (thanks
+	goes mainly to David Lemon) who confirm that the CFF specs are fuzzy
+	and not correct.
+
+	* src/cff/cffgload.h (cff_decoder_prepare): Add `size' argument.
+
+	* src/cff/cffgload.c (cff_builder_init): Updated.
+	(cff_decoder_prepare): Handle hints globals for subfonts.
+	Update all callers.
+	(cff_slot_load): Handling scaling of subfonts properly.
+
+	* src/cff/cffparse.c (cff_parse_fixed_dynamic): New function.
+	(cff_parse_font_matrix): Use it.
+
+	* src/cff/cfftypes.h (CFF_FontDictRec): Make `units_per_em'
+	FT_ULong.
+
+	* docs/CHANGES: Document it.
+
 2008-05-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/winfonts/winfnt.c (fnt_face_get_dll_font, FNT_Face_Init):

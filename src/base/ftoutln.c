@@ -628,13 +628,13 @@
   }
 
 
-  /* documentation is in ftoutln.h */
+  /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( void )
   FT_Vector_Transform( FT_Vector*        vector,
                        const FT_Matrix*  matrix )
   {
-    FT_Pos xz, yz;
+    FT_Pos  xz, yz;
 
 
     if ( !vector || !matrix )

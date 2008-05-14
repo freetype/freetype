@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (specification).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2007 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2007, 2008 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -53,8 +53,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  CFF_SizeRec_
   {
-    FT_SizeRec       root;
-    FT_ULong         strike_index;    /* 0xFFFFFFFF to indicate invalid */
+    FT_SizeRec  root;
+    FT_ULong    strike_index;    /* 0xFFFFFFFF to indicate invalid */
 
   } CFF_SizeRec, *CFF_Size;
 
@@ -79,6 +79,21 @@ FT_BEGIN_HEADER
 
   } CFF_GlyphSlotRec, *CFF_GlyphSlot;
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    CFF_Internal                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The interface to the `internal' field of `FT_Size'.                */
+  /*                                                                       */
+  typedef struct  CFF_InternalRec_
+  {
+    PSH_Globals  topfont;
+    PSH_Globals  subfonts[CFF_MAX_CID_FONTS];
+
+  } CFF_InternalRec, *CFF_Internal;
 
 
   /*************************************************************************/
