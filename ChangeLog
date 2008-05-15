@@ -1,5 +1,9 @@
 2008-05-15  Werner Lemberg  <wl@gnu.org>
 
+	* builds/toplevel.mk (CONFIG_GUESS, CONFIG_SUB): Updated.
+
+2008-05-15  Werner Lemberg  <wl@gnu.org>
+
 	* src/type1/t1load.c (parse_subrs): Accept fonts with a subrs array
 	which contains a single but empty entry.  This is technically
 	invalid (since it must end with `return'), but...
