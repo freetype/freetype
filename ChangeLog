@@ -1,5 +1,13 @@
 2008-05-15  Werner Lemberg  <wl@gnu.org>
 
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	<op_closepath>: `closepath' without a path is a no-op, not an error
+	(cf. the PS reference manual).
+
+	Reported by Martin McBride.
+
+2008-05-15  Werner Lemberg  <wl@gnu.org>
+
 	* builds/toplevel.mk (CONFIG_GUESS, CONFIG_SUB): Updated.
 
 2008-05-15  Werner Lemberg  <wl@gnu.org>
