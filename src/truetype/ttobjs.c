@@ -699,8 +699,9 @@
 
       error = tt_size_run_prep( size );
       if ( !error )
-          size->cvt_ready = 1;
+        size->cvt_ready = 1;
     }
+
   Exit:
     return error;
   }

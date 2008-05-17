@@ -1,3 +1,17 @@
+2008-05-16  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2008-05-16  Sergey Tolstov  <stolstov@esri.com>
+
+	Improve support for WGL4 encoded fonts.
+
+	* src/psnames/psmodule.c (WGL_EXTRA_LIST_SIZE): New macro.
+	(ft_wgl_extra_unicodes, ft_wgl_extra_glyph_names,
+	ft_wgl_extra_glyph_name_offsets): New arrays.
+	(ps_check_wgl_name, ps_check_wgl_unicode): New functions.
+	(ps_unicodes_init): Use them to add additional Unicode mappings.
+
 2008-05-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)

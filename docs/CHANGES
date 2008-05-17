@@ -42,6 +42,8 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
 
     - Build support for symbian has been contributed.
 
+    - Better WGL4 glyph name support, contributed by Sergey Tolstov.
+
 
 ======================================================================
 
