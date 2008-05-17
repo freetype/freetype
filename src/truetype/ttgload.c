@@ -267,7 +267,11 @@
     if ( n_contours >= 0xFFF || p + ( n_contours + 1 ) * 2 > limit )
       goto Invalid_Outline;
 
-    cont[0] = prev_cont = FT_NEXT_USHORT( p );
+    prev_cont = FT_NEXT_USHORT( p );
+
+    if ( n_contours > 0 )
+      cont[0] = prev_cont;
+
     for ( cont++; cont < cont_limit; cont++ )
     {
       cont[0] = FT_NEXT_USHORT( p );
