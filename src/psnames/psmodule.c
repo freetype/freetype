@@ -184,7 +184,7 @@
 
 #define WGL_EXTRA_LIST_SIZE  8
 
-  const FT_UInt32  ft_wgl_extra_unicodes[WGL_EXTRA_LIST_SIZE] =
+  static const FT_UInt32  ft_wgl_extra_unicodes[WGL_EXTRA_LIST_SIZE] =
   {
     0x0394,
     0x03A9,
@@ -196,7 +196,7 @@
     0x00A0
   };
 
-  const char  ft_wgl_extra_glyph_names[] =
+  static const char  ft_wgl_extra_glyph_names[] =
   {
     'D','e','l','t','a',0,
     'O','m','e','g','a',0,
@@ -208,7 +208,8 @@
     's','p','a','c','e',0
   };
 
-  const FT_Int  ft_wgl_extra_glyph_name_offsets[WGL_EXTRA_LIST_SIZE] =
+  static const FT_Int
+  ft_wgl_extra_glyph_name_offsets[WGL_EXTRA_LIST_SIZE] =
   {
      0,
      6,
@@ -221,7 +222,7 @@
   };
 
 
-  void
+  static void
   ps_check_wgl_name( const char*  gname,
                      FT_UInt      glyph,
                      FT_UInt*     wgl_glyphs,
@@ -248,7 +249,7 @@
   }
 
 
-  void
+  static void
   ps_check_wgl_unicode( FT_UInt32  uni_char,
                         FT_UInt   *states )
   {
