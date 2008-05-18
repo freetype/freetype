@@ -1,11 +1,18 @@
+2008-05-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftdebug.c (FT_Message, FT_Panic): Send output to stderr.
+	This fixes Savannah bug #23280.
+
+	* docs/CHANGES: Updated.
+
 2008-05-18  David Turner <david@freetype.org>
 
-	* src/psnames/psmodule.c: using 'static' to make declarations
-	non-global for ft_wgl_extra_unicodes, ft_wgl_extra_glyph_names,
-	ft_wgl_extra_glyph_name_offsets, ps_check_wgl_name and 
-	ps_check_wgl_unicode
+	* src/psnames/psmodule.c (ft_wgl_extra_unicodes,
+	ft_wgl_extra_glyph_names, ft_wgl_extra_glyph_name_offsets,
+	ps_check_wgl_name, ps_check_wgl_unicode): Use `static' to make
+	declarations non-global.
 
-	* src/type1/t1load.c: add missing comment
+	* src/type1/t1load.c: Add missing comment.
 
 2008-05-17  Sam Hocevar  <samh>
 
