@@ -1,5 +1,12 @@
 2008-05-18  Werner Lemberg  <wl@gnu.org>
 
+	* src/pshinter/pshalgo.c (ps_hints_apply): Reset scale values after
+	correction for pixel boundary.  Without this patch, the effect can
+	be cumulative under certain circumstances, making glyphs taller and
+	taller after each call.  This fixes Savannah bug #19976.
+
+2008-05-18  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftdebug.c (FT_Message, FT_Panic): Send output to stderr.
 	This fixes Savannah bug #23280.
 
