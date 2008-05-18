@@ -1397,6 +1397,9 @@
         FT_Byte*  temp;
 
 
+        /* some fonts define empty subr records. this is not totally
+         * compliant to the spec (which says they should at least
+         * contain a 'return') but we support them */
         if ( size < face->type1.private_dict.lenIV )
         {
           error = T1_Err_Invalid_File_Format;

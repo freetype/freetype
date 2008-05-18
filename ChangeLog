@@ -5,7 +5,7 @@
 	ft_wgl_extra_glyph_name_offsets, ps_check_wgl_name and 
 	ps_check_wgl_unicode
 
-
+	* src/type1/t1load.c: add missing comment
 
 2008-05-17  Sam Hocevar  <samh>
 
