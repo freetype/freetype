@@ -899,7 +899,7 @@ typedef short ResourceIndex;
     }
 
     CloseResFile( res_ref );
-    if ( FT_Err_Ok == error && NULL != aface )
+    if ( FT_Err_Ok == error && NULL != aface && NULL != *aface )
       (*aface)->num_faces = num_faces_in_res;
     return error;
   }

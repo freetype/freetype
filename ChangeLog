@@ -1,3 +1,9 @@
+2008-05-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftmac.c (FT_New_Face_From_Suitcase): Check if valid
+	aface is returned by FT_New_Face_From_FOND(). The patch was
+	proposed by anonymous reporter of Savannah bug #23204.
+
 2008-05-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshalgo.c (ps_hints_apply): Reset scale values after
