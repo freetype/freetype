@@ -3,6 +3,13 @@
 	* src/raster/ftraster.c (fc_black_render): Return 0 when we are
 	trying to render into a zero-width/height bitmap, not an error code.
 
+	* src/truetype/ttgload.c (load_truetype_glyph): Move initialization
+	of the graphics state for subglyphs to...
+	(TT_Hint_Glyph): This function.
+	Hinting instructions for a composite glyph apparently refer to the
+	just hinted subglyphs, not the unhinted, unscaled outline.  This
+	seems to fix Savannah bugs #20973 and (at least partially) #23310.
+
 2008-05-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c (FT_New_Face_From_Suitcase): Check if valid

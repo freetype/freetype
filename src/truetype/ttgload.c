@@ -643,6 +643,24 @@
     /* save original point position in org */
     if ( n_ins > 0 )
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
+
+    /* Reset graphics state. */
+    loader->exec->GS = ((TT_Size)loader->size)->GS;
+
+    /* XXX: UNDOCUMENTED! Hinting instructions of a composite glyph */
+    /*      completely refer to the (already) hinted subglyphs.     */
+    if ( is_composite )
+    {
+      loader->exec->metrics.x_scale = 1 << 16;
+      loader->exec->metrics.y_scale = 1 << 16;
+
+      FT_ARRAY_COPY( zone->orus, zone->cur, zone->n_points );
+    }
+    else
+    {
+      loader->exec->metrics.x_scale = loader->size->metrics.x_scale;
+      loader->exec->metrics.y_scale = loader->size->metrics.y_scale;
+    }
 #endif
 
     /* round pp2 and pp4 */
@@ -1407,13 +1425,6 @@
 
         FT_Stream         old_stream     = loader->stream;
 
-#ifdef TT_USE_BYTECODE_INTERPRETER
-        TT_GraphicsState  saved_GS;
-
-
-        if ( loader->exec )
-          saved_GS = loader->exec->GS;
-#endif
 
         FT_GlyphLoader_Add( gloader );
 
@@ -1422,12 +1433,6 @@
         {
           FT_Vector  pp[4];
 
-
-#ifdef TT_USE_BYTECODE_INTERPRETER
-          /* reinitialize graphics state */
-          if ( loader->exec )
-            loader->exec->GS = saved_GS;
-#endif
 
           /* Each time we call load_truetype_glyph in this loop, the   */
           /* value of `gloader.base.subglyphs' can change due to table */
