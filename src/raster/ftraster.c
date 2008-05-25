@@ -3331,7 +3331,8 @@ static const char  count_table[256] =
     if ( !outline->contours || !outline->points )
       return Raster_Err_Invalid;
 
-    if ( outline->n_points != outline->contours[outline->n_contours - 1] + 1 )
+    if ( outline->n_points !=
+           outline->contours[outline->n_contours - 1] + 1 )
       return Raster_Err_Invalid;
 
     worker = raster->worker;
@@ -3340,7 +3341,14 @@ static const char  count_table[256] =
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
       return Raster_Err_Unsupported;
 
-    if ( !target_map || !target_map->buffer )
+    if ( !target_map )
+      return Raster_Err_Invalid;
+
+    /* nothing to do */
+    if ( !target_map->width || !target_map->rows )
+      return Raster_Err_None;
+
+    if ( !target_map->buffer )
       return Raster_Err_Invalid;
 
     ras.outline  = *outline;
