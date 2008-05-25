@@ -658,8 +658,10 @@
     }
     else
     {
-      loader->exec->metrics.x_scale = loader->size->metrics.x_scale;
-      loader->exec->metrics.y_scale = loader->size->metrics.y_scale;
+      loader->exec->metrics.x_scale =
+        ((TT_Size)loader->size)->metrics.x_scale;
+      loader->exec->metrics.y_scale =
+        ((TT_Size)loader->size)->metrics.y_scale;
     }
 #endif
 
