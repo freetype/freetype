@@ -1416,14 +1416,14 @@
       /*********************************************************************/
 
       {
-        FT_UInt           n, num_base_points;
-        FT_SubGlyph       subglyph       = 0;
+        FT_UInt      n, num_base_points;
+        FT_SubGlyph  subglyph       = 0;
 
-        FT_UInt           num_points     = start_point;
-        FT_UInt           num_subglyphs  = gloader->current.num_subglyphs;
-        FT_UInt           num_base_subgs = gloader->base.num_subglyphs;
+        FT_UInt      num_points     = start_point;
+        FT_UInt      num_subglyphs  = gloader->current.num_subglyphs;
+        FT_UInt      num_base_subgs = gloader->base.num_subglyphs;
 
-        FT_Stream         old_stream     = loader->stream;
+        FT_Stream    old_stream     = loader->stream;
 
 
         FT_GlyphLoader_Add( gloader );
