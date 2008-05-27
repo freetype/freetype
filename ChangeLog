@@ -1,3 +1,9 @@
+2008-05-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (Ins_MD): The MD instruction also uses
+	original, unscaled input values.  Confirmed by Greg Hitchcock from
+	Microsoft.
+
 2008-05-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/docmaker/tohtml.py (block_footer_start,

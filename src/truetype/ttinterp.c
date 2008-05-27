@@ -4821,7 +4821,28 @@
       if ( CUR.opcode & 1 )
         D = CUR_Func_project( CUR.zp0.cur + L, CUR.zp1.cur + K );
       else
-        D = CUR_Func_dualproj( CUR.zp0.org + L, CUR.zp1.org + K );
+      {
+        FT_Vector*  vec1 = CUR.zp0.orus + L;
+        FT_Vector*  vec2 = CUR.zp1.orus + K;
+
+
+        if ( CUR.metrics.x_scale == CUR.metrics.y_scale )
+        {
+          /* this should be faster */
+          D = CUR_Func_dualproj( vec1, vec2 );
+          D = TT_MULFIX( D, CUR.metrics.x_scale );
+        }
+        else
+        {
+          FT_Vector  vec;
+
+
+          vec.x = TT_MULFIX( vec1->x - vec2->x, CUR.metrics.x_scale );
+          vec.y = TT_MULFIX( vec1->y - vec2->y, CUR.metrics.y_scale );
+
+          D = CUR_fast_dualproj( &vec );
+        }
+      }
     }
 
     args[0] = D;
