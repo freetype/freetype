@@ -79,12 +79,12 @@ block_header        = '<table align=center width="75%"><tr><td>'
 block_footer_start  = """\
 </td></tr></table>
 <hr width="75%">
-<table align=center width="75%"><tr><td><font size=-2>[<a href="
+<table align=center width="75%"><tr><td><font size=-2>[<a href="\
 """
 block_footer_middle = """\
 ">Index</a>]</font></td>
 <td width="100%"></td>
-<td><font size=-2>[<a href="
+<td><font size=-2>[<a href="\
 """
 block_footer_end    = """\
 ">TOC</a>]</font></td></tr></table>

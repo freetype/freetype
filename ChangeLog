@@ -1,3 +1,8 @@
+2008-05-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/docmaker/tohtml.py (block_footer_start,
+	block_footer_middle): Beautify output.
+
 2008-05-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (fc_black_render): Return 0 when we are
