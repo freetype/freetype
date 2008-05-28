@@ -190,7 +190,7 @@ FT_BEGIN_HEADER
   /*    given blend dictionary (font info or private).  Used to support    */
   /*    Multiple Masters fonts.                                            */
   /*                                                                       */
-  typedef enum
+  typedef enum  T1_Blend_Flags_
   {
     /*# required fields in a FontInfo blend dictionary */
     T1_BLEND_UNDERLINE_POSITION = 0,

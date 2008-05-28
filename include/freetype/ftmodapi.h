@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType modules public interface (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2006 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2006, 2008 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -362,7 +362,7 @@ FT_BEGIN_HEADER
    *       2.2
    *
    */
-  typedef enum
+  typedef enum  FT_TrueTypeEngineType_
   {
     FT_TRUETYPE_ENGINE_TYPE_NONE = 0,
     FT_TRUETYPE_ENGINE_TYPE_UNPATENTED,

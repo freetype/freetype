@@ -337,7 +337,8 @@
   }
 
 
-  typedef struct  GX_GVar_Head_ {
+  typedef struct  GX_GVar_Head_
+  {
     FT_Long    version;
     FT_UShort  axisCount;
     FT_UShort  globalCoordCount;
@@ -564,7 +565,8 @@
   /*************************************************************************/
 
 
-  typedef struct  GX_FVar_Head_ {
+  typedef struct  GX_FVar_Head_
+  {
     FT_Long    version;
     FT_UShort  offsetToData;
     FT_UShort  countSizePairs;
@@ -576,7 +578,8 @@
   } GX_FVar_Head;
 
 
-  typedef struct  fvar_axis {
+  typedef struct  fvar_axis_
+  {
     FT_ULong   axisTag;
     FT_ULong   minValue;
     FT_ULong   defaultValue;

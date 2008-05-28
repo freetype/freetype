@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
 #define FT_TRACE_DEF( x )  trace_ ## x ,
 
   /* defining the enumeration */
-  typedef enum
+  typedef enum  FT_Trace_
   {
 #include FT_INTERNAL_TRACE_H
     trace_count

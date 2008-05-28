@@ -6278,7 +6278,7 @@
 
 
   /* Local variables for Ins_IUP: */
-  typedef struct
+  typedef struct  IUP_WorkerRec_
   {
     FT_Vector*  orgs;   /* original and current coordinate */
     FT_Vector*  curs;   /* arrays                          */
