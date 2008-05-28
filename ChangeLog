@@ -1,5 +1,11 @@
 2008-05-28  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/sources.py (SourceBlock::__init__): While
+	looking for markup tags, return immediately as soon a single one is
+	found.
+
+2008-05-28  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (Ins_MD): The MD instruction also uses
 	original, unscaled input values.  Confirmed by Greg Hitchcock from
 	Microsoft.

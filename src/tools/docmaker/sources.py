@@ -58,9 +58,9 @@ class  SourceBlockFormat:
 #
 
 start = r'''
-  \s*       # any number of whitespace
-  /\*{2,}/  # followed by '/' and at least two asterisks then '/'
-  \s*$      # eventually followed by whitespace
+  \s*      # any number of whitespace
+  /\*{2,}/ # followed by '/' and at least two asterisks then '/'
+  \s*$     # probably followed by whitespace
 '''
 
 column = r'''
@@ -68,7 +68,7 @@ column = r'''
   /\*{1}   # followed by '/' and precisely one asterisk
   ([^*].*) # followed by anything (group 1)
   \*{1}/   # followed by one asterisk and a '/'
-  \s*$     # eventually followed by whitespace
+  \s*$     # probably followed by whitespace
 '''
 
 re_source_block_format1 = SourceBlockFormat( 1, start, column, start )
@@ -89,18 +89,18 @@ re_source_block_format1 = SourceBlockFormat( 1, start, column, start )
 start = r'''
   \s*     # any number of whitespace
   /\*{2,} # followed by '/' and at least two asterisks
-  \s*$    # eventually followed by whitespace
+  \s*$    # probably followed by whitespace
 '''
 
 column = r'''
-  \s*         # any number of whitespace
-  \*{1}(?!/)  # followed by precisely one asterisk not followed by `/'
-  (.*)        # then anything (group1)
+  \s*        # any number of whitespace
+  \*{1}(?!/) # followed by precisely one asterisk not followed by `/'
+  (.*)       # then anything (group1)
 '''
 
 end = r'''
-  \s*     # any number of whitespace
-  \*+/    # followed by at least one asterisk, then '/'
+  \s*  # any number of whitespace
+  \*+/ # followed by at least one asterisk, then '/'
 '''
 
 re_source_block_format2 = SourceBlockFormat( 2, start, column, end )
@@ -228,7 +228,7 @@ class  SourceBlock:
                 for tag in re_markup_tags:
                     if tag.match( l ):
                         self.content = lines
-                return
+                        return
 
     def  location( self ):
         return "(" + self.filename + ":" + repr( self.lineno ) + ")"
@@ -282,8 +282,7 @@ class  SourceProcessor:
         self.format = None
 
     def  parse_file( self, filename ):
-        """parse a C source file, and adds its blocks to the processor's list"""
-
+        """parse a C source file, and add its blocks to the processor's list"""
         self.reset()
 
         self.filename = filename
@@ -321,17 +320,17 @@ class  SourceProcessor:
         self.add_block_lines()
 
     def  process_normal_line( self, line ):
-        """process a normal line and check if it's the start of a new block"""
+        """process a normal line and check whether it is the start of a new block"""
         for f in re_source_block_formats:
-          if f.start.match( line ):
-            self.add_block_lines()
-            self.format = f
-            self.lineno = fileinput.filelineno()
+            if f.start.match( line ):
+                self.add_block_lines()
+                self.format = f
+                self.lineno = fileinput.filelineno()
 
         self.lines.append( line )
 
     def  add_block_lines( self ):
-        """add the current accumulated lines, and create a new block"""
+        """add the current accumulated lines and create a new block"""
         if self.lines != []:
             block = SourceBlock( self, self.filename, self.lineno, self.lines )
 
