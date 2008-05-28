@@ -34,11 +34,10 @@ import fileinput, re, sys, os, string
 ##   note that the 'column' pattern must contain a group that will
 ##   be used to "unbox" the content of documentation comment blocks
 ##
-class SourceBlockFormat:
+class  SourceBlockFormat:
 
     def  __init__( self, id, start, column, end ):
         """create a block pattern, used to recognize special documentation blocks"""
-
         self.id     = id
         self.start  = re.compile( start, re.VERBOSE )
         self.column = re.compile( column, re.VERBOSE )
@@ -199,7 +198,8 @@ re_source_keywords = re.compile( '''\\b ( typedef   |
 ##                    (i.e. sources or ordinary comments with no starting
 ##                     markup tag)
 ##
-class SourceBlock:
+class  SourceBlock:
+
     def  __init__( self, processor, filename, lineno, lines ):
         self.processor = processor
         self.filename  = filename
@@ -232,7 +232,6 @@ class SourceBlock:
 
     def  location( self ):
         return "(" + self.filename + ":" + repr( self.lineno ) + ")"
-
 
     # debugging only - not used in normal operations
     def  dump( self ):
@@ -268,7 +267,7 @@ class SourceBlock:
 ##   - normal sources lines, include comments
 ##
 ##
-class SourceProcessor:
+class  SourceProcessor:
 
     def  __init__( self ):
         """initialize a source processor"""
@@ -296,23 +295,20 @@ class SourceProcessor:
 
         for line in fileinput.input( filename ):
             # strip trailing newlines, important on Windows machines!
-            if  line[-1] == '\012':
+            if line[-1] == '\012':
                 line = line[0:-1]
 
             if self.format == None:
                 self.process_normal_line( line )
-
             else:
                 if self.format.end.match( line ):
                     # that's a normal block end, add it to lines and
                     # create a new block
                     self.lines.append( line )
                     self.add_block_lines()
-
                 elif self.format.column.match( line ):
                     # that's a normal column line, add it to 'lines'
                     self.lines.append( line )
-
                 else:
                     # humm.. this is an unexpected block end,
                     # create a new block, but don't process the line

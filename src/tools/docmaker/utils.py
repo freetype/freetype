@@ -83,7 +83,7 @@ def  check_output():
     if output_dir:
         if output_dir != "":
             if not os.path.isdir( output_dir ):
-                sys.stderr.write( "argument" + " '" + output_dir + "' " +
+                sys.stderr.write( "argument" + " '" + output_dir + "' " + \
                                   "is not a valid directory" )
                 sys.exit( 2 )
         else:
@@ -105,7 +105,6 @@ def  file_exists( pathname ):
 
 def  make_file_list( args = None ):
     """builds a list of input files from command-line arguments"""
-
     file_list = []
     # sys.stderr.write( repr( sys.argv[1 :] ) + '\n' )
 

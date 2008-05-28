@@ -14,7 +14,7 @@ from utils   import *
 # used to output -- you guessed it -- HTML.
 #
 
-class Formatter:
+class  Formatter:
 
     def  __init__( self, processor ):
         self.processor   = processor
@@ -41,7 +41,7 @@ class Formatter:
     def  add_identifier( self, name, block ):
         if self.identifiers.has_key( name ):
             # duplicate name!
-            sys.stderr.write( \
+            sys.stderr.write(                                           \
                "WARNING: duplicate definition for '" + name + "' in " + \
                block.location() + ", previous definition in " +         \
                self.identifiers[name].location() + "\n" )
@@ -155,7 +155,6 @@ class Formatter:
         pass
 
     def  section_dump( self, section, section_filename = None ):
-
         output = None
         if section_filename:
             output = open_output( section_filename )

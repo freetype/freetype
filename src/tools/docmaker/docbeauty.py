@@ -55,10 +55,9 @@ def  main( argv ):
     global output_dir
 
     try:
-        opts, args = getopt.getopt( sys.argv[1:],
-                                    "hb",
+        opts, args = getopt.getopt( sys.argv[1:], \
+                                    "hb",         \
                                     ["help", "backup"] )
-
     except getopt.GetoptError:
         usage()
         sys.exit( 2 )
@@ -87,10 +86,13 @@ def  main( argv ):
     file_list = make_file_list( args )
     for filename in file_list:
         source_processor.parse_file( filename )
+
         for block in source_processor.blocks:
             beautify_block( block )
+
         new_name = filename + ".new"
         ok       = None
+
         try:
             file = open( new_name, "wt" )
             for block in source_processor.blocks:
