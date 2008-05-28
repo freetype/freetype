@@ -2091,7 +2091,18 @@ FT_BEGIN_HEADER
     FT_UInt               horiResolution;
     FT_UInt               vertResolution;
 
-  } FT_Size_RequestRec, *FT_Size_Request;
+  } FT_Size_RequestRec;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Size_Request                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a size request structure.                              */
+  /*                                                                       */
+  typedef struct FT_Size_RequestRec_  *FT_Size_Request;
 
 
   /*************************************************************************/
@@ -2489,18 +2500,18 @@ FT_BEGIN_HEADER
 #define FT_LOAD_TARGET_LCD_V      FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
 
 
-  /*
+  /**************************************************************************
+   *
    * @macro:
    *   FT_LOAD_TARGET_MODE
    *
    * @description:
    *   Return the @FT_Render_Mode corresponding to a given
    *   @FT_LOAD_TARGET_XXX value.
+   *
    */
 
 #define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 15 ) )
-
-  /* */
 
 
   /*************************************************************************/
