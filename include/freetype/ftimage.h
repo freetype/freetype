@@ -5,7 +5,7 @@
 /*    FreeType glyph image formats and default raster interface            */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -206,7 +206,7 @@ FT_BEGIN_HEADER
   /*    An enumeration type to describe the format of a bitmap palette,    */
   /*    used with ft_pixel_mode_pal4 and ft_pixel_mode_pal8.               */
   /*                                                                       */
-  /* <Fields>                                                              */
+  /* <Values>                                                              */
   /*    ft_palette_mode_rgb  :: The palette is an array of 3-bytes RGB     */
   /*                            records.                                   */
   /*                                                                       */
@@ -222,7 +222,7 @@ FT_BEGIN_HEADER
     ft_palette_mode_rgb = 0,
     ft_palette_mode_rgba,
 
-    ft_palettte_mode_max   /* do not remove */
+    ft_palette_mode_max   /* do not remove */
 
   } FT_Palette_Mode;
 
@@ -491,6 +491,7 @@ FT_BEGIN_HEADER
 
 #define FT_Outline_MoveTo_Func  FT_Outline_MoveToFunc
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -516,6 +517,7 @@ FT_BEGIN_HEADER
                             void*             user );
 
 #define FT_Outline_LineTo_Func  FT_Outline_LineToFunc
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -547,6 +549,7 @@ FT_BEGIN_HEADER
                              void*             user );
 
 #define FT_Outline_ConicTo_Func  FT_Outline_ConicToFunc
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -869,7 +872,7 @@ FT_BEGIN_HEADER
                   const FT_Span*  spans,
                   void*           user );
 
-#define FT_Raster_Span_Func   FT_SpanFunc
+#define FT_Raster_Span_Func  FT_SpanFunc
 
 
   /*************************************************************************/
@@ -1074,7 +1077,7 @@ FT_BEGIN_HEADER
   (*FT_Raster_NewFunc)( void*       memory,
                         FT_Raster*  raster );
 
-#define FT_Raster_New_Func    FT_Raster_NewFunc
+#define FT_Raster_New_Func  FT_Raster_NewFunc
 
 
   /*************************************************************************/
@@ -1091,7 +1094,7 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_Raster_DoneFunc)( FT_Raster  raster );
 
-#define FT_Raster_Done_Func   FT_Raster_DoneFunc
+#define FT_Raster_Done_Func  FT_Raster_DoneFunc
 
 
   /*************************************************************************/
@@ -1126,7 +1129,7 @@ FT_BEGIN_HEADER
                           unsigned char*  pool_base,
                           unsigned long   pool_size );
 
-#define FT_Raster_Reset_Func   FT_Raster_ResetFunc
+#define FT_Raster_Reset_Func  FT_Raster_ResetFunc
 
 
   /*************************************************************************/
@@ -1193,7 +1196,7 @@ FT_BEGIN_HEADER
   (*FT_Raster_RenderFunc)( FT_Raster                raster,
                            const FT_Raster_Params*  params );
 
-#define FT_Raster_Render_Func    FT_Raster_RenderFunc
+#define FT_Raster_Render_Func  FT_Raster_RenderFunc
 
 
   /*************************************************************************/

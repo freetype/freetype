@@ -294,6 +294,14 @@ FT_BEGIN_HEADER
   typedef PS_BlendRec  T1_Blend;
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    CID_FaceDictRec                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A structure used to represent data in a CID top-level dictionary.  */
+  /*                                                                       */
   typedef struct  CID_FaceDictRec_
   {
     PS_PrivateRec  private_dict;
@@ -312,7 +320,20 @@ FT_BEGIN_HEADER
     FT_ULong       subrmap_offset;
     FT_Int         sd_bytes;
 
-  } CID_FaceDictRec, *CID_FaceDict;
+  } CID_FaceDictRec;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    CID_FaceDict                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a @CID_FaceDictRec structure.                          */
+  /*                                                                       */
+  typedef struct CID_FaceDictRec_*  CID_FaceDict;
+
+  /* */
 
 
   /* backwards-compatible definition */
