@@ -156,7 +156,7 @@ FT_BEGIN_HEADER
   /*    caret_Slope_Run        :: The run coefficient of the cursor's      */
   /*                              slope.                                   */
   /*                                                                       */
-  /*    Reserved               :: 10 reserved bytes.                       */
+  /*    Reserved               :: 8 reserved bytes.                        */
   /*                                                                       */
   /*    metric_Data_Format     :: Always 0.                                */
   /*                                                                       */
