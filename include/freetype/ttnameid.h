@@ -28,6 +28,13 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* <Section>                                                             */
+  /*    truetype_tables                                                    */
+  /*                                                                       */
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Possible values for the `platform' identifier code in the name        */
   /* records of the TTF `name' table.                                      */
   /*                                                                       */

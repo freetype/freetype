@@ -1,3 +1,8 @@
+2008-05-01  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftheader.h (FT_UNPATENTED_HINTING_H,
+	FT_INCREMENTAL_H): Added.
+
 2008-05-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/docmaker/sources.py (SourceBlock::__init__): While

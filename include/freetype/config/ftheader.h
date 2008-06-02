@@ -696,6 +696,30 @@
   /*************************************************************************
    *
    * @macro:
+   *   FT_UNPATENTED_HINTING_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API which performs color filtering for subpixel rendering.
+   */
+#define FT_UNPATENTED_HINTING_H  <freetype/ttunpat.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_INCREMENTAL_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType 2 API which performs color filtering for subpixel rendering.
+   */
+#define FT_INCREMENTAL_H  <freetype/ftincrem.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
    *   FT_GASP_H
    *
    * @description:
