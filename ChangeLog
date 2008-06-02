@@ -1,4 +1,19 @@
-2008-05-01  Werner Lemberg  <wl@gnu.org>
+2008-06-02  Werner Lemberg  <wl@gnu.org>
+
+	Emit header info for defined FreeType objects in reference.
+
+	* src/tools/docmaker/content.py (re_header_macro): New regexp.
+	(ContentProcessor::__init__): Initialize new dictionary `headers'.
+	(DocBlock::__init__): Collect macro header definitions.
+
+	* src/tools/docmaker/tohtml.py (header_location_header,
+	header_location_footer): New strings.
+	(HtmlFormatter::__init__): Pass `headers' dictionary.
+	(HtmlFormatter::print_html_field): Don't emit paragraph tags.
+	(HtmlFormatter::print_html_field_list): Emit empty paragraph.
+	(HtmlFormatter::block_enter): Emit header info.
+
+2008-06-01  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/config/ftheader.h (FT_UNPATENTED_HINTING_H,
 	FT_INCREMENTAL_H): Added.

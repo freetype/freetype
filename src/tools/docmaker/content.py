@@ -34,6 +34,12 @@ re_code_end   = re.compile( r"(\s*)}\s*$" )
 re_identifier = re.compile( r'(\w*)' )
 
 
+# we collect macros ending in `_H'; while outputting the object data, we use
+# this info together with the object's file location to emit the appropriate
+# header file macro and name before the object itself
+#
+re_header_macro = re.compile( r'^#define\s{1,}(\w{1,}_H)\s{1,}<(.*)>' )
+
 
 #############################################################################
 #
@@ -339,7 +345,9 @@ class  ContentProcessor:
         self.sections = {}    # dictionary of documentation sections
         self.section  = None  # current documentation section
 
-        self.chapters = []        # list of chapters
+        self.chapters = []    # list of chapters
+
+        self.headers  = {}    # dictionary of header macros
 
     def  set_section( self, section_name ):
         """set current section during parsing"""
@@ -511,6 +519,11 @@ class  DocBlock:
             if b.format:
                 break
             for l in b.lines:
+                # collect header macro definitions
+                m = re_header_macro.match( l )
+                if m:
+                    processor.headers[m.group( 2 )] = m.group( 1 );
+
                 # we use "/* */" as a separator
                 if re_source_sep.match( l ):
                     break

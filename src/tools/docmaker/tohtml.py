@@ -93,6 +93,10 @@ marker_header = '<table align=center width="87%" cellpadding=5><tr bgcolor="#EEE
 marker_inter  = "</b></em></td></tr><tr><td>"
 marker_footer = "</td></tr></table>"
 
+# Header location header/footer.
+header_location_header = '<table align=center width="87%"><tr><td>'
+header_location_footer = "</td></tr></table><br>"
+
 # Source code extracts header/footer.
 source_header = '<table align=center width="87%"><tr bgcolor="#D6E8FF"><td><pre>\n'
 source_footer = "\n</pre></table><br>"
@@ -162,6 +166,7 @@ class  HtmlFormatter( Formatter ):
         else:
             file_prefix = ""
 
+        self.headers       = processor.headers
         self.project_title = project_title
         self.file_prefix   = file_prefix
         self.html_header   = html_header_1 + project_title + html_header_2 + \
@@ -259,7 +264,7 @@ class  HtmlFormatter( Formatter ):
 
     def  print_html_field( self, field ):
         if field.name:
-            print "<table><tr valign=top><td><p><b>" + field.name + "</b></p></td><td>"
+            print "<table><tr valign=top><td><b>" + field.name + "</b></td><td>"
 
         print self.make_html_items( field.items )
 
@@ -297,6 +302,7 @@ class  HtmlFormatter( Formatter ):
         return result
 
     def  print_html_field_list( self, fields ):
+        print "<p></p>"
         print "<table cellpadding=3 border=0>"
         for field in fields:
             if len( field.name ) > 22:
@@ -472,6 +478,21 @@ class  HtmlFormatter( Formatter ):
 
         # dump the block C source lines now
         if block.code:
+            header = ''
+            for f in self.headers.keys():
+                if block.source.filename.find( f ) >= 0:
+                    header = self.headers[f] + ' (' + f + ')'
+                    break;
+                
+#           if not header:
+#               sys.stderr.write( \
+#                 'WARNING: No header macro for ' + block.source.filename + '.\n' )
+
+            if header:
+                print header_location_header
+                print 'Defined in ' + header + '.'
+                print header_location_footer
+
             print source_header
             for l in block.code:
                 print self.html_source_quote( l, block.name )
