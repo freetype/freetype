@@ -1,3 +1,8 @@
+2008-06-03  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftcache.h (FTC_FaceID): Change type back to
+	FT_Pointer.  Reported by Ian Britten <britten@caris.com>.
+
 2008-06-02  Werner Lemberg  <wl@gnu.org>
 
 	Emit header info for defined FreeType objects in reference.

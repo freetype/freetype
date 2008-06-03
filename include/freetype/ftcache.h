@@ -165,7 +165,7 @@ FT_BEGIN_HEADER
    *   Failure to do so will result in incorrect behaviour or even
    *   memory leaks and crashes.
    */
-  typedef struct FTC_FaceIDRec_*  FTC_FaceID;
+  typedef FT_Pointer  FTC_FaceID;
 
 
   /************************************************************************
