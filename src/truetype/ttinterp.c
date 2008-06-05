@@ -6232,9 +6232,13 @@
         org_dist = CUR_Func_dualproj( &CUR.zp2.orus[point], orus_base );
 
       cur_dist = CUR_Func_project ( &CUR.zp2.cur[point], cur_base );
-      new_dist = ( old_range != 0 )
-                   ? TT_MULDIV( org_dist, cur_range, old_range )
-                   : cur_dist;
+
+      if ( org_dist )
+        new_dist = ( old_range != 0 )
+                     ? TT_MULDIV( org_dist, cur_range, old_range )
+                     : cur_dist;
+      else
+        new_dist = 0;
 
       CUR_Func_move( &CUR.zp2, (FT_UShort)point, new_dist - cur_dist );
     }

@@ -1,3 +1,8 @@
+2008-06-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (Ins_IP): Handle case `org_dist == 0'
+	correctly.  This fixes glyphs `t' and `h' of Arial Narrow at 12ppem.
+
 2008-06-03  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftcache.h (FTC_FaceID): Change type back to
