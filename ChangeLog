@@ -1,3 +1,10 @@
+2008-06-09  Werner Lemberg  <wl@gnu.org>
+
+	* README.CVS: Updated.
+
+	* builds/unix/configure.raw: Updated for newer versions of autoconf
+	and friends.
+
 2008-06-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1parse.h (T1_ParserRec): Make `base_len' and
