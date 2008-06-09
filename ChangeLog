@@ -1,3 +1,31 @@
+2008-06-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1parse.h (T1_ParserRec): Make `base_len' and
+	`private_len' unsigned.
+
+	* src/type1/t1parse.c (read_pfb_tag): Make `asize' unsigned and read
+	it as such.
+	(T1_New_Parser, T1_Get_Private_Dict): Make `size' unsigned.
+
+
+	* src/base/ftstream.c (FT_Stream_Skip): Reject negative values.
+
+
+	* src/type1/t1load.c (parse_blend_design_positions): Check `n_axis'
+	for sane value.
+	Fix typo.
+
+
+	* src/psaux/psobjs.c (ps_table_add): Check `idx' correctly.
+
+
+	* src/truetype/ttinterp (Ins_SHC): Use BOUNDS() to check
+	`last_point'.
+
+
+	* src/sfnt/ttload.c (tt_face_load_max_profile): Limit
+	`maxTwilightPoints'.
+
 2008-06-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (Ins_IP): Handle case `org_dist == 0'

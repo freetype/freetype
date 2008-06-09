@@ -674,7 +674,7 @@
 
       for ( n = 0; n < num_designs; n++ )
       {
-        T1_TokenRec  axis_tokens[T1_MAX_MM_DESIGNS];
+        T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
         T1_Token     token;
         FT_Int       axis, n_axis;
 
@@ -687,6 +687,15 @@
 
         if ( n == 0 )
         {
+          if ( n_axis <= 0 || n_axis > T1_MAX_MM_AXIS )
+          {
+            FT_ERROR(( "parse_blend_design_positions:" ));
+            FT_ERROR(( "  invalid number of axes: %d\n",
+                       n_axis ));
+            error = T1_Err_Invalid_File_Format;
+            goto Exit;
+          }
+
           num_axis = n_axis;
           error = t1_allocate_blend( face, num_designs, num_axis );
           if ( error )

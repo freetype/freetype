@@ -10,6 +10,8 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
       it's always possible to manually select an Apple Unicode cmap if
       desired.
 
+    - Many bug fixes to the TrueType bytecode interpreter.
+
     - Improved Mac support.
 
     - Subsetted CID-keyed CFFs are now supported correctly.

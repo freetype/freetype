@@ -5449,7 +5449,7 @@
 
     /* XXX: this is probably wrong... at least it prevents memory */
     /*      corruption when zp2 is the twilight zone              */
-    if ( last_point > CUR.zp2.n_points )
+    if ( BOUNDS( last_point, CUR.zp2.n_points ) )
     {
       if ( CUR.zp2.n_points > 0 )
         last_point = (FT_UShort)(CUR.zp2.n_points - 1);
