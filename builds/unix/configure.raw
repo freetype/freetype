@@ -510,8 +510,7 @@ LT_INIT(win32-dll)
 
 AC_SUBST([hardcode_libdir_flag_spec])
 AC_SUBST([wl])
-# urgh -- this is an internal libtool variable...
-AC_SUBST([enable_shared])
+AC_SUBST([build_libtool_libs])
 
 
 # configuration file -- stay in 8.3 limit

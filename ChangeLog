@@ -13,8 +13,8 @@
 
 	* README.CVS: Updated.
 
-	* builds/unix/configure.raw: Updated for newer versions of autoconf
-	and friends.
+	* builds/unix/configure.raw, builds/unix/freetype-config.in: Updated
+	for newer versions of autoconf and friends.
 
 2008-06-08  Werner Lemberg  <wl@gnu.org>
 
