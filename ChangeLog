@@ -1,3 +1,14 @@
+2008-06-09  VaDiM  <s_sliva@rambler.ru>
+
+	Support debugging on WinCE.  From Savannah patch #6536; this fixes
+	bug #23497.
+
+	* builds/win32/ftdebug.c (OutputDebugStringEx): New function/macro
+	as a replacement for OutputDebugStringA (which WinCE doesn't have).
+	Update all callers.
+	(ft_debug_init) [_WIN32_CE]: WinCE apparently doesn't have
+	environment variables.
+
 2008-06-09  Werner Lemberg  <wl@gnu.org>
 
 	* README.CVS: Updated.
