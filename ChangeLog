@@ -1,5 +1,36 @@
 2008-06-10  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.3.6 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-6'.
+
+	* docs/CHANGES, docs/VERSION.DLL: Update documentation and bump
+	version number to 2.3.6.
+
+	* README, Jamfile (RefDoc), builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj: s/2.3.5/2.3.6/, s/235/236/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 6.
+
+	* builds/unix/configure.raw (version_info): Set to 9:17:3.
+
+
+	* include/freetype/internal/psaux.h (T1_BuilderRec): Remove `scale_x'
+	and `scale_y'.
+	* src/cff/cffgload.h (CFF_Builder): Remove `scale_x' and `scale_y'.
+
+
+	* src/cff/cffparse.c: Include FT_INTERNAL_DEBUG_H.
+	* src/cff/cffobjs.h: Include FT_INTERNAL_POSTSCRIPT_HINTS_H.
+
+2008-06-10  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftobjs.c (open_face): Check `clazz->init_face' and
 	`clazz->done_face'.
 
@@ -532,7 +563,7 @@
 
 2007-11-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Fix MacOS legacy font support by Masatake Yamato on Mac OS X. It is
+	Fix MacOS legacy font support by Masatake Yamato on Mac OS X.  It is
 	not working since 2.3.5.  In FT_Open_New(), if FT_New_Stream()
 	cannot mmap() the specified file and cannot seek to head of the
 	specified file, it returns NULL stream and FT_Open_New() returns the

@@ -564,9 +564,6 @@ FT_BEGIN_HEADER
 
     FT_Vector       last;
 
-    FT_Fixed        scale_x;       /* obsolete */
-    FT_Fixed        scale_y;       /* obsolete */
-
     FT_Pos          pos_x;
     FT_Pos          pos_y;
 

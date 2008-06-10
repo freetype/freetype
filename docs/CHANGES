@@ -3,6 +3,9 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
 
   I. IMPORTANT BUG FIXES
 
+    - A  bunch of  potential security  problems have  been found.  All
+      users should update.
+
     - Microsoft  Unicode  cmaps  in  TrueType  fonts  are  now  always
       preferred over Apple cmaps.  This is not a bug per se, but there
       exist some buggy  fonts created for MS which  have broken  Apple
@@ -49,6 +52,11 @@ CHANGES BETWEEN 2.3.6 and 2.3.5
 
     - Debugging output of the  various FT_TRACEX macros is now sent to
       stderr.
+
+    - The `ftview' demo program now provides artificial slanting too.
+
+    - The `ftvalid' demo  program has a new  option `-f' to select the
+      font index.
 
 
 ======================================================================
