@@ -1068,7 +1068,7 @@
     }
 #endif
 
-    if ( class->init_face )
+    if ( clazz->init_face )
       error = clazz->init_face( stream,
                                 face,
                                 (FT_Int)face_index,
