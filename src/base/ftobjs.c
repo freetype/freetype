@@ -1068,11 +1068,12 @@
     }
 #endif
 
-    error = clazz->init_face( stream,
-                              face,
-                              (FT_Int)face_index,
-                              num_params,
-                              params );
+    if ( class->init_face )
+      error = clazz->init_face( stream,
+                                face,
+                                (FT_Int)face_index,
+                                num_params,
+                                params );
     if ( error )
       goto Fail;
 
@@ -1095,7 +1096,8 @@
     if ( error )
     {
       destroy_charmaps( face, memory );
-      clazz->done_face( face );
+      if ( clazz->done_face )
+        clazz->done_face( face );
       FT_FREE( internal );
       FT_FREE( face );
       *aface = 0;

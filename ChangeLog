@@ -1,3 +1,8 @@
+2008-06-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (open_face): Check `clazz->init_face' and
+	`clazz->done_face'.
+
 2008-06-09  VaDiM  <s_sliva@rambler.ru>
 
 	Support debugging on WinCE.  From Savannah patch #6536; this fixes
