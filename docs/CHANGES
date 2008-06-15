@@ -1,3 +1,15 @@
+CHANGES BETWEEN 2.3.7 and 2.3.6
+
+  I. IMPORTANT BUG FIXES
+
+    - If the library  was compiled on an i386  platform using gcc, and
+      compiler  option -O3 was  given, `FT_MulFix'  sometimes returned
+      incorrect  results   which  could  have   caused  problems  with
+      `FT_Request_Metrics'   and  `FT_Select_Metrics',   returning  an
+      incorrect descender size.
+
+
+======================================================================
 
 CHANGES BETWEEN 2.3.6 and 2.3.5
 

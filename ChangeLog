@@ -1,3 +1,10 @@
+2008-06-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftcalc.c (FT_MulFix) <asm>: Protect registers correctly
+	from clobbering.  Patch from Savannah bug report #23556.
+
+	* docs/CHANGES: Document it.
+
 2008-06-10  Werner Lemberg  <wl@gnu.org>
 
 	* autogen.sh: Add option `--install' to libtoolize.

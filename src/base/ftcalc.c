@@ -430,8 +430,8 @@
       "shll  $16, %%edx\n"
       "addl  %%edx, %%eax\n"
       "mov   %%eax, %0\n"
-      : "=r"(result)
-      : "a"(a), "d"(b)
+      : "=a"(result), "+d"(b)
+      : "a"(a)
       : "%ecx"
     );
     return result;
