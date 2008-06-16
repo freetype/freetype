@@ -1,3 +1,9 @@
+2008-06-15  George Williams  <gww@silcom.com>
+
+	* src/otvalid/otvgpos.c (otv_MarkBasePos_validate): Set
+	`valid->extra2' to 1.  This is undocumented in the OpenType 1.5
+	specification.
+
 2008-06-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftcalc.c (FT_MulFix) <asm>: Protect registers correctly

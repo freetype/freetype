@@ -838,6 +838,10 @@ FT_BEGIN_HEADER
   /*                           descender'.  Only relevant for scalable     */
   /*                           formats.                                    */
   /*                                                                       */
+  /*                           Note that the bounding box might be off by  */
+  /*                           (at least) one pixel for hinted fonts.  See */
+  /*                           @FT_Size_Metrics for further discussion.    */
+  /*                                                                       */
   /*    units_per_EM        :: The number of font units per EM square for  */
   /*                           this face.  This is typically 2048 for      */
   /*                           TrueType fonts, and 1000 for Type 1 fonts.  */
