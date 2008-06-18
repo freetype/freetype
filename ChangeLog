@@ -1,3 +1,10 @@
+2008-06-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/type/t1objs.c (T1_Face_Init): Fix change from 2008-03-21.
+	Reported by Peter Weilbacher <mozilla@weilbacher.org>.
+
+	* docs/CHANGES: Updated.
+
 2008-06-15  George Williams  <gww@silcom.com>
 
 	* src/otvalid/otvgpos.c (otv_MarkBasePos_validate): Set
