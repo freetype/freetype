@@ -1,5 +1,15 @@
 2008-06-19  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffobjs.c (cff_face_init): Compute final
+	`dict->units_per_em' value before assigning it to
+	`cffface->units_per_EM'.  Otherwise, CFFs without subfonts are be
+	scaled incorrectly if the font matrix is non-standard.  This fixes
+	Savannah bug #23630.
+
+	* docs/CHANGES: Updated.
+
+2008-06-19  Werner Lemberg  <wl@gnu.org>
+
 	* src/type/t1objs.c (T1_Face_Init): Slightly improve algorithm.
 
 2008-06-18  Werner Lemberg  <wl@gnu.org>

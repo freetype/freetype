@@ -8,6 +8,10 @@ CHANGES BETWEEN 2.3.7 and 2.3.6
       `FT_Request_Metrics'   and  `FT_Select_Metrics',   returning  an
       incorrect descender size.
 
+    - Pure CFFs without  subfonts were scaled incorrectly  if the font
+      matrix  was  non-standard.  This  bug  has  been  introduced  in
+      version 2.3.6.
+
     - The  `style_name'  field  in  the  `FT_FaceRec'  structure often
       contained  a wrong  value for  Type 1  fonts.  This misbehaviour
       has been  introduced  in  version  2.3.6  while  trying  to  fix
