@@ -375,6 +375,9 @@
 
         if ( full )
         {
+          FT_Bool  the_same = TRUE;
+
+
           while ( *full )
           {
             if ( *full == *family )
@@ -390,12 +393,17 @@
                 family++;
               else
               {
+                the_same = FALSE;
+
                 if ( !*family )
                   root->style_name = full;
                 break;
               }
             }
           }
+
+          if ( the_same )
+            root->style_name = (char *)"Regular";
         }
       }
       else
@@ -410,7 +418,7 @@
         if ( info->weight )
           root->style_name = info->weight;
         else
-          /* assume "Regular" style because we don't know better */
+          /* assume `Regular' style because we don't know better */
           root->style_name = (char *)"Regular";
       }
 

@@ -1,3 +1,7 @@
+2008-06-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/type/t1objs.c (T1_Face_Init): Slightly improve algorithm.
+
 2008-06-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/type/t1objs.c (T1_Face_Init): Fix change from 2008-03-21.
