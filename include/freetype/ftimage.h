@@ -129,7 +129,7 @@ FT_BEGIN_HEADER
   /*    FT_PIXEL_MODE_GRAY ::                                              */
   /*      An 8-bit bitmap, generally used to represent anti-aliased glyph  */
   /*      images.  Each pixel is stored in one byte.  Note that the number */
-  /*      of value `gray' levels is stored in the `num_bytes' field of     */
+  /*      of value `gray' levels is stored in the `num_grays' field of     */
   /*      the @FT_Bitmap structure (it generally is 256).                  */
   /*                                                                       */
   /*    FT_PIXEL_MODE_GRAY2 ::                                             */
@@ -819,7 +819,8 @@ FT_BEGIN_HEADER
   /*    @FT_SpanFunc which takes the y-coordinate of the span as a         */
   /*    a parameter.                                                       */
   /*                                                                       */
-  /*    The coverage value is always between 0 and 255.                    */
+  /*    The coverage value is always between 0 and 255.  If you want less  */
+  /*    gray values, the callback function has to reduce them.             */
   /*                                                                       */
   typedef struct  FT_Span_
   {

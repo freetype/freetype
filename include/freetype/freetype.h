@@ -2564,10 +2564,12 @@ FT_BEGIN_HEADER
   /*    @FT_GlyphSlotRec structure gives the format of the returned        */
   /*    bitmap.                                                            */
   /*                                                                       */
+  /*    All modes except @FT_RENDER_MODE_MONO use 256 levels of opacity.   */
+  /*                                                                       */
   /* <Values>                                                              */
   /*    FT_RENDER_MODE_NORMAL ::                                           */
   /*      This is the default render mode; it corresponds to 8-bit         */
-  /*      anti-aliased bitmaps, using 256 levels of opacity.               */
+  /*      anti-aliased bitmaps.                                            */
   /*                                                                       */
   /*    FT_RENDER_MODE_LIGHT ::                                            */
   /*      This is equivalent to @FT_RENDER_MODE_NORMAL.  It is only        */
@@ -2576,7 +2578,8 @@ FT_BEGIN_HEADER
   /*      @FT_LOAD_TARGET_XXX for details.                                 */
   /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
-  /*      This mode corresponds to 1-bit bitmaps.                          */
+  /*      This mode corresponds to 1-bit bitmaps (with 2 levels of         */
+  /*      opacity).                                                        */
   /*                                                                       */
   /*    FT_RENDER_MODE_LCD ::                                              */
   /*      This mode corresponds to horizontal RGB and BGR sub-pixel        */

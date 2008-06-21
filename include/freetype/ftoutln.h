@@ -391,9 +391,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function does NOT CREATE the bitmap, it only renders an       */
-  /*    outline image within the one you pass to it!                       */
+  /*    outline image within the one you pass to it!  Consequently, the    */
+  /*    various fields in `abitmap' should be set accordingly.             */
   /*                                                                       */
   /*    It will use the raster corresponding to the default glyph format.  */
+  /*                                                                       */
+  /*    The value of the `num_grays' field in `abitmap' is ignored.  If    */
+  /*    you select the gray-level rasterizer, and you want less than 256   */
+  /*    gray levels, you have to use @FT_Outline_Render directly.          */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Get_Bitmap( FT_Library        library,
@@ -431,6 +436,11 @@ FT_BEGIN_HEADER
   /*    The field `params.source' will be set to `outline' before the scan */
   /*    converter is called, which means that the value you give to it is  */
   /*    actually ignored.                                                  */
+  /*                                                                       */
+  /*    The gray-level rasterizer always uses 256 gray levels.  If you     */
+  /*    want less gray levels, you have to provide your own span callback. */
+  /*    See the @FT_RASTER_FLAG_DIRECT value of the `flags' field in the   */
+  /*    @FT_Raster_Params structure for more details.                      */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Render( FT_Library         library,
