@@ -171,6 +171,32 @@ if test x$with_zlib != xno && test -n "$LIBZ"; then
 fi
 
 
+# check Apple "-isysroot" option and duplicate it to LDFLAGS if required
+# Apple TechNote 2137 recommends to include it in CFLAGS but not in LDFLAGS.
+
+AC_MSG_CHECKING([CFLAGS includes -isysroot option])
+case "$CFLAGS" in
+  *sysroot* )
+    AC_MSG_RESULT([yes])
+    AC_MSG_CHECKING([LDFLAGS includes -isysroot option])
+    case "$LDFLAGS" in
+      *sysroot* )
+        AC_MSG_RESULT([yes])
+        ;;
+      *)
+        AC_MSG_RESULT([no])
+	isysroot_dir=`echo ${CFLAGS} | tr '\t' ' ' | sed 's/^.*-isysroot *//;s/ .*//'`
+        AC_MSG_WARN(-isysroot ${isysroot_dir} is added to LDFLAGS)
+        LDFLAGS="-isysroot ${isysroot_dir} ${LDFLAGS}"
+        ;;
+    esac
+    ;;
+  *)
+    AC_MSG_RESULT([no])
+    ;;
+esac
+
+
 # Whether to use Mac OS resource-based fonts.
 
 # don't quote AS_HELP_STRING!
