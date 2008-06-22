@@ -20,6 +20,20 @@ CHANGES BETWEEN 2.3.7 and 2.3.6
       very simplistic.]
 
 
+  II. IMPORTANT CHANGES
+
+    - Two      new      macros,      FT_OUTLINE_SMART_DROPOUTS     and
+      FT_OUTLINE_EXCLUDE_STUBS,  have been introduced.   Together with
+      FT_OUTLINE_IGNORE_DROPOUTS (which  was ignored until now)  it is
+      now possible to control the dropout mode  of the `raster' module
+      (for B&W rasterization),   using  the   `flags'  field   in  the
+      `FT_Outline' structure.
+
+    - The TrueType bytecode interpreter now passes the dropout mode to
+      the B&W rasterizer.  This greatly increases the output for small
+      ppem values for many fonts like `pala.ttf'.
+
+
 ======================================================================
 
 CHANGES BETWEEN 2.3.6 and 2.3.5

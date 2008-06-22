@@ -1,13 +1,20 @@
+2008-06-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Protect bytecode stuff
+	with IS_HINTED.
+
+	* docs/CHANGES: Updated.
+
 2008-06-22  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.raw: If CFLAGS has "-isysroot XXX"
-	option but LDFLAGS does not, import it to LDFLAGS. The option
-	is used to specify non-default SDK on Mac OS X (e.g. universal
-	binary SDK for Mac OS X 10.4 on PowerPC platform). Although
-	Apple TechNote 2137 recommends to add the option only to CFLAGS,
-	LDFLAGS should include it because libfreetype.la is built with
-	-no-undefined. This fixes a bug reported by Ryan Schmidt in
-	MacPorts, http://trac.macports.org/ticket/15331.
+	* builds/unix/configure.raw: If CFLAGS has `-isysroot XXX' option
+	but LDFLAGS does not, import it to LDFLAGS.  The option is used to
+	specify non-default SDK on Mac OS X (e.g., universal binary SDK for
+	Mac OS X 10.4 on PowerPC platform).  Although Apple TechNote 2137
+	recommends to add the option only to CFLAGS, LDFLAGS should include
+	it because libfreetype.la is built with -no-undefined.  This fixes a
+	bug reported by Ryan Schmidt in MacPorts,
+	http://trac.macports.org/ticket/15331.
 
 2008-06-21  Werner Lemberg  <wl@gnu.org>
 
