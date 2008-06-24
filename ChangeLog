@@ -1,5 +1,13 @@
 2008-06-24  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttinterp. (Ins_SCANTYPE): Don't check rendering mode.
+
+	* src/raster/ftraster.c (Render_Glyph, Render_Gray_Glyph,
+	Draw_Sweep): No-dropout mode is value 2, not value 0.
+	(Draw_Sweep): Really skip dropout handling for no-dropout mode.
+
+2008-06-24  Werner Lemberg  <wl@gnu.org>
+
 	* src/psaux/psobjs.c (t1_builder_close_contour): Don't add contour
 	if it consists of one point only.  Based on a patch from Savannah
 	bug #23683 (from John Tytgat).

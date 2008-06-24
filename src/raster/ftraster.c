@@ -2893,17 +2893,19 @@ static const char  count_table[256] =
             e1 = FLOOR( x1 );
             e2 = CEILING( x2 );
 
-            if ( ras.dropOutControl != 0                 &&
-                 ( e1 > e2 || e2 == e1 + ras.precision ) )
+            if ( e1 > e2 || e2 == e1 + ras.precision )
             {
-              /* a drop out was detected */
+              if ( ras.dropOutControl != 2 )
+              {
+                /* a drop out was detected */
 
-              P_Left ->X = x1;
-              P_Right->X = x2;
+                P_Left ->X = x1;
+                P_Right->X = x2;
 
-              /* mark profile for drop-out processing */
-              P_Left->countL = 1;
-              dropouts++;
+                /* mark profile for drop-out processing */
+                P_Left->countL = 1;
+                dropouts++;
+              }
 
               goto Skip_To_Next;
             }
@@ -3123,7 +3125,7 @@ static const char  count_table[256] =
       return error;
 
     /* Horizontal Sweep */
-    if ( ras.second_pass && ras.dropOutControl != 0 )
+    if ( ras.second_pass && ras.dropOutControl != 2 )
     {
       ras.Proc_Sweep_Init = Horizontal_Sweep_Init;
       ras.Proc_Sweep_Span = Horizontal_Sweep_Span;
@@ -3208,7 +3210,7 @@ static const char  count_table[256] =
       return error;
 
     /* Horizontal Sweep */
-    if ( ras.second_pass && ras.dropOutControl != 0 )
+    if ( ras.second_pass && ras.dropOutControl != 2 )
     {
       ras.Proc_Sweep_Init = Horizontal_Sweep_Init;
       ras.Proc_Sweep_Span = Horizontal_Gray_Sweep_Span;

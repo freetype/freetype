@@ -5121,16 +5121,8 @@
   static void
   Ins_SCANTYPE( INS_ARG )
   {
-    /* for compatibility with future enhancements, */
-    /* we must ignore new modes                    */
-
-    if ( args[0] >= 0 && args[0] <= 5 )
-    {
-      if ( args[0] == 3 )
-        args[0] = 2;
-
+    if ( args[0] >= 0 )
       CUR.GS.scan_type = (FT_Int)args[0];
-    }
   }
 
 
