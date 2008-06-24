@@ -1,3 +1,15 @@
+2008-06-24  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.raw: Check type "ResourceIndex" explicitly
+	and define HAVE_TYPE_RESOURCE_INDEX if it is defined. Mac OS X
+	10.5 bundles 10.4u SDK with MAC_OS_X_VERSION_10_5 macro but without
+	ResourceIndex type definition. The macro does not inform the type
+	availability.
+	* src/base/ftmac.c: More parentheses are inserted to clarify the
+	conditionals to disable legacy APIs in "10.5 and later" cases.
+	If HAVE_TYPE_RESOURCE_INDEX is not defined, ResourceIndex is
+	defined.
+
 2008-06-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp. (Ins_SCANTYPE): Don't check rendering mode.

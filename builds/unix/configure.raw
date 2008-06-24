@@ -260,7 +260,37 @@ if test x$with_old_mac_fonts = xyes; then
        ],
        [AC_MSG_RESULT([no, ANSI incompatible])
         CFLAGS="$orig_CFLAGS"
-       ])],
+       ])
+     AC_MSG_CHECKING([type ResourceIndex])
+     orig_CFLAGS="$CFLAGS"
+     CFLAGS="$CFLAGS $XX_CFLAGS $XX_ANSIFLAGS"
+     AC_COMPILE_IFELSE([
+       AC_LANG_PROGRAM([
+
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <Carbon/Carbon.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Files.h>
+# include <Resources.h>
+#endif
+
+         ],
+         [
+
+           ResourceIndex i = 0;
+           return i;
+
+         ])],
+       [AC_MSG_RESULT([ok])
+        CFLAGS="$orig_CFLAGS"
+        CFLAGS="$CFLAGS -DHAVE_TYPE_RESOURCE_INDEX"
+       ],
+       [AC_MSG_RESULT([no])
+        CFLAGS="$orig_CFLAGS"
+       ])
+    ],
     [AC_MSG_RESULT([not found])
      LDFLAGS="${orig_LDFLAGS}"
      CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"])
