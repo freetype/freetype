@@ -289,8 +289,7 @@ if test x$with_old_mac_fonts = xyes; then
        ],
        [AC_MSG_RESULT([no])
         CFLAGS="$orig_CFLAGS"
-       ])
-    ],
+       ])],
     [AC_MSG_RESULT([not found])
      LDFLAGS="${orig_LDFLAGS}"
      CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"])
