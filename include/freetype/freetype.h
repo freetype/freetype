@@ -790,6 +790,9 @@ FT_BEGIN_HEADER
   /*                           `num_fixed_sizes'), it is set to the number */
   /*                           of outline glyphs.                          */
   /*                                                                       */
+  /*                           For CID-keyed fonts, this value gives the   */
+  /*                           highest CID used in the font.               */
+  /*                                                                       */
   /*    family_name         :: The face's family name.  This is an ASCII   */
   /*                           string, usually in English, which describes */
   /*                           the typeface's family (like `Times New      */
