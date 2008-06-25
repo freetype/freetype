@@ -24,7 +24,7 @@ CHANGES BETWEEN 2.3.7 and 2.3.6
 
     - Two      new      macros,      FT_OUTLINE_SMART_DROPOUTS     and
       FT_OUTLINE_EXCLUDE_STUBS,  have been introduced.   Together with
-      FT_OUTLINE_IGNORE_DROPOUTS (which  was ignored until now)  it is
+      FT_OUTLINE_IGNORE_DROPOUTS (which  was ignored previously) it is
       now possible to control the dropout mode  of the `raster' module
       (for B&W rasterization),   using  the   `flags'  field   in  the
       `FT_Outline' structure.

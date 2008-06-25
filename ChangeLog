@@ -46,8 +46,7 @@
 
 	Enable access to the various dropout rules of the B&W rasterizer.
 	Pass dropout rules from the TT bytecode interpreter to the
-	rasterizer; temporarily this is enabled only if
-	`USE_SCAN_CONVERSION_RULES' is defined.
+	rasterizer.
 
 	* include/freetype/ftimage.h (FT_OUTLINE_SMART_DROPOUTS,
 	FT_OUTLINE_EXCLUDE_STUBS): New flags for for FT_Outline.
@@ -58,9 +57,8 @@
 	Fix mode 4 computation.
 	(Render_Glyph, Render_Gray_Glyph): Handle new outline flags.
 
-	* src/truetype/ttgload.c (TT_Load_Glyph)
-	[USE_SCAN_CONVERSION_RULES]: Convert scan conversion mode to
-	FT_OUTLINE_XXX flags.
+	* src/truetype/ttgload.c (TT_Load_Glyph) Convert scan conversion
+	mode to FT_OUTLINE_XXX flags.
 
 	* src/truetype/ttinterp.c (Ins_SCANCTRL): Enable ppem check.
 
