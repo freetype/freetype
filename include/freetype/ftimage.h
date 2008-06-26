@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    The type FT_Pos is a 32-bit integer used to store vectorial        */
   /*    coordinates.  Depending on the context, these can represent        */
-  /*    distances in integer font units, or 16,16, or 26.6 fixed float     */
+  /*    distances in integer font units, or 16.16, or 26.6 fixed float     */
   /*    pixel coordinates.                                                 */
   /*                                                                       */
   typedef signed long  FT_Pos;
@@ -119,10 +119,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_PIXEL_MODE_NONE ::                                              */
-  /*      Value 0 is reserved.                                             */
+  /*      Value~0 is reserved.                                             */
   /*                                                                       */
   /*    FT_PIXEL_MODE_MONO ::                                              */
-  /*      A monochrome bitmap, using 1 bit per pixel.  Note that pixels    */
+  /*      A monochrome bitmap, using 1~bit per pixel.  Note that pixels    */
   /*      are stored in most-significant order (MSB), which means that     */
   /*      the left-most pixel in a byte has value 128.                     */
   /*                                                                       */
@@ -207,10 +207,10 @@ FT_BEGIN_HEADER
   /*    used with ft_pixel_mode_pal4 and ft_pixel_mode_pal8.               */
   /*                                                                       */
   /* <Values>                                                              */
-  /*    ft_palette_mode_rgb  :: The palette is an array of 3-bytes RGB     */
+  /*    ft_palette_mode_rgb  :: The palette is an array of 3-byte RGB      */
   /*                            records.                                   */
   /*                                                                       */
-  /*    ft_palette_mode_rgba :: The palette is an array of 4-bytes RGBA    */
+  /*    ft_palette_mode_rgba :: The palette is an array of 4-byte RGBA     */
   /*                            records.                                   */
   /*                                                                       */
   /* <Note>                                                                */
@@ -317,11 +317,11 @@ FT_BEGIN_HEADER
   /*                  elements, giving the outline's point coordinates.    */
   /*                                                                       */
   /*    tags       :: A pointer to an array of `n_points' chars, giving    */
-  /*                  each outline point's type.  If bit 0 is unset, the   */
+  /*                  each outline point's type.  If bit~0 is unset, the   */
   /*                  point is `off' the curve, i.e., a Bézier control     */
   /*                  point, while it is `on' when set.                    */
   /*                                                                       */
-  /*                  Bit 1 is meaningful for `off' points only.  If set,  */
+  /*                  Bit~1 is meaningful for `off' points only.  If set,  */
   /*                  it indicates a third-order Bézier arc control point; */
   /*                  and a second-order control point if unset.           */
   /*                                                                       */
@@ -360,7 +360,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_OUTLINE_NONE ::                                                 */
-  /*      Value 0 is reserved.                                             */
+  /*      Value~0 is reserved.                                             */
   /*                                                                       */
   /*    FT_OUTLINE_OWNER ::                                                */
   /*      If set, this flag indicates that the outline's field arrays      */
@@ -376,7 +376,7 @@ FT_BEGIN_HEADER
   /*      By default, outside contours of an outline are oriented in       */
   /*      clock-wise direction, as defined in the TrueType specification.  */
   /*      This flag is set if the outline uses the opposite direction      */
-  /*      (typically for Type 1 fonts).  This flag is ignored by the scan  */
+  /*      (typically for Type~1 fonts).  This flag is ignored by the scan  */
   /*      converter.                                                       */
   /*                                                                       */
   /*    FT_OUTLINE_IGNORE_DROPOUTS ::                                      */
@@ -489,7 +489,7 @@ FT_BEGIN_HEADER
   /*            decomposition function.                                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Error code.  0~means success.                                      */
   /*                                                                       */
   typedef int
   (*FT_Outline_MoveToFunc)( const FT_Vector*  to,
@@ -516,7 +516,7 @@ FT_BEGIN_HEADER
   /*            decomposition function.                                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Error code.  0~means success.                                      */
   /*                                                                       */
   typedef int
   (*FT_Outline_LineToFunc)( const FT_Vector*  to,
@@ -547,7 +547,7 @@ FT_BEGIN_HEADER
   /*               the decomposition function.                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Error code.  0~means success.                                      */
   /*                                                                       */
   typedef int
   (*FT_Outline_ConicToFunc)( const FT_Vector*  control,
@@ -579,7 +579,7 @@ FT_BEGIN_HEADER
   /*                the decomposition function.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Error code.  0~means success.                                      */
   /*                                                                       */
   typedef int
   (*FT_Outline_CubicToFunc)( const FT_Vector*  control1,
@@ -625,7 +625,7 @@ FT_BEGIN_HEADER
   /*      y' = (x << shift) - delta                                        */
   /*    }                                                                  */
   /*                                                                       */
-  /*    Set the value of `shift' and `delta' to 0 to get the original      */
+  /*    Set the value of `shift' and `delta' to~0 to get the original      */
   /*    point coordinates.                                                 */
   /*                                                                       */
   typedef struct  FT_Outline_Funcs_
@@ -658,7 +658,7 @@ FT_BEGIN_HEADER
   /*    This macro converts four-letter tags to an unsigned long type.     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    Since many 16bit compilers don't like 32bit enumerations, you      */
+  /*    Since many 16-bit compilers don't like 32-bit enumerations, you    */
   /*    should redefine this macro in case of problems to something like   */
   /*    this:                                                              */
   /*                                                                       */
@@ -690,7 +690,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_GLYPH_FORMAT_NONE ::                                            */
-  /*      The value 0 is reserved.                                         */
+  /*      The value~0 is reserved.                                         */
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_COMPOSITE ::                                       */
   /*      The glyph image is a composite of several other images.  This    */
@@ -710,7 +710,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_PLOTTER ::                                         */
   /*      The glyph image is a vectorial path with no inside and outside   */
-  /*      contours.  Some Type 1 fonts, like those in the Hershey family,  */
+  /*      contours.  Some Type~1 fonts, like those in the Hershey family,  */
   /*      contain glyphs in this format.  These are described as           */
   /*      @FT_Outline, but FreeType isn't currently capable of rendering   */
   /*      them correctly.                                                  */
@@ -822,7 +822,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    This structure is used by the span drawing callback type named     */
-  /*    @FT_SpanFunc which takes the y-coordinate of the span as a         */
+  /*    @FT_SpanFunc which takes the y~coordinate of the span as a         */
   /*    a parameter.                                                       */
   /*                                                                       */
   /*    The coverage value is always between 0 and 255.  If you want less  */
@@ -848,7 +848,7 @@ FT_BEGIN_HEADER
   /*    spans on each scan line.                                           */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    y     :: The scanline's y-coordinate.                              */
+  /*    y     :: The scanline's y~coordinate.                              */
   /*                                                                       */
   /*    count :: The number of spans to draw on this scanline.             */
   /*                                                                       */
@@ -865,8 +865,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    Note that the `count' field cannot be greater than a fixed value   */
   /*    defined by the `FT_MAX_GRAY_SPANS' configuration macro in          */
-  /*    `ftoption.h'.  By default, this value is set to 32, which means    */
-  /*    that if there are more than 32 spans on a given scanline, the      */
+  /*    `ftoption.h'.  By default, this value is set to~32, which means    */
+  /*    that if there are more than 32~spans on a given scanline, the      */
   /*    callback is called several times with the same `y' parameter in    */
   /*    order to draw all callbacks.                                       */
   /*                                                                       */
@@ -896,14 +896,14 @@ FT_BEGIN_HEADER
   /*    per-se the TrueType spec.                                          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    y     :: The pixel's y-coordinate.                                 */
+  /*    y     :: The pixel's y~coordinate.                                 */
   /*                                                                       */
-  /*    x     :: The pixel's x-coordinate.                                 */
+  /*    x     :: The pixel's x~coordinate.                                 */
   /*                                                                       */
   /*    user  :: User-supplied data that is passed to the callback.        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*   1 if the pixel is `set', 0 otherwise.                               */
+  /*   1~if the pixel is `set', 0~otherwise.                               */
   /*                                                                       */
   typedef int
   (*FT_Raster_BitTest_Func)( int    y,
@@ -924,14 +924,14 @@ FT_BEGIN_HEADER
   /*    drop-out control according to the TrueType specification.          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    y     :: The pixel's y-coordinate.                                 */
+  /*    y     :: The pixel's y~coordinate.                                 */
   /*                                                                       */
-  /*    x     :: The pixel's x-coordinate.                                 */
+  /*    x     :: The pixel's x~coordinate.                                 */
   /*                                                                       */
   /*    user  :: User-supplied data that is passed to the callback.        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    1 if the pixel is `set', 0 otherwise.                              */
+  /*    1~if the pixel is `set', 0~otherwise.                              */
   /*                                                                       */
   typedef void
   (*FT_Raster_BitSet_Func)( int    y,
@@ -1071,7 +1071,7 @@ FT_BEGIN_HEADER
   /*    raster :: A handle to the new raster object.                       */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Error code.  0~means success.                                      */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The `memory' parameter is a typeless pointer in order to avoid     */
@@ -1171,8 +1171,8 @@ FT_BEGIN_HEADER
   /*    FT_Raster_RenderFunc                                               */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   Invokes a given raster to scan-convert a given glyph image into a   */
-  /*   target bitmap.                                                      */
+  /*    Invoke a given raster to scan-convert a given glyph image into a   */
+  /*    target bitmap.                                                     */
   /*                                                                       */
   /* <Input>                                                               */
   /*    raster :: A handle to the raster object.                           */
@@ -1181,7 +1181,7 @@ FT_BEGIN_HEADER
   /*              store the rendering parameters.                          */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    Error code.  0~means success.                                      */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The exact format of the source image depends on the raster's glyph */

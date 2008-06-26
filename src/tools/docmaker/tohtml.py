@@ -15,9 +15,11 @@ html_header_1 = """\
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>"""
+<title>\
+"""
 
-html_header_2= """ API Reference</title>
+html_header_2 = """\
+ API Reference</title>
 <style type="text/css">
   body { font-family: Verdana, Geneva, Arial, Helvetica, serif;
          color: #000000;
@@ -45,16 +47,44 @@ html_header_2= """ API Reference</title>
 </style>
 </head>
 <body>
-<center><h1>"""
+"""
 
-html_header_3=""" API Reference</h1></center>
+html_header_3 = """
+<table align=center><tr><td><font size=-1>[<a href="\
+"""
+
+html_header_3i = """
+<table align=center><tr><td width="100%"></td>
+<td><font size=-1>[<a href="\
+"""
+
+html_header_4 = """\
+">Index</a>]</font></td>
+<td width="100%"></td>
+<td><font size=-1>[<a href="\
+"""
+
+html_header_5 = """\
+">TOC</a>]</font></td></tr></table>
+<center><h1>\
+"""
+
+html_header_5t = """\
+">Index</a>]</font></td>
+<td width="100%"></td></tr></table>
+<center><h1>\
+"""
+
+html_header_6 = """\
+ API Reference</h1></center>
 """
 
 
 # The HTML footer used by all generated pages.
 html_footer = """\
 </body>
-</html>"""
+</html>\
+"""
 
 # The header and footer used for each section.
 section_title_header = "<center><h1>"
@@ -110,10 +140,21 @@ chapter_footer = '</li></ul></td></tr></table>'
 index_footer_start = """\
 <hr>
 <table><tr><td width="100%"></td>
-<td><font size=-2>[<a href="
+<td><font size=-2>[<a href="\
 """
 index_footer_end = """\
 ">TOC</a>]</font></td></tr></table>
+"""
+
+# TOC footer.
+toc_footer_start = """\
+<hr>
+<table><tr><td><font size=-2>[<a href="\
+"""
+toc_footer_end = """\
+">Index</a>]</font></td>
+<td width="100%"></td>
+</tr></table>
 """
 
 
@@ -159,22 +200,39 @@ class  HtmlFormatter( Formatter ):
     def  __init__( self, processor, project_title, file_prefix ):
         Formatter.__init__( self, processor )
 
-        global html_header_1, html_header_2, html_header_3, html_footer
+        global html_header_1, html_header_2, html_header_3
+        global html_header_4, html_header_5, html_footer
 
         if file_prefix:
             file_prefix = file_prefix + "-"
         else:
             file_prefix = ""
 
-        self.headers       = processor.headers
-        self.project_title = project_title
-        self.file_prefix   = file_prefix
-        self.html_header   = html_header_1 + project_title + html_header_2 + \
-                             project_title + html_header_3
+        self.headers           = processor.headers
+        self.project_title     = project_title
+        self.file_prefix       = file_prefix
+        self.html_header       = html_header_1 + project_title +              \
+                                 html_header_2 +                              \
+                                 html_header_3 + file_prefix + "index.html" + \
+                                 html_header_4 + file_prefix + "toc.html" +   \
+                                 html_header_5 + project_title +              \
+                                 html_header_6
 
-        self.html_footer = "<center><font size=""-2"">generated on " +      \
-                            time.asctime( time.localtime( time.time() ) ) + \
-                           "</font></center>" + html_footer
+        self.html_index_header = html_header_1 + project_title +             \
+                                 html_header_2 +                             \
+                                 html_header_3i + file_prefix + "toc.html" + \
+                                 html_header_5 + project_title +             \
+                                 html_header_6
+
+        self.html_toc_header   = html_header_1 + project_title +              \
+                                 html_header_2 +                              \
+                                 html_header_3 + file_prefix + "index.html" + \
+                                 html_header_5t + project_title +             \
+                                 html_header_6
+
+        self.html_footer       = "<center><font size=""-2"">generated on " +     \
+                                 time.asctime( time.localtime( time.time() ) ) + \
+                                 "</font></center>" + html_footer
 
         self.columns = 3
 
@@ -227,7 +285,7 @@ class  HtmlFormatter( Formatter ):
         return html_quote( word )
 
     def  make_html_para( self, words ):
-        """ convert a paragraph's words into tagged HTML text, handle xrefs """
+        """ convert words of a paragraph into tagged HTML text, handle xrefs """
         line = ""
         if words:
             line = self.make_html_word( words[0] )
@@ -237,6 +295,8 @@ class  HtmlFormatter( Formatter ):
             line = re.sub( r"(^|\W)`(.*?)'(\W|$)",  \
                            r'\1&lsquo;\2&rsquo;\3', \
                            line )
+            # convert tilde into non-breakable space
+            line = string.replace( line, "~", "&nbsp;" )
 
         return para_header + line + para_footer
 
@@ -338,7 +398,7 @@ class  HtmlFormatter( Formatter ):
     #  Formatting the index
     #
     def  index_enter( self ):
-        print self.html_header
+        print self.html_index_header
         self.index_items = {}
 
     def  index_name_enter( self, name ):
@@ -371,6 +431,8 @@ class  HtmlFormatter( Formatter ):
               self.file_prefix + "toc.html" + \
               index_footer_end
 
+        print self.html_footer
+
         self.index_items = {}
 
     def  index_dump( self, index_filename = None ):
@@ -383,7 +445,7 @@ class  HtmlFormatter( Formatter ):
     #  Formatting the table of content
     #
     def  toc_enter( self ):
-        print self.html_header
+        print self.html_toc_header
         print "<center><h1>Table of Contents</h1></center>"
 
     def  toc_chapter_enter( self, chapter ):
@@ -402,7 +464,7 @@ class  HtmlFormatter( Formatter ):
 
     def  toc_chapter_exit( self, chapter ):
         print "</table>"
-        print  chapter_footer
+        print chapter_footer
 
     def  toc_index( self, index_filename ):
         print chapter_header +                                      \
@@ -410,6 +472,10 @@ class  HtmlFormatter( Formatter ):
               chapter_inter + chapter_footer
 
     def  toc_exit( self ):
+        print toc_footer_start +                \
+              self.file_prefix + "index.html" + \
+              toc_footer_end
+
         print self.html_footer
 
     def  toc_dump( self, toc_filename = None, index_filename = None ):

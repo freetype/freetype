@@ -1,6 +1,28 @@
+2008-06-26  Werner Lemberg  <wl@gnu.org>
+
+	Improve navigation in API reference.
+
+	* src/tools/docmaker/tohtml.py (html_header_3): Renamed to...
+	(html_header_6): This.
+	(html_header_3, html_header_3i, html_header_4, html_header_5,
+	html_header_5t): New strings.
+	(toc_footer_start, toc_footer_end): New strings.
+	(HtmlFormatter::html_header): Updated.
+	(HtmlFormatter::html_index_header, HtmlFormatter::html_toc_header):
+	New strings.
+	(HtmlFormatter::index_enter): Use `html_index_header'.
+	(HtmlFormatter::index_exit): Print `html_footer'.
+	(HtmlFormatter::toc_enter): Use `html_toc_header'.
+	(HtmlFormatter::toc_exit): Print proper footer.
+
+	Convert ~ to non-breakable space.
+
+	* src/tools/docmaker/tohtml.py (make_html_para): Implement it.
+	Update header files accordingly.
+
 2008-06-24  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.raw: Check type `ResourceIndex. explicitly
+	* builds/unix/configure.raw: Check type `ResourceIndex' explicitly
 	and define HAVE_TYPE_RESOURCE_INDEX if it is defined.  Mac OS X 10.5
 	bundles 10.4u SDK with MAC_OS_X_VERSION_10_5 macro but without
 	ResourceIndex type definition.  The macro does not inform the type
