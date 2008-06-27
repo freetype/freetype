@@ -2213,13 +2213,6 @@ static const char  count_table[256] =
     /*  5                1, 2, 6                                       */
     /*  6, 7             same as mode 2                                */
 
-    /* FIXXXME: The specification doesn't discuss the case where the */
-    /*          intersections degenerate to a single point.          */
-#if 0
-    if ( x1 == x2 )
-      return;
-#endif
-
     e1  = CEILING( x1 );
     e2  = FLOOR  ( x2 );
     pxl = e1;
@@ -2414,13 +2407,6 @@ static const char  count_table[256] =
     /*        |                        */
     /*        |                        */
     /* e2     +       <-- pixel center */
-
-    /* FIXXXME: The specification doesn't discuss the case where the */
-    /*          intersections degenerate to a single point.          */
-#if 0
-    if ( x1 == x2 )
-      return;
-#endif
 
     e1  = CEILING( x1 );
     e2  = FLOOR  ( x2 );
@@ -2672,13 +2658,6 @@ static const char  count_table[256] =
 
 
     /* During the horizontal sweep, we only take care of drop-outs */
-
-    /* FIXXXME: The specification doesn't discuss the case where the */
-    /*          intersections degenerate to a single point.          */
-#if 0
-    if ( x1 == x2 )
-      return;
-#endif
 
     e1 = CEILING( x1 );
     e2 = FLOOR  ( x2 );

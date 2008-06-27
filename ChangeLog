@@ -1,3 +1,10 @@
+2008-06-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/raster/ftraster.c (Vertical_Sweep_Drop, Horizontal_Sweep_Drop,
+	Horizontal_Gray_Sweep_Drop): Test for intersections which
+	degenerate to a single point can be ignored; this has been confirmed
+	by Greg Hitchcock from Microsoft.  (This was commented out code.)
+
 2008-06-26  Werner Lemberg  <wl@gnu.org>
 
 	Improve navigation in API reference.
