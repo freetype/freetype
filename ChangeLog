@@ -1,3 +1,8 @@
+2008-06-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/ftlyph.c (FT_Matrix_Multiply, FT_Matrix_Invert): Move to...
+	* src/ftcalc.c: Here.  This fixes Savannah bug #23729.
+
 2008-06-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (Vertical_Sweep_Drop, Horizontal_Sweep_Drop,
