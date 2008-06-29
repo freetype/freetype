@@ -31,7 +31,7 @@ CHANGES BETWEEN 2.3.7 and 2.3.6
 
     - The TrueType bytecode interpreter now passes the dropout mode to
       the B&W rasterizer.  This greatly increases the output for small
-      ppem values for many fonts like `pala.ttf'.
+      ppem values of many fonts like `pala.ttf'.
 
 
 ======================================================================

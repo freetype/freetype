@@ -17,7 +17,7 @@ AC_CONFIG_SRCDIR([ftconfig.in])
 
 # Don't forget to update docs/VERSION.DLL!
 
-version_info='9:17:3'
+version_info='9:18:3'
 AC_SUBST([version_info])
 ft_version=`echo $version_info | tr : .`
 AC_SUBST([ft_version])
@@ -171,7 +171,7 @@ if test x$with_zlib != xno && test -n "$LIBZ"; then
 fi
 
 
-# check Apple "-isysroot" option and duplicate it to LDFLAGS if required --
+# check Apple's `-isysroot' option and duplicate it to LDFLAGS if required --
 # Apple TechNote 2137 recommends to include it in CFLAGS but not in LDFLAGS
 
 AC_MSG_CHECKING([whether CFLAGS includes -isysroot option])

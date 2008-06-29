@@ -1,6 +1,30 @@
+2008-06-29  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.3.7 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-7'.
+
+	* docs/CHANGES, docs/VERSION.DLL: Update documentation and bump
+	version number to 2.3.7.
+
+	* README, Jamfile (RefDoc), builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj: s/2.3.6/2.3.7/, s/236/237/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 7.
+
+	* builds/unix/configure.raw (version_info): Set to 9:18:3.
+
+	* docs/release: Updated.
+
 2008-06-28  Werner Lemberg  <wl@gnu.org>
 
-	* src/ftlyph.c (FT_Matrix_Multiply, FT_Matrix_Invert): Move to...
+	* src/ftglyph.c (FT_Matrix_Multiply, FT_Matrix_Invert): Move to...
 	* src/ftcalc.c: Here.  This fixes Savannah bug #23729.
 
 2008-06-27  Werner Lemberg  <wl@gnu.org>
@@ -99,7 +123,7 @@
 
 	* src/cff/cffobjs.c (cff_face_init): Compute final
 	`dict->units_per_em' value before assigning it to
-	`cffface->units_per_EM'.  Otherwise, CFFs without subfonts are be
+	`cffface->units_per_EM'.  Otherwise, CFFs without subfonts are
 	scaled incorrectly if the font matrix is non-standard.  This fixes
 	Savannah bug #23630.
 
@@ -107,7 +131,8 @@
 
 2008-06-19  Werner Lemberg  <wl@gnu.org>
 
-	* src/type/t1objs.c (T1_Face_Init): Slightly improve algorithm.
+	* src/type/t1objs.c (T1_Face_Init): Slightly improve algorithm fix
+	from 2008-06-19.
 
 2008-06-18  Werner Lemberg  <wl@gnu.org>
 
