@@ -1,3 +1,9 @@
+2008-07-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/raster/ftraster.c (Draw_Sweep): If span is smaller than one
+	pixel, only check for dropouts if neither start nor end point lies
+	on a pixel center.  This fixes Savannah bug #23762.
+
 2008-06-29  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.7 released.

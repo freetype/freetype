@@ -2867,11 +2867,12 @@ static const char  count_table[256] =
             x2 = xs;
           }
 
-          if ( x2 - x1 <= ras.precision )
-          {
-            e1 = FLOOR( x1 );
-            e2 = CEILING( x2 );
+          e1 = FLOOR( x1 );
+          e2 = CEILING( x2 );
 
+          if ( x2 - x1 <= ras.precision &&
+               e1 != x1 && e2 != x2     )
+          {
             if ( e1 > e2 || e2 == e1 + ras.precision )
             {
               if ( ras.dropOutControl != 2 )
