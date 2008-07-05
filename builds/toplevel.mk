@@ -34,6 +34,16 @@
 # details on host platform detection and library builds.
 
 
+# First of all, check whether we have `$(value ...)'.  We do this by testing
+# for `$(eval ...)' which has been introduced in the same GNU make version.
+
+eval_available :=
+$(eval eval_available := T)
+ifneq ($(eval_available),T)
+  $(error FreeType's build system needs a Make program which supports $$(value))
+endif
+
+
 .PHONY: all dist distclean modules setup
 
 

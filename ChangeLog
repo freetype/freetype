@@ -1,3 +1,14 @@
+2008-07-05  Werner Lemberg  <wl@gnu.org>
+
+	Since FreeType uses `$(value ...)', we now need GNU make 3.80 or
+	newer.
+
+	* configure: zsh doesn't like ${1+"$@"}.
+	Update needed GNU make version.
+	* builds/toplevel.mk: Check for `$(eval ...)'.
+	* docs/INSTALL.GNU, docs/INSTALL.CROSS, docs/INSTALL.UNIX: Document
+	it.
+
 2008-07-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (Draw_Sweep): If span is smaller than one

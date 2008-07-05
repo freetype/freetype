@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2002, 2003, 2004, 2005, 2006 by
+# Copyright 2002, 2003, 2004, 2005, 2006, 2008 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -21,7 +21,7 @@ fi
 
 if test -z "`$GNUMAKE -v 2>/dev/null | grep GNU`"; then
   if test -z "`$GNUMAKE -v 2>/dev/null | grep makepp`"; then
-    echo "GNU make (>= 3.79.1) or makepp (>= 1.19) is required to build FreeType2." >&2
+    echo "GNU make (>= 3.80) or makepp (>= 1.19) is required to build FreeType2." >&2
     echo "Please try" >&2
     echo "  \`GNUMAKE=<GNU make command name> $0'." >&2
     echo "or >&2"
@@ -92,9 +92,13 @@ fi
 # call make
 
 CFG=
-for x in ${1+"$@"}; do
-  CFG="$CFG '$x'"
-done
+# work around zsh bug which doesn't like `${1+"$@"}'
+case $# in
+0) ;;
+*) for x in "$@"; do
+     CFG="$CFG '$x'"
+   done ;;
+esac
 CFG=$CFG $GNUMAKE setup unix
 
 # eof
