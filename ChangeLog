@@ -1,7 +1,7 @@
 2008-07-05  Werner Lemberg  <wl@gnu.org>
 
 	Since FreeType uses `$(value ...)', we now need GNU make 3.80 or
-	newer.
+	newer.  This fixes Savannah bug #23648.
 
 	* configure: zsh doesn't like ${1+"$@"}.
 	Update needed GNU make version.
