@@ -1,3 +1,8 @@
+2008-07-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttpload.c (tt_face_load_loca): Handle buggy fonts
+	where num_locations < num_glyphs.  Problem reported by Ding Li.
+
 2008-07-05  Werner Lemberg  <wl@gnu.org>
 
 	Since FreeType uses `$(value ...)', we now need GNU make 3.80 or
