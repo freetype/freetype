@@ -5,7 +5,7 @@
 /*    Postcript name table processing for TrueType and OpenType fonts      */
 /*    (body).                                                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2006, 2007 by                         */
+/*  Copyright 1996-2001, 2002, 2003, 2006, 2007, 2008 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -62,7 +62,7 @@
    /* table of Mac names.  Thus, it is possible to build a version of */
    /* FreeType without the Type 1 driver & PSNames module.            */
 
-#define MAC_NAME( x )  tt_post_default_names[x]
+#define MAC_NAME( x )  ( (FT_String*)tt_post_default_names[x] )
 
   /* the 258 default Mac PS glyph names */
 

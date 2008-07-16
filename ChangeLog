@@ -1,3 +1,12 @@
+2008-07-16  Jon Foster  <Jon.Foster@cabot.co.uk>
+
+	* src/pfr/pfrdrivr.c (pfr_get_advance): Fix off-by-one error.
+
+	* src/base/ftcalc.c (FT_MulFix): Fix portability issue.
+
+	* src/sfnt/ttpost.c (MAC_NAME) [!FT_CONFIG_OPTION_POSTSCRIPT_NAMES]:
+	Fix compiler warning.
+
 2008-07-16  Werner Lemberg  <wl@gnu.org>
 
 	Handle CID-keyed fonts wrapped in a SFNT (with cmaps) correctly.

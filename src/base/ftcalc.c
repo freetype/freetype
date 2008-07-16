@@ -437,7 +437,14 @@
     );
     return result;
 
-#elif 1
+#elif 0
+
+    /*
+     *  This code is nonportable.  See comment below.
+     *
+     *  However, on a platform where right-shift of a signed quantity fills
+     *  the leftmost bits by copying the sign bit, it might be faster.
+     */
 
     FT_Long   sa, sb;
     FT_ULong  ua, ub;
@@ -446,6 +453,24 @@
     if ( a == 0 || b == 0x10000L )
       return a;
 
+    /*
+     *  This is a clever way of converting a signed number `a' into its
+     *  absolute value (stored back into `a') and its sign.  The sign is
+     *  stored in `sa'; 0 means `a' was positive or zero, and -1 means `a'
+     *  was negative.  (Similarly for `b' and `sb').
+     *
+     *  Unfortunately, it doesn't work (at least not portably).
+     *
+     *  It makes the assumption that right-shift on a negative signed value
+     *  fills the leftmost bits by copying the sign bit.  This is wrong. 
+     *  According to K&R 2nd ed, section `A7.8 Shift Operators' on page 206,
+     *  the result of right-shift of a negative signed value is
+     *  implementation-defined.  At least one implementation fills the
+     *  leftmost bits with 0s (i.e., it is exactly the same as an unsigned
+     *  right shift).  This means that when `a' is negative, `sa' ends up
+     *  with the value 1 rather than -1.  After that, everything else goes
+     *  wrong.
+     */
     sa = ( a >> ( sizeof ( a ) * 8 - 1 ) );
     a  = ( a ^ sa ) - sa;
     sb = ( b >> ( sizeof ( b ) * 8 - 1 ) );
