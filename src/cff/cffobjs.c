@@ -508,7 +508,7 @@
         goto Exit;
 
       face->extra.data = cff;
-      error = cff_font_load( stream, face_index, cff );
+      error = cff_font_load( stream, face_index, cff, pure_cff );
       if ( error )
         goto Exit;
 

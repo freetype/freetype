@@ -1,3 +1,13 @@
+2008-07-16  Werner Lemberg  <wl@gnu.org>
+
+	Handle CID-keyed fonts wrapped in a SFNT (with cmaps) correctly.
+
+	* src/cff/cffload.c (cff_font_load): Pass `pure_cff'.
+	Invert sids table only if `pure_cff' is set.
+	* src/cff/cffload.h: Udpated.
+
+	* src/cff/cffobjs.c (cff_face_init): Updated.
+
 2008-07-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttpload.c (tt_face_load_loca): Handle buggy fonts
