@@ -823,7 +823,7 @@
         cffface->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
 #endif
 
-      if ( dict->cid_registry != 0xFFFFU )
+      if ( dict->cid_registry != 0xFFFFU && pure_cff )
         cffface->face_flags |= FT_FACE_FLAG_CID_KEYED;
 
 

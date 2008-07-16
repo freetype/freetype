@@ -7,6 +7,7 @@
 	* src/cff/cffload.h: Udpated.
 
 	* src/cff/cffobjs.c (cff_face_init): Updated.
+	Set FT_FACE_FLAG_CID_KEYED only if pure_cff is set.
 
 2008-07-09  Werner Lemberg  <wl@gnu.org>
 
