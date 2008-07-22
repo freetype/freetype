@@ -1,3 +1,10 @@
+2008-07-22  Martin McBride  <mmcbride@emtex.com>
+
+	* src/sfnt/ttcmap.c (tt_cmap4_validate, tt_cmap4_char_map_linear,
+	tt_cmap4_char_map_binary): Handle fonts which treat the last segment
+	specially.  According to the specification, such fonts would be
+	invalid but acroread accepts them.
+
 2008-07-16  Jon Foster  <Jon.Foster@cabot.co.uk>
 
 	* src/pfr/pfrdrivr.c (pfr_get_advance): Fix off-by-one error.
@@ -9,7 +16,7 @@
 
 2008-07-16  Werner Lemberg  <wl@gnu.org>
 
-	Handle CID-keyed fonts wrapped in a SFNT (with cmaps) correctly.
+	Handle CID-keyed fonts wrapped in an SFNT (with cmaps) correctly.
 
 	* src/cff/cffload.c (cff_font_load): Pass `pure_cff'.
 	Invert sids table only if `pure_cff' is set.
@@ -17,6 +24,8 @@
 
 	* src/cff/cffobjs.c (cff_face_init): Updated.
 	Set FT_FACE_FLAG_CID_KEYED only if pure_cff is set.
+
+	* docs/CHANGES: Updated.
 
 2008-07-09  Werner Lemberg  <wl@gnu.org>
 
