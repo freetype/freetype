@@ -1,3 +1,8 @@
+2008-07-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_decoder_prepare,
+	cff_decoder_parse_charstrings): Improve debug output.
+
 2008-07-22  Martin McBride  <mmcbride@emtex.com>
 
 	* src/sfnt/ttcmap.c (tt_cmap4_validate, tt_cmap4_char_map_linear,

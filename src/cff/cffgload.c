@@ -406,6 +406,8 @@
         goto Exit;
       }
 
+      FT_TRACE4(( "glyph index %d (subfont %d):\n", glyph_index, fd_index ));
+
       sub = cff->subfonts[fd_index];
 
       if ( builder->hints_funcs )
@@ -417,6 +419,12 @@
         builder->hints_globals = (void *)internal->subfonts[fd_index];
       }
     }
+#ifdef FT_DEBUG_LEVEL_TRACE
+    else
+    {
+      FT_TRACE4(( "glyph index %d:\n", glyph_index ));
+    }
+#endif
 
     decoder->num_locals    = sub->num_local_subrs;
     decoder->locals        = sub->local_subrs;
@@ -1172,7 +1180,7 @@
             case cff_op_endchar:
               /* If there is a width specified for endchar, we either have */
               /* 1 argument or 5 arguments.  We like to argue.             */
-              set_width_ok = ( ( num_args == 5 ) || ( num_args == 1 ) );
+              set_width_ok = ( num_args == 5 ) || ( num_args == 1 );
               break;
 
             default:
@@ -1208,9 +1216,10 @@
         case cff_op_hstemhm:
         case cff_op_vstemhm:
           /* the number of arguments is always even here */
-          FT_TRACE4(( op == cff_op_hstem   ? " hstem"   :
-                    ( op == cff_op_vstem   ? " vstem"   :
-                    ( op == cff_op_hstemhm ? " hstemhm" : " vstemhm" ) ) ));
+          FT_TRACE4((
+              op == cff_op_hstem   ? " hstem\n"   :
+            ( op == cff_op_vstem   ? " vstem\n"   :
+            ( op == cff_op_hstemhm ? " hstemhm\n" : " vstemhm\n" ) ) ));
 
           if ( hinter )
             hinter->stems( hinter->hints,
@@ -1259,12 +1268,14 @@
             FT_UInt maskbyte;
 
 
-            FT_TRACE4(( " " ));
+            FT_TRACE4(( " (maskbytes: " ));
 
             for ( maskbyte = 0;
                   maskbyte < (FT_UInt)(( decoder->num_hints + 7 ) >> 3);
                   maskbyte++, ip++ )
               FT_TRACE4(( "0x%02X", *ip ));
+
+            FT_TRACE4(( ")\n" ));
           }
 #else
           ip += ( decoder->num_hints + 7 ) >> 3;
@@ -1275,7 +1286,7 @@
           break;
 
         case cff_op_rmoveto:
-          FT_TRACE4(( " rmoveto" ));
+          FT_TRACE4(( " rmoveto\n" ));
 
           cff_builder_close_contour( builder );
           builder->path_begun = 0;
@@ -1285,7 +1296,7 @@
           break;
 
         case cff_op_vmoveto:
-          FT_TRACE4(( " vmoveto" ));
+          FT_TRACE4(( " vmoveto\n" ));
 
           cff_builder_close_contour( builder );
           builder->path_begun = 0;
@@ -1294,7 +1305,7 @@
           break;
 
         case cff_op_hmoveto:
-          FT_TRACE4(( " hmoveto" ));
+          FT_TRACE4(( " hmoveto\n" ));
 
           cff_builder_close_contour( builder );
           builder->path_begun = 0;
@@ -1303,7 +1314,7 @@
           break;
 
         case cff_op_rlineto:
-          FT_TRACE4(( " rlineto" ));
+          FT_TRACE4(( " rlineto\n" ));
 
           if ( cff_builder_start_point ( builder, x, y ) ||
                check_points( builder, num_args / 2 )     )
@@ -1329,8 +1340,8 @@
             FT_Int  phase = ( op == cff_op_hlineto );
 
 
-            FT_TRACE4(( op == cff_op_hlineto ? " hlineto"
-                                             : " vlineto" ));
+            FT_TRACE4(( op == cff_op_hlineto ? " hlineto\n"
+                                             : " vlineto\n" ));
 
             if ( cff_builder_start_point ( builder, x, y ) ||
                  check_points( builder, num_args )         )
@@ -1355,7 +1366,7 @@
           break;
 
         case cff_op_rrcurveto:
-          FT_TRACE4(( " rrcurveto" ));
+          FT_TRACE4(( " rrcurveto\n" ));
 
           /* check number of arguments; must be a multiple of 6 */
           if ( num_args % 6 != 0 )
@@ -1383,7 +1394,7 @@
           break;
 
         case cff_op_vvcurveto:
-          FT_TRACE4(( " vvcurveto" ));
+          FT_TRACE4(( " vvcurveto\n" ));
 
           if ( cff_builder_start_point( builder, x, y ) )
             goto Fail;
@@ -1417,7 +1428,7 @@
           break;
 
         case cff_op_hhcurveto:
-          FT_TRACE4(( " hhcurveto" ));
+          FT_TRACE4(( " hhcurveto\n" ));
 
           if ( cff_builder_start_point( builder, x, y ) )
             goto Fail;
@@ -1456,8 +1467,8 @@
             FT_Int  phase;
 
 
-            FT_TRACE4(( op == cff_op_vhcurveto ? " vhcurveto"
-                                               : " hvcurveto" ));
+            FT_TRACE4(( op == cff_op_vhcurveto ? " vhcurveto\n"
+                                               : " hvcurveto\n" ));
 
             if ( cff_builder_start_point( builder, x, y ) )
               goto Fail;
@@ -1510,7 +1521,7 @@
             FT_Int  num_lines = ( num_args - 6 ) / 2;
 
 
-            FT_TRACE4(( " rlinecurve" ));
+            FT_TRACE4(( " rlinecurve\n" ));
 
             if ( num_args < 8 || ( num_args - 6 ) & 1 )
               goto Stack_Underflow;
@@ -1550,7 +1561,7 @@
             FT_Int  num_curves = ( num_args - 2 ) / 6;
 
 
-            FT_TRACE4(( " rcurveline" ));
+            FT_TRACE4(( " rcurveline\n" ));
 
             if ( num_args < 8 || ( num_args - 2 ) % 6 )
               goto Stack_Underflow;
@@ -1590,7 +1601,7 @@
             FT_Pos start_y;
 
 
-            FT_TRACE4(( " hflex1" ));
+            FT_TRACE4(( " hflex1\n" ));
 
             args = stack;
 
@@ -1643,7 +1654,7 @@
             FT_Pos start_y;
 
 
-            FT_TRACE4(( " hflex" ));
+            FT_TRACE4(( " hflex\n" ));
 
             args = stack;
 
@@ -1691,13 +1702,13 @@
         case cff_op_flex1:
           {
             FT_Pos    start_x, start_y; /* record start x, y values for */
-                                        /* alter use                                */
+                                        /* alter use                    */
             FT_Fixed  dx = 0, dy = 0;   /* used in horizontal/vertical  */
                                         /* algorithm below              */
             FT_Int    horizontal, count;
 
 
-            FT_TRACE4(( " flex1" ));
+            FT_TRACE4(( " flex1\n" ));
 
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
@@ -1761,7 +1772,7 @@
             FT_UInt  count;
 
 
-            FT_TRACE4(( " flex" ));
+            FT_TRACE4(( " flex\n" ));
 
             if ( cff_builder_start_point( builder, x, y ) ||
                  check_points( builder, 6 )               )
@@ -1782,7 +1793,7 @@
           break;
 
         case cff_op_endchar:
-          FT_TRACE4(( " endchar" ));
+          FT_TRACE4(( " endchar\n" ));
 
           /* We are going to emulate the seac operator. */
           if ( num_args == 4 )
@@ -1826,11 +1837,11 @@
           }
 
           /* return now! */
-          FT_TRACE4(( "\n\n" ));
+          FT_TRACE4(( "\n" ));
           return error;
 
         case cff_op_abs:
-          FT_TRACE4(( " abs" ));
+          FT_TRACE4(( " abs\n" ));
 
           if ( args[0] < 0 )
             args[0] = -args[0];
@@ -1838,28 +1849,28 @@
           break;
 
         case cff_op_add:
-          FT_TRACE4(( " add" ));
+          FT_TRACE4(( " add\n" ));
 
           args[0] += args[1];
           args++;
           break;
 
         case cff_op_sub:
-          FT_TRACE4(( " sub" ));
+          FT_TRACE4(( " sub\n" ));
 
           args[0] -= args[1];
           args++;
           break;
 
         case cff_op_div:
-          FT_TRACE4(( " div" ));
+          FT_TRACE4(( " div\n" ));
 
           args[0] = FT_DivFix( args[0], args[1] );
           args++;
           break;
 
         case cff_op_neg:
-          FT_TRACE4(( " neg" ));
+          FT_TRACE4(( " neg\n" ));
 
           args[0] = -args[0];
           args++;
@@ -1870,7 +1881,7 @@
             FT_Fixed  Rand;
 
 
-            FT_TRACE4(( " rand" ));
+            FT_TRACE4(( " rand\n" ));
 
             Rand = seed;
             if ( Rand >= 0x8000L )
@@ -1885,14 +1896,14 @@
           break;
 
         case cff_op_mul:
-          FT_TRACE4(( " mul" ));
+          FT_TRACE4(( " mul\n" ));
 
           args[0] = FT_MulFix( args[0], args[1] );
           args++;
           break;
 
         case cff_op_sqrt:
-          FT_TRACE4(( " sqrt" ));
+          FT_TRACE4(( " sqrt\n" ));
 
           if ( args[0] > 0 )
           {
@@ -1917,7 +1928,7 @@
 
         case cff_op_drop:
           /* nothing */
-          FT_TRACE4(( " drop" ));
+          FT_TRACE4(( " drop\n" ));
 
           break;
 
@@ -1926,7 +1937,7 @@
             FT_Fixed  tmp;
 
 
-            FT_TRACE4(( " exch" ));
+            FT_TRACE4(( " exch\n" ));
 
             tmp     = args[0];
             args[0] = args[1];
@@ -1940,7 +1951,7 @@
             FT_Int  idx = (FT_Int)( args[0] >> 16 );
 
 
-            FT_TRACE4(( " index" ));
+            FT_TRACE4(( " index\n" ));
 
             if ( idx < 0 )
               idx = 0;
@@ -1957,7 +1968,7 @@
             FT_Int  idx   = (FT_Int)( args[1] >> 16 );
 
 
-            FT_TRACE4(( " roll" ));
+            FT_TRACE4(( " roll\n" ));
 
             if ( count <= 0 )
               count = 1;
@@ -1999,7 +2010,7 @@
           break;
 
         case cff_op_dup:
-          FT_TRACE4(( " dup" ));
+          FT_TRACE4(( " dup\n" ));
 
           args[1] = args[0];
           args++;
@@ -2011,7 +2022,7 @@
             FT_Int    idx = (FT_Int)( args[1] >> 16 );
 
 
-            FT_TRACE4(( " put" ));
+            FT_TRACE4(( " put\n" ));
 
             if ( idx >= 0 && idx < decoder->len_buildchar )
               decoder->buildchar[idx] = val;
@@ -2024,7 +2035,7 @@
             FT_Fixed  val = 0;
 
 
-            FT_TRACE4(( " get" ));
+            FT_TRACE4(( " get\n" ));
 
             if ( idx >= 0 && idx < decoder->len_buildchar )
               val = decoder->buildchar[idx];
@@ -2035,18 +2046,18 @@
           break;
 
         case cff_op_store:
-          FT_TRACE4(( " store "));
+          FT_TRACE4(( " store\n"));
 
           goto Unimplemented;
 
         case cff_op_load:
-          FT_TRACE4(( " load" ));
+          FT_TRACE4(( " load\n" ));
 
           goto Unimplemented;
 
         case cff_op_dotsection:
           /* this operator is deprecated and ignored by the parser */
-          FT_TRACE4(( " dotsection" ));
+          FT_TRACE4(( " dotsection\n" ));
           break;
 
         case cff_op_closepath:
@@ -2054,7 +2065,7 @@
           /* exist fonts which are incorrectly converted from probably */
           /* Type 1 to CFF, and some parsers seem to accept it         */
 
-          FT_TRACE4(( " closepath (invalid op)" ));
+          FT_TRACE4(( " closepath (invalid op)\n" ));
 
           args = stack;
           break;
@@ -2064,7 +2075,7 @@
           /* exist fonts which are incorrectly converted from probably */
           /* Type 1 to CFF, and some parsers seem to accept it         */
 
-          FT_TRACE4(( " hsbw (invalid op)" ));
+          FT_TRACE4(( " hsbw (invalid op)\n" ));
 
           decoder->glyph_width = decoder->nominal_width +
                                    (args[1] >> 16);
@@ -2078,7 +2089,7 @@
             FT_Fixed  cond = args[0] && args[1];
 
 
-            FT_TRACE4(( " and" ));
+            FT_TRACE4(( " and\n" ));
 
             args[0] = cond ? 0x10000L : 0;
             args++;
@@ -2090,7 +2101,7 @@
             FT_Fixed  cond = args[0] || args[1];
 
 
-            FT_TRACE4(( " or" ));
+            FT_TRACE4(( " or\n" ));
 
             args[0] = cond ? 0x10000L : 0;
             args++;
@@ -2102,7 +2113,7 @@
             FT_Fixed  cond = !args[0];
 
 
-            FT_TRACE4(( " eq" ));
+            FT_TRACE4(( " eq\n" ));
 
             args[0] = cond ? 0x10000L : 0;
             args++;
@@ -2114,7 +2125,7 @@
             FT_Fixed  cond = ( args[2] <= args[3] );
 
 
-            FT_TRACE4(( " ifelse" ));
+            FT_TRACE4(( " ifelse\n" ));
 
             if ( !cond )
               args[0] = args[1];
@@ -2128,7 +2139,7 @@
                                       decoder->locals_bias );
 
 
-            FT_TRACE4(( " callsubr(%d)", idx ));
+            FT_TRACE4(( " callsubr(%d)\n", idx ));
 
             if ( idx >= decoder->num_locals )
             {
@@ -2170,7 +2181,7 @@
                                       decoder->globals_bias );
 
 
-            FT_TRACE4(( " callgsubr(%d)", idx ));
+            FT_TRACE4(( " callgsubr(%d)\n", idx ));
 
             if ( idx >= decoder->num_globals )
             {
@@ -2207,7 +2218,7 @@
           break;
 
         case cff_op_return:
-          FT_TRACE4(( " return" ));
+          FT_TRACE4(( " return\n" ));
 
           if ( decoder->zone <= decoder->zones )
           {
@@ -2245,15 +2256,15 @@
     return error;
 
   Syntax_Error:
-    FT_TRACE4(( "cff_decoder_parse_charstrings: syntax error!" ));
+    FT_TRACE4(( "cff_decoder_parse_charstrings: syntax error!\n" ));
     return CFF_Err_Invalid_File_Format;
 
   Stack_Underflow:
-    FT_TRACE4(( "cff_decoder_parse_charstrings: stack underflow!" ));
+    FT_TRACE4(( "cff_decoder_parse_charstrings: stack underflow!\n" ));
     return CFF_Err_Too_Few_Arguments;
 
   Stack_Overflow:
-    FT_TRACE4(( "cff_decoder_parse_charstrings: stack overflow!" ));
+    FT_TRACE4(( "cff_decoder_parse_charstrings: stack overflow!\n" ));
     return CFF_Err_Stack_Overflow;
   }
 
