@@ -148,7 +148,8 @@
 
 2008-06-24  Werner Lemberg  <wl@gnu.org>
 
-	* src/truetype/ttinterp. (Ins_SCANTYPE): Don't check rendering mode.
+	* src/truetype/ttinterp.c (Ins_SCANTYPE): Don't check rendering
+	mode.
 
 	* src/raster/ftraster.c (Render_Glyph, Render_Gray_Glyph,
 	Draw_Sweep): No-dropout mode is value 2, not value 0.
@@ -838,9 +839,9 @@
 	* doc/INSTALL.MAC: Comment on MACOSX_DEPLOYMENT_TARGET.
 
 	* include/freetype/ftmac.h: Deprecate FT_New_Face_From_FOND and
-	FT_GetFilePath_From_Mac_ATS_Name. Since Mac OS X 10.5, calling
+	FT_GetFilePath_From_Mac_ATS_Name.  Since Mac OS X 10.5, calling
 	Carbon functions from a forked process is classified as unsafe
-	by Apple. All Carbon-dependent functions should be deprecated.
+	by Apple.  All Carbon-dependent functions should be deprecated.
 
 	* src/base/ftmac.c: Use essential header files <Carbon/Carbon.h>
 	and <ApplicationServices/ApplicationServices.h> instead of
@@ -2517,7 +2518,7 @@
 
 	* src/base/ftmac.c: Specialized for Mac OS X only.
 	* builds/unix/ftconfig.in: Fixed for ppc64 missing Carbon framework.
-	* builds/unix/configure.raw: Ditto. When explicit switches for
+	* builds/unix/configure.raw: Ditto.  When explicit switches for
 	FSSpec/FSRef/QuickDraw/ATS availability are given to configure,
 	builds/mac/ftmac.c is used instead of default src/base/ftmac.c.
 
@@ -3137,7 +3138,7 @@
 	buggy by design.  Always return -1.
 
 
-	Improvements to native TrueType hinting. This is a first try,
+	Improvements to native TrueType hinting.  This is a first try,
 	controlled by the FIX_BYTECODE macro in src/truetype/ttinterp.c.
 
 	* include/freetype/internal/ftgloadr.h (FT_GlyphLoadRec): Add member
