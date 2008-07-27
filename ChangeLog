@@ -1,3 +1,26 @@
+2008-07-27  Werner Lemberg  <wl@gnu.org>
+
+	Add extra mappings for `Tcommaaccent' and `tcommaaccent'.  This
+	fixes Savanna bug #23940.
+
+	* src/psnames/psmodule.c (WGL_EXTRA_LIST_SIZE): Rename to...
+	(EXTRA_GLYPH_LIST_SIZE): This.
+	Increase by 2.
+	(ft_wgl_extra_unicodes): Rename to...
+	(ft_extra_glyph_unicodes): This.
+	Add two code values.
+	(ft_wgl_extra_glyph_names): Rename to...
+	(ft_extra_glyph_names): This.
+	Add two glyphs.
+	(ft_wgl_extra_glyph_name_offsets): Rename to...
+	(ft_extra_glyph_name_offsets): This.
+	Add two offsets.
+
+	(ps_check_wgl_name, ps_check_wgl_unicode): Rename to...
+	(ps_check_extra_glyph_name, ps_check_extra_glyph_unicode): This.
+	Updated.
+	(ps_unicodes_init): Updated.
+
 2008-07-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffgload.c (cff_decoder_prepare,
