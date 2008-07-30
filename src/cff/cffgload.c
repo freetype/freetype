@@ -123,6 +123,11 @@
 #define CFF_COUNT_EXACT        0x40
 #define CFF_COUNT_CLEAR_STACK  0x20
 
+  /* count values which have the `CFF_COUNT_CHECK_WIDTH' flag set are  */
+  /* used for checking the width and requested numbers of arguments    */
+  /* only; they are set to zero afterwards                             */
+
+  /* the other two flags are informative only and unused currently     */
 
   static const FT_Byte  cff_argument_counts[] =
   {
@@ -952,6 +957,11 @@
       }
       else
       {
+        /* The specification says that normally arguments are to be taken */
+        /* from the bottom of the stack.  However, this seems not to be   */
+        /* correct, at least for Acroread 7.0.8 on GNU/Linux: It pops the */
+        /* arguments similar to a PS interpreter.                         */
+
         FT_Fixed*  args     = decoder->top;
         FT_Int     num_args = (FT_Int)( args - decoder->stack );
         FT_Int     req_args;
@@ -1138,6 +1148,7 @@
         default:
           ;
         }
+
         if ( op == cff_op_unknown )
           goto Syntax_Error;
 
@@ -1145,8 +1156,6 @@
         req_args = cff_argument_counts[op];
         if ( req_args & CFF_COUNT_CHECK_WIDTH )
         {
-          args = stack;
-
           if ( num_args > 0 && decoder->read_width )
           {
             /* If `nominal_width' is non-zero, the number is really a      */
@@ -1195,7 +1204,6 @@
 
               /* Consumed an argument. */
               num_args--;
-              args++;
             }
           }
 
@@ -1208,6 +1216,14 @@
           goto Stack_Underflow;
         args     -= req_args;
         num_args -= req_args;
+
+        /* At this point, `args' points to the first argument of the  */
+        /* operand in case `req_args' isn't zero.  Otherwise, we have */
+        /* to adjust `args' manually.                                 */
+
+        /* Note that we only pop arguments from the stack which we    */
+        /* really need and can digest so that we can continue in case */
+        /* of superfluous stack elements.                             */
 
         switch ( op )
         {
@@ -1225,7 +1241,7 @@
             hinter->stems( hinter->hints,
                            ( op == cff_op_hstem || op == cff_op_hstemhm ),
                            num_args / 2,
-                           args );
+                           args - ( num_args & ~1 ) );
 
           decoder->num_hints += num_args / 2;
           args = stack;
@@ -1245,7 +1261,7 @@
               hinter->stems( hinter->hints,
                              0,
                              num_args / 2,
-                             args );
+                             args - ( num_args & ~1 ) );
 
             decoder->num_hints += num_args / 2;
           }
@@ -1290,8 +1306,8 @@
 
           cff_builder_close_contour( builder );
           builder->path_begun = 0;
-          x   += args[0];
-          y   += args[1];
+          x   += args[-2];
+          y   += args[-1];
           args = stack;
           break;
 
@@ -1300,7 +1316,7 @@
 
           cff_builder_close_contour( builder );
           builder->path_begun = 0;
-          y   += args[0];
+          y   += args[-1];
           args = stack;
           break;
 
@@ -1309,7 +1325,7 @@
 
           cff_builder_close_contour( builder );
           builder->path_begun = 0;
-          x   += args[0];
+          x   += args[-1];
           args = stack;
           break;
 
@@ -1320,10 +1336,10 @@
                check_points( builder, num_args / 2 )     )
             goto Fail;
 
-          if ( num_args < 2 || num_args & 1 )
+          if ( num_args < 2 )
             goto Stack_Underflow;
 
-          args = stack;
+          args -= num_args & ~1;
           while ( args < decoder->top )
           {
             x += args[0];
@@ -1342,6 +1358,9 @@
 
             FT_TRACE4(( op == cff_op_hlineto ? " hlineto\n"
                                              : " vlineto\n" ));
+
+            if ( num_args < 1 )
+              goto Stack_Underflow;
 
             if ( cff_builder_start_point ( builder, x, y ) ||
                  check_points( builder, num_args )         )
@@ -1366,105 +1385,137 @@
           break;
 
         case cff_op_rrcurveto:
-          FT_TRACE4(( " rrcurveto\n" ));
-
-          /* check number of arguments; must be a multiple of 6 */
-          if ( num_args % 6 != 0 )
-            goto Stack_Underflow;
-
-          if ( cff_builder_start_point ( builder, x, y ) ||
-               check_points( builder, num_args / 2 )     )
-            goto Fail;
-
-          args = stack;
-          while ( args < decoder->top )
           {
-            x += args[0];
-            y += args[1];
-            cff_builder_add_point( builder, x, y, 0 );
-            x += args[2];
-            y += args[3];
-            cff_builder_add_point( builder, x, y, 0 );
-            x += args[4];
-            y += args[5];
-            cff_builder_add_point( builder, x, y, 1 );
-            args += 6;
+            FT_Int  nargs;
+
+
+            FT_TRACE4(( " rrcurveto\n" ));
+
+            if ( num_args < 6 )
+              goto Stack_Underflow;
+
+            nargs = num_args - num_args % 6;
+
+            if ( cff_builder_start_point ( builder, x, y ) ||
+                 check_points( builder, nargs / 2 )     )
+              goto Fail;
+
+            args -= nargs;
+            while ( args < decoder->top )
+            {
+              x += args[0];
+              y += args[1];
+              cff_builder_add_point( builder, x, y, 0 );
+              x += args[2];
+              y += args[3];
+              cff_builder_add_point( builder, x, y, 0 );
+              x += args[4];
+              y += args[5];
+              cff_builder_add_point( builder, x, y, 1 );
+              args += 6;
+            }
+            args = stack;
           }
-          args = stack;
           break;
 
         case cff_op_vvcurveto:
-          FT_TRACE4(( " vvcurveto\n" ));
-
-          if ( cff_builder_start_point( builder, x, y ) )
-            goto Fail;
-
-          args = stack;
-          if ( num_args & 1 )
           {
-            x += args[0];
-            args++;
-            num_args--;
+            FT_Int  nargs;
+
+
+            FT_TRACE4(( " vvcurveto\n" ));
+
+            if ( num_args < 4 )
+              goto Stack_Underflow;
+
+            /* if num_args isn't of the form 4n or 4n+1, */
+            /* we reduce it to 4n+1                      */
+
+            nargs = num_args - num_args % 4;
+            if ( num_args - nargs > 0 )
+              nargs += 1;
+
+            if ( cff_builder_start_point( builder, x, y ) )
+              goto Fail;
+
+            args -= nargs;
+
+            if ( nargs & 1 )
+            {
+              x += args[0];
+              args++;
+              nargs--;
+            }
+
+            if ( check_points( builder, 3 * ( nargs / 4 ) ) )
+              goto Fail;
+
+            while ( args < decoder->top )
+            {
+              y += args[0];
+              cff_builder_add_point( builder, x, y, 0 );
+              x += args[1];
+              y += args[2];
+              cff_builder_add_point( builder, x, y, 0 );
+              y += args[3];
+              cff_builder_add_point( builder, x, y, 1 );
+              args += 4;
+            }
+            args = stack;
           }
-
-          if ( num_args % 4 != 0 )
-            goto Stack_Underflow;
-
-          if ( check_points( builder, 3 * ( num_args / 4 ) ) )
-            goto Fail;
-
-          while ( args < decoder->top )
-          {
-            y += args[0];
-            cff_builder_add_point( builder, x, y, 0 );
-            x += args[1];
-            y += args[2];
-            cff_builder_add_point( builder, x, y, 0 );
-            y += args[3];
-            cff_builder_add_point( builder, x, y, 1 );
-            args += 4;
-          }
-          args = stack;
           break;
 
         case cff_op_hhcurveto:
-          FT_TRACE4(( " hhcurveto\n" ));
-
-          if ( cff_builder_start_point( builder, x, y ) )
-            goto Fail;
-
-          args = stack;
-          if ( num_args & 1 )
           {
-            y += args[0];
-            args++;
-            num_args--;
+            FT_Int  nargs;
+
+
+            FT_TRACE4(( " hhcurveto\n" ));
+
+            if ( num_args < 4 )
+              goto Stack_Underflow;
+
+            /* if num_args isn't of the form 4n or 4n+1, */
+            /* we reduce it to 4n+1                      */
+
+            nargs = num_args - num_args % 4;
+            if ( num_args - nargs > 0 )
+              nargs += 1;
+
+            if ( cff_builder_start_point( builder, x, y ) )
+              goto Fail;
+
+            args -= nargs;
+            if ( nargs & 1 )
+            {
+              y += args[0];
+              args++;
+              nargs--;
+            }
+
+            if ( check_points( builder, 3 * ( nargs / 4 ) ) )
+              goto Fail;
+
+            while ( args < decoder->top )
+            {
+              x += args[0];
+              cff_builder_add_point( builder, x, y, 0 );
+              x += args[1];
+              y += args[2];
+              cff_builder_add_point( builder, x, y, 0 );
+              x += args[3];
+              cff_builder_add_point( builder, x, y, 1 );
+              args += 4;
+            }
+            args = stack;
           }
-
-          if ( num_args % 4 != 0 )
-            goto Stack_Underflow;
-
-          if ( check_points( builder, 3 * ( num_args / 4 ) ) )
-            goto Fail;
-
-          while ( args < decoder->top )
-          {
-            x += args[0];
-            cff_builder_add_point( builder, x, y, 0 );
-            x += args[1];
-            y += args[2];
-            cff_builder_add_point( builder, x, y, 0 );
-            x += args[3];
-            cff_builder_add_point( builder, x, y, 1 );
-            args += 4;
-          }
-          args = stack;
           break;
 
         case cff_op_vhcurveto:
         case cff_op_hvcurveto:
           {
             FT_Int  phase;
+            FT_Int  nargs;
 
 
             FT_TRACE4(( op == cff_op_vhcurveto ? " vhcurveto\n"
@@ -1473,18 +1524,25 @@
             if ( cff_builder_start_point( builder, x, y ) )
               goto Fail;
 
-            args = stack;
-            if ( num_args < 4 || ( num_args % 4 ) > 1 )
+            if ( num_args < 4 )
               goto Stack_Underflow;
 
-            if ( check_points( builder, ( num_args / 4 ) * 3 ) )
+            /* if num_args isn't of the form 8n, 8n+1, 8n+4, or 8n+5, */
+            /* we reduce it to the largest one which fits             */
+
+            nargs = num_args - num_args % 4;
+            if ( num_args - nargs > 0 )
+              nargs += 1;
+
+            args -= nargs;
+            if ( check_points( builder, ( nargs / 4 ) * 3 ) )
               goto Stack_Underflow;
 
             phase = ( op == cff_op_hvcurveto );
 
-            while ( num_args >= 4 )
+            while ( nargs >= 4 )
             {
-              num_args -= 4;
+              nargs -= 4;
               if ( phase )
               {
                 x += args[0];
@@ -1493,7 +1551,7 @@
                 y += args[2];
                 cff_builder_add_point( builder, x, y, 0 );
                 y += args[3];
-                if ( num_args == 1 )
+                if ( nargs == 1 )
                   x += args[4];
                 cff_builder_add_point( builder, x, y, 1 );
               }
@@ -1505,7 +1563,7 @@
                 y += args[2];
                 cff_builder_add_point( builder, x, y, 0 );
                 x += args[3];
-                if ( num_args == 1 )
+                if ( nargs == 1 )
                   y += args[4];
                 cff_builder_add_point( builder, x, y, 1 );
               }
@@ -1518,19 +1576,23 @@
 
         case cff_op_rlinecurve:
           {
-            FT_Int  num_lines = ( num_args - 6 ) / 2;
+            FT_Int  num_lines;
+            FT_Int  nargs;
 
 
             FT_TRACE4(( " rlinecurve\n" ));
 
-            if ( num_args < 8 || ( num_args - 6 ) & 1 )
+            if ( num_args < 8 )
               goto Stack_Underflow;
+
+            nargs     = num_args & ~1;
+            num_lines = ( nargs - 6 ) / 2;
 
             if ( cff_builder_start_point( builder, x, y ) ||
                  check_points( builder, num_lines + 3 )   )
               goto Fail;
 
-            args = stack;
+            args -= nargs;
 
             /* first, add the line segments */
             while ( num_lines > 0 )
@@ -1558,19 +1620,24 @@
 
         case cff_op_rcurveline:
           {
-            FT_Int  num_curves = ( num_args - 2 ) / 6;
+            FT_Int  num_curves;
+            FT_Int  nargs;
 
 
             FT_TRACE4(( " rcurveline\n" ));
 
-            if ( num_args < 8 || ( num_args - 2 ) % 6 )
+            if ( num_args < 8 )
               goto Stack_Underflow;
 
+            nargs      = num_args - 2;
+            nargs      = nargs - nargs % 6 + 2;
+            num_curves = ( nargs - 2 ) / 6;
+
             if ( cff_builder_start_point ( builder, x, y ) ||
-                 check_points( builder, num_curves*3 + 2 ) )
+                 check_points( builder, num_curves * 3 + 2 ) )
               goto Fail;
 
-            args = stack;
+            args -= nargs;
 
             /* first, add the curves */
             while ( num_curves > 0 )
@@ -1603,16 +1670,14 @@
 
             FT_TRACE4(( " hflex1\n" ));
 
-            args = stack;
-
-            /* adding five more points; 4 control points, 1 on-curve point */
-            /* make sure we have enough space for the start point if it    */
+            /* adding five more points: 4 control points, 1 on-curve point */
+            /* -- make sure we have enough space for the start point if it */
             /* needs to be added                                           */
             if ( cff_builder_start_point( builder, x, y ) ||
                  check_points( builder, 6 )               )
               goto Fail;
 
-            /* Record the starting point's y position for later use */
+            /* record the starting point's y position for later use */
             start_y = y;
 
             /* first control point */
@@ -1655,8 +1720,6 @@
 
 
             FT_TRACE4(( " hflex\n" ));
-
-            args = stack;
 
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
@@ -1701,11 +1764,12 @@
 
         case cff_op_flex1:
           {
-            FT_Pos    start_x, start_y; /* record start x, y values for */
-                                        /* alter use                    */
-            FT_Fixed  dx = 0, dy = 0;   /* used in horizontal/vertical  */
-                                        /* algorithm below              */
-            FT_Int    horizontal, count;
+            FT_Pos     start_x, start_y; /* record start x, y values for */
+                                         /* alter use                    */
+            FT_Fixed   dx = 0, dy = 0;   /* used in horizontal/vertical  */
+                                         /* algorithm below              */
+            FT_Int     horizontal, count;
+            FT_Fixed*  temp;
 
 
             FT_TRACE4(( " flex1\n" ));
@@ -1722,21 +1786,20 @@
             /* XXX: figure out whether this is supposed to be a horizontal */
             /*      or vertical flex; the Type 2 specification is vague... */
 
-            args = stack;
+            temp = args;
 
             /* grab up to the last argument */
             for ( count = 5; count > 0; count-- )
             {
-              dx += args[0];
-              dy += args[1];
-              args += 2;
+              dx += temp[0];
+              dy += temp[1];
+              temp += 2;
             }
 
-            /* rewind */
-            args = stack;
-
-            if ( dx < 0 ) dx = -dx;
-            if ( dy < 0 ) dy = -dy;
+            if ( dx < 0 )
+              dx = -dx;
+            if ( dy < 0 )
+              dy = -dy;
 
             /* strange test, but here it is... */
             horizontal = ( dx > dy );
@@ -1745,7 +1808,8 @@
             {
               x += args[0];
               y += args[1];
-              cff_builder_add_point( builder, x, y, (FT_Bool)( count == 3 ) );
+              cff_builder_add_point( builder, x, y,
+                                     (FT_Bool)( count == 3 ) );
               args += 2;
             }
 
@@ -1778,7 +1842,6 @@
                  check_points( builder, 6 )               )
               goto Fail;
 
-            args = stack;
             for ( count = 6; count > 0; count-- )
             {
               x += args[0];
@@ -1796,18 +1859,17 @@
           FT_TRACE4(( " endchar\n" ));
 
           /* We are going to emulate the seac operator. */
-          if ( num_args == 4 )
+          if ( num_args >= 4 )
           {
             /* Save glyph width so that the subglyphs don't overwrite it. */
             FT_Pos  glyph_width = decoder->glyph_width;
 
 
             error = cff_operator_seac( decoder,
-                                       args[0],
-                                       args[1],
-                                       (FT_Int)( args[2] >> 16 ),
-                                       (FT_Int)( args[3] >> 16 ) );
-            args += 4;
+                                       args[-4],
+                                       args[-3],
+                                       (FT_Int)( args[-2] >> 16 ),
+                                       (FT_Int)( args[-1] >> 16 ) );
 
             decoder->glyph_width = glyph_width;
           }

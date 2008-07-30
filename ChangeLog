@@ -1,3 +1,22 @@
+2008-07-30  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): No longer
+	assume that the first argument on the stack is the bottom-most
+	element.  Two reasons:
+
+	  o According to people from Adobe it is missing in the Type 2
+	    specification that pushing of additional, superfluous arguments
+	    on the stack is prohibited.
+
+	  o Acroread in general handles fonts differently, namely by popping
+	    the number of arguments needed for a particular operand (as a PS
+	    interpreter would do).  In case of buggy fonts this causes a
+	    different interpretation which of the elements on the stack are
+	    superfluous and which not.
+
+	Since there are CFF subfonts (embedded in PDFs) which rely on
+	Acroread's behaviour, FreeType now does the same.
+
 2008-07-27  Werner Lemberg  <wl@gnu.org>
 
 	Add extra mappings for `Tcommaaccent' and `tcommaaccent'.  This
