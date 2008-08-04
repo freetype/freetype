@@ -406,10 +406,9 @@
   cff_parse_fixed_scaled( FT_Byte**  d,
                           FT_Int     scaling )
   {
-    return **d ==
-      30 ? cff_parse_real( d[0], d[1], scaling, NULL )
-         : (FT_Fixed)FT_MulFix( cff_parse_integer( d[0], d[1] ) << 16,
-                                                   power_tens[scaling] );
+    return **d == 30 ? cff_parse_real( d[0], d[1], scaling, NULL )
+                     : ( cff_parse_integer( d[0], d[1] ) *
+                           power_tens[scaling] ) << 16;
   }
 
 

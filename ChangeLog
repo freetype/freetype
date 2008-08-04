@@ -1,3 +1,8 @@
+2008-08-04  Bram Tassyns  <bramt@enfocus.be>
+
+	* src/cff/cffparse.c (cff_parse_fixed_scaled): Fix thinko which
+	resulted in incorrect scaling.  This fixes Savannah bug #23973.
+
 2008-08-04  Werner Lemberg  <wl@gnu.org>
 
 	Be more tolerant w.r.t. invalid entries in SFNT table directory.
