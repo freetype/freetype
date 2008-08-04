@@ -124,7 +124,7 @@
         *length = table->Length;
 
       if ( FT_STREAM_SEEK( table->Offset ) )
-       goto Exit;
+        goto Exit;
     }
     else
       error = SFNT_Err_Table_Missing;
@@ -134,27 +134,21 @@
   }
 
 
-  /* Here, we                                                              */
-  /*                                                                       */
-  /* - check that `num_tables' is valid                                    */
-  /* - look for a `head' table, check its size, and parse it to check      */
-  /*   whether its `magic' field is correctly set                          */
-  /*                                                                       */
-  /* When checking directory entries, ignore the tables `glyx' and `locx'  */
-  /* which are hacked-out versions of `glyf' and `loca' in some PostScript */
-  /* Type 42 fonts, and which are generally invalid.                       */
-  /*                                                                       */
+  /* Here, we                                                         */
+  /*                                                                  */
+  /* - check that `num_tables' is valid (and adjust it if necessary)  */
+  /*                                                                  */
+  /* - look for a `head' table, check its size, and parse it to check */
+  /*   whether its `magic' field is correctly set                     */
+  /*                                                                  */
   static FT_Error
   check_table_dir( SFNT_Header  sfnt,
                    FT_Stream    stream )
   {
-    FT_Error        error;
-    FT_UInt         nn;
-    FT_UInt         has_head = 0, has_sing = 0, has_meta = 0;
-    FT_ULong        offset = sfnt->offset + 12;
-
-    const FT_ULong  glyx_tag = FT_MAKE_TAG( 'g', 'l', 'y', 'x' );
-    const FT_ULong  locx_tag = FT_MAKE_TAG( 'l', 'o', 'c', 'x' );
+    FT_Error  error;
+    FT_UInt   nn, valid_entries = 0;
+    FT_UInt   has_head = 0, has_sing = 0, has_meta = 0;
+    FT_ULong  offset = sfnt->offset + 12;
 
     static const FT_Frame_Field  table_dir_entry_fields[] =
     {
@@ -170,12 +164,8 @@
     };
 
 
-    if ( sfnt->num_tables == 0                         ||
-         offset + sfnt->num_tables * 16 > stream->size )
-      return SFNT_Err_Unknown_File_Format;
-
     if ( FT_STREAM_SEEK( offset ) )
-      return error;
+      goto Exit;
 
     for ( nn = 0; nn < sfnt->num_tables; nn++ )
     {
@@ -183,12 +173,23 @@
 
 
       if ( FT_STREAM_READ_FIELDS( table_dir_entry_fields, &table ) )
-        return error;
+      {
+        nn--;
+        FT_TRACE2(( "check_table_dir:"
+                    " can read only %d table%s in font (instead of %d)\n",
+                    nn, nn == 1 ? "" : "s", sfnt->num_tables ));
+        sfnt->num_tables = nn;
+        break;
+      }
 
-      if ( table.Offset + table.Length > stream->size &&
-           table.Tag != glyx_tag                      &&
-           table.Tag != locx_tag                      )
-        return SFNT_Err_Unknown_File_Format;
+      /* we ignore invalid tables */
+      if ( table.Offset + table.Length > stream->size )
+      {
+        FT_TRACE2(( "check_table_dir: table entry %d invalid\n", nn ));
+        continue;
+      }
+      else
+        valid_entries++;
 
       if ( table.Tag == TTAG_head || table.Tag == TTAG_bhed )
       {
@@ -210,17 +211,26 @@
          *
          */
         if ( table.Length < 0x36 )
-          return SFNT_Err_Unknown_File_Format;
+        {
+          FT_TRACE2(( "check_table_dir: `head' table too small\n" ));
+          error = SFNT_Err_Unknown_File_Format;
+          goto Exit;
+        }
 
         if ( FT_STREAM_SEEK( table.Offset + 12 ) ||
              FT_READ_ULONG( magic )              )
-          return error;
+          goto Exit;
 
         if ( magic != 0x5F0F3CF5UL )
-          return SFNT_Err_Unknown_File_Format;
+        {
+          FT_TRACE2(( "check_table_dir:"
+                      " no magic number found in `head' table\n"));
+          error = SFNT_Err_Unknown_File_Format;
+          goto Exit;
+        }
 
         if ( FT_STREAM_SEEK( offset + ( nn + 1 ) * 16 ) )
-          return error;
+          goto Exit;
       }
       else if ( table.Tag == TTAG_SING )
         has_sing = 1;
@@ -228,11 +238,34 @@
         has_meta = 1;
     }
 
+    sfnt->num_tables = valid_entries;
+
+    if ( sfnt->num_tables == 0 )
+    {
+      FT_TRACE2(( "check_table_dir: no tables found\n" ));
+      error = SFNT_Err_Unknown_File_Format;
+      goto Exit;
+    }
+
     /* if `sing' and `meta' tables are present, there is no `head' table */
     if ( has_head || ( has_sing && has_meta ) )
-      return SFNT_Err_Ok;
+    {
+      error = SFNT_Err_Ok;
+      goto Exit;
+    }
     else
-      return SFNT_Err_Unknown_File_Format;
+    {
+      FT_TRACE2(( "check_table_dir:" ));
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+      FT_TRACE2(( " neither `head', `bhed', nor `sing' table found\n" ));
+#else
+      FT_TRACE2(( " neither `head' nor `sing' table found\n" ));
+#endif
+      error = SFNT_Err_Unknown_File_Format;
+    }
+
+  Exit:
+    return error;
   }
 
 
@@ -266,7 +299,7 @@
     FT_Error        error;
     FT_Memory       memory = stream->memory;
     TT_TableRec*    entry;
-    TT_TableRec*    limit;
+    FT_Int          nn;
 
     static const FT_Frame_Field  offset_table_fields[] =
     {
@@ -290,7 +323,7 @@
 
     if ( FT_READ_ULONG( sfnt.format_tag )                    ||
          FT_STREAM_READ_FIELDS( offset_table_fields, &sfnt ) )
-      return error;
+      goto Exit;
 
     /* many fonts don't have these fields set correctly */
 #if 0
@@ -301,8 +334,8 @@
 
     /* load the table directory */
 
-    FT_TRACE2(( "-- Tables count:   %12u\n",  sfnt.num_tables ));
-    FT_TRACE2(( "-- Format version: %08lx\n", sfnt.format_tag ));
+    FT_TRACE2(( "-- Number of tables: %10u\n",    sfnt.num_tables ));
+    FT_TRACE2(( "-- Format version:   0x%08lx\n", sfnt.format_tag ));
 
     /* check first */
     error = check_table_dir( &sfnt, stream );
@@ -310,42 +343,49 @@
     {
       FT_TRACE2(( "tt_face_load_font_dir: invalid table directory!\n" ));
 
-      return error;
+      goto Exit;
     }
 
     face->num_tables = sfnt.num_tables;
     face->format_tag = sfnt.format_tag;
 
     if ( FT_QNEW_ARRAY( face->dir_tables, face->num_tables ) )
-      return error;
+      goto Exit;
 
     if ( FT_STREAM_SEEK( sfnt.offset + 12 )       ||
          FT_FRAME_ENTER( face->num_tables * 16L ) )
-      return error;
+      goto Exit;
 
     entry = face->dir_tables;
-    limit = entry + face->num_tables;
 
-    for ( ; entry < limit; entry++ )
+    for ( nn = 0; nn < sfnt.num_tables; nn++ )
     {
       entry->Tag      = FT_GET_TAG4();
       entry->CheckSum = FT_GET_ULONG();
       entry->Offset   = FT_GET_LONG();
       entry->Length   = FT_GET_LONG();
 
-      FT_TRACE2(( "  %c%c%c%c  -  %08lx  -  %08lx\n",
-                  (FT_Char)( entry->Tag >> 24 ),
-                  (FT_Char)( entry->Tag >> 16 ),
-                  (FT_Char)( entry->Tag >> 8  ),
-                  (FT_Char)( entry->Tag       ),
-                  entry->Offset,
-                  entry->Length ));
+      /* ignore invalid tables */
+      if ( entry->Offset + entry->Length > stream->size )
+        continue;
+      else
+      {
+        FT_TRACE2(( "  %c%c%c%c  -  %08lx  -  %08lx\n",
+                    (FT_Char)( entry->Tag >> 24 ),
+                    (FT_Char)( entry->Tag >> 16 ),
+                    (FT_Char)( entry->Tag >> 8  ),
+                    (FT_Char)( entry->Tag       ),
+                    entry->Offset,
+                    entry->Length ));
+        entry++;
+      }
     }
 
     FT_FRAME_EXIT();
 
     FT_TRACE2(( "table directory loaded\n\n" ));
 
+  Exit:
     return error;
   }
 

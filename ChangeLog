@@ -1,3 +1,12 @@
+2008-08-04  Werner Lemberg  <wl@gnu.org>
+
+	Be more tolerant w.r.t. invalid entries in SFNT table directory.
+
+	* src/sfnt/ttload.c (check_table_dir): Ignore invalid entries and
+	adjust table count.
+	Add more trace messages.
+	(tt_face_load_font_dir): Updated.
+
 2008-07-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings): No longer
