@@ -219,7 +219,8 @@ FT_BEGIN_HEADER
   /*    FT_Get_Glyph                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A function used to extract a glyph image from a slot.              */
+  /*    A function used to extract a glyph image from a slot.  Note that   */
+  /*    the created @FT_Glyph object must be released with @FT_Done_Glyph. */
   /*                                                                       */
   /* <Input>                                                               */
   /*    slot   :: A handle to the source glyph slot.                       */
