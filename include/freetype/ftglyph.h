@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType convenience functions to handle glyphs (specification).     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2006 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2006, 2008 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -428,7 +428,7 @@ FT_BEGIN_HEADER
   /*    the_glyph   :: A pointer to a handle to the target glyph.          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    render_mode :: An enumeration that describe how the data is        */
+  /*    render_mode :: An enumeration that describes how the data is       */
   /*                   rendered.                                           */
   /*                                                                       */
   /*    origin      :: A pointer to a vector used to translate the glyph   */
@@ -448,8 +448,8 @@ FT_BEGIN_HEADER
   /*    rendering.                                                         */
   /*                                                                       */
   /*    The first parameter is a pointer to an @FT_Glyph handle, that will */
-  /*    be replaced by this function.  Typically, you would use (omitting  */
-  /*    error handling):                                                   */
+  /*    be _replaced_ by this function (with newly allocated data).        */
+  /*    Typically, you would use (omitting error handling):                */
   /*                                                                       */
   /*                                                                       */
   /*      {                                                                */
@@ -463,12 +463,12 @@ FT_BEGIN_HEADER
   /*        // extract glyph image                                         */
   /*        error = FT_Get_Glyph( face->glyph, &glyph );                   */
   /*                                                                       */
-  /*        // convert to a bitmap (default render mode + destroy old)     */
+  /*        // convert to a bitmap (default render mode + destroying old)  */
   /*        if ( glyph->format != FT_GLYPH_FORMAT_BITMAP )                 */
   /*        {                                                              */
   /*          error = FT_Glyph_To_Bitmap( &glyph, FT_RENDER_MODE_DEFAULT,  */
   /*                                      0, 1 );                          */
-  /*          if ( error ) // glyph unchanged                              */
+  /*          if ( error ) // `glyph' unchanged                            */
   /*            ...                                                        */
   /*        }                                                              */
   /*                                                                       */
