@@ -444,6 +444,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
+  /*    This function does nothing if the glyph format isn't scalable.     */
+  /*                                                                       */
   /*    The glyph image is translated with the `origin' vector before      */
   /*    rendering.                                                         */
   /*                                                                       */
@@ -483,7 +485,42 @@ FT_BEGIN_HEADER
   /*      }                                                                */
   /*                                                                       */
   /*                                                                       */
-  /*    This function does nothing if the glyph format isn't scalable.     */
+  /*    Here another example, again without error handling:                */
+  /*                                                                       */
+  /*                                                                       */
+  /*      {                                                                */
+  /*        FT_Glyph  glyphs[MAX_GLYPHS]                                   */
+  /*                                                                       */
+  /*                                                                       */
+  /*        ...                                                            */
+  /*                                                                       */
+  /*        for ( idx = 0; i < MAX_GLYPHS; i++ )                           */
+  /*          error = FT_Load_Glyph( face, idx, FT_LOAD_DEFAULT ) ||       */
+  /*                  FT_Get_Glyph ( face->glyph, &glyph[idx] );           */
+  /*                                                                       */
+  /*        ...                                                            */
+  /*                                                                       */
+  /*        for ( idx = 0; i < MAX_GLYPHS; i++ )                           */
+  /*        {                                                              */
+  /*          FT_Glyph  bitmap = glyphs[idx];                              */
+  /*                                                                       */
+  /*                                                                       */
+  /*          ...                                                          */
+  /*                                                                       */
+  /*          // after this call, `bitmap' no longer points into           */
+  /*          // the `glyphs' array (and the old value isn't destroyed)    */
+  /*          FT_Glyph_To_Bitmap( &bitmap, FT_RENDER_MODE_MONO, 0, 0 );    */
+  /*                                                                       */
+  /*          ...                                                          */
+  /*                                                                       */
+  /*          FT_Done_Glyph( bitmap );                                     */
+  /*        }                                                              */
+  /*                                                                       */
+  /*        ...                                                            */
+  /*                                                                       */
+  /*        for ( idx = 0; i < MAX_GLYPHS; i++ )                           */
+  /*          FT_Done_Glyph( glyphs[idx] );                                */
+  /*      }                                                                */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Glyph_To_Bitmap( FT_Glyph*       the_glyph,

@@ -426,9 +426,7 @@
     }
 #ifdef FT_DEBUG_LEVEL_TRACE
     else
-    {
       FT_TRACE4(( "glyph index %d:\n", glyph_index ));
-    }
 #endif
 
     decoder->num_locals    = sub->num_local_subrs;
