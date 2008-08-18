@@ -1,5 +1,11 @@
 2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	* builds/unix/configure.raw: In checking of Mac OS X features,
+	all-in-one header file "Carbon.h" is replaced by by the minimum
+	header file "CoreServices.h", as current src/base/ftmac.c.
+
+2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/sfnt/ttcmap.c (tt_cmap2_validate): Skip the validation of
 	sub-header when its code_count is 0. Many Japanese Dynalab fonts
 	include such empty sub-header (code_count == 0, first_code == 0

@@ -212,7 +212,7 @@ if test x$with_old_mac_fonts = xyes; then
     AC_LANG_PROGRAM([
 
 #if defined(__GNUC__) && defined(__APPLE_CC__)
-# include <Carbon/Carbon.h>
+# include <CoreServices/CoreServices.h>
 # include <ApplicationServices/ApplicationServices.h>
 #else
 # include <ConditionalMacros.h>
@@ -236,7 +236,7 @@ if test x$with_old_mac_fonts = xyes; then
        AC_LANG_PROGRAM([
 
 #if defined(__GNUC__) && defined(__APPLE_CC__)
-# include <Carbon/Carbon.h>
+# include <CoreServices/CoreServices.h>
 # include <ApplicationServices/ApplicationServices.h>
 #else
 # include <ConditionalMacros.h>
@@ -268,7 +268,7 @@ if test x$with_old_mac_fonts = xyes; then
        AC_LANG_PROGRAM([
 
 #if defined(__GNUC__) && defined(__APPLE_CC__)
-# include <Carbon/Carbon.h>
+# include <CoreServices/CoreServices.h>
 # include <ApplicationServices/ApplicationServices.h>
 #else
 # include <ConditionalMacros.h>
@@ -317,7 +317,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsspec != x; then
     AC_LANG_PROGRAM([
 
 #if defined(__GNUC__) && defined(__APPLE_CC__)
-# include <Carbon/Carbon.h>
+# include <CoreServices/CoreServices.h>
 # include <ApplicationServices/ApplicationServices.h>
 #else
 # include <ConditionalMacros.h>
@@ -364,7 +364,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
     AC_LANG_PROGRAM([
 
 #if defined(__GNUC__) && defined(__APPLE_CC__)
-# include <Carbon/Carbon.h>
+# include <CoreServices/CoreServices.h>
 # include <ApplicationServices/ApplicationServices.h>
 #else
 # include <ConditionalMacros.h>
@@ -427,7 +427,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_toolbox != x; then
     AC_LANG_PROGRAM([
 
 #if defined(__GNUC__) && defined(__APPLE_CC__)
-# include <Carbon/Carbon.h>
+# include <CoreServices/CoreServices.h>
 # include <ApplicationServices/ApplicationServices.h>
 #else
 # include <ConditionalMacros.h>
@@ -469,7 +469,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_carbon != x; then
     AC_LANG_PROGRAM([
 
 #if defined(__GNUC__) && defined(__APPLE_CC__)
-# include <Carbon/Carbon.h>
+# include <CoreServices/CoreServices.h>
 # include <ApplicationServices/ApplicationServices.h>
 #else
 # include <ConditionalMacros.h>
@@ -520,7 +520,13 @@ elif test x$with_old_mac_fonts = xyes -a x$with_ats != x ; then
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
 
-#include <Carbon/Carbon.h>
+#if defined(__GNUC__) && defined(__APPLE_CC__)
+# include <CoreServices/CoreServices.h>
+# include <ApplicationServices/ApplicationServices.h>
+#else
+# include <ConditionalMacros.h>
+# include <Files.h>
+#endif
 
       ],
       [
