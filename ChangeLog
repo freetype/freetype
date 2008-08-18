@@ -1,5 +1,14 @@
 2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftmac.c: Add a fallback to suppose the availability
+	of ResourceIndex type. It is used when built without configure
+	(e.g. build by Jam).
+	* builds/mac/ftmac.c: Ditto.
+	* builds/unix/configure.raw: Set HAVE_TYPE_RESOURCE_INDEX
+	to 1 or 0 explicitly, even if ResourceIndex is unavailable.
+
+2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	* builds/unix/configure.raw: In checking of Mac OS X features,
 	all-in-one header file "Carbon.h" is replaced by by the minimum
 	header file "CoreServices.h", as current src/base/ftmac.c.

@@ -77,8 +77,20 @@
 #define OS_INLINE  static __inline__
 #endif
 
-  /* The ResourceIndex type was available SDKs on 10.5 */
-#ifndef HAVE_TYPE_RESOURCE_INDEX
+  /* configure checks the availability of ResourceIndex strictly */
+  /* and set HAVE_TYPE_RESOURCE_INDEX 1 or 0 always. If it is    */
+  /* not set (e.g. build without configure), the availability    */
+  /* is supposed from the SDK version but this is uncertain.     */
+#if !defined( HAVE_TYPE_RESOURCE_INDEX )
+#if !defined( MAC_OS_X_VERSION_10_5 ) || \
+#   ( MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5 )
+#define HAVE_TYPE_RESOURCE_INDEX 0
+#else
+#define HAVE_TYPE_RESOURCE_INDEX 1
+#endif
+#endif
+
+#if ( HAVE_TYPE_RESOURCE_INDEX == 0 )
 typedef short ResourceIndex;
 #endif
 
