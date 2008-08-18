@@ -1,3 +1,11 @@
+2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/sfnt/ttcmap.c (tt_cmap2_validate): Skip the validation of
+	sub-header when its code_count is 0. Many Japanese Dynalab fonts
+	include such empty sub-header (code_count == 0, first_code == 0
+	delta == 0, but offset != 0 ) as the second sub-header in SJIS
+	cmap.
+
 2008-08-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1tokens.h: Handle `ForceBold' keyword.  This fixes

@@ -328,6 +328,10 @@
       delta      = TT_NEXT_SHORT( p );
       offset     = TT_NEXT_USHORT( p );
 
+      /* many Dynalab fonts have empty sub-header */
+      if ( 0 == code_count )
+        continue;
+
       /* check range within 0..255 */
       if ( valid->level >= FT_VALIDATE_PARANOID )
       {
