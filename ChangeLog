@@ -1,25 +1,24 @@
 2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftmac.c: Add a fallback to suppose the availability
-	of ResourceIndex type. It is used when built without configure
-	(e.g. build by Jam).
+	* src/base/ftmac.c: Add a fallback to guess the availability of the
+	`ResourceIndex' type.  It is used when built without configure
+	(e.g., a build with Jam).
 	* builds/mac/ftmac.c: Ditto.
-	* builds/unix/configure.raw: Set HAVE_TYPE_RESOURCE_INDEX
-	to 1 or 0 explicitly, even if ResourceIndex is unavailable.
+	* builds/unix/configure.raw: Set HAVE_TYPE_RESOURCE_INDEX to 1 or 0
+	explicitly, even if `ResourceIndex' is unavailable.
 
 2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: In checking of Mac OS X features,
-	all-in-one header file "Carbon.h" is replaced by by the minimum
-	header file "CoreServices.h", as current src/base/ftmac.c.
+	all-in-one header file `Carbon.h' is replaced by the minimum
+	header file `CoreServices.h', similar to current src/base/ftmac.c.
 
 2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/sfnt/ttcmap.c (tt_cmap2_validate): Skip the validation of
-	sub-header when its code_count is 0. Many Japanese Dynalab fonts
-	include such empty sub-header (code_count == 0, first_code == 0
-	delta == 0, but offset != 0 ) as the second sub-header in SJIS
-	cmap.
+	sub-header when its code_count is 0.  Many Japanese Dynalab fonts
+	include such an empty sub-header (code_count == 0, first_code == 0
+	delta == 0, but offset != 0) as the second sub-header in SJIS cmap.
 
 2008-08-04  Werner Lemberg  <wl@gnu.org>
 

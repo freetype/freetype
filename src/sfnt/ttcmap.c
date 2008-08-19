@@ -328,8 +328,8 @@
       delta      = TT_NEXT_SHORT( p );
       offset     = TT_NEXT_USHORT( p );
 
-      /* many Dynalab fonts have empty sub-header */
-      if ( 0 == code_count )
+      /* many Dynalab fonts have empty sub-headers */
+      if ( code_count == 0 )
         continue;
 
       /* check range within 0..255 */
