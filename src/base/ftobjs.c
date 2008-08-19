@@ -128,13 +128,14 @@
     FT_Stream  stream;
 
 
+    *astream = 0;
+
     if ( !library )
       return FT_Err_Invalid_Library_Handle;
 
     if ( !args )
       return FT_Err_Invalid_Argument;
 
-    *astream = 0;
     memory   = library->memory;
 
     if ( FT_NEW( stream ) )
@@ -1600,7 +1601,7 @@
     FT_Error   errors[FT_RACCESS_N_RULES];
 
     FT_Open_Args  args2;
-    FT_Stream     stream2;
+    FT_Stream     stream2 = 0;
 
 
     FT_Raccess_Guess( library, stream,
@@ -1713,7 +1714,7 @@
     FT_Error     error;
     FT_Driver    driver;
     FT_Memory    memory;
-    FT_Stream    stream;
+    FT_Stream    stream = 0;
     FT_Face      face = 0;
     FT_ListNode  node = 0;
     FT_Bool      external_stream;
