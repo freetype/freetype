@@ -174,9 +174,23 @@
 
     /* sort base glyphs before glyph variants */
     if ( unicode1 == unicode2 )
-      return map1->unicode - map2->unicode;
+    {
+      if ( map1->unicode > map2->unicode )
+        return 1;
+      else if ( map1->unicode < map2->unicode )
+        return -1;
+      else
+        return 0;
+    }
     else
-      return unicode1 - unicode2;
+    {
+      if ( unicode1 > unicode2 )
+        return 1;
+      else if ( unicode1 < unicode2 )
+        return -1;
+      else
+        return 0;
+    }
   }
 
 

@@ -1,10 +1,16 @@
+2008-08-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/type/t1afm.c (compare_kern_pairs), src/pxaux/afmparse.c
+	(afm_compare_kern_pairs): Fix comparison.  This fixes Savannah bug
+	#24119.
+
 2008-08-19  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftobjs.c (FT_Stream_New): Initialize *astream
-	always, even if passed library or arguments are invalid.
-	This fixes a bug that uninitialized stream is freed when
-	an invalid library handle is passed. Originally proposed
-	by Mike Fabian, 2008/08/18 on freetype-devel.
+	* src/base/ftobjs.c (FT_Stream_New): Initialize *astream always,
+	even if passed library or arguments are invalid.  This fixes a bug
+	that an uninitialized stream is freed when an invalid library handle
+	is passed.  Originally proposed by Mike Fabian, 2008/08/18 on
+	freetype-devel.
 	(FT_Open_Face): Ditto (stream).
 	(load_face_in_embedded_rfork): Ditto (stream2).
 
