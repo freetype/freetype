@@ -1274,6 +1274,19 @@
 
             n++;
           }
+          else if ( only_immediates )
+          {
+            /* Since the current position is not updated for           */
+            /* immediates-only mode we would get an infinite loop if   */
+            /* we don't do anything here.                              */
+            /*                                                         */
+            /* This encoding array is not valid according to the type1 */
+            /* specification (it might be an encoding for a CID type1  */
+            /* font, however), so we conclude that this font is NOT a  */
+            /* type1 font.                                             */
+            parser->root.error = FT_Err_Unknown_File_Format;
+            return;
+          }
         }
         else
         {

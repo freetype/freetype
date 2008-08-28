@@ -1,3 +1,9 @@
+2008-08-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_encoding): Protect against infinite
+	loop.  This fixes Savannah bug #24150 (where a patch has been posted
+	too).
+
 2008-08-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/type/t1afm.c (compare_kern_pairs), src/pxaux/afmparse.c
