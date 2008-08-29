@@ -1,3 +1,8 @@
+2008-08-29  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/sfnt/sfobjs.c (sfnt_open_font): Use TTAG_OTTO defined in
+	ttags.h instead of FT_MAKE_TAG( 'O', 'T', 'T', 'O' ).
+
 2008-08-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_encoding): Protect against infinite
