@@ -32,6 +32,13 @@ FT_BEGIN_HEADER
                           FT_Pos*  max_advance );
 
   FT_LOCAL( FT_Error )
+  T1_Get_Advances( T1_Face    face,
+                   FT_UInt    first,
+                   FT_UInt    count,
+                   FT_ULong   load_flags,
+                   FT_Fixed*  advances );
+
+  FT_LOCAL( FT_Error )
   T1_Load_Glyph( T1_GlyphSlot  glyph,
                  T1_Size       size,
                  FT_UInt       glyph_index,

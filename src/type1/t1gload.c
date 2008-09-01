@@ -203,6 +203,63 @@
 
 
   FT_LOCAL_DEF( FT_Error )
+  T1_Get_Advances( T1_Face    face,
+                   FT_UInt    first,
+                   FT_UInt    count,
+                   FT_ULong   load_flags,
+                   FT_Fixed*  advances )
+  {
+    T1_DecoderRec  decoder;
+    T1_Font        type1 = &face->type1;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    FT_UInt        nn;
+    FT_Error       error;
+
+    if (load_flags & FT_LOAD_VERTICAL_LAYOUT)
+    {
+        for (nn = 0; nn < count; nn++)
+            advances[nn] = 0;
+
+        return T1_Err_Ok;
+    }
+
+    error = psaux->t1_decoder_funcs->init( &decoder,
+                                           (FT_Face)face,
+                                           0, /* size       */
+                                           0, /* glyph slot */
+                                           (FT_Byte**)type1->glyph_names,
+                                           face->blend,
+                                           0,
+                                           FT_RENDER_MODE_NORMAL,
+                                           T1_Parse_Glyph );
+    if ( error )
+      return error;
+
+    FT_UNUSED(load_flags);
+
+    decoder.builder.metrics_only = 1;
+    decoder.builder.load_points  = 0;
+
+    decoder.num_subrs     = type1->num_subrs;
+    decoder.subrs         = type1->subrs;
+    decoder.subrs_len     = type1->subrs_len;
+
+    decoder.buildchar     = face->buildchar;
+    decoder.len_buildchar = face->len_buildchar;
+
+    for ( nn = 0; nn < count; nn++ )
+    {
+      error = T1_Parse_Glyph( &decoder, first + nn );
+      if (!error)
+        advances[nn] = decoder.builder.advance.x;
+      else
+        advances[nn] = 0;
+    }
+    return T1_Err_Ok;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
   T1_Load_Glyph( T1_GlyphSlot  glyph,
                  T1_Size       size,
                  FT_UInt       glyph_index,

@@ -187,6 +187,32 @@
   }
 
 
+  FT_CALLBACK_DEF(FT_Error)
+  cff_get_advances( FT_Face    ftface,
+                    FT_UInt    start,
+                    FT_UInt    count,
+                    FT_UInt    flags,
+                    FT_Fixed*  advances )
+  {
+    CFF_Face      face = (CFF_Face) ftface;
+    FT_UInt       nn;
+    FT_Error      error = 0;
+    FT_GlyphSlot  slot = face->root.glyph;
+
+    flags |= FT_LOAD_ADVANCE_ONLY;
+
+    for (nn = 0; nn < count; nn++)
+    {
+      error = Load_Glyph( slot, face->root.size, start+nn, flags );
+      if (error) break;
+
+      advances[nn] = (flags & FT_LOAD_VERTICAL_LAYOUT)
+                   ? slot->advance.y
+                   : slot->advance.x;
+    }
+    return error;
+  }
+
   /*
    *  GLYPH DICT SERVICE
    *
@@ -570,7 +596,7 @@
 
     cff_get_kerning,
     0,                      /* FT_Face_AttachFunc      */
-    0,                      /* FT_Face_GetAdvancesFunc */
+    cff_get_advances,       /* FT_Face_GetAdvancesFunc */
 
     cff_size_request,
 

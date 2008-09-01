@@ -69,12 +69,12 @@
   /* `check' is true, take care of monospaced fonts by returning the       */
   /* advance width maximum.                                                */
   /*                                                                       */
-  static void
-  Get_HMetrics( TT_Face     face,
-                FT_UInt     idx,
-                FT_Bool     check,
-                FT_Short*   lsb,
-                FT_UShort*  aw )
+  FT_LOCAL_DEF(void)
+  TT_Get_HMetrics( TT_Face     face,
+                   FT_UInt     idx,
+                   FT_Bool     check,
+                   FT_Short*   lsb,
+                   FT_UShort*  aw )
   {
     ( (SFNT_Service)face->sfnt )->get_metrics( face, 0, idx, lsb, aw );
 
@@ -96,12 +96,12 @@
   /* The monospace `check' is probably not meaningful here, but we leave   */
   /* it in for a consistent interface.                                     */
   /*                                                                       */
-  static void
-  Get_VMetrics( TT_Face     face,
-                FT_UInt     idx,
-                FT_Bool     check,
-                FT_Short*   tsb,
-                FT_UShort*  ah )
+  FT_LOCAL_DEF(void)
+  TT_Get_VMetrics( TT_Face     face,
+                   FT_UInt     idx,
+                   FT_Bool     check,
+                   FT_Short*   tsb,
+                   FT_UShort*  ah )
   {
     FT_UNUSED( check );
 
@@ -1143,16 +1143,16 @@
       FT_UShort  advance_width = 0, advance_height = 0;
 
 
-      Get_HMetrics( face, glyph_index,
-                    (FT_Bool)!( loader->load_flags &
-                                FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
-                    &left_bearing,
-                    &advance_width );
-      Get_VMetrics( face, glyph_index,
-                    (FT_Bool)!( loader->load_flags &
-                                FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
-                    &top_bearing,
-                    &advance_height );
+      TT_Get_HMetrics( face, glyph_index,
+                       (FT_Bool)!( loader->load_flags &
+                                   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
+                       &left_bearing,
+                       &advance_width );
+      TT_Get_VMetrics( face, glyph_index,
+                       (FT_Bool)!( loader->load_flags &
+                                   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
+                       &top_bearing,
+                       &advance_height );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 

@@ -97,18 +97,17 @@ FT_BEGIN_HEADER
                              FT_UInt     right_glyph,
                              FT_Vector*  kerning );
 
-
   typedef FT_Error
   (*FT_Face_AttachFunc)( FT_Face    face,
                          FT_Stream  stream );
 
 
   typedef FT_Error
-  (*FT_Face_GetAdvancesFunc)( FT_Face     face,
-                              FT_UInt     first,
-                              FT_UInt     count,
-                              FT_Bool     vertical,
-                              FT_UShort*  advances );
+  (*FT_Face_GetAdvancesFunc)( FT_Face    face,
+                              FT_UInt    first,
+                              FT_UInt    count,
+                              FT_UInt    flags,
+                              FT_Fixed*  advances );
 
 
   /*************************************************************************/

@@ -384,6 +384,11 @@
     decoder->hint_mode    = hint_mode;
   }
 
+  FT_LOCAL_DEF( void )
+  cff_decoder_set_width_only( CFF_Decoder*  decoder )
+  {
+    decoder->width_only = 1;
+  }
 
   /* this function is used to select the subfont */
   /* and the locals subrs array                  */
@@ -1199,6 +1204,12 @@
             {
               decoder->glyph_width = decoder->nominal_width +
                                        ( stack[0] >> 16 );
+
+              if (decoder->width_only)
+              {
+                /* we only want the advance width, stop here */
+                break;
+              }
 
               /* Consumed an argument. */
               num_args--;
@@ -2558,6 +2569,9 @@
 
       cff_decoder_init( &decoder, face, size, glyph, hinting,
                         FT_LOAD_TARGET_MODE( load_flags ) );
+
+      if ((load_flags & FT_LOAD_ADVANCE_ONLY) != 0)
+        cff_decoder_set_width_only( &decoder );
 
       decoder.builder.no_recurse =
         (FT_Bool)( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );

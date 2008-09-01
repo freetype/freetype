@@ -1,3 +1,19 @@
+2008-09-01  david turner <david@freetype.org>
+
+	* include/freetype/ftadvanc.h, src/base/ftadvanc.c,
+	include/freetype/config/ftheader.h, include/freetype/freetype.h,
+	src/base/Jamfile, src/base/rules.mk, src/cff/cffdrivr.c,
+	src/cff/cffgload.c, src/cff/cffgload.h, src/truetype/ttdriver.c,
+	src/truetype/ttgload.h, src/truetype/ttgload.c, src/type1/t1driver.c,
+	src/type1/t1gload.h, src/type1/t1gload.c:
+	Add a new header named FT_ADVANCES_H declaring some new APIs
+	to extract the advances of one or more glyphs without necessarily
+	loading their outlines. Also provide 'fast loaders' for the
+	TrueType, Type1 and CFF font drivers (more to come later) 
+
+	* autogen.sh: add checks for minimum version of the 'autotools'
+	stuff.
+
 2008-08-29  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/sfnt/sfobjs.c (sfnt_open_font): Use TTAG_OTTO defined in

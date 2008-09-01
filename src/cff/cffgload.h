@@ -139,6 +139,7 @@ FT_BEGIN_HEADER
     FT_Pos             nominal_width;
 
     FT_Bool            read_width;
+    FT_Bool            width_only;
     FT_Int             num_hints;
     FT_Fixed*          buildchar;
     FT_Int             len_buildchar;
@@ -167,6 +168,9 @@ FT_BEGIN_HEADER
                     CFF_GlyphSlot   slot,
                     FT_Bool         hinting,
                     FT_Render_Mode  hint_mode );
+
+  FT_LOCAL( void )
+  cff_decoder_set_width_only( CFF_Decoder*  decoder );
 
   FT_LOCAL( FT_Error )
   cff_decoder_prepare( CFF_Decoder*  decoder,

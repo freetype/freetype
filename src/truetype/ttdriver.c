@@ -125,6 +125,44 @@
 #undef PAIR_TAG
 
 
+  static FT_Error
+  tt_get_advances( FT_Face    ttface,
+                   FT_UInt    start,
+                   FT_UInt    count,
+                   FT_UInt    flags,
+                   FT_Fixed  *advances )
+  {
+    FT_UInt  nn;
+    TT_Face  face  = (TT_Face) ttface;
+    FT_Bool  check = FT_BOOL(!(flags & FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH));
+
+    /* XXX: TODO: check for sbits */
+
+    if (flags & FT_LOAD_VERTICAL_LAYOUT)
+    {
+      for (nn = 0; nn < count; nn++)
+      {
+        FT_Short   tsb;
+        FT_UShort  ah;
+
+        TT_Get_VMetrics( face, start + nn, check, &tsb, &ah );
+        advances[nn] = ah;
+      }
+    }
+    else
+    {
+      for (nn = 0; nn < count; nn++)
+      {
+        FT_Short   lsb;
+        FT_UShort  aw;
+
+        TT_Get_HMetrics( face, start + nn, check, &lsb, &aw );
+        advances[nn] = aw;
+      }
+    }
+    return 0;
+  }
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -404,7 +442,7 @@
 
     tt_get_kerning,
     0,                      /* FT_Face_AttachFunc      */
-    0,                      /* FT_Face_GetAdvancesFunc */
+    tt_get_advances,
 
     tt_size_request,
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
