@@ -1,5 +1,10 @@
 2008-09-01  david turner <david@freetype.org>
 
+	* include/freetype/ftcache.h, src/cache/ftccmap.c:
+	modify FTC_CMapCache_Lookup to accept a negative cmap index
+	to mean "use default cached FT_Face's charmap". This fixes
+	Savannah issue #22625
+
 	* include/freetype/ftoption.h, include/freetype/ftconfig.h,
 	builds/unix/ftconfig.in, include/freetype/freetype.h,
 	src/base/ftcalc.c:
