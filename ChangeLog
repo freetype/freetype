@@ -1,5 +1,15 @@
 2008-09-01  david turner <david@freetype.org>
 
+	* include/freetype/ftoption.h, include/freetype/ftconfig.h,
+	builds/unix/ftconfig.in, include/freetype/freetype.h,
+	src/base/ftcalc.c:
+	Make FT_MulFix an inlined function. Also provide an assembler
+	implementation for ARM architectures. this is done to speedup
+	FreeType a little (on x86 3% when loading+hinting, 10% when
+	rendering, ARM savings are more important though).
+	Disable this by undefining FT_CONFIG_OPTION_INLINE_MULFIX in
+	ftconfig.h
+
 	* include/freetype/ftadvanc.h, src/base/ftadvanc.c,
 	include/freetype/config/ftheader.h, include/freetype/freetype.h,
 	src/base/Jamfile, src/base/rules.mk, src/cff/cffdrivr.c,

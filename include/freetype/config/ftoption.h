@@ -117,6 +117,26 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* When this macro is defined, do not try to use an assembler version    */
+  /* of performance-critical functions (e.g. FT_MulFix). you should only   */
+  /* do that to verify that the assembler function works properly, or even */
+  /* to benchmarks the various implementations...                          */
+/* #define FT_CONFIG_OPTION_NO_ASSEMBLER */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* When this macro is defined, try to use an inlined assembler version   */
+  /* of the FT_MulFix function, which appears to be a hotspot when loading */
+  /* and hinting glyphs.                                                   */
+  /*                                                                       */
+  /* note that if your compiler/cpu isn't supported, this will default to  */
+  /* the standard and portable implementation found in src/base/ftcalc.c   */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_INLINE_MULFIX
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* LZW-compressed file support.                                          */
   /*                                                                       */
   /*   FreeType now handles font files that have been compressed with the  */

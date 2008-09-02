@@ -3468,10 +3468,13 @@ FT_BEGIN_HEADER
   /*    _second_ argument of this function; this can make a great          */
   /*    difference.                                                        */
   /*                                                                       */
+#ifdef FT_MULFIX_INLINED
+#  define  FT_MulFix(a,b)  FT_MULFIX_INLINED(a,b)
+#else
   FT_EXPORT( FT_Long )
   FT_MulFix( FT_Long  a,
              FT_Long  b );
-
+#endif
 
   /*************************************************************************/
   /*                                                                       */

@@ -38,6 +38,9 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 
+#ifdef  FT_MULFIX_INLINED
+#undef  FT_MulFix
+#endif
 
 /* we need to define a 64-bits data type here */
 
@@ -193,6 +196,9 @@
   FT_MulFix( FT_Long  a,
              FT_Long  b )
   {
+#ifdef FT_MULFIX_ASSEMBLER
+    return FT_MULFIX_ASSEMBLER(a,b);
+#else
     FT_Int   s = 1;
     FT_Long  c;
 
@@ -202,6 +208,7 @@
 
     c = (FT_Long)( ( (FT_Int64)a * b + 0x8000L ) >> 16 );
     return ( s > 0 ) ? c : -c ;
+#endif
   }
 
 
@@ -413,30 +420,8 @@
   FT_MulFix( FT_Long  a,
              FT_Long  b )
   {
-    /* use inline assembly to speed up things a bit */
-
-#if defined( __GNUC__ ) && defined( i386 )
-
-    FT_Long  result;
-
-
-    __asm__ __volatile__ (
-      "imul  %%edx\n"
-      "movl  %%edx, %%ecx\n"
-      "sarl  $31, %%ecx\n"
-      "addl  $0x8000, %%ecx\n"
-      "addl  %%ecx, %%eax\n"
-      "adcl  $0, %%edx\n"
-      "shrl  $16, %%eax\n"
-      "shll  $16, %%edx\n"
-      "addl  %%edx, %%eax\n"
-      "mov   %%eax, %0\n"
-      : "=a"(result), "+d"(b)
-      : "a"(a)
-      : "%ecx"
-    );
-    return result;
-
+#ifdef FT_MULFIX_ASSEMBLER
+    return FT_MULFIX_ASSEMBLER(a,b);
 #elif 0
 
     /*
