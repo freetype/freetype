@@ -292,6 +292,7 @@ if test x$with_old_mac_fonts = xyes; then
         CFLAGS="$CFLAGS -DHAVE_TYPE_RESOURCE_INDEX=0"
        ])],
     [AC_MSG_RESULT([not found])
+     FT2_EXTRA_LIBS=""
      LDFLAGS="${orig_LDFLAGS}"
      CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"])
 else

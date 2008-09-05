@@ -1,3 +1,10 @@
+2008-09-05  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.raw: Clear FT2_EXTRA_LIBS when Carbon
+	or ApplicationService framework is missing. Although this
+	value is not used in building of FreeType2, it is written in
+	freetype2.pc and freetype-config.
+
 2008-09-01  david turner <david@freetype.org>
 
 	* include/freetype/ftcache.h, src/cache/ftccmap.c:
