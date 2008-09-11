@@ -1,3 +1,19 @@
+2008-09-11  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/ftconfig.in: Duplicate the cpp computation of
+	FT_SIZEOF_{INT|LONG} from include/freetype/config/ftconfig.h.
+	If FT_USE_AUTOCONF_SIZEOF_TYPES is defined, the cpp computation
+	is disabled and the statically configured sizes are used.
+	This fixes Savannah bug #21250
+
+	* builds/unix/configure.raw: Add the checks to compare the
+	cpp computation results of the bit length of int and long
+	versus the sizes detected by running configure. If the results
+	are different, FT_USE_AUTOCONF_SIZEOF_TYPES is defined to
+	prioritize the results detected by running configure.
+	New option --{enable|disable}-biarch-config is added to
+	define or undefine FT_USE_AUTOCONF_SIZEOF_TYPES manually.
+
 2008-09-05  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: Clear FT2_EXTRA_LIBS when Carbon
