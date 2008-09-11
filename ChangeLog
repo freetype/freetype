@@ -1,3 +1,7 @@
+2008-09-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftbase.c: Include ftadvanc.c.
+
 2008-09-11  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/ftconfig.in: Duplicate the cpp computation of
