@@ -728,6 +728,7 @@
    */
 #define FT_GASP_H  <freetype/ftgasp.h>
 
+
   /*************************************************************************
    *
    * @macro:
@@ -735,9 +736,10 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   FreeType~2 API which returns individual and ranged glyph advances
+   *   FreeType~2 API which returns individual and ranged glyph advances.
    */
-#define FT_ADVANCES_H             <freetype/ftadvanc.h>
+#define FT_ADVANCES_H  <freetype/ftadvanc.h>
+
 
   /* */
 

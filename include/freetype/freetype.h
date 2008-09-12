@@ -1056,8 +1056,6 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_HINTER            ( 1L << 11 )
 #define FT_FACE_FLAG_CID_KEYED         ( 1L << 12 )
 
-  /* */
-
 
   /*************************************************************************
    *
@@ -1167,8 +1165,6 @@ FT_BEGIN_HEADER
 #define FT_HAS_FIXED_SIZES( face ) \
           ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
 
-  /* */
-
 
   /*************************************************************************
    *
@@ -1231,7 +1227,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Constant>                                                            */
+  /* <Const>                                                               */
   /*    FT_STYLE_FLAG_XXX                                                  */
   /*                                                                       */
   /* <Description>                                                         */
@@ -2432,12 +2428,12 @@ FT_BEGIN_HEADER
 #define FT_LOAD_MONOCHROME                   0x1000
 #define FT_LOAD_LINEAR_DESIGN                0x2000
 #define FT_LOAD_NO_AUTOHINT                  0x8000U
-#define FT_LOAD_ADVANCE_ONLY                 0x10000U
-
-  /* used internally only by certain font drivers ! */
-#define FT_LOAD_SBITS_ONLY                   0x4000
+#define FT_LOAD_ADVANCE_ONLY                 0x10000UL
 
   /* */
+
+  /* used internally only by certain font drivers! */
+#define FT_LOAD_SBITS_ONLY                   0x4000
 
 
   /**************************************************************************
@@ -3439,6 +3435,12 @@ FT_BEGIN_HEADER
              FT_Long  c );
 
 
+  /* */
+
+  /* The following #if 0 ... #endif is for the documentation formatter, */
+  /* hiding the internal `FT_MULFIX_INLINED' macro.                     */
+
+#if 0
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -3468,13 +3470,21 @@ FT_BEGIN_HEADER
   /*    _second_ argument of this function; this can make a great          */
   /*    difference.                                                        */
   /*                                                                       */
+  FT_EXPORT( FT_Long )
+  FT_MulFix( FT_Long  a,
+             FT_Long  b );
+
+  /* */
+#endif
+
 #ifdef FT_MULFIX_INLINED
-#  define  FT_MulFix(a,b)  FT_MULFIX_INLINED(a,b)
+#define FT_MulFix( a, b )  FT_MULFIX_INLINED( a, b )
 #else
   FT_EXPORT( FT_Long )
   FT_MulFix( FT_Long  a,
              FT_Long  b );
 #endif
+
 
   /*************************************************************************/
   /*                                                                       */

@@ -1,62 +1,129 @@
+2008-09-13  Werner Lemberg  <wl@gnu.org>
+
+	* autogen.sh, builds/unix/configure.raw,
+	include/freetype/config/ftconfig.h, builds/unix/ftconfig.in: Minor
+	beautifying.
+
+	* include/freetype/ftadvanc.h, include/freetype/ftgasp.h,
+	include/freetype/ftlcdfil.h: Protect against FreeType 1.
+	Some other minor fixes.
+
+	* devel/ftoption.h: Synchronize with
+	include/freetype/config/ftoption.h.
+
 2008-09-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftbase.c: Include ftadvanc.c.
 
-2008-09-11  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-09-11  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/ftconfig.in: Duplicate the cpp computation of
 	FT_SIZEOF_{INT|LONG} from include/freetype/config/ftconfig.h.
-	If FT_USE_AUTOCONF_SIZEOF_TYPES is defined, the cpp computation
-	is disabled and the statically configured sizes are used.
-	This fixes Savannah bug #21250
+	(FT_USE_AUTOCONF_SIZEOF_TYPES): New macro.  If defined, the cpp
+	computation is disabled and the statically configured sizes are
+	used.  This fixes Savannah bug #21250.
 
-	* builds/unix/configure.raw: Add the checks to compare the
-	cpp computation results of the bit length of int and long
-	versus the sizes detected by running configure. If the results
-	are different, FT_USE_AUTOCONF_SIZEOF_TYPES is defined to
-	prioritize the results detected by running configure.
-	New option --{enable|disable}-biarch-config is added to
-	define or undefine FT_USE_AUTOCONF_SIZEOF_TYPES manually.
+	* builds/unix/configure.raw: Add the checks to compare the cpp
+	computation results of the bit length of int and long versus the
+	sizes detected by running `configure'.  If the results are
+	different, FT_USE_AUTOCONF_SIZEOF_TYPES is defined to prioritize the
+	results.
+	New option --{enable|disable}-biarch-config is added to define or
+	undefine FT_USE_AUTOCONF_SIZEOF_TYPES manually.
 
-2008-09-05  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-09-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* builds/unix/configure.raw: Clear FT2_EXTRA_LIBS when Carbon
-	or ApplicationService framework is missing. Although this
-	value is not used in building of FreeType2, it is written in
-	freetype2.pc and freetype-config.
+	* builds/unix/configure.raw: Clear FT2_EXTRA_LIBS when Carbon or
+	ApplicationService framework is missing.  Although this value is not
+	used in building of FreeType2, it is written in `freetype2.pc' and
+	`freetype-config'.
 
-2008-09-01  david turner <david@freetype.org>
+2008-09-01  david turner  <david@freetype.org>
 
-	* include/freetype/ftcache.h, src/cache/ftccmap.c:
-	modify FTC_CMapCache_Lookup to accept a negative cmap index
-	to mean "use default cached FT_Face's charmap". This fixes
-	Savannah issue #22625
+	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Accept a negative cmap
+	index to mean `use default cached FT_Face's charmap'.  This fixes
+	Savannah bug #22625.
+	* include/freetype/ftcache.h: Document it.
 
-	* include/freetype/ftoption.h, include/freetype/ftconfig.h,
-	builds/unix/ftconfig.in, include/freetype/freetype.h,
-	src/base/ftcalc.c:
-	Make FT_MulFix an inlined function. Also provide an assembler
-	implementation for ARM architectures. this is done to speedup
+
+	Make FT_MulFix an inlined function.  This is done to speed up
 	FreeType a little (on x86 3% when loading+hinting, 10% when
-	rendering, ARM savings are more important though).
-	Disable this by undefining FT_CONFIG_OPTION_INLINE_MULFIX in
-	ftconfig.h
+	rendering, ARM savings are more important though).  Disable this by
+	undefining FT_CONFIG_OPTION_INLINE_MULFIX.
 
-	* include/freetype/ftadvanc.h, src/base/ftadvanc.c,
-	include/freetype/config/ftheader.h, include/freetype/freetype.h,
-	src/base/Jamfile, src/base/rules.mk, src/cff/cffdrivr.c,
-	src/cff/cffgload.c, src/cff/cffgload.h, src/truetype/ttdriver.c,
-	src/truetype/ttgload.h, src/truetype/ttgload.c, src/type1/t1driver.c,
-	src/type1/t1gload.h, src/type1/t1gload.c:
-	Add a new header named FT_ADVANCES_H declaring some new APIs
-	to extract the advances of one or more glyphs without necessarily
-	loading their outlines. Also provide 'fast loaders' for the
-	TrueType, Type1 and CFF font drivers (more to come later) 
+	Use of assembler code can now be controlled with
+	FT_CONFIG_OPTION_NO_ASSEMBLER.
 
-	* autogen.sh: add checks for minimum version of the 'autotools'
-	stuff.
+	* include/freetype/config/ftconfig.h, builds/unix/ftconfig.in
+	[!FT_CONFIG_OPTION_NO_ASSEMBLER] (FT_MulFix_arm): New assembler
+	implementation.
+	[!FT_CONFIG_OPTION_NO_ASSEMBLER] (FT_MulFix_i386): Assembler
+	implementation taken from `ftcalc.c'.
+	[!FT_CONFIG_OPTION_NO_ASSEMBLER] (FT_MULFIX_ASSEMBLER): New macro
+	which is defined to the platform-specific assembler implementation
+	of FT_MulFix.
+	[FT_CONFIG_OPTION_INLINE_MULFIX && FT_MULFIX_ASSEMBLER]
+	(FT_MULFIX_INLINED): New macro.
 
-2008-08-29  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_NO_ASSEMBLER,
+	FT_CONFIG_OPTION_INLINE_MULFIX): New macros.
+
+	* include/freetype/freetype.h: Updated to handle FT_MULFIX_INLINED.
+
+	* src/base/ftcalc.c: Updated to use FT_MULFIX_ASSEMBLER and
+	FT_MULFIX_INLINED.
+
+
+	Add a new header named FT_ADVANCES_H declaring some new APIs to
+	extract the advances of one or more glyphs without necessarily
+	loading their outlines.  Also provide `fast loaders' for the
+	TrueType, Type1, and CFF font drivers (more to come later).
+
+	* src/base/ftadvanc.c, include/freetype/ftadvanc.h: New files.
+
+	* include/freetype/config/ftheader.h (FT_ADVANCES_H): New macro.
+	* include/freetype/freetype.h (FT_LOAD_ADVANCE_ONLY): New macro.
+
+	* include/freetype/internal/ftdriver.h (FT_Face_GetAdvancesFunc):
+	`flags' and `advances' are now of type `FT_UInt' and `FT_Fixed',
+	respectively.
+
+	* src/base/Jamfile (_sources), src/base/rules.mk (BASE_SRC): Add
+	ftadvanc.c.
+
+	* src/cff/cffdrivr.c (cff_get_advances): New function.
+	(cff_driver_class): Register it.
+
+	* src/cff/cffgload.c (cff_decoder_set_width_only): New function.
+	(cff_decoder_parse_charstrings): Handle `width_only'.
+	(cff_slot_load): Handle FT_LOAD_ADVANCE_ONLY.
+
+	* src/cff/cffgload.h (cff_decoder): New element `width_only'.
+	(cff_decoder_set_width_only): New declaration.
+
+	* src/truetype/ttdriver.c (tt_get_advances): New function.
+	(tt_driver_class): Register it.
+
+	* src/truetype/ttgload.c (Get_HMetrics, Get_VMetrics): Renamed to...
+	(TT_Get_HMetrics, TT_Get_VMetrics): This.
+	Update callers.
+	* src/truetype/ttgload.h: Declare them.
+
+	* src/type1/t1gload.h, src/type1/t1gload.c (T1_Get_Advances): New
+	function.
+	* src/type1/t1driver.c (t1_driver_class): Register T1_Get_Advances.
+
+
+	Add checks for minimum version of the `autotools' stuff.
+
+	* autogen.sh: Implement it.
+	(get_major_version, get_minor_version, get_patch_version,
+	compare_to_minimum_version, check_tool_version): New auxiliary
+	functions.
+
+	* README.CVS: Document it.
+
+2008-08-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/sfnt/sfobjs.c (sfnt_open_font): Use TTAG_OTTO defined in
 	ttags.h instead of FT_MAKE_TAG( 'O', 'T', 'T', 'O' ).
@@ -73,7 +140,7 @@
 	(afm_compare_kern_pairs): Fix comparison.  This fixes Savannah bug
 	#24119.
 
-2008-08-19  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-08-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftobjs.c (FT_Stream_New): Initialize *astream always,
 	even if passed library or arguments are invalid.  This fixes a bug
@@ -83,7 +150,7 @@
 	(FT_Open_Face): Ditto (stream).
 	(load_face_in_embedded_rfork): Ditto (stream2).
 
-2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-08-18  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c: Add a fallback to guess the availability of the
 	`ResourceIndex' type.  It is used when built without configure
@@ -92,13 +159,13 @@
 	* builds/unix/configure.raw: Set HAVE_TYPE_RESOURCE_INDEX to 1 or 0
 	explicitly, even if `ResourceIndex' is unavailable.
 
-2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-08-18  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: In checking of Mac OS X features,
 	all-in-one header file `Carbon.h' is replaced by the minimum
 	header file `CoreServices.h', similar to current src/base/ftmac.c.
 
-2008-08-18  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-08-18  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/sfnt/ttcmap.c (tt_cmap2_validate): Skip the validation of
 	sub-header when its code_count is 0.  Many Japanese Dynalab fonts
@@ -285,7 +352,7 @@
 	* src/tools/docmaker/tohtml.py (make_html_para): Implement it.
 	Update header files accordingly.
 
-2008-06-24  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-06-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: Check type `ResourceIndex' explicitly
 	and define HAVE_TYPE_RESOURCE_INDEX if it is defined.  Mac OS X 10.5
@@ -318,7 +385,7 @@
 
 	* docs/CHANGES: Updated.
 
-2008-06-22  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2008-06-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: If CFLAGS has `-isysroot XXX' option
 	but LDFLAGS does not, import it to LDFLAGS.  The option is used to
@@ -549,7 +616,7 @@
 
 	* docs/CHANGES: Updated.
 
-2008-05-18  David Turner <david@freetype.org>
+2008-05-18  David Turner  <david@freetype.org>
 
 	* src/psnames/psmodule.c (ft_wgl_extra_unicodes,
 	ft_wgl_extra_glyph_names, ft_wgl_extra_glyph_name_offsets,
@@ -1869,7 +1936,7 @@
 	* src/base/ftglyph.c (FT_Glyph_Copy): Always set second argument to
 	zero in case of error.  This fixes Savannah bug #19689.
 
-2007-04-25  Boris Letocha <b.letocha@cz.gmc.net>
+2007-04-25  Boris Letocha  <b.letocha@cz.gmc.net>
 
 	* src/truetype/ttobjs.c: Fix a typo that created a speed regression
 	in the TrueType bytecode loader.

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType CharMap cache (body)                                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -290,14 +290,14 @@
     FT_UInt32         hash;
     FT_Int            no_cmap_change = 0;
 
-    if (cmap_index < 0)
+
+    if ( cmap_index < 0 )
     {
-      /* treat a negative cmap index as a special value that
-       * means you don't want to change the FT_Face's character
-       * map through this call. this can be useful when the
-       * face requester callback already set the face's charmap
-       * to the appropriate value.
-       */
+      /* Treat a negative cmap index as a special value, meaning that you */
+      /* don't want to change the FT_Face's character map through this    */
+      /* call.  This can be useful if the face requester callback already */
+      /* sets the face's charmap to the appropriate value.                */
+
       no_cmap_change = 1;
       cmap_index     = 0;
     }

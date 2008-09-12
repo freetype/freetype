@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2002, 2003, 2004, 2005, 2006, 2007 by
+# Copyright 1996-2000, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -46,7 +46,6 @@ BASE_SRC := $(BASE_DIR)/ftcalc.c   \
             $(BASE_DIR)/fttrigon.c \
             $(BASE_DIR)/ftutil.c   \
             $(BASE_DIR)/ftadvanc.c
-
 
 # Base layer `extensions' sources
 #

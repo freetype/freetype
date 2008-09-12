@@ -609,8 +609,8 @@ FT_BEGIN_HEADER
    *     The source face ID.
    *
    *   cmap_index ::
-   *     The index of the charmap in the source face.
-   *     Any negative value means to use the cache FT_Face's default charmap.
+   *     The index of the charmap in the source face.  Any negative value
+   *     means to use the cache @FT_Face's default charmap.
    *
    *   char_code ::
    *     The character code (in the corresponding charmap).

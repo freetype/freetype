@@ -384,11 +384,13 @@
     decoder->hint_mode    = hint_mode;
   }
 
+
   FT_LOCAL_DEF( void )
   cff_decoder_set_width_only( CFF_Decoder*  decoder )
   {
     decoder->width_only = 1;
   }
+
 
   /* this function is used to select the subfont */
   /* and the locals subrs array                  */
@@ -1205,9 +1207,9 @@
               decoder->glyph_width = decoder->nominal_width +
                                        ( stack[0] >> 16 );
 
-              if (decoder->width_only)
+              if ( decoder->width_only )
               {
-                /* we only want the advance width, stop here */
+                /* we only want the advance width; stop here */
                 break;
               }
 
@@ -2570,11 +2572,11 @@
       cff_decoder_init( &decoder, face, size, glyph, hinting,
                         FT_LOAD_TARGET_MODE( load_flags ) );
 
-      if ((load_flags & FT_LOAD_ADVANCE_ONLY) != 0)
+      if ( load_flags & FT_LOAD_ADVANCE_ONLY )
         cff_decoder_set_width_only( &decoder );
 
       decoder.builder.no_recurse =
-        (FT_Bool)( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
+        (FT_Bool)( load_flags & FT_LOAD_NO_RECURSE );
 
       /* now load the unscaled outline */
       error = cff_get_glyph_data( face, glyph_index,
@@ -2681,7 +2683,7 @@
 
         has_vertical_info = FT_BOOL( face->vertical_info                   &&
                                      face->vertical.number_Of_VMetrics > 0 &&
-                                     face->vertical.long_metrics != 0 );
+                                     face->vertical.long_metrics           );
 
         /* get the vertical metrics from the vtmx table if we have one */
         if ( has_vertical_info )

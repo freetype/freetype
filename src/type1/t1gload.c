@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 Glyph Loader (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2008 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -215,12 +215,15 @@
     FT_UInt        nn;
     FT_Error       error;
 
-    if (load_flags & FT_LOAD_VERTICAL_LAYOUT)
-    {
-        for (nn = 0; nn < count; nn++)
-            advances[nn] = 0;
+    FT_UNUSED( load_flags );
 
-        return T1_Err_Ok;
+
+    if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
+    {
+      for ( nn = 0; nn < count; nn++ )
+        advances[nn] = 0;
+
+      return T1_Err_Ok;
     }
 
     error = psaux->t1_decoder_funcs->init( &decoder,
@@ -235,14 +238,12 @@
     if ( error )
       return error;
 
-    FT_UNUSED(load_flags);
-
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
 
-    decoder.num_subrs     = type1->num_subrs;
-    decoder.subrs         = type1->subrs;
-    decoder.subrs_len     = type1->subrs_len;
+    decoder.num_subrs = type1->num_subrs;
+    decoder.subrs     = type1->subrs;
+    decoder.subrs_len = type1->subrs_len;
 
     decoder.buildchar     = face->buildchar;
     decoder.len_buildchar = face->len_buildchar;
@@ -250,11 +251,12 @@
     for ( nn = 0; nn < count; nn++ )
     {
       error = T1_Parse_Glyph( &decoder, first + nn );
-      if (!error)
+      if ( !error )
         advances[nn] = decoder.builder.advance.x;
       else
         advances[nn] = 0;
     }
+
     return T1_Err_Ok;
   }
 

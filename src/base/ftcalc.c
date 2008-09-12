@@ -38,8 +38,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 
-#ifdef  FT_MULFIX_INLINED
-#undef  FT_MulFix
+#ifdef FT_MULFIX_INLINED
+#undef FT_MulFix
 #endif
 
 /* we need to define a 64-bits data type here */
@@ -197,18 +197,32 @@
              FT_Long  b )
   {
 #ifdef FT_MULFIX_ASSEMBLER
-    return FT_MULFIX_ASSEMBLER(a,b);
+
+    return FT_MULFIX_ASSEMBLER( a, b );
+
 #else
+
     FT_Int   s = 1;
     FT_Long  c;
 
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
+    if ( a < 0 )
+    {
+      a = -a;
+      s = -1;
+    }
+
+    if ( b < 0 )
+    {
+      b = -b;
+      s = -s;
+    }
 
     c = (FT_Long)( ( (FT_Int64)a * b + 0x8000L ) >> 16 );
-    return ( s > 0 ) ? c : -c ;
-#endif
+
+    return ( s > 0 ) ? c : -c;
+
+#endif /* FT_MULFIX_ASSEMBLER */
   }
 
 
@@ -421,7 +435,9 @@
              FT_Long  b )
   {
 #ifdef FT_MULFIX_ASSEMBLER
-    return FT_MULFIX_ASSEMBLER(a,b);
+
+    return FT_MULFIX_ASSEMBLER( a, b );
+
 #elif 0
 
     /*

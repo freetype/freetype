@@ -91,11 +91,13 @@ FT_BEGIN_HEADER
   (*FT_CharMap_CharNextFunc)( FT_CharMap  charmap,
                               FT_Long     charcode );
 
+
   typedef FT_Error
   (*FT_Face_GetKerningFunc)( FT_Face     face,
                              FT_UInt     left_glyph,
                              FT_UInt     right_glyph,
                              FT_Vector*  kerning );
+
 
   typedef FT_Error
   (*FT_Face_AttachFunc)( FT_Face    face,

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -134,16 +134,19 @@
   {
     FT_UInt  nn;
     TT_Face  face  = (TT_Face) ttface;
-    FT_Bool  check = FT_BOOL(!(flags & FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH));
+    FT_Bool  check = FT_BOOL(
+                       !( flags & FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ) );
+
 
     /* XXX: TODO: check for sbits */
 
-    if (flags & FT_LOAD_VERTICAL_LAYOUT)
+    if ( flags & FT_LOAD_VERTICAL_LAYOUT )
     {
-      for (nn = 0; nn < count; nn++)
+      for ( nn = 0; nn < count; nn++ )
       {
         FT_Short   tsb;
         FT_UShort  ah;
+
 
         TT_Get_VMetrics( face, start + nn, check, &tsb, &ah );
         advances[nn] = ah;
@@ -151,16 +154,18 @@
     }
     else
     {
-      for (nn = 0; nn < count; nn++)
+      for ( nn = 0; nn < count; nn++ )
       {
         FT_Short   lsb;
         FT_UShort  aw;
+
 
         TT_Get_HMetrics( face, start + nn, check, &lsb, &aw );
         advances[nn] = aw;
       }
     }
-    return 0;
+
+    return TT_Err_Ok;
   }
 
   /*************************************************************************/

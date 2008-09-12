@@ -112,25 +112,26 @@ FT_BEGIN_HEADER
   /*         file `ftconfig.h' either statically or through the            */
   /*         `configure' script on supported platforms.                    */
   /*                                                                       */
-#undef  FT_CONFIG_OPTION_FORCE_INT64
+#undef FT_CONFIG_OPTION_FORCE_INT64
 
 
   /*************************************************************************/
   /*                                                                       */
-  /* When this macro is defined, do not try to use an assembler version    */
-  /* of performance-critical functions (e.g. FT_MulFix). you should only   */
-  /* do that to verify that the assembler function works properly, or even */
-  /* to benchmarks the various implementations...                          */
+  /* If this macro is defined, do not try to use an assembler version of   */
+  /* performance-critical functions (e.g. FT_MulFix).  You should only do  */
+  /* that to verify that the assembler function works properly, or to      */
+  /* execute benchmark tests of the various implementations.               */
 /* #define FT_CONFIG_OPTION_NO_ASSEMBLER */
 
+
   /*************************************************************************/
   /*                                                                       */
-  /* When this macro is defined, try to use an inlined assembler version   */
-  /* of the FT_MulFix function, which appears to be a hotspot when loading */
-  /* and hinting glyphs.                                                   */
+  /* If this macro is defined, try to use an inlined assembler version of  */
+  /* the `FT_MulFix' function, which is a `hotspot' when loading and       */
+  /* hinting glyphs, and which should be executed as fast as possible.     */
   /*                                                                       */
-  /* note that if your compiler/cpu isn't supported, this will default to  */
-  /* the standard and portable implementation found in src/base/ftcalc.c   */
+  /* Note that if your compiler or CPU is not supported, this will default */
+  /* to the standard and portable implementation found in `ftcalc.c'.      */
   /*                                                                       */
 #define FT_CONFIG_OPTION_INLINE_MULFIX
 
@@ -183,7 +184,7 @@ FT_BEGIN_HEADER
   /*   Do not #undef this macro here since the build system might define   */
   /*   it for certain configurations only.                                 */
   /*                                                                       */
-/* #define  FT_CONFIG_OPTION_SYSTEM_ZLIB */
+/* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
 
   /*************************************************************************/
@@ -224,8 +225,8 @@ FT_BEGIN_HEADER
   /*   Do not #undef these macros here since the build system might define */
   /*   them for certain configurations only.                               */
   /*                                                                       */
-/* #define  FT_EXPORT(x)       extern x */
-/* #define  FT_EXPORT_DEF(x)   x */
+/* #define FT_EXPORT(x)      extern x */
+/* #define FT_EXPORT_DEF(x)  x */
 
 
   /*************************************************************************/
