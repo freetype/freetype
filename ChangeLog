@@ -1,3 +1,18 @@
+2008-09-15  George Williams  <gww@silcom.com>
+
+	Fix Savannah bug #24179, reported by Bram Tassyns.
+
+	* src/type1/t1load.c (mm_axis_unmap, T1_Get_MM_Var): Fix computation
+	of default values.
+
+2008-09-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/glnames.py (main): Surround `ft_get_adobe_glyph_index'
+	and `ft_adobe_glyph_list' with FT_CONFIG_OPTION_ADOBE_GLYPH_LIST to
+	prevent unconditional definition.  This fixes Savannah bug #24241.
+
+	* src/psnames/pstables.h: Regenerated.
+
 2008-09-13  Werner Lemberg  <wl@gnu.org>
 
 	* autogen.sh, builds/unix/configure.raw,

@@ -241,8 +241,7 @@
                                  axismap->blend_points[j] -
                                    axismap->blend_points[j - 1] );
 
-
-        return axismap->design_points[j - 1] +
+        return FT_INT_TO_FIXED( axismap->design_points[j - 1] ) +
                  FT_MulDiv( t,
                             axismap->design_points[j] -
                               axismap->design_points[j - 1],
@@ -355,9 +354,8 @@
                         blend->num_axis );
 
       for ( i = 0; i < mmaster.num_axis; ++i )
-        mmvar->axis[i].def =
-          FT_INT_TO_FIXED( mm_axis_unmap( &blend->design_map[i],
-                                          axiscoords[i] ) );
+        mmvar->axis[i].def = mm_axis_unmap( &blend->design_map[i],
+                                            axiscoords[i] );
     }
 
     *master = mmvar;

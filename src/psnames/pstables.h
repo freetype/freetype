@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PostScript glyph names.                                              */
 /*                                                                         */
-/*  Copyright 2005 by                                                      */
+/*  Copyright 2005, 2008 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -561,6 +561,9 @@
    *  The lookup function to get the Unicode value for a given string
    *  is defined below the table.
    */
+
+#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
+
   static const unsigned char  ft_adobe_glyph_list[54791] =
   {
       0, 52,  0,106,  2,167,  3, 63,  4,220,  6,125,  9,143, 10, 23,
@@ -4085,6 +4088,8 @@
   NotFound:
     return 0;
   }
+
+#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
 
 /* END */
