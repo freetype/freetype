@@ -169,9 +169,6 @@ FT_BEGIN_HEADER
                     FT_Bool         hinting,
                     FT_Render_Mode  hint_mode );
 
-  FT_LOCAL( void )
-  cff_decoder_set_width_only( CFF_Decoder*  decoder );
-
   FT_LOCAL( FT_Error )
   cff_decoder_prepare( CFF_Decoder*  decoder,
                        CFF_Size      size,

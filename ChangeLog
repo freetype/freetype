@@ -1,3 +1,8 @@
+2008-09-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.h, src/cff/cffgload.c
+	(cff_decoder_set_width_only): Eliminate function call.
+
 2008-09-15  George Williams  <gww@silcom.com>
 
 	Fix Savannah bug #24179, reported by Bram Tassyns.

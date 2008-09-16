@@ -385,13 +385,6 @@
   }
 
 
-  FT_LOCAL_DEF( void )
-  cff_decoder_set_width_only( CFF_Decoder*  decoder )
-  {
-    decoder->width_only = 1;
-  }
-
-
   /* this function is used to select the subfont */
   /* and the locals subrs array                  */
   FT_LOCAL_DEF( FT_Error )
@@ -2573,7 +2566,7 @@
                         FT_LOAD_TARGET_MODE( load_flags ) );
 
       if ( load_flags & FT_LOAD_ADVANCE_ONLY )
-        cff_decoder_set_width_only( &decoder );
+        decoder.width_only = TRUE;
 
       decoder.builder.no_recurse =
         (FT_Bool)( load_flags & FT_LOAD_NO_RECURSE );
