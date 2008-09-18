@@ -437,7 +437,7 @@
     error = sfnt->init_face( stream, face, face_index, num_params, params );
     if ( !error )
     {
-      if ( face->format_tag != 0x4F54544FL )  /* `OTTO'; OpenType/CFF font */
+      if ( face->format_tag != TTAG_OTTO )  /* `OTTO'; OpenType/CFF font */
       {
         FT_TRACE2(( "[not a valid OpenType/CFF font]\n" ));
         goto Bad_Format;
