@@ -1,3 +1,9 @@
+2008-09-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftsystem.c (FT_Done_Memory): Use ft_sfree directly for
+	orthogonality (ft_free and ft_sfree could belong to different memory
+	pools).  This fixes Savannah bug #24297.
+
 2008-09-18  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/cff/cffobjs.c (cff_face_init): Use TTAG_OTTO defined
