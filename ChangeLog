@@ -1,5 +1,11 @@
 2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftmac.c: Import sfnt-wrapped Type1 and sfnt-wrapped
+	CID-keyed font support.
+	* builds/mac/ftmac.c: Ditto.
+
+2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Fix double free bug
 	in sfnt-wrapped Type1 and sfnt-wrapped CID-keyed font support code.
 	open_face_from_buffer() frees the passed buffer when it cannot
