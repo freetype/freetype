@@ -2,7 +2,10 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
 
   I. IMPORTANT BUG FIXES
 
-    - CID-keyed fonts in an SFNT wrapper were not handled correctly.
+    - PS Type1 and CID-keyed fonts in an SFNT wrapper were not loaded.
+      In version 2.3.8, the core tables `TYP1' or `CID ' are passed to
+      PS Type1 or CID-keyed font drivers, other tables (`ALMX', `BBOX'
+      etc) are not supported yet.
 
 
 ======================================================================

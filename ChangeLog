@@ -1,3 +1,11 @@
+2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Add initial support
+	for sfnt-wrapped Type1 and sfnt-wrapped CID-keyed font.
+	(ft_lookup_PS_in_sfnt): New function to look up `TYP1' or `CID '
+	table in sfnt table directory. It is used before loading TrueType
+	font driver.
+
 2008-09-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftsystem.c (FT_Done_Memory): Use ft_sfree directly for

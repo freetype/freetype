@@ -1409,6 +1409,59 @@
   }
 
 
+  /* Look up `TYP1' or `CID ' table from sfnt table directory. */
+  /* offset & length must exclude the binary header in tables. */
+
+  /* For proper support, PS Type1 and CID-keyed font drivers  */
+  /* should recognize sfnt-wrapped format. Here, yet TrueType */
+  /* font driver is not loaded, we must parse by ourselves.   */
+  /* We only care the name of table and offset. */
+
+  static FT_Error
+  ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
+                        FT_ULong*  offset,
+                        FT_ULong*  length,
+                        FT_Bool*   is_sfnt_cid )
+  {
+    FT_Byte*   p = sfnt + 4; /* skip version `typ1' */
+    FT_UShort  numTables = FT_NEXT_USHORT( p );
+
+
+    p += ( 2 * 3 ); /* skip binary search header */
+    for ( ; numTables > 0 ; numTables -- )
+    {
+      FT_ULong  tag = FT_NEXT_ULONG( p );
+
+
+      p += 4; /* skip checkSum */
+      *offset = FT_NEXT_ULONG( p );
+      *length = FT_NEXT_ULONG( p );
+
+      /* see Adobe TN# 5180 for binary header in CID table */
+      if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
+      {
+        *offset += 22;
+        *length -= 22;
+        *is_sfnt_cid = TRUE;
+        return FT_Err_Ok;
+      }
+
+      /* see Apple "The Type 1 GX Font Format" */
+      if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
+      {
+        *offset += 24;
+        *length -= 24;
+        *is_sfnt_cid = FALSE;
+        return FT_Err_Ok;
+      }
+    }
+
+    *offset = 0;
+    *length = 0;
+    return FT_Err_Invalid_Table;
+  }
+
+
   /* The resource header says we've got resource_cnt `sfnt'      */
   /* (TrueType/OpenType) resources in this file.  Look through   */
   /* them for the one indicated by face_index, load it into mem, */
@@ -1428,6 +1481,7 @@
     FT_Long    flag_offset;
     FT_Long    rlen;
     int        is_cff;
+    int        is_sfnt_ps;
     FT_Long    face_index_in_resource = 0;
 
 
@@ -1452,11 +1506,43 @@
     if ( error )
       goto Exit;
 
-    is_cff = rlen > 4 && sfnt_data[0] == 'O' &&
-                         sfnt_data[1] == 'T' &&
-                         sfnt_data[2] == 'T' &&
-                         sfnt_data[3] == 'O';
+    is_cff     = rlen > 4 && !ft_memcmp( sfnt_data, "OTTO", 4 );
+    is_sfnt_ps = rlen > 4 && !ft_memcmp( sfnt_data, "typ1", 4 );
 
+    if ( is_sfnt_ps )
+    {
+      FT_ULong  offset, length;
+      FT_Bool   is_sfnt_cid;
+      FT_Byte*  sfnt_ps;
+
+
+      error = ft_lookup_PS_in_sfnt( sfnt_data,
+                                    &offset,
+                                    &length,
+                                    &is_sfnt_cid );
+      if ( error )
+        goto Try_OpenType;
+
+
+      if ( FT_ALLOC( sfnt_ps, (FT_Long)length ) )
+        return error;
+      ft_memcpy( sfnt_ps, sfnt_data + offset, length );
+
+      error = open_face_from_buffer( library,
+                                     sfnt_ps,
+                                     length,
+                                     face_index_in_resource,
+                                     is_sfnt_cid ? "cid" : "type1",
+                                     aface );
+      if ( !error )
+      {
+        FT_FREE( sfnt_data );
+        goto Exit;
+      }
+
+      FT_FREE( sfnt_ps );
+    }
+  Try_OpenType:
     error = open_face_from_buffer( library,
                                    sfnt_data,
                                    rlen,
