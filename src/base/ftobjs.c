@@ -1539,8 +1539,6 @@
         FT_FREE( sfnt_data );
         goto Exit;
       }
-
-      FT_FREE( sfnt_ps );
     }
   Try_OpenType:
     error = open_face_from_buffer( library,

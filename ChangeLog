@@ -1,10 +1,20 @@
 2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Fix double free bug
+	in sfnt-wrapped Type1 and sfnt-wrapped CID-keyed font support code.
+	open_face_from_buffer() frees the passed buffer when it cannot
+	open a face from the buffer, so the caller must not free it.
+
+2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Add initial support
 	for sfnt-wrapped Type1 and sfnt-wrapped CID-keyed font.
 	(ft_lookup_PS_in_sfnt): New function to look up `TYP1' or `CID '
 	table in sfnt table directory. It is used before loading TrueType
 	font driver.
+
+	* docs/CHANGES: Add note about the current status of sfnt-wrapped
+	Type1 and sfnt-wrapped CID-keyed font support.
 
 2008-09-18  Werner Lemberg  <wl@gnu.org>
 
