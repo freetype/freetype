@@ -24,6 +24,8 @@
 	* src/base/ftadvanc.c (FT_Get_Advance, FT_Get_Advances): Use
 	FT_ERROR_BASE.
 
+	* docs/formats.txt: Updated.
+
 2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c: Import sfnt-wrapped Type1 and sfnt-wrapped
@@ -32,17 +34,17 @@
 
 2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Fix double free bug
-	in sfnt-wrapped Type1 and sfnt-wrapped CID-keyed font support code.
-	open_face_from_buffer() frees the passed buffer when it cannot
-	open a face from the buffer, so the caller must not free it.
+	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Fix double free bug in
+	sfnt-wrapped Type1 and sfnt-wrapped CID-keyed font support code.
+	`open_face_from_buffer' frees the passed buffer if it cannot open a
+	face from the buffer, so the caller must not free it.
 
 2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Add initial support
 	for sfnt-wrapped Type1 and sfnt-wrapped CID-keyed font.
 	(ft_lookup_PS_in_sfnt): New function to look up `TYP1' or `CID '
-	table in sfnt table directory. It is used before loading TrueType
+	table in sfnt table directory.  It is used before loading TrueType
 	font driver.
 
 	* docs/CHANGES: Add note about the current status of sfnt-wrapped

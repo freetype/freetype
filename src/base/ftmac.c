@@ -829,13 +829,14 @@
   }
 
 
-  /* Look up `TYP1' or `CID ' table from sfnt table directory. */
-  /* offset & length must exclude the binary header in tables. */
+  /* Look up `TYP1' or `CID ' table from sfnt table directory.       */
+  /* `offset' and `length' must exclude the binary header in tables. */
 
-  /* For proper support, PS Type1 and CID-keyed font drivers  */
-  /* should recognize sfnt-wrapped format. Here, yet TrueType */
-  /* font driver is not loaded, we must parse by ourselves.   */
-  /* We only care the name of table and offset. */
+  /* Type 1 and CID-keyed font drivers should recognize sfnt-wrapped */
+  /* format too.  Here, since we can't expect that the TrueType font */
+  /* driver is loaded unconditially, we must parse the font by       */
+  /* ourselves.  We are only interested in the name of the table and */
+  /* the offset. */
 
   static FT_Error
   ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
@@ -847,7 +848,8 @@
     FT_UShort  numTables = FT_NEXT_USHORT( p );
 
 
-    p += ( 2 * 3 ); /* skip binary search header */
+    p += 2 * 3;              /* skip binary search header */
+
     for ( ; numTables > 0 ; numTables -- )
     {
       FT_ULong  tag = FT_NEXT_ULONG( p );
@@ -866,7 +868,7 @@
         return FT_Err_Ok;
       }
 
-      /* see Apple "The Type 1 GX Font Format" */
+      /* see Apple's `The Type 1 GX Font Format' */
       if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
       {
         *offset += 24;
@@ -945,6 +947,7 @@
         goto Exit;
       }
     }
+
   Try_OpenType:
     error = open_face_from_buffer( library,
                                    sfnt_data,

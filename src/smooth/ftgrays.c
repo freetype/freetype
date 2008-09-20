@@ -1338,6 +1338,8 @@
 
     ras.num_gray_spans = 0;
 
+    FT_TRACE7(( "gray_sweep: start\n" ));
+
     for ( yindex = 0; yindex < ras.ycount; yindex++ )
     {
       PCell   cell  = ras.ycells[yindex];
@@ -1371,6 +1373,8 @@
     if ( ras.render_span && ras.num_gray_spans > 0 )
       ras.render_span( ras.span_y, ras.num_gray_spans,
                        ras.gray_spans, ras.render_span_data );
+
+    FT_TRACE7(( "gray_sweep: end\n" ));
   }
 
 
