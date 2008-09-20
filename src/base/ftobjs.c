@@ -197,6 +197,12 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_objs
 
@@ -1280,13 +1286,13 @@
 
     error = FT_Open_Face( library, &args, face_index, aface );
 
-    if ( error == FT_Err_Ok )
-      (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
-    else
+    if ( error )
     {
       FT_Stream_Close( stream );
       FT_FREE( stream );
     }
+    else
+      (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
 
     return error;
   }

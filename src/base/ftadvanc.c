@@ -91,7 +91,7 @@
       if ( !error )
         return _ft_face_scale_advances( face, padvance, 1, flags );
 
-      if ( error != FT_Err_Unimplemented_Feature )
+      if ( error != FT_ERROR_BASE( FT_Err_Unimplemented_Feature ) )
         return error;
     }
 
@@ -131,7 +131,7 @@
       if ( !error )
         goto Exit;
 
-      if ( error != FT_Err_Unimplemented_Feature )
+      if ( error != FT_ERROR_BASE( FT_Err_Unimplemented_Feature ) )
         return error;
     }
 

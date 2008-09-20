@@ -1,3 +1,29 @@
+2008-09-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c: Include FT_INTERNAL_DEBUG_H.
+	(FT_Outline_Decompose): Decorate with tracing messages.
+
+	* src/smooth/ftgrays.c [DEBUG_GRAYS]: Replace with
+	FT_DEBUG_LEVEL_TRACE.
+	[_STANDALONE_ && FT_DEBUG_LEVEL_TRACE]: Include stdio.h and
+	stdarg.h.
+
+	(FT_TRACE) [_STANDALONE_]: Remove.
+	(FT_Message) [_STANDALONE_ && FT_DEBUG_LEVEL_TRACE]: New function.
+	(FT_TRACE5, FT_TRACE7) [_STANDALONE_]: New macros.
+	(FT_ERROR) [_STANDALONE_]: Updated.
+
+	(gray_hline) [FT_DEBUG_LEVEL_TRACE]: Fix condition.
+	Use FT_TRACE7.
+	(gray_dump_cells): Make it `static void'.
+	(graay_convert_glyph): Use FT_TRACE7.
+
+	(FT_Outline_Decompose) [_STANDALONE_]: Synchronize with version in
+	ftoutln.c.
+
+	* src/base/ftadvanc.c (FT_Get_Advance, FT_Get_Advances): Use
+	FT_ERROR_BASE.
+
 2008-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c: Import sfnt-wrapped Type1 and sfnt-wrapped

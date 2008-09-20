@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    outline        :: A pointer to the source target.                  */
   /*                                                                       */
-  /*    func_interface :: A table of `emitters', i.e,. function pointers   */
+  /*    func_interface :: A table of `emitters', i.e., function pointers   */
   /*                      called during decomposition to indicate path     */
   /*                      operations.                                      */
   /*                                                                       */
