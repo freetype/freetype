@@ -431,8 +431,8 @@
     int     x = ras.ex;
 
 
-    if ( x > ras.max_ex )
-      x = ras.max_ex;
+    if ( x > ras.count_ex )
+      x = ras.count_ex;
 
     pcell = &ras.ycells[ras.ey];
     for (;;)

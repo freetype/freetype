@@ -1,5 +1,13 @@
 2008-09-20  Werner Lemberg  <wl@gnu.org>
 
+	* src/smooth/ftgrays.c (gray_find_cell): Fix threshold.  The values
+	passed to this function are already `normalized'.  Problem reported
+	by Stephan T. Lavavej  <stl@nuwen.net>.
+
+	* docs/CHANGES: Document it.
+
+2008-09-20  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftoutln.c: Include FT_INTERNAL_DEBUG_H.
 	(FT_Outline_Decompose): Decorate with tracing messages.
 
@@ -16,7 +24,7 @@
 	(gray_hline) [FT_DEBUG_LEVEL_TRACE]: Fix condition.
 	Use FT_TRACE7.
 	(gray_dump_cells): Make it `static void'.
-	(graay_convert_glyph): Use FT_TRACE7.
+	(gray_convert_glyph): Use FT_TRACE7.
 
 	(FT_Outline_Decompose) [_STANDALONE_]: Synchronize with version in
 	ftoutln.c.

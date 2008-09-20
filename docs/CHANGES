@@ -4,6 +4,12 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
 
     - CID-keyed fonts in an SFNT wrapper were not handled correctly.
 
+    - The smooth renderer produced truncated images (on the right) for
+      outline parts with negative horizontal values.  Most fonts don't
+      contain outlines left  to the y coordinate axis, but  the effect
+      was very noticeable for outlines processed with FT_Glyph_Stroke,
+      using thick strokes.
+
 
   II. IMPORTANT CHANGES
 
