@@ -1,3 +1,10 @@
+2008-09-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/otvalid/Jamfile: Add missing target `otvmath' for multi build
+	by jam.
+	* src/sfnt/Jamfile: Add missing target `ttmtx' for multi build by
+	jam.
+
 2008-09-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/smooth/ftgrays.c (gray_find_cell): Fix threshold.  The values
