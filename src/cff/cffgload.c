@@ -110,8 +110,11 @@
     cff_op_callgsubr,
     cff_op_return,
 
-    cff_op_hsbw,        /* Type 1 opcode: invalid but seen in real life */
-    cff_op_closepath,   /* ditto */
+    /* Type 1 opcodes: invalid but seen in real life */
+    cff_op_hsbw,
+    cff_op_closepath,
+    cff_op_callothersubr,
+    cff_op_pop,
 
     /* do not remove */
     cff_op_max
@@ -198,6 +201,8 @@
     0,
 
     2, /* hsbw */
+    0,
+    0,
     0
   };
 
@@ -1043,6 +1048,12 @@
               break;
             case 15:
               op = cff_op_eq;
+              break;
+            case 16:
+              op = cff_op_callothersubr;
+              break;
+            case 17:
+              op = cff_op_pop;
               break;
             case 18:
               op = cff_op_drop;
@@ -2148,6 +2159,27 @@
           x    = args[0];
           y    = 0;
           args = stack;
+          break;
+
+        case cff_op_callothersubr:
+          /* this is an invalid Type 2 operator; however, there        */
+          /* exist fonts which are incorrectly converted from probably */
+          /* Type 1 to CFF, and some parsers seem to accept it         */
+
+          FT_TRACE4(( " callothersubr (invalid op)\n" ));
+
+          /* don't modify stack; handle the subr as `unknown' so that */
+          /* following `pop' operands use the arguments on stack      */
+          break;
+
+        case cff_op_pop:
+          /* this is an invalid Type 2 operator; however, there        */
+          /* exist fonts which are incorrectly converted from probably */
+          /* Type 1 to CFF, and some parsers seem to accept it         */
+
+          FT_TRACE4(( " pop (invalid op)\n" ));
+
+          args++;
           break;
 
         case cff_op_and:
