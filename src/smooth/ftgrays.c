@@ -1881,7 +1881,7 @@
     worker = raster->worker;
 
     /* if direct mode is not set, we must have a target bitmap */
-    if ( ( params->flags & FT_RASTER_FLAG_DIRECT ) == 0 )
+    if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
     {
       if ( !target_map )
         return ErrRaster_Invalid_Argument;
@@ -1899,7 +1899,7 @@
       return ErrRaster_Invalid_Mode;
 
     /* compute clipping box */
-    if ( ( params->flags & FT_RASTER_FLAG_DIRECT ) == 0 )
+    if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
     {
       /* compute clip box from target pixmap */
       ras.clip_box.xMin = 0;
@@ -1908,9 +1908,7 @@
       ras.clip_box.yMax = target_map->rows;
     }
     else if ( params->flags & FT_RASTER_FLAG_CLIP )
-    {
       ras.clip_box = params->clip_box;
-    }
     else
     {
       ras.clip_box.xMin = -32768L;
@@ -1927,16 +1925,16 @@
     ras.band_size      = raster->band_size;
     ras.num_gray_spans = 0;
 
-    if ( target_map )
-      ras.target = *target_map;
-
-    ras.render_span      = (FT_Raster_Span_Func)gray_render_span;
-    ras.render_span_data = &ras;
-
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
     {
       ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
       ras.render_span_data = params->user;
+    }
+    else
+    {
+      ras.target           = *target_map;
+      ras.render_span      = (FT_Raster_Span_Func)gray_render_span;
+      ras.render_span_data = &ras;
     }
 
     return gray_convert_glyph( worker );

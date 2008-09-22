@@ -1,3 +1,16 @@
+2008-09-22  John Tytgat  <John.Tytgat@esko.com>
+
+	Fix Savannah bug #24307.
+
+	* include/freetype/internal/t1types.h (CID_FaceRec),
+	src/type42/t42types.h (T42_FaceRec): Comment out `afm_data'.
+
+2008-09-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/smooth/ftgrays.c (gray_raster_render): Don't dereference
+	`target_map' if FT_RASTER_FLAG_DIRECT is set.  Problem reported by
+	Stephan T. Lavavej <stl@nuwen.net>.
+
 2008-09-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/otvalid/Jamfile: Add missing target `otvmath' for multi build
@@ -9,7 +22,7 @@
 
 	* src/smooth/ftgrays.c (gray_find_cell): Fix threshold.  The values
 	passed to this function are already `normalized'.  Problem reported
-	by Stephan T. Lavavej  <stl@nuwen.net>.
+	by Stephan T. Lavavej <stl@nuwen.net>.
 
 	* docs/CHANGES: Document it.
 
