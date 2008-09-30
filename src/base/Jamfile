@@ -46,5 +46,12 @@ if $(MAC)
 {
   Library  $(FT2_LIB) : ftmac.c ;
 }
+else if $(OS) = MACOSX
+{
+  if $(FT2_MULTI)
+  {
+    Library  $(FT2_LIB) : ftmac.c ;
+  }
+}
 
 # end of src/base Jamfile
