@@ -1,5 +1,17 @@
 2008-09-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/rules.mk: Add conditional source to BASE_SRC, for
+	`make multi' on Mac OS X. If the macro $(ftmac_c) is defined,
+	$(BASE_DIR)/$(ftmac_c) is added to BASE_SRC. In normal build,
+	the lack of ftmac.c in BASE_SRC is not serious because ftbase.c
+	includes ftmac.c.
+	* builds/unix/unix-def.in: Add a macro definition of $(ftmac_c).
+	* builds/unix/configure.raw: Add procedure to set up appropriate
+	value of $(ftmac_c) with the consideration of the availability
+	of Carbon framework.
+
+2008-09-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/Jamfile: Add target for multi build by jam on Mac OS X.
 	* src/base/ftobjs.c (FT_New_Face): Fix the condition to include
 	this function for MPW building. It is synchronized the condition

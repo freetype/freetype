@@ -47,6 +47,10 @@ BASE_SRC := $(BASE_DIR)/ftcalc.c   \
             $(BASE_DIR)/ftutil.c   \
             $(BASE_DIR)/ftadvanc.c
 
+ifneq ($(ftmac_c),)
+  BASE_SRC += $(BASE_DIR)/$(ftmac_c)
+endif
+
 # Base layer `extensions' sources
 #
 # An extension is added to the library file as a separate object.  It is

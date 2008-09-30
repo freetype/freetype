@@ -263,6 +263,8 @@ esac
 
 # Whether to use Mac OS resource-based fonts.
 
+ftmac_c="" # src/base/ftmac.c should not be included in makefiles by default
+
 # don't quote AS_HELP_STRING!
 AC_ARG_WITH([old-mac-fonts],
   AS_HELP_STRING([--with-old-mac-fonts],
@@ -293,6 +295,7 @@ if test x$with_old_mac_fonts = xyes; then
 
       ])],
     [AC_MSG_RESULT([ok])
+     ftmac_c='ftmac.c'
      AC_MSG_CHECKING([OS_INLINE macro is ANSI compatible])
      orig_CFLAGS="$CFLAGS"
      CFLAGS="$CFLAGS $XX_CFLAGS $XX_ANSIFLAGS"
@@ -626,6 +629,7 @@ case "$CFLAGS" in
 esac
 
 
+AC_SUBST([ftmac_c])
 AC_SUBST([LIBZ])
 AC_SUBST([CFLAGS])
 AC_SUBST([LDFLAGS])
