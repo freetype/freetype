@@ -304,9 +304,14 @@ THE SOFTWARE.
   FT_CALLBACK_DEF( void )
   BDF_Face_Done( FT_Face  bdfface )         /* BDF_Face */
   {
-    BDF_Face   face   = (BDF_Face)bdfface;
-    FT_Memory  memory = FT_FACE_MEMORY( face );
+    BDF_Face   face = (BDF_Face)bdfface;
+    FT_Memory  memory;
 
+
+    if ( !face )
+      return;
+
+    memory = FT_FACE_MEMORY( face );
 
     bdf_free_font( face->bdffont );
 

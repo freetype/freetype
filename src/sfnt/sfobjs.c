@@ -1027,9 +1027,15 @@
   FT_LOCAL_DEF( void )
   sfnt_done_face( TT_Face  face )
   {
-    FT_Memory     memory = face->root.memory;
-    SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
+    FT_Memory     memory;
+    SFNT_Service  sfnt;
 
+
+    if ( !face )
+      return;
+
+    memory = face->root.memory;
+    sfnt   = (SFNT_Service)face->sfnt;
 
     if ( sfnt )
     {

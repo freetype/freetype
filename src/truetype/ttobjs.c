@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -330,12 +330,18 @@
   FT_LOCAL_DEF( void )
   tt_face_done( FT_Face  ttface )           /* TT_Face */
   {
-    TT_Face       face   = (TT_Face)ttface;
-    FT_Memory     memory = face->root.memory;
-    FT_Stream     stream = face->root.stream;
+    TT_Face       face = (TT_Face)ttface;
+    FT_Memory     memory;
+    FT_Stream     stream;
+    SFNT_Service  sfnt;
 
-    SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
+    if ( !face )
+      return;
+
+    memory = face->root.memory;
+    stream = face->root.stream;
+    sfnt   = (SFNT_Service)face->sfnt;
 
     /* for `extended TrueType formats' (i.e. compressed versions) */
     if ( face->extra.finalizer )

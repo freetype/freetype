@@ -665,16 +665,18 @@
   static void
   FNT_Face_Done( FNT_Face  face )
   {
-    if ( face )
-    {
-      FT_Memory  memory = FT_FACE_MEMORY( face );
+    FT_Memory  memory;
 
 
-      fnt_font_done( face );
+    if ( !face )
+      return;
 
-      FT_FREE( face->root.available_sizes );
-      face->root.num_fixed_sizes = 0;
-    }
+    memory = FT_FACE_MEMORY( face );
+
+    fnt_font_done( face );
+
+    FT_FREE( face->root.available_sizes );
+    face->root.num_fixed_sizes = 0;
   }
 
 
