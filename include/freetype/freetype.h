@@ -606,7 +606,7 @@ FT_BEGIN_HEADER
   /*     Same as FT_ENCODING_JOHAB.  Deprecated.                           */
   /*                                                                       */
   /* <Note>                                                                */
-  /*   By default, FreeType automatically synthetizes a Unicode charmap    */
+  /*   By default, FreeType automatically synthesizes a Unicode charmap    */
   /*   for PostScript fonts, using their glyph names dictionaries.         */
   /*   However, it also reports the encodings defined explicitly in the    */
   /*   font file, for the cases when they are needed, with the Adobe       */

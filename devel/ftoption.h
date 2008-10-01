@@ -245,7 +245,7 @@ FT_BEGIN_HEADER
   /*     if you build it to support postscript names in the TrueType       */
   /*     `post' table.                                                     */
   /*                                                                       */
-  /*   - The Type 1 driver will not be able to synthetize a Unicode        */
+  /*   - The Type 1 driver will not be able to synthesize a Unicode        */
   /*     charmap out of the glyphs found in the fonts.                     */
   /*                                                                       */
   /*   You would normally undefine this configuration macro when building  */
@@ -261,12 +261,12 @@ FT_BEGIN_HEADER
   /*   By default, FreeType 2 is built with the `PSNames' module compiled  */
   /*   in.  Among other things, the module is used to convert a glyph name */
   /*   into a Unicode value.  This is especially useful in order to        */
-  /*   synthetize on the fly a Unicode charmap from the CFF/Type 1 driver  */
+  /*   synthesize on the fly a Unicode charmap from the CFF/Type 1 driver  */
   /*   through a big table named the `Adobe Glyph List' (AGL).             */
   /*                                                                       */
   /*   Undefine this macro if you do not want the Adobe Glyph List         */
   /*   compiled in your `PSNames' module.  The Type 1 driver will not be   */
-  /*   able to synthetize a Unicode charmap out of the glyphs found in the */
+  /*   able to synthesize a Unicode charmap out of the glyphs found in the */
   /*   fonts.                                                              */
   /*                                                                       */
 #define FT_CONFIG_OPTION_ADOBE_GLYPH_LIST

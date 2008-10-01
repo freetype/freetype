@@ -101,7 +101,7 @@
 
 
   /* CFF and Type 1 private dictionaries have slightly different      */
-  /* structures; we need to synthetize a Type 1 dictionary on the fly */
+  /* structures; we need to synthesize a Type 1 dictionary on the fly */
 
   static void
   cff_make_private_dict( CFF_SubFont  subfont,
@@ -832,7 +832,7 @@
       /* Compute char maps.                                              */
       /*                                                                 */
 
-      /* Try to synthetize a Unicode charmap if there is none available */
+      /* Try to synthesize a Unicode charmap if there is none available */
       /* already.  If an OpenType font contains a Unicode "cmap", we    */
       /* will use it, whatever be in the CFF part of the file.          */
       {

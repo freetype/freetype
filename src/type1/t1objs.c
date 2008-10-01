@@ -488,7 +488,7 @@
 
         charmap.face = root;
 
-        /* first of all, try to synthetize a Unicode charmap */
+        /* first of all, try to synthesize a Unicode charmap */
         charmap.platform_id = 3;
         charmap.encoding_id = 1;
         charmap.encoding    = FT_ENCODING_UNICODE;
