@@ -1,3 +1,8 @@
+2008-10-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): `psnames_error' is only needed
+	if TT_CONFIG_OPTION_POSTSCRIPT_NAMES is defined.
+
 2008-10-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttobjs.c (tt_face_done), src/cff/cffobjs.c

@@ -506,7 +506,10 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    FT_Error      error, psnames_error;
+    FT_Error      error;
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+    FT_Error      psnames_error;
+#endif
     FT_Bool       has_outline;
     FT_Bool       is_apple_sbit;
 
@@ -581,7 +584,10 @@
     /* don't check for errors                            */
     LOAD_( name );
     LOAD_( post );
+
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
     psnames_error = error;
+#endif
 
     /* do not load the metrics headers and tables if this is an Apple */
     /* sbit font file                                                 */
