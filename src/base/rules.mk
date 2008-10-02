@@ -21,8 +21,6 @@
 #   BASE_EXT_OBJ: A list of base layer extensions, i.e., components found
 #                 in `freetype/src/base' which are not compiled within the
 #                 base layer proper.
-#
-# BASE_H is defined in freetype.mk to simplify the dependency rules.
 
 
 BASE_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(SRC_DIR)/base)
@@ -84,13 +82,13 @@ BASE_SRC_S := $(BASE_DIR)/ftbase.c
 
 # Base layer - single object build
 #
-$(BASE_OBJ_S): $(BASE_SRC_S) $(BASE_SRC) $(FREETYPE_H)
+$(BASE_OBJ_S): $(BASE_SRC_S) $(BASE_SRC) $(FREETYPE_H) $(BASE_H)
 	$(BASE_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $(BASE_SRC_S))
 
 
 # Multiple objects build + extensions
 #
-$(OBJ_DIR)/%.$O: $(BASE_DIR)/%.c $(FREETYPE_H)
+$(OBJ_DIR)/%.$O: $(BASE_DIR)/%.c $(FREETYPE_H) $(BASE_H)
 	$(BASE_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
 

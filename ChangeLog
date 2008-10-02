@@ -1,3 +1,15 @@
+2008-10-02  Werner Lemberg  <wl@gnu.org>
+
+	* builds/freetype.mk (BASE_H): Rename to...
+	(INTERNAL_H): This.
+	(FREETYPE_H): Updated.
+	* src/base/rules.mk: (BASE_OBJ_S, OBJ_DIR/%.$O): Add BASE_H.
+	* src/bdf/rules.mk (BDF_DRV_H): Add bdferror.h.
+	* src/cache/rules.mk (CACHE_DRV_H): Add ftccache.h and ftcsbits.h.
+	* src/pcf/rules.mk (PCF_DRV_H): Add pcfread.h.
+	* src/raster/rules.mk (RASTER_DRV_H): Add ftmisc.h.
+	* src/type42/rules.mk (T42_DRV_H): Add t42types.h.
+
 2008-10-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftbase.h: New file to declare the private utility
