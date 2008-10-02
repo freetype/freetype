@@ -2450,9 +2450,9 @@
   {
     FT_Error     error;
     CFF_Decoder  decoder;
-    TT_Face      face     = (TT_Face)glyph->root.face;
+    TT_Face      face = (TT_Face)glyph->root.face;
     FT_Bool      hinting, force_scaling;
-    CFF_Font     cff      = (CFF_Font)face->extra.data;
+    CFF_Font     cff  = (CFF_Font)face->extra.data;
 
     FT_Matrix    font_matrix;
     FT_Vector    font_offset;
@@ -2466,9 +2466,14 @@
     if ( cff->top_font.font_dict.cid_registry != 0xFFFFU &&
          cff->charset.cids                               )
     {
-      glyph_index = cff_charset_cid_to_gindex( &cff->charset, glyph_index );
-      if ( glyph_index == 0 )
-        return CFF_Err_Invalid_Argument;
+      /* don't handle CID 0 (.notdef) which is directly mapped to GID 0 */
+      if ( glyph_index != 0 )
+      {
+        glyph_index = cff_charset_cid_to_gindex( &cff->charset,
+                                                 glyph_index );
+        if ( glyph_index == 0 )
+          return CFF_Err_Invalid_Argument;
+      }
     }
     else if ( glyph_index >= cff->num_glyphs )
       return CFF_Err_Invalid_Argument;

@@ -1,3 +1,8 @@
+2008-10-02  Bram Tassyns  <bramt@enfocus.be>
+
+	* src/cff/cffgload.c (cff_slot_load): Map CID 0 to GID 0.  This
+	fixes Savannah bug #24430.
+
 2008-10-02  Werner Lemberg  <wl@gnu.org>
 
 	* builds/freetype.mk (BASE_H): Rename to...
