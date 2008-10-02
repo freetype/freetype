@@ -1198,9 +1198,9 @@
   /* we don't really have access to it.                                    */
 
 
-  /* Finalizer for a memory stream; gets called by FT_Done_Face().
-     It frees the memory it uses. */
-  /* from ftmac.c */
+  /* Finalizer for a memory stream; gets called by FT_Done_Face(). */
+  /* It frees the memory it uses.                                  */
+  /* From ftmac.c.                                                 */
   static void
   memory_stream_close( FT_Stream  stream )
   {
@@ -1216,7 +1216,7 @@
 
 
   /* Create a new memory stream from a buffer and a size. */
-  /* from ftmac.c */
+  /* From ftmac.c.                                        */
   static FT_Error
   new_memory_stream( FT_Library           library,
                      FT_Byte*             base,
@@ -1321,7 +1321,7 @@
   /* format too.  Here, since we can't expect that the TrueType font */
   /* driver is loaded unconditially, we must parse the font by       */
   /* ourselves.  We are only interested in the name of the table and */
-  /* the offset. */
+  /* the offset.                                                     */
 
   FT_LOCAL_DEF( FT_Error )
   ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
@@ -1370,6 +1370,7 @@
 
 
 #if !defined( FT_MACINTOSH ) || defined( DARWIN_NO_CARBON )
+
   /* The resource header says we've got resource_cnt `POST' (type1) */
   /* resources in this file.  They all need to be coalesced into    */
   /* one lump which gets passed on to the type1 driver.             */
