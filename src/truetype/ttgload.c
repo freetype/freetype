@@ -382,8 +382,8 @@
 
     for ( ; vec < vec_limit; vec++, flag++ )
     {
-      FT_Pos  y = 0;
-      FT_Byte f = *flag;
+      FT_Pos   y = 0;
+      FT_Byte  f = *flag;
 
 
       if ( f & 2 )
@@ -405,7 +405,8 @@
 
       x     += y;
       vec->x = x;
-      *flag  = f & ~( 2 | 16 );
+      /* the cast is for stupid compilers */
+      *flag  = (FT_Byte)( f & ~( 2 | 16 ) );
     }
 
     /* reading the Y coordinates */
@@ -417,8 +418,8 @@
 
     for ( ; vec < vec_limit; vec++, flag++ )
     {
-      FT_Pos  y = 0;
-      FT_Byte f = *flag;
+      FT_Pos   y = 0;
+      FT_Byte  f = *flag;
 
 
       if ( f & 4 )
@@ -440,7 +441,8 @@
 
       x     += y;
       vec->y = x;
-      *flag  = f & FT_CURVE_TAG_ON;
+      /* the cast is for stupid compilers */
+      *flag  = (FT_Byte)( f & FT_CURVE_TAG_ON );
     }
 
     outline->n_points   = (FT_UShort)n_points;
