@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTDRIVER_H__ */
+#endif /* __FTBASE_H__ */
 
 
 /* END */
