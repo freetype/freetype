@@ -1,3 +1,27 @@
+2008-10-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftbase.h: New file to declare the private utility
+	functions shared by the sources of base modules. Currently,
+	`ft_lookup_PS_in_sfnt' and `open_face_from_buffer' are declared
+	to share between ftobjs.c and ftmac.c.
+	* src/base/rule.mk: Add ftbase.h.
+	* src/base/ftobjs.c: Include ftbase.h.
+	(memory_stream_close): Build on any platform when old MacOS
+	font support is enabled.
+	(new_memory_stream): Ditto.
+	(open_face_from_buffer): Build on any platform when old MacOS
+	font support is enabled. The counting of the face in a font
+	file is slightly different between Carbon-dependent parser and
+	Carbon-free parser. They are merged with the platform-specific
+	conditional.
+	(ft_lookup_PS_in_sfnt): Ditto.
+	* src/base/ftmac.c: Include ftbase.h.
+	(memory_stream_close): Removed.
+	(new_memory_stream): Ditto.
+	(open_face_from_buffer): Removed. Use the implementation in
+	ftobjs.c.
+	(ft_lookup_PS_in_sfnt): Ditto.
+
 2008-10-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): `psnames_error' is only needed

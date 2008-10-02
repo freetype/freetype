@@ -36,6 +36,8 @@
 #include FT_SERVICE_KERNING_H
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 
+#include "ftbase.h"
+
 #define GRID_FIT_METRICS
 
   FT_BASE_DEF( FT_Pointer )
@@ -1167,7 +1169,7 @@
   }
 
 
-#if !defined( FT_MACINTOSH ) && defined( FT_CONFIG_OPTION_MAC_FONTS )
+#if defined( FT_CONFIG_OPTION_MAC_FONTS )
 
   /* The behavior here is very similar to that in base/ftmac.c, but it     */
   /* is designed to work on non-mac systems, so no mac specific calls.     */
@@ -1251,7 +1253,7 @@
 
   /* Create a new FT_Face given a buffer and a driver name. */
   /* from ftmac.c */
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   open_face_from_buffer( FT_Library   library,
                          FT_Byte*     base,
                          FT_ULong     size,
@@ -1284,20 +1286,90 @@
       args.driver = FT_Get_Module( library, driver_name );
     }
 
+#if defined( FT_MACINTOSH )
+    /* At this point, face_index has served its purpose;      */
+    /* whoever calls this function has already used it to     */
+    /* locate the correct font data.  We should not propagate */
+    /* this index to FT_Open_Face() (unless it is negative).  */
+
+    if ( face_index > 0 )
+      face_index = 0;
+#endif
+
     error = FT_Open_Face( library, &args, face_index, aface );
 
-    if ( error )
+    if ( error == FT_Err_Ok )
+      (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
+    else
+#if defined( FT_MACINTOSH )
+      FT_Stream_Free( stream, 0 );
+#else
     {
       FT_Stream_Close( stream );
       FT_FREE( stream );
     }
-    else
-      (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
+#endif
 
     return error;
   }
 
 
+  /* Look up `TYP1' or `CID ' table from sfnt table directory.       */
+  /* `offset' and `length' must exclude the binary header in tables. */
+
+  /* Type 1 and CID-keyed font drivers should recognize sfnt-wrapped */
+  /* format too.  Here, since we can't expect that the TrueType font */
+  /* driver is loaded unconditially, we must parse the font by       */
+  /* ourselves.  We are only interested in the name of the table and */
+  /* the offset. */
+
+  FT_LOCAL_DEF( FT_Error )
+  ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
+                        FT_ULong*  offset,
+                        FT_ULong*  length,
+                        FT_Bool*   is_sfnt_cid )
+  {
+    FT_Byte*   p = sfnt + 4; /* skip version `typ1' */
+    FT_UShort  numTables = FT_NEXT_USHORT( p );
+
+
+    p += 2 * 3;              /* skip binary search header */
+
+    for ( ; numTables > 0 ; numTables -- )
+    {
+      FT_ULong  tag = FT_NEXT_ULONG( p );
+
+
+      p += 4; /* skip checkSum */
+      *offset = FT_NEXT_ULONG( p );
+      *length = FT_NEXT_ULONG( p );
+
+      /* see Adobe TN# 5180 for binary header in CID table */
+      if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
+      {
+        *offset += 22;
+        *length -= 22;
+        *is_sfnt_cid = TRUE;
+        return FT_Err_Ok;
+      }
+
+      /* see Apple's `The Type 1 GX Font Format' */
+      if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
+      {
+        *offset += 24;
+        *length -= 24;
+        *is_sfnt_cid = FALSE;
+        return FT_Err_Ok;
+      }
+    }
+
+    *offset = 0;
+    *length = 0;
+    return FT_Err_Invalid_Table;
+  }
+
+
+#if !defined( FT_MACINTOSH ) || defined( DARWIN_NO_CARBON )
   /* The resource header says we've got resource_cnt `POST' (type1) */
   /* resources in this file.  They all need to be coalesced into    */
   /* one lump which gets passed on to the type1 driver.             */
@@ -1412,61 +1484,6 @@
 
   Exit:
     return error;
-  }
-
-
-  /* Look up `TYP1' or `CID ' table from sfnt table directory.       */
-  /* `offset' and `length' must exclude the binary header in tables. */
-
-  /* Type 1 and CID-keyed font drivers should recognize sfnt-wrapped */
-  /* format too.  Here, since we can't expect that the TrueType font */
-  /* driver is loaded unconditially, we must parse the font by       */
-  /* ourselves.  We are only interested in the name of the table and */
-  /* the offset. */
-
-  static FT_Error
-  ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
-                        FT_ULong*  offset,
-                        FT_ULong*  length,
-                        FT_Bool*   is_sfnt_cid )
-  {
-    FT_Byte*   p = sfnt + 4; /* skip version `typ1' */
-    FT_UShort  numTables = FT_NEXT_USHORT( p );
-
-
-    p += 2 * 3;              /* skip binary search header */
-
-    for ( ; numTables > 0 ; numTables -- )
-    {
-      FT_ULong  tag = FT_NEXT_ULONG( p );
-
-
-      p += 4; /* skip checkSum */
-      *offset = FT_NEXT_ULONG( p );
-      *length = FT_NEXT_ULONG( p );
-
-      /* see Adobe TN# 5180 for binary header in CID table */
-      if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
-      {
-        *offset += 22;
-        *length -= 22;
-        *is_sfnt_cid = TRUE;
-        return FT_Err_Ok;
-      }
-
-      /* see Apple's `The Type 1 GX Font Format' */
-      if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
-      {
-        *offset += 24;
-        *length -= 24;
-        *is_sfnt_cid = FALSE;
-        return FT_Err_Ok;
-      }
-    }
-
-    *offset = 0;
-    *length = 0;
-    return FT_Err_Invalid_Table;
   }
 
 
@@ -1749,7 +1766,7 @@
   }
 
 
-  /* Check for some macintosh formats.                             */
+  /* Check for some macintosh formats without Carbon framework.    */
   /* Is this a macbinary file?  If so look at the resource fork.   */
   /* Is this a mac dfont file?                                     */
   /* Is this an old style resource fork? (in data)                 */
@@ -1792,6 +1809,7 @@
                                            face_index, aface, args );
     return error;
   }
+#endif
 
 #endif  /* !FT_MACINTOSH && FT_CONFIG_OPTION_MAC_FONTS */
 

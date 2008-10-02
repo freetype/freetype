@@ -51,6 +51,8 @@ ifneq ($(ftmac_c),)
   BASE_SRC += $(BASE_DIR)/$(ftmac_c)
 endif
 
+BASE_H := $(BASE_DIR)/ftbase.h
+
 # Base layer `extensions' sources
 #
 # An extension is added to the library file as a separate object.  It is
