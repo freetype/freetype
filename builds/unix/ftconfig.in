@@ -156,6 +156,14 @@ FT_BEGIN_HEADER
 #else
 #define FT_MACINTOSH 1
 #endif
+
+#elif  defined( __SC__ ) || defined( __MRC__ )
+  /* Classic MacOS compilers */
+#include "ConditionalMacros.h"
+#if TARGET_OS_MAC
+#define FT_MACINTOSH 1
+#endif
+
 #endif
 
 

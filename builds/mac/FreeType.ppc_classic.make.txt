@@ -31,9 +31,8 @@ PPCCOptions     = \xB6
 ### Source Files ###
 
 SrcFiles        =  \xB6
-				  :builds:mac:ftmac.c \xB6
 				  :src:autofit:autofit.c \xB6
-				  :src:base:ftbase.c \xB6
+				  :builds:mac:ftbase.c \xB6
 				  :src:base:ftbbox.c \xB6
 				  :src:base:ftbdf.c \xB6
 				  :src:base:ftbitmap.c \xB6
@@ -84,7 +83,6 @@ ObjFiles-PPC    =  \xB6
 				  "{ObjDir}ftglyph.c.x" \xB6
 				  "{ObjDir}ftgxval.c.x" \xB6
 				  "{ObjDir}ftinit.c.x" \xB6
-				  "{ObjDir}ftmac.c.x" \xB6
 				  "{ObjDir}ftmm.c.x" \xB6
 				  "{ObjDir}ftotval.c.x" \xB6
 				  "{ObjDir}ftpfr.c.x" \xB6
@@ -129,6 +127,15 @@ LibFiles-PPC    =
 
 ### Build Rules ###
 
+:builds:mac:ftbase.c \xC4\xC4 :src:base:ftbase.c
+	Duplicate :src:base:ftbase.c :builds:mac:ftbase.c
+
+"{ObjDir}ftbase.c.x"  \xC4\xC4  :builds:mac:ftbase.c
+	{PPCC} :builds:mac:ftbase.c -o "{ObjDir}ftbase.c.x" \xB6
+		-i :builds:mac: \xB6
+		-i :src:base: \xB6
+		{PPCCOptions}
+
 FreeType.ppc_classic    \xC4\xC4  FreeType.ppc_classic.o
 
 FreeType.ppc_classic.o  \xC4\xC4  {ObjFiles-PPC} {LibFiles-PPC} {\xA5MondoBuild\xA5}
@@ -146,9 +153,8 @@ FreeType.ppc_classic.o  \xC4\xC4  {ObjFiles-PPC} {LibFiles-PPC} {\xA5MondoBuild\
 
 ### Required Dependencies ###
 
-"{ObjDir}ftmac.c.x" \xC4 :builds:mac:ftmac.c
 "{ObjDir}autofit.c.x" \xC4 :src:autofit:autofit.c
-"{ObjDir}ftbase.c.x" \xC4 :src:base:ftbase.c
+# "{ObjDir}ftbase.c.x" \xC4 :builds:mac:ftbase.c
 "{ObjDir}ftbbox.c.x" \xC4 :src:base:ftbbox.c
 "{ObjDir}ftbdf.c.x" \xC4 :src:base:ftbdf.c
 "{ObjDir}ftbitmap.c.x" \xC4 :src:base:ftbitmap.c

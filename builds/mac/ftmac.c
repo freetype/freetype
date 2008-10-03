@@ -65,6 +65,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_STREAM_H
+#include "ftbase.h"
 
 #if defined( __GNUC__ ) || defined( __IBMC__ )
   /* This is for Mac OS X.  Without redefinition, OS_INLINE */
@@ -1073,109 +1074,6 @@ typedef short ResourceIndex;
   }
 
 
-  /* Finalizer for a memory stream; gets called by FT_Done_Face().
-     It frees the memory it uses. */
-  static void
-  memory_stream_close( FT_Stream  stream )
-  {
-    FT_Memory  memory = stream->memory;
-
-
-    FT_FREE( stream->base );
-
-    stream->size  = 0;
-    stream->base  = 0;
-    stream->close = 0;
-  }
-
-
-  /* Create a new memory stream from a buffer and a size. */
-  static FT_Error
-  new_memory_stream( FT_Library           library,
-                     FT_Byte*             base,
-                     FT_ULong             size,
-                     FT_Stream_CloseFunc  close,
-                     FT_Stream*           astream )
-  {
-    FT_Error   error;
-    FT_Memory  memory;
-    FT_Stream  stream;
-
-
-    if ( !library )
-      return FT_Err_Invalid_Library_Handle;
-
-    if ( !base )
-      return FT_Err_Invalid_Argument;
-
-    *astream = 0;
-    memory = library->memory;
-    if ( FT_NEW( stream ) )
-      goto Exit;
-
-    FT_Stream_OpenMemory( stream, base, size );
-
-    stream->close = close;
-
-    *astream = stream;
-
-  Exit:
-    return error;
-  }
-
-
-  /* Create a new FT_Face given a buffer and a driver name. */
-  static FT_Error
-  open_face_from_buffer( FT_Library  library,
-                         FT_Byte*    base,
-                         FT_ULong    size,
-                         FT_Long     face_index,
-                         char*       driver_name,
-                         FT_Face*    aface )
-  {
-    FT_Open_Args  args;
-    FT_Error      error;
-    FT_Stream     stream;
-    FT_Memory     memory = library->memory;
-
-
-    error = new_memory_stream( library,
-                               base,
-                               size,
-                               memory_stream_close,
-                               &stream );
-    if ( error )
-    {
-      FT_FREE( base );
-      return error;
-    }
-
-    args.flags  = FT_OPEN_STREAM;
-    args.stream = stream;
-    if ( driver_name )
-    {
-      args.flags  = args.flags | FT_OPEN_DRIVER;
-      args.driver = FT_Get_Module( library, driver_name );
-    }
-
-    /* At this point, face_index has served its purpose;      */
-    /* whoever calls this function has already used it to     */
-    /* locate the correct font data.  We should not propagate */
-    /* this index to FT_Open_Face() (unless it is negative).  */
-
-    if ( face_index > 0 )
-      face_index = 0;
-
-    error = FT_Open_Face( library, &args, face_index, aface );
-    if ( error == FT_Err_Ok )
-      (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
-    else
-      FT_Stream_Free( stream, 0 );
-
-    return error;
-  }
-
-
   /* Create a new FT_Face from a file spec to an LWFN file. */
   static FT_Error
   FT_New_Face_From_LWFN( FT_Library    library,
@@ -1205,59 +1103,6 @@ typedef short ResourceIndex;
                                   face_index,
                                   "type1",
                                   aface );
-  }
-
-
-  /* Look up `TYP1' or `CID ' table from sfnt table directory. */
-  /* offset & length must exclude the binary header in tables. */
-
-  /* For proper support, PS Type1 and CID-keyed font drivers  */
-  /* should recognize sfnt-wrapped format. Here, yet TrueType */
-  /* font driver is not loaded, we must parse by ourselves.   */
-  /* We only care the name of table and offset. */
-
-  static FT_Error
-  ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
-                        FT_ULong*  offset,
-                        FT_ULong*  length,
-                        FT_Bool*   is_sfnt_cid )
-  {
-    FT_Byte*   p = sfnt + 4; /* skip version `typ1' */
-    FT_UShort  numTables = FT_NEXT_USHORT( p );
-
-
-    p += ( 2 * 3 ); /* skip binary search header */
-    for ( ; numTables > 0 ; numTables -- )
-    {
-      FT_ULong  tag = FT_NEXT_ULONG( p );
-
-
-      p += 4; /* skip checkSum */
-      *offset = FT_NEXT_ULONG( p );
-      *length = FT_NEXT_ULONG( p );
-
-      /* see Adobe TN# 5180 for binary header in CID table */
-      if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
-      {
-        *offset += 22;
-        *length -= 22;
-        *is_sfnt_cid = TRUE;
-        return FT_Err_Ok;
-      }
-
-      /* see Apple "The Type 1 GX Font Format" */
-      if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
-      {
-        *offset += 24;
-        *length -= 24;
-        *is_sfnt_cid = FALSE;
-        return FT_Err_Ok;
-      }
-    }
-
-    *offset = 0;
-    *length = 0;
-    return FT_Err_Invalid_Table;
   }
 
 

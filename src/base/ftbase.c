@@ -32,7 +32,7 @@
 #include "fttrigon.c"
 #include "ftutil.c"
 
-#if defined( __APPLE__ ) && !defined ( DARWIN_NO_CARBON )
+#if defined( FT_MACINTOSH ) && !defined ( DARWIN_NO_CARBON )
 #include "ftmac.c"
 #endif
 

@@ -1119,7 +1119,7 @@
   /* there's a Mac-specific extended implementation of FT_New_Face() */
   /* in src/base/ftmac.c                                             */
 
-#if !defined( __APPLE__ ) || defined( DARWIN_NO_CARBON )
+#if !defined( FT_MACINTOSH ) || defined( DARWIN_NO_CARBON )
 
   /* documentation is in freetype.h */
 
@@ -1142,7 +1142,7 @@
     return FT_Open_Face( library, &args, face_index, aface );
   }
 
-#endif  /* defined( __APPLE__ ) && !defined( DARWIN_NO_CARBON ) */
+#endif  /* defined( FT_MACINTOSH ) && !defined( DARWIN_NO_CARBON ) */
 
 
   /* documentation is in freetype.h */
