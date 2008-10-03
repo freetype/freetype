@@ -1365,6 +1365,7 @@
 
     *offset = 0;
     *length = 0;
+    *is_sfnt_cid = FALSE;
     return FT_Err_Invalid_Table;
   }
 

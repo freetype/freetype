@@ -1,5 +1,11 @@
 2008-10-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt): Set *is_sfnt_cid
+	to FALSE when neither `CID ' nor `TYP1' is found in the sfnt
+	container.
+
+2008-10-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* include/freetype/config/ftconfig.h: Define FT_MACINTOSH when
 	SC or MrC compiler of MPW is used. These compilers do not
 	define the macro __APPLE__ by themselves.
