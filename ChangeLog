@@ -1,3 +1,19 @@
+2008-10-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt): Replaced by...
+	(ft_lookup_PS_in_sfnt_stream): This.
+	(open_face_PS_from_sfnt_stream): New function. It checks
+	whether the stream is sfnt-wrapped Type1 PS font or sfnt-
+	wrapped CID-keyed font, then try to open a face for given
+	face_index.
+	(Mac_Read_sfnt_Resource): Replace the combination of
+	`ft_lookup_PS_in_sfnt' and `open_face_from_buffer' by
+	`open_face_PS_from_sfnt_stream'.
+	* src/base/ftmac.c (FT_New_Face_From_SFNT): Ditto.
+	* builds/mac/ftmac.c (FT_New_Face_From_SFNT): Ditto.
+	* src/base/ftbase.h: Remove `ft_lookup_PS_in_sfnt' and add
+	`open_face_PS_from_sfnt_stream'.
+
 2008-10-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt): Set *is_sfnt_cid

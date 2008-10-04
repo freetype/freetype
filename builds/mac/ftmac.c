@@ -1142,34 +1142,26 @@ typedef short ResourceIndex;
 
     if ( is_sfnt_ps )
     {
-      FT_ULong  offset, length;
-      FT_Bool   is_sfnt_cid;
-      FT_Byte*  sfnt_ps;
+      FT_Stream  stream;
 
 
-      error = ft_lookup_PS_in_sfnt( sfnt_data,
-                                    &offset,
-                                    &length,
-                                    &is_sfnt_cid );
-      if ( error )
+      if ( FT_NEW( stream ) )
         goto Try_OpenType;
 
-
-      if ( FT_ALLOC( sfnt_ps, (FT_Long)length ) )
-        return error;
-      ft_memcpy( sfnt_ps, sfnt_data + offset, length );
-
-      error = open_face_from_buffer( library,
-                                     sfnt_ps,
-                                     length,
-                                     face_index,
-                                     is_sfnt_cid ? "cid" : "type1",
-                                     aface );
-      if ( !error )
+      FT_Stream_OpenMemory( stream, sfnt_data, sfnt_size );
+      if ( !open_face_PS_from_sfnt_stream( library,
+                                           stream,
+                                           face_index,
+                                           0, NULL,
+                                           aface ) )
       {
+        FT_Stream_Close( stream );
+        FT_FREE( stream );
         FT_FREE( sfnt_data );
         goto Exit;
       }
+
+      FT_FREE( stream );
     }
   Try_OpenType:
     error = open_face_from_buffer( library,

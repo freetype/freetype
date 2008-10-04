@@ -1323,50 +1323,117 @@
   /* ourselves.  We are only interested in the name of the table and */
   /* the offset.                                                     */
 
-  FT_LOCAL_DEF( FT_Error )
-  ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
-                        FT_ULong*  offset,
-                        FT_ULong*  length,
-                        FT_Bool*   is_sfnt_cid )
+  static FT_Error
+  ft_lookup_PS_in_sfnt_stream( FT_Stream  stream,
+                               FT_Long    face_index,
+                               FT_ULong*  offset,
+                               FT_ULong*  length,
+                               FT_Bool*   is_sfnt_cid )
   {
-    FT_Byte*   p = sfnt + 4; /* skip version `typ1' */
-    FT_UShort  numTables = FT_NEXT_USHORT( p );
+    FT_Error   error;
+    FT_UShort  numTables;
+    FT_Long    pstable_index;
+    FT_ULong   tag;
+    int        i;
 
-
-    p += 2 * 3;              /* skip binary search header */
-
-    for ( ; numTables > 0 ; numTables -- )
-    {
-      FT_ULong  tag = FT_NEXT_ULONG( p );
-
-
-      p += 4; /* skip checkSum */
-      *offset = FT_NEXT_ULONG( p );
-      *length = FT_NEXT_ULONG( p );
-
-      /* see Adobe TN# 5180 for binary header in CID table */
-      if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
-      {
-        *offset += 22;
-        *length -= 22;
-        *is_sfnt_cid = TRUE;
-        return FT_Err_Ok;
-      }
-
-      /* see Apple's `The Type 1 GX Font Format' */
-      if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
-      {
-        *offset += 24;
-        *length -= 24;
-        *is_sfnt_cid = FALSE;
-        return FT_Err_Ok;
-      }
-    }
 
     *offset = 0;
     *length = 0;
+    *is_sfnt_cid = TRUE;
+    /* TODO: support for sfnt-wrapped PS/CID in TTC format */
     *is_sfnt_cid = FALSE;
-    return FT_Err_Invalid_Table;
+
+    /* version check for 'typ1' (should be ignored?) */
+    if ( FT_READ_ULONG( tag ) )
+      return error;
+    if ( tag != FT_MAKE_TAG( 't', 'y', 'p', '1' ) )
+      return FT_Err_Unknown_File_Format;
+
+
+    if ( FT_READ_USHORT( numTables ) )
+      return error;
+    if ( FT_STREAM_SKIP( 2 * 3 ) ) /* skip binary search header */
+      return error;
+
+
+    pstable_index = -1;
+    *is_sfnt_cid = FALSE;
+    for ( i = 0; i < numTables; i ++ )
+    {
+      if ( FT_READ_ULONG( tag )     || FT_STREAM_SKIP( 4 )     ||
+           FT_READ_ULONG( *offset ) || FT_READ_ULONG( *length ) )
+        return error;
+
+      if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
+      {
+        pstable_index ++;
+        *offset += 22;
+        *length -= 22;
+        *is_sfnt_cid = TRUE;
+        if ( face_index < 0 )
+          return FT_Err_Ok;
+      }
+      else if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
+      {
+        pstable_index ++;
+        *offset += 24;
+        *length -= 24;
+        *is_sfnt_cid = FALSE;
+        if ( face_index < 0 )
+          return FT_Err_Ok;
+      }
+      if ( face_index >= 0 && pstable_index == face_index )
+        return FT_Err_Ok;
+    }
+    return FT_Err_Table_Missing;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  open_face_PS_from_sfnt_stream( FT_Library    library,
+                                 FT_Stream     stream,
+                                 FT_Long       face_index,
+                                 FT_Int        num_params,
+                                 FT_Parameter  *params,
+                                 FT_Face       *aface )
+  {
+    FT_Error   error;
+    FT_Memory  memory = library->memory;
+    FT_ULong   offset, length;
+    FT_Long    pos;
+    FT_Bool    is_sfnt_cid;
+    FT_Byte*   sfnt_ps;
+
+
+    pos = FT_Stream_Pos( stream );
+
+    error = ft_lookup_PS_in_sfnt_stream( stream,
+                                         face_index,
+                                         &offset,
+                                         &length,
+                                         &is_sfnt_cid );
+    if ( error )
+      return error;
+
+    if ( FT_Stream_Seek( stream, pos + offset ) )
+      goto Exit;
+
+    if ( FT_ALLOC( sfnt_ps, (FT_Long)length ) )
+      goto Exit;
+
+    error = FT_Stream_Read( stream, (FT_Byte *)sfnt_ps, length );
+    if ( error )
+      goto Exit;
+
+    error = open_face_from_buffer( library,
+                                   sfnt_ps,
+                                   length,
+                                   face_index < 0 ? face_index : 0,
+                                   is_sfnt_cid ? "cid" : "type1",
+                                   aface );
+  Exit:
+    FT_Stream_Seek( stream, pos );
+    return error;
   }
 
 
@@ -1508,7 +1575,6 @@
     FT_Long    flag_offset;
     FT_Long    rlen;
     int        is_cff;
-    int        is_sfnt_ps;
     FT_Long    face_index_in_resource = 0;
 
 
@@ -1527,48 +1593,21 @@
     if ( rlen == -1 )
       return FT_Err_Cannot_Open_Resource;
 
+    error = open_face_PS_from_sfnt_stream( library,
+                                           stream,
+                                           face_index,
+                                           0, NULL,
+                                           aface );
+    if ( !error )
+      goto Exit;
+
     if ( FT_ALLOC( sfnt_data, (FT_Long)rlen ) )
       return error;
     error = FT_Stream_Read( stream, (FT_Byte *)sfnt_data, rlen );
     if ( error )
       goto Exit;
 
-    is_cff     = rlen > 4 && !ft_memcmp( sfnt_data, "OTTO", 4 );
-    is_sfnt_ps = rlen > 4 && !ft_memcmp( sfnt_data, "typ1", 4 );
-
-    if ( is_sfnt_ps )
-    {
-      FT_ULong  offset, length;
-      FT_Bool   is_sfnt_cid;
-      FT_Byte*  sfnt_ps;
-
-
-      error = ft_lookup_PS_in_sfnt( sfnt_data,
-                                    &offset,
-                                    &length,
-                                    &is_sfnt_cid );
-      if ( error )
-        goto Try_OpenType;
-
-
-      if ( FT_ALLOC( sfnt_ps, (FT_Long)length ) )
-        return error;
-      ft_memcpy( sfnt_ps, sfnt_data + offset, length );
-
-      error = open_face_from_buffer( library,
-                                     sfnt_ps,
-                                     length,
-                                     face_index_in_resource,
-                                     is_sfnt_cid ? "cid" : "type1",
-                                     aface );
-      if ( !error )
-      {
-        FT_FREE( sfnt_data );
-        goto Exit;
-      }
-    }
-
-  Try_OpenType:
+    is_cff = rlen > 4 && !ft_memcmp( sfnt_data, "OTTO", 4 );
     error = open_face_from_buffer( library,
                                    sfnt_data,
                                    rlen,

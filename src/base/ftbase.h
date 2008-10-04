@@ -27,14 +27,16 @@
 FT_BEGIN_HEADER
 
 
-  /* Check whether the sfnt image in the buffer is sfnt-wrapped PS Type1 */
-  /* or sfnt-wrapped CID-keyed font.                                     */
+  /* Assume the stream is sfnt-wrapped PS Type1 or sfnt-wrapped CID-keyed */
+  /* font, and try to load a face specified by the face_index.            */
   FT_LOCAL_DEF( FT_Error )
-  ft_lookup_PS_in_sfnt( FT_Byte*   sfnt,
-                        FT_ULong*  offset,
-                        FT_ULong*  length,
-                        FT_Bool*   is_sfnt_cid );
- 
+  open_face_PS_from_sfnt_stream( FT_Library    library,
+                                 FT_Stream     stream,
+                                 FT_Long       face_index,
+                                 FT_Int        num_params,
+                                 FT_Parameter  *params,
+                                 FT_Face       *aface );
+
 
   /* Create a new FT_Face given a buffer and a driver name. */
   /* From ftmac.c.                                          */
