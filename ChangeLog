@@ -1,3 +1,8 @@
+2008-10-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt_stream): Remove wrong
+	initialization of *is_sfnt_cid.
+
 2008-10-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream): Remove compiler
