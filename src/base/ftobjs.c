@@ -1346,7 +1346,7 @@
     /* version check for 'typ1' (should be ignored?) */
     if ( FT_READ_ULONG( tag ) )
       return error;
-    if ( tag != FT_MAKE_TAG( 't', 'y', 'p', '1' ) )
+    if ( tag != TTAG_typ1 )
       return FT_Err_Unknown_File_Format;
 
     if ( FT_READ_USHORT( numTables ) )
@@ -1363,7 +1363,7 @@
            FT_READ_ULONG( *offset ) || FT_READ_ULONG( *length ) )
         return error;
 
-      if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
+      if ( tag == TTAG_CID )
       {
         pstable_index++;
         *offset += 22;
@@ -1372,7 +1372,7 @@
         if ( face_index < 0 )
           return FT_Err_Ok;
       }
-      else if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
+      else if ( tag == TTAG_TYP1 )
       {
         pstable_index++;
         *offset += 24;
@@ -1648,7 +1648,7 @@
 
     error = FT_Raccess_Get_DataOffsets( library, stream,
                                         map_offset, rdara_pos,
-                                        FT_MAKE_TAG( 'P', 'O', 'S', 'T' ),
+                                        TTAG_POST,
                                         &data_offsets, &count );
     if ( !error )
     {
@@ -1663,7 +1663,7 @@
 
     error = FT_Raccess_Get_DataOffsets( library, stream,
                                         map_offset, rdara_pos,
-                                        FT_MAKE_TAG( 's', 'f', 'n', 't' ),
+                                        TTAG_sfnt,
                                         &data_offsets, &count );
     if ( !error )
     {

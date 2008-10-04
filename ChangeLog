@@ -1,5 +1,14 @@
 2008-10-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* include/freetype/tttags.h: Add TTAG_CID, TTAG_FOND, TTAG_LWFN,
+	TTAG_POST, TTAG_sfnt, TTAG_TYP1, TTAG_typ1 to simplify the
+	repeated calculations of these values in ftobjs.c and ftmac.c.
+	* src/base/ftobjs.c: Replace all FT_MAKE_TAG by new tags.
+	* src/base/ftmac.c: Ditto.
+	* builds/mac/ftmac.c: Ditto.
+
+2008-10-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt_stream): Remove wrong
 	initialization of *is_sfnt_cid.
 

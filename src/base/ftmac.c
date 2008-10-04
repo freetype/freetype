@@ -602,8 +602,7 @@
 
     for (;;)
     {
-      post_data = Get1Resource( FT_MAKE_TAG( 'P', 'O', 'S', 'T' ),
-                                res_id++ );
+      post_data = Get1Resource( TTAG_POST, res_id++ );
       if ( post_data == NULL )
         break;  /* we are done */
 
@@ -642,8 +641,7 @@
 
     for (;;)
     {
-      post_data = Get1Resource( FT_MAKE_TAG( 'P', 'O', 'S', 'T' ),
-                                res_id++ );
+      post_data = Get1Resource( TTAG_POST, res_id++ );
       if ( post_data == NULL )
         break;  /* we are done */
 
@@ -742,7 +740,7 @@
     int        is_cff, is_sfnt_ps;
 
 
-    sfnt = GetResource( FT_MAKE_TAG( 's', 'f', 'n', 't' ), sfnt_id );
+    sfnt = GetResource( TTAG_sfnt, sfnt_id );
     if ( sfnt == NULL )
       return FT_Err_Invalid_Handle;
 
@@ -818,8 +816,7 @@
     num_faces_in_res = 0;
     for ( res_index = 1; ; ++res_index )
     {
-      fond = Get1IndResource( FT_MAKE_TAG( 'F', 'O', 'N', 'D' ),
-                              res_index );
+      fond = Get1IndResource( TTAG_FOND, res_index );
       if ( ResError() )
         break;
 
@@ -858,7 +855,7 @@
 
 
     GetResInfo( fond, &fond_id, &fond_type, fond_name );
-    if ( ResError() != noErr || fond_type != FT_MAKE_TAG( 'F', 'O', 'N', 'D' ) )
+    if ( ResError() != noErr || fond_type != TTAG_FOND )
       return FT_Err_Invalid_File_Format;
 
     parse_fond( *fond, &have_sfnt, &sfnt_id, lwfn_file_name, face_index );
@@ -925,7 +922,7 @@
 
     /* LWFN is a (very) specific file format, check for it explicitly */
     file_type = get_file_type_from_path( pathname );
-    if ( file_type == FT_MAKE_TAG( 'L', 'W', 'F', 'N' ) )
+    if ( file_type == TTAG_LWFN )
       return FT_New_Face_From_LWFN( library, pathname, face_index, aface );
 
     /* Otherwise the file type doesn't matter (there are more than  */
