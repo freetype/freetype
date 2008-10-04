@@ -1,11 +1,15 @@
+2008-10-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream): Remove compiler
+	warnings.
+
 2008-10-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt): Replaced by...
 	(ft_lookup_PS_in_sfnt_stream): This.
-	(open_face_PS_from_sfnt_stream): New function. It checks
-	whether the stream is sfnt-wrapped Type1 PS font or sfnt-
-	wrapped CID-keyed font, then try to open a face for given
-	face_index.
+	(open_face_PS_from_sfnt_stream): New function.  It checks whether
+	the stream is sfnt-wrapped Type1 PS font or sfnt-wrapped CID-keyed
+	font, then try to open a face for given face_index.
 	(Mac_Read_sfnt_Resource): Replace the combination of
 	`ft_lookup_PS_in_sfnt' and `open_face_from_buffer' by
 	`open_face_PS_from_sfnt_stream'.
@@ -16,22 +20,20 @@
 
 2008-10-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt): Set *is_sfnt_cid
-	to FALSE when neither `CID ' nor `TYP1' is found in the sfnt
-	container.
+	* src/base/ftobjs.c (ft_lookup_PS_in_sfnt): Set *is_sfnt_cid to
+	FALSE if neither `CID ' nor `TYP1' is found in the sfnt container.
 
 2008-10-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* include/freetype/config/ftconfig.h: Define FT_MACINTOSH when
-	SC or MrC compiler of MPW is used. These compilers do not
-	define the macro __APPLE__ by themselves.
+	* include/freetype/config/ftconfig.h: Define FT_MACINTOSH when SC or
+	MrC compiler of MPW is used.  These compilers do not define the
+	macro __APPLE__ by themselves.
 	* builds/unix/ftconfig.in: Ditto.
 	* builds/vms/ftconfig.h: Ditto.
-	* src/base/ftbase.c: Use FT_MACINTOSH instead of __APPLE__,
-	to include ftmac.c when FreeType2 is built by MPW.
-	* src/base/ftobjs.c: Use FT_MACINTOSH instead of __APPLE__,
-	to enable shared functions for ftmac.c when FreeType2 is
-	built by MPW.
+	* src/base/ftbase.c: Use FT_MACINTOSH instead of __APPLE__, to
+	include ftmac.c if FreeType 2 is built by MPW.
+	* src/base/ftobjs.c: Use FT_MACINTOSH instead of __APPLE__, to
+	enable shared functions for ftmac.c if FreeType 2 is built by MPW.
 
 	* builds/mac/ftmac.c: Include ftbase.h.
 	(memory_stream_close): Removed.
@@ -41,10 +43,9 @@
 	(ft_lookup_PS_in_sfnt): Ditto.
 
 	* builds/mac/FreeType.m68k_far.make.txt: Build ftmac.c as an
-	included part of ftbase.c, to share the functions in ftobjs.c.
-	The rule compiling ftmac.c separately is removed and the rule
-	copying ftbase.c from src/base/ftbase.c to builds/mac/ftbase.c
-	is added.
+	included part of ftbase.c, to share the functions in ftobjs.c.  The
+	rule compiling ftmac.c separately is removed and the rule copying
+	ftbase.c from src/base/ftbase.c to builds/mac/ftbase.c is added.
 	* builds/mac/FreeType.m68k_cfm.make.txt: Ditto.
 	* builds/mac/FreeType.ppc_classic.make.txt: Ditto.
 	* builds/mac/FreeType.ppc_carbon.make.txt: Ditto.

@@ -30,10 +30,10 @@ FT_BEGIN_HEADER
   /* Assume the stream is sfnt-wrapped PS Type1 or sfnt-wrapped CID-keyed */
   /* font, and try to load a face specified by the face_index.            */
   FT_LOCAL_DEF( FT_Error )
-  open_face_PS_from_sfnt_stream( FT_Library    library,
-                                 FT_Stream     stream,
-                                 FT_Long       face_index,
-                                 FT_Int        num_params,
+  open_face_PS_from_sfnt_stream( FT_Library     library,
+                                 FT_Stream      stream,
+                                 FT_Long        face_index,
+                                 FT_Int         num_params,
                                  FT_Parameter  *params,
                                  FT_Face       *aface );
 

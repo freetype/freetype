@@ -1339,6 +1339,7 @@
 
     *offset = 0;
     *length = 0;
+
     *is_sfnt_cid = TRUE;
     /* TODO: support for sfnt-wrapped PS/CID in TTC format */
     *is_sfnt_cid = FALSE;
@@ -1349,24 +1350,23 @@
     if ( tag != FT_MAKE_TAG( 't', 'y', 'p', '1' ) )
       return FT_Err_Unknown_File_Format;
 
-
     if ( FT_READ_USHORT( numTables ) )
       return error;
     if ( FT_STREAM_SKIP( 2 * 3 ) ) /* skip binary search header */
       return error;
 
-
     pstable_index = -1;
-    *is_sfnt_cid = FALSE;
-    for ( i = 0; i < numTables; i ++ )
+    *is_sfnt_cid  = FALSE;
+
+    for ( i = 0; i < numTables; i++ )
     {
-      if ( FT_READ_ULONG( tag )     || FT_STREAM_SKIP( 4 )     ||
+      if ( FT_READ_ULONG( tag )     || FT_STREAM_SKIP( 4 )      ||
            FT_READ_ULONG( *offset ) || FT_READ_ULONG( *length ) )
         return error;
 
       if ( tag == FT_MAKE_TAG( 'C', 'I', 'D', ' ' ) )
       {
-        pstable_index ++;
+        pstable_index++;
         *offset += 22;
         *length -= 22;
         *is_sfnt_cid = TRUE;
@@ -1375,7 +1375,7 @@
       }
       else if ( tag == FT_MAKE_TAG( 'T', 'Y', 'P', '1' ) )
       {
-        pstable_index ++;
+        pstable_index++;
         *offset += 24;
         *length -= 24;
         *is_sfnt_cid = FALSE;
@@ -1390,10 +1390,10 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  open_face_PS_from_sfnt_stream( FT_Library    library,
-                                 FT_Stream     stream,
-                                 FT_Long       face_index,
-                                 FT_Int        num_params,
+  open_face_PS_from_sfnt_stream( FT_Library     library,
+                                 FT_Stream      stream,
+                                 FT_Long        face_index,
+                                 FT_Int         num_params,
                                  FT_Parameter  *params,
                                  FT_Face       *aface )
   {
@@ -1403,6 +1403,9 @@
     FT_Long    pos;
     FT_Bool    is_sfnt_cid;
     FT_Byte*   sfnt_ps;
+
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
 
 
     pos = FT_Stream_Pos( stream );
