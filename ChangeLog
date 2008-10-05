@@ -1,3 +1,17 @@
+2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/sfnt/sfobjs.c (sfnt_open_font): Allow 'typ1' version
+	tag in the beginning of sfnt container.
+	* src/sfnt/ttload.c (check_table_dir): Return
+	`SFNT_Err_Table_Missing' when sfnt table directory structure
+	is correct but essential tables for TrueType fonts (`head',
+	`bhed' or `SING') are missing. Other errors are returned
+	by SFNT_Err_Unknown_File_Format.
+
+	* src/base/ftobjs.c (FT_Open_Face): When TrueType driver returns
+	`FT_Err_Table_Missing', try  `open_face_PS_from_sfnt_stream'.
+	It is enabled only when old mac font support is configured.
+
 2008-10-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* include/freetype/tttags.h: Add TTAG_CID, TTAG_FOND, TTAG_LWFN,

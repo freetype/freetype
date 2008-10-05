@@ -367,6 +367,7 @@
          tag != TTAG_ttcf                         &&
          tag != TTAG_OTTO                         &&
          tag != TTAG_true                         &&
+         tag != TTAG_typ1                         &&
          tag != 0x00020000UL                      )
       return SFNT_Err_Unknown_File_Format;
 

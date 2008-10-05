@@ -1951,6 +1951,28 @@
           if ( !error )
             goto Success;
 
+#ifdef FT_CONFIG_OPTION_MAC_FONTS
+          if ( ft_strcmp( cur[0]->clazz->module_name, "truetype" ) == 0 &&
+               FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
+          {
+            /* TrueType but essential tables are missing */
+            if ( FT_Stream_Seek( stream, 0 ) )
+              break;
+
+            error = open_face_PS_from_sfnt_stream( library,
+                                                   stream,
+                                                   face_index,
+                                                   num_params,
+                                                   params,
+                                                   aface );
+            if ( !error )
+            {
+              FT_Stream_Free( stream, external_stream );
+              return error;
+            }
+          }
+#endif
+
           if ( FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format )
             goto Fail3;
         }

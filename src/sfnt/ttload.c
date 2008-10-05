@@ -141,6 +141,13 @@
   /* - look for a `head' table, check its size, and parse it to check */
   /*   whether its `magic' field is correctly set                     */
   /*                                                                  */
+  /* - errors (except of errors returned by stream handling)          */
+  /*                                                                  */
+  /* SFNT_Err_Unknown_File_Format: no table is defined in directory,  */
+  /*                               it's not sfnt-wrapped data.        */
+  /* SFNT_Err_Table_Missing: table directory is valid, but essential  */
+  /*                         tables (head/bhed/SING) are missing.     */
+  /*                                                                  */
   static FT_Error
   check_table_dir( SFNT_Header  sfnt,
                    FT_Stream    stream )
@@ -213,7 +220,7 @@
         if ( table.Length < 0x36 )
         {
           FT_TRACE2(( "check_table_dir: `head' table too small\n" ));
-          error = SFNT_Err_Unknown_File_Format;
+          error = SFNT_Err_Table_Missing;
           goto Exit;
         }
 
@@ -225,7 +232,7 @@
         {
           FT_TRACE2(( "check_table_dir:"
                       " no magic number found in `head' table\n"));
-          error = SFNT_Err_Unknown_File_Format;
+          error = SFNT_Err_Table_Missing;
           goto Exit;
         }
 
@@ -261,7 +268,7 @@
 #else
       FT_TRACE2(( " neither `head' nor `sing' table found\n" ));
 #endif
-      error = SFNT_Err_Unknown_File_Format;
+      error = SFNT_Err_Table_Missing;
     }
 
   Exit:
@@ -341,7 +348,7 @@
     error = check_table_dir( &sfnt, stream );
     if ( error )
     {
-      FT_TRACE2(( "tt_face_load_font_dir: invalid table directory!\n" ));
+      FT_TRACE2(( "tt_face_load_font_dir: invalid table directory for TrueType!\n" ));
 
       goto Exit;
     }
