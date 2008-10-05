@@ -1,5 +1,10 @@
 2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftmac.c: Include FT_TRUETYPE_TAGS_H for multi build.
+	* builds/mac/ftmac.c: Ditto.
+
+2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* include/freetype/tttags.h: Fix wrong definitions of TTAG_TYP1
 	and TTAG_typ1.
 	* src/base/ftobjs.c: Include FT_TRUETYPE_TAGS_H.
