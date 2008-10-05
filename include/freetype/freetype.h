@@ -60,8 +60,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    FreeType assumes that structures allocated by the user and passed  */
-  /*    as arguments are zeroed out except for the actual data.  With      */
-  /*    other words, it is recommended to use `calloc' (or variants of it) */
+  /*    as arguments are zeroed out except for the actual data.  In other  */
+  /*    words, it is recommended to use `calloc' (or variants of it)       */
   /*    instead of `malloc' for allocation.                                */
   /*                                                                       */
   /*************************************************************************/
@@ -1770,7 +1770,7 @@ FT_BEGIN_HEADER
   /*    `num_params' and `params' is used.  They are ignored otherwise.    */
   /*                                                                       */
   /*    Ideally, both the `pathname' and `params' fields should be tagged  */
-  /*    as `const'; this is missing for API backwards compatibility.  With */
+  /*    as `const'; this is missing for API backwards compatibility.  In   */
   /*    other words, applications should treat them as read-only.          */
   /*                                                                       */
   typedef struct  FT_Open_Args_
