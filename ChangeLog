@@ -5,29 +5,28 @@
 
 2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* include/freetype/tttags.h: Fix wrong definitions of TTAG_TYP1
-	and TTAG_typ1.
+	* include/freetype/tttags.h (TTAG_TYP1, TTAG_typ1): Fix definitions.
 	* src/base/ftobjs.c: Include FT_TRUETYPE_TAGS_H.
 
 2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/sfnt/sfobjs.c (sfnt_open_font): Allow 'typ1' version
-	tag in the beginning of sfnt container.
+	* src/sfnt/sfobjs.c (sfnt_open_font): Allow `typ1' version tag in
+	the beginning of sfnt container.
 	* src/sfnt/ttload.c (check_table_dir): Return
-	`SFNT_Err_Table_Missing' when sfnt table directory structure
-	is correct but essential tables for TrueType fonts (`head',
-	`bhed' or `SING') are missing. Other errors are returned
-	by SFNT_Err_Unknown_File_Format.
+	`SFNT_Err_Table_Missing' when sfnt table directory structure is
+	correct but essential tables for TrueType fonts (`head', `bhed' or
+	`SING') are missing.  Other errors are returned by
+	SFNT_Err_Unknown_File_Format.
 
 	* src/base/ftobjs.c (FT_Open_Face): When TrueType driver returns
-	`FT_Err_Table_Missing', try  `open_face_PS_from_sfnt_stream'.
-	It is enabled only when old mac font support is configured.
+	`FT_Err_Table_Missing', try `open_face_PS_from_sfnt_stream'.  It is
+	enabled only when old mac font support is configured.
 
 2008-10-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* include/freetype/tttags.h: Add TTAG_CID, TTAG_FOND, TTAG_LWFN,
-	TTAG_POST, TTAG_sfnt, TTAG_TYP1, TTAG_typ1 to simplify the
-	repeated calculations of these values in ftobjs.c and ftmac.c.
+	* include/freetype/tttags.h (TTAG_CID, TTAG_FOND, TTAG_LWFN,
+	TTAG_POST, TTAG_sfnt, TTAG_TYP1, TTAG_typ1): New tags to simplify
+	the repeated calculations of these values in ftobjs.c and ftmac.c.
 	* src/base/ftobjs.c: Replace all FT_MAKE_TAG by new tags.
 	* src/base/ftmac.c: Ditto.
 	* builds/mac/ftmac.c: Ditto.

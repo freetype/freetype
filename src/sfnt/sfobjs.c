@@ -363,12 +363,12 @@
     if ( FT_READ_ULONG( tag ) )
       return error;
 
-    if ( tag != 0x00010000UL                      &&
-         tag != TTAG_ttcf                         &&
-         tag != TTAG_OTTO                         &&
-         tag != TTAG_true                         &&
-         tag != TTAG_typ1                         &&
-         tag != 0x00020000UL                      )
+    if ( tag != 0x00010000UL &&
+         tag != TTAG_ttcf    &&
+         tag != TTAG_OTTO    &&
+         tag != TTAG_true    &&
+         tag != TTAG_typ1    &&
+         tag != 0x00020000UL )
       return SFNT_Err_Unknown_File_Format;
 
     face->ttc_header.tag = TTAG_ttcf;

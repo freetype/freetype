@@ -141,12 +141,14 @@
   /* - look for a `head' table, check its size, and parse it to check */
   /*   whether its `magic' field is correctly set                     */
   /*                                                                  */
-  /* - errors (except of errors returned by stream handling)          */
+  /* - errors (except errors returned by stream handling)             */
   /*                                                                  */
-  /* SFNT_Err_Unknown_File_Format: no table is defined in directory,  */
-  /*                               it's not sfnt-wrapped data.        */
-  /* SFNT_Err_Table_Missing: table directory is valid, but essential  */
-  /*                         tables (head/bhed/SING) are missing.     */
+  /*     SFNT_Err_Unknown_File_Format:                                */
+  /*       no table is defined in directory, it is not sfnt-wrapped   */
+  /*       data                                                       */
+  /*     SFNT_Err_Table_Missing:                                      */
+  /*       table directory is valid, but essential tables             */
+  /*       (head/bhed/SING) are missing                               */
   /*                                                                  */
   static FT_Error
   check_table_dir( SFNT_Header  sfnt,
