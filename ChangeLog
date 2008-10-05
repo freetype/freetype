@@ -1,5 +1,11 @@
 2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* include/freetype/tttags.h: Fix wrong definitions of TTAG_TYP1
+	and TTAG_typ1.
+	* src/base/ftobjs.c: Include FT_TRUETYPE_TAGS_H.
+
+2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/sfnt/sfobjs.c (sfnt_open_font): Allow 'typ1' version
 	tag in the beginning of sfnt container.
 	* src/sfnt/ttload.c (check_table_dir): Return
