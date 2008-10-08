@@ -1,3 +1,10 @@
+2008-09-22  John Tytgat  <John.Tytgat@esko.com>
+
+	Fix Savannah bug #24485.
+
+	* src/type1/t1load.c (parse_charstrings): Assure that we always have
+	a .notdef glyph.
+
 2008-10-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftmac.c: Include FT_TRUETYPE_TAGS_H for multi build.

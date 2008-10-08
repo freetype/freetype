@@ -1626,15 +1626,11 @@
       }
     }
 
-    if ( loader->num_glyphs )
-      return;
-    else
-      loader->num_glyphs = n;
+    loader->num_glyphs = n;
 
     /* if /.notdef is found but does not occupy index 0, do our magic. */
-    if ( ft_strcmp( (const char*)".notdef",
-                    (const char*)name_table->elements[0] ) &&
-         notdef_found                                      )
+    if ( notdef_found                                                 &&
+         ft_strcmp( ".notdef", (const char*)name_table->elements[0] ) )
     {
       /* Swap glyph in index 0 with /.notdef glyph.  First, add index 0  */
       /* name and code entries to swap_table.  Then place notdef_index   */
@@ -1703,7 +1699,7 @@
       /* and add our own /.notdef glyph to index 0.               */
 
       /* 0 333 hsbw endchar */
-      FT_Byte  notdef_glyph[] = {0x8B, 0xF7, 0xE1, 0x0D, 0x0E};
+      FT_Byte  notdef_glyph[] = { 0x8B, 0xF7, 0xE1, 0x0D, 0x0E };
       char*    notdef_name    = (char *)".notdef";
 
 
@@ -1741,7 +1737,7 @@
         goto Fail;
 
       /* we added a glyph. */
-      loader->num_glyphs = n + 1;
+      loader->num_glyphs += 1;
     }
 
     return;
