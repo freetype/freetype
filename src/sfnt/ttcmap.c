@@ -973,9 +973,9 @@
 
 
   static FT_UInt
-  tt_cmap4_char_map_linear( TT_CMap   cmap,
-                            FT_UInt*  pcharcode,
-                            FT_Bool   next )
+  tt_cmap4_char_map_linear( TT_CMap     cmap,
+                            FT_UInt32*  pcharcode,
+                            FT_Bool     next )
   {
     FT_UInt    num_segs2, start, end, offset;
     FT_Int     delta;
@@ -1052,9 +1052,9 @@
 
 
   static FT_UInt
-  tt_cmap4_char_map_binary( TT_CMap   cmap,
-                            FT_UInt*  pcharcode,
-                            FT_Bool   next )
+  tt_cmap4_char_map_binary( TT_CMap     cmap,
+                            FT_UInt32*  pcharcode,
+                            FT_Bool     next )
   {
     FT_UInt   num_segs2, start, end, offset;
     FT_Int    delta;
@@ -2794,7 +2794,7 @@
   }
 
 
-  static FT_UInt*
+  static FT_UInt32*
   tt_cmap14_get_nondef_chars( TT_CMap     cmap,
                               FT_Byte    *p,
                               FT_Memory   memory )

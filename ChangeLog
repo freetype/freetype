@@ -1,4 +1,18 @@
-2008-09-22  John Tytgat  <John.Tytgat@esko.com>
+2008-10-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix Savannah bug #24468.
+
+	According to include/freetype/internal/ftobjs.h, the appropriate
+	type to interchange single character codepoint is FT_UInt32. It
+	should be distinguished from FT_UInt which can be 16bit integer.
+
+	* src/sfnt/ttcmap.c (tt_cmap4_char_map_linear): Change the type
+	of the second argument `pcharcode' from FT_UInt* to FT_UInt32*.
+	(tt_cmap4_char_map_binary): Ditto.
+	(tt_cmap14_get_nondef_chars): Change the type of return value
+	from FT_UInt* to FT_UInt32*.
+
+2008-10-08  John Tytgat  <John.Tytgat@esko.com>
 
 	Fix Savannah bug #24485.
 
