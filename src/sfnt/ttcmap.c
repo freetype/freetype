@@ -2982,7 +2982,7 @@
     (TT_CMap_Info_GetFunc)tt_cmap14_get_info
   };
 
-#endif /* TT_CONFIG_CMAP_FORMAT_0 */
+#endif /* TT_CONFIG_CMAP_FORMAT_14 */
 
 
   static const TT_CMap_Class  tt_cmap_classes[] =
