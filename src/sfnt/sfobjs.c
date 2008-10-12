@@ -947,13 +947,14 @@
 
 #endif /* 0 */
 
-        root->max_advance_width   = face->horizontal.advance_Width_Max;
+        root->max_advance_width  = face->horizontal.advance_Width_Max;
+        root->max_advance_height = (FT_Short)( face->vertical_info
+                                     ? face->vertical.advance_Height_Max
+                                     : root->height );
 
-        root->max_advance_height  = (FT_Short)( face->vertical_info
-                                      ? face->vertical.advance_Height_Max
-                                      : root->height );
-
-        root->underline_position  = face->postscript.underlinePosition;
+        /* see http://www.microsoft.com/OpenType/OTSpec/post.htm */
+        root->underline_position  = face->postscript.underlinePosition -
+                                    face->postscript.underlineThickness / 2;
         root->underline_thickness = face->postscript.underlineThickness;
       }
 

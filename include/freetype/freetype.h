@@ -883,7 +883,7 @@ FT_BEGIN_HEADER
   /*                           scalable formats.                           */
   /*                                                                       */
   /*    underline_position  :: The position, in font units, of the         */
-  /*                           underline line for this face.  It's the     */
+  /*                           underline line for this face.  It is the    */
   /*                           center of the underlining stem.  Only       */
   /*                           relevant for scalable formats.              */
   /*                                                                       */
