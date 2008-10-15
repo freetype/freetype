@@ -952,7 +952,9 @@
                                      ? face->vertical.advance_Height_Max
                                      : root->height );
 
-        /* see http://www.microsoft.com/OpenType/OTSpec/post.htm */
+        /* See http://www.microsoft.com/OpenType/OTSpec/post.htm -- */
+        /* Adjust underline position from top edge to centre of     */
+        /* stroke to convert TrueType meaning to FreeType meaning.  */
         root->underline_position  = face->postscript.underlinePosition -
                                     face->postscript.underlineThickness / 2;
         root->underline_thickness = face->postscript.underlineThickness;
