@@ -66,7 +66,7 @@
 
   /* the 258 default Mac PS glyph names */
 
-  static const FT_String*  tt_post_default_names[258] =
+  static const FT_String* const  tt_post_default_names[258] =
   {
     /*   0 */
     ".notdef", ".null", "CR", "space", "exclam",
