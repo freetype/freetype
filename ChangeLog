@@ -1,3 +1,8 @@
+2008-10-16  David Turner  <david@freetype.org>
+
+	* src/truetype/ttgxvar.c (TT_Set_MM_Blend): Disambiguate for
+	meddlesome compilers' warning against `for ( ...; ...; ...) ;'.
+
 2008-10-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffobjs.c (cff_face_init): Remove compiler warning. 
