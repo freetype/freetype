@@ -179,7 +179,7 @@
     if ( table->cursor + length > table->capacity )
     {
       FT_Error   error;
-      FT_Offset  new_size  = table->capacity;
+      FT_Offset  new_size = table->capacity;
       FT_Long    in_offset;
 
 
@@ -376,7 +376,7 @@
           /* skip octal escape or ignore backslash */
           for ( i = 0; i < 3 && cur < limit; ++i )
           {
-            if ( ! IS_OCTAL_DIGIT( *cur ) )
+            if ( !IS_OCTAL_DIGIT( *cur ) )
               break;
 
             ++cur;

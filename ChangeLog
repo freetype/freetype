@@ -1,3 +1,10 @@
+2008-11-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_subrs): Use an endless loop.  There are
+	fonts (like HELVI.PFB version 003.001, used on OS/2) which define
+	some `subrs' elements more than once.  Problem reported by Peter
+	Weilbacher <mozilla@weilbacher.org>.
+
 2008-10-15  Graham Asher  <graham.asher@btinternet.com>
 
 	* src/sfnt/ttpost.c (tt_post_default_names): Add `const'.

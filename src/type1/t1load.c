@@ -1330,9 +1330,9 @@
     PS_Table   table  = &loader->subrs;
     FT_Memory  memory = parser->root.memory;
     FT_Error   error;
-    FT_Int     n, num_subrs;
+    FT_Int     num_subrs;
 
-    PSAux_Service  psaux  = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
     T1_Skip_Spaces( parser );
@@ -1366,18 +1366,17 @@
         goto Fail;
     }
 
-    /* the format is simple:                                 */
-    /*                                                       */
-    /*   `index' + binary data                               */
-    /*                                                       */
-    for ( n = 0; n < num_subrs; n++ )
+    /* the format is simple:   */
+    /*                         */
+    /*   `index' + binary data */
+    /*                         */
+    for (;;)
     {
       FT_Long   idx, size;
       FT_Byte*  base;
 
 
-      /* If the next token isn't `dup', we are also done.  This */
-      /* happens when there are `holes' in the Subrs array.     */
+      /* If the next token isn't `dup' we are done. */
       if ( ft_strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
         break;
 
