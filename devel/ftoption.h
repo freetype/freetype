@@ -488,9 +488,9 @@ FT_BEGIN_HEADER
   /* If you define TT_CONFIG_OPTION_UNPATENTED_HINTING, a special version  */
   /* of the TrueType bytecode interpreter is used that doesn't implement   */
   /* any of the patented opcodes and algorithms.  Note that the            */
-  /* the TT_CONFIG_OPTION_UNPATENTED_HINTING macro is *ignored* if you     */
-  /* define TT_CONFIG_OPTION_BYTECODE_INTERPRETER; in other words, either  */
-  /* define TT_CONFIG_OPTION_BYTECODE_INTERPRETER or                       */
+  /* TT_CONFIG_OPTION_UNPATENTED_HINTING macro is *ignored* if you define  */
+  /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER; in other words, either define  */
+  /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER or                              */
   /* TT_CONFIG_OPTION_UNPATENTED_HINTING but not both at the same time.    */
   /*                                                                       */
   /* This macro is only useful for a small number of font files (mostly    */
@@ -680,6 +680,7 @@ FT_BEGIN_HEADER
    */
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #define  TT_USE_BYTECODE_INTERPRETER
+#undef   TT_CONFIG_OPTION_UNPATENTED_HINTING
 #elif defined TT_CONFIG_OPTION_UNPATENTED_HINTING
 #define  TT_USE_BYTECODE_INTERPRETER
 #endif

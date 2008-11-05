@@ -833,6 +833,9 @@ FT_BEGIN_HEADER
   /*    call to one of the caching sub-system APIs.  Don't assume that it  */
   /*    is persistent!                                                     */
   /*                                                                       */
+  /*    Calls to @FT_Set_Char_Size and friends have no effect on cached    */
+  /*    glyphs; you should always use the FreeType cache API instead.      */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_ImageCache_LookupScaler( FTC_ImageCache  cache,
                                FTC_Scaler      scaler,

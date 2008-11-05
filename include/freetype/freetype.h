@@ -2175,7 +2175,8 @@ FT_BEGIN_HEADER
   /*    A character width or height smaller than 1pt is set to 1pt; if     */
   /*    both resolution values are zero, they are set to 72dpi.            */
   /*                                                                       */
-
+  /*    Don't use this function if you are using the FreeType cache API.   */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Char_Size( FT_Face     face,
                     FT_F26Dot6  char_width,

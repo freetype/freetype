@@ -10,6 +10,10 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
       was very noticeable for outlines processed with FT_Glyph_Stroke,
       using thick strokes.
 
+    - `FT_Get_TrueType_Engine_Type' returned  a  wrong  value if  both
+      TT_CONFIG_OPTION_BYTECODE_INTERPRETER                        and
+      TT_CONFIG_OPTION_UNPATENTED_HINTING are defined.
+
 
   II. IMPORTANT CHANGES
 

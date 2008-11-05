@@ -1,3 +1,13 @@
+2008-11-05  Werner Lemberg  <wl@gnu.org>
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Undefine
+	TT_CONFIG_OPTION_UNPATENTED_HINTING.  This fixes the return value of
+	`FT_Get_TrueType_Engine_Type' (and makes it work as documented). 
+	Reported in bug #441638 of bugzilla.novell.com.
+
+	* docs/CHANGES: Document it.
+
 2008-11-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_subrs): Use an endless loop.  There are
