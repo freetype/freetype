@@ -1,3 +1,11 @@
+2008-11-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (tt_face_get_name): Modified to return an error
+	code so that memory allocation problems can be distinguished from
+	missing table entries.  Reported by Graham Asher.
+	(GET_NAME): New macro.
+	(sfnt_load_face): Use it.
+
 2008-11-05  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h, include/freetype/config/ftoption.h

@@ -416,13 +416,14 @@
   /*    tt_face_get_ps_name                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Gets the PostScript glyph name of a glyph.                         */
+  /*    Get the PostScript glyph name of a glyph.                          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the parent face.                             */
   /*                                                                       */
   /*    idx    :: The glyph index.                                         */
   /*                                                                       */
+  /* <InOut>                                                               */
   /*    PSname :: The address of a string pointer.  Will be NULL in case   */
   /*              of error, otherwise it is a pointer to the glyph name.   */
   /*                                                                       */
@@ -436,9 +437,9 @@
                        FT_UInt      idx,
                        FT_String**  PSname )
   {
-    FT_Error         error;
-    TT_Post_Names    names;
-    FT_Fixed         format;
+    FT_Error       error;
+    TT_Post_Names  names;
+    FT_Fixed       format;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     FT_Service_PsCMaps  psnames;

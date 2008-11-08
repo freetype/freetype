@@ -123,14 +123,20 @@
   /*                                                                       */
   /*    nameid :: The name id of the name record to return.                */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    Character string.  NULL if no name is present.                     */
+  /* <InOut>                                                               */
+  /*    name   :: The address of a string pointer.  NULL if no name is     */
+  /*              present.                                                 */
   /*                                                                       */
-  static FT_String*
-  tt_face_get_name( TT_Face    face,
-                    FT_UShort  nameid )
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  static FT_Error
+  tt_face_get_name( TT_Face      face,
+                    FT_UShort    nameid,
+                    FT_String**  name )
   {
     FT_Memory         memory = face->root.memory;
+    FT_Error          error  = SFNT_Err_Ok;
     FT_String*        result = NULL;
     FT_UShort         n;
     TT_NameEntryRec*  rec;
@@ -144,6 +150,8 @@
 
     TT_NameEntry_ConvertFunc  convert;
 
+
+    FT_ASSERT( name );
 
     rec = face->name_table.names;
     for ( n = 0; n < face->num_names; n++, rec++ )
@@ -256,10 +264,7 @@
     {
       if ( rec->string == NULL )
       {
-        FT_Error   error  = SFNT_Err_Ok;
         FT_Stream  stream = face->name_table.stream;
-
-        FT_UNUSED( error );
 
 
         if ( FT_QNEW_ARRAY ( rec->string, rec->stringLength ) ||
@@ -277,7 +282,8 @@
     }
 
   Exit:
-    return result;
+    *name = result;
+    return error;
   }
 
 
@@ -499,6 +505,13 @@
     FT_TRACE3(( "\n" ));                                      \
   } while ( 0 )
 
+#define GET_NAME( id, field )                                 \
+  do {                                                        \
+    error = tt_face_get_name( face, TT_NAME_ID_##id, field ); \
+    if ( error )                                              \
+      goto Exit;                                              \
+  } while ( 0 )
+
 
   FT_LOCAL_DEF( FT_Error )
   sfnt_load_face( FT_Stream      stream,
@@ -699,8 +712,6 @@
     LOAD_( gasp );
     LOAD_( kern );
 
-    error = SFNT_Err_Ok;
-
     face->root.num_glyphs = face->max_profile.numGlyphs;
 
 #if 0
@@ -713,17 +724,13 @@
     if ( face->os2.version != 0xFFFFU && face->os2.fsSelection & 256 )
 #endif
     {
-      face->root.family_name =
-        tt_face_get_name( face, TT_NAME_ID_PREFERRED_FAMILY );
+      GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
-        face->root.family_name =
-          tt_face_get_name( face, TT_NAME_ID_FONT_FAMILY );
+        GET_NAME( FONT_FAMILY, &face->root.family_name );
 
-      face->root.style_name =
-        tt_face_get_name( face, TT_NAME_ID_PREFERRED_SUBFAMILY );
+      GET_NAME( PREFERRED_SUBFAMILY, &face->root.style_name );
       if ( !face->root.style_name )
-        face->root.style_name =
-          tt_face_get_name( face, TT_NAME_ID_FONT_SUBFAMILY );
+        GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
     }
 #if 0
     else
@@ -732,23 +739,17 @@
       /* subfamily) is still under consideration by Microsoft and */
       /* not implemented in the current version of WPF.           */
 
-      face->root.family_name =
-        tt_face_get_name( face, TT_NAME_ID_WWS_FAMILY );
+      GET_NAME( WWS_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
-        face->root.family_name =
-          tt_face_get_name( face, TT_NAME_ID_PREFERRED_FAMILY );
+        GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
-        face->root.family_name =
-          tt_face_get_name( face, TT_NAME_ID_FONT_FAMILY );
+        GET_NAME( FONT_FAMILY, &face->root.family_name );
 
-      face->root.style_name =
-        tt_face_get_name( face, TT_NAME_ID_WWS_SUBFAMILY );
+      GET_NAME( WWS_SUBFAMILY, &face->root.style_name );
       if ( !face->root.style_name )
-        face->root.style_name =
-          tt_face_get_name( face, TT_NAME_ID_PREFERRED_SUBFAMILY );
+        GET_NAME( PREFERRED_SUBFAMILY, &face->root.style_name );
       if ( !face->root.style_name )
-        face->root.style_name =
-          tt_face_get_name( face, TT_NAME_ID_FONT_SUBFAMILY );
+        GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
     }
 #endif
 
@@ -1032,6 +1033,7 @@
 
 #undef LOAD_
 #undef LOADM_
+#undef GET_NAME
 
 
   FT_LOCAL_DEF( void )
