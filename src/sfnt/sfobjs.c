@@ -714,15 +714,13 @@
 
     face->root.num_glyphs = face->max_profile.numGlyphs;
 
-#if 0
     /* Bit 8 of the `fsSelection' field in the `OS/2' table denotes  */
     /* a WWS-only font face.  `WWS' stands for `weight', width', and */
     /* `slope', a term used by Microsoft's Windows Presentation      */
-    /* Foundation (WPF).  This flag will be introduced in version    */
-    /* 1.5 of the OpenType specification (but is already in use).    */
+    /* Foundation (WPF).  This flag has been introduced in version   */
+    /* 1.5 of the OpenType specification (May 2008).                 */
 
     if ( face->os2.version != 0xFFFFU && face->os2.fsSelection & 256 )
-#endif
     {
       GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
@@ -732,13 +730,8 @@
       if ( !face->root.style_name )
         GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
     }
-#if 0
     else
     {
-      /* Support for `name' table ID 21 (WWS family) and 22 (WWS  */
-      /* subfamily) is still under consideration by Microsoft and */
-      /* not implemented in the current version of WPF.           */
-
       GET_NAME( WWS_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
         GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
@@ -751,8 +744,6 @@
       if ( !face->root.style_name )
         GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
     }
-#endif
-
 
     /* now set up root fields */
     {
@@ -809,10 +800,9 @@
       flags = 0;
       if ( has_outline == TRUE && face->os2.version != 0xFFFFU )
       {
-        /* We have an OS/2 table; use the `fsSelection' field.  Bit 9   */
-        /* indicates an oblique font face.  This flag will be           */
-        /* introduced in version 1.5 of the OpenType specification (but */
-        /* is already in use).                                          */
+        /* We have an OS/2 table; use the `fsSelection' field.  Bit 9 */
+        /* indicates an oblique font face.  This flag has been        */
+        /* introduced in version 1.5 of the OpenType specification.   */
 
         if ( face->os2.fsSelection & 512 )       /* bit 9 */
           flags |= FT_STYLE_FLAG_ITALIC;
@@ -825,6 +815,7 @@
       else
       {
         /* this is an old Mac font, use the header field */
+
         if ( face->header.Mac_Style & 1 )
           flags |= FT_STYLE_FLAG_BOLD;
 
@@ -927,10 +918,9 @@
         /* this computation is based on various versions of Times New Roman */
         if ( face->horizontal.Line_Gap == 0 )
           root->height = (FT_Short)( ( root->height * 115 + 50 ) / 100 );
-#endif
+#endif /* 0 */
 
 #if 0
-
         /* some fonts have the OS/2 "sTypoAscender", "sTypoDescender" & */
         /* "sTypoLineGap" fields set to 0, like ARIALNB.TTF             */
         if ( face->os2.version != 0xFFFFU && root->ascender )
@@ -945,7 +935,6 @@
           if ( height > root->height )
             root->height = height;
         }
-
 #endif /* 0 */
 
         root->max_advance_width  = face->horizontal.advance_Width_Max;
