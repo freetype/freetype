@@ -1,3 +1,8 @@
+2008-11-08  Wenlin Institute <wenlin@wenlin.com>
+
+	* src/base/ftobjs.c (ft_glyphslot_free_bitmap): Protect against
+	slot->internal == NULL.  Reported by Graham Asher.
+
 2008-11-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (tt_face_get_name): Modified to return an error

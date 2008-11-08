@@ -254,7 +254,7 @@
   FT_BASE_DEF( void )
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot )
   {
-    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+    if ( slot->internal && ( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
     {
       FT_Memory  memory = FT_FACE_MEMORY( slot->face );
 
