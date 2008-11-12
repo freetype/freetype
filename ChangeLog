@@ -1,3 +1,8 @@
+2008-11-12  Tor Andersson  <tor.andersson@gmail.com>
+
+	* src/cff/cffdrivr.c (cff_get_cmap_info): Initialize `format' field.
+	This fixes Savannah bug #24819.
+
 2008-11-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Remove #if 0/#endif guards

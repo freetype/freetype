@@ -426,6 +426,7 @@
 
 
     cmap_info->language = 0;
+    cmap_info->format   = 0;
 
     if ( cmap->clazz != &cff_cmap_encoding_class_rec &&
          cmap->clazz != &cff_cmap_unicode_class_rec  )
