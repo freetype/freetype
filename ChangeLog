@@ -1,3 +1,10 @@
+2008-11-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (tt_default_graphics_state): The default
+	value for `scan_type' is zero, as confirmed by Greg Hitchcock from
+	Microsoft.  Problem reported by Michal Nowakowski
+	<miszka@limes.com.pl>.
+
 2008-11-12  Tor Andersson  <tor.andersson@gmail.com>
 
 	* src/cff/cffdrivr.c (cff_get_cmap_info): Initialize `format' field.
