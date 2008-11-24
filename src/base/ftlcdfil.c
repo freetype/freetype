@@ -266,7 +266,7 @@
 #endif /* USE_LEGACY */
 
 
-  FT_EXPORT( FT_Error )
+  FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilter( FT_Library     library,
                            FT_LcdFilter   filter )
   {
@@ -335,7 +335,7 @@
 
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
-  FT_EXPORT( FT_Error )
+  FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilter( FT_Library    library,
                            FT_LcdFilter  filter )
   {

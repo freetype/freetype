@@ -175,6 +175,12 @@
       return PSaux_Err_Invalid_Argument;
     }
 
+    if ( length < 0 )
+    {
+      FT_ERROR(( "ps_table_add: invalid length\n" ));
+      return PSaux_Err_Invalid_Argument;
+    }
+
     /* grow the base block if needed */
     if ( table->cursor + length > table->capacity )
     {
