@@ -1,3 +1,8 @@
+2008-11-25  Daniel Zimmermann  <netzimme@aol.com>
+
+	* src/base/ftstream.c (FT_Stream_ReadFields): Don't access stream
+	before the NULL check.  From Savannah patch #6681.
+
 2008-11-24  Werner Lemberg  <wl@gnu.org>
 
 	Fixes from the gnuwin32 port.
