@@ -355,6 +355,12 @@
       if ( FT_ABS( integer_length ) > 5 )
         goto Exit;
 
+      /* Remove non-significant digits. */
+      if ( integer_length < 0 ) {
+        number          /= power_tens[-integer_length];
+        fraction_length += integer_length;
+      }
+
       /* Convert into 16.16 format. */
       if ( fraction_length > 0 )
       {
