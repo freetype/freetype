@@ -1,3 +1,9 @@
+2008-11-29  James Cloos  <cloos@jhcloos.com>
+
+	* src/type1/t1load.c (mm_axis_unmap): `blend_points' is FT_Fixed*,
+	whereas `design_points' is FT_Long*.  Therefore, return blend rather
+	than design points.
+
 2008-11-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffparse.c (cff_parse_real): Handle more than nine

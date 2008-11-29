@@ -230,7 +230,7 @@
 
 
     if ( ncv <= axismap->blend_points[0] )
-      return axismap->design_points[0];
+      return axismap->blend_points[0];
 
     for ( j = 1; j < axismap->num_points; ++j )
     {
@@ -249,7 +249,7 @@
       }
     }
 
-    return axismap->design_points[axismap->num_points - 1];
+    return axismap->blend_points[axismap->num_points - 1];
   }
 
 
