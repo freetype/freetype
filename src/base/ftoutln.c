@@ -1045,7 +1045,7 @@
       }
     }
 
-    if ( xmin == 32768 )
+    if ( xmin == 32768L )
       return FT_ORIENTATION_TRUETYPE;
 
     ray_y[0] = ( xmin_ymin * 3 + xmin_ymax     ) >> 2;

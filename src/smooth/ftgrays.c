@@ -1240,7 +1240,7 @@
     x += (TCoord)ras.min_ex;
 
     /* FT_Span.x is a 16-bit short, so limit our coordinates appropriately */
-    if ( x >= 32768 )
+    if ( x >= 32767 )
       x = 32767;
 
     if ( coverage )

@@ -519,7 +519,7 @@
 
     FT_Activate_Size( size->ttsize );
 
-    error = FT_Select_Size( face->ttf_face, strike_index );
+    error = FT_Select_Size( face->ttf_face, (FT_Int)strike_index );
     if ( !error )
       ( (FT_Size)size )->metrics = face->ttf_face->size->metrics;
 

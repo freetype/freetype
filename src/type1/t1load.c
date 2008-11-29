@@ -336,8 +336,8 @@
       mmvar->axis[i].def     = ( mmvar->axis[i].minimum +
                                    mmvar->axis[i].maximum ) / 2;
                             /* Does not apply.  But this value is in range */
-      mmvar->axis[i].strid   = 0xFFFFFFFFUL;   /* Does not apply */
-      mmvar->axis[i].tag     = 0xFFFFFFFFUL;   /* Does not apply */
+      mmvar->axis[i].strid   = (FT_UInt)-1;    /* Does not apply */
+      mmvar->axis[i].tag     = (FT_ULong)-1;   /* Does not apply */
 
       if ( ft_strcmp( mmvar->axis[i].name, "Weight" ) == 0 )
         mmvar->axis[i].tag = FT_MAKE_TAG( 'w', 'g', 'h', 't' );
@@ -347,7 +347,7 @@
         mmvar->axis[i].tag = FT_MAKE_TAG( 'o', 'p', 's', 'z' );
     }
 
-    if ( blend->num_designs == 1U << blend->num_axis )
+    if ( blend->num_designs == ( 1U << blend->num_axis ) )
     {
       mm_weights_unmap( blend->default_weight_vector,
                         axiscoords,

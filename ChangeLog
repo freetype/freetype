@@ -1,3 +1,12 @@
+2008-11-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afcjk.c, src/base/ftoutln.c, src/base/ftrfork.c,
+	src/bdf/bdfdrivr.c, src/gxvalid/gxvmorx.c, src/otvalid/otvmath.c,
+	src/pcf/pcfdrivr.c, src/psnames/pstables.h, src/smooth/ftgrays.c,
+	src/tools/glnames.py, src/truetype/ttinterp.c, src/type1/t1load.c,
+	src/type42/t42objs.c, src/winfonts/winfnt.c: Fix compiler warnings
+	(Atari PureC).
+
 2008-11-29  James Cloos  <cloos@jhcloos.com>
 
 	* src/type/t1load.c (mm_axis_unmap): Revert previous patch and fix

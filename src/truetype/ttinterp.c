@@ -6388,7 +6388,7 @@
           {
             scale_valid = 1;
             scale       = TT_MULDIV( org2 + delta2 - ( org1 + delta1 ),
-                                     0x10000, orus2 - orus1 );
+                                     0x10000L, orus2 - orus1 );
           }
 
           x = ( org1 + delta1 ) +

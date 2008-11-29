@@ -5011,7 +5011,7 @@ def dump_array( the_array, write, array_name ):
   """dumps a given encoding"""
 
   write( "  static const unsigned char  " + array_name +
-         "[" + repr( len( the_array ) ) + "] =\n" )
+         "[" + repr( len( the_array ) ) + "L] =\n" )
   write( "  {\n" )
 
   line  = ""

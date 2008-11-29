@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT morx table validation (body).                         */
 /*                                                                         */
-/*  Copyright 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,       */
+/*  Copyright 2005, 2008 by                                                */
+/*  suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -129,7 +130,7 @@
     gxv_mort_featurearray_validate( p, limit, nFeatureFlags, valid );
     p += valid->subtable_length;
 
-    if ( nSubtables >= 0x10000 )
+    if ( nSubtables >= 0x10000L )
       FT_INVALID_DATA;
 
     gxv_morx_subtables_validate( p, table + chainLength,

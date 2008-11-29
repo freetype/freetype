@@ -413,7 +413,7 @@ THE SOFTWARE.
     switch ( req->type )
     {
     case FT_SIZE_REQUEST_TYPE_NOMINAL:
-      if ( height == ( bsize->y_ppem + 32 ) >> 6 )
+      if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
         error = PCF_Err_Ok;
       break;
 

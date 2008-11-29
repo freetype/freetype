@@ -612,8 +612,9 @@
 
     char_code -= cmap->first;
     if ( char_code < cmap->count )
-      gindex = char_code + 1; /* we artificially increase the glyph index; */
-                              /* FNT_Load_Glyph reverts to the right one   */
+      /* we artificially increase the glyph index; */
+      /* FNT_Load_Glyph reverts to the right one   */
+      gindex = (FT_UInt)( char_code + 1 );
     return gindex;
   }
 
@@ -638,7 +639,7 @@
       if ( char_code < cmap->count )
       {
         result = cmap->first + char_code;
-        gindex = char_code + 1;
+        gindex = (FT_UInt)( char_code + 1 );
       }
     }
 
@@ -782,7 +783,7 @@
          * => nominal_point_size contains incorrect value;
          *    use pixel_height as the nominal height
          */
-        if ( bsize->y_ppem > font->header.pixel_height << 6 )
+        if ( bsize->y_ppem > ( font->header.pixel_height << 6 ) )
         {
           FT_TRACE2(( "use pixel_height as the nominal height\n" ));
 
@@ -911,7 +912,7 @@
     switch ( req->type )
     {
     case FT_SIZE_REQUEST_TYPE_NOMINAL:
-      if ( height == ( bsize->y_ppem + 32 ) >> 6 )
+      if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
         error = FNT_Err_Ok;
       break;
 
