@@ -1,5 +1,11 @@
 2008-11-29  James Cloos  <cloos@jhcloos.com>
 
+	* src/type/t1load.c (mm_axis_unmap): Revert previous patch and fix
+	it correctly by using FT_INT_TO_FIXED (FreeType expects 16.16 values
+	in the /BlendDesignMap space).
+
+2008-11-29  James Cloos  <cloos@jhcloos.com>
+
 	* src/type1/t1load.c (mm_axis_unmap): `blend_points' is FT_Fixed*,
 	whereas `design_points' is FT_Long*.  Therefore, return blend rather
 	than design points.
