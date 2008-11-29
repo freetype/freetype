@@ -1170,7 +1170,7 @@
   }
 
 
-#if defined( FT_CONFIG_OPTION_MAC_FONTS )
+#ifdef FT_CONFIG_OPTION_MAC_FONTS
 
   /* The behavior here is very similar to that in base/ftmac.c, but it     */
   /* is designed to work on non-mac systems, so no mac specific calls.     */
@@ -1287,7 +1287,7 @@
       args.driver = FT_Get_Module( library, driver_name );
     }
 
-#if defined( FT_MACINTOSH )
+#ifdef FT_MACINTOSH
     /* At this point, face_index has served its purpose;      */
     /* whoever calls this function has already used it to     */
     /* locate the correct font data.  We should not propagate */
@@ -1302,7 +1302,7 @@
     if ( error == FT_Err_Ok )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
     else
-#if defined( FT_MACINTOSH )
+#ifdef FT_MACINTOSH
       FT_Stream_Free( stream, 0 );
 #else
     {
