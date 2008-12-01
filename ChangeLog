@@ -1,3 +1,12 @@
+2008-12-01  Werner Lemberg  <wl@gnu.org>
+
+	GDEF tables need `glyph_count' too for validation.  Problem reported
+	by Chi Nguyen <chint@necsv.com>.
+
+	* src/otvalid/otvgdef.c (otv_GDEF_validate), src/otvalid/otvalid.h
+	(otv_GDEF_validate), src/otvalid/otvmod.c (otv_validate): Pass
+	`glyph_count'.
+
 2008-11-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afcjk.c, src/base/ftoutln.c, src/base/ftrfork.c,
