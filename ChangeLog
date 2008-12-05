@@ -1,5 +1,10 @@
 2008-12-05  Werner Lemberg  <wl@nu.org>
 
+	* src/autofit/aflatin.c (af_latin_uniranges): Add more ranges.  This
+	fixes Savannah bug #21190 which also provides a basic patch.
+
+2008-12-05  Werner Lemberg  <wl@nu.org>
+
 	* include/freetype/freetype.h (FT_LOAD_ADVANCE_ONLY): Use value
 	0x100 instead of 0x10000; the latter value is already occupied by
 	FT_LOAD_TARGET_LIGHT.  Bug reported by James Cloos.
