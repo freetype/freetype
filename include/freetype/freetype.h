@@ -2429,11 +2429,11 @@ FT_BEGIN_HEADER
 #define FT_LOAD_MONOCHROME                   0x1000
 #define FT_LOAD_LINEAR_DESIGN                0x2000
 #define FT_LOAD_NO_AUTOHINT                  0x8000U
-#define FT_LOAD_ADVANCE_ONLY                 0x10000UL
 
   /* */
 
   /* used internally only by certain font drivers! */
+#define FT_LOAD_ADVANCE_ONLY                 0x100
 #define FT_LOAD_SBITS_ONLY                   0x4000
 
 

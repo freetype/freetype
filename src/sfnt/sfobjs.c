@@ -680,19 +680,20 @@
 
         face->os2.version = 0xFFFFU;
       }
-
     }
 
     /* the optional tables */
 
-    /* embedded bitmap support. */
+    /* embedded bitmap support */
     if ( sfnt->load_eblc )
     {
       LOAD_( eblc );
       if ( error )
       {
-        /* return an error if this font file has no outlines */
-        if ( error == SFNT_Err_Table_Missing && has_outline )
+        /* a font which contains neither bitmaps nor outlines is */
+        /* still valid (although rather useless in most cases);  */
+        /* however, you can find such stripped fonts in PDFs     */
+        if ( error == SFNT_Err_Table_Missing )
           error = SFNT_Err_Ok;
         else
           goto Exit;

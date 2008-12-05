@@ -58,6 +58,9 @@
   {
     TT_Table  entry;
     TT_Table  limit;
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_Bool   zero_length = FALSE;
+#endif
 
 
     FT_TRACE4(( "tt_face_lookup_table: %08p, `%c%c%c%c' -- ",
@@ -72,17 +75,28 @@
 
     for ( ; entry < limit; entry++ )
     {
-      /* For compatibility with Windows, we consider 0-length */
-      /* tables the same as missing tables.                   */
-      if ( entry->Tag == tag && entry->Length != 0 )
-      {
-        FT_TRACE4(( "found table.\n" ));
-        return entry;
+      /* For compatibility with Windows, we consider    */
+      /* zero-length tables the same as missing tables. */
+      if ( entry->Tag == tag ) {
+        if ( entry->Length != 0 )
+        {
+          FT_TRACE4(( "found table.\n" ));
+          return entry;
+        }
+#ifdef FT_DEBUG_LEVEL_TRACE
+        zero_length = TRUE;
+#endif
       }
     }
 
-    FT_TRACE4(( "could not find table!\n" ));
-    return 0;
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( zero_length )
+      FT_TRACE4(( "ignoring empty table!\n" ));
+    else
+      FT_TRACE4(( "could not find table!\n" ));
+#endif
+
+    return NULL;
   }
 
 

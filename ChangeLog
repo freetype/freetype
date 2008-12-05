@@ -1,3 +1,23 @@
+2008-12-05  Werner Lemberg  <wl@nu.org>
+
+	* include/freetype/freetype.h (FT_LOAD_ADVANCE_ONLY): Use value
+	0x100 instead of 0x10000; the latter value is already occupied by
+	FT_LOAD_TARGET_LIGHT.  Bug reported by James Cloos.
+
+
+	Handle SFNT with neither outlines nor bitmaps.  This fixes Savannah
+	bug #25010.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Reject fonts with neither
+	outlines nor bitmaps.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Don't return an error if there
+	is no table with glyphs.
+
+
+	* src/sfnt/ttload.c (tt_face_lookup_table): Improve debugging
+	message.
+
 2008-12-01  Werner Lemberg  <wl@gnu.org>
 
 	GDEF tables need `glyph_count' too for validation.  Problem reported
