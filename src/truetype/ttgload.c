@@ -1245,6 +1245,13 @@
 
     if ( loader->byte_len > 0 )
     {
+      if ( !loader->glyf_offset )
+      {
+        FT_TRACE2(( "no `glyf' table but non-zero `loca' entry!\n" ));
+        error = TT_Err_Invalid_Table;
+        goto Exit;
+      }
+
       error = face->access_glyph_frame( loader, glyph_index,
                                         loader->glyf_offset + offset,
                                         loader->byte_len );
@@ -1840,12 +1847,15 @@
       FT_Error  error = face->goto_table( face, TTAG_glyf, stream, 0 );
 
 
-      if ( error )
+      if ( error == TT_Err_Table_Missing )
+        loader->glyf_offset = 0;
+      else if ( error )
       {
         FT_ERROR(( "TT_Load_Glyph: could not access glyph table\n" ));
         return error;
       }
-      loader->glyf_offset = FT_STREAM_POS();
+      else
+        loader->glyf_offset = FT_STREAM_POS();
     }
 
     /* get face's glyph loader */
@@ -1857,7 +1867,7 @@
       loader->gloader = gloader;
     }
 
-    loader->load_flags    = load_flags;
+    loader->load_flags = load_flags;
 
     loader->face   = (FT_Face)face;
     loader->size   = (FT_Size)size;

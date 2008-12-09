@@ -559,10 +559,6 @@
     if ( !face || !face->size || !face->glyph )
       return FT_Err_Invalid_Face_Handle;
 
-    /* fonts with neither outlines nor bitmaps can be found in PDFs */
-    if ( !FT_IS_SCALABLE( face ) && !FT_HAS_FIXED_SIZES( face ) )
-      return FT_Err_Invalid_Glyph_Index;
-
     /* The validity test for `glyph_index' is performed by the */
     /* font drivers.                                           */
 

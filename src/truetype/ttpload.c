@@ -70,7 +70,12 @@
 
     /* we need the size of the `glyf' table for malformed `loca' tables */
     error = face->goto_table( face, TTAG_glyf, stream, &face->glyf_len );
-    if ( error )
+
+    /* it is possible that a font doesn't have a glyf table at all */
+    /* or its size is zero                                         */
+    if ( error == TT_Err_Table_Missing )
+      face->glyf_len = 0;
+    else if ( error )
       goto Exit;
 
     FT_TRACE2(( "Locations " ));
@@ -205,6 +210,9 @@
     /* Anyway, there do exist (malformed) fonts which don't obey    */
     /* this rule, so we are only able to provide an upper bound for */
     /* the size.                                                    */
+    /*                                                              */
+    /* We get (intentionally) a wrong, non-zero result in case the  */
+    /* `glyf' table is missing.                                     */
     if ( pos2 >= pos1 )
       *asize = (FT_UInt)( pos2 - pos1 );
     else

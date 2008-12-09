@@ -1012,6 +1012,10 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
+      /* a font with no bitmaps and no outlines is scalable; */
+      /* it has only empty glyphs then                       */
+      if ( !FT_HAS_FIXED_SIZES( root ) && !FT_IS_SCALABLE( root ) )
+        root->face_flags |= FT_FACE_FLAG_SCALABLE;
     }
 
   Exit:

@@ -1,3 +1,20 @@
+2008-12-09  Werner Lemberg  <wl@gnu.org>
+
+	Really fix Savannah bug #25010: An SFNT font with neither outlines
+	nor bitmaps can be considered as containing space `glyphs' only.
+
+	* src/truetype/ttpload.c (tt_face_load_loca): Handle the case where
+	a `glyf' table is missing.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Abort if we have no
+	`glyf' table but a non-zero `loca' entry.
+	(tt_loader_init): Handle missing `glyf' table.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Undo change 2008-12-05.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): A font with neither outlines
+	nor bitmaps is scalable.
+
 2008-12-05  Werner Lemberg  <wl@nu.org>
 
 	* src/autofit/aflatin.c (af_latin_uniranges): Add more ranges.  This
