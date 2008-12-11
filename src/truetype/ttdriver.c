@@ -272,7 +272,7 @@
   /*    glyph_index :: The index of the glyph in the font file.            */
   /*                                                                       */
   /*    load_flags  :: A flag indicating what to load for this glyph.  The */
-  /*                   FTLOAD_??? constants can be used to control the     */
+  /*                   FT_LOAD_XXX constants can be used to control the    */
   /*                   glyph loading process (e.g., whether the outline    */
   /*                   should be scaled, whether to load bitmaps or not,   */
   /*                   whether to hint the outline, etc).                  */
@@ -301,11 +301,24 @@
     if ( !face || glyph_index >= (FT_UInt)face->num_glyphs )
       return TT_Err_Invalid_Argument;
 
+    if ( load_flags & FT_LOAD_NO_HINTING )
+    {
+      /* both FT_LOAD_NO_HINTING and FT_LOAD_NO_AUTOHINT   */
+      /* are necessary to disable hinting for tricky fonts */          
+
+      if ( FT_IS_TRICKY( face ) )
+        load_flags &= ~FT_LOAD_NO_HINTING;
+
+      if ( load_flags & FT_LOAD_NO_AUTOHINT )
+        load_flags |= FT_LOAD_NO_HINTING;
+    }
+
     if ( load_flags & ( FT_LOAD_NO_RECURSE | FT_LOAD_NO_SCALE ) )
     {
-      load_flags |= FT_LOAD_NO_HINTING |
-                    FT_LOAD_NO_BITMAP  |
-                    FT_LOAD_NO_SCALE;
+      load_flags |= FT_LOAD_NO_BITMAP | FT_LOAD_NO_SCALE;
+
+      if ( !FT_IS_TRICKY( face ) )
+        load_flags |= FT_LOAD_NO_HINTING;
     }
 
     /* now load the glyph outline if necessary */

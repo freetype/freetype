@@ -10,9 +10,9 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
       was very noticeable for outlines processed with FT_Glyph_Stroke,
       using thick strokes.
 
-    - `FT_Get_TrueType_Engine_Type' returned  a  wrong  value if  both
-      TT_CONFIG_OPTION_BYTECODE_INTERPRETER                        and
-      TT_CONFIG_OPTION_UNPATENTED_HINTING are defined.
+    - `FT_Get_TrueType_Engine_Type'  returned a  wrong  value if  both
+      configuration  macros  TT_CONFIG_OPTION_BYTECODE_INTERPRETER and
+      TT_CONFIG_OPTION_UNPATENTED_HINTING were defined.
 
 
   II. IMPORTANT CHANGES
@@ -34,6 +34,22 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
     - FT_MulFix is now an inlined function; by default, assembler code
       is provided for x86 and ARM.  See FT_CONFIG_OPTION_INLINE_MULFIX
       and FT_CONFIG_OPTION_NO_ASSEMBLER (in ftoption.h) for more.
+
+    - The handling of `tricky' fonts  (this is, fonts which don't work
+      with the  autohinter, needing the font  format's hinting engine)
+      has been generalized and changed slightly:
+
+      . A new  face flag  FT_FACE_FLAG_TRICKY indicates that  the font
+        format's  hinting engine is  necessary for  correct rendering.
+        The macro FT_IS_TRICKY can be used to check this flag.
+
+      . FT_LOAD_NO_HINTING is now ignored for tricky fonts.  To really
+        force  raw  loading  of  such fonts  (without  hinting),  both
+        FT_LOAD_NO_HINTING  and FT_LOAD_NO_AUTOHINT  must  be used  --
+        this is something which you probably never want to do.
+
+      . Tricky  TrueType fonts  always use  the  bytecode interpreter,
+        either the patented or unpatented version.
 
 
 ======================================================================

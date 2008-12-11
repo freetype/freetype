@@ -41,6 +41,7 @@
 
 #define GRID_FIT_METRICS
 
+
   FT_BASE_DEF( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
                           const char*     service_id )
@@ -552,7 +553,7 @@
     FT_Driver     driver;
     FT_GlyphSlot  slot;
     FT_Library    library;
-    FT_Bool       autohint = 0;
+    FT_Bool       autohint = FALSE;
     FT_Module     hinter;
 
 
@@ -596,22 +597,22 @@
      *
      * - Otherwise, auto-hint for LIGHT hinting mode.
      *
-     * - Exception: The font requires the unpatented
-     *   bytecode interpreter to load properly.
+     * - Exception: The font is `tricky' and requires
+     *   the native hinter to load properly.
      */
 
-    autohint = 0;
-    if ( hinter                                    &&
-         ( load_flags & FT_LOAD_NO_HINTING  ) == 0 &&
-         ( load_flags & FT_LOAD_NO_AUTOHINT ) == 0 &&
-         FT_DRIVER_IS_SCALABLE( driver )           &&
-         FT_DRIVER_USES_OUTLINES( driver )         &&
-         face->internal->transform_matrix.yy > 0   &&
-         face->internal->transform_matrix.yx == 0  )
+    if ( hinter                                   &&
+         !( load_flags & FT_LOAD_NO_HINTING )     &&
+         !( load_flags & FT_LOAD_NO_AUTOHINT )    &&
+         FT_DRIVER_IS_SCALABLE( driver )          &&
+         FT_DRIVER_USES_OUTLINES( driver )        &&
+         !FT_IS_TRICKY( face )                    &&
+         face->internal->transform_matrix.yy > 0  &&
+         face->internal->transform_matrix.yx == 0 )
     {
-      if ( ( load_flags & FT_LOAD_FORCE_AUTOHINT ) != 0 ||
-           !FT_DRIVER_HAS_HINTER( driver )              )
-        autohint = 1;
+      if ( ( load_flags & FT_LOAD_FORCE_AUTOHINT ) ||
+           !FT_DRIVER_HAS_HINTER( driver )         )
+        autohint = TRUE;
       else
       {
         FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
@@ -619,7 +620,7 @@
 
         if ( mode == FT_RENDER_MODE_LIGHT             ||
              face->internal->ignore_unpatented_hinter )
-          autohint = 1;
+          autohint = TRUE;
       }
     }
 

@@ -1042,6 +1042,22 @@ FT_BEGIN_HEADER
   /*      way (using contiguous indices); the `CID-ness' isn't visible to  */
   /*      the application.                                                 */
   /*                                                                       */
+  /*    FT_FACE_FLAG_TRICKY ::                                             */
+  /*      Set if the font is `tricky', this is, it always needs the        */
+  /*      font format's native hinting engine to get a reasonable result.  */
+  /*      A typical example is the Chinese font `mingli.ttf' which uses    */
+  /*      TrueType bytecode instructions to move and scale all of its      */
+  /*      subglyphs.                                                       */
+  /*                                                                       */
+  /*      It is not possible to autohint such fonts using                  */
+  /*      @FT_LOAD_FORCE_AUTOHINT; it will also ignore                     */
+  /*      @FT_LOAD_NO_HINTING.  You have to set both FT_LOAD_NO_HINTING    */
+  /*      and @FT_LOAD_NO_AUTOHINT to really disable hinting; however, you */
+  /*      probably never want this except for demonstration purposes.      */
+  /*                                                                       */
+  /*      Currently, there are six TrueType fonts in the list of tricky    */
+  /*      fonts; they are hard-coded in file `ttobjs.c'.                   */
+  /*                                                                       */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
 #define FT_FACE_FLAG_FIXED_WIDTH       ( 1L <<  2 )
@@ -1055,6 +1071,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_EXTERNAL_STREAM   ( 1L << 10 )
 #define FT_FACE_FLAG_HINTER            ( 1L << 11 )
 #define FT_FACE_FLAG_CID_KEYED         ( 1L << 12 )
+#define FT_FACE_FLAG_TRICKY            ( 1L << 13 )
 
 
   /*************************************************************************
@@ -1223,6 +1240,20 @@ FT_BEGIN_HEADER
    */
 #define FT_IS_CID_KEYED( face ) \
           ( face->face_flags & FT_FACE_FLAG_CID_KEYED )
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_IS_TRICKY( face )
+   *
+   * @description:
+   *   A macro that returns true whenever a face represents a `tricky' font.
+   *   See the discussion of @FT_FACE_FLAG_TRICKY for more details.
+   *
+   */
+#define FT_IS_TRICKY( face ) \
+          ( face->face_flags & FT_FACE_FLAG_TRICKY )
 
 
   /*************************************************************************/
@@ -2410,6 +2441,9 @@ FT_BEGIN_HEADER
    *   precedence by setting @FT_LOAD_FORCE_AUTOHINT.  You can also set
    *   @FT_LOAD_NO_AUTOHINT in case you don't want the auto-hinter to be
    *   used at all.
+   *
+   *   See the description of @FT_FACE_FLAG_TRICKY for a special exception
+   *   (affecting only a handful of Asian fonts).
    *
    *   Besides deciding which hinter to use, you can also decide which
    *   hinting algorithm to use.  See @FT_LOAD_TARGET_XXX for details.
@@ -3717,7 +3751,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    The old setting value.  This will always be false if this is not   */
-  /*    a SFNT font, or if the unpatented hinter is not compiled in this   */
+  /*    an SFNT font, or if the unpatented hinter is not compiled in this  */
   /*    instance of the library.                                           */
   /*                                                                       */
   /* <Since>                                                               */

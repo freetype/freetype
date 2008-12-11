@@ -1,3 +1,33 @@
+2008-12-10  Werner Lemberg  <wl@gnu.org>
+
+	Generalize the concept of `tricky' fonts by introducing
+	FT_FACE_FLAG_TRICKY to indicate that the font format's hinting
+	engine is necessary for correct rendering.
+
+	At the same time, slightly modify the behaviour of tricky fonts:
+	FT_LOAD_NO_HINTING is now ignored.  To really force raw loading
+	of tricky fonts (without hinting), both FT_LOAD_NO_HINTING and
+	FT_LOAD_NO_AUTOHINT must be used.
+
+	Finally, tricky TrueType fonts always use the bytecode interpreter
+	even if the patented code is used.
+
+	* include/freetype/freetype.h (FT_FACE_FLAG_TRICKY, FT_IS_TRICKY):
+	New macros.
+
+	* src/truetype/ttdriver.c (Load_Glyph): Handle new load flags
+	semantics as described above.
+
+	* src/truetype/ttobjs.c (tt_check_trickyness): New function, using
+	code of ...
+	(tt_face_init): This function, now simplified and updated to new
+	semantics.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Don't use autohinter for tricky
+	fonts.
+
+	* docs/CHANGES: Document it.
+
 2008-12-09  Werner Lemberg  <wl@gnu.org>
 
 	Really fix Savannah bug #25010: An SFNT font with neither outlines
