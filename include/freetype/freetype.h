@@ -1550,10 +1550,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    This image can later be converted into a bitmap by calling         */
   /*    @FT_Render_Glyph.  This function finds the current renderer for    */
-  /*    the native image's format then invokes it.                         */
+  /*    the native image's format, then invokes it.                        */
   /*                                                                       */
   /*    The renderer is in charge of transforming the native image through */
-  /*    the slot's face transformation fields, then convert it into a      */
+  /*    the slot's face transformation fields, then converting it into a   */
   /*    bitmap that is returned in `slot->bitmap'.                         */
   /*                                                                       */
   /*    Note that `slot->bitmap_left' and `slot->bitmap_top' are also used */
