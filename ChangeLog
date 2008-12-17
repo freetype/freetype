@@ -1,6 +1,12 @@
 2008-12-17  Werner Lemberg  <wl@gnu.org>
 
-	* include/freetype/ftsynth.h, src/basae/ftsynth.c: Move
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Don't use internal
+	macros so that copying the source code into an application works
+	out of the box.
+
+2008-12-17  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftsynth.h, src/base/ftsynth.c: Move
 	FT_GlyphSlot_Own_Bitmap to...
 	* include/freetype/ftbitmap.h, src/base/ftbitmap.c: These files.
 

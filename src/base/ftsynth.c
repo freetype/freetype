@@ -74,7 +74,7 @@
   FT_GlyphSlot_Embolden( FT_GlyphSlot  slot )
   {
     FT_Library  library = slot->library;
-    FT_Face     face    = FT_SLOT_FACE( slot );
+    FT_Face     face    = slot->face;
     FT_Error    error;
     FT_Pos      xstr, ystr;
 
@@ -100,10 +100,11 @@
     }
     else if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
     {
-      xstr = FT_PIX_FLOOR( xstr );
+      /* round to full pixels */
+      xstr &= ~63;
       if ( xstr == 0 )
         xstr = 1 << 6;
-      ystr = FT_PIX_FLOOR( ystr );
+      ystr &= ~63;
 
       error = FT_GlyphSlot_Own_Bitmap( slot );
       if ( error )
