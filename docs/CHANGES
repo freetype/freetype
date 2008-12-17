@@ -51,6 +51,11 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
       . Tricky  TrueType fonts  always use  the  bytecode interpreter,
         either the patented or unpatented version.
 
+    - The  function  `FT_GlyphSlot_Own_Bitmap'  has  been  moved  from
+      FT_SYNTHESIS_H to FT_BITMAP_H; it  is now part of the `official'
+      API.   (The functions  in  FT_SYNTHESIS_H are  still subject  to
+      change, however.)
+
 
 ======================================================================
 

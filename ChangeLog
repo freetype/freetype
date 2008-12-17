@@ -1,3 +1,11 @@
+2008-12-17  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftsynth.h, src/basae/ftsynth.c: Move
+	FT_GlyphSlot_Own_Bitmap to...
+	* include/freetype/ftbitmap.h, src/base/ftbitmap.c: These files.
+
+	* docs/CHANGES: Document it.
+
 2008-12-10  Werner Lemberg  <wl@gnu.org>
 
 	Generalize the concept of `tricky' fonts by introducing
