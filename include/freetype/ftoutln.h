@@ -333,6 +333,9 @@ FT_BEGIN_HEADER
   /*    situations like acute angles or intersections are sometimes        */
   /*    handled incorrectly.                                               */
   /*                                                                       */
+  /*    If you need `better' metrics values you should call                */
+  /*    @FT_Outline_Get_CBox ot @FT_Outline_Get_BBox.                      */
+  /*                                                                       */
   /*    Example call:                                                      */
   /*                                                                       */
   /*    {                                                                  */
