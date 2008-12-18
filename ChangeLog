@@ -1,3 +1,26 @@
+2008-12-18  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2008-12-18  Bevan, David  <dbevan@emtex.com>
+
+	Provide API for accessing embedding and subsetting restriction
+	information.
+
+	* include/freetype.h (FT_FSTYPE_INSTALLABLE_EMBEDDING,
+	FT_FSTYPE_RESTRICTED_LICENSE_EMBEDDING,
+	FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING, FT_FSTYPE_EDITABLE_EMBEDDING,
+	FT_FSTYPE_NO_SUBSETTING, FT_FSTYPE_BITMAP_EMBEDDING_ONLY): New
+	macros.
+	(FT_Get_FSType_Flags): New function declaration.
+
+	* src/base/ftobjs.c (FT_Get_FSType_Flags): New function.
+
+	* src/cid/cidtoken.h, src/type1/t1tokens.h, src/type42/t42parse.c
+	(t42_keywords): Handle `FSType'.
+
+	* include/freetype/t1tables.h (PS_FontInfoRec): Add `fs_type' field.
+
 2008-12-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Don't use internal

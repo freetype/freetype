@@ -4374,4 +4374,27 @@
   }
 
 
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_UShort )
+  FT_Get_FSType_Flags( FT_Face  face )
+  {
+    PS_FontInfoRec  font_info;
+    TT_OS2*         os2;
+
+
+    /* look at FSType before fsType for Type42 */
+
+    if ( !FT_Get_PS_Font_Info( face, &font_info ) &&
+         font_info.fs_type != 0                   )
+      return font_info.fs_type;
+
+    if ( ( os2 = FT_Get_Sfnt_Table( face, ft_sfnt_os2 ) ) != NULL &&
+         os2->version != 0xFFFFU                                  )
+      return os2->fsType;
+
+    return 0;
+  }
+
+
 /* END */

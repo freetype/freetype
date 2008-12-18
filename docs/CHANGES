@@ -28,6 +28,10 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
       `FT_Get_Advance' and `FT_Get_Advances'; they are defined in file
       `ftadvanc.h' (to be accessed as FT_ADVANCES_H).
 
+    - A new function `FT_Get_FSType_Flags' (in FT_FREETYPE_H) has been
+      contributed  by   David  Bevan  to  access   the  embedding  and
+      subsetting restriction information of fonts.
+
 
   III. MISCELLANEOUS
 

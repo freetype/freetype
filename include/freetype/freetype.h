@@ -191,6 +191,15 @@ FT_BEGIN_HEADER
   /*    FT_Set_Charmap                                                     */
   /*    FT_Get_Charmap_Index                                               */
   /*                                                                       */
+  /*    FT_FSTYPE_INSTALLABLE_EMBEDDING                                    */
+  /*    FT_FSTYPE_RESTRICTED_LICENSE_EMBEDDING                             */
+  /*    FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING                              */
+  /*    FT_FSTYPE_EDITABLE_EMBEDDING                                       */
+  /*    FT_FSTYPE_NO_SUBSETTING                                            */
+  /*    FT_FSTYPE_BITMAP_EMBEDDING_ONLY                                    */
+  /*                                                                       */
+  /*    FT_Get_FSType_Flags                                                */
+  /*                                                                       */
   /*************************************************************************/
 
 
@@ -2423,7 +2432,7 @@ FT_BEGIN_HEADER
    *     8~pixels packed into each byte of the bitmap data.
    *
    *     Note that this has no effect on the hinting algorithm used.  You
-   *     should use @FT_LOAD_TARGET_MONO instead so that the
+   *     should rather use @FT_LOAD_TARGET_MONO so that the
    *     monochrome-optimized hinting algorithm is used.
    *
    *   FT_LOAD_LINEAR_DESIGN ::
@@ -3193,6 +3202,88 @@ FT_BEGIN_HEADER
                         FT_Int       *p_arg1,
                         FT_Int       *p_arg2,
                         FT_Matrix    *p_transform );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Enum>                                                                */
+  /*    FT_FSTYPE_XXX                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A list of bit flags used in the `fsType' field of the OS/2 table   */
+  /*    in a TrueType or OpenType font and the `FSType' entry in a         */
+  /*    PostScript font.  These bit flags are returned by                  */
+  /*    @FT_Get_FSType_Flags; they inform client applications of embedding */
+  /*    and subsetting restrictions associated with a font.                */
+  /*                                                                       */
+  /*    See http://www.adobe.com/devnet/acrobat/pdfs/FontPolicies.pdf for  */
+  /*    more details.                                                      */
+  /*                                                                       */
+  /* <Values>                                                              */
+  /*    FT_FSTYPE_INSTALLABLE_EMBEDDING ::                                 */
+  /*      Fonts with no fsType bit set may be embedded and permanently     */
+  /*      installed on the remote system by an application.                */
+  /*                                                                       */
+  /*    FT_FSTYPE_RESTRICTED_LICENSE_EMBEDDING ::                          */
+  /*      Fonts that have only this bit set must not be modified, embedded */
+  /*      or exchanged in any manner without first obtaining permission of */
+  /*      the font software copyright owner.                               */
+  /*                                                                       */
+  /*    FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING ::                           */
+  /*      If this bit is set, the font may be embedded and temporarily     */
+  /*      loaded on the remote system.  Documents containing Preview &     */
+  /*      Print fonts must be opened `read-only'; no edits can be applied  */
+  /*      to the document.                                                 */
+  /*                                                                       */
+  /*    FT_FSTYPE_EDITABLE_EMBEDDING ::                                    */
+  /*      If this bit is set, the font may be embedded but must only be    */
+  /*      installed temporarily on other systems.  In contrast to Preview  */
+  /*      & Print fonts, documents containing editable fonts may be opened */
+  /*      for reading, editing is permitted, and changes may be saved.     */
+  /*                                                                       */
+  /*    FT_FSTYPE_NO_SUBSETTING ::                                         */
+  /*      If this bit is set, the font may not be subsetted prior to       */
+  /*      embedding.                                                       */
+  /*                                                                       */
+  /*    FT_FSTYPE_BITMAP_EMBEDDING_ONLY ::                                 */
+  /*      If this bit is set, only bitmaps contained in the font may be    */
+  /*      embedded; no outline data may be embedded.  If there are no      */
+  /*      bitmaps available in the font, then the font is unembeddable.    */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    While the fsType flags can indicate that a font may be embedded, a */
+  /*    license with the font vendor may be separately required to use the */
+  /*    font in this way.                                                  */
+  /*                                                                       */
+#define FT_FSTYPE_INSTALLABLE_EMBEDDING         0x0000
+#define FT_FSTYPE_RESTRICTED_LICENSE_EMBEDDING  0x0002
+#define FT_FSTYPE_PREVIEW_AND_PRINT_EMBEDDING   0x0004
+#define FT_FSTYPE_EDITABLE_EMBEDDING            0x0008
+#define FT_FSTYPE_NO_SUBSETTING                 0x0100
+#define FT_FSTYPE_BITMAP_EMBEDDING_ONLY         0x0200
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_FSType_Flags                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return the fsType flags for a font.                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: A handle to the source face object.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The fsType flags, @FT_FSTYPE_XXX.                                  */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Use this function rather than directly reading the `fs_type' field */
+  /*    in the @PS_FontInfoRec structure which is only guaranteed to       */
+  /*    return the correct results for Type~1 fonts.                       */
+  /*                                                                       */
+  FT_EXPORT( FT_UShort )
+  FT_Get_FSType_Flags( FT_Face  face );
 
 
   /*************************************************************************/
