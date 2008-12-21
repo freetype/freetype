@@ -2008,7 +2008,10 @@
           if ( before >= edges && before < edge   &&
                after < edge_limit && after > edge )
           {
-            edge->pos = before->pos +
+            if ( after->opos == before->opos )
+              edge->pos = before->pos;
+            else
+              edge->pos = before->pos +
                           FT_MulDiv( edge->opos - before->opos,
                                      after->pos - before->pos,
                                      after->opos - before->opos );

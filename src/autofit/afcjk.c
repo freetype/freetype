@@ -1253,10 +1253,15 @@
         else if ( after >= edge_limit )
           af_cjk_align_serif_edge( hints, before, edge );
         else
-          edge->pos = before->pos +
-            FT_MulDiv( edge->fpos - before->fpos,
-                       after->pos - before->pos,
-                       after->fpos - before->fpos );
+        {
+          if ( after->fpos == before->fpos )
+            edge->pos = before->pos;
+          else
+            edge->pos = before->pos +
+                        FT_MulDiv( edge->fpos - before->fpos,
+                                   after->pos - before->pos,
+                                   after->fpos - before->fpos );
+        }
       }
     }
   }
