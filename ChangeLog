@@ -1,3 +1,10 @@
+2008-12-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftpfr.c (FT_Get_PFR_Metrics): Protect against NULL
+	arguments.
+	Fix return value for non-PFR fonts.  Both problems reported by Chi
+	Nguyen <chint@necsv.com>.
+
 2008-12-21  anonymous
 
 	FT_USE_MODULE declares things as:
