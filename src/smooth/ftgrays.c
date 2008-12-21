@@ -184,7 +184,7 @@
 #define ErrRaster_Invalid_Mode      Smooth_Err_Cannot_Render_Glyph
 #define ErrRaster_Invalid_Outline   Smooth_Err_Invalid_Outline
 #define ErrRaster_Memory_Overflow   Smooth_Err_Out_Of_Memory
-#define ErrRaster_Invalid_Argument  Smooth_Err_Bad_Argument
+#define ErrRaster_Invalid_Argument  Smooth_Err_Invalid_Argument
 
 #endif /* !_STANDALONE_ */
 

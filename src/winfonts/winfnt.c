@@ -360,7 +360,7 @@
 
         if ( face_index >= font_count )
         {
-          error = FNT_Err_Bad_Argument;
+          error = FNT_Err_Invalid_Argument;
           goto Exit;
         }
         else if ( face_index < 0 )
@@ -566,7 +566,7 @@
 
       if ( face_index >= face->root.num_faces )
       {
-        error = FNT_Err_Bad_Argument;
+        error = FNT_Err_Invalid_Argument;
         goto Exit;
       }
     }
@@ -719,7 +719,7 @@
       if ( !error )
       {
         if ( face_index > 0 )
-          error = FNT_Err_Bad_Argument;
+          error = FNT_Err_Invalid_Argument;
         else if ( face_index < 0 )
           goto Exit;
       }

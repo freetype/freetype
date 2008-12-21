@@ -66,7 +66,7 @@
                    FT_Pos   *anadvance )
   {
     PFR_Face  face  = (PFR_Face)pfrface;
-    FT_Error  error = PFR_Err_Bad_Argument;
+    FT_Error  error = PFR_Err_Invalid_Argument;
 
 
     *anadvance = 0;

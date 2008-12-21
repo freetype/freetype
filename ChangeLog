@@ -1,5 +1,12 @@
 2008-12-21  Werner Lemberg  <wl@gnu.org>
 
+	* src/pfr/pfrdrivr.c, src/winfonts/winfnt.c, src/cache/ftcmanag.c,
+	src/smooth/ftgrays.c, src/base/ftobjc.s, src/sfobjs.c:
+	s/_Err_Bad_Argument/_Err_Invalid_Argument/.  The former is for
+	errors in the bytecode interpreter only.
+
+2008-12-21  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftpfr.c (FT_Get_PFR_Metrics): Protect against NULL
 	arguments.
 	Fix return value for non-PFR fonts.  Both problems reported by Chi

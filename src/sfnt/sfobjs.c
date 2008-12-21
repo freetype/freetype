@@ -458,7 +458,7 @@
       face_index = 0;
 
     if ( face_index >= face->ttc_header.count )
-        return SFNT_Err_Bad_Argument;
+      return SFNT_Err_Invalid_Argument;
 
     if ( FT_STREAM_SEEK( face->ttc_header.offsets[face_index] ) )
       return error;
