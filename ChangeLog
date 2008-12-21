@@ -1,8 +1,44 @@
+2008-12-21  anonymous
+
+	FT_USE_MODULE declares things as:
+
+	  extern const FT_Module_Class
+
+	(or similar for C++).  However, the actual types of the variables
+	being declared are often different, e.g., FT_Driver_ClassRec or
+	FT_Renderer_Class.  (Some are, indeed, FT_Module_Class.)
+
+	This works with most C compilers (since those structs begin with an
+	FT_Module_Class struct), but technically it's undefined behavior.
+
+	To quote the ISO/IEC 9899:TC2 final committee draft, section 6.2.7
+	paragraph 2:
+
+	  All declarations that refer to the same object or function shall
+	  have compatible type; otherwise, the behavior is undefined.
+
+	(And they are not compatible types.)
+
+	Most C compilers don't reject (or even detect!) code which has this
+	issue, but the GCC LTO development branch compiler does.  (It
+	outputs the types of the objects while generating .o files, along
+	with a bunch of other information, then compares them when doing the
+	final link-time code generation pass.)
+
+	Patch from Savannah bug #25133.
+
+	* src/base/ftinit.c (FT_USE_MODULE): Include variable type.
+
+	* builds/amiga/include/freetype/config/ftmodule.h,
+	include/freetype/config/ftmodule.h, */module.mk: Updated to declare
+	pass correct types to FT_USE_MODULE.
+
 2008-12-21  Hongbo Ni  <hongbo@njstar.com>
 
 	* src/autofit/aflatin.c (af_latin_hint_edges),
 	src/autofit/aflatin2.c (af_latin2_hint_edges), src/autofit/afcjk.c
-	(af_cjk_hint_edges): Protect against division by zero.
+	(af_cjk_hint_edges): Protect against division by zero.  This fixes
+	Savannah bug #25124.
 
 2008-12-18  Werner Lemberg  <wl@gnu.org>
 
