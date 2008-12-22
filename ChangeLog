@@ -1,3 +1,8 @@
+2008-12-22  Steve Grubb
+
+	* builds/unix/ftsystem.c (FT_Stream_Open): Reject zero-length files. 
+	Patch from Savannah bug #25151.
+
 2008-12-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrdrivr.c, src/winfonts/winfnt.c, src/cache/ftcmanag.c,
