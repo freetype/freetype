@@ -468,7 +468,8 @@
     if ( error )
       return error;
 
-    face->root.num_faces = face->ttc_header.count;
+    face->root.num_faces  = face->ttc_header.count;
+    face->root.face_index = face_index;
 
     return error;
   }

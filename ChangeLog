@@ -1,3 +1,12 @@
+2008-12-26  Werner Lemberg  <wl@gnu.org>
+
+	Set `face_index' field in FT_Face for all font formats.
+
+	* cff/cffobjs.c (cff_face_init), winfonts/winfnt.c (FNT_Face_Init),
+	sfnt/sfobjs.c (sfnt_init_face): Do it.
+
+	* docs/CHANGES: Document it.
+
 2008-12-22  Steve Grubb
 
 	* builds/unix/ftsystem.c (FT_Stream_Open): Reject zero-length files. 

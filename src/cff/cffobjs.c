@@ -465,8 +465,7 @@
         pure_cff = 0;
 
         /* load font directory */
-        error = sfnt->load_face( stream, face,
-                                 face_index, num_params, params );
+        error = sfnt->load_face( stream, face, 0, num_params, params );
         if ( error )
           goto Exit;
       }
@@ -514,6 +513,8 @@
 
       cff->pshinter = pshinter;
       cff->psnames  = (void*)psnames;
+
+      cffface->face_index = face_index;
 
       /* Complement the root flags with some interesting information. */
       /* Note that this is only necessary for pure CFF and CEF fonts; */

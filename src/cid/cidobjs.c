@@ -324,6 +324,7 @@
       goto Exit;
 
     /* check the face index */
+    /* XXX: handle CID fonts with more than a single face */
     if ( face_index != 0 )
     {
       FT_ERROR(( "cid_face_init: invalid face index\n" ));

@@ -14,6 +14,11 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
       configuration  macros  TT_CONFIG_OPTION_BYTECODE_INTERPRETER and
       TT_CONFIG_OPTION_UNPATENTED_HINTING were defined.
 
+    - The  `face_index'  field  in   the  `FT_Face'  structure  wasn't
+      initialized properly after calling FT_Open_Face and friends with
+      a positive face index for CFFs,  WinFNTs, and, most importantly,
+      for TrueType Collections (TTCs).
+
 
   II. IMPORTANT CHANGES
 

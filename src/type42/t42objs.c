@@ -188,7 +188,7 @@
       goto Exit;
 
     /* check the face index */
-    if ( face_index != 0 )
+    if ( face_index > 0 )
     {
       FT_ERROR(( "T42_Face_Init: invalid face index\n" ));
       error = T42_Err_Invalid_Argument;
@@ -202,7 +202,7 @@
 
     root->num_glyphs   = type1->num_glyphs;
     root->num_charmaps = 0;
-    root->face_index   = face_index;
+    root->face_index   = 0;
 
     root->face_flags = FT_FACE_FLAG_SCALABLE    |
                        FT_FACE_FLAG_HORIZONTAL  |
