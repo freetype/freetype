@@ -8,7 +8,8 @@
 /*  This file is for Mac OS X only; see builds/mac/ftoldmac.c for          */
 /*  classic platforms built by MPW.                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008,         */
+/*            2009 by                                                      */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -100,16 +101,10 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include <sys/syslimits.h> /* PATH_MAX */
 
+  /* Don't want warnings about our own use of deprecated functions. */
 #define FT_DEPRECATED_ATTRIBUTE
 
 #include FT_MAC_H
-
-  /* undefine blocking-macros in ftmac.h */
-#undef FT_GetFile_From_Mac_Name( a, b, c )
-#undef FT_GetFile_From_Mac_ATS_Name( a, b, c )
-#undef FT_New_Face_From_FOND( a, b, c, d )
-#undef FT_New_Face_From_FSSpec( a, b, c, d )
-#undef FT_New_Face_From_FSRef( a, b, c, d )
 
 #ifndef kATSOptionFlagsUnRestrictedScope /* since Mac OS X 10.1 */
 #define kATSOptionFlagsUnRestrictedScope kATSOptionFlagsDefault
@@ -694,7 +689,7 @@
   }
 
 
-  /* Create a new FT_Face from a file spec to an LWFN file. */
+  /* Create a new FT_Face from a file path to an LWFN file. */
   static FT_Error
   FT_New_Face_From_LWFN( FT_Library    library,
                          const UInt8*  pathname,
@@ -793,7 +788,7 @@
   }
 
 
-  /* Create a new FT_Face from a file spec to a suitcase file. */
+  /* Create a new FT_Face from a file path to a suitcase file. */
   static FT_Error
   FT_New_Face_From_Suitcase( FT_Library    library,
                              const UInt8*  pathname,
