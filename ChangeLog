@@ -857,7 +857,7 @@
 2008-07-27  Werner Lemberg  <wl@gnu.org>
 
 	Add extra mappings for `Tcommaaccent' and `tcommaaccent'.  This
-	fixes Savanna bug #23940.
+	fixes Savannah bug #23940.
 
 	* src/psnames/psmodule.c (WGL_EXTRA_LIST_SIZE): Rename to...
 	(EXTRA_GLYPH_LIST_SIZE): This.
