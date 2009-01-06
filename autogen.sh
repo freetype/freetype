@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2005, 2006, 2007, 2008 by
+# Copyright 2005, 2006, 2007, 2008, 2009 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -22,21 +22,21 @@ run ()
 
 get_major_version ()
 {
-  echo $1 | sed -e 's/\([0-9]\+\)\..*/\1/g'
+  echo $1 | sed -e 's/\([0-9][0-9]*\)\..*/\1/g'
 }
 
 get_minor_version ()
 {
-  echo $1 | sed -e 's/[0-9]\+\.\([0-9]\+\).*/\1/g'
+  echo $1 | sed -e 's/[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/g'
 }
 
 get_patch_version ()
 {
   # tricky: some version numbers don't include a patch
   # separated with a point, but something like 1.4-p6
-  patch=`echo $1 | sed -e 's/[0-9]\+\.[0-9]\+\.\([0-9]\+\).*/\1/g'`
+  patch=`echo $1 | sed -e 's/[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/g'`
   if test "$patch" = "$1"; then
-    patch=`echo $1 | sed -e 's/[0-9]\+\.[0-9]\+\-p\([0-9]\+\).*/\1/g'`
+    patch=`echo $1 | sed -e 's/[0-9][0-9]*\.[0-9][0-9]*\-p\([0-9][0-9]*\).*/\1/g'`
     # if there isn't any patch number, default to 0
     if test "$patch" = "$1"; then
       patch=0
@@ -110,9 +110,9 @@ check_tool_version ()
 }
 
 if test ! -f ./builds/unix/configure.raw; then
- echo "You must be in the same directory as \`autogen.sh'."
- echo "Bootstrapping doesn't work if srcdir != builddir."
- exit 1
+  echo "You must be in the same directory as \`autogen.sh'."
+  echo "Bootstrapping doesn't work if srcdir != builddir."
+  exit 1
 fi
 
 # On MacOS X, the GNU libtool is named `glibtool'.
@@ -146,7 +146,7 @@ cd builds/unix
 
 echo "generating \`configure.ac'"
 sed -e "s;@VERSION@;$freetype_major$freetype_minor$freetype_patch;" \
-    < configure.raw > configure.ac
+  < configure.raw > configure.ac
 
 run aclocal -I . --force
 run $LIBTOOLIZE --force --copy --install
