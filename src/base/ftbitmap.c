@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType utility functions for bitmaps (body).                       */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006, 2007, 2008 by                              */
+/*  Copyright 2004, 2005, 2006, 2007, 2008, 2009 by                        */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -388,6 +388,8 @@
     case FT_PIXEL_MODE_GRAY:
     case FT_PIXEL_MODE_GRAY2:
     case FT_PIXEL_MODE_GRAY4:
+    case FT_PIXEL_MODE_LCD:
+    case FT_PIXEL_MODE_LCD_V:
       {
         FT_Int   pad;
         FT_Long  old_size;
@@ -482,6 +484,8 @@
 
 
     case FT_PIXEL_MODE_GRAY:
+    case FT_PIXEL_MODE_LCD:
+    case FT_PIXEL_MODE_LCD_V:
       {
         FT_Int    width   = source->width;
         FT_Byte*  s       = source->buffer;
