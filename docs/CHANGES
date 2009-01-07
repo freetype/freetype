@@ -65,6 +65,9 @@ CHANGES BETWEEN 2.3.8 and 2.3.7
       API.   (The functions  in  FT_SYNTHESIS_H are  still subject  to
       change, however.)
 
+    - In the  `ftdiff'  demo  program you  can now  toggle the  use of
+      FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH with key `a'.
+
 
 ======================================================================
 
@@ -3237,7 +3240,7 @@ Extensions support:
 
 ------------------------------------------------------------------------
 
-Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by
+Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file  is  part  of the  FreeType  project, and may  only be  used,
