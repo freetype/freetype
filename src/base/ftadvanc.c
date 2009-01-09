@@ -25,7 +25,7 @@
   _ft_face_scale_advances( FT_Face    face,
                            FT_Fixed*  advances,
                            FT_UInt    count,
-                           FT_UInt    flags )
+                           FT_UInt32  flags )
   {
     FT_Fixed  scale;
     FT_UInt   nn;
@@ -69,7 +69,7 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Get_Advance( FT_Face    face,
                   FT_UInt    gindex,
-                  FT_UInt    flags,
+                  FT_UInt32  flags,
                   FT_Fixed  *padvance )
   {
     FT_Face_GetAdvancesFunc  func;
@@ -105,7 +105,7 @@
   FT_Get_Advances( FT_Face    face,
                    FT_UInt    start,
                    FT_UInt    count,
-                   FT_UInt    flags,
+                   FT_UInt32  flags,
                    FT_Fixed  *padvances )
   {
     FT_Face_GetAdvancesFunc  func;

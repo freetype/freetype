@@ -1,5 +1,17 @@
 2009-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftadvanc.c (_ft_face_scale_advances, FT_Get_Advance,
+	FT_Get_Advances): Extend the type of load_flags from FT_UInt to
+	FT_UInt32, to pass 32-bit flags on 16bit platforms.
+	* src/cff/cffdrivr.c (cff_get_advances): Ditto.
+	* src/truetype/ttdriver.c (tt_get_advances): Ditto.
+	* include/freetype/ftadvanc.h (FT_Get_Advance, FT_Get_Advances):
+	Ditto.
+	* include/freetype/internal/ftdriver.h (FT_Face_GetAdvancesFunc):
+	Ditto.
+
+2009-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftobjs.c (FT_Done_Library): Issue an error message when
 	FT_Done_Face() cannot free all faces. If the list of the opened
 	faces includes broken face which FT_Done_Face() cannot free,

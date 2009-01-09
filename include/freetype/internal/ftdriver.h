@@ -108,7 +108,7 @@ FT_BEGIN_HEADER
   (*FT_Face_GetAdvancesFunc)( FT_Face    face,
                               FT_UInt    first,
                               FT_UInt    count,
-                              FT_UInt    flags,
+                              FT_UInt32  flags,
                               FT_Fixed*  advances );
 
 
