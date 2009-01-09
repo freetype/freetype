@@ -42,7 +42,7 @@
   gxv_mort_feature_validate( GXV_mort_feature  f,
                              GXV_Validator     valid )
   {
-    if ( f->featureType > gxv_feat_registry_length )
+    if ( f->featureType >= gxv_feat_registry_length )
     {
       GXV_TRACE(( "featureType %d is out of registered range, "
                   "setting %d is unchecked\n",
