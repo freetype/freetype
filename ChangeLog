@@ -1,3 +1,12 @@
+2009-01-09  Werner Lemberg  <wl@gnu.org>
+
+	Fix problem with T1_FIELD_{NUM,FIXED}_TABLE2.
+
+	* src/psaux/psobjs.c (ps_parser_load_field_table): Don't handle
+	`count_offset' if it is zero (i.e., unused).  Otherwise, the first
+	element of the structure which holds the data is erroneously
+	modified.  Problem reported by Chi Nguyen <chint@necsv.com>.
+
 2009-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftadvanc.c (_ft_face_scale_advances, FT_Get_Advance,
