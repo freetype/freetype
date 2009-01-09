@@ -129,7 +129,7 @@
   tt_get_advances( FT_Face    ttface,
                    FT_UInt    start,
                    FT_UInt    count,
-                   FT_UInt32  flags,
+                   FT_Int32   flags,
                    FT_Fixed  *advances )
   {
     FT_UInt  nn;

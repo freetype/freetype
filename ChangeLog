@@ -1,3 +1,15 @@
+2009-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/base/ftadvanc.c (_ft_face_scale_advances, FT_Get_Advance,
+	FT_Get_Advances): Change the type of load_flags from FT_UInt32 to
+	FT_Int32, to match with the flags for FT_Load_Glyph().
+	* src/cff/cffdrivr.c (cff_get_advances): Ditto.
+	* src/truetype/ttdriver.c (tt_get_advances): Ditto.
+	* include/freetype/ftadvanc.h (FT_Get_Advance, FT_Get_Advances):
+	Ditto.
+	* include/freetype/internal/ftdriver.h (FT_Face_GetAdvancesFunc):
+	Ditto.
+
 2009-01-09  Daniel Zimmermann  <netzimme@aol.com>
 
 	* src/gxvalid/gxvmort.c (gxv_mort_feature_validate): Fix wrong
