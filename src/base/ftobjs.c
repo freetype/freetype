@@ -4196,7 +4196,11 @@
 
         faces = &FT_DRIVER(module)->faces_list;
         while ( faces->head )
+	{
           FT_Done_Face( FT_FACE( faces->head->data ) );
+	  if ( faces->head )
+            FT_ERROR(( "FT_Done_Library: failed to free some faces\n" ));
+	}
       }
     }
 
