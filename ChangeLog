@@ -2,6 +2,9 @@
 
 	* docs/formats.txt: Add link to PCF specification.
 
+	* include/freetype/ftbdf.h (FT_Get_BDF_Property): Improve
+	documentation.
+
 2009-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftadvanc.c (_ft_face_scale_advances, FT_Get_Advance,
