@@ -1,3 +1,7 @@
+2009-01-11  Werner Lemberg  <wl@gnu.org>
+
+	* docs/formats.txt: Add link to PCF specification.
+
 2009-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftadvanc.c (_ft_face_scale_advances, FT_Get_Advance,
@@ -13,7 +17,7 @@
 2009-01-09  Daniel Zimmermann  <netzimme@aol.com>
 
 	* src/gxvalid/gxvmort.c (gxv_mort_feature_validate): Fix wrong
-	length check. From Savannah patch #6682.
+	length check.  From Savannah patch #6682.
 
 2009-01-09  Werner Lemberg  <wl@gnu.org>
 
