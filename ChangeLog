@@ -1,3 +1,15 @@
+2009-01-12  Werner Lemberg  <wl@gnu.org>
+
+	Fix stdlib dependencies.
+
+	Problem reported by Mickey Gabel <mickey@monfort.co.il>.
+
+	* include/freetype/config/ftstdlib.h (ft_exit): Removed.  Unused.
+
+	* src/autofit/afhints.c, src/base/ftlcdfil.c, src/smooth/ftsmooth.c:
+	s/memcpy/ft_memcpy/.
+	* src/psaux/t1decode.c: s/memset/ft_memset/, s/memcpy/ft_memcpy/.
+
 2009-01-11  Werner Lemberg  <wl@gnu.org>
 
 	* docs/formats.txt: Add link to PCF specification.
