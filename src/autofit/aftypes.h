@@ -69,7 +69,7 @@ extern void*  _af_debug_hints;
 
 #else /* !AF_DEBUG */
 
-#define AF_LOG( x )  do ; while ( 0 )        /* nothing */
+#define AF_LOG( x )  do { } while ( 0 )        /* nothing */
 
 #endif /* !AF_DEBUG */
 

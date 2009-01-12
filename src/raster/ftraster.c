@@ -181,13 +181,13 @@
   /* Disable the tracing mechanism for simplicity -- developers can      */
   /* activate it easily by redefining these two macros.                  */
 #ifndef FT_ERROR
-#define FT_ERROR( x )  do ; while ( 0 )     /* nothing */
+#define FT_ERROR( x )  do { } while ( 0 )     /* nothing */
 #endif
 
 #ifndef FT_TRACE
-#define FT_TRACE( x )   do ; while ( 0 )    /* nothing */
-#define FT_TRACE1( x )  do ; while ( 0 )    /* nothing */
-#define FT_TRACE6( x )  do ; while ( 0 )    /* nothing */
+#define FT_TRACE( x )   do { } while ( 0 )    /* nothing */
+#define FT_TRACE1( x )  do { } while ( 0 )    /* nothing */
+#define FT_TRACE6( x )  do { } while ( 0 )    /* nothing */
 #endif
 
 #define Raster_Err_None          0
@@ -370,7 +370,7 @@
 #define RAS_VARS       /* void */
 #define RAS_VAR        /* void */
 
-#define FT_UNUSED_RASTER  do ; while ( 0 )
+#define FT_UNUSED_RASTER  do { } while ( 0 )
 
 
 #else /* FT_STATIC_RASTER */

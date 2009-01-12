@@ -163,9 +163,9 @@
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
 
-#define FT_TRACE5( x )  do ; while ( 0 )     /* nothing */
-#define FT_TRACE7( x )  do ; while ( 0 )     /* nothing */
-#define FT_ERROR( x )   do ; while ( 0 )     /* nothing */
+#define FT_TRACE5( x )  do { } while ( 0 )     /* nothing */
+#define FT_TRACE7( x )  do { } while ( 0 )     /* nothing */
+#define FT_ERROR( x )   do { } while ( 0 )     /* nothing */
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 

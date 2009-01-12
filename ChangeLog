@@ -1,5 +1,12 @@
 2009-01-12  Werner Lemberg  <wl@gnu.org>
 
+	Avoid compiler warnings.
+
+	* */*: s/do ; while ( 0 )/do { } while ( 0 )/.
+	Reported by Sean McBride <sean@rogue-research.com>.
+
+2009-01-12  Werner Lemberg  <wl@gnu.org>
+
 	Fix stdlib dependencies.
 
 	Problem reported by Mickey Gabel <mickey@monfort.co.il>.
