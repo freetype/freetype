@@ -1,5 +1,10 @@
 2009-01-13  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftobjs.c (FT_Get_FSType_Flags): Cast for compilation
+	with C++.
+
+2009-01-13  Werner Lemberg  <wl@gnu.org>
+
 	Don't use stdlib.h and friends directly.
 	Reported by Mickey Gabel <mickey@monfort.co.il>.
 
