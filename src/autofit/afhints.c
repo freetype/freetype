@@ -127,7 +127,7 @@
 
 #ifdef AF_DEBUG
 
-#include <stdio.h>
+#include FT_CONFIG_STANDARD_LIBRARY_H
 
   static const char*
   af_dir_str( AF_Direction  dir )

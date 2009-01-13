@@ -33,8 +33,7 @@
                     * memory, however.
                     */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include FT_CONFIG_STANDARD_LIBRARY_H
 
   FT_BASE_DEF( const char* )  _ft_debug_file   = 0;
   FT_BASE_DEF( long )         _ft_debug_lineno = 0;

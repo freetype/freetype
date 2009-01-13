@@ -1,3 +1,18 @@
+2009-01-13  Werner Lemberg  <wl@gnu.org>
+
+	Don't use stdlib.h and friends directly.
+	Reported by Mickey Gabel <mickey@monfort.co.il>.
+
+	* src/base/ftdbgmem.c: s/<stdlib.h>/FT_CONFIG_STANDARD_LIBRARY_H/.
+
+	* src/gzip/ftgzip.c, src/lzw/ftlzw.c, src/raster/ftmisc.h:
+	s/<string.h>/FT_CONFIG_STANDARD_LIBRARY_H/.
+
+	* src/autofit/aftypes.h, src/autofit/afhints.c,
+	src/pshinter/pshalgo.c: s/<stdio.h>/FT_CONFIG_STANDARD_LIBRARY_H/
+
+	* src/lzw/ftlzw.c, src/base/ftdbgmem.c: Don't include stdio.h.
+
 2009-01-12  Werner Lemberg  <wl@gnu.org>
 
 	Avoid compiler warnings.
