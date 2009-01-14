@@ -1,3 +1,7 @@
+2009-01-14  Werner Lemberg  <wl@gnu.org>
+
+	* builds/toplevel.mk (dist): Compress better.
+
 2009-01-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Get_FSType_Flags): Cast for compilation
@@ -383,7 +387,7 @@
 	TT_URC_PHAISTOS_DISC, TT_URC_OLD_ANATOLIAN, TT_URC_GAME_TILES): New
 	macros for OpenType 1.5.
 
-2008-11-08  Wenlin Institute <wenlin@wenlin.com>
+2008-11-08  Wenlin Institute  <wenlin@wenlin.com>
 
 	* src/base/ftobjs.c (ft_glyphslot_free_bitmap): Protect against
 	slot->internal == NULL.  Reported by Graham Asher.

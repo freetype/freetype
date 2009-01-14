@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2003, 2006, 2008 by
+# Copyright 1996-2000, 2001, 2003, 2006, 2008, 2009 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -219,12 +219,12 @@ dist:
 	mv tmp freetype-$(version)
 
 	tar cfh - freetype-$(version) \
-	| gzip -c > freetype-$(version).tar.gz
+	| gzip -9 -c > freetype-$(version).tar.gz
 	tar cfh - freetype-$(version) \
 	| bzip2 -c > freetype-$(version).tar.bz2
 
 	@# Use CR/LF for zip files.
-	zip -lr ft$(winversion).zip freetype-$(version)
+	zip -lr9 ft$(winversion).zip freetype-$(version)
 
 	rm -fr freetype-$(version)
 
