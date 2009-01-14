@@ -1,5 +1,29 @@
 2009-01-14  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.3.8 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-8'.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.3.8.
+
+	* README, Jamfile (RefDoc), builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj: s/2.3.7/2.3.8/, s/237/238/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 8.
+
+	* builds/unix/configure.raw (version_info): Set to 9:19:3.
+
+	* docs/release: Updated.
+
+2009-01-14  Werner Lemberg  <wl@gnu.org>
+
 	* builds/toplevel.mk (dist): Compress better.
 
 2009-01-13  Werner Lemberg  <wl@gnu.org>
