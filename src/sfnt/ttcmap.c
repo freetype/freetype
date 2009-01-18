@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008 by                  */
+/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by            */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -696,6 +696,14 @@
 
       p     += num_ranges * 2;
       offset = FT_PEEK_USHORT( p );
+
+      /* some fonts handle the last segment incorrectly; */
+      /* we have to catch it                             */
+      if ( range_index     >= num_ranges - 1 &&
+           cmap->cur_start == 0xFFFFU        &&
+           cmap->cur_end   == 0xFFFFU        &&
+           cmap->cur_delta == 0x1U           )
+        offset = 0;
 
       if ( offset != 0xFFFFU )
       {

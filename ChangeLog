@@ -1,5 +1,14 @@
 2009-01-18  Werner Lemberg  <wl@gnu.org>
 
+	Protect FT_Get_Next_Char.
+
+	* src/sfnt/ttcmap.c (tt_cmap4_set_range): Apply fix similar to
+	change from 2008-07-22.
+
+	Patch from Ronen Ghoshal <rghoshal@emtex.com>.
+
+2009-01-18  Werner Lemberg  <wl@gnu.org>
+
 	Implement FT_Get_Name_Index for SFNT driver.
 
 	* src/sfnt/sfdriver.c (sfnt_get_name_index): New function.
