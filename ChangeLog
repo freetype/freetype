@@ -1,3 +1,10 @@
+2009-01-18  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftstroke.h (FT_Outline_GetInsideBorder): Fix
+	documentation.  Problem reported by Truc Truong <tructv@necsv.com>.
+
+	* docs/CHANGES: Updated.
+
 2009-01-14  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.8 released.
