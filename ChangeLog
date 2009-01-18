@@ -1,5 +1,14 @@
 2009-01-18  Werner Lemberg  <wl@gnu.org>
 
+	Implement FT_Get_Name_Index for SFNT driver.
+
+	* src/sfnt/sfdriver.c (sfnt_get_name_index): New function.
+	(sfnt_service_glyph_dict): Use it.
+
+	Problem reported by Truc Truong <tructv@necsv.com>.
+
+2009-01-18  Werner Lemberg  <wl@gnu.org>
+
 	* include/freetype/ftstroke.h (FT_Outline_GetInsideBorder): Fix
 	documentation.  Problem reported by Truc Truong <tructv@necsv.com>.
 
