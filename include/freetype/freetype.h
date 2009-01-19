@@ -3082,7 +3082,7 @@ FT_BEGIN_HEADER
   /*    char_code :: The starting character code.                          */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    agindex   :: Glyph index of first character code.  0~if charmap    */
+  /*    agindex   :: Glyph index of next character code.  0~if charmap     */
   /*                 is empty.                                             */
   /*                                                                       */
   /* <Return>                                                              */
