@@ -357,9 +357,9 @@ FT_BEGIN_HEADER
       "shrl  $16, %%eax\n"
       "shll  $16, %%edx\n"
       "addl  %%edx, %%eax\n"
-      : "=a"(result), "+d"(b)
-      : "a"(a)
-      : "%ecx" );
+      : "=a"(result), "=d"(b)
+      : "a"(a), "d"(b)
+      : "%ecx", "cc" );
     return result;
   }
 

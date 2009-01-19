@@ -1,3 +1,11 @@
+2009-01-19  Michael Lotz  <mmlr@mlotz.ch>
+
+	Fix Savannah bug #25355.
+
+	* include/freetype/config/ftconfig.h (FT_MulFix_i386): Make
+	assembler code work with gcc 2.95.3 (as used by the Haiku project).
+	Add `cc' register to the clobber list.
+
 2009-01-18  Werner Lemberg  <wl@gnu.org>
 
 	Protect FT_Get_Next_Char.
