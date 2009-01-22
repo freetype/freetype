@@ -1,3 +1,19 @@
+2009-01-23  Werner Lemberg  <wl@gnu.org>
+
+	Move FT_Get_FSType_Flags to a separate file.
+	Problem reported by Mickey Gabel <mickey@monfort.co.il>.
+
+	* src/base/ftobjs.c (FT_Get_FSType_Flags): Move to...
+	* src/base/ftfstype.c: This new file.
+
+	* modules.cfg (BASE_EXTENSION): Add ftfstype.c.
+
+	* docs/INSTALL.ANY: Updated.
+
+	* builds/mac/*.txt, builds/amiga/*makefile*,
+	builds/win32/{visualc,visualce}/freetype.*, builds/symbian/*:
+	Updated.
+
 2009-01-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/ftsystem.c (FT_Stream_Open): Fix 2 error

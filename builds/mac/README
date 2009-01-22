@@ -61,11 +61,11 @@ environment by Metrowerks. GCC for MPW and Symantec
   /Developer/Tools/SetFile of DevTool is useful to
   manipulate from commandline.
 
-  2-2. Metrowerks CodeWarriror
-  ----------------------------
+  2-2. Metrowerks CodeWarrior
+  ---------------------------
 
   XML project file is generated and tested by
-  CodeWarriror 9.0.  Older versions are not tested
+  CodeWarrior 9.0.  Older versions are not tested
   at all. At present, static library for ppc target
   is available in the project file.
 

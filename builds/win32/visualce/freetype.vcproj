@@ -4785,6 +4785,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\base\ftfstype.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\cache\ftcache.c"
 				>
 				<FileConfiguration

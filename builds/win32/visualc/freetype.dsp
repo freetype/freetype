@@ -226,6 +226,10 @@ SOURCE=..\..\..\src\base\ftbitmap.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\base\ftfstype.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\base\ftgasp.c
 # End Source File
 # Begin Source File
