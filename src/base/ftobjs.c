@@ -1417,7 +1417,7 @@
                                          &length,
                                          &is_sfnt_cid );
     if ( error )
-      return error;
+      goto Exit;
 
     if ( FT_Stream_Seek( stream, pos + offset ) )
       goto Exit;
@@ -1603,6 +1603,10 @@
                                            0, NULL,
                                            aface );
     if ( !error )
+      goto Exit;
+
+    /* rewind sfnt stream before open_face_PS_from_sfnt_stream() */
+    if ( FT_Stream_Seek( stream, flag_offset + 4 ) )
       goto Exit;
 
     if ( FT_ALLOC( sfnt_data, (FT_Long)rlen ) )

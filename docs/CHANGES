@@ -2,6 +2,10 @@ CHANGES BETWEEN 2.3.9 and 2.3.8
 
   I. IMPORTANT BUG FIXES
 
+    - The POSIX support  of MacOS resource-fork fonts  (Suitcase fonts
+      and LaserWriter Type1 PostScript fonts) was broken in 2.3.8.  If
+      FreeType2 is built without Carbon framework, these fonts are not
+      handled correctly. The version 2.3.7 didn't have this bug.
 
   II. IMPORTANT CHANGES
 

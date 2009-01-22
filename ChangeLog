@@ -1,3 +1,14 @@
+2009-01-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix Savannah bug #25347.
+
+	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream): Rewind
+	the stream to the original position passed to this function,
+	when ft_lookup_PS_in_sfnt_stream() failed.
+	(Mac_Read_sfnt_Resource): Rewind the stream to the head of
+	sfnt resource body, when open_face_PS_from_sfnt_stream()
+	failed.
+
 2009-01-19  Michael Lotz  <mmlr@mlotz.ch>
 
 	Fix Savannah bug #25355.
