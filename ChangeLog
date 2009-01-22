@@ -1,5 +1,10 @@
 2009-01-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* builds/unix/ftsystem.c (FT_Stream_Open): Fix 2 error
+	messages ending without "\n".
+
+2009-01-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Fix Savannah bug #25347.
 
 	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream): Rewind

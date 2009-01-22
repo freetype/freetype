@@ -277,12 +277,12 @@
     /*                                                                 */
     if ( stat_buf.st_size > LONG_MAX )
     {
-      FT_ERROR(( "FT_Stream_Open: file is too big" ));
+      FT_ERROR(( "FT_Stream_Open: file is too big\n" ));
       goto Fail_Map;
     }
     else if ( stat_buf.st_size == 0 )
     {
-      FT_ERROR(( "FT_Stream_Open: zero-length file" ));
+      FT_ERROR(( "FT_Stream_Open: zero-length file\n" ));
       goto Fail_Map;
     }
 
