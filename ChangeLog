@@ -1,3 +1,10 @@
+2009-01-25  Werner Lemberg  <wl@gnu.org>
+
+	Fix SCANCTRL handling in TTFs.
+	Problem reported by Alexey Kryukov <anagnost@yandex.ru>.
+
+	* src/truetype/ttinterp.c (Ins_SCANCTRL): Fix threshold handling.
+
 2009-01-23  Werner Lemberg  <wl@gnu.org>
 
 	Move FT_Get_FSType_Flags to a separate file.
