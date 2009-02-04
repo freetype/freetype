@@ -1,3 +1,10 @@
+2009-02-04  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #25480.
+
+	* builds/unix/freetype-config.in: For --ftversion, don't use $prefix
+	but $includedir.
+
 2009-01-31  Werner Lemberg  <wl@gnu.org>
 
 	Minor docmaker improvements.

@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2008 by
+# Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2008, 2009 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -76,17 +76,7 @@ while test $# -gt 0 ; do
     exit 0
     ;;
   --ftversion)
-    major=`grep define @prefix@/include/freetype2/freetype/freetype.h \
-           | grep FREETYPE_MAJOR \
-           | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
-    minor=`grep define @prefix@/include/freetype2/freetype/freetype.h \
-           | grep FREETYPE_MINOR \
-           | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
-    patch=`grep define @prefix@/include/freetype2/freetype/freetype.h \
-           | grep FREETYPE_PATCH \
-           | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
-    echo $major.$minor.$patch
-    exit 0
+    echo_ft_version=yes
     ;;
   --cflags)
     echo_cflags=yes
@@ -125,6 +115,19 @@ else
     includedir=$prefix/include
     libdir=$prefix/lib
   fi
+fi
+
+if test "$echo_ft_version" = "yes" ; then
+  major=`grep define $includedir/freetype2/freetype/freetype.h \
+         | grep FREETYPE_MAJOR \
+         | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
+  minor=`grep define $includedir/freetype2/freetype/freetype.h \
+         | grep FREETYPE_MINOR \
+         | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
+  patch=`grep define $includedir/freetype2/freetype/freetype.h \
+         | grep FREETYPE_PATCH \
+         | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
+  echo $major.$minor.$patch
 fi
 
 if test "$echo_cflags" = "yes" ; then
