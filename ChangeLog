@@ -1,3 +1,12 @@
+2009-02-09  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #25495.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Test for bitmap strikes before
+	setting metrics and bbox values.  This ensures that the check for a
+	font with neither a `glyf' table nor bitmap strikes can be performed
+	early enough to set metrics and bbox values too.
+
 2009-02-04  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #25480.
