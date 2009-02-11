@@ -1,3 +1,8 @@
+2009-02-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttobjs.c (tt_check_trickyness): Add `DFKaiShu'.
+	Reported by David Bevan <dbevan@emtex.com>.
+
 2009-02-09  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #25495.
