@@ -1,3 +1,10 @@
+2009-02-15  Matt Godbolt  <matt@godbolt.org>
+
+	Fix Savannah bug #25588.
+
+	* builds/unix/ftconfig.in (FT_MulFix_arm): Use correct syntax for
+	`orr' instruction.
+
 2009-02-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttobjs.c (tt_check_trickyness): Add `DFKaiShu'.
