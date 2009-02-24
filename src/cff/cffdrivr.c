@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -188,29 +188,28 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  cff_get_advances( FT_Face    ftface,
+  cff_get_advances( FT_Face    face,
                     FT_UInt    start,
                     FT_UInt    count,
                     FT_Int32   flags,
                     FT_Fixed*  advances )
   {
-    CFF_Face      face = (CFF_Face)ftface;
     FT_UInt       nn;
     FT_Error      error = CFF_Err_Ok;
-    FT_GlyphSlot  slot  = face->root.glyph;
+    FT_GlyphSlot  slot  = face->glyph;
 
 
     flags |= FT_LOAD_ADVANCE_ONLY;
 
     for ( nn = 0; nn < count; nn++ )
     {
-      error = Load_Glyph( slot, face->root.size, start+nn, flags );
+      error = Load_Glyph( slot, face->size, start + nn, flags );
       if ( error )
         break;
 
       advances[nn] = ( flags & FT_LOAD_VERTICAL_LAYOUT )
-                     ? slot->advance.y
-                     : slot->advance.x;
+                     ? slot->linearVertAdvance
+                     : slot->linearHoriAdvance;
     }
 
     return error;

@@ -1,3 +1,17 @@
+2009-02-23  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #25669.
+
+	* src/base/ftadvanc.h (FT_Get_Advances): Fix serious typo.
+
+	* src/base/ftobjs.c (FT_Select_Metrics, FT_Request_Metrics): Fix
+	scaling factor for non-scalable fonts.
+
+	* src/cff/cffdrivr.c (cff_get_advances): Use correct advance width
+	value to prevent incorrect scaling.
+
+	* docs/CHANGES: Document it.
+
 2009-02-15  Matt Godbolt  <matt@godbolt.org>
 
 	Fix Savannah bug #25588.

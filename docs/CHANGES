@@ -7,6 +7,9 @@ CHANGES BETWEEN 2.3.9 and 2.3.8
       FreeType2 is built without Carbon framework, these fonts are not
       handled correctly.  Version 2.3.7 didn't have this bug.
 
+    - `FT_Get_Advance' (and `FT_Get_Advances') returned bad values for
+      almost all font formats except TrueType fonts.
+
 
   II. IMPORTANT CHANGES
 

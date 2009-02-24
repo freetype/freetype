@@ -2454,8 +2454,8 @@
     }
     else
     {
-      metrics->x_scale     = 1L << 22;
-      metrics->y_scale     = 1L << 22;
+      metrics->x_scale     = 1L << 16;
+      metrics->y_scale     = 1L << 16;
       metrics->ascender    = bsize->y_ppem;
       metrics->descender   = 0;
       metrics->height      = bsize->height << 6;
@@ -2566,8 +2566,8 @@
     else
     {
       FT_ZERO( metrics );
-      metrics->x_scale = 1L << 22;
-      metrics->y_scale = 1L << 22;
+      metrics->x_scale = 1L << 16;
+      metrics->y_scale = 1L << 16;
     }
   }
 
