@@ -1,3 +1,15 @@
+2009-03-02  Alexey Kryukov  <anagnost@yandex.ru>
+
+	Fix handling of EBDT formats 8 and 9.
+
+	The main cycle in `blit_sbit' makes too many iterations: it actually
+	needs the count of lines in the source bitmap rather than in the
+	target image.
+
+	* src/sfnt/ttsbit.c (blit_sbit) [FT_CONFIG_OPTION_OLD_INTERNALS]:
+	Add parameter `source_height' and use it for main loop.
+	(Load_SBit_Single) [FT_CONFIG_OPTION_OLD_INTERNALS]: Updated.
+
 2009-02-23  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #25669.
