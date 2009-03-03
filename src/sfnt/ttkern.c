@@ -5,7 +5,7 @@
 /*    Load the basic TrueType kerning table.  This doesn't handle          */
 /*    kerning data within the GPOS table at the moment.                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -103,8 +103,8 @@
 
       p_next += length;
 
-      if (p_next > p_limit)  /* handle broken table */
-         p_next = p_limit;
+      if ( p_next > p_limit )  /* handle broken table */
+        p_next = p_limit;
 
       /* only use horizontal kerning tables */
       if ( ( coverage & ~8 ) != 0x0001 ||
@@ -114,8 +114,8 @@
       num_pairs = FT_NEXT_USHORT( p );
       p        += 6;
 
-      if ( (p_next - p)/6 < (int)num_pairs ) /* handle broken count */
-        num_pairs = (FT_UInt)((p_next - p)/6);
+      if ( ( p_next - p ) / 6 < (int)num_pairs ) /* handle broken count */
+        num_pairs = (FT_UInt)( ( p_next - p ) / 6 );
 
       avail |= mask;
 
@@ -207,7 +207,7 @@
 
       next = base + length;
 
-      if (next > p_limit)  /* handle broken table */
+      if ( next > p_limit )  /* handle broken table */
         next = p_limit;
 
       if ( ( face->kern_avail_bits & mask ) == 0 )
@@ -219,8 +219,8 @@
       num_pairs = FT_NEXT_USHORT( p );
       p        += 6;
 
-      if ((next - p)/6 < (int)num_pairs)  /* handle broken count  */
-        num_pairs = (FT_UInt)((next - p)/6);
+      if ( ( next - p ) / 6 < (int)num_pairs )  /* handle broken count  */
+        num_pairs = (FT_UInt)( ( next - p ) / 6 );
 
       switch ( coverage >> 8 )
       {
