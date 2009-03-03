@@ -87,9 +87,21 @@ FT_BEGIN_HEADER
   } T1_EncodingType;
 
 
+  /* used to hold extra data of PS_FontInfoRec that
+   * cannot be stored in the publicly defined structure.
+   *
+   * Note these can't be blended with multiple-masters.
+   */
+  typedef struct PS_FontExtraRec_
+  {
+    FT_UShort   fs_type;
+
+  } PS_FontExtraRec;
+
   typedef struct  T1_FontRec_
   {
     PS_FontInfoRec   font_info;         /* font info dictionary */
+    PS_FontExtraRec  font_extra;        /* font info extra fields */
     PS_PrivateRec    private_dict;      /* private dictionary   */
     FT_String*       font_name;         /* top-level dictionary */
 
@@ -231,6 +243,7 @@ FT_BEGIN_HEADER
     void*            psnames;
     void*            psaux;
     CID_FaceInfoRec  cid;
+    PS_FontExtraRec  font_extra;
 #if 0
     void*            afm_data;
 #endif

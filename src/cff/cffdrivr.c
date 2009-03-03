@@ -380,6 +380,7 @@
   static const FT_Service_PsInfoRec  cff_service_ps_info =
   {
     (PS_GetFontInfoFunc)   cff_ps_get_font_info,
+    (PS_GetFontExtraFunc)  NULL,
     (PS_HasGlyphNamesFunc) cff_ps_has_glyph_names,
     (PS_GetFontPrivateFunc)NULL         /* unsupported with CFF fonts */
   };

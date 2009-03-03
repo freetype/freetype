@@ -138,6 +138,13 @@
     return 0;
   }
 
+  static FT_Error
+  t1_ps_get_font_extra( FT_Face           face,
+                        PS_FontExtraRec*  afont_extra )
+  {
+    *afont_extra = ((T1_Face)face)->type1.font_extra;
+    return 0;
+  }
 
   static FT_Int
   t1_ps_has_glyph_names( FT_Face  face )
@@ -159,6 +166,7 @@
   static const FT_Service_PsInfoRec  t1_service_ps_info =
   {
     (PS_GetFontInfoFunc)   t1_ps_get_font_info,
+    (PS_GetFontExtraFunc)  t1_ps_get_font_extra,
     (PS_HasGlyphNamesFunc) t1_ps_has_glyph_names,
     (PS_GetFontPrivateFunc)t1_ps_get_font_private,
   };

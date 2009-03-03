@@ -48,6 +48,12 @@
   T1_FIELD_BOOL  ( "isFixedPitch",       is_fixed_pitch,      0 )
   T1_FIELD_NUM   ( "UnderlinePosition",  underline_position,  0 )
   T1_FIELD_NUM   ( "UnderlineThickness", underline_thickness, 0 )
+
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  PS_FontExtraRec
+#undef  T1CODE
+#define T1CODE        T1_FIELD_LOCATION_FONT_EXTRA
+
   T1_FIELD_NUM   ( "FSType",             fs_type,             0 )
 
 

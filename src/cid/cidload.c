@@ -97,6 +97,10 @@
       object = (FT_Byte*)&cid->font_info;
       break;
 
+    case T1_FIELD_LOCATION_FONT_EXTRA:
+      object = (FT_Byte*)&face->font_extra;
+      break;
+
     case T1_FIELD_LOCATION_BBOX:
       object = (FT_Byte*)&cid->font_bbox;
       break;

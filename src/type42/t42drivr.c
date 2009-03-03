@@ -127,6 +127,13 @@
     return T42_Err_Ok;
   }
 
+  static FT_Error
+  t42_ps_get_font_extra( FT_Face           face,
+                         PS_FontExtraRec*  afont_extra )
+  {
+    *afont_extra = ((T42_Face)face)->type1.font_extra;
+    return T42_Err_Ok;
+  }
 
   static FT_Int
   t42_ps_has_glyph_names( FT_Face  face )
@@ -148,6 +155,7 @@
   static const FT_Service_PsInfoRec  t42_service_ps_info =
   {
     (PS_GetFontInfoFunc)   t42_ps_get_font_info,
+    (PS_GetFontExtraFunc)   t42_ps_get_font_extra,
     (PS_HasGlyphNamesFunc) t42_ps_has_glyph_names,
     (PS_GetFontPrivateFunc)t42_ps_get_font_private
   };

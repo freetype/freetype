@@ -948,6 +948,12 @@
       }
       break;
 
+    case T1_FIELD_LOCATION_FONT_EXTRA:
+      dummy_object = &face->type1.font_extra;
+      objects      = &dummy_object;
+      max_objects  = 0;
+      break;
+
     case T1_FIELD_LOCATION_PRIVATE:
       dummy_object = &face->type1.private_dict;
       objects      = &dummy_object;
