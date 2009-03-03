@@ -2,6 +2,29 @@ CHANGES BETWEEN 2.3.9 and 2.3.8
 
   I. IMPORTANT BUG FIXES
 
+    - Very unfortunately, FreeType 2.3.8 contained a change that
+      broke its official ABI. The end result is that programs compiled
+      against previous versions of the library, but dynamically linked
+      to 2.3.8 can experience memory corruption if they call the
+      FT_Get_PS_Font_Info() function.
+
+      We recommend all users to upgrade to 2.3.9 as soon as possible,
+      or to downgrade to a previous release of the library if this is
+      not an option.
+
+      The origin of the bug is that a new field was added to the
+      publicly defined PS_FontInfoRec structure. Unfortunately objects
+      of this type can be stack or heap allocated by callers of
+      FT_Get_PS_Font_Info(), resulting in a memory buffer over-write
+      with its implementation in 2.3.8.
+
+      If you want to know if your code is vulnerable to this issue,
+      simply search for the substrings "PS_FontInfo" and
+      "PS_Font_Info" in your source code. If none is found, your code
+      is safe and will not be affected.
+
+      The FreeType team apologizes for the problem.
+
     - The POSIX support  of MacOS resource-fork fonts  (Suitcase fonts
       and LaserWriter Type1 PostScript fonts) was broken in 2.3.8.  If
       FreeType2 is built without Carbon framework, these fonts are not
