@@ -1477,7 +1477,7 @@ FT_BEGIN_HEADER
   /*                         Only relevant for outline glyphs.             */
   /*                                                                       */
   /*    advance           :: This is the transformed advance width for the */
-  /*                         glyph.                                        */
+  /*                         glyph (in 26.6 fractional pixel format).      */
   /*                                                                       */
   /*    format            :: This field indicates the format of the image  */
   /*                         contained in the glyph slot.  Typically       */
