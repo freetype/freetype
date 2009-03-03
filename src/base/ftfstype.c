@@ -42,11 +42,10 @@
       {
         PS_FontExtraRec  extra;
 
+
         if ( !service->ps_get_font_extra( face, &extra ) &&
-             extra.fs_type != 0 )
-        {
+             extra.fs_type != 0                          )
           return extra.fs_type;
-        }
       }
     }
 

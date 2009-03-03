@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID driver interface (body).                                         */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2008 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2008, 2009 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -74,7 +74,8 @@
                         PS_FontInfoRec*  afont_info )
   {
     *afont_info = ((CID_Face)face)->cid.font_info;
-    return 0;
+
+    return CID_Err_Ok;
   }
 
   static FT_Error
@@ -82,7 +83,8 @@
                         PS_FontExtraRec*  afont_extra )
   {
     *afont_extra = ((CID_Face)face)->font_extra;
-    return 0;
+
+    return CID_Err_Ok;
   }
 
   static const FT_Service_PsInfoRec  cid_service_ps_info =

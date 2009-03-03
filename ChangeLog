@@ -1,36 +1,50 @@
 2009-03-03  David Turner  <david@freetype.org>
 
-	Update documentation and bump version number to 2.3.9
+	Update documentation and bump version number to 2.3.9.
 
-	* include/freetype/freetype.h: bump patch version to 9
-	* docs/CHANGES: document the ABI break in 2.3.8
-	* docs/VERSION.DLL: update version numbers table for 2.3.9
-	* builds/unix/configure.ac: update AC_INIT and version_info
+	* include/freetype/freetype.h: Bump patch version to 9.
+	* docs/CHANGES: Document the ABI break in 2.3.8.
+	* docs/VERSION.DLL: Update version numbers table for 2.3.9.
+	* builds/unix/configure.ac: Update AC_INIT and version_info
 	numbers.
 
 2009-03-03  David Turner  <david@freetype.org>
 
 	Remove ABI-breaking field in public PS_InfoFontRec definition.
+
 	Instead, we define a new internal PS_FontExtraRec structure to
 	hold the additionnal field, then place it in various internal
 	positions of the corresponding FT_Face derived objects.
 
 	* include/freetype/t1tables.h (PS_FontInfoRec): Remove the
 	`fs_type' field from the public structure.
+	* include/freetype/internal/psaux.h (T1_FieldLocation): New
+	enumeration `T1_FIELD_LOCATION_FONT_EXTRA'.
+	* include/freetype/internal/t1types.h (PS_FontExtraRec): New
+	structure.
+	(T1_FontRec, CID_FaceRec): Add it.
 
-	* include/freetype/internal/psaux.h (T1_FieldLocation),
-	include/freetype/internal/t1types.h (T1_FontRec, CID_FaceRec),
-	src/type1/t1load.c, src/type1/t1tokens.h,
-	src/cid/cidload.c, src/cid/cidtoken.h,
-	src/type42/t42parse.c: modify the various font parsers to store
-	the `fs_type' field in a different places, instead of the public
-	PS_FontInfoRec.
+	* src/cid/cidload.c (cid_load_keyword): Handle
+	T1_FIELD_LOCATION_FONT_EXTRA.
+	* src/cid/cidtoken.h, src/type1/t1tokens.h, src/type42/t42parse.c:
+	Adjust FT_STRUCTURE and T1CODE properly to handle `FSType'.
+	* src/type1/t1load.c (t1_load_keyword): Handle
+	T1_FIELD_LOCATION_FONT_EXTRA.
 
-	* include/freetype/internal/services/svpsinfo.h (PsInfo service),
-	src/base/ftfstype.c (FT_Get_FSType_Flags), src/cff/cffdrivr.c,
-	src/cid/cidriver.c, src/type1/t1driver.c, src/type42/t42drivr.c:
-	Modify the PsInfo service to add a GetExtra function, use it in
-	FT_Get_FSType_Flags() and modify the drivers accordingly.
+	* include/freetype/internal/services/svpsinfo.h (PsInfo service):
+	Add `PS_GetFontExtraFunc' function typedef.
+
+	* src/base/ftfstype.c: Include FT_INTERNAL_SERVICE_H and
+	FT_SERVICE_POSTSCRIPT_INFO_H.
+	(FT_Get_FSType_Flags): Use POSTSCRIPT_INFO service.
+
+	* src/cff/cffdrivr.c (cff_service_ps_info): Updated.
+	* src/cid/cidriver.c (cid_ps_get_font_extra): New function.
+	(cid_service_ps_info): Updated.
+	* src/type1/t1driver.c (t1_ps_get_font_extra): New function.
+	(t1_service_ps_info): Updated.
+	* src/type42/t42drivr.c (t42_ps_get_font_extra): New function.
+	(t42_service_ps_info): Updated.
 
 2009-03-02  Alexey Kryukov  <anagnost@yandex.ru>
 

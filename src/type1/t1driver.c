@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 driver interface (body).                                      */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2007 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2007, 2009 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -84,6 +84,7 @@
     return 0;
   }
 
+
   static const FT_Service_GlyphDictRec  t1_service_glyph_dict =
   {
     (FT_GlyphDict_GetNameFunc)  t1_get_glyph_name,
@@ -91,10 +92,10 @@
   };
 
 
- /*
-  *  POSTSCRIPT NAME SERVICE
-  *
-  */
+  /*
+   *  POSTSCRIPT NAME SERVICE
+   *
+   */
 
   static const char*
   t1_get_ps_name( T1_Face  face )
@@ -102,16 +103,17 @@
     return (const char*) face->type1.font_name;
   }
 
+
   static const FT_Service_PsFontNameRec  t1_service_ps_name =
   {
     (FT_PsName_GetFunc)t1_get_ps_name
   };
 
 
- /*
-  *  MULTIPLE MASTERS SERVICE
-  *
-  */
+  /*
+   *  MULTIPLE MASTERS SERVICE
+   *
+   */
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
   static const FT_Service_MultiMastersRec  t1_service_multi_masters =
@@ -125,31 +127,36 @@
 #endif
 
 
- /*
-  *  POSTSCRIPT INFO SERVICE
-  *
-  */
+  /*
+   *  POSTSCRIPT INFO SERVICE
+   *
+   */
 
   static FT_Error
   t1_ps_get_font_info( FT_Face          face,
                        PS_FontInfoRec*  afont_info )
   {
     *afont_info = ((T1_Face)face)->type1.font_info;
-    return 0;
+
+    return T1_Err_Ok;
   }
+
 
   static FT_Error
   t1_ps_get_font_extra( FT_Face           face,
                         PS_FontExtraRec*  afont_extra )
   {
     *afont_extra = ((T1_Face)face)->type1.font_extra;
-    return 0;
+
+    return T1_Err_Ok;
   }
+
 
   static FT_Int
   t1_ps_has_glyph_names( FT_Face  face )
   {
     FT_UNUSED( face );
+
     return 1;
   }
 
@@ -159,7 +166,8 @@
                           PS_PrivateRec*  afont_private )
   {
     *afont_private = ((T1_Face)face)->type1.private_dict;
-    return 0;
+
+    return T1_Err_Ok;
   }
 
 
@@ -171,6 +179,7 @@
     (PS_GetFontPrivateFunc)t1_ps_get_font_private,
   };
 
+
 #ifndef T1_CONFIG_OPTION_NO_AFM
   static const FT_Service_KerningRec  t1_service_kerning =
   {
@@ -178,10 +187,11 @@
   };
 #endif
 
- /*
-  *  SERVICE LIST
-  *
-  */
+
+  /*
+   *  SERVICE LIST
+   *
+   */
 
   static const FT_ServiceDescRec  t1_services[] =
   {

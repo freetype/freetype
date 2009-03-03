@@ -5,7 +5,7 @@
 /*    Basic Type1/Type2 type definitions and interface (specification      */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2008 by                   */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2008, 2009 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -92,18 +92,19 @@ FT_BEGIN_HEADER
    *
    * Note these can't be blended with multiple-masters.
    */
-  typedef struct PS_FontExtraRec_
+  typedef struct  PS_FontExtraRec_
   {
-    FT_UShort   fs_type;
+    FT_UShort  fs_type;
 
   } PS_FontExtraRec;
 
+
   typedef struct  T1_FontRec_
   {
-    PS_FontInfoRec   font_info;         /* font info dictionary */
+    PS_FontInfoRec   font_info;         /* font info dictionary   */
     PS_FontExtraRec  font_extra;        /* font info extra fields */
-    PS_PrivateRec    private_dict;      /* private dictionary   */
-    FT_String*       font_name;         /* top-level dictionary */
+    PS_PrivateRec    private_dict;      /* private dictionary     */
+    FT_String*       font_name;         /* top-level dictionary   */
 
     T1_EncodingType  encoding_type;
     T1_EncodingRec   encoding;

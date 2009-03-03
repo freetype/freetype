@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level Type 42 driver interface (body).                          */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2006, 2007 by Roberto Alameda.             */
+/*  Copyright 2002, 2003, 2004, 2006, 2007, 2009 by Roberto Alameda.       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -49,11 +49,11 @@
 #define FT_COMPONENT  trace_t42
 
 
- /*
-  *
-  *  GLYPH DICT SERVICE
-  *
-  */
+  /*
+   *
+   *  GLYPH DICT SERVICE
+   *
+   */
 
   static FT_Error
   t42_get_glyph_name( T42_Face    face,
@@ -94,11 +94,11 @@
   };
 
 
- /*
-  *
-  *  POSTSCRIPT NAME SERVICE
-  *
-  */
+  /*
+   *
+   *  POSTSCRIPT NAME SERVICE
+   *
+   */
 
   static const char*
   t42_get_ps_font_name( T42_Face  face )
@@ -113,32 +113,37 @@
   };
 
 
- /*
-  *
-  *  POSTSCRIPT INFO SERVICE
-  *
-  */
+  /*
+   *
+   *  POSTSCRIPT INFO SERVICE
+   *
+   */
 
   static FT_Error
   t42_ps_get_font_info( FT_Face          face,
                         PS_FontInfoRec*  afont_info )
   {
     *afont_info = ((T42_Face)face)->type1.font_info;
+
     return T42_Err_Ok;
   }
+
 
   static FT_Error
   t42_ps_get_font_extra( FT_Face           face,
                          PS_FontExtraRec*  afont_extra )
   {
     *afont_extra = ((T42_Face)face)->type1.font_extra;
+
     return T42_Err_Ok;
   }
+
 
   static FT_Int
   t42_ps_has_glyph_names( FT_Face  face )
   {
     FT_UNUSED( face );
+
     return 1;
   }
 
@@ -148,6 +153,7 @@
                            PS_PrivateRec*  afont_private )
   {
     *afont_private = ((T42_Face)face)->type1.private_dict;
+
     return T42_Err_Ok;
   }
 
@@ -161,11 +167,11 @@
   };
 
 
- /*
-  *
-  *  SERVICE LIST
-  *
-  */
+  /*
+   *
+   *  SERVICE LIST
+   *
+   */
 
   static const FT_ServiceDescRec  t42_services[] =
   {
