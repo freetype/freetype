@@ -33,6 +33,8 @@ CHANGES BETWEEN 2.3.9 and 2.3.8
     - `FT_Get_Advance' (and `FT_Get_Advances') returned bad values for
       almost all font formats except TrueType fonts.
 
+    - Fix a bug in the SFNT kerning table loader/parser which could crash
+      the engine if certain malformed tables were encountered.
 
   II. IMPORTANT CHANGES
 

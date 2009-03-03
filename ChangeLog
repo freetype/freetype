@@ -1,5 +1,14 @@
 2009-03-03  David Turner  <david@freetype.org>
 
+	Fix SFNT kerning table parser against malformed tables.
+	Closes Savannah BUG #25750
+
+	* src/sfnt/ttkern.c (tt_face_get_kerning): fix a bug
+	where a malformed table would be succesfully loaded but
+	later crash the engine during parsing.
+
+2009-03-03  David Turner  <david@freetype.org>
+
 	Update documentation and bump version number to 2.3.9.
 
 	* include/freetype/freetype.h: Bump patch version to 9.
