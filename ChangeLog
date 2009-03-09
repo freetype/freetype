@@ -1,3 +1,7 @@
+2009-03-09  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.raw (version_info): Set to 9:20:3.
+
 2009-03-03  David Turner  <david@freetype.org>
 
 	Protect SFNT kerning table parser against malformed tables.
@@ -15,8 +19,6 @@
 	* include/freetype/freetype.h: Bump patch version to 9.
 	* docs/CHANGES: Document the ABI break in 2.3.8.
 	* docs/VERSION.DLL: Update version numbers table for 2.3.9.
-	* builds/unix/configure.ac: Update AC_INIT and version_info
-	numbers.
 
 2009-03-03  David Turner  <david@freetype.org>
 
