@@ -1,5 +1,13 @@
 2009-03-09  Werner Lemberg  <wl@gnu.org>
 
+	More preparations for 2.3.9 release.
+
+	* docs/CHANGES: Updated.
+
+	* Jamfile, README: s/2.3.8/2.3.9/, s/238/239/.
+
+2009-03-09  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/rules.mk (SFNT_DRV_H): Add ttsbit0.c.
 
 2009-03-09  Alexey Kryukov  <anagnost@yandex.ru>
