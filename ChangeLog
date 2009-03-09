@@ -1,3 +1,33 @@
+2009-03-09  Alexey Kryukov  <anagnost@yandex.ru>
+
+	Fix handling of EBDT formats 8 and 9 (part 2).
+
+	This patch fixes the following problems in ttsbit0.c:
+
+	. Bitmaps for compound glyphs were never allocated.
+
+	. `SBitDecoder' refused to load metrics if some other metrics have
+	  already been loaded.  This condition certainly makes no sense for
+	  recursive calls, so I've just disabled it.  Another possibility
+	  would be resetting `decoder->metrics_loaded' to false before
+	  loading each composite component.  However, we must restore the
+	  original metrics after finishing the recursion; otherwise we can
+	  get a misaligned glyph.
+
+	. `tt_sbit_decoder_load_bit_aligned' incorrectly handled `x_pos',
+	  causing some glyph components to be shifted too far to the right
+	  (especially noticeable for small sizes).
+
+	Note that support for grayscale bitmaps (not necessarily compound) is
+	completely broken in ttsbit0.c.
+
+	* src/sfnt/tt_sbit_decoder_load_metrics: Always load metrics.
+	(tt_sbit_decoder_load_bit_aligned): Handle `x_pos' correctly in case
+	of `h == height'.
+	(tt_sbit_decoder_load_compound): Reset metrics after loading
+	components.
+	Allocate bitmap.
+
 2009-03-09  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.raw (version_info): Set to 9:20:3.

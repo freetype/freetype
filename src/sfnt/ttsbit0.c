@@ -324,14 +324,11 @@
     if ( p + 5 > limit )
       goto Fail;
 
-    if ( !decoder->metrics_loaded )
-    {
-      metrics->height       = p[0];
-      metrics->width        = p[1];
-      metrics->horiBearingX = (FT_Char)p[2];
-      metrics->horiBearingY = (FT_Char)p[3];
-      metrics->horiAdvance  = p[4];
-    }
+    metrics->height       = p[0];
+    metrics->width        = p[1];
+    metrics->horiBearingX = (FT_Char)p[2];
+    metrics->horiBearingY = (FT_Char)p[3];
+    metrics->horiAdvance  = p[4];
 
     p += 5;
     if ( big )
@@ -339,12 +336,9 @@
       if ( p + 3 > limit )
         goto Fail;
 
-      if ( !decoder->metrics_loaded )
-      {
-        metrics->vertBearingX = (FT_Char)p[0];
-        metrics->vertBearingY = (FT_Char)p[1];
-        metrics->vertAdvance  = p[2];
-      }
+      metrics->vertBearingX = (FT_Char)p[0];
+      metrics->vertBearingY = (FT_Char)p[1];
+      metrics->vertAdvance  = p[2];
 
       p += 3;
     }
@@ -537,7 +531,12 @@
       {
         w = ( width < 8 - x_pos ) ? width : 8 - x_pos;
 
-        if ( nbits < w )
+        if ( h == height )
+        {
+          rval  |= *p++;
+          nbits += x_pos;
+        }
+        else if ( nbits < w )
         {
           rval  |= *p++;
           nbits += 8 - w;
@@ -548,7 +547,8 @@
           nbits  -= w;
         }
 
-        *write++ |= ( ( rval >> nbits ) & 0xFF ) & ~( 0xFF << w );
+        *write++ |= ( ( rval >> nbits ) & 0xFF ) &
+                    ( ~( 0xFF << w ) << ( 8 - w - x_pos ) );
         rval    <<= 8;
 
         w = width - w;
@@ -595,6 +595,13 @@
     FT_Error  error = SFNT_Err_Ok;
     FT_UInt   num_components, nn;
 
+    FT_Char  horiBearingX = decoder->metrics->horiBearingX;
+    FT_Char  horiBearingY = decoder->metrics->horiBearingY;
+    FT_Byte  horiAdvance  = decoder->metrics->horiAdvance;
+    FT_Char  vertBearingX = decoder->metrics->vertBearingX;
+    FT_Char  vertBearingY = decoder->metrics->vertBearingY;
+    FT_Byte  vertAdvance  = decoder->metrics->vertAdvance;
+
 
     if ( p + 2 > limit )
       goto Fail;
@@ -602,6 +609,13 @@
     num_components = FT_NEXT_USHORT( p );
     if ( p + 4 * num_components > limit )
       goto Fail;
+
+    if ( !decoder->bitmap_allocated )
+    {
+      error = tt_sbit_decoder_alloc_bitmap( decoder );
+      if ( error )
+        goto Exit;
+    }
 
     for ( nn = 0; nn < num_components; nn++ )
     {
@@ -616,6 +630,15 @@
       if ( error )
         break;
     }
+
+    decoder->metrics->horiBearingX = horiBearingX;
+    decoder->metrics->horiBearingY = horiBearingY;
+    decoder->metrics->horiAdvance  = horiAdvance;
+    decoder->metrics->vertBearingX = vertBearingX;
+    decoder->metrics->vertBearingY = vertBearingY;
+    decoder->metrics->vertAdvance  = vertAdvance;
+    decoder->metrics->width        = (FT_UInt)decoder->bitmap->width;
+    decoder->metrics->height       = (FT_UInt)decoder->bitmap->rows;
 
   Exit:
     return error;
