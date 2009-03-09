@@ -1,3 +1,7 @@
+2009-03-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/rules.mk (SFNT_DRV_H): Add ttsbit0.c.
+
 2009-03-09  Alexey Kryukov  <anagnost@yandex.ru>
 
 	Fix handling of EBDT formats 8 and 9 (part 2).
