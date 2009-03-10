@@ -1,3 +1,14 @@
+2009-03-10  Vincent Richomme  <richom.v@free.fr>
+
+	Restructure Win32 and Wince compiler support.
+
+	* src/builds/win32: Remove files for WinCE.
+	Move VC 2005 support to a separate directory.
+	Add directory for VC 2008 support.
+
+	* src/builds/wince: New directory hierarchy for WinCE compilers
+	(VC 2005 and VC 2008).
+
 2009-03-09  Werner Lemberg  <wl@gnu.org>
 
 	More preparations for 2.3.9 release.
