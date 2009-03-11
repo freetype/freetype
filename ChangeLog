@@ -1,5 +1,12 @@
 2009-03-11  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #25814.
+
+	* builds/unix/freetype2.in: As suggested in the bug report, move
+	@LIBZ@ to `Libs.private'.
+
+2009-03-11  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #25781.
 	We now simply check for a valid `offset', no longer handling `delta
 	= 1' specially.
