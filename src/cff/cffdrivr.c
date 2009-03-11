@@ -506,9 +506,74 @@
   }
 
 
+  static FT_Error
+  cff_get_is_cid( CFF_Face  face,
+                  FT_Bool  *is_cid )
+  {
+    FT_Error  error = CFF_Err_Ok;
+    CFF_Font  cff   = (CFF_Font)face->extra.data;
+
+
+    *is_cid = 0;
+
+    if ( cff )
+    {
+      CFF_FontRecDict  dict = &cff->top_font.font_dict;
+
+
+      if ( dict->cid_registry != 0xFFFFU )
+        *is_cid = 1;
+    }
+
+    return error;
+  }
+
+
+  static FT_Error
+  cff_get_cid_from_glyph_index( CFF_Face  face,
+                                FT_UInt   glyph_index,
+                                FT_UInt  *cid )
+  {
+    FT_Error  error = CFF_Err_Ok;
+    CFF_Font  cff;
+
+
+    cff = (CFF_Font)face->extra.data;
+
+    if ( cff )
+    {
+      FT_UInt          c;
+      CFF_FontRecDict  dict = &cff->top_font.font_dict;
+
+
+      if ( dict->cid_registry == 0xFFFFU )
+      {
+        error = CFF_Err_Invalid_Argument;
+        goto Fail;
+      }
+
+      if ( glyph_index > cff->num_glyphs )
+      {
+        error = CFF_Err_Invalid_Argument;
+        goto Fail;
+      }
+
+      c = cff->charset.sids[glyph_index];
+
+      if ( cid )
+        *cid = c;
+    }
+
+  Fail:
+    return error;
+  }
+
+
   static const FT_Service_CIDRec  cff_service_cid_info =
   {
-    (FT_CID_GetRegistryOrderingSupplementFunc)cff_get_ros
+    (FT_CID_GetRegistryOrderingSupplementFunc)cff_get_ros,
+    (FT_CID_GetIsInternallyCIDKeyedFunc)      cff_get_is_cid,
+    (FT_CID_GetCIDFromGlyphIndexFunc)         cff_get_cid_from_glyph_index
   };
 
 

@@ -39,7 +39,15 @@ CHANGES BETWEEN 2.3.9 and 2.3.8
     - Composite SFNT bitmaps are now handled correctly.
 
 
-  II. MISCELLANEOUS
+  II. IMPORTANT CHANGES
+
+    - The   new  functions   `FT_Get_CID_Is_Internally_CID_keyed'  and
+      `FT_Get_CID_From_Glyph_Index'  can be  used to  access CID-keyed
+      CFF fonts  via CID  values.  This code  has been  contributed by
+      Michael Toftdal.
+
+
+  III. MISCELLANEOUS
 
     - `FT_Outline_Get_InsideBorder'  returns   FT_STROKER_BORDER_RIGHT
       for empty outlines.  This was incorrectly documented.
