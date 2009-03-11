@@ -1,3 +1,10 @@
+2009-03-11  Bram Tassyns  <bramt@enfocus.be>
+
+	Fix Savannah bug #25597.
+
+	* src/cff/cffparse.c (cff_parse_real): Don't allow fraction_length
+	to become larger than 9.
+
 2009-03-11  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #25814.
