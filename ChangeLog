@@ -1,3 +1,8 @@
+2009-03-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/Jamfile: Fix handling of ftadvanc.c.
+	Reported by Oran Agra <oran@monfort.co.il>.
+
 2009-03-10  Vincent Richomme  <richom.v@free.fr>
 
 	Restructure Win32 and Wince compiler support.
