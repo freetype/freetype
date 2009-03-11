@@ -1,5 +1,16 @@
 2009-03-11  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #25781.
+	We now simply check for a valid `offset', no longer handling `delta
+	= 1' specially.
+
+	* src/sfnt/ttcmap.c (tt_cmap4_validate): Don't check `delta' for
+	last segment.
+	(tt_cmap4_set_range, tt_cmap4_char_map_linear,
+	tt_cmap4_char_map_binary): Check offset.
+
+2009-03-11  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/Jamfile: Fix handling of ftadvanc.c.
 	Reported by Oran Agra <oran@monfort.co.il>.
 
