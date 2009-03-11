@@ -44,6 +44,8 @@ CHANGES BETWEEN 2.3.9 and 2.3.8
     - `FT_Outline_Get_InsideBorder'  returns   FT_STROKER_BORDER_RIGHT
       for empty outlines.  This was incorrectly documented.
 
+    - The `ftview' demo program now supports UTF-8 encoded strings.
+
 
 ======================================================================
 
