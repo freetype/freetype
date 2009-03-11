@@ -139,7 +139,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *    cid ::
-   *       The CID as an FT_UInt.
+   *       The CID as an @FT_UInt.
    *
    * @return:
    *    FreeType error code.  0~means success.
