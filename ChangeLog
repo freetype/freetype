@@ -1,5 +1,13 @@
 2009-03-12  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.3.9 released.
+	=========================
+
+
+	Tag sources with `VER-2-3-9'.
+
+2009-03-12  Werner Lemberg  <wl@gnu.org>
+
 	* builds/unix/freetype2.in: Move @FT2_EXTRA_LIBS@ to `Libs.private'.
 
 2009-03-12  Werner Lemberg  <wl@gnu.org>
