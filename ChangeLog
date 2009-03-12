@@ -1,4 +1,8 @@
-2009-03-11  Werner Lemberg  <wl@gnu.org>
+2009-03-12  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/freetype2.in: Move @FT2_EXTRA_LIBS@ to `Libs.private'.
+
+2009-03-12  Werner Lemberg  <wl@gnu.org>
 
 	Fix some FreeType Coverity issues as reported for Ghostscript.
 
