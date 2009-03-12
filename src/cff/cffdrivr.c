@@ -370,7 +370,8 @@
       cff->font_info = font_info;
     }
 
-    *afont_info = *cff->font_info;
+    if ( cff )
+      *afont_info = *cff->font_info;
 
   Fail:
     return error;

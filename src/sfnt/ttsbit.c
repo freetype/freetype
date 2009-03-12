@@ -1325,7 +1325,11 @@
                                range->image_format, metrics, stream );
 
     case 8:  /* compound format */
-      FT_Stream_Skip( stream, 1L );
+      if ( FT_STREAM_SKIP( 1L ) )
+      {
+        error = SFNT_Err_Invalid_Stream_Skip;
+        goto Exit;
+      }
       /* fallthrough */
 
     case 9:

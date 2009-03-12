@@ -1,3 +1,46 @@
+2009-03-11  Werner Lemberg  <wl@gnu.org>
+
+	Fix some FreeType Coverity issues as reported for Ghostscript.
+
+	* src/base/ftobjs.c (FT_New_Face, FT_New_Memory_Face): Initialize
+	`args.stream' (#3874, #3875).
+	(open_face_PS_from_sfnt_stream): Improve error management (#3786).
+	* src/base/ftmm.c (ft_face_get_mm_service): Fix check of `aservice'
+	(#3870).
+	* src/base/ftstroke.c (ft_stroke_border_get_counts): Remove dead
+	code (#3790).
+	* src/base/ftrfork.c (raccess_guess_apple_generic): Check error
+	value of `FT_Stream_Skip' (#3784).
+
+	* src/type1/t1gload.c (T1_Load_Glyph): Check `size' before accessing
+	it (#3872)
+
+	* src/pcf/pcfdrivr.c (PCF_Glyph_Load): Check `face' before accessing
+	it (#3871).
+	* src/pcf/pcfread.c (pcf_get_metrics): Handle return value of
+	`pcf_get_metric' (#3789, #3782).
+	(pcf_get_properties): Use FT_STREAM_SKIP (#3783).
+
+	* src/cache/ftcmanag.c (FTC_Manager_RegisterCache): Fix check of
+	`acache' (#3797)
+
+	* src/cff/cffdrivr.c (cff_ps_get_font_info): Fix check of `cff'
+	(#3796).
+	* src/cff/cffgload.c (cff_decoder_prepare): Check `size' (#3795).
+	* src/cff/cffload.c (cff_index_get_pointers): Add comment (#3794).
+
+	* src/bdf/bdflib.c (_bdf_add_property): Check `fp->value.atom'
+	(#3793).
+	(_bdf_parse_start): Add comment (#3792).
+
+	* src/raster/ftraster.c (Finalize_Profile_Table): Check
+	`ras.fProfile' (#3791).
+
+	* src/sfnt/ttsbit.c (Load_SBit_Image): Use FT_STREAM_SKIP (#3785).
+
+	* src/gzip/ftgzip.c (ft_gzip_get_uncompressed_size): Properly ignore
+	seek error (#3781).
+
 2009-03-11  Michael Toftdal  <toftdal@gmail.com>
 
 	Extend CID service functions to handle CID-keyed CFFs as CID fonts.

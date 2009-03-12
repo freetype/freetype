@@ -319,7 +319,7 @@
   static FT_Error
   cff_index_load_offsets( CFF_Index  idx )
   {
-    FT_Error   error  = 0;
+    FT_Error   error  = CFF_Err_Ok;
     FT_Stream  stream = idx->stream;
     FT_Memory  memory = stream->memory;
 
@@ -402,6 +402,7 @@
       old_offset = 1;
       for ( n = 0; n <= idx->count; n++ )
       {
+        /* at this point, `idx->offsets' can't be NULL */
         offset = idx->offsets[n];
         if ( !offset )
           offset = old_offset;

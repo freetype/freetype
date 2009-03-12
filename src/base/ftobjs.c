@@ -1140,6 +1140,7 @@
 
     args.flags    = FT_OPEN_PATHNAME;
     args.pathname = (char*)pathname;
+    args.stream   = NULL;
 
     return FT_Open_Face( library, &args, face_index, aface );
   }
@@ -1166,6 +1167,7 @@
     args.flags       = FT_OPEN_MEMORY;
     args.memory_base = file_base;
     args.memory_size = file_size;
+    args.stream      = NULL;
 
     return FT_Open_Face( library, &args, face_index, aface );
   }
@@ -1436,8 +1438,19 @@
                                    is_sfnt_cid ? "cid" : "type1",
                                    aface );
   Exit:
-    FT_Stream_Seek( stream, pos );
-    return error;
+    {
+      FT_Error  error1;
+
+
+      if ( error == FT_Err_Unknown_File_Format )
+      {
+        error1 = FT_Stream_Seek( stream, pos );
+        if ( error1 )
+          return error1;
+      }
+
+      return error;
+    }
   }
 
 
