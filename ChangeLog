@@ -1,3 +1,10 @@
+2009-03-14  Werner Lemberg  <wl@gnu.org>
+
+	Fix valgrind warning.
+
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_bit_aligned): Don't read
+	past the end of the frame.
+
 2009-03-12  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.9 released.
