@@ -1,3 +1,10 @@
+2009-03-15  Steve Langasek  <steve.langasek@canonical.com>
+
+	Use __asm__ for declaring assembly instead of asm.
+
+	* builds/unix/ftconfig.in (FT_MulFix_arm): Use __asm__ instead of
+	asm on arm, fixing a build failure on armel with -pedantic.
+
 2009-03-14  Werner Lemberg  <wl@gnu.org>
 
 	Fix valgrind warning.
