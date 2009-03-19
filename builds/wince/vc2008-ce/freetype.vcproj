@@ -7864,6 +7864,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\base\ftbdf.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftcid.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftgxval.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftlcdfil.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\base\ftmm.c"
 					>
 					<FileConfiguration
@@ -8291,6 +8307,14 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\..\src\base\ftotval.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftpatent.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\base\ftpfr.c"
 					>
 				</File>
@@ -8304,6 +8328,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\base\ftwinfnt.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftxf86.c"
 					>
 				</File>
 				<File

@@ -1,3 +1,11 @@
+2009-03-19  Vincent Richomme <richom.v@free.fr>
+
+	Update WinCE Visual C project files.
+
+	* builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/freetype.vcproj: Add missing base extension
+	files.
+
 2009-03-19  Werner Lemberg  <wl@gnu.org>
 
 	Remove unused Win32 code.
