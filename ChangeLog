@@ -1,3 +1,9 @@
+2009-03-19  Vincent Richomme <richom.v@free.fr>
+
+	Make `gzip' module compile on WinCE.
+
+	* src/gzip/zconf.h [_WIN32_WCE]: Define NO_ERRNO_H.
+
 2009-03-19  Werner Lemberg  <wl@gnu.org>
 
 	Remove unused WinCE code.
