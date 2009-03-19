@@ -1,3 +1,10 @@
+2009-03-19  Werner Lemberg  <wl@gnu.org>
+
+	Remove unused Win32 code.
+
+	* builds/wince/ftdebug.c: Remove code guarded with `!_WIN32_WCE'.
+	Since Win32 is handled separately this is no longer needed.
+
 2009-03-19  Vincent Richomme <richom.v@free.fr>
 
 	Make `gzip' module compile on WinCE.
