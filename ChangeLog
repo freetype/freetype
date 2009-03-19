@@ -1,3 +1,10 @@
+2009-03-19  Werner Lemberg  <wl@gnu.org>
+
+	Remove unused WinCE code.
+
+	* builds/win32/ftdebug.c: Remove code guarded with `_WIN32_WCE'.
+	Since WinCE is handled separately this is no longer needed.
+
 2009-03-16  Werner Lemberg  <wl@gnu.org>
 
 	docmaker: Don't ignore single-line code blocks.
