@@ -1,3 +1,12 @@
+2009-03-20  Werner Lemberg  <wl@gnu.org>
+
+	Protect against invalid SID values in CFFs.
+
+	Problem reported by Tavis Ormandy <taviso@google.com>.
+
+	* src/cff/cffload.c (cff_charset_load): Reject SID values larger
+	than 64999.
+
 2009-03-19  Vincent Richomme <richom.v@free.fr>
 
 	Update WinCE Visual C project files.
