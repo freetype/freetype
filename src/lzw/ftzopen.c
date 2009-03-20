@@ -332,6 +332,9 @@
 
           while ( code >= 256U )
           {
+            if ( !state->prefix )
+              goto Eof;
+
             FTLZW_STACK_PUSH( state->suffix[code - 256] );
             code = state->prefix[code - 256];
           }
