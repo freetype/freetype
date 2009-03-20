@@ -1,5 +1,11 @@
 2009-03-20  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #25923.
+
+	* src/cache/ftccmap.c (FTC_CMAP_HASH): Fix typo.
+
+2009-03-20  Werner Lemberg  <wl@gnu.org>
+
 	Protect against too large glyphs.
 
 	Problem reported by Tavis Ormandy <taviso@google.com>.

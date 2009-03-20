@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType CharMap cache (body)                                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -88,7 +88,7 @@
   /* compute a query/node hash */
 #define FTC_CMAP_HASH( faceid, index, charcode )           \
           ( FTC_FACE_ID_HASH( faceid ) + 211 * ( index ) + \
-            ( (char_code) / FTC_CMAP_INDICES_MAX )       )
+            ( (charcode) / FTC_CMAP_INDICES_MAX )        )
 
   /* the charmap query */
   typedef struct  FTC_CMapQueryRec_
