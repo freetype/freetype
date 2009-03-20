@@ -1,4 +1,13 @@
 2009-03-20  Werner Lemberg  <wl@gnu.org>
+
+	Protect against too large glyphs.
+
+	Problem reported by Tavis Ormandy <taviso@google.com>.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Don't allow
+	`width' or `pitch' to be larger than 0xFFFF.
+
+2009-03-20  Werner Lemberg  <wl@gnu.org>
 	    Tavis Ormandy <taviso@google.com>
 
 	Fix validation for various cmap table formats.
@@ -10,8 +19,6 @@
 2009-03-20  Werner Lemberg  <wl@gnu.org>
 
 	Protect against malformed compressed data.
-
-	Problem reported by Tavis Ormandy <taviso@google.com>.
 
 	* src/lsw/ftzopen.c (ft_lzwstate_io): Test whether `state->prefix' is
 	zero.
