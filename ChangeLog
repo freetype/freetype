@@ -1,4 +1,13 @@
 2009-03-20  Werner Lemberg  <wl@gnu.org>
+	    Tavis Ormandy <taviso@google.com>
+
+	Fix validation for various cmap table formats.
+
+	* src/sfnt/ttcmap.c (tt_cmap8_validate, tt_cmap10_validate,
+	tt_cmap12_validate): Check `length' correctly.
+	(tt_cmap_14_validate): Check `length' and `numMappings' correctly.
+
+2009-03-20  Werner Lemberg  <wl@gnu.org>
 
 	Protect against malformed compressed data.
 
