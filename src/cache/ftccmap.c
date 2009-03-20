@@ -86,9 +86,9 @@
 #define FTC_CMAP_INDICES_MAX  128
 
   /* compute a query/node hash */
-#define FTC_CMAP_HASH( faceid, index, charcode )           \
-          ( FTC_FACE_ID_HASH( faceid ) + 211 * ( index ) + \
-            ( (charcode) / FTC_CMAP_INDICES_MAX )        )
+#define FTC_CMAP_HASH( faceid, index, charcode )         \
+          ( FTC_FACE_ID_HASH( faceid ) + 211 * (index) + \
+            ( (charcode) / FTC_CMAP_INDICES_MAX )      )
 
   /* the charmap query */
   typedef struct  FTC_CMapQueryRec_
