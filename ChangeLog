@@ -1,5 +1,11 @@
 2009-03-20  Werner Lemberg  <wl@gnu.org>
 
+	Fix `make multi' run.
+
+	* src/smooth/ftsmooth.h: Include FT_INTERNAL_DEBUG_H.
+
+2009-03-20  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #25923.
 
 	* src/cache/ftccmap.c (FTC_CMAP_HASH): Fix typo.
