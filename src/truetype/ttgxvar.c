@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType GX Font Variation loader                                    */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006, 2007, 2008 by                              */
+/*  Copyright 2004, 2005, 2006, 2007, 2008, 2009 by                        */
 /*  David Turner, Robert Wilhelm, Werner Lemberg, and George Williams.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,30 +16,31 @@
 /***************************************************************************/
 
 
-/***************************************************************************/
-/*                                                                         */
-/* Apple documents the `fvar', `gvar', `cvar', and `avar' tables at        */
-/*                                                                         */
-/*   http://developer.apple.com/fonts/TTRefMan/RM06/Chap6[fgca]var.html    */
-/*                                                                         */
-/* The documentation for `fvar' is inconsistent.  At one point it says     */
-/* that `countSizePairs' should be 3, at another point 2.  It should be 2. */
-/*                                                                         */
-/* The documentation for `gvar' is not intelligible; `cvar' refers you to  */
-/* `gvar' and is thus also incomprehensible.                               */
-/*                                                                         */
-/* The documentation for `avar' appears correct, but Apple has no fonts    */
-/* with an `avar' table, so it is hard to test.                            */
-/*                                                                         */
-/* Many thanks to John Jenkins (at Apple) in figuring this out.            */
-/*                                                                         */
-/*                                                                         */
-/* Apple's `kern' table has some references to tuple indices, but as there */
-/* is no indication where these indices are defined, nor how to            */
-/* interpolate the kerning values (different tuples have different         */
-/* classes) this issue is ignored.                                         */
-/*                                                                         */
-/***************************************************************************/
+  /*************************************************************************/
+  /*                                                                       */
+  /* Apple documents the `fvar', `gvar', `cvar', and `avar' tables at      */
+  /*                                                                       */
+  /*   http://developer.apple.com/fonts/TTRefMan/RM06/Chap6[fgca]var.html  */
+  /*                                                                       */
+  /* The documentation for `fvar' is inconsistent.  At one point it says   */
+  /* that `countSizePairs' should be 3, at another point 2.  It should     */
+  /* be 2.                                                                 */
+  /*                                                                       */
+  /* The documentation for `gvar' is not intelligible; `cvar' refers you   */
+  /* to `gvar' and is thus also incomprehensible.                          */
+  /*                                                                       */
+  /* The documentation for `avar' appears correct, but Apple has no fonts  */
+  /* with an `avar' table, so it is hard to test.                          */
+  /*                                                                       */
+  /* Many thanks to John Jenkins (at Apple) in figuring this out.          */
+  /*                                                                       */
+  /*                                                                       */
+  /* Apple's `kern' table has some references to tuple indices, but as     */
+  /* there is no indication where these indices are defined, nor how to    */
+  /* interpolate the kerning values (different tuples have different       */
+  /* classes) this issue is ignored.                                       */
+  /*                                                                       */
+  /*************************************************************************/
 
 
 #include <ft2build.h>
@@ -158,6 +159,9 @@
         runcnt = runcnt & GX_PT_POINT_RUN_COUNT_MASK;
         first  = points[i++] = FT_GET_USHORT();
 
+        if ( !runcnt )
+          goto Exit;
+
         /* first point not included in runcount */
         for ( j = 0; j < runcnt; ++j )
           points[i++] = (FT_UShort)( first += FT_GET_USHORT() );
@@ -166,11 +170,15 @@
       {
         first = points[i++] = FT_GET_BYTE();
 
+        if ( !runcnt )
+          goto Exit;
+
         for ( j = 0; j < runcnt; ++j )
           points[i++] = (FT_UShort)( first += FT_GET_BYTE() );
       }
     }
 
+  Exit:
     return points;
   }
 
