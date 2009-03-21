@@ -157,7 +157,7 @@
         runcnt = runcnt & GX_PT_POINT_RUN_COUNT_MASK;
         first  = points[i++] = FT_GET_USHORT();
 
-        if ( !runcnt )
+        if ( runcnt < 1 )
           goto Exit;
 
         /* first point not included in runcount */
@@ -168,7 +168,7 @@
       {
         first = points[i++] = FT_GET_BYTE();
 
-        if ( !runcnt )
+        if ( runcnt < 1 )
           goto Exit;
 
         for ( j = 0; j < runcnt; ++j )

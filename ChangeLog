@@ -17,7 +17,7 @@
 	Fix Ghostscript Coverity issue #3904.
 
 	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): Protect against
-	zero value of `runcnt'.
+	invalid values of `runcnt'.
 
 2009-03-20  Werner Lemberg  <wl@gnu.org>
 
