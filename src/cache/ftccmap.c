@@ -22,7 +22,6 @@
 #include "ftcmanag.h"
 #include FT_INTERNAL_MEMORY_H
 #include FT_INTERNAL_DEBUG_H
-#include FT_TRUETYPE_IDS_H
 
 #include "ftccback.h"
 #include "ftcerror.h"

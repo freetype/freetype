@@ -22,7 +22,6 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include "ttkern.h"
-#include "ttload.h"
 
 #include "sferrors.h"
 

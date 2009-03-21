@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    AFM parser (body).                                                   */
 /*                                                                         */
-/*  Copyright 2006, 2007, 2008 by                                          */
+/*  Copyright 2006, 2007, 2008, 2009 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -18,7 +18,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_INTERNAL_DEBUG_H
 
 #include "afmparse.h"
 #include "psconv.h"

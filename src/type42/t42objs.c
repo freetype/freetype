@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    Type 42 objects manager (body).                                      */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008 by Roberto Alameda. */
+/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009               */
+/*  by Roberto Alameda.                                                    */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -19,7 +20,6 @@
 #include "t42parse.h"
 #include "t42error.h"
 #include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_STREAM_H
 #include FT_LIST_H
 
 
