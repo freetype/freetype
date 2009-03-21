@@ -51,7 +51,6 @@
 #include FT_TRUETYPE_TAGS_H
 #include FT_MULTIPLE_MASTERS_H
 
-#include "ttdriver.h"
 #include "ttpload.h"
 #include "ttgxvar.h"
 

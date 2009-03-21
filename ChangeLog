@@ -1,5 +1,11 @@
 2009-03-21  Werner Lemberg  <wl@gnu.org>
 
+	Another redundant header inclusion.
+
+	* src/truetype/ttgxvar.c: Fix Ghostscript Coverity issue #4041.
+
+2009-03-21  Werner Lemberg  <wl@gnu.org>
+
 	Remove redundant header inclusions.
 
 	This covers many Ghostscript Coverity issues.
