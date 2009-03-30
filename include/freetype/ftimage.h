@@ -5,7 +5,7 @@
 /*    FreeType glyph image formats and default raster interface            */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1011,7 +1011,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    gray_spans  :: The gray span drawing callback.                     */
   /*                                                                       */
-  /*    black_spans :: The black span drawing callback.                    */
+  /*    black_spans :: The black span drawing callback.  UNIMPLEMENTED!    */
   /*                                                                       */
   /*    bit_test    :: The bit test callback.  UNIMPLEMENTED!              */
   /*                                                                       */
@@ -1048,7 +1048,7 @@ FT_BEGIN_HEADER
     const void*             source;
     int                     flags;
     FT_SpanFunc             gray_spans;
-    FT_SpanFunc             black_spans;
+    FT_SpanFunc             black_spans;  /* doesn't work! */
     FT_Raster_BitTest_Func  bit_test;     /* doesn't work! */
     FT_Raster_BitSet_Func   bit_set;      /* doesn't work! */
     void*                   user;
