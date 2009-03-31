@@ -535,7 +535,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*      For example, if you want to access Unicode value U+1F028 (and    */
   /*      the font contains it), use value 0x1F028 as the input value for  */
-  /*      @FT_Get_Char_index.                                              */
+  /*      @FT_Get_Char_Index.                                              */
   /*                                                                       */
   /*    FT_ENCODING_MS_SYMBOL ::                                           */
   /*      Corresponds to the Microsoft Symbol encoding, used to encode     */
