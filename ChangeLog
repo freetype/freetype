@@ -1,3 +1,12 @@
+2009-04-01  Werner Lemberg  <wl@gnu.org>
+
+	Ignore empty contours in CFF glyphs.
+
+	Problem reported by Albert Astals Cid <aacid@kde.org>.
+
+	* src/cff/cffgload.c (cff_builder_close_contour): Synchronize with
+	t1_builder_close_contour.
+
 2009-03-21  Werner Lemberg  <wl@gnu.org>
 
 	Another redundant header inclusion.
