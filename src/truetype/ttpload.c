@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType-specific tables loader (body).                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2005, 2006, 2007, 2008 by             */
+/*  Copyright 1996-2001, 2002, 2004, 2005, 2006, 2007, 2008, 2009 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -58,7 +58,6 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_loca( TT_Face    face,
                      FT_Stream  stream )
@@ -204,12 +203,11 @@
       }
     }
 
-    /* It isn't mentioned explicitly that the `loca' table must be  */
-    /* ordered, but implicitly it refers to the length of an entry  */
-    /* as the difference between the current and the next position. */
-    /* Anyway, there do exist (malformed) fonts which don't obey    */
-    /* this rule, so we are only able to provide an upper bound for */
-    /* the size.                                                    */
+    /* The `loca' table must be ordered; it refers to the length of */
+    /* an entry as the difference between the current and the next  */
+    /* position.  However, there do exist (malformed) fonts which   */
+    /* don't obey this rule, so we are only able to provide an      */
+    /* upper bound for the size.                                    */
     /*                                                              */
     /* We get (intentionally) a wrong, non-zero result in case the  */
     /* `glyf' table is missing.                                     */
