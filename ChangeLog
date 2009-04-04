@@ -1,5 +1,13 @@
 2009-04-04  Werner Lemberg  <wl@gnu.org>
 
+	ftnames.c -> ftsnames.c
+
+	* src/base/ftnames.c: Rename to...
+	* src/base/ftsnames.c: This.
+	* src/base/Jamfile, src/base/rules.mk, src/base/ftbase.c: Updated.
+
+2009-04-04  Werner Lemberg  <wl@gnu.org>
+
 	Add support for cmap type 13.
 
 	* devel/ftoption.h, include/freetype/config/ftoption.h
