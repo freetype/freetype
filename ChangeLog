@@ -1,3 +1,19 @@
+2009-04-04  Werner Lemberg  <wl@gnu.org>
+
+	Add support for cmap type 13.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(TT_CONFIG_CMAP_FORMAT_13): New macro.
+
+	* src/sfnt/ttcmap.c (TT_CMap13Rec, tt_cmap13_init,
+	tt_cmap13_validate, tt_cmap13_char_index, tt_cmap13_char_next,
+	tt_cmap13_get_info, tt_cmap13_char_map_def_binary,
+	tt_cmap14_class_rec): New functions and structures for cmap 13
+	support.
+	(tt_cmap_classes): Register tt_cmap13_class_rec.
+
+	* docs/CHANGES: Mention cmap 13 support.
+
 2009-04-01  Werner Lemberg  <wl@gnu.org>
 
 	Ignore empty contours in CFF glyphs.

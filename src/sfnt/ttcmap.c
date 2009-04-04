@@ -157,7 +157,7 @@
     FT_Byte*  p = cmap->data + 4;
 
 
-    cmap_info->format = 0;
+    cmap_info->format   = 0;
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
     return SFNT_Err_Ok;
@@ -536,7 +536,7 @@
     FT_Byte*  p = cmap->data + 4;
 
 
-    cmap_info->format = 2;
+    cmap_info->format   = 2;
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
     return SFNT_Err_Ok;
@@ -1375,7 +1375,7 @@
     FT_Byte*  p = cmap->data + 4;
 
 
-    cmap_info->format = 4;
+    cmap_info->format   = 4;
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
     return SFNT_Err_Ok;
@@ -1537,7 +1537,7 @@
     FT_Byte*  p = cmap->data + 4;
 
 
-    cmap_info->format = 6;
+    cmap_info->format   = 6;
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
     return SFNT_Err_Ok;
@@ -1793,7 +1793,7 @@
     FT_Byte*  p = cmap->data + 8;
 
 
-    cmap_info->format = 8;
+    cmap_info->format   = 8;
     cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
 
     return SFNT_Err_Ok;
@@ -1945,7 +1945,7 @@
     FT_Byte*  p = cmap->data + 8;
 
 
-    cmap_info->format = 10;
+    cmap_info->format   = 10;
     cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
 
     return SFNT_Err_Ok;
@@ -2265,7 +2265,7 @@
     FT_Byte*  p = cmap->data + 8;
 
 
-    cmap_info->format = 12;
+    cmap_info->format   = 12;
     cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
 
     return SFNT_Err_Ok;
@@ -2291,6 +2291,325 @@
   };
 
 #endif /* TT_CONFIG_CMAP_FORMAT_12 */
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                          FORMAT 13                            *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* TABLE OVERVIEW                                                        */
+  /* --------------                                                        */
+  /*                                                                       */
+  /*   NAME        OFFSET     TYPE       DESCRIPTION                       */
+  /*                                                                       */
+  /*   format      0          USHORT     must be 13                        */
+  /*   reserved    2          USHORT     reserved                          */
+  /*   length      4          ULONG      length in bytes                   */
+  /*   language    8          ULONG      Mac language code                 */
+  /*   count       12         ULONG      number of groups                  */
+  /*               16                                                      */
+  /*                                                                       */
+  /* This header is followed by `count' groups of the following format:    */
+  /*                                                                       */
+  /*   start       0          ULONG      first charcode                    */
+  /*   end         4          ULONG      last charcode                     */
+  /*   glyphId     8          ULONG      glyph ID for the whole group      */
+  /*                                                                       */
+
+#ifdef TT_CONFIG_CMAP_FORMAT_13
+
+  typedef struct  TT_CMap13Rec_
+  {
+    TT_CMapRec  cmap;
+    FT_Bool     valid;
+    FT_ULong    cur_charcode;
+    FT_UInt     cur_gindex;
+    FT_ULong    cur_group;
+    FT_ULong    num_groups;
+
+  } TT_CMap13Rec, *TT_CMap13;
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap13_init( TT_CMap13  cmap,
+                  FT_Byte*   table )
+  {
+    cmap->cmap.data  = table;
+
+    table           += 12;
+    cmap->num_groups = FT_PEEK_ULONG( table );
+
+    cmap->valid      = 0;
+
+    return SFNT_Err_Ok;
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap13_validate( FT_Byte*      table,
+                      FT_Validator  valid )
+  {
+    FT_Byte*   p;
+    FT_ULong   length;
+    FT_ULong   num_groups;
+
+
+    if ( table + 16 > valid->limit )
+      FT_INVALID_TOO_SHORT;
+
+    p      = table + 4;
+    length = TT_NEXT_ULONG( p );
+
+    p          = table + 12;
+    num_groups = TT_NEXT_ULONG( p );
+
+    if ( length > (FT_ULong)( valid->limit - table ) ||
+         length < 16 + 12 * num_groups               )
+      FT_INVALID_TOO_SHORT;
+
+    /* check groups, they must be in increasing order */
+    {
+      FT_ULong  n, start, end, glyph_id, last = 0;
+
+
+      for ( n = 0; n < num_groups; n++ )
+      {
+        start    = TT_NEXT_ULONG( p );
+        end      = TT_NEXT_ULONG( p );
+        glyph_id = TT_NEXT_ULONG( p );
+
+        if ( start > end )
+          FT_INVALID_DATA;
+
+        if ( n > 0 && start <= last )
+          FT_INVALID_DATA;
+
+        if ( valid->level >= FT_VALIDATE_TIGHT )
+        {
+          if ( glyph_id >= TT_VALID_GLYPH_COUNT( valid ) )
+            FT_INVALID_GLYPH_ID;
+        }
+
+        last = end;
+      }
+    }
+
+    return SFNT_Err_Ok;
+  }
+
+
+  /* search the index of the charcode next to cmap->cur_charcode */
+  /* cmap->cur_group should be set up properly by caller         */
+  /*                                                             */
+  static void
+  tt_cmap13_next( TT_CMap13  cmap )
+  {
+    FT_Byte*  p;
+    FT_ULong  start, end, glyph_id, char_code;
+    FT_ULong  n;
+    FT_UInt   gindex;
+
+
+    if ( cmap->cur_charcode >= 0xFFFFFFFFUL )
+      goto Fail;
+
+    char_code = cmap->cur_charcode + 1;
+
+    n = cmap->cur_group;
+
+    for ( n = cmap->cur_group; n < cmap->num_groups; n++ )
+    {
+      p        = cmap->cmap.data + 16 + 12 * n;
+      start    = TT_NEXT_ULONG( p );
+      end      = TT_NEXT_ULONG( p );
+      glyph_id = TT_PEEK_ULONG( p );
+
+      if ( char_code < start )
+        char_code = start;
+
+      if ( char_code <= end )
+      {
+        gindex = (FT_UInt)glyph_id;
+
+        if ( gindex )
+        {
+          cmap->cur_charcode = char_code;;
+          cmap->cur_gindex   = gindex;
+          cmap->cur_group    = n;
+
+          return;
+        }
+      }
+    }
+
+  Fail:
+    cmap->valid = 0;
+  }
+
+
+  static FT_UInt
+  tt_cmap13_char_map_binary( TT_CMap     cmap,
+                             FT_UInt32*  pchar_code,
+                             FT_Bool     next )
+  {
+    FT_UInt    gindex     = 0;
+    FT_Byte*   p          = cmap->data + 12;
+    FT_UInt32  num_groups = TT_PEEK_ULONG( p );
+    FT_UInt32  char_code  = *pchar_code;
+    FT_UInt32  start, end;
+    FT_UInt32  max, min, mid;
+
+
+    if ( !num_groups )
+      return 0;
+
+    /* make compiler happy */
+    mid = num_groups;
+    end = 0xFFFFFFFFUL;
+
+    if ( next )
+      char_code++;
+
+    min = 0;
+    max = num_groups;
+
+    /* binary search */
+    while ( min < max )
+    {
+      mid = ( min + max ) >> 1;
+      p   = cmap->data + 16 + 12 * mid;
+
+      start = TT_NEXT_ULONG( p );
+      end   = TT_NEXT_ULONG( p );
+
+      if ( char_code < start )
+        max = mid;
+      else if ( char_code > end )
+        min = mid + 1;
+      else
+      {
+        gindex = (FT_UInt)TT_PEEK_ULONG( p );
+
+        break;
+      }
+    }
+
+    if ( next )
+    {
+      TT_CMap13  cmap13 = (TT_CMap13)cmap;
+
+
+      /* if `char_code' is not in any group, then `mid' is */
+      /* the group nearest to `char_code'                  */
+      /*                                                   */
+
+      if ( char_code > end )
+      {
+        mid++;
+        if ( mid == num_groups )
+          return 0;
+      }
+
+      cmap13->valid        = 1;
+      cmap13->cur_charcode = char_code;
+      cmap13->cur_group    = mid;
+
+      if ( !gindex )
+      {
+        tt_cmap13_next( cmap13 );
+
+        if ( cmap13->valid )
+          gindex = cmap13->cur_gindex;
+      }
+      else
+        cmap13->cur_gindex = gindex;
+
+      if ( gindex )
+        *pchar_code = cmap13->cur_charcode;
+    }
+
+    return gindex;
+  }
+
+
+  FT_CALLBACK_DEF( FT_UInt )
+  tt_cmap13_char_index( TT_CMap    cmap,
+                        FT_UInt32  char_code )
+  {
+    return tt_cmap13_char_map_binary( cmap, &char_code, 0 );
+  }
+
+
+  FT_CALLBACK_DEF( FT_UInt )
+  tt_cmap13_char_next( TT_CMap     cmap,
+                       FT_UInt32  *pchar_code )
+  {
+    TT_CMap13  cmap13 = (TT_CMap13)cmap;
+    FT_ULong   gindex;
+
+
+    if ( cmap13->cur_charcode >= 0xFFFFFFFFUL )
+      return 0;
+
+    /* no need to search */
+    if ( cmap13->valid && cmap13->cur_charcode == *pchar_code )
+    {
+      tt_cmap13_next( cmap13 );
+      if ( cmap13->valid )
+      {
+        gindex = cmap13->cur_gindex;
+        if ( gindex )
+          *pchar_code = cmap13->cur_charcode;
+      }
+      else
+        gindex = 0;
+    }
+    else
+      gindex = tt_cmap13_char_map_binary( cmap, pchar_code, 1 );
+
+    return gindex;
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap13_get_info( TT_CMap       cmap,
+                      TT_CMapInfo  *cmap_info )
+  {
+    FT_Byte*  p = cmap->data + 8;
+
+
+    cmap_info->format   = 13;
+    cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
+
+    return SFNT_Err_Ok;
+  }
+
+
+  FT_CALLBACK_TABLE_DEF
+  const TT_CMap_ClassRec  tt_cmap13_class_rec =
+  {
+    {
+      sizeof ( TT_CMap13Rec ),
+
+      (FT_CMap_InitFunc)     tt_cmap13_init,
+      (FT_CMap_DoneFunc)     NULL,
+      (FT_CMap_CharIndexFunc)tt_cmap13_char_index,
+      (FT_CMap_CharNextFunc) tt_cmap13_char_next,
+
+      NULL, NULL, NULL, NULL, NULL
+    },
+    13,
+    (TT_CMap_ValidateFunc)   tt_cmap13_validate,
+    (TT_CMap_Info_GetFunc)   tt_cmap13_get_info
+  };
+
+#endif /* TT_CONFIG_CMAP_FORMAT_13 */
 
 
   /*************************************************************************/
@@ -2553,7 +2872,7 @@
   {
     FT_UNUSED( cmap );
 
-    cmap_info->format = 14;
+    cmap_info->format   = 14;
     /* subtable 14 does not define a language field */
     cmap_info->language = 0xFFFFFFFFUL;
 
@@ -3060,6 +3379,10 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_12
     &tt_cmap12_class_rec,
+#endif
+
+#ifdef TT_CONFIG_CMAP_FORMAT_13
+    &tt_cmap13_class_rec,
 #endif
 
 #ifdef TT_CONFIG_CMAP_FORMAT_14

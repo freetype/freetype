@@ -1,3 +1,13 @@
+CHANGES BETWEEN 2.3.10 and 2.3.9
+
+  I. IMPORTANT CHANGES
+
+    - Support for the SFNT cmap 13 table format (as defined by the new
+      OpenType 1.6 specification) has been added.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.3.9 and 2.3.8
 
   I. IMPORTANT BUG FIXES
