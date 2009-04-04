@@ -112,7 +112,7 @@ FT_BEGIN_HEADER
   /*         file `ftconfig.h' either statically or through the            */
   /*         `configure' script on supported platforms.                    */
   /*                                                                       */
-#undef  FT_CONFIG_OPTION_FORCE_INT64
+#undef FT_CONFIG_OPTION_FORCE_INT64
 
 
   /*************************************************************************/
@@ -184,7 +184,7 @@ FT_BEGIN_HEADER
   /*   Do not #undef this macro here since the build system might define   */
   /*   it for certain configurations only.                                 */
   /*                                                                       */
-/* #define  FT_CONFIG_OPTION_SYSTEM_ZLIB */
+/* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
 
   /*************************************************************************/
@@ -225,20 +225,20 @@ FT_BEGIN_HEADER
   /*   Do not #undef these macros here since the build system might define */
   /*   them for certain configurations only.                               */
   /*                                                                       */
-/* #define  FT_EXPORT(x)       extern x */
-/* #define  FT_EXPORT_DEF(x)   x */
+/* #define FT_EXPORT(x)      extern x */
+/* #define FT_EXPORT_DEF(x)  x */
 
 
   /*************************************************************************/
   /*                                                                       */
   /* Glyph Postscript Names handling                                       */
   /*                                                                       */
-  /*   By default, FreeType 2 is compiled with the `PSNames' module.  This */
+  /*   By default, FreeType 2 is compiled with the `psnames' module.  This */
   /*   module is in charge of converting a glyph name string into a        */
   /*   Unicode value, or return a Macintosh standard glyph name for the    */
   /*   use with the TrueType `post' table.                                 */
   /*                                                                       */
-  /*   Undefine this macro if you do not want `PSNames' compiled in your   */
+  /*   Undefine this macro if you do not want `psnames' compiled in your   */
   /*   build of FreeType.  This has the following effects:                 */
   /*                                                                       */
   /*   - The TrueType driver will provide its own set of glyph names,      */
@@ -651,7 +651,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #define AF_CONFIG_OPTION_CJK
 
-
   /*************************************************************************/
   /*                                                                       */
   /* Compile autofit module with Indic script support.                     */
@@ -671,11 +670,11 @@ FT_BEGIN_HEADER
    * is recommended to disable the macro since it reduces the library's code
    * size and activates a few memory-saving optimizations as well.
    */
-#undef FT_CONFIG_OPTION_OLD_INTERNALS
+/* #define FT_CONFIG_OPTION_OLD_INTERNALS */
 
 
   /*
-   * This variable is defined if either unpatented or native TrueType
+   * This macro is defined if either unpatented or native TrueType
    * hinting is requested by the definitions above.
    */
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
