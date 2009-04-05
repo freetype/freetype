@@ -1,5 +1,60 @@
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
+	Position Independent Code (PIC) support in sfnt driver.
+
+	* include/freetype/internal/services/svbdf.h add macros to init 
+	instances of FT_Service_BDFRec.
+	* include/freetype/internal/services/svgldict.h add macros to init 
+	instances of FT_Service_GlyphDictRec.
+	* include/freetype/internal/services/svpostnm.h add macros to init 
+	instances of FT_Service_PsFontNameRec.
+	* include/freetype/internal/services/svsfnt.h add macros to init 
+	instances of FT_Service_SFNT_TableRec.
+	* include/freetype/internal/services/svttcmap.h add macros to init 
+	instances of FT_Service_TTCMapsRec.
+	* include/freetype/internal/sfnt.h add macros to init 
+	instances of SFNT_Interface.
+
+	* src/sfnt/sfdriver.h declare sfnt_module_class using macros from
+	ftmodapi.h, when FT_CONFIG_OPTION_PIC is defined create and destroy
+	functions will be declared.
+	* src/sfnt/sfdriver.c when FT_CONFIG_OPTION_PIC is defined 
+	the following structs: 
+	sfnt_service_sfnt_table, sfnt_service_glyph_dict, sfnt_service_ps_name
+	tt_service_get_cmap_info, sfnt_service_bdf, sfnt_interface, 
+	sfnt_module_class, and sfnt_services array
+	will have functions to init or create and destroy them
+	instead of being allocated in the global scope.
+	And macros will be used from sfntpic.h in order to access them
+	from the pic_container.
+
+	* src/sfnt/ttcmap.h add macros to init 
+	instances of TT_CMap_ClassRec.
+	* src/sfnt/ttcmap.c when FT_CONFIG_OPTION_PIC is defined 
+	the following structs: 
+	tt_cmap0_class_rec, tt_cmap2_class_rec, tt_cmap4_class_rec
+	tt_cmap6_class_rec, tt_cmap8_class_rec, tt_cmap10_class_rec, 
+	tt_cmap12_class_rec, tt_cmap14_class_rec and tt_cmap_classes array
+	will have functions to init or create and destroy them
+	instead of being allocated in the global scope.
+	And macros will be used from sfntpic.h in order to access them
+	from the pic_container.
+	The content of tt_cmap_classes is now described in the
+	new file 'ttcmapc.h'.
+
+	New Files:
+	* src/sfnt/sfntpic.h declare struct to hold PIC globals for sfnt
+	driver and macros to access them.
+	* src/sfnt/sfntpic.c implement functions to allocate, destroy and 
+	initialize PIC globals for sfnt driver.
+	* src/sfnt/ttcmapc.h describing the content of 
+	tt_cmap_classes allocated in ttcmap.c
+
+	* src/sfnt/sfnt.c add new file to build: sfntpic.c.
+	* src/sfnt/jamfile add new files to FT2_MULTI build: sfntpic.c.
+
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
 	Position Independent Code (PIC) support in truetype driver.
 
 	* include/freetype/internal/services/svmm.h add macros to init 
