@@ -22,6 +22,7 @@
 #include FT_OUTLINE_H
 #include "ftsmooth.h"
 #include "ftgrays.h"
+#include "ftspic.h"
 
 #include "ftsmerrs.h"
 
@@ -384,10 +385,8 @@
   }
 
 
-  FT_CALLBACK_TABLE_DEF
-  const FT_Renderer_Class  ft_smooth_renderer_class =
-  {
-    {
+  FT_DEFINE_RENDERER(ft_smooth_renderer_class,
+
       FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
@@ -400,7 +399,7 @@
       (FT_Module_Constructor)ft_smooth_init,
       (FT_Module_Destructor) 0,
       (FT_Module_Requester)  0
-    },
+    ,
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -409,14 +408,12 @@
     (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,
 
-    (FT_Raster_Funcs*)    &ft_grays_raster
-  };
+    (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
+  )
 
 
-  FT_CALLBACK_TABLE_DEF
-  const FT_Renderer_Class  ft_smooth_lcd_renderer_class =
-  {
-    {
+  FT_DEFINE_RENDERER(ft_smooth_lcd_renderer_class,
+  
       FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
@@ -429,7 +426,7 @@
       (FT_Module_Constructor)ft_smooth_init,
       (FT_Module_Destructor) 0,
       (FT_Module_Requester)  0
-    },
+    ,
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -438,15 +435,11 @@
     (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,
 
-    (FT_Raster_Funcs*)    &ft_grays_raster
-  };
+    (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
+  )
 
+  FT_DEFINE_RENDERER(ft_smooth_lcdv_renderer_class,
 
-
-  FT_CALLBACK_TABLE_DEF
-  const FT_Renderer_Class  ft_smooth_lcdv_renderer_class =
-  {
-    {
       FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
@@ -459,7 +452,7 @@
       (FT_Module_Constructor)ft_smooth_init,
       (FT_Module_Destructor) 0,
       (FT_Module_Requester)  0
-    },
+    ,
 
     FT_GLYPH_FORMAT_OUTLINE,
 
@@ -468,8 +461,8 @@
     (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,
 
-    (FT_Raster_Funcs*)    &ft_grays_raster
-  };
+    (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
+  )
 
 
 /* END */

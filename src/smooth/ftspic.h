@@ -1,11 +1,11 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftsmooth.h                                                             */
+/*  ftspic.h                                                               */
 /*                                                                         */
-/*    Anti-aliasing renderer interface (specification).                    */
+/*    The FreeType position independent code services for smooth module.   */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*  Copyright 2009 by                                                      */
+/*  Oran Agra and Mickey Gabel.                                            */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -16,34 +16,35 @@
 /***************************************************************************/
 
 
-#ifndef __FTSMOOTH_H__
-#define __FTSMOOTH_H__
+#ifndef __FTSPIC_H__
+#define __FTSPIC_H__
 
-
-#include <ft2build.h>
-#include FT_RENDER_H
-
-
+  
 FT_BEGIN_HEADER
 
+#include FT_INTERNAL_PIC_H
 
-#ifndef FT_CONFIG_OPTION_NO_STD_RASTER
-  FT_DECLARE_RENDERER( ft_std_renderer_class )
-#endif
+#ifndef FT_CONFIG_OPTION_PIC
+#define FT_GRAYS_RASTER_GET        ft_grays_raster
 
-#ifndef FT_CONFIG_OPTION_NO_SMOOTH_RASTER
-  FT_DECLARE_RENDERER( ft_smooth_renderer_class )
+#else /* FT_CONFIG_OPTION_PIC */
 
-  FT_DECLARE_RENDERER( ft_smooth_lcd_renderer_class )
+  typedef struct SmoothPIC_
+  {
+    int ref_count;
+    FT_Raster_Funcs ft_grays_raster;
+  } SmoothPIC;
 
-  FT_DECLARE_RENDERER( ft_smooth_lcd_v_renderer_class )
-#endif
+#define GET_PIC(lib)               ((SmoothPIC*)((lib)->pic_container.smooth))
+#define FT_GRAYS_RASTER_GET        (GET_PIC(library)->ft_grays_raster)
 
+#endif /* FT_CONFIG_OPTION_PIC */
 
+ /* */
 
 FT_END_HEADER
 
-#endif /* __FTSMOOTH_H__ */
+#endif /* __FTSPIC_H__ */
 
 
 /* END */

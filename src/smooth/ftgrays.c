@@ -188,6 +188,7 @@
 
 #endif /* !_STANDALONE_ */
 
+#include "ftspic.h"
 
 #ifndef FT_MEM_SET
 #define FT_MEM_SET( d, s, c )  ft_memset( d, s, c )
@@ -1666,23 +1667,25 @@
 
   } TBand;
 
-
-  static int
-  gray_convert_glyph_inner( RAS_ARG )
-  {
-    static
-    const FT_Outline_Funcs  func_interface =
-    {
+    FT_DEFINE_OUTLINE_FUNCS(func_interface,
       (FT_Outline_MoveTo_Func) gray_move_to,
       (FT_Outline_LineTo_Func) gray_line_to,
       (FT_Outline_ConicTo_Func)gray_conic_to,
       (FT_Outline_CubicTo_Func)gray_cubic_to,
       0,
       0
-    };
+    )
+
+  static int
+  gray_convert_glyph_inner( RAS_ARG )
+  {
 
     volatile int  error = 0;
 
+#ifdef FT_CONFIG_OPTION_PIC
+      FT_Outline_Funcs func_interface;
+      Init_Class_func_interface(&func_interface);
+#endif
 
     if ( ft_setjmp( ras.jump_buffer ) == 0 )
     {
@@ -2037,8 +2040,7 @@
   }
 
 
-  const FT_Raster_Funcs  ft_grays_raster =
-  {
+  FT_DEFINE_RASTER_FUNCS(ft_grays_raster,
     FT_GLYPH_FORMAT_OUTLINE,
 
     (FT_Raster_New_Func)     gray_raster_new,
@@ -2046,7 +2048,7 @@
     (FT_Raster_Set_Mode_Func)0,
     (FT_Raster_Render_Func)  gray_raster_render,
     (FT_Raster_Done_Func)    gray_raster_done
-  };
+  )
 
 
 /* END */
