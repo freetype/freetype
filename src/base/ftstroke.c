@@ -706,7 +706,7 @@
 
     FT_Bool              valid;
     FT_StrokeBorderRec   borders[2];
-    FT_Memory            memory;
+    FT_Library           library;
 
   } FT_StrokerRec;
 
@@ -729,7 +729,7 @@
 
     if ( !FT_NEW( stroker ) )
     {
-      stroker->memory = memory;
+      stroker->library = library;
 
       ft_stroke_border_init( &stroker->borders[0], memory );
       ft_stroke_border_init( &stroker->borders[1], memory );
@@ -777,13 +777,13 @@
   {
     if ( stroker )
     {
-      FT_Memory  memory = stroker->memory;
+      FT_Memory  memory = stroker->library->memory;
 
 
       ft_stroke_border_done( &stroker->borders[0] );
       ft_stroke_border_done( &stroker->borders[1] );
 
-      stroker->memory = NULL;
+      stroker->library = NULL;
       FT_FREE( stroker );
     }
   }

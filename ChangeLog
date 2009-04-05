@@ -1,3 +1,11 @@
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
+	Minor change in ftstroke.c.
+
+	* src/base/ftstroke.c (FT_StrokerRec): Replace `memory' member with
+	`library' needed for PIC version.
+	Update all callers.
+
 2009-04-04  Werner Lemberg  <wl@gnu.org>
 
 	ftnames.c -> ftsnames.c
