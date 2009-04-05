@@ -148,7 +148,9 @@
   static FT_Bool
   tt_check_trickyness( FT_String*  name )
   {
-    static const char* const  trick_names[] =
+#define TRICK_NAMES_MAX_CHARACTERS  16
+#define TRICK_NAMES_COUNT 7
+    static const char trick_names[TRICK_NAMES_COUNT][TRICK_NAMES_MAX_CHARACTERS+1] =
     {
       "DFKaiSho-SB",     /* dfkaisb.ttf */
       "DFKaiShu",
@@ -157,7 +159,6 @@
       "MingLiU",         /* mingliu.ttf & mingliu.ttc */
       "PMingLiU",        /* mingliu.ttc */
       "MingLi43",        /* mingli.ttf */
-      NULL
     };
     int  nn;
 
@@ -167,7 +168,7 @@
 
     /* Note that we only check the face name at the moment; it might */
     /* be worth to do more checks for a few special cases.           */
-    for ( nn = 0; trick_names[nn] != NULL; nn++ )
+    for ( nn = 0; nn < TRICK_NAMES_COUNT; nn++ )
       if ( ft_strstr( name, trick_names[nn] ) )
         return TRUE;
 
