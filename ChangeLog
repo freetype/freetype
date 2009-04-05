@@ -1,5 +1,18 @@
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
+	Preparing changes in cff parser later needed for PIC version.
+
+	* src/cff/cffload.c, src/cff/cffload.h, src/cff/cffobjs.c,
+	src/cff/cffparse.c, src/cff/cffparse.h: Add library pointer to 
+	'CFF_ParserRec' set by `cff_parser_init'.
+	Route library pointer from 'cff_face_init' to 'cff_subfont_load'
+	for `cff_parser_init'.
+
+	* src/cff/cffparse.c (CFF_Field_Handler): Move it to...
+	* src/cff/cffparse.h: This file, to be used by other C files.
+
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
 	Minor change in ftstroke.c.
 
 	* src/base/ftstroke.c (FT_StrokerRec): Replace `memory' member with

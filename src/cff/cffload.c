@@ -1267,7 +1267,8 @@
                     CFF_Index    idx,
                     FT_UInt      font_index,
                     FT_Stream    stream,
-                    FT_ULong     base_offset )
+                    FT_ULong     base_offset,
+                    FT_Library   library )
   {
     FT_Error         error;
     CFF_ParserRec    parser;
@@ -1277,7 +1278,7 @@
     CFF_Private      priv = &font->private_dict;
 
 
-    cff_parser_init( &parser, CFF_CODE_TOPDICT, &font->font_dict );
+    cff_parser_init( &parser, CFF_CODE_TOPDICT, &font->font_dict, library );
 
     /* set defaults */
     FT_MEM_ZERO( top, sizeof ( *top ) );
@@ -1328,7 +1329,7 @@
       priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
       priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
 
-      cff_parser_init( &parser, CFF_CODE_PRIVATE, priv );
+      cff_parser_init( &parser, CFF_CODE_PRIVATE, priv, library );
 
       if ( FT_STREAM_SEEK( base_offset + font->font_dict.private_offset ) ||
            FT_FRAME_ENTER( font->font_dict.private_size )                 )
@@ -1381,7 +1382,8 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  cff_font_load( FT_Stream  stream,
+  cff_font_load( FT_Library library,
+                 FT_Stream  stream,
                  FT_Int     face_index,
                  CFF_Font   font,
                  FT_Bool    pure_cff )
@@ -1459,7 +1461,8 @@
                               &font->font_dict_index,
                               face_index,
                               stream,
-                              base_offset );
+                              base_offset,
+                              library );
     if ( error )
       goto Exit;
 
@@ -1507,7 +1510,7 @@
       {
         sub = font->subfonts[idx];
         error = cff_subfont_load( sub, &fd_index, idx,
-                                  stream, base_offset );
+                                  stream, base_offset, library );
         if ( error )
           goto Fail_CID;
       }

@@ -408,6 +408,7 @@
     PSHinter_Service    pshinter;
     FT_Bool             pure_cff    = 1;
     FT_Bool             sfnt_format = 0;
+    FT_Library library = cffface->driver->root.library;
 
 
 #if 0
@@ -419,14 +420,14 @@
       goto Bad_Format;
 #else
     sfnt = (SFNT_Service)FT_Get_Module_Interface(
-             cffface->driver->root.library, "sfnt" );
+             library, "sfnt" );
     if ( !sfnt )
       goto Bad_Format;
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
 
     pshinter = (PSHinter_Service)FT_Get_Module_Interface(
-                 cffface->driver->root.library, "pshinter" );
+                 library, "pshinter" );
 #endif
 
     /* create input stream from resource */
@@ -507,7 +508,7 @@
         goto Exit;
 
       face->extra.data = cff;
-      error = cff_font_load( stream, face_index, cff, pure_cff );
+      error = cff_font_load( library, stream, face_index, cff, pure_cff );
       if ( error )
         goto Exit;
 
