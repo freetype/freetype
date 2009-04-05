@@ -24,6 +24,7 @@
 #include "pstables.h"
 
 #include "psnamerr.h"
+#include "pspic.h"
 
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
@@ -516,56 +517,66 @@
   }
 
 
-  static
-  const FT_Service_PsCMapsRec  pscmaps_interface =
-  {
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
-
+  FT_DEFINE_SERVICE_PSCMAPSREC(pscmaps_interface, 
     (PS_Unicode_ValueFunc)     ps_unicode_value,
     (PS_Unicodes_InitFunc)     ps_unicodes_init,
     (PS_Unicodes_CharIndexFunc)ps_unicodes_char_index,
     (PS_Unicodes_CharNextFunc) ps_unicodes_char_next,
-
-#else
-
-    0,
-    0,
-    0,
-    0,
-
-#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
     (PS_Macintosh_NameFunc)    ps_get_macintosh_name,
     (PS_Adobe_Std_StringsFunc) ps_get_standard_strings,
 
     t1_standard_encoding,
     t1_expert_encoding
-  };
+  )
+
+#else
+
+  FT_DEFINE_SERVICE_PSCMAPSREC(pscmaps_interface, 
+    0,
+    0,
+    0,
+    0,
+
+    (PS_Macintosh_NameFunc)    ps_get_macintosh_name,
+    (PS_Adobe_Std_StringsFunc) ps_get_standard_strings,
+
+    t1_standard_encoding,
+    t1_expert_encoding
+  )
+
+#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
 
-  static const FT_ServiceDescRec  pscmaps_services[] =
-  {
-    { FT_SERVICE_ID_POSTSCRIPT_CMAPS, &pscmaps_interface },
-    { NULL, NULL }
-  };
+  FT_DEFINE_SERVICEDESCREC1(pscmaps_services, 
+    FT_SERVICE_ID_POSTSCRIPT_CMAPS, &FT_PSCMAPS_INTERFACE_GET
+  )
+
+
 
 
   static FT_Pointer
   psnames_get_service( FT_Module    module,
                        const char*  service_id )
   {
-    FT_UNUSED( module );
+    FT_Library library = module->library;
+    FT_UNUSED(library);
 
-    return ft_service_list_lookup( pscmaps_services, service_id );
+    return ft_service_list_lookup( FT_PSCMAPS_SERVICES_GET, service_id );
   }
 
 #endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
+#ifndef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+#define PUT_PS_NAMES_SERVICE(a) 0
+#else
+#define PUT_PS_NAMES_SERVICE(a) a
+#endif
 
-  FT_CALLBACK_TABLE_DEF
-  const FT_Module_Class  psnames_module_class =
-  {
+  FT_DEFINE_MODULE(psnames_module_class,
+  
     0,  /* this is not a font driver, nor a renderer */
     sizeof ( FT_ModuleRec ),
 
@@ -573,18 +584,12 @@
     0x10000L,   /* driver version                      */
     0x20000L,   /* driver requires FreeType 2 or above */
 
-#ifndef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    0,
+    PUT_PS_NAMES_SERVICE((void*)&FT_PSCMAPS_INTERFACE_GET),   /* module specific interface */
     (FT_Module_Constructor)0,
     (FT_Module_Destructor) 0,
-    (FT_Module_Requester)  0
-#else
-    (void*)&pscmaps_interface,   /* module specific interface */
-    (FT_Module_Constructor)0,
-    (FT_Module_Destructor) 0,
-    (FT_Module_Requester)  psnames_get_service
-#endif
-  };
+    (FT_Module_Requester)  PUT_PS_NAMES_SERVICE(psnames_get_service)
+  )
+
 
 
 /* END */
