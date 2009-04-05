@@ -1,11 +1,11 @@
 /***************************************************************************/
 /*                                                                         */
-/*  pshmod.h                                                               */
+/*  pshpic.h                                                               */
 /*                                                                         */
-/*    PostScript hinter module interface (specification).                  */
+/*    The FreeType position independent code services for pshinter module. */
 /*                                                                         */
-/*  Copyright 2001 by                                                      */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*  Copyright 2009 by                                                      */
+/*  Oran Agra and Mickey Gabel.                                            */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -16,24 +16,38 @@
 /***************************************************************************/
 
 
-#ifndef __PSHMOD_H__
-#define __PSHMOD_H__
+#ifndef __PSHPIC_H__
+#define __PSHPIC_H__
 
-
-#include <ft2build.h>
-#include FT_MODULE_H
-
-
+  
 FT_BEGIN_HEADER
 
+#include FT_INTERNAL_PIC_H
 
-  FT_DECLARE_MODULE( pshinter_module_class )
+#ifndef FT_CONFIG_OPTION_PIC
 
+#define FTPSHINTER_INTERFACE_GET        pshinter_interface
+
+#else /* FT_CONFIG_OPTION_PIC */
+
+#include FT_INTERNAL_POSTSCRIPT_HINTS_H
+
+  typedef struct PSHinterPIC_
+  {
+    PSHinter_Interface pshinter_interface;
+  } PSHinterPIC;
+
+#define GET_PIC(lib)                    ((PSHinterPIC*)((lib)->pic_container.autofit))
+#define FTPSHINTER_INTERFACE_GET        (GET_PIC(library)->pshinter_interface)
+
+
+#endif /* FT_CONFIG_OPTION_PIC */
+
+ /* */
 
 FT_END_HEADER
 
-
-#endif /* __PSHMOD_H__ */
+#endif /* __PSHPIC_H__ */
 
 
 /* END */
