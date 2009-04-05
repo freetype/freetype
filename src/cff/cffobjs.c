@@ -30,6 +30,7 @@
 #include "cffload.h"
 #include "cffcmap.h"
 #include "cfferrs.h"
+#include "cffpic.h"
 
 
   /*************************************************************************/
@@ -869,7 +870,7 @@
 
         nn = (FT_UInt)cffface->num_charmaps;
 
-        FT_CMap_New( &cff_cmap_unicode_class_rec, NULL, &cmaprec, NULL );
+        FT_CMap_New( &FT_CFF_CMAP_UNICODE_CLASS_REC_GET, NULL, &cmaprec, NULL );
 
         /* if no Unicode charmap was previously selected, select this one */
         if ( cffface->charmap == NULL && nn != (FT_UInt)cffface->num_charmaps )
@@ -888,19 +889,19 @@
           {
             cmaprec.encoding_id = TT_ADOBE_ID_STANDARD;
             cmaprec.encoding    = FT_ENCODING_ADOBE_STANDARD;
-            clazz               = &cff_cmap_encoding_class_rec;
+            clazz               = &FT_CFF_CMAP_ENCODING_CLASS_REC_GET;
           }
           else if ( encoding->offset == 1 )
           {
             cmaprec.encoding_id = TT_ADOBE_ID_EXPERT;
             cmaprec.encoding    = FT_ENCODING_ADOBE_EXPERT;
-            clazz               = &cff_cmap_encoding_class_rec;
+            clazz               = &FT_CFF_CMAP_ENCODING_CLASS_REC_GET;
           }
           else
           {
             cmaprec.encoding_id = TT_ADOBE_ID_CUSTOM;
             cmaprec.encoding    = FT_ENCODING_ADOBE_CUSTOM;
-            clazz               = &cff_cmap_encoding_class_rec;
+            clazz               = &FT_CFF_CMAP_ENCODING_CLASS_REC_GET;
           }
 
           FT_CMap_New( clazz, NULL, &cmaprec, NULL );

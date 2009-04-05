@@ -1,5 +1,57 @@
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
+	Position Independent Code (PIC) support in cff driver.
+
+	* include/freetype/internal/services/svcid.h add macros to init 
+	instances of FT_Service_CIDRec.
+	* include/freetype/internal/services/svpsinfo.h add macros to init 
+	instances of FT_Service_PsInfoRec.
+
+	* src/cff/cffcmap.h declare cff_cmap_encoding_class_rec
+	and cff_cmap_unicode_class_rec using macros from
+	ftobjs.h, when FT_CONFIG_OPTION_PIC is defined create and destroy
+	functions will be declared.
+	* src/cff/cffcmap.c when FT_CONFIG_OPTION_PIC is defined 
+	the following structs: 
+	cff_cmap_encoding_class_rec and cff_cmap_unicode_class_rec
+	will have functions to init or create and destroy them
+	instead of being allocated in the global scope.
+
+	* src/cff/cffdrivr.h declare cff_driver_class using macros from
+	ftdriver.h, when FT_CONFIG_OPTION_PIC is defined create and destroy
+	functions will be declared.
+	* src/cff/cffdrivr.c when FT_CONFIG_OPTION_PIC is defined 
+	the following structs: 
+	cff_service_glyph_dict, cff_service_ps_info, cff_service_ps_name
+	cff_service_get_cmap_info, cff_service_cid_info, cff_driver_class, 
+	and cff_services array
+	will have functions to init or create and destroy them
+	instead of being allocated in the global scope.
+	And macros will be used from cffpic.h in order to access them
+	from the pic_container.
+	Use macros from cffpic.h in order to access the
+	structs allocated in cffcmap.c
+
+	* src/cff/cffobjs.c Use macros from cffpic.h in order to access the
+	structs allocated in cffcmap.c
+
+	* src/cff/parser.c when FT_CONFIG_OPTION_PIC is defined 
+	implement functions to create and destroy cff_field_handlers array 
+	instead of being allocated in the global scope.
+	And macros will be used from cffpic.h in order to access it
+	from the pic_container.
+
+	New Files:
+	* src/cff/cffpic.h declare struct to hold PIC globals for cff
+	driver and macros to access them.
+	* src/cff/cffpic.c implement functions to allocate, destroy and 
+	initialize PIC globals for cff driver.
+
+	* src/cff/cff.c add new file to build: cffpic.c.
+	* src/cff/jamfile add new files to FT2_MULTI build: cffpic.c.
+
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
 	Position Independent Code (PIC) support in sfnt driver.
 
 	* include/freetype/internal/services/svbdf.h add macros to init 
