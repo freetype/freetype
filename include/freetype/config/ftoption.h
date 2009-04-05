@@ -396,6 +396,20 @@ FT_BEGIN_HEADER
 #undef FT_CONFIG_OPTION_USE_MODULE_ERRORS
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* Position Independent Code                                             */
+  /*                                                                       */
+  /*   If this macro is set (which is _not_ the default), FreeType2 will   */
+  /*   avoid creating constants that require address fixups. Instead the   */
+  /*   constants will be moved into a struct and additional intialization  */
+  /*   code will be used.                                                  */
+  /*                                                                       */
+  /*   Setting this macro is needed for systems that prohibit address      */
+  /*   fixups, such as BREW.                                               */
+  /*                                                                       */
+/* #define FT_CONFIG_OPTION_PIC */
+
 
   /*************************************************************************/
   /*************************************************************************/

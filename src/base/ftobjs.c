@@ -4123,6 +4123,13 @@
 
     library->memory = memory;
 
+#ifdef FT_CONFIG_OPTION_PIC
+    /* initialize position independent code containers */
+    error = ft_pic_container_init( library );
+    if ( error )
+      goto Fail;
+#endif
+
     /* allocate the render pool */
     library->raster_pool_size = FT_RENDER_POOL_SIZE;
 #if FT_RENDER_POOL_SIZE > 0
@@ -4136,6 +4143,9 @@
     return FT_Err_Ok;
 
   Fail:
+#ifdef FT_CONFIG_OPTION_PIC
+    ft_pic_container_destroy( library );
+#endif
     FT_FREE( library );
     return error;
   }
@@ -4251,6 +4261,11 @@
     /* Destroy raster objects */
     FT_FREE( library->raster_pool );
     library->raster_pool_size = 0;
+
+#ifdef FT_CONFIG_OPTION_PIC
+    /* Destroy pic container contents */
+    ft_pic_container_destroy( library );
+#endif
 
     FT_FREE( library );
     return FT_Err_Ok;

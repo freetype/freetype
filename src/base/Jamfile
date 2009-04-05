@@ -20,6 +20,7 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
     _sources = ftadvanc ftcalc   ftdbgmem ftgloadr
                ftobjs   ftoutln  ftrfork  ftsnames
                ftstream fttrigon ftutil
+               basepic  ftpic
                ;
   }
   else

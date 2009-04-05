@@ -1,5 +1,58 @@
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
+	Position Independent Code (PIC) support and infrastructure in base.
+
+	* include/freetype/config/ftoption.h add FT_CONFIG_OPTION_PIC
+	* include/freetype/internal/ftobjs.h Add pic_container member to 
+	FT_LibraryRec.
+	Add macros to declare and init instances of FT_CMap_ClassRec.
+	Add macros to init instances of FT_Outline_Funcs and FT_Raster_Funcs.
+	Add macros to declare, allocate and initialize modules 
+	(FT_Module_Class).
+	Add macros to declare, allocate and initialize renderers 
+	(FT_Renderer_Class).
+	Add macro to init instances of FT_Glyph_Class.
+	Add macros to declare, allocate and initialize drivers 
+	(FT_Driver_ClassRec).
+	* include/freetype/internal/ftpic.h new file to declare the 
+	FT_PIC_Container struct and the functions to allocate and detroy it.
+	* include/freetype/internal/ftserv.h add macros to allocate and 
+	destory arrays of FT_ServiceDescRec.
+	* include/freetype/internal/internal.h define macro to include 
+	ftpic.h.
+
+	New Files:
+	* src/base/ftpic.c implement functions to allocate and destory the 
+	global pic_container.
+	* src/base/basepic.h declare struct to hold PIC globals for base and 
+	macros to access them.
+	* src/base/basepic.c implement functions to allocate, destroy and 
+	initialize PIC globals for base.
+
+	* src/base/ftinit.c when FT_CONFIG_OPTION_PIC is defined implement 
+	functions that allocate and destroy ft_default_modules according to 
+	FT_CONFIG_MODULES_H in the pic_container instead of the global scope
+	and use macro from basepic.h to access it.
+	* src/base/ftobjs.c add calls to the functions that allocate and 
+	destroy the global pic_container when the library is created and 
+	destroyed.
+
+	* src/base/jamfile add new files to FT2_MULTI build: 
+	ftpic.c and basepic.c.
+	* src/base/ftbase.c add new files to build: 
+	ftpic.c and basepic.c.
+
+	* src/base/ftglyph.c when FT_CONFIG_OPTION_PIC is defined 
+	ft_bitmap_glyph_class and ft_outline_glyph_class will be allocated
+	in the pic_container instead of the global scope and use macros from
+ 	basepic.h to access them.
+	* src/base/ftbbox.c allocate bbox_interface stract on the stack 
+	instead of the global scope when FT_CONFIG_OPTION_PIC is defined.
+	* src/base/ftstroke.c access ft_outline_glyph_class allocated in
+	ftglyph.c via macros from basepic.h
+
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
 	Preparing changes in cff parser later needed for PIC version.
 
 	* src/cff/cffload.c, src/cff/cffload.h, src/cff/cffobjs.c,

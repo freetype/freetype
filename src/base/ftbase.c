@@ -20,6 +20,8 @@
 
 #define  FT_MAKE_OPTION_SINGLE_OBJECT
 
+#include "ftpic.c"
+#include "basepic.c"
 #include "ftadvanc.c"
 #include "ftcalc.c"
 #include "ftdbgmem.c"

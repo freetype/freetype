@@ -1844,8 +1844,13 @@
     return FT_Err_Invalid_Outline;
   }
 
-
+/* declare an extern to access ft_outline_glyph_class global allocated 
+   in ftglyph.c, and use the FT_OUTLINE_GLYPH_CLASS_GET macro to access 
+   it when FT_CONFIG_OPTION_PIC is defined */
+#ifndef FT_CONFIG_OPTION_PIC
   extern const FT_Glyph_Class  ft_outline_glyph_class;
+#endif
+#include "basepic.h"
 
 
   /* documentation is in ftstroke.h */
@@ -1857,13 +1862,14 @@
   {
     FT_Error  error = FT_Err_Invalid_Argument;
     FT_Glyph  glyph = NULL;
-
+    FT_Library library = stroker->library;
+    FT_UNUSED(library);
 
     if ( pglyph == NULL )
       goto Exit;
 
     glyph = *pglyph;
-    if ( glyph == NULL || glyph->clazz != &ft_outline_glyph_class )
+    if ( glyph == NULL || glyph->clazz != FT_OUTLINE_GLYPH_CLASS_GET )
       goto Exit;
 
     {
@@ -1930,13 +1936,14 @@
   {
     FT_Error  error = FT_Err_Invalid_Argument;
     FT_Glyph  glyph = NULL;
-
+    FT_Library library = stroker->library;
+    FT_UNUSED(library);
 
     if ( pglyph == NULL )
       goto Exit;
 
     glyph = *pglyph;
-    if ( glyph == NULL || glyph->clazz != &ft_outline_glyph_class )
+    if ( glyph == NULL || glyph->clazz != FT_OUTLINE_GLYPH_CLASS_GET )
       goto Exit;
 
     {
