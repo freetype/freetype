@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  svsttcmap.h                                                            */
+/*  svttcmap.h                                                             */
 /*                                                                         */
 /*    The FreeType TrueType/sfnt cmap extra information service.           */
 /*                                                                         */
