@@ -1467,9 +1467,7 @@
   };
 
 
-  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec
-  af_cjk_script_class =
-  {
+  AF_DEFINE_SCRIPT_CLASS(af_cjk_script_class,
     AF_SCRIPT_CJK,
     af_cjk_uniranges,
 
@@ -1481,7 +1479,7 @@
 
     (AF_Script_InitHintsFunc)   af_cjk_hints_init,
     (AF_Script_ApplyHintsFunc)  af_cjk_hints_apply
-  };
+  )
 
 #else /* !AF_CONFIG_OPTION_CJK */
 
@@ -1491,9 +1489,7 @@
   };
 
 
-  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec
-  af_cjk_script_class =
-  {
+  AF_DEFINE_SCRIPT_CLASS(af_cjk_script_class,
     AF_SCRIPT_CJK,
     af_cjk_uniranges,
 
@@ -1505,7 +1501,7 @@
 
     (AF_Script_InitHintsFunc)   NULL,
     (AF_Script_ApplyHintsFunc)  NULL
-  };
+  )
 
 #endif /* !AF_CONFIG_OPTION_CJK */
 

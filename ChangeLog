@@ -1,5 +1,78 @@
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
+	Position Independent Code (PIC) support in autofit module.
+
+	* include/freetype/internal/autohint.h add macros to init 
+	instances of FT_AutoHinter_ServiceRec.
+
+	* src/autofit/afmodule.h declare autofit_module_class 
+	using macros from ftmodapi.h, 
+	when FT_CONFIG_OPTION_PIC is defined create and destroy
+	functions will be declared.
+	* src/autofit/afmodule.c when FT_CONFIG_OPTION_PIC is defined 
+	af_autofitter_service and autofit_module_class structs 
+	will have functions to init or create and destroy them
+	instead of being allocated in the global scope.
+	And macros will be used from afpic.h in order to access them.
+
+	* src/autofit/aftypes.h add macros to init and declare
+	instances of AF_ScriptClassRec.
+
+	* src/autofit/afcjk.h declare af_cjk_script_class 
+	using macros from aftypes.h, 
+	when FT_CONFIG_OPTION_PIC is defined init function will be declared.
+	* src/autofit/afcjk.c when FT_CONFIG_OPTION_PIC is defined 
+	af_cjk_script_class struct will have function to init it instead of 
+	being allocated in the global scope.
+
+	* src/autofit/afdummy.h declare af_dummy_script_class 
+	using macros from aftypes.h, 
+	when FT_CONFIG_OPTION_PIC is defined init function will be declared.
+	* src/autofit/afdummy.c when FT_CONFIG_OPTION_PIC is defined 
+	af_dummy_script_class struct will have function to init it instead of 
+	being allocated in the global scope.
+
+	* src/autofit/afindic.h declare af_indic_script_class 
+	using macros from aftypes.h, 
+	when FT_CONFIG_OPTION_PIC is defined init function will be declared.
+	* src/autofit/afindic.c when FT_CONFIG_OPTION_PIC is defined 
+	af_indic_script_class struct will have function to init it instead of 
+	being allocated in the global scope.
+
+	* src/autofit/aflatin.h declare af_latin_script_class 
+	using macros from aftypes.h, 
+	when FT_CONFIG_OPTION_PIC is defined init function will be declared.
+	* src/autofit/aflatin.c when FT_CONFIG_OPTION_PIC is defined 
+	af_latin_script_class struct will have function to init it instead of 
+	being allocated in the global scope.
+	Change af_latin_blue_chars to be PIC-compatible by being a two 
+	dimentional array rather than array of pointers.
+
+
+	* src/autofit/aflatin2.h declare af_latin2_script_class 
+	using macros from aftypes.h, 
+	when FT_CONFIG_OPTION_PIC is defined init function will be declared.
+	* src/autofit/aflatin2.c when FT_CONFIG_OPTION_PIC is defined 
+	af_latin2_script_class struct will have function to init it instead of 
+	being allocated in the global scope.
+	Change af_latin2_blue_chars to be PIC-compatible by being a two 
+	dimentional array rather than array of pointers.
+
+	* src/autofit/afglobal.c when FT_CONFIG_OPTION_PIC is defined 
+	af_script_classes array initialization was moved to afpic.c and
+	is later refered using macros defeined in afpic.h.
+
+	New Files:
+	* src/autofit/afpic.h declare struct to hold PIC globals for autofit
+	module and macros to access them.
+	* src/autofit/afpic.c implement functions to allocate, destroy and 
+	initialize PIC globals for autofit module.
+
+	* src/autofit/autofit.c add new file to build: afpic.c.
+	* src/autofit/jamfile add new files to FT2_MULTI build: afpic.c.
+
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
 	Position Independent Code (PIC) support in pshinter module.
 
 	* include/freetype/internal/pshints.h add macros to init 

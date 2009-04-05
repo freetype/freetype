@@ -21,12 +21,18 @@
 #include "aflatin.h"
 #include "afcjk.h"
 #include "afindic.h"
+#include "afpic.h"
 
 #include "aferrors.h"
 
 #ifdef FT_OPTION_AUTOFIT2
 #include "aflatin2.h"
 #endif
+
+#ifndef FT_CONFIG_OPTION_PIC
+
+/* when updating this table, don't forget to update 
+  AF_SCRIPT_CLASSES_COUNT and autofit_module_class_pic_init */
 
   /* populate this list when you add new scripts */
   static AF_ScriptClass const  af_script_classes[] =
@@ -40,6 +46,8 @@
     &af_indic_script_class, 
     NULL  /* do not remove */
   };
+
+#endif /* FT_CONFIG_OPTION_PIC */
 
   /* index of default script in `af_script_classes' */
 #define AF_SCRIPT_LIST_DEFAULT  2
@@ -92,9 +100,9 @@
     }
 
     /* scan each script in a Unicode charmap */
-    for ( ss = 0; af_script_classes[ss]; ss++ )
+    for ( ss = 0; AF_SCRIPT_CLASSES_GET[ss]; ss++ )
     {
-      AF_ScriptClass      clazz = af_script_classes[ss];
+      AF_ScriptClass      clazz = AF_SCRIPT_CLASSES_GET[ss];
       AF_Script_UniRange  range;
 
 
@@ -201,7 +209,7 @@
       {
         if ( globals->metrics[nn] )
         {
-          AF_ScriptClass  clazz = af_script_classes[nn];
+          AF_ScriptClass  clazz = AF_SCRIPT_CLASSES_GET[nn];
 
 
           FT_ASSERT( globals->metrics[nn]->clazz == clazz );
@@ -232,8 +240,8 @@
     FT_UInt           gidx;
     AF_ScriptClass    clazz;
     FT_UInt           script     = options & 15;
-    const FT_UInt     script_max = sizeof ( af_script_classes ) /
-                                     sizeof ( af_script_classes[0] );
+    const FT_UInt     script_max = sizeof ( AF_SCRIPT_CLASSES_GET ) /
+                                     sizeof ( AF_SCRIPT_CLASSES_GET[0] );
     FT_Error          error      = AF_Err_Ok;
 
 
@@ -247,7 +255,7 @@
     if ( gidx == 0 || gidx + 1 >= script_max )
       gidx = globals->glyph_scripts[gindex];
 
-    clazz = af_script_classes[gidx];
+    clazz = AF_SCRIPT_CLASSES_GET[gidx];
     if ( script == 0 )
       script = clazz->script;
 

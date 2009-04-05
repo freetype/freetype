@@ -27,8 +27,7 @@ FT_BEGIN_HEADER
 
   /* the latin-specific script class */
 
-  FT_CALLBACK_TABLE const AF_ScriptClassRec
-  af_latin_script_class;
+  AF_DECLARE_SCRIPT_CLASS(af_latin_script_class)
 
 
 /* constants are given with units_per_em == 2048 in mind */

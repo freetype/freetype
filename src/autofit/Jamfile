@@ -21,7 +21,7 @@ SubDir FT2_TOP src autofit ;
   }
   if $(FT2_MULTI)
   {
-    _sources = afangles afglobal afhints aflatin afcjk afindic afloader afmodule afdummy afwarp ;
+    _sources = afangles afglobal afhints aflatin afcjk afindic afloader afmodule afdummy afwarp afpic ;
 
     if $(FT2_AUTOFIT2)
     {

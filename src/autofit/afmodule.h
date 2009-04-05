@@ -25,8 +25,7 @@
 
 FT_BEGIN_HEADER
 
-  FT_CALLBACK_TABLE
-  const FT_Module_Class  autofit_module_class;
+FT_DECLARE_MODULE(autofit_module_class)
 
 
 FT_END_HEADER

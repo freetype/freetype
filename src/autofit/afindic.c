@@ -88,9 +88,7 @@
   };
 
 
-  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec
-  af_indic_script_class =
-  {
+  AF_DEFINE_SCRIPT_CLASS(af_indic_script_class,
     AF_SCRIPT_INDIC,
     af_indic_uniranges,
 
@@ -102,7 +100,7 @@
 
     (AF_Script_InitHintsFunc)   af_indic_hints_init,
     (AF_Script_ApplyHintsFunc)  af_indic_hints_apply
-  };
+  )
 
 #else /* !AF_CONFIG_OPTION_INDIC */
 
@@ -112,9 +110,7 @@
   };
 
 
-  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec
-  af_indic_script_class =
-  {
+  AF_DEFINE_SCRIPT_CLASS(af_indic_script_class,
     AF_SCRIPT_INDIC,
     af_indic_uniranges,
 
@@ -126,7 +122,7 @@
 
     (AF_Script_InitHintsFunc)   NULL,
     (AF_Script_ApplyHintsFunc)  NULL
-  };
+  )
 
 #endif /* !AF_CONFIG_OPTION_INDIC */
 

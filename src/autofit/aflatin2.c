@@ -154,7 +154,7 @@
 #define AF_LATIN_MAX_TEST_CHARACTERS  12
 
 
-  static const char* const  af_latin2_blue_chars[AF_LATIN_MAX_BLUES] =
+  static const char af_latin2_blue_chars[AF_LATIN_MAX_BLUES][AF_LATIN_MAX_TEST_CHARACTERS+1] =
   {
     "THEZOCQS",
     "HEZLOCUS",
@@ -2272,9 +2272,7 @@
   };
 
 
-  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec
-  af_latin2_script_class =
-  {
+  AF_DEFINE_SCRIPT_CLASS(af_latin2_script_class,
     AF_SCRIPT_LATIN2,
     af_latin2_uniranges,
 
@@ -2286,7 +2284,7 @@
 
     (AF_Script_InitHintsFunc)   af_latin2_hints_init,
     (AF_Script_ApplyHintsFunc)  af_latin2_hints_apply
-  };
+  )
 
 
 /* END */
