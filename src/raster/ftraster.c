@@ -60,6 +60,7 @@
 
 #endif /* !_STANDALONE_ */
 
+#include "rastpic.h"
 
   /*************************************************************************/
   /*                                                                       */
@@ -3419,15 +3420,14 @@ a  };
   }
 
 
-  const FT_Raster_Funcs  ft_standard_raster =
-  {
+  FT_DEFINE_RASTER_FUNCS(ft_standard_raster,
     FT_GLYPH_FORMAT_OUTLINE,
     (FT_Raster_New_Func)     ft_black_new,
     (FT_Raster_Reset_Func)   ft_black_reset,
     (FT_Raster_Set_Mode_Func)ft_black_set_mode,
     (FT_Raster_Render_Func)  ft_black_render,
     (FT_Raster_Done_Func)    ft_black_done
-  };
+  )
 
 
 /* END */

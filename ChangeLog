@@ -1,5 +1,37 @@
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
+	Position Independent Code (PIC) support in raster renderer.
+
+	* src/raster/ftrend1.h declare ft_raster1_renderer_class 
+	and ft_raster5_renderer_class 
+	using macros from ftrender.h, 
+	when FT_CONFIG_OPTION_PIC is defined create and destroy
+	functions will be declared.
+	* src/smooth/ftrend1.c when FT_CONFIG_OPTION_PIC is defined 
+	ft_raster1_renderer_class and ft_raster5_renderer_class structs
+	will have functions to init or create and destroy them
+	instead of being allocated in the global scope.
+	Macros will be used from rastpic.h in order to access 
+	ft_standard_raster from the pic_container (allocated in ftraster.c).
+	In ft_raster1_render when PIC is enabled, the last letter of 
+	module_name is used to verfy the renderer class rather than the
+	class pointer.
+
+	* src/raster/ftraster.c when FT_CONFIG_OPTION_PIC is defined 
+	ft_standard_raster struct will have function to init it
+	instead of being allocated in the global scope.
+
+	New Files:
+	* src/raster/rastpic.h declare struct to hold PIC globals for raster
+	renderer and macros to access them.
+	* src/raster/rastpic.c implement functions to allocate, destroy and 
+	initialize PIC globals for raster renderer.
+
+	* src/raster/raster.c add new file to build: rastpic.c.
+	* src/raster/jamfile add new files to FT2_MULTI build: rastpic.c.
+
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
 	Position Independent Code (PIC) support in smooth renderer.
 
 	* src/smooth/ftsmooth.h declare ft_smooth_renderer_class, 
