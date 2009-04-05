@@ -1,5 +1,25 @@
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
+	Add #error to modules and files that do not support PIC yet.
+
+	When FT_CONFIG_OPTION_PIC is defined the following files will 
+	create #error:
+	* src/bdf/bdfdrivr.h
+	* src/cache/ftcmanag.c
+	* src/cid/cidriver.h
+	* src/gxvalid/gxvmod.h
+	* src/gzip/ftgzip.c
+	* src/lzw/ftlzw.c
+	* src/otvalid/otvmod.h
+	* src/pcf/pcfdrivr.h
+	* src/pfr/pfrdrivr.h
+	* src/psaux/psauxmod.h
+	* src/type1/t1driver.h
+	* src/type42/t42drivr.h
+	* src/winfonts/winfnt.h
+
+2009-04-05  Oran Agra  <oran@monfort.co.il>
+
 	Position Independent Code (PIC) support in autofit module.
 
 	* include/freetype/internal/autohint.h add macros to init 
