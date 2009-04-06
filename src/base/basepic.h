@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
     FT_Glyph_Class ft_bitmap_glyph_class;
   } BasePIC;
 
-#define GET_PIC(lib)                  ((BasePIC*)((lib)->pic_container.base))
+#define GET_PIC(lib)                  ((BasePIC*)((lib)->pic_table.base))
 #define FT_OUTLINE_GLYPH_CLASS_GET    (&GET_PIC(library)->ft_outline_glyph_class)
 #define FT_BITMAP_GLYPH_CLASS_GET     (&GET_PIC(library)->ft_bitmap_glyph_class)
 #define FT_DEFAULT_MODULES_GET        (GET_PIC(library)->default_module_classes)

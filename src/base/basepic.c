@@ -34,15 +34,17 @@
   void
   ft_base_pic_free( FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Memory    memory = library->memory;
-    if ( pic_container->base )
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Memory    memory    = library->memory;
+
+
+    if ( pic_table->base )
     {
       /* Destroy default module classes (in case FT_Add_Default_Modules was used) */
       ft_destroy_default_module_classes( library );
 
-      FT_FREE( pic_container->base );
-      pic_container->base = NULL;
+      FT_FREE( pic_table->base );
+      pic_table->base = NULL;
     }
   }
 
@@ -50,16 +52,16 @@
   FT_Error
   ft_base_pic_init( FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Error        error = FT_Err_Ok;
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Error     error     = FT_Err_Ok;
+    FT_Memory    memory    = library->memory;
     BasePIC*     container;
-    FT_Memory    memory = library->memory;
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_NEW ( container ) )
       return error;
-    FT_MEM_SET( container, 0, sizeof(*container) );
-    pic_container->base = container;
+
+    pic_table->base = container;
 
     /* initialize default modules list and pointers */
     error = ft_create_default_module_classes( library );
@@ -73,6 +75,7 @@
 Exit:
     if(error)
       ft_base_pic_free(library);
+
     return error;
   }
 

@@ -1,3 +1,34 @@
+2009-04-07  David Turner  <david@freetype.org>
+
+	Formatting + small cleanup of PIC changes
+
+	* include/freetype/config/ftoption.h
+	* include/freetype/internal/ftobjs.h
+	* include/freetype/internal/ftpic.h
+	* src/autofit/afpic.c
+	* src/autofit/afpic.h
+	* src/base/basepic.c
+	* src/base/basepic.h
+	* src/base/ftinit.c
+	* src/base/ftobjs.c
+	* src/base/ftpic.c
+	* src/cff/cffpic.c
+	* src/cff/cffpic.h
+	* src/pshinter/pshpic.c
+	* src/pshinter/pshpic.h
+	* src/psnames/pspic.c
+	* src/psnames/pspic.h
+	* src/raster/rastpic.c
+	* src/raster/rastpic.h
+	* src/sfnt/sfntpic.c
+	* src/sfnt/sfntpic.h
+	* src/smooth/ftspic.c
+	* src/smooth/ftspic.h
+	* src/truetype/ttpic.c
+	* src/truetype/ttpic.h
+
+
+
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
 	Add #error to modules and files that do not support PIC yet.

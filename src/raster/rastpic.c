@@ -29,15 +29,18 @@
   void
   ft_raster1_renderer_class_pic_free(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Memory memory = library->memory;
-    if ( pic_container->raster )
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Memory    memory    = library->memory;
+
+    if ( pic_table->raster )
     {
-      RasterPIC* container = (RasterPIC*)pic_container->raster;
+      RasterPIC* container = (RasterPIC*)pic_table->raster;
+
       if(--container->ref_count)
         return;
+
       FT_FREE( container );
-      pic_container->raster = NULL;
+      pic_table->raster = NULL;
     }
   }
 
@@ -45,24 +48,24 @@
   FT_Error
   ft_raster1_renderer_class_pic_init(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Error        error = FT_Err_Ok;
-    RasterPIC* container;
-    FT_Memory memory = library->memory;
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Error     error     = FT_Err_Ok;
+    FT_Memory    memory    = library->memory;
+    RasterPIC*   container;
 
     /* since this function also serve raster5 renderer, 
        it implements reference counting */
-    if(pic_container->raster)
+    if(pic_table->raster)
     {
-      ((RasterPIC*)pic_container->raster)->ref_count++;
+      ((RasterPIC*)pic_table->raster)->ref_count++;
       return error;
     }
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_NEW ( container ) )
       return error;
-    FT_MEM_SET( container, 0, sizeof(*container) );
-    pic_container->raster = container;
+
+    pic_table->raster    = container;
     container->ref_count = 1;
 
     /* initialize pointer table - this is how the module usually expects this data */
@@ -70,6 +73,7 @@
 /*Exit:*/
     if(error)
       ft_raster1_renderer_class_pic_free(library);
+
     return error;
   }
 
@@ -78,6 +82,7 @@
   {
     return ft_raster1_renderer_class_pic_init(library);
   }
+
   void ft_raster5_renderer_class_pic_free(FT_Library library)
   {
     ft_raster1_renderer_class_pic_free(library);

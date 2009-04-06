@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
     FT_AutoHinter_ServiceRec af_autofitter_service;
   } AFModulePIC;
 
-#define GET_PIC(lib)                  ((AFModulePIC*)((lib)->pic_container.autofit))
+#define GET_PIC(lib)                  ((AFModulePIC*)((lib)->pic_table.autofit))
 #define AF_SCRIPT_CLASSES_GET         (GET_PIC(FT_FACE_LIBRARY(globals->face))->af_script_classes)
 #define AF_AF_AUTOFITTER_SERVICE_GET  (GET_PIC(library)->af_autofitter_service)
 

@@ -40,19 +40,24 @@
   void
   sfnt_module_class_pic_free(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Memory memory = library->memory;
-    if ( pic_container->sfnt )
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Memory    memory    = library->memory;
+
+    if ( pic_table->sfnt )
     {
-      sfntModulePIC* container = (sfntModulePIC*)pic_container->sfnt;
+      sfntModulePIC* container = (sfntModulePIC*)pic_table->sfnt;
+
       if(container->sfnt_services)
         FT_Destroy_Class_sfnt_services(library, container->sfnt_services);
+
       container->sfnt_services = NULL;
       if(container->tt_cmap_classes)
+      {
         FT_Destroy_Class_tt_cmap_classes(library, container->tt_cmap_classes);
-      container->tt_cmap_classes = NULL;
+        container->tt_cmap_classes = NULL;
+      }
       FT_FREE( container );
-      pic_container->sfnt = NULL;
+      pic_table->sfnt = NULL;
     }
   }
 
@@ -60,36 +65,40 @@
   FT_Error
   sfnt_module_class_pic_init(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Error        error = FT_Err_Ok;
-    sfntModulePIC* container;
-    FT_Memory memory = library->memory;
+    FT_PicTable     pic_table = &library->pic_table;
+    FT_Error        error     = FT_Err_Ok;
+    FT_Memory       memory    = library->memory;
+    sfntModulePIC*  container;
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_NEW ( container ) )
       return error;
-    FT_MEM_SET( container, 0, sizeof(*container) );
-    pic_container->sfnt = container;
+
+    pic_table->sfnt = container;
 
     /* initialize pointer table - this is how the module usually expects this data */
     error = FT_Create_Class_sfnt_services(library, &container->sfnt_services);
-    if(error) 
+    if(error)
       goto Exit;
+
     error = FT_Create_Class_tt_cmap_classes(library, &container->tt_cmap_classes);
-    if(error) 
+    if(error)
       goto Exit;
-    FT_Init_Class_sfnt_service_glyph_dict(library, &container->sfnt_service_glyph_dict);
-    FT_Init_Class_sfnt_service_ps_name(library, &container->sfnt_service_ps_name);
+
+    FT_Init_Class_sfnt_service_glyph_dict (library, &container->sfnt_service_glyph_dict);
+    FT_Init_Class_sfnt_service_ps_name    (library, &container->sfnt_service_ps_name);
     FT_Init_Class_tt_service_get_cmap_info(library, &container->tt_service_get_cmap_info);
+
     FT_Init_Class_sfnt_service_sfnt_table(&container->sfnt_service_sfnt_table);
 #ifdef TT_CONFIG_OPTION_BDF
-    FT_Init_Class_sfnt_service_bdf(&container->sfnt_service_bdf);
+    FT_Init_Class_sfnt_service_bdf       (&container->sfnt_service_bdf);
 #endif
     FT_Init_Class_sfnt_interface(library, &container->sfnt_interface);
 
 Exit:
     if(error)
       sfnt_module_class_pic_free(library);
+
     return error;
   }
 

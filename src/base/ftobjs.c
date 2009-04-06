@@ -4125,7 +4125,7 @@
 
 #ifdef FT_CONFIG_OPTION_PIC
     /* initialize position independent code containers */
-    error = ft_pic_container_init( library );
+    error = ft_library_pic_init( library );
     if ( error )
       goto Fail;
 #endif
@@ -4144,7 +4144,7 @@
 
   Fail:
 #ifdef FT_CONFIG_OPTION_PIC
-    ft_pic_container_destroy( library );
+    ft_library_done_pic( library );
 #endif
     FT_FREE( library );
     return error;
@@ -4264,7 +4264,7 @@
 
 #ifdef FT_CONFIG_OPTION_PIC
     /* Destroy pic container contents */
-    ft_pic_container_destroy( library );
+    ft_library_pic_done( library );
 #endif
 
     FT_FREE( library );

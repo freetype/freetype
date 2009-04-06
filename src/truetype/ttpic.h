@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
     FT_Service_TTGlyfRec tt_service_truetype_glyf;
   } TTModulePIC;
 
-#define GET_PIC(lib)                         ((TTModulePIC*)((lib)->pic_container.truetype))
+#define GET_PIC(lib)                         ((TTModulePIC*)((lib)->pic_table.truetype))
 #define FT_TT_SERVICES_GET                   (GET_PIC(library)->tt_services)
 #define FT_TT_SERVICE_GX_MULTI_MASTERS_GET   (GET_PIC(library)->tt_service_gx_multi_masters)
 #define FT_TT_SERVICE_TRUETYPE_GLYF_GET      (GET_PIC(library)->tt_service_truetype_glyf)

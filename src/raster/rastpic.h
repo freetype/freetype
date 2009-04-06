@@ -35,7 +35,7 @@ FT_BEGIN_HEADER
     FT_Raster_Funcs ft_standard_raster;
   } RasterPIC;
 
-#define GET_PIC(lib)               ((RasterPIC*)((lib)->pic_container.raster))
+#define GET_PIC(lib)               ((RasterPIC*)((lib)->pic_table.raster))
 #define FT_STANDARD_RASTER_GET     (GET_PIC(library)->ft_standard_raster)
 
 #endif /* FT_CONFIG_OPTION_PIC */

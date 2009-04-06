@@ -115,19 +115,19 @@
     FT_Module_Class** classes;
     FT_Memory         memory;
     FT_UInt           i;
-    BasePIC*          pic_container = library->pic_container.base;
+    BasePIC*          pic_table = library->pic_table.base;
 
-    if ( !pic_container->default_module_classes )
+    if ( !pic_table->default_module_classes )
       return;
 
     memory = library->memory;
-    classes = pic_container->default_module_classes;
+    classes = pic_table->default_module_classes;
     i = 0;
 
 #include FT_CONFIG_MODULES_H
 
     FT_FREE( classes );
-    pic_container->default_module_classes = 0;
+    pic_table->default_module_classes = 0;
   }
 
   /* initialize all module classes and the pointer table */
@@ -145,10 +145,10 @@
     FT_Module_Class** classes;
     FT_Module_Class*  clazz;
     FT_UInt           i;
-    BasePIC*          pic_container = library->pic_container.base;
+    BasePIC*          pic_table = library->pic_table.base;
 
     memory = library->memory;  
-    pic_container->default_module_classes = 0;
+    pic_table->default_module_classes = 0;
 
     if ( FT_ALLOC(classes, sizeof(FT_Module_Class*) * (FT_NUM_MODULE_CLASSES + 1) ) )
       return error;
@@ -163,7 +163,7 @@
 
 Exit:    
     if (error) ft_destroy_default_module_classes( library );
-    else pic_container->default_module_classes = classes;
+    else pic_table->default_module_classes = classes;
 
     return error;    
   }

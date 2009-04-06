@@ -32,32 +32,37 @@
   void
   tt_driver_class_pic_free(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Memory memory = library->memory;
-    if ( pic_container->truetype )
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Memory    memory    = library->memory;
+
+    if ( pic_table->truetype )
     {
-      TTModulePIC* container = (TTModulePIC*)pic_container->truetype;
+      TTModulePIC* container = (TTModulePIC*)pic_table->truetype;
+
       if(container->tt_services)
+      {
         FT_Destroy_Class_tt_services(library, container->tt_services);
-      container->tt_services = NULL;
+        container->tt_services = NULL;
+      }
       FT_FREE( container );
-      pic_container->truetype = NULL;
+      pic_table->truetype = NULL;
     }
   }
+
 
   FT_Error
   tt_driver_class_pic_init(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Error        error = FT_Err_Ok;
-    TTModulePIC* container;
-    FT_Memory memory = library->memory;
+    FT_PicTable   pic_table = &library->pic_table;
+    FT_Error      error     = FT_Err_Ok;
+    FT_Memory     memory    = library->memory;
+    TTModulePIC*  container;
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_NEW ( container ) )
       return error;
-    FT_MEM_SET( container, 0, sizeof(*container) );
-    pic_container->truetype = container;
+
+    pic_table->truetype = container;
 
     /* initialize pointer table - this is how the module usually expects this data */
     error = FT_Create_Class_tt_services(library, &container->tt_services);
@@ -67,9 +72,11 @@
     FT_Init_Class_tt_service_gx_multi_masters(&container->tt_service_gx_multi_masters);
 #endif
     FT_Init_Class_tt_service_truetype_glyf(&container->tt_service_truetype_glyf);
+
 Exit:
     if(error)
       tt_driver_class_pic_free(library);
+
     return error;
   }
 

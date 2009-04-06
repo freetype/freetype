@@ -57,7 +57,7 @@ FT_BEGIN_HEADER
     FT_CMap_ClassRec cff_cmap_unicode_class_rec;
   } CffModulePIC;
 
-#define GET_PIC(lib)                       ((CffModulePIC*)((lib)->pic_container.cff))
+#define GET_PIC(lib)                       ((CffModulePIC*)((lib)->pic_table.cff))
 #define FT_CFF_SERVICE_PS_INFO_GET         (GET_PIC(library)->cff_service_ps_info)
 #define FT_CFF_SERVICE_GLYPH_DICT_GET      (GET_PIC(library)->cff_service_glyph_dict)
 #define FT_CFF_SERVICE_PS_NAME_GET         (GET_PIC(library)->cff_service_ps_name)

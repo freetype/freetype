@@ -805,7 +805,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    debug_hooks      :: XXX                                            */
   /*                                                                       */
-  /*    pic_container    :: Contains global structs and tables, instead    */
+  /*    pic_table    :: Contains global structs and tables, instead    */
   /*                        of defining them globallly.                    */
   /*                                                                       */
 
@@ -840,7 +840,7 @@ FT_BEGIN_HEADER
 #endif
 
 #ifdef FT_CONFIG_OPTION_PIC
-    FT_PIC_Container   pic_container;
+    FT_PicTableRec     pic_table;
 #endif
 
   } FT_LibraryRec;

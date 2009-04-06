@@ -26,12 +26,12 @@
   /* documentation is in ftpic.h */
 
   FT_BASE_DEF( FT_Error )
-  ft_pic_container_init( FT_Library library )
+  ft_library_pic_init( FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Error error = FT_Err_Ok;
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Error     error     = FT_Err_Ok;
 
-    FT_MEM_SET( pic_container, 0, sizeof(*pic_container) );
+    FT_ZERO(pic_table);
 
     error = ft_base_pic_init( library );
     if(error)
@@ -43,7 +43,7 @@
 
   /* Destroy the contents of the container. */
   FT_BASE_DEF( void )
-  ft_pic_container_destroy( FT_Library library )
+  ft_library_pic_done( FT_Library library )
   {
     ft_base_pic_free( library );
   }

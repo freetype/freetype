@@ -37,7 +37,7 @@ FT_BEGIN_HEADER
     PSHinter_Interface pshinter_interface;
   } PSHinterPIC;
 
-#define GET_PIC(lib)                    ((PSHinterPIC*)((lib)->pic_container.autofit))
+#define GET_PIC(lib)                    ((PSHinterPIC*)((lib)->pic_table.autofit))
 #define FTPSHINTER_INTERFACE_GET        (GET_PIC(library)->pshinter_interface)
 
 

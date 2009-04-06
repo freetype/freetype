@@ -65,7 +65,7 @@ typedef struct sfntModulePIC_
     SFNT_Interface sfnt_interface;
   } sfntModulePIC;
 
-#define GET_PIC(lib)                      ((sfntModulePIC*)((lib)->pic_container.sfnt))
+#define GET_PIC(lib)                      ((sfntModulePIC*)((lib)->pic_table.sfnt))
 #define FT_SFNT_SERVICES_GET              (GET_PIC(library)->sfnt_services)
 #define FT_SFNT_SERVICE_GLYPH_DICT_GET    (GET_PIC(library)->sfnt_service_glyph_dict)
 #define FT_SFNT_SERVICE_PS_NAME_GET       (GET_PIC(library)->sfnt_service_ps_name)

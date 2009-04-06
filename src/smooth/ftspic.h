@@ -35,7 +35,7 @@ FT_BEGIN_HEADER
     FT_Raster_Funcs ft_grays_raster;
   } SmoothPIC;
 
-#define GET_PIC(lib)               ((SmoothPIC*)((lib)->pic_container.smooth))
+#define GET_PIC(lib)               ((SmoothPIC*)((lib)->pic_table.smooth))
 #define FT_GRAYS_RASTER_GET        (GET_PIC(library)->ft_grays_raster)
 
 #endif /* FT_CONFIG_OPTION_PIC */

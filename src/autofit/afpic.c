@@ -36,29 +36,32 @@
   void
   autofit_module_class_pic_free( FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Memory memory = library->memory;
-    if ( pic_container->autofit )
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Memory    memory    = library->memory;
+
+
+    if ( pic_table->autofit )
     {
-      FT_FREE( pic_container->autofit );
-      pic_container->autofit = NULL;
+      FT_FREE( pic_table->autofit );
+      pic_table->autofit = NULL;
     }
   }
+
 
   FT_Error
   autofit_module_class_pic_init( FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_UInt         ss;
-    FT_Error        error = FT_Err_Ok;
+    FT_PicTable   pic_table = &library->pic_table;
+    FT_Memory     memory    = library->memory;
+    FT_UInt       ss;
+    FT_Error      error = FT_Err_Ok;
     AFModulePIC*  container;
-    FT_Memory memory = library->memory;
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_NEW( container ) )
       return error;
-    FT_MEM_SET( container, 0, sizeof(*container) );
-    pic_container->autofit = container;
+
+    pic_table->autofit = container;
 
     /* initialize pointer table - this is how the module usually expects this data */
     for ( ss = 0 ; ss < AF_SCRIPT_CLASSES_REC_COUNT ; ss++ )
@@ -66,7 +69,7 @@
       container->af_script_classes[ss] = &container->af_script_classes_rec[ss];
     }
     container->af_script_classes[AF_SCRIPT_CLASSES_COUNT-1] = NULL;
-    
+
     /* add call to initialization function when you add new scripts */
     ss = 0;
     FT_Init_Class_af_dummy_script_class(&container->af_script_classes_rec[ss++]);

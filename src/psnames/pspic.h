@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
     FT_Service_PsCMapsRec pscmaps_interface;
   } PSModulePIC;
 
-#define GET_PIC(lib)                ((PSModulePIC*)((lib)->pic_container.psnames))
+#define GET_PIC(lib)                ((PSModulePIC*)((lib)->pic_table.psnames))
 #define FT_PSCMAPS_SERVICES_GET     (GET_PIC(library)->pscmaps_services)
 #define FT_PSCMAPS_INTERFACE_GET    (GET_PIC(library)->pscmaps_interface)
 

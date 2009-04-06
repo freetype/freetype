@@ -29,15 +29,18 @@
   void
   ft_smooth_renderer_class_pic_free(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Memory memory = library->memory;
-    if ( pic_container->smooth )
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Memory    memory    = library->memory;
+
+    if ( pic_table->smooth )
     {
-      SmoothPIC* container = (SmoothPIC*)pic_container->smooth;
+      SmoothPIC* container = (SmoothPIC*)pic_table->smooth;
+
       if(--container->ref_count)
         return;
+
       FT_FREE( container );
-      pic_container->smooth = NULL;
+      pic_table->smooth = NULL;
     }
   }
 
@@ -45,24 +48,24 @@
   FT_Error
   ft_smooth_renderer_class_pic_init(  FT_Library library )
   {
-    FT_PIC_Container* pic_container = &library->pic_container;
-    FT_Error        error = FT_Err_Ok;
-    SmoothPIC* container;
-    FT_Memory memory = library->memory;
+    FT_PicTable  pic_table = &library->pic_table;
+    FT_Error     error     = FT_Err_Ok;
+    FT_Memory    memory    = library->memory;
+    SmoothPIC*   container;
 
     /* since this function also serve smooth_lcd and smooth_lcdv renderers, 
        it implements reference counting */
-    if(pic_container->smooth)
+    if(pic_table->smooth)
     {
-      ((SmoothPIC*)pic_container->smooth)->ref_count++;
+      ((SmoothPIC*)pic_table->smooth)->ref_count++;
       return error;
     }
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_NEW ( container ) )
       return error;
-    FT_MEM_SET( container, 0, sizeof(*container) );
-    pic_container->smooth = container;
+
+    pic_table->smooth    = container;
     container->ref_count = 1;
 
     /* initialize pointer table - this is how the module usually expects this data */
@@ -70,6 +73,7 @@
 /*Exit:*/
     if(error)
       ft_smooth_renderer_class_pic_free(library);
+
     return error;
   }
 
