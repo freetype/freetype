@@ -24,10 +24,10 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ttdriver.c */
-  FT_Error FT_Create_Class_tt_services( FT_Library, FT_ServiceDescRec**);
-  void FT_Destroy_Class_tt_services( FT_Library, FT_ServiceDescRec*);
-  void FT_Init_Class_tt_service_gx_multi_masters(FT_Service_MultiMastersRec*);
-  void FT_Init_Class_tt_service_truetype_glyf(FT_Service_TTGlyfRec*);
+  FT_Error ft_library_pic_alloc_tt_services( FT_Library, FT_ServiceDescRec**);
+  void ft_library_pic_free_tt_services( FT_Library, FT_ServiceDescRec*);
+  void ft_pic_init_tt_service_gx_multi_masters(FT_Service_MultiMastersRec*);
+  void ft_pic_init_tt_service_truetype_glyf(FT_Service_TTGlyfRec*);
 
   void
   tt_driver_class_pic_free(  FT_Library library )
@@ -41,7 +41,7 @@
 
       if(container->tt_services)
       {
-        FT_Destroy_Class_tt_services(library, container->tt_services);
+        ft_library_pic_free_tt_services(library, container->tt_services);
         container->tt_services = NULL;
       }
       FT_FREE( container );
@@ -65,13 +65,13 @@
     pic_table->truetype = container;
 
     /* initialize pointer table - this is how the module usually expects this data */
-    error = FT_Create_Class_tt_services(library, &container->tt_services);
+    error = ft_library_pic_alloc_tt_services(library, &container->tt_services);
     if(error) 
       goto Exit;
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    FT_Init_Class_tt_service_gx_multi_masters(&container->tt_service_gx_multi_masters);
+    ft_pic_init_tt_service_gx_multi_masters(&container->tt_service_gx_multi_masters);
 #endif
-    FT_Init_Class_tt_service_truetype_glyf(&container->tt_service_truetype_glyf);
+    ft_pic_init_tt_service_truetype_glyf(&container->tt_service_truetype_glyf);
 
 Exit:
     if(error)

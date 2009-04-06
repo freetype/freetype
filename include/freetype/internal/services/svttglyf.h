@@ -49,7 +49,7 @@ FT_BEGIN_HEADER
 
 #define FT_DEFINE_SERVICE_TTGLYFREC(class_, get_location_ )   \
   void                                                        \
-  FT_Init_Class_##class_( FT_Service_TTGlyfRec*  clazz )      \
+  ft_pic_init_##class_( FT_Service_TTGlyfRec*  clazz )      \
   {                                                           \
     clazz->get_location = get_location_;                      \
   } 

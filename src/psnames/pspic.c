@@ -24,9 +24,9 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from psmodule.c */
-  FT_Error FT_Create_Class_pscmaps_services ( FT_Library, FT_ServiceDescRec** );
-  void     FT_Destroy_Class_pscmaps_services( FT_Library, FT_ServiceDescRec* );
-  void     FT_Init_Class_pscmaps_interface  ( FT_Library, FT_Service_PsCMapsRec* );
+  FT_Error ft_library_pic_alloc_pscmaps_services ( FT_Library, FT_ServiceDescRec** );
+  void     ft_library_pic_free_pscmaps_services( FT_Library, FT_ServiceDescRec* );
+  void     ft_pic_init_pscmaps_interface  ( FT_Library, FT_Service_PsCMapsRec* );
 
   void
   psnames_module_class_pic_free(  FT_Library library )
@@ -41,7 +41,7 @@
 
 
       if(container->pscmaps_services)
-        FT_Destroy_Class_pscmaps_services(library, container->pscmaps_services);
+        ft_library_pic_free_pscmaps_services(library, container->pscmaps_services);
 
       container->pscmaps_services = NULL;
       FT_FREE( container );
@@ -66,11 +66,11 @@
     pic_table->psnames = container;
 
     /* initialize pointer table - this is how the module usually expects this data */
-    error = FT_Create_Class_pscmaps_services(library, &container->pscmaps_services);
+    error = ft_library_pic_alloc_pscmaps_services(library, &container->pscmaps_services);
     if(error) 
       goto Exit;
 
-    FT_Init_Class_pscmaps_interface(library, &container->pscmaps_interface);
+    ft_pic_init_pscmaps_interface(library, &container->pscmaps_interface);
 
 Exit:
     if(error)

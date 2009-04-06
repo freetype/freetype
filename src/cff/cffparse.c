@@ -620,14 +620,14 @@
 
 #else /* FT_CONFIG_OPTION_PIC */
 
-  void FT_Destroy_Class_cff_field_handlers(FT_Library library, CFF_Field_Handler* clazz)
+  void ft_library_pic_free_cff_field_handlers(FT_Library library, CFF_Field_Handler* clazz)
   {
     FT_Memory memory = library->memory;
     if ( clazz )
       FT_FREE( clazz );
   }
 
-  FT_Error FT_Create_Class_cff_field_handlers(FT_Library library, CFF_Field_Handler** output_class)
+  FT_Error ft_library_pic_alloc_cff_field_handlers(FT_Library library, CFF_Field_Handler** output_class)
   {
     CFF_Field_Handler*  clazz;
     FT_Error          error;

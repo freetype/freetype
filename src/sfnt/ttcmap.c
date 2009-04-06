@@ -3339,14 +3339,14 @@
 
 #else /*FT_CONFIG_OPTION_PIC*/
 
-  void FT_Destroy_Class_tt_cmap_classes(FT_Library library, TT_CMap_Class* clazz)
+  void ft_library_pic_free_tt_cmap_classes(FT_Library library, TT_CMap_Class* clazz)
   {
     FT_Memory memory = library->memory;
     if ( clazz )
       FT_FREE( clazz );
   }
 
-  FT_Error FT_Create_Class_tt_cmap_classes(FT_Library library, TT_CMap_Class** output_class)
+  FT_Error ft_library_pic_alloc_tt_cmap_classes(FT_Library library, TT_CMap_Class** output_class)
   {
     TT_CMap_Class*  clazz;
     TT_CMap_ClassRec* recs;
@@ -3367,7 +3367,7 @@
 
 #undef TTCMAPCITEM
 #define TTCMAPCITEM(a)           \
-    FT_Init_Class_##a(&recs[i]); \
+    ft_pic_init_##a(&recs[i]); \
     clazz[i] = &recs[i];         \
     i++;
 #include "ttcmapc.h"

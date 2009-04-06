@@ -223,13 +223,13 @@ FT_BEGIN_HEADER
 #else /* FT_CONFIG_OPTION_PIC */
 
 #define FT_DECLARE_CMAP_CLASS(class_) \
-    void FT_Init_Class_##class_( FT_Library library, FT_CMap_ClassRec*  clazz);
+    void ft_pic_init_##class_( FT_Library library, FT_CMap_ClassRec*  clazz);
 
 #define FT_DEFINE_CMAP_CLASS(class_, size_, init_, done_, char_index_,       \
         char_next_, char_var_index_, char_var_default_, variant_list_,       \
         charvariant_list_, variantchar_list_)                                \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Library library,                                \
+  ft_pic_init_##class_( FT_Library library,                                \
                           FT_CMap_ClassRec*  clazz)                          \
   {                                                                          \
     FT_UNUSED(library);                                                      \
@@ -996,7 +996,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_RASTER_FUNCS(class_, glyph_format_, raster_new_,           \
     raster_reset_, raster_set_mode_, raster_render_, raster_done_)           \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Raster_Funcs*  clazz )                          \
+  ft_pic_init_##class_( FT_Raster_Funcs*  clazz )                          \
   {                                                                          \
     clazz->glyph_format = glyph_format_;                                     \
     clazz->raster_new = raster_new_;                                         \
@@ -1050,7 +1050,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_GLYPH(class_, size_, format_, init_, done_, copy_,         \
                         transform_, bbox_, prepare_)                         \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Glyph_Class*  clazz )                           \
+  ft_pic_init_##class_( FT_Glyph_Class*  clazz )                           \
   {                                                                          \
     clazz->glyph_size = size_;                                               \
     clazz->glyph_format = format_;                                           \
@@ -1136,7 +1136,7 @@ FT_BEGIN_HEADER
   FT_Error class_##_pic_init( FT_Library library );                          \
                                                                              \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library        library,                      \
+  ft_library_pic_free_##class_( FT_Library        library,                      \
                         FT_Module_Class*  clazz )                            \
   {                                                                          \
     FT_Renderer_Class* rclazz = (FT_Renderer_Class*)clazz;                   \
@@ -1147,7 +1147,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library         library,                      \
+  ft_library_pic_alloc_##class_( FT_Library         library,                      \
                             FT_Module_Class**  output_class )                \
   {                                                                          \
     FT_Renderer_Class*  clazz;                                               \
@@ -1323,10 +1323,10 @@ FT_BEGIN_HEADER
 #else /* FT_CONFIG_OPTION_PIC */
 
 #define FT_DECLARE_MODULE(class_)                                            \
-  FT_Error FT_Create_Class_##class_( FT_Library library,                     \
-                                     FT_Module_Class** output_class );       \
-  void     FT_Destroy_Class_##class_( FT_Library library,                    \
-                                      FT_Module_Class*  clazz );
+  FT_Error ft_library_pic_alloc_##class_( FT_Library library,                \
+                                          FT_Module_Class** output_class );  \
+  void     ft_library_pic_free_##class_( FT_Library library,                 \
+                                         FT_Module_Class*  clazz );
 
 #define FT_DEFINE_ROOT_MODULE(flags_, size_, name_, version_, requires_,     \
                               interface_, init_, done_, get_interface_)      \
@@ -1348,8 +1348,8 @@ FT_BEGIN_HEADER
   FT_Error class_##_pic_init( FT_Library library );                          \
                                                                              \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library library,                             \
-                             FT_Module_Class*  clazz )                       \
+  ft_library_pic_free_##class_( FT_Library        library,                   \
+                                FT_Module_Class*  clazz )                    \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \
     class_##_pic_free( library );                                            \
@@ -1358,7 +1358,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library library,                              \
+  ft_library_pic_alloc_##class_( FT_Library library,                              \
                             FT_Module_Class**  output_class )                \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \

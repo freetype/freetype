@@ -88,8 +88,8 @@
   /* declare the module's class creation/destruction functions */
 #undef  FT_USE_MODULE
 #define FT_USE_MODULE( type, x )  \
-  FT_EXTERNC FT_Error FT_Create_Class_##x( FT_Library library, FT_Module_Class** output_class ); \
-  FT_EXTERNC void     FT_Destroy_Class_##x( FT_Library library, FT_Module_Class*  clazz );
+  FT_EXTERNC FT_Error ft_library_pic_alloc_##x( FT_Library library, FT_Module_Class** output_class ); \
+  FT_EXTERNC void     ft_library_pic_free_##x( FT_Library library, FT_Module_Class*  clazz );
 
 #include FT_CONFIG_MODULES_H
 
@@ -106,7 +106,7 @@
   /* destroy all module classes */  
 #undef  FT_USE_MODULE
 #define FT_USE_MODULE( type, x )  \
-  if ( classes[i] ) { FT_Destroy_Class_##x(library, classes[i]); } \
+  if ( classes[i] ) { ft_library_pic_free_##x(library, classes[i]); } \
   i++;                                                             \
 
   FT_BASE_DEF( void )
@@ -133,7 +133,7 @@
   /* initialize all module classes and the pointer table */
 #undef  FT_USE_MODULE
 #define FT_USE_MODULE( type, x )                \
-  error = FT_Create_Class_##x(library, &clazz); \
+  error = ft_library_pic_alloc_##x(library, &clazz); \
   if (error) goto Exit;                         \
   classes[i++] = clazz;
 

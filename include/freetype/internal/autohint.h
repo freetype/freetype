@@ -211,7 +211,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_AUTOHINTER_SERVICE(class_, reset_face_, get_global_hints_, \
                                      done_global_hints_, load_glyph_)        \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Library library,                                \
+  ft_pic_init_##class_( FT_Library library,                                \
                           FT_AutoHinter_ServiceRec* clazz)                   \
   {                                                                          \
     FT_UNUSED(library);                                                      \

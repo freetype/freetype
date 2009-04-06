@@ -368,12 +368,12 @@ extern void*  _af_debug_hints;
 
 #define AF_DECLARE_SCRIPT_CLASS(script_class)                                \
   FT_LOCAL(void)                                                             \
-  FT_Init_Class_##script_class(AF_ScriptClassRec* ac);
+  ft_pic_init_##script_class(AF_ScriptClassRec* ac);
 
 #define AF_DEFINE_SCRIPT_CLASS(script_class, script_, ranges, m_size,        \
                                m_init, m_scale, m_done, h_init, h_apply)     \
   FT_LOCAL_DEF(void)                                                         \
-  FT_Init_Class_##script_class(AF_ScriptClassRec* ac)                        \
+  ft_pic_init_##script_class(AF_ScriptClassRec* ac)                        \
   {                                                                          \
     ac->script                = script_;                                     \
     ac->script_uni_ranges     = ranges;                                      \

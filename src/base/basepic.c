@@ -24,8 +24,8 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ftglyph.c */
-  void FT_Init_Class_ft_outline_glyph_class(FT_Glyph_Class*);
-  void FT_Init_Class_ft_bitmap_glyph_class(FT_Glyph_Class*);
+  void ft_pic_init_ft_outline_glyph_class(FT_Glyph_Class*);
+  void ft_pic_init_ft_bitmap_glyph_class(FT_Glyph_Class*);
 
   /* forward declaration of PIC init functions from ftinit.c */
   FT_Error ft_create_default_module_classes(FT_Library);
@@ -69,8 +69,8 @@
       goto Exit;
 
     /* initialize pointer table - this is how the module usually expects this data */
-    FT_Init_Class_ft_outline_glyph_class(&container->ft_outline_glyph_class);
-    FT_Init_Class_ft_bitmap_glyph_class(&container->ft_bitmap_glyph_class);
+    ft_pic_init_ft_outline_glyph_class(&container->ft_outline_glyph_class);
+    ft_pic_init_ft_bitmap_glyph_class(&container->ft_bitmap_glyph_class);
 
 Exit:
     if(error)

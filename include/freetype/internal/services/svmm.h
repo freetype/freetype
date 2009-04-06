@@ -82,7 +82,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_SERVICE_MULTIMASTERSREC(class_, get_mm_, set_mm_design_,   \
         set_mm_blend_, get_mm_var_, set_var_design_)                         \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Service_MultiMastersRec*  clazz )               \
+  ft_pic_init_##class_( FT_Service_MultiMastersRec*  clazz )               \
   {                                                                          \
     clazz->get_mm = get_mm_;                                                 \
     clazz->set_mm_design = set_mm_design_;                                   \

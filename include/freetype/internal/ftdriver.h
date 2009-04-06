@@ -352,7 +352,7 @@ FT_BEGIN_HEADER
   FT_Error class_##_pic_init( FT_Library library );                          \
                                                                              \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library        library,                      \
+  ft_library_pic_free_##class_( FT_Library        library,                      \
                              FT_Module_Class*  clazz )                       \
   {                                                                          \
     FT_Memory       memory = library->memory;                                \
@@ -363,7 +363,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library        library,                       \
+  ft_library_pic_alloc_##class_( FT_Library        library,                       \
                             FT_Module_Class**  output_class )                \
   {                                                                          \
     FT_Driver_Class  clazz;                                                  \

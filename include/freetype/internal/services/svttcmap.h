@@ -86,7 +86,7 @@ FT_BEGIN_HEADER
 
 #define FT_DEFINE_SERVICE_TTCMAPSREC(class_, get_cmap_info_) \
   void                                                       \
-  FT_Init_Class_##class_( FT_Library library,                \
+  ft_pic_init_##class_( FT_Library library,                \
                           FT_Service_TTCMapsRec*  clazz)     \
   {                                                          \
     FT_UNUSED(library);                                      \

@@ -136,7 +136,7 @@ FT_BEGIN_HEADER
         unicodes_char_index_, unicodes_char_next_, macintosh_name_,          \
         adobe_std_strings_, adobe_std_encoding_, adobe_expert_encoding_)     \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Library library,                                \
+  ft_pic_init_##class_( FT_Library library,                                \
                           FT_Service_PsCMapsRec* clazz)                      \
   {                                                                          \
     FT_UNUSED(library);                                                      \

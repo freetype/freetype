@@ -692,7 +692,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_PSHINTER_INTERFACE(class_, get_globals_funcs_,             \
                                      get_t1_funcs_, get_t2_funcs_)           \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Library library,                                \
+  ft_pic_init_##class_( FT_Library library,                                \
                           PSHinter_Interface*  clazz)                        \
   {                                                                          \
     FT_UNUSED(library);                                                      \

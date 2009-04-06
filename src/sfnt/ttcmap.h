@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
     charvariant_list_,variantchar_list_,                                     \
     format_, validate_, get_cmap_info_)                                      \
   void                                                                       \
-  FT_Init_Class_##class_( TT_CMap_ClassRec*  clazz )                         \
+  ft_pic_init_##class_( TT_CMap_ClassRec*  clazz )                         \
   {                                                                          \
     clazz->clazz.size = size_;                                               \
     clazz->clazz.init = init_;                                               \

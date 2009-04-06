@@ -24,7 +24,7 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ftgrays.c */
-  void FT_Init_Class_ft_grays_raster(FT_Raster_Funcs*);
+  void ft_pic_init_ft_grays_raster(FT_Raster_Funcs*);
 
   void
   ft_smooth_renderer_class_pic_free(  FT_Library library )
@@ -69,7 +69,7 @@
     container->ref_count = 1;
 
     /* initialize pointer table - this is how the module usually expects this data */
-    FT_Init_Class_ft_grays_raster(&container->ft_grays_raster);
+    ft_pic_init_ft_grays_raster(&container->ft_grays_raster);
 /*Exit:*/
     if(error)
       ft_smooth_renderer_class_pic_free(library);

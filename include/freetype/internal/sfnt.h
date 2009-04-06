@@ -842,7 +842,7 @@ FT_BEGIN_HEADER
     get_kerning_, load_font_dir_, load_hmtx_, load_eblc_, free_eblc_,        \
     set_sbit_strike_, load_strike_metrics_, get_metrics_ )                   \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Library library, SFNT_Interface*  clazz )       \
+  ft_pic_init_##class_( FT_Library library, SFNT_Interface*  clazz )       \
   {                                                                          \
     FT_UNUSED(library);                                                      \
     FT_INTERNAL(goto_table,goto_table_) \

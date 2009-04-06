@@ -24,7 +24,7 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ftraster.c */
-  void FT_Init_Class_ft_standard_raster(FT_Raster_Funcs*);
+  void ft_pic_init_ft_standard_raster(FT_Raster_Funcs*);
 
   void
   ft_raster1_renderer_class_pic_free(  FT_Library library )
@@ -69,7 +69,7 @@
     container->ref_count = 1;
 
     /* initialize pointer table - this is how the module usually expects this data */
-    FT_Init_Class_ft_standard_raster(&container->ft_standard_raster);
+    ft_pic_init_ft_standard_raster(&container->ft_standard_raster);
 /*Exit:*/
     if(error)
       ft_raster1_renderer_class_pic_free(library);

@@ -60,7 +60,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_SERVICE_CIDREC(class_, get_ros_,                           \
         get_is_cid_, get_cid_from_glyph_index_ )                             \
   void                                                                       \
-  FT_Init_Class_##class_( FT_Library library,                                \
+  ft_pic_init_##class_( FT_Library library,                                \
                           FT_Service_CIDRec* clazz)                          \
   {                                                                          \
     FT_UNUSED(library);                                                      \

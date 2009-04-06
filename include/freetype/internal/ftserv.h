@@ -250,7 +250,7 @@ FT_BEGIN_HEADER
 
 #define FT_DEFINE_SERVICEDESCREC1(class_, serv_id_1, serv_data_1)            \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library library,                             \
+  ft_library_pic_free_##class_( FT_Library library,                             \
                              FT_ServiceDescRec* clazz )                      \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \
@@ -259,7 +259,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library library,                              \
+  ft_library_pic_alloc_##class_( FT_Library library,                              \
                             FT_ServiceDescRec** output_class)                \
   {                                                                          \
     FT_ServiceDescRec*  clazz;                                               \
@@ -279,7 +279,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_SERVICEDESCREC2(class_, serv_id_1, serv_data_1,            \
         serv_id_2, serv_data_2)                                              \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library library,                             \
+  ft_library_pic_free_##class_( FT_Library library,                             \
                              FT_ServiceDescRec* clazz )                      \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \
@@ -288,7 +288,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library library,                              \
+  ft_library_pic_alloc_##class_( FT_Library library,                              \
                             FT_ServiceDescRec** output_class)                \
   {                                                                          \
     FT_ServiceDescRec*  clazz;                                               \
@@ -310,7 +310,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_SERVICEDESCREC3(class_, serv_id_1, serv_data_1,            \
         serv_id_2, serv_data_2, serv_id_3, serv_data_3)                      \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library library,                             \
+  ft_library_pic_free_##class_( FT_Library library,                             \
                              FT_ServiceDescRec* clazz )                      \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \
@@ -319,7 +319,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library library,                              \
+  ft_library_pic_alloc_##class_( FT_Library library,                              \
                             FT_ServiceDescRec** output_class)                \
   {                                                                          \
     FT_ServiceDescRec*  clazz;                                               \
@@ -344,7 +344,7 @@ FT_BEGIN_HEADER
         serv_id_2, serv_data_2, serv_id_3, serv_data_3,                      \
         serv_id_4, serv_data_4)                                              \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library library,                             \
+  ft_library_pic_free_##class_( FT_Library library,                             \
                              FT_ServiceDescRec* clazz )                      \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \
@@ -353,7 +353,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library library,                              \
+  ft_library_pic_alloc_##class_( FT_Library library,                              \
                             FT_ServiceDescRec** output_class)                \
   {                                                                          \
     FT_ServiceDescRec*  clazz;                                               \
@@ -380,7 +380,7 @@ FT_BEGIN_HEADER
         serv_id_2, serv_data_2, serv_id_3, serv_data_3, serv_id_4,           \
         serv_data_4, serv_id_5, serv_data_5)                                 \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library library,                             \
+  ft_library_pic_free_##class_( FT_Library library,                             \
                              FT_ServiceDescRec* clazz )                      \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \
@@ -389,7 +389,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library library,                              \
+  ft_library_pic_alloc_##class_( FT_Library library,                              \
                             FT_ServiceDescRec** output_class)                \
   {                                                                          \
     FT_ServiceDescRec*  clazz;                                               \
@@ -419,7 +419,7 @@ FT_BEGIN_HEADER
         serv_id_4, serv_data_4, serv_id_5, serv_data_5,                      \
         serv_id_6, serv_data_6)                                              \
   void                                                                       \
-  FT_Destroy_Class_##class_( FT_Library library,                             \
+  ft_library_pic_free_##class_( FT_Library library,                             \
                              FT_ServiceDescRec* clazz )                      \
   {                                                                          \
     FT_Memory memory = library->memory;                                      \
@@ -428,7 +428,7 @@ FT_BEGIN_HEADER
   }                                                                          \
                                                                              \
   FT_Error                                                                   \
-  FT_Create_Class_##class_( FT_Library library,                              \
+  ft_library_pic_alloc_##class_( FT_Library library,                              \
                             FT_ServiceDescRec** output_class)                \
   {                                                                          \
     FT_ServiceDescRec*  clazz;                                               \

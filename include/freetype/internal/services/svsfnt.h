@@ -80,7 +80,7 @@ FT_BEGIN_HEADER
 
 #define FT_DEFINE_SERVICE_SFNT_TABLEREC(class_, load_, get_, info_) \
   void                                                              \
-  FT_Init_Class_##class_( FT_Service_SFNT_TableRec*  clazz )        \
+  ft_pic_init_##class_( FT_Service_SFNT_TableRec*  clazz )        \
   {                                                                 \
     clazz->load_table = load_;                                      \
     clazz->get_table = get_;                                        \

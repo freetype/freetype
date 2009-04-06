@@ -68,7 +68,7 @@ FT_BEGIN_HEADER
 #define FT_DEFINE_SERVICE_PSINFOREC(class_, get_font_info_,      \
         ps_get_font_extra_, has_glyph_names_, get_font_private_) \
   void                                                           \
-  FT_Init_Class_##class_( FT_Library library,                    \
+  ft_pic_init_##class_( FT_Library library,                    \
                           FT_Service_PsInfoRec*  clazz)          \
   {                                                              \
     FT_UNUSED(library);                                          \

@@ -24,7 +24,7 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from pshmod.c */
-  void FT_Init_Class_pshinter_interface( FT_Library, PSHinter_Interface*);
+  void ft_pic_init_pshinter_interface( FT_Library, PSHinter_Interface*);
 
   void
   pshinter_module_class_pic_free( FT_Library library )
@@ -55,7 +55,7 @@
     pic_table->pshinter = container;
 
     /* add call to initialization function when you add new scripts */
-    FT_Init_Class_pshinter_interface(library, &container->pshinter_interface);
+    ft_pic_init_pshinter_interface(library, &container->pshinter_interface);
 
 /*Exit:*/
     if(error)
