@@ -559,20 +559,6 @@
     return error;
   }
 
-
-#define CFF_FIELD_NUM( code, name ) \
-          CFF_FIELD( code, name, cff_kind_num )
-#define CFF_FIELD_FIXED( code, name ) \
-          CFF_FIELD( code, name, cff_kind_fixed )
-#define CFF_FIELD_FIXED_1000( code, name ) \
-          CFF_FIELD( code, name, cff_kind_fixed_thousand )
-#define CFF_FIELD_STRING( code, name ) \
-          CFF_FIELD( code, name, cff_kind_string )
-#define CFF_FIELD_BOOL( code, name ) \
-          CFF_FIELD( code, name, cff_kind_bool )
-#define CFF_FIELD_DELTA( code, name, max ) \
-          CFF_FIELD( code, name, cff_kind_delta )
-
 #define CFFCODE_TOPDICT  0x1000
 #define CFFCODE_PRIVATE  0x2000
 
@@ -587,7 +573,6 @@
             0, 0                         \
           },
 
-#undef  CFF_FIELD
 #define CFF_FIELD( code, name, kind ) \
           {                          \
             kind,                    \
@@ -597,7 +582,6 @@
             0, 0, 0                  \
           },
 
-#undef  CFF_FIELD_DELTA
 #define CFF_FIELD_DELTA( code, name, max ) \
         {                                  \
           cff_kind_delta,                  \
@@ -620,81 +604,48 @@
 
 #else /* FT_CONFIG_OPTION_PIC */
 
-  void ft_library_pic_free_cff_field_handlers(FT_Library library, CFF_Field_Handler* clazz)
+  void
+  cff_field_handlers_init( CFF_Field_Handler*  clazz )
   {
-    FT_Memory memory = library->memory;
-    FT_FREE( clazz );
-  }
+#define CFF_FIELD_CALLBACK( code_, name_ )                                 \
+    clazz->kind   = cff_kind_callback;                                     \
+    clazz->code   = code_ | CFFCODE;                                       \
+    clazz->offset = 0;                                                     \
+    clazz->size   = 0;                                                     \
+    clazz->reader = cff_parse_ ## name_;                                   \
+    clazz->array_max = 0;                                                  \
+    clazz->count_offset = 0;                                               \
+    clazz++;
 
-  FT_Error ft_library_pic_alloc_cff_field_handlers(FT_Library library, CFF_Field_Handler** output_class)
-  {
-    CFF_Field_Handler*  clazz;
-    FT_Error            error;
-    FT_Memory           memory = library->memory;
-    int i=0;
+#define CFF_FIELD( code_, name_, kind_ )                                   \
+    clazz->kind = kind_;                                                   \
+    clazz->code = code_ | CFFCODE;                                         \
+    clazz->offset = FT_FIELD_OFFSET( name_ );                              \
+    clazz->size = FT_FIELD_SIZE( name_ );                                  \
+    clazz->reader = 0;                                                     \
+    clazz->array_max = 0;                                                  \
+    clazz->count_offset = 0;                                               \
+    clazz++;
 
-#undef CFF_FIELD
-#undef CFF_FIELD_DELTA
-#undef CFF_FIELD_CALLBACK
-#define CFF_FIELD_CALLBACK( code, name ) i++;
-#define CFF_FIELD( code, name, kind ) i++;
-#define CFF_FIELD_DELTA( code, name, max ) i++;
-
-#include "cfftoken.h"
-    i++;/*{ 0, 0, 0, 0, 0, 0, 0 }*/
-
-    if ( FT_NEW_ARRAY( clazz, i ) )
-      return error;
-
-    i=0;
-#undef CFF_FIELD
-#undef CFF_FIELD_DELTA
-#undef CFF_FIELD_CALLBACK
-
-#define CFF_FIELD_CALLBACK( code_, name_ )                                   \
-    clazz[i].kind   = cff_kind_callback;                                     \
-    clazz[i].code   = code_ | CFFCODE;                                       \
-    clazz[i].offset = 0;                                                     \
-    clazz[i].size   = 0;                                                     \
-    clazz[i].reader = cff_parse_ ## name_;                                   \
-    clazz[i].array_max = 0;                                                  \
-    clazz[i].count_offset = 0;                                               \
-    i++;
-
-#undef  CFF_FIELD
-#define CFF_FIELD( code_, name_, kind_ )                                     \
-    clazz[i].kind = kind_;                                                   \
-    clazz[i].code = code_ | CFFCODE;                                         \
-    clazz[i].offset = FT_FIELD_OFFSET( name_ );                              \
-    clazz[i].size = FT_FIELD_SIZE( name_ );                                  \
-    clazz[i].reader = 0;                                                     \
-    clazz[i].array_max = 0;                                                  \
-    clazz[i].count_offset = 0;                                               \
-    i++;                                                                     \
-
-#undef  CFF_FIELD_DELTA
-#define CFF_FIELD_DELTA( code_, name_, max_ )                                \
-    clazz[i].kind = cff_kind_delta;                                          \
-    clazz[i].code = code_ | CFFCODE;                                         \
-    clazz[i].offset = FT_FIELD_OFFSET( name_ );                              \
-    clazz[i].size = FT_FIELD_SIZE_DELTA( name_ );                            \
-    clazz[i].reader = 0;                                                     \
-    clazz[i].array_max = max_;                                               \
-    clazz[i].count_offset = FT_FIELD_OFFSET( num_ ## name_ );                \
-    i++;
+#define CFF_FIELD_DELTA( code_, name_, max_ )                              \
+    clazz->kind = cff_kind_delta;                                          \
+    clazz->code = code_ | CFFCODE;                                         \
+    clazz->offset = FT_FIELD_OFFSET( name_ );                              \
+    clazz->size = FT_FIELD_SIZE_DELTA( name_ );                            \
+    clazz->reader = 0;                                                     \
+    clazz->array_max = max_;                                               \
+    clazz->count_offset = FT_FIELD_OFFSET( num_ ## name_ );                \
+    clazz++;
 
 #include "cfftoken.h"
 
-    clazz[i].kind = 0;
-    clazz[i].code = 0;
-    clazz[i].offset = 0;
-    clazz[i].size = 0;
-    clazz[i].reader = 0;
-    clazz[i].array_max = 0;
-    clazz[i].count_offset = 0;
-
-    *output_class = clazz;
-    return FT_Err_Ok;
+    clazz->kind = 0;
+    clazz->code = 0;
+    clazz->offset = 0;
+    clazz->size = 0;
+    clazz->reader = 0;
+    clazz->array_max = 0;
+    clazz->count_offset = 0;
   }
 
 

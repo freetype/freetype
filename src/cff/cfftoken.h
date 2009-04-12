@@ -15,6 +15,42 @@
 /*                                                                         */
 /***************************************************************************/
 
+#ifndef CFF_FIELD
+#error  CFF_FIELD must be defined
+#endif
+
+#ifndef CFF_FIELD_DELTA
+#error  CFF_FIELD_DELTA must be defined
+#endif
+
+#ifndef CFF_FIELD_CALLBACK
+#error  CFF_FIELD_CALLBACK must be defined
+#endif
+
+#ifndef CFF_FIELD_NUM
+#define CFF_FIELD_NUM( code, name ) \
+          CFF_FIELD( code, name, cff_kind_num )
+#endif
+
+#ifndef CFF_FIELD_FIXED
+#define CFF_FIELD_FIXED( code, name ) \
+          CFF_FIELD( code, name, cff_kind_fixed )
+#endif
+
+#ifndef CFF_FIELD_FIXED_1000
+#define CFF_FIELD_FIXED_1000( code, name ) \
+          CFF_FIELD( code, name, cff_kind_fixed_thousand )
+#endif
+
+#ifndef CFF_FIELD_STRING
+#define CFF_FIELD_STRING( code, name ) \
+          CFF_FIELD( code, name, cff_kind_string )
+#endif
+
+#ifndef CFF_FIELD_BOOL
+#define CFF_FIELD_BOOL( code, name ) \
+          CFF_FIELD( code, name, cff_kind_bool )
+#endif
 
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  CFF_FontRecDictRec
@@ -93,5 +129,14 @@
   CFF_FIELD_NUM       ( 20,    default_width )
   CFF_FIELD_NUM       ( 21,    nominal_width )
 
+#undef CFF_FIELD_STRING
+#undef CFF_FIELD_BOOL
+#undef CFF_FIELD_NUM
+#undef CFF_FIELD_FIXED
+#undef CFF_FIELD_FIXED_1000
+
+#undef CFF_FIELD_DELTA
+#undef CFF_FIELD_CALLBACK
+#undef CFF_FIELD
 
 /* END */

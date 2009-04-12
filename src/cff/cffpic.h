@@ -36,6 +36,18 @@ FT_BEGIN_HEADER
 #include FT_SERVICE_TT_CMAP_H
 #include FT_SERVICE_CID_H
 
+#define  COUNT__(prefix_)  prefix_##__LINE__
+#define  COUNT_(prefix_)   COUNT__(prefix_)
+
+/* count the number of items declared by cfftoken.h */
+enum {
+    CFF_FIELD_HANDLER_COUNT = 0
+#define  CFF_FIELD(x,y,z)         +1
+#define  CFF_FIELD_CALLBACK(x,y)  +1
+#define  CFF_FIELD_DELTA(x,y,z)   +1
+#include "cfftoken.h"
+};
+
   typedef struct CffModulePIC_
   {
     FT_ServiceDescRec*       cff_services;
@@ -46,7 +58,7 @@ FT_BEGIN_HEADER
     FT_Service_CIDRec        cff_service_cid_info;
     FT_CMap_ClassRec         cff_cmap_encoding_class_rec;
     FT_CMap_ClassRec         cff_cmap_unicode_class_rec;
-    CFF_Field_Handler*       cff_field_handlers;
+    CFF_Field_Handler        cff_field_handlers[CFF_FIELD_HANDLER_COUNT+1];
   } CffModulePIC;
 
 #define CFF_GET_PIC(lib)                   ((CffModulePIC*)((lib)->pic_table.cff))

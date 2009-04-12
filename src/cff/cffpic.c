@@ -33,8 +33,7 @@
   void ft_pic_init_cff_service_cid_info( FT_Library, FT_Service_CIDRec*);
 
   /* forward declaration of PIC init functions from cffparse.c */
-  FT_Error ft_library_pic_alloc_cff_field_handlers( FT_Library, CFF_Field_Handler**);
-  void ft_library_pic_free_cff_field_handlers( FT_Library, CFF_Field_Handler*);
+  void cff_pic_field_handlers_init( CFF_Field_Handler* );
 
 #if 0  /* defined by cffcmap.h */
   /* forward declaration of PIC init functions from cffcmap.c */
@@ -53,12 +52,6 @@
       ft_library_pic_free_cff_services(pic->library, container->cff_services);
       container->cff_services = NULL;
     }
-
-    if(container->cff_field_handlers)
-    {
-      ft_library_pic_free_cff_field_handlers(pic->library, container->cff_field_handlers);
-      container->cff_field_handlers = NULL;
-    }
   }
 
 
@@ -74,9 +67,7 @@
     if(error) 
       goto Exit;
 
-    error = ft_library_pic_alloc_cff_field_handlers(library, &container->cff_field_handlers);
-    if(error) 
-      goto Exit;
+    cff_pic_field_handlers_init(container->cff_field_handlers);
 
     ft_pic_init_cff_service_ps_info    (library, &container->cff_service_ps_info);
     ft_pic_init_cff_service_glyph_dict (library, &container->cff_service_glyph_dict);
