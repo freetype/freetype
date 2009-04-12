@@ -33,35 +33,11 @@
 #include "afdummy.h"
 #include "afindic.h"
 
-  void
-  autofit_module_class_pic_free( FT_Library library )
+  static FT_Error
+  pic_autofit_init( void*  _autofit, FT_PicTable  pic )
   {
-    FT_PicTable  pic_table = &library->pic_table;
-    FT_Memory    memory    = library->memory;
-
-
-    if ( pic_table->autofit )
-    {
-      FT_FREE( pic_table->autofit );
-      pic_table->autofit = NULL;
-    }
-  }
-
-
-  FT_Error
-  autofit_module_class_pic_init( FT_Library library )
-  {
-    FT_PicTable   pic_table = &library->pic_table;
-    FT_Memory     memory    = library->memory;
+    AFModulePIC*  container = _autofit;
     FT_UInt       ss;
-    FT_Error      error = FT_Err_Ok;
-    AFModulePIC*  container;
-
-    /* allocate pointer, clear and set global container pointer */
-    if ( FT_NEW( container ) )
-      return error;
-
-    pic_table->autofit = container;
 
     /* initialize pointer table - this is how the module usually expects this data */
     for ( ss = 0 ; ss < AF_SCRIPT_CLASSES_REC_COUNT ; ss++ )
@@ -72,22 +48,30 @@
 
     /* add call to initialization function when you add new scripts */
     ss = 0;
-    ft_pic_init_af_dummy_script_class(&container->af_script_classes_rec[ss++]);
+    ft_pic_init_af_dummy_script_class (&container->af_script_classes_rec[ss++]);
 #ifdef FT_OPTION_AUTOFIT2
     ft_pic_init_af_latin2_script_class(&container->af_script_classes_rec[ss++]);
 #endif
-    ft_pic_init_af_latin_script_class(&container->af_script_classes_rec[ss++]);
-    ft_pic_init_af_cjk_script_class(&container->af_script_classes_rec[ss++]);
-    ft_pic_init_af_indic_script_class(&container->af_script_classes_rec[ss++]);    
+    ft_pic_init_af_latin_script_class (&container->af_script_classes_rec[ss++]);
+    ft_pic_init_af_cjk_script_class   (&container->af_script_classes_rec[ss++]);
+    ft_pic_init_af_indic_script_class (&container->af_script_classes_rec[ss++]);
 
-    ft_pic_init_af_autofitter_service(library, &container->af_autofitter_service);
+    ft_pic_init_af_autofitter_service(pic->library, &container->af_autofitter_service);
 
-/*Exit:*/
-    if(error)
-      autofit_module_class_pic_free(library);
-    return error;
+    return 0;
   }
 
+
+  FT_Error
+  autofit_module_class_pic_init( FT_Library  library )
+  {
+    FT_PicTable  pic = &library->pic_table;
+
+    return ft_pic_table_init_data( pic, pic->autofit,
+                                   sizeof(AFModulePIC),
+                                   pic_autofit_init,
+                                   NULL );
+  }
 
 #endif /* FT_CONFIG_OPTION_PIC */
 

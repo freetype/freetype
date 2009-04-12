@@ -94,13 +94,13 @@ FT_BEGIN_HEADER
  */
 #define  FT_PIC_ENTRY_LIST  \
   _FT_PICDATA( base ) \
+  _FT_PICDATA( autofit ) \
 
 /* now define the entries in the PIC table itself */
 #define _FT_PICDATA(name)  FT_PicDataRec  name [1];
     FT_PIC_ENTRY_LIST
 #undef _FT_PICDATA
 
-    void*  autofit;
     void*  cff;
     void*  pshinter;
     void*  psnames;
