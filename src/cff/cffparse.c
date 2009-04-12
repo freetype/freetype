@@ -623,15 +623,14 @@
   void ft_library_pic_free_cff_field_handlers(FT_Library library, CFF_Field_Handler* clazz)
   {
     FT_Memory memory = library->memory;
-    if ( clazz )
-      FT_FREE( clazz );
+    FT_FREE( clazz );
   }
 
   FT_Error ft_library_pic_alloc_cff_field_handlers(FT_Library library, CFF_Field_Handler** output_class)
   {
     CFF_Field_Handler*  clazz;
-    FT_Error          error;
-    FT_Memory memory = library->memory;
+    FT_Error            error;
+    FT_Memory           memory = library->memory;
     int i=0;
 
 #undef CFF_FIELD
@@ -644,7 +643,7 @@
 #include "cfftoken.h"
     i++;/*{ 0, 0, 0, 0, 0, 0, 0 }*/
 
-    if ( FT_ALLOC( clazz, sizeof(CFF_Field_Handler)*i ) )
+    if ( FT_NEW_ARRAY( clazz, i ) )
       return error;
 
     i=0;
@@ -653,10 +652,10 @@
 #undef CFF_FIELD_CALLBACK
 
 #define CFF_FIELD_CALLBACK( code_, name_ )                                   \
-    clazz[i].kind = cff_kind_callback;                                       \
-    clazz[i].code = code_ | CFFCODE;                                         \
+    clazz[i].kind   = cff_kind_callback;                                     \
+    clazz[i].code   = code_ | CFFCODE;                                       \
     clazz[i].offset = 0;                                                     \
-    clazz[i].size = 0;                                                       \
+    clazz[i].size   = 0;                                                     \
     clazz[i].reader = cff_parse_ ## name_;                                   \
     clazz[i].array_max = 0;                                                  \
     clazz[i].count_offset = 0;                                               \
