@@ -4144,7 +4144,7 @@
 
   Fail:
 #ifdef FT_CONFIG_OPTION_PIC
-    ft_library_done_pic( library );
+    ft_library_pic_done( library );
 #endif
     FT_FREE( library );
     return error;

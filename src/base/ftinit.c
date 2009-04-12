@@ -115,7 +115,7 @@
     FT_Module_Class** classes;
     FT_Memory         memory;
     FT_UInt           i;
-    BasePIC*          pic_table = library->pic_table.base;
+    BasePIC*          pic_table = FT_LIBRARY_GET_PIC_DATA(library, base);
 
     if ( !pic_table->default_module_classes )
       return;
@@ -130,13 +130,6 @@
     pic_table->default_module_classes = 0;
   }
 
-  /* initialize all module classes and the pointer table */
-#undef  FT_USE_MODULE
-#define FT_USE_MODULE( type, x )                \
-  error = ft_library_pic_alloc_##x(library, &clazz); \
-  if (error) goto Exit;                         \
-  classes[i++] = clazz;
-
   FT_BASE_DEF( FT_Error )
   ft_create_default_module_classes( FT_Library  library )
   {
@@ -145,27 +138,35 @@
     FT_Module_Class** classes;
     FT_Module_Class*  clazz;
     FT_UInt           i;
-    BasePIC*          pic_table = library->pic_table.base;
+    BasePIC*          pic_table = FT_LIBRARY_GET_PIC_DATA(library, base);
 
     memory = library->memory;  
     pic_table->default_module_classes = 0;
 
-    if ( FT_ALLOC(classes, sizeof(FT_Module_Class*) * (FT_NUM_MODULE_CLASSES + 1) ) )
+    if ( FT_NEW_ARRAY(classes, FT_NUM_MODULE_CLASSES + 1 ) )
       return error;
-    /* initialize all pointers to 0, especially the last one */
-    for (i = 0; i < FT_NUM_MODULE_CLASSES; i++)
-      classes[i] = 0;
-    classes[FT_NUM_MODULE_CLASSES] = 0;
 
     i = 0;
 
+  /* initialize all module classes and the pointer table */
+#undef  FT_USE_MODULE
+#define FT_USE_MODULE( type, x )                \
+  error = ft_library_pic_alloc_##x(library, &clazz); \
+  if (error) \
+    goto Exit; \
+  \
+  classes[i++] = clazz;
+
 #include FT_CONFIG_MODULES_H
+#undef FT_USE_MODULE
 
-Exit:    
-    if (error) ft_destroy_default_module_classes( library );
-    else pic_table->default_module_classes = classes;
+Exit:
+    if (error)
+      ft_destroy_default_module_classes( library );
+    else
+      pic_table->default_module_classes = classes;
 
-    return error;    
+    return error;
   }
 
 

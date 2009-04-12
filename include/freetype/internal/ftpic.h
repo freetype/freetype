@@ -31,6 +31,51 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_PIC
 
+  /* A FT_PicDataRec object models a heap-allocated structure
+   * used to hold data that, in non-PIC builds of the engine,
+   * would be constant and contain pointers.
+   *
+   * The FT_PicDataRec contains book-keeping information about
+   * the structure, whose exact fields depend on which module
+   * is defining/using it. The structure itself can be
+   * accessed as the 'data' field of a FT_PicDataRec object.
+   */
+  typedef struct FT_PicDataRec_*  FT_PicData;
+
+  /* A FT_PicTableRec object contains the FT_PicDataRec of all
+   * PIC structures needed by the library at runtime.
+   */
+  typedef struct FT_PicTableRec_*  FT_PicTable;
+
+  /* A special callback function call to finalize the structure
+   * backed by a FT_PicDataRec object. It is called by
+   * ft_pic_table_done_data and its first parameter is the 'data'
+   * field of the corresponding FT_PicDataRec. Note that the
+   * PIC structure itself is allocated by ft_pic_table_init_data
+   * and freed by ft_pic_table_done_data.
+   */
+  typedef void (*FT_PicDataDoneFunc)( void*  data, FT_PicTable  pic );
+
+  /* A special initialization function called by ft_pic_table_init_data
+   * to initialize a freshly allocated PIC structure.
+   */
+  typedef FT_Error (*FT_PicDataInitFunc)( void*  data, FT_PicTable  pic );
+
+  /* The FT_PicDataRec itself holds a pointer to heap-allocated
+   * PIC data, a reference count and an optional finalizer function.
+   *
+   * One should call ft_pic_table_init_data() to register a new
+   * heap-allocated PIC structure, which address will be placed
+   * into the 'data' field.
+   */
+  typedef struct FT_PicDataRec_
+  {
+    void*               data;
+    FT_Int              ref_count;
+    FT_PicDataDoneFunc  done;
+
+  } FT_PicDataRec;
+
   /* When FT_CONFIG_OPTION_PIC is defined, the FT_PicTable
    * is used to hold all constant structures that normally
    * contain pointers in the normal build of FreeType.
@@ -41,10 +86,20 @@ FT_BEGIN_HEADER
    */
   typedef struct FT_PicTableRec_
   {
-    /* pic containers for base */
-    void*  base;
+    FT_Library  library;
+    FT_Memory   memory;
 
-    /* pic containers for modules */
+/* this macro is used to define the list of FT_PicDataRec
+ * stored in the PIC table. Add new entries here.
+ */
+#define  FT_PIC_ENTRY_LIST  \
+  _FT_PICDATA( base ) \
+
+/* now define the entries in the PIC table itself */
+#define _FT_PICDATA(name)  FT_PicDataRec  name [1];
+    FT_PIC_ENTRY_LIST
+#undef _FT_PICDATA
+
     void*  autofit;
     void*  cff;
     void*  pshinter;
@@ -54,12 +109,38 @@ FT_BEGIN_HEADER
     void*  smooth;
     void*  truetype;
 
-  } FT_PicTableRec, *FT_PicTable;
+  } FT_PicTableRec;
+
+#define  FT_LIBRARY_GET_PIC_DATA(library_,name_) \
+  library_->pic_table.name_->data
+
+  /* allocate and initialize a PIC structure in the heap.
+   * This should be called at module initialization time
+   * before the PIC data can be used.
+   *
+   * if the structure already exists, this simply increments
+   * its reference count.
+   */
+  FT_BASE( FT_Error )
+  ft_pic_table_init_data( FT_PicTable         table,
+                          FT_PicData          data,
+                          FT_UInt             data_size,
+                          FT_PicDataInitFunc  data_init,
+                          FT_PicDataDoneFunc  data_done );
+
+  /* finalize and free a given PIC structure. This really
+   * decrements the reference count and performs destruction
+   * if it reaches 0.
+   *
+   * this should be called a module exit time.
+   */
+  FT_BASE( void )
+  ft_pic_table_done_data( FT_PicTable  table,
+                          FT_PicData   data );
 
   /* Initialize the PIC table's base */
   FT_BASE( FT_Error )
   ft_library_pic_init( FT_Library library );
-
 
   /* Destroy the contents of the PIC table. */
   FT_BASE( void )

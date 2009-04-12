@@ -31,21 +31,32 @@
   FT_Error ft_create_default_module_classes(FT_Library);
   void ft_destroy_default_module_classes(FT_Library);
 
-  void
-  ft_base_pic_free( FT_Library library )
+  static void
+  pic_base_done( void*  base, FT_PicTable  pic )
   {
-    FT_PicTable  pic_table = &library->pic_table;
-    FT_Memory    memory    = library->memory;
+    FT_UNUSED(base);
 
+    /* Destroy default module classes (in case FT_Add_Default_Modules was used) */
+    ft_destroy_default_module_classes( pic->library );
+  }
 
-    if ( pic_table->base )
-    {
-      /* Destroy default module classes (in case FT_Add_Default_Modules was used) */
-      ft_destroy_default_module_classes( library );
+  static FT_Error
+  pic_base_init( void*  data, FT_PicTable  pic )
+  {
+    BasePIC*   base = (BasePIC*)data;
+    FT_Error   error;
 
-      FT_FREE( pic_table->base );
-      pic_table->base = NULL;
-    }
+    /* initialize default modules list and pointers */
+    error = ft_create_default_module_classes( pic->library );
+    if ( error )
+      goto Exit;
+
+    /* initialize pointer table - this is how the module usually expects this data */
+    ft_pic_init_ft_outline_glyph_class(&base->ft_outline_glyph_class);
+    ft_pic_init_ft_bitmap_glyph_class(&base->ft_bitmap_glyph_class);
+
+  Exit:
+    return error;
   }
 
 
@@ -53,32 +64,13 @@
   ft_base_pic_init( FT_Library library )
   {
     FT_PicTable  pic_table = &library->pic_table;
-    FT_Error     error     = FT_Err_Ok;
-    FT_Memory    memory    = library->memory;
-    BasePIC*     container;
 
-    /* allocate pointer, clear and set global container pointer */
-    if ( FT_NEW ( container ) )
-      return error;
-
-    pic_table->base = container;
-
-    /* initialize default modules list and pointers */
-    error = ft_create_default_module_classes( library );
-    if ( error )
-      goto Exit;
-
-    /* initialize pointer table - this is how the module usually expects this data */
-    ft_pic_init_ft_outline_glyph_class(&container->ft_outline_glyph_class);
-    ft_pic_init_ft_bitmap_glyph_class(&container->ft_bitmap_glyph_class);
-
-Exit:
-    if(error)
-      ft_base_pic_free(library);
-
-    return error;
+    return ft_pic_table_init_data( pic_table,
+                                   pic_table->base,
+                                   sizeof(BasePIC),
+                                   pic_base_init,
+                                   pic_base_done );
   }
-
 
 #endif /* FT_CONFIG_OPTION_PIC */
 
