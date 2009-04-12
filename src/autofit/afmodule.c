@@ -83,7 +83,7 @@
     0x10000L,   /* version 1.0 of the autofitter  */
     0x20000L,   /* requires FreeType 2.0 or above */
 
-    (const void*)&AF_AF_AUTOFITTER_SERVICE_GET,
+    (const void*)&AF_AUTOFITTER_SERVICE_GET,
 
     (FT_Module_Constructor)af_autofitter_init,
     (FT_Module_Destructor) af_autofitter_done,
