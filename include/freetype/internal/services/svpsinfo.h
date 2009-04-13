@@ -25,7 +25,6 @@
 
 FT_BEGIN_HEADER
 
-
 #define FT_SERVICE_ID_POSTSCRIPT_INFO  "postscript-info"
 
 
@@ -44,41 +43,16 @@ FT_BEGIN_HEADER
   (*PS_GetFontPrivateFunc)( FT_Face         face,
                             PS_PrivateRec*  afont_private );
 
+#define  FT_PSINFO_SERVICE_FIELDS \
+  _FT_SERVICE_FIELD( PS_GetFontInfoFunc,    get_font_info )   \
+  _FT_SERVICE_FIELD( PS_GetFontExtraFunc,   get_font_extra )  \
+  _FT_SERVICE_FIELD( PS_HasGlyphNamesFunc,  has_glyph_names ) \
+  _FT_SERVICE_FIELD( PS_GetFontPrivateFunc, get_font_private ) \
 
-  FT_DEFINE_SERVICE( PsInfo )
-  {
-    PS_GetFontInfoFunc     ps_get_font_info;
-    PS_GetFontExtraFunc    ps_get_font_extra;
-    PS_HasGlyphNamesFunc   ps_has_glyph_names;
-    PS_GetFontPrivateFunc  ps_get_font_private;
-  };
+#define  FT_SERVICE_NAME    PsInfo
+#define  FT_SERVICE_FIELDS  FT_PSINFO_SERVICE_FIELDS
 
-#ifndef FT_CONFIG_OPTION_PIC
-
-#define FT_DEFINE_SERVICE_PSINFOREC(class_, get_font_info_,      \
-        ps_get_font_extra_, has_glyph_names_, get_font_private_) \
-  static const FT_Service_PsInfoRec class_ =                     \
-  {                                                              \
-    get_font_info_, ps_get_font_extra_, has_glyph_names_,        \
-    get_font_private_                                            \
-  };
-
-#else /* FT_CONFIG_OPTION_PIC */ 
-
-#define FT_DEFINE_SERVICE_PSINFOREC(class_, get_font_info_,      \
-        ps_get_font_extra_, has_glyph_names_, get_font_private_) \
-  void                                                           \
-  ft_pic_init_##class_( FT_Library library,                    \
-                          FT_Service_PsInfoRec*  clazz)          \
-  {                                                              \
-    FT_UNUSED(library);                                          \
-    clazz->ps_get_font_info = get_font_info_;                    \
-    clazz->ps_get_font_extra = ps_get_font_extra_;               \
-    clazz->ps_has_glyph_names = has_glyph_names_;                \
-    clazz->ps_get_font_private = get_font_private_;              \
-  } 
-
-#endif /* FT_CONFIG_OPTION_PIC */ 
+#include FT_INTERNAL_SERVICE_DECLARE_H
 
   /* */
 

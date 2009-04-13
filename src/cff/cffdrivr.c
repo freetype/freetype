@@ -329,9 +329,10 @@
 
 
   static FT_Error
-  cff_ps_get_font_info( CFF_Face         face,
+  cff_ps_get_font_info( FT_Face          face_,
                         PS_FontInfoRec*  afont_info )
   {
+    CFF_Face  face  = (CFF_Face)face_;
     CFF_Font  cff   = (CFF_Font)face->extra.data;
     FT_Error  error = FT_Err_Ok;
 
@@ -378,13 +379,22 @@
   }
 
 
+#define  FT_SERVICE_FIELDS        FT_PSINFO_SERVICE_FIELDS
+#define  FT_SERVICE_NAME          PsInfo
+#define  FT_SERVICE_PREFIX        cff_ps_
+#define  cff_ps_get_font_extra    NULL
+#define  cff_ps_get_font_private  NULL
+
+#include FT_INTERNAL_SERVICE_DEFINE_H
+
+#if 0
   FT_DEFINE_SERVICE_PSINFOREC(cff_service_ps_info,
     (PS_GetFontInfoFunc)   cff_ps_get_font_info,
     (PS_GetFontExtraFunc)  NULL,
     (PS_HasGlyphNamesFunc) cff_ps_has_glyph_names,
     (PS_GetFontPrivateFunc)NULL         /* unsupported with CFF fonts */
   )
-
+#endif
 
   /*
    *  POSTSCRIPT NAME SERVICE
@@ -585,20 +595,20 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+#define  FT_SERVICE_ITEMS    CFF_SERVICE_ITEMS
+#define  FT_SERVICE_NAME     cff
+#define  FT_SERVICE_VARNAME  cff_services
+
+#include FT_INTERNAL_SERVICE_LIST_DEFINE_H
+
+#if 0
   FT_DEFINE_SERVICEDESCREC6(cff_services,
     FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_CFF,
     FT_SERVICE_ID_POSTSCRIPT_INFO,      &FT_CFF_SERVICE_PS_INFO_GET,
     FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &FT_CFF_SERVICE_PS_NAME_GET,
-    FT_SERVICE_ID_GLYPH_DICT,           &FT_CFF_SERVICE_GLYPH_DICT_GET,
-    FT_SERVICE_ID_TT_CMAP,              &FT_CFF_SERVICE_GET_CMAP_INFO_GET,
-    FT_SERVICE_ID_CID,                  &FT_CFF_SERVICE_CID_INFO_GET
-  )
-#else
-  FT_DEFINE_SERVICEDESCREC5(cff_services,
-    FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_CFF,
-    FT_SERVICE_ID_POSTSCRIPT_INFO,      &FT_CFF_SERVICE_PS_INFO_GET,
-    FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &FT_CFF_SERVICE_PS_NAME_GET,
+    IF_GLYPH_NAMES(
+      FT_SERVICE_ID_GLYPH_DICT,           &FT_CFF_SERVICE_GLYPH_DICT_GET,
+    )
     FT_SERVICE_ID_TT_CMAP,              &FT_CFF_SERVICE_GET_CMAP_INFO_GET,
     FT_SERVICE_ID_CID,                  &FT_CFF_SERVICE_CID_INFO_GET
   )

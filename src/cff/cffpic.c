@@ -24,8 +24,6 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from cffdrivr.c */
-  FT_Error ft_library_pic_alloc_cff_services( FT_Library, FT_ServiceDescRec**);
-  void ft_library_pic_free_cff_services( FT_Library, FT_ServiceDescRec*);
   void ft_pic_init_cff_service_ps_info( FT_Library, FT_Service_PsInfoRec*);
   void ft_pic_init_cff_service_glyph_dict( FT_Library, FT_Service_GlyphDictRec*);
   void ft_pic_init_cff_service_ps_name( FT_Library, FT_Service_PsFontNameRec*);
@@ -41,33 +39,12 @@
   void ft_pic_init_cff_cmap_unicode_class_rec( FT_Library, FT_CMap_ClassRec*);
 #endif
 
-  static void
-  pic_cff_done( void*  _cff, FT_PicTable  pic )
-  {
-    CffModulePIC* container = (CffModulePIC*) _cff;
-
-
-    if (container->cff_services)
-    {
-      ft_library_pic_free_cff_services(pic->library, container->cff_services);
-      container->cff_services = NULL;
-    }
-  }
-
-
   static FT_Error
   pic_cff_init( void*  _cff, FT_PicTable  pic )
   {
     FT_Library     library   = pic->library;
     FT_Error       error     = FT_Err_Ok;
     CffModulePIC*  container = (CffModulePIC*) _cff;
-
-    /* initialize pointer table - this is how the module usually expects this data */
-    error = ft_library_pic_alloc_cff_services(library, &container->cff_services);
-    if(error) 
-      goto Exit;
-
-    cff_pic_field_handlers_init(container->cff_field_handlers);
 
     ft_pic_init_cff_service_ps_info    (library, &container->cff_service_ps_info);
     ft_pic_init_cff_service_glyph_dict (library, &container->cff_service_glyph_dict);
@@ -80,8 +57,11 @@
                                                &container->cff_cmap_encoding_class_rec);
     ft_pic_init_cff_cmap_unicode_class_rec  (library, 
                                                &container->cff_cmap_unicode_class_rec);
-Exit:
-    return error;
+
+    cff_pic_field_handlers_init(container->cff_field_handlers);
+    ft_pic_services_init_Cff( &container->cff_services, library );
+
+    return 0;
   }
 
 
@@ -93,7 +73,7 @@ Exit:
     return ft_pic_table_init_data( pic, pic->cff,
                                    sizeof(CffModulePIC),
                                    pic_cff_init,
-                                   pic_cff_done );
+                                   NULL );
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */

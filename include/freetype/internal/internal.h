@@ -47,5 +47,11 @@
 
 #define FT_INTERNAL_AUTOHINT_H            <freetype/internal/autohint.h>
 
+#define FT_INTERNAL_SERVICE_DECLARE_H     <freetype/internal/services/declare.h>
+#define FT_INTERNAL_SERVICE_DEFINE_H      <freetype/internal/services/define.h>
+
+#define FT_INTERNAL_SERVICE_LIST_DECLARE_H <freetype/internal/services/listdecl.h>
+#define FT_INTERNAL_SERVICE_LIST_DEFINE_H  <freetype/internal/services/listdef.h>
+
 
 /* END */

@@ -38,8 +38,8 @@
 
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
-      if ( service && service->ps_get_font_info )
-        error = service->ps_get_font_info( face, afont_info );
+      if ( service && service->get_font_info )
+        error = service->get_font_info( face, afont_info );
     }
 
     return error;
@@ -59,8 +59,8 @@
     {
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
-      if ( service && service->ps_has_glyph_names )
-        result = service->ps_has_glyph_names( face );
+      if ( service && service->has_glyph_names )
+        result = service->has_glyph_names( face );
     }
 
     return result;
@@ -83,8 +83,8 @@
 
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
-      if ( service && service->ps_get_font_private )
-        error = service->ps_get_font_private( face, afont_private );
+      if ( service && service->get_font_private )
+        error = service->get_font_private( face, afont_private );
     }
 
     return error;

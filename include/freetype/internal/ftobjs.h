@@ -62,6 +62,11 @@ FT_BEGIN_HEADER
 #endif
 
 
+#define  FT_GLUE(x,y)   FT_GLUE_(x,y)
+#define  FT_GLUE_(x,y)  x##y
+
+#define  FT_GLUE3(x,y,z)  FT_GLUE(FT_GLUE(x,y),z)
+
   /*************************************************************************/
   /*                                                                       */
   /* The min and max functions missing in C.  As usual, be careful not to  */

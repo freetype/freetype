@@ -19,8 +19,33 @@
 #ifndef __CFFPIC_H__
 #define __CFFPIC_H__
 
-  
 FT_BEGIN_HEADER
+
+#include FT_INTERNAL_OBJECTS_H
+
+/* CFF services list */
+#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+#  define IF_GLYPH_NAMES(x)  x
+#else
+#  define IF_GLYPH_NAMES(x)  /* nothing */
+#endif
+
+#define  CFF_SERVICE_ITEMS \
+  _FT_SERVICE_ITEM( XF86_NAME,            FT_XF86_FORMAT_CFF ) \
+  _FT_SERVICE_ITEM( POSTSCRIPT_INFO,      &FT_CFF_SERVICE_PS_INFO_GET ) \
+  _FT_SERVICE_ITEM( POSTSCRIPT_FONT_NAME, &FT_CFF_SERVICE_PS_NAME_GET ) \
+  IF_GLYPH_NAMES( \
+    _FT_SERVICE_ITEM( GLYPH_DICT,         &FT_CFF_SERVICE_GLYPH_DICT_GET ) \
+  ) \
+  _FT_SERVICE_ITEM( TT_CMAP, &FT_CFF_SERVICE_GET_CMAP_INFO_GET ) \
+  _FT_SERVICE_ITEM( CID,     &FT_CFF_SERVICE_CID_INFO_GET ) \
+
+#define  FT_SERVICE_NAME   Cff
+#define  FT_SERVICE_ITEMS  CFF_SERVICE_ITEMS
+
+#include FT_INTERNAL_SERVICE_LIST_DECLARE_H
+
+
 
 #include FT_INTERNAL_PIC_H
 
@@ -36,9 +61,6 @@ FT_BEGIN_HEADER
 #include FT_SERVICE_TT_CMAP_H
 #include FT_SERVICE_CID_H
 
-#define  COUNT__(prefix_)  prefix_##__LINE__
-#define  COUNT_(prefix_)   COUNT__(prefix_)
-
 /* count the number of items declared by cfftoken.h */
 enum {
     CFF_FIELD_HANDLER_COUNT = 0
@@ -50,7 +72,6 @@ enum {
 
   typedef struct CffModulePIC_
   {
-    FT_ServiceDescRec*       cff_services;
     FT_Service_PsInfoRec     cff_service_ps_info;
     FT_Service_GlyphDictRec  cff_service_glyph_dict;
     FT_Service_PsFontNameRec cff_service_ps_name;
@@ -59,9 +80,10 @@ enum {
     FT_CMap_ClassRec         cff_cmap_encoding_class_rec;
     FT_CMap_ClassRec         cff_cmap_unicode_class_rec;
     CFF_Field_Handler        cff_field_handlers[CFF_FIELD_HANDLER_COUNT+1];
+    FT_ServiceItems_Cff      cff_services;
   } CffModulePIC;
 
-#define CFF_GET_PIC(lib)                   ((CffModulePIC*)((lib)->pic_table.cff))
+#define CFF_GET_PIC(lib)                   ((CffModulePIC*)FT_LIBRARY_GET_PIC_DATA(lib,cff))
 #define FT_CFF_CONST_(name_)               (CFF_GET_PIC(library)->cff_##name_)
 
 #endif /* FT_CONFIG_OPTION_PIC */

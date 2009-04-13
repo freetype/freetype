@@ -38,12 +38,12 @@
 
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
-      if ( service && service->ps_get_font_extra )
+      if ( service && service->get_font_extra )
       {
         PS_FontExtraRec  extra;
 
 
-        if ( !service->ps_get_font_extra( face, &extra ) &&
+        if ( !service->get_font_extra( face, &extra ) &&
              extra.fs_type != 0                          )
           return extra.fs_type;
       }
