@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2005, 2006, 2007, 2008 by             */
+/*  Copyright 2000-2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -170,6 +170,34 @@
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
 
+#define FT_DEFINE_OUTLINE_FUNCS( class_,               \
+                                 move_to_, line_to_,   \
+                                 conic_to_, cubic_to_, \
+                                 shift_, delta_ )      \
+          static const FT_Outline_Funcs class_ =       \
+          {                                            \
+            move_to_,                                  \
+            line_to_,                                  \
+            conic_to_,                                 \
+            cubic_to_,                                 \
+            shift_,                                    \
+            delta_                                     \
+         };
+                                          
+#define FT_DEFINE_RASTER_FUNCS( class_, glyph_format_,            \
+                                raster_new_, raster_reset_,       \
+                                raster_set_mode_, raster_render_, \
+                                raster_done_ )                    \
+          const FT_Raster_Funcs class_ =                          \
+          {                                                       \
+            glyph_format_,                                        \
+            raster_new_,                                          \
+            raster_reset_,                                        \
+            raster_set_mode_,                                     \
+            raster_render_,                                       \
+            raster_done_                                          \
+         };
+
 #else /* !_STANDALONE_ */
 
 
@@ -181,14 +209,14 @@
 
 #include "ftsmerrs.h"
 
+#include "ftspic.h"
+
 #define ErrRaster_Invalid_Mode      Smooth_Err_Cannot_Render_Glyph
 #define ErrRaster_Invalid_Outline   Smooth_Err_Invalid_Outline
 #define ErrRaster_Memory_Overflow   Smooth_Err_Out_Of_Memory
 #define ErrRaster_Invalid_Argument  Smooth_Err_Invalid_Argument
 
 #endif /* !_STANDALONE_ */
-
-#include "ftspic.h"
 
 #ifndef FT_MEM_SET
 #define FT_MEM_SET( d, s, c )  ft_memset( d, s, c )
@@ -202,26 +230,18 @@
 
 #ifndef FT_STATIC_RASTER
 
-
 #define RAS_ARG   PWorker  worker
 #define RAS_ARG_  PWorker  worker,
 
 #define RAS_VAR   worker
 #define RAS_VAR_  worker,
 
-#define ras       (*worker)
-
-
 #else /* FT_STATIC_RASTER */
-
 
 #define RAS_ARG   /* empty */
 #define RAS_ARG_  /* empty */
 #define RAS_VAR   /* empty */
 #define RAS_VAR_  /* empty */
-
-  static TWorker  ras;
-
 
 #endif /* FT_STATIC_RASTER */
 
@@ -342,6 +362,13 @@
     int        ycount;
 
   } TWorker, *PWorker;
+
+
+#ifndef FT_STATIC_RASTER
+#define ras  (*worker)
+#else
+  static TWorker  ras;
+#endif
 
 
   typedef struct TRaster_
@@ -727,7 +754,7 @@
       ras.cover += delta;
       ey1       += incr;
 
-      gray_set_cell( &ras, ex, ey1 );
+      gray_set_cell( RAS_VAR_ ex, ey1 );
 
       delta = (int)( first + first - ONE_PIXEL );
       area  = (TArea)two_fx * delta;
@@ -737,7 +764,7 @@
         ras.cover += delta;
         ey1       += incr;
 
-        gray_set_cell( &ras, ex, ey1 );
+        gray_set_cell( RAS_VAR_ ex, ey1 );
       }
 
       delta      = (int)( fy2 - ONE_PIXEL + first );
@@ -1111,7 +1138,7 @@
     x = UPSCALE( to->x );
     y = UPSCALE( to->y );
 
-    gray_start_cell( worker, TRUNC( x ), TRUNC( y ) );
+    gray_start_cell( RAS_VAR_ TRUNC( x ), TRUNC( y ) );
 
     worker->x = x;
     worker->y = y;
@@ -1123,7 +1150,7 @@
   gray_line_to( const FT_Vector*  to,
                 PWorker           worker )
   {
-    gray_render_line( worker, UPSCALE( to->x ), UPSCALE( to->y ) );
+    gray_render_line( RAS_VAR_ UPSCALE( to->x ), UPSCALE( to->y ) );
     return 0;
   }
 
@@ -1133,7 +1160,7 @@
                  const FT_Vector*  to,
                  PWorker           worker )
   {
-    gray_render_conic( worker, control, to );
+    gray_render_conic( RAS_VAR_ control, to );
     return 0;
   }
 
@@ -1144,7 +1171,7 @@
                  const FT_Vector*  to,
                  PWorker           worker )
   {
-    gray_render_cubic( worker, control1, control2, to );
+    gray_render_cubic( RAS_VAR_ control1, control2, to );
     return 0;
   }
 
@@ -1920,7 +1947,7 @@
       ras.clip_box.yMax =  32767L;
     }
 
-    gray_init_cells( worker, raster->buffer, raster->buffer_size );
+    gray_init_cells( RAS_VAR_ raster->buffer, raster->buffer_size );
 
     ras.outline        = *outline;
     ras.num_cells      = 0;

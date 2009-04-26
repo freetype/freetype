@@ -1,3 +1,14 @@
+2009-04-26  Werner Lemberg  <wl@gnu.org>
+
+	Make ftgrays compile with _STANDALONE_ and FT_STATIC_RASTER again.
+	Problems reported by suyu@cooee.cn.
+
+	* src/smooth/ftgrays.c (FT_DEFINE_OUTLINE_FUNCS,
+	FT_DEFINE_RASTER_FUNCS) [_STANDALONE_]: Define.
+	[!_STANDALONE_]: Include ftspic.h only here.
+	(ras): Define/declare after definition of `TWorker'.
+	Use `RAS_VAR_' where necessary.
+
 2009-04-21  Karl Berry  <karl@gnu.org>
 
 	Fix AC_CHECK_FT2.
