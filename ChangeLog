@@ -1,3 +1,10 @@
+2009-04-21  Karl Berry  <karl@gnu.org>
+
+	Fix AC_CHECK_FT2.
+    
+	* builds/unix/freetype2.m4: Only check PATH for freetype-config if
+	we did not already find it from a prefix option.
+
 2009-04-05  Oran Agra  <oran@monfort.co.il>
 
 	Add #error to modules and files that do not support PIC yet.
