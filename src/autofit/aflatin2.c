@@ -16,6 +16,8 @@
 /***************************************************************************/
 
 
+#include FT_ADVANCES_H
+
 #include "aflatin.h"
 #include "aflatin2.h"
 #include "aferrors.h"
@@ -401,6 +403,52 @@
   }
 
 
+  FT_LOCAL_DEF( void )
+  af_latin2_metrics_check_digits( AF_LatinMetrics  metrics,
+                                  FT_Face          face )
+  {
+    FT_UInt  i;
+    FT_Bool  started = 0, same_width = 1;
+
+
+    /* check whether all ASCII digits have the same advance width; */
+    /* digit `0' is 0x30 in all supported charmaps                 */
+    for ( i = 0x30; i <= 0x39; i++ )
+    {
+      FT_UInt   glyph_index;
+      FT_Fixed  advance, old_advance;
+
+
+      glyph_index = FT_Get_Char_Index( face, i );
+      if ( glyph_index == 0 )
+        continue;
+
+      if ( FT_Get_Advance( face, glyph_index,
+                           FT_LOAD_NO_SCALE         |
+                           FT_LOAD_NO_HINTING       |
+                           FT_LOAD_IGNORE_TRANSFORM,
+                           &advance ) )
+        continue;
+
+      if ( started )
+      {
+        if ( advance != old_advance )
+        {
+          same_width = 0;
+          break;
+        }
+      }
+      else
+      {
+        old_advance = advance;
+        started     = 1;
+      }
+    }
+
+    metrics->root.digits_have_same_width = same_width;
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   af_latin2_metrics_init( AF_LatinMetrics  metrics,
                          FT_Face          face )
@@ -434,6 +482,7 @@
       /* For now, compute the standard width and height from the `o'. */
       af_latin2_metrics_init_widths( metrics, face, 'o' );
       af_latin2_metrics_init_blues( metrics, face );
+      af_latin2_metrics_check_digits( metrics, face );
     }
 
     FT_Set_Charmap( face, oldmap );

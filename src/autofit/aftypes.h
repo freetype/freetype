@@ -285,6 +285,7 @@ extern void*  _af_debug_hints;
   {
     AF_ScriptClass  clazz;
     AF_ScalerRec    scaler;
+    FT_Bool         digits_have_same_width;
 
   } AF_ScriptMetricsRec, *AF_ScriptMetrics;
 

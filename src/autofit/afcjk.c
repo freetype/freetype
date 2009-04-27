@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for CJK script (body).                  */
 /*                                                                         */
-/*  Copyright 2006, 2007, 2008 by                                          */
+/*  Copyright 2006, 2007, 2008, 2009 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -58,9 +58,12 @@
 
     if ( FT_Select_Charmap( face, FT_ENCODING_UNICODE ) )
       face->charmap = NULL;
-
-    /* latin's version would suffice */
-    af_latin_metrics_init_widths( metrics, face, 0x7530 );
+    else
+    {
+      /* latin's version would suffice */
+      af_latin_metrics_init_widths( metrics, face, 0x7530 );
+      af_latin_metrics_check_digits( metrics, face );
+    }
 
     FT_Set_Charmap( face, oldmap );
 

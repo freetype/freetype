@@ -1,6 +1,12 @@
 CHANGES BETWEEN 2.3.10 and 2.3.9
 
-  I. IMPORTANT CHANGES
+  I. IMPORTANT BUG FIXES
+
+    - If all ASCII digits in a font have the same (unscaled) width,
+      the autohinter respects this and won't change it.
+
+
+  II. IMPORTANT CHANGES
 
     - Support for the SFNT cmap 13 table format (as defined by the new
       OpenType 1.6 specification) has been added.

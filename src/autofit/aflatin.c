@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008 by                        */
+/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by                  */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -15,6 +15,8 @@
 /*                                                                         */
 /***************************************************************************/
 
+
+#include FT_ADVANCES_H
 
 #include "aflatin.h"
 #include "aferrors.h"
@@ -146,7 +148,8 @@
 #define AF_LATIN_MAX_TEST_CHARACTERS  12
 
 
-  static const char af_latin_blue_chars[AF_LATIN_MAX_BLUES][AF_LATIN_MAX_TEST_CHARACTERS+1] =
+  static const char af_latin_blue_chars[AF_LATIN_MAX_BLUES]
+                                       [AF_LATIN_MAX_TEST_CHARACTERS + 1] =
   {
     "THEZOCQS",
     "HEZLOCUS",
@@ -379,7 +382,7 @@
         blue->flags |= AF_LATIN_BLUE_TOP;
 
       /*
-       * The following flags is used later to adjust the y and x scales
+       * The following flag is used later to adjust the y and x scales
        * in order to optimize the pixel grid alignment of the top of small
        * letters.
        */
@@ -390,6 +393,52 @@
     }
 
     return;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  af_latin_metrics_check_digits( AF_LatinMetrics  metrics,
+                                 FT_Face          face )
+  {
+    FT_UInt  i;
+    FT_Bool  started = 0, same_width = 1;
+
+
+    /* check whether all ASCII digits have the same advance width; */
+    /* digit `0' is 0x30 in all supported charmaps                 */
+    for ( i = 0x30; i <= 0x39; i++ )
+    {
+      FT_UInt   glyph_index;
+      FT_Fixed  advance, old_advance;
+
+
+      glyph_index = FT_Get_Char_Index( face, i );
+      if ( glyph_index == 0 )
+        continue;
+
+      if ( FT_Get_Advance( face, glyph_index,
+                           FT_LOAD_NO_SCALE         |
+                           FT_LOAD_NO_HINTING       |
+                           FT_LOAD_IGNORE_TRANSFORM,
+                           &advance ) )
+        continue;
+
+      if ( started )
+      {
+        if ( advance != old_advance )
+        {
+          same_width = 0;
+          break;
+        }
+      }
+      else
+      {
+        old_advance = advance;
+        started     = 1;
+      }
+    }
+
+    metrics->root.digits_have_same_width = same_width;
   }
 
 
@@ -426,6 +475,7 @@
       /* For now, compute the standard width and height from the `o'. */
       af_latin_metrics_init_widths( metrics, face, 'o' );
       af_latin_metrics_init_blues( metrics, face );
+      af_latin_metrics_check_digits( metrics, face );
     }
 
     FT_Set_Charmap( face, oldmap );

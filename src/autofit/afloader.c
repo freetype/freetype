@@ -183,9 +183,9 @@
 
         if ( axis->num_edges > 1 && AF_HINTS_DO_ADVANCE( hints ) )
         {
-          old_rsb     = loader->pp2.x - edge2->opos;
-          old_lsb     = edge1->opos;
-          new_lsb     = edge1->pos;
+          old_rsb = loader->pp2.x - edge2->opos;
+          old_lsb = edge1->opos;
+          new_lsb = edge1->pos;
 
           /* remember unhinted values to later account */
           /* for rounding errors                       */
@@ -216,8 +216,9 @@
         }
         else
         {
-          FT_Pos   pp1x = loader->pp1.x;
-          FT_Pos   pp2x = loader->pp2.x;
+          FT_Pos  pp1x = loader->pp1.x;
+          FT_Pos  pp2x = loader->pp2.x;
+
 
           loader->pp1.x = FT_PIX_ROUND( pp1x );
           loader->pp2.x = FT_PIX_ROUND( pp2x );
@@ -228,8 +229,9 @@
       }
       else
       {
-        FT_Pos   pp1x = loader->pp1.x;
-        FT_Pos   pp2x = loader->pp2.x;
+        FT_Pos  pp1x = loader->pp1.x;
+        FT_Pos  pp2x = loader->pp2.x;
+
 
         loader->pp1.x = FT_PIX_ROUND( pp1x + hints->xmin_delta );
         loader->pp2.x = FT_PIX_ROUND( pp2x + hints->xmax_delta );
@@ -412,7 +414,8 @@
       slot->metrics.vertBearingY = FT_PIX_FLOOR( bbox.yMax + vvector.y );
 
       /* for mono-width fonts (like Andale, Courier, etc.) we need */
-      /* to keep the original rounded advance width                */
+      /* to keep the original rounded advance width; ditto for     */
+      /* digits if all have the same advance width                 */
 #if 0
       if ( !FT_IS_FIXED_WIDTH( slot->face ) )
         slot->metrics.horiAdvance = loader->pp2.x - loader->pp1.x;
@@ -420,13 +423,9 @@
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                x_scale );
 #else
-      if ( !FT_IS_FIXED_WIDTH( slot->face ) )
-      {
-        /* non-spacing glyphs must stay as-is */
-        if ( slot->metrics.horiAdvance )
-          slot->metrics.horiAdvance = loader->pp2.x - loader->pp1.x;
-      }
-      else
+      if ( FT_IS_FIXED_WIDTH( slot->face )                              ||
+           ( af_face_globals_is_digit( loader->globals, glyph_index ) &&
+             metrics->digits_have_same_width                          ) )
       {
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                metrics->scaler.x_scale );
@@ -435,6 +434,12 @@
         /* going to ruin the fixed advance width.                   */
         slot->lsb_delta = 0;
         slot->rsb_delta = 0;
+      }
+      else
+      {
+        /* non-spacing glyphs must stay as-is */
+        if ( slot->metrics.horiAdvance )
+          slot->metrics.horiAdvance = loader->pp2.x - loader->pp1.x;
       }
 #endif
 

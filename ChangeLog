@@ -1,3 +1,28 @@
+2009-04-27  Werner Lemberg  <wl@gnu.org>
+
+	autohinter: Don't change digit widths if all widths are the same.
+	This fixes FreeDesktop bug #21197.
+
+	* src/autofit/afglobal.c (AF_DIGIT): New macro.
+	(af_face_globals_compute_script_coverage): Mark ASCII digits in
+	`glyph_scripts' array.
+	(af_face_globals_get_metrics): Updated.
+	(af_face_globals_is_digit): New function.
+	* src/autofit/afglobal.h: Updated.
+	(AF_ScriptMetricsRec): Add `digits_have_same_width' flag.
+
+	* src/autofit/aflatin.c: Include FT_ADVANCES_H.
+	(af_latin_metrics_check_digits): New function.
+	(af_latin_metrics_init): Use it.
+	* src/autofit/aflatin.h: Updated.
+	* src/autofit/afcjk.c (af_cjk_metrics_init): Updated.
+
+	* src/autofit/aflatin2.c: Similar changes as with aflatin.c.
+
+	* src/autofit/afloader.c (af_loader_load_g): Test digit width.
+
+	* docs/CHANGES: Document it.
+
 2009-04-26  Werner Lemberg  <wl@gnu.org>
 
 	Make ftgrays compile with _STANDALONE_ and FT_STATIC_RASTER again.

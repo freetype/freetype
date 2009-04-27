@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter routines to compute global hinting values (body).        */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008 by                        */
+/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by                  */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -51,8 +51,10 @@
 
   /* index of default script in `af_script_classes' */
 #define AF_SCRIPT_LIST_DEFAULT  2
-  /* indicates an uncovered glyph                   */
-#define AF_SCRIPT_LIST_NONE   255
+  /* a bit mask indicating an uncovered glyph       */
+#define AF_SCRIPT_LIST_NONE     0x7F
+  /* if this flag is set, we have an ASCII digit    */
+#define AF_DIGIT                0x80
 
 
   /*
@@ -80,7 +82,7 @@
     FT_Face     face        = globals->face;
     FT_CharMap  old_charmap = face->charmap;
     FT_Byte*    gscripts    = globals->glyph_scripts;
-    FT_UInt     ss;
+    FT_UInt     ss, i;
 
 
     /* the value 255 means `uncovered glyph' */
@@ -142,6 +144,16 @@
           }
         }
       }
+    }
+
+    /* mark ASCII digits */
+    for ( i = 0x30; i <= 0x39; i++ )
+    {
+      FT_UInt  gindex = FT_Get_Char_Index( face, i );
+
+
+      if ( gindex != 0 && gindex < globals->glyph_count )
+        gscripts[gindex] |= AF_DIGIT;
     }
 
   Exit:
@@ -253,7 +265,7 @@
 
     gidx = script;
     if ( gidx == 0 || gidx + 1 >= script_max )
-      gidx = globals->glyph_scripts[gindex];
+      gidx = globals->glyph_scripts[gindex] & AF_SCRIPT_LIST_NONE;
 
     clazz = AF_SCRIPT_CLASSES_GET[gidx];
     if ( script == 0 )
@@ -291,6 +303,17 @@
     *ametrics = metrics;
 
     return error;
+  }
+
+
+  FT_LOCAL_DEF( FT_Bool )
+  af_face_globals_is_digit( AF_FaceGlobals  globals,
+                            FT_UInt         gindex )
+  {
+    if ( gindex < globals->glyph_count )
+      return (FT_Bool)( globals->glyph_scripts[gindex] & AF_DIGIT );
+
+    return (FT_Bool)0;
   }
 
 
