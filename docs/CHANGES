@@ -2,7 +2,7 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
 
   I. IMPORTANT BUG FIXES
 
-    - If all ASCII digits in a font have the same (unscaled) width,
+    - If all  ASCII digits in a  font have the  same (unscaled) width,
       the autohinter respects this and won't change it.
 
 
@@ -10,6 +10,14 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
 
     - Support for the SFNT cmap 13 table format (as defined by the new
       OpenType 1.6 specification) has been added.
+
+  III. MISCELLANEOUS
+
+    - It  is now  possible to  change  the emboldening  factor in  the
+      `ftview' demo program with keys `e' and `E'.
+
+    - It is  now possible  to change the  slant value in  the `ftview'
+      demo program with keys `s' and `S'.
 
 
 ======================================================================

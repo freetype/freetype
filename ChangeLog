@@ -1,3 +1,9 @@
+2009-04-30  Werner Lemberg  <wl@gnu.org>
+
+	Document recent changes to ftview.
+
+	* docs/CHANGES: Do it.
+
 2009-04-27  Werner Lemberg  <wl@gnu.org>
 
 	autohinter: Don't change digit widths if all widths are the same.
