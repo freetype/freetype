@@ -206,8 +206,18 @@
       return PSaux_Err_Syntax_Error;
     }
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+
+    /* the caller must handle the font encoding also */
+    bchar_index = bchar;
+    achar_index = achar;
+
+#else
+
     bchar_index = t1_lookup_glyph_by_stdcharcode( decoder, bchar );
     achar_index = t1_lookup_glyph_by_stdcharcode( decoder, achar );
+
+#endif
 
     if ( bchar_index < 0 || achar_index < 0 )
     {
