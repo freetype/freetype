@@ -1,3 +1,10 @@
+2009-05-19  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #26600.
+
+	* src/type42/t42parse.c (t42_load_keyword): Handle
+	T1_FIELD_LOCATION_FONT_EXTRA.
+
 2009-04-30  Werner Lemberg  <wl@gnu.org>
 
 	Document recent changes to ftview.
@@ -820,7 +827,7 @@
 	Remove ABI-breaking field in public PS_InfoFontRec definition.
 
 	Instead, we define a new internal PS_FontExtraRec structure to
-	hold the additionnal field, then place it in various internal
+	hold the additional field, then place it in various internal
 	positions of the corresponding FT_Face derived objects.
 
 	* include/freetype/t1tables.h (PS_FontInfoRec): Remove the

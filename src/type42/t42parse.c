@@ -983,6 +983,10 @@
       dummy_object = &face->type1.font_info;
       break;
 
+    case T1_FIELD_LOCATION_FONT_EXTRA:
+      dummy_object = &face->type1.font_extra;
+      break;
+
     case T1_FIELD_LOCATION_BBOX:
       dummy_object = &face->type1.font_bbox;
       break;
