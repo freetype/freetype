@@ -1,3 +1,13 @@
+2009-05-22  Werner Lemberg  <wl@gnu.org>
+
+	Improve b/w rasterizer.
+	Problem reported by Krzysztof Kotlenga <pocek@users.sf.net>.
+
+	* src/raster/raster.c (Vertical_Sweep_Drop, Horizontal_Sweep_Drop,
+	Horizontal_Gray_Sweep_Drop): For smart drop-out mode, if
+	intersections are equally distant relative to next pixel center,
+	select the left pixel, not the right one.
+
 2009-05-19  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #26600.
