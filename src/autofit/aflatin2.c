@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008 by                        */
+/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by                  */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1788,7 +1788,6 @@
     AF_AxisHints  axis       = &hints->axis[dim];
     AF_Edge       edges      = axis->edges;
     AF_Edge       edge_limit = edges + axis->num_edges;
-    FT_Int        n_edges;
     AF_Edge       edge;
     AF_Edge       anchor     = 0;
     FT_Int        has_serifs = 0;
@@ -2099,54 +2098,60 @@
     /* We don't handle horizontal edges since we can't easily assure that */
     /* the third (lowest) stem aligns with the base line; it might end up */
     /* one pixel higher or lower.                                         */
+
 #if 0
-    n_edges = edge_limit - edges;
-    if ( dim == AF_DIMENSION_HORZ && ( n_edges == 6 || n_edges == 12 ) )
     {
-      AF_Edge  edge1, edge2, edge3;
-      FT_Pos   dist1, dist2, span, delta;
+      FT_Int  n_edges = edge_limit - edges;
 
 
-      if ( n_edges == 6 )
+      if ( dim == AF_DIMENSION_HORZ && ( n_edges == 6 || n_edges == 12 ) )
       {
-        edge1 = edges;
-        edge2 = edges + 2;
-        edge3 = edges + 4;
-      }
-      else
-      {
-        edge1 = edges + 1;
-        edge2 = edges + 5;
-        edge3 = edges + 9;
-      }
+        AF_Edge  edge1, edge2, edge3;
+        FT_Pos   dist1, dist2, span, delta;
 
-      dist1 = edge2->opos - edge1->opos;
-      dist2 = edge3->opos - edge2->opos;
 
-      span = dist1 - dist2;
-      if ( span < 0 )
-        span = -span;
-
-      if ( span < 8 )
-      {
-        delta = edge3->pos - ( 2 * edge2->pos - edge1->pos );
-        edge3->pos -= delta;
-        if ( edge3->link )
-          edge3->link->pos -= delta;
-
-        /* move the serifs along with the stem */
-        if ( n_edges == 12 )
+        if ( n_edges == 6 )
         {
-          ( edges + 8 )->pos -= delta;
-          ( edges + 11 )->pos -= delta;
+          edge1 = edges;
+          edge2 = edges + 2;
+          edge3 = edges + 4;
+        }
+        else
+        {
+          edge1 = edges + 1;
+          edge2 = edges + 5;
+          edge3 = edges + 9;
         }
 
-        edge3->flags |= AF_EDGE_DONE;
-        if ( edge3->link )
-          edge3->link->flags |= AF_EDGE_DONE;
+        dist1 = edge2->opos - edge1->opos;
+        dist2 = edge3->opos - edge2->opos;
+
+        span = dist1 - dist2;
+        if ( span < 0 )
+          span = -span;
+
+        if ( span < 8 )
+        {
+          delta = edge3->pos - ( 2 * edge2->pos - edge1->pos );
+          edge3->pos -= delta;
+          if ( edge3->link )
+            edge3->link->pos -= delta;
+
+          /* move the serifs along with the stem */
+          if ( n_edges == 12 )
+          {
+            ( edges + 8 )->pos -= delta;
+            ( edges + 11 )->pos -= delta;
+          }
+
+          edge3->flags |= AF_EDGE_DONE;
+          if ( edge3->link )
+            edge3->link->flags |= AF_EDGE_DONE;
+        }
       }
     }
 #endif
+
     if ( has_serifs || !anchor )
     {
       /*

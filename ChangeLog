@@ -1,5 +1,13 @@
 2009-05-28  Werner Lemberg  <wl@gnu.org>
 
+	Remove compiler warning.
+	Reported by Krzysztof Kowalczyk <kkowalczyk@gmail.com>.
+
+	* src/autofit/aflatin2.c (af_latin2_hint_edges): Move declaration of
+	`n_edges' into `#if' block.
+
+2009-05-28  Werner Lemberg  <wl@gnu.org>
+
 	Make compilation work with FT_CONFIG_OPTION_USE_ZLIB not defined.
 	Reported by Krzysztof Kowalczyk <kkowalczyk@gmail.com>.
 
