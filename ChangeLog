@@ -1,3 +1,12 @@
+2009-05-28  Werner Lemberg  <wl@gnu.org>
+
+	Make compilation work with FT_CONFIG_OPTION_USE_ZLIB not defined.
+	Reported by Krzysztof Kowalczyk <kkowalczyk@gmail.com>.
+
+	* src/pcf/pcfdrivr.c (PCF_Face_Init) [!FT_CONFIG_OPTION_USE_ZLIB]:
+	Make it work.
+	Simplify #ifdef logic.
+
 2009-05-22  Werner Lemberg  <wl@gnu.org>
 
 	Improve b/w rasterizer.

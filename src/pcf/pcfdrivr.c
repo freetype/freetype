@@ -266,19 +266,27 @@ THE SOFTWARE.
     error = pcf_load_font( stream, face );
     if ( error )
     {
-      FT_Error  error2;
-
-
       PCF_Face_Done( pcfface );
 
-      /* this didn't work, try gzip support! */
-      error2 = FT_Stream_OpenGzip( &face->gzip_stream, stream );
-      if ( FT_ERROR_BASE( error2 ) == FT_Err_Unimplemented_Feature )
-        goto Fail;
+#if defined( FT_CONFIG_OPTION_USE_ZLIB ) || \
+    defined( FT_CONFIG_OPTION_USE_LZW )
 
-      error = error2;
-      if ( error )
+#ifdef FT_CONFIG_OPTION_USE_ZLIB
+      {
+        FT_Error  error2;
+
+
+        /* this didn't work, try gzip support! */
+        error2 = FT_Stream_OpenGzip( &face->gzip_stream, stream );
+        if ( FT_ERROR_BASE( error2 ) == FT_Err_Unimplemented_Feature )
+          goto Fail;
+
+        error = error2;
+      }
+#endif /* FT_CONFIG_OPTION_USE_ZLIB */
+
 #ifdef FT_CONFIG_OPTION_USE_LZW
+      if ( error )
       {
         FT_Error  error3;
 
@@ -289,32 +297,26 @@ THE SOFTWARE.
           goto Fail;
 
         error = error3;
-        if ( error )
-          goto Fail;
-
-        face->gzip_source = stream;
-        pcfface->stream   = &face->gzip_stream;
-
-        stream = pcfface->stream;
-
-        error = pcf_load_font( stream, face );
-        if ( error )
-          goto Fail;
       }
-#else
+#endif /* FT_CONFIG_OPTION_USE_LZW */
+
+      if ( error )
         goto Fail;
+
+      face->gzip_source = stream;
+      pcfface->stream   = &face->gzip_stream;
+
+      stream = pcfface->stream;
+
+      error = pcf_load_font( stream, face );
+      if ( error )
+        goto Fail;
+
+#else /* !(FT_CONFIG_OPTION_USE_ZLIB || FT_CONFIG_OPTION_USE_LZW) */
+
+      goto Fail;
+
 #endif
-      else
-      {
-        face->gzip_source = stream;
-        pcfface->stream   = &face->gzip_stream;
-
-        stream = pcfface->stream;
-
-        error = pcf_load_font( stream, face );
-        if ( error )
-          goto Fail;
-      }
     }
 
     /* set up charmap */
