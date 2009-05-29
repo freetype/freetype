@@ -1,3 +1,11 @@
+2009-05-29  James Cloos <cloos@jhcloos.com>
+
+	Enable autohinting for glyphs rotated by multiples of 90°.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Alter check for permitted
+	matrices to allow rotations by multiples of 90°, not only unrotated,
+	possibly slanted matrices.
+
 2009-05-28  Werner Lemberg  <wl@gnu.org>
 
 	Remove compiler warning.

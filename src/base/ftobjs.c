@@ -588,27 +588,29 @@
      * Determine whether we need to auto-hint or not.
      * The general rules are:
      *
-     * - Do only auto-hinting if we have a hinter module,
-     *   a scalable font format dealing with outlines,
-     *   and no transforms except simple slants.
+     * - Do only auto-hinting if we have a hinter module, a scalable font
+     *   format dealing with outlines, and no transforms except simple
+     *   slants and/or rotations by integer multiples of 90 degrees.
      *
-     * - Then, autohint if FT_LOAD_FORCE_AUTOHINT is set
-     *   or if we don't have a native font hinter.
+     * - Then, auto-hint if FT_LOAD_FORCE_AUTOHINT is set or if we don't
+     *   have a native font hinter.
      *
      * - Otherwise, auto-hint for LIGHT hinting mode.
      *
-     * - Exception: The font is `tricky' and requires
-     *   the native hinter to load properly.
+     * - Exception: The font is `tricky' and requires the native hinter to
+     *   load properly.
      */
 
-    if ( hinter                                   &&
-         !( load_flags & FT_LOAD_NO_HINTING )     &&
-         !( load_flags & FT_LOAD_NO_AUTOHINT )    &&
-         FT_DRIVER_IS_SCALABLE( driver )          &&
-         FT_DRIVER_USES_OUTLINES( driver )        &&
-         !FT_IS_TRICKY( face )                    &&
-         face->internal->transform_matrix.yy > 0  &&
-         face->internal->transform_matrix.yx == 0 )
+    if ( hinter                                           &&
+         !( load_flags & FT_LOAD_NO_HINTING )             &&
+         !( load_flags & FT_LOAD_NO_AUTOHINT )            &&
+         FT_DRIVER_IS_SCALABLE( driver )                  &&
+         FT_DRIVER_USES_OUTLINES( driver )                &&
+         !FT_IS_TRICKY( face )                            &&
+         ( ( face->internal->transform_matrix.yx == 0 &&
+             face->internal->transform_matrix.xx != 0 ) ||
+           ( face->internal->transform_matrix.xx == 0 &&
+             face->internal->transform_matrix.yx != 0 ) ) )
     {
       if ( ( load_flags & FT_LOAD_FORCE_AUTOHINT ) ||
            !FT_DRIVER_HAS_HINTER( driver )         )
