@@ -562,7 +562,7 @@
     3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
     3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
     4 , 5 , 5 , 6 , 5 , 6 , 6 , 7 , 5 , 6 , 6 , 7 , 6 , 7 , 7 , 8
-a  };
+  };
 
 #endif /* FT_RASTER_OPTION_ANTI_ALIASING */
 
@@ -1231,7 +1231,7 @@ a  };
         }
         else
         {
-          *top++ = arc[degree].x + FMulDiv( arc[0].x-arc[degree].x,
+          *top++ = arc[degree].x + FMulDiv( arc[0].x - arc[degree].x,
                                             e - y1, y2 - y1 );
           arc -= degree;
           e   += ras.precision;
@@ -1432,8 +1432,10 @@ a  };
     ras.arc      = ras.arcs;
     ras.arc[2].x = ras.lastX;
     ras.arc[2].y = ras.lastY;
-    ras.arc[1].x = cx; ras.arc[1].y = cy;
-    ras.arc[0].x = x;  ras.arc[0].y = y;
+    ras.arc[1].x = cx;
+    ras.arc[1].y = cy;
+    ras.arc[0].x = x;
+    ras.arc[0].y = y;
 
     do
     {
@@ -1474,8 +1476,8 @@ a  };
         if ( ras.state != state_bez )
         {
           /* finalize current profile if any */
-          if ( ras.state != Unknown_State   &&
-               End_Profile( RAS_VAR ) )
+          if ( ras.state != Unknown_State &&
+               End_Profile( RAS_VAR )     )
             goto Fail;
 
           /* create a new profile */
@@ -1548,9 +1550,12 @@ a  };
     ras.arc      = ras.arcs;
     ras.arc[3].x = ras.lastX;
     ras.arc[3].y = ras.lastY;
-    ras.arc[2].x = cx1; ras.arc[2].y = cy1;
-    ras.arc[1].x = cx2; ras.arc[1].y = cy2;
-    ras.arc[0].x = x;   ras.arc[0].y = y;
+    ras.arc[2].x = cx1;
+    ras.arc[2].y = cy1;
+    ras.arc[1].x = cx2;
+    ras.arc[1].y = cy2;
+    ras.arc[0].x = x;
+    ras.arc[0].y = y;
 
     do
     {
@@ -1602,8 +1607,8 @@ a  };
         /* detect a change of direction */
         if ( ras.state != state_bez )
         {
-          if ( ras.state != Unknown_State   &&
-               End_Profile( RAS_VAR ) )
+          if ( ras.state != Unknown_State &&
+               End_Profile( RAS_VAR )     )
             goto Fail;
 
           if ( New_Profile( RAS_VARS state_bez ) )
@@ -1699,7 +1704,7 @@ a  };
     v_control = v_start;
 
     point = points + first;
-    tags  = ras.outline.tags  + first;
+    tags  = ras.outline.tags + first;
     tag   = FT_CURVE_TAG( tags[0] );
 
     /* A contour cannot start with a cubic control point! */
@@ -1916,7 +1921,7 @@ a  };
 
       start = ras.outline.contours[i] + 1;
 
-      /* We must now see whether the extreme arcs join or not */
+      /* we must now check whether the extreme arcs join or not */
       if ( FRAC( ras.lastY ) == 0 &&
            ras.lastY >= ras.minY  &&
            ras.lastY <= ras.maxY  )
@@ -2807,7 +2812,7 @@ a  };
     y        = min_Y;
     y_height = 0;
 
-    if ( ras.numTurns > 0 &&
+    if ( ras.numTurns > 0                     &&
          ras.sizeBuff[-ras.numTurns] == min_Y )
       ras.numTurns--;
 
@@ -3414,9 +3419,9 @@ a  };
     worker->gray_width = raster->gray_width;
 #endif
 
-    return ( ( params->flags & FT_RASTER_FLAG_AA )
-               ? Render_Gray_Glyph( RAS_VAR )
-               : Render_Glyph( RAS_VAR ) );
+    return ( params->flags & FT_RASTER_FLAG_AA )
+           ? Render_Gray_Glyph( RAS_VAR )
+           : Render_Glyph( RAS_VAR );
   }
 
 
