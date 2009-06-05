@@ -305,13 +305,7 @@
   } TPoint;
 
 
-  typedef enum  TFlow_
-  {
-    Flow_None = 0,
-    Flow_Up   = 1,
-    Flow_Down = -1
-
-  } TFlow;
+#define Flow_Up  0x1
 
 
   /* States of each line, arc, and profile */
@@ -330,18 +324,18 @@
 
   struct  TProfile_
   {
-    FT_F26Dot6  X;           /* current coordinate during sweep        */
-    PProfile    link;        /* link to next profile - various purpose */
-    PLong       offset;      /* start of profile's data in render pool */
-    int         flow;        /* Profile orientation: Asc/Descending    */
-    long        height;      /* profile's height in scanlines          */
-    long        start;       /* profile's starting scanline            */
+    FT_F26Dot6  X;           /* current coordinate during sweep         */
+    PProfile    link;        /* link to next profile (various purposes) */
+    PLong       offset;      /* start of profile's data in render pool  */
+    unsigned    flags;       /* Bit 0: profile orientation: up/down     */
+    long        height;      /* profile's height in scanlines           */
+    long        start;       /* profile's starting scanline             */
 
-    unsigned    countL;      /* number of lines to step before this    */
-                             /* profile becomes drawable               */
+    unsigned    countL;      /* number of lines to step before this     */
+                             /* profile becomes drawable                */
 
-    PProfile    next;        /* next profile in same contour, used     */
-                             /* during drop-out control                */
+    PProfile    next;        /* next profile in same contour, used      */
+                             /* during drop-out control                 */
   };
 
   typedef PProfile   TProfileList;
@@ -454,7 +448,7 @@
     UShort    num_Profs;            /* current number of profiles          */
 
     Bool      fresh;                /* signals a fresh new profile which   */
-                                    /* 'start' field must be completed     */
+                                    /* `start' field must be completed     */
     Bool      joint;                /* signals that the last arc ended     */
                                     /* exactly on a scanline.  Allows      */
                                     /* removal of doublets                 */
@@ -648,12 +642,12 @@
     switch ( aState )
     {
     case Ascending_State:
-      ras.cProfile->flow = Flow_Up;
+      ras.cProfile->flags |= Flow_Up;
       FT_TRACE6(( "New ascending profile = %lx\n", (long)ras.cProfile ));
       break;
 
     case Descending_State:
-      ras.cProfile->flow = Flow_Down;
+      ras.cProfile->flags &= ~Flow_Up;
       FT_TRACE6(( "New descending profile = %lx\n", (long)ras.cProfile ));
       break;
 
@@ -823,23 +817,21 @@
         else
           p->link = NULL;
 
-        switch ( p->flow )
+        if ( p->flags & Flow_Up )
         {
-        case Flow_Down:
+          bottom = (Int)p->start;
+          top    = (Int)( p->start + p->height - 1 );
+        }
+        else
+        {
           bottom     = (Int)( p->start - p->height + 1 );
           top        = (Int)p->start;
           p->start   = bottom;
           p->offset += p->height - 1;
-          break;
-
-        case Flow_Up:
-        default:
-          bottom = (Int)p->start;
-          top    = (Int)( p->start + p->height - 1 );
         }
 
-        if ( Insert_Y_Turn( RAS_VARS bottom )   ||
-             Insert_Y_Turn( RAS_VARS top + 1 )  )
+        if ( Insert_Y_Turn( RAS_VARS bottom )  ||
+             Insert_Y_Turn( RAS_VARS top + 1 ) )
           return FAILURE;
 
         p = p->link;
@@ -1925,7 +1917,9 @@
       if ( FRAC( ras.lastY ) == 0 &&
            ras.lastY >= ras.minY  &&
            ras.lastY <= ras.maxY  )
-        if ( ras.gProfile && ras.gProfile->flow == ras.cProfile->flow )
+        if ( ras.gProfile                           &&
+               ( ras.gProfile->flags & Flow_Up ) ==
+               ( ras.cProfile->flags & Flow_Up )    )
           ras.top--;
         /* Note that ras.gProfile can be nil if the contour was too small */
         /* to be drawn.                                                   */
@@ -2051,7 +2045,7 @@
     while ( current )
     {
       current->X       = *current->offset;
-      current->offset += current->flow;
+      current->offset += current->flags & Flow_Up ? 1 : -1;
       current->height--;
       current = current->link;
     }
@@ -2830,16 +2824,10 @@
         {
           DelOld( &waiting, P );
 
-          switch ( P->flow )
-          {
-          case Flow_Up:
+          if ( P->flags & Flow_Up )
             InsNew( &draw_left,  P );
-            break;
-
-          case Flow_Down:
+          else
             InsNew( &draw_right, P );
-            break;
-          }
         }
 
         P = Q;

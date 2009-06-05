@@ -1,3 +1,12 @@
+2009-06-04  Werner Lemberg  <wl@gnu.org>
+
+	Preparation for fixing scan conversion rules 4 and 6.
+
+	* src/raster/ftraster.c (TFlow): Replace enumeration with...
+	(Flow_Up): This macro.
+	(TProfile): Replace `flow' member with `flags' bit field.
+	Update all affected code.
+
 2009-05-29  James Cloos <cloos@jhcloos.com>
 
 	Enable autohinting for glyphs rotated by multiples of 90°.
