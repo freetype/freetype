@@ -2229,7 +2229,7 @@
           break;
 
         case 4: /* smart drop-outs including stubs */
-          pxl = FLOOR( ( x1 + x2 + 1 ) / 2 + ras.precision_half - 1 );
+          pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
           break;
 
         case 1: /* simple drop-outs excluding stubs */
@@ -2275,7 +2275,7 @@
           if ( ras.dropOutControl == 1 )
             pxl = e2;
           else
-            pxl = FLOOR( ( x1 + x2 + 1 ) / 2 + ras.precision_half - 1 );
+            pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
           break;
 
         default: /* modes 2, 3, 6, 7 */
@@ -2424,7 +2424,7 @@
           break;
 
         case 4: /* smart drop-outs including stubs */
-          pxl = FLOOR( ( x1 + x2 + 1 ) / 2 + ras.precision_half - 1 );
+          pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
           break;
 
         case 1: /* simple drop-outs excluding stubs */
@@ -2442,7 +2442,7 @@
           if ( ras.dropOutControl == 1 )
             pxl = e2;
           else
-            pxl = FLOOR( ( x1 + x2 + 1 ) / 2 + ras.precision_half - 1 );
+            pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
           break;
 
         default: /* modes 2, 3, 6, 7 */
@@ -2674,7 +2674,7 @@
           break;
 
         case 4: /* smart drop-outs including stubs */
-          e1 = FLOOR( ( x1 + x2 + 1 ) / 2 + ras.precision_half - 1 );
+          e1 = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
           break;
 
         case 1: /* simple drop-outs excluding stubs */
@@ -2692,7 +2692,7 @@
           if ( ras.dropOutControl == 1 )
             e1 = e2;
           else
-            e1 = FLOOR( ( x1 + x2 + 1 ) / 2 + ras.precision_half - 1 );
+            e1 = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
 
           break;
 

@@ -1,3 +1,11 @@
+2009-06-07  Werner Lemberg  <wl@gnu.org>
+
+	Simplify math.
+	Suggested by Alexei Podtelezhnikov <apodtele@gmail.com>.
+
+	* src/raster/ftraster.c (Vertical_Sweep_Drop, Horizontal_Sweep_Drop,
+	Horizontal_Gray_Sweep_Drop): Do it.
+
 2009-06-04  Werner Lemberg  <wl@gnu.org>
 
 	Preparation for fixing scan conversion rules 4 and 6.
