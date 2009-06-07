@@ -348,14 +348,18 @@
     /* free bitmap buffer if needed */
     ft_glyphslot_free_bitmap( slot );
 
-    /* free glyph loader */
-    if ( FT_DRIVER_USES_OUTLINES( driver ) )
+    /* slot->internal might be NULL in out-of-memory situations */
+    if ( slot->internal )
     {
-      FT_GlyphLoader_Done( slot->internal->loader );
-      slot->internal->loader = 0;
-    }
+      /* free glyph loader */
+      if ( FT_DRIVER_USES_OUTLINES( driver ) )
+      {
+        FT_GlyphLoader_Done( slot->internal->loader );
+        slot->internal->loader = 0;
+      }
 
-    FT_FREE( slot->internal );
+      FT_FREE( slot->internal );
+    }
   }
 
 

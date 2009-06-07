@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    I/O stream support (body).                                           */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2004, 2005, 2006, 2008 by                   */
+/*  Copyright 2000-2001, 2002, 2004, 2005, 2006, 2008, 2009 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -211,7 +211,7 @@
   FT_Stream_ReleaseFrame( FT_Stream  stream,
                           FT_Byte**  pbytes )
   {
-    if ( stream->read )
+    if ( stream && stream->read )
     {
       FT_Memory  memory = stream->memory;
 

@@ -1,3 +1,12 @@
+2009-06-07  Harald Fernengel  <harry@kdevelop.org>
+
+	Fix some potential out-of-memory crashes.
+
+	* src/base/ftobjs.c (ft_glyphslot_done): Check `slot->internal'.
+	* src/base/ftstream.c (FT_Stream_ReleaseFrame): Check `stream'.
+	* src/truetype/ttinterp.c (TT_New_Context): Avoid double-free of
+	`exec' in case of failure.
+
 2009-06-07  Werner Lemberg  <wl@gnu.org>
 
 	Simplify math.

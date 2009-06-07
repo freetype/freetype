@@ -791,9 +791,9 @@
 
       /* allocate object */
       if ( FT_NEW( exec ) )
-        goto Exit;
+        goto Fail;
 
-      /* initialize it */
+      /* initialize it; in case of error this deallocates `exec' too */
       error = Init_Context( exec, memory );
       if ( error )
         goto Fail;
@@ -802,13 +802,10 @@
       driver->context = exec;
     }
 
-  Exit:
     return driver->context;
 
   Fail:
-    FT_FREE( exec );
-
-    return 0;
+    return NULL;
   }
 
 
