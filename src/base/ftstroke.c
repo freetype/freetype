@@ -859,6 +859,31 @@
 
       error = ft_stroke_border_lineto( border, &delta, FALSE );
     }
+    else if ( stroker->line_cap == FT_STROKER_LINECAP_BUTT )
+    {
+      /* add a butt ending */
+      FT_Vector        delta;
+      FT_Angle         rotate = FT_SIDE_TO_ROTATE( side );
+      FT_Fixed         radius = stroker->radius;
+      FT_StrokeBorder  border = stroker->borders + side;
+
+
+      FT_Vector_From_Polar( &delta, radius, angle + rotate );
+
+      delta.x += stroker->center.x;
+      delta.y += stroker->center.y;
+
+      error = ft_stroke_border_lineto( border, &delta, FALSE );
+      if ( error )
+        goto Exit;
+
+      FT_Vector_From_Polar( &delta, radius, angle - rotate );
+
+      delta.x += stroker->center.x;
+      delta.y += stroker->center.y;
+
+      error = ft_stroke_border_lineto( border, &delta, FALSE );   
+    }
 
   Exit:
     return error;

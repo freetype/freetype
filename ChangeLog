@@ -1,3 +1,10 @@
+2009-06-08  Michael Zucchi  <notzed@gmail.com>
+
+	Handle FT_STROKER_LINECAP_BUTT.
+	This fixes Savannah bug #26757.
+
+	* src/base/ftstroke.c (ft_stroker_cap): Implement it.
+
 2009-06-07  Harald Fernengel  <harry@kdevelop.org>
 
 	Fix some potential out-of-memory crashes.
