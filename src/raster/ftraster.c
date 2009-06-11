@@ -588,9 +588,9 @@
   {
     if ( High )
     {
-      ras.precision_bits   = 10;
-      ras.precision_step   = 128;
-      ras.precision_jitter = 24;
+      ras.precision_bits   = 12;
+      ras.precision_step   = 256;
+      ras.precision_jitter = 50;
     }
     else
     {

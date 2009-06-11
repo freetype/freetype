@@ -1,3 +1,12 @@
+2009-06-11  Werner Lemberg  <wl@gnu.org>
+
+	Increase precision for B/W rasterizer.
+
+	* src/raster/ftraster.c (Set_High_Precision): Add two more bits to
+	the precision.  This corrects rendering of some small glyphs, for
+	example, glyph `xi' in verdana.ttf at 13 ppem.  Testing with ftbench
+	on my GNU/Linux box I don't see a performance degradation.
+
 2009-06-08  Michael Zucchi  <notzed@gmail.com>
 
 	Handle FT_STROKER_LINECAP_BUTT.
