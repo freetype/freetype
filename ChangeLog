@@ -1,3 +1,31 @@
+2009-06-16  Werner Lemberg  <wl@gnu.org>
+
+	Improve scan conversion rules 4 and 6.
+
+	Two new constraints are introduced to better identify a `stub' -- a
+	concept which is only vaguely described in the OpenType
+	specification.  The old code was too rigorous and suppressed more
+	pixel than it should.
+
+	  . The intersection of the two profiles with the scanline is less
+	    than a half pixel.  Code related to this was already present in
+	    the sources but has been commented out.
+
+	  . The endpoint of the original contour forming a profile has a
+	    distance (`overshoot') less than half a pixel to the scanline.
+
+	Note that the two additional conditions fix almost all differences
+	to the Windows rasterizer, but some problematic cases remain.
+
+	* src/raster/ftraster.c (Overshoot_Top, Overshoot_Bottom): New
+	macros for the `flags' field in the `TProfile' structure.
+	(IS_BOTTOM_OVERSHOOT, IS_TOP_OVERSHOOT): New macros.
+	(New_Profile, End_Profile): Pass overshoot flag as an argument and
+	set it accordingly.
+	Update callers.
+	(Vertical_Sweep_Drop, Horizontal_Sweep_Drop): Implement the two new
+	constraints.
+
 2009-06-11  Werner Lemberg  <wl@gnu.org>
 
 	Increase precision for B/W rasterizer.

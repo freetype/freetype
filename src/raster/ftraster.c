@@ -305,7 +305,10 @@
   } TPoint;
 
 
-#define Flow_Up  0x1
+  /* values for the `flags' bit field */
+#define Flow_Up           0x1
+#define Overshoot_Top     0x2
+#define Overshoot_Bottom  0x4
 
 
   /* States of each line, arc, and profile */
@@ -324,18 +327,19 @@
 
   struct  TProfile_
   {
-    FT_F26Dot6  X;           /* current coordinate during sweep         */
-    PProfile    link;        /* link to next profile (various purposes) */
-    PLong       offset;      /* start of profile's data in render pool  */
-    unsigned    flags;       /* Bit 0: profile orientation: up/down     */
-    long        height;      /* profile's height in scanlines           */
-    long        start;       /* profile's starting scanline             */
+    FT_F26Dot6  X;           /* current coordinate during sweep          */
+    PProfile    link;        /* link to next profile (various purposes)  */
+    PLong       offset;      /* start of profile's data in render pool   */
+    unsigned    flags;       /* Bit 0: profile orientation (up/down)     */
+                             /* Bit 1, 2: profile overshoot (top/bottom) */
+    long        height;      /* profile's height in scanlines            */
+    long        start;       /* profile's starting scanline              */
 
-    unsigned    countL;      /* number of lines to step before this     */
-                             /* profile becomes drawable                */
+    unsigned    countL;      /* number of lines to step before this      */
+                             /* profile becomes drawable                 */
 
-    PProfile    next;        /* next profile in same contour, used      */
-                             /* during drop-out control                 */
+    PProfile    next;        /* next profile in same contour, used       */
+                             /* during drop-out control                  */
   };
 
   typedef PProfile   TProfileList;
@@ -409,6 +413,9 @@
 #define TRUNC( x )    ( (signed long)(x) >> ras.precision_bits )
 #define FRAC( x )     ( (x) & ( ras.precision - 1 ) )
 #define SCALED( x )   ( ( (x) << ras.scale_shift ) - ras.precision_half )
+
+#define IS_BOTTOM_OVERSHOOT( x )  ( CEILING( x ) - x >= ras.precision_half )
+#define IS_TOP_OVERSHOOT( x )     ( x - FLOOR( x ) >= ras.precision_half )
 
   /* Note that I have moved the location of some fields in the */
   /* structure to ensure that the most used variables are used */
@@ -617,14 +624,18 @@
   /*    Create a new profile in the render pool.                           */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    aState :: The state/orientation of the new profile.                */
+  /*    aState    :: The state/orientation of the new profile.             */
+  /*                                                                       */
+  /*    overshoot :: Whether the profile's unrounded start position        */
+  /*                 differs by at least a half pixel.                     */
   /*                                                                       */
   /* <Return>                                                              */
   /*   SUCCESS on success.  FAILURE in case of overflow or of incoherent   */
   /*   profile.                                                            */
   /*                                                                       */
   static Bool
-  New_Profile( RAS_ARGS TStates  aState )
+  New_Profile( RAS_ARGS TStates  aState,
+                        Bool     overshoot )
   {
     if ( !ras.fProfile )
     {
@@ -639,15 +650,26 @@
       return FAILURE;
     }
 
+    ras.cProfile->flags  = 0;
+    ras.cProfile->start  = 0;
+    ras.cProfile->height = 0;
+    ras.cProfile->offset = ras.top;
+    ras.cProfile->link   = (PProfile)0;
+    ras.cProfile->next   = (PProfile)0;
+
     switch ( aState )
     {
     case Ascending_State:
       ras.cProfile->flags |= Flow_Up;
+      if ( overshoot )
+        ras.cProfile->flags |= Overshoot_Bottom;
+
       FT_TRACE6(( "New ascending profile = %lx\n", (long)ras.cProfile ));
       break;
 
     case Descending_State:
-      ras.cProfile->flags &= ~Flow_Up;
+      if ( overshoot )
+        ras.cProfile->flags |= Overshoot_Top;
       FT_TRACE6(( "New descending profile = %lx\n", (long)ras.cProfile ));
       break;
 
@@ -656,12 +678,6 @@
       ras.error = Raster_Err_Invalid;
       return FAILURE;
     }
-
-    ras.cProfile->start  = 0;
-    ras.cProfile->height = 0;
-    ras.cProfile->offset = ras.top;
-    ras.cProfile->link   = (PProfile)0;
-    ras.cProfile->next   = (PProfile)0;
 
     if ( !ras.gProfile )
       ras.gProfile = ras.cProfile;
@@ -682,11 +698,15 @@
   /* <Description>                                                         */
   /*    Finalize the current profile.                                      */
   /*                                                                       */
+  /* <Input>                                                               */
+  /*    overshoot :: Whether the profile's unrounded end position differs  */
+  /*                 by at least a half pixel.                             */
+  /*                                                                       */
   /* <Return>                                                              */
   /*    SUCCESS on success.  FAILURE in case of overflow or incoherency.   */
   /*                                                                       */
   static Bool
-  End_Profile( RAS_ARG )
+  End_Profile( RAS_ARGS Bool  overshoot )
   {
     Long      h;
     PProfile  oldProfile;
@@ -706,15 +726,24 @@
       FT_TRACE6(( "Ending profile %lx, start = %ld, height = %ld\n",
                   (long)ras.cProfile, ras.cProfile->start, h ));
 
-      oldProfile           = ras.cProfile;
       ras.cProfile->height = h;
-      ras.cProfile         = (PProfile)ras.top;
+      if ( overshoot )
+      {
+        if ( ras.cProfile->flags & Flow_Up )
+          ras.cProfile->flags |= Overshoot_Top;
+        else
+          ras.cProfile->flags |= Overshoot_Bottom;
+      }
 
-      ras.top             += AlignProfileSize;
+      oldProfile   = ras.cProfile;
+      ras.cProfile = (PProfile)ras.top;
+
+      ras.top += AlignProfileSize;
 
       ras.cProfile->height = 0;
       ras.cProfile->offset = ras.top;
-      oldProfile->next     = ras.cProfile;
+
+      oldProfile->next = ras.cProfile;
       ras.num_Profs++;
     }
 
@@ -1328,13 +1357,15 @@
     case Unknown_State:
       if ( y > ras.lastY )
       {
-        if ( New_Profile( RAS_VARS Ascending_State ) )
+        if ( New_Profile( RAS_VARS Ascending_State,
+                                   IS_BOTTOM_OVERSHOOT( ras.lastY ) ) )
           return FAILURE;
       }
       else
       {
         if ( y < ras.lastY )
-          if ( New_Profile( RAS_VARS Descending_State ) )
+          if ( New_Profile( RAS_VARS Descending_State,
+                                     IS_TOP_OVERSHOOT( ras.lastY ) ) )
             return FAILURE;
       }
       break;
@@ -1342,8 +1373,9 @@
     case Ascending_State:
       if ( y < ras.lastY )
       {
-        if ( End_Profile( RAS_VAR )                   ||
-             New_Profile( RAS_VARS Descending_State ) )
+        if ( End_Profile( RAS_VARS IS_TOP_OVERSHOOT( ras.lastY ) ) ||
+             New_Profile( RAS_VARS Descending_State,
+                                   IS_TOP_OVERSHOOT( ras.lastY ) ) )
           return FAILURE;
       }
       break;
@@ -1351,8 +1383,9 @@
     case Descending_State:
       if ( y > ras.lastY )
       {
-        if ( End_Profile( RAS_VAR )                  ||
-             New_Profile( RAS_VARS Ascending_State ) )
+        if ( End_Profile( RAS_VARS IS_BOTTOM_OVERSHOOT( ras.lastY ) ) ||
+             New_Profile( RAS_VARS Ascending_State,
+                                   IS_BOTTOM_OVERSHOOT( ras.lastY ) ) )
           return FAILURE;
       }
       break;
@@ -1367,13 +1400,13 @@
     {
     case Ascending_State:
       if ( Line_Up( RAS_VARS ras.lastX, ras.lastY,
-                    x, y, ras.minY, ras.maxY ) )
+                             x, y, ras.minY, ras.maxY ) )
         return FAILURE;
       break;
 
     case Descending_State:
       if ( Line_Down( RAS_VARS ras.lastX, ras.lastY,
-                      x, y, ras.minY, ras.maxY ) )
+                               x, y, ras.minY, ras.maxY ) )
         return FAILURE;
       break;
 
@@ -1467,13 +1500,17 @@
         state_bez = y1 < y3 ? Ascending_State : Descending_State;
         if ( ras.state != state_bez )
         {
+          Bool  o = state_bez == Ascending_State ? IS_BOTTOM_OVERSHOOT( y1 )
+                                                 : IS_TOP_OVERSHOOT( y1 );
+
+
           /* finalize current profile if any */
           if ( ras.state != Unknown_State &&
-               End_Profile( RAS_VAR )     )
+               End_Profile( RAS_VARS o )  )
             goto Fail;
 
           /* create a new profile */
-          if ( New_Profile( RAS_VARS state_bez ) )
+          if ( New_Profile( RAS_VARS state_bez, o ) )
             goto Fail;
         }
 
@@ -1599,11 +1636,16 @@
         /* detect a change of direction */
         if ( ras.state != state_bez )
         {
+          Bool  o = state_bez == Ascending_State ? IS_BOTTOM_OVERSHOOT( y1 )
+                                                 : IS_TOP_OVERSHOOT( y1 );
+
+
+          /* finalize current profile if any */
           if ( ras.state != Unknown_State &&
-               End_Profile( RAS_VAR )     )
+               End_Profile( RAS_VARS o )  )
             goto Fail;
 
-          if ( New_Profile( RAS_VARS state_bez ) )
+          if ( New_Profile( RAS_VARS state_bez, o ) )
             goto Fail;
         }
 
@@ -1903,12 +1945,15 @@
 
     for ( i = 0; i < ras.outline.n_contours; i++ )
     {
+      Bool  o;
+
+
       ras.state    = Unknown_State;
       ras.gProfile = NULL;
 
       if ( Decompose_Curve( RAS_VARS (unsigned short)start,
-                            ras.outline.contours[i],
-                            flipped ) )
+                                     ras.outline.contours[i],
+                                     flipped ) )
         return FAILURE;
 
       start = ras.outline.contours[i] + 1;
@@ -1917,15 +1962,19 @@
       if ( FRAC( ras.lastY ) == 0 &&
            ras.lastY >= ras.minY  &&
            ras.lastY <= ras.maxY  )
-        if ( ras.gProfile                           &&
-               ( ras.gProfile->flags & Flow_Up ) ==
-               ( ras.cProfile->flags & Flow_Up )    )
+        if ( ras.gProfile                        &&
+             ( ras.gProfile->flags & Flow_Up ) ==
+               ( ras.cProfile->flags & Flow_Up ) )
           ras.top--;
         /* Note that ras.gProfile can be nil if the contour was too small */
         /* to be drawn.                                                   */
 
       lastProfile = ras.cProfile;
-      if ( End_Profile( RAS_VAR ) )
+      if ( ras.cProfile->flags & Flow_Up )
+        o = IS_TOP_OVERSHOOT( ras.lastY );
+      else
+        o = IS_BOTTOM_OVERSHOOT( ras.lastY );
+      if ( End_Profile( RAS_VARS o ) )
         return FAILURE;
 
       /* close the `next profile in contour' linked list */
@@ -2237,11 +2286,10 @@
 
           /* Drop-out Control Rules #4 and #6 */
 
-          /* The spec is not very clear regarding those rules.  It  */
-          /* presents a method that is way too costly to implement  */
-          /* while the general idea seems to get rid of `stubs'.    */
+          /* The specification neither provides an exact definition */
+          /* of a `stub' nor gives exact rules to exclude them.     */
           /*                                                        */
-          /* Here, we only get rid of stubs recognized if:          */
+          /* Here the constraints we use to recognize a stub.       */
           /*                                                        */
           /*  upper stub:                                           */
           /*                                                        */
@@ -2255,22 +2303,26 @@
           /*   - P_Left is the successor of P_Right in that contour */
           /*   - y is the bottom of P_Left                          */
           /*                                                        */
+          /* We draw a stub if the following constraints are met.   */
+          /*                                                        */
+          /*   - for an upper or lower stub, there is top or bottom */
+          /*     overshoot, respectively                            */
+          /*   - the covered interval is greater or equal to a half */
+          /*     pixel                                              */
 
-          /* FIXXXME: uncommenting this line solves the disappearing */
-          /*          bit problem in the `7' of verdana 10pts, but   */
-          /*          makes a new one in the `C' of arial 14pts      */
-#if 0
-          if ( x2 - x1 < ras.precision_half )
-#endif
-          {
-            /* upper stub test */
-            if ( left->next == right && left->height <= 0 )
-              return;
+          /* upper stub test */
+          if ( left->next == right                &&
+               left->height <= 0                  &&
+               !( left->flags & Overshoot_Top   &&
+                  x2 - x1 >= ras.precision_half ) )
+            return;
 
-            /* lower stub test */
-            if ( right->next == left && left->start == y )
-              return;
-          }
+          /* lower stub test */
+          if ( right->next == left                 &&
+               left->start == y                    &&
+               !( left->flags & Overshoot_Bottom &&
+                  x2 - x1 >= ras.precision_half  ) )
+            return;
 
           if ( ras.dropOutControl == 1 )
             pxl = e2;
@@ -2432,11 +2484,17 @@
           /* see Vertical_Sweep_Drop for details */
 
           /* rightmost stub test */
-          if ( left->next == right && left->height <= 0 )
+          if ( left->next == right                &&
+               left->height <= 0                  &&
+               !( left->flags & Overshoot_Top   &&
+                  x2 - x1 >= ras.precision_half ) )
             return;
 
           /* leftmost stub test */
-          if ( right->next == left && left->start == y )
+          if ( right->next == left                 &&
+               left->start == y                    &&
+               !( left->flags & Overshoot_Bottom &&
+                  x2 - x1 >= ras.precision_half  ) )
             return;
 
           if ( ras.dropOutControl == 1 )
@@ -3064,7 +3122,7 @@
 
 
     Set_High_Precision( RAS_VARS ras.outline.flags &
-                        FT_OUTLINE_HIGH_PRECISION );
+                                 FT_OUTLINE_HIGH_PRECISION );
     ras.scale_shift = ras.precision_shift;
 
     if ( ras.outline.flags & FT_OUTLINE_IGNORE_DROPOUTS )
@@ -3140,7 +3198,7 @@
 
 
     Set_High_Precision( RAS_VARS ras.outline.flags &
-                        FT_OUTLINE_HIGH_PRECISION );
+                                 FT_OUTLINE_HIGH_PRECISION );
     ras.scale_shift = ras.precision_shift + 1;
 
     if ( ras.outline.flags & FT_OUTLINE_IGNORE_DROPOUTS )
