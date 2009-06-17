@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by       */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1053,8 +1053,7 @@
     /* Some points are likely touched during execution of  */
     /* instructions on components.  So let's untouch them. */
     for ( i = start_point; i < loader->zone.n_points; i++ )
-      loader->zone.tags[i] &= ~( FT_CURVE_TAG_TOUCH_X |
-                                 FT_CURVE_TAG_TOUCH_Y );
+      loader->zone.tags[i] &= ~FT_CURVE_TAG_TOUCH_BOTH;
 
     loader->zone.n_points += 4;
 
