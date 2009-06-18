@@ -1,5 +1,9 @@
 2009-06-18  Werner Lemberg  <wl@gnu.org>
 
+	* docs/CHANGES: Updated.
+
+2009-06-18  Werner Lemberg  <wl@gnu.org>
+
 	Fix B/W rasterization of subglyphs with different drop-out modes.
 
 	Normally, the SCANMODE instruction (if present) to set the drop-out

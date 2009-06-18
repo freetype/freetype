@@ -11,6 +11,9 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
     - Support for the SFNT cmap 13 table format (as defined by the new
       OpenType 1.6 specification) has been added.
 
+    - B/W rasterization  of well-hinted TrueType  fonts at small sizes
+      has been greatly improved.
+
   III. MISCELLANEOUS
 
     - It  is now  possible to  change  the emboldening  factor in  the
