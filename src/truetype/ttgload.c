@@ -680,6 +680,9 @@
       FT_Bool   debug;
       FT_Error  error;
 
+      FT_GlyphLoader  gloader         = loader->gloader;
+      FT_Outline      current_outline = gloader->current.outline;
+
 
       error = TT_Set_CodeRange( loader->exec, tt_coderange_glyph,
                                 loader->exec->glyphIns, n_ins );
@@ -695,6 +698,10 @@
       error = TT_Run_Context( loader->exec, debug );
       if ( error && loader->exec->pedantic_hinting )
         return error;
+
+      /* store drop-out mode in bits 5-7; set bit 2 also as a marker */
+      current_outline.tags[0] |=
+        ( loader->exec->GS.scan_type << 5 ) | FT_CURVE_TAG_HAS_SCANMODE;
     }
 
 #endif

@@ -306,9 +306,9 @@
 
 
   /* values for the `flags' bit field */
-#define Flow_Up           0x1
-#define Overshoot_Top     0x2
-#define Overshoot_Bottom  0x4
+#define Flow_Up           0x8
+#define Overshoot_Top     0x10
+#define Overshoot_Bottom  0x20
 
 
   /* States of each line, arc, and profile */
@@ -330,8 +330,10 @@
     FT_F26Dot6  X;           /* current coordinate during sweep          */
     PProfile    link;        /* link to next profile (various purposes)  */
     PLong       offset;      /* start of profile's data in render pool   */
-    unsigned    flags;       /* Bit 0: profile orientation (up/down)     */
-                             /* Bit 1, 2: profile overshoot (top/bottom) */
+    unsigned    flags;       /* Bit 0-2: drop-out mode                   */
+                             /* Bit 3: profile orientation (up/down)     */
+                             /* Bit 4: is top profile?                   */
+                             /* Bit 5: is bottom profile?                */
     long        height;      /* profile's height in scanlines            */
     long        start;       /* profile's starting scanline              */
 
@@ -656,6 +658,7 @@
     ras.cProfile->offset = ras.top;
     ras.cProfile->link   = (PProfile)0;
     ras.cProfile->next   = (PProfile)0;
+    ras.cProfile->flags  = ras.dropOutControl;
 
     switch ( aState )
     {
@@ -1739,7 +1742,12 @@
 
     point = points + first;
     tags  = ras.outline.tags + first;
-    tag   = FT_CURVE_TAG( tags[0] );
+
+    /* set scan mode if necessary */
+    if ( tags[0] & FT_CURVE_TAG_HAS_SCANMODE )
+      ras.dropOutControl = (Byte)tags[0] >> 5;
+
+    tag = FT_CURVE_TAG( tags[0] );
 
     /* A contour cannot start with a cubic control point! */
     if ( tag == FT_CURVE_TAG_CUBIC )
@@ -2269,9 +2277,12 @@
 
     if ( e1 > e2 )
     {
+      Int  dropOutControl = left->flags & 7;
+
+
       if ( e1 == e2 + ras.precision )
       {
-        switch ( ras.dropOutControl )
+        switch ( dropOutControl )
         {
         case 0: /* simple drop-outs including stubs */
           pxl = e2;
@@ -2324,7 +2335,7 @@
                   x2 - x1 >= ras.precision_half  ) )
             return;
 
-          if ( ras.dropOutControl == 1 )
+          if ( dropOutControl == 1 )
             pxl = e2;
           else
             pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
@@ -2467,9 +2478,12 @@
 
     if ( e1 > e2 )
     {
+      Int  dropOutControl = left->flags & 7;
+
+
       if ( e1 == e2 + ras.precision )
       {
-        switch ( ras.dropOutControl )
+        switch ( dropOutControl )
         {
         case 0: /* simple drop-outs including stubs */
           pxl = e2;
@@ -2497,7 +2511,7 @@
                   x2 - x1 >= ras.precision_half  ) )
             return;
 
-          if ( ras.dropOutControl == 1 )
+          if ( dropOutControl == 1 )
             pxl = e2;
           else
             pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
@@ -2723,9 +2737,12 @@
 
     if ( e1 > e2 )
     {
+      Int  dropOutControl = left->flags & 7;
+
+
       if ( e1 == e2 + ras.precision )
       {
-        switch ( ras.dropOutControl )
+        switch ( dropOutControl )
         {
         case 0: /* simple drop-outs including stubs */
           e1 = e2;
@@ -2747,7 +2764,7 @@
           if ( right->next == left && left->start == y )
             return;
 
-          if ( ras.dropOutControl == 1 )
+          if ( dropOutControl == 1 )
             e1 = e2;
           else
             e1 = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
@@ -2928,7 +2945,10 @@
           {
             if ( e1 > e2 || e2 == e1 + ras.precision )
             {
-              if ( ras.dropOutControl != 2 )
+              Int  dropOutControl = P_Left->flags & 7;
+
+
+              if ( dropOutControl != 2 )
               {
                 /* a drop-out was detected */
 

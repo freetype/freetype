@@ -1,3 +1,41 @@
+2009-06-18  Werner Lemberg  <wl@gnu.org>
+
+	Fix B/W rasterization of subglyphs with different drop-out modes.
+
+	Normally, the SCANMODE instruction (if present) to set the drop-out
+	mode in a TrueType font is located in the `prep' table only and thus
+	valid for all glyphs.  However, there are fonts like `pala.ttf'
+	which additionally contain this instruction in the hinting code of
+	some glyphs (but not all).  As a result it can happen that a
+	composite glyph needs multiple drop-out modes for its subglyphs
+	since the rendering state gets reset for each subglyph.
+
+	FreeType collects the hinted outlines from all subglyphs, then it
+	sends the data to the rasterizer.  It also sends the drop-out mode
+	-- after hinting has been applied -- and here is the error: It sends
+	the drop-out mode of the last subglyph only; drop-out modes of all
+	other subglyphs are lost.
+
+	This patch fixes the problem; it adds a second, alternative
+	mechanism to pass the drop-out mode: For each contour, the
+	rasterizer now checks the first `tags' array element.  If bit 2 is
+	set, bits 5-7 contain the contour's drop-out mode, overriding the
+	global drop-out mode.
+
+	* include/freetype/ftimage.h (FT_CURVE_TAG_HAS_SCANMODE): New macro.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Store drop-out mode in
+	`tags[0]'.
+
+	* src/raster/ftraster.c (Flow_Up, Overshoot_Top, Overshoot_Bottom):
+	Use bits 3-5 instead of 0-2.
+	(New_Profile): Set the drop-out mode in the profile's `flags' field.
+	(Decompose_Curve): Check `tags[0]' and set `dropOutControl' if
+	necessary.
+	(Vertical_Sweep_Drop, Horizontal_Sweep_Drop,
+	Horizontal_Gray_Sweep_Drop, Draw_Sweep): Use the profile's drop-out
+	mode.
+
 2009-06-16  Werner Lemberg  <wl@gnu.org>
 
 	Improve scan conversion rules 4 and 6.
