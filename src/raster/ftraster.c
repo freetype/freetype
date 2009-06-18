@@ -73,13 +73,15 @@
   /*       profile is simply an array of scanline intersections on a given */
   /*       dimension.  A profile's main attributes are                     */
   /*                                                                       */
-  /*       o its scanline position boundaries, i.e. `Ymin' and `Ymax'.     */
+  /*       o its scanline position boundaries, i.e. `Ymin' and `Ymax'      */
   /*                                                                       */
   /*       o an array of intersection coordinates for each scanline        */
-  /*         between `Ymin' and `Ymax'.                                    */
+  /*         between `Ymin' and `Ymax'                                     */
   /*                                                                       */
   /*       o a direction, indicating whether it was built going `up' or    */
-  /*         `down', as this is very important for filling rules.          */
+  /*         `down', as this is very important for filling rules           */
+  /*                                                                       */
+  /*       o its drop-out mode                                             */
   /*                                                                       */
   /*   2 - Sweeping the target map's scanlines in order to compute segment */
   /*       `spans' which are then filled.  Additionally, this pass         */
@@ -89,15 +91,15 @@
   /*   built from the bottom of the render pool, used as a stack.  The     */
   /*   following graphics shows the profile list under construction:       */
   /*                                                                       */
-  /*     ____________________________________________________________ _ _  */
-  /*    |         |                   |         |                 |        */
-  /*    | profile | coordinates for   | profile | coordinates for |-->     */
-  /*    |    1    |  profile 1        |    2    |  profile 2      |-->     */
-  /*    |_________|___________________|_________|_________________|__ _ _  */
+  /*     __________________________________________________________ _ _    */
+  /*    |         |                 |         |                 |          */
+  /*    | profile | coordinates for | profile | coordinates for |-->       */
+  /*    |    1    |  profile 1      |    2    |  profile 2      |-->       */
+  /*    |_________|_________________|_________|_________________|__ _ _    */
   /*                                                                       */
-  /*    ^                                                         ^        */
-  /*    |                                                         |        */
-  /*  start of render pool                                       top       */
+  /*    ^                                                       ^          */
+  /*    |                                                       |          */
+  /* start of render pool                                      top         */
   /*                                                                       */
   /*   The top of the profile stack is kept in the `top' variable.         */
   /*                                                                       */
@@ -200,7 +202,8 @@
 
 #define ft_memset   memset
 
-#else /* _STANDALONE_ */
+
+#else /* !_STANDALONE_ */
 
 
 #include FT_INTERNAL_OBJECTS_H
@@ -216,7 +219,7 @@
 #define Raster_Err_Unsupported  Raster_Err_Cannot_Render_Glyph
 
 
-#endif /* _STANDALONE_ */
+#endif /* !_STANDALONE_ */
 
 
 #ifndef FT_MEM_SET
@@ -374,7 +377,7 @@
 #define FT_UNUSED_RASTER  do { } while ( 0 )
 
 
-#else /* FT_STATIC_RASTER */
+#else /* !FT_STATIC_RASTER */
 
 
 #define RAS_ARGS       PWorker    worker,
@@ -386,7 +389,7 @@
 #define FT_UNUSED_RASTER  FT_UNUSED( worker )
 
 
-#endif /* FT_STATIC_RASTER */
+#endif /* !FT_STATIC_RASTER */
 
 
   typedef struct TWorker_  TWorker, *PWorker;
@@ -419,65 +422,65 @@
 #define IS_BOTTOM_OVERSHOOT( x )  ( CEILING( x ) - x >= ras.precision_half )
 #define IS_TOP_OVERSHOOT( x )     ( x - FLOOR( x ) >= ras.precision_half )
 
-  /* Note that I have moved the location of some fields in the */
-  /* structure to ensure that the most used variables are used */
-  /* at the top.  Thus, their offset can be coded with less    */
-  /* opcodes, and it results in a smaller executable.          */
+  /* The most used variables are positioned at the top of the structure. */
+  /* Thus, their offset can be coded with less opcodes, resulting in a   */
+  /* smaller executable.                                                 */
 
   struct  TWorker_
   {
-    Int       precision_bits;       /* precision related variables         */
-    Int       precision;
-    Int       precision_half;
-    Long      precision_mask;
-    Int       precision_shift;
-    Int       precision_step;
-    Int       precision_jitter;
+    Int         precision_bits;     /* precision related variables         */
+    Int         precision;
+    Int         precision_half;
+    Long        precision_mask;
+    Int         precision_shift;
+    Int         precision_step;
+    Int         precision_jitter;
 
-    Int       scale_shift;          /* == precision_shift   for bitmaps    */
+    Int         scale_shift;        /* == precision_shift   for bitmaps    */
                                     /* == precision_shift+1 for pixmaps    */
 
-    PLong     buff;                 /* The profiles buffer                 */
-    PLong     sizeBuff;             /* Render pool size                    */
-    PLong     maxBuff;              /* Profiles buffer size                */
-    PLong     top;                  /* Current cursor in buffer            */
+    PLong       buff;               /* The profiles buffer                 */
+    PLong       sizeBuff;           /* Render pool size                    */
+    PLong       maxBuff;            /* Profiles buffer size                */
+    PLong       top;                /* Current cursor in buffer            */
 
-    FT_Error  error;
+    FT_Error    error;
 
-    Int       numTurns;             /* number of Y-turns in outline        */
+    Int         numTurns;           /* number of Y-turns in outline        */
 
-    TPoint*   arc;                  /* current Bezier arc pointer          */
+    TPoint*     arc;                /* current Bezier arc pointer          */
 
-    UShort    bWidth;               /* target bitmap width                 */
-    PByte     bTarget;              /* target bitmap buffer                */
-    PByte     gTarget;              /* target pixmap buffer                */
+    UShort      bWidth;             /* target bitmap width                 */
+    PByte       bTarget;            /* target bitmap buffer                */
+    PByte       gTarget;            /* target pixmap buffer                */
 
-    Long      lastX, lastY, minY, maxY;
+    Long        lastX, lastY;
+    Long        minY, maxY;
 
-    UShort    num_Profs;            /* current number of profiles          */
+    UShort      num_Profs;          /* current number of profiles          */
 
-    Bool      fresh;                /* signals a fresh new profile which   */
+    Bool        fresh;              /* signals a fresh new profile which   */
                                     /* `start' field must be completed     */
-    Bool      joint;                /* signals that the last arc ended     */
+    Bool        joint;              /* signals that the last arc ended     */
                                     /* exactly on a scanline.  Allows      */
                                     /* removal of doublets                 */
-    PProfile  cProfile;             /* current profile                     */
-    PProfile  fProfile;             /* head of linked list of profiles     */
-    PProfile  gProfile;             /* contour's first profile in case     */
+    PProfile    cProfile;           /* current profile                     */
+    PProfile    fProfile;           /* head of linked list of profiles     */
+    PProfile    gProfile;           /* contour's first profile in case     */
                                     /* of impact                           */
 
-    TStates   state;                /* rendering state                     */
+    TStates     state;              /* rendering state                     */
 
     FT_Bitmap   target;             /* description of target bit/pixmap    */
     FT_Outline  outline;
 
-    Long      traceOfs;             /* current offset in target bitmap     */
-    Long      traceG;               /* current offset in target pixmap     */
+    Long        traceOfs;           /* current offset in target bitmap     */
+    Long        traceG;             /* current offset in target pixmap     */
 
-    Short     traceIncr;            /* sweep's increment in target bitmap  */
+    Short       traceIncr;          /* sweep's increment in target bitmap  */
 
-    Short     gray_min_x;           /* current min x during gray rendering */
-    Short     gray_max_x;           /* current max x during gray rendering */
+    Short       gray_min_x;         /* current min x during gray rendering */
+    Short       gray_max_x;         /* current max x during gray rendering */
 
     /* dispatch variables */
 
@@ -486,31 +489,31 @@
     Function_Sweep_Span*  Proc_Sweep_Drop;
     Function_Sweep_Step*  Proc_Sweep_Step;
 
-    Byte      dropOutControl;       /* current drop_out control method     */
+    Byte        dropOutControl;     /* current drop_out control method     */
 
-    Bool      second_pass;          /* indicates whether a horizontal pass */
+    Bool        second_pass;        /* indicates whether a horizontal pass */
                                     /* should be performed to control      */
                                     /* drop-out accurately when calling    */
                                     /* Render_Glyph.  Note that there is   */
                                     /* no horizontal pass during gray      */
                                     /* rendering.                          */
 
-    TPoint    arcs[3 * MaxBezier + 1]; /* The Bezier stack                 */
+    TPoint      arcs[3 * MaxBezier + 1]; /* The Bezier stack               */
 
-    TBand     band_stack[16];       /* band stack used for sub-banding     */
-    Int       band_top;             /* band stack top                      */
+    TBand       band_stack[16];     /* band stack used for sub-banding     */
+    Int         band_top;           /* band stack top                      */
 
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
 
-    Byte*     grays;
+    Byte*       grays;
 
-    Byte      gray_lines[RASTER_GRAY_LINES];
+    Byte        gray_lines[RASTER_GRAY_LINES];
                                 /* Intermediate table used to render the   */
                                 /* graylevels pixmaps.                     */
                                 /* gray_lines is a buffer holding two      */
                                 /* monochrome scanlines                    */
 
-    Short     gray_width;       /* width in bytes of one monochrome        */
+    Short       gray_width;     /* width in bytes of one monochrome        */
                                 /* intermediate scanline of gray_lines.    */
                                 /* Each gray pixel takes 2 bits long there */
 
@@ -524,12 +527,12 @@
 
   typedef struct  TRaster_
   {
-    char*     buffer;
-    long      buffer_size;
-    void*     memory;
-    PWorker   worker;
-    Byte      grays[5];
-    Short     gray_width;
+    char*    buffer;
+    long     buffer_size;
+    void*    memory;
+    PWorker  worker;
+    Byte     grays[5];
+    Short    gray_width;
 
   } TRaster, *PRaster;
 
@@ -538,11 +541,11 @@
   static TWorker  cur_ras;
 #define ras  cur_ras
 
-#else
+#else /* !FT_STATIC_RASTER */
 
 #define ras  (*worker)
 
-#endif /* FT_STATIC_RASTER */
+#endif /* !FT_STATIC_RASTER */
 
 
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
