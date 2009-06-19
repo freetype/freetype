@@ -1,5 +1,12 @@
 2009-06-19  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Fix handling of reserved byte 0xFF.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Abort if byte
+	0xFF is encountered.
+
+2009-06-19  Werner Lemberg  <wl@gnu.org>
+
 	Improve debug messages for Type1 charstrings.
 
 	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Emit newlines

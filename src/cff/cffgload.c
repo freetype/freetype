@@ -938,17 +938,9 @@
             goto Syntax_Error;
           val = -( (FT_Long)v - 251 ) * 256 - *ip++ - 108;
         }
-        else
-        {
-          if ( ip + 3 >= limit )
-            goto Syntax_Error;
-          val = ( (FT_Int32)ip[0] << 24 ) |
-                ( (FT_Int32)ip[1] << 16 ) |
-                ( (FT_Int32)ip[2] <<  8 ) |
-                            ip[3];
-          ip    += 4;
-          shift  = 0;
-        }
+        else /* 255 */
+          goto Syntax_Error;
+
         if ( decoder->top - stack >= CFF_MAX_OPERANDS )
           goto Stack_Overflow;
 
