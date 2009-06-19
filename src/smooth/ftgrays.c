@@ -1132,7 +1132,7 @@
 
 
     /* record current cell, if any */
-    gray_record_cell( worker );
+    gray_record_cell( RAS_VAR );
 
     /* start to a new position */
     x = UPSCALE( to->x );
@@ -1967,7 +1967,7 @@
       ras.render_span_data = &ras;
     }
 
-    return gray_convert_glyph( worker );
+    return gray_convert_glyph( RAS_VAR );
   }
 
 

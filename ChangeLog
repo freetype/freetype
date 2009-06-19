@@ -1,3 +1,11 @@
+2009-06-19  Werner Lemberg  <wl@gnu.org>
+
+	More ftgray fixes for FT_STATIC_RASTER.
+	Problems reported by suyu@cooee.cn.
+
+	* src/smooth/ftgrays.c (gray_move_to, gray_raster_render): Use
+	RAS_VAR.
+
 2009-06-18  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
