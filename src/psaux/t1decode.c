@@ -340,6 +340,10 @@
 
     T1_Hints_Funcs   hinter;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_Bool          bol = TRUE;
+#endif
+
 
     /* we don't want to touch the source code -- use macro trick */
 #define start_point    t1_builder_start_point
@@ -394,7 +398,13 @@
       FT_ASSERT( known_othersubr_result_cnt == 0   ||
                  unknown_othersubr_result_cnt == 0 );
 
-      FT_TRACE5(( " (%d)", decoder->top - decoder->stack ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+      if ( bol )
+      {
+        FT_TRACE5(( " (%d)", decoder->top - decoder->stack ));
+        bol = FALSE;
+      }
+#endif
 
       /*********************************************************************/
       /*                                                                   */
@@ -592,7 +602,10 @@
         FT_Int  arg_cnt;
 
 
-        FT_TRACE4(( " callothersubr" ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+        FT_TRACE4(( " callothersubr\n" ));
+        bol = TRUE;
+#endif
 
         if ( top - decoder->stack < 2 )
           goto Stack_Underflow;
@@ -974,7 +987,7 @@
         switch ( op )
         {
         case op_endchar:
-          FT_TRACE4(( " endchar" ));
+          FT_TRACE4(( " endchar\n" ));
 
           close_contour( builder );
 
@@ -993,8 +1006,6 @@
 
           /* add current outline to the glyph slot */
           FT_GlyphLoader_Add( builder->loader );
-
-          FT_TRACE4(( "\n" ));
 
           /* the compiler should optimize away this empty loop but ... */
 
@@ -1144,7 +1155,7 @@
           break;
 
         case op_rrcurveto:
-          FT_TRACE4(( " rcurveto" ));
+          FT_TRACE4(( " rrcurveto" ));
 
           if ( start_point( builder, x, y ) ||
                check_points( builder, 3 )   )
@@ -1398,6 +1409,11 @@
         /*     In practice it doesn't matter (?).          */
 
         decoder->top = top;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        FT_TRACE4(( "\n" ));
+        bol = TRUE;
+#endif
 
       } /* general operator processing */
 

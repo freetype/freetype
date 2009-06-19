@@ -1,5 +1,13 @@
 2009-06-19  Werner Lemberg  <wl@gnu.org>
 
+	Improve debug messages for Type1 charstrings.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Emit newlines
+	after instructions.
+	Prettify output.
+
+2009-06-19  Werner Lemberg  <wl@gnu.org>
+
 	More ftgray fixes for FT_STATIC_RASTER.
 	Problems reported by suyu@cooee.cn.
 
