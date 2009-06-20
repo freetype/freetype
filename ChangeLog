@@ -1,5 +1,13 @@
 2009-06-20  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Revert last change.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Do it.
+	Next time, don't confuse Type 2 charstring opcodes with TOP DICT
+	values...
+
+2009-06-20  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/aflatin.c (af_latin_metrics_check_digits): Fix
 	compiler warning.
 
