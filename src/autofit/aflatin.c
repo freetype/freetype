@@ -409,7 +409,7 @@
     for ( i = 0x30; i <= 0x39; i++ )
     {
       FT_UInt   glyph_index;
-      FT_Fixed  advance, old_advance;
+      FT_Fixed  advance, old_advance = 0;
 
 
       glyph_index = FT_Get_Char_Index( face, i );
