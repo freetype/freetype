@@ -1,5 +1,12 @@
 2009-06-20  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Check large integers while parsing charstrings.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Large
+	integers must be followed by a `div' operator.
+
+2009-06-20  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Revert last change.
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Do it.

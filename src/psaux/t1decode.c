@@ -337,6 +337,7 @@
     FT_Pos           x, y, orig_x, orig_y;
     FT_Int           known_othersubr_result_cnt   = 0;
     FT_Int           unknown_othersubr_result_cnt = 0;
+    FT_Bool          large_int;
 
     T1_Hints_Funcs   hinter;
 
@@ -386,6 +387,8 @@
     /* begin hints recording session, if any */
     if ( hinter )
       hinter->open( hinter->hints );
+
+    large_int = FALSE;
 
     /* now, execute loop */
     while ( ip < limit )
@@ -531,6 +534,25 @@
                             ((FT_Long)ip[2] << 8 ) |
                                       ip[3] );
         ip += 4;
+
+        /* According to the specification, values > 32000 or < -32000 must */
+        /* be followed by a `div' operator to make the result be in the    */
+        /* range [-32000;32000].  We expect that the second argument of    */
+        /* `div' is not a large number.  Additionally, we don't handle     */
+        /* stuff like `<large1> <large2> <num> div <num> div' or           */
+        /* <large1> <num> <large2> <num> div div'.  This is probably not   */
+        /* allowed anyway.                                                 */
+        if ( value > 32000 || value < -32000 )
+        {
+          if ( large_int )
+          {
+            FT_ERROR(( "t1_decoder_parse_charstrings:" ));
+            FT_ERROR(( " no `div' after large integer\n" ));
+          }
+          else
+            large_int = TRUE;
+        }
+
         break;
 
       default:
@@ -576,6 +598,14 @@
           unknown_othersubr_result_cnt = 0;
           break;
         }
+      }
+
+      if ( large_int && !( op == op_none || op == op_div ) )
+      {
+        FT_ERROR(( "t1_decoder_parse_charstrings:" ));
+        FT_ERROR(( " no `div' after large integer\n" ));
+
+        large_int = FALSE;
       }
 
       /*********************************************************************/
@@ -1224,6 +1254,9 @@
             FT_ERROR(( "t1_decoder_parse_charstrings: division by 0\n" ));
             goto Syntax_Error;
           }
+
+          large_int = FALSE;
+
           break;
 
         case op_callsubr:
