@@ -1,3 +1,7 @@
+2009-06-20  Werner Lemberg  <wl@gnu.org>
+
+	* builds/compiler/gcc.mk (CFLAGS): Use -O3, not -O6.
+
 2009-06-19  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix handling of reserved byte 0xFF.
