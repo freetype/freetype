@@ -1559,8 +1559,6 @@
       point->x = x;
       point->y = y;
       *control = (FT_Byte)( flag ? FT_CURVE_TAG_ON : FT_CURVE_TAG_CUBIC );
-
-      builder->last = *point;
     }
     outline->n_points++;
   }

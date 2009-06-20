@@ -533,8 +533,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    max_contours :: Maximal number of contours in builder outline.     */
   /*                                                                       */
-  /*    last         :: The last point position.                           */
-  /*                                                                       */
   /*    pos_x        :: The horizontal translation (if composite glyph).   */
   /*                                                                       */
   /*    pos_y        :: The vertical translation (if composite glyph).     */
@@ -566,8 +564,6 @@ FT_BEGIN_HEADER
     FT_GlyphLoader  loader;
     FT_Outline*     base;
     FT_Outline*     current;
-
-    FT_Vector       last;
 
     FT_Pos          pos_x;
     FT_Pos          pos_y;

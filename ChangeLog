@@ -1,5 +1,13 @@
 2009-06-20  Werner Lemberg  <wl@gnu.org>
 
+	Remove unused variables.
+
+	* include/freetype/internal/psaux.h (T1_BuilderRec),
+	src/cff/cffgload.h (CFF_Builder): Remove `last'.
+	Update all users.
+
+2009-06-20  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Check large integers while parsing charstrings.
 
 	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Large

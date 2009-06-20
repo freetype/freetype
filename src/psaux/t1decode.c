@@ -1070,8 +1070,8 @@
           builder->advance.x       = top[1];
           builder->advance.y       = 0;
 
-          orig_x = builder->last.x = x = builder->pos_x + top[0];
-          orig_y = builder->last.y = y = builder->pos_y;
+          orig_x = x = builder->pos_x + top[0];
+          orig_y = y = builder->pos_y;
 
           FT_UNUSED( orig_y );
 
@@ -1098,8 +1098,8 @@
           builder->advance.x       = top[2];
           builder->advance.y       = top[3];
 
-          builder->last.x = x = builder->pos_x + top[0];
-          builder->last.y = y = builder->pos_y + top[1];
+          x = builder->pos_x + top[0];
+          y = builder->pos_y + top[1];
 
           /* the `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */
