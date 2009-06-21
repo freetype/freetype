@@ -1,5 +1,9 @@
 2009-06-21  Werner Lemberg  <wl@gnu.org>
 
+	* src/pshinter/pshrec.c: Use PSH_Err_Ok.
+
+2009-06-21  Werner Lemberg  <wl@gnu.org>
+
 	Code beautification.
 
 	* src/type1/t1load.c (FT_INT_TO_FIXED): Removed.
