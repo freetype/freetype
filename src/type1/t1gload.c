@@ -215,8 +215,6 @@
     FT_UInt        nn;
     FT_Error       error;
 
-    FT_UNUSED( load_flags );
-
 
     if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
     {
