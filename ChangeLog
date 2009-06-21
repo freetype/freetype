@@ -1,3 +1,13 @@
+2009-06-21  Werner Lemberg  <wl@gnu.org>
+
+	Code beautification.
+
+	* src/type1/t1load.c (FT_INT_TO_FIXED): Removed.
+	Replace everywhere with INT_TO_FIXED.
+	(FT_FIXED_TO_INT): Move to ...
+	* include/freetype/internal/ftcalc.h (FIXED_TO_INT): Here.
+	Update all users.
+
 2009-06-20  Werner Lemberg  <wl@gnu.org>
 
 	Remove unused variables.

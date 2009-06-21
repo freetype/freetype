@@ -213,10 +213,6 @@
   }
 
 
-#define FT_INT_TO_FIXED( a )  ( (a) << 16 )
-#define FT_FIXED_TO_INT( a )  ( FT_RoundFix( a ) >> 16 )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Given a normalized (blend) coordinate, figure out the design          */
@@ -230,7 +226,7 @@
 
 
     if ( ncv <= axismap->blend_points[0] )
-      return FT_INT_TO_FIXED( axismap->design_points[0] );
+      return INT_TO_FIXED( axismap->design_points[0] );
 
     for ( j = 1; j < axismap->num_points; ++j )
     {
@@ -241,7 +237,7 @@
                                  axismap->blend_points[j] -
                                    axismap->blend_points[j - 1] );
 
-        return FT_INT_TO_FIXED( axismap->design_points[j - 1] ) +
+        return INT_TO_FIXED( axismap->design_points[j - 1] ) +
                  FT_MulDiv( t,
                             axismap->design_points[j] -
                               axismap->design_points[j - 1],
@@ -249,7 +245,7 @@
       }
     }
 
-    return FT_INT_TO_FIXED( axismap->design_points[axismap->num_points - 1] );
+    return INT_TO_FIXED( axismap->design_points[axismap->num_points - 1] );
   }
 
 
@@ -331,8 +327,8 @@
     for ( i = 0 ; i < mmaster.num_axis; ++i )
     {
       mmvar->axis[i].name    = mmaster.axis[i].name;
-      mmvar->axis[i].minimum = FT_INT_TO_FIXED( mmaster.axis[i].minimum);
-      mmvar->axis[i].maximum = FT_INT_TO_FIXED( mmaster.axis[i].maximum);
+      mmvar->axis[i].minimum = INT_TO_FIXED( mmaster.axis[i].minimum);
+      mmvar->axis[i].maximum = INT_TO_FIXED( mmaster.axis[i].maximum);
       mmvar->axis[i].def     = ( mmvar->axis[i].minimum +
                                    mmvar->axis[i].maximum ) / 2;
                             /* Does not apply.  But this value is in range */
@@ -502,7 +498,7 @@
      if ( num_coords <= 4 && num_coords > 0 )
      {
        for ( i = 0; i < num_coords; ++i )
-         lcoords[i] = FT_FIXED_TO_INT( coords[i] );
+         lcoords[i] = FIXED_TO_INT( coords[i] );
        error = T1_Set_MM_Design( face, num_coords, lcoords );
      }
 
