@@ -65,6 +65,7 @@
 #include FT_CONFIG_CONFIG_H
 #include FT_MULTIPLE_MASTERS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_CALC_H
 
 #include "t1load.h"
 #include "t1errors.h"

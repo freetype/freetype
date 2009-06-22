@@ -1,3 +1,48 @@
+2009-06-22  Werner Lemberg  <wl@gnu.org>
+
+	Use 16.16 format while parsing Type 1 charstrings.
+	This fixes Savannah bug #26867.
+
+	Previously, only integers have been used which can lead to serious
+	rounding errors.
+
+	However, fractional values are only used internally; after the
+	charstrings (of either Type 1 or 2) have been processed, the
+	resulting coordinates get rounded to integers currently -- before
+	applying scaling.  This should be fixed; at the same time a new load
+	flag should be introduced, to be used in combination with
+	FT_LOAD_NO_SCALE, which indicates that font units are returned in
+	16.16 format.  Similarly, the incremental interface should be
+	extended to allow fractional values for metrics.
+
+	* include/freetype/internal/psaux.h (T1_BuilderRec): Remove `shift'
+	field.
+	* include/freetype/internal/pshints.h (T1_Hints_SetStemFunc,
+	T1_Hints_SetStem3Func): Use FT_Fixed for coordinates.
+
+	* src/psaux/psobjs.c: Include FT_INTERNAL_CALC_H.
+	(t1_build_add_point): Always convert fixed to integer.
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings):
+	Use 16.16 format everywhere (except for large integers followed by a
+	`div').
+	[CAN_HANDLE_NON_INTEGRAL_T1_OPERANDS]: Remove #ifdef and activate
+	code uncoditionally.
+	Add support for random numbers and update remaining code
+	accordingly; this should work now.
+	(t1_operator_seac): Updated.
+	* src/psaux/pshrec.c: Include FT_INTERNAL_CALC_H.
+	(ps_hints_t1stem3, t1_hints_stem): Updated.
+
+	* src/cid/cidgload.c: Include FT_INTERNAL_CALC_H.
+	(cid_load_glyph) [FT_CONFIG_OPTION_INCREMENTAL],
+	(cid_face_compute_max_advance, cid_slot_load_glyph): Updated.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String)
+	[FT_CONFIG_OPTION_INCREMENTAL], (T1_Get_Advances, T1_Load_Glyph):
+	Updated.
+	* src/type1/t1load.c: Include FT_INTERNAL_CALC_H.
+	* src/type1/t1objs.c (T1_Face_Init): Updated.
+
 2009-06-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshrec.c: Use PSH_Err_Ok.

@@ -253,8 +253,8 @@
       /* subglyph 1 = accent character */
       subg->index = achar_index;
       subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES;
-      subg->arg1  = (FT_Int)( adx - asb );
-      subg->arg2  = (FT_Int)ady;
+      subg->arg1  = (FT_Int)FIXED_TO_INT( adx - asb );
+      subg->arg2  = (FT_Int)FIXED_TO_INT( ady );
 
       /* set up remaining glyph fields */
       glyph->num_subglyphs = 2;
@@ -338,6 +338,7 @@
     FT_Int           known_othersubr_result_cnt   = 0;
     FT_Int           unknown_othersubr_result_cnt = 0;
     FT_Bool          large_int;
+    FT_Fixed         seed;
 
     T1_Hints_Funcs   hinter;
 
@@ -353,6 +354,15 @@
 #define add_point1     t1_builder_add_point1
 #define add_contour    t1_builder_add_contour
 #define close_contour  t1_builder_close_contour
+
+
+    /* compute random seed from stack address of parameter */
+    seed = (FT_Fixed)(char*)&seed           ^
+           (FT_Fixed)(char*)&decoder        ^
+           (FT_Fixed)(char*)&charstring_base;
+    seed = ( seed ^ ( seed >> 10 ) ^ ( seed >> 20 ) ) & 0xFFFFL;
+    if ( seed == 0 )
+      seed = 0x7384;
 
     /* First of all, initialize the decoder */
     decoder->top  = decoder->stack;
@@ -395,7 +405,7 @@
     {
       FT_Long*     top   = decoder->top;
       T1_Operator  op    = op_none;
-      FT_Long      value = 0;
+      FT_Int32     value = 0;
 
 
       FT_ASSERT( known_othersubr_result_cnt == 0   ||
@@ -552,6 +562,11 @@
           else
             large_int = TRUE;
         }
+        else
+        {
+          if ( !large_int )
+            value <<= 16;
+        }
 
         break;
 
@@ -574,6 +589,9 @@
             else
               value = -( ( ( (FT_Long)ip[-2] - 251 ) << 8 ) + ip[-1] + 108 );
           }
+
+          if ( !large_int )
+            value <<= 16;
         }
         else
         {
@@ -621,7 +639,12 @@
           goto Syntax_Error;
         }
 
-        FT_TRACE4(( " %ld", value ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( large_int )
+          FT_TRACE4(( " %ld", value ));
+        else
+          FT_TRACE4(( " %ld", (FT_Int32)( value >> 16 ) ));
+#endif
 
         *top++       = value;
         decoder->top = top;
@@ -642,8 +665,8 @@
 
         top -= 2;
 
-        subr_no = (FT_Int)top[1];
-        arg_cnt = (FT_Int)top[0];
+        subr_no = (FT_Int)( top[1] >> 16 );
+        arg_cnt = (FT_Int)( top[0] >> 16 );
 
         /***********************************************************/
         /*                                                         */
@@ -805,12 +828,6 @@
             break;
           }
 
-#ifdef CAN_HANDLE_NON_INTEGRAL_T1_OPERANDS
-
-          /* We cannot yet enable these since currently  */
-          /* our T1 stack stores integers which lack the */
-          /* precision to express the values             */
-
         case 19:
           /* <idx> 1 19 callothersubr                             */
           /* => replace elements starting from index cvi( <idx> ) */
@@ -823,10 +840,10 @@
             if ( arg_cnt != 1 || blend == NULL )
               goto Unexpected_OtherSubr;
 
-            idx = top[0];
+            idx = (FT_Int)( top[0] >> 16 );
 
-            if ( idx < 0                                                 ||
-                 idx + blend->num_designs > decoder->face->len_buildchar )
+            if ( idx < 0                                           ||
+                 idx + blend->num_designs > decoder->len_buildchar )
               goto Unexpected_OtherSubr;
 
             ft_memcpy( &decoder->buildchar[idx],
@@ -864,7 +881,7 @@
           if ( arg_cnt != 2 )
             goto Unexpected_OtherSubr;
 
-          top[0] *= top[1]; /* XXX (over|under)flow */
+          top[0] = FT_MulFix( top[0], top[1] );
 
           known_othersubr_result_cnt = 1;
           break;
@@ -875,12 +892,10 @@
           if ( arg_cnt != 2 || top[1] == 0 )
             goto Unexpected_OtherSubr;
 
-          top[0] /= top[1]; /* XXX (over|under)flow */
+          top[0] = FT_DivFix( top[0], top[1] );
 
           known_othersubr_result_cnt = 1;
           break;
-
-#endif /* CAN_HANDLE_NON_INTEGRAL_T1_OPERANDS */
 
         case 24:
           /* <val> <idx> 2 24 callothersubr              */
@@ -889,10 +904,11 @@
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
 
+
             if ( arg_cnt != 2 || blend == NULL )
               goto Unexpected_OtherSubr;
 
-            idx = top[1];
+            idx = (FT_Int)( top[1] >> 16 );
 
             if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
               goto Unexpected_OtherSubr;
@@ -909,10 +925,11 @@
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
 
+
             if ( arg_cnt != 1 || blend == NULL )
               goto Unexpected_OtherSubr;
 
-            idx = top[0];
+            idx = (FT_Int)( top[0] >> 16 );
 
             if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
               goto Unexpected_OtherSubr;
@@ -945,17 +962,29 @@
           known_othersubr_result_cnt = 1;
           break;
 
-#ifdef CAN_HANDLE_NON_INTEGRAL_T1_OPERANDS
         case 28:
           /* 0 28 callothersubr pop                               */
           /* => push random value from interval [0, 1) onto stack */
           if ( arg_cnt != 0 )
             goto Unexpected_OtherSubr;
 
-          top[0] = FT_rand();
+          {
+            FT_Fixed  Rand;
+
+
+            Rand = seed;
+            if ( Rand >= 0x8000L )
+              Rand++;
+
+            top[0] = Rand;
+
+            seed = FT_MulFix( seed, 0x10000L - seed );
+            if ( seed == 0 )
+              seed += 0x2873;
+          }
+
           known_othersubr_result_cnt = 1;
           break;
-#endif
 
         default:
           FT_ERROR(( "t1_decoder_parse_charstrings: "
@@ -1024,13 +1053,13 @@
           /* close hints recording session */
           if ( hinter )
           {
-            if (hinter->close( hinter->hints, builder->current->n_points ))
+            if ( hinter->close( hinter->hints, builder->current->n_points ) )
               goto Syntax_Error;
 
             /* apply hints to the loaded glyph outline now */
             hinter->apply( hinter->hints,
                            builder->current,
-                           (PSH_Globals) builder->hints_globals,
+                           (PSH_Globals)builder->hints_globals,
                            decoder->hint_mode );
           }
 
@@ -1085,8 +1114,12 @@
 
         case op_seac:
           /* return immediately after the processing */
-          return t1operator_seac( decoder, top[0], top[1], top[2],
-                                           (FT_Int)top[3], (FT_Int)top[4] );
+          return t1operator_seac( decoder,
+                                  top[0],
+                                  top[1],
+                                  top[2],
+                                  (FT_Int)( top[3] >> 16 ),
+                                  (FT_Int)( top[4] >> 16 ) );
 
         case op_sbw:
           FT_TRACE4(( " sbw" ));
@@ -1244,19 +1277,13 @@
         case op_div:
           FT_TRACE4(( " div" ));
 
-          if ( top[1] )
-          {
-            *top = top[0] / top[1];
-            ++top;
-          }
-          else
-          {
-            FT_ERROR(( "t1_decoder_parse_charstrings: division by 0\n" ));
-            goto Syntax_Error;
-          }
+          /* if `large_int' is set, we divide unscaled numbers; */
+          /* otherwise, we divide numbers in 16.16 format --    */
+          /* in both cases, it is the same operation            */
+          *top = FT_DivFix( top[0], top[1] );
+          ++top;
 
           large_int = FALSE;
-
           break;
 
         case op_callsubr:
@@ -1266,7 +1293,7 @@
 
             FT_TRACE4(( " callsubr" ));
 
-            idx = (FT_Int)top[0];
+            idx = (FT_Int)( top[0] >> 16 );
             if ( idx < 0 || idx >= (FT_Int)decoder->num_subrs )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings: "

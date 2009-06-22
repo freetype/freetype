@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PostScript hints recorder (body).                           */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003, 2004, 2007 by                              */
+/*  Copyright 2001, 2002, 2003, 2004, 2007, 2009 by                        */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -20,6 +20,8 @@
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
+
 #include "pshrec.h"
 #include "pshalgo.h"
 
@@ -800,7 +802,7 @@
   {
     FT_MEM_ZERO( hints, sizeof ( *hints ) );
     hints->memory = memory;
-    return 0;
+    return PSH_Err_Ok;
   }
 
 
@@ -888,9 +890,9 @@
 
   /* add one Type1 counter stem to the current hints table */
   static void
-  ps_hints_t1stem3( PS_Hints  hints,
-                    FT_Int    dimension,
-                    FT_Long*  stems )
+  ps_hints_t1stem3( PS_Hints   hints,
+                    FT_Int     dimension,
+                    FT_Fixed*  stems )
   {
     FT_Error  error = PSH_Err_Ok;
 
@@ -919,9 +921,10 @@
         /* add the three stems to our hints/masks table */
         for ( count = 0; count < 3; count++, stems += 2 )
         {
-          error = ps_dimension_add_t1stem(
-                    dim, (FT_Int)stems[0], (FT_Int)stems[1],
-                    memory, &idx[count] );
+          error = ps_dimension_add_t1stem( dim,
+                                           (FT_Int)FIXED_TO_INT( stems[0] ),
+                                           (FT_Int)FIXED_TO_INT( stems[1] ),
+                                           memory, &idx[count] );
           if ( error )
             goto Fail;
         }
@@ -1124,11 +1127,17 @@
   }
 
   static void
-  t1_hints_stem( T1_Hints  hints,
-                 FT_Int    dimension,
-                 FT_Long*  coords )
+  t1_hints_stem( T1_Hints   hints,
+                 FT_Int     dimension,
+                 FT_Fixed*  coords )
   {
-    ps_hints_stem( (PS_Hints)hints, dimension, 1, coords );
+    FT_Pos  stems[2];
+
+
+    stems[0] = FIXED_TO_INT( coords[0] );
+    stems[1] = FIXED_TO_INT( coords[1] );
+
+    ps_hints_stem( (PS_Hints)hints, dimension, 1, stems );
   }
 
 
@@ -1183,7 +1192,7 @@
       for ( n = 0; n < count * 2; n++ )
       {
         y       += coords[n];
-        stems[n] = ( y + 0x8000L ) >> 16;
+        stems[n] = FIXED_TO_INT( y );
       }
 
       /* compute lengths */

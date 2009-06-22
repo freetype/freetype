@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
 
 #include "psobjs.h"
 #include "psconv.h"
@@ -1551,13 +1552,8 @@
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 
-      if ( builder->shift )
-      {
-        x >>= 16;
-        y >>= 16;
-      }
-      point->x = x;
-      point->y = y;
+      point->x = FIXED_TO_INT( x );
+      point->y = FIXED_TO_INT( y );
       *control = (FT_Byte)( flag ? FT_CURVE_TAG_ON : FT_CURVE_TAG_CUBIC );
     }
     outline->n_points++;
@@ -1666,8 +1662,8 @@
 
     if ( outline->n_contours > 0 )
     {
-      /* Don't add contours only consisting of one point, i.e., */
-      /* check whether begin point and last point are the same. */
+      /* Don't add contours only consisting of one point, i.e.,  */
+      /* check whether the first and the last point is the same. */
       if ( first == outline->n_points - 1 )
       {
         outline->n_contours--;

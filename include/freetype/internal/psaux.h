@@ -575,7 +575,6 @@ FT_BEGIN_HEADER
     T1_ParseState   parse_state;
     FT_Bool         load_points;
     FT_Bool         no_recurse;
-    FT_Bool         shift;
 
     FT_Bool         metrics_only;
 
