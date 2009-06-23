@@ -550,8 +550,8 @@
         /* range [-32000;32000].  We expect that the second argument of    */
         /* `div' is not a large number.  Additionally, we don't handle     */
         /* stuff like `<large1> <large2> <num> div <num> div' or           */
-        /* <large1> <num> <large2> <num> div div'.  This is probably not   */
-        /* allowed anyway.                                                 */
+        /* <large1> <large2> <num> div div'.  This is probably not allowed */
+        /* anyway.                                                         */
         if ( value > 32000 || value < -32000 )
         {
           if ( large_int )
