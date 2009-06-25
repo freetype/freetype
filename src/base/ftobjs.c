@@ -4143,6 +4143,10 @@
       goto Fail;
 #endif
 
+    library->version_major = FREETYPE_MAJOR;
+    library->version_minor = FREETYPE_MINOR;
+    library->version_patch = FREETYPE_PATCH;
+
     /* That's ok now */
     *alibrary = library;
 

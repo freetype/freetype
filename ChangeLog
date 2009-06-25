@@ -1,3 +1,11 @@
+2009-06-25  Werner Lemberg  <wl@gnu.org>
+
+	Provide version information better.
+
+	* src/base/ftinit.c (FT_Init_FreeType): Don't set version here
+	but...
+	* src/base/ftobjs.c (FT_New_Library): Here.
+
 2009-06-22  Werner Lemberg  <wl@gnu.org>
 
 	Use 16.16 format while parsing Type 1 charstrings.
