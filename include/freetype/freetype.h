@@ -1652,6 +1652,11 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    In case you want to provide your own memory allocating routines,   */
+  /*    use @FT_New_Library instead, followed by a call to                 */
+  /*    @FT_Add_Default_Modules (or a series of calls to @FT_Add_Module).  */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Init_FreeType( FT_Library  *alibrary );
 
