@@ -1,5 +1,11 @@
 2009-06-26  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Remove TT_SubGlyphRec.
+
+	* src/truetype/ttobjs.h (TT_SubGlyphRec): Removed, unused.
+
+2009-06-26  Werner Lemberg  <wl@gnu.org>
+
 	* */*: For warning messages, replace FT_ERROR with FT_TRACE0.
 
 	FT_ERROR is now used only if a function produces a non-zero `error'
