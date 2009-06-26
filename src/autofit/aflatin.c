@@ -331,7 +331,7 @@
          *  we couldn't find a single glyph to compute this blue zone,
          *  we will simply ignore it then
          */
-        AF_LOG(( "empty!\n" ));
+        AF_LOG(( "empty\n" ));
         continue;
       }
 

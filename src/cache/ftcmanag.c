@@ -480,8 +480,8 @@
 
 
         if ( (FT_UInt)node->cache_index >= manager->num_caches )
-          FT_ERROR(( "FTC_Manager_Check: invalid node (cache index = %ld\n",
-                     node->cache_index ));
+          FT_TRACE0(( "FTC_Manager_Check: invalid node (cache index = %ld\n",
+                      node->cache_index ));
         else
           weight += cache->clazz.node_weight( node, cache );
 
@@ -490,8 +490,8 @@
       } while ( node != first );
 
       if ( weight != manager->cur_weight )
-        FT_ERROR(( "FTC_Manager_Check: invalid weight %ld instead of %ld\n",
-                   manager->cur_weight, weight ));
+        FT_TRACE0(( "FTC_Manager_Check: invalid weight %ld instead of %ld\n",
+                    manager->cur_weight, weight ));
     }
 
     /* check circular list */
@@ -509,9 +509,9 @@
       } while ( node != first );
 
       if ( count != manager->num_nodes )
-        FT_ERROR((
-          "FTC_Manager_Check: invalid cache node count %d instead of %d\n",
-          manager->num_nodes, count ));
+        FT_TRACE0(( "FTC_Manager_Check:"
+                    " invalid cache node count %d instead of %d\n",
+                    manager->num_nodes, count ));
     }
   }
 
@@ -538,9 +538,9 @@
 #ifdef FT_DEBUG_ERROR
     FTC_Manager_Check( manager );
 
-    FT_ERROR(( "compressing, weight = %ld, max = %ld, nodes = %d\n",
-               manager->cur_weight, manager->max_weight,
-               manager->num_nodes ));
+    FT_TRACE0(( "compressing, weight = %ld, max = %ld, nodes = %d\n",
+                manager->cur_weight, manager->max_weight,
+                manager->num_nodes ));
 #endif
 
     if ( manager->cur_weight < manager->max_weight || first == NULL )
@@ -583,8 +583,8 @@
       if ( manager->num_caches >= FTC_MAX_CACHES )
       {
         error = FTC_Err_Too_Many_Caches;
-        FT_ERROR(( "%s: too many registered caches\n",
-                   "FTC_Manager_Register_Cache" ));
+        FT_ERROR(( "FTC_Manager_RegisterCache:"
+                   " too many registered caches\n" ));
         goto Exit;
       }
 

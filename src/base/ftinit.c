@@ -188,10 +188,9 @@ Exit:
       error = FT_Add_Module( library, *cur );
       /* notify errors, but don't stop */
       if ( error )
-      {
-        FT_ERROR(( "FT_Add_Default_Module: Cannot install `%s', error = 0x%x\n",
-                   (*cur)->module_name, error ));
-      }
+        FT_TRACE0(( "FT_Add_Default_Module:"
+                    " Cannot install `%s', error = 0x%x\n",
+                    (*cur)->module_name, error ));
       cur++;
     }
   }

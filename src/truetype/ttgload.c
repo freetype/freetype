@@ -317,7 +317,7 @@
 
     if ( n_ins > face->max_profile.maxSizeOfInstructions )
     {
-      FT_TRACE0(( "TT_Load_Simple_Glyph: Too many instructions (%d)\n",
+      FT_TRACE0(( "TT_Load_Simple_Glyph: too many instructions (%d)\n",
                   n_ins ));
       error = TT_Err_Too_Many_Hints;
       goto Fail;
@@ -325,7 +325,7 @@
 
     if ( ( limit - p ) < n_ins )
     {
-      FT_TRACE0(( "TT_Load_Simple_Glyph: Instruction count mismatch!\n" ));
+      FT_TRACE0(( "TT_Load_Simple_Glyph: instruction count mismatch\n" ));
       error = TT_Err_Too_Many_Hints;
       goto Fail;
     }
@@ -1037,7 +1037,7 @@
       /* check it */
       if ( n_ins > ((TT_Face)loader->face)->max_profile.maxSizeOfInstructions )
       {
-        FT_TRACE0(( "TT_Process_Composite_Glyph: Too many instructions (%d)\n",
+        FT_TRACE0(( "TT_Process_Composite_Glyph: too many instructions (%d)\n",
                     n_ins ));
 
         return TT_Err_Too_Many_Hints;
@@ -1253,7 +1253,7 @@
     {
       if ( !loader->glyf_offset )
       {
-        FT_TRACE2(( "no `glyf' table but non-zero `loca' entry!\n" ));
+        FT_TRACE2(( "no `glyf' table but non-zero `loca' entry\n" ));
         error = TT_Err_Invalid_Table;
         goto Exit;
       }
@@ -1857,7 +1857,7 @@
         loader->glyf_offset = 0;
       else if ( error )
       {
-        FT_ERROR(( "TT_Load_Glyph: could not access glyph table\n" ));
+        FT_ERROR(( "tt_loader_init: could not access glyph table\n" ));
         return error;
       }
       else

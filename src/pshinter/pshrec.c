@@ -483,8 +483,8 @@
       table->num_masks--;
     }
     else
-      FT_ERROR(( "ps_mask_table_merge: ignoring invalid indices (%d,%d)\n",
-                 index1, index2 ));
+      FT_TRACE0(( "ps_mask_table_merge: ignoring invalid indices (%d,%d)\n",
+                  index1, index2 ));
 
   Exit:
     return error;
@@ -826,7 +826,7 @@
       hints->error     = PSH_Err_Invalid_Argument;
       hints->hint_type = hint_type;
 
-      FT_ERROR(( "ps_hints_open: invalid charstring type!\n" ));
+      FT_TRACE0(( "ps_hints_open: invalid charstring type\n" ));
       break;
     }
   }
@@ -844,8 +844,8 @@
       /* limit "dimension" to 0..1 */
       if ( dimension < 0 || dimension > 1 )
       {
-        FT_ERROR(( "ps_hints_stem: invalid dimension (%d) used\n",
-                   dimension ));
+        FT_TRACE0(( "ps_hints_stem: invalid dimension (%d) used\n",
+                    dimension ));
         dimension = ( dimension != 0 );
       }
 
@@ -880,8 +880,8 @@
         }
 
       default:
-        FT_ERROR(( "ps_hints_stem: called with invalid hint type (%d)\n",
-                   hints->hint_type ));
+        FT_TRACE0(( "ps_hints_stem: called with invalid hint type (%d)\n",
+                    hints->hint_type ));
         break;
       }
     }
@@ -908,8 +908,8 @@
       /* limit "dimension" to 0..1 */
       if ( dimension < 0 || dimension > 1 )
       {
-        FT_ERROR(( "ps_hints_t1stem3: invalid dimension (%d) used\n",
-                   dimension ));
+        FT_TRACE0(( "ps_hints_t1stem3: invalid dimension (%d) used\n",
+                    dimension ));
         dimension = ( dimension != 0 );
       }
 
@@ -937,7 +937,7 @@
       }
       else
       {
-        FT_ERROR(( "ps_hints_t1stem3: called with invalid hint type!\n" ));
+        FT_ERROR(( "ps_hints_t1stem3: called with invalid hint type\n" ));
         error = PSH_Err_Invalid_Argument;
         goto Fail;
       }
@@ -1011,8 +1011,8 @@
       /* check bit count; must be equal to current total hint count */
       if ( bit_count !=  count1 + count2 )
       {
-        FT_ERROR(( "ps_hints_t2mask: "
-                   "called with invalid bitcount %d (instead of %d)\n",
+        FT_TRACE0(( "ps_hints_t2mask:"
+                    " called with invalid bitcount %d (instead of %d)\n",
                    bit_count, count1 + count2 ));
 
         /* simply ignore the operator */
@@ -1056,8 +1056,8 @@
       /* check bit count, must be equal to current total hint count */
       if ( bit_count !=  count1 + count2 )
       {
-        FT_ERROR(( "ps_hints_t2counter: "
-                   "called with invalid bitcount %d (instead of %d)\n",
+        FT_TRACE0(( "ps_hints_t2counter:"
+                    " called with invalid bitcount %d (instead of %d)\n",
                    bit_count, count1 + count2 ));
 
         /* simply ignore the operator */

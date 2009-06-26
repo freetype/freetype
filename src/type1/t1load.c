@@ -651,8 +651,8 @@
     }
     if ( num_designs == 0 || num_designs > T1_MAX_MM_DESIGNS )
     {
-      FT_ERROR(( "parse_blend_design_positions:" ));
-      FT_ERROR(( " incorrect number of designs: %d\n",
+      FT_ERROR(( "parse_blend_design_positions:"
+                 " incorrect number of designs: %d\n",
                  num_designs ));
       error = T1_Err_Invalid_File_Format;
       goto Exit;
@@ -684,8 +684,8 @@
         {
           if ( n_axis <= 0 || n_axis > T1_MAX_MM_AXIS )
           {
-            FT_ERROR(( "parse_blend_design_positions:" ));
-            FT_ERROR(( "  invalid number of axes: %d\n",
+            FT_ERROR(( "parse_blend_design_positions:"
+                       " invalid number of axes: %d\n",
                        n_axis ));
             error = T1_Err_Invalid_File_Format;
             goto Exit;
@@ -839,8 +839,8 @@
     }
     if ( num_designs == 0 || num_designs > T1_MAX_MM_DESIGNS )
     {
-      FT_ERROR(( "parse_weight_vector:" ));
-      FT_ERROR(( " incorrect number of designs: %d\n",
+      FT_ERROR(( "parse_weight_vector:"
+                 " incorrect number of designs: %d\n",
                  num_designs ));
       error = T1_Err_Invalid_File_Format;
       goto Exit;
@@ -856,9 +856,9 @@
     else if ( blend->num_designs != (FT_UInt)num_designs )
     {
       FT_ERROR(( "parse_weight_vector:"
-                 " /BlendDesignPosition and /WeightVector have\n" ));
-      FT_ERROR(( "                    "
-                 " different number of elements!\n" ));
+                 " /BlendDesignPosition and /WeightVector have\n"
+                 "                    "
+                 " different number of elements\n" ));
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
@@ -1140,7 +1140,7 @@
     cur = parser->root.cursor;
     if ( cur >= limit )
     {
-      FT_ERROR(( "parse_encoding: out of bounds!\n" ));
+      FT_ERROR(( "parse_encoding: out of bounds\n" ));
       parser->root.error = T1_Err_Invalid_File_Format;
       return;
     }
@@ -2153,7 +2153,7 @@
 #endif
       if ( !loader.charstrings.init )
       {
-        FT_ERROR(( "T1_Open_Face: no `/CharStrings' array in face!\n" ));
+        FT_ERROR(( "T1_Open_Face: no `/CharStrings' array in face\n" ));
         error = T1_Err_Invalid_File_Format;
       }
 

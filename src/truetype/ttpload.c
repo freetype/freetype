@@ -91,7 +91,7 @@
 
       if ( table_len >= 0x40000L )
       {
-        FT_TRACE2(( "table too large!\n" ));
+        FT_TRACE2(( "table too large\n" ));
         error = TT_Err_Invalid_Table;
         goto Exit;
       }
@@ -103,7 +103,7 @@
 
       if ( table_len >= 0x20000L )
       {
-        FT_TRACE2(( "table too large!\n" ));
+        FT_TRACE2(( "table too large\n" ));
         error = TT_Err_Invalid_Table;
         goto Exit;
       }
@@ -265,7 +265,7 @@
     error = face->goto_table( face, TTAG_cvt, stream, &table_len );
     if ( error )
     {
-      FT_TRACE2(( "is missing!\n" ));
+      FT_TRACE2(( "is missing\n" ));
 
       face->cvt_size = 0;
       face->cvt      = NULL;
@@ -350,7 +350,7 @@
       face->font_program_size = 0;
       error                   = TT_Err_Ok;
 
-      FT_TRACE2(( "is missing!\n" ));
+      FT_TRACE2(( "is missing\n" ));
     }
     else
     {
@@ -411,7 +411,7 @@
       face->cvt_program_size = 0;
       error                  = TT_Err_Ok;
 
-      FT_TRACE2(( "is missing!\n" ));
+      FT_TRACE2(( "is missing\n" ));
     }
     else
     {

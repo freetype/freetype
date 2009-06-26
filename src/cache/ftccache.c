@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType internal cache interface (body).                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007 by             */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -216,7 +216,7 @@
 
       if ( node == NULL )
       {
-        FT_ERROR(( "ftc_node_hash_unlink: unknown node!\n" ));
+        FT_TRACE0(( "ftc_node_hash_unlink: unknown node\n" ));
         return;
       }
 
@@ -273,7 +273,7 @@
     /* find node's cache */
     if ( node->cache_index >= manager->num_caches )
     {
-      FT_ERROR(( "ftc_node_destroy: invalid node handle\n" ));
+      FT_TRACE0(( "ftc_node_destroy: invalid node handle\n" ));
       return;
     }
 #endif
@@ -283,7 +283,7 @@
 #ifdef FT_DEBUG_ERROR
     if ( cache == NULL )
     {
-      FT_ERROR(( "ftc_node_destroy: invalid node handle\n" ));
+      FT_TRACE0(( "ftc_node_destroy: invalid node handle\n" ));
       return;
     }
 #endif
@@ -302,7 +302,7 @@
 #if 0
     /* check, just in case of general corruption :-) */
     if ( manager->num_nodes == 0 )
-      FT_ERROR(( "ftc_node_destroy: invalid cache node count! = %d\n",
+      FT_TRACE0(( "ftc_node_destroy: invalid cache node count (%d)\n",
                   manager->num_nodes ));
 #endif
   }

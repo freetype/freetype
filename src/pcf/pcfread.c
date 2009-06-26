@@ -738,8 +738,8 @@ THE SOFTWARE.
       if ( ( offsets[i] < 0 )              ||
            ( (FT_ULong)offsets[i] > size ) )
       {
-        FT_ERROR(( "pcf_get_bitmaps:"));
-        FT_ERROR(( " invalid offset to bitmap data of glyph %d\n", i ));
+        FT_TRACE0(( "pcf_get_bitmaps:"
+                    " invalid offset to bitmap data of glyph %d\n", i ));
       }
       else
         face->metrics[i].bits = stream->pos + offsets[i];

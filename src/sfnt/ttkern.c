@@ -59,14 +59,16 @@
 
     if ( table_size < 4 )  /* the case of a malformed table */
     {
-      FT_ERROR(( "kerning table is too small - ignored\n" ));
+      FT_ERROR(( "tt_face_load_kern:"
+                 " kerning table is too small - ignored\n" ));
       error = SFNT_Err_Table_Missing;
       goto Exit;
     }
 
     if ( FT_FRAME_EXTRACT( table_size, face->kern_table ) )
     {
-      FT_ERROR(( "could not extract kerning table\n" ));
+      FT_ERROR(( "tt_face_load_kern:"
+                 " could not extract kerning table\n" ));
       goto Exit;
     }
 

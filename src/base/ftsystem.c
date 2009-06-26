@@ -226,8 +226,8 @@
     file = ft_fopen( filepathname, "rb" );
     if ( !file )
     {
-      FT_ERROR(( "FT_Stream_Open:" ));
-      FT_ERROR(( " could not open `%s'\n", filepathname ));
+      FT_ERROR(( "FT_Stream_Open:"
+                 " could not open `%s'\n", filepathname ));
 
       return FT_Err_Cannot_Open_Resource;
     }

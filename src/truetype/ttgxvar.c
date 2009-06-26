@@ -1138,7 +1138,7 @@
 
     if ( blend == NULL )
     {
-      FT_TRACE2(( "no blend specified!\n" ));
+      FT_TRACE2(( "tt_face_vary_cvt: no blend specified\n" ));
 
       error = TT_Err_Ok;
       goto Exit;
@@ -1146,7 +1146,7 @@
 
     if ( face->cvt == NULL )
     {
-      FT_TRACE2(( "no `cvt ' table!\n" ));
+      FT_TRACE2(( "tt_face_vary_cvt: no `cvt ' table\n" ));
 
       error = TT_Err_Ok;
       goto Exit;
@@ -1155,7 +1155,7 @@
     error = face->goto_table( face, TTAG_cvar, stream, &table_len );
     if ( error )
     {
-      FT_TRACE2(( "is missing!\n" ));
+      FT_TRACE2(( "is missing\n" ));
 
       error = TT_Err_Ok;
       goto Exit;
@@ -1170,7 +1170,7 @@
     table_start = FT_Stream_FTell( stream );
     if ( FT_GET_LONG() != 0x00010000L )
     {
-      FT_TRACE2(( "bad table version!\n" ));
+      FT_TRACE2(( "bad table version\n" ));
 
       error = TT_Err_Ok;
       goto FExit;

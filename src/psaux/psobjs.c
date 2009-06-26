@@ -565,8 +565,8 @@
       cur++;
       if ( cur >= limit || *cur != '>' )             /* >> */
       {
-        FT_ERROR(( "ps_parser_skip_PS_token: "
-                   "unexpected closing delimiter `>'\n" ));
+        FT_ERROR(( "ps_parser_skip_PS_token:"
+                   " unexpected closing delimiter `>'\n" ));
         error = PSaux_Err_Invalid_File_Format;
         goto Exit;
       }
@@ -591,9 +591,10 @@
   Exit:
     if ( cur == parser->cursor )
     {
-      FT_ERROR(( "ps_parser_skip_PS_token: "
-                 "current token is `%c', which is self-delimiting "
-                 "but invalid at this point\n",
+      FT_ERROR(( "ps_parser_skip_PS_token:"
+                 " current token is `%c' which is self-delimiting\n"
+                 "                        "
+                 " but invalid at this point\n",
                  *cur ));
 
       error = PSaux_Err_Invalid_File_Format;
@@ -1154,8 +1155,10 @@
           }
           else
           {
-            FT_ERROR(( "ps_parser_load_field: expected a name or string "
-                       "but found token of type %d instead\n",
+            FT_ERROR(( "ps_parser_load_field:"
+                       " expected a name or string\n"
+                       "                     "
+                       " but found token of type %d instead\n",
                        token.type ));
             error = PSaux_Err_Invalid_File_Format;
             goto Exit;
@@ -1192,8 +1195,8 @@
 
           if ( result < 0 )
           {
-            FT_ERROR(( "ps_parser_load_field: "
-                       "expected four integers in bounding box\n" ));
+            FT_ERROR(( "ps_parser_load_field:"
+                       " expected four integers in bounding box\n" ));
             error = PSaux_Err_Invalid_File_Format;
             goto Exit;
           }

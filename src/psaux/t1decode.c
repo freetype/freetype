@@ -203,7 +203,7 @@
     if ( decoder->glyph_names == 0 )
     {
       FT_ERROR(( "t1operator_seac:"
-                 " glyph names table not available in this font!\n" ));
+                 " glyph names table not available in this font\n" ));
       return PSaux_Err_Syntax_Error;
     }
 
@@ -637,7 +637,7 @@
       {
         if ( top - decoder->stack >= T1_MAX_CHARSTRINGS_OPERANDS )
         {
-          FT_ERROR(( "t1_decoder_parse_charstrings: stack overflow!\n" ));
+          FT_ERROR(( "t1_decoder_parse_charstrings: stack overflow\n" ));
           goto Syntax_Error;
         }
 
@@ -785,7 +785,7 @@
             if ( !blend )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings:"
-                         " unexpected multiple masters operator!\n" ));
+                         " unexpected multiple masters operator\n" ));
               goto Syntax_Error;
             }
 
@@ -989,14 +989,14 @@
 
         default:
           FT_ERROR(( "t1_decoder_parse_charstrings:"
-                     " unknown othersubr [%d %d], wish me luck!\n",
+                     " unknown othersubr [%d %d], wish me luck\n",
                      arg_cnt, subr_no ));
           unknown_othersubr_result_cnt = arg_cnt;
           break;
 
         Unexpected_OtherSubr:
           FT_ERROR(( "t1_decoder_parse_charstrings:"
-                     " invalid othersubr [%d %d]!\n", arg_cnt, subr_no ));
+                     " invalid othersubr [%d %d]\n", arg_cnt, subr_no ));
           goto Syntax_Error;
         }
 
@@ -1333,7 +1333,7 @@
             if ( !zone->base )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings:"
-                         " invoking empty subrs!\n" ));
+                         " invoking empty subrs\n" ));
               goto Syntax_Error;
             }
 
@@ -1356,7 +1356,7 @@
           if ( unknown_othersubr_result_cnt == 0 )
           {
             FT_ERROR(( "t1_decoder_parse_charstrings:"
-                       " no more operands for othersubr!\n" ));
+                       " no more operands for othersubr\n" ));
             goto Syntax_Error;
           }
 

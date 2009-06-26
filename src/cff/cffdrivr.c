@@ -239,10 +239,10 @@
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
     if ( !psnames )
     {
-      FT_ERROR(( "cff_get_glyph_name:" ));
-      FT_ERROR(( " cannot get glyph name from CFF & CEF fonts\n" ));
-      FT_ERROR(( "                   " ));
-      FT_ERROR(( " without the `PSNames' module\n" ));
+      FT_ERROR(( "cff_get_glyph_name:"
+                 " cannot get glyph name from CFF & CEF fonts\n"
+                 "                   "
+                 " without the `PSNames' module\n" ));
       error = CFF_Err_Unknown_File_Format;
       goto Exit;
     }

@@ -727,8 +727,8 @@
 
     if ( bchar_index < 0 || achar_index < 0 )
     {
-      FT_ERROR(( "cff_operator_seac:" ));
-      FT_ERROR(( " invalid seac character code arguments\n" ));
+      FT_ERROR(( "cff_operator_seac:"
+                 " invalid seac character code arguments\n" ));
       return CFF_Err_Syntax_Error;
     }
 
@@ -2244,8 +2244,8 @@
 
             if ( idx >= decoder->num_locals )
             {
-              FT_ERROR(( "cff_decoder_parse_charstrings:" ));
-              FT_ERROR(( " invalid local subr index\n" ));
+              FT_ERROR(( "cff_decoder_parse_charstrings:"
+                         " invalid local subr index\n" ));
               goto Syntax_Error;
             }
 
@@ -2266,7 +2266,7 @@
             if ( !zone->base || zone->limit == zone->base )
             {
               FT_ERROR(( "cff_decoder_parse_charstrings:"
-                         " invoking empty subrs!\n" ));
+                         " invoking empty subrs\n" ));
               goto Syntax_Error;
             }
 
@@ -2286,8 +2286,8 @@
 
             if ( idx >= decoder->num_globals )
             {
-              FT_ERROR(( "cff_decoder_parse_charstrings:" ));
-              FT_ERROR(( " invalid global subr index\n" ));
+              FT_ERROR(( "cff_decoder_parse_charstrings:"
+                         " invalid global subr index\n" ));
               goto Syntax_Error;
             }
 
@@ -2308,7 +2308,7 @@
             if ( !zone->base || zone->limit == zone->base )
             {
               FT_ERROR(( "cff_decoder_parse_charstrings:"
-                         " invoking empty subrs!\n" ));
+                         " invoking empty subrs\n" ));
               goto Syntax_Error;
             }
 
@@ -2357,15 +2357,15 @@
     return error;
 
   Syntax_Error:
-    FT_TRACE4(( "cff_decoder_parse_charstrings: syntax error!\n" ));
+    FT_TRACE4(( "cff_decoder_parse_charstrings: syntax error\n" ));
     return CFF_Err_Invalid_File_Format;
 
   Stack_Underflow:
-    FT_TRACE4(( "cff_decoder_parse_charstrings: stack underflow!\n" ));
+    FT_TRACE4(( "cff_decoder_parse_charstrings: stack underflow\n" ));
     return CFF_Err_Too_Few_Arguments;
 
   Stack_Overflow:
-    FT_TRACE4(( "cff_decoder_parse_charstrings: stack overflow!\n" ));
+    FT_TRACE4(( "cff_decoder_parse_charstrings: stack overflow\n" ));
     return CFF_Err_Stack_Overflow;
   }
 

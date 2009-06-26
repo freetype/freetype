@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType sbits manager (body).                                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006 by                   */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2009 by             */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -134,8 +134,8 @@
 
       if ( slot->format != FT_GLYPH_FORMAT_BITMAP )
       {
-        FT_ERROR(( "%s: glyph loaded didn't return a bitmap!\n",
-                   "ftc_snode_load" ));
+        FT_TRACE0(( "ftc_snode_load:"
+                    " glyph loaded didn't return a bitmap\n" ));
         goto BadGlyph;
       }
 

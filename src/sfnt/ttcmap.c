@@ -3402,7 +3402,8 @@
     if ( TT_NEXT_USHORT( p ) != 0 )
     {
       p -= 2;
-      FT_ERROR(( "tt_face_build_cmaps: unsupported `cmap' table format = %d\n",
+      FT_ERROR(( "tt_face_build_cmaps:"
+                 " unsupported `cmap' table format = %d\n",
                  TT_PEEK_USHORT( p ) ));
       return SFNT_Err_Invalid_Table;
     }
@@ -3469,8 +3470,8 @@
             }
             else
             {
-              FT_ERROR(( "tt_face_build_cmaps:" ));
-              FT_ERROR(( " broken cmap sub-table ignored!\n" ));
+              FT_TRACE0(( "tt_face_build_cmaps:"
+                          " broken cmap sub-table ignored\n" ));
             }
             break;
           }
@@ -3478,8 +3479,8 @@
 
         if ( *pclazz == NULL )
         {
-          FT_ERROR(( "tt_face_build_cmaps:" ));
-          FT_ERROR(( " unsupported cmap sub-table ignored!\n" ));
+          FT_TRACE0(( "tt_face_build_cmaps:"
+                      " unsupported cmap sub-table ignored\n" ));
         }
       }
     }

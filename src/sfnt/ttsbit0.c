@@ -62,7 +62,7 @@
 
     if ( table_size < 8 )
     {
-      FT_ERROR(( "tt_face_load_sbit_strikes: table too short!\n" ));
+      FT_ERROR(( "tt_face_load_sbit_strikes: table too short\n" ));
       error = SFNT_Err_Invalid_File_Format;
       goto Exit;
     }
@@ -80,7 +80,7 @@
 
     if ( version != 0x00020000UL || num_strikes >= 0x10000UL )
     {
-      FT_ERROR(( "tt_face_load_sbit_strikes: invalid table version!\n" ));
+      FT_ERROR(( "tt_face_load_sbit_strikes: invalid table version\n" ));
       error = SFNT_Err_Invalid_File_Format;
       goto Fail;
     }

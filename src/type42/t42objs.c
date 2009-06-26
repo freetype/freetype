@@ -70,7 +70,7 @@
 
     if ( !loader.charstrings.init )
     {
-      FT_ERROR(( "T42_Open_Face: no charstrings array in face!\n" ));
+      FT_ERROR(( "T42_Open_Face: no charstrings array in face\n" ));
       error = T42_Err_Invalid_File_Format;
     }
 

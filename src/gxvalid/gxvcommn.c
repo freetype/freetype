@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT common tables validation (body).                      */
 /*                                                                         */
-/*  Copyright 2004, 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K., */
+/*  Copyright 2004, 2005, 2009                                             */
+/*  by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -404,8 +405,8 @@
             if ( UNITSIZE != CORRECTSIZE )                             \
             {                                                          \
               FT_ERROR(( "unitSize=%d differs from"                    \
-                         "expected unitSize=%d"                        \
-                         "in LookupTable %s",                          \
+                         " expected unitSize=%d"                       \
+                         " in LookupTable %s\n",                       \
                           UNITSIZE, CORRECTSIZE, FORMAT ));            \
               if ( UNITSIZE != 0 && NUNITS != 0 )                      \
               {                                                        \

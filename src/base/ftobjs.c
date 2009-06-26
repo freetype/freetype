@@ -3731,7 +3731,7 @@
         while ( renderer )
         {
           error = renderer->render( renderer, slot, render_mode, NULL );
-          if ( !error ||
+          if ( !error                                               ||
                FT_ERROR_BASE( error ) != FT_Err_Cannot_Render_Glyph )
             break;
 
@@ -4236,7 +4236,7 @@
         {
           FT_Done_Face( FT_FACE( faces->head->data ) );
           if ( faces->head )
-            FT_ERROR(( "FT_Done_Library: failed to free some faces\n" ));
+            FT_TRACE0(( "FT_Done_Library: failed to free some faces\n" ));
         }
       }
     }

@@ -1859,7 +1859,7 @@
         if ( middle == bottom )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
-          FT_TRACE7(( "gray_convert_glyph: Rotten glyph!\n" ));
+          FT_TRACE7(( "gray_convert_glyph: rotten glyph\n" ));
 #endif
           return 1;
         }

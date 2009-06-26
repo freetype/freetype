@@ -303,7 +303,7 @@
 
     if ( !cache )
     {
-      FT_ERROR(( "FTC_CMapCache_Lookup: bad arguments, returning 0!\n" ));
+      FT_TRACE0(( "FTC_CMapCache_Lookup: bad arguments, returning 0\n" ));
       return 0;
     }
 

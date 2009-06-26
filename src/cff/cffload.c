@@ -851,8 +851,8 @@
               charset->sids[j] = sid;
             else
             {
-              FT_ERROR(( "cff_charset_load:"
-                         " invalid SID value %d set to zero\n", sid ));
+              FT_TRACE0(( "cff_charset_load:"
+                          " invalid SID value %d set to zero\n", sid ));
               charset->sids[j] = 0;
             }
           }
@@ -910,7 +910,7 @@
         break;
 
       default:
-        FT_ERROR(( "cff_charset_load: invalid table format!\n" ));
+        FT_ERROR(( "cff_charset_load: invalid table format\n" ));
         error = CFF_Err_Invalid_File_Format;
         goto Exit;
       }
@@ -933,7 +933,7 @@
         if ( num_glyphs > 229 )
         {
           FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
-                     "predefined charset (Adobe ISO-Latin)!\n" ));
+                     "predefined charset (Adobe ISO-Latin)\n" ));
           error = CFF_Err_Invalid_File_Format;
           goto Exit;
         }
@@ -951,7 +951,7 @@
         if ( num_glyphs > 166 )
         {
           FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
-                     "predefined charset (Adobe Expert)!\n" ));
+                     "predefined charset (Adobe Expert)\n" ));
           error = CFF_Err_Invalid_File_Format;
           goto Exit;
         }
@@ -969,7 +969,7 @@
         if ( num_glyphs > 87 )
         {
           FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
-                     "predefined charset (Adobe Expert Subset)!\n" ));
+                     "predefined charset (Adobe Expert Subset)\n" ));
           error = CFF_Err_Invalid_File_Format;
           goto Exit;
         }
@@ -1154,7 +1154,7 @@
         break;
 
       default:
-        FT_ERROR(( "cff_encoding_load: invalid table format!\n" ));
+        FT_ERROR(( "cff_encoding_load: invalid table format\n" ));
         error = CFF_Err_Invalid_File_Format;
         goto Exit;
       }
@@ -1249,7 +1249,7 @@
         break;
 
       default:
-        FT_ERROR(( "cff_encoding_load: invalid table format!\n" ));
+        FT_ERROR(( "cff_encoding_load: invalid table format\n" ));
         error = CFF_Err_Invalid_File_Format;
         goto Exit;
       }
@@ -1423,7 +1423,7 @@
          font->header_size      < 4 ||
          font->absolute_offsize > 4 )
     {
-      FT_TRACE2(( "[not a CFF font header!]\n" ));
+      FT_TRACE2(( "[not a CFF font header]\n" ));
       error = CFF_Err_Unknown_File_Format;
       goto Exit;
     }
@@ -1492,7 +1492,7 @@
 
       if ( fd_index.count > CFF_MAX_CID_FONTS )
       {
-        FT_ERROR(( "cff_font_load: FD array too large in CID font\n" ));
+        FT_TRACE0(( "cff_font_load: FD array too large in CID font\n" ));
         goto Fail_CID;
       }
 
@@ -1533,7 +1533,7 @@
     /* read the charstrings index now */
     if ( dict->charstrings_offset == 0 )
     {
-      FT_ERROR(( "cff_font_load: no charstrings offset!\n" ));
+      FT_ERROR(( "cff_font_load: no charstrings offset\n" ));
       error = CFF_Err_Unknown_File_Format;
       goto Exit;
     }
