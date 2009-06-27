@@ -1,5 +1,13 @@
 2009-06-28  Werner Lemberg  <wl@gnu.org>
 
+	Thinko.
+
+	* src/psaux/t1decode.c (t1operator_seac)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Test for existence of incremental
+	interface.
+
+2009-06-28  Werner Lemberg  <wl@gnu.org>
+
 	* devel/ftoption.h [FT_CONFIG_OPTION_INCREMENTAL]: Define.
 
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
