@@ -1,5 +1,16 @@
 2009-06-28  Werner Lemberg  <wl@gnu.org>
 
+	[psaux, cff] Protect against nested `seac' calls.
+
+	* include/freetype/internal/psaux.h (T1_Decoder), src/cff/cffgload.h
+	(CFF_Decoder): Add `seac' boolean variable.
+
+	* src/cff/cffgload.c (cff_operator_seac,
+	cff_decoder_parse_charstrings), src/psaux/t1decode.c
+	(t1operator_seac, t1_decoder_parse_charstrings): Use it.
+
+2009-06-28  Werner Lemberg  <wl@gnu.org>
+
 	Thinko.
 
 	* src/psaux/t1decode.c (t1operator_seac)

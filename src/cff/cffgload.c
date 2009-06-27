@@ -707,6 +707,12 @@
     FT_ULong      charstring_len;
 
 
+    if ( decoder->seac )
+    {
+      FT_ERROR(( "cff_operator_seac: invalid nested seac\n" ));
+      return CFF_Err_Syntax_Error;
+    }
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     /* Incremental fonts don't necessarily have valid charsets.        */
     /* They use the character code, not the glyph index, in this case. */
@@ -1883,11 +1889,14 @@
             FT_Pos  glyph_width = decoder->glyph_width;
 
 
+            /* the seac operator must not be nested */
+            decoder->seac = TRUE;
             error = cff_operator_seac( decoder,
                                        args[-4],
                                        args[-3],
                                        (FT_Int)( args[-2] >> 16 ),
                                        (FT_Int)( args[-1] >> 16 ) );
+            decoder->seac = FALSE;
 
             decoder->glyph_width = glyph_width;
           }

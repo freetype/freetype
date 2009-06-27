@@ -198,6 +198,13 @@
     T1_Face      face  = (T1_Face)decoder->builder.face;
 #endif     
 
+
+    if ( decoder->seac )
+    {
+      FT_ERROR(( "t1operator_seac: invalid nested seac\n" ));
+      return PSaux_Err_Syntax_Error;
+    }
+
     /* seac weirdness */
     adx += decoder->builder.left_bearing.x;
 
@@ -1118,13 +1125,18 @@
           break;
 
         case op_seac:
+          /* the seac operator must not be nested */
+          decoder->seac = TRUE;
+          error = t1operator_seac( decoder,
+                                   top[0],
+                                   top[1],
+                                   top[2],
+                                   (FT_Int)( top[3] >> 16 ),
+                                   (FT_Int)( top[4] >> 16 ) );
+          decoder->seac = FALSE;
+
           /* return immediately after the processing */
-          return t1operator_seac( decoder,
-                                  top[0],
-                                  top[1],
-                                  top[2],
-                                  (FT_Int)( top[3] >> 16 ),
-                                  (FT_Int)( top[4] >> 16 ) );
+          return error;
 
         case op_sbw:
           FT_TRACE4(( " sbw" ));

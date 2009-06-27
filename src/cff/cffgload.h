@@ -154,6 +154,8 @@ FT_BEGIN_HEADER
 
     FT_Render_Mode     hint_mode;
 
+    FT_Bool            seac;
+
   } CFF_Decoder;
 
 

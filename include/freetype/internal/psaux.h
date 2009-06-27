@@ -692,6 +692,8 @@ FT_BEGIN_HEADER
     FT_Int*              buildchar;
     FT_UInt              len_buildchar;
 
+    FT_Bool              seac;
+
   } T1_DecoderRec;
 
 
