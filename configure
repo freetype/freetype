@@ -82,8 +82,10 @@ fi
 
 if test "$abs_curr_dir" != "$abs_ft2_dir"; then
   mkdir reference
-  echo "Copying \`modules.cfg'"
-  cp $abs_ft2_dir/modules.cfg $abs_curr_dir
+  if test ! -r $abs_curr_dir/modules.cfg; then
+    echo "Copying \`modules.cfg'"
+    cp $abs_ft2_dir/modules.cfg $abs_curr_dir
+  fi
   echo "Generating \`Makefile'"
   echo "TOP_DIR   := $abs_ft2_dir"               > Makefile
   echo "OBJ_DIR   := $abs_curr_dir"             >> Makefile

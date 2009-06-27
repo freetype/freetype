@@ -1,3 +1,11 @@
+2009-06-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Keep existing modules.cfg in the building tree.
+
+	* configure: When configure is executed out of the source tree,
+	existing modules.cfg in building directory should be kept as
+	the building in the source tree.
+
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Filter --srcdir= option before invoking builds/unix/configure.
