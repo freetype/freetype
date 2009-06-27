@@ -2,35 +2,36 @@
 
 	Add tools to preprocess the source files for AtariST PureC.
 
-	* builds/atari/deflinejoiner.awk: New file to filter C
-	source file for broken cpp of PureC.
-	* builds/atari/gen-purec-patch.sh: New file to generate
-	a patch set for PureC, by using deflinejoiner.awk.
+	* builds/atari/deflinejoiner.awk: New file to filter C source files
+	for broken C preprocessor of PureC compiler.
+
+	* builds/atari/gen-purec-patch.sh: New file to generate a patch set
+	for PureC, by using deflinejoiner.awk.
 
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Keep existing modules.cfg in the building tree.
 
-	* configure: When configure is executed out of the source tree,
-	existing modules.cfg in building directory should be kept as
-	the building in the source tree.
+	* configure: If `configure' is executed outside of the source tree,
+	an existing `modules.cfg' file in the build directory should be
+	kept, not overwritten by the version in the source tree.
 
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Filter --srcdir= option before invoking builds/unix/configure.
 
-	* configure: When builds/unix/configure is invoked with --srcdir
-	option, the option should take "builds/unix" directory instead
-	of the top source directory.  Thus configure in the top directory
-	should modify --srcdir= option when builds/unix/configure is
-	invoked.
+	* configure: If builds/unix/configure is invoked with --srcdir
+	option, the option should take `builds/unix' directory instead of
+	the top source directory.  Thus the configure script in the top
+	directory should modify the --srcdir= option if
+	`builds/unix/configure' is invoked.
 
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Improve configure.raw for cross-building on exe-suffixed systems.
 
 	* builds/unix/configure.raw: Fix a bug in sed script to extract
-	native suffix for binary executables, patch by Peter Breitenlohner.
+	native suffix for binary executables, patch by Peter Breitenlohner. 
 	http://lists.gnu.org/archive/html/freetype-devel/2009-04/msg00036.html
 
 2009-06-26  Werner Lemberg  <wl@gnu.org>
