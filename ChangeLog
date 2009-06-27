@@ -1,3 +1,7 @@
+2009-06-28  Werner Lemberg  <wl@gnu.org>
+
+	* devel/ftoption.h [FT_CONFIG_OPTION_INCREMENTAL]: Define.
+
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Add tools to preprocess the source files for AtariST PureC.
