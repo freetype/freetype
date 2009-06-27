@@ -67,6 +67,17 @@ ft2_dir=`(dirname "$0") 2>/dev/null                         ||
 abs_curr_dir=`pwd`
 abs_ft2_dir=`cd "$ft2_dir" && pwd`
 
+# "--srcdir=" option can override abs_ft2_dir.
+
+if test $# -gt 0; then
+  for x in "$@"; do
+    case x"$x" in
+    x--srcdir=*)
+      abs_ft2_dir=`echo $x | sed 's/^--srcdir=//'` ;;
+    esac
+  done
+fi
+
 # build a dummy Makefile if we are not building in the source tree
 
 if test "$abs_curr_dir" != "$abs_ft2_dir"; then
@@ -96,7 +107,10 @@ CFG=
 case $# in
 0) ;;
 *) for x in "$@"; do
-     CFG="$CFG '$x'"
+     case x"$x" in
+     x--srcdir=* ) CFG="$CFG '$x'/builds/unix" ;;
+     *) CFG="$CFG '$x'" ;;
+     esac
    done ;;
 esac
 CFG=$CFG $GNUMAKE setup unix

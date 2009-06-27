@@ -1,5 +1,15 @@
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Filter --srcdir= option before invoking builds/unix/configure.
+
+	* configure: When builds/unix/configure is invoked with --srcdir
+	option, the option should take "builds/unix" directory instead
+	of the top source directory.  Thus configure in the top directory
+	should modify --srcdir= option when builds/unix/configure is
+	invoked.
+
+2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Improve configure.raw for cross-building on exe-suffixed systems.
 
 	* builds/unix/configure.raw: Fix a bug in sed script to extract
