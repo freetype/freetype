@@ -53,7 +53,7 @@ if test ${cross_compiling} = yes; then
   elif test -x a_out.exe -o -x conftest.exe; then
     EXEEXT_BUILD=".exe"
   elif test -x conftest.* ; then
-    EXEEXT_BUILD=`echo conftest.* | sed -n '1s/^.*\.//g'`
+    EXEEXT_BUILD=`echo conftest.* | sed -n '1s/^.*\././'`
   fi
   AC_MSG_RESULT($EXEEXT_BUILD)
 else
@@ -61,10 +61,6 @@ else
   EXEEXT_BUILD=${EXEEXT}
 fi
 
-
-if test ! -z ${EXEEXT_BUILD}; then
-  EXEEXT_BUILD=."${EXEEXT_BUILD}"
-fi
 AC_SUBST(CC_BUILD)
 AC_SUBST(EXEEXT_BUILD)
 
