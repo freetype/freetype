@@ -1,5 +1,14 @@
 2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Add tools to preprocess the source files for AtariST PureC.
+
+	* builds/atari/deflinejoiner.awk: New file to filter C
+	source file for broken cpp of PureC.
+	* builds/atari/gen-purec-patch.sh: New file to generate
+	a patch set for PureC, by using deflinejoiner.awk.
+
+2009-06-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Keep existing modules.cfg in the building tree.
 
 	* configure: When configure is executed out of the source tree,
