@@ -58,6 +58,7 @@ FT_BEGIN_HEADER
   (*FT_SFNT_TableInfoFunc)( FT_Face    face,
                             FT_UInt    idx,
                             FT_ULong  *tag,
+                            FT_ULong  *offset,
                             FT_ULong  *length );
 
 

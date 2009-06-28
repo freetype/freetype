@@ -104,15 +104,17 @@
   sfnt_table_info( TT_Face    face,
                    FT_UInt    idx,
                    FT_ULong  *tag,
+                   FT_ULong  *offset,
                    FT_ULong  *length )
   {
-    if ( !tag || !length )
+    if ( !tag || !offset || !length )
       return SFNT_Err_Invalid_Argument;
 
     if ( idx >= face->num_tables )
       return SFNT_Err_Table_Missing;
 
     *tag    = face->dir_tables[idx].Tag;
+    *offset = face->dir_tables[idx].Offset;
     *length = face->dir_tables[idx].Length;
 
     return SFNT_Err_Ok;

@@ -3397,6 +3397,7 @@
                       FT_ULong  *length )
   {
     FT_Service_SFNT_Table  service;
+    FT_ULong               offset;
 
 
     if ( !face || !FT_IS_SFNT( face ) )
@@ -3406,7 +3407,7 @@
     if ( service == NULL )
       return FT_Err_Unimplemented_Feature;
 
-    return service->table_info( face, table_index, tag, length );
+    return service->table_info( face, table_index, tag, &offset, length );
   }
 
 
