@@ -5,9 +5,8 @@
 	* include/freetype/internal/psaux.h (T1_Decoder), src/cff/cffgload.h
 	(CFF_Decoder): Add `seac' boolean variable.
 
-	* src/cff/cffgload.c (cff_operator_seac,
-	cff_decoder_parse_charstrings), src/psaux/t1decode.c
-	(t1operator_seac, t1_decoder_parse_charstrings): Use it.
+	* src/cff/cffgload.c (cff_operator_seac), src/psaux/t1decode.c
+	(t1operator_seac): Use it.
 
 2009-06-28  Werner Lemberg  <wl@gnu.org>
 

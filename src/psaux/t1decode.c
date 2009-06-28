@@ -282,7 +282,10 @@
 
     FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
 
+    /* the seac operator must not be nested */
+    decoder->seac = TRUE;
     error = t1_decoder_parse_glyph( decoder, bchar_index );
+    decoder->seac = FALSE;
     if ( error )
       goto Exit;
 
@@ -300,7 +303,11 @@
 
     /* Now load `achar' on top of */
     /* the base outline           */
+
+    /* the seac operator must not be nested */
+    decoder->seac = TRUE;
     error = t1_decoder_parse_glyph( decoder, achar_index );
+    decoder->seac = FALSE;
     if ( error )
       goto Exit;
 
@@ -1125,18 +1132,12 @@
           break;
 
         case op_seac:
-          /* the seac operator must not be nested */
-          decoder->seac = TRUE;
-          error = t1operator_seac( decoder,
-                                   top[0],
-                                   top[1],
-                                   top[2],
-                                   (FT_Int)( top[3] >> 16 ),
-                                   (FT_Int)( top[4] >> 16 ) );
-          decoder->seac = FALSE;
-
-          /* return immediately after the processing */
-          return error;
+          return t1operator_seac( decoder,
+                                  top[0],
+                                  top[1],
+                                  top[2],
+                                  (FT_Int)( top[3] >> 16 ),
+                                  (FT_Int)( top[4] >> 16 ) );
 
         case op_sbw:
           FT_TRACE4(( " sbw" ));
