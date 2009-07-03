@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	pcf: Fix some data types mismatching with their sources.
+
+	* src/pcf/pcfread.c (pcf_seek_to_table_type,
+	pcf_has_table_type): The type of 3rd argument
+	`ntables' is matched with PCF_Toc->count.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	otvalid: Truncate the glyph index to 16-bit.
 
 	* src/otvalid/otvalid.c (otv_validate): Checks
