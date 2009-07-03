@@ -349,10 +349,16 @@
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     {
+      if ( (FT_ULong)(type->flags - FT_INT_MIN) > FT_UINT_MAX )
+      {
+        FT_TRACE1(( "FTC_ImageCache_Lookup: higher bits in load_flags" ));
+        FT_TRACE1(( "0x%x are dropped\n", (type->flags & ~((FT_ULong)FT_UINT_MAX)) ));
+      }
+
       query.attrs.scaler.face_id = type->face_id;
       query.attrs.scaler.width   = type->width;
       query.attrs.scaler.height  = type->height;
-      query.attrs.load_flags     = type->flags;
+      query.attrs.load_flags     = (FT_UInt)type->flags;
     }
 
     query.attrs.scaler.pixel = 1;
@@ -418,8 +424,15 @@
     if ( anode )
       *anode  = NULL;
 
+    /* FT_Load_Glyph(), FT_Load_Char() take FT_UInt flags */
+    if ( load_flags > FT_UINT_MAX )
+    {
+      FT_TRACE1(( "FTC_ImageCache_LookupScaler: higher bits in load_flags" ));
+      FT_TRACE1(( "0x%x are dropped\n", (load_flags & ~((FT_ULong)FT_UINT_MAX)) ));
+    }
+
     query.attrs.scaler     = scaler[0];
-    query.attrs.load_flags = load_flags;
+    query.attrs.load_flags = (FT_UInt)load_flags;
 
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
 
@@ -671,10 +684,16 @@
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     {
+      if ( (FT_ULong)(type->flags - FT_INT_MIN) > FT_UINT_MAX )
+      {
+        FT_TRACE1(( "FTC_ImageCache_Lookup: higher bits in load_flags" ));
+        FT_TRACE1(( "0x%x are dropped\n", (type->flags & ~((FT_ULong)FT_UINT_MAX)) ));
+      }
+
       query.attrs.scaler.face_id = type->face_id;
       query.attrs.scaler.width   = type->width;
       query.attrs.scaler.height  = type->height;
-      query.attrs.load_flags     = type->flags;
+      query.attrs.load_flags     = (FT_UInt)type->flags;
     }
 
     query.attrs.scaler.pixel = 1;
@@ -741,8 +760,15 @@
 
     *ansbit = NULL;
 
+    /* FT_Load_Glyph(), FT_Load_Char() take FT_UInt flags */
+    if ( load_flags > FT_UINT_MAX )
+    {
+      FT_TRACE1(( "FTC_ImageCache_LookupScaler: higher bits in load_flags" ));
+      FT_TRACE1(( "0x%x are dropped\n", (load_flags & ~((FT_ULong)FT_UINT_MAX)) ));
+    }
+
     query.attrs.scaler     = scaler[0];
-    query.attrs.load_flags = load_flags;
+    query.attrs.load_flags = (FT_UInt)load_flags;
 
     /* beware, the hash must be the same for all glyph ranges! */
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
