@@ -198,7 +198,8 @@
       for ( ; p < limit && *p; p++ )
       {
         FT_UInt     glyph_index;
-        FT_Int      best_point, best_y, best_first, best_last;
+        FT_Pos      best_y; /* same as points.y */
+        FT_Int      best_point, best_first, best_last;
         FT_Vector*  points;
         FT_Bool     round = 0;
 
@@ -1617,7 +1618,7 @@
             /* not hinted, appear a lot bolder or thinner than the    */
             /* vertical stems.                                        */
 
-            FT_Int  delta;
+            FT_Pos  delta;
 
 
             dist = ( dist + 22 ) & ~63;

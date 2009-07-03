@@ -34,7 +34,7 @@
     {
       FT_Int  old_max = axis->max_segments;
       FT_Int  new_max = old_max;
-      FT_Int  big_max = FT_INT_MAX / sizeof ( *segment );
+      FT_Int  big_max = (FT_Int)( FT_INT_MAX / sizeof ( *segment ) );
 
 
       if ( old_max >= big_max )
@@ -77,7 +77,7 @@
     {
       FT_Int  old_max = axis->max_edges;
       FT_Int  new_max = old_max;
-      FT_Int  big_max = FT_INT_MAX / sizeof ( *edge );
+      FT_Int  big_max = (FT_Int)( FT_INT_MAX / sizeof ( *edge ) );
 
 
       if ( old_max >= big_max )
