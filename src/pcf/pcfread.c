@@ -542,9 +542,9 @@ THE SOFTWARE.
       }
       else
       {
-        properties[i].value.integer = props[i].value;
+        properties[i].value.l = props[i].value;
 
-        FT_TRACE4(( " %d\n", properties[i].value.integer ));
+        FT_TRACE4(( " %d\n", properties[i].value.l ));
       }
     }
 
@@ -1201,7 +1201,7 @@ THE SOFTWARE.
 
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop )
-          bsize->width = (FT_Short)( ( prop->value.integer + 5 ) / 10 );
+          bsize->width = (FT_Short)( ( prop->value.l + 5 ) / 10 );
         else
           bsize->width = (FT_Short)( bsize->height * 2/3 );
 
@@ -1209,19 +1209,19 @@ THE SOFTWARE.
         if ( prop )
           /* convert from 722.7 decipoints to 72 points per inch */
           bsize->size =
-            (FT_Pos)( ( prop->value.integer * 64 * 7200 + 36135L ) / 72270L );
+            (FT_Pos)( ( prop->value.l * 64 * 7200 + 36135L ) / 72270L );
 
         prop = pcf_find_property( face, "PIXEL_SIZE" );
         if ( prop )
-          bsize->y_ppem = (FT_Short)prop->value.integer << 6;
+          bsize->y_ppem = (FT_Short)prop->value.l << 6;
 
         prop = pcf_find_property( face, "RESOLUTION_X" );
         if ( prop )
-          resolution_x = (FT_Short)prop->value.integer;
+          resolution_x = (FT_Short)prop->value.l;
 
         prop = pcf_find_property( face, "RESOLUTION_Y" );
         if ( prop )
-          resolution_y = (FT_Short)prop->value.integer;
+          resolution_y = (FT_Short)prop->value.l;
 
         if ( bsize->y_ppem == 0 )
         {
