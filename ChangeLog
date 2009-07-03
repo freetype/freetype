@@ -1,5 +1,12 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	type1: Check invalid string longer than PostScript limit.
+
+	* src/type1/t1afm.c (t1_get_index): Check invalid string
+	which exceeds the limit of PostScript string/name objects.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	gzip: Use FT2 zcalloc() & zfree() in ftgzip.c by default.
 
 	* src/gzip/ftgzip.c (zcalloc, zcfree): Disable all
