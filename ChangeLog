@@ -1,5 +1,34 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	smooth: Fix some data types mismatching with their sources.
+
+	* src/smooth/ftgrays.c: The type of `TCoord' is
+	matched to `TPos', because they are mixed in
+	gray_set_cell().  The type of TCell->x is extended
+	to `TPos', because gray_find_cell() sets it by
+	TWorker.ex.  The type of TCell->cover is extended
+	to `TCoord', because gray_render_scanline() adds
+	TCoord value to it.  The type of TWork.cover is matched
+	with TCell->cover.  The types of
+	TWork.{max_cells,num_cells} are changed to FT_PtrDist,
+	because they are calculated from the memory addresses.
+	The type of TWork.ycount is changed to TPos, because
+	it is calculated from TPos variables.
+	(gray_find_cell): The type of `x' is matched with
+	its initial value ras.ex.
+	(gray_render_scanline): The types of `mod', `lift'
+	and `rem' are changed to TCoord, because their values
+	are set with explicit casts to TCoord.  When ras.area
+	is updated by the differential values including
+	`delta', they are explicitly casted to TArea, because
+	the type of `delta' is not TArea but TCoord.
+	(gray_render_line): The type of `mod' is extended
+	from int to TCoord, because (TCoord)dy is added to mod.
+	(gray_hline): The argument `acount' is extended to
+	TCoord, to match with the parameters in the callers.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cff: Fix some data types mismatching with their sources.
 
 	* src/cff/cffobjs.c (cff_face_init): The type of
