@@ -25,6 +25,8 @@
 #include "ftccback.h"
 #include "ftcerror.h"
 
+#define FT_COMPONENT  trace_cache
+
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
@@ -139,8 +141,15 @@
 
     error = FTC_Manager_LookupFace( manager, family->attrs.scaler.face_id,
                                     &face );
+
+    if ( (FT_ULong)face->num_glyphs > FT_UINT_MAX || 0 > face->num_glyphs )
+    {
+      FT_TRACE1(( "ftc_basic_family_get_count: too large number of glyphs " ));
+      FT_TRACE1(( "in this face, truncated\n", face->num_glyphs ));
+    }
+
     if ( !error )
-      result = face->num_glyphs;
+      result = (FT_UInt)face->num_glyphs;
 
     return result;
   }
