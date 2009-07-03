@@ -1,5 +1,14 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	otvalid: Count the table size on memory by ptrdiff_t.
+
+	* src/otvalid/otvgpos.c (otv_ValueRecord_validate):
+	Change the type of table size from FT_UInt to
+	FT_PtrDist because it is calculated by the memory
+	addresses.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	otvalid: Prevent an overflow by GPOS/GSUB 32b-bit offset.
 
 	* src/otvalid/otvgpos.c (otv_ExtensionPos_validate):
