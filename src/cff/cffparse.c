@@ -554,7 +554,12 @@
     {
       dict->cid_registry   = (FT_UInt)cff_parse_num ( data++ );
       dict->cid_ordering   = (FT_UInt)cff_parse_num ( data++ );
-      dict->cid_supplement = (FT_ULong)cff_parse_num( data );
+      if ( **data == 30 )
+        FT_TRACE1(( "cff_parse_cid_ros: real supplement is rounded\n" ));
+      dict->cid_supplement = cff_parse_num( data );
+      if ( dict->cid_supplement < 0 )
+        FT_TRACE1(( "cff_parse_cid_ros: negative supplement %d is found\n",
+                   dict->cid_supplement ));
       error = CFF_Err_Ok;
     }
 

@@ -842,7 +842,7 @@
                          FT_Pos  out_x,
                          FT_Pos  out_y )
   {
-    FT_Int  result;
+    FT_Long  result; /* avoid overflow on 16-bit system */
 
 
     /* deal with the trivial cases quickly */
@@ -909,7 +909,8 @@
 #endif
     }
 
-    return result;
+    /* XXX: only the sign of return value, +1/0/-1 must be used */
+    return (FT_Int)result;
   }
 
 
