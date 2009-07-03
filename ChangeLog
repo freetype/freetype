@@ -2,6 +2,19 @@
 
 	sfnt: Cast a character code to FT_UInt32 for LP64 system.
 
+	* src/sfnt/ttcmap.c (tt_cmap14_char_map_nondef_binary,
+	tt_cmap14_variants, tt_cmap14_char_variants,
+	tt_cmap14_def_char_count, tt_cmap14_get_def_chars,
+	tt_cmap14_get_nondef_chars, tt_cmap14_variant_chars)
+	Insert casts when FT_UInt32 variable is loaded by
+	TT_NEXT_{UINT24|ULONG}.  Because most of them are
+	compared with FT_UInt32 values in public API, replacing
+	FT_UFast is not recommended.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	sfnt: Cast a character code to FT_UInt32 for LP64 system.
+
 	* src/sfnt/ttcmap.c (tt_cmap4_init, tt_cmap4_next):
 	Insert the casts from unsigned long constant to
 	FT_UInt32.
