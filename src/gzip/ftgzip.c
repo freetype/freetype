@@ -58,7 +58,9 @@
  /* original ZLib.                                                   */
 
 #define NO_DUMMY_DECL
-#define MY_ZCALLOC
+#ifndef USE_ZLIB_ZCALLOC
+#define MY_ZCALLOC /* prevent all zcalloc() & zfree() in zutils.c */
+#endif
 
 #include "zlib.h"
 
@@ -121,7 +123,7 @@
   }
 
 
-#ifndef FT_CONFIG_OPTION_SYSTEM_ZLIB
+#if !defined( FT_CONFIG_OPTION_SYSTEM_ZLIB ) && !defined( USE_ZLIB_ZCALLOC )
 
   local voidpf
   zcalloc ( voidpf    opaque,
@@ -138,7 +140,7 @@
     ft_gzip_free( (FT_Memory)opaque, ptr );
   }
 
-#endif /* !SYSTEM_ZLIB */
+#endif /* !SYSTEM_ZLIB && !USE_ZLIB_ZCALLOC */
 
 
 /***************************************************************************/
