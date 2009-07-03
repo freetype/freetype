@@ -941,8 +941,8 @@
         }
 
         {
-          FT_UInt  min, max, mid;
-          FT_Pos   fpos;
+          FT_PtrDist  min, max, mid;
+          FT_Pos      fpos;
 
 
           /* find enclosing edges */
@@ -953,7 +953,7 @@
           /* for small edge counts, a linear search is better */
           if ( max <= 8 )
           {
-            FT_UInt  nn;
+            FT_PtrDist  nn;
 
             for ( nn = 0; nn < max; nn++ )
               if ( edges[nn].fpos >= u )

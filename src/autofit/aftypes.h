@@ -332,7 +332,7 @@ extern void*  _af_debug_hints;
     AF_Script                   script;
     AF_Script_UniRange          script_uni_ranges; /* last must be { 0, 0 } */
 
-    FT_UInt                     script_metrics_size;
+    FT_Offset                   script_metrics_size;
     AF_Script_InitMetricsFunc   script_metrics_init;
     AF_Script_ScaleMetricsFunc  script_metrics_scale;
     AF_Script_DoneMetricsFunc   script_metrics_done;
