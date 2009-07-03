@@ -196,12 +196,18 @@
 
 #endif
 
+#if FT_UINT_MAX > 0xFFFFU
+
+  /* if pitch or height is not FT_UInt, check must be enabled */
+
     if ( pitch > 0xFFFF || height > 0xFFFF )
     {
       FT_ERROR(( "ft_smooth_render_generic: glyph too large: %d x %d\n",
                  width, height ));
       return Smooth_Err_Raster_Overflow;
     }
+
+#endif
 
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
     bitmap->num_grays  = 256;

@@ -1,5 +1,14 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	smooth: Exclude 16-bit system in invalid pitch/height check.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic):
+	pitch and height are typed as FT_UInt but checked to fit
+	16-bit range, to avoid the overflows.  On 16-bit system,
+	this checking inserts a conditional that never occurs.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cff: Type large constants > 0x7FFF as long for 16-bit systems.
 
 	* src/cff/cffload.c (cff_charset_load): Type large
