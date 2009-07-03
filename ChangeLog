@@ -1,5 +1,14 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	autofit: Cast FT_Long glyph_count to compare with FT_UInt GID.
+
+	* src/autofit/afglobal.c (af_face_globals_is_digit,
+	af_face_globals_compute_script_coverage): Cast FT_Long
+	globals->glyph_count to FT_ULong, to compare with FT_UInt
+	gindex.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	smooth: Exclude 16-bit system in invalid pitch/height check.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic):
