@@ -1,5 +1,12 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	pcf: Fix a comparison between FT_Long and FT_ULong.
+
+	* src/pcf/pcfread.c (pcf_get_bitmaps): Return an error
+	if PCF_Face->nemetrics is negative.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	gxvalid: Guarantee `nFeatureFlags' size up to 32-bit.
 
 	* src/gxvalid/gxvmort.c (gxv_mort_featurearray_validate):
