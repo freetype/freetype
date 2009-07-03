@@ -1377,7 +1377,7 @@
 
       for ( ; cell != NULL; cell = cell->next )
       {
-        TArea  area;
+        TPos  area;
 
 
         if ( cell->x > x && cover != 0 )
