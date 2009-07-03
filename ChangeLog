@@ -1,5 +1,12 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	pfr: Extend `num_aux' to take 32-bit value.
+
+	* src/pfr/pfrload.c (pfr_phy_font_load): Extend
+	`num_aux' to load 32-bit value.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	pcf: Truncate FT_ULong `nprops' to fit to int PCF_Face->nprops.
 
 	* src/pcf/pcfread.c (pcf_get_properties): Load `nprops'
