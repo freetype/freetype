@@ -111,7 +111,7 @@ THE SOFTWARE.
 
     while ( min < max )
     {
-      FT_UInt32  code;
+      FT_ULong  code;
 
 
       mid  = ( min + max ) >> 1;
@@ -140,7 +140,7 @@ THE SOFTWARE.
     PCF_CMap      cmap      = (PCF_CMap)pcfcmap;
     PCF_Encoding  encodings = cmap->encodings;
     FT_UInt       min, max, mid;
-    FT_UInt32     charcode  = *acharcode + 1;
+    FT_ULong      charcode  = *acharcode + 1;
     FT_UInt       result    = 0;
 
 
@@ -149,7 +149,7 @@ THE SOFTWARE.
 
     while ( min < max )
     {
-      FT_UInt32  code;
+      FT_ULong  code;
 
 
       mid  = ( min + max ) >> 1;
@@ -175,7 +175,14 @@ THE SOFTWARE.
     }
 
   Exit:
-    *acharcode = charcode;
+    if ( charcode > 0xFFFFFFFFUL )
+    {
+      FT_TRACE1(( "pcf_cmap_char_next: charcode 0x%x > 32bit API" ));
+      *acharcode = 0;
+      /* XXX: result should be changed to indicate an overflow error */
+    }
+    else
+      *acharcode = (FT_UInt32)charcode;
     return result;
   }
 

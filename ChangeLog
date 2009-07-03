@@ -1,5 +1,16 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	pcf: Fix some data types mismatching with their sources.
+
+	* src/pcf/pcfdrivr.c (pcf_cmap_char_index): The type of
+	`code' is matched to PCF_Encoding->enc.
+	(pcf_cmap_char_next): The type of `charcode' is matched
+	to PCF_Encoding->enc.  When *acharcode is set by charcode,
+	an overflow is checked and casted to unsigned 32-bit
+	integer.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	bdf: Improve bdf_property_t.value names for LP64 platforms.
 
 	* src/bdf/bdf.h: In bdf_property_t.value, the member
