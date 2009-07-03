@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	pcf: Fix some data types mismatching with their sources.
+
+	* src/pcf/pcfread.c (pcf_get_bitmaps): The types
+	of `nbitmaps', `i', `sizebitmaps' are matched with
+	the type of area FT_Bitmap.pitch * FT_Bitmap.rows.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	pcf: Handle the string length by size_t variables.
 
 	* src/pcf/pcfread.c (pcf_interpret_style): The types
