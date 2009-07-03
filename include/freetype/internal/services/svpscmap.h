@@ -98,7 +98,7 @@ FT_BEGIN_HEADER
   (*PS_Unicodes_CharIndexFunc)( PS_Unicodes  unicodes,
                                 FT_UInt32    unicode );
 
-  typedef FT_ULong
+  typedef FT_UInt32
   (*PS_Unicodes_CharNextFunc)( PS_Unicodes  unicodes,
                                FT_UInt32   *unicode );
 
