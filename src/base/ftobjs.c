@@ -3054,7 +3054,12 @@
       FT_CMap  cmap = FT_CMAP( face->charmap );
 
 
-      result = cmap->clazz->char_index( cmap, charcode );
+      if ( charcode > 0xFFFFFFFFUL )
+      {
+        FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
+        FT_TRACE1(( " 0x%x is truncated\n", charcode ));
+      }
+      result = cmap->clazz->char_index( cmap, (FT_UInt32)charcode );
     }
     return  result;
   }
@@ -3134,8 +3139,20 @@
         FT_CMap  vcmap = FT_CMAP( charmap );
 
 
-        result = vcmap->clazz->char_var_index( vcmap, ucmap, charcode,
-                                               variantSelector );
+        if ( charcode > 0xFFFFFFFFUL )
+        {
+          FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
+          FT_TRACE1(( " 0x%x is truncated\n", charcode ));
+        }
+        if ( variantSelector > 0xFFFFFFFFUL )
+        {
+          FT_TRACE1(( "FT_Get_Char_Index: too large variantSelector" ));
+          FT_TRACE1(( " 0x%x is truncated\n", variantSelector ));
+        }
+
+        result = vcmap->clazz->char_var_index( vcmap, ucmap,
+                                               (FT_UInt32)charcode,
+                                               (FT_UInt32)variantSelector );
       }
     }
 
@@ -3163,8 +3180,20 @@
         FT_CMap  vcmap = FT_CMAP( charmap );
 
 
-        result = vcmap->clazz->char_var_default( vcmap, charcode,
-                                                 variantSelector );
+        if ( charcode > 0xFFFFFFFFUL )
+        {
+          FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
+          FT_TRACE1(( " 0x%x is truncated\n", charcode ));
+        }
+        if ( variantSelector > 0xFFFFFFFFUL )
+        {
+          FT_TRACE1(( "FT_Get_Char_Index: too large variantSelector" ));
+          FT_TRACE1(( " 0x%x is truncated\n", variantSelector ));
+        }
+
+        result = vcmap->clazz->char_var_default( vcmap,
+                                                 (FT_UInt32)charcode,
+                                                 (FT_UInt32)variantSelector );
       }
     }
 
@@ -3219,7 +3248,14 @@
         FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
-        result = vcmap->clazz->charvariant_list( vcmap, memory, charcode );
+        if ( charcode > 0xFFFFFFFFUL )
+        {
+          FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
+          FT_TRACE1(( " 0x%x is truncated\n", charcode ));
+        }
+
+        result = vcmap->clazz->charvariant_list( vcmap, memory,
+                                                 (FT_UInt32)charcode );
       }
     }
     return result;
@@ -3246,8 +3282,14 @@
         FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
+        if ( variantSelector > 0xFFFFFFFFUL )
+        {
+          FT_TRACE1(( "FT_Get_Char_Index: too large variantSelector" ));
+          FT_TRACE1(( " 0x%x is truncated\n", variantSelector ));
+        }
+
         result = vcmap->clazz->variantchar_list( vcmap, memory,
-                                                 variantSelector );
+                                                 (FT_UInt32)variantSelector );
       }
     }
 

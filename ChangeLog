@@ -1,5 +1,33 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	base: Prevent some overflows on LP64 systems.
+
+	* src/base/ftadvance.c (FT_Get_Advances): Cast the
+	unsigned long constant FT_LOAD_ADVANCE_ONLY to FT_UInt32
+	for LP64 platforms.
+
+	* src/base/ftcalc.c (FT_Sqrt32): All internal variables
+	are changed to FT_UInt32 from FT_ULong.
+	(FT_MulDiv): Insert casts to FT_Int32 for LP64 platforms.
+	This function is designed for 32-bit integer, although
+	their arguments and return value are FT_Long.
+
+	* src/base/ftobjs.c (FT_Get_Char_Index): Check `charcode'
+	is within unsigned 32-bit integer for LP64 platforms.
+	(FT_Face_GetCharVariantIndex): Check `charcode' and
+	`variantSelector' are within 32-bit integer for LP64
+	platforms.
+	(FT_Face_GetCharsOfVariant): Check `variantSelector' is
+	within unsigned 32-bit integer for LP64 platforms.
+
+	* src/base/fttrigon.c (ft_trig_downscale): The FT_Fixed
+	variable `val' and unsigned long constant FT_TRIG_SCALE
+	are casted to FT_UInt32, when calculates FT_UInt32.
+	(FT_Vector_Rotate): The long constant 1L is casted to
+	FT_Int32 to calculate FT_Int32 `half'.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cff: Cast the long variables to 32-bit for LP64 systems.
 
 	* src/cff/cffdrivr.c (cff_get_advances): Insert
