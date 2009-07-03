@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	truetype: Cast the scaling params to 32-bit for LP64 system.
+
+	* src/truetype/ttgload.c (TT_Process_Composite_Component):
+	Insert casts from long (return value of FT_MulFix()) to
+	FT_Int32 (the argument to FT_SqrtFixed()).
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	sfnt: Cast a character code to FT_UInt32 for LP64 system.
 
 	* src/sfnt/ttcmap.c (tt_cmap14_char_map_nondef_binary,

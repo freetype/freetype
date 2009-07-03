@@ -936,15 +936,15 @@
   /* This algorithm is a guess and works much better than the above.       */
   /*                                                                       */
         FT_Fixed  mac_xscale = FT_SqrtFixed(
-                                 FT_MulFix( subglyph->transform.xx,
-                                            subglyph->transform.xx ) +
-                                 FT_MulFix( subglyph->transform.xy,
-                                            subglyph->transform.xy ) );
+                                 (FT_Int32)FT_MulFix( subglyph->transform.xx,
+                                                      subglyph->transform.xx ) +
+                                 (FT_Int32)FT_MulFix( subglyph->transform.xy,
+                                                      subglyph->transform.xy ) );
         FT_Fixed  mac_yscale = FT_SqrtFixed(
-                                 FT_MulFix( subglyph->transform.yy,
-                                            subglyph->transform.yy ) +
-                                 FT_MulFix( subglyph->transform.yx,
-                                            subglyph->transform.yx ) );
+                                 (FT_Int32)FT_MulFix( subglyph->transform.yy,
+                                                      subglyph->transform.yy ) +
+                                 (FT_Int32)FT_MulFix( subglyph->transform.yx,
+                                                      subglyph->transform.yx ) );
 
 
         x = FT_MulFix( x, mac_xscale );
