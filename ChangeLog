@@ -1,5 +1,14 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	truetype: Extend TrueType GX packed deltas to FT_Offset.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackeddeltas):
+	The type of 2nd argument `delta_cnt' is changed from
+	FT_Int to FT_Offset, because its source can be cvt
+	table size calculated from stream position.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Extend mmvar_len to hold size_t values.
 
 	* src/truetype/ttgxvar.h: The type of
