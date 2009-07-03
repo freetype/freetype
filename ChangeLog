@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	truetype: Cast the project vector to 32-bit for LP64 system.
+
+	* src/truetype/ttinterp.c (Project, DualProject):
+	Insert casts from FT_Pos (the arguments `dx', `dy')
+	to FT_UInt32 (the argument to TT_DotFix14()).
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Cast the scaling params to 32-bit for LP64 system.
 
 	* src/truetype/ttgload.c (TT_Process_Composite_Component):
