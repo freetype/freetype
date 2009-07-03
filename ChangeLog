@@ -1,5 +1,14 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	psnames: Handle Unicode codepoints by FT_UInt32 variables.
+
+	* src/psnames/psmodule.c (BASE_GLYPH): Cast the result
+	to unsigned 32-bit integer for LP64 platform.
+	(ps_unicode_value): Return the value by unsigned 32-bit
+	integer instead of unsigned long.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	psaux: Use size_t variable to pass the buffer size.
 
 	* src/psaux/psaux.h (to_bytes): The type of `max_bytes'
