@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	gxvalid: Guarantee `just' table size upto 32-bit.
+
+	* src/gxvalid/gxvjust.c (gxv_just_validate):
+	The type of `offset' is changed from FT_UInt to
+	FT_Offset, for 16-bit platforms.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	gxvalid: Guarantee `trak' table size upto 32-bit.
 
 	* src/gxvalid/gxvtrak.c (gxv_trak_validate):
