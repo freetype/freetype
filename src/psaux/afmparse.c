@@ -366,11 +366,11 @@
   FT_LOCAL_DEF( FT_Int )
   afm_parser_read_vals( AFM_Parser  parser,
                         AFM_Value   vals,
-                        FT_Int      n )
+                        FT_UInt     n )
   {
     AFM_Stream  stream = parser->stream;
     char*       str;
-    FT_Int      i;
+    FT_UInt     i;
 
 
     if ( n > AFM_MAX_ARGUMENTS )
