@@ -432,7 +432,7 @@ THE SOFTWARE.
 
         prop = bdf_get_font_property( font, "AVERAGE_WIDTH" );
         if ( prop )
-          bsize->width = (FT_Short)( ( prop->value.int32 + 5 ) / 10 );
+          bsize->width = (FT_Short)( ( prop->value.l + 5 ) / 10 );
         else
           bsize->width = (FT_Short)( bsize->height * 2/3 );
 
@@ -440,21 +440,21 @@ THE SOFTWARE.
         if ( prop )
           /* convert from 722.7 decipoints to 72 points per inch */
           bsize->size =
-            (FT_Pos)( ( prop->value.int32 * 64 * 7200 + 36135L ) / 72270L );
+            (FT_Pos)( ( prop->value.l * 64 * 7200 + 36135L ) / 72270L );
         else
           bsize->size = bsize->width << 6;
 
         prop = bdf_get_font_property( font, "PIXEL_SIZE" );
         if ( prop )
-          bsize->y_ppem = (FT_Short)prop->value.int32 << 6;
+          bsize->y_ppem = (FT_Short)prop->value.l << 6;
 
         prop = bdf_get_font_property( font, "RESOLUTION_X" );
         if ( prop )
-          resolution_x = (FT_Short)prop->value.int32;
+          resolution_x = (FT_Short)prop->value.l;
 
         prop = bdf_get_font_property( font, "RESOLUTION_Y" );
         if ( prop )
-          resolution_y = (FT_Short)prop->value.int32;
+          resolution_y = (FT_Short)prop->value.l;
 
         if ( bsize->y_ppem == 0 )
         {
@@ -749,13 +749,23 @@ THE SOFTWARE.
         break;
 
       case BDF_INTEGER:
+        if ( prop->value.l > 0x7FFFFFFFL || prop->value.l < ( -1 - 0x7FFFFFFFL ) )
+        {
+          FT_TRACE1(( "bdf_get_bdf_property: " ));
+          FT_TRACE1(( "too large integer 0x%x is truncated\n" ));
+        }
         aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
-        aproperty->u.integer = prop->value.int32;
+        aproperty->u.integer = (FT_Int32)prop->value.l;
         break;
 
       case BDF_CARDINAL:
+        if ( prop->value.ul > 0xFFFFFFFFUL )
+        {
+          FT_TRACE1(( "bdf_get_bdf_property: " ));
+          FT_TRACE1(( "too large cardinal 0x%x is truncated\n" ));
+        }
         aproperty->type       = BDF_PROPERTY_TYPE_CARDINAL;
-        aproperty->u.cardinal = prop->value.card32;
+        aproperty->u.cardinal = (FT_UInt32)prop->value.ul;
         break;
 
       default:
