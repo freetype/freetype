@@ -992,9 +992,9 @@ THE SOFTWARE.
 
     PCF_Property  prop;
 
-    int    nn, len;
-    char*  strings[4] = { NULL, NULL, NULL, NULL };
-    int    lengths[4];
+    size_t  nn, len;
+    char*   strings[4] = { NULL, NULL, NULL, NULL };
+    size_t  lengths[4];
 
 
     face->style_flags = 0;
@@ -1076,7 +1076,7 @@ THE SOFTWARE.
         /* add_style_name and setwidth_name     */
         if ( nn == 0 || nn == 3 )
         {
-          int  mm;
+          size_t  mm;
 
 
           for ( mm = 0; mm < len; mm++ )

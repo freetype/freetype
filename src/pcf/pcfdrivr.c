@@ -455,7 +455,7 @@ THE SOFTWARE.
     FT_Error    error  = PCF_Err_Ok;
     FT_Bitmap*  bitmap = &slot->bitmap;
     PCF_Metric  metric;
-    int         bytes;
+    FT_Offset   bytes;
 
     FT_UNUSED( load_flags );
 
