@@ -260,7 +260,7 @@ FT_BEGIN_HEADER
     PFR_KernItem*      kern_items_tail;
 
     /* not part of the spec, but used during load */
-    FT_UInt32          bct_offset;
+    FT_Long            bct_offset;
     FT_Byte*           cursor;
 
   } PFR_PhyFontRec, *PFR_PhyFont;
