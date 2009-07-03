@@ -507,7 +507,6 @@
                       FT_Vector*      origin,
                       FT_Bool         destroy )
   {
-    FT_Library                library;
     FT_GlyphSlotRec           dummy;
     FT_GlyphSlot_InternalRec  dummy_internal;
     FT_Error                  error = FT_Err_Ok;
@@ -528,7 +527,6 @@
     if ( !glyph )
       goto Bad;
 
-    library = glyph->library;
     clazz = glyph->clazz;
 
     /* when called with a bitmap glyph, do nothing and return successfully */
