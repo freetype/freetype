@@ -2228,8 +2228,10 @@
       if ( cmap12->valid )
       {
         gindex = cmap12->cur_gindex;
+
+        /* XXX: check cur_charcode overflow is expected */
         if ( gindex )
-          *pchar_code = cmap12->cur_charcode;
+          *pchar_code = (FT_UInt32)cmap12->cur_charcode;
       }
       else
         gindex = 0;
@@ -2237,7 +2239,8 @@
     else
       gindex = tt_cmap12_char_map_binary( cmap, pchar_code, 1 );
 
-    return gindex;
+    /* XXX: check gindex overflow is expected */
+    return (FT_UInt32)gindex;
   }
 
 
