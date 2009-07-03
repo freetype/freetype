@@ -1,5 +1,30 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cache: Fix some data types mismatching with their sources.
+
+	* src/cache/ftccache.h: The type of return value
+	by FTC_Node_WeightFunc function is changed to
+	FT_Offset.  The type of FTC_CacheClass->cache_size
+	is changed to FT_Offset, too.
+
+	* src/cache/ftccback.h (ft_inode_weight,
+	ftc_snode_weight): Ditto.
+
+	* src/cache/ftccmap.c (ftc_cmap_node_weight): Ditto.
+
+	* src/cache/ftcimage.c (ftc_inode_weight,
+	FTC_INode_Weight): Ditto.
+
+	* src/cache/ftcsbits.c (ftc_snode_weight,
+	FTC_SNode_Weight): Ditto.
+
+	* src/cache/ftcmru.h: The type of
+	FTC_MruListClass->node_size is changed to FT_Offset,
+	because it is passed to FT_ALLOC() to specify the
+	size of buffer.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	XXX_cmap_encoding_char_next() return FT_UInt32 values.
 
 	* include/freetype/internal/services/svpscmap.h:

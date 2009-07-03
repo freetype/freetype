@@ -107,7 +107,7 @@ FT_BEGIN_HEADER
 
   typedef struct  FTC_MruListClassRec_
   {
-    FT_UInt                  node_size;
+    FT_Offset                node_size;
     FTC_MruNode_CompareFunc  node_compare;
     FTC_MruNode_InitFunc     node_init;
     FTC_MruNode_ResetFunc    node_reset;

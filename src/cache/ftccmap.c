@@ -174,7 +174,7 @@
 
 
   /* compute the weight of a given cmap node */
-  FT_CALLBACK_DEF( FT_ULong )
+  FT_CALLBACK_DEF( FT_Offset )
   ftc_cmap_node_weight( FTC_Node   cnode,
                         FTC_Cache  cache )
   {
