@@ -53,7 +53,7 @@ THE SOFTWARE.
   typedef struct  BDF_CMapRec_
   {
     FT_CMapRec        cmap;
-    FT_UInt           num_encodings;
+    FT_ULong          num_encodings; /* ftobjs.h: FT_CMap->clazz->size */
     BDF_encoding_el*  encodings;
 
   } BDF_CMapRec, *BDF_CMap;
@@ -92,8 +92,8 @@ THE SOFTWARE.
   {
     BDF_CMap          cmap      = (BDF_CMap)bdfcmap;
     BDF_encoding_el*  encodings = cmap->encodings;
-    FT_UInt           min, max, mid;
-    FT_UInt           result    = 0;
+    FT_ULong          min, max, mid; /* num_encodings */
+    FT_UShort         result    = 0; /* encodings->glyph */
 
 
     min = 0;
@@ -131,9 +131,9 @@ THE SOFTWARE.
   {
     BDF_CMap          cmap      = (BDF_CMap)bdfcmap;
     BDF_encoding_el*  encodings = cmap->encodings;
-    FT_UInt           min, max, mid;
+    FT_ULong          min, max, mid; /* num_encodings */
+    FT_UShort         result   = 0;  /* encodings->glyph */
     FT_UInt32         charcode = *acharcode + 1;
-    FT_UInt           result   = 0;
 
 
     min = 0;
@@ -141,7 +141,7 @@ THE SOFTWARE.
 
     while ( min < max )
     {
-      FT_UInt32  code;
+      FT_ULong  code; /* same as BDF_encoding_el.enc */
 
 
       mid  = ( min + max ) >> 1;
@@ -196,9 +196,8 @@ THE SOFTWARE.
     bdf_font_t*      font   = bdf->bdffont;
     bdf_property_t*  prop;
 
-    int    nn, len;
-    char*  strings[4] = { NULL, NULL, NULL, NULL };
-    int    lengths[4];
+    char*   strings[4] = { NULL, NULL, NULL, NULL };
+    size_t  nn, len, lengths[4];
 
 
     face->style_flags = 0;
@@ -284,7 +283,7 @@ THE SOFTWARE.
         /* add_style_name and setwidth_name     */
         if ( nn == 0 || nn == 3 )
         {
-          int  mm;
+          size_t  mm;
 
 
           for ( mm = 0; mm < len; mm++ )

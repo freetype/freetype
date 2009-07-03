@@ -415,18 +415,18 @@
 
 
   static FT_Error
-  _bdf_list_ensure( _bdf_list_t*  list,
-                    int           num_items )
+  _bdf_list_ensure( _bdf_list_t*   list,
+                    unsigned long  num_items ) /* same as _bdf_list_t.used */
   {
     FT_Error  error = BDF_Err_Ok;
 
 
-    if ( num_items > (int)list->size )
+    if ( num_items > list->size )
     {
-      int        oldsize = list->size;
-      int        newsize = oldsize + ( oldsize >> 1 ) + 4;
-      int        bigsize = FT_INT_MAX / sizeof ( char* );
-      FT_Memory  memory  = list->memory;
+      unsigned long  oldsize = list->size; /* same as _bdf_list_t.size */
+      unsigned long  newsize = oldsize + ( oldsize >> 1 ) + 4;
+      unsigned long  bigsize = (unsigned long)( FT_INT_MAX / sizeof ( char* ) );
+      FT_Memory      memory  = list->memory;
 
 
       if ( oldsize == bigsize )
@@ -614,8 +614,8 @@
   {
     _bdf_line_func_t  cb;
     unsigned long     lineno, buf_size;
-    int               refill, bytes, hold, to_skip;
-    int               start, end, cursor, avail;
+    int               refill, hold, to_skip;
+    ptrdiff_t         bytes, start, end, cursor, avail;
     char*             buf = 0;
     FT_Memory         memory = stream->memory;
     FT_Error          error = BDF_Err_Ok;
@@ -648,8 +648,8 @@
     {
       if ( refill )
       {
-        bytes  = (int)FT_Stream_TryRead( stream, (FT_Byte*)buf + cursor,
-                                         (FT_ULong)(buf_size - cursor) );
+        bytes  = (ptrdiff_t)FT_Stream_TryRead( stream, (FT_Byte*)buf + cursor,
+                                               (FT_ULong)(buf_size - cursor) );
         avail  = cursor + bytes;
         cursor = 0;
         refill = 0;
