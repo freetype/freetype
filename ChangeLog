@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cid: Fix some data types mismatching with their sources.
+
+	* src/cid/cidparse.c (cid_parser_new): The types of
+	`read_len' and `stream_len' are matched to
+	FT_Stream->size.  Unrequired cast is removed.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cff: Fix for unused variable `rest'.
 
 	* src/cff/cffparse.c (cff_parse_real): Insert

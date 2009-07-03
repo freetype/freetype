@@ -86,13 +86,13 @@
     /* `StartData' or `/sfnts'                      */
     {
       FT_Byte   buffer[256 + 10];
-      FT_Int    read_len = 256 + 10;
+      FT_Long   read_len = 256 + 10; /* same as signed FT_Stream->size */
       FT_Byte*  p        = buffer;
 
 
-      for ( offset = (FT_ULong)FT_STREAM_POS(); ; offset += 256 )
+      for ( offset = FT_STREAM_POS(); ; offset += 256 )
       {
-        FT_Int  stream_len;
+        FT_Long  stream_len; /* same as signed FT_Stream->size */
 
 
         stream_len = stream->size - FT_STREAM_POS();
