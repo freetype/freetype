@@ -1,5 +1,17 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	sfnt: Extend TT_BDF->strings_size to FT_ULong for huge BDF.
+
+	* include/freetype/internal/tttypes.h: The type
+	of TT_BDF->string_size is extended from FT_UInt32
+	to FT_ULong, because BDF specification does not 
+	restrict the length of string.
+	* src/sfnt/ttbdf.c: The scratch variable `strings'
+	to load TT_BDF->string_size is matched with
+	TT_BDF->string_size.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	psaux: Handle the string length by FT_Offset variables.
 
 	* src/psaux/afmparse.c (afm_parser_next_key,

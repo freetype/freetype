@@ -902,7 +902,7 @@ FT_BEGIN_HEADER
     FT_Byte*   table;
     FT_Byte*   table_end;
     FT_Byte*   strings;
-    FT_UInt32  strings_size;
+    FT_ULong   strings_size;
     FT_UInt    num_strikes;
     FT_Bool    loaded;
 
