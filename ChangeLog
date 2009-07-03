@@ -1,5 +1,15 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cache: Disable the legacy compatibility if 16-bit system.
+
+	* src/cache/ftcbasic.c (FTC_ImageCache_Lookup): Exclude
+	the legacy behaviour from 16-bit platform, because the
+	current hack cannot detect the caller uses this function
+	via legacy convension.
+	(FTC_SBitCache_Lookup): Ditto.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cache: Check 32-bit glyph index on 16-bit systems.
 
 	* src/cache/ftcbasic.c (ftc_basic_family_get_count):
