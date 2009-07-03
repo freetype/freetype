@@ -129,7 +129,7 @@
       FT_Int        temp;
       FT_GlyphSlot  slot   = face->glyph;
       FT_Bitmap*    bitmap = &slot->bitmap;
-      FT_Int        xadvance, yadvance;
+      FT_Pos        xadvance, yadvance; /* FT_GlyphSlot->advance.{x|y} */
 
 
       if ( slot->format != FT_GLYPH_FORMAT_BITMAP )
