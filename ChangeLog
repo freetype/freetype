@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	psaux: Fix a data type mismatching with its source.
+
+	* include/freetype/internal/psaux.h: The type of
+	T1_DecorderRec.buildchar is matched with
+	T1_DecorderRec.top.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Extend TrueType GX packed deltas to FT_Offset.
 
 	* src/truetype/ttgxvar.c (ft_var_readpackeddeltas):
