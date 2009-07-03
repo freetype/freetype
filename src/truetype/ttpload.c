@@ -95,7 +95,7 @@
         error = TT_Err_Invalid_Table;
         goto Exit;
       }
-      face->num_locations = (FT_UInt)( table_len >> shift );
+      face->num_locations = table_len >> shift;
     }
     else
     {
@@ -107,16 +107,16 @@
         error = TT_Err_Invalid_Table;
         goto Exit;
       }
-      face->num_locations = (FT_UInt)( table_len >> shift );
+      face->num_locations = table_len >> shift;
     }
 
-    if ( face->num_locations != (FT_UInt)face->root.num_glyphs )
+    if ( face->num_locations != (FT_ULong)face->root.num_glyphs )
     {
       FT_TRACE2(( "glyph count mismatch!  loca: %d, maxp: %d\n",
                   face->num_locations, face->root.num_glyphs ));
 
       /* we only handle the case where `maxp' gives a larger value */
-      if ( face->num_locations < (FT_UInt)face->root.num_glyphs )
+      if ( face->num_locations < (FT_ULong)face->root.num_glyphs )
       {
         FT_Long   new_loca_len = (FT_Long)face->root.num_glyphs << shift;
 
@@ -139,7 +139,7 @@
 
         if ( new_loca_len <= dist )
         {
-          face->num_locations = (FT_Long)face->root.num_glyphs;
+          face->num_locations = face->root.num_glyphs;
           table_len           = new_loca_len;
 
           FT_TRACE2(( "adjusting num_locations to %d\n",
