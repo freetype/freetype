@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	psaux: Fix a few casts to FT_Int32 value.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings):
+	Fix a few casts setting `value' from FT_Long to FT_Int32,
+	because `value' is typed as FT_Int32 since 2009-06-22.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	sfnt: Fix a data type mismatching with its source.
 
 	* src/sfnt/ttcmap.c (tt_cmap13_char_next): Fix the
