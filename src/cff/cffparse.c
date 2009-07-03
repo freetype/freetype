@@ -130,8 +130,8 @@
   static FT_Fixed
   cff_parse_real( FT_Byte*  start,
                   FT_Byte*  limit,
-                  FT_Int    power_ten,
-                  FT_Int*   scaling )
+                  FT_Long   power_ten,
+                  FT_Long*  scaling )
   {
     FT_Byte*  p = start;
     FT_UInt   nib;
@@ -139,7 +139,7 @@
 
     FT_Long   result, number, rest, exponent;
     FT_Int    sign = 0, exponent_sign = 0;
-    FT_Int    exponent_add, integer_length, fraction_length;
+    FT_Long   exponent_add, integer_length, fraction_length;
 
 
     if ( scaling )
@@ -286,7 +286,7 @@
         {
           if ( exponent > 0 )
           {
-            FT_Int  new_fraction_length, shift;
+            FT_Long  new_fraction_length, shift;
 
 
             /* Make `scaling' as small as possible. */
@@ -386,7 +386,7 @@
   /* but return `10^scaling' times the number read in      */
   static FT_Fixed
   cff_parse_fixed_scaled( FT_Byte**  d,
-                          FT_Int     scaling )
+                          FT_Long    scaling )
   {
     return **d == 30 ? cff_parse_real( d[0], d[1], scaling, NULL )
                      : ( cff_parse_integer( d[0], d[1] ) *
@@ -399,7 +399,7 @@
   /* the scaling factor (as a power of 10)                     */
   static FT_Fixed
   cff_parse_fixed_dynamic( FT_Byte**  d,
-                           FT_Int*    scaling )
+                           FT_Long*   scaling )
   {
     FT_ASSERT( scaling );
 
@@ -452,7 +452,7 @@
 
     if ( parser->top >= parser->stack + 6 )
     {
-      FT_Int  scaling;
+      FT_Long  scaling;
 
 
       error = CFF_Err_Ok;

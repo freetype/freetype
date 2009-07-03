@@ -584,7 +584,7 @@
 
         if ( sub->units_per_em )
         {
-          FT_Int  scaling;
+          FT_Long  scaling;
 
 
           if ( top->units_per_em > 1 && sub->units_per_em > 1 )
