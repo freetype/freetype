@@ -1,5 +1,12 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	ftobjs.c: Prevent an overflow in glyph index handling.
+
+	* src/base/ftobjs.c (FT_Face_GetCharsOfVariant):
+	Improve the cast in comparison to avoid the truncation.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	Improve the variable types in raccess_make_file_name().
 
 	* src/base/ftrfork.c (raccess_make_file_name):
