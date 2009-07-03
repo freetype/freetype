@@ -334,7 +334,7 @@
      *  This one is a major hack used to detect whether we are passed a
      *  regular FTC_ImageType handle, or a legacy FTC_OldImageDesc one.
      */
-    if ( type->width >= 0x10000 )
+    if ( (FT_ULong)type->width >= 0x10000L )
     {
       FTC_OldImageDesc  desc = (FTC_OldImageDesc)type;
 
@@ -656,7 +656,7 @@
     /*  This one is a major hack used to detect whether we are passed a
      *  regular FTC_ImageType handle, or a legacy FTC_OldImageDesc one.
      */
-    if ( type->width >= 0x10000 )
+    if ( (FT_ULong)type->width >= 0x10000L )
     {
       FTC_OldImageDesc  desc = (FTC_OldImageDesc)type;
 

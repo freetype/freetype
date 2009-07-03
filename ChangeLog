@@ -1,5 +1,15 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cache: Insert explict casts for LP64 systems.
+
+	* src/cache/ftcbasic.c (FTC_ImageCache_Lookup,
+	FTC_SBitCache_Lookup): The type of FTC_ImageType->width
+	is FT_Int, so the cast to unsigned larger type FT_ULong
+	is introduced for the comparisons with 0x10000L for
+	LP64 platform.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cache: Fix some data types mismatching with their sources.
 
 	* src/cache/ftccache.h: The type of return value
