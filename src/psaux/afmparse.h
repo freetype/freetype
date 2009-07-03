@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( char* )
   afm_parser_next_key( AFM_Parser  parser,
                        FT_Bool     line,
-                       FT_UInt*    len );
+                       FT_Offset*  len );
 
 FT_END_HEADER
 
