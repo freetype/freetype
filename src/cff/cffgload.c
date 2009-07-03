@@ -2580,8 +2580,8 @@
       FT_Byte  fd_index = cff_fd_select_get( &cff->fd_select,
                                              glyph_index );
 
-      FT_Int  top_upm = cff->top_font.font_dict.units_per_em;
-      FT_Int  sub_upm = cff->subfonts[fd_index]->font_dict.units_per_em;
+      FT_ULong  top_upm = cff->top_font.font_dict.units_per_em;
+      FT_ULong  sub_upm = cff->subfonts[fd_index]->font_dict.units_per_em;
 
 
       font_matrix = cff->subfonts[fd_index]->font_dict.font_matrix;

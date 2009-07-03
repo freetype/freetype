@@ -224,8 +224,8 @@
       CFF_Font      font     = (CFF_Font)face->extra.data;
       CFF_Internal  internal = (CFF_Internal)size->internal;
 
-      FT_Int   top_upm  = font->top_font.font_dict.units_per_em;
-      FT_UInt  i;
+      FT_ULong  top_upm  = font->top_font.font_dict.units_per_em;
+      FT_UInt   i;
 
 
       funcs->set_scale( internal->topfont,
@@ -235,7 +235,7 @@
       for ( i = font->num_subfonts; i > 0; i-- )
       {
         CFF_SubFont  sub     = font->subfonts[i - 1];
-        FT_Int       sub_upm = sub->font_dict.units_per_em;
+        FT_ULong     sub_upm = sub->font_dict.units_per_em;
         FT_Pos       x_scale, y_scale;
 
 
@@ -296,8 +296,8 @@
       CFF_Font      font     = (CFF_Font)cffface->extra.data;
       CFF_Internal  internal = (CFF_Internal)size->internal;
 
-      FT_Int   top_upm  = font->top_font.font_dict.units_per_em;
-      FT_UInt  i;
+      FT_ULong  top_upm  = font->top_font.font_dict.units_per_em;
+      FT_UInt   i;
 
 
       funcs->set_scale( internal->topfont,
@@ -307,7 +307,7 @@
       for ( i = font->num_subfonts; i > 0; i-- )
       {
         CFF_SubFont  sub     = font->subfonts[i - 1];
-        FT_Int       sub_upm = sub->font_dict.units_per_em;
+        FT_ULong     sub_upm = sub->font_dict.units_per_em;
         FT_Pos       x_scale, y_scale;
 
 
