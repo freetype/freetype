@@ -1,5 +1,14 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	otvalid: Truncate the glyph index to 16-bit.
+
+	* src/otvalid/otvalid.c (otv_validate): Checks
+	face->num_glyphs does not exceed 16-bit limit,
+	pass FT_UInt num_glyphs to backend functions
+	otv_{GPOS|GSUB|GDEF|JSTF|MATH}_validate().
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cache: Insert explict casts for LP64 systems.
 
 	* src/cache/ftcbasic.c (FTC_ImageCache_Lookup,
