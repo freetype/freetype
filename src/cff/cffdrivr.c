@@ -200,7 +200,7 @@
     FT_GlyphSlot  slot  = face->glyph;
 
 
-    flags |= FT_LOAD_ADVANCE_ONLY;
+    flags |= (FT_UInt32)FT_LOAD_ADVANCE_ONLY;
 
     for ( nn = 0; nn < count; nn++ )
     {

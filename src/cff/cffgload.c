@@ -935,18 +935,18 @@
           ip += 2;
         }
         else if ( v < 247 )
-          val = (FT_Long)v - 139;
+          val = (FT_Int32)v - 139;
         else if ( v < 251 )
         {
           if ( ip >= limit )
             goto Syntax_Error;
-          val = ( (FT_Long)v - 247 ) * 256 + *ip++ + 108;
+          val = ( (FT_Int32)v - 247 ) * 256 + *ip++ + 108;
         }
         else if ( v < 255 )
         {
           if ( ip >= limit )
             goto Syntax_Error;
-          val = -( (FT_Long)v - 251 ) * 256 - *ip++ - 108;
+          val = -( (FT_Int32)v - 251 ) * 256 - *ip++ - 108;
         }
         else
         {
