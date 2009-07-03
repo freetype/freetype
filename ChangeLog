@@ -1,5 +1,13 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	gxvalid: Insert PureC pragma to allow unevaluated variables.
+
+	* builds/atari/ATARI.H: Insert PureC pragma not to
+	warn against set-but-unevaluated variable in gxvalid
+	module.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	gxvalid: Pass the union by the pointer instead of the value.
 
 	* src/gxvalid/gxvcommn.h:
