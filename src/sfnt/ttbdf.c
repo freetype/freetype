@@ -141,13 +141,13 @@
                          const char*       property_name,
                          BDF_PropertyRec  *aprop )
   {
-    TT_BDF    bdf   = &face->bdf;
-    FT_Size   size  = FT_FACE(face)->size;
-    FT_Error  error = 0;
-    FT_Byte*  p;
-    FT_UInt   count;
-    FT_Byte*  strike;
-    FT_UInt   property_len;
+    TT_BDF     bdf   = &face->bdf;
+    FT_Size    size  = FT_FACE(face)->size;
+    FT_Error   error = 0;
+    FT_Byte*   p;
+    FT_UInt    count;
+    FT_Byte*   strike;
+    FT_Offset  property_len;
 
 
     aprop->type = BDF_PROPERTY_TYPE_NONE;
