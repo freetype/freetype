@@ -252,7 +252,7 @@ FT_BEGIN_HEADER
     FT_UInt            blue_scale;
 
     FT_UInt            num_chars;
-    FT_UInt32          chars_offset;
+    FT_Offset          chars_offset;
     PFR_Char           chars;
 
     FT_UInt            num_kern_pairs;
