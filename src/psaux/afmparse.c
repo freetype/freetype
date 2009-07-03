@@ -378,7 +378,7 @@
 
     for ( i = 0; i < n; i++ )
     {
-      FT_UInt    len;
+      FT_Offset  len;
       AFM_Value  val = vals + i;
 
 
