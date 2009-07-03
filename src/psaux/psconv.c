@@ -239,7 +239,7 @@
   PS_Conv_StringDecode( FT_Byte**  cursor,
                         FT_Byte*   limit,
                         FT_Byte*   buffer,
-                        FT_UInt    n )
+                        FT_Offset  n )
   {
     FT_Byte*  p;
     FT_UInt   r = 0;
@@ -334,7 +334,7 @@
   PS_Conv_ASCIIHexDecode( FT_Byte**  cursor,
                           FT_Byte*   limit,
                           FT_Byte*   buffer,
-                          FT_UInt    n )
+                          FT_Offset  n )
   {
     FT_Byte*  p;
     FT_UInt   r   = 0;
@@ -423,7 +423,7 @@
   PS_Conv_EexecDecode( FT_Byte**   cursor,
                        FT_Byte*    limit,
                        FT_Byte*    buffer,
-                       FT_UInt     n,
+                       FT_Offset   n,
                        FT_UShort*  seed )
   {
     FT_Byte*  p;

@@ -1,5 +1,23 @@
 2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	psaux: Use size_t variable to pass the buffer size.
+
+	* src/psaux/psaux.h (to_bytes): The type of `max_bytes'
+	(the argument to pass the buffer size) is changed to
+	size_t, to match with ANSI C string functions.
+
+	* src/psaux/psconv.h (PS_Conv_StringDecode,
+	PS_Conv_ASCIIHexDecode, PS_Conv_EexecDecode): Ditto.
+
+	* src/psaux/psconv.c (PS_Conv_StringDecode,
+	PS_Conv_ASCIIHexDecode, PS_Conv_EexecDecode): Ditto.
+
+	* src/psaux/psobjs.h (ps_parser_to_bytes): Ditto.
+
+	* src/psaux/psobjs.c (ps_parser_to_bytes): Ditto.
+
+2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	type1: Use size_t variable to pass the string length.
 
 	* psaux.h: The type of `len' (the argument to pass
