@@ -202,7 +202,7 @@ FT_BEGIN_HEADER
     FTC_Cache             _cache   = FTC_CACHE(cache);                   \
     FT_UInt32             _hash    = (FT_UInt32)(hash);                  \
     FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);    \
-    FT_UInt               _idx;                                          \
+    FT_UFast              _idx;                                          \
                                                                          \
                                                                          \
     error = 0;                                                           \
