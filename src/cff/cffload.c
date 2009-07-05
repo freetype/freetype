@@ -736,6 +736,7 @@
   {
     FT_Error   error   = FT_Err_Ok;
     FT_UInt    i;
+    FT_Long    j;
     FT_UShort  max_cid = 0;
 
 
@@ -750,8 +751,11 @@
     if ( FT_NEW_ARRAY( charset->cids, max_cid ) )
       goto Exit;
 
-    for ( i = 0; i < num_glyphs; i++ )
-      charset->cids[charset->sids[i]] = (FT_UShort)i;
+    /* When multiple GIDs map to the same CID, we choose the lowest */
+    /* GID.  This is not described in any spec, but it matches the  */
+    /* behaviour of recent Acroread versions.                       */
+    for ( j = num_glyphs - 1; j >= 0 ; j-- )
+      charset->cids[charset->sids[j]] = (FT_UShort)j;
 
     charset->max_cid    = max_cid;
     charset->num_glyphs = num_glyphs;
