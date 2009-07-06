@@ -937,7 +937,7 @@
 
 	Protect against malformed compressed data.
 
-	* src/lsw/ftzopen.c (ft_lzwstate_io): Test whether `state->prefix' is
+	* src/lzw/ftzopen.c (ft_lzwstate_io): Test whether `state->prefix' is
 	zero.
 
 2009-03-20  Werner Lemberg  <wl@gnu.org>
