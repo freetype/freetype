@@ -1,3 +1,22 @@
+2009-07-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Prevent the overflows by a glyph with too many points or contours.
+	The bug is reported by Boris Letocha <b.letocha@gmc.net>. See
+	http://lists.nongnu.org/archive/html/freetype-devel/2009-06/msg00031.html
+	http://lists.nongnu.org/archive/html/freetype-devel/2009-07/msg00002.html	
+
+	* include/freetype/ftimage.h (FT_OUTLINE_CONTOURS_MAX,
+	FT_OUTLINE_POINTS_MAX): New macros to declare the maximum
+	values of FT_Outline.{n_contours,n_points}.
+	* src/base/ftgloadr.c (FT_GlyphLoader_CheckPoints): Check the
+	total numbers of points and contours cause no overflows in
+	FT_Outline.{n_contours,n_points}.
+
+	* include/freetype/internal/ftgloadr.h (FT_GLYPHLOADER_CHECK_P,
+	FT_GLYPHLOADER_CHECK_C): Compare the numbers of points and
+	contours as unsigned long number, instead of signed int, to
+	prevent the overflows on 16-bit systems.
+
 2009-07-05  Bram Tassyns  <bramt@enfocus.be>
 
 	Improve compatibility to Acroread.

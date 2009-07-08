@@ -364,6 +364,11 @@ FT_BEGIN_HEADER
 
   } FT_Outline;
 
+  /* Following limits must be consistent with */
+  /* FT_Outline.{n_contours,n_points}         */
+#define FT_OUTLINE_CONTOURS_MAX  SHRT_MAX
+#define FT_OUTLINE_POINTS_MAX    SHRT_MAX
+
 
   /*************************************************************************/
   /*                                                                       */
