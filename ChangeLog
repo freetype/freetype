@@ -18,8 +18,8 @@
 
 	Prevent the overflows by a glyph with too many points or contours.
 	The bug is reported by Boris Letocha <b.letocha@gmc.net>. See
-	http://lists.nongnu.org/archive/html/freetype-devel/2009-06/msg00031.html
-	http://lists.nongnu.org/archive/html/freetype-devel/2009-07/msg00002.html	
+	http://lists.gnu.org/archive/html/freetype-devel/2009-06/msg00031.html
+	http://lists.gnu.org/archive/html/freetype-devel/2009-07/msg00002.html	
 
 	* include/freetype/ftimage.h (FT_OUTLINE_CONTOURS_MAX,
 	FT_OUTLINE_POINTS_MAX): New macros to declare the maximum
@@ -5567,7 +5567,7 @@
 
 	`ft_validator_run' wrapping `setjmp' can cause a crash, as found by
 	Jens:
-	http://lists.nongnu.org/archive/html/freetype-devel/2006-08/msg00004.htm.
+	http://lists.gnu.org/archive/html/freetype-devel/2006-08/msg00004.htm.
 
 	* src/otvalid/otvmod.c: Replace `ft_validator_run' by `ft_setjmp'.
 	It reverts the change introduced on 2005-08-20.
@@ -5764,7 +5764,7 @@
 2006-06-24  Eugeniy Meshcheryakov  <eugen@univ.kiev.ua>
 
 	Fix two hinting bugs as reported in
-	http://lists.nongnu.org/archive/html/freetype-devel/2006-06/msg00057.html.
+	http://lists.gnu.org/archive/html/freetype-devel/2006-06/msg00057.html.
 
 	* include/freetype/internal/tttypes.h (TT_GlyphZoneRec): Add
 	`first_point' member.
