@@ -49,6 +49,10 @@
 
 #ifdef _STANDALONE_
 
+#define FT_CONFIG_STANDARD_LIBRARY_H  <stdlib.h>
+
+#include <string.h>
+
 #include "ftmisc.h"
 #include "ftimage.h"
 
@@ -58,9 +62,10 @@
 #include "ftraster.h"
 #include FT_INTERNAL_CALC_H   /* for FT_MulDiv only */
 
+#include "rastpic.h"
+
 #endif /* !_STANDALONE_ */
 
-#include "rastpic.h"
 
   /*************************************************************************/
   /*                                                                       */
@@ -200,8 +205,20 @@
 #define Raster_Err_Invalid      -4
 #define Raster_Err_Unsupported  -5
 
-#define ft_memset   memset
+#define ft_memset  memset
 
+#define FT_DEFINE_RASTER_FUNCS( class_, glyph_format_, raster_new_, \
+                                raster_reset_, raster_set_mode_,    \
+                                raster_render_, raster_done_ )      \
+          const FT_Raster_Funcs class_ =                            \
+          {                                                         \
+            glyph_format_,                                          \
+            raster_new_,                                            \
+            raster_reset_,                                          \
+            raster_set_mode_,                                       \
+            raster_render_,                                         \
+            raster_done_                                            \
+         };
 
 #else /* !_STANDALONE_ */
 
@@ -3494,7 +3511,7 @@
   }
 
 
-  FT_DEFINE_RASTER_FUNCS(ft_standard_raster,
+  FT_DEFINE_RASTER_FUNCS( ft_standard_raster,
     FT_GLYPH_FORMAT_OUTLINE,
     (FT_Raster_New_Func)     ft_black_new,
     (FT_Raster_Reset_Func)   ft_black_reset,
