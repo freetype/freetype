@@ -1,5 +1,17 @@
 2009-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	smooth: Check glyph size by width/height, instead of pitch/height.
+	Suggested by der Mouse <mouse@Rodents-Montreal.ORG>.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Improve
+	the check for too large glyph. Replace the pair of `pitch' and
+	`height' by the pair of `width' and `height'. `pitch' cannot
+	be greater than `height'. The required is checking the product
+	`pitch' * `height' <= FT_ULONG_MAX, but we use cheap checks for 
+	the realistic case only.
+
+2009-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Register 2 missing trace components, t1afm and ttbdf.
 
 	* include/freetype/internal/fttrace.h: Add FT_TRACE_DEF( t1afm )
@@ -957,7 +969,7 @@
 	Problem reported by Tavis Ormandy <taviso@google.com>.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Don't allow
-	`width' or `pitch' to be larger than 0xFFFF.
+	`pitch' or `height' to be larger than 0xFFFF.
 
 2009-03-20  Werner Lemberg  <wl@gnu.org>
 	    Tavis Ormandy <taviso@google.com>
