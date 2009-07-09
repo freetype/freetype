@@ -1,5 +1,13 @@
 2009-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Register 2 missing trace components, t1afm and ttbdf.
+
+	* include/freetype/internal/fttrace.h: Add FT_TRACE_DEF( t1afm )
+	and FT_TRACE_DEF( ttbdf ).  See
+	http://lists.gnu.org/archive/html/freetype-devel/2009-07/msg00013.html
+
+2009-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Register a trace component for ftgloadr.c.
 
 	* include/freetype/internal/fttrace.h: Add FT_TRACE_DEF( gloader ).

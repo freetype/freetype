@@ -49,6 +49,7 @@ FT_TRACE_DEF( ttload )    /* basic TrueType tables   (ttload.c)   */
 FT_TRACE_DEF( ttmtx )     /* metrics-related tables  (ttmtx.c)    */
 FT_TRACE_DEF( ttpost )    /* PS table processing     (ttpost.c)   */
 FT_TRACE_DEF( ttsbit )    /* TrueType sbit handling  (ttsbit.c)   */
+FT_TRACE_DEF( ttbdf )     /* TrueType embedded BDF   (ttbdf.c)    */
 
   /* TrueType driver components */
 FT_TRACE_DEF( ttdriver )  /* TT font driver          (ttdriver.c) */
@@ -59,6 +60,7 @@ FT_TRACE_DEF( ttpload )   /* TT data/program loader  (ttpload.c)  */
 FT_TRACE_DEF( ttgxvar )   /* TrueType GX var handler (ttgxvar.c)  */
 
   /* Type 1 driver components */
+FT_TRACE_DEF( t1afm )
 FT_TRACE_DEF( t1driver )
 FT_TRACE_DEF( t1gload )
 FT_TRACE_DEF( t1hint )
