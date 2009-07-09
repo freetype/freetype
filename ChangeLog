@@ -1,3 +1,11 @@
+2009-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Register a trace component for ftgloadr.c.
+
+	* include/freetype/internal/fttrace.h: Add FT_TRACE_DEF( gloader ).
+	The macro `trace_gloader' was already used in the initial version
+	on 2002-02-24.
+
 2009-07-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Prevent the overflows by a glyph with too many points or contours.

@@ -31,6 +31,7 @@ FT_TRACE_DEF( init )      /* initialization          (ftinit.c)   */
 FT_TRACE_DEF( objs )      /* base objects            (ftobjs.c)   */
 FT_TRACE_DEF( outline )   /* outline management      (ftoutln.c)  */
 FT_TRACE_DEF( glyph )     /* glyph management        (ftglyph.c)  */
+FT_TRACE_DEF( gloader )   /* glyph loader            (ftgloadr.c) */
 
 FT_TRACE_DEF( raster )    /* monochrome rasterizer   (ftraster.c) */
 FT_TRACE_DEF( smooth )    /* anti-aliasing raster    (ftgrays.c)  */
