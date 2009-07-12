@@ -1,3 +1,14 @@
+2009-07-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Add a script to check the undefined and unused trace macros.
+
+	* src/tools/chktrcmp.py: A script to check trace_XXXX macros
+	that are used in C source but undefined in fttrace.h, or
+	defined in fttrace.h but unused in C sources.  See
+	http://lists.gnu.org/archive/html/freetype-devel/2009-07/msg00013.html.
+	* docs/DEBUG: Mention on chktrcmp.py.
+	* docs/release: Ditto.
+
 2009-07-09  Werner Lemberg  <wl@gnu.org>
 
 	[ftraster] Make it compile again with -D_STANDALONE_.
