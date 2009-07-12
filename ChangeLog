@@ -14,9 +14,9 @@
 	Suggested by der Mouse <mouse@Rodents-Montreal.ORG>.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Improve
-	the check for too large glyph. Replace the pair of `pitch' and
-	`height' by the pair of `width' and `height'. `pitch' cannot
-	be greater than `height'. The required is checking the product
+	the check for too large glyph.  Replace the pair of `pitch' and
+	`height' by the pair of `width' and `height'.  `pitch' cannot
+	be greater than `height'.  The required is checking the product
 	`pitch' * `height' <= FT_ULONG_MAX, but we use cheap checks for 
 	the realistic case only.
 
@@ -39,7 +39,7 @@
 2009-07-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Prevent the overflows by a glyph with too many points or contours.
-	The bug is reported by Boris Letocha <b.letocha@gmc.net>. See
+	The bug is reported by Boris Letocha <b.letocha@gmc.net>.  See
 	http://lists.gnu.org/archive/html/freetype-devel/2009-06/msg00031.html
 	http://lists.gnu.org/archive/html/freetype-devel/2009-07/msg00002.html	
 
