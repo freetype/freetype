@@ -1,3 +1,9 @@
+2009-07-14  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #27026.
+
+	* builds/win32/vc2005/freetype.sln: Use correct version number.
+
 2009-07-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Add a script to check the undefined and unused trace macros.
