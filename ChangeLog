@@ -1,3 +1,18 @@
+2009-07-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Borland C++ compiler patch proposed by Mirco Babin.
+	http://lists.gnu.org/archive/html/freetype/2009-07/msg00016.html.
+
+	* builds/exports.mk: Delete unused flags, CCexe_{CFLAGS,LDFLAGS}.
+	Fix APINAMES_C and APINAMES_EXE pathnames to reflect the platform
+	specific pathname syntax.
+	* builds/compiler/bcc.mk: Remove unused flag, CCexe_LDFLAGS.
+	Define TE = `-e' separately (bcc32 cannot specify the pathname of
+	binary executable by T = `-o').
+	Extend the large page size in linking freetype.lib.
+	Add extra CLEAN target to delete bcc specific temporary files.
+	* builds/compiler/bcc-dev.mk: Ditto.
+
 2009-07-14  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #27026.
