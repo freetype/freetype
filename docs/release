@@ -15,10 +15,14 @@ How to prepare a new release
 
 . docs/VERSION.DLL: Document changed `version_info'.
 
-. ChangeLog: Announce  new release  (both in  freetype2  and  ft2demos
-  modules).
+. ChangeLog:   Announce  new  release   (both  in  the  freetype2  and
+  freetype2-demos modules).
 
-. Copy the CVS archive to another directory and run
+. Clone the git archive to another directory with
+
+    git clone -l -s . ../freetype2.test
+
+  or something like this and run
 
     make distclean; make devel; make
     make distclean; make devel; make multi
@@ -29,18 +33,20 @@ How to prepare a new release
     make distclean; ./configure; make
     make distclean; ./configure CC=g++; make
 
-  to test compilation with both gcc and g++.
+  in the cloned repository to test compilation with both gcc and g++.
 
-. Test C++ compilation for ft2demos too.
+. Test C++ compilation  for freetype2-demos too  (using `git clone' as
+  above).
 
-. Run src/tools/chktrcmp.py and check no undefined trace_XXXX macros.
+. Run  src/tools/chktrcmp.py  and check  that there  are no  undefined
+  trace_XXXX macros.
 
-. Tag the CVS (freetype2, ft2demos).
+. Tag the git repositories (freetype2, freetype2-demos).
 
   TODO: Tag the home page CVS on savannah.nongnu.org.
 
-. Say `make  dist'  in both  the  freetype2 and  ft2demos  modules  to
-  generate the .tar.gz, .tar.bz2, and .zip files.
+. Say `make  dist' in both the  freetype2 and freetype2-demos  modules
+  to generate the .tar.gz, .tar.bz2, and .zip files.
 
 . Create     the     doc    bundles    (freetype-doc-<version>.tar.gz,
   freetype-doc-<version>.tar.bz2,    ftdoc<version>.zip).    This   is
