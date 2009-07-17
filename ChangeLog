@@ -1,3 +1,13 @@
+2009-07-17  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #23786.
+
+	* src/truetype/ttobjs.c (tt_size_init_bytecode): Don't reset x_ppem
+	and y_ppem.  Otherwise the `*_CVT_Stretched' functions in ttinterp.c
+	get never called.
+	An anonymous guy suggested this change on Savannah, and it seems to
+	be the right solution.
+
 2009-07-15  Werner Lemberg  <wl@gnu.org>
 
 	* docs/release: Updated.

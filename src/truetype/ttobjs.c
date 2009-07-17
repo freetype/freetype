@@ -611,18 +611,15 @@
 
     /* Set default metrics */
     {
-      FT_Size_Metrics*  metrics  = &size->metrics;
-      TT_Size_Metrics*  metrics2 = &size->ttmetrics;
+      TT_Size_Metrics*  metrics = &size->ttmetrics;
 
-      metrics->x_ppem = 0;
-      metrics->y_ppem = 0;
 
-      metrics2->rotated   = FALSE;
-      metrics2->stretched = FALSE;
+      metrics->rotated   = FALSE;
+      metrics->stretched = FALSE;
 
       /* set default compensation (all 0) */
       for ( i = 0; i < 4; i++ )
-        metrics2->compensations[i] = 0;
+        metrics->compensations[i] = 0;
     }
 
     /* allocate function defs, instruction defs, cvt, and storage area */
