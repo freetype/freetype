@@ -5,6 +5,13 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
     - If all  ASCII digits in a  font have the  same (unscaled) width,
       the autohinter respects this and won't change it.
 
+    - TrueType fonts  are now  rasterized correctly  if the horizontal
+      and vertical resolution differ.
+
+    - Type 1 fonts are now handled with increased precision internally
+      to avoid serious rounding issues if non-integral coordinates are
+      encountered.
+
 
   II. IMPORTANT CHANGES
 
@@ -13,6 +20,7 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
 
     - B/W rasterization  of well-hinted TrueType  fonts at small sizes
       has been greatly improved.
+
 
   III. MISCELLANEOUS
 
