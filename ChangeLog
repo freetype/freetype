@@ -1,3 +1,10 @@
+2009-07-29  Fabrice Bellet  <fabrice@bellet.info>
+
+	Fix Redhat bugzilla #513582 and Savannah bug #26849.
+
+	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP) <FTC_INLINE>: Fix
+	aliasing bug.
+
 2009-07-19  Werner Lemberg  <wl@gnu.org>
 
 	Document recent library changes.
