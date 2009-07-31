@@ -4290,13 +4290,21 @@
       CUR.numFDefs++;
     }
 
+    /* Although FDEF takes unsigned 32-bit integer,  */
+    /* func # must be within unsigned 16-bit integer */
+    if ( n > 0xFFFFU )
+    {
+      CUR.error = TT_Err_Too_Many_Function_Defs;
+      return;
+    }
+
     rec->range  = CUR.curRange;
-    rec->opc    = n;
+    rec->opc    = (FT_UInt16)n;
     rec->start  = CUR.IP + 1;
     rec->active = TRUE;
 
     if ( n > CUR.maxFunc )
-      CUR.maxFunc = n;
+      CUR.maxFunc = (FT_UInt16)n;
 
     /* Now skip the whole function definition. */
     /* We don't allow nested IDEFS & FDEFs.    */

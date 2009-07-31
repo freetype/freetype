@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	truetype: Check invalid function number in FDEF instruction.
+
+	* src/truetype/ttinterp.c (Ins_FDEF): Check
+	if the operand fits 16-bit function number.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Truncate the deltas of composite glyph at 16-bit values.
 
 	* src/truetype/ttgload.c (load_truetype_glyph):
