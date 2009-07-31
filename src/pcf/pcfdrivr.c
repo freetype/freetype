@@ -585,12 +585,17 @@ THE SOFTWARE.
       }
       else
       {
+        if ( prop->value.l > 0x7FFFFFFFL || prop->value.l < ( -1 - 0x7FFFFFFFL ) )
+        {
+          FT_TRACE1(( "pcf_get_bdf_property: " ));
+          FT_TRACE1(( "too large integer 0x%x is truncated\n" ));
+        }
         /* Apparently, the PCF driver loads all properties as signed integers!
          * This really doesn't seem to be a problem, because this is
          * sufficient for any meaningful values.
          */
         aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
-        aproperty->u.integer = prop->value.integer;
+        aproperty->u.integer = (FT_Int32)prop->value.l;
       }
       return 0;
     }
