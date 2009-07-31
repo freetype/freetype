@@ -661,7 +661,7 @@ THE SOFTWARE.
     FT_Long*   offsets;
     FT_Long    bitmapSizes[GLYPHPADOPTIONS];
     FT_ULong   format, size;
-    int        nbitmaps, i, sizebitmaps = 0;
+    FT_ULong   nbitmaps, i, sizebitmaps = 0;
 
 
     error = pcf_seek_to_table_type( stream,
