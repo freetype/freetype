@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	autofit: Fix for unused variable `first'.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload): Insert
+	FT_UNUSED() to hide the unused variable warning.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	Improve bitmap size or pixel variables for 16-bit systems.
 
 	* include/freetype/config/ftstdlib.h: Introduce

@@ -645,6 +645,7 @@
         FT_Int      contour_index = 0;
 
 
+        FT_UNUSED( first );
         for ( point = points; point < point_limit; point++, vec++, tag++ )
         {
           point->fx = (FT_Short)vec->x;
