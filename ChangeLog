@@ -1,5 +1,27 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cff: Fix some data types mismatching with their sources.
+
+	* src/cff/cffobjs.c (cff_face_init): The type of
+	`scaling' is matched with the scaling parameter
+	in FT_Matrix_Multiply_Scaled() and
+	FT_Vector_Transform_Scaled().
+
+	* src/cff/cffparse.c (cff_parse_real): The type of
+	`power_ten', `scaling', `exponent_add',
+	`integer_length', `fraction_length',
+	`new_fraction_length' and `shift' are matched with
+	the type of `exponent' to avoid unexpected truncation.
+	(cff_parse_fixed_scaled): The type of `scaling' is
+	matched with the `scaling' argument to
+	cff_parse_real().
+	(cff_parse_fixed_dynamic): Ditto.
+	(cff_parse_font_matrix): The type of `scaling' is
+	matched with the `scaling' argument to
+	cff_parse_dynamic().
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	autofit: Fix some data types mismatching with their sources.
 
 	* src/autofit/afglobal.c: Correct the type of
