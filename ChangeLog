@@ -1,5 +1,13 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cache: Check 32-bit glyph index on 16-bit systems.
+
+	* src/cache/ftcbasic.c (ftc_basic_family_get_count):
+	Check overflow caused by the face including large
+	number of glyphs > 64k.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cache: Fix some data types mismatching with their sources.
 
 	* src/cache/ftccache.c (ftc_cache_resize): The types of
