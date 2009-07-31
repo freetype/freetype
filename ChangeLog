@@ -1,5 +1,25 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	autofit: Count the size of the memory object by ptrdiff_t.
+
+	* src/autofit/afcjk.c (af_cjk_hint_edges): The
+	number of edges `n_edges' should be counted by
+	FT_PtrDist variable instead of FT_Int.
+
+	* src/autofit/aflatin.c (af_latin_hint_edges):
+	Ditto.
+
+	* src/autofit/aftypes.h: In AF_ScriptClassRec,
+	the size of metric `script_metrics_size' should
+	be counted by FT_Offset variable instead of FT_UInt.
+
+	* src/autofit/afhints.c
+	(af_glyph_hints_align_strong_points): The cursors
+	for the edges `min', `max', `mid' in the memory
+	buffer should be typed FT_PtrDist.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	autofit: Fix for unused variable `first'.
 
 	* src/autofit/afhints.c (af_glyph_hints_reload): Insert

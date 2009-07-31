@@ -1701,7 +1701,7 @@
     AF_AxisHints  axis       = &hints->axis[dim];
     AF_Edge       edges      = axis->edges;
     AF_Edge       edge_limit = edges + axis->num_edges;
-    FT_Int        n_edges;
+    FT_PtrDist    n_edges;
     AF_Edge       edge;
     AF_Edge       anchor     = 0;
     FT_Int        has_serifs = 0;
