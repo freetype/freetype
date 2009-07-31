@@ -4561,13 +4561,20 @@
       CUR.numIDefs++;
     }
 
-    def->opc    = args[0];
+    /* opcode must be unsigned 8-bit integer */
+    if ( 0 > args[0] || args[0] > 0x00FF )
+    {
+      CUR.error = TT_Err_Too_Many_Instruction_Defs;
+      return;
+    }
+
+    def->opc    = (FT_Byte)args[0];
     def->start  = CUR.IP+1;
     def->range  = CUR.curRange;
     def->active = TRUE;
 
     if ( (FT_ULong)args[0] > CUR.maxIns )
-      CUR.maxIns = args[0];
+      CUR.maxIns = (FT_Byte)args[0];
 
     /* Now skip the whole function definition. */
     /* We don't allow nested IDEFs & FDEFs.    */
