@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	fttypes.h: Cast FT_MAKE_TAG output to FT_Tag exlicitly.
+
+	* include/freetype/fttypes.h (FT_MAKE_TAG):
+	Cast the result to FT_Tag.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	psnames: Handle Unicode codepoints by FT_UInt32 variables.
 
 	* src/psnames/psmodule.c (BASE_GLYPH): Cast the result
