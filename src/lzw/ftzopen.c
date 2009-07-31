@@ -113,8 +113,8 @@
     {
       FT_Memory  memory = state->memory;
       FT_Error   error;
-      FT_UInt    old_size = state->stack_size;
-      FT_UInt    new_size = old_size;
+      FT_Offset  old_size = state->stack_size;
+      FT_Offset  new_size = old_size;
 
       new_size = new_size + ( new_size >> 1 ) + 4;
 

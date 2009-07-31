@@ -1,5 +1,19 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	lzw: Count the size of the memory object by ptrdiff_t.
+
+	* src/lzw/ftzopen.h: The types of FT_LzwState->{buf_total,
+	stack_size} are changed from FT_UInt to FT_Offset, to match
+	with size_t, which is appropriate type for the object in
+	the memory buffer.
+
+	* src/lzw/ftzopen.c (ft_lzwstate_stack_grow): The types of
+	`old_size' and `new_size' are changed from FT_UInt to
+	FT_Offset, to match with size_t, which is appropriate type
+	for the object in the memory buffer.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	otvalid: Count the table size on memory by ptrdiff_t.
 
 	* src/otvalid/otvgpos.c (otv_ValueRecord_validate):
