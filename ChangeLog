@@ -1,5 +1,16 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cff: Fix some data types mismatching with their sources.
+
+	* src/cff/cffgload.c (cff_slot_load): The types of	
+	`top_upm' and `sub_upm' are matched with
+	CFF_FontRecDict->units_per_em.
+
+	* src/cff/cffobjs.c (cff_size_select): Ditto.
+	(cff_size_request): Ditto.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	bdf: Fix some data types mismatching with their sources.
 
 	* bdflib.c (_bdf_list_ensure): The type of `num_items'
