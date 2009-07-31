@@ -322,6 +322,8 @@ extern void*  _af_debug_hints;
 
   } AF_Script_UniRangeRec;
 
+#define AF_UNIRANGE_REC( a, b ) { (FT_UInt32)(a), (FT_UInt32)(b) }
+
   typedef const AF_Script_UniRangeRec  *AF_Script_UniRange;
 
 
