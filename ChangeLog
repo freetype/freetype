@@ -1,5 +1,14 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cff: Type large constants > 0x7FFF as long for 16-bit systems.
+
+	* src/cff/cffload.c (cff_charset_load): Type large
+	constants > 0x7FFF as long, because normal constants
+	are typed signed integer that is less than 0x8000 on
+	16-bit systems.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	base: Remove an unused variable.
 
 	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Remove an

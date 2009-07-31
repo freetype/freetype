@@ -851,7 +851,7 @@
 
 
             /* this constant is given in the CFF specification */
-            if ( sid < 65000 )
+            if ( sid < 65000L )
               charset->sids[j] = sid;
             else
             {
@@ -894,16 +894,16 @@
 
             /* check whether the range contains at least one valid glyph; */
             /* the constant is given in the CFF specification             */
-            if ( glyph_sid >= 65000 ) {
+            if ( glyph_sid >= 65000L ) {
               FT_ERROR(( "cff_charset_load: invalid SID range\n" ));
               error = CFF_Err_Invalid_File_Format;
               goto Exit;
             }
 
             /* try to rescue some of the SIDs if `nleft' is too large */
-            if ( nleft > 65000 - 1 || glyph_sid >= 65000 - nleft ) {
+            if ( nleft > 65000L - 1L || glyph_sid >= 65000L - nleft ) {
               FT_ERROR(( "cff_charset_load: invalid SID range trimmed\n" ));
-              nleft = 65000 - 1 - glyph_sid;
+              nleft = ( FT_UInt )( 65000L - 1L - glyph_sid );
             }
 
             /* Fill in the range of sids -- `nleft + 1' glyphs. */
