@@ -1349,7 +1349,7 @@
       printf( "%3d:", yindex );
 
       for ( cell = ras.ycells[yindex]; cell != NULL; cell = cell->next )
-        printf( " (%3d, c:%4d, a:%6d)", cell->x, cell->cover, cell->area );
+        printf( " (%3ld, c:%4ld, a:%6d)", cell->x, cell->cover, cell->area );
       printf( "\n" );
     }
   }
