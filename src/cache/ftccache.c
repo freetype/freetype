@@ -93,9 +93,9 @@
     for (;;)
     {
       FTC_Node  node, *pnode;
-      FT_UInt   p      = cache->p;
-      FT_UInt   mask   = cache->mask;
-      FT_UInt   count  = mask + p + 1;    /* number of buckets */
+      FT_UFast  p      = cache->p;
+      FT_UFast  mask   = cache->mask;
+      FT_UFast  count  = mask + p + 1;    /* number of buckets */
 
 
       /* do we need to shrink the buckets array? */
@@ -153,7 +153,7 @@
       /* do we need to expand the buckets array? */
       else if ( cache->slack > (FT_Long)count * FTC_HASH_SUB_LOAD )
       {
-        FT_UInt    old_index = p + mask;
+        FT_UFast   old_index = p + mask;
         FTC_Node*  pold;
 
 
@@ -347,7 +347,7 @@
     {
       FTC_Manager  manager = cache->manager;
       FT_UFast     i;
-      FT_UInt      count;
+      FT_UFast     count;
 
 
       count = cache->p + cache->mask + 1;
