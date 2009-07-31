@@ -1,5 +1,13 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	gxvalid: Guarantee `nFeatureFlags' size up to 32-bit.
+
+	* src/gxvalid/gxvmort.c (gxv_mort_featurearray_validate):
+	Extend the 3rd argument `nFeatureFlags' to FT_ULong.
+	* src/gxvalid/gxvmort.h: Ditto.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	sfnt: Insert explicit cast for LP64 system.
 
 	* src/sfnt/ttkern.c (tt_face_load_kern): Insert
