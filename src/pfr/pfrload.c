@@ -716,7 +716,8 @@
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
-    FT_UInt    flags, num_aux;
+    FT_UInt    flags;
+    FT_ULong   num_aux;
     FT_Byte*   p;
     FT_Byte*   limit;
 
