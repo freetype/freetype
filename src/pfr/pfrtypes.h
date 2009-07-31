@@ -200,7 +200,7 @@ FT_BEGIN_HEADER
     FT_Byte       flags;
     FT_Short      base_adj;
     FT_UInt       pair_size;
-    FT_UInt32     offset;
+    FT_Offset     offset;
     FT_UInt32     pair1;
     FT_UInt32     pair2;
 
