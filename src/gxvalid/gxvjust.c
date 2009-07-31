@@ -557,7 +557,7 @@
   {
     FT_Bytes           p     = table;
     FT_Bytes           limit = 0;
-    FT_UInt            table_size;
+    FT_Offset          table_size;
 
     GXV_ValidatorRec   validrec;
     GXV_Validator      valid = &validrec;
