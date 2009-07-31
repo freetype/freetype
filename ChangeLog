@@ -1,5 +1,14 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	pcf: Truncate FT_ULong `nprops' to fit to int PCF_Face->nprops.
+
+	* src/pcf/pcfread.c (pcf_get_properties): Load `nprops'
+	as FT_ULong value from PCF file, but truncate it as
+	int to fit PCF_Face->nprops.  The number of truncated
+	properties is shown in the trace message.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	gxvalid: Extend a few local variables to reduce the casts.
 
 	* src/gxvalid/gxvmorx.c (gxv_morx_subtables_validate):

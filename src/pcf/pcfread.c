@@ -399,7 +399,7 @@ THE SOFTWARE.
   {
     PCF_ParseProperty  props      = 0;
     PCF_Property       properties;
-    FT_UInt            nprops, i;
+    FT_ULong           nprops, i;
     FT_ULong           format, size;
     FT_Error           error;
     FT_Memory          memory     = FT_FACE(face)->memory;
@@ -433,7 +433,10 @@ THE SOFTWARE.
     if ( error )
       goto Bail;
 
-    FT_TRACE4(( "  nprop = %d\n", nprops ));
+    FT_TRACE4(( "  nprop = %d (truncate %d props)\n",
+                (int)nprops, nprops - (int)nprops ));
+
+    nprops = nprops - (int)nprops;
 
     /* rough estimate */
     if ( nprops > size / PCF_PROPERTY_SIZE )
@@ -442,7 +445,7 @@ THE SOFTWARE.
       goto Bail;
     }
 
-    face->nprops = nprops;
+    face->nprops = (int)nprops;
 
     if ( FT_NEW_ARRAY( props, nprops ) )
       goto Bail;
