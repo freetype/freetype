@@ -1,5 +1,16 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	sfnt: Ignore invalid GIDs in glyph name lookup.
+
+	* include/freetype/internal/fttrace.h:
+	New trace module for sfdriver.c is added.
+
+	* src/sfnt/sfdriver.c (sfnt_get_name_index):
+	Restrict glyph name lookup to FT_UInt GID.
+	Genuine TrueType can hold 16-bit glyphs.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	pcf: Fix a comparison between FT_Long and FT_ULong.
 
 	* src/pcf/pcfread.c (pcf_get_bitmaps): Return an error

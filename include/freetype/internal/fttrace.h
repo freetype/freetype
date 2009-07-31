@@ -43,6 +43,7 @@ FT_TRACE_DEF( synth )     /* bold/slant synthesizer  (ftsynth.c)  */
 FT_TRACE_DEF( cache )     /* cache sub-system        (ftcache.c, etc.) */
 
   /* SFNT driver components */
+FT_TRACE_DEF( sfdriver )  /* SFNT font driver        (sfdriver.c) */
 FT_TRACE_DEF( sfobjs )    /* SFNT object handler     (sfobjs.c)   */
 FT_TRACE_DEF( ttcmap )    /* charmap handler         (ttcmap.c)   */
 FT_TRACE_DEF( ttkern )    /* kerning handler         (ttkern.c)   */
