@@ -689,7 +689,7 @@ FT_BEGIN_HEADER
     T1_Decoder_Callback  parse_callback;
     T1_Decoder_FuncsRec  funcs;
 
-    FT_Int*              buildchar;
+    FT_Long*             buildchar;
     FT_UInt              len_buildchar;
 
     FT_Bool              seac;
