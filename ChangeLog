@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	gzip: Distinguish PureC from TurboC on MSDOS.
+
+	* src/gzip/zutil.c (zcalloc, zcfree): Enable only for
+	MSDOS platform.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	gxvalid: Insert PureC pragma to allow unevaluated variables.
 
 	* builds/atari/ATARI.H: Insert PureC pragma not to
