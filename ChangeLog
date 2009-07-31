@@ -1,5 +1,18 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	truetype: Truncate the deltas of composite glyph at 16-bit values.
+
+	* src/truetype/ttgload.c (load_truetype_glyph):
+	Insert cast from FT_Long (deltas[i].{x,y}) to
+	FT_Int16 in the summation of deltas[] for composite
+	glyphs.  Because deltas[i] is typed as FT_Pos,
+	its component x, y are typed as FT_Long, but
+	their sources are always FT_Int16 when they are
+	loaded by ft_var_readpackeddeltas().  However,
+	the limitation about the summed deltas is unclear.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Truncate the instructions upto 16-bit per a glyph.
 
 	* src/truetype/ttgload.c (TT_Hint_Glyph): Truncate

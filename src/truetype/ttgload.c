@@ -1400,8 +1400,11 @@
         {
           if ( subglyph->flags & ARGS_ARE_XY_VALUES )
           {
-            subglyph->arg1 += deltas[i].x;
-            subglyph->arg2 += deltas[i].y;
+            /* XXX: overflow check for subglyph->{arg1,arg2}.   */
+            /* deltas[i].{x,y} must be within signed 16-bit,    */
+            /* but the restriction of summed delta is not clear */
+            subglyph->arg1 += (FT_Int16)deltas[i].x;
+            subglyph->arg2 += (FT_Int16)deltas[i].y;
           }
         }
 
