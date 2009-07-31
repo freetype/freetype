@@ -91,7 +91,7 @@ FT_BEGIN_HEADER
                        FT_Pointer   query,
                        FTC_Cache    cache );
 
-  typedef FT_ULong
+  typedef FT_Offset
   (*FTC_Node_WeightFunc)( FTC_Node   node,
                           FTC_Cache  cache );
 
@@ -121,7 +121,7 @@ FT_BEGIN_HEADER
     FTC_Node_CompareFunc  node_remove_faceid;
     FTC_Node_FreeFunc     node_free;
 
-    FT_UInt               cache_size;
+    FT_Offset             cache_size;
     FTC_Cache_InitFunc    cache_init;
     FTC_Cache_DoneFunc    cache_done;
 
