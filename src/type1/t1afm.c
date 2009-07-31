@@ -50,7 +50,7 @@
   /* read a glyph name and return the equivalent glyph index */
   static FT_Int
   t1_get_index( const char*  name,
-                FT_UInt      len,
+                FT_Offset    len,
                 void*        user_data )
   {
     T1_Font  type1 = (T1_Font)user_data;

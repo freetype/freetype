@@ -755,7 +755,7 @@ FT_BEGIN_HEADER
 
     FT_Int
     (*get_index)( const char*  name,
-                  FT_UInt      len,
+                  FT_Offset    len,
                   void*        user_data );
 
     void*         user_data;
