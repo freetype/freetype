@@ -1,5 +1,41 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	XXX_cmap_encoding_char_next() return FT_UInt32 values.
+
+	* include/freetype/internal/services/svpscmap.h:
+	The size of the charcode value returned by
+	the function typed PS_Unicodes_CharNextFunc is
+	matched with its input charcode value.
+
+	* src/cff/cffmap.c (cff_cmap_encoding_char_next,
+	cff_cmap_unicode_char_next): Ditto.
+
+	* src/pfr/pfrmap.c (pfr_cmap_encoding_char_next):
+	Ditto.
+
+	* src/psaux/t1cmap.c (t1_cmap_std_char_next,
+	t1_cmap_custom_char_next, t1_cmap_unicode_char_next):
+	Ditto.
+
+	* src/psnames/psmodule.c (ps_unicodes_char_next):
+	Ditto.
+
+	* src/winfonts/winfnt.c (fnt_cmap_char_next):
+	Ditto.
+
+	* src/sfnt/ttcmap.c (tt_cmap0_char_next,
+	tt_cmap2_char_next, tt_cmap4_char_next,
+	tt_cmap6_char_next, tt_cmap10_char_next,
+	tt_cmap12_char_next, tt_cmap13_char_next): Ditto.
+	(tt_cmap14_char_variants): Handle base unicode
+	codepoint by FT_UInt32 variable to avoid overflow
+	on 16-bit platforms.
+	(tt_cmap14_ensure): The type of `num_results' is
+	extend to FT_UInt32, to cover unsigned 32-bit
+	`numVarSelectorRecords' in cmap14 table header.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Extend TT_Face->num_locations for broken TTFs.
 
 	* include/freetype/internal/tttypes.h:

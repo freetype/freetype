@@ -125,7 +125,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap0_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -460,7 +460,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap2_char_next( TT_CMap     cmap,
                       FT_UInt32  *pcharcode )
   {
@@ -737,7 +737,7 @@
     if ( cmap->cur_charcode >= 0xFFFFUL )
       goto Fail;
 
-    charcode = cmap->cur_charcode + 1;
+    charcode = (FT_UInt)cmap->cur_charcode + 1;
 
     if ( charcode < cmap->cur_start )
       charcode = cmap->cur_start;
@@ -1088,7 +1088,7 @@
     FT_UInt   num_segs2, start, end, offset;
     FT_Int    delta;
     FT_UInt   max, min, mid, num_segs;
-    FT_UInt   charcode = *pcharcode;
+    FT_UInt   charcode = (FT_UInt)*pcharcode;
     FT_UInt   gindex   = 0;
     FT_Byte*  p;
 
@@ -1330,7 +1330,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap4_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -1481,7 +1481,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap6_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -1734,7 +1734,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap8_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
@@ -1892,7 +1892,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap10_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -2210,7 +2210,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap12_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -2526,7 +2526,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap13_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -2664,7 +2664,7 @@
      * cmap 14 query functions.  The data is overwritten
      * on each call to these functions.
      */
-    FT_UInt     max_results;
+    FT_UInt32   max_results;
     FT_UInt32*  results;
     FT_Memory   memory;
 
@@ -2685,10 +2685,10 @@
 
   static FT_Error
   tt_cmap14_ensure( TT_CMap14  cmap,
-                    FT_UInt    num_results,
+                    FT_UInt32  num_results,
                     FT_Memory  memory )
   {
-    FT_UInt   old_max = cmap->max_results;
+    FT_UInt32 old_max = cmap->max_results;
     FT_Error  error   = 0;
 
 
@@ -2834,7 +2834,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_UInt )
+  FT_CALLBACK_DEF( FT_UInt32 )
   tt_cmap14_char_next( TT_CMap     cmap,
                        FT_UInt32  *pchar_code )
   {
@@ -3027,10 +3027,10 @@
                       FT_Memory  memory )
   {
     TT_CMap14   cmap14 = (TT_CMap14)cmap;
-    FT_UInt     count  = cmap14->num_selectors;
+    FT_UInt32   count  = cmap14->num_selectors;
     FT_Byte*    p      = cmap->data + 10;
     FT_UInt32*  result;
-    FT_UInt     i;
+    FT_UInt32   i;
 
 
     if ( tt_cmap14_ensure( cmap14, ( count + 1 ), memory ) )
@@ -3054,7 +3054,7 @@
                            FT_ULong   charCode )
   {
     TT_CMap14   cmap14 = (TT_CMap14)  cmap;
-    FT_UInt     count  = cmap14->num_selectors;
+    FT_UInt32   count  = cmap14->num_selectors;
     FT_Byte*    p      = cmap->data + 10;
     FT_UInt32*  q;
 
@@ -3123,7 +3123,7 @@
 
     for ( q = cmap14->results; numRanges > 0; --numRanges )
     {
-      FT_UInt  uni = TT_NEXT_UINT24( p );
+      FT_UInt32 uni = TT_NEXT_UINT24( p );
 
 
       cnt = FT_NEXT_BYTE( p ) + 1;
