@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	gxvalid: Extend a few local variables to reduce the casts.
+
+	* src/gxvalid/gxvmorx.c (gxv_morx_subtables_validate):
+	Extend `type' and `rest' to take FT_ULong values.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	gxvalid: Extend `settingTable' to take 32-bit offset.
 
 	* src/gxvalid/gxvfeat.c (gxv_feat_name_validate):
