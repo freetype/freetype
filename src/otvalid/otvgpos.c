@@ -911,7 +911,8 @@
     {
     case 1:     /* ExtensionPosFormat1 */
       {
-        FT_UInt            ExtensionLookupType, ExtensionOffset;
+        FT_UInt            ExtensionLookupType;
+        FT_ULong           ExtensionOffset;
         OTV_Validate_Func  validate;
 
 

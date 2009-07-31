@@ -1,5 +1,16 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	otvalid: Prevent an overflow by GPOS/GSUB 32b-bit offset.
+
+	* src/otvalid/otvgpos.c (otv_ExtensionPos_validate):
+	Extend ExtensionOffset from FT_UInt to FT_ULong, to
+	cover 32-bit offset on 16-bit platform.
+
+	* src/otvalid/otvgsub.c (otv_ExtensionSubst_validate):
+	Ditto.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	ftobjs.c: Prevent an overflow in glyph index handling.
 
 	* src/base/ftobjs.c (FT_Face_GetCharsOfVariant):
