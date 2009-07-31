@@ -1,5 +1,15 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	Improve the variable types in raccess_make_file_name().
+
+	* src/base/ftrfork.c (raccess_make_file_name):
+	Change the type of cursor variable `tmp' to const char*,
+	to prevent the unexpected modification of original pathname.
+	(raccess_make_file_name): Change the type of new_length
+	to size_t.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	ftpatent.c: Fix for unused variable `error'.
 
 	* src/base/ftpatent.c (_tt_check_patents_in_range):
