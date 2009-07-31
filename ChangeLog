@@ -1,5 +1,27 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	bdf: Fix some data types mismatching with their sources.
+
+	* bdflib.c (_bdf_list_ensure): The type of `num_items'
+	is matched with _bdf_list_t.used.  Also the types of
+	`oldsize', `newsize', `bigsize' are matched too.
+	(_bdf_readstream): `cursor' is used as an offset to
+	the pointer, it should be typed as FT_Offset.  Also
+	the types of `bytes', `start', `end', `avail' are matched.
+
+	* bdfdrivr.c: The type of BDF_CMap->num_encodings is
+	matched with FT_CMap->clazz->size.
+	(bdf_cmap_char_index): The types of `min', `max', `mid'
+	are matched with BDF_CMap->num_encodings.  The type of
+	`result' is matched with encoding->glyph.
+	(bdf_cmap_char_next): Ditto, the type of `code' is
+	matched with BDF_encoding_el.enc.
+	(bdf_interpret_style): The type of `lengths' is changed
+	to size_t, to take the value by ft_strlen().  Also the
+	types of `len', `nn', `mm' are matched.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	sfnt: Count the size of the memory object by ptrdiff_t.
 
 	* src/sfnt/ttbdf.c (tt_face_find_bdf_prop): The type of
