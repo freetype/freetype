@@ -1,5 +1,13 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cache: Fix some data types mismatching with their sources.
+
+	* src/cache/ftcsbits.c (ftc_snode_load): The types
+	of `xadvance' and `yadvance' are matched with
+	FT_GlyphSlot->advance.{x|y}.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cache: Cast NULL to a required function type explicitly.
 
 	* src/cache/ftcmanag.c (FTC_Manager_RemoveFaceID):
