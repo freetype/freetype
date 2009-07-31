@@ -1,5 +1,19 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	cff: Cast the long variables to 32-bit for LP64 systems.
+
+	* src/cff/cffdrivr.c (cff_get_advances): Insert
+	explicit cast to modify a 32-bit flag by unsigned
+	long constant.
+
+	* src/cff/cffobjs.c (cff_face_init): Ditto.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings):
+	Replace the casts to FT_Long by the casts to FT_Int32
+	for LP64 platforms.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	pcf: Improve PCF_PropertyRec.value names on LP64 platforms.
 
 	* src/pcf/pcf.h: In PCF_PropertyRec.value, the member
