@@ -87,7 +87,7 @@
     {
       FT_UInt    num_pairs, length, coverage;
       FT_Byte*   p_next;
-      FT_UInt32  mask = 1UL << nn;
+      FT_UInt32  mask = (FT_UInt32)1UL << nn;
 
 
       if ( p + 6 > p_limit )
