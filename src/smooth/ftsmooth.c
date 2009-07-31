@@ -196,6 +196,8 @@
 
 #endif
 
+#if FT_UINT_MAX > 0xFFFFU
+
     /* Required check is ( pitch * height < FT_ULONG_MAX ),     */
     /* but we care realistic cases only. Always pitch <= width. */
     if ( width > 0xFFFFU || height > 0xFFFFU )
@@ -204,6 +206,8 @@
                  width, height ));
       return Smooth_Err_Raster_Overflow;
     }
+
+#endif
 
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
     bitmap->num_grays  = 256;
