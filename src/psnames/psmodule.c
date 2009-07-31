@@ -34,7 +34,7 @@
 
 
 #define VARIANT_BIT         0x80000000UL
-#define BASE_GLYPH( code )  ( (code) & ~VARIANT_BIT )
+#define BASE_GLYPH( code )  ( (FT_UInt32)( (code) & ~VARIANT_BIT ) )
 
 
   /* Return the Unicode value corresponding to a given glyph.  Note that */
@@ -58,7 +58,7 @@
       /*      `uniXXXXYYYYZZZZ'...                                   */
 
       FT_Int       count;
-      FT_ULong     value = 0;
+      FT_UInt32    value = 0;
       const char*  p     = glyph_name + 3;
 
 
@@ -93,7 +93,7 @@
         if ( *p == '\0' )
           return value;
         if ( *p == '.' )
-          return value | VARIANT_BIT;
+          return (FT_UInt32)( value | VARIANT_BIT );
       }
     }
 
@@ -102,7 +102,7 @@
     if ( glyph_name[0] == 'u' )
     {
       FT_Int       count;
-      FT_ULong     value = 0;
+      FT_UInt32    value = 0;
       const char*  p     = glyph_name + 1;
 
 
@@ -133,7 +133,7 @@
         if ( *p == '\0' )
           return value;
         if ( *p == '.' )
-          return value | VARIANT_BIT;
+          return (FT_UInt32)( value | VARIANT_BIT );
       }
     }
 
@@ -155,9 +155,10 @@
 
       /* now look up the glyph in the Adobe Glyph List */
       if ( !dot )
-        return ft_get_adobe_glyph_index( glyph_name, p );
+        return (FT_UInt32)ft_get_adobe_glyph_index( glyph_name, p );
       else
-        return ft_get_adobe_glyph_index( glyph_name, dot ) | VARIANT_BIT;
+        return (FT_UInt32)( ft_get_adobe_glyph_index( glyph_name, dot ) |
+                            VARIANT_BIT );
     }
   }
 
