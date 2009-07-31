@@ -1,5 +1,15 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	sfnt: Cast a charcode to 32-bit in cmap format 14 parser.
+	
+	* src/sfnt/ttcmap.c (tt_cmap14_char_var_index,
+	tt_cmap14_char_var_isdefault, tt_cmap14_char_variants,
+	tt_cmap14_variant_chars): Correct mismatches from
+	FT_CMap_CharVarIndexFunc prototype, FT_ULong arguments
+	are replaced by FT_UInt32 arguments.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	sfnt: Cast a charcode to 32-bit in cmap format 12 parser.
 
 	* src/sfnt/ttcmap.c (tt_cmap12_char_next):

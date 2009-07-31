@@ -2964,10 +2964,10 @@
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  tt_cmap14_char_var_index( TT_CMap   cmap,
-                            TT_CMap   ucmap,
-                            FT_ULong  charcode,
-                            FT_ULong  variantSelector)
+  tt_cmap14_char_var_index( TT_CMap    cmap,
+                            TT_CMap    ucmap,
+                            FT_UInt32  charcode,
+                            FT_UInt32  variantSelector)
   {
     FT_Byte*  p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
     FT_ULong  defOff;
@@ -2997,9 +2997,9 @@
 
 
   FT_CALLBACK_DEF( FT_Int )
-  tt_cmap14_char_var_isdefault( TT_CMap   cmap,
-                                FT_ULong  charcode,
-                                FT_ULong  variantSelector )
+  tt_cmap14_char_var_isdefault( TT_CMap    cmap,
+                                FT_UInt32  charcode,
+                                FT_UInt32  variantSelector )
   {
     FT_Byte*  p = tt_cmap14_find_variant( cmap->data + 6, variantSelector );
     FT_ULong  defOff;
@@ -3054,7 +3054,7 @@
   FT_CALLBACK_DEF( FT_UInt32 * )
   tt_cmap14_char_variants( TT_CMap    cmap,
                            FT_Memory  memory,
-                           FT_ULong   charCode )
+                           FT_UInt32  charCode )
   {
     TT_CMap14   cmap14 = (TT_CMap14)  cmap;
     FT_UInt32   count  = cmap14->num_selectors;
@@ -3174,7 +3174,7 @@
   FT_CALLBACK_DEF( FT_UInt32 * )
   tt_cmap14_variant_chars( TT_CMap    cmap,
                            FT_Memory  memory,
-                           FT_ULong   variantSelector )
+                           FT_UInt32  variantSelector )
   {
     FT_Byte    *p  = tt_cmap14_find_variant( cmap->data + 6,
                                              variantSelector );
