@@ -152,7 +152,7 @@
       FT_UInt  gindex = FT_Get_Char_Index( face, i );
 
 
-      if ( gindex != 0 && gindex < globals->glyph_count )
+      if ( gindex != 0 && gindex < (FT_ULong)globals->glyph_count )
         gscripts[gindex] |= AF_DIGIT;
     }
 
@@ -310,7 +310,7 @@
   af_face_globals_is_digit( AF_FaceGlobals  globals,
                             FT_UInt         gindex )
   {
-    if ( gindex < globals->glyph_count )
+    if ( gindex < (FT_ULong)globals->glyph_count )
       return (FT_Bool)( globals->glyph_scripts[gindex] & AF_DIGIT );
 
     return (FT_Bool)0;
