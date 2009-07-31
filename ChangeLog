@@ -1,5 +1,13 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	sfnt: Cast a character code to FT_UInt32 for LP64 system.
+
+	* src/sfnt/ttcmap.c (tt_cmap4_init, tt_cmap4_next):
+	Insert the casts from unsigned long constant to
+	FT_UInt32.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	sfnt: Extend TT_BDF->strings_size to FT_ULong for huge BDF.
 
 	* include/freetype/internal/tttypes.h: The type
