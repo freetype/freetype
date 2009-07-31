@@ -209,7 +209,7 @@
     {
       if ( format & 1 )
       {
-        FT_UInt   table_size;
+        FT_PtrDist  table_size;
 
         OTV_OPTIONAL_TABLE( device );
 
