@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	base: Remove an unused variable.
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Remove an
+	unused variable `library'.  glyph->library is used.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	cache: Check higher bits in flags for non ILP32 systems.
 
 	4 public functions ought to take FT_ULong flags, but take
