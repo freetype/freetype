@@ -5527,20 +5527,20 @@
     {
       if ( CUR.GS.both_x_axis )
       {
-        dx = TT_MulFix14( args[0], 0x4000 );
+        dx = TT_MulFix14( (FT_UInt32)args[0], 0x4000 );
         dy = 0;
       }
       else
       {
         dx = 0;
-        dy = TT_MulFix14( args[0], 0x4000 );
+        dy = TT_MulFix14( (FT_UInt32)args[0], 0x4000 );
       }
     }
     else
 #endif
     {
-      dx = TT_MulFix14( args[0], CUR.GS.freeVector.x );
-      dy = TT_MulFix14( args[0], CUR.GS.freeVector.y );
+      dx = TT_MulFix14( (FT_UInt32)args[0], CUR.GS.freeVector.x );
+      dy = TT_MulFix14( (FT_UInt32)args[0], CUR.GS.freeVector.y );
     }
 
     while ( CUR.GS.loop > 0 )
@@ -5706,8 +5706,8 @@
 
     if ( CUR.GS.gep0 == 0 )   /* If in twilight zone */
     {
-      CUR.zp0.org[point].x = TT_MulFix14( distance, CUR.GS.freeVector.x );
-      CUR.zp0.org[point].y = TT_MulFix14( distance, CUR.GS.freeVector.y ),
+      CUR.zp0.org[point].x = TT_MulFix14( (FT_UInt32)distance, CUR.GS.freeVector.x );
+      CUR.zp0.org[point].y = TT_MulFix14( (FT_UInt32)distance, CUR.GS.freeVector.y ),
       CUR.zp0.cur[point]   = CUR.zp0.org[point];
     }
 
@@ -5894,10 +5894,12 @@
     if ( CUR.GS.gep1 == 0 )
     {
       CUR.zp1.org[point].x = CUR.zp0.org[CUR.GS.rp0].x +
-                             TT_MulFix14( cvt_dist, CUR.GS.freeVector.x );
+                             TT_MulFix14( (FT_UInt32)cvt_dist,
+                                          CUR.GS.freeVector.x );
 
       CUR.zp1.org[point].y = CUR.zp0.org[CUR.GS.rp0].y +
-                             TT_MulFix14( cvt_dist, CUR.GS.freeVector.y );
+                             TT_MulFix14( (FT_UInt32)cvt_dist,
+                                          CUR.GS.freeVector.y );
 
       CUR.zp1.cur[point] = CUR.zp0.cur[point];
     }
