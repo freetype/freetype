@@ -2531,7 +2531,7 @@
                        FT_UInt32  *pchar_code )
   {
     TT_CMap13  cmap13 = (TT_CMap13)cmap;
-    FT_ULong   gindex;
+    FT_UInt    gindex;
 
 
     if ( cmap13->cur_charcode >= 0xFFFFFFFFUL )
