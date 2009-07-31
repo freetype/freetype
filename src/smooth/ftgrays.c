@@ -739,7 +739,7 @@
     {
       TCoord  ex     = TRUNC( ras.x );
       TCoord  two_fx = (TCoord)( ( ras.x - SUBPIXELS( ex ) ) << 1 );
-      TPos    area;
+      TArea   area;
 
 
       first = ONE_PIXEL;
