@@ -1,5 +1,14 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	truetype: Extend mmvar_len to hold size_t values.
+
+	* src/truetype/ttgxvar.h: The type of
+	GX_BlendRec.mmvar_len is changed from FT_Int to
+	FT_Offset, because TT_Get_MM_Var() calculates it
+	by sizeof() results.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Check invalid function number in IDEF instruction.
 
 	* src/truetype/ttinterp.c (Ins_IDEF): Check
