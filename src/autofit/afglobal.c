@@ -65,7 +65,7 @@
   typedef struct  AF_FaceGlobalsRec_
   {
     FT_Face           face;
-    FT_UInt           glyph_count;    /* same as face->num_glyphs */
+    FT_Long           glyph_count;    /* same as face->num_glyphs */
     FT_Byte*          glyph_scripts;
 
     AF_ScriptMetrics  metrics[AF_SCRIPT_MAX];
@@ -124,7 +124,7 @@
         gindex = FT_Get_Char_Index( face, charcode );
 
         if ( gindex != 0                             &&
-             gindex < globals->glyph_count           &&
+             gindex < (FT_ULong)globals->glyph_count &&
              gscripts[gindex] == AF_SCRIPT_LIST_NONE )
         {
           gscripts[gindex] = (FT_Byte)ss;
@@ -137,7 +137,7 @@
           if ( gindex == 0 || charcode > range->last )
             break;
 
-          if ( gindex < globals->glyph_count           &&
+          if ( gindex < (FT_ULong)globals->glyph_count &&
                gscripts[gindex] == AF_SCRIPT_LIST_NONE )
           {
             gscripts[gindex] = (FT_Byte)ss;
@@ -162,7 +162,7 @@
      *  XXX: Shouldn't we disable hinting or do something similar?
      */
     {
-      FT_UInt  nn;
+      FT_Long  nn;
 
 
       for ( nn = 0; nn < globals->glyph_count; nn++ )
@@ -252,12 +252,12 @@
     FT_UInt           gidx;
     AF_ScriptClass    clazz;
     FT_UInt           script     = options & 15;
-    const FT_UInt     script_max = sizeof ( AF_SCRIPT_CLASSES_GET ) /
+    const FT_Offset   script_max = sizeof ( AF_SCRIPT_CLASSES_GET ) /
                                      sizeof ( AF_SCRIPT_CLASSES_GET[0] );
     FT_Error          error      = AF_Err_Ok;
 
 
-    if ( gindex >= globals->glyph_count )
+    if ( gindex >= (FT_ULong)globals->glyph_count )
     {
       error = AF_Err_Invalid_Argument;
       goto Exit;

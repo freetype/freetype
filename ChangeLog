@@ -1,5 +1,32 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	autofit: Fix some data types mismatching with their sources.
+
+	* src/autofit/afglobal.c: Correct the type of
+	AF_FaceGlobalsRec.glyph_count to match with
+	FT_Face->num_glyphs.
+	(af_face_globals_compute_script_coverage):
+	Insert explicit cast to compare
+	FT_Long AF_FaceGlobalsRec.glyph_count versus
+	FT_UInt gindex.  The type of `nn' is changed
+	to scan glyph index upto AF_FaceGlobalsRec.glyph_count.
+	(af_face_globals_get_metrics): The type of `script_max'
+	is changed to cover size_t value.  Insert explicit cast
+	to compare FT_Long AF_FaceGlobalsRec.glyph_count versus
+	FT_UInt gindex.
+
+	* src/autofit/afhints.c (af_axis_hints_new_segment):
+	Insert explicit cast to calculate `big_max' from
+	integer and size_t values.
+	(af_axis_hints_new_edge): Ditto.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues):
+	The type of `best_y' is matched to FT_Vector.y.
+	(af_latin_compute_stem_width): The type of `delta' is
+	matched to `dist' and `org_dist'.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	autofit: Count the size of the memory object by ptrdiff_t.
 
 	* src/autofit/afcjk.c (af_cjk_hint_edges): The
