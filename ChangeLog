@@ -1,5 +1,23 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	pcf: Handle the string length by size_t variables.
+
+	* src/pcf/pcfread.c (pcf_interpret_style): The types
+	of nn, len, lengths[4] are changed to size_t, because
+	they are loaded by (or compared with) ft_strlen().
+
+	* src/pcf/pcfutil.c (BitOrderInvert, TwoByteSwap,
+	FourByteSwap): The type of the 2nd argument `nbytes'
+	is changed to size_t, for similarity with ANSI C
+	string functions.
+
+	* src/pcf/pcfdrivr.c (PCF_Glyph_Load): The type of
+	`bytes' is changed to FT_Offset, because it is passed
+	to FT_ALLOC(), via ft_glyphslot_alloc_bitmap().  At
+	least, using unsigned type is better.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	pcf: Fix some data types mismatching with their sources.
 
 	* src/pcf/pcfread.c (pcf_seek_to_table_type,
