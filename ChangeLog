@@ -1,5 +1,24 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	bdf: Improve bdf_property_t.value names for LP64 platforms.
+
+	* src/bdf/bdf.h: In bdf_property_t.value, the member
+	`int32' is replaced by `l', `card32' is replaced by
+	`ul', to fix the difference between the name and the
+	types on LP64 platforms.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Reflect
+	bdf_property_t.value change.
+	(bdf_get_bdf_property): Reflect bdf_property_t.value
+	change, with appropriate casts to FT_Int32/FT_UInt32.
+	Their destinations BDF_PropertyRec.{integer|cardinal}
+	are public and explicitly defined as FT_Int32/FT_UInt32.
+
+	* src/bdf/bdflib.c (_bdf_add_property): Reflect
+	bdf_property_t.value change.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	bdf: Fix some data types mismatching with their sources.
 
 	* src/bdf/bdrdrivr.c (bdf_cmap_char_index): The type
