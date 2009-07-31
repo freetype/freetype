@@ -155,6 +155,8 @@
     integer_length  = 0;
     fraction_length = 0;
 
+    FT_UNUSED( rest );
+
     /* First of all, read the integer part. */
     phase = 4;
 
