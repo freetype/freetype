@@ -126,8 +126,8 @@
        */
       if ( num_pairs > 0 )
       {
-        FT_UInt  count;
-        FT_UInt  old_pair;
+        FT_ULong  count;
+        FT_ULong  old_pair;
 
 
         old_pair = FT_NEXT_ULONG( p );
