@@ -103,6 +103,7 @@
     }
 
   Exit:
+    FT_UNUSED( error );
     FT_FRAME_EXIT();
     return result;
   }

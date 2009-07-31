@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	ftpatent.c: Fix for unused variable `error'.
+
+	* src/base/ftpatent.c (_tt_check_patents_in_range):
+	Fix warning for unused variable `error'.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	type1: Check invalid string longer than PostScript limit.
 
 	* src/type1/t1afm.c (t1_get_index): Check invalid string
