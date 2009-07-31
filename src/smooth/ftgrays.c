@@ -275,7 +275,7 @@
   /* need to define them to "float" or "double" when experimenting with   */
   /* new algorithms                                                       */
 
-  typedef int   TCoord;   /* integer scanline/pixel coordinate */
+  typedef long  TCoord;   /* integer scanline/pixel coordinate */
   typedef long  TPos;     /* sub-pixel coordinate              */
 
   /* determine the type used to store cell areas.  This normally takes at */
@@ -306,8 +306,8 @@
 
   typedef struct  TCell_
   {
-    int    x;
-    int    cover;
+    TPos   x;     /* same with TWorker.ex */
+    TCoord cover; /* same with TWorker.cover */
     TArea  area;
     PCell  next;
 
@@ -322,12 +322,12 @@
     TPos    count_ex, count_ey;
 
     TArea   area;
-    int     cover;
+    TCoord  cover;
     int     invalid;
 
     PCell   cells;
-    int     max_cells;
-    int     num_cells;
+    FT_PtrDist  max_cells;
+    FT_PtrDist  num_cells;
 
     TCoord  cx, cy;
     TPos    x,  y;
@@ -359,7 +359,7 @@
     long        buffer_size;
 
     PCell*     ycells;
-    int        ycount;
+    TPos       ycount;
 
   } TWorker, *PWorker;
 
@@ -456,7 +456,7 @@
   gray_find_cell( RAS_ARG )
   {
     PCell  *pcell, cell;
-    int     x = ras.ex;
+    TPos    x = ras.ex;
 
 
     if ( x > ras.count_ex )
@@ -588,9 +588,9 @@
                                  TPos    x2,
                                  TCoord  y2 )
   {
-    TCoord  ex1, ex2, fx1, fx2, delta;
+    TCoord  ex1, ex2, fx1, fx2, delta, mod, lift, rem;
     long    p, first, dx;
-    int     incr, lift, mod, rem;
+    int     incr;
 
 
     dx = x2 - x1;
@@ -612,7 +612,7 @@
     if ( ex1 == ex2 )
     {
       delta      = y2 - y1;
-      ras.area  += (TArea)( fx1 + fx2 ) * delta;
+      ras.area  += (TArea)(( fx1 + fx2 ) * delta);
       ras.cover += delta;
       return;
     }
@@ -640,7 +640,7 @@
       mod += (TCoord)dx;
     }
 
-    ras.area  += (TArea)( fx1 + first ) * delta;
+    ras.area  += (TArea)(( fx1 + first ) * delta);
     ras.cover += delta;
 
     ex1 += incr;
@@ -670,7 +670,7 @@
           delta++;
         }
 
-        ras.area  += (TArea)ONE_PIXEL * delta;
+        ras.area  += (TArea)(ONE_PIXEL * delta);
         ras.cover += delta;
         y1        += delta;
         ex1       += incr;
@@ -679,7 +679,7 @@
     }
 
     delta      = y2 - y1;
-    ras.area  += (TArea)( fx2 + ONE_PIXEL - first ) * delta;
+    ras.area  += (TArea)(( fx2 + ONE_PIXEL - first ) * delta);
     ras.cover += delta;
   }
 
@@ -692,10 +692,10 @@
   gray_render_line( RAS_ARG_ TPos  to_x,
                              TPos  to_y )
   {
-    TCoord  ey1, ey2, fy1, fy2;
+    TCoord  ey1, ey2, fy1, fy2, mod;
     TPos    dx, dy, x, x2;
     long    p, first;
-    int     delta, rem, mod, lift, incr;
+    int     delta, rem, lift, incr;
 
 
     ey1 = TRUNC( ras.last_ey );
@@ -1231,7 +1231,7 @@
   gray_hline( RAS_ARG_ TCoord  x,
                        TCoord  y,
                        TPos    area,
-                       int     acount )
+                       TCoord  acount )
   {
     FT_Span*  span;
     int       count;
