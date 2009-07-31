@@ -1,5 +1,15 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	psaux: Prevent invalid arguments to afm_parser_read_vals().
+
+	* src/psaux/afmparse.c (afm_parser_read_vals): Change
+	the type of `n' to prevent negative number how many
+	arguments should be parsed.
+
+	* src/psaux/afmparse.h (afm_parser_read_vals): Ditto.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	base: Prevent some overflows on LP64 systems.
 
 	* src/base/ftadvance.c (FT_Get_Advances): Cast the
