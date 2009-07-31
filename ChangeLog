@@ -1,5 +1,22 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	psaux: Handle the string length by FT_Offset variables.
+
+	* src/psaux/afmparse.c (afm_parser_next_key,
+	afm_tokenize, afm_parse_track_kern,
+	afm_parse_kern_pairs, afm_parse_kern_data,
+	afm_parser_skip_section, afm_parser_parse):
+	The length of key is handled by FT_Offset,
+	instead of FT_UInt.  Although the length of
+	PostScript strings or name object is 16-bit,
+	AFM_STREAM_KEY_LEN() calculates the length
+	from the pointer difference.
+
+	* src/psaux/afmparse.h (afm_parser_next_key):
+	Ditto.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	pcf: Fix some data types mismatching with their sources.
 
 	* src/pcf/pcfread.c (pcf_get_bitmaps): The types
