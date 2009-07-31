@@ -594,7 +594,7 @@
         if ( ip[-1] >= 32 )
         {
           if ( ip[-1] < 247 )
-            value = (FT_Long)ip[-1] - 139;
+            value = (FT_Int32)ip[-1] - 139;
           else
           {
             if ( ++ip > limit )
@@ -605,9 +605,9 @@
             }
 
             if ( ip[-2] < 251 )
-              value =  ( ( (FT_Long)ip[-2] - 247 ) << 8 ) + ip[-1] + 108;
+              value =  ( ( (FT_Int32)ip[-2] - 247 ) << 8 ) + ip[-1] + 108;
             else
-              value = -( ( ( (FT_Long)ip[-2] - 251 ) << 8 ) + ip[-1] + 108 );
+              value = -( ( ( (FT_Int32)ip[-2] - 251 ) << 8 ) + ip[-1] + 108 );
           }
 
           if ( !large_int )
