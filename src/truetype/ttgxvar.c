@@ -211,12 +211,12 @@
   /*                                                                       */
   static FT_Short*
   ft_var_readpackeddeltas( FT_Stream  stream,
-                           FT_Int     delta_cnt )
+                           FT_Offset  delta_cnt )
   {
     FT_Short  *deltas;
     FT_Int     runcnt;
-    FT_Int     i;
-    FT_Int     j;
+    FT_Offset  i;
+    FT_Offset  j;
     FT_Memory  memory = stream->memory;
     FT_Error   error = TT_Err_Ok;
 
