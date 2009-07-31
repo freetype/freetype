@@ -57,6 +57,10 @@
     FT_Int   n;
 
 
+    /* PS string/name length must be < 16-bit */
+    if ( ( len - 0xFFFFU ) > 0 )
+      return 0;
+
     for ( n = 0; n < type1->num_glyphs; n++ )
     {
       char*  gname = (char*)type1->glyph_names[n];
