@@ -1,5 +1,16 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	bdf: Fix some data types mismatching with their sources.
+
+	* src/bdf/bdrdrivr.c (bdf_cmap_char_index): The type
+	of `code' is matched with BDF_encoding_el->enc.
+	(bdf_cmap_char_next): The type of `charcode' is
+	matched with BDF_encoding_el->enc.  When *acharcode
+	is set by charcode, an overflow is checked and
+	casted to unsigned 32-bit integer.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	autofit: Improve Unicode range definitions.
 
 	* src/autofit/aftypes.h (AF_UNIRANGE_REC): New macro
