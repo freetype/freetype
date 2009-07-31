@@ -665,7 +665,9 @@
     /* this will remove all FTC_SizeNode that correspond to
      * the face_id as well
      */
-    FTC_MruList_RemoveSelection( &manager->faces, NULL, face_id );
+    FTC_MruList_RemoveSelection( &manager->faces,
+                                 (FTC_MruNode_CompareFunc)NULL,
+                                 face_id );
 
     for ( nn = 0; nn < manager->num_caches; nn++ )
       FTC_Cache_RemoveFaceID( manager->caches[nn], face_id );
