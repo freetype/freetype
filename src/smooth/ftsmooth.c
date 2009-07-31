@@ -321,12 +321,19 @@
 
     FT_Outline_Translate( outline, x_shift, y_shift );
 
+    /*
+     * XXX: on 16bit system, we return an error for huge bitmap
+     * to prevent an overflow.
+     */
+    if ( x_left > FT_INT_MAX || y_top > FT_INT_MAX )
+      return Smooth_Err_Invalid_Pixel_Size;
+
     if ( error )
       goto Exit;
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = x_left;
-    slot->bitmap_top  = y_top;
+    slot->bitmap_left = (FT_Int)x_left;
+    slot->bitmap_top  = (FT_Int)y_top;
 
   Exit:
     if ( outline && origin )

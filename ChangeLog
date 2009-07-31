@@ -1,5 +1,63 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	Improve bitmap size or pixel variables for 16-bit systems.
+
+	* include/freetype/config/ftstdlib.h: Introduce
+	FT_INT_MIN, to use in signed integer overflow in
+	16-bit and 64-bit platforms.
+	
+	* include/freetype/internal/fttrace.h: Add a tracer
+	to ftsynth.c.
+	
+	* src/base/ftbitmap.c (FT_Bitmap_Embolden): Check
+	invalid strength causing integer overflow on 16-bit
+	platform.
+	
+	* src/base/ftcalc.c (ft_corner_orientation): Change
+	the internal calculation from FT_Int to FT_Long, to
+	avoid an overflow on 16-bit platforms.  The caller of
+	this function should use only the sign of result,
+	so the cast to FT_Int is acceptable.
+	
+	* src/base/ftsynth.c: Introduce a tracer for synth module.
+	(FT_GlyphSlot_Embolden): Check invalid strength causing
+	integer overflow on 16-bit platform.
+	
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): The glyph index
+	in FT2 API is typed as FT_UInt, although BDF driver
+	can handle unsigned long glyph index internally.  To
+	avoid integer overflow on 16-bit platform, too large
+	glyph index should be excluded.
+	(BDF_Glyph_Load): The glyph pitch in FT2 is typed as
+	FT_UInt, although BDF driver can handle unsigned long
+	glyph pitch internally.  To avoid integer overflow on
+	16-bit platform, too large glyph pitch should not be
+	returned.
+	
+	* src/pfr/pfrsbit.c (pfr_slot_load_bitmap): The glyph
+	pitch in FT2 is typed as FT_UInt, although PFR font
+	format can include huge bitmap glyph with 24-bit pitch
+	(however, a glyph spends 16.7 pixel, it's not realistic).
+	To avoid integer overflow on 16-bit platform, huge
+	bitmap glyph should be excluded.
+	
+	* src/smooth/ftgrays.c (gray_hline): As FT_Span.x is
+	truncated to fit its type (16-bit short), FT_Span.y
+	should be truncated to fit its type (FT_Int).
+	
+	* src/cff/cffdrivr.c (cff_get_ros): CFF specification
+	defines the supplement in ROS as a real number.
+	Truncate it to fit public FT2 API.
+	
+	* src/cff/cffparse.c (cff_parse_cid_ros): Warn the
+	supplement if it is truncated or rounded in cff_get_ros().
+	
+	* src/cff/cfftypes.h: Change the type of internal variable
+	`supplement' from FT_Long to FT_ULong to fit the signedness
+	to the type in public API.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	psaux: Prevent invalid arguments to afm_parser_read_vals().
 
 	* src/psaux/afmparse.c (afm_parser_read_vals): Change

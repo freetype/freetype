@@ -1271,6 +1271,10 @@
     if ( x >= 32767 )
       x = 32767;
 
+    /* FT_Span.y is an integer, so limit our coordinates appropriately */
+    if ( y >= FT_INT_MAX )
+      y = FT_INT_MAX;
+
     if ( coverage )
     {
       /* see whether we can add this span to the current list */
@@ -1309,7 +1313,7 @@
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
         ras.num_gray_spans = 0;
-        ras.span_y         = y;
+        ras.span_y         = (int)y;
 
         count = 0;
         span  = ras.gray_spans;

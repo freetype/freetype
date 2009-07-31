@@ -485,7 +485,12 @@ THE SOFTWARE.
           (face->en_table[n]).glyph = (FT_Short)n;
 
           if ( cur[n].encoding == font->default_char )
-            face->default_glyph = n;
+          {
+            if ( n < FT_UINT_MAX )
+              face->default_glyph = (FT_UInt)n;
+            else
+              FT_TRACE1(( "idx %d is too large for this system\n", n ));
+          }
         }
       }
 
@@ -677,7 +682,10 @@ THE SOFTWARE.
 
     bitmap->rows  = glyph.bbx.height;
     bitmap->width = glyph.bbx.width;
-    bitmap->pitch = glyph.bpr;
+    if ( glyph.bpr > INT_MAX )
+      FT_TRACE1(( "BDF_Glyph_Load: too large pitch %d is truncated\n",
+                   glyph.bpr ));
+    bitmap->pitch = (int)glyph.bpr; /* same as FT_Bitmap.pitch */
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */

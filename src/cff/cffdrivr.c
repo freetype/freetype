@@ -495,8 +495,19 @@
         *ordering = cff->ordering;
       }
 
+      /*
+       * XXX: According to Adobe TechNote #5176, the supplement in CFF
+       *      can be a real number. We truncate it to fit public API
+       *      since freetype-2.3.6.
+       */
       if ( supplement )
-        *supplement = dict->cid_supplement;
+      {
+        if ( dict->cid_supplement < FT_INT_MIN ||
+             dict->cid_supplement > FT_INT_MAX )
+          FT_TRACE1(( "cff_get_ros: too large supplement %d is truncated\n",
+                      dict->cid_supplement ));
+        *supplement = (FT_Int)dict->cid_supplement;
+      }
     }
       
   Fail:
