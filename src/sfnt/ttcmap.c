@@ -2912,7 +2912,7 @@
     {
       FT_UInt32  mid = ( min + max ) >> 1;
       FT_Byte*   p   = base + 5 * mid;
-      FT_UInt32  uni = TT_NEXT_UINT24( p );
+      FT_UInt32  uni = (FT_UInt32)TT_NEXT_UINT24( p );
 
 
       if ( char_code < uni )
@@ -3039,7 +3039,7 @@
     result = cmap14->results;
     for ( i = 0; i < count; ++i )
     {
-      result[i] = TT_NEXT_UINT24( p );
+      result[i] = (FT_UInt32)TT_NEXT_UINT24( p );
       p        += 8;
     }
     result[i] = 0;
@@ -3089,7 +3089,7 @@
   static FT_UInt
   tt_cmap14_def_char_count( FT_Byte  *p )
   {
-    FT_UInt32  numRanges = TT_NEXT_ULONG( p );
+    FT_UInt32  numRanges = (FT_UInt32)TT_NEXT_ULONG( p );
     FT_UInt    tot       = 0;
 
 
@@ -3116,14 +3116,14 @@
 
 
     cnt       = tt_cmap14_def_char_count( p );
-    numRanges = TT_NEXT_ULONG( p );
+    numRanges = (FT_UInt32)TT_NEXT_ULONG( p );
 
     if ( tt_cmap14_ensure( cmap14, ( cnt + 1 ), memory ) )
       return NULL;
 
     for ( q = cmap14->results; numRanges > 0; --numRanges )
     {
-      FT_UInt32 uni = TT_NEXT_UINT24( p );
+      FT_UInt32 uni = (FT_UInt32)TT_NEXT_UINT24( p );
 
 
       cnt = FT_NEXT_BYTE( p ) + 1;
@@ -3151,7 +3151,7 @@
     FT_UInt32  *ret;
 
 
-    numMappings = TT_NEXT_ULONG( p );
+    numMappings = (FT_UInt32)TT_NEXT_ULONG( p );
 
     if ( tt_cmap14_ensure( cmap14, ( numMappings + 1 ), memory ) )
       return NULL;
@@ -3159,7 +3159,7 @@
     ret = cmap14->results;
     for ( i = 0; i < numMappings; ++i )
     {
-      ret[i] = TT_NEXT_UINT24( p );
+      ret[i] = (FT_UInt32)TT_NEXT_UINT24( p );
       p += 2;
     }
     ret[i] = 0;
@@ -3213,9 +3213,9 @@
       p  = cmap->data + nondefOff;
       dp = cmap->data + defOff;
 
-      numMappings = TT_NEXT_ULONG( p );
+      numMappings = (FT_UInt32)TT_NEXT_ULONG( p );
       dcnt        = tt_cmap14_def_char_count( dp );
-      numRanges   = TT_NEXT_ULONG( dp );
+      numRanges   = (FT_UInt32)TT_NEXT_ULONG( dp );
 
       if ( numMappings == 0 )
         return tt_cmap14_get_def_chars( cmap, cmap->data + defOff,
@@ -3228,10 +3228,10 @@
         return NULL;
 
       ret  = cmap14->results;
-      duni = TT_NEXT_UINT24( dp );
+      duni = (FT_UInt32)TT_NEXT_UINT24( dp );
       dcnt = FT_NEXT_BYTE( dp );
       di   = 1;
-      nuni = TT_NEXT_UINT24( p );
+      nuni = (FT_UInt32)TT_NEXT_UINT24( p );
       p   += 2;
       ni   = 1;
       i    = 0;
@@ -3248,7 +3248,7 @@
           if ( di > numRanges )
             break;
 
-          duni = TT_NEXT_UINT24( dp );
+          duni = (FT_UInt32)TT_NEXT_UINT24( dp );
           dcnt = FT_NEXT_BYTE( dp );
         }
         else
@@ -3261,7 +3261,7 @@
           if ( ni > numMappings )
             break;
 
-          nuni = TT_NEXT_UINT24( p );
+          nuni = (FT_UInt32)TT_NEXT_UINT24( p );
           p += 2;
         }
       }
@@ -3274,7 +3274,7 @@
         ret[i++] = nuni;
         while ( ni < numMappings )
         {
-          ret[i++] = TT_NEXT_UINT24( p );
+          ret[i++] = (FT_UInt32)TT_NEXT_UINT24( p );
           p += 2;
           ++ni;
         }
@@ -3289,7 +3289,7 @@
 
         while ( di < numRanges )
         {
-          duni = TT_NEXT_UINT24( dp );
+          duni = (FT_UInt32)TT_NEXT_UINT24( dp );
           dcnt = FT_NEXT_BYTE( dp );
 
           for ( k = 0; k <= dcnt; ++k )
