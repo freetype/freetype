@@ -692,7 +692,8 @@ THE SOFTWARE.
 
     FT_TRACE4(( "  number of bitmaps: %d\n", nbitmaps ));
 
-    if ( nbitmaps != face->nmetrics )
+    /* XXX: PCF_Face->nmetrics is singed FT_Long, see pcf.h */
+    if ( face->nmetrics < 0 || nbitmaps != ( FT_ULong )face->nmetrics )
       return PCF_Err_Invalid_File_Format;
 
     if ( FT_NEW_ARRAY( offsets, nbitmaps ) )
