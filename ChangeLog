@@ -1,3 +1,87 @@
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
+	gxvalid: Pass the union by the pointer instead of the value.
+
+	* src/gxvalid/gxvcommn.h:
+	  - Declare new type `GXV_LookupValueCPtr'.
+	  - Update the type of the 2nd argument to pass GXV_LookupValueDesc
+	    data to the function prototyped as GXV_Lookup_Value_Validate_Func,
+	    from GXV_LookupValueDesc to GXV_LookupValueCPtr.
+	  - Likewise for the function prototyped as
+	    GXV_Lookup_Fmt4_Transit_Func.
+
+	  - Declare new type `GXV_StateTable_GlyphOffsetCPtr'.
+	  - Update the type of the 3rd argument to pass
+	    GXV_StateTable_GlyphOffsetDesc data to the function prototyped
+	    as GXV_StateTable_Entry_Validate_Func, from
+	    GXV_StateTable_GlyphOffsetDesc to GXV_StateTable_GlyphOffsetCPtr.
+
+	  - Declare new type `GXV_XStateTable_GlyphOffsetCPtr'.
+	  - Update the type of the 3rd argument to pass
+	    GXV_XStateTable_GlyphOffsetDesc data to the function prototyped
+	    as GXV_XStateTable_Entry_Validate_Func,
+	    from GXV_XStateTable_GlyphOffsetDesc
+	    to GXV_XStateTable_GlyphOffsetCPtr.
+
+	* src/gxvalid/gxvcommn.c (gxv_LookupTable_fmt0_validate,
+	gxv_XClassTable_lookupval_validate,
+	gxv_XClassTable_lookupfmt4_transit):
+	Update from GXV_LookupValueDesc to GXV_LookupValueCPtr.
+	
+	* src/gxvalid/gxvbsln.c (gxv_bsln_LookupValue_validate,
+	gxv_bsln_LookupFmt4_transit): Ditto.
+	
+	* src/gxvalid/gxvjust.c
+	(gxv_just_pcTable_LookupValue_entry_validate,
+	gxv_just_classTable_entry_validate,
+	gxv_just_wdcTable_LookupValue_validate): Ditto.
+	
+	* src/gxvalid/gxvkern.c
+	(gxv_kern_subtable_fmt1_entry_validate): Ditto.
+	
+	* src/gxvalid/gxvlcar.c (gxv_lcar_LookupValue_validate,
+	gxv_lcar_LookupFmt4_transit): Ditto.
+	
+	* src/gxvalid/gxvopbd.c (gxv_opbd_LookupValue_validate,
+	gxv_opbd_LookupFmt4_transit): Ditto.
+	
+	* src/gxvalid/gxvprop.c (gxv_prop_LookupValue_validate,
+	gxv_prop_LookupFmt4_transit): Ditto.
+	
+	* src/gxvalid/gxvmort4.c
+	(gxv_mort_subtable_type4_lookupval_validate): Ditto.
+	
+	* src/gxvalid/gxvmort0.c
+	(gxv_mort_subtable_type0_entry_validate): Update
+	from GXV_StateTable_GlyphOffsetDesc
+	to GXV_StateTable_GlyphOffsetCPtr.
+	
+	* src/gxvalid/gxvmort1.c
+	(gxv_mort_subtable_type1_entry_validate): Ditto.
+	
+	* src/gxvalid/gxvmort2.c
+	(gxv_mort_subtable_type2_entry_validate): Ditto.
+	
+	* src/gxvalid/gxvmort5.c
+	(gxv_mort_subtable_type5_entry_validate): Ditto.
+	
+	* src/gxvalid/gxvmorx2.c
+	(gxv_morx_subtable_type2_entry_validate): Ditto.
+	
+	* src/gxvalid/gxvmorx5.c
+	(gxv_morx_subtable_type5_entry_validate): Ditto.
+	
+	* src/gxvalid/gxvmorx1.c
+	(gxv_morx_subtable_type1_entry_validate): Ditto.
+	(gxv_morx_subtable_type1_LookupValue_validate,
+	gxv_morx_subtable_type1_LookupFmt4_transit):
+	Update from GXV_LookupValueDesc to GXV_LookupValueCPtr.
+	
+	* src/gxvalid/gxvmorx0.c
+	(gxv_morx_subtable_type0_entry_validate): Update
+	from GXV_XStateTable_GlyphOffsetDesc
+	to GXV_XStateTable_GlyphOffsetCPtr.
+
 2009-07-29  Fabrice Bellet  <fabrice@bellet.info>
 
 	Fix Redhat bugzilla #513582 and Savannah bug #26849.
