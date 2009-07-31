@@ -360,7 +360,7 @@ FT_BEGIN_HEADER
     FT_Error
     (*to_bytes)( PS_Parser  parser,
                  FT_Byte*   bytes,
-                 FT_Long    max_bytes,
+                 FT_Offset  max_bytes,
                  FT_Long*   pnum_bytes,
                  FT_Bool    delimiters );
 
