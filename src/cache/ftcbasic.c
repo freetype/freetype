@@ -328,7 +328,7 @@
     if ( anode )
       *anode  = NULL;
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+#if defined( FT_CONFIG_OPTION_OLD_INTERNALS ) && ( FT_INT_MAX > 0xFFFFU )
 
     /*
      *  This one is a major hack used to detect whether we are passed a
@@ -651,7 +651,7 @@
 
     *ansbit = NULL;
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+#if defined( FT_CONFIG_OPTION_OLD_INTERNALS ) && ( FT_INT_MAX > 0xFFFFU )
 
     /*  This one is a major hack used to detect whether we are passed a
      *  regular FTC_ImageType handle, or a legacy FTC_OldImageDesc one.
