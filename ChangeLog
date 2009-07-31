@@ -1,5 +1,12 @@
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
+	truetype: Truncate the instructions upto 16-bit per a glyph.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Truncate
+	the instructions upto 16-bit length per a glyph.
+
+2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+
 	truetype: Cast the numerical operands to 32-bit for LP64 systems.
 
 	* src/truetype/ttinterp.c (Ins_SPHIX, INS_MIAP,

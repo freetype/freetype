@@ -633,7 +633,13 @@
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    n_ins = loader->glyph->control_len;
+    if ( loader->glyph->control_len > 0xFFFFL )
+    {
+      FT_TRACE1(( "TT_Hint_Glyph: too long instructions " ));
+      FT_TRACE1(( "(0x%lx byte) is truncated\n",
+                 loader->glyph->control_len ));
+    }
+    n_ins = (FT_UInt)( loader->glyph->control_len );
 #endif
 
     origin = zone->cur[zone->n_points - 4].x;
