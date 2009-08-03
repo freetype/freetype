@@ -60,8 +60,6 @@
     FT_Error  error = FT_Err_Ok;
 
 
-    stream->pos = pos;
-
     if ( stream->read )
     {
       if ( stream->read( stream, pos, 0, 0 ) )
@@ -82,6 +80,9 @@
 
       error = FT_Err_Invalid_Stream_Operation;
     }
+
+    if ( !error )
+      stream->pos = pos;
 
     return error;
   }

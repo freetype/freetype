@@ -1,3 +1,10 @@
+2009-08-03  suyu0925@gmail.com
+
+	Don't call `ft_fseek' every time when executing `ft_fread'.
+
+	* src/base/ftstream.c (FT_Stream_Seek), src/base/ftsystem.c
+	(ft_ansi_stream_io): Implement it.
+
 2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Cast a charcode to 32-bit in cmap format 14 parser.

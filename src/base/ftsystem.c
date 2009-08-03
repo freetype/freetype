@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    ANSI-specific FreeType low-level system interface (body).            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2006, 2008 by                               */
+/*  Copyright 1996-2001, 2002, 2006, 2008, 2009 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -205,7 +205,8 @@
 
     file = STREAM_FILE( stream );
 
-    ft_fseek( file, offset, SEEK_SET );
+    if ( stream->pos != offset )
+      ft_fseek( file, offset, SEEK_SET );
 
     return (unsigned long)ft_fread( buffer, 1, count, file );
   }
