@@ -2765,8 +2765,8 @@
 
         glyph->root.outline.flags |= FT_OUTLINE_REVERSE_FILL;
 
-        /* apply the font matrix -- `xx' has already been normalized */
-        if ( !( font_matrix.yy == 0x10000L &&
+        if ( !( font_matrix.xx == 0x10000L &&
+                font_matrix.yy == 0x10000L &&
                 font_matrix.xy == 0        &&
                 font_matrix.yx == 0        ) )
           FT_Outline_Transform( &glyph->root.outline, &font_matrix );

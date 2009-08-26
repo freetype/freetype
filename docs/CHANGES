@@ -12,6 +12,10 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
       to avoid serious rounding issues if non-integral coordinates are
       encountered.
 
+    - Horizontally  condensed CFF  fonts (using the font  matrix) were
+      rendered  incorrectly.   This  bug  has  been  introduced  after
+      release 2.3.5.
+
 
   II. IMPORTANT CHANGES
 

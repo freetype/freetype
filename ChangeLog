@@ -1,3 +1,13 @@
+2009-08-25  Werner Lemberg  <wl@gnu.org>
+
+	Fix rendering of horizontally compressed CFFs.
+	Bug reported by Ivan Nincic <inincic@pdftron.com>.
+
+	* src/cff/cffgload.c (cff_slot_load): Thinko: Check `xx' element of
+	`font_matrix' also.
+
+	* docs/CHANGES: Updated.
+
 2009-08-03  suyu0925@gmail.com
 
 	Don't call `ft_fseek' every time when executing `ft_fread'.
