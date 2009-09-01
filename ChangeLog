@@ -1,3 +1,15 @@
+2009-09-01  John Tytgat <John.Tytgat@esko.com>
+
+	Fix custom cmap for empty Type 1 font (Savannah bug #27294).
+
+	* include/freetype/internal/t1types.h (T1_EncodingRecRec_): Update
+	comment to reflect revised code_last meaning.
+	* src/type1/t1load.c (T1_Open_Face), src/type42/t42objs.c
+	(T42_Open_Face): Assign max_char as highest character code + 1 and
+	use this for T1_EncodingRecRec_::code_last.
+	* src/psaux/t1cmap.c (t1_cmap_custom_init): Follow revised
+	T1_EncodingRecRec_::code_last meaning.
+
 2009-08-25  Werner Lemberg  <wl@gnu.org>
 
 	Fix rendering of horizontally compressed CFFs.

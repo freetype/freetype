@@ -58,7 +58,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    code_first :: The lowest valid character code in the encoding.     */
   /*                                                                       */
-  /*    code_last  :: The highest valid character code in the encoding.    */
+  /*    code_last  :: The highest valid character code in the encoding     */
+  /*                  + 1. When equal to code_first there are no valid     */
+  /*                  character codes.                                     */
   /*                                                                       */
   /*    char_index :: An array of corresponding glyph indices.             */
   /*                                                                       */

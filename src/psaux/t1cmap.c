@@ -179,7 +179,7 @@
 
 
     cmap->first   = encoding->code_first;
-    cmap->count   = (FT_UInt)( encoding->code_last - cmap->first + 1 );
+    cmap->count   = (FT_UInt)( encoding->code_last - cmap->first );
     cmap->indices = encoding->char_index;
 
     FT_ASSERT( cmap->indices != NULL );

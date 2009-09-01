@@ -2182,8 +2182,8 @@
       /* the index is then stored in type1.encoding.char_index, and */
       /* a the name to type1.encoding.char_name                     */
 
-      min_char = +32000;
-      max_char = -32000;
+      min_char = 0;
+      max_char = 0;
 
       charcode = 0;
       for ( ; charcode < loader.encoding_table.max_elems; charcode++ )
@@ -2209,23 +2209,12 @@
               {
                 if ( charcode < min_char )
                   min_char = charcode;
-                if ( charcode > max_char )
-                  max_char = charcode;
+                if ( charcode >= max_char )
+                  max_char = charcode + 1;
               }
               break;
             }
           }
-      }
-
-      /*
-       *  Yes, this happens: Certain PDF-embedded fonts have only a
-       *  `.notdef' glyph defined!
-       */
-
-      if ( min_char > max_char )
-      {
-        min_char = 0;
-        max_char = loader.encoding_table.max_elems;
       }
 
       type1->encoding.code_first = min_char;
