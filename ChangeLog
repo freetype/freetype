@@ -1,3 +1,47 @@
+2009-09-02  Bram Tassyns  <bramt@enfocus.be>
+
+	Improve vertical metrics calculation (Savannah bug #27364).
+
+	The calculation of `vertBearingX' is not defined in the OTF font
+	spec so FreeType does a `best effort' attempt.  However, this value
+	is defined in the PDF and PostScript specs, and that algorithm is
+	better than the one FreeType currently uses:
+
+	  FreeType: Use the middle of the bounding box as the X coordinate
+	            of the vertical origin.
+
+	  Adobe PDF spec: Use the middle of the horizontal advance vector as
+	                  the X coordinate of the vertical origin.
+
+	FreeType's algorithm goes wrong if you have a really small glyph
+	(like the full-width, circle-like dot at the end of the sentence, as
+	used in CJK scripts) with large bearings.  With the FreeType
+	algorithm this dot gets centered on the baseline; with the PDF
+	algorithm it gets the correct location (in the top right).  Note
+	that this is a serious issue, it's like printing the dot at the end
+	of a Roman sentence at the center of the textline instead of on the
+	baseline like it should. So i believe the PDF spec's algorithm
+	should be used in FreeType as well.
+
+	The `vertBearingY' value for such small glyphs is also very strange
+	if no `vmtx' information is present, since the height of the bbox is
+	not representable for the height of the glyph visually (the
+	whitespace up to the baseline is part of the glyph).  The fix also
+	includes some code for a better estimate of `vertBearingY'.
+
+	* src/base/ftobjs.c (ft_synthesize_vertical_metrics): `vertBearingX'
+	is now calculated as described by the Adobe PDF Spec.  Estimate for
+	`vertBearingY' now works better for small glyphs completely above or
+	below the baseline into account.
+
+	* src/cff/cffgload.c (cff_slot_load): `vertBearingX' is now
+	calculated as described by the Adobe PDF Spec.  Vertical metrics
+	information was always ignored when FT_CONFIG_OPTION_OLD_INTERNALS
+	was not defined.
+
+	* src/truetype/ttgload.c (compute_glyph_metrics): `vertBearingX' is
+	now calculated as described by the Adobe PDF Spec.
+
 2009-09-01  John Tytgat <John.Tytgat@esko.com>
 
 	Fix custom cmap for empty Type 1 font (Savannah bug #27294).

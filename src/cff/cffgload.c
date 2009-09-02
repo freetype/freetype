@@ -2726,9 +2726,14 @@
         glyph->root.linearHoriAdvance           = decoder.glyph_width;
         glyph->root.internal->glyph_transformed = 0;
 
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
         has_vertical_info = FT_BOOL( face->vertical_info                   &&
                                      face->vertical.number_Of_VMetrics > 0 &&
                                      face->vertical.long_metrics           );
+#else
+        has_vertical_info = FT_BOOL( face->vertical_info                   &&
+                                     face->vertical.number_Of_VMetrics > 0 );
+#endif
 
         /* get the vertical metrics from the vtmx table if we have one */
         if ( has_vertical_info )
@@ -2819,7 +2824,8 @@
         metrics->horiBearingY = cbox.yMax;
 
         if ( has_vertical_info )
-          metrics->vertBearingX = -metrics->width / 2;
+          metrics->vertBearingX = metrics->horiBearingX -
+                                    metrics->horiAdvance / 2;
         else
           ft_synthesize_vertical_metrics( metrics,
                                           metrics->vertAdvance );

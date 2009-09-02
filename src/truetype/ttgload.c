@@ -1594,10 +1594,28 @@
     glyph->metrics.horiBearingY = bbox.yMax;
     glyph->metrics.horiAdvance  = loader->pp2.x - loader->pp1.x;
 
-    /* Now take care of vertical metrics.  In the case where there is    */
-    /* no vertical information within the font (relatively common), make */
-    /* up some metrics by `hand'...                                      */
+    /* adjust advance width to the value contained in the hdmx table */
+    if ( !face->postscript.isFixedPitch  &&
+         IS_HINTED( loader->load_flags ) )
+    {
+      FT_Byte*  widthp;
 
+
+      widthp = tt_face_get_device_metrics( face,
+                                           size->root.metrics.x_ppem,
+                                           glyph_index );
+
+      if ( widthp )
+        glyph->metrics.horiAdvance = *widthp << 6;
+    }
+
+    /* set glyph dimensions */
+    glyph->metrics.width  = bbox.xMax - bbox.xMin;
+    glyph->metrics.height = bbox.yMax - bbox.yMin;
+
+    /* Now take care of vertical metrics.  In the case where there is */
+    /* no vertical information within the font (relatively common),   */
+    /* create some metrics manually                                   */
     {
       FT_Pos  top;      /* scaled vertical top side bearing  */
       FT_Pos  advance;  /* scaled vertical advance height    */
@@ -1686,29 +1704,11 @@
       /* XXX: for now, we have no better algorithm for the lsb, but it */
       /*      should work fine.                                        */
       /*                                                               */
-      glyph->metrics.vertBearingX = ( bbox.xMin - bbox.xMax ) / 2;
+      glyph->metrics.vertBearingX = glyph->metrics.horiBearingX -
+                                      glyph->metrics.horiAdvance / 2;
       glyph->metrics.vertBearingY = top;
       glyph->metrics.vertAdvance  = advance;
     }
-
-    /* adjust advance width to the value contained in the hdmx table */
-    if ( !face->postscript.isFixedPitch  &&
-         IS_HINTED( loader->load_flags ) )
-    {
-      FT_Byte*  widthp;
-
-
-      widthp = tt_face_get_device_metrics( face,
-                                           size->root.metrics.x_ppem,
-                                           glyph_index );
-
-      if ( widthp )
-        glyph->metrics.horiAdvance = *widthp << 6;
-    }
-
-    /* set glyph dimensions */
-    glyph->metrics.width  = bbox.xMax - bbox.xMin;
-    glyph->metrics.height = bbox.yMax - bbox.yMin;
 
     return 0;
   }
@@ -2013,7 +2013,7 @@
             break;
           }
         }
-        else 
+        else
           glyph->outline.flags |= FT_OUTLINE_IGNORE_DROPOUTS;
       }
 
