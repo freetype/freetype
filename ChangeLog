@@ -52,7 +52,7 @@
 	* src/truetype/ttgload.c (compute_glyph_metrics): `vertBearingX' is
 	now calculated as described by the Adobe PDF Spec.
 
-2009-09-01  John Tytgat <John.Tytgat@esko.com>
+2009-09-01  John Tytgat  <John.Tytgat@esko.com>
 
 	Fix custom cmap for empty Type 1 font (Savannah bug #27294).
 
@@ -81,7 +81,7 @@
 	* src/base/ftstream.c (FT_Stream_Seek), src/base/ftsystem.c
 	(ft_ansi_stream_io): Implement it.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Cast a charcode to 32-bit in cmap format 14 parser.
 	
@@ -91,7 +91,7 @@
 	FT_CMap_CharVarIndexFunc prototype, FT_ULong arguments
 	are replaced by FT_UInt32 arguments.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Cast a charcode to 32-bit in cmap format 12 parser.
 
@@ -99,7 +99,7 @@
 	Insert explicit cast from FT_UFast to FT_UInt32
 	for return value.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	psaux: Fix a few casts to FT_Int32 value.
 
@@ -107,7 +107,7 @@
 	Fix a few casts setting `value' from FT_Long to FT_Int32,
 	because `value' is typed as FT_Int32 since 2009-06-22.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Fix a data type mismatching with its source.
 
@@ -116,21 +116,21 @@
 	it is set by FT_UInt tt_cmap13_char_map_binary() or
 	TT_CMap13->cur_gindex.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Extend a few local variables to load 32-bit values.
 
 	* src/sfnt/ttkern.c (tt_face_load_kern): Extend `count'
 	and `kern' to load 32-bit values.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pfr: Extend `num_aux' to take 32-bit value.
 
 	* src/pfr/pfrload.c (pfr_phy_font_load): Extend
 	`num_aux' to load 32-bit value.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pcf: Truncate FT_ULong `nprops' to fit to int PCF_Face->nprops.
 
@@ -139,21 +139,21 @@
 	int to fit PCF_Face->nprops.  The number of truncated
 	properties is shown in the trace message.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gxvalid: Extend a few local variables to reduce the casts.
 
 	* src/gxvalid/gxvmorx.c (gxv_morx_subtables_validate):
 	Extend `type' and `rest' to take FT_ULong values.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gxvalid: Extend `settingTable' to take 32-bit offset.
 
 	* src/gxvalid/gxvfeat.c (gxv_feat_name_validate):
 	Extend `settingTable' to take 32-bit offset.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	autofit: Cast FT_Long glyph_count to compare with FT_UInt GID.
 
@@ -162,7 +162,7 @@
 	globals->glyph_count to FT_ULong, to compare with FT_UInt
 	gindex.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	smooth: Exclude 16-bit system in invalid pitch/height check.
 
@@ -171,7 +171,7 @@
 	16-bit range, to avoid the overflows.  On 16-bit system,
 	this checking inserts a conditional that never occurs.
 
-2009-07-03  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cff: Type large constants > 0x7FFF as long for 16-bit systems.
 
@@ -180,14 +180,14 @@
 	are typed signed integer that is less than 0x8000 on
 	16-bit systems.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	base: Remove an unused variable.
 
 	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Remove an
 	unused variable `library'.  glyph->library is used.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Check higher bits in flags for non ILP32 systems.
 
@@ -209,7 +209,7 @@
 	the 3rd argument.
 	(FTC_SBitCache_LookupScaler): Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Ignore invalid GIDs in glyph name lookup.
 
@@ -220,14 +220,14 @@
 	Restrict glyph name lookup to FT_UInt GID.
 	Genuine TrueType can hold 16-bit glyphs.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pcf: Fix a comparison between FT_Long and FT_ULong.
 
 	* src/pcf/pcfread.c (pcf_get_bitmaps): Return an error
 	if PCF_Face->nemetrics is negative.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gxvalid: Guarantee `nFeatureFlags' size up to 32-bit.
 
@@ -235,14 +235,14 @@
 	Extend the 3rd argument `nFeatureFlags' to FT_ULong.
 	* src/gxvalid/gxvmort.h: Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Insert explicit cast for LP64 system.
 
 	* src/sfnt/ttkern.c (tt_face_load_kern): Insert
 	cast from unsigned long to FT_UInt32.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gxvalid: Guarantee `just' table size upto 32-bit.
 
@@ -250,7 +250,7 @@
 	The type of `offset' is changed from FT_UInt to
 	FT_Offset, for 16-bit platforms.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gxvalid: Guarantee `trak' table size upto 32-bit.
 
@@ -258,14 +258,14 @@
 	The type of `offset' is changed from FT_UInt to
 	FT_Offset, for 16-bit platforms.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	type1: Fix a data type mismatching with its source.
 
 	* include/freetype/internal/t1types.h: The type of
 	T1_Face->buildchar is matched with T1_Decorder->top.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pfr: Fix a data type mismatching with its source.
 
@@ -274,7 +274,7 @@
 	calculated with the pointer difference, in
 	pfr_extra_item_load_kerning_pairs().
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pfr: Fix a data type mismatching with its source.
 
@@ -282,7 +282,7 @@
 	is extended from FT_UInt32 to FT_Offset, because it is
 	calculated with the pointer difference in pfr_phy_font_load().
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pfr: Fix a data type mismatching with its source.
 
@@ -290,21 +290,21 @@
 	is extended from FT_UInt32 to FT_Long, because it is
 	loaded by FT_STREAM_POS() in pfr_phy_font_load().
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	smooth: Improve the format in debug message.
 
 	* src/smooth/ftgrays.c (gray_dump_cells): Improve the
 	format specifications to dump variables.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Fix a data type mismatching with its source.
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): The type of
 	local `flags' is matched with FT_Face->face_flags.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	psaux: Fix a data type mismatching with its source.
 
@@ -312,7 +312,7 @@
 	T1_DecorderRec.buildchar is matched with
 	T1_DecorderRec.top.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Extend TrueType GX packed deltas to FT_Offset.
 
@@ -321,7 +321,7 @@
 	FT_Int to FT_Offset, because its source can be cvt
 	table size calculated from stream position.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Extend mmvar_len to hold size_t values.
 
@@ -330,21 +330,21 @@
 	FT_Offset, because TT_Get_MM_Var() calculates it
 	by sizeof() results.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Check invalid function number in IDEF instruction.
 
 	* src/truetype/ttinterp.c (Ins_IDEF): Check
 	if the operand fits to 8-bit opcode limitation.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Check invalid function number in FDEF instruction.
 
 	* src/truetype/ttinterp.c (Ins_FDEF): Check
 	if the operand fits 16-bit function number.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Truncate the deltas of composite glyph at 16-bit values.
 
@@ -357,14 +357,14 @@
 	loaded by ft_var_readpackeddeltas().  However,
 	the limitation about the summed deltas is unclear.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Truncate the instructions upto 16-bit per a glyph.
 
 	* src/truetype/ttgload.c (TT_Hint_Glyph): Truncate
 	the instructions upto 16-bit length per a glyph.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Cast the numerical operands to 32-bit for LP64 systems.
 
@@ -373,7 +373,7 @@
 	operands passed to TrueType operator) to FT_Int32
 	(the argument of TT_MulFix14()).
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Cast the project vector to 32-bit for LP64 system.
 
@@ -381,7 +381,7 @@
 	Insert casts from FT_Pos (the arguments `dx', `dy')
 	to FT_UInt32 (the argument to TT_DotFix14()).
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Cast the scaling params to 32-bit for LP64 system.
 
@@ -389,7 +389,7 @@
 	Insert casts from long (return value of FT_MulFix()) to
 	FT_Int32 (the argument to FT_SqrtFixed()).
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Cast a character code to FT_UInt32 for LP64 system.
 
@@ -402,7 +402,7 @@
 	compared with FT_UInt32 values in public API, replacing
 	FT_UFast is not recommended.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Cast a character code to FT_UInt32 for LP64 system.
 
@@ -410,7 +410,7 @@
 	Insert the casts from unsigned long constant to
 	FT_UInt32.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Extend TT_BDF->strings_size to FT_ULong for huge BDF.
 
@@ -422,7 +422,7 @@
 	to load TT_BDF->string_size is matched with
 	TT_BDF->string_size.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	psaux: Handle the string length by FT_Offset variables.
 
@@ -439,7 +439,7 @@
 	* src/psaux/afmparse.h (afm_parser_next_key):
 	Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pcf: Fix some data types mismatching with their sources.
 
@@ -447,7 +447,7 @@
 	of `nbitmaps', `i', `sizebitmaps' are matched with
 	the type of area FT_Bitmap.pitch * FT_Bitmap.rows.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pcf: Handle the string length by size_t variables.
 
@@ -465,7 +465,7 @@
 	to FT_ALLOC(), via ft_glyphslot_alloc_bitmap().  At
 	least, using unsigned type is better.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pcf: Fix some data types mismatching with their sources.
 
@@ -473,7 +473,7 @@
 	pcf_has_table_type): The type of 3rd argument
 	`ntables' is matched with PCF_Toc->count.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	otvalid: Truncate the glyph index to 16-bit.
 
@@ -482,7 +482,7 @@
 	pass FT_UInt num_glyphs to backend functions
 	otv_{GPOS|GSUB|GDEF|JSTF|MATH}_validate().
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Insert explict casts for LP64 systems.
 
@@ -492,7 +492,7 @@
 	is introduced for the comparisons with 0x10000L for
 	LP64 platform.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Fix some data types mismatching with their sources.
 
@@ -517,7 +517,7 @@
 	because it is passed to FT_ALLOC() to specify the
 	size of buffer.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	XXX_cmap_encoding_char_next() return FT_UInt32 values.
 
@@ -553,7 +553,7 @@
 	extend to FT_UInt32, to cover unsigned 32-bit
 	`numVarSelectorRecords' in cmap14 table header.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	truetype: Extend TT_Face->num_locations for broken TTFs.
 
@@ -566,7 +566,7 @@
 	Remove unrequired 16-bit truncation for FT_UInt
 	TT_Face->num_locations.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	smooth: Fix some data types mismatching with their sources.
 
@@ -595,7 +595,7 @@
 	(gray_hline): The argument `acount' is extended to
 	TCoord, to match with the parameters in the callers.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cff: Fix some data types mismatching with their sources.
 
@@ -617,7 +617,7 @@
 	matched with the `scaling' argument to
 	cff_parse_dynamic().
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	autofit: Fix some data types mismatching with their sources.
 
@@ -644,7 +644,7 @@
 	(af_latin_compute_stem_width): The type of `delta' is
 	matched to `dist' and `org_dist'.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	autofit: Count the size of the memory object by ptrdiff_t.
 
@@ -664,14 +664,14 @@
 	for the edges `min', `max', `mid' in the memory
 	buffer should be typed FT_PtrDist.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	autofit: Fix for unused variable `first'.
 
 	* src/autofit/afhints.c (af_glyph_hints_reload): Insert
 	FT_UNUSED() to hide the unused variable warning.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Improve bitmap size or pixel variables for 16-bit systems.
 
@@ -729,7 +729,7 @@
 	`supplement' from FT_Long to FT_ULong to fit the signedness
 	to the type in public API.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	psaux: Prevent invalid arguments to afm_parser_read_vals().
 
@@ -739,7 +739,7 @@
 
 	* src/psaux/afmparse.h (afm_parser_read_vals): Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	base: Prevent some overflows on LP64 systems.
 
@@ -767,7 +767,7 @@
 	(FT_Vector_Rotate): The long constant 1L is casted to
 	FT_Int32 to calculate FT_Int32 `half'.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cff: Cast the long variables to 32-bit for LP64 systems.
 
@@ -781,7 +781,7 @@
 	Replace the casts to FT_Long by the casts to FT_Int32
 	for LP64 platforms.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pcf: Improve PCF_PropertyRec.value names on LP64 platforms.
 
@@ -799,7 +799,7 @@
 	* src/pcf/pcfread.c (pcf_get_properties, pcf_load_font):
 	Reflect PCF_PropertyRec.value change.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	pcf: Fix some data types mismatching with their sources.
 
@@ -810,7 +810,7 @@
 	an overflow is checked and casted to unsigned 32-bit
 	integer.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	bdf: Improve bdf_property_t.value names for LP64 platforms.
 
@@ -829,7 +829,7 @@
 	* src/bdf/bdflib.c (_bdf_add_property): Reflect
 	bdf_property_t.value change.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	bdf: Fix some data types mismatching with their sources.
 
@@ -840,7 +840,7 @@
 	is set by charcode, an overflow is checked and
 	casted to unsigned 32-bit integer.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	autofit: Improve Unicode range definitions.
 
@@ -857,7 +857,7 @@
 	* src/autofit/afcjk.c (af_cjk_uniranges): Declare
 	the ranges by AF_UNIRANGE_REC.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	smooth: Fix a data type mismatching with its source.
 
@@ -865,14 +865,14 @@
 	`area' is matched with the 3rd argument `area'
 	of gray_hline().
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	smooth: Fix a data type mismatching with its source.
 
 	* src/smooth/ftgrays.c (gray_render_line): The type
 	of `area' is matched with TWorker.area.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Disable the legacy compatibility if 16-bit system.
 
@@ -882,7 +882,7 @@
 	via legacy convension.
 	(FTC_SBitCache_Lookup): Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Check 32-bit glyph index on 16-bit systems.
 
@@ -890,7 +890,7 @@
 	Check overflow caused by the face including large
 	number of glyphs > 64k.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Fix some data types mismatching with their sources.
 
@@ -902,7 +902,7 @@
 	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP): The type
 	of `_idx' is matched with FTC_Cache->{p,mask}.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Fix some data types mismatching with their sources.
 
@@ -910,21 +910,21 @@
 	of `xadvance' and `yadvance' are matched with
 	FT_GlyphSlot->advance.{x|y}.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cache: Cast NULL to a required function type explicitly.
 
 	* src/cache/ftcmanag.c (FTC_Manager_RemoveFaceID):
 	Insert explicit cast from NULL to function type.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	fttypes.h: Cast FT_MAKE_TAG output to FT_Tag exlicitly.
 
 	* include/freetype/fttypes.h (FT_MAKE_TAG):
 	Cast the result to FT_Tag.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	psnames: Handle Unicode codepoints by FT_UInt32 variables.
 
@@ -933,7 +933,7 @@
 	(ps_unicode_value): Return the value by unsigned 32-bit
 	integer instead of unsigned long.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	psaux: Use size_t variable to pass the buffer size.
 
@@ -951,7 +951,7 @@
 
 	* src/psaux/psobjs.c (ps_parser_to_bytes): Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	type1: Use size_t variable to pass the string length.
 
@@ -968,7 +968,7 @@
 	AFM_ParserRec.get_index, the length of token
 	`len' is casted to size_t.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cid: Fix some data types mismatching with their sources.
 
@@ -976,14 +976,14 @@
 	`read_len' and `stream_len' are matched to
 	FT_Stream->size.  Unrequired cast is removed.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cff: Fix for unused variable `rest'.
 
 	* src/cff/cffparse.c (cff_parse_real): Insert
 	FT_UNUSED() to hide the unused variable warning.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	cff: Fix some data types mismatching with their sources.
 
@@ -994,7 +994,7 @@
 	* src/cff/cffobjs.c (cff_size_select): Ditto.
 	(cff_size_request): Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	bdf: Fix some data types mismatching with their sources.
 
@@ -1016,7 +1016,7 @@
 	to size_t, to take the value by ft_strlen().  Also the
 	types of `len', `nn', `mm' are matched.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	sfnt: Count the size of the memory object by ptrdiff_t.
 
@@ -1025,7 +1025,7 @@
 	to match with size_t, which is appropriate type for the
 	object in the memory buffer.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	lzw: Count the size of the memory object by ptrdiff_t.
 
@@ -1039,7 +1039,7 @@
 	FT_Offset, to match with size_t, which is appropriate type
 	for the object in the memory buffer.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	otvalid: Count the table size on memory by ptrdiff_t.
 
@@ -1048,7 +1048,7 @@
 	FT_PtrDist because it is calculated by the memory
 	addresses.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	otvalid: Prevent an overflow by GPOS/GSUB 32b-bit offset.
 
@@ -1059,14 +1059,14 @@
 	* src/otvalid/otvgsub.c (otv_ExtensionSubst_validate):
 	Ditto.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	ftobjs.c: Prevent an overflow in glyph index handling.
 
 	* src/base/ftobjs.c (FT_Face_GetCharsOfVariant):
 	Improve the cast in comparison to avoid the truncation.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Improve the variable types in raccess_make_file_name().
 
@@ -1076,21 +1076,21 @@
 	(raccess_make_file_name): Change the type of new_length
 	to size_t.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	ftpatent.c: Fix for unused variable `error'.
 
 	* src/base/ftpatent.c (_tt_check_patents_in_range):
 	Fix warning for unused variable `error'.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	type1: Check invalid string longer than PostScript limit.
 
 	* src/type1/t1afm.c (t1_get_index): Check invalid string
 	which exceeds the limit of PostScript string/name objects.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gzip: Use FT2 zcalloc() & zfree() in ftgzip.c by default.
 
@@ -1101,14 +1101,14 @@
 	See discussion:
 	http://lists.gnu.org/archive/html/freetype-devel/2009-02/msg00000.html
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gzip: Distinguish PureC from TurboC on MSDOS.
 
 	* src/gzip/zutil.c (zcalloc, zcfree): Enable only for
 	MSDOS platform.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gxvalid: Insert PureC pragma to allow unevaluated variables.
 
@@ -1116,7 +1116,7 @@
 	warn against set-but-unevaluated variable in gxvalid
 	module.
 
-2009-07-31  suzuki toshiya <mpsuzuki@hiroshima-u.ac.jp>
+2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	gxvalid: Pass the union by the pointer instead of the value.
 
@@ -1654,7 +1654,7 @@
 	(TProfile): Replace `flow' member with `flags' bit field.
 	Update all affected code.
 
-2009-05-29  James Cloos <cloos@jhcloos.com>
+2009-05-29  James Cloos  <cloos@jhcloos.com>
 
 	Enable autohinting for glyphs rotated by multiples of 90°.
 
@@ -2251,7 +2251,7 @@
 	`pitch' or `height' to be larger than 0xFFFF.
 
 2009-03-20  Werner Lemberg  <wl@gnu.org>
-	    Tavis Ormandy <taviso@google.com>
+	    Tavis Ormandy  <taviso@google.com>
 
 	Fix validation for various cmap table formats.
 
@@ -2275,7 +2275,7 @@
 	* src/cff/cffload.c (cff_charset_load): Reject SID values larger
 	than 64999.
 
-2009-03-19  Vincent Richomme <richom.v@free.fr>
+2009-03-19  Vincent Richomme  <richom.v@free.fr>
 
 	Update WinCE Visual C project files.
 
@@ -2290,7 +2290,7 @@
 	* builds/wince/ftdebug.c: Remove code guarded with `!_WIN32_WCE'.
 	Since Win32 is handled separately this is no longer needed.
 
-2009-03-19  Vincent Richomme <richom.v@free.fr>
+2009-03-19  Vincent Richomme  <richom.v@free.fr>
 
 	Make `gzip' module compile on WinCE.
 
