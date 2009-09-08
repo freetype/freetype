@@ -1622,7 +1622,7 @@
 
 
       /* Get the unscaled top bearing and advance height. */
-      if ( face->vertical_info &&
+      if ( face->vertical_info                   &&
            face->vertical.number_Of_VMetrics > 0 )
       {
         top = (FT_Short)FT_DivFix( loader->pp3.y - bbox.yMax,
