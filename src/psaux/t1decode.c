@@ -376,9 +376,10 @@
 
 
     /* compute random seed from stack address of parameter */
-    seed = (FT_Fixed)(char*)&seed           ^
-           (FT_Fixed)(char*)&decoder        ^
-           (FT_Fixed)(char*)&charstring_base;
+    seed = (FT_Fixed)( ( (FT_PtrDist)(char*)&seed              ^
+                         (FT_PtrDist)(char*)&decoder           ^
+                         (FT_PtrDist)(char*)&charstring_base ) &
+                         FT_ULONG_MAX ) ;
     seed = ( seed ^ ( seed >> 10 ) ^ ( seed >> 20 ) ) & 0xFFFFL;
     if ( seed == 0 )
       seed = 0x7384;
