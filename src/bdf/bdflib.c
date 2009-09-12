@@ -281,7 +281,7 @@
 
   static FT_Error
   hash_insert( char*       key,
-               void*       data,
+               size_t      data,
                hashtable*  ht,
                FT_Memory   memory )
   {
@@ -971,7 +971,7 @@
                        int          format,
                        bdf_font_t*  font )
   {
-    unsigned long    n;
+    size_t           n;
     bdf_property_t*  p;
     FT_Memory        memory = font->memory;
     FT_Error         error = BDF_Err_Ok;
@@ -991,7 +991,9 @@
     p = font->user_props + font->nuser_props;
     FT_ZERO( p );
 
-    n = (unsigned long)( ft_strlen( name ) + 1 );
+    n = ft_strlen( name ) + 1;
+    if ( n > FT_ULONG_MAX )
+      return BDF_Err_Invalid_Argument;
 
     if ( FT_NEW_ARRAY( p->name, n ) )
       goto Exit;
@@ -1003,7 +1005,7 @@
 
     n = _num_bdf_properties + font->nuser_props;
 
-    error = hash_insert( p->name, (void *)n, &(font->proptbl), memory );
+    error = hash_insert( p->name, n, &(font->proptbl), memory );
     if ( error )
       goto Exit;
 
@@ -1018,8 +1020,8 @@
   bdf_get_property( char*        name,
                     bdf_font_t*  font )
   {
-    hashnode       hn;
-    unsigned long  propid;
+    hashnode  hn;
+    size_t    propid;
 
 
     if ( name == 0 || *name == 0 )
@@ -1028,7 +1030,7 @@
     if ( ( hn = hash_lookup( name, &(font->proptbl) ) ) == 0 )
       return 0;
 
-    propid = (unsigned long)hn->data;
+    propid = hn->data;
     if ( propid >= _num_bdf_properties )
       return font->user_props + ( propid - _num_bdf_properties );
 
@@ -1131,11 +1133,11 @@
   _bdf_set_default_spacing( bdf_font_t*     font,
                             bdf_options_t*  opts )
   {
-    unsigned long  len;
-    char           name[256];
-    _bdf_list_t    list;
-    FT_Memory      memory;
-    FT_Error       error = BDF_Err_Ok;
+    size_t       len;
+    char         name[256];
+    _bdf_list_t  list;
+    FT_Memory    memory;
+    FT_Error     error = BDF_Err_Ok;
 
 
     if ( font == 0 || font->name == 0 || font->name[0] == 0 )
@@ -1150,7 +1152,7 @@
 
     font->spacing = opts->font_spacing;
 
-    len = (unsigned long)( ft_strlen( font->name ) + 1 );
+    len = ft_strlen( font->name ) + 1;
     /* Limit ourselves to 256 characters in the font name. */
     if ( len >= 256 )
     {
@@ -1261,7 +1263,7 @@
                      char*        name,
                      char*        value )
   {
-    unsigned long   propid;
+    size_t          propid;
     hashnode        hn;
     bdf_property_t  *prop, *fp;
     FT_Memory       memory = font->memory;
@@ -1273,7 +1275,7 @@
     {
       /* The property already exists in the font, so simply replace */
       /* the value of the property with the current value.          */
-      fp = font->props + (unsigned long)hn->data;
+      fp = font->props + hn->data;
 
       switch ( fp->format )
       {
@@ -1335,7 +1337,7 @@
       font->props_size++;
     }
 
-    propid = (unsigned long)hn->data;
+    propid = hn->data;
     if ( propid >= _num_bdf_properties )
       prop = font->user_props + ( propid - _num_bdf_properties );
     else
@@ -1372,7 +1374,7 @@
     if ( ft_memcmp( name, "COMMENT", 7 ) != 0 ) {
       /* Add the property to the font property table. */
       error = hash_insert( fp->name,
-                           (void *)font->props_used,
+                           font->props_used,
                            (hashtable *)font->internal,
                            memory );
       if ( error )
@@ -2044,7 +2046,7 @@
       p->memory    = 0;
 
       { /* setup */
-        unsigned long    i;
+        size_t           i;
         bdf_property_t*  prop;
 
 
@@ -2054,7 +2056,7 @@
         for ( i = 0, prop = (bdf_property_t*)_bdf_properties;
               i < _num_bdf_properties; i++, prop++ )
         {
-          error = hash_insert( prop->name, (void *)i,
+          error = hash_insert( prop->name, i,
                                &(font->proptbl), memory );
           if ( error )
             goto Exit;
@@ -2472,7 +2474,7 @@
 
     hn = hash_lookup( name, (hashtable *)font->internal );
 
-    return hn ? ( font->props + (unsigned long)hn->data ) : 0;
+    return hn ? ( font->props + hn->data ) : 0;
   }
 
 

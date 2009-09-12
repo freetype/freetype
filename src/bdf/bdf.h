@@ -160,7 +160,7 @@ FT_BEGIN_HEADER
   typedef struct  _hashnode_
   {
     const char*  key;
-    void*        data;
+    size_t       data;
 
   } _hashnode, *hashnode;
 

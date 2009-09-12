@@ -1,3 +1,34 @@
+2009-09-11  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[BDF] Modify hash API to take size_t value instead of void *.
+
+	The hash API in BDF driver is designed to be generic, it takes
+	void * typed data.  But BDF driver always gives an unsigned long
+	integer (the index to a property).  To reduce non-essential
+	casts from unsigned long to void* and from void* to unsigned
+	long, the hash API is changed to take size_t integer.
+	The issue of incompatible cast between unsigned long and void*
+	on LLP64 platform is reported by NightStrike from MinGW-Win64
+	project.  See
+	http://lists.gnu.org/archive/html/freetype/2009-09/msg00000.html
+
+	* src/bdf/bdf.h: The type of hashnode->data is changed from
+	void* to size_t.
+
+	* src/bdf/bdflib.c (hash_insert): Get size_t data, instead of
+	void* data.
+	(bdf_create_property): Get the name length of new property by
+	size_t variable, with a cut-off at FT_ULONG_MAX.
+	(_bdf_set_default_spacing): Get the name length of the face by
+	size_t variable, with a cut-off at 256.
+	(bdf_get_property): Get the property id by size_t variable to
+	reduce the casts between 32-bit prop ID & hashnode->data during
+	simple copying.
+	(_bdf_add_property): Ditto.
+	(_bdf_parse_start): Calculate the index to the property array
+	by size_t variable.
+	(bdf_get_font_property): Drop a cast to unsigned long.
+
 2009-09-10  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[Win64] Improve the computation of random seed from stack address.
