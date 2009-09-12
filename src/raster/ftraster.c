@@ -51,7 +51,7 @@
 
 #define FT_CONFIG_STANDARD_LIBRARY_H  <stdlib.h>
 
-#include <string.h>
+#include <string.h>           /* for memset */
 
 #include "ftmisc.h"
 #include "ftimage.h"
@@ -148,11 +148,11 @@
   /*************************************************************************/
 
   /* define DEBUG_RASTER if you want to compile a debugging version */
-#define xxxDEBUG_RASTER
+/* #define DEBUG_RASTER */
 
-  /* undefine FT_RASTER_OPTION_ANTI_ALIASING if you do not want to support */
-  /* 5-levels anti-aliasing                                                */
-#undef FT_RASTER_OPTION_ANTI_ALIASING
+  /* define FT_RASTER_OPTION_ANTI_ALIASING if you want to support */
+  /* 5-levels anti-aliasing                                       */
+/* #define FT_RASTER_OPTION_ANTI_ALIASING */
 
   /* The size of the two-lines intermediate bitmap used */
   /* for anti-aliasing, in bytes.                       */
@@ -567,24 +567,62 @@
 
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
 
-  static const char  count_table[256] =
+  /* A lookup table used to quickly count set bits in four gray 2x2 */
+  /* cells.  The values of the table have been produced with the    */
+  /* following code:                                                */
+  /*                                                                */
+  /*   for ( i = 0; i < 256; i++ )                                  */
+  /*   {                                                            */
+  /*     l = 0;                                                     */
+  /*     j = i;                                                     */
+  /*                                                                */
+  /*     for ( c = 0; c < 4; c++ )                                  */
+  /*     {                                                          */
+  /*       l <<= 4;                                                 */
+  /*                                                                */
+  /*       if ( j & 0x80 ) l++;                                     */
+  /*       if ( j & 0x40 ) l++;                                     */
+  /*                                                                */
+  /*       j = ( j << 2 ) & 0xFF;                                   */
+  /*     }                                                          */
+  /*     printf( "0x%04X", l );                                     */
+  /*   }                                                            */
+  /*                                                                */
+
+  static const short  count_table[256] =
   {
-    0 , 1 , 1 , 2 , 1 , 2 , 2 , 3 , 1 , 2 , 2 , 3 , 2 , 3 , 3 , 4,
-    1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
-    1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
-    2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
-    1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
-    2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
-    2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
-    3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
-    1 , 2 , 2 , 3 , 2 , 3 , 3 , 4 , 2 , 3 , 3 , 4 , 3 , 4 , 4 , 5,
-    2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
-    2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
-    3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
-    2 , 3 , 3 , 4 , 3 , 4 , 4 , 5 , 3 , 4 , 4 , 5 , 4 , 5 , 5 , 6,
-    3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
-    3 , 4 , 4 , 5 , 4 , 5 , 5 , 6 , 4 , 5 , 5 , 6 , 5 , 6 , 6 , 7,
-    4 , 5 , 5 , 6 , 5 , 6 , 6 , 7 , 5 , 6 , 6 , 7 , 6 , 7 , 7 , 8
+    0x0000, 0x0001, 0x0001, 0x0002, 0x0010, 0x0011, 0x0011, 0x0012,
+    0x0010, 0x0011, 0x0011, 0x0012, 0x0020, 0x0021, 0x0021, 0x0022,
+    0x0100, 0x0101, 0x0101, 0x0102, 0x0110, 0x0111, 0x0111, 0x0112,
+    0x0110, 0x0111, 0x0111, 0x0112, 0x0120, 0x0121, 0x0121, 0x0122,
+    0x0100, 0x0101, 0x0101, 0x0102, 0x0110, 0x0111, 0x0111, 0x0112,
+    0x0110, 0x0111, 0x0111, 0x0112, 0x0120, 0x0121, 0x0121, 0x0122,
+    0x0200, 0x0201, 0x0201, 0x0202, 0x0210, 0x0211, 0x0211, 0x0212,
+    0x0210, 0x0211, 0x0211, 0x0212, 0x0220, 0x0221, 0x0221, 0x0222,
+    0x1000, 0x1001, 0x1001, 0x1002, 0x1010, 0x1011, 0x1011, 0x1012,
+    0x1010, 0x1011, 0x1011, 0x1012, 0x1020, 0x1021, 0x1021, 0x1022,
+    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
+    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
+    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
+    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
+    0x1200, 0x1201, 0x1201, 0x1202, 0x1210, 0x1211, 0x1211, 0x1212,
+    0x1210, 0x1211, 0x1211, 0x1212, 0x1220, 0x1221, 0x1221, 0x1222,
+    0x1000, 0x1001, 0x1001, 0x1002, 0x1010, 0x1011, 0x1011, 0x1012,
+    0x1010, 0x1011, 0x1011, 0x1012, 0x1020, 0x1021, 0x1021, 0x1022,
+    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
+    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
+    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
+    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
+    0x1200, 0x1201, 0x1201, 0x1202, 0x1210, 0x1211, 0x1211, 0x1212,
+    0x1210, 0x1211, 0x1211, 0x1212, 0x1220, 0x1221, 0x1221, 0x1222,
+    0x2000, 0x2001, 0x2001, 0x2002, 0x2010, 0x2011, 0x2011, 0x2012,
+    0x2010, 0x2011, 0x2011, 0x2012, 0x2020, 0x2021, 0x2021, 0x2022,
+    0x2100, 0x2101, 0x2101, 0x2102, 0x2110, 0x2111, 0x2111, 0x2112,
+    0x2110, 0x2111, 0x2111, 0x2112, 0x2120, 0x2121, 0x2121, 0x2122,
+    0x2100, 0x2101, 0x2101, 0x2102, 0x2110, 0x2111, 0x2111, 0x2112,
+    0x2110, 0x2111, 0x2111, 0x2112, 0x2120, 0x2121, 0x2121, 0x2122,
+    0x2200, 0x2201, 0x2201, 0x2202, 0x2210, 0x2211, 0x2211, 0x2212,
+    0x2210, 0x2211, 0x2211, 0x2212, 0x2220, 0x2221, 0x2221, 0x2222
   };
 
 #endif /* FT_RASTER_OPTION_ANTI_ALIASING */
@@ -2635,10 +2673,10 @@
   static void
   Vertical_Gray_Sweep_Step( RAS_ARG )
   {
-    Int    c1, c2;
-    PByte  pix, bit, bit2;
-    char*  count = (char*)count_table;
-    Byte*  grays;
+    Int     c1, c2;
+    PByte   pix, bit, bit2;
+    short*  count = (short*)count_table;
+    Byte*   grays;
 
 
     ras.traceOfs += ras.gray_width;
@@ -3326,7 +3364,6 @@
       raster->grays[n] = n * 255 / 4;
 
     raster->gray_width = RASTER_GRAY_LINES / 2;
-
 #else
     FT_UNUSED( raster );
 #endif
@@ -3503,6 +3540,8 @@
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
     worker->grays      = raster->grays;
     worker->gray_width = raster->gray_width;
+
+    FT_MEM_ZERO( worker->gray_lines, worker->gray_width * 2 );
 #endif
 
     return ( params->flags & FT_RASTER_FLAG_AA )

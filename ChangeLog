@@ -1,3 +1,18 @@
+2009-09-12  Werner Lemberg  <wl@gnu.org>
+
+	[raster] Fix 5-levels grayscale output.
+	This was broken since version 2.3.0.
+
+	* src/raster/ftraster.c (count_table): Use pre-2.3.0 values (which
+	were then computed dynamically).
+	(Vertical_Gray_Sweep_Step): Updated.
+
+	(ft_black_render): Initialize `worker->gray_lines' (problem found by
+	valgrind).
+
+	(FT_RASTER_OPTION_ANTI_ALIASING, DEBUG_RASTER): Dont' #undef, just
+	comment out.
+
 2009-09-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Improve configure.raw for cross build.
