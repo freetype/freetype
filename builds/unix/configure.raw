@@ -55,6 +55,7 @@ if test ${cross_compiling} = yes; then
   elif test -x conftest.* ; then
     EXEEXT_BUILD=`echo conftest.* | sed -n '1s/^.*\././'`
   fi
+  rm -f a.* b.* a_out.exe conftest.*
   AC_MSG_RESULT($EXEEXT_BUILD)
 else
   CC_BUILD=${CC}
@@ -68,7 +69,7 @@ AC_SUBST(EXEEXT_BUILD)
 
 # get compiler flags right
 
-if test "x$CC" = xgcc; then
+if test "x$GCC" = xyes; then
   XX_CFLAGS="-Wall"
   XX_ANSIFLAGS="-pedantic -ansi"
 else

@@ -1,4 +1,14 @@
-2009-09-11  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2009-09-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Improve configure.raw for cross build.
+
+	* builds/unix/configure.raw: Remove temporal files created by
+	the suffix checking for CC_BUILD.  Set XX_ANSIFLAGS and
+	XX_CFLAGS when cross compiler is GCC.  AC_PROG_CC checks
+	whether the cross compiler is GCC, its result is stored in
+	GCC.
+
+2009-09-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[BDF] Modify hash API to take size_t value instead of void *.
 
