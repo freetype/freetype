@@ -1,3 +1,7 @@
+2009-09-23  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2009-09-12  Werner Lemberg  <wl@gnu.org>
 
 	[raster] Fix 5-levels grayscale output.

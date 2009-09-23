@@ -25,6 +25,8 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
     - B/W rasterization  of well-hinted TrueType  fonts at small sizes
       has been greatly improved.
 
+    - Calculation  of  vertical  metrics in  OpenType  fonts has  been
+      improved.
 
   III. MISCELLANEOUS
 
@@ -34,6 +36,13 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
     - It is  now possible  to change the  slant value in  the `ftview'
       demo program with keys `s' and `S'.
 
+    - The  5-levels  grayscale  mode of  the `ftraster'  module (which
+      FreeType doesn't use by default) was broken since version 2.3.0.
+
+    - Compilation of the  `ftgrays' and `ftraster' modules  was broken
+      in stand-alone mode.
+
+    - Various fixes for compilation on 64bit and 16bit architectures.
 
 ======================================================================
 
