@@ -1,3 +1,11 @@
+2009-09-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cache] Check the face filled by FTC_Manager_LookupFace().
+
+	* src/cache/ftcbasic.c (ftc_basic_family_get_count): Return
+	immediately if FTC_Manager_LookupFace() fills face by NULL.
+	Such case can occur when the code is optimized by GCC-4.2.x.
+
 2009-09-23  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

@@ -142,6 +142,9 @@
     error = FTC_Manager_LookupFace( manager, family->attrs.scaler.face_id,
                                     &face );
 
+    if ( error || !face )
+      return result;
+
     if ( (FT_ULong)face->num_glyphs > FT_UINT_MAX || 0 > face->num_glyphs )
     {
       FT_TRACE1(( "ftc_basic_family_get_count: too large number of glyphs " ));
