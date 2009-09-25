@@ -1,3 +1,13 @@
+2009-09-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[autofit] Fix for multi build.
+
+	* src/autofit/afmodule.h: Include FT_INTERNAL_OBJECTS_H
+	to use FT_DECLARE_MODULE() macro in multi build.
+
+	* src/autofit/aflatin.c: Include <ft2build.h> to handle
+	FT_ADVANCES_H correctly in multi build.
+
 2009-09-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Check the face filled by FTC_Manager_LookupFace().
