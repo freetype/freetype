@@ -1,5 +1,19 @@
 2009-09-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache, psaux, type1] Fix for multi build.
+	In multi build, some cpp functions are left as unresolved
+	symbols.
+
+	* src/cache/ftcbasic.c: Include FT_INTERNAL_DEBUG_H for
+	FT_TRACE1().
+
+	* src/psaux/t1decode.c: Include FT_INTERNAL_CALC_H for
+	FIXED_TO_INT().
+	* src/type1/t1gload.c: Ditto.
+	* src/type1/t1objs.c: Ditto.
+
+2009-09-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[autofit] Fix for multi build.
 
 	* src/autofit/afmodule.h: Include FT_INTERNAL_OBJECTS_H

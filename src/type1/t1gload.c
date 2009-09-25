@@ -18,6 +18,7 @@
 
 #include <ft2build.h>
 #include "t1gload.h"
+#include FT_INTERNAL_CALC_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_OUTLINE_H
