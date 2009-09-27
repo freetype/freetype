@@ -316,7 +316,7 @@
                          FTC_Node       *anode )
   {
     FTC_BasicQueryRec  query;
-    FTC_INode          node = 0;  /* make compiler happy */
+    FTC_Node           node = 0; /* make compiler happy */
     FT_Error           error;
     FT_UInt32          hash;
 
@@ -383,7 +383,7 @@
     error = FTC_GCache_Lookup( FTC_GCACHE( cache ),
                                hash, gindex,
                                FTC_GQUERY( &query ),
-                               (FTC_Node*) &node );
+                               &node );
 #endif
     if ( !error )
     {
@@ -391,8 +391,8 @@
 
       if ( anode )
       {
-        *anode = FTC_NODE( node );
-        FTC_NODE( node )->ref_count++;
+        *anode = node;
+        node->ref_count++;
       }
     }
 
@@ -412,7 +412,7 @@
                                FTC_Node       *anode )
   {
     FTC_BasicQueryRec  query;
-    FTC_INode          node = 0;  /* make compiler happy */
+    FTC_Node           node = 0; /* make compiler happy */
     FT_Error           error;
     FT_UInt32          hash;
 
@@ -453,8 +453,8 @@
 
       if ( anode )
       {
-        *anode = FTC_NODE( node );
-        FTC_NODE( node )->ref_count++;
+        *anode = node;
+        node->ref_count++;
       }
     }
 
@@ -655,7 +655,7 @@
   {
     FT_Error           error;
     FTC_BasicQueryRec  query;
-    FTC_SNode          node = 0; /* make compiler happy */
+    FTC_Node           node = 0; /* make compiler happy */
     FT_UInt32          hash;
 
 
@@ -721,17 +721,17 @@
                                hash,
                                gindex,
                                FTC_GQUERY( &query ),
-                               (FTC_Node*)&node );
+                               &node );
 #endif
     if ( error )
       goto Exit;
 
-    *ansbit = node->sbits + ( gindex - FTC_GNODE( node )->gindex );
+    *ansbit = FTC_SNODE( node )->sbits + ( gindex - FTC_GNODE( node )->gindex );
 
     if ( anode )
     {
-      *anode = FTC_NODE( node );
-      FTC_NODE( node )->ref_count++;
+      *anode = node;
+      node->ref_count++;
     }
 
   Exit:
@@ -751,7 +751,7 @@
   {
     FT_Error           error;
     FTC_BasicQueryRec  query;
-    FTC_SNode          node = 0; /* make compiler happy */
+    FTC_Node           node = 0; /* make compiler happy */
     FT_UInt32          hash;
 
 
@@ -788,12 +788,12 @@
     if ( error )
       goto Exit;
 
-    *ansbit = node->sbits + ( gindex - FTC_GNODE( node )->gindex );
+    *ansbit = FTC_SNODE( node )->sbits + ( gindex - FTC_GNODE( node )->gindex );
 
     if ( anode )
     {
-      *anode = FTC_NODE( node );
-      FTC_NODE( node )->ref_count++;
+      *anode = node;
+      node->ref_count++;
     }
 
   Exit:

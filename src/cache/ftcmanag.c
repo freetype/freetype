@@ -82,6 +82,8 @@
 
   } FTC_SizeNodeRec, *FTC_SizeNode;
 
+#define FTC_SIZE_NODE( x ) ( (FTC_SizeNode)( x ) )
+
 
   FT_CALLBACK_DEF( void )
   ftc_size_node_done( FTC_MruNode  ftcnode,
@@ -180,8 +182,8 @@
                           FTC_Scaler   scaler,
                           FT_Size     *asize )
   {
-    FT_Error      error;
-    FTC_SizeNode  node;
+    FT_Error     error;
+    FTC_MruNode  mrunode;
 
 
     if ( asize == NULL )
@@ -195,14 +197,14 @@
 #ifdef FTC_INLINE
 
     FTC_MRULIST_LOOKUP_CMP( &manager->sizes, scaler, ftc_size_node_compare,
-                            node, error );
+                            mrunode, error );
 
 #else
-    error = FTC_MruList_Lookup( &manager->sizes, scaler, (FTC_MruNode*)&node );
+    error = FTC_MruList_Lookup( &manager->sizes, scaler, &mrunode );
 #endif
 
     if ( !error )
-      *asize = node->size;
+      *asize = FTC_SIZE_NODE( mrunode )->size;
 
     return error;
   }
@@ -223,6 +225,8 @@
     FT_Face         face;
 
   } FTC_FaceNodeRec, *FTC_FaceNode;
+
+#define FTC_FACE_NODE( x ) ( ( FTC_FaceNode )( x ) )
 
 
   FT_CALLBACK_DEF( FT_Error )
@@ -305,8 +309,8 @@
                           FTC_FaceID   face_id,
                           FT_Face     *aface )
   {
-    FT_Error      error;
-    FTC_FaceNode  node;
+    FT_Error     error;
+    FTC_MruNode  mrunode;
 
 
     if ( aface == NULL )
@@ -321,14 +325,14 @@
 #ifdef FTC_INLINE
 
     FTC_MRULIST_LOOKUP_CMP( &manager->faces, face_id, ftc_face_node_compare,
-                            node, error );
+                            mrunode, error );
 
 #else
-    error = FTC_MruList_Lookup( &manager->faces, face_id, (FTC_MruNode*)&node );
+    error = FTC_MruList_Lookup( &manager->faces, face_id, &mrunode );
 #endif
 
     if ( !error )
-      *aface = node->face;
+      *aface = FTC_FACE_NODE( mrunode )->face;
 
     return error;
   }

@@ -283,7 +283,7 @@
   {
     FTC_Cache         cache = FTC_CACHE( cmap_cache );
     FTC_CMapQueryRec  query;
-    FTC_CMapNode      node;
+    FTC_Node          node;
     FT_Error          error;
     FT_UInt           gindex = 0;
     FT_UInt32         hash;
@@ -373,18 +373,18 @@
     FTC_CACHE_LOOKUP_CMP( cache, ftc_cmap_node_compare, hash, &query,
                           node, error );
 #else
-    error = FTC_Cache_Lookup( cache, hash, &query, (FTC_Node*) &node );
+    error = FTC_Cache_Lookup( cache, hash, &query, &node );
 #endif
     if ( error )
       goto Exit;
 
-    FT_ASSERT( (FT_UInt)( char_code - node->first ) < FTC_CMAP_INDICES_MAX );
+    FT_ASSERT( (FT_UInt)( char_code - FTC_CMAP_NODE( node )->first ) < FTC_CMAP_INDICES_MAX );
 
     /* something rotten can happen with rogue clients */
-    if ( (FT_UInt)( char_code - node->first >= FTC_CMAP_INDICES_MAX ) )
+    if ( (FT_UInt)( char_code - FTC_CMAP_NODE( node )->first >= FTC_CMAP_INDICES_MAX ) )
       return 0;
 
-    gindex = node->indices[char_code - node->first];
+    gindex = FTC_CMAP_NODE( node )->indices[char_code - FTC_CMAP_NODE( node )->first];
     if ( gindex == FTC_CMAP_UNKNOWN )
     {
       FT_Face  face;
@@ -392,7 +392,7 @@
 
       gindex = 0;
 
-      error = FTC_Manager_LookupFace( cache->manager, node->face_id, &face );
+      error = FTC_Manager_LookupFace( cache->manager, FTC_CMAP_NODE( node )->face_id, &face );
       if ( error )
         goto Exit;
 
@@ -413,7 +413,7 @@
           FT_Set_Charmap( face, old );
       }
 
-      node->indices[char_code - node->first] = (FT_UShort)gindex;
+      FTC_CMAP_NODE( node )->indices[char_code - FTC_CMAP_NODE( node )->first] = (FT_UShort)gindex;
     }
 
   Exit:
