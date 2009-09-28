@@ -726,7 +726,8 @@
     if ( error )
       goto Exit;
 
-    *ansbit = FTC_SNODE( node )->sbits + ( gindex - FTC_GNODE( node )->gindex );
+    *ansbit = FTC_SNODE( node )->sbits +
+              ( gindex - FTC_GNODE( node )->gindex );
 
     if ( anode )
     {
@@ -788,7 +789,8 @@
     if ( error )
       goto Exit;
 
-    *ansbit = FTC_SNODE( node )->sbits + ( gindex - FTC_GNODE( node )->gindex );
+    *ansbit = FTC_SNODE( node )->sbits +
+              ( gindex - FTC_GNODE( node )->gindex );
 
     if ( anode )
     {

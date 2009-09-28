@@ -378,13 +378,16 @@
     if ( error )
       goto Exit;
 
-    FT_ASSERT( (FT_UInt)( char_code - FTC_CMAP_NODE( node )->first ) < FTC_CMAP_INDICES_MAX );
+    FT_ASSERT( (FT_UInt)( char_code - FTC_CMAP_NODE( node )->first ) <
+                FTC_CMAP_INDICES_MAX );
 
     /* something rotten can happen with rogue clients */
-    if ( (FT_UInt)( char_code - FTC_CMAP_NODE( node )->first >= FTC_CMAP_INDICES_MAX ) )
+    if ( (FT_UInt)( char_code - FTC_CMAP_NODE( node )->first >=
+                    FTC_CMAP_INDICES_MAX ) )
       return 0;
 
-    gindex = FTC_CMAP_NODE( node )->indices[char_code - FTC_CMAP_NODE( node )->first];
+    gindex = FTC_CMAP_NODE( node )->indices[char_code -
+                                            FTC_CMAP_NODE( node )->first];
     if ( gindex == FTC_CMAP_UNKNOWN )
     {
       FT_Face  face;
@@ -392,7 +395,9 @@
 
       gindex = 0;
 
-      error = FTC_Manager_LookupFace( cache->manager, FTC_CMAP_NODE( node )->face_id, &face );
+      error = FTC_Manager_LookupFace( cache->manager,
+                                      FTC_CMAP_NODE( node )->face_id,
+                                      &face );
       if ( error )
         goto Exit;
 
@@ -413,7 +418,9 @@
           FT_Set_Charmap( face, old );
       }
 
-      FTC_CMAP_NODE( node )->indices[char_code - FTC_CMAP_NODE( node )->first] = (FT_UShort)gindex;
+      FTC_CMAP_NODE( node )->indices[char_code -
+                                     FTC_CMAP_NODE( node )->first]
+        = (FT_UShort)gindex;
     }
 
   Exit:
