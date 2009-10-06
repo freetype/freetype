@@ -1,3 +1,11 @@
+2009-10-06  Werner Lemberg  <wl@gnu.org>
+
+	Fix `make multi'.
+
+	* src/cache/ftccache.c, src/cache/ftcsbits.c (FT_COMPONENT): Define.
+
+	* src/sfnt/sfdriver.c: Include FT_INTERNAL_DEBUG_H.
+
 2009-09-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Fix Savannah bug #27441, cleanup Redhat bugzilla #513582.

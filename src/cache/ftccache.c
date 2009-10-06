@@ -24,6 +24,9 @@
 #include "ftccback.h"
 #include "ftcerror.h"
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_cache
+
 
 #define FTC_HASH_MAX_LOAD  2
 #define FTC_HASH_MIN_LOAD  1
