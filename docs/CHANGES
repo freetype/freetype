@@ -28,6 +28,7 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
     - Calculation  of  vertical  metrics in  OpenType  fonts has  been
       improved.
 
+
   III. MISCELLANEOUS
 
     - It  is now  possible to  change  the emboldening  factor in  the
@@ -43,6 +44,7 @@ CHANGES BETWEEN 2.3.10 and 2.3.9
       in stand-alone mode.
 
     - Various fixes for compilation on 64bit and 16bit architectures.
+
 
 ======================================================================
 
