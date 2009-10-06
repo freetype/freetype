@@ -8,53 +8,49 @@
 
 2009-09-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[cache] Fix Savannah bug #27441, cleanup Redhat bugzilla #513582.
-	Tricky casts in FTC_{CACHE,GCACHE,MRULIST}_LOOKUP_CMP()
-	are removed. Now these functions should be called with
-	FTC_Node or FTC_MruNode variable, and the caller should
-	cast them to appropriate pointers to concrete data.
-	These tricky casts can GCC-4.4 optimizer (-O2) confused
-	and the crashing binaries are generated.
+	[cache] Fix Savannah bug #27441, clean up Redhat bugzilla #513582.
+	Tricky casts in FTC_{CACHE,GCACHE,MRULIST}_LOOKUP_CMP() are removed. 
+	Now these functions should be called with FTC_Node or FTC_MruNode
+	variable, and the caller should cast them to appropriate pointers to
+	concrete data.  These tricky casts can GCC-4.4 optimizer (-O2)
+	confused and the crashing binaries are generated.
 
-	* src/cache/ftcmru.h (FTC_MRULIST_LOOKUP_CMP): Drop tricky
-	cast. Now the 4th argument `node' of this function should
-	be typed as FTC_MruNode.
+	* src/cache/ftcmru.h (FTC_MRULIST_LOOKUP_CMP): Drop tricky cast. 
+	Now the 4th argument `node' of this function should be typed as
+	FTC_MruNode.
 
 	* src/cache/ftcglyph.h (FTC_GCACHE_LOOKUP_CMP): For inline
-	implementation, new temporal variable FTC_MruNode `_mrunode'
-	to take the pointer from FTC_MRULIST_LOOKUP_CMP().  For non
-	inline implementation, tricky cast is dropped.
+	implementation, new temporal variable FTC_MruNode `_mrunode' to take
+	the pointer from FTC_MRULIST_LOOKUP_CMP().  For non-inline
+	implementation, tricky cast is dropped.
 
 	* src/cache/ftcmanag.c (FTC_SIZE_NODE): New macro casting
 	to FTC_SizeNode.
-	(FTC_Manager_LookupSize): Replace FTC_SizeNode `node' by
-	FTC_MruNode `mrunode', and FTC_SIZE_NODE() is inserted.
+	(FTC_Manager_LookupSize): Replace FTC_SizeNode `node' by FTC_MruNode
+	`mrunode', and FTC_SIZE_NODE() is inserted.
 	(FTC_FACE_NODE): New macro casting to FTC_FaceNode.
-	(FTC_Manager_LookupFace) Replace FTC_FaceNode `node' by
-	FTC_MruNode `mrunode', and FTC_FACE_NODE() is inserted.
+	(FTC_Manager_LookupFace) Replace FTC_FaceNode `node' by FTC_MruNode
+	`mrunode', and FTC_FACE_NODE() is inserted.
 
-	* src/cache/ftcbasic.c (FTC_ImageCache_Lookup): Change
-	the type of `node' from FTC_INode to FTC_Node.  Extra
-	casting macro FTC_NODE() is dropped.
+	* src/cache/ftcbasic.c (FTC_ImageCache_Lookup): Change the type of
+	`node' from FTC_INode to FTC_Node.  Extra casting macro FTC_NODE()
+	is dropped.
 	(FTC_ImageCache_LookupScaler): Ditto.
-	(FTC_SBitCache_Lookup): Change the type of `node' from
-	FTC_SNode to FTC_Node.  Extra casting macro FTC_NODE()
-	is dropped.  FTC_SNODE() is inserted.
+	(FTC_SBitCache_Lookup): Change the type of `node' from FTC_SNode to
+	FTC_Node.  Extra casting macro FTC_NODE() is dropped.  FTC_SNODE()
+	is inserted.
 	(FTC_SBitCache_LookupScaler): Ditto.
 
-	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Change
-	the type of `node' from FTC_CMapNode to FTC_Node.  Extra
-	casting macro FTC_NODE() is dropped, FTC_CMAP_NODE() is
-	inserted.
+	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Change the type of
+	`node' from FTC_CMapNode to FTC_Node.  Extra casting macro
+	FTC_NODE() is dropped, FTC_CMAP_NODE() is inserted.
 
 2009-09-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache, psaux, type1] Fix for multi build.
-	In multi build, some cpp functions are left as unresolved
-	symbols.
+	In multi build, some cpp functions are left as unresolved symbols.
 
-	* src/cache/ftcbasic.c: Include FT_INTERNAL_DEBUG_H for
-	FT_TRACE1().
+	* src/cache/ftcbasic.c: Include FT_INTERNAL_DEBUG_H for FT_TRACE1().
 
 	* src/psaux/t1decode.c: Include FT_INTERNAL_CALC_H for
 	FIXED_TO_INT().
@@ -65,8 +61,8 @@
 
 	[autofit] Fix for multi build.
 
-	* src/autofit/afmodule.h: Include FT_INTERNAL_OBJECTS_H
-	to use FT_DECLARE_MODULE() macro in multi build.
+	* src/autofit/afmodule.h: Include FT_INTERNAL_OBJECTS_H to use
+	FT_DECLARE_MODULE() macro in multi build.
 
 	* src/autofit/aflatin.c: Include <ft2build.h> to handle
 	FT_ADVANCES_H correctly in multi build.
@@ -76,8 +72,8 @@
 	[cache] Check the face filled by FTC_Manager_LookupFace().
 
 	* src/cache/ftcbasic.c (ftc_basic_family_get_count): Return
-	immediately if FTC_Manager_LookupFace() fills face by NULL.
-	Such case can occur when the code is optimized by GCC-4.2.x.
+	immediately if FTC_Manager_LookupFace() fills face by NULL.  Such
+	case can occur when the code is optimized by GCC-4.2.x.
 
 2009-09-23  Werner Lemberg  <wl@gnu.org>
 
@@ -102,11 +98,10 @@
 
 	Improve configure.raw for cross build.
 
-	* builds/unix/configure.raw: Remove temporal files created by
-	the suffix checking for CC_BUILD.  Set XX_ANSIFLAGS and
-	XX_CFLAGS when cross compiler is GCC.  AC_PROG_CC checks
-	whether the cross compiler is GCC, its result is stored in
-	GCC.
+	* builds/unix/configure.raw: Remove temporal files created by the
+	suffix checking for CC_BUILD.  Set XX_ANSIFLAGS and XX_CFLAGS when
+	cross compiler is GCC.  AC_PROG_CC checks whether the cross compiler
+	is GCC, its result is stored in GCC.
 
 2009-09-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
