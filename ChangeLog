@@ -1,5 +1,31 @@
 2009-10-06  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.3.10 released.
+	==========================
+
+
+	Tag sources with `VER-2-3-10'.
+
+	* builds/toplevel.mk (major, minor, patch): Fix regexp to allow more
+	than a single digit.
+	(dist): We now use git.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.3.10.
+
+	* README, Jamfile (RefDoc), builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj: s/2.3.9/2.3.10/, s/239/2310/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 10.
+
+	* builds/unix/configure.raw (version_info): Set to 9:21:3.
+
+2009-10-06  Werner Lemberg  <wl@gnu.org>
+
 	Fix `make multi'.
 
 	* src/cache/ftccache.c, src/cache/ftcsbits.c (FT_COMPONENT): Define.
