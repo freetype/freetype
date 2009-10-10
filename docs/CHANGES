@@ -1,3 +1,12 @@
+CHANGES BETWEEN 2.3.10 and 2.3.11
+
+  I. IMPORTANT BUG FIXES
+
+    - Version 2.3.10 broke PCF support.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.3.10 and 2.3.9
 
   I. IMPORTANT BUG FIXES

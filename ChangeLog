@@ -1,3 +1,7 @@
+2009-10-10  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES, docs/release: Updated.
+
 2009-10-10  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/pcf/pcfread.c (pcf_get_properties): Fix a bug in the nprops
