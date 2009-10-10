@@ -82,17 +82,17 @@ How to prepare a new release
 
     FREETYPE_PACKAGES="freetype-$VERSION.tar.gz \
                        freetype-$VERSION.tar.bz2 \
-                       ft$VERSION.zip"
+                       ft$version.zip"
     FT2DEMOS_PACKAGES="ft2demos-$VERSION.tar.gz \
                        ft2demos-$VERSION.tar.bz2 \
-                       ftdmo$VERSION.zip"
+                       ftdmo$version.zip"
     FTDOC_PACKAGES="freetype-doc-$VERSION.tar.gz \
                     freetype-doc-$VERSION.tar.bz2 \
-                    ftdoc$VERSION.zip"
+                    ftdoc$version.zip"
 
-    PACKAGE_LIST=$FREETYPE_PACKAGES \
-                 $FT2DEMOS_PACKAGES \
-                 $FTDOC_PACKAGES
+    PACKAGE_LIST="$FREETYPE_PACKAGES \
+                  $FT2DEMOS_PACKAGES \
+                  $FTDOC_PACKAGES"
 
     set -e
     unset passphrase
@@ -133,9 +133,9 @@ How to prepare a new release
       FTDOC_SIGNATURES="$FTDOC_SIGNATURES $i.sig"
     done
 
-    SIGNATURE_LIST=$FREETYPE_SIGNATURES \
-                   $FT2DEMOS_SIGNATURES \
-                   $FTDOC_SIGNATURES
+    SIGNATURE_LIST="$FREETYPE_SIGNATURES \
+                    $FT2DEMOS_SIGNATURES \
+                    $FTDOC_SIGNATURES"
 
     scp $PACKAGE_LIST $SIGNATURE_LIST \
       $SAVANNAH_USER@dl.sv.nongnu.org:/releases/freetype/
