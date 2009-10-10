@@ -1,5 +1,27 @@
 2009-10-10  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.3.11 released.
+	==========================
+
+
+	Tag sources with `VER-2-3-11'.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.3.11.
+
+	* README, Jamfile (RefDoc), builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj: s/2.3.10/2.3.11/, s/2310/2311/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 11.
+
+	* builds/unix/configure.raw (version_info): Set to 9:22:3.
+
+2009-10-10  Werner Lemberg  <wl@gnu.org>
+
 	* docs/CHANGES, docs/release: Updated.
 
 2009-10-10  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
