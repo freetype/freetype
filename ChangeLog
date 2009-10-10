@@ -1,3 +1,9 @@
+2009-10-10  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/pcf/pcfread.c (pcf_get_properties): Fix a bug in the nprops
+	truncation.  Reported by Martin von Gagern and Peter Volkov.
+	https://bugs.gentoo.org/288357 and https://bugs.gentoo.org/288256
+
 2009-10-06  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.10 released.

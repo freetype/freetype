@@ -436,7 +436,7 @@ THE SOFTWARE.
     FT_TRACE4(( "  nprop = %d (truncate %d props)\n",
                 (int)nprops, nprops - (int)nprops ));
 
-    nprops = nprops - (int)nprops;
+    nprops = (int)nprops;
 
     /* rough estimate */
     if ( nprops > size / PCF_PROPERTY_SIZE )
