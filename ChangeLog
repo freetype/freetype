@@ -1,3 +1,11 @@
+2009-10-18  Werner Lemberg  <wl@gnu.org>
+
+	Fix handling of `dup' CFF instruction.
+	Problem and solution reported by Ning Dong <flintning@163.com>.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings) <cff_op_dup>:
+	Increase `args' by 2, not 1.
+
 2009-10-10  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.11 released.

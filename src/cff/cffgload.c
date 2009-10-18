@@ -2106,7 +2106,7 @@
           FT_TRACE4(( " dup\n" ));
 
           args[1] = args[0];
-          args++;
+          args += 2;
           break;
 
         case cff_op_put:
