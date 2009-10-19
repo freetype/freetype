@@ -1,3 +1,13 @@
+2009-10-19  Ning Dong  <flintning@163.com>
+
+	Fix handling of `get' and `put' CFF instructions.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings) <cff_op_get,
+	cff_op_put>: Appendix B of Adobe Technote #5177 limits the number of
+	elements for the `get' and `put' operators to 32.
+	* src/cff/cffgload.h (CFF_MAX_TRANS_ELEMENTS): Define.
+	(CFF_Decoder): Use it for `buildchar' and remove `len_buildchar'.
+
 2009-10-18  Werner Lemberg  <wl@gnu.org>
 
 	Fix handling of `dup' CFF instruction.

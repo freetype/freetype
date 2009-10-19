@@ -2117,7 +2117,7 @@
 
             FT_TRACE4(( " put\n" ));
 
-            if ( idx >= 0 && idx < decoder->len_buildchar )
+            if ( idx >= 0 && idx < CFF_MAX_TRANS_ELEMENTS )
               decoder->buildchar[idx] = val;
           }
           break;
@@ -2130,7 +2130,7 @@
 
             FT_TRACE4(( " get\n" ));
 
-            if ( idx >= 0 && idx < decoder->len_buildchar )
+            if ( idx >= 0 && idx < CFF_MAX_TRANS_ELEMENTS )
               val = decoder->buildchar[idx];
 
             args[0] = val;
