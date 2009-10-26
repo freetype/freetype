@@ -1,3 +1,10 @@
+2009-10-26  Bram Tassyns  <bramt@enfocus.be>
+
+	Fix Savannah bug #27811.
+
+	* src/truetype/ttxgvar.c (ft_var_readpackeddeltas): Fix
+	signed/unsigned mismatch.
+
 2009-10-19  Ning Dong  <flintning@163.com>
 
 	Fix handling of `get' and `put' CFF instructions.
