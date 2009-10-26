@@ -708,8 +708,8 @@
     }
 
     /* compute the linear advance in 16.16 pixels */
-    if ( ( load_flags & FT_LOAD_LINEAR_DESIGN ) == 0  &&
-         ( FT_IS_SCALABLE( face ) )                   )
+    if ( ( load_flags & FT_LOAD_LINEAR_DESIGN ) == 0 &&
+         ( FT_IS_SCALABLE( face ) )                  )
     {
       FT_Size_Metrics*  metrics = &face->size->metrics;
 
