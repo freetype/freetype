@@ -231,6 +231,10 @@ FT_BEGIN_HEADER
   /*    vertAdvance ::                                                     */
   /*      Advance height for vertical layout.                              */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    If not disabled with @FT_LOAD_NO_HINTING, the values represent     */
+  /*    dimensions of the hinted glyph (in case hinting is applicable).    */
+  /*                                                                       */
   typedef struct  FT_Glyph_Metrics_
   {
     FT_Pos  width;
@@ -1477,8 +1481,13 @@ FT_BEGIN_HEADER
   /*                         important to perform correct WYSIWYG layout.  */
   /*                         Only relevant for outline glyphs.             */
   /*                                                                       */
-  /*    advance           :: This is the transformed advance width for the */
-  /*                         glyph (in 26.6 fractional pixel format).      */
+  /*    advance           :: This shorthand is, depending on               */
+  /*                         @FT_LOAD_IGNORE_TRANSFORM, the transformed    */
+  /*                         advance width for the glyph (in 26.6          */
+  /*                         fractional pixel format).  As specified with  */
+  /*                         @FT_LOAD_VERTICAL_LAYOUT, it uses either the  */
+  /*                         `horiAdvance' or the `vertAdvance' value of   */
+  /*                         `metrics' field.                              */
   /*                                                                       */
   /*    format            :: This field indicates the format of the image  */
   /*                         contained in the glyph slot.  Typically       */
