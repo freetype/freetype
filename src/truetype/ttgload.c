@@ -69,7 +69,7 @@
   /* `check' is true, take care of monospaced fonts by returning the       */
   /* advance width maximum.                                                */
   /*                                                                       */
-  FT_LOCAL_DEF(void)
+  FT_LOCAL_DEF( void )
   TT_Get_HMetrics( TT_Face     face,
                    FT_UInt     idx,
                    FT_Bool     check,
@@ -96,7 +96,7 @@
   /* The monospace `check' is probably not meaningful here, but we leave   */
   /* it in for a consistent interface.                                     */
   /*                                                                       */
-  FT_LOCAL_DEF(void)
+  FT_LOCAL_DEF( void )
   TT_Get_VMetrics( TT_Face     face,
                    FT_UInt     idx,
                    FT_Bool     check,
