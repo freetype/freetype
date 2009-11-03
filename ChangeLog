@@ -1,3 +1,11 @@
+2009-11-03  Werner Lemberg  <wl@gnu.org>
+
+	Improve code readability.
+
+	* src/ttgload.c (load_truetype_glyph): Move metrics calculation
+	to...
+	(tt_get_metrics): This new function.
+
 2009-10-26  Bram Tassyns  <bramt@enfocus.be>
 
 	Fix Savannah bug #27811.

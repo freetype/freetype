@@ -134,6 +134,87 @@
   }
 
 
+  static void
+  tt_get_metrics( TT_Loader  loader,
+                  FT_UInt    glyph_index )
+  {
+    TT_Face  face = (TT_Face)loader->face;
+
+    FT_Short   left_bearing = 0, top_bearing = 0;
+    FT_UShort  advance_width = 0, advance_height = 0;
+
+
+    TT_Get_HMetrics( face, glyph_index,
+                     (FT_Bool)!( loader->load_flags &
+                                 FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
+                     &left_bearing,
+                     &advance_width );
+    TT_Get_VMetrics( face, glyph_index,
+                     (FT_Bool)!( loader->load_flags &
+                                 FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
+                     &top_bearing,
+                     &advance_height );
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+
+    /* If this is an incrementally loaded font see if there are */
+    /* overriding metrics for this glyph.                       */
+    if ( face->root.internal->incremental_interface &&
+         face->root.internal->incremental_interface->funcs->get_glyph_metrics )
+    {
+      FT_Incremental_MetricsRec  metrics;
+      FT_Error                   error;
+
+
+      metrics.bearing_x = left_bearing;
+      metrics.bearing_y = 0;
+      metrics.advance   = advance_width;
+
+      error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
+                face->root.internal->incremental_interface->object,
+                glyph_index, FALSE, &metrics );
+      if ( error )
+        goto Exit;
+
+      left_bearing  = (FT_Short)metrics.bearing_x;
+      advance_width = (FT_UShort)metrics.advance;
+
+#if 0
+
+      /* GWW: Do I do the same for vertical metrics? */
+      metrics.bearing_x = 0;
+      metrics.bearing_y = top_bearing;
+      metrics.advance   = advance_height;
+
+      error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
+                face->root.internal->incremental_interface->object,
+                glyph_index, TRUE, &metrics );
+      if ( error )
+        goto Exit;
+
+      top_bearing    = (FT_Short)metrics.bearing_y;
+      advance_height = (FT_UShort)metrics.advance;
+
+#endif /* 0 */
+
+    }
+
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
+
+  Exit:
+    loader->left_bearing = left_bearing;
+    loader->advance      = advance_width;
+    loader->top_bearing  = top_bearing;
+    loader->vadvance     = advance_height;
+
+    if ( !loader->linear_def )
+    {
+      loader->linear_def = 1;
+      loader->linear     = advance_width;
+    }
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* Translates an array of coordinates.                                   */
@@ -1151,75 +1232,7 @@
       y_scale = 0x10000L;
     }
 
-    /* get metrics, horizontal and vertical */
-    {
-      FT_Short   left_bearing = 0, top_bearing = 0;
-      FT_UShort  advance_width = 0, advance_height = 0;
-
-
-      TT_Get_HMetrics( face, glyph_index,
-                       (FT_Bool)!( loader->load_flags &
-                                   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
-                       &left_bearing,
-                       &advance_width );
-      TT_Get_VMetrics( face, glyph_index,
-                       (FT_Bool)!( loader->load_flags &
-                                   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
-                       &top_bearing,
-                       &advance_height );
-
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-
-      /* If this is an incrementally loaded font see if there are */
-      /* overriding metrics for this glyph.                       */
-      if ( face->root.internal->incremental_interface &&
-           face->root.internal->incremental_interface->funcs->get_glyph_metrics )
-      {
-        FT_Incremental_MetricsRec  metrics;
-
-
-        metrics.bearing_x = left_bearing;
-        metrics.bearing_y = 0;
-        metrics.advance = advance_width;
-        error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
-                  face->root.internal->incremental_interface->object,
-                  glyph_index, FALSE, &metrics );
-        if ( error )
-          goto Exit;
-        left_bearing  = (FT_Short)metrics.bearing_x;
-        advance_width = (FT_UShort)metrics.advance;
-
-#if 0
-
-        /* GWW: Do I do the same for vertical metrics? */
-        metrics.bearing_x = 0;
-        metrics.bearing_y = top_bearing;
-        metrics.advance = advance_height;
-        error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
-                  face->root.internal->incremental_interface->object,
-                  glyph_index, TRUE, &metrics );
-        if ( error )
-          goto Exit;
-        top_bearing  = (FT_Short)metrics.bearing_y;
-        advance_height = (FT_UShort)metrics.advance;
-
-#endif /* 0 */
-
-      }
-
-#endif /* FT_CONFIG_OPTION_INCREMENTAL */
-
-      loader->left_bearing = left_bearing;
-      loader->advance      = advance_width;
-      loader->top_bearing  = top_bearing;
-      loader->vadvance     = advance_height;
-
-      if ( !loader->linear_def )
-      {
-        loader->linear_def = 1;
-        loader->linear     = advance_width;
-      }
-    }
+    tt_get_metrics( loader, glyph_index );
 
     /* Set `offset' to the start of the glyph relative to the start of */
     /* the `glyf' table, and `byte_len' to the length of the glyph in  */
