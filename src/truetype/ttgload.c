@@ -1183,7 +1183,8 @@
   static FT_Error
   load_truetype_glyph( TT_Loader  loader,
                        FT_UInt    glyph_index,
-                       FT_UInt    recurse_count )
+                       FT_UInt    recurse_count,
+                       FT_Bool    header_only )
   {
     FT_Error        error;
     FT_Fixed        x_scale, y_scale;
@@ -1285,9 +1286,9 @@
 
       opened_frame = 1;
 
-      /* read first glyph header */
+      /* read glyph header first */
       error = face->read_glyph_header( loader );
-      if ( error )
+      if ( error || header_only )
         goto Exit;
     }
 
@@ -1297,6 +1298,9 @@
       loader->bbox.xMax = 0;
       loader->bbox.yMin = 0;
       loader->bbox.yMax = 0;
+
+      if ( header_only )
+        goto Exit;
 
       TT_LOADER_SET_PP( loader );
 
@@ -1487,7 +1491,7 @@
           num_base_points = gloader->base.outline.n_points;
 
           error = load_truetype_glyph( loader, subglyph->index,
-                                       recurse_count + 1 );
+                                       recurse_count + 1, FALSE );
           if ( error )
             goto Exit;
 
@@ -1710,7 +1714,7 @@
       /* scale the metrics */
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
       {
-        top     = FT_MulFix( top, y_scale );
+        top     = FT_MulFix( top,     y_scale );
         advance = FT_MulFix( advance, y_scale );
       }
 
@@ -1770,6 +1774,7 @@
       glyph->metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  << 6;
 
       glyph->format = FT_GLYPH_FORMAT_BITMAP;
+
       if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
       {
         glyph->bitmap_left = metrics.vertBearingX;
@@ -1792,7 +1797,8 @@
   tt_loader_init( TT_Loader     loader,
                   TT_Size       size,
                   TT_GlyphSlot  glyph,
-                  FT_Int32      load_flags )
+                  FT_Int32      load_flags,
+                  FT_Bool       glyf_table_only )
   {
     TT_Face    face;
     FT_Stream  stream;
@@ -1806,7 +1812,7 @@
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
     /* load execution context */
-    if ( IS_HINTED( load_flags ) )
+    if ( IS_HINTED( load_flags ) && !glyf_table_only )
     {
       TT_ExecContext  exec;
       FT_Bool         grayscale;
@@ -1887,6 +1893,7 @@
     }
 
     /* get face's glyph loader */
+    if ( !glyf_table_only )
     {
       FT_GlyphLoader  gloader = glyph->internal->loader;
 
@@ -1958,7 +1965,25 @@
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );
       if ( !error )
+      {
+        FT_Face  root = &face->root;
+
+
+        if ( FT_IS_SCALABLE( root ) )
+        {
+          /* for the bbox we need the header only */
+          (void)tt_loader_init( &loader, size, glyph, load_flags, TRUE );
+          (void)load_truetype_glyph( &loader, glyph_index, 0, TRUE );
+          glyph->linearHoriAdvance = loader.linear;
+          glyph->linearVertAdvance = loader.top_bearing + loader.bbox.yMax -
+                                       loader.vadvance;
+          if ( face->postscript.isFixedPitch                             &&
+               ( load_flags & FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ) == 0 )
+            glyph->linearHoriAdvance = face->horizontal.advance_Width_Max;
+        }
+
         return TT_Err_Ok;
+      }
     }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
@@ -1970,7 +1995,7 @@
     if ( load_flags & FT_LOAD_SBITS_ONLY )
       return TT_Err_Invalid_Argument;
 
-    error = tt_loader_init( &loader, size, glyph, load_flags );
+    error = tt_loader_init( &loader, size, glyph, load_flags, FALSE );
     if ( error )
       return error;
 
@@ -1979,7 +2004,7 @@
     glyph->outline.flags = 0;
 
     /* main loading loop */
-    error = load_truetype_glyph( &loader, glyph_index, 0 );
+    error = load_truetype_glyph( &loader, glyph_index, 0, FALSE );
     if ( !error )
     {
       if ( glyph->format == FT_GLYPH_FORMAT_COMPOSITE )

@@ -1,5 +1,19 @@
 2009-11-03  Werner Lemberg  <wl@gnu.org>
 
+	Return correct `linearHoriAdvance' value for embedded TT bitmaps too.
+	Reported by Jeremy Manson <jeremy.manson@gmail.com>.
+
+	src/truetype/ttgload.c (load_truetype_glyph): Add parameter to
+	quickly load the glyph header only.
+	Update all callers.
+	(tt_loader_init): Add parameter to quickly load the `glyf' table
+	only.
+	Update all callers.
+	(TT_Load_Glyph): Compute linear advance values for embedded bitmap
+	glyphs too.
+
+2009-11-03  Werner Lemberg  <wl@gnu.org>
+
 	Improve code readability.
 
 	* src/ttgload.c (load_truetype_glyph): Move metrics calculation
