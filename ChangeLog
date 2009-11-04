@@ -1,6 +1,16 @@
+2009-11-04  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #27921.
+
+	* src/cff/cffobjs.c (cff_face_init), src/cid/cidobjs.c
+	(cid_face_init), src/type1/t1afm.c (T1_Read_Metrics),
+	src/type1/t1objs.c (T1_Face_Init): Don't use unsigned constant
+	values for rounding if the argument can be negative.
+
 2009-11-03  Bram Tassyns  <bramt@enfocus.be>
 
 	Add basic support for Type1 charstrings in CFF.
+	This fixes Savannah bug #27922.
 
 	* src/cff/cffgload.c (CFF_Operator, cff_argument_counts): Handle
 	`seac', `sbw', and `setcurrentpoint' opcodes.
