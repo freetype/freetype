@@ -1,3 +1,14 @@
+2009-11-03  Bram Tassyns  <bramt@enfocus.be>
+
+	Add basic support for Type1 charstrings in CFF.
+
+	* src/cff/cffgload.c (CFF_Operator, cff_argument_counts): Handle
+	`seac', `sbw', and `setcurrentpoint' opcodes.
+	(cff_compute_bias): Add parameter to indicate the charstring type.
+	Update all callers.
+	(cff_operator_seac): Add parameter for side bearing.
+	(cff_decoder_parse_charstrings): Updated for more Type1 support.
+
 2009-11-03  Werner Lemberg  <wl@gnu.org>
 
 	Return correct `linearHoriAdvance' value for embedded TT bitmaps too.
