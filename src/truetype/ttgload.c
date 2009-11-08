@@ -1186,7 +1186,7 @@
                        FT_UInt    recurse_count,
                        FT_Bool    header_only )
   {
-    FT_Error        error;
+    FT_Error        error        = TT_Err_Ok;
     FT_Fixed        x_scale, y_scale;
     FT_ULong        offset;
     TT_Face         face         = (TT_Face)loader->face;

@@ -1,3 +1,10 @@
+2009-11-08  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warning.
+	Reported by Jeremy Manson <jeremy.manson@gmail.com>.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Initialize `error'.
+
 2009-11-04  Werner Lemberg  <wl@gnu.org>
 
 	Remove compiler warning.
