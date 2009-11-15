@@ -80,6 +80,9 @@
 
     if ( check && face->postscript.isFixedPitch )
       *aw = face->horizontal.advance_Width_Max;
+
+    FT_TRACE5(( "  advance width (font units): %d\n", *aw ));
+    FT_TRACE5(( "  left side bearing (font units): %d\n", *lsb ));
   }
 
 
@@ -131,6 +134,8 @@
 
 #endif
 
+    FT_TRACE5(( "  advance height (font units): %d\n", *ah ));
+    FT_TRACE5(( "  top side bearing (font units): %d\n", *tsb ));
   }
 
 

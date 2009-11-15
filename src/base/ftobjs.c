@@ -744,6 +744,12 @@
       }
     }
 
+    FT_TRACE5(( "  x advance: %d\n" , slot->advance.x ));
+    FT_TRACE5(( "  y advance: %d\n" , slot->advance.y ));
+
+    FT_TRACE5(( "  linear x advance: %d\n" , slot->linearHoriAdvance ));
+    FT_TRACE5(( "  linear y advance: %d\n" , slot->linearVertAdvance ));
+
     /* do we need to render the image now? */
     if ( !error                                    &&
          slot->format != FT_GLYPH_FORMAT_BITMAP    &&

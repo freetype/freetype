@@ -1,3 +1,10 @@
+2009-11-15  Werner Lemberg  <wl@gnu.org>
+
+	Add tracing messages for advance values.
+
+	* src/base/ftobjs.c (FT_Load_Glyph), src/truetype/ttgload.c
+	(TT_Get_HMetrics, TT_Get_VMetrics): Do it.
+
 2009-11-08  Werner Lemberg  <wl@gnu.org>
 
 	Fix compiler warning.
