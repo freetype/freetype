@@ -1,5 +1,13 @@
 2009-11-15  Werner Lemberg  <wl@gnu.org>
 
+	Really fix FreeDesktop bug #21197.
+	This also fixes Savannah bug #28021.
+
+	* src/autofit/aflatin.c (af_latin_metrics_check_digits),
+	src/autofit/aflatin2.c (af_latin2_metrics_check_digits): Fix loop.
+
+2009-11-15  Werner Lemberg  <wl@gnu.org>
+
 	Add tracing messages for advance values.
 
 	* src/base/ftobjs.c (FT_Load_Glyph), src/truetype/ttgload.c
