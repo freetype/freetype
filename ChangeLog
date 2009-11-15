@@ -894,7 +894,7 @@
 	and `rem' are changed to TCoord, because their values
 	are set with explicit casts to TCoord.  When ras.area
 	is updated by the differential values including
-	`delta', they are explicitly casted to TArea, because
+	`delta', they are explicitly cast to TArea, because
 	the type of `delta' is not TArea but TCoord.
 	(gray_render_line): The type of `mod' is extended
 	from int to TCoord, because (TCoord)dy is added to mod.
@@ -1069,8 +1069,8 @@
 
 	* src/base/fttrigon.c (ft_trig_downscale): The FT_Fixed
 	variable `val' and unsigned long constant FT_TRIG_SCALE
-	are casted to FT_UInt32, when calculates FT_UInt32.
-	(FT_Vector_Rotate): The long constant 1L is casted to
+	are cast to FT_UInt32, when calculates FT_UInt32.
+	(FT_Vector_Rotate): The long constant 1L is cast to
 	FT_Int32 to calculate FT_Int32 `half'.
 
 2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -1113,7 +1113,7 @@
 	`code' is matched to PCF_Encoding->enc.
 	(pcf_cmap_char_next): The type of `charcode' is matched
 	to PCF_Encoding->enc.  When *acharcode is set by charcode,
-	an overflow is checked and casted to unsigned 32-bit
+	an overflow is checked and cast to unsigned 32-bit
 	integer.
 
 2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -1144,7 +1144,7 @@
 	(bdf_cmap_char_next): The type of `charcode' is
 	matched with BDF_encoding_el->enc.  When *acharcode
 	is set by charcode, an overflow is checked and
-	casted to unsigned 32-bit integer.
+	cast to unsigned 32-bit integer.
 
 2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -1272,7 +1272,7 @@
 
 	* afmparse.c (afm_parser_read_vals): To call
 	AFM_ParserRec.get_index, the length of token
-	`len' is casted to size_t.
+	`len' is cast to size_t.
 
 2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
