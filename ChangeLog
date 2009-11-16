@@ -1,3 +1,10 @@
+2009-11-16  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warnings.
+	Reported by Kevin Blenkinsopp <arqon@promode.org>.
+
+	* src/sfnt/ttload.c (check_table_dir): Use proper data type.
+
 2009-11-15  Werner Lemberg  <wl@gnu.org>
 
 	Really fix FreeDesktop bug #21197.
