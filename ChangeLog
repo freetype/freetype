@@ -1,5 +1,12 @@
 2009-11-20  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #27742.
+
+	* src/base/ftstroke.c (ft_stroker_outside): Avoid silent division by
+	zero, using a threshold for `theta'.
+
+2009-11-20  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #28036.
 
 	* src/type1/t1afm.c (t1_get_index): Fix comparison.

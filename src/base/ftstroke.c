@@ -979,7 +979,8 @@
       thcos = FT_Cos( theta );
       sigma = FT_MulFix( stroker->miter_limit, thcos );
 
-      if ( sigma >= 0x10000L )
+      /* FT_Sin(x) = 0 for x <= 57 */
+      if ( sigma >= 0x10000L || ft_pos_abs( theta ) <= 57 )
         miter = FALSE;
 
       if ( miter )  /* this is a miter (broken angle) */
@@ -1360,7 +1361,7 @@
         phi1    = (angle_mid + angle_in ) / 2;
         phi2    = (angle_mid + angle_out ) / 2;
         length1 = FT_DivFix( stroker->radius, FT_Cos( theta1 ) );
-        length2 = FT_DivFix( stroker->radius, FT_Cos(theta2) );
+        length2 = FT_DivFix( stroker->radius, FT_Cos( theta2 ) );
 
         for ( side = 0; side <= 1; side++ )
         {
