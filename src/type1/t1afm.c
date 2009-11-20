@@ -58,7 +58,7 @@
 
 
     /* PS string/name length must be < 16-bit */
-    if ( ( len - 0xFFFFU ) > 0 )
+    if ( len > 0xFFFFU )
       return 0;
 
     for ( n = 0; n < type1->num_glyphs; n++ )
