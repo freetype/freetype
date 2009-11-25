@@ -1,3 +1,11 @@
+2009-11-25  John Tytgat  <John.Tytgat@esko.com>
+
+	Better handling of start of `eexec' section.
+	This fixes Savannah bug #28090.
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Skip all whitespace
+	characters before start of `eexec' section.
+
 2009-11-20  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #27742.
