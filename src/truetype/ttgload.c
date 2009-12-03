@@ -204,9 +204,10 @@
 
     }
 
+  Exit:
+
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
-  Exit:
     loader->left_bearing = left_bearing;
     loader->advance      = advance_width;
     loader->top_bearing  = top_bearing;

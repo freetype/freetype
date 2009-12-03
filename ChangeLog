@@ -1,3 +1,11 @@
+2009-12-03  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warnings.
+
+	* src/truetype/ttgload.c (tt_get_metrics): Put `Exit' label into the
+	proper preprocessor conditional.
+	* src/pfr/pfrobjs.c (pfr_slot_load): Pacify gcc.
+
 2009-11-25  John Tytgat  <John.Tytgat@esko.com>
 
 	Better handling of start of `eexec' section.
