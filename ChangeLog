@@ -1,3 +1,10 @@
+2009-12-14  Werner Lemberg  <wl@gnu.org>
+
+	Trace glyph index in CID module.
+	Suggested in Savannah patch #7023.
+
+	* src/cid/cidgload.c (cid_load_glyph): Add tracing message.
+
 2009-12-03  Werner Lemberg  <wl@gnu.org>
 
 	Fix compiler warnings.
