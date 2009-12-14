@@ -1,3 +1,23 @@
+2009-12-14  Ken Sharp  <ken.sharp@artifex.com>
+
+	Ignore invalid `setcurrentpoint' operations in Type 1 fonts.
+	This fixes Savannah bug #28226.
+
+	At least two wild PostScript files of unknown provenance contain
+	Type 1 fonts, apparently converted from TrueType fonts in earlier
+	PDF versions of the files, which use the `setcurrentpoint' operator
+	inappropriately.
+
+	FreeType currently throws an error in this case, but Ghostscript and
+	Adobe Distiller both accept the fonts and ignore the problem.  This
+	commit #ifdefs out the check so PostScript interpreters using
+	FreeType can render these files.
+
+	The specification says `setcurrentpoint' should only be used to set
+	the point after a `Subr' call, but these fonts use it to set the
+	initial point to (0,0).  Unnecessarily so, as they correctly use an
+	`hsbw' operation which implicitly sets the initial point.
+
 2009-12-14  Bram Tassyns  <bramt@enfocus.be>
 
 	Fix parsing of /CIDFontVersion.

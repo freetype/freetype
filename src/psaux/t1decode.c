@@ -1453,12 +1453,20 @@
         case op_setcurrentpoint:
           FT_TRACE4(( " setcurrentpoint" ));
 
-          /* From the T1 specs, section 6.4:                        */
+#if 0
+          /* From the T1 specification, section 6.4:                */
           /*                                                        */
           /*   The setcurrentpoint command is used only in          */
           /*   conjunction with results from OtherSubrs procedures. */
 
-          /* known_othersubr_result_cnt != 0 is already handled above */
+          /* known_othersubr_result_cnt != 0 is already handled     */
+          /* above.                                                 */
+
+          /* Note, however, that both Ghostscript and Adobe         */
+          /* Distiller handle this situation by silently ignoring   */
+          /* the inappropriate `setcurrentpoint' instruction.  So   */
+          /* we do the same.                                        */
+
           if ( decoder->flex_state != 1 )
           {
             FT_ERROR(( "t1_decoder_parse_charstrings:"
@@ -1467,6 +1475,7 @@
           }
           else
             decoder->flex_state = 0;
+#endif
           break;
 
         case op_unknown15:
