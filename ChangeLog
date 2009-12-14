@@ -1,3 +1,11 @@
+2009-12-14  Bram Tassyns  <bramt@enfocus.be>
+
+	Fix parsing of /CIDFontVersion.
+	This fixes Savannah bug #28287.
+
+	* src/cid/cidtoken.h: `cid_version' in CID_FaceInfoRec (in
+	t1tables.h) is of type FT_Fixed.
+
 2009-12-14  Werner Lemberg  <wl@gnu.org>
 
 	Trace glyph index in CID module.
