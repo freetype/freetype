@@ -562,8 +562,8 @@ FT_BEGIN_HEADER
   /*    FT_Outline_ConicToFunc                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A function pointer type use to describe the signature of a `conic  */
-  /*    to' function during outline walking/decomposition.                 */
+  /*    A function pointer type used to describe the signature of a `conic */
+  /*    to' function during outline walking or decomposition.              */
   /*                                                                       */
   /*    A `conic to' is emitted to indicate a second-order Bézier arc in   */
   /*    the outline.                                                       */
@@ -595,7 +595,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A function pointer type used to describe the signature of a `cubic */
-  /*    to' function during outline walking/decomposition.                 */
+  /*    to' function during outline walking or decomposition.              */
   /*                                                                       */
   /*    A `cubic to' is emitted to indicate a third-order Bézier arc.      */
   /*                                                                       */
