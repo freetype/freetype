@@ -230,30 +230,48 @@ if test x$with_zlib != xno && test -n "$LIBZ"; then
 fi
 
 
-# check Apple's `-isysroot' option and duplicate it to LDFLAGS if required --
-# Apple TechNote 2137 recommends to include it in CFLAGS but not in LDFLAGS
+# Some options handling SDKs/archs in CFLAGS should be copied
+# to LDFLAGS. Apple TechNote 2137 recommends to include these
+# options in CFLAGS but not in LDFLAGS.
 
-AC_MSG_CHECKING([whether CFLAGS includes -isysroot option])
-case "$CFLAGS" in
-*sysroot* )
-  AC_MSG_RESULT([yes])
-  AC_MSG_CHECKING([whether LDFLAGS includes -isysroot option])
-  case "$LDFLAGS" in
-  *sysroot* )
-    AC_MSG_RESULT([yes])
+save_config_args=$*
+set dummy ${CFLAGS}
+i=1
+while test $i -lt $#
+do
+  c=$1
+
+  case "${c}" in
+  -isysroot|-arch) # options taking 1 argument
+    a=$2
+    AC_MSG_CHECKING([whether CFLAGS and LDFLAGS share ${c} ${a}])
+    if expr " ${LDFLAGS} " : ".* ${c} *${a}.*" > /dev/null
+    then
+      AC_MSG_RESULT([yes])
+    else
+      AC_MSG_RESULT([no, copy to LDFLAGS])
+      LDFLAGS="${LDFLAGS} ${c} ${a}"
+    fi
+    shift 1
     ;;
-  *)
-    AC_MSG_RESULT([no])
-    isysroot_dir=`echo ${CFLAGS} | tr '\t' ' ' | sed 's/^.*-isysroot *//;s/ .*//'`
-    AC_MSG_WARN(-isysroot ${isysroot_dir} is added to LDFLAGS)
-    LDFLAGS="-isysroot ${isysroot_dir} ${LDFLAGS}"
+  -m32|-m64) # options taking no argument
+    AC_MSG_RESULT([whether CFLAGS and LDFLAGS share ${c}])
+    if expr " ${LDFLAGS} " : ".* ${c} *${a}.*" > /dev/null
+    then
+      AC_MSG_RESULT([yes])
+    else
+      AC_MSG_RESULT([no, copy to LDFLAGS])
+      LDFLAGS="${LDFLAGS} ${c}"
+    fi
     ;;
+  # *)
+  #   AC_MSG_RESULT([${c} is not copied to LDFLAGS])
+  #   ;;
   esac
-  ;;
-*)
-  AC_MSG_RESULT([no])
-  ;;
-esac
+
+  shift 1
+done
+set ${save_config_args}
 
 
 # Whether to use Mac OS resource-based fonts.
