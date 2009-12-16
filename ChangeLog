@@ -1,3 +1,11 @@
+2009-12-16  Werner Lemberg  <wl@gnu.org>
+
+	Really fix compiler warnings.
+	Reported by Sean.
+
+	* src/truetype/ttgxvar.c (GX_PT_POINTS_ARE_WORDS,
+	GX_PT_POINT_RUN_COUNT_MASK): Convert enum values to macros.
+
 2009-12-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Improve configure.raw to copy some options from CFLAGS to LDFLAGS. 
