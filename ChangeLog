@@ -1,12 +1,12 @@
 2009-12-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Improve configure.raw to copy some options from CFLAGS to LDFLAGS.
-	The linker of Mac OS X 10.6 is sensitive the architechture.
-	When the architechtures are specified explicitly for C compiler,
-	the linker requires the architechture specifications too.
+	Improve configure.raw to copy some options from CFLAGS to LDFLAGS. 
+	The linker of Mac OS X 10.6 is sensitive to the architecture.  If
+	the architectures are specified explicitly for the C compiler, the
+	linker requires the architecture specifications too.
 
-	* builds/unix/configure.raw: Replace `-isysroot' option parser
-	by more generic argument parser.
+	* builds/unix/configure.raw: Replace `-isysroot' option parser by
+	more generic argument parser.
 
 2009-12-15  Werner Lemberg  <wl@gnu.org>
 
