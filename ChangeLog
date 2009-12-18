@@ -1,3 +1,15 @@
+2009-12-18  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #28320.
+
+	There exist corrupt, subsetted fonts (embedded in PDF files) which
+	contain a private dict that ends with an unterminated floating point
+	number (no operator following).  We now ignore this error (as
+	acrobat does).
+
+	* src/cff/cffparse.c (cff_parser_run): Don't emit a syntax error for
+	unterminated floating point numbers.
+
 2009-12-16  Werner Lemberg  <wl@gnu.org>
 
 	Really fix compiler warnings.
