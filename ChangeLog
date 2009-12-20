@@ -1,3 +1,12 @@
+2009-12-20  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warning.
+	Reported by Sean.
+
+	* src/base/ftdbgmem.c [!FT_DEBUG_MEMORY]: ANSI C doesn't like empty
+	source files; however, some compilers warn about an unused variable
+	declaration.  This is now replaced with a typedef.
+
 2009-12-18  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #28320.
