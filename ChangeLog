@@ -1,6 +1,7 @@
 2009-12-22  Marc Kleine-Budde  <mkl@pengutronix.de>
 
 	Make freetype-config aware of $SYSROOT.
+	This is Savannah patch #7040.
 
 	* builds/unix/freetype-config.in: Decorate with ${SYSROOT} where
 	appropriate.
