@@ -1,3 +1,10 @@
+2009-12-22  Marc Kleine-Budde  <mkl@pengutronix.de>
+
+	Make freetype-config aware of $SYSROOT.
+
+	* builds/unix/freetype-config.in: Decorate with ${SYSROOT} where
+	appropriate.
+
 2009-12-20  Werner Lemberg  <wl@gnu.org>
 
 	Fix compiler warning.
