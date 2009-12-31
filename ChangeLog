@@ -1,3 +1,16 @@
+2009-12-31  Lars Abrahamsson  <wonko@opera.com>
+
+	Make compilation with FT_CONFIG_OPTION_PIC work again.
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap) [FT_CONFIG_OPTION_PIC]:
+	Declare `library' for FT_BITMAP_GLYPH_CLASS_GET.
+
+	* src/base/ftinit.c (ft_destroy_default_module_classes,
+	ft_create_default_module_classes): Use proper casts (needed for C++
+	compilation).
+
+	* src/sfnt/ttcmap.c (tt_cmap13_class_rec): Use FT_DEFINE_TT_CMAP.
+
 2009-12-22  Marc Kleine-Budde  <mkl@pengutronix.de>
 
 	Make freetype-config aware of $SYSROOT.
