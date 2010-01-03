@@ -5,7 +5,8 @@
 /*    FreeType glyph image formats and default raster interface            */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -628,8 +629,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure to hold various function pointers used during outline  */
-  /*    decomposition in order to emit segments, conic, and cubic Béziers, */
-  /*    as well as `move to' and `close to' operations.                    */
+  /*    decomposition in order to emit segments, conic, and cubic Béziers. */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    move_to  :: The `move to' emitter.                                 */
@@ -656,7 +656,7 @@ FT_BEGIN_HEADER
   /*      y' = (x << shift) - delta                                        */
   /*    }                                                                  */
   /*                                                                       */
-  /*    Set the value of `shift' and `delta' to~0 to get the original      */
+  /*    Set the values of `shift' and `delta' to~0 to get the original     */
   /*    point coordinates.                                                 */
   /*                                                                       */
   typedef struct  FT_Outline_Funcs_
