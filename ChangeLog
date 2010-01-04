@@ -1,3 +1,10 @@
+2010-01-04  Ken Sharp  <ken.sharp@artifex.com>
+
+	Make incremental interface work with TrueType fonts.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Don't check
+	`glyf_offset' if incremental interface is used.
+
 2009-12-31  Lars Abrahamsson  <wonko@opera.com>
 
 	Make compilation with FT_CONFIG_OPTION_PIC work again.
