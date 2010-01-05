@@ -124,7 +124,7 @@
     if ( service )
     {
       FT_UInt   i = 0;
-      FT_ULong  tag_i = 0, offset_i = 0, length_i;
+      FT_ULong  tag_i = 0, offset_i = 0, length_i = 0;
 
 
       for ( i = 0; !error && tag_i != tag ; i++ )

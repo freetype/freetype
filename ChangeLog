@@ -7,7 +7,7 @@
 	(FT_GlyphSlot_Embolden): Remove dead code.
 
 	* src/base/ftpatent.c (_tt_check_patents_in_table): Initialize
-	`offset_i'.
+	`offset_i' and `length_i'.
 
 2010-01-05  Ralph Giles  <giles@ghostscript.com>
 
