@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -312,8 +313,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* Allow the use of FT_Incremental_Interface to load typefaces that      */
   /* contain no glyph data, but supply it via a callback function.         */
-  /* This allows FreeType to be used with the PostScript language, using   */
-  /* the GhostScript interpreter.                                          */
+  /* This is required by clients supporting document formats which         */
+  /* supply font data incrementally as the document is parsed, such        */
+  /* as the Ghostscript interpreter for the PostScript language.           */
   /*                                                                       */
 #define FT_CONFIG_OPTION_INCREMENTAL
 
