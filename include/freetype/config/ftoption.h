@@ -315,7 +315,7 @@ FT_BEGIN_HEADER
   /* This allows FreeType to be used with the PostScript language, using   */
   /* the GhostScript interpreter.                                          */
   /*                                                                       */
-/* #define FT_CONFIG_OPTION_INCREMENTAL */
+#define FT_CONFIG_OPTION_INCREMENTAL
 
 
   /*************************************************************************/

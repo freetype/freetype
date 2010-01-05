@@ -1,3 +1,16 @@
+2010-01-05  Ralph Giles  <giles@ghostscript.com>
+
+	Enable the incremental font interface by default.
+
+	Ghostscript requires the incremental font interface for handling
+	some Postscript documents.  It is moving to using FreeType as its
+	primary renderer; supporting this in the default build makes it
+	Ghostscript to be linked against the system FreeType when one is
+	available.
+
+	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_INCREMENTAL):
+	Uncomment.
+
 2010-01-05  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #28395.
