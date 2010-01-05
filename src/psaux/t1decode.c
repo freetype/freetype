@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    PostScript Type 1 decoding routines (body).                          */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009    */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -211,7 +212,8 @@
 
     /* `glyph_names' is set to 0 for CID fonts which do not */
     /* include an encoding.  How can we deal with these?    */
-    if ( decoder->glyph_names == 0 )
+    if ( decoder->glyph_names == 0                   &&
+         !face->root.internal->incremental_interface )
     {
       FT_ERROR(( "t1operator_seac:"
                  " glyph names table not available in this font\n" ));

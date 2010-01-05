@@ -1,3 +1,10 @@
+2010-01-05  Ken Sharp  <ken.sharp@artifex.com>
+
+	Make Type 1 `seac' operator work with incremental interface.
+
+	* src/psaux/t1decode.c (t1operator_seac): Don't check `glyph_names'
+	if incremental interface is used.
+
 2010-01-04  Ken Sharp  <ken.sharp@artifex.com>
 
 	Make incremental interface work with TrueType fonts.
@@ -7718,7 +7725,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2006, 2007, 2008, 2009 by
+Copyright 2006, 2007, 2008, 2009, 2010 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,
