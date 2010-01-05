@@ -1278,9 +1278,13 @@
 
     if ( loader->byte_len > 0 )
     {
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
       /* for the incremental interface, `glyf_offset' is always zero */
       if ( !loader->glyf_offset                        &&
            !face->root.internal->incremental_interface )
+#else
+      if ( !loader->glyf_offset )
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
       {
         FT_TRACE2(( "no `glyf' table but non-zero `loca' entry\n" ));
         error = TT_Err_Invalid_Table;
