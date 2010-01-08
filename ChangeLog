@@ -1,3 +1,22 @@
+2010-01-08  Ken Sharp  <ken.sharp@artifex.com>
+
+	Fix Savannah bug #28521.
+
+	Issue #28226 involved a work-around for a font which used the
+	`setcurrentpoint' operator in an invalid way; this operator is only
+	supposed to be used with the result of OtherSubrs, and the font used
+	it directly.  The supplied patch removed the block of code which
+	checked this usage entirely.
+
+	This turns out to be a Bad Thing.  If `setcurrentpoint' is being
+	used correctly it should reset the flex flag in the decoder.  If we
+	don't do this then the flag never gets reset and we omit any further
+	contours from the glyph (at least until we close the path or
+	similar).
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	<op_setcurrentpoint>: Handle `flex_state' correctly.
+
 2010-01-05  Werner Lemberg  <wl@gnu.org>
 
 	Apply reports from clang static analyzer.
@@ -133,6 +152,9 @@
 	the point after a `Subr' call, but these fonts use it to set the
 	initial point to (0,0).  Unnecessarily so, as they correctly use an
 	`hsbw' operation which implicitly sets the initial point.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	<op_setcurrentpoint>: Comment out code.
 
 2009-12-14  Bram Tassyns  <bramt@enfocus.be>
 

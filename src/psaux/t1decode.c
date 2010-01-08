@@ -1459,7 +1459,6 @@
         case op_setcurrentpoint:
           FT_TRACE4(( " setcurrentpoint" ));
 
-#if 0
           /* From the T1 specification, section 6.4:                */
           /*                                                        */
           /*   The setcurrentpoint command is used only in          */
@@ -1472,6 +1471,7 @@
           /* Distiller handle this situation by silently ignoring   */
           /* the inappropriate `setcurrentpoint' instruction.  So   */
           /* we do the same.                                        */
+#if 0
 
           if ( decoder->flex_state != 1 )
           {
@@ -1480,8 +1480,8 @@
             goto Syntax_Error;
           }
           else
-            decoder->flex_state = 0;
 #endif
+            decoder->flex_state = 0;
           break;
 
         case op_unknown15:
