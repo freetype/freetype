@@ -28,9 +28,9 @@
 FT_BEGIN_HEADER
 
 
-#define CFF_MAX_OPERANDS     48
-#define CFF_MAX_SUBRS_CALLS  32
-#define CFF_MAX_TRANS_ELEMENTS 32
+#define CFF_MAX_OPERANDS        48
+#define CFF_MAX_SUBRS_CALLS     32
+#define CFF_MAX_TRANS_ELEMENTS  32
 
 
   /*************************************************************************/
