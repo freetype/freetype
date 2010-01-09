@@ -20,7 +20,7 @@ any of your projects or products.
     GPL.  Note  that the  FTL is  incompatible with the  GPL due  to its
     advertisement clause.
 
-The contributed BDF and PCF drivers comes with a license similar to that
+The contributed BDF and PCF drivers come with a license similar  to that
 of the X Window System.  It is compatible to the above two licenses (see
 file src/bdf/README and src/pcf/README).
 
