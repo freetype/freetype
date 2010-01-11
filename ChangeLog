@@ -1,3 +1,11 @@
+2010-01-11  Kwang Yul Seo  <skyul@company100.net>
+
+	Provide inline assembly code for RVCT compiler.
+	This is Savannah patch #7059.
+
+	* include/freetype/config/ftconfig.h (FT_MULFIX_ASSEMBLER,
+	FT_MulFix_arm) [__CC_ARM || __ARM_CC]: Define.
+
 2010-01-08  Ken Sharp  <ken.sharp@artifex.com>
 
 	Fix Savannah bug #28521.
