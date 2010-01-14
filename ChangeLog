@@ -1,3 +1,10 @@
+2010-01-14  Werner Lemberg  <wl@gnu.org>
+
+	Fix compilation warning.
+
+	* src/base/ftbase.h: s/LOCAL_DEF/LOCAL/.
+	* src/base/ftobjc.s: Include ftbase.h conditionally.
+
 2010-01-11  Kwang Yul Seo  <skyul@company100.net>
 
 	Provide inline assembly code for RVCT compiler.
