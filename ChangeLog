@@ -1,5 +1,12 @@
 2010-01-14  Werner Lemberg  <wl@gnu.org>
 
+	Make FT_Set_Transform work if no renderer is available.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Apply `standard' transformation
+	if no renderer is compiled into the library.
+
+2010-01-14  Werner Lemberg  <wl@gnu.org>
+
 	Fix compilation warning.
 
 	* src/base/ftbase.h: s/LOCAL_DEF/LOCAL/.

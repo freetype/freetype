@@ -742,6 +742,19 @@
                                      renderer, slot,
                                      &internal->transform_matrix,
                                      &internal->transform_delta );
+        else if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
+        {
+          /* apply `standard' transformation if no renderer is available */
+          if ( &internal->transform_matrix )
+            FT_Outline_Transform( &slot->outline,
+                                  &internal->transform_matrix );
+
+          if ( &internal->transform_delta )
+            FT_Outline_Translate( &slot->outline,
+                                  internal->transform_delta.x,
+                                  internal->transform_delta.y );
+        }
+
         /* transform advance */
         FT_Vector_Transform( &slot->advance, &internal->transform_matrix );
       }
