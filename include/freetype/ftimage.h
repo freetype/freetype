@@ -99,6 +99,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    yMax :: The vertical maximum (top-most).                           */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    The bounding box is specified with the coordinates of the lower    */
+  /*    left and the upper right corner.  In PostScript, those values are  */
+  /*    often called (llx,lly) and (urx,ury), respectively.                */
+  /*                                                                       */
+  /*    If `yMin' is negative, this value gives the glyph's descender.     */
+  /*    Otherwise, the glyph doesn't descend below the baseline.           */
+  /*    Similarly, if `ymax' is positive, this value gives the glyph's     */
+  /*    ascender.                                                          */
+  /*                                                                       */
   typedef struct  FT_BBox_
   {
     FT_Pos  xMin, yMin;
