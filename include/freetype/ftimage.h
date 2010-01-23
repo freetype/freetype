@@ -109,6 +109,10 @@ FT_BEGIN_HEADER
   /*    Similarly, if `ymax' is positive, this value gives the glyph's     */
   /*    ascender.                                                          */
   /*                                                                       */
+  /*    `xMin' gives the horizontal distance from the glyph's origin to    */
+  /*    the left edge of the glyph's bounding box.  If `xMin' is negative, */
+  /*    the glyph extends to the left of the origin.                       */
+  /*                                                                       */
   typedef struct  FT_BBox_
   {
     FT_Pos  xMin, yMin;
