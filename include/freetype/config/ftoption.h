@@ -315,7 +315,7 @@ FT_BEGIN_HEADER
   /* contain no glyph data, but supply it via a callback function.         */
   /* This is required by clients supporting document formats which         */
   /* supply font data incrementally as the document is parsed, such        */
-  /* as the Ghostscript interpreter for the PostScript language.	   */
+  /* as the Ghostscript interpreter for the PostScript language.           */
   /*                                                                       */
 #define FT_CONFIG_OPTION_INCREMENTAL
 

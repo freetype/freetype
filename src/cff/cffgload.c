@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    OpenType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -694,7 +695,7 @@
       data.length  = length;
 
       face->root.internal->incremental_interface->funcs->free_glyph_data(
-        face->root.internal->incremental_interface->object,&data );
+        face->root.internal->incremental_interface->object, &data );
     }
     else
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
@@ -2771,15 +2772,29 @@
 
 
       metrics.bearing_x = decoder.builder.left_bearing.x;
-      metrics.bearing_y = decoder.builder.left_bearing.y;
+      metrics.bearing_y = 0;
       metrics.advance   = decoder.builder.advance.x;
+
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                 face->root.internal->incremental_interface->object,
                 glyph_index, FALSE, &metrics );
+
       decoder.builder.left_bearing.x = metrics.bearing_x;
-      decoder.builder.left_bearing.y = metrics.bearing_y;
       decoder.builder.advance.x      = metrics.advance;
-      decoder.builder.advance.y      = 0;
+
+      if ( !error )
+      {
+        metrics.bearing_x = 0;
+        metrics.bearing_y = decoder.builder.left_bearing.y;
+        metrics.advance   = decoder.builder.advance.y;
+
+        error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
+                  face->root.internal->incremental_interface->object,
+                  glyph_index, TRUE, &metrics );
+
+        decoder.builder.left_bearing.y = metrics.bearing_y;
+        decoder.builder.advance.y      = metrics.advance;
+      }
     }
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
