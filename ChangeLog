@@ -1,5 +1,12 @@
 2010-01-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Fix memory leaks in previous patch.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Don't overwrite the strings
+	allocated for face->root.family_name and style_name.
+
+2010-01-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	New parameters for FT_Open_Face() to ignore preferred family names.
 
 	Preferred family names should be used for legacy systems that

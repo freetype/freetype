@@ -737,29 +737,33 @@
     /* Foundation (WPF).  This flag has been introduced in version   */
     /* 1.5 of the OpenType specification (May 2008).                 */
 
+    face->root.family_name = NULL;
+    face->root.style_name  = NULL;
     if ( face->os2.version != 0xFFFFU && face->os2.fsSelection & 256 )
     {
-      GET_NAME( FONT_FAMILY, &face->root.family_name );
-      if ( !face->root.family_name || !ignore_preferred_family )
+      if ( !ignore_preferred_family )
         GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
+      if ( !face->root.family_name )
+        GET_NAME( FONT_FAMILY, &face->root.family_name );
 
-      GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
-      if ( !face->root.style_name || !ignore_preferred_subfamily )
+      if ( !ignore_preferred_subfamily )
         GET_NAME( PREFERRED_SUBFAMILY, &face->root.style_name );
+      if ( !face->root.style_name )
+        GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
     }
     else
     {
       GET_NAME( WWS_FAMILY, &face->root.family_name );
+      if ( !face->root.family_name && !ignore_preferred_family )
+        GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
         GET_NAME( FONT_FAMILY, &face->root.family_name );
-      if ( !face->root.family_name || !ignore_preferred_family )
-        GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
 
       GET_NAME( WWS_SUBFAMILY, &face->root.style_name );
+      if ( !face->root.style_name && !ignore_preferred_subfamily )
+        GET_NAME( PREFERRED_SUBFAMILY, &face->root.style_name );
       if ( !face->root.style_name )
         GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
-      if ( !face->root.style_name || !ignore_preferred_subfamily )
-        GET_NAME( PREFERRED_SUBFAMILY, &face->root.style_name );
     }
 
     /* now set up root fields */
