@@ -160,6 +160,22 @@ FT_BEGIN_HEADER
                     FT_SfntName  *aname );
 
 
+  /***************************************************************************
+   *
+   * @constant:
+   *   FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY
+   *   FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY
+   *
+   * @description:
+   *   A constant used as the tag of @FT_Parameter structures to make
+   *   FT_Open_Face() ignore preferred family & preferred subfamily names
+   *   in `name' table since OpenType version 1.4. For back compatibility
+   *   with legacy systems which has 4-face-per-family restriction.
+   *
+   */
+#define FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY     FT_MAKE_TAG( 'i', 'g', 'p', 'f' )
+#define FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY  FT_MAKE_TAG( 'i', 'g', 'p', 's' )
+
   /* */
 
 

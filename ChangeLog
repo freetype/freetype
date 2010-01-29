@@ -1,3 +1,18 @@
+2010-01-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	New parameters for FT_Open_Face() to ignore preferred family names.
+
+	Preferred family names should be used for legacy systems that
+	can hold only a few faces (<= 4) for a family name. Suggested by
+	Andreas Heinrich.
+	http://lists.gnu.org/archive/html/freetype/2010-01/msg00001.html
+
+	* include/freetype/ftsnames.h (FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY,
+	FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY): Define.
+
+	* src/sfnt/sfobjs.h (sfnt_load_face): Check the arguments and
+	ignore preferred family and subfamily names if requested.
+
 2010-01-27  Ken Sharp  <ken.sharp@artifex.com>
 
 	Fix Savannah bug #28678.
