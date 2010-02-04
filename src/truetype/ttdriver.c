@@ -402,15 +402,16 @@
   tt_get_interface( FT_Module    driver,    /* TT_Driver */
                     const char*  tt_interface )
   {
-    FT_Library           library = driver->library;
     FT_Module_Interface  result;
     FT_Module            sfntd;
     SFNT_Service         sfnt;
-    FT_UNUSED(library);
 
     result = ft_service_list_lookup( FT_TT_SERVICES_GET, tt_interface );
     if ( result != NULL )
       return result;
+
+    if ( !driver )
+      return NULL;
 
     /* only return the default interface from the SFNT module */
     sfntd = FT_Get_Module( driver->library, "sfnt" );

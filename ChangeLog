@@ -1,3 +1,13 @@
+2010-02-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Prevent NULL pointer dereference passed to FT_Module_Requester.
+
+	* src/sfnt/sfdriver.c (sfnt_get_interface): Don't use `module'.
+	* src/psnames/psmodule.c (psnames_get_interface): Ditto.
+
+	* src/cff/cffdrivr.c (cff_get_interface): Check NULL `driver'.
+	* src/truetype/ttdriver.c (tt_get_interface): Ditto.
+
 2010-01-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix memory leaks in previous patch.
