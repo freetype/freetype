@@ -1,3 +1,7 @@
+2010-02-08  Werner Lemberg  <wl@gnu.org>
+
+	* devel/ftoption.h [FT_CONFIG_OPTION_PIC]: Define.
+
 2010-02-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Prevent NULL pointer dereference passed to FT_Module_Requester.
