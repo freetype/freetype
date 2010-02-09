@@ -268,6 +268,9 @@ FT_BEGIN_HEADER
   /*                    flow.  In all cases, the pitch is an offset to add */
   /*                    to a bitmap pointer in order to go down one row.   */
   /*                                                                       */
+  /*                    For the B/W rasterizer, `pitch' is always an even  */
+  /*                    number.                                            */
+  /*                                                                       */
   /*    buffer       :: A typeless pointer to the bitmap buffer.  This     */
   /*                    value should be aligned on 32-bit boundaries in    */
   /*                    most cases.                                        */
