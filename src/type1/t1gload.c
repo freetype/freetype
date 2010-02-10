@@ -105,25 +105,14 @@
       metrics.bearing_x = FIXED_TO_INT( decoder->builder.left_bearing.x );
       metrics.bearing_y = 0;
       metrics.advance   = FIXED_TO_INT( decoder->builder.advance.x );
+      metrics.advance_v = FIXED_TO_INT( decoder->builder.advance.y );
 
       error = inc->funcs->get_glyph_metrics( inc->object,
                                              glyph_index, FALSE, &metrics );
 
       decoder->builder.left_bearing.x = INT_TO_FIXED( metrics.bearing_x );
       decoder->builder.advance.x      = INT_TO_FIXED( metrics.advance );
-
-      if ( !error )
-      {
-        metrics.bearing_x = 0;
-        metrics.bearing_y = FIXED_TO_INT( decoder->builder.left_bearing.y );
-        metrics.advance   = FIXED_TO_INT( decoder->builder.advance.y );
-
-        error = inc->funcs->get_glyph_metrics( inc->object,
-                                               glyph_index, TRUE, &metrics );
-
-        decoder->builder.left_bearing.y = INT_TO_FIXED( metrics.bearing_y );
-        decoder->builder.advance.y      = INT_TO_FIXED( metrics.advance );
-      }
+      decoder->builder.advance.y      = INT_TO_FIXED( metrics.advance_v );
     }
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */

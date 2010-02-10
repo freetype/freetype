@@ -1,3 +1,25 @@
+2010-01-27  Ken Sharp  <ken.sharp@artifex.com>
+
+	Really fix Savannah bug #28678 (part 1).
+
+	After long discussion, we now consider the character width vector
+	(wx,wy) returned by the `sbw' Type 1 operator as being part of *one*
+	direction only.  For example, if you are using the horizontal
+	writing direction, you get the horizontal and vertical components of
+	the advance width for this direction.  Note that OpenType and CFF fonts
+	don't have such a vertical component; instead, the GPOS table can be
+	used to generate two-dimensional advance widths (but this isn't
+	handled by FreeType).
+
+	* include/freetype/ftincrem.h (FT_Incremental_MetricsRec): Add
+	`advance_v' field to hold the vertical component of the advance
+	value.
+
+	* src/truetype/ttgload.c (tt_get_metrics), src/cff/cffgload.c
+	(cff_slot_load), src/type1/t1gload.c
+	(T1_Parse_Glyph_And_Get_Char_String), src/cid/cidgload.c
+	(cid_load_glyph): Use it.
+
 2010-02-08  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h [FT_CONFIG_OPTION_PIC]: Define.

@@ -163,9 +163,9 @@
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
-    /* If this is an incrementally loaded font see if there are */
-    /* overriding metrics for this glyph.                       */
-    if ( face->root.internal->incremental_interface &&
+    /* If this is an incrementally loaded font check whether there are */
+    /* overriding metrics for this glyph.                              */
+    if ( face->root.internal->incremental_interface                           &&
          face->root.internal->incremental_interface->funcs->get_glyph_metrics )
     {
       FT_Incremental_MetricsRec  metrics;
@@ -175,6 +175,7 @@
       metrics.bearing_x = left_bearing;
       metrics.bearing_y = 0;
       metrics.advance   = advance_width;
+      metrics.advance_v = 0;
 
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                 face->root.internal->incremental_interface->object,

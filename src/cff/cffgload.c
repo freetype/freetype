@@ -2764,8 +2764,8 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
     /* Incremental fonts can optionally override the metrics. */
-    if ( !error                                                              &&
-         face->root.internal->incremental_interface                          &&
+    if ( !error                                                               &&
+         face->root.internal->incremental_interface                           &&
          face->root.internal->incremental_interface->funcs->get_glyph_metrics )
     {
       FT_Incremental_MetricsRec  metrics;
@@ -2774,6 +2774,7 @@
       metrics.bearing_x = decoder.builder.left_bearing.x;
       metrics.bearing_y = 0;
       metrics.advance   = decoder.builder.advance.x;
+      metrics.advance_v = decoder.builder.advance.y;
 
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                 face->root.internal->incremental_interface->object,
@@ -2781,20 +2782,7 @@
 
       decoder.builder.left_bearing.x = metrics.bearing_x;
       decoder.builder.advance.x      = metrics.advance;
-
-      if ( !error )
-      {
-        metrics.bearing_x = 0;
-        metrics.bearing_y = decoder.builder.left_bearing.y;
-        metrics.advance   = decoder.builder.advance.y;
-
-        error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
-                  face->root.internal->incremental_interface->object,
-                  glyph_index, TRUE, &metrics );
-
-        decoder.builder.left_bearing.y = metrics.bearing_y;
-        decoder.builder.advance.y      = metrics.advance;
-      }
+      decoder.builder.advance.y      = metrics.advance_v;
     }
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
