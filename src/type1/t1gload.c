@@ -401,17 +401,20 @@
           FIXED_TO_INT( decoder.builder.advance.x );
         glyph->root.internal->glyph_transformed = 0;
 
-#if 0
-        /* make up vertical ones */
-        metrics->vertAdvance = ( face->type1.font_bbox.yMax -
-                                 face->type1.font_bbox.yMin ) >> 16;
-        glyph->root.linearVertAdvance = metrics->vertAdvance;
-#else
-        metrics->vertAdvance =
-          FIXED_TO_INT( decoder.builder.advance.y );
-        glyph->root.linearVertAdvance =
-          FIXED_TO_INT( decoder.builder.advance.y );
-#endif
+        if ( load_flags & FT_LOAD_VERTICAL_LAYOUT ) 
+        {
+          /* make up vertical ones */
+          metrics->vertAdvance = ( face->type1.font_bbox.yMax -
+                                   face->type1.font_bbox.yMin ) >> 16;
+          glyph->root.linearVertAdvance = metrics->vertAdvance;
+        }
+        else
+        {
+          metrics->vertAdvance =
+            FIXED_TO_INT( decoder.builder.advance.y );
+          glyph->root.linearVertAdvance =
+            FIXED_TO_INT( decoder.builder.advance.y );
+        }
 
         glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;
 
@@ -471,9 +474,12 @@
         metrics->horiBearingX = cbox.xMin;
         metrics->horiBearingY = cbox.yMax;
 
-        /* make up vertical ones */
-        ft_synthesize_vertical_metrics( metrics,
-                                        metrics->vertAdvance );
+        if ( load_flags & FT_LOAD_VERTICAL_LAYOUT ) 
+        {
+          /* make up vertical ones */
+          ft_synthesize_vertical_metrics( metrics,
+                                          metrics->vertAdvance );
+        }
       }
 
       /* Set control data to the glyph charstrings.  Note that this is */

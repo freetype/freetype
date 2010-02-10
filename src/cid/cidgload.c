@@ -427,9 +427,12 @@
       metrics->horiBearingX = cbox.xMin;
       metrics->horiBearingY = cbox.yMax;
 
-      /* make up vertical ones */
-      ft_synthesize_vertical_metrics( metrics,
-                                      metrics->vertAdvance );
+      if ( load_flags & FT_LOAD_VERTICAL_LAYOUT ) 
+      {
+        /* make up vertical ones */
+        ft_synthesize_vertical_metrics( metrics,
+                                        metrics->vertAdvance );
+      }
     }
 
   Exit:
