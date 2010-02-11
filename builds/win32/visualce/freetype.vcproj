@@ -8705,6 +8705,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\base\ftlcdfil.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftgxval.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftotval.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftpatent.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\pcf\pcf.c"
 					>
 					<FileConfiguration
