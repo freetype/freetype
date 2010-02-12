@@ -1,5 +1,13 @@
 2010-02-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Improve autotool version checking to work with beta releases.
+
+	* autogen.sh (check_tool_version): Improve the extraction of version
+	number from "tool --version" output. Some beta releases of autotools
+	have extra strings before version number.
+
+2010-02-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Fix overallocating bug in FT_Outline_New_Internal().
 
 	* src/base/ftoutln.c (FT_Outline_New_Internal): The length of
