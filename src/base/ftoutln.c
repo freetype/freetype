@@ -304,9 +304,9 @@
 
     *anoutline = null_outline;
 
-    if ( FT_NEW_ARRAY( anoutline->points,   numPoints * 2L ) ||
-         FT_NEW_ARRAY( anoutline->tags,     numPoints      ) ||
-         FT_NEW_ARRAY( anoutline->contours, numContours    ) )
+    if ( FT_NEW_ARRAY( anoutline->points,   numPoints   ) ||
+         FT_NEW_ARRAY( anoutline->tags,     numPoints   ) ||
+         FT_NEW_ARRAY( anoutline->contours, numContours ) )
       goto Fail;
 
     anoutline->n_points    = (FT_UShort)numPoints;
