@@ -1,3 +1,23 @@
+CHANGES BETWEEN 2.3.11 and 2.3.12
+
+  I. IMPORTANT CHANGES
+
+    - For  `FT_Open_Face',  new  parameters  are  available  to ignore
+      preferred family names: FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY and
+      FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY.
+
+  II. MISCELLANEOUS
+
+    - Support  for  incremental  font  loading  (controlled  with  the
+      FT_CONFIG_OPTION_INCREMENTAL macro) is now active by default.
+
+    - Better support for vertical metrics.
+
+    - Various minor bug fixes.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.3.10 and 2.3.11
 
   I. IMPORTANT BUG FIXES
