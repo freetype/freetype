@@ -1,3 +1,16 @@
+2010-02-18  Chris Liddell  <chris.liddell@artifex.com>
+
+	Fix Savannah bug #28905.
+
+	Initialize phantom points before calling the incremental interface
+	to update glyph metrics.
+
+	* src/truetype/ttgload.c (tt_get_metrics_incr_overrides)
+	[FT_CONFIG_OPTION_INCREMENTAL]: New function, split off from...
+	(tt_get_metrics): This.
+	Updated.
+	(load_truetype_glyph): Use tt_get_metrics_incr_overrides.
+
 2010-02-13  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.3.12 released.

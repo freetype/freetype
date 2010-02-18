@@ -161,7 +161,30 @@
                      &top_bearing,
                      &advance_height );
 
+    loader->left_bearing = left_bearing;
+    loader->advance      = advance_width;
+    loader->top_bearing  = top_bearing;
+    loader->vadvance     = advance_height;
+
+    if ( !loader->linear_def )
+    {
+      loader->linear_def = 1;
+      loader->linear     = advance_width;
+    }
+  }
+
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
+
+  static void
+  tt_get_metrics_incr_overrides( TT_Loader  loader,
+                                 FT_UInt    glyph_index )
+  {
+    TT_Face  face = (TT_Face)loader->face;
+
+    FT_Short   left_bearing = 0, top_bearing = 0;
+    FT_UShort  advance_width = 0, advance_height = 0;
+
 
     /* If this is an incrementally loaded font check whether there are */
     /* overriding metrics for this glyph.                              */
@@ -172,9 +195,9 @@
       FT_Error                   error;
 
 
-      metrics.bearing_x = left_bearing;
+      metrics.bearing_x = loader->left_bearing;
       metrics.bearing_y = 0;
-      metrics.advance   = advance_width;
+      metrics.advance   = loader->advance;
       metrics.advance_v = 0;
 
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
@@ -190,8 +213,8 @@
 
       /* GWW: Do I do the same for vertical metrics? */
       metrics.bearing_x = 0;
-      metrics.bearing_y = top_bearing;
-      metrics.advance   = advance_height;
+      metrics.bearing_y = loader->top_bearing;
+      metrics.advance   = loader->vadvance;
 
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                 face->root.internal->incremental_interface->object,
@@ -204,23 +227,23 @@
 
 #endif /* 0 */
 
+      loader->left_bearing = left_bearing;
+      loader->advance      = advance_width;
+      loader->top_bearing  = top_bearing;
+      loader->vadvance     = advance_height;
+
+      if ( !loader->linear_def )
+      {
+        loader->linear_def = 1;
+        loader->linear     = advance_width;
+      }
     }
 
   Exit:
+    return;
+  }
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
-
-    loader->left_bearing = left_bearing;
-    loader->advance      = advance_width;
-    loader->top_bearing  = top_bearing;
-    loader->vadvance     = advance_height;
-
-    if ( !loader->linear_def )
-    {
-      loader->linear_def = 1;
-      loader->linear     = advance_width;
-    }
-  }
 
 
   /*************************************************************************/
@@ -1316,7 +1339,13 @@
       if ( header_only )
         goto Exit;
 
+      /* must initialize points before (possibly) overriding */
+      /* glyph metrics from the incremental interface        */
       TT_LOADER_SET_PP( loader );
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+      tt_get_metrics_incr_overrides( loader, glyph_index );
+#endif
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
@@ -1353,7 +1382,13 @@
       goto Exit;
     }
 
+    /* must initialize points before (possibly) overriding */
+    /* glyph metrics from the incremental interface        */
     TT_LOADER_SET_PP( loader );
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    tt_get_metrics_incr_overrides( loader, glyph_index );
+#endif
 
     /***********************************************************************/
     /***********************************************************************/
