@@ -1,3 +1,10 @@
+2010-02-26  Behdad Esfahbod  <behdad@behdad.org>
+
+	Improve handling of invalid glyph indices in char->index functions.
+
+	* src/base/ftobjs.c (FT_Get_First_Char, FT_Get_Next_Char): Use a
+	loop.
+
 2010-02-18  Chris Liddell  <chris.liddell@artifex.com>
 
 	Fix Savannah bug #28905.
