@@ -1,3 +1,11 @@
+2010-02-27  Werner Lemberg  <wl@gnu.org>
+
+	Simplify code.
+	Suggested by Behdad.
+
+	* src/base/ftobjs.c (FT_Get_First_Char): Don't use a loop since we
+	call FT_Get_Next_Char anyway if necessary.
+
 2010-02-26  Behdad Esfahbod  <behdad@behdad.org>
 
 	Improve handling of invalid glyph indices in char->index functions.

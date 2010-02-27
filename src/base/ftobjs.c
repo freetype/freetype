@@ -3113,9 +3113,7 @@
     {
       gindex = FT_Get_Char_Index( face, 0 );
       if ( gindex == 0 || gindex >= (FT_UInt)face->num_glyphs )
-        do {
-          result = FT_Get_Next_Char( face, 0, &gindex );
-        } while ( gindex >= (FT_UInt)face->num_glyphs );
+        result = FT_Get_Next_Char( face, 0, &gindex );
     }
 
     if ( agindex )
