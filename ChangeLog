@@ -1,3 +1,55 @@
+2010-03-02  John Tytgat  <John.Tytgat@esko.com>
+
+	Improve CFF string (especially glyphname) lookup performance.
+
+	We do this by avoiding memory allocation and file I/O.  This is
+	Savannah patch #7104.
+
+	* src/cff/cfftypes.h: Include PS cmaps service and
+	FT_INTERNAL_POSTSCRIPT_HINTS_H.
+	(CFF_SubFontRec): Remove `num_local_subrs'.
+	(CFF_FontRec): Add `num_strings', `strings', and `string_pool'
+	fields.
+	Remove `string_index' and `num_global_subrs' fields.
+	Use real types instead of `void' for `pshinter' and `psnames' fields.
+
+	* src/cff/cffload.c: Don't include PS cmaps service.
+	(cff_index_get_pointers): Add `pool' parameter which allows to
+	insert an extra NUL character for each String INDEX entry.
+	(cff_index_get_name): Make it a local function.
+	(cff_index_get_string): New function.
+	(cff_subfont_load): Updated.
+	(cff_font_load): Initialize `num_strings', `strings', and
+	`string_pool' fields in the `CFF_FontRec' structure.
+	(cff_index_get_sid_string): Use `cff_index_get_string' instead of
+	`cff_index_get_name'.
+	(cff_font_done): Updated.
+
+	* src/cff/cffload.h: Don't include PS cmaps service.
+	(cff_index_get_string): Added.
+	(cff_index_get_sid_string): Updated.
+
+	* src/cff/cffobjs.c: Don't include PS cmaps service and
+	FT_INTERNAL_POSTSCRIPT_HINTS_H.
+	(cff_size_get_globals_funcs, cff_slot_init): Updated.
+	(cff_face_init): Follow `cff_index_get_name',
+	`cff_index_get_string', and `cff_index_get_sid_string' changes.
+
+	* src/cff/cffcmap.c (cff_sid_free_glyph_name): Removed.
+	(cff_sid_to_glyph_name): Use `cff_index_get_cid_string'.
+	(cff_cmap_unicode_init): Updated.
+
+	* src/cff/cffdrivr.c: Don't include PS cmap service.
+	(cff_get_glyph_name): Avoid unnecessary lookup for POSTSCRIPT_CMAPS
+	service.
+	(cff_get_glyph_name, cff_ps_get_font_info, cff_get_ros): Follow API
+	`cff_index_get_sid_string' change.
+	(cff_get_name_index): Use `cff_index_get_string' instead of
+	`cff_index_get_name'.
+
+	* src/cff/cffgload.c: Don't include FT_INTERNAL_POSTSCRIPT_HINTS_H.
+	(cff_decoder_init, cff_decoder_prepare): Updated.
+
 2010-02-27  Werner Lemberg  <wl@gnu.org>
 
 	Simplify code.

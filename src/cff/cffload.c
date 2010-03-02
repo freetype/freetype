@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    OpenType and CFF data/program tables loader (body).                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -20,7 +21,6 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
-#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_TYPE1_TABLES_H
 
@@ -377,18 +377,21 @@
   }
 
 
-  /* allocate a table containing pointers to an index's elements */
+  /* Allocate a table containing pointers to an index's elements. */
+  /* The `pool' argument makes this function convert the index    */
+  /* entries to C-style strings (this is, NULL-terminated).       */
   static FT_Error
   cff_index_get_pointers( CFF_Index   idx,
-                          FT_Byte***  table )
+                          FT_Byte***  table,
+                          FT_Byte**   pool )
   {
     FT_Error   error  = CFF_Err_Ok;
     FT_Memory  memory = idx->stream->memory;
-    FT_ULong   n, offset, old_offset;
     FT_Byte**  t;
+    FT_Byte*   new_bytes;
 
 
-    *table = 0;
+    *table = NULL;
 
     if ( idx->offsets == NULL )
     {
@@ -397,28 +400,56 @@
         goto Exit;
     }
 
-    if ( idx->count > 0 && !FT_NEW_ARRAY( t, idx->count + 1 ) )
+    if ( idx->count > 0                                        &&
+         !FT_NEW_ARRAY( t, idx->count + 1 )                    &&
+         ( !pool || !FT_ALLOC( new_bytes,
+                               idx->data_size + idx->count ) ) )
     {
-      old_offset = 1;
-      for ( n = 0; n <= idx->count; n++ )
+      FT_ULong  n, cur_offset;
+      FT_ULong  extra = 0;
+      FT_Byte*  org_bytes = idx->bytes;
+
+
+      /* at this point, `idx->offsets' can't be NULL */
+      cur_offset = idx->offsets[0] - 1;
+
+      if ( !pool )
+        t[0] = org_bytes + cur_offset;
+      else
+        t[0] = new_bytes + cur_offset;
+
+      for ( n = 1; n <= idx->count; n++ )
       {
-        /* at this point, `idx->offsets' can't be NULL */
-        offset = idx->offsets[n];
-        if ( !offset )
-          offset = old_offset;
+        FT_ULong  next_offset = idx->offsets[n] - 1;
 
-        /* two sanity checks for invalid offset tables */
-        else if ( offset < old_offset )
-          offset = old_offset;
 
-        else if ( offset - 1 >= idx->data_size && n < idx->count )
-          offset = old_offset;
+        /* empty slot + two sanity checks for invalid offset tables */
+        if ( next_offset == 0                                    ||
+             next_offset < cur_offset                            ||
+             ( next_offset >= idx->data_size && n < idx->count ) )
+          next_offset = cur_offset;
 
-        t[n] = idx->bytes + offset - 1;
+        if ( !pool )
+          t[n] = org_bytes + next_offset;
+        else
+        {
+          t[n] = new_bytes + next_offset + extra;
 
-        old_offset = offset;
+          if ( next_offset != cur_offset )
+          {
+            FT_MEM_COPY( t[n - 1], org_bytes + cur_offset, t[n] - t[n - 1] );
+            t[n][0] = '\0';
+            t[n]   += 1;
+            extra++;
+          }
+        }
+
+        cur_offset = next_offset;
       }
       *table = t;
+
+      if ( pool )
+        *pool = new_bytes;
     }
 
   Exit:
@@ -526,10 +557,12 @@
   }
 
 
-  FT_LOCAL_DEF( FT_String* )
-  cff_index_get_name( CFF_Index  idx,
-                      FT_UInt    element )
+  /* get an entry from Name INDEX */
+  static FT_String*
+  cff_index_get_name( CFF_Font  font,
+                      FT_UInt   element )
   {
+    CFF_Index   idx = &font->name_index;
     FT_Memory   memory = idx->stream->memory;
     FT_Byte*    bytes;
     FT_ULong    byte_len;
@@ -553,42 +586,35 @@
   }
 
 
+  /* get an entry from String INDEX */
   FT_LOCAL_DEF( FT_String* )
-  cff_index_get_sid_string( CFF_Index           idx,
-                            FT_UInt             sid,
-                            FT_Service_PsCMaps  psnames )
+  cff_index_get_string( CFF_Font  font,
+                        FT_UInt   element )
+  {
+    return ( element < font->num_strings )
+             ? (FT_String*)font->strings[element]
+             : NULL;
+  }
+
+
+  FT_LOCAL_DEF( FT_String* )
+  cff_index_get_sid_string( CFF_Font  font,
+                            FT_UInt   sid )
   {
     /* value 0xFFFFU indicates a missing dictionary entry */
     if ( sid == 0xFFFFU )
-      return 0;
+      return NULL;
 
     /* if it is not a standard string, return it */
     if ( sid > 390 )
-      return cff_index_get_name( idx, sid - 391 );
+      return cff_index_get_string( font, sid - 391 );
 
     /* CID-keyed CFF fonts don't have glyph names */
-    if ( !psnames )
-      return 0;
+    if ( !font->psnames )
+      return NULL;
 
-    /* that's a standard string, fetch a copy from the PSName module */
-    {
-      FT_String*   name       = 0;
-      const char*  adobe_name = psnames->adobe_std_strings( sid );
-
-
-      if ( adobe_name )
-      {
-        FT_Memory  memory = idx->stream->memory;
-        FT_Error   error;
-
-
-        (void)FT_STRDUP( name, adobe_name );
-
-        FT_UNUSED( error );
-      }
-
-      return name;
-    }
+    /* this is a standard string */
+    return (FT_String *)font->psnames->adobe_std_strings( sid );
   }
 
 
@@ -1361,9 +1387,8 @@
       if ( error )
         goto Exit;
 
-      font->num_local_subrs = font->local_subrs_index.count;
       error = cff_index_get_pointers( &font->local_subrs_index,
-                                      &font->local_subrs );
+                                      &font->local_subrs, NULL );
       if ( error )
         goto Exit;
     }
@@ -1409,9 +1434,11 @@
     FT_Memory        memory = stream->memory;
     FT_ULong         base_offset;
     CFF_FontRecDict  dict;
+    CFF_IndexRec     string_index;
 
 
     FT_ZERO( font );
+    FT_ZERO( &string_index );
 
     font->stream = stream;
     font->memory = memory;
@@ -1438,14 +1465,19 @@
 
     /* read the name, top dict, string and global subrs index */
     if ( FT_SET_ERROR( cff_index_init( &font->name_index,
-                                       stream, 0 ) )              ||
+                                       stream, 0 ) )                  ||
          FT_SET_ERROR( cff_index_init( &font->font_dict_index,
-                                       stream, 0 ) )              ||
-         FT_SET_ERROR( cff_index_init( &font->string_index,
-                                       stream, 0 ) )              ||
+                                       stream, 0 ) )                  ||
+         FT_SET_ERROR( cff_index_init( &string_index,
+                                       stream, 1 ) )                  ||
          FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
-                                       stream, 1 ) )              )
+                                       stream, 1 ) )                  ||
+         FT_SET_ERROR( cff_index_get_pointers( &string_index,
+                                               &font->strings,
+                                               &font->string_pool ) ) )
       goto Exit;
+
+    font->num_strings = string_index.count;
 
     /* well, we don't really forget the `disabled' fonts... */
     font->num_faces = font->name_index.count;
@@ -1542,12 +1574,10 @@
       goto Exit;
     }
 
-    /* explicit the global subrs */
-    font->num_global_subrs = font->global_subrs_index.count;
-    font->num_glyphs       = font->charstrings_index.count;
+    font->num_glyphs = font->charstrings_index.count;
 
     error = cff_index_get_pointers( &font->global_subrs_index,
-                                    &font->global_subrs ) ;
+                                    &font->global_subrs, NULL );
 
     if ( error )
       goto Exit;
@@ -1579,9 +1609,11 @@
 
     /* get the font name (/CIDFontName for CID-keyed fonts, */
     /* /FontName otherwise)                                 */
-    font->font_name = cff_index_get_name( &font->name_index, face_index );
+    font->font_name = cff_index_get_name( font, face_index );
 
   Exit:
+    cff_index_done( &string_index );
+
     return error;
   }
 
@@ -1594,7 +1626,6 @@
 
 
     cff_index_done( &font->global_subrs_index );
-    cff_index_done( &font->string_index );
     cff_index_done( &font->font_dict_index );
     cff_index_done( &font->name_index );
     cff_index_done( &font->charstrings_index );
@@ -1617,21 +1648,12 @@
 
     CFF_Done_FD_Select( &font->fd_select, font->stream );
 
-    if (font->font_info != NULL)
-    {
-      FT_FREE( font->font_info->version );
-      FT_FREE( font->font_info->notice );
-      FT_FREE( font->font_info->full_name );
-      FT_FREE( font->font_info->family_name );
-      FT_FREE( font->font_info->weight );
-      FT_FREE( font->font_info );
-    }
+    FT_FREE( font->font_info );
 
-    FT_FREE( font->registry );
-    FT_FREE( font->ordering );
-
-    FT_FREE( font->global_subrs );
     FT_FREE( font->font_name );
+    FT_FREE( font->global_subrs );
+    FT_FREE( font->strings );
+    FT_FREE( font->string_pool );
   }
 
 

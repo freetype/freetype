@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -24,8 +25,6 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
-#include FT_SERVICE_POSTSCRIPT_CMAPS_H
-#include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include "cffobjs.h"
 #include "cffload.h"
 #include "cffcmap.h"
@@ -58,7 +57,7 @@
   {
     CFF_Face          face     = (CFF_Face)size->root.face;
     CFF_Font          font     = (CFF_Font)face->extra.data;
-    PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
+    PSHinter_Service  pshinter = font->pshinter;
     FT_Module         module;
 
 
@@ -349,7 +348,7 @@
   {
     CFF_Face          face     = (CFF_Face)slot->face;
     CFF_Font          font     = (CFF_Font)face->extra.data;
-    PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
+    PSHinter_Service  pshinter = font->pshinter;
 
 
     if ( pshinter )
@@ -412,14 +411,6 @@
     FT_Library library = cffface->driver->root.library;
 
 
-#if 0
-    FT_FACE_FIND_GLOBAL_SERVICE( face, sfnt,     SFNT );
-    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames,  POSTSCRIPT_NAMES );
-    FT_FACE_FIND_GLOBAL_SERVICE( face, pshinter, POSTSCRIPT_HINTER );
-
-    if ( !sfnt )
-      goto Bad_Format;
-#else
     sfnt = (SFNT_Service)FT_Get_Module_Interface(
              library, "sfnt" );
     if ( !sfnt )
@@ -429,7 +420,6 @@
 
     pshinter = (PSHinter_Service)FT_Get_Module_Interface(
                  library, "pshinter" );
-#endif
 
     /* create input stream from resource */
     if ( FT_STREAM_SEEK( 0 ) )
@@ -514,7 +504,7 @@
         goto Exit;
 
       cff->pshinter = pshinter;
-      cff->psnames  = (void*)psnames;
+      cff->psnames  = psnames;
 
       cffface->face_index = face_index;
 
@@ -678,24 +668,20 @@
           (FT_Short)( dict->underline_thickness >> 16 );
 
         /* retrieve font family & style name */
-        cffface->family_name = cff_index_get_name( &cff->name_index,
-                                                   face_index );
-
+        cffface->family_name = cff_index_get_name( cff, face_index );
         if ( cffface->family_name )
         {
-          char*  full   = cff_index_get_sid_string( &cff->string_index,
-                                                    dict->full_name,
-                                                    psnames );
+          char*  full   = cff_index_get_sid_string( cff,
+                                                    dict->full_name );
           char*  fullp  = full;
           char*  family = cffface->family_name;
-          char*  family_name = 0;
+          char*  family_name = NULL;
 
 
           if ( dict->family_name )
           {
-            family_name = cff_index_get_sid_string( &cff->string_index,
-                                                    dict->family_name,
-                                                    psnames);
+            family_name = cff_index_get_sid_string( cff,
+                                                    dict->family_name );
             if ( family_name )
               family = family_name;
           }
@@ -738,23 +724,18 @@
               }
               break;
             }
-
-            if ( family_name )
-              FT_FREE( family_name );
-            FT_FREE( full );
           }
         }
         else
         {
           char  *cid_font_name =
-                   cff_index_get_sid_string( &cff->string_index,
-                                             dict->cid_font_name,
-                                             psnames );
+                   cff_index_get_sid_string( cff,
+                                             dict->cid_font_name );
 
 
           /* do we have a `/FontName' for a CID-keyed font? */
           if ( cid_font_name )
-            cffface->family_name = cid_font_name;
+            cffface->family_name = cff_strcpy( memory, cid_font_name );
         }
 
         if ( style_name )
@@ -797,16 +778,14 @@
           flags |= FT_STYLE_FLAG_ITALIC;
 
         {
-          char  *weight = cff_index_get_sid_string( &cff->string_index,
-                                                    dict->weight,
-                                                    psnames );
+          char  *weight = cff_index_get_sid_string( cff,
+                                                    dict->weight );
 
 
           if ( weight )
             if ( !ft_strcmp( weight, "Bold"  ) ||
                  !ft_strcmp( weight, "Black" ) )
               flags |= FT_STYLE_FLAG_BOLD;
-          FT_FREE( weight );
         }
 
         /* double check */

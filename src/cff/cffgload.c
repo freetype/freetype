@@ -22,7 +22,6 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_OUTLINE_H
-#include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
 #include "cffobjs.h"
 #include "cffload.h"
@@ -394,7 +393,7 @@
 
     /* initialize Type2 decoder */
     decoder->cff          = cff;
-    decoder->num_globals  = cff->num_global_subrs;
+    decoder->num_globals  = cff->global_subrs_index.count;
     decoder->globals      = cff->global_subrs;
     decoder->globals_bias = cff_compute_bias(
                               cff->top_font.font_dict.charstring_type,
@@ -448,7 +447,7 @@
       FT_TRACE4(( "glyph index %d:\n", glyph_index ));
 #endif
 
-    decoder->num_locals    = sub->num_local_subrs;
+    decoder->num_locals    = sub->local_subrs_index.count;
     decoder->locals        = sub->local_subrs;
     decoder->locals_bias   = cff_compute_bias(
                                decoder->cff->top_font.font_dict.charstring_type,
