@@ -1,3 +1,10 @@
+2010-03-09  Werner Lemberg  <wl@gnu.org>
+
+	Remove unused variable.
+	Reported by Graham.
+
+	* src/cff/cffparse.c (cff_parse_real): Remove `rest'.
+
 2010-03-02  John Tytgat  <John.Tytgat@esko.com>
 
 	Improve CFF string (especially glyphname) lookup performance.
