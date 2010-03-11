@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2005, 2007, 2008, 2009 by             */
+/*  Copyright 1996-2001, 2002, 2003, 2005, 2007, 2008, 2009, 2010 by       */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3447,9 +3447,8 @@
         PWorker  worker = (PWorker)pool_base;
 
 
-        raster->buffer      = pool_base + ( (sizeof ( *worker ) + 7 ) & ~7 );
-        raster->buffer_size = ( ( pool_base + pool_size ) -
-                                (char*)raster->buffer ) / sizeof ( Long );
+        raster->buffer      = pool_base + ( ( sizeof ( *worker ) + 7 ) & ~7 );
+        raster->buffer_size = pool_base + pool_size - (char*)raster->buffer;
         raster->worker      = worker;
       }
       else
