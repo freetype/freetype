@@ -1,3 +1,9 @@
+2010-03-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Remove duplicated inclusion of `FT_OUTLINE_H' in ftobjs.c.
+
+	* src/base/ftobjs.c: Remove 2nd inclusion of `FT_OUTLINE_H'.
+
 2010-03-11  Chris Liddell  <chris.liddell@artifex.com>
 
 	Fix Savannah bug #27442.
