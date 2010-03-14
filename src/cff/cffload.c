@@ -558,7 +558,7 @@
 
 
   /* get an entry from Name INDEX */
-  static FT_String*
+  FT_LOCAL_DEF( FT_String* )
   cff_index_get_name( CFF_Font  font,
                       FT_UInt   element )
   {

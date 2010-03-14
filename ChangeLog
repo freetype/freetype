@@ -1,3 +1,9 @@
+2010-03-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix `multi build' for Tytgat's CFF driver improvement.
+
+	* src/base/cffload.h (cff_index_get_name): Added.
+
 2010-03-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Remove duplicated inclusion of `FT_OUTLINE_H' in ftobjs.c.

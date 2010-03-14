@@ -49,6 +49,10 @@ FT_BEGIN_HEADER
   cff_index_forget_element( CFF_Index  idx,
                             FT_Byte**  pbytes );
 
+  FT_LOCAL( FT_String* )
+  cff_index_get_name( CFF_Font  font,
+                      FT_UInt   element );
+
 
   FT_LOCAL( FT_UInt )
   cff_charset_cid_to_gindex( CFF_Charset  charset,
