@@ -301,7 +301,7 @@ FT_BEGIN_HEADER
    *     The stream's input function.
    *
    *   close ::
-   *     The stream;s close function.
+   *     The stream's close function.
    *
    *   memory ::
    *     The memory manager to use to preload frames.  This is set
