@@ -1,3 +1,10 @@
+2010-04-01  John Tytgat  <John.Tytgat@esko.com>
+
+	Fix Savannah bug #29404.
+
+	* src/truetype/ttgload.c: Revert change 2752bd1a (check on bit 1
+	of `head' table of TrueType fonts).
+
 2010-03-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix `multi build' for Tytgat's CFF driver improvement.
