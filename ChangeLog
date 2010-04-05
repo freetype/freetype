@@ -1,3 +1,11 @@
+2010-04-05  Ken Sharp  <ken.sharp@artifex.com>
+
+	Fix Savannah bug #29335.
+
+	* src/raster/ftraster.c (Line_Up): Use slow multiplication to
+	prevent overflow.  This shouldn't have any serious impact on speed,
+	however.
+
 2010-04-05  Werner Lemberg  <wl@gnu.org>
 
 	Add new function `FT_Library_SetLcdFilterWeights'.

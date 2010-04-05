@@ -1122,13 +1122,13 @@
 
     if ( Dx > 0 )
     {
-      Ix = ( ras.precision * Dx ) / Dy;
+      Ix = SMulDiv( ras.precision, Dx,  Dy);
       Rx = ( ras.precision * Dx ) % Dy;
       Dx = 1;
     }
     else
     {
-      Ix = -( ( ras.precision * -Dx ) / Dy );
+      Ix = SMulDiv( ras.precision, -Dx,  Dy) * -1;
       Rx =    ( ras.precision * -Dx ) % Dy;
       Dx = -1;
     }
