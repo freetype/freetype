@@ -1,3 +1,18 @@
+2010-04-05  Werner Lemberg  <wl@gnu.org>
+
+	Add new function `FT_Library_SetLcdFilterWeights'.
+
+	This is based on code written by Lifter
+	<http://unixforum.org/index.php?showuser=11691>.  It fixes
+	FreeDesktop bug #27386.
+
+	* src/base/ftlcdfil.c (FT_Library_SetLcdFilterWeights): New
+	function.
+
+	* include/freetype/ftlcdfil.h: Updated.
+
+	* docs/CHANGES: Updated.
+
 2010-04-01  John Tytgat  <John.Tytgat@esko.com>
 
 	Fix Savannah bug #29404.

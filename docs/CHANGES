@@ -1,3 +1,13 @@
+CHANGES BETWEEN 2.3.12 and 2.3.13
+
+  I. IMPORTANT CHANGES
+
+    - A new function `FT_Library_SetLcdFilterWeights' is available  to
+      adjust the filter weights set by `FT_Library_SetLcdFilter'.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.3.11 and 2.3.12
 
   I. IMPORTANT CHANGES
@@ -3378,7 +3388,8 @@ Extensions support:
 
 ------------------------------------------------------------------------
 
-Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by
+Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+          2010 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file  is  part  of the  FreeType  project, and may  only be  used,
