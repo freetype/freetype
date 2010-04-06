@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType GX Font Variation loader                                    */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006, 2007, 2008, 2009 by                        */
+/*  Copyright 2004, 2005, 2006, 2007, 2008, 2009, 2010 by                  */
 /*  David Turner, Robert Wilhelm, Werner Lemberg, and George Williams.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -682,7 +682,11 @@
       if ( fvar_head.version != (FT_Long)0x00010000L                      ||
            fvar_head.countSizePairs != 2                                  ||
            fvar_head.axisSize != 20                                       ||
+           /* axisCount limit implied by 16-bit instanceSize */
+           fvar_head.axisCount > 0x3FFE                                   ||
            fvar_head.instanceSize != 4 + 4 * fvar_head.axisCount          ||
+           /* instanceCount limit implied by limited range of name IDs */
+           fvar_head.instanceCount > 0x7EFF                               ||
            fvar_head.offsetToData + fvar_head.axisCount * 20U +
              fvar_head.instanceCount * fvar_head.instanceSize > table_len )
       {
@@ -693,7 +697,7 @@
       if ( FT_NEW( face->blend ) )
         goto Exit;
 
-      /* XXX: TODO - check for overflows */
+      /* cannot overflow 32-bit arithmetic because of limits above */
       face->blend->mmvar_len =
         sizeof ( FT_MM_Var ) +
         fvar_head.axisCount * sizeof ( FT_Var_Axis ) +

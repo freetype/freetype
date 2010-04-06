@@ -1,3 +1,10 @@
+2010-04-06  Jonathan Kew  <jfkthame@gmail.com>
+
+	Add overflow check to `fvar' table.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Check axis and instance
+	count.
+
 2010-04-05  Ken Sharp  <ken.sharp@artifex.com>
 
 	Fix Savannah bug #29335.
