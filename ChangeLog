@@ -1,3 +1,10 @@
+2010-04-14  Michał Cichoń  <thedmd@artifexmundi.com>
+
+	Fix Savannah bug #27999.
+
+	* src/cache/ftcmanag.c (FTC_Manager_RemoveFaceID): Only remove
+	selected entry, not all.
+
 2010-04-06  Jonathan Kew  <jfkthame@gmail.com>
 
 	Add overflow check to `fvar' table.
