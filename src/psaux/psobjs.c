@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    Auxiliary functions for PostScript fonts (body).                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1621,8 +1622,7 @@
 
     if ( builder->parse_state == T1_Parse_Have_Path )
       error = PSaux_Err_Ok;
-    else if ( builder->parse_state == T1_Parse_Have_Moveto )
-    {
+    else {
       builder->parse_state = T1_Parse_Have_Path;
       error = t1_builder_add_contour( builder );
       if ( !error )

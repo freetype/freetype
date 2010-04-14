@@ -1,3 +1,11 @@
+2010-04-14  Ken Sharp  <ken.sharp@artifex.com>
+
+	Fix Savannah bug #29444.
+
+	* src/psaux/psobjs.c (t1_builder_start_point): Accept (invalid)
+	`lineto' immediately after `hsbw', in accordance with Acrobat, GS,
+	and others.
+
 2010-04-14  Michał Cichoń  <thedmd@artifexmundi.com>
 
 	Fix Savannah bug #27999.
