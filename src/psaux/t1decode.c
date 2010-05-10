@@ -1482,10 +1482,12 @@
             goto Syntax_Error;
           }
           else
+            ...
 #endif
+
           x = top[0];
           y = top[1];
-            decoder->flex_state = 0;
+          decoder->flex_state = 0;
           break;
 
         case op_unknown15:
