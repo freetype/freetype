@@ -1,5 +1,33 @@
-2010-04-14  Ken Sharp  <ken.sharp@artifex.com>
+2010-05-10  Ken Sharp  <ken.sharp@artifex.com>
 
+	Fix Savannah bug #29846.
+
+	Previously we discovered fonts which used `setcurrentpoint' to set
+	the initial point of a contour to 0,0.  This caused FreeType to
+	raise an error, because the `setcurrentpoint' operator is only
+	supposed to be used with the results from an OtherSubr subroutine.
+
+	This was fixed by simply ignoring the error and carrying on.
+
+	Now we have found a font which uses setcurrentpoint to actually
+	establish a non-zero point for a contour during the course of a
+	glyph program.  FWIW, these files may be produced by an application
+	called `Intaglio' on the Mac, when converting TrueType fonts to
+	Type 1.
+
+	The fix allows the new invalid behaviour, the old invalid behaviour
+	and real proper usage of the operator to work the same way as Adobe
+	interpreters apparently do.
+
+	(t1_decoder_parse_charstrings): Make `setcurrentpoint' use the top
+	two elements of the stack to establish unconditionally the current x
+	and y coordinates.
+
+	Make the `flex' subroutine handling (OtherSubr 0) put the current
+	x,y coordinates onto the stack, instead of two dummy uninitialised
+	values.
+
+2010-04-14  Ken Sharp  <ken.sharp@artifex.com>
 	Fix Savannah bug #29444.
 
 	* src/psaux/psobjs.c (t1_builder_start_point): Accept (invalid)
