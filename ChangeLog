@@ -1,3 +1,10 @@
+2010-05-18  Hongbo Ni  <hongbo@njstar.com>
+
+	Apply patch #7196.
+
+	* src/cff/cffgload.c (cff_slot_load): Prevent crash if CFF subfont
+	index is out of range.
+
 2010-05-11  Werner Lemberg  <wl@gnu.org>
 
 	* docs/formats.txt: Give pointer to PCF documentation.
