@@ -1,3 +1,19 @@
+2010-05-20  Werner Lemberg  <wl@gnu.org>
+
+	TrueType: Make FreeType ignore maxSizeOfInstructions in `maxp'.
+
+	Acroread does the same.
+
+	* src/truetype/ttgload.c (TT_Process_Composite_Glyph): Call
+	`Update_Max' to adjust size of instructions array if necessary and
+	add a rough safety check.
+
+	(load_truetype_glyph): Save `loader->byte_len' before recursive
+	call.
+
+	* src/truetype/ttinterp.h, src/truetype/ttinterp.c (Update_Max):
+	Declare it as FT_LOCAL.
+
 2010-05-18  Hongbo Ni  <hongbo@njstar.com>
 
 	Apply patch #7196.

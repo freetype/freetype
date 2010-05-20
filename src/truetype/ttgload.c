@@ -1141,7 +1141,8 @@
 
     {
       FT_Stream  stream = loader->stream;
-      FT_UShort  n_ins;
+      FT_UShort  n_ins, max_ins;
+      FT_ULong   tmp;
 
 
       /* TT_Load_Composite_Glyph only gives us the offset of instructions */
@@ -1153,12 +1154,27 @@
       FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
 
       /* check it */
-      if ( n_ins > ((TT_Face)loader->face)->max_profile.maxSizeOfInstructions )
+      max_ins = ((TT_Face)loader->face)->max_profile.maxSizeOfInstructions;
+      if ( n_ins > max_ins )
       {
-        FT_TRACE0(( "TT_Process_Composite_Glyph: too many instructions (%d)\n",
-                    n_ins ));
+        /* acroread ignores this field, so we only do a rough safety check */
+        if ( (FT_Int)n_ins > loader->byte_len )
+        {
+          FT_TRACE1(( "TT_Process_Composite_Glyph: "
+                      "too many instructions (%d) for glyph with length (%d)\n",
+                      n_ins, loader->byte_len ));
+          return TT_Err_Too_Many_Hints;
+        }
 
-        return TT_Err_Too_Many_Hints;
+        tmp = loader->exec->glyphSize;
+        error = Update_Max( loader->exec->memory,
+                            &tmp,
+                            sizeof ( FT_Byte ),
+                            (void*)&loader->exec->glyphIns,
+                            n_ins );
+        loader->exec->glyphSize = (FT_UShort)tmp;
+        if ( error )
+          return error;
       }
       else if ( n_ins == 0 )
         return TT_Err_Ok;
@@ -1516,6 +1532,7 @@
         FT_UInt      num_base_subgs = gloader->base.num_subglyphs;
 
         FT_Stream    old_stream     = loader->stream;
+        FT_Int       old_byte_len   = loader->byte_len;
 
 
         FT_GlyphLoader_Add( gloader );
@@ -1570,7 +1587,8 @@
                                           num_base_points );
         }
 
-        loader->stream = old_stream;
+        loader->stream   = old_stream;
+        loader->byte_len = old_byte_len;
 
         /* process the glyph */
         loader->ins_pos = ins_pos;
