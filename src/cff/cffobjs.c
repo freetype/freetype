@@ -394,6 +394,41 @@
   }
 
 
+  /* Strip all subset prefixes of the form `ABCDEF+'.  Usually, there */
+  /* is only one, but font names like `APCOOG+JFABTD+FuturaBQ-Bold'   */
+  /* have been seen in the wild.                                      */
+
+  static void
+  remove_subset_prefix( FT_String*  name )
+  {
+    FT_Int32  idx             = 0;
+    FT_Int32  length          = strlen( name ) + 1;
+    FT_Bool   continue_search = 1;
+ 
+
+    while ( continue_search )
+    {
+      if ( length >= 7 && name[6] == '+' )
+      {
+        for ( idx = 0; idx < 6; idx++ )
+        {
+          /* ASCII uppercase letters */
+          if ( !( 'A' <= name[idx] && name[idx] <= 'Z' ) )
+            continue_search = 0;
+        }
+
+        if ( continue_search )
+        {
+          for ( idx = 7; idx < length; idx++ )
+            name[idx - 7] = name[idx];
+        }
+      }
+      else
+        continue_search = 0;
+    }
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   cff_face_init( FT_Stream      stream,
                  FT_Face        cffface,        /* CFF_Face */
@@ -677,6 +712,8 @@
           char*  family = cffface->family_name;
           char*  family_name = NULL;
 
+
+          remove_subset_prefix( cffface->family_name ); 
 
           if ( dict->family_name )
           {

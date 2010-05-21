@@ -1,3 +1,10 @@
+2010-05-21  Bram Tassyns  <bramt@enfocus.be>
+
+	Fix Savannah bug #27987.
+
+	* src/cff/cffobjs.c (remove_subset_prefix): New function.
+	(cff_face_init): Use it to adjust `cffface->family_name'.
+
 2010-05-20  Werner Lemberg  <wl@gnu.org>
 
 	TrueType: Make FreeType ignore maxSizeOfInstructions in `maxp'.
@@ -16,7 +23,7 @@
 
 2010-05-18  Hongbo Ni  <hongbo@njstar.com>
 
-	Apply patch #7196.
+	Apply Savannah patch #7196.
 
 	* src/cff/cffgload.c (cff_slot_load): Prevent crash if CFF subfont
 	index is out of range.
