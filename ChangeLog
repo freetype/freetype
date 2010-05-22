@@ -1,5 +1,18 @@
 2010-05-22  Werner Lemberg  <wl@gnu.org>
 
+	Fix various memory problems found by linuxtesting.org.
+
+	* src/base/ftgxval.c (FT_TrueTypeGX_Free, FT_ClassicKern_Free),
+	src/base/ftotval.c (FT_OpenType_Free), src/base/ftpfr.c
+	(ft_pfr_check): Check `face'.
+
+	* src/base/ftobjs.c (FT_Get_Charmap_Index): Check `charmap' and
+	`charmap->face'.
+	(FT_Render_Glyph): Check `slot->face'.
+	(FT_Get_SubGlyph_Info): Check `glyph->subglyphs'.
+
+2010-05-22  Werner Lemberg  <wl@gnu.org>
+
 	autofit: Remove dead code.
 	Suggested by Graham.
 

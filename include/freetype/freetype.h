@@ -2997,7 +2997,7 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   The index into the array of character maps within the face to which
-   *   `charmap' belongs.
+   *   `charmap' belongs.  If an error occurs, -1 is returned.
    *
    */
   FT_EXPORT( FT_Int )

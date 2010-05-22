@@ -2950,6 +2950,9 @@
     FT_Int  i;
 
 
+    if ( !charmap || !charmap->face )
+      return -1;
+
     for ( i = 0; i < charmap->face->num_charmaps; i++ )
       if ( charmap->face->charmaps[i] == charmap )
         break;
@@ -3844,7 +3847,7 @@
     FT_Library  library;
 
 
-    if ( !slot )
+    if ( !slot || !slot->face )
       return FT_Err_Invalid_Argument;
 
     library = FT_FACE_LIBRARY( slot->face );
@@ -4469,6 +4472,8 @@
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
                         FT_UInt       sub_index,
@@ -4481,7 +4486,8 @@
     FT_Error  error = FT_Err_Invalid_Argument;
 
 
-    if ( glyph != NULL                              &&
+    if ( glyph                                      &&
+         glyph->subglyphs                           &&
          glyph->format == FT_GLYPH_FORMAT_COMPOSITE &&
          sub_index < glyph->num_subglyphs           )
     {
