@@ -524,13 +524,11 @@
       {
         FT_Vector*  vec           = outline->points;
         char*       tag           = outline->tags;
-        AF_Point    first         = points;
         AF_Point    end           = points + outline->contours[0];
         AF_Point    prev          = end;
         FT_Int      contour_index = 0;
 
 
-        FT_UNUSED( first );
         for ( point = points; point < point_limit; point++, vec++, tag++ )
         {
           point->fx = (FT_Short)vec->x;
@@ -558,9 +556,8 @@
           {
             if ( ++contour_index < outline->n_contours )
             {
-              first = point + 1;
-              end   = points + outline->contours[contour_index];
-              prev  = end;
+              end  = points + outline->contours[contour_index];
+              prev = end;
             }
           }
         }
