@@ -1,3 +1,11 @@
+2010-06-07  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30052.
+	This bug has been introduced with commit 2415cbf3.
+
+	* src/base/ftobjs.c (FT_Get_First_Char, FT_Get_Next_Char): Protect
+	against endless loop in case of corrupted font header data.
+
 2010-05-26  Werner Lemberg  <wl@gnu.org>
 
 	Remove unused variable.

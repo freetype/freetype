@@ -3111,7 +3111,7 @@
     FT_UInt   gindex = 0;
 
 
-    if ( face && face->charmap )
+    if ( face && face->charmap && face->num_glyphs )
     {
       gindex = FT_Get_Char_Index( face, 0 );
       if ( gindex == 0 || gindex >= (FT_UInt)face->num_glyphs )
@@ -3136,7 +3136,7 @@
     FT_UInt   gindex = 0;
 
 
-    if ( face && face->charmap )
+    if ( face && face->charmap && face->num_glyphs )
     {
       FT_UInt32  code = (FT_UInt32)charcode;
       FT_CMap    cmap = FT_CMAP( face->charmap );
