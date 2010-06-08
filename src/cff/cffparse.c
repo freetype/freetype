@@ -335,6 +335,13 @@
         fraction_length += integer_length;
       }
 
+      /* this can only happen if exponent was non-zero */
+      if ( fraction_length == 10 )
+      {
+        number          /= 10;
+        fraction_length -= 1;
+      }
+
       /* Convert into 16.16 format. */
       if ( fraction_length > 0 )
       {

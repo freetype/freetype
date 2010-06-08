@@ -1,3 +1,10 @@
+2010-06-08  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30053.
+
+	* src/cff/cffparse (cff_parse_real): Handle border case where
+	`fraction_length' has value 10.
+
 2010-06-07  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30052.
