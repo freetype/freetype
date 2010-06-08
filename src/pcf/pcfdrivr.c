@@ -227,7 +227,8 @@ THE SOFTWARE.
         {
           prop = &face->properties[i];
 
-          if ( prop ) {
+          if ( prop )
+          {
             FT_FREE( prop->name );
             if ( prop->isString )
               FT_FREE( prop->value.atom );

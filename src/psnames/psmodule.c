@@ -370,7 +370,8 @@
         if ( !error )
           error = PSnames_Err_Invalid_Argument;  /* No unicode chars here! */
       }
-      else {
+      else
+      {
         /* Reallocate if the number of used entries is much smaller. */
         if ( count < num_glyphs / 2 )
         {

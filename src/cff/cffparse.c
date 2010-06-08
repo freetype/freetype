@@ -329,7 +329,8 @@
         goto Exit;
 
       /* Remove non-significant digits. */
-      if ( integer_length < 0 ) {
+      if ( integer_length < 0 )
+      {
         number          /= power_tens[-integer_length];
         fraction_length += integer_length;
       }

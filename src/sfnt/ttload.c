@@ -77,7 +77,8 @@
     {
       /* For compatibility with Windows, we consider    */
       /* zero-length tables the same as missing tables. */
-      if ( entry->Tag == tag ) {
+      if ( entry->Tag == tag )
+      {
         if ( entry->Length != 0 )
         {
           FT_TRACE4(( "found table.\n" ));

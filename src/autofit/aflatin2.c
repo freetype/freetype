@@ -545,7 +545,8 @@
         FT_Pos  fitted = ( scaled + 40 ) & ~63;
 
 #if 1
-        if ( scaled != fitted ) {
+        if ( scaled != fitted )
+        {
           scale = FT_MulDiv( scale, fitted, scaled );
           AF_LOG(( "== scaled x-top = %.2g  fitted = %.2g, scaling = %.4g\n", scaled/64.0, fitted/64.0, (fitted*1.0)/scaled ));
         }

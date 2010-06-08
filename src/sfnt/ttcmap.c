@@ -2787,7 +2787,8 @@
         }
 
         /* and the non-default table (these glyphs are specified here) */
-        if ( nondefOff != 0 ) {
+        if ( nondefOff != 0 )
+        {
           FT_Byte*  ndp         = table + nondefOff;
           FT_ULong  numMappings = TT_NEXT_ULONG( ndp );
           FT_ULong  i, lastUni = 0;

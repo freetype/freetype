@@ -920,14 +920,16 @@
 
             /* check whether the range contains at least one valid glyph; */
             /* the constant is given in the CFF specification             */
-            if ( glyph_sid >= 65000L ) {
+            if ( glyph_sid >= 65000L )
+            {
               FT_ERROR(( "cff_charset_load: invalid SID range\n" ));
               error = CFF_Err_Invalid_File_Format;
               goto Exit;
             }
 
             /* try to rescue some of the SIDs if `nleft' is too large */
-            if ( nleft > 65000L - 1L || glyph_sid >= 65000L - nleft ) {
+            if ( nleft > 65000L - 1L || glyph_sid >= 65000L - nleft )
+            {
               FT_ERROR(( "cff_charset_load: invalid SID range trimmed\n" ));
               nleft = ( FT_UInt )( 65000L - 1L - glyph_sid );
             }

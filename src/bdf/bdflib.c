@@ -1371,7 +1371,8 @@
 
     /* If the property happens to be a comment, then it doesn't need */
     /* to be added to the internal hash table.                       */
-    if ( ft_memcmp( name, "COMMENT", 7 ) != 0 ) {
+    if ( ft_memcmp( name, "COMMENT", 7 ) != 0 )
+    {
       /* Add the property to the font property table. */
       error = hash_insert( fp->name,
                            font->props_used,
@@ -2344,7 +2345,8 @@
       /* Make sure the comments are NULL terminated if they exist. */
       memory = p->font->memory;
 
-      if ( p->font->comments_len > 0 ) {
+      if ( p->font->comments_len > 0 )
+      {
         if ( FT_RENEW_ARRAY( p->font->comments,
                              p->font->comments_len,
                              p->font->comments_len + 1 ) )

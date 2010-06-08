@@ -1728,7 +1728,8 @@
       if ( distance && val < 0 )
         val = 0;
     }
-    else {
+    else
+    {
       val = distance - compensation;
       if ( val > 0 )
         val = 0;
