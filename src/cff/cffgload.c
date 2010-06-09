@@ -2275,6 +2275,8 @@
           /* this is the implementation described for `unknown' other  */
           /* subroutines in the Type1 spec.                            */
           args -= 2 + ( args[-2] >> 16 );
+          if ( args < stack )
+            goto Stack_Underflow;
           break;
 
         case cff_op_pop:

@@ -1007,45 +1007,40 @@
                               const FT_Vector*  control2,
                               const FT_Vector*  to )
   {
-    TPos        dx, dy, da, db;
+    TPos        dx, dy;
+    TPos        mid_x, mid_y;
     int         top, level;
     int*        levels;
     FT_Vector*  arc;
 
 
-    dx = DOWNSCALE( ras.x ) + to->x - ( control1->x << 1 );
+    /* Calculate midpoint and compare it with start and end. */
+    mid_x = ( DOWNSCALE( ras.x ) + to->x +
+              3 * ( control1->x + control2->x ) ) / 8;
+    mid_y = ( DOWNSCALE( ras.y ) + to->y +
+              3 * ( control1->y + control2->y ) ) / 8;
+
+    dx = DOWNSCALE( ras.x ) + to->x - ( mid_x << 1 );
     if ( dx < 0 )
       dx = -dx;
-    dy = DOWNSCALE( ras.y ) + to->y - ( control1->y << 1 );
+    dy = DOWNSCALE( ras.y ) + to->y - ( mid_y << 1 );
     if ( dy < 0 )
       dy = -dy;
     if ( dx < dy )
       dx = dy;
-    da = dx;
 
-    dx = DOWNSCALE( ras.x ) + to->x - 3 * ( control1->x + control2->x );
-    if ( dx < 0 )
-      dx = -dx;
-    dy = DOWNSCALE( ras.y ) + to->y - 3 * ( control1->x + control2->y );
-    if ( dy < 0 )
-      dy = -dy;
-    if ( dx < dy )
-      dx = dy;
-    db = dx;
-
+    /* Check whether an approximation with straight lines is sufficient. */
     level = 1;
-    da    = da / ras.cubic_level;
-    db    = db / ras.conic_level;
-    while ( da > 0 || db > 0 )
+    dx    = dx / ras.conic_level;
+    while ( dx > 0 )
     {
-      da >>= 2;
-      db >>= 3;
+      dx >>= 3;
       level++;
     }
 
     if ( level <= 1 )
     {
-      TPos   to_x, to_y, mid_x, mid_y;
+      TPos   to_x, to_y;
 
 
       to_x  = UPSCALE( to->x );
@@ -1104,7 +1099,7 @@
 
     Draw:
       {
-        TPos  to_x, to_y, mid_x, mid_y;
+        TPos  to_x, to_y;
 
 
         to_x  = arc[0].x;
