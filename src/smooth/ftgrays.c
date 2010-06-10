@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009 by       */
+/*  Copyright 2000-2001, 2002, 2003, 2005, 2006, 2007, 2008, 2009, 2010 by */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1007,56 +1007,53 @@
                               const FT_Vector*  control2,
                               const FT_Vector*  to )
   {
-    TPos        dx, dy, da, db;
     int         top, level;
     int*        levels;
     FT_Vector*  arc;
+    int         mid_x = ( DOWNSCALE( ras.x ) + to->x +
+                          3 * (control1->x + control2->x ) ) / 8;
+    int         mid_y = ( DOWNSCALE( ras.y ) + to->y +
+                          3 * (control1->y + control2->y ) ) / 8;
+    TPos        dx = DOWNSCALE( ras.x ) + to->x - ( mid_x << 1 );
+    TPos        dy = DOWNSCALE( ras.y ) + to->y - ( mid_y << 1 );
 
 
-    dx = DOWNSCALE( ras.x ) + to->x - ( control1->x << 1 );
     if ( dx < 0 )
       dx = -dx;
-    dy = DOWNSCALE( ras.y ) + to->y - ( control1->y << 1 );
     if ( dy < 0 )
       dy = -dy;
     if ( dx < dy )
       dx = dy;
-    da = dx;
-
-    dx = DOWNSCALE( ras.x ) + to->x - 3 * ( control1->x + control2->x );
-    if ( dx < 0 )
-      dx = -dx;
-    dy = DOWNSCALE( ras.y ) + to->y - 3 * ( control1->x + control2->y );
-    if ( dy < 0 )
-      dy = -dy;
-    if ( dx < dy )
-      dx = dy;
-    db = dx;
 
     level = 1;
-    da    = da / ras.cubic_level;
-    db    = db / ras.conic_level;
-    while ( da > 0 || db > 0 )
+    dx /= ras.cubic_level;
+    while ( dx > 0 )
     {
-      da >>= 2;
-      db >>= 3;
+      dx >>= 3;
       level++;
     }
 
     if ( level <= 1 )
     {
-      TPos   to_x, to_y, mid_x, mid_y;
+      TPos  to_x, to_y;
 
 
       to_x  = UPSCALE( to->x );
       to_y  = UPSCALE( to->y );
+
+      /* Recalculation of midpoint is needed only if */
+      /* UPSCALE and DOWNSCALE have any effect.      */
+
+#if ( PIXEL_BITS != 6 )
       mid_x = ( ras.x + to_x +
                 3 * UPSCALE( control1->x + control2->x ) ) / 8;
       mid_y = ( ras.y + to_y +
                 3 * UPSCALE( control1->y + control2->y ) ) / 8;
+#endif
 
       gray_render_line( RAS_VAR_ mid_x, mid_y );
       gray_render_line( RAS_VAR_ to_x, to_y );
+
       return;
     }
 
@@ -1104,7 +1101,7 @@
 
     Draw:
       {
-        TPos  to_x, to_y, mid_x, mid_y;
+        TPos  to_x, to_y;
 
 
         to_x  = arc[0].x;
