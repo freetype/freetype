@@ -1357,12 +1357,12 @@
             FT_UInt maskbyte;
 
 
-            FT_TRACE4(( " (maskbytes: " ));
+            FT_TRACE4(( " (maskbytes:" ));
 
             for ( maskbyte = 0;
                   maskbyte < (FT_UInt)(( decoder->num_hints + 7 ) >> 3);
                   maskbyte++, ip++ )
-              FT_TRACE4(( "0x%02X", *ip ));
+              FT_TRACE4(( " 0x%02X", *ip ));
 
             FT_TRACE4(( ")\n" ));
           }
