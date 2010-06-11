@@ -1,5 +1,17 @@
 2010-06-11  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #30106.
+
+	Point numbers for FreeType's implementation of hinting masks are
+	collected before the final number of points of a glyph has been
+	determined; in particular, the code for handling the `endchar'
+	opcode can reduce the number of points.
+
+	* src/pshinter/pshalgo.c (psh_glyph_find_strong_points): Assure that
+	`end_point' is not larger than `glyph->num_points'.
+
+2010-06-11  Werner Lemberg  <wl@gnu.org>
+
 	[cff]: Improve debugging output.
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
