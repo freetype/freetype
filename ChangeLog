@@ -1,3 +1,10 @@
+2010-06-15  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30108.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_script_coverage):
+	Properly mask AF_DIGIT bit in comparison.
+
 2010-06-11  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30106.
