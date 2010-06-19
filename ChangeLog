@@ -1,3 +1,11 @@
+2010-06-19  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30135.
+
+	* src/bdf/bdflib.c (_bdf_list_join): Don't modify value in static
+	string `empty'.
+	(_bdf_parse_glyph): Avoid memory leak in case of error.
+
 2010-06-15  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30108.

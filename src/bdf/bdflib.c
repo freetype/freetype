@@ -1,6 +1,6 @@
 /*
  * Copyright 2000 Computing Research Labs, New Mexico State University
- * Copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009
+ * Copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010
  *   Francesco Zappa Nardelli
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -470,6 +470,11 @@
   }
 
 
+  /* An empty string for empty fields. */
+
+  static const char  empty[1] = { 0 };      /* XXX eliminate this */
+
+
   static char *
   _bdf_list_join( _bdf_list_t*    list,
                   int             c,
@@ -494,16 +499,12 @@
       if ( i + 1 < list->used )
         dp[j++] = (char)c;
     }
-    dp[j] = 0;
+    if ( dp != empty )
+      dp[j] = 0;
 
     *alen = j;
     return dp;
   }
-
-
-  /* An empty string for empty fields. */
-
-  static const char  empty[1] = { 0 };      /* XXX eliminate this */
 
 
   static FT_Error
@@ -1868,6 +1869,9 @@
     error = BDF_Err_Invalid_File_Format;
 
   Exit:
+    if ( error && ( p->flags & _BDF_GLYPH ) )
+      FT_FREE( p->glyph_name );
+
     return error;
   }
 
