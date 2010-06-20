@@ -1589,6 +1589,13 @@
     FT_Error     error;
 
 
+    /* this might happen in invalid fonts */
+    if ( !outline )
+    {
+      FT_ERROR(( "t1_builder_add_contour: no outline to add points to\n" ));
+      return PSaux_Err_Invalid_File_Format;
+    }
+
     if ( !builder->load_points )
     {
       outline->n_contours++;
