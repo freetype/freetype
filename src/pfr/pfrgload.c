@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR glyph loader (body).                                    */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2005, 2007 by                                    */
+/*  Copyright 2002, 2003, 2005, 2007, 2010 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -597,6 +597,16 @@
     {
       FT_UInt  new_max = ( org_count + count + 3 ) & (FT_UInt)-4;
 
+
+      /* we arbitrarily limit the number of subglyphs */
+      /* to avoid endless recursion                   */
+      if ( new_max > 64 )
+      {
+        error = PFR_Err_Invalid_Table;
+        FT_ERROR(( "pfr_glyph_load_compound:"
+                   " too many compound glyphs components\n" ));
+        goto Exit;
+      }
 
       if ( FT_RENEW_ARRAY( glyph->subs, glyph->max_subs, new_max ) )
         goto Exit;

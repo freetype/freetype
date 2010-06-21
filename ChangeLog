@@ -1,3 +1,10 @@
+2010-06-21  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30168.
+
+	* src/pfr/pfrgload.c (pfr_glyph_load_compound): Limit the number of
+	subglyphs to avoid endless recursion.
+
 2010-06-20  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30145.
