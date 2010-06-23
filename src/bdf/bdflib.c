@@ -2082,6 +2082,14 @@
     /* Check for the start of the properties. */
     if ( ft_memcmp( line, "STARTPROPERTIES", 15 ) == 0 )
     {
+      if ( !(p->flags & _BDF_FONT_BBX ) )
+      {
+        /* Missing the FONTBOUNDINGBOX field. */
+        FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
+        error = BDF_Err_Missing_Fontboundingbox_Field;
+        goto Exit;
+      }
+
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
         goto Exit;
@@ -2143,6 +2151,9 @@
         error = BDF_Err_Invalid_File_Format;
         goto Exit;
       }
+
+      /* Allowing multiple `FONT' lines (which is invalid) doesn't hurt... */
+      FT_FREE( p->font->name );
 
       if ( FT_NEW_ARRAY( p->font->name, slen + 1 ) )
         goto Exit;

@@ -1,3 +1,15 @@
+2010-06-23  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30220.
+
+	* include/freetype/fterrdef.h
+	(BDF_Err_Missing_Fontboundingbox_Field): New error code.
+
+	* src/bdf/bdflib.c (_bdf_parse_start): Check for missing
+	`FONTBOUNDINGBOX' field.
+	Avoid memory leak if there are multiple `FONT' lines (which is
+	invalid but doesn't hurt).
+
 2010-06-21  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30168.
