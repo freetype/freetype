@@ -1,3 +1,10 @@
+2010-06-24  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30247.
+
+	* src/pcf/pcfread.c (pcf_get_metrics): Disallow (invalid) fonts with
+	zero metrics.
+
 2010-06-24  Graham Asher  <graham.asher@btinternet.com>
 
 	* src/smooth/ftgrays.c (gray_render_cubic): Fix algorithm.
