@@ -649,8 +649,9 @@
     {
       if ( refill )
       {
-        bytes  = (ptrdiff_t)FT_Stream_TryRead( stream, (FT_Byte*)buf + cursor,
-                                               (FT_ULong)(buf_size - cursor) );
+        bytes  = (ptrdiff_t)FT_Stream_TryRead(
+                   stream, (FT_Byte*)buf + cursor,
+                   (FT_ULong)( buf_size - cursor ) );
         avail  = cursor + bytes;
         cursor = 0;
         refill = 0;
@@ -2082,7 +2083,7 @@
     /* Check for the start of the properties. */
     if ( ft_memcmp( line, "STARTPROPERTIES", 15 ) == 0 )
     {
-      if ( !(p->flags & _BDF_FONT_BBX ) )
+      if ( !( p->flags & _BDF_FONT_BBX ) )
       {
         /* Missing the FONTBOUNDINGBOX field. */
         FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
@@ -2108,7 +2109,7 @@
     /* Check for the FONTBOUNDINGBOX field. */
     if ( ft_memcmp( line, "FONTBOUNDINGBOX", 15 ) == 0 )
     {
-      if ( !(p->flags & _BDF_SIZE ) )
+      if ( !( p->flags & _BDF_SIZE ) )
       {
         /* Missing the SIZE field. */
         FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "SIZE" ));
@@ -2465,8 +2466,8 @@
     hash_free( &(font->proptbl), memory );
 
     /* Free up the user defined properties. */
-    for (prop = font->user_props, i = 0;
-         i < font->nuser_props; i++, prop++ )
+    for ( prop = font->user_props, i = 0;
+          i < font->nuser_props; i++, prop++ )
     {
       FT_FREE( prop->name );
       if ( prop->format == BDF_ATOM )
