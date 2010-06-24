@@ -248,7 +248,7 @@
                          FT_Byte*   p,
                          FT_Byte*   limit )
   {
-    FT_Error   error  = 0;
+    FT_Error   error  = PFR_Err_Ok;
     FT_Memory  memory = glyph->loader->memory;
     FT_UInt    flags, x_count, y_count, i, count, mask;
     FT_Int     x;
@@ -558,7 +558,7 @@
                            FT_Byte*   p,
                            FT_Byte*   limit )
   {
-    FT_Error        error  = 0;
+    FT_Error        error  = PFR_Err_Ok;
     FT_GlyphLoader  loader = glyph->loader;
     FT_Memory       memory = loader->memory;
     PFR_SubGlyph    subglyph;

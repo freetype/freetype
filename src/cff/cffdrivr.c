@@ -322,7 +322,7 @@
                         PS_FontInfoRec*  afont_info )
   {
     CFF_Font  cff   = (CFF_Font)face->extra.data;
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = CFF_Err_Ok;
 
 
     if ( cff && cff->font_info == NULL )

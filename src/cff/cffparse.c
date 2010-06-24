@@ -707,7 +707,7 @@
     clazz[i].count_offset = 0;
 
     *output_class = clazz;
-    return FT_Err_Ok;
+    return CFF_Err_Ok;
   }
 
 

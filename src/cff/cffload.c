@@ -251,7 +251,7 @@
 
       if ( offsize < 1 || offsize > 4 )
       {
-        error = FT_Err_Invalid_Table;
+        error = CFF_Err_Invalid_Table;
         goto Exit;
       }
 
@@ -760,7 +760,7 @@
                             FT_UInt      num_glyphs,
                             FT_Memory    memory )
   {
-    FT_Error   error   = FT_Err_Ok;
+    FT_Error   error   = CFF_Err_Ok;
     FT_UInt    i;
     FT_Long    j;
     FT_UShort  max_cid = 0;

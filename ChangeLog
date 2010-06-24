@@ -1,5 +1,9 @@
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
+	*/*: Use module specific error names where appropriate.
+
+2010-06-24  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #30236.
 
 	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Improve check for pointer

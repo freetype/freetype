@@ -390,7 +390,7 @@
       if ( cont[0] <= prev_cont )
       {
         /* unordered contours: this is invalid */
-        error = FT_Err_Invalid_Table;
+        error = TT_Err_Invalid_Table;
         goto Fail;
       }
       prev_cont = cont[0];
