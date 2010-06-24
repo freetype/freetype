@@ -1,3 +1,12 @@
+2010-06-24  Werner Lemberg  <wl@gnu.org>
+
+	[bdf]: Font properties are optional.
+
+	* src/bdf/bdflib.c (_bdf_readstream): Use special error code to
+	indicate a redo operation.
+	(_bdf_parse_start): Handle `CHARS' keyword here too and pass current
+	input line to `_bdf_parse_glyph'.
+
 2010-06-23  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30220.

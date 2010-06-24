@@ -721,6 +721,10 @@
       {
         error = (*cb)( buf + start, end - start, lineno,
                        (void*)&cb, client_data );
+        /* Redo if we have encountered CHARS without properties. */
+        if ( error == -1 )
+          error = (*cb)( buf + start, end - start, lineno,
+                         (void*)&cb, client_data );
         if ( error )
           break;
       }
@@ -2222,6 +2226,45 @@
 
       p->flags |= _BDF_SIZE;
 
+      goto Exit;
+    }
+
+    /* Check for the CHARS field -- font properties are optional */
+    if ( ft_memcmp( line, "CHARS", 5 ) == 0 )
+    {
+      char  nbuf[128];
+
+
+      if ( !( p->flags & _BDF_FONT_BBX ) )
+      {
+        /* Missing the FONTBOUNDINGBOX field. */
+        FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
+        error = BDF_Err_Missing_Fontboundingbox_Field;
+        goto Exit;
+      }
+
+      /* Add the two standard X11 properties which are required */
+      /* for compiling fonts.                                   */
+      p->font->font_ascent = p->font->bbx.ascent;
+      ft_sprintf( nbuf, "%hd", p->font->bbx.ascent );
+      error = _bdf_add_property( p->font, (char *)"FONT_ASCENT", nbuf );
+      if ( error )
+        goto Exit;
+      FT_TRACE2(( "_bdf_parse_properties: " ACMSG1, p->font->bbx.ascent ));
+
+      p->font->font_descent = p->font->bbx.descent;
+      ft_sprintf( nbuf, "%hd", p->font->bbx.descent );
+      error = _bdf_add_property( p->font, (char *)"FONT_DESCENT", nbuf );
+      if ( error )
+        goto Exit;
+      FT_TRACE2(( "_bdf_parse_properties: " ACMSG2, p->font->bbx.descent ));
+
+      p->font->modified = 1;
+
+      *next = _bdf_parse_glyphs;
+
+      /* A special return value. */
+      error = -1;
       goto Exit;
     }
 
