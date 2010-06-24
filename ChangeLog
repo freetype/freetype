@@ -1,3 +1,9 @@
+2010-06-24  Graham Asher  <graham.asher@btinternet.com>
+
+	* src/smooth/ftgrays.c (gray_render_cubic): Fix algorithm.
+	The previous version was too aggressive, as demonstrated in
+	http://lists.gnu.org/archive/html/freetype-devel/2010-06/msg00020.html.
+
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
 	*/*: Use module specific error names where appropriate.

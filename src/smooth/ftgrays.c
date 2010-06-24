@@ -1029,7 +1029,7 @@
     dx /= ras.cubic_level;
     while ( dx > 0 )
     {
-      dx >>= 3;
+      dx >>= 2;
       level++;
     }
 
