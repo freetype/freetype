@@ -1,5 +1,12 @@
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #30236.
+
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Improve check for pointer
+	to `cmap_table'.
+
+2010-06-24  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #30235.
 
 	* src/pfr/pfrgload.c (pfr_glyph_load_simple): Protect against

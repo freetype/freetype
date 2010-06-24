@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by            */
+/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 by      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3392,11 +3392,12 @@
     FT_Byte*           limit = table + face->cmap_size;
     FT_UInt volatile   num_cmaps;
     FT_Byte* volatile  p     = table;
-    FT_Library         library = FT_FACE_LIBRARY(face);
-    FT_UNUSED(library);
+    FT_Library         library = FT_FACE_LIBRARY( face );
+
+    FT_UNUSED( library );
 
 
-    if ( p + 4 > limit )
+    if ( !p || p + 4 > limit )
       return SFNT_Err_Invalid_Table;
 
     /* only recognize format 0 */
