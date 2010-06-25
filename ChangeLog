@@ -1,5 +1,12 @@
 2010-06-25  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #30261.
+
+	* src/pfr/pfrobjs.c (pfr_face_init): Reject fonts which contain
+	neither outline nor bitmap glyphs.
+
+2010-06-25  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #30254.
 
 	* src/cff/cffload.c (cff_index_get_pointers): Do sanity check for
