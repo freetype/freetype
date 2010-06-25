@@ -413,6 +413,15 @@
       /* at this point, `idx->offsets' can't be NULL */
       cur_offset = idx->offsets[0] - 1;
 
+      /* sanity check */
+      if ( cur_offset >= idx->data_size )
+      {
+        FT_TRACE0(( "cff_index_get_pointers:"
+                    " invalid first offset value %d set to zero\n",
+                    cur_offset ));
+        cur_offset = 0;
+      }
+
       if ( !pool )
         t[0] = org_bytes + cur_offset;
       else
