@@ -1,3 +1,11 @@
+2010-06-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Initial fix for Savannah bug #30248 and #30249.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check the error during
+	reading a PFB fragment embedded in LaserWriter PS font for Macintosh.
+	Reported by Robert Swiecki.
+
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30247.
