@@ -1,4 +1,11 @@
-2010-06-25  Werner Lemberg  <wl@gnu.org>
+2010-06-26  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30262.
+
+	* src/sfnt/ttload.c (tt_face_load_maxp): Limit `maxComponentDepth'
+	arbitrarily to 100 to avoid stack exhaustion.
+
+2010-06-26  Werner Lemberg  <wl@gnu.org>
 
 	Add some memory checks (mainly for debugging).
 
