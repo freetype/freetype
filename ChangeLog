@@ -1,5 +1,12 @@
 2010-06-26  Werner Lemberg  <wl@gnu.org>
 
+	Improve PFR tracing messages.
+
+	* src/pfr/pfrgload.c (pfr_glyph_load_rec): Emit tracing messages for
+	simple and compound glyph offsets.
+
+2010-06-26  Werner Lemberg  <wl@gnu.org>
+
 	Fix last PFR change.
 
 	* src/pfr/pfrobjs.c (pfr_face_init): Fix rejection logic.

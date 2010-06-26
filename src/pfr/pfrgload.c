@@ -753,12 +753,17 @@
 
       count = glyph->num_subs - old_count;
 
+      FT_TRACE4(( "compound glyph with %d elements (offset %lu):\n",
+                  count, offset ));
+
       /* now, load each individual glyph */
       for ( n = 0; n < count; n++ )
       {
         FT_Int        i, old_points, num_points;
         PFR_SubGlyph  subglyph;
 
+
+        FT_TRACE4(( "subglyph %d:\n", n ));
 
         subglyph   = glyph->subs + old_count + n;
         old_points = base->n_points;
@@ -767,7 +772,7 @@
                                     subglyph->gps_offset,
                                     subglyph->gps_size );
         if ( error )
-          goto Exit;
+          break;
 
         /* note that `glyph->subs' might have been re-allocated */
         subglyph   = glyph->subs + old_count + n;
@@ -801,9 +806,13 @@
 
         /* proceed to next sub-glyph */
       }
+
+      FT_TRACE4(( "end compound glyph with %d elements\n", count ));
     }
     else
     {
+      FT_TRACE4(( "simple glyph (offset %lu)\n", offset ));
+
       /* load a simple glyph */
       error = pfr_glyph_load_simple( glyph, p, limit );
 
@@ -813,9 +822,6 @@
   Exit:
     return error;
   }
-
-
-
 
 
   FT_LOCAL_DEF( FT_Error )
