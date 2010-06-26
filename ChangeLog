@@ -1,5 +1,12 @@
 2010-06-26  Werner Lemberg  <wl@gnu.org>
 
+	Fix PFR change 2010-06-24.
+
+	* src/pfr/pfrgload.c (pfr_glyph_load_simple): Really protect against
+	invalid indices.
+
+2010-06-26  Werner Lemberg  <wl@gnu.org>
+
 	Improve PFR tracing messages.
 
 	* src/pfr/pfrgload.c (pfr_glyph_load_rec): Emit tracing messages for
