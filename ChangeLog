@@ -1,5 +1,15 @@
 2010-06-25  Werner Lemberg  <wl@gnu.org>
 
+	Add some memory checks (mainly for debugging).
+
+	* src/base/ftstream.c (FT_Stream_EnterFrame): Exit with error
+	if the frame size is larger than the stream size.
+
+	* src/base/ftsystem.c (ft_ansi_stream_io): Exit with error if
+	seeking a position larger than the stream size.
+
+2010-06-25  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #30261.
 
 	* src/pfr/pfrobjs.c (pfr_face_init): Reject fonts which contain
