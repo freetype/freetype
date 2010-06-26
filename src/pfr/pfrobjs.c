@@ -146,16 +146,16 @@
           if ( phy_font->chars[nn].gps_offset != 0 )
             break;
 
-        if ( phy_font->num_strikes > 0 )
+        if ( nn == phy_font->num_chars )
         {
-          if ( nn == phy_font->num_chars )
+          if ( phy_font->num_strikes > 0 )
             pfrface->face_flags = 0;        /* not scalable */
-        }
-        else
-        {
-          FT_ERROR(( "pfr_face_init: font doesn't contain glyphs\n" ));
-          error = PFR_Err_Invalid_File_Format;
-          goto Exit;
+          else
+          {
+            FT_ERROR(( "pfr_face_init: font doesn't contain glyphs\n" ));
+            error = PFR_Err_Invalid_File_Format;
+            goto Exit;
+          }
         }
       }
 

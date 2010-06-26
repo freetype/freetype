@@ -1,5 +1,11 @@
 2010-06-26  Werner Lemberg  <wl@gnu.org>
 
+	Fix last PFR change.
+
+	* src/pfr/pfrobjs.c (pfr_face_init): Fix rejection logic.
+
+2010-06-26  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #30262.
 
 	* src/sfnt/ttload.c (tt_face_load_maxp): Limit `maxComponentDepth'
