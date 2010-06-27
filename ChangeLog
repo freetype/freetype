@@ -1,5 +1,12 @@
 2010-06-27  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Really fix `hintmask' and `cntrmask' limit check.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_hintmask>: Fix thinko and handle tracing also.
+
+2010-06-27  Werner Lemberg  <wl@gnu.org>
+
 	Fix valgrind warning.
 
 	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Initialize
