@@ -1341,6 +1341,14 @@
 
           if ( hinter )
           {
+            /* In a valid charstring there must be at least three bytes */
+            /* after `hintmask' or `cntrmask' (two for a `moveto'       */
+            /* operator and one for `endchar').  Additionally, there    */
+            /* must be space for `num_hints' bits.                      */
+
+            if ( ( ip + 3 + ( decoder->num_hints >> 8 ) ) >= limit )
+              goto Syntax_Error;
+
             if ( op == cff_op_hintmask )
               hinter->hintmask( hinter->hints,
                                 builder->current->n_points,
@@ -1360,7 +1368,7 @@
             FT_TRACE4(( " (maskbytes:" ));
 
             for ( maskbyte = 0;
-                  maskbyte < (FT_UInt)(( decoder->num_hints + 7 ) >> 3);
+                  maskbyte < (FT_UInt)( ( decoder->num_hints + 7 ) >> 3 );
                   maskbyte++, ip++ )
               FT_TRACE4(( " 0x%02X", *ip ));
 
