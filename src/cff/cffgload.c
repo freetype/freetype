@@ -811,10 +811,10 @@
                                              charstring_len );
       decoder->seac = FALSE;
 
+      cff_free_glyph_data( face, &charstring, charstring_len );
+
       if ( error )
         goto Exit;
-
-      cff_free_glyph_data( face, &charstring, charstring_len );
     }
 
     /* Save the left bearing, advance and glyph width of the base */
@@ -841,10 +841,10 @@
                                              charstring_len );
       decoder->seac = FALSE;
 
+      cff_free_glyph_data( face, &charstring, charstring_len );
+
       if ( error )
         goto Exit;
-
-      cff_free_glyph_data( face, &charstring, charstring_len );
     }
 
     /* Restore the left side bearing, advance and glyph width */

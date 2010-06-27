@@ -1,5 +1,12 @@
 2010-06-27  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Fix memory leak.
+
+	* src/cff/cffgload.c (cff_operator_seac): Free charstrings even in
+	case of errors.
+
+2010-06-27  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Protect against invalid `hintmask' and `cntrmask' operators.
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
