@@ -294,7 +294,7 @@
     FT_UNUSED( glyph_index );
 
 
-    FT_TRACE5(( "Glyph %ld\n", glyph_index ));
+    FT_TRACE4(( "Glyph %ld\n", glyph_index ));
 
     /* the following line sets the `error' variable through macros! */
     if ( FT_STREAM_SEEK( offset ) || FT_FRAME_ENTER( byte_count ) )
@@ -1161,7 +1161,7 @@
         if ( (FT_Int)n_ins > loader->byte_len )
         {
           FT_TRACE1(( "TT_Process_Composite_Glyph: "
-                      "too many instructions (%d) for glyph with length (%d)\n",
+                      "too many instructions (%d) for glyph with length %d\n",
                       n_ins, loader->byte_len ));
           return TT_Err_Too_Many_Hints;
         }

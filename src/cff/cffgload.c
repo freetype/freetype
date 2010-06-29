@@ -429,7 +429,7 @@
         goto Exit;
       }
 
-      FT_TRACE4(( "glyph index %d (subfont %d):\n", glyph_index, fd_index ));
+      FT_TRACE3(( "glyph index %d (subfont %d):\n", glyph_index, fd_index ));
 
       sub = cff->subfonts[fd_index];
 
@@ -444,7 +444,7 @@
     }
 #ifdef FT_DEBUG_LEVEL_TRACE
     else
-      FT_TRACE4(( "glyph index %d:\n", glyph_index ));
+      FT_TRACE3(( "glyph index %d:\n", glyph_index ));
 #endif
 
     decoder->num_locals    = sub->local_subrs_index.count;
