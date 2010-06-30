@@ -1,3 +1,10 @@
+2010-06-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Minor optimizations by avoiding divisions.
+
+	* src/sfnt/ttkern.c (tt_face_load_kern, tt_face_get_kerning):
+	Replace divisions with multiplication in comparisons.
+
 2010-06-29  Werner Lemberg  <wl@gnu.org>
 
 	Fix minor tracing issues.
