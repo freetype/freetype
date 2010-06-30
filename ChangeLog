@@ -1,3 +1,14 @@
+2010-06-30  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30263.
+
+	* src/smooth/ftgrays.c (gray_render_span): Use cast to `unsigned
+	int' to avoid integer overflow.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Use smaller
+	threshold values for `width' and `height'.  This is not directly
+	related to the bug fix but makes sense anyway.
+
 2010-06-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Minor optimizations by avoiding divisions.

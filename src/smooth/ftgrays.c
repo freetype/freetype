@@ -1186,7 +1186,7 @@
     /* first of all, compute the scanline offset */
     p = (unsigned char*)map->buffer - y * map->pitch;
     if ( map->pitch >= 0 )
-      p += ( map->rows - 1 ) * map->pitch;
+      p += (unsigned)( ( map->rows - 1 ) * map->pitch );
 
     for ( ; count > 0; count--, spans++ )
     {
