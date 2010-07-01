@@ -3175,24 +3175,30 @@
   }
 
 
-#define DO_JROT               \
-    if ( args[1] != 0 )       \
-    {                         \
-      CUR.IP      += args[0]; \
-      CUR.step_ins = FALSE;   \
+#define DO_JROT                          \
+    if ( args[1] != 0 )                  \
+    {                                    \
+      CUR.IP      += args[0];            \
+      if ( CUR.IP < 0 )                  \
+        CUR.error = TT_Err_Bad_Argument; \
+      CUR.step_ins = FALSE;              \
     }
 
 
-#define DO_JMPR             \
-    CUR.IP      += args[0]; \
+#define DO_JMPR                        \
+    CUR.IP      += args[0];            \
+    if ( CUR.IP < 0 )                  \
+      CUR.error = TT_Err_Bad_Argument; \
     CUR.step_ins = FALSE;
 
 
-#define DO_JROF               \
-    if ( args[1] == 0 )       \
-    {                         \
-      CUR.IP      += args[0]; \
-      CUR.step_ins = FALSE;   \
+#define DO_JROF                          \
+    if ( args[1] == 0 )                  \
+    {                                    \
+      CUR.IP      += args[0];            \
+      if ( CUR.IP < 0 )                  \
+        CUR.error = TT_Err_Bad_Argument; \
+      CUR.step_ins = FALSE;              \
     }
 
 

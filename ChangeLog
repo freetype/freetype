@@ -1,5 +1,12 @@
 2010-07-01  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Protect against code range underflow.
+
+	* src/truetype/ttinterp.c (DO_JROT, DO_JMPR, DO_JROF): Don't allow
+	negative IP values.
+
+2010-07-01  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Add rudimentary tracing for bytecode instructions.
 
 	* src/truetype/ttinterp.c (opcode_name) [FT_DEBUG_LEVEL_TRACE]: New
