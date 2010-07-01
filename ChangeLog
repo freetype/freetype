@@ -24,6 +24,24 @@
 	threshold values for `width' and `height'.  This is not directly
 	related to the bug fix but makes sense anyway.
 
+2010-07-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Initial fix for Savannah bug #30306.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check `rlen'
+	the length of fragment declared in the POST fragment header
+	and prevent an underflow in length calculation. Some fonts
+	set the length to zero in spite of the exist of following
+	16bit `type'. Reported by Robert Swiecki.
+
+2010-07-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Additional fix for Savannah bug #30248 and #30249.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check the buffer
+	size during gathering PFB fragments embedded in LaserWriter PS
+	font for Macintosh. Reported by Robert Swiecki.
+
 2010-06-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Minor optimizations by avoiding divisions.
