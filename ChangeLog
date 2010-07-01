@@ -1,3 +1,11 @@
+2010-07-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Additional fix for Savannah bug #30248 and #30249.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check the buffer
+	size during gathering PFB fragments embedded in LaserWriter PS
+	font for Macintosh. Reported by Robert Swiecki.
+
 2010-06-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Minor optimizations by avoiding divisions.

@@ -1552,6 +1552,8 @@
         len += rlen;
       else
       {
+        if ( pfb_lenpos + 3 > pfb_len + 2 )
+          goto Exit2;
         pfb_data[pfb_lenpos    ] = (FT_Byte)( len );
         pfb_data[pfb_lenpos + 1] = (FT_Byte)( len >> 8 );
         pfb_data[pfb_lenpos + 2] = (FT_Byte)( len >> 16 );
@@ -1560,6 +1562,8 @@
         if ( ( flags >> 8 ) == 5 )      /* End of font mark */
           break;
 
+        if ( pfb_pos + 6 > pfb_len + 2 )
+          goto Exit2;
         pfb_data[pfb_pos++] = 0x80;
 
         type = flags >> 8;
@@ -1579,9 +1583,13 @@
       pfb_pos += rlen;
     }
 
+    if ( pfb_pos + 2 > pfb_len + 2 )
+      goto Exit2;
     pfb_data[pfb_pos++] = 0x80;
     pfb_data[pfb_pos++] = 3;
 
+    if ( pfb_lenpos + 3 > pfb_len + 2 )
+      goto Exit2;
     pfb_data[pfb_lenpos    ] = (FT_Byte)( len );
     pfb_data[pfb_lenpos + 1] = (FT_Byte)( len >> 8 );
     pfb_data[pfb_lenpos + 2] = (FT_Byte)( len >> 16 );
