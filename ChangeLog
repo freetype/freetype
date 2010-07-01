@@ -1,3 +1,11 @@
+2010-07-01  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Add rudimentary tracing for bytecode instructions.
+
+	* src/truetype/ttinterp.c (opcode_name) [FT_DEBUG_LEVEL_TRACE]: New
+	array.
+	(TT_RunIns): Trace opcodes.
+
 2010-06-30  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30263.
