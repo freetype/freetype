@@ -1,3 +1,14 @@
+2010-07-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Additional fix for Savannah bug #30306.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): If the type
+	of the POST fragment is 0, the segment is completely ignored.
+	The declared length of the segment is not cared at all.
+	According to Adobe Technical Note 5040, type 0 segment is
+	comment only and should not be loaded for the interpreter.
+	Reported by Robert Swiecki.
+
 2010-07-01  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Protect against code range underflow.

@@ -1550,6 +1550,9 @@
       FT_TRACE3(( "POST fragment[%d]: offsets=0x%08x, rlen=0x%08x, flags=0x%04x\n",
                    i, offsets[i], rlen, flags ));
 
+      if ( ( flags >> 8 ) == 0 )        /* Comment, should not be loaded */
+        continue;
+
       /* the flags are part of the resource, so rlen >= 2.  */
       /* but some fonts declare rlen = 0 for empty fragment */
       if ( rlen > 2 )
