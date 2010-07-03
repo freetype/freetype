@@ -1,3 +1,10 @@
+2010-07-03  Werner Lemberg  <wl@gnu.org>
+
+	Make ftgrays.c compile stand-alone again.
+
+	* src/smooth/ftgrays.c [_STANDALONE_]: Include `stddef.h'.
+	(FT_INT_MAX, FT_PtrDist)[_STANDALONE_]: Define.
+
 2010-07-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Additional fix for Savannah bug #30306.

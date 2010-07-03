@@ -103,16 +103,20 @@
 #include <stdarg.h>
 #endif
 
+#include <stddef.h>
 #include <string.h>
 #include <setjmp.h>
 #include <limits.h>
 #define FT_UINT_MAX  UINT_MAX
+#define FT_INT_MAX   INT_MAX
 
 #define ft_memset   memset
 
 #define ft_setjmp   setjmp
 #define ft_longjmp  longjmp
 #define ft_jmp_buf  jmp_buf
+
+typedef ptrdiff_t  FT_PtrDist;
 
 
 #define ErrRaster_Invalid_Mode      -2
