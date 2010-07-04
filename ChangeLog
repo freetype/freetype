@@ -1,3 +1,35 @@
+2010-07-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Restrict the number of the charmaps in a rogue-compatible mode.
+	Fix for Savannah bug #30059.
+
+	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Replace `16' the
+	minimum character code passed by a legacy rogue client by...
+	* include/freetype/config/ftoption.h (FT_MAX_CHARMAP_CACHEABLE):
+	This.  It is undefined when FT_CONFIG_OPTION_OLD_INTERNALS is
+	undefined (thus the rogue client compatibility is not required).
+
+	* src/cff/cffobjs.c (cff_face_init): Abort the automatic
+	selection or synthesis of Unicode cmap subtable when the charmap
+	index exceeds FT_MAX_CHARMAP_CACHEABLE.
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Issue error message
+	when the charmap index exceeds FT_MAX_CHARMAP_CACHEABLE.
+
+	* src/base/ftobjs.c (find_unicode_charmap): When Unicode charmap
+	is found after FT_MAX_CHARMAP_CACHEABLE, ignore it and search
+	earlier one.
+	(find_variant_selector_charmap): When UVS charmap is found after
+	FT_MAX_CHARMAP_CACHEABLE, ignore it and search earlier one.
+	(FT_Select_Charmap): When a charmap matching with requested
+	encoding but after FT_MAX_CHARMAP_CACHEABLE, ignore and search
+	earlier one.
+	(FT_Set_Charmap): When a charmap matching with requested
+	charmap but after FT_MAX_CHARMAP_CACHEABLE, ignore and search
+	earlier one.
+	(FT_Get_Charmap_Index): When a requested charmap is found
+	after FT_MAX_CHARMAP_CACHEABLE, return the inverted charmap
+	index.
+
 2010-07-04  Werner Lemberg  <wl@gnu.org>
 
 	TrueType hinting is no longer patented.
