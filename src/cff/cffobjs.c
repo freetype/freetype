@@ -887,7 +887,10 @@
 
         nn = (FT_UInt)cffface->num_charmaps;
 
-        FT_CMap_New( &FT_CFF_CMAP_UNICODE_CLASS_REC_GET, NULL, &cmaprec, NULL );
+        error = FT_CMap_New( &FT_CFF_CMAP_UNICODE_CLASS_REC_GET, NULL,
+                             &cmaprec, NULL );
+        if ( error )
+          goto Exit;
 
         /* if no Unicode charmap was previously selected, select this one */
         if ( cffface->charmap == NULL && nn != (FT_UInt)cffface->num_charmaps )
@@ -921,7 +924,7 @@
             clazz               = &FT_CFF_CMAP_ENCODING_CLASS_REC_GET;
           }
 
-          FT_CMap_New( clazz, NULL, &cmaprec, NULL );
+          error = FT_CMap_New( clazz, NULL, &cmaprec, NULL );
         }
       }
     }

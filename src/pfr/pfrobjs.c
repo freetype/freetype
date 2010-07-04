@@ -256,7 +256,7 @@
         charmap.encoding_id = 1;
         charmap.encoding    = FT_ENCODING_UNICODE;
 
-        FT_CMap_New( &pfr_cmap_class_rec, NULL, &charmap, NULL );
+        error = FT_CMap_New( &pfr_cmap_class_rec, NULL, &charmap, NULL );
 
 #if 0
         /* Select default charmap */

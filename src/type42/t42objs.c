@@ -334,7 +334,9 @@
         charmap.encoding_id = 1;
         charmap.encoding    = FT_ENCODING_UNICODE;
 
-        FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
+        error = FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
+        if ( error )
+          goto Exit;
 
         /* now, generate an Adobe Standard encoding when appropriate */
         charmap.platform_id = 7;
@@ -371,7 +373,7 @@
         }
 
         if ( clazz )
-          FT_CMap_New( clazz, NULL, &charmap, NULL );
+          error = FT_CMap_New( clazz, NULL, &charmap, NULL );
 
 #if 0
         /* Select default charmap */
