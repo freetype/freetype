@@ -1,9 +1,19 @@
-CHANGES BETWEEN 2.3.12 and 2.3.13
+CHANGES BETWEEN 2.3.12 and 2.4.0
 
   I. IMPORTANT CHANGES
 
+    - Since May 2010, all patents regarding the TrueType bytecode
+      interpreter have expired worldwide.  Consequently, we now define
+      TT_CONFIG_OPTION_BYTECODE_INTERPRETER by default (and undefine
+      TT_CONFIG_OPTION_UNPATENTED_HINTING).
+
     - A new function `FT_Library_SetLcdFilterWeights' is available  to
       adjust the filter weights set by `FT_Library_SetLcdFilter'.
+
+  II. MISCELLANEOUS
+
+    - Thanks to many reports from Robert Święcki, FreeType's stability
+      in handling broken or damaged fonts could be much improved.
 
 
 ======================================================================
@@ -15,6 +25,7 @@ CHANGES BETWEEN 2.3.11 and 2.3.12
     - For  `FT_Open_Face',  new  parameters  are  available  to ignore
       preferred family names: FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY and
       FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY.
+
 
   II. MISCELLANEOUS
 

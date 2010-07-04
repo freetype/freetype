@@ -397,8 +397,8 @@ FT_BEGIN_HEADER
    *
    *    FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
    *       The library implements a bytecode interpreter that covers
-   *       the full instruction set of the TrueType virtual machine.
-   *       See the file `docs/PATENTS' for legal aspects.
+   *       the full instruction set of the TrueType virtual machine (this
+   *       was governed by patents until May 2010, hence the name).
    *
    *  @since:
    *       2.2

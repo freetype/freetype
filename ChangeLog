@@ -1,3 +1,14 @@
+2010-07-04  Werner Lemberg  <wl@gnu.org>
+
+	TrueType hinting is no longer patented.
+
+	* include/freetype/config/ftoption.h, devel/ftoption.h
+	(TT_CONFIG_OPTION_BYTECODE_INTERPRETER): Define.
+	(TT_CONFIG_OPTION_UNPATENTED_HINTING): Undefine.
+
+	* docs/CHANGES, docs/INSTALL, include/freetype/freetype.h: Updated.
+	* docs/TRUETYPE, docs/PATENTS: Removed.
+
 2010-07-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Check error value by `FT_CMap_New'.
