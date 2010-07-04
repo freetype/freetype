@@ -19,12 +19,11 @@
 
 	Additional fix for Savannah bug #30306.
 
-	* src/base/ftobjs.c (Mac_Read_POST_Resource): If the type
-	of the POST fragment is 0, the segment is completely ignored.
-	The declared length of the segment is not cared at all.
-	According to Adobe Technical Note 5040, type 0 segment is
-	comment only and should not be loaded for the interpreter.
-	Reported by Robert Swiecki.
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): If the type of the
+	POST fragment is 0, the segment is completely ignored.  The declared
+	length of the segment is not cared at all.  According to Adobe
+	Technical Note 5040, type 0 segment is a comment only and should not
+	be loaded for the interpreter.  Reported by Robert Święcki.
 
 2010-07-01  Werner Lemberg  <wl@gnu.org>
 
@@ -56,19 +55,19 @@
 
 	Initial fix for Savannah bug #30306.
 
-	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check `rlen'
-	the length of fragment declared in the POST fragment header
-	and prevent an underflow in length calculation. Some fonts
-	set the length to zero in spite of the exist of following
-	16bit `type'. Reported by Robert Swiecki.
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check `rlen', the
+	length of fragment declared in the POST fragment header, and prevent
+	an underflow in length calculation.  Some fonts set the length to
+	zero in spite of the existence of a following 16bit `type'. 
+	Reported by Robert Święcki.
 
 2010-07-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Additional fix for Savannah bug #30248 and #30249.
 
-	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check the buffer
-	size during gathering PFB fragments embedded in LaserWriter PS
-	font for Macintosh. Reported by Robert Swiecki.
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check the buffer size
+	during gathering PFB fragments embedded in LaserWriter PS font for
+	Macintosh.  Reported by Robert Święcki.
 
 2010-06-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
@@ -169,7 +168,7 @@
 
 	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check the error during
 	reading a PFB fragment embedded in LaserWriter PS font for Macintosh.
-	Reported by Robert Swiecki.
+	Reported by Robert Święcki.
 
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
@@ -400,6 +399,7 @@
 	values.
 
 2010-04-14  Ken Sharp  <ken.sharp@artifex.com>
+
 	Fix Savannah bug #29444.
 
 	* src/psaux/psobjs.c (t1_builder_start_point): Accept (invalid)
