@@ -196,7 +196,7 @@ FT_BEGIN_HEADER
    *   any effect.
    *
    * @since:
-   *   2.3.13
+   *   2.4.0
    */
   FT_EXPORT( FT_Error )
   FT_Library_SetLcdFilterWeights( FT_Library      library,
