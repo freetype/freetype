@@ -1,3 +1,13 @@
+2010-07-05  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Next try to fix `hintmask' and `cntrmask' limit check.
+
+	Problem reported by malc <av1474@comtv.ru>.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_hintmask>: It is possible that there is just a single byte
+	after the `hintmask' or `cntrmask', e.g., a `return' instruction.
+
 2010-07-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Restrict the number of the charmaps in a rogue-compatible mode.
