@@ -1,3 +1,10 @@
+2010-07-05  Eugene A. Shatokhin  <spectre@ispras.ru>
+
+	Fix Savannah bug #27648.
+
+	* src/base/ftobjs.c (ft_remove_renderer, FT_Add_Module): Call
+	`raster_done' only if we have an outline glyph format.
+
 2010-07-05  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30030.
