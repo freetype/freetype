@@ -1319,6 +1319,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\base\ftxf86.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\base\ftlcdfil.c"
 					>
 				</File>

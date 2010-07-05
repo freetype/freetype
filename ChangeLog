@@ -1,5 +1,11 @@
 2010-07-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #30030.
+
+	* builds/win32/*/freetype.vcproj: Add ftxf86.c.
+
+2010-07-05  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Next try to fix `hintmask' and `cntrmask' limit check.
 
 	Problem reported by malc <av1474@comtv.ru>.
