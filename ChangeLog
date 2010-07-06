@@ -1,3 +1,10 @@
+2010-07-06  Werner Lemberg  <wl@gnu.org>
+
+	Pacify compiler.
+
+	* src/cff/cffload.c (cff_index_get_pointers): Initialize
+	`new_bytes'.
+
 2010-07-05  Eugene A. Shatokhin  <spectre@ispras.ru>
 
 	Fix Savannah bug #27648.

@@ -385,10 +385,10 @@
                           FT_Byte***  table,
                           FT_Byte**   pool )
   {
-    FT_Error   error  = CFF_Err_Ok;
-    FT_Memory  memory = idx->stream->memory;
+    FT_Error   error     = CFF_Err_Ok;
+    FT_Memory  memory    = idx->stream->memory;
     FT_Byte**  t;
-    FT_Byte*   new_bytes;
+    FT_Byte*   new_bytes = NULL;
 
 
     *table = NULL;
