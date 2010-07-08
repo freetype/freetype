@@ -6755,8 +6755,8 @@
       end_point   = CUR.pts.contours[contour] - CUR.pts.first_point;
       first_point = point;
 
-      if ( CUR.pts.n_points <= end_point )
-        end_point = CUR.pts.n_points;
+      if ( BOUNDS ( end_point, CUR.pts.n_points ) )
+        end_point = CUR.pts.n_points - 1;
 
       while ( point <= end_point && ( CUR.pts.tags[point] & mask ) == 0 )
         point++;
