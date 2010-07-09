@@ -1,5 +1,18 @@
 2010-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Use defined macros to set {platform,encoding}_id.
+
+	* src/bdf/bdfdrivr.c: Include ttnameid.h and use macros to
+	set charmap.{platfom,encoding}_id.
+	* src/pcf/pcfdrivr.c: Ditto.
+	* src/winfonts/winfnt.c: Ditto.
+	* src/type1/t1objs.c: Ditto.
+	* src/type42/t42objs.c: Ditto.
+	* src/cff/cffobjs.c: Ditto.
+	* src/pfr/pfrobjs.c: Ditto.
+
+2010-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Fix Savannah bug #30373.
 	Too serious check of errors by `FT_CMap_New' since 2010-07-04
 	is fixed. Reported by Tor Andersson.

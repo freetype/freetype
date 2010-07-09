@@ -865,12 +865,13 @@
         {
           cmap = cffface->charmaps[nn];
 
-          /* Windows Unicode (3,1)? */
-          if ( cmap->platform_id == 3 && cmap->encoding_id == 1 )
+          /* Windows Unicode? */
+          if ( cmap->platform_id == TT_PLATFORM_MICROSOFT &&
+               cmap->encoding_id == TT_MS_ID_UNICODE_CS   )
             goto Skip_Unicode;
 
           /* Apple Unicode platform id? */
-          if ( cmap->platform_id == 0 )
+          if ( cmap->platform_id == TT_PLATFORM_APPLE_UNICODE )
             goto Skip_Unicode; /* Apple Unicode */
         }
 
@@ -891,8 +892,8 @@
 
         /* we didn't find a Unicode charmap -- synthesize one */
         cmaprec.face        = cffface;
-        cmaprec.platform_id = 3;
-        cmaprec.encoding_id = 1;
+        cmaprec.platform_id = TT_PLATFORM_MICROSOFT;
+        cmaprec.encoding_id = TT_MS_ID_UNICODE_CS;
         cmaprec.encoding    = FT_ENCODING_UNICODE;
 
         nn = (FT_UInt)cffface->num_charmaps;
@@ -922,7 +923,7 @@
 
 
           cmaprec.face        = cffface;
-          cmaprec.platform_id = 7;  /* Adobe platform id */
+          cmaprec.platform_id = TT_PLATFORM_ADOBE;  /* Adobe platform id */
 
           if ( encoding->offset == 0 )
           {

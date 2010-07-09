@@ -494,8 +494,8 @@
         charmap.face = root;
 
         /* first of all, try to synthesize a Unicode charmap */
-        charmap.platform_id = 3;
-        charmap.encoding_id = 1;
+        charmap.platform_id = TT_PLATFORM_MICROSOFT;
+        charmap.encoding_id = TT_MS_ID_UNICODE_CS;
         charmap.encoding    = FT_ENCODING_UNICODE;
 
         error = FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
@@ -503,7 +503,7 @@
           goto Exit;
 
         /* now, generate an Adobe Standard encoding when appropriate */
-        charmap.platform_id = 7;
+        charmap.platform_id = TT_PLATFORM_ADOBE;
         clazz               = NULL;
 
         switch ( type1->encoding_type )

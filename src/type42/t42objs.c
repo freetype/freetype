@@ -21,6 +21,7 @@
 #include "t42error.h"
 #include FT_INTERNAL_DEBUG_H
 #include FT_LIST_H
+#include FT_TRUETYPE_IDS_H 
 
 
 #undef  FT_COMPONENT
@@ -330,8 +331,8 @@
         charmap.face = root;
 
         /* first of all, try to synthesize a Unicode charmap */
-        charmap.platform_id = 3;
-        charmap.encoding_id = 1;
+        charmap.platform_id = TT_PLATFORM_MICROSOFT;
+        charmap.encoding_id = TT_MS_ID_UNICODE_CS;
         charmap.encoding    = FT_ENCODING_UNICODE;
 
         error = FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
@@ -339,32 +340,32 @@
           goto Exit;
 
         /* now, generate an Adobe Standard encoding when appropriate */
-        charmap.platform_id = 7;
+        charmap.encoding_id = TT_ADOBE_ID_STANDARD;
         clazz               = NULL;
 
         switch ( type1->encoding_type )
         {
         case T1_ENCODING_TYPE_STANDARD:
           charmap.encoding    = FT_ENCODING_ADOBE_STANDARD;
-          charmap.encoding_id = 0;
+          charmap.encoding_id = TT_ADOBE_ID_STANDARD;
           clazz               = cmap_classes->standard;
           break;
 
         case T1_ENCODING_TYPE_EXPERT:
           charmap.encoding    = FT_ENCODING_ADOBE_EXPERT;
-          charmap.encoding_id = 1;
+          charmap.encoding_id = TT_ADOBE_ID_EXPERT;
           clazz               = cmap_classes->expert;
           break;
 
         case T1_ENCODING_TYPE_ARRAY:
           charmap.encoding    = FT_ENCODING_ADOBE_CUSTOM;
-          charmap.encoding_id = 2;
+          charmap.encoding_id = TT_ADOBE_ID_CUSTOM;
           clazz               = cmap_classes->custom;
           break;
 
         case T1_ENCODING_TYPE_ISOLATIN1:
           charmap.encoding    = FT_ENCODING_ADOBE_LATIN_1;
-          charmap.encoding_id = 3;
+          charmap.encoding_id = TT_ADOBE_ID_LATIN_1;
           clazz               = cmap_classes->unicode;
           break;
 
