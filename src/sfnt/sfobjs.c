@@ -160,7 +160,7 @@
       /* According to the OpenType 1.3 specification, only Microsoft or  */
       /* Apple platform IDs might be used in the `name' table.  The      */
       /* `Unicode' platform is reserved for the `cmap' table, and the    */
-      /* `Iso' one is deprecated.                                        */
+      /* `ISO' one is deprecated.                                        */
       /*                                                                 */
       /* However, the Apple TrueType specification doesn't say the same  */
       /* thing and goes to suggest that all Unicode `name' table entries */
