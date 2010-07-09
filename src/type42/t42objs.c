@@ -335,7 +335,7 @@
         charmap.encoding    = FT_ENCODING_UNICODE;
 
         error = FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
-        if ( error )
+        if ( error && FT_Err_No_Unicode_Glyph_Name != error )
           goto Exit;
 
         /* now, generate an Adobe Standard encoding when appropriate */

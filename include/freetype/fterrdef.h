@@ -211,6 +211,9 @@
                 "argument stack underflow" )
   FT_ERRORDEF_( Ignore,                                      0xA2, \
                 "ignore" )
+  FT_ERRORDEF_( No_Unicode_Glyph_Name,                       0xA3, \
+                "no Unicode glyph name found" )
+
 
   /* BDF errors */
 

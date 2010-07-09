@@ -143,8 +143,9 @@
 
 
     /* can't build Unicode map for CID-keyed font */
+    /* because we don't know glyph names.         */
     if ( !charset->sids )
-      return CFF_Err_Invalid_Argument;
+      return CFF_Err_No_Unicode_Glyph_Name;
 
     return psnames->unicodes_init( memory,
                                    unicodes,

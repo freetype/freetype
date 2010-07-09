@@ -899,7 +899,7 @@
 
         error = FT_CMap_New( &FT_CFF_CMAP_UNICODE_CLASS_REC_GET, NULL,
                              &cmaprec, NULL );
-        if ( error )
+        if ( error && FT_Err_No_Unicode_Glyph_Name != error )
           goto Exit;
 
         /* if no Unicode charmap was previously selected, select this one */
