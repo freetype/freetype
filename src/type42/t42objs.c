@@ -340,7 +340,7 @@
           goto Exit;
 
         /* now, generate an Adobe Standard encoding when appropriate */
-        charmap.encoding_id = TT_ADOBE_ID_STANDARD;
+        charmap.platform_id = TT_PLATFORM_ADOBE;
         clazz               = NULL;
 
         switch ( type1->encoding_type )
