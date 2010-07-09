@@ -869,9 +869,9 @@
           if ( cmap->platform_id == 3 && cmap->encoding_id == 1 )
             goto Skip_Unicode;
 
-          /* Deprecated Unicode platform id? */
+          /* Apple Unicode platform id? */
           if ( cmap->platform_id == 0 )
-            goto Skip_Unicode; /* Standard Unicode (deprecated) */
+            goto Skip_Unicode; /* Apple Unicode */
         }
 
         /* since CID-keyed fonts don't contain glyph names, we can't */
