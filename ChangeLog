@@ -1,3 +1,10 @@
+2010-07-09  Ken Sharp  <ken.sharp@artifex.com>
+
+	Make ftraster.c compile in stand-alone mode with MSVC compiler.
+
+	* src/raster/ftmisc.h (FT_Int64) [_WIN32, _WIN64]: Fix typedef
+	since there is no `inttypes.h' for MSVC.
+
 2010-07-08  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30361.
