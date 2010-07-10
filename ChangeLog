@@ -1,3 +1,14 @@
+2010-07-10  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix another case reported in Savannah bug #30373.
+	Permit a face for Type1, Type42 and CFF without charmap,
+	patch by Tor Andersson.
+
+	* src/type1/t1objs.c (T1_Face_Init): Reset the error if it
+	is FT_Err_No_Unicode_Glyph_Name.
+	* src/type42/t42objs.c (T42_Face_Init): Ditto.
+	* src/cff/cffobjs.c (cff_face_init): Ditto.
+
 2010-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Use defined macros to set {platform,encoding}_id.

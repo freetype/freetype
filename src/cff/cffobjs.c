@@ -902,6 +902,7 @@
                              &cmaprec, NULL );
         if ( error && FT_Err_No_Unicode_Glyph_Name != error )
           goto Exit;
+        error = FT_Err_Ok;
 
         /* if no Unicode charmap was previously selected, select this one */
         if ( cffface->charmap == NULL && nn != (FT_UInt)cffface->num_charmaps )
