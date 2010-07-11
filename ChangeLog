@@ -1,3 +1,10 @@
+2010-07-11  Werner Lemberg  <wl@gnu.org>
+
+	Fix C++ compilation issue.
+
+	* src/tools/apinames.c (names_dump) <OUTPUT_WATCOM_LBC>: Fix
+	typo of `dot' variable.
+
 2010-07-10  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix another case reported in Savannah bug #30373.
