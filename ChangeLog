@@ -1,9 +1,17 @@
+2010-07-12  malc  <av1474@comtv.ru>
+
+	Fix type-punning issues with C++.
+
+	* include/freetype/internal/ftmemory.h (FT_ASSIGNP) [__cplusplus]:
+	Emulate a `typeof' operator with an inline template which uses
+	`static_cast'.
+
 2010-07-11  Werner Lemberg  <wl@gnu.org>
 
 	Fix C++ compilation issue.
 
 	* src/tools/apinames.c (names_dump) <OUTPUT_WATCOM_LBC>: Fix
-	typo of `dot' variable.
+	type of `dot' variable.
 
 2010-07-10  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
