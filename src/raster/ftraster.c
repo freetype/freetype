@@ -3400,7 +3400,7 @@
   }
 
 
-#else /* _STANDALONE_ */
+#else /* !_STANDALONE_ */
 
 
   static int
@@ -3408,7 +3408,7 @@
                 PRaster    *araster )
   {
     FT_Error  error;
-    PRaster   raster;
+    PRaster   raster = NULL;
 
 
     *araster = 0;
@@ -3432,7 +3432,7 @@
   }
 
 
-#endif /* _STANDALONE_ */
+#endif /* !_STANDALONE_ */
 
 
   static void

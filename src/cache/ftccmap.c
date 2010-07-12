@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    FreeType CharMap cache (body)                                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -153,7 +154,7 @@
     FTC_CMapQuery  query  = (FTC_CMapQuery)ftcquery;
     FT_Error       error;
     FT_Memory      memory = cache->memory;
-    FTC_CMapNode   node;
+    FTC_CMapNode   node   = NULL;
     FT_UInt        nn;
 
 

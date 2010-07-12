@@ -2004,14 +2004,14 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_UNUSED( raster );
   }
 
-#else /* _STANDALONE_ */
+#else /* !_STANDALONE_ */
 
   static int
   gray_raster_new( FT_Memory   memory,
                    FT_Raster*  araster )
   {
     FT_Error  error;
-    PRaster   raster;
+    PRaster   raster = NULL;
 
 
     *araster = 0;
@@ -2034,7 +2034,7 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_FREE( raster );
   }
 
-#endif /* _STANDALONE_ */
+#endif /* !_STANDALONE_ */
 
 
   static void

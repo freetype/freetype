@@ -2289,7 +2289,7 @@
                  bdf_font_t*    *font )
   {
     unsigned long  lineno = 0; /* make compiler happy */
-    _bdf_parse_t   *p;
+    _bdf_parse_t   *p     = NULL;
 
     FT_Memory      memory = extmemory;
     FT_Error       error  = BDF_Err_Ok;

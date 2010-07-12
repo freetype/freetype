@@ -186,7 +186,7 @@
   {
     FT_Error        error;
     FT_Memory       memory;
-    AF_FaceGlobals  globals;
+    AF_FaceGlobals  globals = NULL;
 
 
     memory = face->memory;

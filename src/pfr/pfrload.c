@@ -520,7 +520,7 @@
                                      FT_Byte*     limit,
                                      PFR_PhyFont  phy_font )
   {
-    PFR_KernItem  item;
+    PFR_KernItem  item   = NULL;
     FT_Error      error  = PFR_Err_Ok;
     FT_Memory     memory = phy_font->memory;
 

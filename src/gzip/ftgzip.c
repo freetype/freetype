@@ -107,7 +107,7 @@
   {
     FT_ULong    sz = (FT_ULong)size * items;
     FT_Error    error;
-    FT_Pointer  p;
+    FT_Pointer  p  = NULL;
 
 
     (void)FT_ALLOC( p, sz );

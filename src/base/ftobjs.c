@@ -229,11 +229,11 @@
   static FT_Error
   ft_glyphslot_init( FT_GlyphSlot  slot )
   {
-    FT_Driver         driver = slot->face->driver;
-    FT_Driver_Class   clazz  = driver->clazz;
-    FT_Memory         memory = driver->root.memory;
-    FT_Error          error  = FT_Err_Ok;
-    FT_Slot_Internal  internal;
+    FT_Driver         driver   = slot->face->driver;
+    FT_Driver_Class   clazz    = driver->clazz;
+    FT_Memory         memory   = driver->root.memory;
+    FT_Error          error    = FT_Err_Ok;
+    FT_Slot_Internal  internal = NULL;
 
 
     slot->library = driver->root.library;
@@ -3723,7 +3723,7 @@
     FT_Library   library = module->library;
     FT_Memory    memory  = library->memory;
     FT_Error     error;
-    FT_ListNode  node;
+    FT_ListNode  node    = NULL;
 
 
     if ( FT_NEW( node ) )

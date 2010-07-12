@@ -1,3 +1,9 @@
+2010-07-12  Werner Lemberg  <wl@gnu.org>
+
+	Remove C++ warnings.
+
+	*/*: Initialize pointers where necessary to make g++ happy.
+
 2010-07-12  malc  <av1474@comtv.ru>
 
 	Fix type-punning issues with C++.
