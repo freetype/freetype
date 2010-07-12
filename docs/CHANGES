@@ -2,18 +2,22 @@ CHANGES BETWEEN 2.3.12 and 2.4.0
 
   I. IMPORTANT CHANGES
 
-    - Since May 2010, all patents regarding the TrueType bytecode
+    - Since May  2010, all  patents  regarding  the TrueType  bytecode
       interpreter have expired worldwide.  Consequently, we now define
-      TT_CONFIG_OPTION_BYTECODE_INTERPRETER by default (and undefine
+      TT_CONFIG_OPTION_BYTECODE_INTERPRETER by  default (and  undefine
       TT_CONFIG_OPTION_UNPATENTED_HINTING).
 
     - A new function `FT_Library_SetLcdFilterWeights' is available  to
       adjust the filter weights set by `FT_Library_SetLcdFilter'.
 
+
   II. MISCELLANEOUS
 
     - Thanks to many reports from Robert Święcki, FreeType's stability
-      in handling broken or damaged fonts could be much improved.
+      in handling broken or damaged fonts is much improved.
+
+    - Support  for LCD  filter  control has  been  added to  the  demo
+      programs `ftdiff' and `ftview'.
 
 
 ======================================================================
