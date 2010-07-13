@@ -36,6 +36,7 @@
 	*/*: Initialize pointers where necessary to make g++ happy.
 
 2010-07-12  malc  <av1474@comtv.ru>
+	    Richard Henderson  <rth@redhat.com>
 
 	Fix type-punning issues with C++.
 
