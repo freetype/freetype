@@ -1344,7 +1344,7 @@
           /* instruction).  Additionally, there must be space for  */
           /* `num_hints' bits.                                     */
 
-          if ( ( ip + 1 + ( ( decoder->num_hints + 7 ) >> 3 ) ) >= limit )
+          if ( ( ip + ( ( decoder->num_hints + 7 ) >> 3 ) ) >= limit )
             goto Syntax_Error;
 
           if ( hinter )

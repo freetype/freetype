@@ -1,3 +1,13 @@
+2010-07-17  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Final try to fix `hintmask' and `cntrmask' limit check.
+
+	Problem reported by Tobias Wolf <towolf@gmail.com>.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_hintmask>: Sigh.  I'm apparently too silly to fix this
+	correctly in less than three tries.
+
 2010-07-12  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.0 released.
