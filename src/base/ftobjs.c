@@ -142,7 +142,7 @@
     if ( !args )
       return FT_Err_Invalid_Argument;
 
-    memory   = library->memory;
+    memory = library->memory;
 
     if ( FT_NEW( stream ) )
       goto Exit;
@@ -1960,9 +1960,9 @@
     FT_Error     error;
     FT_Driver    driver;
     FT_Memory    memory;
-    FT_Stream    stream = 0;
-    FT_Face      face = 0;
-    FT_ListNode  node = 0;
+    FT_Stream    stream = NULL;
+    FT_Face      face   = NULL;
+    FT_ListNode  node   = NULL;
     FT_Bool      external_stream;
     FT_Module*   cur;
     FT_Module*   limit;
@@ -2186,6 +2186,8 @@
 
       internal->transform_delta.x = 0;
       internal->transform_delta.y = 0;
+
+      internal->refcount = 1;
     }
 
     if ( aface )
@@ -2274,6 +2276,17 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
+  FT_Reference_Face( FT_Face  face )
+  {
+    face->internal->refcount++;
+
+    return FT_Err_Ok;
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Error )
   FT_Done_Face( FT_Face  face )
   {
     FT_Error     error;
@@ -2285,22 +2298,29 @@
     error = FT_Err_Invalid_Face_Handle;
     if ( face && face->driver )
     {
-      driver = face->driver;
-      memory = driver->root.memory;
-
-      /* find face in driver's list */
-      node = FT_List_Find( &driver->faces_list, face );
-      if ( node )
-      {
-        /* remove face object from the driver's list */
-        FT_List_Remove( &driver->faces_list, node );
-        FT_FREE( node );
-
-        /* now destroy the object proper */
-        destroy_face( memory, face, driver );
+      face->internal->refcount--;
+      if ( face->internal->refcount > 0 )
         error = FT_Err_Ok;
+      else
+      {
+        driver = face->driver;
+        memory = driver->root.memory;
+
+        /* find face in driver's list */
+        node = FT_List_Find( &driver->faces_list, face );
+        if ( node )
+        {
+          /* remove face object from the driver's list */
+          FT_List_Remove( &driver->faces_list, node );
+          FT_FREE( node );
+
+          /* now destroy the object proper */
+          destroy_face( memory, face, driver );
+          error = FT_Err_Ok;
+        }
       }
     }
+
     return error;
   }
 
@@ -4265,10 +4285,21 @@
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
+  FT_Reference_Library( FT_Library  library )
+  {
+    library->refcount++;
+
+    return FT_Err_Ok;
+  }
+
+
+  /* documentation is in ftmodapi.h */
+
+  FT_EXPORT_DEF( FT_Error )
   FT_New_Library( FT_Memory    memory,
                   FT_Library  *alibrary )
   {
-    FT_Library  library = 0;
+    FT_Library  library = NULL;
     FT_Error    error;
 
 
@@ -4303,6 +4334,8 @@
     library->version_major = FREETYPE_MAJOR;
     library->version_minor = FREETYPE_MINOR;
     library->version_patch = FREETYPE_PATCH;
+
+    library->refcount = 1;
 
     /* That's ok now */
     *alibrary = library;
@@ -4359,6 +4392,10 @@
 
     if ( !library )
       return FT_Err_Invalid_Library_Handle;
+
+    library->refcount--;
+    if ( library->refcount > 0 )
+      goto Exit;
 
     memory = library->memory;
 
@@ -4435,6 +4472,8 @@
 #endif
 
     FT_FREE( library );
+
+  Exit:
     return FT_Err_Ok;
   }
 

@@ -1,3 +1,18 @@
+CHANGES BETWEEN 2.4.1 and 2.4.2
+
+  I. MISCELLANEOUS
+
+    - Two new functions,  `FT_Reference_Library' (in FT_MODULE_H)  and
+      `FT_Reference_Face'  (in  FT_FREETYPE_H),  have  been  added  to
+      simplify life-cycle management.  A counter gets initialized to 1
+      at the  time an  FT_Library (or  FT_Face) structure  is created.
+      The  two  new   functions  increment  the  respective   counter.
+      `FT_Done_Library' and `FT_Done_Face' then only destroy a library
+      or face if the counter is 1, otherwise they simply decrement the
+      counter. 
+
+
+======================================================================
 
 CHANGES BETWEEN 2.4.0 and 2.4.1
 
