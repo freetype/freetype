@@ -1,3 +1,14 @@
+
+CHANGES BETWEEN 2.4.0 and 2.4.1
+
+  I. IMPORTANT CHANGES
+
+    - A serious bug in the  CFF font module prevented  display of many
+      glyphs in CFF fonts like `MinionPro-Regular.otf'.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.3.12 and 2.4.0
 
   I. IMPORTANT CHANGES
