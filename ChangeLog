@@ -1,3 +1,10 @@
+2010-08-04  Suzuki, Toshiya (鈴木俊哉) <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cff] Improve stack overflow test.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Check stack
+	after execution of operations too.
+
 2010-07-18  Werner Lemberg  <wl@gnu.org>
 
 	Add reference counters and to FT_Library and FT_Face objects.
