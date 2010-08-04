@@ -1,5 +1,11 @@
 2010-08-04  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #30644.
+
+	* src/base/ftstream.c (FT_Stream_EnterFrame): Fix comparison.
+
+2010-08-04  Werner Lemberg  <wl@gnu.org>
+
 	`make devel' fails if FT_CONFIG_OPTION_OLD_INTERNALS is set.
 
 	* devel/ftoption.h: Synchronize with
