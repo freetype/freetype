@@ -1,3 +1,10 @@
+2010-08-04  Werner Lemberg  <wl@gnu.org>
+
+	`make devel' fails if FT_CONFIG_OPTION_OLD_INTERNALS is set.
+
+	* devel/ftoption.h: Synchronize with
+	include/freetype/config/ftoption.h.
+
 2010-08-04  Suzuki, Toshiya (鈴木俊哉) <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cff] Improve stack overflow test.
