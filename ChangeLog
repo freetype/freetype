@@ -1,5 +1,15 @@
 2010-08-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #30657.
+
+	* src/truetype/ttinterp.c (BOUNDSL): New macro.
+	Change `BOUNDS' to `BOUNDSL' where appropriate.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Fix type of
+	`cvtSize'.
+
+2010-08-05  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #30656.
 
 	* src/type42/t42parse.c (t42_parse_sfnts): Protect against negative
