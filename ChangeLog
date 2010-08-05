@@ -1,3 +1,11 @@
+2010-08-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cff] Don't use any values in decoder after parsing error.
+
+	* src/cff/cffgload.c (cff_slot_load): Skip the evaluations
+	of the values in decoder, if cff_decoder_parse_charstrings()
+	returns any error.
+
 2010-08-04  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #30644.
@@ -11,7 +19,7 @@
 	* devel/ftoption.h: Synchronize with
 	include/freetype/config/ftoption.h.
 
-2010-08-04  Suzuki, Toshiya (鈴木俊哉) <mpsuzuki@hiroshima-u.ac.jp>
+2010-08-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cff] Improve stack overflow test.
 
