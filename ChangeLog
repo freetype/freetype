@@ -1,3 +1,11 @@
+2010-08-05  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #30656.
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Protect against negative
+	string_size.
+	Fix comparison.
+
 2010-08-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cff] Don't use any values in decoder after parsing error.
