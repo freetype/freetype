@@ -4408,8 +4408,10 @@
     if ( library->generic.finalizer )
       library->generic.finalizer( library );
 
-    /* Close all faces in the library.  If we don't do
-     * this, we can have some subtle memory leaks.
+    /*
+     * Close all faces in the library.  If we don't do this, we can have
+     * some subtle memory leaks.
+     *
      * Example:
      *
      *  - the cff font driver uses the pshinter module in cff_size_done
@@ -4417,35 +4419,37 @@
      *    opened FT_Face objects managed by the driver are not properly
      *    destroyed, resulting in a memory leak
      *
-     * Some faces are dependent with other faces, like Type42 faces that
-     * depends on TrueType face synthesized internally.
-     * The order of driver should be described in driver_name[].
+     * Some faces are dependent on other faces, like Type42 faces that
+     * depend on TrueType faces synthesized internally.
+     *
+     * The order of drivers should be specified in driver_name[].
      */
     {
-      FT_UInt  m, n;
-      const char* driver_name[] = { "type42", NULL };
+      FT_UInt      m, n;
+      const char*  driver_name[] = { "type42", NULL };
 
 
       for ( m = 0;
-            m < sizeof( driver_name ) / sizeof( driver_name[0] );
-            m ++ )
+            m < sizeof ( driver_name ) / sizeof ( driver_name[0] );
+            m++ )
       {
         for ( n = 0; n < library->num_modules; n++ )
         {
-          FT_Module    module = library->modules[n];
+          FT_Module    module      = library->modules[n];
           const char*  module_name = module->clazz->module_name;
           FT_List      faces;
 
 
           if ( driver_name[m]                                &&
-               0 != ft_strcmp( module_name, driver_name[m] ) )
+               ft_strcmp( module_name, driver_name[m] ) != 0 )
             continue;
 
           if ( ( module->clazz->module_flags & FT_MODULE_FONT_DRIVER ) == 0 )
             continue;
 
           FT_TRACE7(( "FT_Done_Library: close faces for %s\n", module_name ));
-          faces = &FT_DRIVER(module)->faces_list;
+
+          faces = &FT_DRIVER( module )->faces_list;
           while ( faces->head )
           {
             FT_Done_Face( FT_FACE( faces->head->data ) );
