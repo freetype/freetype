@@ -1574,6 +1574,7 @@
       FT_TRACE3(( "POST fragment[%d]: offsets=0x%08x, rlen=0x%08x, flags=0x%04x\n",
                    i, offsets[i], rlen, flags ));
 
+      /* postpone the check of rlen longer than buffer until FT_Stream_Read() */
       if ( ( flags >> 8 ) == 0 )        /* Comment, should not be loaded */
         continue;
 
@@ -1612,6 +1613,10 @@
         pfb_data[pfb_pos++] = 0;
         pfb_data[pfb_pos++] = 0;
       }
+
+      error = FT_Err_Cannot_Open_Resource;
+      if ( pfb_pos > pfb_len || pfb_pos + rlen > pfb_len )
+        goto Exit2;
 
       error = FT_Stream_Read( stream, (FT_Byte *)pfb_data + pfb_pos, rlen );
       if ( error )

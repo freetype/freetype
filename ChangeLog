@@ -1,3 +1,11 @@
+2010-08-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix Savannah bug #30658.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check the total
+	length of collected POST segments does not overrun the allocated
+	buffer.
+
 2010-08-06  Yuriy Kaminskiy  <yumkam@mail.ru>
 
 	Fix conditional usage of FT_MulFix_i386.
