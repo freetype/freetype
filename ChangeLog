@@ -1,3 +1,13 @@
+2010-08-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix Savannah bug #30648.
+
+	* src/base/ftobjs.c (FT_Done_Library): Specify the order of font
+	drivers in face closing process. Type42 faces should be closed
+	before TrueType faces, because a Type42 face refers another
+	internal TrueType face which is created from sfnt[] array on the
+	memory.
+
 2010-08-06  Yuriy Kaminskiy  <yumkam@mail.ru>
 
 	[raster] Fix valgrind warning.

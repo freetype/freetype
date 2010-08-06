@@ -4416,26 +4416,42 @@
      *  - if the pshinter module is destroyed before the cff font driver,
      *    opened FT_Face objects managed by the driver are not properly
      *    destroyed, resulting in a memory leak
+     *
+     * Some faces are dependent with other faces, like Type42 faces that
+     * depends on TrueType face synthesized internally.
+     * The order of driver should be described in driver_name[].
      */
     {
-      FT_UInt  n;
+      FT_UInt  m, n;
+      const char* driver_name[] = { "type42", NULL };
 
 
-      for ( n = 0; n < library->num_modules; n++ )
+      for ( m = 0;
+            m < sizeof( driver_name ) / sizeof( driver_name[0] );
+            m ++ )
       {
-        FT_Module  module = library->modules[n];
-        FT_List    faces;
-
-
-        if ( ( module->clazz->module_flags & FT_MODULE_FONT_DRIVER ) == 0 )
-          continue;
-
-        faces = &FT_DRIVER(module)->faces_list;
-        while ( faces->head )
+        for ( n = 0; n < library->num_modules; n++ )
         {
-          FT_Done_Face( FT_FACE( faces->head->data ) );
-          if ( faces->head )
-            FT_TRACE0(( "FT_Done_Library: failed to free some faces\n" ));
+          FT_Module    module = library->modules[n];
+          const char*  module_name = module->clazz->module_name;
+          FT_List      faces;
+
+
+          if ( driver_name[m]                                &&
+               0 != ft_strcmp( module_name, driver_name[m] ) )
+            continue;
+
+          if ( ( module->clazz->module_flags & FT_MODULE_FONT_DRIVER ) == 0 )
+            continue;
+
+          FT_TRACE7(( "FT_Done_Library: close faces for %s\n", module_name ));
+          faces = &FT_DRIVER(module)->faces_list;
+          while ( faces->head )
+          {
+            FT_Done_Face( FT_FACE( faces->head->data ) );
+            if ( faces->head )
+              FT_TRACE0(( "FT_Done_Library: failed to free some faces\n" ));
+          }
         }
       }
     }
