@@ -2280,6 +2280,8 @@
           /* subsequent `pop' operands should add the arguments,       */
           /* this is the implementation described for `unknown' other  */
           /* subroutines in the Type1 spec.                            */
+          /*                                                           */
+          /* XXX Fix return arguments (see discussion below).          */
           args -= 2 + ( args[-2] >> 16 );
           if ( args < stack )
             goto Stack_Underflow;
@@ -2292,6 +2294,22 @@
 
           FT_TRACE4(( " pop (invalid op)\n" ));
 
+          /* XXX Increasing `args' is wrong: After a certain number of */
+          /* `pop's we get a stack overflow.  Reason for doing it is   */
+          /* code like this (actually found in a CFF font):            */
+          /*                                                           */
+          /*   17 1 3 callothersubr                                    */
+          /*   pop                                                     */
+          /*   callsubr                                                */
+          /*                                                           */
+          /* Since we handle `callothersubr' as a no-op, and           */
+          /* `callsubr' needs at least one argument, `pop' can't be a  */
+          /* no-op too as it basically should be.                      */
+          /*                                                           */
+          /* The right solution would be to provide real support for   */
+          /* `callothersubr' as done in `t1decode.c', however, given   */
+          /* the fact that CFF fonts with `pop' are invalid, it is     */
+          /* questionable whether it is worth the time.                */
           args++;
           break;
 
