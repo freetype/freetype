@@ -4,6 +4,10 @@ CHANGES BETWEEN 2.4.1 and 2.4.2
 
     - A stack overflow in CFF Type2 CharStrings interpreter is fixed.
 
+    - Handling Type 42 font deallocation was broken; additionally, the
+      library is now more robust against malformed Type 42 fonts.
+
+
   II. MISCELLANEOUS
 
     - Two new functions,  `FT_Reference_Library' (in FT_MODULE_H)  and
