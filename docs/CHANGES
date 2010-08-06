@@ -1,6 +1,10 @@
 CHANGES BETWEEN 2.4.1 and 2.4.2
 
-  I. MISCELLANEOUS
+  I. IMPORTANT BUG FIXES
+
+    - A stack overflow in CFF Type2 CharStrings interpreter is fixed.
+
+  II. MISCELLANEOUS
 
     - Two new functions,  `FT_Reference_Library' (in FT_MODULE_H)  and
       `FT_Reference_Face'  (in  FT_FREETYPE_H),  have  been  added  to
