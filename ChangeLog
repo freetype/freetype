@@ -1,3 +1,10 @@
+2010-08-10  Werner Lemberg  <wl@gnu.org>
+
+	Try to fix Savannah bug #30717 (and probably #30719 too).
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Add another
+	overflow test for `width' and `height'.
+
 2010-08-06  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.2 released.
