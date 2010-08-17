@@ -1,3 +1,10 @@
+2010-08-17  Teijo Kinnunen <Teijo.Kinnunen@nuance.com>
+
+	Fix Savannah bug #30788.
+
+	* src/cache/ftccache.c (FTC_Cache_Clear): Check `cache->buckets' for
+	NULL too.
+
 2010-08-10  Werner Lemberg  <wl@gnu.org>
 
 	Try to fix Savannah bug #30717 (and probably #30719 too).
