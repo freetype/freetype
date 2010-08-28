@@ -1,3 +1,11 @@
+2010-08-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Register yet another tricky TrueType font.
+
+	* src/truetype/ttobjs.c (tt_check_trickyness): Add `HuaTianKaiTi?',
+	a Kaishu typeface paired with `HuaTianSongTi?' by Huatian
+	Information Industry.
+
 2010-08-17  Teijo Kinnunen <Teijo.Kinnunen@nuance.com>
 
 	Fix Savannah bug #30788.

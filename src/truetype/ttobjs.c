@@ -149,12 +149,13 @@
   tt_check_trickyness( FT_String*  name )
   {
 #define TRICK_NAMES_MAX_CHARACTERS  16
-#define TRICK_NAMES_COUNT 7
+#define TRICK_NAMES_COUNT 8
     static const char trick_names[TRICK_NAMES_COUNT][TRICK_NAMES_MAX_CHARACTERS+1] =
     {
       "DFKaiSho-SB",     /* dfkaisb.ttf */
       "DFKaiShu",
       "DFKai-SB",        /* kaiu.ttf */
+      "HuaTianKaiTi?",   /* htkt2.ttf */
       "HuaTianSongTi?",  /* htst3.ttf */
       "MingLiU",         /* mingliu.ttf & mingliu.ttc */
       "PMingLiU",        /* mingliu.ttc */
