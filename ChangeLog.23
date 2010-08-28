@@ -113,7 +113,7 @@
 	* include/freetype/ftsnames.h (FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY,
 	FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY): Define.
 
-	* src/sfnt/sfobjs.h (sfnt_load_face): Check the arguments and
+	* src/sfnt/sfobjs.c (sfnt_load_face): Check the arguments and
 	ignore preferred family and subfamily names if requested.
 
 2010-01-27  Ken Sharp  <ken.sharp@artifex.com>
