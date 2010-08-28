@@ -165,7 +165,7 @@
 
 
     if ( !name )
-      return FALSE;
+      return TRUE;
 
     /* Note that we only check the face name at the moment; it might */
     /* be worth to do more checks for a few special cases.           */
