@@ -1,5 +1,12 @@
 2010-08-29  Werner Lemberg  <wl@gnu.org>
 
+	[ftraster] Pacify compiler.
+
+	* src/raster/ftraster.c (ft_black_new) [_STANDALONE_]: `memory' is
+	not used.
+
+2010-08-29  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Allow SIDs >= 65000.
 
 	* src/cff/cffload.c (cff_charset_load): Fix change from 2009-03-20:
