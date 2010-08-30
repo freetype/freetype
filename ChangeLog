@@ -1,3 +1,17 @@
+2010-08-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Prevent bytecode reuse after the interpretation error.
+
+	* src/truetype/ttinterp.c (free_buffer_in_size): New function to
+	free the buffer allocated during the interpretation of this glyph.
+	(TT_RunIns): Unset FT_Face->size->{cvt_ready,bytecode_ready} if
+	an error occurs in the bytecode interpretation.  The interpretation
+	of invalid bytecode may break the function definitions and referring
+	them in later interpretation is danger.  By unsetting these flags,
+	`fpgm' and `prep' tables are executed again in next interpretation.
+
+	Fix Savannah bug #30798, reported by Robert Swiecki.
+
 2010-08-29  Werner Lemberg  <wl@gnu.org>
 
 	[ftraster] Pacify compiler.

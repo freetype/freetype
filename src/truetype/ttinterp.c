@@ -7362,6 +7362,41 @@
 #endif /* !TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 
 
+  static void
+  free_buffer_in_size( TT_ExecContext  exc )
+  {
+    FT_Memory        memory = exc->memory;
+    TT_Size          size = exc->size;
+    TT_GlyphZoneRec  twilight;
+
+
+    if ( !size )
+      return;
+
+    if ( size->function_defs )
+      FT_FREE( size->function_defs );
+    if ( size->instruction_defs )
+      FT_FREE( size->instruction_defs );
+    if ( size->cvt )
+      FT_FREE( size->cvt );
+    if ( size->storage )
+      FT_FREE( size->storage );
+
+    twilight = size->twilight;
+
+    if ( twilight.org )
+      FT_FREE( twilight.org );
+    if ( twilight.cur )
+      FT_FREE( twilight.cur );
+    if ( twilight.orus )
+      FT_FREE( twilight.orus );
+    if ( twilight.tags )
+      FT_FREE( twilight.tags );
+    if ( twilight.contours )
+      FT_FREE( twilight.contours );
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* RUN                                                                   */
@@ -8127,6 +8162,16 @@
 #ifdef TT_CONFIG_OPTION_STATIC_RASTER
     *exc = cur;
 #endif
+
+    /* if any errors, function tables may be broken.  */
+    /* it should not be used for next interpretation. */
+    if ( CUR.error )
+    {
+      FT_TRACE7(( "  The interpreter got an error = %d\n", CUR.error ));
+      free_buffer_in_size( exc );
+      exc->size->cvt_ready = FALSE;  
+      exc->size->bytecode_ready = FALSE;  
+    }
 
     return CUR.error;
   }
