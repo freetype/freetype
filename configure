@@ -91,7 +91,7 @@ if test "$abs_curr_dir" != "$abs_ft2_dir"; then
   echo "OBJ_DIR   := $abs_curr_dir"             >> Makefile
   echo "OBJ_BUILD := \$(OBJ_DIR)"               >> Makefile
   echo "DOC_DIR   := \$(OBJ_DIR)/reference"     >> Makefile
-  echo "LIBTOOL   := \$(OBJ_DIR)/libtool"       >> Makefile
+  echo "FT_LIBTOOL_DIR   := \$(OBJ_DIR)"        >> Makefile
   echo "ifndef FT2DEMOS"                        >> Makefile
   echo "  include \$(TOP_DIR)/Makefile"         >> Makefile
   echo "else"                                   >> Makefile

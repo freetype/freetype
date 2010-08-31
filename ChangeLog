@@ -1,5 +1,18 @@
 2010-08-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Ignore the environmental setting of LIBTOOL.
+	Patch is suggested by Adrian Bunk, to prevent unexpected
+	reflection of environmental LIBTOOL.  See:
+	http://savannah.nongnu.org/patch/?7290
+
+	* builds/unix/unix-cc.in: LIBTOOL is unconditionally set to
+	$(FT_LIBTOOL_DIR)/libtool.  FT_LIBTOOL_DIR is set to $(BUILD_DIR)
+	by default.
+	* configure: When configured for the building out of source tee,
+	FT_LIBTOOL_DIR is set to $(OBJ_DIR).
+
+2010-08-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[truetype] Decrease the trace level catching the interpreter error.
 
 	* src/truetype/ttinterp.c (TT_RunIns): Decrease the trace level
