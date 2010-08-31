@@ -1,3 +1,11 @@
+2010-08-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Decrease the trace level catching the interpreter error.
+
+	* src/truetype/ttinterp.c (TT_RunIns): Decrease the trace level
+	showing the error when the interpreter returns with an error,
+	from FT_TRACE7() to FT_TRACE1().
+
 2010-08-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Prevent bytecode reuse after the interpretation error.
