@@ -6773,12 +6773,11 @@
         {
           if ( ( CUR.pts.tags[point] & mask ) != 0 )
           {
-            if ( point > 0 )
-              _iup_worker_interpolate( &V,
-                                       cur_touched + 1,
-                                       point - 1,
-                                       cur_touched,
-                                       point );
+            _iup_worker_interpolate( &V,
+                                     cur_touched + 1,
+                                     point - 1,
+                                     cur_touched,
+                                     point );
             cur_touched = point;
           }
 

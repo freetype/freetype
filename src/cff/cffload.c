@@ -1255,9 +1255,7 @@
           if ( gid != 0 )
           {
             encoding->codes[j] = (FT_UShort)gid;
-
-            if ( encoding->count < j + 1 )
-              encoding->count = j + 1;
+            encoding->count    = j + 1;
           }
           else
           {

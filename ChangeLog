@@ -1,3 +1,19 @@
+2010-09-13  Werner Lemberg  <wl@gnu.org>
+
+	Fix minor issues reported by <muktha.narayan@wipro.com>.
+
+	* src/autofit/aflatin.c (af_latin_compute_stem_width): Remove
+	redundant conditional check.
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Ditto.
+	* src/cff/cffload.c (cff_encoding_load): Remove conditional check
+	which always evaluates to `true'.
+	* src/pshinter/pshalgo.c (ps_glyph_interpolate_strong_points):
+	Ditto.
+	* src/truetype/ttinterp.c (Ins_IUP): Ditto.
+	* src/cid/cidgload.c (cid_slot_load_glyph): Don't check for NULL if
+	value is already dereferenced.
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Fix check of `face'.
+
 2010-08-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Ignore the environmental setting of LIBTOOL.
@@ -31,7 +47,7 @@
 	them in later interpretation is danger.  By unsetting these flags,
 	`fpgm' and `prep' tables are executed again in next interpretation.
 
-	Fix Savannah bug #30798, reported by Robert Swiecki.
+	This fixes Savannah bug #30798, reported by Robert Święcki.
 
 2010-08-29  Werner Lemberg  <wl@gnu.org>
 
