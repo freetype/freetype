@@ -1,3 +1,15 @@
+2010-09-14  Werner Lemberg  <wl@gnu.org>
+
+	Improve tracing messages.
+
+	* src/truetype/ttinterp.c (TT_RunIns): Improve wording of tracing
+	message.
+	* src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep): Add
+	tracing message.
+	* src/truetype/ttgload.c (tt_loader_init): Add tracing message.
+	* src/cache/ftcsbits.c (ftc_snode_load): Emit tracing message if
+	glyph doesn't fit into a small bitmap container.
+
 2010-09-13  Werner Lemberg  <wl@gnu.org>
 
 	Fix minor issues reported by <muktha.narayan@wipro.com>.

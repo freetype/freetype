@@ -8166,7 +8166,7 @@
     /* it should not be used for next interpretation. */
     if ( CUR.error )
     {
-      FT_TRACE1(( "  The interpreter got an error = %d\n", CUR.error ));
+      FT_TRACE1(( "  The interpreter returned error 0x%x\n", CUR.error ));
       free_buffer_in_size( exc );
       exc->size->cvt_ready = FALSE;  
       exc->size->bytecode_ready = FALSE;  

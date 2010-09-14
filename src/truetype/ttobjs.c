@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 by */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
+/*            2010 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -459,7 +460,11 @@
       error = TT_Goto_CodeRange( exec, tt_coderange_font, 0 );
 
       if ( !error )
+      {
+        FT_TRACE4(( "Executing `fpgm' table.\n" ));
+
         error = face->interpreter( exec );
+      }
     }
     else
       error = TT_Err_Ok;
@@ -521,7 +526,11 @@
       error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
 
       if ( !error && !size->debug )
+      {
+        FT_TRACE4(( "Executing `prep' table.\n" ));
+
         error = face->interpreter( exec );
+      }
     }
     else
       error = TT_Err_Ok;
