@@ -8162,13 +8162,15 @@
     *exc = cur;
 #endif
 
-    /* if any errors, function tables may be broken.  */
-    /* it should not be used for next interpretation. */
-    if ( CUR.error )
+    /* If any errors have occurred, function tables may be broken. */
+    /* Force a re-execution of `prep' and `fpgm' tables if no      */
+    /* bytecode debugger is run.                                   */
+    if ( CUR.error && !CUR.instruction_trap )
     {
       FT_TRACE1(( "  The interpreter returned error 0x%x\n", CUR.error ));
       free_buffer_in_size( exc );
-      exc->size->cvt_ready = FALSE;  
+
+      exc->size->cvt_ready      = FALSE;  
       exc->size->bytecode_ready = FALSE;  
     }
 

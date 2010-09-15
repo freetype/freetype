@@ -1,3 +1,10 @@
+2010-09-15  Werner Lemberg  <wl@gnu.org>
+
+	Make bytecode debugging with FontForge work again.
+
+	* src/truetype/ttinterp.c (TT_RunIns): Don't call
+	`free_buffer_in_size' in case of error if a debugger is active.
+
 2010-09-14  Werner Lemberg  <wl@gnu.org>
 
 	Improve tracing messages.
