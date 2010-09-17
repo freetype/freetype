@@ -1,3 +1,14 @@
+2010-09-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Don't duplicate size->twilight structure to be freed.
+
+	* src/truetype/ttinterp.c (free_buffer_in_size): Don't duplicate
+	FT_GlyphZoneRec size->twilight to be freed.  If duplicated,
+	FT_FREE() erases the duplicated pointers only and leave original
+	pointers.  They can cause the double-free crash when the burst
+	errors occur in TrueType interpreter and free_buffer_in_size()
+	is invoked repeatedly.  See Savannah bug #31040 for detail.
+
 2010-09-15  Werner Lemberg  <wl@gnu.org>
 
 	Make bytecode debugging with FontForge work again.

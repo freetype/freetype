@@ -7364,9 +7364,8 @@
   static void
   free_buffer_in_size( TT_ExecContext  exc )
   {
-    FT_Memory        memory = exc->memory;
-    TT_Size          size = exc->size;
-    TT_GlyphZoneRec  twilight;
+    FT_Memory  memory = exc->memory;
+    TT_Size    size = exc->size;
 
 
     if ( !size )
@@ -7381,18 +7380,16 @@
     if ( size->storage )
       FT_FREE( size->storage );
 
-    twilight = size->twilight;
-
-    if ( twilight.org )
-      FT_FREE( twilight.org );
-    if ( twilight.cur )
-      FT_FREE( twilight.cur );
-    if ( twilight.orus )
-      FT_FREE( twilight.orus );
-    if ( twilight.tags )
-      FT_FREE( twilight.tags );
-    if ( twilight.contours )
-      FT_FREE( twilight.contours );
+    if ( size->twilight.org )
+      FT_FREE( size->twilight.org );
+    if ( size->twilight.cur )
+      FT_FREE( size->twilight.cur );
+    if ( size->twilight.orus )
+      FT_FREE( size->twilight.orus );
+    if ( size->twilight.tags )
+      FT_FREE( size->twilight.tags );
+    if ( size->twilight.contours )
+      FT_FREE( size->twilight.contours );
   }
 
 
