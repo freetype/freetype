@@ -1,3 +1,14 @@
+2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[sfnt] Prevent overrunning in `post' table parser.
+
+	* src/sfnt/ttpost.c (load_post_names): Get the length of
+	`post' table and pass the limit of `post' table to
+	load_format_20() and load_format_25().
+	(load_format_20): Stop the parsing when we reached at the
+	limit of `post' table.  If more glyph names are required,
+	they are filled by NULL names.  See Savannah bug #31040.
+
 2010-09-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Don't duplicate size->twilight structure to be freed.

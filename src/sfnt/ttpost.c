@@ -153,7 +153,8 @@
 
   static FT_Error
   load_format_20( TT_Face    face,
-                  FT_Stream  stream )
+                  FT_Stream  stream,
+                  FT_ULong   post_limit )
   {
     FT_Memory   memory = stream->memory;
     FT_Error    error;
@@ -230,8 +231,29 @@
         FT_UInt  len;
 
 
-        if ( FT_READ_BYTE  ( len )                    ||
-             FT_NEW_ARRAY( name_strings[n], len + 1 ) ||
+        FT_TRACE7(( "load_format_20: %d byte left in post table\n",
+                     post_limit - FT_STREAM_POS() ));
+
+        if ( FT_STREAM_POS() >= post_limit )
+        {
+          FT_ERROR(( "load_format_20:"
+                     " all entries in post table is already parsed,"
+                     " put NULL name for gid=%d\n", n ));
+          len = 0;
+        }
+        else if ( FT_READ_BYTE( len ) )
+          goto Fail1;
+
+        if ( len > 0 && FT_STREAM_POS() + len > post_limit )
+        {
+          FT_ERROR(( "load_format_20:"
+                     " too large string length (%d)"
+                     " truncate at the end of post table (%d byte left)\n",
+                     len, post_limit - FT_STREAM_POS() ));
+          len = FT_MAX( 0, post_limit - FT_STREAM_POS() );
+        }
+
+        if ( FT_NEW_ARRAY( name_strings[n], len + 1 ) ||
              FT_STREAM_READ  ( name_strings[n], len ) )
           goto Fail1;
 
@@ -271,7 +293,8 @@
 
   static FT_Error
   load_format_25( TT_Face    face,
-                  FT_Stream  stream )
+                  FT_Stream  stream,
+                  FT_ULong   post_limit )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error;
@@ -338,15 +361,18 @@
     FT_Stream  stream;
     FT_Error   error;
     FT_Fixed   format;
+    FT_ULong   post_len, post_limit;
 
 
     /* get a stream for the face's resource */
     stream = face->root.stream;
 
     /* seek to the beginning of the PS names table */
-    error = face->goto_table( face, TTAG_post, stream, 0 );
+    error = face->goto_table( face, TTAG_post, stream, &post_len );
     if ( error )
       goto Exit;
+
+    post_limit = FT_STREAM_POS() + post_len;
 
     format = face->postscript.FormatType;
 
@@ -356,9 +382,9 @@
 
     /* now read postscript table */
     if ( format == 0x00020000L )
-      error = load_format_20( face, stream );
+      error = load_format_20( face, stream, post_limit );
     else if ( format == 0x00028000L )
-      error = load_format_25( face, stream );
+      error = load_format_25( face, stream, post_limit );
     else
       error = SFNT_Err_Invalid_File_Format;
 
