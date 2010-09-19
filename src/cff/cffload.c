@@ -519,9 +519,10 @@
         }
       }
 
-      /* XXX: should check off2 does not exceed the end of this entry   */
-      /*      at present, only truncate off 2 at the end of this stream */
-      if ( idx->data_offset + off2 - 1 > stream->size )
+      /* XXX: should check off2 does not exceed the end of this entry; */
+      /*      at present, only truncate off2 at the end of this stream */
+      if ( off2 > stream->size + 1                    ||
+           idx->data_offset > stream->size - off2 + 1 )
       {
         FT_ERROR(( "cff_index_access_element:"
                    " offset to next entry (%d)"
@@ -791,16 +792,11 @@
 
     for ( i = 0; i < num_glyphs; i++ )
     {
-      if ( charset->sids[i] > 0xFFFFU )
-        FT_ERROR(( "cff_charset_compute_cids():"
-                   " ignore CID (0x%lx) for SID (0x%lx),"
-                   " greater than PS/PDF spec\n",
-                   charset->sids[i], i ));
-      else if ( charset->sids[i] > max_cid )
+      if ( charset->sids[i] > max_cid )
         max_cid = charset->sids[i];
     }
 
-    if ( FT_NEW_ARRAY( charset->cids, max_cid + 1 ) )
+    if ( FT_NEW_ARRAY( charset->cids, (FT_ULong)max_cid + 1 ) )
       goto Exit;
 
     /* When multiple GIDs map to the same CID, we choose the lowest */

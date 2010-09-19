@@ -1,13 +1,27 @@
+2010-09-19  Werner Lemberg  <wl@gnu.org>
+
+	Minor fixes.
+
+	* src/cff/cffload.c (cff_charset_compute_cids): `charset->sids[i]'
+	is `FT_UShort'.
+	(cff_index_access_element): Don't use additions in comparison.
+	* src/sfnt/ttpost.c (load_format_20): Make `post_limit' of type
+	`FT_Long'.
+	Don't use additions in comparison.
+	Improve tracing messages.
+	(load_format_25, load_post_names): Make `post_limit' of type
+	`FT_Long'.
+
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
  
 	[cff] Truncate the element length at the end of the stream.
 	See Savannah bug #30975.
  
-	* src/cff/cffload.c (cff_index_access_element): `off2', the
- 	offset to the next element is truncated at the end of the
-	stream to prevent invalid I/O.  As `off1', the offset to the
-	requested element has been checked by FT_STREAM_SEEK(),
-	`off2' should be checked similarly.
+	* src/cff/cffload.c (cff_index_access_element): `off2', the offset
+ 	to the next element is truncated at the end of the stream to prevent
+ 	invalid I/O.  As `off1', the offset to the requested element has
+ 	been checked by FT_STREAM_SEEK(), `off2' should be checked
+ 	similarly.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -15,17 +29,17 @@
 	See Savannah bug #30975.
 
 	* src/cff/cffload.c (cff_charset_compute_cids): Ignore CID if
-	greater than 0xFFFFU.  CFF font spec does not mention about
-	maximum CID in the font, but PostScript and PDF spec define
-	that maximum CID is 0xFFFFU.
+	greater than 0xFFFFU.  CFF font spec does not mention maximum CID in
+	the font, but PostScript and PDF spec define that maximum CID is
+	0xFFFFU.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cff] Make trace message in cff_charset_load() verbose.
 	See Savannah bug #30975.
 
-	* src/cff/cffload.c (cff_charset_load): Report the original
-	`nleft' and truncated `nleft'.
+	* src/cff/cffload.c (cff_charset_load): Report the original `nleft'
+	and truncated `nleft'.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -33,45 +47,47 @@
 	See Savannah bug #30975.
 
 	* src/cff/cffload.c (cff_charset_compute_cids): Don't increment
-	max_cid after detecting max CID.  The array CFF_Charset->cids
-	is allocated by max_cid + 1.
-	(cff_charset_cid_to_gindex): Permit CID is less than or equal
-	to CFF_Charset->max_cid.
+	max_cid after detecting max CID.  The array CFF_Charset->cids is
+	allocated by max_cid + 1.
+	(cff_charset_cid_to_gindex): Permit CID is less than or equal to
+	CFF_Charset->max_cid.
 	* src/cff/cffobjs.c (cff_face_init): FT_Face->num_glyphs is
 	calculated as CFF_Charset->max_cid + 1.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Sanitize the broken offsets in `loca'.
+	See Savannah bug #31040.
 
 	* src/truetype/ttpload.c (tt_face_get_location): If `pos1', the
 	offset to the requested entry in `glyf' exceeds the end of the
-	table, return offset=0, length=0.  If `pos2', the offset to the
-	next entry in `glyf' exceeds the end of the table, truncate
-	the entry length at the end of `glyf' table.
-	See Savannah bug #31040.
+	table, return offset=0, length=0.  If `pos2', the offset to the next
+	entry in `glyf' exceeds the end of the table, truncate the entry
+	length at the end of `glyf' table.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[sfnt] Prevent overrunning in `post' table parser.
+	See Savannah bug #31040.
 
-	* src/sfnt/ttpost.c (load_post_names): Get the length of
-	`post' table and pass the limit of `post' table to
-	load_format_20() and load_format_25().
-	(load_format_20): Stop the parsing when we reached at the
-	limit of `post' table.  If more glyph names are required,
-	they are filled by NULL names.  See Savannah bug #31040.
+	* src/sfnt/ttpost.c (load_post_names): Get the length of `post'
+	table and pass the limit of `post' table to load_format_20() and
+	load_format_25().
+	(load_format_20): Stop the parsing when we reached at the limit of
+	`post' table.  If more glyph names are required, they are filled by
+	NULL names.
 
 2010-09-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Don't duplicate size->twilight structure to be freed.
+	See Savannah bug #31040 for detail.
 
 	* src/truetype/ttinterp.c (free_buffer_in_size): Don't duplicate
 	FT_GlyphZoneRec size->twilight to be freed.  If duplicated,
 	FT_FREE() erases the duplicated pointers only and leave original
 	pointers.  They can cause the double-free crash when the burst
-	errors occur in TrueType interpreter and free_buffer_in_size()
-	is invoked repeatedly.  See Savannah bug #31040 for detail.
+	errors occur in TrueType interpreter and free_buffer_in_size() is
+	invoked repeatedly.
 
 2010-09-15  Werner Lemberg  <wl@gnu.org>
 
