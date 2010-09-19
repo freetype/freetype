@@ -1,5 +1,16 @@
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[truetype] Sanitize the broken offsets in `loca'.
+
+	* src/truetype/ttpload.c (tt_face_get_location): If `pos1', the
+	offset to the requested entry in `glyf' exceeds the end of the
+	table, return offset=0, length=0.  If `pos2', the offset to the
+	next entry in `glyf' exceeds the end of the table, truncate
+	the entry length at the end of `glyf' table.
+	See Savannah bug #31040.
+
+2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[sfnt] Prevent overrunning in `post' table parser.
 
 	* src/sfnt/ttpost.c (load_post_names): Get the length of
