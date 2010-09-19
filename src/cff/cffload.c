@@ -779,8 +779,15 @@
       goto Exit;
 
     for ( i = 0; i < num_glyphs; i++ )
-      if ( charset->sids[i] > max_cid )
+    {
+      if ( charset->sids[i] > 0xFFFFU )
+        FT_ERROR(( "cff_charset_compute_cids():"
+                   " ignore CID (0x%lx) for SID (0x%lx),"
+                   " greater than PS/PDF spec\n",
+                   charset->sids[i], i ));
+      else if ( charset->sids[i] > max_cid )
         max_cid = charset->sids[i];
+    }
 
     if ( FT_NEW_ARRAY( charset->cids, max_cid + 1 ) )
       goto Exit;

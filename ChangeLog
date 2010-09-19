@@ -1,5 +1,15 @@
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cff] Ignore CID > 0xFFFFU.
+	See Savannah bug #30975.
+
+	* src/cff/cffload.c (cff_charset_compute_cids): Ignore CID if
+	greater than 0xFFFFU.  CFF font spec does not mention about
+	maximum CID in the font, but PostScript and PDF spec define
+	that maximum CID is 0xFFFFU.
+
+2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cff] Make trace message in cff_charset_load() verbose.
 	See Savannah bug #30975.
 
