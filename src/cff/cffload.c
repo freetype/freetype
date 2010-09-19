@@ -519,6 +519,17 @@
         }
       }
 
+      /* XXX: should check off2 does not exceed the end of this entry   */
+      /*      at present, only truncate off 2 at the end of this stream */
+      if ( idx->data_offset + off2 - 1 > stream->size )
+      {
+        FT_ERROR(( "cff_index_access_element:"
+                   " offset to next entry (%d)"
+                   " exceeds the end of stream (%d)\n",
+                   off2, stream->size - idx->data_offset + 1 ));
+        off2 = stream->size - idx->data_offset + 1;
+      }
+
       /* access element */
       if ( off1 && off2 > off1 )
       {
