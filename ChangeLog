@@ -1,5 +1,13 @@
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cff] Make trace message in cff_charset_load() verbose.
+	See Savannah bug #30975.
+
+	* src/cff/cffload.c (cff_charset_load): Report the original
+	`nleft' and truncated `nleft'.
+
+2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cff] Correct `max_cid' from CID array length to max CID.
 	See Savannah bug #30975.
 

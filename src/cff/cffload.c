@@ -916,7 +916,8 @@
             /* try to rescue some of the SIDs if `nleft' is too large */
             if ( glyph_sid > 0xFFFFL - nleft )
             {
-              FT_ERROR(( "cff_charset_load: invalid SID range trimmed\n" ));
+              FT_ERROR(( "cff_charset_load: invalid SID range trimmed"
+                         " nleft=%d -> %d\n", nleft, 0xFFFFL - glyph_sid ));
               nleft = ( FT_UInt )( 0xFFFFL - glyph_sid );
             }
 
