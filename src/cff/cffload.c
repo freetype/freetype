@@ -781,9 +781,8 @@
     for ( i = 0; i < num_glyphs; i++ )
       if ( charset->sids[i] > max_cid )
         max_cid = charset->sids[i];
-    max_cid++;
 
-    if ( FT_NEW_ARRAY( charset->cids, max_cid ) )
+    if ( FT_NEW_ARRAY( charset->cids, max_cid + 1 ) )
       goto Exit;
 
     /* When multiple GIDs map to the same CID, we choose the lowest */
@@ -807,7 +806,7 @@
     FT_UInt  result = 0;
 
 
-    if ( cid < charset->max_cid )
+    if ( cid <= charset->max_cid )
       result = charset->cids[cid];
 
     return result;

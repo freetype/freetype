@@ -1,5 +1,18 @@
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cff] Correct `max_cid' from CID array length to max CID.
+	See Savannah bug #30975.
+
+	* src/cff/cffload.c (cff_charset_compute_cids): Don't increment
+	max_cid after detecting max CID.  The array CFF_Charset->cids
+	is allocated by max_cid + 1.
+	(cff_charset_cid_to_gindex): Permit CID is less than or equal
+	to CFF_Charset->max_cid.
+	* src/cff/cffobjs.c (cff_face_init): FT_Face->num_glyphs is
+	calculated as CFF_Charset->max_cid + 1.
+
+2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[truetype] Sanitize the broken offsets in `loca'.
 
 	* src/truetype/ttpload.c (tt_face_get_location): If `pos1', the
