@@ -1,3 +1,10 @@
+2010-09-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[sfnt] Make error message filling NULL names less verbose.
+
+	* src/sfnt/ttpost.c (load_format_20): Showing 1 summary message
+	when we fill `post' names by NULL, instead of per-entry message.
+
 2010-09-20  Graham Asher  <graham.asher@btinternet.com>
 	    David Bevan  <david.bevan@pb.com>
 

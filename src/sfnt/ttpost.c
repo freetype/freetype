@@ -232,12 +232,7 @@
 
 
         if ( FT_STREAM_POS() >= post_limit )
-        {
-          FT_ERROR(( "load_format_20:"
-                     " all entries in post table are already parsed,"
-                     " using NULL for gid %d\n", n ));
-          len = 0;
-        }
+          break;
         else
         {
           FT_TRACE6(( "load_format_20: %d byte left in post table\n",
@@ -262,6 +257,19 @@
           goto Fail1;
 
         name_strings[n][len] = '\0';
+      }
+
+      if ( n < num_names )
+      {
+        FT_ERROR(( "load_format_20:"
+                   " all entries in post table are already parsed,"
+                   " using NULL names for gid %d - %d\n",
+                    n, num_names - 1 ));
+        for ( ; n < num_names; n++ )
+          if ( FT_NEW_ARRAY( name_strings[n], 1 ) )
+            goto Fail1;
+          else
+            name_strings[n][0] = '\0';
       }
     }
 
