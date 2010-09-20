@@ -1,3 +1,21 @@
+2010-09-20  Graham Asher  <graham.asher@btinternet.com>
+	    David Bevan  <david.bevan@pb.com>
+
+	[smooth] Fix and improve spline flattening.
+	
+	This fixes the flattening of cubic, S-shaped curves and speeds up
+	the handling of both the conic and cubic arcs.
+
+	See the discussions on the freetype-devel mailing list in late
+	August and September 2010 for details.
+
+	* src/smooth/ftgrays.c (FT_MAX_CURVE_DEVIATION): New macro.
+	(TWorker): Remove `conic_level' and `cubic_level' elements.
+	(gray_render_conic): Simplify algorithm.
+	(gray_render_cubic): New algorithm; details are given in the code
+	comments.
+	(gray_convert_glyph): Remove heuristics.
+
 2010-09-19  Werner Lemberg  <wl@gnu.org>
 
 	Minor fixes.
