@@ -1,3 +1,10 @@
+2010-10-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix Savannah bug #31040.
+
+	* src/truetype/ttinterp.c (free_buffer_in_size): Remove.
+	(TT_RunIns): Updated.
+
 2010-09-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[sfnt] Make error message filling NULL names less verbose.

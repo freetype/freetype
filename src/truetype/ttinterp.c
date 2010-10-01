@@ -7361,38 +7361,6 @@
 #endif /* !TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 
 
-  static void
-  free_buffer_in_size( TT_ExecContext  exc )
-  {
-    FT_Memory  memory = exc->memory;
-    TT_Size    size = exc->size;
-
-
-    if ( !size )
-      return;
-
-    if ( size->function_defs )
-      FT_FREE( size->function_defs );
-    if ( size->instruction_defs )
-      FT_FREE( size->instruction_defs );
-    if ( size->cvt )
-      FT_FREE( size->cvt );
-    if ( size->storage )
-      FT_FREE( size->storage );
-
-    if ( size->twilight.org )
-      FT_FREE( size->twilight.org );
-    if ( size->twilight.cur )
-      FT_FREE( size->twilight.cur );
-    if ( size->twilight.orus )
-      FT_FREE( size->twilight.orus );
-    if ( size->twilight.tags )
-      FT_FREE( size->twilight.tags );
-    if ( size->twilight.contours )
-      FT_FREE( size->twilight.contours );
-  }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RUN                                                                   */
@@ -8165,10 +8133,7 @@
     if ( CUR.error && !CUR.instruction_trap )
     {
       FT_TRACE1(( "  The interpreter returned error 0x%x\n", CUR.error ));
-      free_buffer_in_size( exc );
-
       exc->size->cvt_ready      = FALSE;  
-      exc->size->bytecode_ready = FALSE;  
     }
 
     return CUR.error;
