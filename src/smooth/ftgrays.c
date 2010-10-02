@@ -1028,7 +1028,7 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( y > max )
         max = y;
 
-      if ( TRUNC( min ) >= ras.max_ey || TRUNC( max ) < 0 )
+      if ( TRUNC( min ) >= ras.max_ey || TRUNC( max ) < ras.min_ey )
         goto Draw;
 
       /* Decide whether to split or draw. See `Rapid Termination          */
