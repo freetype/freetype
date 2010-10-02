@@ -1,5 +1,12 @@
 2010-10-02  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #31088 (sort of).
+
+	* src/sfnt/ttload.c (tt_face_load_maxp): Always allocate at least 64
+	function entries.
+
+2010-10-02  Werner Lemberg  <wl@gnu.org>
+
 	[smooth] Fix splitting of cubics for negative values.
 
 	Reported by Róbert Márki <gsmiko@gmail.com>; see
