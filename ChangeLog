@@ -40,7 +40,7 @@
 	    David Bevan  <david.bevan@pb.com>
 
 	[smooth] Fix and improve spline flattening.
-	
+
 	This fixes the flattening of cubic, S-shaped curves and speeds up
 	the handling of both the conic and cubic arcs.
 
@@ -69,10 +69,10 @@
 	`FT_Long'.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
- 
+
 	[cff] Truncate the element length at the end of the stream.
 	See Savannah bug #30975.
- 
+
 	* src/cff/cffload.c (cff_index_access_element): `off2', the offset
  	to the next element is truncated at the end of the stream to prevent
  	invalid I/O.  As `off1', the offset to the requested element has
@@ -681,7 +681,7 @@
 	* src/base/ftobjs.c (Mac_Read_POST_Resource): Check `rlen', the
 	length of fragment declared in the POST fragment header, and prevent
 	an underflow in length calculation.  Some fonts set the length to
-	zero in spite of the existence of a following 16bit `type'. 
+	zero in spite of the existence of a following 16bit `type'.
 	Reported by Robert Święcki.
 
 2010-07-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
