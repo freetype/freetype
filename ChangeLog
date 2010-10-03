@@ -74,10 +74,10 @@
 	See Savannah bug #30975.
 
 	* src/cff/cffload.c (cff_index_access_element): `off2', the offset
- 	to the next element is truncated at the end of the stream to prevent
- 	invalid I/O.  As `off1', the offset to the requested element has
- 	been checked by FT_STREAM_SEEK(), `off2' should be checked
- 	similarly.
+	to the next element is truncated at the end of the stream to prevent
+	invalid I/O.  As `off1', the offset to the requested element has
+	been checked by FT_STREAM_SEEK(), `off2' should be checked
+	similarly.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
