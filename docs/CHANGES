@@ -1,3 +1,23 @@
+
+CHANGES BETWEEN 2.4.2 and 2.4.3
+
+  I. IMPORTANT BUG FIXES
+
+    - Fix rendering of certain cubic, S-shaped arcs.   This regression
+      has been introduced in version 2.4.0.
+
+
+  II. MISCELLANEOUS
+
+    - To  fix  the  above  mentioned  rendering  issue,  a  new spline
+      flattening algorithm  has been  introduced which  speeds up both
+      conic and cubic arcs.
+
+    - Handling of broken fonts has been further improved.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.4.1 and 2.4.2
 
   I. IMPORTANT BUG FIXES
