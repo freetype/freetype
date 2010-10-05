@@ -1,3 +1,11 @@
+2010-10-05  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #31253.
+	Patch submitted by an anonymous reporter.
+
+	* configure: Use `awk' instead of `sed' to manipulate output of `ls
+	-id'.
+
 2010-10-03  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.3 released.
