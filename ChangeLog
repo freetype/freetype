@@ -1,3 +1,9 @@
+2010-10-08  Chris Liddell  <chris.liddell@artifex.com>
+
+	Fix Savannah bug #31275.
+
+	* src/sfnt/ttpost.c: Include FT_INTERNAL_DEBUG_H.
+
 2010-10-06  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Improve error handling of `SHZ' bytecode instruction.
