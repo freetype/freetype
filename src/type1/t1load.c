@@ -2180,7 +2180,7 @@
       /* OK, we do the following: for each element in the encoding  */
       /* table, look up the index of the glyph having the same name */
       /* the index is then stored in type1.encoding.char_index, and */
-      /* a the name to type1.encoding.char_name                     */
+      /* the name to type1.encoding.char_name                       */
 
       min_char = 0;
       max_char = 0;
