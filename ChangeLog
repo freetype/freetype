@@ -1,5 +1,29 @@
 2010-10-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[raccess] Grouping resource access rules based on Darwin VFS.
+
+	MacOS X/Darwin kernel supports a few tricky methods to access
+	a resource fork via ANSI C or POSIX interface.  Current resource
+	fork accessor tries all possible methods to support all kernels.
+	But if a method could open a resource fork but no font is found,
+	there is no need to try other methods older than tested method. 
+	To determine whether the rule index is for Darwin VFS, a local
+	function ftrfork.c::raccess_rule_by_darwin_vfs() is introduced.
+	To use this function in ftobjs.c etc but it should be inlined,
+	it is exposed by ftbase.h.
+
+	* src/base/ftrfork.c (FT_RFork_Rule): New enum type to identify
+	the rules to access the resource fork.
+	(raccess_guess_rec): New structure to bind the rule function and
+	rule enum type.
+	(FT_Raccess_Guess): The list of the rule functions is replaced by
+	(raccess_guess_table): This.  This is exposed to be used by other
+	intra module functions.
+	(raccess_rule_by_darwin_vfs): A function to return a boolean
+	if the rule specified by the rule index is based on Darwin VFS.
+
+2010-10-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Prevent to open a FT_Stream for zero-sized file on non-Unix.
 
 	builds/unix/ftsystem.c prevents to open an useless stream from
