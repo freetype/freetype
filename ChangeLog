@@ -1,3 +1,18 @@
+2010-10-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Prevent to open a FT_Stream for zero-sized file on non-Unix.
+
+	builds/unix/ftsystem.c prevents to open an useless stream from
+	zero-sized file and returns FT_Err_Cannot_Open_Stream, but the
+	stream drivers for ANSI C, Amiga and VMS return useless streams.
+	For cross-platform consistency, all stream drivers should act
+	same.
+
+	* src/base/ftsystem.c (FT_Stream_Open): If the size of the opened
+	file is zero, FT_Err_Cannot_Open_Stream is returned.
+	* builds/amiga/src/base/ftsystem.c (FT_Stream_Open): Ditto.
+	* src/vms/ftsystem.c (FT_Stream_Open): Ditto.
+
 2010-10-12  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #31310.

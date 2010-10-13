@@ -231,6 +231,13 @@
     }
 
     stream->size = stat_buf.st_size;
+    if ( !stream->size )
+    {
+      FT_ERROR(( "FT_Stream_Open:" ));
+      FT_ERROR(( " opened `%s' but zero-sized\n", filepathname ));
+      goto Fail_Map;
+    }
+
     stream->pos  = 0;
     stream->base = (unsigned char *)mmap( NULL,
                                           stream->size,

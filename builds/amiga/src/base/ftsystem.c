@@ -442,6 +442,14 @@ Free_VecPooled( APTR  poolHeader,
     stream->read  = ft_amiga_stream_io;
     stream->close = ft_amiga_stream_close;
 
+    if ( !stream->size )
+    {
+      ft_amiga_stream_close( stream );
+      FT_ERROR(( "FT_Stream_Open:" ));
+      FT_ERROR(( " opened `%s' but zero-sized\n", filepathname ));
+      return FT_Err_Cannot_Open_Stream;;
+    }
+
     FT_TRACE1(( "FT_Stream_Open:" ));
     FT_TRACE1(( " opened `%s' (%ld bytes) successfully\n",
                 filepathname, stream->size ));
