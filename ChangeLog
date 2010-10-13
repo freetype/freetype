@@ -1,5 +1,25 @@
 2010-10-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[raccess] Skip unrequired resource access rules by Darwin VFS.
+
+	When a resource fork access rule by Darwin VFS could open the
+	resource fork but no font is found in it, the rest of rules
+	by Darwin VFS are skipped.  It reduces the warnings of the
+	deprecated resource fork access method by recent Darwin kernel.
+	Fix MacPorts ticket #18859:
+		http://trac.macports.org/ticket/18859
+
+	* src/base/ftobjs.c (load_face_in_embedded_rfork):
+	When FT_Stream_New() returns FT_Err_Cannot_Open_Stream, it
+	means that the file is possible to be fopen()-ed but zero-sized.
+	Also there is a case that the resource fork is not zero-sized, 
+	but no supported font exists in it.  If a rule by Darwin VFS
+	falls into such cases, there is no need to try other Darwin VFS
+	rules anymore.  Such cases are marked by vfs_rfork_has_no_font.
+	If it is TRUE, the Darwin VFS rules are skipped.
+
+2010-10-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[raccess] Grouping resource access rules based on Darwin VFS.
 
 	MacOS X/Darwin kernel supports a few tricky methods to access
