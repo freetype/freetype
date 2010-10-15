@@ -1,3 +1,12 @@
+2010-10-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Fix thinko in spline flattening.
+
+	FT_MAX_CURVE_DEVIATION is dependent on the value of ONE_PIXEL.
+
+	* src/smooth/ftgrays.c (FT_MAX_CURVE_DEVIATION): Remove it and
+	replace it everywhere with ONE_PIXEL/8.
+
 2010-10-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[raccess] Skip unrequired resource access rules by Darwin VFS.

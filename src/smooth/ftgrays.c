@@ -91,11 +91,6 @@
 #define FT_COMPONENT  trace_smooth
 
 
-  /* The maximum distance of a curve from the chord, in 64ths of a pixel; */
-  /* used when flattening curves.                                         */
-#define FT_MAX_CURVE_DEVIATION  16
-
-
 #ifdef _STANDALONE_
 
 
@@ -891,14 +886,14 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( dx < dy )
       dx = dy;
 
-    if ( dx <= FT_MAX_CURVE_DEVIATION )
+    if ( dx <= ONE_PIXEL / 8 )
     {
       gray_render_line( RAS_VAR_ UPSCALE( to->x ), UPSCALE( to->y ) );
       return;
     }
 
     level = 1;
-    dx /= FT_MAX_CURVE_DEVIATION;
+    dx /= ONE_PIXEL / 8;
     while ( dx > 1 )
     {
       dx >>= 2;
@@ -1074,7 +1069,7 @@ typedef ptrdiff_t  FT_PtrDist;
           goto Split;
 
         /* Max deviation may be as much as (s/L) * 3/4 (if Hain's v = 1). */
-        s_limit = L * (TPos)( FT_MAX_CURVE_DEVIATION / 0.75 );
+        s_limit = L * (TPos)( ONE_PIXEL / 6 );
 
         /* s is L * the perpendicular distance from P1 to the line P0-P3. */
         dx1 = arc[1].x - arc[0].x;
