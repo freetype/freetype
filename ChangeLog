@@ -1,5 +1,46 @@
 2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache] Change the hash types to FT_PtrDist.
+
+	On LLP64 platforms (e.g. Win64), FT_ULong (32-bit)
+	variables are inappropriate to calculate hash values
+	from the memory address (64-bit).  The hash variables  
+	are extended from FT_ULong to FT_PtrDist and new
+	hashing macro functions are introduced.  The hash
+	values on 16-bit memory platforms are changed, but
+	ILP32 and LP64 are not changed.  The hash value in
+	the cache subsystem is not reverted to the memory
+	address, so using signed type FT_PtrDist is safe.
+
+	* src/cache/ftccache.h (_FTC_FACE_ID_HASH): New hash
+	function to replace FTC_FACE_ID_HASH() for portability.
+	* src/cache/ftcmanag.h (FTC_SCALER_HASH): Replace 
+	FTC_FACE_ID_HASH() by _FTC_FACE_ID_HASH().
+	* src/cache/ftccmap.c (FTC_CMAP_HASH): Ditto.
+
+	* src/cache/ftccache.h (FTC_NodeRec): The type of the
+	member `hash' is changed from FT_UInt32 to FT_PtrDist.
+
+	* src/cache/ftccache.h (FTC_Cache_Lookup): The type of the
+	argument `hash' is changed from FT_UInt32 to FT_PtrDist.
+	(FTC_Cache_NewNode): Ditto.
+	* src/cache/ftccache.c (ftc_cache_add): Ditto.
+	(FTC_Cache_Lookup): Ditto.  (FTC_Cache_NewNode): Ditto.
+	* src/cache/ftcglyph.h (FTC_GCache_Lookup): Ditto.
+	* src/cache/ftcglyph.c (FTC_GCache_Lookup): Ditto.
+
+	* src/cache/ftcbasic.c (FTC_ImageCache_Lookup): The type
+	of the internal variable `hash' is changed to FT_PtrDist
+	from FT_UInt32.  (FTC_ImageCache_LookupScaler): Ditto.
+	(FTC_SBitCache_Lookup): Ditto.
+	(FTC_SBitCache_LookupScaler): Ditto.
+	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Ditto.
+	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP): Ditto.
+	Also the type of the internal variable `_idx' is changed to
+	FT_PtrDist from FT_UInt32 for better pointer calculation.
+	
+2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cache] Hide internal macros incompatible with LLP64.
 
 	FT_POINTER_TO_ULONG(), FTC_FACE_ID_HASH() and
