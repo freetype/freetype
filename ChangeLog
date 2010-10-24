@@ -1,5 +1,19 @@
 2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Change the type of FT_MEM_VAL() from FT_ULong to FT_PtrDist.
+
+	On LLP64 platforms (e.g. Win64), unsigned long (32-bit)
+	cannot cover the memory address (64-bit).  FT_MEM_VAL() is
+	used for hashing only and not dereferred, so using signed
+	type FT_PtrDist is safe.
+
+	* src/base/ftdbgmem.c (FT_MEM_VAL): Change the type of the
+	return value from FT_ULong to FT_PtrDist.
+	(ft_mem_table_resize): The type of hash is changed to
+	FT_PtrDist.  (ft_mem_table_get_nodep): Ditto.
+
+2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Replace "%lx" for memory address by "%p", LLP64 platforms.
 
 	On LLP64 platforms (e.g. Win64), long (32-bit) cannot cover
