@@ -1,5 +1,17 @@
 2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache] Hide internal macros incompatible with LLP64.
+
+	FT_POINTER_TO_ULONG(), FTC_FACE_ID_HASH() and
+	FTC_IMAGE_TYPE_HASH() are enclosed by
+	FT_CONFIG_OPTION_OLD_INTERNALS and hidden from
+	normal clients.
+
+	For the history of these macros, see the investigation:
+	http://lists.gnu.org/archive/html/freetype/2010-10/msg00022.html
+
+2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Change the type of FT_MEM_VAL() from FT_ULong to FT_PtrDist.
 
 	On LLP64 platforms (e.g. Win64), unsigned long (32-bit)
