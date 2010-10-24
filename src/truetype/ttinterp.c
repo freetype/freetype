@@ -478,8 +478,7 @@
     return TT_Err_Ok;
 
   Fail_Memory:
-    FT_ERROR(( "Init_Context: not enough memory for 0x%08lx\n",
-               (FT_Long)exec ));
+    FT_ERROR(( "Init_Context: not enough memory for %p\n", exec ));
     TT_Done_Context( exec );
 
     return error;

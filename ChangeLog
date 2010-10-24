@@ -1,3 +1,16 @@
+2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Replace "%lx" for memory address by "%p", LLP64 platforms.
+
+	On LLP64 platforms (e.g. Win64), long (32-bit) cannot cover
+	the memory address (64-bit).  Also the casts from the pointer
+	type to long int should be removed to preserve the address
+	correctly.
+
+	* src/raster/ftraster.c (New_Profile): Replace "%lx" by "%p".
+	(End_Profile) Ditto.
+	* src/truetype/ttinterp.c (Init_Context): Ditto.
+
 2010-10-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Fix thinko in spline flattening.
