@@ -205,7 +205,7 @@ FT_BEGIN_HEADER
     FTC_Cache             _cache   = FTC_CACHE(cache);                   \
     FT_PtrDist            _hash    = (FT_PtrDist)(hash);                 \
     FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);    \
-    FT_PtrDist            _idx;                                          \
+    FT_UFast              _idx;                                          \
                                                                          \
                                                                          \
     error = FTC_Err_Ok;                                                  \

@@ -1,3 +1,11 @@
+2010-10-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Revert a change of `_idx' type in FTC_CACHE_LOOKUP_CMP().
+
+	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP): Revert
+	the type of `_idx' from FT_PtrDist (by previous change)
+	to original FT_UFast, to match with FT_CacheRec.
+
 2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Change the hash types to FT_PtrDist.
@@ -37,7 +45,7 @@
 	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Ditto.
 	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP): Ditto.
 	Also the type of the internal variable `_idx' is changed to
-	FT_PtrDist from FT_UInt32 for better pointer calculation.
+	FT_PtrDist from FT_UFast for better pointer calculation.
 	
 2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
