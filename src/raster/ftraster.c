@@ -302,7 +302,6 @@
   typedef short           Short;
   typedef unsigned short  UShort, *PUShort;
   typedef long            Long, *PLong;
-  typedef unsigned long   ULong;
 
   typedef unsigned char   Byte, *PByte;
   typedef char            Bool;
@@ -448,7 +447,6 @@
     Int         precision_bits;     /* precision related variables         */
     Int         precision;
     Int         precision_half;
-    Long        precision_mask;
     Int         precision_shift;
     Int         precision_step;
     Int         precision_jitter;
@@ -671,7 +669,6 @@
     ras.precision       = 1 << ras.precision_bits;
     ras.precision_half  = ras.precision / 2;
     ras.precision_shift = ras.precision_bits - Pixel_Bits;
-    ras.precision_mask  = -ras.precision;
   }
 
 

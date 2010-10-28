@@ -1,5 +1,14 @@
 2010-10-28  Werner Lemberg  <wl@gnu.org>
 
+	[ftraster] Minor fixes.
+
+	Reported by Tom Bishop <wenlin@wenlin.com>.
+
+	* src/raster/ftraster.c (ULong): Remove unused typedef.
+	(TWorker): Remove unused variable `precision_mask'.
+
+2010-10-28  Werner Lemberg  <wl@gnu.org>
+
 	[ftraster] Fix rendering.
 
 	Problem reported by Tom Bishop <wenlin@wenlin.com>; see
