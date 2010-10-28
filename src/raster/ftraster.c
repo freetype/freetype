@@ -1094,7 +1094,7 @@
         return SUCCESS;
       else
       {
-        x1 += FMulDiv( Dx, ras.precision - f1, Dy );
+        x1 += SMulDiv( Dx, ras.precision - f1, Dy );
         e1 += 1;
       }
     }
@@ -1122,13 +1122,13 @@
 
     if ( Dx > 0 )
     {
-      Ix = SMulDiv( ras.precision, Dx,  Dy);
+      Ix = SMulDiv( ras.precision, Dx, Dy);
       Rx = ( ras.precision * Dx ) % Dy;
       Dx = 1;
     }
     else
     {
-      Ix = SMulDiv( ras.precision, -Dx,  Dy) * -1;
+      Ix = SMulDiv( ras.precision, -Dx, Dy) * -1;
       Rx =    ( ras.precision * -Dx ) % Dy;
       Dx = -1;
     }

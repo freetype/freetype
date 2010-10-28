@@ -1,3 +1,15 @@
+2010-10-28  Werner Lemberg  <wl@gnu.org>
+
+	[ftraster] Fix rendering.
+
+	Problem reported by Tom Bishop <wenlin@wenlin.com>; see
+	thread starting with
+
+	  http://lists.gnu.org/archive/html/freetype/2010-10/msg00049.html
+
+	* src/raster/ftraster.c (Line_Up): Replace FMulDiv with SMulDiv
+	since the involved multiplication exceeds 32 bits.
+
 2010-10-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Revert a change of `_idx' type in FTC_CACHE_LOOKUP_CMP().
