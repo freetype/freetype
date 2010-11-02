@@ -877,40 +877,35 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_Vector*  arc;
 
 
-    dx = DOWNSCALE( ras.x ) + to->x - ( control->x << 1 );
-    if ( dx < 0 )
-      dx = -dx;
-    dy = DOWNSCALE( ras.y ) + to->y - ( control->y << 1 );
-    if ( dy < 0 )
-      dy = -dy;
-    if ( dx < dy )
-      dx = dy;
-
-    if ( dx <= ONE_PIXEL / 8 )
-    {
-      gray_render_line( RAS_VAR_ UPSCALE( to->x ), UPSCALE( to->y ) );
-      return;
-    }
-
-    level = 1;
-    dx /= ONE_PIXEL / 8;
-    while ( dx > 1 )
-    {
-      dx >>= 2;
-      level++;
-    }
-
-    arc       = ras.bez_stack;
-    levels    = ras.lev_stack;
-    top       = 0;
-    levels[0] = level;
-
+    arc      = ras.bez_stack;
     arc[0].x = UPSCALE( to->x );
     arc[0].y = UPSCALE( to->y );
     arc[1].x = UPSCALE( control->x );
     arc[1].y = UPSCALE( control->y );
     arc[2].x = ras.x;
     arc[2].y = ras.y;
+
+    dx = FT_ABS( arc[2].x + arc[0].x - 2 * arc[1].x );
+    dy = FT_ABS( arc[2].y + arc[0].y - 2 * arc[1].y );
+    if ( dx < dy )
+      dx = dy;
+
+    if ( dx <= ONE_PIXEL / 4 )
+    {
+      gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
+      return;
+    }
+
+    level = 0;
+    while ( dx > ONE_PIXEL / 4 )
+    {
+      dx >>= 2;
+      level++;
+    }
+
+    levels    = ras.lev_stack;
+    levels[0] = level;
+    top       = 0;
 
     while ( top >= 0 )
     {
