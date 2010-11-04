@@ -1,3 +1,23 @@
+2010-11-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[UVS] Stabilizes UVS supporting functions against non-UVS fonts.
+
+	UVS supporting functions assume the variation handler functions
+	are valid.  When fonts without cmap format 14 is given, these
+	function pointers are left as NULL, so calling these functions
+	causes NULL pointer dereference.
+
+	* src/base/ftobjs.c (FT_Face_GetCharVariantIndex): Check the pointer
+	FT_CMap_Class->char_var_index before calling it.
+	(FT_Face_GetCharVariantIsDefault): Check the pointer
+	FT_CMap_Class->char_var_default before calling it.
+	(FT_Face_GetVariantSelectors): Check the pointer
+	FT_CMap_Class->variant_list before calling it.
+	(FT_Face_GetVariantsOfChar): Check the pointer
+	FT_CMap_Class->charvariant_list before calling it.
+	(FT_Face_GetCharsOfVariant): Check the pointer 
+	FT_CMap_Class->variantchar_list before calling it.
+
 2010-11-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[ftsmooth] Improve rendering.
