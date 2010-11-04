@@ -1062,6 +1062,7 @@
       if ( cur[0]->platform_id == TT_PLATFORM_APPLE_UNICODE    &&
            cur[0]->encoding_id == TT_APPLE_ID_VARIANT_SELECTOR &&
            FT_Get_CMap_Format( cur[0] ) == 14                  )
+      {
 #ifdef FT_MAX_CHARMAP_CACHEABLE
         if ( cur - first > FT_MAX_CHARMAP_CACHEABLE )
         {
@@ -1071,6 +1072,7 @@
         }
 #endif
         return cur[0];
+      }
     }
 
     return NULL;

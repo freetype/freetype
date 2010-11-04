@@ -1,3 +1,15 @@
+2010-11-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[UVS] Fix find_variant_selector_charmap(), Savannah bug #31545.
+
+	Since 2010-07-04, find_variant_selector_charmap() returns
+	the first cmap subtable always under rogue-compatible
+	configuration, it causes NULL pointer dereference and
+	make UVS-related functions crashed.
+
+	* src/base/ftobjs.c (Fix find_variant_selector_charmap):
+	Returns UVS cmap correctly.
+
 2010-11-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[ftsmooth] Improve rendering.
