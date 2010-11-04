@@ -3291,10 +3291,6 @@
         FT_CMap  vcmap = FT_CMAP( charmap );
 
 
-	/* font without TT cmap format 14 has no char_var_index() */
-        if ( !( vcmap->clazz ) || !( vcmap->clazz->char_var_index ) )
-          return result;
-
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
@@ -3336,10 +3332,6 @@
         FT_CMap  vcmap = FT_CMAP( charmap );
 
 
-	/* font without TT cmap format 14 has no char_var_index() */
-        if ( !( vcmap->clazz ) || !( vcmap->clazz->char_var_default ) )
-          return result;
-
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
@@ -3380,10 +3372,6 @@
         FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
-	/* font without TT cmap format 14 has no variant_list() */
-        if ( !( vcmap->clazz ) || !( vcmap->clazz->variant_list ) )
-          return result;
-
         result = vcmap->clazz->variant_list( vcmap, memory );
       }
     }
@@ -3411,10 +3399,6 @@
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
 
-
-	/* font without TT cmap format 14 has no charvariant_list() */
-        if ( !( vcmap->clazz ) || !( vcmap->clazz->charvariant_list ) )
-          return result;
 
         if ( charcode > 0xFFFFFFFFUL )
         {
@@ -3449,10 +3433,6 @@
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
 
-
-	/* font without TT cmap format 14 has no variantchar_list() */
-        if ( !( vcmap->clazz ) || !( vcmap->clazz->variantchar_list ) )
-          return result;
 
         if ( variantSelector > 0xFFFFFFFFUL )
         {
