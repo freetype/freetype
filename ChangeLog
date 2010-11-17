@@ -1,3 +1,9 @@
+2010-11-17  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] While tracing, output table checksums also.
+
+	* src/sfnt/ttload.c (tt_face_load_font_dir): Do it.
+
 2010-11-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[UVS] Fix find_variant_selector_charmap(), Savannah bug #31545.
