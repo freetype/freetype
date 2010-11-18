@@ -1,5 +1,13 @@
 2010-11-18  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix `loca' handling for inconsistent number of glyphs.
+	Reported by Johnson Y. Yan <yinsen_yan@foxitsoftware.com>.
+
+	* src/truetype/ttpload.c (tt_face_load_loca): While sanitizing,
+	handle case where `loca' is the last table in the font.
+
+2010-11-18  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Ignore all errors while loading `OS/2' table.
 	Suggested by Johnson Y. Yan <yinsen_yan@foxitsoftware.com>.
 
