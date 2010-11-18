@@ -1,3 +1,11 @@
+2010-11-18  Werner Lemberg  <wl@gnu.org>
+
+	[type1]: Improve guard against malformed data.
+	Based on a patch submitted by Johnson Y. Yan
+	<yinsen_yan@foxitsoftware.com>
+
+	* src/type1/t1load.c (read_binary_data): Check `size'.
+
 2010-11-17  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] While tracing, output table checksums also.
