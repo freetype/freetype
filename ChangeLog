@@ -1,3 +1,10 @@
+2010-11-18  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Ignore all errors while loading `OS/2' table.
+	Suggested by Johnson Y. Yan <yinsen_yan@foxitsoftware.com>.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Do it.
+
 2010-11-18  Johnson Y. Yan  <yinsen_yan@foxitsoftware.com>
 
 	[type1] Fix matrix normalization.
