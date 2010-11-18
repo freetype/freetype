@@ -1117,7 +1117,7 @@
       temp[2] = FT_DivFix( temp[2], temp_scale );
       temp[4] = FT_DivFix( temp[4], temp_scale );
       temp[5] = FT_DivFix( temp[5], temp_scale );
-      temp[3] = 0x10000L;
+      temp[3] = temp[3] < 0 ? -0x10000L : 0x10000L;
     }
 
     matrix->xx = temp[0];
