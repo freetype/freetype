@@ -1,3 +1,16 @@
+2010-11-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Identify the tricky fonts by cvt/fpgm/prep checksums.
+	Some Latin TrueType fonts are still expected to be unhinted.
+	Fix Savannah bug #31645.
+
+	* src/truetype/ttobjs.c (tt_check_trickyness): Divided to...
+	(tt_check_trickyness_family): this checking family name, and
+	(tt_check_trickyness_sfnt_ids): this checking cvt/fpgm/prep.
+	(tt_get_sfnt_checksum): Function to retrieve the sfnt checksum
+	for specified subtable even if cleared by lazy PDF generators.
+	(tt_synth_sfnt_checksum): Function to calculate the checksum.
+
 2010-11-18  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix `loca' handling for inconsistent number of glyphs.
