@@ -1,3 +1,20 @@
+======================================================================
+
+CHANGES BETWEEN 2.4.3 and 2.4.4
+
+  I. IMPORTANT BUG FIXES
+
+    - UVS support (TrueType/OpenType cmap format 14) support is fixed.
+      This regression has been introduced in version 2.4.0.
+
+  II. MISCELLANEOUS
+
+    - Detect tricky fonts (e.g. MingLiU)  by the lengths and checksums
+      of Type42-persistent subtables (`cvt ', `fpgm', and `prep') when
+      a TrueType font without family name is given.
+
+
+======================================================================
 
 CHANGES BETWEEN 2.4.2 and 2.4.3
 
