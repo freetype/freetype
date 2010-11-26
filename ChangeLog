@@ -1,3 +1,10 @@
+2010-11-26  Johnson Y. Yan  <yinsen_yan@foxitsoftware.com>
+
+	[truetype] Better multi-threading support.
+
+	* src/truetype/ttinterp.c (TT_Load_Context): Reset glyph zone
+	references.
+
 2010-11-23  John Tytgat  <John.Tytgat@esko.com>
 
 	* src/psaux/t1decode.c (t1_decoder_parse_charstring): Expand
