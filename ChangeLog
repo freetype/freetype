@@ -1,3 +1,10 @@
+2010-11-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[ftsmooth]: Minor code simplification.
+
+	* src/smooth/ftgrays (gray_render_cubic): Do only one comparison
+	instead of two.
+
 2010-11-26  Johnson Y. Yan  <yinsen_yan@foxitsoftware.com>
 
 	[truetype] Better multi-threading support.

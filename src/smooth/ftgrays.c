@@ -1057,7 +1057,13 @@ typedef ptrdiff_t  FT_PtrDist;
 
         dx_ = FT_ABS( dx );
         dy_ = FT_ABS( dy );
-        L = ( 236 * FT_MAX( dx_, dy_ ) + 97 * FT_MIN( dx_, dy_ ) ) >> 8;
+
+        /* This is the same as                     */
+        /*                                         */
+        /*   L = ( 236 * FT_MAX( dx_, dy_ )        */
+        /*       + 97 * FT_MIN( dx_, dy_ ) ) >> 8; */
+        L = ( dx_ > dy_ ? 236 * dx_ +  97 * dy_
+                        :  97 * dx_ + 236 * dy_ ) >> 8;
 
         /* Avoid possible arithmetic overflow below by splitting. */
         if ( L > 32767 )
