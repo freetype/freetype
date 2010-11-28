@@ -11,7 +11,15 @@ CHANGES BETWEEN 2.4.3 and 2.4.4
 
     - Detect tricky fonts (e.g. MingLiU)  by the lengths and checksums
       of Type42-persistent subtables (`cvt ', `fpgm', and `prep') when
-      a TrueType font without family name is given.
+      a TrueType font without family name is given.  The previous fix,
+      introduced in 2.4.3,  was too rigorous,  causing many  subsetted
+      fonts (mainly  from PDF files) displayed badly  because FreeType
+      forced  rendering with  the TrueType bytecode engine  instead of
+      the autohinter.
+
+    - Better support for 64bit platforms.
+
+    - More fixes to improve handling of broken fonts.
 
 
 ======================================================================
