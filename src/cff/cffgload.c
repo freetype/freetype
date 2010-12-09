@@ -1438,8 +1438,13 @@
             FT_TRACE4(( op == cff_op_hlineto ? " hlineto\n"
                                              : " vlineto\n" ));
 
-            if ( num_args < 1 )
+            if ( num_args < 0 )
               goto Stack_Underflow;
+
+            /* there exist subsetted fonts (found in PDFs) */
+            /* which call `hlineto' without arguments      */
+            if ( num_args == 0 )
+              break;
 
             if ( cff_builder_start_point ( builder, x, y ) ||
                  check_points( builder, num_args )         )

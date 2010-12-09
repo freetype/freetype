@@ -1,3 +1,16 @@
+2010-12-09  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Allow `hlineto' and `vlineto' without arguments.
+
+	We simply ignore such instructions.  This is invalid, but it doesn't
+	harm; and indeed, there exist such subsetted fonts in PDFs.
+
+	Reported by Albert Astals Cid <aacid@kde.org>.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	[cff_op_hlineto]: Ignore instruction if there aren't any arguments
+	on the stack.
+
 2010-11-28  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.4 released.
