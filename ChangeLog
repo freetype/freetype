@@ -1,3 +1,10 @@
+2010-12-13  Werner Lemberg  <wl@gnu.org>
+
+	Fix parameter handling of `FT_Set_Renderer'.
+	Reported by Kirill Tishin <siege@bk.ru>.
+
+	* src/base/ftobjs.c (FT_Set_Renderer): Increment `parameters'.
+
 2010-12-09  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Allow `hlineto' and `vlineto' without arguments.

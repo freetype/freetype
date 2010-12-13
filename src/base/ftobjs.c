@@ -3887,6 +3887,7 @@
         error = set_mode( renderer, parameters->tag, parameters->data );
         if ( error )
           break;
+        parameters++;
       }
     }
 
