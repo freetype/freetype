@@ -1,3 +1,19 @@
+2010-12-25  Harsha  <mm.harsha@gmail.com>
+
+	Apply Savannah patch #7422.
+
+	If we encouter a space in a string then the sbit buffer is NULL,
+	height and width are 0s.  So the check in ftc_snode_compare will
+	always pass for spaces (comparision with 255).  Here the comments
+	above the condition are proper but the implementation is not.  When
+	we create an snode I think it is the proper way to initialize the
+	width to 255 and then put a check for being equal to 255 in snode
+	compare function.
+
+	* src/cache/ftcsbits.c (FTC_SNode_New): Initialize sbit widths with
+	value 255.
+	(ftc_snode_compare): Fix condition.
+
 2010-12-13  Werner Lemberg  <wl@gnu.org>
 
 	Fix parameter handling of `FT_Set_Renderer'.

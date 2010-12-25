@@ -217,6 +217,7 @@
 
     FTC_SFamilyClass  clazz = FTC_CACHE__SFAMILY_CLASS( cache );
     FT_UInt           total;
+    FT_UInt           node_count;
 
 
     total = clazz->family_get_count( family, cache->manager );
@@ -239,6 +240,10 @@
       FTC_GNode_Init( FTC_GNODE( snode ), start, family );
 
       snode->count = count;
+      for ( node_count = 0; node_count < count; node_count++ )
+      {
+        snode->sbits[node_count].width = 255;
+      }
 
       error = ftc_snode_load( snode,
                               cache->manager,
@@ -368,7 +373,7 @@
        *
        */
 
-      if ( sbit->buffer == NULL && sbit->width != 255 )
+      if ( sbit->buffer == NULL && sbit->width == 255 )
       {
         FT_ULong  size;
         FT_Error  error;
