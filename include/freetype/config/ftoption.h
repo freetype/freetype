@@ -190,6 +190,22 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Bzip2-compressed file support.                                        */
+  /*                                                                       */
+  /*   FreeType now handles font files that have been compressed with the  */
+  /*   `bzip2' program.  This is mostly used to parse many of the PCF      */
+  /*   files that come with XFree86.  The implementation uses `libbz2' to  */
+  /*   partially uncompress the file on the fly (see src/bzip2/ftbzip2.c). */
+  /*   Contrary to gzip, bzip2 currently is not included and need to use   */
+  /*   the system available bzip2 implementation.                          */
+  /*                                                                       */
+  /*   Define this macro if you want to enable this `feature'.             */
+  /*                                                                       */
+/* #define FT_CONFIG_OPTION_USE_BZIP2 */
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* DLL export compilation                                                */
   /*                                                                       */
   /*   When compiling FreeType as a DLL, some systems/compilers need a     */
