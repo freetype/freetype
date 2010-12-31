@@ -55,7 +55,7 @@ FT_BEGIN_HEADER
   *
   * @description:
   *   Open a new stream to parse bzip2-compressed font files.  This is
-  *   mainly used to support the compressed `*.pcf.gz' fonts that come
+  *   mainly used to support the compressed `*.pcf.bz2' fonts that come
   *   with XFree86.
   *
   * @input:

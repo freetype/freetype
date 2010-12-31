@@ -1,3 +1,14 @@
+2010-12-31  Werner Lemberg  <wl@gnu.org>
+
+	Improve bzip2 support.
+
+	* include/freetype/ftmoderr.h: Add bzip2.
+
+	* docs/INSTALL.ANY, docs/CHANGES: Updated.
+
+	* src/pcf/README: Updated.
+	* include/freetype/internal/pcftypes.h: Obsolete, removed.
+
 2010-12-31  Joel Klinghed  <the_jk@yahoo.com>
 
 	Add bzip2 compression support to handle *.pcf.bz2 files.
