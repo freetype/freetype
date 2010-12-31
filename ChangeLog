@@ -1,5 +1,10 @@
 2010-12-31  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cfftypes.h (CFF_MAX_CID_FONTS): Increase to 64.
+	Problem reported by Tom Bishop <wenlin@wenlin.com>.
+
+2010-12-31  Werner Lemberg  <wl@gnu.org>
+
 	Improve bzip2 support.
 
 	* include/freetype/ftmoderr.h: Add bzip2.
