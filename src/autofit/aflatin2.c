@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 by            */
+/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -156,7 +156,8 @@
 #define AF_LATIN_MAX_TEST_CHARACTERS  12
 
 
-  static const char af_latin2_blue_chars[AF_LATIN_MAX_BLUES][AF_LATIN_MAX_TEST_CHARACTERS+1] =
+  static const char af_latin2_blue_chars[AF_LATIN_MAX_BLUES]
+                                        [AF_LATIN_MAX_TEST_CHARACTERS+1] =
   {
     "THEZOCQS",
     "HEZLOCUS",
@@ -182,9 +183,9 @@
     FT_GlyphSlot  glyph = face->glyph;
 
 
-    /* we compute the blues simply by loading each character from the    */
+    /* we compute the blues simply by loading each character from the     */
     /* 'af_latin2_blue_chars[blues]' string, then compute its top-most or */
-    /* bottom-most points (depending on `AF_IS_TOP_BLUE')                */
+    /* bottom-most points (depending on `AF_IS_TOP_BLUE')                 */
 
     AF_LOG(( "blue zones computation\n" ));
     AF_LOG(( "------------------------------------------------\n" ));
@@ -548,7 +549,8 @@
         if ( scaled != fitted )
         {
           scale = FT_MulDiv( scale, fitted, scaled );
-          AF_LOG(( "== scaled x-top = %.2g  fitted = %.2g, scaling = %.4g\n", scaled/64.0, fitted/64.0, (fitted*1.0)/scaled ));
+          AF_LOG(( "== scaled x-top = %.2g  fitted = %.2g, scaling = %.4g\n",
+                   scaled / 64.0, fitted / 64.0, ( fitted * 1.0 ) / scaled ));
         }
 #endif
       }
@@ -624,9 +626,11 @@
           blue->ref.fit   = FT_PIX_ROUND( blue->ref.cur );
           blue->shoot.fit = blue->ref.fit + delta2;
 
-          AF_LOG(( ">> activating blue zone %d:  ref.cur=%.2g ref.fit=%.2g shoot.cur=%.2g shoot.fit=%.2g\n",
-                   nn, blue->ref.cur/64.0, blue->ref.fit/64.0,
-                   blue->shoot.cur/64.0, blue->shoot.fit/64.0 ));
+          AF_LOG(( ">> activating blue zone %d:"
+                   "  ref.cur=%.2g ref.fit=%.2g"
+                   "  shoot.cur=%.2g shoot.fit=%.2g\n",
+                   nn, blue->ref.cur / 64.0, blue->ref.fit / 64.0,
+                   blue->shoot.cur / 64.0, blue->shoot.fit / 64.0 ));
 
           blue->flags |= AF_LATIN_BLUE_ACTIVE;
         }
@@ -1137,7 +1141,8 @@
 
         /* insert a new edge in the list and */
         /* sort according to the position    */
-        error = af_axis_hints_new_edge( axis, seg->pos, seg->dir, memory, &edge );
+        error = af_axis_hints_new_edge( axis, seg->pos, seg->dir,
+                                        memory, &edge );
         if ( error )
           goto Exit;
 
@@ -1796,7 +1801,8 @@
 
 
 
-    AF_LOG(( "==== hinting %s edges =====\n", dim == AF_DIMENSION_HORZ ? "vertical" : "horizontal" ));
+    AF_LOG(( "==== hinting %s edges =====\n",
+             dim == AF_DIMENSION_HORZ ? "vertical" : "horizontal" ));
 
     /* we begin by aligning all stems relative to the blue zone */
     /* if needed -- that's only for horizontal edges            */
@@ -1965,7 +1971,8 @@
         org_left  = org_pos + ((org_len - cur_len) >> 1);
         org_right = org_pos + ((org_len + cur_len) >> 1);
 
-        AF_LOG(( "ALIGN: left=%.2f right=%.2f ", org_left/64.0, org_right/64.0 ));
+        AF_LOG(( "ALIGN: left=%.2f right=%.2f ",
+                 org_left / 64.0, org_right / 64.0 ));
         cur_center = org_center;
 
         if ( edge2->flags & AF_EDGE_DONE )
@@ -2066,8 +2073,8 @@
         edge->pos  = cur_center - (cur_len >> 1);
         edge2->pos = edge->pos + cur_len;
 
-        AF_LOG(( "STEM1: %d (opos=%.2f) to %d (opos=%.2f) "
-                 "snapped to (%.2f) and (%.2f), org_len = %.2f cur_len=%.2f\n",
+        AF_LOG(( "STEM1: %d (opos=%.2f) to %d (opos=%.2f)"
+                 " snapped to (%.2f) and (%.2f), org_len=%.2f cur_len=%.2f\n",
                  edge-edges, edge->opos / 64.0,
                  edge2-edges, edge2->opos / 64.0,
                  edge->pos / 64.0, edge2->pos / 64.0,
@@ -2215,12 +2222,15 @@
                           FT_MulDiv( edge->opos - before->opos,
                                      after->pos - before->pos,
                                      after->opos - before->opos );
-            AF_LOG(( "SERIF_LINK1: edge %d (opos=%.2f) snapped to (%.2f) from %d (opos=%.2f)\n",
-                     edge-edges, edge->opos / 64.0, edge->pos / 64.0, before - edges, before->opos / 64.0 ));
+            AF_LOG(( "SERIF_LINK1: edge %d (opos=%.2f) snapped to (%.2f)"
+                     " from %d (opos=%.2f)\n",
+                     edge-edges, edge->opos / 64.0, edge->pos / 64.0,
+                     before - edges, before->opos / 64.0 ));
           }
           else
           {
-              edge->pos = anchor->pos + (( edge->opos - anchor->opos + 16) & ~31);
+            edge->pos = anchor->pos +
+                        ( ( edge->opos - anchor->opos + 16 ) & ~31 );
 
             AF_LOG(( "SERIF_LINK2: edge %d (opos=%.2f) snapped to (%.2f)\n",
                      edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
@@ -2321,7 +2331,7 @@
 
   static const AF_Script_UniRangeRec  af_latin2_uniranges[] =
   {
-    AF_UNIRANGE_REC( 32UL,  127UL ),    /* XXX: TODO: Add new Unicode ranges here! */
+    AF_UNIRANGE_REC( 32UL,  127UL ),    /* TODO: Add new Unicode ranges here! */
     AF_UNIRANGE_REC( 160UL, 255UL ),
     AF_UNIRANGE_REC( 0UL,   0UL )
   };
