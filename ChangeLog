@@ -1,3 +1,7 @@
+2011-01-03  Werner Lemberg  <wl@gnu.org>
+
+	*/rules.mk: Handle `*pic.c' files.
+
 2010-12-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cfftypes.h (CFF_MAX_CID_FONTS): Increase to 64.
@@ -1617,7 +1621,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2010 by
+Copyright 2010, 2011 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,
