@@ -241,7 +241,6 @@ fi
 if test x$with_bzip2 != xno && test -n "$LIBBZ2"; then
   CFLAGS="$CFLAGS -DFT_CONFIG_OPTION_USE_BZIP2"
   LDFLAGS="$LDFLAGS $LIBBZ2"
-  SYSTEM_BZ2LIB=yes
 fi
 
 # Some options handling SDKs/archs in CFLAGS should be copied
@@ -663,7 +662,6 @@ AC_SUBST([CFLAGS])
 AC_SUBST([LDFLAGS])
 AC_SUBST([FT2_EXTRA_LIBS])
 AC_SUBST([SYSTEM_ZLIB])
-AC_SUBST([SYSTEM_BZ2LIB])
 
 
 LT_INIT(win32-dll)

@@ -1,3 +1,13 @@
+2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/unix/configure.raw: Remove `SYSTEM_BZ2LIB' macro.
+
+	SYSTEM_ZLIB is used to switch the builtin zlib source
+	or system zlib source out of FreeType2.  But ftbzip2
+	module has no builtin bzip2 library and always requires
+	system bzip2 library.  Thus SYSTEM_BZ2LIB is always yes,
+	it is not used.
+
 2011-01-03  Werner Lemberg  <wl@gnu.org>
 
 	*/rules.mk: Handle `*pic.c' files.
