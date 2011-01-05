@@ -1,5 +1,18 @@
 2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Update classic MacOS makefiles to include Bzip2 support.
+
+	Currently, it provides FT_Stream_OpenBzip2() that returns
+	unimplemented error always, to prevent unresolved symbol
+	error for the applications designed for Unix systems.
+
+	* builds/mac/FreeType.m68k_cfm.make.txt: Include ftbzip2.c.o.
+	* builds/mac/FreeType.m68k_far.make.txt: Ditto.
+	* builds/mac/FreeType.ppc_carbon.make.txt: Include ftbzip2.c.x.
+	* builds/mac/FreeType.ppc_classic.make.txt: Include ftbzip2.c.x.
+
+2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Update Amiga makefiles to include Bzip2 support.
 
 	Currently, it provides FT_Stream_OpenBzip2() that returns
