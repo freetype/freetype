@@ -16,6 +16,8 @@
 /***************************************************************************/
 
 
+#include <strings.h>
+#include <libgen.h>
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_DEBUG_H
@@ -23,6 +25,10 @@
 #include FT_SYSTEM_H
 #include FT_ERRORS_H
 #include FT_TYPES_H
+
+
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_dbgmem
 
 
 #ifdef FT_DEBUG_MEMORY
@@ -505,6 +511,47 @@
   }
 
 
+  static int
+  ft_mem_check_site_alloc_environment( FT_MemSource  source,
+                                       const char*   env_var_name )
+  {
+    char  *source_basename = basename( (char *)source->file_name );
+    char  *c, *c0;
+
+
+    /* environment is unset */
+    c = c0 = getenv( env_var_name );
+    if ( !c )
+      return -1;
+
+    /* basename not found */
+    if ( NULL == ( c = strstr( c, source_basename ) ) )
+      return -1;
+
+    /* found position was substring */
+    if ( c != c0 && *(c-1) != ',' && *(c-1) != '/' )
+      return -1;
+
+    /* invalid syntax without line number */
+    c = c + strlen( source_basename );
+    if ( ':' != *c )
+      return -1;
+
+    /* line number differs */
+    if ( atoi( c + 1 ) !=  source->line_no )
+      return -1;
+
+    /* invalid syntax without max memory space */
+    if ( NULL == index( c + 1, ':' ) )
+      return -1;
+    c = index( c + 1, ':' );
+    if ( !ft_isdigit( c[1] ) )
+      return -1;
+
+    return atoi( c + 1 );
+  }
+
+
   static void
   ft_mem_table_set( FT_MemTable  table,
                     FT_Byte*     address,
@@ -680,12 +727,51 @@
   ft_mem_debug_alloc( FT_Memory  memory,
                       FT_Long    size )
   {
-    FT_MemTable  table = (FT_MemTable)memory->user;
-    FT_Byte*     block;
+    FT_MemTable   table = (FT_MemTable)memory->user;
+    FT_MemSource  source = NULL;
+    FT_Byte*      block;
 
 
     if ( size <= 0 )
       ft_mem_debug_panic( "negative block size allocation (%ld)", size );
+
+    {
+      int      mem_limit_site_total = -1; /* negative means unlimited */
+      int      mem_limit_site_cur   = -1; /* negative means unlimited */
+      FT_Bool  exceeds_limit_site_total = FALSE;
+      FT_Bool  exceeds_limit_site_cur   = FALSE;
+
+
+      source = ft_mem_table_get_source( table );
+      mem_limit_site_total = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_TOTAL_MAX_SITE" );
+      mem_limit_site_cur   = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_CUR_MAX_SITE" );
+      if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
+        FT_TRACE1(("ft_mem_table_set() invoked by %s:%lu, limit:( "));
+      if ( mem_limit_site_total >= 0 )
+        FT_TRACE1(("%ld =< %ld", source->all_size + size, mem_limit_site_total ));
+      if ( mem_limit_site_total >= 0 && mem_limit_site_cur >= 0 )
+        FT_TRACE1((" && "));
+      if ( mem_limit_site_cur >= 0 )
+        FT_TRACE1(("%ld =< %ld", source->cur_size + size, mem_limit_site_cur ));
+      if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
+        FT_TRACE1((" )\n"));
+
+      if ( mem_limit_site_total >= 0 && mem_limit_site_total < ( source->all_size + size ) )
+        exceeds_limit_site_total = TRUE;
+      if ( mem_limit_site_cur >= 0 && mem_limit_site_cur < ( source->cur_size + size ) )
+        exceeds_limit_site_cur = TRUE;
+
+      if ( exceeds_limit_site_total || exceeds_limit_site_cur )
+      {
+        FT_TRACE1(("ft_mem_table_set() returns NULL to %s:%lu, allocation request exceeds %s-limit (%lu > %lu)\n",
+                   basename( (char*)source->file_name ), source->line_no,
+                   ( exceeds_limit_site_total ? "site-total" : "site-current" ),
+                   ( exceeds_limit_site_total ? source->all_size : source->cur_size ) + size,
+                   ( exceeds_limit_site_total ? mem_limit_site_total : mem_limit_site_cur )
+                   ));
+        return NULL;
+      }
+    }
 
     /* return NULL if the maximum number of allocations was reached */
     if ( table->bound_count                           &&

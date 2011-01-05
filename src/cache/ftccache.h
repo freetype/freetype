@@ -210,6 +210,10 @@ FT_BEGIN_HEADER
   FTC_Cache_RemoveFaceID( FTC_Cache   cache,
                           FTC_FaceID  face_id );
 
+  FT_LOCAL( FT_Size )
+  ftc_get_list_length( FTC_Cache   cache,
+                       FT_PtrDist  hash );
+
 
 #ifdef FTC_INLINE
 
@@ -221,6 +225,11 @@ FT_BEGIN_HEADER
     FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);    \
     FT_Bool               _list_changed = FALSE;                         \
                                                                          \
+                                                                         \
+    FT_TRACE7(("FTC_CACHE_LOOKUP_CMP() lookup object for "));            \
+    FT_TRACE7(("hash=0x%08x in cache ", _hash ));                        \
+    FT_TRACE7(("mask=0x%08x p=0x%08x ", _cache->mask, _cache->p ));      \
+    FT_TRACE7(("list length=%d\n", ftc_get_list_length( _cache, _hash ) )); \
                                                                          \
     error = FTC_Err_Ok;                                                  \
     node  = NULL;                                                        \
@@ -245,6 +254,8 @@ FT_BEGIN_HEADER
                                                                          \
     if ( _list_changed )                                                 \
     {                                                                    \
+      FT_TRACE7(("(_bucket,_pnode)=(%p,%p)", _bucket, _pnode));          \
+                                                                         \
       /* Update _bucket by possibly modified linked list */              \
       _bucket = _pnode = FTC_NODE__TOP_FOR_HASH( _cache, _hash );        \
                                                                          \
@@ -259,6 +270,8 @@ FT_BEGIN_HEADER
         else                                                             \
           _pnode = &((*_pnode)->link);                                   \
       }                                                                  \
+                                                                         \
+      FT_TRACE7(("-> (%p,%p)\n", _bucket, _pnode));                      \
     }                                                                    \
                                                                          \
     /* Reorder the list to move the found node to the `top' */           \

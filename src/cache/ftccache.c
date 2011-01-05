@@ -478,6 +478,29 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Size )
+  ftc_get_list_length( FTC_Cache   cache,
+                       FT_PtrDist  hash )
+  {
+    FT_Size    len = 0;
+    FTC_Node*  bucket;
+    FTC_Node*  pnode;
+    FT_UFast   idx;
+    
+
+    idx = hash & cache->mask;
+    if ( idx < cache->p )
+      idx = hash & ( cache->mask * 2 + 1 );
+
+    bucket = cache->buckets + idx;
+    pnode = bucket;
+    for ( ; pnode && *pnode; pnode = &((*pnode)->link) )
+      len++;
+
+    return len;
+  }
+
+
 #ifndef FTC_INLINE
 
   FT_LOCAL_DEF( FT_Error )

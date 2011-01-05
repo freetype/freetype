@@ -24,6 +24,7 @@ FT_TRACE_DEF( any )
   /* base components */
 FT_TRACE_DEF( calc )      /* calculations            (ftcalc.c)   */
 FT_TRACE_DEF( memory )    /* memory manager          (ftobjs.c)   */
+FT_TRACE_DEF( dbgmem )    /* memory debugger         (ftdbgmem.c) */
 FT_TRACE_DEF( stream )    /* stream manager          (ftstream.c) */
 FT_TRACE_DEF( io )        /* i/o interface           (ftsystem.c) */
 FT_TRACE_DEF( list )      /* list management         (ftlist.c)   */

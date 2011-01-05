@@ -622,6 +622,24 @@
   }
 
 
+  static int
+  ft_get_length_nodes_list( FTC_Node  node0 )
+  {
+    FTC_Node  node = node0;
+    int       len = 0;
+
+
+    while ( node )
+    {
+      len ++; 
+      node = node->link;
+      if ( node == node0 )
+        return len;
+    }
+    return len;
+  }
+
+
   FT_LOCAL_DEF( FT_UInt )
   FTC_Manager_FlushN( FTC_Manager  manager,
                       FT_UInt      count )
@@ -631,9 +649,14 @@
     FT_UInt   result;
 
 
+    FT_TRACE1(("%s() tries to free %d nodes from list length=%d\n", __FUNCTION__, count, ft_get_length_nodes_list( manager->nodes_list ) ));
+
     /* try to remove `count' nodes from the list */
     if ( first == NULL )  /* empty list! */
+    {
+      FT_TRACE1(("%s() cannot change empty list\n", __FUNCTION__ ));
       return 0;
+    }
 
     /* go to last node - it's a circular list */
     node = FTC_NODE__PREV(first);
@@ -654,6 +677,7 @@
 
       node = prev;
     }
+    FT_TRACE1(("%s() freed %d nodes, list length=%d\n", __FUNCTION__, result, ft_get_length_nodes_list( manager->nodes_list ) ));
     return  result;
   }
 
