@@ -1,5 +1,17 @@
 2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Update Amiga makefiles to include Bzip2 support.
+
+	Currently, it provides FT_Stream_OpenBzip2() that returns
+	unimplemented error always, to prevent unresolved symbol
+	error for the applications designed for Unix systems.
+
+	* builds/amiga/makefile: Include bzip2.ppc.o built from ftbzip2.c.
+	* builds/amiga/makefile.os4: Include bzip2.o built from ftbzip2.c.
+	* builds/amiga/smakefile: Ditto.
+
+2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Update pkg-config tools to reflect Bzip2 support.
 
 	* builds/unix/freetype-config.in: Include `-lbz2' to
