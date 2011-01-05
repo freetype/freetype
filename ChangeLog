@@ -9,7 +9,7 @@
 	* builds/mac/FreeType.m68k_cfm.make.txt: Include ftbzip2.c.o.
 	* builds/mac/FreeType.m68k_far.make.txt: Ditto.
 	* builds/mac/FreeType.ppc_carbon.make.txt: Include ftbzip2.c.x.
-	* builds/mac/FreeType.ppc_classic.make.txt: Include ftbzip2.c.x.
+	* builds/mac/FreeType.ppc_classic.make.txt: Ditto.
 
 2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
