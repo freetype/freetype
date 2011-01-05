@@ -1,5 +1,16 @@
 2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Update Symbian project files to include Bzip2 support.
+
+	Currently, it provides FT_Stream_OpenBzip2() that returns
+	unimplemented error always, to prevent unresolved symbol
+	error for the applications designed for Unix systems.
+
+	* builds/symbian/bld.inf: Include ftbzip2.h.
+	* builds/symbian/freetype.mmp: Include ftbzip2.c.
+
+2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Update classic MacOS makefiles to include Bzip2 support.
 
 	Currently, it provides FT_Stream_OpenBzip2() that returns
