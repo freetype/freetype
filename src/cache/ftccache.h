@@ -226,10 +226,11 @@ FT_BEGIN_HEADER
     FT_Bool               _list_changed = FALSE;                         \
                                                                          \
                                                                          \
-    FT_TRACE7(("FTC_CACHE_LOOKUP_CMP() lookup object for "));            \
-    FT_TRACE7(("hash=0x%08x in cache ", _hash ));                        \
-    FT_TRACE7(("mask=0x%08x p=0x%08x ", _cache->mask, _cache->p ));      \
-    FT_TRACE7(("list length=%d\n", ftc_get_list_length( _cache, _hash ) )); \
+    FT_TRACE6(("FTC_CACHE_LOOKUP_CMP() lookup object for "));            \
+    FT_TRACE6(("hash=0x%08x in cache ", _hash ));                        \
+    FT_TRACE6(("mask=0x%08x p=0x%08x ", _cache->mask, _cache->p ));      \
+    FT_TRACE7(("list length=%d", ftc_get_list_length( _cache, _hash ) )); \
+    FT_TRACE6(("\n"));                                                   \
                                                                          \
     error = FTC_Err_Ok;                                                  \
     node  = NULL;                                                        \

@@ -746,15 +746,15 @@
       mem_limit_site_total = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_TOTAL_MAX_SITE" );
       mem_limit_site_cur   = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_CUR_MAX_SITE" );
       if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
-        FT_TRACE1(("ft_mem_table_set() invoked by %s:%lu, limit:( "));
+        FT_TRACE6(("ft_mem_table_set() invoked by %s:%lu, limit:( "));
       if ( mem_limit_site_total >= 0 )
-        FT_TRACE1(("%ld =< %ld", source->all_size + size, mem_limit_site_total ));
+        FT_TRACE6(("%ld =< %ld", source->all_size + size, mem_limit_site_total ));
       if ( mem_limit_site_total >= 0 && mem_limit_site_cur >= 0 )
-        FT_TRACE1((" && "));
+        FT_TRACE6((" && "));
       if ( mem_limit_site_cur >= 0 )
-        FT_TRACE1(("%ld =< %ld", source->cur_size + size, mem_limit_site_cur ));
+        FT_TRACE6(("%ld =< %ld", source->cur_size + size, mem_limit_site_cur ));
       if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
-        FT_TRACE1((" )\n"));
+        FT_TRACE6((" )\n"));
 
       if ( mem_limit_site_total >= 0 && mem_limit_site_total < ( source->all_size + size ) )
         exceeds_limit_site_total = TRUE;
@@ -763,7 +763,7 @@
 
       if ( exceeds_limit_site_total || exceeds_limit_site_cur )
       {
-        FT_TRACE1(("ft_mem_table_set() returns NULL to %s:%lu, allocation request exceeds %s-limit (%lu > %lu)\n",
+        FT_TRACE6(("ft_mem_table_set() returns NULL to %s:%lu, allocation request exceeds %s-limit (%lu > %lu)\n",
                    basename( (char*)source->file_name ), source->line_no,
                    ( exceeds_limit_site_total ? "site-total" : "site-current" ),
                    ( exceeds_limit_site_total ? source->all_size : source->cur_size ) + size,
