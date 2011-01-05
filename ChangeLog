@@ -1,5 +1,13 @@
 2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Update pkg-config tools to reflect Bzip2 support.
+
+	* builds/unix/freetype-config.in: Include `-lbz2' to
+	--libs output, if built with Bzip2 support.
+	* builds/unix/freetype2.in: Ditto.
+
+2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* builds/unix/configure.raw: Remove `SYSTEM_BZ2LIB' macro.
 
 	SYSTEM_ZLIB is used to switch the builtin zlib source
