@@ -16,8 +16,6 @@
 /***************************************************************************/
 
 
-#include <strings.h>
-#include <libgen.h>
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_DEBUG_H
@@ -515,7 +513,7 @@
   ft_mem_check_site_alloc_environment( FT_MemSource  source,
                                        const char*   env_var_name )
   {
-    char  *source_basename = ft_basename( (char *)source->file_name );
+    char  *file_name = (char*)source->file_name;
     char  *c, *c0;
 
 
@@ -525,14 +523,14 @@
       return -1;
 
     /* return if basename not found anymore */
-    while ( NULL != ( c = ft_strstr( c, source_basename ) ) )
+    while ( NULL != ( c = ft_strstr( c, file_name ) ) )
     {
       /* skip if partial match of basename */
       if ( c != c0 && *(c-1) != ' ' && *(c-1) != PLATFORM_PATH_SEPARATOR[0] )
         goto NextToken;
 
       /* goto line number after ':' */
-      c = c + ft_strlen( source_basename );
+      c = c + ft_strlen( file_name );
       if ( ':' != *c || !ft_isdigit( c[1] ) )
         goto NextToken;
       c++;
@@ -756,7 +754,7 @@
       mem_limit_site_cur   = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_CUR_MAX_SITE" );
       if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
         FT_TRACE6(("ft_mem_table_set() invoked by %s:%lu, limit:( ",
-                   ft_basename( (char*)source->file_name ), source->line_no ));
+                   source->file_name, source->line_no ));
       if ( mem_limit_site_total >= 0 )
         FT_TRACE6(("%ld =< %ld", source->all_size + size, mem_limit_site_total ));
       if ( mem_limit_site_total >= 0 && mem_limit_site_cur >= 0 )
@@ -774,7 +772,7 @@
       if ( exceeds_limit_site_total || exceeds_limit_site_cur )
       {
         FT_TRACE6(("ft_mem_table_set() returns NULL to %s:%lu, allocation request exceeds %s-limit (%lu > %lu)\n",
-                   basename( (char*)source->file_name ), source->line_no,
+                   source->file_name, source->line_no,
                    ( exceeds_limit_site_total ? "site-total" : "site-current" ),
                    ( exceeds_limit_site_total ? source->all_size : source->cur_size ) + size,
                    ( exceeds_limit_site_total ? mem_limit_site_total : mem_limit_site_cur )
