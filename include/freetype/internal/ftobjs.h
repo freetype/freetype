@@ -108,6 +108,14 @@ FT_BEGIN_HEADER
 #define  ft_isalpha( x )  ( ft_isupper( x ) || ft_islower( x ) )
 #define  ft_isalnum( x )  ( ft_isdigit( x ) || ft_isalpha( x ) )
 
+#ifdef HAVE_LIBGEN_H
+#include <libgen.h>
+#define ft_basename( p )  basename( ( p ) )
+#else
+  FT_BASE( char* )
+  ft_basename( char* path );
+#endif
+
 
   /*************************************************************************/
   /*************************************************************************/

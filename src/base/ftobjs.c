@@ -1226,6 +1226,27 @@
   }
 
 
+#ifndef HAVE_LIBGEN_H
+  FT_BASE_DEF( char* )
+  ft_basename( char*  pathname )
+  {
+    char*  c;
+
+
+    c = pathname + ft_strlen( pathname );
+
+    /* skip trailing separator */
+    while ( pathname < c && *c == PLATFORM_DIR_SEPARATOR[0] )
+      c--;
+
+    while ( pathname < c && *(c-1) != PLATFORM_DIR_SEPARATOR[0] )
+      c--;
+
+    return c;
+  }
+#endif
+
+
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 
   /* The behavior here is very similar to that in base/ftmac.c, but it     */

@@ -111,7 +111,7 @@ esac
 # checks for header files
 
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h unistd.h libgen.h])
 
 
 # checks for typedefs, structures, and compiler characteristics
