@@ -515,40 +515,49 @@
   ft_mem_check_site_alloc_environment( FT_MemSource  source,
                                        const char*   env_var_name )
   {
-    char  *source_basename = basename( (char *)source->file_name );
+    char  *source_basename = ft_basename( (char *)source->file_name );
     char  *c, *c0;
 
 
-    /* environment is unset */
+    /* return if environment is unset */
     c = c0 = getenv( env_var_name );
     if ( !c )
       return -1;
 
-    /* basename not found */
-    if ( NULL == ( c = ft_strstr( c, source_basename ) ) )
-      return -1;
+    /* return if basename not found anymore */
+    while ( NULL != ( c = ft_strstr( c, source_basename ) ) )
+    {
+      /* skip if partial match of basename */
+      if ( c != c0 && *(c-1) != ' ' && *(c-1) != PLATFORM_PATH_SEPARATOR[0] )
+        goto NextToken;
 
-    /* found position was substring */
-    if ( c != c0 && *(c-1) != ',' && *(c-1) != '/' )
-      return -1;
+      /* goto line number after ':' */
+      c = c + ft_strlen( source_basename );
+      if ( ':' != *c || !ft_isdigit( c[1] ) )
+        goto NextToken;
+      c++;
 
-    /* invalid syntax without line number */
-    c = c + strlen( source_basename );
-    if ( ':' != *c )
-      return -1;
+      /* compare line number */
+      if ( atoi( c ) !=  source->line_no )
+        goto NextToken;
 
-    /* line number differs */
-    if ( atoi( c + 1 ) !=  source->line_no )
-      return -1;
+      while ( ft_isdigit( *c ) )
+        c++;
 
-    /* invalid syntax without max memory space */
-    if ( NULL == ft_strchr( c + 1, ':' ) )
-      return -1;
-    c = ft_strchr( c + 1, ':' );
-    if ( !ft_isdigit( c[1] ) )
-      return -1;
+      /* check alloc limiter after ',' */
+      if ( ',' != *c || !ft_isdigit( c[1] ) )
+        goto NextToken;
+      c++;
+      return atoi( c );
 
-    return atoi( c + 1 );
+  NextToken:
+      c = ft_strchr( c, ' ' );
+      if ( !c ) /* no token anymore */
+        break;
+
+      c++;
+    }
+    return -1;
   }
 
 
