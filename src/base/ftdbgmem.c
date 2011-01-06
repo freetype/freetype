@@ -746,7 +746,8 @@
       mem_limit_site_total = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_TOTAL_MAX_SITE" );
       mem_limit_site_cur   = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_CUR_MAX_SITE" );
       if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
-        FT_TRACE6(("ft_mem_table_set() invoked by %s:%lu, limit:( "));
+        FT_TRACE6(("ft_mem_table_set() invoked by %s:%lu, limit:( ",
+                   ft_basename( (char*)source->file_name ), source->line_no ));
       if ( mem_limit_site_total >= 0 )
         FT_TRACE6(("%ld =< %ld", source->all_size + size, mem_limit_site_total ));
       if ( mem_limit_site_total >= 0 && mem_limit_site_cur >= 0 )
