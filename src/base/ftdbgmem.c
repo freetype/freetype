@@ -535,10 +535,12 @@
     {
       /* matched token is 1st or after separator space? */
       if ( c != c0 && *(c-1) != ' ' &&
-#ifndef macintosh
-           *(c-1) != '/' && *(c-1) != '\\' )
-#else
+#ifdef PLATFORM_DIR_SEPARATOR
+           *(c-1) != PLATFORM_DIR_SEPARATOR[0] )
+#elif defined( macintosh )
            *(c-1) != ':' )
+#else
+           *(c-1) != '/' && *(c-1) != '\\' )
 #endif
         goto NextToken;
 
