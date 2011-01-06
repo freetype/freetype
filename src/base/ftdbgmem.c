@@ -525,7 +525,7 @@
       return -1;
 
     /* basename not found */
-    if ( NULL == ( c = strstr( c, source_basename ) ) )
+    if ( NULL == ( c = ft_strstr( c, source_basename ) ) )
       return -1;
 
     /* found position was substring */
@@ -542,9 +542,9 @@
       return -1;
 
     /* invalid syntax without max memory space */
-    if ( NULL == index( c + 1, ':' ) )
+    if ( NULL == ft_strchr( c + 1, ':' ) )
       return -1;
-    c = index( c + 1, ':' );
+    c = ft_strchr( c + 1, ':' );
     if ( !ft_isdigit( c[1] ) )
       return -1;
 
