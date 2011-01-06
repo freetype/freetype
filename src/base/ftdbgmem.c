@@ -509,15 +509,23 @@
   }
 
 
+  /*
+   * ft_mem_get_val_for_source( source, env_var_name )
+   *
+   * Get a numerical value from named environmental variable
+   * for the site specified by FT_MemSource.  For the syntax
+   * of the environmental variable, see docs/DEBUG.
+   *
+   */
   static int
-  ft_mem_check_site_alloc_environment( FT_MemSource  source,
-                                       const char*   env_var_name )
+  ft_mem_get_env_val_for_source( FT_MemSource  source,
+                                 const char*   env_var_name )
   {
     char  *file_name = (char*)source->file_name;
     char  *c, *c0;
 
 
-    /* return if environment is unset */
+    /* return if specified environment is unset */
     c = c0 = getenv( env_var_name );
     if ( !c )
       return -1;
@@ -525,24 +533,25 @@
     /* return if basename not found anymore */
     while ( NULL != ( c = ft_strstr( c, file_name ) ) )
     {
-      /* skip if partial match of basename */
-      if ( c != c0 && *(c-1) != ' ' && *(c-1) != PLATFORM_PATH_SEPARATOR[0] )
+      /* matched token is 1st or after separator space? */
+      if ( c != c0 && *(c-1) != ' ' )
         goto NextToken;
 
-      /* goto line number after ':' */
+      /* check ':', a separator between pathname & line number */
       c = c + ft_strlen( file_name );
       if ( ':' != *c || !ft_isdigit( c[1] ) )
         goto NextToken;
       c++;
 
-      /* compare line number */
+      /* check the line number */
       if ( atoi( c ) !=  source->line_no )
         goto NextToken;
 
+      /* line number matched, skip digits */
       while ( ft_isdigit( *c ) )
         c++;
 
-      /* check alloc limiter after ',' */
+      /* check ',', a separator between line number & value */
       if ( ',' != *c || !ft_isdigit( c[1] ) )
         goto NextToken;
       c++;
@@ -730,6 +739,70 @@
   }
 
 
+  static FT_Bool
+  ft_mem_check_alloc_limiter_for_source( FT_MemSource  source,
+                                         FT_Long       size )
+  {
+    int      mem_limit_site_total = -1; /* negative means unlimited */
+    int      mem_limit_site_cur   = -1; /* negative means unlimited */
+    FT_Bool  exceeds_limit_site_total = FALSE;
+    FT_Bool  exceeds_limit_site_cur   = FALSE;
+    long     req_all = source->all_size + size;
+    long     req_cur = source->cur_size + size;
+#define FT_HAS_LIMITER( key ) \
+    ( mem_limit_ ## key ## _total >= 0 || mem_limit_ ## key ## _cur >= 0 )
+#define FT_HAS_MULTI_LIMITERS( key ) \
+    ( mem_limit_ ## key ## _total >= 0 && mem_limit_ ## key ## _cur >= 0 )
+#define FT_TRACE6_DEFINED_LIMIT( req, limit )    \
+    {                                            \
+      if ( limit >= 0 )                          \
+        FT_TRACE6(( "%ld =< %ld", req, limit )); \
+    }
+
+    mem_limit_site_total =
+      ft_mem_get_env_val_for_source( source,
+                                     "FT2_ALLOC_TOTAL_MAX_SITE" );
+    mem_limit_site_cur =
+      ft_mem_get_env_val_for_source( source,
+                                     "FT2_ALLOC_CUR_MAX_SITE" );
+    if ( FT_HAS_LIMITER( site ) )
+      FT_TRACE6(( "ft_mem_table_set() invoked by %s:%lu, limit:( ",
+                  source->file_name, source->line_no ));
+    FT_TRACE6_DEFINED_LIMIT( req_all, mem_limit_site_total );
+    if ( FT_HAS_MULTI_LIMITERS( site ) )
+      FT_TRACE6(( " && " ));
+    FT_TRACE6_DEFINED_LIMIT( req_cur, mem_limit_site_cur );
+    if ( FT_HAS_LIMITER( site ) )
+      FT_TRACE6((" )\n"));
+
+    if ( mem_limit_site_total >= 0 && mem_limit_site_total > req_all )
+      exceeds_limit_site_total = TRUE;
+
+    if ( mem_limit_site_cur >= 0 && mem_limit_site_cur > req_cur )
+      exceeds_limit_site_cur = TRUE;
+
+    if ( exceeds_limit_site_total || exceeds_limit_site_cur )
+    {
+      FT_TRACE6(( "ft_mem_table_set() returns NULL to %s:%lu,"
+                  " allocation request exceeds %s-limit (%lu > %lu)\n",
+                  source->file_name, source->line_no,
+                  ( exceeds_limit_site_total ? "site-total" :
+                                               "site-current" ),
+                  ( exceeds_limit_site_total ? req_all :
+                                               req_cur ),
+                  ( exceeds_limit_site_total ? mem_limit_site_total :
+                                               mem_limit_site_cur )
+                 ));
+      return FALSE;
+    }
+    return TRUE;
+
+#undef FT_HAS_LIMITER
+#undef FT_HAS_MULTI_LIMITERS
+#undef FT_TRACE6_DEFINED_LIMIT
+  }
+
+
   extern FT_Pointer
   ft_mem_debug_alloc( FT_Memory  memory,
                       FT_Long    size )
@@ -742,44 +815,10 @@
     if ( size <= 0 )
       ft_mem_debug_panic( "negative block size allocation (%ld)", size );
 
-    {
-      int      mem_limit_site_total = -1; /* negative means unlimited */
-      int      mem_limit_site_cur   = -1; /* negative means unlimited */
-      FT_Bool  exceeds_limit_site_total = FALSE;
-      FT_Bool  exceeds_limit_site_cur   = FALSE;
-
-
-      source = ft_mem_table_get_source( table );
-      mem_limit_site_total = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_TOTAL_MAX_SITE" );
-      mem_limit_site_cur   = ft_mem_check_site_alloc_environment( source, "FT2_ALLOC_CUR_MAX_SITE" );
-      if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
-        FT_TRACE6(("ft_mem_table_set() invoked by %s:%lu, limit:( ",
-                   source->file_name, source->line_no ));
-      if ( mem_limit_site_total >= 0 )
-        FT_TRACE6(("%ld =< %ld", source->all_size + size, mem_limit_site_total ));
-      if ( mem_limit_site_total >= 0 && mem_limit_site_cur >= 0 )
-        FT_TRACE6((" && "));
-      if ( mem_limit_site_cur >= 0 )
-        FT_TRACE6(("%ld =< %ld", source->cur_size + size, mem_limit_site_cur ));
-      if ( mem_limit_site_total >= 0 || mem_limit_site_cur >= 0 )
-        FT_TRACE6((" )\n"));
-
-      if ( mem_limit_site_total >= 0 && mem_limit_site_total < ( source->all_size + size ) )
-        exceeds_limit_site_total = TRUE;
-      if ( mem_limit_site_cur >= 0 && mem_limit_site_cur < ( source->cur_size + size ) )
-        exceeds_limit_site_cur = TRUE;
-
-      if ( exceeds_limit_site_total || exceeds_limit_site_cur )
-      {
-        FT_TRACE6(("ft_mem_table_set() returns NULL to %s:%lu, allocation request exceeds %s-limit (%lu > %lu)\n",
-                   source->file_name, source->line_no,
-                   ( exceeds_limit_site_total ? "site-total" : "site-current" ),
-                   ( exceeds_limit_site_total ? source->all_size : source->cur_size ) + size,
-                   ( exceeds_limit_site_total ? mem_limit_site_total : mem_limit_site_cur )
-                   ));
+    source = ft_mem_table_get_source( table );
+    if ( source )
+      if ( !ft_mem_check_alloc_limiter_for_source( source, size ) )
         return NULL;
-      }
-    }
 
     /* return NULL if the maximum number of allocations was reached */
     if ( table->bound_count                           &&

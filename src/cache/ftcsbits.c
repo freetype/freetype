@@ -125,7 +125,11 @@
     sbit->buffer = 0;
 
     error = clazz->family_load_glyph( family, gindex, manager, &face );
-    FT_TRACE2(("ftc_snode_load() got %s from family_load_glyph() err=0x%02x%s\n", error ? "error" : "ok", error, error ? " fallback to BadGlyph" : "" ));
+    FT_TRACE2(( "ftc_snode_load() got %s from "
+                "family_load_glyph() err=0x%02x%s\n",
+                 error ? "error" : "ok",
+                 error,
+                 error ? " fallback to BadGlyph" : "" ));
     if ( error )
       goto BadGlyph;
 
@@ -201,7 +205,8 @@
         *asize = 0;
     }
 
-    FT_TRACE2(("ftc_snode_load() load glyph for gid=%d, err=0x%02x\n", gindex, error));
+    FT_TRACE2(( "ftc_snode_load() load glyph for gid=%d, err=0x%02x\n",
+                gindex, error));
     return error;
   }
 
@@ -403,7 +408,8 @@
       }
     }
 
-    FT_TRACE2(("%s() returns %s\n", __FUNCTION__, result ? "TRUE" : "FALSE"));
+    FT_TRACE2(( "ftc_snode_compare() returns %s\n",
+                result ? "TRUE" : "FALSE" ));
     return result;
   }
 

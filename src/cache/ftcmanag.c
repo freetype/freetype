@@ -649,12 +649,15 @@
     FT_UInt   result;
 
 
-    FT_TRACE2(("%s() tries to free %d nodes from list length=%d\n", __FUNCTION__, count, ft_get_length_nodes_list( manager->nodes_list ) ));
+    FT_TRACE2(( "FTC_Manager_FlushN() tries to"
+                " free %d nodes from list length=%d\n",
+                count,
+                ft_get_length_nodes_list( manager->nodes_list ) ));
 
     /* try to remove `count' nodes from the list */
     if ( first == NULL )  /* empty list! */
     {
-      FT_TRACE2(("%s() cannot change empty list\n", __FUNCTION__ ));
+      FT_TRACE2(("FTC_Manager_FlushN() cannot change empty list\n" ));
       return 0;
     }
 
@@ -677,7 +680,10 @@
 
       node = prev;
     }
-    FT_TRACE2(("%s() freed %d nodes, list length=%d\n", __FUNCTION__, result, ft_get_length_nodes_list( manager->nodes_list ) ));
+    FT_TRACE2(( "FTC_Manager_FlushN() freed %d nodes,"
+                " list length=%d\n", 
+                result,
+                ft_get_length_nodes_list( manager->nodes_list ) ));
     return  result;
   }
 
