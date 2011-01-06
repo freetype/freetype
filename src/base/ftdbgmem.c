@@ -521,7 +521,7 @@
   ft_mem_get_env_val_for_source( FT_MemSource  source,
                                  const char*   env_var_name )
   {
-    char  *file_name = (char*)source->file_name;
+    char  *file_name = ft_basename( (char*)source->file_name );
     char  *c, *c0;
 
 
@@ -534,7 +534,12 @@
     while ( NULL != ( c = ft_strstr( c, file_name ) ) )
     {
       /* matched token is 1st or after separator space? */
-      if ( c != c0 && *(c-1) != ' ' )
+      if ( c != c0 && *(c-1) != ' ' &&
+#ifndef macintosh
+           *(c-1) != '/' && *(c-1) != '\\' )
+#else
+           *(c-1) != ':' )
+#endif
         goto NextToken;
 
       /* check ':', a separator between pathname & line number */
@@ -767,7 +772,8 @@
                                      "FT2_ALLOC_CUR_MAX_SITE" );
     if ( FT_HAS_LIMITER( site ) )
       FT_TRACE6(( "ft_mem_table_set() invoked by %s:%lu, limit:( ",
-                  source->file_name, source->line_no ));
+                  ft_basename( (char*)source->file_name ),
+                                source->line_no ));
     FT_TRACE6_DEFINED_LIMIT( req_all, mem_limit_site_total );
     if ( FT_HAS_MULTI_LIMITERS( site ) )
       FT_TRACE6(( " && " ));
@@ -785,7 +791,8 @@
     {
       FT_TRACE6(( "ft_mem_table_set() returns NULL to %s:%lu,"
                   " allocation request exceeds %s-limit (%lu > %lu)\n",
-                  source->file_name, source->line_no,
+                  ft_basename( (char*)source->file_name ),
+                  source->line_no,
                   ( exceeds_limit_site_total ? "site-total" :
                                                "site-current" ),
                   ( exceeds_limit_site_total ? req_all :
