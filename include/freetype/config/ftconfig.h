@@ -147,6 +147,25 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Pathname separator used by resource-fork accessor & ft_basename()     */
+  /*                                                                       */
+
+#ifdef PLATFORM_PATH_SEPARATOR
+  /* explicitly defined, do nothing */
+#elif defined( __DOS__ ) || defined( __OS2__ ) || defined( _WIN32 ) || \
+      defined( __SYMBIAN32__ )
+#define PLATFORM_PATH_SEPARATOR "\\"
+#elif defined( FT_MACINTOSH ) && !defined( __MACH__ )
+#define PLATFORM_PATH_SEPARATOR ":"
+#elif defined( __riscos__ ) || defined( VMS )
+#define PLATFORM_PATH_SEPARATOR "."
+#else
+#define PLATFORM_PATH_SEPARATOR "/"
+#endif
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* <Section>                                                             */
   /*    basic_types                                                        */
   /*                                                                       */

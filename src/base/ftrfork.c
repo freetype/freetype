@@ -544,7 +544,8 @@
       return error;
 
     FT_MEM_COPY( newpath, base_file_name, base_file_len );
-    FT_MEM_COPY( newpath + base_file_len, "/rsrc", 6 );
+    FT_MEM_COPY( newpath + base_file_len,
+                 PLATFORM_PATH_SEPARATOR "rsrc", 6 );
 
     *result_file_name = newpath;
     *result_offset    = 0;
@@ -580,7 +581,9 @@
       return error;
 
     FT_MEM_COPY( newpath, base_file_name, base_file_len );
-    FT_MEM_COPY( newpath + base_file_len, "/..namedfork/rsrc", 18 );
+    FT_MEM_COPY( newpath + base_file_len,
+                 PLATFORM_PATH_SEPARATOR "..namedfork"
+                 PLATFORM_PATH_SEPARATOR "rsrc", 18 );
 
     *result_file_name = newpath;
     *result_offset    = 0;
@@ -605,7 +608,8 @@
     memory = library->memory;
 
     newpath = raccess_make_file_name( memory, base_file_name,
-                                      "resource.frk/" );
+                                      "resource.frk"
+                                      PLATFORM_PATH_SEPARATOR );
     if ( !newpath )
       return FT_Err_Out_Of_Memory;
 
@@ -631,7 +635,9 @@
 
     memory = library->memory;
 
-    newpath = raccess_make_file_name( memory, base_file_name, ".resource/" );
+    newpath = raccess_make_file_name( memory, base_file_name,
+                                      ".resource"
+                                      PLATFORM_PATH_SEPARATOR );
     if ( !newpath )
       return FT_Err_Out_Of_Memory;
 
@@ -690,7 +696,8 @@
     memory = library->memory;
 
     newpath = raccess_make_file_name( memory, base_file_name,
-                                      ".AppleDouble/" );
+                                      ".AppleDouble"
+                                      PLATFORM_PATH_SEPARATOR );
     if ( !newpath )
       return FT_Err_Out_Of_Memory;
 
@@ -815,7 +822,7 @@
     if ( FT_ALLOC( new_name, new_length + 1 ) )
       return NULL;
 
-    tmp = ft_strrchr( original_name, '/' );
+    tmp = ft_strrchr( original_name, PLATFORM_PATH_SEPARATOR[0] );
     if ( tmp )
     {
       ft_strncpy( new_name, original_name, tmp - original_name + 1 );
