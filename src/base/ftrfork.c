@@ -545,7 +545,7 @@
 
     FT_MEM_COPY( newpath, base_file_name, base_file_len );
     FT_MEM_COPY( newpath + base_file_len,
-                 PLATFORM_PATH_SEPARATOR "rsrc", 6 );
+                 PLATFORM_DIR_SEPARATOR "rsrc", 6 );
 
     *result_file_name = newpath;
     *result_offset    = 0;
@@ -582,8 +582,8 @@
 
     FT_MEM_COPY( newpath, base_file_name, base_file_len );
     FT_MEM_COPY( newpath + base_file_len,
-                 PLATFORM_PATH_SEPARATOR "..namedfork"
-                 PLATFORM_PATH_SEPARATOR "rsrc", 18 );
+                 PLATFORM_DIR_SEPARATOR "..namedfork"
+                 PLATFORM_DIR_SEPARATOR "rsrc", 18 );
 
     *result_file_name = newpath;
     *result_offset    = 0;
@@ -609,7 +609,7 @@
 
     newpath = raccess_make_file_name( memory, base_file_name,
                                       "resource.frk"
-                                      PLATFORM_PATH_SEPARATOR );
+                                      PLATFORM_DIR_SEPARATOR );
     if ( !newpath )
       return FT_Err_Out_Of_Memory;
 
@@ -637,7 +637,7 @@
 
     newpath = raccess_make_file_name( memory, base_file_name,
                                       ".resource"
-                                      PLATFORM_PATH_SEPARATOR );
+                                      PLATFORM_DIR_SEPARATOR );
     if ( !newpath )
       return FT_Err_Out_Of_Memory;
 
@@ -697,7 +697,7 @@
 
     newpath = raccess_make_file_name( memory, base_file_name,
                                       ".AppleDouble"
-                                      PLATFORM_PATH_SEPARATOR );
+                                      PLATFORM_DIR_SEPARATOR );
     if ( !newpath )
       return FT_Err_Out_Of_Memory;
 
@@ -822,7 +822,7 @@
     if ( FT_ALLOC( new_name, new_length + 1 ) )
       return NULL;
 
-    tmp = ft_strrchr( original_name, PLATFORM_PATH_SEPARATOR[0] );
+    tmp = ft_strrchr( original_name, PLATFORM_DIR_SEPARATOR[0] );
     if ( tmp )
     {
       ft_strncpy( new_name, original_name, tmp - original_name + 1 );
