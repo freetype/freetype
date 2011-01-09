@@ -1,5 +1,22 @@
 2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache] Fix Savannah bug #31923, patch drafted by Harsha.
+
+	When a node comparator changes the cached nodes during the
+	search of a node matching with queried properties, the
+	pointers obtained before the functon should be updated to
+	prevent the dereference to freed or reallocated nodes.
+	To minimize the rescan of the linked list, the update is
+	executed when the comparator notifies the change of cached
+	nodes. This change depends previous change:
+	38b272ffbbdaae276d636aec4ef84af407d16181
+
+	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP): Rescan the
+	top node if the cached nodes are changed.
+	* src/cache/ftccache.c (FTC_Cache_Lookup): Ditto.
+
+2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cache] Notice if a cache query induced the node list change.
 
 	Some node comparators (comparing the cache node content and 

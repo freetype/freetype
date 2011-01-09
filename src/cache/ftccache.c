@@ -498,7 +498,11 @@
     if ( cache == NULL || anode == NULL )
       return FTC_Err_Invalid_Argument;
 
+    /* Go to the `top' node of the list sharing same masked hash */
     bucket = pnode = FTC_NODE__TOP_FOR_HASH( cache, hash );
+
+    /* Lookup a node with exactly same hash and queried properties.  */
+    /* NOTE: _nodcomp() may change the linked list to reduce memory. */
     for (;;)
     {
       node = *pnode;
@@ -512,6 +516,25 @@
       pnode = &node->link;
     }
 
+    if ( list_changed )
+    {
+      /* Update bucket by modified linked list */
+      bucket = pnode = FTC_NODE__TOP_FOR_HASH( cache, hash );
+
+      /* Update pnode by modified linked list */
+      while ( *pnode != node )
+      {
+        if ( *pnode == NULL )
+        {
+          FT_ERROR(("oops!!! node missing"));
+          goto NewNode;
+        }
+        else
+          pnode = &((*pnode)->link);
+      }
+    }
+
+    /* Reorder the list to move the found node to the `top' */
     if ( node != *bucket )
     {
       *pnode     = node->link;

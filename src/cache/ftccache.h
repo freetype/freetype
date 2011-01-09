@@ -224,8 +224,12 @@ FT_BEGIN_HEADER
                                                                          \
     error = FTC_Err_Ok;                                                  \
     node  = NULL;                                                        \
+                                                                         \
+    /* Go to the `top' node of the list sharing same masked hash */      \
     _bucket = _pnode = FTC_NODE__TOP_FOR_HASH( _cache, _hash );          \
                                                                          \
+    /* Lookup a node with exactly same hash and queried properties.  */  \
+    /* NOTE: _nodcomp() may change the linked list to reduce memory. */  \
     for (;;)                                                             \
     {                                                                    \
       _node = *_pnode;                                                   \
@@ -239,6 +243,25 @@ FT_BEGIN_HEADER
       _pnode = &_node->link;                                             \
     }                                                                    \
                                                                          \
+    if ( _list_changed )                                                 \
+    {                                                                    \
+      /* Update _bucket by possibly modified linked list */              \
+      _bucket = _pnode = FTC_NODE__TOP_FOR_HASH( _cache, _hash );        \
+                                                                         \
+      /* Update _pnode by possibly modified linked list */               \
+      while ( *_pnode != _node )                                         \
+      {                                                                  \
+        if ( *_pnode == NULL )                                           \
+        {                                                                \
+          FT_ERROR(("oops!!! node missing"));                            \
+          goto _NewNode;                                                 \
+        }                                                                \
+        else                                                             \
+          _pnode = &((*_pnode)->link);                                   \
+      }                                                                  \
+    }                                                                    \
+                                                                         \
+    /* Reorder the list to move the found node to the `top' */           \
     if ( _node != *_bucket )                                             \
     {                                                                    \
       *_pnode     = _node->link;                                         \
@@ -246,6 +269,7 @@ FT_BEGIN_HEADER
       *_bucket    = _node;                                               \
     }                                                                    \
                                                                          \
+    /* Update MRU list */                                                \
     {                                                                    \
       FTC_Manager  _manager = _cache->manager;                           \
       void*        _nl      = &_manager->nodes_list;                     \
