@@ -775,10 +775,10 @@
     if ( FT_HAS_LIMITER( site ) )
       FT_TRACE6((" )\n"));
 
-    if ( mem_limit_site_total >= 0 && mem_limit_site_total > req_all )
+    if ( mem_limit_site_total >= 0 && mem_limit_site_total < req_all )
       exceeds_limit_site_total = TRUE;
 
-    if ( mem_limit_site_cur >= 0 && mem_limit_site_cur > req_cur )
+    if ( mem_limit_site_cur >= 0 && mem_limit_site_cur < req_cur )
       exceeds_limit_site_cur = TRUE;
 
     if ( exceeds_limit_site_total || exceeds_limit_site_cur )
