@@ -72,6 +72,19 @@ FT_BEGIN_HEADER
 #define FTC_NODE__NEXT( x )  FTC_NODE( (x)->mru.next )
 #define FTC_NODE__PREV( x )  FTC_NODE( (x)->mru.prev )
 
+#ifdef FTC_INLINE
+#define FTC_NODE__TOP_FOR_HASH( cache, hash )                            \
+        ( ( cache )->buckets +                                           \
+          ( ( ( ( hash ) &   ( cache )->mask ) < ( cache )->p ) ?        \
+              ( ( hash ) & ( ( cache )->mask * 2 + 1 ) ) :               \
+              ( ( hash ) &   ( cache )->mask ) ) )
+#else
+  FT_LOCAL( FTC_Node* )
+  ftc_get_top_node_for_hash( FTC_Cache   cache,
+                             FT_PtrDist  hash );
+#define FTC_NODE__TOP_FOR_HASH( cache, hash )                            \
+        ftc_get_top_node_for_hash( ( cache ), ( hash ) )
+#endif
 
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
   FT_BASE( void )
@@ -205,16 +218,12 @@ FT_BEGIN_HEADER
     FTC_Cache             _cache   = FTC_CACHE(cache);                   \
     FT_PtrDist            _hash    = (FT_PtrDist)(hash);                 \
     FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);    \
-    FT_UFast              _idx;                                          \
                                                                          \
                                                                          \
     error = FTC_Err_Ok;                                                  \
     node  = NULL;                                                        \
-    _idx  = _hash & _cache->mask;                                        \
-    if ( _idx < _cache->p )                                              \
-      _idx = _hash & ( _cache->mask*2 + 1 );                             \
+    _bucket = _pnode = FTC_NODE__TOP_FOR_HASH( _cache, _hash );          \
                                                                          \
-    _bucket = _pnode = _cache->buckets + _idx;                           \
     for (;;)                                                             \
     {                                                                    \
       _node = *_pnode;                                                   \

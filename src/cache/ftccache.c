@@ -83,6 +83,25 @@
                     (FTC_MruNode)node );
   }
 
+
+  /* get a top bucket for specified hash from cache,
+   * body for FTC_NODE__TOP_FOR_HASH( cache, hash )
+   */
+  FT_LOCAL_DEF( FTC_Node* )
+  ftc_get_top_node_for_hash( FTC_Cache   cache,
+                             FT_PtrDist  hash )
+  {
+    FTC_Node*  pnode;
+    FT_UInt    idx;
+
+
+    idx = (FT_UInt)( hash & cache->mask );
+    if ( idx < cache->p )
+      idx = (FT_UInt)( hash & ( 2 * cache->mask + 1 ) );
+    pnode = cache->buckets + idx;
+    return pnode;
+  }
+
 #endif /* !FTC_INLINE */
 
 
@@ -202,15 +221,8 @@
   ftc_node_hash_unlink( FTC_Node   node0,
                         FTC_Cache  cache )
   {
-    FTC_Node  *pnode;
-    FT_UInt    idx;
+    FTC_Node  *pnode = FTC_NODE__TOP_FOR_HASH( cache, node0->hash );
 
-
-    idx = (FT_UInt)( node0->hash & cache->mask );
-    if ( idx < cache->p )
-      idx = (FT_UInt)( node0->hash & ( 2 * cache->mask + 1 ) );
-
-    pnode = cache->buckets + idx;
 
     for (;;)
     {
@@ -242,15 +254,8 @@
   ftc_node_hash_link( FTC_Node   node,
                       FTC_Cache  cache )
   {
-    FTC_Node  *pnode;
-    FT_UInt    idx;
+    FTC_Node  *pnode = FTC_NODE__TOP_FOR_HASH( cache, node->hash );
 
-
-    idx = (FT_UInt)( node->hash & cache->mask );
-    if ( idx < cache->p )
-      idx = (FT_UInt)( node->hash & (2 * cache->mask + 1 ) );
-
-    pnode = cache->buckets + idx;
 
     node->link = *pnode;
     *pnode     = node;
@@ -481,7 +486,6 @@
                     FT_Pointer  query,
                     FTC_Node   *anode )
   {
-    FT_UFast   idx;
     FTC_Node*  bucket;
     FTC_Node*  pnode;
     FTC_Node   node;
@@ -493,12 +497,7 @@
     if ( cache == NULL || anode == NULL )
       return FTC_Err_Invalid_Argument;
 
-    idx = hash & cache->mask;
-    if ( idx < cache->p )
-      idx = hash & ( cache->mask * 2 + 1 );
-
-    bucket = cache->buckets + idx;
-    pnode  = bucket;
+    bucket = pnode = FTC_NODE__TOP_FOR_HASH( cache, hash );
     for (;;)
     {
       node = *pnode;

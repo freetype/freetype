@@ -1,5 +1,31 @@
 2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache] Deduplicate the code to get the top node by a hash.
+
+	There are several duplicated codes getting the top node
+	from a cache by a given hash, like:
+
+	    idx = hash & cache->mask;
+	    if ( idx < cache->p )
+	      idx = hash & ( cache->mask * 2 + 1 );
+	    pnode = cache->buckets + idx;
+
+	To deduplicate them, a cpp-macro to do same work
+	FTC_NODE__TOP_FOR_HASH( cache, hash ) is introduced.
+	For non-inlined config, non-ftc_get_top_node_for_hash() is
+	also introduced.
+
+	* src/cache/ftccache.h (FTC_NODE__TOP_FOR_HASH): Declare
+	and implement inlined version.
+	(FTC_CACHE_LOOKUP_CMP): Use FTC_NODE__TOP_FOR_HASH().
+	* src/cache/ftccache.c (ftc_get_top_node_for_hash): Non-
+	inlined version.
+	(ftc_node_hash_unlink): Use FTC_NODE__TOP_FOR_HASH().
+	(ftc_node_hash_link): Ditto.
+	(FTC_Cache_Lookup): Ditto.
+
+2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cache] inline-specific functions are conditionalized.
 
 	* src/cache/ftcglyph.c (FTC_GNode_Compare): Conditionalized
