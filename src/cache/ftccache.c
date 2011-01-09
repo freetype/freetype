@@ -461,7 +461,7 @@
     {
       error = cache->clazz.node_new( &node, query, cache );
     }
-    FTC_CACHE_TRYLOOP_END();
+    FTC_CACHE_TRYLOOP_END( NULL );
 
     if ( error )
       node = NULL;
@@ -490,6 +490,7 @@
     FTC_Node*  pnode;
     FTC_Node   node;
     FT_Error   error = FTC_Err_Ok;
+    FT_Bool    list_changed = FALSE;
 
     FTC_Node_CompareFunc  compare = cache->clazz.node_compare;
 
@@ -504,7 +505,8 @@
       if ( node == NULL )
         goto NewNode;
 
-      if ( node->hash == hash && compare( node, query, cache ) )
+      if ( node->hash == hash                         &&
+           compare( node, query, cache, &list_changed ) )
         break;
 
       pnode = &node->link;
@@ -554,12 +556,13 @@
       for ( ;; )
       {
         FTC_Node  node = *pnode;
+        FT_Bool   list_changed = FALSE;
 
 
         if ( node == NULL )
           break;
 
-        if ( cache->clazz.node_remove_faceid( node, face_id, cache ) )
+        if ( cache->clazz.node_remove_faceid( node, face_id, cache, &list_changed ) )
         {
           *pnode     = node->link;
           node->link = frees;

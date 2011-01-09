@@ -1,5 +1,59 @@
 2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache] Notice if a cache query induced the node list change.
+
+	Some node comparators (comparing the cache node content and 
+	the properties specified by the query) can flush the cache
+	node to prevent the cache inflation.  The change may
+	invalidate the pointers to the node obtained before the node
+	comparison, so the change should be noticed to the caller.
+	The problem caused by the cache node changing is reported by
+	Harsha, see Savannah bug #31923.
+
+	* src/cache/ftccache.h (FTC_Node_CompareFunc): Add new
+	argument `FT_Bool* list_changed' to indicate the change of
+	the cached nodes to the caller.
+	(FTC_CACHE_LOOKUP_CMP): Watch the change of the cached nodes
+	by `_list_changed'.
+	(FTC_CACHE_TRYLOOP_END): Take new macro argument `_list_changed'
+	and update it when FTC_Manager_FlushN() flushes any nodes.
+
+	* src/cache/ftccback.h (ftc_snode_compare): Updated to fit
+	with new FTC_Node_CompareFunc type.  (ftc_gnode_compare): Ditto.
+
+	* src/cache/ftcbasic.c: Include FT_INTERNAL_OBJECTS_H to
+	use TRUE/FALSE macros.  (ftc_basic_gnode_compare_faceid):
+	New argument `FT_Bool* list_changed' to indicate the change
+	of the cache nodes, anyway, it is always FALSE.
+
+	* src/cache/ftccmap.c: Include FT_INTERNAL_OBJECTS_H to
+	use TRUE/FALSE macros.  (ftc_cmap_node_compare):
+	New argument `FT_Bool* list_changed' to indicate the change
+	of the cache nodes, anyway, it is always FALSE.
+	(ftc_cmap_node_remove_faceid): Ditto.
+
+	* src/cache/ftccache.c (FTC_Cache_NewNode): Pass a NULL
+	pointer to FTC_CACHE_TRYLOOP_END(), because the result is
+	not needed.  (FTC_Cache_Lookup): Watch the change of the cache
+	nodes by `list_changed'.  (FTC_Cache_RemoveFaceID): Ditto.
+
+	* src/cache/ftcglyph.c: Include FT_INTERNAL_OBJECTS_H to
+	use TRUE/FALSE macros.  (ftc_gnode_compare): New argument
+	`FT_Bool* list_changed' to indicate the change of the cache
+	nodes, anyway, it is always FALSE.  (FTC_GNode_Compare):
+	New argument `FT_Bool* list_changed' to be passed to
+	ftc_gnode_compare().
+	* src/cache/ftcglyph.h (FTC_GNode_Compare): Ditto.
+
+	* src/cache/ftcsbits.c (ftc_snode_compare): New argument
+	`FT_Bool* list_changed' to indicate the change of the cache
+	nodes, anyway. It is updated by FTC_CACHE_TRYLOOP().
+	(FTC_SNode_Compare): New argument `FT_Bool* list_changed'
+	to be passed to ftc_snode_compare().
+	* src/cache/ftcsbits.h (FTC_SNode_Compare): Ditto.
+
+2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cache] Fit FTC_GNode_Compare() to FTC_Node_CompareFunc.
 
 	* src/cache/ftcglyph.h (FTC_GNode_Compare): Add the 3rd

@@ -324,7 +324,8 @@
   FT_LOCAL_DEF( FT_Bool )
   ftc_snode_compare( FTC_Node    ftcsnode,
                      FT_Pointer  ftcgquery,
-                     FTC_Cache   cache )
+                     FTC_Cache   cache,
+                     FT_Bool*    list_changed )
   {
     FTC_SNode   snode  = (FTC_SNode)ftcsnode;
     FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
@@ -333,6 +334,8 @@
     FT_Bool     result;
 
 
+    if (list_changed)
+      *list_changed = FALSE;
     result = FT_BOOL( gnode->family == gquery->family                    &&
                       (FT_UInt)( gindex - gnode->gindex ) < snode->count );
     if ( result )
@@ -386,7 +389,7 @@
         {
           error = ftc_snode_load( snode, cache->manager, gindex, &size );
         }
-        FTC_CACHE_TRYLOOP_END();
+        FTC_CACHE_TRYLOOP_END( list_changed );
 
         ftcsnode->ref_count--;  /* unlock the node */
 
@@ -406,9 +409,10 @@
   FT_LOCAL_DEF( FT_Bool )
   FTC_SNode_Compare( FTC_SNode   snode,
                      FTC_GQuery  gquery,
-                     FTC_Cache   cache )
+                     FTC_Cache   cache,
+                     FT_Bool*    list_changed )
   {
-    return ftc_snode_compare( FTC_NODE( snode ), gquery, cache );
+    return ftc_snode_compare( FTC_NODE( snode ), gquery, cache, list_changed );
   }
 
 #endif

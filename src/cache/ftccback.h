@@ -57,13 +57,15 @@
   FT_LOCAL( FT_Bool )
   ftc_snode_compare( FTC_Node    snode,
                      FT_Pointer  gquery,
-                     FTC_Cache   cache );
+                     FTC_Cache   cache,
+                     FT_Bool*    list_changed );
 
 
   FT_LOCAL( FT_Bool )
   ftc_gnode_compare( FTC_Node    gnode,
                      FT_Pointer  gquery,
-                     FTC_Cache   cache );
+                     FTC_Cache   cache,
+                     FT_Bool*    list_changed );
 
 
   FT_LOCAL( FT_Error )

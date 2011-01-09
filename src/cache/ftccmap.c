@@ -22,6 +22,7 @@
 #include FT_CACHE_H
 #include "ftcmanag.h"
 #include FT_INTERNAL_MEMORY_H
+#include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
 #include "ftccback.h"
@@ -190,13 +191,16 @@
   FT_CALLBACK_DEF( FT_Bool )
   ftc_cmap_node_compare( FTC_Node    ftcnode,
                          FT_Pointer  ftcquery,
-                         FTC_Cache   cache )
+                         FTC_Cache   cache,
+                         FT_Bool*    list_changed )
   {
     FTC_CMapNode   node  = (FTC_CMapNode)ftcnode;
     FTC_CMapQuery  query = (FTC_CMapQuery)ftcquery;
     FT_UNUSED( cache );
 
 
+    if ( list_changed )
+      *list_changed = FALSE;
     if ( node->face_id    == query->face_id    &&
          node->cmap_index == query->cmap_index )
     {
@@ -213,12 +217,15 @@
   FT_CALLBACK_DEF( FT_Bool )
   ftc_cmap_node_remove_faceid( FTC_Node    ftcnode,
                                FT_Pointer  ftcface_id,
-                               FTC_Cache   cache )
+                               FTC_Cache   cache,
+                               FT_Bool*    list_changed )
   {
     FTC_CMapNode  node    = (FTC_CMapNode)ftcnode;
     FTC_FaceID    face_id = (FTC_FaceID)ftcface_id;
     FT_UNUSED( cache );
 
+    if ( list_changed )
+      *list_changed = FALSE;
     return FT_BOOL( node->face_id == face_id );
   }
 

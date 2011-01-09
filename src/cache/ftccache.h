@@ -115,7 +115,8 @@ FT_BEGIN_HEADER
   typedef FT_Bool
   (*FTC_Node_CompareFunc)( FTC_Node    node,
                            FT_Pointer  key,
-                           FTC_Cache   cache );
+                           FTC_Cache   cache,
+                           FT_Bool*    list_changed );
 
 
   typedef void
@@ -218,6 +219,7 @@ FT_BEGIN_HEADER
     FTC_Cache             _cache   = FTC_CACHE(cache);                   \
     FT_PtrDist            _hash    = (FT_PtrDist)(hash);                 \
     FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);    \
+    FT_Bool               _list_changed = FALSE;                         \
                                                                          \
                                                                          \
     error = FTC_Err_Ok;                                                  \
@@ -230,7 +232,8 @@ FT_BEGIN_HEADER
       if ( _node == NULL )                                               \
         goto _NewNode;                                                   \
                                                                          \
-      if ( _node->hash == _hash && _nodcomp( _node, query, _cache ) )    \
+      if ( _node->hash == _hash                             &&           \
+           _nodcomp( _node, query, _cache, &_list_changed ) )            \
         break;                                                           \
                                                                          \
       _pnode = &_node->link;                                             \
@@ -299,11 +302,14 @@ FT_BEGIN_HEADER
       FT_UInt  _try_done;
 
 
-#define FTC_CACHE_TRYLOOP_END()                                   \
+#define FTC_CACHE_TRYLOOP_END( list_changed )                     \
       if ( !error || error != FTC_Err_Out_Of_Memory )             \
         break;                                                    \
                                                                   \
       _try_done = FTC_Manager_FlushN( _try_manager, _try_count ); \
+      if ( _try_done > 0 && ( list_changed ) )                    \
+        *(FT_Bool*)( list_changed ) = TRUE;                       \
+                                                                  \
       if ( _try_done == 0 )                                       \
         break;                                                    \
                                                                   \

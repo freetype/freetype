@@ -17,6 +17,7 @@
 
 
 #include <ft2build.h>
+#include FT_INTERNAL_OBJECTS_H
 #include FT_CACHE_H
 #include "ftcglyph.h"
 #include FT_ERRORS_H
@@ -64,13 +65,16 @@
   FT_LOCAL_DEF( FT_Bool )
   ftc_gnode_compare( FTC_Node    ftcgnode,
                      FT_Pointer  ftcgquery,
-                     FTC_Cache   cache )
+                     FTC_Cache   cache,
+                     FT_Bool*    list_changed )
   {
     FTC_GNode   gnode  = (FTC_GNode)ftcgnode;
     FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
     FT_UNUSED( cache );
 
 
+    if ( list_changed )
+      *list_changed = FALSE;
     return FT_BOOL( gnode->family == gquery->family &&
                     gnode->gindex == gquery->gindex );
   }
@@ -81,9 +85,10 @@
   FT_LOCAL_DEF( FT_Bool )
   FTC_GNode_Compare( FTC_GNode   gnode,
                      FTC_GQuery  gquery,
-                     FTC_Cache   cache )
+                     FTC_Cache   cache,
+                     FT_Bool*    list_changed )
   {
-    return ftc_gnode_compare( FTC_NODE( gnode ), gquery, cache );
+    return ftc_gnode_compare( FTC_NODE( gnode ), gquery, cache, list_changed );
   }
 
 #endif
