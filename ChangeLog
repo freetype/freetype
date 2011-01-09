@@ -1,5 +1,15 @@
 2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache] Fit FTC_GNode_Compare() to FTC_Node_CompareFunc.
+
+	* src/cache/ftcglyph.h (FTC_GNode_Compare): Add the 3rd
+	argument `FTC_Cache  cache' to fit FTC_Node_CompareFunc
+	prototype.
+	* src/cache/ftcglyph.c (FTC_GNode_Compare): Ditto. Anyway,
+	`cache' is not used by its child ftc_gnode_compare().
+
+2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cache] Deduplicate the code to get the top node by a hash.
 
 	There are several duplicated codes getting the top node

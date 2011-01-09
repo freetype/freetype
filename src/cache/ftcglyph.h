@@ -187,7 +187,8 @@ FT_BEGIN_HEADER
   /* already correctly set                                             */
   FT_LOCAL( FT_Bool )
   FTC_GNode_Compare( FTC_GNode   gnode,
-                     FTC_GQuery  gquery );
+                     FTC_GQuery  gquery,
+                     FTC_Cache   cache );
 
 #endif
 

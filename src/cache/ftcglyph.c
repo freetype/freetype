@@ -80,9 +80,10 @@
 
   FT_LOCAL_DEF( FT_Bool )
   FTC_GNode_Compare( FTC_GNode   gnode,
-                     FTC_GQuery  gquery )
+                     FTC_GQuery  gquery,
+                     FTC_Cache   cache )
   {
-    return ftc_gnode_compare( FTC_NODE( gnode ), gquery, NULL );
+    return ftc_gnode_compare( FTC_NODE( gnode ), gquery, cache );
   }
 
 #endif
