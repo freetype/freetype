@@ -1,3 +1,11 @@
+2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cache] Correct a type mismatch under non-inlined config.
+
+	* src/cache/ftcglyph.h (FTC_GCACHE_LOOKUP_CMP):
+	FTC_GCache_Lookup() takes the node via a pointer `FTC_Node*', 
+	differently from cpp-macro FTC_CACHE_LOOKUP_CMP().
+
 2010-01-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Update Jamfile to include Bzip2 support.

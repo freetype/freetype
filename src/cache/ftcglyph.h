@@ -307,7 +307,7 @@ FT_BEGIN_HEADER
    FT_BEGIN_STMNT                                                     \
                                                                       \
      error = FTC_GCache_Lookup( FTC_GCACHE( cache ), hash, gindex,    \
-                                FTC_GQUERY( query ), node );          \
+                                FTC_GQUERY( query ), &node );         \
                                                                       \
    FT_END_STMNT
 
