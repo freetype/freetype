@@ -1,4 +1,4 @@
-2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Fix Savannah bug #31923, patch drafted by Harsha.
 
@@ -15,7 +15,7 @@
 	top node if the cached nodes are changed.
 	* src/cache/ftccache.c (FTC_Cache_Lookup): Ditto.
 
-2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Notice if a cache query induced the node list change.
 
@@ -69,7 +69,7 @@
 	to be passed to ftc_snode_compare().
 	* src/cache/ftcsbits.h (FTC_SNode_Compare): Ditto.
 
-2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Fit FTC_GNode_Compare() to FTC_Node_CompareFunc.
 
@@ -79,7 +79,7 @@
 	* src/cache/ftcglyph.c (FTC_GNode_Compare): Ditto. Anyway,
 	`cache' is not used by its child ftc_gnode_compare().
 
-2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Deduplicate the code to get the top node by a hash.
 
@@ -105,7 +105,7 @@
 	(ftc_node_hash_link): Ditto.
 	(FTC_Cache_Lookup): Ditto.
 
-2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] inline-specific functions are conditionalized.
 
@@ -121,7 +121,7 @@
 	for ftc_snode_compare().
 	* src/cache/ftcsbits.h (FTC_SNode_Compare): Ditto.
 
-2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Correct a type mismatch under non-inlined config.
 
@@ -129,7 +129,7 @@
 	FTC_GCache_Lookup() takes the node via a pointer `FTC_Node*', 
 	differently from cpp-macro FTC_CACHE_LOOKUP_CMP().
 
-2010-01-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Update Jamfile to include Bzip2 support.
 
@@ -138,7 +138,7 @@
 	they are for compressed PCF fonts, not others.
 	(e.g. compressed BDF fonts are not supported yet)
 
-2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Update Symbian project files to include Bzip2 support.
 
@@ -149,7 +149,7 @@
 	* builds/symbian/bld.inf: Include ftbzip2.h.
 	* builds/symbian/freetype.mmp: Include ftbzip2.c.
 
-2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Update classic MacOS makefiles to include Bzip2 support.
 
@@ -162,7 +162,7 @@
 	* builds/mac/FreeType.ppc_carbon.make.txt: Include ftbzip2.c.x.
 	* builds/mac/FreeType.ppc_classic.make.txt: Ditto.
 
-2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Update Amiga makefiles to include Bzip2 support.
 
@@ -174,7 +174,7 @@
 	* builds/amiga/makefile.os4: Include bzip2.o built from ftbzip2.c.
 	* builds/amiga/smakefile: Ditto.
 
-2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Update pkg-config tools to reflect Bzip2 support.
 
@@ -182,7 +182,7 @@
 	--libs output, if built with Bzip2 support.
 	* builds/unix/freetype2.in: Ditto.
 
-2010-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2011-01-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: Remove `SYSTEM_BZ2LIB' macro.
 
