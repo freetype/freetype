@@ -76,6 +76,8 @@
   }
 
 
+#ifdef FTC_INLINE
+
   FT_LOCAL_DEF( FT_Bool )
   FTC_GNode_Compare( FTC_GNode   gnode,
                      FTC_GQuery  gquery )
@@ -83,6 +85,7 @@
     return ftc_gnode_compare( FTC_NODE( gnode ), gquery, NULL );
   }
 
+#endif
 
   /*************************************************************************/
   /*************************************************************************/

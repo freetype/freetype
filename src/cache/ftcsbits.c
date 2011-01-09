@@ -401,6 +401,8 @@
   }
 
 
+#ifdef FTC_INLINE
+
   FT_LOCAL_DEF( FT_Bool )
   FTC_SNode_Compare( FTC_SNode   snode,
                      FTC_GQuery  gquery,
@@ -409,5 +411,6 @@
     return ftc_snode_compare( FTC_NODE( snode ), gquery, cache );
   }
 
+#endif
 
 /* END */

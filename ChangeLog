@@ -1,5 +1,21 @@
 2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[cache] inline-specific functions are conditionalized.
+
+	* src/cache/ftcglyph.c (FTC_GNode_Compare): Conditionalized
+	for inlined config.  This function is a thin wrapper of
+	ftc_gnode_compare() for inlined FTC_CACHE_LOOKUP_CMP()
+	(see `nodecmp' argument).  Under non-inlined config,
+	ftc_gnode_compare() is invoked by FTC_Cache_Lookup(),
+	via FTC_Cache->clazz.node_compare().
+
+	* src/cache/ftcglyph.h (FTC_GNode_Compare): Ditto.
+	* src/cache/ftcsbits.c (FTC_SNode_Compare): Ditto,
+	for ftc_snode_compare().
+	* src/cache/ftcsbits.h (FTC_SNode_Compare): Ditto.
+
+2010-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cache] Correct a type mismatch under non-inlined config.
 
 	* src/cache/ftcglyph.h (FTC_GCACHE_LOOKUP_CMP):

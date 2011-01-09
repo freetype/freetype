@@ -180,12 +180,16 @@ FT_BEGIN_HEADER
                   FT_UInt     gindex,  /* glyph index for node */
                   FTC_Family  family );
 
+#ifdef FTC_INLINE
+
   /* returns TRUE iff the query's glyph index correspond to the node;  */
   /* this assumes that the `family' and `hash' fields of the query are */
   /* already correctly set                                             */
   FT_LOCAL( FT_Bool )
   FTC_GNode_Compare( FTC_GNode   gnode,
                      FTC_GQuery  gquery );
+
+#endif
 
   /* call this function to clear a node's family -- this is necessary */
   /* to implement the `node_remove_faceid' cache method correctly     */
