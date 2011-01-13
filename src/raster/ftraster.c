@@ -2403,6 +2403,11 @@
           return;  /* no drop-out control */
         }
 
+        /* undocumented but confirmed: If the drop-out would result in a  */
+        /* pixel outside of the bounding box, use the right pixel instead */
+        if ( pxl < 0 )
+          pxl = e1;
+
         /* check that the other pixel isn't set */
         e1 = pxl == e1 ? e2 : e1;
 
@@ -2578,6 +2583,11 @@
         default: /* modes 2, 3, 6, 7 */
           return;  /* no drop-out control */
         }
+
+        /* undocumented but confirmed: If the drop-out would result in a */
+        /* pixel outside of the bounding box, use the top pixel instead  */
+        if ( pxl < 0 )
+          pxl = e1;
 
         /* check that the other pixel isn't set */
         e1 = pxl == e1 ? e2 : e1;

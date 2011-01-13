@@ -1,3 +1,17 @@
+2011-01-13  Werner Lemberg  <wl@gnu.org>
+
+	[raster] Handle drop-outs at glyph borders according to Microsoft.
+
+	If a drop-out rule would switch on a pixel outside of the glyph's
+	bounding box, use the right (or top) pixel instead.  This is an
+	undocumented feature, but some fonts like `Helvetica Neue LT Com 65
+	Medium' heavily rely on it.
+
+	Thanks to Greg Hitchcock who explained this behaviour.
+
+	* src/raster/ftraster.c (Vertical_Sweep_Drop,
+	Horizontal_Sweep_Drop): Implement it.
+
 2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Fix Savannah bug #31923, patch drafted by Harsha.
