@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType sbits manager (body).                                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2009, 2010 by       */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2009, 2010, 2011 by */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -412,7 +412,8 @@
                      FTC_Cache   cache,
                      FT_Bool*    list_changed )
   {
-    return ftc_snode_compare( FTC_NODE( snode ), gquery, cache, list_changed );
+    return ftc_snode_compare( FTC_NODE( snode ), gquery,
+                              cache, list_changed );
   }
 
 #endif

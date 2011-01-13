@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    The FreeType internal cache interface (body).                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010 by */
+/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010,   */
+/*            2011 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -32,7 +33,7 @@
 #define FTC_HASH_MIN_LOAD  1
 #define FTC_HASH_SUB_LOAD  ( FTC_HASH_MAX_LOAD - FTC_HASH_MIN_LOAD )
 
-/* this one _must_ be a power of 2! */
+  /* this one _must_ be a power of 2! */
 #define FTC_HASH_INITIAL_SIZE  8
 
 
@@ -115,9 +116,9 @@
     for (;;)
     {
       FTC_Node  node, *pnode;
-      FT_UFast  p      = cache->p;
-      FT_UFast  mask   = cache->mask;
-      FT_UFast  count  = mask + p + 1;    /* number of buckets */
+      FT_UFast  p     = cache->p;
+      FT_UFast  mask  = cache->mask;
+      FT_UFast  count = mask + p + 1;    /* number of buckets */
 
 
       /* do we need to shrink the buckets array? */
@@ -136,7 +137,8 @@
 
 
           /* if we can't expand the array, leave immediately */
-          if ( FT_RENEW_ARRAY( cache->buckets, (mask+1)*2, (mask+1)*4 ) )
+          if ( FT_RENEW_ARRAY( cache->buckets,
+                               ( mask + 1 ) * 2, ( mask + 1 ) * 4 ) )
             break;
         }
 
@@ -210,7 +212,9 @@
         cache->slack -= FTC_HASH_MAX_LOAD;
         cache->p      = p;
       }
-      else /* the hash table is balanced */
+
+      /* otherwise, the hash table is balanced */
+      else
         break;
     }
   }
@@ -418,8 +422,8 @@
                  FT_PtrDist hash,
                  FTC_Node   node )
   {
-    node->hash = hash;
-    node->cache_index = (FT_UInt16) cache->index;
+    node->hash        = hash;
+    node->cache_index = (FT_UInt16)cache->index;
     node->ref_count   = 0;
 
     ftc_node_hash_link( node, cache );
@@ -489,7 +493,7 @@
     FTC_Node*  bucket;
     FTC_Node*  pnode;
     FTC_Node   node;
-    FT_Error   error = FTC_Err_Ok;
+    FT_Error   error        = FTC_Err_Ok;
     FT_Bool    list_changed = FALSE;
 
     FTC_Node_CompareFunc  compare = cache->clazz.node_compare;
@@ -509,7 +513,7 @@
       if ( node == NULL )
         goto NewNode;
 
-      if ( node->hash == hash                         &&
+      if ( node->hash == hash                           &&
            compare( node, query, cache, &list_changed ) )
         break;
 
@@ -526,7 +530,7 @@
       {
         if ( *pnode == NULL )
         {
-          FT_ERROR(("oops!!! node missing"));
+          FT_ERROR(( "FTC_Cache_Lookup: oops!!!  node missing\n" ));
           goto NewNode;
         }
         else
@@ -551,6 +555,7 @@
         ftc_node_mru_up( node, manager );
     }
     *anode = node;
+
     return error;
 
   NewNode:
@@ -585,7 +590,8 @@
         if ( node == NULL )
           break;
 
-        if ( cache->clazz.node_remove_faceid( node, face_id, cache, &list_changed ) )
+        if ( cache->clazz.node_remove_faceid( node, face_id,
+                                              cache, &list_changed ) )
         {
           *pnode     = node->link;
           node->link = frees;

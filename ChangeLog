@@ -4,7 +4,7 @@
 
 	When a node comparator changes the cached nodes during the
 	search of a node matching with queried properties, the
-	pointers obtained before the functon should be updated to
+	pointers obtained before the function should be updated to
 	prevent the dereference to freed or reallocated nodes.
 	To minimize the rescan of the linked list, the update is
 	executed when the comparator notifies the change of cached
@@ -19,54 +19,56 @@
 
 	[cache] Notice if a cache query induced the node list change.
 
-	Some node comparators (comparing the cache node content and 
-	the properties specified by the query) can flush the cache
-	node to prevent the cache inflation.  The change may
-	invalidate the pointers to the node obtained before the node
-	comparison, so the change should be noticed to the caller.
-	The problem caused by the cache node changing is reported by
-	Harsha, see Savannah bug #31923.
+	Some node comparators (comparing the cache node contents and the
+	properties specified by the query) can flush the cache node to
+	prevent the cache inflation.  The change may invalidate the pointers
+	to the node obtained before the node comparison, so it should be
+	noticed to the caller.  The problem caused by the cache node
+	changing is reported by Harsha, see Savannah bug #31923.
 
-	* src/cache/ftccache.h (FTC_Node_CompareFunc): Add new
-	argument `FT_Bool* list_changed' to indicate the change of
-	the cached nodes to the caller.
-	(FTC_CACHE_LOOKUP_CMP): Watch the change of the cached nodes
-	by `_list_changed'.
+	* src/cache/ftccache.h (FTC_Node_CompareFunc): Add new argument
+	`FT_Bool* list_changed' to indicate the change of the cached nodes
+	to the caller.
+	(FTC_CACHE_LOOKUP_CMP): Watch the change of the cached nodes by
+	`_list_changed'.
 	(FTC_CACHE_TRYLOOP_END): Take new macro argument `_list_changed'
-	and update it when FTC_Manager_FlushN() flushes any nodes.
+	and update it when `FTC_Manager_FlushN' flushes any nodes.
 
-	* src/cache/ftccback.h (ftc_snode_compare): Updated to fit
-	with new FTC_Node_CompareFunc type.  (ftc_gnode_compare): Ditto.
+	* src/cache/ftccback.h (ftc_snode_compare): Updated to fit with new
+	FTC_Node_CompareFunc type.
+	(ftc_gnode_compare): Ditto.
 
-	* src/cache/ftcbasic.c: Include FT_INTERNAL_OBJECTS_H to
-	use TRUE/FALSE macros.  (ftc_basic_gnode_compare_faceid):
-	New argument `FT_Bool* list_changed' to indicate the change
-	of the cache nodes, anyway, it is always FALSE.
+	* src/cache/ftcbasic.c: Include FT_INTERNAL_OBJECTS_H to use
+	TRUE/FALSE macros.
+	(ftc_basic_gnode_compare_faceid): New argument `FT_Bool*
+	list_changed' to indicate the change of the cache nodes (anyway, it
+	is always FALSE).
 
-	* src/cache/ftccmap.c: Include FT_INTERNAL_OBJECTS_H to
-	use TRUE/FALSE macros.  (ftc_cmap_node_compare):
-	New argument `FT_Bool* list_changed' to indicate the change
-	of the cache nodes, anyway, it is always FALSE.
+	* src/cache/ftccmap.c: Include FT_INTERNAL_OBJECTS_H to use
+	TRUE/FALSE macros.
+	(ftc_cmap_node_compare): New argument `FT_Bool* list_changed' to
+	indicate the change of the cache nodes (anyway, it is always FALSE).
 	(ftc_cmap_node_remove_faceid): Ditto.
 
-	* src/cache/ftccache.c (FTC_Cache_NewNode): Pass a NULL
-	pointer to FTC_CACHE_TRYLOOP_END(), because the result is
-	not needed.  (FTC_Cache_Lookup): Watch the change of the cache
-	nodes by `list_changed'.  (FTC_Cache_RemoveFaceID): Ditto.
+	* src/cache/ftccache.c (FTC_Cache_NewNode): Pass a NULL pointer to
+	`FTC_CACHE_TRYLOOP_END', because the result is not needed.
+	(FTC_Cache_Lookup): Watch the change of the cache nodes by
+	`list_changed'.
+	(FTC_Cache_RemoveFaceID): Ditto.
 
-	* src/cache/ftcglyph.c: Include FT_INTERNAL_OBJECTS_H to
-	use TRUE/FALSE macros.  (ftc_gnode_compare): New argument
-	`FT_Bool* list_changed' to indicate the change of the cache
-	nodes, anyway, it is always FALSE.  (FTC_GNode_Compare):
-	New argument `FT_Bool* list_changed' to be passed to
-	ftc_gnode_compare().
+	* src/cache/ftcglyph.c: Include FT_INTERNAL_OBJECTS_H to use
+	TRUE/FALSE macros.
+	(ftc_gnode_compare): New argument `FT_Bool* list_changed' to
+	indicate the change of the cache nodes (anyway, it is always FALSE).
+	(FTC_GNode_Compare): New argument `FT_Bool* list_changed' to be
+	passed to `ftc_gnode_compare'.
 	* src/cache/ftcglyph.h (FTC_GNode_Compare): Ditto.
 
-	* src/cache/ftcsbits.c (ftc_snode_compare): New argument
-	`FT_Bool* list_changed' to indicate the change of the cache
-	nodes, anyway. It is updated by FTC_CACHE_TRYLOOP().
-	(FTC_SNode_Compare): New argument `FT_Bool* list_changed'
-	to be passed to ftc_snode_compare().
+	* src/cache/ftcsbits.c (ftc_snode_compare): New argument `FT_Bool*
+	list_changed' to indicate the change of the cache nodes, anyway.  It
+	is updated by `FTC_CACHE_TRYLOOP'.
+	(FTC_SNode_Compare): New argument `FT_Bool* list_changed' to be
+	passed to `ftc_snode_compare'.
 	* src/cache/ftcsbits.h (FTC_SNode_Compare): Ditto.
 
 2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -83,7 +85,7 @@
 
 	[cache] Deduplicate the code to get the top node by a hash.
 
-	There are several duplicated codes getting the top node
+	There are several duplicated code fragments getting the top node
 	from a cache by a given hash, like:
 
 	    idx = hash & cache->mask;
@@ -91,17 +93,16 @@
 	      idx = hash & ( cache->mask * 2 + 1 );
 	    pnode = cache->buckets + idx;
 
-	To deduplicate them, a cpp-macro to do same work
-	FTC_NODE__TOP_FOR_HASH( cache, hash ) is introduced.
-	For non-inlined config, non-ftc_get_top_node_for_hash() is
-	also introduced.
+	To remove duplication, a cpp-macro to do same work
+	`FTC_NODE__TOP_FOR_HASH' is introduced.  For non-inlined
+	configuration, non-ftc_get_top_node_for_hash() is also introduced.
 
 	* src/cache/ftccache.h (FTC_NODE__TOP_FOR_HASH): Declare
 	and implement inlined version.
-	(FTC_CACHE_LOOKUP_CMP): Use FTC_NODE__TOP_FOR_HASH().
-	* src/cache/ftccache.c (ftc_get_top_node_for_hash): Non-
-	inlined version.
-	(ftc_node_hash_unlink): Use FTC_NODE__TOP_FOR_HASH().
+	(FTC_CACHE_LOOKUP_CMP): Use `FTC_NODE__TOP_FOR_HASH'.
+	* src/cache/ftccache.c (ftc_get_top_node_for_hash): Non-inlined
+	version.
+	(ftc_node_hash_unlink): Use `FTC_NODE__TOP_FOR_HASH'.
 	(ftc_node_hash_link): Ditto.
 	(FTC_Cache_Lookup): Ditto.
 
@@ -109,25 +110,25 @@
 
 	[cache] inline-specific functions are conditionalized.
 
-	* src/cache/ftcglyph.c (FTC_GNode_Compare): Conditionalized
-	for inlined config.  This function is a thin wrapper of
-	ftc_gnode_compare() for inlined FTC_CACHE_LOOKUP_CMP()
-	(see `nodecmp' argument).  Under non-inlined config,
-	ftc_gnode_compare() is invoked by FTC_Cache_Lookup(),
-	via FTC_Cache->clazz.node_compare().
+	* src/cache/ftcglyph.c (FTC_GNode_Compare): Conditionalized for
+	inlined configuration.  This function is a thin wrapper of
+	`ftc_gnode_compare' for inlined `FTC_CACHE_LOOKUP_CMP' (see
+	`nodecmp' argument).  Under non-inlined configuration,
+	`ftc_gnode_compare' is invoked by `FTC_Cache_Lookup', via
+	`FTC_Cache->clazz.node_compare'.
 
 	* src/cache/ftcglyph.h (FTC_GNode_Compare): Ditto.
-	* src/cache/ftcsbits.c (FTC_SNode_Compare): Ditto,
-	for ftc_snode_compare().
+	* src/cache/ftcsbits.c (FTC_SNode_Compare): Ditto, for
+	`ftc_snode_compare'.
 	* src/cache/ftcsbits.h (FTC_SNode_Compare): Ditto.
 
 2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Correct a type mismatch under non-inlined config.
 
-	* src/cache/ftcglyph.h (FTC_GCACHE_LOOKUP_CMP):
-	FTC_GCache_Lookup() takes the node via a pointer `FTC_Node*', 
-	differently from cpp-macro FTC_CACHE_LOOKUP_CMP().
+	* src/cache/ftcglyph.h (FTC_GCACHE_LOOKUP_CMP): `FTC_GCache_Lookup'
+	takes the node via a pointer `FTC_Node*', differently from cpp-macro
+	`FTC_CACHE_LOOKUP_CMP'.
 
 2011-01-06  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -433,7 +434,7 @@
 
 	On LLP64 platforms (e.g. Win64), FT_ULong (32-bit)
 	variables are inappropriate to calculate hash values
-	from the memory address (64-bit).  The hash variables  
+	from the memory address (64-bit).  The hash variables
 	are extended from FT_ULong to FT_PtrDist and new
 	hashing macro functions are introduced.  The hash
 	values on 16-bit memory platforms are changed, but
@@ -443,7 +444,7 @@
 
 	* src/cache/ftccache.h (_FTC_FACE_ID_HASH): New hash
 	function to replace FTC_FACE_ID_HASH() for portability.
-	* src/cache/ftcmanag.h (FTC_SCALER_HASH): Replace 
+	* src/cache/ftcmanag.h (FTC_SCALER_HASH): Replace
 	FTC_FACE_ID_HASH() by _FTC_FACE_ID_HASH().
 	* src/cache/ftccmap.c (FTC_CMAP_HASH): Ditto.
 
@@ -467,7 +468,7 @@
 	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP): Ditto.
 	Also the type of the internal variable `_idx' is changed to
 	FT_PtrDist from FT_UFast for better pointer calculation.
-	
+
 2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Hide internal macros incompatible with LLP64.
@@ -530,7 +531,7 @@
 	* src/base/ftobjs.c (load_face_in_embedded_rfork):
 	When FT_Stream_New() returns FT_Err_Cannot_Open_Stream, it
 	means that the file is possible to be fopen()-ed but zero-sized.
-	Also there is a case that the resource fork is not zero-sized, 
+	Also there is a case that the resource fork is not zero-sized,
 	but no supported font exists in it.  If a rule by Darwin VFS
 	falls into such cases, there is no need to try other Darwin VFS
 	rules anymore.  Such cases are marked by vfs_rfork_has_no_font.
@@ -544,7 +545,7 @@
 	a resource fork via ANSI C or POSIX interface.  Current resource
 	fork accessor tries all possible methods to support all kernels.
 	But if a method could open a resource fork but no font is found,
-	there is no need to try other methods older than tested method. 
+	there is no need to try other methods older than tested method.
 	To determine whether the rule index is for Darwin VFS, a local
 	function ftrfork.c::raccess_rule_by_darwin_vfs() is introduced.
 	To use this function in ftobjs.c etc but it should be inlined,

@@ -5,7 +5,7 @@
 /*    FreeType CharMap cache (body)                                        */
 /*                                                                         */
 /*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
-/*            2010 by                                                      */
+/*            2010, 2011 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -223,6 +223,7 @@
     FTC_CMapNode  node    = (FTC_CMapNode)ftcnode;
     FTC_FaceID    face_id = (FTC_FaceID)ftcface_id;
     FT_UNUSED( cache );
+
 
     if ( list_changed )
       *list_changed = FALSE;
