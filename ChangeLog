@@ -1,5 +1,15 @@
 2011-01-13  Werner Lemberg  <wl@gnu.org>
 
+	[raster] Reduce jitter value.
+
+	This catches a rendering problem with glyph `x' from Tahoma at
+	10ppem.  It seems that the increase of the precision in the change
+	from 2009-06-11 makes a larger jitter value unnecessary.
+
+	* src/raster/ftraster.c (Set_High_Precision): Implement it.
+
+2011-01-13  Werner Lemberg  <wl@gnu.org>
+
 	[raster] Handle drop-outs at glyph borders according to Microsoft.
 
 	If a drop-out rule would switch on a pixel outside of the glyph's
