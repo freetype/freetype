@@ -2426,9 +2426,12 @@
         }
 
         /* undocumented but confirmed: If the drop-out would result in a  */
-        /* pixel outside of the bounding box, use the right pixel instead */
+        /* pixel outside of the bounding box, use the pixel inside of the */
+        /* bounding box instead                                           */
         if ( pxl < 0 )
           pxl = e1;
+        else if ( TRUNC( pxl ) >= ras.bWidth )
+          pxl = e2;
 
         /* check that the other pixel isn't set */
         e1 = pxl == e1 ? e2 : e1;
@@ -2606,10 +2609,13 @@
           return;  /* no drop-out control */
         }
 
-        /* undocumented but confirmed: If the drop-out would result in a */
-        /* pixel outside of the bounding box, use the top pixel instead  */
+        /* undocumented but confirmed: If the drop-out would result in a  */
+        /* pixel outside of the bounding box, use the pixel inside of the */
+        /* bounding box instead                                           */
         if ( pxl < 0 )
           pxl = e1;
+        else if ( TRUNC( pxl ) >= ras.target.rows )
+          pxl = e2;
 
         /* check that the other pixel isn't set */
         e1 = pxl == e1 ? e2 : e1;

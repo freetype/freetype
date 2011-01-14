@@ -1,5 +1,12 @@
 2011-01-13  Werner Lemberg  <wl@gnu.org>
 
+	[raster] Add undocumented drop-out rule to the other bbox side also.
+
+	* src/raster/ftraster.c (Vertical_Sweep_Drop,
+	Horizontal_Sweep_Drop): Implement it.
+
+2011-01-13  Werner Lemberg  <wl@gnu.org>
+
 	[raster] Reduce jitter value.
 
 	This catches a rendering problem with glyph `x' from Tahoma at
