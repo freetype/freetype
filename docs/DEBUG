@@ -187,9 +187,41 @@ behaviour of FreeType at runtime.
     If it is  undefined, or if its value is  not strictly positive, then
     no allocation bounds are checked at runtime.
 
+
+  FT2_ALLOC_CUR_MAX_SITE
+
+    This  variable is ignored  if FT2_DEBUG_MEMORY  is not  defined.  It
+    allows you to specify a maximum size  of the memory buffer allocated
+    at the specific site in the source code of FreeType. The variable is
+    a list of the per-site limits, separated by the space.  The per-site
+    limit is  a pair of the site specification and the limiting value in
+    digits,  separated by a comma.  The site specification is  a pair of
+    the path name of source code  and the line number in digits,  as the
+    summary report given by setting FT2_DEBUG_MEMORY.
+
+    Example:
+
+      FT2_ALLOC_CUR_MAX_SITE=/tmp/freetype2/src/base/ftobjs.c:302,300000 \
+                             /tmp/freetype2/src/base/ftglyph.c:290,10000 \
+                             ...
+
+    This is useful to check the recovery  from an out of memory error at
+    the specific site of the source code.  If it is undefined, or if its
+    value is negative, then no allocation bounds are checked at runtime.
+
+
+  FT2_ALLOC_TOTAL_MAX_SITE
+
+    This variable is  almost same with FT2_ALLOC_CUR_MAX_SITE  in above,
+    but it counts the summary of historical allocations at the specified
+    site of the source code.  It does not care about whether the buffers
+    are freed.  When the limiting value for a site  is set to 1000 bytes
+    and repeating 100 bytes allocation and free it,  the 11th allocation
+    will fail.
+
 ------------------------------------------------------------------------
 
-Copyright 2002, 2003, 2004, 2005, 2009 by
+Copyright 2002, 2003, 2004, 2005, 2009, 2011 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file is  part  of the  FreeType  project, and  may  only be  used,
