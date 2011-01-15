@@ -1,5 +1,14 @@
 2011-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Copy -mcpu=* & -march=* options from CFLAGS to LDFLAGS.
+
+	* builds/unix/configure.raw: Consider recent gcc-standard
+	flags to specify architecture in CFLAGS & LDFLAGS
+	harmonization.  Requested by Savannah bug #32114, to
+	support multilib feature of BuildRoot SDK correctly.
+
+2011-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Fix off-by-one bug in CFLAGS & LDFLAGS harmonizer.
 
 	* builds/unix/configure.raw: Some important options that
