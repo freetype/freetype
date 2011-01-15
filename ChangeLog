@@ -1,3 +1,11 @@
+2011-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix off-by-one bug in CFLAGS & LDFLAGS harmonizer.
+
+	* builds/unix/configure.raw: Some important options that
+	included in CFLAGS but not in LDFLAGS are copied to
+	LDFLAGS, but the last option in CFLAGS was not checked.
+
 2011-01-13  Werner Lemberg  <wl@gnu.org>
 
 	[raster] Add undocumented drop-out rule to the other bbox side also.

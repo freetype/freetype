@@ -250,7 +250,7 @@ fi
 save_config_args=$*
 set dummy ${CFLAGS}
 i=1
-while test $i -lt $#
+while test $i -le $#
 do
   c=$1
 
