@@ -1,3 +1,15 @@
+2011-01-15  Werner Lemberg  <wl@gnu.org>
+
+	[raster] Make bbox handling the same as with Microsoft's rasterizer.
+
+	Right before B/W rasterizing, the bbox gets simply rounded to
+	integers.  This fixes, for example, glyph `three' in font `Helvetica
+	Neue LT Com 65 Medium' at 11ppem.
+
+	Thanks to Greg Hitchcock who explained this behaviour.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Implement it.
+
 2011-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Copy -mcpu=* & -march=* options from CFLAGS to LDFLAGS.
