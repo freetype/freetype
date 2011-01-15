@@ -1,3 +1,17 @@
+2011-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix ARM assembly code in include/freetype/config/ftconfig.h.
+
+	* include/freetype/config/ftconfig.h (FT_MulFix_arm):
+	Copy the maintained code from builds/unix/ftconfig.in.
+	Old GNU binutils could not accept the reduced syntax
+	`orr %0, %2, lsl #16'.  Un-omitted syntax like RVCT,
+	`orr %0, %0, %2, lsl #16' is better.  Reported by
+	Johnson Y. Yan.  The bug report by Qt developers is
+	considered too.
+
+	http://bugreports.qt.nokia.com/browse/QTBUG-6521
+
 2011-01-15  Werner Lemberg  <wl@gnu.org>
 
 	[raster] Make bbox handling the same as with Microsoft's rasterizer.
