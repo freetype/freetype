@@ -1,3 +1,14 @@
+2011-01-18  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix handling of MIRP instruction.
+
+	Thanks to Greg Hitchcock who explained the issue.
+
+	* src/truetype/ttinterp.c (Ins_MIRP): Replace a `>=' operator with
+	`>' since the description in the specification is incorrect.
+	This fixes, for example, glyph `two' in font `Helvetica Neue LT Com
+	65 medium' at 15ppem.
+
 2011-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix ARM assembly code in include/freetype/config/ftconfig.h.

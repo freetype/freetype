@@ -6244,8 +6244,22 @@
       /*      refer to the same zone.                                  */
 
       if ( CUR.GS.gep0 == CUR.GS.gep1 )
-        if ( FT_ABS( cvt_dist - org_dist ) >= CUR.GS.control_value_cutin )
+      {
+        /* XXX: According to Greg Hitchcock, the following wording is */
+        /*      the right one:                                        */
+        /*                                                            */
+        /*        When the absolute difference between the value in   */
+        /*        the table [CVT] and the measurement directly from   */
+        /*        the outline is _greater_ than the cut_in value, the */
+        /*        outline measurement is used.                        */
+        /*                                                            */
+        /*      This is from `instgly.doc'.  The description in       */
+        /*      `ttinst2.doc', version 1.66, is thus incorrect since  */
+        /*      it implies `>=' instead of `>'.                       */
+
+        if ( FT_ABS( cvt_dist - org_dist ) > CUR.GS.control_value_cutin )
           cvt_dist = org_dist;
+      }
 
       distance = CUR_Func_round(
                    cvt_dist,
