@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter types (specification only).                              */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by                  */
+/*  Copyright 2003-2009, 2011 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -241,7 +241,7 @@ extern void*  _af_debug_hints;
   /*************************************************************************/
 
   /*
-   *  The list of know scripts.  Each different script corresponds to the
+   *  The list of known scripts.  Each different script corresponds to the
    *  following information:
    *
    *   - A set of Unicode ranges to test whether the face supports the
@@ -342,55 +342,57 @@ extern void*  _af_debug_hints;
 
   } AF_ScriptClassRec;
 
-/* Declare and define vtables for classes */
+
+  /* Declare and define vtables for classes */
 #ifndef FT_CONFIG_OPTION_PIC
 
-#define AF_DECLARE_SCRIPT_CLASS(script_class)                                \
-  FT_CALLBACK_TABLE const AF_ScriptClassRec                                  \
+#define AF_DECLARE_SCRIPT_CLASS( script_class ) \
+  FT_CALLBACK_TABLE const AF_ScriptClassRec     \
   script_class;
 
-#define AF_DEFINE_SCRIPT_CLASS(script_class, script_, ranges, m_size,        \
-                               m_init, m_scale, m_done, h_init, h_apply)     \
-  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec                              \
-  script_class =                                                             \
-  {                                                                          \
-    script_,                                                                 \
-    ranges,                                                                  \
-                                                                             \
-    m_size,                                                                  \
-                                                                             \
-    m_init,                                                                  \
-    m_scale,                                                                 \
-    m_done,                                                                  \
-                                                                             \
-    h_init,                                                                  \
-    h_apply                                                                  \
+#define AF_DEFINE_SCRIPT_CLASS( script_class, script_, ranges, m_size,     \
+                                m_init, m_scale, m_done, h_init, h_apply ) \
+  FT_CALLBACK_TABLE_DEF const AF_ScriptClassRec                            \
+  script_class =                                                           \
+  {                                                                        \
+    script_,                                                               \
+    ranges,                                                                \
+                                                                           \
+    m_size,                                                                \
+                                                                           \
+    m_init,                                                                \
+    m_scale,                                                               \
+    m_done,                                                                \
+                                                                           \
+    h_init,                                                                \
+    h_apply                                                                \
   };
 
-#else 
+#else /* FT_CONFIG_OPTION_PIC */
 
-#define AF_DECLARE_SCRIPT_CLASS(script_class)                                \
-  FT_LOCAL(void)                                                             \
-  FT_Init_Class_##script_class(AF_ScriptClassRec* ac);
+#define AF_DECLARE_SCRIPT_CLASS( script_class )          \
+  FT_LOCAL( void )                                       \
+  FT_Init_Class_##script_class( AF_ScriptClassRec* ac );
 
-#define AF_DEFINE_SCRIPT_CLASS(script_class, script_, ranges, m_size,        \
-                               m_init, m_scale, m_done, h_init, h_apply)     \
-  FT_LOCAL_DEF(void)                                                         \
-  FT_Init_Class_##script_class(AF_ScriptClassRec* ac)                        \
-  {                                                                          \
-    ac->script                = script_;                                     \
-    ac->script_uni_ranges     = ranges;                                      \
-                                                                             \
-    ac->script_metrics_size   = m_size;                                      \
-                                                                             \
-    ac->script_metrics_init   = m_init;                                      \
-    ac->script_metrics_scale  = m_scale;                                     \
-    ac->script_metrics_done   = m_done;                                      \
-                                                                             \
-    ac->script_hints_init     = h_init;                                      \
-    ac->script_hints_apply    = h_apply;                                     \
+#define AF_DEFINE_SCRIPT_CLASS( script_class, script_, ranges, m_size,     \
+                                m_init, m_scale, m_done, h_init, h_apply ) \
+  FT_LOCAL_DEF( void )                                                     \
+  FT_Init_Class_##script_class( AF_ScriptClassRec* ac )                    \
+  {                                                                        \
+    ac->script               = script_;                                    \
+    ac->script_uni_ranges    = ranges;                                     \
+                                                                           \
+    ac->script_metrics_size  = m_size;                                     \
+                                                                           \
+    ac->script_metrics_init  = m_init;                                     \
+    ac->script_metrics_scale = m_scale;                                    \
+    ac->script_metrics_done  = m_done;                                     \
+                                                                           \
+    ac->script_hints_init    = h_init;                                     \
+    ac->script_hints_apply   = h_apply;                                    \
   }
-#endif
+
+#endif /* FT_CONFIG_OPTION_PIC */
 
 
 /* */
