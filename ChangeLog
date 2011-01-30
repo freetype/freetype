@@ -1,3 +1,10 @@
+2011-01-30  LIU Sun-Liang  <sunliang_liu@foxitsoftware.com>
+
+	[truetype]: Fix behaviour of MIAP for invalid arguments.
+
+	* src/truetype/ttinterp.c (Ins_MIAP): Set reference points even in
+	case of error.
+
 2011-01-18  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix handling of MIRP instruction.
