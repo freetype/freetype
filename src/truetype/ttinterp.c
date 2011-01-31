@@ -985,8 +985,8 @@
     /*  INS_$83   */  PACK( 0, 0 ),
     /*  INS_$84   */  PACK( 0, 0 ),
     /*  ScanCTRL  */  PACK( 1, 0 ),
-    /*  SDVPTL[0] */  PACK( 2, 0 ),
-    /*  SDVPTL[1] */  PACK( 2, 0 ),
+    /*  SDPVTL[0] */  PACK( 2, 0 ),
+    /*  SDPVTL[1] */  PACK( 2, 0 ),
     /*  GetINFO   */  PACK( 1, 1 ),
     /*  IDEF      */  PACK( 1, 0 ),
     /*  ROLL      */  PACK( 3, 3 ),
@@ -3166,17 +3166,21 @@
     args[0] = CUR.top;
 
 
-#define DO_CINDEX                           \
-  {                                         \
-    FT_Long  L;                             \
-                                            \
-                                            \
-    L = args[0];                            \
-                                            \
-    if ( L <= 0 || L > CUR.args )           \
-      CUR.error = TT_Err_Invalid_Reference; \
-    else                                    \
-      args[0] = CUR.stack[CUR.args - L];    \
+#define DO_CINDEX                             \
+  {                                           \
+    FT_Long  L;                               \
+                                              \
+                                              \
+    L = args[0];                              \
+                                              \
+    if ( L <= 0 || L > CUR.args )             \
+    {                                         \
+      if ( CUR.pedantic_hinting )             \
+        CUR.error = TT_Err_Invalid_Reference; \
+      args[0] = 0;                            \
+    }                                         \
+    else                                      \
+      args[0] = CUR.stack[CUR.args - L];      \
   }
 
 
@@ -4385,17 +4389,19 @@
 
     if ( L <= 0 || L > CUR.args )
     {
-      CUR.error = TT_Err_Invalid_Reference;
-      return;
+      if ( CUR.pedantic_hinting )
+        CUR.error = TT_Err_Invalid_Reference;
     }
+    else
+    {
+      K = CUR.stack[CUR.args - L];
 
-    K = CUR.stack[CUR.args - L];
+      FT_ARRAY_MOVE( &CUR.stack[CUR.args - L    ],
+                     &CUR.stack[CUR.args - L + 1],
+                     ( L - 1 ) );
 
-    FT_ARRAY_MOVE( &CUR.stack[CUR.args - L    ],
-                   &CUR.stack[CUR.args - L + 1],
-                   ( L - 1 ) );
-
-    CUR.stack[CUR.args - 1] = K;
+      CUR.stack[CUR.args - 1] = K;
+    }
   }
 
 
@@ -5038,12 +5044,8 @@
     if ( BOUNDSL( L, CUR.zp2.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-      {
         CUR.error = TT_Err_Invalid_Reference;
-        return;
-      }
-      else
-        R = 0;
+      R = 0;
     }
     else
     {
@@ -5123,10 +5125,7 @@
          BOUNDS( K, CUR.zp1.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-      {
         CUR.error = TT_Err_Invalid_Reference;
-        return;
-      }
       D = 0;
     }
     else
@@ -5465,11 +5464,8 @@
     if ( CUR.top < CUR.GS.loop )
     {
       if ( CUR.pedantic_hinting )
-      {
         CUR.error = TT_Err_Too_Few_Arguments;
-        return;
-      }
-      CUR.GS.loop = CUR.top;
+      goto Fail;
     }
 
     while ( CUR.GS.loop > 0 )
@@ -5492,6 +5488,7 @@
       CUR.GS.loop--;
     }
 
+  Fail:
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
@@ -5679,8 +5676,9 @@
 
     if ( CUR.top < CUR.GS.loop )
     {
-      CUR.error = TT_Err_Invalid_Reference;
-      return;
+      if ( CUR.pedantic_hinting )
+        CUR.error = TT_Err_Invalid_Reference;
+      goto Fail;
     }
 
     if ( COMPUTE_Point_Displacement( &dx, &dy, &zp, &refp ) )
@@ -5706,6 +5704,7 @@
       CUR.GS.loop--;
     }
 
+  Fail:
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
@@ -5840,8 +5839,9 @@
 
     if ( CUR.top < CUR.GS.loop + 1 )
     {
-      CUR.error = TT_Err_Invalid_Reference;
-      return;
+      if ( CUR.pedantic_hinting )
+        CUR.error = TT_Err_Invalid_Reference;
+      goto Fail;
     }
 
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
@@ -5885,6 +5885,7 @@
       CUR.GS.loop--;
     }
 
+  Fail:
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
@@ -6071,7 +6072,7 @@
     {
       if ( CUR.pedantic_hinting )
         CUR.error = TT_Err_Invalid_Reference;
-      return;
+      goto Fail;
     }
 
     /* XXX: Is there some undocumented feature while in the */
@@ -6156,6 +6157,7 @@
 
     CUR_Func_move( &CUR.zp1, point, distance - org_dist );
 
+  Fail:
     CUR.GS.rp1 = CUR.GS.rp0;
     CUR.GS.rp2 = point;
 
@@ -6193,7 +6195,7 @@
     {
       if ( CUR.pedantic_hinting )
         CUR.error = TT_Err_Invalid_Reference;
-      return;
+      goto Fail;
     }
 
     if ( !cvtEntry )
@@ -6292,6 +6294,7 @@
 
     CUR_Func_move( &CUR.zp1, point, distance - cur_dist );
 
+  Fail:
     CUR.GS.rp1 = CUR.GS.rp0;
 
     if ( ( CUR.opcode & 16 ) != 0 )
@@ -6322,7 +6325,7 @@
     {
       if ( CUR.pedantic_hinting )
         CUR.error = TT_Err_Invalid_Reference;
-      return;
+      goto Fail;
     }
 
     while ( CUR.GS.loop > 0 )
@@ -6350,6 +6353,7 @@
       CUR.GS.loop--;
     }
 
+  Fail:
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
@@ -6491,8 +6495,9 @@
 
     if ( CUR.top < CUR.GS.loop )
     {
-      CUR.error = TT_Err_Invalid_Reference;
-      return;
+      if ( CUR.pedantic_hinting )
+        CUR.error = TT_Err_Invalid_Reference;
+      goto Fail;
     }
 
     /*
@@ -6506,7 +6511,7 @@
     {
       if ( CUR.pedantic_hinting )
         CUR.error = TT_Err_Invalid_Reference;
-      return;
+      goto Fail;
     }
 
     if ( twilight )
@@ -6571,6 +6576,8 @@
 
       CUR_Func_move( &CUR.zp2, (FT_UShort)point, new_dist - cur_dist );
     }
+
+  Fail:
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }

@@ -1,5 +1,15 @@
 2011-01-31  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Improve handling of invalid references.
+
+	* src/truetype/interp.c: Set even more TT_Err_Invalid_Reference
+	error codes only if pedantic hinting is active.  At the same time,
+	try to provide sane values which hopefully allow useful
+	continuation.  Exception to this is CALL and LOOPCALL – due to
+	possible stack corruption it is necessary to bail out.
+
+2011-01-31  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Improve handling of stack underflow.
 
 	* src/truetype/ttinterp.c (TT_RunIns, Ins_FLIPPT, Ins_DELTAP,
