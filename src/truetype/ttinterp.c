@@ -3184,30 +3184,36 @@
   }
 
 
-#define DO_JROT                          \
-    if ( args[1] != 0 )                  \
-    {                                    \
-      CUR.IP      += args[0];            \
-      if ( CUR.IP < 0 )                  \
-        CUR.error = TT_Err_Bad_Argument; \
-      CUR.step_ins = FALSE;              \
+#define DO_JROT                            \
+    if ( args[1] != 0 )                    \
+    {                                      \
+      if ( args[0] == 0 && CUR.args == 0 ) \
+        CUR.error = TT_Err_Bad_Argument;   \
+      CUR.IP += args[0];                   \
+      if ( CUR.IP < 0 )                    \
+        CUR.error = TT_Err_Bad_Argument;   \
+      CUR.step_ins = FALSE;                \
     }
 
 
-#define DO_JMPR                        \
-    CUR.IP      += args[0];            \
-    if ( CUR.IP < 0 )                  \
-      CUR.error = TT_Err_Bad_Argument; \
+#define DO_JMPR                          \
+    if ( args[0] == 0 && CUR.args == 0 ) \
+      CUR.error = TT_Err_Bad_Argument;   \
+    CUR.IP += args[0];                   \
+    if ( CUR.IP < 0 )                    \
+      CUR.error = TT_Err_Bad_Argument;   \
     CUR.step_ins = FALSE;
 
 
-#define DO_JROF                          \
-    if ( args[1] == 0 )                  \
-    {                                    \
-      CUR.IP      += args[0];            \
-      if ( CUR.IP < 0 )                  \
-        CUR.error = TT_Err_Bad_Argument; \
-      CUR.step_ins = FALSE;              \
+#define DO_JROF                            \
+    if ( args[1] == 0 )                    \
+    {                                      \
+      if ( args[0] == 0 && CUR.args == 0 ) \
+        CUR.error = TT_Err_Bad_Argument;   \
+      CUR.IP += args[0];                   \
+      if ( CUR.IP < 0 )                    \
+        CUR.error = TT_Err_Bad_Argument;   \
+      CUR.step_ins = FALSE;                \
     }
 
 

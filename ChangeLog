@@ -1,5 +1,12 @@
 2011-01-31  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Protect jump instructions against endless loops.
+
+	* src/truetype/interp.c (DO_JROT, DO_JMPR, DO_JROF): Exit with error
+	if offset is zero.
+
+2011-01-31  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Improve handling of invalid references.
 
 	* src/truetype/interp.c: Set even more TT_Err_Invalid_Reference
