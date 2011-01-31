@@ -5464,8 +5464,12 @@
 
     if ( CUR.top < CUR.GS.loop )
     {
-      CUR.error = TT_Err_Too_Few_Arguments;
-      return;
+      if ( CUR.pedantic_hinting )
+      {
+        CUR.error = TT_Err_Too_Few_Arguments;
+        return;
+      }
+      CUR.GS.loop = CUR.top;
     }
 
     while ( CUR.GS.loop > 0 )
@@ -6859,8 +6863,9 @@
 
       if ( CUR.args < n )
       {
-        CUR.error = TT_Err_Too_Few_Arguments;
-        return;
+        if ( CUR.pedantic_hinting )
+          CUR.error = TT_Err_Too_Few_Arguments;
+        n = CUR.args;
       }
 
       CUR.args -= n;
@@ -6876,8 +6881,10 @@
     {
       if ( CUR.args < 2 )
       {
-        CUR.error = TT_Err_Too_Few_Arguments;
-        return;
+        if ( CUR.pedantic_hinting )
+          CUR.error = TT_Err_Too_Few_Arguments;
+        CUR.args = 0;
+        goto Fail;
       }
 
       CUR.args -= 2;
@@ -6926,6 +6933,7 @@
           CUR.error = TT_Err_Invalid_Reference;
     }
 
+  Fail:
     CUR.new_top = CUR.args;
   }
 
@@ -6953,8 +6961,9 @@
 
       if ( CUR.args < n )
       {
-        CUR.error = TT_Err_Too_Few_Arguments;
-        return;
+        if ( CUR.pedantic_hinting )
+          CUR.error = TT_Err_Too_Few_Arguments;
+        n = CUR.args;
       }
 
       CUR.args -= n;
@@ -6969,8 +6978,10 @@
     {
       if ( CUR.args < 2 )
       {
-        CUR.error = TT_Err_Too_Few_Arguments;
-        return;
+        if ( CUR.pedantic_hinting )
+          CUR.error = TT_Err_Too_Few_Arguments;
+        CUR.args = 0;
+        goto Fail;
       }
 
       CUR.args -= 2;
@@ -7018,6 +7029,7 @@
       }
     }
 
+  Fail:
     CUR.new_top = CUR.args;
   }
 
@@ -7479,8 +7491,19 @@
       /* One can also interpret it as the index of the last argument.    */
       if ( CUR.args < 0 )
       {
-        CUR.error = TT_Err_Too_Few_Arguments;
-        goto LErrorLabel_;
+        FT_UShort  i;
+
+
+        if ( CUR.pedantic_hinting )
+        {
+          CUR.error = TT_Err_Too_Few_Arguments;
+          goto LErrorLabel_;
+        }
+
+        /* push zeroes onto the stack */
+        for ( i = 0; i < Pop_Push_Count[CUR.opcode] >> 4; i++ )
+          CUR.stack[i] = 0;
+        CUR.args = 0;
       }
 
       CUR.new_top = CUR.args + ( Pop_Push_Count[CUR.opcode] & 15 );
@@ -7517,7 +7540,7 @@
         case 0x04:  /* SFvTCA y */
         case 0x05:  /* SFvTCA x */
           {
-            FT_Short AA, BB;
+            FT_Short  AA, BB;
 
 
             AA = (FT_Short)( ( opcode & 1 ) << 14 );
