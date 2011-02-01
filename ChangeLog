@@ -1,5 +1,14 @@
 2011-02-01  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Ignore unknown operators in charstrings.
+	Patch suggested by Miles.Lau <sunliang_liu@foxitsoftware.com>.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Emit tracing
+	message for unknown operators and continue instead of exiting with a
+	syntax error.
+
+2011-02-01  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] FT_LOAD_PEDANTIC now affects `prep' and `fpgm' also.
 
 	* src/truetype/ttgload.c (tt_loader_init): Handle
