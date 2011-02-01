@@ -1868,6 +1868,7 @@
   {
     TT_Face    face;
     FT_Stream  stream;
+    FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
 
 
     face   = (TT_Face)glyph->face;
@@ -1886,7 +1887,7 @@
 
       if ( !size->cvt_ready )
       {
-        FT_Error  error = tt_size_ready_bytecode( size );
+        FT_Error  error = tt_size_ready_bytecode( size, pedantic );
 
 
         if ( error )
@@ -1918,7 +1919,7 @@
 
         for ( i = 0; i < size->cvt_size; i++ )
           size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
-        tt_size_run_prep( size );
+        tt_size_run_prep( size, pedantic );
       }
 
       /* see whether the cvt program has disabled hinting */

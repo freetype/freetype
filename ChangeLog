@@ -1,3 +1,14 @@
+2011-02-01  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] FT_LOAD_PEDANTIC now affects `prep' and `fpgm' also.
+
+	* src/truetype/ttgload.c (tt_loader_init): Handle
+	`FT_LOAD_PEDANTIC'.
+	* src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep,
+	tt_size_init_bytecode, tt_size_ready_bytecode): New argument to
+	handle pedantic mode.
+	* src/truetype/ttobjs.h: Updated.
+
 2011-01-31  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Protect jump instructions against endless loops.

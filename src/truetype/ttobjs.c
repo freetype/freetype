@@ -4,8 +4,7 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
-/*            2010 by                                                      */
+/*  Copyright 1996-2011                                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -570,13 +569,16 @@
   /*    Run the font program.                                              */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    size :: A handle to the size object.                               */
+  /*    size     :: A handle to the size object.                           */
+  /*                                                                       */
+  /*    pedantic :: Set if bytecode execution should be pedantic.          */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_run_fpgm( TT_Size  size )
+  tt_size_run_fpgm( TT_Size  size,
+                    FT_Bool  pedantic )
   {
     TT_Face         face = (TT_Face)size->root.face;
     TT_ExecContext  exec;
@@ -594,15 +596,17 @@
 
     TT_Load_Context( exec, face, size );
 
-    exec->callTop   = 0;
-    exec->top       = 0;
+    exec->callTop = 0;
+    exec->top     = 0;
 
     exec->period    = 64;
     exec->phase     = 0;
     exec->threshold = 0;
 
     exec->instruction_trap = FALSE;
-    exec->F_dot_P = 0x10000L;
+    exec->F_dot_P          = 0x10000L;
+
+    exec->pedantic_hinting = pedantic;
 
     {
       FT_Size_Metrics*  metrics    = &exec->metrics;
@@ -659,13 +663,16 @@
   /*    Run the control value program.                                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    size :: A handle to the size object.                               */
+  /*    size     :: A handle to the size object.                           */
+  /*                                                                       */
+  /*    pedantic :: Set if bytecode execution should be pedantic.          */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_run_prep( TT_Size  size )
+  tt_size_run_prep( TT_Size  size,
+                    FT_Bool  pedantic )
   {
     TT_Face         face = (TT_Face)size->root.face;
     TT_ExecContext  exec;
@@ -687,6 +694,8 @@
     exec->top     = 0;
 
     exec->instruction_trap = FALSE;
+
+    exec->pedantic_hinting = pedantic;
 
     TT_Set_CodeRange( exec,
                       tt_coderange_cvt,
@@ -766,7 +775,8 @@
   /* Initialize bytecode-related fields in the size object.       */
   /* We do this only if bytecode interpretation is really needed. */
   static FT_Error
-  tt_size_init_bytecode( FT_Size  ftsize )
+  tt_size_init_bytecode( FT_Size  ftsize,
+                         FT_Bool  pedantic )
   {
     FT_Error   error;
     TT_Size    size = (TT_Size)ftsize;
@@ -839,7 +849,7 @@
     }
 
     /* Fine, now run the font program! */
-    error = tt_size_run_fpgm( size );
+    error = tt_size_run_fpgm( size, pedantic );
 
   Exit:
     if ( error )
@@ -850,14 +860,15 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  tt_size_ready_bytecode( TT_Size  size )
+  tt_size_ready_bytecode( TT_Size  size,
+                          FT_Bool  pedantic )
   {
     FT_Error  error = TT_Err_Ok;
 
 
     if ( !size->bytecode_ready )
     {
-      error = tt_size_init_bytecode( (FT_Size)size );
+      error = tt_size_init_bytecode( (FT_Size)size, pedantic );
       if ( error )
         goto Exit;
     }
@@ -889,7 +900,7 @@
 
       size->GS = tt_default_graphics_state;
 
-      error = tt_size_run_prep( size );
+      error = tt_size_run_prep( size, pedantic );
       if ( !error )
         size->cvt_ready = 1;
     }
