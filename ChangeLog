@@ -1,5 +1,10 @@
 2011-02-01  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/afdummy.c: Include `aferrors.h'.
+	Problem reported by Chris Liddel <chris.liddell@artifex.com>.
+
+2011-02-01  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Ignore unknown operators in charstrings.
 	Patch suggested by Miles.Lau <sunliang_liu@foxitsoftware.com>.
 
