@@ -395,6 +395,43 @@ FT_BEGIN_HEADER
 
 #endif /* __GNUC__ */
 
+
+#ifdef _MSC_VER /* Visual C++ */
+
+#ifdef _M_IX86
+
+#define FT_MULFIX_ASSEMBLER  FT_MulFix_i386
+
+  /* documentation is in freetype.h */
+
+  static __inline FT_Int32
+  FT_MulFix_i386( FT_Int32  a,
+                  FT_Int32  b )
+  {
+    register FT_Int32  result;
+
+    __asm
+    {
+      mov eax, a
+      mov edx, b
+      imul edx
+      mov ecx, edx
+      sar ecx, 31
+      add ecx, 8000h
+      add eax, ecx
+      adc edx, 0
+      shr eax, 16
+      shl edx, 16
+      add eax, edx
+      mov result, eax
+    }
+    return result;
+  }
+
+#endif /* _M_IX86 */
+
+#endif /* _MSC_VER */
+
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 
 

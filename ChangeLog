@@ -1,5 +1,13 @@
 2011-02-13  Bradley Grainger  <bgrainger@logos.com>
 
+	Add inline assembly version of FT_MulFix for MSVC.
+
+	* include/freetype/config/ftconfig.h: Ported the FT_MulFix_i386
+	function from GNU inline assembly syntax (see #ifdef __GNUC__ block
+	above) to MASM syntax for Microsoft Visual C++.
+
+2011-02-13  Bradley Grainger  <bgrainger@logos.com>
+
 	Add project and solution files in Visual Studio 2010 format.
 
 	* builds/win32/.gitignore: Ignore user-specific cache files.
