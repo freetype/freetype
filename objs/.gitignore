@@ -7,3 +7,6 @@ ftoption.h
 libfreetype.la
 .libs
 *.lo
+debug*/
+release*/
+win32/

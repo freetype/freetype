@@ -1,3 +1,12 @@
+2011-02-13  Bradley Grainger  <bgrainger@logos.com>
+
+	Add project and solution files in Visual Studio 2010 format.
+
+	* builds/win32/.gitignore: Ignore user-specific cache files.
+	* builds/win32/vc2010/: Add VS2010 project & solution files, created
+	by upgrading builds/win32/vc2008/freetype.vcproj.
+	* objs/.gitignore: Ignore Visual Studio output files.
+
 2011-02-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afdummy.c: Include `aferrors.h'.
