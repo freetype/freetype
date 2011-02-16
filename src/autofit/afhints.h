@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines (specification).                        */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2010 by                  */
+/*  Copyright 2003-2008, 2010-2011 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -25,10 +25,10 @@
 
 FT_BEGIN_HEADER
 
- /*
-  *  The definition of outline glyph hints.  These are shared by all
-  *  script analysis routines (until now).
-  */
+  /*
+   *  The definition of outline glyph hints.  These are shared by all
+   *  script analysis routines (until now).
+   */
 
   typedef enum  AF_Dimension_
   {
@@ -53,6 +53,128 @@ FT_BEGIN_HEADER
     AF_DIR_DOWN  = -2
 
   } AF_Direction;
+
+
+  /*
+   *  The following explanations are mostly taken from the article
+   *
+   *    Real-Time Grid Fitting of Typographic Outlines
+   *
+   *  by David Turner and Werner Lemberg
+   *
+   *   http://www.tug.org/TUGboat/Articles/tb24-3/lemberg.pdf
+   *
+   *
+   *  Segments
+   *
+   *    `af_{cjk,latin,...}_hints_compute_segments' are the functions to
+   *    find segments in an outline.  A segment is a series of consecutive
+   *    points that are approximately aligned along a coordinate axis.  The
+   *    analysis to do so is specific to a script.
+   *
+   *    A segment must have at least two points, except in the case of
+   *    `fake' segments that are generated to hint metrics appropriately,
+   *    and which consist of a single point.
+   *
+   *
+   *  Edges
+   *
+   *    As soon as segments are defined, the auto-hinter groups them into
+   *    edges.  An edge corresponds to a single position on the main
+   *    dimension that collects one or more segments (allowing for a small
+   *    threshold).
+   *
+   *    The auto-hinter first tries to grid fit edges, then to align
+   *    segments on the edges unless it detects that they form a serif.
+   *
+   *    `af_{cjk,latin,...}_hints_compute_edges' are the functions to find
+   *    edges; they are specific to a script.
+   *
+   *
+   *  Stems
+   *
+   *    Segments need to be `linked' to other ones in order to detect stems.
+   *    A stem is made of two segments that face each other in opposite
+   *    directions and that are sufficiently close to each other.  Using
+   *    vocabulary from the TrueType specification, stem segments form a
+   *    `black distance'.
+   *
+   *    Each segment has at most one `best' candidate to form a black
+   *    distance, or no candidate at all.  Notice that two distinct segments
+   *    can have the same candidate, which frequently means a serif.
+   *
+   *    A stem is recognized by the following condition:
+   *
+   *      best segment_1 = segment_2 && best segment_2 = segment_1
+   *
+   *    The best candidate is stored in field `link' in structure
+   *    `AF_Segment'.
+   *
+   *    Stems are detected by `af_{cjk,latin,...}_hint_edges'.
+   *
+   *
+   *  Serifs
+   *
+   *    On the opposite, a serif has
+   *
+   *      best segment_1 = segment_2 && best segment_2 != segment_1
+   *
+   *    where segment_1 corresponds to the serif segment.
+   *
+   *    The best candidate is stored in field `serif' in structure
+   *    `AF_Segment' (and `link' is set to NULL).
+   *
+   *    Serifs are detected by `af_{cjk,latin,...}_hint_edges'.
+   *
+   *
+   *  Touched points
+   *
+   *    A point is called `touched' if it has been processed somehow by the
+   *    auto-hinter.  It basically means that it shouldn't be moved again
+   *    (or moved only under certain constraints to preserve the already
+   *    applied processing).
+   *
+   *
+   *  Flat and round segments
+   *
+   *    Segments are `round' or `flat', depending on the series of points
+   *    that define them.  A segment is round if the next and previous point
+   *    of an extremum (which can be either a single point or sequence of
+   *    points) are both conic or cubic control points.  Otherwise, a
+   *    segment with an extremum is flat.
+   *
+   *
+   *  Strong Points
+   *
+   *    Experience has shown that points which are not part of an edge need
+   *    to be interpolated linearly between their two closest edges, even if
+   *    these are not part of the contour of those particular points.
+   *    Typical candidates for this are
+   *
+   *    - angle points (i.e., points where the `in' and `out' direction
+   *      differ greatly)
+   *
+   *    - inflection points (i.e., where the `in' and `out' angles are the
+   *      same, but the curvature changes sign)
+   *
+   *    `af_glyph_hints_align_strong_points' is the function which takes
+   *    care of such situations; it is equivalent to the TrueType `IP'
+   *    hinting instruction.
+   *
+   *
+   *  Weak Points
+   *
+   *    Other points in the outline must be interpolated using the
+   *    coordinates of their previous and next unfitted contour neighbours.
+   *    These are called `weak points' and are touched by the function
+   *    `af_glyph_hints_align_weak_points', equivalent to the TrueType `IUP'
+   *    hinting instruction.  Typical candidates are control points and
+   *    points on the contour without a major direction.
+   *
+   *    The major effect is to reduce possible distortion caused by
+   *    alignment of edges and strong points, thus weak points are processed
+   *    after strong points.
+   */
 
 
   /* point hint flags */
@@ -155,32 +277,31 @@ FT_BEGIN_HEADER
     FT_Fixed    scale;      /* used to speed up interpolation between edges */
     AF_Width    blue_edge;  /* non-NULL if this is a blue edge              */
 
-    AF_Edge     link;
-    AF_Edge     serif;
-    FT_Short    num_linked;
+    AF_Edge     link;       /* link edge                 */
+    AF_Edge     serif;      /* primary edge for serifs   */
+    FT_Short    num_linked; /* number of linked edges    */
+    FT_Int      score;      /* used during stem matching */
 
-    FT_Int      score;
-
-    AF_Segment  first;
-    AF_Segment  last;
+    AF_Segment  first;      /* first segment in edge */
+    AF_Segment  last;       /* last segment in edge  */
 
   } AF_EdgeRec;
 
 
   typedef struct  AF_AxisHintsRec_
   {
-    FT_Int        num_segments;
-    FT_Int        max_segments;
-    AF_Segment    segments;
+    FT_Int        num_segments; /* number of used segments      */
+    FT_Int        max_segments; /* number of allocated segments */
+    AF_Segment    segments;     /* segments array               */
 #ifdef AF_SORT_SEGMENTS
     FT_Int        mid_segments;
 #endif
 
-    FT_Int        num_edges;
-    FT_Int        max_edges;
-    AF_Edge       edges;
+    FT_Int        num_edges;    /* number of used edges      */
+    FT_Int        max_edges;    /* number of allocated edges */
+    AF_Edge       edges;        /* edges array               */
 
-    AF_Direction  major_dir;
+    AF_Direction  major_dir;    /* either vertical or horizontal */
 
   } AF_AxisHintsRec, *AF_AxisHints;
 
@@ -197,13 +318,13 @@ FT_BEGIN_HEADER
 
     FT_Pos            edge_distance_threshold;
 
-    FT_Int            max_points;
-    FT_Int            num_points;
-    AF_Point          points;
+    FT_Int            max_points;    /* number of allocated points */
+    FT_Int            num_points;    /* number of used points      */
+    AF_Point          points;        /* points array               */
 
-    FT_Int            max_contours;
-    FT_Int            num_contours;
-    AF_Point*         contours;
+    FT_Int            max_contours;  /* number of allocated contours */
+    FT_Int            num_contours;  /* number of used contours      */
+    AF_Point*         contours;      /* contours array               */
 
     AF_AxisHintsRec   axis[AF_DIMENSION_MAX];
 
@@ -214,7 +335,7 @@ FT_BEGIN_HEADER
 
     FT_Pos            xmin_delta;    /* used for warping */
     FT_Pos            xmax_delta;
-    
+
   } AF_GlyphHintsRec;
 
 
@@ -274,12 +395,6 @@ FT_BEGIN_HEADER
   af_glyph_hints_init( AF_GlyphHints  hints,
                        FT_Memory      memory );
 
-
-
-  /*
-   *  recompute all AF_Point in a AF_GlyphHints from the definitions
-   *  in a source outline
-   */
   FT_LOCAL( void )
   af_glyph_hints_rescale( AF_GlyphHints     hints,
                           AF_ScriptMetrics  metrics );
