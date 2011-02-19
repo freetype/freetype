@@ -4,8 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
-/*            2010 by                                                      */
+/*  Copyright 1996-2011 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -561,6 +560,7 @@
     FT_Library    library;
     FT_Bool       autohint = FALSE;
     FT_Module     hinter;
+    TT_Face       ttface = (TT_Face)face;
 
 
     if ( !face || !face->size || !face->glyph )
@@ -601,7 +601,8 @@
      * - Then, auto-hint if FT_LOAD_FORCE_AUTOHINT is set or if we don't
      *   have a native font hinter.
      *
-     * - Otherwise, auto-hint for LIGHT hinting mode.
+     * - Otherwise, auto-hint for LIGHT hinting mode or if there isn't
+     *   any hinting bytecode in the TrueType/OpenType font.
      *
      * - Exception: The font is `tricky' and requires the native hinter to
      *   load properly.
@@ -626,8 +627,10 @@
         FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
 
 
-        if ( mode == FT_RENDER_MODE_LIGHT             ||
-             face->internal->ignore_unpatented_hinter )
+        if ( mode == FT_RENDER_MODE_LIGHT                       ||
+             face->internal->ignore_unpatented_hinter           ||
+             ( FT_IS_SFNT( face )                             &&
+               ttface->max_profile.maxSizeOfInstructions == 0 ) )
           autohint = TRUE;
       }
     }
@@ -1869,7 +1872,7 @@
                     " is already checked and"
                     " no font is found\n", i ));
         continue;
-      }  
+      }
 
       if ( errors[i] )
       {
@@ -4151,7 +4154,7 @@
       FT_Renderer  renderer = FT_RENDERER( module );
 
 
-      if ( renderer->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE && 
+      if ( renderer->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
            renderer->raster                                         )
         renderer->clazz->raster_class->raster_done( renderer->raster );
     }

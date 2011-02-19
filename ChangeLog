@@ -1,6 +1,14 @@
+2011-02-19  Kevin Kofler  <kevin.kofler@chello.at>
+
+	Fall back to autohinting if a TTF/OTF doesn't contain any bytecode.
+	This is Savannah patch #7471.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Implement it.
+
 2011-02-19  John Tytgat  <John.Tytgat@esko.com>
 
 	[cff] Fix subset prefix removal.
+	This is Savannah patch #7465.
 
 	* src/cff/cffobjs.c (remove_subset_prefix): Update length after
 	subset prefix removal.
