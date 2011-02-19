@@ -1,3 +1,10 @@
+2011-02-19  John Tytgat  <John.Tytgat@esko.com>
+
+	[cff] Fix subset prefix removal.
+
+	* src/cff/cffobjs.c (remove_subset_prefix): Update length after
+	subset prefix removal.
+
 2011-02-13  Bradley Grainger  <bgrainger@logos.com>
 
 	Add inline assembly version of FT_MulFix for MSVC.
