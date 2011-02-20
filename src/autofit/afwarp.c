@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter warping algorithm (body).                                */
 /*                                                                         */
-/*  Copyright 2006, 2007 by                                                */
+/*  Copyright 2006, 2007, 2011 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,10 +16,20 @@
 /***************************************************************************/
 
 
+  /*
+   *  The idea of the warping code is to slightly scale and shift a glyph
+   *  within a single dimension so that as much of its segments are aligned
+   *  (more or less) on the grid.  To find out the optimal scaling and
+   *  shifting value, various parameter combinations are tried and scored.
+   */
+
 #include "afwarp.h"
 
 #ifdef AF_USE_WARPER
 
+  /* The weights cover the range 0/64 - 63/64 of a pixel.  Obviously, */
+  /* values around a half pixel (which means exactly between two grid */
+  /* lines) gets the worst weight.                                    */
 #if 1
   static const AF_WarpScore
   af_warper_weights[64] =
@@ -42,6 +52,11 @@
   };
 #endif
 
+
+  /* Score segments for a given `scale' and `delta' in the range */
+  /* `xx1' to `xx2', and store the best result in `warper'.  If  */
+  /* the new best score is equal to the old one, prefer the      */
+  /* value with a smaller distortion (around `base_distort').    */
 
   static void
   af_warper_compute_line_best( AF_Warper     warper,
@@ -100,6 +115,7 @@
       FT_Int  idx;
 
 
+      /* score the length of the segments for the given range */
       for ( idx = idx_min; idx <= idx_max; idx++, y++ )
         scores[idx] += af_warper_weights[y & 63] * len;
     }
@@ -115,9 +131,9 @@
         AF_WarpScore  distort = base_distort + ( idx - idx0 );
 
 
-        if ( score > warper->best_score           ||
+        if ( score > warper->best_score         ||
              ( score == warper->best_score    &&
-               distort < warper->best_distort )   )
+               distort < warper->best_distort ) )
         {
           warper->best_score   = score;
           warper->best_distort = distort;
@@ -128,6 +144,9 @@
     }
   }
 
+
+  /* Compute optimal scaling and delta values for a given glyph and */
+  /* dimension.                                                     */
 
   FT_LOCAL_DEF( void )
   af_warper_compute( AF_Warper      warper,
@@ -215,6 +234,7 @@
     warper->t1 = AF_WARPER_FLOOR( warper->x1 );
     warper->t2 = AF_WARPER_CEIL( warper->x2 );
 
+    /* examine a half pixel wide range around the maximum coordinates */
     warper->x1min = warper->x1 & ~31;
     warper->x1max = warper->x1min + 32;
     warper->x2min = warper->x2 & ~31;
@@ -234,10 +254,12 @@
       warper->x2min = warper->x2;
     }
 
+    /* examine (at most) a pixel wide range around the natural width */
     warper->wmin = warper->x2min - warper->x1max;
     warper->wmax = warper->x2max - warper->x1min;
 
 #if 1
+    /* some heuristics to reduce the number of widths to be examined */
     {
       int  margin = 16;
 
@@ -273,6 +295,8 @@
       FT_Pos    xx1, xx2;
 
 
+      /* compute min and max positions for given width,       */
+      /* assuring that they stay within the coordinate ranges */
       xx1 = warper->x1;
       xx2 = warper->x2;
       if ( w >= warper->w0 )
@@ -304,6 +328,7 @@
       else
         base_distort += xx2 - warper->x2;
 
+      /* give base distortion a greater weight while scoring */
       base_distort *= 10;
 
       new_scale = org_scale + FT_DivFix( w - warper->w0, X2 - X1 );
@@ -331,7 +356,7 @@
 
 #else /* !AF_USE_WARPER */
 
-char  af_warper_dummy = 0;  /* make compiler happy */
+  char  af_warper_dummy = 0;  /* make compiler happy */
 
 #endif /* !AF_USE_WARPER */
 

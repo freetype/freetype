@@ -1152,6 +1152,8 @@
 
 #ifdef AF_USE_WARPER
 
+  /* Apply (small) warp scale and warp delta for given dimension. */
+
   FT_LOCAL_DEF( void )
   af_glyph_hints_scale_dim( AF_GlyphHints  hints,
                             AF_Dimension   dim,
