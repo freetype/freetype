@@ -574,7 +574,7 @@
     FTC_Node     frees   = NULL;
 
 
-    count = cache->p + cache->mask;
+    count = cache->p + cache->mask + 1;
     for ( i = 0; i < count; i++ )
     {
       FTC_Node*  bucket = cache->buckets + i;
