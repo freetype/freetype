@@ -91,6 +91,20 @@ FT_BEGIN_HEADER
    *    edges; they are specific to a script.
    *
    *
+   *                      A          H
+   *                       |        |
+   *                       |        |
+   *                       |        |
+   *                       |        |
+   *         C             |        |             F
+   *          +------<-----+        +-----<------+
+   *          |             B      G             |
+   *          |                                  |
+   *          |                                  |
+   *          +--------------->------------------+
+   *         D                                    E
+   *
+   *
    *  Stems
    *
    *    Segments need to be `linked' to other ones in order to detect stems.
@@ -98,6 +112,9 @@ FT_BEGIN_HEADER
    *    directions and that are sufficiently close to each other.  Using
    *    vocabulary from the TrueType specification, stem segments form a
    *    `black distance'.
+   *
+   *    In the above ASCII drawing, the horizontal segments are BC, DE, and
+   *    FG; the vertical segments are AB, CD, EF, and GH.
    *
    *    Each segment has at most one `best' candidate to form a black
    *    distance, or no candidate at all.  Notice that two distinct segments
@@ -112,6 +129,11 @@ FT_BEGIN_HEADER
    *
    *    Stems are detected by `af_{cjk,latin,...}_hint_edges'.
    *
+   *    In the above ASCII drawing, the best candidate for both AB and CD is
+   *    GH, while the best candidate for GH is AB.  Similarly, the best
+   *    candidate for EF and GH is AB, while the best candidate for AB is
+   *    GH.
+   *
    *
    *  Serifs
    *
@@ -119,7 +141,8 @@ FT_BEGIN_HEADER
    *
    *      best segment_1 = segment_2 && best segment_2 != segment_1
    *
-   *    where segment_1 corresponds to the serif segment.
+   *    where segment_1 corresponds to the serif segment (CD and EF in the
+   *    above ASCII drawing).
    *
    *    The best candidate is stored in field `serif' in structure
    *    `AF_Segment' (and `link' is set to NULL).
