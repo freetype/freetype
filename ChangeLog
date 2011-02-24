@@ -1,5 +1,11 @@
 2011-02-24  Werner Lemberg  <wl@gnu.org>
 
+	* docs/PROBLEMS: Mention rendering differences on different
+	platforms.
+	Suggested and worded by Jason Owen <jason.a.owen@gmail.com>.
+
+2011-02-24  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Comment out unused code.
 
 	* src/autofit/aflatin.c, src/autofit/aflatin2.c
