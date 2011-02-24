@@ -339,8 +339,6 @@ FT_BEGIN_HEADER
     FT_Fixed          y_scale;
     FT_Pos            y_delta;
 
-    FT_Pos            edge_distance_threshold;
-
     FT_Int            max_points;    /* number of allocated points */
     FT_Int            num_points;    /* number of used points      */
     AF_Point          points;        /* points array               */

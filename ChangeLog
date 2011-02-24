@@ -1,3 +1,7 @@
+2011-02-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afhints.h (AF_GlyphHints): Remove unused field.
+
 2011-02-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[cache] Fix an off-by-one bug in FTC_Manager_RemoveFaceID().
