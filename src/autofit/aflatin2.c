@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  aflatin.c                                                              */
+/*  aflatin2.c                                                             */
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by      */
+/*  Copyright 2003-2011 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1210,8 +1210,10 @@
       {
         FT_Int  is_round    = 0;  /* does it contain round segments?    */
         FT_Int  is_straight = 0;  /* does it contain straight segments? */
+#if 0
         FT_Pos  ups         = 0;  /* number of upwards segments         */
         FT_Pos  downs       = 0;  /* number of downwards segments       */
+#endif
 
 
         seg = edge->first;
@@ -1227,11 +1229,13 @@
           else
             is_straight++;
 
+#if 0
           /* check for segment direction */
           if ( seg->dir == up_dir )
             ups   += seg->max_coord-seg->min_coord;
           else
             downs += seg->max_coord-seg->min_coord;
+#endif
 
           /* check for links -- if seg->serif is set, then seg->link must */
           /* be ignored                                                   */

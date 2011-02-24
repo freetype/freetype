@@ -1,5 +1,12 @@
 2011-02-24  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Comment out unused code.
+
+	* src/autofit/aflatin.c, src/autofit/aflatin2.c
+	(af_latin_hints_compute_edges): Do it.
+
+2011-02-24  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/afhints.h (AF_GlyphHints): Remove unused field.
 
 2011-02-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
