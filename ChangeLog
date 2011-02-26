@@ -1,3 +1,11 @@
+2011-02-26  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Slight simplifications.
+
+	* src/autofit/aflatin.c (af_latin_hints_link_segments): Remove
+	test which always returns false.
+	(af_latin_hints_compute_blue_edges): Remove redundant assignment.
+
 2011-02-24  Werner Lemberg  <wl@gnu.org>
 
 	* docs/PROBLEMS: Mention rendering differences on different

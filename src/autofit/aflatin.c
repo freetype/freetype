@@ -900,47 +900,44 @@
         continue;
 
       for ( seg2 = segments; seg2 < segment_limit; seg2++ )
-        if ( seg1->dir + seg2->dir == 0 && seg2->pos > seg1->pos )
+      {
+        FT_Pos  pos1 = seg1->pos;
+        FT_Pos  pos2 = seg2->pos;
+
+
+        if ( seg1->dir + seg2->dir == 0 && pos2 > pos1 )
         {
-          FT_Pos  pos1 = seg1->pos;
-          FT_Pos  pos2 = seg2->pos;
           FT_Pos  dist = pos2 - pos1;
+          FT_Pos  min  = seg1->min_coord;
+          FT_Pos  max  = seg1->max_coord;
+          FT_Pos  len, score;
 
 
-          if ( dist < 0 )
-            dist = -dist;
+          if ( min < seg2->min_coord )
+            min = seg2->min_coord;
 
+          if ( max > seg2->max_coord )
+            max = seg2->max_coord;
+
+          len = max - min;
+          if ( len >= len_threshold )
           {
-            FT_Pos  min = seg1->min_coord;
-            FT_Pos  max = seg1->max_coord;
-            FT_Pos  len, score;
+            score = dist + len_score / len;
 
-
-            if ( min < seg2->min_coord )
-              min = seg2->min_coord;
-
-            if ( max > seg2->max_coord )
-              max = seg2->max_coord;
-
-            len = max - min;
-            if ( len >= len_threshold )
+            if ( score < seg1->score )
             {
-              score = dist + len_score / len;
+              seg1->score = score;
+              seg1->link  = seg2;
+            }
 
-              if ( score < seg1->score )
-              {
-                seg1->score = score;
-                seg1->link  = seg2;
-              }
-
-              if ( score < seg2->score )
-              {
-                seg2->score = score;
-                seg2->link  = seg1;
-              }
+            if ( score < seg2->score )
+            {
+              seg2->score = score;
+              seg2->link  = seg1;
             }
           }
         }
+      }
     }
 
     /* now, compute the `serif' segments */
@@ -1339,7 +1336,6 @@
 
             if ( is_top_blue ^ is_under_ref )
             {
-              blue = latin->blues + bb;
               dist = edge->fpos - blue->shoot.org;
               if ( dist < 0 )
                 dist = -dist;
