@@ -34,7 +34,7 @@
 #include "afloader.c"
 #include "afmodule.c"
 
-#ifdef AF_USE_WARPER
+#ifdef AF_CONFIG_OPTION_USE_WARPER
 #include "afwarp.c"
 #endif
 

@@ -1,3 +1,16 @@
+2011-02-27  Werner Lemberg  <wl@gnu.org>
+
+	Add AF_CONFIG_OPTION_USE_WARPER to control the autofit warper.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(AF_CONFIG_OPTION_USE_WARPER): New macro.
+	* src/autofit/aftypes.h (AF_USE_WARPER): Remove.
+
+	* src/autofit/*: s/AF_USE_WARPER/AF_CONFIG_OPTION_USE_WARPER/.
+
+	* src/autofit/afwarp.c [!AF_CONFIG_OPTION_USE_WARPER]: Replace dummy
+	variable assignment with a typedef.
+
 2011-02-26  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Slight simplifications.

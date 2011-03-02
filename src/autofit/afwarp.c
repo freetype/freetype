@@ -25,7 +25,7 @@
 
 #include "afwarp.h"
 
-#ifdef AF_USE_WARPER
+#ifdef AF_CONFIG_OPTION_USE_WARPER
 
   /* The weights cover the range 0/64 - 63/64 of a pixel.  Obviously, */
   /* values around a half pixel (which means exactly between two grid */
@@ -354,10 +354,11 @@
     }
   }
 
-#else /* !AF_USE_WARPER */
+#else /* !AF_CONFIG_OPTION_USE_WARPER */
 
-  char  af_warper_dummy = 0;  /* make compiler happy */
+  /* ANSI C doesn't like empty source files */
+  typedef int  _af_warp_dummy;
 
-#endif /* !AF_USE_WARPER */
+#endif /* !AF_CONFIG_OPTION_USE_WARPER */
 
 /* END */

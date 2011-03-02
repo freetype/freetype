@@ -4,8 +4,7 @@
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
-/*            2010 by                                                      */
+/*  Copyright 1996-2011 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -691,6 +690,19 @@ FT_BEGIN_HEADER
   /* Compile autofit module with Indic script support.                     */
   /*                                                                       */
 #define AF_CONFIG_OPTION_INDIC
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Compile autofit module with warp hinting.  The idea of the warping    */
+  /* code is to slightly scale and shift a glyph within a single dimension */
+  /* so that as much of its segments are aligned (more or less) on the     */
+  /* grid.  To find out the optimal scaling and shifting value, various    */
+  /* parameter combinations are tried and scored.                          */
+  /*                                                                       */
+  /* This experimental option is only active if the render mode is         */
+  /* FT_RENDER_MODE_LIGHT.                                                 */
+  /*                                                                       */
+#define AF_CONFIG_OPTION_USE_WARPER
 
   /* */
 

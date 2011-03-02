@@ -1150,7 +1150,7 @@
   }
 
 
-#ifdef AF_USE_WARPER
+#ifdef AF_CONFIG_OPTION_USE_WARPER
 
   /* Apply (small) warp scale and warp delta for given dimension. */
 
@@ -1177,6 +1177,6 @@
     }
   }
 
-#endif /* AF_USE_WARPER */
+#endif /* AF_CONFIG_OPTION_USE_WARPER */
 
 /* END */
