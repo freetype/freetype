@@ -1,3 +1,10 @@
+2011-03-06  Werner Lemberg  <wl@gnu.org>
+
+	Fix autohinting fallback.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Assure that we only check TTFs,
+	ignoring CFF-based OTFs.
+
 2011-02-27  Werner Lemberg  <wl@gnu.org>
 
 	Add AF_CONFIG_OPTION_USE_WARPER to control the autofit warper.

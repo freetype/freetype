@@ -627,9 +627,12 @@
         FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
 
 
+        /* the check for `num_locations' assures that we actually    */
+        /* test for instructions in a TTF and not in a CFF-based OTF */
         if ( mode == FT_RENDER_MODE_LIGHT                       ||
              face->internal->ignore_unpatented_hinter           ||
              ( FT_IS_SFNT( face )                             &&
+               ttface->num_locations                          &&
                ttface->max_profile.maxSizeOfInstructions == 0 ) )
           autohint = TRUE;
       }
