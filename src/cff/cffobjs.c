@@ -436,14 +436,14 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    CFF_Face            face = (CFF_Face)cffface;
+    CFF_Face            face        = (CFF_Face)cffface;
     FT_Error            error;
     SFNT_Service        sfnt;
     FT_Service_PsCMaps  psnames;
     PSHinter_Service    pshinter;
     FT_Bool             pure_cff    = 1;
     FT_Bool             sfnt_format = 0;
-    FT_Library library = cffface->driver->root.library;
+    FT_Library          library     = cffface->driver->root.library;
 
 
     sfnt = (SFNT_Service)FT_Get_Module_Interface(
