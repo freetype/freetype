@@ -1,10 +1,32 @@
 CHANGES BETWEEN 2.4.4 and 2.4.5
 
-  I. MISCELLANEOUS
+  I. IMPORTANT BUG FIXES
+
+    - A rendering regression  for second-order Bézier curves  has been
+      fixed, introduced in 2.4.3.
+
+
+  II. IMPORTANT CHANGES
+
+    - If autohinting  is not  explicitly disabled,  FreeType now  uses
+      the autohinter if  a TrueType based font doesn't  contain native
+      hints.
+
+
+  III. MISCELLANEOUS
 
     - Support for PCF files compressed with bzip2 has been contributed
       by Joel  Klinghed.  To  make this  work, the  OS must  provide a
       bzip2 library.
+
+    - Bradley  Grainger  contributed  project  and  solution  files in
+      Visual Studio 2010 format.
+
+    - Again some fixes to better handle broken fonts.
+
+    - Some improvements to the B/W rasterizer.
+
+    - Fixes to the cache module to improve robustness.
 
 
 ======================================================================
@@ -15,6 +37,7 @@ CHANGES BETWEEN 2.4.3 and 2.4.4
 
     - UVS support (TrueType/OpenType cmap format 14) support is fixed.
       This regression has been introduced in version 2.4.0.
+
 
   II. MISCELLANEOUS
 
@@ -3491,8 +3514,7 @@ Extensions support:
 
 ------------------------------------------------------------------------
 
-Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-          2010 by
+Copyright 2000-2011 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file  is  part  of the  FreeType  project, and may  only be  used,

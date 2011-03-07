@@ -1,3 +1,7 @@
+2011-03-07  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2011-03-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Quick fix for Savannah bug #32671.
