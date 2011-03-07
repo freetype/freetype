@@ -1,3 +1,12 @@
+2011-03-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Quick fix for Savannah bug #32671.
+
+	This isn't the optimal solution yet, but it restores the previous
+	rendering quality (more or less).
+
+	* src/smooth/ftgrays.c (gray_render_conic): Do more splitting.
+
 2011-03-06  Werner Lemberg  <wl@gnu.org>
 
 	Fix autohinting fallback.

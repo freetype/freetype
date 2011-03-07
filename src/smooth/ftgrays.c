@@ -897,7 +897,7 @@ typedef ptrdiff_t  FT_PtrDist;
     }
 
     level = 0;
-    while ( dx > ONE_PIXEL / 4 )
+    while ( dx > ONE_PIXEL / 6 )
     {
       dx >>= 2;
       level++;
