@@ -1,3 +1,11 @@
+2011-03-27  Bram Tassyns  <bramt@enfocus.be>
+
+	Fix Savannah bug #27988.
+
+	* src/cff/cffobjs.c (remove_style): New function.
+	(cff_face_init): Use it to strip off the style part of the family
+	name.
+
 2011-03-07  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
@@ -145,7 +153,7 @@
 	[truetype] Improve handling of stack underflow.
 
 	* src/truetype/ttinterp.c (TT_RunIns, Ins_FLIPPT, Ins_DELTAP,
-	Ins_DELTAC): Exit with error only if `pedantic_hinting' is set. 
+	Ins_DELTAC): Exit with error only if `pedantic_hinting' is set.
 	Otherwise, try to do something sane.
 
 2011-01-30  Werner Lemberg  <wl@gnu.org>

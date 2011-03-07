@@ -429,6 +429,51 @@
   }
 
 
+  /* Remove the style part from the family name (if present). */
+
+  static void
+  remove_style( FT_String*        family_name,
+                const FT_String*  style_name )
+  {
+    FT_Int32  family_name_length, style_name_length;
+
+
+    family_name_length = strlen( family_name );
+    style_name_length  = strlen( style_name );
+
+    if ( family_name_length > style_name_length )
+    {
+      FT_Int  idx;
+
+
+      for ( idx = 1; idx <= style_name_length; ++idx )
+      {
+        if ( family_name[family_name_length - idx] !=
+             style_name[style_name_length - idx] )
+          break;
+      }
+
+      if ( idx > style_name_length )
+      {
+        /* family_name ends with style_name; remove it */
+        idx = family_name_length - style_name_length - 1;
+
+        /* also remove special characters     */
+        /* between real family name and style */
+        while ( idx > 0                     &&
+                ( family_name[idx] == '-' ||
+                  family_name[idx] == ' ' ||
+                  family_name[idx] == '_' ||
+                  family_name[idx] == '+' ) )
+          --idx;
+
+        if ( idx > 0 )
+          family_name[idx + 1] = '\0';
+      }
+    }
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   cff_face_init( FT_Stream      stream,
                  FT_Face        cffface,        /* CFF_Face */
@@ -758,6 +803,9 @@
                 /* case, the remaining string in `fullp' will be used as */
                 /* the style name.                                       */
                 style_name = cff_strcpy( memory, fullp );
+
+                /* remove the style part from the family name (if present) */
+                remove_style( cffface->family_name, style_name ); 
               }
               break;
             }
