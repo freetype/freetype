@@ -1,4 +1,12 @@
-2011-03-27  Bram Tassyns  <bramt@enfocus.be>
+2011-03-09  Werner Lemberg  <wl@gnu.org>
+
+	Make FT_Sfnt_Table_Info return the number of SFNT tables.
+
+	* src/sfnt/sfdriver.c (sfnt_table_info): Implement it.
+	* include/freetype/tttables.h: Update documentation.
+	* docs/CHANGES: Updated.
+
+2011-03-07  Bram Tassyns  <bramt@enfocus.be>
 
 	Fix Savannah bug #27988.
 
