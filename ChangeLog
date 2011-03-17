@@ -1,3 +1,10 @@
+2011-03-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	A better fix for Savannah bug #32671.
+
+	* src/smooth/ftgrays.c (gray_render_conic): Clean up code and
+	replace WHILE loop with a more natural DO-WHILE construct.
+
 2011-03-16  Werner Lemberg  <wl@gnu.org>.
 
 	* src/base/ftstroke.c (FT_StrokerRec): Remove unused `valid' field.
