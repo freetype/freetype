@@ -1,3 +1,10 @@
+2011-03-18  Werner Lemberg  <wl@gnu.org>
+
+	C++ compilation fixes.
+
+	* src/autofit/aflatin.c (af_latin_hints_apply), src/autofit/afcjk.c
+	(af_cjk_hints_apply): Use cast for `dim'.
+
 2011-03-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	A better fix for Savannah bug #32671.

@@ -2207,8 +2207,10 @@
         FT_Pos        delta;
 
 
-        af_warper_compute( &warper, hints, dim, &scale, &delta );
-        af_glyph_hints_scale_dim( hints, dim, scale, delta );
+        af_warper_compute( &warper, hints, (AF_Dimension)dim,
+                           &scale, &delta );
+        af_glyph_hints_scale_dim( hints, (AF_Dimension)dim,
+                                  scale, delta );
         continue;
       }
 #endif
