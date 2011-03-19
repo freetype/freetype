@@ -1,3 +1,11 @@
+2011-03-19  Werner Lemberg  <wl@gnu.org>
+
+	More C++ compilation fixes.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_points,
+	af_glyph_hints_dump_segments, af_glyph_hints_dump_edges)
+	[__cplusplus]: Protect with `extern "C"'.
+
 2011-03-18  Werner Lemberg  <wl@gnu.org>
 
 	C++ compilation fixes.

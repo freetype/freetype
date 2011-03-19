@@ -164,6 +164,9 @@
 #define AF_INDEX_NUM( ptr, base )  ( (ptr) ? ( (ptr) - (base) ) : -1 )
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
   void
   af_glyph_hints_dump_points( AF_GlyphHints  hints )
   {
@@ -196,6 +199,9 @@
     }
     printf( "\n" );
   }
+#ifdef __cplusplus
+  }
+#endif
 
 
   static const char*
@@ -228,6 +234,9 @@
 
   /* Dump the array of linked segments. */
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
   void
   af_glyph_hints_dump_segments( AF_GlyphHints  hints )
   {
@@ -263,10 +272,16 @@
       printf( "\n" );
     }
   }
+#ifdef __cplusplus
+  }
+#endif
 
 
   /* Dump the array of linked edges. */
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
   void
   af_glyph_hints_dump_edges( AF_GlyphHints  hints )
   {
@@ -307,11 +322,18 @@
       printf( "\n" );
     }
   }
+#ifdef __cplusplus
+  }
+#endif
 
 #else /* !AF_DEBUG */
 
   /* these empty stubs are only used to link the `ftgrid' test program */
   /* when debugging is disabled                                        */
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
   void
   af_glyph_hints_dump_points( AF_GlyphHints  hints )
@@ -332,6 +354,10 @@
   {
     FT_UNUSED( hints );
   }
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif /* !AF_DEBUG */
 
