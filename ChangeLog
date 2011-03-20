@@ -1,3 +1,7 @@
+2011-03-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_open_font): Check number of TTC subfonts.
+
 2011-03-19  Werner Lemberg  <wl@gnu.org>
 
 	More C++ compilation fixes.
