@@ -46,7 +46,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* Composite font flags.                                                 */
+  /* Composite glyph flags.                                                */
   /*                                                                       */
 #define ARGS_ARE_WORDS             0x0001
 #define ARGS_ARE_XY_VALUES         0x0002
