@@ -1,3 +1,7 @@
+2011-03-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttpload.c(tt_face_load_loca): Fix mismatch warning.
+
 2011-03-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_open_font): Check number of TTC subfonts.
