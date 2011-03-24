@@ -1,3 +1,8 @@
+2011-03-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cfftypes.h (CFF_MAX_CID_FONTS): Increase to 256.
+	This limit is given on p. 37 of Adobe Tech Note #5014.
+
 2011-03-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttpload.c(tt_face_load_loca): Fix mismatch warning.
