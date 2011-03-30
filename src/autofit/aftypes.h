@@ -158,35 +158,10 @@ extern void*  _af_debug_hints;
   FT_END_STMNT
 
 
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                    O U T L I N E S                            *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
-
   /*  opaque handle to glyph-specific hints -- see `afhints.h' for more
    *  details
    */
   typedef struct AF_GlyphHintsRec_*  AF_GlyphHints;
-
-  /*  This structure is used to model an input glyph outline to
-   *  the auto-hinter.  The latter will set the `hints' field
-   *  depending on the glyph's script.
-   */
-  typedef struct  AF_OutlineRec_
-  {
-    FT_Face        face;
-    FT_Outline     outline;
-    FT_UInt        outline_resolution;
-
-    FT_Int         advance;
-    FT_UInt        metrics_resolution;
-
-    AF_GlyphHints  hints;
-
-  } AF_OutlineRec;
 
 
   /*************************************************************************/
