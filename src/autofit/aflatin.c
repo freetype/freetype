@@ -1472,7 +1472,7 @@
     hints->scaler_flags = scaler_flags;
     hints->other_flags  = other_flags;
 
-    return 0;
+    return AF_Err_Ok;
   }
 
 
