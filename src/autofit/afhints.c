@@ -176,13 +176,13 @@
 
 
     printf( "Table of points:\n" );
-    printf(   "  [ index |  xorg |  yorg |  xscale |  yscale"
-              " |  xfit  |  yfit  |  flags ]\n" );
+    printf(   "  [ index |  xorg |  yorg | xscale | yscale"
+              " |  xfit |  yfit |  flags ]\n" );
 
     for ( point = points; point < limit; point++ )
     {
-      printf( "  [ %5d | %5d | %5d | %-5.2f | %-5.2f"
-              " | %-5.2f | %-5.2f | %c%c%c%c%c%c ]\n",
+      printf( "  [ %5d | %5d | %5d | %6.2f | %6.2f"
+              " | %5.2f | %5.2f | %c%c%c%c%c%c ]\n",
               point - points,
               point->fx,
               point->fy,
@@ -254,11 +254,11 @@
       printf ( "Table of %s segments:\n",
                dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
       printf ( "  [ index |  pos  |  dir  | link | serif |"
-               " height  | extra | flags    ]\n" );
+               " height | extra |    flags    ]\n" );
 
       for ( seg = segments; seg < limit; seg++ )
       {
-        printf ( "  [ %5d | %5.2g | %5s | %4d | %5d | %5d | %5d | %s ]\n",
+        printf ( "  [ %5d | %5.2g | %5s | %4d | %5d | %6d | %5d | %11s ]\n",
                  seg - segments,
                  dimension == AF_DIMENSION_HORZ ? (int)seg->first->ox / 64.0
                                                 : (int)seg->first->oy / 64.0,
@@ -303,12 +303,12 @@
       printf ( "Table of %s edges:\n",
                dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
       printf ( "  [ index |  pos  |  dir  | link |"
-               " serif | blue | opos  |  pos  | flags   ]\n" );
+               " serif | blue | opos  |  pos  |    flags    ]\n" );
 
       for ( edge = edges; edge < limit; edge++ )
       {
         printf ( "  [ %5d | %5.2g | %5s | %4d |"
-                 " %5d |   %c  | %5.2f | %5.2f | %s ]\n",
+                 " %5d |   %c  | %5.2f | %5.2f | %11s ]\n",
                  edge - edges,
                  (int)edge->opos / 64.0,
                  af_dir_str( (AF_Direction)edge->dir ),

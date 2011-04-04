@@ -1571,7 +1571,7 @@
            ( dist < 3 * 64 )              )
         goto Done_Width;
 
-      else if ( ( base_flags & AF_EDGE_ROUND ) )
+      else if ( base_flags & AF_EDGE_ROUND )
       {
         if ( dist < 80 )
           dist = 64;

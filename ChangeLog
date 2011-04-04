@@ -1,3 +1,11 @@
+2011-04-04  Werner Lemberg  <wl@gnu.org>
+
+	Fix formatting of autofit debug dumps.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_points,
+	af_glyph_hints_dump_segments, af_glyph_hints_dump_edges): Adjust
+	column widths.
+
 2011-03-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aftypes.h (AF_OutlineRec): Removed, unused.
