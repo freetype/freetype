@@ -1,3 +1,9 @@
+2011-04-07  Werner Lemberg  <wl@gnu.org>
+
+	Update Unicode ranges for CJK autofitter; in particular, add Hangul.
+
+	* src/autofit/afcjk.c (af_cjk_uniranges): Update to Unicode 6.0.
+
 2011-04-04  Werner Lemberg  <wl@gnu.org>
 
 	Fix formatting of autofit debug dumps.
