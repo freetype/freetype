@@ -1,3 +1,21 @@
+2011-04-11  Kan-Ru Chen  <kanru@kanru.info>
+
+	Fix reading of signed integers from files on 64bit platforms.
+
+	Previously, signed integers were converted to unsigned integers, but
+	this can fail because of sign extension.  For example, 0xa344a1eb
+	becomes 0xffffffffa344a1eb.
+
+	We now do the reverse which is always correct because the integer
+	size is the same during the cast from unsigned to signed.
+
+	* include/freetype/internal/ftstream.h, src/base/ftstream.c
+	(FT_Stream_Get*): Replace with...
+	(FT_Stream_GetU*): Functions which read unsigned integers.
+	Update all macros accordingly.
+
+	* src/gzip/ftgzip.c (ft_gzip_get_uncompressed_size): Updated.
+
 2011-04-07  Werner Lemberg  <wl@gnu.org>
 
 	Update Unicode ranges for CJK autofitter; in particular, add Hangul.
