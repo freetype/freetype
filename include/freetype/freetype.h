@@ -4,8 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,   */
-/*            2010 by                                                      */
+/*  Copyright 1996-2011 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1058,7 +1057,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*      It is not possible to autohint such fonts using                  */
   /*      @FT_LOAD_FORCE_AUTOHINT; it will also ignore                     */
-  /*      @FT_LOAD_NO_HINTING.  You have to set both FT_LOAD_NO_HINTING    */
+  /*      @FT_LOAD_NO_HINTING.  You have to set both @FT_LOAD_NO_HINTING   */
   /*      and @FT_LOAD_NO_AUTOHINT to really disable hinting; however, you */
   /*      probably never want this except for demonstration purposes.      */
   /*                                                                       */
