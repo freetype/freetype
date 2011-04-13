@@ -1,3 +1,12 @@
+2011-04-13  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #33047.
+
+	Patch submitted by anonymous reporter.
+
+	* src/psaux/psobjs.c (ps_table_add): Use FT_PtrDist for pointer
+	difference.
+
 2011-04-11  Kan-Ru Chen  <kanru@kanru.info>
 
 	Fix reading of signed integers from files on 64bit platforms.
