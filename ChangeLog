@@ -1,3 +1,10 @@
+2011-04-18  Werner Lemberg  <wl@gnu.org>
+
+	Synchronize config files.
+
+	* builds/unix/ftconfig.in: Copy missing assembler routines from
+	include/freetype/config/ftconfig.h.
+
 2011-04-13  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #33047.
