@@ -18,6 +18,7 @@
 
 #include <ft2build.h>
 #include FT_ADVANCES_H
+#include FT_INTERNAL_DEBUG_H
 
 #include "aflatin.h"
 #include "aferrors.h"
@@ -26,6 +27,16 @@
 #ifdef AF_CONFIG_OPTION_USE_WARPER
 #include "afwarp.h"
 #endif
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_aflatin
 
 
   /*************************************************************************/
@@ -191,8 +202,8 @@
     /* `af_latin_blue_chars[blues]' string, then finding its top-most or */
     /* bottom-most points (depending on `AF_IS_TOP_BLUE')                */
 
-    AF_LOG(( "blue zones computation\n" ));
-    AF_LOG(( "------------------------------------------------\n" ));
+    FT_TRACE5(( "blue zones computation\n" ));
+    FT_TRACE5(( "------------------------------------------------\n" ));
 
     for ( bb = 0; bb < AF_LATIN_BLUE_MAX; bb++ )
     {
@@ -202,7 +213,7 @@
       FT_Pos*      blue_shoot;
 
 
-      AF_LOG(( "blue %3d: ", bb ));
+      FT_TRACE5(( "blue %3d: ", bb ));
 
       num_flats  = 0;
       num_rounds = 0;
@@ -216,7 +227,7 @@
         FT_Bool     round = 0;
 
 
-        AF_LOG(( "'%c'", *p ));
+        FT_TRACE5(( "'%c'", *p ));
 
         /* load the character in the face -- skip unknown or empty ones */
         glyph_index = FT_Get_Char_Index( face, (FT_UInt)*p );
@@ -281,7 +292,7 @@
               best_last  = last;
             }
           }
-          AF_LOG(( "%5d", best_y ));
+          FT_TRACE5(( "%5d", best_y ));
         }
 
         /* now check whether the point belongs to a straight or round   */
@@ -329,7 +340,7 @@
             FT_CURVE_TAG( glyph->outline.tags[prev] ) != FT_CURVE_TAG_ON ||
             FT_CURVE_TAG( glyph->outline.tags[next] ) != FT_CURVE_TAG_ON );
 
-          AF_LOG(( "%c ", round ? 'r' : 'f' ));
+          FT_TRACE5(( "%c ", round ? 'r' : 'f' ));
         }
 
         if ( round )
@@ -338,7 +349,7 @@
           flats[num_flats++]   = best_y;
       }
 
-      AF_LOG(( "\n" ));
+      FT_TRACE5(( "\n" ));
 
       if ( num_flats == 0 && num_rounds == 0 )
       {
@@ -346,7 +357,7 @@
          *  we couldn't find a single glyph to compute this blue zone,
          *  we will simply ignore it then
          */
-        AF_LOG(( "empty\n" ));
+        FT_TRACE5(( "empty\n" ));
         continue;
       }
 
@@ -405,7 +416,7 @@
       if ( bb == AF_LATIN_BLUE_SMALL_TOP )
         blue->flags |= AF_LATIN_BLUE_ADJUSTMENT;
 
-      AF_LOG(( "-- ref = %ld, shoot = %ld\n", *blue_ref, *blue_shoot ));
+      FT_TRACE5(( "-- ref = %ld, shoot = %ld\n", *blue_ref, *blue_shoot ));
     }
 
     return;
@@ -1716,10 +1727,10 @@
 
     stem_edge->pos = base_edge->pos + fitted_width;
 
-    AF_LOG(( "LINK: edge %d (opos=%.2f) linked to (%.2f),"
-             " dist was %.2f, now %.2f\n",
-             stem_edge-hints->axis[dim].edges, stem_edge->opos / 64.0,
-             stem_edge->pos / 64.0, dist / 64.0, fitted_width / 64.0 ));
+    FT_TRACE5(( "LINK: edge %d (opos=%.2f) linked to (%.2f),"
+                " dist was %.2f, now %.2f\n",
+                stem_edge-hints->axis[dim].edges, stem_edge->opos / 64.0,
+                stem_edge->pos / 64.0, dist / 64.0, fitted_width / 64.0 ));
   }
 
 
@@ -1794,10 +1805,10 @@
         if ( !edge1 )
           continue;
 
-        AF_LOG(( "BLUE: edge %d (opos=%.2f) snapped to (%.2f),"
-                 " was (%.2f)\n",
-                 edge1 - edges, edge1->opos / 64.0, blue->fit / 64.0,
-                 edge1->pos / 64.0 ));
+        FT_TRACE5(( "BLUE: edge %d (opos=%.2f) snapped to (%.2f),"
+                    " was (%.2f)\n",
+                    edge1 - edges, edge1->opos / 64.0, blue->fit / 64.0,
+                    edge1->pos / 64.0 ));
 
         edge1->pos    = blue->fit;
         edge1->flags |= AF_EDGE_DONE;
@@ -1836,7 +1847,7 @@
       /* this should not happen, but it's better to be safe */
       if ( edge2->blue_edge )
       {
-        AF_LOG(( "ASSERTION FAILED for edge %d\n", edge2-edges ));
+        FT_TRACE5(( "ASSERTION FAILED for edge %d\n", edge2-edges ));
 
         af_latin_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;
@@ -1891,11 +1902,11 @@
         else
           edge->pos = FT_PIX_ROUND( edge->opos );
 
-        AF_LOG(( "ANCHOR: edge %d (opos=%.2f) and %d (opos=%.2f)"
-                 " snapped to (%.2f) (%.2f)\n",
-                 edge - edges, edge->opos / 64.0,
-                 edge2 - edges, edge2->opos / 64.0,
-                 edge->pos / 64.0, edge2->pos / 64.0 ));
+        FT_TRACE5(( "ANCHOR: edge %d (opos=%.2f) and %d (opos=%.2f)"
+                    " snapped to (%.2f) (%.2f)\n",
+                    edge - edges, edge->opos / 64.0,
+                    edge2 - edges, edge2->opos / 64.0,
+                    edge->pos / 64.0, edge2->pos / 64.0 ));
         anchor = edge;
 
         edge->flags |= AF_EDGE_DONE;
@@ -1954,11 +1965,11 @@
           edge->pos  = cur_pos1 - cur_len / 2;
           edge2->pos = cur_pos1 + cur_len / 2;
 
-          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f)"
-                   " snapped to (%.2f) and (%.2f)\n",
-                   edge - edges, edge->opos / 64.0,
-                   edge2 - edges, edge2->opos / 64.0,
-                   edge->pos / 64.0, edge2->pos / 64.0 ));
+          FT_TRACE5(( "STEM: %d (opos=%.2f) to %d (opos=%.2f)"
+                      " snapped to (%.2f) and (%.2f)\n",
+                      edge - edges, edge->opos / 64.0,
+                      edge2 - edges, edge2->opos / 64.0,
+                      edge->pos / 64.0, edge2->pos / 64.0 ));
         }
         else
         {
@@ -1984,11 +1995,11 @@
           edge->pos  = ( delta1 < delta2 ) ? cur_pos1 : cur_pos2;
           edge2->pos = edge->pos + cur_len;
 
-          AF_LOG(( "STEM: %d (opos=%.2f) to %d (opos=%.2f)"
-                   " snapped to (%.2f) and (%.2f)\n",
-                   edge - edges, edge->opos / 64.0,
-                   edge2 - edges, edge2->opos / 64.0,
-                   edge->pos / 64.0, edge2->pos / 64.0 ));
+          FT_TRACE5(( "STEM: %d (opos=%.2f) to %d (opos=%.2f)"
+                      " snapped to (%.2f) and (%.2f)\n",
+                      edge - edges, edge->opos / 64.0,
+                      edge2 - edges, edge2->opos / 64.0,
+                      edge->pos / 64.0, edge2->pos / 64.0 ));
         }
 
         edge->flags  |= AF_EDGE_DONE;
@@ -1996,8 +2007,8 @@
 
         if ( edge > edges && edge->pos < edge[-1].pos )
         {
-          AF_LOG(( "BOUND: %d (pos=%.2f) to (%.2f)\n",
-                   edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
+          FT_TRACE5(( "BOUND: %d (pos=%.2f) to (%.2f)\n",
+                      edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
           edge->pos = edge[-1].pos;
         }
       }
@@ -2091,16 +2102,17 @@
         if ( delta < 64 + 16 )
         {
           af_latin_align_serif_edge( hints, edge->serif, edge );
-          AF_LOG(( "SERIF: edge %d (opos=%.2f) serif to %d (opos=%.2f)"
-                   " aligned to (%.2f)\n",
-                   edge - edges, edge->opos / 64.0,
-                   edge->serif - edges, edge->serif->opos / 64.0,
-                   edge->pos / 64.0 ));
+          FT_TRACE5(( "SERIF: edge %d (opos=%.2f) serif to %d (opos=%.2f)"
+                      " aligned to (%.2f)\n",
+                      edge - edges, edge->opos / 64.0,
+                      edge->serif - edges, edge->serif->opos / 64.0,
+                      edge->pos / 64.0 ));
         }
         else if ( !anchor )
         {
-          AF_LOG(( "SERIF_ANCHOR: edge %d (opos=%.2f) snapped to (%.2f)\n",
-                   edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
+          FT_TRACE5(( "SERIF_ANCHOR: edge %d (opos=%.2f)"
+                      " snapped to (%.2f)\n",
+                      edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
           edge->pos = FT_PIX_ROUND( edge->opos );
           anchor    = edge;
         }
@@ -2128,19 +2140,20 @@
                                      after->pos - before->pos,
                                      after->opos - before->opos );
 
-            AF_LOG(( "SERIF_LINK1: edge %d (opos=%.2f) snapped to (%.2f)"
-                     " from %d (opos=%.2f)\n",
-                     edge - edges, edge->opos / 64.0,
-                     edge->pos / 64.0,
-                     before - edges, before->opos / 64.0 ));
+            FT_TRACE5(( "SERIF_LINK1: edge %d (opos=%.2f) snapped to (%.2f)"
+                        " from %d (opos=%.2f)\n",
+                        edge - edges, edge->opos / 64.0,
+                        edge->pos / 64.0,
+                        before - edges, before->opos / 64.0 ));
           }
           else
           {
             edge->pos = anchor->pos +
                         ( ( edge->opos - anchor->opos + 16 ) & ~31 );
 
-            AF_LOG(( "SERIF_LINK2: edge %d (opos=%.2f) snapped to (%.2f)\n",
-                     edge - edges, edge->opos / 64.0, edge->pos / 64.0 ));
+            FT_TRACE5(( "SERIF_LINK2: edge %d (opos=%.2f)"
+                        " snapped to (%.2f)\n",
+                        edge - edges, edge->opos / 64.0, edge->pos / 64.0 ));
           }
         }
 

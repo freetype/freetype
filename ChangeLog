@@ -1,5 +1,22 @@
 2011-04-18  Werner Lemberg  <wl@gnu.org>
 
+	Integrate autofitter debugging stuff.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(FT_DEBUG_AUTOFIT): New macro.
+
+	* include/freetype/internal/fttrace.h: Add trace components for
+	autofitter.
+
+	* src/autofit/aftypes.h (AF_LOG): Removed.
+	(_af_debug): Removed.
+
+	* src/autofit/*: s/AF_DEBUG/FT_DEBUG_AUTOFIT/.
+	s/AF_LOG/FT_TRACE5/.
+	Define FT_COMPONENT where necessary.
+
+2011-04-18  Werner Lemberg  <wl@gnu.org>
+
 	Synchronize config files.
 
 	* builds/unix/ftconfig.in: Copy missing assembler routines from

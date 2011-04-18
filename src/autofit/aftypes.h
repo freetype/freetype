@@ -53,25 +53,16 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-#define xxAF_DEBUG
-
-#ifdef AF_DEBUG
+#ifdef FT_DEBUG_AUTOFIT
 
 #include FT_CONFIG_STANDARD_LIBRARY_H
 
-#define AF_LOG( x )  do { if ( _af_debug ) printf x; } while ( 0 )
-
-extern int    _af_debug;
 extern int    _af_debug_disable_horz_hints;
 extern int    _af_debug_disable_vert_hints;
 extern int    _af_debug_disable_blue_hints;
 extern void*  _af_debug_hints;
 
-#else /* !AF_DEBUG */
-
-#define AF_LOG( x )  do { } while ( 0 )        /* nothing */
-
-#endif /* !AF_DEBUG */
+#endif /* FT_DEBUG_AUTOFIT */
 
 
   /*************************************************************************/

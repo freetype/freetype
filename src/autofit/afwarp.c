@@ -27,6 +27,16 @@
 
 #ifdef AF_CONFIG_OPTION_USE_WARPER
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_afwarp
+
+
   /* The weights cover the range 0/64 - 63/64 of a pixel.  Obviously, */
   /* values around a half pixel (which means exactly between two grid */
   /* lines) gets the worst weight.                                    */
@@ -97,12 +107,12 @@
 
       if ( idx_min < 0 || idx_min > idx_max || idx_max > 64 )
       {
-        AF_LOG(( "invalid indices:\n"
-                 "  min=%d max=%d, xx1=%ld xx2=%ld,\n"
-                 "  x1min=%ld x1max=%ld, x2min=%ld x2max=%ld\n",
-                 idx_min, idx_max, xx1, xx2,
-                 warper->x1min, warper->x1max,
-                 warper->x2min, warper->x2max ));
+        FT_TRACE5(( "invalid indices:\n"
+                    "  min=%d max=%d, xx1=%ld xx2=%ld,\n"
+                    "  x1min=%ld x1max=%ld, x2min=%ld x2max=%ld\n",
+                    idx_min, idx_max, xx1, xx2,
+                    warper->x1min, warper->x1max,
+                    warper->x2min, warper->x2max ));
         return;
       }
     }

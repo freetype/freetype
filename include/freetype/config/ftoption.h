@@ -380,6 +380,39 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Autofitter debugging                                                  */
+  /*                                                                       */
+  /*   If FT_DEBUG_AUTOFIT is defined, FreeType provides some means to     */
+  /*   control the autofitter behaviour for debugging purposes with global */
+  /*   boolean variables (consequently, you should *never* enable this     */
+  /*   while compiling in `release' mode):                                 */
+  /*                                                                       */
+  /*     _af_debug_disable_horz_hints                                      */
+  /*     _af_debug_disable_vert_hints                                      */
+  /*     _af_debug_disable_blue_hints                                      */
+  /*                                                                       */
+  /*   Additionally, the following functions provide dumps of various      */
+  /*   internal autofit structures to stdout (using `printf'):             */
+  /*                                                                       */
+  /*     af_glyph_hints_dump_points                                        */
+  /*     af_glyph_hints_dump_segments                                      */
+  /*     af_glyph_hints_dump_edges                                         */
+  /*                                                                       */
+  /*   As an argument, they use another global variable:                   */
+  /*                                                                       */
+  /*     _af_debug_hints                                                   */
+  /*                                                                       */
+  /*   Please have a look at the `ftgrid' demo program to see how those    */
+  /*   variables and macros should be used.                                */
+  /*                                                                       */
+  /*   Do not #undef these macros here since the build system might define */
+  /*   them for certain configurations only.                               */
+  /*                                                                       */
+/* #define FT_DEBUG_AUTOFIT */
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Memory Debugging                                                      */
   /*                                                                       */
   /*   FreeType now comes with an integrated memory debugger that is       */

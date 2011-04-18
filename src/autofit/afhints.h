@@ -364,7 +364,7 @@ FT_BEGIN_HEADER
 #define AF_HINTS_TEST_OTHER( h, f )   ( (h)->other_flags  & (f) )
 
 
-#ifdef AF_DEBUG
+#ifdef FT_DEBUG_AUTOFIT
 
 #define AF_HINTS_DO_HORIZONTAL( h )                                     \
           ( !_af_debug_disable_horz_hints                            && \
@@ -379,7 +379,7 @@ FT_BEGIN_HEADER
 
 #define AF_HINTS_DO_BLUES( h )  ( !_af_debug_disable_blue_hints )
 
-#else /* !AF_DEBUG */
+#else /* !FT_DEBUG_AUTOFIT */
 
 #define AF_HINTS_DO_HORIZONTAL( h )                                \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_HORIZONTAL )
@@ -392,7 +392,7 @@ FT_BEGIN_HEADER
 
 #define AF_HINTS_DO_BLUES( h )  1
 
-#endif /* !AF_DEBUG */
+#endif /* !FT_DEBUG_AUTOFIT */
 
 
   FT_LOCAL( AF_Direction )

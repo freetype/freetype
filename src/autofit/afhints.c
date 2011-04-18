@@ -129,7 +129,7 @@
   }
 
 
-#ifdef AF_DEBUG
+#ifdef FT_DEBUG_AUTOFIT
 
 #include FT_CONFIG_STANDARD_LIBRARY_H
 
@@ -326,10 +326,10 @@
   }
 #endif
 
-#else /* !AF_DEBUG */
+#else /* !FT_DEBUG_AUTOFIT */
 
   /* these empty stubs are only used to link the `ftgrid' test program */
-  /* when debugging is disabled                                        */
+  /* if debugging is disabled                                          */
 
 #ifdef __cplusplus
   extern "C" {
@@ -359,7 +359,7 @@
   }
 #endif
 
-#endif /* !AF_DEBUG */
+#endif /* !FT_DEBUG_AUTOFIT */
 
 
   /* Compute the direction value of a given vector. */
