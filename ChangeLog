@@ -57,7 +57,7 @@
 
 2011-03-23  Werner Lemberg  <wl@gnu.org>
 
-	* src/truetype/ttpload.c(tt_face_load_loca): Fix mismatch warning.
+	* src/truetype/ttpload.c (tt_face_load_loca): Fix mismatch warning.
 
 2011-03-20  Werner Lemberg  <wl@gnu.org>
 
@@ -166,7 +166,7 @@
 
 2011-02-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[cache] Fix an off-by-one bug in FTC_Manager_RemoveFaceID().
+	[cache] Fix an off-by-one bug in `FTC_Manager_RemoveFaceID'.
 	Found by <ychen1392001@yahoo.com.cn>, see detail in
 
 	  http://lists.gnu.org/archive/html/freetype/2011-01/msg00023.html
@@ -427,13 +427,13 @@
 
 2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[cache] Fit FTC_GNode_Compare() to FTC_Node_CompareFunc.
+	[cache] Fit `FTC_GNode_Compare' to `FTC_Node_CompareFunc'.
 
 	* src/cache/ftcglyph.h (FTC_GNode_Compare): Add the 3rd
 	argument `FTC_Cache  cache' to fit FTC_Node_CompareFunc
 	prototype.
 	* src/cache/ftcglyph.c (FTC_GNode_Compare): Ditto. Anyway,
-	`cache' is not used by its child ftc_gnode_compare().
+	`cache' is not used by its child `ftc_gnode_compare'.
 
 2011-01-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -449,7 +449,7 @@
 
 	To remove duplication, a cpp-macro to do same work
 	`FTC_NODE__TOP_FOR_HASH' is introduced.  For non-inlined
-	configuration, non-ftc_get_top_node_for_hash() is also introduced.
+	configuration, non-`ftc_get_top_node_for_hash' is also introduced.
 
 	* src/cache/ftccache.h (FTC_NODE__TOP_FOR_HASH): Declare
 	and implement inlined version.
@@ -497,7 +497,7 @@
 
 	Update Symbian project files to include Bzip2 support.
 
-	Currently, it provides FT_Stream_OpenBzip2() that returns
+	Currently, it provides `FT_Stream_OpenBzip2' that returns
 	unimplemented error always, to prevent unresolved symbol
 	error for the applications designed for Unix systems.
 
@@ -508,7 +508,7 @@
 
 	Update classic MacOS makefiles to include Bzip2 support.
 
-	Currently, it provides FT_Stream_OpenBzip2() that returns
+	Currently, it provides `FT_Stream_OpenBzip2' that returns
 	unimplemented error always, to prevent unresolved symbol
 	error for the applications designed for Unix systems.
 
@@ -521,7 +521,7 @@
 
 	Update Amiga makefiles to include Bzip2 support.
 
-	Currently, it provides FT_Stream_OpenBzip2() that returns
+	Currently, it provides `FT_Stream_OpenBzip2' that returns
 	unimplemented error always, to prevent unresolved symbol
 	error for the applications designed for Unix systems.
 
@@ -728,9 +728,9 @@
 
 2010-11-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[UVS] Fix find_variant_selector_charmap(), Savannah bug #31545.
+	[UVS] Fix `find_variant_selector_charmap', Savannah bug #31545.
 
-	Since 2010-07-04, find_variant_selector_charmap() returns
+	Since 2010-07-04, `find_variant_selector_charmap' returns
 	the first cmap subtable always under rogue-compatible
 	configuration, it causes NULL pointer dereference and
 	make UVS-related functions crashed.
@@ -776,7 +776,7 @@
 
 2010-10-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Revert a change of `_idx' type in FTC_CACHE_LOOKUP_CMP().
+	Revert a change of `_idx' type in `FTC_CACHE_LOOKUP_CMP'.
 
 	* src/cache/ftccache.h (FTC_CACHE_LOOKUP_CMP): Revert
 	the type of `_idx' from FT_PtrDist (by previous change)
@@ -797,9 +797,9 @@
 	address, so using signed type FT_PtrDist is safe.
 
 	* src/cache/ftccache.h (_FTC_FACE_ID_HASH): New hash
-	function to replace FTC_FACE_ID_HASH() for portability.
+	function to replace `FTC_FACE_ID_HASH' for portability.
 	* src/cache/ftcmanag.h (FTC_SCALER_HASH): Replace
-	FTC_FACE_ID_HASH() by _FTC_FACE_ID_HASH().
+	`FTC_FACE_ID_HASH' by `_FTC_FACE_ID_HASH'.
 	* src/cache/ftccmap.c (FTC_CMAP_HASH): Ditto.
 
 	* src/cache/ftccache.h (FTC_NodeRec): The type of the
@@ -827,8 +827,8 @@
 
 	[cache] Hide internal macros incompatible with LLP64.
 
-	FT_POINTER_TO_ULONG(), FTC_FACE_ID_HASH() and
-	FTC_IMAGE_TYPE_HASH() are enclosed by
+	`FT_POINTER_TO_ULONG', `FTC_FACE_ID_HASH', and
+	`FTC_IMAGE_TYPE_HASH' are enclosed by
 	FT_CONFIG_OPTION_OLD_INTERNALS and hidden from
 	normal clients.
 
@@ -837,10 +837,10 @@
 
 2010-10-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Change the type of FT_MEM_VAL() from FT_ULong to FT_PtrDist.
+	Change the type of `FT_MEM_VAL' from FT_ULong to FT_PtrDist.
 
 	On LLP64 platforms (e.g. Win64), unsigned long (32-bit)
-	cannot cover the memory address (64-bit).  FT_MEM_VAL() is
+	cannot cover the memory address (64-bit).  `FT_MEM_VAL' is
 	used for hashing only and not dereferred, so using signed
 	type FT_PtrDist is safe.
 
@@ -883,8 +883,8 @@
 		http://trac.macports.org/ticket/18859
 
 	* src/base/ftobjs.c (load_face_in_embedded_rfork):
-	When FT_Stream_New() returns FT_Err_Cannot_Open_Stream, it
-	means that the file is possible to be fopen()-ed but zero-sized.
+	When `FT_Stream_New' returns FT_Err_Cannot_Open_Stream, it
+	means that the file is possible to be `fopen'-ed but zero-sized.
 	Also there is a case that the resource fork is not zero-sized,
 	but no supported font exists in it.  If a rule by Darwin VFS
 	falls into such cases, there is no need to try other Darwin VFS
@@ -901,7 +901,7 @@
 	But if a method could open a resource fork but no font is found,
 	there is no need to try other methods older than tested method.
 	To determine whether the rule index is for Darwin VFS, a local
-	function ftrfork.c::raccess_rule_by_darwin_vfs() is introduced.
+	function `ftrfork.c::raccess_rule_by_darwin_vfs' is introduced.
 	To use this function in ftobjs.c etc but it should be inlined,
 	it is exposed by ftbase.h.
 
@@ -1066,7 +1066,7 @@
 	* src/cff/cffload.c (cff_index_access_element): `off2', the offset
 	to the next element is truncated at the end of the stream to prevent
 	invalid I/O.  As `off1', the offset to the requested element has
-	been checked by FT_STREAM_SEEK(), `off2' should be checked
+	been checked by `FT_STREAM_SEEK', `off2' should be checked
 	similarly.
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -1081,7 +1081,7 @@
 
 2010-09-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[cff] Make trace message in cff_charset_load() verbose.
+	[cff] Make trace message in` cff_charset_load' verbose.
 	See Savannah bug #30975.
 
 	* src/cff/cffload.c (cff_charset_load): Report the original `nleft'
@@ -1117,8 +1117,8 @@
 	See Savannah bug #31040.
 
 	* src/sfnt/ttpost.c (load_post_names): Get the length of `post'
-	table and pass the limit of `post' table to load_format_20() and
-	load_format_25().
+	table and pass the limit of `post' table to `load_format_20' and
+	`load_format_25'.
 	(load_format_20): Stop the parsing when we reached at the limit of
 	`post' table.  If more glyph names are required, they are filled by
 	NULL names.
@@ -1130,9 +1130,9 @@
 
 	* src/truetype/ttinterp.c (free_buffer_in_size): Don't duplicate
 	FT_GlyphZoneRec size->twilight to be freed.  If duplicated,
-	FT_FREE() erases the duplicated pointers only and leave original
+	`FT_FREE' erases the duplicated pointers only and leave original
 	pointers.  They can cause the double-free crash when the burst
-	errors occur in TrueType interpreter and free_buffer_in_size() is
+	errors occur in TrueType interpreter and `free_buffer_in_size' is
 	invoked repeatedly.
 
 2010-09-15  Werner Lemberg  <wl@gnu.org>
@@ -1189,7 +1189,7 @@
 
 	* src/truetype/ttinterp.c (TT_RunIns): Decrease the trace level
 	showing the error when the interpreter returns with an error,
-	from FT_TRACE7() to FT_TRACE1().
+	from` FT_TRACE7' to `FT_TRACE1'.
 
 2010-08-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -1346,7 +1346,7 @@
 	[cff] Don't use any values in decoder after parsing error.
 
 	* src/cff/cffgload.c (cff_slot_load): Skip the evaluations
-	of the values in decoder, if cff_decoder_parse_charstrings()
+	of the values in decoder, if `cff_decoder_parse_charstrings'
 	returns any error.
 
 2010-08-04  Werner Lemberg  <wl@gnu.org>
