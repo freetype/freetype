@@ -469,10 +469,6 @@
       slot->format  = FT_GLYPH_FORMAT_OUTLINE;
     }
 
-#ifdef DEBUG_HINTER
-    af_debug_hinter = hinter;
-#endif
-
   Exit:
     return error;
   }
