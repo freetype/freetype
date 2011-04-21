@@ -12,6 +12,10 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
       the autohinter if  a TrueType based font doesn't  contain native
       hints.
 
+    - The load flag FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  has been made
+      redundant and  is simply ignored;  this means that FreeType  now
+      ignores the global advance width value in TrueType fonts.
+
 
   III. MISCELLANEOUS
 

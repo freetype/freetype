@@ -2444,13 +2444,7 @@ FT_BEGIN_HEADER
    *     in fonts.  By default, FreeType tries to handle broken fonts also.
    *
    *   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ::
-   *     Indicates that the font driver should ignore the global advance
-   *     width defined in the font.  By default, that value is used as the
-   *     advance width for all glyphs when the face has
-   *     @FT_FACE_FLAG_FIXED_WIDTH set.
-   *
-   *     This flag exists for historical reasons (to support buggy CJK
-   *     fonts).
+   *     Ignored.  Deprecated.
    *
    *   FT_LOAD_NO_RECURSE ::
    *     This flag is only used internally.  It merely indicates that the

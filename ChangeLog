@@ -1,12 +1,29 @@
+2011-04-21  Behdad Esfahbod  <behdad@behdad.org>
+
+	Always ignore global advance.
+
+	This makes FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH redundant,
+	deprecated, and ignored.  The new behavior is what every major user
+	of FreeType has been requesting.  Global advance is broken in many
+	CJK fonts.  Just ignoring it by default makes most sense.
+
+	* src/truetype/ttdriver.c (tt_get_advances),
+	src/truetype/ttgload.c (TT_Get_HMetrics, TT_Get_VMetrics,
+	tt_get_metrics, compute_glyph_metrics, TT_Load_Glyph),
+	src/truetype/ttgload.h: Implement it.
+
+	* docs/CHANGES: Updated.
+
 2011-04-21  rainy6144  <rainy6144@gmail.com>
 
 	[autofit] Blur CJK stems if too many to preserve their gaps.
+
 	When there are too many stems to preserve their gaps in the
 	rasterization of CJK Ideographs at a low resolution, blur the
 	stems instead of showing clumped stems.  See
 	http://lists.gnu.org/archive/html/freetype-devel/2011-02/msg00011.html
 	http://lists.gnu.org/archive/html/freetype-devel/2011-04/msg00046.html
-	for detail.
+	for details.
 
 	* src/autofit/afcjk.c (af_cjk_hint_edges): Store the position of
 	the previous stem by `has_last_stem' and `last_stem_pos', and skip
