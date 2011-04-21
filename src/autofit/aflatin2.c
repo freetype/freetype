@@ -40,7 +40,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   af_latin2_hints_compute_segments( AF_GlyphHints  hints,
-                                   AF_Dimension   dim );
+                                    AF_Dimension   dim );
 
   FT_LOCAL_DEF( void )
   af_latin2_hints_link_segments( AF_GlyphHints  hints,
@@ -56,8 +56,8 @@
 
   FT_LOCAL_DEF( void )
   af_latin2_metrics_init_widths( AF_LatinMetrics  metrics,
-                                FT_Face          face,
-                                FT_ULong         charcode )
+                                 FT_Face          face,
+                                 FT_ULong         charcode )
   {
     /* scan the array of segments in each direction */
     AF_GlyphHintsRec  hints[1];
@@ -181,7 +181,7 @@
 
   static void
   af_latin2_metrics_init_blues( AF_LatinMetrics  metrics,
-                               FT_Face          face )
+                                FT_Face          face )
   {
     FT_Pos        flats [AF_LATIN_MAX_TEST_CHARACTERS];
     FT_Pos        rounds[AF_LATIN_MAX_TEST_CHARACTERS];
@@ -463,7 +463,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   af_latin2_metrics_init( AF_LatinMetrics  metrics,
-                         FT_Face          face )
+                          FT_Face          face )
   {
     FT_Error    error = AF_Err_Ok;
     FT_CharMap  oldmap = face->charmap;
@@ -504,8 +504,8 @@
 
   static void
   af_latin2_metrics_scale_dim( AF_LatinMetrics  metrics,
-                              AF_Scaler        scaler,
-                              AF_Dimension     dim )
+                               AF_Scaler        scaler,
+                               AF_Dimension     dim )
   {
     FT_Fixed      scale;
     FT_Pos        delta;
@@ -654,7 +654,7 @@
 
   FT_LOCAL_DEF( void )
   af_latin2_metrics_scale( AF_LatinMetrics  metrics,
-                          AF_Scaler        scaler )
+                           AF_Scaler        scaler )
   {
     metrics->root.scaler.render_mode = scaler->render_mode;
     metrics->root.scaler.face        = scaler->face;
@@ -676,7 +676,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   af_latin2_hints_compute_segments( AF_GlyphHints  hints,
-                                   AF_Dimension   dim )
+                                    AF_Dimension   dim )
   {
     AF_AxisHints  axis          = &hints->axis[dim];
     FT_Memory     memory        = hints->memory;
@@ -934,7 +934,7 @@
 
   FT_LOCAL_DEF( void )
   af_latin2_hints_link_segments( AF_GlyphHints  hints,
-                                AF_Dimension   dim )
+                                 AF_Dimension   dim )
   {
     AF_AxisHints  axis          = &hints->axis[dim];
     AF_Segment    segments      = axis->segments;
@@ -1034,7 +1034,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   af_latin2_hints_compute_edges( AF_GlyphHints  hints,
-                                AF_Dimension   dim )
+                                 AF_Dimension   dim )
   {
     AF_AxisHints  axis   = &hints->axis[dim];
     FT_Error      error  = AF_Err_Ok;
@@ -1340,7 +1340,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   af_latin2_hints_detect_features( AF_GlyphHints  hints,
-                                  AF_Dimension   dim )
+                                   AF_Dimension   dim )
   {
     FT_Error  error;
 
@@ -1358,7 +1358,7 @@
 
   FT_LOCAL_DEF( void )
   af_latin2_hints_compute_blue_edges( AF_GlyphHints    hints,
-                                     AF_LatinMetrics  metrics )
+                                      AF_LatinMetrics  metrics )
   {
     AF_AxisHints  axis       = &hints->axis[ AF_DIMENSION_VERT ];
     AF_Edge       edge       = axis->edges;
@@ -1464,7 +1464,7 @@
 
   static FT_Error
   af_latin2_hints_init( AF_GlyphHints    hints,
-                       AF_LatinMetrics  metrics )
+                        AF_LatinMetrics  metrics )
   {
     FT_Render_Mode  mode;
     FT_UInt32       scaler_flags, other_flags;
@@ -1546,8 +1546,8 @@
 
   static FT_Pos
   af_latin2_snap_width( AF_Width  widths,
-                       FT_Int    count,
-                       FT_Pos    width )
+                        FT_Int    count,
+                        FT_Pos    width )
   {
     int     n;
     FT_Pos  best      = 64 + 32 + 2;
@@ -1593,10 +1593,10 @@
 
   static FT_Pos
   af_latin2_compute_stem_width( AF_GlyphHints  hints,
-                               AF_Dimension   dim,
-                               FT_Pos         width,
-                               AF_Edge_Flags  base_flags,
-                               AF_Edge_Flags  stem_flags )
+                                AF_Dimension   dim,
+                                FT_Pos         width,
+                                AF_Edge_Flags  base_flags,
+                                AF_Edge_Flags  stem_flags )
   {
     AF_LatinMetrics  metrics  = (AF_LatinMetrics) hints->metrics;
     AF_LatinAxis     axis     = & metrics->axis[dim];
@@ -1761,9 +1761,9 @@
 
   static void
   af_latin2_align_linked_edge( AF_GlyphHints  hints,
-                              AF_Dimension   dim,
-                              AF_Edge        base_edge,
-                              AF_Edge        stem_edge )
+                               AF_Dimension   dim,
+                               AF_Edge        base_edge,
+                               AF_Edge        stem_edge )
   {
     FT_Pos  dist = stem_edge->opos - base_edge->opos;
 
@@ -1784,8 +1784,8 @@
 
   static void
   af_latin2_align_serif_edge( AF_GlyphHints  hints,
-                             AF_Edge        base,
-                             AF_Edge        serif )
+                              AF_Edge        base,
+                              AF_Edge        serif )
   {
     FT_UNUSED( hints );
 
@@ -1806,7 +1806,7 @@
 
   FT_LOCAL_DEF( void )
   af_latin2_hint_edges( AF_GlyphHints  hints,
-                       AF_Dimension   dim )
+                        AF_Dimension   dim )
   {
     AF_AxisHints  axis       = &hints->axis[dim];
     AF_Edge       edges      = axis->edges;
@@ -2273,8 +2273,8 @@
 
   static FT_Error
   af_latin2_hints_apply( AF_GlyphHints    hints,
-                        FT_Outline*      outline,
-                        AF_LatinMetrics  metrics )
+                         FT_Outline*      outline,
+                         AF_LatinMetrics  metrics )
   {
     FT_Error  error;
     int       dim;
