@@ -1,3 +1,18 @@
+2011-04-21  rainy6144  <rainy6144@gmail.com>
+
+	[autofit] Blur CJK stems if too many to preserve their gaps.
+	When there are too many stems to preserve their gaps in the
+	rasterization of CJK Ideographs at a low resolution, blur the
+	stems instead of showing clumped stems.  See
+	http://lists.gnu.org/archive/html/freetype-devel/2011-02/msg00011.html
+	http://lists.gnu.org/archive/html/freetype-devel/2011-04/msg00046.html
+	for detail.
+
+	* src/autofit/afcjk.c (af_cjk_hint_edges): Store the position of
+	the previous stem by `has_last_stem' and `last_stem_pos', and skip
+	a stem if the current and previous stem are too near to preserve
+	the gap.
+
 2011-04-18  Werner Lemberg  <wl@gnu.org>
 
 	Integrate autofitter debugging stuff.
