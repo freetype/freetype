@@ -1,3 +1,11 @@
+2011-04-22  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[autofit] Add more Indic scripts with hanging baseline.
+
+	* src/autofit/afindic.c (af_indic_uniranges): Tibetan, Limbu,
+	Sundanese, Meetei Mayak, Syloti Nagri and Sharada scripts are
+	added.
+
 2011-04-21  Behdad Esfahbod  <behdad@behdad.org>
 
 	Always ignore global advance.
