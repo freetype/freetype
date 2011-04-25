@@ -332,19 +332,15 @@
     if ( !face )
       return FALSE;
 
-    /* First, check the face name. */
-    if ( face->family_name )
-    {
-      if ( tt_check_trickyness_family( face->family_name ) )
-        return TRUE;
-      else
-        return FALSE;
-    }
-
     /* Type42 fonts may lack `name' tables, we thus try to identify */
     /* tricky fonts by checking the checksums of Type42-persistent  */
     /* sfnt tables (`cvt', `fpgm', and `prep').                     */
     if ( tt_check_trickyness_sfnt_ids( (TT_Face)face ) )
+      return TRUE;
+
+    /* Secondary, check the face name. */
+    if ( face->family_name                               &&
+         tt_check_trickyness_family( face->family_name ) )
       return TRUE;
 
     return FALSE;
