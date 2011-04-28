@@ -1,3 +1,10 @@
+2011-04-28  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve tracing messages.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues,
+	af_latin_align_linked_edge, af_latin_hint_edges): Do it.
+
 2011-04-25  Kan-Ru Chen  <kanru@kanru.info>
 
 	[truetype] Always check the checksum to identify tricky fonts.
