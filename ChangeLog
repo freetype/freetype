@@ -1,3 +1,10 @@
+2011-04-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Fix a bug in the sfnt table checksum getter.
+
+	* src/truetype/ttobjs.c (tt_get_sfnt_checksum): Check the
+	return value of face->goto_table() correctly.
+
 2011-04-28  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve tracing messages.
