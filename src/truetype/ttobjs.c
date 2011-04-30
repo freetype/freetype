@@ -216,13 +216,13 @@
     if ( face->dir_tables[i].CheckSum )
       return face->dir_tables[i].CheckSum;
 
-    else if ( !face->goto_table )
+    if ( !face->goto_table )
       return 0;
 
-    else if ( face->goto_table( face,
-                                face->dir_tables[i].Tag,
-                                face->root.stream,
-                                NULL ) )
+    if ( face->goto_table( face,
+                           face->dir_tables[i].Tag,
+                           face->root.stream,
+                           NULL ) )
       return 0;
 
     return (FT_ULong)tt_synth_sfnt_checksum( face->root.stream,
