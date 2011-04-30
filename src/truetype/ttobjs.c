@@ -242,7 +242,7 @@
   tt_check_trickyness_sfnt_ids( TT_Face  face )
   {
 #define TRICK_SFNT_IDS_PER_FACE   3
-#define TRICK_SFNT_IDS_NUM_FACES  5
+#define TRICK_SFNT_IDS_NUM_FACES  13
 
     static const tt_sfnt_id_rec sfnt_id[TRICK_SFNT_IDS_NUM_FACES]
                                        [TRICK_SFNT_IDS_PER_FACE] = {
@@ -275,16 +275,60 @@
         { 0xfffbfffc, 0x00000008 }, /* cvt  */
         { 0x0a5a0483, 0x00017c39 }, /* fpgm */
         { 0x70020112, 0x00000008 }  /* prep */
+      },
+      { /* NEC fadpop7.ttf */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x40c92555, 0x000000e5 }, /* fpgm */
+        { 0xa39b58e3, 0x0000117c }  /* prep */
+      },
+      { /* NEC fadrei5.ttf */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x33c41652, 0x000000e5 }, /* fpgm */
+        { 0x26d6c52a, 0x00000f6a }  /* prep */
+      },
+      { /* NEC fangot7.ttf */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x6db1651d, 0x0000019d }, /* fpgm */
+        { 0x6c6e4b03, 0x00002492 }  /* prep */
+      },
+      { /* NEC fangyo5.ttf */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x40c92555, 0x000000e5 }, /* fpgm */
+        { 0xde51fad0, 0x0000117c }  /* prep */
+      },
+      { /* NEC fankyo5.ttf */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x85e47664, 0x000000e5 }, /* fpgm */
+        { 0xa6c62831, 0x00001caa }  /* prep */
+      },
+      { /* NEC fanrgo5.ttf */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x2d891cfd, 0x0000019d }, /* fpgm */
+        { 0xa0604633, 0x00001de8 }  /* prep */
+      },
+      { /* NEC fangot5.ttc */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x40aa774c, 0x000001cb }, /* fpgm */
+        { 0x9b5caa96, 0x00001f9a }  /* prep */
+      },
+      { /* NEC fanmin3.ttc */
+        { 0x00000000, 0x00000000 }, /* cvt  */
+        { 0x0d3de9cb, 0x00000141 }, /* fpgm */
+        { 0xd4127766, 0x00002280 }  /* prep */
       }
     };
 
     FT_ULong  checksum;
     int       num_matched_ids[TRICK_SFNT_IDS_NUM_FACES];
+    FT_Bool   has_cvt, has_fpgm, has_prep;
     int       i, j, k;
 
 
     FT_MEM_SET( num_matched_ids, 0,
                 sizeof( int ) * TRICK_SFNT_IDS_NUM_FACES );
+    has_cvt  = FALSE;
+    has_fpgm = FALSE;
+    has_prep = FALSE;
 
     for ( i = 0; i < face->num_tables; i++ )
     {
@@ -294,14 +338,17 @@
       {
       case TTAG_cvt:
         k = TRICK_SFNT_ID_cvt;
+        has_cvt  = TRUE;
         break;
 
       case TTAG_fpgm:
         k = TRICK_SFNT_ID_fpgm;
+        has_fpgm = TRUE;
         break;
 
       case TTAG_prep:
         k = TRICK_SFNT_ID_prep;
+        has_prep = TRUE;
         break;
 
       default:
@@ -320,6 +367,18 @@
           if ( num_matched_ids[j] == TRICK_SFNT_IDS_PER_FACE )
             return TRUE;
         }
+    }
+
+    for ( j = 0; j < TRICK_SFNT_IDS_NUM_FACES; j++ )
+    {
+      if ( !has_cvt  && !sfnt_id[j][TRICK_SFNT_ID_cvt].Length )
+        num_matched_ids[j] ++;
+      if ( !has_fpgm && !sfnt_id[j][TRICK_SFNT_ID_fpgm].Length )
+        num_matched_ids[j] ++;
+      if ( !has_prep && !sfnt_id[j][TRICK_SFNT_ID_prep].Length )
+        num_matched_ids[j] ++;
+      if ( num_matched_ids[j] == TRICK_SFNT_IDS_PER_FACE )
+        return TRUE;
     }
 
     return FALSE;

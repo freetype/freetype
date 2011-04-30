@@ -1,3 +1,13 @@
+2011-04-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Register a set of tricky fonts, NEC FA family.
+
+	* src/truetype/ttobjs.c (tt_check_trickyness_sfnt_ids):
+	Add 8 checksum sets for NEC FA family.  For the tricky fonts
+	without some tables (e.g. NEC FA fonts lack cvt table),
+	extra check is added to assure that 0-length table in the
+	registry is not included in the font.
+
 2011-04-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Fix a bug in the sfnt table checksum getter.
