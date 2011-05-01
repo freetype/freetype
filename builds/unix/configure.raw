@@ -52,7 +52,7 @@ if test ${cross_compiling} = yes; then
     EXEEXT_BUILD=""
   elif test -x a_out.exe -o -x conftest.exe; then
     EXEEXT_BUILD=".exe"
-  elif test -x conftest.* ; then
+  elif test -x conftest.*; then
     EXEEXT_BUILD=`echo conftest.* | sed -n '1s/^.*\././'`
   fi
   rm -f a.* b.* a_out.exe conftest.*
@@ -104,7 +104,8 @@ case "$INSTALL" in
 /*)
   ;;
 */*)
-  INSTALL="`pwd`/$INSTALL" ;;
+  INSTALL="`pwd`/$INSTALL"
+  ;;
 esac
 
 
@@ -196,7 +197,8 @@ AC_ARG_ENABLE([mmap],
 if test "x${enable_mmap}" != "xno"; then
   AC_FUNC_MMAP
 fi
-if test "x${enable_mmap}" = "xno" -o "$ac_cv_func_mmap_fixed_mapped" != "yes" ; then
+if test "x${enable_mmap}" = "xno" \
+   -o "$ac_cv_func_mmap_fixed_mapped" != "yes"; then
   FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
 else
   FTSYS_SRC='$(BUILD_DIR)/ftsystem.c'
@@ -400,7 +402,8 @@ else
     dnl AC_MSG_WARN([host system is MacOS but configured to build without Carbon])
     CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"
     ;;
-  *) ;;
+  *)
+    ;;
   esac
 fi
 
@@ -616,7 +619,7 @@ AC_ARG_WITH([ats],
                  [use AppleTypeService, if available (default=yes)]))
 if test x$with_ats = xno; then
   CFLAGS="$CFLAGS -DHAVE_ATS=0"
-elif test x$with_old_mac_fonts = xyes -a x$with_ats != x ; then
+elif test x$with_old_mac_fonts = xyes -a x$with_ats != x; then
   AC_MSG_CHECKING([AppleTypeService functions])
   AC_LINK_IFELSE([
     AC_LANG_PROGRAM([
