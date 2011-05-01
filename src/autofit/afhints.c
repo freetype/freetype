@@ -277,6 +277,69 @@
 #endif
 
 
+  /* Fetch number of segments. */
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+  FT_Error
+  af_glyph_hints_get_num_segments( AF_GlyphHints  hints,
+                                   FT_Int         dimension,
+                                   FT_Int*        num_segments )
+  {
+    AF_Dimension  dim;
+    AF_AxisHints  axis;
+
+
+    dim = ( dimension == 0 ) ? AF_DIMENSION_HORZ : AF_DIMENSION_VERT;
+
+    axis          = &hints->axis[dim];
+    *num_segments = axis->num_segments;
+
+    return AF_Err_Ok;
+  }
+#ifdef __cplusplus
+  }
+#endif
+
+
+  /* Fetch offset of segments into user supplied offset array. */
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+  FT_Error
+  af_glyph_hints_get_segment_offset( AF_GlyphHints  hints,
+                                     FT_Int         dimension,
+                                     FT_Int         idx,
+                                     FT_Pos*        offset )
+  {
+    AF_Dimension  dim;
+    AF_AxisHints  axis;
+    AF_Segment    seg;
+
+
+    if ( !offset )
+      return AF_Err_Invalid_Argument;
+
+    dim = ( dimension == 0 ) ? AF_DIMENSION_HORZ : AF_DIMENSION_VERT;
+
+    axis = &hints->axis[dim];
+
+    if ( idx < 0 || idx >= axis->num_segments )
+      return AF_Err_Invalid_Argument;
+
+    seg     = &axis->segments[idx];
+    *offset = (dim == AF_DIMENSION_HORZ) ? seg->first->ox
+                                         : seg->first->oy;
+
+    return AF_Err_Ok;
+  }
+#ifdef __cplusplus
+  }
+#endif
+
+
   /* Dump the array of linked edges. */
 
 #ifdef __cplusplus
@@ -346,6 +409,30 @@
   af_glyph_hints_dump_segments( AF_GlyphHints  hints )
   {
     FT_UNUSED( hints );
+  }
+
+
+  FT_Error
+  af_glyph_hints_get_num_segments( AF_GlyphHints  hints,
+                                   FT_Int         dimension,
+                                   FT_Int*        num_segments )
+  {
+    FT_UNUSED( hints );
+    FT_UNUSED( dimension );
+    FT_UNUSED( num_segments );
+  }
+
+
+  FT_Error
+  af_glyph_hints_get_segment_offset( AF_GlyphHints  hints,
+                                     FT_Int         dimension,
+                                     FT_Int         idx,
+                                     FT_Pos*        offset )
+  {
+    FT_UNUSED( hints );
+    FT_UNUSED( dimension );
+    FT_UNUSED( idx );
+    FT_UNUSED( offset );
   }
 
 
