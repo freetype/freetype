@@ -1,3 +1,11 @@
+2011-05-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Add new option `--disable-mmap' to configure script.
+
+	* builds/unix/configure.raw: New option `--disable-mmap' 
+	is added.  It is for the developers to simulate the systems
+	without mmap() (like 4.3BSD, minix etc) on POSIX systems.
+
 2011-04-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Recalculate the sfnt table checksum always.

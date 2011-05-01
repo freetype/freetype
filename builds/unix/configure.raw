@@ -189,8 +189,14 @@ CPPFLAGS="${orig_CPPFLAGS}"
 
 # Here we check whether we can use our mmap file component.
 
-AC_FUNC_MMAP
-if test "$ac_cv_func_mmap_fixed_mapped" != yes; then
+AC_ARG_ENABLE([mmap],
+  AS_HELP_STRING([--disable-mmap],
+                 [do not check mmap() and do not use]),
+  [enable_mmap="no"],[enable_mmap="yes"])
+if test "x${enable_mmap}" != "xno"; then
+  AC_FUNC_MMAP
+fi
+if test "x${enable_mmap}" = "xno" -o "$ac_cv_func_mmap_fixed_mapped" != "yes" ; then
   FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
 else
   FTSYS_SRC='$(BUILD_DIR)/ftsystem.c'
