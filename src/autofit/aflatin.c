@@ -614,7 +614,7 @@
     }
 
     /* an extra-light axis corresponds to a standard width that is */
-    /* smaller than 0.75 pixels                                    */
+    /* smaller than 5/8 pixels                                     */
     axis->extra_light =
       (FT_Bool)( FT_MulFix( axis->standard_width, scale ) < 32 + 8 );
 
@@ -1059,7 +1059,7 @@
     /*                                                                   */
     /*********************************************************************/
 
-    /* assure that edge distance threshold is at least 0.25px */
+    /* assure that edge distance threshold is at most 0.25px */
     edge_distance_threshold = FT_MulFix( laxis->edge_distance_threshold,
                                          scale );
     if ( edge_distance_threshold > 64 / 4 )
@@ -1787,7 +1787,7 @@
       for ( edge = edges; edge < edge_limit; edge++ )
       {
         AF_Width  blue;
-        AF_Edge   edge1, edge2;
+        AF_Edge   edge1, edge2; /* these edges form the stem to check */
 
 
         if ( edge->flags & AF_EDGE_DONE )
@@ -1800,6 +1800,7 @@
         if ( blue )
           edge1 = edge;
 
+        /* flip edges if the other stem is aligned to a blue zone */
         else if ( edge2 && edge2->blue_edge )
         {
           blue  = edge2->blue_edge;
@@ -1829,8 +1830,8 @@
       }
     }
 
-    /* now we align all stem edges, trying to maintain the */
-    /* relative order of stems in the glyph                */
+    /* now we align all other stem edges, trying to maintain the */
+    /* relative order of stems in the glyph                      */
     for ( edge = edges; edge < edge_limit; edge++ )
     {
       AF_Edge  edge2;
@@ -1861,6 +1862,8 @@
 
       if ( !anchor )
       {
+        /* if we reach this if clause, no stem has been aligned yet */
+
         FT_Pos  org_len, org_center, cur_len;
         FT_Pos  cur_pos1, error1, error2, u_off, d_off;
 
@@ -1871,14 +1874,18 @@
                     (AF_Edge_Flags)edge->flags,
                     (AF_Edge_Flags)edge2->flags );
 
-        /* some voodoo to specially round edges for small stem widths */
+        /* some voodoo to specially round edges for small stem widths; */
+        /* the idea is to align the center of a stem, then shifting    */
+        /* the stem edges to suitable positions                        */
         if ( cur_len <= 64 )
         {
+          /* width <= 1px */
           u_off = 32;
           d_off = 32;
         }
         else
         {
+          /* 1px < width < 1.5px */
           u_off = 38;
           d_off = 26;
         }
