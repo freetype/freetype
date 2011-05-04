@@ -637,9 +637,17 @@
         dist = FT_MulFix( blue->ref.org - blue->shoot.org, scale );
         if ( dist <= 48 && dist >= -48 )
         {
-          FT_Pos  delta1, delta2;
+#if 0
+          FT_Pos  delta1;
+#endif
+          FT_Pos  delta2;
 
 
+          /* use discrete values for blue zone widths */
+
+#if 0
+
+          /* generic, original code */
           delta1 = blue->shoot.org - blue->ref.org;
           delta2 = delta1;
           if ( delta1 < 0 )
@@ -656,6 +664,25 @@
 
           if ( delta1 < 0 )
             delta2 = -delta2;
+
+#else
+
+          /* simplified version due to abs(dist) <= 48 */
+          delta2 = dist;
+          if ( dist < 0 )
+            delta2 = -delta2;
+
+          if ( delta2 < 32 )
+            delta2 = 0;
+          else if ( delta < 48 )
+            delta2 = 32;
+          else
+            delta2 = 64;
+
+          if ( dist < 0 )
+            delta2 = -delta2;
+
+#endif
 
           blue->ref.fit   = FT_PIX_ROUND( blue->ref.cur );
           blue->shoot.fit = blue->ref.fit + delta2;
