@@ -1,3 +1,9 @@
+2011-05-06  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Remove unused struct member.
+
+	* src/autofit/aflatin.h (AF_LatinAxis): Remove `control_overshoot'.
+
 2011-05-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Simplify.

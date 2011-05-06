@@ -105,7 +105,6 @@ FT_BEGIN_HEADER
     FT_Bool          extra_light;         /* is standard width very light? */
 
     /* ignored for horizontal metrics */
-    FT_Bool          control_overshoot;
     FT_UInt          blue_count;
     AF_LatinBlueRec  blues[AF_LATIN_BLUE_MAX];
 
