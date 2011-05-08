@@ -136,6 +136,7 @@ FT_TRACE_DEF( gxvprop )
 FT_TRACE_DEF( gxvlcar )
 
   /* autofit components */
+FT_TRACE_DEF( afcjk )
 FT_TRACE_DEF( aflatin )
 FT_TRACE_DEF( aflatin2 )
 FT_TRACE_DEF( afwarp )

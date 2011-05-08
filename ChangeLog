@@ -1,3 +1,48 @@
+2011-05-08  Just Fill Bugs  <mozbugbox@yahoo.com.au>
+            suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[autofit] Add bluezones for CJK Ideographs.
+
+	To remove extremas of vertical strokes of CJK Ideographs at
+	low resolution and make the top and bottom horizontal stems
+	aligned, bluezones for CJK Ideographs are calculated from
+	sample glyphs.  At present, vertical bluezones (bluezones
+	to align vertical stems) are disabled by default.  For detail, see
+	http://lists.gnu.org/archive/html/freetype-devel/2011-04/msg00070.html
+	http://lists.gnu.org/archive/html/freetype-devel/2011-04/msg00092.html
+	http://lists.gnu.org/archive/html/freetype-devel/2011-05/msg00001.html
+
+	* include/freetype/internal/fttrace.h: New trace component `afcjk'.
+	* src/autofit/afcjk.h (AF_CJK{Blue,Axis,Metric}Rec): Add CJK version
+	for AF_Latin{Blue,Axis,Metric}Rec.
+	(af_cjk_metrics_check_digits): Ditto, shared with Indic module.
+	(af_cjk_metrics_init_widths): Ditto.
+	(af_cjk_metrics_init): Take AF_CJKMetric instead of AF_LatinMetric.
+	(af_cjk_metrics_scale): Ditto (declaration).
+	(af_cjk_hints_init): Ditto (declaration).
+	(af_cjk_hints_apply): Ditto (declaration).
+	* src/autofit/afcjk.c (af_cjk_metrics_scale): Ditto (body).
+	(af_cjk_hints_init): Ditto (body).
+	(af_cjk_hints_apply): Ditto (body).
+	(af_cjk_metrics_init_widths): Duplicate af_latin_metrics_init_widths.
+	(af_cjk_metrics_check_digits): Duplicate af_latin_metrics_check_digits.
+	(af_cjk_metrics_init): Call CJK bluezone initializer.
+	(af_cjk_metrics_scale_dim): Add code to scale bluezones.  
+	(af_cjk_hints_compute_blue_edges): New function, CJK version of
+	af_latin_hints_compute_blue_edges.
+	(af_cjk_metrics_init_blues): New function, CJK version of
+	af_latin_metrics_init_blues.
+	(af_cjk_hints_edges): Add code to align the edge stems to blue zones.
+
+	* src/autofit/afindic.c (af_indic_metrics_init): Take AF_CJKMetric
+	instead of AF_LatinMetric, and initialize as af_cjk_metrics_init.
+	However bluezones are not initialized.
+	(af_indic_metrics_scale): Take AF_CJKMetric instead of AF_LatinMetric.
+	(af_indic_hints_init): Ditto.
+	(af_indic_hints_apply): Ditto.
+
+	* docs/CHANGES: Note about CJK bluezone support.
+
 2011-05-06  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Remove unused struct member.
