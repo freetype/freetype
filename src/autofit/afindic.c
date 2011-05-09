@@ -33,8 +33,8 @@
 
 
   static FT_Error
-  af_indic_metrics_init( AF_CJKMetrics    metrics,
-                         FT_Face          face )
+  af_indic_metrics_init( AF_CJKMetrics  metrics,
+                         FT_Face        face )
   {
     /* skip blue zone init in CJK routines */
     FT_CharMap  oldmap = face->charmap;
@@ -48,7 +48,7 @@
     {
       af_cjk_metrics_init_widths( metrics, face, 0x7530 );
 #if 0
-      /* either need indic specific blue_chars[] or just skip blue zones. */
+      /* either need indic specific blue_chars[] or just skip blue zones */
       af_cjk_metrics_init_blues( metrics, face, af_cjk_blue_chars );
 #endif
       af_cjk_metrics_check_digits( metrics, face );
@@ -61,8 +61,8 @@
 
 
   static void
-  af_indic_metrics_scale( AF_CJKMetrics    metrics,
-                          AF_Scaler        scaler )
+  af_indic_metrics_scale( AF_CJKMetrics  metrics,
+                          AF_Scaler      scaler )
   {
     /* use CJK routines */
     af_cjk_metrics_scale( metrics, scaler );
@@ -70,8 +70,8 @@
 
 
   static FT_Error
-  af_indic_hints_init( AF_GlyphHints    hints,
-                       AF_CJKMetrics    metrics )
+  af_indic_hints_init( AF_GlyphHints  hints,
+                       AF_CJKMetrics  metrics )
   {
     /* use CJK routines */
     return af_cjk_hints_init( hints, metrics );
@@ -79,9 +79,9 @@
 
 
   static FT_Error
-  af_indic_hints_apply( AF_GlyphHints    hints,
-                        FT_Outline*      outline,
-                        AF_CJKMetrics    metrics)
+  af_indic_hints_apply( AF_GlyphHints  hints,
+                        FT_Outline*    outline,
+                        AF_CJKMetrics  metrics )
   {
     /* use CJK routines */
     return af_cjk_hints_apply( hints, outline, metrics );

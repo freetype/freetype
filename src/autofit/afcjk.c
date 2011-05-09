@@ -62,7 +62,8 @@
   /*************************************************************************/
 
 
-  /* Basically the Latin version with AF_CJKMetrics to replace AF_LatinMetrics */
+  /* Basically the Latin version with AF_CJKMetrics */
+  /* to replace AF_LatinMetrics.                    */
 
   FT_LOCAL_DEF( void )
   af_cjk_metrics_init_widths( AF_CJKMetrics  metrics,
@@ -79,11 +80,11 @@
     metrics->axis[AF_DIMENSION_VERT].width_count = 0;
 
     {
-      FT_Error             error;
-      FT_UInt              glyph_index;
-      int                  dim;
-      AF_CJKMetricsRec     dummy[1];
-      AF_Scaler            scaler = &dummy->root.scaler;
+      FT_Error          error;
+      FT_UInt           glyph_index;
+      int               dim;
+      AF_CJKMetricsRec  dummy[1];
+      AF_Scaler         scaler = &dummy->root.scaler;
 
 
       glyph_index = FT_Get_Char_Index( face, charcode );
@@ -121,13 +122,11 @@
         FT_UInt       num_widths = 0;
 
 
-        error = af_latin_hints_compute_segments( hints,
-                                                 (AF_Dimension)dim );
+        error = af_latin_hints_compute_segments( hints, (AF_Dimension)dim );
         if ( error )
           goto Exit;
 
-        af_latin_hints_link_segments( hints,
-                                      (AF_Dimension)dim );
+        af_latin_hints_link_segments( hints, (AF_Dimension)dim );
 
         seg   = axhints->segments;
         limit = seg + axhints->num_segments;
@@ -155,16 +154,15 @@
         axis->width_count = num_widths;
       }
 
-  Exit:
+    Exit:
       for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
       {
-        AF_CJKAxis    axis = &metrics->axis[dim];
-        FT_Pos        stdw;
+        AF_CJKAxis  axis = &metrics->axis[dim];
+        FT_Pos      stdw;
 
 
-        stdw = ( axis->width_count > 0 )
-                 ? axis->widths[0].org
-                 : AF_LATIN_CONSTANT( metrics, 50 );
+        stdw = ( axis->width_count > 0 ) ? axis->widths[0].org
+                                         : AF_LATIN_CONSTANT( metrics, 50 );
 
         /* let's try 20% of the smallest width */
         axis->edge_distance_threshold = stdw / 5;
@@ -177,19 +175,19 @@
   }
 
 
-
 #define AF_CJK_MAX_TEST_CHARACTERS  32
 
 
-  /* Every blue zone has 2 types of fill and unfill,
-   * Which means fill the entire square or not.
-   * */
+  /* Each blue zone has two types of fill and unfill, this is, */
+  /* filling the entire glyph square or not.                   */
+
   enum
   {
     AF_CJK_BLUE_TYPE_FILL,
     AF_CJK_BLUE_TYPE_UNFILL,
     AF_CJK_BLUE_TYPE_MAX
   };
+
 
   /* Put some common and representative Han Ideographs characters here. */
   static const FT_ULong af_cjk_hani_blue_chars[AF_CJK_BLUE_MAX]
@@ -260,28 +258,32 @@
   };
 
 
-  /* Calculate blue zones for all the CJK_BLUE_XXX's */
+  /* Calculate blue zones for all the CJK_BLUE_XXX's. */
 
   static void
   af_cjk_metrics_init_blues( AF_CJKMetrics   metrics,
                              FT_Face         face,
-                             const FT_ULong  blue_chars[AF_CJK_BLUE_MAX]
-                                                       [AF_CJK_BLUE_TYPE_MAX]
-                                                       [AF_CJK_MAX_TEST_CHARACTERS] )
+                             const FT_ULong  blue_chars
+                                               [AF_CJK_BLUE_MAX]
+                                               [AF_CJK_BLUE_TYPE_MAX]
+                                               [AF_CJK_MAX_TEST_CHARACTERS] )
   {
     FT_Pos        fills[AF_CJK_MAX_TEST_CHARACTERS];
     FT_Pos        flats[AF_CJK_MAX_TEST_CHARACTERS];
+
     FT_Int        num_fills;
     FT_Int        num_flats;
+
     FT_Int        bb;
     AF_CJKBlue    blue;
     FT_Error      error;
     AF_CJKAxis    axis;
     FT_GlyphSlot  glyph = face->glyph;
 
-    /* we compute the blues simply by loading each character from the    */
-    /* 'blue_chars[blues]' string, then compute its extreme  */
-    /* points (depending blue zone type etc.)                */
+
+    /* We compute the blues simply by loading each character from the */
+    /* `blue_chars[blues]' string, then computing its extreme points  */
+    /* (depending blue zone type etc.).                               */
 
     FT_TRACE5(( "cjk blue zones computation\n" ));
     FT_TRACE5(( "------------------------------------------------\n" ));
@@ -293,13 +295,15 @@
       FT_Pos*  blue_shoot;
 
 
-      num_fills  = 0;
-      num_flats  = 0;
-      for ( fill_type = 0 ; fill_type < AF_CJK_BLUE_TYPE_MAX; fill_type++)
+      num_fills = 0;
+      num_flats = 0;
+
+      for ( fill_type = 0; fill_type < AF_CJK_BLUE_TYPE_MAX; fill_type++ )
       {
         const FT_ULong*  p     = blue_chars[bb][fill_type];
         const FT_ULong*  limit = p + AF_CJK_MAX_TEST_CHARACTERS;
-        FT_Bool          fill  = FT_BOOL( fill_type == AF_CJK_BLUE_TYPE_FILL );
+        FT_Bool          fill  = FT_BOOL(
+                                   fill_type == AF_CJK_BLUE_TYPE_FILL );
 
 
         FT_TRACE5(( "cjk blue %3d/%d: ", bb, fill_type ));
@@ -311,6 +315,7 @@
           FT_Pos      best_pos; /* same as points.y */
           FT_Int      best_point, best_first, best_last;
           FT_Vector*  points;
+
 
           FT_TRACE5(( "0x%lX", *p ));
 
@@ -336,7 +341,9 @@
             FT_Int  last  = -1;
 
 
-            for ( nn = 0; nn < glyph->outline.n_contours; first = last+1, nn++ )
+            for ( nn = 0;
+                  nn < glyph->outline.n_contours;
+                  first = last + 1, nn++ )
             {
               FT_Int  old_best_point = best_point;
               FT_Int  pp;
@@ -344,49 +351,54 @@
 
               last = glyph->outline.contours[nn];
 
-              /* Avoid single-point contours since they are never rasterized. */
-              /* In some fonts, they correspond to mark attachment points     */
-              /* which are way outside of the glyph's real outline.           */
+              /* Avoid single-point contours since they are never       */
+              /* rasterized.  In some fonts, they correspond to mark    */
+              /* attachment points which are way outside of the glyph's */
+              /* real outline.                                          */
               if ( last <= first )
                 continue;
 
-              switch (bb)
+              switch ( bb )
               {
-                case AF_CJK_BLUE_TOP:
-                  for ( pp = first; pp <= last; pp++ )
-                    if ( best_point < 0 || points[pp].y > best_pos )
-                    {
-                      best_point = pp;
-                      best_pos   = points[pp].y;
-                    }
-                  break;
-                case AF_CJK_BLUE_BOTTOM:
-                  for ( pp = first; pp <= last; pp++ )
-                    if ( best_point < 0 || points[pp].y < best_pos )
-                    {
-                      best_point = pp;
-                      best_pos   = points[pp].y;
-                    }
-                  break;
-                case AF_CJK_BLUE_LEFT:
-                  for ( pp = first; pp <= last; pp++ )
-                    if ( best_point < 0 || points[pp].x < best_pos )
-                    {
-                      best_point = pp;
-                      best_pos   = points[pp].x;
-                    }
-                  break;
-                case AF_CJK_BLUE_RIGHT:
-                  for ( pp = first; pp <= last; pp++ )
-                    if ( best_point < 0 || points[pp].x > best_pos )
-                    {
-                      best_point = pp;
-                      best_pos   = points[pp].x;
-                    }
-                  break;
-                default:
-                  ;
-            }
+              case AF_CJK_BLUE_TOP:
+                for ( pp = first; pp <= last; pp++ )
+                  if ( best_point < 0 || points[pp].y > best_pos )
+                  {
+                    best_point = pp;
+                    best_pos   = points[pp].y;
+                  }
+                break;
+
+              case AF_CJK_BLUE_BOTTOM:
+                for ( pp = first; pp <= last; pp++ )
+                  if ( best_point < 0 || points[pp].y < best_pos )
+                  {
+                    best_point = pp;
+                    best_pos   = points[pp].y;
+                  }
+                break;
+
+              case AF_CJK_BLUE_LEFT:
+                for ( pp = first; pp <= last; pp++ )
+                  if ( best_point < 0 || points[pp].x < best_pos )
+                  {
+                    best_point = pp;
+                    best_pos   = points[pp].x;
+                  }
+                break;
+
+              case AF_CJK_BLUE_RIGHT:
+                for ( pp = first; pp <= last; pp++ )
+                  if ( best_point < 0 || points[pp].x > best_pos )
+                  {
+                    best_point = pp;
+                    best_pos   = points[pp].x;
+                  }
+                break;
+
+              default:
+                ;
+              }
 
               if ( best_point != old_best_point )
               {
@@ -397,7 +409,7 @@
             FT_TRACE5(( "%5ld, ", best_pos ));
           }
 
-          if (fill)
+          if ( fill )
             fills[num_fills++] = best_pos;
           else
             flats[num_flats++] = best_pos;
@@ -406,7 +418,7 @@
         FT_TRACE5(( "\n" ));
       }
 
-      if ( num_flats == 0 && num_fills == 0)
+      if ( num_flats == 0 && num_fills == 0 )
       {
         /*
          *  we couldn't find a single glyph to compute this blue zone,
@@ -417,8 +429,8 @@
       }
 
       /* we have computed the contents of the `fill' and `flats' tables, */
-      /* now determine the reference position of the blue --  */
-      /* we simply take the median value after a simple sort  */
+      /* now determine the reference position of the blue --             */
+      /* we simply take the median value after a simple sort             */
       af_sort_pos( num_flats, flats );
       af_sort_pos( num_fills, fills );
 
@@ -448,8 +460,8 @@
         *blue_shoot = flats[num_flats / 2];
       }
 
-      /* make sure blue_ref >= blue_shoot for top/right or
-       * vis vesa for bottom/left. */
+      /* make sure blue_ref >= blue_shoot for top/right or */
+      /* vice versa for bottom/left                        */
       if ( *blue_shoot != *blue_ref )
       {
         FT_Pos   ref       = *blue_ref;
@@ -467,8 +479,10 @@
       else if ( AF_CJK_BLUE_RIGHT == bb )
         blue->flags |= AF_CJK_BLUE_IS_RIGHT;
 
-      FT_TRACE5(( "-- cjk ref = %ld shoot = %ld\n", *blue_ref, *blue_shoot ));
+      FT_TRACE5(( "-- cjk ref = %ld shoot = %ld\n",
+                  *blue_ref, *blue_shoot ));
     }
+
     return;
   }
 
@@ -580,8 +594,8 @@
     /* scale the blue zones */
     for ( nn = 0; nn < axis->blue_count; nn++ )
     {
-      AF_CJKBlue    blue = &axis->blues[nn];
-      FT_Pos        dist;
+      AF_CJKBlue  blue = &axis->blues[nn];
+      FT_Pos      dist;
 
 
       blue->ref.cur   = FT_MulFix( blue->ref.org, scale ) + delta;
@@ -596,10 +610,11 @@
       {
         FT_Pos  delta1, delta2;
 
-        blue->ref.fit   = FT_PIX_ROUND( blue->ref.cur );
+
+        blue->ref.fit  = FT_PIX_ROUND( blue->ref.cur );
 
         /* shoot is under shoot for cjk */
-        delta1 = FT_DivFix(blue->ref.fit, scale) - blue->shoot.org;
+        delta1 = FT_DivFix( blue->ref.fit, scale ) - blue->shoot.org;
         delta2 = delta1;
         if ( delta1 < 0 )
           delta2 = -delta2;
@@ -609,10 +624,10 @@
         FT_TRACE5(( "delta: %d", delta1 ));
         if ( delta2 < 32 )
           delta2 = 0;
-        /*
+#if 0
         else if ( delta2 < 64 )
           delta2 = 32 + ( ( ( delta2 - 32 ) + 16 ) & ~31 );
-        */
+#endif
         else
           delta2 = FT_PIX_ROUND( delta2 );
         FT_TRACE5(( "/%d\n", delta2 ));
@@ -624,10 +639,10 @@
 
         FT_TRACE5(( ">> active cjk blue zone %c%d[%ld/%ld]: "
                      "ref: cur=%.2f fit=%.2f shoot: cur=%.2f fit=%.2f\n",
-                       ( dim == AF_DIMENSION_HORZ ) ? 'H':'V',
+                       ( dim == AF_DIMENSION_HORZ ) ? 'H' : 'V',
                        nn, blue->ref.org, blue->shoot.org,
-                       blue->ref.cur/64.0, blue->ref.fit/64.0,
-                       blue->shoot.cur/64.0, blue->shoot.fit/64.0 ));
+                       blue->ref.cur / 64.0, blue->ref.fit / 64.0,
+                       blue->shoot.cur / 64.0, blue->shoot.fit / 64.0 ));
 
         blue->flags |= AF_CJK_BLUE_ACTIVE;
       }
@@ -1143,14 +1158,14 @@
 
 
   FT_LOCAL_DEF( void )
-  af_cjk_hints_compute_blue_edges( AF_GlyphHints    hints,
-                                   AF_CJKMetrics    metrics,
-                                   AF_Dimension     dim )
+  af_cjk_hints_compute_blue_edges( AF_GlyphHints  hints,
+                                   AF_CJKMetrics  metrics,
+                                   AF_Dimension   dim )
   {
-    AF_AxisHints  axis       = &hints->axis[ dim ];
+    AF_AxisHints  axis       = &hints->axis[dim];
     AF_Edge       edge       = axis->edges;
     AF_Edge       edge_limit = edge + axis->num_edges;
-    AF_CJKAxis    cjk        = &metrics->axis[ dim ];
+    AF_CJKAxis    cjk        = &metrics->axis[dim];
     FT_Fixed      scale      = cjk->scale;
     FT_Pos        best_dist0;  /* initial threshold */
 
@@ -1158,15 +1173,16 @@
     /* compute the initial threshold as a fraction of the EM size */
     best_dist0 = FT_MulFix( metrics->units_per_em / 40, scale );
 
-    if ( best_dist0 > 64 / 2 ) /* Maximum 1/2 pixel */
+    if ( best_dist0 > 64 / 2 ) /* maximum 1/2 pixel */
       best_dist0 = 64 / 2;
 
     /* compute which blue zones are active, i.e. have their scaled */
     /* size < 3/4 pixels                                           */
 
-    /* If the distant between an edge and a blue zone is shorter than
-     * best_dist0, set the blue zone for the edge. Then search for
-     * the blue zone with the smallest best_dist to the edge. */
+    /* If the distant between an edge and a blue zone is shorter than */
+    /* best_dist0, set the blue zone for the edge.  Then search for   */
+    /* the blue zone with the smallest best_dist to the edge.         */
+
     for ( ; edge < edge_limit; edge++ )
     {
       FT_UInt   bb;
@@ -1176,8 +1192,9 @@
 
       for ( bb = 0; bb < cjk->blue_count; bb++ )
       {
-        AF_CJKBlue    blue = cjk->blues + bb;
-        FT_Bool       is_top_right_blue, is_major_dir;
+        AF_CJKBlue  blue = cjk->blues + bb;
+        FT_Bool     is_top_right_blue, is_major_dir;
+
 
         /* skip inactive blue zones (i.e., those that are too small) */
         if ( !( blue->flags & AF_CJK_BLUE_ACTIVE ) )
@@ -1187,8 +1204,9 @@
         /* zone, check for left edges                                      */
         /*                                                                 */
         /* of course, that's for TrueType                                  */
-        is_top_right_blue  = FT_BOOL( ( ( blue->flags & AF_CJK_BLUE_IS_TOP )   != 0 ) ||
-                                      ( ( blue->flags & AF_CJK_BLUE_IS_RIGHT ) != 0 ) );
+        is_top_right_blue  =
+          FT_BOOL( ( ( blue->flags & AF_CJK_BLUE_IS_TOP )   != 0 ) ||
+                   ( ( blue->flags & AF_CJK_BLUE_IS_RIGHT ) != 0 ) );
         is_major_dir = FT_BOOL( edge->dir == axis->major_dir );
 
         /* if it is a top zone, the edge must be against the major    */
@@ -1208,7 +1226,7 @@
             compare = &blue->ref;
 
           dist = edge->fpos - compare->org;
-          if (dist < 0)
+          if ( dist < 0 )
             dist = -dist;
 
           dist = FT_MulFix( dist, scale );
@@ -1227,8 +1245,8 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_cjk_hints_init( AF_GlyphHints    hints,
-                     AF_CJKMetrics    metrics )
+  af_cjk_hints_init( AF_GlyphHints  hints,
+                     AF_CJKMetrics  metrics )
   {
     FT_Render_Mode  mode;
     FT_UInt32       scaler_flags, other_flags;
@@ -1353,11 +1371,11 @@
                              AF_Edge_Flags  base_flags,
                              AF_Edge_Flags  stem_flags )
   {
-    AF_CJKMetrics    metrics  = (AF_CJKMetrics) hints->metrics;
-    AF_CJKAxis       axis     = & metrics->axis[dim];
-    FT_Pos           dist     = width;
-    FT_Int           sign     = 0;
-    FT_Bool          vertical = FT_BOOL( dim == AF_DIMENSION_VERT );
+    AF_CJKMetrics  metrics  = (AF_CJKMetrics) hints->metrics;
+    AF_CJKAxis     axis     = & metrics->axis[dim];
+    FT_Pos         dist     = width;
+    FT_Int         sign     = 0;
+    FT_Bool        vertical = FT_BOOL( dim == AF_DIMENSION_VERT );
 
     FT_UNUSED( base_flags );
     FT_UNUSED( stem_flags );
@@ -2073,9 +2091,9 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_cjk_hints_apply( AF_GlyphHints    hints,
-                      FT_Outline*      outline,
-                      AF_CJKMetrics    metrics )
+  af_cjk_hints_apply( AF_GlyphHints  hints,
+                      FT_Outline*    outline,
+                      AF_CJKMetrics  metrics )
   {
     FT_Error  error;
     int       dim;
