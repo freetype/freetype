@@ -280,6 +280,13 @@
     AF_CJKAxis    axis;
     FT_GlyphSlot  glyph = face->glyph;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_String*    cjk_blue_name[AF_CJK_BLUE_MAX] = { "top", "bottom",
+                                                     "left", "right" };
+    FT_String*    cjk_blue_type_name[AF_CJK_BLUE_TYPE_MAX] = { "filled",
+                                                               "unfilled" };
+#endif
+
 
     /* We compute the blues simply by loading each character from the */
     /* `blue_chars[blues]' string, then computing its extreme points  */
@@ -306,7 +313,8 @@
                                    fill_type == AF_CJK_BLUE_TYPE_FILL );
 
 
-        FT_TRACE5(( "cjk blue %3d/%d: ", bb, fill_type ));
+        FT_TRACE5(( "cjk blue %s/%s\n", cjk_blue_name[bb],
+                                        cjk_blue_type_name[fill_type] ));
 
 
         for ( ; p < limit && *p; p++ )
@@ -317,16 +325,22 @@
           FT_Vector*  points;
 
 
-          FT_TRACE5(( "0x%lX", *p ));
+          FT_TRACE5(( "  U+%lX...", *p ));
 
           /* load the character in the face -- skip unknown or empty ones */
           glyph_index = FT_Get_Char_Index( face, *p );
           if ( glyph_index == 0 )
+          {
+            FT_TRACE5(( "unavailable\n" ));
             continue;
+          }
 
           error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
           if ( error || glyph->outline.n_points <= 0 )
+          {
+            FT_TRACE5(( "no outline\n" ));
             continue;
+          }
 
           /* now compute min or max point indices and coordinates */
           points     = glyph->outline.points;
@@ -406,7 +420,7 @@
                 best_last  = last;
               }
             }
-            FT_TRACE5(( "%5ld, ", best_pos ));
+            FT_TRACE5(( "best_pos=%5ld\n", best_pos ));
           }
 
           if ( fill )
@@ -414,8 +428,6 @@
           else
             flats[num_flats++] = best_pos;
         }
-
-        FT_TRACE5(( "\n" ));
       }
 
       if ( num_flats == 0 && num_fills == 0 )
@@ -479,8 +491,8 @@
       else if ( AF_CJK_BLUE_RIGHT == bb )
         blue->flags |= AF_CJK_BLUE_IS_RIGHT;
 
-      FT_TRACE5(( "-- cjk ref = %ld shoot = %ld\n",
-                  *blue_ref, *blue_shoot ));
+      FT_TRACE5(( "-- cjk %s bluezone ref = %ld shoot = %ld\n",
+                  cjk_blue_name[bb], *blue_ref, *blue_shoot ));
     }
 
     return;
