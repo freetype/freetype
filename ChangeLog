@@ -1,3 +1,11 @@
+2011-05-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Automake component `builds/unix/install-sh' is removed.
+
+	* builds/unix/install-sh: Removed.  It is not needed to
+	include repository, because autogen.sh installs it.
+	* builds/unix/.gitignore: Register install-sh.
+
 2011-05-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[autofit] Make trace message for CJK bluezone more verbose.
