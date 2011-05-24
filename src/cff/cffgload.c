@@ -2706,7 +2706,7 @@
                                               glyph_index );
 
       if ( fd_index >= cff->num_subfonts ) 
-        fd_index = cff->num_subfonts - 1;
+        fd_index = (FT_Byte)( cff->num_subfonts - 1 );
 
       top_upm = cff->top_font.font_dict.units_per_em;
       sub_upm = cff->subfonts[fd_index]->font_dict.units_per_em;

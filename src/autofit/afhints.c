@@ -420,6 +420,8 @@
     FT_UNUSED( hints );
     FT_UNUSED( dimension );
     FT_UNUSED( num_segments );
+
+    return 0;
   }
 
 
@@ -433,6 +435,8 @@
     FT_UNUSED( dimension );
     FT_UNUSED( idx );
     FT_UNUSED( offset );
+
+    return 0;
   }
 
 

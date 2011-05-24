@@ -1,3 +1,14 @@
+2011-05-24  Daniel Zimmermann  <netzimme@googlemail.com>
+
+	Reduce warnings for MS Visual Studio 2010.
+
+	* src/autofit/afhints.c (af_glyph_hints_get_num_segments,
+	af_glyph_hints_get_segment_offset) [!FT_DEBUG_AUTOFIT]: Provide
+	return value.
+	* src/cff/cffgload.c (cff_slot_load): Add cast.
+	* src/truetype/ttobjs.c (tt_check_trickyness_sfnt_ids): Use proper
+	loop variable type.
+
 2011-05-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Automake component `builds/unix/install-sh' is removed.

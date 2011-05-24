@@ -320,10 +320,11 @@
       }
     };
 
-    FT_ULong  checksum;
-    int       num_matched_ids[TRICK_SFNT_IDS_NUM_FACES];
-    FT_Bool   has_cvt, has_fpgm, has_prep;
-    int       i, j, k;
+    FT_ULong   checksum;
+    int        num_matched_ids[TRICK_SFNT_IDS_NUM_FACES];
+    FT_Bool    has_cvt, has_fpgm, has_prep;
+    FT_UShort  i;
+    int        j, k;
 
 
     FT_MEM_SET( num_matched_ids, 0,
