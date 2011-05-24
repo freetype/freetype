@@ -226,10 +226,12 @@ FT_BEGIN_HEADER
   /*      Left side bearing for vertical layout.                           */
   /*                                                                       */
   /*    vertBearingY ::                                                    */
-  /*      Top side bearing for vertical layout.                            */
+  /*      Top side bearing for vertical layout.  Larger positive values    */
+  /*      mean further below the vertical glyph origin.                    */
   /*                                                                       */
   /*    vertAdvance ::                                                     */
-  /*      Advance height for vertical layout.                              */
+  /*      Advance height for vertical layout.  Positive values mean the    */
+  /*      glyph has a positive advance downward.                           */
   /*                                                                       */
   /* <Note>                                                                */
   /*    If not disabled with @FT_LOAD_NO_HINTING, the values represent     */
