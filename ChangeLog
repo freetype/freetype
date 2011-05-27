@@ -1,3 +1,17 @@
+2011-05-27  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve tracing of hinting process.
+
+	* src/autofit/aflatin.c (af_latin_hint_edges): Add tracing message
+	`ADJUST'.
+
+2011-05-26  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix trace message.
+
+	* src/autofit/aflatin.c (af_latin_hint_edges): Show correct value in
+	tracing message.
+
 2011-05-24  Daniel Zimmermann  <netzimme@googlemail.com>
 
 	Reduce warnings for MS Visual Studio 2010.

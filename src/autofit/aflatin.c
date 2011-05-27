@@ -1968,7 +1968,13 @@
                     (AF_Edge_Flags)edge2->flags );
 
         if ( edge2->flags & AF_EDGE_DONE )
+        {
+          FT_TRACE5(( "  ADJUST: edge %d (pos=%.2f) moved to %.2f\n",
+                      edge - edges, edge->pos / 64.0,
+                      ( edge2->pos - cur_len ) / 64.0 ));
+
           edge->pos = edge2->pos - cur_len;
+        }
 
         else if ( cur_len < 96 )
         {
@@ -2149,11 +2155,11 @@
         }
         else if ( !anchor )
         {
+          edge->pos = FT_PIX_ROUND( edge->opos );
+          anchor    = edge;
           FT_TRACE5(( "  SERIF_ANCHOR: edge %d (opos=%.2f)"
                       " snapped to (%.2f)\n",
                       edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
-          edge->pos = FT_PIX_ROUND( edge->opos );
-          anchor    = edge;
         }
         else
         {
