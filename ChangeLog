@@ -16,6 +16,20 @@
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Use `height_org'
 	and `width_org' conditionalized.
 
+2011-05-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[mac] Conditionalize the inclusion of "AvailabilityMacros.h".
+
+	The native SDK on earliest Mac OS X (10.0-10.1) did not have 
+	"AvailabilityMacros.h".  To prevent the inclusion of missing
+	header file, ECANCELED (introduced in 10.2) in POSIX header
+	file <errno.h> is checked to detect the system version.
+
+	* include/freetype/config/ftconfig.h: Conditionalize the
+	inclusion of "AvailabilityMacros.h".
+	* builds/unix/ftconfig.in: Ditto.
+	* builds/vms/ftconfig.h: Ditto.
+
 2011-05-27  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve tracing of hinting process.
