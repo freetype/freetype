@@ -1,5 +1,12 @@
 2011-05-30  Werner Lemberg  <wl@gnu.org>
 
+	Fix g++ 4.6 compilation.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_segments,
+	af_glyph_hints_dump_edges): Use cast.
+
+2011-05-30  Werner Lemberg  <wl@gnu.org>
+
 	Fix gcc 4.6 compiler warnings.
 
 	* src/autofit/afcjk.c (af_cjk_metrics_init_blues): Use casts and

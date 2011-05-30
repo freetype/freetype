@@ -267,7 +267,7 @@
                  AF_INDEX_NUM( seg->serif, segments ),
                  seg->height,
                  seg->height - ( seg->max_coord - seg->min_coord ),
-                 af_edge_flags_to_string( seg->flags ) );
+                 af_edge_flags_to_string( (AF_Edge_Flags)seg->flags ) );
       }
       printf( "\n" );
     }
@@ -380,7 +380,7 @@
                  edge->blue_edge ? 'y' : 'n',
                  edge->opos / 64.0,
                  edge->pos / 64.0,
-                 af_edge_flags_to_string( edge->flags ) );
+                 af_edge_flags_to_string( (AF_Edge_Flags)edge->flags ) );
       }
       printf( "\n" );
     }
