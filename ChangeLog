@@ -1,3 +1,14 @@
+2011-05-30  Werner Lemberg  <wl@gnu.org>
+
+	Fix gcc 4.6 compiler warnings.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_blues): Use casts and
+	remove unused variables.
+	* src/autofit/aflatin.c (af_latin_hints_compute_edges): Comment out
+	`up_dir'.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Use `height_org'
+	and `width_org' conditionalized.
+
 2011-05-27  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve tracing of hinting process.

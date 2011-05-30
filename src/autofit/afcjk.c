@@ -281,10 +281,16 @@
     FT_GlyphSlot  glyph = face->glyph;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-    FT_String*    cjk_blue_name[AF_CJK_BLUE_MAX] = { "top", "bottom",
-                                                     "left", "right" };
-    FT_String*    cjk_blue_type_name[AF_CJK_BLUE_TYPE_MAX] = { "filled",
-                                                               "unfilled" };
+    FT_String*  cjk_blue_name[AF_CJK_BLUE_MAX] = {
+      (FT_String*)"top",
+      (FT_String*)"bottom",
+      (FT_String*)"left",
+      (FT_String*)"right"
+    };
+    FT_String*  cjk_blue_type_name[AF_CJK_BLUE_TYPE_MAX] = {
+      (FT_String*)"filled",
+      (FT_String*)"unfilled"
+    };
 #endif
 
 
@@ -321,7 +327,7 @@
         {
           FT_UInt     glyph_index;
           FT_Pos      best_pos; /* same as points.y */
-          FT_Int      best_point, best_first, best_last;
+          FT_Int      best_point;
           FT_Vector*  points;
 
 
@@ -346,8 +352,6 @@
           points     = glyph->outline.points;
           best_point = -1;
           best_pos   = 0;  /* make compiler happy */
-          best_first = 0;  /* ditto */
-          best_last  = 0;  /* ditto */
 
           {
             FT_Int  nn;
@@ -359,7 +363,6 @@
                   nn < glyph->outline.n_contours;
                   first = last + 1, nn++ )
             {
-              FT_Int  old_best_point = best_point;
               FT_Int  pp;
 
 
@@ -412,12 +415,6 @@
 
               default:
                 ;
-              }
-
-              if ( best_point != old_best_point )
-              {
-                best_first = first;
-                best_last  = last;
               }
             }
             FT_TRACE5(( "best_pos=%5ld\n", best_pos ));

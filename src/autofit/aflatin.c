@@ -1046,7 +1046,9 @@
     AF_Segment    segment_limit = segments + axis->num_segments;
     AF_Segment    seg;
 
+#if 0
     AF_Direction  up_dir;
+#endif
     FT_Fixed      scale;
     FT_Pos        edge_distance_threshold;
     FT_Pos        segment_length_threshold;
@@ -1057,8 +1059,10 @@
     scale = ( dim == AF_DIMENSION_HORZ ) ? hints->x_scale
                                          : hints->y_scale;
 
+#if 0
     up_dir = ( dim == AF_DIMENSION_HORZ ) ? AF_DIR_UP
                                           : AF_DIR_RIGHT;
+#endif
 
     /*
      *  We ignore all segments that are less than 1 pixel in length
