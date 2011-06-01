@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    ANSI-specific configuration file (specification only).               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2007, 2008, 2010 by       */
+/*  Copyright 1996-2004, 2006-2008, 2010-2011 by                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -127,7 +127,7 @@ FT_BEGIN_HEADER
 #if ( defined( __APPLE__ ) && !defined( DARWIN_NO_CARBON ) ) || \
     ( defined( __MWERKS__ ) && defined( macintosh )        )
   /* no Carbon frameworks for 64bit 10.4.x */
-  /* AvailabilityMacros.h was introduced since Mac OS X 10.2,      */
+  /* AvailabilityMacros.h is available since Mac OS X 10.2,        */
   /* so guess the system version by maximum errno before inclusion */
 #include <errno.h>
 #ifdef ECANCELED /* defined since 10.2 */
