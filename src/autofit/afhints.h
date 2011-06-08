@@ -282,9 +282,8 @@ FT_BEGIN_HEADER
     FT_Pos      score;       /* used during stem matching  */
     FT_Pos      len;         /* used during stem matching  */
 
-    AF_Point    first;       /* first point in edge segment             */
-    AF_Point    last;        /* last point in edge segment              */
-    AF_Point*   contour;     /* ptr to first point of segment's contour */
+    AF_Point    first;       /* first point in edge segment */
+    AF_Point    last;        /* last point in edge segment  */
 
   } AF_SegmentRec;
 

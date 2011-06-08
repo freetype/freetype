@@ -1,3 +1,11 @@
+2011-06-08  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Remove unused structure member.
+
+	* src/autofit/afhints.h (AF_SegmentRec): Remove `contour'. 
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments),
+	src/autofit/aflatin2.c (af_latin2_hints_compute_segments): Updated.
+
 2011-05-30  Werner Lemberg  <wl@gnu.org>
 
 	Fix g++ 4.6 compilation.

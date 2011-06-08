@@ -796,7 +796,6 @@
         segment->dir       = first->out_dir;
         segment->first     = first;
         segment->last      = point;
-        segment->contour   = contour;
         segment->pos       = (FT_Short)(( min_u + max_u ) >> 1);
         segment->min_coord = (FT_Short) min_v;
         segment->max_coord = (FT_Short) max_v;
