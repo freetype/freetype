@@ -194,8 +194,7 @@
                     " too negative offset moving all GID"
                     " below defined range: 0x%04x\n",
                     offset & 0xFFFFU ));
-        if ( valid->root->level >= FT_VALIDATE_PARANOID )
-          FT_INVALID_OFFSET;
+        GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
       }
       else if ( ( offset & 0x3FFF0000UL ) == 0x0000000UL )
       {
@@ -206,15 +205,13 @@
                     " too large offset moving all GID"
                     " over defined range: 0x%04x\n",
                     offset & 0xFFFFU ));
-        if ( valid->root->level >= FT_VALIDATE_PARANOID )
-          FT_INVALID_OFFSET;
+        GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
       }
 
       GXV_TRACE(( "ligature action table includes"
                   " invalid offset to add to 16-bit GID:"
                   " 0x%08x\n", offset ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_OFFSET;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
     }
   }
 
@@ -282,9 +279,8 @@
 
         GXV_LIMIT_CHECK( 2 );
         lig_gid = FT_NEXT_USHORT( p );
-        if ( valid->root->level >= FT_VALIDATE_PARANOID &&
-             lig_gid < valid->face->num_glyphs          )
-          FT_INVALID_GLYPH_ID;
+        if ( lig_gid < valid->face->num_glyphs )
+          GXV_SET_ERR_IF_PARANOID( FT_INVALID_GLYPH_ID );
       }
     }
 

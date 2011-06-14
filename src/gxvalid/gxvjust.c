@@ -77,8 +77,7 @@
     GXV_TRACE(( "just table includes too large %s"
                 " GID=%d > %d (in maxp)\n",
                 msg_tag, gid, valid->face->num_glyphs ));
-    if ( valid->root->level >= FT_VALIDATE_PARANOID )
-      FT_INVALID_GLYPH_ID;
+    GXV_SET_ERR_IF_PARANOID( FT_INVALID_GLYPH_ID );
   }
 
 
@@ -113,13 +112,12 @@
 #endif
 
     /* According to Apple spec, only 7bits in justClass is used */
-    if ( valid->root->level >= FT_VALIDATE_PARANOID &&
-         ( justClass & 0xFFFFFF80 ) != 0            )
+    if ( ( justClass & 0xFFFFFF80 ) != 0 )
     {
       GXV_TRACE(( "just table includes non-zero value"
                   " in unused justClass higher bits"
                   " of WidthDeltaPair" ));
-      FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
 
     valid->subtable_length = p - table;
@@ -202,12 +200,11 @@
 #endif
     decomposedCount = FT_NEXT_USHORT( p );
 
-    if ( valid->root->level >= FT_VALIDATE_PARANOID &&
-         lowerLimit >= upperLimit                   )
+    if ( lowerLimit >= upperLimit )
     {
       GXV_TRACE(( "just table includes invalid range spec:"
                   " lowerLimit(%d) > upperLimit(%d)\n"     ));
-      FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
 
     for ( i = 0; i < decomposedCount; i++ )
@@ -303,7 +300,7 @@
     else if ( noStretchValue > maximumLimit )
       GXV_TRACE(( "type4:noStretchValue 0x%08x > maximumLimit 0x%08x\n",
                   noStretchValue, maximumLimit ));
-    else if ( valid->root->level < FT_VALIDATE_PARANOID )
+    else if ( !IS_PARANOID_VALIDATION )
       return;
 
     FT_INVALID_DATA;
@@ -353,9 +350,8 @@
     actionLength = FT_NEXT_ULONG( p );
 
     /* actionClass is related with justClass using 7bit only */
-    if ( valid->root->level >= FT_VALIDATE_PARANOID &&
-         ( actionClass & 0xFF80 ) != 0              )
-      FT_INVALID_DATA;
+    if ( ( actionClass & 0xFF80 ) != 0 )
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
 
     if ( actionType == 0 )
       gxv_just_actSubrecord_type0_validate( p, limit, valid );

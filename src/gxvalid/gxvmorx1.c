@@ -140,8 +140,7 @@
     if ( 0 < reserved )
     {
       GXV_TRACE(( " non-zero bits found in reserved range\n" ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
 
     GXV_TRACE(( "markIndex = %d, currentIndex = %d\n",

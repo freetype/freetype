@@ -1,5 +1,34 @@
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] Cleanup.
+
+	Some invalid, overrunning, unrecommended non-zero values
+	are cared in paranoid validation mode only.  There are
+	many lines looking like:
+
+	  if ( valid->root->level >= FT_VALIDATE_PARANOID )
+	    FT_INVALID_xxx;
+
+	To simplify them, GXV_SET_ERR_IF_PARANOID( err ) is
+	introduced for more paranoid validation in future.
+
+	* src/gxvalid/gxvcommn.h (IS_PARANOID_VALIDATION):
+	New macro to assure valid->root->level is more or
+	equal to FT_VALIDATE_PARANOID.  (GXV_SET_ERR_IF_PARANOID):
+	New macro to raise an error if in paranoid validation.
+	* src/gxvalid/gxvcommn.c: Use GXV_SET_ERR_IF_PARANOID().
+	* src/gxvalid/gxvfeat.c: Ditto.
+	* src/gxvalid/gxvjust.c: Ditto.
+	* src/gxvalid/gxvkern.c: Ditto.
+	* src/gxvalid/gxvmort.c: Ditto.
+	* src/gxvalid/gxvmort0.c: Ditto.
+	* src/gxvalid/gxvmort1.c: Ditto.
+	* src/gxvalid/gxvmort2.c: Ditto.
+	* src/gxvalid/gxvmorx1.c: Ditto.
+	* src/gxvalid/gxvmorx2.c: Ditto.
+
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[gxvalid] Fix gcc4.6 compiler warnings in gxvtrak.c.
 
 	* src/gxvalid/gxvtrak.c (gxv_trak_trackTable_validate):

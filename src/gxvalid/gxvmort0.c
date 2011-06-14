@@ -102,23 +102,20 @@
     {
       GXV_TRACE(( "  [odd] a glyph is marked as the first and last"
                   "  in Indic rearrangement\n" ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
 
     if ( markFirst > 0 && dontAdvance > 0 )
     {
       GXV_TRACE(( "  [odd] the first glyph is marked as dontAdvance"
                   " in Indic rearrangement\n" ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
 
     if ( 0 < reserved )
     {
       GXV_TRACE(( " non-zero bits found in reserved range\n" ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
     else
       GXV_TRACE(( "\n" ));

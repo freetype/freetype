@@ -491,8 +491,7 @@
     {
       GXV_TRACE(( "maxGID=%d, but glyphCount=%d\n",
                   valid->face->num_glyphs, glyphCount ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_GLYPH_ID;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_GLYPH_ID );
     }
 
     if ( flags != 0 )

@@ -163,8 +163,7 @@
     if ( 0 < reserved )
     {
       GXV_TRACE(( " non-zero bits found in reserved range\n" ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
 
     gxv_mort_subtable_type1_offset_to_subst_validate( markOffset,
@@ -208,8 +207,7 @@
         GXV_TRACE(( "substTable include a strange gid[%d]=%d >"
                     " out of define range (%d..%d)\n",
                     i, dst_gid, valid->min_gid, valid->max_gid ));
-        if ( valid->root->level >= FT_VALIDATE_PARANOID )
-          FT_INVALID_GLYPH_ID;
+        GXV_SET_ERR_IF_PARANOID( FT_INVALID_GLYPH_ID );
       }
     }
 

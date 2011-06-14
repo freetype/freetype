@@ -155,8 +155,7 @@
                   ligActionOffset, lat_base - p ));
 
       /* FontValidator, ftxvalidator, ftxdumperfuser warn but continue */
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_OFFSET;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
     }
     else if ( lat_limit < p )
     {
@@ -164,8 +163,7 @@
                   ligActionOffset, p - lat_limit ));
 
       /* FontValidator, ftxvalidator, ftxdumperfuser warn but continue */
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_OFFSET;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
     }
     else
     {
@@ -192,8 +190,7 @@
                     " 2 x offset < ligatureTable (%d byte rewind)\n",
                      offset, optdata->ligatureTable - offset * 2 ));
 
-        if ( valid->root->level >= FT_VALIDATE_PARANOID )
-          FT_INVALID_OFFSET;
+        GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
       } else if ( offset * 2 >
                   optdata->ligatureTable + optdata->ligatureTable_length )
       {
@@ -204,8 +201,7 @@
                      optdata->ligatureTable + optdata->ligatureTable_length
                      - offset * 2 ));
 
-        if ( valid->root->level >= FT_VALIDATE_PARANOID )
-          FT_INVALID_OFFSET;
+        GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
       }
     }
   }
@@ -268,9 +264,8 @@
         GXV_LIMIT_CHECK( 2 );
         lig_gid = FT_NEXT_USHORT( p );
 
-        if ( valid->root->level >= FT_VALIDATE_PARANOID &&
-             valid->face->num_glyphs < lig_gid          )
-          FT_INVALID_GLYPH_ID;
+        if ( valid->face->num_glyphs < lig_gid )
+          GXV_SET_ERR_IF_PARANOID( FT_INVALID_GLYPH_ID );
       }
     }
     GXV_EXIT;

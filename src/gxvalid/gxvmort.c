@@ -47,16 +47,14 @@
       GXV_TRACE(( "featureType %d is out of registered range, "
                   "setting %d is unchecked\n",
                   f->featureType, f->featureSetting ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
     else if ( !gxv_feat_registry[f->featureType].existence )
     {
       GXV_TRACE(( "featureType %d is within registered area "
                   "but undefined, setting %d is unchecked\n",
                   f->featureType, f->featureSetting ));
-      if ( valid->root->level >= FT_VALIDATE_PARANOID )
-        FT_INVALID_DATA;
+      GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
     }
     else
     {
@@ -74,8 +72,7 @@
       if ( f->featureSetting > nSettings_max )
       {
         GXV_TRACE(( "out of defined range %d", nSettings_max ));
-        if ( valid->root->level >= FT_VALIDATE_PARANOID )
-          FT_INVALID_DATA;
+        GXV_SET_ERR_IF_PARANOID( FT_INVALID_DATA );
       }
       GXV_TRACE(( "\n" ));
     }
