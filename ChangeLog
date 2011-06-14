@@ -1,5 +1,43 @@
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] Fix gcc4.6 compiler warnings in gxvmorx*.c.
+
+	* src/gxvalid/gxvmorx.c (gxv_morx_subtables_validate):
+	Conditionalize unvalidated variable `subFeatureFlags'.
+	(gxv_morx_chain_validate): Conditionalize unvalidated
+	variable `defaultFlags'.
+
+	* src/gxvalid/gxmorx0.c
+	(gxv_morx_subtable_type0_entry_validate):
+	Conditionalize unvalidated variables; `markFirst',
+	`dontAdvance', `markLast', `verb'.
+
+	* src/gxvalid/gxmorx1.c
+	(gxv_morx_subtable_type1_entry_validate): Conditionalize
+	unvalidated variables; `setMark', `dontAdvance'.
+
+	* src/gxvalid/gxvmorx2.c
+	(gxv_morx_subtable_type2_ligActionOffset_validate):
+	Conditionalize unvalidated variables; `last', `store'.
+	Checking for overrunning offset is added.
+	(gxv_morx_subtable_type2_entry_validate):
+	Conditionalize unvalidated variables; `setComponent',
+	`dontAdvance', `performAction'.
+	(gxv_morx_subtable_type2_ligatureTable_validate):
+	Check if the GID for ligature does not exceed the
+	max GID in `maxp' table.
+
+	* src/gxvalid/gxvmort5.c
+	(gxv_morx_subtable_type5_InsertList_validate):
+	Conditionalize unvalidated loading of `insert_glyphID'
+	array.  (gxv_morx_subtable_type5_entry_validate):
+	Conditionalize unvalidated variables; `setMark',
+	`dontAdvance', `currentIsKashidaLike',
+	`markedIsKashidaLike', `currentInsertBefore',
+	`markedInsertBefore'.
+
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[gxvalid] Fix gcc4.6 compiler warnings in gxvmort*.c.
 
 	* src/gxvalid/gxvmort.c (gxv_mort_subtables_validate):
