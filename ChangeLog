@@ -1,5 +1,34 @@
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Fix g++4.6 compiler warnings in module drivers.
+
+	The background is same with previous commit.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints):
+	Init `points'.  (TT_Vary_Get_Glyph_Deltas): Init
+	`delta_xy'.  (TT_Get_MM_Var): Init `mmvar'.
+	* src/type1/t1load.c (T1_Get_MM_Var): Ditto.
+	* src/cff/cffdrivr.c (cff_ps_get_font_info): Init
+	`font_info'.
+	* src/cff/cffload.c (cff_index_get_pointers): Init `t'.
+	(cff_font_load): Init `sub'.
+	* src/cff/cffobjs.c (cff_size_init): Init `internal'.
+	(cff_face_init): Init `cff'.
+	* src/pfr/pfrload.c (pfr_extra_item_load_stem_snaps):
+	Init `snaps'.
+	* src/pcf/pcfread.c (pcf_get_properties): Init `properties'.
+	(pcf_get_bitmaps): Init `offsets'.  (pcf_get_encodings):
+	Init `tmpEncoding'.
+	* src/sfnt/ttload.c (tt_face_load_gasp): Init `gaspranges'.
+	* src/sfnt/ttsbit.c (Load_SBit_Image): Init `components'.
+	* src/cache/ftcmru.c (FTC_MruList_New): Init `node'.
+	* src/gzip/ftgzip.c (FT_Stream_OpenGzip): Init `zip' and
+	`zip_buff'.
+	* src/lzw/ftlzw.c (FT_Stream_OpenLZW): Init `zip'.
+	* src/bzip2/ftbzip2.c (FT_Stream_OpenBzip2): Init `zip'.
+
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[base] Fix g++4.6 compiler warnings in src/base/*.c.
 
 	Passing uninitialized pointer to FT_NEW() families is

@@ -161,7 +161,7 @@
     {
       CFF_Face      face     = (CFF_Face)cffsize->face;
       CFF_Font      font     = (CFF_Font)face->extra.data;
-      CFF_Internal  internal;
+      CFF_Internal  internal = NULL;
 
       PS_PrivateRec  priv;
       FT_Memory      memory = cffsize->face->memory;
@@ -568,7 +568,7 @@
 
     /* now load and parse the CFF table in the file */
     {
-      CFF_Font         cff;
+      CFF_Font         cff = NULL;
       CFF_FontRecDict  dict;
       FT_Memory        memory = cffface->memory;
       FT_Int32         flags;

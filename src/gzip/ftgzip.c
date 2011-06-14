@@ -588,7 +588,7 @@
   {
     FT_Error     error;
     FT_Memory    memory = source->memory;
-    FT_GZipFile  zip;
+    FT_GZipFile  zip = NULL;
 
 
     /*
@@ -628,7 +628,7 @@
 
       if ( zip_size != 0 && zip_size < 40 * 1024 )
       {
-        FT_Byte*  zip_buff;
+        FT_Byte*  zip_buff = NULL;
 
 
         if ( !FT_ALLOC( zip_buff, zip_size ) )

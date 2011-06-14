@@ -456,7 +456,7 @@
   {
     FT_Error      error;
     FT_Memory     memory = source->memory;
-    FT_BZip2File  zip;
+    FT_BZip2File  zip = NULL;
 
 
     /*
