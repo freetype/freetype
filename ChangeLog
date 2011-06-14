@@ -1,5 +1,29 @@
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[base] Fix g++4.6 compiler warnings in src/base/*.c.
+
+	Passing uninitialized pointer to the buffer allocator is
+	not problematic theoretically (as far as the returned
+	pointer is checked before writing), but g++4.6 dislikes
+	it and warns by -Wuninitialized.  Initialize them by NULL.
+
+	* src/base/ftobjs.c (FT_Stream_New): Init `stream'.
+	(new_memory_stream): Ditto.
+	(FT_New_GlyphSlot): Init `slot'.
+	(FT_CMap_New): Init `cmap'.
+	(open_face_PS_from_sfnt_stream): Init `sfnt_ps'.
+	(Mac_Read_POST_Resource): Init `pfb_data'.
+	(Mac_Read_sfnt_Resource): Init `sfnt_data'.
+	* src/base/ftrfork.c (FT_Raccess_Get_DataOffsets):
+	Init `offsets_internal' and `ref'.
+	(raccess_guess_darwin_hfsplus): Init `newpath'.
+	(raccess_guess_darwin_newvfs): Ditto.
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer):
+	Init `buffer'.
+	* src/base/ftstroke.c (FT_Stroker_New): Init `stroker'.
+
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[gxvalid] Cleanup.
 
 	Some invalid, overrunning, unrecommended non-zero values

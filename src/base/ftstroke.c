@@ -718,7 +718,7 @@
   {
     FT_Error    error;
     FT_Memory   memory;
-    FT_Stroker  stroker;
+    FT_Stroker  stroker = NULL;
 
 
     if ( !library )
