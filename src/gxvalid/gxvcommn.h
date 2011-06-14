@@ -51,6 +51,17 @@
 FT_BEGIN_HEADER
 
 
+  /* some variables are not evaluated or only used in trace */
+
+#ifdef  FT_DEBUG_LEVEL_TRACE
+#define GXV_LOAD_TRACE_VARS
+#else
+#undef  GXV_LOAD_TRACE_VARS
+#endif
+
+#undef GXV_LOAD_UNUSED_VARS /* debug purpose */
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -233,6 +244,9 @@ FT_BEGIN_HEADER
     GXV_Lookup_Value_Validate_Func  lookupval_func;
     GXV_Lookup_Fmt4_Transit_Func    lookupfmt4_trans;
     FT_Bytes                        lookuptbl_head;
+
+    FT_UShort  min_gid;
+    FT_UShort  max_gid;
 
     GXV_StateTable_ValidatorRec     statetable;
     GXV_XStateTable_ValidatorRec    xstatetable;

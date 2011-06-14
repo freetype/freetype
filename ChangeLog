@@ -1,3 +1,15 @@
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[gxvalid] Preparation to fix gcc4.6 compiler warnings.
+
+	* src/gxvalid/gxvcommn.h (GXV_LOAD_TRACE_VARS): New macro to
+	conditionalize the variable which is only used for trace messages.
+	Automatically set by FT_DEBUG_LEVEL_TRACE.
+	(GXV_LOAD_UNUSED_VARS): New macro to conditionalize the loading of
+	unvalidated variables.  Undefined by default to calm gcc4.6 warning.
+	(GXV_ValidatorRec.{min_gid,max_gid}): New variables to hold defined
+	GID ranges, for the comparison of GID ranges in different subtables.
+
 2011-06-08  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Remove unused structure member.
