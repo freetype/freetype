@@ -2,7 +2,7 @@
 
 	[base] Fix g++4.6 compiler warnings in src/base/*.c.
 
-	Passing uninitialized pointer to the buffer allocator is
+	Passing uninitialized pointer to FT_NEW() families is
 	not problematic theoretically (as far as the returned
 	pointer is checked before writing), but g++4.6 dislikes
 	it and warns by -Wuninitialized.  Initialize them by NULL.
