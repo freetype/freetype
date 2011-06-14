@@ -1,5 +1,31 @@
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] Fix gcc4.6 compiler warnings in gxvjust.c.
+
+	* src/gxvalid/gxvjust.c (gxv_just_check_max_gid):
+	New function to unify the checks of too large GID.
+	(gxv_just_wdp_entry_validate): Conditionalize unvalidated
+	variables; `beforeGrowLimit', `beforeShrinkGrowLimit',
+	`afterGrowLimit', `afterShrinkGrowLimit', `growFlags',
+	`shrinkFlags'.  Additional check for non-zero values in
+	unused storage `justClass' is added.
+	(gxv_just_actSubrecord_type0_validate): Conditionalize
+	unvalidated variable `order'.  GID is checked by
+	gxv_just_check_max_gid().  Additional check for upside-down
+	relationship between `lowerLimit' and `upperLimit' is added.
+	(gxv_just_actSubrecord_type1_validate): GID is checked by
+	gxv_just_check_max_gid().
+	(gxv_just_actSubrecord_type2_validate): Conditionalize
+	unvalidated variable `substThreshhold'.  GID is checked by
+	gxv_just_check_max_gid().
+	(gxv_just_actSubrecord_type5_validate): GID is checked by
+	gxv_just_check_max_gid().
+	(gxv_just_classTable_entry_validate): Conditionalize
+	unvalidated variables; `setMark', `dontAdvance',
+	`markClass', `currentClass'.
+
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[gxvalid] Preparation to fix gcc4.6 compiler warnings.
 
 	* src/gxvalid/gxvcommn.h (GXV_LOAD_TRACE_VARS): New macro to
