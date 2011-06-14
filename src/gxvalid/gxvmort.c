@@ -176,7 +176,9 @@
     {
       FT_UShort  length;
       FT_UShort  coverage;
+#ifdef GXV_LOAD_UNUSED_VARS
       FT_ULong   subFeatureFlags;
+#endif
       FT_UInt    type;
       FT_UInt    rest;
 
@@ -184,7 +186,11 @@
       GXV_LIMIT_CHECK( 2 + 2 + 4 );
       length          = FT_NEXT_USHORT( p );
       coverage        = FT_NEXT_USHORT( p );
+#ifdef GXV_LOAD_UNUSED_VARS
       subFeatureFlags = FT_NEXT_ULONG( p );
+#else
+      p += 4;
+#endif
 
       GXV_TRACE(( "validating chain subtable %d/%d (%d bytes)\n",
                   i + 1, nSubtables, length ));
@@ -204,6 +210,7 @@
       func( p, p + rest, valid );
 
       p += rest;
+      /* TODO: validate subFeatureFlags */
     }
 
     valid->subtable_length = p - table;
@@ -218,7 +225,9 @@
                            GXV_Validator  valid )
   {
     FT_Bytes   p = table;
+#ifdef GXV_LOAD_UNUSED_VARS
     FT_ULong   defaultFlags;
+#endif
     FT_ULong   chainLength;
     FT_UShort  nFeatureFlags;
     FT_UShort  nSubtables;
@@ -227,7 +236,11 @@
     GXV_NAME_ENTER( "mort chain header" );
 
     GXV_LIMIT_CHECK( 4 + 4 + 2 + 2 );
+#ifdef GXV_LOAD_UNUSED_VARS
     defaultFlags  = FT_NEXT_ULONG( p );
+#else
+    p += 4;
+#endif
     chainLength   = FT_NEXT_ULONG( p );
     nFeatureFlags = FT_NEXT_USHORT( p );
     nSubtables    = FT_NEXT_USHORT( p );
@@ -238,6 +251,7 @@
     gxv_mort_subtables_validate( p, table + chainLength, nSubtables, valid );
     valid->subtable_length = chainLength;
 
+    /* TODO: validate defaultFlags */
     GXV_EXIT;
   }
 

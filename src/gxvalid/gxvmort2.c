@@ -171,16 +171,42 @@
     {
       /* validate entry in ligActionTable */
       FT_ULong   lig_action;
+#ifdef GXV_LOAD_UNUSED_VARS
       FT_UShort  last;
       FT_UShort  store;
+#endif
       FT_ULong   offset;
 
 
       lig_action = FT_NEXT_ULONG( p );
+#ifdef GXV_LOAD_UNUSED_VARS
       last   = (FT_UShort)( ( lig_action >> 31 ) & 1 );
       store  = (FT_UShort)( ( lig_action >> 30 ) & 1 );
+#endif
 
+      /* Apple spec defines this offset as a word offset */
       offset = lig_action & 0x3FFFFFFFUL;
+      if ( offset * 2 < optdata->ligatureTable )
+      {
+        GXV_TRACE(( "too short offset 0x%08x:"
+                    " 2 x offset < ligatureTable (%d byte rewind)\n",
+                     offset, optdata->ligatureTable - offset * 2 ));
+
+        if ( valid->root->level >= FT_VALIDATE_PARANOID )
+          FT_INVALID_OFFSET;
+      } else if ( offset * 2 >
+                  optdata->ligatureTable + optdata->ligatureTable_length )
+      {
+        GXV_TRACE(( "too long offset 0x%08x:"
+                    " 2 x offset > ligatureTable + ligatureTable_length"
+                    " (%d byte overrun)\n",
+                     offset,
+                     optdata->ligatureTable + optdata->ligatureTable_length
+                     - offset * 2 ));
+
+        if ( valid->root->level >= FT_VALIDATE_PARANOID )
+          FT_INVALID_OFFSET;
+      }
     }
   }
 
@@ -194,8 +220,10 @@
     FT_Bytes                        limit,
     GXV_Validator                   valid )
   {
+#ifdef GXV_LOAD_UNUSED_VARS
     FT_UShort setComponent;
     FT_UShort dontAdvance;
+#endif
     FT_UShort offset;
 
     FT_UNUSED( state );
@@ -203,8 +231,10 @@
     FT_UNUSED( limit );
 
 
+#ifdef GXV_LOAD_UNUSED_VARS
     setComponent = (FT_UShort)( ( flags >> 15 ) & 1 );
     dontAdvance  = (FT_UShort)( ( flags >> 14 ) & 1 );
+#endif
 
     offset = (FT_UShort)( flags & 0x3FFFU );
 
@@ -237,6 +267,10 @@
 
         GXV_LIMIT_CHECK( 2 );
         lig_gid = FT_NEXT_USHORT( p );
+
+        if ( valid->root->level >= FT_VALIDATE_PARANOID &&
+             valid->face->num_glyphs < lig_gid          )
+          FT_INVALID_GLYPH_ID;
       }
     }
     GXV_EXIT;
