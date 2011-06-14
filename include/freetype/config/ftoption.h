@@ -623,7 +623,7 @@ FT_BEGIN_HEADER
   /* composite flags array which can be used to disambiguate, but old      */
   /* fonts will not have them.                                             */
   /*                                                                       */
-  /*   http://partners.adobe.com/asn/developer/opentype/glyf.html          */
+  /*   http://www.microsoft.com/typography/otspec/glyf.htm                 */
   /*   http://fonts.apple.com/TTRefMan/RM06/Chap6glyf.html                 */
   /*                                                                       */
 #undef TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED
