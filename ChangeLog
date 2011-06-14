@@ -1,5 +1,13 @@
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] Fix gcc4.6 compiler warnings in gxvtrak.c.
+
+	* src/gxvalid/gxvtrak.c (gxv_trak_trackTable_validate):
+	Check different entries pointing same traking value.
+	(gxv_trak_validate): Remove unused variable `table_size'.
+
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[gxvalid] Fix gcc4.6 compiler warnings in gxvmorx*.c.
 
 	* src/gxvalid/gxvmorx.c (gxv_morx_subtables_validate):
