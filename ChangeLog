@@ -1,5 +1,26 @@
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] Fix gcc4.6 compiler warnings in gxvkern.c.
+
+	* src/gxvalid/gxvkern.c
+	(gxv_kern_subtable_fmt0_pairs_validate): Conditionalize
+	unvalidated variable `kernValue'.
+	(gxv_kern_subtable_fmt1_entry_validate): Conditionalize
+	unvalidated variables; `push', `dontAdvance', `kernAction',
+	`kernValue'.
+	(gxv_kern_coverage_new_apple_validate): Conditionalize
+	trace-only variables; `kernVertical', `kernCrossStream',
+	`kernVariation'.
+	(gxv_kern_coverage_classic_apple_validate): Conditionalize
+	trace-only variables; `horizontal', `cross_stream'.
+	(gxv_kern_coverage_classic_microsoft_validate):
+	Conditionalize trace-only variables; `horizontal',
+	`minimum', `cross_stream', `override'.
+	(gxv_kern_subtable_validate): Conditionalize trace-only
+	variables; `version', `tupleIndex'.
+
+2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[gxvalid] Fix gcc4.6 compiler warnings in gxvjust.c.
 
 	* src/gxvalid/gxvjust.c (gxv_just_check_max_gid):
