@@ -1,5 +1,11 @@
 2011-06-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] make the `prop' validation tracing verbose.
+
+	* src/gxvalid/gxvprop.c: Add tracing messages for errors.
+
+2011-06-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[autogen.sh] Reflect environment variable LIBTOOLIZE.
 
 2011-06-18  Werner Lemberg <wl@gnu.org>
