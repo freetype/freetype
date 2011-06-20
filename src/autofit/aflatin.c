@@ -665,6 +665,9 @@
           if ( delta1 < 0 )
             delta2 = -delta2;
 
+          blue->ref.fit   = FT_PIX_ROUND( blue->ref.cur );
+          blue->shoot.fit = blue->ref.fit + delta2;
+
 #else
 
           /* simplified version due to abs(dist) <= 48 */
@@ -682,10 +685,10 @@
           if ( dist < 0 )
             delta2 = -delta2;
 
-#endif
-
           blue->ref.fit   = FT_PIX_ROUND( blue->ref.cur );
-          blue->shoot.fit = blue->ref.fit + delta2;
+          blue->shoot.fit = blue->ref.fit - delta2;
+
+#endif
 
           blue->flags |= AF_LATIN_BLUE_ACTIVE;
         }
