@@ -3,6 +3,16 @@
 	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Fix change
 	from 2011-05-04.
 
+2011-06-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[gxvalid] make the `prop' validation tracing verbose.
+
+	* src/gxvalid/gxvprop.c: Add tracing messages for errors.
+
+2011-06-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[autogen.sh] Reflect environment variable LIBTOOLIZE.
+
 2011-06-18  Werner Lemberg <wl@gnu.org>
 
 	Update license documentation.
