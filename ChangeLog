@@ -401,12 +401,12 @@
 
 2011-04-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[truetype] Recalculate the sfnt table checksum always.
+	[truetype] Always recalculate the sfnt table checksum.
 
 	* src/truetype/ttobjs.c (tt_get_sfnt_checksum): Recalculate
-	the sfnt table checksum even if non-zero value is writte in
+	the sfnt table checksum even if non-zero value is written in
 	the TrueType font header.  Some bad PDF generators write
-	wrong values.  For detail, see examples and benchmark tests
+	wrong values.  For details see examples and benchmark tests
 	of the latency by recalculation:
 	http://lists.gnu.org/archive/html/freetype-devel/2011-04/msg00091.html
 	http://lists.gnu.org/archive/html/freetype-devel/2011-04/msg00096.html
@@ -418,7 +418,7 @@
 	* src/truetype/ttobjs.c (tt_check_trickyness_sfnt_ids):
 	Add 8 checksum sets for NEC FA family.  For the tricky fonts
 	without some tables (e.g. NEC FA fonts lack cvt table),
-	extra check is added to assure that 0-length table in the
+	extra check is added to assure that a zero-length table in the
 	registry is not included in the font.
 
 2011-04-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -716,7 +716,7 @@
 2011-02-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afdummy.c: Include `aferrors.h'.
-	Problem reported by Chris Liddel <chris.liddell@artifex.com>.
+	Problem reported by Chris Liddell <chris.liddell@artifex.com>.
 
 2011-02-01  Werner Lemberg  <wl@gnu.org>
 

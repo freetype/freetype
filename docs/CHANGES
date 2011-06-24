@@ -16,10 +16,6 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
       redundant and  is simply ignored;  this means that FreeType  now
       ignores the global advance width value in TrueType fonts.
 
-    - Just  Fill Bugs contributed (experimental) code to compute  blue
-      zones for CJK Ideographs, improving the alignment of  horizontal
-      stems at the top or bottom edges.
-
 
   III. MISCELLANEOUS
 
@@ -38,6 +34,10 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
     - Some improvements to the B/W rasterizer.
 
     - Fixes to the cache module to improve robustness.
+
+    - Just  Fill Bugs contributed (experimental) code to compute  blue
+      zones for CJK Ideographs, improving the alignment of  horizontal
+      stems at the top or bottom edges.
 
 
 ======================================================================
