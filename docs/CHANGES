@@ -39,6 +39,8 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
       zones for CJK Ideographs, improving the alignment of  horizontal
       stems at the top or bottom edges.
 
+    - The `ftgrid' demo program  can now display  autohinter segments,
+      to be toggled on and off with key `s'.
 
 ======================================================================
 
