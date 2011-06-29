@@ -2916,6 +2916,10 @@ FT_BEGIN_HEADER
   /*    The glyph name is truncated to fit within the buffer if it is too  */
   /*    long.  The returned string is always zero-terminated.              */
   /*                                                                       */
+  /*    Be aware that FreeType reorders glyph indices internally so that   */
+  /*    glyph index~0 always corresponds to the `missing glyph' (called    */
+  /*    `.notdef').                                                        */
+  /*                                                                       */
   /*    This function is not compiled within the library if the config     */
   /*    macro `FT_CONFIG_OPTION_NO_GLYPH_NAMES' is defined in              */
   /*    `include/freetype/config/ftoptions.h'.                             */
