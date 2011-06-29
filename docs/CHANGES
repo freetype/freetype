@@ -2,6 +2,17 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
 
   I. IMPORTANT BUG FIXES
 
+    - BDF fonts  containing  glyphs with negative values  for ENCODING
+      were  incorrectly  rejected.  This  bug has  been introduced  in
+      FreeType version 2.2.0.
+
+
+======================================================================
+
+CHANGES BETWEEN 2.4.4 and 2.4.5
+
+  I. IMPORTANT BUG FIXES
+
     - A rendering regression  for second-order Bézier curves  has been
       fixed, introduced in 2.4.3.
 
@@ -41,6 +52,7 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
 
     - The `ftgrid' demo program  can now display  autohinter segments,
       to be toggled on and off with key `s'.
+
 
 ======================================================================
 

@@ -5,6 +5,8 @@
 	* src/bdf/bdflib.c (_bdf_parse_glyphs): Handle negative values for
 	ENCODING correctly.
 
+	* docs/CHANGES: Document it.
+
 2011-06-24  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.5 released.
