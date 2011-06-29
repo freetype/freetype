@@ -1,3 +1,10 @@
+2011-06-29  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #33663.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs): Handle negative values for
+	ENCODING correctly.
+
 2011-06-24  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.5 released.
