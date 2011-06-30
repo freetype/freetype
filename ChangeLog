@@ -1,3 +1,7 @@
+2011-06-30  İsmail Dönmez <ismail@namtrac.org>
+
+	* builds/toplevel.mk: We use git, not CVS, thus skip `.gitignore'.
+
 2011-06-29  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #33663.
