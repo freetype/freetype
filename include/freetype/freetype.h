@@ -1063,8 +1063,8 @@ FT_BEGIN_HEADER
   /*      and @FT_LOAD_NO_AUTOHINT to really disable hinting; however, you */
   /*      probably never want this except for demonstration purposes.      */
   /*                                                                       */
-  /*      Currently, there are six TrueType fonts in the list of tricky    */
-  /*      fonts; they are hard-coded in file `ttobjs.c'.                   */
+  /*      Currently, there are about a dozen TrueType fonts in the list of */
+  /*      tricky fonts; they are hard-coded in file `ttobjs.c'.            */
   /*                                                                       */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
@@ -3329,6 +3329,9 @@ FT_BEGIN_HEADER
   /*    Use this function rather than directly reading the `fs_type' field */
   /*    in the @PS_FontInfoRec structure which is only guaranteed to       */
   /*    return the correct results for Type~1 fonts.                       */
+  /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.3.8                                                              */
   /*                                                                       */
   FT_EXPORT( FT_UShort )
   FT_Get_FSType_Flags( FT_Face  face );
