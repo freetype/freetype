@@ -6,6 +6,19 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
       were  incorrectly  rejected.  This  bug has  been introduced  in
       FreeType version 2.2.0.
 
+    - David Bevan contributed a major revision of the FreeType stroker
+      code:
+
+      . The behaviour of FT_STROKER_LINEJOIN_BEVEL has been corrected.
+
+      . A new  line join style,  FT_STROKER_LINEJOIN_MITER_FIXED,  has
+        been introduced to support PostScript and PDF miter joins.
+
+      . FT_STROKER_LINEJOIN_MITER_VARIABLE  has been introduced  as an
+        alias for FT_STROKER_LINEJOIN_MITER.
+
+      . Various stroking glitches has been fixed.
+
 
 ======================================================================
 
