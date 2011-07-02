@@ -1,3 +1,102 @@
+2011-07-02  David Bevan  <david.bevan@pb.com>
+
+	[ftstroke] Major revision.
+
+	The main problems
+	-----------------
+
+	  o If FT_STROKER_LINEJOIN_BEVEL was specified, unlimited miter
+	    joins (not bevel joins) were generated.  Indeed, the meanings of
+	    `miter' and `bevel' were incorrectly reversed (consistently) in
+	    both the code and comments.
+
+	  o The way bevel joins were constructed (whether specified
+	    explicitly, or created as a result of exceeding the miter limit)
+	    did not match what is required for stroked text in PostScript or
+	    PDF.
+
+	The main fixes
+	--------------
+
+	  o The behaviour of FT_STROKER_LINEJOIN_BEVEL has been corrected.
+
+	  o A new line join style, FT_STROKER_LINEJOIN_MITER_FIXED, has been
+	    introduced to support PostScript and PDF miter joins.
+
+	  o FT_STROKER_LINEJOIN_MITER_VARIABLE has been introduced as an
+	    alias for FT_STROKER_LINEJOIN_MITER.
+
+	Additionally, a variety of stroking errors have been fixed.  These
+	would cause various artifacts (including points `at infinity'),
+	especially when stroking poor quality fonts.
+
+	See
+
+	  http://lists.gnu.org/archive/html/freetype-devel/2011-07/msg00001.html
+
+	for example documents.  The FreeType stroker now produces results
+	very similar to that produced by GhostScript and Distiller for these
+	fonts.
+
+	Other problems
+	--------------
+
+	The following problems have been resolved:
+
+	  o Inside corners could be generated incorrectly.  Intersecting the
+	    inside corner could cause a missing triangular area and other
+	    effects.
+
+	    The intersection point can only be used if the join is between
+	    two lines and both lines are long enough.  The `optimization'
+	    condition in `ft_stroker_inside' has been corrected; this
+	    requires the line length to be passed into various functions and
+	    stored in `FT_StrokerRec'.
+
+	  o Incorrect cubic curves could be generated.  The angle
+	    calculations in `FT_Stroker_CubicTo' have been corrected to
+	    handle the case of the curve crossing the +/-PI direction.
+
+	  o If the border radius was greater than the radius of curvature of
+	    a curve, then the negative sector would end up outside (not
+	    inside) the border.  This situation is now recognized and the
+	    negative sector is circumnavigated in the opposite direction.
+	    (If round line joins are being used, this code is disabled
+	    because the line join will always cover the negative sector.)
+
+	  o When a curve is split, the arcs may not join smoothly (especially
+	    if the curve turns sharply back on itself).  Changes in
+	    direction between adjacent arcs were not handled.  A round
+	    corner is now added if the deviation from one arc to the next is
+	    greater than a suitable threshold.
+
+	  o The current direction wasn't retained if a the outline contained
+	    a zero length lineto or a curve that was determined to be
+	    `basically a point'.  This could cause a spurious join to be
+	    added.
+
+	  o Cubics with close control points could be mishandled.  All eight
+	    cases are now distinguished correctly.
+
+	Other improvements
+	------------------
+
+	o Borders for cubic curves could be too `flat'.
+	  FT_SMALL_CUBIC_THRESHOLD has been reduced a little to prevent
+	  this.
+
+	o The handling and use of movable points has been simplified a
+	  little.
+
+	o Various values are now computed only if the results are actually
+	  needed.
+
+	o The directions of the outer and inner borders have been swapped,
+	  as recommended by Graham Asher.
+
+	* src/base/ftstroke.c: Revised.
+	* include/freetype/ftstroke.h: Updated.
+
 2011-06-30  İsmail Dönmez <ismail@namtrac.org>
 
 	* builds/toplevel.mk: We use git, not CVS, thus skip `.gitignore'.
@@ -299,7 +398,7 @@
 
 	[autofit] Remove unused structure member.
 
-	* src/autofit/afhints.h (AF_SegmentRec): Remove `contour'. 
+	* src/autofit/afhints.h (AF_SegmentRec): Remove `contour'.
 	* src/autofit/aflatin.c (af_latin_hints_compute_segments),
 	src/autofit/aflatin2.c (af_latin2_hints_compute_segments): Updated.
 
@@ -325,7 +424,7 @@
 
 	[mac] Conditionalize the inclusion of `AvailabilityMacros.h'.
 
-	The native SDK on earliest Mac OS X (10.0-10.1) did not have 
+	The native SDK on earliest Mac OS X (10.0-10.1) did not have
 	`AvailabilityMacros.h'.  To prevent the inclusion of missing
 	header file, ECANCELED (introduced in 10.2) in POSIX header
 	file <errno.h> is checked to detect the system version.
@@ -401,7 +500,7 @@
 	(af_cjk_metrics_init_widths): Duplicate af_latin_metrics_init_widths.
 	(af_cjk_metrics_check_digits): Duplicate af_latin_metrics_check_digits.
 	(af_cjk_metrics_init): Call CJK bluezone initializer.
-	(af_cjk_metrics_scale_dim): Add code to scale bluezones.  
+	(af_cjk_metrics_scale_dim): Add code to scale bluezones.
 	(af_cjk_hints_compute_blue_edges): New function, CJK version of
 	af_latin_hints_compute_blue_edges.
 	(af_cjk_metrics_init_blues): New function, CJK version of
@@ -439,7 +538,7 @@
 
 	Add new option `--disable-mmap' to configure script.
 
-	* builds/unix/configure.raw: New option `--disable-mmap' 
+	* builds/unix/configure.raw: New option `--disable-mmap'
 	is added.  It is for the developers to simulate the systems
 	without mmap() (like 4.3BSD, minix etc) on POSIX systems.
 
