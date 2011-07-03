@@ -553,8 +553,10 @@
         error = tt_face_load_prep( face, stream );
 
       /* Check the scalable flag based on `loca'. */
-      if ( !ttface->internal->incremental_interface                  &&
-           face->glyph_locations && tt_check_single_notdef( ttface ) )
+      if ( !ttface->internal->incremental_interface &&
+           ttface->num_fixed_sizes                  &&
+           face->glyph_locations                    &&
+           tt_check_single_notdef( ttface )         )
       {
         FT_TRACE5(( "tt_face_init:"
                     " Only the `.notdef' glyph has an outline.\n"
@@ -576,7 +578,9 @@
         error = tt_face_load_prep( face, stream );
 
       /* Check the scalable flag based on `loca'. */
-      if ( face->glyph_locations && tt_check_single_notdef( ttface ) )
+      if ( ttface->num_fixed_sizes          &&
+           face->glyph_locations            &&
+           tt_check_single_notdef( ttface ) )
       {
         FT_TRACE5(( "tt_face_init:"
                     " Only the `.notdef' glyph has an outline.\n"

@@ -20,6 +20,12 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
       . Various stroking glitches has been fixed.
 
 
+  II. MISCELLANEOUS
+
+      - SFNT bitmap fonts which contain an outline glyph for `.notdef'
+        only no longer set the FT_FACE_FLAG_SCALABLE flag.
+
+
 ======================================================================
 
 CHANGES BETWEEN 2.4.4 and 2.4.5

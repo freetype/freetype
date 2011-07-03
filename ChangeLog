@@ -1,3 +1,14 @@
+2011-07-03  Werner Lemberg  <wl@gnu.org>
+
+	Fix previous commit.
+
+	We want to unset FT_FACE_FLAG_SCALABLE only if there are bitmap
+	strikes in the font.
+
+	* src/truetype/ttobjs.c (tt_face_init): Implement it.
+
+	* docs/CHANGES: Updated.
+
 2011-07-02  Just Fill Bugs  <mozbugbox@yahoo.com.au>
 
 	Fix Savannah bug #33246.
