@@ -2107,8 +2107,8 @@ FT_BEGIN_HEADER
   /*      used to determine both scaling values.                           */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_REAL_DIM ::                                   */
-  /*      The real dimension.  The sum of the the `Ascender' and (minus    */
-  /*      of) the `Descender' fields of @FT_FaceRec are used to determine  */
+  /*      The real dimension.  The sum of the the `ascender' and (minus    */
+  /*      of) the `descender' fields of @FT_FaceRec are used to determine  */
   /*      both scaling values.                                             */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_BBOX ::                                       */
