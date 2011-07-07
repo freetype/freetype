@@ -1,3 +1,10 @@
+2011-07-07  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Try harder to find non-zero values for ascender and descender.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Consult `OS/2' table in case
+	the `hhea' table's values are zero.
+
 2011-07-03  Werner Lemberg  <wl@gnu.org>
 
 	Fix previous commit.
