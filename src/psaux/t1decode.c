@@ -4,8 +4,7 @@
 /*                                                                         */
 /*    PostScript Type 1 decoding routines (body).                          */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009    */
-/*            2010 by                                                      */
+/*  Copyright 2000-2011 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -686,6 +685,9 @@
 
         subr_no = (FT_Int)( top[1] >> 16 );
         arg_cnt = (FT_Int)( top[0] >> 16 );
+
+        if ( arg_cnt < 0 || subr_no < 0 )
+          goto Unexpected_OtherSubr;
 
         /***********************************************************/
         /*                                                         */
