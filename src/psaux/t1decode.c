@@ -686,9 +686,6 @@
         subr_no = (FT_Int)( top[1] >> 16 );
         arg_cnt = (FT_Int)( top[0] >> 16 );
 
-        if ( arg_cnt < 0 || subr_no < 0 )
-          goto Unexpected_OtherSubr;
-
         /***********************************************************/
         /*                                                         */
         /* remove all operands to callothersubr from the stack     */
@@ -1011,11 +1008,14 @@
           break;
 
         default:
-          FT_ERROR(( "t1_decoder_parse_charstrings:"
-                     " unknown othersubr [%d %d], wish me luck\n",
-                     arg_cnt, subr_no ));
-          unknown_othersubr_result_cnt = arg_cnt;
-          break;
+          if ( arg_cnt >= 0 && subr_no > 0 )
+          {
+            FT_ERROR(( "t1_decoder_parse_charstrings:"
+                       " unknown othersubr [%d %d], wish me luck\n",
+                       arg_cnt, subr_no ));
+            unknown_othersubr_result_cnt = arg_cnt;
+            break;
+          }
 
         Unexpected_OtherSubr:
           FT_ERROR(( "t1_decoder_parse_charstrings:"
