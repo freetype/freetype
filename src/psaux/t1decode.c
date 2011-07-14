@@ -27,6 +27,8 @@
 
 #include "psauxerr.h"
 
+/* ensure proper sign extension */
+#define Fix2Int( f )  ( (FT_Int)(FT_Short)( (f) >> 16 ) )
 
   /*************************************************************************/
   /*                                                                       */
@@ -661,7 +663,7 @@
         if ( large_int )
           FT_TRACE4(( " %ld", value ));
         else
-          FT_TRACE4(( " %ld", (FT_Int32)( value >> 16 ) ));
+          FT_TRACE4(( " %ld", Fix2Int( value ) ));
 #endif
 
         *top++       = value;
@@ -683,8 +685,8 @@
 
         top -= 2;
 
-        subr_no = (FT_Int)( top[1] >> 16 );
-        arg_cnt = (FT_Int)( top[0] >> 16 );
+        subr_no = Fix2Int( top[1] );
+        arg_cnt = Fix2Int( top[0] );
 
         /***********************************************************/
         /*                                                         */
@@ -862,7 +864,7 @@
             if ( arg_cnt != 1 || blend == NULL )
               goto Unexpected_OtherSubr;
 
-            idx = (FT_Int)( top[0] >> 16 );
+            idx = Fix2Int( top[0] );
 
             if ( idx < 0                                           ||
                  idx + blend->num_designs > decoder->len_buildchar )
@@ -930,7 +932,7 @@
             if ( arg_cnt != 2 || blend == NULL )
               goto Unexpected_OtherSubr;
 
-            idx = (FT_Int)( top[1] >> 16 );
+            idx = Fix2Int( top[1] );
 
             if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
               goto Unexpected_OtherSubr;
@@ -951,7 +953,7 @@
             if ( arg_cnt != 1 || blend == NULL )
               goto Unexpected_OtherSubr;
 
-            idx = (FT_Int)( top[0] >> 16 );
+            idx = Fix2Int( top[0] );
 
             if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
               goto Unexpected_OtherSubr;
@@ -1017,6 +1019,7 @@
             unknown_othersubr_result_cnt = arg_cnt;
             break;
           }
+          /* fall through */
 
         Unexpected_OtherSubr:
           FT_ERROR(( "t1_decoder_parse_charstrings:"
@@ -1142,8 +1145,8 @@
                                   top[0],
                                   top[1],
                                   top[2],
-                                  (FT_Int)( top[3] >> 16 ),
-                                  (FT_Int)( top[4] >> 16 ) );
+                                  Fix2Int( top[3] ),
+                                  Fix2Int( top[4] ) );
 
         case op_sbw:
           FT_TRACE4(( " sbw" ));
@@ -1327,7 +1330,7 @@
 
             FT_TRACE4(( " callsubr" ));
 
-            idx = (FT_Int)( top[0] >> 16 );
+            idx = Fix2Int( top[0] );
             if ( idx < 0 || idx >= (FT_Int)decoder->num_subrs )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings:"

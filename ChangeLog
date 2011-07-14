@@ -1,3 +1,15 @@
+2011-07-14  Matthias Drochner  <M.Drochner@fz-juelich.de>.
+
+	[psaux] Fix potential sign extension problems.
+
+	When shifting right a signed value, it is not defined by the
+	C standard whether one gets a sign extension or not.  Use a macro to
+	do an explicit cast from a signed short (assuming that this is
+	16bit) to an int.
+
+	* src/psaux/t1decode.c (Fix2Int): New macro.
+	Use it where appropriate.
+
 2011-07-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
