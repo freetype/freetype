@@ -1,3 +1,9 @@
+2011-07-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	<op_callothersubr>: Better handling of subroutine index 0.
+	From Matthias Drochner <M.Drochner@fz-juelich.de>.
+
 2011-07-10  Алексей Подтележников  <apodtele@gmail.com>
 
 	[psaux] Optimize previous commit.

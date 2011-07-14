@@ -1009,7 +1009,7 @@
           break;
 
         default:
-          if ( arg_cnt >= 0 && subr_no > 0 )
+          if ( arg_cnt >= 0 && subr_no >= 0 )
           {
             FT_ERROR(( "t1_decoder_parse_charstrings:"
                        " unknown othersubr [%d %d], wish me luck\n",
