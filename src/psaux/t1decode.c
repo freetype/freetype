@@ -723,6 +723,24 @@
 
         switch ( subr_no )
         {
+        case 0:                     /* end flex feature */
+          if ( arg_cnt != 3 )
+            goto Unexpected_OtherSubr;
+
+          if ( decoder->flex_state       == 0 ||
+               decoder->num_flex_vectors != 7 )
+          {
+            FT_ERROR(( "t1_decoder_parse_charstrings:"
+                       " unexpected flex end\n" ));
+            goto Syntax_Error;
+          }
+
+          /* the two `results' are popped by the following setcurrentpoint */
+          top[0] = x;
+          top[1] = y;
+          known_othersubr_result_cnt = 2;
+          break;
+
         case 1:                     /* start flex feature */
           if ( arg_cnt != 0 )
             goto Unexpected_OtherSubr;
@@ -754,24 +772,6 @@
                                     y,
                                     (FT_Byte)( idx == 3 || idx == 6 ) );
           }
-          break;
-
-        case 0:                     /* end flex feature */
-          if ( arg_cnt != 3 )
-            goto Unexpected_OtherSubr;
-
-          if ( decoder->flex_state       == 0 ||
-               decoder->num_flex_vectors != 7 )
-          {
-            FT_ERROR(( "t1_decoder_parse_charstrings:"
-                       " unexpected flex end\n" ));
-            goto Syntax_Error;
-          }
-
-          /* the two `results' are popped by the following setcurrentpoint */
-          top[0] = x;
-          top[1] = y;
-          known_othersubr_result_cnt = 2;
           break;
 
         case 3:                     /* change hints */
@@ -817,17 +817,18 @@
               goto Syntax_Error;
             }
 
-            /* we want to compute:                                   */
+            /* We want to compute                                    */
             /*                                                       */
-            /*  a0*w0 + a1*w1 + ... + ak*wk                          */
+            /*   a0*w0 + a1*w1 + ... + ak*wk                         */
             /*                                                       */
-            /* but we only have the a0, a1-a0, a2-a0, .. ak-a0       */
-            /* however, given that w0 + w1 + ... + wk == 1, we can   */
-            /* rewrite it easily as:                                 */
+            /* but we only have a0, a1-a0, a2-a0, ..., ak-a0.        */
             /*                                                       */
-            /*  a0 + (a1-a0)*w1 + (a2-a0)*w2 + .. + (ak-a0)*wk       */
+            /* However, given that w0 + w1 + ... + wk == 1, we can   */
+            /* rewrite it easily as                                  */
             /*                                                       */
-            /* where k == num_designs-1                              */
+            /*   a0 + (a1-a0)*w1 + (a2-a0)*w2 + ... + (ak-a0)*wk     */
+            /*                                                       */
+            /* where k == num_designs-1.                             */
             /*                                                       */
             /* I guess that's why it's written in this `compact'     */
             /* form.                                                 */
