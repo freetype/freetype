@@ -1,3 +1,10 @@
+2011-07-16  Steven Chu  <steven.f.chu@gmail.com>
+
+	[truetype] Fix metrics on size request for scalable fonts.
+
+	* src/truetype/ttdriver.c (tt_size_request): Fix copying metrics
+	from TT_Size to FT_Size if scalable font.
+
 2011-07-14  Matthias Drochner  <M.Drochner@fz-juelich.de>.
 
 	[psaux] Fix potential sign extension problems.
