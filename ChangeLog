@@ -1,3 +1,12 @@
+2011-07-20  Chris Morgan  <cmorgan@cybexintl.com>
+
+	Add FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT.
+
+	Useful for embedded systems which don't need file stream support.
+
+	* src/base/ftsystem.c, src/base/ftobjs.c (FT_Stream_New): Implement
+	it.
+
 2011-07-20  Elton Chung  <elton328@gmail.com>
 
 	* src/base/ftpatent.c (FT_Face_SetUnpatentedHinting): Fix typo.
