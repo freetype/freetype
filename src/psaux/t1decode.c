@@ -397,7 +397,7 @@
     FT_ASSERT( ( decoder->len_buildchar == 0 ) ==
                ( decoder->buildchar == NULL )  );
 
-    if ( decoder->len_buildchar > 0 )
+    if ( decoder->buildchar && decoder->len_buildchar > 0 )
       ft_memset( &decoder->buildchar[0],
                  0,
                  sizeof( decoder->buildchar[0] ) * decoder->len_buildchar );

@@ -1,3 +1,14 @@
+2011-07-22  Dirk Müller  <dmueller@suse.de>
+
+	[psaux, type1] Fix null pointer dereferences.
+
+	Found with font fuzzying.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Check
+	`decoder->buildchar'.
+
+	* src/type1/t1load.c (t1_load_keyword): Check `blend->num_designs'.
+
 2011-07-20  Chris Morgan  <cmorgan@cybexintl.com>
 
 	Add FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT.
