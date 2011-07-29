@@ -1,6 +1,15 @@
-CHANGES BETWEEN 2.4.4 and 2.4.5
+CHANGES BETWEEN 2.4.5 and 2.4.6
 
   I. IMPORTANT BUG FIXES
+
+    - For TrueType based fonts, the ascender and descender values were
+      incorrect sometimes  (off by a pixel if the ppem value was not a
+      multiple of 5).   Depending on the use you might now  experience
+      a different  layout; the  change should  result in  better, more
+      consistent line spacing.
+
+    - Fix CVE-2011-0226  which causes a  vulnerability while  handling
+      Type 1 fonts.
 
     - BDF fonts  containing  glyphs with negative values  for ENCODING
       were  incorrectly  rejected.  This  bug has  been introduced  in

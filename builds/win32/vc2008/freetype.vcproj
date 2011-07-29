@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\win32\vc2008\freetype245.lib"
+				OutputFile="..\..\..\objs\win32\vc2008\freetype246.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -145,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\win32\vc2008\freetype245MT.lib"
+				OutputFile="..\..\..\objs\win32\vc2008\freetype246MT.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -220,7 +220,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\win32\vc2008\freetype245ST.lib"
+				OutputFile="..\..\..\objs\win32\vc2008\freetype246ST.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -292,7 +292,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\win32\vc2008\freetype245_D.lib"
+				OutputFile="..\..\..\objs\win32\vc2008\freetype246_D.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -365,7 +365,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\win32\vc2008\freetype245ST_D.lib"
+				OutputFile="..\..\..\objs\win32\vc2008\freetype246ST_D.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -439,7 +439,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\win32\vc2008\freetype245MT_D.lib"
+				OutputFile="..\..\..\objs\win32\vc2008\freetype246MT_D.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
