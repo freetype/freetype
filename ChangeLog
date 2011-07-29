@@ -1,3 +1,10 @@
+2011-07-29  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Add some more tracing infos.
+
+	* src/cff/cffparse.c (cff_parse_font_matrix, cff_parse_font_bbox,
+	cff_parse_cid_ros): Add tracing.
+
 2011-07-22  Dirk Müller  <dmueller@suse.de>
 
 	[psaux, type1] Fix null pointer dereferences.
@@ -28,6 +35,12 @@
 
 	* src/truetype/ttdriver.c (tt_size_request): Fix copying metrics
 	from TT_Size to FT_Size if scalable font.
+
+	See
+
+	  http://lists.gnu.org/archive/html/freetype-devel/2011-07/msg00049.html
+
+	for some comparison images.
 
 2011-07-14  Matthias Drochner  <M.Drochner@fz-juelich.de>.
 
