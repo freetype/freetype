@@ -5708,7 +5708,6 @@
         }
       }
       else
-        /* XXX: UNDOCUMENTED! SHP touches the points */
         MOVE_Zp2_Point( point, dx, dy, TRUE );
 
       CUR.GS.loop--;
@@ -5769,7 +5768,6 @@
         last_point = 0;
     }
 
-    /* XXX: UNDOCUMENTED! SHC touches the points */
     for ( i = first_point; i <= last_point; i++ )
     {
       if ( zp.cur != CUR.zp2.cur || refp != i )
@@ -6306,7 +6304,6 @@
     if ( ( CUR.opcode & 16 ) != 0 )
       CUR.GS.rp0 = point;
 
-    /* XXX: UNDOCUMENTED! */
     CUR.GS.rp2 = point;
   }
 
