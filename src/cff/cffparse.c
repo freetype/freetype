@@ -481,7 +481,7 @@
 
         matrix->xx = 0x10000L;
         matrix->yx = 0;
-        matrix->yx = 0;
+        matrix->xy = 0;
         matrix->yy = 0x10000L;
         offset->x  = 0;
         offset->y  = 0;
