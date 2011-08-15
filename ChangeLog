@@ -1,3 +1,9 @@
+2011-08-15  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #34018.
+
+	* doc/UPGRADE.UNIX: Removed.  Obsolete.
+
 2011-08-15  David Bevan  <david.bevan@pb.com>
 
 	Fix Savannah bug #33992.
