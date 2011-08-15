@@ -1,3 +1,9 @@
+2011-08-15  David Bevan  <david.bevan@pb.com>
+
+	Fix Savannah bug #33992.
+
+	* src/base/ftstroke.c (FT_Stroker_ParseOutline): Fix border case.
+
 2011-08-12  Werner Lemberg  <wl@gnu.org
 
 	[truetype] Fix degenerate case in S{P,F,DP}VTL opcodes.
