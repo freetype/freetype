@@ -1,8 +1,14 @@
+2011-08-16  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #34022.
+
+	* README, docs/INSTALL: Remove references to UPGRADE.UNIX.
+
 2011-08-15  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #34018.
 
-	* doc/UPGRADE.UNIX: Removed.  Obsolete.
+	* docs/UPGRADE.UNIX: Removed.  Obsolete.
 
 2011-08-15  David Bevan  <david.bevan@pb.com>
 
