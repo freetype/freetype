@@ -1,3 +1,22 @@
+2011-08-25  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Better tracing of the parsing process.
+
+	* src/cff/cffload.c (cff_subfont_load, cff_font_load): Decorate with
+	FT_TRACE.
+
+	* src/cff/cffparse.c (cff_parse_font_matrix, cff_parse_font_bbox,
+	cff_parse_private_dict, cff_parse_cid_ros): Updated.
+	(CFF_FIELD_NUM, CFF_FIELD_FIXED, CFF_FIELD_FIXED_1000,
+	CFF_FIELD_STRING, CFF_FIELD_BOOL, CFF_FIELD_CALLBACK, CFF_FIELD,
+	CFF_FIELD_DELTA): Add argument for ID.
+	(cff_parser_run): Decorate with FT_TRACE.
+
+	* src/cff/cffparse.h (CFF_Field_Handler) [FT_DEBUG_LEVEL_TRACE]: Add
+	`id' member.
+
+	* src/cff/cfftoken.h: Add IDs to all fields.
+
 2011-08-16  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #34022.
