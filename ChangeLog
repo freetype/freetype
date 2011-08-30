@@ -1,3 +1,10 @@
+2011-08-30  Werner Lemberg  <wl@gnu.org>
+
+	Better tracing of metrics.
+
+	* src/base/ftobjs.c (FT_Select_Metrics, FT_Request_Metrics):
+	Decorate with FT_TRACE.
+
 2011-08-25  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Better tracing of the parsing process.

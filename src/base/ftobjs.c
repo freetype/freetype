@@ -2613,6 +2613,18 @@
       metrics->height      = bsize->height << 6;
       metrics->max_advance = bsize->x_ppem;
     }
+
+    FT_TRACE5(( "FT_Select_Metrics:\n" ));
+    FT_TRACE5(( "  x scale: %d (%f)\n",
+                metrics->x_scale, metrics->x_scale / 65536.0 ));
+    FT_TRACE5(( "  y scale: %d (%f)\n",
+                metrics->y_scale, metrics->y_scale / 65536.0 ));
+    FT_TRACE5(( "  ascender: %f\n",    metrics->ascender / 64.0 ));
+    FT_TRACE5(( "  descender: %f\n",   metrics->descender / 64.0 ));
+    FT_TRACE5(( "  height: %f\n",      metrics->height / 64.0 ));
+    FT_TRACE5(( "  max advance: %f\n", metrics->max_advance / 64.0 ));
+    FT_TRACE5(( "  x ppem: %d\n",      metrics->x_ppem ));
+    FT_TRACE5(( "  y ppem: %d\n",      metrics->y_ppem ));
   }
 
 
@@ -2721,6 +2733,18 @@
       metrics->x_scale = 1L << 16;
       metrics->y_scale = 1L << 16;
     }
+
+    FT_TRACE5(( "FT_Select_Metrics:\n" ));
+    FT_TRACE5(( "  x scale: %d (%f)\n",
+                metrics->x_scale, metrics->x_scale / 65536.0 ));
+    FT_TRACE5(( "  y scale: %d (%f)\n",
+                metrics->y_scale, metrics->y_scale / 65536.0 ));
+    FT_TRACE5(( "  ascender: %f\n",    metrics->ascender / 64.0 ));
+    FT_TRACE5(( "  descender: %f\n",   metrics->descender / 64.0 ));
+    FT_TRACE5(( "  height: %f\n",      metrics->height / 64.0 ));
+    FT_TRACE5(( "  max advance: %f\n", metrics->max_advance / 64.0 ));
+    FT_TRACE5(( "  x ppem: %d\n",      metrics->x_ppem ));
+    FT_TRACE5(( "  y ppem: %d\n",      metrics->y_ppem ));
   }
 
 
