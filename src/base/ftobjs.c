@@ -2734,7 +2734,7 @@
       metrics->y_scale = 1L << 16;
     }
 
-    FT_TRACE5(( "FT_Select_Metrics:\n" ));
+    FT_TRACE5(( "FT_Request_Metrics:\n" ));
     FT_TRACE5(( "  x scale: %d (%f)\n",
                 metrics->x_scale, metrics->x_scale / 65536.0 ));
     FT_TRACE5(( "  y scale: %d (%f)\n",
