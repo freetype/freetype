@@ -460,6 +460,8 @@
 
       error = CFF_Err_Ok;
 
+      dict->has_font_matrix = TRUE;
+
       /* We expect a well-formed font matrix, this is, the matrix elements */
       /* `xx' and `yy' are of approximately the same magnitude.  To avoid  */
       /* loss of precision, we use the magnitude of element `xx' to scale  */
@@ -498,11 +500,13 @@
 
       *upm = power_tens[scaling];
 
-      FT_TRACE4(( " [%f %f %f %f]\n",
+      FT_TRACE4(( " [%f %f %f %f %f %f]\n",
                   (double)matrix->xx / *upm / 65536,
                   (double)matrix->xy / *upm / 65536,
                   (double)matrix->yx / *upm / 65536,
-                  (double)matrix->yy / *upm / 65536 ));
+                  (double)matrix->yy / *upm / 65536,
+                  (double)offset->x  / *upm / 65536,
+                  (double)offset->y  / *upm / 65536 ));
     }
 
   Exit:

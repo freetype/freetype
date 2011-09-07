@@ -1,3 +1,14 @@
+2011-09-07  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #33816.
+
+	* src/cff/cfftypes.h (CFF_FontRecDictRec): New member
+	`has_font_matrix'.
+	* src/cff/cffparse.c (cff_parse_font_matrix): Set it.
+	Update tracing output.
+	* src/cff/cffobjs.c (cff_face_init): Use it so that the heuristics
+	can be removed.
+
 2011-08-30  Werner Lemberg  <wl@gnu.org>
 
 	Better tracing of metrics.
