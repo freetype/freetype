@@ -1,3 +1,10 @@
+2011-09-09  Werner Lemberg  <wl@gnu.org>
+
+	Better tracing of metrics.
+
+	* src/base/ftobjs.c (FT_Request_Size, FT_Select_Size): Decorate with
+	FT_TRACE.
+
 2011-09-07  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #33816.
