@@ -124,6 +124,15 @@
         old_size     = 0;
       }
 
+      /* requirement of the character stack larger than 1<<LZW_MAX_BITS */
+      /* implies bug in the decompression code                          */
+      if ( new_size > ( 1 << LZW_MAX_BITS ) )
+      {
+        new_size = 1 << LZW_MAX_BITS;
+        if ( new_size == old_size )
+          return -1;
+      }
+
       if ( FT_RENEW_ARRAY( state->stack, old_size, new_size ) )
         return -1;
 

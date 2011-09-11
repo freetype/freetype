@@ -1,5 +1,25 @@
 2011-09-11  Tomas Hoger  <thoger@redhat.com>
 
+	Add explicit LZW decompression stack size limit.
+
+	Stack larger than 1<<LZW_MAX_BITS is never needed if prefix table is
+	constructed correctly.  It's even less than that, see e.g. 
+	libarchive code comment for a better size upper bound:
+
+	  http://code.google.com/p/libarchive/source/browse/trunk/libarchive/archive_read_support_filter_compress.c?r=3635#121
+
+	This patch adds explicit stack size limit, enforced when stack is
+	realloced.
+
+	An alternative is to ensure that code < state->prefix[code - 256]
+	when traversing prefix table.  Such check is less efficient and
+	should not be required if prefix table is constructed correctly in
+	the first place.
+
+	* src/lzw/ftzopen.c (ft_lzwstate_stack_grow): Implement it.
+
+2011-09-11  Tomas Hoger  <thoger@redhat.com>
+
 	Protect against loops in the prefix table.
 
 	LZW decompressor did not sufficiently check codes read from the
