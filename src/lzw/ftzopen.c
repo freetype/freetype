@@ -8,7 +8,7 @@
 /*  be used to parse compressed PCF fonts, as found with many X11 server   */
 /*  distributions.                                                         */
 /*                                                                         */
-/*  Copyright 2005, 2006, 2007, 2009 by David Turner.                      */
+/*  Copyright 2005-2007, 2009, 2011 by David Turner.                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -279,7 +279,7 @@
                            : state->max_free + 1;
 
         c = ft_lzwstate_get_code( state );
-        if ( c < 0 )
+        if ( c < 0 || c > 255 )
           goto Eof;
 
         old_code = old_char = (FT_UInt)c;
@@ -326,6 +326,10 @@
           /* special case for KwKwKwK */
           if ( code - 256U >= state->free_ent )
           {
+            /* corrupted LZW stream */
+            if ( code - 256U > state->free_ent )
+              goto Eof;
+
             FTLZW_STACK_PUSH( old_char );
             code = old_code;
           }
