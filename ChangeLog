@@ -1,5 +1,15 @@
 2011-09-11  Tomas Hoger  <thoger@redhat.com>
 
+	Slightly improve LZW_CLEAR handling.
+
+	* src/lzw/ftzopen.c (ft_lzwstate_io) <FT_LZW_PHASE_CODE>:
+	Ensure that subsequent (modulo garbage byte(s)) LZW_CLEAR codes are
+	handled as clear codes.  This also re-sets old_code and old_char to
+	predictable values, which is a little better than using `random'
+	ones if the code following LZW_CLEAR is invalid.
+
+2011-09-11  Tomas Hoger  <thoger@redhat.com>
+
 	Add explicit LZW decompression stack size limit.
 
 	Stack larger than 1<<LZW_MAX_BITS is never needed if prefix table is

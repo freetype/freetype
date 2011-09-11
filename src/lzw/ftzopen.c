@@ -321,11 +321,12 @@
           /* why not LZW_FIRST-256 ? */
           state->free_ent  = ( LZW_FIRST - 1 ) - 256;
           state->buf_clear = 1;
-          c = ft_lzwstate_get_code( state );
-          if ( c < 0 )
-            goto Eof;
 
-          code = (FT_UInt)c;
+          /* not quite right, but at least more predictable */
+          old_code = 0;
+          old_char = 0;
+
+          goto NextCode;
         }
 
         in_code = code; /* save code for later */
