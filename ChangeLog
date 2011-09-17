@@ -1,3 +1,10 @@
+2011-09-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Slightly optimize conic and cubic flatterners.
+
+	* src/smooth/ftgrays.c (gray_render_conic, gray_render_cubic): Move
+	out some code from the main loop to speed it up.
+
 2011-09-11  Tomas Hoger  <thoger@redhat.com>
 
 	Slightly improve LZW_CLEAR handling.
