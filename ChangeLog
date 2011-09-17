@@ -1,3 +1,10 @@
+2011-09-17  Werner Lemberg  <wl@gnu.org>
+
+	Remove unused FT_ALIGNMENT macro.
+
+	* builds/unix/ftconfig.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Do it.
+
 2011-09-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Slightly optimize conic and cubic flatterners.
