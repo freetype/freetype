@@ -1004,6 +1004,9 @@
                 break;
 
               case cff_kind_string:
+                FT_TRACE4(( " %ld (SID)\n", val ));
+                break;
+
               case cff_kind_num:
                 FT_TRACE4(( " %ld\n", val ));
                 break;

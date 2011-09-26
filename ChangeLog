@@ -1,3 +1,12 @@
+2011-09-26  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Dump SIDs while tracing.
+
+	* src/cff/cffobjs.c (cff_face_init): Do it.
+
+	* src/cff/cffparse.c (cff_parser_run) [FT_DEBUG_LEVEL_TRACE]
+	<cff_kind_string>: Identify as SID.
+
 2011-09-17  Werner Lemberg  <wl@gnu.org>
 
 	Remove unused FT_ALIGNMENT macro.

@@ -607,6 +607,24 @@
         goto Bad_Format;
       }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+      {
+        FT_UInt     idx;
+        FT_String*  s;
+
+
+        FT_TRACE4(( "SIDs\n" ));
+
+        /* dump string index, including default strings for convenience */
+        for ( idx = 0; idx < cff->num_strings + 390; idx++ )
+        {
+          s = cff_index_get_sid_string( cff, idx );
+          if ( s )
+            FT_TRACE4(("  %5d %s\n", idx, s ));
+        }
+      }
+#endif /* FT_DEBUG_LEVEL_TRACE */
+
       if ( !dict->has_font_matrix )
         dict->units_per_em = pure_cff ? 1000 : face->root.units_per_EM;
 
