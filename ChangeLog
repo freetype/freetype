@@ -1,3 +1,10 @@
+2011-09-27  Simon Bünzli  zeniko@gmail.com
+
+	Fix Savannah bug #34189.
+
+	* src/type1/t1load.c (T1_Open_Face): Initialize
+	`face->len_buildchar'.
+
 2011-09-26  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Dump SIDs while tracing.
