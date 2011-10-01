@@ -1,3 +1,21 @@
+2011-10-01  Braden Thomas  <bthomas@apple.com>
+
+	Handle some border cases.
+
+	* include/freetype/config/ftstdlib.h (FT_USHORT_MAX): New macro.
+
+	* src/base/ftbitmap.c (FT_Bitmap_Convert): Protect against invalid
+	value of `target->rows'.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Add check for
+	flex start.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Check `width' and
+	`height'.
+
+	* src/truetype/ttgxvar.c (TT_Vary_Get_Glyph_Deltas): Protect against
+	invalid values in `localpoints' array.
+
 2011-10-01  Werner Lemberg  <wl@gnu.org>
 
 	[psnames] Handle zapfdingbats.
