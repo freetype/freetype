@@ -1,4 +1,14 @@
-2011-09-27  Simon Bünzli  zeniko@gmail.com
+2011-10-01  Werner Lemberg  <wl@gnu.org>
+
+	[psnames] Handle zapfdingbats.
+	Problem reported by Nicolas Rougier <Nicolas.Rougier@inria.fr>.
+
+	* src/tools/glnames.py (adobe_glyph_list): Add data from AGL's
+	`zapfdingbats.txt' file.
+
+	* src/psnames/pstables.h: Regenerated.
+
+2011-09-27  Simon Bünzli  <zeniko@gmail.com>
 
 	Fix Savannah bug #34189.
 
