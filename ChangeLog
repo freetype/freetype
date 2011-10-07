@@ -1,3 +1,11 @@
+2011-10-07  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[gxvalid] Fix a bug to detect too large offset in morx table.
+
+	* src/gxvalid/gxvmorx2.c
+	(gxv_morx_subtable_type2_ligActionIndex_validate): Fix a bug
+	that too large positive offset cannot be detected.
+
 2011-10-01  Braden Thomas  <bthomas@apple.com>
 
 	Handle some border cases.
