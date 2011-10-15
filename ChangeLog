@@ -1,3 +1,10 @@
+2011-10-15  Kal Conley  <kcconley@gmail.com>
+
+	Fix conditions for autohinting.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Handle
+	FT_LOAD_IGNORE_TRANSFORM.
+
 2011-10-07  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[gxvalid] Fix a bug to detect too large offset in morx table.

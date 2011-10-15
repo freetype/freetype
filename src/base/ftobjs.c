@@ -620,7 +620,8 @@
          FT_DRIVER_IS_SCALABLE( driver )                  &&
          FT_DRIVER_USES_OUTLINES( driver )                &&
          !FT_IS_TRICKY( face )                            &&
-         ( ( face->internal->transform_matrix.yx == 0 &&
+         ( ( load_flags & FT_LOAD_IGNORE_TRANSFORM )    ||
+           ( face->internal->transform_matrix.yx == 0 &&
              face->internal->transform_matrix.xx != 0 ) ||
            ( face->internal->transform_matrix.xx == 0 &&
              face->internal->transform_matrix.yx != 0 ) ) )
