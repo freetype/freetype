@@ -1,5 +1,11 @@
 2011-10-15  Kal Conley  <kcconley@gmail.com>
 
+	Fix handling of transformations if no renderer is present.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Thinko.
+
+2011-10-15  Kal Conley  <kcconley@gmail.com>
+
 	Fix conditions for autohinting.
 
 	* src/base/ftobjs.c (FT_Load_Glyph): Handle
