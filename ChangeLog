@@ -1,3 +1,11 @@
+2011-10-25  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix MD instruction for twilight zone.
+
+	* src/truetype/ttinterp.c (Ins_MD): Without this fix, the MD
+	instruction applied to original coordinates of twilight points
+	always returns zero.
+
 2011-10-18  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.7 released.
