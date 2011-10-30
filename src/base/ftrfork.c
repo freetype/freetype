@@ -417,6 +417,7 @@
   }
 
 
+#if !defined( FT_MACINTOSH ) || defined( DARWIN_NO_CARBON )
   static FT_RFork_Rule
   raccess_get_rule_type_from_rule_index( FT_UInt  rule_index )
   {
@@ -427,7 +428,6 @@
   }
 
 
-#if !defined( FT_MACINTOSH ) || defined( DARWIN_NO_CARBON )
   FT_LOCAL_DEF( FT_Bool )
   raccess_rule_by_darwin_vfs( FT_UInt  rule_index )
   {

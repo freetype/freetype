@@ -1,5 +1,15 @@
 2011-10-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[raccess] Supplement for previous fix.
+
+	* src/base/ftbase.h (raccess_rule_by_darwin_vfs): Do not declare
+	it on native Mac OS X.
+	* src/base/ftrfork.c (raccess_get_rule_type_from_rule_index):
+	Hide raccess_get_rule_type_from_rule_index() on native Mac OS X
+	too.
+
+2011-10-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[raccess] Hide raccess_rule_by_darwin_vfs() on native Mac OS X.
 
 	* src/base/ftrfork.c (raccess_rule_by_darwin_vfs): Do not
