@@ -427,6 +427,7 @@
   }
 
 
+#if !defined( FT_MACINTOSH ) || defined( DARWIN_NO_CARBON )
   FT_LOCAL_DEF( FT_Bool )
   raccess_rule_by_darwin_vfs( FT_UInt  rule_index )
   {
@@ -440,6 +441,7 @@
         return FALSE;
     }
   }
+#endif
 
 
   static FT_Error

@@ -1,3 +1,10 @@
+2011-10-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[raccess] Hide raccess_rule_by_darwin_vfs() on native Mac OS X.
+
+	* src/base/ftrfork.c (raccess_rule_by_darwin_vfs): Do not
+	compile on native Mac OS X because it is not used.
+
 2011-10-25  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix MD instruction for twilight zone.
