@@ -1,3 +1,13 @@
+2011-11-05  Werner Lemberg  <wl@gnu.org>
+
+	* README: We use copyright ranges also.
+
+	According to
+
+	  http://www.gnu.org/prep/maintain/html_node/Copyright-Notices.html
+
+	this should be mentioned explicitly.
+
 2011-10-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[raccess] Supplement for previous fix.

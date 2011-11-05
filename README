@@ -6,6 +6,10 @@
 
   Read the files `docs/INSTALL' for installation instructions.
 
+  See the  file `docs/LICENSE.TXT'  for the available licenses.   Note
+  that we use ranges (`2008-2010') for copyright years also instead of
+  listing individual years (`2008, 2009, 2010').
+
   The FreeType 2 API reference is located in `docs/reference'; use the
   file   `ft2-doc.html'   as   the   top  entry   point.    Additional
   documentation is available as a separate package from our sites.  Go
