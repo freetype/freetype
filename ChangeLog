@@ -1,3 +1,13 @@
+2011-11-08  Braden Thomas  <bthomas@apple.com>
+
+	[cid] Various loading fixes.
+
+	* src/cid/cidload.c (cid_load_keyword) <default>,
+	(parse_font_matrix, parse_expansion_factor): Correctly check number
+	of dictionaries.
+	(cid_read_subrs): Protect against invalid values of `num_subrs'.
+	Assure that the elements of the `offsets' array are ascending.
+
 2011-11-05  Werner Lemberg  <wl@gnu.org>
 
 	* README: We use copyright ranges also.
