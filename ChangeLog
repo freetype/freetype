@@ -1,3 +1,31 @@
+2011-11-13  Chris Liddell  <chris.liddell@artifex.com>
+
+	Add FT_Get_PS_Font_Value() API.
+
+	This allows a Type 1 font face to be interrogated to retrieve most
+	of the dictionary keys (keys not relevant to FreeType's Type 1
+	interpreter are not available).
+
+	* include/freetype/internal/services/svpsinfo.h
+	(PS_GetFontValueFunc): New typedef.
+	(PSInfo): Add `ps_get_font_value'.
+	(FT_DEFINE_SERVICE_PSINFOREC): Updated.
+
+	* include/freetype/internal/t1types.h (T1_EncodingType): Moved to...
+	* include/freetype/t1tables.h: Here.
+	(PS_Dict_Keys): New enumeration.
+	(FT_Get_PS_Font_Value): New declaration.
+
+	* src/base/fttype1.c (FT_Get_PS_Font_Value): New function.
+
+	* src/type1/t1driver.c (t1_ps_get_font_value): This new function
+	does the real job.
+	(t1_service_ps_info): Add it.
+
+	* src/cff/cffdrivr.c (cff_service_ps_info), src/cid/cidriver.c
+	(cid_service_ps_info), src/type42/t42drivr.c (t42_service_ps_info):
+	Updated.
+
 2011-11-08  Braden Thomas  <bthomas@apple.com>
 
 	[cid] Various loading fixes.
