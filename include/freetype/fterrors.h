@@ -192,7 +192,6 @@
 #undef FT_NOERRORDEF_
 
 #undef FT_NEED_EXTERN_C
-#undef FT_ERR_CONCAT
 #undef FT_ERR_BASE
 
   /* FT_KEEP_ERR_PREFIX is needed for ftvalid.h */

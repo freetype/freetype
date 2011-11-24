@@ -1,3 +1,7 @@
+2011-11-24  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/fterrors.h: Remove dead code.
+
 2011-11-15  Werner Lemberg  <wl@gnu.org>
 
 	* docs/releases: Updated.
