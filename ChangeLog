@@ -1,3 +1,14 @@
+2011-11-25  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Add more error messages.
+
+	* src/bdf/bdflib.c (_bdf_set_default_spacing, _bdf_add_property):
+	Add line number argument.
+	Update all callers.
+	(ERRMSG5, ERRMSG6, ERRMSG7, ERRMSG8, ERRMSG9): New macros.
+	(_bdf_readstream, _bdf_set_default_spacing, _bdf_add_property,
+	_bdf_parse_glyphs, _bdf_parse_start): Add error messages.
+
 2011-11-24  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/fterrors.h: Remove dead code.
