@@ -99,7 +99,7 @@
         if ( stream_len == 0 )
         {
           FT_TRACE2(( "cid_parser_new: no `StartData' keyword found\n" ));
-          error = CID_Err_Unknown_File_Format;
+          error = CID_Err_Invalid_File_Format;
           goto Exit;
         }
 

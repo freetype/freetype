@@ -1,5 +1,11 @@
 2011-11-26  Werner Lemberg  <wl@gnu.org>
 
+	[cid] Fix error code.
+
+	* src/cid/cidparse.c (cid_parser_new): Do it.
+
+2011-11-26  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Fix error code.
 
 	* src/cff/cffload.c (cff_font_load): Do it.
