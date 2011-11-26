@@ -239,7 +239,7 @@
                  " cannot get glyph name from CFF & CEF fonts\n"
                  "                   "
                  " without the `PSNames' module\n" ));
-      error = CFF_Err_Unknown_File_Format;
+      error = CFF_Err_Missing_Module;
       goto Exit;
     }
 
