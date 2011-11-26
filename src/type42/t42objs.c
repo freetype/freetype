@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 42 objects manager (body).                                      */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009               */
+/*  Copyright 2002-2009, 2011                                              */
 /*  by Roberto Alameda.                                                    */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -179,6 +179,12 @@
     face->psaux = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
                                            "psaux" );
     psaux = (PSAux_Service)face->psaux;
+    if ( !psaux )
+    {
+      FT_ERROR(( "T42_Face_Init: cannot access `psaux' module\n" ));
+      error = T42_Err_Missing_Module;
+      goto Exit;
+    }
 
     /* open the tokenizer, this will also check the font format */
     error = T42_Open_Face( face );
@@ -321,7 +327,7 @@
       root->face_flags |= FT_FACE_FLAG_VERTICAL;
 
     {
-      if ( psnames && psaux )
+      if ( psnames )
       {
         FT_CharMapRec    charmap;
         T1_CMap_Classes  cmap_classes = psaux->t1_cmap_classes;
@@ -465,6 +471,12 @@
 
 
     ttmodule = FT_Get_Module( FT_MODULE(driver)->library, "truetype" );
+    if ( !ttmodule )
+    {
+      FT_ERROR(( "T42_Driver_Init: cannot access `truetype' module\n" ));
+      return T42_Err_Missing_Module;
+    }
+
     driver->ttclazz = (FT_Driver_Class)ttmodule->clazz;
 
     return T42_Err_Ok;

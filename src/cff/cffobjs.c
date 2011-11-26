@@ -494,7 +494,11 @@
     sfnt = (SFNT_Service)FT_Get_Module_Interface(
              library, "sfnt" );
     if ( !sfnt )
-      goto Bad_Format;
+    {
+      FT_ERROR(( "cff_face_init: cannot access `sfnt' module\n" ));
+      error = CFF_Err_Missing_Module;
+      goto Exit;
+    }
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
 
@@ -512,7 +516,8 @@
       if ( face->format_tag != TTAG_OTTO )  /* `OTTO'; OpenType/CFF font */
       {
         FT_TRACE2(( "[not a valid OpenType/CFF font]\n" ));
-        goto Bad_Format;
+        error = CFF_Err_Unknown_File_Format;
+        goto Exit;
       }
 
       /* if we are performing a simple font format check, exit immediately */
@@ -604,7 +609,8 @@
                    " cannot open CFF & CEF fonts\n"
                    "              "
                    " without the `PSNames' module\n" ));
-        goto Bad_Format;
+        error = CFF_Err_Missing_Module;
+        goto Exit;
       }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -1014,10 +1020,6 @@
 
   Exit:
     return error;
-
-  Bad_Format:
-    error = CFF_Err_Unknown_File_Format;
-    goto Exit;
   }
 
 

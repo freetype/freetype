@@ -1,3 +1,23 @@
+2011-11-26  Werner Lemberg  <wl@gnu.org>
+
+	Add new error code FT_Err_Missing_Module.
+
+	Previously, FreeType misleadingly returned
+	FT_Err_Unknown_File_Format if a module was missing (or a test was
+	missing completely).
+
+	* include/freetype/fterrdef.h (FT_Err_Missing_Module): Define.
+
+	* src/cff/cffobjs.c (cff_face_init), src/cid/cidobjs.c
+	(cid_face_init), src/sfnt/sfobjs.c (sfnt_init_face),
+	src/truetype/ttobjs.c (tt_face_init), src/type1/t1objs.c
+	(T1_Face_Init), src/type42/t42objs.c (T42_Face_Init,
+	T42_Driver_Init): Updated.
+
+	* src/type1/t1afm.c (T1_Read_Metrics), src/type/t1objs.c
+	(T1_Face_Init), src/type42/t42objs.c (T42_Face_Init): Remove now
+	redundant test for `psaux'.
+
 2011-11-25  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Add more error messages.

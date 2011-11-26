@@ -494,9 +494,14 @@
 
 
     library = ttface->driver->root.library;
-    sfnt    = (SFNT_Service)FT_Get_Module_Interface( library, "sfnt" );
+
+    sfnt = (SFNT_Service)FT_Get_Module_Interface( library, "sfnt" );
     if ( !sfnt )
-      goto Bad_Format;
+    {
+      FT_ERROR(( "tt_face_init: cannot access `sfnt' module\n" ));
+      error = TT_Err_Missing_Module;
+      goto Exit;
+    }
 
     /* create input stream from resource */
     if ( FT_STREAM_SEEK( 0 ) )

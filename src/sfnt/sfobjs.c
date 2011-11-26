@@ -452,7 +452,10 @@
     {
       sfnt = (SFNT_Service)FT_Get_Module_Interface( library, "sfnt" );
       if ( !sfnt )
-        return SFNT_Err_Invalid_File_Format;
+      {
+        FT_ERROR(( "sfnt_init_face: cannot access `sfnt' module\n" ));
+        return SFNT_Err_Missing_Module;
+      }
 
       face->sfnt       = sfnt;
       face->goto_table = sfnt->goto_table;
