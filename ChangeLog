@@ -1,5 +1,23 @@
 2011-11-26  Werner Lemberg  <wl@gnu.org>
 
+	Improve tracing.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Done), src/pcf/pcfdrivr.c
+	(PCF_Face_Done): Remove tracing message.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init), src/cff/cffobjs.c
+	(cff_face_init), src/cid/cidobjs.c (cid_face_init),
+	src/pfr/pfrobjs.c (pfr_face_init), src/sfnt/sfobjs.c
+	(sfnt_init_face), src/truetype/ttobjs.c (tt_face_init),
+	src/type1/t1objs.c (T1_Face_Init), src/type42/t42objs.c
+	(T42_Face_Init), src/winfonts/winfnt.c (FNT_Face_Init): Add
+	`greeting' message.
+
+	* src/sfnt/sfobjs.c (sfnt_open_font), src/type42/t42objs.c
+	(T42_Open_Face): Improve tracing.
+
+2011-11-26  Werner Lemberg  <wl@gnu.org>
+
 	[cid] Fix error code.
 
 	* src/cid/cidparse.c (cid_parser_new): Do it.

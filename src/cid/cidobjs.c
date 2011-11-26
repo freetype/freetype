@@ -318,6 +318,8 @@
       face->pshinter = pshinter;
     }
 
+    FT_TRACE2(( "CID driver\n" ));
+
     /* open the tokenizer; this will also check the font format */
     if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;

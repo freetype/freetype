@@ -164,7 +164,7 @@
       error = check_type1_format( stream, "%!FontType", 10 );
       if ( error )
       {
-        FT_TRACE2(( "[not a Type1 font]\n" ));
+        FT_TRACE2(( "  not a Type 1 font\n" ));
         goto Exit;
       }
     }

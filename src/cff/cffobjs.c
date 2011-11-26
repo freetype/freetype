@@ -505,6 +505,8 @@
     pshinter = (PSHinter_Service)FT_Get_Module_Interface(
                  library, "pshinter" );
 
+    FT_TRACE2(( "CFF driver\n" ));
+
     /* create input stream from resource */
     if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
@@ -515,7 +517,7 @@
     {
       if ( face->format_tag != TTAG_OTTO )  /* `OTTO'; OpenType/CFF font */
       {
-        FT_TRACE2(( "[not a valid OpenType/CFF font]\n" ));
+        FT_TRACE2(( "  not an OpenType/CFF font\n" ));
         error = CFF_Err_Unknown_File_Format;
         goto Exit;
       }

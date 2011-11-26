@@ -376,7 +376,10 @@
          tag != TTAG_true    &&
          tag != TTAG_typ1    &&
          tag != 0x00020000UL )
+    {
+      FT_TRACE2(( "  not a font using the SFNT container format\n" ));
       return SFNT_Err_Unknown_File_Format;
+    }
 
     face->ttc_header.tag = TTAG_ttcf;
 
@@ -462,6 +465,8 @@
     }
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, face->psnames, POSTSCRIPT_CMAPS );
+
+    FT_TRACE2(( "SFNT driver\n" ));
 
     error = sfnt_open_font( stream, face );
     if ( error )

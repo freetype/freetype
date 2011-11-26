@@ -2,8 +2,7 @@
 
     FreeType font driver for pcf files
 
-    Copyright (C) 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2008, 2009,
-                  2010 by
+    Copyright (C) 2000-2004, 2006-2011 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -248,8 +247,6 @@ THE SOFTWARE.
     FT_FREE( face->charset_encoding );
     FT_FREE( face->charset_registry );
 
-    FT_TRACE4(( "PCF_Face_Done: done face\n" ));
-
     /* close compressed stream if any */
     if ( pcfface->stream == &face->comp_stream )
     {
@@ -273,6 +270,8 @@ THE SOFTWARE.
     FT_UNUSED( params );
     FT_UNUSED( face_index );
 
+
+    FT_TRACE2(( "PCF driver\n" ));
 
     error = pcf_load_font( stream, face );
     if ( error )
@@ -405,7 +404,7 @@ THE SOFTWARE.
     return error;
 
   Fail:
-    FT_TRACE2(( "[not a valid PCF file]\n" ));
+    FT_TRACE2(( "  not a PCF file\n" ));
     PCF_Face_Done( pcfface );
     error = PCF_Err_Unknown_File_Format;  /* error */
     goto Exit;

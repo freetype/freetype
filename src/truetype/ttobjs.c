@@ -493,6 +493,8 @@
     TT_Face       face = (TT_Face)ttface;
 
 
+    FT_TRACE2(( "TTF driver\n" ));
+
     library = ttface->driver->root.library;
 
     sfnt = (SFNT_Service)FT_Get_Module_Interface( library, "sfnt" );
@@ -519,7 +521,7 @@
          face->format_tag != 0x00020000L &&    /* CJK fonts for Win 3.1 */
          face->format_tag != TTAG_true   )     /* Mac fonts */
     {
-      FT_TRACE2(( "[not a valid TTF font]\n" ));
+      FT_TRACE2(( "  not a TTF font\n" ));
       goto Bad_Format;
     }
 

@@ -61,6 +61,8 @@
 
     if ( type1->font_type != 42 )
     {
+      FT_ERROR(( "T42_Open_Face: cannot handle FontType %d\n",
+                 type1->font_type ));
       error = T42_Err_Unknown_File_Format;
       goto Exit;
     }
@@ -185,6 +187,8 @@
       error = T42_Err_Missing_Module;
       goto Exit;
     }
+
+    FT_TRACE2(( "Type 42 driver\n" ));
 
     /* open the tokenizer, this will also check the font format */
     error = T42_Open_Face( face );

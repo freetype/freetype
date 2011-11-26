@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver for Windows FNT/FON files                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2006, 2007, 2008, 2009, 2010 by */
+/*  Copyright 1996-2004, 2006-2011 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*  Copyright 2003 Huw D M Davies for Codeweavers                          */
 /*  Copyright 2007 Dmitry Timoshkov for Codeweavers                        */
@@ -224,7 +224,7 @@
     if ( header->version != 0x200 &&
          header->version != 0x300 )
     {
-      FT_TRACE2(( "[not a valid FNT file]\n" ));
+      FT_TRACE2(( "  not a Windows FNT file\n" ));
       error = FNT_Err_Unknown_File_Format;
       goto Exit;
     }
@@ -234,7 +234,7 @@
 
     if ( header->file_size < size )
     {
-      FT_TRACE2(( "[not a valid FNT file]\n" ));
+      FT_TRACE2(( "  not a Windows FNT file\n" ));
       error = FNT_Err_Unknown_File_Format;
       goto Exit;
     }
@@ -695,6 +695,8 @@
     FT_UNUSED( num_params );
     FT_UNUSED( params );
 
+
+    FT_TRACE2(( "Windows FNT driver\n" ));
 
     /* try to load font from a DLL */
     error = fnt_face_get_dll_font( face, face_index );

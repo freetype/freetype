@@ -323,6 +323,8 @@
     face->pshinter = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
                                               "pshinter" );
 
+    FT_TRACE2(( "Type 1 driver\n" ));
+
     /* open the tokenizer; this will also check the font format */
     error = T1_Open_Face( face );
     if ( error )
