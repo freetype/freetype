@@ -1,5 +1,11 @@
 2011-11-26  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Fix error code.
+
+	* src/cff/cffload.c (cff_font_load): Do it.
+
+2011-11-26  Werner Lemberg  <wl@gnu.org>
+
 	Add new error code FT_Err_Missing_Module.
 
 	Previously, FreeType misleadingly returned
