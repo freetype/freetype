@@ -200,6 +200,10 @@
 #define ERRMSG8  "[line %ld] Invalid `%s' value.\n"
 #define ERRMSG9  "[line %ld] Invalid keyword.\n"
 
+  /* Debug messages. */
+#define DBGMSG1  "  [%6ld] %s" /* no \n */
+#define DBGMSG2  " (0x%lX)\n"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1577,6 +1581,8 @@
 
       p->flags |= _BDF_GLYPH;
 
+      FT_TRACE4(( DBGMSG1, lineno, s ));
+
       goto Exit;
     }
 
@@ -1596,6 +1602,8 @@
         goto Exit;
 
       p->glyph_enc = _bdf_atol( p->list.field[1], 0, 10 );
+
+      FT_TRACE4(( DBGMSG2, p->glyph_enc ));
 
       /* Check that the encoding is in the range [0,65536] because */
       /* otherwise p->have (a bitmap with static size) overflows.  */
