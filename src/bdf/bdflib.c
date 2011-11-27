@@ -413,7 +413,8 @@
     bdf_font_t*     font;
     bdf_options_t*  opts;
 
-    unsigned long   have[2048];
+    unsigned long   have[34816]; /* must be in sync with `nmod' and `umod' */
+                                 /* arrays from `bdf_font_t' structure     */
     _bdf_list_t     list;
 
     FT_Memory       memory;
@@ -1605,8 +1606,8 @@
 
       FT_TRACE4(( DBGMSG2, p->glyph_enc ));
 
-      /* Check that the encoding is in the range [0,65536] because */
-      /* otherwise p->have (a bitmap with static size) overflows.  */
+      /* Check that the encoding is in the Unicode range because  */
+      /* otherwise p->have (a bitmap with static size) overflows. */
       if ( p->glyph_enc > 0                               &&
            (size_t)p->glyph_enc >= sizeof ( p->have ) * 8 )
       {

@@ -1,5 +1,22 @@
 2011-11-27  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #34896.
+
+	ENCODING now covers the whole Unicode range.
+
+	Note, however, that this change is quite expensive since it
+	increases the size of three arrays by almost 400kByte in total.  The
+	right fix is to replace the logic with something smarter.
+	Additionally, there exist very old BDFs for three-byte CCCII
+	encoding which exceeds the range of Unicode (another reason to have
+	a smarter logic).
+
+	* src/bdf/bdf.h (bdf_font_t): Increase size of `nmod' and `umod'
+	arrays.
+	* src/bdf/bdflib.c (bdf_parse_t): Increase size of `have' array.
+
+2011-11-27  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Improve tracing.
 
 	* src/bdf/bdflib.c (DBGMSG1, DBGMSG2): New macros.
@@ -303,7 +320,7 @@
 	Add explicit LZW decompression stack size limit.
 
 	Stack larger than 1<<LZW_MAX_BITS is never needed if prefix table is
-	constructed correctly.  It's even less than that, see e.g. 
+	constructed correctly.  It's even less than that, see e.g.
 	libarchive code comment for a better size upper bound:
 
 	  http://code.google.com/p/libarchive/source/browse/trunk/libarchive/archive_read_support_filter_compress.c?r=3635#121
