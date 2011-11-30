@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver interface (specification).                      */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2006, 2008 by                         */
+/*  Copyright 1996-2003, 2006, 2008, 2011 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -162,10 +162,9 @@ FT_BEGIN_HEADER
   /*                        starting at `first'.  The `vertical' flag must */
   /*                        be set to get vertical advance heights.  The   */
   /*                        `advances' buffer is caller-allocated.         */
-  /*                        Currently not implemented.  The idea of this   */
-  /*                        function is to be able to perform              */
-  /*                        device-independent text layout without loading */
-  /*                        a single glyph image.                          */
+  /*                        The idea of this function is to be able to     */
+  /*                        perform device-independent text layout without */
+  /*                        loading a single glyph image.                  */
   /*                                                                       */
   /*    request_size     :: A handle to a function used to request the new */
   /*                        character size.  Can be set to 0 if the        */
