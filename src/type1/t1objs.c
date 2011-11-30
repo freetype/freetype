@@ -72,8 +72,11 @@
 
 
   FT_LOCAL_DEF( void )
-  T1_Size_Done( T1_Size  size )
+  T1_Size_Done( FT_Size  t1size )          /* T1_Size */
   {
+    T1_Size  size = (T1_Size)t1size;
+
+
     if ( size->root.internal )
     {
       PSH_Globals_Funcs  funcs;
@@ -89,8 +92,9 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Size_Init( T1_Size  size )
+  T1_Size_Init( FT_Size  t1size )      /* T1_Size */
   {
+    T1_Size            size  = (T1_Size)t1size;
     FT_Error           error = T1_Err_Ok;
     PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
 
@@ -112,9 +116,10 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_Size_Request( T1_Size          size,
+  T1_Size_Request( FT_Size          t1size,     /* T1_Size */
                    FT_Size_Request  req )
   {
+    T1_Size            size  = (T1_Size)t1size;
     PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
 
 
@@ -137,20 +142,20 @@
   /*************************************************************************/
 
   FT_LOCAL_DEF( void )
-  T1_GlyphSlot_Done( T1_GlyphSlot  slot )
+  T1_GlyphSlot_Done( FT_GlyphSlot  slot )
   {
-    slot->root.internal->glyph_hints = 0;
+    slot->internal->glyph_hints = 0;
   }
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_GlyphSlot_Init( T1_GlyphSlot  slot )
+  T1_GlyphSlot_Init( FT_GlyphSlot  slot )
   {
     T1_Face           face;
     PSHinter_Service  pshinter;
 
 
-    face     = (T1_Face)slot->root.face;
+    face     = (T1_Face)slot->face;
     pshinter = (PSHinter_Service)face->pshinter;
 
     if ( pshinter )
@@ -158,15 +163,18 @@
       FT_Module  module;
 
 
-      module = FT_Get_Module( slot->root.face->driver->root.library, "pshinter" );
-      if (module)
+      module = FT_Get_Module( slot->face->driver->root.library,
+                              "pshinter" );
+      if ( module )
       {
         T1_Hints_Funcs  funcs;
 
+
         funcs = pshinter->get_t1_funcs( module );
-        slot->root.internal->glyph_hints = (void*)funcs;
+        slot->internal->glyph_hints = (void*)funcs;
       }
     }
+
     return 0;
   }
 
@@ -190,8 +198,9 @@
   /*    face :: A typeless pointer to the face object to destroy.          */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  T1_Face_Done( T1_Face  face )
+  T1_Face_Done( FT_Face  t1face )         /* T1_Face */
   {
+    T1_Face    face = (T1_Face)t1face;
     FT_Memory  memory;
     T1_Font    type1;
 
@@ -289,11 +298,12 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   T1_Face_Init( FT_Stream      stream,
-                T1_Face        face,
+                FT_Face        t1face,          /* T1_Face */
                 FT_Int         face_index,
                 FT_Int         num_params,
                 FT_Parameter*  params )
   {
+    T1_Face             face = (T1_Face)t1face;
     FT_Error            error;
     FT_Service_PsCMaps  psnames;
     PSAux_Service       psaux;
@@ -576,7 +586,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  T1_Driver_Init( T1_Driver  driver )
+  T1_Driver_Init( FT_Module  driver )
   {
     FT_UNUSED( driver );
 
@@ -596,7 +606,7 @@
   /*    driver :: A handle to the target Type 1 driver.                    */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  T1_Driver_Done( T1_Driver  driver )
+  T1_Driver_Done( FT_Module  driver )
   {
     FT_UNUSED( driver );
   }
