@@ -1,5 +1,15 @@
 2011-11-30  Werner Lemberg  <wl@gnu.org>
 
+	[type42] Remove casts.
+
+	* src/type42/t42driver.c (t42_driver_class): Remove all casts and
+	update affected functions.
+
+	* src/type42/t42objs.c, src/type42/t42objs.h: Updated for t42driver
+	changes.
+
+2011-11-30  Werner Lemberg  <wl@gnu.org>
+
 	[type1] Remove casts.
 
 	* src/type1/t1driver.c (t1_driver_class): Remove all casts and

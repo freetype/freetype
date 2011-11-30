@@ -154,11 +154,12 @@
 
   FT_LOCAL_DEF( FT_Error )
   T42_Face_Init( FT_Stream      stream,
-                 T42_Face       face,
+                 FT_Face        t42face,       /* T42_Face */
                  FT_Int         face_index,
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
+    T42_Face            face  = (T42_Face)t42face;
     FT_Error            error;
     FT_Service_PsCMaps  psnames;
     PSAux_Service       psaux;
@@ -400,8 +401,9 @@
 
 
   FT_LOCAL_DEF( void )
-  T42_Face_Done( T42_Face  face )
+  T42_Face_Done( FT_Face  t42face )
   {
+    T42_Face     face = (T42_Face)t42face;
     T1_Font      type1;
     PS_FontInfo  info;
     FT_Memory    memory;
@@ -469,12 +471,13 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  T42_Driver_Init( T42_Driver  driver )
+  T42_Driver_Init( FT_Module  module )        /* T42_Driver */
   {
-    FT_Module  ttmodule;
+    T42_Driver  driver = (T42_Driver)module;
+    FT_Module   ttmodule;
 
 
-    ttmodule = FT_Get_Module( FT_MODULE(driver)->library, "truetype" );
+    ttmodule = FT_Get_Module( module->library, "truetype" );
     if ( !ttmodule )
     {
       FT_ERROR(( "T42_Driver_Init: cannot access `truetype' module\n" ));
@@ -488,23 +491,24 @@
 
 
   FT_LOCAL_DEF( void )
-  T42_Driver_Done( T42_Driver  driver )
+  T42_Driver_Done( FT_Module  module )
   {
-    FT_UNUSED( driver );
+    FT_UNUSED( module );
   }
 
 
   FT_LOCAL_DEF( FT_Error )
-  T42_Size_Init( T42_Size  size )
+  T42_Size_Init( FT_Size  size )         /* T42_Size */
   {
-    FT_Face   face = size->root.face;
+    T42_Size  t42size = (T42_Size)size;
+    FT_Face   face    = size->face;
     T42_Face  t42face = (T42_Face)face;
     FT_Size   ttsize;
     FT_Error  error   = T42_Err_Ok;
 
 
     error = FT_New_Size( t42face->ttf_face, &ttsize );
-    size->ttsize = ttsize;
+    t42size->ttsize = ttsize;
 
     FT_Activate_Size( ttsize );
 
@@ -513,10 +517,11 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T42_Size_Request( T42_Size         size,
+  T42_Size_Request( FT_Size          t42size,      /* T42_Size */
                     FT_Size_Request  req )
   {
-    T42_Face  face = (T42_Face)size->root.face;
+    T42_Size  size = (T42_Size)t42size;
+    T42_Face  face = (T42_Face)t42size->face;
     FT_Error  error;
 
 
@@ -524,17 +529,18 @@
 
     error = FT_Request_Size( face->ttf_face, req );
     if ( !error )
-      ( (FT_Size)size )->metrics = face->ttf_face->size->metrics;
+      t42size->metrics = face->ttf_face->size->metrics;
 
     return error;
   }
 
 
   FT_LOCAL_DEF( FT_Error )
-  T42_Size_Select( T42_Size  size,
+  T42_Size_Select( FT_Size   t42size,         /* T42_Size */
                    FT_ULong  strike_index )
   {
-    T42_Face  face = (T42_Face)size->root.face;
+    T42_Size  size = (T42_Size)t42size;
+    T42_Face  face = (T42_Face)t42size->face;
     FT_Error  error;
 
 
@@ -542,7 +548,7 @@
 
     error = FT_Select_Size( face->ttf_face, (FT_Int)strike_index );
     if ( !error )
-      ( (FT_Size)size )->metrics = face->ttf_face->size->metrics;
+      t42size->metrics = face->ttf_face->size->metrics;
 
     return error;
 
@@ -550,9 +556,10 @@
 
 
   FT_LOCAL_DEF( void )
-  T42_Size_Done( T42_Size  size )
+  T42_Size_Done( FT_Size  t42size )             /* T42_Size */
   {
-    FT_Face      face    = size->root.face;
+    T42_Size     size    = (T42_Size)t42size;
+    FT_Face      face    = t42size->face;
     T42_Face     t42face = (T42_Face)face;
     FT_ListNode  node;
 
@@ -567,12 +574,13 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T42_GlyphSlot_Init( T42_GlyphSlot  slot )
+  T42_GlyphSlot_Init( FT_GlyphSlot  t42slot )        /* T42_GlyphSlot */
   {
-    FT_Face       face    = slot->root.face;
-    T42_Face      t42face = (T42_Face)face;
-    FT_GlyphSlot  ttslot;
-    FT_Error      error   = T42_Err_Ok;
+    T42_GlyphSlot  slot    = (T42_GlyphSlot)t42slot;
+    FT_Face        face    = t42slot->face;
+    T42_Face       t42face = (T42_Face)face;
+    FT_GlyphSlot   ttslot;
+    FT_Error       error   = T42_Err_Ok;
 
 
     if ( face->glyph == NULL )
@@ -591,8 +599,11 @@
 
 
   FT_LOCAL_DEF( void )
-  T42_GlyphSlot_Done( T42_GlyphSlot slot )
+  T42_GlyphSlot_Done( FT_GlyphSlot  t42slot )       /* T42_GlyphSlot */
   {
+    T42_GlyphSlot  slot = (T42_GlyphSlot)t42slot;
+
+
     FT_Done_GlyphSlot( slot->ttslot );
   }
 
