@@ -848,9 +848,9 @@ THE SOFTWARE.
 
       0,
 
-      (FT_Module_Constructor)0,
-      (FT_Module_Destructor) 0,
-      (FT_Module_Requester)  bdf_driver_requester
+      0,                        /* FT_Module_Constructor */
+      0,                        /* FT_Module_Destructor  */
+      bdf_driver_requester
     },
 
     sizeof ( BDF_FaceRec ),

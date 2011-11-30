@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR driver interface (body).                                */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2006, 2008, 2010 by                        */
+/*  Copyright 2002-2004, 2006, 2008, 2010, 2011 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -181,8 +181,8 @@
 
       NULL,
 
-      0,
-      0,
+      0,                /* FT_Module_Constructor */
+      0,                /* FT_Module_Destructor  */
       pfr_get_service
     },
 

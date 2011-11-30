@@ -683,8 +683,8 @@ THE SOFTWARE.
 
       0,
 
-      0,
-      0,
+      0,                    /* FT_Module_Constructor */
+      0,                    /* FT_Module_Destructor  */
       pcf_driver_requester
     },
 
