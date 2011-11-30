@@ -639,7 +639,7 @@
   FT_DEFINE_MODULE(sfnt_module_class,
   
     0,  /* not a font driver or renderer */
-    sizeof( FT_ModuleRec ),
+    sizeof ( FT_ModuleRec ),
 
     "sfnt",     /* driver name                            */
     0x10000L,   /* driver version 1.0                     */

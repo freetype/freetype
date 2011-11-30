@@ -3481,7 +3481,7 @@
   {
     if ( raster )
     {
-      if ( pool_base && pool_size >= (long)sizeof(TWorker) + 2048 )
+      if ( pool_base && pool_size >= (long)sizeof ( TWorker ) + 2048 )
       {
         PWorker  worker = (PWorker)pool_base;
 

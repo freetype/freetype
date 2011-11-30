@@ -1784,7 +1784,7 @@ typedef ptrdiff_t  FT_PtrDist;
             cell_start += sizeof ( TCell ) - cell_mod;
 
           cell_end  = ras.buffer_size;
-          cell_end -= cell_end % sizeof( TCell );
+          cell_end -= cell_end % sizeof ( TCell );
 
           cells_max = (PCell)( (char*)ras.buffer + cell_end );
           ras.cells = (PCell)( (char*)ras.buffer + cell_start );

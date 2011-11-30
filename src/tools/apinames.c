@@ -86,7 +86,8 @@ names_add( const char*  name,
   if ( num_names >= max_names )
   {
     max_names += (max_names >> 1) + 4;
-    the_names  = (NameRec*)realloc( the_names, sizeof(the_names[0])*max_names );
+    the_names  = (NameRec*)realloc( the_names,
+                                    sizeof ( the_names[0] ) * max_names );
     if ( the_names == NULL )
       panic( "not enough memory" );
   }
@@ -115,7 +116,8 @@ name_compare( const void*  name1,
 static void
 names_sort( void )
 {
-  qsort( the_names, (size_t)num_names, sizeof(the_names[0]), name_compare );
+  qsort( the_names, (size_t)num_names,
+         sizeof ( the_names[0] ), name_compare );
 }
 
 
@@ -169,7 +171,7 @@ names_dump( FILE*         out,
           int  len = dot - dll_name;
 
 
-          if ( len > (int)( sizeof( temp ) - 1 ) )
+          if ( len > (int)( sizeof ( temp ) - 1 ) )
             len = sizeof ( temp ) - 1;
 
           memcpy( temp, dll_name, len );

@@ -681,7 +681,7 @@
       FT_MODULE_DRIVER_SCALABLE   |
       FT_MODULE_DRIVER_HAS_HINTER,
 
-      sizeof( FT_DriverRec ),
+      sizeof ( FT_DriverRec ),
 
       "type1",
       0x10000L,
@@ -694,9 +694,9 @@
       (FT_Module_Requester)  Get_Interface,
     },
 
-    sizeof( T1_FaceRec ),
-    sizeof( T1_SizeRec ),
-    sizeof( T1_GlyphSlotRec ),
+    sizeof ( T1_FaceRec ),
+    sizeof ( T1_SizeRec ),
+    sizeof ( T1_GlyphSlotRec ),
 
     (FT_Face_InitFunc)        T1_Face_Init,
     (FT_Face_DoneFunc)        T1_Face_Done,

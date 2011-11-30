@@ -313,7 +313,7 @@
     if ( load_flags & FT_LOAD_NO_HINTING )
     {
       /* both FT_LOAD_NO_HINTING and FT_LOAD_NO_AUTOHINT   */
-      /* are necessary to disable hinting for tricky fonts */          
+      /* are necessary to disable hinting for tricky fonts */
 
       if ( FT_IS_TRICKY( face ) )
         load_flags &= ~FT_LOAD_NO_HINTING;
@@ -440,11 +440,10 @@
 #define TT_SIZE_SELECT    0
 #endif
 
-  FT_DEFINE_DRIVER(tt_driver_class,
-  
-    
-      FT_MODULE_FONT_DRIVER        |
-      FT_MODULE_DRIVER_SCALABLE    |
+  FT_DEFINE_DRIVER( tt_driver_class,
+
+      FT_MODULE_FONT_DRIVER     |
+      FT_MODULE_DRIVER_SCALABLE |
       TT_HINTER_FLAG,
 
       sizeof ( TT_DriverRec ),
@@ -468,15 +467,15 @@
     tt_size_init,
     tt_size_done,
     tt_slot_init,
-    0,                      /* FT_Slot_DoneFunc */
+    0,                       /* FT_Slot_DoneFunc */
 
-    ft_stub_set_char_sizes, /* FT_CONFIG_OPTION_OLD_INTERNALS */
+    ft_stub_set_char_sizes,  /* FT_CONFIG_OPTION_OLD_INTERNALS */
     ft_stub_set_pixel_sizes, /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     Load_Glyph,
 
     tt_get_kerning,
-    0,                      /* FT_Face_AttachFunc      */
+    0,                       /* FT_Face_AttachFunc */
     tt_get_advances,
 
     tt_size_request,

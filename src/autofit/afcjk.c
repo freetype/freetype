@@ -2225,11 +2225,11 @@
   };
 
 
-  AF_DEFINE_SCRIPT_CLASS(af_cjk_script_class,
+  AF_DEFINE_SCRIPT_CLASS( af_cjk_script_class,
     AF_SCRIPT_CJK,
     af_cjk_uniranges,
 
-    sizeof( AF_CJKMetricsRec ),
+    sizeof ( AF_CJKMetricsRec ),
 
     (AF_Script_InitMetricsFunc) af_cjk_metrics_init,
     (AF_Script_ScaleMetricsFunc)af_cjk_metrics_scale,
@@ -2247,11 +2247,11 @@
   };
 
 
-  AF_DEFINE_SCRIPT_CLASS(af_cjk_script_class,
+  AF_DEFINE_SCRIPT_CLASS( af_cjk_script_class,
     AF_SCRIPT_CJK,
     af_cjk_uniranges,
 
-    sizeof( AF_CJKMetricsRec ),
+    sizeof ( AF_CJKMetricsRec ),
 
     (AF_Script_InitMetricsFunc) NULL,
     (AF_Script_ScaleMetricsFunc)NULL,

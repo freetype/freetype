@@ -1118,9 +1118,9 @@
       (FT_Module_Requester)  winfnt_get_service
     },
 
-    sizeof( FNT_FaceRec ),
-    sizeof( FT_SizeRec ),
-    sizeof( FT_GlyphSlotRec ),
+    sizeof ( FNT_FaceRec ),
+    sizeof ( FT_SizeRec ),
+    sizeof ( FT_GlyphSlotRec ),
 
     (FT_Face_InitFunc)        FNT_Face_Init,
     (FT_Face_DoneFunc)        FNT_Face_Done,

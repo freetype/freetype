@@ -328,7 +328,7 @@
 
 
     FT_MEM_SET( num_matched_ids, 0,
-                sizeof( int ) * TRICK_SFNT_IDS_NUM_FACES );
+                sizeof ( int ) * TRICK_SFNT_IDS_NUM_FACES );
     has_cvt  = FALSE;
     has_fpgm = FALSE;
     has_prep = FALSE;

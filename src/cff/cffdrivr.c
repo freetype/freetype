@@ -625,12 +625,13 @@
 #define CFF_SIZE_SELECT 0
 #endif
 
-  FT_DEFINE_DRIVER(cff_driver_class,
+  FT_DEFINE_DRIVER( cff_driver_class,
+
       FT_MODULE_FONT_DRIVER       |
       FT_MODULE_DRIVER_SCALABLE   |
       FT_MODULE_DRIVER_HAS_HINTER,
 
-      sizeof( CFF_DriverRec ),
+      sizeof ( CFF_DriverRec ),
       "cff",
       0x10000L,
       0x20000L,
@@ -642,9 +643,9 @@
       cff_get_interface,
 
     /* now the specific driver fields */
-    sizeof( TT_FaceRec ),
-    sizeof( CFF_SizeRec ),
-    sizeof( CFF_GlyphSlotRec ),
+    sizeof ( TT_FaceRec ),
+    sizeof ( CFF_SizeRec ),
+    sizeof ( CFF_GlyphSlotRec ),
 
     cff_face_init,
     cff_face_done,
@@ -653,14 +654,14 @@
     cff_slot_init,
     cff_slot_done,
 
-    ft_stub_set_char_sizes, /* FT_CONFIG_OPTION_OLD_INTERNALS */
+    ft_stub_set_char_sizes,  /* FT_CONFIG_OPTION_OLD_INTERNALS */
     ft_stub_set_pixel_sizes, /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
     Load_Glyph,
 
     cff_get_kerning,
-    0,                      /* FT_Face_AttachFunc      */
-    cff_get_advances,       /* FT_Face_GetAdvancesFunc */
+    0,                       /* FT_Face_AttachFunc */
+    cff_get_advances,
 
     cff_size_request,
 

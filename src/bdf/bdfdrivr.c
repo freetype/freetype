@@ -870,9 +870,9 @@ THE SOFTWARE.
 #endif
     BDF_Glyph_Load,
 
-    0,                          /* FT_Face_GetKerningFunc   */
-    0,                          /* FT_Face_AttachFunc       */
-    0,                          /* FT_Face_GetAdvancesFunc  */
+    0,                          /* FT_Face_GetKerningFunc  */
+    0,                          /* FT_Face_AttachFunc      */
+    0,                          /* FT_Face_GetAdvancesFunc */
 
     BDF_Size_Request,
     BDF_Size_Select

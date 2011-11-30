@@ -754,7 +754,7 @@
       case AFM_TOKEN_ENDFONTMETRICS:
         fi->NumKernPair = n + 1;
         ft_qsort( fi->KernPairs, fi->NumKernPair,
-                  sizeof( AFM_KernPairRec ),
+                  sizeof ( AFM_KernPairRec ),
                   afm_compare_kern_pairs );
         return PSaux_Err_Ok;
 

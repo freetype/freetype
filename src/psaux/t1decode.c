@@ -400,7 +400,7 @@
     if ( decoder->buildchar && decoder->len_buildchar > 0 )
       ft_memset( &decoder->buildchar[0],
                  0,
-                 sizeof( decoder->buildchar[0] ) * decoder->len_buildchar );
+                 sizeof ( decoder->buildchar[0] ) * decoder->len_buildchar );
 
     FT_TRACE4(( "\n"
                 "Start charstring\n" ));
@@ -880,7 +880,7 @@
             ft_memcpy( &decoder->buildchar[idx],
                        blend->weight_vector,
                        blend->num_designs *
-                         sizeof( blend->weight_vector[0] ) );
+                         sizeof ( blend->weight_vector[0] ) );
           }
           break;
 

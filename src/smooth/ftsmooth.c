@@ -421,10 +421,10 @@
   }
 
 
-  FT_DEFINE_RENDERER(ft_smooth_renderer_class,
+  FT_DEFINE_RENDERER( ft_smooth_renderer_class,
 
       FT_MODULE_RENDERER,
-      sizeof( FT_RendererRec ),
+      sizeof ( FT_RendererRec ),
 
       "smooth",
       0x10000L,
@@ -448,10 +448,10 @@
   )
 
 
-  FT_DEFINE_RENDERER(ft_smooth_lcd_renderer_class,
+  FT_DEFINE_RENDERER( ft_smooth_lcd_renderer_class,
   
       FT_MODULE_RENDERER,
-      sizeof( FT_RendererRec ),
+      sizeof ( FT_RendererRec ),
 
       "smooth-lcd",
       0x10000L,
@@ -474,10 +474,10 @@
     (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
   )
 
-  FT_DEFINE_RENDERER(ft_smooth_lcdv_renderer_class,
+  FT_DEFINE_RENDERER( ft_smooth_lcdv_renderer_class,
 
       FT_MODULE_RENDERER,
-      sizeof( FT_RendererRec ),
+      sizeof ( FT_RendererRec ),
 
       "smooth-lcdv",
       0x10000L,
