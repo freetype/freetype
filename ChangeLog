@@ -1,5 +1,13 @@
 2011-11-30  Werner Lemberg  <wl@gnu.org>
 
+	[winfonts] Remove casts.
+
+	* src/winfonts/winfnt.c (winfnt_driver_class): Remove all casts and
+	update affected functions.
+	(FNT_Size_Select): Fix number of arguments.
+
+2011-11-30  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Remove casts.
 
 	* src/type42/t42driver.c (t42_driver_class): Remove all casts and
