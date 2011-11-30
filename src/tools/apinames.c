@@ -59,8 +59,9 @@ static void
 names_add( const char*  name,
            const char*  end )
 {
-  int   nn, len, h;
-  Name  nm;
+  unsigned int  h;
+  int           nn, len;
+  Name          nm;
 
   if ( end <= name )
     return;

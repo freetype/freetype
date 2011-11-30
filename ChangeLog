@@ -1,3 +1,13 @@
+2011-11-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[apinames] Fix the overflow of signed integer hash.
+
+	* src/tools/apinames.c (names_add): Change the type of `h' from
+	int to unsigned int, to prevent undefined behaviour in the
+	overflow of signed integers (overflow of unsigned int is defined
+	to be wrap around).  Found by clang test suggested by Sean
+	McBride.
+
 2011-11-30  Werner Lemberg  <wl@gnu.org>
 
 	[winfonts] Remove casts.
