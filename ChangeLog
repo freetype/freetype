@@ -1,5 +1,13 @@
 2011-11-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Fix Savannah bug #34728 (`make devel' on Mac OS X).
+
+	* builds/toplevel.mk: Check `/dev/null' to identify the Unix-
+	like systems without `init' nor `hurd' (e.g. Mac OS X >= 10.4).
+	* builds/unix/detect.mk: Ditto.
+
+2011-11-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[apinames] Fix the overflow of signed integer hash.
 
 	* src/tools/apinames.c (names_add): Change the type of `h' from
