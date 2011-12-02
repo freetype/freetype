@@ -331,7 +331,7 @@ if test x$with_old_mac_fonts = xyes; then
     [AC_MSG_RESULT([ok])
      ftmac_c='ftmac.c'
      AC_MSG_CHECKING([OS_INLINE macro is ANSI compatible])
-     orig_CFLAGS="$CFLAGS"
+     orig_CFLAGS="$CFLAGS -DFT_MACINTOSH"
      CFLAGS="$CFLAGS $XX_CFLAGS $XX_ANSIFLAGS"
      AC_COMPILE_IFELSE([
        AC_LANG_PROGRAM([

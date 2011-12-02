@@ -119,6 +119,8 @@
 #endif
 
 
+#ifdef FT_MACINTOSH
+
   /* This function is deprecated because FSSpec is deprecated in Mac OS X  */
   FT_EXPORT_DEF( FT_Error )
   FT_GetFile_From_Mac_Name( const char*  fontName,
@@ -1052,6 +1054,8 @@
       return FT_New_Face_From_FSRef( library, &ref, face_index, aface );
 #endif
   }
+
+#endif /* FT_MACINTOSH */
 
 
 /* END */

@@ -1,3 +1,39 @@
+2011-12-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[mac] Unify DARWIN_NO_CARBON with FT_MACINTOSH.
+
+	Originally FT_MACINTOSH was a pure auto macro and DARWIN_NO_CARBON
+	was a configurable macro to disable Carbon-dependent code.  Because
+	now configure script sets DARWIN_NO_CARBON by default and disables
+	Darwin & Carbon-dependent codes, these macros can be unified.
+	FT_MACINTOSH (undefined by default) is kept and DARWIN_NO_CARBON
+	(defined by default) is removed, because DARWIN_NO_CARBON violates
+	FT_XXX naming convention of public macros, and a macro configured by 
+	default is not portable for the building without configure (e.g.
+	make devel).
+
+	* builds/unix/configure.raw: Define FT_MACINTOSH if Carbon-based
+	old Mac font support is requested and Carbon is available.
+	* builds/unix/ftconfig.in: Undefine FT_MACINTOSH when the support
+	for Mac OS X without Carbon (e.g.  Mac OS X 10.4 for ppc64) is
+	requested.
+	* include/freetype/config/ftconfig.in: Ditto.
+	* builds/vms/ftconfig.h: Ditto.
+
+	* src/base/ftbase.h: Remove DARWIN_NO_CARBON.
+	* src/base/ftbase.c: Ditto.
+	* src/base/ftobjs.c: Ditto.
+	* src/base/ftrfork.c: Ditto.
+
+	* src/base/ftmac.c: Compile the body if FT_MACINTOSH is defined
+	(same with TT_USE_BYTECODE_INTERPRETER in ttinterp.c).
+	* builds/mac/ftmac.c: Ditto.
+
+	* builds/mac/FreeType.m68k_cfm.make.txt: Define FT_MACINTOSH.
+	* builds/mac/FreeType.m68k_far.make.txt: Ditto.
+	* builds/mac/FreeType.ppc_classic.make.txt: Ditto.
+	* builds/mac/FreeType.ppc_carbon.make.txt: Ditto.
+
 2011-11-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix Savannah bug #34728 (`make devel' on Mac OS X).

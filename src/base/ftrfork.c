@@ -417,7 +417,7 @@
   }
 
 
-#if !defined( FT_MACINTOSH ) || defined( DARWIN_NO_CARBON )
+#ifndef FT_MACINTOSH
   static FT_RFork_Rule
   raccess_get_rule_type_from_rule_index( FT_UInt  rule_index )
   {
