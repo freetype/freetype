@@ -1,5 +1,12 @@
 2011-12-08  Werner Lemberg  <wl@gnu.org>
 
+	Fix serious scaling bug in `FT_Get_Advances'.
+
+	* src/base/ftadvanc.c (FT_Get_Advances): Advance values returned by
+	`FT_Load_Glyph' must be simply multiplied by 1024.
+
+2011-12-08  Werner Lemberg  <wl@gnu.org>
+
 	* src/bdf/bdflib.c (_bdf_parse_start): Drop redundant error tracing.
 
 2011-12-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
