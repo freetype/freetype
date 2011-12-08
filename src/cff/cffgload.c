@@ -1963,6 +1963,7 @@
             /* Save glyph width so that the subglyphs don't overwrite it. */
             FT_Pos  glyph_width = decoder->glyph_width;
 
+
             error = cff_operator_seac( decoder,
                                        0L, args[-4], args[-3],
                                        (FT_Int)( args[-2] >> 16 ),
