@@ -1,3 +1,7 @@
+2011-12-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdflib.c (_bdf_parse_start): Drop redundant error tracing.
+
 2011-12-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[mac] Unify DARWIN_NO_CARBON with FT_MACINTOSH.

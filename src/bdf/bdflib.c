@@ -2066,8 +2066,8 @@
 
       if ( ft_memcmp( line, "STARTFONT", 9 ) != 0 )
       {
-        /* No STARTFONT field is a good indication of a problem. */
-        FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "STARTFONT" ));
+        /* we don't emit an error message since this code gets */
+        /* explicitly caught one level higher                  */
         error = BDF_Err_Missing_Startfont_Field;
         goto Exit;
       }
