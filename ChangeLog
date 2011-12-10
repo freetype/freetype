@@ -1,3 +1,12 @@
+2011-12-10  Werner Lemberg  <wl@gnu.org>
+
+	Add some variable initializations.
+	Reported by Richard COOK <rscook@unicode.org>.
+
+	* src/type1/t1driver.c (t1_ps_get_font_value): Initialize `val'.
+	* src/smooth/ftgrays.c (gray_render_conic): Initialize `levels'
+	earlier.
+
 2011-12-08  Werner Lemberg  <wl@gnu.org>
 
 	Fix serious scaling bug in `FT_Get_Advances'.

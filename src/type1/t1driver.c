@@ -195,7 +195,7 @@
       if ( idx < sizeof ( type1->font_matrix ) /
                    sizeof ( type1->font_matrix.xx ) )
       {
-        FT_Fixed  val;
+        FT_Fixed  val = 0;
 
 
         retval = sizeof ( val );
@@ -225,7 +225,7 @@
       if ( idx < sizeof ( type1->font_bbox ) /
                    sizeof ( type1->font_bbox.xMin ) )
       {
-        FT_Fixed val;
+        FT_Fixed val = 0;
 
 
         retval = sizeof ( val );
