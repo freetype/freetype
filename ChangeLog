@@ -1,3 +1,10 @@
+2012-01-02  Werner Lemberg  <wl@gnu.org>
+
+	Fix tracing message for `loca' table.
+
+	* src/truetype/ttpload.c (tt_face_get_location): Don't emit a
+	warning message if the last `loca' entry references an empty glyph.
+
 2011-12-10  Werner Lemberg  <wl@gnu.org>
 
 	Add some variable initializations.
@@ -3487,7 +3494,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2010-2011 by
+Copyright 2010-2012 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,
