@@ -1,3 +1,10 @@
+2012-01-04  Tobias Ringström  <tobias@ringis.se>
+
+	[truetype] Fix IP instruction if x_ppem != y_ppem.
+
+	* src/truetype/ttinterp.c (Ins_IP): Scale `orus' coordinates
+	properly.
+
 2012-01-02  Werner Lemberg  <wl@gnu.org>
 
 	Fix tracing message for `loca' table.

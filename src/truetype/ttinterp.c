@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType bytecode interpreter (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2011                                                    */
+/*  Copyright 1996-2012                                                    */
 /*  by David Turner, Robert Wilhelm, and Werner Lemberg.                   */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -6575,9 +6575,21 @@
       if ( twilight )
         old_range = CUR_Func_dualproj( &CUR.zp1.org[CUR.GS.rp2],
                                        orus_base );
-      else
+      else if ( CUR.metrics.x_scale == CUR.metrics.y_scale )
         old_range = CUR_Func_dualproj( &CUR.zp1.orus[CUR.GS.rp2],
                                        orus_base );
+      else
+      {
+        FT_Vector  vec;
+
+
+        vec.x = TT_MULFIX( CUR.zp1.orus[CUR.GS.rp2].x - orus_base->x,
+                           CUR.metrics.x_scale );
+        vec.y = TT_MULFIX( CUR.zp1.orus[CUR.GS.rp2].y - orus_base->y,
+                           CUR.metrics.y_scale );
+
+        old_range = CUR_fast_dualproj( &vec );
+      }
 
       cur_range = CUR_Func_project ( &CUR.zp1.cur[CUR.GS.rp2], cur_base );
     }
@@ -6601,8 +6613,20 @@
 
       if ( twilight )
         org_dist = CUR_Func_dualproj( &CUR.zp2.org[point], orus_base );
-      else
+      else if ( CUR.metrics.x_scale == CUR.metrics.y_scale )
         org_dist = CUR_Func_dualproj( &CUR.zp2.orus[point], orus_base );
+      else
+      {
+        FT_Vector  vec;
+
+
+        vec.x = TT_MULFIX( CUR.zp2.orus[point].x - orus_base->x,
+                           CUR.metrics.x_scale );
+        vec.y = TT_MULFIX( CUR.zp2.orus[point].y - orus_base->y,
+                           CUR.metrics.y_scale );
+
+        org_dist = CUR_fast_dualproj( &vec );
+      }
 
       cur_dist = CUR_Func_project ( &CUR.zp2.cur[point], cur_base );
 
