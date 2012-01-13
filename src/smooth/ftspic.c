@@ -20,6 +20,7 @@
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "ftspic.h"
+#include "ftsmerrs.h"
 
 #ifdef FT_CONFIG_OPTION_PIC
 

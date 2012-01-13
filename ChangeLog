@@ -1,3 +1,16 @@
+2012-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Make PIC files to include module error headers, to use the
+	error codes with per-module prefix.
+
+	* src/autofit/afpic.c: Include `aferrors.h'.
+	* src/cff/cffpic.c: Include `cfferrs.h'.
+	* src/pshinter/pshpic.c: Include `pshnterr.h'.
+	* src/raster/rastpic.c: Include `rasterrs.h'.
+	* src/sfnt/sfntpic.c: Include `sferrors.h'.
+	* src/smooth/ftspic.c: Include `ftsmerrs.h'.
+	* src/truetype/ttpic.c: Include `tterrors.h'.
+
 2012-01-04  Tobias Ringström  <tobias@ringis.se>
 
 	[truetype] Fix IP instruction if x_ppem != y_ppem.
