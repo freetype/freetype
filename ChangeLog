@@ -1,5 +1,21 @@
 2012-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Fix PIC build broken by d9145241fe378104ba4c12a42534549faacc92e6.
+
+	Under PIC configuration, FT_{CFF,PSCMAPS,SFNT,TT}_SERVICES_GET
+	take no arguments but derefer the variable named `library'
+	internally.
+
+	* src/cff/cffdrivr.c (cff_get_interface): Declare `library' and
+	set it if non-NULL driver is passed.
+	* src/truetype/ttdriver.c (tt_get_interface): Ditto.
+
+	* src/sfnt/sfdriver.c (sfnt_get_interface): Declare `library'
+	under PIC configuration, and set it if non-NULL module is given.
+	* src/psnames/psmodule.c (psnames_get_interface): Ditto.
+
+2012-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Make PIC files to include module error headers, to use the
 	error codes with per-module prefix.
 

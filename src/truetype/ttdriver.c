@@ -402,19 +402,35 @@
   tt_get_interface( FT_Module    driver,    /* TT_Driver */
                     const char*  tt_interface )
   {
+    FT_Library           library;
     FT_Module_Interface  result;
     FT_Module            sfntd;
     SFNT_Service         sfnt;
+
+
+    /* FT_TT_SERVICES_GET derefers `library' in PIC mode */
+#ifdef FT_CONFIG_OPTION_PIC
+    if ( !driver )
+      return NULL;
+    library = driver->library;
+    if ( !library )
+      return NULL;
+#endif
 
     result = ft_service_list_lookup( FT_TT_SERVICES_GET, tt_interface );
     if ( result != NULL )
       return result;
 
+#ifndef FT_CONFIG_OPTION_PIC
     if ( !driver )
       return NULL;
+    library = driver->library;
+    if ( !library )
+      return NULL;
+#endif
 
     /* only return the default interface from the SFNT module */
-    sfntd = FT_Get_Module( driver->library, "sfnt" );
+    sfntd = FT_Get_Module( library, "sfnt" );
     if ( sfntd )
     {
       sfnt = (SFNT_Service)( sfntd->clazz->module_interface );

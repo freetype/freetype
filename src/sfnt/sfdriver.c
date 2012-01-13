@@ -422,8 +422,19 @@
   sfnt_get_interface( FT_Module    module,
                       const char*  module_interface )
   {
-    FT_UNUSED( module );
+    /* FT_SFNT_SERVICES_GET derefers `library' in PIC mode */
+#ifdef FT_CONFIG_OPTION_PIC
+    FT_Library  library;
 
+
+    if ( !module )
+      return NULL;
+    library = module->library;
+    if ( !library ) 
+      return NULL;
+#else
+    FT_UNUSED( module );
+#endif
     return ft_service_list_lookup( FT_SFNT_SERVICES_GET, module_interface );
   }
 

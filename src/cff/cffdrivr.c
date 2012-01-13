@@ -599,19 +599,35 @@
   cff_get_interface( FT_Module    driver,       /* CFF_Driver */
                      const char*  module_interface )
   {
+    FT_Library           library;
     FT_Module            sfnt;
     FT_Module_Interface  result;
 
 
-    result = ft_service_list_lookup( FT_CFF_SERVICES_GET, module_interface );
-    if ( result != NULL )
-      return  result;
-
+    /* FT_CFF_SERVICES_GET derefers `library' in PIC mode */
+#ifdef FT_CONFIG_OPTION_PIC
     if ( !driver )
       return NULL;
+    library = driver->library;
+    if ( !library )
+      return NULL;
+#endif
+
+    result = ft_service_list_lookup( FT_CFF_SERVICES_GET, module_interface );
+    if ( result != NULL )
+      return result;
+
+    /* `driver' is not yet evaluated in non-PIC mode */
+#ifndef FT_CONFIG_OPTION_PIC
+    if ( !driver )
+      return NULL;
+    library = driver->library;
+    if ( !library )
+      return NULL;
+#endif
 
     /* we pass our request to the `sfnt' module */
-    sfnt = FT_Get_Module( driver->library, "sfnt" );
+    sfnt = FT_Get_Module( library, "sfnt" );
 
     return sfnt ? sfnt->clazz->get_interface( sfnt, module_interface ) : 0;
   }

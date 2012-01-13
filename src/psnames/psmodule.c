@@ -563,7 +563,19 @@
   psnames_get_service( FT_Module    module,
                        const char*  service_id )
   {
+    /* FT_PSCMAPS_SERVICES_GET derefers `library' in PIC mode */
+#ifdef FT_CONFIG_OPTION_PIC
+    FT_Library  library;
+
+
+    if ( !module )
+      return NULL;
+    library = module->library;
+    if ( !library )
+      return NULL;
+#else
     FT_UNUSED( module );
+#endif
 
     return ft_service_list_lookup( FT_PSCMAPS_SERVICES_GET, service_id );
   }
