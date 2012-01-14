@@ -1,5 +1,14 @@
 2012-01-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[base] Fix a dereference of uninitialized variable in PIC mode.
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): `glyph' must be
+	set before derefering to obtain `library'.  The initialization
+	of `clazz', `glyph', `library' and NULL pointer check are
+	reordered to minimize PIC conditonals.
+
+2012-01-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[base] Insert explict cast for GCC 4.6 in PIC mode.
 
 	* src/base/ftinit.c (FT_Add_Default_Modules): Under PIC
