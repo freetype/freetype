@@ -181,9 +181,18 @@ Exit:
     const FT_Module_Class* const*  cur;
 
 
-    /* test for valid `library' delayed to FT_Add_Module() */
+    /* FT_DEFAULT_MODULES_GET derefers `library' in PIC mode */
+#ifdef FT_CONFIG_OPTION_PIC
+    if ( !library )
+      return;
+#endif
 
-    cur = FT_DEFAULT_MODULES_GET;
+    /* GCC 4.6 warns the type difference:
+     *   FT_Module_Class** != const FT_Module_Class* const*
+     */
+    cur = ( const FT_Module_Class* const* )FT_DEFAULT_MODULES_GET;
+
+    /* test for valid `library' delayed to FT_Add_Module() */
     while ( *cur )
     {
       error = FT_Add_Module( library, *cur );

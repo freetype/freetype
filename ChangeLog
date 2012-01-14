@@ -1,3 +1,15 @@
+2012-01-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[base] Insert explict cast for GCC 4.6 in PIC mode.
+
+	* src/base/ftinit.c (FT_Add_Default_Modules): Under PIC
+	configuration, FT_DEFAULT_MODULES_GET returns
+	FT_Module_Class** pointer, GCC 4.6 warns that
+	const FT_Module_Class* const* variable is warned as
+	inappropriate to store it.  To calm it, explicit cast is
+	inserted.  Also `library' is checked to prevent the NULL
+	pointer dereference in FT_DEFAULT_MODULES_GET.
+
 2012-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix PIC build broken by d9145241fe378104ba4c12a42534549faacc92e6.
