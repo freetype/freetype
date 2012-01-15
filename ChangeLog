@@ -1,3 +1,9 @@
+2012-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Make pspic.c to include module error header to fix multi build.
+
+	* src/psnames/pspic.c: Include `psnamerr.h'.
+
 2012-01-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[base] Fix a dereference of uninitialized variable in PIC mode.
@@ -9,7 +15,7 @@
 
 2012-01-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[base] Insert explict cast for GCC 4.6 in PIC mode.
+	[base] Insert explicit cast for GCC 4.6 in PIC mode.
 
 	* src/base/ftinit.c (FT_Add_Default_Modules): Under PIC
 	configuration, FT_DEFAULT_MODULES_GET returns
