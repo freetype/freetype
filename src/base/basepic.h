@@ -45,11 +45,12 @@ FT_BEGIN_HEADER
 #define FT_BITMAP_GLYPH_CLASS_GET     (&GET_PIC(library)->ft_bitmap_glyph_class)
 #define FT_DEFAULT_MODULES_GET        (GET_PIC(library)->default_module_classes)
 
+  /* see basepic.c for the implementation. */
   void
-  ft_base_pic_free( FT_Library library );
+  ft_base_pic_free( FT_Library  library );
 
   FT_Error
-  ft_base_pic_init( FT_Library library );
+  ft_base_pic_init( FT_Library  library );
 
 #endif /* FT_CONFIG_OPTION_PIC */
  /* */

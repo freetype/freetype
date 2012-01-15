@@ -1,5 +1,42 @@
 2012-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Fix redundant declaration warning in PIC mode.
+
+	Originally FT_DEFINE_{DRIVER,MODULE,RENDERER}() macros were
+	designed to declare xxx_pic_{free,init} by themselves.
+	Because these macros are used at the end of the module
+	interface (e.g. ttdriver.c) and the wrapper source to build
+	a module as a single object (e.g. truetype.c) includes
+	the PIC file (e.g. ttpic.c) before the module interface,
+	these macros are expanded AFTER xxx_pic_{free,init} body
+	when the modules are built as single object.
+	The declaration after the implementation causes the redundant
+	declaration warnings, so the declarations are moved to module
+	PIC headers (e.g. ttpic.h).  Separating to other header files
+	are needed for multi build.
+
+	* include/freetype/internal/ftdriver.h (FT_DEFINE_DRIVER):
+	Remove class_##_pic_free and class_##_pic_init declarations.
+	* include/freetype/internal/ftobjs.h (FT_DEFINE_RENDERER,
+	FT_DEFINE_MODULE): Ditto.
+
+	* src/base/basepic.h: Insert a comment and fix coding style.
+	* src/autofit/afpic.h: Declare autofit_module_class_pic_{free,
+	init}.
+	* src/cff/cffpic.h: Declare cff_driver_class_pic_{free,init}.
+	* src/pshinter/pshpic.h: Declare pshinter_module_class_pic_{free,
+	init}.
+	* src/psnames/pspic.h: Declare psnames_module_class_pic_{free,
+	init}.
+	* src/raster/rastpic.h: Declare
+	ft_raster{1,5}_renderer_class_pic_{free,init}
+	* src/sfnt/sfntpic.h: Declare sfnt_module_class_pic_{free,init}.
+	* src/smooth/ftspic.h: Declare
+	ft_smooth_{,lcd_,lcdv_}renderer_class_pic_{free,init}.
+	* src/truetype/ttpic.h: Declare tt_driver_class_pic_{free,init}.
+
+2012-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Make pspic.c to include module error header to fix multi build.
 
 	* src/psnames/pspic.c: Include `psnamerr.h'.

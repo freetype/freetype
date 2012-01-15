@@ -47,6 +47,13 @@ FT_BEGIN_HEADER
 #define FT_TT_SERVICE_GX_MULTI_MASTERS_GET   (GET_PIC(library)->tt_service_gx_multi_masters)
 #define FT_TT_SERVICE_TRUETYPE_GLYF_GET      (GET_PIC(library)->tt_service_truetype_glyf)
 
+  /* see ttpic.c for the implementation */
+  void
+  tt_driver_class_pic_free( FT_Library  library );
+
+  FT_Error
+  tt_driver_class_pic_init( FT_Library  library );
+
 #endif /* FT_CONFIG_OPTION_PIC */
 
  /* */

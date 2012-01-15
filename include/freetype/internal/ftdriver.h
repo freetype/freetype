@@ -267,7 +267,9 @@ FT_BEGIN_HEADER
   /*    and initialize any additional global data, like module specific    */
   /*    interface, and put them in the global pic container defined in     */
   /*    ftpic.h. if you don't need them just implement the functions as    */
-  /*    empty to resolve the link error.                                   */
+  /*    empty to resolve the link error.  Also the pic_init and pic_free   */
+  /*    functions should be declared in pic.h, to be referred by driver    */
+  /*    definition calling FT_DEFINE_DRIVER() in following.                */
   /*                                                                       */
   /*    When FT_CONFIG_OPTION_PIC is not defined the struct will be        */
   /*    allocated in the global scope (or the scope where the macro        */
@@ -347,8 +349,6 @@ FT_BEGIN_HEADER
                          old_set_char_sizes_, old_set_pixel_sizes_,          \
                          load_glyph_, get_kerning_, attach_file_,            \
                          get_advances_, request_size_, select_size_ )        \
-  void class_##_pic_free( FT_Library library );                              \
-  FT_Error class_##_pic_init( FT_Library library );                          \
                                                                              \
   void                                                                       \
   FT_Destroy_Class_##class_( FT_Library        library,                      \
