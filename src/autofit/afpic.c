@@ -30,7 +30,9 @@
 
   /* forward declaration of PIC init functions from script classes */
 #include "aflatin.h"
+#ifdef FT_OPTION_AUTOFIT2
 #include "aflatin2.h"
+#endif
 #include "afcjk.h"
 #include "afdummy.h"
 #include "afindic.h"

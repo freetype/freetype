@@ -1,5 +1,14 @@
 2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[autofit] Fix the inclusion of "aflatin2.h" in PIC file.
+
+	* src/autofit/afpic.c: Include "aflatin2.h" when
+	FT_OPTION_AUTOFIT2 is defined, as afglobal.c does so.
+	Unconditionally inclusion causes declared but unimplemented
+	warning by GCC 4.6.
+
+2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cff] Remove redundant declarations of cff_cmap_XXX_class_rec.
 
 	* src/cff/cffpic.c: The declarations of
