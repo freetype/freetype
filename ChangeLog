@@ -1,5 +1,20 @@
 2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Formatting PIC related sources.
+
+	* src/autofit/afpic.c: Harmonize to FT2 coding conventions.
+	* src/base/basepic.c: Ditto.
+	* src/base/ftpic.c: Ditto.
+	* src/cff/cffpic.c: Ditto.
+	* src/pshinter/pshpic.c: Ditto.
+	* src/psnames/pspic.c: Ditto.
+	* src/raster/rastpic.c: Ditto.
+	* src/sfnt/sfntpic.c: Ditto.
+	* src/smooth/ftspic.c: Ditto.
+	* src/truetype/ttpic.c: Ditto.
+
+2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[autofit] Fix the inclusion of "aflatin2.h" in PIC file.
 
 	* src/autofit/afpic.c: Include "aflatin2.h" when

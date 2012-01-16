@@ -25,8 +25,9 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from afmodule.c */
-  void FT_Init_Class_af_autofitter_service( FT_Library,
-                                            FT_AutoHinter_ServiceRec* );
+  void FT_Init_Class_af_autofitter_service(
+    FT_Library                 library,
+    FT_AutoHinter_ServiceRec*  clazz );
 
   /* forward declaration of PIC init functions from script classes */
 #include "aflatin.h"
