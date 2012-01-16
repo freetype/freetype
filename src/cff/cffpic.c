@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
+#include "cffcmap.h"
 #include "cffpic.h"
 #include "cfferrs.h"
 
@@ -36,10 +37,6 @@
   /* forward declaration of PIC init functions from cffparse.c */
   FT_Error FT_Create_Class_cff_field_handlers( FT_Library, CFF_Field_Handler**);
   void FT_Destroy_Class_cff_field_handlers( FT_Library, CFF_Field_Handler*);
-
-  /* forward declaration of PIC init functions from cffcmap.c */
-  void FT_Init_Class_cff_cmap_encoding_class_rec( FT_Library, FT_CMap_ClassRec*);
-  void FT_Init_Class_cff_cmap_unicode_class_rec( FT_Library, FT_CMap_ClassRec*);
 
   void
   cff_driver_class_pic_free(  FT_Library library )

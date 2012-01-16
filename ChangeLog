@@ -1,3 +1,14 @@
+2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cff] Remove redundant declarations of cff_cmap_XXX_class_rec.
+
+	* src/cff/cffpic.c: The declarations of
+	FT_Init_Class_cff_cmap_encoding_class_rec() and
+	FT_Init_Class_cff_cmap_unicode_class_rec() are removed.
+	They can be obtained by the inclusion of cffcmap.h.
+	cffcmap.h invokes FT_DECLARE_CMAP_CLASS() and it declares
+	FT_Init_Class_cff_cmap_encoding_class_rec() etc in PIC mode.
+
 2012-01-15  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix redundant declaration warning in PIC mode.
