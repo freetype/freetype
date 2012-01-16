@@ -449,7 +449,7 @@
 
 
   FT_DEFINE_RENDERER( ft_smooth_lcd_renderer_class,
-  
+
       FT_MODULE_RENDERER,
       sizeof ( FT_RendererRec ),
 

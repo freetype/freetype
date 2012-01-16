@@ -199,7 +199,7 @@
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     T1_Face      face  = (T1_Face)decoder->builder.face;
-#endif     
+#endif
 
 
     if ( decoder->seac )

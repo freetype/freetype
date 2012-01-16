@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include FT_BZIP2_H
 #include FT_ERRORS_H
 #include FT_BDF_H
-#include FT_TRUETYPE_IDS_H 
+#include FT_TRUETYPE_IDS_H
 
 #include "pcf.h"
 #include "pcfdrivr.h"

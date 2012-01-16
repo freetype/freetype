@@ -77,7 +77,7 @@
         &container->af_script_classes_rec[ss];
     }
     container->af_script_classes[AF_SCRIPT_CLASSES_COUNT - 1] = NULL;
-    
+
     /* add call to initialization function when you add new scripts */
     ss = 0;
     FT_Init_Class_af_dummy_script_class(

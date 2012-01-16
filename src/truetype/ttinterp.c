@@ -8254,7 +8254,7 @@
     if ( CUR.error && !CUR.instruction_trap )
     {
       FT_TRACE1(( "  The interpreter returned error 0x%x\n", CUR.error ));
-      exc->size->cvt_ready      = FALSE;  
+      exc->size->cvt_ready      = FALSE;
     }
 
     return CUR.error;

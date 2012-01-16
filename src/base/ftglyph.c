@@ -254,7 +254,7 @@
   }
 
 
-  FT_DEFINE_GLYPH( ft_outline_glyph_class, 
+  FT_DEFINE_GLYPH( ft_outline_glyph_class,
     sizeof ( FT_OutlineGlyphRec ),
     FT_GLYPH_FORMAT_OUTLINE,
 

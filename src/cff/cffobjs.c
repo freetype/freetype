@@ -403,7 +403,7 @@
     FT_Int32  idx             = 0;
     FT_Int32  length          = strlen( name ) + 1;
     FT_Bool   continue_search = 1;
- 
+
 
     while ( continue_search )
     {
@@ -780,7 +780,7 @@
           char*  family_name = NULL;
 
 
-          remove_subset_prefix( cffface->family_name ); 
+          remove_subset_prefix( cffface->family_name );
 
           if ( dict->family_name )
           {
@@ -827,7 +827,7 @@
                 style_name = cff_strcpy( memory, fullp );
 
                 /* remove the style part from the family name (if present) */
-                remove_style( cffface->family_name, style_name ); 
+                remove_style( cffface->family_name, style_name );
               }
               break;
             }

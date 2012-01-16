@@ -42,7 +42,7 @@
 
 #ifdef FT_CONFIG_OPTION_PIC
 #error "gzip code does not support PIC yet"
-#endif 
+#endif
 
 #ifdef FT_CONFIG_OPTION_SYSTEM_ZLIB
 

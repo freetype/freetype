@@ -19,7 +19,7 @@
 #ifndef __BASEPIC_H__
 #define __BASEPIC_H__
 
-  
+
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H

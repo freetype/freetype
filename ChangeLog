@@ -1,5 +1,9 @@
 2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Remove trailing spaces.
+
+2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Formatting PIC related sources.
 
 	* src/autofit/afpic.c: Harmonize to FT2 coding conventions.

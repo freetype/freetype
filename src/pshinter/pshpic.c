@@ -58,7 +58,7 @@
       return error;
     FT_MEM_SET( container, 0, sizeof ( *container ) );
     pic_container->pshinter = container;
-    
+
     /* add call to initialization function when you add new scripts */
     FT_Init_Class_pshinter_interface(
       library, &container->pshinter_interface );

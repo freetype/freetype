@@ -19,7 +19,7 @@
 #ifndef __PSHPIC_H__
 #define __PSHPIC_H__
 
-  
+
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H

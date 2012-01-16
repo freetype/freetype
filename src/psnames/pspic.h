@@ -19,7 +19,7 @@
 #ifndef __PSPIC_H__
 #define __PSPIC_H__
 
-  
+
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H

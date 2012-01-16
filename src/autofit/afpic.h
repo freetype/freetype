@@ -19,7 +19,7 @@
 #ifndef __AFPIC_H__
 #define __AFPIC_H__
 
-  
+
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
@@ -38,9 +38,9 @@ FT_BEGIN_HEADER
 #ifdef FT_OPTION_AUTOFIT2
 #define AF_SCRIPT_CLASSES_COUNT     6
 #else
-#define AF_SCRIPT_CLASSES_COUNT     5  
+#define AF_SCRIPT_CLASSES_COUNT     5
 #endif
-#define AF_SCRIPT_CLASSES_REC_COUNT  ( AF_SCRIPT_CLASSES_COUNT - 1 )    
+#define AF_SCRIPT_CLASSES_REC_COUNT  ( AF_SCRIPT_CLASSES_COUNT - 1 )
 
   typedef struct AFModulePIC_
   {

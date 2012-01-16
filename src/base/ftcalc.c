@@ -464,7 +464,7 @@
      *  Unfortunately, it doesn't work (at least not portably).
      *
      *  It makes the assumption that right-shift on a negative signed value
-     *  fills the leftmost bits by copying the sign bit.  This is wrong. 
+     *  fills the leftmost bits by copying the sign bit.  This is wrong.
      *  According to K&R 2nd ed, section `A7.8 Shift Operators' on page 206,
      *  the result of right-shift of a negative signed value is
      *  implementation-defined.  At least one implementation fills the

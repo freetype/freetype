@@ -430,7 +430,7 @@
     if ( !module )
       return NULL;
     library = module->library;
-    if ( !library ) 
+    if ( !library )
       return NULL;
 #else
     FT_UNUSED( module );
@@ -567,14 +567,14 @@
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-#define PUT_EMBEDDED_BITMAPS(a) a 
+#define PUT_EMBEDDED_BITMAPS(a) a
 #else
-#define PUT_EMBEDDED_BITMAPS(a) 0 
+#define PUT_EMBEDDED_BITMAPS(a) 0
 #endif
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#define PUT_PS_NAMES(a) a 
+#define PUT_PS_NAMES(a) a
 #else
-#define PUT_PS_NAMES(a) 0 
+#define PUT_PS_NAMES(a) 0
 #endif
 
   FT_DEFINE_SFNT_INTERFACE(sfnt_interface,
@@ -648,7 +648,7 @@
 
 
   FT_DEFINE_MODULE(sfnt_module_class,
-  
+
     0,  /* not a font driver or renderer */
     sizeof ( FT_ModuleRec ),
 

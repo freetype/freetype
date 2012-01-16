@@ -19,7 +19,7 @@
 #ifndef __TTPIC_H__
 #define __TTPIC_H__
 
-  
+
 FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC

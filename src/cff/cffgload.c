@@ -2706,7 +2706,7 @@
       FT_Byte   fd_index = cff_fd_select_get( &cff->fd_select,
                                               glyph_index );
 
-      if ( fd_index >= cff->num_subfonts ) 
+      if ( fd_index >= cff->num_subfonts )
         fd_index = (FT_Byte)( cff->num_subfonts - 1 );
 
       top_upm = cff->top_font.font_dict.units_per_em;
@@ -2962,7 +2962,7 @@
         if ( has_vertical_info )
           metrics->vertBearingX = metrics->horiBearingX -
                                     metrics->horiAdvance / 2;
-        else 
+        else
         {
           if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
             ft_synthesize_vertical_metrics( metrics,

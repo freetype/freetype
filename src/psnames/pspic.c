@@ -80,7 +80,7 @@
       goto Exit;
     FT_Init_Class_pscmaps_interface( library,
                                      &container->pscmaps_interface );
-    
+
 Exit:
     if ( error )
       psnames_module_class_pic_free( library );

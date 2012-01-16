@@ -44,7 +44,7 @@
 
 #ifdef FT_CONFIG_OPTION_PIC
 #error "lzw code does not support PIC yet"
-#endif 
+#endif
 
 #include "ftzopen.h"
 

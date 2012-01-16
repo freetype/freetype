@@ -19,7 +19,7 @@
 #ifndef __CFFPIC_H__
 #define __CFFPIC_H__
 
-  
+
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H

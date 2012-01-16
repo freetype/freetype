@@ -104,7 +104,7 @@
     FT_NUM_MODULE_CLASSES
   };
 
-  /* destroy all module classes */  
+  /* destroy all module classes */
 #undef  FT_USE_MODULE
 #define FT_USE_MODULE( type, x )  \
   if ( classes[i] ) { FT_Destroy_Class_##x(library, classes[i]); } \
@@ -148,7 +148,7 @@
     FT_UInt           i;
     BasePIC*          pic_container = (BasePIC*)library->pic_container.base;
 
-    memory = library->memory;  
+    memory = library->memory;
     pic_container->default_module_classes = 0;
 
     if ( FT_ALLOC(classes, sizeof(FT_Module_Class*) * (FT_NUM_MODULE_CLASSES + 1) ) )
@@ -162,11 +162,11 @@
 
 #include FT_CONFIG_MODULES_H
 
-Exit:    
+Exit:
     if (error) ft_destroy_default_module_classes( library );
     else pic_container->default_module_classes = classes;
 
-    return error;    
+    return error;
   }
 
 
