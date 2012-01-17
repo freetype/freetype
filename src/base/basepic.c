@@ -27,6 +27,9 @@
   void FT_Init_Class_ft_outline_glyph_class( FT_Glyph_Class*  clazz );
   void FT_Init_Class_ft_bitmap_glyph_class( FT_Glyph_Class*  clazz );
 
+  /* forward declaration of PIC init function from ftrfork.c (not modularized) */
+  void FT_Init_Table_raccess_guess_table( ft_raccess_guess_rec*  record );
+
   /* forward declaration of PIC init functions from ftinit.c */
   FT_Error
   ft_create_default_module_classes( FT_Library  library );
@@ -74,6 +77,8 @@
       &container->ft_outline_glyph_class );
     FT_Init_Class_ft_bitmap_glyph_class(
       &container->ft_bitmap_glyph_class );
+    FT_Init_Table_raccess_guess_table(
+      (ft_raccess_guess_rec*)&container->ft_raccess_guess_table);
 
 Exit:
     if( error )

@@ -1875,7 +1875,7 @@
 
     for ( i = 0; i < FT_RACCESS_N_RULES; i++ )
     {
-      is_darwin_vfs = raccess_rule_by_darwin_vfs( i );
+      is_darwin_vfs = ft_raccess_rule_by_darwin_vfs( library, i );
       if ( is_darwin_vfs && vfs_rfork_has_no_font )
       {
         FT_TRACE3(( "Skip rule %d: darwin vfs resource fork"

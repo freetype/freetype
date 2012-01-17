@@ -1,3 +1,40 @@
+2012-01-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[raccess] Modify for PIC build.
+
+	Based on the patch provided by Erik Dahlstrom <ed@opera.com>,
+	http://lists.gnu.org/archive/html/freetype-devel/2012-01/msg00010.html
+
+	Also `raccess_guess_table[]' and `raccess_rule_by_darwin_vfs()'
+	are renamed with `ft_' suffixes.
+
+	* src/base/ftbase.h: `raccess_rule_by_darwin_vfs()' is renamed
+	to `ft_raccess_rule_by_darwin_vfs()'.
+	* src/base/ftobjs.c: Ditto.
+
+	* src/base/ftrfork.c: Declarations of FT_RFork_Rule,
+	raccess_guess_rec, are moved to...
+	* include/freetype/internal/ftrfork.h: Here.
+
+	* include/freetype/internal/ftrfork.h:
+	FT_RFORK_RULE_ARRAY_{BEGIN,ENTRY,END} macros are defined
+	to replace raccess_guess_table[] in both of PIC and non-PIC
+	modes.
+	* src/base/ftrfork.c: raccess_guess_table[] array is rewritten
+	by FT_RFORK_RULE_ARRAY_{BEGIN,ENTRY,END}.
+
+	* src/base/basepic.h (BasePIC): Add `ft_raccess_guess_table'
+	storage.  (FT_RACCESS_GUESS_TABLE_GET): New macro to retrieve
+	the function pointer from `ft_raccess_guess_table' storage in
+	`BasePIC' structure.
+	* src/base/ftrfork.c (FT_Raccess_Guess): Rewritten with
+	FT_RACCESS_GUESS_TABLE_GET.
+	(raccess_get_rule_type_from_rule_index): Add `library' as the
+	first argument to the function, to retrieve the storage of
+	`ft_raccess_guess_table' from it.  Also `raccess_guess_table'
+	is replaced by FT_RACCESS_GUESS_TABLE_GET.
+	(ft_raccess_rule_by_darwin_vfs): Ditto.
+
 2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Remove trailing spaces.

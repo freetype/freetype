@@ -57,7 +57,7 @@ FT_BEGIN_HEADER
   /* on Darwin VFS should be grouped and skip the rest methods after   */
   /* the case the resource is opened but found to lack a font in it.   */
   FT_LOCAL( FT_Bool )
-  raccess_rule_by_darwin_vfs( FT_UInt  rule_index );
+  ft_raccess_rule_by_darwin_vfs( FT_Library library, FT_UInt  rule_index );
 #endif
 
 
