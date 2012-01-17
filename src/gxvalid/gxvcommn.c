@@ -1334,7 +1334,7 @@
     l[1] = stateArray_length_p;
     l[2] = entryTable_length_p;
 
-    gxv_set_length_by_ulong_offset( o, l, buff, 4, table_size, valid );
+    gxv_set_length_by_ulong_offset( o, l, buff, 3, table_size, valid );
   }
 
 

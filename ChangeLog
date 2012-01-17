@@ -1,5 +1,16 @@
 2012-01-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] Fix Savannah bug #35286.
+
+	Patch submitted by anonymous reporter.
+
+	* src/gxvalid/gxvcommn.c (gxv_XStateTable_subtable_setup):
+	gxv_set_length_by_ulong_offset() must be called with 3, not 4,
+	the number of the subtables in the state tables; classTable,
+	stateArray, entryTable.
+
+2012-01-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[raccess] Modify for PIC build.
 
 	Based on the patch provided by Erik Dahlstrom <ed@opera.com>,
