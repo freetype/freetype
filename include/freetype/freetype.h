@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2011 by                                                 */
+/*  Copyright 1996-2012 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1668,6 +1668,9 @@ FT_BEGIN_HEADER
   /*    use @FT_New_Library instead, followed by a call to                 */
   /*    @FT_Add_Default_Modules (or a series of calls to @FT_Add_Module).  */
   /*                                                                       */
+  /*    For multi-threading applications each thread should have its own   */
+  /*    FT_Library object.                                                 */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Init_FreeType( FT_Library  *alibrary );
 
@@ -1952,6 +1955,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    Each new face object created with this function also owns a        */
   /*    default @FT_Size object, accessible as `face->size'.               */
+  /*                                                                       */
+  /*    One @FT_Library instance can have multiple face objects, this is,  */
+  /*    @FT_Open_Face and its siblings can be called multiple times using  */
+  /*    the same `library' argument.                                       */
   /*                                                                       */
   /*    See the discussion of reference counters in the description of     */
   /*    @FT_Reference_Face.                                                */
