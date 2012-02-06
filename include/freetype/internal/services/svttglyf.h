@@ -24,7 +24,7 @@
 FT_BEGIN_HEADER
 
 
-#define FT_SERVICE_ID_TT_GLYF "tt-glyf"
+#define FT_SERVICE_ID_TT_GLYF  "tt-glyf"
 
 
   typedef FT_ULong
@@ -36,6 +36,7 @@ FT_BEGIN_HEADER
   {
     TT_Glyf_GetLocationFunc  get_location;
   };
+
 
 #ifndef FT_CONFIG_OPTION_PIC
 
