@@ -1,5 +1,12 @@
 2012-02-07  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Harmonize function arguments.
+
+	* src/autofit/afloader.c, src/autofit/afloader.h: Use `FT_Int32' for
+	`load_flags'.
+
+2012-02-07  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cffobjs.c (cff_face_init): Remove unnecessary casts.
 
 2012-01-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
