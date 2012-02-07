@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2011 by                                                 */
+/*  Copyright 1996-2012 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -855,22 +855,22 @@
         /*                                                                 */
         /* Compute face flags.                                             */
         /*                                                                 */
-        flags = (FT_UInt32)( FT_FACE_FLAG_SCALABLE   | /* scalable outlines */
-                             FT_FACE_FLAG_HORIZONTAL | /* horizontal data   */
-                             FT_FACE_FLAG_HINTER );    /* has native hinter */
+        flags = FT_FACE_FLAG_SCALABLE   | /* scalable outlines */
+                FT_FACE_FLAG_HORIZONTAL | /* horizontal data   */
+                FT_FACE_FLAG_HINTER;      /* has native hinter */
 
         if ( sfnt_format )
-          flags |= (FT_UInt32)FT_FACE_FLAG_SFNT;
+          flags |= FT_FACE_FLAG_SFNT;
 
         /* fixed width font? */
         if ( dict->is_fixed_pitch )
-          flags |= (FT_UInt32)FT_FACE_FLAG_FIXED_WIDTH;
+          flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
   /* XXX: WE DO NOT SUPPORT KERNING METRICS IN THE GPOS TABLE FOR NOW */
 #if 0
         /* kerning available? */
         if ( face->kern_pairs )
-          flags |= (FT_UInt32)FT_FACE_FLAG_KERNING;
+          flags |= FT_FACE_FLAG_KERNING;
 #endif
 
         cffface->face_flags = flags;
