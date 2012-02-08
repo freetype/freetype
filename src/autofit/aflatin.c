@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003-2011 by                                                 */
+/*  Copyright 2003-2012 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -18,6 +18,7 @@
 
 #include <ft2build.h>
 #include FT_ADVANCES_H
+#include FT_AUTOHINTER_H
 #include FT_INTERNAL_DEBUG_H
 
 #include "aflatin.h"
@@ -569,9 +570,21 @@
 
       if ( blue )
       {
-        FT_Pos  scaled = FT_MulFix( blue->shoot.org, scaler->y_scale );
-        FT_Pos  fitted = ( scaled + 40 ) & ~63;
+        FT_Pos  scaled;
+        FT_Pos  threshold;
+        FT_Pos  fitted;
 
+
+        scaled = FT_MulFix( blue->shoot.org, scaler->y_scale );
+
+        threshold = 40;
+        if ( ( metrics->root.scaler.face->internal->auto_hinter_flags &
+               FT_AUTOHINTER_INCREASE_GLYPH_HEIGHTS                   ) &&
+             metrics->root.scaler.face->size->metrics.x_ppem < 15       &&
+             metrics->root.scaler.face->size->metrics.x_ppem > 5        )
+          threshold = 52;
+
+        fitted = ( scaled + threshold ) & ~63;
 
         if ( scaled != fitted )
         {

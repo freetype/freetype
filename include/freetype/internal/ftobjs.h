@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2008, 2010 by       */
+/*  Copyright 1996-2006, 2008, 2010, 2012 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -305,6 +305,9 @@ FT_BEGIN_HEADER
   /*      this data when first opened.  This field exists only if          */
   /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
+  /*    auto_hinter_flags ::                                               */
+  /*      Flags controlling the behaviour of the auto-hinter locally.      */
+  /*                                                                       */
   /*    ignore_unpatented_hinter ::                                        */
   /*      This boolean flag instructs the glyph loader to ignore the       */
   /*      native font hinter, if one is found.  This is exclusively used   */
@@ -332,6 +335,8 @@ FT_BEGIN_HEADER
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     FT_Incremental_InterfaceRec*  incremental_interface;
 #endif
+
+    FT_Int32            auto_hinter_flags;
 
     FT_Bool             ignore_unpatented_hinter;
     FT_UInt             refcount;
@@ -803,7 +808,10 @@ FT_BEGIN_HEADER
   /*                        handle to the current renderer for the         */
   /*                        FT_GLYPH_FORMAT_OUTLINE format.                */
   /*                                                                       */
-  /*    auto_hinter      :: XXX                                            */
+  /*    auto_hinter      :: The current auto-hinter.                       */
+  /*                                                                       */
+  /*    auto_hinter_flags :: Flags controlling the behaviour of the        */
+  /*                         auto-hinter globally.                         */
   /*                                                                       */
   /*    raster_pool      :: The raster object's render pool.  This can     */
   /*                        ideally be changed dynamically at run-time.    */
@@ -850,6 +858,8 @@ FT_BEGIN_HEADER
     FT_ListRec         renderers;        /* list of renderers        */
     FT_Renderer        cur_renderer;     /* current outline renderer */
     FT_Module          auto_hinter;
+    FT_Int32           auto_hinter_flags; /* global flags controlling */
+                                          /* the autohinter behaviour */
 
     FT_Byte*           raster_pool;      /* scan-line conversion */
                                          /* render pool          */
