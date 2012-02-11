@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2008, 2010 by       */
+/*  Copyright 1996-2006, 2008, 2010, 2012 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -436,19 +436,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    memory  :: A handle to the memory manager.                         */
   /*                                                                       */
-  /*    generic :: A generic structure for user-level extensibility (?).   */
-  /*                                                                       */
   typedef struct  FT_ModuleRec_
   {
     FT_Module_Class*  clazz;
     FT_Library        library;
     FT_Memory         memory;
-    FT_Generic        generic;
 
   } FT_ModuleRec;
 
 
-  /* typecast an object to a FT_Module */
+  /* typecast an object to an FT_Module */
 #define FT_MODULE( x )          ((FT_Module)( x ))
 #define FT_MODULE_CLASS( x )    FT_MODULE( x )->clazz
 #define FT_MODULE_LIBRARY( x )  FT_MODULE( x )->library
@@ -776,9 +773,6 @@ FT_BEGIN_HEADER
   /*    memory           :: The library's memory object.  Manages memory   */
   /*                        allocation.                                    */
   /*                                                                       */
-  /*    generic          :: Client data variable.  Used to extend the      */
-  /*                        Library class by higher levels and clients.    */
-  /*                                                                       */
   /*    version_major    :: The major version number of the library.       */
   /*                                                                       */
   /*    version_minor    :: The minor version number of the library.       */
@@ -837,8 +831,6 @@ FT_BEGIN_HEADER
   typedef struct  FT_LibraryRec_
   {
     FT_Memory          memory;           /* library's memory manager */
-
-    FT_Generic         generic;
 
     FT_Int             version_major;
     FT_Int             version_minor;

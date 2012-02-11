@@ -1,3 +1,14 @@
+2012-02-11  Werner Lemberg  <wl@gnu.org>
+
+	Clean up `generic' fields.
+
+	* include/freetype/internal/ftobjs.h (FT_ModuleRec, FT_LibraryRec):
+	Remove `generic' field since users can't access it.
+
+	* src/base/ftobjs.c (FT_Done_GlyphSlot): Call `generic.finalizer' as
+	advertised in the documentation of FT_Generic.
+	(Destroy_Module, FT_Done_Library): Updated to changes in `ftobjs.h'.
+
 2012-02-07  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Harmonize function arguments.
