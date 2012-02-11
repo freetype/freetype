@@ -715,7 +715,7 @@
     FT_Error  error;
 
 
-    if ( ( error = TT_Goto_CodeRange( exec, tt_coderange_glyph, 0  ) )
+    if ( ( error = TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 ) )
            != TT_Err_Ok )
       return error;
 
@@ -1800,7 +1800,7 @@
 
     /* NOTE: Because the last instruction of a program may be a CALL */
     /*       which will return to the first byte *after* the code    */
-    /*       range, we test for AIP <= Size, instead of AIP < Size.  */
+    /*       range, we test for aIP <= Size, instead of aIP < Size.  */
 
     if ( aIP > range->size )
     {
@@ -2757,7 +2757,7 @@
     W = Vx * Vx + Vy * Vy;
 
     /* Now, we want that Sqrt( W ) = 0x4000 */
-    /* Or 0x10000000 <= W < 0x10004000        */
+    /* Or 0x10000000 <= W < 0x10004000      */
 
     if ( Vx < 0 )
     {
@@ -3199,36 +3199,42 @@
   }
 
 
-#define DO_JROT                            \
-    if ( args[1] != 0 )                    \
-    {                                      \
-      if ( args[0] == 0 && CUR.args == 0 ) \
-        CUR.error = TT_Err_Bad_Argument;   \
-      CUR.IP += args[0];                   \
-      if ( CUR.IP < 0 )                    \
-        CUR.error = TT_Err_Bad_Argument;   \
-      CUR.step_ins = FALSE;                \
+#define DO_JROT                                                   \
+    if ( args[1] != 0 )                                           \
+    {                                                             \
+      if ( args[0] == 0 && CUR.args == 0 )                        \
+        CUR.error = TT_Err_Bad_Argument;                          \
+      CUR.IP += args[0];                                          \
+      if ( CUR.IP < 0                                          || \
+           ( CUR.callTop > 0                                 &&   \
+             CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
+        CUR.error = TT_Err_Bad_Argument;                          \
+      CUR.step_ins = FALSE;                                       \
     }
 
 
-#define DO_JMPR                          \
-    if ( args[0] == 0 && CUR.args == 0 ) \
-      CUR.error = TT_Err_Bad_Argument;   \
-    CUR.IP += args[0];                   \
-    if ( CUR.IP < 0 )                    \
-      CUR.error = TT_Err_Bad_Argument;   \
+#define DO_JMPR                                                 \
+    if ( args[0] == 0 && CUR.args == 0 )                        \
+      CUR.error = TT_Err_Bad_Argument;                          \
+    CUR.IP += args[0];                                          \
+    if ( CUR.IP < 0                                          || \
+         ( CUR.callTop > 0                                 &&   \
+           CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
+      CUR.error = TT_Err_Bad_Argument;                          \
     CUR.step_ins = FALSE;
 
 
-#define DO_JROF                            \
-    if ( args[1] == 0 )                    \
-    {                                      \
-      if ( args[0] == 0 && CUR.args == 0 ) \
-        CUR.error = TT_Err_Bad_Argument;   \
-      CUR.IP += args[0];                   \
-      if ( CUR.IP < 0 )                    \
-        CUR.error = TT_Err_Bad_Argument;   \
-      CUR.step_ins = FALSE;                \
+#define DO_JROF                                                   \
+    if ( args[1] == 0 )                                           \
+    {                                                             \
+      if ( args[0] == 0 && CUR.args == 0 )                        \
+        CUR.error = TT_Err_Bad_Argument;                          \
+      CUR.IP += args[0];                                          \
+      if ( CUR.IP < 0                                          || \
+           ( CUR.callTop > 0                                 &&   \
+             CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
+        CUR.error = TT_Err_Bad_Argument;                          \
+      CUR.step_ins = FALSE;                                       \
     }
 
 
@@ -4640,6 +4646,7 @@
         return;
 
       case 0x2D:   /* ENDF */
+        rec->end = CUR.IP;
         return;
       }
     }
@@ -4757,6 +4764,7 @@
     pCrec->Caller_IP    = CUR.IP + 1;
     pCrec->Cur_Count    = 1;
     pCrec->Cur_Restart  = def->start;
+    pCrec->Cur_End      = def->end;
 
     CUR.callTop++;
 
@@ -4835,6 +4843,7 @@
       pCrec->Caller_IP    = CUR.IP + 1;
       pCrec->Cur_Count    = (FT_Int)args[0];
       pCrec->Cur_Restart  = def->start;
+      pCrec->Cur_End      = def->end;
 
       CUR.callTop++;
 
@@ -7173,6 +7182,7 @@
         call->Caller_IP    = CUR.IP + 1;
         call->Cur_Count    = 1;
         call->Cur_Restart  = def->start;
+        call->Cur_End      = def->end;
 
         INS_Goto_CodeRange( def->range, def->start );
 
@@ -8181,6 +8191,7 @@
                 callrec->Caller_IP    = CUR.IP + 1;
                 callrec->Cur_Count    = 1;
                 callrec->Cur_Restart  = def->start;
+                callrec->Cur_End      = def->end;
 
                 if ( INS_Goto_CodeRange( def->range, def->start ) == FAILURE )
                   goto LErrorLabel_;

@@ -1,5 +1,19 @@
 2012-02-11  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix Savannah bug #35466.
+
+	Jump instructions are now bound to the current function.  The MS
+	Windows rasterizer behaves the same, as confirmed by Greg Hitchcock.
+
+	* src/truetype/ttinterp.h (TT_CallRec): Add `Cur_End' element.
+	* src/truetype/ttobjs.h (TT_DefRecord): Add `end' element.
+
+	* src/truetype/ttinterp.c (DO_JROT, DO_JMPR, DO_JROF): Check upper
+	bound of jump address.
+	(Ins_FDEF, Ins_CALL, Ins_LOOPCALL, Ins_UNKNOWN, TT_RunIns): Updated.
+
+2012-02-11  Werner Lemberg  <wl@gnu.org>
+
 	We don't use `extensions'.
 
 	* include/freetype/internal/ftobjs.h (FT_DriverRec): Remove
