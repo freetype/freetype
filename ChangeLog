@@ -1,5 +1,12 @@
 2012-02-11  Werner Lemberg  <wl@gnu.org>
 
+	We don't use `extensions'.
+
+	* include/freetype/internal/ftobjs.h (FT_DriverRec): Remove
+	`extensions' field.
+
+2012-02-11  Werner Lemberg  <wl@gnu.org>
+
 	Clean up `generic' fields.
 
 	* include/freetype/internal/ftobjs.h (FT_ModuleRec, FT_LibraryRec):

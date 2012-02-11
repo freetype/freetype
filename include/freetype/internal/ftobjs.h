@@ -708,10 +708,6 @@ FT_BEGIN_HEADER
   /*     faces_list   :: The list of faces currently opened by this        */
   /*                     driver.                                           */
   /*                                                                       */
-  /*     extensions   :: A typeless pointer to the driver's extensions     */
-  /*                     registry, if they are supported through the       */
-  /*                     configuration macro FT_CONFIG_OPTION_EXTENSIONS.  */
-  /*                                                                       */
   /*     glyph_loader :: The glyph loader for all faces managed by this    */
   /*                     driver.  This object isn't defined for unscalable */
   /*                     formats.                                          */
@@ -720,10 +716,7 @@ FT_BEGIN_HEADER
   {
     FT_ModuleRec     root;
     FT_Driver_Class  clazz;
-
     FT_ListRec       faces_list;
-    void*            extensions;
-
     FT_GlyphLoader   glyph_loader;
 
   } FT_DriverRec;
