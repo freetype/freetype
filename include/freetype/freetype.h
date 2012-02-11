@@ -2452,6 +2452,11 @@ FT_BEGIN_HEADER
    *     during glyph loading.  This is mostly used to detect broken glyphs
    *     in fonts.  By default, FreeType tries to handle broken fonts also.
    *
+   *     In particular, errors from the TrueType bytecode engine are not
+   *     passed to the application if this flag is not set; this might
+   *     result in partially hinted or distorted glyphs in case a glyph's
+   *     bytecode is buggy.
+   *
    *   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ::
    *     Ignored.  Deprecated.
    *
