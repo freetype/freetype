@@ -465,7 +465,13 @@
       if ( error )
         goto Exit;
 
-      slot->outline = internal->loader->base.outline;
+      /* reassign all outline fields except flags to protect them */
+      slot->outline.n_contours = internal->loader->base.outline.n_contours;
+      slot->outline.n_points   = internal->loader->base.outline.n_points;
+      slot->outline.points     = internal->loader->base.outline.points;
+      slot->outline.tags       = internal->loader->base.outline.tags;
+      slot->outline.contours   = internal->loader->base.outline.contours;
+
       slot->format  = FT_GLYPH_FORMAT_OUTLINE;
     }
 
