@@ -234,8 +234,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
 #ifndef FT_STATIC_RASTER
 
-#define RAS_ARG   PWorker  worker
-#define RAS_ARG_  PWorker  worker,
+#define RAS_ARG   gray_PWorker  worker
+#define RAS_ARG_  gray_PWorker  worker,
 
 #define RAS_VAR   worker
 #define RAS_VAR_  worker,
@@ -315,15 +315,15 @@ typedef ptrdiff_t  FT_PtrDist;
 
   typedef struct  TCell_
   {
-    TPos   x;     /* same with TWorker.ex */
-    TCoord cover; /* same with TWorker.cover */
-    TArea  area;
-    PCell  next;
+    TPos    x;     /* same with gray_TWorker.ex    */
+    TCoord  cover; /* same with gray_TWorker.cover */
+    TArea   area;
+    PCell   next;
 
   } TCell;
 
 
-  typedef struct  TWorker_
+  typedef struct  gray_TWorker_
   {
     TCoord  ex, ey;
     TPos    min_ex, max_ex;
@@ -334,7 +334,7 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord  cover;
     int     invalid;
 
-    PCell   cells;
+    PCell       cells;
     FT_PtrDist  max_cells;
     FT_PtrDist  num_cells;
 
@@ -368,23 +368,23 @@ typedef ptrdiff_t  FT_PtrDist;
     PCell*     ycells;
     TPos       ycount;
 
-  } TWorker, *PWorker;
+  } gray_TWorker, *gray_PWorker;
 
 
 #ifndef FT_STATIC_RASTER
 #define ras  (*worker)
 #else
-  static TWorker  ras;
+  static gray_TWorker  ras;
 #endif
 
 
   typedef struct TRaster_
   {
-    void*    buffer;
-    long     buffer_size;
-    int      band_size;
-    void*    memory;
-    PWorker  worker;
+    void*         buffer;
+    long          buffer_size;
+    int           band_size;
+    void*         memory;
+    gray_PWorker  worker;
 
   } TRaster, *PRaster;
 
@@ -1115,7 +1115,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   static int
   gray_move_to( const FT_Vector*  to,
-                PWorker           worker )
+                gray_PWorker      worker )
   {
     TPos  x, y;
 
@@ -1137,7 +1137,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   static int
   gray_line_to( const FT_Vector*  to,
-                PWorker           worker )
+                gray_PWorker      worker )
   {
     gray_render_line( RAS_VAR_ UPSCALE( to->x ), UPSCALE( to->y ) );
     return 0;
@@ -1147,7 +1147,7 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_conic_to( const FT_Vector*  control,
                  const FT_Vector*  to,
-                 PWorker           worker )
+                 gray_PWorker      worker )
   {
     gray_render_conic( RAS_VAR_ control, to );
     return 0;
@@ -1158,7 +1158,7 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_cubic_to( const FT_Vector*  control1,
                  const FT_Vector*  control2,
                  const FT_Vector*  to,
-                 PWorker           worker )
+                 gray_PWorker      worker )
   {
     gray_render_cubic( RAS_VAR_ control1, control2, to );
     return 0;
@@ -1169,7 +1169,7 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_render_span( int             y,
                     int             count,
                     const FT_Span*  spans,
-                    PWorker         worker )
+                    gray_PWorker    worker )
   {
     unsigned char*  p;
     FT_Bitmap*      map = &worker->target;
@@ -1862,7 +1862,7 @@ typedef ptrdiff_t  FT_PtrDist;
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
-    PWorker            worker;
+    gray_PWorker       worker;
 
 
     if ( !raster || !raster->buffer || !raster->buffer_size )
@@ -2016,14 +2016,15 @@ typedef ptrdiff_t  FT_PtrDist;
 
     if ( raster )
     {
-      if ( pool_base && pool_size >= (long)sizeof ( TWorker ) + 2048 )
+      if ( pool_base && pool_size >= (long)sizeof ( gray_TWorker ) + 2048 )
       {
-        PWorker  worker = (PWorker)pool_base;
+        gray_PWorker  worker = (gray_PWorker)pool_base;
 
 
         rast->worker      = worker;
         rast->buffer      = pool_base +
-                              ( ( sizeof ( TWorker ) + sizeof ( TCell ) - 1 ) &
+                              ( ( sizeof ( gray_TWorker ) +
+                                  sizeof ( TCell ) - 1 )  &
                                 ~( sizeof ( TCell ) - 1 ) );
         rast->buffer_size = (long)( ( pool_base + pool_size ) -
                                     (char*)rast->buffer ) &

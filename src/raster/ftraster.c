@@ -396,8 +396,8 @@
 #else /* !FT_STATIC_RASTER */
 
 
-#define RAS_ARGS       PWorker    worker,
-#define RAS_ARG        PWorker    worker
+#define RAS_ARGS       black_PWorker  worker,
+#define RAS_ARG        black_PWorker  worker
 
 #define RAS_VARS       worker,
 #define RAS_VAR        worker
@@ -408,7 +408,7 @@
 #endif /* !FT_STATIC_RASTER */
 
 
-  typedef struct TWorker_  TWorker, *PWorker;
+  typedef struct black_TWorker_  black_TWorker, *black_PWorker;
 
 
   /* prototypes used for sweep function dispatch */
@@ -446,7 +446,7 @@
   /* Thus, their offset can be coded with less opcodes, resulting in a   */
   /* smaller executable.                                                 */
 
-  struct  TWorker_
+  struct  black_TWorker_
   {
     Int         precision_bits;     /* precision related variables         */
     Int         precision;
@@ -546,18 +546,18 @@
 
   typedef struct  TRaster_
   {
-    char*    buffer;
-    long     buffer_size;
-    void*    memory;
-    PWorker  worker;
-    Byte     grays[5];
-    Short    gray_width;
+    char*          buffer;
+    long           buffer_size;
+    void*          memory;
+    black_PWorker  worker;
+    Byte           grays[5];
+    Short          gray_width;
 
   } TRaster, *PRaster;
 
 #ifdef FT_STATIC_RASTER
 
-  static TWorker  cur_ras;
+  static black_TWorker  cur_ras;
 #define ras  cur_ras
 
 #else /* !FT_STATIC_RASTER */
@@ -3485,9 +3485,9 @@
   {
     if ( raster )
     {
-      if ( pool_base && pool_size >= (long)sizeof ( TWorker ) + 2048 )
+      if ( pool_base && pool_size >= (long)sizeof ( black_TWorker ) + 2048 )
       {
-        PWorker  worker = (PWorker)pool_base;
+        black_PWorker  worker = (black_PWorker)pool_base;
 
 
         raster->buffer      = pool_base + ( ( sizeof ( *worker ) + 7 ) & ~7 );
@@ -3537,7 +3537,7 @@
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
-    PWorker            worker;
+    black_PWorker            worker;
 
 
     if ( !raster || !raster->buffer || !raster->buffer_size )
