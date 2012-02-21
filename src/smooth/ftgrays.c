@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000-2003, 2005-2011 by                                      */
+/*  Copyright 2000-2003, 2005-2012 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1676,11 +1676,11 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif /* _STANDALONE_ */
 
 
-  typedef struct  TBand_
+  typedef struct  gray_TBand_
   {
     TPos  min, max;
 
-  } TBand;
+  } gray_TBand;
 
     FT_DEFINE_OUTLINE_FUNCS(func_interface,
       (FT_Outline_MoveTo_Func) gray_move_to,
@@ -1717,11 +1717,11 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_convert_glyph( RAS_ARG )
   {
-    TBand            bands[40];
-    TBand* volatile  band;
-    int volatile     n, num_bands;
-    TPos volatile    min, max, max_y;
-    FT_BBox*         clip;
+    gray_TBand            bands[40];
+    gray_TBand* volatile  band;
+    int volatile          n, num_bands;
+    TPos volatile         min, max, max_y;
+    FT_BBox*              clip;
 
 
     /* Set up state in the raster object */

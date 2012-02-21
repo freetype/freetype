@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2005, 2007, 2008, 2009, 2010, 2011 by */
+/*  Copyright 1996-2003, 2005, 2007-2012 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -369,12 +369,12 @@
 
   /* Simple record used to implement a stack of bands, required */
   /* by the sub-banding mechanism                               */
-  typedef struct  TBand_
+  typedef struct  black_TBand_
   {
     Short  y_min;   /* band's minimum */
     Short  y_max;   /* band's maximum */
 
-  } TBand;
+  } black_TBand;
 
 
 #define AlignProfileSize \
@@ -515,8 +515,8 @@
 
     TPoint      arcs[3 * MaxBezier + 1]; /* The Bezier stack               */
 
-    TBand       band_stack[16];     /* band stack used for sub-banding     */
-    Int         band_top;           /* band stack top                      */
+    black_TBand  band_stack[16];    /* band stack used for sub-banding     */
+    Int          band_top;          /* band stack top                      */
 
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
 
