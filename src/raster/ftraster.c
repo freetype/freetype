@@ -428,6 +428,10 @@
 
 
   /* NOTE: These operations are only valid on 2's complement processors */
+#undef FLOOR
+#undef CEILING
+#undef TRUNC
+#undef SCALED
 
 #define FLOOR( x )    ( (x) & -ras.precision )
 #define CEILING( x )  ( ( (x) + ras.precision - 1 ) & -ras.precision )
