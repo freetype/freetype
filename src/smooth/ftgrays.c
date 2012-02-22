@@ -232,6 +232,11 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /* as usual, for the speed hungry :-) */
 
+#undef RAS_ARG
+#undef RAS_ARG_
+#undef RAS_VAR
+#undef RAS_VAR_
+
 #ifndef FT_STATIC_RASTER
 
 #define RAS_ARG   gray_PWorker  worker
@@ -378,7 +383,7 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif
 
 
-  typedef struct TRaster_
+  typedef struct gray_TRaster_
   {
     void*         buffer;
     long          buffer_size;
@@ -386,7 +391,7 @@ typedef ptrdiff_t  FT_PtrDist;
     void*         memory;
     gray_PWorker  worker;
 
-  } TRaster, *PRaster;
+  } gray_TRaster, *gray_PRaster;
 
 
 
@@ -1857,7 +1862,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_raster_render( PRaster                  raster,
+  gray_raster_render( gray_PRaster             raster,
                       const FT_Raster_Params*  params )
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
@@ -1954,7 +1959,7 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_raster_new( void*       memory,
                    FT_Raster*  araster )
   {
-    static TRaster  the_raster;
+    static gray_TRaster  the_raster;
 
     FT_UNUSED( memory );
 
@@ -1979,15 +1984,15 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_raster_new( FT_Memory   memory,
                    FT_Raster*  araster )
   {
-    FT_Error  error;
-    PRaster   raster = NULL;
+    FT_Error      error;
+    gray_PRaster  raster = NULL;
 
 
     *araster = 0;
-    if ( !FT_ALLOC( raster, sizeof ( TRaster ) ) )
+    if ( !FT_ALLOC( raster, sizeof ( gray_TRaster ) ) )
     {
       raster->memory = memory;
-      *araster = (FT_Raster)raster;
+      *araster       = (FT_Raster)raster;
     }
 
     return error;
@@ -1997,7 +2002,7 @@ typedef ptrdiff_t  FT_PtrDist;
   static void
   gray_raster_done( FT_Raster  raster )
   {
-    FT_Memory  memory = (FT_Memory)((PRaster)raster)->memory;
+    FT_Memory  memory = (FT_Memory)((gray_PRaster)raster)->memory;
 
 
     FT_FREE( raster );
@@ -2011,7 +2016,7 @@ typedef ptrdiff_t  FT_PtrDist;
                      char*      pool_base,
                      long       pool_size )
   {
-    PRaster  rast = (PRaster)raster;
+    gray_PRaster  rast = (gray_PRaster)raster;
 
 
     if ( raster )

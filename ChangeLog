@@ -1,3 +1,15 @@
+2012-02-22  Vinnie Falco  <vinnie.falco@gmail.com>
+
+	Prepare source code for amalgamation (4/6).
+
+	* src/smooth/ftgrays.c, src/raster/ftraster.c: Undefine RAS_ARG,
+	RAS_ARGS, RAS_VAR, and RAS_VARS before defining it.
+
+	* src/smooth/ftgrays.c: s/TRaster/black_TRaster/,
+	s/PRaster/black_PRaster/.
+	* src/raster/ftraster.c: s/TRaster/gray_TRaster/,
+	s/PRaster/gray_PRaster/.
+
 2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (3/6).
@@ -5,7 +17,7 @@
 	* src/smooth/ftgrays.c: s/TWorker/black_TWorker/,
 	s/PWorker/black_PWorker/.
 	* src/raster/ftraster.c: s/TWorker/gray_TWorker/,
-	s/PWorker/gray_PWorker/
+	s/PWorker/gray_PWorker/.
 
 2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
 

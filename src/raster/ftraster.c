@@ -381,6 +381,11 @@
   ( ( sizeof ( TProfile ) + sizeof ( Alignment ) - 1 ) / sizeof ( long ) )
 
 
+#undef RAS_ARG
+#undef RAS_ARGS
+#undef RAS_VAR
+#undef RAS_VARS
+
 #ifdef FT_STATIC_RASTER
 
 
@@ -544,7 +549,7 @@
   };
 
 
-  typedef struct  TRaster_
+  typedef struct  black_TRaster_
   {
     char*          buffer;
     long           buffer_size;
@@ -553,7 +558,7 @@
     Byte           grays[5];
     Short          gray_width;
 
-  } TRaster, *PRaster;
+  } black_TRaster, *black_PRaster;
 
 #ifdef FT_STATIC_RASTER
 
@@ -3395,7 +3400,7 @@
 
 
   static void
-  ft_black_init( PRaster  raster )
+  ft_black_init( black_PRaster  raster )
   {
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
     FT_UInt  n;
@@ -3423,7 +3428,7 @@
   ft_black_new( void*       memory,
                 FT_Raster  *araster )
   {
-     static TRaster  the_raster;
+     static black_TRaster  the_raster;
      FT_UNUSED( memory );
 
 
@@ -3447,11 +3452,11 @@
 
 
   static int
-  ft_black_new( FT_Memory   memory,
-                PRaster    *araster )
+  ft_black_new( FT_Memory       memory,
+                black_PRaster  *araster )
   {
-    FT_Error  error;
-    PRaster   raster = NULL;
+    FT_Error       error;
+    black_PRaster  raster = NULL;
 
 
     *araster = 0;
@@ -3468,9 +3473,11 @@
 
 
   static void
-  ft_black_done( PRaster  raster )
+  ft_black_done( black_PRaster  raster )
   {
     FT_Memory  memory = (FT_Memory)raster->memory;
+
+
     FT_FREE( raster );
   }
 
@@ -3479,9 +3486,9 @@
 
 
   static void
-  ft_black_reset( PRaster  raster,
-                  char*    pool_base,
-                  long     pool_size )
+  ft_black_reset( black_PRaster  raster,
+                  char*          pool_base,
+                  long           pool_size )
   {
     if ( raster )
     {
@@ -3505,7 +3512,7 @@
 
 
   static void
-  ft_black_set_mode( PRaster        raster,
+  ft_black_set_mode( black_PRaster  raster,
                      unsigned long  mode,
                      const char*    palette )
   {
@@ -3532,12 +3539,12 @@
 
 
   static int
-  ft_black_render( PRaster                  raster,
+  ft_black_render( black_PRaster            raster,
                    const FT_Raster_Params*  params )
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
-    black_PWorker            worker;
+    black_PWorker      worker;
 
 
     if ( !raster || !raster->buffer || !raster->buffer_size )
