@@ -1,6 +1,6 @@
 /*
  * Copyright 2000 Computing Research Labs, New Mexico State University
- * Copyright 2001-2011
+ * Copyright 2001-2012
  *   Francesco Zappa Nardelli
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -1254,7 +1254,8 @@
     ep = line + linelen;
 
     /* Trim the leading whitespace if it exists. */
-    *sp++ = 0;
+    if ( *sp )
+      *sp++ = 0;
     while ( *sp                           &&
             ( *sp == ' ' || *sp == '\t' ) )
       sp++;

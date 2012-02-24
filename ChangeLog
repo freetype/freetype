@@ -1,3 +1,9 @@
+2012-02-24  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Fix Savannah bugs #35597 and #35598.
+
+	* src/bdf/bdflib.c (_bdf_is_atom): Fix handling of property value.
+
 2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (6/6).
