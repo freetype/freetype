@@ -1,3 +1,10 @@
+2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
+
+	Prepare source code for amalgamation (5/6).
+
+	* include/freetype/fterrors.h: Undefine FT_KEEP_ERR_PREFIX after
+	using it.
+
 2012-02-22  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (4/6).

@@ -197,6 +197,8 @@
   /* FT_KEEP_ERR_PREFIX is needed for ftvalid.h */
 #ifndef FT_KEEP_ERR_PREFIX
 #undef FT_ERR_PREFIX
+#else
+#undef FT_KEEP_ERR_PREFIX
 #endif
 
 #endif /* __FTERRORS_H__ */
