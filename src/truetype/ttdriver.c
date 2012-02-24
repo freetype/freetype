@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2011 by                                                 */
+/*  Copyright 1996-2012 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -258,7 +258,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Load_Glyph                                                         */
+  /*    tt_glyph_load                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A driver method used to load a glyph within a given glyph slot.    */
@@ -282,10 +282,10 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static FT_Error
-  Load_Glyph( FT_GlyphSlot  ttslot,         /* TT_GlyphSlot */
-              FT_Size       ttsize,         /* TT_Size      */
-              FT_UInt       glyph_index,
-              FT_Int32      load_flags )
+  tt_glyph_load( FT_GlyphSlot  ttslot,      /* TT_GlyphSlot */
+                 FT_Size       ttsize,      /* TT_Size      */
+                 FT_UInt       glyph_index,
+                 FT_Int32      load_flags )
   {
     TT_GlyphSlot  slot = (TT_GlyphSlot)ttslot;
     TT_Size       size = (TT_Size)ttsize;
@@ -488,7 +488,7 @@
     ft_stub_set_char_sizes,  /* FT_CONFIG_OPTION_OLD_INTERNALS */
     ft_stub_set_pixel_sizes, /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
-    Load_Glyph,
+    tt_glyph_load,
 
     tt_get_kerning,
     0,                       /* FT_Face_AttachFunc */

@@ -1,5 +1,21 @@
 2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
 
+	Prepare source code for amalgamation (6/6).
+
+	* src/cff/cffdrivr.c: s/Load_Glyph/cff_glyph_load/.
+
+	* src/cid/cidload.c: s/parse_font_matrix/cid_parse_font_matrix/.
+	s/t1_init_loader/cid_init_loader/.
+	s/t1_done_loader/cid_done_loader/.
+
+	* src/pxaux/t1cmap.c: s/t1_get_glyph_name/psaux_get_glyph_name/.
+
+	* src/truetype/ttdriver.c: s/Load_Glyph/tt_glyph_load/.
+
+	* src/type1/t1load.c: s/parse_font_matrix/t1_parse_font_matrix/.
+
+2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
+
 	Prepare source code for amalgamation (5/6).
 
 	* include/freetype/fterrors.h: Undefine FT_KEEP_ERR_PREFIX after

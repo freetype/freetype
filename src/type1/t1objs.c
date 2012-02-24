@@ -465,7 +465,7 @@
       root->bbox.xMax = ( type1->font_bbox.xMax + 0xFFFF ) >> 16;
       root->bbox.yMax = ( type1->font_bbox.yMax + 0xFFFF ) >> 16;
 
-      /* Set units_per_EM if we didn't set it in parse_font_matrix. */
+      /* Set units_per_EM if we didn't set it in t1_parse_font_matrix. */
       if ( !root->units_per_EM )
         root->units_per_EM = 1000;
 
