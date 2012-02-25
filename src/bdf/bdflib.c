@@ -188,6 +188,7 @@
 #define ACMSG13  "Glyph %ld extra rows removed.\n"
 #define ACMSG14  "Glyph %ld extra columns removed.\n"
 #define ACMSG15  "Incorrect glyph count: %ld indicated but %ld found.\n"
+#define ACMSG16  "Glyph %ld missing columns padded with zero bits.\n"
 
   /* Error messages. */
 #define ERRMSG1  "[line %ld] Missing `%s' line.\n"
@@ -1725,9 +1726,21 @@
       for ( i = 0; i < nibbles; i++ )
       {
         c = line[i];
+        if ( !c )
+          break;
         *bp = (FT_Byte)( ( *bp << 4 ) + a2i[c] );
         if ( i + 1 < nibbles && ( i & 1 ) )
           *++bp = 0;
+      }
+
+      /* If any line has not enough columns,            */
+      /* indicate they have been padded with zero bits. */
+      if ( i < nibbles                            &&
+           !( p->flags & _BDF_GLYPH_WIDTH_CHECK ) )
+      {
+        FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG16, glyph->encoding ));
+        p->flags       |= _BDF_GLYPH_WIDTH_CHECK;
+        font->modified  = 1;
       }
 
       /* Remove possible garbage at the right. */
@@ -1736,7 +1749,8 @@
         *bp &= nibble_mask[mask_index];
 
       /* If any line has extra columns, indicate they have been removed. */
-      if ( ( line[nibbles] == '0' || a2i[(int)line[nibbles]] != 0 ) &&
+      if ( i == nibbles                                             &&
+           ( line[nibbles] == '0' || a2i[(int)line[nibbles]] != 0 ) &&
            !( p->flags & _BDF_GLYPH_WIDTH_CHECK )                   )
       {
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG14, glyph->encoding ));

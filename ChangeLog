@@ -1,3 +1,10 @@
+2012-02-25  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Fix Savannah bugs #35599 and #35600.
+
+	* src/bdf/bdflib.c (ACMSG16): New warning message.
+	(_bdf_parse_glyphs) <_BDF_BITMAP>: Check line length.
+
 2012-02-24  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Fix Savannah bugs #35597 and #35598.
