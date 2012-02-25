@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 42 font parser (body).                                          */
 /*                                                                         */
-/*  Copyright 2002-2011 by                                                 */
+/*  Copyright 2002-2012 by                                                 */
 /*  Roberto Alameda.                                                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -608,7 +608,8 @@
       }
 
       /* A string can have a trailing zero byte for padding.  Ignore it. */
-      if ( string_buf[string_size - 1] == 0 && ( string_size % 2 == 1 ) )
+      if ( string_size                                                  &&
+           string_buf[string_size - 1] == 0 && ( string_size % 2 == 1 ) )
         string_size--;
 
       if ( !string_size )

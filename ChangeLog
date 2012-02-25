@@ -1,5 +1,12 @@
 2012-02-25  Werner Lemberg  <wl@gnu.org>
 
+	[type42] Fix Savannah bug #35602.
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Check `string_size' more
+	thoroughly.
+
+2012-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Fix Savannah bugs #35599 and #35600.
 
 	* src/bdf/bdflib.c (ACMSG16): New warning message.
