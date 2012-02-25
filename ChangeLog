@@ -1,5 +1,12 @@
 2012-02-25  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] Fix Savannah bug #35603.
+
+	* src/pcf/pcfread.c (pcf_get_properties): Assure final zero byte in
+	`strings' array.
+
+2012-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Fix Savannah bug #35602.
 
 	* src/type42/t42parse.c (t42_parse_sfnts): Check `string_size' more
