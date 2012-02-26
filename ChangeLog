@@ -1,3 +1,12 @@
+2012-02-26  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Fix Savannah bug #35606.
+
+	* src/type1/t1load.c (parse_subrs): Add proper guards for `strncmp'.
+
+	* src/psaux/psobjs.c (ps_parser_skip_PS_token): Emit error message
+	only if cur < limit.
+
 2012-02-25  Werner Lemberg  <wl@gnu.org>
 
 	[pcf] Fix Savannah bug #35603.

@@ -1388,7 +1388,8 @@
 
 
       /* If the next token isn't `dup' we are done. */
-      if ( ft_strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
+      if ( parser->root.cursor + 4 < parser->root.limit            &&
+           ft_strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
         break;
 
       T1_Skip_PS_Token( parser );       /* `dup' */
@@ -1407,7 +1408,8 @@
         return;
       T1_Skip_Spaces  ( parser );
 
-      if ( ft_strncmp( (char*)parser->root.cursor, "put", 3 ) == 0 )
+      if ( parser->root.cursor + 4 < parser->root.limit            &&
+           ft_strncmp( (char*)parser->root.cursor, "put", 3 ) == 0 )
       {
         T1_Skip_PS_Token( parser ); /* skip `put' */
         T1_Skip_Spaces  ( parser );
