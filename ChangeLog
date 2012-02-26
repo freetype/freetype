@@ -1,3 +1,10 @@
+2012-02-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[type42] Minor code optimization.
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Use bitmask instead of
+	modulo operator.
+
 2012-02-26  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
