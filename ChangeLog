@@ -1,5 +1,12 @@
 2012-02-26  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #35607.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <ENCODING>: Normalize
+	negative encoding values.
+
+2012-02-26  Werner Lemberg  <wl@gnu.org>
+
 	[type1] Fix Savannah bug #35606.
 
 	* src/type1/t1load.c (parse_subrs): Add proper guards for `strncmp'.

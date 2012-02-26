@@ -1606,6 +1606,11 @@
 
       p->glyph_enc = _bdf_atol( p->list.field[1], 0, 10 );
 
+      /* Normalize negative encoding values.  The specification only */
+      /* allows -1, but we can be more generous here.                */
+      if ( p->glyph_enc < -1 )
+        p->glyph_enc = -1;
+
       FT_TRACE4(( DBGMSG2, p->glyph_enc ));
 
       /* Check that the encoding is in the Unicode range because  */
