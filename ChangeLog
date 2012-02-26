@@ -1,5 +1,9 @@
 2012-02-26  Werner Lemberg  <wl@gnu.org>
 
+	* docs/CHANGES: Updated.
+
+2012-02-26  Werner Lemberg  <wl@gnu.org>
+
 	[type1] Fix Savannah bug #35608.
 
 	* src/type1/t1parse.c (T1_Get_Private_Dict): Reject too short
@@ -238,9 +242,9 @@
 
 2012-01-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[autofit] Fix the inclusion of "aflatin2.h" in PIC file.
+	[autofit] Fix the inclusion of `aflatin2.h' in PIC file.
 
-	* src/autofit/afpic.c: Include "aflatin2.h" when
+	* src/autofit/afpic.c: Include `aflatin2.h' when
 	FT_OPTION_AUTOFIT2 is defined, as afglobal.c does so.
 	Unconditionally inclusion causes declared but unimplemented
 	warning by GCC 4.6.
@@ -338,8 +342,8 @@
 
 2012-01-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Make PIC files to include module error headers, to use the
-	error codes with per-module prefix.
+	Make PIC files include module error headers, to use the error codes
+	with per-module prefix.
 
 	* src/autofit/afpic.c: Include `aferrors.h'.
 	* src/cff/cffpic.c: Include `cfferrs.h'.
