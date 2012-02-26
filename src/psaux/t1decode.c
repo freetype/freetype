@@ -1113,7 +1113,7 @@
             FT_TRACE4(( "BuildCharArray = [ " ));
 
             for ( i = 0; i < decoder->len_buildchar; ++i )
-              FT_TRACE4(( "%d ", decoder->buildchar[ i ] ));
+              FT_TRACE4(( "%d ", decoder->buildchar[i] ));
 
             FT_TRACE4(( "]\n" ));
           }

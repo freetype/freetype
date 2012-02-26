@@ -5773,13 +5773,12 @@
   static void
   Ins_SHC( INS_ARG )
   {
-    TT_GlyphZoneRec zp;
-    FT_UShort       refp;
-    FT_F26Dot6      dx,
-                    dy;
+    TT_GlyphZoneRec  zp;
+    FT_UShort        refp;
+    FT_F26Dot6       dx, dy;
 
-    FT_Short        contour;
-    FT_UShort       first_point, last_point, i;
+    FT_Short         contour;
+    FT_UShort        first_point, last_point, i;
 
 
     contour = (FT_UShort)args[0];

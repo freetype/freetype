@@ -1704,9 +1704,9 @@
                         const FT_String*  name,
                         GXV_odtect_Range  odtect )
   {
-    odtect->range[ odtect->nRanges ].start  = start;
-    odtect->range[ odtect->nRanges ].length = length;
-    odtect->range[ odtect->nRanges ].name   = (FT_String*)name;
+    odtect->range[odtect->nRanges].start  = start;
+    odtect->range[odtect->nRanges].length = length;
+    odtect->range[odtect->nRanges].name   = (FT_String*)name;
     odtect->nRanges++;
   }
 

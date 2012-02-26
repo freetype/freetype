@@ -10,7 +10,7 @@
  * accepted if you are using GCC for compilation (and probably by
  * other compilers too).
  *
- * Author: David Turner, 2005, 2006, 2008, 2009, 2010
+ * Author: David Turner, 2005, 2006, 2008-2012
  *
  * This code is explicitly placed into the public domain.
  *
@@ -208,7 +208,7 @@ typedef enum  State_
 static int
 read_header_file( FILE*  file, int  verbose )
 {
-  static char  buff[ LINEBUFF_SIZE+1 ];
+  static char  buff[LINEBUFF_SIZE + 1];
   State        state = STATE_START;
 
   while ( !feof( file ) )
