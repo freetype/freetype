@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 parser (body).                                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2008, 2009 by             */
+/*  Copyright 1996-2005, 2008, 2009, 2012 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -466,6 +466,14 @@
 
     /* we now decrypt the encoded binary private dictionary */
     psaux->t1_decrypt( parser->private_dict, parser->private_len, 55665U );
+
+    if ( parser->private_len < 4 )
+    {
+      FT_ERROR(( "T1_Get_Private_Dict:"
+                 " invalid private dictionary section\n" ));
+      error = T1_Err_Invalid_File_Format;
+      goto Fail;
+    }
 
     /* replace the four random bytes at the beginning with whitespace */
     parser->private_dict[0] = ' ';

@@ -1,5 +1,12 @@
 2012-02-26  Werner Lemberg  <wl@gnu.org>
 
+	[type1] Fix Savannah bug #35608.
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Reject too short
+	dictionaries.
+
+2012-02-26  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Support `ENCODING -1 <n>' format.
 
 	* src/bdf/bdflib.c (_bdf_parse_glyphs) <ENCODING>: Implement it.
