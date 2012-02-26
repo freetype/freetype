@@ -1,5 +1,11 @@
 2012-02-26  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Support `ENCODING -1 <n>' format.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <ENCODING>: Implement it.
+
+2012-02-26  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Fix Savannah bug #35607.
 
 	* src/bdf/bdflib.c (_bdf_parse_glyphs) <ENCODING>: Normalize

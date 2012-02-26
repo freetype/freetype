@@ -545,6 +545,10 @@
   }
 
 
+  /* The code below ensures that we have at least 4 + 1 `field' */
+  /* elements in `list' (which are possibly NULL) so that we    */
+  /* don't have to check the number of fields in most cases.    */
+
   static FT_Error
   _bdf_list_split( _bdf_list_t*   list,
                    char*          separators,
@@ -1610,6 +1614,10 @@
       /* allows -1, but we can be more generous here.                */
       if ( p->glyph_enc < -1 )
         p->glyph_enc = -1;
+
+      /* Check for alternative encoding format. */
+      if ( p->glyph_enc == -1 && p->list.used > 2 )
+        p->glyph_enc = _bdf_atol( p->list.field[2], 0, 10 );
 
       FT_TRACE4(( DBGMSG2, p->glyph_enc ));
 
