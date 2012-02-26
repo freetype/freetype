@@ -1,3 +1,12 @@
+2012-02-26  Mateusz Jurczyk  <mjurczyk@google.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[smooth] Fix Savannah bug #35604.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Use `FT_Pos'
+	instead of `FT_UInt' for some variables and update comparisons
+	accordingly.  A detailed analysis can be found in the bug report.
+
 2012-02-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type42] Minor code optimization.
