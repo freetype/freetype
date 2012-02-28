@@ -1,3 +1,9 @@
+2012-02-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[type42] Minor code optimization (again).
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Simplify previous change.
+
 2012-02-26  Mateusz Jurczyk  <mjurczyk@google.com>
 	    Werner Lemberg  <wl@gnu.org>
 

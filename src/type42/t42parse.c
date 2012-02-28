@@ -607,9 +607,9 @@
         goto Fail;
       }
 
-      /* A string can have a trailing zero byte for padding.  Ignore it. */
-      if ( string_size                                             &&
-           string_buf[string_size - 1] == 0 && ( string_size & 1 ) )
+      /* A string can have a trailing zero (odd) byte for padding. */
+      /* Ignore it.                                                */
+      if ( ( string_size & 1 ) && string_buf[string_size - 1] == 0 )
         string_size--;
 
       if ( !string_size )
