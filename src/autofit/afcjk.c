@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for CJK script (body).                  */
 /*                                                                         */
-/*  Copyright 2006-2011 by                                                 */
+/*  Copyright 2006-2012 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1610,7 +1610,7 @@
         goto Exit;
     }
 
-    offset = cur_len % 64;
+    offset = cur_len & 63;
 
     if ( offset < 32 )
     {

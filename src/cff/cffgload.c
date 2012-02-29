@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2011 by                                                 */
+/*  Copyright 1996-2012 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1513,11 +1513,9 @@
               goto Stack_Underflow;
 
             /* if num_args isn't of the form 4n or 4n+1, */
-            /* we reduce it to 4n+1                      */
+            /* we enforce it by clearing the second bit  */
 
-            nargs = num_args - num_args % 4;
-            if ( num_args - nargs > 0 )
-              nargs += 1;
+            nargs = num_args & ~2;
 
             if ( cff_builder_start_point( builder, x, y ) )
               goto Fail;
@@ -1560,11 +1558,9 @@
               goto Stack_Underflow;
 
             /* if num_args isn't of the form 4n or 4n+1, */
-            /* we reduce it to 4n+1                      */
+            /* we enforce it by clearing the second bit  */
 
-            nargs = num_args - num_args % 4;
-            if ( num_args - nargs > 0 )
-              nargs += 1;
+            nargs = num_args & ~2;
 
             if ( cff_builder_start_point( builder, x, y ) )
               goto Fail;
@@ -1612,11 +1608,9 @@
               goto Stack_Underflow;
 
             /* if num_args isn't of the form 8n, 8n+1, 8n+4, or 8n+5, */
-            /* we reduce it to the largest one which fits             */
+            /* we enforce it by clearing the second bit               */
 
-            nargs = num_args - num_args % 4;
-            if ( num_args - nargs > 0 )
-              nargs += 1;
+            nargs = num_args & ~2;
 
             args -= nargs;
             if ( check_points( builder, ( nargs / 4 ) * 3 ) )

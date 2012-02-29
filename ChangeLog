@@ -1,3 +1,14 @@
+2012-02-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Avoid modulo operators against a power-of-two denominator.
+
+	* src/afcjk.c (af_hint_normal_stem), src/base/ftoutln.c
+	(ft_contour_has), src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_vvcurveto, cff_op_hhcurveto, cff_op_hvcurveto>,
+	src/gxvalid/gxvcommn.c (GXV_32BIT_ALIGNMENT_VALIDATE),
+	src/gxvalid/gxvfeat.c (gxv_feat_setting_validate): Replace `%' with
+	`&' operator.
+
 2012-02-29  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Don't synchronize digit widths for light rendering mode.
