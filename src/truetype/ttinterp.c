@@ -5770,6 +5770,10 @@
   /* Opcode range: 0x34-35                                                 */
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
+  /* UNDOCUMENTED: According to Greg Hitchcock, there is one (virtual)     */
+  /*               contour in the twilight zone, namely contour number     */
+  /*               zero.                                                   */
+  /*                                                                       */
   static void
   Ins_SHC( INS_ARG )
   {
@@ -5777,13 +5781,14 @@
     FT_UShort        refp;
     FT_F26Dot6       dx, dy;
 
-    FT_Short         contour;
-    FT_UShort        first_point, last_point, i;
+    FT_Short         contour, bounds;
+    FT_UShort        start, limit, i;
 
 
     contour = (FT_UShort)args[0];
+    bounds  = ( CUR.GS.gep2 == 0 ) ? 1 : CUR.zp2.n_contours;
 
-    if ( BOUNDS( contour, CUR.pts.n_contours ) )
+    if ( BOUNDS( contour, bounds ) )
     {
       if ( CUR.pedantic_hinting )
         CUR.error = TT_Err_Invalid_Reference;
@@ -5794,25 +5799,19 @@
       return;
 
     if ( contour == 0 )
-      first_point = 0;
+      start = 0;
     else
-      first_point = (FT_UShort)( CUR.pts.contours[contour - 1] + 1 -
-                                 CUR.pts.first_point );
+      start = (FT_UShort)( CUR.zp2.contours[contour - 1] + 1 -
+                           CUR.zp2.first_point );
 
-    last_point = (FT_UShort)( CUR.pts.contours[contour] -
-                              CUR.pts.first_point );
+    /* we use the number of points if in the twilight zone */
+    if ( CUR.GS.gep2 == 0 )
+      limit = CUR.zp2.n_points;
+    else
+      limit = (FT_UShort)( CUR.zp2.contours[contour] -
+                           CUR.zp2.first_point + 1 );
 
-    /* XXX: this is probably wrong... at least it prevents memory */
-    /*      corruption when zp2 is the twilight zone              */
-    if ( BOUNDS( last_point, CUR.zp2.n_points ) )
-    {
-      if ( CUR.zp2.n_points > 0 )
-        last_point = (FT_UShort)(CUR.zp2.n_points - 1);
-      else
-        last_point = 0;
-    }
-
-    for ( i = first_point; i <= last_point; i++ )
+    for ( i = start; i < limit; i++ )
     {
       if ( zp.cur != CUR.zp2.cur || refp != i )
         MOVE_Zp2_Point( i, dx, dy, TRUE );

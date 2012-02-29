@@ -1,3 +1,10 @@
+2012-02-29  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Make SHC instruction behave similar to MS rasterizer.
+
+	* src/truetype/ttinterp.c (Ins_SHC): Handle virtual contour in
+	twilight zone.
+
 2012-02-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Avoid modulo operators against a power-of-two denominator.
