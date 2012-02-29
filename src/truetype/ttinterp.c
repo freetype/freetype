@@ -5059,8 +5059,8 @@
   /* Opcode range: 0x46-0x47                                               */
   /* Stack:        uint32 --> f26.6                                        */
   /*                                                                       */
-  /* BULLSHIT: Measures from the original glyph must be taken along the    */
-  /*           dual projection vector!                                     */
+  /* XXX: UNDOCUMENTED: Measures from the original glyph must be taken     */
+  /*      along the dual projection vector!                                */
   /*                                                                       */
   static void
   Ins_GC( INS_ARG )
@@ -5132,14 +5132,14 @@
   /* Opcode range: 0x49-0x4A                                               */
   /* Stack:        uint32 uint32 --> f26.6                                 */
   /*                                                                       */
-  /* BULLSHIT: Measure taken in the original glyph must be along the dual  */
-  /*           projection vector.                                          */
+  /* XXX: UNDOCUMENTED: Measure taken in the original glyph must be along  */
+  /*                    the dual projection vector.                        */
   /*                                                                       */
-  /* Second BULLSHIT: Flag attributes are inverted!                        */
-  /*                  0 => measure distance in original outline            */
-  /*                  1 => measure distance in grid-fitted outline         */
+  /* XXX: UNDOCUMENTED: Flag attributes are inverted!                      */
+  /*                      0 => measure distance in original outline        */
+  /*                      1 => measure distance in grid-fitted outline     */
   /*                                                                       */
-  /* Third one: `zp0 - zp1', and not `zp2 - zp1!                           */
+  /* XXX: UNDOCUMENTED: `zp0 - zp1', and not `zp2 - zp1!                   */
   /*                                                                       */
   static void
   Ins_MD( INS_ARG )
@@ -5847,10 +5847,10 @@
     if ( COMPUTE_Point_Displacement( &dx, &dy, &zp, &refp ) )
       return;
 
-    /* XXX: UNDOCUMENTED! SHZ doesn't move the phantom points.  */
-    /*      Twilight zone has no contours, so use `n_points'.   */
-    /*      Normal zone's `n_points' includes phantoms, so must */
-    /*      use end of last contour.                            */
+    /* XXX: UNDOCUMENTED! SHZ doesn't move the phantom points.     */
+    /*      Twilight zone has no real contours, so use `n_points'. */
+    /*      Normal zone's `n_points' includes phantoms, so must    */
+    /*      use end of last contour.                               */
     if ( CUR.GS.gep2 == 0 && CUR.zp2.n_points > 0 )
       last_point = (FT_UShort)( CUR.zp2.n_points - 1 );
     else if ( CUR.GS.gep2 == 1 && CUR.zp2.n_contours > 0 )
