@@ -1,8 +1,16 @@
 2012-02-29  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix Savannah bug #35601.
+
+	* src/truetype/ttinterp.c (Ins_SHZ): Use number of points instead of
+	last point for loop.
+	Also remove redundant boundary check.
+
+2012-02-29  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Remove redundant check.
 
-	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Remove reduntant
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Remove redundant
 	second check for ordered contour start points.
 
 2012-02-29  Werner Lemberg  <wl@gnu.org>
