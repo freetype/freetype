@@ -1,3 +1,12 @@
+2012-02-29  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Don't synchronize digit widths for light rendering mode.
+
+	We don't hint horizontally in this mode.
+
+	* src/autofit/afloader.c (af_loader_load_g) <Hint_Metrics>:
+	Implement it.
+
 2012-02-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type42] Minor code optimization (again).

@@ -433,9 +433,10 @@
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                x_scale );
 #else
-      if ( FT_IS_FIXED_WIDTH( slot->face )                              ||
-           ( af_face_globals_is_digit( loader->globals, glyph_index ) &&
-             metrics->digits_have_same_width                          ) )
+      if ( scaler->render_mode != FT_RENDER_MODE_LIGHT                      &&
+           ( FT_IS_FIXED_WIDTH( slot->face )                              ||
+             ( af_face_globals_is_digit( loader->globals, glyph_index ) &&
+               metrics->digits_have_same_width                          ) ) )
       {
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                metrics->scaler.x_scale );
