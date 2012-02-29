@@ -1,5 +1,12 @@
 2012-02-29  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Remove redundant check.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Remove reduntant
+	second check for ordered contour start points.
+
+2012-02-29  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Make SHC instruction behave similar to MS rasterizer.
 
 	* src/truetype/ttinterp.c (Ins_SHC): Handle virtual contour in
