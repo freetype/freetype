@@ -6264,7 +6264,7 @@
       CUR.zp1.org[point].y = CUR.zp0.org[CUR.GS.rp0].y +
                              TT_MulFix14( (FT_UInt32)cvt_dist,
                                           CUR.GS.freeVector.y );
-      CUR.zp1.cur[point]   = CUR.zp0.cur[point];
+      CUR.zp1.cur[point]   = CUR.zp1.org[point];
     }
 
     org_dist = CUR_Func_dualproj( &CUR.zp1.org[point],

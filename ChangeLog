@@ -1,4 +1,12 @@
-2012-02-29  Werner Lemberg  <wl@gnu.org>
+2012-03-01  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix Savannah bug #35646.
+
+	* src/truetype/ttinterp.c (Ins_MIRP): Typo, present since ages.  The
+	code is now in sync with the other operators (e.g. MSIRP) which
+	modify twilight points.
+
+2012-03-01  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Fix Savannah bug #35643.
 
@@ -6,7 +14,7 @@
 	comment before `_bdf_list_split', this is, really allocate at least
 	five `field' elements.
 
-2012-02-29  Werner Lemberg  <wl@gnu.org>
+2012-03-01  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Fix Savannah bug #35641.
 
@@ -14,7 +22,7 @@
 	_BDF_ENCODING isn't set.  We need this because access to the `glyph'
 	variable might be undefined otherwise.
 
-2012-02-29  Werner Lemberg  <wl@gnu.org>
+2012-03-01  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix Savannah bug #35640.
 
