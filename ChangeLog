@@ -1,5 +1,12 @@
 2012-02-29  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix Savannah bug #35640.
+
+	* src/truetype/ttinterp.c (SkipCode, TT_RunIns): Fix boundary check
+	for NPUSHB and NPUSHW instructions.
+
+2012-02-29  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix Savannah bug #35601.
 
 	* src/truetype/ttinterp.c (Ins_SHZ): Use number of points instead of

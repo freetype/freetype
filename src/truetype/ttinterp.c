@@ -4477,7 +4477,7 @@
       CUR.length = opcode_length[CUR.opcode];
       if ( CUR.length < 0 )
       {
-        if ( CUR.IP + 1 > CUR.codeSize )
+        if ( CUR.IP + 1 >= CUR.codeSize )
           goto Fail_Overflow;
         CUR.length = 2 - CUR.length * CUR.code[CUR.IP + 1];
       }
@@ -7544,7 +7544,7 @@
 
       if ( ( CUR.length = opcode_length[CUR.opcode] ) < 0 )
       {
-        if ( CUR.IP + 1 > CUR.codeSize )
+        if ( CUR.IP + 1 >= CUR.codeSize )
           goto LErrorCodeOverflow_;
 
         CUR.length = 2 - CUR.length * CUR.code[CUR.IP + 1];
