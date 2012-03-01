@@ -1,5 +1,13 @@
 2012-02-29  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #35643.
+
+	* src/bdf/bdflib.c (_bdf_list_ensure): Bring code in sync with
+	comment before `_bdf_list_split', this is, really allocate at least
+	five `field' elements.
+
+2012-02-29  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Fix Savannah bug #35641.
 
 	* src/bdf/bdflib.c (_bdf_parse_glyphs) <DWIDTH, BBX>: Abort if
