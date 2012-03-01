@@ -1,5 +1,16 @@
 2012-03-01  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix Savannah bug #35657.
+
+	If in function `skip_spaces' the routine `skip_comment' comes to the
+	end of buffer, `cur' is still increased by one, so we need to check
+	for `p >= limit' and not `p == limit'.
+
+	* src/psaux/psconv.c (PS_Conv_Strtol, PS_Conv_ToFixed,
+	PS_Conv_ASCIIHexDecode, PS_Conv_EexecDecode): Fix boundary checking.
+
+2012-03-01  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix Savannah bug #35646.
 
 	* src/truetype/ttinterp.c (Ins_MIRP): Typo, present since ages.  The
