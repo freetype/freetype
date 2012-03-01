@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver for Windows FNT/FON files                       */
 /*                                                                         */
-/*  Copyright 1996-2004, 2006-2011 by                                      */
+/*  Copyright 1996-2004, 2006-2012 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*  Copyright 2003 Huw D M Davies for Codeweavers                          */
 /*  Copyright 2007 Dmitry Timoshkov for Codeweavers                        */
@@ -831,7 +831,14 @@
           root->charmap = root->charmaps[0];
       }
 
-      /* setup remaining flags */
+      /* set up remaining flags */
+
+      if ( font->header.last_char < font->header.first_char )
+      {
+        FT_TRACE2(( "invalid number of glyphs\n" ));
+        error = FNT_Err_Invalid_File_Format;
+        goto Fail;
+      }
 
       /* reserve one slot for the .notdef glyph at index 0 */
       root->num_glyphs = font->header.last_char -
