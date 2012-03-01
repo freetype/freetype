@@ -1,5 +1,12 @@
 2012-03-01  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #35656.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <_BDF_BITMAP>: Check validity
+	of nibble characters instead of accessing `a2i' array.
+
+2012-03-01  Werner Lemberg  <wl@gnu.org>
+
 	[winfonts] Fix Savannah bug #35659.
 
 	* src/winfonts/winfnt.c (FNT_Face_Init): Check number of glyphs.
