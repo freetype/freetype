@@ -1,5 +1,13 @@
 2012-02-29  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #35641.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <DWIDTH, BBX>: Abort if
+	_BDF_ENCODING isn't set.  We need this because access to the `glyph'
+	variable might be undefined otherwise.
+
+2012-02-29  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix Savannah bug #35640.
 
 	* src/truetype/ttinterp.c (SkipCode, TT_RunIns): Fix boundary check

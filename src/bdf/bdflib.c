@@ -1779,12 +1779,7 @@
     if ( ft_memcmp( line, "SWIDTH", 6 ) == 0 )
     {
       if ( !( p->flags & _BDF_ENCODING ) )
-      {
-        /* Missing ENCODING field. */
-        FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "ENCODING" ));
-        error = BDF_Err_Missing_Encoding_Field;
-        goto Exit;
-      }
+        goto Missing_Encoding;
 
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
@@ -1799,6 +1794,9 @@
     /* Expect the DWIDTH (scalable width) field next. */
     if ( ft_memcmp( line, "DWIDTH", 6 ) == 0 )
     {
+      if ( !( p->flags & _BDF_ENCODING ) )
+        goto Missing_Encoding;
+
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
         goto Exit;
@@ -1824,6 +1822,9 @@
     /* Expect the BBX field next. */
     if ( ft_memcmp( line, "BBX", 3 ) == 0 )
     {
+      if ( !( p->flags & _BDF_ENCODING ) )
+        goto Missing_Encoding;
+
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
         goto Exit;
@@ -1924,6 +1925,12 @@
 
     FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG9, lineno ));
     error = BDF_Err_Invalid_File_Format;
+    goto Exit;
+
+  Missing_Encoding:
+    /* Missing ENCODING field. */
+    FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "ENCODING" ));
+    error = BDF_Err_Missing_Encoding_Field;
 
   Exit:
     if ( error && ( p->flags & _BDF_GLYPH ) )
