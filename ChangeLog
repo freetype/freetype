@@ -1,5 +1,12 @@
 2012-03-01  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #35658.
+
+	* src/bdf/bdflib.c (_bdf_list_split): Initialize `field' elements
+	properly.
+
+2012-03-01  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Fix Savannah bug #35657.
 
 	If in function `skip_spaces' the routine `skip_comment' comes to the

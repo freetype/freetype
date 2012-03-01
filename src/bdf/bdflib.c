@@ -563,6 +563,13 @@
 
     /* Initialize the list. */
     list->used = 0;
+    if ( list->size )
+    {
+      list->field[0] = (char*)empty;
+      list->field[1] = (char*)empty;
+      list->field[2] = (char*)empty;
+      list->field[3] = (char*)empty;
+    }
 
     /* If the line is empty, then simply return. */
     if ( linelen == 0 || line[0] == 0 )
