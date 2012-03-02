@@ -362,14 +362,17 @@
     if ( n_contours >= 0xFFF || p + ( n_contours + 1 ) * 2 > limit )
       goto Invalid_Outline;
 
-    prev_cont = FT_NEXT_USHORT( p );
+    prev_cont = FT_NEXT_SHORT( p );
 
     if ( n_contours > 0 )
       cont[0] = prev_cont;
 
+    if ( prev_cont < 0 )
+      goto Invalid_Outline;
+
     for ( cont++; cont < cont_limit; cont++ )
     {
-      cont[0] = FT_NEXT_USHORT( p );
+      cont[0] = FT_NEXT_SHORT( p );
       if ( cont[0] <= prev_cont )
       {
         /* unordered contours: this is invalid */
