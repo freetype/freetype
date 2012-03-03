@@ -1,5 +1,16 @@
 2012-03-03  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #35660.
+
+	For some divisions, we use casts to 32bit entities.  Always guard
+	against division by zero with these casts also.
+
+	* src/base/ftcalc.c (ft_div64by32): Remove redundant cast.
+	(FT_MulDiv, FT_MulDiv_No_Round): Add 32bit cast.
+	(FT_DivFix): Add 32bit cast (this omission triggered the bug).
+
+2012-03-03  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Fix handling of track kerning.
 
 	* src/psaux/afmparse.c (afm_parse_track_kern): Don't inverse sign
