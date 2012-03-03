@@ -1,3 +1,11 @@
+2012-03-03  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Fix handling of track kerning.
+
+	* src/psaux/afmparse.c (afm_parse_track_kern): Don't inverse sign
+	for `min_kern'.  It is indeed quite common that track kerning
+	*increases* spacing for very small sizes.
+
 2012-03-02  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix Savannah bug #35689.
