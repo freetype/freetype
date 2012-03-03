@@ -2881,13 +2881,25 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    point_size :: The point size in 16.16 fractional points.           */
   /*                                                                       */
-  /*    degree     :: The degree of tightness.                             */
+  /*    degree     :: The degree of tightness.  Increasingly negative      */
+  /*                  values represent tighter track kerning, while        */
+  /*                  increasingly positive values represent looser track  */
+  /*                  kerning.  Value zero means no track kerning.         */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    akerning   :: The kerning in 16.16 fractional points.              */
+  /*    akerning   :: The kerning in 16.16 fractional points, to be        */
+  /*                  uniformly applied between all glyphs.                */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Currently, only the Type~1 font driver supports track kerning,     */
+  /*    using data from AFM files (if attached with @FT_Attach_File or     */
+  /*    @FT_Attach_Stream).                                                */
+  /*                                                                       */
+  /*    Only very few AFM files come with track kerning data; please refer */
+  /*    to the Adobe's AFM specification for more details.                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Track_Kerning( FT_Face    face,
