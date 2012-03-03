@@ -1,5 +1,12 @@
 2012-03-03  Werner Lemberg  <wl@gnu.org>
 
+	[cff] One more check against malformed font matrix.
+
+	* src/cff/cffparse.c (cff_parse_font_matrix): Guard against `xx' and
+	`yy' matrix coefficients being zero.
+
+2012-03-03  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #35660.
 
 	For some divisions, we use casts to 32bit entities.  Always guard
