@@ -474,11 +474,22 @@
 
       if ( scaling < 0 || scaling > 9 )
       {
+        /* Return default matrix in case of unlikely values. */
+
         FT_TRACE1(( "cff_parse_font_matrix:"
                     " strange scaling value for xx element (%d),\n"
                     "                      "
                     " using default matrix\n", scaling ));
-        goto Default_matrix;
+
+        matrix->xx = 0x10000L;
+        matrix->yx = 0;
+        matrix->xy = 0;
+        matrix->yy = 0x10000L;
+        offset->x  = 0;
+        offset->y  = 0;
+        *upm       = 1;
+
+        goto Exit;
       }
 
       matrix->yx = cff_parse_fixed_scaled( data++, scaling );
@@ -486,13 +497,6 @@
       matrix->yy = cff_parse_fixed_scaled( data++, scaling );
       offset->x  = cff_parse_fixed_scaled( data++, scaling );
       offset->y  = cff_parse_fixed_scaled( data,   scaling );
-
-      if ( matrix->xx == 0 || matrix->yy == 0 )
-      {
-        FT_TRACE1(( "cff_parse_font_matrix:"
-                    " xx or yy element is zero, using default matrix\n" ));
-        goto Default_matrix;
-      }
 
       *upm = power_tens[scaling];
 
@@ -504,17 +508,6 @@
                   (double)offset->x  / *upm / 65536,
                   (double)offset->y  / *upm / 65536 ));
     }
-
-    goto Exit;
-
-  Default_matrix:
-    matrix->xx = 0x10000L;
-    matrix->yx = 0;
-    matrix->xy = 0;
-    matrix->yy = 0x10000L;
-    offset->x  = 0;
-    offset->y  = 0;
-    *upm       = 1;
 
   Exit:
     return error;
