@@ -1,3 +1,17 @@
+2012-03-07  Vinnie Falco  <vinnie.falco@gmail.com>
+
+	Prepare source code for amalgamation.
+
+	* src\autofit\aferrors.h, src\bdf\bdferror.h, src\bzip2\ftbzip2.c,
+	src\cache\ftcerror.h, src\cff\cfferrs.h, src\cid\ciderrs.h,
+	src\gxvalid\gxverror.h, src\gzip\ftgzip.c, src\lzw\ftlzw.c,
+	src\otvalid\otverror.h, src\pcf\pcferror.h, src\pfr\pfrerror.h,
+	src\psaux\psauxerr.h, src\pshinter\pshnterr.h,
+	src\psnames\psnamerr.h, src\raster\rasterrs.h, src\sfnt\sferrors.h,
+	src\smooth\ftsmerrs.h, src\truetype\tterrors.h,
+	src\type1\t1errors.h, src\type42\t42error.h, src\winfonts\fnterrs.h:
+	Add #undef FT_ERR_PREFIX before #define FT_ERR_PREFIX.
+
 2012-03-03  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #35660.
@@ -549,7 +563,7 @@
 	Darwin & Carbon-dependent codes, these macros can be unified.
 	FT_MACINTOSH (undefined by default) is kept and DARWIN_NO_CARBON
 	(defined by default) is removed, because DARWIN_NO_CARBON violates
-	FT_XXX naming convention of public macros, and a macro configured by 
+	FT_XXX naming convention of public macros, and a macro configured by
 	default is not portable for the building without configure (e.g.
 	make devel).
 
