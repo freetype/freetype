@@ -1,7 +1,14 @@
 
 CHANGES BETWEEN 2.4.8 and 2.4.9
 
-  I. MISCELLANEOUS
+  I. IMPORTANT BUG FIXES
+
+    - Another round of fixes to better handle invalid fonts.   Many of
+      them are vulnerabilities  (see CVE-2012-1126 up to CVE-2012-1144
+      and SA48320) so all users should upgrade.
+
+
+  II. MISCELLANEOUS
 
     - The `ENCODING -1 <n>' format of BDF fonts is now supported.
 
@@ -12,7 +19,10 @@ CHANGES BETWEEN 2.4.8 and 2.4.9
 
     - `FT_Get_Advances' sometimes returned bogus values.
 
-    - Another round of fixes to better handle invalid fonts.
+    - The  demo  programs  no  longer  recognize  and  handle  default
+      suffixes; you now have to always specify the complete font name.
+
+    - Better rendering and LCD mode cycling added to ftview.
 
 
 ======================================================================
