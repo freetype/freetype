@@ -1912,7 +1912,7 @@
       glyph->bpr = ( glyph->bbx.width * p->font->bpp + 7 ) >> 3;
 
       bitmap_size = glyph->bpr * glyph->bbx.height;
-      if ( bitmap_size > 0xFFFFU )
+      if ( glyph->bpr > 0xFFFFU || bitmap_size > 0xFFFFU )
       {
         FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG4, lineno ));
         error = BDF_Err_Bbx_Too_Big;

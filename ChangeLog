@@ -1,3 +1,10 @@
+2012-03-08  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Add missing overflow check.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <BITMAP>: Add threshold for
+	`glyph->bpr'.
+
 2012-03-07  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation.
