@@ -5767,7 +5767,7 @@
   /*                                                                       */
   /* UNDOCUMENTED: According to Greg Hitchcock, there is one (virtual)     */
   /*               contour in the twilight zone, namely contour number     */
-  /*               zero.                                                   */
+  /*               zero which includes all points of it.                   */
   /*                                                                       */
   static void
   Ins_SHC( INS_ARG )
