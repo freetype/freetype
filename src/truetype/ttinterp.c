@@ -3110,14 +3110,9 @@
     CUR.GS.single_width_cutin = (FT_F26Dot6)args[0];
 
 
-    /* XXX: UNDOCUMENTED! or bug in the Windows engine?   */
-    /*                                                    */
-    /*      It seems that the value that is read here is  */
-    /*      expressed in 16.16 format rather than in font */
-    /*      units.                                        */
-    /*                                                    */
-#define DO_SSW                                                 \
-    CUR.GS.single_width_value = (FT_F26Dot6)( args[0] >> 10 );
+#define DO_SSW                                                     \
+    CUR.GS.single_width_value = TT_MULFIX( args[0],                \
+                                           CUR.tt_metrics.scale );
 
 
 #define DO_FLIPON            \

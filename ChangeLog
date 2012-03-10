@@ -1,8 +1,16 @@
+2012-03-10  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix SSW instruction.
+
+	* src/truetype/ttinterp.c (DO_SSW): SSW *does* use font units.  For
+	verification, it took some time to find a font which actually uses
+	this instruction.
+
 2012-03-09  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation.
 
-	* include\freetype\freetype.h: Swap order of preprocessor blocks.
+	* include/freetype/freetype.h: Swap order of preprocessor blocks.
 
 2012-03-08  Werner Lemberg  <wl@gnu.org>
 
@@ -46,14 +54,14 @@
 
 	Prepare source code for amalgamation.
 
-	* src\autofit\aferrors.h, src\bdf\bdferror.h, src\bzip2\ftbzip2.c,
-	src\cache\ftcerror.h, src\cff\cfferrs.h, src\cid\ciderrs.h,
-	src\gxvalid\gxverror.h, src\gzip\ftgzip.c, src\lzw\ftlzw.c,
-	src\otvalid\otverror.h, src\pcf\pcferror.h, src\pfr\pfrerror.h,
-	src\psaux\psauxerr.h, src\pshinter\pshnterr.h,
-	src\psnames\psnamerr.h, src\raster\rasterrs.h, src\sfnt\sferrors.h,
-	src\smooth\ftsmerrs.h, src\truetype\tterrors.h,
-	src\type1\t1errors.h, src\type42\t42error.h, src\winfonts\fnterrs.h:
+	* src/autofit/aferrors.h, src/bdf/bdferror.h, src/bzip2/ftbzip2.c,
+	src/cache/ftcerror.h, src/cff/cfferrs.h, src/cid/ciderrs.h,
+	src/gxvalid/gxverror.h, src/gzip/ftgzip.c, src/lzw/ftlzw.c,
+	src/otvalid/otverror.h, src/pcf/pcferror.h, src/pfr/pfrerror.h,
+	src/psaux/psauxerr.h, src/pshinter/pshnterr.h,
+	src/psnames/psnamerr.h, src/raster/rasterrs.h, src/sfnt/sferrors.h,
+	src/smooth/ftsmerrs.h, src/truetype/tterrors.h,
+	src/type1/t1errors.h, src/type42/t42error.h, src/winfonts/fnterrs.h:
 	Add #undef FT_ERR_PREFIX before #define FT_ERR_PREFIX.
 
 2012-03-03  Werner Lemberg  <wl@gnu.org>
