@@ -16,6 +16,10 @@
 /***************************************************************************/
 
 
+#ifndef __FREETYPE_H__
+#define __FREETYPE_H__
+
+
 #ifndef FT_FREETYPE_H
 #error "`ft2build.h' hasn't been included yet!"
 #error "Please always use macros to include FreeType header files."
@@ -23,10 +27,6 @@
 #error "  #include <ft2build.h>"
 #error "  #include FT_FREETYPE_H"
 #endif
-
-
-#ifndef __FREETYPE_H__
-#define __FREETYPE_H__
 
 
 #include <ft2build.h>

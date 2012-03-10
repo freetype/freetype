@@ -1,3 +1,9 @@
+2012-03-09  Vinnie Falco  <vinnie.falco@gmail.com>
+
+	Prepare source code for amalgamation.
+
+	* include\freetype\freetype.h: Swap order of preprocessor blocks.
+
 2012-03-08  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.9 released.
