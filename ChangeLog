@@ -1,3 +1,34 @@
+2012-03-11  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Return correct linear advance width values.
+
+	This was quite a subtle bug which accidentally showed up with glyph
+	`afii10023' of arial.ttf (version 2.76).  This glyph is a composite;
+	the first component, `E', has an advance width of 1366 font units,
+	while the advance width of the composite itself (which looks like
+	uppercase `E' with dieresis) is 1367 font units.  I think this is
+	actually a bug in the font itself, because there is no reason that
+	this glyph has not the same width as uppercase `E' without the
+	dieresis.  Anyway, it helped identify this problem.
+
+	Using the TrueType hinter, the correct value (1367) of `afii10023'
+	was returned, but the autohinter mysteriously returned 1366.
+
+	Digging in the code showed that the autohinter recursively calls
+	FT_Load_Glyph to load the glyph, adding the FT_LOAD_NO_SCALE load
+	flag.  However, the `linearHoriAdvance' field is still returned as a
+	scaled value.  To avoid scaling twice, the old code in autofit reset
+	`linearHoriAdvance', using the `horiAdvance' field.  This seemed to
+	work since FT_LOAD_NO_SCALE was in use, but it failed actually,
+	because `horiAdvance' is defined as the distance of the first
+	subglyph's phantom points, which in turn are initialized using the
+	advance width of the first subglyph.  And as the given example
+	shows, these widths can differ.
+
+	* src/autofit/afloader.c (af_loader_load_g): Temporarily set
+	FT_LOAD_LINEAR_DESIGN while calling FT_Load_Glyph to get unscaled
+	values for the linear advance widths.
+
 2012-03-10  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix SSW instruction.
