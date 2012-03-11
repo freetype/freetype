@@ -844,8 +844,8 @@ FT_BEGIN_HEADER
   /*                           expressed in font units (see                */
   /*                           `units_per_EM').  The box is large enough   */
   /*                           to contain any glyph from the font.  Thus,  */
-  /*                           `bbox.yMax' can be seen as the `maximal     */
-  /*                           ascender', and `bbox.yMin' as the `minimal  */
+  /*                           `bbox.yMax' can be seen as the `maximum     */
+  /*                           ascender', and `bbox.yMin' as the `minimum  */
   /*                           descender'.  Only relevant for scalable     */
   /*                           formats.                                    */
   /*                                                                       */
@@ -877,13 +877,13 @@ FT_BEGIN_HEADER
   /*                           positive.  Only relevant for scalable       */
   /*                           formats.                                    */
   /*                                                                       */
-  /*    max_advance_width   :: The maximal advance width, in font units,   */
+  /*    max_advance_width   :: The maximum advance width, in font units,   */
   /*                           for all glyphs in this face.  This can be   */
   /*                           used to make word wrapping computations     */
   /*                           faster.  Only relevant for scalable         */
   /*                           formats.                                    */
   /*                                                                       */
-  /*    max_advance_height  :: The maximal advance height, in font units,  */
+  /*    max_advance_height  :: The maximum advance height, in font units,  */
   /*                           for all glyphs in this face.  This is only  */
   /*                           relevant for vertical layouts, and is set   */
   /*                           to `height' for fonts that do not provide   */
@@ -1338,7 +1338,7 @@ FT_BEGIN_HEADER
   /*    height       :: The height in 26.6 fractional pixels.  See         */
   /*                    @FT_FaceRec for the details.                       */
   /*                                                                       */
-  /*    max_advance  :: The maximal advance width in 26.6 fractional       */
+  /*    max_advance  :: The maximum advance width in 26.6 fractional       */
   /*                    pixels.  See @FT_FaceRec for the details.          */
   /*                                                                       */
   /* <Note>                                                                */
@@ -2922,7 +2922,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    glyph_index :: The glyph index.                                    */
   /*                                                                       */
-  /*    buffer_max  :: The maximal number of bytes available in the        */
+  /*    buffer_max  :: The maximum number of bytes available in the        */
   /*                   buffer.                                             */
   /*                                                                       */
   /* <Output>                                                              */
@@ -3614,7 +3614,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation `(a*b)/c'   */
-  /*    with maximal accuracy (it uses a 64-bit intermediate integer       */
+  /*    with maximum accuracy (it uses a 64-bit intermediate integer       */
   /*    whenever necessary).                                               */
   /*                                                                       */
   /*    This function isn't necessarily as fast as some processor specific */
@@ -3649,7 +3649,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(a*b)/0x10000' with maximal accuracy.  Most of the time this is   */
+  /*    `(a*b)/0x10000' with maximum accuracy.  Most of the time this is   */
   /*    used to multiply a given value by a 16.16 fixed float factor.      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -3694,7 +3694,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
-  /*    `(a*0x10000)/b' with maximal accuracy.  Most of the time, this is  */
+  /*    `(a*0x10000)/b' with maximum accuracy.  Most of the time, this is  */
   /*    used to divide a given value by a 16.16 fixed float factor.        */
   /*                                                                       */
   /* <Input>                                                               */

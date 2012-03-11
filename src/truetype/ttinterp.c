@@ -52,7 +52,7 @@
   /*                                                                       */
   /* In order to detect infinite loops in the code, we set up a counter    */
   /* within the run loop.  A single stroke of interpretation is now        */
-  /* limited to a maximal number of opcodes defined below.                 */
+  /* limited to a maximum number of opcodes defined below.                 */
   /*                                                                       */
 #define MAX_RUNNABLE_OPCODES  1000000L
 
@@ -1463,7 +1463,7 @@
 
 #else
 
-  /* compute (a*b)/2^14 with maximal accuracy and rounding */
+  /* compute (a*b)/2^14 with maximum accuracy and rounding */
   static FT_Int32
   TT_MulFix14( FT_Int32  a,
                FT_Int    b )
@@ -1493,7 +1493,7 @@
 #endif
 
 
-  /* compute (ax*bx+ay*by)/2^14 with maximal accuracy and rounding */
+  /* compute (ax*bx+ay*by)/2^14 with maximum accuracy and rounding */
   static FT_Int32
   TT_DotFix14( FT_Int32  ax,
                FT_Int32  ay,
