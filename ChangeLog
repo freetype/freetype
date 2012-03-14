@@ -1,3 +1,13 @@
+2012-03-14  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #35833.
+
+	Based on the patch given in the bug report.
+
+	* src/type1/t1load.c (IS_INCREMENTAL): New macro.
+	(read_binary_data): Add parameter `incremental'.
+	Update all callers using `IS_INCREMENTAL'.
+
 2012-03-11  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Return correct linear advance width values.
