@@ -1,3 +1,11 @@
+2012-03-14  Huw Davies  <huw@codeweavers.com>
+
+	[sfnt] Add `name' table compatibility to MS Windows.
+
+	* src/sfnt/sfobjs.c (tt_name_entry_ascii_from_utf16,
+	tt_name_entry_ascii_from_other): Don't replace `\0' with question
+	marks when converting strings.
+
 2012-03-14  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #35833.
