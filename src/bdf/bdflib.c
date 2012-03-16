@@ -569,6 +569,7 @@
       list->field[1] = (char*)empty;
       list->field[2] = (char*)empty;
       list->field[3] = (char*)empty;
+      list->field[4] = (char*)empty;
     }
 
     /* If the line is empty, then simply return. */

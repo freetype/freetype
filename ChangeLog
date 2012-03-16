@@ -1,3 +1,9 @@
+2012-03-16  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Really fix 35658.
+
+	* src/bdf/bdflib.c (_bdf_list_split): Add one more `field' initializer.
+
 2012-03-14  Yann Droneaud  <yann@droneaud.fr>
 
 	[sfnt] Make arrays static like all others.
