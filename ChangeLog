@@ -1,6 +1,13 @@
+2012-03-17  Chris Liddell  <chris.liddell@artifex.com>
+
+	[type1] Fix Savannah bug #35847.
+
+	* src/type1/t1load.c (parse_subrs): Fix the loop exit condition;
+	we want to exit when we have run out of data.
+
 2012-03-16  Werner Lemberg  <wl@gnu.org>
 
-	[bdf] Really fix 35658.
+	[bdf] Really fix Savannah bug #35658.
 
 	* src/bdf/bdflib.c (_bdf_list_split): Add one more `field' initializer.
 

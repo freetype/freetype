@@ -1399,9 +1399,10 @@
       FT_Byte*  base;
 
 
-      /* If the next token isn't `dup' we are done. */
-      if ( parser->root.cursor + 4 < parser->root.limit            &&
-           ft_strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
+      /* If we are out of data, or if the next token isn't `dup', */
+      /* we are done.                                             */
+      if ( parser->root.cursor + 4 >= parser->root.limit          ||
+          ft_strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
         break;
 
       T1_Skip_PS_Token( parser );       /* `dup' */
