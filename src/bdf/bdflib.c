@@ -842,7 +842,7 @@
   };
 
 
-#define isdigok( m, d )  (m[(d) >> 3] & ( 1 << ( (d) & 7 ) ) )
+#define isdigok( m, d )  (m[(unsigned char)(d) >> 3] & ( 1 << ( (d) & 7 ) ) )
 
 
   /* Routine to convert an ASCII string into an unsigned long integer. */

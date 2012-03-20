@@ -1,3 +1,9 @@
+2012-03-20  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Improvement to Savannah bug #35656.
+
+	* src/bdf/bdflib.c (isdigok): Add cast, as suggested in report.
+
 2012-03-17  Chris Liddell  <chris.liddell@artifex.com>
 
 	[type1] Fix Savannah bug #35847.
