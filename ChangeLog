@@ -1,3 +1,12 @@
+2012-03-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[configure] fix Savannah bug #35644.
+
+	* builds/unix/configure.raw: Check `-ansi' flag works even if gcc
+	is used.  Bionic libc headers for Android lose the consistency
+	when they are parsed with __STDC_VERSION__ older than 199901L or
+	__STRICT_ANSI__.
+
 2012-03-20  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Improvement to Savannah bug #35656.

@@ -67,28 +67,6 @@ AC_SUBST(EXEEXT_BUILD)
 
 
 
-# get compiler flags right
-
-if test "x$GCC" = xyes; then
-  XX_CFLAGS="-Wall"
-  XX_ANSIFLAGS="-pedantic -ansi"
-else
-  case "$host" in
-  *-dec-osf*)
-    CFLAGS=
-    XX_CFLAGS="-std1 -g3"
-    XX_ANSIFLAGS=
-    ;;
-  *)
-    XX_CFLAGS=
-    XX_ANSIFLAGS=
-    ;;
-  esac
-fi
-AC_SUBST([XX_CFLAGS])
-AC_SUBST([XX_ANSIFLAGS])
-
-
 # auxiliary programs
 
 AC_CHECK_PROG([RMF], [rm], [rm -f])
@@ -220,6 +198,48 @@ fi
 AC_SUBST([FTSYS_SRC])
 
 AC_CHECK_FUNCS([memcpy memmove])
+
+
+# get compiler flags right
+#  we try to make the compiler work for C89-strict source.
+#  even if C compiler is GCC and C89 flags are available,
+#  some system headers (e.g. Android Bionic libc) is broken
+#  in C89 mode. we have to check the compilation finishes
+#  successfully.
+#
+if test "x$GCC" = xyes; then
+  XX_CFLAGS="-Wall"
+  XX_ANSIFLAGS=""
+  for a in -pedantic -ansi
+  do
+    AC_MSG_CHECKING([gcc compiler flag ${a} to assure ANSI C works correctly])
+    orig_CFLAGS="${CFLAGS}"
+    CFLAGS="${CFLAGS} ${XX_ANSIFLAGS} ${a}"
+    AC_COMPILE_IFELSE([
+        AC_LANG_PROGRAM([#include <stdio.h>],[{puts("");return 0;}])
+      ],[
+        AC_MSG_RESULT([ok, add it to XX_ANSIFLAGS])
+        XX_ANSIFLAGS="${XX_ANSIFLAGS} ${a}"
+      ],[
+        AC_MSG_RESULT([no])
+      ])
+    CFLAGS="${orig_CFLAGS}"
+  done
+else
+  case "$host" in
+  *-dec-osf*)
+    CFLAGS=
+    XX_CFLAGS="-std1 -g3"
+    XX_ANSIFLAGS=
+    ;;
+  *)
+    XX_CFLAGS=
+    XX_ANSIFLAGS=
+    ;;
+  esac
+fi
+AC_SUBST([XX_CFLAGS])
+AC_SUBST([XX_ANSIFLAGS])
 
 
 # check for system zlib
