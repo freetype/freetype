@@ -842,9 +842,6 @@
   };
 
 
-#define isdigok( m, d )  (m[(unsigned char)(d) >> 3] & ( 1 << ( (d) & 7 ) ) )
-
-
   /* Routine to convert an ASCII string into an unsigned long integer. */
   static unsigned long
   _bdf_atoul( char*   s,
@@ -882,7 +879,7 @@
       s   += 2;
     }
 
-    for ( v = 0; isdigok( dmap, *s ); s++ )
+    for ( v = 0; sbitset( dmap, *s ); s++ )
       v = v * base + a2i[(int)*s];
 
     if ( end != 0 )
@@ -937,7 +934,7 @@
       s   += 2;
     }
 
-    for ( v = 0; isdigok( dmap, *s ); s++ )
+    for ( v = 0; sbitset( dmap, *s ); s++ )
       v = v * base + a2i[(int)*s];
 
     if ( end != 0 )
@@ -992,7 +989,7 @@
       s   += 2;
     }
 
-    for ( v = 0; isdigok( dmap, *s ); s++ )
+    for ( v = 0; sbitset( dmap, *s ); s++ )
       v = (short)( v * base + a2i[(int)*s] );
 
     if ( end != 0 )
@@ -1747,7 +1744,7 @@
       for ( i = 0; i < nibbles; i++ )
       {
         c = line[i];
-        if ( !isdigok( hdigits, c ) )
+        if ( !sbitset( hdigits, c ) )
           break;
         *bp = (FT_Byte)( ( *bp << 4 ) + a2i[c] );
         if ( i + 1 < nibbles && ( i & 1 ) )
@@ -1771,7 +1768,7 @@
 
       /* If any line has extra columns, indicate they have been removed. */
       if ( i == nibbles                           &&
-           isdigok( hdigits, line[nibbles] )      &&
+           sbitset( hdigits, line[nibbles] )      &&
            !( p->flags & _BDF_GLYPH_WIDTH_CHECK ) )
       {
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG14, glyph->encoding ));

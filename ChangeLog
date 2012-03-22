@@ -1,3 +1,10 @@
+2012-03-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdflib] Remove redundant macro.
+
+	* src/bdf/bdflib.c (isdigok): Remove and replace with sbitset, which
+	is exactly the same.
+
 2012-03-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[configure] fix Savannah bug #35644.
