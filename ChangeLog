@@ -1,3 +1,13 @@
+2012-03-28  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Properly copy scaler flags to script metrics object.
+
+	Without this patch, only the dummy and cjk autohinter modules get
+	them (since they copy the whole scaler object).
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale),
+	src/autofit/aflatin2.c (af_latin2_metrics_scale): Implement it.
+
 2012-03-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[bdflib] Remove redundant macro.
