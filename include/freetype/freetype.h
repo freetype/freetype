@@ -2580,7 +2580,8 @@ FT_BEGIN_HEADER
    *
    *   If @FT_LOAD_RENDER is also set, the glyph is rendered in the
    *   corresponding mode (i.e., the mode which matches the used algorithm
-   *   best) unless @FT_LOAD_MONOCHROME is set.
+   *   best).  An exeption is FT_LOAD_TARGET_MONO since it implies
+   *   @FT_LOAD_MONOCHROME.
    *
    *   You can use a hinting algorithm that doesn't correspond to the same
    *   rendering mode.  As an example, it is possible to use the `light'
