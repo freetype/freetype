@@ -1,3 +1,10 @@
+2012-04-07  Werner Lemberg  <wl@gnu.org>
+
+	Remove compiler warning.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph)
+	[!TT_CONFIG_OPTION_EMBEDDED_BITMAPS]: Access `glyph->face' directly.
+
 2012-03-28  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Properly copy scaler flags to script metrics object.
