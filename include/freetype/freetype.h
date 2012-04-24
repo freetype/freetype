@@ -2507,6 +2507,13 @@ FT_BEGIN_HEADER
    *   Besides deciding which hinter to use, you can also decide which
    *   hinting algorithm to use.  See @FT_LOAD_TARGET_XXX for details.
    *
+   *   Note that the auto-hinter needs a valid Unicode cmap (either a native
+   *   one or synthesized by FreeType) for producing correct results.  If a
+   *   font provides an incorrect mapping (for example, assigning the
+   *   character code U+005A, LATIN CAPITAL LETTER Z, to a glyph depicting a
+   *   mathematical integral sign), the auto-hinter might produce useless
+   *   results.
+   *
    */
 #define FT_LOAD_DEFAULT                      0x0
 #define FT_LOAD_NO_SCALE                     ( 1L << 0 )
