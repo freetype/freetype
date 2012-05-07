@@ -1011,13 +1011,24 @@
       max_objects  = 0;
     }
 
-    if ( field->type == T1_FIELD_TYPE_INTEGER_ARRAY ||
-         field->type == T1_FIELD_TYPE_FIXED_ARRAY   )
-      error = T1_Load_Field_Table( &loader->parser, field,
-                                   objects, max_objects, 0 );
+    if ( *objects )
+    {
+      if ( field->type == T1_FIELD_TYPE_INTEGER_ARRAY ||
+           field->type == T1_FIELD_TYPE_FIXED_ARRAY   )
+        error = T1_Load_Field_Table( &loader->parser, field,
+                                     objects, max_objects, 0 );
+      else
+        error = T1_Load_Field( &loader->parser, field,
+                               objects, max_objects, 0 );
+    }
     else
-      error = T1_Load_Field( &loader->parser, field,
-                             objects, max_objects, 0 );
+    {
+      FT_TRACE1(( "t1_load_keyword: ignoring keyword `%s'"
+                  " which is not valid at this point\n"
+                  "                 (probably due to missing keywords)\n",
+                 field->ident ));
+      error = T1_Err_Ok;
+    }
 
   Exit:
     return error;
@@ -1970,8 +1981,8 @@
 
               if ( !( dict & keyword->dict ) )
               {
-                FT_TRACE1(( "parse_dict: found %s but ignoring it "
-                            "since it is in the wrong dictionary\n",
+                FT_TRACE1(( "parse_dict: found `%s' but ignoring it"
+                            " since it is in the wrong dictionary\n",
                             keyword->ident ));
                 break;
               }

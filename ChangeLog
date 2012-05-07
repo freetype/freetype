@@ -1,3 +1,10 @@
+2012-05-07  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Fix Savannah bug #36386.
+
+	* src/type1/t1load.c (t1_load_keyword): Ignore keyword if context is
+	not valid.
+
 2012-04-07  Werner Lemberg  <wl@gnu.org>
 
 	Remove compiler warning.
