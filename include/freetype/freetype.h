@@ -237,6 +237,10 @@ FT_BEGIN_HEADER
   /*    If not disabled with @FT_LOAD_NO_HINTING, the values represent     */
   /*    dimensions of the hinted glyph (in case hinting is applicable).    */
   /*                                                                       */
+  /*    Stroking a glyph with an outside border does not increase          */
+  /*    `horiAdvance' or `vertAdvance'; you have to manually adjust these  */
+  /*    values to account for the added width and height.                  */
+  /*                                                                       */
   typedef struct  FT_Glyph_Metrics_
   {
     FT_Pos  width;
