@@ -10,6 +10,9 @@ CHANGES BETWEEN 2.4.8 and 2.4.9
 
   II. MISCELLANEOUS
 
+    - A new  function `FT_Outline_EmboldenXY',  contributed by  Alexei
+      Podtelezhnikov.
+
     - The `ENCODING -1 <n>' format of BDF fonts is now supported.
 
     - For BDF fonts,  support for the whole Unicode encoding range has
@@ -21,6 +24,10 @@ CHANGES BETWEEN 2.4.8 and 2.4.9
 
     - The  demo  programs  no  longer  recognize  and  handle  default
       suffixes; you now have to always specify the complete font name.
+
+    - In the `ftview' demo program, key `e' has been replaced with `x'
+      and  `y' to  embolden in  horizontal and  vertical  directiions,
+      respectively.
 
     - Better rendering and LCD mode cycling added to ftview.
 
