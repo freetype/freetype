@@ -1,3 +1,10 @@
+2012-05-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Simplify.
+
+	We now use the cross product of the direction vectors to compute the
+	outline's orientation.
+
 2012-05-28  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

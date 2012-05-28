@@ -987,23 +987,10 @@
   FT_EXPORT_DEF( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline )
   {
-    FT_Pos      xmin       = 32768L;
-    FT_Pos      xmin_ymin  = 32768L;
-    FT_Pos      xmin_ymax  = -32768L;
-    FT_Vector*  xmin_first = NULL;
-    FT_Vector*  xmin_last  = NULL;
-
-    short*      contour;
-
-    FT_Vector*  first;
-    FT_Vector*  last;
-    FT_Vector*  prev;
-    FT_Vector*  point;
-
-    int             i;
-    FT_Pos          ray_y[3];
-    FT_Orientation  result[3] =
-      { FT_ORIENTATION_NONE, FT_ORIENTATION_NONE, FT_ORIENTATION_NONE };
+    FT_Vector*  points;
+    FT_Vector   v_prev, v_cur;
+    FT_Int      c, n, first;
+    FT_Pos      area = 0;
 
 
     if ( !outline || outline->n_points <= 0 )
@@ -1014,127 +1001,32 @@
     /* cubic or quadratic curves, this test deals with the polygon    */
     /* only which is spanned up by the control points.                */
 
-    first = outline->points;
-    for ( contour = outline->contours;
-          contour < outline->contours + outline->n_contours;
-          contour++, first = last + 1 )
+    points = outline->points;
+
+    first = 0;
+    for ( c = 0; c < outline->n_contours; c++ )
     {
-      FT_Pos  contour_xmin = 32768L;
-      FT_Pos  contour_xmax = -32768L;
-      FT_Pos  contour_ymin = 32768L;
-      FT_Pos  contour_ymax = -32768L;
+      FT_Int  last = outline->contours[c];
 
 
-      last = outline->points + *contour;
+      v_prev = points[last];
 
-      /* skip degenerate contours */
-      if ( last < first + 2 )
-        continue;
-
-      for ( point = first; point <= last; ++point )
+      for ( n = first; n <= last; n++ )
       {
-        if ( point->x < contour_xmin )
-          contour_xmin = point->x;
-
-        if ( point->x > contour_xmax )
-          contour_xmax = point->x;
-
-        if ( point->y < contour_ymin )
-          contour_ymin = point->y;
-
-        if ( point->y > contour_ymax )
-          contour_ymax = point->y;
+        v_cur = points[n];
+        area += ( v_cur.y - v_prev.y ) * ( v_cur.x + v_prev.x );
+        v_prev = v_cur;
       }
 
-      if ( contour_xmin < xmin          &&
-           contour_xmin != contour_xmax &&
-           contour_ymin != contour_ymax )
-      {
-        xmin       = contour_xmin;
-        xmin_ymin  = contour_ymin;
-        xmin_ymax  = contour_ymax;
-        xmin_first = first;
-        xmin_last  = last;
-      }
+      first = last + 1;
     }
 
-    if ( xmin == 32768L )
+    if ( area > 0 )
+      return FT_ORIENTATION_POSTSCRIPT;
+    else if ( area < 0 )
       return FT_ORIENTATION_TRUETYPE;
-
-    ray_y[0] = ( xmin_ymin * 3 + xmin_ymax     ) >> 2;
-    ray_y[1] = ( xmin_ymin     + xmin_ymax     ) >> 1;
-    ray_y[2] = ( xmin_ymin     + xmin_ymax * 3 ) >> 2;
-
-    for ( i = 0; i < 3; i++ )
-    {
-      FT_Pos      left_x;
-      FT_Pos      right_x;
-      FT_Vector*  left1;
-      FT_Vector*  left2;
-      FT_Vector*  right1;
-      FT_Vector*  right2;
-
-
-    RedoRay:
-      left_x  = 32768L;
-      right_x = -32768L;
-
-      left1 = left2 = right1 = right2 = NULL;
-
-      prev = xmin_last;
-      for ( point = xmin_first; point <= xmin_last; prev = point, ++point )
-      {
-        FT_Pos  tmp_x;
-
-
-        if ( point->y == ray_y[i] || prev->y == ray_y[i] )
-        {
-          ray_y[i]++;
-          goto RedoRay;
-        }
-
-        if ( ( point->y < ray_y[i] && prev->y < ray_y[i] ) ||
-             ( point->y > ray_y[i] && prev->y > ray_y[i] ) )
-          continue;
-
-        tmp_x = FT_MulDiv( point->x - prev->x,
-                           ray_y[i] - prev->y,
-                           point->y - prev->y ) + prev->x;
-
-        if ( tmp_x < left_x )
-        {
-          left_x = tmp_x;
-          left1  = prev;
-          left2  = point;
-        }
-
-        if ( tmp_x > right_x )
-        {
-          right_x = tmp_x;
-          right1  = prev;
-          right2  = point;
-        }
-      }
-
-      if ( left1 && right1 )
-      {
-        if ( left1->y < left2->y && right1->y > right2->y )
-          result[i] = FT_ORIENTATION_TRUETYPE;
-        else if ( left1->y > left2->y && right1->y < right2->y )
-          result[i] = FT_ORIENTATION_POSTSCRIPT;
-        else
-          result[i] = FT_ORIENTATION_NONE;
-      }
-    }
-
-    if ( result[0] != FT_ORIENTATION_NONE                     &&
-         ( result[0] == result[1] || result[0] == result[2] ) )
-      return result[0];
-
-    if ( result[1] != FT_ORIENTATION_NONE && result[1] == result[2] )
-      return result[1];
-
-    return FT_ORIENTATION_TRUETYPE;
+    else
+      return FT_ORIENTATION_NONE;
   }
 
 
