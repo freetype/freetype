@@ -882,9 +882,19 @@
   FT_Outline_Embolden( FT_Outline*  outline,
                        FT_Pos       strength )
   {
+    return FT_Outline_EmboldenXY( outline, strength, strength );
+  }
+
+
+  /* documentation is in ftoutln.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Outline_EmboldenXY( FT_Outline*  outline,
+                         FT_Pos       xstrength,
+                         FT_Pos       ystrength )
+  {
     FT_Vector*  points;
     FT_Vector   v_prev, v_first, v_next, v_cur;
-    FT_Angle    rotate, angle_in, angle_out;
     FT_Int      c, n, first;
     FT_Int      orientation;
 
@@ -892,8 +902,9 @@
     if ( !outline )
       return FT_Err_Invalid_Argument;
 
-    strength /= 2;
-    if ( strength == 0 )
+    xstrength /= 2;
+    ystrength /= 2;
+    if ( xstrength == 0 && ystrength == 0 )
       return FT_Err_Ok;
 
     orientation = FT_Outline_Get_Orientation( outline );
@@ -905,62 +916,63 @@
         return FT_Err_Ok;
     }
 
-    if ( orientation == FT_ORIENTATION_TRUETYPE )
-      rotate = -FT_ANGLE_PI2;
-    else
-      rotate = FT_ANGLE_PI2;
-
     points = outline->points;
 
     first = 0;
     for ( c = 0; c < outline->n_contours; c++ )
     {
-      int  last = outline->contours[c];
+      FT_Vector  in, out, shift;
+      FT_Fixed   l_in, l_out, d;
+      int        last = outline->contours[c];
 
 
       v_first = points[first];
       v_prev  = points[last];
       v_cur   = v_first;
 
+      /* compute the incoming vector and its length */
+      in.x = v_cur.x - v_prev.x;
+      in.y = v_cur.y - v_prev.y;
+      l_in = FT_Vector_Length( &in );
+
       for ( n = first; n <= last; n++ )
       {
-        FT_Vector  in, out;
-        FT_Angle   angle_diff;
-        FT_Pos     d;
-        FT_Fixed   scale;
-
-
         if ( n < last )
           v_next = points[n + 1];
         else
           v_next = v_first;
 
-        /* compute the in and out vectors */
-        in.x = v_cur.x - v_prev.x;
-        in.y = v_cur.y - v_prev.y;
-
+        /* compute the outgoing vector and its length */
         out.x = v_next.x - v_cur.x;
         out.y = v_next.y - v_cur.y;
+        l_out = FT_Vector_Length( &out );
 
-        angle_in   = FT_Atan2( in.x, in.y );
-        angle_out  = FT_Atan2( out.x, out.y );
-        angle_diff = FT_Angle_Diff( angle_in, angle_out );
-        scale      = FT_Cos( angle_diff / 2 );
+        d = l_in * l_out + in.x * out.x + in.y * out.y;
 
-        if ( scale < 0x4000L && scale > -0x4000L )
-          in.x = in.y = 0;
-        else
+        /* shift only if turn is less then ~160 degrees */
+        if ( 16 * d > l_in * l_out )
         {
-          d = FT_DivFix( strength, scale );
+          /* shift components are rotated */
+          shift.x = FT_DivFix( l_out * in.y + l_in * out.y, d );
+          shift.y = FT_DivFix( l_out * in.x + l_in * out.x, d );
 
-          FT_Vector_From_Polar( &in, d, angle_in + angle_diff / 2 - rotate );
+          if ( orientation == FT_ORIENTATION_TRUETYPE )
+            shift.x = -shift.x;
+          else
+            shift.y = -shift.y;
+
+          shift.x = FT_MulFix( xstrength, shift.x );
+          shift.y = FT_MulFix( ystrength, shift.y );
         }
+        else
+          shift.x = shift.y = 0;
 
-        outline->points[n].x = v_cur.x + strength + in.x;
-        outline->points[n].y = v_cur.y + strength + in.y;
+        outline->points[n].x = v_cur.x + xstrength + shift.x;
+        outline->points[n].y = v_cur.y + ystrength + shift.y;
 
-        v_prev = v_cur;
-        v_cur  = v_next;
+        in    = out;
+        l_in  = l_out;
+        v_cur = v_next;
       }
 
       first = last + 1;

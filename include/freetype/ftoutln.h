@@ -59,6 +59,7 @@ FT_BEGIN_HEADER
   /*    FT_Outline_Translate                                               */
   /*    FT_Outline_Transform                                               */
   /*    FT_Outline_Embolden                                                */
+  /*    FT_Outline_EmboldenXY                                              */
   /*    FT_Outline_Reverse                                                 */
   /*    FT_Outline_Check                                                   */
   /*                                                                       */
@@ -348,6 +349,23 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Outline_Embolden( FT_Outline*  outline,
                        FT_Pos       strength );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Outline_EmboldenXY                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Embolden an outline.  The new outline will be `xstrength' pixels   */
+  /*    wider and `ystrength' pixels higher.  Otherwise, it is similar to  */
+  /*    @FT_Outline_Embolden, which uses the same strength in both         */
+  /*    directions.                                                        */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Outline_EmboldenXY( FT_Outline*  outline,
+                         FT_Pos       xstrength,
+                         FT_Pos       ystrength );
 
 
   /*************************************************************************/

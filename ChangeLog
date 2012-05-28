@@ -1,3 +1,14 @@
+2012-05-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	New function FT_Outline_EmboldenXY.
+
+	* include/freetype/ftoutln.h (FT_Outline_EmboldenXY): Define it.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Implement it, using a
+	simplified embolding algorithm.
+	(FT_Outline_Embolden): Make it a special case of
+	`FT_Outline_EmboldenXY'
+
 2012-05-07  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Fix Savannah bug #36386.
