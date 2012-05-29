@@ -158,7 +158,8 @@ case :${ft_use_autoconf_sizeof_types}:${enable_biarch_config}: in
 esac
 
 if test x"${ft_use_autoconf_sizeof_types}" = xyes; then
-  AC_DEFINE([FT_USE_AUTOCONF_SIZEOF_TYPES])
+  AC_DEFINE([FT_USE_AUTOCONF_SIZEOF_TYPES], [],
+            [Define if autoconf sizeof types should be used.])
 fi
 
 CPPFLAGS="${orig_CPPFLAGS}"
