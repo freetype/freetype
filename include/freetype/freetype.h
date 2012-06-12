@@ -3093,9 +3093,15 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    If you use FreeType to manipulate the contents of font files       */
   /*    directly, be aware that the glyph index returned by this function  */
-  /*    doesn't always correspond to the internal indices used within      */
-  /*    the file.  This is done to ensure that value~0 always corresponds  */
-  /*    to the `missing glyph'.                                            */
+  /*    doesn't always correspond to the internal indices used within the  */
+  /*    file.  This is done to ensure that value~0 always corresponds to   */
+  /*    the `missing glyph'.  If the first glyph is not named `.notdef',   */
+  /*    then for Type~1 and Type~42 fonts, `.notdef' will be moved into    */
+  /*    the glyph ID~0 position, and whatever was there will be moved to   */
+  /*    the position `.notdef' had.  For Type~1 fonts, if there is no      */
+  /*    `.notdef' glyph at all, then one will be created at index~0 and    */
+  /*    whatever was there will be moved to the last index -- Type~42      */
+  /*    fonts are considered invalid under this condition.                 */
   /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
