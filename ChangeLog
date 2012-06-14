@@ -1,3 +1,14 @@
+2012-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* builds/exports.mk: Add CCexe_CFLAGS and CCexe_LDFLAGS.
+
+	to pass special compiler/linker flags under cross development.
+	Suggested by Savannah bug #36367.
+
+	ChangeLog on 2010-07-15 saying as they were removed was wrong
+	for the official trunk of FreeType2.  This commit is the first
+	introduction of them.
+
 2012-06-14  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
