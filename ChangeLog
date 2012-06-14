@@ -1,3 +1,7 @@
+2012-06-14  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2012-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Add new versions of NEC FA family to tricky font list.
@@ -80,7 +84,7 @@
 
 2012-03-20  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[configure] fix Savannah bug #35644.
+	[configure] Fix Savannah bug #35644.
 
 	* builds/unix/configure.raw: Check `-ansi' flag works even if gcc
 	is used.  Bionic libc headers for Android lose the consistency
