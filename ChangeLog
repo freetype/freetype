@@ -1,3 +1,9 @@
+2012-06-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Improve spacing.
+
+	* docs/CHANGES: Updated.
+
 2012-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/exports.mk: Add CCexe_CFLAGS and CCexe_LDFLAGS.
