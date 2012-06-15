@@ -1,3 +1,32 @@
+2012-06-15  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.4.10 released.
+	=========================
+
+
+	Tag sources with `VER-2-4-10'.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.4.10.
+
+	* README, Jamfile (RefDoc),
+	builds/win32/vc2005/freetype.vcproj, builds/win32/vc2005/index.html,
+	builds/win32/vc2008/freetype.vcproj, builds/win32/vc2008/index.html,
+	builds/win32/vc2010/freetype.vcxproj, builds/win32/vc2010/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualc/index.html, builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.4.9/2.4.10/, s/249/2410/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 10.
+
+	* builds/unix/configure.raw (version_info): Set to 15:0:9.
+
 2012-06-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Improve spacing.
