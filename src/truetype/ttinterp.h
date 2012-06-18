@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType bytecode interpreter (specification).                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2010 by       */
+/*  Copyright 1996-2007, 2010, 2012 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -68,7 +68,8 @@ FT_BEGIN_HEADER
   /* Rounding function */
   typedef FT_F26Dot6
   (*TT_Round_Func)( EXEC_OP_ FT_F26Dot6  distance,
-                             FT_F26Dot6  compensation );
+                             FT_F26Dot6  compensation,
+                             FT_Int      resolution );
 
   /* Point displacement along the freedom vector routine */
   typedef void
@@ -105,6 +106,48 @@ FT_BEGIN_HEADER
     FT_Long  Cur_End;
 
   } TT_CallRec, *TT_CallStack;
+
+
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* These structures define rules used to tweak subpixel hinting for      */
+  /* various fonts.  "", 0, "", NULL value indicates to match any value.   */
+  /*                                                                       */
+
+#define MAX_NAME_SIZE      32
+#define MAX_CLASS_MEMBERS  100
+
+  typedef struct  SPH_TweakRule_
+  {
+    const char      family[MAX_NAME_SIZE];
+    const FT_UInt   ppem;
+    const char      style[MAX_NAME_SIZE];
+    const FT_ULong  glyph;
+
+  } SPH_TweakRule;
+
+
+  typedef struct  SPH_ScaleRule_
+  {
+    const char      family[MAX_NAME_SIZE];
+    const FT_UInt   ppem;
+    const char      style[MAX_NAME_SIZE];
+    const FT_ULong  glyph;
+    const FT_ULong  scale;
+
+  } SPH_ScaleRule;
+
+
+  typedef struct  Font_Class_
+  {
+    const char  name[MAX_NAME_SIZE];
+    const char  member[MAX_CLASS_MEMBERS][MAX_NAME_SIZE];
+
+  } Font_Class;
+
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
   /*************************************************************************/
@@ -217,6 +260,41 @@ FT_BEGIN_HEADER
     TT_Set_CVT_Func    func_move_cvt;  /* incr a cvt entry (in pixels)  */
 
     FT_Bool            grayscale;      /* are we hinting for grayscale? */
+
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+    TT_Round_Func      func_round_sphn;   /* subpixel rounding function */
+
+    FT_Bool            grayscale_hinting; /* Using grayscale hinting?      */
+    FT_Bool            subpixel_hinting;  /* Using subpixel hinting?       */
+    FT_Bool            native_hinting;    /* Using native hinting?         */
+    FT_Bool            ignore_x_mode;     /* Standard rendering mode for   */
+                                          /* subpixel hinting.  On if gray */
+                                          /* or subpixel hinting is on )   */
+    FT_Bool            compatibility_mode;/* Additional exceptions to      */
+                                          /* native TT rules for legacy    */
+                                          /* fonts.  Implies               */
+                                          /* ignore_x_mode.                */
+
+    /* The following 4 aren't fully implemented but here for MS rasterizer */
+    /* compatibility.                                                      */
+    FT_Bool            compatible_widths;     /* compatible widths?        */
+    FT_Bool            symmetrical_smoothing; /* symmetrical_smoothing?    */
+    FT_Bool            bgr;                   /* bgr instead of rgb?       */
+    FT_Bool            subpixel_positioned;   /* subpixel positioned       */
+                                              /* (DirectWrite ClearType)?  */
+
+    FT_Int             rasterizer_version;    /* MS rasterizer version */
+
+    FT_Bool            iup_called;            /* IUP called for glyph?  */
+    FT_Bool            in_delta_function;     /* inside an inline delta */
+                                              /* function?              */
+
+    FT_ULong           sph_tweak_flags;       /* flags to control */
+                                              /* hint tweaks      */
+
+    FT_Int             num_delta_funcs;
+    FT_ULong           inline_delta_funcs[5];
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
   } TT_ExecContextRec;
 
