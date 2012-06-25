@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CFF token stream parser (body)                                       */
 /*                                                                         */
-/*  Copyright 1996-2004, 2007-2011 by                                      */
+/*  Copyright 1996-2004, 2007-2012 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -286,15 +286,20 @@
 
             /* Make `scaling' as small as possible. */
             new_fraction_length = FT_MIN( exponent, 5 );
-            exponent           -= new_fraction_length;
             shift               = new_fraction_length - fraction_length;
 
-            number *= power_tens[shift];
-            if ( number > 0x7FFFL )
+            if ( shift > 0 )
             {
-              number   /= 10;
-              exponent += 1;
+              exponent -= new_fraction_length;
+              number   *= power_tens[shift];
+              if ( number > 0x7FFFL )
+              {
+                number   /= 10;
+                exponent += 1;
+              }
             }
+            else
+              exponent -= fraction_length;
           }
           else
             exponent -= fraction_length;

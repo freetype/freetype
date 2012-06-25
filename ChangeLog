@@ -1,3 +1,12 @@
+2012-06-25  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix Savannah bug #36705.
+
+	Handle numbers like 2.001 correctly.
+
+	* src/cff/cffparse.c (cff_parse_real): Avoid negative values for
+	`shift'.
+
 2012-06-18  Infinality  <infinality@infinality.net>
 
 	[truetype] Support subpixel hinting.
