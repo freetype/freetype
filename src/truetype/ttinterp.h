@@ -68,8 +68,7 @@ FT_BEGIN_HEADER
   /* Rounding function */
   typedef FT_F26Dot6
   (*TT_Round_Func)( EXEC_OP_ FT_F26Dot6  distance,
-                             FT_F26Dot6  compensation,
-                             FT_Int      resolution );
+                             FT_F26Dot6  compensation );
 
   /* Point displacement along the freedom vector routine */
   typedef void

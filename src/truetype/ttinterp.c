@@ -156,11 +156,11 @@
 #define NORMalize( x, y, v ) \
           Normalize( EXEC_ARG_ x, y, v )
 
-#define SET_SuperRound( scale, flags, res ) \
-          SetSuperRound( EXEC_ARG_ scale, flags, res )
+#define SET_SuperRound( scale, flags ) \
+          SetSuperRound( EXEC_ARG_ scale, flags )
 
-#define ROUND_None( d, c, e ) \
-          Round_None( EXEC_ARG_ d, c, e )
+#define ROUND_None( d, c ) \
+          Round_None( EXEC_ARG_ d, c )
 
 #define INS_Goto_CodeRange( range, ip ) \
           Ins_Goto_CodeRange( EXEC_ARG_ range, ip )
@@ -171,8 +171,8 @@
 #define CUR_Func_move_orig( z, p, d ) \
           CUR.func_move_orig( EXEC_ARG_ z, p, d )
 
-#define CUR_Func_round( d, c, e ) \
-          CUR.func_round( EXEC_ARG_ d, c, e )
+#define CUR_Func_round( d, c ) \
+          CUR.func_round( EXEC_ARG_ d, c )
 
 #define CUR_Func_read_cvt( index ) \
           CUR.func_read_cvt( EXEC_ARG_ index )
@@ -2005,8 +2005,6 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    The compensated distance.                                          */
   /*                                                                       */
@@ -2018,13 +2016,11 @@
   /*                                                                       */
   static FT_F26Dot6
   Round_None( EXEC_OP_ FT_F26Dot6  distance,
-                       FT_F26Dot6  compensation,
-                       FT_Int      resolution )
+                       FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
 
     FT_UNUSED_EXEC;
-    FT_UNUSED( resolution );
 
 
     if ( distance >= 0 )
@@ -2039,7 +2035,6 @@
       if ( val > 0 )
         val = 0;
     }
-
     return val;
   }
 
@@ -2057,15 +2052,12 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
   Round_To_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                          FT_F26Dot6  compensation,
-                          FT_Int      resolution )
+                          FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
 
@@ -2074,15 +2066,15 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation + 32 / resolution;
+      val = distance + compensation + 32;
       if ( distance && val > 0 )
-        val &= ~( 64 / resolution - 1 );
+        val &= ~63;
       else
         val = 0;
     }
     else
     {
-      val = -FT_PIX_ROUND_GRID( compensation - distance, resolution );
+      val = -FT_PIX_ROUND( compensation - distance );
       if ( val > 0 )
         val = 0;
     }
@@ -2104,15 +2096,12 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
   Round_To_Half_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                               FT_F26Dot6  compensation,
-                               FT_Int      resolution )
+                               FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
 
@@ -2121,15 +2110,13 @@
 
     if ( distance >= 0 )
     {
-      val = FT_PIX_FLOOR_GRID( distance + compensation, resolution ) +
-            32 / resolution;
+      val = FT_PIX_FLOOR( distance + compensation ) + 32;
       if ( distance && val < 0 )
         val = 0;
     }
     else
     {
-      val = -( FT_PIX_FLOOR_GRID( compensation - distance, resolution ) +
-               32 / resolution );
+      val = -( FT_PIX_FLOOR( compensation - distance ) + 32 );
       if ( val > 0 )
         val = 0;
     }
@@ -2151,15 +2138,12 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
   Round_Down_To_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                               FT_F26Dot6  compensation,
-                               FT_Int      resolution )
+                               FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
 
@@ -2170,13 +2154,13 @@
     {
       val = distance + compensation;
       if ( distance && val > 0 )
-        val &= ~( 64 / resolution - 1 );
+        val &= ~63;
       else
         val = 0;
     }
     else
     {
-      val = -( ( compensation - distance ) & -( 64 / resolution ) );
+      val = -( ( compensation - distance ) & -64 );
       if ( val > 0 )
         val = 0;
     }
@@ -2198,15 +2182,12 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
   Round_Up_To_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                             FT_F26Dot6  compensation,
-                             FT_Int      resolution )
+                             FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
 
@@ -2215,15 +2196,15 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation + ( 64 / resolution - 1 );
+      val = distance + compensation + 63;
       if ( distance && val > 0 )
-        val &= ~( 64 / resolution - 1 );
+        val &= ~63;
       else
         val = 0;
     }
     else
     {
-      val = -FT_PIX_CEIL_GRID( compensation - distance, resolution );
+      val = - FT_PIX_CEIL( compensation - distance );
       if ( val > 0 )
         val = 0;
     }
@@ -2245,15 +2226,12 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
   Round_To_Double_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                                 FT_F26Dot6  compensation,
-                                 FT_Int      resolution )
+                                 FT_F26Dot6  compensation )
   {
     FT_F26Dot6 val;
 
@@ -2262,15 +2240,15 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation + 16 / resolution;
+      val = distance + compensation + 16;
       if ( distance && val > 0 )
-        val &= ~( 32 / resolution - 1 );
+        val &= ~31;
       else
         val = 0;
     }
     else
     {
-      val = -FT_PAD_ROUND( compensation - distance, 32 / resolution );
+      val = -FT_PAD_ROUND( compensation - distance, 32 );
       if ( val > 0 )
         val = 0;
     }
@@ -2292,8 +2270,6 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    Rounded distance.                                                  */
   /*                                                                       */
@@ -2305,12 +2281,9 @@
   /*                                                                       */
   static FT_F26Dot6
   Round_Super( EXEC_OP_ FT_F26Dot6  distance,
-                        FT_F26Dot6  compensation,
-                        FT_Int      resolution )
+                        FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
-
-    FT_UNUSED( resolution );
 
 
     if ( distance >= 0 )
@@ -2347,8 +2320,6 @@
   /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
-  /*    resolution   :: The number of grid lines per pixel.                */
-  /*                                                                       */
   /* <Return>                                                              */
   /*    Rounded distance.                                                  */
   /*                                                                       */
@@ -2358,12 +2329,9 @@
   /*                                                                       */
   static FT_F26Dot6
   Round_Super_45( EXEC_OP_ FT_F26Dot6  distance,
-                           FT_F26Dot6  compensation,
-                           FT_Int      resolution )
+                           FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
-
-    FT_UNUSED( resolution );
 
 
     if ( distance >= 0 )
@@ -2447,19 +2415,13 @@
   /*    Sets Super Round parameters.                                       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    GridPeriod :: The grid period.                                     */
-  /*                                                                       */
-  /*    selector   :: The SROUND opcode.                                   */
-  /*                                                                       */
-  /*    resolution :: The number of grid lines per pixel.                  */
+  /*    GridPeriod :: Grid period                                          */
+  /*    selector   :: SROUND opcode                                        */
   /*                                                                       */
   static void
   SetSuperRound( EXEC_OP_ FT_F26Dot6  GridPeriod,
-                          FT_Long     selector,
-                          FT_Int      resolution )
+                          FT_Long     selector )
   {
-    FT_UNUSED( resolution );
-
     switch ( (FT_Int)( selector & 0xC0 ) )
     {
       case 0:
@@ -3129,13 +3091,13 @@
 
 
 #define DO_SROUND                                \
-    SET_SuperRound( 0x4000, args[0], 1 );        \
+    SET_SuperRound( 0x4000, args[0] );           \
     CUR.GS.round_state = TT_Round_Super;         \
     CUR.func_round = (TT_Round_Func)Round_Super;
 
 
 #define DO_S45ROUND                                 \
-    SET_SuperRound( 0x2D41, args[0], 1 );           \
+    SET_SuperRound( 0x2D41, args[0] );              \
     CUR.GS.round_state = TT_Round_Super_45;         \
     CUR.func_round = (TT_Round_Func)Round_Super_45;
 
@@ -3306,12 +3268,12 @@
     args[0] = ( args[0] != args[1] );
 
 
-#define DO_ODD                                                     \
-    args[0] = ( ( CUR_Func_round( args[0], 0, 1 ) & 127 ) == 64 );
+#define DO_ODD                                                  \
+    args[0] = ( ( CUR_Func_round( args[0], 0 ) & 127 ) == 64 );
 
 
-#define DO_EVEN                                                   \
-    args[0] = ( ( CUR_Func_round( args[0], 0, 1 ) & 127 ) == 0 );
+#define DO_EVEN                                                \
+    args[0] = ( ( CUR_Func_round( args[0], 0 ) & 127 ) == 0 );
 
 
 #define DO_AND                        \
@@ -3484,17 +3446,15 @@
     CUR.error = TT_Err_Debug_OpCode;
 
 
-#define DO_ROUND                                                 \
-    args[0] = CUR_Func_round(                                    \
-                args[0],                                         \
-                CUR.tt_metrics.compensations[CUR.opcode - 0x68], \
-                1 );
+#define DO_ROUND                                                   \
+    args[0] = CUR_Func_round(                                      \
+                args[0],                                           \
+                CUR.tt_metrics.compensations[CUR.opcode - 0x68] );
 
 
-#define DO_NROUND                                                          \
-    args[0] = ROUND_None( args[0],                                         \
-                          CUR.tt_metrics.compensations[CUR.opcode - 0x6C], \
-                          1 );
+#define DO_NROUND                                                            \
+    args[0] = ROUND_None( args[0],                                           \
+                          CUR.tt_metrics.compensations[CUR.opcode - 0x6C] );
 
 
 #define DO_MAX               \
@@ -6243,18 +6203,17 @@
   Ins_MSIRP( INS_ARG )
   {
     FT_UShort   point;
-    FT_F26Dot6  distance;
+    FT_F26Dot6  distance,
+                control_value_cutin;
+
+
+    control_value_cutin = CUR.GS.control_value_cutin;
+
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    FT_Int      gridlines_per_pixel = 1;
-
-
-    if ( CUR.ignore_x_mode )
-    {
-      if ( CUR.GS.freeVector.x != 0 )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_X;
-      else if ( CUR.GS.freeVector.y != 0 )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_Y;
-    }
+    if ( CUR.ignore_x_mode                                 &&
+         CUR.GS.freeVector.x != 0                          &&
+         !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        control_value_cutin = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     point = (FT_UShort)args[0];
@@ -6281,10 +6240,9 @@
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     /* subpixel hinting - make MSIRP respect CVT cut-in; */
-    if ( CUR.ignore_x_mode                                  &&
-         CUR.GS.freeVector.x != 0                           &&
-         FT_ABS( distance - args[1] ) >=
-           CUR.GS.control_value_cutin / gridlines_per_pixel )
+    if ( CUR.ignore_x_mode                                   &&
+         CUR.GS.freeVector.x != 0                            &&
+         FT_ABS( distance - args[1] ) >= control_value_cutin )
       distance = args[1];
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -6310,21 +6268,7 @@
     FT_UShort   point;
     FT_F26Dot6  cur_dist,
                 distance;
-    FT_Int      gridlines_per_pixel = 1;
 
-
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    if ( CUR.ignore_x_mode )
-    {
-      if ( CUR.GS.freeVector.x != 0                          &&
-           !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_X;
-
-      else if ( CUR.GS.freeVector.y != 0                          &&
-                !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_Y;
-    }
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     point = (FT_UShort)args[0];
 
@@ -6338,9 +6282,14 @@
     if ( ( CUR.opcode & 1 ) != 0 )
     {
       cur_dist = CUR_fast_project( &CUR.zp0.cur[point] );
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+      if ( CUR.ignore_x_mode && CUR.GS.freeVector.x != 0 )
+        distance = ROUND_None( cur_dist,
+                               CUR.tt_metrics.compensations[0] ) - cur_dist;
+      else
+#endif
       distance = CUR_Func_round( cur_dist,
-                                 CUR.tt_metrics.compensations[0],
-                                 gridlines_per_pixel ) - cur_dist;
+                                 CUR.tt_metrics.compensations[0] ) - cur_dist;
     }
     else
       distance = 0;
@@ -6364,25 +6313,20 @@
     FT_ULong    cvtEntry;
     FT_UShort   point;
     FT_F26Dot6  distance,
-                org_dist;
-    FT_Int      gridlines_per_pixel = 1;
+                org_dist,
+                control_value_cutin;
 
 
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    if ( CUR.ignore_x_mode )
-    {
-      if ( CUR.GS.freeVector.x != 0                          &&
-           !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_X;
-
-      else if ( CUR.GS.freeVector.y != 0                          &&
-                !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_Y;
-    }
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
+    control_value_cutin = CUR.GS.control_value_cutin;
     cvtEntry = (FT_ULong)args[1];
     point    = (FT_UShort)args[0];
+
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+    if ( CUR.ignore_x_mode                                 &&
+         CUR.GS.freeVector.x != 0                          &&
+         !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        control_value_cutin = 0;
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     if ( BOUNDS( point,     CUR.zp0.n_points ) ||
          BOUNDSL( cvtEntry, CUR.cvtSize )      )
@@ -6437,13 +6381,16 @@
 
     if ( ( CUR.opcode & 1 ) != 0 )   /* rounding and control cutin flag */
     {
-      if ( FT_ABS( distance - org_dist ) >
-             CUR.GS.control_value_cutin / gridlines_per_pixel )
+      if ( FT_ABS( distance - org_dist ) > control_value_cutin )
         distance = org_dist;
 
-      distance = CUR_Func_round( distance,
-                                 CUR.tt_metrics.compensations[0],
-                                 gridlines_per_pixel );
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+      if ( CUR.ignore_x_mode && CUR.GS.freeVector.x != 0 )
+        distance = ROUND_None( distance,
+                               CUR.tt_metrics.compensations[0] );
+      else
+#endif
+      distance = CUR_Func_round( distance, CUR.tt_metrics.compensations[0] );
     }
 
     CUR_Func_move( &CUR.zp0, point, distance - org_dist );
@@ -6464,24 +6411,16 @@
   Ins_MDRP( INS_ARG )
   {
     FT_UShort   point;
-    FT_F26Dot6  org_dist, distance, new_distance;
-    FT_Int      minimum_distance_factor = 64;
-    FT_Int      gridlines_per_pixel     = 1;
+    FT_F26Dot6  org_dist, distance, minimum_distance;
 
+
+    minimum_distance    = CUR.GS.minimum_distance;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    if ( CUR.ignore_x_mode )
-    {
-      if ( CUR.GS.freeVector.x != 0                          &&
-           !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-      {
-        gridlines_per_pixel     = SPH_OPTION_GRIDLINES_PER_PIXEL_X;
-        minimum_distance_factor = 64 - gridlines_per_pixel / 3;
-      }
-      else if ( CUR.GS.freeVector.y != 0                          &&
-                !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_Y;
-    }
+    if ( CUR.ignore_x_mode                                 &&
+         CUR.GS.freeVector.x != 0                          &&
+         !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        minimum_distance = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
@@ -6546,15 +6485,22 @@
     /* round flag */
 
     if ( ( CUR.opcode & 4 ) != 0 )
+    {
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+      if ( CUR.ignore_x_mode && CUR.GS.freeVector.x != 0 )
+        distance = ROUND_None(
+                     org_dist,
+                     CUR.tt_metrics.compensations[CUR.opcode & 3] );
+      else
+#endif
       distance = CUR_Func_round(
                    org_dist,
-                   CUR.tt_metrics.compensations[CUR.opcode & 3],
-                   gridlines_per_pixel );
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
+    }
     else
       distance = ROUND_None(
                    org_dist,
-                   CUR.tt_metrics.compensations[CUR.opcode & 3],
-                   gridlines_per_pixel );
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
 
     /* minimum distance flag */
 
@@ -6562,17 +6508,13 @@
     {
       if ( org_dist >= 0 )
       {
-        new_distance = FT_MulDiv( minimum_distance_factor,
-                                  CUR.GS.minimum_distance, 64 );
-        if ( distance < new_distance )
-          distance = new_distance;
+        if ( distance < minimum_distance )
+          distance = minimum_distance;
       }
       else
       {
-        new_distance = -FT_MulDiv( minimum_distance_factor,
-                                  CUR.GS.minimum_distance, 64 );
-        if ( distance > new_distance )
-          distance = new_distance;
+        if ( distance > -minimum_distance )
+          distance = -minimum_distance;
       }
     }
 
@@ -6606,13 +6548,10 @@
 
     FT_F26Dot6  cvt_dist,
                 distance,
-                new_distance,
                 cur_dist,
-                org_dist;
-
-    FT_Int      minimum_distance_factor = 64;
-    FT_Int      gridlines_per_pixel     = 1;
-
+                org_dist,
+                control_value_cutin,
+                minimum_distance;
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_Int      B1;
     FT_Int      B2;
@@ -6620,26 +6559,16 @@
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
+    minimum_distance    = CUR.GS.minimum_distance;
+    control_value_cutin = CUR.GS.control_value_cutin;
     point    = (FT_UShort)args[0];
     cvtEntry = (FT_ULong)( args[1] + 1 );
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    if ( CUR.ignore_x_mode )
-    {
-      if ( CUR.GS.freeVector.x != 0                          &&
-           !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-      {
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_X;
-        /* high value emboldens glyphs at lower ppems (< 14); */
-        /* Courier looks better with 52 --                    */
-        /* MS ClearType Rasterizer supposedly uses 32         */
-        minimum_distance_factor = 64 - gridlines_per_pixel / 3;
-      }
-
-      else if ( CUR.GS.freeVector.y != 0                          &&
-                !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        gridlines_per_pixel = SPH_OPTION_GRIDLINES_PER_PIXEL_Y;
-    }
+    if ( CUR.ignore_x_mode                                 &&
+         CUR.GS.freeVector.x != 0                          &&
+         !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        control_value_cutin = minimum_distance = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     /* XXX: UNDOCUMENTED! cvt[-1] = 0 always */
@@ -6729,21 +6658,25 @@
         /*      `ttinst2.doc', version 1.66, is thus incorrect since  */
         /*      it implies `>=' instead of `>'.                       */
 
-        if ( FT_ABS( cvt_dist - org_dist ) >
-               CUR.GS.control_value_cutin / gridlines_per_pixel )
+        if ( FT_ABS( cvt_dist - org_dist ) > control_value_cutin )
           cvt_dist = org_dist;
       }
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+      if ( CUR.ignore_x_mode && CUR.GS.freeVector.x != 0 )
+        distance = ROUND_None(
+                     cvt_dist,
+                     CUR.tt_metrics.compensations[CUR.opcode & 3] );
+      else
+#endif
 
       distance = CUR_Func_round(
                    cvt_dist,
-                   CUR.tt_metrics.compensations[CUR.opcode & 3],
-                   gridlines_per_pixel );
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
     }
     else
       distance = ROUND_None(
                    cvt_dist,
-                   CUR.tt_metrics.compensations[CUR.opcode & 3],
-                   gridlines_per_pixel );
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
 
     /* minimum distance test */
 
@@ -6751,17 +6684,13 @@
     {
       if ( org_dist >= 0 )
       {
-        new_distance = FT_MulDiv( minimum_distance_factor,
-                                  CUR.GS.minimum_distance, 64 );
-        if ( distance < new_distance )
-          distance = new_distance;
+        if ( distance < minimum_distance )
+          distance = minimum_distance;
       }
       else
       {
-        new_distance = -FT_MulDiv( minimum_distance_factor,
-                                  CUR.GS.minimum_distance, 64 );
-        if ( distance > new_distance )
-          distance = new_distance;
+        if ( distance > -minimum_distance )
+          distance = -minimum_distance;
       }
     }
 

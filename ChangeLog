@@ -1,3 +1,30 @@
+2012-06-26  Infinality  <infinality@infinality.net>
+
+	[truetype] Remove unused rounding functionality.
+
+	The subpixel hinting patch contained the concept of an adjustable
+	number of gridlines per pixel.  This is no longer used due to x
+	being completely ignored instead.  This will return some of the
+	code to its existing state prior to the original Infinality
+	commit.
+
+	* include/freetype/internal/ftobjs.h (FT_PIX_FLOOR_GRID,
+	FT_PIX_ROUND_GRID, FT_PIX_CEIL_GRID): Removed.
+
+	* src/truetype/ttinterp.c: Updated.
+	(Round_None, Round_To_Grid, Round_To_Half_Grid, Round_Down_To_Grid,
+	Round_Up_To_Grid, Round_To_Double_Grid, Round_Super, Round_Super_45,
+	SetSuperRound): Remove parameter to handle the number of grid lines per
+	pixel.
+	(SET_SuperRound, ROUND_None, CUR_Func_round): Updated.
+	(DO_SROUND, DOS45ROUND, DO_ODD, DO_EVEN): Updated.
+	(DO_ROUND, DO_NROUND): Updated.
+	(Move_Zp2_Point, Ins_SHPIX, Ins_MSIRP, Ins_MDAP, Ins_MIAP,
+	Ins_MDRP, Ins_MIRP): Perform Round_None instead of calling a modified
+	rounding function.  Remove gridlines_per_pixel.  Create a local
+	variable to store control value cutin. Simplify the conditional for 
+	ignore_x_mode.  Adjust rounding calls to pass only two values.
+
 2012-06-25  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix Savannah bug #36705.
