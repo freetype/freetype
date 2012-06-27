@@ -2,6 +2,12 @@
 
 	Fix conditional compilation.
 
+	* src/base/basepic.c: Use FT_CONFIG_OPTION_MAC_FONTS.
+
+2012-06-27  Werner Lemberg  <wl@gnu.org>
+
+	Fix conditional compilation.
+
 	* include/freetype/internal/ftcalc.h (FT_MulDiv_No_Round): Don't
 	enclose with `TT_USE_BYTECODE_INTERPRETER'; we now need the function
 	elsewhere also.
