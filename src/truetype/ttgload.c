@@ -1899,7 +1899,9 @@
   {
     TT_Face    face;
     FT_Stream  stream;
+#ifdef TT_USE_BYTECODE_INTERPRETER
     FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
+#endif
 
 
     face   = (TT_Face)glyph->face;

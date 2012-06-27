@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for CJK script (specification).         */
 /*                                                                         */
-/*  Copyright 2006, 2007, 2011 by                                          */
+/*  Copyright 2006, 2007, 2011, 2012 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -103,6 +103,7 @@ FT_BEGIN_HEADER
   } AF_CJKMetricsRec, *AF_CJKMetrics;
 
 
+#ifdef AF_CONFIG_OPTION_CJK
   FT_LOCAL( FT_Error )
   af_cjk_metrics_init( AF_CJKMetrics  metrics,
                        FT_Face        face );
@@ -129,6 +130,7 @@ FT_BEGIN_HEADER
   af_cjk_metrics_init_widths( AF_CJKMetrics  metrics,
                               FT_Face        face,
                               FT_ULong       charcode );
+#endif /* AF_CONFIG_OPTION_CJK */
 
 
 /* */

@@ -2204,7 +2204,7 @@
     }
     else
     {
-      val = - FT_PIX_CEIL( compensation - distance );
+      val = -FT_PIX_CEIL( compensation - distance );
       if ( val > 0 )
         val = 0;
     }
@@ -2415,8 +2415,9 @@
   /*    Sets Super Round parameters.                                       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    GridPeriod :: Grid period                                          */
-  /*    selector   :: SROUND opcode                                        */
+  /*    GridPeriod :: The grid period.                                     */
+  /*                                                                       */
+  /*    selector   :: The SROUND opcode.                                   */
   /*                                                                       */
   static void
   SetSuperRound( EXEC_OP_ FT_F26Dot6  GridPeriod,
@@ -6203,17 +6204,17 @@
   Ins_MSIRP( INS_ARG )
   {
     FT_UShort   point;
-    FT_F26Dot6  distance,
-                control_value_cutin;
+    FT_F26Dot6  distance;
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+    FT_F26Dot6  control_value_cutin;
 
 
     control_value_cutin = CUR.GS.control_value_cutin;
 
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( CUR.ignore_x_mode                                 &&
          CUR.GS.freeVector.x != 0                          &&
          !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        control_value_cutin = 0;
+      control_value_cutin = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     point = (FT_UShort)args[0];
@@ -6266,8 +6267,8 @@
   Ins_MDAP( INS_ARG )
   {
     FT_UShort   point;
-    FT_F26Dot6  cur_dist,
-                distance;
+    FT_F26Dot6  cur_dist;
+    FT_F26Dot6  distance;
 
 
     point = (FT_UShort)args[0];
@@ -6283,13 +6284,16 @@
     {
       cur_dist = CUR_fast_project( &CUR.zp0.cur[point] );
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-      if ( CUR.ignore_x_mode && CUR.GS.freeVector.x != 0 )
-        distance = ROUND_None( cur_dist,
-                               CUR.tt_metrics.compensations[0] ) - cur_dist;
+      if ( CUR.ignore_x_mode        &&
+           CUR.GS.freeVector.x != 0 )
+        distance = ROUND_None(
+                     cur_dist,
+                     CUR.tt_metrics.compensations[0] ) - cur_dist;
       else
 #endif
-      distance = CUR_Func_round( cur_dist,
-                                 CUR.tt_metrics.compensations[0] ) - cur_dist;
+        distance = CUR_Func_round(
+                     cur_dist,
+                     CUR.tt_metrics.compensations[0] ) - cur_dist;
     }
     else
       distance = 0;
@@ -6312,20 +6316,20 @@
   {
     FT_ULong    cvtEntry;
     FT_UShort   point;
-    FT_F26Dot6  distance,
-                org_dist,
-                control_value_cutin;
+    FT_F26Dot6  distance;
+    FT_F26Dot6  org_dist;
+    FT_F26Dot6  control_value_cutin;
 
 
     control_value_cutin = CUR.GS.control_value_cutin;
-    cvtEntry = (FT_ULong)args[1];
-    point    = (FT_UShort)args[0];
+    cvtEntry            = (FT_ULong)args[1];
+    point               = (FT_UShort)args[0];
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( CUR.ignore_x_mode                                 &&
          CUR.GS.freeVector.x != 0                          &&
          !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        control_value_cutin = 0;
+      control_value_cutin = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     if ( BOUNDS( point,     CUR.zp0.n_points ) ||
@@ -6379,18 +6383,20 @@
 
     org_dist = CUR_fast_project( &CUR.zp0.cur[point] );
 
-    if ( ( CUR.opcode & 1 ) != 0 )   /* rounding and control cutin flag */
+    if ( ( CUR.opcode & 1 ) != 0 )   /* rounding and control cut-in flag */
     {
       if ( FT_ABS( distance - org_dist ) > control_value_cutin )
         distance = org_dist;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-      if ( CUR.ignore_x_mode && CUR.GS.freeVector.x != 0 )
+      if ( CUR.ignore_x_mode        &&
+           CUR.GS.freeVector.x != 0 )
         distance = ROUND_None( distance,
                                CUR.tt_metrics.compensations[0] );
       else
 #endif
-      distance = CUR_Func_round( distance, CUR.tt_metrics.compensations[0] );
+        distance = CUR_Func_round( distance,
+                                   CUR.tt_metrics.compensations[0] );
     }
 
     CUR_Func_move( &CUR.zp0, point, distance - org_dist );
@@ -6414,13 +6420,13 @@
     FT_F26Dot6  org_dist, distance, minimum_distance;
 
 
-    minimum_distance    = CUR.GS.minimum_distance;
+    minimum_distance = CUR.GS.minimum_distance;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( CUR.ignore_x_mode                                 &&
          CUR.GS.freeVector.x != 0                          &&
          !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        minimum_distance = 0;
+      minimum_distance = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
@@ -6561,14 +6567,14 @@
 
     minimum_distance    = CUR.GS.minimum_distance;
     control_value_cutin = CUR.GS.control_value_cutin;
-    point    = (FT_UShort)args[0];
-    cvtEntry = (FT_ULong)( args[1] + 1 );
+    point               = (FT_UShort)args[0];
+    cvtEntry            = (FT_ULong)( args[1] + 1 );
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( CUR.ignore_x_mode                                 &&
          CUR.GS.freeVector.x != 0                          &&
          !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        control_value_cutin = minimum_distance = 0;
+      control_value_cutin = minimum_distance = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     /* XXX: UNDOCUMENTED! cvt[-1] = 0 always */

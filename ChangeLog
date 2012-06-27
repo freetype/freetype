@@ -1,3 +1,20 @@
+2012-06-27  Werner Lemberg  <wl@gnu.org>
+
+	Fix conditional compilation.
+
+	* include/freetype/internal/ftcalc.h (FT_MulDiv_No_Round): Don't
+	enclose with `TT_USE_BYTECODE_INTERPRETER'; we now need the function
+	elsewhere also.
+
+	* src/autofit/afcjk.h: Use AF_CONFIG_OPTION_CJK.
+
+	* src/truetype/ttgload.c (tt_loader_init): Fix compiler warning.
+
+	* src/truetype/ttinterp.c (Ins_MSIRP): Fix compiler warning.
+
+	* src/truetype/ttinterp.h: Use
+	TT_CONFIG_OPTION_BYTECODE_INTERPRETER.
+
 2012-06-26  Infinality  <infinality@infinality.net>
 
 	[truetype] Remove unused rounding functionality.
@@ -22,7 +39,7 @@
 	(Move_Zp2_Point, Ins_SHPIX, Ins_MSIRP, Ins_MDAP, Ins_MIAP,
 	Ins_MDRP, Ins_MIRP): Perform Round_None instead of calling a modified
 	rounding function.  Remove gridlines_per_pixel.  Create a local
-	variable to store control value cutin. Simplify the conditional for 
+	variable to store control value cutin. Simplify the conditional for
 	ignore_x_mode.  Adjust rounding calls to pass only two values.
 
 2012-06-25  Werner Lemberg  <wl@gnu.org>
