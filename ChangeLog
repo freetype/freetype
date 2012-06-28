@@ -1,3 +1,11 @@
+2012-06-28  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Set the `subpixel_positioned' flag unconditionally.
+
+	This is how the code currently behaves.
+
+	* src/truetype/ttgload.c (tt_loader_init): Do it.
+
 2012-06-27  Werner Lemberg  <wl@gnu.org>
 
 	Fix conditional compilation.

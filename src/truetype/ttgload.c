@@ -1923,6 +1923,7 @@
       FT_Bool         compatible_widths;
       FT_Bool         symmetrical_smoothing;
       FT_Bool         bgr;
+      FT_Bool         subpixel_positioned;
 #endif
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -1969,6 +1970,7 @@
       exec->compatible_widths     = SPH_OPTION_SET_COMPATIBLE_WIDTHS;
       exec->symmetrical_smoothing = FALSE;
       exec->bgr                   = FALSE;
+      exec->subpixel_positioned   = TRUE;
 #else /* 0 */
       exec->compatible_widths =
         FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
@@ -1979,6 +1981,9 @@
       exec->bgr =
         FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
                  TT_LOAD_BGR );
+      exec->subpixel_positioned =
+        FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
+                 TT_LOAD_SUBPIXEL_POSITIONED );
 #endif /* 0 */
 
 #else /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
