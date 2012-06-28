@@ -297,7 +297,7 @@ do
     shift 1
     ;;
   -m32|-m64|-march=*|-mcpu=*) # options taking no argument
-    AC_MSG_RESULT([whether CFLAGS and LDFLAGS share ${c}])
+    AC_MSG_CHECKING([whether CFLAGS and LDFLAGS share ${c}])
     if expr " ${LDFLAGS} " : ".* ${c} *${a}.*" > /dev/null
     then
       AC_MSG_RESULT([yes])

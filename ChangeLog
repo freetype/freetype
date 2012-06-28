@@ -1,3 +1,9 @@
+2012-06-28  Gilles Espinasse  <g.esp@free.fr>
+
+	Fix CFLAGS and LDFLAGS share configure test.
+
+	* builds/unix/configure.raw: Fix typo.
+
 2012-06-28  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Set the `subpixel_positioned' flag unconditionally.
