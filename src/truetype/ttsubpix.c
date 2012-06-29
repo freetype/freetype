@@ -227,29 +227,14 @@
     TWEAK_RULES_EXCEPTIONS( ROUND_NONPIXEL_Y_MOVES );
 
     if ( loader->exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 )
-    {
-      if ( loader->exec->rasterizer_version != 35 )
-      {
-        loader->exec->rasterizer_version = 35;
-        /* must re-execute fpgm */
-        loader->exec->size->cvt_ready = FALSE;
-        tt_size_ready_bytecode(
-          loader->exec->size,
-          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
-      }
-    }
+      loader->exec->rasterizer_version = 35;
     else
-    {
-      if ( loader->exec->rasterizer_version == 35 )
-      {
-        loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
-        /* must re-execute fpgm */
-        loader->exec->size->cvt_ready = FALSE;
-        tt_size_ready_bytecode(
-          loader->exec->size,
-          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
-      }
-    }
+      loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
+
+    /* re-execute fpgm always to avoid problems */
+    loader->exec->size->cvt_ready = FALSE;
+    tt_size_ready_bytecode( loader->exec->size,
+                            FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
 
     if ( IS_HINTED( loader->load_flags ) )
     {

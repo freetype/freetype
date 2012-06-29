@@ -1,3 +1,21 @@
+2012-06-28  Infinality  <infinality@infinality.net>
+
+	[truetype] Fix various artifacts.
+
+	Verdana was broken in the original Infinality commit.  Also
+	includes other minor fixes.
+
+	* src/truetype/ttsubpix.h: Updated.  Removed unused macros.
+	(RASTERIZER_35_Rules): Add Verdana.
+	(SKIP_NONPIXEL_Y_MOVES_Rules): Add Tahoma `s'.
+	(MIRP_CVT_ZERO_Rules): Remove Verdana.
+	(ALWAYS_SKIP_DELTAP_Rules): Add Russian char 0x438.
+	(COMPATIBLE_WIDTHS_Rules): Rearrange some rules.
+	(X_SCALING_Rules): Adjust Verdana `a' at 12 and 13 ppem.
+	
+	* src/truetype/ttsubpix.c: Updated.
+	(sph_set_tweaks): Re-execute fpgm always.
+
 2012-06-28  Gilles Espinasse  <g.esp@free.fr>
 
 	Fix CFLAGS and LDFLAGS share configure test.

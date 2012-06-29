@@ -119,8 +119,6 @@ FT_BEGIN_HEADER
 #define SPH_OPTION_SET_GRAYSCALE           FALSE
 #define SPH_OPTION_SET_COMPATIBLE_WIDTHS   FALSE
 #define SPH_OPTION_SET_RASTERIZER_VERSION  38
-#define SPH_OPTION_GRIDLINES_PER_PIXEL_X   64
-#define SPH_OPTION_GRIDLINES_PER_PIXEL_Y   1
 
 
   /* Define this to force natural (i.e. not bitmap-compatible) widths.     */
@@ -392,7 +390,7 @@ FT_BEGIN_HEADER
 
   /* Skip Y moves that start with a point that is not on a Y pixel         */
   /* boundary and don't move that point to a Y pixel boundary.             */
-#define SKIP_NONPIXEL_Y_MOVES_RULES_SIZE  9
+#define SKIP_NONPIXEL_Y_MOVES_RULES_SIZE  10
 
   SPH_TweakRule  SKIP_NONPIXEL_Y_MOVES_Rules
                    [SKIP_NONPIXEL_Y_MOVES_RULES_SIZE] =
@@ -411,6 +409,8 @@ FT_BEGIN_HEADER
     { "Ubuntu", 0, "Regular Class", 'N' },
     /* Fix misshapen x */
     { "Verdana", 0, "Bold", 'x' },
+    /* Fix misshapen s */
+    { "Tahoma", 0, "", 's' },
   };
 
 
@@ -514,7 +514,7 @@ FT_BEGIN_HEADER
 
 
   /* Return MS rasterizer version 35 if matched.                           */
-#define RASTERIZER_35_RULES_SIZE  8
+#define RASTERIZER_35_RULES_SIZE  9
 
   SPH_TweakRule  RASTERIZER_35_Rules
                    [RASTERIZER_35_RULES_SIZE] =
@@ -528,6 +528,9 @@ FT_BEGIN_HEADER
     { "Times New Roman", 0, "Regular", 'n' },
     { "Times New Roman", 0, "Regular", 'p' },
     { "Times", 0, "", 0 },
+    /* Verdana 5.05 from Windows 7 SP1 has issues at 37+ */
+    /* This is only a workaround */
+    { "Verdana", 0, "", 0 },
   };
 
 
@@ -564,7 +567,7 @@ FT_BEGIN_HEADER
 
 
   /* Skip DELTAP instructions if matched.                                  */
-#define ALWAYS_SKIP_DELTAP_RULES_SIZE  13
+#define ALWAYS_SKIP_DELTAP_RULES_SIZE  14
 
   SPH_TweakRule  ALWAYS_SKIP_DELTAP_Rules
                    [ALWAYS_SKIP_DELTAP_RULES_SIZE] =
@@ -577,6 +580,7 @@ FT_BEGIN_HEADER
     { "Verdana", 10, "Regular", 0 },
     { "Verdana", 9, "Regular", 0 },
     /* Cyrillic small letter short I */
+    { "Legacy Sans Fonts", 0, "", 0x438 },
     { "Legacy Sans Fonts", 0, "", 0x439 },
     { "Arial", 10, "Regular", '6' },
     { "Arial", 0, "Bold/BoldItalic Class", 'a' },
@@ -615,7 +619,7 @@ FT_BEGIN_HEADER
   SPH_TweakRule  MIRP_CVT_ZERO_Rules
                    [MIRP_CVT_ZERO_RULES_SIZE] =
   {
-    { "Verdana", 0, "Regular", 0 },
+    { "-", 0, "", 0 },
   };
 
 
@@ -802,13 +806,13 @@ FT_BEGIN_HEADER
     /* Cyrillic small letter sha */
     { "Verdana", 10, "Regular Class", 0x448 },
     { "Verdana", 11, "Regular Class", 0x448 },
-    { "Verdana and Clones", 12, "Regular Class", 'm' },
-    { "Verdana and Clones", 12, "Regular Class", 'l' },
     { "Verdana and Clones", 12, "Regular Class", 'i' },
     { "Verdana and Clones", 12, "Regular Class", 'j' },
-    { "Verdana and Clones", 13, "Regular Class", 'l' },
+    { "Verdana and Clones", 12, "Regular Class", 'l' },
+    { "Verdana and Clones", 12, "Regular Class", 'm' },
     { "Verdana and Clones", 13, "Regular Class", 'i' },
     { "Verdana and Clones", 13, "Regular Class", 'j' },
+    { "Verdana and Clones", 13, "Regular Class", 'l' },
     { "Verdana and Clones", 14, "Regular Class", 'm' },
   };
 
@@ -817,13 +821,14 @@ FT_BEGIN_HEADER
   /* more visually pleasing glyphs in certain cases.                       */
   /* This sometimes needs to be coordinated with compatible width rules.   */
   /* A value of 1000 corresponds to a scaled value of 1.0.                 */
-#define X_SCALING_RULES_SIZE  40
+#define X_SCALING_RULES_SIZE  41
 
   SPH_ScaleRule  X_SCALING_Rules
                    [X_SCALING_RULES_SIZE] =
   {
     { "DejaVu Sans", 12, "Regular Class", 'm', 950 },
-    { "Verdana and Clones", 12, "Regular Class", 'a', 1000 },
+    { "Verdana and Clones", 12, "Regular Class", 'a', 1100 },
+    { "Verdana and Clones", 13, "Regular Class", 'a', 1050 },
     { "Arial", 11, "Regular Class", 'm', 975 },
     { "Arial", 12, "Regular Class", 'm', 1050 },
     /* Cyrillic small letter el */
