@@ -5,7 +5,7 @@
 /*    Routines used to compute vector angles with limited accuracy         */
 /*    and very high speed.  It also contains sorting routines (body).      */
 /*                                                                         */
-/*  Copyright 2003-2006, 2011 by                                           */
+/*  Copyright 2003-2006, 2011-2012 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -255,7 +255,7 @@
     {
       for ( j = i; j > 0; j-- )
       {
-        if ( table[j] > table[j - 1] )
+        if ( table[j] >= table[j - 1] )
           break;
 
         swap         = table[j];
@@ -278,7 +278,7 @@
     {
       for ( j = i; j > 0; j-- )
       {
-        if ( table[j].org > table[j - 1].org )
+        if ( table[j].org >= table[j - 1].org )
           break;
 
         swap         = table[j];

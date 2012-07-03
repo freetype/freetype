@@ -1,3 +1,10 @@
+2012-07-03  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Minor speed-up.
+
+	* src/autofit/afangles (af_sort_pos, af_sort_widths): Don't swap
+	elements if they are equal.
+
 2012-06-30  Gilles Espinasse  <g.esp@free.fr>
 
 	Fix `checking if gcc static flag -static works' test.
