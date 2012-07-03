@@ -138,7 +138,10 @@
           }
         }
 
-        af_sort_widths( num_widths, axis->widths );
+        /* this also replaces multiple almost identical stem widths */
+        /* with a single one (the value 100 is heuristic) */
+        af_sort_and_quantize_widths( &num_widths, axis->widths,
+                                     dummy->units_per_em / 100 );
         axis->width_count = num_widths;
       }
 

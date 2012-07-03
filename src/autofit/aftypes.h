@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter types (specification only).                              */
 /*                                                                         */
-/*  Copyright 2003-2009, 2011 by                                           */
+/*  Copyright 2003-2009, 2011-2012 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -87,8 +87,9 @@ extern void*  _af_debug_hints;
                FT_Pos*  table );
 
   FT_LOCAL( void )
-  af_sort_widths( FT_UInt   count,
-                  AF_Width  widths );
+  af_sort_and_quantize_widths( FT_UInt*  count,
+                               AF_Width  widths,
+                               FT_Pos    threshold );
 
 
   /*************************************************************************/

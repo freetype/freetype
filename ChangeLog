@@ -1,5 +1,15 @@
 2012-07-03  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Quantize stem widths.
+
+	* src/autofit/afangles.c (af_sort_widths): Rename to...
+	(af_sort_and_quantize_widths): This.
+	Add code to avoid stem widths which are almost identical.
+	* src/autofit/aftypes.h, src/autofit/aflatin.c, src/autofit/afcjk.c:
+	Updated.
+
+2012-07-03  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Minor speed-up.
 
 	* src/autofit/afangles (af_sort_pos, af_sort_widths): Don't swap
