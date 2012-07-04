@@ -205,8 +205,8 @@
     /* `af_latin_blue_chars[blues]' string, then finding its top-most or */
     /* bottom-most points (depending on `AF_IS_TOP_BLUE')                */
 
-    FT_TRACE5(( "blue zones computation\n" ));
-    FT_TRACE5(( "------------------------------------------------\n" ));
+    FT_TRACE5(( "blue zones computation\n"
+                "======================\n\n" ));
 
     for ( bb = 0; bb < AF_LATIN_BLUE_MAX; bb++ )
     {
@@ -216,7 +216,7 @@
       FT_Pos*      blue_shoot;
 
 
-      FT_TRACE5(( "blue %3d: ", bb ));
+      FT_TRACE5(( "blue zone %d:\n", bb ));
 
       num_flats  = 0;
       num_rounds = 0;
@@ -229,8 +229,6 @@
         FT_Vector*  points;
         FT_Bool     round = 0;
 
-
-        FT_TRACE5(( "'%c'", *p ));
 
         /* load the character in the face -- skip unknown or empty ones */
         glyph_index = FT_Get_Char_Index( face, (FT_UInt)*p );
@@ -295,7 +293,7 @@
               best_last  = last;
             }
           }
-          FT_TRACE5(( "%5d", best_y ));
+          FT_TRACE5(( "  %c  %d", *p, best_y ));
         }
 
         /* now check whether the point belongs to a straight or round   */
@@ -343,7 +341,7 @@
             FT_CURVE_TAG( glyph->outline.tags[prev] ) != FT_CURVE_TAG_ON ||
             FT_CURVE_TAG( glyph->outline.tags[next] ) != FT_CURVE_TAG_ON );
 
-          FT_TRACE5(( "%c ", round ? 'r' : 'f' ));
+          FT_TRACE5(( " (%s)\n", round ? "round" : "flat" ));
         }
 
         if ( round )
@@ -352,15 +350,13 @@
           flats[num_flats++]   = best_y;
       }
 
-      FT_TRACE5(( "\n" ));
-
       if ( num_flats == 0 && num_rounds == 0 )
       {
         /*
          *  we couldn't find a single glyph to compute this blue zone,
          *  we will simply ignore it then
          */
-        FT_TRACE5(( "empty\n" ));
+        FT_TRACE5(( "  empty\n" ));
         continue;
       }
 
@@ -403,8 +399,13 @@
 
 
         if ( AF_LATIN_IS_TOP_BLUE( bb ) ^ over_ref )
+        {
           *blue_ref   =
           *blue_shoot = ( shoot + ref ) / 2;
+
+          FT_TRACE5(( "  [overshoot smaller than reference,"
+                      " taking mean value]\n" ));
+        }
       }
 
       blue->flags = 0;
@@ -419,7 +420,9 @@
       if ( bb == AF_LATIN_BLUE_SMALL_TOP )
         blue->flags |= AF_LATIN_BLUE_ADJUSTMENT;
 
-      FT_TRACE5(( "-- ref = %ld, shoot = %ld\n", *blue_ref, *blue_shoot ));
+      FT_TRACE5(( "    -> reference = %ld\n"
+                  "       overshoot = %ld\n",
+                  *blue_ref, *blue_shoot ));
     }
 
     FT_TRACE5(( "\n" ));

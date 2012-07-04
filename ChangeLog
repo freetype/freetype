@@ -1,3 +1,10 @@
+2012-07-04  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Beautify blue zone tracing.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues),
+	src/autofit/aflatin2.c (af_latin2_metrics_init_blues): Implement it.
+
 2012-07-03  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Quantize stem widths.
