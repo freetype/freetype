@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines (body).                                 */
 /*                                                                         */
-/*  Copyright 2003-2007, 2009-2011 by                                      */
+/*  Copyright 2003-2007, 2009-2012 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -494,8 +494,8 @@
       }
     }
 
-    /* return no direction if arm lengths differ too much */
-    /* (value 14 is heuristic)                            */
+    /* return no direction if arm lengths differ too much            */
+    /* (value 14 is heuristic, corresponding to approx. 4.1 degrees) */
     ss *= 14;
     if ( FT_ABS( ll ) <= FT_ABS( ss ) )
       dir = AF_DIR_NONE;
