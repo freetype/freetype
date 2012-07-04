@@ -1,5 +1,14 @@
 2012-07-04  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #36091.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues),
+	src/autofit/aflatin2.c (af_latin2_metrics_init_blues): Change the
+	constraint for testing round vs. flat segment: Accept either a
+	small distance or a small angle.
+
+2012-07-04  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Beautify blue zone tracing.
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_blues),

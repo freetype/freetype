@@ -290,6 +290,7 @@
         /* segment; we first need to find in which contour the extremum */
         /* lies, then inspect its previous and next points              */
         {
+          FT_Pos  best_x = points[best_point].x;
           FT_Int  start, end, prev, next;
           FT_Pos  dist;
 
@@ -300,13 +301,16 @@
 
           do
           {
-            prev = start-1;
+            prev = start - 1;
             if ( prev < best_first )
               prev = best_last;
 
-            dist = points[prev].y - best_y;
-            if ( dist < -5 || dist > 5 )
-              break;
+            dist = FT_ABS( points[prev].y - best_y );
+            /* accept a small distance or a small angle (both values are */
+            /* heuristic; value 20 corresponds to approx. 2.9 degrees)   */
+            if ( dist > 5 )
+              if ( FT_ABS( points[prev].x - best_x ) <= 20 * dist )
+                break;
 
             start = prev;
 
@@ -314,13 +318,14 @@
 
           do
           {
-            next = end+1;
+            next = end + 1;
             if ( next > best_last )
               next = best_first;
 
-            dist = points[next].y - best_y;
-            if ( dist < -5 || dist > 5 )
-              break;
+            dist = FT_ABS( points[next].y - best_y );
+            if ( dist > 5 )
+              if ( FT_ABS( points[next].x - best_x ) <= 20 * dist )
+                break;
 
             end = next;
 
