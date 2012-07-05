@@ -246,28 +246,39 @@
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
       AF_AxisHints  axis     = &hints->axis[dimension];
+      AF_Point      points   = hints->points;
+      AF_Edge       edges    = axis->edges;
       AF_Segment    segments = axis->segments;
       AF_Segment    limit    = segments + axis->num_segments;
       AF_Segment    seg;
 
 
-      printf ( "Table of %s segments:\n",
-               dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
-      printf ( "  [ index |  pos  |  dir  | link | serif |"
-               " height | extra |    flags    ]\n" );
+      printf( "Table of %s segments:\n",
+              dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
+      if (axis->num_segments)
+        printf( "  [ index |  pos  |  dir  | from"
+                " |  to  | link | serif | edge"
+                " | height | extra |    flags    ]\n" );
+      else
+        printf( "  (none)\n" );
 
       for ( seg = segments; seg < limit; seg++ )
       {
-        printf ( "  [ %5d | %5.2g | %5s | %4d | %5d | %6d | %5d | %11s ]\n",
-                 seg - segments,
-                 dimension == AF_DIMENSION_HORZ ? (int)seg->first->ox / 64.0
-                                                : (int)seg->first->oy / 64.0,
-                 af_dir_str( (AF_Direction)seg->dir ),
-                 AF_INDEX_NUM( seg->link, segments ),
-                 AF_INDEX_NUM( seg->serif, segments ),
-                 seg->height,
-                 seg->height - ( seg->max_coord - seg->min_coord ),
-                 af_edge_flags_to_string( (AF_Edge_Flags)seg->flags ) );
+        printf( "  [ %5d | %5.2g | %5s | %4d"
+                " | %4d | %4d | %5d | %4d"
+                " | %6d | %5d | %11s ]\n",
+                seg - segments,
+                dimension == AF_DIMENSION_HORZ ? (int)seg->first->ox / 64.0
+                                               : (int)seg->first->oy / 64.0,
+                af_dir_str( (AF_Direction)seg->dir ),
+                AF_INDEX_NUM( seg->first, points ),
+                AF_INDEX_NUM( seg->last, points ),
+                AF_INDEX_NUM( seg->link, segments ),
+                AF_INDEX_NUM( seg->serif, segments ),
+                AF_INDEX_NUM( seg->edge, edges ),
+                seg->height,
+                seg->height - ( seg->max_coord - seg->min_coord ),
+                af_edge_flags_to_string( (AF_Edge_Flags)seg->flags ) );
       }
       printf( "\n" );
     }
@@ -363,24 +374,27 @@
        *  note: AF_DIMENSION_HORZ corresponds to _vertical_ edges
        *        since they have a constant X coordinate.
        */
-      printf ( "Table of %s edges:\n",
-               dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
-      printf ( "  [ index |  pos  |  dir  | link |"
-               " serif | blue | opos  |  pos  |    flags    ]\n" );
+      printf( "Table of %s edges:\n",
+              dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
+      if ( axis->num_edges )
+        printf( "  [ index |  pos  |  dir  | link"
+                " | serif | blue | opos  |  pos  |    flags    ]\n" );
+      else
+        printf( "  (none)\n" );
 
       for ( edge = edges; edge < limit; edge++ )
       {
-        printf ( "  [ %5d | %5.2g | %5s | %4d |"
-                 " %5d |   %c  | %5.2f | %5.2f | %11s ]\n",
-                 edge - edges,
-                 (int)edge->opos / 64.0,
-                 af_dir_str( (AF_Direction)edge->dir ),
-                 AF_INDEX_NUM( edge->link, edges ),
-                 AF_INDEX_NUM( edge->serif, edges ),
-                 edge->blue_edge ? 'y' : 'n',
-                 edge->opos / 64.0,
-                 edge->pos / 64.0,
-                 af_edge_flags_to_string( (AF_Edge_Flags)edge->flags ) );
+        printf( "  [ %5d | %5.2g | %5s | %4d"
+                " | %5d |   %c  | %5.2f | %5.2f | %11s ]\n",
+                edge - edges,
+                (int)edge->opos / 64.0,
+                af_dir_str( (AF_Direction)edge->dir ),
+                AF_INDEX_NUM( edge->link, edges ),
+                AF_INDEX_NUM( edge->serif, edges ),
+                edge->blue_edge ? 'y' : 'n',
+                edge->opos / 64.0,
+                edge->pos / 64.0,
+                af_edge_flags_to_string( (AF_Edge_Flags)edge->flags ) );
       }
       printf( "\n" );
     }

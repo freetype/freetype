@@ -1,3 +1,11 @@
+2012-07-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve output of debugging information.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_segments): Print more
+	data; report no data.
+	(af_glyph_hints_dump_edges): Report no data.
+
 2012-07-04  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #36091.
