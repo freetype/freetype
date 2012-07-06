@@ -1,3 +1,16 @@
+2012-07-06  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Do some code cleanup.
+
+	* src/autofit/afglobal.c (af_face_globals_new): Simplify.
+
+	* src/autofit/afhints.c: Use `FT_TRACE7' instead of `printf'
+	everywhere.
+	(FT_COMPONENT): New macro.
+	(af_glyph_hints_done): Simplify.
+
+	* include/freetype/internal/fttrace.h: Updated.
+
 2012-07-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve output of debugging information.

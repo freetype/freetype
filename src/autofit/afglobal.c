@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter routines to compute global hinting values (body).        */
 /*                                                                         */
-/*  Copyright 2003-2011 by                                                 */
+/*  Copyright 2003-2012 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -82,7 +82,8 @@
     FT_Face     face        = globals->face;
     FT_CharMap  old_charmap = face->charmap;
     FT_Byte*    gscripts    = globals->glyph_scripts;
-    FT_UInt     ss, i;
+    FT_UInt     ss;
+    FT_UInt     i;
 
 
     /* the value AF_SCRIPT_LIST_NONE means `uncovered glyph' */
@@ -112,7 +113,7 @@
         continue;
 
       /*
-       *  Scan all unicode points in the range and set the corresponding
+       *  Scan all Unicode points in the range and set the corresponding
        *  glyph script index.
        */
       for ( range = clazz->script_uni_ranges; range->first != 0; range++ )
@@ -187,21 +188,22 @@
 
     memory = face->memory;
 
-    if ( !FT_ALLOC( globals, sizeof ( *globals ) +
-                             face->num_glyphs * sizeof ( FT_Byte ) ) )
-    {
-      globals->face          = face;
-      globals->glyph_count   = face->num_glyphs;
-      globals->glyph_scripts = (FT_Byte*)( globals + 1 );
+    if ( FT_ALLOC( globals, sizeof ( *globals ) +
+                            face->num_glyphs * sizeof ( FT_Byte ) ) )
+      goto Exit;
 
-      error = af_face_globals_compute_script_coverage( globals );
-      if ( error )
-      {
-        af_face_globals_free( globals );
-        globals = NULL;
-      }
+    globals->face          = face;
+    globals->glyph_count   = face->num_glyphs;
+    globals->glyph_scripts = (FT_Byte*)( globals + 1 );
+
+    error = af_face_globals_compute_script_coverage( globals );
+    if ( error )
+    {
+      af_face_globals_free( globals );
+      globals = NULL;
     }
 
+  Exit:
     *aglobals = globals;
     return error;
   }
@@ -273,7 +275,7 @@
     metrics = globals->metrics[clazz->script];
     if ( metrics == NULL )
     {
-      /* create the global metrics object when needed */
+      /* create the global metrics object if necessary */
       FT_Memory  memory = globals->face->memory;
 
 
