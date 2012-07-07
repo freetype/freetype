@@ -1,3 +1,9 @@
+2012-07-07  Gilles Espinasse  <g.esp@free.fr>
+
+	Fix strict-aliasing warning.
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Avoid double cast.
+
 2012-07-07  Dave Thomas  <dave.thomas@metaforic.com>
 
 	[ARM] Fix FT_MulFix_arm.
