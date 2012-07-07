@@ -1,3 +1,10 @@
+2012-07-07  Dave Thomas  <dave.thomas@metaforic.com>
+
+	[ARM] Fix FT_MulFix_arm.
+
+	* include/freetype/config/ftconfig.h (FT_MulFix_arm) [__arm__]:
+	Avoid ADDS instruction to clobber condition codes.
+
 2012-07-06  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Do some code cleanup.
