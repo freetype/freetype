@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 by      */
+/*  Copyright 2002-2010, 2012 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3452,8 +3452,7 @@
 
             valid.num_glyphs = (FT_UInt)face->max_profile.numGlyphs;
 
-            if ( ft_setjmp(
-              *((ft_jmp_buf*)&FT_VALIDATOR( &valid )->jump_buffer) ) == 0 )
+            if ( ft_setjmp( FT_VALIDATOR( &valid )->jump_buffer) == 0 )
             {
               /* validate this cmap sub-table */
               error = clazz->validate( cmap, FT_VALIDATOR( &valid ) );

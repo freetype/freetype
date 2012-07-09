@@ -1,5 +1,14 @@
 2012-07-09  Werner Lemberg  <wl@gnu.org>
 
+	Fix compilation with MSVC 5.0.
+
+	Problem reported by Peter Breitenlohner and Akira Kakuto.
+
+	* include/freetype/config/ftstdlib.h (ft_setjmp): Updated.
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Remove cast.
+
+2012-07-09  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Improve debugging messages; do some code cleanup.
 
 	* src/autofit/aflatin.c (af_latin_align_linked_edge,
