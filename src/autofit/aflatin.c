@@ -293,7 +293,7 @@
               best_last  = last;
             }
           }
-          FT_TRACE5(( "  %c  %d", *p, best_y ));
+          FT_TRACE5(( "  %c  %ld", *p, best_y ));
         }
 
         /* now check whether the point belongs to a straight or round   */
@@ -860,7 +860,7 @@
 
             on_edge = 0;
             segment = NULL;
-            /* fallthrough */
+            /* fall through */
           }
         }
 
@@ -896,8 +896,8 @@
     } /* contours */
 
 
-    /* now slightly increase the height of segments when this makes */
-    /* sense -- this is used to better detect and ignore serifs     */
+    /* now slightly increase the height of segments if this makes */
+    /* sense -- this is used to better detect and ignore serifs   */
     {
       AF_Segment  segments     = axis->segments;
       AF_Segment  segments_end = segments + axis->num_segments;
@@ -1181,17 +1181,17 @@
     }
 
 
-    /*********************************************************************/
-    /*                                                                   */
-    /* Good, we will now compute each edge's properties according to     */
-    /* the segments found on its position.  Basically, these are         */
-    /*                                                                   */
-    /*  - the edge's main direction                                      */
-    /*  - stem edge, serif edge or both (which defaults to stem then)    */
-    /*  - rounded edge, straight or both (which defaults to straight)    */
-    /*  - link for edge                                                  */
-    /*                                                                   */
-    /*********************************************************************/
+    /******************************************************************/
+    /*                                                                */
+    /* Good, we now compute each edge's properties according to the   */
+    /* segments found on its position.  Basically, these are          */
+    /*                                                                */
+    /*  - the edge's main direction                                   */
+    /*  - stem edge, serif edge or both (which defaults to stem then) */
+    /*  - rounded edge, straight or both (which defaults to straight) */
+    /*  - link for edge                                               */
+    /*                                                                */
+    /******************************************************************/
 
     /* first of all, set the `edge' field in each segment -- this is */
     /* required in order to compute edge links                       */
@@ -1488,9 +1488,7 @@
 
 #if 0 /* #ifdef AF_CONFIG_OPTION_USE_WARPER */
     if ( mode == FT_RENDER_MODE_LCD || mode == FT_RENDER_MODE_LCD_V )
-    {
       metrics->root.scaler.render_mode = mode = FT_RENDER_MODE_NORMAL;
-    }
 #endif
 
     scaler_flags = hints->scaler_flags;
@@ -1774,7 +1772,7 @@
 
     stem_edge->pos = base_edge->pos + fitted_width;
 
-    FT_TRACE5(( "  LINK: edge %d (opos=%.2f) linked to (%.2f),"
+    FT_TRACE5(( "  LINK: edge %d (opos=%.2f) linked to %.2f,"
                 " dist was %.2f, now %.2f\n",
                 stem_edge-hints->axis[dim].edges, stem_edge->opos / 64.0,
                 stem_edge->pos / 64.0, dist / 64.0, fitted_width / 64.0 ));
@@ -1856,10 +1854,16 @@
         if ( !edge1 )
           continue;
 
-        FT_TRACE5(( "  BLUE: edge %d (opos=%.2f) snapped to (%.2f),"
-                    " was (%.2f)\n",
-                    edge1 - edges, edge1->opos / 64.0, blue->fit / 64.0,
-                    edge1->pos / 64.0 ));
+        if (!anchor)
+          FT_TRACE5(( "  BLUE_ANCHOR: edge %d (opos=%.2f) snapped to %.2f,"
+                      " was %.2f (anchor=edge %d)\n",
+                      edge1 - edges, edge1->opos / 64.0, blue->fit / 64.0,
+                      edge1->pos / 64.0, edge - edges ));
+        else
+          FT_TRACE5(( "  BLUE: edge %d (opos=%.2f) snapped to %.2f,"
+                      " was %.2f\n",
+                      edge1 - edges, edge1->opos / 64.0, blue->fit / 64.0,
+                      edge1->pos / 64.0 ));
 
         edge1->pos    = blue->fit;
         edge1->flags |= AF_EDGE_DONE;
@@ -1959,14 +1963,14 @@
         else
           edge->pos = FT_PIX_ROUND( edge->opos );
 
+        anchor       = edge;
+        edge->flags |= AF_EDGE_DONE;
+
         FT_TRACE5(( "  ANCHOR: edge %d (opos=%.2f) and %d (opos=%.2f)"
-                    " snapped to (%.2f) (%.2f)\n",
+                    " snapped to %.2f and %.2f\n",
                     edge - edges, edge->opos / 64.0,
                     edge2 - edges, edge2->opos / 64.0,
                     edge->pos / 64.0, edge2->pos / 64.0 ));
-        anchor = edge;
-
-        edge->flags |= AF_EDGE_DONE;
 
         af_latin_align_linked_edge( hints, dim, edge, edge2 );
       }
@@ -2028,8 +2032,8 @@
           edge->pos  = cur_pos1 - cur_len / 2;
           edge2->pos = cur_pos1 + cur_len / 2;
 
-          FT_TRACE5(( "  STEM: %d (opos=%.2f) to %d (opos=%.2f)"
-                      " snapped to (%.2f) and (%.2f)\n",
+          FT_TRACE5(( "  STEM: edge %d (opos=%.2f) linked to %d (opos=%.2f)"
+                      " snapped to %.2f and %.2f\n",
                       edge - edges, edge->opos / 64.0,
                       edge2 - edges, edge2->opos / 64.0,
                       edge->pos / 64.0, edge2->pos / 64.0 ));
@@ -2058,8 +2062,8 @@
           edge->pos  = ( delta1 < delta2 ) ? cur_pos1 : cur_pos2;
           edge2->pos = edge->pos + cur_len;
 
-          FT_TRACE5(( "  STEM: %d (opos=%.2f) to %d (opos=%.2f)"
-                      " snapped to (%.2f) and (%.2f)\n",
+          FT_TRACE5(( "  STEM: edge %d (opos=%.2f) linked to %d (opos=%.2f)"
+                      " snapped to %.2f and %.2f\n",
                       edge - edges, edge->opos / 64.0,
                       edge2 - edges, edge2->opos / 64.0,
                       edge->pos / 64.0, edge2->pos / 64.0 ));
@@ -2070,8 +2074,9 @@
 
         if ( edge > edges && edge->pos < edge[-1].pos )
         {
-          FT_TRACE5(( "  BOUND: %d (pos=%.2f) to (%.2f)\n",
+          FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
                       edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
+
           edge->pos = edge[-1].pos;
         }
       }
@@ -2166,7 +2171,7 @@
         {
           af_latin_align_serif_edge( hints, edge->serif, edge );
           FT_TRACE5(( "  SERIF: edge %d (opos=%.2f) serif to %d (opos=%.2f)"
-                      " aligned to (%.2f)\n",
+                      " aligned to %.2f\n",
                       edge - edges, edge->opos / 64.0,
                       edge->serif - edges, edge->serif->opos / 64.0,
                       edge->pos / 64.0 ));
@@ -2176,7 +2181,7 @@
           edge->pos = FT_PIX_ROUND( edge->opos );
           anchor    = edge;
           FT_TRACE5(( "  SERIF_ANCHOR: edge %d (opos=%.2f)"
-                      " snapped to (%.2f)\n",
+                      " snapped to %.2f\n",
                       edge-edges, edge->opos / 64.0, edge->pos / 64.0 ));
         }
         else
@@ -2203,7 +2208,7 @@
                                      after->pos - before->pos,
                                      after->opos - before->opos );
 
-            FT_TRACE5(( "  SERIF_LINK1: edge %d (opos=%.2f) snapped to (%.2f)"
+            FT_TRACE5(( "  SERIF_LINK1: edge %d (opos=%.2f) snapped to %.2f"
                         " from %d (opos=%.2f)\n",
                         edge - edges, edge->opos / 64.0,
                         edge->pos / 64.0,
@@ -2215,7 +2220,7 @@
                         ( ( edge->opos - anchor->opos + 16 ) & ~31 );
 
             FT_TRACE5(( "  SERIF_LINK2: edge %d (opos=%.2f)"
-                        " snapped to (%.2f)\n",
+                        " snapped to %.2f\n",
                         edge - edges, edge->opos / 64.0, edge->pos / 64.0 ));
           }
         }
@@ -2223,12 +2228,22 @@
         edge->flags |= AF_EDGE_DONE;
 
         if ( edge > edges && edge->pos < edge[-1].pos )
+        {
+          FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
+                      edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
+
           edge->pos = edge[-1].pos;
+        }
 
         if ( edge + 1 < edge_limit        &&
              edge[1].flags & AF_EDGE_DONE &&
              edge->pos > edge[1].pos      )
+        {
+          FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
+                      edge - edges, edge->pos / 64.0, edge[1].pos / 64.0 ));
+
           edge->pos = edge[1].pos;
+        }
       }
     }
 

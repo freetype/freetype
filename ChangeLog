@@ -1,3 +1,11 @@
+2012-07-09  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve debugging messages; do some code cleanup.
+
+	* src/autofit/aflatin.c (af_latin_align_linked_edge,
+	af_latin_hint_edges): Synchronize with formatting used in the
+	ttfautohint project.
+
 2012-07-07  Gilles Espinasse  <g.esp@free.fr>
 
 	Fix strict-aliasing warning.

@@ -234,7 +234,7 @@ extern void*  _af_debug_hints;
     AF_SCRIPT_CJK   = 2,
     AF_SCRIPT_INDIC = 3,
 #ifdef FT_OPTION_AUTOFIT2
-    AF_SCRIPT_LATIN2,
+    AF_SCRIPT_LATIN2 = 4,
 #endif
 
     /* add new scripts here.  Don't forget to update the list in */

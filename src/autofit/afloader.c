@@ -135,8 +135,8 @@
                               loader->trans_delta.x,
                               loader->trans_delta.y );
 
-      /* copy the outline points in the loader's current               */
-      /* extra points which is used to keep original glyph coordinates */
+      /* copy the outline points in the loader's current                */
+      /* extra points which are used to keep original glyph coordinates */
       error = FT_GLYPHLOADER_CHECK_POINTS( gloader,
                                            slot->outline.n_points + 4,
                                            slot->outline.n_contours );
@@ -347,8 +347,8 @@
 
             l += num_base_points;
 
-            /* for now, only use the current point coordinates;    */
-            /* we may consider another approach in the near future */
+            /* for now, only use the current point coordinates; */
+            /* we eventually may consider another approach      */
             p1 = gloader->base.outline.points + start_point + k;
             p2 = gloader->base.outline.points + start_point + l;
 
