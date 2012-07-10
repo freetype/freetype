@@ -2413,14 +2413,20 @@ FT_BEGIN_HEADER
    *     behaviour to more specific and useful cases.
    *
    *   FT_LOAD_NO_SCALE ::
-   *     Don't scale the outline glyph loaded, but keep it in font units.
+   *     Don't scale the loaded outline glyph but keep it in font units.
    *
    *     This flag implies @FT_LOAD_NO_HINTING and @FT_LOAD_NO_BITMAP, and
    *     unsets @FT_LOAD_RENDER.
    *
+   *     If the font is `tricky' (see @FT_FACE_FLAG_TRICKY for more), using
+   *     FT_LOAD_NO_SCALE usually yields meaningless outlines because the
+   *     subglyphs must be scaled and positioned with hinting instructions. 
+   *     This can be solved by loading the font without FT_LOAD_NO_SCALE and
+   *     setting the character size to `font->units_per_EM'.
+   *
    *   FT_LOAD_NO_HINTING ::
-   *     Disable hinting.  This generally generates `blurrier' bitmap glyph
-   *     when the glyph is rendered in any of the anti-aliased modes.  See
+   *     Disable hinting.  This generally generates `blurrier' bitmap glyphs
+   *     when the glyph are rendered in any of the anti-aliased modes.  See
    *     also the note below.
    *
    *     This flag is implied by @FT_LOAD_NO_SCALE.
