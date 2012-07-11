@@ -1,3 +1,11 @@
+2012-07-11  Werner Lemberg  <wl@gnu.org>
+
+	[smooth] Avoid memory like in case of failure.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Use flags to
+	indicate what to clean up after finishing the function, with and
+	without errors.
+
 2012-07-09  Werner Lemberg  <wl@gnu.org>
 
 	Fix compilation with MSVC 5.0.
