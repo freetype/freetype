@@ -1,3 +1,9 @@
+2012-07-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[ftstroke] Fix uninitialized return value.
+
+	* src/base/ftstroke.c (FT_Stroker_New): Return FT_Err_Ok instead.
+
 2012-07-11  Werner Lemberg  <wl@gnu.org>
 
 	[smooth] Avoid memory like in case of failure.
