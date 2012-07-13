@@ -789,6 +789,7 @@
   FT_Stroker_New( FT_Library   library,
                   FT_Stroker  *astroker )
   {
+    FT_Error    error;           /* assigned in FT_NEW */
     FT_Memory   memory;
     FT_Stroker  stroker = NULL;
 
@@ -808,7 +809,7 @@
 
     *astroker = stroker;
 
-    return FT_Err_Ok;
+    return error;
   }
 
 
