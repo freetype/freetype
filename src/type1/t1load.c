@@ -1293,6 +1293,8 @@
 
             parser->root.cursor = cur;
             T1_Skip_PS_Token( parser );
+            if ( parser->root.cursor >= limit )
+              return;
             if ( parser->root.error )
               return;
 
