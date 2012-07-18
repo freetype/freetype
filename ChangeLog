@@ -1,3 +1,10 @@
+2012-07-17  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #36833.
+
+	* src/psaux/t1decode.c (t1operator_seac): `seac' is not a valid
+	operator if we want metrics only.
+
 2012-07-16  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #36832.
@@ -20,7 +27,7 @@
 
 2012-07-11  Werner Lemberg  <wl@gnu.org>
 
-	[smooth] Avoid memory like in case of failure.
+	[smooth] Avoid memory leak in case of failure.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Use flags to
 	indicate what to clean up after finishing the function, with and
