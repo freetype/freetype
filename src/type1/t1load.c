@@ -1514,6 +1514,12 @@
 
 
     num_glyphs = (FT_Int)T1_ToInt( parser );
+    if ( num_glyphs < 0 )
+    {
+      error = T1_Err_Invalid_File_Format;
+      goto Fail;
+    }
+
     /* some fonts like Optima-Oblique not only define the /CharStrings */
     /* array but access it also                                        */
     if ( num_glyphs == 0 || parser->root.error )

@@ -1,3 +1,10 @@
+2012-07-16  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #36832.
+
+	* src/type1/t1load.c (parse_charstrings): Reject negative number of
+	glyphs.
+
 2012-07-13  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #36829.
