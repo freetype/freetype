@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType modules public interface (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2006, 2008, 2009, 2010 by             */
+/*  Copyright 1996-2003, 2006, 2008-2010, 2012 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -118,7 +118,7 @@ FT_BEGIN_HEADER
   /*    A function used to query a given module for a specific interface.  */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    module :: The module to finalize.                                  */
+  /*    module :: The module to be searched.                               */
   /*                                                                       */
   /*    name ::   The name of the interface in the module.                 */
   /*                                                                       */
