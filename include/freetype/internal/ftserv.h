@@ -167,7 +167,12 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
-  /*    FT_DEFINE_SERVICEDESCREC1 .. FT_DEFINE_SERVICEDESCREC6             */
+  /*    FT_DEFINE_SERVICEDESCREC1                                          */
+  /*    FT_DEFINE_SERVICEDESCREC2                                          */
+  /*    FT_DEFINE_SERVICEDESCREC3                                          */
+  /*    FT_DEFINE_SERVICEDESCREC4                                          */
+  /*    FT_DEFINE_SERVICEDESCREC5                                          */
+  /*    FT_DEFINE_SERVICEDESCREC6                                          */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Used to initialize an array of FT_ServiceDescRec structures.       */
