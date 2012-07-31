@@ -1,3 +1,9 @@
+2012-07-31  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #37000.
+
+	* src/type1/t1load.c (parse_encoding): Fix order of checks.
+
 2012-07-17  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #36833.
