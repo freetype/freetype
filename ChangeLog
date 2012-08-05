@@ -1,3 +1,12 @@
+2012-08-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Variable renamings.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Replace
+	`glyph' with `outline'.
+	s/best_first/best_contour_first/.
+	s/best_last/best_contour_last/.
+
 2012-07-31  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #37000.
