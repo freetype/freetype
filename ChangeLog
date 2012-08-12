@@ -1,3 +1,10 @@
+2012-08-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Fix Savannah bug #37017.
+
+	* src/smooth/ftgrays.c (gray_render_cubic): Use a different set of
+	checks when detecting super curvy splines to be split.
+
 2012-08-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve recognition of flat segments.
@@ -43,6 +50,12 @@
 
 	* src/type1/t1load.c (parse_encoding): Check cursor position after
 	call to T1_Skip_PS_Token.
+
+2012-07-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Revert the last commit 45337b07.
+
+	* src/base/ftstroke.c (FT_Stroker_New): Revert the previous chenge.
 
 2012-07-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 

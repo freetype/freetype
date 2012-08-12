@@ -1091,11 +1091,11 @@ typedef ptrdiff_t  FT_PtrDist;
         if ( s > s_limit )
           goto Split;
 
-        /* If P1 or P2 is outside P0-P3, split the curve. */
-        if ( dy * dy1 + dx * dx1 < 0                                     ||
-             dy * dy2 + dx * dx2 < 0                                     ||
-             dy * (arc[3].y - arc[1].y) + dx * (arc[3].x - arc[1].x) < 0 ||
-             dy * (arc[3].y - arc[2].y) + dx * (arc[3].x - arc[2].x) < 0 )
+        /* Split super curvy segments where the off points are so far
+           from the chord that the angles P0-P1-P3 or P0-P2-P3 become 
+           acute as detected by appropriate dot products. */
+        if ( dx1 * ( dx1 - dx ) + dy1 * ( dy1 - dy ) > 0 ||
+             dx2 * ( dx2 - dx ) + dy2 * ( dy2 - dy ) > 0 )
           goto Split;
 
         /* No reason to split. */
