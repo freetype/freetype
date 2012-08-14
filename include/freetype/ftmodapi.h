@@ -48,6 +48,31 @@ FT_BEGIN_HEADER
   /*    The definitions below are used to manage modules within FreeType.  */
   /*    Modules can be added, upgraded, and removed at runtime.            */
   /*                                                                       */
+  /*    Here is a list of module names (the possible values of the         */
+  /*    `module_name' field in the @FT_Module_Class structure).            */
+  /*                                                                       */
+  /*    {                                                                  */
+  /*      autofitter                                                       */
+  /*      bdf                                                              */
+  /*      cff                                                              */
+  /*      gxvalid                                                          */
+  /*      otvalid                                                          */
+  /*      pcf                                                              */
+  /*      pfr                                                              */
+  /*      psaux                                                            */
+  /*      pshinter                                                         */
+  /*      psnames                                                          */
+  /*      raster1, raster5                                                 */
+  /*      sfnt                                                             */
+  /*      smooth, smooth-lcd, smooth-lcdv                                  */
+  /*      truetype                                                         */
+  /*      type1                                                            */
+  /*      type42                                                           */
+  /*      t1cid                                                            */
+  /*      winfonts                                                         */
+  /*    }                                                                  */
+  /*                                                                       */
+  /*                                                                       */
   /*************************************************************************/
 
 
