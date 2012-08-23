@@ -86,20 +86,20 @@ FT_BEGIN_HEADER
   /*    FT_AutoHinter_GlobalGetFunc                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the global hints computed for a given face object the    */
+  /*    Retrieve the global hints computed for a given face object.  The   */
   /*    resulting data is dissociated from the face and will survive a     */
   /*    call to FT_Done_Face().  It must be discarded through the API      */
   /*    FT_AutoHinter_GlobalDoneFunc().                                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    hinter        :: A handle to the source auto-hinter.               */
+  /*    hinter       :: A handle to the source auto-hinter.                */
   /*                                                                       */
-  /*    face          :: A handle to the source face object.               */
+  /*    face         :: A handle to the source face object.                */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    global_hints  :: A typeless pointer to the global hints.           */
+  /*    global_hints :: A typeless pointer to the global hints.            */
   /*                                                                       */
-  /*    global_len    :: The size in bytes of the global hints.            */
+  /*    global_len   :: The size in bytes of the global hints.             */
   /*                                                                       */
   typedef void
   (*FT_AutoHinter_GlobalGetFunc)( FT_AutoHinter  hinter,
@@ -114,7 +114,7 @@ FT_BEGIN_HEADER
   /*    FT_AutoHinter_GlobalDoneFunc                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Discards the global hints retrieved through                        */
+  /*    Discard the global hints retrieved through                         */
   /*    FT_AutoHinter_GlobalGetFunc().  This is the only way these hints   */
   /*    are freed from memory.                                             */
   /*                                                                       */
@@ -168,8 +168,8 @@ FT_BEGIN_HEADER
   /*    This function is capable of loading composite glyphs by hinting    */
   /*    each sub-glyph independently (which improves quality).             */
   /*                                                                       */
-  /*    It will call the font driver with FT_Load_Glyph(), with            */
-  /*    FT_LOAD_NO_SCALE set.                                              */
+  /*    It will call the font driver with @FT_Load_Glyph, with             */
+  /*    @FT_LOAD_NO_SCALE set.                                             */
   /*                                                                       */
   typedef FT_Error
   (*FT_AutoHinter_GlyphLoadFunc)( FT_AutoHinter  hinter,
