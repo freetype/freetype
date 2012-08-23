@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter module implementation (body).                            */
 /*                                                                         */
-/*  Copyright 2003-2006, 2009, 2011 by                                     */
+/*  Copyright 2003-2006, 2009, 2011-2012 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -68,10 +68,10 @@
 
   FT_DEFINE_AUTOHINTER_SERVICE(
     af_autofitter_service,
-    NULL,
-    NULL,
-    NULL,
-    (FT_AutoHinter_GlyphLoadFunc)af_autofitter_load_glyph )
+    NULL,                                                    /* reset_face */
+    NULL,                                              /* get_global_hints */
+    NULL,                                             /* done_global_hints */
+    (FT_AutoHinter_GlyphLoadFunc)af_autofitter_load_glyph )  /* load_glyph */
 
   FT_DEFINE_MODULE(
     autofit_module_class,
@@ -83,7 +83,7 @@
     0x10000L,   /* version 1.0 of the autofitter  */
     0x20000L,   /* requires FreeType 2.0 or above */
 
-    (const void*)&AF_AF_AUTOFITTER_SERVICE_GET,
+    (const void*)&AF_AUTOFITTER_SERVICE_GET,
 
     (FT_Module_Constructor)af_autofitter_init,
     (FT_Module_Destructor) af_autofitter_done,
