@@ -2055,10 +2055,11 @@
     }
     else
     {
+      error = FT_Err_Missing_Module;
+
       /* check each font driver for an appropriate format */
       cur   = library->modules;
       limit = cur + library->num_modules;
-
 
       for ( ; cur < limit; cur++ )
       {
