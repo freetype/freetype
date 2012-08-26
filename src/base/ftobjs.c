@@ -2109,30 +2109,30 @@
         }
       }
 
-  Fail3:
-    /* If we are on the mac, and we get an FT_Err_Invalid_Stream_Operation */
-    /* it may be because we have an empty data fork, so we need to check   */
-    /* the resource fork.                                                  */
-    if ( FT_ERROR_BASE( error ) != FT_Err_Cannot_Open_Stream       &&
-         FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format      &&
-         FT_ERROR_BASE( error ) != FT_Err_Invalid_Stream_Operation )
-      goto Fail2;
+    Fail3:
+      /* If we are on the mac, and we get an                          */
+      /* FT_Err_Invalid_Stream_Operation it may be because we have an */
+      /* empty data fork, so we need to check the resource fork.      */
+      if ( FT_ERROR_BASE( error ) != FT_Err_Cannot_Open_Stream       &&
+           FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format      &&
+           FT_ERROR_BASE( error ) != FT_Err_Invalid_Stream_Operation )
+        goto Fail2;
 
 #if !defined( FT_MACINTOSH ) && defined( FT_CONFIG_OPTION_MAC_FONTS )
-    error = load_mac_face( library, stream, face_index, aface, args );
-    if ( !error )
-    {
-      /* We don't want to go to Success here.  We've already done that. */
-      /* On the other hand, if we succeeded we still need to close this */
-      /* stream (we opened a different stream which extracted the       */
-      /* interesting information out of this stream here.  That stream  */
-      /* will still be open and the face will point to it).             */
-      FT_Stream_Free( stream, external_stream );
-      return error;
-    }
+      error = load_mac_face( library, stream, face_index, aface, args );
+      if ( !error )
+      {
+        /* We don't want to go to Success here.  We've already done that. */
+        /* On the other hand, if we succeeded we still need to close this */
+        /* stream (we opened a different stream which extracted the       */
+        /* interesting information out of this stream here.  That stream  */
+        /* will still be open and the face will point to it).             */
+        FT_Stream_Free( stream, external_stream );
+        return error;
+      }
 
-    if ( FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format )
-      goto Fail2;
+      if ( FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format )
+        goto Fail2;
 #endif  /* !FT_MACINTOSH && FT_CONFIG_OPTION_MAC_FONTS */
 
       /* no driver is able to handle this format */
