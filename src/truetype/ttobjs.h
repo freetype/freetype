@@ -428,6 +428,10 @@ FT_BEGIN_HEADER
   tt_slot_init( FT_GlyphSlot  slot );
 
 
+  /* auxiliary */
+#define IS_HINTED( flags )  ( ( flags & FT_LOAD_NO_HINTING ) == 0 )
+
+
 FT_END_HEADER
 
 #endif /* __TTOBJS_H__ */

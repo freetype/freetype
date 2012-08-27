@@ -1,5 +1,12 @@
 2012-08-27  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix compilation warning.
+
+	* src/truetype/ttgload.c (IS_HINTED): Move macro to...
+	* src/truetype/ttobjs.h: This header file.
+
+2012-08-27  Werner Lemberg  <wl@gnu.org>
+
 	[autofit, cff, pshinter, psnames] More renamings for orthogonality.
 
 	* src/autofit/afmodule.c, src/autofit/afpic.h:

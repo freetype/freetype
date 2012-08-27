@@ -262,10 +262,6 @@
   }
 
 
-#undef  IS_HINTED
-#define IS_HINTED( flags )  ( ( flags & FT_LOAD_NO_HINTING ) == 0 )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The following functions are used by default with TrueType fonts.      */
