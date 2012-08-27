@@ -68,7 +68,7 @@
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Error           error         = TT_Err_Ok;
-    TTModulePIC*       container;
+    TTModulePIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
 
 

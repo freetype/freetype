@@ -61,7 +61,7 @@
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_UInt            ss;
     FT_Error           error         = AF_Err_Ok;
-    AFModulePIC*       container;
+    AFModulePIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
 
 

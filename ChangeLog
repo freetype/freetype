@@ -1,5 +1,28 @@
 2012-08-27  Werner Lemberg  <wl@gnu.org>
 
+	[FT_CONFIG_OPTION_PIC] Fix g++ 4.6.2 compiler warnings.
+
+	* include/freetype/internal/ftdriver.h (FT_DEFINE_DRIVER),
+	include/freetype/internal/ftobjs.h (FT_DEFINE_RENDERER,
+	FT_DEFINE_MODULE), include/freetype/internal/ftserv.h
+	(FT_DEFINE_SERVICEDESCREC1, FT_DEFINE_SERVICEDESCREC2,
+	FT_DEFINE_SERVICEDESCREC3, FT_DEFINE_SERVICEDESCREC4,
+	FT_DEFINE_SERVICEDESCREC5, FT_DEFINE_SERVICEDESCREC6),
+	src/autofit/afpic.c (autofit_module_class_pic_init),
+	src/base/basepic.c (ft_base_pic_init), src/base/ftinit.c
+	(ft_create_default_module_classes), src/cff/cffparse.c
+	(FT_Create_Class_cff_field_handlers), src/cff/cffpic.c
+	(cff_driver_class_pic_init), src/pshinter/pshpic.c
+	(pshinter_module_class_pic_init), src/psnames/pspic.c
+	(psnames_module_class_pic_init), src/raster/rastpic.c
+	(ft_raster1_renderer_class_pic_init), src/sfnt/sfntpic.c
+	(sfnt_module_class_pic_init), src/sfnt/ttcmap.c
+	(FT_Create_Class_tt_cmap_classes), src/smooth/ftspic.c
+	(ft_smooth_renderer_class_pic_init), src/truetype/ttpic.c
+	(tt_driver_class_pic_init): Initialize allocation variable.
+
+2012-08-27  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix compilation warning.
 
 	* src/truetype/ttgload.c (IS_HINTED): Move macro to...

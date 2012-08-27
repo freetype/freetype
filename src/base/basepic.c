@@ -70,7 +70,7 @@
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Error           error         = FT_Err_Ok;
-    BasePIC*           container;
+    BasePIC*           container     = NULL;
     FT_Memory          memory        = library->memory;
 
 

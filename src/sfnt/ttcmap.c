@@ -3388,7 +3388,7 @@
   FT_Create_Class_tt_cmap_classes( FT_Library       library,
                                    TT_CMap_Class**  output_class )
   {
-    TT_CMap_Class*     clazz;
+    TT_CMap_Class*     clazz  = NULL;
     TT_CMap_ClassRec*  recs;
     FT_Error           error;
     FT_Memory          memory = library->memory;

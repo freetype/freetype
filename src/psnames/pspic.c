@@ -65,7 +65,7 @@
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Error           error         = PSnames_Err_Ok;
-    PSModulePIC*       container;
+    PSModulePIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
 
 

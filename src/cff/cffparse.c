@@ -735,7 +735,7 @@
   FT_Create_Class_cff_field_handlers( FT_Library           library,
                                       CFF_Field_Handler**  output_class )
   {
-    CFF_Field_Handler*  clazz;
+    CFF_Field_Handler*  clazz  = NULL;
     FT_Error            error;
     FT_Memory           memory = library->memory;
 

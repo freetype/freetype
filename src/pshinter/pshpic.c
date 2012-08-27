@@ -50,7 +50,7 @@
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Error           error         = PSH_Err_Ok;
-    PSHinterPIC*       container;
+    PSHinterPIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
 
 

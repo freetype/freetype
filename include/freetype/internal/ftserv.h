@@ -288,7 +288,7 @@ FT_BEGIN_HEADER
   FT_Create_Class_ ## class_( FT_Library           library,                 \
                               FT_ServiceDescRec**  output_class )           \
   {                                                                         \
-    FT_ServiceDescRec*  clazz;                                              \
+    FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
     FT_Memory           memory = library->memory;                           \
                                                                             \
@@ -324,7 +324,7 @@ FT_BEGIN_HEADER
   FT_Create_Class_ ## class_( FT_Library           library,                 \
                               FT_ServiceDescRec**  output_class )           \
   {                                                                         \
-    FT_ServiceDescRec*  clazz;                                              \
+    FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
     FT_Memory           memory = library->memory;                           \
                                                                             \
@@ -363,7 +363,7 @@ FT_BEGIN_HEADER
   FT_Create_Class_ ## class_( FT_Library           library,                 \
                               FT_ServiceDescRec**  output_class )           \
   {                                                                         \
-    FT_ServiceDescRec*  clazz;                                              \
+    FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
     FT_Memory           memory = library->memory;                           \
                                                                             \
@@ -405,7 +405,7 @@ FT_BEGIN_HEADER
   FT_Create_Class_ ## class_( FT_Library           library,                 \
                               FT_ServiceDescRec**  output_class )           \
   {                                                                         \
-    FT_ServiceDescRec*  clazz;                                              \
+    FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
     FT_Memory           memory = library->memory;                           \
                                                                             \
@@ -450,7 +450,7 @@ FT_BEGIN_HEADER
   FT_Create_Class_ ## class_( FT_Library           library,                 \
                               FT_ServiceDescRec**  output_class )           \
   {                                                                         \
-    FT_ServiceDescRec*  clazz;                                              \
+    FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
     FT_Memory           memory = library->memory;                           \
                                                                             \
@@ -498,7 +498,7 @@ FT_BEGIN_HEADER
   FT_Create_Class_ ## class_( FT_Library           library,                 \
                               FT_ServiceDescRec**  output_class)            \
   {                                                                         \
-    FT_ServiceDescRec*  clazz;                                              \
+    FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
     FT_Memory           memory = library->memory;                           \
                                                                             \

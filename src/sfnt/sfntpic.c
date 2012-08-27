@@ -28,7 +28,7 @@
   /* forward declaration of PIC init functions from sfdriver.c */
   FT_Error
   FT_Create_Class_sfnt_services( FT_Library           library,
-                                 FT_ServiceDescRec**  ouput_class );
+                                 FT_ServiceDescRec**  output_class );
 
   void
   FT_Destroy_Class_sfnt_services( FT_Library          library,
@@ -103,7 +103,7 @@
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Error           error         = SFNT_Err_Ok;
-    sfntModulePIC*     container;
+    sfntModulePIC*     container     = NULL;
     FT_Memory          memory        = library->memory;
 
 

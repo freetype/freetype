@@ -415,7 +415,7 @@ FT_BEGIN_HEADER
   FT_Create_Class_ ## class_( FT_Library         library,        \
                               FT_Module_Class**  output_class )  \
   {                                                              \
-    FT_Driver_Class  clazz;                                      \
+    FT_Driver_Class  clazz  = NULL;                              \
     FT_Error         error;                                      \
     FT_Memory        memory = library->memory;                   \
                                                                  \
@@ -438,7 +438,7 @@ FT_BEGIN_HEADER
                            interface_,                           \
                            init_,                                \
                            done_,                                \
-                           get_interface_)                       \
+                           get_interface_ )                      \
                                                                  \
     clazz->face_object_size = face_object_size_;                 \
     clazz->size_object_size = size_object_size_;                 \
