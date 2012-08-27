@@ -555,14 +555,14 @@
 
   FT_DEFINE_SERVICEDESCREC1(
     pscmaps_services,
-    FT_SERVICE_ID_POSTSCRIPT_CMAPS, &FT_PSCMAPS_INTERFACE_GET )
+    FT_SERVICE_ID_POSTSCRIPT_CMAPS, &PSCMAPS_INTERFACE_GET )
 
 
   static FT_Pointer
   psnames_get_service( FT_Module    module,
                        const char*  service_id )
   {
-    /* FT_PSCMAPS_SERVICES_GET derefers `library' in PIC mode */
+    /* PSCMAPS_SERVICES_GET derefers `library' in PIC mode */
 #ifdef FT_CONFIG_OPTION_PIC
     FT_Library  library;
 
@@ -576,7 +576,7 @@
     FT_UNUSED( module );
 #endif
 
-    return ft_service_list_lookup( FT_PSCMAPS_SERVICES_GET, service_id );
+    return ft_service_list_lookup( PSCMAPS_SERVICES_GET, service_id );
   }
 
 #endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
@@ -599,7 +599,7 @@
     0x20000L,   /* driver requires FreeType 2 or above */
 
     PUT_PS_NAMES_SERVICE(
-      (void*)&FT_PSCMAPS_INTERFACE_GET ),   /* module specific interface */
+      (void*)&PSCMAPS_INTERFACE_GET ),   /* module specific interface */
     (FT_Module_Constructor)NULL,
     (FT_Module_Destructor) NULL,
     (FT_Module_Requester)  PUT_PS_NAMES_SERVICE( psnames_get_service ) )

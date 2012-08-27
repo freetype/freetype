@@ -26,8 +26,8 @@ FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
 
-#define FT_PSCMAPS_SERVICES_GET   pscmaps_services
-#define FT_PSCMAPS_INTERFACE_GET  pscmaps_interface
+#define PSCMAPS_SERVICES_GET   pscmaps_services
+#define PSCMAPS_INTERFACE_GET  pscmaps_interface
 
 #else /* FT_CONFIG_OPTION_PIC */
 
@@ -43,8 +43,8 @@ FT_BEGIN_HEADER
 
 #define GET_PIC( lib )                                     \
           ( (PSModulePIC*)((lib)->pic_container.psnames) )
-#define FT_PSCMAPS_SERVICES_GET   ( GET_PIC( library )->pscmaps_services )
-#define FT_PSCMAPS_INTERFACE_GET  ( GET_PIC( library )->pscmaps_interface )
+#define PSCMAPS_SERVICES_GET   ( GET_PIC( library )->pscmaps_services )
+#define PSCMAPS_INTERFACE_GET  ( GET_PIC( library )->pscmaps_interface )
 
 
   /* see pspic.c for the implementation */

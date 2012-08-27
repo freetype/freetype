@@ -27,7 +27,7 @@ FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
 
-#define FT_PSHINTER_INTERFACE_GET  pshinter_interface
+#define PSHINTER_INTERFACE_GET  pshinter_interface
 
 #else /* FT_CONFIG_OPTION_PIC */
 
@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
 
 #define GET_PIC( lib )  ( (PSHinterPIC*)((lib)->pic_container.autofit) )
 
-#define FT_PSHINTER_INTERFACE_GET  ( GET_PIC( library )->pshinter_interface )
+#define PSHINTER_INTERFACE_GET  ( GET_PIC( library )->pshinter_interface )
 
   /* see pshpic.c for the implementation */
   void

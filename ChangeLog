@@ -1,5 +1,21 @@
 2012-08-27  Werner Lemberg  <wl@gnu.org>
 
+	[autofit, cff, pshinter, psnames] More renamings for orthogonality.
+
+	* src/autofit/afmodule.c, src/autofit/afpic.h:
+	s/AF_AUTOFITTER_/AF_/.
+
+	* src/cff/cffdrivr.c, src/cff/cffobjs.c, src/cff/cffparse.c,
+	src/cff/cffpic.h: s/FT_CFF_/CFF_/.
+
+	* src/pshinter/pshmod.c, src/pshinter/pshpic.h:
+	s/FT_PSHINTER_/PSHINTER_/.
+
+	* src/psnames/psmodule.c, src/psnames/pspic.h:
+	s/FT_PSCMAPS/PSCMAPS_/.
+
+2012-08-27  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt, truetype] More renamings for orthogonality.
 
 	* src/sfnt/sfdriver.c, src/sfnt/sfntpic.h, src/sfnt/ttcmap.c,

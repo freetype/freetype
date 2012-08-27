@@ -27,8 +27,8 @@ FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
 
-#define AF_SCRIPT_CLASSES_GET        af_script_classes
-#define AF_AUTOFITTER_INTERFACE_GET  af_autofitter_interface
+#define AF_SCRIPT_CLASSES_GET  af_script_classes
+#define AF_INTERFACE_GET       af_autofitter_interface
 
 #else /* FT_CONFIG_OPTION_PIC */
 
@@ -54,12 +54,12 @@ FT_BEGIN_HEADER
   } AFModulePIC;
 
 
-#define GET_PIC( lib )                                                     \
+#define GET_PIC( lib )  \
           ( (AFModulePIC*)((lib)->pic_container.autofit) )
 
-#define AF_SCRIPT_CLASSES_GET                                              \
-          ( GET_PIC( FT_FACE_LIBRARY(globals->face) )->af_script_classes )
-#define AF_AUTOFITTER_INTERFACE_GET                                        \
+#define AF_SCRIPT_CLASSES_GET  \
+          ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_script_classes )
+#define AF_INTERFACE_GET  \
           ( GET_PIC( library )->af_autofitter_interface )
 
 

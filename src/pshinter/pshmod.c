@@ -109,7 +109,7 @@
     0x10000L,
     0x20000L,
 
-    &FT_PSHINTER_INTERFACE_GET,           /* module-specific interface */
+    &PSHINTER_INTERFACE_GET,              /* module-specific interface */
 
     (FT_Module_Constructor)ps_hinter_init,
     (FT_Module_Destructor) ps_hinter_done,

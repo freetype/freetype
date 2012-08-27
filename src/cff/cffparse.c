@@ -949,7 +949,7 @@
         }
         code = code | parser->object_code;
 
-        for ( field = FT_CFF_FIELD_HANDLERS_GET; field->kind; field++ )
+        for ( field = CFF_FIELD_HANDLERS_GET; field->kind; field++ )
         {
           if ( field->code == (FT_Int)code )
           {
