@@ -1,5 +1,13 @@
 2012-08-27  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt, truetype] More renamings for orthogonality.
+
+	* src/sfnt/sfdriver.c, src/sfnt/sfntpic.h, src/sfnt/ttcmap.c,
+	src/truetype/ttdriver.c, src/truetype/ttpic.h: s/FT_SFNT_/SFNT_/,
+	s/FT_TT_/TT_/, s/GET_CMAP_INFO_GET/CMAP_INFO_GET/.
+
+2012-08-27  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Some macro and variable renamings for orthogonality.
 
 	* include/freetype/internal/autohint.h, src/base/ftobjs.c,

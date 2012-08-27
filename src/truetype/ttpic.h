@@ -24,9 +24,9 @@ FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
 
-#define FT_TT_SERVICES_GET                  tt_services
-#define FT_TT_SERVICE_GX_MULTI_MASTERS_GET  tt_service_gx_multi_masters
-#define FT_TT_SERVICE_TRUETYPE_GLYF_GET     tt_service_truetype_glyf
+#define TT_SERVICES_GET                  tt_services
+#define TT_SERVICE_GX_MULTI_MASTERS_GET  tt_service_gx_multi_masters
+#define TT_SERVICE_TRUETYPE_GLYF_GET     tt_service_truetype_glyf
 
 #else /* FT_CONFIG_OPTION_PIC */
 
@@ -48,11 +48,11 @@ FT_BEGIN_HEADER
 
 #define GET_PIC( lib )                                      \
           ( (TTModulePIC*)((lib)->pic_container.truetype) )
-#define FT_TT_SERVICES_GET                    \
+#define TT_SERVICES_GET                       \
           ( GET_PIC( library )->tt_services )
-#define FT_TT_SERVICE_GX_MULTI_MASTERS_GET                    \
+#define TT_SERVICE_GX_MULTI_MASTERS_GET                       \
           ( GET_PIC( library )->tt_service_gx_multi_masters )
-#define FT_TT_SERVICE_TRUETYPE_GLYF_GET                    \
+#define TT_SERVICE_TRUETYPE_GLYF_GET                       \
           ( GET_PIC( library )->tt_service_truetype_glyf )
 
 

@@ -387,15 +387,15 @@
   FT_DEFINE_SERVICEDESCREC4(
     tt_services,
     FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TRUETYPE,
-    FT_SERVICE_ID_MULTI_MASTERS,   &FT_TT_SERVICE_GX_MULTI_MASTERS_GET,
+    FT_SERVICE_ID_MULTI_MASTERS,   &TT_SERVICE_GX_MULTI_MASTERS_GET,
     FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine,
-    FT_SERVICE_ID_TT_GLYF,         &FT_TT_SERVICE_TRUETYPE_GLYF_GET )
+    FT_SERVICE_ID_TT_GLYF,         &TT_SERVICE_TRUETYPE_GLYF_GET )
 #else
   FT_DEFINE_SERVICEDESCREC3(
     tt_services,
     FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TRUETYPE,
     FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine,
-    FT_SERVICE_ID_TT_GLYF,         &FT_TT_SERVICE_TRUETYPE_GLYF_GET )
+    FT_SERVICE_ID_TT_GLYF,         &TT_SERVICE_TRUETYPE_GLYF_GET )
 #endif
 
 
@@ -409,7 +409,7 @@
     SFNT_Service         sfnt;
 
 
-    /* FT_TT_SERVICES_GET derefers `library' in PIC mode */
+    /* TT_SERVICES_GET derefers `library' in PIC mode */
 #ifdef FT_CONFIG_OPTION_PIC
     if ( !driver )
       return NULL;
@@ -418,7 +418,7 @@
       return NULL;
 #endif
 
-    result = ft_service_list_lookup( FT_TT_SERVICES_GET, tt_interface );
+    result = ft_service_list_lookup( TT_SERVICES_GET, tt_interface );
     if ( result != NULL )
       return result;
 
