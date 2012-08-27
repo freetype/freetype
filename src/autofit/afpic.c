@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType position independent code services for autofit module.  */
 /*                                                                         */
-/*  Copyright 2009, 2010, 2011 by                                          */
+/*  Copyright 2009-2012 by                                                 */
 /*  Oran Agra and Mickey Gabel.                                            */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -22,12 +22,13 @@
 #include "afpic.h"
 #include "aferrors.h"
 
+
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from afmodule.c */
-  void FT_Init_Class_af_autofitter_service(
-    FT_Library                 library,
-    FT_AutoHinter_ServiceRec*  clazz );
+  void FT_Init_Class_af_autofitter_interface(
+    FT_Library                   library,
+    FT_AutoHinter_InterfaceRec*  clazz );
 
   /* forward declaration of PIC init functions from script classes */
 #include "aflatin.h"
@@ -37,6 +38,7 @@
 #include "afcjk.h"
 #include "afdummy.h"
 #include "afindic.h"
+
 
   void
   autofit_module_class_pic_free( FT_Library  library )
@@ -93,8 +95,8 @@
     FT_Init_Class_af_indic_script_class(
       &container->af_script_classes_rec[ss++] );
 
-    FT_Init_Class_af_autofitter_service(
-      library, &container->af_autofitter_service );
+    FT_Init_Class_af_autofitter_interface(
+      library, &container->af_autofitter_interface );
 
 /* Exit: */
 
@@ -102,7 +104,6 @@
       autofit_module_class_pic_free( library );
     return error;
   }
-
 
 #endif /* FT_CONFIG_OPTION_PIC */
 

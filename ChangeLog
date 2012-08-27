@@ -1,3 +1,11 @@
+2012-08-27  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Some macro and variable renamings for orthogonality.
+
+	* include/freetype/internal/autohint.h, src/base/ftobjs.c,
+	src/autofit/afmodule.c, src/autofit/afpic.c, src/autofit/afpic.h:
+	s/SERVICE/INTERFACE/, s/service/interface/, s/Service/Interface/.
+
 2012-08-26  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #37178.
