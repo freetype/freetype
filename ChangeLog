@@ -1,3 +1,11 @@
+2012-08-29  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Allow `-' in tags and identifiers.
+
+	* src/tools/docmaker/content.py (re_identifier),
+	src/tools/docmaker/sources.py (re_markup_tag1, re_markup_tag2,
+	re_crossref): Add `-' in patterns.
+
 2012-08-27  Werner Lemberg  <wl@gnu.org>
 
 	[FT_CONFIG_OPTION_PIC] Fix g++ 4.6.2 compiler warnings.
