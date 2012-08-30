@@ -28,6 +28,68 @@
 #endif
 
 #include FT_INTERNAL_OBJECTS_H
+#include FT_SERVICE_PROPERTIES_H
+
+
+  FT_Error
+  af_property_set( FT_Library   library,
+                   const char*  property_name,
+                   const void*  value )
+  {
+    FT_UNUSED( library );
+    FT_UNUSED( value );
+
+    FT_TRACE0(( "af_property_get: missing property `%s'\n",
+                property_name ));
+    return FT_Err_Missing_Property;
+  }
+
+
+  FT_Error
+  af_property_get( FT_Library   library,
+                   const char*  property_name,
+                   void*        value )
+  {
+    FT_UNUSED( library );
+    FT_UNUSED( value );
+
+    FT_TRACE0(( "af_property_get: missing property `%s'\n",
+                property_name ));
+    return FT_Err_Missing_Property;
+  }
+
+
+  FT_DEFINE_SERVICE_PROPERTIESREC(
+    af_service_properties,
+    (FT_Properties_SetFunc)af_property_set,
+    (FT_Properties_GetFunc)af_property_get )
+
+
+  FT_DEFINE_SERVICEDESCREC1(
+    af_services,
+    FT_SERVICE_ID_PROPERTIES, &AF_SERVICE_PROPERTIES_GET )
+
+
+  FT_CALLBACK_DEF( FT_Module_Interface )
+  af_get_interface( FT_Module    module,
+                    const char*  module_interface )
+  {
+    /* AF_SERVICES_GET derefers `library' in PIC mode */
+#ifdef FT_CONFIG_OPTION_PIC
+    FT_Library  library;
+
+
+    if ( !module )
+      return NULL;
+    library = module->library;
+    if ( !library )
+      return NULL;
+#else
+    FT_UNUSED( module );
+#endif
+
+    return ft_service_list_lookup( AF_SERVICES_GET, module_interface );
+  }
 
 
   typedef struct  FT_AutofitterRec_
@@ -88,7 +150,7 @@
 
     (FT_Module_Constructor)af_autofitter_init,
     (FT_Module_Destructor) af_autofitter_done,
-    (FT_Module_Requester)  NULL )
+    (FT_Module_Requester)  af_get_interface )
 
 
 /* END */

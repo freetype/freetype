@@ -27,10 +27,16 @@ FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
 
-#define AF_SCRIPT_CLASSES_GET  af_script_classes
-#define AF_INTERFACE_GET       af_autofitter_interface
+#define AF_SERVICES_GET            af_services
+#define AF_SERVICE_PROPERTIES_GET  af_service_properties
+
+#define AF_SCRIPT_CLASSES_GET      af_script_classes
+#define AF_INTERFACE_GET           af_autofitter_interface
 
 #else /* FT_CONFIG_OPTION_PIC */
+
+  /* some include files required for members of AFModulePIC */
+#include FT_SERVICE_PROPERTIES_H
 
 #include "aftypes.h"
 
@@ -47,6 +53,9 @@ FT_BEGIN_HEADER
 
   typedef struct  AFModulePIC_
   {
+    FT_ServiceDescRec*          af_services;
+    FT_Service_PropertiesRec    af_service_properties;
+
     AF_ScriptClass              af_script_classes[AF_SCRIPT_CLASSES_COUNT];
     AF_ScriptClassRec           af_script_classes_rec[AF_SCRIPT_CLASSES_REC_COUNT];
     FT_AutoHinter_InterfaceRec  af_autofitter_interface;
@@ -56,6 +65,11 @@ FT_BEGIN_HEADER
 
 #define GET_PIC( lib )  \
           ( (AFModulePIC*)((lib)->pic_container.autofit) )
+
+#define AF_SERVICES_GET  \
+          ( GET_PIC( library )->af_services )
+#define AF_SERVICE_PROPERTIES_GET  \
+          ( GET_PIC( library)->af_service_properties )
 
 #define AF_SCRIPT_CLASSES_GET  \
           ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_script_classes )

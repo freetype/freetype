@@ -26,9 +26,21 @@
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from afmodule.c */
+  FT_Error
+  FT_Create_Class_af_services( FT_Library           library,
+                               FT_ServiceDescRec**  output_class );
+
+  void
+  FT_Destroy_Class_af_services( FT_Library          library,
+                                FT_ServiceDescRec*  clazz );
+
+  void
+  FT_Init_Class_af_service_properties( FT_Service_PropertiesRec*  clazz );
+
   void FT_Init_Class_af_autofitter_interface(
     FT_Library                   library,
     FT_AutoHinter_InterfaceRec*  clazz );
+
 
   /* forward declaration of PIC init functions from script classes */
 #include "aflatin.h"
@@ -49,7 +61,15 @@
 
     if ( pic_container->autofit )
     {
-      FT_FREE( pic_container->autofit );
+      AFModulePIC*  container = (AFModulePIC*)pic_container->autofit;
+
+
+      if ( container->af_services )
+        FT_Destroy_Class_af_services( library,
+                                      container->af_services );
+      container->af_services = NULL;
+
+      FT_FREE( container );
       pic_container->autofit = NULL;
     }
   }
@@ -73,6 +93,13 @@
 
     /* initialize pointer table -                       */
     /* this is how the module usually expects this data */
+    error = FT_Create_Class_af_services( library,
+                                         &container->af_services );
+    if ( error )
+      goto Exit;
+
+    FT_Init_Class_af_service_properties( &container->af_service_properties );
+
     for ( ss = 0 ; ss < AF_SCRIPT_CLASSES_REC_COUNT ; ss++ )
     {
       container->af_script_classes[ss] =
@@ -98,8 +125,7 @@
     FT_Init_Class_af_autofitter_interface(
       library, &container->af_autofitter_interface );
 
-/* Exit: */
-
+  Exit:
     if ( error )
       autofit_module_class_pic_free( library );
     return error;

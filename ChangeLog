@@ -1,3 +1,22 @@
+2012-08-31  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Implement properties service framework.
+
+	No properties are added yet.
+
+	* src/autofit/afmodule.c: Include FT_SERVICE_PROPERTIES_H.
+	(af_property_set, af_property_get): New dummy functions.
+	(af_service_properties, af_services, af_get_interface): Provide
+	service setup.
+	(autofit_moduleclass): Add service interface.
+
+	* src/autofit/afpic.c: Add necessary forward declarations.
+	(autofit_module_class_pic_init): Add code for service addition.
+	(autofit_module_pic_free): Add code for service removal.
+	* src/autofit/afpic.h (AF_SERVICES_GET, AF_SERVICE_PROPERTIES_GET):
+	New macros which provide necessary syntactical sugar for PIC
+	support.
+
 2012-08-30  Werner Lemberg  <wl@gnu.org>
 
 	Implement properties to control FreeType modules.
