@@ -676,6 +676,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_POSTSCRIPT_CMAPS_H   <freetype/internal/services/svpscmap.h>
 #define FT_SERVICE_POSTSCRIPT_INFO_H    <freetype/internal/services/svpsinfo.h>
 #define FT_SERVICE_POSTSCRIPT_NAME_H    <freetype/internal/services/svpostnm.h>
+#define FT_SERVICE_PROPERTIES_H         <freetype/internal/services/svprop.h>
 #define FT_SERVICE_SFNT_H               <freetype/internal/services/svsfnt.h>
 #define FT_SERVICE_TRUETYPE_ENGINE_H    <freetype/internal/services/svtteng.h>
 #define FT_SERVICE_TT_CMAP_H            <freetype/internal/services/svttcmap.h>

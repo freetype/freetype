@@ -1,3 +1,19 @@
+2012-08-30  Werner Lemberg  <wl@gnu.org>
+
+	Implement properties to control FreeType modules.
+
+	* include/freetype/fterrdef.h (FT_Err_Missing_Property): New error
+	code.
+	* include/freetype/ftmodapi.h (FT_Property_Set, FT_Property_Get):
+	New API.
+
+	* include/freetype/internal/services/svprop.h: New file.
+	* include/freetype/internal/ftserv.h (FT_SERVICE_PROPERTIES_H): New
+	macro.
+
+	* src/base/ftobjs.c: Include FT_SERVICE_PROPERTIES_H.
+	(ft_property_do, FT_Property_Set, FT_Property_Get): New functions.
+
 2012-08-29  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Allow `-' in tags and identifiers.

@@ -42,14 +42,15 @@ FT_BEGIN_HEADER
   /*    Module Management                                                  */
   /*                                                                       */
   /* <Abstract>                                                            */
-  /*    How to add, upgrade, and remove modules from FreeType.             */
+  /*    How to add, upgrade, remove, and control modules from FreeType.    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The definitions below are used to manage modules within FreeType.  */
   /*    Modules can be added, upgraded, and removed at runtime.            */
+  /*    Additionally, some module properties can be controlled also.       */
   /*                                                                       */
-  /*    Here is a list of module names (the possible values of the         */
-  /*    `module_name' field in the @FT_Module_Class structure).            */
+  /*    Here is a list of possible values of the `module_name' field in    */
+  /*    the @FT_Module_Class structure.                                    */
   /*                                                                       */
   /*    {                                                                  */
   /*      autofitter                                                       */
@@ -72,6 +73,7 @@ FT_BEGIN_HEADER
   /*      winfonts                                                         */
   /*    }                                                                  */
   /*                                                                       */
+  /*    Note that the FreeType Cache sub-system is not a FreeType module.  */
   /*                                                                       */
   /*************************************************************************/
 
@@ -274,6 +276,130 @@ FT_BEGIN_HEADER
                     FT_Module   module );
 
 
+  /**********************************************************************
+   *
+   * @function:
+   *    FT_Property_Set
+   *
+   * @description:
+   *    Set a property for a given module.
+   *
+   * @input:
+   *    library ::
+   *       A handle to the library the module is part of.
+   *
+   *    module_name ::
+   *       The module name.
+   *
+   *    property_name ::
+   *       The property name.  Properties are described in the `Synopsis'
+   *       subsection of the module's documentation.
+   *
+   *       Note that only a few modules have properties.
+   *
+   *    value ::
+   *       A generic pointer to a variable or structure which gives the new
+   *       value of the property.  The exact definition of `value' is
+   *       dependent on the property; see the `Synopsis' subsection of the
+   *       module's documentation.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *    If `module_name' isn't a valid module name, or `property_name'
+   *    doesn't specify a valid property, or if `value' doesn't represent a
+   *    valid value for the given property, an error is returned.
+   *
+   *    The following example sets property `bar' (a simple integer) in
+   *    module `foo' to value~1.
+   *
+   *    {
+   *      FT_UInt  bar;
+   *
+   *
+   *      bar = 1;
+   *      FT_Property_Set( library, "foo", "bar", &bar );
+   *    }
+   *
+   *    It is not possible to set properties of the FreeType Cache
+   *    sub-system with FT_Property_Set; use @FTC_Property_Set instead.
+   *
+   *  @since:
+   *    2.4.11
+   *
+   */
+  FT_Error
+  FT_Property_Set( FT_Library        library,
+                   const FT_String*  module_name,
+                   const FT_String*  property_name,
+                   const void*       value );
+
+
+  /**********************************************************************
+   *
+   * @function:
+   *    FT_Property_Get
+   *
+   * @description:
+   *    Get a module's property value.
+   *
+   * @input:
+   *    library ::
+   *       A handle to the library the module is part of.
+   *
+   *    module_name ::
+   *       The module name.
+   *
+   *    property_name ::
+   *       The property name.  Properties are described in the `Synopsis'
+   *       subsection of the module's documentation.
+   *
+   * @inout:
+   *    value ::
+   *       A generic pointer to a variable or structure which gives the
+   *       value of the property.  The exact definition of `value' is
+   *       dependent on the property; see the `Synopsis' subsection of the
+   *       module's documentation.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *    If `module_name' isn't a valid module name, or `property_name'
+   *    doesn't specify a valid property, or if `value' doesn't represent a
+   *    valid value for the given property, an error is returned.
+   *
+   *    The following example gets property `baz' (a range) in module `foo'.
+   *
+   *    {
+   *      typedef  range_
+   *      {
+   *        FT_Int32  min;
+   *        FT_Int32  max;
+   *
+   *      } range;
+   *
+   *      range  baz;
+   *
+   *
+   *      FT_Property_Get( library, "foo", "baz", &baz );
+   *    }
+   *
+   *    It is not possible to retrieve properties of the FreeType Cache
+   *    sub-system with FT_Property_Get; use @FTC_Property_Get instead.
+   *
+   *  @since:
+   *    2.4.11
+   *
+   */
+  FT_Error
+  FT_Property_Get( FT_Library        library,
+                   const FT_String*  module_name,
+                   const FT_String*  property_name,
+                   void*             value );
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -455,13 +581,13 @@ FT_BEGIN_HEADER
    *       scale glyph components with bytecode instructions.  It produces
    *       bad output for most other fonts.
    *
-   *    FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
+   *     FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
    *       The library implements a bytecode interpreter that covers
    *       the full instruction set of the TrueType virtual machine (this
    *       was governed by patents until May 2010, hence the name).
    *
    *  @since:
-   *       2.2
+   *     2.2
    *
    */
   typedef enum  FT_TrueTypeEngineType_
