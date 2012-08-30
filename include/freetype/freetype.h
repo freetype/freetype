@@ -2231,6 +2231,12 @@ FT_BEGIN_HEADER
   /*    particular bitmap strike.  Use @FT_Select_Size instead in that     */
   /*    case.                                                              */
   /*                                                                       */
+  /*    The relation between the requested size and the resulting glyph    */
+  /*    size is dependent entirely on how the size is defined in the       */
+  /*    source face.  The font designer chooses the final size of each     */
+  /*    glyph relative to this size.  For more information refer to        */
+  /*    `http://www.freetype.org/freetype2/docs/glyphs/glyphs-2.html'      */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Request_Size( FT_Face          face,
                    FT_Size_Request  req );
@@ -2299,6 +2305,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    You should not rely on the resulting glyphs matching, or being     */
+  /*    constrained, to this pixel size.  Refer to @FT_Request_Size to     */
+  /*    understand how requested sizes relate to actual sizes.             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Pixel_Sizes( FT_Face  face,
