@@ -1,3 +1,15 @@
+2012-09-01  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Implement `glyph-to-script-map' property.
+
+	* include/freetype/ftautoh.h: New public header file.
+	* include/freetype/config/ftheader.h (FT_AUTOHINTER_H): New macro.
+
+	* src/autofit/afglobal.c (AF_FaceGlobalsRec): Move structure to...
+	* src/autofit/afglobal.h: This header file.
+	* src/autofit/afmodule.c: Include FT_AUTOHINTER_H.
+	(af_property_get): Handle `glyph-to-script-map'.
+
 2012-08-31  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Implement properties service framework.

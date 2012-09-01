@@ -57,22 +57,6 @@
 #define AF_DIGIT                0x80
 
 
-  /*
-   *  Note that glyph_scripts[] is used to map each glyph into
-   *  an index into the `af_script_classes' array.
-   *
-   */
-  typedef struct  AF_FaceGlobalsRec_
-  {
-    FT_Face           face;
-    FT_Long           glyph_count;    /* same as face->num_glyphs */
-    FT_Byte*          glyph_scripts;
-
-    AF_ScriptMetrics  metrics[AF_SCRIPT_MAX];
-
-  } AF_FaceGlobalsRec;
-
-
   /* Compute the script index of each glyph within a given face. */
 
   static FT_Error

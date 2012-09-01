@@ -28,6 +28,7 @@
 #endif
 
 #include FT_INTERNAL_OBJECTS_H
+#include FT_AUTOHINTER_H
 #include FT_SERVICE_PROPERTIES_H
 
 
@@ -50,8 +51,40 @@
                    const char*  property_name,
                    void*        value )
   {
+    FT_Error  error = FT_Err_Ok;
+
     FT_UNUSED( library );
-    FT_UNUSED( value );
+
+
+    if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
+    {
+      FT_Prop_GlyphToScriptMap*  prop = (FT_Prop_GlyphToScriptMap*)value;
+      AF_FaceGlobals             globals;
+
+
+      if ( !prop->face )
+        return FT_Err_Invalid_Argument;
+
+      globals = (AF_FaceGlobals)prop->face->autohint.data;
+      if ( !globals )
+      {
+        /* trigger computation of the global script data */
+        /* in case it hasn't been done yet               */
+        error = af_face_globals_new( prop->face, &globals );
+        if ( !error )
+        {
+          prop->face->autohint.data =
+            (FT_Pointer)globals;
+          prop->face->autohint.finalizer =
+            (FT_Generic_Finalizer)af_face_globals_free;
+        }
+      }
+
+      if ( !error )
+        prop->map = globals->glyph_scripts;
+
+      return error;
+    }
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
                 property_name ));

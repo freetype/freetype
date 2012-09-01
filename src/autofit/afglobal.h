@@ -5,7 +5,7 @@
 /*    Auto-fitter routines to compute global hinting values                */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 2003-2005, 2007, 2009, 2011 by                               */
+/*  Copyright 2003-2005, 2007, 2009, 2011-2012 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -37,10 +37,26 @@ FT_BEGIN_HEADER
 
 
   /*
+   *  Note that glyph_scripts[] is used to map each glyph into
+   *  an index into the `af_script_classes' array.
+   *
+   */
+  typedef struct  AF_FaceGlobalsRec_
+  {
+    FT_Face           face;
+    FT_Long           glyph_count;    /* same as face->num_glyphs */
+    FT_Byte*          glyph_scripts;
+
+    AF_ScriptMetrics  metrics[AF_SCRIPT_MAX];
+
+  } AF_FaceGlobalsRec;
+
+
+  /*
    *  model the global hints data for a given face, decomposed into
    *  script-specific items
    */
-  typedef struct AF_FaceGlobalsRec_*   AF_FaceGlobals;
+  typedef struct AF_FaceGlobalsRec_*  AF_FaceGlobals;
 
 
   FT_LOCAL( FT_Error )
