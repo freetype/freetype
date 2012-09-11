@@ -25,11 +25,21 @@
 
 FT_BEGIN_HEADER
 
-  typedef struct AF_LoaderRec_
+  /*
+   *  The autofitter module's global data structure.  If necessary, `local'
+   *  data like the current face, the current face's auto-hint data, or the
+   *  current glyph's parameters relevant to auto-hinting are `swapped in'.
+   *  Cf. functions like `af_loader_reset' and `af_loader_load_g'.
+   */
+
+  typedef struct  AF_LoaderRec_
   {
-    FT_Face           face;           /* current face */
-    AF_FaceGlobals    globals;        /* current face globals */
-    FT_GlyphLoader    gloader;        /* glyph loader */
+    /* current face data */
+    FT_Face           face;
+    AF_FaceGlobals    globals;
+
+    /* current glyph data */
+    FT_GlyphLoader    gloader;
     AF_GlyphHintsRec  hints;
     AF_ScriptMetrics  metrics;
     FT_Bool           transformed;
