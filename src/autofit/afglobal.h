@@ -36,6 +36,14 @@ FT_BEGIN_HEADER
   /************************************************************************/
 
 
+  /* index of default script in `af_script_classes' */
+#define AF_SCRIPT_DEFAULT  2
+  /* a bit mask indicating an uncovered glyph       */
+#define AF_SCRIPT_NONE     0x7F
+  /* if this flag is set, we have an ASCII digit    */
+#define AF_DIGIT           0x80
+
+
   /*
    *  Note that glyph_scripts[] is used to map each glyph into
    *  an index into the `af_script_classes' array.

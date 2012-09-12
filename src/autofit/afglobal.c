@@ -49,13 +49,6 @@
 
 #endif /* !FT_CONFIG_OPTION_PIC */
 
-  /* index of default script in `af_script_classes' */
-#define AF_SCRIPT_LIST_DEFAULT  2
-  /* a bit mask indicating an uncovered glyph       */
-#define AF_SCRIPT_LIST_NONE     0x7F
-  /* if this flag is set, we have an ASCII digit    */
-#define AF_DIGIT                0x80
-
 
   /* Compute the script index of each glyph within a given face. */
 
@@ -70,9 +63,9 @@
     FT_UInt     i;
 
 
-    /* the value AF_SCRIPT_LIST_NONE means `uncovered glyph' */
+    /* the value AF_SCRIPT_NONE means `uncovered glyph' */
     FT_MEM_SET( globals->glyph_scripts,
-                AF_SCRIPT_LIST_NONE,
+                AF_SCRIPT_NONE,
                 globals->glyph_count );
 
     error = FT_Select_Charmap( face, FT_ENCODING_UNICODE );
@@ -110,7 +103,7 @@
 
         if ( gindex != 0                             &&
              gindex < (FT_ULong)globals->glyph_count &&
-             gscripts[gindex] == AF_SCRIPT_LIST_NONE )
+             gscripts[gindex] == AF_SCRIPT_NONE )
           gscripts[gindex] = (FT_Byte)ss;
 
         for (;;)
@@ -121,7 +114,7 @@
             break;
 
           if ( gindex < (FT_ULong)globals->glyph_count &&
-               gscripts[gindex] == AF_SCRIPT_LIST_NONE )
+               gscripts[gindex] == AF_SCRIPT_NONE )
             gscripts[gindex] = (FT_Byte)ss;
         }
       }
@@ -148,10 +141,10 @@
 
       for ( nn = 0; nn < globals->glyph_count; nn++ )
       {
-        if ( ( gscripts[nn] & ~AF_DIGIT ) == AF_SCRIPT_LIST_NONE )
+        if ( ( gscripts[nn] & ~AF_DIGIT ) == AF_SCRIPT_NONE )
         {
-          gscripts[nn] &= ~AF_SCRIPT_LIST_NONE;
-          gscripts[nn] |= AF_SCRIPT_LIST_DEFAULT;
+          gscripts[nn] &= ~AF_SCRIPT_NONE;
+          gscripts[nn] |= AF_SCRIPT_DEFAULT;
         }
       }
     }
@@ -250,7 +243,7 @@
 
     gidx = script;
     if ( gidx == 0 || gidx + 1 >= script_max )
-      gidx = globals->glyph_scripts[gindex] & AF_SCRIPT_LIST_NONE;
+      gidx = globals->glyph_scripts[gindex] & AF_SCRIPT_NONE;
 
     clazz = AF_SCRIPT_CLASSES_GET[gidx];
     if ( script == 0 )

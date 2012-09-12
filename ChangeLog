@@ -1,3 +1,12 @@
+2012-09-12  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Minor reorganization.
+
+	* src/autofit/afglobal.c (AF_SCRIPT_LIST_DEFAULT,
+	AF_SCRIPT_LIST_NONE, AF_DIGIT): Move to...
+	* src/autofit/afglobal.h (AF_SCRIPT_DEFAULT, AF_SCRIPT_LIST_NONE,
+	AF_DIGIT): This and update code.
+
 2012-09-01  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Implement `glyph-to-script-map' property.
