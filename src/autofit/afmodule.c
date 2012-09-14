@@ -132,34 +132,34 @@
    *  are `swapped in' in function `af_loader_reset'.
    */
 
-  typedef struct  FT_AutofitterRec_
+  typedef struct  AF_ModuleRec_
   {
     FT_ModuleRec  root;
     AF_LoaderRec  loader[1];
 
-  } FT_AutofitterRec, *FT_Autofitter;
+  } AF_ModuleRec, *AF_Module;
 
 
   FT_CALLBACK_DEF( FT_Error )
-  af_autofitter_init( FT_Autofitter  module )
+  af_autofitter_init( AF_Module  module )
   {
     return af_loader_init( module->loader, module->root.library->memory );
   }
 
 
   FT_CALLBACK_DEF( void )
-  af_autofitter_done( FT_Autofitter  module )
+  af_autofitter_done( AF_Module  module )
   {
     af_loader_done( module->loader );
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
-  af_autofitter_load_glyph( FT_Autofitter  module,
-                            FT_GlyphSlot   slot,
-                            FT_Size        size,
-                            FT_UInt        glyph_index,
-                            FT_Int32       load_flags )
+  af_autofitter_load_glyph( AF_Module     module,
+                            FT_GlyphSlot  slot,
+                            FT_Size       size,
+                            FT_UInt       glyph_index,
+                            FT_Int32      load_flags )
   {
     FT_UNUSED( size );
 
@@ -180,7 +180,7 @@
     autofit_module_class,
 
     FT_MODULE_HINTER,
-    sizeof ( FT_AutofitterRec ),
+    sizeof ( AF_ModuleRec ),
 
     "autofitter",
     0x10000L,   /* version 1.0 of the autofitter  */

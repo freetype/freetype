@@ -1,3 +1,7 @@
+2012-09-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afmodule.c: s/FT_Autofitter/AF_Module/.
+
 2012-09-12  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Minor reorganization.
