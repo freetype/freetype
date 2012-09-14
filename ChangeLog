@@ -1,5 +1,23 @@
 2012-09-14  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Pass `AF_Module' instead of `AF_Loader'.
+
+	We want to access the (not yet existing) module's global data later
+	on.
+
+	* src/autofit/afloader.c: Include `afmodule.h'.
+	(af_loader_init, af_loader_reset, af_loader_done,
+	af_loader_load_glyph): Change accordingly.
+	* src/autofit/afmodule.c (AF_ModuleRec): Move to `afmodule.h'.
+	Updated.
+
+	* src/autofit/afmodule.h: Include `afloader.h'.
+	(AF_ModuleRec): Define here.
+	* src/autofit/afloader.h (AF_Module): Define here.
+	Updated.
+
+2012-09-14  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix `make multi'.
 
 	* include/freetype/internal/fttrace.h: Add `afmodule'.

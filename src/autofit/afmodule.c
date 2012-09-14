@@ -136,32 +136,17 @@
   }
 
 
-  /*
-   *  This is the `extended' FT_Module structure which holds the
-   *  autofitter's global data (in `loader').  Right before hinting a glyph,
-   *  the data specific to the glyph's face (blue zones, stem widths, etc.)
-   *  are `swapped in' in function `af_loader_reset'.
-   */
-
-  typedef struct  AF_ModuleRec_
-  {
-    FT_ModuleRec  root;
-    AF_LoaderRec  loader[1];
-
-  } AF_ModuleRec, *AF_Module;
-
-
   FT_CALLBACK_DEF( FT_Error )
   af_autofitter_init( AF_Module  module )
   {
-    return af_loader_init( module->loader, module->root.library->memory );
+    return af_loader_init( module );
   }
 
 
   FT_CALLBACK_DEF( void )
   af_autofitter_done( AF_Module  module )
   {
-    af_loader_done( module->loader );
+    af_loader_done( module );
   }
 
 
@@ -174,7 +159,7 @@
   {
     FT_UNUSED( size );
 
-    return af_loader_load_glyph( module->loader, slot->face,
+    return af_loader_load_glyph( module, slot->face,
                                  glyph_index, load_flags );
   }
 
