@@ -1,5 +1,12 @@
 2012-09-14  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Update to Unicode 6.1.0.
+
+	* src/autofit/afcjk.c (af_cjk_uniranges), src/autofit/aflatin.c
+	(af_latin_uniranges): Add and fix ranges.
+
+2012-09-14  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Pass `AF_Module' instead of `AF_Loader'.
 
 	We want to access the (not yet existing) module's global data later
