@@ -1,5 +1,13 @@
 2012-09-14  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix `make multi'.
+
+	* include/freetype/internal/fttrace.h: Add `afmodule'.
+	* src/autofit/afmodule.c: Include FT_INTERNAL_DEBUG_H.
+	(FT_COMPONENT): Define.
+
+2012-09-14  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/afmodule.c: s/FT_Autofitter/AF_Module/.
 
 2012-09-12  Werner Lemberg  <wl@gnu.org>
