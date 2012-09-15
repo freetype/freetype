@@ -4456,8 +4456,8 @@
       return FT_Err_Unimplemented_Feature;
     }
 
-    return set ? service->set_property( library, property_name, value )
-               : service->get_property( library, property_name, value );
+    return set ? service->set_property( cur[0], property_name, value )
+               : service->get_property( cur[0], property_name, value );
   }
 
 

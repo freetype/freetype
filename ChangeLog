@@ -1,3 +1,15 @@
+2012-09-15  Werner Lemberg  <wl@gnu.org>
+
+	Use `FT_Module' instead of `FT_Library' argument in property funcs.
+
+	This internal change simplifies access to global module data.
+
+	* include/freetype/internal/services/svprop.h
+	(FT_Properties_SetFunc, FT_Properties_GetFunc): Change accordingly.
+
+	* src/base/ftobjs.c (ft_property_do), src/autofit/afmodule.c
+	(af_property_set, af_property_get): Updated.
+
 2012-09-14  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Update to Unicode 6.1.0.

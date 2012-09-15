@@ -27,12 +27,12 @@ FT_BEGIN_HEADER
 
 
   typedef FT_Error
-  (*FT_Properties_SetFunc)( FT_Library   library,
+  (*FT_Properties_SetFunc)( FT_Module    module,
                             const char*  property_name,
                             const void*  value );
 
   typedef FT_Error
-  (*FT_Properties_GetFunc)( FT_Library   library,
+  (*FT_Properties_GetFunc)( FT_Module    module,
                             const char*  property_name,
                             void*        value );
 

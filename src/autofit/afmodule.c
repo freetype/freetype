@@ -44,11 +44,11 @@
 
 
   FT_Error
-  af_property_set( FT_Library   library,
+  af_property_set( FT_Module    module,
                    const char*  property_name,
                    const void*  value )
   {
-    FT_UNUSED( library );
+    FT_UNUSED( module );
     FT_UNUSED( value );
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
@@ -58,13 +58,13 @@
 
 
   FT_Error
-  af_property_get( FT_Library   library,
+  af_property_get( FT_Module    module,
                    const char*  property_name,
                    void*        value )
   {
     FT_Error  error = FT_Err_Ok;
 
-    FT_UNUSED( library );
+    FT_UNUSED( module );
 
 
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
