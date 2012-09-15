@@ -130,8 +130,8 @@ FT_BEGIN_HEADER
    *     assigned to this submodule.
    *
    *     {
-   *       U+0020 - U+007F  // Basic Latin (no control chars)
-   *       U+00A0 - U+00FF  // Latin-1 Supplement (no control chars)
+   *       U+0020 - U+007F  // Basic Latin (no control characters)
+   *       U+00A0 - U+00FF  // Latin-1 Supplement (no control characters)
    *       U+0100 - U+017F  // Latin Extended-A
    *       U+0180 - U+024F  // Latin Extended-B
    *       U+0250 - U+02AF  // IPA Extensions
@@ -152,10 +152,12 @@ FT_BEGIN_HEADER
    *       U+2460 - U+24FF  // Enclosed Alphanumerics
    *       U+2C60 - U+2C7F  // Latin Extended-C
    *       U+2DE0 - U+2DFF  // Cyrillic Extended-A
+   *       U+2E00 - U+2E7F  // Supplemental Punctuation
    *       U+A640 - U+A69F  // Cyrillic Extended-B
    *       U+A720 - U+A7FF  // Latin Extended-D
-   *       U+FB00 - U+FB06  // Alphab. Present. Forms (Latin Ligs)
+   *       U+FB00 - U+FB06  // Alphab. Present. Forms (Latin Ligatures)
    *      U+1D400 - U+1D7FF // Mathematical Alphanumeric Symbols
+   *      U+1F100 - U+1F1FF // Enclosed Alphanumeric Supplement
    *     }
    *
    *   FT_AUTOHINTER_SCRIPT_CJK ::
@@ -166,6 +168,7 @@ FT_BEGIN_HEADER
    *     assigned to this submodule.
    *
    *     {
+   *       U+1100 - U+11FF  // Hangul Jamo
    *       U+2E80 - U+2EFF  // CJK Radicals Supplement
    *       U+2F00 - U+2FDF  // Kangxi Radicals
    *       U+2FF0 - U+2FFF  // Ideographic Description Characters

@@ -1,5 +1,14 @@
 2012-09-15  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Correct previous Unicode 6.1.0 change.
+
+	The auto-hinter's latin module only handles latin ligatures in the
+	`Alphabetical Presentation Forms' block.
+
+	* src/autofit/aflatin.c (af_latin_uniranges): Fix it.
+
+2012-09-15  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/afmodule.c: s/FT_Err_/AF_Err_/.
 
 2012-09-15  Werner Lemberg  <wl@gnu.org>
