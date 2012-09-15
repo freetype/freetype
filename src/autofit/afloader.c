@@ -59,7 +59,8 @@
 
     if ( loader->globals == NULL )
     {
-      error = af_face_globals_new( face, &loader->globals );
+      error = af_face_globals_new( face, &loader->globals,
+                                   module->default_script );
       if ( !error )
       {
         face->autohint.data =

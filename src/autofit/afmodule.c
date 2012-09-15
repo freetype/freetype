@@ -62,9 +62,8 @@
                    const char*  property_name,
                    void*        value )
   {
-    FT_Error  error = FT_Err_Ok;
-
-    FT_UNUSED( module );
+    FT_Error  error          = FT_Err_Ok;
+    FT_UInt   default_script = ((AF_Module)module)->default_script;
 
 
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
@@ -81,7 +80,7 @@
       {
         /* trigger computation of the global script data */
         /* in case it hasn't been done yet               */
-        error = af_face_globals_new( prop->face, &globals );
+        error = af_face_globals_new( prop->face, &globals, default_script );
         if ( !error )
         {
           prop->face->autohint.data =
@@ -139,6 +138,8 @@
   FT_CALLBACK_DEF( FT_Error )
   af_autofitter_init( AF_Module  module )
   {
+    module->default_script = AF_SCRIPT_DEFAULT;
+
     return af_loader_init( module );
   }
 

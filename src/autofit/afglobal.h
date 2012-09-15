@@ -69,7 +69,8 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   af_face_globals_new( FT_Face          face,
-                       AF_FaceGlobals  *aglobals );
+                       AF_FaceGlobals  *aglobals,
+                       FT_UInt          default_script );
 
   FT_LOCAL( FT_Error )
   af_face_globals_get_metrics( AF_FaceGlobals     globals,
