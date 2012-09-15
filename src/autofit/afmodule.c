@@ -53,7 +53,7 @@
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
                 property_name ));
-    return FT_Err_Missing_Property;
+    return AF_Err_Missing_Property;
   }
 
 
@@ -62,7 +62,7 @@
                    const char*  property_name,
                    void*        value )
   {
-    FT_Error  error          = FT_Err_Ok;
+    FT_Error  error          = AF_Err_Ok;
     FT_UInt   default_script = ((AF_Module)module)->default_script;
 
 
@@ -73,7 +73,7 @@
 
 
       if ( !prop->face )
-        return FT_Err_Invalid_Argument;
+        return AF_Err_Invalid_Argument;
 
       globals = (AF_FaceGlobals)prop->face->autohint.data;
       if ( !globals )
@@ -98,7 +98,7 @@
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
                 property_name ));
-    return FT_Err_Missing_Property;
+    return AF_Err_Missing_Property;
   }
 
 

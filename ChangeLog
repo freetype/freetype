@@ -1,5 +1,9 @@
 2012-09-15  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/afmodule.c: s/FT_Err_/AF_Err_/.
+
+2012-09-15  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Make default script a global property.
 
 	* src/autofit/afmodule.h (AF_ModuleRec): Add `default_script' field.
