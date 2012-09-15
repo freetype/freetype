@@ -1,5 +1,18 @@
 2012-09-15  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Implement `fallback-script' property.
+
+	* src/autofit/afglobal.c: s/default_script/fallback_script/.
+	* src/autofit/afglobal.h: s/AF_SCRIPT_DEFAULT/AF_SCRIPT_FALLBACK/.
+
+	* src/autofit/afmodule.c: s/default_script/fallback_script/.
+	(af_property_set, af_property_get): Implement `fallback-script'.
+	* src/autofit/afmodule.h: s/default_script/fallback_script/.
+
+	* include/freetype/ftautoh.h: Document it.
+
+2012-09-15  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Correct previous Unicode 6.1.0 change.
 
 	The auto-hinter's latin module only handles latin ligatures in the

@@ -60,7 +60,7 @@
     if ( loader->globals == NULL )
     {
       error = af_face_globals_new( face, &loader->globals,
-                                   module->default_script );
+                                   module->fallback_script );
       if ( !error )
       {
         face->autohint.data =

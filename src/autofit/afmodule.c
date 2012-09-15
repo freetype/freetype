@@ -48,8 +48,18 @@
                    const char*  property_name,
                    const void*  value )
   {
-    FT_UNUSED( module );
-    FT_UNUSED( value );
+    FT_Error  error = AF_Err_Ok;
+
+
+    if ( !ft_strcmp( property_name, "fallback-script" ) )
+    {
+      FT_UInt*  fallback_script = (FT_UInt*)value;
+
+
+      ((AF_Module)module)->fallback_script = *fallback_script;
+
+      return error;
+    }
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
                 property_name ));
@@ -62,8 +72,8 @@
                    const char*  property_name,
                    void*        value )
   {
-    FT_Error  error          = AF_Err_Ok;
-    FT_UInt   default_script = ((AF_Module)module)->default_script;
+    FT_Error  error           = AF_Err_Ok;
+    FT_UInt   fallback_script = ((AF_Module)module)->fallback_script;
 
 
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
@@ -80,7 +90,7 @@
       {
         /* trigger computation of the global script data */
         /* in case it hasn't been done yet               */
-        error = af_face_globals_new( prop->face, &globals, default_script );
+        error = af_face_globals_new( prop->face, &globals, fallback_script );
         if ( !error )
         {
           prop->face->autohint.data =
@@ -92,6 +102,15 @@
 
       if ( !error )
         prop->map = globals->glyph_scripts;
+
+      return error;
+    }
+    else if ( !ft_strcmp( property_name, "fallback-script" ) )
+    {
+      FT_UInt*  val = (FT_UInt*)value;
+
+
+      *val = fallback_script;
 
       return error;
     }
@@ -138,7 +157,7 @@
   FT_CALLBACK_DEF( FT_Error )
   af_autofitter_init( AF_Module  module )
   {
-    module->default_script = AF_SCRIPT_DEFAULT;
+    module->fallback_script = AF_SCRIPT_FALLBACK;
 
     return af_loader_init( module );
   }

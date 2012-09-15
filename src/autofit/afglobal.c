@@ -54,7 +54,7 @@
 
   static FT_Error
   af_face_globals_compute_script_coverage( AF_FaceGlobals  globals,
-                                           FT_UInt         default_script )
+                                           FT_UInt         fallback_script )
   {
     FT_Error    error       = AF_Err_Ok;
     FT_Face     face        = globals->face;
@@ -73,7 +73,7 @@
     if ( error )
     {
      /*
-      *  Ignore this error; we simply use the default script.
+      *  Ignore this error; we simply use the fallback script.
       *  XXX: Shouldn't we rather disable hinting?
       */
       error = AF_Err_Ok;
@@ -133,7 +133,7 @@
 
   Exit:
     /*
-     *  By default, all uncovered glyphs are set to the latin script.
+     *  By default, all uncovered glyphs are set to the fallback script.
      *  XXX: Shouldn't we disable hinting or do something similar?
      */
     {
@@ -145,7 +145,7 @@
         if ( ( gscripts[nn] & ~AF_DIGIT ) == AF_SCRIPT_NONE )
         {
           gscripts[nn] &= ~AF_SCRIPT_NONE;
-          gscripts[nn] |= default_script;
+          gscripts[nn] |= fallback_script;
         }
       }
     }
@@ -158,7 +158,7 @@
   FT_LOCAL_DEF( FT_Error )
   af_face_globals_new( FT_Face          face,
                        AF_FaceGlobals  *aglobals,
-                       FT_UInt          default_script )
+                       FT_UInt          fallback_script )
   {
     FT_Error        error;
     FT_Memory       memory;
@@ -176,7 +176,7 @@
     globals->glyph_scripts = (FT_Byte*)( globals + 1 );
 
     error = af_face_globals_compute_script_coverage( globals,
-                                                     default_script );
+                                                     fallback_script );
     if ( error )
     {
       af_face_globals_free( globals );

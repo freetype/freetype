@@ -36,12 +36,12 @@ FT_BEGIN_HEADER
   /************************************************************************/
 
 
-  /* index of default script in `af_script_classes' */
-#define AF_SCRIPT_DEFAULT  2
-  /* a bit mask indicating an uncovered glyph       */
-#define AF_SCRIPT_NONE     0x7F
-  /* if this flag is set, we have an ASCII digit    */
-#define AF_DIGIT           0x80
+  /* index of fallback script in `af_script_classes' */
+#define AF_SCRIPT_FALLBACK  2
+  /* a bit mask indicating an uncovered glyph        */
+#define AF_SCRIPT_NONE      0x7F
+  /* if this flag is set, we have an ASCII digit     */
+#define AF_DIGIT            0x80
 
 
   /*
@@ -70,7 +70,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   af_face_globals_new( FT_Face          face,
                        AF_FaceGlobals  *aglobals,
-                       FT_UInt          default_script );
+                       FT_UInt          fallback_script );
 
   FT_LOCAL( FT_Error )
   af_face_globals_get_metrics( AF_FaceGlobals     globals,

@@ -246,6 +246,44 @@ FT_BEGIN_HEADER
 
    } FT_Prop_GlyphToScriptMap;
 
+
+  /**************************************************************************
+   *
+   * @property:
+   *   fallback-script
+   *
+   * @description:
+   *   If no auto-hinter script module can be assigned to a glyph, a
+   *   fallback script gets assigned to it (see also the
+   *   @glyph-to-script-map property).  By default, this is
+   *   @FT_AUTOHINTER_SCRIPT_CJK.  Using the `fallback-script' property,
+   *   this fallback value can be changed.
+   *
+   *   {
+   *     FT_Library  library;
+   *     FT_UInt     fallback_script = FT_AUTOHINTER_SCRIPT_NONE;
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *
+   *     FT_Property_Set( library, "autofitter",
+   *                               "fallback-script", &fallback_script );
+   *   }
+   *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   *   It's important to use the right timing for changing this value: The
+   *   creation of the glyph-to-script map which eventually uses the
+   *   fallback script value gets triggered either by accessing the
+   *   @glyph-to-script-map property of a face, or by auto-hinting any glyph
+   *   from that face.  In particular, if you have already created an
+   *   @FT_Face structure but not loaded any glyph (using the auto-hinter),
+   *   a change of the fallback glyph will affect this face.
+   *
+   */
+
+
  /* */
 
 FT_END_HEADER
