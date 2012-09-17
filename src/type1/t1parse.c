@@ -441,7 +441,8 @@
       /* the `eexec' keyword); if they all are hexadecimal digits, then   */
       /* we have a case of ASCII storage                                  */
 
-      if ( ft_isxdigit( cur[0] ) && ft_isxdigit( cur[1] ) &&
+      if ( cur + 3 < limit                                &&
+           ft_isxdigit( cur[0] ) && ft_isxdigit( cur[1] ) &&
            ft_isxdigit( cur[2] ) && ft_isxdigit( cur[3] ) )
       {
         /* ASCII hexadecimal encoding */

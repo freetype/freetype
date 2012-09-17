@@ -1,3 +1,10 @@
+2012-09-17  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #37350.
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict) <found>: Check for ASCII
+	storage only if we actually have at least four bytes.
+
 2012-09-15  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Implement `fallback-script' property.
