@@ -1,6 +1,6 @@
 2012-09-17  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #37350.
+	[type1] Fix Savannah bug #37350.
 
 	* src/type1/t1parse.c (T1_Get_Private_Dict) <found>: Check for ASCII
 	storage only if we actually have at least four bytes.
@@ -236,7 +236,7 @@
 
 2012-08-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	Fix Savannah bug #37017.
+	[smooth] Fix Savannah bug #37017.
 
 	* src/smooth/ftgrays.c (gray_render_cubic): Use a different set of
 	checks when detecting super curvy splines to be split.
@@ -262,27 +262,27 @@
 
 2012-07-31  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #37000.
+	[type1] Fix Savannah bug #37000.
 
 	* src/type1/t1load.c (parse_encoding): Fix order of checks.
 
 2012-07-17  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #36833.
+	[psaux] Fix Savannah bug #36833.
 
 	* src/psaux/t1decode.c (t1operator_seac): `seac' is not a valid
 	operator if we want metrics only.
 
 2012-07-16  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #36832.
+	[type1] Fix Savannah bug #36832.
 
 	* src/type1/t1load.c (parse_charstrings): Reject negative number of
 	glyphs.
 
 2012-07-13  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #36829.
+	[type1] Fix Savannah bug #36829.
 
 	* src/type1/t1load.c (parse_encoding): Check cursor position after
 	call to T1_Skip_PS_Token.
@@ -360,7 +360,7 @@
 
 2012-07-04  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #36091.
+	[autofit] Fix Savannah bug #36091.
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_blues),
 	src/autofit/aflatin2.c (af_latin2_metrics_init_blues): Change the
@@ -765,7 +765,7 @@
 
 2012-03-14  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #35833.
+	[type1] Fix Savannah bug #35833.
 
 	Based on the patch given in the bug report.
 
@@ -1774,7 +1774,7 @@
 
 2011-09-27  Simon Bünzli  <zeniko@gmail.com>
 
-	Fix Savannah bug #34189.
+	[type1] Fix Savannah bug #34189.
 
 	* src/type1/t1load.c (T1_Open_Face): Initialize
 	`face->len_buildchar'.
@@ -1855,7 +1855,7 @@
 
 2011-09-07  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #33816.
+	[cff] Fix Savannah bug #33816.
 
 	* src/cff/cfftypes.h (CFF_FontRecDictRec): New member
 	`has_font_matrix'.
@@ -1917,7 +1917,7 @@
 
 2011-08-09  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #33975.
+	[cff] Fix Savannah bug #33975.
 
 	* src/cff/cffparse.c (cff_parse_font_matrix): Fix typo.
 
@@ -2049,7 +2049,7 @@
 
 2011-07-02  Just Fill Bugs  <mozbugbox@yahoo.com.au>
 
-	Fix Savannah bug #33246.
+	[truetype] Fix Savannah bug #33246.
 
 	* src/truetype/ttobjs.c (tt_check_single_notdef): New function.
 	(tt_face_init): Use it to test FT_FACE_FLAG_SCALABLE.
@@ -2163,7 +2163,7 @@
 
 2011-06-29  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #33663.
+	[bdf] Fix Savannah bug #33663.
 
 	* src/bdf/bdflib.c (_bdf_parse_glyphs): Handle negative values for
 	ENCODING correctly.
@@ -2717,7 +2717,7 @@
 
 2011-04-13  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #33047.
+	[psaux] Fix Savannah bug #33047.
 
 	Patch submitted by anonymous reporter.
 
@@ -2810,7 +2810,7 @@
 
 2011-03-07  Bram Tassyns  <bramt@enfocus.be>
 
-	Fix Savannah bug #27988.
+	[cff] Fix Savannah bug #27988.
 
 	* src/cff/cffobjs.c (remove_style): New function.
 	(cff_face_init): Use it to strip off the style part of the family
@@ -3642,14 +3642,14 @@
 
 2010-10-12  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #31310.
+	[truetype] Fix Savannah bug #31310.
 
 	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): Protect against
 	invalid `runcnt' values.
 
 2010-10-08  Chris Liddell  <chris.liddell@artifex.com>
 
-	Fix Savannah bug #31275.
+	[sfnt] Fix Savannah bug #31275.
 
 	* src/sfnt/ttpost.c: Include FT_INTERNAL_DEBUG_H.
 
@@ -3708,7 +3708,7 @@
 
 2010-10-02  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #31088 (sort of).
+	[sfnt] Fix Savannah bug #31088 (sort of).
 
 	* src/sfnt/ttload.c (tt_face_load_maxp): Always allocate at least 64
 	function entries.
@@ -3724,7 +3724,7 @@
 
 2010-10-01  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	Fix Savannah bug #31040.
+	[truetype] Fix Savannah bug #31040.
 
 	* src/truetype/ttinterp.c (free_buffer_in_size): Remove.
 	(TT_RunIns): Updated.
@@ -3958,7 +3958,7 @@
 
 2010-08-17  Teijo Kinnunen <Teijo.Kinnunen@nuance.com>
 
-	Fix Savannah bug #30788.
+	[cache] Fix Savannah bug #30788.
 
 	* src/cache/ftccache.c (FTC_Cache_Clear): Check `cache->buckets' for
 	NULL too.
@@ -4035,7 +4035,7 @@
 
 2010-08-05  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30657.
+	[truetype] Fix Savannah bug #30657.
 
 	* src/truetype/ttinterp.c (BOUNDSL): New macro.
 	Change `BOUNDS' to `BOUNDSL' where appropriate.
@@ -4045,7 +4045,7 @@
 
 2010-08-05  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30656.
+	[type42] Fix Savannah bug #30656.
 
 	* src/type42/t42parse.c (t42_parse_sfnts): Protect against negative
 	string_size.
@@ -4244,7 +4244,7 @@
 
 2010-07-08  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30361.
+	[truetype] Fix Savannah bug #30361.
 
 	* src/truetype/ttinterp.c (Ins_IUP): Fix bounds check.
 
@@ -4365,7 +4365,7 @@
 
 2010-06-30  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30263.
+	[smooth] Fix Savannah bug #30263.
 
 	* src/smooth/ftgrays.c (gray_render_span): Use cast to `unsigned
 	int' to avoid integer overflow.
@@ -4456,7 +4456,7 @@
 
 2010-06-26  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30262.
+	[sfnt] Fix Savannah bug #30262.
 
 	* src/sfnt/ttload.c (tt_face_load_maxp): Limit `maxComponentDepth'
 	arbitrarily to 100 to avoid stack exhaustion.
@@ -4473,14 +4473,14 @@
 
 2010-06-25  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30261.
+	[pfr] Fix Savannah bug #30261.
 
 	* src/pfr/pfrobjs.c (pfr_face_init): Reject fonts which contain
 	neither outline nor bitmap glyphs.
 
 2010-06-25  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30254.
+	[cff] Fix Savannah bug #30254.
 
 	* src/cff/cffload.c (cff_index_get_pointers): Do sanity check for
 	first offset also.
@@ -4495,7 +4495,7 @@
 
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30247.
+	[pcf] Fix Savannah bug #30247.
 
 	* src/pcf/pcfread.c (pcf_get_metrics): Disallow (invalid) fonts with
 	zero metrics.
@@ -4512,14 +4512,14 @@
 
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30236.
+	[sfnt] Fix Savannah bug #30236.
 
 	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Improve check for pointer
 	to `cmap_table'.
 
 2010-06-24  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30235.
+	[pfr] Fix Savannah bug #30235.
 
 	* src/pfr/pfrgload.c (pfr_glyph_load_simple): Protect against
 	invalid indices if there aren't any coordinates for indexing.
@@ -4535,7 +4535,7 @@
 
 2010-06-23  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30220.
+	[bdf] Fix Savannah bug #30220.
 
 	* include/freetype/fterrdef.h
 	(BDF_Err_Missing_Fontboundingbox_Field): New error code.
@@ -4547,21 +4547,21 @@
 
 2010-06-21  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30168.
+	[pfr] Fix Savannah bug #30168.
 
 	* src/pfr/pfrgload.c (pfr_glyph_load_compound): Limit the number of
 	subglyphs to avoid endless recursion.
 
 2010-06-20  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30145.
+	[psaux] Fix Savannah bug #30145.
 
 	* src/psaux/psobjs.c (t1_builder_add_contour): Protect against
 	`outline == NULL' which might happen in invalid fonts.
 
 2010-06-19  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30135.
+	[bdf] Fix Savannah bug #30135.
 
 	* src/bdf/bdflib.c (_bdf_list_join): Don't modify value in static
 	string `empty'.
@@ -4569,14 +4569,14 @@
 
 2010-06-15  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30108.
+	[autofit] Fix Savannah bug #30108.
 
 	* src/autofit/afglobal.c (af_face_globals_compute_script_coverage):
 	Properly mask AF_DIGIT bit in comparison.
 
 2010-06-11  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30106.
+	[pshinter] Fix Savannah bug #30106.
 
 	Point numbers for FreeType's implementation of hinting masks are
 	collected before the final number of points of a glyph has been
@@ -4605,14 +4605,14 @@
 
 2010-06-09  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30082.
+	[cff] Fix Savannah bug #30082.
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
 	<cff_op_callothersubr>: Protect against stack underflow.
 
 2010-06-08  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #30053.
+	[cff] Fix Savannah bug #30053.
 
 	* src/cff/cffparse.c (cff_parse_real): Handle border case where
 	`fraction_length' has value 10.
@@ -4658,7 +4658,7 @@
 
 2010-05-21  Bram Tassyns  <bramt@enfocus.be>
 
-	Fix Savannah bug #27987.
+	[cff] Fix Savannah bug #27987.
 
 	* src/cff/cffobjs.c (remove_subset_prefix): New function.
 	(cff_face_init): Use it to adjust `cffface->family_name'.
@@ -4694,7 +4694,7 @@
 
 2010-05-10  Ken Sharp  <ken.sharp@artifex.com>
 
-	Fix Savannah bug #29846.
+	[psaux] Fix Savannah bug #29846.
 
 	Previously we discovered fonts which used `setcurrentpoint' to set
 	the initial point of a contour to 0,0.  This caused FreeType to
@@ -4713,9 +4713,9 @@
 	and real proper usage of the operator to work the same way as Adobe
 	interpreters apparently do.
 
-	(t1_decoder_parse_charstrings): Make `setcurrentpoint' use the top
-	two elements of the stack to establish unconditionally the current x
-	and y coordinates.
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Make
+	`setcurrentpoint' use the top two elements of the stack to establish
+	unconditionally the current x and y coordinates.
 
 	Make the `flex' subroutine handling (OtherSubr 0) put the current
 	x,y coordinates onto the stack, instead of two dummy uninitialised
@@ -4723,7 +4723,7 @@
 
 2010-04-14  Ken Sharp  <ken.sharp@artifex.com>
 
-	Fix Savannah bug #29444.
+	[psaux] Fix Savannah bug #29444.
 
 	* src/psaux/psobjs.c (t1_builder_start_point): Accept (invalid)
 	`lineto' immediately after `hsbw', in accordance with Acrobat, GS,
@@ -4731,21 +4731,21 @@
 
 2010-04-14  Michał Cichoń  <thedmd@artifexmundi.com>
 
-	Fix Savannah bug #27999.
+	[psaux] Fix Savannah bug #27999.
 
 	* src/cache/ftcmanag.c (FTC_Manager_RemoveFaceID): Only remove
 	selected entry, not all.
 
 2010-04-06  Jonathan Kew  <jfkthame@gmail.com>
 
-	Add overflow check to `fvar' table.
+	[truetype] Add overflow check to `fvar' table.
 
 	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Check axis and instance
 	count.
 
 2010-04-05  Ken Sharp  <ken.sharp@artifex.com>
 
-	Fix Savannah bug #29335.
+	[raster] Fix Savannah bug #29335.
 
 	* src/raster/ftraster.c (Line_Up): Use slow multiplication to
 	prevent overflow.  This shouldn't have any serious impact on speed,
@@ -4768,7 +4768,7 @@
 
 2010-04-01  John Tytgat  <John.Tytgat@esko.com>
 
-	Fix Savannah bug #29404.
+	[truetype] Fix Savannah bug #29404.
 
 	* src/truetype/ttgload.c: Revert change 2752bd1a (check on bit 1
 	of `head' table of TrueType fonts).
@@ -4787,20 +4787,20 @@
 
 2010-03-11  Chris Liddell  <chris.liddell@artifex.com>
 
-	Fix Savannah bug #27442.
+	[raster] Fix Savannah bug #27442.
 
 	* src/raster/ftraster.c (ft_black_reset): Fix `buffer_size'.
 
 2010-03-09  Werner Lemberg  <wl@gnu.org>
 
-	Remove unused variable.
+	[cff] Remove unused variable.
 	Reported by Graham.
 
 	* src/cff/cffparse.c (cff_parse_real): Remove `rest'.
 
 2010-03-02  John Tytgat  <John.Tytgat@esko.com>
 
-	Improve CFF string (especially glyphname) lookup performance.
+	[cff] Improve CFF string (especially glyphname) lookup performance.
 
 	We do this by avoiding memory allocation and file I/O.  This is
 	Savannah patch #7104.
@@ -4867,7 +4867,7 @@
 
 2010-02-18  Chris Liddell  <chris.liddell@artifex.com>
 
-	Fix Savannah bug #28905.
+	[truetype] Fix Savannah bug #28905.
 
 	Initialize phantom points before calling the incremental interface
 	to update glyph metrics.
