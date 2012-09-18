@@ -1,5 +1,17 @@
 2012-09-18  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Implement `increase-x-height' property.
+
+	* include/freetype/ftautoh.h (FT_Prop_IncreaseXHeight): New
+	structure.
+
+	* include/autofit/afmodule.c (af_property_get_face_globals): New
+	function, re-using code from `af_property_get'.
+	(af_property_set, af_property_get): Handle `increase-x-height'.
+	Updated.
+
+2012-09-18  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Implement Infinality's `increase glyph heights'.
 
 	This is an improved version of a similar fix contained in the

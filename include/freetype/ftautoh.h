@@ -275,13 +275,68 @@ FT_BEGIN_HEADER
    *
    *   It's important to use the right timing for changing this value: The
    *   creation of the glyph-to-script map which eventually uses the
-   *   fallback script value gets triggered either by accessing the
-   *   @glyph-to-script-map property of a face, or by auto-hinting any glyph
-   *   from that face.  In particular, if you have already created an
-   *   @FT_Face structure but not loaded any glyph (using the auto-hinter),
-   *   a change of the fallback glyph will affect this face.
+   *   fallback script value gets triggered either by setting or reading a
+   *   face-specific property like @glyph-to-script-map, or by auto-hinting
+   *   any glyph from that face.  In particular, if you have already created
+   *   an @FT_Face structure but not loaded any glyph (using the
+   *   auto-hinter), a change of the fallback glyph will affect this face.
    *
    */
+
+
+  /**************************************************************************
+   *
+   * @property:
+   *   increase-x-height
+   *
+   * @description:
+   *   For ppem values in the range 6~<= ppem <= `increase-x-height', round
+   *   up the font's x~height much more often than normally.  If the value
+   *   is set to~0, which is the default, this feature is switched off.  Use
+   *   this property to improve the legibility of small font sizes if
+   *   necessary.
+   *
+   *   {
+   *     FT_Library               library;
+   *     FT_Face                  face;
+   *     FT_Prop_IncreaseXHeight  prop;
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *     FT_New_Face( library, "foo.ttf", 0, &face );
+   *     FT_Set_Char_Size( face, 10 * 64, 0, 72, 0 );
+   *
+   *     prop.face  = face;
+   *     prop.limit = 14;
+   *
+   *     FT_Property_Set( library, "autofitter",
+   *                               "increase-x-height", &prop );
+   *   }
+   *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   *   Set this value right after calling @FT_Set_Char_Size, but before
+   *   loading any glyph (using the auto-hinter).
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   FT_Prop_IncreaseXHeight
+   *
+   * @description:
+   *   The data exchange structure for the @increase-x-height property.
+   *
+   */
+   typedef struct  FT_Prop_IncreaseXHeight_
+   {
+     FT_Face  face;
+     FT_UInt  limit;
+
+   } FT_Prop_IncreaseXHeight;
 
 
  /* */
