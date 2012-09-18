@@ -562,8 +562,26 @@
 
       if ( blue )
       {
-        FT_Pos  scaled = FT_MulFix( blue->shoot.org, scaler->y_scale );
-        FT_Pos  fitted = ( scaled + 40 ) & ~63;
+        FT_Pos   scaled;
+        FT_Pos   threshold;
+        FT_Pos   fitted;
+        FT_UInt  limit;
+        FT_UInt  ppem;
+
+
+        scaled    = FT_MulFix( blue->shoot.org, scaler->y_scale );
+        ppem      = metrics->root.scaler.face->size->metrics.x_ppem;
+        limit     = metrics->root.globals->increase_x_height;
+        threshold = 40;
+
+        /* if the `increase_x_height' property is active, */
+        /* we round up much more often                    */
+        if ( limit                                 &&
+             ppem <= limit                         &&
+             ppem >= AF_PROP_INCREASE_X_HEIGHT_MIN )
+          threshold = 52;
+
+        fitted = ( scaled + threshold ) & ~63;
 
 #if 1
         if ( scaled != fitted )

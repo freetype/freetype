@@ -28,14 +28,10 @@
 FT_BEGIN_HEADER
 
 
-  /************************************************************************/
-  /************************************************************************/
-  /*****                                                              *****/
-  /*****                  F A C E   G L O B A L S                     *****/
-  /*****                                                              *****/
-  /************************************************************************/
-  /************************************************************************/
-
+  /*
+   *  Default values and flags for both autofitter globals (found in
+   *  AF_ModuleRec) and face globals (in AF_FaceGlobalsRec).
+   */
 
   /* index of fallback script in `af_script_classes' */
 #define AF_SCRIPT_FALLBACK  2
@@ -43,6 +39,19 @@ FT_BEGIN_HEADER
 #define AF_SCRIPT_NONE      0x7F
   /* if this flag is set, we have an ASCII digit     */
 #define AF_DIGIT            0x80
+
+  /* `increase-x-height' property */
+#define AF_PROP_INCREASE_X_HEIGHT_MIN  6
+#define AF_PROP_INCREASE_X_HEIGHT_MAX  0
+
+
+  /************************************************************************/
+  /************************************************************************/
+  /*****                                                              *****/
+  /*****                  F A C E   G L O B A L S                     *****/
+  /*****                                                              *****/
+  /************************************************************************/
+  /************************************************************************/
 
 
   /*
@@ -55,6 +64,9 @@ FT_BEGIN_HEADER
     FT_Face           face;
     FT_Long           glyph_count;    /* same as face->num_glyphs */
     FT_Byte*          glyph_scripts;
+
+    /* per-face auto-hinter properties */
+    FT_UInt           increase_x_height;
 
     AF_ScriptMetrics  metrics[AF_SCRIPT_MAX];
 

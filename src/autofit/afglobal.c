@@ -182,6 +182,8 @@
       globals = NULL;
     }
 
+    globals->increase_x_height = AF_PROP_INCREASE_X_HEIGHT_MAX;
+
   Exit:
     *aglobals = globals;
     return error;

@@ -1,5 +1,30 @@
 2012-09-18  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Implement Infinality's `increase glyph heights'.
+
+	This is an improved version of a similar fix contained in the
+	so-called `Infinality patch', taken from
+
+	  http://www.infinality.net/fedora/linux/zips/freetype-infinality-2.4.10-20120616_01-x86_64.tar.bz2
+
+	which addresses various enhancements of the auto-hinter.  Without
+	properties to control a module's metadata it wasn't possible to
+	adapt the patches because everything was originally controlled by
+	environment variables which I consider not suitable in general.
+
+	A patch to control `increase_x_height' follows.
+
+	* src/autofit/afglobal.h (AF_PROP_INCREASE_X_HEIGHT_MIN,
+	AF_PROP_INCREASE_X_HEIGHT_MAX): New macros.
+	(AF_FaceGlobalsRec): Add `increase_x_height' member.
+	* src/autofit/afglobal.c (af_face_globals_new): Initialize it.
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim),
+	* src/autofit/aflatin2.c (af_latin2_metrics_scale_dim): Implement
+	handling of `increase_x_height'.
+
+2012-09-18  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Add hierarchical property access to some structures.
 
 	* src/autofit/afglobal.h: Include `afmodule.h'.
