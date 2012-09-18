@@ -53,8 +53,7 @@
   /* Compute the script index of each glyph within a given face. */
 
   static FT_Error
-  af_face_globals_compute_script_coverage( AF_FaceGlobals  globals,
-                                           FT_UInt         fallback_script )
+  af_face_globals_compute_script_coverage( AF_FaceGlobals  globals )
   {
     FT_Error    error       = AF_Err_Ok;
     FT_Face     face        = globals->face;
@@ -145,7 +144,7 @@
         if ( ( gscripts[nn] & ~AF_DIGIT ) == AF_SCRIPT_NONE )
         {
           gscripts[nn] &= ~AF_SCRIPT_NONE;
-          gscripts[nn] |= fallback_script;
+          gscripts[nn] |= globals->module->fallback_script;
         }
       }
     }
@@ -158,7 +157,7 @@
   FT_LOCAL_DEF( FT_Error )
   af_face_globals_new( FT_Face          face,
                        AF_FaceGlobals  *aglobals,
-                       FT_UInt          fallback_script )
+                       AF_Module        module )
   {
     FT_Error        error;
     FT_Memory       memory;
@@ -174,9 +173,9 @@
     globals->face          = face;
     globals->glyph_count   = face->num_glyphs;
     globals->glyph_scripts = (FT_Byte*)( globals + 1 );
+    globals->module        = module;
 
-    error = af_face_globals_compute_script_coverage( globals,
-                                                     fallback_script );
+    error = af_face_globals_compute_script_coverage( globals );
     if ( error )
     {
       af_face_globals_free( globals );
@@ -262,7 +261,8 @@
       if ( FT_ALLOC( metrics, clazz->script_metrics_size ) )
         goto Exit;
 
-      metrics->clazz = clazz;
+      metrics->clazz   = clazz;
+      metrics->globals = globals;
 
       if ( clazz->script_metrics_init )
       {

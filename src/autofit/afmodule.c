@@ -44,11 +44,12 @@
 
 
   FT_Error
-  af_property_set( FT_Module    module,
+  af_property_set( FT_Module    ft_module,
                    const char*  property_name,
                    const void*  value )
   {
-    FT_Error  error = AF_Err_Ok;
+    FT_Error   error  = AF_Err_Ok;
+    AF_Module  module = (AF_Module)ft_module;
 
 
     if ( !ft_strcmp( property_name, "fallback-script" ) )
@@ -56,7 +57,7 @@
       FT_UInt*  fallback_script = (FT_UInt*)value;
 
 
-      ((AF_Module)module)->fallback_script = *fallback_script;
+      module->fallback_script = *fallback_script;
 
       return error;
     }
@@ -68,12 +69,13 @@
 
 
   FT_Error
-  af_property_get( FT_Module    module,
+  af_property_get( FT_Module    ft_module,
                    const char*  property_name,
                    void*        value )
   {
-    FT_Error  error           = AF_Err_Ok;
-    FT_UInt   fallback_script = ((AF_Module)module)->fallback_script;
+    FT_Error   error           = AF_Err_Ok;
+    AF_Module  module          = (AF_Module)ft_module;
+    FT_UInt    fallback_script = module->fallback_script;
 
 
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
@@ -90,7 +92,7 @@
       {
         /* trigger computation of the global script data */
         /* in case it hasn't been done yet               */
-        error = af_face_globals_new( prop->face, &globals, fallback_script );
+        error = af_face_globals_new( prop->face, &globals, module );
         if ( !error )
         {
           prop->face->autohint.data =

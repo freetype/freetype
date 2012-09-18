@@ -246,12 +246,15 @@ extern void*  _af_debug_hints;
 
 
   typedef struct AF_ScriptClassRec_ const*  AF_ScriptClass;
+  typedef struct AF_FaceGlobalsRec_*        AF_FaceGlobals;
 
   typedef struct  AF_ScriptMetricsRec_
   {
     AF_ScriptClass  clazz;
     AF_ScalerRec    scaler;
     FT_Bool         digits_have_same_width;
+
+    AF_FaceGlobals  globals;    /* to access properties */
 
   } AF_ScriptMetricsRec, *AF_ScriptMetrics;
 

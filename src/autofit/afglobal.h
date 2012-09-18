@@ -22,6 +22,7 @@
 
 
 #include "aftypes.h"
+#include "afmodule.h"
 
 
 FT_BEGIN_HEADER
@@ -57,6 +58,8 @@ FT_BEGIN_HEADER
 
     AF_ScriptMetrics  metrics[AF_SCRIPT_MAX];
 
+    AF_Module         module;         /* to access global properties */
+
   } AF_FaceGlobalsRec;
 
 
@@ -64,13 +67,11 @@ FT_BEGIN_HEADER
    *  model the global hints data for a given face, decomposed into
    *  script-specific items
    */
-  typedef struct AF_FaceGlobalsRec_*  AF_FaceGlobals;
-
 
   FT_LOCAL( FT_Error )
   af_face_globals_new( FT_Face          face,
                        AF_FaceGlobals  *aglobals,
-                       FT_UInt          fallback_script );
+                       AF_Module        module );
 
   FT_LOCAL( FT_Error )
   af_face_globals_get_metrics( AF_FaceGlobals     globals,

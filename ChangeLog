@@ -1,3 +1,20 @@
+2012-09-18  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Add hierarchical property access to some structures.
+
+	* src/autofit/afglobal.h: Include `afmodule.h'.
+	(AF_FaceGlobalsRec): Add `module' member.
+	(AF_FaceGlobals): Typedef moved to...
+	* src/autofit/aftypes.h: Here.
+	(AF_ScriptMetricsRec): Add `globals' member.
+
+	* src/autofit/afglobal.c (af_face_globals_new,
+	af_face_globals_compute_script_coverage,
+	af_face_globals_get_metrics): Updated.
+
+	* src/autofit/afloader.c (af_loader_reset), src/autofit/afmodule.c
+	(af_property_get): Updated.
+
 2012-09-17  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Fix Savannah bug #37350.
