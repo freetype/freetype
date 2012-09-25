@@ -574,7 +574,7 @@
         limit     = metrics->root.globals->increase_x_height;
         threshold = 40;
 
-        /* if the `increase_x_height' property is active, */
+        /* if the `increase-x-height' property is active, */
         /* we round up much more often                    */
         if ( limit                                 &&
              ppem <= limit                         &&
