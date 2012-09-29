@@ -44,7 +44,7 @@
 
 
   AF_DEFINE_SCRIPT_CLASS( af_dummy_script_class,
-    AF_SCRIPT_NONE,
+    AF_SCRIPT_DUMMY,
     NULL,
 
     sizeof ( AF_ScriptMetricsRec ),

@@ -229,7 +229,7 @@ extern void*  _af_debug_hints;
 
   typedef enum  AF_Script_
   {
-    AF_SCRIPT_NONE  = 0,
+    AF_SCRIPT_DUMMY = 0,
     AF_SCRIPT_LATIN = 1,
     AF_SCRIPT_CJK   = 2,
     AF_SCRIPT_INDIC = 3,
