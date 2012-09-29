@@ -1,5 +1,12 @@
 2012-09-29  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Minor optimization.
+
+	* src/autofit/afglobals.c (af_face_globals_compute_script_coverage):
+	Add loop condition.
+
+2012-09-29  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix thinko.
 
 	* src/autofit/aftypes.h (AF_SCRIPT):

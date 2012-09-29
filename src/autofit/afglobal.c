@@ -135,6 +135,7 @@
      *  By default, all uncovered glyphs are set to the fallback script.
      *  XXX: Shouldn't we disable hinting or do something similar?
      */
+    if ( globals->module->fallback_script != AF_SCRIPT_NONE )
     {
       FT_Long  nn;
 
