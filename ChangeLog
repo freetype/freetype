@@ -1,3 +1,13 @@
+2012-09-30  Gilles Espinasse  <g.esp@free.fr>
+
+	Remove useless `rm' detection.
+
+	`rm -f' is directly used in the `configure' script created by
+	autoconf, thus no availability test is necessary.
+
+	* builds/unix/configure.raw (RMF): Remove test.
+	* builds/unix/unix-def.in (DELETE): Updated.
+
 2012-09-29  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Minor optimization.

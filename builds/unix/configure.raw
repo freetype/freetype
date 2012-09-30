@@ -66,10 +66,8 @@ AC_SUBST(CC_BUILD)
 AC_SUBST(EXEEXT_BUILD)
 
 
-
 # auxiliary programs
 
-AC_CHECK_PROG([RMF], [rm], [rm -f])
 AC_CHECK_PROG([RMDIR], [rmdir], [rmdir])
 
 
@@ -125,7 +123,7 @@ echo >> conftest.c "#endif"
 
 ${CPP} ${CPPFLAGS} conftest.c | ${GREP} ac_cpp_ft > conftest.sh
 eval `cat conftest.sh`
-${RMF} conftest.c conftest.sh confft2build.h ftoption.h ftstdlib.h
+rm -f conftest.c conftest.sh confft2build.h ftoption.h ftstdlib.h
 
 if test x != "x${ac_cpp_ft_sizeof_int}" \
    -a x != x"${ac_cpp_ft_sizeof_long}"; then
