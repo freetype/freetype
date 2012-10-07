@@ -1109,8 +1109,8 @@ FT_BEGIN_HEADER
    *   FT_HAS_VERTICAL( face )
    *
    * @description:
-   *   A macro that returns true whenever a face object contains vertical
-   *   metrics.
+   *   A macro that returns true whenever a face object contains real
+   *   vertical metrics (and not only synthesized ones).
    *
    */
 #define FT_HAS_VERTICAL( face ) \
@@ -2456,8 +2456,14 @@ FT_BEGIN_HEADER
    *     @FT_LOAD_NO_SCALE always sets this flag.
    *
    *   FT_LOAD_VERTICAL_LAYOUT ::
-   *     Load the glyph for vertical text layout.  _Don't_ use it as it is
-   *     problematic currently.
+   *     Load the glyph for vertical text layout.  In particular, the
+   *     `advance' value in the @FT_GlyphSlotRec structure is set to the
+   *     `vertAdvance' value of the `metrics' field.
+   *
+   *     In case @FT_HAS_VERTICAL doesn't return true, you shouldn't use
+   *     this flag currently.  Reason is that in this case vertical metrics
+   *     get synthesized, and those values are not always consistent across
+   *     various font formats.
    *
    *   FT_LOAD_FORCE_AUTOHINT ::
    *     Indicates that the auto-hinter is preferred over the font's native
