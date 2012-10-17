@@ -1,3 +1,11 @@
+2012-10-17  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix Savannah bug #37572.
+
+	* src/truetype/ttinterp.c (Ins_ISECT): Use angle between vectors to
+	avoid grazing intersections.  The previous threshold was too coarse,
+	incorrectly rejecting short but valid vectors.
+
 2012-09-30  Gilles Espinasse  <g.esp@free.fr>
 
 	Remove useless `rm' detection.

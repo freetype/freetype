@@ -6841,6 +6841,9 @@
                 dax, day,
                 dbx, dby;
 
+    FT_F26Dot6  len_a, len_b;
+    FT_Long     sine;
+
     FT_F26Dot6  val;
 
     FT_Vector   R;
@@ -6864,6 +6867,8 @@
       return;
     }
 
+    /* Cramer's rule */
+
     dbx = CUR.zp0.cur[b1].x - CUR.zp0.cur[b0].x;
     dby = CUR.zp0.cur[b1].y - CUR.zp0.cur[b0].y;
 
@@ -6878,7 +6883,33 @@
     discriminant = TT_MULDIV( dax, -dby, 0x40 ) +
                    TT_MULDIV( day, dbx, 0x40 );
 
-    if ( FT_ABS( discriminant ) >= 0x40 )
+    /* Let                                   */
+    /*                                       */
+    /*   a = vector(a0, a1)                  */
+    /*   b = vector(b0, b1)    .             */
+    /*                                       */
+    /* Then                                  */
+    /*                                       */
+    /*   dot_product(normal_vector(a), b)    */
+    /*     = discriminant                    */
+    /*     = |a| * |b| * sin(alpha)        . */
+
+    len_a = TT_VecLen( dax, day );
+    len_b = TT_VecLen( dbx, dby );
+
+    if ( len_a && len_b )
+    {
+      /* precision: (F.6 * F.16) / F.6 = F.16 */
+      sine = FT_DivFix( discriminant, len_a );
+      /* precision: (F.16 * F.16) / F.6 = F.26 */
+      sine = FT_DivFix( sine, len_b );
+    }
+    else
+      sine = 0;
+
+    /* We reject grazing intersections; heuristic value 2342066       */
+    /* corresponds to arcsin(2342066/2^26), this is approx 2 degrees. */
+    if ( FT_ABS( sine ) >= 2342066 )
     {
       val = TT_MULDIV( dx, -dby, 0x40 ) + TT_MULDIV( dy, dbx, 0x40 );
 
