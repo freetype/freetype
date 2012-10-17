@@ -163,7 +163,14 @@
     }
 
     if ( *p != '.' )
-      integral = PS_Conv_ToInt( &p, limit ) << 16;
+    {
+      integral = PS_Conv_ToInt( &p, limit );
+
+      if ( integral > 0x7FFF )
+        return sign ? -0x7FFFFFFFL : 0x7FFFFFFFL;
+
+      integral <<= 16;
+    }
     else
       integral = 0;
 
@@ -210,6 +217,8 @@
 
     while ( power_ten > 0 )
     {
+      if ( integral >= 0xCCCCCCCL )
+        return sign ? -0x7FFFFFFFL : 0x7FFFFFFFL;
       integral *= 10;
       decimal  *= 10;
       power_ten--;
@@ -223,7 +232,12 @@
     }
 
     if ( decimal )
-      integral += FT_DivFix( decimal, divider );
+    {
+      decimal = FT_DivFix( decimal, divider );
+      if ( 0x7FFFFFFFL - decimal < integral )
+        return sign ? -0x7FFFFFFFL : 0x7FFFFFFFL;
+      integral += decimal;
+    }
 
     if ( sign )
       integral = -integral;

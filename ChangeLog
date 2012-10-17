@@ -1,3 +1,9 @@
+2012-10-17  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Fix some value overflows.
+
+	* src/psaux/psconv.c (PS_Conv_ToFixed): Implement it.
+
 2012-10-17  Bram Tassyns  <BramT@enfocus.com>
 
 	[cff] Fix value overflow.
