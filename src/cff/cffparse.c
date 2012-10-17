@@ -396,9 +396,20 @@
   cff_parse_fixed_scaled( FT_Byte**  d,
                           FT_Long    scaling )
   {
-    return **d == 30 ? cff_parse_real( d[0], d[1], scaling, NULL )
-                     : ( cff_parse_integer( d[0], d[1] ) *
-                           power_tens[scaling] ) << 16;
+    if ( **d == 30 )
+      return cff_parse_real( d[0], d[1], scaling, NULL );
+    else
+    {
+      FT_Long  val = cff_parse_integer( d[0], d[1] ) * power_tens[scaling];
+
+
+      if ( val > 0x7FFF )
+        return 0x7FFFFFFFL;
+      else if ( val < -0x7FFF )
+        return -0x7FFFFFFFL;
+
+      return val << 16;
+    }
   }
 
 

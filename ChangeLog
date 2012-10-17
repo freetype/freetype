@@ -1,3 +1,9 @@
+2012-10-17  Bram Tassyns  <BramT@enfocus.com>
+
+	[cff] Fix value overflow.
+
+	* src/cff/cffparse.c (cff_parse_fixed_scaled): Implement it.
+
 2012-10-17  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix Savannah bug #37572.
