@@ -1,3 +1,14 @@
+2012-10-19  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix more value errors and improve tracing.
+
+	* src/cff/cffparse.c (cff_parse_integer): Emit tracing message in
+	case of error.
+	(cff_parse_real): Handle and trace overflow, underflow, and bad data
+	consistently.
+	(do_fixed): New helper function, handling and tracing overflow.
+	(cff_parse_fixed, cff_parse_fixed_scaled): Use `do_fixed'.
+
 2012-10-17  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix some value overflows.

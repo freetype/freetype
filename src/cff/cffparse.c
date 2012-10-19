@@ -105,6 +105,7 @@
 
   Bad:
     val = 0;
+    FT_TRACE4(( "!!!END OF DATA:!!!" ));
     goto Exit;
   }
 
@@ -165,7 +166,7 @@
 
         /* Make sure we don't read past the end. */
         if ( p >= limit )
-          goto Exit;
+          goto Bad;
       }
 
       /* Get the nibble. */
@@ -202,7 +203,7 @@
 
           /* Make sure we don't read past the end. */
           if ( p >= limit )
-            goto Exit;
+            goto Bad;
         }
 
         /* Get the nibble. */
@@ -241,7 +242,7 @@
 
           /* Make sure we don't read past the end. */
           if ( p >= limit )
-            goto Exit;
+            goto Bad;
         }
 
         /* Get the nibble. */
@@ -254,12 +255,20 @@
 
         /* Arbitrarily limit exponent. */
         if ( exponent > 1000 )
-          goto Exit;
+        {
+          if ( exponent_sign )
+            goto Underflow;
+          else
+            goto Overflow;
+        }
       }
 
       if ( exponent_sign )
         exponent = -exponent;
     }
+
+    if ( !number )
+      goto Exit;
 
     /* We don't check `power_ten' and `exponent_add'. */
     exponent += power_ten + exponent_add;
@@ -329,7 +338,7 @@
 
       /* Check for overflow and underflow. */
       if ( FT_ABS( integer_length ) > 5 )
-        goto Exit;
+        goto Overflow;
 
       /* Remove non-significant digits. */
       if ( integer_length < 0 )
@@ -358,17 +367,32 @@
         number *= power_tens[-fraction_length];
 
         if ( number > 0x7FFFL )
-          goto Exit;
+          goto Overflow;
 
         result = number << 16;
       }
     }
 
+  Exit:
     if ( sign )
       result = -result;
 
-  Exit:
     return result;
+
+  Overflow:
+    result = 0x7FFFFFFFL;
+    FT_TRACE4(( "!!!OVERFLOW:!!!" ));
+    goto Exit;
+
+  Underflow:
+    result = 0;
+    FT_TRACE4(( "!!!UNDERFLOW:!!!" ));
+    goto Exit;
+
+  Bad:
+    result = 0;
+    FT_TRACE4(( "!!!END OF DATA:!!!" ));
+    goto Exit;
   }
 
 
@@ -383,10 +407,44 @@
 
   /* read a floating point number, either integer or real */
   static FT_Fixed
+  do_fixed( FT_Byte**  d,
+            FT_Long    scaling )
+  {
+    if ( **d == 30 )
+      return cff_parse_real( d[0], d[1], scaling, NULL );
+    else
+    {
+      FT_Long  val = cff_parse_integer( d[0], d[1] );
+
+
+      if ( scaling )
+        val *= power_tens[scaling];
+
+      if ( val > 0x7FFF )
+      {
+        val = 0x7FFFFFFFL;
+        goto Overflow;
+      }
+      else if ( val < -0x7FFF )
+      {
+        val = -0x7FFFFFFFL;
+        goto Overflow;
+      }
+
+      return val << 16;
+
+    Overflow:
+      FT_TRACE4(( "!!!OVERFLOW:!!!" ));
+      return val;
+    }
+  }
+
+
+  /* read a floating point number, either integer or real */
+  static FT_Fixed
   cff_parse_fixed( FT_Byte**  d )
   {
-    return **d == 30 ? cff_parse_real( d[0], d[1], 0, NULL )
-                     : cff_parse_integer( d[0], d[1] ) << 16;
+    return do_fixed( d, 0 );
   }
 
 
@@ -396,20 +454,7 @@
   cff_parse_fixed_scaled( FT_Byte**  d,
                           FT_Long    scaling )
   {
-    if ( **d == 30 )
-      return cff_parse_real( d[0], d[1], scaling, NULL );
-    else
-    {
-      FT_Long  val = cff_parse_integer( d[0], d[1] ) * power_tens[scaling];
-
-
-      if ( val > 0x7FFF )
-        return 0x7FFFFFFFL;
-      else if ( val < -0x7FFF )
-        return -0x7FFFFFFFL;
-
-      return val << 16;
-    }
+    return do_fixed( d, scaling );
   }
 
 
