@@ -1,3 +1,11 @@
+2012-10-20  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Improve parsing of invalid real numbers.
+
+	* src/cff/cffparse.c (cff_parse_real): Always parse complete number,
+	even in case of overflow or underflow.
+	Also trace one more underflow.
+
 2012-10-20  Andreas Pehnack  <andreas.pehnack@me.com>
 
 	[sfnt] Load pure CFF fonts wrapped in SFNT container.

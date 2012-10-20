@@ -137,7 +137,7 @@
     FT_UInt   phase;
 
     FT_Long   result, number, exponent;
-    FT_Int    sign = 0, exponent_sign = 0;
+    FT_Int    sign = 0, exponent_sign = 0, have_overflow = 0;
     FT_Long   exponent_add, integer_length, fraction_length;
 
 
@@ -251,16 +251,11 @@
         if ( nib >= 10 )
           break;
 
-        exponent = exponent * 10 + nib;
-
         /* Arbitrarily limit exponent. */
         if ( exponent > 1000 )
-        {
-          if ( exponent_sign )
-            goto Underflow;
-          else
-            goto Overflow;
-        }
+          have_overflow = 1;
+        else
+          exponent = exponent * 10 + nib;
       }
 
       if ( exponent_sign )
@@ -269,6 +264,14 @@
 
     if ( !number )
       goto Exit;
+
+    if ( have_overflow )
+    {
+      if ( exponent_sign )
+        goto Underflow;
+      else
+        goto Overflow;
+    }
 
     /* We don't check `power_ten' and `exponent_add'. */
     exponent += power_ten + exponent_add;
@@ -336,9 +339,10 @@
       integer_length  += exponent;
       fraction_length -= exponent;
 
-      /* Check for overflow and underflow. */
-      if ( FT_ABS( integer_length ) > 5 )
+      if ( integer_length > 5 )
         goto Overflow;
+      if ( integer_length < -5 )
+        goto Underflow;
 
       /* Remove non-significant digits. */
       if ( integer_length < 0 )
