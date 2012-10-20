@@ -361,14 +361,17 @@
     FT_TRACE2(( "-- Number of tables: %10u\n",    sfnt.num_tables ));
     FT_TRACE2(( "-- Format version:   0x%08lx\n", sfnt.format_tag ));
 
-    /* check first */
-    error = check_table_dir( &sfnt, stream );
-    if ( error )
+    if ( sfnt.format_tag != TTAG_OTTO )
     {
-      FT_TRACE2(( "tt_face_load_font_dir:"
-                  " invalid table directory for TrueType\n" ));
+      /* check first */
+      error = check_table_dir( &sfnt, stream );
+      if ( error )
+      {
+        FT_TRACE2(( "tt_face_load_font_dir:"
+                    " invalid table directory for TrueType\n" ));
 
-      goto Exit;
+        goto Exit;
+      }
     }
 
     face->num_tables = sfnt.num_tables;
