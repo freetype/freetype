@@ -16,9 +16,9 @@
 /***************************************************************************/
 
 
+#include "afglobal.h"
 #include "afloader.h"
 #include "afhints.h"
-#include "afglobal.h"
 #include "aferrors.h"
 #include "afmodule.h"
 

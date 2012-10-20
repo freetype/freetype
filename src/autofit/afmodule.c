@@ -16,8 +16,10 @@
 /***************************************************************************/
 
 
+#include "afglobal.h"
 #include "afmodule.h"
 #include "afloader.h"
+#include "aferrors.h"
 #include "afpic.h"
 
 #ifdef FT_DEBUG_AUTOFIT

@@ -1,3 +1,12 @@
+2012-10-20  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix `make multi CC=c++'.
+
+	* src/autofit/aflatin.c, src/autofit/aflatin2.c: Include
+	`afglobal.h'.
+	* src/autofit/afloader.c: Fix order of header files.
+	* src/autofit/afmodule.c: Include `afglobal.h' and `aferrors.h'.
+
 2012-10-19  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix more value errors and improve tracing.

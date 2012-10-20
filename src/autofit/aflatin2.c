@@ -18,6 +18,7 @@
 
 #include FT_ADVANCES_H
 
+#include "afglobal.h"
 #include "aflatin.h"
 #include "aflatin2.h"
 #include "aferrors.h"

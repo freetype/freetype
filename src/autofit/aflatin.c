@@ -20,6 +20,7 @@
 #include FT_ADVANCES_H
 #include FT_INTERNAL_DEBUG_H
 
+#include "afglobal.h"
 #include "aflatin.h"
 #include "aferrors.h"
 
