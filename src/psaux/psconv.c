@@ -18,9 +18,20 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_INTERNAL_DEBUG_H
 
 #include "psconv.h"
 #include "psauxerr.h"
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_psconv
 
 
   /* The following array is used by various functions to quickly convert */
@@ -69,18 +80,27 @@
 #endif /* 'A' == 193 */
 
 
-  FT_LOCAL_DEF( FT_Int )
+  FT_LOCAL_DEF( FT_Long )
   PS_Conv_Strtol( FT_Byte**  cursor,
                   FT_Byte*   limit,
-                  FT_Int     base )
+                  FT_Long    base )
   {
     FT_Byte*  p = *cursor;
-    FT_Int    num = 0;
+    FT_Long   num  = 0;
     FT_Bool   sign = 0;
 
+    FT_Long   num_limit;
+    FT_Char   c_limit;
 
-    if ( p >= limit || base < 2 || base > 36 )
+
+    if ( p >= limit )
+      goto Bad;
+
+    if ( base < 2 || base > 36 )
+    {
+      FT_TRACE4(( "!!!INVALID BASE:!!!" ));
       return 0;
+    }
 
     if ( *p == '-' || *p == '+' )
     {
@@ -88,8 +108,11 @@
 
       p++;
       if ( p == limit )
-        return 0;
+        goto Bad;
     }
+
+    num_limit = 0x7FFFFFFFL / base;
+    c_limit   = (FT_Char)( 0x7FFFFFFFL % base );
 
     for ( ; p < limit; p++ )
     {
@@ -104,25 +127,38 @@
       if ( c < 0 || c >= base )
         break;
 
+      if ( num > num_limit || ( num == num_limit && c > c_limit ) )
+        goto Overflow;
       num = num * base + c;
     }
 
+    *cursor = p;
+
+  Exit:
     if ( sign )
       num = -num;
 
-    *cursor = p;
-
     return num;
+
+  Overflow:
+    num = 0x7FFFFFFFL;
+    FT_TRACE4(( "!!!OVERFLOW:!!!" ));
+    goto Exit;
+
+  Bad:
+    num = 0;
+    FT_TRACE4(( "!!!END OF DATA:!!!" ));
+    goto Exit;
   }
 
 
-  FT_LOCAL_DEF( FT_Int )
+  FT_LOCAL_DEF( FT_Long )
   PS_Conv_ToInt( FT_Byte**  cursor,
                  FT_Byte*   limit )
 
   {
     FT_Byte*  p;
-    FT_Int    num;
+    FT_Long   num;
 
 
     num = PS_Conv_Strtol( cursor, limit, 10 );
@@ -142,7 +178,7 @@
   FT_LOCAL_DEF( FT_Fixed )
   PS_Conv_ToFixed( FT_Byte**  cursor,
                    FT_Byte*   limit,
-                   FT_Int     power_ten )
+                   FT_Long    power_ten )
   {
     FT_Byte*  p = *cursor;
     FT_Fixed  integral;

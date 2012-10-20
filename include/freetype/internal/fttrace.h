@@ -73,6 +73,7 @@ FT_TRACE_DEF( t1parse )
   /* PostScript helper module `psaux' */
 FT_TRACE_DEF( t1decode )
 FT_TRACE_DEF( psobjs )
+FT_TRACE_DEF( psconv )
 
   /* PostScript hinting module `pshinter' */
 FT_TRACE_DEF( pshrec )

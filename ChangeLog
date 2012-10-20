@@ -1,5 +1,20 @@
 2012-10-20  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix some value overflows and improve tracing.
+
+	* src/psaux/psconv.c: Include FT_INTERNAL_DEBUG_H.
+	(FT_COMPONENT): Define.
+	(PS_Conv_Strtol): Return FT_Long.
+	Handle bad data and overflow.
+	Emit some tracing messages in case of error.
+	(PS_Conv_ToInt): Return FT_Long.
+	(PS_Conv_ToFixed): Updated.
+	* src/psaux/psconv.h: Updated.
+
+	* include/freetype/internal/fttrace.h: Add `psconv'.
+
+2012-10-20  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix `make multi CC=c++'.
 
 	* src/autofit/aflatin.c, src/autofit/aflatin2.c: Include
