@@ -1400,7 +1400,26 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.render_span( ras.span_y, ras.num_gray_spans,
                        ras.gray_spans, ras.render_span_data );
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+    if ( ras.num_gray_spans > 0 )
+    {
+      FT_Span*  span;
+      int       n;
+
+
+      FT_TRACE7(( "y = %3d ", ras.span_y ));
+      span = ras.gray_spans;
+      for ( n = 0; n < ras.num_gray_spans; n++, span++ )
+        FT_TRACE7(( "[%d..%d]:%02x ",
+                    span->x, span->x + span->len - 1, span->coverage ));
+      FT_TRACE7(( "\n" ));
+    }
+
     FT_TRACE7(( "gray_sweep: end\n" ));
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
+
   }
 
 
