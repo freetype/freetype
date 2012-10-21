@@ -6835,14 +6835,11 @@
                 a0, a1,
                 b0, b1;
 
-    FT_F26Dot6  discriminant;
+    FT_F26Dot6  discriminant, dotproduct;
 
     FT_F26Dot6  dx,  dy,
                 dax, day,
                 dbx, dby;
-
-    FT_F26Dot6  len_a, len_b;
-    FT_Long     sine;
 
     FT_F26Dot6  val;
 
@@ -6882,34 +6879,18 @@
 
     discriminant = TT_MULDIV( dax, -dby, 0x40 ) +
                    TT_MULDIV( day, dbx, 0x40 );
+    dotproduct   = TT_MULDIV( dax, dbx, 0x40 ) +
+                   TT_MULDIV( day, dby, 0x40 );
 
-    /* Let                                   */
-    /*                                       */
-    /*   a = vector(a0, a1)                  */
-    /*   b = vector(b0, b1)    .             */
-    /*                                       */
-    /* Then                                  */
-    /*                                       */
-    /*   dot_product(normal_vector(a), b)    */
-    /*     = discriminant                    */
-    /*     = |a| * |b| * sin(alpha)        . */
-
-    len_a = TT_VecLen( dax, day );
-    len_b = TT_VecLen( dbx, dby );
-
-    if ( len_a && len_b )
-    {
-      /* precision: (F.6 * F.16) / F.6 = F.16 */
-      sine = FT_DivFix( discriminant, len_a );
-      /* precision: (F.16 * F.16) / F.6 = F.26 */
-      sine = FT_DivFix( sine, len_b );
-    }
-    else
-      sine = 0;
-
-    /* We reject grazing intersections; heuristic value 2342066       */
-    /* corresponds to arcsin(2342066/2^26), this is approx 2 degrees. */
-    if ( FT_ABS( sine ) >= 2342066 )
+    /* The discriminant above is actually a cross product of vectors     */
+    /* da and db. Together with the dot product, they can be used as     */
+    /* surrogates for sine and cosine of the angle between the vectors.  */
+    /* Indeed,                                                           */
+    /*       dotproduct   = |da||db|cos(angle)                           */
+    /*       discriminant = |da||db|sin(angle)     .                     */
+    /* We use these equations to reject grazing intersections by         */
+    /* thresholding abs(tan(angle)) at 1/19, corresponding to 3 degrees. */
+    if ( 19 * FT_ABS( discriminant ) > FT_ABS( dotproduct ) )
     {
       val = TT_MULDIV( dx, -dby, 0x40 ) + TT_MULDIV( dy, dbx, 0x40 );
 

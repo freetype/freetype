@@ -1,3 +1,10 @@
+2012-10-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+        [truetype] Cheaper way to threshold angles between vectors.
+
+	* src/truetype/ttinterp.c (Ins_ISECT): Thresholding tangent is a lot
+	cheaper than thresholding sine. 
+	
 2012-10-20  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Improve parsing of invalid real numbers.
