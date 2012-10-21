@@ -1,5 +1,15 @@
 2012-10-21  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Improve parsing of invalid numbers.
+
+	* src/psaux/psconv.c (PS_Conv_Strtol): Always parse complete number,
+	even in case of overflow.
+	(PS_Conv_ToInt): Only increase cursor if parsing was successful.
+	(PS_Conv_ToFixed): Ditto.
+	Trace underflow and data error.
+
+2012-10-21  Werner Lemberg  <wl@gnu.org>
+
 	[smooth] Improve tracing.
 
 	* src/smooth/ftgrays.c (gray_sweep): Trace last sweep line of

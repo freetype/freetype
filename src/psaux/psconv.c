@@ -86,8 +86,10 @@
                   FT_Long    base )
   {
     FT_Byte*  p = *cursor;
-    FT_Long   num  = 0;
-    FT_Bool   sign = 0;
+
+    FT_Long   num           = 0;
+    FT_Bool   sign          = 0;
+    FT_Bool   have_overflow = 0;
 
     FT_Long   num_limit;
     FT_Char   c_limit;
@@ -128,27 +130,27 @@
         break;
 
       if ( num > num_limit || ( num == num_limit && c > c_limit ) )
-        goto Overflow;
-      num = num * base + c;
+        have_overflow = 1;
+      else
+        num = num * base + c;
     }
 
     *cursor = p;
 
-  Exit:
+    if ( have_overflow )
+    {
+      num = 0x7FFFFFFFL;
+      FT_TRACE4(( "!!!OVERFLOW:!!!" ));
+    }
+
     if ( sign )
       num = -num;
 
     return num;
 
-  Overflow:
-    num = 0x7FFFFFFFL;
-    FT_TRACE4(( "!!!OVERFLOW:!!!" ));
-    goto Exit;
-
   Bad:
-    num = 0;
     FT_TRACE4(( "!!!END OF DATA:!!!" ));
-    goto Exit;
+    return 0;
   }
 
 
@@ -157,21 +159,32 @@
                  FT_Byte*   limit )
 
   {
-    FT_Byte*  p;
+    FT_Byte*  p = *cursor;
+    FT_Byte*  curp;
+
     FT_Long   num;
 
 
-    num = PS_Conv_Strtol( cursor, limit, 10 );
-    p   = *cursor;
+    curp = p;
+    num  = PS_Conv_Strtol( &p, limit, 10 );
+
+    if ( p == curp )
+      return 0;
 
     if ( p < limit && *p == '#' )
     {
-      *cursor = p + 1;
+      p++;
 
-      return PS_Conv_Strtol( cursor, limit, num );
+      curp = p;
+      num  = PS_Conv_Strtol( &p, limit, num );
+
+      if ( p == curp )
+        return 0;
     }
-    else
-      return num;
+
+    *cursor = p;
+
+    return num;
   }
 
 
@@ -181,13 +194,19 @@
                    FT_Long    power_ten )
   {
     FT_Byte*  p = *cursor;
-    FT_Fixed  integral;
-    FT_Long   decimal = 0, divider = 1;
-    FT_Bool   sign = 0;
+    FT_Byte*  curp;
+
+    FT_Fixed  integral = 0;
+    FT_Long   decimal  = 0;
+    FT_Long   divider  = 1;
+
+    FT_Bool   sign           = 0;
+    FT_Bool   have_overflow  = 0;
+    FT_Bool   have_underflow = 0;
 
 
     if ( p >= limit )
-      return 0;
+      goto Bad;
 
     if ( *p == '-' || *p == '+' )
     {
@@ -195,20 +214,23 @@
 
       p++;
       if ( p == limit )
-        return 0;
+        goto Bad;
     }
 
+    /* read the integer part */
     if ( *p != '.' )
     {
+      curp     = p;
       integral = PS_Conv_ToInt( &p, limit );
 
-      if ( integral > 0x7FFF )
-        return sign ? -0x7FFFFFFFL : 0x7FFFFFFFL;
+      if ( p == curp )
+        return 0;
 
-      integral <<= 16;
+      if ( integral > 0x7FFF )
+        have_overflow = 1;
+      else
+        integral <<= 16;
     }
-    else
-      integral = 0;
 
     /* read the decimal part */
     if ( p < limit && *p == '.' )
@@ -228,18 +250,14 @@
         if ( c < 0 || c >= 10 )
           break;
 
-        if ( !integral && power_ten > 0 )
+        if ( decimal < 0xCCCCCCCL )
         {
-          power_ten--;
           decimal = decimal * 10 + c;
-        }
-        else
-        {
-          if ( divider < 10000000L )
-          {
-            decimal = decimal * 10 + c;
+
+          if ( !integral && power_ten > 0 )
+            power_ten--;
+          else
             divider *= 10;
-          }
         }
       }
     }
@@ -247,40 +265,94 @@
     /* read exponent, if any */
     if ( p + 1 < limit && ( *p == 'e' || *p == 'E' ) )
     {
+      FT_Long  exponent;
+
+
       p++;
-      power_ten += PS_Conv_ToInt( &p, limit );
+
+      curp     = p;
+      exponent = PS_Conv_ToInt( &p, limit );
+
+      if ( curp == p )
+        return 0;
+
+      /* arbitrarily limit exponent */
+      if ( exponent > 1000 )
+        have_overflow = 1;
+      else if ( exponent < -1000 )
+        have_underflow = 1;
+      else
+        power_ten += exponent;
     }
+
+    *cursor = p;
+
+    if ( !integral && !decimal )
+      return 0;
+
+    if ( have_overflow )
+      goto Overflow;
+    if ( have_underflow )
+      goto Underflow;
 
     while ( power_ten > 0 )
     {
       if ( integral >= 0xCCCCCCCL )
-        return sign ? -0x7FFFFFFFL : 0x7FFFFFFFL;
+        goto Overflow;
       integral *= 10;
-      decimal  *= 10;
+
+      if ( decimal >= 0xCCCCCCCL )
+      {
+        if ( divider == 1 )
+          goto Overflow;
+        divider /= 10;
+      }
+      else
+        decimal *= 10;
+
       power_ten--;
     }
 
     while ( power_ten < 0 )
     {
       integral /= 10;
-      divider  *= 10;
+      if ( divider < 0xCCCCCCCL )
+        divider *= 10;
+      else
+        decimal /= 10;
+
+      if ( !integral && !decimal )
+        goto Underflow;
+
       power_ten++;
     }
 
     if ( decimal )
     {
       decimal = FT_DivFix( decimal, divider );
-      if ( 0x7FFFFFFFL - decimal < integral )
-        return sign ? -0x7FFFFFFFL : 0x7FFFFFFFL;
+      /* it's not necessary to check this addition for overflow */
+      /* due to the structure of the real number representation */
       integral += decimal;
     }
 
+  Exit:
     if ( sign )
       integral = -integral;
 
-    *cursor = p;
-
     return integral;
+
+  Bad:
+    FT_TRACE4(( "!!!END OF DATA:!!!" ));
+    return 0;
+
+  Overflow:
+    integral = 0x7FFFFFFFL;
+    FT_TRACE4(( "!!!OVERFLOW:!!!" ));
+    goto Exit;
+
+  Underflow:
+    FT_TRACE4(( "!!!UNDERFLOW:!!!" ));
+    return 0;
   }
 
 
