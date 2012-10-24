@@ -67,8 +67,7 @@
 
   FT_LOCAL_DEF( void )
   af_cjk_metrics_init_widths( AF_CJKMetrics  metrics,
-                              FT_Face        face,
-                              FT_ULong       charcode )
+                              FT_Face        face )
   {
     /* scan the array of segments in each direction */
     AF_GlyphHintsRec  hints[1];
@@ -87,7 +86,8 @@
       AF_Scaler         scaler = &dummy->root.scaler;
 
 
-      glyph_index = FT_Get_Char_Index( face, charcode );
+      glyph_index = FT_Get_Char_Index( face,
+                                       metrics->root.clazz->standard_char );
       if ( glyph_index == 0 )
         goto Exit;
 
@@ -559,7 +559,7 @@
       face->charmap = NULL;
     else
     {
-      af_cjk_metrics_init_widths( metrics, face, 0x7530 );
+      af_cjk_metrics_init_widths( metrics, face );
       af_cjk_metrics_init_blues( metrics, face, af_cjk_hani_blue_chars );
       af_cjk_metrics_check_digits( metrics, face );
     }
@@ -2232,6 +2232,7 @@
   AF_DEFINE_SCRIPT_CLASS( af_cjk_script_class,
     AF_SCRIPT_CJK,
     af_cjk_uniranges,
+    0x7530, /* 田 */
 
     sizeof ( AF_CJKMetricsRec ),
 
@@ -2254,6 +2255,7 @@
   AF_DEFINE_SCRIPT_CLASS( af_cjk_script_class,
     AF_SCRIPT_CJK,
     af_cjk_uniranges,
+    0,
 
     sizeof ( AF_CJKMetricsRec ),
 

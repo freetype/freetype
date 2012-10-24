@@ -1,9 +1,33 @@
 2012-10-24  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add standard character to `AF_ScriptClassRec' structure.
+
+	* src/autofit/aftypes.h (AF_ScriptClassRec): Add `standard_char'
+	member.
+	(AF_DEFINE_SCRIPT_CLASS): Updated.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Use it.
+	(af_latin_metrics_init, af_latin_script_class): Updated.
+
+	* src/autofit/aflatin.c (af_latin2_metrics_init_widths): Use it.
+	(af_latin2_metrics_init, af_latin2_script_class): Updated.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths): Use it.
+	(af_cjk_metrics_init, af_cjk_script_class): Updated.
+
+	* src/autofit/afindic.c	(af_indic_metrics_init,
+	af_indic_script_class): Updated.
+
+	* src/autofit/afcjk.h, src/autofit/aflatin.h: Updated.
+
+	* src/autofit/afdummy.c: Updated.
+
+2012-10-24  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Only use Unicode CMap.
 
 	* src/autofit/aflatin.c (af_latin_metrics_init): Implement it, to be
-	in sync with `af_face_globals_compute_script_coverage)'.
+	in sync with `af_face_globals_compute_script_coverage'.
 
 2012-10-21  Werner Lemberg  <wl@gnu.org>
 

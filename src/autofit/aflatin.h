@@ -27,7 +27,7 @@ FT_BEGIN_HEADER
 
   /* the latin-specific script class */
 
-  AF_DECLARE_SCRIPT_CLASS(af_latin_script_class)
+  AF_DECLARE_SCRIPT_CLASS( af_latin_script_class )
 
 
   /* constants are given with units_per_em == 2048 in mind */
@@ -133,8 +133,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   af_latin_metrics_init_widths( AF_LatinMetrics  metrics,
-                                FT_Face          face,
-                                FT_ULong         charcode );
+                                FT_Face          face );
 
   FT_LOCAL( void )
   af_latin_metrics_check_digits( AF_LatinMetrics  metrics,

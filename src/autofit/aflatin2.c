@@ -57,8 +57,7 @@
 
   FT_LOCAL_DEF( void )
   af_latin2_metrics_init_widths( AF_LatinMetrics  metrics,
-                                 FT_Face          face,
-                                 FT_ULong         charcode )
+                                 FT_Face          face )
   {
     /* scan the array of segments in each direction */
     AF_GlyphHintsRec  hints[1];
@@ -77,7 +76,8 @@
       AF_Scaler            scaler = &dummy->root.scaler;
 
 
-      glyph_index = FT_Get_Char_Index( face, charcode );
+      glyph_index = FT_Get_Char_Index( face,
+                                       metrics->root.clazz->standard_char );
       if ( glyph_index == 0 )
         goto Exit;
 
@@ -501,8 +501,7 @@
 
     if ( !error )
     {
-      /* For now, compute the standard width and height from the `o'. */
-      af_latin2_metrics_init_widths( metrics, face, 'o' );
+      af_latin2_metrics_init_widths( metrics, face );
       af_latin2_metrics_init_blues( metrics, face );
       af_latin2_metrics_check_digits( metrics, face );
     }
@@ -2388,6 +2387,7 @@
   AF_DEFINE_SCRIPT_CLASS( af_latin2_script_class,
     AF_SCRIPT_LATIN2,
     af_latin2_uniranges,
+    'o',
 
     sizeof ( AF_LatinMetricsRec ),
 

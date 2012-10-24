@@ -28,7 +28,7 @@ FT_BEGIN_HEADER
 
   /* the CJK-specific script class */
 
-  AF_DECLARE_SCRIPT_CLASS(af_cjk_script_class)
+  AF_DECLARE_SCRIPT_CLASS( af_cjk_script_class )
 
   /* CJK (global) metrics management */
 
@@ -121,15 +121,14 @@ FT_BEGIN_HEADER
                       FT_Outline*    outline,
                       AF_CJKMetrics  metrics );
 
-  /* Shared. called from afindic.c */
+  /* shared; called from afindic.c */
   FT_LOCAL( void )
   af_cjk_metrics_check_digits( AF_CJKMetrics  metrics,
                                FT_Face        face );
 
   FT_LOCAL( void )
   af_cjk_metrics_init_widths( AF_CJKMetrics  metrics,
-                              FT_Face        face,
-                              FT_ULong       charcode );
+                              FT_Face        face );
 #endif /* AF_CONFIG_OPTION_CJK */
 
 
