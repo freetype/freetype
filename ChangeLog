@@ -1,3 +1,10 @@
+2012-10-24  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Only use Unicode CMap.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init): Implement it, to be
+	in sync with `af_face_globals_compute_script_coverage)'.
+
 2012-10-21  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Improve parsing of invalid numbers.
