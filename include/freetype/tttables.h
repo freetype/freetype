@@ -740,6 +740,9 @@ FT_BEGIN_HEADER
   /*    The language ID of `charmap'.  If `charmap' doesn't belong to a    */
   /*    TrueType/sfnt face, just return~0 as the default value.            */
   /*                                                                       */
+  /*    For a format~14 cmap (to access Unicode IVS), the return value is  */
+  /*    0xFFFFFFFF.                                                        */
+  /*                                                                       */
   FT_EXPORT( FT_ULong )
   FT_Get_CMap_Language_ID( FT_CharMap  charmap );
 

@@ -3424,9 +3424,13 @@ FT_BEGIN_HEADER
   /*    code range for CJK characters.                                     */
   /*                                                                       */
   /*    An IVS is registered and unique; for further details please refer  */
-  /*    to Unicode Technical Report #37, the Ideographic Variation         */
-  /*    Database.  To date (October 2007), the character with the most     */
-  /*    variants is U+908A, having 8~such IVS.                             */
+  /*    to Unicode Technical Standard #37, the Ideographic Variation       */
+  /*    Database:                                                          */
+  /*                                                                       */
+  /*      http://www.unicode.org/reports/tr37/                             */
+  /*                                                                       */
+  /*    To date (November 2012), the character with the most variants is   */
+  /*    U+9089, having 31 such IVS.                                        */
   /*                                                                       */
   /*    Adobe and MS decided to support IVS with a new cmap subtable       */
   /*    (format~14).  It is an odd subtable because it is not a mapping of */
