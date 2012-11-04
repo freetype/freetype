@@ -1,3 +1,11 @@
+2012-11-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Clean up emboldening code and improve comments there.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Replace sequential
+	calls to FT_MulFix and FT_DivFix with FT_MulDiv.
+	Mention that bisectors are used to figure out the shift direction.
+
 2012-10-24  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add standard character to `AF_ScriptClassRec' structure.

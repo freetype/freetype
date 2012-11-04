@@ -952,17 +952,18 @@
         /* shift only if turn is less then ~160 degrees */
         if ( 16 * d > l_in * l_out )
         {
-          /* shift components are rotated */
-          shift.x = FT_DivFix( l_out * in.y + l_in * out.y, d );
-          shift.y = FT_DivFix( l_out * in.x + l_in * out.x, d );
+          /* shift components are aligned along bisector        */
+          /* and directed according to the outline orientation. */
+          shift.x = l_out * in.y + l_in * out.y;
+          shift.y = l_out * in.x + l_in * out.x;
 
           if ( orientation == FT_ORIENTATION_TRUETYPE )
             shift.x = -shift.x;
           else
             shift.y = -shift.y;
 
-          shift.x = FT_MulFix( xstrength, shift.x );
-          shift.y = FT_MulFix( ystrength, shift.y );
+          shift.x = FT_MulDiv( shift.x, xstrength, d );
+          shift.y = FT_MulDiv( shift.y, ystrength, d );
         }
         else
           shift.x = shift.y = 0;
