@@ -922,7 +922,7 @@
     for ( c = 0; c < outline->n_contours; c++ )
     {
       FT_Vector  in, out, shift;
-      FT_Fixed   l_in, l_out, d;
+      FT_Fixed   l_in, l_out, l, q, d;
       int        last = outline->contours[c];
 
 
@@ -962,8 +962,22 @@
           else
             shift.y = -shift.y;
 
-          shift.x = FT_MulDiv( shift.x, xstrength, d );
-          shift.y = FT_MulDiv( shift.y, ystrength, d );
+          /* threshold strength to better handle collapsing segments */
+          l = FT_MIN( l_in, l_out );
+          q = out.x * in.y - out.y * in.x;
+          if ( orientation == FT_ORIENTATION_TRUETYPE )
+            q = -q;
+
+          if ( xstrength * q < d * l )
+            shift.x = FT_MulDiv( shift.x, xstrength, d );
+          else
+            shift.x = FT_MulDiv( shift.x, l, q );
+
+          
+          if ( ystrength * q < d * l )
+            shift.y = FT_MulDiv( shift.y, ystrength, d );
+          else
+            shift.y = FT_MulDiv( shift.y, l, q );
         }
         else
           shift.x = shift.y = 0;

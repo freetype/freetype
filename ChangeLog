@@ -1,3 +1,10 @@
+2012-11-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Fortify emboldening code against egregious distortions.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Threshold emboldening
+	strength when it leads to segment collapse.
+
 2012-11-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Clean up emboldening code and improve comments there.
