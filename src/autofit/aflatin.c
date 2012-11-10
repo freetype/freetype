@@ -1848,9 +1848,13 @@
     AF_Edge       anchor     = NULL;
     FT_Int        has_serifs = 0;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_UInt       num_actions = 0;
+#endif
 
-    FT_TRACE5(("%s edge hinting\n", dim == AF_DIMENSION_VERT ? "horizontal"
-                                                             : "vertical"));
+
+    FT_TRACE5(( "%s edge hinting\n",
+                dim == AF_DIMENSION_VERT ? "horizontal" : "vertical" ));
 
     /* we begin by aligning all stems relative to the blue zone */
     /* if needed -- that's only for horizontal edges            */
@@ -1884,6 +1888,7 @@
         if ( !edge1 )
           continue;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
         if (!anchor)
           FT_TRACE5(( "  BLUE_ANCHOR: edge %d (opos=%.2f) snapped to %.2f,"
                       " was %.2f (anchor=edge %d)\n",
@@ -1895,6 +1900,9 @@
                       edge1 - edges, edge1->opos / 64.0, blue->fit / 64.0,
                       edge1->pos / 64.0 ));
 
+        num_actions++;
+#endif
+
         edge1->pos    = blue->fit;
         edge1->flags |= AF_EDGE_DONE;
 
@@ -1902,6 +1910,10 @@
         {
           af_latin_align_linked_edge( hints, dim, edge1, edge2 );
           edge2->flags |= AF_EDGE_DONE;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          num_actions++;
+#endif
         }
 
         if ( !anchor )
@@ -1936,6 +1948,10 @@
 
         af_latin_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        num_actions++;
+#endif
         continue;
       }
 
@@ -2003,6 +2019,10 @@
                     edge->pos / 64.0, edge2->pos / 64.0 ));
 
         af_latin_align_linked_edge( hints, dim, edge, edge2 );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        num_actions += 2;
+#endif
       }
       else
       {
@@ -2068,6 +2088,7 @@
                       edge2 - edges, edge2->opos / 64.0,
                       edge->pos / 64.0, edge2->pos / 64.0 ));
         }
+
         else
         {
           org_pos    = anchor->pos + ( edge->opos - anchor->opos );
@@ -2099,13 +2120,21 @@
                       edge->pos / 64.0, edge2->pos / 64.0 ));
         }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+        num_actions++;
+#endif
+
         edge->flags  |= AF_EDGE_DONE;
         edge2->flags |= AF_EDGE_DONE;
 
         if ( edge > edges && edge->pos < edge[-1].pos )
         {
+#ifdef FT_DEBUG_LEVEL_TRACE
           FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
                       edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
+
+          num_actions++;
+#endif
 
           edge->pos = edge[-1].pos;
         }
@@ -2248,20 +2277,25 @@
           {
             edge->pos = anchor->pos +
                         ( ( edge->opos - anchor->opos + 16 ) & ~31 );
-
             FT_TRACE5(( "  SERIF_LINK2: edge %d (opos=%.2f)"
                         " snapped to %.2f\n",
                         edge - edges, edge->opos / 64.0, edge->pos / 64.0 ));
           }
         }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+        num_actions++;
+#endif
         edge->flags |= AF_EDGE_DONE;
 
         if ( edge > edges && edge->pos < edge[-1].pos )
         {
+#ifdef FT_DEBUG_LEVEL_TRACE
           FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
                       edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
 
+          num_actions++;
+#endif
           edge->pos = edge[-1].pos;
         }
 
@@ -2269,15 +2303,23 @@
              edge[1].flags & AF_EDGE_DONE &&
              edge->pos > edge[1].pos      )
         {
+#ifdef FT_DEBUG_LEVEL_TRACE
           FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
                       edge - edges, edge->pos / 64.0, edge[1].pos / 64.0 ));
+
+          num_actions++;
+#endif
 
           edge->pos = edge[1].pos;
         }
       }
     }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( !num_actions )
+      FT_TRACE5(( "  (none)\n" ));
     FT_TRACE5(( "\n" ));
+#endif
   }
 
 
