@@ -1,3 +1,10 @@
+2012-11-12  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Minor improvement.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_blue_edges): Fix
+	loop.
+
 2012-11-10  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve tracing.

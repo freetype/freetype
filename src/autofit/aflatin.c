@@ -1409,7 +1409,7 @@
     /* for each horizontal edge search the blue zone which is closest */
     for ( ; edge < edge_limit; edge++ )
     {
-      FT_Int    bb;
+      FT_UInt   bb;
       AF_Width  best_blue = NULL;
       FT_Pos    best_dist;  /* initial threshold */
 
@@ -1422,7 +1422,7 @@
       if ( best_dist > 64 / 2 )
         best_dist = 64 / 2;
 
-      for ( bb = 0; bb < AF_LATIN_BLUE_MAX; bb++ )
+      for ( bb = 0; bb < latin->blue_count; bb++ )
       {
         AF_LatinBlue  blue = latin->blues + bb;
         FT_Bool       is_top_blue, is_major_dir;
