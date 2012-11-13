@@ -526,14 +526,6 @@
       if ( face_index < 0 )
         return CFF_Err_Ok;
 
-      /* UNDOCUMENTED!  A CFF in an SFNT can have only a single font. */
-      if ( face_index > 0 )
-      {
-        FT_ERROR(( "cff_face_init: invalid face index\n" ));
-        error = CFF_Err_Invalid_Argument;
-        goto Exit;
-      }
-
       sfnt_format = 1;
 
       /* now, the font can be either an OpenType/CFF font, or an SVG CEF */
@@ -544,7 +536,8 @@
         pure_cff = 0;
 
         /* load font directory */
-        error = sfnt->load_face( stream, face, 0, num_params, params );
+        error = sfnt->load_face( stream, face, face_index,
+                                 num_params, params );
         if ( error )
           goto Exit;
       }
@@ -554,10 +547,6 @@
         error = sfnt->load_cmap( face, stream );
         if ( error )
           goto Exit;
-
-        /* XXX: we don't load the GPOS table, as OpenType Layout     */
-        /* support will be added later to a layout library on top of */
-        /* FreeType 2                                                */
       }
 
       /* now load the CFF part of the file */
