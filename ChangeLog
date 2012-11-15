@@ -1,3 +1,10 @@
+2012-11-15  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Trace stem widths.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Add some
+	FT_TRACE calls.
+
 2012-11-13  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Add support for OpenType Collections (OTC).

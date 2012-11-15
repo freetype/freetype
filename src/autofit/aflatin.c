@@ -60,6 +60,9 @@
     AF_GlyphHintsRec  hints[1];
 
 
+    FT_TRACE5(( "standard widths computation\n"
+                "===========================\n\n" ));
+
     af_glyph_hints_init( hints, face->memory );
 
     metrics->axis[AF_DIMENSION_HORZ].width_count = 0;
@@ -77,6 +80,9 @@
                                        metrics->root.clazz->standard_char );
       if ( glyph_index == 0 )
         goto Exit;
+
+      FT_TRACE5(( "standard character: 0x%X (glyph index %d)\n",
+                  metrics->root.clazz->standard_char, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
       if ( error || face->glyph->outline.n_points <= 0 )
@@ -161,8 +167,27 @@
         axis->edge_distance_threshold = stdw / 5;
         axis->standard_width          = stdw;
         axis->extra_light             = 0;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        {
+          FT_UInt  i;
+
+
+          FT_TRACE5(( "%s widths:\n",
+                      dim == AF_DIMENSION_VERT ? "horizontal"
+                                               : "vertical" ));
+
+          FT_TRACE5(( "  %d (standard)", axis->standard_width ));
+          for ( i = 1; i < axis->width_count; i++ )
+            FT_TRACE5(( " %d", axis->widths[i].org ));
+
+          FT_TRACE5(( "\n" ));
+        }
+#endif
       }
     }
+
+    FT_TRACE5(( "\n" ));
 
     af_glyph_hints_done( hints );
   }
