@@ -968,13 +968,13 @@
           if ( orientation == FT_ORIENTATION_TRUETYPE )
             q = -q;
 
-          if ( xstrength * q < d * l )
+          if ( FT_MulDiv( xstrength, q, l ) < d )
             shift.x = FT_MulDiv( shift.x, xstrength, d );
           else
             shift.x = FT_MulDiv( shift.x, l, q );
 
           
-          if ( ystrength * q < d * l )
+          if ( FT_MulDiv( ystrength, q, l ) < d )
             shift.y = FT_MulDiv( shift.y, ystrength, d );
           else
             shift.y = FT_MulDiv( shift.y, l, q );

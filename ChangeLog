@@ -1,3 +1,9 @@
+2012-11-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Fix integer overflows in dd5718c7d67a.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Use FT_MulDiv.
+
 2012-11-15  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Trace stem widths.
