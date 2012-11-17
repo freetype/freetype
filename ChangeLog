@@ -1,3 +1,7 @@
+2012-11-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/fttrigon.c (ft_trig_downscale): Make 64bit version work.
+
 2012-11-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix integer overflows in dd5718c7d67a.

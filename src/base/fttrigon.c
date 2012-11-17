@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType trigonometric functions (body).                             */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003, 2004, 2005 by                              */
+/*  Copyright 2001-2005, 2012 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -19,6 +19,11 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_TRIGONOMETRY_H
+
+
+#ifdef FT_LONG64
+  typedef FT_INT64  FT_Int64;
+#endif
 
 
   /* the following is 0.2715717684432231 * 2^30 */
@@ -39,7 +44,7 @@
 #define FT_TRIG_SCALE    1166391785UL  /* 0x4585BA38UL */
 
 
-#ifdef FT_CONFIG_HAS_INT64
+#ifdef FT_LONG64
 
   /* multiply a given value by the CORDIC shrink factor */
   static FT_Fixed
@@ -58,7 +63,7 @@
     return ( s >= 0 ) ? val : -val;
   }
 
-#else /* !FT_CONFIG_HAS_INT64 */
+#else /* !FT_LONG64 */
 
   /* multiply a given value by the CORDIC shrink factor */
   static FT_Fixed
@@ -72,10 +77,10 @@
     val = ( val >= 0 ) ? val : -val;
 
     v1 = (FT_UInt32)val >> 16;
-    v2 = (FT_UInt32)(val & 0xFFFFL);
+    v2 = (FT_UInt32)( val & 0xFFFFL );
 
-    k1 = (FT_UInt32)FT_TRIG_SCALE >> 16;       /* constant */
-    k2 = (FT_UInt32)(FT_TRIG_SCALE & 0xFFFFL);   /* constant */
+    k1 = (FT_UInt32)FT_TRIG_SCALE >> 16;           /* constant */
+    k2 = (FT_UInt32)( FT_TRIG_SCALE & 0xFFFFL );   /* constant */
 
     hi   = k1 * v1;
     lo1  = k1 * v2 + k2 * v1;       /* can't overflow */
@@ -93,7 +98,7 @@
     return ( s >= 0 ) ? val : -val;
   }
 
-#endif /* !FT_CONFIG_HAS_INT64 */
+#endif /* !FT_LONG64 */
 
 
   static FT_Int
