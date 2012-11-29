@@ -364,7 +364,8 @@
       /* or string (as e.g. in u003043t.gsf from ghostscript)       */
 
       parser->root.cursor = parser->base_dict;
-      parser->root.limit  = cur + 9;
+      /* set limit to `eexec' + newline + 4 characters */
+      parser->root.limit  = cur + 10;
 
       cur   = parser->root.cursor;
       limit = parser->root.limit;

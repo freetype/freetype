@@ -1,3 +1,12 @@
+2012-11-29  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Fix Savannah bug #37831.
+
+	The bug report also contains a patch.
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict) <found>: Really fix
+	change from 2012-09-17.
+
 2012-11-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Fix formatting and typo.
