@@ -1,3 +1,7 @@
+2012-11-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Fix formatting and typo.
+
 2012-11-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[cid, type1, type42] Clean up units_per_EM calculations.
@@ -5,7 +9,6 @@
 	* src/cid/cidload.c (cid_parse_font_matrix): Updated.
 	* src/type1/t1load.c (t1_parse_font_matrix): Updated.
 	* src/type42/t42parse.c (t42_parse_font_matrix): Updated.
-
 
 2012-11-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 

@@ -6713,7 +6713,7 @@
          ( CUR.opcode & 16 ) == 0                               &&
          ( CUR.opcode & 8 ) == 0                                &&
          ( CUR.sph_tweak_flags & SPH_TWEAK_COURIER_NEW_2_HACK ) )
-      distance +=64;
+      distance += 64;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     CUR_Func_move( &CUR.zp1, point, distance - cur_dist );
@@ -6739,7 +6739,7 @@
       if ( ( CUR.sph_tweak_flags &
              SPH_TWEAK_DELTAP_SKIP_EXAGGERATED_VALUES ) &&
            !reverse_move                                &&
-           abs ( B1 - B2 ) >= 64                        )
+           FT_ABS( B1 - B2 ) >= 64                      )
         reverse_move = TRUE;
     }
 
