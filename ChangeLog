@@ -7,7 +7,7 @@
 	* builds/unix/configure.raw <cpp computation of bit length>: Don't
 	remove existing FreeType configuration files.
 
-2012-11-29  Werner Lemberg  <wl@gnu.org>
+2012-11-29  John Tytgat  <John.Tytgat@esko.com>
 
 	[type1] Fix Savannah bug #37831.
 
