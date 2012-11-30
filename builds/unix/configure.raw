@@ -103,8 +103,14 @@ AC_CHECK_SIZEOF([long])
 AC_MSG_CHECKING([whether cpp computation of bit length in ftconfig.in works])
 orig_CPPFLAGS="${CPPFLAGS}"
 CPPFLAGS="-I${srcdir} -I. ${CPPFLAGS}"
-ac_clean_files="ft2build.h ftoption.h ftstdlib.h"
-touch ft2build.h ftoption.h ftstdlib.h
+
+ac_clean_files=
+for f in ft2build.h ftoption.h ftstdlib.h; do
+  if test ! -f $f; then
+    ac_clean_files="$ac_clean_files $f"
+    touch $f
+  fi
+done
 
 cat > conftest.c <<\_ACEOF
 #include <limits.h>
@@ -123,7 +129,7 @@ echo >> conftest.c "#endif"
 
 ${CPP} ${CPPFLAGS} conftest.c | ${GREP} ac_cpp_ft > conftest.sh
 eval `cat conftest.sh`
-rm -f conftest.c conftest.sh confft2build.h ftoption.h ftstdlib.h
+rm -f conftest.* $ac_clean_files
 
 if test x != "x${ac_cpp_ft_sizeof_int}" \
    -a x != x"${ac_cpp_ft_sizeof_long}"; then
