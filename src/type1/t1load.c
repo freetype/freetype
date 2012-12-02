@@ -239,18 +239,11 @@
     for ( j = 1; j < axismap->num_points; ++j )
     {
       if ( ncv <= axismap->blend_points[j] )
-      {
-        FT_Fixed  t = FT_MulDiv( ncv - axismap->blend_points[j - 1],
-                                 0x10000L,
-                                 axismap->blend_points[j] -
-                                   axismap->blend_points[j - 1] );
-
         return INT_TO_FIXED( axismap->design_points[j - 1] ) +
-                 FT_MulDiv( t,
-                            axismap->design_points[j] -
-                              axismap->design_points[j - 1],
-                            1L );
-      }
+               ( axismap->design_points[j] - axismap->design_points[j - 1] ) *
+               FT_DivFix( ncv - axismap->blend_points[j - 1],
+                          axismap->blend_points[j] -
+                            axismap->blend_points[j - 1] );
     }
 
     return INT_TO_FIXED( axismap->design_points[axismap->num_points - 1] );
