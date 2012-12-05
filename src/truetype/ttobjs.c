@@ -1190,13 +1190,15 @@
       size->ttmetrics.scale   = metrics->x_scale;
       size->ttmetrics.ppem    = metrics->x_ppem;
       size->ttmetrics.x_ratio = 0x10000L;
-      size->ttmetrics.y_ratio = FT_DivFix( metrics->y_ppem, metrics->x_ppem );
+      size->ttmetrics.y_ratio = FT_DivFix( metrics->y_ppem,
+                                           metrics->x_ppem );
     }
     else
     {
       size->ttmetrics.scale   = metrics->y_scale;
       size->ttmetrics.ppem    = metrics->y_ppem;
-      size->ttmetrics.x_ratio = FT_DivFix( metrics->x_ppem, metrics->y_ppem );
+      size->ttmetrics.x_ratio = FT_DivFix( metrics->x_ppem,
+                                           metrics->y_ppem );
       size->ttmetrics.y_ratio = 0x10000L;
     }
 
