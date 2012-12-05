@@ -1,3 +1,13 @@
+2012-12-03  John Tytgat  <John.Tytgat@esko.com>
+
+	[pshinter] Clamp BlueScale value.
+
+	This is Savannah bug #37856.
+
+	* src/pshinter/pshglob.c (psh_calc_max_height): New function.
+	(psh_globals_new): Use it to limit BlueScale value to
+	`1 / max_of_blue_zone_heights'.
+
 2012-12-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype, type1] Revise the use of FT_MulDiv.
