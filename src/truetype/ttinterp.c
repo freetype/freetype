@@ -37,10 +37,6 @@
 #define xxxSPH_DEBUG
 #define xxxSPH_DEBUG_MORE_VERBOSE
 
-#define TT_MULFIX           FT_MulFix
-#define TT_MULDIV           FT_MulDiv
-#define TT_MULDIV_NO_ROUND  FT_MulDiv_No_Round
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -1667,9 +1663,9 @@
           FT_Long  x, y;
 
 
-          x = TT_MULDIV( CUR.GS.projVector.x,
+          x = FT_MulDiv( CUR.GS.projVector.x,
                          CUR.tt_metrics.x_ratio, 0x4000 );
-          y = TT_MULDIV( CUR.GS.projVector.y,
+          y = FT_MulDiv( CUR.GS.projVector.y,
                          CUR.tt_metrics.y_ratio, 0x4000 );
           CUR.tt_metrics.ratio = TT_VecLen( x, y );
         }
@@ -1682,7 +1678,7 @@
   static FT_Long
   Current_Ppem( EXEC_OP )
   {
-    return TT_MULFIX( CUR.tt_metrics.ppem, CURRENT_Ratio() );
+    return FT_MulFix( CUR.tt_metrics.ppem, CURRENT_Ratio() );
   }
 
 
@@ -1703,7 +1699,7 @@
   FT_CALLBACK_DEF( FT_F26Dot6 )
   Read_CVT_Stretched( EXEC_OP_ FT_ULong  idx )
   {
-    return TT_MULFIX( CUR.cvt[idx], CURRENT_Ratio() );
+    return FT_MulFix( CUR.cvt[idx], CURRENT_Ratio() );
   }
 
 
@@ -1857,7 +1853,7 @@
       if ( !CUR.ignore_x_mode                                ||
            ( CUR.sph_tweak_flags & SPH_TWEAK_ALLOW_X_DMOVE ) )
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-      zone->cur[point].x += TT_MULDIV( distance,
+      zone->cur[point].x += FT_MulDiv( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
 
@@ -1868,7 +1864,7 @@
 
     if ( v != 0 )
     {
-      zone->cur[point].y += TT_MULDIV( distance,
+      zone->cur[point].y += FT_MulDiv( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
 
@@ -1909,14 +1905,14 @@
     v = CUR.GS.freeVector.x;
 
     if ( v != 0 )
-      zone->org[point].x += TT_MULDIV( distance,
+      zone->org[point].x += FT_MulDiv( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
 
     v = CUR.GS.freeVector.y;
 
     if ( v != 0 )
-      zone->org[point].y += TT_MULDIV( distance,
+      zone->org[point].y += FT_MulDiv( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
   }
@@ -3123,7 +3119,7 @@
 
 
 #define DO_SSW                                                     \
-    CUR.GS.single_width_value = TT_MULFIX( args[0],                \
+    CUR.GS.single_width_value = FT_MulFix( args[0],                \
                                            CUR.tt_metrics.scale );
 
 
@@ -3301,11 +3297,11 @@
     if ( args[1] == 0 )                                      \
       CUR.error = TT_Err_Divide_By_Zero;                     \
     else                                                     \
-      args[0] = TT_MULDIV_NO_ROUND( args[0], 64L, args[1] );
+      args[0] = FT_MulDiv_No_Round( args[0], 64L, args[1] );
 
 
 #define DO_MUL                                    \
-    args[0] = TT_MULDIV( args[0], args[1], 64L );
+    args[0] = FT_MulDiv( args[0], args[1], 64L );
 
 
 #define DO_ABS                   \
@@ -3439,7 +3435,7 @@
        }                                                        \
      }                                                          \
      else                                                       \
-       CUR.cvt[I] = TT_MULFIX( args[1], CUR.tt_metrics.scale ); \
+       CUR.cvt[I] = FT_MulFix( args[1], CUR.tt_metrics.scale ); \
    }
 
 
@@ -5359,15 +5355,15 @@
           {
             /* this should be faster */
             D = CUR_Func_dualproj( vec1, vec2 );
-            D = TT_MULFIX( D, CUR.metrics.x_scale );
+            D = FT_MulFix( D, CUR.metrics.x_scale );
           }
           else
           {
             FT_Vector  vec;
 
 
-            vec.x = TT_MULFIX( vec1->x - vec2->x, CUR.metrics.x_scale );
-            vec.y = TT_MULFIX( vec1->y - vec2->y, CUR.metrics.y_scale );
+            vec.x = FT_MulFix( vec1->x - vec2->x, CUR.metrics.x_scale );
+            vec.y = FT_MulFix( vec1->y - vec2->y, CUR.metrics.y_scale );
 
             D = CUR_fast_dualproj( &vec );
           }
@@ -5838,10 +5834,10 @@
     else
 #endif
     {
-      *x = TT_MULDIV( d,
+      *x = FT_MulDiv( d,
                       (FT_Long)CUR.GS.freeVector.x * 0x10000L,
                       CUR.F_dot_P );
-      *y = TT_MULDIV( d,
+      *y = FT_MulDiv( d,
                       (FT_Long)CUR.GS.freeVector.y * 0x10000L,
                       CUR.F_dot_P );
     }
@@ -6463,15 +6459,15 @@
       {
         /* this should be faster */
         org_dist = CUR_Func_dualproj( vec1, vec2 );
-        org_dist = TT_MULFIX( org_dist, CUR.metrics.x_scale );
+        org_dist = FT_MulFix( org_dist, CUR.metrics.x_scale );
       }
       else
       {
         FT_Vector  vec;
 
 
-        vec.x = TT_MULFIX( vec1->x - vec2->x, CUR.metrics.x_scale );
-        vec.y = TT_MULFIX( vec1->y - vec2->y, CUR.metrics.y_scale );
+        vec.x = FT_MulFix( vec1->x - vec2->x, CUR.metrics.x_scale );
+        vec.y = FT_MulFix( vec1->y - vec2->y, CUR.metrics.y_scale );
 
         org_dist = CUR_fast_dualproj( &vec );
       }
@@ -6877,10 +6873,10 @@
 
     CUR.zp2.tags[point] |= FT_CURVE_TAG_TOUCH_BOTH;
 
-    discriminant = TT_MULDIV( dax, -dby, 0x40 ) +
-                   TT_MULDIV( day, dbx, 0x40 );
-    dotproduct   = TT_MULDIV( dax, dbx, 0x40 ) +
-                   TT_MULDIV( day, dby, 0x40 );
+    discriminant = FT_MulDiv( dax, -dby, 0x40 ) +
+                   FT_MulDiv( day, dbx, 0x40 );
+    dotproduct   = FT_MulDiv( dax, dbx, 0x40 ) +
+                   FT_MulDiv( day, dby, 0x40 );
 
     /* The discriminant above is actually a cross product of vectors     */
     /* da and db. Together with the dot product, they can be used as     */
@@ -6892,10 +6888,10 @@
     /* thresholding abs(tan(angle)) at 1/19, corresponding to 3 degrees. */
     if ( 19 * FT_ABS( discriminant ) > FT_ABS( dotproduct ) )
     {
-      val = TT_MULDIV( dx, -dby, 0x40 ) + TT_MULDIV( dy, dbx, 0x40 );
+      val = FT_MulDiv( dx, -dby, 0x40 ) + FT_MulDiv( dy, dbx, 0x40 );
 
-      R.x = TT_MULDIV( val, dax, discriminant );
-      R.y = TT_MULDIV( val, day, discriminant );
+      R.x = FT_MulDiv( val, dax, discriminant );
+      R.y = FT_MulDiv( val, day, discriminant );
 
       CUR.zp2.cur[point].x = CUR.zp1.cur[a0].x + R.x;
       CUR.zp2.cur[point].y = CUR.zp1.cur[a0].y + R.y;
@@ -7019,9 +7015,9 @@
         FT_Vector  vec;
 
 
-        vec.x = TT_MULFIX( CUR.zp1.orus[CUR.GS.rp2].x - orus_base->x,
+        vec.x = FT_MulFix( CUR.zp1.orus[CUR.GS.rp2].x - orus_base->x,
                            CUR.metrics.x_scale );
-        vec.y = TT_MULFIX( CUR.zp1.orus[CUR.GS.rp2].y - orus_base->y,
+        vec.y = FT_MulFix( CUR.zp1.orus[CUR.GS.rp2].y - orus_base->y,
                            CUR.metrics.y_scale );
 
         old_range = CUR_fast_dualproj( &vec );
@@ -7056,9 +7052,9 @@
         FT_Vector  vec;
 
 
-        vec.x = TT_MULFIX( CUR.zp2.orus[point].x - orus_base->x,
+        vec.x = FT_MulFix( CUR.zp2.orus[point].x - orus_base->x,
                            CUR.metrics.x_scale );
-        vec.y = TT_MULFIX( CUR.zp2.orus[point].y - orus_base->y,
+        vec.y = FT_MulFix( CUR.zp2.orus[point].y - orus_base->y,
                            CUR.metrics.y_scale );
 
         org_dist = CUR_fast_dualproj( &vec );
@@ -7068,7 +7064,7 @@
 
       if ( org_dist )
         new_dist = ( old_range != 0 )
-                     ? TT_MULDIV( org_dist, cur_range, old_range )
+                     ? FT_MulDiv( org_dist, cur_range, old_range )
                      : cur_dist;
       else
         new_dist = 0;
@@ -7229,12 +7225,12 @@
           if ( !scale_valid )
           {
             scale_valid = 1;
-            scale       = TT_MULDIV( org2 + delta2 - ( org1 + delta1 ),
-                                     0x10000L, orus2 - orus1 );
+            scale       = FT_DivFix( org2 + delta2 - ( org1 + delta1 ),
+                                     orus2 - orus1 );
           }
 
           x = ( org1 + delta1 ) +
-              TT_MULFIX( worker->orus[i].x - orus1, scale );
+              FT_MulFix( worker->orus[i].x - orus1, scale );
         }
         worker->curs[i].x = x;
       }

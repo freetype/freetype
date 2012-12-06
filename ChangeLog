@@ -1,3 +1,10 @@
+2012-12-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Cosmetic improvement in bytecode interpreter.
+
+	* src/truetype/ttinterp.c: Use explicit calls to FT_MulDiv,
+	FT_MulFix, and FT_DivFix instead of macros.
+
 2012-12-03  John Tytgat  <John.Tytgat@esko.com>
 
 	[pshinter] Clamp BlueScale value.
