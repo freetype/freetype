@@ -1,3 +1,12 @@
+2012-12-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Microoptimizations in bytecode interpreter.
+
+	* src/truetype/ttinterp.c (TT_DivFix14): New macro.
+	(Normalize): Use it here.
+	(Current_Ratio): Use TT_MulFix14 instead of FT_MulDiv.
+	(Ins_SHPIX): Cancel out two TT_MulFix14 calls.
+
 2012-12-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Cosmetic improvement in bytecode interpreter.
@@ -750,7 +759,7 @@
 	(ALWAYS_SKIP_DELTAP_Rules): Add Russian char 0x438.
 	(COMPATIBLE_WIDTHS_Rules): Rearrange some rules.
 	(X_SCALING_Rules): Adjust Verdana `a' at 12 and 13 ppem.
-	
+
 	* src/truetype/ttsubpix.c: Updated.
 	(sph_set_tweaks): Re-execute fpgm always.
 

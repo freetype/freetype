@@ -231,6 +231,14 @@
 #define BOUNDS( x, n )   ( (FT_UInt)(x)  >= (FT_UInt)(n)  )
 #define BOUNDSL( x, n )  ( (FT_ULong)(x) >= (FT_ULong)(n) )
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* This macro computes (a*2^14)/b and compliments TT_MulFix14.           */
+  /*                                                                       */
+#define TT_DivFix14( a, b ) \
+          FT_DivFix( a, (b) << 2 )
+
+
 #undef  SUCCESS
 #define SUCCESS  0
 
@@ -1660,13 +1668,13 @@
 
         else
         {
-          FT_Long  x, y;
+          FT_F26Dot6  x, y;
 
 
-          x = FT_MulDiv( CUR.GS.projVector.x,
-                         CUR.tt_metrics.x_ratio, 0x4000 );
-          y = FT_MulDiv( CUR.GS.projVector.y,
-                         CUR.tt_metrics.y_ratio, 0x4000 );
+          x = TT_MulFix14( CUR.GS.projVector.x,
+                           CUR.tt_metrics.x_ratio );
+          y = TT_MulFix14( CUR.GS.projVector.y,
+                           CUR.tt_metrics.y_ratio );
           CUR.tt_metrics.ratio = TT_VecLen( x, y );
         }
       }
@@ -2751,16 +2759,16 @@
         return SUCCESS;
       }
 
-      R->x = (FT_F2Dot14)FT_MulDiv( Vx, 0x4000L, W );
-      R->y = (FT_F2Dot14)FT_MulDiv( Vy, 0x4000L, W );
+      R->x = (FT_F2Dot14)TT_DivFix14( Vx, W );
+      R->y = (FT_F2Dot14)TT_DivFix14( Vy, W );
 
       return SUCCESS;
     }
 
     W = TT_VecLen( Vx, Vy );
 
-    Vx = FT_MulDiv( Vx, 0x4000L, W );
-    Vy = FT_MulDiv( Vy, 0x4000L, W );
+    Vx = TT_DivFix14( Vx, W );
+    Vy = TT_DivFix14( Vy, W );
 
     W = Vx * Vx + Vy * Vy;
 
@@ -6076,13 +6084,13 @@
     {
       if ( CUR.GS.both_x_axis )
       {
-        dx = TT_MulFix14( (FT_UInt32)args[0], 0x4000 );
+        dx = (FT_UInt32)args[0];
         dy = 0;
       }
       else
       {
         dx = 0;
-        dy = TT_MulFix14( (FT_UInt32)args[0], 0x4000 );
+        dy = (FT_UInt32)args[0];
       }
     }
     else
