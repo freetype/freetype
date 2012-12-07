@@ -233,7 +233,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* This macro computes (a*2^14)/b and compliments TT_MulFix14.           */
+  /* This macro computes (a*2^14)/b and complements TT_MulFix14.           */
   /*                                                                       */
 #define TT_DivFix14( a, b ) \
           FT_DivFix( a, (b) << 2 )
@@ -1671,10 +1671,10 @@
           FT_F26Dot6  x, y;
 
 
-          x = TT_MulFix14( CUR.GS.projVector.x,
-                           CUR.tt_metrics.x_ratio );
-          y = TT_MulFix14( CUR.GS.projVector.y,
-                           CUR.tt_metrics.y_ratio );
+          x = TT_MulFix14( CUR.tt_metrics.x_ratio,
+                           CUR.GS.projVector.x );
+          y = TT_MulFix14( CUR.tt_metrics.y_ratio,
+                           CUR.GS.projVector.y );
           CUR.tt_metrics.ratio = TT_VecLen( x, y );
         }
       }
