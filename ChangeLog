@@ -1,3 +1,10 @@
+2012-12-09  Johnson Y. Yan  <yinsen_yan@foxitsoftware.com>
+
+	[type1] Another fix for 2012-09-17 commit.
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict) <found>: Correctly set
+	`limit' value.
+
 2012-12-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Tweak the previous commit.
