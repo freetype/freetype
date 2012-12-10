@@ -1861,9 +1861,7 @@
       if ( !CUR.ignore_x_mode                                ||
            ( CUR.sph_tweak_flags & SPH_TWEAK_ALLOW_X_DMOVE ) )
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-      zone->cur[point].x += FT_MulDiv( distance,
-                                       v * 0x10000L,
-                                       CUR.F_dot_P );
+      zone->cur[point].x += FT_MulDiv( distance, v, CUR.F_dot_P );
 
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_X;
     }
@@ -1872,9 +1870,7 @@
 
     if ( v != 0 )
     {
-      zone->cur[point].y += FT_MulDiv( distance,
-                                       v * 0x10000L,
-                                       CUR.F_dot_P );
+      zone->cur[point].y += FT_MulDiv( distance, v, CUR.F_dot_P );
 
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_Y;
     }
@@ -1913,16 +1909,12 @@
     v = CUR.GS.freeVector.x;
 
     if ( v != 0 )
-      zone->org[point].x += FT_MulDiv( distance,
-                                       v * 0x10000L,
-                                       CUR.F_dot_P );
+      zone->org[point].x += FT_MulDiv( distance, v, CUR.F_dot_P );
 
     v = CUR.GS.freeVector.y;
 
     if ( v != 0 )
-      zone->org[point].y += FT_MulDiv( distance,
-                                       v * 0x10000L,
-                                       CUR.F_dot_P );
+      zone->org[point].y += FT_MulDiv( distance, v, CUR.F_dot_P );
   }
 
 
@@ -2646,12 +2638,13 @@
 #endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING */
 
     if ( CUR.GS.freeVector.x == 0x4000 )
-      CUR.F_dot_P = CUR.GS.projVector.x * 0x10000L;
+      CUR.F_dot_P = CUR.GS.projVector.x;
     else if ( CUR.GS.freeVector.y == 0x4000 )
-      CUR.F_dot_P = CUR.GS.projVector.y * 0x10000L;
+      CUR.F_dot_P = CUR.GS.projVector.y;
     else
-      CUR.F_dot_P = (FT_Long)CUR.GS.projVector.x * CUR.GS.freeVector.x * 4 +
-                    (FT_Long)CUR.GS.projVector.y * CUR.GS.freeVector.y * 4;
+      CUR.F_dot_P = ( (FT_Long)CUR.GS.projVector.x * CUR.GS.freeVector.x +
+                      (FT_Long)CUR.GS.projVector.y * CUR.GS.freeVector.y ) >>
+                    14;
 
     if ( CUR.GS.projVector.x == 0x4000 )
       CUR.func_project = (TT_Project_Func)Project_x;
@@ -2670,7 +2663,7 @@
     CUR.func_move      = (TT_Move_Func)Direct_Move;
     CUR.func_move_orig = (TT_Move_Func)Direct_Move_Orig;
 
-    if ( CUR.F_dot_P == 0x40000000L )
+    if ( CUR.F_dot_P == 0x4000L )
     {
       if ( CUR.GS.freeVector.x == 0x4000 )
       {
@@ -2687,8 +2680,8 @@
     /* at small sizes, F_dot_P can become too small, resulting   */
     /* in overflows and `spikes' in a number of glyphs like `w'. */
 
-    if ( FT_ABS( CUR.F_dot_P ) < 0x4000000L )
-      CUR.F_dot_P = 0x40000000L;
+    if ( FT_ABS( CUR.F_dot_P ) < 0x400L )
+      CUR.F_dot_P = 0x4000L;
 
     /* Disable cached aspect ratio */
     CUR.tt_metrics.ratio = 0;
@@ -5827,12 +5820,8 @@
     else
 #endif
     {
-      *x = FT_MulDiv( d,
-                      (FT_Long)CUR.GS.freeVector.x * 0x10000L,
-                      CUR.F_dot_P );
-      *y = FT_MulDiv( d,
-                      (FT_Long)CUR.GS.freeVector.y * 0x10000L,
-                      CUR.F_dot_P );
+      *x = FT_MulDiv( d, (FT_Long)CUR.GS.freeVector.x, CUR.F_dot_P );
+      *y = FT_MulDiv( d, (FT_Long)CUR.GS.freeVector.y, CUR.F_dot_P );
     }
 
     return SUCCESS;

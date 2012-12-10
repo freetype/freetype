@@ -764,7 +764,7 @@
     exec->threshold = 0;
 
     exec->instruction_trap = FALSE;
-    exec->F_dot_P          = 0x10000L;
+    exec->F_dot_P          = 0x4000L;
 
     exec->pedantic_hinting = pedantic;
 

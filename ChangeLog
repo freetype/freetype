@@ -1,3 +1,33 @@
+2012-12-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Scale F_dot_P down.
+
+	The dot product between freeVector and projVector or cosine of
+	the angle between these FT_F2Dot14 unit vectors used to be scaled up
+	by 4 and routinely occupied 32 bits in an FT_Long field F_dot_P.
+	This patch scales the value down by 2^14 instead, which simplifies 
+	its use throughout the bytecode interpreter.
+
+	This does not lead to the loss of precision because the lower bits
+	are unreliable anyway. Consider two unit vectors (1,0) and (.6,.8)
+	for which the true value of F_dot_P is .6 * 0x40000000 = 0x26666666.
+	These vectors are stored as (0x4000,0) and (0x2666,0x3333) after
+	rounding and F_dot_P is assigned 0x26660000. The lower bits were
+	already lost while rounding the unit vector components.
+
+	Besides code simplification, this change can lead to better
+	performance when FT_MulDiv with the scaled-down F_dot_P is less
+	likely to use the costly 64-bit path. We are not changing the type
+	of F_dot_P to FT_F2Dot14 at this point.  
+
+	* src/truetype/ttinterp.c (Compute_Funcs): Scale F_dot_P down by 14
+	bits and modify its use accordingly.
+	(Direct_Move, Direct_Move_Orig, Compute_Point_Displacement): Modify
+	the use of F_dot_P field.
+	* src/truetype/ttobjs.c (tt_size_run_fpgm): Change arbitrary
+	assignment of F_dot_P to its theoretical maximum in case we decide
+	to scale back its type later.
+
 2012-12-09  Johnson Y. Yan  <yinsen_yan@foxitsoftware.com>
 
 	[type1] Another fix for 2012-09-17 commit.
