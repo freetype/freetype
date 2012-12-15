@@ -2169,7 +2169,10 @@
       p->cnt = p->font->props_size = _bdf_atoul( p->list.field[1], 0, 10 );
 
       if ( FT_NEW_ARRAY( p->font->props, p->cnt ) )
+      {
+        p->font->props_size = 0;
         goto Exit;
+      }
 
       p->flags |= _BDF_PROPS;
       *next     = _bdf_parse_properties;
