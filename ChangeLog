@@ -1,5 +1,12 @@
 2012-12-15  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #37906.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs): Use correct array size for
+	checking `glyph_enc'.
+
+2012-12-15  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Fix Savannah bug #37905.
 
 	* src/bdf/bdflib.c (_bdf_parse_start): Reset `props_size' to zero in

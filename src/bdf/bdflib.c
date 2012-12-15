@@ -1628,8 +1628,9 @@
 
       /* Check that the encoding is in the Unicode range because  */
       /* otherwise p->have (a bitmap with static size) overflows. */
-      if ( p->glyph_enc > 0                               &&
-           (size_t)p->glyph_enc >= sizeof ( p->have ) * 8 )
+      if ( p->glyph_enc > 0                                      &&
+           (size_t)p->glyph_enc >= sizeof ( p->have ) /
+                                   sizeof ( unsigned long ) * 32 )
       {
         FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG5, lineno, "ENCODING" ));
         error = BDF_Err_Invalid_File_Format;
