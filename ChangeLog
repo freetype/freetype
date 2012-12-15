@@ -1,17 +1,24 @@
 2012-12-15  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix Savannah bug #37907.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <ENCODING>: Normalize
+	negative second parameter of `ENCODING' field also.
+
+2012-12-15  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Fix Savannah bug #37906.
 
-	* src/bdf/bdflib.c (_bdf_parse_glyphs): Use correct array size for
-	checking `glyph_enc'.
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <ENCODING>: Use correct array
+	size for checking `glyph_enc'.
 
 2012-12-15  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Fix Savannah bug #37905.
 
-	* src/bdf/bdflib.c (_bdf_parse_start): Reset `props_size' to zero in
-	case of allocation error; this value gets used in a loop in
-	`bdf_free_font'.
+	* src/bdf/bdflib.c (_bdf_parse_start) <STARTPROPERTIES>: Reset
+	`props_size' to zero in case of allocation error; this value gets
+	used in a loop in `bdf_free_font'.
 
 2012-12-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 

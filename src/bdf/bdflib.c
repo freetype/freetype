@@ -1624,6 +1624,9 @@
       if ( p->glyph_enc == -1 && p->list.used > 2 )
         p->glyph_enc = _bdf_atol( p->list.field[2], 0, 10 );
 
+      if ( p->glyph_enc < -1 )
+        p->glyph_enc = -1;
+
       FT_TRACE4(( DBGMSG2, p->glyph_enc ));
 
       /* Check that the encoding is in the Unicode range because  */
