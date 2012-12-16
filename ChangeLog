@@ -1,3 +1,9 @@
+2012-12-16  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix Savannah bug #37936.
+
+	* src/sfnt/ttload.c (tt_face_load_gasp): Avoid memory leak.
+
 2012-12-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix 11-year old bug.
@@ -705,7 +711,7 @@
 
 	Revert the last commit 45337b07.
 
-	* src/base/ftstroke.c (FT_Stroker_New): Revert the previous chenge.
+	* src/base/ftstroke.c (FT_Stroker_New): Revert the previous change.
 
 2012-07-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
