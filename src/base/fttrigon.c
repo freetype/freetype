@@ -41,7 +41,7 @@
   };
 
   /* the Cordic shrink factor, multiplied by 2^32 */
-#define FT_TRIG_SCALE    1166391785UL  /* 0x4585BA38UL */
+#define FT_TRIG_SCALE    1166391864UL  /* 0x4585BA38UL */
 
 
 #ifdef FT_LONG64

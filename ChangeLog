@@ -1,3 +1,14 @@
+2012-12-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Fix 11-year old bug.
+
+	Since the initial commit (ebe85f59) the value of FT_TRIG_SCALE has
+	always been slightly less than the correct value, which has been
+	given in the comment as a hexadecimal. As a result, vector lengths
+	were underestimated and rotated vectors were shortened.
+
+	* src/base/fttrigon.c (FT_TRIG_SCALE): Fix macro value.
+
 2012-12-15  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Fix Savannah bug #37907.
