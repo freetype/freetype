@@ -92,6 +92,7 @@ FT_BEGIN_HEADER
 
 #endif /* !C++ */
 
+
   /*
    * @macro:
    *   FT_FACE_FIND_GLOBAL_SERVICE
@@ -578,7 +579,7 @@ FT_BEGIN_HEADER
   /*
    *  A magic number used within the services cache.
    */
-#define FT_SERVICE_UNAVAILABLE  ((FT_Pointer)-2)  /* magic number */
+#define FT_SERVICE_UNAVAILABLE  ((FT_Pointer)~1)  /* magic number */
 
 
   /*

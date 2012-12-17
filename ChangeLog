@@ -1,3 +1,18 @@
+2012-12-16  Werner Lemberg  <wl@gnu.org>
+
+	Various compiler warning fixes.
+
+	* include/freetype/internal/ftserv.h (FT_SERVICE_UNAVAILABLE): Use
+	`logical not' operator instead of negation.  The idea is that `~'
+	returns exactly the data type enforced by the cast to a pointer (be
+	it 32bit or 64bit or whatever), while a negative integer has not
+	this flexibility.
+	* src/cache/ftccmap.c (FTC_CMAP_UNKNOWN): Ditto.
+	* src/truetype/ttgxvar.c (ALL_POINTS, TT_Get_MM_Var): Ditto.
+	* src/type/t1load.c (T1_Get_MM_Var): Ditto.
+	(parse_blend_axis_types): Use cast.
+	* src/bdf/bdflib.c (_bdf_readstream): Use cast.
+
 2012-12-16  Infinality  <infinality@infinality.net>
 
 	[truetype] Remove unusued code and variables.  Add minor fixes.
@@ -30,7 +45,7 @@
 	(Ins_MIRP): Don't round x in cut-in calculation.  Add logic to handle
 	ttfautohinted fonts.
 
-    2012-12-16  Werner Lemberg  <wl@gnu.org>
+2012-12-16  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix Savannah bug #37936.
 

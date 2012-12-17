@@ -91,7 +91,7 @@
   /* indicates that there is a delta for every point without needing to    */
   /* enumerate all of them.                                                */
   /*                                                                       */
-#define ALL_POINTS  (FT_UShort*)( -1 )
+#define ALL_POINTS  (FT_UShort*)( ~0 )
 
 
 #define GX_PT_POINTS_ARE_WORDS      0x80
@@ -703,7 +703,7 @@
       mmvar->num_axis =
         fvar_head.axisCount;
       mmvar->num_designs =
-        (FT_UInt)-1;           /* meaningless in this context; each glyph */
+        ~0;                    /* meaningless in this context; each glyph */
                                /* may have a different number of designs  */
                                /* (or tuples, as called by Apple)         */
       mmvar->num_namedstyles =

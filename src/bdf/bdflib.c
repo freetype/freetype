@@ -770,11 +770,11 @@
       /* XXX: Use encoding independent value for 0x1a */
       if ( buf[start] != '#' && buf[start] != 0x1a && end > start )
       {
-        error = (*cb)( buf + start, end - start, lineno,
+        error = (*cb)( buf + start, (unsigned long)( end - start ), lineno,
                        (void*)&cb, client_data );
         /* Redo if we have encountered CHARS without properties. */
         if ( error == -1 )
-          error = (*cb)( buf + start, end - start, lineno,
+          error = (*cb)( buf + start, (unsigned long)( end - start ), lineno,
                          (void*)&cb, client_data );
         if ( error )
           break;
