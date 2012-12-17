@@ -4610,7 +4610,6 @@
     FT_ULong       n;
     TT_DefRecord*  rec;
     TT_DefRecord*  limit;
-
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_Byte    opcode_pattern[7][12] = {
                  /* inline delta function 1 */
