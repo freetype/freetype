@@ -932,7 +932,7 @@
       /* the amount was determined via experimentation */
       if ( x_scale_factor != 1000 && ppem > 11 )
         FT_Outline_EmboldenXY( outline,
-                               FT_MulDiv( 16 * ppem,
+                               FT_MulDiv( 80 * ppem,
                                           1000 - x_scale_factor,
                                           0x1000L ), 0 );
 #else

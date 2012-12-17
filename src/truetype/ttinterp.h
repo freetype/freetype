@@ -285,14 +285,9 @@ FT_BEGIN_HEADER
     FT_Int             rasterizer_version;    /* MS rasterizer version */
 
     FT_Bool            iup_called;            /* IUP called for glyph?  */
-    FT_Bool            in_delta_function;     /* inside an inline delta */
-                                              /* function?              */
 
     FT_ULong           sph_tweak_flags;       /* flags to control */
                                               /* hint tweaks      */
-
-    FT_Int             num_delta_funcs;
-    FT_ULong           inline_delta_funcs[5];
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
   } TT_ExecContextRec;

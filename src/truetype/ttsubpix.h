@@ -259,6 +259,7 @@ FT_BEGIN_HEADER
         "Lucida Console",
         "Lucida Grande",
         "Lucida Sans Unicode",
+        "Lucida Sans Typewriter",
         "Microsoft Sans Serif",
         "Monaco",
         "Tahoma",
@@ -414,7 +415,7 @@ FT_BEGIN_HEADER
   };
 
 
-#define SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  5
+#define SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  6
 
   SPH_TweakRule  SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions
                    [SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE] =
@@ -425,6 +426,7 @@ FT_BEGIN_HEADER
     { "Verdana", 11, "Bold", 'x' },
     /* Cyrillic small letter I */
     { "Arial", 0, "", 0x438 },
+    { "Trebuchet MS", 0, "Bold", 0 },
   };
 
 
@@ -477,26 +479,21 @@ FT_BEGIN_HEADER
 
 
   /* Allow a Direct_Move_X along X freedom vector if matched.              */
-#define ALLOW_X_DMOVEX_RULES_SIZE  2
+#define ALLOW_X_DMOVEX_RULES_SIZE  1
 
   SPH_TweakRule  ALLOW_X_DMOVEX_Rules
                    [ALLOW_X_DMOVEX_RULES_SIZE] =
   {
-    /* Creates a more consistent appearance for these */
-    { "Arial", 13, "Regular", 'e' },
-    { "Arial", 13, "Regular", 'o' },
+    { "-", 0, "Regular", 0 },
   };
 
 
   /* Allow a Direct_Move along X freedom vector if matched.                */
-#define ALLOW_X_DMOVE_RULES_SIZE  3
+#define ALLOW_X_DMOVE_RULES_SIZE  1
 
   SPH_TweakRule  ALLOW_X_DMOVE_Rules
                    [ALLOW_X_DMOVE_RULES_SIZE] =
   {
-    /* Creates a more consistent appearance for these */
-    { "Arial", 13, "Regular", 'e' },
-    { "Arial", 13, "Regular", 'o' },
     /* Fixes vanishing diagonal in 4 */
     { "Verdana", 0, "Regular", '4' },
   };
@@ -514,7 +511,7 @@ FT_BEGIN_HEADER
 
 
   /* Return MS rasterizer version 35 if matched.                           */
-#define RASTERIZER_35_RULES_SIZE  9
+#define RASTERIZER_35_RULES_SIZE  8
 
   SPH_TweakRule  RASTERIZER_35_Rules
                    [RASTERIZER_35_RULES_SIZE] =
@@ -528,9 +525,6 @@ FT_BEGIN_HEADER
     { "Times New Roman", 0, "Regular", 'n' },
     { "Times New Roman", 0, "Regular", 'p' },
     { "Times", 0, "", 0 },
-    /* Verdana 5.05 from Windows 7 SP1 has issues at 37+ */
-    /* This is only a workaround */
-    { "Verdana", 0, "", 0 },
   };
 
 
@@ -551,9 +545,9 @@ FT_BEGIN_HEADER
 
   SPH_TweakRule  SKIP_IUP_Rules
                    [SKIP_IUP_RULES_SIZE] =
-                 {
-                   { "Arial", 13, "Regular", 'a' },
-                 };
+  {
+    { "Arial", 13, "Regular", 'a' },
+  };
 
 
   /* Skip MIAP Twilight hack if matched.                                   */
@@ -567,7 +561,7 @@ FT_BEGIN_HEADER
 
 
   /* Skip DELTAP instructions if matched.                                  */
-#define ALWAYS_SKIP_DELTAP_RULES_SIZE  14
+#define ALWAYS_SKIP_DELTAP_RULES_SIZE  16
 
   SPH_TweakRule  ALWAYS_SKIP_DELTAP_Rules
                    [ALWAYS_SKIP_DELTAP_RULES_SIZE] =
@@ -575,7 +569,10 @@ FT_BEGIN_HEADER
     { "Georgia", 0, "Regular", 'k' },
     /* fixes problems with W M w */
     { "Trebuchet MS", 0, "Italic", 0 },
+    /* fix various problems with e in different versions */
     { "Trebuchet MS", 14, "Regular", 'e' },
+    { "Trebuchet MS", 13, "Regular", 'e' },
+    { "Trebuchet MS", 15, "Regular", 'e' },
     { "Arial", 11, "Regular", 's' },
     { "Verdana", 10, "Regular", 0 },
     { "Verdana", 9, "Regular", 0 },
@@ -624,15 +621,13 @@ FT_BEGIN_HEADER
 
 
   /* Skip moves that meet or exceed 1 pixel.                               */
-#define DELTAP_SKIP_EXAGGERATED_VALUES_RULES_SIZE  2
+#define DELTAP_SKIP_EXAGGERATED_VALUES_RULES_SIZE  1
 
   SPH_TweakRule  DELTAP_SKIP_EXAGGERATED_VALUES_Rules
                    [DELTAP_SKIP_EXAGGERATED_VALUES_RULES_SIZE] =
   {
     /* Fix vanishing stems */
     { "Ubuntu", 0, "Regular", 'M' },
-    /* Fix X at larger ppems */
-    { "Segoe UI", 0, "Light", 0 },
   };
 
 
@@ -769,7 +764,7 @@ FT_BEGIN_HEADER
   /* Use compatible widths with these glyphs.  Compatible widths is always */
   /* on when doing B/W TrueType instructing, but is used selectively here, */
   /* typically on glyphs with 3 or more vertical stems.                    */
-#define COMPATIBLE_WIDTHS_RULES_SIZE  36
+#define COMPATIBLE_WIDTHS_RULES_SIZE  38
 
   SPH_TweakRule  COMPATIBLE_WIDTHS_Rules
                    [COMPATIBLE_WIDTHS_RULES_SIZE] =
@@ -792,6 +787,7 @@ FT_BEGIN_HEADER
     { "Microsoft Sans Serif", 11, "Regular Class", 0 },
     { "Microsoft Sans Serif", 12, "Regular Class", 0 },
     { "Segoe UI", 11, "Regular Class", 0 },
+    { "Monaco", 0, "Regular Class", 0 },
     { "Segoe UI", 12, "Regular Class", 'm' },
     { "Segoe UI", 14, "Regular Class", 'm' },
     { "Tahoma", 11, "Regular Class", 0 },
@@ -799,6 +795,7 @@ FT_BEGIN_HEADER
     { "Times New Roman", 16, "Regular Class", 'm' },
     { "Times New Roman", 16, "Regular Class", 'o' },
     { "Times New Roman", 16, "Regular Class", 'w' },
+    { "Trebuchet MS", 11, "Regular Class", 0 },
     { "Trebuchet MS", 12, "Regular Class", 0 },
     { "Trebuchet MS", 14, "Regular Class", 0 },
     { "Trebuchet MS", 15, "Regular Class", 0 },
@@ -821,7 +818,7 @@ FT_BEGIN_HEADER
   /* more visually pleasing glyphs in certain cases.                       */
   /* This sometimes needs to be coordinated with compatible width rules.   */
   /* A value of 1000 corresponds to a scaled value of 1.0.                 */
-#define X_SCALING_RULES_SIZE  41
+#define X_SCALING_RULES_SIZE  50
 
   SPH_ScaleRule  X_SCALING_Rules
                    [X_SCALING_RULES_SIZE] =
@@ -833,6 +830,8 @@ FT_BEGIN_HEADER
     { "Arial", 12, "Regular Class", 'm', 1050 },
     /* Cyrillic small letter el */
     { "Arial", 13, "Regular Class", 0x43B, 950 },
+    { "Arial", 13, "Regular Class", 'o', 950 },
+    { "Arial", 13, "Regular Class", 'e', 950 },
     { "Arial", 14, "Regular Class", 'm', 950 },
     /* Cyrillic small letter el */
     { "Arial", 15, "Regular Class", 0x43B, 925 },
@@ -861,14 +860,21 @@ FT_BEGIN_HEADER
     { "Segoe UI", 12, "Regular Class", 'H', 1050 },
     { "Segoe UI", 12, "Regular Class", 'm', 1050 },
     { "Segoe UI", 14, "Regular Class", 'm', 1050 },
-    { "Tahoma", 11, "Regular Class", 'm', 975 },
+    { "Tahoma", 11, "Regular Class", 'i', 975 },
+    { "Tahoma", 11, "Regular Class", 'l', 975 },
+    { "Tahoma", 11, "Regular Class", 'j', 900 },
+    { "Tahoma", 11, "Regular Class", 'm', 918 },
     { "Verdana", 10, "Regular/Italic Class", 0, 1100 },
     { "Verdana", 12, "Regular Class", 'm', 975 },
     { "Verdana", 12, "Regular/Italic Class", 0, 1050 },
+    { "Verdana", 13, "Regular/Italic Class", 'i', 950 },
+    { "Verdana", 13, "Regular/Italic Class", 'j', 950 },
+    { "Verdana", 13, "Regular/Italic Class", 'l', 950 },
     { "Verdana", 16, "Regular Class", 0, 1050 },
     { "Verdana", 9, "Regular/Italic Class", 0, 1050 },
-    { "Times New Roman", 16, "Regular Class", 'm', 950 },
-    { "Trebuchet MS", 12, "Regular Class", 'm', 950 },
+    { "Times New Roman", 16, "Regular Class", 'm', 918 },
+    { "Trebuchet MS", 11, "Regular Class", 'm', 800 },
+    { "Trebuchet MS", 12, "Regular Class", 'm', 800 },
   };
 
 #else

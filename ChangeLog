@@ -1,4 +1,36 @@
-2012-12-16  Werner Lemberg  <wl@gnu.org>
+2012-12-16  Infinality  <infinality@infinality.net>
+
+	[truetype] Remove unusued code and variables.  Add minor fixes.
+
+	* src/truetype/ttsubpix.h: Updated.
+	(SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions): Add Trebuchet MS.
+	(ALLOW_X_DMOVEX_Rules): Remove Arial characters.
+	(ALLOW_X_DMOVE_Rules): Remove Arial characters.
+	(RASTERIZER_35_Rules): Verdana no longer needs to be here.
+	(SKIP_IUP_Rules): Formatting fix.
+	(DELTAP_SKIP_EXAGGERATED_VALUES_Rules): Remove Segoe UI.
+	(COMPATIBLE_WIDTHS_Rules): Add Monaco and Trebuchet MS.
+	(X_SCALING_Rules): Add misc. corrective fixes.
+
+	* src/truetype/ttgload.c: (TT_Process_Simple_Glyph): Adjust correction
+	factor for emboldening during scaling.
+
+	* src/truetype/ttinterp.h: Updated.
+	(TT_ExecContextRec): Remove unused variables.
+
+	* src/truetype/ttobjs.h: Updated.
+	(TT_SizeRec): Add ttfautohinted variable.
+
+	* src/truetype/ttinterp.c: Updated.
+	(Ins_FDEF): Rework code to fix bugs and add more detection.
+	(Ins_CALL): Remove unused code.
+	(Ins_LOOPCALL): Remove unused code.
+	(TT_RunIns): Remove unusued code.
+	(Ins_SHPIX): Add logic to handle ttfautohinted fonts.
+	(Ins_MIRP): Don't round x in cut-in calculation.  Add logic to handle
+	ttfautohinted fonts.
+
+    2012-12-16  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix Savannah bug #37936.
 

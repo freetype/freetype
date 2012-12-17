@@ -334,6 +334,7 @@ FT_BEGIN_HEADER
 
     FT_Bool            bytecode_ready;
     FT_Bool            cvt_ready;
+    FT_Bool            ttfautohinted;
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 

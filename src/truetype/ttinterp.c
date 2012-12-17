@@ -4612,21 +4612,25 @@
     TT_DefRecord*  limit;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-#if 0
-    int  opcode_pattern[4][12] = {
-           /* VacuFormRound function */
-           {0x45,0x23,0x46,0x60,0x20},
-           /* inline delta function 1 */
-           {0x4B,0x53,0x23,0x4B,0x51,0x5A,0x58,0x38,0x1B,0x21,0x21,0x59},
-           /* inline delta function 2 */
-           {0x4B,0x54,0x58,0x38,0x1B,0x5A,0x21,0x21,0x59},
-           /* diagonal stroke function */
-           {0x20,0x20,0x40,0x60,0x47,0x40,0x23,0x42},
-         };
-    int  opcode_patterns = 4;
-    int  i;
-    int  opcode_pointer[4] = {0,0,0,0};
-#endif /* 0 */
+    FT_Byte    opcode_pattern[7][12] = {
+                 /* inline delta function 1 */
+                 {0x4B,0x53,0x23,0x4B,0x51,0x5A,0x58,0x38,0x1B,0x21,0x21,0x59},
+                 /* inline delta function 2 */
+                 {0x4B,0x54,0x58,0x38,0x1B,0x5A,0x21,0x21,0x59,},
+                 /* diagonal stroke function */
+                 {0x20,0x20,0x40,0x60,0x47,0x40,0x23,0x42,},
+                 /* VacuFormRound function */
+                 {0x45,0x23,0x46,0x60,0x20,},
+                 /* ttfautohinted */
+                 {0x20,0x64,0xb0,0x60,0x66,0x23,0xb0,},
+                 /* spacing functions */
+                 {0x01,0x41,0x43,0x58,},
+                 {0x01,0x18,0x41,0x43,0x58,},
+               };
+    FT_UShort  opcode_patterns   = 7;
+    FT_UShort  opcode_pointer[7] = {0,0,0,0,0,0,0};
+    FT_UShort  opcode_size[7]    = {12,9,8,5,7,4,5};
+    FT_UShort  i;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
@@ -4677,14 +4681,15 @@
     while ( SKIP_Code() == SUCCESS )
     {
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-#if 0
+
 #ifdef SPH_DEBUG_MORE_VERBOSE
-      printf ("Opcode: %d ", CUR.opcode);
+      printf ( "Opcode: %d ", CUR.opcode );
 #endif
 
       for ( i = 0; i < opcode_patterns; i++ )
       {
-        if ( CUR.opcode == opcode_pattern[i][opcode_pointer[i]] )
+        if ( opcode_pointer[i] < opcode_size[i]                 &&
+             CUR.opcode == opcode_pattern[i][opcode_pointer[i]] )
         {
 #ifdef SPH_DEBUG_MORE_VERBOSE
           printf( "function %d, opcode ptrn: %d"
@@ -4693,51 +4698,33 @@
 #endif
           opcode_pointer[i] += 1;
 
-          if ( i == 0 && opcode_pointer[0] == 5 )
+          if ( opcode_pointer[i] == opcode_size[i] )
           {
-
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
 #ifdef SPH_DEBUG
-            printf( "Vacuform Round FUNCTION %d detected\n", n);
+            printf( "Function signature %d detected in FDEF %d\n", i, n);
 #endif
-            /*rec->active = FALSE;*/
-            opcode_pointer[i] = 0;
-          }
 
-          if ( i == 1 && opcode_pointer[1] == 12 )
-          {
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
-#ifdef SPH_DEBUG
-            printf( "inline delta FUNCTION1 %d detected\n",
-                    n, CUR.num_delta_funcs);
-#endif
-            rec->inline_delta = TRUE;
-            opcode_pointer[i] = 0;
-          }
+            switch ( i )
+            {
+            case 0:
+            case 1:
+              rec->inline_delta = TRUE;
+              break;
 
-          if ( i == 2 && opcode_pointer[1] == 9 )
-          {
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
-            rec->inline_delta = TRUE;
-#ifdef SPH_DEBUG
-            printf( "inline delta2 FUNCTION2 %d detected\n",
-                    n, CUR.num_delta_funcs);
-#endif
-            opcode_pointer[i] = 0;
-          }
+            case 2:
+            case 3:
+              rec->active = FALSE;
+              break;
 
-          if ( i == 4 && opcode_pointer[1] == 8 )
-          {
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
-            /*rec->active = FALSE;*/
-#ifdef SPH_DEBUG
-            printf( "diagonal stroke function %d detected\n",
-                    n, CUR.num_delta_funcs);
-#endif
+            case 4:
+              CUR.size->ttfautohinted = TRUE;
+              break;
+
+            case 5:
+            case 6:
+              rec->active = FALSE;
+              break;
+            }
             opcode_pointer[i] = 0;
           }
         }
@@ -4745,7 +4732,7 @@
         else
           opcode_pointer[i] = 0;
       }
-#endif /* 0 */
+
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
       switch ( CUR.opcode )
@@ -4833,10 +4820,6 @@
     TT_CallRec*    pCrec;
     TT_DefRecord*  def;
 
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    FT_Bool        oldF;
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
 
     /* first of all, check the index */
 
@@ -4874,16 +4857,6 @@
     if ( !def->active )
       goto Fail;
 
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    /* This is test code used to detect inline delta functions */
-    oldF = def->inline_delta;
-    if ( CUR.ignore_x_mode && def->inline_delta )
-      CUR.in_delta_function = TRUE;
-
-#ifdef SPH_DEBUG
-      printf("Entering function %d\n", F);
-#endif
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     /* check the call stack */
     if ( CUR.callTop >= CUR.callSize )
@@ -4906,13 +4879,6 @@
                         def->start );
 
     CUR.step_ins = FALSE;
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    CUR.in_delta_function = oldF;
-
-#ifdef SPH_DEBUG
-      printf("Leaving function %d\n", F);
-#endif
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
     return;
 
   Fail:
@@ -4932,10 +4898,6 @@
     FT_ULong       F;
     TT_CallRec*    pCrec;
     TT_DefRecord*  def;
-
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    FT_Bool        oldF;
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
     /* first of all, check the index */
@@ -4973,13 +4935,6 @@
     if ( !def->active )
       goto Fail;
 
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    oldF = def->inline_delta;
-    if ( CUR.ignore_x_mode && def->inline_delta )
-      CUR.in_delta_function = TRUE;
-
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
     /* check stack */
     if ( CUR.callTop >= CUR.callSize )
     {
@@ -5003,10 +4958,6 @@
 
       CUR.step_ins = FALSE;
     }
-
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    CUR.in_delta_function = oldF;
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     return;
 
@@ -6147,7 +6098,8 @@
                  CUR.GS.freeVector.y != 0                                  &&
                  B1 % 64 == 0                                              &&
                  B2 % 64 != 0                                              &&
-                 B1 != B2                                                  ) )
+                 B1 != B2                                                  &&
+                 !CUR.size->ttfautohinted                                  ) )
           {
 #ifdef SPH_DEBUG
             printf( "Reversing ZP2 move\n" );
@@ -6645,13 +6597,6 @@
         if ( FT_ABS( cvt_dist - org_dist ) > control_value_cutin )
           cvt_dist = org_dist;
       }
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-      if ( CUR.ignore_x_mode && CUR.GS.freeVector.x != 0 )
-        distance = ROUND_None(
-                     cvt_dist,
-                     CUR.tt_metrics.compensations[CUR.opcode & 3] );
-      else
-#endif
 
       distance = CUR_Func_round(
                    cvt_dist,
@@ -6705,7 +6650,8 @@
       if ( ( CUR.sph_tweak_flags & SPH_TWEAK_SKIP_OFFPIXEL_Y_MOVES ) &&
            CUR.GS.freeVector.y != 0                                  &&
            B1 % 64 == 0                                              &&
-           B2 % 64 != 0                                              )
+           B2 % 64 != 0                                              &&
+           !CUR.size->ttfautohinted                                  )
         reverse_move = TRUE;
 
       if ( ( CUR.sph_tweak_flags & SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
@@ -7473,7 +7419,8 @@
                  ( ( ( CUR.sph_tweak_flags &
                         SPH_TWEAK_SKIP_OFFPIXEL_Y_MOVES ) &&
                         B1 % 64 == 0                      &&
-                        B2 % 64 != 0                      ) ||
+                        B2 % 64 != 0                      &&
+                        !CUR.size->ttfautohinted          ) ||
                    ( ( CUR.sph_tweak_flags &
                         SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
                         B1 % 64 != 0                      &&
@@ -8096,11 +8043,7 @@
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( CUR.ignore_x_mode )
-    {
-      /* ensure some variables are set for this run */
       CUR.iup_called        = FALSE;
-      CUR.in_delta_function = FALSE;
-    }
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     /* set CVT functions */
