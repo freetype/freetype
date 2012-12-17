@@ -4611,24 +4611,6 @@
     TT_DefRecord*  rec;
     TT_DefRecord*  limit;
 
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-#if 0
-    int  opcode_pattern[4][12] = {
-           /* VacuFormRound function */
-           {0x45,0x23,0x46,0x60,0x20},
-           /* inline delta function 1 */
-           {0x4B,0x53,0x23,0x4B,0x51,0x5A,0x58,0x38,0x1B,0x21,0x21,0x59},
-           /* inline delta function 2 */
-           {0x4B,0x54,0x58,0x38,0x1B,0x5A,0x21,0x21,0x59},
-           /* diagonal stroke function */
-           {0x20,0x20,0x40,0x60,0x47,0x40,0x23,0x42},
-         };
-    int  opcode_patterns = 4;
-    int  i;
-    int  opcode_pointer[4] = {0,0,0,0};
-#endif /* 0 */
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
 
     /* some font programs are broken enough to redefine functions! */
     /* We will then parse the current table.                       */
@@ -4676,78 +4658,6 @@
 
     while ( SKIP_Code() == SUCCESS )
     {
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-#if 0
-#ifdef SPH_DEBUG_MORE_VERBOSE
-      printf ("Opcode: %d ", CUR.opcode);
-#endif
-
-      for ( i = 0; i < opcode_patterns; i++ )
-      {
-        if ( CUR.opcode == opcode_pattern[i][opcode_pointer[i]] )
-        {
-#ifdef SPH_DEBUG_MORE_VERBOSE
-          printf( "function %d, opcode ptrn: %d"
-                  "  op# %d: %d FOUND \n",
-                  n, i, opcode_pointer[i], CUR.opcode );
-#endif
-          opcode_pointer[i] += 1;
-
-          if ( i == 0 && opcode_pointer[0] == 5 )
-          {
-
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
-#ifdef SPH_DEBUG
-            printf( "Vacuform Round FUNCTION %d detected\n", n);
-#endif
-            /*rec->active = FALSE;*/
-            opcode_pointer[i] = 0;
-          }
-
-          if ( i == 1 && opcode_pointer[1] == 12 )
-          {
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
-#ifdef SPH_DEBUG
-            printf( "inline delta FUNCTION1 %d detected\n",
-                    n, CUR.num_delta_funcs);
-#endif
-            rec->inline_delta = TRUE;
-            opcode_pointer[i] = 0;
-          }
-
-          if ( i == 2 && opcode_pointer[1] == 9 )
-          {
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
-            rec->inline_delta = TRUE;
-#ifdef SPH_DEBUG
-            printf( "inline delta2 FUNCTION2 %d detected\n",
-                    n, CUR.num_delta_funcs);
-#endif
-            opcode_pointer[i] = 0;
-          }
-
-          if ( i == 4 && opcode_pointer[1] == 8 )
-          {
-            CUR.inline_delta_funcs[CUR.num_delta_funcs] = n;
-            CUR.num_delta_funcs++;
-            /*rec->active = FALSE;*/
-#ifdef SPH_DEBUG
-            printf( "diagonal stroke function %d detected\n",
-                    n, CUR.num_delta_funcs);
-#endif
-            opcode_pointer[i] = 0;
-          }
-        }
-
-        else
-          opcode_pointer[i] = 0;
-      }
-#endif /* 0 */
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
       switch ( CUR.opcode )
       {
       case 0x89:    /* IDEF */
