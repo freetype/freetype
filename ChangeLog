@@ -1,3 +1,10 @@
+2012-12-18  Infinality  <infinality@infinality.net>
+
+	[truetype] Minor performance enhancement.
+
+	* src/truetype/ttgload.c: (TT_Process_Simple_Glyph): Use FT_MulFix
+	instead of FT_MulDiv.
+
 2012-12-17  Infinality  <infinality@infinality.net>
 
 	[truetype] Remove unusued code and variables.
