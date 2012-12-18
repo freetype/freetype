@@ -4610,25 +4610,25 @@
     FT_ULong       n;
     TT_DefRecord*  rec;
     TT_DefRecord*  limit;
+
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    FT_Byte    opcode_pattern[7][12] = {
-                 /* inline delta function 1 */
-                 {0x4B,0x53,0x23,0x4B,0x51,0x5A,0x58,0x38,0x1B,0x21,0x21,0x59},
-                 /* inline delta function 2 */
-                 {0x4B,0x54,0x58,0x38,0x1B,0x5A,0x21,0x21,0x59,},
-                 /* diagonal stroke function */
-                 {0x20,0x20,0x40,0x60,0x47,0x40,0x23,0x42,},
-                 /* VacuFormRound function */
-                 {0x45,0x23,0x46,0x60,0x20,},
-                 /* ttfautohinted */
-                 {0x20,0x64,0xb0,0x60,0x66,0x23,0xb0,},
-                 /* spacing functions */
-                 {0x01,0x41,0x43,0x58,},
-                 {0x01,0x18,0x41,0x43,0x58,},
+    /* arguments to opcodes are skipped by `SKIP_Code' */
+    FT_Byte    opcode_pattern[1][12] = {
+                 /* #0 TTFautohint bytecode (old) */
+                 {
+                   0x20, /* DUP     */
+                   0x64, /* ABS     */
+                   0xB0, /* PUSHB_1 */
+                         /*   32    */
+                   0x60, /* ADD     */
+                   0x66, /* FLOOR   */
+                   0x23, /* SWAP    */
+                   0xB0  /* PUSHB_1 */
+                 },
                };
-    FT_UShort  opcode_patterns   = 7;
-    FT_UShort  opcode_pointer[7] = {0,0,0,0,0,0,0};
-    FT_UShort  opcode_size[7]    = {12,9,8,5,7,4,5};
+    FT_UShort  opcode_patterns   = 1;
+    FT_UShort  opcode_pointer[1] = { 0, };
+    FT_UShort  opcode_size[1]    = { 7, };
     FT_UShort  i;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -4706,22 +4706,7 @@
             switch ( i )
             {
             case 0:
-            case 1:
-              rec->inline_delta = TRUE;
-              break;
-
-            case 2:
-            case 3:
-              rec->active = FALSE;
-              break;
-
-            case 4:
               CUR.size->ttfautohinted = TRUE;
-              break;
-
-            case 5:
-            case 6:
-              rec->active = FALSE;
               break;
             }
             opcode_pointer[i] = 0;
