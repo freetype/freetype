@@ -260,9 +260,9 @@
   static void
   ft_trig_pseudo_polarize( FT_Vector*  vec )
   {
-    FT_Fixed         theta;
-    FT_Fixed         yi, i;
-    FT_Fixed         x, y;
+    FT_Angle         theta;
+    FT_Int           i;
+    FT_Fixed         x, y, xtemp;
     const FT_Fixed  *arctanptr;
 
 
@@ -283,41 +283,38 @@
 
     arctanptr = ft_trig_arctan_table;
 
-    if ( y < 0 )
+    if ( y > 0 )
     {
-      /* Rotate positive */
-      yi     = y + ( x << 1 );
-      x      = x - ( y << 1 );
-      y      = yi;
-      theta -= *arctanptr++;  /* Subtract angle */
+      xtemp  = x + ( y << 1 );
+      y      = y - ( x << 1 );
+      x      = xtemp;
+      theta += *arctanptr++;
     }
     else
     {
-      /* Rotate negative */
-      yi     = y - ( x << 1 );
-      x      = x + ( y << 1 );
-      y      = yi;
-      theta += *arctanptr++;  /* Add angle */
+      xtemp  = x - ( y << 1 );
+      y      = y + ( x << 1 );
+      x      = xtemp;
+      theta -= *arctanptr++;
     }
 
+    /* Subsequent pseudorotations, with right shifts */
     i = 0;
     do
     {
-      if ( y < 0 )
+      if ( y > 0 )
       {
-        /* Rotate positive */
-        yi     = y + ( x >> i );
-        x      = x - ( y >> i );
-        y      = yi;
-        theta -= *arctanptr++;
+        xtemp  = x + ( y >> i );
+        y      = y - ( x >> i );
+        x      = xtemp;
+        theta += *arctanptr++;
       }
       else
       {
-        /* Rotate negative */
-        yi     = y - ( x >> i );
-        x      = x + ( y >> i );
-        y      = yi;
-        theta += *arctanptr++;
+        xtemp  = x - ( y >> i );
+        y      = y + ( x >> i );
+        x      = xtemp;
+        theta -= *arctanptr++;
       }
     } while ( ++i < FT_TRIG_MAX_ITERS );
 

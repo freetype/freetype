@@ -1,3 +1,10 @@
+2012-12-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Clean up trigonometric core.
+
+	* src/base/fttrrigon.c (ft_trig_pseudo_polarize): Align algorithm
+	with `ft_trig_pseudo_rotate'.
+
 2012-12-18  Infinality  <infinality@infinality.net>
 
 	[truetype] Minor performance enhancement.
