@@ -4396,9 +4396,11 @@
 
     FT_Service_Properties  service;
 
+#ifdef FT_DEBUG_LEVEL_ERROR
     const FT_String*  set_name  = "FT_Property_Set";
     const FT_String*  get_name  = "FT_Property_Get";
     const FT_String*  func_name = set ? set_name : get_name;
+#endif
 
     FT_Bool  missing_func;
 

@@ -1,3 +1,7 @@
+2012-12-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (ft_property_do): Fix compiler warning.
+
 2012-12-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftrfork.c (FT_Raccess_Guess): Switch to FT_Int counters.
