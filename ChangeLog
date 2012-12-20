@@ -1,3 +1,20 @@
+2012-12-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Improve trigonometric core.
+
+	FreeType used to rely on a 24-step iteration CORDIC algorithm to
+	calculate trigonometric functions and rotate vectors. It turns out
+	that once the vector is in the right half-plane, the initial rotation
+	by 63 degrees is not necessary. The algorithm is perfectly capable
+	to converge to any angle starting from the second 45 degree rotation.
+	This patch removes the first rotation and makes it a 23-step CORDIC
+	algorithm.
+
+	* src/base/fttrigon.c (FT_TRIG_SCALE, FT_TRIG_COSCALE): Update macro
+	values.
+	(ft_trig_pseudo_rotate, ft_trig_pseudo_polarize): Remove initial
+	rotation.
+
 2012-12-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (ft_property_do): Fix compiler warning.

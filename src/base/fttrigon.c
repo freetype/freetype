@@ -26,22 +26,22 @@
 #endif
 
 
-  /* the following is 0.2715717684432231 * 2^30 */
-#define FT_TRIG_COSCALE  0x11616E8EUL
+  /* the Cordic shrink factor 0.607252935008887 * 2^32 */
+#define FT_TRIG_SCALE    0x9B74EDA8UL
+
+  /* the following is 0.607252935008887 * 2^30 */
+#define FT_TRIG_COSCALE  0x26DD3B6AUL
 
   /* this table was generated for FT_PI = 180L << 16, i.e. degrees */
 #define FT_TRIG_MAX_ITERS  23
 
   static const FT_Fixed
-  ft_trig_arctan_table[24] =
+  ft_trig_arctan_table[23] =
   {
-    4157273L, 2949120L, 1740967L, 919879L, 466945L, 234379L, 117304L,
-    58666L, 29335L, 14668L, 7334L, 3667L, 1833L, 917L, 458L, 229L, 115L,
+    2949120L, 1740967L, 919879L, 466945L, 234379L, 117304L, 58666L,
+    29335L, 14668L, 7334L, 3667L, 1833L, 917L, 458L, 229L, 115L,
     57L, 29L, 14L, 7L, 4L, 2L, 1L
   };
-
-  /* the Cordic shrink factor, multiplied by 2^32 */
-#define FT_TRIG_SCALE    1166391864UL  /* 0x4585BA38UL */
 
 
 #ifdef FT_LONG64
@@ -214,25 +214,9 @@
       theta -= FT_ANGLE_PI;
     }
 
-    /* Initial pseudorotation, with left shift */
     arctanptr = ft_trig_arctan_table;
 
-    if ( theta < 0 )
-    {
-      xtemp  = x + ( y << 1 );
-      y      = y - ( x << 1 );
-      x      = xtemp;
-      theta += *arctanptr++;
-    }
-    else
-    {
-      xtemp  = x - ( y << 1 );
-      y      = y + ( x << 1 );
-      x      = xtemp;
-      theta -= *arctanptr++;
-    }
-
-    /* Subsequent pseudorotations, with right shifts */
+    /* Pseudorotations, with right shifts */
     i = 0;
     do
     {
@@ -283,22 +267,7 @@
 
     arctanptr = ft_trig_arctan_table;
 
-    if ( y > 0 )
-    {
-      xtemp  = x + ( y << 1 );
-      y      = y - ( x << 1 );
-      x      = xtemp;
-      theta += *arctanptr++;
-    }
-    else
-    {
-      xtemp  = x - ( y << 1 );
-      y      = y + ( x << 1 );
-      x      = xtemp;
-      theta -= *arctanptr++;
-    }
-
-    /* Subsequent pseudorotations, with right shifts */
+    /* Pseudorotations, with right shifts */
     i = 0;
     do
     {
