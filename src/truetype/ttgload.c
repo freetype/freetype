@@ -932,8 +932,9 @@
       /* the amount was determined via experimentation */
       if ( x_scale_factor != 1000 && ppem > 11 )
          FT_Outline_EmboldenXY( outline,
-                                FT_MulFix( 1280 * ppem, 1000 - x_scale_factor ),
-                                       0 );
+                                FT_MulFix( 1280 * ppem,
+                                           1000 - x_scale_factor ),
+                                0 );
 #else
     /* scale the glyph */
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
