@@ -1,5 +1,9 @@
 2012-12-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/ftrfork.c (FT_Raccess_Guess): Switch to FT_Int counters.
+
+2012-12-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Clean up trigonometric core.
 
 	* src/base/fttrrigon.c (ft_trig_pseudo_polarize): Align algorithm
