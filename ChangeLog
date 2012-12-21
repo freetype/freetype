@@ -1,3 +1,7 @@
+2012-12-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/tools/cordic.py: Bring up to date with trigonometric core.
+
 2012-12-21  Werner Lemberg  <wl@gnu.org>
 
 	Check parameters of `FT_Outline_New'.
