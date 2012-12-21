@@ -1,3 +1,12 @@
+2012-12-21  Werner Lemberg  <wl@gnu.org>
+
+	Check parameters of `FT_Outline_New'.
+	Problem reported by Robin Watts <robin.watts@artifex.com>.
+
+	* src/base/ftoutln.c (FT_Outline_New_Internal): Ensure that
+	`numContours' and `numPoints' fit into FT_Outline's `n_points' and
+	`n_contours', respectively.
+
 2012-12-20  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.11 released.
