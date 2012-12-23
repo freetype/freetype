@@ -1027,12 +1027,13 @@
                         FT_UInt         max_objects,
                         FT_ULong*       pflags )
   {
-    T1_TokenRec  token;
-    FT_Byte*     cur;
-    FT_Byte*     limit;
-    FT_UInt      count;
-    FT_UInt      idx;
-    FT_Error     error;
+    T1_TokenRec   token;
+    FT_Byte*      cur;
+    FT_Byte*      limit;
+    FT_UInt       count;
+    FT_UInt       idx;
+    FT_Error      error;
+    T1_FieldType  type;
 
 
     /* this also skips leading whitespace */
@@ -1045,8 +1046,10 @@
     cur   = token.start;
     limit = token.limit;
 
+    type = field->type;
+
     /* we must detect arrays in /FontBBox */
-    if ( field->type == T1_FIELD_TYPE_BBOX )
+    if ( type == T1_FIELD_TYPE_BBOX )
     {
       T1_TokenRec  token2;
       FT_Byte*     old_cur   = parser->cursor;
@@ -1062,17 +1065,21 @@
       parser->limit  = old_limit;
 
       if ( token2.type == T1_TOKEN_TYPE_ARRAY )
+      {
+        type = T1_FIELD_TYPE_MM_BBOX;
         goto FieldArray;
+      }
     }
     else if ( token.type == T1_TOKEN_TYPE_ARRAY )
     {
+      count = max_objects;
+
     FieldArray:
       /* if this is an array and we have no blend, an error occurs */
       if ( max_objects == 0 )
         goto Fail;
 
-      count = max_objects;
-      idx   = 1;
+      idx = 1;
 
       /* don't include delimiters */
       cur++;
@@ -1088,7 +1095,7 @@
 
       skip_spaces( &cur, limit );
 
-      switch ( field->type )
+      switch ( type )
       {
       case T1_FIELD_TYPE_BOOL:
         val = ps_tobool( &cur, limit );
@@ -1205,6 +1212,54 @@
           bbox->yMin = FT_RoundFix( temp[1] );
           bbox->xMax = FT_RoundFix( temp[2] );
           bbox->yMax = FT_RoundFix( temp[3] );
+        }
+        break;
+
+      case T1_FIELD_TYPE_MM_BBOX:
+        {
+          FT_Memory  memory = parser->memory;
+          FT_Fixed*  temp;
+          FT_Int     result;
+          FT_UInt    i;
+
+
+          if ( FT_NEW_ARRAY( temp, max_objects * 4 ) )
+            goto Exit;
+
+          for ( i = 0; i < 4; i++ )
+          {
+            result = ps_tofixedarray( &cur, limit, max_objects,
+                                      temp + i * max_objects, 0 );
+            if ( result < 0 )
+            {
+              FT_ERROR(( "ps_parser_load_field:"
+                         " expected %d integers in the %s subarray\n"
+                         "                     "
+                         " of /FontBBox in the /Blend dictionary\n",
+                         max_objects,
+                         i == 0 ? "first"
+                                : ( i == 1 ? "second"
+                                           : ( i == 2 ? "third"
+                                                      : "fourth" ) ) ));
+              error = PSaux_Err_Invalid_File_Format;
+              goto Exit;
+            }
+
+            skip_spaces( &cur, limit );
+          }
+
+          for ( i = 0; i < max_objects; i++ )
+          {
+            FT_BBox*  bbox = (FT_BBox*)objects[i];
+
+
+            bbox->xMin = FT_RoundFix( temp[i                  ] );
+            bbox->yMin = FT_RoundFix( temp[i +     max_objects] );
+            bbox->xMax = FT_RoundFix( temp[i + 2 * max_objects] );
+            bbox->yMax = FT_RoundFix( temp[i + 3 * max_objects] );
+          }
+
+          FT_FREE( temp );
         }
         break;
 
