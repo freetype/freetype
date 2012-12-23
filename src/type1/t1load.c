@@ -130,8 +130,8 @@
 
         /* allocate the blend `private' and `font_info' dictionaries */
         if ( FT_NEW_ARRAY( blend->font_infos[1], num_designs     ) ||
-             FT_NEW_ARRAY( blend->privates[1], num_designs       ) ||
-             FT_NEW_ARRAY( blend->bboxes[1], num_designs         ) ||
+             FT_NEW_ARRAY( blend->privates  [1], num_designs     ) ||
+             FT_NEW_ARRAY( blend->bboxes    [1], num_designs     ) ||
              FT_NEW_ARRAY( blend->weight_vector, num_designs * 2 ) )
           goto Exit;
 
@@ -143,12 +143,12 @@
 
         for ( nn = 2; nn <= num_designs; nn++ )
         {
-          blend->privates[nn]   = blend->privates  [nn - 1] + 1;
           blend->font_infos[nn] = blend->font_infos[nn - 1] + 1;
-          blend->bboxes[nn]     = blend->bboxes    [nn - 1] + 1;
+          blend->privates  [nn] = blend->privates  [nn - 1] + 1;
+          blend->bboxes    [nn] = blend->bboxes    [nn - 1] + 1;
         }
 
-        blend->num_designs   = num_designs;
+        blend->num_designs = num_designs;
       }
       else if ( blend->num_designs != num_designs )
         goto Fail;
@@ -391,8 +391,10 @@
 
           /* get current blend axis position */
           factor = coords[m];
-          if ( factor < 0 )        factor = 0;
-          if ( factor > 0x10000L ) factor = 0x10000L;
+          if ( factor < 0 )
+            factor = 0;
+          if ( factor > 0x10000L )
+            factor = 0x10000L;
 
           if ( ( n & ( 1 << m ) ) == 0 )
             factor = 0x10000L - factor;
@@ -524,7 +526,7 @@
       /* release design pos table */
       FT_FREE( blend->design_pos[0] );
       for ( n = 1; n < num_designs; n++ )
-        blend->design_pos[n] = 0;
+        blend->design_pos[n] = NULL;
 
       /* release blend `private' and `font info' dictionaries */
       FT_FREE( blend->privates[1] );
@@ -533,14 +535,14 @@
 
       for ( n = 0; n < num_designs; n++ )
       {
-        blend->privates  [n] = 0;
-        blend->font_infos[n] = 0;
-        blend->bboxes    [n] = 0;
+        blend->privates  [n] = NULL;
+        blend->font_infos[n] = NULL;
+        blend->bboxes    [n] = NULL;
       }
 
       /* release weight vectors */
       FT_FREE( blend->weight_vector );
-      blend->default_weight_vector = 0;
+      blend->default_weight_vector = NULL;
 
       /* release axis names */
       for ( n = 0; n < num_axis; n++ )
@@ -620,7 +622,7 @@
 
       name = (FT_Byte*)blend->axis_names[n];
       FT_MEM_COPY( name, token->start, len );
-      name[len] = 0;
+      name[len] = '\0';
     }
 
   Exit:
