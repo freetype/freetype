@@ -1,3 +1,7 @@
+2012-12-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (tt_loader_init): Add more tracing.
+
 2012-12-23  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Fix handling of /FontBBox in MM fonts.

@@ -2000,6 +2000,9 @@
         FT_UInt  i;
 
 
+        FT_TRACE4(( "tt_loader_init: subpixel hinting change,"
+                    " re-executing `prep' table\n" ));
+
         exec->subpixel_hinting = subpixel_hinting;
 
         for ( i = 0; i < size->cvt_size; i++ )
@@ -2013,6 +2016,9 @@
       {
         FT_UInt  i;
 
+
+        FT_TRACE4(( "tt_loader_init: grayscale hinting change,"
+                    " re-executing `prep' table\n" ));
 
         exec->grayscale_hinting = grayscale_hinting;
 
