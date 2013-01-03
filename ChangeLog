@@ -1,4 +1,19 @@
-2012-12-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2013-01-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Reduce trigonometric algorithms.
+
+	After we get within 45 degrees by means of true 90-degree rotations,
+	we can remove initial 45-degree CORDIC iteration and start from
+	atan(1/2) pseudorotation, reducing expansion factor thereby.
+
+	* src/base/fttrigon.c (FT_TRIG_SCALE, FT_TRIG_COSCALE): Update macros.
+	(ft_trig_pseudo_rotate, ft_trig_pseudo_polarize): Update.
+
+	* src/tools/cordic.py: Bring up to date with trigonometric core.
+
+	* docs/CHANGES: Old typo.
+
+2013-01-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/pshinter/pshalgo.h: Remove unused code.
 

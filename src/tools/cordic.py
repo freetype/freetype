@@ -10,7 +10,7 @@ comma  = ""
 print ""
 print "table of arctan( 1/2^n ) for PI = " + repr(units/65536.0) + " units"
 
-for n in range(0,32):
+for n in range(1,32):
 
     x = 0.5**n                      # tangent value
 

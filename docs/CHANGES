@@ -2486,7 +2486,7 @@ CHANGES BETWEEN 2.0.3 and 2.0.2
       number.  see <freetype/fterrors.h> for details.
 
     - A   new  public   header   file  has   been  introduced,   named
-      FT_TRIGONOMETRY_H     (include/freetype/fttrig.h),     providing
+      FT_TRIGONOMETRY_H    (include/freetype/fttrigon.h),    providing
       trigonometric functions to  compute sines, cosines, arctangents,
       etc. with 16.16 fixed precision.  The implementation is based on
       the CORDIC  algorithm and is very fast  while being sufficiently

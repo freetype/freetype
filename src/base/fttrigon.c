@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType trigonometric functions (body).                             */
 /*                                                                         */
-/*  Copyright 2001-2005, 2012 by                                           */
+/*  Copyright 2001-2005, 2012, 2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -26,20 +26,20 @@
 #endif
 
 
-  /* the Cordic shrink factor 0.607252935008887 * 2^32 */
-#define FT_TRIG_SCALE    0x9B74EDA8UL
+  /* the Cordic shrink factor 0.858785336480436 * 2^32 */
+#define FT_TRIG_SCALE    0xDBD95B16UL
 
-  /* the following is 0.607252935008887 * 2^30 */
-#define FT_TRIG_COSCALE  0x26DD3B6AUL
+  /* the following is 0.858785336480436 * 2^30 */
+#define FT_TRIG_COSCALE  0x36F656C6UL
 
   /* this table was generated for FT_PI = 180L << 16, i.e. degrees */
 #define FT_TRIG_MAX_ITERS  23
 
   static const FT_Fixed
-  ft_trig_arctan_table[23] =
+  ft_trig_arctan_table[] =
   {
-    2949120L, 1740967L, 919879L, 466945L, 234379L, 117304L, 58666L,
-    29335L, 14668L, 7334L, 3667L, 1833L, 917L, 458L, 229L, 115L,
+    1740967L, 919879L, 466945L, 234379L, 117304L, 58666L, 29335L,
+    14668L, 7334L, 3667L, 1833L, 917L, 458L, 229L, 115L,
     57L, 29L, 14L, 7L, 4L, 2L, 1L
   };
 
@@ -199,25 +199,27 @@
     x = vec->x;
     y = vec->y;
 
-    /* Get angle between -90 and 90 degrees */
-    while ( theta <= -FT_ANGLE_PI2 )
+    /* Rotate inside [-PI/4,PI/4] sector */
+    while ( theta < -FT_ANGLE_PI4 )
     {
-      x = -x;
-      y = -y;
-      theta += FT_ANGLE_PI;
+      xtemp  =  y;
+      y      = -x;
+      x      =  xtemp;
+      theta +=  FT_ANGLE_PI2;
     }
 
-    while ( theta > FT_ANGLE_PI2 )
+    while ( theta > FT_ANGLE_PI4 )
     {
-      x = -x;
-      y = -y;
-      theta -= FT_ANGLE_PI;
+      xtemp  = -y;
+      y      =  x;
+      x      =  xtemp;
+      theta -=  FT_ANGLE_PI2;
     }
 
     arctanptr = ft_trig_arctan_table;
 
     /* Pseudorotations, with right shifts */
-    i = 0;
+    i = 1;
     do
     {
       if ( theta < 0 )
@@ -253,22 +255,42 @@
     x = vec->x;
     y = vec->y;
 
-    /* Get the vector into the right half plane */
-    theta = 0;
-    if ( x < 0 )
+    /* Get the vector into [-PI/4,PI/4] sector */
+    if ( y > x )
     {
-      x = -x;
-      y = -y;
-      theta = 2 * FT_ANGLE_PI2;
+      if ( y > -x )
+      {
+        theta =  FT_ANGLE_PI2;
+        xtemp =  y;
+        y     = -x;
+        x     =  xtemp;
+      }
+      else
+      {
+        theta =  y > 0 ? FT_ANGLE_PI : -FT_ANGLE_PI;
+        x     = -x;
+        y     = -y;
+      }
     }
-
-    if ( y > 0 )
-      theta = - theta;
+    else
+    {
+      if ( y < -x )
+      {
+        theta = -FT_ANGLE_PI2;
+        xtemp = -y;
+        y     =  x;
+        x     =  xtemp;
+      }
+      else
+      {
+        theta = 0;
+      }
+    }
 
     arctanptr = ft_trig_arctan_table;
 
     /* Pseudorotations, with right shifts */
-    i = 0;
+    i = 1;
     do
     {
       if ( y > 0 )
