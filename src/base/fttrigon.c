@@ -192,7 +192,7 @@
                          FT_Angle    theta )
   {
     FT_Int           i;
-    FT_Fixed         x, y, xtemp;
+    FT_Fixed         x, y, xtemp, b;
     const FT_Fixed  *arctanptr;
 
 
@@ -219,24 +219,23 @@
     arctanptr = ft_trig_arctan_table;
 
     /* Pseudorotations, with right shifts */
-    i = 1;
-    do
+    for ( i = 1, b = 1; i < FT_TRIG_MAX_ITERS; b <<= 1, i++ )
     {
       if ( theta < 0 )
       {
-        xtemp  = x + ( y >> i );
-        y      = y - ( x >> i );
+        xtemp  = x + ( ( y + b ) >> i );
+        y      = y - ( ( x + b ) >> i );
         x      = xtemp;
         theta += *arctanptr++;
       }
       else
       {
-        xtemp  = x - ( y >> i );
-        y      = y + ( x >> i );
+        xtemp  = x - ( ( y + b ) >> i );
+        y      = y + ( ( x + b ) >> i );
         x      = xtemp;
         theta -= *arctanptr++;
       }
-    } while ( ++i < FT_TRIG_MAX_ITERS );
+    }
 
     vec->x = x;
     vec->y = y;
@@ -248,7 +247,7 @@
   {
     FT_Angle         theta;
     FT_Int           i;
-    FT_Fixed         x, y, xtemp;
+    FT_Fixed         x, y, xtemp, b;
     const FT_Fixed  *arctanptr;
 
 
@@ -290,24 +289,23 @@
     arctanptr = ft_trig_arctan_table;
 
     /* Pseudorotations, with right shifts */
-    i = 1;
-    do
+    for ( i = 1, b = 1; i < FT_TRIG_MAX_ITERS; b <<= 1, i++ )
     {
       if ( y > 0 )
       {
-        xtemp  = x + ( y >> i );
-        y      = y - ( x >> i );
+        xtemp  = x + ( ( y + b ) >> i );
+        y      = y - ( ( x + b ) >> i );
         x      = xtemp;
         theta += *arctanptr++;
       }
       else
       {
-        xtemp  = x - ( y >> i );
-        y      = y + ( x >> i );
+        xtemp  = x - ( ( y + b ) >> i );
+        y      = y + ( ( x + b ) >> i );
         x      = xtemp;
         theta -= *arctanptr++;
       }
-    } while ( ++i < FT_TRIG_MAX_ITERS );
+    }
 
     /* round theta */
     if ( theta >= 0 )
