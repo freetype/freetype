@@ -1,3 +1,12 @@
+2013-01-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Clean up trigonometric core.
+
+	* src/base/fttrigon.c: Document the algorithm in a large comment.
+	(FT_TRIG_COSCALE): Remove macro.
+	(FT_Tan: Use `FT_TRIG_SCALE' instead.
+	(FT_Cos, FT_Vector_Unit): Ditto and round the return values.
+
 2013-01-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Use rounding in CORDIC iterations.

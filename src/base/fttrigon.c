@@ -15,6 +15,19 @@
 /*                                                                         */
 /***************************************************************************/
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* This is a fixed-point CORDIC implementation of trigonometric          */
+  /* functions as well as transformations between Cartesian and polar      */
+  /* coordinates. The angles are represented as a 16.16 fixed-point value  */
+  /* in degrees, i.e., the angular resolution is 2^-16 degrees. Note that   */
+  /* only vectors longer than 2^16*180/pi (or at least 22 bits) on a       */
+  /* discrete Cartesian greed can have the same or better angular          */
+  /* resolution. Therefore, to maintain this precision, some functions     */
+  /* require the interim upscaling of the vectors, whereas others operate  */
+  /* with 24-bit long vectors from the start.                              */
+  /*                                                                       */
+  /*************************************************************************/
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
@@ -28,9 +41,6 @@
 
   /* the Cordic shrink factor 0.858785336480436 * 2^32 */
 #define FT_TRIG_SCALE    0xDBD95B16UL
-
-  /* the following is 0.858785336480436 * 2^30 */
-#define FT_TRIG_COSCALE  0x36F656C6UL
 
   /* this table was generated for FT_PI = 180L << 16, i.e. degrees */
 #define FT_TRIG_MAX_ITERS  23
@@ -326,11 +336,11 @@
     FT_Vector  v;
 
 
-    v.x = FT_TRIG_COSCALE >> 2;
+    v.x = FT_TRIG_SCALE >> 8;
     v.y = 0;
     ft_trig_pseudo_rotate( &v, angle );
 
-    return v.x / ( 1 << 12 );
+    return ( v.x + 0x80L ) >> 8;
   }
 
 
@@ -351,7 +361,7 @@
     FT_Vector  v;
 
 
-    v.x = FT_TRIG_COSCALE >> 2;
+    v.x = FT_TRIG_SCALE >> 8;
     v.y = 0;
     ft_trig_pseudo_rotate( &v, angle );
 
@@ -386,11 +396,11 @@
   FT_Vector_Unit( FT_Vector*  vec,
                   FT_Angle    angle )
   {
-    vec->x = FT_TRIG_COSCALE >> 2;
+    vec->x = FT_TRIG_SCALE >> 8;
     vec->y = 0;
     ft_trig_pseudo_rotate( vec, angle );
-    vec->x >>= 12;
-    vec->y >>= 12;
+    vec->x = ( vec->x + 0x80L ) >> 8;
+    vec->y = ( vec->y + 0x80L ) >> 8;
   }
 
 
