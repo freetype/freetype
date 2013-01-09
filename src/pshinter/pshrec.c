@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PostScript hints recorder (body).                           */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003, 2004, 2007, 2009 by                        */
+/*  Copyright 2001-2004, 2007, 2009, 2013 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -384,7 +384,7 @@
     FT_UInt   count;
 
 
-    count = ( count1 <= count2 ) ? count1 : count2;
+    count = FT_MIN( count1, count2 );
     for ( ; count >= 8; count -= 8 )
     {
       if ( p1[0] & p2[0] )

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType bbox computation (body).                                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2006, 2010 by                         */
+/*  Copyright 1996-2002, 2004, 2006, 2010, 2013 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -400,10 +400,10 @@
         /* We begin by computing `t1' as the bitwise `OR' of the     */
         /* absolute values of `a', `b', `c'.                         */
 
-        t1  = (FT_ULong)( ( a >= 0 ) ? a : -a );
-        t2  = (FT_ULong)( ( b >= 0 ) ? b : -b );
+        t1  = (FT_ULong)FT_ABS( a );
+        t2  = (FT_ULong)FT_ABS( b );
         t1 |= t2;
-        t2  = (FT_ULong)( ( c >= 0 ) ? c : -c );
+        t2  = (FT_ULong)FT_ABS( c );
         t1 |= t2;
 
         /* Now we can be sure that the most significant bit of `t1'  */

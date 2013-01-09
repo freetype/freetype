@@ -65,7 +65,7 @@
 
 
     s   = val;
-    val = ( val >= 0 ) ? val : -val;
+    val = FT_ABS( val );
 
     v   = ( val * (FT_Int64)FT_TRIG_SCALE ) + 0x100000000UL;
     val = (FT_Fixed)( v >> 32 );
@@ -84,7 +84,7 @@
 
 
     s   = val;
-    val = ( val >= 0 ) ? val : -val;
+    val = FT_ABS( val );
 
     v1 = (FT_UInt32)val >> 16;
     v2 = (FT_UInt32)( val & 0xFFFFL );
@@ -96,7 +96,7 @@
     lo1  = k1 * v2 + k2 * v1;       /* can't overflow */
 
     lo2  = ( k2 * v2 ) >> 16;
-    lo3  = ( lo1 >= lo2 ) ? lo1 : lo2;
+    lo3  = FT_MAX( lo1, lo2 );
     lo1 += lo2;
 
     hi  += lo1 >> 16;
@@ -121,7 +121,7 @@
     x = vec->x;
     y = vec->y;
 
-    z     = ( ( x >= 0 ) ? x : - x ) | ( (y >= 0) ? y : -y );
+    z     = FT_ABS( x ) | FT_ABS( y );
     shift = 0;
 
 #if 1
@@ -464,11 +464,11 @@
     /* handle trivial cases */
     if ( v.x == 0 )
     {
-      return ( v.y >= 0 ) ? v.y : -v.y;
+      return FT_ABS( v.y );
     }
     else if ( v.y == 0 )
     {
-      return ( v.x >= 0 ) ? v.x : -v.x;
+      return FT_ABS( v.x );
     }
 
     /* general case */

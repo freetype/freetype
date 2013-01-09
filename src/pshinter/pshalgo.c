@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PostScript hinting algorithm (body).                                 */
 /*                                                                         */
-/*  Copyright 2001-2010, 2012 by                                           */
+/*  Copyright 2001-2010, 2012, 2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -1161,8 +1161,8 @@
     int     result = PSH_DIR_NONE;
 
 
-    ax = ( dx >= 0 ) ? dx : -dx;
-    ay = ( dy >= 0 ) ? dy : -dy;
+    ax = FT_ABS( dx );
+    ay = FT_ABS( dy );
 
     if ( ay * 12 < ax )
     {
