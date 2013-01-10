@@ -19,13 +19,13 @@
   /*                                                                       */
   /* This is a fixed-point CORDIC implementation of trigonometric          */
   /* functions as well as transformations between Cartesian and polar      */
-  /* coordinates. The angles are represented as a 16.16 fixed-point value  */
-  /* in degrees, i.e., the angular resolution is 2^-16 degrees. Note that   */
+  /* coordinates.  The angles are represented as 16.16 fixed-point values  */
+  /* in degrees, i.e., the angular resolution is 2^-16 degrees.  Note that */
   /* only vectors longer than 2^16*180/pi (or at least 22 bits) on a       */
-  /* discrete Cartesian greed can have the same or better angular          */
-  /* resolution. Therefore, to maintain this precision, some functions     */
-  /* require the interim upscaling of the vectors, whereas others operate  */
-  /* with 24-bit long vectors from the start.                              */
+  /* discrete Cartesian grid can have the same or better angular           */
+  /* resolution.  Therefore, to maintain this precision, some functions    */
+  /* require an interim upscaling of the vectors, whereas others operate   */
+  /* with 24-bit long vectors directly.                                    */
   /*                                                                       */
   /*************************************************************************/
 
