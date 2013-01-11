@@ -2,9 +2,9 @@
 
 	[base] Update the overflow protection bit.
 
-	The recent optimizations of CORDIC iterations drastically reduce
-	the expansion factor. The vector components with MSB of 29 are now
-	safe from overflow.
+	The recent optimizations of CORDIC iterations drastically reduce the
+	expansion factor.  Vector components with MSB of 29 are now safe
+	from overflow.
 
 	* src/base/fttrigon.c (FT_TRIG_SAFE_MSB): New macro.
 	(ft_trig_prenorm): Use it and remove dead code.
@@ -264,7 +264,7 @@
 	The dot product between freeVector and projVector or cosine of
 	the angle between these FT_F2Dot14 unit vectors used to be scaled up
 	by 4 and routinely occupied 32 bits in an FT_Long field F_dot_P.
-	This patch scales the value down by 2^14 instead, which simplifies 
+	This patch scales the value down by 2^14 instead, which simplifies
 	its use throughout the bytecode interpreter.
 
 	This does not lead to the loss of precision because the lower bits
@@ -277,7 +277,7 @@
 	Besides code simplification, this change can lead to better
 	performance when FT_MulDiv with the scaled-down F_dot_P is less
 	likely to use the costly 64-bit path. We are not changing the type
-	of F_dot_P to FT_F2Dot14 at this point.  
+	of F_dot_P to FT_F2Dot14 at this point.
 
 	* src/truetype/ttinterp.c (Compute_Funcs): Scale F_dot_P down by 14
 	bits and modify its use accordingly.
@@ -483,7 +483,7 @@
 	[truetype] Cheaper way to threshold angles between vectors.
 
 	* src/truetype/ttinterp.c (Ins_ISECT): Thresholding tangent is a lot
-	cheaper than thresholding sine. 
+	cheaper than thresholding sine.
 
 2012-10-20  Werner Lemberg  <wl@gnu.org>
 
@@ -5520,7 +5520,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2010-2012 by
+Copyright 2010-2013 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,
