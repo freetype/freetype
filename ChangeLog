@@ -1,3 +1,13 @@
+2013-01-11  Werner Lemberg  <wl@gnu.org>
+
+	Disable FT_CONFIG_OPTION_OLD_INTERNALS.
+
+	After the next release we are going to remove the code completely.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(FT_CONFIG_OPTION_OLD_INTERNALS): Comment out.
+	* docs/CHANGES: Document it.
+
 2013-01-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Update the overflow protection bit.

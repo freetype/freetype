@@ -1,4 +1,16 @@
 
+CHANGES BETWEEN 2.4.11 and 2.4.12
+
+  I. IMPORTANT CHANGES
+
+    - The  macro FT_CONFIG_OPTION_OLD_INTERNALS  is no  longer set  by
+      default.  In  the next  release, we  will completely  remove the
+      associated code.   Please update your  programs in case  you are
+      still using this macro.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.4.10 and 2.4.11
 
   I. IMPORTANT BUG FIXES
