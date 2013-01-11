@@ -40,7 +40,11 @@
 
 
   /* the Cordic shrink factor 0.858785336480436 * 2^32 */
-#define FT_TRIG_SCALE    0xDBD95B16UL
+#define FT_TRIG_SCALE      0xDBD95B16UL
+
+  /* the highest bit in overflow-safe vectror components,
+     MSB of 0.858785336480436 * sqrt(0.5) * 2^30 */
+#define FT_TRIG_SAFE_MSB   29
 
   /* this table was generated for FT_PI = 180L << 16, i.e. degrees */
 #define FT_TRIG_MAX_ITERS  23
@@ -124,7 +128,6 @@
     z     = FT_ABS( x ) | FT_ABS( y );
     shift = 0;
 
-#if 1
     /* determine msb bit index in `shift' */
     if ( z >= ( 1L << 16 ) )
     {
@@ -152,46 +155,19 @@
       shift += 1;
     }
 
-    if ( shift <= 27 )
+    if ( shift <= FT_TRIG_SAFE_MSB )
     {
-      shift  = 27 - shift;
+      shift  = FT_TRIG_SAFE_MSB - shift;
       vec->x = x << shift;
       vec->y = y << shift;
     }
     else
     {
-      shift -= 27;
+      shift -= FT_TRIG_SAFE_MSB;
       vec->x = x >> shift;
       vec->y = y >> shift;
       shift  = -shift;
     }
-
-#else /* 0 */
-
-    if ( z < ( 1L << 27 ) )
-    {
-      do
-      {
-        shift++;
-        z <<= 1;
-      } while ( z < ( 1L << 27 ) );
-      vec->x = x << shift;
-      vec->y = y << shift;
-    }
-    else if ( z > ( 1L << 28 ) )
-    {
-      do
-      {
-        shift++;
-        z >>= 1;
-      } while ( z > ( 1L << 28 ) );
-
-      vec->x = x >> shift;
-      vec->y = y >> shift;
-      shift  = -shift;
-    }
-
-#endif /* 0 */
 
     return shift;
   }

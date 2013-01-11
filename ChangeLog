@@ -1,3 +1,14 @@
+2013-01-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Update the overflow protection bit.
+
+	The recent optimizations of CORDIC iterations drastically reduce
+	the expansion factor. The vector components with MSB of 29 are now
+	safe from overflow.
+
+	* src/base/fttrigon.c (FT_TRIG_SAFE_MSB): New macro.
+	(ft_trig_prenorm): Use it and remove dead code.
+
 2013-01-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base, pshinter] Use FT_ABS, FT_MIN, and FT_MAX for readability.
