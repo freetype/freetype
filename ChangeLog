@@ -1,3 +1,16 @@
+2013-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Kill very old vector normalization hacks.
+
+	Back in the days, vector length calculations were not very accurate
+	and the vector normalization function, Normalize, had to meticulously
+	correct the errors for long vectors [commit b7ef2b096867]. It was no
+	longer necessary after accurate CORDIC algorithms were adopted, but
+	the code remained. It is time to kill it.
+
+	* src/truetype/ttinterp.c (Normalize): Remove error compensation.
+	(TT_VecLen): Remove any mention of old less accurate implementation.
+
 2013-01-11  Werner Lemberg  <wl@gnu.org>
 
 	Disable FT_CONFIG_OPTION_OLD_INTERNALS.
