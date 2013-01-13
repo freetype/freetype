@@ -255,7 +255,7 @@ FT_BEGIN_HEADER
   /*    FT_F2Dot14                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A signed 2.14 fixed float type used for unit vectors.              */
+  /*    A signed 2.14 fixed-point type used for unit vectors.              */
   /*                                                                       */
   typedef signed short  FT_F2Dot14;
 
@@ -266,7 +266,7 @@ FT_BEGIN_HEADER
   /*    FT_F26Dot6                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A signed 26.6 fixed float type used for vectorial pixel            */
+  /*    A signed 26.6 fixed-point type used for vectorial pixel            */
   /*    coordinates.                                                       */
   /*                                                                       */
   typedef signed long  FT_F26Dot6;
@@ -278,7 +278,7 @@ FT_BEGIN_HEADER
   /*    FT_Fixed                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This type is used to store 16.16 fixed float values, like scaling  */
+  /*    This type is used to store 16.16 fixed-point values, like scaling  */
   /*    values or matrix coefficients.                                     */
   /*                                                                       */
   typedef signed long  FT_Fixed;
@@ -362,7 +362,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A simple structure used to store a 2x2 matrix.  Coefficients are   */
-  /*    in 16.16 fixed float format.  The computation performed is:        */
+  /*    in 16.16 fixed-point format.  The computation performed is:        */
   /*                                                                       */
   /*       {                                                               */
   /*          x' = x*xx + y*xy                                             */

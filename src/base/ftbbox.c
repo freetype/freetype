@@ -369,12 +369,12 @@
 
       /* We need to solve `ax^2+2bx+c' here, without floating points!      */
       /* The trick is to normalize to a different representation in order  */
-      /* to use our 16.16 fixed point routines.                            */
+      /* to use our 16.16 fixed-point routines.                            */
       /*                                                                   */
       /* We compute FT_MulFix(b,b) and FT_MulFix(a,c) after normalization. */
       /* These values must fit into a single 16.16 value.                  */
       /*                                                                   */
-      /* We normalize a, b, and c to `8.16' fixed float values to ensure   */
+      /* We normalize a, b, and c to `8.16' fixed-point values to ensure   */
       /* that its product is held in a `16.16' value.                      */
 
       {

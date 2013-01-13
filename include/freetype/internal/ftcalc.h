@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
   /*    FT_FixedSqrt                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Computes the square root of a 16.16 fixed point value.             */
+  /*    Computes the square root of a 16.16 fixed-point value.             */
   /*                                                                       */
   /* <Input>                                                               */
   /*    x :: The value to compute the root for.                            */

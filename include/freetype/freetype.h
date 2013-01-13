@@ -3695,7 +3695,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
   /*    `(a*b)/0x10000' with maximum accuracy.  Most of the time this is   */
-  /*    used to multiply a given value by a 16.16 fixed float factor.      */
+  /*    used to multiply a given value by a 16.16 fixed-point factor.      */
   /*                                                                       */
   /* <Input>                                                               */
   /*    a :: The first multiplier.                                         */
@@ -3740,7 +3740,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    A very simple function used to perform the computation             */
   /*    `(a*0x10000)/b' with maximum accuracy.  Most of the time, this is  */
-  /*    used to divide a given value by a 16.16 fixed float factor.        */
+  /*    used to divide a given value by a 16.16 fixed-point factor.        */
   /*                                                                       */
   /* <Input>                                                               */
   /*    a :: The first multiplier.                                         */
