@@ -1,5 +1,17 @@
 2013-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[truetype] Improve accuracy of normalization of short vectors.
+
+	Unit vector components are stored as 2.14 fixed-point numbers. In
+	order to calculate all 14 bits accurately, a short vector to be
+	normalized has to be upscaled to at least 14 bits before its length
+	is calculated. This has been safe since accurate CORDIC algorithms
+	were adopted.
+
+	* src/truetype/ttinterp.c (Normalize): Scale short vectors by 0x4000.
+
+2013-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[truetype] Kill very old vector normalization hacks.
 
 	Back in the days, vector length calculations were not very accurate

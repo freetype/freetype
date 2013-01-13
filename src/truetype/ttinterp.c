@@ -2635,8 +2635,6 @@
   /*    In case Vx and Vy are both zero, Normalize() returns SUCCESS, and  */
   /*    R is undefined.                                                    */
   /*                                                                       */
-
-
   static FT_Bool
   Normalize( EXEC_OP_ FT_F26Dot6      Vx,
                       FT_F26Dot6      Vy,
@@ -2647,17 +2645,17 @@
     FT_UNUSED_EXEC;
 
 
-    if ( FT_ABS( Vx ) < 0x10000L && FT_ABS( Vy ) < 0x10000L )
+    if ( FT_ABS( Vx ) < 0x4000L && FT_ABS( Vy ) < 0x4000L )
     {
-      Vx *= 0x100;
-      Vy *= 0x100;
-
       if ( Vx == 0 && Vy == 0 )
       {
         /* XXX: UNDOCUMENTED! It seems that it is possible to try   */
         /*      to normalize the vector (0,0).  Return immediately. */
         return SUCCESS;
       }
+
+      Vx *= 0x4000;
+      Vy *= 0x4000;
     }
 
     W = TT_VecLen( Vx, Vy );
