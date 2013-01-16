@@ -914,8 +914,9 @@
     /* scale, but only if enabled and only if TT hinting is being used */
     if ( IS_HINTED( loader->load_flags ) )
       x_scale_factor = scale_test_tweak( face, family, ppem, style,
-                                         loader->glyph_index, X_SCALING_Rules,
-                                         X_SCALING_RULES_SIZE );
+                                         loader->glyph_index,
+                                         sph_X_SCALING_Rules,
+                                         SPH_X_SCALING_RULES_SIZE );
     /* scale the glyph */
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 ||
          x_scale_factor != 1000                         )

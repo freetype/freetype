@@ -115,14 +115,14 @@ FT_BEGIN_HEADER
   /* various fonts.  "", 0, "", NULL value indicates to match any value.   */
   /*                                                                       */
 
-#define MAX_NAME_SIZE      32
-#define MAX_CLASS_MEMBERS  100
+#define SPH_MAX_NAME_SIZE      32
+#define SPH_MAX_CLASS_MEMBERS  100
 
   typedef struct  SPH_TweakRule_
   {
-    const char      family[MAX_NAME_SIZE];
+    const char      family[SPH_MAX_NAME_SIZE];
     const FT_UInt   ppem;
-    const char      style[MAX_NAME_SIZE];
+    const char      style[SPH_MAX_NAME_SIZE];
     const FT_ULong  glyph;
 
   } SPH_TweakRule;
@@ -130,21 +130,21 @@ FT_BEGIN_HEADER
 
   typedef struct  SPH_ScaleRule_
   {
-    const char      family[MAX_NAME_SIZE];
+    const char      family[SPH_MAX_NAME_SIZE];
     const FT_UInt   ppem;
-    const char      style[MAX_NAME_SIZE];
+    const char      style[SPH_MAX_NAME_SIZE];
     const FT_ULong  glyph;
     const FT_ULong  scale;
 
   } SPH_ScaleRule;
 
 
-  typedef struct  Font_Class_
+  typedef struct  SPH_Font_Class_
   {
-    const char  name[MAX_NAME_SIZE];
-    const char  member[MAX_CLASS_MEMBERS][MAX_NAME_SIZE];
+    const char  name[SPH_MAX_NAME_SIZE];
+    const char  member[SPH_MAX_CLASS_MEMBERS][SPH_MAX_NAME_SIZE];
 
-  } Font_Class;
+  } SPH_Font_Class;
 
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 

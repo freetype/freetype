@@ -1,3 +1,48 @@
+2013-01-16  David 'Digit' Turner  <digit@google.com>
+
+	[truetype] Improve sub-pixel code.
+
+	This patches fixes many issues with the ttsubpix implementation.
+
+	1. Data tables are defined, instead of declared, in the header, and
+	   thus copied into each source file that includes it.
+
+	2. These tables were defined as global, mutable, visible variables,
+	   and thus costing private RAM to every process that loads the
+	   library (> 50 KB / process, this is huge!).
+
+	   Additionally, this also made the library export the symbols
+	   completely needlessly.
+
+	3. Missing `sph_' and `SPH_' prefixes to some of the definitions.
+
+	Note that this doesn't try to fix the incredibly inefficient storage
+	format for the data tables used by the code.  This one will require
+	another pass in the future.
+
+	* src/truetype/ttinterp.h (MAX_NAME_SIZE, MAX_CLASS_MEMBERS):
+	Renamed to...
+	(SPH_MAX_NAME_SIZE, SPH_MAX_CLASS_MEMBERS): This.
+	Update all users.
+
+	(SPH_TweakRule, SPH_ScaleRule): Decorate with `const' where
+	appropriate.
+
+	(Font_Class): Rename to...
+	(SPH_Font_Class): This.  Decorate with `const' where appropriate.
+	
+	* src/truetype/ttsubpix.h (scale_test_tweak, sph_test_tweak):
+	Decorate arguments with `const' where appropriate.
+
+	Move font tweaking tables to...
+
+	* src/truetype/ttsubpic.c: This file and decorate them with `static'
+	and `const' where appropriate.
+
+	(X_SCALING_Rules, X_SCALING_RULES_SIZE): Renamed to...
+	(spu_X_SCALING_Rules, SPH_X_SCALING_RULES_SIZE): This.
+	Update all users.
+
 2013-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Improve accuracy of normalization of short vectors.
