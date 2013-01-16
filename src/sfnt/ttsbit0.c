@@ -375,7 +375,7 @@
   {
     FT_Error    error = SFNT_Err_Ok;
     FT_Byte*    line;
-    FT_Int      bit_height, bit_width, pitch, width, height, h;
+    FT_Int      bit_height, bit_width, pitch, width, height, line_bits, h;
     FT_Bitmap*  bitmap;
 
 
@@ -396,6 +396,8 @@
     width  = decoder->metrics->width;
     height = decoder->metrics->height;
 
+    line_bits = width * decoder->bit_depth;
+
     if ( x_pos < 0 || x_pos + width > bit_width   ||
          y_pos < 0 || y_pos + height > bit_height )
     {
@@ -403,7 +405,7 @@
       goto Exit;
     }
 
-    if ( p + ( ( width + 7 ) >> 3 ) * height > limit )
+    if ( p + ( ( line_bits + 7 ) >> 3 ) * height > limit )
     {
       error = SFNT_Err_Invalid_File_Format;
       goto Exit;
@@ -421,7 +423,7 @@
         FT_Int    w;
 
 
-        for ( w = width; w >= 8; w -= 8 )
+        for ( w = line_bits; w >= 8; w -= 8 )
         {
           write[0] = (FT_Byte)( write[0] | *p++ );
           write   += 1;
@@ -440,7 +442,7 @@
         FT_UInt   wval = 0;
 
 
-        for ( w = width; w >= 8; w -= 8 )
+        for ( w = line_bits; w >= 8; w -= 8 )
         {
           wval      = (FT_UInt)( wval | *p++ );
           write[0]  = (FT_Byte)( write[0] | ( wval >> x_pos ) );
@@ -513,7 +515,7 @@
   {
     FT_Error    error = SFNT_Err_Ok;
     FT_Byte*    line;
-    FT_Int      bit_height, bit_width, pitch, width, height, h, nbits;
+    FT_Int      bit_height, bit_width, pitch, width, height, line_bits, h, nbits;
     FT_Bitmap*  bitmap;
     FT_UShort   rval;
 
@@ -535,6 +537,8 @@
     width  = decoder->metrics->width;
     height = decoder->metrics->height;
 
+    line_bits = width * decoder->bit_depth;
+
     if ( x_pos < 0 || x_pos + width  > bit_width  ||
          y_pos < 0 || y_pos + height > bit_height )
     {
@@ -542,7 +546,7 @@
       goto Exit;
     }
 
-    if ( p + ( ( width * height + 7 ) >> 3 ) > limit )
+    if ( p + ( ( line_bits * height + 7 ) >> 3 ) > limit )
     {
       error = SFNT_Err_Invalid_File_Format;
       goto Exit;
@@ -561,13 +565,13 @@
     for ( h = height; h > 0; h--, line += pitch )
     {
       FT_Byte*  write = line;
-      FT_Int    w     = width;
+      FT_Int    w     = line_bits;
 
 
       /* handle initial byte (in target bitmap) specially if necessary */
       if ( x_pos )
       {
-        w = ( width < 8 - x_pos ) ? width : 8 - x_pos;
+        w = ( line_bits < 8 - x_pos ) ? line_bits : 8 - x_pos;
 
         if ( h == height )
         {
@@ -590,7 +594,7 @@
                     ( ~( 0xFF << w ) << ( 8 - w - x_pos ) );
         rval    <<= 8;
 
-        w = width - w;
+        w = line_bits - w;
       }
 
       /* handle medial bytes */

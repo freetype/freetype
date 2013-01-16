@@ -1,3 +1,13 @@
+2013-01-16  Behdad Esfahbod  <behdad@behdad.org>
+
+	[sfnt] Fix optimized sbit loader.
+
+	It was not taking bit_depth into consideration when blitting!
+
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_byte_aligned,
+	* tt_sbit_decoder_load_bit_aligned): Handle bit
+	depth.
+
 2013-01-16  David 'Digit' Turner  <digit@google.com>
 
 	[truetype] Improve sub-pixel code.
