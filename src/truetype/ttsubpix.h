@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType Subpixel Hinting.                                           */
 /*                                                                         */
-/*  Copyright 2010-2012 by                                                 */
+/*  Copyright 2010-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -69,7 +69,7 @@ FT_BEGIN_HEADER
                   const SPH_TweakRule*  rule,
                   FT_UInt               num_rules );
 
-  FT_LOCAL_DEF( FT_UInt )
+  FT_LOCAL( FT_UInt )
   scale_test_tweak( TT_Face               face,
                     const FT_String*      family,
                     FT_UInt               ppem,
@@ -87,35 +87,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( const SPH_ScaleRule* const )  sph_X_SCALING_Rules;
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* These rules affect how the TT Interpreter does hinting, with the      */
-  /* goal of doing subpixel hinting by (in general) ignoring x moves.      */
-  /* Some of these rules are fixes that go above and beyond the            */
-  /* stated techniques in the MS whitepaper on Cleartype, due to           */
-  /* artifacts in many glyphs.  So, these rules make some glyphs render    */
-  /* better than they do in the MS rasterizer.                             */
-  /*                                                                       */
-  /* "" string or 0 int/char indicates to apply to all glyphs.             */
-  /* "-" used as dummy placeholders, but any non-matching string works.    */
-  /*                                                                       */
-  /* Some of this could arguably be implemented in fontconfig, however:    */
-  /*                                                                       */
-  /*  - Fontconfig can't set things on a glyph-by-glyph basis.             */
-  /*  - The tweaks that happen here are very low-level, from an average    */
-  /*    user's point of view and are best implemented in the hinter.       */
-  /*                                                                       */
-  /* The goal is to make the subpixel hinting techniques as generalized    */
-  /* as possible across all fonts to prevent the need for extra rules such */
-  /* as these.                                                             */
-  /*                                                                       */
-  /* The rule structure is designed so that entirely new rules can easily  */
-  /* be added when a new compatibility feature is discovered.              */
-  /*                                                                       */
-  /* The rule structures could also use some enhancement to handle ranges. */
-  /*                                                                       */
-  /*     ****************** WORK IN PROGRESS *******************           */
-  /*                                                                       */
 
   /* These macros are defined absent a method for setting them */
 #define SPH_OPTION_BITMAP_WIDTHS           FALSE

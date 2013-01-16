@@ -5,7 +5,7 @@
 /*    TrueType and OpenType embedded bitmap support (body).                */
 /*    This is a heap-optimized version.                                    */
 /*                                                                         */
-/*  Copyright 2005, 2006, 2007, 2008, 2009 by                              */
+/*  Copyright 2005-2009, 2013 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
