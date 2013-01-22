@@ -1,3 +1,11 @@
+2013-01-22  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix font height.
+
+	* src/truetype/ttobjs.c (tt_size_reset): The Windows rendering
+	engine uses rounded values of the ascender and descender to compute
+	the TrueType font height.
+
 2013-01-16  Behdad Esfahbod  <behdad@behdad.org>
 
 	[sfnt] Fix optimized sbit loader.
