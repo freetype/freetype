@@ -22,6 +22,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_TAGS_H
+#include FT_TRIGONOMETRY_H
 #include FT_OUTLINE_H
 
 #include "ttgload.h"
@@ -1082,16 +1083,10 @@
   /*                                                                       */
   /* This algorithm is a guess and works much better than the above.       */
   /*                                                                       */
-        FT_Fixed  mac_xscale = FT_SqrtFixed(
-                                 (FT_Int32)FT_MulFix( subglyph->transform.xx,
-                                                      subglyph->transform.xx ) +
-                                 (FT_Int32)FT_MulFix( subglyph->transform.xy,
-                                                      subglyph->transform.xy ) );
-        FT_Fixed  mac_yscale = FT_SqrtFixed(
-                                 (FT_Int32)FT_MulFix( subglyph->transform.yy,
-                                                      subglyph->transform.yy ) +
-                                 (FT_Int32)FT_MulFix( subglyph->transform.yx,
-                                                      subglyph->transform.yx ) );
+        FT_Fixed  mac_xscale = FT_Hypot( subglyph->transform.xx,
+                                         subglyph->transform.xy );
+        FT_Fixed  mac_yscale = FT_Hypot( subglyph->transform.yy,
+                                         subglyph->transform.yx );
 
 
         x = FT_MulFix( x, mac_xscale );

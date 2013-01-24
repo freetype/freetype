@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType trigonometric functions (specification).                    */
 /*                                                                         */
-/*  Copyright 2001, 2003, 2005, 2007 by                                    */
+/*  Copyright 2001, 2003, 2005, 2007, 2013 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -338,6 +338,14 @@ FT_BEGIN_HEADER
   FT_Vector_From_Polar( FT_Vector*  vec,
                         FT_Fixed    length,
                         FT_Angle    angle );
+
+  /*
+   * Return sqrt(x*x+y*y), which is the same as FT_Vector_Length but uses
+   * two fixed-point arguments instead.
+   */ 
+  FT_BASE( FT_Fixed )
+  FT_Hypot( FT_Fixed x,
+            FT_Fixed y );
 
   /* */
 

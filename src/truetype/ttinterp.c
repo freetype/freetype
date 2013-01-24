@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType bytecode interpreter (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2012                                                    */
+/*  Copyright 1996-2013                                                    */
 /*  by David Turner, Robert Wilhelm, and Werner Lemberg.                   */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1542,21 +1542,6 @@
   }
 
 
-  /* return length of given vector */
-  static FT_F26Dot6
-  TT_VecLen( FT_F26Dot6  X,
-             FT_F26Dot6  Y )
-  {
-    FT_Vector  v;
-
-
-    v.x = X;
-    v.y = Y;
-
-    return FT_Vector_Length( &v );
-  }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1600,7 +1585,7 @@
                            CUR.GS.projVector.x );
           y = TT_MulFix14( CUR.tt_metrics.y_ratio,
                            CUR.GS.projVector.y );
-          CUR.tt_metrics.ratio = TT_VecLen( x, y );
+          CUR.tt_metrics.ratio = FT_Hypot( x, y );
         }
       }
     }
@@ -2658,7 +2643,7 @@
       Vy *= 0x4000;
     }
 
-    W = TT_VecLen( Vx, Vy );
+    W = FT_Hypot( Vx, Vy );
 
     R->x = (FT_F2Dot14)TT_DivFix14( Vx, W );
     R->y = (FT_F2Dot14)TT_DivFix14( Vy, W );

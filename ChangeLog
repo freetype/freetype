@@ -1,5 +1,17 @@
 2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base, truetype] New internal FT_Hypot function.
+
+	* include/freetype/fttrigon.h (FT_Hypot): Declare it.
+	* src/base/fttrigon.c (FT_Hypot): Define it.
+	* src/truetype/ttgload.c (TT_Process_Composite_Component): Use it
+	instead of explicit expressions.
+	* src/truetype/ttinterp.c (Current_Ratio, Normalize): Use it instead
+	of TT_VecLen.
+	(TT_VecLen): Removed.
+
+2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Fix integer overflow.
 
 	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Normalize incoming and

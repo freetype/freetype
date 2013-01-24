@@ -492,4 +492,19 @@
   }
 
 
+  /* documentation is in fttrigon.h */
+
+  FT_BASE_DEF( FT_Fixed )
+  FT_Hypot( FT_Fixed x,
+            FT_Fixed y )
+  {
+    FT_Vector  v;
+
+    v.x = x;
+    v.y = y;
+
+    return FT_Vector_Length( &v );
+  }
+
+
 /* END */
