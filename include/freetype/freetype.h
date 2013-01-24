@@ -875,11 +875,14 @@ FT_BEGIN_HEADER
   /*                           usually negative.  Only relevant for        */
   /*                           scalable formats.                           */
   /*                                                                       */
-  /*    height              :: The height is the vertical distance         */
+  /*    height              :: This value is the vertical distance         */
   /*                           between two consecutive baselines,          */
   /*                           expressed in font units.  It is always      */
   /*                           positive.  Only relevant for scalable       */
   /*                           formats.                                    */
+  /*                                                                       */
+  /*                           If you want the global glyph height, use    */
+  /*                           `ascender - descender'.                     */
   /*                                                                       */
   /*    max_advance_width   :: The maximum advance width, in font units,   */
   /*                           for all glyphs in this face.  This can be   */
