@@ -1,6 +1,20 @@
+2013-01-25  Xi Wang  <xi.wang@gmail.com>
+
+	[sfnt] Fix broken pointer overflow checks.
+
+	Many compilers such as gcc and clang optimize away pointer overflow
+	checks `p + n < p', because pointer overflow is undefined behavior. 
+	Use a safe form `n > p_limit - p' instead.
+
+	Also avoid possible integer overflow issues, for example, using
+	`num_glyphs > ( p_limit - p ) / 2' rather than `num_glyphs * 2'
+	given a large `num_glyphs'.
+
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): Implement it.
+
 2013-01-25  Werner Lemberg  <wl@gnu.org>
 
-	Fix `make multi'
+	[base] Fix `make multi'.
 
 	* src/base/ftoutln.c, src/base/fttrigon.c: Include
 	FT_INTERNAL_CALC_H.
