@@ -982,13 +982,13 @@
 
           l = FT_MIN( l_in, l_out );
 
-          if ( FT_MulFix( xstrength, q ) =< FT_MulFix( d, l ) )
+          if ( FT_MulFix( xstrength, q ) <= FT_MulFix( d, l ) )
             shift.x = FT_MulDiv( shift.x, xstrength, d );
           else
             shift.x = FT_MulDiv( shift.x, l, q );
 
           
-          if ( FT_MulFix( ystrength, q ) =< FT_MulFix( d, l ) )
+          if ( FT_MulFix( ystrength, q ) <= FT_MulFix( d, l ) )
             shift.y = FT_MulDiv( shift.y, ystrength, d );
           else
             shift.y = FT_MulDiv( shift.y, l, q );
