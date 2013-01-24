@@ -937,10 +937,12 @@
       v_prev  = points[last];
       v_cur   = v_first;
 
-      /* compute the incoming vector and its length */
+      /* compute the incoming normalized vector */
       in.x = v_cur.x - v_prev.x;
       in.y = v_cur.y - v_prev.y;
       l_in = FT_Vector_Length( &in );
+      in.x = FT_DivFix( in.x, l_in );
+      in.y = FT_DivFix( in.y, l_in );
 
       for ( n = first; n <= last; n++ )
       {
@@ -949,20 +951,24 @@
         else
           v_next = v_first;
 
-        /* compute the outgoing vector and its length */
+        /* compute the outgoing normalized vector */
         out.x = v_next.x - v_cur.x;
         out.y = v_next.y - v_cur.y;
         l_out = FT_Vector_Length( &out );
+        out.x = FT_DivFix( out.x, l_out );
+        out.y = FT_DivFix( out.y, l_out );
 
-        d = l_in * l_out + in.x * out.x + in.y * out.y;
+        d = FT_MulFix( in.x, out.x ) + FT_MulFix( in.y, out.y );
 
         /* shift only if turn is less then ~160 degrees */
-        if ( 16 * d > l_in * l_out )
+        if ( d > -0xF000L )
         {
+          d = d + 0x10000L;
+
           /* shift components are aligned along bisector        */
           /* and directed according to the outline orientation. */
-          shift.x = l_out * in.y + l_in * out.y;
-          shift.y = l_out * in.x + l_in * out.x;
+          shift.x = in.y + out.y;
+          shift.y = in.x + out.x;
 
           if ( orientation == FT_ORIENTATION_TRUETYPE )
             shift.x = -shift.x;
@@ -970,18 +976,19 @@
             shift.y = -shift.y;
 
           /* threshold strength to better handle collapsing segments */
-          l = FT_MIN( l_in, l_out );
-          q = out.x * in.y - out.y * in.x;
+          q = FT_MulFix( out.x, in.y ) - FT_MulFix( out.y, in.x );
           if ( orientation == FT_ORIENTATION_TRUETYPE )
             q = -q;
 
-          if ( FT_MulDiv( xstrength, q, l ) < d )
+          l = FT_MIN( l_in, l_out );
+
+          if ( FT_MulFix( xstrength, q ) =< FT_MulFix( d, l ) )
             shift.x = FT_MulDiv( shift.x, xstrength, d );
           else
             shift.x = FT_MulDiv( shift.x, l, q );
 
           
-          if ( FT_MulDiv( ystrength, q, l ) < d )
+          if ( FT_MulFix( ystrength, q ) =< FT_MulFix( d, l ) )
             shift.y = FT_MulDiv( shift.y, ystrength, d );
           else
             shift.y = FT_MulDiv( shift.y, l, q );
