@@ -157,7 +157,7 @@ FT_BEGIN_HEADER
 
   /*
    *  Return the most significant bit index.
-   */  
+   */
   FT_BASE( FT_Int )
   FT_MSB( FT_UInt32  z );
 

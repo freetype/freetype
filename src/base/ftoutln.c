@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType outline management (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2008, 2010, 2012 by                                     */
+/*  Copyright 1996-2008, 2010, 2012-2013 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -987,7 +987,7 @@
           else
             shift.x = FT_MulDiv( shift.x, l, q );
 
-          
+
           if ( FT_MulFix( ystrength, q ) <= FT_MulFix( d, l ) )
             shift.y = FT_MulDiv( shift.y, ystrength, d );
           else
@@ -1053,7 +1053,7 @@
       for ( n = first; n <= last; n++ )
       {
         v_cur = points[n];
-        area += ( ( v_cur.y - v_prev.y ) >> yshift ) * 
+        area += ( ( v_cur.y - v_prev.y ) >> yshift ) *
                 ( ( v_cur.x + v_prev.x ) >> xshift );
         v_prev = v_cur;
       }

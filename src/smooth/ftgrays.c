@@ -1092,7 +1092,7 @@ typedef ptrdiff_t  FT_PtrDist;
           goto Split;
 
         /* Split super curvy segments where the off points are so far
-           from the chord that the angles P0-P1-P3 or P0-P2-P3 become 
+           from the chord that the angles P0-P1-P3 or P0-P2-P3 become
            acute as detected by appropriate dot products. */
         if ( dx1 * ( dx1 - dx ) + dy1 * ( dy1 - dy ) > 0 ||
              dx2 * ( dx2 - dx ) + dy2 * ( dy2 - dy ) > 0 )
