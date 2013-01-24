@@ -1009,6 +1009,8 @@
   FT_EXPORT_DEF( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline )
   {
+    FT_BBox     cbox;
+    FT_Int      xshift, yshift;
     FT_Vector*  points;
     FT_Vector   v_prev, v_cur;
     FT_Int      c, n, first;
@@ -1023,6 +1025,14 @@
     /* cubic or quadratic curves, this test deals with the polygon    */
     /* only which is spanned up by the control points.                */
 
+    FT_Outline_Get_CBox( outline, &cbox );
+
+    xshift = FT_MSB( FT_ABS( cbox.xMax ) | FT_ABS( cbox.xMin ) ) - 14;
+    xshift = FT_MAX( xshift, 0 );
+
+    yshift = FT_MSB( cbox.yMax - cbox.yMin ) - 14;
+    yshift = FT_MAX( yshift, 0 );
+
     points = outline->points;
 
     first = 0;
@@ -1036,7 +1046,8 @@
       for ( n = first; n <= last; n++ )
       {
         v_cur = points[n];
-        area += ( v_cur.y - v_prev.y ) * ( v_cur.x + v_prev.x );
+        area += ( ( v_cur.y - v_prev.y ) >> yshift ) * 
+                ( ( v_cur.x + v_prev.x ) >> xshift );
         v_prev = v_cur;
       }
 

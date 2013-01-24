@@ -1,5 +1,12 @@
 2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] Fix integer overflow.
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Scale the
+	coordinates down to avoid overflow.
+
+2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Split out MSB function.
 
 	* src/base/fttrigon.c (ft_trig_prenorm): Borrow from here.
