@@ -22,7 +22,6 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_TAGS_H
-#include FT_TRIGONOMETRY_H
 #include FT_OUTLINE_H
 
 #include "ttgload.h"

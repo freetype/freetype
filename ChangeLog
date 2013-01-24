@@ -1,5 +1,18 @@
 2013-01-23  Werner Lemberg  <wl@gnu.org>
 
+	[base] Make `FT_Hypot' really internal.
+
+	* include/freetype/fttrigon.h (FT_Hypot): Move to...
+	* include/freetype/internal/ftcalc.h: This file.
+
+	* src/base/fttrigon.c (FT_Hypot): Move to...
+	* src/base/ftcalc.c: This file.
+	Include FT_TRIGONOMETRY_H.
+
+	* src/truetype/ttgload.c: Don't include FT_TRIGONOMETRY_H.
+
+2013-01-23  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Revert change from 2013-01-22.
 
 	FreeType's `height' value is the baseline-to-baseline distance...
@@ -8,7 +21,7 @@
 
 2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	[base, truetype] New internal FT_Hypot function.
+	[base, truetype] New internal `FT_Hypot' function.
 
 	* include/freetype/fttrigon.h (FT_Hypot): Declare it.
 	* src/base/fttrigon.c (FT_Hypot): Define it.

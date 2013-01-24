@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Arithmetic computations (body).                                      */
 /*                                                                         */
-/*  Copyright 1996-2006, 2008, 2012 by                                     */
+/*  Copyright 1996-2006, 2008, 2012-2013 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -34,6 +34,7 @@
 
 #include <ft2build.h>
 #include FT_GLYPH_H
+#include FT_TRIGONOMETRY_H
 #include FT_INTERNAL_CALC_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
@@ -136,6 +137,22 @@
     }
 
     return shift;
+  }
+
+
+  /* documentation is in ftcalc.h */
+
+  FT_BASE_DEF( FT_Fixed )
+  FT_Hypot( FT_Fixed  x,
+            FT_Fixed  y )
+  {
+    FT_Vector  v;
+
+
+    v.x = x;
+    v.y = y;
+
+    return FT_Vector_Length( &v );
   }
 
 

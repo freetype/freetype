@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Arithmetic computations (specification).                             */
 /*                                                                         */
-/*  Copyright 1996-2006, 2008, 2009, 2012 by                               */
+/*  Copyright 1996-2006, 2008, 2009, 2012-2013 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -159,7 +159,16 @@ FT_BEGIN_HEADER
    *  Return the most significant bit index.
    */  
   FT_BASE( FT_Int )
-  FT_MSB( FT_UInt32 z );
+  FT_MSB( FT_UInt32  z );
+
+
+  /*
+   *  Return sqrt(x*x+y*y), which is the same as `FT_Vector_Length' but uses
+   *  two fixed-point arguments instead.
+   */
+  FT_BASE( FT_Fixed )
+  FT_Hypot( FT_Fixed  x,
+            FT_Fixed  y );
 
 
 #define INT_TO_F26DOT6( x )    ( (FT_Long)(x) << 6  )

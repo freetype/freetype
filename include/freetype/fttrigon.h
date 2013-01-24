@@ -339,14 +339,6 @@ FT_BEGIN_HEADER
                         FT_Fixed    length,
                         FT_Angle    angle );
 
-  /*
-   * Return sqrt(x*x+y*y), which is the same as FT_Vector_Length but uses
-   * two fixed-point arguments instead.
-   */ 
-  FT_BASE( FT_Fixed )
-  FT_Hypot( FT_Fixed x,
-            FT_Fixed y );
-
   /* */
 
 
