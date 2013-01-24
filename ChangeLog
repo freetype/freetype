@@ -1,3 +1,16 @@
+2013-01-25  David 'Digit' Turner  <digit@google.com>
+
+	[truetype] Fix C++ compilation.
+
+	* src/truetype/ttsubpix.h: Updated.
+	(SPH_X_SCALING_RULES_SIZE): Moved and renamed to...
+	* src/truetype/ttsubpix.c (X_SCALING_RULES_SIZE): This.
+	(sph_X_SCALING_Rules): Removed.
+	(scale_test_tweak): Make function static.
+	(sph_test_tweak_x_scaling): New function.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Updated.
+
 2013-01-23  Werner Lemberg  <wl@gnu.org>
 
 	[base] Make `FT_Hypot' really internal.

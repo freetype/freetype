@@ -70,22 +70,15 @@ FT_BEGIN_HEADER
                   FT_UInt               num_rules );
 
   FT_LOCAL( FT_UInt )
-  scale_test_tweak( TT_Face               face,
-                    const FT_String*      family,
-                    FT_UInt               ppem,
-                    const FT_String*      style,
-                    FT_UInt               glyph_index,
-                    const SPH_ScaleRule*  rule,
-                    FT_UInt               num_rules );
+  sph_test_tweak_x_scaling( TT_Face           face,
+                            const FT_String*  family,
+                            FT_UInt           ppem,
+                            const FT_String*  style,
+                            FT_UInt           glyph_index );
 
   FT_LOCAL( void )
   sph_set_tweaks( TT_Loader  loader,
                   FT_UInt    glyph_index );
-
-
-#define SPH_X_SCALING_RULES_SIZE  50
-
-  FT_LOCAL( const SPH_ScaleRule* const )  sph_X_SCALING_Rules;
 
 
   /* These macros are defined absent a method for setting them */

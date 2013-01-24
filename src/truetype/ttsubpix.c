@@ -756,7 +756,9 @@
   /* This sometimes needs to be coordinated with compatible width rules.   */
   /* A value of 1000 corresponds to a scaled value of 1.0.                 */
 
-  static const SPH_ScaleRule  X_SCALING_Rules[SPH_X_SCALING_RULES_SIZE] =
+#define X_SCALING_RULES_SIZE  50
+
+  static const SPH_ScaleRule  X_SCALING_Rules[X_SCALING_RULES_SIZE] =
   {
     { "DejaVu Sans", 12, "Regular Class", 'm', 950 },
     { "Verdana and Clones", 12, "Regular Class", 'a', 1100 },
@@ -832,10 +834,6 @@
   };
 
 #endif /* FORCE_NATURAL_WIDTHS */
-
-
-  FT_LOCAL_DEF( const SPH_ScaleRule* const ) sph_X_SCALING_Rules
-                                               = X_SCALING_Rules;
 
 
   FT_LOCAL_DEF( FT_Bool )
@@ -939,7 +937,7 @@
   }
 
 
-  FT_LOCAL_DEF( FT_UInt )
+  static FT_UInt
   scale_test_tweak( TT_Face               face,
                     const FT_String*      family,
                     FT_UInt               ppem,
@@ -967,6 +965,18 @@
     }
 
     return 1000;
+  }
+
+
+  FT_LOCAL_DEF( FT_UInt )
+  sph_test_tweak_x_scaling( TT_Face           face,
+                            const FT_String*  family,
+                            FT_UInt           ppem,
+                            const FT_String*  style,
+                            FT_UInt           glyph_index )
+  {
+    return scale_test_tweak( face, family, ppem, style, glyph_index,
+                             X_SCALING_Rules, X_SCALING_RULES_SIZE );
   }
 
 
