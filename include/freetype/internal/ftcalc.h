@@ -125,7 +125,6 @@ FT_BEGIN_HEADER
    *  A variant of FT_Vector_Transform.  See comments for
    *  FT_Matrix_Multiply_Scaled.
    */
-
   FT_BASE( void )
   FT_Vector_Transform_Scaled( FT_Vector*        vector,
                               const FT_Matrix*  matrix,
@@ -154,6 +153,13 @@ FT_BEGIN_HEADER
                      FT_Pos  in_y,
                      FT_Pos  out_x,
                      FT_Pos  out_y );
+
+
+  /*
+   *  Return the most significant bit index.
+   */  
+  FT_BASE( FT_Int )
+  FT_MSB( FT_UInt32 z );
 
 
 #define INT_TO_F26DOT6( x )    ( (FT_Long)(x) << 6  )

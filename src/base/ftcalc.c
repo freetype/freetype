@@ -103,6 +103,42 @@
   }
 
 
+  FT_BASE_DEF ( FT_Int )
+  FT_MSB( FT_UInt32 z )
+  {
+    FT_Int shift = 0;
+
+    /* determine msb bit index in `shift' */
+    if ( z >= ( 1L << 16 ) )
+    {
+      z     >>= 16;
+      shift  += 16;
+    }
+    if ( z >= ( 1L << 8 ) )
+    {
+      z     >>= 8;
+      shift  += 8;
+    }
+    if ( z >= ( 1L << 4 ) )
+    {
+      z     >>= 4;
+      shift  += 4;
+    }
+    if ( z >= ( 1L << 2 ) )
+    {
+      z     >>= 2;
+      shift  += 2;
+    }
+    if ( z >= ( 1L << 1 ) )
+    {
+      z     >>= 1;
+      shift  += 1;
+    }
+
+    return shift;
+  }
+
+
 #ifdef FT_CONFIG_OPTION_OLD_INTERNALS
 
   /* documentation is in ftcalc.h */

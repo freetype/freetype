@@ -118,42 +118,14 @@
   static FT_Int
   ft_trig_prenorm( FT_Vector*  vec )
   {
-    FT_Fixed  x, y, z;
+    FT_Fixed  x, y;
     FT_Int    shift;
 
 
     x = vec->x;
     y = vec->y;
 
-    z     = FT_ABS( x ) | FT_ABS( y );
-    shift = 0;
-
-    /* determine msb bit index in `shift' */
-    if ( z >= ( 1L << 16 ) )
-    {
-      z     >>= 16;
-      shift  += 16;
-    }
-    if ( z >= ( 1L << 8 ) )
-    {
-      z     >>= 8;
-      shift  += 8;
-    }
-    if ( z >= ( 1L << 4 ) )
-    {
-      z     >>= 4;
-      shift  += 4;
-    }
-    if ( z >= ( 1L << 2 ) )
-    {
-      z     >>= 2;
-      shift  += 2;
-    }
-    if ( z >= ( 1L << 1 ) )
-    {
-      z    >>= 1;
-      shift += 1;
-    }
+    shift = FT_MSB( FT_ABS( x ) | FT_ABS( y ) );
 
     if ( shift <= FT_TRIG_SAFE_MSB )
     {
