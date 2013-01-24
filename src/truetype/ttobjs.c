@@ -1177,12 +1177,11 @@
         FT_PIX_ROUND( FT_MulFix( face->root.ascender, metrics->y_scale ) );
       metrics->descender =
         FT_PIX_ROUND( FT_MulFix( face->root.descender, metrics->y_scale ) );
+      metrics->height =
+        FT_PIX_ROUND( FT_MulFix( face->root.height, metrics->y_scale ) );
       metrics->max_advance =
         FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
                                  metrics->x_scale ) );
-
-      /* the height is derived from rounded values */
-      metrics->height = metrics->ascender - metrics->descender;
     }
 
     /* compute new transformation */

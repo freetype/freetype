@@ -1,3 +1,11 @@
+2013-01-23  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Revert change from 2013-01-22.
+
+	FreeType's `height' value is the baseline-to-baseline distance...
+
+	* src/truetype/ttobjs.c (tt_size_reset): Undo.
+
 2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base, truetype] New internal FT_Hypot function.
