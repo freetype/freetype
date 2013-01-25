@@ -1,3 +1,12 @@
+2013-01-25  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #38167.
+
+	This fixes commit 83c0ebab from 2012-06-27.
+
+	* src/truetype/ttinterp.h:
+	s/TT_CONFIG_OPTION_BYTECODE_INTERPRETER/TT_USE_BYTECODE_INTERPRETER/.
+
 2013-01-25  Xi Wang  <xi.wang@gmail.com>
 
 	[sfnt] Fix broken pointer overflow checks.

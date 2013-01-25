@@ -296,7 +296,7 @@ FT_BEGIN_HEADER
   extern const TT_GraphicsState  tt_default_graphics_state;
 
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
   FT_LOCAL( FT_Error )
   TT_Goto_CodeRange( TT_ExecContext  exec,
                      FT_Int          range,
@@ -319,7 +319,7 @@ FT_BEGIN_HEADER
               FT_Long    multiplier,
               void*      _pbuff,
               FT_ULong   new_max );
-#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#endif /* TT_USE_BYTECODE_INTERPRETER */
 
 
   /*************************************************************************/
@@ -345,7 +345,7 @@ FT_BEGIN_HEADER
   TT_New_Context( TT_Driver  driver );
 
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#ifdef TT_USE_BYTECODE_INTERPRETER
   FT_LOCAL( FT_Error )
   TT_Done_Context( TT_ExecContext  exec );
 
@@ -361,7 +361,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   TT_Run_Context( TT_ExecContext  exec,
                   FT_Bool         debug );
-#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+#endif /* TT_USE_BYTECODE_INTERPRETER */
 
 
   /*************************************************************************/
