@@ -942,8 +942,11 @@
       in.x = v_cur.x - v_prev.x;
       in.y = v_cur.y - v_prev.y;
       l_in = FT_Vector_Length( &in );
-      in.x = FT_DivFix( in.x, l_in );
-      in.y = FT_DivFix( in.y, l_in );
+      if ( l_in )
+      {
+        in.x = FT_DivFix( in.x, l_in );
+        in.y = FT_DivFix( in.y, l_in );
+      }
 
       for ( n = first; n <= last; n++ )
       {
@@ -956,8 +959,11 @@
         out.x = v_next.x - v_cur.x;
         out.y = v_next.y - v_cur.y;
         l_out = FT_Vector_Length( &out );
-        out.x = FT_DivFix( out.x, l_out );
-        out.y = FT_DivFix( out.y, l_out );
+        if ( l_out )
+        {
+          out.x = FT_DivFix( out.x, l_out );
+          out.y = FT_DivFix( out.y, l_out );
+        }
 
         d = FT_MulFix( in.x, out.x ) + FT_MulFix( in.y, out.y );
 
