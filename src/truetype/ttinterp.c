@@ -3165,18 +3165,18 @@
        /* subpixel hinting - avoid Typeman Dstroke and */ \
        /* IStroke and Vacuform rounds                  */ \
                                                           \
-      if ( CUR.ignore_x_mode                          &&  \
-           ( ( I == 24                            &&      \
-               ( CUR.face->sph_found_func_flags &         \
-                 ( SPH_FDEF_SPACING_1 |                   \
-                   SPH_FDEF_SPACING_2 )         ) ) ||    \
-             ( I == 22                      &&            \
-               ( CUR.sph_in_func_flags    &               \
-                 SPH_FDEF_TYPEMAN_STROKES ) )       ||    \
-             ( I == 8                             &&      \
-               ( CUR.face->sph_found_func_flags &         \
-                 SPH_FDEF_VACUFORM_ROUND_1      ) &&      \
-                 CUR.iup_called                   ) ) )   \
+       if ( CUR.ignore_x_mode                          && \
+            ( ( I == 24                            &&     \
+                ( CUR.face->sph_found_func_flags &        \
+                  ( SPH_FDEF_SPACING_1 |                  \
+                    SPH_FDEF_SPACING_2 )         ) ) ||   \
+              ( I == 22                      &&           \
+                ( CUR.sph_in_func_flags    &              \
+                  SPH_FDEF_TYPEMAN_STROKES ) )       ||   \
+              ( I == 8                             &&     \
+                ( CUR.face->sph_found_func_flags &        \
+                  SPH_FDEF_VACUFORM_ROUND_1      ) &&     \
+                  CUR.iup_called                   ) ) )  \
          args[0] = 0;                                     \
        else                                               \
          args[0] = CUR.storage[I];                        \
