@@ -269,10 +269,6 @@ FT_BEGIN_HEADER
     FT_Bool            ignore_x_mode;     /* Standard rendering mode for   */
                                           /* subpixel hinting.  On if gray */
                                           /* or subpixel hinting is on )   */
-    FT_Bool            compatibility_mode;/* Additional exceptions to      */
-                                          /* native TT rules for legacy    */
-                                          /* fonts.  Implies               */
-                                          /* ignore_x_mode.                */
 
     /* The following 4 aren't fully implemented but here for MS rasterizer */
     /* compatibility.                                                      */
@@ -286,8 +282,12 @@ FT_BEGIN_HEADER
 
     FT_Bool            iup_called;            /* IUP called for glyph?  */
 
-    FT_ULong           sph_tweak_flags;       /* flags to control */
-                                              /* hint tweaks      */
+    FT_ULong           sph_tweak_flags;       /* flags to control  */
+                                              /* hint tweaks       */
+
+    FT_ULong           sph_in_func_flags;     /* flags to indicate if in */
+                                              /* special functions       */
+
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
   } TT_ExecContextRec;

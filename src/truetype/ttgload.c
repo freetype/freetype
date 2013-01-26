@@ -1949,6 +1949,8 @@
         grayscale = grayscale_hinting = TRUE;
         subpixel_hinting = FALSE;
       }
+      else
+        grayscale = grayscale_hinting = FALSE;
 
       if ( FT_IS_TRICKY( glyph->face ) )
         subpixel_hinting = grayscale_hinting = FALSE;

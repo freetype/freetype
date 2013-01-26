@@ -179,6 +179,7 @@ FT_BEGIN_HEADER
     FT_UInt  opc;          /* function #, or instruction code        */
     FT_Bool  active;       /* is it active?                          */
     FT_Bool  inline_delta; /* is function that defines inline delta? */
+    FT_ULong sph_fdef_flags; /* flags to identify special functions  */
 
   } TT_DefRecord, *TT_DefArray;
 
@@ -334,7 +335,6 @@ FT_BEGIN_HEADER
 
     FT_Bool            bytecode_ready;
     FT_Bool            cvt_ready;
-    FT_Bool            ttfautohinted;
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 

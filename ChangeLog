@@ -1,3 +1,56 @@
+2013-01-26  Infinality  <infinality@infinality.net>
+
+	[truetype] Align more to ClearType whitepaper for sph.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Add flags
+	for detected fdefs and compatibility mode.
+
+	* src/truetype/ttgload.c (tt_loader_init): Complete conditional.
+
+	* src/truetype/ttinterp.c: Updated. Remove SPH_DEBUG and replace 
+	with FT_TRACE7.
+	(DO_RS): More conditions.
+	(Ins_FDEF): Add more opcode detection patterns. More specific 
+	conditions when flagging a fdef. Make compatibility mode only turn 
+	on when delta fdefs are found.
+	(Ins_CALL, Ins_LOOPCALL): Set flags for currently executing fdef.
+	(Ins_SHPIX): Remove logic to handle ttfautohinted fonts.  Simplify
+	conditionals where possible. Use & instead of % operator for dumb
+	compilers.
+	(Ins_MIAP): Adjust twilight zone conditional. Ensure ingore_x_mode
+	is on when testing sph conditionals.
+	(Ins_MIRP): Ensure ingore_x_mode is on when testing sph conditionals.
+	Do cvt cutin always when in ignore_x_mode.  Remove test for 
+	ttfautohinted fonts.
+	(Ins_DELTAP): Ensure ingore_x_mode is on when testing sph conditionals.
+	Do cvt cutin always when in ignore_x_mode.  Remove test for 
+	ttfautohinted fonts. Use & instead of % operator for dumb
+	compilers.
+	(Ins_GETINFO): Remove SPH_DEBUG and replace with FT_TRACE7.
+
+	* src/truetype/ttinterp.h: Updated.
+	(TT_ExecContextRec): Remove compatibility_mode variable.  Add variable
+	to indicate when executing in special fdefs for sph.
+
+	* src/truetype/ttobjs.h: Updated.
+	(TT_DefRecord): Add flags to identify special fdefs for sph.
+	(TT_SizeRec): Remove unnecessary ttfautohinted variable.
+
+	* src/truetype/ttsubpix.c: Updated.
+	(COMPATIBILITY_MODE_Rules): Remove all. Auto-detected now.
+	(PIXEL_HINTING_Rules): Remove all. Unnecessary after fixes.
+	(SKIP_NONPIXEL_Y_MOVES_Rules): Remove Ubuntu.
+	(SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions): Add Arial Bold `N'.
+	(SKIP_OFFPIXEL_Y_MOVES_Rules): Remove all. Happens automatically now.
+	(ROUND_NONPIXEL_Y_MOVES_Rules): Remove Ubuntu.
+	(ROUND_NONPIXEL_Y_MOVES_Rules_Exceptions): Remove all.
+	(NORMAL_ROUND_Rules): Remove Verdana.
+	(NO_DELTAP_AFTER_IUP_Rules): Remove all.
+	(sph_set_tweaks): Performance fix. Don't run prep always. Adjust
+	conditional for sph_compatibility_mode.
+
+	* src/truetype/ttsubpix.h: Add new fdef flags for sph.
+
 2013-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix broken emboldening at small sizes.

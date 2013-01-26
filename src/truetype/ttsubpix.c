@@ -275,32 +275,24 @@
   };
 
 
-  /* Special fixes for known legacy fonts;                                 */
-  /* this is the primary workhorse rule for legacy fonts                   */
-#define COMPATIBILITY_MODE_RULES_SIZE  4
+  /* Force special legacy fixes for fonts;                                 */
+#define COMPATIBILITY_MODE_RULES_SIZE  1
 
   const SPH_TweakRule  COMPATIBILITY_MODE_Rules
                        [COMPATIBILITY_MODE_RULES_SIZE] =
   {
-    { "MS Legacy Fonts", 0, "", 0 },
-    { "Apple Legacy Fonts", 0, "", 0 },
-    { "Misc Legacy Fonts", 0, "", 0 },
-    { "Verdana Clones", 0, "", 0 },
+    { "-", 0, "", 0 },
   };
 
 
   /* Don't do subpixel (ignore_x_mode) hinting; do normal hinting.         */
-#define PIXEL_HINTING_RULES_SIZE  4
+#define PIXEL_HINTING_RULES_SIZE  1
 
   const SPH_TweakRule  PIXEL_HINTING_Rules
                        [PIXEL_HINTING_RULES_SIZE] =
   {
     /* these characters are almost always safe */
-    { "", 0, "", '<' },
-    { "", 0, "", '>' },
-    /* fixes the vanishing stem */
-    { "Times New Roman", 0, "Bold", 'A' },
-    { "Times New Roman", 0, "Bold", 'V' },
+    { "-", 0, "", 0 },
   };
 
 
@@ -328,7 +320,7 @@
 
   /* Skip Y moves that start with a point that is not on a Y pixel         */
   /* boundary and don't move that point to a Y pixel boundary.             */
-#define SKIP_NONPIXEL_Y_MOVES_RULES_SIZE  10
+#define SKIP_NONPIXEL_Y_MOVES_RULES_SIZE  9
 
   const SPH_TweakRule  SKIP_NONPIXEL_Y_MOVES_Rules
                        [SKIP_NONPIXEL_Y_MOVES_RULES_SIZE] =
@@ -344,7 +336,6 @@
     /* Cyrillic small letter I */
     { "Legacy Sans Fonts", 0, "", 0x438 },
     { "Verdana Clones", 0, "",'N' },
-    { "Ubuntu", 0, "Regular Class", 'N' },
     /* Fix misshapen x */
     { "Verdana", 0, "Bold", 'x' },
     /* Fix misshapen s */
@@ -352,7 +343,7 @@
   };
 
 
-#define SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  6
+#define SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  7
 
   const SPH_TweakRule  SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions
                        [SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE] =
@@ -363,22 +354,18 @@
     { "Verdana", 11, "Bold", 'x' },
     /* Cyrillic small letter I */
     { "Arial", 0, "", 0x438 },
+    { "Arial", 11, "Bold", 'N' },
     { "Trebuchet MS", 0, "Bold", 0 },
   };
 
 
   /* Skip Y moves that move a point off a Y pixel boundary.                */
-  /* This fixes Tahoma, Trebuchet oddities and some issues with `$'.       */
-#define SKIP_OFFPIXEL_Y_MOVES_RULES_SIZE  5
+#define SKIP_OFFPIXEL_Y_MOVES_RULES_SIZE  1
 
   const SPH_TweakRule  SKIP_OFFPIXEL_Y_MOVES_Rules
                        [SKIP_OFFPIXEL_Y_MOVES_RULES_SIZE] =
   {
-    { "MS Legacy Fonts", 0, "", 0 },
-    { "Apple Legacy Fonts", 0, "", 0 },
-    { "Misc Legacy Fonts", 0, "", 0 },
-    { "Ubuntu", 0, "Regular Class", 0 },
-    { "Verdana Clones", 0, "", 0 },
+    { "-", 0, "", 0 },
   };
 
 
@@ -392,7 +379,7 @@
 
 
   /* Round moves that don't move a point to a Y pixel boundary.            */
-#define ROUND_NONPIXEL_Y_MOVES_RULES_SIZE  3
+#define ROUND_NONPIXEL_Y_MOVES_RULES_SIZE  2
 
   const SPH_TweakRule  ROUND_NONPIXEL_Y_MOVES_Rules
                        [ROUND_NONPIXEL_Y_MOVES_RULES_SIZE] =
@@ -400,18 +387,15 @@
     /* Droid font instructions don't snap Y to pixels */
     { "Droid Sans", 0, "Regular/Italic Class", 0 },
     { "Droid Sans Mono", 0, "", 0 },
-    { "Ubuntu", 0, "", 0 },
   };
 
 
-#define ROUND_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  3
+#define ROUND_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  1
 
   const SPH_TweakRule  ROUND_NONPIXEL_Y_MOVES_Rules_Exceptions
                        [ROUND_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE] =
   {
-    { "Droid Sans", 12, "Bold", 0 },
-    { "Droid Sans", 13, "Bold", 0 },
-    { "Droid Sans", 16, "Bold", 0 },
+    { "-", 0, "", 0 },
   };
 
 
@@ -466,14 +450,13 @@
 
 
   /* Don't round to the subpixel grid.  Round to pixel grid.               */
-#define NORMAL_ROUND_RULES_SIZE  2
+#define NORMAL_ROUND_RULES_SIZE  1
 
   const SPH_TweakRule  NORMAL_ROUND_Rules
                        [NORMAL_ROUND_RULES_SIZE] =
   {
-    /* Fix point "explosions" */
+    /* Fix serif thickness */
     { "Courier New", 0, "", 0 },
-    { "Verdana", 10, "Regular", '4' },
   };
 
 
@@ -563,8 +546,7 @@
   static const SPH_TweakRule  DELTAP_SKIP_EXAGGERATED_VALUES_Rules
                               [DELTAP_SKIP_EXAGGERATED_VALUES_RULES_SIZE] =
   {
-    /* Fix vanishing stems */
-    { "Ubuntu", 0, "Regular", 'M' },
+    { "-", 0, "", 0 },
   };
 
 
@@ -583,13 +565,12 @@
 
 
   /* Don't allow DELTAP after IUP.                                         */
-#define NO_DELTAP_AFTER_IUP_RULES_SIZE  2
+#define NO_DELTAP_AFTER_IUP_RULES_SIZE  1
 
   static const SPH_TweakRule  NO_DELTAP_AFTER_IUP_Rules
                               [NO_DELTAP_AFTER_IUP_RULES_SIZE] =
   {
-    { "Arial", 0, "Bold", 'N' },
-    { "Verdana", 0, "Regular", '4' },
+    { "-", 0, "", 0 },
   };
 
 
@@ -1046,15 +1027,22 @@
     TWEAK_RULES( ROUND_NONPIXEL_Y_MOVES );
     TWEAK_RULES_EXCEPTIONS( ROUND_NONPIXEL_Y_MOVES );
 
-    if ( loader->exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 )
+    if ( loader->exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 &&
+         loader->exec->rasterizer_version != 35                  )
+    {
       loader->exec->rasterizer_version = 35;
-    else
+      loader->exec->size->cvt_ready = FALSE;
+      tt_size_ready_bytecode( loader->exec->size,
+                          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+    }
+    else if ( loader->exec->rasterizer_version  !=
+              SPH_OPTION_SET_RASTERIZER_VERSION )
+    {
       loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
-
-    /* re-execute fpgm always to avoid problems */
-    loader->exec->size->cvt_ready = FALSE;
-    tt_size_ready_bytecode( loader->exec->size,
-                            FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+      loader->exec->size->cvt_ready = FALSE;
+      tt_size_ready_bytecode( loader->exec->size,
+                          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+    }
 
     if ( IS_HINTED( loader->load_flags ) )
     {
@@ -1064,12 +1052,8 @@
 
     if ( sph_test_tweak( face, family, ppem, style, glyph_index,
            COMPATIBILITY_MODE_Rules, COMPATIBILITY_MODE_RULES_SIZE ) )
-    {
-      loader->exec->compatibility_mode |= TRUE;
-      loader->exec->ignore_x_mode      |= TRUE;
-    }
-    else
-      loader->exec->compatibility_mode &= FALSE;
+      loader->exec->face->sph_compatibility_mode = TRUE;
+
 
     if ( IS_HINTED( loader->load_flags ) )
     {

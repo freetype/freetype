@@ -1428,6 +1428,12 @@ FT_BEGIN_HEADER
     FT_ULong              horz_metrics_offset;
     FT_ULong              vert_metrics_offset;
 
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+    FT_ULong              sph_found_func_flags; /* special funcs identified */
+                                                /* for this face            */
+    FT_Bool               sph_compatibility_mode;
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
+
   } TT_FaceRec;
 
 
