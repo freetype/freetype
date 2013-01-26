@@ -1,5 +1,13 @@
 2013-01-26  Infinality  <infinality@infinality.net>
 
+	[truetype] Fix rasterizer_version logic in sph.
+
+	* src/truetype/ttsubpix.c: Updated.
+	(ALWAYS_SKIP_DELTAP_Rules): Remove rule for Trebuchet MS.
+	(sph_set_tweaks): Fix rasterizer_version logic.
+
+2013-01-26  Infinality  <infinality@infinality.net>
+
 	[truetype] Align more to ClearType whitepaper for sph.
 
 	* include/freetype/internal/tttypes.h (TT_FaceRec): Add flags

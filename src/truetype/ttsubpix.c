@@ -481,14 +481,12 @@
 
 
   /* Skip DELTAP instructions if matched.                                  */
-#define ALWAYS_SKIP_DELTAP_RULES_SIZE  16
+#define ALWAYS_SKIP_DELTAP_RULES_SIZE  15
 
   const SPH_TweakRule  ALWAYS_SKIP_DELTAP_Rules
                        [ALWAYS_SKIP_DELTAP_RULES_SIZE] =
   {
     { "Georgia", 0, "Regular", 'k' },
-    /* fixes problems with W M w */
-    { "Trebuchet MS", 0, "Italic", 0 },
     /* fix various problems with e in different versions */
     { "Trebuchet MS", 14, "Regular", 'e' },
     { "Trebuchet MS", 13, "Regular", 'e' },
@@ -1027,21 +1025,27 @@
     TWEAK_RULES( ROUND_NONPIXEL_Y_MOVES );
     TWEAK_RULES_EXCEPTIONS( ROUND_NONPIXEL_Y_MOVES );
 
-    if ( loader->exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 &&
-         loader->exec->rasterizer_version != 35                  )
+    if ( loader->exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 )
     {
-      loader->exec->rasterizer_version = 35;
-      loader->exec->size->cvt_ready = FALSE;
-      tt_size_ready_bytecode( loader->exec->size,
-                          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+      if ( loader->exec->rasterizer_version != 35 )
+      {
+        loader->exec->rasterizer_version = 35;
+        loader->exec->size->cvt_ready = FALSE;
+        tt_size_ready_bytecode( loader->exec->size,
+                            FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+      }
+      else loader->exec->rasterizer_version = 35;
     }
-    else if ( loader->exec->rasterizer_version  !=
-              SPH_OPTION_SET_RASTERIZER_VERSION )
+    else
     {
-      loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
-      loader->exec->size->cvt_ready = FALSE;
-      tt_size_ready_bytecode( loader->exec->size,
-                          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+      if ( loader->exec->rasterizer_version != SPH_OPTION_SET_RASTERIZER_VERSION )
+      {
+        loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
+        loader->exec->size->cvt_ready = FALSE;
+        tt_size_ready_bytecode( loader->exec->size,
+                            FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+      }
+      else loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
     }
 
     if ( IS_HINTED( loader->load_flags ) )
