@@ -278,15 +278,15 @@ FT_BEGIN_HEADER
     FT_Bool            subpixel_positioned;   /* subpixel positioned       */
                                               /* (DirectWrite ClearType)?  */
 
-    FT_Int             rasterizer_version;    /* MS rasterizer version */
+    FT_Int             rasterizer_version;    /* MS rasterizer version     */
 
-    FT_Bool            iup_called;            /* IUP called for glyph?  */
+    FT_Bool            iup_called;            /* IUP called for glyph?     */
 
-    FT_ULong           sph_tweak_flags;       /* flags to control  */
-                                              /* hint tweaks       */
+    FT_ULong           sph_tweak_flags;       /* flags to control          */
+                                              /* hint tweaks               */
 
-    FT_ULong           sph_in_func_flags;     /* flags to indicate if in */
-                                              /* special functions       */
+    FT_ULong           sph_in_func_flags;     /* flags to indicate if in   */
+                                              /* special functions         */
 
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 

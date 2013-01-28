@@ -1943,7 +1943,6 @@
 
       if ( subpixel_hinting )
         grayscale = grayscale_hinting = FALSE;
-
       else if ( SPH_OPTION_SET_GRAYSCALE )
       {
         grayscale = grayscale_hinting = TRUE;

@@ -275,7 +275,7 @@
   };
 
 
-  /* Force special legacy fixes for fonts;                                 */
+  /* Force special legacy fixes for fonts.                                 */
 #define COMPATIBILITY_MODE_RULES_SIZE  1
 
   const SPH_TweakRule  COMPATIBILITY_MODE_Rules
@@ -1030,22 +1030,29 @@
       if ( loader->exec->rasterizer_version != 35 )
       {
         loader->exec->rasterizer_version = 35;
-        loader->exec->size->cvt_ready = FALSE;
-        tt_size_ready_bytecode( loader->exec->size,
-                            FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+        loader->exec->size->cvt_ready    = FALSE;
+
+        tt_size_ready_bytecode(
+          loader->exec->size,
+          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
       }
-      else loader->exec->rasterizer_version = 35;
+      else
+        loader->exec->rasterizer_version = 35;
     }
     else
     {
-      if ( loader->exec->rasterizer_version != SPH_OPTION_SET_RASTERIZER_VERSION )
+      if ( loader->exec->rasterizer_version  !=
+           SPH_OPTION_SET_RASTERIZER_VERSION )
       {
         loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
-        loader->exec->size->cvt_ready = FALSE;
-        tt_size_ready_bytecode( loader->exec->size,
-                            FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
+        loader->exec->size->cvt_ready    = FALSE;
+
+        tt_size_ready_bytecode(
+          loader->exec->size,
+          FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
       }
-      else loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
+      else
+        loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
     }
 
     if ( IS_HINTED( loader->load_flags ) )

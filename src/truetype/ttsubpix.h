@@ -34,14 +34,14 @@ FT_BEGIN_HEADER
   /* ID flags to identify special functions at FDEF and runtime.           */
   /*                                                                       */
   /*                                                                       */
-#define SPH_FDEF_INLINE_DELTA_1                   0x0000001
-#define SPH_FDEF_INLINE_DELTA_2                   0x0000002
-#define SPH_FDEF_DIAGONAL_STROKE                  0x0000004
-#define SPH_FDEF_VACUFORM_ROUND_1                 0x0000008
-#define SPH_FDEF_TTFAUTOHINT_1                    0x0000010
-#define SPH_FDEF_SPACING_1                        0x0000020
-#define SPH_FDEF_SPACING_2                        0x0000040
-#define SPH_FDEF_TYPEMAN_STROKES                  0x0000080
+#define SPH_FDEF_INLINE_DELTA_1    0x0000001
+#define SPH_FDEF_INLINE_DELTA_2    0x0000002
+#define SPH_FDEF_DIAGONAL_STROKE   0x0000004
+#define SPH_FDEF_VACUFORM_ROUND_1  0x0000008
+#define SPH_FDEF_TTFAUTOHINT_1     0x0000010
+#define SPH_FDEF_SPACING_1         0x0000020
+#define SPH_FDEF_SPACING_2         0x0000040
+#define SPH_FDEF_TYPEMAN_STROKES   0x0000080
 
 
   /*************************************************************************/

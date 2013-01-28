@@ -5,7 +5,7 @@
 /*    Basic SFNT/TrueType type definitions and interface (specification    */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2002, 2004-2008, 2012 by                                */
+/*  Copyright 1996-2002, 2004-2008, 2012-2013 by                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1429,8 +1429,9 @@ FT_BEGIN_HEADER
     FT_ULong              vert_metrics_offset;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    FT_ULong              sph_found_func_flags; /* special funcs identified */
-                                                /* for this face            */
+    /* since 2.4.12 */
+    FT_ULong              sph_found_func_flags; /* special functions found */
+                                                /* for this face           */
     FT_Bool               sph_compatibility_mode;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 

@@ -3182,6 +3182,7 @@
          args[0] = CUR.storage[I];                        \
      }                                                    \
    }
+
 #else /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 #define DO_RS                           \
@@ -4581,11 +4582,11 @@
       return;
     }
 
-    rec->range        = CUR.curRange;
-    rec->opc          = (FT_UInt16)n;
-    rec->start        = CUR.IP + 1;
-    rec->active       = TRUE;
-    rec->inline_delta = FALSE;
+    rec->range          = CUR.curRange;
+    rec->opc            = (FT_UInt16)n;
+    rec->start          = CUR.IP + 1;
+    rec->active         = TRUE;
+    rec->inline_delta   = FALSE;
     rec->sph_fdef_flags = 0x0000;
 
     if ( n > CUR.maxFunc )
@@ -4614,8 +4615,8 @@
 
           if ( opcode_pointer[i] == opcode_size[i] )
           {
-
-            FT_TRACE7(( "sph: Function %d, opcode ptrn: %d, %s %s\n", i, n,
+            FT_TRACE7(( "sph: Function %d, opcode ptrn: %d, %s %s\n",
+                        i, n,
                         CUR.face->root.family_name,
                         CUR.face->root.style_name ));
 
@@ -4683,7 +4684,6 @@
                 CUR.face->sph_found_func_flags |= SPH_FDEF_SPACING_2;
               }
               break;
-
             }
             opcode_pointer[i] = 0;
           }
@@ -4694,10 +4694,9 @@
       }
 
       /* Set sph_compatibility_mode only when deltas are detected */
-      CUR.face->sph_compatibility_mode = ( ( CUR.face->sph_found_func_flags &
-                                             SPH_FDEF_INLINE_DELTA_1 )        |
-                                           ( CUR.face->sph_found_func_flags &
-                                             SPH_FDEF_INLINE_DELTA_2 ) );
+      CUR.face->sph_compatibility_mode =
+        ( ( CUR.face->sph_found_func_flags & SPH_FDEF_INLINE_DELTA_1 ) |
+          ( CUR.face->sph_found_func_flags & SPH_FDEF_INLINE_DELTA_2 ) );
 
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -6035,7 +6034,8 @@
                ( CUR.sph_tweak_flags & SPH_TWEAK_SKIP_INLINE_DELTAS ) )
             goto Skip;
 
-          if ( !CUR.face->sph_compatibility_mode && CUR.GS.freeVector.y != 0 )
+          if ( !CUR.face->sph_compatibility_mode &&
+               CUR.GS.freeVector.y != 0          )
             MOVE_Zp2_Point( point, dx, dy, TRUE );
 
           else if ( CUR.face->sph_compatibility_mode )
@@ -6069,7 +6069,7 @@
                  CUR.GS.freeVector.y != 0                                  &&
                  ( B1 & 63 ) == 0                                          &&
                  ( B2 & 63 ) != 0                                          &&
-                 B1 != B2                                                ) )
+                 B1 != B2                                                  ) )
             MOVE_Zp2_Point( point, -dx, -dy, TRUE );
       }
         else
@@ -6260,8 +6260,8 @@
     if ( CUR.GS.gep0 == 0 )   /* If in twilight zone */
     {
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-      /* Only adjust when not in sph_compatibility_mode or ignore_x_mode */
-      /* Determined via experimentation and may be incorrect             */
+      /* Only adjust if not in sph_compatibility_mode or ignore_x_mode. */
+      /* Determined via experimentation and may be incorrect...         */
       if ( !CUR.ignore_x_mode || !CUR.face->sph_compatibility_mode )
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
         CUR.zp0.org[point].x = TT_MulFix14( (FT_UInt32)distance,
@@ -6643,7 +6643,7 @@
            ( B1 & 63 ) != 0                                          )
         reverse_move = TRUE;
 
-      if ( ( CUR.sph_tweak_flags &
+      if ( ( CUR.sph_tweak_flags                      &
              SPH_TWEAK_DELTAP_SKIP_EXAGGERATED_VALUES ) &&
            !reverse_move                                &&
            FT_ABS( B1 - B2 ) >= 64                      )
@@ -7371,15 +7371,15 @@
             else
               B1 = CUR.zp0.cur[A].x;
 #if 0
-            /* Standard Subpixel Hinting:  Allow y move    */
-            /* This messes up dejavu and may not be needed */
+            /* Standard Subpixel Hinting: Allow y move.       */
+            /* This messes up dejavu and may not be needed... */
             if ( !CUR.face->sph_compatibility_mode &&
                  CUR.GS.freeVector.y != 0           )
               CUR_Func_move( &CUR.zp0, A, B );
             else
 #endif
-            /* Compatibility Mode: Allow x or y move if point touched in
-                Y direction */
+            /* Compatibility Mode: Allow x or y move if point touched in */
+            /* Y direction.                                              */
             if ( CUR.face->sph_compatibility_mode                      &&
                  !( CUR.sph_tweak_flags & SPH_TWEAK_ALWAYS_SKIP_DELTAP ) )
             {
@@ -7389,10 +7389,8 @@
               if ( ( CUR.sph_tweak_flags & SPH_TWEAK_ROUND_NONPIXEL_Y_MOVES ) )
                 B = FT_PIX_ROUND( B1 + B ) - B1;
 
-              /*
-              *  Allow delta move if using sph_compatibility_mode, IUP has not
-              *  been called, and point is touched on Y.
-              */
+              /* Allow delta move if using sph_compatibility_mode,   */
+              /* IUP has not been called, and point is touched on Y. */
               if ( !CUR.iup_called                            &&
                    ( CUR.zp0.tags[A] & FT_CURVE_TAG_TOUCH_Y ) )
                 CUR_Func_move( &CUR.zp0, A, B );
@@ -7401,14 +7399,14 @@
             B2 = CUR.zp0.cur[A].y;
 
             /* Reverse this move if it results in a disallowed move */
-            if ( CUR.GS.freeVector.y != 0                     &&
-                 ( ( CUR.face->sph_compatibility_mode     &&
-                        ( B1 & 63 ) == 0                  &&
-                        ( B2 & 63 ) != 0                  ) ||
-                   ( ( CUR.sph_tweak_flags &
-                        SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
-                        ( B1 & 63 ) != 0                  &&
-                        ( B2 & 63 ) != 0                  ) ) )
+            if ( CUR.GS.freeVector.y != 0                    &&
+                 ( ( CUR.face->sph_compatibility_mode    &&
+                     ( B1 & 63 ) == 0                    &&
+                     ( B2 & 63 ) != 0                    ) ||
+                   ( ( CUR.sph_tweak_flags             &
+                       SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
+                     ( B1 & 63 ) != 0                    &&
+                     ( B2 & 63 ) != 0                    ) ) )
               CUR_Func_move( &CUR.zp0, A, -B );
           }
 #else
@@ -7552,7 +7550,8 @@
     if ( ( args[0] & 1 ) != 0 && CUR.ignore_x_mode )
     {
       K = CUR.rasterizer_version;
-      FT_TRACE7(( "Setting rasterizer version %d\n", CUR.rasterizer_version ));
+      FT_TRACE7(( "Setting rasterizer version %d\n",
+                  CUR.rasterizer_version ));
     }
     else
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
@@ -8024,7 +8023,7 @@
 #endif
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    CUR.iup_called        = FALSE;
+    CUR.iup_called = FALSE;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     /* set CVT functions */
