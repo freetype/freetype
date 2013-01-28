@@ -358,13 +358,15 @@
         return;
     }
 
-    /* There are some split points.  Find them. */
+    /* There are some split points.  Find them.                        */
+    /* We already made sure that a, b, and c below cannot be all zero. */
     {
       FT_Pos    a = y4 - 3*y3 + 3*y2 - y1;
       FT_Pos    b = y3 - 2*y2 + y1;
       FT_Pos    c = y2 - y1;
       FT_Pos    d;
       FT_Fixed  t;
+      FT_Int    shift;
 
 
       /* We need to solve `ax^2+2bx+c' here, without floating points!      */
@@ -375,90 +377,38 @@
       /* These values must fit into a single 16.16 value.                  */
       /*                                                                   */
       /* We normalize a, b, and c to `8.16' fixed-point values to ensure   */
-      /* that its product is held in a `16.16' value.                      */
+      /* that its product is held in a `16.16' value.  Necessarily,        */
+      /* we need to shift `a', `b', and `c' so that the most significant   */
+      /* bit of their absolute values is at _most_ at position 23.         */
+      /*                                                                   */
+      /* This also means that we are using 24 bits of precision to compute */
+      /* the zeros, independently of the range of the original polynomial  */
+      /* coefficients.                                                     */
+      /*                                                                   */
+      /* This algorithm should ensure reasonably accurate values for the   */
+      /* zeros.  Note that they are only expressed with 16 bits when       */
+      /* computing the extrema (the zeros need to be in 0..1 exclusive     */
+      /* to be considered part of the arc).                                */
 
+      shift = FT_MSB( FT_ABS( a ) | FT_ABS( b ) | FT_ABS( c ) );
+
+      if ( shift > 23 )
       {
-        FT_ULong  t1, t2;
-        int       shift = 0;
+        shift -= 23;
 
+        /* this loses some bits of precision, but we use 24 of them */
+        /* for the computation anyway                               */
+        a >>= shift;
+        b >>= shift;
+        c >>= shift;
+      }
+      else
+      {
+        shift = 23 - shift;
 
-        /* The following computation is based on the fact that for   */
-        /* any value `y', if `n' is the position of the most         */
-        /* significant bit of `abs(y)' (starting from 0 for the      */
-        /* least significant bit), then `y' is in the range          */
-        /*                                                           */
-        /*   -2^n..2^n-1                                             */
-        /*                                                           */
-        /* We want to shift `a', `b', and `c' concurrently in order  */
-        /* to ensure that they all fit in 8.16 values, which maps    */
-        /* to the integer range `-2^23..2^23-1'.                     */
-        /*                                                           */
-        /* Necessarily, we need to shift `a', `b', and `c' so that   */
-        /* the most significant bit of its absolute values is at     */
-        /* _most_ at position 23.                                    */
-        /*                                                           */
-        /* We begin by computing `t1' as the bitwise `OR' of the     */
-        /* absolute values of `a', `b', `c'.                         */
-
-        t1  = (FT_ULong)FT_ABS( a );
-        t2  = (FT_ULong)FT_ABS( b );
-        t1 |= t2;
-        t2  = (FT_ULong)FT_ABS( c );
-        t1 |= t2;
-
-        /* Now we can be sure that the most significant bit of `t1'  */
-        /* is the most significant bit of either `a', `b', or `c',   */
-        /* depending on the greatest integer range of the particular */
-        /* variable.                                                 */
-        /*                                                           */
-        /* Next, we compute the `shift', by shifting `t1' as many    */
-        /* times as necessary to move its MSB to position 23.  This  */
-        /* corresponds to a value of `t1' that is in the range       */
-        /* 0x40_0000..0x7F_FFFF.                                     */
-        /*                                                           */
-        /* Finally, we shift `a', `b', and `c' by the same amount.   */
-        /* This ensures that all values are now in the range         */
-        /* -2^23..2^23, i.e., they are now expressed as 8.16         */
-        /* fixed-float numbers.  This also means that we are using   */
-        /* 24 bits of precision to compute the zeros, independently  */
-        /* of the range of the original polynomial coefficients.     */
-        /*                                                           */
-        /* This algorithm should ensure reasonably accurate values   */
-        /* for the zeros.  Note that they are only expressed with    */
-        /* 16 bits when computing the extrema (the zeros need to     */
-        /* be in 0..1 exclusive to be considered part of the arc).   */
-
-        if ( t1 == 0 )  /* all coefficients are 0! */
-          return;
-
-        if ( t1 > 0x7FFFFFUL )
-        {
-          do
-          {
-            shift++;
-            t1 >>= 1;
-
-          } while ( t1 > 0x7FFFFFUL );
-
-          /* this loses some bits of precision, but we use 24 of them */
-          /* for the computation anyway                               */
-          a >>= shift;
-          b >>= shift;
-          c >>= shift;
-        }
-        else if ( t1 < 0x400000UL )
-        {
-          do
-          {
-            shift++;
-            t1 <<= 1;
-
-          } while ( t1 < 0x400000UL );
-
-          a <<= shift;
-          b <<= shift;
-          c <<= shift;
-        }
+        a <<= shift;
+        b <<= shift;
+        c <<= shift;
       }
 
       /* handle a == 0 */

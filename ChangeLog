@@ -1,3 +1,10 @@
+2013-01-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Small optimization of BBox calculation.
+
+	* src/base/ftbbox.c (BBox_Cubic_Check): Use FT_MSB function in
+	scaling algorithm.
+
 2013-01-26  Infinality  <infinality@infinality.net>
 
 	[truetype] Minor formatting fix.
