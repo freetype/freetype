@@ -989,6 +989,7 @@
 
           l = FT_MIN( l_in, l_out );
 
+          /* non-strict inequality avoids divide-by-zero when q == l == 0 */
           if ( FT_MulFix( xstrength, q ) <= FT_MulFix( d, l ) )
             shift.x = FT_MulDiv( shift.x, xstrength, d );
           else
