@@ -938,7 +938,7 @@
       v_prev  = points[last];
       v_cur   = v_first;
 
-      /* compute the incoming normalized vector */
+      /* compute incoming normalized vector */
       in.x = v_cur.x - v_prev.x;
       in.y = v_cur.y - v_prev.y;
       l_in = FT_Vector_Length( &in );
@@ -955,7 +955,7 @@
         else
           v_next = v_first;
 
-        /* compute the outgoing normalized vector */
+        /* compute outgoing normalized vector */
         out.x = v_next.x - v_cur.x;
         out.y = v_next.y - v_cur.y;
         l_out = FT_Vector_Length( &out );
@@ -967,13 +967,13 @@
 
         d = FT_MulFix( in.x, out.x ) + FT_MulFix( in.y, out.y );
 
-        /* shift only if turn is less then ~160 degrees */
+        /* shift only if turn is less than ~160 degrees */
         if ( d > -0xF000L )
         {
           d = d + 0x10000L;
 
-          /* shift components are aligned along bisector        */
-          /* and directed according to the outline orientation. */
+          /* shift components are aligned along lateral bisector */
+          /* and directed according to the outline orientation.  */
           shift.x = in.y + out.y;
           shift.y = in.x + out.x;
 
@@ -982,14 +982,14 @@
           else
             shift.y = -shift.y;
 
-          /* threshold strength to better handle collapsing segments */
+          /* restrict shift magnitude to better handle collapsing segments */
           q = FT_MulFix( out.x, in.y ) - FT_MulFix( out.y, in.x );
           if ( orientation == FT_ORIENTATION_TRUETYPE )
             q = -q;
 
           l = FT_MIN( l_in, l_out );
 
-          /* non-strict inequality avoids divide-by-zero when q == l == 0 */
+          /* non-strict inequalities avoid divide-by-zero when q == l == 0 */
           if ( FT_MulFix( xstrength, q ) <= FT_MulFix( d, l ) )
             shift.x = FT_MulDiv( shift.x, xstrength, d );
           else
