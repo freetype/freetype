@@ -1,5 +1,11 @@
 2013-02-01  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #38227.
+
+	* builds/unix/freetype-config.in: Set LC_ALL.
+
+2013-02-01  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #38221.
 
 	This complements commit 83c0ebab.
