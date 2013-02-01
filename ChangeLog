@@ -1,5 +1,14 @@
 2013-02-01  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #38221.
+
+	This complements commit 83c0ebab.
+
+	* src/base/ftcalc.c (FT_MulDiv_No_Round): Don't enclose with
+	`TT_USE_BYTECODE_INTERPRETER'.
+
+2013-02-01  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix Savannah bug #38211.
 
 	* src/truetype/ttinterp.c (Ins_IP): Make FreeType behave identical
