@@ -6974,9 +6974,18 @@
       cur_dist = CUR_Func_project ( &CUR.zp2.cur[point], cur_base );
 
       if ( org_dist )
-        new_dist = ( old_range != 0 )
-                     ? FT_MulDiv( org_dist, cur_range, old_range )
-                     : cur_dist;
+      {
+        if ( old_range )
+          new_dist = FT_MulDiv( org_dist, cur_range, old_range );
+        else
+        {
+          /* use the middle position */
+          new_dist = cur_dist -
+                     CUR_fast_dualproj( &CUR.zp2.cur[point] ) +
+                     ( CUR_fast_dualproj( &CUR.zp1.cur[CUR.GS.rp1] ) +
+                       CUR_fast_dualproj( &CUR.zp1.cur[CUR.GS.rp2] ) ) / 2;
+        }
+      }
       else
         new_dist = 0;
 

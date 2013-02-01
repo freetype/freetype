@@ -1,3 +1,10 @@
+2013-02-01  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix Savannah bug #38211.
+
+	* src/truetype/ttinterp.c (Ins_IP): Make FreeType behave identical
+	to other interpreters if rp1 == rp2 (which is invalid).
+
 2013-01-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Small optimization of BBox calculation.
