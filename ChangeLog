@@ -1,3 +1,10 @@
+2013-02-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf] Streamline parsing of PCF encoding table.
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Use simpler double for-loop.
+	Reallocate array instead of using temporary storage.
+
 2013-02-01  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #38227.

@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf fonts
 
-  Copyright 2000-2010, 2012 by
+  Copyright 2000-2010, 2012, 2013 by
   Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -771,8 +771,8 @@ THE SOFTWARE.
     int           firstCol, lastCol;
     int           firstRow, lastRow;
     int           nencoding, encodingOffset;
-    int           i, j;
-    PCF_Encoding  tmpEncoding = NULL, encoding = 0;
+    int           i, j, k;
+    PCF_Encoding  encoding = NULL;
 
 
     error = pcf_seek_to_table_type( stream,
@@ -819,56 +819,47 @@ THE SOFTWARE.
 
     nencoding = ( lastCol - firstCol + 1 ) * ( lastRow - firstRow + 1 );
 
-    if ( FT_NEW_ARRAY( tmpEncoding, nencoding ) )
+    if ( FT_NEW_ARRAY( encoding, nencoding ) )
       return PCF_Err_Out_Of_Memory;
 
     error = FT_Stream_EnterFrame( stream, 2 * nencoding );
     if ( error )
       goto Bail;
 
-    for ( i = 0, j = 0 ; i < nencoding; i++ )
+    k = 0;
+    for ( i = firstRow; i <= lastRow; i++ )
     {
-      if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        encodingOffset = FT_GET_SHORT();
-      else
-        encodingOffset = FT_GET_SHORT_LE();
-
-      if ( encodingOffset != -1 )
+      for ( j = firstCol; j <= lastCol; j++ )
       {
-        tmpEncoding[j].enc = ( ( ( i / ( lastCol - firstCol + 1 ) ) +
-                                 firstRow ) * 256 ) +
-                               ( ( i % ( lastCol - firstCol + 1 ) ) +
-                                 firstCol );
+        if ( PCF_BYTE_ORDER( format ) == MSBFirst )
+          encodingOffset = FT_GET_SHORT();
+        else
+          encodingOffset = FT_GET_SHORT_LE();
 
-        tmpEncoding[j].glyph = (FT_Short)encodingOffset;
+        if ( encodingOffset != -1 )
+        {
+          encoding[k].enc   = i * 256 + j;
+          encoding[k].glyph = (FT_Short)encodingOffset;
 
-        FT_TRACE5(( "  code %d (0x%04X): idx %d\n",
-                    tmpEncoding[j].enc, tmpEncoding[j].enc,
-                    tmpEncoding[j].glyph ));
+          FT_TRACE5(( "  code %d (0x%04X): idx %d\n",
+                      encoding[k].enc, encoding[k].enc, encoding[k].glyph ));
 
-        j++;
+          k++;
+        }
       }
     }
     FT_Stream_ExitFrame( stream );
 
-    if ( FT_NEW_ARRAY( encoding, j ) )
+    if ( FT_RENEW_ARRAY( encoding, nencoding, k ) )
       goto Bail;
 
-    for ( i = 0; i < j; i++ )
-    {
-      encoding[i].enc   = tmpEncoding[i].enc;
-      encoding[i].glyph = tmpEncoding[i].glyph;
-    }
-
-    face->nencodings = j;
+    face->nencodings = k;
     face->encodings  = encoding;
-    FT_FREE( tmpEncoding );
 
     return error;
 
   Bail:
     FT_FREE( encoding );
-    FT_FREE( tmpEncoding );
     return error;
   }
 
