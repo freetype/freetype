@@ -1,3 +1,10 @@
+2013-02-05  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] A better fix for Savannah bug #38211.
+
+	* src/truetype/ttinterp.c (Ins_IP): Implement identical behaviour to
+	MS rasterizer if rp1 == rp2 (confirmed by Greg Hitchcock).
+
 2013-02-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[pcf] Streamline parsing of PCF encoding table.

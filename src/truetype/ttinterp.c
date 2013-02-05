@@ -6979,11 +6979,17 @@
           new_dist = FT_MulDiv( org_dist, cur_range, old_range );
         else
         {
-          /* use the middle position */
-          new_dist = cur_dist -
-                     CUR_fast_dualproj( &CUR.zp2.cur[point] ) +
-                     ( CUR_fast_dualproj( &CUR.zp1.cur[CUR.GS.rp1] ) +
-                       CUR_fast_dualproj( &CUR.zp1.cur[CUR.GS.rp2] ) ) / 2;
+          /* This is the same as what MS does for the invalid case:  */
+          /*                                                         */
+          /*   delta = (Original_Pt - Original_RP1) -                */
+          /*           (Current_Pt - Current_RP1)                    */
+          /*                                                         */
+          /* In FreeType speak:                                      */
+          /*                                                         */
+          /*   new_dist = cur_dist -                                 */
+          /*              org_dist - cur_dist;                       */
+
+          new_dist = -org_dist;
         }
       }
       else
