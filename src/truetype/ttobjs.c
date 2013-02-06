@@ -878,6 +878,11 @@
     else
       error = TT_Err_Ok;
 
+    /* UNDOCUMENTED!  Reference points are reset to zero. */
+    exec->GS.rp0 = 0;
+    exec->GS.rp1 = 0;
+    exec->GS.rp2 = 0;
+
     /* save as default graphics state */
     size->GS = exec->GS;
 

@@ -1,3 +1,17 @@
+2013-02-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttobjs.c (tt_size_run_prep): Reset reference points.
+
+	Up to now, we simply took a snapshot of the Graphics State after the
+	`prep' table has been executed, and right before a glyph's bytecode
+	was run it got reloaded.  However, as Greg Hitchcock has told us in
+	private communication, reference points get reset to zero in the MS
+	rasterizer and we follow in due course.  While reasonable, this is
+	undocumented behaviour.
+
+	Most notably, this fixes the rendering of Arial's `x' glyph in
+	subpixel hinting mode.
+
 2013-02-05  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] A better fix for Savannah bug #38211.
