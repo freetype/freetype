@@ -878,10 +878,25 @@
     else
       error = TT_Err_Ok;
 
-    /* UNDOCUMENTED!  Reference points are reset to zero. */
+    /* UNDOCUMENTED!  The MS rasterizer doesn't allow the following */
+    /* graphics state variables to be modified by the CVT program.  */
+
+    exec->GS.dualVector.x = 0x4000;
+    exec->GS.dualVector.y = 0;
+    exec->GS.projVector.x = 0x4000;
+    exec->GS.projVector.y = 0x0;
+    exec->GS.freeVector.x = 0x4000;
+    exec->GS.freeVector.y = 0x0;
+
     exec->GS.rp0 = 0;
     exec->GS.rp1 = 0;
     exec->GS.rp2 = 0;
+
+    exec->GS.gep0 = 1;
+    exec->GS.gep1 = 1;
+    exec->GS.gep2 = 1;
+
+    exec->GS.loop = 1;
 
     /* save as default graphics state */
     size->GS = exec->GS;

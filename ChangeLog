@@ -1,3 +1,11 @@
+2013-02-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttobjs.c (tt_size_run_prep): Reset more GS variables.
+
+	BTW, Greg agrees that the OpenType specification is missing the list
+	of GS variables which will always be reset to the default values
+	after the `prep' table has been executed.
+
 2013-02-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttobjs.c (tt_size_run_prep): Reset reference points.
