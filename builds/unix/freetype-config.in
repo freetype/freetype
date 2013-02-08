@@ -12,14 +12,12 @@
 LC_ALL=C
 export LC_ALL
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-exec_prefix_set=no
-includedir=@includedir@
-libdir=@libdir@
-enable_shared=@build_libtool_libs@
-wl=@wl@
-hardcode_libdir_flag_spec='@hardcode_libdir_flag_spec@'
+prefix="%prefix%"
+exec_prefix="%exec_prefix%"
+exec_prefix_set="no"
+includedir="%includedir%"
+libdir="%libdir%"
+enable_shared="%build_libtool_libs%"
 
 usage()
 {
@@ -75,7 +73,7 @@ while test $# -gt 0 ; do
     echo_exec_prefix=yes
     ;;
   --version)
-    echo @ft_version@
+    echo %ft_version%
     exit 0
     ;;
   --ftversion)
@@ -143,12 +141,9 @@ if test "$echo_cflags" = "yes" ; then
 fi
 
 if test "$echo_libs" = "yes" ; then
-  rpath=
-  if test "$enable_shared" = "yes" ; then
-    eval "rpath=\"$hardcode_libdir_flag_spec\""
-  fi
-  libs="-lfreetype @LIBZ@ @LIBBZ2@ @FT2_EXTRA_LIBS@"
-  if test "${SYSROOT}$libdir" != "/usr/lib" && test "${SYSROOT}$libdir" != "/usr/lib64"; then
+  libs="-lfreetype %LIBZ% %LIBBZ2% %FT2_EXTRA_LIBS%"
+  if test "${SYSROOT}$libdir" != "/usr/lib"  &&
+     test "${SYSROOT}$libdir" != "/usr/lib64"; then
     echo -L${SYSROOT}$libdir $libs
   else
     echo $libs

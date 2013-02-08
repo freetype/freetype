@@ -1,3 +1,24 @@
+2013-02-02  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #38235.
+
+	* builds/unix/configure.raw: Don't generate `freetype-config' and
+	`freetype.pc'.
+
+	* builds/unix/unix-def.in (FT2_EXTRA_LIBS, LIBBZ2, LIBZ,
+	build_libtool_libs, ft_version): New variables to be substituted.
+	(freetype-config, freetype.pc): New rules to generate those files.
+
+	* builds/unix/freetype-config.in: Remove code for handling `rpath'.
+	The use of $rpath has been accidentally removed in a patch from
+	2009-12-22, and apparently noone has missed it since.
+	Use `%' instead of `@' as a variable substitution marker.
+	Use quotes.
+
+	* builds/unix/freetype.in: Use `%' instead of `@' as a variable
+	substitution marker.
+	Use quotes.
+
 2013-02-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttobjs.c (tt_size_run_prep): Reset more GS variables.
