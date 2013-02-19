@@ -1,3 +1,11 @@
+2013-02-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[tools] Update BBox testing tool.
+
+	* src/tools/test_bbox.c: Add another cubic outline with exact BBox.
+	(REPEAT): Increase the number of benchmarking cycles.
+	(profile_outline): Tweak output formatting.
+
 2013-02-02  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #38235.
