@@ -222,65 +222,100 @@
                     FT_Pos*  min,
                     FT_Pos*  max )
   {
-    FT_Pos  stack[32*3 + 1], *arc;
+    FT_Pos  q1, q2, q3, q4;
 
 
-    arc = stack;
+    q1 = p1;
+    q2 = p2;
+    q3 = p3;
+    q4 = p4;
 
-    arc[0] = p1;
-    arc[1] = p2;
-    arc[2] = p3;
-    arc[3] = p4;
-
-    do
+    /* for a conic segment to possibly reach new maximum     */
+    /* one of its off-points must be above the current value */
+    while ( q2 > *max || q3 > *max )
     {
-      FT_Pos  y1 = arc[0];
-      FT_Pos  y2 = arc[1];
-      FT_Pos  y3 = arc[2];
-      FT_Pos  y4 = arc[3];
-
-
-      if ( y1 == y4 )
+      /* determine which half contains the maximum and split */
+      if ( q1 + q2 > q3 + q4 ) /* first half */
       {
-        if ( y1 == y2 && y1 == y3 )                         /* flat */
-          goto Test;
+        q4 = q4 + q3;
+        q3 = q3 + q2;
+        q2 = q2 + q1;
+        q4 = q4 + q3;
+        q3 = q3 + q2;
+        q4 = ( q4 + q3 ) / 8;
+        q3 = q3 / 4;
+        q2 = q2 / 2;
       }
-      else if ( y1 < y4 )
+      else                     /* second half */
       {
-        if ( y2 >= y1 && y2 <= y4 && y3 >= y1 && y3 <= y4 ) /* ascending */
-          goto Test;
-      }
-      else
-      {
-        if ( y2 >= y4 && y2 <= y1 && y3 >= y4 && y3 <= y1 ) /* descending */
-        {
-          y2 = y1;
-          y1 = y4;
-          y4 = y2;
-          goto Test;
-        }
+        q1 = q1 + q2;
+        q2 = q2 + q3;
+        q3 = q3 + q4;
+        q1 = q1 + q2;
+        q2 = q2 + q3;
+        q1 = ( q1 + q2 ) / 8;
+        q2 = q2 / 4;
+        q3 = q3 / 2;
       }
 
-      /* unknown direction -- split the arc in two */
-      arc[6] = y4;
-      arc[1] = y1 = ( y1 + y2 ) / 2;
-      arc[5] = y4 = ( y4 + y3 ) / 2;
-      y2 = ( y2 + y3 ) / 2;
-      arc[2] = y1 = ( y1 + y2 ) / 2;
-      arc[4] = y4 = ( y4 + y2 ) / 2;
-      arc[3] = ( y1 + y4 ) / 2;
+      /* check if either end reached the maximum */
+      if ( q1 == q2 && q1 >= q3 )
+      {
+        *max = q1;
+        break;
+      }
+      if ( q3 == q4 && q2 <= q4 )
+      {
+        *max = q4;
+        break;
+      }
+    }
 
-      arc += 3;
-      goto Suite;
+    q1 = p1;
+    q2 = p2;
+    q3 = p3;
+    q4 = p4;
 
-   Test:
-      if ( y1 < *min ) *min = y1;
-      if ( y4 > *max ) *max = y4;
-      arc -= 3;
+    /* for a conic segment to possibly reach new minimum     */
+    /* one of its off-points must be below the current value */
+    while ( q2 < *min || q3 < *min )
+    {
+      /* determine which half contains the minimum and split */
+      if ( q1 + q2 < q3 + q4 ) /* first half */
+      {
+        q4 = q4 + q3;
+        q3 = q3 + q2;
+        q2 = q2 + q1;
+        q4 = q4 + q3;
+        q3 = q3 + q2;
+        q4 = ( q4 + q3 ) / 8;
+        q3 = q3 / 4;
+        q2 = q2 / 2;
+      }
+      else                     /* second half */
+      {
+        q1 = q1 + q2;
+        q2 = q2 + q3;
+        q3 = q3 + q4;
+        q1 = q1 + q2;
+        q2 = q2 + q3;
+        q1 = ( q1 + q2 ) / 8;
+        q2 = q2 / 4;
+        q3 = q3 / 2;
+      }
 
-    Suite:
-      ;
-    } while ( arc >= stack );
+      /* check if either end reached the minimum */
+      if ( q1 == q2 && q1 <= q3 )
+      {
+        *min = q1;
+        break;
+      }
+      if ( q3 == q4 && q2 >= q4 )
+      {
+        *min = q4;
+        break;
+      }
+    }
   }
 
 #else

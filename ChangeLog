@@ -1,3 +1,11 @@
+2013-02-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] New bisecting BBox_Cubic_Check (disabled).
+
+	* src/base/ftbbox.c (BBox_Cubic_Check): New bisecting algorithm
+	for extremum search built around simple condition that defines
+	which half contains the extremum.
+
 2013-02-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[tools] Update BBox testing tool.
