@@ -412,11 +412,11 @@
       /* These values must fit into a single 16.16 value.                  */
       /*                                                                   */
       /* We normalize a, b, and c to `8.16' fixed-point values to ensure   */
-      /* that its product is held in a `16.16' value.  Necessarily,        */
-      /* we need to shift `a', `b', and `c' so that the most significant   */
-      /* bit of their absolute values is at _most_ at position 23.         */
+      /* that their product is held in a `16.16' value including the sign. */
+      /* Necessarily, we need to shift `a', `b', and `c' so that the most  */
+      /* significant bit of their absolute values is at position 22.       */
       /*                                                                   */
-      /* This also means that we are using 24 bits of precision to compute */
+      /* This also means that we are using 23 bits of precision to compute */
       /* the zeros, independently of the range of the original polynomial  */
       /* coefficients.                                                     */
       /*                                                                   */
@@ -427,11 +427,11 @@
 
       shift = FT_MSB( FT_ABS( a ) | FT_ABS( b ) | FT_ABS( c ) );
 
-      if ( shift > 23 )
+      if ( shift > 22 )
       {
-        shift -= 23;
+        shift -= 22;
 
-        /* this loses some bits of precision, but we use 24 of them */
+        /* this loses some bits of precision, but we use 23 of them */
         /* for the computation anyway                               */
         a >>= shift;
         b >>= shift;
@@ -439,7 +439,7 @@
       }
       else
       {
-        shift = 23 - shift;
+        shift = 22 - shift;
 
         a <<= shift;
         b <<= shift;
