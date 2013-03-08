@@ -2,6 +2,8 @@
 
 	[cff] Set `linear{Hori,Vert}Advance' for embedded bitmaps also.
 
+	Problem reported by Khaled Hosny <khaledhosny@eglug.org>.
+
 	* src/cff/cffgload.c (cff_slot_load): Implement it.
 
 2013-02-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
