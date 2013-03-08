@@ -2653,6 +2653,11 @@
 
         if ( !error )
         {
+          FT_Bool    has_vertical_info;
+          FT_UShort  advance;
+          FT_Short   dummy;
+
+
           glyph->root.outline.n_points   = 0;
           glyph->root.outline.n_contours = 0;
 
@@ -2679,6 +2684,46 @@
             glyph->root.bitmap_left = metrics.horiBearingX;
             glyph->root.bitmap_top  = metrics.horiBearingY;
           }
+
+          /* compute linear advance widths */
+
+          ( (SFNT_Service)face->sfnt )->get_metrics( face, 0,
+                                                     glyph_index,
+                                                     &dummy,
+                                                     &advance );
+          glyph->root.linearHoriAdvance = advance;
+
+#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
+          has_vertical_info = FT_BOOL(
+                                face->vertical_info                   &&
+                                face->vertical.number_Of_VMetrics > 0 &&
+                                face->vertical.long_metrics           );
+#else
+          has_vertical_info = FT_BOOL(
+                                face->vertical_info                   &&
+                                face->vertical.number_Of_VMetrics > 0 );
+#endif
+
+          /* get the vertical metrics from the vtmx table if we have one */
+          if ( has_vertical_info )
+          {
+            ( (SFNT_Service)face->sfnt )->get_metrics( face, 1,
+                                                       glyph_index,
+                                                       &dummy,
+                                                       &advance );
+            glyph->root.linearVertAdvance = advance;
+          }
+          else
+          {
+            /* make up vertical ones */
+            if ( face->os2.version != 0xFFFFU )
+              glyph->root.linearVertAdvance = (FT_Pos)
+                ( face->os2.sTypoAscender - face->os2.sTypoDescender );
+            else
+              glyph->root.linearVertAdvance = (FT_Pos)
+                ( face->horizontal.Ascender - face->horizontal.Descender );
+          }
+
           return error;
         }
       }
@@ -2699,6 +2744,7 @@
       FT_ULong  top_upm, sub_upm;
       FT_Byte   fd_index = cff_fd_select_get( &cff->fd_select,
                                               glyph_index );
+
 
       if ( fd_index >= cff->num_subfonts )
         fd_index = (FT_Byte)( cff->num_subfonts - 1 );

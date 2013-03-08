@@ -1,3 +1,9 @@
+2013-03-08  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Set `linear{Hori,Vert}Advance' for embedded bitmaps also.
+
+	* src/cff/cffgload.c (cff_slot_load): Implement it.
+
 2013-02-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix commit ab02d9e8.
