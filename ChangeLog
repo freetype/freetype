@@ -1,5 +1,13 @@
 2013-03-11  Werner Lemberg  <wl@gnu.org>
 
+	[gxvalid] Fix module error.
+
+	* src/gxvalid/gxverror.h (FT_ERR_BASE): Define as
+	FT_Mod_Err_GXvalid.
+	* include/freetype/ftmoderr.h: Add module error for `GXvalid'.
+
+2013-03-11  Werner Lemberg  <wl@gnu.org>
+
 	Always use module related error codes.
 
 	* src/cff/cffobjs.c (cff_face_init), src/type1/t1objs.c
