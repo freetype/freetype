@@ -1,3 +1,14 @@
+2013-03-11  Werner Lemberg  <wl@gnu.org>
+
+	Always use module related error codes.
+
+	* src/cff/cffobjs.c (cff_face_init), src/type1/t1objs.c
+	(T1_Face_Init), src/type42/t42objs.c (T42_Face_Init): Use
+	`FT_ERROR_BASE'.
+
+	* src/type1/t1load.c (parse_encoding): Use
+	T1_Err_Unknown_File_Format.
+
 2013-03-08  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Set `linear{Hori,Vert}Advance' for embedded bitmaps also.

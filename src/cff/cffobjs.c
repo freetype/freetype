@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2012 by                                                 */
+/*  Copyright 1996-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -959,7 +959,8 @@
 
         error = FT_CMap_New( &CFF_CMAP_UNICODE_CLASS_REC_GET, NULL,
                              &cmaprec, NULL );
-        if ( error && FT_Err_No_Unicode_Glyph_Name != error )
+        if ( error                                                  &&
+             FT_ERROR_BASE( error ) != FT_Err_No_Unicode_Glyph_Name )
           goto Exit;
         error = FT_Err_Ok;
 

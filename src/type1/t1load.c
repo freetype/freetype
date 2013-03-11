@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 font loader (body).                                           */
 /*                                                                         */
-/*  Copyright 1996-2012 by                                                 */
+/*  Copyright 1996-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1312,7 +1312,7 @@
             /* specification (it might be an encoding for a CID type1  */
             /* font, however), so we conclude that this font is NOT a  */
             /* type1 font.                                             */
-            parser->root.error = FT_Err_Unknown_File_Format;
+            parser->root.error = T1_Err_Unknown_File_Format;
             return;
           }
         }

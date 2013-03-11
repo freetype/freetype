@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 42 objects manager (body).                                      */
 /*                                                                         */
-/*  Copyright 2002-2009, 2011                                              */
+/*  Copyright 2002-2009, 2011, 2013                                        */
 /*  by Roberto Alameda.                                                    */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -347,7 +347,8 @@
         charmap.encoding    = FT_ENCODING_UNICODE;
 
         error = FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
-        if ( error && FT_Err_No_Unicode_Glyph_Name != error )
+        if ( error                                                 &&
+             FT_ERROR_BASE( error) != FT_Err_No_Unicode_Glyph_Name )
           goto Exit;
         error = FT_Err_Ok;
 
