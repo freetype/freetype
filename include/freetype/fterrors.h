@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType error code handling (specification).                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2007 by                               */
+/*  Copyright 1996-2002, 2004, 2007, 2013 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -194,11 +194,9 @@
 #undef FT_NEED_EXTERN_C
 #undef FT_ERR_BASE
 
-  /* FT_KEEP_ERR_PREFIX is needed for ftvalid.h */
-#ifndef FT_KEEP_ERR_PREFIX
+  /* FT_ERR_PREFIX is needed internally */
+#ifndef FT2_BUILD_LIBRARY
 #undef FT_ERR_PREFIX
-#else
-#undef FT_KEEP_ERR_PREFIX
 #endif
 
 #endif /* __FTERRORS_H__ */

@@ -1,3 +1,15 @@
+2013-03-12  Werner Lemberg  <wl@gnu.org>
+
+	Remove `FT_KEEP_ERR_PREFIX'.
+
+	The idea is to always have FT_ERR_PREFIX available internally.
+
+	* include/freetype/fterrors.h: Use FT2_BUILD_LIBRARY to guard
+	undefinition of FT_ERR_PREFIX
+
+	* src/gxvalid/gxverror.h, src/otvalid/otverror.h,
+	src/sfnt/sferrors.h: Updated.
+
 2013-03-11  Werner Lemberg  <wl@gnu.org>
 
 	[gxvalid] Fix module error.
