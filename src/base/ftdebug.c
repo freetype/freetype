@@ -77,6 +77,21 @@
     exit( EXIT_FAILURE );
   }
 
+
+  /* documentation is in ftdebug.h */
+
+  FT_BASE_DEF( int )
+  FT_Throw( FT_Error     error,
+            int          line,
+            const char*  file )
+  {
+    FT_UNUSED( error );
+    FT_UNUSED( line );
+    FT_UNUSED( file );
+
+    return 0;
+  }
+
 #endif /* FT_DEBUG_LEVEL_ERROR */
 
 

@@ -1,3 +1,30 @@
+2013-03-13  Werner Lemberg  <wl@gnu.org>
+
+	Introduce `FT_THROW' macro.
+
+	The idea is to replace code like
+
+	  return FT_Err_Foo_Bar;
+
+	or
+
+	  return CFF_Err_Foo_Bar;
+
+	with
+
+	  return FT_THROW( Foo_Bar );
+
+	The FT_THROW macro has two functions:
+
+	  . It hides the module specific prefix.
+
+	  . In debug mode, it calls the empty function `FT_Throw' which can
+	    be thus used to set a breakpoint.
+
+	* include/freetype/internal/ftdebug.h (FT_THROW): New macro.
+	(FT_Throw): New prototype.
+	* src/base/ftdebug.c (FT_Throw): New function.
+
 2013-03-12  Werner Lemberg  <wl@gnu.org>
 
 	Remove `FT_KEEP_ERR_PREFIX'.
