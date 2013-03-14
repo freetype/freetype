@@ -296,7 +296,7 @@
 
       face->cvt_size = 0;
       face->cvt      = NULL;
-      error          = TT_Err_Ok;
+      error          = FT_Err_Ok;
 
       goto Exit;
     }
@@ -334,7 +334,7 @@
     FT_UNUSED( face   );
     FT_UNUSED( stream );
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
 
 #endif
   }
@@ -375,7 +375,7 @@
     {
       face->font_program      = NULL;
       face->font_program_size = 0;
-      error                   = TT_Err_Ok;
+      error                   = FT_Err_Ok;
 
       FT_TRACE2(( "is missing\n" ));
     }
@@ -396,7 +396,7 @@
     FT_UNUSED( face   );
     FT_UNUSED( stream );
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
 
 #endif
   }
@@ -436,7 +436,7 @@
     {
       face->cvt_program      = NULL;
       face->cvt_program_size = 0;
-      error                  = TT_Err_Ok;
+      error                  = FT_Err_Ok;
 
       FT_TRACE2(( "is missing\n" ));
     }
@@ -457,7 +457,7 @@
     FT_UNUSED( face   );
     FT_UNUSED( stream );
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
 
 #endif
   }
@@ -495,7 +495,7 @@
     /* this table is optional */
     error = face->goto_table( face, TTAG_hdmx, stream, &table_size );
     if ( error || table_size < 8 )
-      return TT_Err_Ok;
+      return FT_Err_Ok;
 
     if ( FT_FRAME_EXTRACT( table_size, face->hdmx_table ) )
       goto Exit;

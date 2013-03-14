@@ -487,7 +487,7 @@
 
     driver->ttclazz = (FT_Driver_Class)ttmodule->clazz;
 
-    return T42_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -505,7 +505,7 @@
     FT_Face   face    = size->face;
     T42_Face  t42face = (T42_Face)face;
     FT_Size   ttsize;
-    FT_Error  error   = T42_Err_Ok;
+    FT_Error  error   = FT_Err_Ok;
 
 
     error = FT_New_Size( t42face->ttf_face, &ttsize );
@@ -581,7 +581,7 @@
     FT_Face        face    = t42slot->face;
     T42_Face       t42face = (T42_Face)face;
     FT_GlyphSlot   ttslot;
-    FT_Error       error   = T42_Err_Ok;
+    FT_Error       error   = FT_Err_Ok;
 
 
     if ( face->glyph == NULL )

@@ -353,7 +353,7 @@
                            FT_Long   *aadvance,
                            FT_UInt   *aformat )
   {
-    FT_Error  error = PFR_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_Byte   flags;
     FT_Char   b;
     FT_Byte*  p = *pdata;
@@ -484,7 +484,7 @@
                         FT_Bool     decreasing,
                         FT_Bitmap*  target )
   {
-    FT_Error          error = PFR_Err_Ok;
+    FT_Error          error = FT_Err_Ok;
     PFR_BitWriterRec  writer;
 
 

@@ -304,7 +304,7 @@
     exec->IP       = IP;
     exec->curRange = range;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -340,7 +340,7 @@
     exec->codeRangeTable[range - 1].base = (FT_Byte*)base;
     exec->codeRangeTable[range - 1].size = length;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -373,7 +373,7 @@
     exec->codeRangeTable[range - 1].base = NULL;
     exec->codeRangeTable[range - 1].size = 0;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -431,7 +431,7 @@
 
     FT_FREE( exec );
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -481,7 +481,7 @@
     exec->face = NULL;
     exec->size = NULL;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
 
   Fail_Memory:
     FT_ERROR(( "Init_Context: not enough memory for %p\n", exec ));
@@ -533,7 +533,7 @@
       *size = new_max;
     }
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -640,7 +640,7 @@
 
     exec->instruction_trap = FALSE;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -683,7 +683,7 @@
     for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
       size->codeRangeTable[i] = exec->codeRangeTable[i];
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -719,7 +719,7 @@
 
 
     if ( ( error = TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 ) )
-           != TT_Err_Ok )
+           != FT_Err_Ok )
       return error;
 
     exec->zp0 = exec->pts;
@@ -756,7 +756,7 @@
     if ( !debug )
       return TT_RunIns( exec );
     else
-      return TT_Err_Ok;
+      return FT_Err_Ok;
 #endif
   }
 
@@ -8114,7 +8114,7 @@
       }
 
       CUR.step_ins = TRUE;
-      CUR.error    = TT_Err_Ok;
+      CUR.error    = FT_Err_Ok;
 
 #ifdef TT_CONFIG_OPTION_INTERPRETER_SWITCH
 
@@ -8693,7 +8693,7 @@
 
 #endif /* TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 
-      if ( CUR.error != TT_Err_Ok )
+      if ( CUR.error != FT_Err_Ok )
       {
         switch ( CUR.error )
         {
@@ -8779,7 +8779,7 @@
     *exc = cur;
 #endif
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
 
   LErrorCodeOverflow_:
     CUR.error = FT_THROW( Code_Overflow );

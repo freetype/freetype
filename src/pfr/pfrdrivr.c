@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR driver interface (body).                                */
 /*                                                                         */
-/*  Copyright 2002-2004, 2006, 2008, 2010, 2011 by                         */
+/*  Copyright 2002-2004, 2006, 2008, 2010, 2011, 2013 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -51,7 +51,7 @@
                                             phys->metrics_resolution );
     }
 
-    return PFR_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -84,7 +84,7 @@
       if ( gindex < phys->num_chars )
       {
         *anadvance = phys->chars[gindex].advance;
-        error      = PFR_Err_Ok;
+        error      = FT_Err_Ok;
       }
     }
 
@@ -130,7 +130,7 @@
     if ( ametrics_y_scale )
       *ametrics_y_scale = y_scale;
 
-    return PFR_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

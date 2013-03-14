@@ -417,7 +417,7 @@
   tt_face_load_eblc( TT_Face    face,
                      FT_Stream  stream )
   {
-    FT_Error   error  = SFNT_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = stream->memory;
     FT_Fixed   version;
     FT_ULong   num_strikes;
@@ -678,7 +678,7 @@
 
     metrics->height = metrics->ascender - metrics->descender;
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -773,7 +773,7 @@
       Found:
         /* return successfully! */
         *arange  = range;
-        return SFNT_Err_Ok;
+        return FT_Err_Ok;
       }
     }
 
@@ -838,7 +838,7 @@
 
     *astrike = strike;
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
 
   Fail:
     /* no embedded bitmap for this glyph in face */
@@ -882,7 +882,7 @@
                         TT_SBit_Range    range,
                         TT_SBit_Metrics  metrics )
   {
-    FT_Error  error = SFNT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     switch ( range->image_format )

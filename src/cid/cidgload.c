@@ -46,7 +46,7 @@
     FT_Byte*       p;
     FT_UInt        fd_select;
     FT_Stream      stream       = face->cid_stream;
-    FT_Error       error        = CID_Err_Ok;
+    FT_Error       error        = FT_Err_Ok;
     FT_Byte*       charstring   = 0;
     FT_Memory      memory       = face->root.memory;
     FT_ULong       glyph_length = 0;
@@ -258,7 +258,7 @@
 
     psaux->t1_decoder_funcs->done( &decoder );
 
-    return CID_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

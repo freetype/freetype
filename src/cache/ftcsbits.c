@@ -195,7 +195,7 @@
       sbit->width  = 255;
       sbit->height = 0;
       sbit->buffer = NULL;
-      error        = FTC_Err_Ok;
+      error        = FT_Err_Ok;
       if ( asize )
         *asize = 0;
     }

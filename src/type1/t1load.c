@@ -106,7 +106,7 @@
   {
     PS_Blend   blend;
     FT_Memory  memory = face->root.memory;
-    FT_Error   error  = T1_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
 
 
     blend = face->blend;
@@ -214,7 +214,7 @@
         axis->maximum = map->design_points[map->num_points - 1];
       }
 
-      error = T1_Err_Ok;
+      error = FT_Err_Ok;
     }
 
     return error;
@@ -377,7 +377,7 @@
     if ( blend && blend->num_axis == num_coords )
     {
       /* recompute the weight vector from the blend coordinates */
-      error = T1_Err_Ok;
+      error = FT_Err_Ok;
 
       for ( n = 0; n < blend->num_designs; n++ )
       {
@@ -404,7 +404,7 @@
         blend->weight_vector[n] = result;
       }
 
-      error = T1_Err_Ok;
+      error = FT_Err_Ok;
     }
 
     return error;
@@ -569,7 +569,7 @@
   {
     T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
     FT_Int       n, num_axis;
-    FT_Error     error = T1_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
     PS_Blend     blend;
     FT_Memory    memory;
 
@@ -639,7 +639,7 @@
     FT_Int       num_axis;
     T1_Parser    parser = &loader->parser;
 
-    FT_Error     error = T1_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
     PS_Blend     blend;
 
 
@@ -731,7 +731,7 @@
   parse_blend_design_map( T1_Face    face,
                           T1_Loader  loader )
   {
-    FT_Error     error  = T1_Err_Ok;
+    FT_Error     error  = FT_Err_Ok;
     T1_Parser    parser = &loader->parser;
     PS_Blend     blend;
     T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
@@ -823,7 +823,7 @@
   {
     T1_TokenRec  design_tokens[T1_MAX_MM_DESIGNS];
     FT_Int       num_designs;
-    FT_Error     error  = T1_Err_Ok;
+    FT_Error     error  = FT_Err_Ok;
     T1_Parser    parser = &loader->parser;
     PS_Blend     blend  = face->blend;
     T1_Token     token;
@@ -1022,7 +1022,7 @@
                   " which is not valid at this point\n"
                   "                 (probably due to missing keywords)\n",
                  field->ident ));
-      error = T1_Err_Ok;
+      error = FT_Err_Ok;
     }
 
   Exit:
@@ -1845,7 +1845,7 @@
 
     parser->root.cursor = base;
     parser->root.limit  = base + size;
-    parser->root.error  = T1_Err_Ok;
+    parser->root.error  = FT_Err_Ok;
 
     limit = parser->root.limit;
 
@@ -1996,10 +1996,10 @@
                 parser->root.error = t1_load_keyword( face,
                                                       loader,
                                                       keyword );
-                if ( parser->root.error != T1_Err_Ok )
+                if ( parser->root.error != FT_Err_Ok )
                 {
                   if ( FT_ERROR_BASE( parser->root.error ) == FT_Err_Ignore )
-                    parser->root.error = T1_Err_Ok;
+                    parser->root.error = FT_Err_Ok;
                   else
                     return parser->root.error;
                 }

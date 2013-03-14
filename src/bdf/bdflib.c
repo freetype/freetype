@@ -254,7 +254,7 @@
   {
     hashnode*  obp = ht->table, *bp, *nbp;
     int        i, sz = ht->size;
-    FT_Error   error = BDF_Err_Ok;
+    FT_Error   error = FT_Err_Ok;
 
 
     ht->size <<= 1;
@@ -283,7 +283,7 @@
              FT_Memory   memory )
   {
     int       sz    = INITIAL_HT_SIZE;
-    FT_Error  error = BDF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     ht->size  = sz;
@@ -324,7 +324,7 @@
   {
     hashnode   nn;
     hashnode*  bp      = hash_bucket( key, ht );
-    FT_Error   error   = BDF_Err_Ok;
+    FT_Error   error   = FT_Err_Ok;
 
 
     nn = *bp;
@@ -457,7 +457,7 @@
   _bdf_list_ensure( _bdf_list_t*   list,
                     unsigned long  num_items ) /* same as _bdf_list_t.used */
   {
-    FT_Error  error = BDF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( num_items > list->size )
@@ -559,7 +559,7 @@
     int       mult, final_empty;
     char      *sp, *ep, *end;
     char      seps[32];
-    FT_Error  error = BDF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     /* Initialize the list. */
@@ -670,7 +670,7 @@
     ptrdiff_t         bytes, start, end, cursor, avail;
     char*             buf    = 0;
     FT_Memory         memory = stream->memory;
-    FT_Error          error  = BDF_Err_Ok;
+    FT_Error          error  = FT_Err_Ok;
 
 
     if ( callback == 0 )
@@ -1029,7 +1029,7 @@
     size_t           n;
     bdf_property_t*  p;
     FT_Memory        memory = font->memory;
-    FT_Error         error  = BDF_Err_Ok;
+    FT_Error         error  = FT_Err_Ok;
 
 
     /* First check whether the property has        */
@@ -1135,7 +1135,7 @@
   {
     char*      cp;
     FT_Memory  memory = font->memory;
-    FT_Error   error  = BDF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
 
 
     if ( FT_RENEW_ARRAY( font->comments,
@@ -1166,7 +1166,7 @@
     char         name[256];
     _bdf_list_t  list;
     FT_Memory    memory;
-    FT_Error     error = BDF_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
 
 
     if ( font == 0 || font->name == 0 || font->name[0] == 0 )
@@ -1299,7 +1299,7 @@
     hashnode        hn;
     bdf_property_t  *prop, *fp;
     FT_Memory       memory = font->memory;
-    FT_Error        error  = BDF_Err_Ok;
+    FT_Error        error  = FT_Err_Ok;
 
 
     /* First, check whether the property already exists in the font. */
@@ -1473,7 +1473,7 @@
     bdf_font_t*        font;
 
     FT_Memory          memory;
-    FT_Error           error = BDF_Err_Ok;
+    FT_Error           error = FT_Err_Ok;
 
     FT_UNUSED( call_data );
     FT_UNUSED( lineno );        /* only used in debug mode */
@@ -1964,7 +1964,7 @@
     char*              name;
     char*              value;
     char               nbuf[128];
-    FT_Error           error = BDF_Err_Ok;
+    FT_Error           error = FT_Err_Ok;
 
     FT_UNUSED( lineno );
 
@@ -2070,7 +2070,7 @@
     char               *s;
 
     FT_Memory          memory = NULL;
-    FT_Error           error  = BDF_Err_Ok;
+    FT_Error           error  = FT_Err_Ok;
 
     FT_UNUSED( lineno );            /* only used in debug mode */
 
@@ -2371,7 +2371,7 @@
     _bdf_parse_t   *p     = NULL;
 
     FT_Memory      memory = extmemory;
-    FT_Error       error  = BDF_Err_Ok;
+    FT_Error       error  = FT_Err_Ok;
 
 
     if ( FT_NEW( p ) )
@@ -2491,7 +2491,7 @@
         p->font->comments[p->font->comments_len] = 0;
       }
     }
-    else if ( error == BDF_Err_Ok )
+    else if ( error == FT_Err_Ok )
       error = FT_THROW( Invalid_File_Format );
 
     *font = p->font;

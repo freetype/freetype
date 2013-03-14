@@ -181,7 +181,7 @@ THE SOFTWARE.
 
 #endif
 
-    return PCF_Err_Ok;
+    return FT_Err_Ok;
 
   Exit:
     FT_FREE( face->toc.tables );
@@ -248,7 +248,7 @@ THE SOFTWARE.
                   FT_ULong    format,
                   PCF_Metric  metric )
   {
-    FT_Error  error = PCF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
@@ -316,7 +316,7 @@ THE SOFTWARE.
         *asize   = tables[i].size;
         *aformat = tables[i].format;
 
-        return PCF_Err_Ok;
+        return FT_Err_Ok;
       }
 
   Fail:
@@ -552,7 +552,7 @@ THE SOFTWARE.
       }
     }
 
-    error = PCF_Err_Ok;
+    error = FT_Err_Ok;
 
   Bail:
     FT_FREE( props );
@@ -566,7 +566,7 @@ THE SOFTWARE.
   pcf_get_metrics( FT_Stream  stream,
                    PCF_Face   face )
   {
-    FT_Error    error    = PCF_Err_Ok;
+    FT_Error    error    = FT_Err_Ok;
     FT_Memory   memory   = FT_FACE(face)->memory;
     FT_ULong    format, size;
     PCF_Metric  metrics  = 0;
@@ -663,7 +663,7 @@ THE SOFTWARE.
   pcf_get_bitmaps( FT_Stream  stream,
                    PCF_Face   face )
   {
-    FT_Error   error   = PCF_Err_Ok;
+    FT_Error   error   = FT_Err_Ok;
     FT_Memory  memory  = FT_FACE(face)->memory;
     FT_Long*   offsets = NULL;
     FT_Long    bitmapSizes[GLYPHPADOPTIONS];
@@ -765,7 +765,7 @@ THE SOFTWARE.
   pcf_get_encodings( FT_Stream  stream,
                      PCF_Face   face )
   {
-    FT_Error      error  = PCF_Err_Ok;
+    FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = FT_FACE(face)->memory;
     FT_ULong      format, size;
     int           firstCol, lastCol;
@@ -914,7 +914,7 @@ THE SOFTWARE.
                  FT_ULong   type )
   {
     FT_ULong   format, size;
-    FT_Error   error = PCF_Err_Ok;
+    FT_Error   error = FT_Err_Ok;
     PCF_Accel  accel = &face->accel;
 
 
@@ -985,7 +985,7 @@ THE SOFTWARE.
   static FT_Error
   pcf_interpret_style( PCF_Face  pcf )
   {
-    FT_Error   error  = PCF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     FT_Face    face   = FT_FACE( pcf );
     FT_Memory  memory = face->memory;
 
@@ -1096,7 +1096,7 @@ THE SOFTWARE.
   pcf_load_font( FT_Stream  stream,
                  PCF_Face   face )
   {
-    FT_Error   error  = PCF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = FT_FACE(face)->memory;
     FT_Bool    hasBDFAccelerators;
 

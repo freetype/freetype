@@ -909,7 +909,7 @@
                                    header->ascent ) * 64;
     size->metrics.max_advance = header->max_width * 64;
 
-    return FNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -931,12 +931,12 @@
     {
     case FT_SIZE_REQUEST_TYPE_NOMINAL:
       if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
-        error = FNT_Err_Ok;
+        error = FT_Err_Ok;
       break;
 
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
       if ( height == header->pixel_height )
-        error = FNT_Err_Ok;
+        error = FT_Err_Ok;
       break;
 
     default:
@@ -959,7 +959,7 @@
   {
     FNT_Face    face   = (FNT_Face)FT_SIZE_FACE( size );
     FNT_Font    font;
-    FT_Error    error  = FNT_Err_Ok;
+    FT_Error    error  = FT_Err_Ok;
     FT_Byte*    p;
     FT_Int      len;
     FT_Bitmap*  bitmap = &slot->bitmap;

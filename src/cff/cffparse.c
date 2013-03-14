@@ -523,7 +523,7 @@
       FT_Long  scaling;
 
 
-      error = CFF_Err_Ok;
+      error = FT_Err_Ok;
 
       dict->has_font_matrix = TRUE;
 
@@ -596,7 +596,7 @@
       bbox->yMin = FT_RoundFix( cff_parse_fixed( data++ ) );
       bbox->xMax = FT_RoundFix( cff_parse_fixed( data++ ) );
       bbox->yMax = FT_RoundFix( cff_parse_fixed( data   ) );
-      error = CFF_Err_Ok;
+      error = FT_Err_Ok;
 
       FT_TRACE4(( " [%d %d %d %d]\n",
                   bbox->xMin / 65536,
@@ -626,7 +626,7 @@
       FT_TRACE4(( " %lu %lu\n",
                   dict->private_size, dict->private_offset ));
 
-      error = CFF_Err_Ok;
+      error = FT_Err_Ok;
     }
 
     return error;
@@ -653,7 +653,7 @@
       if ( dict->cid_supplement < 0 )
         FT_TRACE1(( "cff_parse_cid_ros: negative supplement %d is found\n",
                    dict->cid_supplement ));
-      error = CFF_Err_Ok;
+      error = FT_Err_Ok;
 
       FT_TRACE4(( " %d %d %d\n",
                   dict->cid_registry,
@@ -922,7 +922,7 @@
 
     *output_class = clazz;
 
-    return CFF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -935,7 +935,7 @@
                   FT_Byte*    limit )
   {
     FT_Byte*    p       = start;
-    FT_Error    error   = CFF_Err_Ok;
+    FT_Error    error   = FT_Err_Ok;
     FT_Library  library = parser->library;
     FT_UNUSED( library );
 

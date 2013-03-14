@@ -284,7 +284,7 @@
       table->glyph_indices = glyph_indices;
       table->glyph_names   = name_strings;
     }
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
 
   Fail1:
     {
@@ -360,7 +360,7 @@
       table->offsets    = offset_table;
     }
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
 
   Fail:
     FT_FREE( offset_table );
@@ -556,7 +556,7 @@
     /* nothing to do for format == 0x00030000L */
 
   End:
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

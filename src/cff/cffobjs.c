@@ -153,7 +153,7 @@
   cff_size_init( FT_Size  cffsize )         /* CFF_Size */
   {
     CFF_Size           size  = (CFF_Size)cffsize;
-    FT_Error           error = CFF_Err_Ok;
+    FT_Error           error = FT_Err_Ok;
     PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
 
 
@@ -253,7 +253,7 @@
       }
     }
 
-    return CFF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
@@ -325,7 +325,7 @@
       }
     }
 
-    return CFF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -367,7 +367,7 @@
       }
     }
 
-    return CFF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -524,7 +524,7 @@
 
       /* if we are performing a simple font format check, exit immediately */
       if ( face_index < 0 )
-        return CFF_Err_Ok;
+        return FT_Err_Ok;
 
       sfnt_format = 1;
 
@@ -559,7 +559,7 @@
       /* rewind to start of file; we are going to load a pure-CFF font */
       if ( FT_STREAM_SEEK( 0 ) )
         goto Exit;
-      error = CFF_Err_Ok;
+      error = FT_Err_Ok;
     }
 
     /* now load and parse the CFF table in the file */
@@ -1050,7 +1050,7 @@
   {
     FT_UNUSED( module );
 
-    return CFF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

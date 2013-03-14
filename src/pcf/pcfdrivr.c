@@ -83,7 +83,7 @@ THE SOFTWARE.
     cmap->num_encodings = (FT_UInt)face->nencodings;
     cmap->encodings     = face->encodings;
 
-    return PCF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -264,7 +264,7 @@ THE SOFTWARE.
                  FT_Parameter*  params )
   {
     PCF_Face  face  = (PCF_Face)pcfface;
-    FT_Error  error = PCF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -424,7 +424,7 @@ THE SOFTWARE.
     size->metrics.descender   = -accel->fontDescent << 6;
     size->metrics.max_advance =  accel->maxbounds.characterWidth << 6;
 
-    return PCF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -445,13 +445,13 @@ THE SOFTWARE.
     {
     case FT_SIZE_REQUEST_TYPE_NOMINAL:
       if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
-        error = PCF_Err_Ok;
+        error = FT_Err_Ok;
       break;
 
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
       if ( height == ( face->accel.fontAscent +
                        face->accel.fontDescent ) )
-        error = PCF_Err_Ok;
+        error = FT_Err_Ok;
       break;
 
     default:
@@ -474,7 +474,7 @@ THE SOFTWARE.
   {
     PCF_Face    face   = (PCF_Face)FT_SIZE_FACE( size );
     FT_Stream   stream;
-    FT_Error    error  = PCF_Err_Ok;
+    FT_Error    error  = FT_Err_Ok;
     FT_Bitmap*  bitmap = &slot->bitmap;
     PCF_Metric  metric;
     FT_Offset   bytes;

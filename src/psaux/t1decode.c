@@ -415,7 +415,7 @@
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
 
-    error = PSaux_Err_Ok;
+    error = FT_Err_Ok;
 
     x = orig_x = builder->pos_x;
     y = orig_y = builder->pos_y;
@@ -756,9 +756,9 @@
           decoder->flex_state        = 1;
           decoder->num_flex_vectors  = 0;
           if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != PSaux_Err_Ok                                   ||
+                 != FT_Err_Ok                                   ||
                ( error = t1_builder_check_points( builder, 6 ) )
-                 != PSaux_Err_Ok                                   )
+                 != FT_Err_Ok                                   )
             goto Fail;
           break;
 
@@ -1129,7 +1129,7 @@
           FT_TRACE4(( "\n" ));
 
           /* return now! */
-          return PSaux_Err_Ok;
+          return FT_Err_Ok;
 
         case op_hsbw:
           FT_TRACE4(( " hsbw" ));
@@ -1149,7 +1149,7 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
-            return PSaux_Err_Ok;
+            return FT_Err_Ok;
 
           break;
 
@@ -1178,7 +1178,7 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
-            return PSaux_Err_Ok;
+            return FT_Err_Ok;
 
           break;
 
@@ -1197,7 +1197,7 @@
           FT_TRACE4(( " hlineto" ));
 
           if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != PSaux_Err_Ok )
+                 != FT_Err_Ok )
             goto Fail;
 
           x += top[0];
@@ -1219,9 +1219,9 @@
           FT_TRACE4(( " hvcurveto" ));
 
           if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != PSaux_Err_Ok                                   ||
+                 != FT_Err_Ok                                   ||
                ( error = t1_builder_check_points( builder, 3 ) )
-                 != PSaux_Err_Ok                                   )
+                 != FT_Err_Ok                                   )
             goto Fail;
 
           x += top[0];
@@ -1237,7 +1237,7 @@
           FT_TRACE4(( " rlineto" ));
 
           if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != PSaux_Err_Ok )
+                 != FT_Err_Ok )
             goto Fail;
 
           x += top[0];
@@ -1245,7 +1245,7 @@
 
         Add_Line:
           if ( ( error = t1_builder_add_point1( builder, x, y ) )
-                 != PSaux_Err_Ok )
+                 != FT_Err_Ok )
             goto Fail;
           break;
 
@@ -1266,9 +1266,9 @@
           FT_TRACE4(( " rrcurveto" ));
 
           if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != PSaux_Err_Ok                                   ||
+                 != FT_Err_Ok                                   ||
                ( error = t1_builder_check_points( builder, 3 ) )
-                 != PSaux_Err_Ok                                   )
+                 != FT_Err_Ok                                   )
             goto Fail;
 
           x += top[0];
@@ -1288,9 +1288,9 @@
           FT_TRACE4(( " vhcurveto" ));
 
           if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != PSaux_Err_Ok                                   ||
+                 != FT_Err_Ok                                   ||
                ( error = t1_builder_check_points( builder, 3 ) )
-                 != PSaux_Err_Ok                                   )
+                 != FT_Err_Ok                                   )
             goto Fail;
 
           y += top[0];
@@ -1306,7 +1306,7 @@
           FT_TRACE4(( " vlineto" ));
 
           if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != PSaux_Err_Ok )
+                 != FT_Err_Ok )
             goto Fail;
 
           y += top[0];
@@ -1605,7 +1605,7 @@
 
     decoder->funcs          = t1_decoder_funcs;
 
-    return PSaux_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

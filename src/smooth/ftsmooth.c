@@ -61,7 +61,7 @@
                        const FT_Matrix*  matrix,
                        const FT_Vector*  delta )
   {
-    FT_Error  error = Smooth_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( slot->format != render->glyph_format )
@@ -384,7 +384,7 @@
     /* everything is fine; don't deallocate buffer */
     have_buffer = FALSE;
 
-    error = Smooth_Err_Ok;
+    error = FT_Err_Ok;
 
   Exit:
     if ( have_outline_shifted )

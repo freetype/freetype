@@ -95,7 +95,7 @@
   T1_Size_Init( FT_Size  t1size )      /* T1_Size */
   {
     T1_Size            size  = (T1_Size)t1size;
-    FT_Error           error = T1_Err_Ok;
+    FT_Error           error = FT_Err_Ok;
     PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
 
 
@@ -131,7 +131,7 @@
                         size->root.metrics.y_scale,
                         0, 0 );
 
-    return T1_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -489,7 +489,7 @@
         if ( !error )
           root->max_advance_width = (FT_Short)FIXED_TO_INT( max_advance );
         else
-          error = T1_Err_Ok;   /* clear error */
+          error = FT_Err_Ok;   /* clear error */
       }
 
       root->max_advance_height = root->height;
@@ -591,7 +591,7 @@
   {
     FT_UNUSED( driver );
 
-    return T1_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

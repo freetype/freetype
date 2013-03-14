@@ -48,7 +48,7 @@
   af_loader_reset( AF_Module  module,
                    FT_Face    face )
   {
-    FT_Error   error  = AF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     AF_Loader  loader = module->loader;
 
 

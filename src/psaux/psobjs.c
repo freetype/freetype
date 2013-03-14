@@ -138,7 +138,7 @@
 
     table->capacity = new_size;
 
-    return PSaux_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -216,7 +216,7 @@
     FT_MEM_COPY( table->block + table->cursor, object, length );
 
     table->cursor += length;
-    return PSaux_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -397,7 +397,7 @@
         embed--;
         if ( embed == 0 )
         {
-          error = PSaux_Err_Ok;
+          error = FT_Err_Ok;
           break;
         }
       }
@@ -416,7 +416,7 @@
                FT_Byte*   limit )
   {
     FT_Byte*  cur = *acur;
-    FT_Error  err =  PSaux_Err_Ok;
+    FT_Error  err =  FT_Err_Ok;
 
 
     while ( ++cur < limit )
@@ -456,12 +456,12 @@
   {
     FT_Byte*  cur;
     FT_Int    embed = 0;
-    FT_Error  error = PSaux_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     FT_ASSERT( **acur == '{' );
 
-    for ( cur = *acur; cur < limit && error == PSaux_Err_Ok; ++cur )
+    for ( cur = *acur; cur < limit && error == FT_Err_Ok; ++cur )
     {
       switch ( *cur )
       {
@@ -519,7 +519,7 @@
 
     FT_Byte*  cur   = parser->cursor;
     FT_Byte*  limit = parser->limit;
-    FT_Error  error = PSaux_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     skip_spaces( &cur, limit );             /* this also skips comments */
@@ -644,7 +644,7 @@
       token->type  = T1_TOKEN_TYPE_STRING;
       token->start = cur;
 
-      if ( skip_literal_string( &cur, limit ) == PSaux_Err_Ok )
+      if ( skip_literal_string( &cur, limit ) == FT_Err_Ok )
         token->limit = cur;
       break;
 
@@ -653,7 +653,7 @@
       token->type  = T1_TOKEN_TYPE_ARRAY;
       token->start = cur;
 
-      if ( skip_procedure( &cur, limit ) == PSaux_Err_Ok )
+      if ( skip_procedure( &cur, limit ) == FT_Err_Ok )
         token->limit = cur;
       break;
 
@@ -1276,7 +1276,7 @@
     FT_UNUSED( pflags );
 #endif
 
-    error = PSaux_Err_Ok;
+    error = FT_Err_Ok;
 
   Exit:
     return error;
@@ -1300,7 +1300,7 @@
     T1_TokenRec  elements[T1_MAX_TABLE_ELEMENTS];
     T1_Token     token;
     FT_Int       num_elements;
-    FT_Error     error = PSaux_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
     FT_Byte*     old_cursor;
     FT_Byte*     old_limit;
     T1_FieldRec  fieldrec = *(T1_Field)field;
@@ -1372,7 +1372,7 @@
                       FT_Long*   pnum_bytes,
                       FT_Bool    delimiters )
   {
-    FT_Error  error = PSaux_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_Byte*  cur;
 
 
@@ -1474,7 +1474,7 @@
                   FT_Byte*   limit,
                   FT_Memory  memory )
   {
-    parser->error  = PSaux_Err_Ok;
+    parser->error  = FT_Err_Ok;
     parser->base   = base;
     parser->limit  = limit;
     parser->cursor = base;
@@ -1653,7 +1653,7 @@
     if ( !builder->load_points )
     {
       outline->n_contours++;
-      return PSaux_Err_Ok;
+      return FT_Err_Ok;
     }
 
     error = FT_GLYPHLOADER_CHECK_POINTS( builder->loader, 0, 1 );
@@ -1682,7 +1682,7 @@
     /* test whether we are building a new contour */
 
     if ( builder->parse_state == T1_Parse_Have_Path )
-      error = PSaux_Err_Ok;
+      error = FT_Err_Ok;
     else
     {
       builder->parse_state = T1_Parse_Have_Path;

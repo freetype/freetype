@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin script (body).                */
 /*                                                                         */
-/*  Copyright 2003-2012 by                                                 */
+/*  Copyright 2003-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -475,7 +475,7 @@
   af_latin2_metrics_init( AF_LatinMetrics  metrics,
                           FT_Face          face )
   {
-    FT_Error    error = AF_Err_Ok;
+    FT_Error    error  = FT_Err_Ok;
     FT_CharMap  oldmap = face->charmap;
     FT_UInt     ee;
 
@@ -507,7 +507,7 @@
     }
 
     FT_Set_Charmap( face, oldmap );
-    return AF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -708,7 +708,7 @@
   {
     AF_AxisHints  axis          = &hints->axis[dim];
     FT_Memory     memory        = hints->memory;
-    FT_Error      error         = AF_Err_Ok;
+    FT_Error      error         = FT_Err_Ok;
     AF_Segment    segment       = NULL;
     AF_SegmentRec seg0;
     AF_Point*     contour       = hints->contours;
@@ -1064,7 +1064,7 @@
                                  AF_Dimension   dim )
   {
     AF_AxisHints  axis   = &hints->axis[dim];
-    FT_Error      error  = AF_Err_Ok;
+    FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = hints->memory;
     AF_LatinAxis  laxis  = &((AF_LatinMetrics)hints->metrics)->axis[dim];
 

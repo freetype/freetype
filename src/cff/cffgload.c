@@ -412,7 +412,7 @@
     CFF_Builder  *builder = &decoder->builder;
     CFF_Font      cff     = (CFF_Font)builder->face->extra.data;
     CFF_SubFont   sub     = &cff->top_font;
-    FT_Error      error   = CFF_Err_Ok;
+    FT_Error      error   = FT_Err_Ok;
 
 
     /* manage CID fonts */
@@ -522,7 +522,7 @@
     if ( !builder->load_points )
     {
       outline->n_contours++;
-      return CFF_Err_Ok;
+      return FT_Err_Ok;
     }
 
     error = FT_GLYPHLOADER_CHECK_POINTS( builder->loader, 0, 1 );
@@ -545,7 +545,7 @@
                            FT_Pos        x,
                            FT_Pos        y )
   {
-    FT_Error  error = CFF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     /* test whether we are building a new contour */
@@ -925,7 +925,7 @@
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
 
-    error = CFF_Err_Ok;
+    error = FT_Err_Ok;
 
     x = builder->pos_x;
     y = builder->pos_y;
@@ -1968,7 +1968,7 @@
           else
           {
             if ( !error )
-              error = CFF_Err_Ok;
+              error = FT_Err_Ok;
 
             cff_builder_close_contour( builder );
 
@@ -2526,7 +2526,7 @@
   cff_compute_max_advance( TT_Face  face,
                            FT_Int*  max_advance )
   {
-    FT_Error     error = CFF_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
     CFF_Decoder  decoder;
     FT_Int       glyph_index;
     CFF_Font     cff = (CFF_Font)face->other;
@@ -2564,12 +2564,12 @@
       }
 
       /* ignore the error if one has occurred -- skip to next glyph */
-      error = CFF_Err_Ok;
+      error = FT_Err_Ok;
     }
 
     *max_advance = decoder.builder.advance.x;
 
-    return CFF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

@@ -120,7 +120,7 @@
   static FT_Error
   ft_bzip2_check_header( FT_Stream  stream )
   {
-    FT_Error  error = Bzip2_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_Byte   head[4];
 
 
@@ -149,7 +149,7 @@
                       FT_Stream     source )
   {
     bz_stream*  bzstream = &zip->bzstream;
-    FT_Error    error    = Bzip2_Err_Ok;
+    FT_Error    error    = FT_Err_Ok;
 
 
     zip->stream = stream;
@@ -273,7 +273,7 @@
     bzstream->next_in  = (char*)zip->input;
     bzstream->avail_in = size;
 
-    return Bzip2_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -281,7 +281,7 @@
   ft_bzip2_file_fill_output( FT_BZip2File  zip )
   {
     bz_stream*  bzstream = &zip->bzstream;
-    FT_Error    error    = Bzip2_Err_Ok;
+    FT_Error    error    = FT_Err_Ok;
 
 
     zip->cursor         = zip->buffer;
@@ -325,7 +325,7 @@
   ft_bzip2_file_skip_output( FT_BZip2File  zip,
                              FT_ULong      count )
   {
-    FT_Error  error = Bzip2_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_ULong  delta;
 
 

@@ -72,7 +72,7 @@ THE SOFTWARE.
     cmap->num_encodings = face->bdffont->glyphs_used;
     cmap->encodings     = face->en_table;
 
-    return BDF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -198,7 +198,7 @@ THE SOFTWARE.
   static FT_Error
   bdf_interpret_style( BDF_Face  bdf )
   {
-    FT_Error         error  = BDF_Err_Ok;
+    FT_Error         error  = FT_Err_Ok;
     FT_Face          face   = FT_FACE( bdf );
     FT_Memory        memory = face->memory;
     bdf_font_t*      font   = bdf->bdffont;
@@ -342,7 +342,7 @@ THE SOFTWARE.
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    FT_Error       error  = BDF_Err_Ok;
+    FT_Error       error  = FT_Err_Ok;
     BDF_Face       face   = (BDF_Face)bdfface;
     FT_Memory      memory = FT_FACE_MEMORY( face );
 
@@ -608,7 +608,7 @@ THE SOFTWARE.
     size->metrics.descender   = -bdffont->font_descent << 6;
     size->metrics.max_advance = bdffont->bbx.width << 6;
 
-    return BDF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -630,13 +630,13 @@ THE SOFTWARE.
     {
     case FT_SIZE_REQUEST_TYPE_NOMINAL:
       if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
-        error = BDF_Err_Ok;
+        error = FT_Err_Ok;
       break;
 
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
       if ( height == ( bdffont->font_ascent +
                        bdffont->font_descent ) )
-        error = BDF_Err_Ok;
+        error = FT_Err_Ok;
       break;
 
     default:
@@ -660,7 +660,7 @@ THE SOFTWARE.
   {
     BDF_Face     bdf    = (BDF_Face)FT_SIZE_FACE( size );
     FT_Face      face   = FT_FACE( bdf );
-    FT_Error     error  = BDF_Err_Ok;
+    FT_Error     error  = FT_Err_Ok;
     FT_Bitmap*   bitmap = &slot->bitmap;
     bdf_glyph_t  glyph;
     int          bpp    = bdf->bdffont->bpp;

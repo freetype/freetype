@@ -143,7 +143,7 @@
   {
     TT_BDF     bdf   = &face->bdf;
     FT_Size    size  = FT_FACE(face)->size;
-    FT_Error   error = SFNT_Err_Ok;
+    FT_Error   error = FT_Err_Ok;
     FT_Byte*   p;
     FT_UInt    count;
     FT_Byte*   strike;
@@ -215,7 +215,7 @@
             {
               aprop->type   = BDF_PROPERTY_TYPE_ATOM;
               aprop->u.atom = (const char*)bdf->strings + value;
-              error         = SFNT_Err_Ok;
+              error         = FT_Err_Ok;
               goto Exit;
             }
             break;
@@ -223,13 +223,13 @@
           case 0x02:
             aprop->type      = BDF_PROPERTY_TYPE_INTEGER;
             aprop->u.integer = (FT_Int32)value;
-            error            = SFNT_Err_Ok;
+            error            = FT_Err_Ok;
             goto Exit;
 
           case 0x03:
             aprop->type       = BDF_PROPERTY_TYPE_CARDINAL;
             aprop->u.cardinal = value;
-            error             = SFNT_Err_Ok;
+            error             = FT_Err_Ok;
             goto Exit;
 
           default:

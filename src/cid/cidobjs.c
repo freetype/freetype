@@ -131,7 +131,7 @@
   cid_size_init( FT_Size  cidsize )     /* CID_Size */
   {
     CID_Size           size  = (CID_Size)cidsize;
-    FT_Error           error = CID_Err_Ok;
+    FT_Error           error = FT_Err_Ok;
     PSH_Globals_Funcs  funcs = cid_size_get_globals_funcs( size );
 
 
@@ -169,7 +169,7 @@
                         size->metrics.y_scale,
                         0, 0 );
 
-    return CID_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -466,7 +466,7 @@
   {
     FT_UNUSED( driver );
 
-    return CID_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

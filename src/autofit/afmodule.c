@@ -50,7 +50,7 @@
                                 AF_FaceGlobals*  aglobals,
                                 AF_Module        module )
   {
-    FT_Error        error = AF_Err_Ok;
+    FT_Error        error = FT_Err_Ok;
     AF_FaceGlobals  globals;
 
 
@@ -84,7 +84,7 @@
                    const char*  property_name,
                    const void*  value )
   {
-    FT_Error   error  = AF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     AF_Module  module = (AF_Module)ft_module;
 
 
@@ -121,7 +121,7 @@
                    const char*  property_name,
                    void*        value )
   {
-    FT_Error   error           = AF_Err_Ok;
+    FT_Error   error           = FT_Err_Ok;
     AF_Module  module          = (AF_Module)ft_module;
     FT_UInt    fallback_script = module->fallback_script;
 

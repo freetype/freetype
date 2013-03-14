@@ -115,7 +115,7 @@
     if ( sfnt )
       kerning->x = sfnt->get_kerning( face, left_glyph, right_glyph );
 
-    return CFF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -195,7 +195,7 @@
                     FT_Fixed*  advances )
   {
     FT_UInt       nn;
-    FT_Error      error = CFF_Err_Ok;
+    FT_Error      error = FT_Err_Ok;
     FT_GlyphSlot  slot  = face->glyph;
 
 
@@ -252,7 +252,7 @@
     if ( gname )
       FT_STRCPYN( buffer, gname, buffer_max );
 
-    error = CFF_Err_Ok;
+    error = FT_Err_Ok;
 
   Exit:
     return error;
@@ -321,7 +321,7 @@
                         PS_FontInfoRec*  afont_info )
   {
     CFF_Font  cff   = (CFF_Font)face->extra.data;
-    FT_Error  error = CFF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( cff && cff->font_info == NULL )
@@ -404,7 +404,7 @@
                      TT_CMapInfo  *cmap_info )
   {
     FT_CMap   cmap  = FT_CMAP( charmap );
-    FT_Error  error = CFF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
     FT_Face     face    = FT_CMAP_FACE( cmap );
     FT_Library  library = FT_FACE_LIBRARY( face );
@@ -445,7 +445,7 @@
                const char*  *ordering,
                FT_Int       *supplement )
   {
-    FT_Error  error = CFF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     CFF_Font  cff   = (CFF_Font)face->extra.data;
 
 
@@ -500,7 +500,7 @@
   cff_get_is_cid( CFF_Face  face,
                   FT_Bool  *is_cid )
   {
-    FT_Error  error = CFF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     CFF_Font  cff   = (CFF_Font)face->extra.data;
 
 
@@ -524,7 +524,7 @@
                                 FT_UInt   glyph_index,
                                 FT_UInt  *cid )
   {
-    FT_Error  error = CFF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     CFF_Font  cff;
 
 

@@ -49,7 +49,7 @@
                          PFR_ExtraItem   item_list,
                          FT_Pointer      item_data )
   {
-    FT_Error  error = PFR_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_Byte*  p     = *pp;
     FT_UInt   num_items, item_type, item_size;
 
@@ -353,7 +353,7 @@
     PFR_Strike  strike;
     FT_UInt     flags0;
     FT_UInt     n, count, size1;
-    FT_Error    error = PFR_Err_Ok;
+    FT_Error    error = FT_Err_Ok;
 
 
     PFR_CHECK( 5 );
@@ -449,7 +449,7 @@
                                FT_Byte*     limit,
                                PFR_PhyFont  phy_font )
   {
-    FT_Error    error  = PFR_Err_Ok;
+    FT_Error    error  = FT_Err_Ok;
     FT_Memory   memory = phy_font->memory;
     FT_PtrDist  len    = limit - p;
 
@@ -477,7 +477,7 @@
   {
     FT_UInt    count, num_vert, num_horz;
     FT_Int*    snaps  = NULL;
-    FT_Error   error  = PFR_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = phy_font->memory;
 
 
@@ -521,7 +521,7 @@
                                      PFR_PhyFont  phy_font )
   {
     PFR_KernItem  item   = NULL;
-    FT_Error      error  = PFR_Err_Ok;
+    FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = phy_font->memory;
 
 
@@ -631,7 +631,7 @@
                      FT_Memory    memory,
                      FT_String*  *astring )
   {
-    FT_Error    error = PFR_Err_Ok;
+    FT_Error    error  = FT_Err_Ok;
     FT_String*  result = NULL;
     FT_UInt     n, ok;
 

@@ -1,4 +1,10 @@
-2013-03-13  Werner Lemberg  <wl@gnu.org>
+2013-03-14  Werner Lemberg  <wl@gnu.org>
+
+	*/*: Use FT_Err_Ok only.
+
+	This is a purely mechanical conversion.
+
+2013-03-14  Werner Lemberg  <wl@gnu.org>
 
 	*/*: Use `FT_THROW'.
 

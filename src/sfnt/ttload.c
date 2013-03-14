@@ -274,7 +274,7 @@
     /* if `sing' and `meta' tables are present, there is no `head' table */
     if ( has_head || ( has_sing && has_meta ) )
     {
-      error = SFNT_Err_Ok;
+      error = FT_Err_Ok;
       goto Exit;
     }
     else
@@ -497,7 +497,7 @@
     {
       *length = size;
 
-      return SFNT_Err_Ok;
+      return FT_Err_Ok;
     }
 
     if ( length )
@@ -1127,7 +1127,7 @@
     FT_TRACE3(( "isFixedPitch:   %s\n", post->isFixedPitch
                                         ? "  yes" : "   no" ));
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

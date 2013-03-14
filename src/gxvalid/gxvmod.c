@@ -59,7 +59,7 @@
 
     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, table_len );
     if ( FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
-      return GXV_Err_Ok;
+      return FT_Err_Ok;
     if ( error )
       goto Exit;
 
@@ -112,7 +112,7 @@
   {
     FT_Memory volatile        memory = FT_FACE_MEMORY( face );
 
-    FT_Error                  error = GXV_Err_Ok;
+    FT_Error                  error = FT_Err_Ok;
     FT_ValidatorRec volatile  valid;
 
     FT_UInt  i;
@@ -200,7 +200,7 @@
     /* without volatile on `error' GCC 4.1.1. emits:                         */
     /*  warning: variable 'error' might be clobbered by 'longjmp' or 'vfork' */
     /* this warning seems spurious but ---                                   */
-    FT_Error volatile         error = GXV_Err_Ok;
+    FT_Error volatile         error = FT_Err_Ok;
     FT_ValidatorRec volatile  valid;
 
 

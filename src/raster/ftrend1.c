@@ -38,7 +38,7 @@
                                                library->raster_pool,
                                                library->raster_pool_size );
 
-    return Raster_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -62,7 +62,7 @@
                         const FT_Matrix*  matrix,
                         const FT_Vector*  delta )
   {
-    FT_Error error = Raster_Err_Ok;
+    FT_Error error = FT_Err_Ok;
 
 
     if ( slot->format != render->glyph_format )

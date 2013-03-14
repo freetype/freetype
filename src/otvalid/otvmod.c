@@ -50,7 +50,7 @@
 
     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, table_len );
     if ( FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
-      return OTV_Err_Ok;
+      return FT_Err_Ok;
     if ( error )
       goto Exit;
 
@@ -73,7 +73,7 @@
                 FT_Bytes          *ot_gsub,
                 FT_Bytes          *ot_jstf )
   {
-    FT_Error                  error = OTV_Err_Ok;
+    FT_Error                  error = FT_Err_Ok;
     FT_Byte* volatile         base;
     FT_Byte* volatile         gdef;
     FT_Byte* volatile         gpos;

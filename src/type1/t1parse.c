@@ -119,7 +119,7 @@
 
     if ( !FT_FRAME_ENTER( header_length ) )
     {
-      error = T1_Err_Ok;
+      error = FT_Err_Ok;
 
       if ( ft_memcmp( stream->cursor, header_string, header_length ) != 0 )
         error = FT_THROW( Unknown_File_Format );
@@ -263,7 +263,7 @@
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->root.memory;
-    FT_Error   error  = T1_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     FT_ULong   size;
 
 
@@ -313,7 +313,7 @@
         error = read_pfb_tag( stream, &tag, &size );
         if ( error || tag != 0x8002U )
         {
-          error = T1_Err_Ok;
+          error = FT_Err_Ok;
           break;
         }
 

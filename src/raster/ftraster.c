@@ -235,7 +235,7 @@
 
 #include "rasterrs.h"
 
-#define Raster_Err_None         Raster_Err_Ok
+#define Raster_Err_None         FT_Err_Ok
 #define Raster_Err_Not_Ini      Raster_Err_Raster_Uninitialized
 #define Raster_Err_Overflow     Raster_Err_Raster_Overflow
 #define Raster_Err_Neg_Height   Raster_Err_Raster_Negative_Height

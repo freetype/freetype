@@ -111,7 +111,7 @@
                     FT_Stream   source )
   {
     FT_LzwState  lzw   = &zip->lzw;
-    FT_Error     error = LZW_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
 
 
     zip->stream = stream;
@@ -172,7 +172,7 @@
   {
     FT_LzwState  lzw = &zip->lzw;
     FT_ULong     count;
-    FT_Error     error = LZW_Err_Ok;
+    FT_Error     error = FT_Err_Ok;
 
 
     zip->cursor = zip->buffer;
@@ -193,7 +193,7 @@
   ft_lzw_file_skip_output( FT_LZWFile  zip,
                            FT_ULong    count )
   {
-    FT_Error  error = LZW_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     /* first, we skip what we can from the output buffer */

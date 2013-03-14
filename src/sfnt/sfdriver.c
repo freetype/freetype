@@ -133,7 +133,7 @@
       *length = face->dir_tables[idx].Length;
     }
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -257,7 +257,7 @@
       FT_Memory         memory = face->root.memory;
       TT_NameEntryRec*  name   = face->name_table.names + found_win;
       FT_UInt           len    = name->stringLength / 2;
-      FT_Error          error  = SFNT_Err_Ok;
+      FT_Error          error  = FT_Err_Ok;
 
       FT_UNUSED( error );
 
@@ -299,7 +299,7 @@
       FT_Memory         memory = face->root.memory;
       TT_NameEntryRec*  name   = face->name_table.names + found_apple;
       FT_UInt           len    = name->stringLength;
-      FT_Error          error  = SFNT_Err_Ok;
+      FT_Error          error  = FT_Err_Ok;
 
       FT_UNUSED( error );
 
@@ -567,7 +567,7 @@
     FT_UNUSED( face );
     FT_UNUSED( cmap );
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 #endif /* FT_CONFIG_OPTION_OLD_INTERNALS */

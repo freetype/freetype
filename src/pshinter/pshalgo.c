@@ -2193,7 +2193,7 @@
 
     /* something to do? */
     if ( outline->n_points == 0 || outline->n_contours == 0 )
-      return PSH_Err_Ok;
+      return FT_Err_Ok;
 
 #ifdef DEBUG_HINTER
 

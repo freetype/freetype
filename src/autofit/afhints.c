@@ -39,7 +39,7 @@
                              FT_Memory     memory,
                              AF_Segment   *asegment )
   {
-    FT_Error    error   = AF_Err_Ok;
+    FT_Error    error   = FT_Err_Ok;
     AF_Segment  segment = NULL;
 
 
@@ -83,7 +83,7 @@
                           FT_Memory     memory,
                           AF_Edge      *anedge )
   {
-    FT_Error  error = AF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     AF_Edge   edge  = NULL;
     AF_Edge   edges;
 
@@ -316,7 +316,7 @@
     axis          = &hints->axis[dim];
     *num_segments = axis->num_segments;
 
-    return AF_Err_Ok;
+    return FT_Err_Ok;
   }
 #ifdef __cplusplus
   }
@@ -353,7 +353,7 @@
     *offset = (dim == AF_DIMENSION_HORZ) ? seg->first->ox
                                          : seg->first->oy;
 
-    return AF_Err_Ok;
+    return FT_Err_Ok;
   }
 #ifdef __cplusplus
   }
@@ -593,7 +593,7 @@
   af_glyph_hints_reload( AF_GlyphHints  hints,
                          FT_Outline*    outline )
   {
-    FT_Error   error   = AF_Err_Ok;
+    FT_Error   error   = FT_Err_Ok;
     AF_Point   points;
     FT_UInt    old_max, new_max;
     FT_Fixed   x_scale = hints->x_scale;

@@ -262,7 +262,7 @@
                      FT_Stream    source )
   {
     z_stream*  zstream = &zip->zstream;
-    FT_Error   error   = Gzip_Err_Ok;
+    FT_Error   error   = FT_Err_Ok;
 
 
     zip->stream = stream;
@@ -383,7 +383,7 @@
     zstream->next_in  = zip->input;
     zstream->avail_in = size;
 
-    return Gzip_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -391,7 +391,7 @@
   ft_gzip_file_fill_output( FT_GZipFile  zip )
   {
     z_stream*  zstream = &zip->zstream;
-    FT_Error   error   = Gzip_Err_Ok;
+    FT_Error   error   = FT_Err_Ok;
 
 
     zip->cursor        = zip->buffer;
@@ -435,7 +435,7 @@
   ft_gzip_file_skip_output( FT_GZipFile  zip,
                             FT_ULong     count )
   {
-    FT_Error  error = Gzip_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_ULong  delta;
 
 
@@ -657,7 +657,7 @@
           ft_gzip_file_io( zip, 0, NULL, 0 );
           FT_FREE( zip_buff );
         }
-        error = Gzip_Err_Ok;
+        error = FT_Err_Ok;
       }
     }
 

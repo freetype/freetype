@@ -195,7 +195,7 @@
       offset->y  = temp[5] >> 16;
     }
 
-    return CID_Err_Ok;      /* this is a callback function; */
+    return FT_Err_Ok;      /* this is a callback function; */
                             /* we must return an error code */
   }
 
@@ -206,7 +206,7 @@
   {
     CID_FaceInfo  cid    = &face->cid;
     FT_Memory     memory = face->root.memory;
-    FT_Error      error  = CID_Err_Ok;
+    FT_Error      error  = FT_Err_Ok;
     FT_Long       num_dicts;
 
 
@@ -257,7 +257,7 @@
       dict->private_dict.expansion_factor = dict->expansion_factor;
     }
 
-    return CID_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -286,7 +286,7 @@
 
     parser->root.cursor = base;
     parser->root.limit  = base + size;
-    parser->root.error  = CID_Err_Ok;
+    parser->root.error  = FT_Err_Ok;
 
     {
       FT_Byte*  cur   = base;
@@ -624,7 +624,7 @@
       p++;
     }
 
-    error = CID_Err_Ok;
+    error = FT_Err_Ok;
 
   Exit:
     return error;

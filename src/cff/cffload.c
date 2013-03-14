@@ -318,7 +318,7 @@
   static FT_Error
   cff_index_load_offsets( CFF_Index  idx )
   {
-    FT_Error   error  = CFF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     FT_Stream  stream = idx->stream;
     FT_Memory  memory = stream->memory;
 
@@ -384,7 +384,7 @@
                           FT_Byte***  table,
                           FT_Byte**   pool )
   {
-    FT_Error   error     = CFF_Err_Ok;
+    FT_Error   error     = FT_Err_Ok;
     FT_Memory  memory    = idx->stream->memory;
 
     FT_Byte**  t         = NULL;
@@ -472,7 +472,7 @@
                             FT_Byte**  pbytes,
                             FT_ULong*  pbyte_len )
   {
-    FT_Error  error = CFF_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( idx && idx->count > element )
@@ -781,7 +781,7 @@
                             FT_UInt      num_glyphs,
                             FT_Memory    memory )
   {
-    FT_Error   error   = CFF_Err_Ok;
+    FT_Error   error   = FT_Err_Ok;
     FT_UInt    i;
     FT_Long    j;
     FT_UShort  max_cid = 0;
@@ -860,7 +860,7 @@
                     FT_Bool      invert )
   {
     FT_Memory  memory = stream->memory;
-    FT_Error   error  = CFF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
     FT_UShort  glyph_sid;
 
 
@@ -1058,7 +1058,7 @@
                      FT_ULong      base_offset,
                      FT_ULong      offset )
   {
-    FT_Error   error = CFF_Err_Ok;
+    FT_Error   error = FT_Err_Ok;
     FT_UInt    count;
     FT_UInt    j;
     FT_UShort  glyph_sid;

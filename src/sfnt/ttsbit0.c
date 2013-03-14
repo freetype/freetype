@@ -43,7 +43,7 @@
   tt_face_load_eblc( TT_Face    face,
                      FT_Stream  stream )
   {
-    FT_Error  error = SFNT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_Fixed  version;
     FT_ULong  num_strikes, table_size;
     FT_Byte*  p;
@@ -153,7 +153,7 @@
                              (FT_Char)strike[23]   /* min_advance_SB */
                                                  ) << 6;
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -249,7 +249,7 @@
   static FT_Error
   tt_sbit_decoder_alloc_bitmap( TT_SBitDecoder  decoder )
   {
-    FT_Error    error = SFNT_Err_Ok;
+    FT_Error    error = FT_Err_Ok;
     FT_UInt     width, height;
     FT_Bitmap*  map = decoder->bitmap;
     FT_Long     size;
@@ -345,7 +345,7 @@
 
     decoder->metrics_loaded = 1;
     *pp = p;
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
 
   Fail:
     return FT_THROW( Invalid_Argument );
@@ -373,7 +373,7 @@
                                      FT_Int          x_pos,
                                      FT_Int          y_pos )
   {
-    FT_Error    error = SFNT_Err_Ok;
+    FT_Error    error = FT_Err_Ok;
     FT_Byte*    line;
     FT_Int      bit_height, bit_width, pitch, width, height, line_bits, h;
     FT_Bitmap*  bitmap;
@@ -513,7 +513,7 @@
                                     FT_Int          x_pos,
                                     FT_Int          y_pos )
   {
-    FT_Error    error = SFNT_Err_Ok;
+    FT_Error    error = FT_Err_Ok;
     FT_Byte*    line;
     FT_Int      bit_height, bit_width, pitch, width, height, line_bits, h, nbits;
     FT_Bitmap*  bitmap;
@@ -638,7 +638,7 @@
                                  FT_Int          x_pos,
                                  FT_Int          y_pos )
   {
-    FT_Error  error = SFNT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
     FT_UInt   num_components, nn;
 
     FT_Char  horiBearingX = decoder->metrics->horiBearingX;
@@ -740,7 +740,7 @@
       break;
 
     default:
-      error = SFNT_Err_Ok;
+      error = FT_Err_Ok;
     }
 
     if ( error )

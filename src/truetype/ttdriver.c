@@ -163,7 +163,7 @@
       }
     }
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
   /*************************************************************************/
@@ -187,7 +187,7 @@
   {
     TT_Face   ttface = (TT_Face)size->face;
     TT_Size   ttsize = (TT_Size)size;
-    FT_Error  error  = TT_Err_Ok;
+    FT_Error  error  = FT_Err_Ok;
 
 
     ttsize->strike_index = strike_index;
@@ -221,7 +221,7 @@
                    FT_Size_Request  req )
   {
     TT_Size   ttsize = (TT_Size)size;
-    FT_Error  error  = TT_Err_Ok;
+    FT_Error  error  = FT_Err_Ok;
 
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS

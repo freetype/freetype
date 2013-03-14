@@ -145,7 +145,7 @@
                     FT_String**  name )
   {
     FT_Memory         memory = face->root.memory;
-    FT_Error          error  = SFNT_Err_Ok;
+    FT_Error          error  = FT_Err_Ok;
     FT_String*        result = NULL;
     FT_UShort         n;
     TT_NameEntryRec*  rec;
@@ -668,7 +668,7 @@
                  get_glyph_metrics                                 )
           {
             face->horizontal.number_Of_HMetrics = 0;
-            error                               = SFNT_Err_Ok;
+            error                               = FT_Err_Ok;
           }
 #endif
         }
@@ -681,7 +681,7 @@
           FT_TRACE2(( "This is an SFNT Mac font.\n" ));
 
           has_outline = 0;
-          error       = SFNT_Err_Ok;
+          error       = FT_Err_Ok;
         }
         else
         {
@@ -695,7 +695,7 @@
                  get_glyph_metrics                                 )
           {
             face->horizontal.number_Of_HMetrics = 0;
-            error                               = SFNT_Err_Ok;
+            error                               = FT_Err_Ok;
           }
 #endif
 
@@ -737,7 +737,7 @@
         /* still valid (although rather useless in most cases);  */
         /* however, you can find such stripped fonts in PDFs     */
         if ( error == SFNT_Err_Table_Missing )
-          error = SFNT_Err_Ok;
+          error = FT_Err_Ok;
         else
           goto Exit;
       }
@@ -812,7 +812,7 @@
                FT_FACE_FLAG_HORIZONTAL;   /* horizontal data   */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-      if ( psnames_error == SFNT_Err_Ok               &&
+      if ( psnames_error == FT_Err_Ok                 &&
            face->postscript.FormatType != 0x00030000L )
         flags |= FT_FACE_FLAG_GLYPH_NAMES;
 #endif

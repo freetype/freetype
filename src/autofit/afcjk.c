@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for CJK script (body).                  */
 /*                                                                         */
-/*  Copyright 2006-2012 by                                                 */
+/*  Copyright 2006-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -566,7 +566,7 @@
 
     FT_Set_Charmap( face, oldmap );
 
-    return AF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -721,7 +721,7 @@
       }
     }
 
-    return AF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -895,7 +895,7 @@
                               AF_Dimension   dim )
   {
     AF_AxisHints  axis   = &hints->axis[dim];
-    FT_Error      error  = AF_Err_Ok;
+    FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = hints->memory;
     AF_CJKAxis    laxis  = &((AF_CJKMetrics)hints->metrics)->axis[dim];
 

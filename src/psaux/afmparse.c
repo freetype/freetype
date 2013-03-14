@@ -546,7 +546,7 @@
     parser->FontInfo  = NULL;
     parser->get_index = NULL;
 
-    return PSaux_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -573,7 +573,7 @@
     {
       *aint = val.u.i;
 
-      return PSaux_Err_Ok;
+      return FT_Err_Ok;
     }
     else
       return FT_THROW( Syntax_Error );
@@ -638,7 +638,7 @@
       case AFM_TOKEN_ENDKERNDATA:
       case AFM_TOKEN_ENDFONTMETRICS:
         fi->NumTrackKern = n + 1;
-        return PSaux_Err_Ok;
+        return FT_Err_Ok;
 
       case AFM_TOKEN_UNKNOWN:
         break;
@@ -754,7 +754,7 @@
         ft_qsort( fi->KernPairs, fi->NumKernPair,
                   sizeof ( AFM_KernPairRec ),
                   afm_compare_kern_pairs );
-        return PSaux_Err_Ok;
+        return FT_Err_Ok;
 
       case AFM_TOKEN_UNKNOWN:
         break;
@@ -796,7 +796,7 @@
 
       case AFM_TOKEN_ENDKERNDATA:
       case AFM_TOKEN_ENDFONTMETRICS:
-        return PSaux_Err_Ok;
+        return FT_Err_Ok;
 
       case AFM_TOKEN_UNKNOWN:
         break;
@@ -833,7 +833,7 @@
 
 
       if ( token == end_section || token == AFM_TOKEN_ENDFONTMETRICS )
-        return PSaux_Err_Ok;
+        return FT_Err_Ok;
     }
 
   Fail:
@@ -939,7 +939,7 @@
         /* fall through since we only support kern data */
 
       case AFM_TOKEN_ENDFONTMETRICS:
-        return PSaux_Err_Ok;
+        return FT_Err_Ok;
 
       default:
         break;

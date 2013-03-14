@@ -292,7 +292,7 @@
     loader->cursor = stream->cursor;
     loader->limit  = stream->limit;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -330,7 +330,7 @@
                                             loader->bbox.yMax ));
     loader->cursor = p;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -826,7 +826,7 @@
     else if ( loader->exec->sph_tweak_flags & SPH_TWEAK_EMBOLDEN )
       FT_Outline_EmboldenXY( &loader->gloader->current.outline, 24, 0 );
 #endif
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -844,7 +844,7 @@
   TT_Process_Simple_Glyph( TT_Loader  loader )
   {
     FT_GlyphLoader  gloader = loader->gloader;
-    FT_Error        error   = TT_Err_Ok;
+    FT_Error        error   = FT_Err_Ok;
     FT_Outline*     outline;
     FT_Int          n_points;
 
@@ -1038,7 +1038,7 @@
       y = subglyph->arg2;
 
       if ( !x && !y )
-        return TT_Err_Ok;
+        return FT_Err_Ok;
 
   /* Use a default value dependent on                                     */
   /* TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED.  This is useful for old TT */
@@ -1118,7 +1118,7 @@
                        base_vec + num_base_points,
                        x, y );
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -1201,7 +1201,7 @@
           return error;
       }
       else if ( n_ins == 0 )
-        return TT_Err_Ok;
+        return FT_Err_Ok;
 
       if ( FT_STREAM_READ( loader->exec->glyphIns, n_ins ) )
         return error;
@@ -1257,7 +1257,7 @@
                        FT_UInt    recurse_count,
                        FT_Bool    header_only )
   {
-    FT_Error        error        = TT_Err_Ok;
+    FT_Error        error        = FT_Err_Ok;
     FT_Fixed        x_scale, y_scale;
     FT_ULong        offset;
     TT_Face         face         = (TT_Face)loader->face;
@@ -1418,7 +1418,7 @@
         loader->pp4.y = FT_MulFix( loader->pp4.y, y_scale );
       }
 
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
       goto Exit;
     }
 
@@ -2104,7 +2104,7 @@
     loader->glyph  = (FT_GlyphSlot)glyph;
     loader->stream = stream;
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -2145,7 +2145,7 @@
     TT_LoaderRec  loader;
 
 
-    error = TT_Err_Ok;
+    error = FT_Err_Ok;
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
@@ -2169,7 +2169,7 @@
                                        loader.vadvance;
         }
 
-        return TT_Err_Ok;
+        return FT_Err_Ok;
       }
     }
 

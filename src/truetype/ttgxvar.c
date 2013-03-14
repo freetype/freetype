@@ -130,7 +130,7 @@
     FT_Int     j;
     FT_Int     first;
     FT_Memory  memory = stream->memory;
-    FT_Error   error  = TT_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
 
     FT_UNUSED( error );
 
@@ -215,7 +215,7 @@
     FT_Offset  i;
     FT_UInt    j;
     FT_Memory  memory = stream->memory;
-    FT_Error   error  = TT_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
 
     FT_UNUSED( error );
 
@@ -283,7 +283,7 @@
     FT_Memory       memory = stream->memory;
     GX_Blend        blend  = face->blend;
     GX_AVarSegment  segment;
-    FT_Error        error = TT_Err_Ok;
+    FT_Error        error = FT_Err_Ok;
     FT_ULong        version;
     FT_Long         axisCount;
     FT_Int          i, j;
@@ -610,7 +610,7 @@
     FT_Stream            stream = face->root.stream;
     FT_Memory            memory = face->root.memory;
     FT_ULong             table_len;
-    FT_Error             error  = TT_Err_Ok;
+    FT_Error             error  = FT_Err_Ok;
     FT_ULong             fvar_start;
     FT_Int               i, j;
     FT_MM_Var*           mmvar = NULL;
@@ -847,7 +847,7 @@
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    FT_Error    error = TT_Err_Ok;
+    FT_Error    error = FT_Err_Ok;
     GX_Blend    blend;
     FT_MM_Var*  mmvar;
     FT_UInt     i;
@@ -983,7 +983,7 @@
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-    FT_Error        error      = TT_Err_Ok;
+    FT_Error        error      = FT_Err_Ok;
     FT_Fixed*       normalized = NULL;
     GX_Blend        blend;
     FT_MM_Var*      mmvar;
@@ -1120,7 +1120,7 @@
     {
       FT_TRACE2(( "tt_face_vary_cvt: no blend specified\n" ));
 
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
       goto Exit;
     }
 
@@ -1128,7 +1128,7 @@
     {
       FT_TRACE2(( "tt_face_vary_cvt: no `cvt ' table\n" ));
 
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
       goto Exit;
     }
 
@@ -1137,13 +1137,13 @@
     {
       FT_TRACE2(( "is missing\n" ));
 
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
       goto Exit;
     }
 
     if ( FT_FRAME_ENTER( table_len ) )
     {
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
       goto Exit;
     }
 
@@ -1152,7 +1152,7 @@
     {
       FT_TRACE2(( "bad table version\n" ));
 
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
       goto FExit;
     }
 
@@ -1333,7 +1333,7 @@
     if ( glyph_index >= blend->gv_glyphcnt      ||
          blend->glyphoffsets[glyph_index] ==
            blend->glyphoffsets[glyph_index + 1] )
-      return TT_Err_Ok;               /* no variation data for this glyph */
+      return FT_Err_Ok;               /* no variation data for this glyph */
 
     if ( FT_STREAM_SEEK( blend->glyphoffsets[glyph_index] )   ||
          FT_FRAME_ENTER( blend->glyphoffsets[glyph_index + 1] -

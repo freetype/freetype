@@ -492,7 +492,7 @@
     FTC_Node*  bucket;
     FTC_Node*  pnode;
     FTC_Node   node;
-    FT_Error   error        = FTC_Err_Ok;
+    FT_Error   error        = FT_Err_Ok;
     FT_Bool    list_changed = FALSE;
 
     FTC_Node_CompareFunc  compare = cache->clazz.node_compare;

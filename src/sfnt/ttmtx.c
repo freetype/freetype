@@ -419,7 +419,7 @@
       *aadvance = 0;
     }
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 #else /* !FT_CONFIG_OPTION_OLD_INTERNALS */
@@ -444,7 +444,7 @@
          gindex >= (FT_UInt)face->max_profile.numGlyphs )
     {
       *abearing = *aadvance = 0;
-      return SFNT_Err_Ok;
+      return FT_Err_Ok;
     }
 
     if ( gindex < (FT_UInt)k )
@@ -459,7 +459,7 @@
       *aadvance = ((TT_LongMetrics)header->long_metrics)[k - 1].advance;
     }
 
-    return SFNT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 #endif /* !FT_CONFIG_OPTION_OLD_INTERNALS */

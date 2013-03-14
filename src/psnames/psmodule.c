@@ -378,7 +378,7 @@
         if ( count < num_glyphs / 2 )
         {
           (void)FT_RENEW_ARRAY( table->maps, num_glyphs, count );
-          error = PSnames_Err_Ok;
+          error = FT_Err_Ok;
         }
 
         /* Sort the table in increasing order of unicode values, */

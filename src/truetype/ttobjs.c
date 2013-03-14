@@ -551,7 +551,7 @@
 
     /* If we are performing a simple font format check, exit immediately. */
     if ( face_index < 0 )
-      return TT_Err_Ok;
+      return FT_Err_Ok;
 
     /* Load font directory */
     error = sfnt->load_face( stream, face, face_index, num_params, params );
@@ -805,7 +805,7 @@
       }
     }
     else
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
 
     if ( !error )
       TT_Save_Context( exec, size );
@@ -876,7 +876,7 @@
       }
     }
     else
-      error = TT_Err_Ok;
+      error = FT_Err_Ok;
 
     /* UNDOCUMENTED!  The MS rasterizer doesn't allow the following */
     /* graphics state variables to be modified by the CVT program.  */
@@ -1043,7 +1043,7 @@
   tt_size_ready_bytecode( TT_Size  size,
                           FT_Bool  pedantic )
   {
-    FT_Error  error = TT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( !size->bytecode_ready )
@@ -1110,7 +1110,7 @@
   tt_size_init( FT_Size  ttsize )           /* TT_Size */
   {
     TT_Size   size  = (TT_Size)ttsize;
-    FT_Error  error = TT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
     size->bytecode_ready = 0;
@@ -1166,7 +1166,7 @@
   tt_size_reset( TT_Size  size )
   {
     TT_Face           face;
-    FT_Error          error = TT_Err_Ok;
+    FT_Error          error = FT_Err_Ok;
     FT_Size_Metrics*  metrics;
 
 
@@ -1265,7 +1265,7 @@
 
 #endif
 
-    return TT_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

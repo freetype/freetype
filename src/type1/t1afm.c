@@ -108,7 +108,7 @@
                FT_Stream     stream,
                AFM_FontInfo  fi )
   {
-    FT_Error      error = T1_Err_Ok;
+    FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = stream->memory;
     FT_Byte*      start;
     FT_Byte*      limit;
@@ -390,7 +390,7 @@
       }
     }
 
-    return T1_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
