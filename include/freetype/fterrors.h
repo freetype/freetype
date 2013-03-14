@@ -28,9 +28,8 @@
   /*   The configuration macro FT_CONFIG_OPTION_USE_MODULE_ERRORS can be   */
   /*   defined in ftoption.h in order to make the higher byte indicate     */
   /*   the module where the error has happened (this is not compatible     */
-  /*   with standard builds of FreeType 2).  You can then use the macro    */
-  /*   FT_ERROR_BASE macro to extract the generic error code from an       */
-  /*   FT_Error value.                                                     */
+  /*   with standard builds of FreeType 2).  See the file `ftmoderr.h' for */
+  /*   more details.                                                       */
   /*                                                                       */
   /*                                                                       */
   /* II - Error Message strings                                            */
@@ -101,12 +100,6 @@
 
 #undef  FT_NEED_EXTERN_C
 
-#undef  FT_ERR_XCAT
-#undef  FT_ERR_CAT
-
-#define FT_ERR_XCAT( x, y )  x ## y
-#define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
-
 
   /* FT_ERR_PREFIX is used as a prefix for error identifiers. */
   /* By default, we use `FT_Err_'.                            */
@@ -150,11 +143,11 @@
 
 
   /* this macro is used to define an error */
-#define FT_ERRORDEF_( e, v, s )   \
+#define FT_ERRORDEF_( e, v, s )                                             \
           FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v + FT_ERR_BASE, s )
 
   /* this is only used for <module>_Err_Ok, which must be 0! */
-#define FT_NOERRORDEF_( e, v, s ) \
+#define FT_NOERRORDEF_( e, v, s )                             \
           FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v, s )
 
 

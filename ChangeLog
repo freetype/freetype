@@ -1,5 +1,16 @@
 2013-03-14  Werner Lemberg  <wl@gnu.org>
 
+	New error management macros.
+
+	* include/freetype/fterrors.h (FT_ERR_XCAT, FT_ERR_CAT): Move to...
+	* include/freetype/fttypes.h: ... this file.
+	(FT_ERR, FT_ERR_EQ, FT_ERR_NEQ, FT_MODERR_EQ, FT_MODERR_NEQ): New
+	macros.
+
+	* include/freetype/freetype.h: Updated.
+
+2013-03-14  Werner Lemberg  <wl@gnu.org>
+
 	*/*: Use FT_Err_Ok only.
 
 	This is a purely mechanical conversion.
