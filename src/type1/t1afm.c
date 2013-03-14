@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    AFM support for Type 1 fonts (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2011 by                                                 */
+/*  Copyright 1996-2011, 2013 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -18,9 +18,10 @@
 
 #include <ft2build.h>
 #include "t1afm.h"
-#include "t1errors.h"
+#include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include "t1errors.h"
 
 
   /*************************************************************************/
@@ -128,7 +129,7 @@
     p = start + 99;
     if ( p + 2 > limit )
     {
-      error = T1_Err_Unknown_File_Format;
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
     width_table_length = FT_PEEK_USHORT_LE( p );
@@ -148,7 +149,7 @@
 
     if ( p + 2 > limit )
     {
-      error = T1_Err_Unknown_File_Format;
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
@@ -156,7 +157,7 @@
     p += 2;
     if ( p + 4 * fi->NumKernPair > limit )
     {
-      error = T1_Err_Unknown_File_Format;
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
@@ -269,7 +270,7 @@
       }
     }
 
-    if ( error == T1_Err_Unknown_File_Format )
+    if ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format )
     {
       FT_Byte*  start = stream->cursor;
 
@@ -366,7 +367,7 @@
 
 
     if ( !fi )
-      return T1_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     for ( i = 0; i < fi->NumTrackKern; i++ )
     {

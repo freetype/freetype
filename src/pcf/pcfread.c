@@ -98,15 +98,15 @@ THE SOFTWARE.
 
     if ( FT_STREAM_SEEK ( 0 )                          ||
          FT_STREAM_READ_FIELDS ( pcf_toc_header, toc ) )
-      return PCF_Err_Cannot_Open_Resource;
+      return FT_THROW( Cannot_Open_Resource );
 
     if ( toc->version != PCF_FILE_VERSION                 ||
          toc->count   >  FT_ARRAY_MAX( face->toc.tables ) ||
          toc->count   == 0                                )
-      return PCF_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
 
     if ( FT_NEW_ARRAY( face->toc.tables, toc->count ) )
-      return PCF_Err_Out_Of_Memory;
+      return FT_THROW( Out_Of_Memory );
 
     tables = face->toc.tables;
     for ( n = 0; n < toc->count; n++ )
@@ -144,7 +144,7 @@ THE SOFTWARE.
 
         if ( ( tables[i].size   > tables[i + 1].offset )                  ||
              ( tables[i].offset > tables[i + 1].offset - tables[i].size ) )
-          return PCF_Err_Invalid_Offset;
+          return FT_THROW( Invalid_Offset );
       }
 
       if ( !have_change )
@@ -303,13 +303,13 @@ THE SOFTWARE.
       {
         if ( stream->pos > tables[i].offset )
         {
-          error = PCF_Err_Invalid_Stream_Skip;
+          error = FT_THROW( Invalid_Stream_Skip );
           goto Fail;
         }
 
         if ( FT_STREAM_SKIP( tables[i].offset - stream->pos ) )
         {
-          error = PCF_Err_Invalid_Stream_Skip;
+          error = FT_THROW( Invalid_Stream_Skip );
           goto Fail;
         }
 
@@ -441,7 +441,7 @@ THE SOFTWARE.
     /* rough estimate */
     if ( nprops > size / PCF_PROPERTY_SIZE )
     {
-      error = PCF_Err_Invalid_Table;
+      error = FT_THROW( Invalid_Table );
       goto Bail;
     }
 
@@ -474,7 +474,7 @@ THE SOFTWARE.
       i = 4 - ( nprops & 3 );
       if ( FT_STREAM_SKIP( i ) )
       {
-        error = PCF_Err_Invalid_Stream_Skip;
+        error = FT_THROW( Invalid_Stream_Skip );
         goto Bail;
       }
     }
@@ -491,7 +491,7 @@ THE SOFTWARE.
     /* rough estimate */
     if ( string_size > size - nprops * PCF_PROPERTY_SIZE )
     {
-      error = PCF_Err_Invalid_Table;
+      error = FT_THROW( Invalid_Table );
       goto Bail;
     }
 
@@ -516,7 +516,7 @@ THE SOFTWARE.
       if ( ( name_offset < 0 )                     ||
            ( (FT_ULong)name_offset > string_size ) )
       {
-        error = PCF_Err_Invalid_Offset;
+        error = FT_THROW( Invalid_Offset );
         goto Bail;
       }
 
@@ -535,7 +535,7 @@ THE SOFTWARE.
         if ( ( value_offset < 0 )                     ||
              ( (FT_ULong)value_offset > string_size ) )
         {
-          error = PCF_Err_Invalid_Offset;
+          error = FT_THROW( Invalid_Offset );
           goto Bail;
         }
 
@@ -587,7 +587,7 @@ THE SOFTWARE.
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )     &&
          !PCF_FORMAT_MATCH( format, PCF_COMPRESSED_METRICS ) )
-      return PCF_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
 
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
     {
@@ -604,12 +604,12 @@ THE SOFTWARE.
         (void)FT_READ_USHORT_LE( nmetrics );
     }
     if ( error )
-      return PCF_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
 
     face->nmetrics = nmetrics;
 
     if ( !nmetrics )
-      return PCF_Err_Invalid_Table;
+      return FT_THROW( Invalid_Table );
 
     FT_TRACE4(( "pcf_get_metrics:\n" ));
 
@@ -619,16 +619,16 @@ THE SOFTWARE.
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
     {
       if ( nmetrics > size / PCF_METRIC_SIZE )
-        return PCF_Err_Invalid_Table;
+        return FT_THROW( Invalid_Table );
     }
     else
     {
       if ( nmetrics > size / PCF_COMPRESSED_METRIC_SIZE )
-        return PCF_Err_Invalid_Table;
+        return FT_THROW( Invalid_Table );
     }
 
     if ( FT_NEW_ARRAY( face->metrics, nmetrics ) )
-      return PCF_Err_Out_Of_Memory;
+      return FT_THROW( Out_Of_Memory );
 
     metrics = face->metrics;
     for ( i = 0; i < nmetrics; i++ )
@@ -693,7 +693,7 @@ THE SOFTWARE.
     FT_Stream_ExitFrame( stream );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
-      return PCF_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
 
     FT_TRACE4(( "pcf_get_bitmaps:\n" ));
 
@@ -701,7 +701,7 @@ THE SOFTWARE.
 
     /* XXX: PCF_Face->nmetrics is singed FT_Long, see pcf.h */
     if ( face->nmetrics < 0 || nbitmaps != ( FT_ULong )face->nmetrics )
-      return PCF_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
 
     if ( FT_NEW_ARRAY( offsets, nbitmaps ) )
       return error;
@@ -810,7 +810,7 @@ THE SOFTWARE.
     FT_Stream_ExitFrame( stream );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
-      return PCF_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
 
     FT_TRACE4(( "pdf_get_encodings:\n" ));
 
@@ -820,7 +820,7 @@ THE SOFTWARE.
     nencoding = ( lastCol - firstCol + 1 ) * ( lastRow - firstRow + 1 );
 
     if ( FT_NEW_ARRAY( encoding, nencoding ) )
-      return PCF_Err_Out_Of_Memory;
+      return FT_THROW( Out_Of_Memory );
 
     error = FT_Stream_EnterFrame( stream, 2 * nencoding );
     if ( error )
@@ -1259,7 +1259,7 @@ THE SOFTWARE.
     {
       /* This is done to respect the behaviour of the original */
       /* PCF font driver.                                      */
-      error = PCF_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
     }
 
     return error;

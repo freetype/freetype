@@ -326,7 +326,7 @@
     if ( !psaux )
     {
       FT_ERROR(( "T1_Face_Init: cannot access `psaux' module\n" ));
-      error = T1_Err_Missing_Module;
+      error = FT_THROW( Missing_Module );
       goto Exit;
     }
 
@@ -348,7 +348,7 @@
     if ( face_index > 0 )
     {
       FT_ERROR(( "T1_Face_Init: invalid face index\n" ));
-      error = T1_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 

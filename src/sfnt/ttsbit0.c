@@ -63,7 +63,7 @@
     if ( table_size < 8 )
     {
       FT_ERROR(( "tt_face_load_sbit_strikes: table too short\n" ));
-      error = SFNT_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -81,7 +81,7 @@
     if ( version != 0x00020000UL || num_strikes >= 0x10000UL )
     {
       FT_ERROR(( "tt_face_load_sbit_strikes: invalid table version\n" ));
-      error = SFNT_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Fail;
     }
 
@@ -136,7 +136,7 @@
 
 
     if ( strike_index >= (FT_ULong)face->sbit_num_strikes )
-      return SFNT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     strike = face->sbit_table + 8 + strike_index * 48;
 
@@ -216,7 +216,7 @@
 
       if ( 8 + 48 * strike_index + 3 * 4 + 34 + 1 > face->sbit_table_size )
       {
-        error = SFNT_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
 
@@ -231,7 +231,7 @@
       if ( decoder->strike_index_array > face->sbit_table_size             ||
            decoder->strike_index_array + 8 * decoder->strike_index_count >
              face->sbit_table_size                                         )
-        error = SFNT_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
     }
 
   Exit:
@@ -257,7 +257,7 @@
 
     if ( !decoder->metrics_loaded )
     {
-      error = SFNT_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
@@ -290,7 +290,7 @@
       break;
 
     default:
-      error = SFNT_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -348,7 +348,7 @@
     return SFNT_Err_Ok;
 
   Fail:
-    return SFNT_Err_Invalid_Argument;
+    return FT_THROW( Invalid_Argument );
   }
 
 
@@ -401,13 +401,13 @@
     if ( x_pos < 0 || x_pos + width > bit_width   ||
          y_pos < 0 || y_pos + height > bit_height )
     {
-      error = SFNT_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
     if ( p + ( ( line_bits + 7 ) >> 3 ) * height > limit )
     {
-      error = SFNT_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -542,13 +542,13 @@
     if ( x_pos < 0 || x_pos + width  > bit_width  ||
          y_pos < 0 || y_pos + height > bit_height )
     {
-      error = SFNT_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
     if ( p + ( ( line_bits * height + 7 ) >> 3 ) > limit )
     {
-      error = SFNT_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -690,7 +690,7 @@
     return error;
 
   Fail:
-    error = SFNT_Err_Invalid_File_Format;
+    error = FT_THROW( Invalid_File_Format );
     goto Exit;
   }
 
@@ -713,7 +713,7 @@
     /* seek into the EBDT table now */
     if ( glyph_start + glyph_size > decoder->ebdt_size )
     {
-      error = SFNT_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
@@ -972,10 +972,10 @@
                                         y_pos );
 
   Failure:
-    return SFNT_Err_Invalid_Table;
+    return FT_THROW( Invalid_Table );
 
   NoBitmap:
-    return SFNT_Err_Invalid_Argument;
+    return FT_THROW( Invalid_Argument );
   }
 
 

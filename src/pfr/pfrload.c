@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR loader (body).                                          */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004, 2005, 2007, 2009, 2010 by                  */
+/*  Copyright 2002-2005, 2007, 2009, 2010, 2013 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -91,7 +91,7 @@
 
   Too_Short:
     FT_ERROR(( "pfr_extra_items_parse: invalid extra items table\n" ));
-    error = PFR_Err_Invalid_Table;
+    error = FT_THROW( Invalid_Table );
     goto Exit;
   }
 
@@ -236,7 +236,7 @@
       goto Exit;
 
     if ( idx >= num_log_fonts )
-      return PFR_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     if ( FT_STREAM_SKIP( idx * 5 ) ||
          FT_READ_USHORT( size )    ||
@@ -329,7 +329,7 @@
 
   Too_Short:
     FT_ERROR(( "pfr_log_font_load: invalid logical font table\n" ));
-    error = PFR_Err_Invalid_Table;
+    error = FT_THROW( Invalid_Table );
     goto Fail;
   }
 
@@ -427,7 +427,7 @@
     return error;
 
   Too_Short:
-    error = PFR_Err_Invalid_Table;
+    error = FT_THROW( Invalid_Table );
     FT_ERROR(( "pfr_extra_item_load_bitmap_info:"
                " invalid bitmap info table\n" ));
     goto Exit;
@@ -506,7 +506,7 @@
     return error;
 
   Too_Short:
-    error = PFR_Err_Invalid_Table;
+    error = FT_THROW( Invalid_Table );
     FT_ERROR(( "pfr_exta_item_load_stem_snaps:"
                " invalid stem snaps table\n" ));
     goto Exit;
@@ -604,7 +604,7 @@
   Too_Short:
     FT_FREE( item );
 
-    error = PFR_Err_Invalid_Table;
+    error = FT_THROW( Invalid_Table );
     FT_ERROR(( "pfr_extra_item_load_kerning_pairs:"
                " invalid kerning pairs table\n" ));
     goto Exit;
@@ -932,7 +932,7 @@
     return error;
 
   Too_Short:
-    error = PFR_Err_Invalid_Table;
+    error = FT_THROW( Invalid_Table );
     FT_ERROR(( "pfr_phy_font_load: invalid physical font table\n" ));
     goto Fail;
   }

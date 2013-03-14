@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines (body).                                 */
 /*                                                                         */
-/*  Copyright 2003-2007, 2009-2012 by                                      */
+/*  Copyright 2003-2007, 2009-2013 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -52,7 +52,7 @@
 
       if ( old_max >= big_max )
       {
-        error = AF_Err_Out_Of_Memory;
+        error = FT_THROW( Out_Of_Memory );
         goto Exit;
       }
 
@@ -97,7 +97,7 @@
 
       if ( old_max >= big_max )
       {
-        error = AF_Err_Out_Of_Memory;
+        error = FT_THROW( Out_Of_Memory );
         goto Exit;
       }
 
@@ -340,14 +340,14 @@
 
 
     if ( !offset )
-      return AF_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     dim = ( dimension == 0 ) ? AF_DIMENSION_HORZ : AF_DIMENSION_VERT;
 
     axis = &hints->axis[dim];
 
     if ( idx < 0 || idx >= axis->num_segments )
-      return AF_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     seg     = &axis->segments[idx];
     *offset = (dim == AF_DIMENSION_HORZ) ? seg->first->ox

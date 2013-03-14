@@ -521,7 +521,7 @@
     if ( !sfnt )
     {
       FT_ERROR(( "tt_face_init: cannot access `sfnt' module\n" ));
-      error = TT_Err_Missing_Module;
+      error = FT_THROW( Missing_Module );
       goto Exit;
     }
 
@@ -651,7 +651,7 @@
     return error;
 
   Bad_Format:
-    error = TT_Err_Unknown_File_Format;
+    error = FT_THROW( Unknown_File_Format );
     goto Exit;
   }
 
@@ -752,7 +752,7 @@
       exec = ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
 
     if ( !exec )
-      return TT_Err_Could_Not_Find_Context;
+      return FT_THROW( Could_Not_Find_Context );
 
     TT_Load_Context( exec, face, size );
 
@@ -846,7 +846,7 @@
       exec = ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
 
     if ( !exec )
-      return TT_Err_Could_Not_Find_Context;
+      return FT_THROW( Could_Not_Find_Context );
 
     TT_Load_Context( exec, face, size );
 
@@ -1180,7 +1180,7 @@
     *metrics = size->root.metrics;
 
     if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
-      return TT_Err_Invalid_PPem;
+      return FT_THROW( Invalid_PPem );
 
     /* This bit flag, if set, indicates that the ppems must be       */
     /* rounded to integers.  Nearly all TrueType fonts have this bit */
@@ -1257,7 +1257,7 @@
 
 
     if ( !TT_New_Context( driver ) )
-      return TT_Err_Could_Not_Find_Context;
+      return FT_THROW( Could_Not_Find_Context );
 
 #else
 

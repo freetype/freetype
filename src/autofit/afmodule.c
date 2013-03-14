@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter module implementation (body).                            */
 /*                                                                         */
-/*  Copyright 2003-2006, 2009, 2011-2012 by                                */
+/*  Copyright 2003-2006, 2009, 2011-2013 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -55,7 +55,7 @@
 
 
     if ( !face )
-      return AF_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     globals = (AF_FaceGlobals)face->autohint.data;
     if ( !globals )
@@ -112,7 +112,7 @@
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
                 property_name ));
-    return AF_Err_Missing_Property;
+    return FT_THROW( Missing_Property );
   }
 
 
@@ -163,7 +163,7 @@
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
                 property_name ));
-    return AF_Err_Missing_Property;
+    return FT_THROW( Missing_Property );
   }
 
 

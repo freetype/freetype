@@ -63,7 +63,7 @@
     {
       FT_ERROR(( "T42_Open_Face: cannot handle FontType %d\n",
                  type1->font_type ));
-      error = T42_Err_Unknown_File_Format;
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
@@ -74,7 +74,7 @@
     if ( !loader.charstrings.init )
     {
       FT_ERROR(( "T42_Open_Face: no charstrings array in face\n" ));
-      error = T42_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
     }
 
     loader.charstrings.init  = 0;
@@ -185,7 +185,7 @@
     if ( !psaux )
     {
       FT_ERROR(( "T42_Face_Init: cannot access `psaux' module\n" ));
-      error = T42_Err_Missing_Module;
+      error = FT_THROW( Missing_Module );
       goto Exit;
     }
 
@@ -204,7 +204,7 @@
     if ( face_index > 0 )
     {
       FT_ERROR(( "T42_Face_Init: invalid face index\n" ));
-      error = T42_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
@@ -347,8 +347,8 @@
         charmap.encoding    = FT_ENCODING_UNICODE;
 
         error = FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
-        if ( error                                                 &&
-             FT_ERROR_BASE( error) != FT_Err_No_Unicode_Glyph_Name )
+        if ( error                                                  &&
+             FT_ERROR_BASE( error ) != FT_Err_No_Unicode_Glyph_Name )
           goto Exit;
         error = FT_Err_Ok;
 
@@ -482,7 +482,7 @@
     if ( !ttmodule )
     {
       FT_ERROR(( "T42_Driver_Init: cannot access `truetype' module\n" ));
-      return T42_Err_Missing_Module;
+      return FT_THROW( Missing_Module );
     }
 
     driver->ttclazz = (FT_Driver_Class)ttmodule->clazz;

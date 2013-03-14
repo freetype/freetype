@@ -25,6 +25,8 @@
 
 
 #include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+
 #include FT_BBOX_H
 #include FT_IMAGE_H
 #include FT_OUTLINE_H
@@ -566,10 +568,10 @@ FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
 
 
     if ( !abbox )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     if ( !outline )
-      return FT_Err_Invalid_Outline;
+      return FT_THROW( Invalid_Outline );
 
     /* if outline is empty, return (0,0,0,0) */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )

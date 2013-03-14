@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType's OpenType validation module implementation (body).         */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006, 2007, 2008 by                              */
+/*  Copyright 2004-2008, 2013 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -49,7 +49,7 @@
 
 
     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, table_len );
-    if ( error == OTV_Err_Table_Missing )
+    if ( FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
       return OTV_Err_Ok;
     if ( error )
       goto Exit;

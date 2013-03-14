@@ -496,7 +496,7 @@
     if ( !sfnt )
     {
       FT_ERROR(( "cff_face_init: cannot access `sfnt' module\n" ));
-      error = CFF_Err_Missing_Module;
+      error = FT_THROW( Missing_Module );
       goto Exit;
     }
 
@@ -518,7 +518,7 @@
       if ( face->format_tag != TTAG_OTTO )  /* `OTTO'; OpenType/CFF font */
       {
         FT_TRACE2(( "  not an OpenType/CFF font\n" ));
-        error = CFF_Err_Unknown_File_Format;
+        error = FT_THROW( Unknown_File_Format );
         goto Exit;
       }
 
@@ -600,7 +600,7 @@
                    " cannot open CFF & CEF fonts\n"
                    "              "
                    " without the `PSNames' module\n" ));
-        error = CFF_Err_Missing_Module;
+        error = FT_THROW( Missing_Module );
         goto Exit;
       }
 

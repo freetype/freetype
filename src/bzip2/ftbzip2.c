@@ -8,7 +8,7 @@
 /*  parse compressed PCF fonts, as found with many X11 server              */
 /*  distributions.                                                         */
 /*                                                                         */
-/*  Copyright 2010, 2012 by                                                */
+/*  Copyright 2010, 2012, 2013 by                                          */
 /*  Joel Klinghed.                                                         */
 /*                                                                         */
 /*  Based on src/gzip/ftgzip.c, Copyright 2002 - 2010 by                   */
@@ -134,7 +134,7 @@
          head[1] != 0x5a  ||
          head[2] != 0x68  )  /* only support bzip2 (huffman) */
     {
-      error = Bzip2_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -182,7 +182,7 @@
 
     if ( BZ2_bzDecompressInit( bzstream, 0, 0 ) != BZ_OK ||
          bzstream->next_in == NULL                       )
-      error = Bzip2_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
 
   Exit:
     return error;
@@ -255,7 +255,7 @@
       size = stream->read( stream, stream->pos, zip->input,
                            FT_BZIP2_BUFFER_SIZE );
       if ( size == 0 )
-        return Bzip2_Err_Invalid_Stream_Operation;
+        return FT_THROW( Invalid_Stream_Operation );
     }
     else
     {
@@ -264,7 +264,7 @@
         size = FT_BZIP2_BUFFER_SIZE;
 
       if ( size == 0 )
-        return Bzip2_Err_Invalid_Stream_Operation;
+        return FT_THROW( Invalid_Stream_Operation );
 
       FT_MEM_COPY( zip->input, stream->base + stream->pos, size );
     }
@@ -306,12 +306,12 @@
       {
         zip->limit = (FT_Byte*)bzstream->next_out;
         if ( zip->limit == zip->cursor )
-          error = Bzip2_Err_Invalid_Stream_Operation;
+          error = FT_THROW( Invalid_Stream_Operation );
         break;
       }
       else if ( err != BZ_OK )
       {
-        error = Bzip2_Err_Invalid_Stream_Operation;
+        error = FT_THROW( Invalid_Stream_Operation );
         break;
       }
     }
@@ -502,7 +502,7 @@
     FT_UNUSED( stream );
     FT_UNUSED( source );
 
-    return Bzip2_Err_Unimplemented_Feature;
+    return FT_THROW( Unimplemented_Feature );
   }
 
 #endif /* !FT_CONFIG_OPTION_USE_BZIP2 */

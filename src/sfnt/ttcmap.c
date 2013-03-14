@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 2002-2010, 2012 by                                           */
+/*  Copyright 2002-2010, 2012, 2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3442,7 +3442,7 @@
 
 
     if ( !p || p + 4 > limit )
-      return SFNT_Err_Invalid_Table;
+      return FT_THROW( Invalid_Table );
 
     /* only recognize format 0 */
     if ( TT_NEXT_USHORT( p ) != 0 )
@@ -3451,7 +3451,7 @@
       FT_ERROR(( "tt_face_build_cmaps:"
                  " unsupported `cmap' table format = %d\n",
                  TT_PEEK_USHORT( p ) ));
-      return SFNT_Err_Invalid_Table;
+      return FT_THROW( Invalid_Table );
     }
 
     num_cmaps = TT_NEXT_USHORT( p );

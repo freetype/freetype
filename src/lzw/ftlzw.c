@@ -8,7 +8,7 @@
 /*  be used to parse compressed PCF fonts, as found with many X11 server   */
 /*  distributions.                                                         */
 /*                                                                         */
-/*  Copyright 2004-2006, 2009, 2010, 2012 by                               */
+/*  Copyright 2004-2006, 2009, 2010, 2012, 2013 by                         */
 /*  Albert Chin-A-Young.                                                   */
 /*                                                                         */
 /*  Based on code in src/gzip/ftgzip.c, Copyright 2004 by                  */
@@ -98,7 +98,7 @@
     /* head[0] && head[1] are the magic numbers */
     if ( head[0] != 0x1f ||
          head[1] != 0x9d )
-      error = LZW_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
 
   Exit:
     return error;
@@ -182,7 +182,7 @@
     zip->limit = zip->cursor + count;
 
     if ( count == 0 )
-      error = LZW_Err_Invalid_Stream_Operation;
+      error = FT_THROW( Invalid_Stream_Operation );
 
     return error;
   }
@@ -224,7 +224,7 @@
       if ( numread < delta )
       {
         /* not enough bytes */
-        error = LZW_Err_Invalid_Stream_Operation;
+        error = FT_THROW( Invalid_Stream_Operation );
         break;
       }
 
@@ -403,7 +403,7 @@
     FT_UNUSED( stream );
     FT_UNUSED( source );
 
-    return LZW_Err_Unimplemented_Feature;
+    return FT_THROW( Unimplemented_Feature );
   }
 
 

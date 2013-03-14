@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID objects manager (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2006, 2008, 2010-2011 by                                */
+/*  Copyright 1996-2006, 2008, 2010-2011, 2013 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -302,7 +302,7 @@
       if ( !psaux )
       {
         FT_ERROR(( "cid_face_init: cannot access `psaux' module\n" ));
-        error = CID_Err_Missing_Module;
+        error = FT_THROW( Missing_Module );
         goto Exit;
       }
 
@@ -337,7 +337,7 @@
     if ( face_index != 0 )
     {
       FT_ERROR(( "cid_face_init: invalid face index\n" ));
-      error = CID_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 

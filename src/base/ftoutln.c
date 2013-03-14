@@ -74,7 +74,7 @@
 
 
     if ( !outline || !func_interface )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     shift = func_interface->shift;
     delta = func_interface->delta;
@@ -287,7 +287,7 @@
     return error;
 
   Invalid_Outline:
-    return FT_Err_Invalid_Outline;
+    return FT_THROW( Invalid_Outline );
   }
 
 
@@ -301,16 +301,16 @@
 
 
     if ( !anoutline || !memory )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     *anoutline = null_outline;
 
     if ( numContours < 0                  ||
          (FT_UInt)numContours > numPoints )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     if ( numPoints > FT_OUTLINE_POINTS_MAX )
-      return FT_Err_Array_Too_Large;
+      return FT_THROW( Array_Too_Large );
 
     if ( FT_NEW_ARRAY( anoutline->points,   numPoints   ) ||
          FT_NEW_ARRAY( anoutline->tags,     numPoints   ) ||
@@ -340,7 +340,7 @@
                   FT_Outline  *anoutline )
   {
     if ( !library )
-      return FT_Err_Invalid_Library_Handle;
+      return FT_THROW( Invalid_Library_Handle );
 
     return FT_Outline_New_Internal( library->memory, numPoints,
                                     numContours, anoutline );
@@ -388,7 +388,7 @@
     }
 
   Bad:
-    return FT_Err_Invalid_Argument;
+    return FT_THROW( Invalid_Argument );
   }
 
 
@@ -404,7 +404,7 @@
     if ( !source            || !target            ||
          source->n_points   != target->n_points   ||
          source->n_contours != target->n_contours )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     if ( source == target )
       return FT_Err_Ok;
@@ -443,7 +443,7 @@
       return FT_Err_Ok;
     }
     else
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
   }
 
 
@@ -456,7 +456,7 @@
     /* check for valid `outline' in FT_Outline_Done_Internal() */
 
     if ( !library )
-      return FT_Err_Invalid_Library_Handle;
+      return FT_THROW( Invalid_Library_Handle );
 
     return FT_Outline_Done_Internal( library->memory, outline );
   }
@@ -610,10 +610,10 @@
 
 
     if ( !library )
-      return FT_Err_Invalid_Library_Handle;
+      return FT_THROW( Invalid_Library_Handle );
 
     if ( !outline || !params )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     renderer = library->cur_renderer;
     node     = library->renderers.head;
@@ -658,7 +658,7 @@
 
 
     if ( !abitmap )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     /* other checks are delayed to FT_Outline_Render() */
 
@@ -908,7 +908,7 @@
 
 
     if ( !outline )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     xstrength /= 2;
     ystrength /= 2;
@@ -919,7 +919,7 @@
     if ( orientation == FT_ORIENTATION_NONE )
     {
       if ( outline->n_contours )
-        return FT_Err_Invalid_Argument;
+        return FT_THROW( Invalid_Argument );
       else
         return FT_Err_Ok;
     }

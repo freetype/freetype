@@ -182,7 +182,7 @@
     return error;
 
   Fail:
-    error = T1_Err_Invalid_File_Format;
+    error = FT_THROW( Invalid_File_Format );
     goto Exit;
   }
 
@@ -196,7 +196,7 @@
     FT_Error  error;
 
 
-    error = T1_Err_Invalid_Argument;
+    error = FT_THROW( Invalid_Argument );
 
     if ( blend )
     {
@@ -586,7 +586,7 @@
     {
       FT_ERROR(( "parse_blend_axis_types: incorrect number of axes: %d\n",
                  num_axis ));
-      error = T1_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -613,7 +613,7 @@
       len = token->limit - token->start;
       if ( len == 0 )
       {
-        error = T1_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
 
@@ -656,7 +656,7 @@
       FT_ERROR(( "parse_blend_design_positions:"
                  " incorrect number of designs: %d\n",
                  num_designs ));
-      error = T1_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -689,7 +689,7 @@
             FT_ERROR(( "parse_blend_design_positions:"
                        " invalid number of axes: %d\n",
                        n_axis ));
-            error = T1_Err_Invalid_File_Format;
+            error = FT_THROW( Invalid_File_Format );
             goto Exit;
           }
 
@@ -702,7 +702,7 @@
         else if ( n_axis != num_axis )
         {
           FT_ERROR(( "parse_blend_design_positions: incorrect table\n" ));
-          error = T1_Err_Invalid_File_Format;
+          error = FT_THROW( Invalid_File_Format );
           goto Exit;
         }
 
@@ -752,7 +752,7 @@
     {
       FT_ERROR(( "parse_blend_design_map: incorrect number of axes: %d\n",
                  num_axis ));
-      error = T1_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -783,7 +783,7 @@
       if ( num_points <= 0 || num_points > T1_MAX_MM_MAP_POINTS )
       {
         FT_ERROR(( "parse_blend_design_map: incorrect table\n" ));
-        error = T1_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
 
@@ -844,7 +844,7 @@
       FT_ERROR(( "parse_weight_vector:"
                  " incorrect number of designs: %d\n",
                  num_designs ));
-      error = T1_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -861,7 +861,7 @@
                  " /BlendDesignPosition and /WeightVector have\n"
                  "                    "
                  " different number of elements\n" ));
-      error = T1_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
@@ -1082,7 +1082,7 @@
     if( !incremental )
     {
       FT_ERROR(( "read_binary_data: invalid size field\n" ));
-      parser->root.error = T1_Err_Invalid_File_Format;
+      parser->root.error = FT_THROW( Invalid_File_Format );
     }
 
     return 0;
@@ -1109,7 +1109,7 @@
 
     if ( result < 0 )
     {
-      parser->root.error = T1_Err_Invalid_File_Format;
+      parser->root.error = FT_THROW( Invalid_File_Format );
       return;
     }
 
@@ -1118,7 +1118,7 @@
     if ( temp_scale == 0 )
     {
       FT_ERROR(( "t1_parse_font_matrix: invalid font matrix\n" ));
-      parser->root.error = T1_Err_Invalid_File_Format;
+      parser->root.error = FT_THROW( Invalid_File_Format );
       return;
     }
 
@@ -1166,7 +1166,7 @@
     if ( cur >= limit )
     {
       FT_ERROR(( "parse_encoding: out of bounds\n" ));
-      parser->root.error = T1_Err_Invalid_File_Format;
+      parser->root.error = FT_THROW( Invalid_File_Format );
       return;
     }
 
@@ -1312,7 +1312,7 @@
             /* specification (it might be an encoding for a CID type1  */
             /* font, however), so we conclude that this font is NOT a  */
             /* type1 font.                                             */
-            parser->root.error = T1_Err_Unknown_File_Format;
+            parser->root.error = FT_THROW( Unknown_File_Format );
             return;
           }
         }
@@ -1375,7 +1375,7 @@
       T1_Skip_Spaces  ( parser );
       if ( parser->root.cursor >= parser->root.limit ||
            *parser->root.cursor != ']'               )
-        parser->root.error = T1_Err_Invalid_File_Format;
+        parser->root.error = FT_THROW( Invalid_File_Format );
       return;
     }
 
@@ -1454,7 +1454,7 @@
         /* least contain a `return'), but we support them anyway       */
         if ( size < face->type1.private_dict.lenIV )
         {
-          error = T1_Err_Invalid_File_Format;
+          error = FT_THROW( Invalid_File_Format );
           goto Fail;
         }
 
@@ -1510,7 +1510,7 @@
     num_glyphs = (FT_Int)T1_ToInt( parser );
     if ( num_glyphs < 0 )
     {
-      error = T1_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
       goto Fail;
     }
 
@@ -1601,7 +1601,7 @@
 
         if ( cur + 1 >= limit )
         {
-          error = T1_Err_Invalid_File_Format;
+          error = FT_THROW( Invalid_File_Format );
           goto Fail;
         }
 
@@ -1641,7 +1641,7 @@
 
           if ( size <= face->type1.private_dict.lenIV )
           {
-            error = T1_Err_Invalid_File_Format;
+            error = FT_THROW( Invalid_File_Format );
             goto Fail;
           }
 
@@ -1898,7 +1898,7 @@
 
         parser->root.cursor = start_binary;
         if ( !read_binary_data( parser, &s, &b, IS_INCREMENTAL ) )
-          return T1_Err_Invalid_File_Format;
+          return FT_THROW( Invalid_File_Format );
         have_integer = 0;
       }
 
@@ -1911,7 +1911,7 @@
 
         parser->root.cursor = start_binary;
         if ( !read_binary_data( parser, &s, &b, IS_INCREMENTAL ) )
-          return T1_Err_Invalid_File_Format;
+          return FT_THROW( Invalid_File_Format );
         have_integer = 0;
       }
 
@@ -2190,7 +2190,7 @@
       if ( !loader.charstrings.init )
       {
         FT_ERROR(( "T1_Open_Face: no `/CharStrings' array in face\n" ));
-        error = T1_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
       }
 
     loader.charstrings.init  = 0;

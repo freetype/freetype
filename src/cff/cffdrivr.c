@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2012 by                                                 */
+/*  Copyright 1996-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -160,7 +160,7 @@
 
 
     if ( !slot )
-      return CFF_Err_Invalid_Slot_Handle;
+      return FT_THROW( Invalid_Slot_Handle );
 
     /* check whether we want a scaled outline or bitmap */
     if ( !size )
@@ -174,7 +174,7 @@
     {
       /* these two objects must have the same parent */
       if ( cffsize->face != cffslot->face )
-        return CFF_Err_Invalid_Face_Handle;
+        return FT_THROW( Invalid_Face_Handle );
     }
 
     /* now load the glyph outline if necessary */
@@ -239,7 +239,7 @@
                  " cannot get glyph name from CFF & CEF fonts\n"
                  "                   "
                  " without the `PSNames' module\n" ));
-      error = CFF_Err_Missing_Module;
+      error = FT_THROW( Missing_Module );
       goto Exit;
     }
 
@@ -405,8 +405,9 @@
   {
     FT_CMap   cmap  = FT_CMAP( charmap );
     FT_Error  error = CFF_Err_Ok;
-    FT_Face    face    = FT_CMAP_FACE( cmap );
-    FT_Library library = FT_FACE_LIBRARY( face );
+
+    FT_Face     face    = FT_CMAP_FACE( cmap );
+    FT_Library  library = FT_FACE_LIBRARY( face );
 
 
     cmap_info->language = 0;
@@ -455,7 +456,7 @@
 
       if ( dict->cid_registry == 0xFFFFU )
       {
-        error = CFF_Err_Invalid_Argument;
+        error = FT_THROW( Invalid_Argument );
         goto Fail;
       }
 
@@ -537,13 +538,13 @@
 
       if ( dict->cid_registry == 0xFFFFU )
       {
-        error = CFF_Err_Invalid_Argument;
+        error = FT_THROW( Invalid_Argument );
         goto Fail;
       }
 
       if ( glyph_index > cff->num_glyphs )
       {
-        error = CFF_Err_Invalid_Argument;
+        error = FT_THROW( Invalid_Argument );
         goto Fail;
       }
 

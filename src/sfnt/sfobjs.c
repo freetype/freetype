@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2008, 2010-2012 by                                      */
+/*  Copyright 1996-2008, 2010-2013 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -386,7 +386,7 @@
          tag != 0x00020000UL )
     {
       FT_TRACE2(( "  not a font using the SFNT container format\n" ));
-      return SFNT_Err_Unknown_File_Format;
+      return FT_THROW( Unknown_File_Format );
     }
 
     face->ttc_header.tag = TTAG_ttcf;
@@ -402,7 +402,7 @@
         return error;
 
       if ( face->ttc_header.count == 0 )
-        return SFNT_Err_Invalid_Table;
+        return FT_THROW( Invalid_Table );
 
       /* a rough size estimate: let's conservatively assume that there   */
       /* is just a single table info in each subfont header (12 + 16*1 = */
@@ -410,7 +410,7 @@
       /* size of the TTC header plus `28*count' bytes for all subfont    */
       /* headers                                                         */
       if ( (FT_ULong)face->ttc_header.count > stream->size / ( 28 + 4 ) )
-        return SFNT_Err_Array_Too_Large;
+        return FT_THROW( Array_Too_Large );
 
       /* now read the offsets of each font in the file */
       if ( FT_NEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) )
@@ -465,7 +465,7 @@
       if ( !sfnt )
       {
         FT_ERROR(( "sfnt_init_face: cannot access `sfnt' module\n" ));
-        return SFNT_Err_Missing_Module;
+        return FT_THROW( Missing_Module );
       }
 
       face->sfnt       = sfnt;
@@ -486,7 +486,7 @@
       face_index = 0;
 
     if ( face_index >= face->ttc_header.count )
-      return SFNT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     if ( FT_STREAM_SEEK( face->ttc_header.offsets[face_index] ) )
       return error;
@@ -628,7 +628,7 @@
 
     if ( face->header.Units_Per_EM == 0 )
     {
-      error = SFNT_Err_Invalid_Table;
+      error = FT_THROW( Invalid_Table );
 
       goto Exit;
     }
@@ -658,7 +658,7 @@
         LOADM_( hmtx, 0 );
         if ( error == SFNT_Err_Table_Missing )
         {
-          error = SFNT_Err_Hmtx_Table_Missing;
+          error = FT_THROW( Hmtx_Table_Missing );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
           /* If this is an incrementally loaded font and there are */
@@ -685,7 +685,7 @@
         }
         else
         {
-          error = SFNT_Err_Horiz_Header_Missing;
+          error = FT_THROW( Horiz_Header_Missing );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
           /* If this is an incrementally loaded font and there are */

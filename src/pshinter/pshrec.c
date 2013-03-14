@@ -823,7 +823,7 @@
       break;
 
     default:
-      hints->error     = PSH_Err_Invalid_Argument;
+      hints->error     = FT_THROW( Invalid_Argument );
       hints->hint_type = hint_type;
 
       FT_TRACE0(( "ps_hints_open: invalid charstring type\n" ));
@@ -938,7 +938,7 @@
       else
       {
         FT_ERROR(( "ps_hints_t1stem3: called with invalid hint type\n" ));
-        error = PSH_Err_Invalid_Argument;
+        error = FT_THROW( Invalid_Argument );
         goto Fail;
       }
     }
@@ -979,7 +979,7 @@
       else
       {
         /* invalid hint type */
-        error = PSH_Err_Invalid_Argument;
+        error = FT_THROW( Invalid_Argument );
         goto Fail;
       }
     }

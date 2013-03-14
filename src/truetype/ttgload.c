@@ -314,7 +314,7 @@
 
 
     if ( p + 10 > limit )
-      return TT_Err_Invalid_Outline;
+      return FT_THROW( Invalid_Outline );
 
     loader->n_contours = FT_NEXT_SHORT( p );
 
@@ -415,14 +415,14 @@
     {
       FT_TRACE0(( "TT_Load_Simple_Glyph: too many instructions (%d)\n",
                   n_ins ));
-      error = TT_Err_Too_Many_Hints;
+      error = FT_THROW( Too_Many_Hints );
       goto Fail;
     }
 
     if ( ( limit - p ) < n_ins )
     {
       FT_TRACE0(( "TT_Load_Simple_Glyph: instruction count mismatch\n" ));
-      error = TT_Err_Too_Many_Hints;
+      error = FT_THROW( Too_Many_Hints );
       goto Fail;
     }
 
@@ -552,7 +552,7 @@
     return error;
 
   Invalid_Outline:
-    error = TT_Err_Invalid_Outline;
+    error = FT_THROW( Invalid_Outline );
     goto Fail;
   }
 
@@ -673,7 +673,7 @@
     return error;
 
   Invalid_Composite:
-    error = TT_Err_Invalid_Composite;
+    error = FT_THROW( Invalid_Composite );
     goto Fail;
   }
 
@@ -1024,7 +1024,7 @@
       l += num_base_points;
       if ( k >= num_base_points ||
            l >= num_points      )
-        return TT_Err_Invalid_Composite;
+        return FT_THROW( Invalid_Composite );
 
       p1 = gloader->base.outline.points + k;
       p2 = gloader->base.outline.points + l;
@@ -1187,7 +1187,7 @@
           FT_TRACE1(( "TT_Process_Composite_Glyph: "
                       "too many instructions (%d) for glyph with length %d\n",
                       n_ins, loader->byte_len ));
-          return TT_Err_Too_Many_Hints;
+          return FT_THROW( Too_Many_Hints );
         }
 
         tmp = loader->exec->glyphSize;
@@ -1280,14 +1280,14 @@
     if ( recurse_count > 1                                   &&
          recurse_count > face->max_profile.maxComponentDepth )
     {
-      error = TT_Err_Invalid_Composite;
+      error = FT_THROW( Invalid_Composite );
       goto Exit;
     }
 
     /* check glyph index */
     if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
-      error = TT_Err_Invalid_Glyph_Index;
+      error = FT_THROW( Invalid_Glyph_Index );
       goto Exit;
     }
 
@@ -1351,7 +1351,7 @@
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
       {
         FT_TRACE2(( "no `glyf' table but non-zero `loca' entry\n" ));
-        error = TT_Err_Invalid_Table;
+        error = FT_THROW( Invalid_Table );
         goto Exit;
       }
 
@@ -1632,7 +1632,7 @@
     else
     {
       /* invalid composite count (negative but not -1) */
-      error = TT_Err_Invalid_Outline;
+      error = FT_THROW( Invalid_Outline );
       goto Exit;
     }
 
@@ -1933,7 +1933,7 @@
       exec = size->debug ? size->context
                          : ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
       if ( !exec )
-        return TT_Err_Could_Not_Find_Context;
+        return FT_THROW( Could_Not_Find_Context );
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
 
@@ -2076,7 +2076,7 @@
       FT_Error  error = face->goto_table( face, TTAG_glyf, stream, 0 );
 
 
-      if ( error == TT_Err_Table_Missing )
+      if ( FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
         loader->glyf_offset = 0;
       else if ( error )
       {
@@ -2177,10 +2177,10 @@
 
     /* if FT_LOAD_NO_SCALE is not set, `ttmetrics' must be valid */
     if ( !( load_flags & FT_LOAD_NO_SCALE ) && !size->ttmetrics.valid )
-      return TT_Err_Invalid_Size_Handle;
+      return FT_THROW( Invalid_Size_Handle );
 
     if ( load_flags & FT_LOAD_SBITS_ONLY )
-      return TT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     error = tt_loader_init( &loader, size, glyph, load_flags, FALSE );
     if ( error )

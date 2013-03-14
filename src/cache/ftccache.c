@@ -4,8 +4,7 @@
 /*                                                                         */
 /*    The FreeType internal cache interface (body).                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010,   */
-/*            2011 by                                                      */
+/*  Copyright 2000-2007, 2009-2011, 2013 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -500,7 +499,7 @@
 
 
     if ( cache == NULL || anode == NULL )
-      return FTC_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     /* Go to the `top' node of the list sharing same masked hash */
     bucket = pnode = FTC_NODE__TOP_FOR_HASH( cache, hash );

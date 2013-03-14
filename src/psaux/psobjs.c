@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auxiliary functions for PostScript fonts (body).                     */
 /*                                                                         */
-/*  Copyright 1996-2012 by                                                 */
+/*  Copyright 1996-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -173,13 +173,13 @@
     if ( idx < 0 || idx >= table->max_elems )
     {
       FT_ERROR(( "ps_table_add: invalid index\n" ));
-      return PSaux_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
     }
 
     if ( length < 0 )
     {
       FT_ERROR(( "ps_table_add: invalid length\n" ));
-      return PSaux_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
     }
 
     /* grow the base block if needed */
@@ -433,7 +433,7 @@
     if ( cur < limit && *cur != '>' )
     {
       FT_ERROR(( "skip_string: missing closing delimiter `>'\n" ));
-      err = PSaux_Err_Invalid_File_Format;
+      err = FT_THROW( Invalid_File_Format );
     }
     else
       cur++;
@@ -494,7 +494,7 @@
 
   end:
     if ( embed != 0 )
-      error = PSaux_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
 
     *acur = cur;
 
@@ -567,7 +567,7 @@
       {
         FT_ERROR(( "ps_parser_skip_PS_token:"
                    " unexpected closing delimiter `>'\n" ));
-        error = PSaux_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
       cur++;
@@ -597,7 +597,7 @@
                  " but invalid at this point\n",
                  *cur ));
 
-      error = PSaux_Err_Invalid_File_Format;
+      error = FT_THROW( Invalid_File_Format );
     }
 
     parser->error  = error;
@@ -1167,7 +1167,7 @@
                        "                     "
                        " but found token of type %d instead\n",
                        token.type ));
-            error = PSaux_Err_Invalid_File_Format;
+            error = FT_THROW( Invalid_File_Format );
             goto Exit;
           }
 
@@ -1204,7 +1204,7 @@
           {
             FT_ERROR(( "ps_parser_load_field:"
                        " expected four integers in bounding box\n" ));
-            error = PSaux_Err_Invalid_File_Format;
+            error = FT_THROW( Invalid_File_Format );
             goto Exit;
           }
 
@@ -1241,7 +1241,7 @@
                                 : ( i == 1 ? "second"
                                            : ( i == 2 ? "third"
                                                       : "fourth" ) ) ));
-              error = PSaux_Err_Invalid_File_Format;
+              error = FT_THROW( Invalid_File_Format );
               goto Exit;
             }
 
@@ -1282,7 +1282,7 @@
     return error;
 
   Fail:
-    error = PSaux_Err_Invalid_File_Format;
+    error = FT_THROW( Invalid_File_Format );
     goto Exit;
   }
 
@@ -1387,7 +1387,7 @@
       if ( *cur != '<' )
       {
         FT_ERROR(( "ps_parser_to_bytes: Missing starting delimiter `<'\n" ));
-        error = PSaux_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
 
@@ -1404,7 +1404,7 @@
       if ( cur < parser->limit && *cur != '>' )
       {
         FT_ERROR(( "ps_parser_to_bytes: Missing closing delimiter `>'\n" ));
-        error = PSaux_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
 
@@ -1647,7 +1647,7 @@
     if ( !outline )
     {
       FT_ERROR(( "t1_builder_add_contour: no outline to add points to\n" ));
-      return PSaux_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
     }
 
     if ( !builder->load_points )

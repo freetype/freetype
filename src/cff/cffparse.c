@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CFF token stream parser (body)                                       */
 /*                                                                         */
-/*  Copyright 1996-2004, 2007-2012 by                                      */
+/*  Copyright 1996-2004, 2007-2013 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1161,15 +1161,15 @@
     return error;
 
   Stack_Overflow:
-    error = CFF_Err_Invalid_Argument;
+    error = FT_THROW( Invalid_Argument );
     goto Exit;
 
   Stack_Underflow:
-    error = CFF_Err_Invalid_Argument;
+    error = FT_THROW( Invalid_Argument );
     goto Exit;
 
   Syntax_Error:
-    error = CFF_Err_Invalid_Argument;
+    error = FT_THROW( Invalid_Argument );
     goto Exit;
   }
 

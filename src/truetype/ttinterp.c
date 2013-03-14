@@ -1699,7 +1699,7 @@
 
     if ( aRange < 1 || aRange > 3 )
     {
-      CUR.error = TT_Err_Bad_Argument;
+      CUR.error = FT_THROW( Bad_Argument );
       return FAILURE;
     }
 
@@ -1707,7 +1707,7 @@
 
     if ( range->base == NULL )     /* invalid coderange */
     {
-      CUR.error = TT_Err_Invalid_CodeRange;
+      CUR.error = FT_THROW( Invalid_CodeRange );
       return FAILURE;
     }
 
@@ -1717,7 +1717,7 @@
 
     if ( aIP > range->size )
     {
-      CUR.error = TT_Err_Code_Overflow;
+      CUR.error = FT_THROW( Code_Overflow );
       return FAILURE;
     }
 
@@ -2670,7 +2670,7 @@
          BOUNDS( aIdx2, CUR.zp1.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return FAILURE;
     }
 
@@ -2926,10 +2926,10 @@
     CUR.func_round = (TT_Round_Func)Round_Super_45;
 
 
-#define DO_SLOOP                       \
-    if ( args[0] < 0 )                 \
-      CUR.error = TT_Err_Bad_Argument; \
-    else                               \
+#define DO_SLOOP                            \
+    if ( args[0] < 0 )                      \
+      CUR.error = FT_THROW( Bad_Argument ); \
+    else                                    \
       CUR.GS.loop = args[0];
 
 
@@ -3011,21 +3011,21 @@
     args[0] = CUR.top;
 
 
-#define DO_CINDEX                             \
-  {                                           \
-    FT_Long  L;                               \
-                                              \
-                                              \
-    L = args[0];                              \
-                                              \
-    if ( L <= 0 || L > CUR.args )             \
-    {                                         \
-      if ( CUR.pedantic_hinting )             \
-        CUR.error = TT_Err_Invalid_Reference; \
-      args[0] = 0;                            \
-    }                                         \
-    else                                      \
-      args[0] = CUR.stack[CUR.args - L];      \
+#define DO_CINDEX                                  \
+  {                                                \
+    FT_Long  L;                                    \
+                                                   \
+                                                   \
+    L = args[0];                                   \
+                                                   \
+    if ( L <= 0 || L > CUR.args )                  \
+    {                                              \
+      if ( CUR.pedantic_hinting )                  \
+        CUR.error = FT_THROW( Invalid_Reference ); \
+      args[0] = 0;                                 \
+    }                                              \
+    else                                           \
+      args[0] = CUR.stack[CUR.args - L];           \
   }
 
 
@@ -3033,24 +3033,24 @@
     if ( args[1] != 0 )                                           \
     {                                                             \
       if ( args[0] == 0 && CUR.args == 0 )                        \
-        CUR.error = TT_Err_Bad_Argument;                          \
+        CUR.error = FT_THROW( Bad_Argument );                     \
       CUR.IP += args[0];                                          \
       if ( CUR.IP < 0                                          || \
            ( CUR.callTop > 0                                 &&   \
              CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
-        CUR.error = TT_Err_Bad_Argument;                          \
+        CUR.error = FT_THROW( Bad_Argument );                     \
       CUR.step_ins = FALSE;                                       \
     }
 
 
 #define DO_JMPR                                                 \
     if ( args[0] == 0 && CUR.args == 0 )                        \
-      CUR.error = TT_Err_Bad_Argument;                          \
+      CUR.error = FT_THROW( Bad_Argument );                     \
     CUR.IP += args[0];                                          \
     if ( CUR.IP < 0                                          || \
          ( CUR.callTop > 0                                 &&   \
            CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
-      CUR.error = TT_Err_Bad_Argument;                          \
+      CUR.error = FT_THROW( Bad_Argument );                     \
     CUR.step_ins = FALSE;
 
 
@@ -3058,12 +3058,12 @@
     if ( args[1] == 0 )                                           \
     {                                                             \
       if ( args[0] == 0 && CUR.args == 0 )                        \
-        CUR.error = TT_Err_Bad_Argument;                          \
+        CUR.error = FT_THROW( Bad_Argument );                     \
       CUR.IP += args[0];                                          \
       if ( CUR.IP < 0                                          || \
            ( CUR.callTop > 0                                 &&   \
              CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
-        CUR.error = TT_Err_Bad_Argument;                          \
+        CUR.error = FT_THROW( Bad_Argument );                     \
       CUR.step_ins = FALSE;                                       \
     }
 
@@ -3122,7 +3122,7 @@
 
 #define DO_DIV                                               \
     if ( args[1] == 0 )                                      \
-      CUR.error = TT_Err_Divide_By_Zero;                     \
+      CUR.error = FT_THROW( Divide_By_Zero );                \
     else                                                     \
       args[0] = FT_MulDiv_No_Round( args[0], 64L, args[1] );
 
@@ -3276,8 +3276,8 @@
    }
 
 
-#define DO_DEBUG                     \
-    CUR.error = TT_Err_Debug_OpCode;
+#define DO_DEBUG                          \
+    CUR.error = FT_THROW( Debug_OpCode );
 
 
 #define DO_ROUND                                                   \
@@ -3305,10 +3305,10 @@
 
 
 #undef  ARRAY_BOUND_ERROR
-#define ARRAY_BOUND_ERROR                   \
-    {                                       \
-      CUR.error = TT_Err_Invalid_Reference; \
-      return;                               \
+#define ARRAY_BOUND_ERROR                        \
+    {                                            \
+      CUR.error = FT_THROW( Invalid_Reference ); \
+      return;                                    \
     }
 
 
@@ -4287,7 +4287,7 @@
     if ( L <= 0 || L > CUR.args )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
     }
     else
     {
@@ -4357,7 +4357,7 @@
     }
 
   Fail_Overflow:
-    CUR.error = TT_Err_Code_Overflow;
+    CUR.error = FT_THROW( Code_Overflow );
     return FAILURE;
   }
 
@@ -4568,7 +4568,7 @@
       /* check that there is enough room for new functions */
       if ( CUR.numFDefs >= CUR.maxFDefs )
       {
-        CUR.error = TT_Err_Too_Many_Function_Defs;
+        CUR.error = FT_THROW( Too_Many_Function_Defs );
         return;
       }
       CUR.numFDefs++;
@@ -4578,7 +4578,7 @@
     /* func # must be within unsigned 16-bit integer */
     if ( n > 0xFFFFU )
     {
-      CUR.error = TT_Err_Too_Many_Function_Defs;
+      CUR.error = FT_THROW( Too_Many_Function_Defs );
       return;
     }
 
@@ -4704,7 +4704,7 @@
       {
       case 0x89:    /* IDEF */
       case 0x2C:    /* FDEF */
-        CUR.error = TT_Err_Nested_DEFS;
+        CUR.error = FT_THROW( Nested_DEFS );
         return;
 
       case 0x2D:   /* ENDF */
@@ -4731,7 +4731,7 @@
 
     if ( CUR.callTop <= 0 )     /* We encountered an ENDF without a call */
     {
-      CUR.error = TT_Err_ENDF_In_Exec_Stream;
+      CUR.error = FT_THROW( ENDF_In_Exec_Stream );
       return;
     }
 
@@ -4820,7 +4820,7 @@
     /* check the call stack */
     if ( CUR.callTop >= CUR.callSize )
     {
-      CUR.error = TT_Err_Stack_Overflow;
+      CUR.error = FT_THROW( Stack_Overflow );
       return;
     }
 
@@ -4846,7 +4846,7 @@
     return;
 
   Fail:
-    CUR.error = TT_Err_Invalid_Reference;
+    CUR.error = FT_THROW( Invalid_Reference );
   }
 
 
@@ -4906,7 +4906,7 @@
     /* check stack */
     if ( CUR.callTop >= CUR.callSize )
     {
-      CUR.error = TT_Err_Stack_Overflow;
+      CUR.error = FT_THROW( Stack_Overflow );
       return;
     }
 
@@ -4934,7 +4934,7 @@
     return;
 
   Fail:
-    CUR.error = TT_Err_Invalid_Reference;
+    CUR.error = FT_THROW( Invalid_Reference );
   }
 
 
@@ -4965,7 +4965,7 @@
       /* check that there is enough room for a new instruction */
       if ( CUR.numIDefs >= CUR.maxIDefs )
       {
-        CUR.error = TT_Err_Too_Many_Instruction_Defs;
+        CUR.error = FT_THROW( Too_Many_Instruction_Defs );
         return;
       }
       CUR.numIDefs++;
@@ -4974,7 +4974,7 @@
     /* opcode must be unsigned 8-bit integer */
     if ( 0 > args[0] || args[0] > 0x00FF )
     {
-      CUR.error = TT_Err_Too_Many_Instruction_Defs;
+      CUR.error = FT_THROW( Too_Many_Instruction_Defs );
       return;
     }
 
@@ -4995,7 +4995,7 @@
       {
       case 0x89:   /* IDEF */
       case 0x2C:   /* FDEF */
-        CUR.error = TT_Err_Nested_DEFS;
+        CUR.error = FT_THROW( Nested_DEFS );
         return;
       case 0x2D:   /* ENDF */
         return;
@@ -5029,7 +5029,7 @@
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
-      CUR.error = TT_Err_Stack_Overflow;
+      CUR.error = FT_THROW( Stack_Overflow );
       return;
     }
 
@@ -5056,7 +5056,7 @@
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
-      CUR.error = TT_Err_Stack_Overflow;
+      CUR.error = FT_THROW( Stack_Overflow );
       return;
     }
 
@@ -5086,7 +5086,7 @@
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
-      CUR.error = TT_Err_Stack_Overflow;
+      CUR.error = FT_THROW( Stack_Overflow );
       return;
     }
 
@@ -5111,7 +5111,7 @@
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
-      CUR.error = TT_Err_Stack_Overflow;
+      CUR.error = FT_THROW( Stack_Overflow );
       return;
     }
 
@@ -5154,7 +5154,7 @@
     if ( BOUNDSL( L, CUR.zp2.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       R = 0;
     }
     else
@@ -5191,7 +5191,7 @@
     if ( BOUNDS( L, CUR.zp2.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5235,7 +5235,7 @@
          BOUNDS( K, CUR.zp1.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       D = 0;
     }
     else
@@ -5311,7 +5311,7 @@
          BOUNDS( p1, CUR.zp2.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5389,7 +5389,7 @@
 
     default:
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5418,7 +5418,7 @@
 
     default:
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5447,7 +5447,7 @@
 
     default:
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5476,7 +5476,7 @@
 
     default:
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5507,7 +5507,7 @@
     if ( K < 1 || K > 2 )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5605,7 +5605,7 @@
     if ( CUR.top < CUR.GS.loop )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Too_Few_Arguments;
+        CUR.error = FT_THROW( Too_Few_Arguments );
       goto Fail;
     }
 
@@ -5619,7 +5619,7 @@
       {
         if ( CUR.pedantic_hinting )
         {
-          CUR.error = TT_Err_Invalid_Reference;
+          CUR.error = FT_THROW( Invalid_Reference );
           return;
         }
       }
@@ -5654,7 +5654,7 @@
          BOUNDS( L, CUR.pts.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5682,7 +5682,7 @@
          BOUNDS( L, CUR.pts.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5716,7 +5716,7 @@
     if ( BOUNDS( p, zp.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       *refp = 0;
       return FAILURE;
     }
@@ -5819,7 +5819,7 @@
     if ( CUR.top < CUR.GS.loop )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -5835,7 +5835,7 @@
       {
         if ( CUR.pedantic_hinting )
         {
-          CUR.error = TT_Err_Invalid_Reference;
+          CUR.error = FT_THROW( Invalid_Reference );
           return;
         }
       }
@@ -5878,7 +5878,7 @@
     if ( BOUNDS( contour, bounds ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5926,7 +5926,7 @@
     if ( BOUNDS( args[0], 2 ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -5972,7 +5972,7 @@
     if ( CUR.top < CUR.GS.loop + 1 )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -6007,7 +6007,7 @@
       {
         if ( CUR.pedantic_hinting )
         {
-          CUR.error = TT_Err_Invalid_Reference;
+          CUR.error = FT_THROW( Invalid_Reference );
           return;
         }
       }
@@ -6118,7 +6118,7 @@
          BOUNDS( CUR.GS.rp0, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -6171,7 +6171,7 @@
     if ( BOUNDS( point, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -6231,7 +6231,7 @@
          BOUNDSL( cvtEntry, CUR.cvtSize )      )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -6333,7 +6333,7 @@
          BOUNDS( CUR.GS.rp0, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -6481,7 +6481,7 @@
          BOUNDS( CUR.GS.rp0, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -6685,7 +6685,7 @@
          CUR.iup_called                                           &&
          ( CUR.sph_tweak_flags & SPH_TWEAK_NO_ALIGNRP_AFTER_IUP ) )
     {
-      CUR.error = TT_Err_Invalid_Reference;
+      CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
@@ -6694,7 +6694,7 @@
          BOUNDS( CUR.GS.rp0, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -6708,7 +6708,7 @@
       {
         if ( CUR.pedantic_hinting )
         {
-          CUR.error = TT_Err_Invalid_Reference;
+          CUR.error = FT_THROW( Invalid_Reference );
           return;
         }
       }
@@ -6767,7 +6767,7 @@
          BOUNDS( point, CUR.zp2.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -6843,7 +6843,7 @@
          BOUNDS( p2, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -6878,7 +6878,7 @@
     if ( CUR.top < CUR.GS.loop )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -6892,7 +6892,7 @@
     if ( BOUNDS( CUR.GS.rp1, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       goto Fail;
     }
 
@@ -6948,7 +6948,7 @@
       {
         if ( CUR.pedantic_hinting )
         {
-          CUR.error = TT_Err_Invalid_Reference;
+          CUR.error = FT_THROW( Invalid_Reference );
           return;
         }
         continue;
@@ -7022,7 +7022,7 @@
     if ( BOUNDS( point, CUR.zp0.n_points ) )
     {
       if ( CUR.pedantic_hinting )
-        CUR.error = TT_Err_Invalid_Reference;
+        CUR.error = FT_THROW( Invalid_Reference );
       return;
     }
 
@@ -7304,7 +7304,7 @@
       if ( CUR.args < n )
       {
         if ( CUR.pedantic_hinting )
-          CUR.error = TT_Err_Too_Few_Arguments;
+          CUR.error = FT_THROW( Too_Few_Arguments );
         n = CUR.args;
       }
 
@@ -7322,7 +7322,7 @@
       if ( CUR.args < 2 )
       {
         if ( CUR.pedantic_hinting )
-          CUR.error = TT_Err_Too_Few_Arguments;
+          CUR.error = FT_THROW( Too_Few_Arguments );
         CUR.args = 0;
         goto Fail;
       }
@@ -7431,7 +7431,7 @@
       }
       else
         if ( CUR.pedantic_hinting )
-          CUR.error = TT_Err_Invalid_Reference;
+          CUR.error = FT_THROW( Invalid_Reference );
     }
 
   Fail:
@@ -7463,7 +7463,7 @@
       if ( CUR.args < n )
       {
         if ( CUR.pedantic_hinting )
-          CUR.error = TT_Err_Too_Few_Arguments;
+          CUR.error = FT_THROW( Too_Few_Arguments );
         n = CUR.args;
       }
 
@@ -7480,7 +7480,7 @@
       if ( CUR.args < 2 )
       {
         if ( CUR.pedantic_hinting )
-          CUR.error = TT_Err_Too_Few_Arguments;
+          CUR.error = FT_THROW( Too_Few_Arguments );
         CUR.args = 0;
         goto Fail;
       }
@@ -7494,7 +7494,7 @@
       {
         if ( CUR.pedantic_hinting )
         {
-          CUR.error = TT_Err_Invalid_Reference;
+          CUR.error = FT_THROW( Invalid_Reference );
           return;
         }
       }
@@ -7684,7 +7684,7 @@
 
         if ( CUR.callTop >= CUR.callSize )
         {
-          CUR.error = TT_Err_Stack_Overflow;
+          CUR.error = FT_THROW( Stack_Overflow );
           return;
         }
 
@@ -7703,7 +7703,7 @@
       }
     }
 
-    CUR.error = TT_Err_Invalid_Opcode;
+    CUR.error = FT_THROW( Invalid_Opcode );
   }
 
 
@@ -8092,7 +8092,7 @@
 
         if ( CUR.pedantic_hinting )
         {
-          CUR.error = TT_Err_Too_Few_Arguments;
+          CUR.error = FT_THROW( Too_Few_Arguments );
           goto LErrorLabel_;
         }
 
@@ -8109,7 +8109,7 @@
       /* statement.                                                     */
       if ( CUR.new_top > CUR.stackSize )
       {
-        CUR.error = TT_Err_Stack_Overflow;
+        CUR.error = FT_THROW( Stack_Overflow );
         goto LErrorLabel_;
       }
 
@@ -8397,7 +8397,7 @@
           break;
 
       Set_Invalid_Ref:
-            CUR.error = TT_Err_Invalid_Reference;
+            CUR.error = FT_THROW( Invalid_Reference );
           break;
 
         case 0x43:  /* RS */
@@ -8712,7 +8712,7 @@
 
                 if ( CUR.callTop >= CUR.callSize )
                 {
-                  CUR.error = TT_Err_Invalid_Reference;
+                  CUR.error = FT_THROW( Invalid_Reference );
                   goto LErrorLabel_;
                 }
 
@@ -8732,7 +8732,7 @@
             }
           }
 
-          CUR.error = TT_Err_Invalid_Opcode;
+          CUR.error = FT_THROW( Invalid_Opcode );
           goto LErrorLabel_;
 
 #if 0
@@ -8758,14 +8758,14 @@
       /* increment instruction counter and check if we didn't */
       /* run this program for too long (e.g. infinite loops). */
       if ( ++ins_counter > MAX_RUNNABLE_OPCODES )
-        return TT_Err_Execution_Too_Long;
+        return FT_THROW( Execution_Too_Long );
 
     LSuiteLabel_:
       if ( CUR.IP >= CUR.codeSize )
       {
         if ( CUR.callTop > 0 )
         {
-          CUR.error = TT_Err_Code_Overflow;
+          CUR.error = FT_THROW( Code_Overflow );
           goto LErrorLabel_;
         }
         else
@@ -8782,7 +8782,7 @@
     return TT_Err_Ok;
 
   LErrorCodeOverflow_:
-    CUR.error = TT_Err_Code_Overflow;
+    CUR.error = FT_THROW( Code_Overflow );
 
   LErrorLabel_:
 

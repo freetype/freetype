@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    I/O stream support (body).                                           */
 /*                                                                         */
-/*  Copyright 2000-2002, 2004-2006, 2008-2011 by                           */
+/*  Copyright 2000-2002, 2004-2006, 2008-2011, 2013 by                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -68,7 +68,7 @@
                    " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                    pos, stream->size ));
 
-        error = FT_Err_Invalid_Stream_Operation;
+        error = FT_THROW( Invalid_Stream_Operation );
       }
     }
     /* note that seeking to the first position after the file is valid */
@@ -78,7 +78,7 @@
                  " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                  pos, stream->size ));
 
-      error = FT_Err_Invalid_Stream_Operation;
+      error = FT_THROW( Invalid_Stream_Operation );
     }
 
     if ( !error )
@@ -93,7 +93,7 @@
                   FT_Long    distance )
   {
     if ( distance < 0 )
-      return FT_Err_Invalid_Stream_Operation;
+      return FT_THROW( Invalid_Stream_Operation );
 
     return FT_Stream_Seek( stream, (FT_ULong)( stream->pos + distance ) );
   }
@@ -131,7 +131,7 @@
                  " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                  pos, stream->size ));
 
-      return FT_Err_Invalid_Stream_Operation;
+      return FT_THROW( Invalid_Stream_Operation );
     }
 
     if ( stream->read )
@@ -153,7 +153,7 @@
                  " invalid read; expected %lu bytes, got %lu\n",
                  count, read_bytes ));
 
-      error = FT_Err_Invalid_Stream_Operation;
+      error = FT_THROW( Invalid_Stream_Operation );
     }
 
     return error;
@@ -254,7 +254,7 @@
                    " frame size (%lu) larger than stream size (%lu)\n",
                    count, stream->size ));
 
-        error = FT_Err_Invalid_Stream_Operation;
+        error = FT_THROW( Invalid_Stream_Operation );
         goto Exit;
       }
 
@@ -277,7 +277,7 @@
                    count, read_bytes ));
 
         FT_FREE( stream->base );
-        error = FT_Err_Invalid_Stream_Operation;
+        error = FT_THROW( Invalid_Stream_Operation );
       }
       stream->cursor = stream->base;
       stream->limit  = stream->cursor + count;
@@ -293,7 +293,7 @@
                    " invalid i/o; pos = 0x%lx, count = %lu, size = 0x%lx\n",
                    stream->pos, count, stream->size ));
 
-        error = FT_Err_Invalid_Stream_Operation;
+        error = FT_THROW( Invalid_Stream_Operation );
         goto Exit;
       }
 
@@ -474,7 +474,7 @@
     return result;
 
   Fail:
-    *error = FT_Err_Invalid_Stream_Operation;
+    *error = FT_THROW( Invalid_Stream_Operation );
     FT_ERROR(( "FT_Stream_ReadChar:"
                " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
@@ -521,7 +521,7 @@
     return result;
 
   Fail:
-    *error = FT_Err_Invalid_Stream_Operation;
+    *error = FT_THROW( Invalid_Stream_Operation );
     FT_ERROR(( "FT_Stream_ReadUShort:"
                " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
@@ -568,7 +568,7 @@
     return result;
 
   Fail:
-    *error = FT_Err_Invalid_Stream_Operation;
+    *error = FT_THROW( Invalid_Stream_Operation );
     FT_ERROR(( "FT_Stream_ReadUShortLE:"
                " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
@@ -615,7 +615,7 @@
     return result;
 
   Fail:
-    *error = FT_Err_Invalid_Stream_Operation;
+    *error = FT_THROW( Invalid_Stream_Operation );
     FT_ERROR(( "FT_Stream_ReadUOffset:"
                " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
@@ -662,7 +662,7 @@
     return result;
 
   Fail:
-    *error = FT_Err_Invalid_Stream_Operation;
+    *error = FT_THROW( Invalid_Stream_Operation );
     FT_ERROR(( "FT_Stream_ReadULong:"
                " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
@@ -709,7 +709,7 @@
     return result;
 
   Fail:
-    *error = FT_Err_Invalid_Stream_Operation;
+    *error = FT_THROW( Invalid_Stream_Operation );
     FT_ERROR(( "FT_Stream_ReadULongLE:"
                " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
@@ -728,7 +728,7 @@
     FT_Byte*  cursor;
 
     if ( !fields || !stream )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     cursor = stream->cursor;
 
@@ -760,7 +760,7 @@
 
           if ( cursor + len > stream->limit )
           {
-            error = FT_Err_Invalid_Stream_Operation;
+            error = FT_THROW( Invalid_Stream_Operation );
             goto Exit;
           }
 

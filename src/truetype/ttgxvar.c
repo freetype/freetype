@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType GX Font Variation loader                                    */
 /*                                                                         */
-/*  Copyright 2004-2012 by                                                 */
+/*  Copyright 2004-2013 by                                                 */
 /*  David Turner, Robert Wilhelm, Werner Lemberg, and George Williams.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -412,7 +412,7 @@
     if ( gvar_head.version   != (FT_Long)0x00010000L              ||
          gvar_head.axisCount != (FT_UShort)blend->mmvar->num_axis )
     {
-      error = TT_Err_Invalid_Table;
+      error = FT_THROW( Invalid_Table );
       goto Exit;
     }
 
@@ -681,7 +681,7 @@
            fvar_head.offsetToData + fvar_head.axisCount * 20U +
              fvar_head.instanceCount * fvar_head.instanceSize > table_len )
       {
-        error = TT_Err_Invalid_Table;
+        error = FT_THROW( Invalid_Table );
         goto Exit;
       }
 
@@ -875,14 +875,14 @@
 
     if ( num_coords != mmvar->num_axis )
     {
-      error = TT_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
     for ( i = 0; i < num_coords; ++i )
       if ( coords[i] < -0x00010000L || coords[i] > 0x00010000L )
       {
-        error = TT_Err_Invalid_Argument;
+        error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
 
@@ -1004,7 +1004,7 @@
 
     if ( num_coords != mmvar->num_axis )
     {
-      error = TT_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
@@ -1020,7 +1020,7 @@
     {
       if ( coords[i] > a->maximum || coords[i] < a->minimum )
       {
-        error = TT_Err_Invalid_Argument;
+        error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
 
@@ -1323,7 +1323,7 @@
 
 
     if ( !face->doblend || blend == NULL )
-      return TT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     /* to be freed by the caller */
     if ( FT_NEW_ARRAY( delta_xy, n_points ) )
@@ -1383,7 +1383,7 @@
       }
       else if ( ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) >= blend->tuplecount )
       {
-        error = TT_Err_Invalid_Table;
+        error = FT_THROW( Invalid_Table );
         goto Fail3;
       }
       else

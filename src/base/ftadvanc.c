@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Quick computation of advance widths (body).                          */
 /*                                                                         */
-/*  Copyright 2008, 2009, 2011 by                                          */
+/*  Copyright 2008, 2009, 2011, 2013 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -17,6 +17,8 @@
 
 
 #include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+
 #include FT_ADVANCES_H
 #include FT_INTERNAL_OBJECTS_H
 
@@ -35,7 +37,7 @@
       return FT_Err_Ok;
 
     if ( face->size == NULL )
-      return FT_Err_Invalid_Size_Handle;
+      return FT_THROW( Invalid_Size_Handle );
 
     if ( flags & FT_LOAD_VERTICAL_LAYOUT )
       scale = face->size->metrics.y_scale;
@@ -76,10 +78,10 @@
 
 
     if ( !face )
-      return FT_Err_Invalid_Face_Handle;
+      return FT_THROW( Invalid_Face_Handle );
 
     if ( gindex >= (FT_UInt)face->num_glyphs )
-      return FT_Err_Invalid_Glyph_Index;
+      return FT_THROW( Invalid_Glyph_Index );
 
     func = face->driver->clazz->get_advances;
     if ( func && LOAD_ADVANCE_FAST_CHECK( flags ) )
@@ -114,12 +116,12 @@
 
 
     if ( !face )
-      return FT_Err_Invalid_Face_Handle;
+      return FT_THROW( Invalid_Face_Handle );
 
     num = (FT_UInt)face->num_glyphs;
     end = start + count;
     if ( start >= num || end < start || end > num )
-      return FT_Err_Invalid_Glyph_Index;
+      return FT_THROW( Invalid_Glyph_Index );
 
     if ( count == 0 )
       return FT_Err_Ok;
@@ -138,7 +140,7 @@
     error = FT_Err_Ok;
 
     if ( flags & FT_ADVANCE_FLAG_FAST_ONLY )
-      return FT_Err_Unimplemented_Feature;
+      return FT_THROW( Unimplemented_Feature );
 
     flags |= (FT_UInt32)FT_LOAD_ADVANCE_ONLY;
     for ( nn = 0; nn < count; nn++ )

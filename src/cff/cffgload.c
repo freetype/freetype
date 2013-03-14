@@ -424,7 +424,7 @@
       if ( fd_index >= cff->num_subfonts )
       {
         FT_TRACE4(( "cff_decoder_prepare: invalid CID subfont index\n" ));
-        error = CFF_Err_Invalid_File_Format;
+        error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
 
@@ -728,7 +728,7 @@
     if ( decoder->seac )
     {
       FT_ERROR(( "cff_operator_seac: invalid nested seac\n" ));
-      return CFF_Err_Syntax_Error;
+      return FT_THROW( Syntax_Error );
     }
 
     adx += decoder->builder.left_bearing.x;
@@ -756,7 +756,7 @@
     {
       FT_ERROR(( "cff_operator_seac:"
                  " invalid seac character code arguments\n" ));
-      return CFF_Err_Syntax_Error;
+      return FT_THROW( Syntax_Error );
     }
 
     /* If we are trying to load a composite glyph, do not load the */
@@ -2470,7 +2470,7 @@
             FT_ERROR(( " %d", ip[0] ));
           FT_ERROR(( "\n" ));
 
-          return CFF_Err_Unimplemented_Feature;
+          return FT_THROW( Unimplemented_Feature );
         }
 
         decoder->top = args;
@@ -2489,15 +2489,15 @@
 
   Syntax_Error:
     FT_TRACE4(( "cff_decoder_parse_charstrings: syntax error\n" ));
-    return CFF_Err_Invalid_File_Format;
+    return FT_THROW( Invalid_File_Format );
 
   Stack_Underflow:
     FT_TRACE4(( "cff_decoder_parse_charstrings: stack underflow\n" ));
-    return CFF_Err_Too_Few_Arguments;
+    return FT_THROW( Too_Few_Arguments );
 
   Stack_Overflow:
     FT_TRACE4(( "cff_decoder_parse_charstrings: stack overflow\n" ));
-    return CFF_Err_Stack_Overflow;
+    return FT_THROW( Stack_Overflow );
   }
 
 
@@ -2606,11 +2606,11 @@
         glyph_index = cff_charset_cid_to_gindex( &cff->charset,
                                                  glyph_index );
         if ( glyph_index == 0 )
-          return CFF_Err_Invalid_Argument;
+          return FT_THROW( Invalid_Argument );
       }
     }
     else if ( glyph_index >= cff->num_glyphs )
-      return CFF_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
@@ -2733,7 +2733,7 @@
 
     /* return immediately if we only want the embedded bitmaps */
     if ( load_flags & FT_LOAD_SBITS_ONLY )
-      return CFF_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     /* if we have a CID subfont, use its matrix (which has already */
     /* been multiplied with the root matrix)                       */

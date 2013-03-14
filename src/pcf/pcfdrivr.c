@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf files
 
-    Copyright (C) 2000-2004, 2006-2011 by
+    Copyright (C) 2000-2004, 2006-2011, 2013 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -406,7 +406,7 @@ THE SOFTWARE.
   Fail:
     FT_TRACE2(( "  not a PCF file\n" ));
     PCF_Face_Done( pcfface );
-    error = PCF_Err_Unknown_File_Format;  /* error */
+    error = FT_THROW( Unknown_File_Format );  /* error */
     goto Exit;
   }
 
@@ -455,7 +455,7 @@ THE SOFTWARE.
       break;
 
     default:
-      error = PCF_Err_Unimplemented_Feature;
+      error = FT_THROW( Unimplemented_Feature );
       break;
     }
 
@@ -486,7 +486,7 @@ THE SOFTWARE.
 
     if ( !face || glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
-      error = PCF_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
@@ -526,7 +526,7 @@ THE SOFTWARE.
       break;
 
     default:
-      return PCF_Err_Invalid_File_Format;
+      return FT_THROW( Invalid_File_Format );
     }
 
     /* XXX: to do: are there cases that need repadding the bitmap? */
@@ -622,7 +622,7 @@ THE SOFTWARE.
       return 0;
     }
 
-    return PCF_Err_Invalid_Argument;
+    return FT_THROW( Invalid_Argument );
   }
 
 

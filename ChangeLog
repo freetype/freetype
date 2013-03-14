@@ -1,5 +1,17 @@
 2013-03-13  Werner Lemberg  <wl@gnu.org>
 
+	*/*: Use `FT_THROW'.
+
+	This is essentially a mechanical conversion, adding inclusion of
+	`FT_INTERNAL_DEBUG_H' where necessary, and providing the macros for
+	stand-alone compiling modes of the rasterizer modules.
+
+	To convert the remaining occurrences of FT_Err_XXX and friends it is
+	necessary to rewrite the code.  Note, however, that it doesn't harm
+	if some cases are not handled since FT_THROW is a no-op.
+
+2013-03-13  Werner Lemberg  <wl@gnu.org>
+
 	Introduce `FT_THROW' macro.
 
 	The idea is to replace code like

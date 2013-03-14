@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 Glyph Loader (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010 by */
+/*  Copyright 1996-2007, 2009, 2010, 2013 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -117,7 +117,7 @@
 
       if ( fd_select >= (FT_UInt)cid->num_dicts )
       {
-        error = CID_Err_Invalid_Offset;
+        error = FT_THROW( Invalid_Offset );
         goto Exit;
       }
       if ( glyph_length == 0 )
@@ -284,7 +284,7 @@
 
     if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
-      error = CID_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 

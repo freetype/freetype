@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (body).                                             */
 /*                                                                         */
-/*  Copyright 1996-2010, 2012 by                                           */
+/*  Copyright 1996-2010, 2012, 2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -142,7 +142,7 @@
         goto Exit;
     }
     else
-      error = SFNT_Err_Table_Missing;
+      error = FT_THROW( Table_Missing );
 
   Exit:
     return error;
@@ -237,7 +237,7 @@
         if ( table.Length < 0x36 )
         {
           FT_TRACE2(( "check_table_dir: `head' table too small\n" ));
-          error = SFNT_Err_Table_Missing;
+          error = FT_THROW( Table_Missing );
           goto Exit;
         }
 
@@ -249,7 +249,7 @@
         {
           FT_TRACE2(( "check_table_dir:"
                       " no magic number found in `head' table\n"));
-          error = SFNT_Err_Table_Missing;
+          error = FT_THROW( Table_Missing );
           goto Exit;
         }
 
@@ -267,7 +267,7 @@
     if ( sfnt->num_tables == 0 )
     {
       FT_TRACE2(( "check_table_dir: no tables found\n" ));
-      error = SFNT_Err_Unknown_File_Format;
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
@@ -285,7 +285,7 @@
 #else
       FT_TRACE2(( " neither `head' nor `sing' table found\n" ));
 #endif
-      error = SFNT_Err_Table_Missing;
+      error = FT_THROW( Table_Missing );
     }
 
   Exit:
@@ -353,7 +353,7 @@
 #if 0
     if ( sfnt.search_range != 1 << ( sfnt.entry_selector + 4 )        ||
          sfnt.search_range + sfnt.range_shift != sfnt.num_tables << 4 )
-      return SFNT_Err_Unknown_File_Format;
+      return FT_THROW( Unknown_File_Format );
 #endif
 
     /* load the table directory */
@@ -482,7 +482,7 @@
       table = tt_face_lookup_table( face, tag );
       if ( !table )
       {
-        error = SFNT_Err_Table_Missing;
+        error = FT_THROW( Table_Missing );
         goto Exit;
       }
 
@@ -801,7 +801,7 @@
     if ( storage_start > storage_limit )
     {
       FT_ERROR(( "tt_face_load_name: invalid `name' table\n" ));
-      error = SFNT_Err_Name_Table_Missing;
+      error = FT_THROW( Name_Table_Missing );
       goto Exit;
     }
 
@@ -1235,7 +1235,7 @@
     if ( face->gasp.version >= 2 )
     {
       face->gasp.numRanges = 0;
-      error = SFNT_Err_Invalid_Table;
+      error = FT_THROW( Invalid_Table );
       goto Exit;
     }
 

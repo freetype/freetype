@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    AFM parser (body).                                                   */
 /*                                                                         */
-/*  Copyright 2006-2010, 2012 by                                           */
+/*  Copyright 2006-2010, 2012, 2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -17,6 +17,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 #include "afmparse.h"
@@ -575,7 +576,7 @@
       return PSaux_Err_Ok;
     }
     else
-      return PSaux_Err_Syntax_Error;
+      return FT_THROW( Syntax_Error );
   }
 
 
@@ -648,7 +649,7 @@
     }
 
   Fail:
-    return PSaux_Err_Syntax_Error;
+    return FT_THROW( Syntax_Error );
   }
 
 
@@ -764,7 +765,7 @@
     }
 
   Fail:
-    return PSaux_Err_Syntax_Error;
+    return FT_THROW( Syntax_Error );
   }
 
 
@@ -806,7 +807,7 @@
     }
 
   Fail:
-    return PSaux_Err_Syntax_Error;
+    return FT_THROW( Syntax_Error );
   }
 
 
@@ -836,7 +837,7 @@
     }
 
   Fail:
-    return PSaux_Err_Syntax_Error;
+    return FT_THROW( Syntax_Error );
   }
 
 
@@ -852,12 +853,12 @@
 
 
     if ( !fi )
-      return PSaux_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     key = afm_parser_next_key( parser, 1, &len );
     if ( !key || len != 16                              ||
          ft_strncmp( key, "StartFontMetrics", 16 ) != 0 )
-      return PSaux_Err_Unknown_File_Format;
+      return FT_THROW( Unknown_File_Format );
 
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
@@ -872,7 +873,7 @@
 
         if ( metrics_sets != 0 && metrics_sets != 2 )
         {
-          error = PSaux_Err_Unimplemented_Feature;
+          error = FT_THROW( Unimplemented_Feature );
 
           goto Fail;
         }

@@ -2,7 +2,7 @@
 
     FreeType font driver for bdf files
 
-    Copyright (C) 2001-2008, 2011 by
+    Copyright (C) 2001-2008, 2011, 2013 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -591,7 +591,7 @@ THE SOFTWARE.
 
   Fail:
     BDF_Face_Done( bdfface );
-    return BDF_Err_Unknown_File_Format;
+    return FT_THROW( Unknown_File_Format );
   }
 
 
@@ -640,7 +640,7 @@ THE SOFTWARE.
       break;
 
     default:
-      error = BDF_Err_Unimplemented_Feature;
+      error = FT_THROW( Unimplemented_Feature );
       break;
     }
 
@@ -670,7 +670,7 @@ THE SOFTWARE.
 
     if ( !face || glyph_index >= (FT_UInt)face->num_glyphs )
     {
-      error = BDF_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
@@ -786,7 +786,7 @@ THE SOFTWARE.
     }
 
   Fail:
-    return BDF_Err_Invalid_Argument;
+    return FT_THROW( Invalid_Argument );
   }
 
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType's TrueTypeGX/AAT validation module implementation (body).   */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006                                             */
+/*  Copyright 2004-2006, 2013                                              */
 /*  by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
@@ -58,7 +58,7 @@
 
 
     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, table_len );
-    if ( error == GXV_Err_Table_Missing )
+    if ( FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
       return GXV_Err_Ok;
     if ( error )
       goto Exit;

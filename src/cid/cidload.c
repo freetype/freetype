@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 font loader (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2006, 2009, 2011-2012 by                                */
+/*  Copyright 1996-2006, 2009, 2011-2013 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -114,7 +114,7 @@
         {
           FT_ERROR(( "cid_load_keyword: invalid use of `%s'\n",
                      keyword->ident ));
-          error = CID_Err_Syntax_Error;
+          error = FT_THROW( Syntax_Error );
           goto Exit;
         }
 
@@ -416,7 +416,7 @@
       /* Check for possible overflow. */
       if ( num_subrs == FT_UINT_MAX )
       {
-        error = CID_Err_Syntax_Error;
+        error = FT_THROW( Syntax_Error );
         goto Fail;
       }
 
@@ -428,7 +428,7 @@
 
         if ( new_max <= max_offsets )
         {
-          error = CID_Err_Syntax_Error;
+          error = FT_THROW( Syntax_Error );
           goto Fail;
         }
 
@@ -571,7 +571,7 @@
 
         if ( size == 0 )
         {
-          error = CID_Err_Syntax_Error;
+          error = FT_THROW( Syntax_Error );
           goto Exit;
         }
 
@@ -604,7 +604,7 @@
       }
       else
       {
-        error = CID_Err_Syntax_Error;
+        error = FT_THROW( Syntax_Error );
         goto Exit;
       }
 

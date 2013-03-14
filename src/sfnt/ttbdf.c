@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType and OpenType embedded BDF properties (body).                */
 /*                                                                         */
-/*  Copyright 2005, 2006, 2010 by                                          */
+/*  Copyright 2005, 2006, 2010, 2013 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -74,7 +74,7 @@
          length < 8                             ||
          FT_FRAME_EXTRACT( length, bdf->table ) )
     {
-      error = SFNT_Err_Invalid_Table;
+      error = FT_THROW( Invalid_Table );
       goto Exit;
     }
 
@@ -131,7 +131,7 @@
   BadTable:
     FT_FRAME_RELEASE( bdf->table );
     FT_ZERO( bdf );
-    error = SFNT_Err_Invalid_Table;
+    error = FT_THROW( Invalid_Table );
     goto Exit;
   }
 

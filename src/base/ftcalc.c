@@ -772,14 +772,14 @@
 
 
     if ( !matrix )
-      return FT_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     /* compute discriminant */
     delta = FT_MulFix( matrix->xx, matrix->yy ) -
             FT_MulFix( matrix->xy, matrix->yx );
 
     if ( !delta )
-      return FT_Err_Invalid_Argument;  /* matrix can't be inverted */
+      return FT_THROW( Invalid_Argument );  /* matrix can't be inverted */
 
     matrix->xy = - FT_DivFix( matrix->xy, delta );
     matrix->yx = - FT_DivFix( matrix->yx, delta );

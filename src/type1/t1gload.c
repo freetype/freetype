@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 Glyph Loader (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004, 2005, 2006, 2008, 2009, 2010 by */
+/*  Copyright 1996-2006, 2008-2010, 2013 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -296,7 +296,7 @@
     if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
     {
-      error = T1_Err_Invalid_Argument;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
