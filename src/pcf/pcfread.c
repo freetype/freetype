@@ -294,7 +294,7 @@ THE SOFTWARE.
                           FT_ULong  *aformat,
                           FT_ULong  *asize )
   {
-    FT_Error  error = PCF_Err_Invalid_File_Format;
+    FT_Error  error = FT_ERR( Invalid_File_Format );
     FT_ULong  i;
 
 

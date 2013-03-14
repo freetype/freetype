@@ -620,11 +620,11 @@
 
     params->source = (void*)outline;
 
-    error = FT_Err_Cannot_Render_Glyph;
+    error = FT_ERR( Cannot_Render_Glyph );
     while ( renderer )
     {
       error = renderer->raster_render( renderer->raster, params );
-      if ( !error || FT_ERROR_BASE( error ) != FT_Err_Cannot_Render_Glyph )
+      if ( !error || FT_ERR_NEQ( error, Cannot_Render_Glyph ) )
         break;
 
       /* FT_Err_Cannot_Render_Glyph is returned if the render mode   */

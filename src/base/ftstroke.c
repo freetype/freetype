@@ -2258,7 +2258,7 @@
                    FT_Stroker   stroker,
                    FT_Bool      destroy )
   {
-    FT_Error    error   = FT_Err_Invalid_Argument;
+    FT_Error    error   = FT_ERR( Invalid_Argument );
     FT_Glyph    glyph   = NULL;
     FT_Library  library = stroker->library;
 
@@ -2334,7 +2334,7 @@
                          FT_Bool      inside,
                          FT_Bool      destroy )
   {
-    FT_Error    error   = FT_Err_Invalid_Argument;
+    FT_Error    error   = FT_ERR( Invalid_Argument );
     FT_Glyph    glyph   = NULL;
     FT_Library  library = stroker->library;
 

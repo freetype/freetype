@@ -515,7 +515,7 @@
     FT_Vector*       offset = &dict->font_offset;
     FT_ULong*        upm    = &dict->units_per_em;
     FT_Byte**        data   = parser->stack;
-    FT_Error         error  = CFF_Err_Stack_Underflow;
+    FT_Error         error  = FT_ERR( Stack_Underflow );
 
 
     if ( parser->top >= parser->stack + 6 )
@@ -588,7 +588,7 @@
     FT_Error         error;
 
 
-    error = CFF_Err_Stack_Underflow;
+    error = FT_ERR( Stack_Underflow );
 
     if ( parser->top >= parser->stack + 4 )
     {
@@ -617,7 +617,7 @@
     FT_Error         error;
 
 
-    error = CFF_Err_Stack_Underflow;
+    error = FT_ERR( Stack_Underflow );
 
     if ( parser->top >= parser->stack + 2 )
     {
@@ -641,7 +641,7 @@
     FT_Error         error;
 
 
-    error = CFF_Err_Stack_Underflow;
+    error = FT_ERR( Stack_Underflow );
 
     if ( parser->top >= parser->stack + 3 )
     {

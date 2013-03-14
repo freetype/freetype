@@ -838,7 +838,7 @@
     {
       new_names[i] = NULL;
       offsets[i]   = 0;
-      errors[i]    = FT_Err_Unimplemented_Feature;
+      errors[i]    = FT_ERR( Unimplemented_Feature );
     }
   }
 

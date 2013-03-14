@@ -8693,11 +8693,12 @@
 
 #endif /* TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 
-      if ( CUR.error != FT_Err_Ok )
+      if ( CUR.error )
       {
         switch ( CUR.error )
         {
-        case TT_Err_Invalid_Opcode: /* looking for redefined instructions */
+          /* looking for redefined instructions */
+        case FT_ERR( Invalid_Opcode ):
           {
             TT_DefRecord*  def   = CUR.IDefs;
             TT_DefRecord*  limit = def + CUR.numIDefs;

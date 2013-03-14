@@ -341,7 +341,7 @@
   {
     FT_Byte*      cur   = *acur;
     FT_Int        embed = 0;
-    FT_Error      error = PSaux_Err_Invalid_File_Format;
+    FT_Error      error = FT_ERR( Invalid_File_Format );
     unsigned int  i;
 
 
@@ -1315,7 +1315,7 @@
                               T1_MAX_TABLE_ELEMENTS, &num_elements );
     if ( num_elements < 0 )
     {
-      error = PSaux_Err_Ignore;
+      error = FT_ERR( Ignore );
       goto Exit;
     }
     if ( (FT_UInt)num_elements > field->array_max )
@@ -1676,7 +1676,7 @@
                           FT_Pos      x,
                           FT_Pos      y )
   {
-    FT_Error  error = PSaux_Err_Invalid_File_Format;
+    FT_Error  error = FT_ERR( Invalid_File_Format );
 
 
     /* test whether we are building a new contour */

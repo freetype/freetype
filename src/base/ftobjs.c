@@ -1166,7 +1166,7 @@
     /* is returned.                                                      */
 
     /* no error should happen, but we want to play safe */
-    if ( error2 && error2 != FT_Err_Invalid_CharMap_Handle )
+    if ( error2 && FT_ERR_NEQ( error2, Invalid_CharMap_Handle ) )
     {
       error = error2;
       goto Fail;
@@ -1513,7 +1513,7 @@
       FT_Error  error1;
 
 
-      if ( error == FT_Err_Unknown_File_Format )
+      if ( FT_ERR_EQ( error, Unknown_File_Format ) )
       {
         error1 = FT_Stream_Seek( stream, pos );
         if ( error1 )
@@ -1541,7 +1541,7 @@
                           FT_Long     face_index,
                           FT_Face    *aface )
   {
-    FT_Error   error  = FT_Err_Cannot_Open_Resource;
+    FT_Error   error  = FT_ERR( Cannot_Open_Resource );
     FT_Memory  memory = library->memory;
     FT_Byte*   pfb_data = NULL;
     int        i, type, flags;
@@ -1634,7 +1634,7 @@
         pfb_data[pfb_pos++] = 0;
       }
 
-      error = FT_Err_Cannot_Open_Resource;
+      error = FT_ERR( Cannot_Open_Resource );
       if ( pfb_pos > pfb_len || pfb_pos + rlen > pfb_len )
         goto Exit2;
 
@@ -1863,7 +1863,7 @@
 #define FT_COMPONENT  trace_raccess
 
     FT_Memory  memory = library->memory;
-    FT_Error   error  = FT_Err_Unknown_File_Format;
+    FT_Error   error  = FT_ERR( Unknown_File_Format );
     int        i;
 
     char *     file_names[FT_RACCESS_N_RULES];
@@ -1902,7 +1902,7 @@
                   i, args2.pathname, offsets[i] ));
 
       error = FT_Stream_New( library, &args2, &stream2 );
-      if ( is_darwin_vfs && error == FT_Err_Cannot_Open_Stream )
+      if ( is_darwin_vfs && FT_ERR_EQ( error, Cannot_Open_Stream ) )
         vfs_rfork_has_no_font = TRUE;
 
       if ( error )
@@ -1931,7 +1931,7 @@
 
     /* Caller (load_mac_face) requires FT_Err_Unknown_File_Format. */
     if ( error )
-      error = FT_Err_Unknown_File_Format;
+      error = FT_ERR( Unknown_File_Format );
 
     return error;
 
@@ -1960,7 +1960,7 @@
 
 
     error = IsMacBinary( library, stream, face_index, aface );
-    if ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format )
+    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
     {
 
 #undef  FT_COMPONENT
@@ -1977,9 +1977,9 @@
 
     }
 
-    if ( ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format      ||
-           FT_ERROR_BASE( error ) == FT_Err_Invalid_Stream_Operation ) &&
-         ( args->flags & FT_OPEN_PATHNAME )                            )
+    if ( ( FT_ERR_EQ( error, Unknown_File_Format )      ||
+           FT_ERR_EQ( error, Invalid_Stream_Operation ) ) &&
+         ( args->flags & FT_OPEN_PATHNAME )               )
       error = load_face_in_embedded_rfork( library, stream,
                                            face_index, aface, args );
     return error;
@@ -2056,7 +2056,7 @@
     }
     else
     {
-      error = FT_Err_Missing_Module;
+      error = FT_ERR( Missing_Module );
 
       /* check each font driver for an appropriate format */
       cur   = library->modules;
@@ -2086,7 +2086,7 @@
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
           if ( ft_strcmp( cur[0]->clazz->module_name, "truetype" ) == 0 &&
-               FT_ERROR_BASE( error ) == FT_Err_Table_Missing           )
+               FT_ERR_EQ( error, Table_Missing )                        )
           {
             /* TrueType but essential tables are missing */
             if ( FT_Stream_Seek( stream, 0 ) )
@@ -2106,7 +2106,7 @@
           }
 #endif
 
-          if ( FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format )
+          if ( FT_ERR_NEQ( error, Unknown_File_Format ) )
             goto Fail3;
         }
       }
@@ -2115,9 +2115,9 @@
       /* If we are on the mac, and we get an                          */
       /* FT_Err_Invalid_Stream_Operation it may be because we have an */
       /* empty data fork, so we need to check the resource fork.      */
-      if ( FT_ERROR_BASE( error ) != FT_Err_Cannot_Open_Stream       &&
-           FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format      &&
-           FT_ERROR_BASE( error ) != FT_Err_Invalid_Stream_Operation )
+      if ( FT_ERR_NEQ( error, Cannot_Open_Stream )       &&
+           FT_ERR_NEQ( error, Unknown_File_Format )      &&
+           FT_ERR_NEQ( error, Invalid_Stream_Operation ) )
         goto Fail2;
 
 #if !defined( FT_MACINTOSH ) && defined( FT_CONFIG_OPTION_MAC_FONTS )
@@ -2133,7 +2133,7 @@
         return error;
       }
 
-      if ( FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format )
+      if ( FT_ERR_NEQ( error, Unknown_File_Format ) )
         goto Fail2;
 #endif  /* !FT_MACINTOSH && FT_CONFIG_OPTION_MAC_FONTS */
 
@@ -2299,7 +2299,7 @@
     /* we implement FT_Attach_Stream in each driver through the */
     /* `attach_file' interface                                  */
 
-    error = FT_Err_Unimplemented_Feature;
+    error = FT_ERR( Unimplemented_Feature );
     clazz = driver->clazz;
     if ( clazz->attach_file )
       error = clazz->attach_file( face, stream );
@@ -2336,7 +2336,7 @@
     FT_ListNode  node;
 
 
-    error = FT_Err_Invalid_Face_Handle;
+    error = FT_ERR( Invalid_Face_Handle );
     if ( face && face->driver )
     {
       face->internal->refcount--;
@@ -3580,7 +3580,7 @@
                      FT_Pointer  buffer,
                      FT_UInt     buffer_max )
   {
-    FT_Error  error = FT_Err_Invalid_Argument;
+    FT_Error  error = FT_ERR( Invalid_Argument );
 
 
     /* clean up buffer */
@@ -4021,12 +4021,12 @@
         else
           renderer = FT_Lookup_Renderer( library, slot->format, &node );
 
-        error = FT_Err_Unimplemented_Feature;
+        error = FT_ERR( Unimplemented_Feature );
         while ( renderer )
         {
           error = renderer->render( renderer, slot, render_mode, NULL );
-          if ( !error                                               ||
-               FT_ERROR_BASE( error ) != FT_Err_Cannot_Render_Glyph )
+          if ( !error                                   ||
+               FT_ERR_NEQ( error, Cannot_Render_Glyph ) )
             break;
 
           /* FT_Err_Cannot_Render_Glyph is returned if the render mode   */
@@ -4839,7 +4839,7 @@
                         FT_Int       *p_arg2,
                         FT_Matrix    *p_transform )
   {
-    FT_Error  error = FT_Err_Invalid_Argument;
+    FT_Error  error = FT_ERR( Invalid_Argument );
 
 
     if ( glyph                                      &&

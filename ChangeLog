@@ -1,5 +1,12 @@
 2013-03-14  Werner Lemberg  <wl@gnu.org>
 
+	*/*: Use FT_ERR_EQ, FT_ERR_NEQ, and FT_ERR where appropriate.
+
+	FT_Err_XXX and friends are no longer directly used in the source
+	code.
+
+2013-03-14  Werner Lemberg  <wl@gnu.org>
+
 	New error management macros.
 
 	* include/freetype/fterrors.h (FT_ERR_XCAT, FT_ERR_CAT): Move to...

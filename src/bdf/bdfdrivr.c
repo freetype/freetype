@@ -365,7 +365,7 @@ THE SOFTWARE.
     options.font_spacing    = BDF_PROPORTIONAL;
 
     error = bdf_load_font( stream, memory, &options, &font );
-    if ( error == BDF_Err_Missing_Startfont_Field )
+    if ( FT_ERR_EQ( error, Missing_Startfont_Field ) )
     {
       FT_TRACE2(( "  not a BDF file\n" ));
       goto Fail;
@@ -619,7 +619,7 @@ THE SOFTWARE.
     FT_Face          face    = size->face;
     FT_Bitmap_Size*  bsize   = face->available_sizes;
     bdf_font_t*      bdffont = ( (BDF_Face)face )->bdffont;
-    FT_Error         error   = BDF_Err_Invalid_Pixel_Size;
+    FT_Error         error   = FT_ERR( Invalid_Pixel_Size );
     FT_Long          height;
 
 

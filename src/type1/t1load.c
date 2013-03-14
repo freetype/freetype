@@ -372,7 +372,7 @@
     FT_UInt   n, m;
 
 
-    error = T1_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
 
     if ( blend && blend->num_axis == num_coords )
     {
@@ -421,7 +421,7 @@
     FT_UInt   n, p;
 
 
-    error = T1_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
     if ( blend && blend->num_axis == num_coords )
     {
       /* compute the blend coordinates through the blend design map */
@@ -497,7 +497,7 @@
      FT_Error  error;
 
 
-     error = T1_Err_Invalid_Argument;
+     error = FT_ERR( Invalid_Argument );
      if ( num_coords <= 4 && num_coords > 0 )
      {
        for ( i = 0; i < num_coords; ++i )
@@ -579,7 +579,7 @@
                      T1_MAX_MM_AXIS, &num_axis );
     if ( num_axis < 0 )
     {
-      error = T1_Err_Ignore;
+      error = FT_ERR( Ignore );
       goto Exit;
     }
     if ( num_axis == 0 || num_axis > T1_MAX_MM_AXIS )
@@ -648,7 +648,7 @@
                      T1_MAX_MM_DESIGNS, &num_designs );
     if ( num_designs < 0 )
     {
-      error = T1_Err_Ignore;
+      error = FT_ERR( Ignore );
       goto Exit;
     }
     if ( num_designs == 0 || num_designs > T1_MAX_MM_DESIGNS )
@@ -745,7 +745,7 @@
                      T1_MAX_MM_AXIS, &num_axis );
     if ( num_axis < 0 )
     {
-      error = T1_Err_Ignore;
+      error = FT_ERR( Ignore );
       goto Exit;
     }
     if ( num_axis == 0 || num_axis > T1_MAX_MM_AXIS )
@@ -836,7 +836,7 @@
                      T1_MAX_MM_DESIGNS, &num_designs );
     if ( num_designs < 0 )
     {
-      error = T1_Err_Ignore;
+      error = FT_ERR( Ignore );
       goto Exit;
     }
     if ( num_designs == 0 || num_designs > T1_MAX_MM_DESIGNS )
@@ -1347,7 +1347,7 @@
         face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
 
       else
-        parser->root.error = T1_Err_Ignore;
+        parser->root.error = FT_ERR( Ignore );
     }
   }
 
@@ -1998,7 +1998,7 @@
                                                       keyword );
                 if ( parser->root.error != FT_Err_Ok )
                 {
-                  if ( FT_ERROR_BASE( parser->root.error ) == FT_Err_Ignore )
+                  if ( FT_ERR_EQ( parser->root.error, Ignore ) )
                     parser->root.error = FT_Err_Ok;
                   else
                     return parser->root.error;

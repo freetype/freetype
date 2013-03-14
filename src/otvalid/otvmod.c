@@ -49,7 +49,7 @@
 
 
     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, table_len );
-    if ( FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
+    if ( FT_ERR_EQ( error, Table_Missing ) )
       return FT_Err_Ok;
     if ( error )
       goto Exit;

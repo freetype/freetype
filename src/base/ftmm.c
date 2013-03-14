@@ -46,7 +46,7 @@
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
-    error = FT_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
 
     if ( FT_HAS_MULTIPLE_MASTERS( face ) )
     {
@@ -75,7 +75,7 @@
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
-      error = FT_Err_Invalid_Argument;
+      error = FT_ERR( Invalid_Argument );
       if ( service->get_mm )
         error = service->get_mm( face, amaster );
     }
@@ -97,7 +97,7 @@
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
-      error = FT_Err_Invalid_Argument;
+      error = FT_ERR( Invalid_Argument );
       if ( service->get_mm_var )
         error = service->get_mm_var( face, amaster );
     }
@@ -120,7 +120,7 @@
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
-      error = FT_Err_Invalid_Argument;
+      error = FT_ERR( Invalid_Argument );
       if ( service->set_mm_design )
         error = service->set_mm_design( face, num_coords, coords );
     }
@@ -143,7 +143,7 @@
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
-      error = FT_Err_Invalid_Argument;
+      error = FT_ERR( Invalid_Argument );
       if ( service->set_var_design )
         error = service->set_var_design( face, num_coords, coords );
     }
@@ -166,7 +166,7 @@
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
-      error = FT_Err_Invalid_Argument;
+      error = FT_ERR( Invalid_Argument );
       if ( service->set_mm_blend )
          error = service->set_mm_blend( face, num_coords, coords );
     }
@@ -192,7 +192,7 @@
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
-      error = FT_Err_Invalid_Argument;
+      error = FT_ERR( Invalid_Argument );
       if ( service->set_mm_blend )
          error = service->set_mm_blend( face, num_coords, coords );
     }

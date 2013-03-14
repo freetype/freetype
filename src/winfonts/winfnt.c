@@ -284,7 +284,7 @@
          FT_STREAM_READ_FIELDS( winmz_header_fields, &mz_header ) )
       goto Exit;
 
-    error = FNT_Err_Unknown_File_Format;
+    error = FT_ERR( Unknown_File_Format );
     if ( mz_header.magic == WINFNT_MZ_MAGIC )
     {
       /* yes, now look for an NE header in the file */
@@ -297,7 +297,7 @@
            FT_STREAM_READ_FIELDS( winne_header_fields, &ne_header ) )
         goto Exit;
 
-      error = FNT_Err_Unknown_File_Format;
+      error = FT_ERR( Unknown_File_Format );
       if ( ne_header.magic == WINFNT_NE_MAGIC )
       {
         /* good, now look into the resource table for each FNT resource */
@@ -705,7 +705,7 @@
     if ( !error && face_index < 0 )
       goto Exit;
 
-    if ( error == FNT_Err_Unknown_File_Format )
+    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
     {
       /* this didn't work; try to load a single FNT font */
       FNT_Font  font;
@@ -920,7 +920,7 @@
     FNT_Face          face    = (FNT_Face)size->face;
     FT_WinFNT_Header  header  = &face->font->header;
     FT_Bitmap_Size*   bsize   = size->face->available_sizes;
-    FT_Error          error   = FNT_Err_Invalid_Pixel_Size;
+    FT_Error          error   = FT_ERR( Invalid_Pixel_Size );
     FT_Long           height;
 
 

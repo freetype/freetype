@@ -189,7 +189,7 @@
     /* we mark unloaded glyphs with `sbit.buffer == 0' */
     /* and `width == 255', `height == 0'               */
     /*                                                 */
-    if ( error && error != FTC_Err_Out_Of_Memory )
+    if ( error && FT_ERR_NEQ( error, Out_Of_Memory ) )
     {
     BadGlyph:
       sbit->width  = 255;

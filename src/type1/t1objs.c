@@ -517,8 +517,8 @@
         charmap.encoding    = FT_ENCODING_UNICODE;
 
         error = FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
-        if ( error                                                  &&
-             FT_ERROR_BASE( error ) != FT_Err_No_Unicode_Glyph_Name )
+        if ( error                                      &&
+             FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) )
           goto Exit;
         error = FT_Err_Ok;
 

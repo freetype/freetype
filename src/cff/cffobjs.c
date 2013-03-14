@@ -959,8 +959,8 @@
 
         error = FT_CMap_New( &CFF_CMAP_UNICODE_CLASS_REC_GET, NULL,
                              &cmaprec, NULL );
-        if ( error                                                  &&
-             FT_ERROR_BASE( error ) != FT_Err_No_Unicode_Glyph_Name )
+        if ( error                                      &&
+             FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) )
           goto Exit;
         error = FT_Err_Ok;
 

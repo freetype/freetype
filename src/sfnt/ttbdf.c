@@ -163,7 +163,7 @@
     p      = bdf->table + 8;
     strike = p + 4 * count;
 
-    error = SFNT_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
 
     if ( size == NULL || property_name == NULL )
       goto Exit;

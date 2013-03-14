@@ -289,7 +289,7 @@ THE SOFTWARE.
 
         /* this didn't work, try gzip support! */
         error2 = FT_Stream_OpenGzip( &face->comp_stream, stream );
-        if ( FT_ERROR_BASE( error2 ) == FT_Err_Unimplemented_Feature )
+        if ( FT_ERR_EQ( error2, Unimplemented_Feature ) )
           goto Fail;
 
         error = error2;
@@ -304,7 +304,7 @@ THE SOFTWARE.
 
         /* this didn't work, try LZW support! */
         error3 = FT_Stream_OpenLZW( &face->comp_stream, stream );
-        if ( FT_ERROR_BASE( error3 ) == FT_Err_Unimplemented_Feature )
+        if ( FT_ERR_EQ( error3, Unimplemented_Feature ) )
           goto Fail;
 
         error = error3;
@@ -319,7 +319,7 @@ THE SOFTWARE.
 
         /* this didn't work, try Bzip2 support! */
         error4 = FT_Stream_OpenBzip2( &face->comp_stream, stream );
-        if ( FT_ERROR_BASE( error4 ) == FT_Err_Unimplemented_Feature )
+        if ( FT_ERR_EQ( error4, Unimplemented_Feature ) )
           goto Fail;
 
         error = error4;
@@ -434,7 +434,7 @@ THE SOFTWARE.
   {
     PCF_Face         face  = (PCF_Face)size->face;
     FT_Bitmap_Size*  bsize = size->face->available_sizes;
-    FT_Error         error = PCF_Err_Invalid_Pixel_Size;
+    FT_Error         error = FT_ERR( Invalid_Pixel_Size );
     FT_Long          height;
 
 

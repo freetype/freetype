@@ -158,7 +158,7 @@
     error = check_type1_format( stream, "%!PS-AdobeFont", 14 );
     if ( error )
     {
-      if ( error != T1_Err_Unknown_File_Format )
+      if ( FT_ERR_NEQ( error, Unknown_File_Format ) )
         goto Exit;
 
       error = check_type1_format( stream, "%!FontType", 10 );

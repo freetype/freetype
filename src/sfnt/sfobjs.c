@@ -503,35 +503,35 @@
   }
 
 
-#define LOAD_( x )                                            \
-  do {                                                        \
-    FT_TRACE2(( "`" #x "' " ));                               \
-    FT_TRACE3(( "-->\n" ));                                   \
-                                                              \
-    error = sfnt->load_ ## x( face, stream );                 \
-                                                              \
-    FT_TRACE2(( "%s\n", ( !error )                            \
-                        ? "loaded"                            \
-                        : ( error == SFNT_Err_Table_Missing ) \
-                          ? "missing"                         \
-                          : "failed to load" ));              \
-    FT_TRACE3(( "\n" ));                                      \
+#define LOAD_( x )                                          \
+  do {                                                      \
+    FT_TRACE2(( "`" #x "' " ));                             \
+    FT_TRACE3(( "-->\n" ));                                 \
+                                                            \
+    error = sfnt->load_ ## x( face, stream );               \
+                                                            \
+    FT_TRACE2(( "%s\n", ( !error )                          \
+                        ? "loaded"                          \
+                        : FT_ERR_EQ( error, Table_Missing ) \
+                          ? "missing"                       \
+                          : "failed to load" ));            \
+    FT_TRACE3(( "\n" ));                                    \
   } while ( 0 )
 
-#define LOADM_( x, vertical )                                 \
-  do {                                                        \
-    FT_TRACE2(( "`%s" #x "' ",                                \
-                vertical ? "vertical " : "" ));               \
-    FT_TRACE3(( "-->\n" ));                                   \
-                                                              \
-    error = sfnt->load_ ## x( face, stream, vertical );       \
-                                                              \
-    FT_TRACE2(( "%s\n", ( !error )                            \
-                        ? "loaded"                            \
-                        : ( error == SFNT_Err_Table_Missing ) \
-                          ? "missing"                         \
-                          : "failed to load" ));              \
-    FT_TRACE3(( "\n" ));                                      \
+#define LOADM_( x, vertical )                               \
+  do {                                                      \
+    FT_TRACE2(( "`%s" #x "' ",                              \
+                vertical ? "vertical " : "" ));             \
+    FT_TRACE3(( "-->\n" ));                                 \
+                                                            \
+    error = sfnt->load_ ## x( face, stream, vertical );     \
+                                                            \
+    FT_TRACE2(( "%s\n", ( !error )                          \
+                        ? "loaded"                          \
+                        : FT_ERR_EQ( error, Table_Missing ) \
+                          ? "missing"                       \
+                          : "failed to load" ));            \
+    FT_TRACE3(( "\n" ));                                    \
   } while ( 0 )
 
 #define GET_NAME( id, field )                                   \
@@ -656,7 +656,7 @@
       if ( !error )
       {
         LOADM_( hmtx, 0 );
-        if ( error == SFNT_Err_Table_Missing )
+        if ( FT_ERR_EQ( error, Table_Missing ) )
         {
           error = FT_THROW( Hmtx_Table_Missing );
 
@@ -673,7 +673,7 @@
 #endif
         }
       }
-      else if ( error == SFNT_Err_Table_Missing )
+      else if ( FT_ERR_EQ( error, Table_Missing ) )
       {
         /* No `hhea' table necessary for SFNT Mac fonts. */
         if ( face->format_tag == TTAG_true )
@@ -714,7 +714,7 @@
           face->vertical_info = 1;
       }
 
-      if ( error && error != SFNT_Err_Table_Missing )
+      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
         goto Exit;
 
       LOAD_( os2 );
@@ -736,7 +736,7 @@
         /* a font which contains neither bitmaps nor outlines is */
         /* still valid (although rather useless in most cases);  */
         /* however, you can find such stripped fonts in PDFs     */
-        if ( error == SFNT_Err_Table_Missing )
+        if ( FT_ERR_EQ( error, Table_Missing ) )
           error = FT_Err_Ok;
         else
           goto Exit;
@@ -746,7 +746,7 @@
     LOAD_( pclt );
     if ( error )
     {
-      if ( error != SFNT_Err_Table_Missing )
+      if ( FT_ERR_NEQ( error, Table_Missing ) )
         goto Exit;
 
       face->pclt.Version = 0;
@@ -812,7 +812,7 @@
                FT_FACE_FLAG_HORIZONTAL;   /* horizontal data   */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-      if ( psnames_error == FT_Err_Ok                 &&
+      if ( !psnames_error                             &&
            face->postscript.FormatType != 0x00030000L )
         flags |= FT_FACE_FLAG_GLYPH_NAMES;
 #endif

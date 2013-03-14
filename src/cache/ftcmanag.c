@@ -575,7 +575,7 @@
                              FTC_CacheClass   clazz,
                              FTC_Cache       *acache )
   {
-    FT_Error   error = FTC_Err_Invalid_Argument;
+    FT_Error   error = FT_ERR( Invalid_Argument );
     FTC_Cache  cache = NULL;
 
 

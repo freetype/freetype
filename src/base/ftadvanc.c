@@ -93,7 +93,7 @@
       if ( !error )
         return _ft_face_scale_advances( face, padvance, 1, flags );
 
-      if ( error != FT_ERROR_BASE( FT_Err_Unimplemented_Feature ) )
+      if ( FT_ERR_NEQ( error, Unimplemented_Feature ) )
         return error;
     }
 
@@ -133,7 +133,7 @@
       if ( !error )
         return _ft_face_scale_advances( face, padvances, count, flags );
 
-      if ( error != FT_ERROR_BASE( FT_Err_Unimplemented_Feature ) )
+      if ( FT_ERR_NEQ( error, Unimplemented_Feature ) )
         return error;
     }
 

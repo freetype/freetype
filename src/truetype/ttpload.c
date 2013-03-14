@@ -72,7 +72,7 @@
 
     /* it is possible that a font doesn't have a glyf table at all */
     /* or its size is zero                                         */
-    if ( FT_ERROR_BASE( error ) == TT_Err_Table_Missing )
+    if ( FT_ERR_EQ( error, Table_Missing ) )
       face->glyf_len = 0;
     else if ( error )
       goto Exit;

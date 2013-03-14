@@ -2076,7 +2076,7 @@
       FT_Error  error = face->goto_table( face, TTAG_glyf, stream, 0 );
 
 
-      if ( FT_ERROR_BASE( error ) == FT_Err_Table_Missing )
+      if ( FT_ERR_EQ( error, Table_Missing ) )
         loader->glyf_offset = 0;
       else if ( error )
       {

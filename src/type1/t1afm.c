@@ -239,7 +239,7 @@
     FT_Memory      memory  = stream->memory;
     AFM_ParserRec  parser;
     AFM_FontInfo   fi      = NULL;
-    FT_Error       error   = T1_Err_Unknown_File_Format;
+    FT_Error       error   = FT_ERR( Unknown_File_Format );
     T1_Font        t1_font = &( (T1_Face)t1_face )->type1;
 
 
@@ -270,7 +270,7 @@
       }
     }
 
-    if ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format )
+    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
     {
       FT_Byte*  start = stream->cursor;
 

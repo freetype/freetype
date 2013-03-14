@@ -228,7 +228,7 @@
 
 
     err = FT_GetFileRef_From_Mac_ATS_Name( fontName, &ref, face_index );
-    if ( FT_Err_Ok != err )
+    if ( err )
       return err;
 
     if ( noErr != FSRefMakePath( &ref, path, maxPathSize ) )
@@ -257,7 +257,7 @@
 
 
     err = FT_GetFileRef_From_Mac_ATS_Name( fontName, &ref, face_index );
-    if ( FT_Err_Ok != err )
+    if ( err )
       return err;
 
     if ( noErr != FSGetCatalogInfo( &ref, kFSCatInfoNone, NULL, NULL,
@@ -556,7 +556,7 @@
     {
       err = lookup_lwfn_by_fond( pathname, lwfn_file_name,
                                  buff, sizeof ( buff )  );
-      if ( FT_Err_Ok == err )
+      if ( !err )
         have_lwfn = 1;
     }
 
@@ -796,7 +796,7 @@
                              FT_Long       face_index,
                              FT_Face*      aface )
   {
-    FT_Error       error = FT_Err_Cannot_Open_Resource;
+    FT_Error       error = FT_ERR( Cannot_Open_Resource );
     ResFileRefNum  res_ref;
     ResourceIndex  res_index;
     Handle         fond;
@@ -827,7 +827,7 @@
     }
 
     CloseResFile( res_ref );
-    if ( FT_Err_Ok == error && NULL != aface && NULL != *aface )
+    if ( !error && aface && *aface )
       (*aface)->num_faces = num_faces_in_res;
     return error;
   }
@@ -882,7 +882,7 @@
 
         error = lookup_lwfn_by_fond( path_fond, lwfn_file_name,
                                      path_lwfn, sizeof ( path_lwfn ) );
-        if ( FT_Err_Ok == error )
+        if ( !error )
           have_lwfn = 1;
       }
     }
@@ -896,7 +896,7 @@
       error = FT_THROW( Unknown_File_Format );
 
   found_no_lwfn_file:
-    if ( have_sfnt && FT_Err_Ok != error )
+    if ( have_sfnt && error )
       error = FT_New_Face_From_SFNT( library,
                                      sfnt_id,
                                      face_index,

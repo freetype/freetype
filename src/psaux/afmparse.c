@@ -846,7 +846,7 @@
   {
     FT_Memory     memory = parser->memory;
     AFM_FontInfo  fi     = parser->FontInfo;
-    FT_Error      error  = PSaux_Err_Syntax_Error;
+    FT_Error      error  = FT_ERR( Syntax_Error );
     char*         key;
     FT_Offset     len;
     FT_Int        metrics_sets = 0;
