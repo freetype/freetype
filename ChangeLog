@@ -1,3 +1,10 @@
+2013-03-15  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftmoderr.h: Fix commit from 2013-03-11.
+
+	The previous version was not backwards compatible.  Reported by
+	Behdad.
+
 2013-03-14  Werner Lemberg  <wl@gnu.org>
 
 	*/*: Use FT_ERR_EQ, FT_ERR_NEQ, and FT_ERR where appropriate.
