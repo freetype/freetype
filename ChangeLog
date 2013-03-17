@@ -1,5 +1,12 @@
 2013-03-17  Werner Lemberg  <wl@gnu.org>
 
+	Remove dead code.
+
+	* src/raster/rastpic.c (ft_raster1_renderer_class_pic_init)
+	src/smooth/ftspic.c (ft_smooth_renderer_class_pic_init): Do it.
+
+2013-03-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/pshinter/pshpic.h (GET_PIC): Use correct container.
 
 2013-03-15  Werner Lemberg  <wl@gnu.org>
