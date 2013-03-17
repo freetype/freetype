@@ -1,5 +1,12 @@
 2013-03-17  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #38538.
+
+	* builds/amiga/src/base/ftdebug.c, builds/win32/ftdebug.c,
+	builds/wince/ftdebug.c (FT_Throw): Add function.
+
+2013-03-17  Werner Lemberg  <wl@gnu.org>
+
 	Remove dead code.
 
 	* src/raster/rastpic.c (ft_raster1_renderer_class_pic_init)
