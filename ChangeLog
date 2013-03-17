@@ -1,3 +1,7 @@
+2013-03-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshpic.h (GET_PIC): Use correct container.
+
 2013-03-15  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftmoderr.h: Fix commit from 2013-03-11.
