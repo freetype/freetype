@@ -70,7 +70,7 @@
 
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
     FT_MEM_SET( container, 0, sizeof ( *container ) );
     pic_container->psnames = container;

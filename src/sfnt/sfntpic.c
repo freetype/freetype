@@ -29,42 +29,35 @@
   FT_Error
   FT_Create_Class_sfnt_services( FT_Library           library,
                                  FT_ServiceDescRec**  output_class );
-
   void
   FT_Destroy_Class_sfnt_services( FT_Library          library,
                                   FT_ServiceDescRec*  clazz );
-
   void
   FT_Init_Class_sfnt_service_bdf( FT_Service_BDFRec*  clazz );
-
   void
   FT_Init_Class_sfnt_interface( FT_Library       library,
                                 SFNT_Interface*  clazz );
-
   void
   FT_Init_Class_sfnt_service_glyph_dict(
     FT_Library                library,
     FT_Service_GlyphDictRec*  clazz );
-
   void
   FT_Init_Class_sfnt_service_ps_name(
     FT_Library                 library,
     FT_Service_PsFontNameRec*  clazz );
-
   void
   FT_Init_Class_tt_service_get_cmap_info(
     FT_Library              library,
     FT_Service_TTCMapsRec*  clazz );
-
   void
   FT_Init_Class_sfnt_service_sfnt_table(
     FT_Service_SFNT_TableRec*  clazz );
+
 
   /* forward declaration of PIC init functions from ttcmap.c */
   FT_Error
   FT_Create_Class_tt_cmap_classes( FT_Library       library,
                                    TT_CMap_Class**  output_class );
-
   void
   FT_Destroy_Class_tt_cmap_classes( FT_Library      library,
                                     TT_CMap_Class*  clazz );
@@ -99,7 +92,7 @@
 
 
   FT_Error
-  sfnt_module_class_pic_init( FT_Library library )
+  sfnt_module_class_pic_init( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Error           error         = FT_Err_Ok;
@@ -108,7 +101,7 @@
 
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
     FT_MEM_SET( container, 0, sizeof ( *container ) );
     pic_container->sfnt = container;

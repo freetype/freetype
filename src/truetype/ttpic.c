@@ -22,21 +22,19 @@
 #include "ttpic.h"
 #include "tterrors.h"
 
+
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ttdriver.c */
   FT_Error
   FT_Create_Class_tt_services( FT_Library           library,
                                FT_ServiceDescRec**  output_class );
-
   void
   FT_Destroy_Class_tt_services( FT_Library          library,
                                 FT_ServiceDescRec*  clazz );
-
   void
   FT_Init_Class_tt_service_gx_multi_masters(
     FT_Service_MultiMastersRec*  sv_mm );
-
   void
   FT_Init_Class_tt_service_truetype_glyf(
     FT_Service_TTGlyfRec*  sv_ttglyf );
@@ -73,7 +71,7 @@
 
 
     /* allocate pointer, clear and set global container pointer */
-    if ( FT_ALLOC ( container, sizeof ( *container ) ) )
+    if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
     FT_MEM_SET( container, 0, sizeof ( *container ) );
     pic_container->truetype = container;
@@ -91,7 +89,7 @@
     FT_Init_Class_tt_service_truetype_glyf(
       &container->tt_service_truetype_glyf );
 
-Exit:
+  Exit:
     if ( error )
       tt_driver_class_pic_free( library );
     return error;
