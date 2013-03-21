@@ -9,6 +9,13 @@ CHANGES BETWEEN 2.4.11 and 2.4.12
       still using this macro.
 
 
+  II. MISCELLANEOUS
+
+    - The  (top-level)  `configure'  script   now  respects  the  MAKE
+      environment variable to specify a `make' binary.   For backwards
+      compatibility, GNUMAKE still overrides MAKE, though.
+
+
 ======================================================================
 
 CHANGES BETWEEN 2.4.10 and 2.4.11
@@ -3726,7 +3733,7 @@ Extensions support:
 
 ------------------------------------------------------------------------
 
-Copyright 2000-2012 by
+Copyright 2000-2013 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file  is  part  of the  FreeType  project, and may  only be  used,

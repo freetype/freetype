@@ -1,3 +1,9 @@
+2013-03-21  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah patch #7971.
+
+	* configure: Handle MAKE environment variable also.
+
 2013-03-17  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #38538.
