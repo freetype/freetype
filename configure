@@ -28,9 +28,12 @@ if test -z "`$MAKE -v 2>/dev/null | grep GNU`"; then
   if test -z "`$MAKE -v 2>/dev/null | grep makepp`"; then
     echo "GNU make (>= 3.80) or makepp (>= 1.19) is required to build FreeType2." >&2
     echo "Please try" >&2
-    echo "  \`MAKE=<GNU make command name> $0'." >&2
-    echo "or >&2"
-    echo "  \`MAKE=\"makepp --norc-substitution\" $0'." >&2
+    echo >&2
+    echo "  MAKE=<GNU make command name> $0" >&2
+    echo >&2
+    echo "or" >&2
+    echo >&2
+    echo "  MAKE=\"makepp --norc-substitution\" $0" >&2
     exit 1
   fi
 fi
