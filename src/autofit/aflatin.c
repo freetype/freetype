@@ -1787,7 +1787,7 @@
             if ( delta < 0 )
               delta = -delta;
 
-            if (delta >= 16)
+            if ( delta >= 16 )
             {
               dist = org_dist;
               if ( dist < 48 )
@@ -1914,7 +1914,7 @@
           continue;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-        if (!anchor)
+        if ( !anchor )
           FT_TRACE5(( "  BLUE_ANCHOR: edge %d (opos=%.2f) snapped to %.2f,"
                       " was %.2f (anchor=edge %d)\n",
                       edge1 - edges, edge1->opos / 64.0, blue->fit / 64.0,
@@ -2080,7 +2080,7 @@
 
           cur_pos1 = FT_PIX_ROUND( org_center );
 
-          if (cur_len <= 64 )
+          if ( cur_len <= 64 )
           {
             u_off = 32;
             d_off = 32;

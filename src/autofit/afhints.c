@@ -265,7 +265,7 @@
       FT_TRACE7(( "Table of %s segments:\n",
                   dimension == AF_DIMENSION_HORZ ? "vertical"
                                                  : "horizontal" ));
-      if (axis->num_segments)
+      if ( axis->num_segments )
         FT_TRACE7(( "  [ index |  pos  |  dir  | from"
                     " |  to  | link | serif | edge"
                     " | height | extra |    flags    ]\n" ));
@@ -350,8 +350,8 @@
       return FT_THROW( Invalid_Argument );
 
     seg     = &axis->segments[idx];
-    *offset = (dim == AF_DIMENSION_HORZ) ? seg->first->ox
-                                         : seg->first->oy;
+    *offset = ( dim == AF_DIMENSION_HORZ ) ? seg->first->ox
+                                           : seg->first->oy;
 
     return FT_Err_Ok;
   }

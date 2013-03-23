@@ -481,7 +481,8 @@
         FT_Bool  under_ref = FT_BOOL( shoot < ref );
 
 
-        if ( (AF_CJK_BLUE_TOP == bb || AF_CJK_BLUE_RIGHT == bb) ^ under_ref )
+        if ( ( AF_CJK_BLUE_TOP == bb   ||
+               AF_CJK_BLUE_RIGHT == bb ) ^ under_ref )
           *blue_shoot = *blue_ref = ( shoot + ref ) / 2;
       }
 
@@ -702,7 +703,7 @@
     {
       AF_Point  pt   = seg->first;
       AF_Point  last = seg->last;
-      AF_Flags  f0   = (AF_Flags)(pt->flags & AF_FLAG_CONTROL);
+      AF_Flags  f0   = (AF_Flags)( pt->flags & AF_FLAG_CONTROL );
       AF_Flags  f1;
 
 
@@ -711,7 +712,7 @@
       for ( ; pt != last; f0 = f1 )
       {
         pt = pt->next;
-        f1 = (AF_Flags)(pt->flags & AF_FLAG_CONTROL);
+        f1 = (AF_Flags)( pt->flags & AF_FLAG_CONTROL );
 
         if ( !f0 && !f1 )
           break;
