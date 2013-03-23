@@ -110,7 +110,7 @@
       return error;
     }
 
-    FT_TRACE0(( "af_property_get: missing property `%s'\n",
+    FT_TRACE0(( "af_property_set: missing property `%s'\n",
                 property_name ));
     return FT_THROW( Missing_Property );
   }
@@ -201,8 +201,11 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  af_autofitter_init( AF_Module  module )
+  af_autofitter_init( FT_Module  ft_module )      /* AF_Module */
   {
+    AF_Module  module = (AF_Module)ft_module;
+
+
     module->fallback_script = AF_SCRIPT_FALLBACK;
 
     return af_loader_init( module );
@@ -210,8 +213,11 @@
 
 
   FT_CALLBACK_DEF( void )
-  af_autofitter_done( AF_Module  module )
+  af_autofitter_done( FT_Module  ft_module )      /* AF_Module */
   {
+    AF_Module  module = (AF_Module)ft_module;
+
+
     af_loader_done( module );
   }
 
