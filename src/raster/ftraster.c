@@ -662,7 +662,7 @@
   /*    Set precision variables according to param flag.                   */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    High :: Set to True for high precision (typically for ppem < 18),  */
+  /*    High :: Set to True for high precision (typically for ppem < 24),  */
   /*            false otherwise.                                           */
   /*                                                                       */
   static void
