@@ -1,3 +1,9 @@
+2013-03-29  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftlcdfil.h: Add description of color filtering.
+
+	Based on a contribution from Antti S. Lankila <alankila@bel.fi>.
+
 2013-03-23  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Minor.
