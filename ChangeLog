@@ -1,3 +1,9 @@
+2013-03-31  Werner Lemberg  <wl@gnu.org>
+
+	* configure: Use egrep, not grep.
+
+	Problem reported Mojca Miklavec <mojca.miklavec.lists@gmail.com>.
+
 2013-03-29  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftlcdfil.h: Add description of color filtering.
