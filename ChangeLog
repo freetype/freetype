@@ -1,3 +1,9 @@
+2013-04-03  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #38589.
+
+	* src/bdf/bdflib.c (_bdf_readstream): Thinko.
+
 2013-03-31  Werner Lemberg  <wl@gnu.org>
 
 	* configure: Use egrep, not grep.

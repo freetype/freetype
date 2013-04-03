@@ -754,7 +754,7 @@
         {
           bytes = avail - start;
 
-          FT_MEM_COPY( buf, buf + start, bytes );
+          FT_MEM_MOVE( buf, buf + start, bytes );
 
           cursor = bytes;
           avail -= bytes;
