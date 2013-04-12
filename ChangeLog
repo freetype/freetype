@@ -1,5 +1,18 @@
 2013-04-12  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Minor code administration issues.
+
+	* src/cff/cffgload.c (check_points): Rename to...
+	(cff_check_points): ...this and make it FT_LOCAL.
+	(cff_builder_add_point, cff_builder_add_point1,
+	cff_builder_start_point, cff_builder_close_contour,
+	cff_lookup_glyph_by_stdcharcode, cff_get_glyph_data,
+	cff_free_glyph_data): Make them FT_LOCAL.
+
+	* src/cff/cffgload.h: Updated.
+
+2013-04-12  Werner Lemberg  <wl@gnu.org>
+
 	Add output bitmap checksums.
 
 	Use `FT2_DEBUG=bitmap:3' for tracing.
@@ -22,7 +35,7 @@
 
 2013-04-12  Werner Lemberg  <wl@gnu.org>
 
-	Add framework for CFF properties.
+	[cff] Add framework for CFF properties.
 
 	* include/freetype/internal/ftserv.h (FT_DEFINE_SERVICEDESCREC7):
 	New macro.
@@ -38,7 +51,7 @@
 
 2013-04-03  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #38589.
+	[bdf] Fix Savannah bug #38589.
 
 	* src/bdf/bdflib.c (_bdf_readstream): Thinko.
 
@@ -97,7 +110,7 @@
 
 2013-03-17  Werner Lemberg  <wl@gnu.org>
 
-	Remove dead code.
+	[raster] Remove dead code.
 
 	* src/raster/rastpic.c (ft_raster1_renderer_class_pic_init)
 	src/smooth/ftspic.c (ft_smooth_renderer_class_pic_init): Do it.

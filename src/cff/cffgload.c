@@ -461,16 +461,16 @@
 
 
   /* check that there is enough space for `count' more points */
-  static FT_Error
-  check_points( CFF_Builder*  builder,
-                FT_Int        count )
+  FT_LOCAL_DEF( FT_Error )
+  cff_check_points( CFF_Builder*  builder,
+                    FT_Int        count )
   {
     return FT_GLYPHLOADER_CHECK_POINTS( builder->loader, count, 0 );
   }
 
 
   /* add a new point, do not check space */
-  static void
+  FT_LOCAL_DEF( void )
   cff_builder_add_point( CFF_Builder*  builder,
                          FT_Pos        x,
                          FT_Pos        y,
@@ -495,7 +495,7 @@
 
 
   /* check space for a new on-curve point, then add it */
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   cff_builder_add_point1( CFF_Builder*  builder,
                           FT_Pos        x,
                           FT_Pos        y )
@@ -503,7 +503,7 @@
     FT_Error  error;
 
 
-    error = check_points( builder, 1 );
+    error = cff_check_points( builder, 1 );
     if ( !error )
       cff_builder_add_point( builder, x, y, 1 );
 
@@ -540,7 +540,7 @@
 
 
   /* if a path was begun, add its first on-curve point */
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   cff_builder_start_point( CFF_Builder*  builder,
                            FT_Pos        x,
                            FT_Pos        y )
@@ -562,7 +562,7 @@
 
 
   /* close the current contour */
-  static void
+  FT_LOCAL_DEF( void )
   cff_builder_close_contour( CFF_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
@@ -607,7 +607,7 @@
   }
 
 
-  static FT_Int
+  FT_LOCAL_DEF( FT_Int )
   cff_lookup_glyph_by_stdcharcode( CFF_Font  cff,
                                    FT_Int    charcode )
   {
@@ -636,7 +636,7 @@
   }
 
 
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   cff_get_glyph_data( TT_Face    face,
                       FT_UInt    glyph_index,
                       FT_Byte**  pointer,
@@ -672,7 +672,7 @@
   }
 
 
-  static void
+  FT_LOCAL_DEF( void )
   cff_free_glyph_data( TT_Face    face,
                        FT_Byte**  pointer,
                        FT_ULong   length )
@@ -1411,8 +1411,8 @@
         case cff_op_rlineto:
           FT_TRACE4(( " rlineto\n" ));
 
-          if ( cff_builder_start_point ( builder, x, y ) ||
-               check_points( builder, num_args / 2 )     )
+          if ( cff_builder_start_point( builder, x, y )  ||
+               cff_check_points( builder, num_args / 2 ) )
             goto Fail;
 
           if ( num_args < 2 )
@@ -1446,8 +1446,8 @@
             if ( num_args == 0 )
               break;
 
-            if ( cff_builder_start_point ( builder, x, y ) ||
-                 check_points( builder, num_args )         )
+            if ( cff_builder_start_point( builder, x, y ) ||
+                 cff_check_points( builder, num_args )    )
               goto Fail;
 
             args = stack;
@@ -1480,8 +1480,8 @@
 
             nargs = num_args - num_args % 6;
 
-            if ( cff_builder_start_point ( builder, x, y ) ||
-                 check_points( builder, nargs / 2 )     )
+            if ( cff_builder_start_point( builder, x, y ) ||
+                 cff_check_points( builder, nargs / 2 )   )
               goto Fail;
 
             args -= nargs;
@@ -1529,7 +1529,7 @@
               nargs--;
             }
 
-            if ( check_points( builder, 3 * ( nargs / 4 ) ) )
+            if ( cff_check_points( builder, 3 * ( nargs / 4 ) ) )
               goto Fail;
 
             while ( args < decoder->top )
@@ -1573,7 +1573,7 @@
               nargs--;
             }
 
-            if ( check_points( builder, 3 * ( nargs / 4 ) ) )
+            if ( cff_check_points( builder, 3 * ( nargs / 4 ) ) )
               goto Fail;
 
             while ( args < decoder->top )
@@ -1613,7 +1613,7 @@
             nargs = num_args & ~2;
 
             args -= nargs;
-            if ( check_points( builder, ( nargs / 4 ) * 3 ) )
+            if ( cff_check_points( builder, ( nargs / 4 ) * 3 ) )
               goto Stack_Underflow;
 
             phase = ( op == cff_op_hvcurveto );
@@ -1666,8 +1666,8 @@
             nargs     = num_args & ~1;
             num_lines = ( nargs - 6 ) / 2;
 
-            if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, num_lines + 3 )   )
+            if ( cff_builder_start_point( builder, x, y )   ||
+                 cff_check_points( builder, num_lines + 3 ) )
               goto Fail;
 
             args -= nargs;
@@ -1711,8 +1711,8 @@
             nargs      = nargs - nargs % 6 + 2;
             num_curves = ( nargs - 2 ) / 6;
 
-            if ( cff_builder_start_point ( builder, x, y ) ||
-                 check_points( builder, num_curves * 3 + 2 ) )
+            if ( cff_builder_start_point( builder, x, y )        ||
+                 cff_check_points( builder, num_curves * 3 + 2 ) )
               goto Fail;
 
             args -= nargs;
@@ -1752,7 +1752,7 @@
             /* -- make sure we have enough space for the start point if it */
             /* needs to be added                                           */
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, 6 )               )
+                 cff_check_points( builder, 6 )           )
               goto Fail;
 
             /* record the starting point's y position for later use */
@@ -1801,7 +1801,7 @@
 
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, 6 )               )
+                 cff_check_points( builder, 6 )           )
               goto Fail;
 
             /* record the starting point's y-position for later use */
@@ -1854,7 +1854,7 @@
 
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, 6 )               )
+                 cff_check_points( builder, 6 )           )
               goto Fail;
 
             /* record the starting point's x, y position for later use */
@@ -1917,7 +1917,7 @@
             FT_TRACE4(( " flex\n" ));
 
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, 6 )               )
+                 cff_check_points( builder, 6 )           )
               goto Fail;
 
             for ( count = 6; count > 0; count-- )
