@@ -37,6 +37,7 @@
 
 #include FT_SERVICE_XFREE86_NAME_H
 #include FT_SERVICE_GLYPH_DICT_H
+#include FT_SERVICE_PROPERTIES_H
 
 
   /*************************************************************************/
@@ -298,7 +299,8 @@
   }
 
 
-  FT_DEFINE_SERVICE_GLYPHDICTREC(cff_service_glyph_dict,
+  FT_DEFINE_SERVICE_GLYPHDICTREC(
+    cff_service_glyph_dict,
     (FT_GlyphDict_GetNameFunc)  cff_get_glyph_name,
     (FT_GlyphDict_NameIndexFunc)cff_get_name_index
   )
@@ -360,7 +362,8 @@
   }
 
 
-  FT_DEFINE_SERVICE_PSINFOREC(cff_service_ps_info,
+  FT_DEFINE_SERVICE_PSINFOREC(
+    cff_service_ps_info,
     (PS_GetFontInfoFunc)   cff_ps_get_font_info,
     (PS_GetFontExtraFunc)  NULL,
     (PS_HasGlyphNamesFunc) cff_ps_has_glyph_names,
@@ -384,7 +387,8 @@
   }
 
 
-  FT_DEFINE_SERVICE_PSFONTNAMEREC(cff_service_ps_name,
+  FT_DEFINE_SERVICE_PSFONTNAMEREC(
+    cff_service_ps_name,
     (FT_PsName_GetFunc)cff_get_ps_name
   )
 
@@ -430,7 +434,8 @@
   }
 
 
-  FT_DEFINE_SERVICE_TTCMAPSREC(cff_service_get_cmap_info,
+  FT_DEFINE_SERVICE_TTCMAPSREC(
+    cff_service_get_cmap_info,
     (TT_CMap_Info_GetFunc)cff_get_cmap_info
   )
 
@@ -559,11 +564,40 @@
   }
 
 
-  FT_DEFINE_SERVICE_CIDREC(cff_service_cid_info,
+  FT_DEFINE_SERVICE_CIDREC(
+    cff_service_cid_info,
     (FT_CID_GetRegistryOrderingSupplementFunc)cff_get_ros,
     (FT_CID_GetIsInternallyCIDKeyedFunc)      cff_get_is_cid,
     (FT_CID_GetCIDFromGlyphIndexFunc)         cff_get_cid_from_glyph_index
   )
+
+
+  /*
+   *  PROPERTY SERVICE
+   *
+   */
+  static FT_Error
+  cff_property_set( FT_Module    ft_module,
+                    const char*  property_name,
+                    const void*  value )
+  {
+    return FT_Err_Ok;
+  }
+
+
+  static FT_Error
+  cff_property_get( FT_Module    ft_module,
+                    const char*  property_name,
+                    const void*  value )
+  {
+    return FT_Err_Ok;
+  }
+
+
+  FT_DEFINE_SERVICE_PROPERTIESREC(
+    cff_service_properties,
+    (FT_Properties_SetFunc)cff_property_set,
+    (FT_Properties_GetFunc)cff_property_get )
 
 
   /*************************************************************************/
@@ -577,24 +611,30 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
+
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
-  FT_DEFINE_SERVICEDESCREC6(cff_services,
+  FT_DEFINE_SERVICEDESCREC7(
+    cff_services,
     FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_CFF,
     FT_SERVICE_ID_POSTSCRIPT_INFO,      &CFF_SERVICE_PS_INFO_GET,
     FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &CFF_SERVICE_PS_NAME_GET,
     FT_SERVICE_ID_GLYPH_DICT,           &CFF_SERVICE_GLYPH_DICT_GET,
     FT_SERVICE_ID_TT_CMAP,              &CFF_SERVICE_GET_CMAP_INFO_GET,
-    FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET
+    FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET,
+    FT_SERVICE_ID_PROPERTIES,           &CFF_SERVICE_PROPERTIES_GET
   )
 #else
-  FT_DEFINE_SERVICEDESCREC5(cff_services,
+  FT_DEFINE_SERVICEDESCREC6(
+    cff_services,
     FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_CFF,
     FT_SERVICE_ID_POSTSCRIPT_INFO,      &CFF_SERVICE_PS_INFO_GET,
     FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &CFF_SERVICE_PS_NAME_GET,
     FT_SERVICE_ID_TT_CMAP,              &CFF_SERVICE_GET_CMAP_INFO_GET,
-    FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET
+    FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET,
+    FT_SERVICE_ID_PROPERTIES,           &CFF_SERVICE_PROPERTIES_GET
   )
 #endif
+
 
   FT_CALLBACK_DEF( FT_Module_Interface )
   cff_get_interface( FT_Module    driver,       /* CFF_Driver */
@@ -642,7 +682,8 @@
 #define CFF_SIZE_SELECT 0
 #endif
 
-  FT_DEFINE_DRIVER( cff_driver_class,
+  FT_DEFINE_DRIVER(
+    cff_driver_class,
 
       FT_MODULE_FONT_DRIVER       |
       FT_MODULE_DRIVER_SCALABLE   |

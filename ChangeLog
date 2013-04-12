@@ -1,3 +1,19 @@
+2013-04-12  Werner Lemberg  <wl@gnu.org>
+
+	Add framework for CFF properties.
+
+	* include/freetype/internal/ftserv.h (FT_DEFINE_SERVICEDESCREC7):
+	New macro.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_PROPERTIES_H.
+	(cff_property_set, cff_property_get): New function, still empty.
+	Define `cff_service_properties' service.
+	Update `cff_services'.
+
+	* src/cff/cffpic.h: Include FT_SERVICE_PROPERTIES_H.
+	(CFF_SERVICE_PROPERTIES_GET): New macro.
+	CffModulePIC: Add `cff_service_properties'.
+
 2013-04-03  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #38589.
