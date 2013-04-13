@@ -112,12 +112,14 @@ FT_BEGIN_HEADER
 
   /***********************************************************************/
   /*                                                                     */
-  /* TrueType driver class.                                              */
+  /* CFF driver class.                                                   */
   /*                                                                     */
   typedef struct  CFF_DriverRec_
   {
     FT_DriverRec  root;
-    void*         extension_component;
+
+    FT_UInt  hinting_engine;
+    FT_Bool  no_stem_darkening;
 
   } CFF_DriverRec;
 

@@ -25,6 +25,7 @@
 #include "cffobjs.h"
 #include "cffload.h"
 #include "cffgload.h"
+#include "cf2ft.h"      /* for cf2_decoder_parse_charstrings */
 
 #include "cfferrs.h"
 
@@ -455,6 +456,8 @@
     decoder->glyph_width   = sub->private_dict.default_width;
     decoder->nominal_width = sub->private_dict.nominal_width;
 
+    decoder->current_subfont = sub;     /* for Adobe's CFF handler */
+
   Exit:
     return error;
   }
@@ -481,12 +484,23 @@
 
     if ( builder->load_points )
     {
+      CFF_Driver  driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
+
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 
-      point->x = x >> 16;
-      point->y = y >> 16;
+      if ( driver->hinting_engine == FT_CFF_HINTING_ADOBE )
+      {
+        /* cf2_decoder_parse_charstrings uses 16.16 coordinates */
+        point->x = x >> 10;
+        point->y = y >> 10;
+      }
+      else
+      {
+        point->x = x >> 16;
+        point->y = y >> 16;
+      }
       *control = (FT_Byte)( flag ? FT_CURVE_TAG_ON : FT_CURVE_TAG_CUBIC );
     }
 
@@ -2585,7 +2599,7 @@
     FT_Error     error;
     CFF_Decoder  decoder;
     TT_Face      face = (TT_Face)glyph->root.face;
-    FT_Bool      hinting, force_scaling;
+    FT_Bool      hinting, scaled, force_scaling;
     CFF_Font     cff  = (CFF_Font)face->extra.data;
 
     FT_Matrix    font_matrix;
@@ -2773,12 +2787,18 @@
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
 
-    hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
-                       ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
+    /* top-level code ensures that FT_LOAD_NO_HINTING is set */
+    /* if FT_LOAD_NO_SCALE is active                         */
+    hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
+    scaled  = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 );
 
+    glyph->hint        = hinting;
+    glyph->scaled      = scaled;
     glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;  /* by default */
 
     {
+      CFF_Driver  driver = (CFF_Driver)FT_FACE_DRIVER( face );
+
       FT_Byte*  charstring;
       FT_ULong  charstring_len;
 
@@ -2802,9 +2822,19 @@
       if ( error )
         goto Glyph_Build_Finished;
 
-      error = cff_decoder_parse_charstrings( &decoder,
-                                             charstring,
-                                             charstring_len );
+      /* choose which CFF renderer to use */
+      if ( driver->hinting_engine == FT_CFF_HINTING_ADOBE )
+        error = cf2_decoder_parse_charstrings( &decoder,
+                                               charstring,
+                                               charstring_len );
+
+      /* Adobe's engine uses 16.16 numbers everywhere;              */
+      /* as a consequence, glyphs larger than 2000ppem get rejected */
+      if ( FT_ERR_EQ( error, Glyph_Too_Big )                 ||
+           driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
+        error = cff_decoder_parse_charstrings( &decoder,
+                                               charstring,
+                                               charstring_len );
 
       cff_free_glyph_data( face, &charstring, charstring_len );
 

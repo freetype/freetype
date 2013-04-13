@@ -17,6 +17,7 @@
 
 
 #include <ft2build.h>
+
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
 #include FT_INTERNAL_STREAM_H
@@ -24,11 +25,14 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
+#include FT_CFF_DRIVER_H
+
 #include "cffobjs.h"
 #include "cffload.h"
 #include "cffcmap.h"
-#include "cfferrs.h"
 #include "cffpic.h"
+
+#include "cfferrs.h"
 
 
   /*************************************************************************/
@@ -1046,16 +1050,21 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  cff_driver_init( FT_Module  module )
+  cff_driver_init( FT_Module  module )        /* CFF_Driver */
   {
-    FT_UNUSED( module );
+    CFF_Driver  driver = (CFF_Driver)module;
+
+
+    /* set default property values */
+    driver->hinting_engine    = FT_CFF_HINTING_FREETYPE;
+    driver->no_stem_darkening = FALSE;
 
     return FT_Err_Ok;
   }
 
 
   FT_LOCAL_DEF( void )
-  cff_driver_done( FT_Module  module )
+  cff_driver_done( FT_Module  module )        /* CFF_Driver */
   {
     FT_UNUSED( module );
   }

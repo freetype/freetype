@@ -1684,6 +1684,12 @@
     FT_FREE( font->global_subrs );
     FT_FREE( font->strings );
     FT_FREE( font->string_pool );
+
+    if ( font->cf2_instance.finalizer )
+    {
+      font->cf2_instance.finalizer( font->cf2_instance.data );
+      FT_FREE( font->cf2_instance.data );
+    }
   }
 
 

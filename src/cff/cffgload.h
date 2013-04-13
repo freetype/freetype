@@ -191,6 +191,8 @@ FT_BEGIN_HEADER
 
     FT_Bool            seac;
 
+    CFF_SubFont        current_subfont; /* for current glyph_index */
+
   } CFF_Decoder;
 
 

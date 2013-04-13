@@ -1,3 +1,49 @@
+2013-04-13  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Add a new Type 2 interpreter and hinter.
+
+	This work, written by Dave Arnold <darnold@adobe.com> and fully
+	integrated into FreeType by me, is a donation by Adobe in
+	collaboration with Google.  It is vastly superior to the old CFF
+	engine, and it will replace it soon.  Right now, it is still off by
+	default, and you have to explicitly select it using the new
+	`hinting-engine' property of the cff driver.
+
+	For convenience, (most of) the new files are committed separately.
+
+	* include/freetype/config/ftheader.h (FT_CFF_DRIVER_H): New macro.
+	* include/freetype/ftcffdrv.h: New file to access CFF driver
+	properties.
+	* include/freetype/fterrdef.h (FT_Err_Glyph_Too_Big): New error
+	code.
+	* include/freetype/internal/fttrace.h: Add `cf2blues', `cf2hints',
+	and `cf2interp'.
+
+	* src/cff/cffgload.h (CFF_SubFont): New member `current_subfont'.
+	* src/cff/cffobjs.h (CFF_DriverRec): New members `hinting_engine'
+	and `no_stem_darkening'.
+	* src/cff/cfftypes.h (CFF_FontRec): New member `cf2_instance'.
+
+	* src/cff/cff.c: Include new files.
+	* src/cff/cffdrivr.c (cff_property_set, cff_property_get): Handle
+	`hinting-engine' and `no-stem-darkening' properties (only the Adobe
+	engine listens to them).
+	* src/cff/cffgload.c: Include `cf2ft.h'.
+	(cff_decoder_prepare): Initialize `current_subfont'.
+	(cff_build_add_point): Handle Adobe engine which uses 16.16
+	coordinates.
+	(cff_slot_load): Handle FT_LOAD_NO_SCALE and FT_LOAD_NO_HINTING
+	separately.
+	Choose rendering engine based on `hinting_engine' property.
+	* src/cff/cffload.c (cff_font_done): Call finalizer of the Adobe
+	engine.
+	* src/cff/cffobjs.c: Include FT_CFF_DRIVER_H.
+	(cff_driver_init): Set default property values.
+
+	* src/cff/rules.mk (CFF_DRV_SRC, CFF_DRV_H): Add new files.
+
+	* src/cff/cf2*.*: New files, containing the Adobe engine.
+
 2013-04-12  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Minor code administration issues.

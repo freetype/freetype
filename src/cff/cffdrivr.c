@@ -577,20 +577,73 @@
    *
    */
   static FT_Error
-  cff_property_set( FT_Module    ft_module,
+  cff_property_set( FT_Module    module,         /* CFF_Driver */
                     const char*  property_name,
                     const void*  value )
   {
-    return FT_Err_Ok;
+    FT_Error    error  = FT_Err_Ok;
+    CFF_Driver  driver = (CFF_Driver)module;
+
+
+    if ( !ft_strcmp( property_name, "hinting-engine" ) )
+    {
+      FT_UInt*  hinting_engine = (FT_UInt*)value;
+
+
+      driver->hinting_engine = *hinting_engine;
+
+      return error;
+    }
+    else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
+    {
+      FT_Bool*  no_stem_darkening = (FT_Bool*)value;
+
+
+      driver->no_stem_darkening = *no_stem_darkening;
+
+      return error;
+    }
+
+    FT_TRACE0(( "cff_property_set: missing property `%s'\n",
+                property_name ));
+    return FT_THROW( Missing_Property );
   }
 
 
   static FT_Error
-  cff_property_get( FT_Module    ft_module,
+  cff_property_get( FT_Module    module,         /* CFF_Driver */
                     const char*  property_name,
                     const void*  value )
   {
-    return FT_Err_Ok;
+    FT_Error    error  = FT_Err_Ok;
+    CFF_Driver  driver = (CFF_Driver)module;
+
+    FT_UInt  hinting_engine    = driver->hinting_engine;
+    FT_Bool  no_stem_darkening = driver->no_stem_darkening;
+
+
+    if ( !ft_strcmp( property_name, "hinting-engine" ) )
+    {
+      FT_UInt*  val = (FT_UInt*)value;
+
+
+      *val = hinting_engine;
+
+      return error;
+    }
+    else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
+    {
+      FT_Bool*  val = (FT_Bool*)value;
+
+
+      *val = no_stem_darkening;
+
+      return error;
+    }
+
+    FT_TRACE0(( "cff_property_get: missing property `%s'\n",
+                property_name ));
+    return FT_THROW( Missing_Property );
   }
 
 
