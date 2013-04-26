@@ -1,3 +1,7 @@
+2013-04-26  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2013-04-13  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Add a new Type 2 interpreter and hinter.

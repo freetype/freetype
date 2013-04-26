@@ -3,6 +3,27 @@ CHANGES BETWEEN 2.4.11 and 2.4.12
 
   I. IMPORTANT CHANGES
 
+    - We have another CFF parsing and hinting engine!  Written by Dave
+      Arnold <darnold@adobe.com>,  this work  has been  contributed by
+      Adobe in  collaboration with Google.   It is vastly  superior to
+      the old CFF engine, and it  will replace it in the next release.
+      Right  now,  it  is  still  off by  default,  and  you  have  to
+      explicitly select it using  the new `hinting-engine' property of
+      the cff driver:
+
+        ...
+        #include FT_CFF_DRIVER_H
+
+        FT_Library  library;
+        int         engine = FT_CFF_HINTING_ADOBE;
+
+
+        ...
+        FT_Property_Set( library, "cff", "hinting-engine", &engine );
+
+      Right now, the code has a (mature) beta status; we encourage all
+      users to test it and report any problems.
+
     - The  macro FT_CONFIG_OPTION_OLD_INTERNALS  is no  longer set  by
       default.  In  the next  release, we  will completely  remove the
       associated code.   Please update your  programs in case  you are
