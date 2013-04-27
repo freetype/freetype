@@ -36,6 +36,33 @@ CHANGES BETWEEN 2.4.11 and 2.4.12
       environment variable to specify a `make' binary.   For backwards
       compatibility, GNUMAKE still overrides MAKE, though.
 
+    - The `ftview'  and `ftdiff'  demo programs have  been redesigned,
+      showing  more options  permanently  on the  screen, among  other
+      minor improvements.
+
+    - Using the `H'  key, it is now possible to  select the CFF engine
+      in both `ftview' and `ftdiff'.
+
+    - It is  now possible  to directly select  the LCD  rendering mode
+      with the keys `A'-`F' in  `ftview'.  The key mapping for cycling
+      through LCD modes  has been changed from `K' and  `L' to `k' and
+      `l', and  toggling custom LCD  filtering is no longer  mapped to
+      key `F' but to key `L'.
+
+    - In `ftdiff',  key `x' toggles  between layout modes:  Either use
+      the  advance width  (this is  new and  now the  default) or  the
+      bounding box information to determine line breaks.
+
+    - For all demo  tools, the new command line option  `-v' shows the
+      version.
+
+    - For the demo tools with a GUI, the new command line options `-w'
+      and `-h' select  the width and the height of  the output window,
+      respectively.
+
+    - The `ttdebug' program was broken and has been reactivated.  Note
+      that this program is not compiled by default.
+
 
 ======================================================================
 
