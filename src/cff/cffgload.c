@@ -21,6 +21,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_OUTLINE_H
+#include FT_CFF_DRIVER_H
 
 #include "cffobjs.h"
 #include "cffload.h"
