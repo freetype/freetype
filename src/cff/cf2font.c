@@ -140,8 +140,7 @@
   cf2_font_setup( CF2_Font           font,
                   const CF2_Matrix*  transform )
   {
-    /* pointer to parsed font object, either PFR ParsedFont or FreeType */
-    /* Decoder                                                          */
+    /* pointer to parsed font object */
     CFF_Decoder*  decoder = font->decoder;
 
     FT_Bool  needExtraSetup = FALSE;

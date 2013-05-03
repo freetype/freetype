@@ -55,24 +55,18 @@
 
 
   /*
-   * For blue values, FreeType parser produces an array of integers, while
-   * PFR parser produces an array of fixed.
+   * For blue values, the FreeType parser produces an array of integers,
+   * while the Adobe CFF engine produces an array of fixed.
    * Define a macro to convert FreeType to fixed.
-   *
    */
-#if 1
 #define cf2_blueToFixed( x )  cf2_intToFixed( x )
-#else
-#define cf2_blueToFixed( x )  ( x )
-#endif
 
 
   FT_LOCAL_DEF( void )
   cf2_blues_init( CF2_Blues  blues,
                   CF2_Font   font )
   {
-    /* pointer to parsed font object, either PFR ParsedFont or FreeType */
-    /* Decoder                                                          */
+    /* pointer to parsed font object */
     CFF_Decoder*  decoder = font->decoder;
 
     CF2_Fixed  zoneHeight;

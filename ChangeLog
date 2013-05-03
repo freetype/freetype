@@ -1,4 +1,8 @@
-2013-05-12  Chris Liddell  <chris.liddell@artifex.com>
+2013-05-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cf2blues.c: Remove dead code.
+
+2013-05-02  Chris Liddell  <chris.liddell@artifex.com>
 
 	* src/cff/cffgload.c: Include FT_CFF_DRIVER_H.
 
