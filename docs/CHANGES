@@ -12,6 +12,7 @@ CHANGES BETWEEN 2.4.11 and 2.4.12
       the cff driver:
 
         ...
+        #include FT_MODULE_H
         #include FT_CFF_DRIVER_H
 
         FT_Library  library;
