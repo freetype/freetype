@@ -1458,10 +1458,11 @@
             CF2_Fixed  v;
 
 
-            v = (CF2_Fixed)( ( cf2_buf_readByte( charstring ) << 24 ) |
-                             ( cf2_buf_readByte( charstring ) << 16 ) |
-                             ( cf2_buf_readByte( charstring ) <<  8 ) |
-                               cf2_buf_readByte( charstring )         );
+            v = (CF2_Fixed)
+                  ( ( (FT_UInt32)cf2_buf_readByte( charstring ) << 24 ) |
+                    ( (FT_UInt32)cf2_buf_readByte( charstring ) << 16 ) |
+                    ( (FT_UInt32)cf2_buf_readByte( charstring ) <<  8 ) |
+                      (FT_UInt32)cf2_buf_readByte( charstring )         );
 
             FT_TRACE4(( " %.2f", v / 65536.0 ));
 

@@ -119,8 +119,8 @@
   static FT_Int
   ft_trig_prenorm( FT_Vector*  vec )
   {
-    FT_Fixed  x, y;
-    FT_Int    shift;
+    FT_Pos  x, y;
+    FT_Int  shift;
 
 
     x = vec->x;
@@ -131,8 +131,8 @@
     if ( shift <= FT_TRIG_SAFE_MSB )
     {
       shift  = FT_TRIG_SAFE_MSB - shift;
-      vec->x = (FT_Fixed)( (FT_UInt32)x << shift );
-      vec->y = (FT_Fixed)( (FT_UInt32)y << shift );
+      vec->x = (FT_Pos)( (FT_ULong)x << shift );
+      vec->y = (FT_Pos)( (FT_ULong)y << shift );
     }
     else
     {
@@ -392,8 +392,8 @@
       else
       {
         shift  = -shift;
-        vec->x = (FT_Fixed)( (FT_UInt32)v.x << shift );
-        vec->y = (FT_Fixed)( (FT_UInt32)v.y << shift );
+        vec->x = (FT_Pos)( (FT_ULong)v.x << shift );
+        vec->y = (FT_Pos)( (FT_ULong)v.y << shift );
       }
     }
   }

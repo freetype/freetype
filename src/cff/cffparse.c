@@ -65,7 +65,7 @@
       if ( p + 2 > limit )
         goto Bad;
 
-      val = (FT_Short)( ( p[0] << 8 ) | p[1] );
+      val = (FT_Short)( ( (FT_UShort)p[0] << 8 ) | p[1] );
       p  += 2;
     }
     else if ( v == 29 )
@@ -73,10 +73,10 @@
       if ( p + 4 > limit )
         goto Bad;
 
-      val = (FT_Long)( ( p[0] << 24 ) |
-                       ( p[1] << 16 ) |
-                       ( p[2] <<  8 ) |
-                         p[3]         );
+      val = (FT_Long)( ( (FT_ULong)p[0] << 24 ) |
+                       ( (FT_ULong)p[1] << 16 ) |
+                       ( (FT_ULong)p[2] <<  8 ) |
+                         (FT_ULong)p[3]         );
       p += 4;
     }
     else if ( v < 247 )

@@ -1,5 +1,19 @@
 2013-05-04  Werner Lemberg  <wl@gnu.org>
 
+	Fix clang fixes.
+
+	* src/base/fttrigon.c (ft_trig_prenorm, FT_Vector_Rotate): Use
+	correct types.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <default>: Force
+	unsigned for computations.
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Ditto.
+	* src/cff/cffparse.c (cff_parse_integer): Ditto.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Ditto.
+
+2013-05-04  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Make Adobe CFF engine work correctly on 64bit hosts.
 
 	Reported by numerous people on the `freetype-devel' list.  Without

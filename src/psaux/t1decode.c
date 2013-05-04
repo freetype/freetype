@@ -565,10 +565,10 @@
           goto Syntax_Error;
         }
 
-        value = (FT_Int32)( ( ip[0] << 24 ) |
-                            ( ip[1] << 16 ) |
-                            ( ip[2] << 8  ) |
-                              ip[3]         );
+        value = (FT_Int32)( ( (FT_UInt32)ip[0] << 24 ) |
+                            ( (FT_UInt32)ip[1] << 16 ) |
+                            ( (FT_UInt32)ip[2] << 8  ) |
+                              (FT_UInt32)ip[3]         );
         ip += 4;
 
         /* According to the specification, values > 32000 or < -32000 must */

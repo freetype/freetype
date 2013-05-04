@@ -975,7 +975,7 @@
         {
           if ( ip + 1 >= limit )
             goto Syntax_Error;
-          val = (FT_Short)( ( ip[0] << 8 ) | ip[1] );
+          val = (FT_Short)( ( (FT_UShort)ip[0] << 8 ) | ip[1] );
           ip += 2;
         }
         else if ( v < 247 )
@@ -996,10 +996,10 @@
         {
           if ( ip + 3 >= limit )
             goto Syntax_Error;
-          val = (FT_Int32)( ( ip[0] << 24 ) |
-                            ( ip[1] << 16 ) |
-                            ( ip[2] <<  8 ) |
-                              ip[3]         );
+          val = (FT_Int32)( ( (FT_UInt32)ip[0] << 24 ) |
+                            ( (FT_UInt32)ip[1] << 16 ) |
+                            ( (FT_UInt32)ip[2] <<  8 ) |
+                              (FT_UInt32)ip[3]         );
           ip    += 4;
           if ( charstring_type == 2 )
             shift = 0;
