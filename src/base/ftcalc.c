@@ -284,16 +284,25 @@
     FT_Int32   s;
     FT_UInt32  q;
 
+
     s = 1;
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
+    if ( a < 0 )
+    {
+      a = -a;
+      s = -1;
+    }
+    if ( b < 0 )
+    {
+      b = -b;
+      s = -s;
+    }
 
     if ( b == 0 )
       /* check for division by 0 */
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = (FT_UInt32)( ( ( (FT_Int64)a << 16 ) + ( b >> 1 ) ) / b );
+      q = (FT_UInt32)( ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b );
 
     return ( s < 0 ? -(FT_Long)q : (FT_Long)q );
   }
@@ -597,7 +606,7 @@
     else if ( ( a >> 16 ) == 0 )
     {
       /* compute result directly */
-      q = (FT_UInt32)( ( a << 16 ) + ( b >> 1 ) ) / (FT_UInt32)b;
+      q = (FT_UInt32)( ( (FT_ULong)a << 16 ) + ( b >> 1 ) ) / (FT_UInt32)b;
     }
     else
     {
@@ -605,8 +614,8 @@
       FT_Int64  temp, temp2;
 
 
-      temp.hi  = (FT_Int32) ( a >> 16 );
-      temp.lo  = (FT_UInt32)( a << 16 );
+      temp.hi  = (FT_Int32)( a >> 16 );
+      temp.lo  = (FT_UInt32)a << 16;
       temp2.hi = 0;
       temp2.lo = (FT_UInt32)( b >> 1 );
       FT_Add64( &temp, &temp2, &temp );

@@ -1,5 +1,28 @@
 2013-05-04  Werner Lemberg  <wl@gnu.org>
 
+	More fixes for clang's `sanitize' feature.
+
+	* src/base/ftcalc.c (FT_DivFix): Use unsigned values for
+	computations which use the left shift operator and convert to signed
+	as the last step.
+	* src/base/fttrigon.c (ft_trig_prenorm, FT_Vector_Rotate,
+	FT_Vector_Length, FT_Vector_Polarize): Ditto.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Simplify.
+	* src/cff/cffload.c (cff_subfont_load): Fix constant.
+	* src/cff/cffparse.c (cff_parse_integer, cff_parse_real, do_fixed,
+	cff_parse_fixed_dynamic): Use unsigned values for computations which
+	use the left shift operator and convert to signed as the last step.
+
+	* src/cid/cidload.c (cid_get_offset): Ditto.
+
+	* src/psaux/psconv.c (PS_Conv_ToFixed): Ditto.
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Ditto.
+
+	* src/truetype/ttinterp.c (TT_MulFix14, TT_DotFix14): Ditto.
+
+2013-05-04  Werner Lemberg  <wl@gnu.org>
+
 	Fix errors reported by clang's `sanitize' feature.
 
 	* include/freetype/internal/ftstream.h: Simplify and fix integer

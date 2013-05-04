@@ -42,7 +42,7 @@
   cid_get_offset( FT_Byte*  *start,
                   FT_Byte    offsize )
   {
-    FT_Long   result;
+    FT_ULong  result;
     FT_Byte*  p = *start;
 
 
@@ -53,7 +53,7 @@
     }
 
     *start = p;
-    return result;
+    return (FT_Long)result;
   }
 
 

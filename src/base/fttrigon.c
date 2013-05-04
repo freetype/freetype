@@ -131,8 +131,8 @@
     if ( shift <= FT_TRIG_SAFE_MSB )
     {
       shift  = FT_TRIG_SAFE_MSB - shift;
-      vec->x = x << shift;
-      vec->y = y << shift;
+      vec->x = (FT_Fixed)( (FT_UInt32)x << shift );
+      vec->y = (FT_Fixed)( (FT_UInt32)y << shift );
     }
     else
     {
@@ -392,8 +392,8 @@
       else
       {
         shift  = -shift;
-        vec->x = v.x << shift;
-        vec->y = v.y << shift;
+        vec->x = (FT_Fixed)( (FT_UInt32)v.x << shift );
+        vec->y = (FT_Fixed)( (FT_UInt32)v.y << shift );
       }
     }
   }
@@ -429,7 +429,7 @@
     if ( shift > 0 )
       return ( v.x + ( 1 << ( shift - 1 ) ) ) >> shift;
 
-    return v.x << -shift;
+    return (FT_Fixed)( (FT_UInt32)v.x << -shift );
   }
 
 
@@ -454,7 +454,8 @@
 
     v.x = ft_trig_downscale( v.x );
 
-    *length = ( shift >= 0 ) ? ( v.x >> shift ) : ( v.x << -shift );
+    *length = ( shift >= 0 ) ?                      ( v.x >>  shift )
+                             : (FT_Fixed)( (FT_UInt32)v.x << -shift );
     *angle  = v.y;
   }
 
