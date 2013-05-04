@@ -727,6 +727,7 @@
     FT_Bool   frame_accessed = 0;
     FT_Byte*  cursor;
 
+
     if ( !fields || !stream )
       return FT_THROW( Invalid_Argument );
 
@@ -776,43 +777,43 @@
 
       case ft_frame_byte:
       case ft_frame_schar:  /* read a single byte */
-        value = FT_NEXT_BYTE(cursor);
+        value = FT_NEXT_BYTE( cursor );
         sign_shift = 24;
         break;
 
       case ft_frame_short_be:
       case ft_frame_ushort_be:  /* read a 2-byte big-endian short */
-        value = FT_NEXT_USHORT(cursor);
+        value = FT_NEXT_USHORT( cursor) ;
         sign_shift = 16;
         break;
 
       case ft_frame_short_le:
       case ft_frame_ushort_le:  /* read a 2-byte little-endian short */
-        value = FT_NEXT_USHORT_LE(cursor);
+        value = FT_NEXT_USHORT_LE( cursor );
         sign_shift = 16;
         break;
 
       case ft_frame_long_be:
       case ft_frame_ulong_be:  /* read a 4-byte big-endian long */
-        value = FT_NEXT_ULONG(cursor);
+        value = FT_NEXT_ULONG( cursor );
         sign_shift = 0;
         break;
 
       case ft_frame_long_le:
       case ft_frame_ulong_le:  /* read a 4-byte little-endian long */
-        value = FT_NEXT_ULONG_LE(cursor);
+        value = FT_NEXT_ULONG_LE( cursor );
         sign_shift = 0;
         break;
 
       case ft_frame_off3_be:
       case ft_frame_uoff3_be:  /* read a 3-byte big-endian long */
-        value = FT_NEXT_UOFF3(cursor);
+        value = FT_NEXT_UOFF3( cursor );
         sign_shift = 8;
         break;
 
       case ft_frame_off3_le:
       case ft_frame_uoff3_le:  /* read a 3-byte little-endian long */
-        value = FT_NEXT_UOFF3_LE(cursor);
+        value = FT_NEXT_UOFF3_LE( cursor );
         sign_shift = 8;
         break;
 
@@ -831,15 +832,15 @@
       p = (FT_Byte*)structure + fields->offset;
       switch ( fields->size )
       {
-      case (8 / FT_CHAR_BIT):
+      case ( 8 / FT_CHAR_BIT ):
         *(FT_Byte*)p = (FT_Byte)value;
         break;
 
-      case (16 / FT_CHAR_BIT):
+      case ( 16 / FT_CHAR_BIT ):
         *(FT_UShort*)p = (FT_UShort)value;
         break;
 
-      case (32 / FT_CHAR_BIT):
+      case ( 32 / FT_CHAR_BIT ):
         *(FT_UInt32*)p = (FT_UInt32)value;
         break;
 
