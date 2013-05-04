@@ -80,19 +80,19 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   cf2_getBlueValues( CFF_Decoder*  decoder,
                      size_t*       count,
-                     CF2_Fixed*   *data );
+                     FT_Pos*      *data );
   FT_LOCAL( void )
   cf2_getOtherBlues( CFF_Decoder*  decoder,
                      size_t*       count,
-                     CF2_Fixed*   *data );
+                     FT_Pos*      *data );
   FT_LOCAL( void )
   cf2_getFamilyBlues( CFF_Decoder*  decoder,
                       size_t*       count,
-                      CF2_Fixed*   *data );
+                      FT_Pos*      *data );
   FT_LOCAL( void )
   cf2_getFamilyOtherBlues( CFF_Decoder*  decoder,
                            size_t*       count,
-                           CF2_Fixed*   *data );
+                           FT_Pos*      *data );
 
   FT_LOCAL( CF2_Int )
   cf2_getLanguageGroup( CFF_Decoder*  decoder );

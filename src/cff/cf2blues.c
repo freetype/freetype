@@ -78,10 +78,10 @@
     size_t  numFamilyBlues;
     size_t  numFamilyOtherBlues;
 
-    CF2_Fixed*  blueValues;
-    CF2_Fixed*  otherBlues;
-    CF2_Fixed*  familyBlues;
-    CF2_Fixed*  familyOtherBlues;
+    FT_Pos*  blueValues;
+    FT_Pos*  otherBlues;
+    FT_Pos*  familyBlues;
+    FT_Pos*  familyOtherBlues;
 
     size_t     i;
     CF2_Fixed  emBoxBottom, emBoxTop;

@@ -1,5 +1,25 @@
 2013-05-04  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Make Adobe CFF engine work correctly on 64bit hosts.
+
+	Reported by numerous people on the `freetype-devel' list.  Without
+	this fix, glyphs aren't properly aligned on a common baseline.
+
+	On 64bit systems, `FT_Pos' expands to `long int', having a width of
+	64bit.  `CF2_Fixed' expands to `int' which is normally 32bit wide on
+	64bit hosts also.  Wrong casts filled up the blues arrays with
+	incorrect values.  Note that all blues values are accessed with the
+	`cf2_blueToFixed' macro which handles the 64bit to 32bit conversion.
+
+	* src/cff/cf2ft.h (cf2_getBlueValues, cf2_getOtherBlues,
+	cf2_getFamilyBlues, cf2_getFamilyOtherBlues): Use `FT_Pos' for
+	`data', not `CF2_Fixed'.
+	* src/cff/cf2ft.c (cf2_getBlueValues, cf2_getOtherBlues,
+	cf2_getFamilyBlues, cf2_getFamilyOtherBlues): Updated.
+	* src/cff/cf2blues.c (cf2_blues_init): Updated.
+
+2013-05-04  Werner Lemberg  <wl@gnu.org>
+
 	More fixes for clang's `sanitize' feature.
 
 	* src/base/ftcalc.c (FT_DivFix): Use unsigned values for
@@ -537,7 +557,7 @@
 	[sfnt] Fix broken pointer overflow checks.
 
 	Many compilers such as gcc and clang optimize away pointer overflow
-	checks `p + n < p', because pointer overflow is undefined behavior. 
+	checks `p + n < p', because pointer overflow is undefined behavior.
 	Use a safe form `n > p_limit - p' instead.
 
 	Also avoid possible integer overflow issues, for example, using
